@@ -1,0 +1,672 @@
+{
+  "evidence_collection_id": "Unit1_Loop1_Evidence",
+  "loop_id": "Unit1_Loop1",
+  "description": "Loop1中所有可收集的证据配置，包括实体证物、线索痕迹、环境叙事和证词",
+
+  "evidence_list": [
+    {
+      "evidence_id": "EV001",
+      "evidence_name": {
+        "zh": "工作记录卡",
+        "en": "Work Schedule Card"
+      },
+      "evidence_type": "item",
+      "category": "document",
+
+      "discovery": {
+        "scene_id": "SC103",
+        "scene_name": "Rosa的储藏室",
+        "hotspot_id": "HS_SC103_Shelf",
+        "hotspot_coordinates": {
+          "x": 1200,
+          "y": 800,
+          "width": 200,
+          "height": 150
+        },
+        "requires_interaction": false,
+        "requires_state": null,
+        "difficulty_hints": {
+          "normal": {
+            "magnifying_glass_animation": true,
+            "hint_text": "架子上似乎有什么文件"
+          },
+          "expert": {
+            "magnifying_glass_animation": false,
+            "hint_text": null
+          }
+        }
+      },
+
+      "visual_assets": {
+        "icon": "icon_work_schedule.png",
+        "detail_image": "detail_work_schedule.png",
+        "thumbnail": "thumb_work_schedule.png"
+      },
+
+      "description": {
+        "zh": "Rosa Martinez - 11月15日夜班：后台走廊清洁 23:00-01:00",
+        "en": "Rosa Martinez - November 15th Night Shift: Backstage corridor cleaning 23:00-01:00"
+      },
+
+      "analysis": {
+        "requires_analysis": false,
+        "analysis_result": null
+      },
+
+      "related_npcs": ["NPC002"],
+
+      "relationships": [
+        {
+          "target_evidence_id": "EV003",
+          "relationship_type": "supports",
+          "strength": 0.8,
+          "reasoning": {
+            "zh": "如果Rosa在后台走廊工作，她应该能看到或听到异常情况",
+            "en": "If Rosa was working in the backstage corridor, she should have seen or heard the incident"
+          }
+        },
+        {
+          "target_evidence_id": "EV004",
+          "relationship_type": "contradicts",
+          "strength": 0.9,
+          "reasoning": {
+            "zh": "Rosa声称在储藏室工作，但工作记录显示她应该在走廊",
+            "en": "Rosa claims she was in the storeroom, but the schedule shows she should have been in the corridor"
+          }
+        }
+      ],
+
+      "combinations": [],
+
+      "usable_in_expose": {
+        "targets": ["NPC002"],
+        "rounds": [1],
+        "effectiveness": "critical"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": null,
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "critical",
+      "role_in_loop": "证明Rosa在撒谎，她应该在走廊而非储藏室"
+    },
+
+    {
+      "evidence_id": "EV002",
+      "evidence_name": {
+        "zh": "空氯仿瓶",
+        "en": "Empty Chloroform Bottle"
+      },
+      "evidence_type": "item",
+      "category": "physical_evidence",
+
+      "discovery": {
+        "scene_id": "SC104",
+        "scene_name": "歌舞厅一楼走廊",
+        "hotspot_id": "HS_SC104_Corner",
+        "hotspot_coordinates": {
+          "x": 800,
+          "y": 1200,
+          "width": 150,
+          "height": 180
+        },
+        "requires_interaction": false,
+        "requires_state": null,
+        "difficulty_hints": {
+          "normal": {
+            "magnifying_glass_animation": true,
+            "hint_text": "角落里有个小瓶子"
+          },
+          "expert": {
+            "magnifying_glass_animation": false,
+            "hint_text": null
+          }
+        }
+      },
+
+      "visual_assets": {
+        "icon": "icon_chloroform_bottle.png",
+        "detail_image": "detail_chloroform_bottle.png",
+        "thumbnail": "thumb_chloroform_bottle.png"
+      },
+
+      "description": {
+        "zh": "芝加哥总医院麻醉科标签，瓶口有残留气味",
+        "en": "Chicago General Hospital Anesthesia Department label, residual smell at the bottle opening"
+      },
+
+      "analysis": {
+        "requires_analysis": false,
+        "analysis_result": null
+      },
+
+      "related_npcs": ["NPC004"],
+
+      "relationships": [
+        {
+          "target_evidence_id": "EV003",
+          "relationship_type": "supports",
+          "strength": 0.95,
+          "reasoning": {
+            "zh": "氯仿瓶和带有氯仿气味的毛巾证明有人使用麻醉剂",
+            "en": "The chloroform bottle and towel with chloroform smell prove someone used anesthetic"
+          }
+        },
+        {
+          "target_evidence_id": "EV004",
+          "relationship_type": "timeline_match",
+          "strength": 0.85,
+          "reasoning": {
+            "zh": "迷晕工具和拖拽痕迹在时间上吻合",
+            "en": "The anesthetic tool and drag marks match chronologically"
+          }
+        }
+      ],
+
+      "combinations": [
+        {
+          "with_evidence_id": "EV003",
+          "result_evidence_id": "EV_Combo_001",
+          "result_name": {
+            "zh": "迷晕工具组合",
+            "en": "Anesthetic Tool Set"
+          },
+          "insight": {
+            "zh": "氯仿瓶+毛巾=完整的迷晕工具，有人精心策划了这次栽赃",
+            "en": "Chloroform bottle + towel = complete anesthetic toolkit, someone carefully planned this frame-up"
+          },
+          "unlock_condition": "both_collected"
+        }
+      ],
+
+      "usable_in_expose": {
+        "targets": ["NPC002"],
+        "rounds": [2],
+        "effectiveness": "high"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": null,
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "critical",
+      "role_in_loop": "证明Zack被人用氯仿迷晕，而非自愿来到案发现场"
+    },
+
+    {
+      "evidence_id": "EV003",
+      "evidence_name": {
+        "zh": "毛巾",
+        "en": "Towel"
+      },
+      "evidence_type": "item",
+      "category": "physical_evidence",
+
+      "discovery": {
+        "scene_id": "SC103",
+        "scene_name": "Rosa的储藏室",
+        "hotspot_id": "HS_SC103_Basket",
+        "hotspot_coordinates": {
+          "x": 600,
+          "y": 900,
+          "width": 180,
+          "height": 160
+        },
+        "requires_interaction": false,
+        "requires_state": null,
+        "difficulty_hints": {
+          "normal": {
+            "magnifying_glass_animation": true,
+            "hint_text": "洗衣篮里有条毛巾"
+          },
+          "expert": {
+            "magnifying_glass_animation": false,
+            "hint_text": null
+          }
+        }
+      },
+
+      "visual_assets": {
+        "icon": "icon_towel.png",
+        "detail_image": "detail_towel.png",
+        "thumbnail": "thumb_towel.png"
+      },
+
+      "description": {
+        "zh": "白色毛巾",
+        "en": "White towel"
+      },
+
+      "analysis": {
+        "requires_analysis": true,
+        "analysis_action": "smell_check",
+        "analysis_result": {
+          "zh": "一条白色毛巾，散发着刺鼻的甜腻气味，毛巾上有明显的使用痕迹",
+          "en": "A white towel emanating a pungent sweet smell, with obvious usage marks"
+        },
+        "analysis_unlocks": "detailed_description"
+      },
+
+      "related_npcs": ["NPC002"],
+
+      "relationships": [
+        {
+          "target_evidence_id": "EV002",
+          "relationship_type": "supports",
+          "strength": 0.95,
+          "reasoning": {
+            "zh": "毛巾上的甜腻气味与氯�form瓶完美匹配",
+            "en": "The sweet smell on the towel perfectly matches the chloroform bottle"
+          }
+        },
+        {
+          "target_evidence_id": "EV001",
+          "relationship_type": "location_contradiction",
+          "strength": 0.7,
+          "reasoning": {
+            "zh": "迷晕工具在储藏室，但Rosa说她整晚都在储藏室工作，这很可疑",
+            "en": "The anesthetic tool is in the storeroom, but Rosa claims she worked there all night - suspicious"
+          }
+        }
+      ],
+
+      "combinations": [
+        {
+          "with_evidence_id": "EV002",
+          "result_evidence_id": "EV_Combo_001",
+          "result_name": {
+            "zh": "迷晕工具组合",
+            "en": "Anesthetic Tool Set"
+          },
+          "insight": {
+            "zh": "完整的迷晕作案工具，证明有人精心准备",
+            "en": "Complete anesthetic toolkit proving careful preparation"
+          },
+          "unlock_condition": "both_analyzed"
+        }
+      ],
+
+      "usable_in_expose": {
+        "targets": ["NPC002"],
+        "rounds": [2, 3],
+        "effectiveness": "critical"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": "EV003_Analysis_Prompt",
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "critical",
+      "role_in_loop": "关键证物，证明迷晕工具的存在和使用"
+    },
+
+    {
+      "evidence_id": "EV004",
+      "evidence_name": {
+        "zh": "地板拖拽痕迹",
+        "en": "Floor Drag Marks"
+      },
+      "evidence_type": "clue",
+      "category": "trace_evidence",
+
+      "discovery": {
+        "scene_id": "SC104",
+        "scene_name": "歌舞厅一楼走廊",
+        "hotspot_id": "HS_SC104_Floor",
+        "hotspot_coordinates": {
+          "x": 1400,
+          "y": 1100,
+          "width": 300,
+          "height": 200
+        },
+        "requires_interaction": false,
+        "requires_state": null,
+        "difficulty_hints": {
+          "normal": {
+            "magnifying_glass_animation": true,
+            "hint_text": "地板上有奇怪的痕迹"
+          },
+          "expert": {
+            "magnifying_glass_animation": false,
+            "hint_text": null
+          }
+        }
+      },
+
+      "visual_assets": {
+        "icon": "icon_drag_marks.png",
+        "detail_image": "detail_drag_marks.png",
+        "thumbnail": "thumb_drag_marks.png"
+      },
+
+      "description": {
+        "zh": "地毯拖拽痕迹，从走廊尽头到Webb办公室",
+        "en": "Carpet drag marks from the end of the corridor to Webb's office"
+      },
+
+      "analysis": {
+        "requires_analysis": true,
+        "analysis_action": "measure_examine",
+        "analysis_result": {
+          "zh": "痕迹宽度约为肩宽，深度表明被拖拽物体重量至少150磅，绝非普通清洁工具能造成",
+          "en": "Marks are about shoulder-width, depth indicates dragged object weighs at least 150 pounds - definitely not from cleaning tools"
+        },
+        "analysis_unlocks": "weight_estimation"
+      },
+
+      "related_npcs": ["NPC002", "NPC004"],
+
+      "relationships": [
+        {
+          "target_evidence_id": "EV002",
+          "relationship_type": "timeline_match",
+          "strength": 0.85,
+          "reasoning": {
+            "zh": "迷晕后被拖拽是合理的时间顺序",
+            "en": "Being drugged then dragged is a logical sequence"
+          }
+        },
+        {
+          "target_evidence_id": "EV003",
+          "relationship_type": "supports",
+          "strength": 0.9,
+          "reasoning": {
+            "zh": "拖拽痕迹证明有人将昏迷的Zack移动到案发现场",
+            "en": "Drag marks prove someone moved unconscious Zack to the crime scene"
+          }
+        },
+        {
+          "target_evidence_id": "EV005",
+          "relationship_type": "corroborates",
+          "strength": 0.8,
+          "reasoning": {
+            "zh": "Tommy听到的重物拖拽声音与这些痕迹吻合",
+            "en": "Tommy's testimony about heavy dragging sounds matches these marks"
+          }
+        }
+      ],
+
+      "combinations": [],
+
+      "usable_in_expose": {
+        "targets": ["NPC002"],
+        "rounds": [3],
+        "effectiveness": "critical"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": null,
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "critical",
+      "role_in_loop": "证明Zack被人拖拽到案发现场，确认栽赃事实"
+    },
+
+    {
+      "evidence_id": "EV005",
+      "evidence_name": {
+        "zh": "Tommy的证词：侧门人影",
+        "en": "Tommy's Testimony: Side Door Figure"
+      },
+      "evidence_type": "note",
+      "category": "testimony",
+
+      "discovery": {
+        "scene_id": "SC105",
+        "scene_name": "Tommy的办公室",
+        "hotspot_id": null,
+        "extraction_method": "dialog",
+        "extracted_from_dialog": "D004",
+        "auto_collect": true
+      },
+
+      "visual_assets": {
+        "icon": "icon_testimony.png",
+        "detail_image": "detail_testimony_tommy_01.png",
+        "thumbnail": "thumb_testimony.png"
+      },
+
+      "description": {
+        "zh": "11点多有人影从侧门进来",
+        "en": "Around 11 o'clock, someone entered through the side door"
+      },
+
+      "analysis": {
+        "requires_analysis": false,
+        "analysis_result": null
+      },
+
+      "related_npcs": ["NPC003"],
+
+      "relationships": [
+        {
+          "target_evidence_id": "EV006",
+          "relationship_type": "supports",
+          "strength": 0.9,
+          "reasoning": {
+            "zh": "侧门人影和重物拖拽声形成完整的事件链",
+            "en": "Side door figure and heavy dragging sound form a complete event chain"
+          }
+        }
+      ],
+
+      "combinations": [],
+
+      "usable_in_expose": {
+        "targets": ["NPC002"],
+        "rounds": [2],
+        "effectiveness": "medium"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": null,
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "supporting",
+      "role_in_loop": "辅助证据，暗示有外来者进入酒吧"
+    },
+
+    {
+      "evidence_id": "EV006",
+      "evidence_name": {
+        "zh": "Tommy的证词：拖拽声音",
+        "en": "Tommy's Testimony: Dragging Sound"
+      },
+      "evidence_type": "note",
+      "category": "testimony",
+
+      "discovery": {
+        "scene_id": "SC105",
+        "scene_name": "Tommy的办公室",
+        "hotspot_id": null,
+        "extraction_method": "dialog",
+        "extracted_from_dialog": "D005",
+        "auto_collect": true
+      },
+
+      "visual_assets": {
+        "icon": "icon_testimony.png",
+        "detail_image": "detail_testimony_tommy_02.png",
+        "thumbnail": "thumb_testimony.png"
+      },
+
+      "description": {
+        "zh": "听到后台有重物拖拽的声音",
+        "en": "Heard the sound of heavy object being dragged backstage"
+      },
+
+      "analysis": {
+        "requires_analysis": false,
+        "analysis_result": null
+      },
+
+      "related_npcs": ["NPC003"],
+
+      "relationships": [
+        {
+          "target_evidence_id": "EV004",
+          "relationship_type": "corroborates",
+          "strength": 0.9,
+          "reasoning": {
+            "zh": "声音证词与地板拖拽痕迹相互印证",
+            "en": "Audio testimony corroborates floor drag marks"
+          }
+        },
+        {
+          "target_evidence_id": "EV005",
+          "relationship_type": "supports",
+          "strength": 0.85,
+          "reasoning": {
+            "zh": "侧门进入的人影可能就是制造拖拽声音的人",
+            "en": "The figure from the side door could be the one making the dragging sound"
+          }
+        }
+      ],
+
+      "combinations": [],
+
+      "usable_in_expose": {
+        "targets": ["NPC002"],
+        "rounds": [2, 3],
+        "effectiveness": "medium"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": null,
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "supporting",
+      "role_in_loop": "辅助证据，印证拖拽事实"
+    },
+
+    {
+      "evidence_id": "EV007",
+      "evidence_name": {
+        "zh": "医疗账单",
+        "en": "Medical Bill"
+      },
+      "evidence_type": "environment",
+      "category": "narrative_item",
+
+      "discovery": {
+        "scene_id": "SC103",
+        "scene_name": "Rosa的储藏室",
+        "hotspot_id": "HS_SC103_Table",
+        "hotspot_coordinates": {
+          "x": 900,
+          "y": 700,
+          "width": 150,
+          "height": 100
+        },
+        "requires_interaction": false,
+        "requires_state": null
+      },
+
+      "visual_assets": {
+        "icon": "medicalrecords.png",
+        "detail_image": "medicalrecords.png",
+        "thumbnail": "thumb_medical_bill.png"
+      },
+
+      "description": {
+        "zh": "一张芝加哥总医院的账单显示\"患者：Miguel Martinez，哮喘治疗费用：50美元/月\"，账单底部盖着红色印章\"逾期未付-已停止治疗\"。",
+        "en": "A Chicago General Hospital bill shows 'Patient: Miguel Martinez, Asthma treatment cost: $50/month', with a red stamp at the bottom reading 'Overdue - Treatment Suspended'."
+      },
+
+      "analysis": {
+        "requires_analysis": false,
+        "analysis_result": null
+      },
+
+      "related_npcs": ["NPC002"],
+
+      "relationships": [],
+
+      "combinations": [],
+
+      "usable_in_expose": {
+        "targets": [],
+        "rounds": [],
+        "effectiveness": "none"
+      },
+
+      "collection_behavior": {
+        "display_after_got": "clear",
+        "triggers_event": "EV007_Collected",
+        "unlocks_dialog": null,
+        "adds_to_inventory": true
+      },
+
+      "narrative_importance": "environmental",
+      "role_in_loop": "环境叙事，展示Rosa家庭的经济困难，为后续理解她的动机做铺垫"
+    }
+  ],
+
+  "evidence_summary": {
+    "total_evidence": 7,
+    "critical_evidence": 4,
+    "supporting_evidence": 2,
+    "environmental_evidence": 1,
+    "combinable_evidence_pairs": 1
+  },
+
+  "collection_order_recommendation": {
+    "optimal_path": [
+      "EV001",
+      "EV003",
+      "EV002",
+      "EV004",
+      "EV005",
+      "EV006",
+      "EV007"
+    ],
+    "reasoning": "先收集Rosa撒谎的直接证据，再收集迷晕工具，最后收集印证证据"
+  },
+
+  "evidence_network_diagram": {
+    "nodes": [
+      {"id": "EV001", "type": "document", "importance": "critical"},
+      {"id": "EV002", "type": "physical", "importance": "critical"},
+      {"id": "EV003", "type": "physical", "importance": "critical"},
+      {"id": "EV004", "type": "trace", "importance": "critical"},
+      {"id": "EV005", "type": "testimony", "importance": "supporting"},
+      {"id": "EV006", "type": "testimony", "importance": "supporting"},
+      {"id": "EV007", "type": "narrative", "importance": "environmental"}
+    ],
+    "edges": [
+      {"from": "EV001", "to": "EV003", "type": "supports"},
+      {"from": "EV001", "to": "EV004", "type": "contradicts"},
+      {"from": "EV002", "to": "EV003", "type": "supports"},
+      {"from": "EV002", "to": "EV004", "type": "timeline_match"},
+      {"from": "EV003", "to": "EV001", "type": "location_contradiction"},
+      {"from": "EV004", "to": "EV005", "type": "corroborates"},
+      {"from": "EV005", "to": "EV006", "type": "supports"},
+      {"from": "EV006", "to": "EV004", "type": "corroborates"}
+    ]
+  },
+
+  "meta_info": {
+    "designed_by": "NDC Content Team",
+    "last_updated": "2025-11-06",
+    "playtesting_notes": "确保玩家能在10分钟内收集完所有关键证据"
+  }
+}

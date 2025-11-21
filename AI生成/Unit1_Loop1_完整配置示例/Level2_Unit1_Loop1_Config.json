@@ -1,0 +1,246 @@
+{
+  "loop_id": "Unit1_Loop1",
+  "loop_number": 1,
+  "unit_id": "Unit1",
+  "section_id": "SEC01",
+
+  "loop_name": {
+    "zh": "栽赃陷害的真相",
+    "en": "The Truth of Frame-up"
+  },
+
+  "objectives": {
+    "main_case": {
+      "type": "MainCase",
+      "text": "蓝月亮歌舞厅谋杀案：找出杀害Webb的真凶",
+      "display_in_ui": true
+    },
+    "phase_goal": {
+      "type": "PhaseGoal",
+      "text": "到底是谁把我迷晕了，还想把杀人的罪名扣在我头上？",
+      "display_progress": true,
+      "progress_type": "evidence_collection",
+      "total_required": 4,
+      "display_in_ui": true
+    },
+    "current_goal": {
+      "type": "CurrentGoal",
+      "text": "调查案发现场，寻找被陷害的证据",
+      "display_in_ui": true
+    },
+    "doubts": [
+      {
+        "type": "Doubt",
+        "text": "为什么Morrison警官反应如此迅速？",
+        "trigger_condition": "D001_Collected",
+        "display_in_ui": true
+      },
+      {
+        "type": "Doubt",
+        "text": "Emma为什么会恰好出现在案发现场？",
+        "trigger_condition": "D010_Collected",
+        "display_in_ui": true
+      }
+    ]
+  },
+
+  "story_context": {
+    "starting_situation": "Zack在陌生房间醒来，发现Webb死亡，被Morrison逮捕",
+    "key_npcs": ["Morrison", "Emma", "Rosa", "Tommy"],
+    "investigation_focus": "寻找被栽赃陷害的证据，发现Rosa在撒谎",
+    "major_revelation": "Rosa承认目击Morrison迷晕Zack并将其拖到案发现场"
+  },
+
+  "available_scenes": [
+    {
+      "scene_id": "SC101",
+      "scene_name": "Webb会客室",
+      "scene_type": "dialogue",
+      "unlock_condition": "loop_start",
+      "npcs": ["NPC001", "NPC004", "NPC009"],
+      "description": "故事开篇场景，Webb死亡现场"
+    },
+    {
+      "scene_id": "SC119",
+      "scene_name": "Webb会客室-2",
+      "scene_type": "dialogue",
+      "unlock_condition": "D009_Completed",
+      "npcs": ["NPC001", "NPC004", "NPC009", "NPC010"],
+      "description": "Emma出场，帮助Zack洗清嫌疑"
+    },
+    {
+      "scene_id": "SC102",
+      "scene_name": "歌舞厅外的街道",
+      "scene_type": "dialogue",
+      "unlock_condition": "D021_Completed",
+      "npcs": ["NPC009", "NPC010"],
+      "description": "与Emma对话，建立合作关系"
+    },
+    {
+      "scene_id": "SC103",
+      "scene_name": "Rosa的储藏室",
+      "scene_type": "crime",
+      "unlock_condition": "D045_Completed",
+      "evidence_available": ["EV001", "EV003", "EV007", "EV008", "EV009"],
+      "description": "搜证场景，寻找Rosa撒谎的证据"
+    },
+    {
+      "scene_id": "SC104",
+      "scene_name": "歌舞厅一楼走廊",
+      "scene_type": "crime",
+      "unlock_condition": "D045_Completed",
+      "evidence_available": ["EV002", "EV004"],
+      "description": "迷晕Zack的案发现场"
+    },
+    {
+      "scene_id": "SC105",
+      "scene_name": "Tommy的办公室",
+      "scene_type": "dialogue",
+      "unlock_condition": "EV001_Collected",
+      "npcs": ["NPC003"],
+      "description": "跟Tommy对话，获取证词"
+    },
+    {
+      "scene_id": "SC106",
+      "scene_name": "酒吧大堂",
+      "scene_type": "dialogue",
+      "unlock_condition": "EVE001",
+      "npcs": ["NPC002"],
+      "description": "跟Rosa对话，进行指证"
+    }
+  ],
+
+  "required_evidence": [
+    {
+      "evidence_id": "EV001",
+      "name": "工作记录卡",
+      "importance": "critical",
+      "role_in_loop": "证明Rosa当晚应该在后台走廊，而非储藏室",
+      "collection_priority": 1
+    },
+    {
+      "evidence_id": "EV002",
+      "name": "空氯仿瓶",
+      "importance": "critical",
+      "role_in_loop": "证明有人使用麻醉剂迷晕了Zack",
+      "collection_priority": 2
+    },
+    {
+      "evidence_id": "EV003",
+      "name": "毛巾",
+      "importance": "critical",
+      "role_in_loop": "结合氯仿瓶，证明迷晕工具",
+      "requires_analysis": true,
+      "collection_priority": 3
+    },
+    {
+      "evidence_id": "EV004",
+      "name": "地板拖拽痕迹",
+      "importance": "critical",
+      "role_in_loop": "证明有人将昏迷的Zack拖到案发现场",
+      "requires_analysis": true,
+      "collection_priority": 4
+    }
+  ],
+
+  "key_dialogs": [
+    {
+      "dialog_id": "D001",
+      "npc": "Morrison",
+      "scene": "SC101",
+      "type": "main_story",
+      "description": "Morrison逮捕Zack，指控其为凶手",
+      "unlock_condition": "loop_start"
+    },
+    {
+      "dialog_id": "D010",
+      "npc": "Emma",
+      "scene": "SC119",
+      "type": "main_story",
+      "description": "Emma出现，声称看到真凶逃跑",
+      "unlock_condition": "D009_Completed"
+    },
+    {
+      "dialog_id": "D022-D045",
+      "npc": "Emma",
+      "scene": "SC102",
+      "type": "branching",
+      "description": "与Emma对话，建立合作关系",
+      "unlock_condition": "D021_Completed",
+      "has_branches": true
+    }
+  ],
+
+  "expose_configuration": {
+    "target_npc": "NPC002",
+    "target_name": "Rosa",
+    "expose_id": "Expose_Loop1_Rosa",
+    "trigger_condition": {
+      "min_evidence_count": 4,
+      "required_evidence": ["EV001", "EV003", "EV004"],
+      "required_dialog": "D045_Completed",
+      "scene_requirement": "SC106"
+    },
+    "expose_file": "Level6_Unit1_Loop1_Expose_Rosa.json"
+  },
+
+  "completion_condition": {
+    "type": "expose_success",
+    "target": "Rosa",
+    "required_rounds": 3,
+    "success_criteria": "Rosa承认目击Morrison迷晕Zack的全过程"
+  },
+
+  "rewards": {
+    "unlock_next_loop": "Unit1_Loop2",
+    "unlocked_scenes": ["SC113", "SC114", "SC115"],
+    "story_progression": "Morrison成为Loop2的调查目标",
+    "relationship_changes": [
+      {
+        "npc_id": "NPC010",
+        "relationship_type": "trust",
+        "change": "+15",
+        "description": "建立合作关系"
+      }
+    ]
+  },
+
+  "difficulty_adjustments": {
+    "normal": {
+      "evidence_hints_enabled": true,
+      "scene_progress_display": true,
+      "expose_retry_allowed": 2,
+      "task_hints": [
+        "在储藏室寻找Rosa的工作记录",
+        "在走廊检查是否有迷晕工具的痕迹"
+      ]
+    },
+    "expert": {
+      "evidence_hints_enabled": false,
+      "scene_progress_display": false,
+      "expose_retry_allowed": 0,
+      "task_hints": []
+    }
+  },
+
+  "narrative_notes": {
+    "pacing": "快节奏开场，建立紧张感和悬念",
+    "emotional_beats": [
+      "Zack被冤枉的愤怒与困惑",
+      "Emma出现带来的希望",
+      "建立合作关系的信任时刻",
+      "Rosa真相揭露的震惊"
+    ],
+    "foreshadowing": [
+      "Morrison的可疑行为为Loop2铺垫",
+      "Emma的神秘出现埋下伏笔",
+      "Webb的秘密暗示更大阴谋"
+    ]
+  },
+
+  "meta_info": {
+    "estimated_playtime_minutes": 10,
+    "complexity_level": "introductory",
+    "designer_notes": "Loop1作为教学关卡，引导玩家熟悉搜证、对话、指证三大核心玩法"
+  }
+}

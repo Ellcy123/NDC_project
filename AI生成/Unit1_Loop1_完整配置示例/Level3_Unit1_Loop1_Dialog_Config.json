@@ -1,0 +1,497 @@
+{
+  "dialog_tree_id": "Unit1_Loop1_DialogTree",
+  "loop_id": "Unit1_Loop1",
+  "description": "Loop1的完整对话树配置，包括开场逮捕、Emma救场、建立合作三个主要对话段落",
+
+  "dialog_nodes": [
+    {
+      "node_id": "D001",
+      "scene_id": "SC101",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "芝加哥警局！放下武器！Webb死了，你就是凶手！",
+        "en": "Chicago Police! Drop your weapon! Webb is dead, and you're the killer!"
+      },
+      "character_portrait": "morrison_angry",
+      "voice_file": "VO_Morrison_001",
+      "next_node": "D002",
+      "is_end": false,
+      "trigger_condition": "loop_start",
+      "narrative_function": "开场冲突，建立紧张感"
+    },
+
+    {
+      "node_id": "D002",
+      "scene_id": "SC101",
+      "npc_id": "NPC009",
+      "npc_name": "Zack",
+      "dialog_type": "AVG_Choice",
+      "speaker": "Zack",
+      "content": {
+        "zh": "[玩家选择回应]",
+        "en": "[Player Choice]"
+      },
+      "options": [
+        {
+          "option_id": "D003",
+          "text": {
+            "zh": "等等！我是私家侦探Zack Brennan...Webb约我来谈事情...",
+            "en": "Wait! I'm private detective Zack Brennan... Webb asked me to come..."
+          },
+          "next_node": "D003",
+          "personality_trait": "cooperative"
+        },
+        {
+          "option_id": "D004",
+          "text": {
+            "zh": "我不知道发生了什么，但我绝对没有杀人！",
+            "en": "I don't know what happened, but I absolutely didn't kill anyone!"
+          },
+          "next_node": "D004",
+          "personality_trait": "defensive",
+          "extracts_evidence": "EV005"
+        },
+        {
+          "option_id": "D005",
+          "text": {
+            "zh": "这一定是陷阱！有人想要陷害我！",
+            "en": "This must be a trap! Someone is trying to frame me!"
+          },
+          "next_node": "D005",
+          "personality_trait": "aggressive",
+          "extracts_evidence": "EV006"
+        }
+      ],
+      "front_node": "D001",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D003",
+      "scene_id": "SC101",
+      "npc_id": "NPC009",
+      "npc_name": "Zack",
+      "dialog_type": "AVG",
+      "speaker": "Zack",
+      "content": {
+        "zh": "等等！我是私家侦探Zack Brennan...Webb约我来谈事情...",
+        "en": "Wait! I'm private detective Zack Brennan... Webb asked me to come..."
+      },
+      "character_portrait": "zack_confused",
+      "next_node": "D006",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D004",
+      "scene_id": "SC101",
+      "npc_id": "NPC009",
+      "npc_name": "Zack",
+      "dialog_type": "AVG",
+      "speaker": "Zack",
+      "content": {
+        "zh": "我不知道发生了什么，但我绝对没有杀人！",
+        "en": "I don't know what happened, but I absolutely didn't kill anyone!"
+      },
+      "character_portrait": "zack_desperate",
+      "next_node": "D007",
+      "is_end": false,
+      "evidence_extraction": {
+        "evidence_id": "EV005",
+        "auto_collect": true
+      }
+    },
+
+    {
+      "node_id": "D005",
+      "scene_id": "SC101",
+      "npc_id": "NPC009",
+      "npc_name": "Zack",
+      "dialog_type": "AVG",
+      "speaker": "Zack",
+      "content": {
+        "zh": "这一定是陷阱！有人想要陷害我！",
+        "en": "This must be a trap! Someone is trying to frame me!"
+      },
+      "character_portrait": "zack_angry",
+      "next_node": "D008",
+      "is_end": false,
+      "evidence_extraction": {
+        "evidence_id": "EV006",
+        "auto_collect": true
+      }
+    },
+
+    {
+      "node_id": "D006",
+      "scene_id": "SC101",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "私家侦探？你有什么证据证明Webb约你来？",
+        "en": "Private detective? What proof do you have that Webb asked you here?"
+      },
+      "character_portrait": "morrison_suspicious",
+      "voice_file": "VO_Morrison_002",
+      "front_node": "D003",
+      "next_node": "D009",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D007",
+      "scene_id": "SC101",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "不知道？那你手里的枪怎么解释？",
+        "en": "Don't know? Then how do you explain the gun in your hand?"
+      },
+      "character_portrait": "morrison_accusatory",
+      "voice_file": "VO_Morrison_003",
+      "front_node": "D004",
+      "next_node": "D009",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D008",
+      "scene_id": "SC101",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "陷阱？是你自己心虚才这么说！",
+        "en": "Trap? You're only saying that because you have a guilty conscience!"
+      },
+      "character_portrait": "morrison_dismissive",
+      "voice_file": "VO_Morrison_004",
+      "front_node": "D005",
+      "next_node": "D009",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D009",
+      "scene_id": "SC101",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "证据确凿，逮捕他！",
+        "en": "The evidence is clear. Arrest him!"
+      },
+      "character_portrait": "morrison_decisive",
+      "voice_file": "VO_Morrison_005",
+      "front_node": ["D006", "D007", "D008"],
+      "next_node": "D010",
+      "is_end": false,
+      "narrative_function": "第一段对话高潮，Zack即将被捕"
+    },
+
+    {
+      "node_id": "D010",
+      "scene_id": "SC119",
+      "npc_id": "NPC010",
+      "npc_name": "Emma",
+      "dialog_type": "AVG",
+      "speaker": "Emma",
+      "content": {
+        "zh": "慢着！这个人不是凶手！",
+        "en": "Wait! This man is not the killer!"
+      },
+      "character_portrait": "emma_determined",
+      "voice_file": "VO_Emma_001",
+      "front_node": "D009",
+      "next_node": "D011",
+      "is_end": false,
+      "narrative_function": "Emma登场，转折点",
+      "camera_effect": "scene_transition",
+      "scene_change": {
+        "from": "SC101",
+        "to": "SC119"
+      }
+    },
+
+    {
+      "node_id": "D011",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "你是谁？",
+        "en": "Who are you?"
+      },
+      "character_portrait": "morrison_surprised",
+      "voice_file": "VO_Morrison_006",
+      "front_node": "D010",
+      "next_node": "D012",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D012",
+      "scene_id": "SC119",
+      "npc_id": "NPC010",
+      "npc_name": "Emma",
+      "dialog_type": "AVG",
+      "speaker": "Emma",
+      "content": {
+        "zh": "《芝加哥先驱报》记者Emma O'Malley。我看到真凶从逃跑了！12点30分，一个黑衣男子离开现场！",
+        "en": "Emma O'Malley, Chicago Herald reporter. I saw the real killer escape! At 12:30, a man in black left the scene!"
+      },
+      "character_portrait": "emma_confident",
+      "voice_file": "VO_Emma_002",
+      "front_node": "D011",
+      "next_node": "D013",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D013",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "你有什么证据？",
+        "en": "What proof do you have?"
+      },
+      "character_portrait": "morrison_skeptical",
+      "voice_file": "VO_Morrison_007",
+      "front_node": "D012",
+      "next_node": "D014",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D014",
+      "scene_id": "SC119",
+      "npc_id": "NPC010",
+      "npc_name": "Emma",
+      "dialog_type": "AVG",
+      "speaker": "Emma",
+      "content": {
+        "zh": "我拍到了黑衣人的背影！",
+        "en": "I photographed the man in black from behind!"
+      },
+      "character_portrait": "emma_triumphant",
+      "voice_file": "VO_Emma_003",
+      "front_node": "D013",
+      "next_node": "D015",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D015",
+      "scene_id": "SC119",
+      "npc_id": "NPC010",
+      "npc_name": "Emma",
+      "dialog_type": "AVG",
+      "speaker": "Emma",
+      "content": {
+        "zh": "Morrison警探，您来得太及时了。从案发到现场不到10分钟，除非您早知道会发生什么？",
+        "en": "Detective Morrison, you arrived very promptly. Less than 10 minutes from the incident to your arrival. Unless you knew what would happen?"
+      },
+      "character_portrait": "emma_questioning",
+      "voice_file": "VO_Emma_004",
+      "front_node": "D014",
+      "next_node": "D016",
+      "is_end": false,
+      "narrative_function": "Emma质疑Morrison，暗示其可疑"
+    },
+
+    {
+      "node_id": "D016",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "我接到匿名电话...",
+        "en": "I received an anonymous call..."
+      },
+      "character_portrait": "morrison_defensive",
+      "voice_file": "VO_Morrison_008",
+      "front_node": "D015",
+      "next_node": "D017",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D017",
+      "scene_id": "SC119",
+      "npc_id": "NPC010",
+      "npc_name": "Emma",
+      "dialog_type": "AVG",
+      "speaker": "Emma",
+      "content": {
+        "zh": "那为什么不先调查现场，而是直接认定Brennan是凶手？",
+        "en": "Then why didn't you investigate the scene first instead of immediately identifying Brennan as the killer?"
+      },
+      "character_portrait": "emma_pressing",
+      "voice_file": "VO_Emma_005",
+      "front_node": "D016",
+      "next_node": "D018",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D018",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "好吧...事情比我想象的复杂。但Brennan，别以为这样就能洗清嫌疑。",
+        "en": "Alright... This is more complicated than I thought. But Brennan, don't think this clears your suspicion."
+      },
+      "character_portrait": "morrison_reluctant",
+      "voice_file": "VO_Morrison_009",
+      "front_node": "D017",
+      "next_node": "D019",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D019",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "我给你们三天时间。找不到真凶，我就逮捕你，Brennan。O'Malley，妨碍司法的罪名够你受的。",
+        "en": "I'll give you three days. If you don't find the real killer, I'll arrest you, Brennan. O'Malley, obstruction of justice is a serious charge."
+      },
+      "character_portrait": "morrison_threatening",
+      "voice_file": "VO_Morrison_010",
+      "front_node": "D018",
+      "next_node": "D020",
+      "is_end": false,
+      "narrative_function": "设立72小时调查期限"
+    },
+
+    {
+      "node_id": "D020",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "三天，72小时。时间一到，我亲自给你戴手铐！",
+        "en": "Three days, 72 hours. When time's up, I'll put the handcuffs on you myself!"
+      },
+      "character_portrait": "morrison_menacing",
+      "voice_file": "VO_Morrison_011",
+      "front_node": "D019",
+      "next_node": "D021",
+      "is_end": false
+    },
+
+    {
+      "node_id": "D021",
+      "scene_id": "SC119",
+      "npc_id": "NPC004",
+      "npc_name": "Morrison",
+      "dialog_type": "AVG",
+      "speaker": "Morrison",
+      "content": {
+        "zh": "祈祷你们能找到那个黑衣人吧，否则Webb的死就算在你头上！",
+        "en": "Pray you find that man in black, otherwise Webb's death will be on you!"
+      },
+      "character_portrait": "morrison_final_warning",
+      "voice_file": "VO_Morrison_012",
+      "front_node": "D020",
+      "next_node": "D022",
+      "is_end": true,
+      "narrative_function": "Morrison离场，第二段对话结束"
+    },
+
+    {
+      "node_id": "D022",
+      "scene_id": "SC102",
+      "npc_id": "NPC009",
+      "npc_name": "Zack",
+      "dialog_type": "AVG",
+      "speaker": "Zack",
+      "content": {
+        "zh": "谢谢你救了我。但我需要知道，你真的拍到了那个黑衣人吗？",
+        "en": "Thank you for saving me. But I need to know, did you really photograph that man in black?"
+      },
+      "character_portrait": "zack_grateful_suspicious",
+      "voice_file": "VO_Zack_001",
+      "front_node": "D021",
+      "next_node": "D023",
+      "is_end": false,
+      "narrative_function": "转场到街道，开始Emma与Zack的对话",
+      "scene_change": {
+        "from": "SC119",
+        "to": "SC102"
+      }
+    },
+
+    {
+      "node_id": "D023",
+      "scene_id": "SC102",
+      "npc_id": "NPC010",
+      "npc_name": "Emma",
+      "dialog_type": "AVG",
+      "speaker": "Emma",
+      "content": {
+        "zh": "我确实看到有人离开，也拍了照片。但说实话，照片很模糊，可能不足以在法庭上作为证据。不过足以让Morrison产生怀疑了。",
+        "en": "I did see someone leave and took photos. But honestly, the photos are blurry and might not be sufficient as court evidence. But enough to make Morrison doubt."
+      },
+      "character_portrait": "emma_honest",
+      "voice_file": "VO_Emma_006",
+      "front_node": "D022",
+      "next_node": "D024",
+      "is_end": false
+    }
+  ],
+
+  "branching_summary": {
+    "total_nodes": 23,
+    "choice_nodes": 1,
+    "branches": 3,
+    "convergence_points": ["D009"],
+    "end_nodes": ["D021"]
+  },
+
+  "narrative_structure": {
+    "act_1": {
+      "nodes": ["D001", "D002", "D003", "D004", "D005", "D006", "D007", "D008", "D009"],
+      "description": "Morrison逮捕Zack，紧张对峙"
+    },
+    "act_2": {
+      "nodes": ["D010", "D011", "D012", "D013", "D014", "D015", "D016", "D017", "D018", "D019", "D020", "D021"],
+      "description": "Emma出场救援，质疑Morrison，设立72小时期限"
+    },
+    "act_3": {
+      "nodes": ["D022", "D023"],
+      "description": "Zack与Emma建立合作关系（分支对话继续）"
+    }
+  },
+
+  "meta_info": {
+    "total_dialog_nodes": 23,
+    "estimated_reading_time_minutes": 8,
+    "voice_acting_required": true,
+    "localization_required": ["zh", "en"]
+  }
+}

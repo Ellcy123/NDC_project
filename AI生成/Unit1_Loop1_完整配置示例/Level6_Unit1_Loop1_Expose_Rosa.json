@@ -1,0 +1,409 @@
+{
+  "expose_id": "Expose_Loop1_Rosa",
+  "loop_id": "Unit1_Loop1",
+  "target_npc": {
+    "npc_id": "NPC002",
+    "npc_name": "Rosa Martinez",
+    "role": "suspect"
+  },
+
+  "expose_objective": {
+    "zh": "揭露Rosa隐瞒Morrison迷晕Zack的真相",
+    "en": "Expose Rosa's concealment of Morrison drugging Zack"
+  },
+
+  "trigger_conditions": {
+    "scene_requirement": "SC106",
+    "min_evidence_collected": 4,
+    "required_evidence": ["EV001", "EV003", "EV004"],
+    "required_dialog_completed": ["D045_Completed"],
+    "event_requirement": "EVE001"
+  },
+
+  "expose_strategy": {
+    "total_rounds": 3,
+    "strategy_type": "progressive_accusation",
+    "description": "通过三轮渐进式指证，从矛盾证据到动机分析，最终迫使Rosa承认目击Morrison栽赃"
+  },
+
+  "rounds": [
+    {
+      "round_number": 1,
+      "round_theme": "What - 事实矛盾",
+      "question": {
+        "zh": "Rosa，你说案发当晚你一直在储藏室工作，但这份工作记录显示你应该在后台走廊。你能解释一下吗？",
+        "en": "Rosa, you said you were working in the storeroom all night, but this work schedule shows you should have been in the backstage corridor. Can you explain?"
+      },
+
+      "correct_evidence": [
+        {
+          "evidence_id": "EV001",
+          "effectiveness": "critical",
+          "reasoning": "直接证明Rosa的证词与工作安排矛盾"
+        }
+      ],
+
+      "wrong_evidence_feedback": [
+        {
+          "evidence_id": "EV002",
+          "feedback": {
+            "zh": "这个证据虽然重要，但还不足以质疑Rosa的位置陈述",
+            "en": "While this evidence is important, it's not sufficient to question Rosa's location statement"
+          }
+        },
+        {
+          "evidence_id": "EV003",
+          "feedback": {
+            "zh": "这条证据需要结合其他信息才能发挥作用",
+            "en": "This evidence needs to be combined with other information to be effective"
+          }
+        },
+        {
+          "evidence_id": "EV004",
+          "feedback": {
+            "zh": "地板痕迹很关键，但先需要证明Rosa在现场",
+            "en": "The floor marks are crucial, but first you need to prove Rosa was at the scene"
+          }
+        }
+      ],
+
+      "npc_initial_response": {
+        "zh": "我...我那天身体不舒服，所以Tommy经理临时调整了我的工作，让我在储藏室整理物品...",
+        "en": "I... I wasn't feeling well that day, so Manager Tommy temporarily adjusted my work and had me organize things in the storeroom..."
+      },
+
+      "player_reaction_options": [
+        {
+          "option_id": "R1_Aggressive",
+          "text": {
+            "zh": "你在撒谎！Tommy从来没提过这件事！",
+            "en": "You're lying! Tommy never mentioned this!"
+          },
+          "personality": "aggressive",
+          "effectiveness": "medium"
+        },
+        {
+          "option_id": "R1_Analytical",
+          "text": {
+            "zh": "临时调整工作应该有新的记录，能给我看看吗？",
+            "en": "A temporary work change should have a new record. Can you show me?"
+          },
+          "personality": "analytical",
+          "effectiveness": "high"
+        },
+        {
+          "option_id": "R1_Empathetic",
+          "text": {
+            "zh": "Rosa，我能理解你的顾虑，但说实话对你更有利",
+            "en": "Rosa, I understand your concerns, but honesty will benefit you more"
+          },
+          "personality": "empathetic",
+          "effectiveness": "low"
+        }
+      ],
+
+      "npc_second_response": {
+        "zh": "好吧...我确实在走廊工作。但我什么都没看到，我发誓！",
+        "en": "Alright... I was working in the corridor. But I didn't see anything, I swear!"
+      },
+
+      "round_completion": {
+        "success_message": {
+          "zh": "Rosa承认了她在后台走廊工作，她的第一层谎言被揭穿了",
+          "en": "Rosa admitted she was working in the backstage corridor. Her first layer of lies has been exposed"
+        },
+        "unlocks_next_round": true,
+        "relationship_change": {
+          "npc_id": "NPC002",
+          "trust": -10,
+          "fear": +15
+        }
+      },
+
+      "difficulty_settings": {
+        "normal": {
+          "hints_available": [
+            "工作记录卡显示了Rosa真实的工作位置"
+          ],
+          "wrong_attempts_allowed": 2,
+          "hint_delay_seconds": 15
+        },
+        "expert": {
+          "hints_available": [],
+          "wrong_attempts_allowed": 0,
+          "hint_delay_seconds": 0
+        }
+      }
+    },
+
+    {
+      "round_number": 2,
+      "round_theme": "Why - 动机压力",
+      "question": {
+        "zh": "既然你在走廊工作，你应该听到或看到了什么。这条毛巾上有氯仿的气味，它就在你工作的储藏室里。你为什么要帮助迷晕我的人？",
+        "en": "Since you were working in the corridor, you should have heard or seen something. This towel has the smell of chloroform, and it was found in the storeroom where you work. Why are you helping the person who drugged me?"
+      },
+
+      "correct_evidence": [
+        {
+          "evidence_id": "EV003",
+          "effectiveness": "critical",
+          "reasoning": "毛巾上的氯仿气味证明迷晕工具藏在Rosa工作的地方"
+        },
+        {
+          "evidence_id": "EV002",
+          "effectiveness": "high",
+          "reasoning": "氯仿瓶与毛巾相互印证"
+        }
+      ],
+
+      "optional_evidence": [
+        {
+          "evidence_id": "EV007",
+          "effectiveness": "medium",
+          "reasoning": "医疗账单揭示Rosa的经济困境，暗示她可能被收买",
+          "adds_insight": true
+        }
+      ],
+
+      "npc_initial_response": {
+        "zh": "我...我不知道那条毛巾是怎么回事...可能是其他人放在那里的...",
+        "en": "I... I don't know about that towel... Maybe someone else put it there..."
+      },
+
+      "pressure_points": [
+        {
+          "evidence_id": "EV007",
+          "pressure_line": {
+            "zh": "Rosa，我看到了你儿子的医疗账单。他的哮喘治疗已经停止了，因为你付不起费用。是不是有人给了你钱，让你保持沉默？",
+            "en": "Rosa, I saw your son's medical bill. His asthma treatment has been stopped because you can't afford it. Did someone pay you to keep silent?"
+          },
+          "effectiveness": "very_high"
+        }
+      ],
+
+      "npc_second_response": {
+        "zh": "[Rosa开始哭泣] 我...我需要那笔钱！Miguel的治疗不能停，他还是个孩子！那个警察...他给了我500美元，只要我说没看到任何东西...",
+        "en": "[Rosa starts crying] I... I needed that money! Miguel's treatment can't stop, he's just a child! That cop... he gave me $500, just to say I didn't see anything..."
+      },
+
+      "round_completion": {
+        "success_message": {
+          "zh": "Rosa承认收了钱保持沉默，但她终于开始说出真相了",
+          "en": "Rosa admitted she took money to stay silent, but she's finally starting to tell the truth"
+        },
+        "unlocks_next_round": true,
+        "relationship_change": {
+          "npc_id": "NPC002",
+          "trust": +5,
+          "fear": +20,
+          "guilt": +30
+        }
+      },
+
+      "difficulty_settings": {
+        "normal": {
+          "hints_available": [
+            "那条有奇怪气味的毛巾很关键",
+            "医疗账单可能解释Rosa的动机"
+          ],
+          "wrong_attempts_allowed": 2,
+          "hint_delay_seconds": 20
+        },
+        "expert": {
+          "hints_available": [],
+          "wrong_attempts_allowed": 0,
+          "hint_delay_seconds": 0
+        }
+      }
+    },
+
+    {
+      "round_number": 3,
+      "round_theme": "How - 完整真相",
+      "question": {
+        "zh": "Rosa，我需要知道完整的真相。那天晚上你到底看到了什么？这些拖拽痕迹证明有人把我拖到了Webb的会客室。是谁做的？",
+        "en": "Rosa, I need to know the complete truth. What exactly did you see that night? These drag marks prove someone dragged me to Webb's meeting room. Who did it?"
+      },
+
+      "correct_evidence": [
+        {
+          "evidence_id": "EV004",
+          "effectiveness": "critical",
+          "reasoning": "拖拽痕迹是最后一块拼图，证明栽赃过程"
+        },
+        {
+          "evidence_id": "EV003",
+          "effectiveness": "high",
+          "reasoning": "迷晕工具与拖拽痕迹构成完整证据链"
+        },
+        {
+          "evidence_id": "EV001",
+          "effectiveness": "medium",
+          "reasoning": "工作记录证明Rosa在现场"
+        }
+      ],
+
+      "npc_initial_response": {
+        "zh": "我...我不能说...如果我说了，他会伤害我的家人...",
+        "en": "I... I can't say... If I tell, he'll hurt my family..."
+      },
+
+      "reassurance_options": [
+        {
+          "option_id": "R3_Protection",
+          "text": {
+            "zh": "Rosa，我会确保你和Miguel的安全。但你必须告诉我真相，这样我才能抓住真正的凶手",
+            "en": "Rosa, I'll ensure you and Miguel's safety. But you must tell me the truth so I can catch the real killer"
+          },
+          "effectiveness": "high",
+          "trust_increase": 15
+        },
+        {
+          "option_id": "R3_Justice",
+          "text": {
+            "zh": "如果你继续隐瞒，你就是帮凶。你真的想让凶手逍遥法外吗？",
+            "en": "If you continue to conceal, you're an accomplice. Do you really want to let the killer go free?"
+          },
+          "effectiveness": "medium",
+          "guilt_increase": 20
+        },
+        {
+          "option_id": "R3_Empathy",
+          "text": {
+            "zh": "我理解你的恐惧，Rosa。但保持沉默只会让情况更糟。让我帮你",
+            "en": "I understand your fear, Rosa. But staying silent will only make things worse. Let me help you"
+          },
+          "effectiveness": "very_high",
+          "trust_increase": 25
+        }
+      ],
+
+      "npc_final_confession": {
+        "zh": "[Rosa崩溃] 好吧...我全都看到了！那天晚上大约11点15分，我在走廊工作时，看到Morrison警官从侧门进来。他看起来很紧张，四处张望。然后我看到他走向你...Zack先生。他从口袋里拿出一块白色的布，突然从背后捂住了你的口鼻。你挣扎了几秒钟就倒下了。\n\n然后Morrison把你拖到了走廊尽头...这些拖拽痕迹就是他留下的。他把你拖进了Webb的会客室。我太害怕了，躲在储藏室里。过了一会儿，他出来了，看到了我。\n\nMorrison威胁我说，如果我敢说出去，他会以妨碍司法的罪名逮捕我，Miguel会被送到孤儿院。然后他给了我钱，让我说那晚我一直在储藏室，什么都没看到...\n\n对不起，Zack先生...我真的很抱歉...但我不能失去我的儿子...",
+        "en": "[Rosa breaks down] Alright... I saw everything! That night around 11:15, while I was working in the corridor, I saw Officer Morrison enter through the side door. He looked nervous, looking around. Then I saw him approach you... Mr. Zack. He pulled out a white cloth from his pocket and suddenly covered your mouth and nose from behind. You struggled for a few seconds and then collapsed.\n\nThen Morrison dragged you down the corridor... These drag marks are what he left behind. He dragged you into Webb's meeting room. I was so scared, I hid in the storeroom. After a while, he came out and saw me.\n\nMorrison threatened me, saying if I dared to speak out, he would arrest me for obstruction of justice and Miguel would be sent to an orphanage. Then he gave me money and told me to say I was in the storeroom all night and saw nothing...\n\nI'm sorry, Mr. Zack... I'm truly sorry... But I couldn't lose my son..."
+      },
+
+      "round_completion": {
+        "success_message": {
+          "zh": "真相大白！Rosa完整地说出了Morrison栽赃陷害的全过程",
+          "en": "The truth is revealed! Rosa has fully described Morrison's entire frame-up process"
+        },
+        "unlocks_next_round": false,
+        "expose_success": true,
+        "relationship_change": {
+          "npc_id": "NPC002",
+          "trust": +20,
+          "fear": -10,
+          "guilt": -15,
+          "relief": +40
+        }
+      },
+
+      "difficulty_settings": {
+        "normal": {
+          "hints_available": [
+            "使用地板拖拽痕迹作为最后一击",
+            "尝试用同理心说服Rosa"
+          ],
+          "wrong_attempts_allowed": 2,
+          "hint_delay_seconds": 25
+        },
+        "expert": {
+          "hints_available": [],
+          "wrong_attempts_allowed": 0,
+          "hint_delay_seconds": 0
+        }
+      }
+    }
+  ],
+
+  "expose_completion": {
+    "success_cutscene": {
+      "cutscene_id": "CS_Expose_Rosa_Success",
+      "description": "Rosa崩溃痛哭，Zack安慰她并承诺保护她和Miguel",
+      "duration_seconds": 45
+    },
+
+    "story_progression": {
+      "zh": "Morrison警官成为Loop2的主要调查目标。Zack现在有了确凿的证据证明自己被陷害，但真正的凶手和幕后主使仍然未知。",
+      "en": "Officer Morrison becomes the primary investigation target for Loop2. Zack now has concrete evidence he was framed, but the real killer and mastermind remain unknown."
+    },
+
+    "unlocks": {
+      "next_loop": "Unit1_Loop2",
+      "scenes": ["SC113", "SC114", "SC115"],
+      "evidence": [],
+      "achievements": [
+        {
+          "achievement_id": "ACH_First_Expose",
+          "name": "真相初现",
+          "description": "完成第一次指证"
+        }
+      ]
+    },
+
+    "rewards": {
+      "experience_points": 100,
+      "relationship_changes": [
+        {
+          "npc_id": "NPC002",
+          "status": "witness_ally",
+          "description": "Rosa成为盟友证人"
+        },
+        {
+          "npc_id": "NPC004",
+          "status": "primary_suspect",
+          "description": "Morrison成为主要嫌疑人"
+        }
+      ]
+    }
+  },
+
+  "failure_conditions": {
+    "max_wrong_attempts": {
+      "normal": 6,
+      "expert": 3
+    },
+    "failure_consequences": {
+      "normal": {
+        "type": "retry_allowed",
+        "penalty": "restart_from_round_1",
+        "message": {
+          "zh": "指证失败。Rosa拒绝再回答问题，你需要重新整理思路",
+          "en": "Expose failed. Rosa refuses to answer more questions. You need to reorganize your thoughts"
+        }
+      },
+      "expert": {
+        "type": "loop_restart",
+        "penalty": "restart_entire_loop",
+        "message": {
+          "zh": "指证失败。你失去了Rosa的信任，必须重新开始调查",
+          "en": "Expose failed. You've lost Rosa's trust and must restart the investigation"
+        }
+      }
+    }
+  },
+
+  "narrative_analysis": {
+    "emotional_arc": "从对抗 → 施压 → 同理 → 突破",
+    "pacing": "快速建立矛盾 → 挖掘动机 → 情感共鸣引出完整真相",
+    "character_development": "Rosa从撒谎者到同情对象，展现道德困境",
+    "foreshadowing": "Morrison的警察身份和权力滥用为Loop2铺垫"
+  },
+
+  "design_notes": {
+    "player_agency": "玩家可选择不同的对话风格，影响Rosa的情感反应",
+    "evidence_chain": "证据链必须完整：位置矛盾→迷晕工具→拖拽痕迹",
+    "difficulty_balance": "Normal模式提供提示和重试，Expert模式要求完美推理",
+    "emotional_impact": "Rosa的困境引发玩家同情，避免简单的善恶二元论"
+  },
+
+  "meta_info": {
+    "estimated_duration_minutes": 8,
+    "voice_acting_required": true,
+    "cutscene_required": true,
+    "designer": "NDC Content Team",
+    "last_updated": "2025-11-06"
+  }
+}

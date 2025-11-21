@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC游戏内容生产框架</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(30, 30, 50, 0.9);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 15px;
+        }
+
+        .intro {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .intro h2 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .structure-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #2a2a4e 0%, #1e1e3c 100%);
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .level-1 { border-color: #ff6b6b; }
+        .level-2 { border-color: #feca57; }
+        .level-3 { border-color: #48dbfb; }
+        .level-4 { border-color: #1dd1a1; }
+        .level-5 { border-color: #a29bfe; }
+        .level-6 { border-color: #fd79a8; }
+
+        .level-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .level-badge {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 12px;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+
+        .level-1 .level-badge { background: #ff6b6b; }
+        .level-2 .level-badge { background: #feca57; }
+        .level-3 .level-badge { background: #48dbfb; }
+        .level-4 .level-badge { background: #1dd1a1; }
+        .level-5 .level-badge { background: #a29bfe; }
+        .level-6 .level-badge { background: #fd79a8; }
+
+        .level-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .level-card li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .level-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: inherit;
+        }
+
+        .section {
+            margin: 50px 0;
+            padding: 30px;
+            background: rgba(40, 40, 70, 0.6);
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #feca57;
+            font-size: 2em;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #feca57;
+            padding-bottom: 10px;
+        }
+
+        .workflow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .phase {
+            background: rgba(30, 30, 50, 0.8);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            position: relative;
+        }
+
+        .phase-1 { border-color: #ff6b6b; }
+        .phase-2 { border-color: #feca57; }
+        .phase-3 { border-color: #48dbfb; }
+        .phase-4 { border-color: #1dd1a1; }
+        .phase-5 { border-color: #a29bfe; }
+
+        .phase h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #feca57;
+        }
+
+        .phase-steps {
+            margin-top: 15px;
+            padding-left: 25px;
+        }
+
+        .phase-steps li {
+            margin: 8px 0;
+            color: #c0c0c0;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #a9dc76;
+        }
+
+        .key { color: #78dce8; }
+        .string { color: #ffd866; }
+        .number { color: #ff6188; }
+        .boolean { color: #ab9df2; }
+
+        .highlight-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px dashed #ffd700;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box h3 {
+            color: #ffd700;
+            margin-bottom: 12px;
+        }
+
+        .relationship-diagram {
+            background: rgba(30, 30, 50, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .diagram-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .diagram-box {
+            background: linear-gradient(135deg, #2a2a4e 0%, #1e1e3c 100%);
+            border: 2px solid #48dbfb;
+            border-radius: 8px;
+            padding: 15px 25px;
+            color: #48dbfb;
+            font-weight: bold;
+            min-width: 150px;
+        }
+
+        .arrow {
+            color: #feca57;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .example-section {
+            margin-top: 30px;
+        }
+
+        .example-section h4 {
+            color: #1dd1a1;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: rgba(50, 50, 80, 0.8);
+            border: 2px solid #555;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: rgba(70, 70, 100, 0.9);
+            border-color: #feca57;
+        }
+
+        .tab-button.active {
+            background: #feca57;
+            color: #1a1a2e;
+            border-color: #feca57;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #444;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .structure-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕵️ NDC游戏内容生产框架</h1>
+
+        <div class="intro">
+            <h2>框架目标</h2>
+            <p>本框架旨在为NDC侦探游戏项目建立<strong>模块化、可扩展、AI协作友好</strong>的内容生产体系，实现：</p>
+            <ul style="margin-top: 15px; padding-left: 25px;">
+                <li>✓ 内容批量化生产：证据、对话、场景、指证诡计等模块化管理</li>
+                <li>✓ AI辅助创作：创意筛选、逻辑验证、内容生成的自动化流程</li>
+                <li>✓ 质量保证：多轮验证机制确保推理链完整性和逻辑合理性</li>
+                <li>✓ 高效协作：统一的JSON配置标准，便于团队协作和版本管理</li>
+            </ul>
+        </div>
+
+        <h2 style="text-align: center; color: #48dbfb; margin: 50px 0 30px 0; font-size: 2em;">📋 六级内容结构</h2>
+
+        <div class="structure-overview">
+            <div class="level-card level-1">
+                <h3><span class="level-badge">1</span>章节元数据</h3>
+                <p style="margin-bottom: 15px; color: #aaa;">定义整个章节的全局信息</p>
+                <ul>
+                    <li>章节ID与名称</li>
+                    <li>故事背景与主题</li>
+                    <li>核心角色列表</li>
+                    <li>难度模式设定</li>
+                    <li>开场/结尾动画</li>
+                </ul>
+            </div>
+
+            <div class="level-card level-2">
+                <h3><span class="level-badge">2</span>循环配置</h3>
+                <p style="margin-bottom: 15px; color: #aaa;">每个循环的调查目标与流程</p>
+                <ul>
+                    <li>循环目标定义</li>
+                    <li>开放场景列表</li>
+                    <li>可用证据清单</li>
+                    <li>指证触发条件</li>
+                    <li>循环完成标准</li>
+                </ul>
+            </div>
+
+            <div class="level-card level-3">
+                <h3><span class="level-badge">3</span>对话配置</h3>
+                <p style="margin-bottom: 15px; color: #aaa;">AVG对话树与分支逻辑</p>
+                <ul>
+                    <li>对话节点ID</li>
+                    <li>分支选项条件</li>
+                    <li>情绪/表情变化</li>
+                    <li>证据触发对话</li>
+                    <li>关系值影响</li>
+                </ul>
+            </div>
+
+            <div class="level-card level-4">
+                <h3><span class="level-badge">4</span>证据配置</h3>
+                <p style="margin-bottom: 15px; color: #aaa;">证据属性与关系网络</p>
+                <ul>
+                    <li>证据基础信息</li>
+                    <li>发现条件与时机</li>
+                    <li>证据关系链</li>
+                    <li>组合规则</li>
+                    <li>指证可用性</li>
+                </ul>
+            </div>
+
+            <div class="level-card level-5">
+                <h3><span class="level-badge">5</span>场景配置</h3>
+                <p style="margin-bottom: 15px; color: #aaa;">场景热区与交互逻辑</p>
+                <ul>
+                    <li>场景背景资源</li>
+                    <li>热区坐标定义</li>
+                    <li>交互物体状态</li>
+                    <li>NPC位置分布</li>
+                    <li>解锁条件</li>
+                </ul>
+            </div>
+
+            <div class="level-card level-6">
+                <h3><span class="level-badge">6</span>指证诡计</h3>
+                <p style="margin-bottom: 15px; color: #aaa;">多轮指证的策略设计</p>
+                <ul>
+                    <li>指证对象定义</li>
+                    <li>三轮渐进逻辑</li>
+                    <li>证据验证规则</li>
+                    <li>失败反馈机制</li>
+                    <li>真相揭露奖励</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="relationship-diagram">
+            <h3 style="color: #48dbfb; margin-bottom: 25px;">📊 层级关系图</h3>
+            <div class="diagram-row">
+                <div class="diagram-box">章节元数据</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="diagram-row">
+                <div class="diagram-box">循环1</div>
+                <div class="diagram-box">循环2</div>
+                <div class="diagram-box">...</div>
+                <div class="diagram-box">循环N</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="diagram-row">
+                <div class="diagram-box">对话树</div>
+                <div class="diagram-box">证据网络</div>
+                <div class="diagram-box">场景热区</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="diagram-row">
+                <div class="diagram-box">指证诡计</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🤖 AI协作工作流</h2>
+            <p style="margin-bottom: 20px;">将内容生产分为5个阶段，每个阶段由AI辅助完成特定任务：</p>
+
+            <div class="workflow">
+                <div class="phase phase-1">
+                    <h3>阶段1：创意验证</h3>
+                    <p><strong>目标：</strong>验证故事创意的逻辑合理性和娱乐性</p>
+                    <ul class="phase-steps">
+                        <li><strong>输入：</strong>章节大纲、角色动机、核心冲突</li>
+                        <li><strong>AI任务：</strong>检查人物行为逻辑、动机合理性、时间线矛盾</li>
+                        <li><strong>输出：</strong>逻辑问题报告 + 优化建议</li>
+                    </ul>
+                </div>
+
+                <div class="phase phase-2">
+                    <h3>阶段2：指证逻辑设计</h3>
+                    <p><strong>目标：</strong>设计每个循环的指证策略</p>
+                    <ul class="phase-steps">
+                        <li><strong>输入：</strong>循环目标、可用证据、NPC证词</li>
+                        <li><strong>AI任务：</strong>生成3轮指证逻辑（What → Why → How）</li>
+                        <li><strong>输出：</strong>指证配置JSON + 证据需求清单</li>
+                    </ul>
+                </div>
+
+                <div class="phase phase-3">
+                    <h3>阶段3：证据网络设计</h3>
+                    <p><strong>目标：</strong>构建证据关系网和组合规则</p>
+                    <ul class="phase-steps">
+                        <li><strong>输入：</strong>证据清单、指证逻辑、故事时间线</li>
+                        <li><strong>AI任务：</strong>定义证据关系（矛盾/支持/时间匹配）</li>
+                        <li><strong>输出：</strong>证据配置JSON + 关系图可视化</li>
+                    </ul>
+                </div>
+
+                <div class="phase phase-4">
+                    <h3>阶段4：对话文本生成</h3>
+                    <p><strong>目标：</strong>生成符合角色性格的对话文本</p>
+                    <ul class="phase-steps">
+                        <li><strong>输入：</strong>角色设定、对话场景、情绪要求</li>
+                        <li><strong>AI任务：</strong>生成对话树、分支选项、证据触发对话</li>
+                        <li><strong>输出：</strong>对话配置JSON + 本地化文本</li>
+                    </ul>
+                </div>
+
+                <div class="phase phase-5">
+                    <h3>阶段5：完整性验证</h3>
+                    <p><strong>目标：</strong>确保所有配置完整且可玩</p>
+                    <ul class="phase-steps">
+                        <li><strong>输入：</strong>所有配置文件</li>
+                        <li><strong>AI任务：</strong>检查循环可通关性、证据链完整性、对话分支死锁</li>
+                        <li><strong>输出：</strong>验证报告 + 错误修复建议</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 配置示例</h2>
+
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab('tab1')">Level 1: 章节元数据</button>
+                <button class="tab-button" onclick="showTab('tab2')">Level 2: 循环配置</button>
+                <button class="tab-button" onclick="showTab('tab3')">Level 4: 证据配置</button>
+                <button class="tab-button" onclick="showTab('tab4')">Level 6: 指证诡计</button>
+            </div>
+
+            <div id="tab1" class="tab-content active">
+                <h4>📄 Unit1_Metadata.json</h4>
+                <div class="code-block">
+                    <pre>{
+  <span class="key">"unit_id"</span>: <span class="string">"Unit1"</span>,
+  <span class="key">"unit_name"</span>: <span class="string">"血色酒吧·意外卷入"</span>,
+  <span class="key">"theme"</span>: <span class="string">"栽赃陷害与勒索网络"</span>,
+  <span class="key">"location"</span>: <span class="string">"蓝月亮歌舞厅"</span>,
+  <span class="key">"time_period"</span>: <span class="string">"1925年11月15-18日"</span>,
+  <span class="key">"difficulty"</span>: {
+    <span class="key">"normal"</span>: <span class="boolean">true</span>,
+    <span class="key">"expert"</span>: <span class="boolean">true</span>
+  },
+  <span class="key">"total_loops"</span>: <span class="number">6</span>,
+  <span class="key">"main_characters"</span>: [
+    <span class="string">"Zack"</span>, <span class="string">"Morrison"</span>, <span class="string">"Rosa"</span>, <span class="string">"Tommy"</span>, <span class="string">"Vivian"</span>, <span class="string">"Jimmy"</span>
+  ],
+  <span class="key">"opening_cutscene"</span>: <span class="string">"CS_Unit1_Opening"</span>,
+  <span class="key">"ending_cutscene"</span>: <span class="string">"CS_Unit1_Ending"</span>
+}</pre>
+                </div>
+            </div>
+
+            <div id="tab2" class="tab-content">
+                <h4>📄 Unit1_Loop3_Config.json</h4>
+                <div class="code-block">
+                    <pre>{
+  <span class="key">"loop_id"</span>: <span class="string">"Unit1_Loop3"</span>,
+  <span class="key">"loop_name"</span>: <span class="string">"勒索网络的发现"</span>,
+  <span class="key">"phase_goal"</span>: <span class="string">"Webb为什么需要雇佣真相侦探？"</span>,
+  <span class="key">"available_scenes"</span>: [
+    <span class="string">"SC_Webb_Office"</span>, <span class="string">"SC_Bar_Backstage"</span>, <span class="string">"SC_Tommy_Room"</span>
+  ],
+  <span class="key">"required_evidence"</span>: [
+    <span class="string">"EV_Blackmail_Records"</span>, <span class="string">"EV_Tommy_Testimony"</span>
+  ],
+  <span class="key">"expose_trigger"</span>: {
+    <span class="key">"target"</span>: <span class="string">"Tommy"</span>,
+    <span class="key">"min_evidence_count"</span>: <span class="number">3</span>,
+    <span class="key">"required_dialog"</span>: <span class="string">"D_Tommy_Vivian_Sympathy"</span>
+  },
+  <span class="key">"completion_condition"</span>: {
+    <span class="key">"type"</span>: <span class="string">"expose_success"</span>,
+    <span class="key">"unlock_next"</span>: <span class="string">"Unit1_Loop4"</span>
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div id="tab3" class="tab-content">
+                <h4>📄 Unit1_Evidence_Config.json（节选）</h4>
+                <div class="code-block">
+                    <pre>{
+  <span class="key">"evidence_id"</span>: <span class="string">"EV_Blackmail_Records"</span>,
+  <span class="key">"name"</span>: <span class="string">"勒索记录本"</span>,
+  <span class="key">"type"</span>: <span class="string">"document"</span>,
+  <span class="key">"description"</span>: <span class="string">"Webb的私人账本，记录了多个勒索目标和金额"</span>,
+  <span class="key">"discovery"</span>: {
+    <span class="key">"scene"</span>: <span class="string">"SC_Webb_Office"</span>,
+    <span class="key">"hotspot"</span>: <span class="string">"HS_Desk_Drawer"</span>,
+    <span class="key">"requires_state"</span>: <span class="string">"drawer_unlocked"</span>
+  },
+  <span class="key">"relationships"</span>: [
+    {
+      <span class="key">"target"</span>: <span class="string">"EV_Tommy_Testimony"</span>,
+      <span class="key">"type"</span>: <span class="string">"supports"</span>,
+      <span class="key">"strength"</span>: <span class="number">0.9</span>
+    },
+    {
+      <span class="key">"target"</span>: <span class="string">"EV_Smith_Photo"</span>,
+      <span class="key">"type"</span>: <span class="string">"contradicts"</span>,
+      <span class="key">"reason"</span>: <span class="string">"账本中没有Smith的记录"</span>
+    }
+  ],
+  <span class="key">"combinations"</span>: [
+    {
+      <span class="key">"with"</span>: <span class="string">"EV_Vivian_Schedule"</span>,
+      <span class="key">"result"</span>: <span class="string">"EV_Blackmail_Timeline"</span>,
+      <span class="key">"insight"</span>: <span class="string">"Vivian的行程与勒索时间完全吻合"</span>
+    }
+  ],
+  <span class="key">"usable_in_expose"</span>: [<span class="string">"Tommy"</span>, <span class="string">"Vivian"</span>]
+}</pre>
+                </div>
+            </div>
+
+            <div id="tab4" class="tab-content">
+                <h4>📄 Unit1_Loop3_Expose_Tommy.json</h4>
+                <div class="code-block">
+                    <pre>{
+  <span class="key">"expose_id"</span>: <span class="string">"Expose_Loop3_Tommy"</span>,
+  <span class="key">"target"</span>: <span class="string">"Tommy"</span>,
+  <span class="key">"objective"</span>: <span class="string">"揭露Tommy隐瞒的勒索网络信息"</span>,
+
+  <span class="key">"round_1"</span>: {
+    <span class="key">"question"</span>: <span class="string">"What - Webb的真正生意是什么？"</span>,
+    <span class="key">"correct_evidence"</span>: [<span class="string">"EV_Blackmail_Records"</span>],
+    <span class="key">"npc_response"</span>: <span class="string">"Tommy低头承认：'好吧...Webb确实在做勒索生意。'"</span>,
+    <span class="key">"difficulty"</span>: {
+      <span class="key">"normal"</span>: {
+        <span class="key">"hints"</span>: [<span class="string">"在Webb办公室找到的那本账本很关键"</span>],
+        <span class="key">"wrong_attempts_allowed"</span>: <span class="number">2</span>
+      },
+      <span class="key">"expert"</span>: {
+        <span class="key">"hints"</span>: [],
+        <span class="key">"wrong_attempts_allowed"</span>: <span class="number">0</span>
+      }
+    }
+  },
+
+  <span class="key">"round_2"</span>: {
+    <span class="key">"question"</span>: <span class="string">"Why - Vivian为什么要配合这个勒索计划？"</span>,
+    <span class="key">"correct_evidence"</span>: [
+      <span class="string">"EV_Tommy_Testimony"</span>,
+      <span class="string">"EV_Vivian_Contract"</span>
+    ],
+    <span class="key">"combination_required"</span>: <span class="boolean">true</span>,
+    <span class="key">"npc_response"</span>: <span class="string">"Tommy叹气：'Webb承诺让她成为第一歌女...她别无选择。'"</span>
+  },
+
+  <span class="key">"round_3"</span>: {
+    <span class="key">"question"</span>: <span class="string">"How - 勒索计划具体如何运作？"</span>,
+    <span class="key">"correct_evidence"</span>: [
+      <span class="string">"EV_Blackmail_Timeline"</span>,
+      <span class="string">"EV_Vivian_Schedule"</span>
+    ],
+    <span class="key">"npc_response"</span>: <span class="string">"Tommy详细描述了Vivian接近目标、获取秘密、Webb实施勒索的完整流程"</span>,
+    <span class="key">"unlock_next"</span>: <span class="string">"Unit1_Loop4"</span>
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🎯 关键设计原则</h3>
+            <ul style="padding-left: 25px;">
+                <li><strong>模块化：</strong>每个循环独立配置，便于并行开发和测试</li>
+                <li><strong>可验证：</strong>AI可自动检查证据链完整性和逻辑闭环</li>
+                <li><strong>灵活性：</strong>支持Normal/Expert双难度，通过配置调整提示和容错</li>
+                <li><strong>可视化：</strong>JSON配置可转换为可视化关系图，便于策划审阅</li>
+                <li><strong>版本管理：</strong>文本格式便于Git追踪变更历史</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔄 与现有数据的整合</h2>
+            <p>本框架基于现有的<code>NDC_DATA.md</code>（12个工作表）进行优化升级：</p>
+
+            <div style="margin-top: 25px;">
+                <h4 style="color: #1dd1a1;">✅ 保留的现有结构</h4>
+                <ul style="padding-left: 25px; margin: 15px 0;">
+                    <li><strong>Chapter表</strong> → 对应 Level 1（章节元数据）</li>
+                    <li><strong>Scene表</strong> → 对应 Level 5（场景配置）</li>
+                    <li><strong>Evidence表</strong> → 对应 Level 4（证据配置）</li>
+                    <li><strong>Dialog表</strong> → 对应 Level 3（对话配置）</li>
+                </ul>
+
+                <h4 style="color: #ff6b6b; margin-top: 30px;">🆕 新增的层级</h4>
+                <ul style="padding-left: 25px; margin: 15px 0;">
+                    <li><strong>Loop循环配置</strong>（Level 2）：明确每个循环的目标和完成条件</li>
+                    <li><strong>Expose指证配置</strong>（Level 6）：结构化三轮指证逻辑</li>
+                    <li><strong>证据关系网</strong>：在Evidence表基础上添加关系字段</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>📝 NDC内容生产框架 v1.0</p>
+            <p style="margin-top: 10px;">生成时间：2025年11月6日</p>
+            <p style="margin-top: 10px; color: #555;">本文档由AI辅助生成，用于指导NDC项目的内容创作与配置管理</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // 隐藏所有tab内容
+            const allTabs = document.querySelectorAll('.tab-content');
+            allTabs.forEach(tab => tab.classList.remove('active'));
+
+            // 移除所有按钮的active状态
+            const allButtons = document.querySelectorAll('.tab-button');
+            allButtons.forEach(btn => btn.classList.remove('active'));
+
+            // 显示选中的tab
+            document.getElementById(tabId).classList.add('active');
+
+            // 激活对应按钮
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

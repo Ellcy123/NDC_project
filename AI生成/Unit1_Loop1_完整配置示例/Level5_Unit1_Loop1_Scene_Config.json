@@ -1,0 +1,837 @@
+{
+  "scene_collection_id": "Unit1_Loop1_Scenes",
+  "loop_id": "Unit1_Loop1",
+  "description": "Loop1中所有场景的配置，包括对话场景、搜证场景和未解锁场景",
+
+  "scenes": [
+    {
+      "scene_id": "SC101",
+      "scene_name": {
+        "zh": "Webb会客室",
+        "en": "Webb's Meeting Room"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "dialogue",
+
+      "background": {
+        "image_file": "webb_meetingroom.jpg",
+        "resolution": "2560x1600",
+        "aspect_ratio": "16:10",
+        "crop_safe_area": {
+          "top": 100,
+          "bottom": 100,
+          "description": "16:9屏幕可裁切上下各100px"
+        }
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_room_tense.ogg",
+        "bgm_file": "bgm_investigation_01.ogg",
+        "lighting": "dim_dramatic",
+        "mood": "tense_confrontation"
+      },
+
+      "unlock_condition": {
+        "type": "loop_start",
+        "prerequisites": []
+      },
+
+      "npcs": [
+        {
+          "npc_id": "NPC001",
+          "npc_name": "Webb",
+          "position": {
+            "x": 800,
+            "y": 900,
+            "scale": 1.0
+          },
+          "state": "dead",
+          "portrait": "webb_dead.png",
+          "interactable": false
+        },
+        {
+          "npc_id": "NPC004",
+          "npc_name": "Morrison",
+          "position": {
+            "x": 1500,
+            "y": 800,
+            "scale": 1.0
+          },
+          "state": "aggressive",
+          "portrait": "morrison_angry.png",
+          "interactable": true,
+          "dialog_entry": "D001",
+          "interaction_icon": "icon_dialogue.png"
+        },
+        {
+          "npc_id": "NPC009",
+          "npc_name": "Zack",
+          "position": {
+            "x": 1200,
+            "y": 850,
+            "scale": 1.0
+          },
+          "state": "confused",
+          "portrait": "zack_confused.png",
+          "interactable": false,
+          "is_protagonist": true
+        }
+      ],
+
+      "hotspots": [],
+
+      "evidence_available": [],
+
+      "interactive_objects": [],
+
+      "scene_transitions": [
+        {
+          "trigger": "D009_Completed",
+          "transition_to": "SC119",
+          "transition_type": "fade",
+          "duration_ms": 1000
+        }
+      ],
+
+      "narrative_function": "开场场景，建立冲突和紧张感",
+      "first_visit_only": true
+    },
+
+    {
+      "scene_id": "SC119",
+      "scene_name": {
+        "zh": "Webb会客室-2",
+        "en": "Webb's Meeting Room - 2"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "dialogue",
+
+      "background": {
+        "image_file": "webb_meetingroom_02.jpg",
+        "resolution": "2560x1600",
+        "aspect_ratio": "16:10"
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_room_tense.ogg",
+        "bgm_file": "bgm_investigation_01.ogg",
+        "lighting": "dim_dramatic",
+        "mood": "hope_emerging"
+      },
+
+      "unlock_condition": {
+        "type": "dialog_completed",
+        "prerequisites": ["D009_Completed"]
+      },
+
+      "npcs": [
+        {
+          "npc_id": "NPC001",
+          "npc_name": "Webb",
+          "position": {
+            "x": 800,
+            "y": 900,
+            "scale": 1.0
+          },
+          "state": "dead",
+          "portrait": "webb_dead.png",
+          "interactable": false
+        },
+        {
+          "npc_id": "NPC004",
+          "npc_name": "Morrison",
+          "position": {
+            "x": 1600,
+            "y": 800,
+            "scale": 1.0
+          },
+          "state": "suspicious",
+          "portrait": "morrison_suspicious.png",
+          "interactable": true,
+          "dialog_entry": "D010"
+        },
+        {
+          "npc_id": "NPC010",
+          "npc_name": "Emma",
+          "position": {
+            "x": 1000,
+            "y": 750,
+            "scale": 1.0
+          },
+          "state": "determined",
+          "portrait": "emma_determined.png",
+          "interactable": true,
+          "dialog_entry": "D010",
+          "entrance_animation": "slide_in_left"
+        },
+        {
+          "npc_id": "NPC009",
+          "npc_name": "Zack",
+          "position": {
+            "x": 1200,
+            "y": 850,
+            "scale": 1.0
+          },
+          "state": "relieved",
+          "portrait": "zack_relieved.png",
+          "interactable": false,
+          "is_protagonist": true
+        }
+      ],
+
+      "hotspots": [],
+
+      "evidence_available": [],
+
+      "interactive_objects": [],
+
+      "scene_transitions": [
+        {
+          "trigger": "D021_Completed",
+          "transition_to": "SC102",
+          "transition_type": "fade",
+          "duration_ms": 1500
+        }
+      ],
+
+      "narrative_function": "Emma登场救援，设立72小时期限",
+      "first_visit_only": true
+    },
+
+    {
+      "scene_id": "SC102",
+      "scene_name": {
+        "zh": "歌舞厅外的街道",
+        "en": "Street Outside the Cabaret"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "dialogue",
+
+      "background": {
+        "image_file": "outside.jpg",
+        "resolution": "2560x1600",
+        "aspect_ratio": "16:10"
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_street_night.ogg",
+        "bgm_file": "bgm_conversation_calm.ogg",
+        "lighting": "night_streetlamp",
+        "mood": "contemplative"
+      },
+
+      "unlock_condition": {
+        "type": "dialog_completed",
+        "prerequisites": ["D021_Completed"]
+      },
+
+      "npcs": [
+        {
+          "npc_id": "NPC009",
+          "npc_name": "Zack",
+          "position": {
+            "x": 1000,
+            "y": 800,
+            "scale": 1.0
+          },
+          "state": "grateful",
+          "portrait": "zack_grateful.png",
+          "interactable": false,
+          "is_protagonist": true
+        },
+        {
+          "npc_id": "NPC010",
+          "npc_name": "Emma",
+          "position": {
+            "x": 1500,
+            "y": 780,
+            "scale": 1.0
+          },
+          "state": "honest",
+          "portrait": "emma_honest.png",
+          "interactable": true,
+          "dialog_entry": "D022"
+        }
+      ],
+
+      "hotspots": [],
+
+      "evidence_available": [],
+
+      "interactive_objects": [],
+
+      "scene_transitions": [
+        {
+          "trigger": "D045_Completed",
+          "transition_to": "scene_map",
+          "transition_type": "fade",
+          "duration_ms": 1000,
+          "unlock_multiple_scenes": true
+        }
+      ],
+
+      "narrative_function": "建立Zack与Emma的合作关系，开启自由探索阶段"
+    },
+
+    {
+      "scene_id": "SC103",
+      "scene_name": {
+        "zh": "Rosa的储藏室",
+        "en": "Rosa's Storeroom"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "crime",
+
+      "background": {
+        "image_file": "storeroom.jpg",
+        "resolution": "3200x1600",
+        "aspect_ratio": "16:10",
+        "parallax_enabled": true,
+        "parallax_range": {
+          "min_x": 0,
+          "max_x": 640,
+          "description": "鼠标左右移动可牵引场景"
+        }
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_room_quiet.ogg",
+        "bgm_file": null,
+        "lighting": "dim_cluttered",
+        "mood": "investigation"
+      },
+
+      "unlock_condition": {
+        "type": "dialog_completed",
+        "prerequisites": ["D045_Completed"]
+      },
+
+      "npcs": [],
+
+      "hotspots": [
+        {
+          "hotspot_id": "HS_SC103_Shelf",
+          "hotspot_name": "储藏架",
+          "coordinates": {
+            "x": 1200,
+            "y": 800,
+            "width": 200,
+            "height": 150
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV001",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        },
+        {
+          "hotspot_id": "HS_SC103_Basket",
+          "hotspot_name": "洗衣篮",
+          "coordinates": {
+            "x": 600,
+            "y": 900,
+            "width": 180,
+            "height": 160
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV003",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        },
+        {
+          "hotspot_id": "HS_SC103_Table",
+          "hotspot_name": "桌子",
+          "coordinates": {
+            "x": 900,
+            "y": 700,
+            "width": 150,
+            "height": 100
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV007",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        },
+        {
+          "hotspot_id": "HS_SC103_Box1",
+          "hotspot_name": "纸箱1",
+          "coordinates": {
+            "x": 1800,
+            "y": 1000,
+            "width": 150,
+            "height": 120
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV008",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        },
+        {
+          "hotspot_id": "HS_SC103_Box2",
+          "hotspot_name": "纸箱2",
+          "coordinates": {
+            "x": 2000,
+            "y": 950,
+            "width": 150,
+            "height": 130
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV009",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        }
+      ],
+
+      "evidence_available": ["EV001", "EV003", "EV007", "EV008", "EV009"],
+
+      "interactive_objects": [],
+
+      "scene_progress": {
+        "normal_mode": {
+          "show_progress": true,
+          "total_collectibles": 5,
+          "format": "{collected}/{total}"
+        },
+        "expert_mode": {
+          "show_progress": false
+        }
+      },
+
+      "scene_transitions": [],
+
+      "narrative_function": "主要搜证场景，收集Rosa撒谎的证据",
+      "first_unlock_animation": {
+        "type": "location_unlock",
+        "text": "Rosa的储藏室 已解锁",
+        "duration_ms": 2000
+      }
+    },
+
+    {
+      "scene_id": "SC104",
+      "scene_name": {
+        "zh": "歌舞厅一楼走廊",
+        "en": "First Floor Corridor"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "crime",
+
+      "background": {
+        "image_file": "1F_corridor.jpg",
+        "resolution": "3400x1600",
+        "aspect_ratio": "16:10",
+        "parallax_enabled": true,
+        "parallax_range": {
+          "min_x": 0,
+          "max_x": 840
+        }
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_corridor_empty.ogg",
+        "bgm_file": null,
+        "lighting": "corridor_dramatic",
+        "mood": "crime_scene"
+      },
+
+      "unlock_condition": {
+        "type": "dialog_completed",
+        "prerequisites": ["D045_Completed"]
+      },
+
+      "npcs": [],
+
+      "hotspots": [
+        {
+          "hotspot_id": "HS_SC104_Corner",
+          "hotspot_name": "走廊角落",
+          "coordinates": {
+            "x": 800,
+            "y": 1200,
+            "width": 150,
+            "height": 180
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV002",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        },
+        {
+          "hotspot_id": "HS_SC104_Floor",
+          "hotspot_name": "地板痕迹",
+          "coordinates": {
+            "x": 1400,
+            "y": 1100,
+            "width": 300,
+            "height": 200
+          },
+          "interaction_type": "evidence_collection",
+          "evidence_id": "EV004",
+          "requires_state": null,
+          "cursor_hint": {
+            "normal_mode": "magnifying_glass_pulse",
+            "expert_mode": "magnifying_glass_static"
+          },
+          "collected_state": {
+            "show_clear_tag": true,
+            "remains_visible": true
+          }
+        }
+      ],
+
+      "evidence_available": ["EV002", "EV004"],
+
+      "interactive_objects": [],
+
+      "scene_progress": {
+        "normal_mode": {
+          "show_progress": true,
+          "total_collectibles": 2,
+          "format": "{collected}/{total}"
+        },
+        "expert_mode": {
+          "show_progress": false
+        }
+      },
+
+      "scene_transitions": [],
+
+      "narrative_function": "案发现场，收集迷晕和拖拽证据",
+      "first_unlock_animation": {
+        "type": "location_unlock",
+        "text": "歌舞厅一楼走廊 已解锁",
+        "duration_ms": 2000
+      }
+    },
+
+    {
+      "scene_id": "SC105",
+      "scene_name": {
+        "zh": "Tommy的办公室",
+        "en": "Tommy's Office"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "dialogue",
+
+      "background": {
+        "image_file": "tommy_office.jpg",
+        "resolution": "2560x1600",
+        "aspect_ratio": "16:10"
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_office_quiet.ogg",
+        "bgm_file": "bgm_conversation_neutral.ogg",
+        "lighting": "office_warm",
+        "mood": "information_gathering"
+      },
+
+      "unlock_condition": {
+        "type": "evidence_collected",
+        "prerequisites": ["EV001_Collected"]
+      },
+
+      "npcs": [
+        {
+          "npc_id": "NPC003",
+          "npc_name": "Tommy",
+          "position": {
+            "x": 1500,
+            "y": 800,
+            "scale": 1.0
+          },
+          "state": "cooperative",
+          "portrait": "tommy_neutral.png",
+          "interactable": true,
+          "dialog_entry": "D_Tommy_001",
+          "interaction_icon": "icon_dialogue.png"
+        }
+      ],
+
+      "hotspots": [],
+
+      "evidence_available": [],
+
+      "interactive_objects": [],
+
+      "scene_transitions": [],
+
+      "narrative_function": "获取Tommy的证词，了解案发当晚的异常情况",
+      "first_unlock_animation": {
+        "type": "location_unlock",
+        "text": "Tommy的办公室 已解锁",
+        "duration_ms": 2000
+      }
+    },
+
+    {
+      "scene_id": "SC106",
+      "scene_name": {
+        "zh": "酒吧大堂",
+        "en": "Bar Lobby"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "dialogue",
+
+      "background": {
+        "image_file": "hall.jpg",
+        "resolution": "2560x1600",
+        "aspect_ratio": "16:10"
+      },
+
+      "atmosphere": {
+        "ambient_sound": "amb_hall_empty.ogg",
+        "bgm_file": "bgm_investigation_02.ogg",
+        "lighting": "hall_dim",
+        "mood": "confrontation"
+      },
+
+      "unlock_condition": {
+        "type": "event_triggered",
+        "prerequisites": ["EVE001"]
+      },
+
+      "npcs": [
+        {
+          "npc_id": "NPC002",
+          "npc_name": "Rosa",
+          "position": {
+            "x": 1300,
+            "y": 850,
+            "scale": 1.0
+          },
+          "state": "nervous",
+          "portrait": "rosa_nervous.png",
+          "interactable": true,
+          "dialog_entry": "D_Rosa_001",
+          "expose_target": true,
+          "interaction_icon": "icon_expose.png"
+        }
+      ],
+
+      "hotspots": [],
+
+      "evidence_available": [],
+
+      "interactive_objects": [],
+
+      "scene_transitions": [],
+
+      "narrative_function": "指证Rosa的场景，揭露第一循环真相",
+      "first_unlock_animation": {
+        "type": "location_unlock",
+        "text": "酒吧大堂 已解锁",
+        "duration_ms": 2000
+      }
+    },
+
+    {
+      "scene_id": "SC107",
+      "scene_name": {
+        "zh": "Vivian的化妆室",
+        "en": "Vivian's Dressing Room"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "noentry",
+
+      "background": {
+        "image_file": null,
+        "placeholder_color": "#1a1a2e"
+      },
+
+      "unlock_condition": {
+        "type": "locked",
+        "unlock_text": {
+          "zh": "这里还不能进入",
+          "en": "Can't enter here yet"
+        }
+      },
+
+      "narrative_function": "Loop1中不可访问，为后续循环预留"
+    },
+
+    {
+      "scene_id": "SC108",
+      "scene_name": {
+        "zh": "Jimmy的厨房",
+        "en": "Jimmy's Kitchen"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "noentry",
+
+      "background": {
+        "image_file": null,
+        "placeholder_color": "#1a1a2e"
+      },
+
+      "unlock_condition": {
+        "type": "locked",
+        "unlock_text": {
+          "zh": "这里还不能进入",
+          "en": "Can't enter here yet"
+        }
+      },
+
+      "narrative_function": "Loop1中不可访问，为后续循环预留"
+    },
+
+    {
+      "scene_id": "SC109",
+      "scene_name": {
+        "zh": "Webb办公室",
+        "en": "Webb's Office"
+      },
+      "scene_chapter": "SEC01",
+      "scene_type": "noentry",
+
+      "background": {
+        "image_file": null,
+        "placeholder_color": "#1a1a2e"
+      },
+
+      "unlock_condition": {
+        "type": "locked",
+        "unlock_text": {
+          "zh": "这里还不能进入",
+          "en": "Can't enter here yet"
+        }
+      },
+
+      "narrative_function": "Loop1中不可访问，Loop3解锁"
+    }
+  ],
+
+  "scene_map": {
+    "map_image": "cabaret_map_floor1.png",
+    "available_scenes": [
+      {
+        "scene_id": "SC102",
+        "map_position": {
+          "x": 400,
+          "y": 200
+        },
+        "icon": "icon_location_street.png"
+      },
+      {
+        "scene_id": "SC103",
+        "map_position": {
+          "x": 800,
+          "y": 600
+        },
+        "icon": "icon_location_storeroom.png"
+      },
+      {
+        "scene_id": "SC104",
+        "map_position": {
+          "x": 1000,
+          "y": 500
+        },
+        "icon": "icon_location_corridor.png"
+      },
+      {
+        "scene_id": "SC105",
+        "map_position": {
+          "x": 1200,
+          "y": 400
+        },
+        "icon": "icon_location_office.png"
+      },
+      {
+        "scene_id": "SC106",
+        "map_position": {
+          "x": 600,
+          "y": 400
+        },
+        "icon": "icon_location_lobby.png"
+      }
+    ],
+    "locked_scenes": [
+      {
+        "scene_id": "SC107",
+        "map_position": {
+          "x": 1400,
+          "y": 300
+        },
+        "icon": "icon_location_locked.png"
+      },
+      {
+        "scene_id": "SC108",
+        "map_position": {
+          "x": 900,
+          "y": 700
+        },
+        "icon": "icon_location_locked.png"
+      },
+      {
+        "scene_id": "SC109",
+        "map_position": {
+          "x": 1100,
+          "y": 350
+        },
+        "icon": "icon_location_locked.png"
+      }
+    ]
+  },
+
+  "scene_flow_diagram": {
+    "start": "SC101",
+    "sequence": [
+      "SC101",
+      "SC119",
+      "SC102",
+      "free_exploration: [SC103, SC104, SC105]",
+      "SC106 (expose)",
+      "loop_complete"
+    ]
+  },
+
+  "meta_info": {
+    "total_scenes": 9,
+    "accessible_in_loop1": 6,
+    "crime_scenes": 2,
+    "dialogue_scenes": 4,
+    "locked_scenes": 3,
+    "designer_notes": "确保玩家在自由探索阶段能清晰识别可访问和不可访问的场景"
+  }
+}

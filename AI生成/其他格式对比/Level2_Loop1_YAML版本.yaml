@@ -1,0 +1,329 @@
+# ═══════════════════════════════════════════════════════════
+# NDC游戏配置 - Unit1 Loop1: 栽赃陷害的真相
+# ═══════════════════════════════════════════════════════════
+# 策划负责人: [您的名字]
+# 最后更新: 2025-11-06
+# 游戏时长: 约10分钟
+# ═══════════════════════════════════════════════════════════
+
+loop_id: Unit1_Loop1
+loop_number: 1
+unit_id: Unit1
+section_id: SEC01
+
+loop_name:
+  zh: 栽赃陷害的真相
+  en: The Truth of Frame-up
+
+# ═══════════════════════════════════════════════════════════
+# 任务系统配置
+# 显示在游戏右上角的任务面板
+# ═══════════════════════════════════════════════════════════
+
+objectives:
+
+  # 主线案件 - 整个Unit的总目标
+  main_case:
+    type: MainCase
+    text: 蓝月亮歌舞厅谋杀案：找出杀害Webb的真凶
+    display_in_ui: true
+    # 注：始终显示，不会完成
+
+  # 循环目标 - 带进度条
+  phase_goal:
+    type: PhaseGoal
+    text: 到底是谁把我迷晕了，还想把杀人的罪名扣在我头上？
+    display_progress: true
+    progress_type: evidence_collection  # 进度类型：证据收集
+    total_required: 4  # 需要4个关键证据
+    display_in_ui: true
+    # 进度示例: [■■■□] 3/4
+
+  # 当前行动目标
+  current_goal:
+    type: CurrentGoal
+    text: 调查案发现场，寻找被陷害的证据
+    display_in_ui: true
+
+  # 疑点列表 - 玩家发现的疑问
+  doubts:
+    - type: Doubt
+      text: 为什么Morrison警官反应如此迅速？
+      trigger_condition: D001_Collected  # 对话D001完成时触发
+      display_in_ui: true
+
+    - type: Doubt
+      text: Emma为什么会恰好出现在案发现场？
+      trigger_condition: D010_Collected  # Emma登场时触发
+      display_in_ui: true
+
+# ═══════════════════════════════════════════════════════════
+# 剧情背景
+# ═══════════════════════════════════════════════════════════
+
+story_context:
+  starting_situation: Zack在陌生房间醒来，发现Webb死亡，被Morrison逮捕
+  key_npcs:
+    - Morrison  # 警官，栽赃陷害的执行者
+    - Emma      # 记者，出现救援Zack
+    - Rosa      # 清洁工，目击证人
+    - Tommy     # 酒吧经理，提供证词
+  investigation_focus: 寻找被栽赃陷害的证据，发现Rosa在撒谎
+  major_revelation: Rosa承认目击Morrison迷晕Zack并将其拖到案发现场
+
+# ═══════════════════════════════════════════════════════════
+# 场景流程配置
+# 流程: SC101 → SC119 → SC102 → [自由探索] → SC106
+# ═══════════════════════════════════════════════════════════
+
+available_scenes:
+
+  # ───────────────────────────────────────────────────────
+  # 第1阶段: 开场剧情（线性流程）
+  # ───────────────────────────────────────────────────────
+
+  - scene_id: SC101
+    scene_name: Webb会客室
+    scene_type: dialogue  # 对话场景，不能搜证
+    unlock_condition: loop_start  # 循环开始时自动解锁
+    npcs: [NPC001, NPC004, NPC009]  # Webb(尸体), Morrison, Zack
+    description: 故事开篇场景，Webb死亡现场
+    # 玩家行为: 选择对话选项回应Morrison的指控
+    # 关键对话: D001-D009
+    # 情感节奏: 紧张、冲突、被冤枉的愤怒
+
+  - scene_id: SC119
+    scene_name: Webb会客室-2
+    scene_type: dialogue
+    unlock_condition: D009_Completed  # Morrison说"逮捕他"后触发
+    npcs: [NPC001, NPC004, NPC009, NPC010]  # 新增Emma ⭐
+    description: Emma出场，帮助Zack洗清嫌疑
+    # 玩家行为: 观看Emma与Morrison的对峙
+    # 关键对话: D010-D021
+    # 情感节奏: 转折、希望、设立72小时期限
+
+  - scene_id: SC102
+    scene_name: 歌舞厅外的街道
+    scene_type: dialogue
+    unlock_condition: D021_Completed
+    npcs: [NPC009, NPC010]  # Zack, Emma
+    description: 与Emma对话，建立合作关系
+    # 玩家行为: 选择对话选项，决定合作方式
+    # 关键对话: D022-D045（含分支）
+    # 情感节奏: 感激、试探、建立信任
+    # 完成后: 开启自由探索阶段
+
+  # ───────────────────────────────────────────────────────
+  # 第2阶段: 自由探索（可任意访问）
+  # ───────────────────────────────────────────────────────
+
+  - scene_id: SC103
+    scene_name: Rosa的储藏室
+    scene_type: crime  # 搜证场景
+    unlock_condition: D045_Completed
+    evidence_available: [EV001, EV003, EV007, EV008, EV009]
+    description: 搜证场景，寻找Rosa撒谎的证据
+    # 关键证据: EV001(工作记录卡), EV003(毛巾), EV007(医疗账单)
+    # 玩家行为: 点击热区收集证据，分析毛巾气味
+    # 场景特点: 杂乱、昏暗、有5个热区
+    # 搜索进度: Normal模式显示 5/5，Expert模式不显示
+
+  - scene_id: SC104
+    scene_name: 歌舞厅一楼走廊
+    scene_type: crime
+    unlock_condition: D045_Completed
+    evidence_available: [EV002, EV004]
+    description: 迷晕Zack的案发现场
+    # 关键证据: EV002(氯仿瓶), EV004(拖拽痕迹)
+    # 玩家行为: 寻找迷晕工具和拖拽痕迹
+    # 叙事功能: 还原Zack被迷晕和拖拽的过程
+
+  - scene_id: SC105
+    scene_name: Tommy的办公室
+    scene_type: dialogue
+    unlock_condition: EV001_Collected  # 收集工作记录卡后解锁
+    npcs: [NPC003]  # Tommy
+    description: 跟Tommy对话，获取证词
+    # 玩家行为: 询问案发当晚的情况
+    # 获得证据: EV005(侧门人影), EV006(拖拽声音)
+
+  # ───────────────────────────────────────────────────────
+  # 第3阶段: 指证
+  # ───────────────────────────────────────────────────────
+
+  - scene_id: SC106
+    scene_name: 酒吧大堂
+    scene_type: dialogue
+    unlock_condition: EVE001  # 收集够证据后系统触发
+    npcs: [NPC002]  # Rosa
+    description: 跟Rosa对话，进行指证
+    # 玩家行为: 三轮指证，使用证据揭露真相
+    # NPC特殊标识: 头顶显示指证图标
+    # 叙事功能: Loop1高潮，揭露Morrison栽赃真相
+
+# ═══════════════════════════════════════════════════════════
+# 证据配置
+# 玩家需收集4个关键证据才能触发指证
+# ═══════════════════════════════════════════════════════════
+
+required_evidence:
+
+  # ⭐⭐⭐ 关键证据1 ⭐⭐⭐
+  - evidence_id: EV001
+    name: 工作记录卡
+    importance: critical  # 指证必需
+    role_in_loop: 证明Rosa当晚应该在后台走廊，而非储藏室
+    collection_priority: 1  # 建议最先收集
+    # 推理逻辑: Rosa说在储藏室 VS 工作记录说在走廊 → Rosa在撒谎
+    # 所在场景: SC103 Rosa的储藏室
+    # 收集方式: 点击架子上的文件
+    # 指证使用: Round 1 - 揭露位置矛盾
+
+  # ⭐⭐⭐ 关键证据2 ⭐⭐⭐
+  - evidence_id: EV002
+    name: 空氯仿瓶
+    importance: critical
+    role_in_loop: 证明有人使用麻醉剂迷晕了Zack
+    collection_priority: 2
+    # 推理逻辑: 氯仿瓶 + 毛巾 → 迷晕工具
+    # 所在场景: SC104 一楼走廊
+    # 可组合: 与EV003组合成"迷晕工具组合"
+    # 指证使用: Round 2 - 证明迷晕手法
+
+  # ⭐⭐⭐ 关键证据3 ⭐⭐⭐
+  - evidence_id: EV003
+    name: 毛巾
+    importance: critical
+    role_in_loop: 结合氯仿瓶，证明迷晕工具
+    requires_analysis: true  # 需要"闻气味"分析
+    collection_priority: 3
+    # 推理逻辑: 毛巾有氯仿气味 + 氯仿瓶 → 用毛巾捂住口鼻迷晕
+    # 分析后描述: 一条白色毛巾，散发着刺鼻的甜腻气味
+    # 所在场景: SC103 Rosa的储藏室
+    # 可组合: 与EV002组合
+    # 指证使用: Round 2, Round 3
+
+  # ⭐⭐⭐ 关键证据4 ⭐⭐⭐
+  - evidence_id: EV004
+    name: 地板拖拽痕迹
+    importance: critical
+    role_in_loop: 证明有人将昏迷的Zack拖到案发现场
+    requires_analysis: true  # 需要测量痕迹
+    collection_priority: 4  # 压轴证据
+    # 推理逻辑: 拖拽痕迹 + Tommy听到拖拽声 → Zack被拖到案发现场
+    # 分析后描述: 痕迹宽度约为肩宽，深度表明被拖拽物至少150磅
+    # 所在场景: SC104 一楼走廊
+    # 指证使用: Round 3 - 最终证据，迫使Rosa说出完整真相
+
+# 证据链: EV001(位置矛盾) → EV002+EV003(迷晕工具) → EV004(拖拽栽赃) → Rosa完整供述
+
+# ═══════════════════════════════════════════════════════════
+# 指证配置
+# 对Rosa的三轮渐进式指证
+# ═══════════════════════════════════════════════════════════
+
+expose_configuration:
+  target_npc: NPC002
+  target_name: Rosa  # 50岁清洁工
+  expose_id: Expose_Loop1_Rosa
+
+  # 触发条件
+  trigger_condition:
+    min_evidence_count: 4  # 至少收集4个证据
+    required_evidence: [EV001, EV003, EV004]  # 必须包含这3个
+    required_dialog: D045_Completed  # 与Emma建立合作
+    scene_requirement: SC106  # 必须在酒吧大堂
+
+  # 三轮指证策略: What(事实) → Why(动机) → How(过程)
+  rounds:
+    - round: 1
+      theme: 事实矛盾
+      question: 你说在储藏室，但工作记录显示你在走廊
+      correct_evidence: [EV001]
+      goal: 让Rosa承认在走廊工作
+
+    - round: 2
+      theme: 动机压力
+      question: 为什么要帮助迷晕我的人？
+      correct_evidence: [EV003, EV007]  # EV007可选
+      goal: 让Rosa承认收了Morrison的钱
+
+    - round: 3
+      theme: 完整真相
+      question: 谁把我拖到案发现场？
+      correct_evidence: [EV004]
+      goal: 让Rosa说出Morrison栽赃的完整过程
+
+# ═══════════════════════════════════════════════════════════
+# 循环完成条件
+# ═══════════════════════════════════════════════════════════
+
+completion_condition:
+  type: expose_success
+  target: Rosa
+  required_rounds: 3  # 三轮全部成功
+  success_criteria: Rosa承认目击Morrison迷晕Zack的全过程
+
+# ═══════════════════════════════════════════════════════════
+# 完成奖励
+# ═══════════════════════════════════════════════════════════
+
+rewards:
+  unlock_next_loop: Unit1_Loop2  # 解锁下一循环
+  unlocked_scenes: [SC113, SC114, SC115]  # Morrison家中/警局
+  story_progression: Morrison成为Loop2的调查目标
+
+  relationship_changes:
+    - npc_id: NPC010
+      relationship_type: trust
+      change: +15
+      description: 建立合作关系
+
+# ═══════════════════════════════════════════════════════════
+# 难度差异配置
+# ═══════════════════════════════════════════════════════════
+
+difficulty_adjustments:
+
+  normal:
+    # Normal模式 - 适合休闲玩家
+    evidence_hints_enabled: true  # 放大镜有动画提示
+    scene_progress_display: true  # 显示搜索进度 3/5
+    expose_retry_allowed: 2  # 指证允许重试2次
+    task_hints:
+      - 在储藏室寻找Rosa的工作记录
+      - 在走廊检查是否有迷晕工具的痕迹
+
+  expert:
+    # Expert模式 - 适合硬核玩家
+    evidence_hints_enabled: false  # 无提示
+    scene_progress_display: false  # 不显示进度
+    expose_retry_allowed: 0  # 指证不允许重试
+    task_hints: []  # 无具体提示
+
+# ═══════════════════════════════════════════════════════════
+# 策划笔记（仅供参考，程序不读取）
+# ═══════════════════════════════════════════════════════════
+
+narrative_notes:
+  pacing: 快节奏开场，建立紧张感和悬念
+
+  emotional_beats:
+    - Zack被冤枉的愤怒与困惑
+    - Emma出现带来的希望
+    - 建立合作关系的信任时刻
+    - Rosa真相揭露的震惊
+
+  foreshadowing:
+    - Morrison的可疑行为为Loop2铺垫
+    - Emma的神秘出现埋下伏笔
+    - Webb的秘密暗示更大阴谋
+
+# ═══════════════════════════════════════════════════════════
+# 元信息
+# ═══════════════════════════════════════════════════════════
+
+meta_info:
+  estimated_playtime_minutes: 10  # 首次通关约10分钟
+  complexity_level: introductory  # 入门级教学关卡
+  designer_notes: Loop1作为教学关卡，引导玩家熟悉搜证、对话、指证三大核心玩法
