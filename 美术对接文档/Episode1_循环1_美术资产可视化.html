@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC Episode 1 - 美术资产对接文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 头部标题 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+
+        /* 控制面板 */
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .selector-group {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .selector-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .selector-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .selector-group select:hover {
+            border-color: #ffd700;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .selector-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* 资产列表区 */
+        .assets-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .assets-panel h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .scene-info {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .scene-info p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+
+        .scene-info strong {
+            color: #ffd700;
+        }
+
+        /* 资产分类 */
+        .asset-category {
+            margin-bottom: 30px;
+        }
+
+        .asset-category h3 {
+            color: #4da6ff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .asset-category h3::before {
+            content: '▸';
+            color: #ffd700;
+        }
+
+        .asset-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .asset-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(77, 166, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .asset-item:hover {
+            border-color: #4da6ff;
+            background: rgba(77, 166, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .asset-item.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .asset-name {
+            font-weight: bold;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .asset-type {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-right: 8px;
+            margin-top: 5px;
+        }
+
+        .type-evidence {
+            background: rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .type-character {
+            background: rgba(77, 166, 255, 0.3);
+            color: #4da6ff;
+            border: 1px solid #4da6ff;
+        }
+
+        .type-interaction {
+            background: rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .type-puzzle {
+            background: rgba(147, 51, 234, 0.3);
+            color: #c084fc;
+            border: 1px solid #c084fc;
+        }
+
+        /* 详情面板 */
+        .detail-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .detail-panel h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .detail-content {
+            line-height: 1.8;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 3px solid #4da6ff;
+        }
+
+        .detail-section h4 {
+            color: #4da6ff;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .detail-section p {
+            color: #c0c0c0;
+            margin: 8px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #808080;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        /* 标签 */
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+
+        .tag-core {
+            background: rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .tag-puzzle {
+            background: rgba(147, 51, 234, 0.3);
+            color: #c084fc;
+            border: 1px solid #c084fc;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.5);
+        }
+
+        /* 循环区块样式（按场景筛选时使用） */
+        .cycle-block {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cycle-block:hover {
+            border-color: rgba(255, 215, 0, 0.5);
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .cycle-block h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cycle-block .scene-info {
+            margin-bottom: 15px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-panel {
+                position: relative;
+                max-height: none;
+            }
+
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🎬 NDC Episode 1 - 美术资产对接文档</h1>
+            <p>交互式资产查看器 | 按循环和场景浏览所有美术资源</p>
+        </div>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="selector-group" style="grid-column: 1 / -1;">
+                <label for="filter-mode">🔍 筛选模式</label>
+                <select id="filter-mode">
+                    <option value="cycle">按循环筛选（先选循环，再选场景）</option>
+                    <option value="scene">按场景筛选（查看场景在各循环中的状态）</option>
+                </select>
+            </div>
+
+            <div class="selector-group" id="cycle-selector-group">
+                <label for="cycle-select">📍 选择循环</label>
+                <select id="cycle-select">
+                    <option value="">-- 请选择循环 --</option>
+                    <option value="1">循环1：Rosa现场目击指证</option>
+                    <option value="2">循环2：Morrison腐败网络调查</option>
+                    <option value="3">循环3：Tommy古董密码网络</option>
+                    <option value="4">循环4：Jimmy吐露与Webb真实关系</option>
+                    <option value="5">循环5：Vivian动机指证</option>
+                    <option value="6">循环6：Jimmy凶手的真相</option>
+                </select>
+            </div>
+
+            <div class="selector-group" id="scene-selector-group">
+                <label for="scene-select">🏛️ 选择场景</label>
+                <select id="scene-select" disabled>
+                    <option value="">-- 请先选择循环 --</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 左侧：资产列表 -->
+            <div class="assets-panel">
+                <h2>📦 场景资产</h2>
+                <div id="assets-container">
+                    <div class="empty-state">
+                        👈 请从左侧选择循环和场景
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：详情面板 -->
+            <div class="detail-panel">
+                <h2>📋 资产详情</h2>
+                <div id="detail-container">
+                    <div class="empty-state">
+                        点击左侧资产查看详细信息
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据结构
+        const gameData = {
+            "1": { // 循环1
+                "循环名称": "Rosa现场目击指证",
+                "scenes": {
+                    "Rosa储藏室": {
+                        "场景状态": "Rosa不在场",
+                        "探索权限": "完全开放，玩家可自由搜索",
+                        "获取证据数量": "5个证据",
+                        "assets": {
+                            "证据": [
+                                {
+                                    "编号": "证据111",
+                                    "名称": "芝加哥警局通缉令",
+                                    "类型": "环境叙事",
+                                    "发现位置": "Rosa储藏室报纸，桌上显眼位置",
+                                    "关键信息": "通缉'疤面Tony'的悬赏金高达5000美元",
+                                    "证据作用": "强化当时芝加哥黑帮横行的社会背景",
+                                    "发现方式": "玩家进入储藏室即可看到",
+                                    "美术需求": "1920年代报纸样式、通缉令海报设计"
+                                },
+                                {
+                                    "编号": "证据112",
+                                    "名称": "Rosa的女儿照片",
+                                    "类型": "环境叙事",
+                                    "发现位置": "Rosa储藏室，墙上相框",
+                                    "关键信息": "照片背面写着'我的小天使Miguel，妈妈的一切希望'，女儿生日0915",
+                                    "证据作用": "强化Rosa母爱主题，让玩家对她的困境产生强烈同情",
+                                    "发现方式": "点击墙上相框查看",
+                                    "解谜关联": "生日0915是工具箱密码",
+                                    "美术需求": "相框模型、老照片纹理、背面手写文字设计"
+                                },
+                                {
+                                    "编号": "证据113",
+                                    "名称": "Rosa的医院就诊清单",
+                                    "类型": "环境叙事",
+                                    "发现位置": "Rosa储藏室，床头柜上",
+                                    "关键信息": "女儿Miguel的昂贵药物清单，经济压力巨大",
+                                    "证据作用": "展现Rosa的家庭困境，解释其被胁迫动机",
+                                    "发现方式": "搜索储藏室物品",
+                                    "美术需求": "1920年代医院账单样式、手写记录"
+                                },
+                                {
+                                    "编号": "证据114",
+                                    "名称": "沾有氯仿的毛巾 ⭐",
+                                    "类型": "实体证据（指证核心）",
+                                    "发现位置": "Rosa储藏室，清洁工具箱内（需解密码锁）",
+                                    "关键信息": "含有医用麻醉剂氯仿，不是清洁用品",
+                                    "证据作用": "否定Rosa'专心清洁，什么都没看到'的目击谎言",
+                                    "指证时机": "循环1第二阶段指证",
+                                    "特殊分析": "接近闻嗅时有明显的甜腻化学味，是氯仿的味道",
+                                    "美术需求": "白色毛巾模型、氯仿液体渍痕纹理、分析特效"
+                                },
+                                {
+                                    "编号": "证据115",
+                                    "名称": "工作记录卡 ⭐",
+                                    "类型": "实体证据（指证核心）",
+                                    "发现位置": "Rosa储藏室，工具箱底部（获得毛巾后才能发现）",
+                                    "关键信息": "明确显示23:00-01:00在后台走廊清洁",
+                                    "证据作用": "否定Rosa'在地下室酒窖工作'的地点谎言",
+                                    "指证时机": "循环1第一阶段指证",
+                                    "美术需求": "工作卡片设计、手写排班表样式"
+                                }
+                            ],
+                            "解谜": [
+                                {
+                                    "名称": "清洁工具箱密码锁",
+                                    "类型": "密码解谜",
+                                    "密码答案": "0915（来自证据112女儿生日）",
+                                    "解锁后获得": "证据114（沾有氯仿的毛巾）+ 证据115（工作记录卡）",
+                                    "交互设计": "点击工具箱呼出锁头展示页面，四位密码锁可上下波动（0-9），输入正确后自动解锁",
+                                    "美术需求": "工具箱模型（上锁/开启两个状态）、密码锁UI界面、解锁动画"
+                                }
+                            ]
+                        }
+                    },
+                    "歌舞厅一楼走廊": {
+                        "场景状态": "空旷走廊，案发现场区域",
+                        "探索权限": "完全开放",
+                        "获取证据数量": "2个现场线索",
+                        "特殊说明": "此场景探索完毕后后续无人对话，也不可再探索",
+                        "assets": {
+                            "证据": [
+                                {
+                                    "编号": "证据121",
+                                    "名称": "氯仿瓶 ⭐",
+                                    "类型": "现场线索（指证核心）",
+                                    "发现位置": "歌舞厅一楼走廊垃圾桶内（需点击垃圾桶搜索）",
+                                    "关键信息": "瓶口有少量氯仿残留",
+                                    "证据作用": "揭示Morrison使用氯仿迷晕Zack的手段",
+                                    "指证时机": "循环1第二阶段指证",
+                                    "美术需求": "氯仿药瓶模型、垃圾桶模型、残留液体特效"
+                                },
+                                {
+                                    "编号": "证据122",
+                                    "名称": "地板拖拽痕迹 ⭐",
+                                    "类型": "现场线索（指证核心）",
+                                    "发现位置": "歌舞厅一楼走廊地面（点击地板）",
+                                    "关键信息": "压痕较深，拖动的东西至少150磅，普通女性的力量基本无法完成",
+                                    "证据作用": "否定Rosa的自认，证明她没有足够力量拖拽",
+                                    "指证时机": "循环1第三阶段指证",
+                                    "特殊分析": "需要对压痕进行分析，发现压痕深度异常",
+                                    "美术需求": "地板拖拽痕迹贴图、脏污效果、分析高亮特效"
+                                }
+                            ]
+                        }
+                    },
+                    "Tommy办公室": {
+                        "场景状态": "Tommy在场，正在整理文件",
+                        "探索权限": "对话",
+                        "获取证据数量": "1个证词",
+                        "assets": {
+                            "人物对话": [
+                                {
+                                    "名称": "Tommy",
+                                    "状态": "在场，正在整理文件",
+                                    "可获取证据": "证据133 - Tommy时间证词",
+                                    "对话要点": "Tommy确认11:30听到枪声，描述'这声枪响和平时黑帮火拼的声音不太一样，只听到了一声'",
+                                    "性格表现": "紧张、整理文件动作有些慌乱、对深入询问表现回避",
+                                    "美术需求": "Tommy角色模型、办公室场景、文件堆积道具、紧张表情"
+                                }
+                            ],
+                            "证据": [
+                                {
+                                    "编号": "证据133",
+                                    "名称": "Tommy时间证词",
+                                    "类型": "对话摘录",
+                                    "发现位置": "Tommy办公室，与Tommy对话获得",
+                                    "关键信息": "确实有一声枪响...但这声枪响和平时黑帮火拼的声音不太一样，只听到了一声",
+                                    "指证时机": "循环6第一轮指证，枪声证明",
+                                    "美术需求": "对话UI、证词记录界面"
+                                }
+                            ]
+                        }
+                    },
+                    "酒吧大堂": {
+                        "场景状态": "Rosa在场，正在打扫",
+                        "探索权限": "可对话",
+                        "主要用途": "Rosa的对话、指证Rosa的场所",
+                        "assets": {
+                            "人物对话": [
+                                {
+                                    "名称": "Rosa",
+                                    "状态": "在场，正在打扫",
+                                    "核心谎言": "我一直在地下室酒窖工作，什么都没看到",
+                                    "指证阶段": "三轮递进式指证",
+                                    "情绪变化": "紧张 → 慌乱 → 崩溃 → 坦白",
+                                    "美术需求": "Rosa角色模型、清洁工具道具、多种表情（紧张/恐惧/哭泣）、酒吧大堂场景"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+            // 其他循环数据可以继续添加...
+        };
+
+        // DOM元素
+        const filterMode = document.getElementById('filter-mode');
+        const cycleSelect = document.getElementById('cycle-select');
+        const sceneSelect = document.getElementById('scene-select');
+        const assetsContainer = document.getElementById('assets-container');
+        const detailContainer = document.getElementById('detail-container');
+
+        let currentMode = 'cycle';
+        let currentCycle = null;
+        let currentScene = null;
+
+        // 筛选模式变化
+        filterMode.addEventListener('change', function() {
+            currentMode = this.value;
+            resetSelectors();
+
+            if (currentMode === 'scene') {
+                // 按场景筛选：加载所有场景
+                loadAllScenes();
+            } else {
+                // 按循环筛选：恢复默认状态
+                sceneSelect.disabled = true;
+                sceneSelect.innerHTML = '<option value="">-- 请先选择循环 --</option>';
+            }
+            showEmptyAssets();
+        });
+
+        // 循环选择变化
+        cycleSelect.addEventListener('change', function() {
+            const cycleId = this.value;
+            if (!cycleId) {
+                if (currentMode === 'cycle') {
+                    sceneSelect.disabled = true;
+                    sceneSelect.innerHTML = '<option value="">-- 请先选择循环 --</option>';
+                }
+                showEmptyAssets();
+                return;
+            }
+
+            currentCycle = cycleId;
+            if (currentMode === 'cycle') {
+                loadScenes(cycleId);
+            }
+        });
+
+        // 场景选择变化
+        sceneSelect.addEventListener('change', function() {
+            const sceneName = this.value;
+            if (!sceneName) {
+                showEmptyAssets();
+                return;
+            }
+
+            currentScene = sceneName;
+
+            if (currentMode === 'cycle' && currentCycle) {
+                loadAssets(currentCycle, sceneName);
+            } else if (currentMode === 'scene') {
+                loadSceneCrossLoop(sceneName);
+            }
+        });
+
+        // 重置选择器
+        function resetSelectors() {
+            currentCycle = null;
+            currentScene = null;
+            cycleSelect.value = '';
+            sceneSelect.value = '';
+        }
+
+        // 加载所有场景（按场景筛选模式）
+        function loadAllScenes() {
+            const allScenes = new Set();
+
+            // 收集所有循环中的场景名称
+            for (const cycleId in gameData) {
+                const cycleData = gameData[cycleId];
+                if (cycleData.scenes) {
+                    for (const sceneName in cycleData.scenes) {
+                        allScenes.add(sceneName);
+                    }
+                }
+            }
+
+            sceneSelect.disabled = false;
+            sceneSelect.innerHTML = '<option value="">-- 请选择场景 --</option>';
+
+            // 按字母顺序排序
+            const sortedScenes = Array.from(allScenes).sort();
+            sortedScenes.forEach(sceneName => {
+                const option = document.createElement('option');
+                option.value = sceneName;
+                option.textContent = sceneName;
+                sceneSelect.appendChild(option);
+            });
+        }
+
+        // 加载场景列表（按循环筛选模式）
+        function loadScenes(cycleId) {
+            const cycleData = gameData[cycleId];
+            if (!cycleData) return;
+
+            sceneSelect.disabled = false;
+            sceneSelect.innerHTML = '<option value="">-- 请选择场景 --</option>';
+
+            const scenes = cycleData.scenes;
+            for (const sceneName in scenes) {
+                const option = document.createElement('option');
+                option.value = sceneName;
+                option.textContent = sceneName;
+                sceneSelect.appendChild(option);
+            }
+
+            showEmptyAssets();
+        }
+
+        // 跨循环加载场景（按场景筛选模式）
+        function loadSceneCrossLoop(sceneName) {
+            let html = `
+                <div class="scene-info">
+                    <p><strong>场景名称：</strong>${sceneName}</p>
+                    <p><strong>筛选模式：</strong>按场景查看（显示该场景在各循环中的状态）</p>
+                </div>
+            `;
+
+            // 遍历所有循环，找到包含该场景的循环
+            for (const cycleId in gameData) {
+                const cycleData = gameData[cycleId];
+                if (!cycleData.scenes || !cycleData.scenes[sceneName]) continue;
+
+                const sceneData = cycleData.scenes[sceneName];
+                const cycleName = cycleData['循环名称'] || `循环${cycleId}`;
+
+                html += `
+                    <div class="cycle-block">
+                        <h3>🔄 ${cycleName}</h3>
+
+                        <div class="scene-info">
+                            <p><strong>场景状态：</strong>${sceneData.场景状态}</p>
+                            <p><strong>探索权限：</strong>${sceneData.探索权限}</p>
+                            ${sceneData.获取证据数量 ? `<p><strong>证据数量：</strong>${sceneData.获取证据数量}</p>` : ''}
+                            ${sceneData.主要用途 ? `<p><strong>主要用途：</strong>${sceneData.主要用途}</p>` : ''}
+                            ${sceneData.特殊说明 ? `<p><strong>⚠️ 特殊说明：</strong>${sceneData.特殊说明}</p>` : ''}
+                        </div>
+                `;
+
+                const assets = sceneData.assets;
+
+                // 证据
+                if (assets.证据 && assets.证据.length > 0) {
+                    html += '<div class="asset-category"><h3>🔍 证据资产</h3><div class="asset-list">';
+                    assets.证据.forEach((item, index) => {
+                        const isCore = item.名称.includes('⭐');
+                        html += `
+                            <div class="asset-item" onclick="showDetail('证据', ${cycleId}, '${sceneName}', ${index})">
+                                <div class="asset-name">${item.名称}</div>
+                                <span class="asset-type type-evidence">${item.类型}</span>
+                                ${isCore ? '<span class="tag tag-core">核心指证</span>' : ''}
+                                ${item.特殊分析 ? '<span class="tag tag-puzzle">需分析</span>' : ''}
+                            </div>
+                        `;
+                    });
+                    html += '</div></div>';
+                }
+
+                // 人物对话
+                if (assets.人物对话 && assets.人物对话.length > 0) {
+                    html += '<div class="asset-category"><h3>👤 人物资产</h3><div class="asset-list">';
+                    assets.人物对话.forEach((item, index) => {
+                        html += `
+                            <div class="asset-item" onclick="showDetail('人物对话', ${cycleId}, '${sceneName}', ${index})">
+                                <div class="asset-name">${item.名称}</div>
+                                <span class="asset-type type-character">人物对话</span>
+                            </div>
+                        `;
+                    });
+                    html += '</div></div>';
+                }
+
+                // 解谜
+                if (assets.解谜 && assets.解谜.length > 0) {
+                    html += '<div class="asset-category"><h3>🧩 解谜玩法</h3><div class="asset-list">';
+                    assets.解谜.forEach((item, index) => {
+                        html += `
+                            <div class="asset-item" onclick="showDetail('解谜', ${cycleId}, '${sceneName}', ${index})">
+                                <div class="asset-name">${item.名称}</div>
+                                <span class="asset-type type-puzzle">${item.类型}</span>
+                            </div>
+                        `;
+                    });
+                    html += '</div></div>';
+                }
+
+                html += '</div>'; // 关闭循环区块
+            }
+
+            assetsContainer.innerHTML = html;
+            detailContainer.innerHTML = '<div class="empty-state">点击左侧资产查看详细信息</div>';
+        }
+
+        // 加载资产（按循环筛选模式）
+        function loadAssets(cycleId, sceneName) {
+            const sceneData = gameData[cycleId].scenes[sceneName];
+            if (!sceneData) return;
+
+            let html = `
+                <div class="scene-info">
+                    <p><strong>场景名称：</strong>${sceneName}</p>
+                    <p><strong>场景状态：</strong>${sceneData.场景状态}</p>
+                    <p><strong>探索权限：</strong>${sceneData.探索权限}</p>
+                    ${sceneData.获取证据数量 ? `<p><strong>证据数量：</strong>${sceneData.获取证据数量}</p>` : ''}
+                    ${sceneData.特殊说明 ? `<p><strong>⚠️ 特殊说明：</strong>${sceneData.特殊说明}</p>` : ''}
+                </div>
+            `;
+
+            const assets = sceneData.assets;
+
+            // 证据
+            if (assets.证据 && assets.证据.length > 0) {
+                html += '<div class="asset-category"><h3>🔍 证据资产</h3><div class="asset-list">';
+                assets.证据.forEach((item, index) => {
+                    const isCore = item.名称.includes('⭐');
+                    html += `
+                        <div class="asset-item" onclick="showDetail('证据', ${cycleId}, '${sceneName}', ${index})">
+                            <div class="asset-name">${item.名称}</div>
+                            <span class="asset-type type-evidence">${item.类型}</span>
+                            ${isCore ? '<span class="tag tag-core">核心指证</span>' : ''}
+                            ${item.特殊分析 ? '<span class="tag tag-puzzle">需分析</span>' : ''}
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+
+            // 人物对话
+            if (assets.人物对话 && assets.人物对话.length > 0) {
+                html += '<div class="asset-category"><h3>👤 人物资产</h3><div class="asset-list">';
+                assets.人物对话.forEach((item, index) => {
+                    html += `
+                        <div class="asset-item" onclick="showDetail('人物对话', ${cycleId}, '${sceneName}', ${index})">
+                            <div class="asset-name">${item.名称}</div>
+                            <span class="asset-type type-character">人物对话</span>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+
+            // 解谜
+            if (assets.解谜 && assets.解谜.length > 0) {
+                html += '<div class="asset-category"><h3>🧩 解谜玩法</h3><div class="asset-list">';
+                assets.解谜.forEach((item, index) => {
+                    html += `
+                        <div class="asset-item" onclick="showDetail('解谜', ${cycleId}, '${sceneName}', ${index})">
+                            <div class="asset-name">${item.名称}</div>
+                            <span class="asset-type type-puzzle">${item.类型}</span>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+
+            assetsContainer.innerHTML = html;
+            detailContainer.innerHTML = '<div class="empty-state">点击左侧资产查看详细信息</div>';
+        }
+
+        // 显示详情
+        function showDetail(category, cycleId, sceneName, index) {
+            const item = gameData[cycleId].scenes[sceneName].assets[category][index];
+            if (!item) return;
+
+            // 高亮选中项
+            document.querySelectorAll('.asset-item').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            let html = `<h2>📋 ${item.名称 || item.编号}</h2>`;
+
+            if (category === '证据') {
+                html += `
+                    <div class="detail-section">
+                        <h4>🏷️ 基本信息</h4>
+                        <p><strong>证据编号：</strong>${item.编号}</p>
+                        <p><strong>证据类型：</strong>${item.类型}</p>
+                        <p><strong>发现位置：</strong>${item.发现位置}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>📝 详细内容</h4>
+                        <p><strong>关键信息：</strong>${item.关键信息}</p>
+                        <p><strong>证据作用：</strong>${item.证据作用}</p>
+                        ${item.发现方式 ? `<p><strong>发现方式：</strong>${item.发现方式}</p>` : ''}
+                        ${item.指证时机 ? `<p><strong>指证时机：</strong>${item.指证时机}</p>` : ''}
+                        ${item.特殊分析 ? `<p><strong>⚙️ 特殊分析：</strong>${item.特殊分析}</p>` : ''}
+                        ${item.解谜关联 ? `<p><strong>🧩 解谜关联：</strong>${item.解谜关联}</p>` : ''}
+                    </div>
+                    <div class="detail-section">
+                        <h4>🎨 美术需求</h4>
+                        <p>${item.美术需求}</p>
+                    </div>
+                `;
+            } else if (category === '人物对话') {
+                html += `
+                    <div class="detail-section">
+                        <h4>👤 人物信息</h4>
+                        <p><strong>名称：</strong>${item.名称}</p>
+                        <p><strong>状态：</strong>${item.状态}</p>
+                        ${item.核心谎言 ? `<p><strong>核心谎言：</strong>${item.核心谎言}</p>` : ''}
+                    </div>
+                    <div class="detail-section">
+                        <h4>💬 对话内容</h4>
+                        ${item.对话要点 ? `<p><strong>对话要点：</strong>${item.对话要点}</p>` : ''}
+                        ${item.可获取证据 ? `<p><strong>可获取证据：</strong>${item.可获取证据}</p>` : ''}
+                        ${item.性格表现 ? `<p><strong>性格表现：</strong>${item.性格表现}</p>` : ''}
+                        ${item.情绪变化 ? `<p><strong>情绪变化：</strong>${item.情绪变化}</p>` : ''}
+                        ${item.指证阶段 ? `<p><strong>指证阶段：</strong>${item.指证阶段}</p>` : ''}
+                    </div>
+                    <div class="detail-section">
+                        <h4>🎨 美术需求</h4>
+                        <p>${item.美术需求}</p>
+                    </div>
+                `;
+            } else if (category === '解谜') {
+                html += `
+                    <div class="detail-section">
+                        <h4>🧩 解谜信息</h4>
+                        <p><strong>类型：</strong>${item.类型}</p>
+                        ${item.密码答案 ? `<p><strong>密码答案：</strong>${item.密码答案}</p>` : ''}
+                        ${item.解锁后获得 ? `<p><strong>解锁后获得：</strong>${item.解锁后获得}</p>` : ''}
+                    </div>
+                    <div class="detail-section">
+                        <h4>⚙️ 交互设计</h4>
+                        <p>${item.交互设计}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>🎨 美术需求</h4>
+                        <p>${item.美术需求}</p>
+                    </div>
+                `;
+            }
+
+            detailContainer.innerHTML = html;
+        }
+
+        // 显示空状态
+        function showEmptyAssets() {
+            assetsContainer.innerHTML = '<div class="empty-state">👈 请从左侧选择循环和场景</div>';
+            detailContainer.innerHTML = '<div class="empty-state">点击左侧资产查看详细信息</div>';
+        }
+
+        // 初始化
+        showEmptyAssets();
+    </script>
+</body>
+</html>
