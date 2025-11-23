@@ -1,0 +1,370 @@
+{
+  "configVersion": "1.0",
+  "lastUpdated": "2025-11-23",
+  "description": "NDC事件触发系统配置 - Episode 1 循环1（Rosa现场目击指证）",
+
+  "events": [
+    {
+      "eventId": "EVE_LOOP001_START",
+      "eventName": "循环1开始",
+      "triggerCondition": "OPENING_AVG_COMPLETE",
+      "unlockContent": {
+        "scenes": ["SC102"],
+        "dialogues": [],
+        "tasks": ["TAS_CH001_MAIN", "TAS_LOOP001_PHASE", "TAS_LOOP001_GOAL_01"]
+      },
+      "unlockText": {
+        "cn": "前往歌舞厅外的街道",
+        "en": "Go to the street outside the ballroom"
+      },
+      "ifInterrupt": 0,
+      "priority": 100
+    },
+
+    {
+      "eventId": "EVE_ENTER_SC102",
+      "eventName": "进入街道场景",
+      "triggerCondition": "SCENE_SC102_ENTER",
+      "unlockContent": {
+        "dialogues": ["D_EMMA_TALK_START"],
+        "tasks": ["TAS_LOOP001_GOAL_02"]
+      },
+      "unlockText": {
+        "cn": "与Emma对话",
+        "en": "Talk to Emma"
+      },
+      "ifInterrupt": 0,
+      "priority": 90
+    },
+
+    {
+      "eventId": "EVE_EMMA_TALK_COMPLETE",
+      "eventName": "Emma对话完成",
+      "triggerCondition": "DIALOGUE_D045_COMPLETE",
+      "unlockContent": {
+        "scenes": ["SC103", "SC104", "SC105", "SC106"],
+        "tasks": ["TAS_LOOP001_GOAL_03", "TAS_LOOP001_DOUBT_01", "TAS_LOOP001_DOUBT_02"]
+      },
+      "unlockText": {
+        "cn": "多个场景已解锁，开始调查！",
+        "en": "Multiple scenes unlocked, start investigating!"
+      },
+      "ifInterrupt": 0,
+      "priority": 85
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV111",
+      "eventName": "收集证据111（通缉令）",
+      "triggerCondition": "EV111_COLLECTED",
+      "unlockContent": {
+        "hints": ["环境叙事证据：了解芝加哥黑帮背景"]
+      },
+      "unlockText": {
+        "cn": "获得证据：芝加哥警局通缉令",
+        "en": "Evidence obtained: Chicago Police Wanted Poster"
+      },
+      "ifInterrupt": 0,
+      "priority": 50
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV112",
+      "eventName": "收集证据112（女儿照片）",
+      "triggerCondition": "EV112_COLLECTED",
+      "unlockContent": {
+        "hints": ["密码提示：照片背面的生日日期可能有用"],
+        "puzzles": ["PUZZLE_TOOLBOX_PASSWORD"]
+      },
+      "unlockText": {
+        "cn": "获得证据：Rosa的女儿照片（生日：0915）",
+        "en": "Evidence obtained: Rosa's daughter photo (Birthday: 0915)"
+      },
+      "ifInterrupt": 0,
+      "priority": 60
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV113",
+      "eventName": "收集证据113（医疗账单）",
+      "triggerCondition": "EV113_COLLECTED",
+      "unlockContent": {
+        "hints": ["环境叙事证据：Rosa的家庭困境"]
+      },
+      "unlockText": {
+        "cn": "获得证据：Rosa的医院就诊清单",
+        "en": "Evidence obtained: Rosa's hospital bill"
+      },
+      "ifInterrupt": 0,
+      "priority": 50
+    },
+
+    {
+      "eventId": "EVE_SOLVE_TOOLBOX_PUZZLE",
+      "eventName": "解开工具箱密码",
+      "triggerCondition": "PUZZLE_TOOLBOX_SOLVED",
+      "unlockContent": {
+        "evidences": ["EV114", "EV115"]
+      },
+      "unlockText": {
+        "cn": "工具箱已打开！",
+        "en": "Toolbox unlocked!"
+      },
+      "ifInterrupt": 0,
+      "priority": 70
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV114",
+      "eventName": "收集证据114（氯仿毛巾）",
+      "triggerCondition": "EV114_COLLECTED",
+      "unlockContent": {
+        "tasks": ["TAS_LOOP001_DOUBT_03"],
+        "hints": ["关键证据：这条毛巾可以指证Rosa"]
+      },
+      "unlockText": {
+        "cn": "获得关键证据：沾有氯仿的毛巾",
+        "en": "Key evidence obtained: Chloroform-stained towel"
+      },
+      "ifInterrupt": 0,
+      "priority": 80
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV115",
+      "eventName": "收集证据115（工作记录卡）",
+      "triggerCondition": "EV115_COLLECTED",
+      "unlockContent": {
+        "hints": ["关键证据：这可以揭穿Rosa的地点谎言"]
+      },
+      "unlockText": {
+        "cn": "获得关键证据：工作记录卡",
+        "en": "Key evidence obtained: Work schedule card"
+      },
+      "ifInterrupt": 0,
+      "priority": 80
+    },
+
+    {
+      "eventId": "EVE_SC103_CLEARED",
+      "eventName": "储藏室搜证完成",
+      "triggerCondition": "SCENE_SC103_ALL_EVIDENCE_COLLECTED",
+      "unlockContent": {
+        "tasks": ["TAS_LOOP001_GOAL_04"]
+      },
+      "unlockText": {
+        "cn": "储藏室调查完毕，前往走廊继续调查",
+        "en": "Storage room investigation complete, proceed to corridor"
+      },
+      "ifInterrupt": 0,
+      "priority": 75
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV121",
+      "eventName": "收集证据121（氯仿瓶）",
+      "triggerCondition": "EV121_COLLECTED",
+      "unlockContent": {
+        "hints": ["关键证据：与毛巾配合，可以证明迷晕手法"]
+      },
+      "unlockText": {
+        "cn": "获得关键证据：氯仿瓶",
+        "en": "Key evidence obtained: Chloroform bottle"
+      },
+      "ifInterrupt": 0,
+      "priority": 80
+    },
+
+    {
+      "eventId": "EVE_COLLECT_EV122",
+      "eventName": "收集证据122（拖拽痕迹）",
+      "triggerCondition": "EV122_COLLECTED",
+      "unlockContent": {
+        "hints": ["关键证据：这可以否定Rosa的自认"]
+      },
+      "unlockText": {
+        "cn": "获得关键证据：地板拖拽痕迹",
+        "en": "Key evidence obtained: Floor drag marks"
+      },
+      "ifInterrupt": 0,
+      "priority": 80
+    },
+
+    {
+      "eventId": "EVE_SC104_CLEARED",
+      "eventName": "走廊搜证完成",
+      "triggerCondition": "SCENE_SC104_ALL_EVIDENCE_COLLECTED",
+      "unlockContent": {
+        "tasks": ["TAS_LOOP001_GOAL_05"]
+      },
+      "unlockText": {
+        "cn": "走廊调查完毕，前往Tommy办公室",
+        "en": "Corridor investigation complete, proceed to Tommy's office"
+      },
+      "ifInterrupt": 0,
+      "priority": 75
+    },
+
+    {
+      "eventId": "EVE_TOMMY_TALK_COMPLETE",
+      "eventName": "Tommy对话完成",
+      "triggerCondition": "DIALOGUE_TOMMY_001_COMPLETE",
+      "unlockContent": {
+        "evidences": ["EV133"],
+        "tasks": ["TAS_LOOP001_DOUBT_04"]
+      },
+      "unlockText": {
+        "cn": "获得证词：Tommy关于枪声的反应",
+        "en": "Testimony obtained: Tommy's reaction to gunshot"
+      },
+      "ifInterrupt": 0,
+      "priority": 70
+    },
+
+    {
+      "eventId": "EVE_ALL_EVIDENCES_COLLECTED",
+      "eventName": "所有证据收集完成",
+      "triggerCondition": "EV115_COLLECTED,EV114_COLLECTED,EV121_COLLECTED,EV122_COLLECTED,EV133_COLLECTED",
+      "unlockContent": {
+        "tasks": ["TAS_LOOP001_GOAL_06"]
+      },
+      "unlockText": {
+        "cn": "证据已齐全，可以指证Rosa了！",
+        "en": "All evidence collected, ready to expose Rosa!"
+      },
+      "ifInterrupt": 0,
+      "priority": 90,
+      "specialEffects": {
+        "highlightTask": "TAS_LOOP001_PHASE",
+        "updateProgress": {
+          "taskId": "TAS_LOOP001_PHASE",
+          "progressCurrent": 5,
+          "progressTotal": 5
+        }
+      }
+    },
+
+    {
+      "eventId": "EVE_ROSA_EXPOSE_ROUND1_SUCCESS",
+      "eventName": "指证Rosa第一轮成功",
+      "triggerCondition": "EXPOSE_ROSA_ROUND1_SUCCESS",
+      "unlockContent": {
+        "dialogues": ["D_ROSA_ROUND1_RESULT"]
+      },
+      "unlockText": {
+        "cn": "第一轮指证成功：Rosa承认在后台走廊工作",
+        "en": "Round 1 success: Rosa admits working in backstage corridor"
+      },
+      "ifInterrupt": 0,
+      "priority": 95
+    },
+
+    {
+      "eventId": "EVE_ROSA_EXPOSE_ROUND2_SUCCESS",
+      "eventName": "指证Rosa第二轮成功",
+      "triggerCondition": "EXPOSE_ROSA_ROUND2_SUCCESS",
+      "unlockContent": {
+        "dialogues": ["D_ROSA_ROUND2_RESULT"]
+      },
+      "unlockText": {
+        "cn": "第二轮指证成功：Rosa承认使用氯仿迷晕Zack",
+        "en": "Round 2 success: Rosa admits using chloroform"
+      },
+      "ifInterrupt": 0,
+      "priority": 95
+    },
+
+    {
+      "eventId": "EVE_ROSA_EXPOSE_ROUND3_SUCCESS",
+      "eventName": "指证Rosa第三轮成功",
+      "triggerCondition": "EXPOSE_ROSA_ROUND3_SUCCESS",
+      "unlockContent": {
+        "dialogues": ["D_ROSA_ROUND3_RESULT"]
+      },
+      "unlockText": {
+        "cn": "第三轮指证成功：Rosa供出Morrison是幕后黑手",
+        "en": "Round 3 success: Rosa reveals Morrison as mastermind"
+      },
+      "ifInterrupt": 1,
+      "priority": 100
+    },
+
+    {
+      "eventId": "EVE_ROSA_EXPOSE_COMPLETE",
+      "eventName": "Rosa指证完成",
+      "triggerCondition": "EXPOSE_ROSA_SUCCESS",
+      "unlockContent": {
+        "dialogues": ["D_LOOP001_ENDING"],
+        "loops": ["LOOP002"]
+      },
+      "unlockText": {
+        "cn": "循环1完成！Morrison成为新的嫌疑人",
+        "en": "Loop 1 complete! Morrison becomes new suspect"
+      },
+      "ifInterrupt": 1,
+      "priority": 100,
+      "specialEffects": {
+        "completeTask": "TAS_LOOP001_PHASE",
+        "removeDoubts": ["TAS_LOOP001_DOUBT_02", "TAS_LOOP001_DOUBT_03"],
+        "playAnimation": "LOOP_COMPLETE_EFFECT"
+      }
+    },
+
+    {
+      "eventId": "EVE_LOOP001_TO_LOOP002",
+      "eventName": "循环1至循环2过渡",
+      "triggerCondition": "LOOP001_COMPLETE",
+      "unlockContent": {
+        "scenes": ["SC107", "SC110", "SC111", "SC112"],
+        "tasks": ["TAS_LOOP002_PHASE"],
+        "dialogues": ["D_LOOP002_OPENING"]
+      },
+      "unlockText": {
+        "cn": "循环2已开启：调查Morrison警官",
+        "en": "Loop 2 unlocked: Investigate Officer Morrison"
+      },
+      "ifInterrupt": 1,
+      "priority": 100
+    }
+  ],
+
+  "eventTypeConfig": {
+    "scene_unlock": {
+      "description": "场景解锁事件",
+      "defaultInterrupt": 0,
+      "showNotification": true
+    },
+    "evidence_collect": {
+      "description": "证据收集事件",
+      "defaultInterrupt": 0,
+      "showNotification": true
+    },
+    "dialogue_complete": {
+      "description": "对话完成事件",
+      "defaultInterrupt": 0,
+      "showNotification": false
+    },
+    "expose_success": {
+      "description": "指证成功事件",
+      "defaultInterrupt": 1,
+      "showNotification": true,
+      "playAnimation": true
+    },
+    "loop_transition": {
+      "description": "循环过渡事件",
+      "defaultInterrupt": 1,
+      "showNotification": true,
+      "playAnimation": true
+    }
+  },
+
+  "conditionTypes": {
+    "SCENE_ENTER": "进入场景",
+    "SCENE_CLEARED": "场景搜证完成",
+    "DIALOGUE_COMPLETE": "对话完成",
+    "EVIDENCE_COLLECTED": "证据收集",
+    "PUZZLE_SOLVED": "谜题解开",
+    "EXPOSE_SUCCESS": "指证成功",
+    "LOOP_COMPLETE": "循环完成"
+  }
+}

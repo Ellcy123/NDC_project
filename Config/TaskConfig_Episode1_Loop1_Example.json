@@ -1,0 +1,363 @@
+{
+  "configVersion": "1.0",
+  "lastUpdated": "2025-11-23",
+  "description": "NDC任务系统配置 - Episode 1 循环1示例",
+
+  "tasks": [
+    {
+      "taskId": "TAS_CH001_MAIN",
+      "taskType": "MainCase",
+      "sectionId": "SEC01",
+      "loopId": "",
+      "priority": 100,
+
+      "cnTitle": "蓝月亮歌舞厅谋杀案",
+      "enTitle": "Blue Moon Ballroom Murder Case",
+      "cnDescription": "查清Webb的死因，找出真凶，洗清我的冤屈",
+      "enDescription": "Investigate Webb's death, find the real killer, and clear my name",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "LOOP001_START",
+      "completeCondition": "LOOP006_COMPLETE",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_PHASE",
+      "taskType": "PhaseGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 90,
+
+      "cnTitle": "调查Rosa的证词",
+      "enTitle": "Investigate Rosa's Testimony",
+      "cnDescription": "收集证据，揭穿Rosa的谎言",
+      "enDescription": "Collect evidence to expose Rosa's lies",
+
+      "showProgressBar": true,
+      "progressType": "evidence_collection",
+      "progressCurrent": 0,
+      "progressTotal": 5,
+      "requiredEvidences": ["EV001", "EV002", "EV003", "EV004", "EV007"],
+
+      "showCompletionEffect": true,
+      "highlightWhen100Percent": true,
+      "highlight100PercentText": {
+        "cn": "证据已齐全，可以进行指证！",
+        "en": "Evidence complete, ready to expose!"
+      },
+
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "LOOP001_START",
+      "completeCondition": "EXPOSE_ROSA_SUCCESS",
+
+      "subtasks": [
+        {
+          "subtaskId": "SUB_LOOP001_01",
+          "cnText": "收集Rosa储藏室的证据",
+          "enText": "Collect evidence from Rosa's storage",
+          "completeCondition": "EV001_COLLECTED,EV003_COLLECTED,EV007_COLLECTED"
+        },
+        {
+          "subtaskId": "SUB_LOOP001_02",
+          "cnText": "收集走廊的证据",
+          "enText": "Collect evidence from the corridor",
+          "completeCondition": "EV002_COLLECTED,EV004_COLLECTED"
+        }
+      ]
+    },
+
+    {
+      "taskId": "TAS_LOOP001_GOAL_01",
+      "taskType": "CurrentGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 85,
+
+      "cnTitle": "前往歌舞厅外的街道",
+      "enTitle": "Go to the Street Outside the Ballroom",
+      "cnDescription": "与Emma汇合，商讨调查计划",
+      "enDescription": "Meet with Emma and discuss the investigation plan",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "DIALOGUE_D021_COMPLETE",
+      "completeCondition": "SCENE_SC102_ENTER",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_GOAL_02",
+      "taskType": "CurrentGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 84,
+
+      "cnTitle": "与Emma对话",
+      "enTitle": "Talk to Emma",
+      "cnDescription": "了解Emma的调查动机",
+      "enDescription": "Learn about Emma's investigation motives",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "SCENE_SC102_ENTER",
+      "completeCondition": "DIALOGUE_D045_COMPLETE",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_GOAL_03",
+      "taskType": "CurrentGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 83,
+
+      "cnTitle": "调查Rosa的储藏室",
+      "enTitle": "Investigate Rosa's Storage Room",
+      "cnDescription": "寻找能够证明Rosa说谎的证据",
+      "enDescription": "Find evidence to prove Rosa is lying",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "DIALOGUE_D045_COMPLETE",
+      "completeCondition": "SCENE_SC103_CLEARED",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_GOAL_04",
+      "taskType": "CurrentGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 82,
+
+      "cnTitle": "调查歌舞厅一楼走廊",
+      "enTitle": "Investigate the First Floor Corridor",
+      "cnDescription": "这里是我被迷晕的现场，一定有重要线索",
+      "enDescription": "This is where I was knocked out, there must be important clues",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "SCENE_SC103_CLEARED",
+      "completeCondition": "SCENE_SC104_CLEARED",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_GOAL_05",
+      "taskType": "CurrentGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 81,
+
+      "cnTitle": "与Tommy对话",
+      "enTitle": "Talk to Tommy",
+      "cnDescription": "前往Tommy的办公室，询问案发当晚的情况",
+      "enDescription": "Go to Tommy's office and ask about the night of the incident",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "SCENE_SC104_CLEARED",
+      "completeCondition": "DIALOGUE_TOMMY_001_COMPLETE",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_GOAL_06",
+      "taskType": "CurrentGoal",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 80,
+
+      "cnTitle": "指证Rosa",
+      "enTitle": "Expose Rosa",
+      "cnDescription": "前往酒吧大堂，用证据指证Rosa的谎言",
+      "enDescription": "Go to the bar hall and expose Rosa's lies with evidence",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 1,
+
+      "triggerCondition": "ALL_EVIDENCES_COLLECTED_LOOP001",
+      "completeCondition": "EXPOSE_ROSA_SUCCESS",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_DOUBT_01",
+      "taskType": "Doubt",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 70,
+
+      "cnTitle": "Morrison为何如此确定我是凶手？",
+      "enTitle": "Why is Morrison so sure I'm the killer?",
+      "cnDescription": "",
+      "enDescription": "",
+
+      "showProgressBar": false,
+      "showCompletionEffect": false,
+      "maxDisplayCount": 6,
+
+      "triggerCondition": "DIALOGUE_D009_COMPLETE",
+      "completeCondition": "EXPOSE_MORRISON_SUCCESS",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_DOUBT_02",
+      "taskType": "Doubt",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 70,
+
+      "cnTitle": "Rosa的证词有什么破绽？",
+      "enTitle": "What's wrong with Rosa's testimony?",
+      "cnDescription": "",
+      "enDescription": "",
+
+      "showProgressBar": false,
+      "showCompletionEffect": false,
+      "maxDisplayCount": 6,
+
+      "triggerCondition": "DIALOGUE_ROSA_001_COMPLETE",
+      "completeCondition": "EXPOSE_ROSA_SUCCESS",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_DOUBT_03",
+      "taskType": "Doubt",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 70,
+
+      "cnTitle": "谁把我迷晕了？",
+      "enTitle": "Who knocked me out?",
+      "cnDescription": "",
+      "enDescription": "",
+
+      "showProgressBar": false,
+      "showCompletionEffect": false,
+      "maxDisplayCount": 6,
+
+      "triggerCondition": "EV002_COLLECTED",
+      "completeCondition": "EXPOSE_ROSA_SUCCESS",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_DOUBT_04",
+      "taskType": "Doubt",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 70,
+
+      "cnTitle": "Tommy为什么说看到警察进入后台？",
+      "enTitle": "Why did Tommy say he saw a cop entering backstage?",
+      "cnDescription": "",
+      "enDescription": "",
+
+      "showProgressBar": false,
+      "showCompletionEffect": false,
+      "maxDisplayCount": 6,
+
+      "triggerCondition": "DIALOGUE_TOMMY_001_COMPLETE",
+      "completeCondition": "EXPOSE_MORRISON_SUCCESS",
+
+      "subtasks": []
+    },
+
+    {
+      "taskId": "TAS_LOOP001_SIDE_01",
+      "taskType": "SideCase",
+      "sectionId": "SEC01",
+      "loopId": "LOOP001",
+      "priority": 60,
+
+      "cnTitle": "Emma的真实目的",
+      "enTitle": "Emma's True Purpose",
+      "cnDescription": "Emma为什么要帮我？她在调查什么？",
+      "enDescription": "Why is Emma helping me? What is she investigating?",
+
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "maxDisplayCount": 2,
+
+      "triggerCondition": "DIALOGUE_D025_COMPLETE",
+      "completeCondition": "OPTIONAL_DIALOGUE_EMMA_SIDE_COMPLETE",
+
+      "subtasks": []
+    }
+  ],
+
+  "taskTypeConfig": {
+    "MainCase": {
+      "maxDisplayCount": 1,
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "defaultPriority": 100
+    },
+    "PhaseGoal": {
+      "maxDisplayCount": 1,
+      "showProgressBar": true,
+      "showCompletionEffect": true,
+      "defaultPriority": 90
+    },
+    "CurrentGoal": {
+      "maxDisplayCount": 1,
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "defaultPriority": 80
+    },
+    "Doubt": {
+      "maxDisplayCount": 6,
+      "showProgressBar": false,
+      "showCompletionEffect": false,
+      "defaultPriority": 70
+    },
+    "SideCase": {
+      "maxDisplayCount": 2,
+      "showProgressBar": false,
+      "showCompletionEffect": true,
+      "defaultPriority": 60
+    }
+  },
+
+  "shortcutDisplayPriority": [
+    "CurrentGoal",
+    "PhaseGoal",
+    "MainCase"
+  ],
+
+  "expandedDisplayOrder": [
+    "PhaseGoal",
+    "CurrentGoal",
+    "Doubt",
+    "SideCase"
+  ]
+}
