@@ -231,7 +231,7 @@
         }
 
         .dialog-node.edited {
-            border-left: 3px solid #2ecc71 !important;
+            border-left: 3px solid var(--gold) !important;
         }
 
         /* 编辑弹窗 */
@@ -351,14 +351,15 @@
         }
 
         .edit-save-btn {
-            background: #2ecc71;
-            color: #fff;
+            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--ink-dark);
+            font-weight: 600;
         }
 
         .edit-save-btn:hover {
-            background: #27ae60;
+            background: linear-gradient(180deg, #ffe44d 0%, var(--gold) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
         }
 
         .edit-cancel-btn {
@@ -461,22 +462,22 @@
 
         /* 参考资料标签（NPC档案等） */
         .phase-tab.reference-tab {
-            background: linear-gradient(180deg, rgba(52, 100, 140, 0.3) 0%, rgba(30, 60, 90, 0.4) 100%);
-            border-color: rgba(52, 152, 219, 0.5);
-            color: #5dade2;
+            background: linear-gradient(180deg, rgba(139, 37, 0, 0.3) 0%, rgba(90, 20, 0, 0.4) 100%);
+            border-color: rgba(180, 100, 60, 0.5);
+            color: #d4a574;
         }
 
         .phase-tab.reference-tab:hover {
-            border-color: #3498db;
-            color: #3498db;
-            box-shadow: 0 4px 12px rgba(52,152,219,0.3);
+            border-color: var(--sepia);
+            color: var(--parchment);
+            box-shadow: 0 4px 12px rgba(139, 37, 0, 0.3);
         }
 
         .phase-tab.reference-tab.active {
-            background: linear-gradient(180deg, rgba(52, 152, 219, 0.4) 0%, rgba(30, 100, 150, 0.3) 100%);
-            border-color: #3498db;
-            color: #3498db;
-            box-shadow: 0 0 20px rgba(52,152,219,0.3);
+            background: linear-gradient(180deg, rgba(139, 37, 0, 0.5) 0%, rgba(100, 40, 10, 0.4) 100%);
+            border-color: var(--sepia);
+            color: var(--parchment);
+            box-shadow: 0 0 20px rgba(139, 37, 0, 0.3);
         }
 
         /* 主内容区 - 复古风格 */
