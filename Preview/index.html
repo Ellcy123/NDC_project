@@ -6,6 +6,17 @@
     <title>NDC 剧情预览器</title>
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
     <style>
+        /* 复古风格变量 */
+        :root {
+            --gold: #ffd700;
+            --gold-dark: #c9a227;
+            --sepia: #d4a574;
+            --parchment: #f5e6d3;
+            --ink-dark: #2c2416;
+            --ink-brown: #4a3728;
+            --accent-red: #8b2500;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,32 +24,89 @@
         }
 
         body {
-            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Georgia', 'Microsoft YaHei', serif;
+            background:
+                linear-gradient(135deg, rgba(26,26,46,0.95) 0%, rgba(22,33,62,0.95) 100%),
+                url('../image/Art/UI/Caseboard/background.png') center center / cover no-repeat fixed;
             min-height: 100vh;
             color: #e0e0e0;
         }
 
+        /* 复古纹理覆盖层 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.02) 2px,
+                    rgba(0,0,0,0.02) 4px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .container {
+            position: relative;
+            z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* 顶部控制栏 */
+        /* 顶部控制栏 - 复古风格 */
         .header {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
+            background:
+                linear-gradient(135deg, rgba(30,25,20,0.95) 0%, rgba(20,15,10,0.98) 100%);
+            border-radius: 8px;
+            padding: 25px;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--gold-dark);
+            box-shadow:
+                0 4px 20px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,215,0,0.1);
+            position: relative;
+        }
+
+        /* Header角落装饰 */
+        .header::before,
+        .header::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--gold);
+            opacity: 0.6;
+        }
+
+        .header::before {
+            top: 8px;
+            left: 8px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .header::after {
+            bottom: 8px;
+            right: 8px;
+            border-left: none;
+            border-top: none;
         }
 
         .header h1 {
-            color: #ffd700;
+            color: var(--gold);
             margin-bottom: 15px;
-            font-size: 24px;
+            font-size: 28px;
+            font-family: 'Georgia', serif;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .controls {
@@ -60,17 +128,31 @@
         }
 
         select {
-            padding: 8px 15px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: #2a2a3e;
-            color: #fff;
+            padding: 10px 35px 10px 15px;
+            border-radius: 4px;
+            border: 1px solid var(--gold-dark);
+            background:
+                linear-gradient(180deg, rgba(42,42,62,1) 0%, rgba(26,26,46,1) 100%);
+            color: var(--parchment);
             font-size: 14px;
+            font-family: 'Georgia', serif;
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffd700' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: all 0.3s;
         }
 
         select:hover {
-            border-color: #ffd700;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(255,215,0,0.3);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
         }
 
         select option {
@@ -91,24 +173,49 @@
         }
 
         .view-btn {
-            padding: 8px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: transparent;
-            color: #aaa;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border: 2px solid var(--gold-dark);
+            background:
+                linear-gradient(180deg, rgba(50,40,30,0.9) 0%, rgba(35,25,20,0.95) 100%);
+            color: var(--sepia);
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .view-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .view-btn:hover::before {
+            left: 100%;
         }
 
         .view-btn.active {
-            background: #ffd700;
-            color: #1a1a2e;
-            border-color: #ffd700;
+            background:
+                linear-gradient(180deg, rgba(255,215,0,0.4) 0%, rgba(201,162,39,0.3) 100%);
+            color: var(--gold);
+            border-color: var(--gold);
+            box-shadow:
+                0 0 20px rgba(255,215,0,0.4),
+                inset 0 0 20px rgba(255,215,0,0.1);
         }
 
         .view-btn:hover:not(.active) {
-            border-color: #ffd700;
-            color: #ffd700;
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 15px rgba(255,215,0,0.3);
         }
 
         /* 编辑模式样式 */
@@ -284,70 +391,120 @@
             font-size: 14px;
         }
 
-        /* 阶段标签 */
+        /* 阶段标签 - 复古风格 */
         .phase-tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 20px;
             flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(255,215,0,0.2);
         }
 
         .phase-tab {
             padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: #aaa;
+            background:
+                linear-gradient(180deg, rgba(60,50,40,0.8) 0%, rgba(40,30,20,0.9) 100%);
+            border: 1px solid var(--gold-dark);
+            border-radius: 4px;
+            color: var(--sepia);
             cursor: pointer;
             transition: all 0.3s;
             font-size: 14px;
+            font-family: 'Georgia', serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .phase-tab:hover::before {
+            left: 100%;
         }
 
         .phase-tab:hover {
-            border-color: #ffd700;
-            color: #ffd700;
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,215,0,0.2);
         }
 
         .phase-tab.active {
-            background: rgba(255, 215, 0, 0.2);
-            border-color: #ffd700;
-            color: #ffd700;
+            background:
+                linear-gradient(180deg, rgba(255,215,0,0.3) 0%, rgba(201,162,39,0.2) 100%);
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow:
+                0 0 20px rgba(255,215,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         /* 标签分隔符 */
         .tab-divider {
-            width: 1px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 0 10px;
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(180deg, transparent, var(--gold-dark), transparent);
+            margin: 0 15px;
+            align-self: center;
         }
 
         /* 参考资料标签（NPC档案等） */
         .phase-tab.reference-tab {
-            background: rgba(52, 152, 219, 0.1);
-            border-color: rgba(52, 152, 219, 0.3);
-            color: #3498db;
+            background: linear-gradient(180deg, rgba(52, 100, 140, 0.3) 0%, rgba(30, 60, 90, 0.4) 100%);
+            border-color: rgba(52, 152, 219, 0.5);
+            color: #5dade2;
         }
 
         .phase-tab.reference-tab:hover {
             border-color: #3498db;
             color: #3498db;
+            box-shadow: 0 4px 12px rgba(52,152,219,0.3);
         }
 
         .phase-tab.reference-tab.active {
-            background: rgba(52, 152, 219, 0.2);
+            background: linear-gradient(180deg, rgba(52, 152, 219, 0.4) 0%, rgba(30, 100, 150, 0.3) 100%);
             border-color: #3498db;
             color: #3498db;
+            box-shadow: 0 0 20px rgba(52,152,219,0.3);
         }
 
-        /* 主内容区 */
+        /* 主内容区 - 复古风格 */
         .main-content {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 25px;
+            background:
+                linear-gradient(135deg, rgba(25,20,15,0.95) 0%, rgba(20,15,10,0.98) 100%);
+            border-radius: 8px;
+            padding: 30px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--gold-dark);
             min-height: 500px;
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.5),
+                inset 0 0 100px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* 主内容区内边框装饰 */
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 1px dashed rgba(255,215,0,0.15);
+            border-radius: 4px;
+            pointer-events: none;
         }
 
         /* 开篇/结尾对话样式 */
@@ -1349,19 +1506,104 @@
             font-size: 14px;
         }
 
-        /* 加载状态 */
-        .loading {
+        /* 欢迎界面 - 初始静态状态 */
+        .welcome-state {
             text-align: center;
-            padding: 50px;
-            color: #888;
+            padding: 60px 40px;
+            position: relative;
         }
 
-        .loading::after {
+        .welcome-state .welcome-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            background: url('../image/Art/UI/Cursor/investi.png') center center no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.3));
+        }
+
+        .welcome-state .welcome-title {
+            color: var(--gold);
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-family: 'Georgia', serif;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .welcome-state .welcome-subtitle {
+            color: var(--sepia);
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .welcome-state .welcome-hint {
+            color: #aaa;
+            font-size: 15px;
+            line-height: 2;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .welcome-state .welcome-hint span {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .welcome-state .npc-showcase {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            opacity: 0.7;
+        }
+
+        .welcome-state .npc-showcase img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid var(--gold-dark);
+            filter: grayscale(30%);
+            transition: all 0.3s;
+            object-fit: cover;
+        }
+
+        .welcome-state .npc-showcase img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.15);
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+        }
+
+        .welcome-state .welcome-arrow {
+            margin-top: 30px;
+            color: var(--gold);
+            font-size: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(-8px); opacity: 0.6; }
+        }
+
+        /* 真正的加载状态 - 有转圈动画 */
+        .loading-state {
+            text-align: center;
+            padding: 50px;
+            color: var(--sepia);
+            font-family: 'Georgia', serif;
+        }
+
+        .loading-state::after {
             content: '';
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 2px solid #ffd700;
+            border: 2px solid var(--gold);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -1371,6 +1613,13 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* 保留旧的.loading类以兼容 */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: var(--sepia);
         }
 
         /* 错误提示 */
@@ -2043,7 +2292,23 @@
         </div>
 
         <div class="main-content" id="mainContent">
-            <div class="loading">请选择章节和循环</div>
+            <div class="welcome-state">
+                <div class="welcome-icon"></div>
+                <div class="welcome-title">案件档案室</div>
+                <div class="welcome-subtitle">— 1920s Detective Story Previewer —</div>
+                <div class="welcome-hint">
+                    欢迎来到NDC剧情预览器<br>
+                    请在上方选择 <span>章节</span> 和 <span>循环</span> 开始预览案件
+                </div>
+                <div class="npc-showcase">
+                    <img src="../image/Art/UI/NPC/EPI01/face_big/rosa_big.png" alt="Rosa" title="Rosa">
+                    <img src="../image/Art/UI/NPC/EPI01/face_big/tommy_big.png" alt="Tommy" title="Tommy">
+                    <img src="../image/Art/UI/NPC/EPI01/face_big/vivian_big.png" alt="Vivian" title="Vivian">
+                    <img src="../image/Art/UI/NPC/EPI01/face_big/morrison_big.png" alt="Morrison" title="Morrison">
+                    <img src="../image/Art/UI/NPC/EPI01/face_big/jimmy_big.png" alt="Jimmy" title="Jimmy">
+                </div>
+                <div class="welcome-arrow">▲</div>
+            </div>
         </div>
 
     </div>
@@ -2070,6 +2335,24 @@
 
         // 基础路径
         const BASE_PATH = 'data/';
+
+        // NPC头像映射
+        const NPC_AVATARS = {
+            'NPC101': '../image/Art/UI/NPC/EPI01/face_big/webb_big.png',      // Zack
+            'NPC103': '../image/Art/UI/NPC/EPI01/face_big/rosa_big.png',      // Rosa
+            'NPC104': '../image/Art/UI/NPC/EPI01/face_big/morrison_big.png',  // Morrison
+            'NPC105': '../image/Art/UI/NPC/EPI01/face_big/tommy_big.png',     // Tommy
+            'NPC106': '../image/Art/UI/NPC/EPI01/face_big/vivian_big.png',    // Vivian
+            'NPC107': '../image/Art/UI/NPC/EPI01/face_big/jimmy_big.png',     // Jimmy
+            'NPC109': '../image/Art/UI/NPC/EPI01/face_big/webb_big.png',      // Webb
+            'NPC110': '../image/Art/UI/NPC/EPI01/face_big/mrsmorrison_big.png', // Morrison太太
+            'NPC111': '../image/Art/UI/NPC/EPI01/face_big/anna_big.png',      // Anna
+        };
+
+        // 获取NPC头像路径
+        function getNpcAvatar(npcId) {
+            return NPC_AVATARS[npcId] || null;
+        }
 
         // 加载YAML文件
         async function loadYaml(path) {
@@ -2325,7 +2608,7 @@
         // 加载循环数据
         async function loadLoop(loopFile) {
             const content = document.getElementById('mainContent');
-            content.innerHTML = '<div class="loading">加载循环数据</div>';
+            content.innerHTML = '<div class="loading-state">加载循环数据中</div>';
 
             state.loopData = await loadYaml(loopFile);
             if (!state.loopData) {
