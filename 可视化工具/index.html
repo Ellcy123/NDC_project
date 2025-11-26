@@ -112,19 +112,19 @@
         }
 
         /* 编辑模式样式 */
-        .edit-mode .dialog-line {
+        .edit-mode .dialog-node {
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .edit-mode .dialog-line:hover {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 3px solid #ffd700;
+        .edit-mode .dialog-node:hover {
+            background: rgba(255, 215, 0, 0.2) !important;
+            border-left: 3px solid #ffd700 !important;
             padding-left: 17px;
         }
 
-        .dialog-line.edited {
-            border-left: 3px solid #2ecc71;
+        .dialog-node.edited {
+            border-left: 3px solid #2ecc71 !important;
         }
 
         /* 编辑弹窗 */
@@ -266,7 +266,7 @@
 
         /* 循环信息 */
         .loop-info {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.2) !important;
             border: 1px solid rgba(255, 215, 0, 0.3);
             border-radius: 8px;
             padding: 15px;
@@ -356,7 +356,7 @@
         }
 
         .scene-header {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.2) !important;
             padding: 12px 18px;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -1563,7 +1563,7 @@
             align-items: center;
             gap: 10px;
             padding: 12px 20px;
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.2) !important;
             border: 1px solid rgba(255, 215, 0, 0.3);
             border-radius: 8px;
             color: #ffd700;
@@ -1759,7 +1759,7 @@
         }
 
         .scene-overview-card.accessible {
-            border-left: 3px solid #2ecc71;
+            border-left: 3px solid #2ecc71 !important;
         }
 
         .scene-overview-card.locked {
@@ -3946,7 +3946,7 @@
 
         // 启用编辑监听
         function enableEditListeners() {
-            document.querySelectorAll('.dialog-line').forEach((line, index) => {
+            document.querySelectorAll('.dialog-node').forEach((line, index) => {
                 line.dataset.editIndex = index;
                 line.addEventListener('click', handleDialogClick);
             });
@@ -3954,7 +3954,7 @@
 
         // 禁用编辑监听
         function disableEditListeners() {
-            document.querySelectorAll('.dialog-line').forEach(line => {
+            document.querySelectorAll('.dialog-node').forEach(line => {
                 line.removeEventListener('click', handleDialogClick);
             });
         }
@@ -4019,7 +4019,7 @@
         // 导出YAML
         document.getElementById('exportBtn').addEventListener('click', function() {
             try {
-                const dialogLines = document.querySelectorAll('.dialog-line');
+                const dialogLines = document.querySelectorAll('.dialog-node');
                 const loop = document.getElementById('loopSelect').value;
 
                 if (!loop) {
