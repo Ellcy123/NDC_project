@@ -1088,6 +1088,36 @@
             margin-bottom: 25px;
         }
 
+        .expose-extra-section {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .extra-section-header {
+            color: #9b59b6;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        .round-dialogs {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .round-dialogs .dialog-nodes {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
         .expose-header {
             background: rgba(231, 76, 60, 0.1);
             border: 1px solid rgba(231, 76, 60, 0.3);
@@ -3454,7 +3484,7 @@
         };
 
         // 渲染指证环节
-        function renderExpose(container) {
+        async function renderExpose(container) {
             if (!state.loopData?.expose) {
                 container.innerHTML = '<div class="error-box"><h3>无指证数据</h3></div>';
                 return;
@@ -3463,6 +3493,17 @@
             const expose = state.loopData.expose;
             const targetNpc = state.masterData.npcs[expose.target] || {};
             const isFlowMode = state.viewMode === 'flow';
+
+            // 加载指证对话文件
+            let accusationDialogs = null;
+            if (expose.dialog_file) {
+                try {
+                    const dialogPath = `${state.currentUnit}/dialogs/${expose.dialog_file}`;
+                    accusationDialogs = await loadYaml(dialogPath);
+                } catch (e) {
+                    console.warn('无法加载指证对话文件:', e);
+                }
+            }
 
             let html = `
                 <div class="expose-section">
@@ -3483,7 +3524,7 @@
                     html += `
                         <button class="expose-round-btn" onclick="toggleExposeRound(${index})">
                             <span class="round-num">${round.round}</span>
-                            <span class="round-name">${round.name || `第${round.round}轮`}</span>
+                            <span class="round-name">${round.name || \`第${round.round}轮\`}</span>
                             <span class="round-arrow">▼</span>
                         </button>
                     `;
@@ -3492,12 +3533,32 @@
 
                 // 流程版轮次详情（初始隐藏）
                 expose.rounds?.forEach((round, index) => {
-                    html += renderExposeRoundFlow(round, index);
+                    const roundDialogs = accusationDialogs?.sections?.[\`round${round.round}\`]?.lines || [];
+                    html += renderExposeRoundFlow(round, index, roundDialogs);
                 });
             } else {
                 // 完整版：直接显示所有轮次
                 expose.rounds?.forEach(round => {
-                    html += renderExposeRoundFull(round);
+                    const roundDialogs = accusationDialogs?.sections?.[\`round${round.round}\`]?.lines || [];
+                    html += renderExposeRoundFull(round, roundDialogs);
+                });
+            }
+
+            // 添加额外对话段落（如confession, tragic_ending等）
+            if (accusationDialogs?.sections) {
+                const extraSections = Object.keys(accusationDialogs.sections).filter(k => !k.startsWith('round'));
+                extraSections.forEach(sectionKey => {
+                    const section = accusationDialogs.sections[sectionKey];
+                    if (section.lines && section.lines.length > 0) {
+                        html += `
+                            <div class="expose-extra-section">
+                                <div class="extra-section-header">${section.description || sectionKey}</div>
+                                <div class="dialog-nodes">
+                                    ${renderAccusationDialogLines(section.lines)}
+                                </div>
+                            </div>
+                        `;
+                    }
                 });
             }
 
@@ -3505,8 +3566,28 @@
             container.innerHTML = html;
         }
 
+        // 渲染指证对话行
+        function renderAccusationDialogLines(lines) {
+            if (!lines || lines.length === 0) return '';
+            return lines.map(line => {
+                const npc = state.masterData.npcs[line.speaker] || {};
+                const speakerName = npc.name_cn || line.speaker || '旁白';
+                const speakerClass = line.speaker?.toLowerCase() || '';
+                return \`
+                    <div class="dialog-node speaker">
+                        <div class="speaker-name ${speakerClass}">
+                            ${speakerName}
+                            ${line.emotion ? \`<span class="emotion">[${line.emotion}]</span>\` : ''}
+                        </div>
+                        <div class="text">${line.text || ''}</div>
+                        ${line.action ? \`<div class="action">${line.action}</div>\` : ''}
+                    </div>
+                \`;
+            }).join('');
+        }
+
         // 完整版指证轮次渲染
-        function renderExposeRoundFull(round) {
+        function renderExposeRoundFull(round, dialogLines = []) {
             const evidenceNames = round.evidence_names ||
                 (round.evidences ? round.evidences.map(id => state.masterData.evidences[id]?.name || id) :
                 [state.masterData.evidences[round.evidence]?.name || round.evidence]);
@@ -3515,14 +3596,14 @@
                 <div class="expose-round">
                     <div class="round-header">
                         <div class="round-number">${round.round}</div>
-                        <div class="round-title">${round.name || `第${round.round}轮`}</div>
-                        ${round.duration ? `<div class="round-duration">${round.duration}</div>` : ''}
+                        <div class="round-title">${round.name || \`第${round.round}轮\`}</div>
+                        ${round.duration ? \`<div class="round-duration">${round.duration}</div>\` : ''}
                     </div>
 
                     <div class="lie-box">
                         <div class="label">谎言</div>
                         <div class="content">${round.lie?.content || round.lie || ''}</div>
-                        ${round.lie?.source ? `<div style="color:#888;font-size:12px;margin-top:5px;">来源: ${round.lie.source}</div>` : ''}
+                        ${round.lie?.source ? \`<div style="color:#888;font-size:12px;margin-top:5px;">来源: ${round.lie.source}</div>\` : ''}
                     </div>
 
                     <div class="evidence-box">
@@ -3533,22 +3614,14 @@
                         </div>
                     </div>
 
-                    ${round.zack_dialog ? `
-                        <div class="dialog-box">
-                            <div class="speaker-tag">Zack 质问</div>
-                            <div class="dialog-text">${round.zack_dialog}</div>
-                        </div>
-                    ` : ''}
-
-                    ${round.rosa_reaction ? `
-                        <div class="dialog-box">
-                            <div class="speaker-tag rosa">
-                                Rosa 反应
-                                <span class="emotion-tag">${round.rosa_reaction.emotion || ''}</span>
+                    ${dialogLines.length > 0 ? \`
+                        <div class="round-dialogs">
+                            <div class="label" style="color:#ffd700;margin-bottom:10px;">💬 对话内容</div>
+                            <div class="dialog-nodes">
+                                ${renderAccusationDialogLines(dialogLines)}
                             </div>
-                            <div class="dialog-text">${round.rosa_reaction.dialog || ''}</div>
                         </div>
-                    ` : ''}
+                    \` : ''}
 
                     <div class="result-box">
                         <div class="label">结果</div>
@@ -3559,7 +3632,7 @@
         }
 
         // 流程版指证轮次渲染（可展开）
-        function renderExposeRoundFlow(round, index) {
+        function renderExposeRoundFlow(round, index, dialogLines = []) {
             const evidenceNames = round.evidence_names ||
                 (round.evidences ? round.evidences.map(id => state.masterData.evidences[id]?.name || id) :
                 [state.masterData.evidences[round.evidence]?.name || round.evidence]);
@@ -3623,6 +3696,19 @@
                         </div>
                     ` : ''}
 
+                    ${dialogLines.length > 0 ? \`
+                        <div class="flow-step" data-step="dialog">
+                            <button class="flow-step-btn" onclick="revealExposeStep(${index}, 'dialog')">
+                                💬 详细对话
+                            </button>
+                            <div class="flow-step-content round-dialogs" style="display:none;">
+                                <div class="dialog-nodes">
+                                    ${renderAccusationDialogLines(dialogLines)}
+                                </div>
+                            </div>
+                        </div>
+                    \` : ''}
+
                     <div class="flow-step" data-step="result">
                         <button class="flow-step-btn" onclick="revealExposeStep(${index}, 'result')">
                             ✅ 查看结果
@@ -3633,7 +3719,7 @@
                         </div>
                     </div>
                 </div>
-            `;
+            \`;
         }
 
         // 切换指证轮次显示
