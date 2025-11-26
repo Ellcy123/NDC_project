@@ -3641,9 +3641,10 @@
                     html += '</div>';
                 }
 
-                // 流程版：显示轮次按钮列表
+                // 流程版：显示轮次按钮和对应内容（每个按钮后紧跟其内容）
                 html += '<div class="expose-rounds-buttons">';
                 expose.rounds?.forEach((round, index) => {
+                    const roundDialogs = accusationDialogs?.sections?.[`round${round.round}`]?.lines || [];
                     html += `
                         <button class="expose-round-btn" onclick="toggleExposeRound(${index})">
                             <span class="round-num">${round.round}</span>
@@ -3651,14 +3652,9 @@
                             <span class="round-arrow">▼</span>
                         </button>
                     `;
-                });
-                html += '</div>';
-
-                // 流程版轮次详情（初始隐藏）
-                expose.rounds?.forEach((round, index) => {
-                    const roundDialogs = accusationDialogs?.sections?.[`round${round.round}`]?.lines || [];
                     html += renderExposeRoundFlow(round, index, roundDialogs);
                 });
+                html += '</div>';
 
                 // 流程版：结尾段落按钮
                 if (endingSections.length > 0) {
