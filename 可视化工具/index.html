@@ -3592,7 +3592,10 @@
             // 分类段落：opening在前，round段落，其他段落在后
             let openingSections = [];
             let endingSections = [];
+
+            // 兼容两种数据格式：sections格式 和 直接字段格式
             if (accusationDialogs?.sections) {
+                // 新格式：sections.opening, sections.round1 等
                 Object.keys(accusationDialogs.sections).forEach(key => {
                     if (key.startsWith('round')) return;
                     const section = accusationDialogs.sections[key];
@@ -3604,6 +3607,30 @@
                         }
                     }
                 });
+            } else if (accusationDialogs) {
+                // 旧格式：opening.lines, rounds[].dialog, truth_reveal.lines 等
+                if (accusationDialogs.opening?.lines?.length > 0) {
+                    openingSections.push({ key: 'opening', section: { lines: accusationDialogs.opening.lines, description: '开场对话' } });
+                }
+                if (accusationDialogs.truth_reveal?.lines?.length > 0) {
+                    endingSections.push({ key: 'truth_reveal', section: { lines: accusationDialogs.truth_reveal.lines, description: '真相揭露' } });
+                }
+            }
+
+            // 从accusation YAML中获取轮次对话的辅助函数
+            function getRoundDialogs(roundNum) {
+                // 新格式：sections.roundX.lines
+                if (accusationDialogs?.sections?.[`round${roundNum}`]?.lines) {
+                    return accusationDialogs.sections[`round${roundNum}`].lines;
+                }
+                // 旧格式：rounds数组中找到对应round的dialog
+                if (accusationDialogs?.rounds) {
+                    const roundData = accusationDialogs.rounds.find(r => r.round === roundNum);
+                    if (roundData?.dialog) {
+                        return roundData.dialog;
+                    }
+                }
+                return [];
             }
 
             let html = `
@@ -3644,7 +3671,7 @@
                 // 流程版：显示轮次按钮和对应内容（每个按钮后紧跟其内容）
                 html += '<div class="expose-rounds-buttons">';
                 expose.rounds?.forEach((round, index) => {
-                    const roundDialogs = accusationDialogs?.sections?.[`round${round.round}`]?.lines || [];
+                    const roundDialogs = getRoundDialogs(round.round);
                     html += `
                         <button class="expose-round-btn" onclick="toggleExposeRound(${index})">
                             <span class="round-num">${round.round}</span>
@@ -3692,7 +3719,7 @@
 
                 // 完整版：显示所有轮次
                 expose.rounds?.forEach(round => {
-                    const roundDialogs = accusationDialogs?.sections?.[`round${round.round}`]?.lines || [];
+                    const roundDialogs = getRoundDialogs(round.round);
                     html += renderExposeRoundFull(round, roundDialogs);
                 });
 
