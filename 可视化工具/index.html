@@ -3967,9 +3967,23 @@
             const line = e.currentTarget;
             currentEditingNode = line;
 
-            const speaker = line.querySelector('.speaker')?.textContent || '';
+            // 获取说话人名字
+            const speakerNameEl = line.querySelector('.speaker-name');
+            let speaker = '';
+            if (speakerNameEl) {
+                const firstText = speakerNameEl.childNodes[0];
+                speaker = firstText?.textContent?.trim() || '';
+            }
+
             const text = line.querySelector('.text')?.textContent || '';
-            const emotion = line.querySelector('.emotion-badge')?.textContent || '';
+
+            // 情感在 .emotion 类里
+            const emotionEl = line.querySelector('.emotion');
+            let emotion = '';
+            if (emotionEl) {
+                emotion = emotionEl.textContent?.replace(/[\[\]]/g, '') || '';
+            }
+
             const action = line.querySelector('.action')?.textContent || '';
 
             document.getElementById('editSpeaker').value = speaker;
@@ -3999,14 +4013,20 @@
             }
 
             if (currentEditingNode) {
-                const speakerEl = currentEditingNode.querySelector('.speaker');
+                const speakerNameEl = currentEditingNode.querySelector('.speaker-name');
                 const textEl = currentEditingNode.querySelector('.text');
-                const emotionEl = currentEditingNode.querySelector('.emotion-badge');
+                const emotionEl = currentEditingNode.querySelector('.emotion');
                 const actionEl = currentEditingNode.querySelector('.action');
 
-                if (speakerEl) speakerEl.textContent = newSpeaker;
+                // 更新说话人名字
+                if (speakerNameEl && newSpeaker) {
+                    const firstTextNode = speakerNameEl.childNodes[0];
+                    if (firstTextNode && firstTextNode.nodeType === Node.TEXT_NODE) {
+                        firstTextNode.textContent = newSpeaker + ' ';
+                    }
+                }
                 if (textEl) textEl.textContent = newText;
-                if (emotionEl && newEmotion) emotionEl.textContent = newEmotion;
+                if (emotionEl && newEmotion) emotionEl.textContent = '[' + newEmotion + ']';
                 if (actionEl && newAction) actionEl.textContent = newAction;
 
                 currentEditingNode.classList.add('edited');
