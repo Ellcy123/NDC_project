@@ -400,6 +400,13 @@
                 </div>
 
                 <div class="control-item">
+                    <label for="sceneNameFilter">场景名称筛选</label>
+                    <select id="sceneNameFilter">
+                        <option value="all">全部场景名称</option>
+                    </select>
+                </div>
+
+                <div class="control-item">
                     <label for="categoryFilter">类别筛选</label>
                     <select id="categoryFilter">
                         <option value="all">全部类别</option>
@@ -453,7 +460,7 @@
             'SC502': '酒吧大堂',
             'SC613': 'Webb会客室',
             'SC602': '酒吧歌舞厅',
-            'SC608': 'Vivan的化妆室'
+            'SC608': 'Vivian的化妆室'
         };
 
         // 从JSON生成的完整游戏数据
@@ -958,7 +965,7 @@
                         },
                         {
                             "scene_id": "SC401",
-                            "scene_name": "Rosa储物间",
+                            "scene_name": "Rosa储藏室",
                             "evidences": [
                                 {
                                     "asset_id": "SC401_note_442",
@@ -1102,14 +1109,14 @@
                         },
                         {
                             "scene_id": "SC607",
-                            "scene_name": "Vivan的化妆室",
+                            "scene_name": "Vivian的化妆室",
                             "evidences": [
                                 {
                                     "asset_id": "SC607_note_651",
                                     "evidence_number": "证据651",
                                     "category": "笔记",
                                     "name": "当晚去敲Webb的门已锁",
-                                    "description": "Vivan的化妆室,'那天晚上我11点05分的时候来到Webb的会客室门口,我们都知道他每天晚上都会在这里喝酒看报纸,平时他都不锁门,但昨天他锁了门,我敲门说向见他,他说今晚不要再来了',表示当晚11点05时候Webb会客室房门锁着"
+                                    "description": "Vivian的化妆室,'那天晚上我11点05分的时候来到Webb的会客室门口,我们都知道他每天晚上都会在这里喝酒看报纸,平时他都不锁门,但昨天他锁了门,我敲门说向见他,他说今晚不要再来了',表示当晚11点05时候Webb会客室房门锁着"
                                 }
                             ]
                         }
@@ -1228,9 +1235,31 @@
                 });
         }
 
+        function populateSceneNameFilter() {
+            const sceneNameFilter = document.getElementById('sceneNameFilter');
+            sceneNameFilter.innerHTML = '<option value="all">全部场景名称</option>';
+
+            const sceneNames = new Set();
+            allAssets.forEach(asset => {
+                if (asset.sceneName) {
+                    sceneNames.add(asset.sceneName);
+                }
+            });
+
+            Array.from(sceneNames)
+                .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+                .forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    sceneNameFilter.appendChild(option);
+                });
+        }
+
         function filterAssets() {
             const cycleFilter = document.getElementById('cycleFilter').value;
             const sceneFilter = document.getElementById('sceneFilter').value;
+            const sceneNameFilter = document.getElementById('sceneNameFilter').value;
             const categoryFilter = document.getElementById('categoryFilter').value;
 
             filteredAssets = allAssets.filter(asset => {
@@ -1246,9 +1275,11 @@
                     }
                 }
 
+                const sceneNameMatch = sceneNameFilter === 'all' || asset.sceneName === sceneNameFilter;
+
                 const categoryMatch = categoryFilter === 'all' || asset.category === categoryFilter;
 
-                return cycleMatch && sceneMatch && categoryMatch;
+                return cycleMatch && sceneMatch && sceneNameMatch && categoryMatch;
             });
 
             renderAssets();
@@ -1373,12 +1404,14 @@
         });
 
         document.getElementById('sceneFilter').addEventListener('change', filterAssets);
+        document.getElementById('sceneNameFilter').addEventListener('change', filterAssets);
         document.getElementById('categoryFilter').addEventListener('change', filterAssets);
 
         // 初始化
         initializeData();
         populateCycleFilter();
         populateSceneFilter();
+        populateSceneNameFilter();
         renderAssets();
     </script>
 </body>
