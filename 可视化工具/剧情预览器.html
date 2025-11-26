@@ -3931,7 +3931,10 @@
                 this.style.borderColor = '#ffd700';
                 document.getElementById('mainContent').classList.add('edit-mode');
                 enableEditListeners();
-                alert('✏️ 编辑模式已开启\\n\\n点击任意对话行即可编辑。\\n编辑后点击"📥 导出"可下载YAML文件。');
+                alert('✏️ 编辑模式已开启\
+\
+点击任意对话行即可编辑。\
+编辑后点击"📥 导出"可下载YAML文件。');
             } else {
                 this.style.background = 'rgba(52, 152, 219, 0.2)';
                 this.style.color = '#3498db';
@@ -4076,7 +4079,9 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
 
-                alert('✅ 导出成功!\\n\\nYAML文件已下载，包含 ' + exportData.sections.main.lines.length + ' 条对话。');
+                alert('✅ 导出成功!\
+\
+YAML文件已下载，包含 ' + exportData.sections.main.lines.length + ' 条对话。');
             } catch (error) {
                 console.error('导出失败:', error);
                 alert('❌ 导出失败: ' + error.message);
