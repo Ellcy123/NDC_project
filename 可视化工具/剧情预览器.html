@@ -3930,7 +3930,6 @@
                 this.style.color = '#ffd700';
                 this.style.borderColor = '#ffd700';
                 document.getElementById('mainContent').classList.add('edit-mode');
-                enableEditListeners();
                 alert('✏️ 编辑模式已开启\
 \
 点击任意对话行即可编辑。\
@@ -3940,31 +3939,18 @@
                 this.style.color = '#3498db';
                 this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                 document.getElementById('mainContent').classList.remove('edit-mode');
-                disableEditListeners();
             }
         });
 
-        // 启用编辑监听
-        function enableEditListeners() {
-            document.querySelectorAll('.dialog-node').forEach((line, index) => {
-                line.dataset.editIndex = index;
-                line.addEventListener('click', handleDialogClick);
-            });
-        }
-
-        // 禁用编辑监听
-        function disableEditListeners() {
-            document.querySelectorAll('.dialog-node').forEach(line => {
-                line.removeEventListener('click', handleDialogClick);
-            });
-        }
-
-        // 处理对话点击
-        function handleDialogClick(e) {
+        // 使用事件委托处理对话点击（动态加载的内容也能响应）
+        document.getElementById('mainContent').addEventListener('click', function(e) {
             if (!isEditMode) return;
-            e.stopPropagation();
 
-            const line = e.currentTarget;
+            // 找到被点击的 .dialog-node 元素
+            const line = e.target.closest('.dialog-node');
+            if (!line) return;
+
+            e.stopPropagation();
             currentEditingNode = line;
 
             // 获取说话人名字
