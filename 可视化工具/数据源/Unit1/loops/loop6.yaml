@@ -1,0 +1,185 @@
+# NDC Episode 1 - 循环6
+# 真凶Jimmy
+# 调查目标：Jimmy如何杀害Webb并伪造时间线？
+
+loop_id: Unit1_Loop6
+chapter: 1
+loop_number: 6
+title: 真凶Jimmy
+title_en: The Real Killer Jimmy
+
+investigation_target: Jimmy如何杀害Webb并伪造时间线？
+core_lie: Jimmy声称案发时一直在厨房，有不在场证明
+
+# ===== 本循环场景总览 =====
+scenes_overview:
+  - scene: SC1004
+    name: Webb会客室
+    status: accessible
+    type: search
+    note: 重新调查案发现场
+
+  - scene: SC1009
+    name: 酒吧歌舞厅
+    status: accessible
+    type: search
+    note: 节目表演记录
+
+  - scene: SC1011
+    name: Jimmy厨房
+    status: accessible
+    type: search
+    note: 送餐订单检查
+
+  - scene: SC1012
+    name: Jimmy家卧室
+    status: accessible
+    type: npc
+    note: 最终指证地点
+
+# ===== 本循环可获取证据 =====
+available_evidences:
+  - EV1621  # 窗外弹孔
+  - EV1631  # 节目表演记录
+  - EV1632  # 舞台道具箱中的手枪
+  - EV1641  # Rosa关于Vivian携带可疑物品的证词
+  - EV1651  # Vivian证词：当晚去敲Webb的门已锁
+  - EV1661  # 厨房的送餐订单
+
+# ===== 本循环可对话NPC =====
+available_npcs:
+  - NPC103  # Rosa
+  - NPC106  # Vivian
+  - NPC107  # Jimmy
+  - NPC108  # Anna
+
+# ===== 开篇 =====
+opening:
+  description: Webb会客室重新开放调查
+  missing: true
+  reason: 循环6直接从loop5结尾的决定延续，无需单独开场
+  inherited_from: loop5/ending
+  scenes:
+    - id: webb_office
+      scene_id: SC1004
+      name: Webb会客室
+      description: 警方封锁解除，重新调查现场
+      dialog_file: loop6/opening.yaml
+      dialog_section: webb_office_investigation
+
+# ===== 自由环节 =====
+free_phase:
+  description: 收集Jimmy作案的关键证据
+  scenes:
+    - scene: SC1004
+      type: search
+      evidences:
+        - id: EV1621
+          analyzable: true
+
+    - scene: SC1009
+      type: search
+      evidences:
+        - id: EV1631
+        - id: EV1632
+
+    - scene: SC1011
+      type: search
+      evidences:
+        - id: EV1661
+
+    - scene: SC1001
+      type: npc
+      npc: NPC103
+      dialog_file: loop5/rosa.yaml
+      evidences:
+        - id: EV1641
+
+    - scene: SC1007
+      type: npc
+      npc: NPC106
+      dialog_file: loop6/vivian.yaml
+      evidences:
+        - id: EV1651
+
+# ===== 指证 =====
+expose:
+  scene: SC1012
+  scene_name: Jimmy家卧室
+  target: NPC107
+  target_name: Jimmy
+  total_rounds: 5
+  total_duration: 150秒
+  design_concept: 最终指证，揭露悲剧性的真凶
+  dialog_file: loop6/accusation.yaml
+
+  rounds:
+    - round: 1
+      name: 不在场证明谎言
+      lie:
+        content: 那天晚上11点到12点我一直在厨房工作，从来没有离开过
+        source: Jimmy伪造不在场证明
+      required_evidences: [EV1621]
+      evidence_names: [窗外弹孔]
+      result: 证明11:30的枪声是从室内射向外面的假枪声
+
+    - round: 2
+      name: 唯一枪声谎言
+      lie:
+        content: 当晚只有11:30那一声枪响
+        source: Jimmy坚持
+      required_evidences: [EV1631]
+      evidence_names: [节目表演记录]
+      result: 11:00-11:10的激烈鼓点可以掩盖任何枪声
+
+    - round: 3
+      name: 送餐谎言
+      lie:
+        content: 我在歌曲开始前下楼送餐
+        source: Jimmy改口
+      required_evidences: [EV1661]
+      evidence_names: [厨房的送餐订单]
+      result: 11点到11点30分没有任何送餐记录
+
+    - round: 4
+      name: 房间操作谎言
+      lie:
+        content: Vivian能证明11点时Webb还活着
+        source: Jimmy依赖证人
+      required_evidences: [EV1651]
+      evidence_names: [Vivian证词]
+      result: Jimmy模仿Webb声音骗走了Vivian
+
+    - round: 5
+      name: 动机谎言
+      lie:
+        content: 我根本没有动机杀Webb
+        source: Jimmy最后挣扎
+      required_evidences: [EV1641]
+      evidence_names: [虎头额外收入]
+      result: Jimmy被Whale收买，背叛了Webb
+
+  truth_revealed: |
+    Jimmy在11:00杀害Webb，利用音乐掩盖枪声
+    11:05模仿Webb声音骗走Vivian
+    11:30向窗外开枪制造假死亡时间
+    12:00 Morrison按计划栽赃Zack
+    Jimmy因为贫穷和身份问题被Whale收买
+
+# ===== 结尾 =====
+ending:
+  description: Jimmy认罪后的悲剧结局
+  dialog_file: loop6/ending.yaml
+  transition_to: Episode2
+  next_objective: Whale是谁？他为什么要杀Webb？
+  transition_text: Jimmy死了，但Whale还在暗处...他到底是谁？
+
+# 循环总结
+summary:
+  duration: 约15分钟
+  core_discoveries:
+    - Jimmy是真凶
+    - 利用音乐掩盖枪声
+    - 伪造死亡时间
+    - 被Whale收买背叛Webb
+  next_target: Episode 2 - Whale的真实身份

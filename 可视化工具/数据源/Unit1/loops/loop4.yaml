@@ -1,0 +1,157 @@
+# NDC Episode 1 - 循环4
+# Jimmy秘密调查
+# 调查目标：Jimmy和Webb的真实关系是什么？
+
+loop_id: Unit1_Loop4
+chapter: 1
+loop_number: 4
+title: Jimmy秘密调查
+title_en: Jimmy Secret Investigation
+
+investigation_target: Jimmy和Webb的真实关系是什么？
+core_lie: Jimmy声称自己只是普通厨师，和Webb只是普通雇佣关系
+
+# ===== 本循环场景总览 =====
+scenes_overview:
+  - scene: SC1010
+    name: 酒吧大堂
+    status: accessible
+    type: npc
+    note: Jimmy对话和指证地点
+
+  - scene: SC1012
+    name: Jimmy家卧室
+    status: accessible
+    type: search
+    note: 搜索Jimmy的秘密
+
+  - scene: SC1011
+    name: Jimmy厨房
+    status: accessible
+    type: search
+    note: 搜索工作证据
+
+# ===== 本循环可获取证据 =====
+available_evidences:
+  - EV1320  # Webb古董收藏记录
+  - EV1341  # Vivian争吵目击证词
+  - EV1411  # 伪装成陶泥的古董水壶
+  - EV1421  # Jimmy家庭合照
+  - EV1441  # Tommy目击证词
+
+# ===== 本循环可对话NPC =====
+available_npcs:
+  - NPC107  # Jimmy
+  - NPC108  # Anna
+
+# ===== 开篇 =====
+opening:
+  missing: true
+  reason: Loop3的ending对话已包含前往Jimmy家的场景和决定，直接进入自由环节
+  inherited_from: Unit1_Loop3.ending.car_conversation
+
+# ===== 自由环节 =====
+free_phase:
+  description: 调查Jimmy的秘密
+  scenes:
+    - scene: SC1012
+      type: search
+      npc: NPC108
+      dialog_file: loop4/anna.yaml
+      evidences:
+        - id: EV1411
+          puzzle_hint: 需要用水清洗才能看出真面目
+        - id: EV1421
+
+    - scene: SC1011
+      type: search
+      evidences: []
+
+    - scene: SC1010
+      type: npc
+      npc: NPC107
+      evidences:
+        - id: EV1441
+
+    - scene: SC1003
+      type: npc
+      npc: NPC105
+      dialog_file: loop4/tommy.yaml
+      evidences:
+        - id: EV1441
+
+    - scene: SC1007
+      type: npc
+      npc: NPC106
+      dialog_file: loop4/vivian.yaml
+      evidences:
+        - id: EV1442
+
+    - scene: SC1001
+      type: npc
+      npc: NPC103
+      dialog_file: loop4/rosa.yaml
+      evidences:
+        - id: EV1442
+
+# ===== 指证 =====
+expose:
+  scene: SC1010
+  scene_name: 酒吧大堂
+  target: NPC107
+  target_name: Jimmy
+  total_rounds: 3
+  total_duration: 90秒
+  design_concept: 逐步拆解Jimmy的三层防御谎言
+  dialog_file: loop4/accusation.yaml
+
+  rounds:
+    - round: 1
+      name: 身份关系欺骗
+      lie:
+        content: 我只是这里的厨师，Webb雇我就是做些杂事
+        source: Jimmy伪装普通员工
+      required_evidences: [EV1320, EV1411]
+      evidence_names: [Webb古董收藏记录, 伪装成陶泥的古董水壶]
+      result: Jimmy被迫改口承认拿过水壶
+
+    - round: 2
+      name: 盗窃行为欺骗
+      lie:
+        content: 我看它像是要扔掉的破陶器，所以随手拿了
+        source: Jimmy编造理由
+      required_evidences: [EV1441]
+      evidence_names: [Tommy目击证词]
+      result: Jimmy被迫承认与Webb关系密切
+
+    - round: 3
+      name: 关系和谐欺骗
+      lie:
+        content: 我们合作很紧密，一直很愉快，从来没有矛盾
+        source: Jimmy伪装和谐
+      required_evidences: [EV1341]
+      evidence_names: [Vivian争吵目击证词]
+      result: Jimmy被迫透露Whale的存在
+
+  truth_revealed: |
+    Jimmy与Webb关系密切，深度参与勒索生意
+    存在一个叫"Whale"的超级危险目标
+    Jimmy曾警告Webb不要勒索Whale
+
+# ===== 结尾 =====
+ending:
+  description: Jimmy透露Whale的存在，引出Vivian线索
+  dialog_file: loop4/ending.yaml
+  transition_to: Unit1_Loop5
+  next_objective: Vivian和Webb的关系是什么？她知道Whale是谁吗？
+  transition_text: Jimmy说Vivian可能知道更多关于Whale的事...
+
+# 循环总结
+summary:
+  duration: 约8分钟
+  core_discoveries:
+    - Jimmy与Webb关系密切
+    - Jimmy参与勒索生意
+    - Whale是超级危险人物
+    - Jimmy曾警告Webb
+  next_target: Vivian和Whale的真实身份

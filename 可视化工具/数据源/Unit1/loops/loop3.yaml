@@ -1,0 +1,171 @@
+# NDC Episode 1 - 循环3
+# Tommy勒索网络
+# 调查目标：Webb的真正生意是什么？
+
+loop_id: Unit1_Loop3
+chapter: 1
+loop_number: 3
+title: Tommy勒索网络
+title_en: Tommy Blackmail Network
+
+investigation_target: Webb的真正生意是什么？
+core_lie: Tommy声称Webb只做私酒生意，没有其他业务
+
+# ===== 本循环场景总览 =====
+scenes_overview:
+  - scene: SC1010
+    name: 酒吧大堂
+    status: accessible
+    type: npc
+    note: Tommy对话和指证地点
+
+  - scene: SC1003
+    name: Tommy办公室
+    status: accessible
+    type: search
+    note: 搜索财务证据
+
+  - scene: SC1008
+    name: Webb办公室
+    status: accessible
+    type: search
+    note: 搜索古董和勒索证据
+
+  - scene: SC1009
+    name: 酒吧歌舞厅
+    status: accessible
+    type: search
+    note: 现场照片证据
+
+# ===== 本循环可获取证据 =====
+available_evidences:
+  - EV1311  # Webb月收入财务报告
+  - EV1313  # Tommy的详细工作记录
+  - EV1320  # Webb古董收藏记录
+  - EV1322  # Webb酒吧营业收入记录
+  - EV1331  # 酒吧歌舞厅现场照片-欧洲油画
+  - EV1332  # 酒吧歌舞厅现场照片-中国花瓶
+  - EV1351  # Whale的神秘电话
+  - EV1361  # Tommy的证词
+
+# ===== 本循环可对话NPC =====
+available_npcs:
+  - NPC105  # Tommy
+
+# ===== 开篇 =====
+opening:
+  missing: true
+  reason: Loop2的ending对话已包含前往Webb办公室的场景，直接进入自由环节
+  inherited_from: Unit1_Loop2.ending.police_station_exit
+
+# ===== 自由环节 =====
+free_phase:
+  description: 调查Webb的真正生意
+  scenes:
+    - scene: SC1003
+      type: search
+      evidences:
+        - id: EV1311
+        - id: EV1313
+        - id: EV1322
+
+    - scene: SC1008
+      type: search
+      evidences:
+        - id: EV1320
+      special_event:
+        trigger: 搜索Webb办公室
+        dialog_file: loop3/whale_call.yaml
+
+    - scene: SC1009
+      type: search
+      evidences:
+        - id: EV1331
+        - id: EV1332
+
+    - scene: SC1007
+      type: npc
+      npc: NPC106
+      dialog_file: loop3/vivian.yaml
+      evidences:
+        - id: EV1341
+
+    - scene: SC1001
+      type: npc
+      npc: NPC103
+      dialog_file: loop3/rosa.yaml
+      evidences:
+        - id: EV1351
+
+    - scene: SC1010
+      type: npc
+      npc: NPC105
+      dialog_file: loop3/tommy.yaml
+      evidences:
+        - id: EV1361
+
+# ===== 指证 =====
+expose:
+  scene: SC1010
+  scene_name: 酒吧大堂
+  target: NPC105
+  target_name: Tommy
+  total_rounds: 3
+  total_duration: 90秒
+  design_concept: 三轮精准指证，揭露勒索网络
+  dialog_file: loop3/accusation.yaml
+
+  rounds:
+    - round: 1
+      name: 收入来源谎言
+      lie:
+        content: 收入全部来自酒类销售
+        source: Tommy声称只做私酒
+      required_evidences: [EV1311, EV1322]
+      evidence_names: [Webb月收入财务报告, Webb酒吧营业收入记录]
+      result: Tommy被迫承认还有古董买卖
+
+    - round: 2
+      name: 古董销售谎言
+      lie:
+        content: 古董是正常买卖，已经卖出去了
+        source: Tommy转移话题
+      required_evidences: [EV1331, EV1332]
+      evidence_names: [酒吧歌舞厅现场照片-欧洲油画, 酒吧歌舞厅现场照片-中国花瓶]
+      result: Tommy无法解释古董为何还在现场
+
+    - round: 3
+      name: 不知情谎言
+      lie:
+        content: 我只是做账的，不知道具体业务
+        source: Tommy推卸责任
+      required_evidences: [EV1313]
+      evidence_names: [Tommy的详细工作记录]
+      result: 彻底击破Tommy的谎言
+
+  truth_revealed: |
+    Webb经营勒索网络，用古董作为档案代号
+    Tommy深度参与，管理整个勒索网络的账目
+    Jimmy也参与勒索生意，可能知道更多
+
+# ===== 结尾 =====
+ending:
+  scene: SC1014
+  scene_name: Zack的车内
+  description: 车内深夜对话，Zack和Emma讨论案情、分享过往，决定前往Jimmy家调查
+  dialog_file: loop3/ending.yaml
+  dialog_section: car_conversation
+  includes_next_loop_opening: true
+  transition_to: Unit1_Loop4
+  next_objective: Jimmy和Webb的关系是什么？Webb勒索的"Whale"是谁？
+  transition_text: Tommy说Jimmy也参与了Webb的生意...他可能知道更多关于Whale的事。
+
+# 循环总结
+summary:
+  duration: 约8分钟
+  core_discoveries:
+    - Webb经营勒索网络
+    - 用古董作为档案代号
+    - Tommy是核心账目管理者
+    - Jimmy深度参与
+  next_target: Jimmy和Whale的真实身份

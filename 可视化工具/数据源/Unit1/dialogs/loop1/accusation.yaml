@@ -1,0 +1,144 @@
+# NDC Episode 1 - 循环1 指证对话
+# 目标：三轮击破Rosa谎言，揭露Morrison
+
+dialog_id: loop1_accusation
+loop: 1
+type: accusation
+
+expose_info:
+  target: NPC103
+  total_rounds: 3
+  duration: 约54秒
+  design_concept: 专业侦探 vs 恐惧母亲的心理博弈
+
+opening:
+  lines:
+    - speaker: NPC101
+      emotion: calm
+      text: "Rosa，我需要问你一些问题。"
+
+    - speaker: NPC103
+      emotion: nervous
+      text: "Brennan先生...我...我很忙..."
+
+    - speaker: NPC101
+      emotion: firm
+      text: "不会耽误你太久。关于昨晚的事。"
+
+rounds:
+  - round: 1
+    name: 地点谎言
+    lie:
+      content: "我一直在地下室酒窖清理，整理酒瓶和架子"
+      source: Rosa虚假陈述
+
+    required_evidences: [EV1115]
+    evidence_names: [工作记录卡]
+
+    dialog:
+      - speaker: NPC103
+        emotion: nervous
+        text: "昨晚...我一直在地下室酒窖清理，整理酒瓶和架子..."
+
+      - speaker: NPC101
+        action: 取出工作记录卡，平静但严厉
+        emotion: serious
+        text: "Rosa，这是你的工作安排表。上面明确写着你昨晚23:00到01:00在后台走廊清洁，不是地下室酒窖。你为什么要撒谎？"
+
+      - speaker: NPC103
+        action: 声音颤抖，开始搓手
+        emotion: panicked
+        text: "哦...哦天哪，我...我可能记错了...最近太累了，总是搞混工作安排...对，我是在后台清洁..."
+
+    result: 地点谎言被戳穿，Rosa被迫修正说法
+
+  - round: 2
+    name: 目击谎言
+    lie:
+      content: "我在后台走廊工作，但我很专心清洁地板和墙壁，那里很安静，什么异常都没发生..."
+      source: Rosa否认目击
+
+    required_evidences: [EV1114, EV1121]
+    evidence_names: [沾有氯仿的毛巾, 氯仿瓶]
+
+    dialog:
+      - speaker: NPC103
+        emotion: defensive
+        text: "我在后台走廊工作，但我很专心清洁地板和墙壁，那里很安静，什么异常都没发生..."
+
+      - speaker: NPC101
+        action: 严肃地展示毛巾和氯仿瓶
+        emotion: accusatory
+        text: "专心清洁？Rosa，这条毛巾在你的工作区域被发现，上面有氯仿残留。而这个氯仿瓶是在后台走廊的垃圾桶内发现的，你说当时你在后台清洁，你工作区域的毛巾沾染了案发现场附近的氯仿，氯仿是医用麻醉剂，不是清洁用品。如果你什么都没看到，怎么解释这个？"
+
+      - speaker: NPC103
+        action: 长时间沉默，看着毛巾，眼中涌出泪水
+        emotion: breaking
+        text: "我...我..."
+
+      - speaker: NPC103
+        action: 抱头哭泣
+        emotion: confessing
+        text: "好吧！是我！是我用这条毛巾迷昏了您！我儿子Miguel生病了，需要手术费，我实在没办法了...求求您别让我坐牢，Miguel还需要我照顾..."
+
+    result: 目击谎言被彻底击破，Rosa承认使用氯仿
+
+  - round: 3
+    name: 自认谎言
+    lie:
+      content: "我等您路过走廊时，从背后用毛巾捂住您的嘴和鼻子...您昏倒后我把您拖到Webb先生的办公室..."
+      source: Rosa虚假自认
+
+    required_evidences: [EV1122]
+    evidence_names: [地板拖拽痕迹]
+
+    dialog:
+      - speaker: NPC103
+        emotion: desperate
+        text: "我等您路过走廊时，从背后用毛巾捂住您的嘴和鼻子...您昏倒后我把您拖到Webb先生的办公室..."
+
+      - speaker: NPC101
+        action: 温和但坚定，展示照片
+        emotion: analytical
+        text: "Rosa，我相信你爱你的儿子，但你不是凶手。看这些拖拽痕迹——需要150磅的力量才能造成2.5厘米的压痕。你体重不到120磅，根本做不到。谁威胁你这样说的？"
+
+      - speaker: NPC103
+        action: 声音几乎是耳语，充满恐惧
+        emotion: terrified
+        text: "是...是Morrison警官..."
+
+      - speaker: NPC103
+        action: 抱头痛哭
+        emotion: broken
+        text: "他...他说如果我不配合，就让我失去工作...他知道我儿子生病的事，知道我需要这份工作...我不知道他要做什么！我只是按他说的，如果有人问起，就说什么都没看到...如果实在瞒不住，就说是我做的..."
+
+      - speaker: NPC103
+        action: 看向Zack，眼中充满恐惧
+        emotion: pleading
+        text: "求求您别让Morrison知道我说了...我真的不知道他具体做了什么...我发誓！"
+
+    result: 自认谎言被彻底否定，揭露Morrison是幕后黑手
+
+truth_reveal:
+  lines:
+    - speaker: NPC101
+      emotion: cold
+      text: "Rosa，你不用害怕。Morrison会为他做的事付出代价。"
+
+    - speaker: NPC103
+      emotion: hopeful
+      text: "真的吗...Brennan先生..."
+
+    - speaker: NPC101
+      emotion: reassuring
+      text: "我会保护你。但你要配合我的调查。"
+
+    - speaker: NPC103
+      emotion: grateful
+      text: "我...我会的...谢谢您..."
+
+truth_summary:
+  rosa_role: 被Morrison威胁的帮凶，负责用氯仿迷晕Zack
+  morrison_involvement: Morrison是幕后指使者，威胁Rosa配合栽赃
+  key_revelation: Morrison才是真正需要调查的对象
+  next_target: 调查Morrison，揭露更深层的阴谋

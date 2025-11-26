@@ -1,0 +1,260 @@
+# NDC 美术资源映射表
+# 管理所有美术资源的命名和制作状态
+
+# ===== 命名规则 =====
+naming_rules:
+  background:
+    pattern: "SC00{scene_num}_bg_{scene_name_en}"
+    description: 场景背景图
+    example: SC001_bg_storageroom
+
+  clue:
+    pattern: "SC{loop}{scene_num}_clue_{num:02d}"
+    sizes: [default, big, icon]
+    description: 证据资源（需要三种尺寸）
+    example: SC101_clue_01
+
+  item:
+    pattern: "SC{loop}{scene_num}_item_{num:02d}"
+    sizes: [default, big, icon]
+    description: 物品资源（需要三种尺寸）
+    example: SC101_item_01
+
+  note:
+    pattern: "SC{loop}{scene_num}_note_{num:02d}"
+    description: 证词资源（通常无美术）
+    example: SC103_note_01
+
+  npc_avatar:
+    pattern: "{npc_name}_{angle}_{expression}"
+    angles: [front, side, back]
+    description: NPC立绘
+    example: Rosa_front_neutral
+
+  npc_scene:
+    pattern: "SC{loop}{scene_num}_npc_{npc_name}"
+    description: 场景内NPC姿态图
+    example: SC101_npc_Rosa
+
+# ===== 资源清单 =====
+assets:
+  # ----- 场景背景 -----
+  SC001_bg_storageroom:
+    type: background
+    scene: SC01
+    name: Rosa储藏室背景
+    status: not_started
+    files:
+      - SC001_bg_storageroom.png
+
+  SC002_bg_corridor:
+    type: background
+    scene: SC02
+    name: 歌舞厅一楼走廊背景
+    status: not_started
+    files:
+      - SC002_bg_corridor.png
+
+  SC003_bg_office:
+    type: background
+    scene: SC03
+    name: Tommy办公室背景
+    status: not_started
+    files:
+      - SC003_bg_office.png
+
+  SC004_bg_barhall:
+    type: background
+    scene: SC04
+    name: 酒吧大堂背景
+    status: not_started
+    files:
+      - SC004_bg_barhall.png
+
+  SC005_bg_crimescene:
+    type: background
+    scene: SC05
+    name: Webb办公室（案发现场）背景
+    status: not_started
+    files:
+      - SC005_bg_crimescene.png
+
+  SC006_bg_street:
+    type: background
+    scene: SC_OPENING_02
+    name: 酒吧外街道背景
+    status: not_started
+    files:
+      - SC006_bg_street.png
+
+  # ----- 循环1 证据资源 -----
+  SC101_clue_01:
+    type: clue
+    evidence: EV001
+    loop: 1
+    scene: SC01
+    name: 芝加哥警局通缉令
+    status: not_started
+    files:
+      - SC101_clue_01.png
+      - SC101_clue_01_big.png
+      - SC101_clue_01_icon.png
+
+  SC101_clue_02:
+    type: clue
+    evidence: EV002
+    loop: 1
+    scene: SC01
+    name: Rosa的女儿照片
+    status: not_started
+    files:
+      - SC101_clue_02.png
+      - SC101_clue_02_big.png
+      - SC101_clue_02_icon.png
+
+  SC101_clue_03:
+    type: clue
+    evidence: EV003
+    loop: 1
+    scene: SC01
+    name: Rosa的医院就诊清单
+    status: not_started
+    files:
+      - SC101_clue_03.png
+      - SC101_clue_03_big.png
+      - SC101_clue_03_icon.png
+
+  SC101_clue_04:
+    type: clue
+    evidence: EV004
+    loop: 1
+    scene: SC01
+    name: 沾有氯仿的毛巾
+    status: not_started
+    files:
+      - SC101_clue_04.png
+      - SC101_clue_04_big.png
+      - SC101_clue_04_icon.png
+
+  SC101_clue_05:
+    type: clue
+    evidence: EV005
+    loop: 1
+    scene: SC01
+    name: 工作记录卡
+    status: not_started
+    files:
+      - SC101_clue_05.png
+      - SC101_clue_05_big.png
+      - SC101_clue_05_icon.png
+
+  SC102_clue_01:
+    type: clue
+    evidence: EV006
+    loop: 1
+    scene: SC02
+    name: 氯仿瓶
+    status: not_started
+    files:
+      - SC102_clue_01.png
+      - SC102_clue_01_big.png
+      - SC102_clue_01_icon.png
+
+  SC102_clue_02:
+    type: clue
+    evidence: EV007
+    loop: 1
+    scene: SC02
+    name: 地板拖拽痕迹
+    status: not_started
+    files:
+      - SC102_clue_02.png
+      - SC102_clue_02_big.png
+      - SC102_clue_02_icon.png
+
+  SC103_note_01:
+    type: note
+    evidence: EV008
+    loop: 1
+    scene: SC03
+    name: Tommy时间证词
+    status: not_started
+    files: []  # 证词通常无美术资源
+
+  # ----- NPC 立绘 -----
+  Rosa_front_neutral:
+    type: npc_avatar
+    npc: NPC003
+    angle: front
+    expression: neutral
+    status: not_started
+    files:
+      - Rosa_front_neutral.png
+
+  Rosa_front_nervous:
+    type: npc_avatar
+    npc: NPC003
+    angle: front
+    expression: nervous
+    status: not_started
+    files:
+      - Rosa_front_nervous.png
+
+  Rosa_front_crying:
+    type: npc_avatar
+    npc: NPC003
+    angle: front
+    expression: crying
+    status: not_started
+    files:
+      - Rosa_front_crying.png
+
+  Tommy_front_neutral:
+    type: npc_avatar
+    npc: NPC005
+    angle: front
+    expression: neutral
+    status: not_started
+    files:
+      - Tommy_front_neutral.png
+
+  Morrison_front_angry:
+    type: npc_avatar
+    npc: NPC004
+    angle: front
+    expression: angry
+    status: not_started
+    files:
+      - Morrison_front_angry.png
+
+  Zack_front_neutral:
+    type: npc_avatar
+    npc: NPC001
+    angle: front
+    expression: neutral
+    status: not_started
+    files:
+      - Zack_front_neutral.png
+
+  Emma_front_neutral:
+    type: npc_avatar
+    npc: NPC002
+    angle: front
+    expression: neutral
+    status: not_started
+    files:
+      - Emma_front_neutral.png
+
+# ===== 统计汇总 =====
+_summary:
+  total_assets: 21
+  by_type:
+    background: 6
+    clue: 7
+    note: 1
+    npc_avatar: 7
+  by_status:
+    completed: 0
+    in_progress: 0
+    not_started: 21
+  files_needed: 45  # 包括三种尺寸

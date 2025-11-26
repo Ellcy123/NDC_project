@@ -1,0 +1,104 @@
+# NDC Episode 1 - 循环4 Rosa对话
+
+dialog_id: loop4_rosa
+loop: 4
+type: npc_dialog
+npc: NPC103
+
+sections:
+  main_dialog:
+    description: 询问Jimmy的异常行为
+    lines:
+      - speaker: NPC103
+        emotion: respectful
+        text: "Brennan先生..."
+
+      - speaker: NPC101
+        emotion: direct
+        text: "Jimmy最近有什么异常行为吗?"
+
+      - speaker: NPC103
+        emotion: uncertain
+        text: "Jimmy?我...我不太注意他...为什么..."
+
+      - speaker: NPC101
+        emotion: encouraging
+        text: "想想。任何异常。"
+
+  key_observation:
+    description: 关键观察
+    lines:
+      - speaker: NPC103
+        action: 思考片刻
+        emotion: recalling
+        text: "我...让我想想...哦...对了,大概一周前,我在走廊清洁...看到Jimmy去了Webb先生的会客室..."
+
+      - speaker: NPC101
+        emotion: alert
+        text: "会客室?"
+
+      - speaker: NPC103
+        emotion: explaining
+        text: "对...他用钥匙开的门...我当时觉得有点奇怪..."
+
+      - speaker: NPC101
+        emotion: probing
+        text: "为什么奇怪?"
+
+      - speaker: NPC103
+        emotion: analytical
+        text: "因为会客室里...没什么值钱东西...就是沙发、酒柜...如果要找什么,应该去办公室...那里才有贵重物品..."
+
+  details:
+    description: 细节追问
+    lines:
+      - speaker: NPC101
+        emotion: curious
+        text: "他在里面待了多久?"
+
+      - speaker: NPC103
+        emotion: recounting
+        text: "很短...两三分钟?然后就出来了...脸色不太好...左右看了看...然后快步走了..."
+
+      - speaker: NPC101
+        emotion: probing
+        text: "看到你了?"
+
+      - speaker: NPC103
+        emotion: describing
+        text: "看到了...他愣了一下,对我笑了笑...但那个笑容...很勉强...就像...就像心里有事..."
+
+      - speaker: NPC101
+        emotion: pressing
+        text: "他说什么了?"
+
+      - speaker: NPC103
+        emotion: matter_of_fact
+        text: "没有...什么都没说就走了..."
+
+  conclusion:
+    description: 对话结束
+    lines:
+      - speaker: NPC101
+        emotion: thorough
+        text: "还有别的吗?"
+
+      - speaker: NPC103
+        emotion: anxious
+        text: "没...没有了...就这些...Brennan先生,我...我没做错什么吧?我只是看到了..."
+
+      - speaker: NPC101
+        emotion: reassuring
+        text: "你做得很好。谢谢你Rosa。"
+
+      - speaker: NPC103
+        emotion: relieved
+        text: "不...不客气...Brennan先生..."
+
+      - speaker: narration
+        text: "获得证据：Rosa关于Jimmy用钥匙进入会客室的证词"
+
+evidence_obtained:
+  - id: EV1442
+    name: Jimmy曾用钥匙进入Webb会客室
+    description: Rosa看到Jimmy用钥匙进入Webb会客室，但那里没有值钱东西，行为可疑

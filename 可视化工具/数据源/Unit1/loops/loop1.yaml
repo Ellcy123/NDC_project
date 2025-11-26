@@ -1,0 +1,184 @@
+# NDC Episode 1 - 循环1
+# Rosa现场目击指证
+# 调查目标：案发现场发生了什么？
+
+loop_id: Unit1_Loop1
+chapter: 1
+loop_number: 1
+title: Rosa现场目击指证
+title_en: Rosa Eyewitness Accusation
+
+investigation_target: 到底是谁把我迷晕了，还想把杀人的罪名扣在我头上？
+core_lie: Rosa声称一直在地下室酒窖工作，什么都没看到
+
+# ===== 本循环场景总览 =====
+scenes_overview:
+  - scene: SC1001
+    name: Rosa储藏室
+    status: accessible
+    type: search
+    note: 可搜索获取证据，可与Rosa对话
+
+  - scene: SC1002
+    name: 歌舞厅一楼走廊
+    status: accessible
+    type: search
+    note: 可搜索获取证据
+
+  - scene: SC1003
+    name: Tommy办公室
+    status: accessible
+    type: npc
+    note: 可与Tommy对话
+
+  - scene: SC1010
+    name: 酒吧大堂
+    status: accessible
+    type: npc
+    note: 指证地点
+
+  - scene: SC1004
+    name: Webb会客室（案发现场）
+    status: locked
+    type: story
+    note: 本循环不可进入
+
+  - scene: SC1008
+    name: Webb办公室
+    status: locked
+    type: story
+    note: 本循环不可进入
+
+# ===== 本循环可获取证据 =====
+available_evidences:
+  - EV1111  # 芝加哥警局通缉令
+  - EV1112  # Rosa的女儿照片
+  - EV1113  # Rosa的医院就诊清单
+  - EV1114  # 沾有氯仿的毛巾（可分析）
+  - EV1115  # 工作记录卡
+  - EV1121  # 氯仿瓶
+  - EV1122  # 地板拖拽痕迹（可分析）
+  - EV1133  # Tommy时间证词
+
+# ===== 本循环可对话NPC =====
+available_npcs:
+  - NPC103  # Rosa
+  - NPC105  # Tommy
+
+# ===== 开篇 =====
+opening:
+  description: Zack在案发现场附近醒来，被Emma救出，开始调查
+  scenes:
+    - id: webb_office
+      scene_id: SC1004
+      name: Webb会客室
+      description: Zack猛然惊醒，发现自己在案发现场旁
+      dialog_file: loop1/opening.yaml
+      dialog_section: webb_office
+
+    - id: street_meeting
+      scene_id: SC1013
+      name: 酒吧外街道
+      description: Zack和Emma在街道上初次合作
+      dialog_file: loop1/opening2.yaml
+      dialog_section: street_meeting
+
+# ===== 自由环节 =====
+free_phase:
+  description: 玩家可自由探索场景，收集证据和对话
+  scenes:
+    - scene: SC1001
+      type: search
+      npc: NPC103
+      evidences:
+        - id: EV1111
+        - id: EV1112
+          puzzle_hint: 生日0915是密码
+        - id: EV1113
+        - id: EV1114
+          requires: 密码0915解锁工具箱
+          analyzable: true
+        - id: EV1115
+
+    - scene: SC1002
+      type: search
+      evidences:
+        - id: EV1121
+        - id: EV1122
+          analyzable: true
+
+    - scene: SC1003
+      type: npc
+      npc: NPC105
+      dialog_file: loop1/tommy.yaml
+      evidences:
+        - id: EV1133
+
+    - scene: SC1010
+      type: npc
+      npc: NPC103
+      dialog_file: loop1/rosa.yaml
+      evidences: []
+
+# ===== 指证 =====
+expose:
+  scene: SC1010
+  scene_name: 酒吧大堂
+  target: NPC103
+  target_name: Rosa Martinez
+  total_rounds: 3
+  total_duration: 54秒
+  design_concept: 三次证据否定，层层击破谎言
+  dialog_file: loop1/accusation.yaml
+
+  rounds:
+    - round: 1
+      name: 否定地点谎言
+      duration: 22秒
+      lie:
+        content: 我一直在地下室酒窖工作，什么都没看到
+        source: Rosa初始证词
+      required_evidences: [EV1115]
+      evidence_names: [工作记录卡]
+      result: 地点谎言被戳穿，Rosa被迫修正说法
+
+    - round: 2
+      name: 否定目击谎言
+      duration: 16秒
+      lie:
+        content: 我在后台走廊工作，但我很专心清洁，什么异常都没发生
+        source: Rosa修正后的说法
+      required_evidences: [EV1114, EV1121]
+      evidence_names: [沾有氯仿的毛巾, 氯仿瓶]
+      result: Rosa承认看到了拖拽痕迹，但声称是自己迷晕的Zack
+
+    - round: 3
+      name: 否定自认，揭露真相
+      duration: 16秒
+      lie:
+        content: 是我用毛巾迷昏了您，我儿子Miguel生病需要手术费
+        source: Rosa的虚假自认
+      required_evidences: [EV1122]
+      evidence_names: [地板拖拽痕迹]
+      result: Rosa承认是Morrison警官迷晕了Zack，她被威胁不能说出真相
+
+  truth_revealed: Rosa承认是Morrison警官迷晕了Zack，她被威胁不能说出真相
+
+# ===== 结尾 =====
+ending:
+  scene: SC1013
+  scene_name: 酒吧外街道
+  description: 循环1结束，过渡到循环2
+  dialog_file: loop1/ending.yaml
+  transition_to: Unit1_Loop2
+  next_objective: Morrison为何要陷害我？
+  transition_text: Morrison迷晕了我...他为什么要这么做？这背后一定有更大的阴谋。
+
+# 循环总结
+summary:
+  duration: 约8分钟
+  core_discoveries:
+    - Rosa目击Morrison迷晕Zack
+    - Morrison是栽赃的帮凶
+    - Rosa因为儿子的医疗费被威胁
+  next_target: Morrison的动机和幕后黑手
