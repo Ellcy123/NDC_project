@@ -83,16 +83,13 @@ lines:
   - speaker: player_choice
     options:
       - text: "继续追问"
-        emotion: aggressive
         next_section: confrontation
 
       - text: "用证据戳穿她"
-        emotion: cold
         next_section: evidence_route
         required_evidences: [EV1115]  # 需要特定证据才能选择
 
       - text: "关心她的处境"
-        emotion: gentle
         next_section: empathy_route
 ```
 
@@ -101,26 +98,117 @@ lines:
 | 字段 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | `text` | string | ✓ | 选项文本 |
-| `emotion` | string |  | 选择该选项时的情绪 |
 | `next_section` | string | ✓ | 跳转到的section名称 |
 | `required_evidences` | array |  | 需要的证据ID列表，不满足则不显示该选项 |
 | `condition` | string |  | 其他条件（如变量、状态等） |
 
-## 条件Section
+## 条件Section（未实现功能）
 
-某些section可以根据条件自动触发：
+**状态**：⚠️ 此功能为设计方案，HTML暂未实现
+
+### 设计说明
+
+某些section可以作为"条件决策点"，根据玩家状态（证据、变量等）自动跳转到不同的section。
+
+### 触发机制
+
+条件section通过`next_section`明确指定跳转，不是按YAML定义顺序执行：
 
 ```yaml
-sections:
-  decision_point:
-    description: 根据证据情况自动选择路线
-    conditions:
-      - has_evidence: EV1115
-        next_section: evidence_confrontation
-      - default: true
-        next_section: normal_dialog
-    lines: []  # 条件section可以没有对话
+# 普通对话
+initial_contact:
+  lines:
+    - speaker: NPC103
+      text: "我一直在地下室..."
+    - speaker: player_choice
+      options:
+        - text: "继续追问"
+          next_section: evidence_check  # ✅ 明确跳转到条件section
+
+# 条件决策点 - 玩家看不到，自动判断
+evidence_check:
+  description: 根据证据情况自动选择路线
+  conditions:
+    - has_evidence: EV1115
+      next_section: evidence_confrontation  # 有证据→跳这里
+    - default: true
+      next_section: normal_dialog           # 没证据→跳这里
+  lines: []  # 条件section不包含对话内容
 ```
+
+### Conditions字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `has_evidence` | string |  | 检查是否拥有某证据（如`EV1115`） |
+| `has_variable` | string |  | 检查变量条件（如`morrison_trust >= 50`） |
+| `default` | boolean |  | 默认路线，所有条件不满足时触发 |
+| `next_section` | string | ✓ | 满足条件后跳转的section名称 |
+
+### 命名规范
+
+每个条件section应有独特的描述性名称，推荐格式：**动作_名词**
+
+- ✅ `evidence_check` - 证据检查
+- ✅ `relationship_branch` - 关系分支
+- ✅ `trust_decision` - 信任决策
+- ✅ `finale_route` - 结局路由
+- ❌ `decision_point1`, `decision_point2` - 不够描述性
+
+### 完整示例：多条件分支
+
+```yaml
+# 初次接触
+initial_contact:
+  lines:
+    - speaker: NPC102
+      text: "你想知道什么？"
+  next_section: evidence_check  # section结束后跳转
+
+# 条件1：检查证据
+evidence_check:
+  description: 根据证据数量决定NPC态度
+  conditions:
+    - has_evidence: EV1115
+      next_section: defensive_route
+    - default: true
+      next_section: relaxed_route
+  lines: []
+
+# 防御路线
+defensive_route:
+  lines:
+    - speaker: NPC102
+      emotion: tense
+      text: "你从哪儿弄到这个的？"
+  next_section: relationship_check  # 再次跳转到条件2
+
+# 放松路线
+relaxed_route:
+  lines:
+    - speaker: NPC102
+      emotion: casual
+      text: "那晚我在巡逻。"
+  # 没有next_section，对话结束
+
+# 条件2：检查关系值
+relationship_check:
+  description: 根据关系值决定结局
+  conditions:
+    - has_variable: trust >= 50
+      next_section: cooperative_ending
+    - default: true
+      next_section: hostile_ending
+  lines: []
+```
+
+### 跳转规则总结
+
+1. **不按位置顺序**：section不会自动按YAML定义顺序执行
+2. **明确跳转**：通过`next_section`字段明确指定跳转目标
+3. **玩家选择跳转**：通过`player_choice`的`options[].next_section`跳转
+4. **条件自动判断**：跳转到条件section时，自动判断并再次跳转
+5. **结束条件**：如果section没有`next_section`，对话结束
 
 ## 完整示例
 
@@ -156,16 +244,13 @@ initial_contact:
     - speaker: player_choice
       options:
         - text: "直接质问她在撒谎"
-          emotion: aggressive
           next_section: confrontation
 
         - text: "用工作记录卡戳穿她"
-          emotion: cold
           next_section: evidence_confrontation
           required_evidences: [EV1115]
 
         - text: "询问她女儿的情况"
-          emotion: gentle
           next_section: daughter_topic
 
 confrontation:

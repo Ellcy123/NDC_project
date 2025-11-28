@@ -55,39 +55,11 @@ scenes_overview:
     type: npc
     note: 获取时间证词
 
-# ===== 本循环可获取证据 =====
-available_evidences:
-  # Morrison家书房证据
-  - EV1211  # Morrison夫人时间证词
-  - EV1221  # 警用便携式现场勘验箱领用单据
-  - EV1222  # 警用便携式现场勘验箱
-  - EV1223  # Morrison的收据
-  - EV1224  # "Whale"特殊纹样纸条
-  - EV1225  # 记账本
-  - EV1226  # 1920年世博会门票
-  - EV1227  # Morrison的家庭照
-  # Webb会客室证据
-  - EV1209  # 警用便携式现场勘验箱压痕
-  - EV1231  # Vivian和Webb合影
-  # 证词
-  - EV1241  # Vivian时间证词
-  - EV1261  # Tommy路线证词
-  - EV1271  # Rosa行为证词
-
-# ===== 本循环可对话NPC =====
-available_npcs:
-  - NPC103  # Rosa
-  - NPC104  # Morrison
-  - NPC105  # Tommy
-  - NPC106  # Vivian
-  - NPC110  # Mrs. Morrison
-
 # ===== 开篇 =====
 opening:
   description: 商议前往Morrison家调查的计划
   scenes:
-    - id: street_planning
-      scene_id: SC1013
+    - scene_id: SC1013
       name: 酒吧外街道
       description: Zack和Emma在街道上商议接近Morrison夫人的计划
       dialog_file: loop2/opening.yaml
@@ -98,66 +70,69 @@ free_phase:
   description: 调查Morrison和Webb周围人物
   scenes:
     - scene: SC1005
-      name: Morrison家客厅（第一次）
       type: npc
       npc: NPC110
       dialog_file: loop2/mrs_morrison.yaml
       dialog_section: first_meeting
       evidences:
         - id: EV1211
+          note: Morrison夫人时间证词
 
     - scene: SC1005
-      name: Morrison家客厅（第二次）
       type: npc
       npc: NPC110
       dialog_file: loop2/mrs_morrison2.yaml
       dialog_section: request_study
-      evidences: []
 
     - scene: SC1006
-      name: Morrison家书房
       type: search
       evidences:
         - id: EV1221
+          note: 警用便携式现场勘验箱领用单据
         - id: EV1222
+          note: 警用便携式现场勘验箱
         - id: EV1223
+          note: Morrison的收据
         - id: EV1224
+          note: Morrison的赌债欠条
         - id: EV1225
+          note: Whale的匿名联系纸条
         - id: EV1226
+          note: 赌场的筹码
         - id: EV1227
+          note: 1920年代报纸头条
 
     - scene: SC1004
-      name: Webb会客室
       type: search
       evidences:
         - id: EV1209
-          analyzable: true
-          analysis_requires: EV1222
+          note: 警用便携式现场勘验箱压痕
         - id: EV1231
+          note: Vivian与Webb的甜蜜合影
 
     - scene: SC1007
-      name: Vivian化妆室
       type: npc
       npc: NPC106
       dialog_file: loop2/vivian.yaml
       evidences:
         - id: EV1241
+          note: Vivian时间证词
 
     - scene: SC1003
-      name: Tommy办公室
       type: npc
       npc: NPC105
       dialog_file: loop2/tommy.yaml
       evidences:
         - id: EV1261
+          note: Tommy关于Morrison路线的证词
 
     - scene: SC1001
-      name: Rosa储藏室
       type: npc
       npc: NPC103
       dialog_file: loop2/rosa.yaml
       evidences:
         - id: EV1271
+          note: Rosa关于Morrison现场行为的证词
 
 # ===== 指证 =====
 expose:
@@ -175,60 +150,37 @@ expose:
       name: 时间线矛盾
       lie:
         content: 00:30我接到匿名电话，立即出警。因为案情紧急，最快速度赶到现场。
-        source: Morrison声称临时接警
       required_evidences: [EV1211, EV1261, EV1241]
-      evidence_names: [Morrison夫人时间证词, Tommy路线证词, Vivian时间证词]
       result: 30分钟路程只需15分钟，时间不对
 
     - round: 2
       name: 预谋行为
       lie:
         content: 我因为走错路耽误了时间
-        source: Morrison辩称
       required_evidences: [EV1221]
-      evidence_names: [警用便携式现场勘验箱领用单据]
       result: 证明Morrison提前一天领用现场勘验箱
 
     - round: 3
       name: 现场操作证据
       lie:
         content: 我没有用到
-        source: Morrison试图解释
-      required_evidences: [EV1209, EV1223]
-      evidence_names: [警用便携式现场勘验箱压痕, 便携式现场勘验箱]
+      required_evidences: [EV1209, EV1222]
       result: 现场压痕与Morrison的勘验箱完全吻合
 
     - round: 4
       name: 职业签名致命击破
       lie:
         content: 那可能是我检查现场时留下的
-        source: Morrison最后挣扎
       required_evidences: [EV1271]
-      evidence_names: [Rosa行为证词]
       result: Rosa证明Morrison检查现场时没有使用任何工具
-
-  truth_revealed: |
-    Morrison迷晕Zack并栽赃给他Webb
-    他欠疤面Tony 5000美元赌债，被"Whale"收买来栽赃Zack
 
 # ===== 结尾 =====
 ending:
   scene: SC1013
-  scene_name: 酒吧外街道/警局门口
+  scene_name: 酒吧外街道
   description: Zack和Emma在警局门口讨论案情，决定前往Webb办公室调查
   dialog_file: loop2/ending.yaml
   dialog_section: police_station_exit
-  includes_next_loop_opening: true
   transition_to: Unit1_Loop3
   next_objective: Webb在勒索谁？为什么Whale要杀他？
   transition_text: Morrison只是帮凶，真正杀死Webb的人是"Whale"。Webb在勒索谁？答案就在Webb的办公室里。
-
-# 循环总结
-summary:
-  duration: 约10分钟
-  core_discoveries:
-    - 'Morrison迷晕Zack并栽赃给他Webb'
-    - 'Morrison被赌债逼迫，被"Whale"收买'
-    - '"Whale"是幕后黑手'
-    - 'Webb可能惹上了大人物'
-  next_target: Webb的生意和"Whale"的身份

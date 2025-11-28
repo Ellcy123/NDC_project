@@ -31,24 +31,9 @@ scenes_overview:
     type: search
     note: 搜索工作证据
 
-# ===== 本循环可获取证据 =====
-available_evidences:
-  - EV1320  # Webb古董收藏记录
-  - EV1341  # Vivian争吵目击证词
-  - EV1411  # 伪装成陶泥的古董水壶
-  - EV1421  # Jimmy家庭合照
-  - EV1441  # Tommy目击证词
-
-# ===== 本循环可对话NPC =====
-available_npcs:
-  - NPC107  # Jimmy
-  - NPC108  # Anna
-
 # ===== 开篇 =====
 opening:
-  missing: true
-  reason: Loop3的ending对话已包含前往Jimmy家的场景和决定，直接进入自由环节
-  inherited_from: Unit1_Loop3.ending.car_conversation
+  description: Loop3的ending对话已包含前往Jimmy家的场景和决定，直接进入自由环节
 
 # ===== 自由环节 =====
 free_phase:
@@ -60,8 +45,9 @@ free_phase:
       dialog_file: loop4/anna.yaml
       evidences:
         - id: EV1411
-          puzzle_hint: 需要用水清洗才能看出真面目
+          note: 伪装成陶泥的古董水壶
         - id: EV1421
+          note: Jimmy家庭合照
 
     - scene: SC1011
       type: search
@@ -110,33 +96,22 @@ expose:
       name: 身份关系欺骗
       lie:
         content: 我只是这里的厨师，Webb雇我就是做些杂事
-        source: Jimmy伪装普通员工
       required_evidences: [EV1320, EV1411]
-      evidence_names: [Webb古董收藏记录, 伪装成陶泥的古董水壶]
       result: Jimmy被迫改口承认拿过水壶
 
     - round: 2
       name: 盗窃行为欺骗
       lie:
         content: 我看它像是要扔掉的破陶器，所以随手拿了
-        source: Jimmy编造理由
       required_evidences: [EV1441]
-      evidence_names: [Tommy目击证词]
       result: Jimmy被迫承认与Webb关系密切
 
     - round: 3
       name: 关系和谐欺骗
       lie:
         content: 我们合作很紧密，一直很愉快，从来没有矛盾
-        source: Jimmy伪装和谐
       required_evidences: [EV1341]
-      evidence_names: [Vivian争吵目击证词]
       result: Jimmy被迫透露Whale的存在
-
-  truth_revealed: |
-    Jimmy与Webb关系密切，深度参与勒索生意
-    存在一个叫"Whale"的超级危险目标
-    Jimmy曾警告Webb不要勒索Whale
 
 # ===== 结尾 =====
 ending:
@@ -146,12 +121,3 @@ ending:
   next_objective: Vivian和Webb的关系是什么？她知道Whale是谁吗？
   transition_text: Jimmy说Vivian可能知道更多关于Whale的事...
 
-# 循环总结
-summary:
-  duration: 约8分钟
-  core_discoveries:
-    - Jimmy与Webb关系密切
-    - Jimmy参与勒索生意
-    - Whale是超级危险人物
-    - Jimmy曾警告Webb
-  next_target: Vivian和Whale的真实身份

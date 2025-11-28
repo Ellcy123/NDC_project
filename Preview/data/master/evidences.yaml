@@ -21,10 +21,8 @@ evidences:
     type: clue
     description:
       initial: 照片背面写着"我的小天使Miguel，生日0915，妈妈的一切希望"
-    puzzle:
-      type: password_hint
-      answer: "0915"
-      unlocks: [EV1114, EV1115]
+    has_puzzle: true
+    puzzle_description: 需要四位密码解锁工具箱，密码提示在女儿照片生日上
     asset_id: SC101_clue_02
     purpose: 强化Rosa母爱主题，提供密码线索
 
@@ -43,10 +41,11 @@ evidences:
     type: item
     description:
       initial: 一条普通的白色毛巾
-      analyzed: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道，这不是清洁用品
-    requires_analysis: true
-    analysis_action: 接近闻嗅
-    result_name: 沾着氯仿的毛巾
+    analysis:
+      required: true
+      action: 接近闻嗅
+      result_name: 沾着氯仿的毛巾
+      result_description: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道，这不是清洁用品
     asset_id: SC101_clue_04
     purpose: 否定Rosa"专心清洁，什么都没看到"的目击谎言
 
@@ -74,9 +73,11 @@ evidences:
     type: clue
     description:
       initial: 地板上的拖拽痕迹
-      analyzed: 压痕较深，被拖动的东西至少150磅，普通女性的力量基本无法完成
-    requires_analysis: true
-    analysis_action: 测量压痕深度
+    analysis:
+      required: true
+      action: 测量压痕深度
+      result_name: 深度拖拽压痕
+      result_description: 压痕较深，被拖动的东西至少150磅，普通女性的力量基本无法完成
     asset_id: SC102_clue_02
     purpose: 否定Rosa的自认，证明她没有足够力量拖拽，揭露Morrison
 
@@ -178,10 +179,11 @@ evidences:
     type: clue
     description:
       initial: 一个普通的四方形压痕
-      analyzed: 四方形的特殊压痕，完全吻合便携式现场勘验箱的尺寸
-    requires_analysis: true
-    analysis_action: 与便携式现场勘验箱比对
-    result_name: 四方形的特殊压痕
+    analysis:
+      required: true
+      action: 与便携式现场勘验箱比对
+      result_name: 四方形的特殊压痕
+      result_description: 四方形的特殊压痕，完全吻合便携式现场勘验箱的尺寸
     asset_id: SC210_clue_01
     purpose: 证明Morrison使用便携式现场勘验箱来到现场
 
@@ -247,10 +249,11 @@ evidences:
     type: item
     description:
       initial: 详细记录客户访问时间、观看古董类型，同一古董多次"销售"记录
-      analyzed: 经过笔迹对比分析，字迹与Tommy的字迹一致
-    requires_analysis: true
-    analysis_action: 笔迹对比分析
-    result_name: Tommy笔迹的详细工作记录
+    analysis:
+      required: true
+      action: 笔迹对比分析
+      result_name: Tommy笔迹的详细工作记录
+      result_description: 经过笔迹对比分析，字迹与Tommy的字迹一致
     asset_id: SC305_clue_03
     purpose: 否定Tommy"不知情，只是做账"的狡辩
 
@@ -331,7 +334,7 @@ evidences:
     name_en: Tommy's Sympathy Diary
     type: item
     description:
-      initial: '作为一个有妻儿的男人，看着Vivian小姐被迫做那些不光彩的事情，我深感羞愧（可用于笔迹对比）'
+      initial: 作为一个有妻儿的男人，看着Vivian小姐被迫做那些不光彩的事情，我深感羞愧（可用于笔迹对比）
     asset_id: SC303_clue_02
     purpose: 展现Tommy对Vivian的同情，为循环5埋伏笔
 
@@ -376,7 +379,7 @@ evidences:
     name_en: Vivian's Quarrel Witness Testimony
     type: note
     description:
-      initial: 'Webb说''别想这么多，多看看我送你的书''，另一个人说''你不要接这个生意，会出大事的'''
+      initial: Webb说'别想这么多，多看看我送你的书'，另一个人说'你不要接这个生意，会出大事的'
     asset_id: SC311_note_01
     purpose: 否定Jimmy"我们关系一直很好"的和谐谎言
 
@@ -385,7 +388,7 @@ evidences:
     name_en: Rosa's Music Volume Testimony
     type: note
     description:
-      initial: '那时候我在清洁，音乐实在太响了，震得我耳朵疼。那种音量下就算有别的声音我也绝对听不到'
+      initial: 那时候我在清洁，音乐实在太响了，震得我耳朵疼。那种音量下就算有别的声音我也绝对听不到
     asset_id: SC301_note_01
     purpose: 从Rosa角度证实音乐掩护效果
 
@@ -394,7 +397,7 @@ evidences:
     name_en: Tommy's Testimony on Jimmy Taking Vase
     type: note
     description:
-      initial: 'Jimmy从Webb先生办公室出来，抱着一个水壶...非常小心翼翼...看到我立刻把水壶藏到身后'
+      initial: Jimmy从Webb先生办公室出来，抱着一个水壶...非常小心翼翼...看到我立刻把水壶藏到身后
     asset_id: SC303_note_02
     purpose: 证明Jimmy从Webb办公室拿走古董
 
@@ -406,10 +409,11 @@ evidences:
     type: item
     description:
       initial: 看似普通的陶制水壶
-      analyzed: 表面人为涂抹泥浆伪装，清理后露出古董底色
-    requires_analysis: true
-    analysis_action: 清理表面泥浆
-    result_name: 一个被故意伪装的贵重古董
+    analysis:
+      required: true
+      action: 清理表面泥浆
+      result_name: 一个被故意伪装的贵重古董
+      result_description: 表面人为涂抹泥浆伪装，清理后露出古董底色
     asset_id: SC414_clue_01
     purpose: 否定Jimmy"不知道是古董，随手拿了破陶器"的盗窃谎言
 
@@ -454,7 +458,7 @@ evidences:
     name_en: Whale's Contact Code
     type: item
     description:
-      initial: '"如果你想清楚了，可以联系我。" 纸张纹样与Morrison处发现的纸条相同'
+      initial: 如果你想清楚了，可以联系我。纸张纹样与Morrison处发现的纸条相同
     asset_id: SC415_clue_02
     purpose: 证明Jimmy与神秘人"Whale"有联系
 
@@ -463,7 +467,7 @@ evidences:
     name_en: Jimmy's Farewell Letter to Anna
     type: envir
     description:
-      initial: '我亲爱的Anna，如果上帝召唤我回家...愿上帝宽恕我的软弱'
+      initial: 我亲爱的Anna，如果上帝召唤我回家...愿上帝宽恕我的软弱
     asset_id: SC415_clue_03
     purpose: 预示Jimmy的最终选择，增强悲剧色彩
 
@@ -517,7 +521,7 @@ evidences:
     name_en: Webb's Anxiety Record
     type: envir
     description:
-      initial: '"WHALE很危险" 便签'
+      initial: WHALE很危险 便签
     asset_id: SC405_clue_01
     purpose: 证明Webb对Whale的恐惧
 
@@ -574,9 +578,8 @@ evidences:
     type: item
     description:
       initial: 法国邮轮船票被撕成碎片，船期是下个月，如果真要旅行不会撕毁
-    puzzle:
-      type: jigsaw
-      note: 拼图小玩法
+    has_puzzle: true
+    puzzle_description: 拼图小玩法，需要玩家将碎片拼合还原船票
     asset_id: SC511_clue_04
     purpose: 否定Vivian"我们还计划去法国旅行"的旅行计划谎言
 
@@ -585,7 +588,7 @@ evidences:
     name_en: Vivian's Personal Diary Excerpt
     type: item
     description:
-      initial: '如果有人背叛了我，我会让他遭受世间最痛苦的事情'
+      initial: 如果有人背叛了我，我会让他遭受世间最痛苦的事情
     asset_id: SC505_clue_01
     purpose: 否定Vivian"我们是和平分手"的和平分手谎言
 
@@ -642,10 +645,11 @@ evidences:
     type: clue
     description:
       initial: 窗外的一个孔洞
-      analyzed: 是一个比较新的枪击孔洞，证明11:30的枪声是故意制造的假象
-    requires_analysis: true
-    analysis_action: 调查孔洞
-    result_name: 窗外的新弹孔
+    analysis:
+      required: true
+      action: 调查孔洞
+      result_name: 窗外的新弹孔
+      result_description: 是一个比较新的枪击孔洞，证明11:30的枪声是故意制造的假象
     asset_id: SC605_clue_01
     purpose: 否定Jimmy"Webb是11:30死的，我有不在场证明"的时间谎言
 
@@ -672,7 +676,7 @@ evidences:
     name_en: Rosa's Testimony on Vivian's Suspicious Items
     type: note
     description:
-      initial: '那天晚上我看到Vivian离开舞台的时候悄悄把什么东西塞进了包里'
+      initial: 那天晚上我看到Vivian离开舞台的时候悄悄把什么东西塞进了包里
     asset_id: SC601_note_01
     purpose: 表示当晚Vivian确实有计划想要杀害Webb
 
@@ -681,7 +685,7 @@ evidences:
     name_en: Vivian's Door Knocking Testimony
     type: note
     description:
-      initial: '11点10分的时候来到Webb的会客室门口，平时他都不锁门，但昨天他锁了门'
+      initial: 11点10分的时候来到Webb的会客室门口，平时他都不锁门，但昨天他锁了门
     asset_id: SC611_note_01
     purpose: 表示当晚11点05时候Webb会客室房门锁着
 

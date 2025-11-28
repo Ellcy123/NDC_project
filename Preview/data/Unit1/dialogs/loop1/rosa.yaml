@@ -5,90 +5,93 @@ loop: 1
 type: npc_dialog
 npc: NPC103
 
-sections:
-  initial_contact:
-    description: 初次接触
-    lines:
-      - speaker: NPC101
-        emotion: direct
-        text: "你是这儿的清洁工？"
+# Section: 初次接触
+initial_contact:
+  description: 初次接触
+  lines:
+    - speaker: NPC101
+      emotion: direct
+      text: "你是这儿的清洁工？"
 
-      - speaker: NPC103
-        emotion: nervous
-        text: "是...是的，先生。"
+    - speaker: NPC103
+      emotion: nervous
+      text: "是...是的，先生。"
 
-      - speaker: NPC101
-        emotion: professional
-        text: "Zack Brennan，私家侦探。昨晚你在哪儿工作？"
+    - speaker: NPC101
+      emotion: professional
+      text: "Zack Brennan，私家侦探。昨晚你在哪儿工作？"
 
-      - speaker: NPC103
-        emotion: evasive
-        text: "我...我一直在地下室。酒窖那边，整理酒瓶和架子...很忙的...一直在那儿..."
+    - speaker: NPC103
+      emotion: evasive
+      text: "我...我一直在地下室。酒窖那边，整理酒瓶和架子...很忙的...一直在那儿..."
 
-  probing:
-    description: 试探
-    lines:
-      - speaker: NPC101
-        emotion: skeptical
-        text: "整晚？"
+# Section: 试探
+probing:
+  description: 试探
+  lines:
+    - speaker: NPC101
+      emotion: skeptical
+      text: "整晚？"
 
-      - speaker: NPC103
-        emotion: defensive
-        text: "对！一直在！我什么都...什么都没看到！"
+    - speaker: NPC103
+      emotion: defensive
+      text: "对！一直在！我什么都...什么都没看到！"
 
-      - speaker: NPC101
-        emotion: sharp
-        text: "我还没问你看到什么。"
+    - speaker: NPC101
+      emotion: sharp
+      text: "我还没问你看到什么。"
 
-      - speaker: NPC103
-        emotion: panicked
-        text: "我是说...地下室很安静，我就...就一直在干活...什么都不知道..."
+    - speaker: NPC103
+      emotion: panicked
+      text: "我是说...地下室很安静，我就...就一直在干活...什么都不知道..."
 
-  confrontation:
-    description: 对峙
-    lines:
-      - speaker: NPC101
-        emotion: probing
-        text: "地下室能听到一楼的枪声吗？"
+# Section: 对峙
+confrontation:
+  description: 对峙
+  lines:
+    - speaker: NPC101
+      emotion: probing
+      text: "地下室能听到一楼的枪声吗？"
 
-      - speaker: NPC103
-        emotion: desperate
-        text: "听...听不到！地下室很深，我什么都没听到..."
+    - speaker: NPC103
+      emotion: desperate
+      text: "听...听不到！地下室很深，我什么都没听到..."
 
-      - speaker: NPC101
-        action: 盯着她
-        emotion: accusatory
-        text: "你在撒谎。"
+    - speaker: NPC101
+      action: 盯着她
+      emotion: accusatory
+      text: "你在撒谎。"
 
-      - speaker: NPC103
-        emotion: pleading
-        text: "没有！我...我真的在地下室！先生，求您了...我还有个女儿要照顾...我只是个清洁工..."
+    - speaker: NPC103
+      emotion: pleading
+      text: "没有！我...我真的在地下室！先生，求您了...我还有个女儿要照顾...我只是个清洁工..."
 
-  daughter_mention:
-    description: 提及女儿
-    lines:
-      - speaker: NPC101
-        emotion: softening
-        text: "你孩子多大？"
+# Section: 提及女儿
+daughter_mention:
+  description: 提及女儿
+  lines:
+    - speaker: NPC101
+      emotion: softening
+      text: "你孩子多大？"
 
-      - speaker: NPC103
-        emotion: vulnerable
-        text: "八...八岁...她生病了，需要钱治病...我真的什么都不知道..."
+    - speaker: NPC103
+      emotion: vulnerable
+      text: "八...八岁...她生病了，需要钱治病...我真的什么都不知道..."
 
-      - speaker: NPC101
-        emotion: firm
-        text: "我不是来为难你的。但如果你撒谎，我会知道。"
+    - speaker: NPC101
+      emotion: firm
+      text: "我不是来为难你的。但如果你撒谎，我会知道。"
 
-      - speaker: NPC103
-        emotion: fearful
-        text: "我...我没有..."
+    - speaker: NPC103
+      emotion: fearful
+      text: "我...我没有..."
 
-      - speaker: NPC101
-        emotion: warning
-        text: "我会再来找你。到那时，希望你想好要说什么。"
+    - speaker: NPC101
+      emotion: warning
+      text: "我会再来找你。到那时，希望你想好要说什么。"
 
-      - speaker: NPC103
-        emotion: resigned
-        text: "好的...好的，先生...我会在这儿..."
+    - speaker: NPC103
+      emotion: resigned
+      text: "好的...好的，先生...我会在这儿..."
 
-note: 此对话用于初步了解Rosa，正式指证需要收集足够证据后触发
+# 备注: 此对话用于初步了解Rosa，正式指证需要收集足够证据后触发

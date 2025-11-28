@@ -25,23 +25,11 @@ scenes_overview:
     type: search
     note: 搜索舞台证据
 
-# ===== 本循环可获取证据 =====
-available_evidences:
-  - EV1511  # Webb给Vivian的信
-  - EV1512  # Vivian的日记
-  - EV1521  # 舞台节目单
-  - EV1531  # Vivian的计划书
-
-# ===== 本循环可对话NPC =====
-available_npcs:
-  - NPC106  # Vivian
-
 # ===== 开篇 =====
 opening:
   description: 发现Vivian的秘密
   scenes:
-    - id: vivian_room
-      scene_id: SC1007
+    - scene_id: SC1007
       name: Vivian化妆室
       description: 发现Vivian的秘密，引出她的悲惨过去
       dialog_file: loop5/opening.yaml
@@ -94,42 +82,29 @@ expose:
       name: 关系谎言
       lie:
         content: 我和Webb只是普通的雇佣关系
-        source: Vivian掩饰
       required_evidences: [EV1511]
-      evidence_names: [Webb给Vivian的信]
       result: Vivian承认Webb曾承诺帮她赎身
 
     - round: 2
       name: 动机谎言
       lie:
         content: Webb虽然没有兑现承诺，但我不怨恨他
-        source: Vivian伪装
       required_evidences: [EV1512]
-      evidence_names: [Vivian的日记]
       result: Vivian承认对Webb有怨恨
 
     - round: 3
       name: 计划谎言
       lie:
         content: 我从来没有想过要伤害Webb
-        source: Vivian否认
       required_evidences: [EV1531]
-      evidence_names: [Vivian的计划书]
       result: Vivian承认有杀人计划
 
     - round: 4
       name: 行动谎言
       lie:
         content: 那天晚上我没有去Webb的办公室
-        source: Vivian最后挣扎
       required_evidences: [EV1521]
-      evidence_names: [舞台节目单]
       result: Vivian承认去了Webb办公室但门锁着
-
-  truth_revealed: |
-    Vivian被Webb欺骗多年，承诺赎身却从未兑现
-    她确实有杀人计划，但那晚Webb的门是锁着的
-    Jimmy可能才是真凶
 
 # ===== 结尾 =====
 ending:
@@ -139,12 +114,3 @@ ending:
   next_objective: Jimmy是真凶吗？他如何伪造时间线？
   transition_text: Vivian说那晚Webb的门是锁着的，但有人回应了她...那个人是Jimmy！
 
-# 循环总结
-summary:
-  duration: 约10分钟
-  core_discoveries:
-    - Vivian被Webb欺骗多年
-    - Vivian有杀人动机和计划
-    - 但案发时Webb的门是锁着的
-    - 有人模仿Webb的声音
-  next_target: Jimmy是真凶，揭露他的诡计
