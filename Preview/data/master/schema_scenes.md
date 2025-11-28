@@ -59,22 +59,27 @@ SC1001:
   description: 酒吧后方的储藏室，堆满杂物，是Rosa的私人空间
 ```
 
-### 示例2：带状态的场景
+### 示例2：同场景不同状态（循环特定场景）
 ```yaml
-SC2001:
+SC2002:
   name: 城市公园
   name_en: CityPark
-  asset_id: SC201_bg_CityPark
+  asset_id: SC2002_bg_CityPark
   description: 芝加哥市中心的公共公园
   state: 白天_晴朗_人流稀少
 
-SC2002:
+SC2102:
   name: 城市公园
   name_en: CityPark_Night
-  asset_id: SC202_bg_CityPark_Night
+  asset_id: SC2102_bg_CityPark_Night
   description: 芝加哥市中心的公共公园
   state: 夜晚_下雨_空无一人
 ```
+
+**说明**：
+- `SC2002`：第2章标准场景（循环位=0），场景02号公园，白天状态
+- `SC2102`：第2章循环1场景（循环位=1），场景02号公园，夜晚状态
+- Loop1-6中，大部分引用`SC2002`；只有Loop1需要夜晚版时引用`SC2102`
 
 ## 注意事项
 
