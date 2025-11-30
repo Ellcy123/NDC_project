@@ -494,6 +494,27 @@
             display: none;
         }
 
+        .dialog-return-btn {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 2rem auto 1rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(100, 80, 60, 0.8);
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            color: var(--gold);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dialog-return-btn:hover {
+            background: var(--gold);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
         /* 证据卡片 - 可折叠 */
         .flow-view .evidence-card {
             cursor: pointer;
@@ -1569,10 +1590,17 @@
                     }, 100);
                 }
 
-                // 显示下一个继续按钮
+                // 显示下一个继续按钮，或者显示返回按钮（最后一句时）
                 if (nextIndex < totalCount - 1) {
                     const nextBtn = document.getElementById(`${flowId}_btn_${nextIndex}`);
                     if (nextBtn) nextBtn.classList.remove('hidden');
+                } else {
+                    // 最后一句对话，显示返回按钮
+                    const returnBtn = document.getElementById(`${flowId}_return`);
+                    if (returnBtn) {
+                        returnBtn.style.display = 'block';
+                        returnBtn.classList.add('visible');
+                    }
                 }
             },
 
@@ -1934,17 +1962,44 @@
                     }
                 });
 
-                // 使用与 renderInlineDialog 一致的包装结构
+                // 判断是否需要显示返回按钮
+                // 如果最后一句是 player_choice，不需要返回按钮（用户会选择跳转）
+                // 如果只有一句普通对话，直接显示返回按钮
+                // 如果有多句普通对话，等最后一句显示后再显示返回按钮
+                const lastLine = lines[lines.length - 1];
+                const lastIsPlayerChoice = lastLine && lastLine.speaker === 'player_choice';
+                const shouldShowReturnNow = !lastIsPlayerChoice && lines.length === 1;
+                const shouldHaveReturn = !lastIsPlayerChoice;
+
+                // 使用与 renderInlineDialog 一致的包装结构，并添加返回按钮
                 this.container.innerHTML = `
                     <div class="dialog-expand" style="padding: 1rem;">
                         <div class="dialog-lines">
                             ${dialogHtml}
                         </div>
+                        ${shouldHaveReturn ? `
+                        <div class="dialog-flow-node ${shouldShowReturnNow ? 'visible' : ''}" id="${flowId}_return" style="${shouldShowReturnNow ? '' : 'display: none;'}">
+                            <button class="dialog-return-btn" onclick="Renderer.returnToDialogScene()">
+                                ↩ 返回对话场景
+                            </button>
+                        </div>
+                        ` : ''}
                     </div>
                 `;
 
                 // Scroll to top
                 this.container.scrollTop = 0;
+            },
+
+            // 返回对话场景
+            async returnToDialogScene() {
+                const dialogFile = AppState.currentDialogFile;
+                if (dialogFile) {
+                    await this.renderDialogFile(dialogFile);
+                } else {
+                    // 如果没有记录，重新渲染当前 section
+                    await this.render();
+                }
             },
 
             /**
