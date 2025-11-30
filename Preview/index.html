@@ -1875,17 +1875,71 @@
                     }
                 }
 
-                // Normal section - render it
-                const sectionHtml = this.renderDialogSection(sectionData, sectionName);
+                // 获取对话相关信息
+                const dialogData = AppState.currentDialogData;
+                const npcId = dialogData.npc;
+                const npc = npcId ? AppState.masterData.npcs[npcId] : null;
+                const npcName = npc ? npc.name_cn : '';
+                const npcColor = this.getNpcColor(npcId);
+                const avatar = this.getNpcEmoji(npcId);
 
-                // Replace content or append? For now, replace the entire content
+                // 使用新版 v2.0 样式渲染
+                const lines = sectionData.lines || [];
+                const flowId = `section_${sectionName}_${Date.now()}`;
+                let dialogHtml = '';
+
+                lines.forEach((line, index) => {
+                    const isNarration = line.speaker === 'narration';
+                    const isPlayerChoice = line.speaker === 'player_choice';
+                    const lineNpcData = (!isNarration && !isPlayerChoice) ? AppState.masterData.npcs[line.speaker] : null;
+                    const speakerName = isNarration ? '' : (lineNpcData ? lineNpcData.name_cn : line.speaker);
+                    const lineAvatar = this.getNpcEmoji(line.speaker);
+                    const lineNpcColor = this.getNpcColor(line.speaker);
+                    const isFirst = index === 0;
+                    const isLast = index === lines.length - 1;
+
+                    dialogHtml += `<div class="dialog-flow-node ${isFirst ? 'visible' : ''}" id="${flowId}_node_${index}">`;
+
+                    if (isNarration) {
+                        dialogHtml += `
+                            <div class="dialog-node narration">
+                                <div class="dialog-content">${line.text}</div>
+                            </div>
+                        `;
+                    } else if (isPlayerChoice) {
+                        dialogHtml += this.renderPlayerChoice(line);
+                    } else {
+                        dialogHtml += `
+                            <div class="dialog-node" style="border-left-color: ${lineNpcColor};">
+                                <div class="speaker-info">
+                                    <div class="speaker-avatar" style="background: ${lineNpcColor};">${lineAvatar}</div>
+                                    <span class="speaker-name" style="color: ${lineNpcColor};">${speakerName}</span>
+                                </div>
+                                <div class="dialog-content">${line.text}</div>
+                                ${line.action ? `<div class="dialog-action">${line.action}</div>` : ''}
+                            </div>
+                        `;
+                    }
+
+                    dialogHtml += '</div>';
+
+                    // 如果不是最后一句，添加"继续"按钮
+                    if (!isLast && !isPlayerChoice) {
+                        dialogHtml += `
+                            <button class="dialog-next-btn ${isFirst ? '' : 'hidden'}" id="${flowId}_btn_${index}"
+                                    onclick="event.stopPropagation(); Renderer.showNextDialogNode('${flowId}', ${index + 1}, ${lines.length})">
+                                ▼ 继续
+                            </button>
+                        `;
+                    }
+                });
+
+                // 使用与 renderInlineDialog 一致的包装结构
                 this.container.innerHTML = `
-                    <div class="section-container">
-                        <div class="section-header">
-                            <div class="section-title">Section: ${sectionName}</div>
-                            <div class="section-description">${sectionData.description || ''}</div>
+                    <div class="dialog-expand" style="padding: 1rem;">
+                        <div class="dialog-lines">
+                            ${dialogHtml}
                         </div>
-                        ${sectionHtml}
                     </div>
                 `;
 
