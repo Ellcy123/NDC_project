@@ -59,7 +59,7 @@ scenes_overview:
 opening:
   description: 商议前往Morrison家调查的计划
   scenes:
-    - scene_id: SC1013
+    - scene_id: SC1017
       name: 酒吧外街道
       description: Zack和Emma在街道上商议接近Morrison夫人的计划
       dialog_file: loop2/opening.yaml
@@ -72,6 +72,9 @@ free_phase:
     - scene: SC1005
       type: npc
       npc: NPC110
+      npc_assets:
+        - SC205_npc_MrsMorrison1
+        - SC205_npc_MrsMorrison2
       dialog_file: loop2/mrs_morrison.yaml
       dialog_section: first_meeting
       evidences:
@@ -81,6 +84,9 @@ free_phase:
     - scene: SC1005
       type: npc
       npc: NPC110
+      npc_assets:
+        - SC205_npc_MrsMorrison1
+        - SC205_npc_MrsMorrison2
       dialog_file: loop2/mrs_morrison2.yaml
       dialog_section: request_study
 
@@ -113,6 +119,9 @@ free_phase:
     - scene: SC1007
       type: npc
       npc: NPC106
+      npc_assets:
+        - SC207_npc_Vivian1
+        - SC207_npc_Vivian2
       dialog_file: loop2/vivian.yaml
       evidences:
         - id: EV1241
@@ -121,6 +130,9 @@ free_phase:
     - scene: SC1003
       type: npc
       npc: NPC105
+      npc_assets:
+        - SC203_npc_Tommy1
+        - SC203_npc_Tommy2
       dialog_file: loop2/tommy.yaml
       evidences:
         - id: EV1261
@@ -129,6 +141,9 @@ free_phase:
     - scene: SC1001
       type: npc
       npc: NPC103
+      npc_assets:
+        - SC201_npc_Rosa1
+        - SC201_npc_Rosa2
       dialog_file: loop2/rosa.yaml
       evidences:
         - id: EV1271
@@ -176,7 +191,7 @@ expose:
 
 # ===== 结尾 =====
 ending:
-  scene: SC1013
+  scene: SC1017
   scene_name: 酒吧外街道
   description: Zack和Emma在警局门口讨论案情，决定前往Webb办公室调查
   dialog_file: loop2/ending.yaml

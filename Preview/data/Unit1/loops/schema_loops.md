@@ -54,7 +54,7 @@ opening:
       dialog_section: webb_office          # 可选：对话section名，不指定则播放所有sections
 
     # 可以添加多个场景，支持同一地点的多场戏
-    - scene_id: SC1013           # 不同地点
+    - scene_id: SC1017           # 不同地点
       name: 酒吧外街道
       description: Zack和Emma在街道上初次合作
       dialog_file: loop1/opening.yaml
@@ -123,7 +123,7 @@ expose:
 
 ```yaml
 ending:
-  scene: SC1013                    # 结尾场景ID
+  scene: SC1017                    # 结尾场景ID
   scene_name: 酒吧外街道            # 可选：场景名称
   description: 循环1结束，过渡到循环2
   dialog_file: loop1/ending.yaml   # 结尾对话文件路径
@@ -189,7 +189,7 @@ expose:
       result: 地点谎言被戳穿，Rosa被迫修正说法
 
 ending:
-  scene: SC1013
+  scene: SC1017
   scene_name: 酒吧外街道
   description: 循环1结束，过渡到循环2
   dialog_file: loop1/ending.yaml

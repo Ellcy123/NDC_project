@@ -52,10 +52,56 @@ confrontation:
 
 | 字段 | 类型 | 必填 | 说明 |
 |------|------|------|------|
+| `talk_id` | int |  | 对话ID，7位数字，用于关联Talk配置表（详见下方ID规则） |
 | `speaker` | string | ✓ | 说话者：`NPC{ID}`、`narration`旁白、`player_choice`玩家选择 |
 | `text` | string | ✓（选择除外） | 对话文本 |
 | `emotion` | string |  | 情绪状态 |
 | `action` | string |  | 动作描述 |
+
+### 对话ID规则（talk_id）
+
+**格式：`NNXXYYY`（7位数字）**
+
+| 位置 | 含义 | 说明 |
+|------|------|------|
+| NN (前1-2位) | 角色编号 | 每个角色有专属编号 |
+| XX (中3位) | 对话段落 | 该角色的第几段对话，001=第1段 |
+| YYY (后3位) | 句子序号 | 该段对话的第几句，001=第1句 |
+
+**示例：**
+- `1001001` = 角色1 的 第1段对话 的 第1句
+- `1001015` = 角色1 的 第1段对话 的 第15句
+- `3001001` = 角色3 的 第1段对话 的 第1句
+
+**角色编号对照表：**
+
+| 编号 | 角色 | NPC ID |
+|------|------|--------|
+| 1 | 查克 (Zack Brennan) | NPC101 |
+| 2 | 艾玛 (Emma O'Malley) | NPC102 |
+| 3 | 罗莎 (Rosa Martinez) | NPC103 |
+| 4 | 莫里森夫人 (Mrs. Morrison) | NPC104 |
+| 5 | 汤米 (Tommy) | NPC105 |
+| 6 | 薇薇安 (Vivian) | NPC106 |
+| 7 | 韦伯 (Webb) | NPC107 |
+| 8 | 安娜 (Anna) | NPC108 |
+| 9 | 吉米 (Jimmy) | NPC109 |
+
+**使用示例：**
+```yaml
+lines:
+  - talk_id: 3001001
+    speaker: NPC101
+    emotion: direct
+    text: "你是这儿的清洁工？"
+
+  - talk_id: 3001002
+    speaker: NPC103
+    emotion: nervous
+    text: "是...是的，先生。"
+```
+
+**注意**：`talk_id` 用于导出到 Talk 配置表时的唯一标识，Preview 预览时可选填。
 
 ### 情绪状态值（emotion）
 
@@ -224,19 +270,23 @@ npc: NPC103
 initial_contact:
   description: 初次接触Rosa
   lines:
-    - speaker: NPC101
+    - talk_id: 3001001
+      speaker: NPC101
       emotion: direct
       text: "你是这儿的清洁工？"
 
-    - speaker: NPC103
+    - talk_id: 3001002
+      speaker: NPC103
       emotion: nervous
       text: "是...是的，先生。"
 
-    - speaker: NPC101
+    - talk_id: 3001003
+      speaker: NPC101
       emotion: professional
       text: "昨晚你在哪儿工作？"
 
-    - speaker: NPC103
+    - talk_id: 3001004
+      speaker: NPC103
       emotion: evasive
       text: "我...我一直在地下室。什么都没看到..."
 
@@ -256,33 +306,39 @@ initial_contact:
 confrontation:
   description: 直接对峙
   lines:
-    - speaker: NPC101
+    - talk_id: 3001005
+      speaker: NPC101
       emotion: sharp
       text: "你在撒谎。"
 
-    - speaker: NPC103
+    - talk_id: 3001006
+      speaker: NPC103
       emotion: panicked
       text: "没有！我真的在地下室！"
 
 evidence_confrontation:
   description: 用证据对峙
   lines:
-    - speaker: NPC101
+    - talk_id: 3001007
+      speaker: NPC101
       emotion: cold
       text: "你的工作记录显示你不在地下室。"
 
-    - speaker: NPC103
+    - talk_id: 3001008
+      speaker: NPC103
       emotion: desperate
       text: "那...那是记错了..."
 
 daughter_topic:
   description: 同理心路线
   lines:
-    - speaker: NPC101
+    - talk_id: 3001009
+      speaker: NPC101
       emotion: softening
       text: "你孩子多大？"
 
-    - speaker: NPC103
+    - talk_id: 3001010
+      speaker: NPC103
       emotion: vulnerable
       text: "八岁...她生病了..."
 ```
@@ -299,33 +355,39 @@ sections:
   round1:
     description: 第一轮指证 - 否定地点谎言
     lines:
-      - speaker: NPC101
+      - talk_id: 3002001
+        speaker: NPC101
         emotion: cold
         text: "你说你在地下室，但工作记录显示你在一楼走廊。"
 
-      - speaker: NPC103
+      - talk_id: 3002002
+        speaker: NPC103
         emotion: panicked
         text: "那...那是我记错了..."
 
   round2:
     description: 第二轮指证 - 否定目击谎言
     lines:
-      - speaker: NPC101
+      - talk_id: 3002003
+        speaker: NPC101
         emotion: pressing
         text: "你看到了什么？"
 
-      - speaker: NPC103
+      - talk_id: 3002004
+        speaker: NPC103
         emotion: breaking
         text: "我...我真的什么都没看到..."
 
   round3:
     description: 第三轮指证 - 揭露真相
     lines:
-      - speaker: NPC101
+      - talk_id: 3002005
+        speaker: NPC101
         emotion: firm
         text: "说实话。"
 
-      - speaker: NPC103
+      - talk_id: 3002006
+        speaker: NPC103
         emotion: confessing
         text: "好吧...是Morrison警官...他威胁我..."
 ```

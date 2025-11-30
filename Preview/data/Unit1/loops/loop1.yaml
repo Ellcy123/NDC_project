@@ -55,7 +55,7 @@ opening:
       dialog_file: loop1/opening.yaml
       dialog_section: webb_office
 
-    - scene_id: SC1013
+    - scene_id: SC1017
       name: 酒吧外街道
       description: Zack和Emma在街道上初次合作
       dialog_file: loop1/opening.yaml
@@ -90,6 +90,9 @@ free_phase:
     - scene: SC1003
       type: npc
       npc: NPC105
+      npc_assets:
+        - SC103_npc_Tommy1
+        - SC103_npc_Tommy2
       dialog_file: loop1/tommy.yaml
       evidences:
         - id: EV1133
@@ -98,6 +101,9 @@ free_phase:
     - scene: SC1010
       type: npc
       npc: NPC103
+      npc_assets:
+        - SC110_npc_Rosa1
+        - SC110_npc_Rosa2
       dialog_file: loop1/rosa.yaml
       note: 在酒吧大堂与Rosa对话
 
@@ -139,7 +145,7 @@ expose:
 
 # 结尾
 ending:
-  scene: SC1013
+  scene: SC1017
   scene_name: 酒吧外街道
   description: 循环1结束，过渡到循环2
   dialog_file: loop1/ending.yaml
