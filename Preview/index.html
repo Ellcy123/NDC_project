@@ -1991,15 +1991,9 @@
                 this.container.scrollTop = 0;
             },
 
-            // 返回对话场景
+            // 返回对话场景（重新渲染当前 section，如 Free Phase）
             async returnToDialogScene() {
-                const dialogFile = AppState.currentDialogFile;
-                if (dialogFile) {
-                    await this.renderDialogFile(dialogFile);
-                } else {
-                    // 如果没有记录，重新渲染当前 section
-                    await this.render();
-                }
+                await this.render();
             },
 
             /**
