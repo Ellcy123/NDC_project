@@ -932,6 +932,24 @@
             color: var(--text-primary);
             margin-right: 0.5rem;
             margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .npc-assets-info code:hover {
+            background: rgba(232, 198, 120, 0.3);
+            color: var(--gold);
+        }
+
+        .npc-assets-info code.copied {
+            background: rgba(74, 124, 89, 0.5);
+            color: #90EE90;
+        }
+
+        .npc-assets-info code.copied::after {
+            content: '✓';
+            margin-left: 0.3rem;
         }
 
         /* 体验版隐藏资源ID */
@@ -1268,6 +1286,31 @@
 
             init() {
                 this.container = document.getElementById('contentContainer');
+            },
+
+            // 复制资源ID到剪贴板
+            copyToClipboard(element, text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    // 添加已复制样式
+                    element.classList.add('copied');
+                    // 1.5秒后移除样式
+                    setTimeout(() => {
+                        element.classList.remove('copied');
+                    }, 1500);
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                    // 降级方案：使用传统方法
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    element.classList.add('copied');
+                    setTimeout(() => {
+                        element.classList.remove('copied');
+                    }, 1500);
+                });
             },
 
             renderError(message) {
@@ -2079,7 +2122,7 @@
                                 const npcAssetsHtml = scene.npc_assets && scene.npc_assets.length > 0
                                     ? `<div class="npc-assets-info">
                                         <span class="assets-label">资源ID:</span>
-                                        ${scene.npc_assets.map(id => `<code>${id}</code>`).join('')}
+                                        ${scene.npc_assets.map(id => `<code onclick="Renderer.copyToClipboard(this, '${id}')">${id}</code>`).join('')}
                                        </div>`
                                     : '';
                                 dialogContentHtml += `
@@ -2114,7 +2157,7 @@
                                     const npcAssetsHtml = npcEntry.npc_assets && npcEntry.npc_assets.length > 0
                                         ? `<div class="npc-assets-info">
                                             <span class="assets-label">资源ID:</span>
-                                            ${npcEntry.npc_assets.map(id => `<code>${id}</code>`).join('')}
+                                            ${npcEntry.npc_assets.map(id => `<code onclick="Renderer.copyToClipboard(this, '${id}')">${id}</code>`).join('')}
                                            </div>`
                                         : '';
                                     dialogContentHtml += `
