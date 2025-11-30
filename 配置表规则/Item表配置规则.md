@@ -8,13 +8,13 @@
 | cnName | string | 是 | 中文名字 |
 | enName | string | 是 | 英文名字 |
 | itemType | string | 是 | 物品分类，详见类型说明 |
-| canCollected | bool | 是 | 能否被收集 |
-| canAnalyzed | bool | 是 | 能否被分析 |
-| canCombined | bool | 是 | 能否被合并 |
+| canCollected | int | 是 | 能否被收集（1=是，0=否） |
+| canAnalyzed | int | 是 | 能否被分析（1=是，0=否） |
+| canCombined | int | 是 | 能否被合并（1=是，0=否） |
 | combineParameter0 | string | 否 | 合并需要用到的物品ID |
 | combineParameter1 | string | 否 | 合并后生成的物品ID |
 | cnDescribe1 | string | 是 | 中文描述（初始状态） |
-| cnDescribe2 | string | 否 | 中文描述（分析后状态，canAnalyzed=true时展示） |
+| cnDescribe2 | string | 否 | 中文描述（分析后状态，canAnalyzed=1时展示） |
 | cnDescribe3 | string | 否 | 中文描述（备用） |
 | enDescribe1 | string | 是 | 英文描述（初始状态） |
 | enDescribe2 | string | 否 | 英文描述（分析后状态） |
@@ -50,10 +50,10 @@
 
 | 类型 | 说明 | canCollected | 示例 |
 |------|------|--------------|------|
-| item | 可收集的物品 | true | 毛巾、工作记录卡、氯仿瓶 |
-| clue | 线索 | true | 拖拽痕迹、VIP客户照片 |
-| note | 证词/笔记 | true | Tommy时间证词、Rosa目击证词 |
-| envir | 环境物品 | false | 通缉令、功勋奖章（只能查看不能收集） |
+| item | 可收集的物品 | 1 | 毛巾、工作记录卡、氯仿瓶 |
+| clue | 线索 | 1 | 拖拽痕迹、VIP客户照片 |
+| note | 证词/笔记 | 1 | Tommy时间证词、Rosa目击证词 |
+| envir | 环境物品 | 0 | 通缉令、功勋奖章（只能查看不能收集） |
 
 ---
 
@@ -61,7 +61,7 @@
 
 ### 4.1 分析机制（canAnalyzed）
 
-当 `canAnalyzed = true` 时，玩家可以对物品进行分析操作。
+当 `canAnalyzed = 1` 时，玩家可以对物品进行分析操作。
 
 分析后：
 - 显示 `cnDescribe2`/`enDescribe2` 替代初始描述
@@ -73,9 +73,9 @@
   cnName: 毛巾
   enName: Chloroform-Stained Towel
   itemType: item
-  canCollected: true
-  canAnalyzed: true
-  canCombined: false
+  canCollected: 1
+  canAnalyzed: 1
+  canCombined: 0
   cnDescribe1: 一条普通的白色毛巾
   cnDescribe2: 一条白色毛巾，散发着刺鼻的甜腻气味，是氯仿的味道
   enDescribe1: An ordinary white towel
@@ -84,7 +84,7 @@
 
 ### 4.2 合并机制（canCombined）
 
-当 `canCombined = true` 时，物品可以与其他物品合并。
+当 `canCombined = 1` 时，物品可以与其他物品合并。
 
 | 参数 | 说明 |
 |------|------|
@@ -97,7 +97,7 @@
 - id: EV1511
   cnName: 分手信信件
   itemType: item
-  canCombined: true
+  canCombined: 1
   combineParameter0: EV1511/EV1512    # 包括自己和信封
   combineParameter1: EV1513
 
@@ -105,7 +105,7 @@
 - id: EV1512
   cnName: 分手信信封
   itemType: item
-  canCombined: true
+  canCombined: 1
   combineParameter0: EV1511/EV1512    # 包括信件和自己
   combineParameter1: EV1513
 
@@ -113,7 +113,7 @@
 - id: EV1513
   cnName: 给Webb的分手信
   itemType: item
-  canCombined: false
+  canCombined: 0
   cnDescribe1: Vivian亲笔写的分手信，"我已经受够了，我们之间结束了"
 ```
 
@@ -141,9 +141,9 @@
   cnName: 工作记录卡
   enName: Work Record Card
   itemType: item
-  canCollected: true
-  canAnalyzed: false
-  canCombined: false
+  canCollected: 1
+  canAnalyzed: 0
+  canCombined: 0
   cnDescribe1: Rosa Martinez - 11月15日夜班：后台走廊清洁 23:00-01:00
   enDescribe1: Rosa Martinez - Night shift Nov 15: Backstage corridor cleaning 23:00-01:00
   path1: Art/UI/Item/WorkCard
@@ -156,9 +156,9 @@
   cnName: 地板拖拽痕迹
   enName: Floor Drag Marks
   itemType: clue
-  canCollected: true
-  canAnalyzed: true
-  canCombined: false
+  canCollected: 1
+  canAnalyzed: 1
+  canCombined: 0
   cnDescribe1: 地板上的拖拽痕迹
   cnDescribe2: 压痕较深，被拖动的东西至少150磅，普通女性的力量基本无法完成
   enDescribe1: Drag marks on the floor
@@ -172,9 +172,9 @@
   cnName: 芝加哥警局通缉令
   enName: Chicago Police Wanted Poster
   itemType: envir
-  canCollected: false
-  canAnalyzed: false
-  canCombined: false
+  canCollected: 0
+  canAnalyzed: 0
+  canCombined: 0
   cnDescribe1: 通缉"疤面Tony"的悬赏金高达5000美元
   enDescribe1: Wanted poster for "Scarface Tony" with a bounty of $5,000
 ```
@@ -186,9 +186,9 @@
   cnName: Tommy时间证词
   enName: Tommy's Time Testimony
   itemType: note
-  canCollected: true
-  canAnalyzed: false
-  canCombined: false
+  canCollected: 1
+  canAnalyzed: 0
+  canCombined: 0
   cnDescribe1: 确实有一声枪响...但这声枪响和平时黑帮火拼的声音不太一样，只听到了一声
   enDescribe1: Indeed there was a gunshot... but different from usual gang firefights
 ```
@@ -245,9 +245,9 @@
   cnName: 毛巾
   enName: Chloroform-Stained Towel
   itemType: item
-  canCollected: true
-  canAnalyzed: true
-  canCombined: false
+  canCollected: 1
+  canAnalyzed: 1
+  canCombined: 0
   cnDescribe1: 一条普通的白色毛巾
   cnDescribe2: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道
   enDescribe1: An ordinary white towel
@@ -290,9 +290,9 @@ EV1114:
 
 1. **ID必须唯一**：同一张表中不能有重复ID
 2. **中英文都要填**：cnName/enName、cnDescribe1/enDescribe1 都必须填写
-3. **bool值格式**：使用 true/false，不要用 1/0
-4. **合并参数成对**：如果 canCombined=true，combineParameter0 和 combineParameter1 都要填
-5. **分析描述**：如果 canAnalyzed=true，cnDescribe2/enDescribe2 要填写分析后的描述
+3. **bool值格式**：使用 1 表示是，0 表示否（不要用 true/false）
+4. **合并参数成对**：如果 canCombined=1，combineParameter0 和 combineParameter1 都要填
+5. **分析描述**：如果 canAnalyzed=1，cnDescribe2/enDescribe2 要填写分析后的描述
 6. **路径格式**：美术资源路径使用 `/` 分隔，如 `Art/UI/Item/Name`
 
 ---

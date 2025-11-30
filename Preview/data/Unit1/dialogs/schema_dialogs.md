@@ -80,12 +80,14 @@ confrontation:
 | 1 | 查克 (Zack Brennan) | NPC101 |
 | 2 | 艾玛 (Emma O'Malley) | NPC102 |
 | 3 | 罗莎 (Rosa Martinez) | NPC103 |
-| 4 | 莫里森夫人 (Mrs. Morrison) | NPC104 |
+| 4 | 莫里森警探 (Detective Morrison) | NPC104 |
 | 5 | 汤米 (Tommy) | NPC105 |
 | 6 | 薇薇安 (Vivian) | NPC106 |
 | 7 | 韦伯 (Webb) | NPC107 |
-| 8 | 安娜 (Anna) | NPC108 |
+| 8 | 安娜·韦伯 (Anna Webb) | NPC108 |
 | 9 | 吉米 (Jimmy) | NPC109 |
+| 10 | 莫里森夫人 (Mrs. Morrison) | NPC110 |
+| 11 | Anna (Jimmy's wife) | NPC111 |
 
 **使用示例：**
 ```yaml
@@ -102,6 +104,54 @@ lines:
 ```
 
 **注意**：`talk_id` 用于导出到 Talk 配置表时的唯一标识，Preview 预览时可选填。
+
+### 自动ID生成规则
+
+配表工具支持自动生成 `talk_id`，无需手动填写。生成规则如下：
+
+#### 处理顺序（决定段落号XX）
+
+同一循环内，对话文件按以下顺序处理，**每个 section 对应一个段落号**：
+
+```
+1. opening.yaml 的各个 section    → 段落 001, 002, ...
+2. npc_dialog 文件的各个 section  → 按文件名字母序，每个 section 递增
+3. accusation.yaml 的各个 section → 继续递增
+4. ending.yaml 的各个 section     → 继续递增
+```
+
+#### 角色归属规则
+
+- **npc_dialog 类型**：根据 `npc` 字段确定角色
+- **accusation 类型**：根据 `target` 字段确定角色
+- **opening/ending 类型**：根据文件内主要对话的 NPC 确定（统计出现最多的 NPC）
+
+#### 示例：循环1的ID分配
+
+假设 `Unit1/dialogs/loop1/opening.yaml` 有两个 section：
+```yaml
+webb_office:      # section 1
+  lines: [...]
+street_meeting:   # section 2
+  lines: [...]
+```
+
+生成的段落号分配（主要 NPC 为 NPC102）：
+
+| 文件/Section | 角色 | 段落号 | ID范围 |
+|--------------|------|--------|--------|
+| opening.yaml/webb_office | NPC102 | 001 | 2001001-2001XXX |
+| opening.yaml/street_meeting | NPC102 | 002 | 2002001-2002XXX |
+| rosa.yaml/initial_contact | NPC103 | 001 | 3001001-3001XXX |
+| rosa.yaml/probing | NPC103 | 002 | 3002001-3002XXX |
+| rosa.yaml/confrontation | NPC103 | 003 | 3003001-3003XXX |
+| ... | ... | ... | ... |
+
+**注意**：每个 section 内的句子序号 (YYY) 从 001 开始重新计数。
+
+#### 手动覆盖
+
+如果文件中已填写 `talk_id`，配表工具将**优先使用手动值**，不会自动覆盖。
 
 ### 情绪状态值（emotion）
 
