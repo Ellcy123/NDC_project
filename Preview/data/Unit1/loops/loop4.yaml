@@ -49,6 +49,12 @@ scenes_overview:
     type: npc
     note: 与Jimmy对话，指证地点
 
+  - scene: SC1008
+    name: Webb办公室
+    status: accessible
+    type: search
+    note: Webb焦虑状态与虚假承诺证据（无新证据）
+
 # ===== 开篇 =====
 opening:
   description: Loop3的ending对话已包含前往Jimmy家的场景和决定，直接进入自由环节
@@ -136,6 +142,11 @@ free_phase:
       evidences:
         - id: EV1443
           note: Rosa关于Jimmy钥匙的证词
+
+    - scene: SC1008
+      type: search
+      note: Webb焦虑状态与虚假承诺证据（无新证据）
+      evidences: []
 
 # ===== 指证 =====
 expose:
