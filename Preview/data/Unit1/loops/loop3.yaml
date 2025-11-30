@@ -13,29 +13,41 @@ core_lie: Tommy声称Webb只做私酒生意，没有其他业务
 
 # ===== 本循环场景总览 =====
 scenes_overview:
-  - scene: SC1010
-    name: 酒吧大堂
+  - scene: SC1008
+    name: Webb办公室
     status: accessible
-    type: npc
-    note: Tommy对话和指证地点
+    type: search
+    note: 主要证据集中地，勒索网络核心
 
   - scene: SC1003
     name: Tommy办公室
     status: accessible
     type: search
-    note: 搜索财务证据
-
-  - scene: SC1008
-    name: Webb办公室
-    status: accessible
-    type: search
-    note: 搜索古董和勒索证据
+    note: 搜索财务证据，主要指证场所
 
   - scene: SC1009
     name: 酒吧歌舞厅
     status: accessible
     type: search
-    note: 现场照片证据
+    note: 古董陈列，现场照片证据
+
+  - scene: SC1007
+    name: Vivian化妆室
+    status: accessible
+    type: npc
+    note: 获取争吵目击证词
+
+  - scene: SC1001
+    name: Rosa储藏室
+    status: accessible
+    type: npc
+    note: 获取音乐相关证词
+
+  - scene: SC1010
+    name: 酒吧大堂
+    status: accessible
+    type: npc
+    note: Tommy证词收集，指证地点
 
 # ===== 开篇 =====
 opening:
@@ -45,24 +57,49 @@ opening:
 free_phase:
   description: 调查Webb的真正生意
   scenes:
-    - scene: SC1003
-      type: search
-      evidences:
-        - id: EV1311
-        - id: EV1313
-        - id: EV1322
-
     - scene: SC1008
       type: search
       evidences:
+        - id: EV1311
+          note: Webb总收入财务汇总
+        - id: EV1312
+          note: Webb总收入财务收入记录
+        - id: EV1313
+          note: Tommy的详细工作记录（可笔迹分析）
+        - id: EV1314
+          note: VIP客户照片
+        - id: EV1315
+          note: Webb对Vivian的虚假承诺信件
+        - id: EV1316
+          note: Webb的项链
+        - id: EV1317
+          note: Webb的私人日记摘录（触发Whale电话事件）
+        - id: EV1318
+          note: Thompson议员的妥协信件
+        - id: EV1319
+          note: Coleman银行家的转账记录
         - id: EV1320
           note: 古董专业鉴定报告
+
+    - scene: SC1003
+      type: search
+      evidences:
+        - id: EV1322
+          note: Webb酒吧营业收入记录
+        - id: EV1323
+          note: Tommy的同情日记（可用于笔迹对比）
+        - id: EV1324
+          note: Vivian工作安排表
+        - id: EV1325
+          note: Tommy全家福
 
     - scene: SC1009
       type: search
       evidences:
         - id: EV1331
+          note: 酒吧歌舞厅现场照片-欧洲油画
         - id: EV1332
+          note: 酒吧歌舞厅现场照片-中国花瓶
 
     - scene: SC1007
       type: npc
@@ -73,6 +110,7 @@ free_phase:
       dialog_file: loop3/vivian.yaml
       evidences:
         - id: EV1341
+          note: Vivian的争吵目击证词
 
     - scene: SC1001
       type: npc
@@ -83,6 +121,7 @@ free_phase:
       dialog_file: loop3/rosa.yaml
       evidences:
         - id: EV1351
+          note: Rosa关于音乐音量的证词
 
     - scene: SC1010
       type: npc
@@ -93,6 +132,7 @@ free_phase:
       dialog_file: loop3/tommy.yaml
       evidences:
         - id: EV1361
+          note: Tommy关于Jimmy拿水壶的证词
 
 # ===== 指证 =====
 expose:

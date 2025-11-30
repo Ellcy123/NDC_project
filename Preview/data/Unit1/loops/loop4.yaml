@@ -13,23 +13,41 @@ core_lie: Jimmy声称自己只是普通厨师，和Webb只是普通雇佣关系
 
 # ===== 本循环场景总览 =====
 scenes_overview:
-  - scene: SC1010
-    name: 酒吧大堂
+  - scene: SC1011
+    name: Jimmy厨房
     status: accessible
-    type: npc
-    note: Jimmy对话和指证地点
+    type: search
+    note: 古董证据与职业身份证据
 
   - scene: SC1012
     name: Jimmy家卧室
     status: accessible
     type: search
-    note: 搜索Jimmy的秘密
+    note: 与Anna对话，搜索线索
 
-  - scene: SC1011
-    name: Jimmy厨房
+  - scene: SC1003
+    name: Tommy办公室
     status: accessible
-    type: search
-    note: 搜索工作证据
+    type: npc
+    note: 获取Jimmy行为目击证词
+
+  - scene: SC1007
+    name: Vivian化妆室
+    status: accessible
+    type: npc
+    note: 获取争吵目击证词
+
+  - scene: SC1001
+    name: Rosa储藏室
+    status: accessible
+    type: npc
+    note: 获取Rosa关于Jimmy的证词
+
+  - scene: SC1010
+    name: 酒吧大堂
+    status: accessible
+    type: npc
+    note: 与Jimmy对话，指证地点
 
 # ===== 开篇 =====
 opening:
@@ -39,6 +57,18 @@ opening:
 free_phase:
   description: 调查Jimmy的秘密
   scenes:
+    - scene: SC1011
+      type: search
+      evidences:
+        - id: EV1411
+          note: 伪装成陶泥的古董水壶（可分析）
+        - id: EV1412
+          note: Jimmy的奖状
+        - id: EV1413
+          note: Jimmy的厨房手套
+        - id: EV1414
+          note: 厨房的送餐订单
+
     - scene: SC1012
       type: search
       npc: NPC108
@@ -47,14 +77,22 @@ free_phase:
         - SC412_npc_Anna2
       dialog_file: loop4/anna.yaml
       evidences:
-        - id: EV1411
-          note: 伪装成陶泥的古董水壶
         - id: EV1421
           note: Jimmy家庭合照
-
-    - scene: SC1011
-      type: search
-      evidences: []
+        - id: EV1422
+          note: "Whale"的联系暗号
+        - id: EV1423
+          note: Jimmy给Anna的遗书
+        - id: EV1424
+          note: 虎头额外收入记录
+        - id: EV1425
+          note: Bennington陶器照片
+        - id: EV1426
+          note: 合并线索-古董专业鉴定报告（EV1320+EV1425合并）
+        - id: EV1427
+          note: 破旧的英语学习书籍
+        - id: EV1428
+          note: 撕掉的移民申请表
 
     - scene: SC1010
       type: npc
@@ -74,16 +112,18 @@ free_phase:
       dialog_file: loop4/tommy.yaml
       evidences:
         - id: EV1441
+          note: Tommy目击Jimmy拿水壶的证词
 
-    - scene: SC1009
+    - scene: SC1007
       type: npc
       npc: NPC106
       npc_assets:
-        - SC409_npc_Vivian1
-        - SC409_npc_Vivian2
+        - SC407_npc_Vivian1
+        - SC407_npc_Vivian2
       dialog_file: loop4/vivian.yaml
       evidences:
         - id: EV1442
+          note: Vivian争吵目击证词
 
     - scene: SC1001
       type: npc
@@ -93,7 +133,8 @@ free_phase:
         - SC401_npc_Rosa2
       dialog_file: loop4/rosa.yaml
       evidences:
-        - id: EV1442
+        - id: EV1443
+          note: Rosa关于Jimmy钥匙的证词
 
 # ===== 指证 =====
 expose:
