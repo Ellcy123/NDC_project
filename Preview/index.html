@@ -2293,6 +2293,9 @@
 
             // 在展开区域内渲染对话（支持逐句展开，使用dialog-node格式）
             renderInlineDialog(container, dialogData, sectionName) {
+                // 存储对话数据以支持选项跳转
+                AppState.currentDialogData = dialogData;
+
                 let lines = [];
 
                 // 如果指定了section，获取该section的lines
