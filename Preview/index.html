@@ -1992,8 +1992,8 @@
             },
 
             // 返回对话场景（重新渲染当前 section，如 Free Phase）
-            async returnToDialogScene() {
-                await this.render();
+            returnToDialogScene() {
+                this.renderSection(AppState.currentSection);
             },
 
             /**
