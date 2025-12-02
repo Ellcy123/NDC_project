@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC - 案情回顾系统 (OVERVIEW)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0808;
+            color: #e8e4d9;
+            font-family: 'Noto Serif SC', serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 噪点纹理 */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* 主容器 */
+        .main-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* ==================== 左侧面板 - 案件档案卡片 ==================== */
+        .left-panel {
+            width: 400px;
+            background: linear-gradient(180deg, #1a1412 0%, #0d0a09 100%);
+            border-right: 1px solid #3a2a20;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 章节标题 */
+        .chapter-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid #3a2a20;
+            background: rgba(30,20,15,0.8);
+        }
+
+        .chapter-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3em;
+            color: #d4af37;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        .chapter-header .subtitle {
+            font-size: 0.9em;
+            color: #8a7a6a;
+        }
+
+        /* 案件卡片区域 - 红色档案风格 */
+        .case-file-area {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 档案卡片 */
+        .case-file {
+            background: linear-gradient(135deg, #6B1C1C 0%, #4a1515 50%, #2a0a0a 100%);
+            border: 2px solid #8a3030;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .case-file:hover {
+            transform: translateX(5px);
+            box-shadow: -5px 5px 20px rgba(107,28,28,0.5);
+        }
+
+        .case-file.active {
+            border-color: #d4af37;
+            box-shadow: 0 0 25px rgba(212,175,55,0.3);
+        }
+
+        .case-file.locked {
+            opacity: 0.4;
+            filter: grayscale(0.6);
+            cursor: not-allowed;
+        }
+
+        .case-file.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 案件标题 */
+        .case-file .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .case-file .case-title {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85em;
+            color: #ffd700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .case-file .case-name {
+            font-size: 1.15em;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            font-size: 0.7em;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .status-badge.completed {
+            background: rgba(76,175,80,0.3);
+            color: #6fcf70;
+            border: 1px solid #4caf50;
+        }
+
+        .status-badge.current {
+            background: rgba(255,193,7,0.3);
+            color: #ffd54f;
+            border: 1px solid #ffc107;
+        }
+
+        .status-badge.locked {
+            background: rgba(100,100,100,0.3);
+            color: #888;
+            border: 1px solid #555;
+        }
+
+        /* 案件信息 */
+        .case-file .case-info {
+            font-size: 0.85em;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .case-file .case-info .target {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .case-file .case-info .hidden {
+            color: #888;
+            font-style: italic;
+        }
+
+        /* 印章 */
+        .stamp-overlay {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%) rotate(-12deg);
+            font-family: 'Special Elite', cursive;
+            font-size: 1.8em;
+            padding: 8px 20px;
+            border: 3px solid;
+            border-radius: 8px;
+            opacity: 0.9;
+        }
+
+        .stamp-overlay.solved {
+            color: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .stamp-overlay.progress {
+            color: #ffc107;
+            border-color: #ffc107;
+            font-size: 1.2em;
+        }
+
+        /* ==================== 中间面板 - 垂直时间线 ==================== */
+        .center-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #12100d 0%, #0a0908 100%);
+        }
+
+        /* 顶部标题 */
+        .panel-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #3a2a20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .panel-title h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6em;
+            color: #d4af37;
+            letter-spacing: 3px;
+        }
+
+        .panel-title .cn {
+            font-size: 1em;
+            color: #8b7355;
+        }
+
+        .close-btn {
+            padding: 10px 25px;
+            background: linear-gradient(180deg, #4a3a2a, #2a1a10);
+            border: 1px solid #8b7355;
+            color: #e8e4d9;
+            font-family: 'Noto Serif SC', serif;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(180deg, #5a4a3a, #3a2a20);
+        }
+
+        /* 时间线容器 - 垂直滚动 */
+        .timeline-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 50px;
+            position: relative;
+        }
+
+        /* 垂直时间线 */
+        .vertical-timeline {
+            position: relative;
+            padding-left: 60px;
+        }
+
+        /* 时间线主轴 */
+        .vertical-timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #8b7355, #5a4a3a, #3a2a20);
+        }
+
+        /* 循环节点组 */
+        .loop-group {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        /* 循环标题 */
+        .loop-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .loop-marker {
+            position: absolute;
+            left: -48px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B2323, #5a1515);
+            border: 3px solid #aa4040;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.8em;
+            color: #fff;
+            z-index: 10;
+        }
+
+        .loop-marker.completed {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            border-color: #4caf50;
+        }
+
+        .loop-marker.current {
+            background: linear-gradient(135deg, #f57c00, #e65100);
+            border-color: #ffc107;
+            animation: pulse 2s infinite;
+        }
+
+        .loop-marker.locked {
+            background: #333;
+            border-color: #555;
+            color: #666;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,193,7,0.5); }
+            50% { box-shadow: 0 0 0 10px rgba(255,193,7,0); }
+        }
+
+        .loop-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1em;
+            color: #d4af37;
+            letter-spacing: 1px;
+        }
+
+        /* 事件节点 */
+        .event-node {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .event-node::before {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 8px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #3a2a20;
+            border: 2px solid #5a4a3a;
+        }
+
+        .event-node.completed::before {
+            background: #4caf50;
+            border-color: #6fcf70;
+        }
+
+        .event-node.story::before {
+            border-color: #e85a5a;
+        }
+
+        .event-node.completed.story::before {
+            background: #e85a5a;
+        }
+
+        .event-node.video::before {
+            border-color: #9a5ae8;
+        }
+
+        .event-node.completed.video::before {
+            background: #9a5ae8;
+        }
+
+        .event-content {
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #3a2a20;
+            border-radius: 5px;
+            padding: 12px 15px;
+            flex: 1;
+            max-width: 500px;
+            transition: all 0.3s ease;
+        }
+
+        .event-node.completed .event-content {
+            cursor: pointer;
+        }
+
+        .event-node.completed .event-content:hover {
+            border-color: #8b7355;
+            background: rgba(40,35,30,0.9);
+        }
+
+        .event-content h4 {
+            font-size: 0.95em;
+            color: #c9a86c;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .event-content h4 .title-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .event-content .expand-arrow {
+            color: #8b7355;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-content.expanded .expand-arrow {
+            transform: rotate(180deg);
+        }
+
+        .event-content p {
+            font-size: 0.85em;
+            color: #8b7a6a;
+            line-height: 1.5;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .event-content.expanded p {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 10px;
+        }
+
+        .event-tag {
+            display: inline-block;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        .event-tag.story {
+            background: rgba(232,90,90,0.2);
+            color: #e85a5a;
+            border: 1px solid #e85a5a;
+        }
+
+        .event-tag.video {
+            background: rgba(154,90,232,0.2);
+            color: #9a5ae8;
+            border: 1px solid #9a5ae8;
+        }
+
+        /* 锁定内容 */
+        .locked-content {
+            color: #555;
+            font-style: italic;
+            padding: 15px;
+        }
+
+        /* ==================== 右侧面板 - 详情与操作 ==================== */
+        .right-panel {
+            width: 320px;
+            background: linear-gradient(180deg, #1a1412 0%, #0d0a09 100%);
+            border-left: 1px solid #3a2a20;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-section {
+            padding: 20px;
+            border-bottom: 1px solid #2a1a10;
+        }
+
+        .detail-section h3 {
+            font-size: 0.9em;
+            color: #8b7355;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 当前选中信息 */
+        .selected-info {
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #3a2a20;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .selected-info .loop-name {
+            font-size: 1.1em;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .selected-info .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #2a1a10;
+            font-size: 0.85em;
+        }
+
+        .selected-info .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .selected-info .label {
+            color: #8b7355;
+        }
+
+        .selected-info .value {
+            color: #e8e4d9;
+        }
+
+        /* 说明文字 */
+        .hint-text {
+            padding: 15px;
+            background: rgba(212,175,55,0.1);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #c9a86c;
+            line-height: 1.6;
+        }
+
+        /* 操作按钮 */
+        .action-area {
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 15px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(180deg, #8B2323, #5a1515);
+            color: #fff;
+            border: 2px solid #aa4040;
+        }
+
+        .action-btn.primary:hover {
+            background: linear-gradient(180deg, #9B3333, #6a2525);
+            box-shadow: 0 0 20px rgba(139,35,35,0.5);
+        }
+
+        .action-btn.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(180deg, #3a3025, #252015);
+            color: #d4af37;
+            border: 2px solid #8b7355;
+        }
+
+        .action-btn.secondary:hover {
+            background: linear-gradient(180deg, #4a4035, #352a20);
+        }
+
+        .action-btn.doc {
+            background: linear-gradient(180deg, #1a3a5a, #0a2a4a);
+            color: #5aafe8;
+            border: 2px solid #3a7aba;
+        }
+
+        .action-btn.doc:hover {
+            background: linear-gradient(180deg, #2a4a6a, #1a3a5a);
+            box-shadow: 0 0 15px rgba(90,175,232,0.4);
+        }
+
+        /* ==================== 详情弹窗 ==================== */
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-modal.active {
+            display: flex;
+        }
+
+        .detail-modal-content {
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            background: linear-gradient(180deg, #1a1815 0%, #0f0c0a 100%);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-modal-header {
+            background: linear-gradient(90deg, #6B1C1C, #4a1515);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-modal-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4em;
+            color: #fff;
+        }
+
+        .detail-modal-header .status-tag {
+            background: rgba(76,175,80,0.3);
+            color: #6fcf70;
+            border: 1px solid #4caf50;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+
+        .detail-modal-header .status-tag.current {
+            background: rgba(255,193,7,0.3);
+            color: #ffd54f;
+            border-color: #ffc107;
+        }
+
+        .detail-modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .detail-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px 30px;
+        }
+
+        /* 详情时间线 */
+        .detail-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .detail-timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #8b7355, #5a4a3a);
+        }
+
+        .detail-event {
+            position: relative;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #3a2a20;
+            border-radius: 5px;
+        }
+
+        .detail-event::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4caf50;
+            border: 2px solid #6fcf70;
+        }
+
+        .detail-event.story::before {
+            background: #e85a5a;
+            border-color: #ff7a7a;
+        }
+
+        .detail-event.video::before {
+            background: #9a5ae8;
+            border-color: #ba7aff;
+        }
+
+        .detail-event.pending::before {
+            background: #3a2a20;
+            border-color: #5a4a3a;
+        }
+
+        .detail-event h4 {
+            color: #c9a86c;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-event h4 .tag {
+            font-size: 0.7em;
+            padding: 3px 10px;
+            border-radius: 3px;
+        }
+
+        .detail-event h4 .tag.story {
+            background: rgba(232,90,90,0.2);
+            color: #e85a5a;
+            border: 1px solid #e85a5a;
+        }
+
+        .detail-event h4 .tag.video {
+            background: rgba(154,90,232,0.2);
+            color: #9a5ae8;
+            border: 1px solid #9a5ae8;
+        }
+
+        .detail-event p {
+            color: #8b7a6a;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .detail-event .video-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: linear-gradient(180deg, #5a3a8a, #3a2a5a);
+            border: 1px solid #9a5ae8;
+            color: #ba7aff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .detail-event .video-btn:hover {
+            background: linear-gradient(180deg, #6a4a9a, #4a3a6a);
+        }
+
+        .detail-modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #3a2a20;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .detail-modal-footer .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-family: 'Noto Serif SC', serif;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        .detail-modal-footer .btn-replay {
+            background: linear-gradient(180deg, #8B2323, #5a1515);
+            color: #fff;
+            border: 2px solid #aa4040;
+        }
+
+        .detail-modal-footer .btn-replay:hover {
+            background: linear-gradient(180deg, #9B3333, #6a2525);
+        }
+
+        .detail-modal-footer .btn-replay:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .detail-modal-footer .btn-close {
+            background: linear-gradient(180deg, #3a3025, #252015);
+            color: #c9a86c;
+            border: 1px solid #5a4a3a;
+        }
+
+        /* ==================== 策划案弹窗 ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            background: linear-gradient(180deg, #1a1815 0%, #0f0c0a 100%);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #8b7355, #5a4a3a);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4em;
+            color: #1a1510;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            color: #1a1510;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* 策划案样式 */
+        .doc-section {
+            margin-bottom: 35px;
+        }
+
+        .doc-section h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            color: #d4af37;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #5a4a3a;
+        }
+
+        .doc-section h4 {
+            font-size: 1em;
+            color: #c9a86c;
+            margin: 15px 0 10px;
+        }
+
+        .doc-section p, .doc-section li {
+            color: #a09080;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .doc-section ul {
+            margin-left: 20px;
+        }
+
+        .doc-section strong {
+            color: #e8e4d9;
+        }
+
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .doc-table th {
+            background: rgba(139,115,85,0.3);
+            color: #d4af37;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #5a4a3a;
+            font-size: 0.9em;
+        }
+
+        .doc-table td {
+            padding: 12px;
+            border: 1px solid #3a2a20;
+            color: #a09080;
+            font-size: 0.85em;
+        }
+
+        .highlight-box {
+            background: rgba(212,175,55,0.1);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .highlight-box h5 {
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .highlight-box p {
+            color: #c9a86c;
+            margin: 0;
+        }
+
+        .flow-diagram {
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #5a4a3a;
+            border-radius: 5px;
+            padding: 25px;
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .flow-step {
+            background: linear-gradient(180deg, #3a3025, #252015);
+            border: 2px solid #5a4a3a;
+            border-radius: 5px;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        .flow-step.highlight {
+            border-color: #d4af37;
+        }
+
+        .flow-step .num {
+            font-size: 0.7em;
+            color: #8b7355;
+        }
+
+        .flow-step .text {
+            color: #e8e4d9;
+            font-size: 0.9em;
+        }
+
+        .flow-arrow {
+            color: #5a4a3a;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: #0a0908;
+            border: 1px solid #3a2a20;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8em;
+            color: #a09080;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .code-block .key { color: #5a9ae8; }
+        .code-block .value { color: #e85a5a; }
+        .code-block .string { color: #9ae85a; }
+        .code-block .comment { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+
+    <div class="main-container">
+        <!-- 左侧 - 案件档案卡片 -->
+        <div class="left-panel">
+            <div class="chapter-header">
+                <h2>UNIT 2</h2>
+                <div class="subtitle">Frank Kowalski 之死</div>
+            </div>
+
+            <div class="case-file-area">
+                <div class="case-file active" onclick="selectLoop(1)">
+                    <div class="file-header">
+                        <div>
+                            <div class="case-name">残酷的身份确认</div>
+                        </div>
+                        <span class="status-badge completed">已完成</span>
+                    </div>
+                    <div class="case-info">
+                        指证对象：<span class="target">Morrison</span>
+                    </div>
+                    <div class="stamp-overlay solved">SOLVED</div>
+                </div>
+
+                <div class="case-file" onclick="selectLoop(2)">
+                    <div class="file-header">
+                        <div>
+                            <div class="case-name">威胁链条与连号钞票</div>
+                        </div>
+                        <span class="status-badge completed">已完成</span>
+                    </div>
+                    <div class="case-info">
+                        指证对象：<span class="target">Leonard Ross</span>
+                    </div>
+                    <div class="stamp-overlay solved">SOLVED</div>
+                </div>
+
+                <div class="case-file" onclick="selectLoop(3)">
+                    <div class="file-header">
+                        <div>
+                            <div class="case-name">掠夺性贷款揭露</div>
+                        </div>
+                        <span class="status-badge completed">已完成</span>
+                    </div>
+                    <div class="case-info">
+                        指证对象：<span class="target">Harold Moore</span>
+                    </div>
+                    <div class="stamp-overlay solved">SOLVED</div>
+                </div>
+
+                <div class="case-file" onclick="selectLoop(4)">
+                    <div class="file-header">
+                        <div>
+                            <div class="case-name">Rose深情告白</div>
+                        </div>
+                        <span class="status-badge current">进行中</span>
+                    </div>
+                    <div class="case-info">
+                        指证对象：<span class="hidden">???</span>
+                    </div>
+                    <div class="stamp-overlay progress">IN PROGRESS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间 - 垂直时间线 -->
+        <div class="center-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h1>PROGRESS</h1>
+                    <span class="cn">案情进展</span>
+                </div>
+                <button class="close-btn" onclick="goToSettings()">返回设置</button>
+            </div>
+
+            <div class="timeline-container">
+                <div class="vertical-timeline">
+                    <!-- 残酷的身份确认 -->
+                    <div class="loop-group">
+                        <div class="loop-header">
+                            <div class="loop-marker completed">✓</div>
+                            <div class="loop-title">残酷的身份确认</div>
+                        </div>
+
+                        <div class="event-node completed">
+                            <div class="event-content" onclick="openDetail(1)">
+                                <h4>
+                                    <span class="title-text">确认死者身份，揭露Morrison的谎言</span>
+                                    <span class="expand-arrow">▶</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 威胁链条与连号钞票 -->
+                    <div class="loop-group">
+                        <div class="loop-header">
+                            <div class="loop-marker completed">✓</div>
+                            <div class="loop-title">威胁链条与连号钞票</div>
+                        </div>
+
+                        <div class="event-node completed">
+                            <div class="event-content" onclick="openDetail(2)">
+                                <h4>
+                                    <span class="title-text">追查连号钞票，揭露暴力催债</span>
+                                    <span class="expand-arrow">▶</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 掠夺性贷款揭露 -->
+                    <div class="loop-group">
+                        <div class="loop-header">
+                            <div class="loop-marker completed">✓</div>
+                            <div class="loop-title">掠夺性贷款揭露</div>
+                        </div>
+
+                        <div class="event-node completed">
+                            <div class="event-content" onclick="openDetail(3)">
+                                <h4>
+                                    <span class="title-text">揭露银行贷款欺诈，获得遗嘱副本</span>
+                                    <span class="expand-arrow">▶</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rose深情告白 (当前) -->
+                    <div class="loop-group">
+                        <div class="loop-header">
+                            <div class="loop-marker current">●</div>
+                            <div class="loop-title">Rose深情告白</div>
+                        </div>
+
+                        <div class="event-node">
+                            <div class="event-content" onclick="openDetail(4)">
+                                <h4>
+                                    <span class="title-text">调查遗嘱争议与约会房间</span>
+                                    <span class="expand-arrow">▶</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧 - 操作 -->
+        <div class="right-panel">
+            <div class="action-area">
+                <button class="action-btn doc" onclick="openDoc()">
+                    📋 策划案
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div class="detail-modal" id="detailModal">
+        <div class="detail-modal-content">
+            <div class="detail-modal-header">
+                <h2 id="detailTitle">残酷的身份确认</h2>
+                <span class="status-tag" id="detailStatus">已完成</span>
+            </div>
+            <div class="detail-modal-body">
+                <div class="detail-timeline" id="detailTimeline">
+                    <!-- 动态填充 -->
+                </div>
+            </div>
+            <div class="detail-modal-footer">
+                <button class="btn btn-close" onclick="closeDetail()">返回</button>
+                <button class="btn btn-replay" id="detailReplayBtn" onclick="replayFromDetail()">⏪ 回溯至此</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 策划案弹窗 -->
+    <div class="modal-overlay" id="docModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 案情回顾系统 - 策划案</h2>
+                <button class="modal-close" onclick="closeDoc()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- 系统概述 -->
+                <div class="doc-section">
+                    <h3>一、系统概述</h3>
+                    <p><strong>系统名称</strong>：案情回顾系统（OVERVIEW）</p>
+                    <p><strong>系统定位</strong>：NDC核心面板之一，提供玩家回顾案件进展、重新播放剧情视频、回溯到指定节点重新开始的功能。</p>
+
+                    <div class="highlight-box">
+                        <h5>💡 核心设计理念</h5>
+                        <p>「循环即存档点」- 每个循环的结束自动保存进度。玩家可以随时回溯到任意已完成循环的起点重新开始游戏，探索不同选择带来的不同结果。</p>
+                    </div>
+
+                    <h4>1.1 系统功能</h4>
+                    <ul>
+                        <li><strong>案情回顾</strong>：查看当前章节的故事背景和进度</li>
+                        <li><strong>节点回溯</strong>：回到某个循环起点，从该节点重新开始游戏</li>
+                        <li><strong>进度展示</strong>：直观展示玩家在每个循环的进展状态</li>
+                    </ul>
+                </div>
+
+                <!-- 存档规则 -->
+                <div class="doc-section">
+                    <h3>二、存档规则</h3>
+
+                    <h4>2.1 存档触发时机</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>触发条件</th>
+                            <th>存档类型</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>循环结束（指证成功）</td>
+                            <td>循环存档</td>
+                            <td><strong>自动触发，不可跳过</strong></td>
+                        </tr>
+                        <tr>
+                            <td>章节结束</td>
+                            <td>章节存档</td>
+                            <td>特殊标记，包含完整章节数据</td>
+                        </tr>
+                    </table>
+
+                    <div class="highlight-box">
+                        <h5>⚠️ 重要限制</h5>
+                        <p><strong>不支持中途存档</strong>：玩家无法在循环进行中手动保存，只能在循环结束时自动保存。</p>
+                    </div>
+
+                    <h4>2.2 存档数据内容</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>数据类型</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>已获得证据（Evidence）</td>
+                            <td>ITEMS、CLUES、NOTES、COMBINED</td>
+                        </tr>
+                        <tr>
+                            <td>已解锁场景</td>
+                            <td>可前往的地点列表</td>
+                        </tr>
+                        <tr>
+                            <td>已完成对话</td>
+                            <td>NPC对话记录和提取的关键信息</td>
+                        </tr>
+                        <tr>
+                            <td>剧情标记（Flags）</td>
+                            <td>已触发的事件和解锁条件</td>
+                        </tr>
+                        <tr>
+                            <td>循环完成状态</td>
+                            <td>该循环是否已完成</td>
+                        </tr>
+                    </table>
+
+                    <h4>2.3 存档数据结构示例</h4>
+                    <div class="code-block">
+{
+  <span class="key">"loop_id"</span>: <span class="value">1</span>,
+  <span class="key">"loop_name"</span>: <span class="string">"残酷的身份确认"</span>,
+  <span class="key">"status"</span>: <span class="string">"completed"</span>,
+  <span class="key">"player_data"</span>: {
+    <span class="key">"evidence_ids"</span>: [<span class="string">"EV101"</span>, <span class="string">"EV102"</span>, <span class="string">"EV103"</span>],
+    <span class="key">"unlocked_scenes"</span>: [<span class="string">"SC201"</span>, <span class="string">"SC202"</span>],
+    <span class="key">"completed_dialogues"</span>: [<span class="string">"D201"</span>, <span class="string">"D202"</span>],
+    <span class="key">"flags"</span>: {
+      <span class="string">"morrison_exposed"</span>: <span class="value">true</span>,
+      <span class="string">"frank_identity_confirmed"</span>: <span class="value">true</span>
+    }
+  }
+}
+                    </div>
+                </div>
+
+                <!-- 重玩机制 -->
+                <div class="doc-section">
+                    <h3>三、重玩（回溯）机制</h3>
+
+                    <h4>3.1 回溯流程</h4>
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <div class="num">STEP 1</div>
+                            <div class="text">打开OVERVIEW</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">STEP 2</div>
+                            <div class="text">选择目标循环</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step highlight">
+                            <div class="num">STEP 3</div>
+                            <div class="text">点击「重玩」</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">STEP 4</div>
+                            <div class="text">确认提示</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">STEP 5</div>
+                            <div class="text">加载循环起点</div>
+                        </div>
+                    </div>
+
+                    <h4>3.2 回溯规则</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>数据类型</th>
+                            <th>回溯时处理</th>
+                        </tr>
+                        <tr>
+                            <td>证据</td>
+                            <td><strong>重置</strong>为该循环开始时的状态</td>
+                        </tr>
+                        <tr>
+                            <td>已解锁场景</td>
+                            <td><strong>重置</strong>为该循环开始时的状态</td>
+                        </tr>
+                        <tr>
+                            <td>对话记录</td>
+                            <td><strong>重置</strong>为该循环开始时的状态</td>
+                        </tr>
+                        <tr>
+                            <td>剧情标记</td>
+                            <td><strong>重置</strong>为该循环开始时的状态</td>
+                        </tr>
+                    </table>
+
+                    <div class="highlight-box">
+                        <h5>💡 回溯意义</h5>
+                        <p>AVG对话内容可能因不同选择而不同，获得的线索也可能不同。回溯机制让玩家可以探索不同的选择路径。</p>
+                    </div>
+                </div>
+
+                <!-- UI设计 -->
+                <div class="doc-section">
+                    <h3>四、UI界面设计</h3>
+
+                    <h4>4.1 界面布局</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>区域</th>
+                            <th>内容</th>
+                            <th>功能</th>
+                        </tr>
+                        <tr>
+                            <td>左侧面板</td>
+                            <td>循环档案卡片</td>
+                            <td>展示所有循环状态，点击切换选中</td>
+                        </tr>
+                        <tr>
+                            <td>中间面板</td>
+                            <td>垂直时间线</td>
+                            <td>上下滚动查看各循环的事件节点</td>
+                        </tr>
+                        <tr>
+                            <td>右侧面板</td>
+                            <td>详情与操作</td>
+                            <td>显示选中循环信息，提供重玩按钮</td>
+                        </tr>
+                    </table>
+
+                    <h4>4.2 循环卡片状态</h4>
+                    <ul>
+                        <li><strong style="color:#4caf50">已完成（SOLVED）</strong>：显示指证对象，可重玩</li>
+                        <li><strong style="color:#ffc107">进行中（IN PROGRESS）</strong>：指证对象显示为「???」，不可重玩</li>
+                        <li><strong style="color:#666">未解锁（LOCKED）</strong>：名称和信息全部隐藏，不可点击</li>
+                    </ul>
+
+                    <h4>4.3 时间线节点类型</h4>
+                    <ul>
+                        <li><strong style="color:#e85a5a">剧情节点（红色）</strong>：关键剧情点，自动播放的故事内容</li>
+                        <li><strong>普通节点</strong>：搜证阶段等可交互内容</li>
+                        <li><strong style="color:#9a5ae8">指证节点（紫色）</strong>：指证演出</li>
+                    </ul>
+                </div>
+
+                <!-- Unit 2 配置 -->
+                <div class="doc-section">
+                    <h3>五、Unit 2 循环配置</h3>
+
+                    <table class="doc-table">
+                        <tr>
+                            <th>循环</th>
+                            <th>名称</th>
+                            <th>指证对象</th>
+                            <th>指证轮次</th>
+                        </tr>
+                        <tr>
+                            <td>Loop 1</td>
+                            <td>残酷的身份确认</td>
+                            <td>Morrison</td>
+                            <td>2轮</td>
+                        </tr>
+                        <tr>
+                            <td>Loop 2</td>
+                            <td>威胁链条与连号钞票</td>
+                            <td>Leonard Ross</td>
+                            <td>3轮</td>
+                        </tr>
+                        <tr>
+                            <td>Loop 3</td>
+                            <td>掠夺性贷款揭露</td>
+                            <td>Harold Moore</td>
+                            <td>3轮</td>
+                        </tr>
+                        <tr>
+                            <td>Loop 4</td>
+                            <td>Rose深情告白</td>
+                            <td>Danny Kowalski</td>
+                            <td>3轮</td>
+                        </tr>
+                        <tr>
+                            <td>Loop 5</td>
+                            <td>Vinnie纵火认罪</td>
+                            <td>Vinnie Moretti</td>
+                            <td>1轮</td>
+                        </tr>
+                        <tr>
+                            <td>Loop 6</td>
+                            <td>Leonard终极指证</td>
+                            <td>Leonard Russo</td>
+                            <td>4轮</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 与其他系统的关系 -->
+                <div class="doc-section">
+                    <h3>六、与其他系统的关系</h3>
+
+                    <h4>6.1 入口位置</h4>
+                    <p>在EXPLORING场景探索面板的左上角导航栏中，点击OVERVIEW可进入本系统。</p>
+
+                    <h4>6.2 数据来源</h4>
+                    <ul>
+                        <li><strong>Evidence数据</strong>：来自CASE BOARD面板中的ITEMS、CLUES、NOTES、COMBINED</li>
+                        <li><strong>Scene数据</strong>：来自MAP地图面板中已解锁的场景</li>
+                        <li><strong>Dialogue数据</strong>：来自NPC对话的AVG记录</li>
+                    </ul>
+
+                    <h4>6.3 触发时机</h4>
+                    <p>循环结束后（指证成功），系统自动保存当前状态到对应循环的存档中。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLoop = 1;
+        let viewingLoop = 1;
+
+        // 循环详情数据
+        const loopDetails = {
+            1: {
+                title: '残酷的身份确认',
+                status: 'completed',
+                target: 'Morrison',
+                events: [
+                    { type: 'story', title: '火灾现场', desc: 'Zack赶到Margaret鞋坊，发现烧焦的尸体。Morrison声称死者是Margaret，但现场疑点重重。' },
+                    { type: 'normal', title: '搜证阶段', desc: '在火灾现场和鞋坊二楼收集证据。发现婚戒位置矛盾——死者戴在右手，而Margaret习惯戴左手。' },
+                    { type: 'video', title: 'Morrison指证', desc: '使用婚戒证据和Foster口供，两轮指证击破Morrison关于死者身份的谎言。' },
+                    { type: 'story', title: '真相揭露', desc: '死者是Frank Kowalski，Margaret下落不明。Morrison承认自己说谎，但坚称不知道Frank为何会死在这里。' }
+                ]
+            },
+            2: {
+                title: '威胁链条与连号钞票',
+                status: 'completed',
+                target: 'Leonard Ross',
+                events: [
+                    { type: 'story', title: '调查Frank背景', desc: '开始调查Frank的生前情况，发现他欠Moore银行一大笔钱，且曾受到威胁。' },
+                    { type: 'normal', title: '连号钞票发现', desc: '在O\'Hara家发现Frank藏起来的现金，与酒吧Vinnie手中的钞票是连号。这揭示了银行与黑帮的勾结。' },
+                    { type: 'normal', title: '证人访谈', desc: '与多位证人交谈，逐步拼凑出Leonard雇佣Vinnie进行暴力催债的证据链。' },
+                    { type: 'video', title: 'Leonard指证', desc: '三轮激烈指证，揭露Leonard Ross雇佣Vinnie Moretti对Frank进行暴力威胁催债的真相。' }
+                ]
+            },
+            3: {
+                title: '掠夺性贷款揭露',
+                status: 'completed',
+                target: 'Harold Moore',
+                events: [
+                    { type: 'story', title: 'Mickey登场', desc: '神秘人Mickey主动接触Zack，表示愿意协助获取银行内部文件，但目的不明。' },
+                    { type: 'normal', title: '银行档案调查', desc: '潜入银行获取贷款档案，发现掠夺性贷款的违法条款和Moore投资公司的秘密关联。' },
+                    { type: 'normal', title: '遗嘱发现', desc: '在调查过程中发现Frank的遗嘱副本，遗产分配涉及多方利益。' },
+                    { type: 'video', title: 'Moore指证', desc: '三轮指证揭露Moore银行的系统性贷款欺诈，Harold Moore承认设计了掠夺性贷款条款。' }
+                ]
+            },
+            4: {
+                title: 'Rose深情告白',
+                status: 'current',
+                target: '???',
+                events: [
+                    { type: 'story', title: '遗嘱争议', desc: 'Frank的遗产归属引发新的疑点，多方势力开始浮出水面...' },
+                    { type: 'normal', title: '约会房间调查', desc: '当前目标：调查Margaret鞋坊地下室的约会房间，寻找更多线索。', pending: true },
+                    { type: 'normal', title: '指证阶段', desc: '尚未到达', pending: true }
+                ]
+            }
+        };
+
+        function selectLoop(loopId) {
+            document.querySelectorAll('.case-file').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            const cards = document.querySelectorAll('.case-file:not(.locked)');
+            if (loopId <= cards.length) {
+                cards[loopId - 1].classList.add('active');
+                currentLoop = loopId;
+            }
+        }
+
+        function openDetail(loopId) {
+            viewingLoop = loopId;
+            const data = loopDetails[loopId];
+            if (!data) return;
+
+            document.getElementById('detailTitle').textContent = data.title;
+
+            const statusEl = document.getElementById('detailStatus');
+            if (data.status === 'completed') {
+                statusEl.textContent = '已完成';
+                statusEl.className = 'status-tag';
+            } else {
+                statusEl.textContent = '进行中';
+                statusEl.className = 'status-tag current';
+            }
+
+            // 生成事件时间线
+            let html = '';
+            data.events.forEach(event => {
+                const pendingClass = event.pending ? ' pending' : '';
+                const typeClass = event.type === 'story' ? ' story' : (event.type === 'video' ? ' video' : '');
+
+                html += `<div class="detail-event${typeClass}${pendingClass}">`;
+                html += `<h4>`;
+                if (event.type === 'story') {
+                    html += `<span class="tag story">剧情</span>`;
+                } else if (event.type === 'video') {
+                    html += `<span class="tag video">指证</span>`;
+                }
+                html += `${event.title}</h4>`;
+                html += `<p>${event.desc}</p>`;
+                if (event.type === 'video' && !event.pending) {
+                    html += `<button class="video-btn" onclick="playVideo('${event.title}')">▶ 回看指证视频</button>`;
+                }
+                html += `</div>`;
+            });
+
+            document.getElementById('detailTimeline').innerHTML = html;
+
+            // 回溯按钮状态
+            const replayBtn = document.getElementById('detailReplayBtn');
+            if (data.status === 'current') {
+                replayBtn.disabled = true;
+                replayBtn.textContent = '当前进行中';
+            } else {
+                replayBtn.disabled = false;
+                replayBtn.textContent = '⏪ 回溯至此';
+            }
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeDetail() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function replayFromDetail() {
+            const data = loopDetails[viewingLoop];
+            if (data && data.status === 'completed') {
+                if (confirm(`确定要回溯到「${data.title}」的起点吗？\n\n后续进度将被重置。`)) {
+                    alert('正在加载存档...\n\n（演示功能）');
+                    closeDetail();
+                }
+            }
+        }
+
+        function playVideo(title) {
+            alert(`播放「${title}」视频...\n\n（演示功能）`);
+        }
+
+        // 返回设置页面
+        function goToSettings() {
+            window.location.href = '../设置系统/settings_system.html';
+        }
+
+        function openDoc() {
+            document.getElementById('docModal').classList.add('active');
+        }
+
+        function closeDoc() {
+            document.getElementById('docModal').classList.remove('active');
+        }
+
+        document.getElementById('docModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDoc();
+        });
+
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetail();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDoc();
+                closeDetail();
+            }
+        });
+    </script>
+</body>
+</html>

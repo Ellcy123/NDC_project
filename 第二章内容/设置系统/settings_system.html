@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC - 设置系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+SC:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0808;
+            color: #e8e4d9;
+            font-family: 'Noto Serif SC', serif;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 背景场景 */
+        .scene-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1510 0%, #0d0a08 50%, #151210 100%);
+            z-index: 0;
+        }
+
+        .scene-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 70%;
+            height: 100%;
+            background: radial-gradient(ellipse at 70% 50%, rgba(139,35,35,0.12) 0%, transparent 60%);
+        }
+
+        /* 噪点纹理 */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* 主容器 */
+        .main-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 左侧设置面板 */
+        .settings-panel {
+            width: 420px;
+            background: linear-gradient(180deg,
+                rgba(245,235,220,0.98) 0%,
+                rgba(235,225,205,0.95) 50%,
+                rgba(220,210,190,0.92) 100%
+            );
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 40px rgba(0,0,0,0.5);
+        }
+
+        .settings-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -15px;
+            width: 15px;
+            height: 100%;
+            background: linear-gradient(90deg,
+                rgba(245,235,220,0.9) 0%,
+                rgba(245,235,220,0.6) 30%,
+                rgba(245,235,220,0.3) 60%,
+                transparent 100%
+            );
+            z-index: 2;
+        }
+
+        .panel-content {
+            position: relative;
+            z-index: 5;
+            padding: 30px 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* 游戏标题 */
+        .game-title {
+            margin-bottom: 20px;
+        }
+
+        .game-title h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2em;
+            font-weight: 900;
+            color: #1a1510;
+            letter-spacing: 2px;
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+        }
+
+        .game-title h1::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #8B2323;
+        }
+
+        .game-title .subtitle {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.7em;
+            color: #8B2323;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        /* 印章装饰 */
+        .stamp-decoration {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 65px;
+            height: 65px;
+            border: 3px solid rgba(139,35,35,0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            opacity: 0.6;
+        }
+
+        .stamp-decoration span {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.55em;
+            color: rgba(139,35,35,0.6);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* 菜单选项 */
+        .menu-options {
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2em;
+            color: #2a2520;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            color: #8B2323;
+            padding-left: 10px;
+        }
+
+        .menu-item.active {
+            color: #fff;
+            background: linear-gradient(90deg, #8B2323, #6a1a1a);
+            padding: 10px 15px;
+            margin: 3px -25px;
+            padding-left: 35px;
+        }
+
+        .menu-item.active::before {
+            content: '▶';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7em;
+        }
+
+        /* 有修改时的保存按钮样式 */
+        .menu-item.active.has-changes {
+            background: linear-gradient(90deg, #c9a030, #a08020);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(201, 160, 48, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(201, 160, 48, 0.6); }
+        }
+
+        /* 快捷键提示 */
+        .hotkey-hints {
+            margin: 15px 0;
+            padding: 12px 0;
+            border-top: 1px dashed #c0b0a0;
+            border-bottom: 1px dashed #c0b0a0;
+        }
+
+        .hotkey-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 0.85em;
+            color: #4a4540;
+        }
+
+        .hotkey-key {
+            background: #2a2520;
+            color: #e8e4d9;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85em;
+            min-width: 38px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* 设置项 */
+        .settings-section {
+            margin-top: 5px;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 12px 0;
+        }
+
+        .setting-label {
+            font-size: 0.9em;
+            color: #3a3530;
+            letter-spacing: 1px;
+        }
+
+        /* 选择器样式 */
+        .selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .selector-arrow {
+            color: #8B2323;
+            font-size: 1.1em;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+            padding: 2px 5px;
+        }
+
+        .selector-arrow:hover {
+            transform: scale(1.2);
+        }
+
+        .selector-value {
+            color: #8B2323;
+            font-weight: 600;
+            min-width: 90px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        /* 开关样式 */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-option {
+            color: #8B2323;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 3px 8px;
+            border-radius: 3px;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .toggle-option.active {
+            background: #8B2323;
+            color: #fff;
+        }
+
+        /* 滑块样式 */
+        .slider-container {
+            flex: 1;
+            max-width: 180px;
+            position: relative;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-track {
+            width: 100%;
+            height: 3px;
+            background: #c0b0a0;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: #8B2323;
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #8B2323;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* 社交链接 */
+        .social-links {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #c0b0a0;
+        }
+
+        .social-title {
+            font-size: 0.75em;
+            color: #8a7a6a;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icon {
+            width: 34px;
+            height: 34px;
+            background: #2a2520;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .social-icon:hover {
+            background: #8B2323;
+            transform: translateY(-2px);
+        }
+
+        /* 右侧场景区域 */
+        .scene-area {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 场景装饰 */
+        .scene-decoration {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            text-align: right;
+        }
+
+        .scene-decoration .progress-text {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85em;
+            color: #8B2323;
+            letter-spacing: 2px;
+            text-decoration: underline;
+        }
+
+        .scene-decoration .progress-value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: #d4af37;
+            margin-left: 12px;
+        }
+
+        .objectives-panel {
+            position: absolute;
+            top: 55px;
+            right: 30px;
+            width: 180px;
+        }
+
+        .objectives-title {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.8em;
+            color: #d4af37;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .objective-item {
+            font-size: 0.75em;
+            color: rgba(232,228,217,0.5);
+            margin: 4px 0;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .objective-item::before {
+            content: '○';
+            position: absolute;
+            left: 0;
+            color: #8B2323;
+            font-size: 0.8em;
+        }
+
+        .objective-item.completed::before {
+            content: '●';
+            color: #4caf50;
+        }
+
+        /* 红色圆圈装饰 */
+        .red-circle {
+            position: absolute;
+            border: 2px solid rgba(139,35,35,0.25);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .red-circle-1 {
+            width: 120px;
+            height: 120px;
+            bottom: 18%;
+            left: 48%;
+        }
+
+        .red-circle-2 {
+            width: 60px;
+            height: 60px;
+            top: 62%;
+            right: 8%;
+        }
+
+        /* 策划案按钮 */
+        .doc-button {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+        }
+
+        .doc-btn {
+            background: linear-gradient(180deg, #1a3a5a, #0a2a4a);
+            color: #5aafe8;
+            border: 2px solid #3a7aba;
+            padding: 12px 25px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95em;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .doc-btn:hover {
+            background: linear-gradient(180deg, #2a4a6a, #1a3a5a);
+            box-shadow: 0 5px 30px rgba(90,175,232,0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 语言确认弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .language-modal {
+            background: linear-gradient(180deg, #8B2323, #5a1515);
+            padding: 25px 45px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .language-modal h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1em;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .language-modal .cn-text {
+            font-size: 0.95em;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 1em;
+            color: #d4af37;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px 12px;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+
+        /* 策划案弹窗 */
+        .doc-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doc-modal.active {
+            display: flex;
+        }
+
+        .doc-content {
+            width: 92%;
+            max-width: 1100px;
+            max-height: 92vh;
+            background: linear-gradient(180deg, #1a1815 0%, #0f0c0a 100%);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doc-header {
+            background: linear-gradient(90deg, #8b7355, #5a4a3a);
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doc-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.3em;
+            color: #1a1510;
+        }
+
+        .doc-close {
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            color: #1a1510;
+            font-size: 1.4em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .doc-close:hover {
+            background: rgba(0,0,0,0.5);
+        }
+
+        .doc-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        /* 策划案内容样式 */
+        .doc-section {
+            margin-bottom: 30px;
+        }
+
+        .doc-section h3 {
+            font-size: 1.15em;
+            color: #d4af37;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #5a4a3a;
+        }
+
+        .doc-section h4 {
+            font-size: 0.95em;
+            color: #c9a86c;
+            margin: 12px 0 8px;
+        }
+
+        .doc-section p, .doc-section li {
+            color: #a09080;
+            line-height: 1.7;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .doc-section ul {
+            margin-left: 18px;
+        }
+
+        .doc-section strong {
+            color: #e8e4d9;
+        }
+
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.85em;
+        }
+
+        .doc-table th {
+            background: rgba(139,115,85,0.3);
+            color: #d4af37;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #5a4a3a;
+        }
+
+        .doc-table td {
+            padding: 10px;
+            border: 1px solid #3a2a20;
+            color: #a09080;
+        }
+
+        .highlight-box {
+            background: rgba(212,175,55,0.1);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .highlight-box h5 {
+            color: #d4af37;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .highlight-box p {
+            color: #c9a86c;
+            margin: 0;
+            font-size: 0.85em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .feature-card {
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #5a4a3a;
+            border-radius: 5px;
+            padding: 12px;
+        }
+
+        .feature-card h5 {
+            color: #d4af37;
+            font-size: 0.9em;
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            color: #8b7a6a;
+            font-size: 0.8em;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Tab导航 */
+        .doc-tabs {
+            display: flex;
+            border-bottom: 2px solid #3a2a20;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .doc-tab {
+            padding: 10px 18px;
+            color: #8b7355;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .doc-tab:hover {
+            color: #c9a86c;
+        }
+
+        .doc-tab.active {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+
+        .doc-tab-content {
+            display: none;
+        }
+
+        .doc-tab-content.active {
+            display: block;
+        }
+
+        /* 存档界面样式 */
+        .save-load-content {
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            background: linear-gradient(180deg, #1a1815 0%, #0f0c0a 100%);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .save-load-header {
+            background: linear-gradient(90deg, #6B1C1C, #4a1515);
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-load-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2em;
+            color: #fff;
+        }
+
+        .modal-close-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(0,0,0,0.5);
+        }
+
+        .save-load-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* 存档槽位 */
+        .save-slot {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(30,25,20,0.8);
+            border: 2px solid #3a2a20;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-slot:hover {
+            border-color: #8b7355;
+            background: rgba(40,35,30,0.9);
+        }
+
+        .save-slot.selected {
+            border-color: #d4af37;
+            box-shadow: 0 0 15px rgba(212,175,55,0.3);
+        }
+
+        .save-slot.auto-save {
+            border-color: #4a6a4a;
+        }
+
+        .save-slot.auto-save:hover {
+            border-color: #6a9a6a;
+        }
+
+        .save-slot.empty {
+            opacity: 0.5;
+        }
+
+        .save-slot.empty:hover {
+            opacity: 0.7;
+        }
+
+        .slot-thumbnail {
+            width: 80px;
+            height: 50px;
+            background: #1a1510;
+            border: 1px solid #5a4a3a;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9em;
+            color: #8b7355;
+            background: linear-gradient(135deg, #2a2520 0%, #1a1510 100%);
+        }
+
+        .thumbnail-placeholder.empty {
+            color: #555;
+        }
+
+        .slot-info {
+            flex: 1;
+        }
+
+        .slot-title {
+            font-size: 1em;
+            color: #d4af37;
+            margin-bottom: 4px;
+        }
+
+        .slot-title.empty {
+            color: #666;
+        }
+
+        .slot-chapter {
+            font-size: 0.9em;
+            color: #a09080;
+            margin-bottom: 6px;
+        }
+
+        .slot-chapter.empty {
+            color: #555;
+            font-style: italic;
+        }
+
+        .slot-details {
+            display: flex;
+            gap: 20px;
+            font-size: 0.75em;
+            color: #6a5a4a;
+        }
+
+        .slot-status {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.75em;
+            color: #8b7355;
+            padding: 4px 10px;
+            border: 1px solid #5a4a3a;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .slot-status.auto {
+            color: #6a9a6a;
+            border-color: #4a6a4a;
+        }
+
+        .slot-status.empty {
+            color: #555;
+            border-color: #333;
+        }
+
+        .save-load-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #3a2a20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-hint {
+            font-size: 0.8em;
+            color: #6a5a4a;
+        }
+
+        .footer-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .sl-btn {
+            padding: 10px 25px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sl-btn.cancel {
+            background: linear-gradient(180deg, #3a3025, #252015);
+            color: #a09080;
+            border: 1px solid #5a4a3a;
+        }
+
+        .sl-btn.cancel:hover {
+            background: linear-gradient(180deg, #4a4035, #352a20);
+            color: #c9a86c;
+        }
+
+        .sl-btn.load {
+            background: linear-gradient(180deg, #8B2323, #5a1515);
+            color: #fff;
+            border: 2px solid #aa4040;
+        }
+
+        .sl-btn.load:hover:not(:disabled) {
+            background: linear-gradient(180deg, #9B3333, #6a2525);
+            box-shadow: 0 0 15px rgba(139,35,35,0.5);
+        }
+
+        .sl-btn.load:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* 确认弹窗 */
+        .confirm-modal {
+            background: linear-gradient(180deg, #1a1815, #0f0c0a);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            padding: 30px 40px;
+            text-align: center;
+            max-width: 450px;
+        }
+
+        .confirm-modal h3 {
+            color: #d4af37;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .confirm-modal p {
+            color: #a09080;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .confirm-modal .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="scene-background"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- 装饰元素 -->
+    <div class="red-circle red-circle-1"></div>
+    <div class="red-circle red-circle-2"></div>
+
+    <div class="main-container">
+        <!-- 左侧设置面板 -->
+        <div class="settings-panel">
+            <div class="panel-content">
+                <!-- 游戏标题 -->
+                <div class="game-title">
+                    <h1>NDC</h1>
+                    <div class="subtitle">STORY-DRIVEN DETECTIVE</div>
+                </div>
+
+                <!-- 印章装饰 -->
+                <div class="stamp-decoration">
+                    <span>INTERACTIVE<br>NOIR</span>
+                </div>
+
+                <!-- 主菜单选项 -->
+                <div class="menu-options">
+                    <div class="menu-item active" id="resumeBtn" onclick="resumeGame()">继续游戏</div>
+                    <div class="menu-item" onclick="openCaseReview()">案情回顾</div>
+                    <div class="menu-item" onclick="showMessage('返回主菜单')">返回主菜单</div>
+                </div>
+
+                
+                <!-- 设置项 -->
+                <div class="settings-section">
+                    <!-- 难度 -->
+                    <div class="setting-row">
+                        <span class="setting-label">难度</span>
+                        <div class="selector">
+                            <span class="selector-arrow" onclick="changeDifficulty(-1)">&lt;</span>
+                            <span class="selector-value" id="difficultyValue">专家模式</span>
+                            <span class="selector-arrow" onclick="changeDifficulty(1)">&gt;</span>
+                        </div>
+                    </div>
+
+                    <!-- 语言 -->
+                    <div class="setting-row">
+                        <span class="setting-label">语言</span>
+                        <div class="selector">
+                            <span class="selector-arrow" onclick="changeLanguage(-1)">&lt;</span>
+                            <span class="selector-value" id="languageValue">英语</span>
+                            <span class="selector-arrow" onclick="changeLanguage(1)">&gt;</span>
+                        </div>
+                    </div>
+
+                    <!-- 字幕 -->
+                    <div class="setting-row">
+                        <span class="setting-label">字幕</span>
+                        <div class="toggle-group">
+                            <span class="toggle-option active" onclick="toggleSubtitles(true)">开</span>
+                            <span class="toggle-option" onclick="toggleSubtitles(false)">关</span>
+                        </div>
+                    </div>
+
+                    <!-- 字幕大小 -->
+                    <div class="setting-row">
+                        <span class="setting-label">字幕大小</span>
+                        <div class="selector">
+                            <span class="selector-arrow" onclick="changeSize(-1)">&lt;</span>
+                            <span class="selector-value" id="sizeValue">中</span>
+                            <span class="selector-arrow" onclick="changeSize(1)">&gt;</span>
+                        </div>
+                    </div>
+
+                    <!-- 音乐音效 -->
+                    <div class="setting-row">
+                        <span class="setting-label">音乐音效</span>
+                        <div class="slider-container" id="musicSlider">
+                            <div class="slider-track">
+                                <div class="slider-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="slider-thumb" style="left: 60%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 语音 -->
+                    <div class="setting-row">
+                        <span class="setting-label">语音</span>
+                        <div class="slider-container" id="voiceSlider">
+                            <div class="slider-track">
+                                <div class="slider-fill" style="width: 70%"></div>
+                            </div>
+                            <div class="slider-thumb" style="left: 70%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 亮度 -->
+                    <div class="setting-row">
+                        <span class="setting-label">亮度</span>
+                        <div class="slider-container" id="brightnessSlider">
+                            <div class="slider-track">
+                                <div class="slider-fill" style="width: 80%"></div>
+                            </div>
+                            <div class="slider-thumb" style="left: 80%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 分隔线 -->
+                    <div style="border-top: 1px dashed #c0b0a0; margin: 15px 0;"></div>
+
+                    <!-- 屏幕比例 -->
+                    <div class="setting-row">
+                        <span class="setting-label">屏幕比例</span>
+                        <div class="selector">
+                            <span class="selector-arrow" onclick="changeAspectRatio(-1)">&lt;</span>
+                            <span class="selector-value" id="aspectRatioValue">16:9</span>
+                            <span class="selector-arrow" onclick="changeAspectRatio(1)">&gt;</span>
+                        </div>
+                    </div>
+
+                    <!-- 显示模式 -->
+                    <div class="setting-row">
+                        <span class="setting-label">显示模式</span>
+                        <div class="selector">
+                            <span class="selector-arrow" onclick="changeDisplayMode(-1)">&lt;</span>
+                            <span class="selector-value" id="displayModeValue">全屏</span>
+                            <span class="selector-arrow" onclick="changeDisplayMode(1)">&gt;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 社交链接 -->
+                <div class="social-links">
+                    <div class="social-title">关注我们</div>
+                    <div class="social-icons">
+                        <div class="social-icon" title="Steam">🎮</div>
+                        <div class="social-icon" title="YouTube">▶</div>
+                        <div class="social-icon" title="Discord">💬</div>
+                        <div class="social-icon" title="X">𝕏</div>
+                        <div class="social-icon" title="Instagram">📷</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧场景区域 -->
+        <div class="scene-area">
+        </div>
+    </div>
+
+    <!-- 策划案按钮 -->
+    <div class="doc-button">
+        <button class="doc-btn" onclick="openDoc()">
+            📋 查看策划案
+        </button>
+    </div>
+
+    <!-- 存档界面弹窗 -->
+    <div class="modal-overlay" id="saveLoadModal">
+        <div class="save-load-content">
+            <div class="save-load-header">
+                <h2>读取存档</h2>
+                <button class="modal-close-btn" onclick="closeSaveLoad()">×</button>
+            </div>
+            <div class="save-load-body">
+                <!-- 自动存档 -->
+                <div class="save-slot auto-save" onclick="selectSlot(0)">
+                    <div class="slot-thumbnail">
+                        <div class="thumbnail-placeholder">AUTO</div>
+                    </div>
+                    <div class="slot-info">
+                        <div class="slot-title">自动存档</div>
+                        <div class="slot-chapter">第二章 - 循环3</div>
+                        <div class="slot-details">
+                            <span>游戏时长: 02:35:18</span>
+                            <span>2025/12/01 14:32</span>
+                        </div>
+                    </div>
+                    <div class="slot-status auto">AUTO</div>
+                </div>
+
+                <!-- 手动存档槽位 -->
+                <div class="save-slot has-data" onclick="selectSlot(1)">
+                    <div class="slot-thumbnail">
+                        <div class="thumbnail-placeholder">01</div>
+                    </div>
+                    <div class="slot-info">
+                        <div class="slot-title">存档 1</div>
+                        <div class="slot-chapter">第二章 - 残酷的身份确认</div>
+                        <div class="slot-details">
+                            <span>游戏时长: 01:45:22</span>
+                            <span>2025/11/30 22:15</span>
+                        </div>
+                    </div>
+                    <div class="slot-status">SLOT 1</div>
+                </div>
+
+                <div class="save-slot has-data" onclick="selectSlot(2)">
+                    <div class="slot-thumbnail">
+                        <div class="thumbnail-placeholder">02</div>
+                    </div>
+                    <div class="slot-info">
+                        <div class="slot-title">存档 2</div>
+                        <div class="slot-chapter">第一章 - Rosa指证完成</div>
+                        <div class="slot-details">
+                            <span>游戏时长: 00:42:15</span>
+                            <span>2025/11/28 19:08</span>
+                        </div>
+                    </div>
+                    <div class="slot-status">SLOT 2</div>
+                </div>
+
+                <div class="save-slot empty" onclick="selectSlot(3)">
+                    <div class="slot-thumbnail">
+                        <div class="thumbnail-placeholder empty">03</div>
+                    </div>
+                    <div class="slot-info">
+                        <div class="slot-title empty">存档 3</div>
+                        <div class="slot-chapter empty">- 空 -</div>
+                    </div>
+                    <div class="slot-status empty">空</div>
+                </div>
+
+                <div class="save-slot empty" onclick="selectSlot(4)">
+                    <div class="slot-thumbnail">
+                        <div class="thumbnail-placeholder empty">04</div>
+                    </div>
+                    <div class="slot-info">
+                        <div class="slot-title empty">存档 4</div>
+                        <div class="slot-chapter empty">- 空 -</div>
+                    </div>
+                    <div class="slot-status empty">空</div>
+                </div>
+
+                <div class="save-slot empty" onclick="selectSlot(5)">
+                    <div class="slot-thumbnail">
+                        <div class="thumbnail-placeholder empty">05</div>
+                    </div>
+                    <div class="slot-info">
+                        <div class="slot-title empty">存档 5</div>
+                        <div class="slot-chapter empty">- 空 -</div>
+                    </div>
+                    <div class="slot-status empty">空</div>
+                </div>
+            </div>
+            <div class="save-load-footer">
+                <div class="footer-hint">选择存档后点击"读取"按钮加载游戏进度</div>
+                <div class="footer-buttons">
+                    <button class="sl-btn cancel" onclick="closeSaveLoad()">取消</button>
+                    <button class="sl-btn load" id="loadBtn" onclick="loadSelectedSlot()" disabled>读取</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 语言确认弹窗 -->
+    <div class="modal-overlay" id="languageModal">
+        <div class="language-modal">
+            <h3>Set Language to Chinese?</h3>
+            <div class="cn-text">是否将语言设置为中文？</div>
+            <div class="modal-buttons">
+                <button class="modal-btn" onclick="confirmLanguage(true)">[是]</button>
+                <button class="modal-btn" onclick="confirmLanguage(false)">[否]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 难度切换确认弹窗 -->
+    <div class="modal-overlay" id="difficultyModal">
+        <div class="language-modal" id="difficultyModalContent">
+            <h3 id="difficultyModalTitle">Switch to Normal Mode?</h3>
+            <div class="cn-text" id="difficultyModalText">是否切换到普通模式？</div>
+            <div class="cn-text" id="difficultyWarning" style="color: #ffcc00; font-size: 0.85em; margin-top: 10px;"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn" onclick="confirmDifficulty(true)">[是]</button>
+                <button class="modal-btn" onclick="confirmDifficulty(false)">[否]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 策划案弹窗 -->
+    <div class="doc-modal" id="docModal">
+        <div class="doc-content">
+            <div class="doc-header">
+                <h2>📋 NDC 设置系统策划案</h2>
+                <button class="doc-close" onclick="closeDoc()">×</button>
+            </div>
+            <div class="doc-body">
+                <!-- Tab导航 -->
+                <div class="doc-tabs">
+                    <div class="doc-tab active" onclick="switchTab('overview')">系统概述</div>
+                    <div class="doc-tab" onclick="switchTab('menu')">主菜单</div>
+                    <div class="doc-tab" onclick="switchTab('difficulty')">难度系统</div>
+                    <div class="doc-tab" onclick="switchTab('audio')">音频设置</div>
+                    <div class="doc-tab" onclick="switchTab('subtitle')">字幕设置</div>
+                    <div class="doc-tab" onclick="switchTab('display')">画面设置</div>
+                    <div class="doc-tab" onclick="switchTab('hotkey')">快捷键</div>
+                    <div class="doc-tab" onclick="switchTab('help')">帮助系统</div>
+                </div>
+
+                <!-- 系统概述 -->
+                <div class="doc-tab-content active" id="tab-overview">
+                    <div class="doc-section">
+                        <h3>一、系统概述</h3>
+                        <p><strong>系统名称</strong>：设置系统（Settings & Help）</p>
+                        <p><strong>系统定位</strong>：NDC游戏的全局配置界面，负责游戏进度管理、难度调整、音视频配置、辅助功能设置等</p>
+
+                        <h4>1.1 入口方式</h4>
+                        <table class="doc-table">
+                            <tr>
+                                <th>入口</th>
+                                <th>触发方式</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>F1键</td>
+                                <td>键盘快捷键</td>
+                                <td>游戏任意界面均可触发</td>
+                            </tr>
+                            <tr>
+                                <td>暂停菜单</td>
+                                <td>Esc键</td>
+                                <td>暂停游戏后显示设置入口</td>
+                            </tr>
+                            <tr>
+                                <td>主菜单</td>
+                                <td>点击"设置"按钮</td>
+                                <td>从游戏主界面进入</td>
+                            </tr>
+                        </table>
+
+                        <h4>1.2 界面布局</h4>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h5>左侧面板</h5>
+                                <p>设置选项区域，复古纸张风格，包含所有可调节的设置项</p>
+                            </div>
+                            <div class="feature-card">
+                                <h5>右侧区域</h5>
+                                <p>游戏场景背景（模糊处理），显示当前游戏进度和目标</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 主菜单 -->
+                <div class="doc-tab-content" id="tab-menu">
+                    <div class="doc-section">
+                        <h3>二、主菜单选项</h3>
+
+                        <h4>2.1 继续游戏</h4>
+                        <table class="doc-table">
+                            <tr><th>属性</th><th>说明</th></tr>
+                            <tr><td>功能</td><td>关闭设置界面，返回当前游戏进度</td></tr>
+                            <tr><td>触发条件</td><td>游戏进行中时可用</td></tr>
+                            <tr><td>快捷键</td><td>Esc</td></tr>
+                            <tr><td>状态显示</td><td>默认高亮选中状态</td></tr>
+                        </table>
+
+                        <h4>2.2 读取存档</h4>
+                        <table class="doc-table">
+                            <tr><th>属性</th><th>说明</th></tr>
+                            <tr><td>功能</td><td>打开存档列表，选择已保存的游戏进度</td></tr>
+                            <tr><td>存档槽位</td><td>最多 <strong>10个</strong> 手动存档 + <strong>1个</strong> 自动存档</td></tr>
+                            <tr><td>存档信息</td><td>章节名称、循环进度、游戏时长、保存时间、缩略图</td></tr>
+                            <tr><td>空槽位显示</td><td>显示"空"字样，不可选择</td></tr>
+                            <tr><td>覆盖确认</td><td>"确定要读取此存档吗？当前未保存的进度将丢失。"</td></tr>
+                        </table>
+
+                        <h4>2.3 返回主菜单</h4>
+                        <table class="doc-table">
+                            <tr><th>属性</th><th>说明</th></tr>
+                            <tr><td>功能</td><td>退出当前游戏，返回游戏主界面</td></tr>
+                            <tr><td>确认弹窗</td><td>"确定要返回主菜单吗？未保存的进度将丢失。"</td></tr>
+                            <tr><td>选项</td><td>[确定] / [取消]</td></tr>
+                        </table>
+
+                        <div class="highlight-box">
+                            <h5>存档数据内容</h5>
+                            <p>章节ID、循环ID、场景ID、已获得证据、已解锁场景、对话记录、剧情标记、游戏时长、保存时间戳、场景缩略图</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 难度系统 -->
+                <div class="doc-tab-content" id="tab-difficulty">
+                    <div class="doc-section">
+                        <h3>三、难度系统</h3>
+
+                        <h4>3.1 难度选项</h4>
+                        <table class="doc-table">
+                            <tr><th>难度</th><th>中文显示</th><th>英文显示</th></tr>
+                            <tr><td>普通</td><td>普通模式</td><td>NORMAL MODE</td></tr>
+                            <tr><td>专家</td><td>专家模式</td><td>EXPERT MODE</td></tr>
+                        </table>
+
+                        <h4>3.2 难度差异 - 场景探索</h4>
+                        <table class="doc-table">
+                            <tr><th>功能项</th><th>普通模式</th><th>专家模式</th></tr>
+                            <tr><td>热区提示</td><td>F1键高亮显示可交互区域</td><td>无任何提示</td></tr>
+                            <tr><td>热区大小</td><td>较大（半径+20%）</td><td>标准大小</td></tr>
+                            <tr><td>已收集标记</td><td>已收集位置显示勾选标记</td><td>不显示标记</td></tr>
+                        </table>
+
+                        <h4>3.3 难度差异 - NPC对话</h4>
+                        <table class="doc-table">
+                            <tr><th>功能项</th><th>普通模式</th><th>专家模式</th></tr>
+                            <tr><td>关键词高亮</td><td>可提取内容显示下划线</td><td>无任何高亮</td></tr>
+                            <tr><td>提取提示</td><td>提示"此内容可提取"</td><td>无提示</td></tr>
+                        </table>
+
+                        <h4>3.4 难度差异 - 调查指证</h4>
+                        <table class="doc-table">
+                            <tr><th>功能项</th><th>普通模式</th><th>专家模式</th></tr>
+                            <tr><td>矛盾高亮</td><td>自动高亮矛盾点</td><td>需手动对比发现</td></tr>
+                            <tr><td>指证提示</td><td>选错时提示"证据不足"</td><td>仅显示"指证失败"</td></tr>
+                            <tr><td>重试限制</td><td>无限制</td><td>每轮最多3次错误</td></tr>
+                        </table>
+
+                        <div class="highlight-box">
+                            <h5>难度切换规则</h5>
+                            <p>游戏任意阶段均可切换，立即生效。从专家切换到普通时，当前章节无法获得"专家通关"成就。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 音频设置 -->
+                <div class="doc-tab-content" id="tab-audio">
+                    <div class="doc-section">
+                        <h3>四、音频设置</h3>
+
+                        <h4>4.1 音乐音效</h4>
+                        <table class="doc-table">
+                            <tr><th>属性</th><th>说明</th></tr>
+                            <tr><td>控制方式</td><td>滑块（0-100）</td></tr>
+                            <tr><td>默认值</td><td>70</td></tr>
+                            <tr><td>影响内容</td><td>背景音乐(BGM) + 环境音效(SFX)</td></tr>
+                            <tr><td>实时预览</td><td>调整时实时生效</td></tr>
+                        </table>
+
+                        <h4>4.2 音乐类型</h4>
+                        <table class="doc-table">
+                            <tr><th>类型</th><th>说明</th><th>风格</th></tr>
+                            <tr><td>主菜单BGM</td><td>游戏主界面</td><td>爵士风格</td></tr>
+                            <tr><td>探索BGM</td><td>场景探索</td><td>悬疑氛围</td></tr>
+                            <tr><td>紧张BGM</td><td>指证阶段</td><td>节奏加快</td></tr>
+                            <tr><td>剧情BGM</td><td>剧情动画</td><td>情感渲染</td></tr>
+                        </table>
+
+                        <h4>4.3 音效类型</h4>
+                        <table class="doc-table">
+                            <tr><th>类型</th><th>说明</th><th>示例</th></tr>
+                            <tr><td>UI音效</td><td>界面操作反馈</td><td>按钮点击、页面切换</td></tr>
+                            <tr><td>环境音效</td><td>场景氛围音</td><td>雨声、脚步声、钟声</td></tr>
+                            <tr><td>交互音效</td><td>游戏交互反馈</td><td>拾取证据、发现线索</td></tr>
+                            <tr><td>剧情音效</td><td>剧情演出音效</td><td>枪声、玻璃破碎</td></tr>
+                        </table>
+
+                        <h4>4.4 语音音量</h4>
+                        <table class="doc-table">
+                            <tr><th>属性</th><th>说明</th></tr>
+                            <tr><td>控制方式</td><td>滑块（0-100）</td></tr>
+                            <tr><td>默认值</td><td>80</td></tr>
+                            <tr><td>影响内容</td><td>角色配音</td></tr>
+                            <tr><td>语言</td><td>仅英语配音</td></tr>
+                            <tr><td>跳过设置</td><td>可按Space跳过当前语音</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 字幕设置 -->
+                <div class="doc-tab-content" id="tab-subtitle">
+                    <div class="doc-section">
+                        <h3>五、字幕设置</h3>
+
+                        <h4>5.1 字幕开关</h4>
+                        <table class="doc-table">
+                            <tr><th>选项</th><th>中文显示</th><th>说明</th></tr>
+                            <tr><td>开启</td><td>开</td><td>显示所有语音对应的字幕</td></tr>
+                            <tr><td>关闭</td><td>关</td><td>不显示字幕</td></tr>
+                        </table>
+
+                        <h4>5.2 字幕大小</h4>
+                        <table class="doc-table">
+                            <tr><th>选项</th><th>中文显示</th><th>字体大小</th><th>行高</th></tr>
+                            <tr><td>小</td><td>小</td><td>18px</td><td>1.4</td></tr>
+                            <tr><td>中</td><td>中</td><td>24px</td><td>1.5</td></tr>
+                            <tr><td>大</td><td>大</td><td>32px</td><td>1.6</td></tr>
+                        </table>
+
+                        <h4>5.3 字幕显示规则</h4>
+                        <table class="doc-table">
+                            <tr><th>规则</th><th>说明</th></tr>
+                            <tr><td>显示位置</td><td>屏幕底部居中，距底边10%</td></tr>
+                            <tr><td>背景样式</td><td>半透明黑色背景（70%透明度）</td></tr>
+                            <tr><td>角色名称</td><td>显示在字幕左侧，使用角色专属颜色</td></tr>
+                            <tr><td>自动换行</td><td>单行超过40个字符自动换行</td></tr>
+                            <tr><td>显示时长</td><td>与语音同步，结束后延迟0.5秒消失</td></tr>
+                        </table>
+
+                        <h4>5.4 字幕类型</h4>
+                        <table class="doc-table">
+                            <tr><th>类型</th><th>显示条件</th><th>样式</th></tr>
+                            <tr><td>对话字幕</td><td>角色说话时</td><td>标准样式</td></tr>
+                            <tr><td>环境音字幕</td><td>开启"环境音字幕"时</td><td>[方括号]标注，斜体</td></tr>
+                            <tr><td>系统提示</td><td>游戏提示时</td><td>屏幕上方，金色文字</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 画面设置 -->
+                <div class="doc-tab-content" id="tab-display">
+                    <div class="doc-section">
+                        <h3>六、画面设置</h3>
+
+                        <h4>6.1 亮度调节</h4>
+                        <table class="doc-table">
+                            <tr><th>属性</th><th>说明</th></tr>
+                            <tr><td>控制方式</td><td>滑块（0-100）</td></tr>
+                            <tr><td>默认值</td><td>50</td></tr>
+                            <tr><td>影响内容</td><td>整体画面明暗</td></tr>
+                            <tr><td>实时预览</td><td>调整时实时生效</td></tr>
+                        </table>
+
+                        <h4>6.2 亮度参考</h4>
+                        <table class="doc-table">
+                            <tr><th>数值范围</th><th>效果描述</th></tr>
+                            <tr><td>0-30</td><td>较暗，适合全黑环境</td></tr>
+                            <tr><td>30-70</td><td>标准，适合一般环境</td></tr>
+                            <tr><td>70-100</td><td>较亮，适合明亮环境</td></tr>
+                        </table>
+
+                        <h4>6.3 屏幕模式（v1.1规划）</h4>
+                        <table class="doc-table">
+                            <tr><th>选项</th><th>中文显示</th><th>说明</th></tr>
+                            <tr><td>全屏</td><td>全屏</td><td>独占全屏模式</td></tr>
+                            <tr><td>窗口</td><td>窗口</td><td>窗口化模式</td></tr>
+                            <tr><td>无边框</td><td>无边框窗口</td><td>无边框全屏窗口</td></tr>
+                        </table>
+
+                        <h4>6.4 辅助功能</h4>
+                        <table class="doc-table">
+                            <tr><th>功能</th><th>中文显示</th><th>说明</th></tr>
+                            <tr><td>环境音字幕</td><td>开/关</td><td>显示环境音效的文字描述，如[脚步声渐近]</td></tr>
+                            <tr><td>屏幕震动</td><td>开/关</td><td>剧情演出时的屏幕震动效果</td></tr>
+                            <tr><td>色盲模式</td><td>关闭/红绿色盲/蓝黄色盲</td><td>v1.1规划</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 快捷键 -->
+                <div class="doc-tab-content" id="tab-hotkey">
+                    <div class="doc-section">
+                        <h3>七、快捷键一览</h3>
+
+                        <table class="doc-table">
+                            <tr><th>按键</th><th>中文名称</th><th>功能描述</th><th>适用界面</th></tr>
+                            <tr><td>Esc</td><td>返回关闭</td><td>关闭当前界面/返回上级</td><td>全局</td></tr>
+                            <tr><td>F1</td><td>设置帮助</td><td>打开设置与帮助界面</td><td>全局</td></tr>
+                            <tr><td>Tab</td><td>案情面板</td><td>打开CASE BOARD</td><td>游戏中</td></tr>
+                            <tr><td>Space</td><td>确认继续</td><td>确认选择/继续对话</td><td>对话/选项</td></tr>
+                            <tr><td>Enter</td><td>确认</td><td>确认选择</td><td>菜单/选项</td></tr>
+                            <tr><td>E</td><td>互动</td><td>与物品/NPC互动</td><td>场景探索</td></tr>
+                            <tr><td>Q</td><td>提示帮助</td><td>打开当前情境提示</td><td>探索/指证</td></tr>
+                            <tr><td>M</td><td>地图</td><td>打开地图界面</td><td>游戏中</td></tr>
+                            <tr><td>J</td><td>目标任务</td><td>显示当前目标</td><td>游戏中</td></tr>
+                            <tr><td>I</td><td>证据背包</td><td>打开EVIDENCE界面</td><td>游戏中</td></tr>
+                            <tr><td>1-5</td><td>快捷证据</td><td>快速选择证据槽位</td><td>指证阶段</td></tr>
+                            <tr><td>↑↓</td><td>上下选择</td><td>菜单项目切换</td><td>菜单界面</td></tr>
+                            <tr><td>←→</td><td>左右调节</td><td>选项/滑块调节</td><td>设置界面</td></tr>
+                        </table>
+
+                        <div class="highlight-box">
+                            <h5>快捷键设置规则</h5>
+                            <p>v1.0暂不支持自定义按键，提供"恢复默认按键"按钮。v1.1规划支持手柄和按键自定义。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 帮助系统 -->
+                <div class="doc-tab-content" id="tab-help">
+                    <div class="doc-section">
+                        <h3>八、帮助系统</h3>
+
+                        <h4>8.1 帮助入口</h4>
+                        <table class="doc-table">
+                            <tr><th>入口位置</th><th>触发方式</th></tr>
+                            <tr><td>设置面板</td><td>点击"帮助"按钮</td></tr>
+                            <tr><td>游戏内</td><td>按Q键（场景探索/调查指证）</td></tr>
+                            <tr><td>卡关时</td><td>系统自动提示"需要帮助吗？"</td></tr>
+                        </table>
+
+                        <h4>8.2 提示层级</h4>
+                        <table class="doc-table">
+                            <tr><th>层级</th><th>内容类型</th><th>示例</th><th>普通模式影响</th><th>专家模式影响</th></tr>
+                            <tr><td>第一层</td><td>方向提示</td><td>"也许应该检查储藏室的角落"</td><td>无</td><td>无</td></tr>
+                            <tr><td>第二层</td><td>详细提示</td><td>"储藏室的木箱后面藏着什么"</td><td>无</td><td>评分-10%</td></tr>
+                            <tr><td>第三层</td><td>答案提示</td><td>"点击木箱，移开上面的布"</td><td>评分-5%</td><td>评分-25%</td></tr>
+                        </table>
+
+                        <h4>8.3 提示冷却时间</h4>
+                        <table class="doc-table">
+                            <tr><th>层级</th><th>冷却时间</th><th>解锁条件</th></tr>
+                            <tr><td>第一层</td><td>无</td><td>随时可用</td></tr>
+                            <tr><td>第二层</td><td>30秒</td><td>使用第一层后解锁</td></tr>
+                            <tr><td>第三层</td><td>60秒</td><td>使用第二层后解锁</td></tr>
+                        </table>
+
+                        <h4>8.4 帮助内容结构</h4>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h5>游戏指南</h5>
+                                <p>基础操作、场景探索指南、对话系统指南、案情分析指南、调查指证指南</p>
+                            </div>
+                            <div class="feature-card">
+                                <h5>情境帮助</h5>
+                                <p>根据当前游戏阶段提供针对性的三层提示</p>
+                            </div>
+                            <div class="feature-card">
+                                <h5>常见问题</h5>
+                                <p>存档相关、进度相关、技术问题解答</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 设置数据
+        let settings = {
+            difficulty: 1,
+            language: 0,
+            subtitles: true,
+            size: 1,
+            aspectRatio: 0,
+            displayMode: 0
+        };
+
+        // 原始设置（用于比较是否有修改）
+        let originalSettings = JSON.parse(JSON.stringify(settings));
+        let hasChanges = false;
+
+        const difficulties = ['普通模式', '专家模式'];
+        const languages = ['英语', '简体中文'];
+        const sizes = ['小', '中', '大'];
+        const aspectRatios = ['16:9', '21:9', '16:10', '4:3'];
+        const displayModes = ['全屏', '窗口化', '无边框窗口'];
+
+        // 检测设置是否有修改
+        function checkForChanges() {
+            hasChanges = JSON.stringify(settings) !== JSON.stringify(originalSettings);
+            const resumeBtn = document.getElementById('resumeBtn');
+            if (hasChanges) {
+                resumeBtn.textContent = '保存并继续游戏';
+                resumeBtn.classList.add('has-changes');
+            } else {
+                resumeBtn.textContent = '继续游戏';
+                resumeBtn.classList.remove('has-changes');
+            }
+        }
+
+        // 继续游戏（保存设置）
+        function resumeGame() {
+            if (hasChanges) {
+                originalSettings = JSON.parse(JSON.stringify(settings));
+                hasChanges = false;
+                showMessage('设置已保存');
+            }
+            // 这里可以添加关闭设置界面的逻辑
+        }
+
+        function changeDifficulty(dir) {
+            const newDifficulty = (settings.difficulty + dir + 2) % 2;
+            if (newDifficulty !== settings.difficulty) {
+                window.pendingDifficulty = newDifficulty;
+
+                // 更新弹窗内容
+                const isToNormal = newDifficulty === 0;
+                document.getElementById('difficultyModalTitle').textContent =
+                    isToNormal ? 'Switch to Normal Mode?' : 'Switch to Expert Mode?';
+                document.getElementById('difficultyModalText').textContent =
+                    isToNormal ? '是否切换到普通模式？' : '是否切换到专家模式？';
+
+                // 从专家切换到普通时显示成就警告
+                if (isToNormal && settings.difficulty === 1) {
+                    document.getElementById('difficultyWarning').textContent =
+                        '⚠ 切换后当前章节无法获得"专家通关"成就';
+                } else {
+                    document.getElementById('difficultyWarning').textContent = '';
+                }
+
+                document.getElementById('difficultyModal').classList.add('active');
+            }
+        }
+
+        function confirmDifficulty(confirm) {
+            if (confirm && window.pendingDifficulty !== undefined) {
+                settings.difficulty = window.pendingDifficulty;
+                document.getElementById('difficultyValue').textContent = difficulties[settings.difficulty];
+                checkForChanges();
+            }
+            document.getElementById('difficultyModal').classList.remove('active');
+        }
+
+        function changeLanguage(dir) {
+            const newLang = (settings.language + dir + 2) % 2;
+            if (newLang !== settings.language) {
+                document.getElementById('languageModal').classList.add('active');
+                window.pendingLanguage = newLang;
+            }
+        }
+
+        function confirmLanguage(confirm) {
+            if (confirm && window.pendingLanguage !== undefined) {
+                settings.language = window.pendingLanguage;
+                document.getElementById('languageValue').textContent = languages[settings.language];
+                checkForChanges();
+            }
+            document.getElementById('languageModal').classList.remove('active');
+        }
+
+        function toggleSubtitles(on) {
+            settings.subtitles = on;
+            document.querySelectorAll('.toggle-option').forEach((el, i) => {
+                el.classList.toggle('active', i === (on ? 0 : 1));
+            });
+            checkForChanges();
+        }
+
+        function changeSize(dir) {
+            settings.size = Math.max(0, Math.min(2, settings.size + dir));
+            document.getElementById('sizeValue').textContent = sizes[settings.size];
+            checkForChanges();
+        }
+
+        function changeAspectRatio(dir) {
+            settings.aspectRatio = (settings.aspectRatio + dir + aspectRatios.length) % aspectRatios.length;
+            document.getElementById('aspectRatioValue').textContent = aspectRatios[settings.aspectRatio];
+            checkForChanges();
+        }
+
+        function changeDisplayMode(dir) {
+            settings.displayMode = (settings.displayMode + dir + displayModes.length) % displayModes.length;
+            document.getElementById('displayModeValue').textContent = displayModes[settings.displayMode];
+            checkForChanges();
+        }
+
+        // 滑块交互
+        function initSliders() {
+            document.querySelectorAll('.slider-container').forEach(slider => {
+                const track = slider.querySelector('.slider-track');
+                const fill = slider.querySelector('.slider-fill');
+                const thumb = slider.querySelector('.slider-thumb');
+                let isDragging = false;
+
+                function updateSlider(e) {
+                    const rect = track.getBoundingClientRect();
+                    let percent = ((e.clientX - rect.left) / rect.width) * 100;
+                    percent = Math.max(0, Math.min(100, percent));
+                    fill.style.width = percent + '%';
+                    thumb.style.left = percent + '%';
+                }
+
+                thumb.addEventListener('mousedown', () => isDragging = true);
+                document.addEventListener('mousemove', (e) => { if (isDragging) updateSlider(e); });
+                document.addEventListener('mouseup', () => isDragging = false);
+                track.addEventListener('click', updateSlider);
+            });
+        }
+
+        // 菜单项点击
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function showMessage(msg) {
+            alert(msg + '\n（演示功能）');
+        }
+
+        // 跳转案情回顾系统
+        function openCaseReview() {
+            window.location.href = '../案情回顾系统/case_review_system.html';
+        }
+
+        // Tab切换
+        function switchTab(tabId) {
+            document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.doc-tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // 策划案弹窗
+        function openDoc() {
+            document.getElementById('docModal').classList.add('active');
+        }
+
+        function closeDoc() {
+            document.getElementById('docModal').classList.remove('active');
+        }
+
+        document.getElementById('docModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDoc();
+        });
+
+        document.getElementById('languageModal').addEventListener('click', function(e) {
+            if (e.target === this) confirmLanguage(false);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDoc();
+                confirmLanguage(false);
+                confirmDifficulty(false);
+                closeSaveLoad();
+                closeConfirm();
+            }
+        });
+
+        document.getElementById('difficultyModal').addEventListener('click', function(e) {
+            if (e.target === this) confirmDifficulty(false);
+        });
+
+        // 存档界面功能
+        let selectedSlot = null;
+
+        function openSaveLoad() {
+            document.getElementById('saveLoadModal').classList.add('active');
+            selectedSlot = null;
+            document.querySelectorAll('.save-slot').forEach(s => s.classList.remove('selected'));
+            document.getElementById('loadBtn').disabled = true;
+        }
+
+        function closeSaveLoad() {
+            document.getElementById('saveLoadModal').classList.remove('active');
+        }
+
+        function selectSlot(slotIndex) {
+            const slots = document.querySelectorAll('.save-slot');
+            const clickedSlot = slots[slotIndex];
+
+            // 空槽位不能选择
+            if (clickedSlot.classList.contains('empty')) {
+                return;
+            }
+
+            // 取消之前的选中
+            slots.forEach(s => s.classList.remove('selected'));
+
+            // 选中当前槽位
+            clickedSlot.classList.add('selected');
+            selectedSlot = slotIndex;
+
+            // 启用读取按钮
+            document.getElementById('loadBtn').disabled = false;
+        }
+
+        function loadSelectedSlot() {
+            if (selectedSlot === null) return;
+
+            const slotNames = ['自动存档', '存档 1', '存档 2', '存档 3', '存档 4', '存档 5'];
+            const slotName = slotNames[selectedSlot];
+
+            if (confirm(`确定要读取「${slotName}」吗？\n\n当前未保存的进度将丢失。`)) {
+                alert(`正在读取「${slotName}」...\n\n（演示功能）`);
+                closeSaveLoad();
+            }
+        }
+
+        function closeConfirm() {
+            const confirmModal = document.getElementById('confirmModal');
+            if (confirmModal) {
+                confirmModal.classList.remove('active');
+            }
+        }
+
+        document.getElementById('saveLoadModal').addEventListener('click', function(e) {
+            if (e.target === this) closeSaveLoad();
+        });
+
+        initSliders();
+    </script>
+</body>
+</html>
