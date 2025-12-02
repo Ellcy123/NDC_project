@@ -5,6 +5,7 @@ version: "1.0"
 last_updated: "2025-11-25"
 
 # 章节列表
+# 每个单元有独立的 master 数据目录
 units:
   - id: Unit1
     name: 血色酒吧·意外卷入
@@ -12,6 +13,7 @@ units:
     status: active           # active / draft / archived
     loops_count: 6
     metadata_file: Unit1/metadata.yaml
+    master_path: Unit1/master/
 
   - id: Unit2
     name: 黄昏悲歌·银行黑幕
@@ -19,13 +21,7 @@ units:
     status: draft
     loops_count: 6
     metadata_file: Unit2/metadata.yaml
-
-# 主数据文件路径
-master_files:
-  scenes: master/scenes.yaml
-  npcs: master/npcs.yaml
-  evidences: master/evidences.yaml
-  assets: master/assets.yaml
+    master_path: Unit2/master/
 
 # 统计数据（可由网站自动更新）
 statistics:

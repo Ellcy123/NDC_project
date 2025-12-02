@@ -1141,6 +1141,7 @@
             <div class="header-controls">
                 <select id="unitSelect">
                     <option value="Unit1">Unit 1</option>
+                    <option value="Unit2">Unit 2</option>
                 </select>
                 <select id="loopSelect">
                     <option value="loop1">Loop 1</option>
@@ -1243,8 +1244,8 @@
             },
 
             async loadMasterData(unit) {
-                // Master data is shared across all units, stored in data/master/
-                const basePath = `data/master`;
+                // Master data is now stored per unit in data/{unit}/master/
+                const basePath = `data/${unit}/master`;
                 try {
                     const [scenesData, npcsData, evidencesData] = await Promise.all([
                         this.loadYAML(`${basePath}/scenes.yaml`),
