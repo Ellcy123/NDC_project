@@ -3077,17 +3077,22 @@
                 let sectionData = null;
                 let effectiveSectionName = sectionName;
 
+                // 支持两种格式：
+                // 1. 直接格式: { initial_contact: { lines: [...] } }
+                // 2. sections包装格式: { sections: { initial_contact: { lines: [...] } } }
+                const sectionsSource = dialogData.sections || dialogData;
+
                 // 如果指定了section，获取该section的lines
-                if (sectionName && dialogData[sectionName]) {
+                if (sectionName && sectionsSource[sectionName]) {
                     // lines可能是null/undefined（YAML只有注释时），确保是数组
-                    lines = dialogData[sectionName].lines || [];
+                    lines = sectionsSource[sectionName].lines || [];
                     if (!Array.isArray(lines)) lines = [];
-                    sectionData = dialogData[sectionName];
+                    sectionData = sectionsSource[sectionName];
                     effectiveSectionName = sectionName;
                 } else {
                     // 否则遍历所有section，取第一个section
-                    const metadataKeys = ['dialog_id', 'loop', 'type', 'npc', 'target', 'scene', 'scene_name', 'target_npc', 'note', 'status', 'inherited_from', 'has_new_clues', 'secondary_npc'];
-                    for (const [key, value] of Object.entries(dialogData)) {
+                    const metadataKeys = ['dialog_id', 'loop', 'type', 'npc', 'target', 'scene', 'scene_name', 'target_npc', 'note', 'status', 'inherited_from', 'has_new_clues', 'secondary_npc', 'sections'];
+                    for (const [key, value] of Object.entries(sectionsSource)) {
                         if (value && typeof value === 'object' && !metadataKeys.includes(key)) {
                             const sectionLines = value.lines || [];
                             if (Array.isArray(sectionLines)) {
