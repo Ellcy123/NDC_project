@@ -4,9 +4,53 @@
 dialog_id: loop3_expose
 loop: 3
 type: expose
+scene: SC2008
+scene_name: 银行贵宾室
+target_npc: Moore
 
-# 指证场景
-expose_scene:
-  description: 待定
-  target_npc: null
-  lines: []
+sections:
+  # 第一轮：笔迹对比
+  round1:
+    description: Moore声称Frank自己签署文件，Zack用笔迹证据反驳
+    lie: "Frank自己签署了所有文件"
+    required_evidences: [EV2301, EV2302, EV2303]
+    lines:
+      # 【待补充】Moore坚称所有文件都是Frank本人签署
+      # 【待补充】Zack展示Frank日记笔迹样本
+      # 【待补充】Zack展示银行内部档案签名
+      # 【待补充】笔迹对比证明Leonard代签
+      []
+
+  # 第二轮：违法条款
+  round2:
+    description: Moore声称利率合法，Zack揭露违法高利贷条款
+    lie: "我们的利率完全合法"
+    required_evidences: [EV2305, EV2306, EV2308]
+    lines:
+      # 【待补充】Moore声称银行利率符合规定
+      # 【待补充】Zack展示第5条"月利率12%复利"
+      # 【待补充】Zack展示第7条"利滚利条款"
+      # 【待补充】Zack展示第12条"月管理费$50"
+      # 【待补充】年化289%利率远超州法36%上限
+      []
+
+  # 第三轮：投资公司马甲
+  round3:
+    description: Moore声称是正规银行，Zack揭露投资公司身份
+    lie: "Moore银行是正规银行"
+    required_evidences: [EV2312]
+    lines:
+      # 【待补充】Moore坚称银行正规运营
+      # 【待补充】Zack展示协议抬头"Moore Investment Company"
+      # 【待补充】揭露Moore银行实为投资公司，规避监管
+      # 【待补充】Moore防线崩溃
+      []
+
+  # 指证结论
+  conclusion:
+    description: Moore防线崩溃，提供Frank遗嘱副本
+    lines:
+      # 【待补充】Moore恐惧Frank死亡引发审计
+      # 【待补充】Moore主动提供遗嘱副本
+      # 【待补充】遗嘱提到"鞋坊地下室的秘密房间"
+      []

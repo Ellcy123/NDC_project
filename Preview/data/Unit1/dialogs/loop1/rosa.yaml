@@ -5,10 +5,11 @@ loop: 1
 type: npc_dialog
 npc: NPC103
 
-# Section: 初次接触
-initial_contact:
-  description: 初次接触
+# Section: 主要对话
+dialog:
+  description: Rosa初次对话
   lines:
+    # --- 初次接触 ---
     - speaker: NPC101
       emotion: direct
       text: "你是这儿的清洁工？"
@@ -25,10 +26,7 @@ initial_contact:
       emotion: evasive
       text: "我...我一直在地下室。酒窖那边，整理酒瓶和架子...很忙的...一直在那儿..."
 
-# Section: 试探
-probing:
-  description: 试探
-  lines:
+    # --- 试探 ---
     - speaker: NPC101
       emotion: skeptical
       text: "整晚？"
@@ -45,10 +43,7 @@ probing:
       emotion: panicked
       text: "我是说...地下室很安静，我就...就一直在干活...什么都不知道..."
 
-# Section: 对峙
-confrontation:
-  description: 对峙
-  lines:
+    # --- 对峙 ---
     - speaker: NPC101
       emotion: probing
       text: "地下室能听到一楼的枪声吗？"
@@ -66,10 +61,7 @@ confrontation:
       emotion: pleading
       text: "没有！我...我真的在地下室！先生，求您了...我还有个女儿要照顾...我只是个清洁工..."
 
-# Section: 提及女儿
-daughter_mention:
-  description: 提及女儿
-  lines:
+    # --- 提及女儿 ---
     - speaker: NPC101
       emotion: softening
       text: "你孩子多大？"
@@ -93,5 +85,3 @@ daughter_mention:
     - speaker: NPC103
       emotion: resigned
       text: "好的...好的，先生...我会在这儿..."
-
-# 备注: 此对话用于初步了解Rosa，正式指证需要收集足够证据后触发

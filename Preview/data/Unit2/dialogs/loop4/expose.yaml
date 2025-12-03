@@ -4,9 +4,63 @@
 dialog_id: loop4_expose
 loop: 4
 type: expose
+scene: SC2002
+scene_name: Margaret鞋坊一楼-状态2
+target_npc: Danny
 
-# 指证场景
-expose_scene:
-  description: 待定
-  target_npc: null
-  lines: []
+sections:
+  # 第一轮：物理痕迹证明5年关系
+  round1:
+    description: Danny声称Rose才认识Frank不到一年，Zack用物理证据反驳
+    lie: "Rose才认识Frank不到一年"
+    required_evidences: [EV2401, EV2402, EV2403]
+    lines:
+      # 【待补充】Danny质疑Rose与Frank的关系时长
+      # 【待补充】Zack展示地下室旧沙发（磨损严重）
+      # 【待补充】Zack展示褪色窗帘
+      # 【待补充】Zack展示地板固定位置磨痕
+      # 【待补充】物理痕迹证明两人关系至少5年
+      []
+
+  # 第二轮：贷款用途证明Frank主动付出
+  round2:
+    description: Danny声称Rose利用Frank的钱，Zack用证据反驳
+    lie: "Rose利用Frank的钱"
+    required_evidences: [EV2408, EV2410]
+    lines:
+      # 【待补充】Danny指控Rose图谋Frank的钱财
+      # 【待补充】Zack展示维修收据（$600用于房间修缮）
+      # 【待补充】Zack展示Rose反对证词（曾劝Frank别贷款）
+      # 【待补充】贷款全部用于修缮约会房间，Rose曾反对
+      []
+
+  # 第三轮：Rose戏剧性登场
+  round3:
+    description: Danny声称Rose会争夺遗产，Rose推门而入
+    lie: "Rose会争夺遗产"
+    required_evidences: [EV2404, EV2406, EV2413]
+    lines:
+      # 【待补充】Danny预言Rose会争夺遗产
+      # 【待补充】Zack展示墙上照片墙（30多张，横跨5年）
+      # 【待补充】Zack展示Rose深情证词
+      []
+
+  # Rose登场（突发事件）
+  rose_appears:
+    description: Rose推门而入，当场签署放弃继承
+    trigger: 第三轮指证时
+    lines:
+      # 【待补充】Rose推门而入
+      # 【待补充】Rose表态愿意捐给工人互助会
+      # 【待补充】Rose当场签署放弃继承文件
+      # 【待补充】Danny沉默
+      []
+
+  # 指证结论
+  conclusion:
+    description: Danny被说服，Rose提供保险箱钥匙
+    lines:
+      # 【待补充】Danny接受Rose的真心
+      # 【待补充】Rose交出保险箱钥匙
+      # 【待补充】Zack和Emma商议下一步
+      []

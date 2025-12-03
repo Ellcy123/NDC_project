@@ -4,32 +4,249 @@
 loop_id: Unit2_Loop5
 chapter: 2
 loop_number: 5
-title: 待定
-title_en: TBD
-investigation_target: 待定
-core_lie: 待定
+title: Vinnie纵火认罪（误导性结局）
+title_en: Vinnie's Arson Confession (Misleading Ending)
+investigation_target: 表面结案，追查Vinnie纵火真相
+core_lie: Vinnie声称"是我放的火，Frank是我杀的"（抢先认罪）
 
 # 场景总览
-scenes_overview: []
+scenes_overview:
+  # 继承场景（循环1）
+  - scene: SC2002
+    name: Margaret鞋坊一楼-状态2
+    status: accessible
+    type: search
+    note: 📦 继承，🔄 有新线索（打火机）
+
+  - scene: SC2003
+    name: Margaret鞋坊二楼
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  # 继承场景（循环2）
+  - scene: SC2006
+    name: Frank和Mrs. O'Hara家门口
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Mrs. O'Hara在场
+
+  - scene: SC2007
+    name: 赌场
+    status: accessible
+    type: search
+    note: 📦 继承，🔄 有新线索（Vinnie矛盾陈述），💬 Tony/Vinnie在场
+
+  - scene: SC2008
+    name: 银行贵宾室
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Moore在场
+
+  - scene: SC2009
+    name: 银行大厅
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Leonard在场
+
+  # 继承场景（循环3）
+  - scene: SC2011
+    name: Frank家里
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索（保险箱开篇硬切打开）
+
+  - scene: SC2012
+    name: Danny家里
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Danny在场
+
+  - scene: SC2013
+    name: 银行档案室
+    status: locked
+    type: search
+    note: 📦 继承，🔒 封锁
+
+  - scene: SC2014
+    name: Leonard办公室
+    status: locked
+    type: search
+    note: 📦 继承，🔒 封锁
+
+  # 继承场景（循环4）
+  - scene: SC2015
+    name: Margaret鞋坊地下室
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  - scene: SC2016
+    name: Rose家里
+    status: accessible
+    type: npc
+    note: 📦 继承，🔄 有新线索（目击证词），💬 Rose在场
 
 # 开篇
 opening:
-  description: 待定
-  dialog_file: loop5/opening.yaml
+  description: 使用Rose的钥匙打开Frank家保险箱，发现举报材料
+  scenes:
+    - scene_id: SC2011
+      name: Frank家里（打开保险箱）
+      description: Zack使用Rose钥匙打开保险箱，发现Frank准备举报银行-黑手党勾结的材料
+      dialog_file: loop5/opening.yaml
+      dialog_section: safe_box
 
 # 自由探索阶段
 free_phase:
-  accessible_scenes: []
-  npcs: []
-  key_evidences: []
+  description: 玩家深度搜索火灾现场，收集打火机和目击证词
+  scenes:
+    # 继承场景（循环1）- 本循环主线
+    - scene: SC2002
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: true
+      note: 本循环主线，深度搜索发现打火机
+      evidences:
+        - id: EV2501
+          note: 火灾现场的打火机（银色金属，侧面"V"字样，完好无损）
+
+    - scene: SC2003
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    # 继承场景（循环2）- 本循环主线
+    - scene: SC2006
+      type: search
+      npc: Mrs. O'Hara
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2007
+      type: search
+      npc: Tony
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: true
+      npc_available: true
+      note: 本循环主线，询问Vinnie获取矛盾陈述
+      dialog_file: loop5/vinnie.yaml
+      evidences:
+        - id: EV2503
+          note: Vinnie矛盾陈述（至少两三个月没去过Frank那儿）
+
+    - scene: SC2008
+      type: npc
+      npc: Moore
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    - scene: SC2009
+      type: npc
+      npc: Leonard
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    # 继承场景（循环3）
+    - scene: SC2011
+      type: search
+      status: inherited
+      inherited_from: loop3
+      has_new_clues: false
+      note: 保险箱在开篇硬切打开
+
+    - scene: SC2012
+      type: search
+      npc: Danny
+      status: inherited
+      inherited_from: loop3
+      has_new_clues: false
+      npc_available: true
+      note: Danny在家，可闲聊，指证已完成
+
+    - scene: SC2013
+      type: search
+      status: locked
+      inherited_from: loop3
+      lock_reason: 搜查令已使用完毕
+
+    - scene: SC2014
+      type: search
+      status: locked
+      inherited_from: loop3
+      lock_reason: 搜查令已使用完毕
+
+    # 继承场景（循环4）- 本循环主线
+    - scene: SC2015
+      type: search
+      status: inherited
+      inherited_from: loop4
+      has_new_clues: false
+
+    - scene: SC2016
+      type: npc
+      npc: Rose
+      status: inherited
+      inherited_from: loop4
+      has_new_clues: true
+      npc_available: true
+      note: 本循环主线，Rose提供5月3日目击证词
+      dialog_file: loop5/rose.yaml
+      evidences:
+        - id: EV2502
+          note: Rose目击证词（5月3日晚在楼梯口遇到Vinnie）
 
 # 指证阶段
 expose:
-  location: null
-  target_npc: null
+  scene: SC2007
+  scene_name: 赌场
+  target: Vinnie
+  target_name: Vinnie Moretti
+  total_rounds: 1
   dialog_file: loop5/expose.yaml
+  note: Vinnie抢先认罪，快速结案
 
-# 结局
+  rounds:
+    - round: 1
+      name: Vinnie抢先认罪
+      lie:
+        content: null
+      required_evidences: [EV2501, EV2502]
+      result: Zack展示打火机+Rose证词，Vinnie抢先认罪"是我！是我放的火！Frank是我杀的！"
+
+  post_expose:
+    - Vinnie被捕
+    - Emma疑惑"他的认罪了...真的吗？"
+
+# 结尾
 ending:
-  type: placeholder
+  scene: SC2004
+  scene_name: 警局外
+  description: Vinnie被押送入狱，Zack和Emma在警局外目送，案件表面结束
   dialog_file: loop5/ending.yaml
+  transition_to: Unit2_Loop6
+  next_objective: Mickey突然出现，揭示Margaret下落
+
+# 突发事件
+emergency:
+  - scene: SC2004
+    scene_name: 警局外
+    trigger: 结尾场景中
+    description: Mickey突然出现："我知道你母亲在哪里！"
+    dialog_file: loop5/ending.yaml
+    dialog_section: mickey_appears
+
+  - scene: SC2019
+    scene_name: 废弃码头仓库
+    trigger: 跟随Mickey前往
+    description: 【纯AVG场景】一行人赶到码头，Mickey救出Margaret，Vinnie暴怒咆哮
+    dialog_file: loop5/ending.yaml
+    dialog_section: dock_rescue
+    note: Vinnie暴怒"Mickey！你背叛了约定！你出卖了Leo！"

@@ -5,167 +5,154 @@ loop: 5
 type: npc_dialog
 npc: NPC105
 
-# Section: 初始抗拒
-initial_resistance:
-    description: Tommy对询问的初始抗拒
-    lines:
-      - speaker: NPC105
-        emotion: nervous
-        text: "Brennan…Brennan先生……又是您？"
+# Section: 主要对话
+dialog:
+  description: 合并的NPC对话
+  lines:
+    # --- initial_resistance ---
+    - speaker: NPC105
+      emotion: nervous
+      text: "Brennan…Brennan先生……又是您？"
 
-      - speaker: NPC101
-        emotion: direct
-        text: "别紧张，我只问一句：Webb和 Vivian 到底什么关系？"
+    - speaker: NPC101
+      emotion: direct
+      text: "别紧张，我只问一句：Webb和 Vivian 到底什么关系？"
 
-      - speaker: NPC105
-        emotion: evasive
-        text: "Vivian小姐是我们的头牌歌女。我负责前台排班、财务而已，私事我不插手……"
+    - speaker: NPC105
+      emotion: evasive
+      text: "Vivian小姐是我们的头牌歌女。我负责前台排班、财务而已，私事我不插手……"
 
-      - speaker: NPC101
-        emotion: firm
-        text: "Tommy。"
+    - speaker: NPC101
+      emotion: firm
+      text: "Tommy。"
 
-      - speaker: NPC105
-        emotion: defensive
-        text: "我真、真的没多问。不该知道的我不会去打探。"
+    - speaker: NPC105
+      emotion: defensive
+      text: "我真、真的没多问。不该知道的我不会去打探。"
 
-      - speaker: NPC101
-        emotion: pressing
-        text: "你在这家店管理员工、审账五年。别告诉我你对老板的私生活一无所知。"
+    - speaker: NPC101
+      emotion: pressing
+      text: "你在这家店管理员工、审账五年。别告诉我你对老板的私生活一无所知。"
 
-      - speaker: NPC105
-        emotion: evasive
-        text: "我只负责让酒吧运转。Webb先生的感情…我向来不碰。"
+    - speaker: NPC105
+      emotion: evasive
+      text: "我只负责让酒吧运转。Webb先生的感情…我向来不碰。"
 
-pressure:
-    description: Zack施压Tommy
-    lines:
-      - speaker: NPC101
-        emotion: serious
-        text: "有人说 Vivian 有杀人动机。"
+    # --- pressure ---
+    - speaker: NPC101
+      emotion: serious
+      text: "有人说 Vivian 有杀人动机。"
 
-      - speaker: NPC105
-        emotion: shocked
-        text: "什么？！不……不可能！她不会的！"
+    - speaker: NPC105
+      emotion: shocked
+      text: "什么？！不……不可能！她不会的！"
 
-      - speaker: NPC101
-        emotion: sharp
-        text: "那你证明给我看。她和 Webb 到底什么关系？"
+    - speaker: NPC101
+      emotion: sharp
+      text: "那你证明给我看。她和 Webb 到底什么关系？"
 
-      - speaker: NPC105
-        emotion: distressed
-        text: "我……我不想害她。拜托，别问了……"
+    - speaker: NPC105
+      emotion: distressed
+      text: "我……我不想害她。拜托，别问了……"
 
-      - speaker: NPC101
-        emotion: accusatory
-        text: "你宁愿让她被栽赃？"
+    - speaker: NPC101
+      emotion: accusatory
+      text: "你宁愿让她被栽赃？"
 
-      - speaker: NPC105
-        emotion: panicked
-        text: "不、不！我只是……Brennan先生，我真的说得够多了……"
+    - speaker: NPC105
+      emotion: panicked
+      text: "不、不！我只是……Brennan先生，我真的说得够多了……"
 
-      - speaker: NPC101
-        emotion: warning
-        text: "你闭口不谈，等警察来盘问，你更麻烦。"
+    - speaker: NPC101
+      emotion: warning
+      text: "你闭口不谈，等警察来盘问，你更麻烦。"
 
-revelation:
-    description: Tommy揭露Webb和Vivian的关系
-    lines:
-      - speaker: NPC105
-        action: 叹气
-        emotion: resigned
-        text: "……好吧。Webb 先生把她当另一半。大家都看得出来——他亲自把她从南区带回来，给她学费、衣服、声乐老师……她十五岁就被父母卖进妓院，是 Webb 半路拦下来的。她只剩他一个依靠。"
+    # --- revelation ---
+    - speaker: NPC105
+      action: 叹气
+      emotion: resigned
+      text: "……好吧。Webb 先生把她当另一半。大家都看得出来——他亲自把她从南区带回来，给她学费、衣服、声乐老师……她十五岁就被父母卖进妓院，是 Webb 半路拦下来的。她只剩他一个依靠。"
 
-      - speaker: NPC101
-        emotion: probing
-        text: "这才叫信息。Webb 最近有什么变化？"
+    - speaker: NPC101
+      emotion: probing
+      text: "这才叫信息。Webb 最近有什么变化？"
 
-      - speaker: NPC105
-        emotion: evasive
-        text: "没——没有……至少账面上没有。"
+    - speaker: NPC105
+      emotion: evasive
+      text: "没——没有……至少账面上没有。"
 
-      - speaker: NPC101
-        emotion: impatient
-        text: "Tommy，别浪费我时间。"
+    - speaker: NPC101
+      emotion: impatient
+      text: "Tommy，别浪费我时间。"
 
-rita_revelation:
-    description: 揭露Rita的存在
-    lines:
-      - speaker: NPC105
-        emotion: yielding
-        text: "…最近两个月，Webb 跟一个叫 Rita 的女人走得很近。她常来 VIP 包厢，我得安排人伺候。"
+    # --- rita_revelation ---
+    - speaker: NPC105
+      emotion: yielding
+      text: "…最近两个月，Webb 跟一个叫 Rita 的女人走得很近。她常来 VIP 包厢，我得安排人伺候。"
 
-      - speaker: NPC101
-        emotion: alert
-        text: "Vivian知道吗？"
+    - speaker: NPC101
+      emotion: alert
+      text: "Vivian知道吗？"
 
-      - speaker: NPC105
-        emotion: uncertain
-        text: "我……不确定。"
+    - speaker: NPC105
+      emotion: uncertain
+      text: "我……不确定。"
 
-      - speaker: NPC101
-        emotion: sharp
-        text: "你刚犹豫了。"
+    - speaker: NPC101
+      emotion: sharp
+      text: "你刚犹豫了。"
 
-key_testimony:
-    description: Tommy提供关键证词
-    lines:
-      - speaker: NPC105
-        emotion: reluctant
-        text: "……有一次我看到 Vivian 站在走廊，看着 Webb 和 Rita。她没闹，只是转头走了。"
+    # --- key_testimony ---
+    - speaker: NPC105
+      emotion: reluctant
+      text: "……有一次我看到 Vivian 站在走廊，看着 Webb 和 Rita。她没闹，只是转头走了。"
 
-      - speaker: NPC101
-        emotion: probing
-        text: "什么表情？"
+    - speaker: NPC101
+      emotion: probing
+      text: "什么表情？"
 
-      - speaker: NPC105
-        emotion: pained
-        text: "我不敢盯太久，但她像被掏空一样。后来我路过化妆室，听到她在里面哭。"
+    - speaker: NPC105
+      emotion: pained
+      text: "我不敢盯太久，但她像被掏空一样。后来我路过化妆室，听到她在里面哭。"
 
-      - speaker: NPC101
-        emotion: curious
-        text: "听到什么？"
+    - speaker: NPC101
+      emotion: curious
+      text: "听到什么？"
 
-      - speaker: NPC105
-        emotion: apologetic
-        text: "门没关紧。我只听见她说：'我为他做了这么多。'就这句，我立刻离开，发誓没偷听别的。"
+    - speaker: NPC105
+      emotion: apologetic
+      text: "门没关紧。我只听见她说：'我为他做了这么多。'就这句，我立刻离开，发誓没偷听别的。"
 
-conclusion:
-    description: 对话结束，Tommy提供最后信息
-    lines:
-      - speaker: NPC101
-        emotion: focused
-        text: "Webb 从什么时候开始和 Rita 走近？"
+    # --- conclusion ---
+    - speaker: NPC101
+      emotion: focused
+      text: "Webb 从什么时候开始和 Rita 走近？"
 
-      - speaker: NPC105
-        emotion: recalling
-        text: "大概九月。两个月前。她从北区来的，住在湖边公寓。"
+    - speaker: NPC105
+      emotion: recalling
+      text: "大概九月。两个月前。她从北区来的，住在湖边公寓。"
 
-      - speaker: NPC101
-        emotion: questioning
-        text: "Vivian有反应吗？"
+    - speaker: NPC101
+      emotion: questioning
+      text: "Vivian有反应吗？"
 
-      - speaker: NPC105
-        emotion: observant
-        text: "她对外什么都没说，只是更拼命唱。我看得出来，她把这家店当命。"
+    - speaker: NPC105
+      emotion: observant
+      text: "她对外什么都没说，只是更拼命唱。我看得出来，她把这家店当命。"
 
-      - speaker: NPC101
-        emotion: final
-        text: "还有什么没说的？"
+    - speaker: NPC101
+      emotion: final
+      text: "还有什么没说的？"
 
-      - speaker: NPC105
-        emotion: exhausted
-        text: "没有了，真没有了。她对 Webb 又敬又怕，从没反抗过。Brennan 先生，我知道的就这些。"
+    - speaker: NPC105
+      emotion: exhausted
+      text: "没有了，真没有了。她对 Webb 又敬又怕，从没反抗过。Brennan 先生，我知道的就这些。"
 
-      - speaker: NPC101
-        emotion: dismissive
-        text: "如果想起别的，来找我。别再拖。"
+    - speaker: NPC101
+      emotion: dismissive
+      text: "如果想起别的，来找我。别再拖。"
 
-      - speaker: NPC105
-        emotion: pleading
-        text: "我……我会的。只是别让她受牵连，她已经够惨了。"
+    - speaker: NPC105
+      emotion: pleading
+      text: "我……我会的。只是别让她受牵连，她已经够惨了。"
 
-evidence_obtained:
-  - id: EV1551
-    name: Tommy关于Webb与Rita关系的证词
-    description: Webb最近和一个叫Rita的女人走得很近，Vivian发现后非常痛苦，曾在化妆室哭泣说"我为他做了这么多"

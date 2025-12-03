@@ -6,67 +6,60 @@ type: npc_dialog
 npc: NPC103
 
 # Section: 主要对话
-main_dialog:
-    description: 确认Vivian携带可疑物品的细节
-    lines:
-      - speaker: NPC103
-        emotion: worried
-        text: "Brennan先生...您又来了..."
+dialog:
+  description: 合并的NPC对话
+  lines:
+    # --- main_dialog ---
+    - speaker: NPC103
+      emotion: worried
+      text: "Brennan先生...您又来了..."
 
-      - speaker: NPC101
-        emotion: serious
-        text: "Rosa，上次你说看到Vivian携带可疑物品。我需要更多细节。"
+    - speaker: NPC101
+      emotion: serious
+      text: "Rosa，上次你说看到Vivian携带可疑物品。我需要更多细节。"
 
-      - speaker: NPC103
-        emotion: recalling
-        text: "是的...我确实看到了..."
+    - speaker: NPC103
+      emotion: recalling
+      text: "是的...我确实看到了..."
 
-details:
-    description: 细节追问
-    lines:
-      - speaker: NPC101
-        emotion: probing
-        text: "那个物品，你能描述得更详细吗？"
+    # --- details ---
+    - speaker: NPC101
+      emotion: probing
+      text: "那个物品，你能描述得更详细吗？"
 
-      - speaker: NPC103
-        emotion: uncertain
-        text: "很小...金属的...她动作很快，我没看清..."
+    - speaker: NPC103
+      emotion: uncertain
+      text: "很小...金属的...她动作很快，我没看清..."
 
-      - speaker: NPC101
-        emotion: pressing
-        text: "金属的？什么颜色？"
+    - speaker: NPC101
+      emotion: pressing
+      text: "金属的？什么颜色？"
 
-      - speaker: NPC103
-        emotion: recalling
-        text: "银色...还是...不，是黑色的...像是...像是枪..."
+    - speaker: NPC103
+      emotion: recalling
+      text: "银色...还是...不，是黑色的...像是...像是枪..."
 
-      - speaker: NPC101
-        emotion: alert
-        text: "枪？"
+    - speaker: NPC101
+      emotion: alert
+      text: "枪？"
 
-      - speaker: NPC103
-        emotion: frightened
-        text: "我...我不确定...我只是远远看到...Brennan先生，我真的不想惹麻烦..."
+    - speaker: NPC103
+      emotion: frightened
+      text: "我...我不确定...我只是远远看到...Brennan先生，我真的不想惹麻烦..."
 
-confirmation:
-    description: 确认证词
-    lines:
-      - speaker: NPC101
-        emotion: reassuring
-        text: "你不会有事的。继续说。"
+    # --- confirmation ---
+    - speaker: NPC101
+      emotion: reassuring
+      text: "你不会有事的。继续说。"
 
-      - speaker: NPC103
-        emotion: nervous
-        text: "Vivian小姐...她平时不会带那种东西...那天晚上...她很不对劲..."
+    - speaker: NPC103
+      emotion: nervous
+      text: "Vivian小姐...她平时不会带那种东西...那天晚上...她很不对劲..."
 
-      - speaker: NPC101
-        emotion: confirming
-        text: "谢谢你，Rosa。"
+    - speaker: NPC101
+      emotion: confirming
+      text: "谢谢你，Rosa。"
 
-      - speaker: narration
-        text: "获得证据：Rosa关于Vivian携带可疑物品的证词"
+    - speaker: narration
+      text: "获得证据：Rosa关于Vivian携带可疑物品的证词"
 
-evidence_obtained:
-  - id: EV1641
-    name: Rosa关于Vivian携带可疑物品的证词
-    description: Rosa目击Vivian在案发当晚携带了一个类似手枪的可疑金属物品

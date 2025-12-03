@@ -4,32 +4,162 @@
 loop_id: Unit2_Loop2
 chapter: 2
 loop_number: 2
-title: 待定
-title_en: TBD
-investigation_target: 待定
-core_lie: 待定
+title: 威胁链条与连号钞票拼图
+title_en: Threat Chain and Serial Bill Puzzle
+investigation_target: 追踪Leonard与Vinnie的雇佣关系，揭露银行黑幕
+core_lie: Leonard否认与Vinnie有任何关系
 
 # 场景总览
-scenes_overview: []
+scenes_overview:
+  # 继承场景
+  - scene: SC2002
+    name: Margaret鞋坊一楼-状态2
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  - scene: SC2003
+    name: Margaret鞋坊二楼
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  # 新增场景
+  - scene: SC2006
+    name: Frank和Mrs. O'Hara家门口
+    status: accessible
+    type: search
+    note: 🆕 地图解锁，催款信、连号钞票
+
+  - scene: SC2007
+    name: 赌场
+    status: accessible
+    type: search
+    note: 🆕 证据解锁，Vinnie钞票、Tony证词
+
+  - scene: SC2008
+    name: 银行贵宾室
+    status: accessible
+    type: npc
+    note: 🆕 地图解锁，与Moore对话获取Leonard曾用名
+
+  - scene: SC2009
+    name: 银行大厅
+    status: accessible
+    type: story
+    note: Leonard指证场所
 
 # 开篇
 opening:
-  description: 待定
-  dialog_file: loop2/opening.yaml
+  description: 承接循环1结尾，在警局外开始调查Frank案件
+  scenes:
+    - scene_id: SC2004
+      name: 警局外
+      description: 承接循环1结尾，Zack和Emma商议调查方向
+      dialog_file: loop2/opening.yaml
+      dialog_section: continue_from_loop1
 
 # 自由探索阶段
 free_phase:
-  accessible_scenes: []
-  npcs: []
-  key_evidences: []
+  description: 玩家探索Frank相关场景，收集连号钞票证据
+  scenes:
+    # 继承场景
+    - scene: SC2002
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    - scene: SC2003
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    # 新增场景
+    - scene: SC2006
+      type: search
+      npc: Mrs. O'Hara
+      unlock_type: map
+      unlock_condition: 地图标注Frank家地址
+      status: new
+      dialog_file: loop2/ohara.yaml
+      evidences:
+        - id: EV2201
+          note: Frank家催款信
+        - id: EV2202
+          note: Mrs. O'Hara受伤证词
+        - id: EV2207
+          note: O'Hara贷款钞票（连号缺失）
+
+    - scene: SC2007
+      type: search
+      npc: Tony
+      unlock_type: evidence
+      unlock_condition: Mrs. O'Hara对话中提到"Vinnie在赌场"
+      status: new
+      dialog_file: loop2/casino.yaml
+      evidences:
+        - id: EV2205
+          note: Vinnie审问录音（口误说Russo）
+        - id: EV2208
+          note: Vinnie消费钞票
+        - id: EV2209
+          note: Tony证词
+        - id: EV2213
+          note: Vinnie工作日历小本子
+
+    - scene: SC2008
+      type: npc
+      npc: Moore
+      unlock_type: map
+      unlock_condition: 地图标注Moore银行地址
+      status: new
+      dialog_file: loop2/moore.yaml
+      evidences:
+        - id: EV2217
+          note: Leonard曾用名信息（原名Russo）
 
 # 指证阶段
 expose:
-  location: null
-  target_npc: null
+  scene: SC2009
+  scene_name: 银行大厅
+  target: Leonard
+  target_name: Leonard Ross (Russo)
+  total_rounds: 3
   dialog_file: loop2/expose.yaml
 
-# 结局
+  rounds:
+    - round: 1
+      name: 揭露身份谎言
+      lie:
+        content: 我叫Leonard Ross，与Russo没有关系
+      required_evidences: [EV2217, EV2205]
+      result: Leonard被迫承认原名Russo
+
+    - round: 2
+      name: 揭露雇佣关系
+      lie:
+        content: 我不认识Vinnie
+      required_evidences: [EV2207, EV2208]
+      result: 连号钞票证明Leonard通过Vinnie威胁债务人
+
+    - round: 3
+      name: 揭露威胁行为
+      lie:
+        content: 银行从未威胁过任何人
+      required_evidences: [EV2202, EV2213]
+      result: Leonard防线崩溃，交出Frank房屋钥匙
+
+  post_expose:
+    - Leonard交出Frank房屋钥匙（因房产抵押而扣押）
+    - Emma提议去市政厅档案室申请令状
+
+# 结尾
 ending:
-  type: placeholder
+  scene: null
+  scene_name: null
+  description: 循环2无独立结尾场景，直接过渡到循环3
   dialog_file: loop2/ending.yaml
+  transition_to: Unit2_Loop3
+  next_objective: 获取银行内部档案，揭露掠夺性贷款

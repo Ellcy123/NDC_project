@@ -4,32 +4,255 @@
 loop_id: Unit2_Loop4
 chapter: 2
 loop_number: 4
-title: 待定
-title_en: TBD
-investigation_target: 待定
-core_lie: 待定
+title: Rose深情告白（黄昏之爱）
+title_en: Rose's Confession (Twilight Love)
+investigation_target: 证明Rose与Frank的五年恋情是真爱，揭穿Danny的继承动机
+core_lie: Danny声称"Rose是为了遗产才接近Frank"
 
 # 场景总览
-scenes_overview: []
+scenes_overview:
+  # 继承场景（循环1）
+  - scene: SC2002
+    name: Margaret鞋坊一楼-状态2
+    status: accessible
+    type: search
+    note: 📦 继承，🔄 有新线索（Danny在此等候），💬 Danny在场
+
+  - scene: SC2003
+    name: Margaret鞋坊二楼
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  # 继承场景（循环2）
+  - scene: SC2006
+    name: Frank和Mrs. O'Hara家门口
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Mrs. O'Hara在场
+
+  - scene: SC2007
+    name: 赌场
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Tony在场
+
+  - scene: SC2008
+    name: 银行贵宾室
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Moore在场
+
+  - scene: SC2009
+    name: 银行大厅
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Leonard在场
+
+  # 继承场景（循环3）
+  - scene: SC2011
+    name: Frank家里
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索（保险箱需钥匙）
+
+  - scene: SC2012
+    name: Danny家里
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  - scene: SC2013
+    name: 银行档案室
+    status: locked
+    type: search
+    note: 📦 继承，🔒 封锁（搜查令已用完）
+
+  - scene: SC2014
+    name: Leonard办公室
+    status: locked
+    type: search
+    note: 📦 继承，🔒 封锁（搜查令已用完）
+
+  # 新增场景
+  - scene: SC2015
+    name: Margaret鞋坊地下室
+    status: accessible
+    type: search
+    note: 🆕 道具+剧情解锁（遗嘱+钥匙）
+
+  - scene: SC2016
+    name: Rose家里
+    status: accessible
+    type: search
+    note: 🆕 证据解锁（遗嘱提到Rose）
 
 # 开篇
 opening:
-  description: 待定
-  dialog_file: loop4/opening.yaml
+  description: 承接循环3结尾，Moore提供遗嘱，地下室通道解锁
+  scenes:
+    - scene_id: SC2008
+      name: 银行贵宾室（遗嘱揭示）
+      description: 承接循环3结尾，Zack拿到遗嘱，决定探索地下室
+      dialog_file: loop4/opening.yaml
+      dialog_section: will_reveal
 
 # 自由探索阶段
 free_phase:
-  accessible_scenes: []
-  npcs: []
-  key_evidences: []
+  description: 玩家探索地下室和Rose家，收集五年恋情证据
+  scenes:
+    # 继承场景（循环1）- 本循环主线
+    - scene: SC2002
+      type: search
+      npc: Danny
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: true
+      npc_available: true
+      note: 本循环主线，Danny在此等候
+
+    - scene: SC2003
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    # 继承场景（循环2）
+    - scene: SC2006
+      type: search
+      npc: Mrs. O'Hara
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2007
+      type: search
+      npc: Tony
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2008
+      type: npc
+      npc: Moore
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    - scene: SC2009
+      type: npc
+      npc: Leonard
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    # 继承场景（循环3）
+    - scene: SC2011
+      type: search
+      status: inherited
+      inherited_from: loop3
+      has_new_clues: false
+      note: 保险箱需钥匙
+
+    - scene: SC2012
+      type: search
+      status: inherited
+      inherited_from: loop3
+      has_new_clues: false
+
+    - scene: SC2013
+      type: search
+      status: locked
+      inherited_from: loop3
+      lock_reason: 搜查令已使用完毕
+
+    - scene: SC2014
+      type: search
+      status: locked
+      inherited_from: loop3
+      lock_reason: 搜查令已使用完毕
+
+    # 新增场景
+    - scene: SC2015
+      type: search
+      unlock_type: item_and_story
+      unlock_condition: 遗嘱提到地下室 + 循环1获得的钥匙
+      status: new
+      evidences:
+        - id: EV2401
+          note: 房间旧沙发（磨损严重）
+        - id: EV2402
+          note: 褪色窗帘
+        - id: EV2403
+          note: 地板固定位置磨痕
+        - id: EV2408
+          note: 维修收据（$600用于房间修缮）
+
+    - scene: SC2016
+      type: search
+      npc: Rose
+      unlock_type: evidence
+      unlock_condition: 遗嘱中提到受益人Rose的地址
+      status: new
+      dialog_file: loop4/rose.yaml
+      evidences:
+        - id: EV2404
+          note: 墙上照片墙（30多张，横跨5年）
+        - id: EV2406
+          note: Rose深情证词
+        - id: EV2410
+          note: Rose反对证词（曾劝Frank别贷款）
+        - id: EV2413
+          note: Rose口头表态（愿意捐给工人互助会）
 
 # 指证阶段
 expose:
-  location: null
-  target_npc: null
+  scene: SC2002
+  scene_name: Margaret鞋坊一楼-状态2
+  target: Danny
+  target_name: Danny Kowalski
+  total_rounds: 3
   dialog_file: loop4/expose.yaml
 
-# 结局
+  rounds:
+    - round: 1
+      name: 物理痕迹证明5年关系
+      lie:
+        content: Rose才认识Frank不到一年
+      required_evidences: [EV2401, EV2402, EV2403]
+      result: 物理痕迹证明两人关系至少5年
+
+    - round: 2
+      name: 贷款用途证明Frank主动付出
+      lie:
+        content: Rose利用Frank的钱
+      required_evidences: [EV2408, EV2410]
+      result: 贷款全部用于修缮约会房间，Rose曾反对
+
+    - round: 3
+      name: Rose戏剧性登场
+      lie:
+        content: Rose会争夺遗产
+      required_evidences: [EV2404, EV2406, EV2413]
+      result: Rose推门而入，当场签署放弃继承
+
+# 突发事件
+emergency:
+  - scene: SC2002
+    scene_name: Margaret鞋坊一楼-状态2（指证中）
+    trigger: 第三轮指证时
+    description: Rose推门而入，当场签署放弃继承
+    dialog_file: loop4/expose.yaml
+    dialog_section: rose_appears
+
+# 结尾
 ending:
-  type: placeholder
+  scene: null
+  scene_name: null
+  description: 循环4无独立结尾场景，Rose提供保险箱钥匙，过渡到循环5
   dialog_file: loop4/ending.yaml
+  transition_to: Unit2_Loop5
+  next_objective: 使用保险箱钥匙，追查Frank举报材料
+  transition_text: Rose放弃继承后，将保险箱钥匙交给Zack

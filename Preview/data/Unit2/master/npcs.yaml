@@ -1,4 +1,176 @@
 # Unit2 NPC定义
 # 黄昏悲歌·银行黑幕
+# ID格式：NPC + 章节(2) + 序号(2)，如 NPC201 = 第2章第01个NPC
 
-npcs: []
+npcs:
+  # ===== 主要角色 =====
+
+  NPC201:
+    name: Morrison
+    name_en: Morrison
+    role: 腐败警察
+    description: 芝加哥警局警官，故意误导Zack关于死者身份
+    default_scene: SC2005  # 警局
+    expose_target_in: [loop1]
+    availability:
+      loop1: true
+      loop2: false
+      loop3: false
+      loop4: false
+      loop5: false
+      loop6: false
+
+  NPC202:
+    name: Leonard Ross
+    name_en: Leonard Ross
+    alias: Leonard Russo
+    role: 银行职员/真凶
+    description: Moore银行职员，原名Russo，与Vinnie是童年旧识，失手杀害Frank
+    default_scene: SC2009  # 银行大厅
+    expose_target_in: [loop2, loop6]
+    availability:
+      loop1: false
+      loop2: true
+      loop3: true
+      loop4: true
+      loop5: true
+      loop6: true
+
+  NPC203:
+    name: Harold Moore
+    name_en: Harold Moore
+    role: 银行经理
+    description: Moore银行经理，掠夺性贷款的幕后主使
+    default_scene: SC2008  # 银行贵宾室
+    expose_target_in: [loop3]
+    availability:
+      loop1: false
+      loop2: true
+      loop3: true
+      loop4: true
+      loop5: true
+      loop6: true
+
+  NPC204:
+    name: Danny Kowalski
+    name_en: Danny Kowalski
+    role: Frank的侄子
+    description: Frank的侄子，质疑Rose与Frank的关系，试图争夺遗产
+    default_scene: SC2012  # Danny家里
+    expose_target_in: [loop4]
+    availability:
+      loop1: false
+      loop2: false
+      loop3: true
+      loop4: true
+      loop5: true
+      loop6: true
+
+  NPC205:
+    name: Vinnie Moretti
+    name_en: Vinnie Moretti
+    role: 打手/替罪羊
+    description: Leonard的童年好友，受雇威胁债务人，为保护Leonard主动认罪
+    default_scene: SC2007  # 赌场
+    expose_target_in: [loop5]
+    availability:
+      loop1: false
+      loop2: true
+      loop3: true
+      loop4: true
+      loop5: true
+      loop6: false  # 循环5被捕
+
+  # ===== 证人/配角 =====
+
+  NPC206:
+    name: Emma
+    name_en: Emma
+    role: Zack的助手
+    description: Zack的搭档，帮忙联系Foster转述信息
+    default_scene: SC2004  # 警局外
+    availability:
+      loop1: true  # 仅循环1可对话获取证据
+      loop2: false
+      loop3: false
+      loop4: false
+      loop5: false
+      loop6: false
+    note: 循环2-6不在警局外可对话，但始终陪伴Zack
+
+  NPC207:
+    name: Mrs. O'Hara
+    name_en: Mrs. O'Hara
+    role: Frank的邻居
+    description: Frank的邻居，被Vinnie威胁过，提供连号钞票线索
+    default_scene: SC2006  # Frank和Mrs. O'Hara家门口
+    availability:
+      loop1: false
+      loop2: true
+      loop3: true
+      loop4: true
+      loop5: true
+      loop6: true
+    note: 始终在家
+
+  NPC208:
+    name: Tony
+    name_en: Tony
+    role: 赌场酒保
+    description: 赌场吧台酒保，提供Vinnie的消费记录和证词
+    default_scene: SC2007  # 赌场
+    availability:
+      loop1: false
+      loop2: true
+      loop3: true
+      loop4: true
+      loop5: true
+      loop6: true
+    note: 始终在吧台
+
+  NPC209:
+    name: Rose
+    name_en: Rose
+    role: Frank的恋人
+    description: Frank的秘密恋人，五年感情，遗嘱受益人
+    default_scene: SC2016  # Rose家里
+    availability:
+      loop1: false
+      loop2: false
+      loop3: false
+      loop4: true  # 循环4首次解锁
+      loop5: true
+      loop6: true
+    note: 循环4解锁后始终在家
+
+  NPC210:
+    name: Margaret
+    name_en: Margaret
+    role: Zack的母亲
+    description: Zack的母亲，鞋坊店主，被Leonard打晕后关押在码头仓库
+    default_scene: SC2017  # 医院
+    availability:
+      loop1: false
+      loop2: false
+      loop3: false
+      loop4: false
+      loop5: false
+      loop6: true  # 循环6才获救送医
+    note: 循环6才能对话获取关键证词
+
+  # ===== 神秘角色 =====
+
+  NPC211:
+    name: Mickey
+    name_en: Mickey
+    role: 神秘线人
+    description: 神秘人物，主动帮助Zack获取令状和情报，救出Margaret
+    default_scene: SC2010  # 芝加哥市政厅档案室门口（首次登场）
+    availability:
+      loop1: false
+      loop2: false
+      loop3: true  # 循环3登场
+      loop4: true
+      loop5: true
+      loop6: true
+    note: 循环3突发事件登场，循环5救出Margaret

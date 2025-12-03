@@ -1,4 +1,167 @@
 # Unit2 场景定义
 # 黄昏悲歌·银行黑幕
+# ID格式：SC + 章节(2) + 序号(2)，如 SC2001 = 第2章第01个场景
 
-scenes: []
+scenes:
+  # ===== Margaret鞋坊相关 =====
+
+  SC2001:
+    name: Margaret鞋坊一楼-状态1
+    name_en: MargaretShoeShop1F_Fire
+    asset_id: SC2001_bg_MargaretShoeShop1F_Fire
+    description: 火灾现场，一具烧焦的尸体被白布盖着，尸体露出一只手，手被烧得焦黑但没有戒指
+    tags: [opening, timed_search]
+
+  SC2002:
+    name: Margaret鞋坊一楼-状态2
+    name_en: MargaretShoeShop1F_Sealed
+    asset_id: SC2002_bg_MargaretShoeShop1F_Sealed
+    description: 现场被封锁，拉起了封条，可进行深度搜索
+    tags: [search, expose]
+
+  SC2003:
+    name: Margaret鞋坊二楼
+    name_en: MargaretShoeShop2F
+    asset_id: SC2003_bg_MargaretShoeShop2F
+    description: Margaret的居住空间，保存较好，有个人物品、照片墙、梳妆台
+    tags: [search]
+
+  SC2015:
+    name: Margaret鞋坊地下室
+    name_en: MargaretShoeShopBasement
+    asset_id: SC2015_bg_MargaretShoeShopBasement
+    description: Frank和Rose的秘密约会地点，有旧沙发、褪色窗帘、地板磨痕等生活痕迹
+    tags: [search, first_unlock]
+
+  # ===== 警局相关 =====
+
+  SC2004:
+    name: 警局外
+    name_en: PoliceStationOutside
+    asset_id: SC2004_bg_PoliceStationOutside
+    description: 警局外的街道/电话亭区域，夜晚路灯昏暗
+    tags: [dialog, ending, opening]
+
+  SC2005:
+    name: 警局
+    name_en: PoliceStation
+    asset_id: SC2005_bg_PoliceStation
+    description: 警局内部，昏暗灯光，Morrison和Leonard指证场所
+    tags: [expose]
+
+  # ===== Frank相关 =====
+
+  SC2006:
+    name: Frank和Mrs. O'Hara家门口
+    name_en: FrankAndOHaraHouseFront
+    asset_id: SC2006_bg_FrankAndOHaraHouseFront
+    description: Frank的住所外，旁边是Mrs. O'Hara的住所，简朴的工人家庭
+    tags: [search, dialog]
+
+  SC2011:
+    name: Frank家里
+    name_en: FrankHouseInside
+    asset_id: SC2011_bg_FrankHouseInside
+    description: Frank的住所内部，有日记、保险箱等
+    tags: [search, opening]
+
+  # ===== 赌场相关 =====
+
+  SC2007:
+    name: 赌场
+    name_en: Casino
+    asset_id: SC2007_bg_Casino
+    description: 地下赌场/酒吧，昏暗，左侧吧台，右侧赌博机，Tony和Vinnie常驻
+    tags: [search, dialog, expose]
+
+  # ===== 银行相关 =====
+
+  SC2008:
+    name: 银行贵宾室
+    name_en: BankVIPRoom
+    asset_id: SC2008_bg_BankVIPRoom
+    description: 银行内部贵宾室，正式商务环境，有一个门通往档案室，Moore办公地点
+    tags: [dialog, expose, ending]
+
+  SC2009:
+    name: 银行大厅
+    name_en: BankLobby
+    asset_id: SC2009_bg_BankLobby
+    description: 银行大厅，Leonard常驻位置，Leonard指证场所
+    tags: [dialog, expose]
+
+  SC2013:
+    name: 银行档案室
+    name_en: BankArchiveRoom
+    asset_id: SC2013_bg_BankArchiveRoom
+    description: 银行内部档案室，入口是贵宾室的一个小门，存放贷款协议等文件
+    tags: [search, locked_after_loop3]
+
+  SC2014:
+    name: Leonard办公室
+    name_en: LeonardOffice
+    asset_id: SC2014_bg_LeonardOffice
+    description: Leonard的办公室，存放贷款档案相关证据
+    tags: [search, locked_after_loop3]
+
+  # ===== 其他人物住所 =====
+
+  SC2012:
+    name: Danny家里
+    name_en: DannyHouse
+    asset_id: SC2012_bg_DannyHouse
+    description: Danny的住所，显示经济困难，有失业证明、欠债记录
+    tags: [dialog, search, expose]
+
+  SC2016:
+    name: Rose家里
+    name_en: RoseHouse
+    asset_id: SC2016_bg_RoseHouse
+    description: Rose的住所，有大量Frank的痕迹，照片墙横跨5年
+    tags: [search, dialog, first_unlock]
+
+  SC2018:
+    name: Leonard住所
+    name_en: LeonardHouse
+    asset_id: SC2018_bg_LeonardHouse
+    description: Leonard的家，有童年照片（Leonard和Vinnie在南区街头）
+    tags: [search, sneak_in]
+
+  # ===== 公共场所 =====
+
+  SC2010:
+    name: 芝加哥市政厅档案室门口
+    name_en: CityHallArchiveEntrance
+    asset_id: SC2010_bg_CityHallArchiveEntrance
+    description: 市政厅内部，官僚氛围，Mickey登场地点
+    tags: [opening, emergency]
+
+  SC2017:
+    name: 医院
+    name_en: Hospital
+    asset_id: SC2017_bg_Hospital
+    description: 医院急诊/病房区域，Margaret送医和康复地点
+    tags: [opening, dialog, ending]
+
+  # ===== 特殊场景 =====
+
+  SC2019:
+    name: 废弃码头仓库
+    name_en: AbandonedDockWarehouse
+    asset_id: SC2019_bg_AbandonedDockWarehouse
+    description: 废弃的码头仓库，Margaret被关押地点，Mickey救援场景
+    tags: [emergency, avg_only]
+
+  SC2020:
+    name: 监狱
+    name_en: Prison
+    asset_id: SC2020_bg_Prison
+    description: Vinnie和Leonard隔着玻璃对话的地点
+    tags: [ending]
+
+  SC2021:
+    name: 墓地
+    name_en: Cemetery
+    asset_id: SC2021_bg_Cemetery
+    description: Frank的墓地，Rose悼念场景
+    tags: [ending]

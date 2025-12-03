@@ -4,32 +4,125 @@
 loop_id: Unit2_Loop1
 chapter: 2
 loop_number: 1
-title: 待定
-title_en: TBD
-investigation_target: 待定
-core_lie: 待定
+title: 残酷的身份确认
+title_en: Cruel Identity Confirmation
+investigation_target: 确认死者不是Margaret，揭穿Morrison故意误导
+core_lie: Morrison声称"死者应该就是Margaret"
 
 # 场景总览
-scenes_overview: []
+scenes_overview:
+  - scene: SC2001
+    name: Margaret鞋坊一楼-状态1
+    status: accessible
+    type: story
+    note: 开篇限时搜证场景
+
+  - scene: SC2002
+    name: Margaret鞋坊一楼-状态2
+    status: accessible
+    type: search
+    note: 开篇剧情过渡+自由探索搜证
+
+  - scene: SC2003
+    name: Margaret鞋坊二楼
+    status: accessible
+    type: search
+    note: 自动解锁，可获取婚戒照片、钥匙、地图
+
+  - scene: SC2004
+    name: 警局外
+    status: accessible
+    type: npc
+    note: 自动解锁，Emma转述Foster口供；结尾场景
+
+  - scene: SC2005
+    name: 警局
+    status: accessible
+    type: story
+    note: Morrison指证场所
 
 # 开篇
 opening:
-  description: 待定
-  dialog_file: loop1/opening.yaml
+  description: Zack冲向火灾现场寻找母亲，发现一具烧焦尸体
+  scenes:
+    - scene_id: SC2001
+      name: Margaret鞋坊一楼-状态1
+      description: 火灾现场，Zack与消防员、Morrison对峙，限时搜证获取尸体证据
+      dialog_file: loop1/opening.yaml
+      dialog_section: fire_scene
+
+    - scene_id: SC2002
+      name: Margaret鞋坊一楼-状态2
+      description: 现场被封锁，Morrison在记录，Zack与Emma商议
+      dialog_file: loop1/opening.yaml
+      dialog_section: sealed_scene
 
 # 自由探索阶段
 free_phase:
-  accessible_scenes: []
-  npcs: []
-  key_evidences: []
+  description: 玩家可探索鞋坊二楼和警局外，收集证据准备指证Morrison
+  scenes:
+    - scene: SC2002
+      type: search
+      unlock_type: auto
+      unlock_condition: 开篇结束后自动可用
+      status: new
+
+    - scene: SC2003
+      type: search
+      unlock_type: auto
+      unlock_condition: 与SC2001/SC2002同一建筑，开篇结束后可进入
+      status: new
+      evidences:
+        - id: EV2102
+          note: Margaret佩戴婚戒照片
+        - id: EV2103
+          note: 空的首饰盒
+        - id: EV2106
+          note: 一把多余的钥匙（循环4解锁地下室）
+        - id: EV2107
+          note: 地图（循环1结尾解锁循环2探索范围）
+
+    - scene: SC2004
+      type: npc
+      npc: Emma
+      unlock_type: auto
+      unlock_condition: 与警局相邻区域
+      status: new
+      dialog_file: loop1/emma.yaml
+      evidences:
+        - id: EV2105
+          note: Emma转述Foster口供
 
 # 指证阶段
 expose:
-  location: null
-  target_npc: null
+  scene: SC2005
+  scene_name: 警局
+  target: Morrison
+  target_name: Morrison（腐败警察）
+  total_rounds: 2
   dialog_file: loop1/expose.yaml
 
-# 结局
+  rounds:
+    - round: 1
+      name: 否定身份谎言
+      lie:
+        content: 死者应该就是Margaret
+      required_evidences: [EV2101, EV2102, EV2103, EV2104]
+      result: 身份谎言被戳穿，Morrison被迫承认无法确认死者身份
+
+    - round: 2
+      name: 否定调查信息谎言
+      lie:
+        content: 我有尸检调查信息
+      required_evidences: [EV2105]
+      result: Morrison的虚假权威被击破
+
+# 结尾
 ending:
-  type: placeholder
+  scene: SC2004
+  scene_name: 警局外
+  description: Emma等待Zack，展示地图解锁循环2探索范围
   dialog_file: loop1/ending.yaml
+  transition_to: Unit2_Loop2
+  next_objective: 调查Frank案件，追踪银行黑幕
+  transition_text: Morrison被揭穿后摆烂威胁，Emma展示地图，Zack决定调查Frank案件

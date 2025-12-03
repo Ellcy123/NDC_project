@@ -4,9 +4,51 @@
 dialog_id: loop2_expose
 loop: 2
 type: expose
+scene: SC2009
+scene_name: 银行大厅
+target_npc: Leonard
 
-# 指证场景
-expose_scene:
-  description: 待定
-  target_npc: null
-  lines: []
+sections:
+  # 第一轮：揭露身份谎言
+  round1:
+    description: Leonard否认与Russo的关系，Zack使用证据揭穿
+    lie: "我叫Leonard Ross，与Russo没有关系"
+    required_evidences: [EV2217, EV2205]
+    lines:
+      # 【待补充】Leonard辩解自己的身份
+      # 【待补充】Zack展示Moore提供的曾用名信息
+      # 【待补充】Zack播放Vinnie审问录音（口误说Russo）
+      # 【待补充】Leonard被迫承认原名Russo
+      []
+
+  # 第二轮：揭露雇佣关系
+  round2:
+    description: Leonard否认认识Vinnie，Zack用连号钞票证明
+    lie: "我不认识Vinnie"
+    required_evidences: [EV2207, EV2208]
+    lines:
+      # 【待补充】Leonard否认与Vinnie有任何往来
+      # 【待补充】Zack展示O'Hara贷款钞票（连号缺失）
+      # 【待补充】Zack展示Vinnie消费钞票（填补缺失序号）
+      # 【待补充】连号钞票证明Leonard通过Vinnie威胁债务人
+      []
+
+  # 第三轮：揭露威胁行为
+  round3:
+    description: Leonard否认银行威胁行为，Zack用证词和日历证明
+    lie: "银行从未威胁过任何人"
+    required_evidences: [EV2202, EV2213]
+    lines:
+      # 【待补充】Leonard坚称银行运营合法
+      # 【待补充】Zack展示Mrs. O'Hara受伤证词
+      # 【待补充】Zack展示Vinnie工作日历小本子
+      # 【待补充】Leonard防线崩溃
+      []
+
+  # 指证结论
+  conclusion:
+    description: Leonard崩溃，交出Frank房屋钥匙
+    lines:
+      # 【待补充】Leonard交出Frank房屋钥匙（因房产抵押而扣押）
+      # 【待补充】Emma提议去市政厅档案室申请令状
+      []

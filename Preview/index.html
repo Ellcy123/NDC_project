@@ -1131,7 +1131,280 @@
                 padding: 0.75rem 1rem;
             }
         }
-    </style>
+
+        /* ===== Section Editor Styles ===== */
+        .editor-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .editor-modal.active {
+            display: flex;
+        }
+        .editor-container {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1400px;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+        }
+        .editor-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            background: #16213e;
+        }
+        .editor-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e94560;
+        }
+        .editor-warning {
+            margin-left: 20px;
+            font-size: 12px;
+            color: #f39c12;
+        }
+        .editor-close-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .editor-close-btn:hover {
+            color: #e94560;
+        }
+        .editor-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .editor-input-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #333;
+        }
+        .editor-textarea {
+            flex: 1;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            border: none;
+            padding: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+        .editor-textarea::placeholder {
+            color: #555;
+        }
+        .editor-preview-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #12121a;
+        }
+        .editor-preview-title {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .editor-errors {
+            padding: 8px 16px;
+            background: #1a0a0a;
+            border-top: 1px solid #333;
+            max-height: 100px;
+            overflow-y: auto;
+            display: none;
+        }
+        .editor-errors.has-errors {
+            display: block;
+        }
+        .editor-error-item {
+            color: #e74c3c;
+            font-size: 12px;
+            padding: 4px 0;
+        }
+        .editor-error-item::before {
+            content: "❌ ";
+        }
+        .editor-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 12px 16px;
+            border-top: 1px solid #333;
+            background: #16213e;
+        }
+        .editor-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .editor-btn-cancel {
+            background: #333;
+            color: #ccc;
+        }
+        .editor-btn-cancel:hover {
+            background: #444;
+        }
+        .editor-btn-save {
+            background: #e94560;
+            color: white;
+        }
+        .editor-btn-save:hover {
+            background: #ff6b6b;
+        }
+        .editor-btn-save:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        /* Section 编辑按钮 */
+        .section-edit-btn {
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid #e94560;
+            color: #e94560;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .section-edit-btn:hover {
+            background: rgba(233, 69, 96, 0.4);
+        }
+        .modified-marker {
+            color: #f39c12;
+            margin-left: 6px;
+        }
+
+        /* 改动面板 */
+        .changes-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            width: 500px;
+            max-height: 70%;
+            z-index: 1001;
+            flex-direction: column;
+        }
+        .changes-panel.active {
+            display: flex;
+        }
+        .changes-panel-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            background: #16213e;
+        }
+        .changes-panel-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e94560;
+        }
+        .changes-panel-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .changes-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        .changes-file-group {
+            margin-bottom: 12px;
+        }
+        .changes-file-name {
+            font-size: 12px;
+            color: #888;
+            padding: 4px 0;
+        }
+        .changes-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: #0f0f1a;
+            border-radius: 4px;
+            margin: 4px 0;
+        }
+        .changes-item-name {
+            flex: 1;
+            color: #e0e0e0;
+            font-size: 13px;
+        }
+        .changes-item-btn {
+            background: #333;
+            border: none;
+            color: #aaa;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .changes-item-btn:hover {
+            background: #444;
+        }
+        .changes-panel-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .changes-export-btn {
+            background: #2ecc71;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .changes-export-btn:hover {
+            background: #27ae60;
+        }
+        .changes-panel-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .changes-panel-overlay.active {
+            display: block;
+        }
+
+        </style>
 </head>
 <body>
     <div class="app-container">
@@ -1154,6 +1427,7 @@
                 <button class="control-button active" id="viewModeBtn">开发版</button>
                 <button class="control-button" id="editModeBtn">✏️ 编辑</button>
                 <button class="control-button" id="exportBtn" style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">📥 导出</button>
+                <button class="control-button" id="viewChangesBtn" style="display: none; background: rgba(243, 156, 18, 0.2); color: #f39c12;">📋 改动</button>
             </div>
         </header>
 
@@ -1220,6 +1494,377 @@
                 evidences: new Set(),
                 analyzedEvidences: new Set(),
                 variables: {}
+            },
+
+            // Section Editor State (新增)
+            sectionEdits: new Map(),  // Key: "dialogFile::sectionKey", Value: {original, modified, modifiedAt}
+            editorState: {
+                isOpen: false,
+                currentKey: null,
+                currentDialogFile: null,
+                currentSectionKey: null,
+                originalLines: null
+            }
+        };
+
+
+        // ===== Dialog Editor =====
+        const DialogEditor = {
+            // 获取 NPC ID ↔ 英文名 映射
+            getNpcNameMap() {
+                const idToName = {};
+                const nameToId = {};
+                const npcs = AppState.masterData.npcs || {};
+                for (const [id, data] of Object.entries(npcs)) {
+                    // 取 name 字段的第一个单词作为简称（如 "Zack Brennan" → "Zack"）
+                    const name = data.name ? data.name.split(' ')[0] : id;
+                    idToName[id] = name;
+                    nameToId[name.toLowerCase()] = id;
+                }
+                return { idToName, nameToId };
+            },
+
+            // YAML lines → 简化格式（NPC ID 转英文名）
+            toSimplifiedFormat(lines) {
+                if (!lines || !Array.isArray(lines)) return '';
+                const { idToName } = this.getNpcNameMap();
+
+                return lines.map(line => {
+                    if (line.speaker === 'narration') {
+                        return `[narration]: ${line.text}`;
+                    }
+                    if (line.speaker === 'player_choice') {
+                        return `# [player_choice - 暂不支持编辑]`;
+                    }
+                    // NPC ID → 英文名
+                    const speakerName = idToName[line.speaker] || line.speaker;
+                    let result = `[${speakerName}]`;
+                    if (line.emotion) result += ` ${line.emotion}`;
+                    if (line.action) result += ` (${line.action})`;
+                    result += `: ${line.text}`;
+                    return result;
+                }).join('\n');
+            },
+
+            // 简化格式 → lines 数组（英文名转回 NPC ID）
+            parseSimplifiedFormat(text) {
+                const { nameToId } = this.getNpcNameMap();
+                // 支持角色名包含字母和空格
+                const pattern = /^\[([\w\s]+)\](?:\s+(\w+))?(?:\s+\(([^)]+)\))?:\s*(.+)$/;
+                const lines = text.split('\n');
+                const result = [];
+                const errors = [];
+
+                lines.forEach((line, index) => {
+                    const trimmed = line.trim();
+                    if (!trimmed || trimmed.startsWith('#')) return; // 空行或注释
+
+                    const match = trimmed.match(pattern);
+                    if (!match) {
+                        errors.push({ line: index + 1, message: '格式错误，请使用 [角色名] emotion: 内容' });
+                        return;
+                    }
+
+                    let [, speakerInput, emotion, action, text] = match;
+                    speakerInput = speakerInput.trim();
+
+                    // 处理 narration
+                    if (speakerInput.toLowerCase() === 'narration') {
+                        result.push({ speaker: 'narration', text });
+                        return;
+                    }
+
+                    // 英文名 → NPC ID
+                    const speakerId = nameToId[speakerInput.toLowerCase()];
+                    if (!speakerId) {
+                        errors.push({ line: index + 1, message: `找不到角色 "${speakerInput}"` });
+                        return;
+                    }
+
+                    const lineObj = { speaker: speakerId, text };
+                    if (emotion) lineObj.emotion = emotion;
+                    if (action) lineObj.action = action;
+                    result.push(lineObj);
+                });
+
+                return { lines: result, errors };
+            },
+
+            // 通过 key 打开编辑器 (支持传参或从fullKey解析)
+            openEditorByKey(fullKey, dialogFile, sectionKey) {
+                const sectionData = window._tempSectionData ? window._tempSectionData[fullKey] : null;
+                if (!sectionData) {
+                    console.error('Section data not found for key:', fullKey);
+                    alert('无法获取 section 数据');
+                    return;
+                }
+                // 如果没传 dialogFile/sectionKey，从 fullKey 解析
+                if (!dialogFile || !sectionKey) {
+                    [dialogFile, sectionKey] = fullKey.split('::');
+                }
+                this.openEditor(dialogFile, sectionKey, sectionData);
+            },
+
+            // 打开编辑器
+            openEditor(dialogFile, sectionKey, sectionData) {
+                const fullKey = `${dialogFile}::${sectionKey}`;
+
+                // 检查是否有已保存的修改
+                let lines = sectionData.lines;
+                if (AppState.sectionEdits.has(fullKey)) {
+                    lines = AppState.sectionEdits.get(fullKey).modified;
+                }
+
+                AppState.editorState = {
+                    isOpen: true,
+                    currentKey: fullKey,
+                    currentDialogFile: dialogFile,
+                    currentSectionKey: sectionKey,
+                    originalLines: JSON.parse(JSON.stringify(sectionData.lines))
+                };
+
+                // 设置标题
+                document.getElementById('editorTitle').textContent = `编辑: ${sectionKey}`;
+
+                // 转换为简化格式并填充
+                const textarea = document.getElementById('editorTextarea');
+                textarea.value = this.toSimplifiedFormat(lines);
+
+                // 显示编辑器
+                document.getElementById('sectionEditor').classList.add('active');
+
+                // 初始预览
+                this.onInput();
+
+                // 聚焦
+                textarea.focus();
+            },
+
+            // 关闭编辑器
+            closeEditor() {
+                document.getElementById('sectionEditor').classList.remove('active');
+                AppState.editorState.isOpen = false;
+            },
+
+            // 实时输入处理
+            onInput() {
+                const textarea = document.getElementById('editorTextarea');
+                const text = textarea.value;
+                const { lines, errors } = this.parseSimplifiedFormat(text);
+
+                // 显示错误
+                const errorsDiv = document.getElementById('editorErrors');
+                if (errors.length > 0) {
+                    errorsDiv.innerHTML = errors.map(e =>
+                        `<div class="editor-error-item">第 ${e.line} 行: ${e.message}</div>`
+                    ).join('');
+                    errorsDiv.classList.add('has-errors');
+                    document.getElementById('editorSaveBtn').disabled = true;
+                } else {
+                    errorsDiv.innerHTML = '';
+                    errorsDiv.classList.remove('has-errors');
+                    document.getElementById('editorSaveBtn').disabled = false;
+                }
+
+                // 渲染预览
+                this.renderPreview(lines);
+            },
+
+            // 渲染预览
+            renderPreview(lines) {
+                const previewContent = document.getElementById('editorPreviewContent');
+                if (!lines || lines.length === 0) {
+                    previewContent.innerHTML = '<div style="color: #555;">暂无内容</div>';
+                    return;
+                }
+
+                let html = '';
+                for (const line of lines) {
+                    if (line.speaker === 'narration') {
+                        html += `<div class="dialog-node narration">${this.escapeHtml(line.text)}</div>`;
+                    } else {
+                        const npcData = AppState.masterData.npcs[line.speaker] || {};
+                        const name = npcData.name_cn || npcData.name || line.speaker;
+                        const color = Renderer.getNpcColor ? Renderer.getNpcColor(line.speaker) : '#e94560';
+
+                        html += `
+                            <div class="dialog-node npc-dialog">
+                                <div class="dialog-speaker" style="color: ${color}">${name}</div>
+                                ${line.emotion ? `<span class="dialog-emotion">[${line.emotion}]</span>` : ''}
+                                ${line.action ? `<div class="dialog-action">${this.escapeHtml(line.action)}</div>` : ''}
+                                <div class="dialog-text">${this.escapeHtml(line.text)}</div>
+                            </div>
+                        `;
+                    }
+                }
+                previewContent.innerHTML = html;
+            },
+
+            // HTML 转义
+            escapeHtml(text) {
+                if (!text) return '';
+                return text.replace(/&/g, '&amp;')
+                           .replace(/</g, '&lt;')
+                           .replace(/>/g, '&gt;')
+                           .replace(/"/g, '&quot;');
+            },
+
+            // 保存改动
+            saveChanges() {
+                const textarea = document.getElementById('editorTextarea');
+                const { lines, errors } = this.parseSimplifiedFormat(textarea.value);
+
+                if (errors.length > 0) {
+                    const errorMsg = errors.map(e => `第${e.line}行: ${e.message}`).join('\n');
+                    alert('格式不正确，请修正后再保存：\n\n' + errorMsg);
+                    return;
+                }
+
+                const fullKey = AppState.editorState.currentKey;
+                const dialogFile = AppState.editorState.currentDialogFile;
+                const sectionKey = AppState.editorState.currentSectionKey;
+
+                // 保存到内存
+                AppState.sectionEdits.set(fullKey, {
+                    dialogFile: dialogFile,
+                    sectionKey: sectionKey,
+                    original: AppState.editorState.originalLines,
+                    modified: lines,
+                    modifiedAt: Date.now()
+                });
+
+                // 更新改动按钮显示
+                ChangesManager.updateChangesButton();
+
+                // 关闭编辑器
+                this.closeEditor();
+
+                // 刷新视图
+                if (AppState.currentSection === 'free_phase') {
+                    // Free Phase: 只更新当前展开的对话内容，不重新渲染整个页面
+                    const expandDivs = document.querySelectorAll('.npc-dialog-expand.active');
+                    expandDivs.forEach(async div => {
+                        // 清除缓存并重新加载
+                        div.dataset.loaded = 'false';
+                        try {
+                            const dialogData = await DataLoader.loadDialogFile(AppState.currentUnit, dialogFile);
+                            Renderer.renderInlineDialog(div, dialogData, sectionKey, dialogFile);
+                            div.dataset.loaded = 'true';
+                        } catch (e) {
+                            console.error('刷新对话失败:', e);
+                        }
+                    });
+                } else {
+                    // 其他页面：直接重新渲染
+                    Renderer.renderSection(AppState.currentSection);
+                }
+
+                console.log('Section saved:', fullKey);
+            }
+        };
+
+        // ===== Changes Manager =====
+        const ChangesManager = {
+            hasChanges() {
+                return AppState.sectionEdits.size > 0;
+            },
+
+            updateChangesButton() {
+                const btn = document.getElementById('viewChangesBtn');
+                if (this.hasChanges()) {
+                    btn.style.display = 'inline-block';
+                    btn.textContent = `📋 改动 (${AppState.sectionEdits.size})`;
+                } else {
+                    btn.style.display = 'none';
+                }
+            },
+
+            showChangesPanel() {
+                const body = document.getElementById('changesPanelBody');
+
+                if (!this.hasChanges()) {
+                    body.innerHTML = '<div style="color: #888; text-align: center; padding: 20px;">暂无改动</div>';
+                } else {
+                    // 按文件分组
+                    const grouped = {};
+                    AppState.sectionEdits.forEach((value, key) => {
+                        const file = value.dialogFile;
+                        if (!grouped[file]) grouped[file] = [];
+                        grouped[file].push({ key, ...value });
+                    });
+
+                    let html = '';
+                    for (const file in grouped) {
+                        html += `<div class="changes-file-group">
+                            <div class="changes-file-name">📁 ${file}</div>`;
+                        for (const item of grouped[file]) {
+                            html += `
+                                <div class="changes-item">
+                                    <span class="changes-item-name">🔸 ${item.sectionKey}</span>
+                                    <button class="changes-item-btn" onclick="DialogEditor.openEditor('${item.dialogFile}', '${item.sectionKey}', {lines: AppState.sectionEdits.get('${item.key}').modified})">编辑</button>
+                                </div>
+                            `;
+                        }
+                        html += '</div>';
+                    }
+                    body.innerHTML = html;
+                }
+
+                document.getElementById('changesPanelOverlay').classList.add('active');
+                document.getElementById('changesPanel').classList.add('active');
+            },
+
+            hideChangesPanel() {
+                document.getElementById('changesPanelOverlay').classList.remove('active');
+                document.getElementById('changesPanel').classList.remove('active');
+            },
+
+            exportChangesAsYAML() {
+                if (!this.hasChanges()) {
+                    alert('暂无改动');
+                    return;
+                }
+
+                let yaml = `# NDC Dialog Changes Export\n`;
+                yaml += `# 导出时间: ${new Date().toISOString()}\n`;
+                yaml += `# Unit: ${AppState.currentUnit}, Loop: ${AppState.currentLoop}\n\n`;
+
+                // 按文件分组输出
+                const grouped = {};
+                AppState.sectionEdits.forEach((value, key) => {
+                    const file = value.dialogFile;
+                    if (!grouped[file]) grouped[file] = {};
+                    grouped[file][value.sectionKey] = value.modified;
+                });
+
+                for (const file in grouped) {
+                    yaml += `# ${file}\n`;
+                    for (const section in grouped[file]) {
+                        yaml += `${section}:\n`;
+                        yaml += `  lines:\n`;
+                        for (const line of grouped[file][section]) {
+                            yaml += `    - speaker: ${line.speaker}\n`;
+                            if (line.emotion) yaml += `      emotion: ${line.emotion}\n`;
+                            if (line.action) yaml += `      action: ${line.action}\n`;
+                            yaml += `      text: "${line.text.replace(/"/g, '\\"')}"\n`;
+                        }
+                    }
+                    yaml += '\n';
+                }
+
+                // 下载
+                const blob = new Blob([yaml], { type: 'text/yaml' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${AppState.currentUnit}_${AppState.currentLoop}_changes.yaml`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                this.hideChangesPanel();
+                console.log('Changes exported');
             }
         };
 
@@ -1452,7 +2097,7 @@
 
                         if (sectionToRender && dialogData[sectionToRender]) {
                             // Render specific section
-                            html += this.renderDialogSection(dialogData[sectionToRender], `opening_${sectionToRender}`);
+                            html += this.renderDialogSection(dialogData[sectionToRender], `opening_${sectionToRender}`, scene.dialog_file, sectionToRender);
                         } else {
                             // Render all sections (excluding metadata)
                             const metadataKeys = ['dialog_id', 'loop', 'type', 'npc', 'target',
@@ -1460,7 +2105,7 @@
                                                   'evidence_obtained', 'transition_to', 'truth_summary'];
                             for (const [key, section] of Object.entries(dialogData)) {
                                 if (!metadataKeys.includes(key)) {
-                                    html += this.renderDialogSection(section, `opening_${key}`);
+                                    html += this.renderDialogSection(section, `opening_${key}`, scene.dialog_file, key);
                                 }
                             }
                         }
@@ -1508,12 +2153,12 @@
                                           'expose_info', 'rounds', 'next_loop_hint',
                                           'evidence_obtained', 'transition_to', 'truth_summary'];
                     if (initialSection && dialogData[initialSection]) {
-                        html += this.renderDialogSection(dialogData[initialSection]);
+                        html += this.renderDialogSection(dialogData[initialSection], initialSection, dialogPath, initialSection);
                     } else {
                         // Render first non-metadata section
                         for (const [key, section] of Object.entries(dialogData)) {
                             if (!metadataKeys.includes(key)) {
-                                html += this.renderDialogSection(section);
+                                html += this.renderDialogSection(section, key, dialogPath, key);
                                 break; // Only render first section
                             }
                         }
@@ -1528,17 +2173,45 @@
                 }
             },
 
-            renderDialogSection(section, sectionId = null) {
+            renderDialogSection(section, sectionId = null, dialogFile = null, sectionKey = null) {
                 if (!section || !section.lines) return '';
+
+                // 检查是否有已修改的版本
+                let linesToRender = section.lines;
+                if (dialogFile && sectionKey) {
+                    const fullKey = `${dialogFile}::${sectionKey}`;
+                    if (AppState.sectionEdits.has(fullKey)) {
+                        linesToRender = AppState.sectionEdits.get(fullKey).modified;
+                    }
+                }
 
                 // 体验版：逐句展开
                 if (AppState.viewMode === 'flow') {
-                    return this.renderDialogSectionFlow(section, sectionId);
+                    return this.renderDialogSectionFlow({ ...section, lines: linesToRender }, sectionId);
                 }
 
                 // 开发版：一次性全部显示
                 let html = '';
-                for (const line of section.lines) {
+                // 添加 section 编辑按钮（仅开发版且有 dialogFile/sectionKey）
+                if (dialogFile && sectionKey) {
+                    const fullKey = `${dialogFile}::${sectionKey}`;
+                    const isModified = AppState.sectionEdits.has(fullKey);
+                    // 存储 section 数据到全局临时对象
+                    if (!window._tempSectionData) window._tempSectionData = {};
+                    window._tempSectionData[fullKey] = section;
+                    html += `
+                        <div class="section-edit-header" style="display: flex; align-items: center; margin-bottom: 8px; padding: 4px 0;">
+                            <span style="color: #888; font-size: 12px;">${sectionKey}</span>
+                            ${isModified ? '<span class="modified-marker">🔸</span>' : ''}
+                            <button class="section-edit-btn"
+                                onclick="event.stopPropagation(); DialogEditor.openEditorByKey('${fullKey}')">
+                                ✏️ 编辑
+                            </button>
+                        </div>
+                    `;
+                }
+
+                for (const line of linesToRender) {
                     html += this.renderDialogLine(line);
                 }
                 return html;
@@ -2384,7 +3057,7 @@
                     if (expandDiv.dataset.loaded !== 'true') {
                         try {
                             const dialogData = await DataLoader.loadDialogFile(AppState.currentUnit, dialogFile);
-                            this.renderInlineDialog(expandDiv, dialogData, dialogSection);
+                            this.renderInlineDialog(expandDiv, dialogData, dialogSection, dialogFile);
                             expandDiv.dataset.loaded = 'true';
                         } catch (error) {
                             console.error('加载对话失败:', error);
@@ -2396,22 +3069,38 @@
             },
 
             // 在展开区域内渲染对话（支持逐句展开，使用dialog-node格式）
-            renderInlineDialog(container, dialogData, sectionName) {
+            renderInlineDialog(container, dialogData, sectionName, dialogFile) {
                 // 存储对话数据以支持选项跳转
                 AppState.currentDialogData = dialogData;
 
                 let lines = [];
+                let sectionData = null;
+                let effectiveSectionName = sectionName;
 
                 // 如果指定了section，获取该section的lines
                 if (sectionName && dialogData[sectionName] && dialogData[sectionName].lines) {
                     lines = dialogData[sectionName].lines;
+                    sectionData = dialogData[sectionName];
+                    effectiveSectionName = sectionName;
                 } else {
-                    // 否则遍历所有section
+                    // 否则遍历所有section，取第一个有lines的section
                     for (const [key, value] of Object.entries(dialogData)) {
                         if (value && value.lines && Array.isArray(value.lines)) {
                             lines = lines.concat(value.lines);
+                            if (!sectionData) {
+                                sectionData = value;
+                                effectiveSectionName = key; // 保存实际的section名
+                            }
                         }
                     }
+                }
+
+                // 检查内存中是否有修改的数据，优先使用修改后的内容
+                const fullKey = `${dialogFile}::${effectiveSectionName}`;
+                const editData = AppState.sectionEdits.get(fullKey);
+                if (editData && editData.modified) {
+                    lines = editData.modified;
+                    sectionData = { lines: editData.modified };
                 }
 
                 if (lines.length === 0) {
@@ -2423,6 +3112,23 @@
                 // 逐句展开模式，使用dialog-node格式
                 const flowId = `inline_${Date.now()}`;
                 let html = '';
+
+                // 开发版：添加编辑按钮（viewMode === 'full' 时显示）
+                if (AppState.viewMode === 'full' && dialogFile && effectiveSectionName && sectionData) {
+                    const fullKey = `${dialogFile}::${effectiveSectionName}`;
+                    const isModified = AppState.sectionEdits.has(fullKey);
+                    if (!window._tempSectionData) window._tempSectionData = {};
+                    window._tempSectionData[fullKey] = sectionData;
+                    html += `
+                        <div style="text-align: right; margin-bottom: 0.5rem;">
+                            ${isModified ? '<span style="color: #f0a000; margin-right: 0.5rem;">🔸 已修改</span>' : ''}
+                            <button class="section-edit-btn" style="position: relative;"
+                                onclick="event.stopPropagation(); DialogEditor.openEditorByKey('${fullKey}', '${dialogFile}', '${effectiveSectionName}')">
+                                ✏️ 编辑
+                            </button>
+                        </div>
+                    `;
+                }
 
                 lines.forEach((line, index) => {
                     const isNarration = line.speaker === 'narration';
@@ -2527,7 +3233,7 @@
                                 <span class="module-icon">▼</span>
                             </div>
                             <div class="collapsible-module-content type-dialog">
-                                ${this.renderDialogSection(dialogData.opening, 'expose_opening')}
+                                ${this.renderDialogSection(dialogData.opening, 'expose_opening', expose.dialog_file, 'opening')}
                             </div>
                         </div>
                     `;
@@ -2592,7 +3298,7 @@
                                             <span class="module-icon">▼</span>
                                         </div>
                                         <div class="collapsible-module-content type-dialog">
-                                            ${this.renderDialogSection(roundSection, `expose_${roundKey}`)}
+                                            ${this.renderDialogSection(roundSection, `expose_${roundKey}`, expose.dialog_file, roundKey)}
                                         </div>
                                     </div>
                                 ` : ''}
@@ -2611,7 +3317,7 @@
                                 <span class="module-icon">▼</span>
                             </div>
                             <div class="collapsible-module-content type-dialog">
-                                ${this.renderDialogSection(dialogData.truth_reveal, 'expose_truth_reveal')}
+                                ${this.renderDialogSection(dialogData.truth_reveal, 'expose_truth_reveal', expose.dialog_file, 'truth_reveal')}
                             </div>
                         </div>
                     `;
@@ -2661,7 +3367,7 @@
                                         <div class="collapsible-section-icon">▼</div>
                                     </div>
                                     <div class="collapsible-section-body" style="padding: 0.75rem; padding-top: 0;">
-                                        ${this.renderDialogSection(section, `ending_${key}`)}
+                                        ${this.renderDialogSection(section, `ending_${key}`, ending.dialog_file, key)}
                                     </div>
                                 </div>
                             `;
@@ -2908,7 +3614,7 @@
                                 </ul>
                             </div>
 
-                            ${this.renderDialogSection(dialogData.start, 'start')}
+                            ${this.renderDialogSection(dialogData.start, 'start', 'loop1/test_conditional.yaml', 'start')}
                         </div>
                     `;
 
@@ -2968,12 +3674,37 @@
                     this.exportData();
                 });
 
+                // View changes button
+                document.getElementById('viewChangesBtn').addEventListener('click', () => {
+                    ChangesManager.showChangesPanel();
+                });
+
+                // Editor textarea input event
+                document.getElementById('editorTextarea').addEventListener('input', () => {
+                    DialogEditor.onInput();
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    // Esc to close editor
+                    if (e.key === 'Escape' && AppState.editorState.isOpen) {
+                        DialogEditor.closeEditor();
+                    }
+                });
+
                 // Initialize view mode class
                 this.updateViewModeClass();
             },
 
             exportData() {
                 try {
+                    // 如果有对话改动，导出改动的 YAML
+                    if (ChangesManager.hasChanges()) {
+                        ChangesManager.exportChangesAsYAML();
+                        return;
+                    }
+
+                    // 否则导出原有的 JSON 格式
                     const exportData = {
                         unit: AppState.currentUnit,
                         loop: AppState.currentLoop,
@@ -3026,5 +3757,47 @@
         // Start the app when DOM is ready
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
+
+    <!-- Section Editor Modal -->
+    <div id="sectionEditor" class="editor-modal">
+        <div class="editor-container">
+            <div class="editor-header">
+                <span class="editor-title" id="editorTitle">编辑 Section</span>
+                <div class="editor-warning">⚠️ 未保存的改动将在刷新后丢失</div>
+                <button class="editor-close-btn" onclick="DialogEditor.closeEditor()">✕</button>
+            </div>
+            <div class="editor-body">
+                <div class="editor-input-area">
+                    <textarea class="editor-textarea" id="editorTextarea" placeholder="[NPC101] emotion: 对话内容&#10;[narration]: 旁白内容"></textarea>
+                </div>
+                <div class="editor-preview-area" id="editorPreview">
+                    <div class="editor-preview-title">实时预览</div>
+                    <div id="editorPreviewContent"></div>
+                </div>
+            </div>
+            <div class="editor-errors" id="editorErrors"></div>
+            <div class="editor-footer">
+                <button class="editor-btn editor-btn-cancel" onclick="DialogEditor.closeEditor()">取消</button>
+                <button class="editor-btn editor-btn-save" id="editorSaveBtn" onclick="DialogEditor.saveChanges()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Changes Panel Overlay -->
+    <div id="changesPanelOverlay" class="changes-panel-overlay" onclick="ChangesManager.hideChangesPanel()"></div>
+    <!-- Changes Panel -->
+    <div id="changesPanel" class="changes-panel">
+        <div class="changes-panel-header">
+            <span class="changes-panel-title">📋 所有改动</span>
+            <button class="changes-panel-close" onclick="ChangesManager.hideChangesPanel()">✕</button>
+        </div>
+        <div class="changes-panel-body" id="changesPanelBody">
+            <div style="color: #888; text-align: center; padding: 20px;">暂无改动</div>
+        </div>
+        <div class="changes-panel-footer">
+            <button class="changes-export-btn" onclick="ChangesManager.exportChangesAsYAML()">📥 导出所有改动</button>
+        </div>
+    </div>
+
 </body>
 </html>

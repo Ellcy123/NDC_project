@@ -4,32 +4,229 @@
 loop_id: Unit2_Loop3
 chapter: 2
 loop_number: 3
-title: 待定
-title_en: TBD
-investigation_target: 待定
-core_lie: 待定
+title: Mickey登场与掠夺性贷款揭露
+title_en: Mickey Appears and Predatory Loan Exposed
+investigation_target: 揭露Moore银行掠夺性贷款欺诈
+core_lie: Moore声称"所有贷款都是合法的"
 
 # 场景总览
-scenes_overview: []
+scenes_overview:
+  # 继承场景（循环1）
+  - scene: SC2002
+    name: Margaret鞋坊一楼-状态2
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  - scene: SC2003
+    name: Margaret鞋坊二楼
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  # 继承场景（循环2）
+  - scene: SC2006
+    name: Frank和Mrs. O'Hara家门口
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Mrs. O'Hara在场
+
+  - scene: SC2007
+    name: 赌场
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Tony/Vinnie在场
+
+  - scene: SC2008
+    name: 银行贵宾室
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Moore在场
+
+  - scene: SC2009
+    name: 银行大厅
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Leonard在场
+
+  # 新增场景
+  - scene: SC2010
+    name: 芝加哥市政厅档案室门口
+    status: accessible
+    type: story
+    note: 🆕 开篇+突发事件，Mickey登场
+
+  - scene: SC2011
+    name: Frank家里
+    status: accessible
+    type: search
+    note: 🆕 道具解锁（钥匙）
+
+  - scene: SC2012
+    name: Danny家里
+    status: accessible
+    type: npc
+    note: 🆕 证据解锁（日记）
+
+  - scene: SC2013
+    name: 银行档案室
+    status: accessible
+    type: search
+    note: 🆕 剧情解锁（Mickey令状）
+
+  - scene: SC2014
+    name: Leonard办公室
+    status: accessible
+    type: search
+    note: 🆕 自动解锁
 
 # 开篇
 opening:
-  description: 待定
-  dialog_file: loop3/opening.yaml
+  description: Zack尝试获取令状被拒绝，Mickey神秘登场
+  scenes:
+    - scene_id: SC2010
+      name: 芝加哥市政厅档案室门口
+      description: Emma带领Zack来到市政厅，尝试获取令状被拒绝
+      dialog_file: loop3/opening.yaml
+      dialog_section: city_hall
+
+# 突发事件
+emergency:
+  - scene: SC2010
+    scene_name: 芝加哥市政厅档案室门口
+    trigger: 离开市政厅时触发
+    description: Mickey神秘登场，主动提出帮忙获取令状
+    dialog_file: loop3/opening.yaml
+    dialog_section: mickey_appears
 
 # 自由探索阶段
 free_phase:
-  accessible_scenes: []
-  npcs: []
-  key_evidences: []
+  description: 玩家探索Frank家和银行档案，收集贷款欺诈证据
+  scenes:
+    # 继承场景（循环1）
+    - scene: SC2002
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    - scene: SC2003
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    # 继承场景（循环2）
+    - scene: SC2006
+      type: search
+      npc: Mrs. O'Hara
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2007
+      type: search
+      npc: Tony
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2008
+      type: npc
+      npc: Moore
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    - scene: SC2009
+      type: npc
+      npc: Leonard
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    # 新增场景
+    - scene: SC2011
+      type: search
+      unlock_type: item
+      unlock_condition: 拥有Leonard交出的钥匙
+      status: new
+      evidences:
+        - id: EV2301
+          note: Frank日记
+        - id: EV2302
+          note: Frank笔迹样本
+
+    - scene: SC2012
+      type: npc
+      npc: Danny
+      unlock_type: evidence
+      unlock_condition: 获取Frank日记后，日记中提到Danny
+      status: new
+      dialog_file: loop3/danny.yaml
+
+    - scene: SC2013
+      type: search
+      unlock_type: story
+      unlock_condition: Mickey帮忙获取令状后解锁
+      status: new
+      evidences:
+        - id: EV2303
+          note: Moore银行内部档案
+        - id: EV2305
+          note: 第5条"月利率12%复利"
+        - id: EV2306
+          note: 第7条"利滚利条款"
+        - id: EV2308
+          note: 第12条"月管理费$50"
+        - id: EV2312
+          note: 协议抬头"Moore Investment Company"
+
+    - scene: SC2014
+      type: search
+      unlock_type: auto
+      unlock_condition: 进入银行档案室后，同一区域可访问
+      status: new
 
 # 指证阶段
 expose:
-  location: null
-  target_npc: null
+  scene: SC2008
+  scene_name: 银行贵宾室
+  target: Moore
+  target_name: Harold Moore
+  total_rounds: 3
   dialog_file: loop3/expose.yaml
 
-# 结局
+  rounds:
+    - round: 1
+      name: 笔迹对比
+      lie:
+        content: Frank自己签署了所有文件
+      required_evidences: [EV2301, EV2302, EV2303]
+      result: 笔迹对比证明Leonard代签
+
+    - round: 2
+      name: 违法条款
+      lie:
+        content: 我们的利率完全合法
+      required_evidences: [EV2305, EV2306, EV2308]
+      result: 年化289%利率远超州法36%上限
+
+    - round: 3
+      name: 投资公司马甲
+      lie:
+        content: Moore银行是正规银行
+      required_evidences: [EV2312]
+      result: 揭露Moore银行实为投资公司，规避监管
+
+# 结尾
 ending:
-  type: placeholder
+  scene: SC2008
+  scene_name: 银行贵宾室（遗嘱揭示）
+  description: Moore防线崩溃，主动提供Frank遗嘱副本，揭示地下室秘密
   dialog_file: loop3/ending.yaml
+  transition_to: Unit2_Loop4
+  next_objective: 探索鞋坊地下室，调查Rose与Frank的关系
+  transition_text: Moore恐惧Frank死亡引发审计，主动提供遗嘱。遗嘱提到"鞋坊地下室的秘密房间"，Zack想起那把多余的钥匙

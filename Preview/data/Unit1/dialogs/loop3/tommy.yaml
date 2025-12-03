@@ -5,151 +5,136 @@ loop: 3
 type: npc_dialog
 npc: NPC105
 
-# Section: 初次接触
-initial_contact:
-    description: 初次接触
-    lines:
-      - speaker: NPC101
-        emotion: direct
-        text: "Tommy,我需要问你一些关于Webb的事。"
+# Section: 主要对话
+dialog:
+  description: 合并的NPC对话
+  lines:
+    # --- initial_contact ---
+    - speaker: NPC101
+      emotion: direct
+      text: "Tommy,我需要问你一些关于Webb的事。"
 
-      - speaker: NPC105
-        emotion: nervous
-        text: "Brennan先生...又是您。Webb先生的案子...警察不是在查吗?"
+    - speaker: NPC105
+      emotion: nervous
+      text: "Brennan先生...又是您。Webb先生的案子...警察不是在查吗?"
 
-      - speaker: NPC101
-        action: 从口袋掏出糖罐，吃了一颗糖
-        emotion: calm
-        text: "我也在查。Webb的生意,你了解多少?"
+    - speaker: NPC101
+      action: 从口袋掏出糖罐，吃了一颗糖
+      emotion: calm
+      text: "我也在查。Webb的生意,你了解多少?"
 
-      - speaker: NPC105
-        emotion: evasive
-        text: "生意?我...我只是个账房先生,负责记账...具体的业务,Webb先生不太...不太让我过问..."
+    - speaker: NPC105
+      emotion: evasive
+      text: "生意?我...我只是个账房先生,负责记账...具体的业务,Webb先生不太...不太让我过问..."
 
-probing_accounts:
-    description: 追问账目
-    lines:
-      - speaker: NPC101
-        emotion: sharp
-        text: "账房先生会记账。那账本上记的是什么?"
+    # --- probing_accounts ---
+    - speaker: NPC101
+      emotion: sharp
+      text: "账房先生会记账。那账本上记的是什么?"
 
-      - speaker: NPC105
-        emotion: defensive
-        text: "私酒...都是私酒生意。您知道的,禁酒令,但很多人还是想喝酒...Webb先生就做这个..."
+    - speaker: NPC105
+      emotion: defensive
+      text: "私酒...都是私酒生意。您知道的,禁酒令,但很多人还是想喝酒...Webb先生就做这个..."
 
-      - speaker: NPC101
-        emotion: skeptical
-        text: "只有私酒?"
+    - speaker: NPC101
+      emotion: skeptical
+      text: "只有私酒?"
 
-      - speaker: NPC105
-        emotion: emphatic
-        text: "对,只有私酒。Webb先生的生意很简单,从加拿大进货,卖给芝加哥的客户...就这样..."
+    - speaker: NPC105
+      emotion: emphatic
+      text: "对,只有私酒。Webb先生的生意很简单,从加拿大进货,卖给芝加哥的客户...就这样..."
 
-pressure:
-    description: 施压
-    lines:
-      - speaker: NPC101
-        action: 又吃了一颗糖
-        emotion: observant
-        text: "很简单。那为什么你看起来这么紧张?"
+    # --- pressure ---
+    - speaker: NPC101
+      action: 又吃了一颗糖
+      emotion: observant
+      text: "很简单。那为什么你看起来这么紧张?"
 
-      - speaker: NPC105
-        emotion: flustered
-        text: "我...我没有紧张...只是...Webb先生死了,大家都很...都很不安..."
+    - speaker: NPC105
+      emotion: flustered
+      text: "我...我没有紧张...只是...Webb先生死了,大家都很...都很不安..."
 
-      - speaker: NPC101
-        emotion: pressing
-        text: "Tommy,做私酒生意不需要这么紧张。除非...他还做了别的。"
+    - speaker: NPC101
+      emotion: pressing
+      text: "Tommy,做私酒生意不需要这么紧张。除非...他还做了别的。"
 
-      - speaker: NPC105
-        emotion: panicked
-        text: "没有!真的没有!Webb先生只做私酒生意,绝对没有其他业务!"
+    - speaker: NPC105
+      emotion: panicked
+      text: "没有!真的没有!Webb先生只做私酒生意,绝对没有其他业务!"
 
-core_lie:
-    description: 核心谎言
-    lines:
-      - speaker: NPC101
-        emotion: doubtful
-        text: "绝对?你很确定。"
+    # --- core_lie ---
+    - speaker: NPC101
+      emotion: doubtful
+      text: "绝对?你很确定。"
 
-      - speaker: NPC105
-        emotion: insistent
-        text: "确定...我记了三年账,都是私酒...威士忌、朗姆酒、葡萄酒...就这些..."
+    - speaker: NPC105
+      emotion: insistent
+      text: "确定...我记了三年账,都是私酒...威士忌、朗姆酒、葡萄酒...就这些..."
 
-      - speaker: NPC101
-        emotion: probing
-        text: "三年。那你一定记得Webb的主要客户是谁。"
+    - speaker: NPC101
+      emotion: probing
+      text: "三年。那你一定记得Webb的主要客户是谁。"
 
-      - speaker: NPC105
-        emotion: evasive
-        text: "客户...很多...酒吧、餐厅、私人买家...我记不清每一个..."
+    - speaker: NPC105
+      emotion: evasive
+      text: "客户...很多...酒吧、餐厅、私人买家...我记不清每一个..."
 
-pushing_harder:
-    description: 进一步施压
-    lines:
-      - speaker: NPC101
-        emotion: sharp
-        text: "记不清,还是不敢说?"
+    # --- pushing_harder ---
+    - speaker: NPC101
+      emotion: sharp
+      text: "记不清,还是不敢说?"
 
-      - speaker: NPC105
-        emotion: desperate
-        text: "Brennan先生,我真的只是负责记账...Webb先生的客户都是他自己联系的...我只是...只是记录交易金额和日期...其他的我真的不知道..."
+    - speaker: NPC105
+      emotion: desperate
+      text: "Brennan先生,我真的只是负责记账...Webb先生的客户都是他自己联系的...我只是...只是记录交易金额和日期...其他的我真的不知道..."
 
-      - speaker: NPC101
-        action: 盯着Tommy
-        emotion: intimidating
-        text: "好。那如果我需要看账本,你能提供吗?"
+    - speaker: NPC101
+      action: 盯着Tommy
+      emotion: intimidating
+      text: "好。那如果我需要看账本,你能提供吗?"
 
-      - speaker: NPC105
-        emotion: hesitant
-        text: "账本...那是Webb先生的私人账本...我...我不确定能不能..."
+    - speaker: NPC105
+      emotion: hesitant
+      text: "账本...那是Webb先生的私人账本...我...我不确定能不能..."
 
-dead_end:
-    description: 暂时僵局
-    lines:
-      - speaker: NPC101
-        emotion: firm
-        text: "Tommy,Webb死了。他的'私人'已经不重要了。我需要找出谁杀了他。"
+    # --- dead_end ---
+    - speaker: NPC101
+      emotion: firm
+      text: "Tommy,Webb死了。他的'私人'已经不重要了。我需要找出谁杀了他。"
 
-      - speaker: NPC105
-        emotion: conflicted
-        text: "我明白...我明白...但是账本...账本在Webb先生的保险柜里...我没有钥匙..."
+    - speaker: NPC105
+      emotion: conflicted
+      text: "我明白...我明白...但是账本...账本在Webb先生的保险柜里...我没有钥匙..."
 
-      - speaker: NPC101
-        emotion: persistent
-        text: "保险柜。那你记得账本上都记了什么吗?"
+    - speaker: NPC101
+      emotion: persistent
+      text: "保险柜。那你记得账本上都记了什么吗?"
 
-      - speaker: NPC105
-        emotion: rambling
-        text: "都是...都是交易记录...客户姓名,酒的种类,金额...就这些...Brennan先生,我真的只知道这些..."
+    - speaker: NPC105
+      emotion: rambling
+      text: "都是...都是交易记录...客户姓名,酒的种类,金额...就这些...Brennan先生,我真的只知道这些..."
 
-conclusion:
-    description: 对话结束
-    lines:
-      - speaker: NPC101
-        emotion: neutral
-        text: "如果你想起什么,随时告诉我。"
+    # --- conclusion ---
+    - speaker: NPC101
+      emotion: neutral
+      text: "如果你想起什么,随时告诉我。"
 
-      - speaker: NPC105
-        emotion: relieved
-        text: "好的...好的...如果我想起什么,一定告诉您..."
+    - speaker: NPC105
+      emotion: relieved
+      text: "好的...好的...如果我想起什么,一定告诉您..."
 
-      - speaker: NPC101
-        emotion: knowing
-        text: "Tommy,Webb不会只做私酒生意。私酒生意不需要'保险侦探'。"
+    - speaker: NPC101
+      emotion: knowing
+      text: "Tommy,Webb不会只做私酒生意。私酒生意不需要'保险侦探'。"
 
-      - speaker: NPC105
-        emotion: confused
-        text: "保险侦探?我...我不知道您在说什么..."
+    - speaker: NPC105
+      emotion: confused
+      text: "保险侦探?我...我不知道您在说什么..."
 
-      - speaker: NPC101
-        emotion: cryptic
-        text: "没关系。你会知道的。"
+    - speaker: NPC101
+      emotion: cryptic
+      text: "没关系。你会知道的。"
 
-      - speaker: narration
-        text: "获得证据：Tommy的证词（只做私酒生意）"
+    - speaker: narration
+      text: "获得证据：Tommy的证词（只做私酒生意）"
 
-evidence_obtained:
-  - id: EV1361
-    name: Tommy的证词
-    description: Tommy声称Webb只做私酒生意，没有其他业务

@@ -4,32 +4,290 @@
 loop_id: Unit2_Loop6
 chapter: 2
 loop_number: 6
-title: 待定
-title_en: TBD
-investigation_target: 待定
-core_lie: 待定
+title: Leonard终极指证（诱导招供）
+title_en: Leonard Ultimate Accusation (Induced Confession)
+investigation_target: 揭露Leonard失手杀害Frank的真相
+core_lie: Leonard否认当晚在场
 
 # 场景总览
-scenes_overview: []
+scenes_overview:
+  # 继承场景（循环1）
+  - scene: SC2002
+    name: Margaret鞋坊一楼-状态2
+    status: accessible
+    type: search
+    note: 📦 继承，🔄 有新线索（凶器+眼镜碎片）
+
+  - scene: SC2003
+    name: Margaret鞋坊二楼
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  # 继承场景（循环2）
+  - scene: SC2006
+    name: Frank和Mrs. O'Hara家门口
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Mrs. O'Hara在场
+
+  - scene: SC2007
+    name: 赌场
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Tony在场（Vinnie已被捕不在）
+
+  - scene: SC2008
+    name: 银行贵宾室
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Moore在场
+
+  - scene: SC2009
+    name: 银行大厅
+    status: accessible
+    type: npc
+    note: 📦 继承，💬 Leonard在场
+
+  # 继承场景（循环3）
+  - scene: SC2011
+    name: Frank家里
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  - scene: SC2012
+    name: Danny家里
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索，💬 Danny在场
+
+  - scene: SC2013
+    name: 银行档案室
+    status: locked
+    type: search
+    note: 📦 继承，🔒 封锁
+
+  - scene: SC2014
+    name: Leonard办公室
+    status: locked
+    type: search
+    note: 📦 继承，🔒 封锁（Leonard已被传唤至警局）
+
+  # 继承场景（循环4）
+  - scene: SC2015
+    name: Margaret鞋坊地下室
+    status: accessible
+    type: search
+    note: 📦 继承，⏸️ 无新线索
+
+  - scene: SC2016
+    name: Rose家里
+    status: accessible
+    type: npc
+    note: 📦 继承，⏸️ 无新线索，💬 Rose在场
+
+  # 新增场景
+  - scene: SC2017
+    name: 医院
+    status: accessible
+    type: story
+    note: 🆕 开篇+自由探索+结尾
+
+  - scene: SC2018
+    name: Leonard住所
+    status: accessible
+    type: search
+    note: 🆕 证据解锁（Mickey情报），偷偷进入
 
 # 开篇
 opening:
-  description: 待定
-  dialog_file: loop6/opening.yaml
+  description: Margaret被送往医院，医生说需要休息
+  scenes:
+    - scene_id: SC2017
+      name: 医院（Margaret送医）
+      description: Margaret被救出后送医，Zack和Emma在病房外等候
+      dialog_file: loop6/opening.yaml
+      dialog_section: hospital_arrival
 
 # 自由探索阶段
 free_phase:
-  accessible_scenes: []
-  npcs: []
-  key_evidences: []
+  description: 玩家深度搜索火灾现场发现凶器，探访医院获取Margaret证词
+  scenes:
+    # 继承场景（循环1）- 本循环主线
+    - scene: SC2002
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: true
+      note: 本循环主线，发现烧焦烛台（凶器）+眼镜碎片
+      evidences:
+        - id: EV2601
+          note: 烧焦的烛台（底座凹痕与Frank头骨伤口吻合，眼镜碎片卡在缝隙）
+
+    - scene: SC2003
+      type: search
+      status: inherited
+      inherited_from: loop1
+      has_new_clues: false
+
+    # 继承场景（循环2）
+    - scene: SC2006
+      type: search
+      npc: Mrs. O'Hara
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2007
+      type: search
+      npc: Tony
+      status: inherited
+      inherited_from: loop2
+      has_new_clues: false
+      npc_available: true
+      note: Vinnie已被捕不在
+
+    - scene: SC2008
+      type: npc
+      npc: Moore
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    - scene: SC2009
+      type: npc
+      npc: Leonard
+      status: inherited
+      inherited_from: loop2
+      npc_available: true
+
+    # 继承场景（循环3）
+    - scene: SC2011
+      type: search
+      status: inherited
+      inherited_from: loop3
+      has_new_clues: false
+
+    - scene: SC2012
+      type: search
+      npc: Danny
+      status: inherited
+      inherited_from: loop3
+      has_new_clues: false
+      npc_available: true
+
+    - scene: SC2013
+      type: search
+      status: locked
+      inherited_from: loop3
+      lock_reason: 搜查令已使用完毕
+
+    - scene: SC2014
+      type: search
+      status: locked
+      inherited_from: loop3
+      lock_reason: 搜查令已使用完毕
+
+    # 继承场景（循环4）
+    - scene: SC2015
+      type: search
+      status: inherited
+      inherited_from: loop4
+      has_new_clues: false
+
+    - scene: SC2016
+      type: npc
+      npc: Rose
+      status: inherited
+      inherited_from: loop4
+      has_new_clues: false
+      npc_available: true
+
+    # 新增场景
+    - scene: SC2017
+      type: npc
+      npc: Margaret
+      unlock_type: auto
+      unlock_condition: 与开篇同一地点
+      status: new
+      dialog_file: loop6/margaret.yaml
+      evidences:
+        - id: EV2606
+          note: Margaret证词（有人和Frank发生激烈冲突，我查看Frank伤势时被人从后面打晕）
+
+    - scene: SC2018
+      type: search
+      unlock_type: evidence
+      unlock_condition: Mickey提供Leonard住址情报
+      status: new
+      note: 偷偷进入
+      evidences:
+        - id: EV2603
+          note: Leonard住所童年照片（1910年，Leonard和Vinnie在南区街头）
 
 # 指证阶段
 expose:
-  location: null
-  target_npc: null
+  scene: SC2009
+  scene_name: 银行大厅
+  target: Leonard
+  target_name: Leonard Russo
+  total_rounds: 4
   dialog_file: loop6/expose.yaml
+  note: 包含诱导招供QTE系统
 
-# 结局
+  rounds:
+    - round: 1
+      name: 眼镜碎片+目击证词
+      lie:
+        content: 我当晚根本不在现场
+      required_evidences: [EV2601, EV2606]
+      result: 证明Leonard到过现场
+
+    - round: 2
+      name: 新旧镜片颜色对比
+      lie:
+        content: 那不是我的眼镜
+      required_evidences: [EV2602]
+      result: 证明是Leonard的眼镜
+
+    - round: 3
+      name: 诱导招供QTE
+      lie:
+        content: 我没有伤害任何人
+      required_evidences: []
+      result: 通过QTE心理压迫，Leonard承认用烛台打人
+      special_mechanic: induced_confession_qte
+
+    - round: 4
+      name: Vinnie证词矛盾
+      lie:
+        content: 是Vinnie放的火
+      required_evidences: [EV2603]
+      result: Leonard是凶手，Vinnie只是替罪羊
+
+# 结尾（多场景）
 ending:
-  type: placeholder
-  dialog_file: loop6/ending.yaml
+  scenes:
+    - scene_id: SC2020
+      name: 监狱
+      description: Vinnie对Leonard深情告白："因为我爱你，Leo。从我们还是孩子的时候就爱你。"
+      dialog_file: loop6/ending.yaml
+      dialog_section: prison_confession
+
+    - scene_id: SC2021
+      name: 墓地
+      description: Rose在Frank墓前悼念："我终于可以光明正大地说我爱你了...但你已经不在了..."
+      dialog_file: loop6/ending.yaml
+      dialog_section: cemetery_mourning
+
+    - scene_id: SC2017
+      name: 医院（反思）
+      description: Zack和Emma在Margaret病房外反思两种爱的悲剧
+      dialog_file: loop6/ending.yaml
+      dialog_section: hospital_reflection
+
+  transition_to: Unit3_Loop1
+  next_objective: 为Unit 3铺垫
+  transition_text: Zack反思两种爱的悲剧，Emma指出正义与系统性压迫的关系
