@@ -3653,6 +3653,18 @@
                     Renderer.renderSection(AppState.currentSection);
                 });
 
+                // Unit selector
+                document.getElementById('unitSelect').addEventListener('change', async (e) => {
+                    AppState.currentUnit = e.target.value;
+                    // 切换Unit时重置到loop1
+                    AppState.currentLoop = 'loop1';
+                    document.getElementById('loopSelect').value = 'loop1';
+                    // 重新加载master数据和loop数据
+                    await DataLoader.loadMasterData(AppState.currentUnit);
+                    await DataLoader.loadLoopData(AppState.currentUnit, AppState.currentLoop);
+                    Renderer.renderSection(AppState.currentSection);
+                });
+
                 // Loop selector
                 document.getElementById('loopSelect').addEventListener('change', async (e) => {
                     AppState.currentLoop = e.target.value;
