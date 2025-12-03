@@ -3289,9 +3289,18 @@
                 if (expose.rounds && expose.rounds.length > 0) {
                     for (const round of expose.rounds) {
                         const roundKey = `round${round.round}`;
-                        // Find matching dialog round from accusation.yaml (rounds[].dialog structure)
-                        const dialogRound = dialogData?.rounds?.find(r => r.round === round.round);
-                        const roundSection = dialogRound?.dialog ? { lines: dialogRound.dialog } : null;
+                        // 支持两种格式：
+                        // 1. dialogData.round1, dialogData.round2 (实际格式)
+                        // 2. dialogData.rounds[].dialog (旧格式)
+                        let roundSection = null;
+                        if (dialogData?.[roundKey]?.lines) {
+                            // 实际格式: round1: { lines: [...] }
+                            roundSection = dialogData[roundKey];
+                        } else {
+                            // 旧格式: rounds: [{ round: 1, dialog: [...] }]
+                            const dialogRound = dialogData?.rounds?.find(r => r.round === round.round);
+                            roundSection = dialogRound?.dialog ? { lines: dialogRound.dialog } : null;
+                        }
 
                         html += `
                             <div class="round-card" id="expose-${roundKey}">
