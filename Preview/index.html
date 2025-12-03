@@ -3275,8 +3275,11 @@
                     }
                 }
 
+                // 支持sections包装格式
+                const sectionsSource = dialogData?.sections || dialogData;
+
                 // Render opening dialog if exists
-                if (dialogData?.opening?.lines) {
+                if (sectionsSource?.opening?.lines) {
                     html += `
                         <div class="collapsible-module" onclick="Renderer.toggleModule(this)" style="margin-bottom: 1rem;">
                             <div class="collapsible-module-btn">
@@ -3284,7 +3287,7 @@
                                 <span class="module-icon">▼</span>
                             </div>
                             <div class="collapsible-module-content type-dialog">
-                                ${this.renderDialogSection(dialogData.opening, 'expose_opening', expose.dialog_file, 'opening')}
+                                ${this.renderDialogSection(sectionsSource.opening, 'expose_opening', expose.dialog_file, 'opening')}
                             </div>
                         </div>
                     `;
@@ -3294,13 +3297,14 @@
                 if (expose.rounds && expose.rounds.length > 0) {
                     for (const round of expose.rounds) {
                         const roundKey = `round${round.round}`;
-                        // 支持两种格式：
-                        // 1. dialogData.round1, dialogData.round2 (实际格式)
-                        // 2. dialogData.rounds[].dialog (旧格式)
+                        // 支持三种格式：
+                        // 1. dialogData.sections.round1 (sections包装格式)
+                        // 2. dialogData.round1 (直接格式)
+                        // 3. dialogData.rounds[].dialog (旧格式)
                         let roundSection = null;
-                        if (dialogData?.[roundKey]?.lines) {
-                            // 实际格式: round1: { lines: [...] }
-                            roundSection = dialogData[roundKey];
+                        if (sectionsSource?.[roundKey]?.lines) {
+                            // 新格式: round1: { lines: [...] } 或 sections.round1: { lines: [...] }
+                            roundSection = sectionsSource[roundKey];
                         } else {
                             // 旧格式: rounds: [{ round: 1, dialog: [...] }]
                             const dialogRound = dialogData?.rounds?.find(r => r.round === round.round);
