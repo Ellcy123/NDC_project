@@ -3078,15 +3078,21 @@
                 let effectiveSectionName = sectionName;
 
                 // 如果指定了section，获取该section的lines
-                if (sectionName && dialogData[sectionName] && dialogData[sectionName].lines) {
-                    lines = dialogData[sectionName].lines;
+                if (sectionName && dialogData[sectionName]) {
+                    // lines可能是null/undefined（YAML只有注释时），确保是数组
+                    lines = dialogData[sectionName].lines || [];
+                    if (!Array.isArray(lines)) lines = [];
                     sectionData = dialogData[sectionName];
                     effectiveSectionName = sectionName;
                 } else {
-                    // 否则遍历所有section，取第一个有lines的section
+                    // 否则遍历所有section，取第一个section
+                    const metadataKeys = ['dialog_id', 'loop', 'type', 'npc', 'target', 'scene', 'scene_name', 'target_npc', 'note', 'status', 'inherited_from', 'has_new_clues', 'secondary_npc'];
                     for (const [key, value] of Object.entries(dialogData)) {
-                        if (value && value.lines && Array.isArray(value.lines)) {
-                            lines = lines.concat(value.lines);
+                        if (value && typeof value === 'object' && !metadataKeys.includes(key)) {
+                            const sectionLines = value.lines || [];
+                            if (Array.isArray(sectionLines)) {
+                                lines = lines.concat(sectionLines);
+                            }
                             if (!sectionData) {
                                 sectionData = value;
                                 effectiveSectionName = key; // 保存实际的section名
@@ -3104,8 +3110,48 @@
                 }
 
                 if (lines.length === 0) {
-                    container.querySelector('.dialog-lines').innerHTML =
-                        '<div style="color: var(--text-secondary); padding: 1rem; text-align: center;">暂无对话内容</div>';
+                    // 即使没有对话内容，也显示NPC信息和编辑按钮
+                    let emptyHtml = '';
+
+                    // 获取NPC信息（从dialogData的顶层字段）
+                    const npcId = dialogData.npc;
+                    const npcData = npcId ? AppState.masterData.npcs[npcId] : null;
+
+                    // 开发版：添加编辑按钮
+                    if (AppState.viewMode === 'full' && dialogFile && effectiveSectionName) {
+                        const fullKey = `${dialogFile}::${effectiveSectionName}`;
+                        const isModified = AppState.sectionEdits.has(fullKey);
+                        if (!window._tempSectionData) window._tempSectionData = {};
+                        window._tempSectionData[fullKey] = sectionData || { lines: [] };
+                        emptyHtml += `
+                            <div style="text-align: right; margin-bottom: 0.5rem;">
+                                ${isModified ? '<span style="color: #f0a000; margin-right: 0.5rem;">🔸 已修改</span>' : ''}
+                                <button class="section-edit-btn" style="position: relative;"
+                                    onclick="event.stopPropagation(); DialogEditor.openEditorByKey('${fullKey}', '${dialogFile}', '${effectiveSectionName}')">
+                                    ✏️ 编辑
+                                </button>
+                            </div>
+                        `;
+                    }
+
+                    // 显示NPC信息（如果有）
+                    if (npcData) {
+                        const avatar = this.getNpcEmoji(npcId);
+                        const npcColor = this.getNpcColor(npcId);
+                        emptyHtml += `
+                            <div class="dialog-node" style="border-left-color: ${npcColor};">
+                                <div class="speaker-info">
+                                    <div class="speaker-avatar" style="background: ${npcColor};">${avatar}</div>
+                                    <span class="speaker-name" style="color: ${npcColor};">${npcData.name_cn || npcData.name}</span>
+                                </div>
+                                <div class="dialog-content" style="color: var(--text-secondary); font-style: italic;">【待补充】对话内容</div>
+                            </div>
+                        `;
+                    } else {
+                        emptyHtml += '<div style="color: var(--text-secondary); padding: 1rem; text-align: center; font-style: italic;">【待补充】对话内容</div>';
+                    }
+
+                    container.querySelector('.dialog-lines').innerHTML = emptyHtml;
                     return;
                 }
 
