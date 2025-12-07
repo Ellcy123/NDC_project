@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUG Dialog Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #1a1a25;
+            --bg-card-hover: #252535;
+            --accent-gold: #d4a574;
+            --accent-gold-light: #e8c89e;
+            --accent-red: #8b3a3a;
+            --accent-red-light: #a85454;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #606070;
+            --border-color: #3a3a4a;
+            --border-gold: #d4a574;
+            --shadow-gold: rgba(212, 165, 116, 0.3);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
+            --gradient-gold: linear-gradient(135deg, #d4a574 0%, #b8956a 100%);
+            --gradient-card: linear-gradient(145deg, #1e1e2a 0%, #151520 100%);
+        }
+
+        /* ===== Reset & Base ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold);
+        }
+
+        /* ===== App Container ===== */
+        .app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            background: var(--gradient-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--accent-gold);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-gold);
+            background: var(--bg-card-hover);
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            border-color: var(--accent-gold);
+            color: var(--bg-dark);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px var(--shadow-gold);
+        }
+
+        /* ===== Main Content ===== */
+        .main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ===== View Containers ===== */
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Scene Selection ===== */
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-gold-light);
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .scene-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .scene-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 40px var(--shadow-dark), 0 0 30px var(--shadow-gold);
+        }
+
+        .scene-card-bg {
+            height: 180px;
+            background: linear-gradient(135deg, #2a2a3a 0%, #1a1a25 100%);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .scene-card-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(transparent, var(--bg-card));
+        }
+
+        .scene-card-content {
+            padding: 1.2rem;
+        }
+
+        .scene-card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .scene-card-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .scene-card-npcs {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .scene-card-npc-tag {
+            padding: 0.25rem 0.6rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== NPC Selection ===== */
+        .npc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .npc-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .npc-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 40px var(--shadow-dark), 0 0 20px var(--shadow-gold);
+        }
+
+        .npc-portrait {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-red) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--bg-dark);
+            overflow: hidden;
+            border: 3px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+
+        .npc-card:hover .npc-portrait {
+            border-color: var(--accent-gold);
+        }
+
+        .npc-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .npc-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .npc-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== Dialog View - Visual Novel Style ===== */
+        #dialogView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .dialog-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .dialog-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.6) 100%);
+        }
+
+        /* 顶部导航栏 */
+        .vn-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+        }
+
+        .vn-scene-name {
+            color: var(--accent-gold-light);
+            font-size: 1.1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .vn-back-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--accent-gold);
+            border-radius: 6px;
+            color: var(--accent-gold-light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .vn-back-btn:hover {
+            background: var(--accent-gold);
+            color: var(--bg-dark);
+        }
+
+        /* NPC立绘区域 */
+        .vn-character {
+            position: absolute;
+            bottom: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            transition: all 0.5s ease;
+        }
+
+        .vn-character img {
+            max-height: 500px;
+            max-width: 400px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+            animation: characterIn 0.5s ease;
+        }
+
+        @keyframes characterIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .vn-character-placeholder {
+            width: 200px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(212,165,116,0.3) 0%, rgba(139,58,58,0.3) 100%);
+            border-radius: 50% 50% 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: rgba(255,255,255,0.5);
+            text-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 对话框容器 */
+        .vn-dialog-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        /* 选项区域 */
+        .vn-choices {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2rem 1.5rem;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .vn-choice-btn {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, rgba(20, 18, 28, 0.9) 0%, rgba(35, 30, 45, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(212, 165, 116, 0.5);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vn-choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,165,116,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .vn-choice-btn:hover {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.2) 0%, rgba(35, 30, 45, 0.95) 100%);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(212, 165, 116, 0.3);
+        }
+
+        .vn-choice-btn:hover::before {
+            left: 100%;
+        }
+
+        /* 主对话框 */
+        .vn-textbox {
+            background: linear-gradient(to top,
+                rgba(15, 12, 20, 0.95) 0%,
+                rgba(25, 22, 35, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border-top: 2px solid var(--accent-gold);
+            padding: 0;
+            min-height: 180px;
+            position: relative;
+            box-shadow: 0 -10px 50px rgba(0,0,0,0.5);
+        }
+
+        .vn-textbox::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--accent-gold) 20%,
+                var(--accent-gold-light) 50%,
+                var(--accent-gold) 80%,
+                transparent 100%);
+        }
+
+        /* 说话者名字 */
+        .vn-speaker {
+            position: absolute;
+            top: -20px;
+            left: 50px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #b8956a 100%);
+            padding: 0.5rem 2rem;
+            border-radius: 8px 8px 0 0;
+            color: var(--bg-dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 -5px 20px rgba(212,165,116,0.3);
+            letter-spacing: 1px;
+        }
+
+        .vn-speaker.player {
+            background: linear-gradient(135deg, #5a8f7a 0%, #3d6b5a 100%);
+            color: white;
+        }
+
+        /* 对话内容 */
+        .vn-text-content {
+            padding: 2rem 3rem 1.5rem;
+            min-height: 120px;
+        }
+
+        .vn-text {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: var(--text-primary);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .vn-text.typing::after {
+            content: '▌';
+            animation: blink 0.8s infinite;
+            color: var(--accent-gold);
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* 点击继续提示 */
+        .vn-continue {
+            position: absolute;
+            bottom: 1rem;
+            right: 2rem;
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            animation: pulse 1.5s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-3px); }
+        }
+
+        /* 对话结束 */
+        .vn-end {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .vn-end-text {
+            color: var(--accent-gold-light);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .vn-end-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .vn-end-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+            color: var(--accent-gold-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .vn-end-btn:hover {
+            background: var(--accent-gold);
+            color: var(--bg-dark);
+        }
+
+        /* ===== Editor View ===== */
+        .editor-container {
+            display: flex;
+            gap: 1.5rem;
+            height: calc(100vh - 200px);
+            min-height: 600px;
+        }
+
+        .editor-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .editor-panel-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-panel-title {
+            font-weight: 600;
+            color: var(--accent-gold-light);
+        }
+
+        .editor-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        .editor-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .preview-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* ===== Error Message ===== */
+        .error-container {
+            background: rgba(139, 58, 58, 0.2);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-title {
+            color: var(--accent-red-light);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        /* ===== Toast Notification ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 40px var(--shadow-dark);
+            z-index: 1000;
+            animation: toastIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .toast.success {
+            border-color: #4a7c59;
+        }
+
+        .toast.error {
+            border-color: var(--accent-red);
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* ===== Help Modal ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow: hidden;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--accent-gold-light);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .modal-body h4 {
+            color: var(--accent-gold);
+            margin: 1.5rem 0 0.8rem;
+        }
+
+        .modal-body h4:first-child {
+            margin-top: 0;
+        }
+
+        .modal-body pre {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-body p {
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-body code {
+            background: var(--bg-dark);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            .main {
+                padding: 1rem;
+            }
+            .dialog-container,
+            .editor-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .scene-grid {
+                grid-template-columns: 1fr;
+            }
+            .npc-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">AUG DIALOG</div>
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item" onclick="showScenes()">场景选择</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn" onclick="showHelp()">
+                    <span>?</span> 帮助
+                </button>
+                <button class="btn" id="editToggle" onclick="toggleEditor()">
+                    <span>✎</span> 编辑模式
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Scene Selection View -->
+            <div class="view active" id="sceneView">
+                <h1 class="section-title">选择场景</h1>
+                <p class="section-desc">选择一个场景开始对话冒险</p>
+                <div class="scene-grid" id="sceneGrid"></div>
+                <div class="empty-state" id="sceneEmpty" style="display: none;">
+                    <div class="empty-state-icon">🏠</div>
+                    <div class="empty-state-title">暂无场景</div>
+                    <p>点击右上角"编辑模式"添加场景数据</p>
+                </div>
+            </div>
+
+            <!-- NPC Selection View -->
+            <div class="view" id="npcView">
+                <h1 class="section-title" id="npcViewTitle">选择角色</h1>
+                <p class="section-desc" id="npcViewDesc">选择一个角色开始对话</p>
+                <div class="npc-grid" id="npcGrid"></div>
+            </div>
+
+            <!-- Dialog View - Visual Novel Style -->
+            <div class="view" id="dialogView">
+                <!-- 全屏背景 -->
+                <div class="dialog-bg" id="dialogBg"></div>
+
+                <!-- 顶部导航 -->
+                <div class="vn-header">
+                    <div class="vn-scene-name" id="vnSceneName">场景名称</div>
+                    <button class="vn-back-btn" onclick="exitDialog()">返回</button>
+                </div>
+
+                <!-- NPC立绘 -->
+                <div class="vn-character" id="vnCharacter"></div>
+
+                <!-- 底部对话区域 -->
+                <div class="vn-dialog-container">
+                    <!-- 选项区域 -->
+                    <div class="vn-choices" id="vnChoices" style="display: none;"></div>
+
+                    <!-- 对话框 -->
+                    <div class="vn-textbox" id="vnTextbox" onclick="handleTextboxClick()">
+                        <div class="vn-speaker" id="vnSpeaker">角色名</div>
+                        <div class="vn-text-content">
+                            <div class="vn-text" id="vnText"></div>
+                        </div>
+                        <div class="vn-continue" id="vnContinue">点击继续 ▼</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editor View -->
+            <div class="view" id="editorView">
+                <div class="editor-container">
+                    <div class="editor-panel">
+                        <div class="editor-panel-header">
+                            <span class="editor-panel-title">YAML 编辑器</span>
+                            <button class="btn btn-primary" onclick="saveAndPreview()">保存并预览</button>
+                        </div>
+                        <textarea class="editor-textarea" id="yamlEditor" placeholder="在此粘贴或编辑 YAML 数据..."></textarea>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="editor-panel-header">
+                            <span class="editor-panel-title">实时预览</span>
+                            <button class="btn" onclick="resetData()">重置数据</button>
+                        </div>
+                        <div class="preview-content" id="previewContent">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <div class="empty-state-title">编辑 YAML 数据</div>
+                                <p>在左侧编辑器中粘贴或编写 YAML 数据，点击"保存并预览"查看效果</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">YAML 格式说明</h2>
+                <button class="modal-close" onclick="closeHelp()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>基本结构</h4>
+                <p>数据包含 <code>scenes</code> 场景列表，每个场景包含 NPC 和对话。</p>
+
+                <h4>完整示例</h4>
+                <pre>scenes:
+  - id: cafe
+    name: "咖啡馆"
+    description: "温馨的街角咖啡馆"
+    background: "cafe.jpg"  # 可选，放在images文件夹
+    npcs:
+      - id: anna
+        name: "安娜"
+        role: "咖啡师"
+        portrait: "anna.png"  # 放在images文件夹
+        dialog:
+          start:
+            - speaker: npc
+              text: "欢迎光临！想喝点什么？"
+            - speaker: player
+              choices:
+                - text: "来杯拿铁"
+                  goto: latte
+                - text: "随便聊聊"
+                  goto: chat
+          latte:
+            - speaker: npc
+              text: "好的，稍等一下~"
+            - speaker: npc
+              text: "您的拿铁好了，请慢用！"
+          chat:
+            - speaker: npc
+              text: "今天天气真不错呢！"</pre>
+
+                <h4>字段说明</h4>
+                <p><code>speaker</code>: 说话者，<code>npc</code> 或 <code>player</code></p>
+                <p><code>choices</code>: 玩家选项，包含 <code>text</code> 显示文本和 <code>goto</code> 跳转目标</p>
+                <p><code>portrait</code>: NPC立绘文件名，放在 <code>images/</code> 文件夹</p>
+                <p><code>background</code>: 场景背景图，放在 <code>images/</code> 文件夹</p>
+
+                <h4>图片文件</h4>
+                <p>将立绘和背景图放入 <code>images/</code> 文件夹，然后在 YAML 中填写文件名即可。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== State =====
+        let gameData = { scenes: [] };
+        let currentScene = null;
+        let currentNpc = null;
+        let currentSection = 'start';
+        let dialogIndex = 0;
+        let isEditorMode = false;
+
+        // ===== Initialization =====
+        function init() {
+            loadData();
+            renderScenes();
+        }
+
+        // ===== Data Management =====
+        function loadData() {
+            const saved = localStorage.getItem('dialogGameData');
+            if (saved) {
+                try {
+                    gameData = JSON.parse(saved);
+                } catch (e) {
+                    gameData = { scenes: [] };
+                }
+            } else {
+                // 加载示例数据
+                gameData = getExampleData();
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('dialogGameData', JSON.stringify(gameData));
+        }
+
+        function resetData() {
+            if (confirm('确定要重置所有数据吗？这将恢复为示例数据。')) {
+                gameData = getExampleData();
+                saveData();
+                document.getElementById('yamlEditor').value = jsyaml.dump(gameData, { lineWidth: -1 });
+                renderPreview();
+                showToast('数据已重置', 'success');
+            }
+        }
+
+        function getExampleData() {
+            return {
+                scenes: [
+                    {
+                        id: 'cafe',
+                        name: '街角咖啡馆',
+                        description: '一家温馨的小咖啡馆，空气中弥漫着咖啡香气',
+                        npcs: [
+                            {
+                                id: 'anna',
+                                name: '安娜',
+                                role: '咖啡师',
+                                portrait: '',
+                                dialog: {
+                                    start: [
+                                        { speaker: 'npc', text: '欢迎来到街角咖啡馆！我是安娜，今天想喝点什么呢？' },
+                                        { speaker: 'player', choices: [
+                                            { text: '来杯拿铁吧', goto: 'latte' },
+                                            { text: '有什么推荐的吗？', goto: 'recommend' },
+                                            { text: '我只是随便看看', goto: 'browse' }
+                                        ]}
+                                    ],
+                                    latte: [
+                                        { speaker: 'npc', text: '拿铁是个好选择！稍等一下...' },
+                                        { speaker: 'npc', text: '给您，请慢用~ 这是我们店的招牌拿铁，用的是特选咖啡豆。' },
+                                        { speaker: 'player', choices: [
+                                            { text: '谢谢，味道很棒！', goto: 'end_good' },
+                                            { text: '还想再点些别的', goto: 'start' }
+                                        ]}
+                                    ],
+                                    recommend: [
+                                        { speaker: 'npc', text: '如果是第一次来的话，我推荐我们的焦糖玛奇朵！' },
+                                        { speaker: 'npc', text: '甜度刚刚好，很多客人都很喜欢呢。' },
+                                        { speaker: 'player', choices: [
+                                            { text: '那就来一杯吧', goto: 'macchiato' },
+                                            { text: '我还是要拿铁', goto: 'latte' }
+                                        ]}
+                                    ],
+                                    macchiato: [
+                                        { speaker: 'npc', text: '好的！马上为您制作~' },
+                                        { speaker: 'npc', text: '这是您的焦糖玛奇朵，上面的焦糖是我手工制作的哦！' }
+                                    ],
+                                    browse: [
+                                        { speaker: 'npc', text: '好的，随时叫我就行！' },
+                                        { speaker: 'npc', text: '对了，今天新到了一批甜点，有兴趣可以看看~' }
+                                    ],
+                                    end_good: [
+                                        { speaker: 'npc', text: '谢谢夸奖！欢迎下次再来哦~' }
+                                    ]
+                                }
+                            },
+                            {
+                                id: 'old_man',
+                                name: '老先生',
+                                role: '常客',
+                                portrait: '',
+                                dialog: {
+                                    start: [
+                                        { speaker: 'npc', text: '哦，年轻人，坐下来聊聊吧。' },
+                                        { speaker: 'npc', text: '我在这家咖啡馆待了二十年了，有什么想知道的吗？' },
+                                        { speaker: 'player', choices: [
+                                            { text: '这家店有什么故事吗？', goto: 'story' },
+                                            { text: '您每天都来这里吗？', goto: 'daily' },
+                                            { text: '打扰了，我先走了', goto: 'leave' }
+                                        ]}
+                                    ],
+                                    story: [
+                                        { speaker: 'npc', text: '这家店啊...是二十年前一对年轻夫妻开的。' },
+                                        { speaker: 'npc', text: '他们把全部心血都投入到这里，每一杯咖啡都用心制作。' },
+                                        { speaker: 'npc', text: '安娜是他们的女儿，现在继承了这份事业。' }
+                                    ],
+                                    daily: [
+                                        { speaker: 'npc', text: '是啊，每天早上九点准时来，下午三点离开。' },
+                                        { speaker: 'npc', text: '这里的咖啡和氛围，已经成为我生活的一部分了。' }
+                                    ],
+                                    leave: [
+                                        { speaker: 'npc', text: '好的，慢走。有空再来聊。' }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        id: 'park',
+                        name: '城市公园',
+                        description: '绿树成荫的城市公园，是居民休闲的好去处',
+                        npcs: [
+                            {
+                                id: 'kid',
+                                name: '小明',
+                                role: '活泼的小男孩',
+                                portrait: '',
+                                dialog: {
+                                    start: [
+                                        { speaker: 'npc', text: '嘿！你也来公园玩吗？' },
+                                        { speaker: 'npc', text: '我在找我的小狗，它跑丢了...' },
+                                        { speaker: 'player', choices: [
+                                            { text: '我帮你一起找吧', goto: 'help' },
+                                            { text: '它长什么样？', goto: 'describe' },
+                                            { text: '祝你好运', goto: 'leave' }
+                                        ]}
+                                    ],
+                                    help: [
+                                        { speaker: 'npc', text: '真的吗？太好了！' },
+                                        { speaker: 'npc', text: '它是一只棕色的柯基，名字叫豆豆！' },
+                                        { speaker: 'npc', text: '它最喜欢在喷泉附近玩了。' }
+                                    ],
+                                    describe: [
+                                        { speaker: 'npc', text: '是一只棕色的柯基犬，腿短短的特别可爱！' },
+                                        { speaker: 'npc', text: '它脖子上有一个蓝色的项圈。' },
+                                        { speaker: 'player', choices: [
+                                            { text: '好，我帮你找找', goto: 'help' },
+                                            { text: '我刚才好像看到一只', goto: 'seen' }
+                                        ]}
+                                    ],
+                                    seen: [
+                                        { speaker: 'npc', text: '真的吗？在哪里？！' },
+                                        { speaker: 'npc', text: '快带我去看看！' }
+                                    ],
+                                    leave: [
+                                        { speaker: 'npc', text: '嗯...好吧，谢谢你。' }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            };
+        }
+
+        // ===== View Management =====
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        function showScenes() {
+            currentScene = null;
+            currentNpc = null;
+            showView('sceneView');
+            updateBreadcrumb();
+            renderScenes();
+        }
+
+        function showNpcs(sceneId) {
+            currentScene = gameData.scenes.find(s => s.id === sceneId);
+            if (!currentScene) return;
+            currentNpc = null;
+            showView('npcView');
+            updateBreadcrumb();
+            renderNpcs();
+        }
+
+        // ===== Visual Novel Dialog System =====
+        let isTyping = false;
+        let currentText = '';
+        let typeTimer = null;
+
+        function showDialog(npcId) {
+            currentNpc = currentScene.npcs.find(n => n.id === npcId);
+            if (!currentNpc) return;
+            currentSection = 'start';
+            dialogIndex = 0;
+
+            // 设置场景背景
+            const dialogBg = document.getElementById('dialogBg');
+            if (currentScene.background) {
+                dialogBg.style.backgroundImage = `url('images/${currentScene.background}')`;
+            } else {
+                dialogBg.style.backgroundImage = 'linear-gradient(135deg, #2a2a3a 0%, #1a1a25 100%)';
+            }
+
+            // 设置场景名称
+            document.getElementById('vnSceneName').textContent = currentScene.name;
+
+            // 设置NPC立绘
+            renderCharacter();
+
+            // 显示对话界面
+            showView('dialogView');
+            updateBreadcrumb();
+
+            // 开始对话
+            advanceDialog();
+        }
+
+        function renderCharacter() {
+            const container = document.getElementById('vnCharacter');
+            if (currentNpc.portrait) {
+                container.innerHTML = `<img src="images/${currentNpc.portrait}" alt="${currentNpc.name}" onerror="this.parentElement.innerHTML='<div class=\\'vn-character-placeholder\\'>${getInitial(currentNpc.name)}</div>'">`;
+            } else {
+                container.innerHTML = `<div class="vn-character-placeholder">${getInitial(currentNpc.name)}</div>`;
+            }
+        }
+
+        function exitDialog() {
+            showNpcs(currentScene.id);
+        }
+
+        function updateBreadcrumb() {
+            const bc = document.getElementById('breadcrumb');
+            let html = '<span class="breadcrumb-item" onclick="showScenes()">场景选择</span>';
+
+            if (currentScene) {
+                html += '<span class="breadcrumb-separator">›</span>';
+                html += `<span class="breadcrumb-item" onclick="showNpcs('${currentScene.id}')">${currentScene.name}</span>`;
+            }
+
+            if (currentNpc) {
+                html += '<span class="breadcrumb-separator">›</span>';
+                html += `<span class="breadcrumb-item">${currentNpc.name}</span>`;
+            }
+
+            bc.innerHTML = html;
+        }
+
+        // ===== Rendering =====
+        function renderScenes() {
+            const grid = document.getElementById('sceneGrid');
+            const empty = document.getElementById('sceneEmpty');
+
+            if (!gameData.scenes || gameData.scenes.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = gameData.scenes.map(scene => {
+                const npcTags = (scene.npcs || []).map(n =>
+                    `<span class="scene-card-npc-tag">${n.name}</span>`
+                ).join('');
+
+                const bgStyle = scene.background
+                    ? `background-image: url('images/${scene.background}')`
+                    : '';
+
+                return `
+                    <div class="scene-card" onclick="showNpcs('${scene.id}')">
+                        <div class="scene-card-bg" style="${bgStyle}"></div>
+                        <div class="scene-card-content">
+                            <div class="scene-card-title">${scene.name}</div>
+                            <div class="scene-card-info">${scene.description || ''}</div>
+                            <div class="scene-card-npcs">${npcTags}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderNpcs() {
+            const grid = document.getElementById('npcGrid');
+            document.getElementById('npcViewTitle').textContent = currentScene.name;
+            document.getElementById('npcViewDesc').textContent = currentScene.description || '选择一个角色开始对话';
+
+            grid.innerHTML = (currentScene.npcs || []).map(npc => {
+                const portraitContent = npc.portrait
+                    ? `<img src="images/${npc.portrait}" alt="${npc.name}" onerror="this.parentElement.innerHTML='${getInitial(npc.name)}'">`
+                    : getInitial(npc.name);
+
+                return `
+                    <div class="npc-card" onclick="showDialog('${npc.id}')">
+                        <div class="npc-portrait">${portraitContent}</div>
+                        <div class="npc-name">${npc.name}</div>
+                        <div class="npc-role">${npc.role || ''}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function advanceDialog() {
+            const dialog = currentNpc.dialog?.[currentSection];
+            if (!dialog || dialogIndex >= dialog.length) {
+                showDialogEnd();
+                return;
+            }
+
+            const line = dialog[dialogIndex];
+            dialogIndex++;
+
+            if (line.speaker === 'player' && line.choices) {
+                showChoices(line.choices);
+            } else {
+                showText(line);
+            }
+        }
+
+        function showText(line) {
+            const isNpc = line.speaker === 'npc';
+            const speakerName = isNpc ? currentNpc.name : '你';
+
+            // 更新说话者名字
+            const speakerEl = document.getElementById('vnSpeaker');
+            speakerEl.textContent = speakerName;
+            speakerEl.className = 'vn-speaker' + (isNpc ? '' : ' player');
+
+            // 隐藏选项，显示对话框
+            document.getElementById('vnChoices').style.display = 'none';
+            document.getElementById('vnTextbox').style.display = 'block';
+            document.getElementById('vnContinue').style.display = 'block';
+
+            // 打字机效果
+            const textEl = document.getElementById('vnText');
+            currentText = line.text;
+            isTyping = true;
+            textEl.textContent = '';
+            textEl.classList.add('typing');
+
+            let charIndex = 0;
+            const typeSpeed = 30;
+
+            clearInterval(typeTimer);
+            typeTimer = setInterval(() => {
+                if (charIndex < currentText.length) {
+                    textEl.textContent += currentText[charIndex];
+                    charIndex++;
+                } else {
+                    clearInterval(typeTimer);
+                    isTyping = false;
+                    textEl.classList.remove('typing');
+                }
+            }, typeSpeed);
+        }
+
+        function handleTextboxClick() {
+            if (isTyping) {
+                clearInterval(typeTimer);
+                document.getElementById('vnText').textContent = currentText;
+                document.getElementById('vnText').classList.remove('typing');
+                isTyping = false;
+            } else {
+                const dialog = currentNpc.dialog?.[currentSection];
+                if (dialog && dialogIndex < dialog.length) {
+                    const next = dialog[dialogIndex];
+                    if (next.speaker === 'player' && next.choices) {
+                        dialogIndex++;
+                        showChoices(next.choices);
+                    } else {
+                        advanceDialog();
+                    }
+                } else {
+                    showDialogEnd();
+                }
+            }
+        }
+
+        function showChoices(choices) {
+            document.getElementById('vnTextbox').style.display = 'none';
+            const container = document.getElementById('vnChoices');
+
+            container.innerHTML = choices.map(c =>
+                `<button class="vn-choice-btn" onclick="selectChoice('${c.goto}', '${c.text.replace(/'/g, "\\'")}')">${c.text}</button>`
+            ).join('');
+
+            container.style.display = 'flex';
+        }
+
+        function selectChoice(goto, choiceText) {
+            document.getElementById('vnChoices').style.display = 'none';
+
+            if (goto && currentNpc.dialog?.[goto]) {
+                currentSection = goto;
+                dialogIndex = 0;
+                showText({ speaker: 'player', text: choiceText });
+                setTimeout(() => {
+                    if (!isTyping) advanceDialog();
+                }, 800);
+            } else {
+                showDialogEnd();
+            }
+        }
+
+        function showDialogEnd() {
+            document.getElementById('vnTextbox').style.display = 'none';
+            document.getElementById('vnChoices').innerHTML = `
+                <div class="vn-end">
+                    <div class="vn-end-text">— 对话结束 —</div>
+                    <div class="vn-end-buttons">
+                        <button class="vn-end-btn" onclick="restartDialog()">重新开始</button>
+                        <button class="vn-end-btn" onclick="exitDialog()">返回场景</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('vnChoices').style.display = 'flex';
+        }
+
+        function restartDialog() {
+            currentSection = 'start';
+            dialogIndex = 0;
+            document.getElementById('vnChoices').style.display = 'none';
+            document.getElementById('vnTextbox').style.display = 'block';
+            advanceDialog();
+        }
+
+        // ===== Editor =====
+        function toggleEditor() {
+            isEditorMode = !isEditorMode;
+            const btn = document.getElementById('editToggle');
+
+            if (isEditorMode) {
+                btn.classList.add('btn-primary');
+                btn.innerHTML = '<span>✓</span> 退出编辑';
+                showView('editorView');
+                document.getElementById('yamlEditor').value = jsyaml.dump(gameData, { lineWidth: -1 });
+                renderPreview();
+            } else {
+                btn.classList.remove('btn-primary');
+                btn.innerHTML = '<span>✎</span> 编辑模式';
+                showScenes();
+            }
+        }
+
+        function saveAndPreview() {
+            const yaml = document.getElementById('yamlEditor').value;
+            const preview = document.getElementById('previewContent');
+
+            try {
+                const parsed = jsyaml.load(yaml);
+                if (!parsed || !parsed.scenes) {
+                    throw new Error('数据格式错误：需要包含 scenes 数组');
+                }
+
+                gameData = parsed;
+                saveData();
+                renderPreview();
+                showToast('保存成功！', 'success');
+            } catch (e) {
+                preview.innerHTML = `
+                    <div class="error-container">
+                        <div class="error-title">⚠ YAML 解析错误</div>
+                        <div class="error-message">${e.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderPreview() {
+            const preview = document.getElementById('previewContent');
+
+            if (!gameData.scenes || gameData.scenes.length === 0) {
+                preview.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-title">暂无数据</div>
+                        <p>添加场景和 NPC 对话数据</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<h3 style="color: var(--accent-gold); margin-bottom: 1rem;">数据预览</h3>';
+
+            gameData.scenes.forEach(scene => {
+                html += `
+                    <div style="background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="font-weight: 600; color: var(--accent-gold-light); margin-bottom: 0.5rem;">
+                            🏠 ${scene.name}
+                        </div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.8rem;">
+                            ${scene.description || ''}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            ${(scene.npcs || []).map(n => `
+                                <span style="padding: 0.3rem 0.8rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8rem;">
+                                    ${n.name} (${Object.keys(n.dialog || {}).length} 个对话节点)
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            preview.innerHTML = html;
+        }
+
+        // ===== Help Modal =====
+        function showHelp() {
+            document.getElementById('helpModal').classList.add('active');
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+
+        // ===== Utilities =====
+        function getInitial(name) {
+            return name ? name.charAt(0) : '?';
+        }
+
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span>${type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ'}</span>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Click outside modal to close
+        document.getElementById('helpModal').addEventListener('click', function(e) {
+            if (e.target === this) closeHelp();
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

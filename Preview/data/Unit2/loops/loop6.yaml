@@ -104,7 +104,7 @@ scenes_overview:
 opening:
   description: Margaret被送往医院，医生说需要休息
   scenes:
-    - scene_id: SC2017
+    - scene_id: SC2017  # 医院
       name: 医院（Margaret送医）
       description: Margaret被救出后送医，Zack和Emma在病房外等候
       dialog_file: loop6/opening.yaml
@@ -115,7 +115,7 @@ free_phase:
   description: 玩家深度搜索火灾现场发现凶器，探访医院获取Margaret证词
   scenes:
     # 继承场景（循环1）- 本循环主线
-    - scene: SC2002
+    - scene: SC2002  # Margaret鞋坊一楼-状态2
       type: search
       status: inherited
       inherited_from: loop1
@@ -125,14 +125,14 @@ free_phase:
         - id: EV2601
           note: 烧焦的烛台（底座凹痕与Frank头骨伤口吻合，眼镜碎片卡在缝隙）
 
-    - scene: SC2003
+    - scene: SC2003  # Margaret鞋坊二楼
       type: search
       status: inherited
       inherited_from: loop1
       has_new_clues: false
 
     # 继承场景（循环2）
-    - scene: SC2006
+    - scene: SC2006  # Frank和Mrs. O'Hara家门口
       type: search
       npc: NPC207
       status: inherited
@@ -140,7 +140,7 @@ free_phase:
       has_new_clues: false
       npc_available: true
 
-    - scene: SC2007
+    - scene: SC2007  # 赌场
       type: search
       npc: NPC208
       status: inherited
@@ -149,14 +149,14 @@ free_phase:
       npc_available: true
       note: Vinnie已被捕不在
 
-    - scene: SC2008
+    - scene: SC2008  # 银行贵宾室
       type: npc
       npc: NPC203
       status: inherited
       inherited_from: loop2
       npc_available: true
 
-    - scene: SC2009
+    - scene: SC2009  # 银行大厅
       type: npc
       npc: NPC202
       status: inherited
@@ -164,13 +164,13 @@ free_phase:
       npc_available: true
 
     # 继承场景（循环3）
-    - scene: SC2011
+    - scene: SC2011  # Frank家里
       type: search
       status: inherited
       inherited_from: loop3
       has_new_clues: false
 
-    - scene: SC2012
+    - scene: SC2012  # Danny家里
       type: search
       npc: NPC204
       status: inherited
@@ -179,13 +179,13 @@ free_phase:
       npc_available: true
 
     # 继承场景（循环4）
-    - scene: SC2015
+    - scene: SC2015  # Margaret鞋坊地下室
       type: search
       status: inherited
       inherited_from: loop4
       has_new_clues: false
 
-    - scene: SC2016
+    - scene: SC2016  # Rose家里
       type: npc
       npc: NPC209
       status: inherited
@@ -194,7 +194,7 @@ free_phase:
       npc_available: true
 
     # 新增场景
-    - scene: SC2017
+    - scene: SC2017  # 医院
       type: npc
       npc: NPC210
       unlock_type: auto
@@ -205,7 +205,7 @@ free_phase:
         - id: EV2606
           note: Margaret证词（有人和Frank发生激烈冲突，我查看Frank伤势时被人从后面打晕）
 
-    - scene: SC2018
+    - scene: SC2018  # Leonard住所
       type: search
       unlock_type: evidence
       unlock_condition: Mickey提供Leonard住址情报
@@ -217,7 +217,7 @@ free_phase:
 
 # 指证阶段
 expose:
-  scene: SC2009
+  scene: SC2009  # 银行大厅
   scene_name: 银行大厅
   target: Leonard
   target_name: Leonard Russo
@@ -258,19 +258,19 @@ expose:
 # 结尾（多场景）
 ending:
   scenes:
-    - scene_id: SC2020
+    - scene_id: SC2020  # 监狱
       name: 监狱
       description: Vinnie对Leonard深情告白："因为我爱你，Leo。从我们还是孩子的时候就爱你。"
       dialog_file: loop6/ending.yaml
       dialog_section: prison_confession
 
-    - scene_id: SC2021
+    - scene_id: SC2021  # 墓地
       name: 墓地
       description: Rose在Frank墓前悼念："我终于可以光明正大地说我爱你了...但你已经不在了..."
       dialog_file: loop6/ending.yaml
       dialog_section: cemetery_mourning
 
-    - scene_id: SC2017
+    - scene_id: SC2017  # 医院
       name: 医院（反思）
       description: Zack和Emma在Margaret病房外反思两种爱的悲剧
       dialog_file: loop6/ending.yaml

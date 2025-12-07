@@ -53,7 +53,7 @@ scenes_overview:
 opening:
   description: 承接循环1结尾，在警局外开始调查Frank案件
   scenes:
-    - scene_id: SC2004
+    - scene_id: SC2004  # 警局外
       name: 警局外
       description: 承接循环1结尾，Zack和Emma商议调查方向
       dialog_file: loop2/opening.yaml
@@ -64,20 +64,20 @@ free_phase:
   description: 玩家探索Frank相关场景，收集连号钞票证据
   scenes:
     # 继承场景
-    - scene: SC2002
+    - scene: SC2002  # Margaret鞋坊一楼-状态2
       type: search
       status: inherited
       inherited_from: loop1
       has_new_clues: false
 
-    - scene: SC2003
+    - scene: SC2003  # Margaret鞋坊二楼
       type: search
       status: inherited
       inherited_from: loop1
       has_new_clues: false
 
     # 新增场景
-    - scene: SC2006
+    - scene: SC2006  # Frank和Mrs. O'Hara家门口
       type: search
       npc: Mrs. O'Hara
       unlock_type: map
@@ -92,7 +92,7 @@ free_phase:
         - id: EV2207
           note: O'Hara贷款钞票（连号缺失）
 
-    - scene: SC2007
+    - scene: SC2007  # 赌场
       type: search
       npc: NPC208
       unlock_type: evidence
@@ -109,7 +109,7 @@ free_phase:
         - id: EV2213
           note: Vinnie工作日历小本子
 
-    - scene: SC2008
+    - scene: SC2008  # 银行贵宾室
       type: npc
       npc: NPC203
       unlock_type: map
@@ -122,7 +122,7 @@ free_phase:
 
 # 指证阶段
 expose:
-  scene: SC2009
+  scene: SC2009  # 银行大厅
   scene_name: 银行大厅
   target: Leonard
   target_name: Leonard Ross (Russo)

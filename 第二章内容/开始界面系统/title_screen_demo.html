@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC - 开始界面系统 (Title Screen)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+SC:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0808;
+            color: #e8e4d9;
+            font-family: 'Noto Serif SC', serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 噪点纹理 */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* ==================== 主界面容器 ==================== */
+        .title-screen {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 背景图层 */
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1510 0%, #2a1815 30%, #1a0a05 70%, #0a0505 100%);
+        }
+
+        /* 城市天际线剪影 */
+        .skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background:
+                /* 远处建筑 */
+                linear-gradient(to bottom, transparent 40%, rgba(30,20,15,0.8) 100%),
+                /* 建筑剪影 */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 600'%3E%3Crect x='100' y='200' width='80' height='400' fill='%23151010'/%3E%3Crect x='200' y='150' width='120' height='450' fill='%23121010'/%3E%3Crect x='350' y='250' width='60' height='350' fill='%23181515'/%3E%3Crect x='450' y='100' width='150' height='500' fill='%23101010'/%3E%3Crect x='650' y='180' width='100' height='420' fill='%23141212'/%3E%3Crect x='800' y='220' width='80' height='380' fill='%23161313'/%3E%3Crect x='1000' y='80' width='200' height='520' fill='%23111010'/%3E%3Crect x='1250' y='150' width='120' height='450' fill='%23131111'/%3E%3Crect x='1400' y='200' width='90' height='400' fill='%23151212'/%3E%3Crect x='1550' y='120' width='180' height='480' fill='%23121111'/%3E%3Crect x='1750' y='180' width='100' height='420' fill='%23141313'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: bottom;
+            opacity: 0.6;
+        }
+
+        /* 路灯光晕 */
+        .street-lights {
+            position: absolute;
+            bottom: 15%;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            pointer-events: none;
+        }
+
+        .light-glow {
+            position: absolute;
+            width: 150px;
+            height: 200px;
+            background: radial-gradient(ellipse at bottom, rgba(255,200,100,0.15) 0%, transparent 70%);
+        }
+
+        .light-glow:nth-child(1) { left: 20%; }
+        .light-glow:nth-child(2) { left: 45%; }
+        .light-glow:nth-child(3) { left: 70%; }
+
+        /* 码头木栈道 */
+        .dock {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: linear-gradient(to top,
+                #1a1510 0%,
+                #252015 30%,
+                #2a2520 60%,
+                transparent 100%
+            );
+        }
+
+        .dock::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: repeating-linear-gradient(90deg,
+                #3a3025 0px, #3a3025 30px,
+                transparent 30px, transparent 35px
+            );
+            opacity: 0.5;
+        }
+
+        /* ==================== Logo区域 ==================== */
+        .logo-container {
+            position: absolute;
+            top: 8%;
+            left: 8%;
+            z-index: 10;
+        }
+
+        .game-logo {
+            font-family: 'Cinzel', serif;
+            line-height: 1;
+        }
+
+        .logo-main {
+            font-size: 4.5em;
+            font-weight: 900;
+            color: #c41e3a;
+            text-shadow:
+                3px 3px 0 #000,
+                -1px -1px 0 #000,
+                0 5px 15px rgba(0,0,0,0.8);
+            letter-spacing: -2px;
+        }
+
+        .logo-main .in {
+            font-size: 0.5em;
+            font-weight: 400;
+            color: #8a8070;
+            vertical-align: super;
+            margin: 0 8px;
+        }
+
+        .logo-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85em;
+            color: #c41e3a;
+            letter-spacing: 3px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            border-top: 2px solid #c41e3a;
+            padding-top: 8px;
+            display: inline-block;
+        }
+
+        /* ==================== 菜单区域 ==================== */
+        .menu-container {
+            position: absolute;
+            top: 35%;
+            left: 8%;
+            z-index: 10;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item {
+            position: relative;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item-inner {
+            display: flex;
+            align-items: center;
+            padding: 12px 30px 12px 20px;
+            background: transparent;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item.active .menu-item-inner,
+        .menu-item:hover .menu-item-inner {
+            background: linear-gradient(90deg, #c41e3a, #a01830);
+        }
+
+        /* 选中时的红色延伸条 */
+        .menu-item.active::before,
+        .menu-item:hover::before {
+            content: '';
+            position: absolute;
+            left: -200px;
+            top: 0;
+            width: 200px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #c41e3a);
+        }
+
+        .menu-text {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #c41e3a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .menu-item.active .menu-text,
+        .menu-item:hover .menu-text {
+            color: #fff;
+        }
+
+        .menu-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .menu-item.disabled:hover .menu-item-inner {
+            background: transparent;
+        }
+
+        .menu-item.disabled:hover::before {
+            display: none;
+        }
+
+        .menu-item.disabled:hover .menu-text {
+            color: #c41e3a;
+        }
+
+        /* 继续游戏的进度提示 */
+        .menu-item .progress-hint {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.7em;
+            color: #8a7a6a;
+            margin-left: 15px;
+            font-weight: normal;
+        }
+
+        .menu-item.active .progress-hint,
+        .menu-item:hover .progress-hint {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ==================== 底部版权信息 ==================== */
+        .copyright {
+            position: absolute;
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cinzel', serif;
+            font-size: 0.75em;
+            color: #5a5045;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        /* ==================== 策划案按钮 ==================== */
+        .doc-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 25px;
+            background: linear-gradient(180deg, #1a3a5a, #0a2a4a);
+            border: 2px solid #3a7aba;
+            color: #5aafe8;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .doc-btn:hover {
+            background: linear-gradient(180deg, #2a4a6a, #1a3a5a);
+            box-shadow: 0 0 20px rgba(90,175,232,0.4);
+        }
+
+        /* 演示按钮 */
+        .demo-btn {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            padding: 12px 25px;
+            background: linear-gradient(180deg, #5a3a6a, #3a2a4a);
+            border: 2px solid #9a6aba;
+            color: #c8a8e8;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            background: linear-gradient(180deg, #6a4a7a, #4a3a5a);
+            box-shadow: 0 0 20px rgba(154,106,186,0.4);
+        }
+
+        /* 演示下拉菜单 */
+        .demo-dropdown {
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            background: linear-gradient(180deg, #2a2530, #1a1520);
+            border: 2px solid #9a6aba;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 100;
+            display: none;
+            min-width: 200px;
+        }
+
+        .demo-dropdown.active {
+            display: block;
+        }
+
+        .demo-dropdown-item {
+            padding: 10px 15px;
+            color: #c8a8e8;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.85em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+        }
+
+        .demo-dropdown-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .demo-dropdown-item:hover {
+            background: rgba(154,106,186,0.3);
+        }
+
+        .demo-dropdown-item .icon {
+            margin-right: 8px;
+        }
+
+        /* ==================== 弹窗通用样式 ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            background: linear-gradient(180deg, #1a1815 0%, #0f0c0a 100%);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #8b7355, #5a4a3a);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3em;
+            color: #1a1510;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            color: #1a1510;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* ==================== 难度选择界面 ==================== */
+        .difficulty-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .difficulty-modal .modal-header {
+            background: linear-gradient(90deg, #c41e3a, #8a1528);
+        }
+
+        .difficulty-modal .modal-header h2 {
+            color: #fff;
+        }
+
+        .difficulty-option {
+            background: rgba(30,25,20,0.8);
+            border: 2px solid #3a2a20;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-option:hover {
+            border-color: #c41e3a;
+            transform: translateX(10px);
+        }
+
+        .difficulty-option.selected {
+            border-color: #d4af37;
+            background: rgba(212,175,55,0.1);
+        }
+
+        .difficulty-option h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3em;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-option p {
+            color: #8a7a6a;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .difficulty-option .recommend {
+            display: inline-block;
+            background: rgba(76,175,80,0.2);
+            color: #6fcf70;
+            border: 1px solid #4caf50;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            margin-top: 10px;
+        }
+
+        .difficulty-note {
+            color: #8a7a6a;
+            font-size: 0.85em;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #3a2a20;
+        }
+
+        .start-game-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #c41e3a, #8a1528);
+            border: 2px solid #e85a5a;
+            color: #fff;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .start-game-btn:hover {
+            background: linear-gradient(180deg, #d42e4a, #9a2538);
+            box-shadow: 0 0 25px rgba(196,30,58,0.5);
+        }
+
+        /* ==================== 确认弹窗 ==================== */
+        .confirm-modal .modal-content {
+            max-width: 500px;
+        }
+
+        .confirm-modal .modal-header {
+            background: linear-gradient(90deg, #8B2323, #5a1515);
+        }
+
+        .confirm-modal .modal-header h2 {
+            color: #fff;
+        }
+
+        .confirm-text {
+            color: #c9a86c;
+            font-size: 1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .confirm-info {
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #3a2a20;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+
+        .confirm-info .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #2a1a10;
+            font-size: 0.9em;
+        }
+
+        .confirm-info .row:last-child {
+            border-bottom: none;
+        }
+
+        .confirm-info .label {
+            color: #8b7355;
+        }
+
+        .confirm-info .value {
+            color: #e8e4d9;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .confirm-btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn.cancel {
+            background: linear-gradient(180deg, #3a3025, #252015);
+            color: #c9a86c;
+            border: 1px solid #5a4a3a;
+        }
+
+        .confirm-btn.confirm {
+            background: linear-gradient(180deg, #c41e3a, #8a1528);
+            color: #fff;
+            border: 2px solid #e85a5a;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ==================== 恢复进度弹窗 ==================== */
+        .recovery-modal .modal-header {
+            background: linear-gradient(90deg, #f57c00, #e65100);
+        }
+
+        .recovery-icon {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ==================== 存档冲突弹窗 ==================== */
+        .conflict-modal .modal-content {
+            max-width: 700px;
+        }
+
+        .conflict-modal .modal-header {
+            background: linear-gradient(90deg, #9c27b0, #7b1fa2);
+        }
+
+        .conflict-saves {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .save-option {
+            flex: 1;
+            background: rgba(30,25,20,0.8);
+            border: 2px solid #3a2a20;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-option:hover {
+            border-color: #d4af37;
+        }
+
+        .save-option.selected {
+            border-color: #d4af37;
+            background: rgba(212,175,55,0.1);
+        }
+
+        .save-option h4 {
+            font-family: 'Cinzel', serif;
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .save-option .info {
+            color: #8a7a6a;
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+
+        .save-option .info strong {
+            color: #e8e4d9;
+        }
+
+        .save-option .use-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(180deg, #3a3025, #252015);
+            border: 1px solid #5a4a3a;
+            color: #c9a86c;
+            font-family: 'Noto Serif SC', serif;
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .save-option .use-btn:hover {
+            background: linear-gradient(180deg, #4a4035, #353025);
+        }
+
+        .conflict-later-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px dashed #5a4a3a;
+            color: #8a7a6a;
+            font-family: 'Noto Serif SC', serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .conflict-later-btn:hover {
+            border-color: #8a7a6a;
+            color: #c9a86c;
+        }
+
+        /* ==================== 策划案文档样式 ==================== */
+        .doc-section {
+            margin-bottom: 35px;
+        }
+
+        .doc-section h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            color: #d4af37;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #5a4a3a;
+        }
+
+        .doc-section h4 {
+            font-size: 1em;
+            color: #c9a86c;
+            margin: 20px 0 12px;
+        }
+
+        .doc-section p, .doc-section li {
+            color: #a09080;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .doc-section ul {
+            margin-left: 20px;
+        }
+
+        .doc-section strong {
+            color: #e8e4d9;
+        }
+
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .doc-table th {
+            background: rgba(139,115,85,0.3);
+            color: #d4af37;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #5a4a3a;
+            font-size: 0.9em;
+        }
+
+        .doc-table td {
+            padding: 12px;
+            border: 1px solid #3a2a20;
+            color: #a09080;
+            font-size: 0.85em;
+        }
+
+        .highlight-box {
+            background: rgba(212,175,55,0.1);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .highlight-box.warning {
+            background: rgba(232,90,90,0.1);
+            border-color: #e85a5a;
+        }
+
+        .highlight-box h5 {
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .highlight-box.warning h5 {
+            color: #e85a5a;
+        }
+
+        .highlight-box p {
+            color: #c9a86c;
+            margin: 0;
+        }
+
+        .flow-diagram {
+            background: rgba(30,25,20,0.8);
+            border: 1px solid #5a4a3a;
+            border-radius: 5px;
+            padding: 25px;
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .flow-step {
+            background: linear-gradient(180deg, #3a3025, #252015);
+            border: 2px solid #5a4a3a;
+            border-radius: 5px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+
+        .flow-step.highlight {
+            border-color: #d4af37;
+        }
+
+        .flow-step .num {
+            font-size: 0.65em;
+            color: #8b7355;
+        }
+
+        .flow-step .text {
+            color: #e8e4d9;
+            font-size: 0.85em;
+        }
+
+        .flow-arrow {
+            color: #5a4a3a;
+            font-size: 1.2em;
+        }
+
+        /* ==================== 加载动画 ==================== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0808;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            color: #c9a86c;
+            letter-spacing: 3px;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: #2a2520;
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .loading-bar-inner {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #c41e3a, #d4af37);
+            border-radius: 2px;
+            animation: loading 2s ease-in-out forwards;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-text">LOADING...</div>
+        <div class="loading-bar">
+            <div class="loading-bar-inner"></div>
+        </div>
+    </div>
+
+    <!-- ==================== 主界面 ==================== -->
+    <div class="title-screen" id="titleScreen">
+        <!-- 背景层 -->
+        <div class="background-layer"></div>
+        <div class="skyline"></div>
+        <div class="street-lights">
+            <div class="light-glow"></div>
+            <div class="light-glow"></div>
+            <div class="light-glow"></div>
+        </div>
+        <div class="dock"></div>
+
+        <!-- Logo -->
+        <div class="logo-container">
+            <div class="game-logo">
+                <div class="logo-main">GAZE<span class="in">IN</span>SHADOWS</div>
+                <div class="logo-subtitle">Story-Driven Detective Game</div>
+            </div>
+        </div>
+
+        <!-- 菜单 -->
+        <div class="menu-container">
+            <ul class="menu-list" id="menuList">
+                <!-- 动态生成 -->
+            </ul>
+        </div>
+
+        <!-- 版权信息 -->
+        <div class="copyright">
+            BION INTERACTIVE ENTERTAINMENT PRESENTS
+        </div>
+    </div>
+
+    <!-- 演示按钮和下拉菜单 -->
+    <div class="demo-dropdown" id="demoDropdown">
+        <div class="demo-dropdown-item" onclick="showConflictModal(); toggleDemoMenu();">
+            <span class="icon">⚔️</span>存档冲突弹窗
+        </div>
+        <div class="demo-dropdown-item" onclick="showRecoveryModal(); toggleDemoMenu();">
+            <span class="icon">⚠️</span>恢复进度弹窗
+        </div>
+        <div class="demo-dropdown-item" onclick="showNewGameConfirm(); toggleDemoMenu();">
+            <span class="icon">🎮</span>新游戏确认弹窗
+        </div>
+        <div class="demo-dropdown-item" onclick="showDifficulty(); toggleDemoMenu();">
+            <span class="icon">⚙️</span>难度选择弹窗
+        </div>
+        <div class="demo-dropdown-item" onclick="showQuitConfirm(); toggleDemoMenu();">
+            <span class="icon">🚪</span>退出确认弹窗
+        </div>
+    </div>
+    <button class="demo-btn" onclick="toggleDemoMenu()">
+        演示弹窗
+    </button>
+
+    <!-- 策划案按钮 -->
+    <button class="doc-btn" onclick="openDoc()">
+        策划案
+    </button>
+
+    <!-- ==================== 难度选择弹窗 ==================== -->
+    <div class="modal-overlay difficulty-modal" id="difficultyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>SELECT DIFFICULTY</h2>
+                <button class="modal-close" onclick="closeDifficulty()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="difficulty-option" id="normalMode" onclick="selectDifficulty('normal')">
+                    <h3>NORMAL MODE</h3>
+                    <p>提供适量提示，专注故事体验</p>
+                    <p>热区高亮、关键词下划线、组合提示</p>
+                    <span class="recommend">推荐首次游玩</span>
+                </div>
+                <div class="difficulty-option" id="expertMode" onclick="selectDifficulty('expert')">
+                    <h3>EXPERT MODE</h3>
+                    <p>无任何提示，纯粹推理挑战</p>
+                    <p>每轮最多3次错误，考验真正的推理能力</p>
+                    <span class="recommend" style="background:rgba(196,30,58,0.2);color:#e85a5a;border-color:#c41e3a;">推理老玩家</span>
+                </div>
+                <p class="difficulty-note">* 难度可在游戏中随时调整</p>
+                <button class="start-game-btn" onclick="startGame()">开始游戏</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 新游戏确认弹窗 ==================== -->
+    <div class="modal-overlay confirm-modal" id="newGameConfirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>START NEW GAME?</h2>
+                <button class="modal-close" onclick="closeConfirm()">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="confirm-text">开始新游戏将覆盖当前进度。<br>您确定要重新开始吗？</p>
+                <div class="confirm-info">
+                    <div class="row">
+                        <span class="label">当前进度</span>
+                        <span class="value">Chapter 2 - 威胁链条</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">游玩时长</span>
+                        <span class="value">2小时35分</span>
+                    </div>
+                </div>
+                <div class="confirm-buttons">
+                    <button class="confirm-btn cancel" onclick="closeConfirm()">取消</button>
+                    <button class="confirm-btn confirm" onclick="confirmNewGame()">确认开始</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 恢复进度弹窗 ==================== -->
+    <div class="modal-overlay confirm-modal recovery-modal" id="recoveryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>RECOVER PROGRESS?</h2>
+                <button class="modal-close" onclick="closeRecovery()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="recovery-icon">⚠️</div>
+                <p class="confirm-text" style="text-align:center;">检测到游戏上次未正常退出。<br>是否恢复到上次的游戏进度？</p>
+                <div class="confirm-info">
+                    <div class="row">
+                        <span class="label">恢复点</span>
+                        <span class="value">Chapter 2 - 威胁链条</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">场景</span>
+                        <span class="value">赌场</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">时间</span>
+                        <span class="value">2025-12-07 15:32</span>
+                    </div>
+                </div>
+                <div class="confirm-buttons">
+                    <button class="confirm-btn cancel" onclick="ignoreRecovery()">忽略</button>
+                    <button class="confirm-btn confirm" onclick="recoverProgress()">恢复进度</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 存档冲突弹窗 ==================== -->
+    <div class="modal-overlay confirm-modal conflict-modal" id="conflictModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>SAVE CONFLICT DETECTED</h2>
+                <button class="modal-close" onclick="closeConflict()">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="confirm-text" style="text-align:center;">检测到本地存档与云端存档不一致。</p>
+                <div class="conflict-saves">
+                    <div class="save-option" onclick="selectSave('local')">
+                        <h4>本地存档</h4>
+                        <div class="info">
+                            <strong>Chapter 3</strong><br>
+                            掠夺性贷款揭露<br>
+                            游玩时长：3小时12分<br>
+                            时间：12-07 16:00
+                        </div>
+                        <button class="use-btn" onclick="useSave('local')">使用此存档</button>
+                    </div>
+                    <div class="save-option" onclick="selectSave('cloud')">
+                        <h4>云端存档</h4>
+                        <div class="info">
+                            <strong>Chapter 2</strong><br>
+                            威胁链条与连号钞票<br>
+                            游玩时长：2小时05分<br>
+                            时间：12-06 22:30
+                        </div>
+                        <button class="use-btn" onclick="useSave('cloud')">使用此存档</button>
+                    </div>
+                </div>
+                <button class="conflict-later-btn" onclick="decideLater()">稍后决定（暂用本地）</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 退出确认弹窗 ==================== -->
+    <div class="modal-overlay confirm-modal" id="quitConfirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>QUIT GAME?</h2>
+                <button class="modal-close" onclick="closeQuit()">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="confirm-text" style="text-align:center;">确定要退出游戏吗？</p>
+                <div class="confirm-buttons" style="justify-content:center;">
+                    <button class="confirm-btn cancel" onclick="closeQuit()">取消</button>
+                    <button class="confirm-btn confirm" onclick="quitGame()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 策划案弹窗 ==================== -->
+    <div class="modal-overlay" id="docModal">
+        <div class="modal-content" style="max-width:1000px;">
+            <div class="modal-header">
+                <h2>开始界面系统 - 策划案</h2>
+                <button class="modal-close" onclick="closeDoc()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- 系统概述 -->
+                <div class="doc-section">
+                    <h3>一、系统概述</h3>
+                    <p><strong>系统名称</strong>：开始界面系统（Title Screen / Main Menu）</p>
+                    <p><strong>系统定位</strong>：玩家启动游戏后的首个界面，承担品牌展示、进度入口、设置管理等核心职责。</p>
+
+                    <div class="highlight-box">
+                        <h5>核心设计理念</h5>
+                        <p>「侦探档案室的入口」- 主界面采用1920年代芝加哥街景作为背景，配合复古红黑配色和打字机字体，让玩家在进入游戏前就感受到黄昏年代的侦探氛围。</p>
+                    </div>
+
+                    <h4>1.1 设计目标</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>目标</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>快速进入</td>
+                            <td>玩家能在3次点击内开始/继续游戏</td>
+                        </tr>
+                        <tr>
+                            <td>状态清晰</td>
+                            <td>清晰展示游戏进度、存档状态</td>
+                        </tr>
+                        <tr>
+                            <td>容错设计</td>
+                            <td>断线、崩溃后能自动恢复进度</td>
+                        </tr>
+                        <tr>
+                            <td>平台兼容</td>
+                            <td>支持Steam云存档，多设备同步</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 菜单选项 -->
+                <div class="doc-section">
+                    <h3>二、菜单选项</h3>
+
+                    <h4>2.1 菜单列表</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>英文名称</th>
+                            <th>中文名称</th>
+                            <th>功能说明</th>
+                        </tr>
+                        <tr>
+                            <td>CONTINUE</td>
+                            <td>继续游戏</td>
+                            <td>加载最近存档，有存档时显示</td>
+                        </tr>
+                        <tr>
+                            <td>NEW GAME</td>
+                            <td>新游戏</td>
+                            <td>开始全新游戏（有存档时需确认）</td>
+                        </tr>
+                        <tr>
+                            <td>CHAPTER SELECT</td>
+                            <td>章节选择</td>
+                            <td>选择已解锁章节开始/重玩</td>
+                        </tr>
+                        <tr>
+                            <td>ACHIEVEMENT</td>
+                            <td>成就</td>
+                            <td>查看成就列表和解锁状态</td>
+                        </tr>
+                        <tr>
+                            <td>SETTINGS</td>
+                            <td>设置</td>
+                            <td>进入设置系统</td>
+                        </tr>
+                        <tr>
+                            <td>DOWNLOAD</td>
+                            <td>下载</td>
+                            <td>DLC内容下载（预留）</td>
+                        </tr>
+                        <tr>
+                            <td>CREDITS</td>
+                            <td>制作人员</td>
+                            <td>查看制作团队名单</td>
+                        </tr>
+                        <tr>
+                            <td>QUIT</td>
+                            <td>退出</td>
+                            <td>退出游戏</td>
+                        </tr>
+                    </table>
+
+                    <h4>2.2 动态菜单规则</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>存档状态</th>
+                            <th>菜单变化</th>
+                        </tr>
+                        <tr>
+                            <td>无存档（首次启动）</td>
+                            <td>仅显示 NEW GAME，CHAPTER SELECT 灰色不可点击</td>
+                        </tr>
+                        <tr>
+                            <td>有进行中存档</td>
+                            <td>NEW GAME 上方新增 CONTINUE 选项，且默认选中</td>
+                        </tr>
+                        <tr>
+                            <td>有已完成章节</td>
+                            <td>CHAPTER SELECT 可用</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 存档系统 -->
+                <div class="doc-section">
+                    <h3>三、存档系统</h3>
+
+                    <h4>3.1 存档类型</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>存档类型</th>
+                            <th>触发时机</th>
+                            <th>保存位置</th>
+                            <th>保留策略</th>
+                        </tr>
+                        <tr>
+                            <td>章节存档</td>
+                            <td>章节结束（指证成功）</td>
+                            <td>本地+云端</td>
+                            <td>永久保留</td>
+                        </tr>
+                        <tr>
+                            <td>自动存档</td>
+                            <td>关键节点自动触发</td>
+                            <td>本地+云端</td>
+                            <td>保留最近3个</td>
+                        </tr>
+                        <tr>
+                            <td>临时存档</td>
+                            <td>退出游戏时</td>
+                            <td>仅本地</td>
+                            <td>下次启动后清除</td>
+                        </tr>
+                        <tr>
+                            <td>快照存档</td>
+                            <td>每10分钟自动创建</td>
+                            <td>仅本地</td>
+                            <td>保留最近1个</td>
+                        </tr>
+                    </table>
+
+                    <h4>3.2 自动存档触发点</h4>
+                    <ul>
+                        <li>章节开始（进入新章节开篇时）</li>
+                        <li>场景切换（从一个场景移动到另一个场景）</li>
+                        <li>关键对话完成（完成重要NPC对话后）</li>
+                        <li>证据获取（获得新证据时）</li>
+                        <li>进入指证阶段（触发指证战斗前）</li>
+                        <li>指证轮次完成（每轮指证成功后）</li>
+                    </ul>
+                </div>
+
+                <!-- 断线重连 -->
+                <div class="doc-section">
+                    <h3>四、断线重连与异常恢复</h3>
+
+                    <div class="highlight-box warning">
+                        <h5>核心原则</h5>
+                        <p>「玩家不应因技术问题丢失任何进度」- 无论是游戏崩溃、系统断电、网络中断还是手动强制退出，系统都应尽可能恢复玩家的最近进度。</p>
+                    </div>
+
+                    <h4>4.1 异常场景处理</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>异常场景</th>
+                            <th>检测方式</th>
+                            <th>恢复策略</th>
+                        </tr>
+                        <tr>
+                            <td>游戏崩溃</td>
+                            <td>下次启动检测到未正常退出标记</td>
+                            <td>加载最近快照存档</td>
+                        </tr>
+                        <tr>
+                            <td>系统断电</td>
+                            <td>同上</td>
+                            <td>加载最近快照存档</td>
+                        </tr>
+                        <tr>
+                            <td>强制退出（Alt+F4）</td>
+                            <td>同上</td>
+                            <td>加载最近快照存档</td>
+                        </tr>
+                        <tr>
+                            <td>Steam离线模式</td>
+                            <td>检测Steam API状态</td>
+                            <td>使用本地存档，稍后同步</td>
+                        </tr>
+                        <tr>
+                            <td>云存档同步失败</td>
+                            <td>Steam API返回错误</td>
+                            <td>保留本地存档，提示用户</td>
+                        </tr>
+                    </table>
+
+                    <h4>4.2 异常退出检测机制</h4>
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <div class="num">STEP 1</div>
+                            <div class="text">游戏启动</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step highlight">
+                            <div class="num">STEP 2</div>
+                            <div class="text">检测运行中标记</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">STEP 3</div>
+                            <div class="text">存在？显示恢复弹窗</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">STEP 4</div>
+                            <div class="text">恢复/忽略</div>
+                        </div>
+                    </div>
+
+                    <p><strong>实现原理</strong>：游戏启动时创建"运行中"标记文件，正常退出时删除该标记。下次启动检测标记文件是否存在，若存在说明上次非正常退出。</p>
+                </div>
+
+                <!-- Steam云存档 -->
+                <div class="doc-section">
+                    <h3>五、Steam云存档集成</h3>
+
+                    <h4>5.1 云存档范围</h4>
+                    <table class="doc-table">
+                        <tr>
+                            <th>数据类型</th>
+                            <th>是否同步</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>章节存档</td>
+                            <td>✅ 同步</td>
+                            <td>核心进度数据</td>
+                        </tr>
+                        <tr>
+                            <td>自动存档</td>
+                            <td>✅ 同步</td>
+                            <td>保留最近3个</td>
+                        </tr>
+                        <tr>
+                            <td>临时存档</td>
+                            <td>❌ 不同步</td>
+                            <td>仅本地临时使用</td>
+                        </tr>
+                        <tr>
+                            <td>快照存档</td>
+                            <td>❌ 不同步</td>
+                            <td>仅用于崩溃恢复</td>
+                        </tr>
+                        <tr>
+                            <td>设置数据</td>
+                            <td>✅ 同步</td>
+                            <td>难度、音量等设置</td>
+                        </tr>
+                    </table>
+
+                    <h4>5.2 存档冲突处理</h4>
+                    <p>当本地存档与云端存档不一致时，系统会显示冲突解决弹窗，让玩家自主选择使用哪个存档。被放弃的存档会移至备份目录，不立即删除。</p>
+                </div>
+
+                <!-- 启动流程 -->
+                <div class="doc-section">
+                    <h3>六、启动流程</h3>
+
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <div class="num">1</div>
+                            <div class="text">显示公司Logo</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">2</div>
+                            <div class="text">显示游戏Logo</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">3</div>
+                            <div class="text">初始化系统</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step highlight">
+                            <div class="num">4</div>
+                            <div class="text">检测异常/冲突</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="num">5</div>
+                            <div class="text">显示主菜单</div>
+                        </div>
+                    </div>
+
+                    <h4>6.1 首次启动特殊处理</h4>
+                    <ol>
+                        <li>显示语言选择界面（英语/简体中文）</li>
+                        <li>显示简要操作说明</li>
+                        <li>进入主菜单，NEW GAME为唯一可用选项</li>
+                        <li>点击NEW GAME后显示难度选择</li>
+                    </ol>
+                </div>
+
+                <!-- 参考资料 -->
+                <div class="doc-section">
+                    <h3>七、参考资料</h3>
+                    <ul>
+                        <li><strong>逆转裁判系列</strong> - 章节存档机制、通关后菜单解锁</li>
+                        <li><strong>弹丸论破系列</strong> - 难度选择、进度回顾系统</li>
+                        <li><strong>黑神话悟空</strong> - 多层自动存档机制（即时/小时/每日）</li>
+                        <li><a href="https://zhuanlan.zhihu.com/p/675106836" style="color:#5aafe8;">单机游戏数据自动保存方案</a></li>
+                        <li><a href="https://www.zhihu.com/question/39385118" style="color:#5aafe8;">Steam云存档机制</a></li>
+                    </ul>
+                </div>
+
+                <!-- 演示功能 -->
+                <div class="doc-section">
+                    <h3>八、弹窗演示</h3>
+                    <p>点击下方按钮可预览各种弹窗效果：</p>
+                    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;">
+                        <button onclick="closeDoc(); setTimeout(showConflictModal, 300);" style="padding:10px 20px; background:linear-gradient(180deg,#9c27b0,#7b1fa2); border:2px solid #ce93d8; color:#fff; font-family:'Noto Serif SC',serif; cursor:pointer; border-radius:5px;">⚔️ 存档冲突弹窗</button>
+                        <button onclick="closeDoc(); setTimeout(showRecoveryModal, 300);" style="padding:10px 20px; background:linear-gradient(180deg,#f57c00,#e65100); border:2px solid #ffb74d; color:#fff; font-family:'Noto Serif SC',serif; cursor:pointer; border-radius:5px;">⚠️ 恢复进度弹窗</button>
+                        <button onclick="closeDoc(); setTimeout(showNewGameConfirm, 300);" style="padding:10px 20px; background:linear-gradient(180deg,#8B2323,#5a1515); border:2px solid #cd5c5c; color:#fff; font-family:'Noto Serif SC',serif; cursor:pointer; border-radius:5px;">🎮 新游戏确认弹窗</button>
+                        <button onclick="closeDoc(); setTimeout(showDifficulty, 300);" style="padding:10px 20px; background:linear-gradient(180deg,#c41e3a,#8a1528); border:2px solid #e85a5a; color:#fff; font-family:'Noto Serif SC',serif; cursor:pointer; border-radius:5px;">⚙️ 难度选择弹窗</button>
+                        <button onclick="closeDoc(); setTimeout(showQuitConfirm, 300);" style="padding:10px 20px; background:linear-gradient(180deg,#3a3025,#252015); border:2px solid #5a4a3a; color:#c9a86c; font-family:'Noto Serif SC',serif; cursor:pointer; border-radius:5px;">🚪 退出确认弹窗</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 状态变量 ====================
+        let hasSave = true; // 模拟是否有存档
+        let hasCompletedChapter = true; // 模拟是否有已完成章节
+        let selectedDifficulty = 'normal';
+
+        // ==================== 初始化 ====================
+        window.onload = function() {
+            // 模拟加载
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                initMenu();
+
+                // 模拟检测到异常退出（演示用，可注释掉）
+                // setTimeout(() => showRecoveryModal(), 1000);
+            }, 2500);
+        };
+
+        // 初始化菜单
+        function initMenu() {
+            const menuList = document.getElementById('menuList');
+            let menuItems = [];
+
+            if (hasSave) {
+                menuItems.push({
+                    id: 'continue',
+                    text: 'CONTINUE',
+                    hint: 'Chapter 2 - 威胁链条',
+                    active: true,
+                    action: 'continueGame()'
+                });
+            }
+
+            menuItems.push({
+                id: 'newgame',
+                text: 'NEW GAME',
+                active: !hasSave,
+                action: hasSave ? 'showNewGameConfirm()' : 'showDifficulty()'
+            });
+
+            menuItems.push({
+                id: 'chapter',
+                text: 'CHAPTER SELECT',
+                disabled: !hasCompletedChapter,
+                action: 'goToChapterSelect()'
+            });
+
+            menuItems.push({
+                id: 'achievement',
+                text: 'ACHIEVEMENT',
+                action: 'showMessage("成就系统")'
+            });
+
+            menuItems.push({
+                id: 'settings',
+                text: 'SETTINGS',
+                action: 'goToSettings()'
+            });
+
+            menuItems.push({
+                id: 'download',
+                text: 'DOWNLOAD',
+                disabled: true,
+                action: 'showMessage("敬请期待")'
+            });
+
+            menuItems.push({
+                id: 'credits',
+                text: 'CREDITS',
+                action: 'showMessage("制作人员名单")'
+            });
+
+            menuItems.push({
+                id: 'quit',
+                text: 'QUIT',
+                action: 'showQuitConfirm()'
+            });
+
+            // 生成菜单HTML
+            let html = '';
+            menuItems.forEach((item, index) => {
+                const activeClass = item.active ? ' active' : '';
+                const disabledClass = item.disabled ? ' disabled' : '';
+                const hintHtml = item.hint ? `<span class="progress-hint">${item.hint}</span>` : '';
+
+                html += `
+                    <li class="menu-item${activeClass}${disabledClass}"
+                        onclick="${item.disabled ? '' : item.action}"
+                        onmouseenter="hoverMenu(this)"
+                        onmouseleave="unhoverMenu(this)">
+                        <div class="menu-item-inner">
+                            <span class="menu-text">${item.text}</span>
+                            ${hintHtml}
+                        </div>
+                    </li>
+                `;
+            });
+
+            menuList.innerHTML = html;
+        }
+
+        // 菜单悬停效果
+        function hoverMenu(el) {
+            if (el.classList.contains('disabled')) return;
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        function unhoverMenu(el) {
+            // 恢复默认选中项
+            const continueItem = document.querySelector('.menu-item:first-child');
+            if (hasSave && continueItem) {
+                continueItem.classList.add('active');
+            }
+        }
+
+        // ==================== 菜单功能 ====================
+        function continueGame() {
+            showMessage('正在加载存档...\n\n（演示功能）');
+        }
+
+        function showNewGameConfirm() {
+            document.getElementById('newGameConfirm').classList.add('active');
+        }
+
+        function closeConfirm() {
+            document.getElementById('newGameConfirm').classList.remove('active');
+        }
+
+        function confirmNewGame() {
+            closeConfirm();
+            showDifficulty();
+        }
+
+        function showDifficulty() {
+            document.getElementById('difficultyModal').classList.add('active');
+            selectDifficulty('normal');
+        }
+
+        function closeDifficulty() {
+            document.getElementById('difficultyModal').classList.remove('active');
+        }
+
+        function selectDifficulty(mode) {
+            selectedDifficulty = mode;
+            document.getElementById('normalMode').classList.toggle('selected', mode === 'normal');
+            document.getElementById('expertMode').classList.toggle('selected', mode === 'expert');
+        }
+
+        function startGame() {
+            closeDifficulty();
+            showMessage(`开始新游戏\n难度：${selectedDifficulty === 'normal' ? '普通模式' : '专家模式'}\n\n（演示功能）`);
+        }
+
+        function goToChapterSelect() {
+            // 从开始界面进入，带mode=select参数，先显示章节选择界面
+            window.location.href = '../案情回顾系统/case_review_system.html?mode=select';
+        }
+
+        function goToSettings() {
+            window.location.href = '../设置系统/settings_system.html';
+        }
+
+        function showQuitConfirm() {
+            document.getElementById('quitConfirm').classList.add('active');
+        }
+
+        function closeQuit() {
+            document.getElementById('quitConfirm').classList.remove('active');
+        }
+
+        function quitGame() {
+            showMessage('退出游戏\n\n（演示功能）');
+            closeQuit();
+        }
+
+        // ==================== 恢复进度弹窗 ====================
+        function showRecoveryModal() {
+            document.getElementById('recoveryModal').classList.add('active');
+        }
+
+        function closeRecovery() {
+            document.getElementById('recoveryModal').classList.remove('active');
+        }
+
+        function ignoreRecovery() {
+            closeRecovery();
+            showMessage('已忽略恢复点');
+        }
+
+        function recoverProgress() {
+            closeRecovery();
+            showMessage('正在恢复进度...\n\n（演示功能）');
+        }
+
+        // ==================== 存档冲突弹窗 ====================
+        function showConflictModal() {
+            document.getElementById('conflictModal').classList.add('active');
+        }
+
+        function closeConflict() {
+            document.getElementById('conflictModal').classList.remove('active');
+        }
+
+        function selectSave(type) {
+            document.querySelectorAll('.save-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function useSave(type) {
+            closeConflict();
+            showMessage(`使用${type === 'local' ? '本地' : '云端'}存档\n\n（演示功能）`);
+        }
+
+        function decideLater() {
+            closeConflict();
+            showMessage('暂时使用本地存档\n下次启动时将再次询问');
+        }
+
+        // ==================== 策划案弹窗 ====================
+        function openDoc() {
+            document.getElementById('docModal').classList.add('active');
+        }
+
+        function closeDoc() {
+            document.getElementById('docModal').classList.remove('active');
+        }
+
+        // ==================== 工具函数 ====================
+        function showMessage(msg) {
+            alert(msg);
+        }
+
+        // 点击弹窗背景关闭
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // ESC关闭弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+
+        // ==================== 演示菜单 ====================
+        function toggleDemoMenu() {
+            const dropdown = document.getElementById('demoDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // 点击其他区域关闭演示菜单
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('demoDropdown');
+            const demoBtn = document.querySelector('.demo-btn');
+            if (!dropdown.contains(e.target) && e.target !== demoBtn) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -84,7 +84,7 @@ scenes_overview:
 opening:
   description: Zack尝试获取令状被拒绝，Mickey神秘登场
   scenes:
-    - scene_id: SC2010
+    - scene_id: SC2010  # 芝加哥市政厅档案室门口
       name: 芝加哥市政厅档案室门口
       description: Emma带领Zack来到市政厅，尝试获取令状被拒绝
       dialog_file: loop3/opening.yaml
@@ -92,7 +92,7 @@ opening:
 
 # 突发事件
 emergency:
-  - scene: SC2010
+  - scene: SC2010  # 芝加哥市政厅档案室门口
     scene_name: 芝加哥市政厅档案室门口
     trigger: 离开市政厅时触发
     description: Mickey神秘登场，主动提出帮忙获取令状
@@ -104,20 +104,20 @@ free_phase:
   description: 玩家探索Frank家和银行档案，收集贷款欺诈证据
   scenes:
     # 继承场景（循环1）
-    - scene: SC2002
+    - scene: SC2002  # Margaret鞋坊一楼-状态2
       type: search
       status: inherited
       inherited_from: loop1
       has_new_clues: false
 
-    - scene: SC2003
+    - scene: SC2003  # Margaret鞋坊二楼
       type: search
       status: inherited
       inherited_from: loop1
       has_new_clues: false
 
     # 继承场景（循环2）
-    - scene: SC2006
+    - scene: SC2006  # Frank和Mrs. O'Hara家门口
       type: search
       npc: Mrs. O'Hara
       status: inherited
@@ -125,7 +125,7 @@ free_phase:
       has_new_clues: false
       npc_available: true
 
-    - scene: SC2007
+    - scene: SC2007  # 赌场
       type: search
       npc: NPC208
       status: inherited
@@ -133,14 +133,14 @@ free_phase:
       has_new_clues: false
       npc_available: true
 
-    - scene: SC2008
+    - scene: SC2008  # 银行贵宾室
       type: npc
       npc: NPC203
       status: inherited
       inherited_from: loop2
       npc_available: true
 
-    - scene: SC2009
+    - scene: SC2009  # 银行大厅
       type: npc
       npc: NPC202
       status: inherited
@@ -148,7 +148,7 @@ free_phase:
       npc_available: true
 
     # 新增场景
-    - scene: SC2011
+    - scene: SC2011  # Frank家里
       type: search
       unlock_type: item
       unlock_condition: 拥有Leonard交出的钥匙
@@ -159,7 +159,7 @@ free_phase:
         - id: EV2302
           note: Frank笔迹样本
 
-    - scene: SC2012
+    - scene: SC2012  # Danny家里
       type: npc
       npc: NPC204
       unlock_type: evidence
@@ -167,7 +167,7 @@ free_phase:
       status: new
       dialog_file: loop3/danny.yaml
 
-    - scene: SC2013
+    - scene: SC2013  # 银行档案室
       type: search
       unlock_type: story
       unlock_condition: Mickey帮忙获取令状后解锁
@@ -184,7 +184,7 @@ free_phase:
         - id: EV2312
           note: 协议抬头"Moore Investment Company"
 
-    - scene: SC2014
+    - scene: SC2014  # Leonard办公室
       type: search
       unlock_type: auto
       unlock_condition: 进入银行档案室后，同一区域可访问
@@ -192,7 +192,7 @@ free_phase:
 
 # 指证阶段
 expose:
-  scene: SC2008
+  scene: SC2008  # 银行贵宾室
   scene_name: 银行贵宾室
   target: Moore
   target_name: Harold Moore
@@ -223,7 +223,7 @@ expose:
 
 # 结尾
 ending:
-  scene: SC2008
+  scene: SC2008  # 银行贵宾室
   scene_name: 银行贵宾室（遗嘱揭示）
   description: Moore防线崩溃，主动提供Frank遗嘱副本，揭示地下室秘密
   dialog_file: loop3/ending.yaml

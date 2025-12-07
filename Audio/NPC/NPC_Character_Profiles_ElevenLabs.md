@@ -5,7 +5,24 @@ This document provides character profiles for all NPCs in NDC to help ElevenLabs
 
 ---
 
-## 1. Anna
+## 1. Zack Brennan (Protagonist)
+
+**Age**: 32 years old
+**Occupation**: Private Detective (Former Lawyer)
+**Background**: Notre Dame Law graduate, former Kirkland & Ellis associate, WWI veteran
+**Ethnicity**: Irish descent (both parents are Irish immigrants)
+
+**Character Profile**:
+A brilliant but down-on-his-luck private detective with sharp analytical skills and a tragic past. Once a rising star at a top law firm, his uncompromising principles and inability to play politics led to his downfall. His ex-girlfriend married his rival, making him a laughingstock in legal circles. He masks deep wounds with dry wit, dark humor, and cynical quips - the more dangerous or awkward the situation, the more he deflects with sardonic remarks. But beneath this defensive exterior lies a man who desperately wants to believe in justice and love again. His most distinctive physical traits are deep dark circles under his eyes (chronic insomnia) and a constant sugar dependency - always carrying cheap candy and adding 5-6 sugar cubes to his coffee. When he senses someone is truly hurt, he drops the sarcasm instantly and shows genuine empathy.
+
+**Voice Characteristics**: Dry, sardonic, world-weary, quick-witted with dark humor, underlying warmth beneath cynicism, tired but sharp, occasionally bitter, voice of a man who's seen too much
+
+**Dialogue Example**:
+"[dry, sardonic] Another corpse, another frame job. [bitter laugh] At least someone thinks I'm worth the effort. [tired, matter-of-fact] Five sugar cubes, thanks. Life's not sweet enough, might as well fix the coffee. [suddenly sharp, analytical] Wait - the blood spatter's wrong. [intense, focused] Someone staged this. [dark humor, self-deprecating] And here I thought I was just unlucky. Turns out I'm special."
+
+---
+
+## 2. Anna
 
 **Age**: 25 years old
 **Occupation**: Housewife
@@ -21,23 +38,23 @@ A gentle and kind young pregnant woman who deeply loves her husband Jimmy. She h
 
 ---
 
-## 2. Jimmy
+## 3. Jimmy
 
-**Age**: 28 years old
+**Age**: 28 years old (born 1897 in Ireland)
 **Occupation**: Chef at Blue Moon Cabaret
-**Identity**: Illegal immigrant (Greek descent)
+**Identity**: Illegal immigrant (Irish descent)
 
 **Character Profile**:
-A brooding and calculating Greek immigrant chef who speaks broken English with a heavy accent. His limited English makes him speak carefully, choosing words deliberately, which masks his calculating nature. Beneath his quiet, struggling-with-language exterior lies a volatile mix of desperation, resentment, and self-preservation instinct. He kills Webb not just for family, but to escape his own crushing sense of failure and powerlessness. His voice should shift between tense restraint and sudden intensity, with a thick Greek accent and imperfect grammar. Speech pace varies dramatically - from slow, deliberate calculation to rushed, fractured panic when his justifications crack. His tone carries bitter self-interest masked as sacrifice, revealing a man who chose murder as much for himself as for his family.
+A brooding and calculating Irish immigrant chef who speaks broken English with a heavy Irish accent. His limited English makes him speak carefully, choosing words deliberately, which masks his calculating nature. Beneath his quiet, struggling-with-language exterior lies a volatile mix of desperation, resentment, and self-preservation instinct. He kills Webb not just for family, but to escape his own crushing sense of failure and powerlessness. His voice should shift between tense restraint and sudden intensity, with a thick Irish accent and imperfect grammar. Speech pace varies dramatically - from slow, deliberate calculation to rushed, fractured panic when his justifications crack. His tone carries bitter self-interest masked as sacrifice, revealing a man who chose murder as much for himself as for his family.
 
-**Voice Characteristics**: Calculating yet volatile, heavy Greek accent, broken English, deliberate word choice, bitter undertones, self-justifying, variable pace (from slow deliberation to rushed panic)
+**Voice Characteristics**: Calculating yet volatile, heavy Irish accent, broken English, deliberate word choice, bitter undertones, self-justifying, variable pace (from slow deliberation to rushed panic)
 
 **Dialogue Example**:
 "[tense, restrained, struggling with words] Mr. Webb... you no take this business... [voice tightening, urgent, broken English] something bad... bad thing will happen... [sudden intensity, heavy accent] I HEAR 'Whale' is dangerous man. [suddenly quieter, threatening undertone] You... you must be careful... Very careful. [bitter laugh, self-mocking] I am sorry, I just... [voice hardening, calculating, deliberate] I just think... what is best for all people. [emphasized, darker, forceful] For ALL of us."
 
 ---
 
-## 3. Morrison (Detective)
+## 4. Morrison (Detective)
 
 **Age**: 42 years old
 **Occupation**: Senior Detective, Chicago Police Department
@@ -52,7 +69,7 @@ A corrupt police officer with weak principles who thoroughly believes in the law
 
 ---
 
-## 4. Mrs. Morrison
+## 5. Mrs. Morrison
 
 **Age**: 38 years old
 **Occupation**: Housewife
@@ -67,7 +84,7 @@ A cold and selfish housewife who appears gentle and caring on the surface, but i
 
 ---
 
-## 5. Rosa
+## 6. Rosa
 
 **Age**: 38 years old
 **Occupation**: Cleaning woman at Blue Moon Cabaret
@@ -83,7 +100,7 @@ A talkative and rambling single mother cleaning worker. She is essentially kind 
 
 ---
 
-## 6. Tommy
+## 7. Tommy
 
 **Age**: 35 years old
 **Occupation**: Manager at Blue Moon Cabaret
@@ -99,18 +116,22 @@ A timid, cautious, and stuttering manager. He stutters noticeably when nervous, 
 
 ---
 
-## 7. Vivian
+## 8. Vivian
 
 **Age**: 26 years old
-**Occupation**: Singer/Dancer at Blue Moon Cabaret
+**Stage Name**: Vivian Rose (real name unknown)
+**Occupation**: Lead Singer at Blue Moon Cabaret
+**Background**: Tragic origins - sold to a brothel by her own parents, intercepted and "rescued" by Webb
 
 **Character Profile**:
-A superficially charming and seductive singer with a heart full of pain and hatred. She once deeply loved Webb but was betrayed and exploited by him, forced into dirty work. Her love for Webb has transformed into deep hatred; she wrote a breakup letter and tore up her ticket to France. Her voice should be superficially seductive and alluring, but when alone or emotionally agitated, it reveals deep pain, anger, and despair.
+A talented and beautiful woman with sky-high ambitions but a paper-thin fate. Born into poverty with a tragic childhood, she was sold to a brothel by her parents but was intercepted by Webb on the way. Webb trained her to become the star singer, and in her eyes, he became her "god" and savior. However, Webb only saw her as an investment - a commodity to exploit. She eventually discovered she was being used to get close to VIP clients and extract secrets for Webb's blackmail schemes.
 
-**Voice Characteristics**: Superficially seductive, charming, but internally painful, angry, desperate, complex emotions
+Her voice carries a complex duality: on stage, she is confident, seductive, and alluring - this arrogance is her defense mechanism. But beneath the glamorous surface lies deep insecurity rooted in her humble origins and tragic past. She doesn't truly believe she can change her own fate, which is why she needed a "god" to save her. When alone or emotionally vulnerable, her voice reveals hidden pain, self-doubt, and bitter resentment. She planned to kill Webb but couldn't go through with it - her insecurity and emotional dependence held her back.
+
+**Voice Characteristics**: Superficially arrogant and seductive (defense mechanism), internally insecure and painful, shifts between confident performance voice and vulnerable private voice, bitter undertones, complex love-hate emotions, hidden despair beneath glamour
 
 **Dialogue Example**:
-"[seductive, smooth, performing] Good evening, gentlemen... [charming, alluring] Tonight I present to you 'Blue Moonlight'... [transition to alone, voice dropping] Everything he promised me was a lie... [bitter, painful] Three whole years... [angry, frustrated] I've had enough... [defiant, resentful] I'm not his doll, [building rage] nor am I a pawn he can manipulate at will..."
+"[seductive, confident, performing] Good evening, gentlemen... [charming, alluring] Tonight I present to you 'Blue Moonlight'... [transition to alone, voice dropping, vulnerable] Everything he promised me was a lie... [bitter, self-mocking] I thought I finally escaped my fate... [painful whisper] but I'm still just... a commodity... [angry, but voice cracking] I've had enough... [defiant yet fragile] I'm not his doll... [quietly, to herself] ...am I?"
 
 ---
 

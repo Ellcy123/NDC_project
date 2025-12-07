@@ -1,0 +1,216 @@
+# AUG Dialog Game - 示例数据
+# 将此内容复制到编辑器中使用
+
+scenes:
+  # ===== 场景1：咖啡馆 =====
+  - id: cafe
+    name: "街角咖啡馆"
+    description: "一家温馨的小咖啡馆，空气中弥漫着咖啡香气"
+    background: "bg_cafe.jpg"  # 可选，放在images文件夹
+    npcs:
+      # NPC: 安娜
+      - id: anna
+        name: "安娜"
+        role: "咖啡师"
+        portrait: "anna.png"  # 放在images文件夹
+        dialog:
+          # 开始对话
+          start:
+            - speaker: npc
+              text: "欢迎来到街角咖啡馆！我是安娜，今天想喝点什么呢？"
+            - speaker: player
+              choices:
+                - text: "来杯拿铁吧"
+                  goto: latte
+                - text: "有什么推荐的吗？"
+                  goto: recommend
+                - text: "我只是随便看看"
+                  goto: browse
+
+          # 拿铁分支
+          latte:
+            - speaker: npc
+              text: "拿铁是个好选择！稍等一下..."
+            - speaker: npc
+              text: "给您，请慢用~ 这是我们店的招牌拿铁，用的是特选咖啡豆。"
+            - speaker: player
+              choices:
+                - text: "谢谢，味道很棒！"
+                  goto: end_good
+                - text: "还想再点些别的"
+                  goto: start
+
+          # 推荐分支
+          recommend:
+            - speaker: npc
+              text: "如果是第一次来的话，我推荐我们的焦糖玛奇朵！"
+            - speaker: npc
+              text: "甜度刚刚好，很多客人都很喜欢呢。"
+            - speaker: player
+              choices:
+                - text: "那就来一杯吧"
+                  goto: macchiato
+                - text: "我还是要拿铁"
+                  goto: latte
+
+          # 玛奇朵分支
+          macchiato:
+            - speaker: npc
+              text: "好的！马上为您制作~"
+            - speaker: npc
+              text: "这是您的焦糖玛奇朵，上面的焦糖是我手工制作的哦！"
+
+          # 随便看看分支
+          browse:
+            - speaker: npc
+              text: "好的，随时叫我就行！"
+            - speaker: npc
+              text: "对了，今天新到了一批甜点，有兴趣可以看看~"
+
+          # 结束
+          end_good:
+            - speaker: npc
+              text: "谢谢夸奖！欢迎下次再来哦~"
+
+      # NPC: 老先生
+      - id: old_man
+        name: "老先生"
+        role: "常客"
+        portrait: ""
+        dialog:
+          start:
+            - speaker: npc
+              text: "哦，年轻人，坐下来聊聊吧。"
+            - speaker: npc
+              text: "我在这家咖啡馆待了二十年了，有什么想知道的吗？"
+            - speaker: player
+              choices:
+                - text: "这家店有什么故事吗？"
+                  goto: story
+                - text: "您每天都来这里吗？"
+                  goto: daily
+                - text: "打扰了，我先走了"
+                  goto: leave
+
+          story:
+            - speaker: npc
+              text: "这家店啊...是二十年前一对年轻夫妻开的。"
+            - speaker: npc
+              text: "他们把全部心血都投入到这里，每一杯咖啡都用心制作。"
+            - speaker: npc
+              text: "安娜是他们的女儿，现在继承了这份事业。"
+
+          daily:
+            - speaker: npc
+              text: "是啊，每天早上九点准时来，下午三点离开。"
+            - speaker: npc
+              text: "这里的咖啡和氛围，已经成为我生活的一部分了。"
+
+          leave:
+            - speaker: npc
+              text: "好的，慢走。有空再来聊。"
+
+  # ===== 场景2：城市公园 =====
+  - id: park
+    name: "城市公园"
+    description: "绿树成荫的城市公园，是居民休闲的好去处"
+    background: ""
+    npcs:
+      # NPC: 小明
+      - id: kid
+        name: "小明"
+        role: "活泼的小男孩"
+        portrait: ""
+        dialog:
+          start:
+            - speaker: npc
+              text: "嘿！你也来公园玩吗？"
+            - speaker: npc
+              text: "我在找我的小狗，它跑丢了..."
+            - speaker: player
+              choices:
+                - text: "我帮你一起找吧"
+                  goto: help
+                - text: "它长什么样？"
+                  goto: describe
+                - text: "祝你好运"
+                  goto: leave
+
+          help:
+            - speaker: npc
+              text: "真的吗？太好了！"
+            - speaker: npc
+              text: "它是一只棕色的柯基，名字叫豆豆！"
+            - speaker: npc
+              text: "它最喜欢在喷泉附近玩了。"
+
+          describe:
+            - speaker: npc
+              text: "是一只棕色的柯基犬，腿短短的特别可爱！"
+            - speaker: npc
+              text: "它脖子上有一个蓝色的项圈。"
+            - speaker: player
+              choices:
+                - text: "好，我帮你找找"
+                  goto: help
+                - text: "我刚才好像看到一只"
+                  goto: seen
+
+          seen:
+            - speaker: npc
+              text: "真的吗？在哪里？！"
+            - speaker: npc
+              text: "快带我去看看！"
+
+          leave:
+            - speaker: npc
+              text: "嗯...好吧，谢谢你。"
+
+  # ===== 场景3：神秘图书馆 =====
+  - id: library
+    name: "神秘图书馆"
+    description: "一座古老的图书馆，据说藏有许多秘密"
+    background: ""
+    npcs:
+      - id: librarian
+        name: "图书管理员"
+        role: "神秘的管理员"
+        portrait: ""
+        dialog:
+          start:
+            - speaker: npc
+              text: "欢迎来到这座图书馆..."
+            - speaker: npc
+              text: "这里的每一本书都有自己的故事。你想找什么样的书？"
+            - speaker: player
+              choices:
+                - text: "有冒险故事吗？"
+                  goto: adventure
+                - text: "有魔法书吗？"
+                  goto: magic
+                - text: "我想看历史书"
+                  goto: history
+
+          adventure:
+            - speaker: npc
+              text: "冒险故事...跟我来。"
+            - speaker: npc
+              text: "这本《星空探险记》讲述了一群勇敢的探险家穿越银河的故事。"
+            - speaker: npc
+              text: "据说，读完这本书的人都会获得勇气。"
+
+          magic:
+            - speaker: npc
+              text: "魔法书...是危险的东西。"
+            - speaker: npc
+              text: "不过，如果你真的想看..."
+            - speaker: npc
+              text: "《初级魔法入门》应该适合你。记住，魔法要谨慎使用。"
+
+          history:
+            - speaker: npc
+              text: "历史是最好的老师。"
+            - speaker: npc
+              text: "这本《古老王国的兴衰》记录了一千年前的故事。"
+            - speaker: npc
+              text: "读历史，可以让我们更好地理解现在。"

@@ -7,10 +7,8 @@
 | 字段名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
 | sceneId | string | 是 | 场景唯一ID，格式：SC + 章节 + 循环 + 场景序号(2位) |
-| sectionId | string | 是 | 子章节ID，如 SEC01 = 循环1 |
 | sceneName | string | 是 | 中文场景名 |
 | sceneNameEn | string | 是 | 英文场景名 |
-| chapterId | string | 是 | 章节ID，如 CH001 = 第1章 |
 | sceneType | string | 是 | 场景类型（crime/dialogue/locked） |
 | backgroundImage | string | 是 | 背景图片路径 |
 | backgroundMusic | string | 否 | 背景音乐ID |
@@ -67,20 +65,7 @@
 
 ---
 
-### 1.4 sectionId 章节段落ID
-
-| sectionId | 说明 |
-|-----------|------|
-| SEC01 | 循环1 |
-| SEC02 | 循环2 |
-| SEC03 | 循环3 |
-| SEC04 | 循环4 |
-| SEC05 | 循环5 |
-| SEC06 | 循环6 |
-
----
-
-### 1.5 backgroundImage 背景图片路径
+### 1.4 backgroundImage 背景图片路径
 
 **格式：** `Art/Scenes/SC{编号}_bg_{英文场景名}.png`
 
@@ -90,15 +75,13 @@
 
 ---
 
-### 1.6 完整配置示例
+### 1.5 完整配置示例
 
 **搜证场景：**
 ```yaml
 - sceneId: SC1101
-  sectionId: SEC01
   sceneName: Rosa储藏室
   sceneNameEn: RosaStorageRoom
-  chapterId: CH001
   sceneType: crime
   backgroundImage: Art/Scenes/SC001_bg_RosaStorageRoom.png
   backgroundMusic: BGM_Storage
@@ -109,10 +92,8 @@
 **对话场景：**
 ```yaml
 - sceneId: SC1103
-  sectionId: SEC01
   sceneName: Tommy办公室
   sceneNameEn: TommyOffice
-  chapterId: CH001
   sceneType: dialogue
   backgroundImage: Art/Scenes/SC003_bg_TommyOffice.png
   npcsPresent: NPC105
@@ -122,13 +103,11 @@
 **锁定场景：**
 ```yaml
 - sceneId: SC1104
-  sectionId: SEC01
   sceneName: Webb会客室
   sceneNameEn: WebbReceptionRoom
-  chapterId: CH001
   sceneType: locked
   backgroundImage: Art/Scenes/SC004_bg_WebbReceptionRoom.png
-  unlockCondition: SEC02
+  unlockCondition: loop2
   备注: 循环1该场景未开放,循环2解锁
 ```
 
@@ -155,7 +134,6 @@
 | backgroundImage | asset_id | 资源路径/ID |
 | 备注 | description | 描述信息 |
 | sceneType | - | 配置表特有 |
-| sectionId | - | 配置表特有 |
 | npcsPresent | - | 配置表特有 |
 | - | state | Preview特有，场景状态 |
 
@@ -194,5 +172,6 @@ scenes:
 
 | 版本 | 日期 | 修改内容 |
 |------|------|----------|
+| v1.2 | 2025-12-07 | 删除sectionId、chapterId字段（章节和循环信息已包含在sceneId中） |
 | v1.1 | 2025-11-29 | ID改为4位格式(章节+循环+场景序号)；删除LoopId、groundImage；添加backgroundMusic |
 | v1.0 | 2025-11-29 | 初始版本 |

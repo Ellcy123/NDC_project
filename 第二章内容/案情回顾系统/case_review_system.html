@@ -18,6 +18,28 @@
             font-family: 'Noto Serif SC', serif;
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* 背景场景 */
+        .scene-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1510 0%, #0d0a08 50%, #151210 100%);
+            z-index: 0;
+        }
+
+        .scene-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 70%;
+            height: 100%;
+            background: radial-gradient(ellipse at 70% 50%, rgba(139,35,35,0.12) 0%, transparent 60%);
         }
 
         /* 噪点纹理 */
@@ -29,7 +51,7 @@
             height: 100%;
             pointer-events: none;
             z-index: 1000;
-            opacity: 0.04;
+            opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
         }
 
@@ -38,22 +60,41 @@
             display: flex;
             height: 100vh;
             position: relative;
+            z-index: 10;
         }
 
-        /* ==================== 左侧面板 - 案件档案卡片 ==================== */
+        /* ==================== 左侧面板 - 深色档案风格 ==================== */
         .left-panel {
             width: 400px;
             background: linear-gradient(180deg, #1a1412 0%, #0d0a09 100%);
             border-right: 1px solid #3a2a20;
+            position: relative;
             display: flex;
             flex-direction: column;
+            box-shadow: 10px 0 40px rgba(0,0,0,0.5);
+        }
+
+        /* 边缘光晕效果 - 参考设置系统 */
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -12px;
+            width: 12px;
+            height: 100%;
+            background: linear-gradient(90deg,
+                rgba(107,28,28,0.12) 0%,
+                rgba(107,28,28,0.05) 50%,
+                transparent 100%
+            );
+            z-index: 2;
         }
 
         /* 章节标题 */
         .chapter-header {
             padding: 25px 20px;
-            border-bottom: 1px solid #3a2a20;
-            background: rgba(30,20,15,0.8);
+            background: transparent;
+            position: relative;
         }
 
         .chapter-header h2 {
@@ -69,16 +110,41 @@
             color: #8a7a6a;
         }
 
-        /* 案件卡片区域 - 红色档案风格 */
+        /* 印章装饰 - 参考设置系统 */
+        .stamp-decoration {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 55px;
+            height: 55px;
+            border: 2px solid rgba(212,175,55,0.35);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            opacity: 0.7;
+        }
+
+        .stamp-decoration span {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.45em;
+            color: rgba(212,175,55,0.6);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* 案件卡片区域 */
         .case-file-area {
             padding: 20px;
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            overflow-y: auto;
         }
 
-        /* 档案卡片 */
+        /* 档案卡片 - 红色档案风格 + 参考设置系统的边缘效果 */
         .case-file {
             background: linear-gradient(135deg, #6B1C1C 0%, #4a1515 50%, #2a0a0a 100%);
             border: 2px solid #8a3030;
@@ -86,17 +152,39 @@
             padding: 20px;
             position: relative;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .case-file::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 6px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .case-file:hover {
             transform: translateX(5px);
-            box-shadow: -5px 5px 20px rgba(107,28,28,0.5);
+            box-shadow:
+                -5px 5px 25px rgba(107,28,28,0.5),
+                0 0 15px rgba(139,35,35,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+            border-color: #aa4040;
         }
 
         .case-file.active {
             border-color: #d4af37;
-            box-shadow: 0 0 25px rgba(212,175,55,0.3);
+            box-shadow:
+                0 0 25px rgba(212,175,55,0.35),
+                0 0 50px rgba(212,175,55,0.15),
+                inset 0 0 20px rgba(212,175,55,0.1);
         }
 
         .case-file.locked {
@@ -107,95 +195,121 @@
 
         .case-file.locked:hover {
             transform: none;
-            box-shadow: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* 案件标题 */
+        /* 案件标题 - 适配浅色背景 */
         .case-file .file-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .case-file .case-title {
             font-family: 'Special Elite', cursive;
-            font-size: 0.85em;
-            color: #ffd700;
+            font-size: 0.75em;
+            color: #c9a86c;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .case-file .case-name {
-            font-size: 1.15em;
+            font-size: 1.1em;
             color: #fff;
             font-weight: 600;
         }
 
-        /* 状态标签 */
+        .case-file.active .case-name,
+        .case-file.active .case-title {
+            color: #d4af37;
+        }
+
+        /* 状态标签 - 深色档案卡片适配 */
         .status-badge {
-            font-size: 0.7em;
-            padding: 4px 10px;
+            font-size: 0.65em;
+            padding: 3px 8px;
             border-radius: 3px;
             font-weight: 600;
         }
 
         .status-badge.completed {
-            background: rgba(76,175,80,0.3);
+            background: rgba(76,175,80,0.25);
             color: #6fcf70;
             border: 1px solid #4caf50;
         }
 
         .status-badge.current {
-            background: rgba(255,193,7,0.3);
+            background: rgba(255,193,7,0.25);
             color: #ffd54f;
             border: 1px solid #ffc107;
         }
 
         .status-badge.locked {
-            background: rgba(100,100,100,0.3);
-            color: #888;
-            border: 1px solid #555;
+            background: rgba(100,100,100,0.25);
+            color: #999;
+            border: 1px solid #666;
         }
 
-        /* 案件信息 */
+        .case-file.active .status-badge {
+            background: rgba(212,175,55,0.3);
+            color: #d4af37;
+            border-color: rgba(212,175,55,0.6);
+        }
+
+        /* 案件信息 - 深色档案卡片适配 */
         .case-file .case-info {
-            font-size: 0.85em;
-            color: #ccc;
-            line-height: 1.6;
+            font-size: 0.8em;
+            color: #c9a86c;
+            line-height: 1.5;
         }
 
         .case-file .case-info .target {
-            color: #ffd700;
+            color: #d4af37;
             font-weight: 600;
         }
 
+        .case-file.active .case-info,
+        .case-file.active .case-info .target {
+            color: #fff;
+        }
+
         .case-file .case-info .hidden {
-            color: #888;
+            color: #8a7a6a;
             font-style: italic;
         }
 
-        /* 印章 */
+        .case-file .case-name.hidden-name {
+            color: #8a7a6a;
+            font-style: italic;
+        }
+
+        /* 印章 - 深色档案卡片适配 */
         .stamp-overlay {
             position: absolute;
             top: 50%;
-            right: 20px;
+            right: 15px;
             transform: translateY(-50%) rotate(-12deg);
             font-family: 'Special Elite', cursive;
-            font-size: 1.8em;
-            padding: 8px 20px;
-            border: 3px solid;
-            border-radius: 8px;
-            opacity: 0.9;
+            font-size: 1.4em;
+            padding: 5px 12px;
+            border: 2px solid;
+            border-radius: 5px;
+            opacity: 0.8;
         }
 
         .stamp-overlay.solved {
-            color: #4caf50;
+            color: #6fcf70;
             border-color: #4caf50;
         }
 
+        .case-file.active .stamp-overlay.solved {
+            color: #d4af37;
+            border-color: rgba(212,175,55,0.8);
+        }
+
         .stamp-overlay.progress {
-            color: #ffc107;
+            color: #ffd54f;
             border-color: #ffc107;
             font-size: 1.2em;
         }
@@ -205,13 +319,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(180deg, #12100d 0%, #0a0908 100%);
+            background: transparent;
         }
 
         /* 顶部标题 */
         .panel-header {
-            padding: 20px 30px;
-            border-bottom: 1px solid #3a2a20;
+            padding: 25px 35px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -225,28 +338,50 @@
 
         .panel-title h1 {
             font-family: 'Cinzel', serif;
-            font-size: 1.6em;
+            font-size: 1.8em;
             color: #d4af37;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
         }
 
         .panel-title .cn {
             font-size: 1em;
-            color: #8b7355;
+            color: #8B2323;
         }
 
         .close-btn {
             padding: 10px 25px;
-            background: linear-gradient(180deg, #4a3a2a, #2a1a10);
-            border: 1px solid #8b7355;
+            background: linear-gradient(180deg, #3a2a20 0%, #2d1f15 50%, #2a1a10 100%);
+            border: 1px solid #8B2323;
             color: #e8e4d9;
             font-family: 'Noto Serif SC', serif;
             cursor: pointer;
-            border-radius: 3px;
+            border-radius: 4px;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .close-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .close-btn:hover {
-            background: linear-gradient(180deg, #5a4a3a, #3a2a20);
+            background: linear-gradient(180deg, #4a3a30 0%, #3d2d22 50%, #3a2a20 100%);
+            border-color: #d4af37;
+            box-shadow: 0 0 12px rgba(212,175,55,0.25), 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
+        }
+
+        .close-btn:active {
+            transform: translateY(0);
         }
 
         /* 时间线容器 - 垂直滚动 */
@@ -377,13 +512,14 @@
         }
 
         .event-content {
-            background: rgba(30,25,20,0.8);
+            background: rgba(30,25,20,0.85);
             border: 1px solid #3a2a20;
             border-radius: 5px;
             padding: 12px 15px;
             flex: 1;
             max-width: 500px;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .event-node.completed .event-content {
@@ -392,7 +528,9 @@
 
         .event-node.completed .event-content:hover {
             border-color: #8b7355;
-            background: rgba(40,35,30,0.9);
+            background: rgba(45,38,32,0.95);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 10px rgba(139,115,85,0.15);
+            transform: translateX(3px);
         }
 
         .event-content h4 {
@@ -548,49 +686,87 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .action-btn.primary {
-            background: linear-gradient(180deg, #8B2323, #5a1515);
+            background: linear-gradient(180deg, #8B2323 0%, #6a1a1a 50%, #5a1515 100%);
             color: #fff;
             border: 2px solid #aa4040;
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .action-btn.primary:hover {
-            background: linear-gradient(180deg, #9B3333, #6a2525);
-            box-shadow: 0 0 20px rgba(139,35,35,0.5);
+            background: linear-gradient(180deg, #9B3333 0%, #7a2a2a 50%, #6a2525 100%);
+            border-color: #cc5050;
+            box-shadow:
+                0 0 20px rgba(139,35,35,0.5),
+                0 6px 16px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .action-btn.primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
         .action-btn.secondary {
-            background: linear-gradient(180deg, #3a3025, #252015);
+            background: linear-gradient(180deg, #3a3025 0%, #2d2518 50%, #252015 100%);
             color: #d4af37;
             border: 2px solid #8b7355;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
 
         .action-btn.secondary:hover {
-            background: linear-gradient(180deg, #4a4035, #352a20);
+            background: linear-gradient(180deg, #4a4035 0%, #3d3328 50%, #352a20 100%);
+            border-color: #a08a65;
+            box-shadow:
+                0 0 15px rgba(139,115,85,0.3),
+                0 6px 16px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
         }
 
         .action-btn.doc {
-            background: linear-gradient(180deg, #1a3a5a, #0a2a4a);
+            background: linear-gradient(180deg, #1a3a5a 0%, #153050 50%, #0a2a4a 100%);
             color: #5aafe8;
             border: 2px solid #3a7aba;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
 
         .action-btn.doc:hover {
-            background: linear-gradient(180deg, #2a4a6a, #1a3a5a);
-            box-shadow: 0 0 15px rgba(90,175,232,0.4);
+            background: linear-gradient(180deg, #2a4a6a 0%, #1f3f5a 50%, #1a3a5a 100%);
+            border-color: #4a8aca;
+            box-shadow:
+                0 0 15px rgba(90,175,232,0.4),
+                0 6px 16px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
         }
 
         /* ==================== 详情弹窗 ==================== */
@@ -997,17 +1173,384 @@
         .code-block .value { color: #e85a5a; }
         .code-block .string { color: #9ae85a; }
         .code-block .comment { color: #666; }
+
+        /* ==================== 章节选择界面 (CHAPTER SELECT) ==================== */
+        .chapter-select-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0808;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .chapter-select-screen.hidden {
+            display: none;
+        }
+
+        /* 城市天际线背景 */
+        .skyline-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to top, #1a1a1a 0%, transparent 100%);
+            opacity: 0.6;
+        }
+
+        .skyline-bg::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background:
+                linear-gradient(90deg,
+                    transparent 0%, #222 2%, #222 3%, transparent 3.5%,
+                    transparent 8%, #1a1a1a 8.5%, #1a1a1a 10%, transparent 10.5%,
+                    transparent 15%, #252525 15.5%, #252525 18%, transparent 18.5%,
+                    transparent 25%, #1f1f1f 25.5%, #1f1f1f 27%, transparent 27.5%,
+                    transparent 35%, #222 35.5%, #222 38%, transparent 38.5%,
+                    transparent 45%, #1a1a1a 45.5%, #1a1a1a 48%, transparent 48.5%,
+                    transparent 55%, #252525 55.5%, #252525 58%, transparent 58.5%,
+                    transparent 65%, #1f1f1f 65.5%, #1f1f1f 68%, transparent 68.5%,
+                    transparent 75%, #222 75.5%, #222 78%, transparent 78.5%,
+                    transparent 85%, #1a1a1a 85.5%, #1a1a1a 88%, transparent 88.5%,
+                    transparent 95%, #252525 95.5%, #252525 98%, transparent 100%
+                );
+            background-size: 100% 100%;
+        }
+
+        /* 标题 */
+        .chapter-select-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2em;
+            color: #e8e4d9;
+            letter-spacing: 8px;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        /* 卡片容器 */
+        .chapter-cards-container {
+            display: flex;
+            gap: 40px;
+            z-index: 1;
+            align-items: flex-end;
+        }
+
+        /* 章节卡片基础样式 */
+        .chapter-card {
+            width: 220px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-12px);
+            filter: brightness(1.05);
+        }
+
+        .chapter-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .chapter-card.locked:hover {
+            transform: none;
+            filter: none;
+        }
+
+        /* 报纸卡片样式 - 已完成章节 */
+        .newspaper-card {
+            background: #f5f0e1;
+            padding: 15px;
+            border-radius: 2px;
+            box-shadow:
+                5px 5px 20px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .newspaper-card:hover {
+            transform: rotate(-2deg) translateY(-12px);
+            box-shadow:
+                8px 12px 30px rgba(0,0,0,0.6),
+                0 0 20px rgba(212,175,55,0.2);
+        }
+
+        .newspaper-inner {
+            border: 1px solid #8a7a6a;
+            padding: 10px;
+        }
+
+        .newspaper-header {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.6em;
+            color: #4a4a4a;
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .newspaper-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: #1a1a1a;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .newspaper-image {
+            width: 100%;
+            height: 100px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .newspaper-date {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.7em;
+            color: #666;
+            text-align: center;
+        }
+
+        /* 拍立得卡片样式 - 进行中/未解锁章节 */
+        .polaroid-card {
+            background: #f8f6f0;
+            padding: 12px 12px 40px 12px;
+            border-radius: 2px;
+            box-shadow:
+                5px 5px 20px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(0,0,0,0.05);
+            transform: rotate(2deg);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .polaroid-card:hover {
+            transform: rotate(2deg) translateY(-12px);
+            box-shadow:
+                8px 12px 30px rgba(0,0,0,0.6),
+                0 0 20px rgba(255,193,7,0.2);
+        }
+
+        .polaroid-card.locked:hover {
+            transform: rotate(2deg);
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
+        }
+
+        .polaroid-image {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #2a1a15 0%, #1a0a05 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .polaroid-image.fire-scene {
+            background: linear-gradient(to top, #1a0a05, #3a1a10, #5a2a15);
+        }
+
+        .polaroid-image.fire-scene::before {
+            content: '🔥';
+            font-size: 4em;
+            opacity: 0.8;
+        }
+
+        .polaroid-image.locked-scene {
+            background: #1a1a1a;
+        }
+
+        .polaroid-image.locked-scene::after {
+            content: '???';
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            color: #4a4a4a;
+        }
+
+        .polaroid-caption {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85em;
+            color: #333;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        /* 卡片底部信息条 */
+        .chapter-info-bar {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            padding: 10px 15px;
+            text-align: center;
+            border-radius: 3px;
+        }
+
+        .chapter-info-bar.completed {
+            background: linear-gradient(180deg, #6B1C1C, #4a1515);
+            border: 1px solid #8a3030;
+        }
+
+        .chapter-info-bar.in-progress {
+            background: linear-gradient(180deg, #8B2323, #5a1515);
+            border: 1px solid #aa4040;
+        }
+
+        .chapter-info-bar.locked {
+            background: linear-gradient(180deg, #3a3a3a, #2a2a2a);
+            border: 1px solid #4a4a4a;
+        }
+
+        .chapter-info-bar .chapter-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9em;
+            color: #e8e4d9;
+            font-weight: bold;
+        }
+
+        .chapter-info-bar .chapter-name {
+            font-size: 0.75em;
+            color: #c9a86c;
+            margin-top: 2px;
+        }
+
+        .chapter-info-bar .chapter-status {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65em;
+            color: #8a7a6a;
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* 章节切换小按钮 - 放在UNIT标题旁边 */
+        .chapter-switch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: rgba(139,35,35,0.3);
+            border: 1px solid #8B2323;
+            color: #c9a86c;
+            font-family: 'Cinzel', serif;
+            font-size: 0.65em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .chapter-switch-btn:hover {
+            background: rgba(139,35,35,0.5);
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        .chapter-switch-btn:focus {
+            outline: none;
+        }
+
+        .chapter-switch-btn .arrow {
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
+    <!-- 背景场景 -->
+    <div class="scene-background"></div>
     <div class="noise-overlay"></div>
 
-    <div class="main-container">
+    <!-- 红色圆圈装饰 -->
+    <div class="red-circle red-circle-1" style="position:fixed;width:120px;height:120px;bottom:18%;left:48%;border:2px solid rgba(139,35,35,0.2);border-radius:50%;pointer-events:none;z-index:5;"></div>
+    <div class="red-circle red-circle-2" style="position:fixed;width:60px;height:60px;top:62%;right:8%;border:2px solid rgba(139,35,35,0.15);border-radius:50%;pointer-events:none;z-index:5;"></div>
+
+    <!-- ==================== 章节选择界面 (CHAPTER SELECT) - 默认隐藏 ==================== -->
+    <div class="chapter-select-screen" id="chapterSelectScreen" style="display:none;">
+        <div class="skyline-bg"></div>
+
+        <h1 class="chapter-select-title">Chapter Select</h1>
+
+        <div class="chapter-cards-container">
+            <!-- 章节1 - 已完成 - 报纸风格 -->
+            <div class="chapter-card" onclick="enterChapterReview(1)">
+                <div class="newspaper-card">
+                    <div class="newspaper-inner">
+                        <div class="newspaper-header">Chicago Daily Tribune</div>
+                        <div class="newspaper-title">BLUE MOON<br>ACCIDENT</div>
+                        <div class="newspaper-image">📰</div>
+                        <div class="newspaper-date">November 12, 1925</div>
+                    </div>
+                </div>
+                <div class="chapter-info-bar completed">
+                    <div class="chapter-number">NO.1</div>
+                    <div class="chapter-name">蓝月事件</div>
+                    <div class="chapter-status">✓ COMPLETED</div>
+                </div>
+            </div>
+
+            <!-- 章节2 - 进行中 - 拍立得风格 -->
+            <div class="chapter-card" onclick="enterChapterReview(2)">
+                <div class="polaroid-card">
+                    <div class="polaroid-image fire-scene"></div>
+                    <div class="polaroid-caption">Chicago - Nov 14, 1925</div>
+                </div>
+                <div class="chapter-info-bar in-progress">
+                    <div class="chapter-number">NO.2</div>
+                    <div class="chapter-name">TWILIGHT ELEGY</div>
+                    <div class="chapter-status">● IN PROGRESS</div>
+                </div>
+            </div>
+
+            <!-- 章节3 - 未解锁 - 拍立得风格（模糊） -->
+            <div class="chapter-card locked">
+                <div class="polaroid-card">
+                    <div class="polaroid-image locked-scene"></div>
+                    <div class="polaroid-caption">&nbsp;</div>
+                </div>
+                <div class="chapter-info-bar locked">
+                    <div class="chapter-number">NO.3</div>
+                    <div class="chapter-name">???</div>
+                    <div class="chapter-status">COMING SOON</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 案情回顾主界面 - 默认显示 ==================== -->
+    <div class="main-container" id="mainContainer">
         <!-- 左侧 - 案件档案卡片 -->
         <div class="left-panel">
             <div class="chapter-header">
-                <h2>UNIT 2</h2>
+                <h2>UNIT 2 <button class="chapter-switch-btn" id="chapterSwitchBtn" onclick="backToChapterSelect()"><span class="arrow">◀</span> 切换</button></h2>
                 <div class="subtitle">Frank Kowalski 之死</div>
+                <!-- 印章装饰 -->
+                <div class="stamp-decoration">
+                    <span>CASE<br>FILE</span>
+                </div>
             </div>
 
             <div class="case-file-area">
@@ -1053,7 +1596,7 @@
                 <div class="case-file" onclick="selectLoop(4)">
                     <div class="file-header">
                         <div>
-                            <div class="case-name">Rose深情告白</div>
+                            <div class="case-name hidden-name">???</div>
                         </div>
                         <span class="status-badge current">进行中</span>
                     </div>
@@ -1072,7 +1615,7 @@
                     <h1>PROGRESS</h1>
                     <span class="cn">案情进展</span>
                 </div>
-                <button class="close-btn" onclick="goToSettings()">返回设置</button>
+                <button class="close-btn" onclick="goBack()">返回</button>
             </div>
 
             <div class="timeline-container">
@@ -1198,7 +1741,8 @@
 
                     <h4>1.1 系统功能</h4>
                     <ul>
-                        <li><strong>案情回顾</strong>：查看当前章节的故事背景和进度</li>
+                        <li><strong>案情回顾</strong>：查看所有已解锁章节的故事背景和进度</li>
+                        <li><strong>章节切换</strong>：在不同章节之间切换查看</li>
                         <li><strong>节点回溯</strong>：回到某个循环起点，从该节点重新开始游戏</li>
                         <li><strong>进度展示</strong>：直观展示玩家在每个循环的进展状态</li>
                     </ul>
@@ -1371,9 +1915,8 @@
 
                     <h4>4.2 循环卡片状态</h4>
                     <ul>
-                        <li><strong style="color:#4caf50">已完成（SOLVED）</strong>：显示指证对象，可重玩</li>
-                        <li><strong style="color:#ffc107">进行中（IN PROGRESS）</strong>：指证对象显示为「???」，不可重玩</li>
-                        <li><strong style="color:#666">未解锁（LOCKED）</strong>：名称和信息全部隐藏，不可点击</li>
+                        <li><strong style="color:#4caf50">已完成（SOLVED）</strong>：显示指证对象，可查看</li>
+                        <li><strong style="color:#ffc107">进行中（IN PROGRESS）</strong>：指证对象显示为「???」，不可查看</li>
                     </ul>
 
                     <h4>4.3 时间线节点类型</h4>
@@ -1384,71 +1927,98 @@
                     </ul>
                 </div>
 
-                <!-- Unit 2 配置 -->
+                <!-- 静态配置 -->
                 <div class="doc-section">
-                    <h3>五、Unit 2 循环配置</h3>
+                    <h3>五、静态配置 (Config)</h3>
+                    <p>开发时定义的固定数据，不随玩家行为改变：</p>
+
+                    <pre style="background:#1a1a2e; padding:15px; border-radius:8px; overflow-x:auto; font-size:13px;">
+{
+  "loopConfig": [
+    {
+      "loopId": 1,
+      "loopName": "残酷的身份确认",
+      "accuseTargetId": "NPC104",
+      "accuseTargetName": "Morrison",
+      "accuseRounds": 2
+    },
+    {
+      "loopId": 2,
+      "loopName": "威胁链条与连号钞票",
+      "accuseTargetId": "NPC201",
+      "accuseTargetName": "Leonard Ross",
+      "accuseRounds": 3
+    }
+    // ... Loop 3-6 同理
+  ]
+}
+                    </pre>
 
                     <table class="doc-table">
-                        <tr>
-                            <th>循环</th>
-                            <th>名称</th>
-                            <th>指证对象</th>
-                            <th>指证轮次</th>
-                        </tr>
-                        <tr>
-                            <td>Loop 1</td>
-                            <td>残酷的身份确认</td>
-                            <td>Morrison</td>
-                            <td>2轮</td>
-                        </tr>
-                        <tr>
-                            <td>Loop 2</td>
-                            <td>威胁链条与连号钞票</td>
-                            <td>Leonard Ross</td>
-                            <td>3轮</td>
-                        </tr>
-                        <tr>
-                            <td>Loop 3</td>
-                            <td>掠夺性贷款揭露</td>
-                            <td>Harold Moore</td>
-                            <td>3轮</td>
-                        </tr>
-                        <tr>
-                            <td>Loop 4</td>
-                            <td>Rose深情告白</td>
-                            <td>Danny Kowalski</td>
-                            <td>3轮</td>
-                        </tr>
-                        <tr>
-                            <td>Loop 5</td>
-                            <td>Vinnie纵火认罪</td>
-                            <td>Vinnie Moretti</td>
-                            <td>1轮</td>
-                        </tr>
-                        <tr>
-                            <td>Loop 6</td>
-                            <td>Leonard终极指证</td>
-                            <td>Leonard Russo</td>
-                            <td>4轮</td>
-                        </tr>
+                        <tr><th>字段名</th><th>类型</th><th>说明</th></tr>
+                        <tr><td>loopId</td><td>number</td><td>循环序号 (1-6)</td></tr>
+                        <tr><td>loopName</td><td>string</td><td>循环名称</td></tr>
+                        <tr><td>accuseTargetId</td><td>string</td><td>指证对象NPC ID</td></tr>
+                        <tr><td>accuseTargetName</td><td>string</td><td>指证对象显示名称</td></tr>
+                        <tr><td>accuseRounds</td><td>number</td><td>需要的指证轮次</td></tr>
+                    </table>
+                </div>
+
+                <!-- 存档数据 -->
+                <div class="doc-section">
+                    <h3>六、存档数据 (Save Data)</h3>
+                    <p>玩家游玩过程中动态产生的数据：</p>
+
+                    <pre style="background:#1a1a2e; padding:15px; border-radius:8px; overflow-x:auto; font-size:13px;">
+{
+  "currentLoop": 3,
+  "loopSaveData": [
+    {
+      "loopId": 1,
+      "isUnlocked": true,
+      "isCompleted": true,
+      "savedEvidence": ["EV001", "EV002"],
+      "savedScenes": ["SC001", "SC002"],
+      "savedDialogues": ["DL001"],
+      "accuseResult": "success",
+      "savedTimestamp": 1733000000000
+    }
+  ]
+}
+                    </pre>
+
+                    <table class="doc-table">
+                        <tr><th>字段名</th><th>类型</th><th>说明</th></tr>
+                        <tr><td>currentLoop</td><td>number</td><td>玩家当前所在循环</td></tr>
+                        <tr><td>loopId</td><td>number</td><td>循环序号</td></tr>
+                        <tr><td>isUnlocked</td><td>boolean</td><td>是否解锁（可查看）</td></tr>
+                        <tr><td>isCompleted</td><td>boolean</td><td>是否已完成</td></tr>
+                        <tr><td>savedEvidence</td><td>string[]</td><td>已收集证据ID列表</td></tr>
+                        <tr><td>savedScenes</td><td>string[]</td><td>已解锁场景ID列表</td></tr>
+                        <tr><td>savedDialogues</td><td>string[]</td><td>已触发对话ID列表</td></tr>
+                        <tr><td>accuseResult</td><td>string</td><td>"success" | "failed" | null</td></tr>
+                        <tr><td>savedTimestamp</td><td>number</td><td>存档时间戳</td></tr>
                     </table>
                 </div>
 
                 <!-- 与其他系统的关系 -->
                 <div class="doc-section">
-                    <h3>六、与其他系统的关系</h3>
+                    <h3>七、与其他系统的关系</h3>
 
-                    <h4>6.1 入口位置</h4>
-                    <p>在EXPLORING场景探索面板的左上角导航栏中，点击OVERVIEW可进入本系统。</p>
+                    <h4>7.1 入口规则</h4>
+                    <ul>
+                        <li><strong>点击OVERVIEW按钮</strong> → 直接进入<strong>当前章节</strong>的案情进展界面</li>
+                        <li><strong>点击← CHAPTER SELECT</strong> → 从案情进展界面进入章节选择界面（用于跨章节回溯）</li>
+                    </ul>
 
-                    <h4>6.2 数据来源</h4>
+                    <h4>7.2 数据来源</h4>
                     <ul>
                         <li><strong>Evidence数据</strong>：来自CASE BOARD面板中的ITEMS、CLUES、NOTES、COMBINED</li>
                         <li><strong>Scene数据</strong>：来自MAP地图面板中已解锁的场景</li>
                         <li><strong>Dialogue数据</strong>：来自NPC对话的AVG记录</li>
                     </ul>
 
-                    <h4>6.3 触发时机</h4>
+                    <h4>7.3 触发时机</h4>
                     <p>循环结束后（指证成功），系统自动保存当前状态到对应循环的存档中。</p>
                 </div>
             </div>
@@ -1456,6 +2026,51 @@
     </div>
 
     <script>
+        // ==================== 界面切换函数 ====================
+        // 入口规则：
+        // - 从开始界面点击 CHAPTER SELECT → 先显示章节选择界面（带 ?mode=select 参数）
+        // - 从游戏中点击 OVERVIEW → 直接进入当前章节的案情进展界面（无参数或 ?mode=overview）
+        // - 在案情进展界面点击 ← CHAPTER SELECT → 返回章节选择界面
+
+        // 页面加载时检测入口模式
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+
+            if (mode === 'select') {
+                // 从开始界面的CHAPTER SELECT进入 → 显示章节选择界面
+                document.getElementById('chapterSelectScreen').style.display = 'flex';
+                document.getElementById('mainContainer').style.display = 'none';
+            } else {
+                // 从游戏中的OVERVIEW进入 → 显示当前章节的案情进展界面
+                document.getElementById('chapterSelectScreen').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'flex';
+            }
+        });
+
+        // 从章节选择界面进入案情回顾
+        function enterChapterReview(chapterId) {
+            // 隐藏章节选择界面
+            document.getElementById('chapterSelectScreen').style.display = 'none';
+            // 显示案情回顾主界面
+            document.getElementById('mainContainer').style.display = 'flex';
+
+            // 可以根据chapterId加载对应章节的数据
+            console.log('进入章节 ' + chapterId + ' 的案情回顾');
+        }
+
+        // 返回章节选择界面
+        function backToChapterSelect() {
+            // 显示章节选择界面
+            document.getElementById('chapterSelectScreen').style.display = 'flex';
+            // 隐藏案情回顾主界面
+            document.getElementById('mainContainer').style.display = 'none';
+            // 关闭可能打开的弹窗
+            closeDetail();
+            closeDoc();
+        }
+
+        // ==================== 原有变量 ====================
         let currentLoop = 1;
         let viewingLoop = 1;
 
@@ -1588,9 +2203,9 @@
             alert(`播放「${title}」视频...\n\n（演示功能）`);
         }
 
-        // 返回设置页面
-        function goToSettings() {
-            window.location.href = '../设置系统/settings_system.html';
+        // 返回上一页
+        function goBack() {
+            window.history.back();
         }
 
         function openDoc() {

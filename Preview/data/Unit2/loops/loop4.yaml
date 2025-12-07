@@ -91,7 +91,7 @@ scenes_overview:
 opening:
   description: 承接循环3结尾，Moore提供遗嘱，地下室通道解锁
   scenes:
-    - scene_id: SC2008
+    - scene_id: SC2008  # 银行贵宾室
       name: 银行贵宾室（遗嘱揭示）
       description: 承接循环3结尾，Zack拿到遗嘱，决定探索地下室
       dialog_file: loop4/opening.yaml
@@ -102,7 +102,7 @@ free_phase:
   description: 玩家探索地下室和Rose家，收集五年恋情证据
   scenes:
     # 继承场景（循环1）- 本循环主线
-    - scene: SC2002
+    - scene: SC2002  # Margaret鞋坊一楼-状态2
       type: search
       npc: NPC204
       status: inherited
@@ -111,14 +111,14 @@ free_phase:
       npc_available: true
       note: 本循环主线，Danny在此等候
 
-    - scene: SC2003
+    - scene: SC2003  # Margaret鞋坊二楼
       type: search
       status: inherited
       inherited_from: loop1
       has_new_clues: false
 
     # 继承场景（循环2）
-    - scene: SC2006
+    - scene: SC2006  # Frank和Mrs. O'Hara家门口
       type: search
       npc: NPC207
       status: inherited
@@ -126,7 +126,7 @@ free_phase:
       has_new_clues: false
       npc_available: true
 
-    - scene: SC2007
+    - scene: SC2007  # 赌场
       type: search
       npc: NPC208
       status: inherited
@@ -134,14 +134,14 @@ free_phase:
       has_new_clues: false
       npc_available: true
 
-    - scene: SC2008
+    - scene: SC2008  # 银行贵宾室
       type: npc
       npc: NPC203
       status: inherited
       inherited_from: loop2
       npc_available: true
 
-    - scene: SC2009
+    - scene: SC2009  # 银行大厅
       type: npc
       npc: NPC202
       status: inherited
@@ -149,21 +149,21 @@ free_phase:
       npc_available: true
 
     # 继承场景（循环3）
-    - scene: SC2011
+    - scene: SC2011  # Frank家里
       type: search
       status: inherited
       inherited_from: loop3
       has_new_clues: false
       note: 保险箱需钥匙
 
-    - scene: SC2012
+    - scene: SC2012  # Danny家里
       type: search
       status: inherited
       inherited_from: loop3
       has_new_clues: false
 
     # 新增场景
-    - scene: SC2015
+    - scene: SC2015  # Margaret鞋坊地下室
       type: search
       unlock_type: item_and_story
       unlock_condition: 遗嘱提到地下室 + 循环1获得的钥匙
@@ -178,7 +178,7 @@ free_phase:
         - id: EV2408
           note: 维修收据（$600用于房间修缮）
 
-    - scene: SC2016
+    - scene: SC2016  # Rose家里
       type: search
       npc: NPC209
       unlock_type: evidence
@@ -197,7 +197,7 @@ free_phase:
 
 # 指证阶段
 expose:
-  scene: SC2002
+  scene: SC2002  # Margaret鞋坊一楼-状态2
   scene_name: Margaret鞋坊一楼-状态2
   target: Danny
   target_name: Danny Kowalski
@@ -228,7 +228,7 @@ expose:
 
 # 突发事件
 emergency:
-  - scene: SC2002
+  - scene: SC2002  # Margaret鞋坊一楼-状态2
     scene_name: Margaret鞋坊一楼-状态2（指证中）
     trigger: 第三轮指证时
     description: Rose推门而入，当场签署放弃继承

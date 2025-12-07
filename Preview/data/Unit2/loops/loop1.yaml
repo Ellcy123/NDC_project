@@ -61,13 +61,13 @@ opening:
 free_phase:
   description: 玩家可探索鞋坊二楼和警局外，收集证据准备指证Morrison
   scenes:
-    - scene: SC2002
+    - scene: SC2002  # Margaret鞋坊一楼-状态2
       type: search
       unlock_type: auto
       unlock_condition: 开篇结束后自动可用
       status: new
 
-    - scene: SC2003
+    - scene: SC2003  # Margaret鞋坊二楼
       type: search
       unlock_type: auto
       unlock_condition: 与SC2001/SC2002同一建筑，开篇结束后可进入
@@ -82,7 +82,7 @@ free_phase:
         - id: EV2107
           note: 地图（循环1结尾解锁循环2探索范围）
 
-    - scene: SC2004
+    - scene: SC2004  # 警局外
       type: npc
       npc: NPC206
       unlock_type: auto
@@ -95,7 +95,7 @@ free_phase:
 
 # 指证阶段
 expose:
-  scene: SC2005
+  scene: SC2005  # 警局
   scene_name: 警局
   target: Morrison
   target_name: Morrison（腐败警察）
@@ -119,7 +119,7 @@ expose:
 
 # 结尾
 ending:
-  scene: SC2004
+  scene: SC2004  # 警局外
   scene_name: 警局外
   description: Emma等待Zack，展示地图解锁循环2探索范围
   dialog_file: loop1/ending.yaml

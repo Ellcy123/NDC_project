@@ -16,11 +16,26 @@
 | TestimonyCount | int | 否 | 证词数量 |
 | cnTestimony | string | 否 | 中文证词（多条用 `/` 分隔） |
 | enTestimony | string | 否 | 英文证词（多条用 `/` 分隔） |
-| cnDescribe | string | 是 | 中文描述（多条用 `/` 分隔） |
-| enDescribe | string | 是 | 英文描述（多条用 `/` 分隔） |
-| ifExpose | string | 否 | 可被指证的描述编号（如 `2/4`） |
-| cnNewDescribe | string | 否 | 指证后的新描述信息 |
-| enNewDescribe | string | 否 | 指证后的新描述信息（英文） |
+| cnDescribe | string | 是 | 中文描述（仅1条，角色简介） |
+| enDescribe | string | 是 | 英文描述（仅1条，角色简介） |
+| infoCount | int | 是 | 信息数量（1-6） |
+| info1 | string | 否 | 人物信息1，格式：`中文/英文` |
+| info2 | string | 否 | 人物信息2，格式：`中文/英文` |
+| info3 | string | 否 | 人物信息3，格式：`中文/英文` |
+| info4 | string | 否 | 人物信息4，格式：`中文/英文` |
+| info5 | string | 否 | 人物信息5，格式：`中文/英文` |
+| info6 | string | 否 | 人物信息6，格式：`中文/英文` |
+| ifExposeInfo1 | int | 否 | 第1个可被指证的info编号（1-6） |
+| cnNewInfo1 | string | 否 | 第1条指证后的中文信息，格式：`原文/新文` |
+| enNewInfo1 | string | 否 | 第1条指证后的英文信息，格式：`原文/新文` |
+| ifExposeInfo2 | int | 否 | 第2个可被指证的info编号（1-6） |
+| cnNewInfo2 | string | 否 | 第2条指证后的中文信息，格式：`原文/新文` |
+| enNewInfo2 | string | 否 | 第2条指证后的英文信息，格式：`原文/新文` |
+| npcPosX | float | 否 | NPC在关系图中的X坐标（中心点） |
+| npcPosY | float | 否 | NPC在关系图中的Y坐标（中心点） |
+| npcRelation | string | 否 | 关联的NPC ID，多个用 `/` 分隔 |
+| npcRelationParaCn | string | 否 | 关系描述（中文），多个用 `/` 分隔 |
+| npcRelationParaEn | string | 否 | 关系描述（英文），多个用 `/` 分隔 |
 
 ---
 
@@ -63,51 +78,146 @@ cnTestimony: 证词1/证词2/证词3
 
 ### 1.4 描述规则（cnDescribe/enDescribe）
 
-描述用于展示NPC的信息（info），多条描述用 `/` 分隔。
+描述用于展示NPC的基础简介，**仅1条**。
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| cnDescribe | string | 中文描述，多条用 `/` 分隔 |
-| enDescribe | string | 英文描述，多条用 `/` 分隔 |
-| ifExpose | string | 可被指证的描述编号，多个用 `/` 分隔 |
-| cnNewDescribe | string | 指证后的新描述信息 |
-| enNewDescribe | string | 指证后的新描述信息（英文） |
+| cnDescribe | string | 中文角色简介（仅1条） |
+| enDescribe | string | 英文角色简介（仅1条） |
 
-**描述格式示例：**
+**示例：**
 ```yaml
-cnDescribe: 描述1/描述2/描述3/描述4
+cnDescribe: 蓝月亮歌舞厅的清洁女工
+enDescribe: Cleaning lady at Blue Moon Ballroom
 ```
-
-**ifExpose 格式：**
-- `2/4` = 第2条和第4条描述可以被指证
-
-**cnNewDescribe 格式：**
-- `原信息<link="key_describe">指证后新信息</link>`
-- 原信息 = 被指证前显示的内容
-- 指证后新信息 = 指证成功后替换显示的内容
-
-**完整示例：**
-```yaml
-- id: NPC103
-  cnName: 罗莎
-  cnDescribe: 蓝月亮歌舞厅的清洁女工/我一直在地下室酒窖工作,什么都没看到/我当时在后台走廊清洁,但很专心工作/是Morrison警官迷晕了Zack先生,我被威胁不能说出真相
-  enDescribe: Cleaning lady at Blue Moon/I was working in the basement wine cellar/I was cleaning the backstage corridor/Officer Morrison drugged Mr. Zack
-  ifExpose: 2/4
-  cnNewDescribe: 我一直在地下室酒窖工作,什么都没看到<link="key_describe">工作记录卡显示她23:00-01:00在后台走廊工作,不是地下室</link>/是Morrison警官迷晕了Zack先生,我被威胁不能说出真相<link="key_describe">Rosa确认是Morrison威胁她配合栽赃</link>
-```
-
-**说明：**
-- cnDescribe 有4条描述（用 `/` 分隔）
-- ifExpose: `2/4` 表示第2条和第4条可以被指证
-- cnNewDescribe:
-  - 第2条原信息：`我一直在地下室酒窖工作,什么都没看到`
-  - 第2条指证后：`工作记录卡显示她23:00-01:00在后台走廊工作,不是地下室`
-  - 第4条原信息：`是Morrison警官迷晕了Zack先生,我被威胁不能说出真相`
-  - 第4条指证后：`Rosa确认是Morrison威胁她配合栽赃`
 
 ---
 
-### 1.5 完整配置示例
+### 1.5 信息规则（info1~info6）
+
+人物详细信息，独立字段存储，最多6条。
+
+| 字段 | 类型 | 格式 | 说明 |
+|------|------|------|------|
+| infoCount | int | 1-6 | 信息条数 |
+| info1~info6 | string | `中文/英文` | 人物详细信息 |
+
+**格式说明：**
+- 每条info用 `/` 分隔中英文
+- 格式：`中文内容/英文内容`
+
+**示例：**
+```yaml
+infoCount: 4
+info1: 50岁的清洁工，夜班23:00-01:00/50-year-old janitor, night shift 23:00-01:00
+info2: 我一直在地下室酒窖工作/I was working in the basement wine cellar
+info3: 单身母亲，儿子Miguel患病/Single mother, son Miguel is sick
+info4: 是Morrison警官迷晕了Zack先生/Officer Morrison drugged Mr. Zack
+```
+
+---
+
+### 1.6 指证规则（ifExposeInfo + NewInfo）
+
+指证系统用于揭穿NPC的谎言，**最多支持2条可被指证的信息**。
+
+| 字段 | 类型 | 格式 | 说明 |
+|------|------|------|------|
+| ifExposeInfo1 | int | 1-6 | 第1个可被指证的info编号 |
+| cnNewInfo1 | string | `原文/新文` | 第1条指证后的中文信息 |
+| enNewInfo1 | string | `原文/新文` | 第1条指证后的英文信息 |
+| ifExposeInfo2 | int | 1-6 | 第2个可被指证的info编号 |
+| cnNewInfo2 | string | `原文/新文` | 第2条指证后的中文信息 |
+| enNewInfo2 | string | `原文/新文` | 第2条指证后的英文信息 |
+
+**格式说明：**
+- NewInfo 用 `/` 分隔原文和新文
+- 格式：`原文/新文`
+- 原文 = 被指证前显示的内容（谎言）
+- 新文 = 指证成功后显示的内容（真相）
+
+**示例：**
+```yaml
+# 指证1：针对info2（地下室酒窖的谎言）
+ifExposeInfo1: 2
+cnNewInfo1: 我一直在地下室酒窖工作/工作记录卡显示她在后台走廊工作
+enNewInfo1: I was in the basement wine cellar/Work record shows backstage corridor
+
+# 指证2：针对info4（Morrison的指控）
+ifExposeInfo2: 4
+cnNewInfo2: 是Morrison警官迷晕了Zack先生/Rosa确认Morrison威胁她配合栽赃
+enNewInfo2: Officer Morrison drugged Mr. Zack/Rosa confirms Morrison threatened her
+```
+
+**指证流程：**
+```
+玩家选择证据 → 指证 info2 的内容
+    ↓
+原显示：我一直在地下室酒窖工作
+    ↓ 指证成功
+新显示：工作记录卡显示她在后台走廊工作
+```
+
+---
+
+### 1.7 人物关系规则（npcRelation）
+
+用于 **INVESTIGATE 面板的 RELATIONSHIP 人物关系网图**。
+
+| 字段 | 类型 | 格式 | 说明 |
+|------|------|------|------|
+| npcPosX | float | 数值 | NPC在关系图中的X坐标（中心点） |
+| npcPosY | float | 数值 | NPC在关系图中的Y坐标（中心点） |
+| npcRelation | string | `NPC_ID` 或 `ID1/ID2` | 关联的NPC ID |
+| npcRelationParaCn | string | `关系1` 或 `关系1/关系2` | 关系描述（中文） |
+| npcRelationParaEn | string | `relation1` 或 `rel1/rel2` | 关系描述（英文） |
+
+**填写规则：**
+1. **每条关系线只填写一次**：A↔B 的关系只需要在 A 或 B 其中一个NPC配置
+2. **尽量避免多关系**：如 Rosa-Webb 写在 Rosa，Tommy-Rosa 写在 Tommy
+3. **多个关系用 `/` 分隔**：如必须配置多个，ID和描述用 `/` 分隔且一一对应
+
+**关系图示意：**
+```
+┌─────────────────────────────────────┐
+│  INVESTIGATE - RELATIONSHIP 面板    │
+├─────────────────────────────────────┤
+│                                     │
+│           [Webb]  ← 死者中心         │
+│          /   |   \                  │
+│     [Rosa] [Tommy] [Morrison]       │
+│        ↑      ↑        ↑            │
+│   npcPosX/Y 决定头像位置             │
+│   npcRelation 决定连线对象           │
+│   npcRelationPara 显示关系文字       │
+│                                     │
+└─────────────────────────────────────┘
+```
+
+**示例：**
+```yaml
+# Rosa 配置与 Webb 的关系
+- id: NPC103
+  cnName: 罗莎
+  npcPosX: 100.0
+  npcPosY: 200.0
+  npcRelation: NPC101           # 与Webb有关系
+  npcRelationParaCn: 清洁工      # 关系是"清洁工"
+  npcRelationParaEn: Cleaner
+
+# Tommy 配置与 Rosa 的关系（每条线只填一次）
+- id: NPC105
+  cnName: 汤米
+  npcPosX: 300.0
+  npcPosY: 200.0
+  npcRelation: NPC103           # 与Rosa有关系
+  npcRelationParaCn: 上下级      # 关系是"上下级"
+  npcRelationParaEn: Supervisor
+```
+
+---
+
+### 1.8 完整配置示例
 
 ```yaml
 - id: NPC103
@@ -116,14 +226,39 @@ cnDescribe: 描述1/描述2/描述3/描述4
   role: suspect
   path1: Art/UI/NPC/Rosa
   path2: Art/UI/NPC/Rosa_Portrait
+
+  # 证词
   TestimonyCount: 3
   cnTestimony: 我一直在地下室酒窖工作,什么都没看到/我当时在后台走廊清洁/是Morrison警官迷晕了Zack先生
   enTestimony: I was working in the basement wine cellar/I was cleaning the backstage corridor/It was Officer Morrison who drugged Mr. Zack
-  cnDescribe: 蓝月亮歌舞厅的清洁女工/我一直在地下室酒窖工作,什么都没看到/我当时在后台走廊清洁,但很专心工作/是Morrison警官迷晕了Zack先生
-  enDescribe: Cleaning lady at Blue Moon/I was working in the basement wine cellar/I was cleaning the backstage corridor/It was Officer Morrison who drugged Mr. Zack
-  ifExpose: 2/4
-  cnNewDescribe: 我一直在地下室酒窖工作,什么都没看到<link="key_describe">工作记录卡显示她23:00-01:00在后台走廊工作,不是地下室</link>/是Morrison警官迷晕了Zack先生,我被威胁不能说出真相<link="key_describe">Rosa确认是Morrison威胁她配合栽赃</link>
-  enNewDescribe: I was working in the basement wine cellar<link="key_describe">Work record shows she was in backstage corridor 23:00-01:00, not basement</link>/Officer Morrison drugged Mr. Zack<link="key_describe">Rosa confirms Morrison threatened her to cooperate in framing</link>
+
+  # 描述（仅1条基础简介）
+  cnDescribe: 蓝月亮歌舞厅的清洁女工
+  enDescribe: Cleaning lady at Blue Moon Ballroom
+
+  # 信息（独立字段，中文/英文格式）
+  infoCount: 4
+  info1: 50岁的清洁工，夜班23:00-01:00/50-year-old janitor, night shift 23:00-01:00
+  info2: 我一直在地下室酒窖工作/I was working in the basement wine cellar
+  info3: 单身母亲，儿子Miguel患病/Single mother, son Miguel is sick
+  info4: 是Morrison警官迷晕了Zack先生/Officer Morrison drugged Mr. Zack
+
+  # 指证1：针对info2
+  ifExposeInfo1: 2
+  cnNewInfo1: 我一直在地下室酒窖工作/工作记录卡显示她在后台走廊工作
+  enNewInfo1: I was in the basement wine cellar/Work record shows backstage corridor
+
+  # 指证2：针对info4
+  ifExposeInfo2: 4
+  cnNewInfo2: 是Morrison警官迷晕了Zack先生/Rosa确认Morrison威胁她配合栽赃
+  enNewInfo2: Officer Morrison drugged Mr. Zack/Rosa confirms Morrison threatened her
+
+  # 人物关系（用于RELATIONSHIP关系图）
+  npcPosX: 100.0
+  npcPosY: 200.0
+  npcRelation: NPC101
+  npcRelationParaCn: 清洁工
+  npcRelationParaEn: Cleaner
 ```
 
 ---
@@ -146,10 +281,10 @@ cnDescribe: 描述1/描述2/描述3/描述4
 | id | 键名（如 NPC103） | ID格式相同 |
 | cnName | name_cn | 中文名 |
 | enName | name | 英文名 |
-| cnDescribe（第1条） | description | 基础描述 |
-| cnDescribe（其他条） | info.loopX | 各循环的详细信息 |
-| ifExpose | （逻辑处理） | 指证系统使用 |
-| cnNewDescribe | （逻辑处理） | 指证后替换信息 |
+| cnDescribe | description | 基础描述 |
+| info1~info6 | info.loopX | 各循环的详细信息 |
+| ifExposeInfo1/2 | （逻辑处理） | 指证系统使用 |
+| cnNewInfo1/2 | （逻辑处理） | 指证后替换信息 |
 | cnTestimony | （需手动整理） | 证词需要根据循环拆分 |
 | role | role | 角色类型 |
 
@@ -177,15 +312,15 @@ NPC103:
   name: Rosa Martinez
   name_cn: 罗莎·马丁内斯
   role: suspect
-  description: 蓝月亮歌舞厅的清洁女工...
+  description: 蓝月亮歌舞厅的清洁女工
   info:
     loop1:
-      - 蓝月亮歌舞厅清洁工，夜班23:00-01:00
-      - 单身母亲，儿子Miguel患病需要昂贵药物
-      - 声称在地下室酒窖工作（实际在后台走廊）
+      - 50岁的清洁工，夜班23:00-01:00
+      - 我一直在地下室酒窖工作（可被指证）
+      - 单身母亲，儿子Miguel患病
     loop2:
-      - 被Morrison威胁配合栽赃，内心充满恐惧和愧疚
-      - 在Zack的劝说下说出真相
+      - 是Morrison警官迷晕了Zack先生（可被指证）
+      - 被Morrison威胁配合栽赃
 ```
 
 ---
@@ -197,11 +332,19 @@ NPC103:
 - id: NPC103
   cnName: 罗莎
   enName: Rosa Martinez
-  cnDescribe: 蓝月亮歌舞厅的清洁女工/我一直在地下室酒窖工作/我当时在后台走廊清洁/是Morrison警官迷晕了Zack先生
-  enDescribe: Cleaning lady at Blue Moon/I was in basement/I was in backstage corridor/Officer Morrison drugged Zack
-  ifExpose: 2/4
-  cnNewDescribe: 我一直在地下室酒窖工作<link="key_describe">工作记录卡显示她在后台走廊工作</link>/是Morrison警官迷晕了Zack先生<link="key_describe">Rosa确认Morrison威胁她配合栽赃</link>
-  cnTestimony: 证词1/证词2/证词3
+  cnDescribe: 蓝月亮歌舞厅的清洁女工
+  enDescribe: Cleaning lady at Blue Moon Ballroom
+  infoCount: 4
+  info1: 50岁的清洁工，夜班23:00-01:00/50-year-old janitor
+  info2: 我一直在地下室酒窖工作/I was in the basement
+  info3: 单身母亲，儿子Miguel患病/Single mother
+  info4: 是Morrison警官迷晕了Zack先生/Morrison drugged Zack
+  ifExposeInfo1: 2
+  cnNewInfo1: 我一直在地下室酒窖工作/工作记录卡显示她在后台走廊工作
+  enNewInfo1: I was in the basement/Work record shows backstage corridor
+  ifExposeInfo2: 4
+  cnNewInfo2: 是Morrison警官迷晕了Zack先生/Rosa确认Morrison威胁她
+  enNewInfo2: Morrison drugged Zack/Rosa confirms Morrison threatened her
 ```
 
 **对应到 npcs.yaml：**
@@ -213,11 +356,11 @@ NPC103:
   description: 蓝月亮歌舞厅的清洁女工
   info:
     loop1:
-      - 我一直在地下室酒窖工作（可被指证）
-      - 声称在地下室酒窖工作（实际在后台走廊）
+      - 50岁的清洁工，夜班23:00-01:00
+      - 我一直在地下室酒窖工作（可被指证 → 工作记录卡显示她在后台走廊工作）
+      - 单身母亲，儿子Miguel患病
     loop2:
-      - 我当时在后台走廊清洁
-      - 是Morrison警官迷晕了Zack先生（可被指证）
+      - 是Morrison警官迷晕了Zack先生（可被指证 → Rosa确认Morrison威胁她）
 ```
 
 ---
@@ -225,10 +368,14 @@ NPC103:
 ## 3. 注意事项
 
 1. **ID必须唯一**：同一张表中不能有重复ID
-2. **中英文都要填**：cnName/enName、cnDescribe1/enDescribe1 必须填写
+2. **中英文都要填**：cnName/enName、cnDescribe/enDescribe 必须填写
 3. **证词分隔符**：多条证词用 `/` 分隔
-4. **描述可扩展**：cnDescribe 可以继续扩展 4/5/6...
-5. **role字段**：可选值为 protagonist/partner/suspect/witness/victim/killer
+4. **info格式**：每条info格式为 `中文/英文`
+5. **NewInfo格式**：格式为 `原文/新文`
+6. **指证上限**：最多2条可被指证的信息（ifExposeInfo1 和 ifExposeInfo2）
+7. **role字段**：可选值为 protagonist/partner/suspect/witness/victim/killer
+8. **关系线唯一**：每条关系线只在一个NPC处配置，避免重复（如 Rosa-Webb 写在 Rosa，Tommy-Rosa 写在 Tommy）
+9. **关系对应**：npcRelation 和 npcRelationParaCn/En 的数量必须一一对应
 
 ---
 
@@ -236,4 +383,6 @@ NPC103:
 
 | 版本 | 日期 | 修改内容 |
 |------|------|----------|
+| v2.1 | 2025-12-07 | 新增人物关系字段：npcPosX/Y（关系图位置）、npcRelation（关联NPC）、npcRelationParaCn/En（关系描述） |
+| v2.0 | 2025-12-07 | 重构info和指证系统：describe简化为1条；新增info1~info6独立字段；指证改为两组字段（ifExposeInfo1/2 + cnNewInfo1/2 + enNewInfo1/2）；NewInfo格式改为`原文/新文` |
 | v1.0 | 2025-11-29 | 初始版本，基于 NPCStaticData 表和 npcs.yaml 整理 |

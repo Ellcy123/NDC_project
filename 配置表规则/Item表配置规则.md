@@ -10,19 +10,21 @@
 | itemType | string | 是 | 物品分类，详见类型说明 |
 | canCollected | int | 是 | 能否被收集（1=是，0=否） |
 | canAnalyzed | int | 是 | 能否被分析（1=是，0=否） |
+| analysedEvidence | string | 否 | 分析后的物品ID（分析后变成哪个物品） |
 | canCombined | int | 是 | 能否被合并（1=是，0=否） |
 | combineParameter0 | string | 否 | 合并需要用到的物品ID |
 | combineParameter1 | string | 否 | 合并后生成的物品ID |
-| cnDescribe1 | string | 是 | 中文描述（初始状态） |
-| cnDescribe2 | string | 否 | 中文描述（分析后状态，canAnalyzed=1时展示） |
-| cnDescribe3 | string | 否 | 中文描述（备用） |
-| enDescribe1 | string | 是 | 英文描述（初始状态） |
-| enDescribe2 | string | 否 | 英文描述（分析后状态） |
-| enDescribe3 | string | 否 | 英文描述（备用） |
-| path1 | string | 否 | 物品美术资源存储路径（优先使用，前期可用编辑器现有资源） |
+| cnDescribe1 | string | 是 | 中文描述（详细描述） |
+| cnDescribe2 | string | 是 | 中文描述（简单描述，列表显示用） |
+| cnDescribe3 | string | 否 | 中文描述（分析后描述，canAnalyzed=1时展示） |
+| enDescribe1 | string | 是 | 英文描述（详细描述） |
+| enDescribe2 | string | 是 | 英文描述（简单描述，列表显示用） |
+| enDescribe3 | string | 否 | 英文描述（分析后描述） |
+| path1 | string | 否 | 物品美术资源ID，从 evidences.yaml 的 `asset_id` 读取，例如：`SC101_clue_01` |
 | path2 | string | 否 | 其他美术资源路径2 |
 | path3 | string | 否 | 其他美术资源路径3 |
-| parameter | string | 否 | JudgeCondition 判断的事件ID |
+| script | string | 否 | 判断事件的方法，固定填写 `JudgeCondition` |
+| parameter | string | 否 | 判断的事件ID |
 
 ---
 
@@ -63,23 +65,34 @@
 
 当 `canAnalyzed = 1` 时，玩家可以对物品进行分析操作。
 
-分析后：
-- 显示 `cnDescribe2`/`enDescribe2` 替代初始描述
-- 物品名称可能变化（如"毛巾" → "沾着氯仿的毛巾"）
+**描述字段用途：**
+| 字段 | 用途 | 显示时机 |
+|------|------|----------|
+| cnDescribe1 | 详细描述 | 始终显示在位置1 |
+| cnDescribe2 | 简单描述 | 列表显示用 |
+| cnDescribe3 | 分析后描述 | 分析后显示在位置3 |
+
+**分析前后显示变化：**
+- 分析前：位置1显示 `cnDescribe1`（详细描述）
+- 分析后：位置1仍显示 `cnDescribe1`（原描述），位置3额外显示 `cnDescribe3`（分析后描述）
+- 物品ID可能变化：通过 `analysedEvidence` 字段指定分析后变成哪个物品
 
 **示例：**
 ```yaml
 - id: EV1114
   cnName: 毛巾
-  enName: Chloroform-Stained Towel
+  enName: Towel
   itemType: item
   canCollected: 1
   canAnalyzed: 1
+  analysedEvidence: EV1114_A    # 分析后变成的物品ID
   canCombined: 0
   cnDescribe1: 一条普通的白色毛巾
-  cnDescribe2: 一条白色毛巾，散发着刺鼻的甜腻气味，是氯仿的味道
+  cnDescribe2: 白色毛巾
+  cnDescribe3: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道
   enDescribe1: An ordinary white towel
-  enDescribe2: A white towel with a pungent sweet smell, it's chloroform
+  enDescribe2: White towel
+  enDescribe3: A pungent sweet smell when sniffed closely, it's chloroform
 ```
 
 ### 4.2 合并机制（canCombined）
@@ -145,8 +158,10 @@
   canAnalyzed: 0
   canCombined: 0
   cnDescribe1: Rosa Martinez - 11月15日夜班：后台走廊清洁 23:00-01:00
+  cnDescribe2: Rosa的工作记录卡
   enDescribe1: Rosa Martinez - Night shift Nov 15: Backstage corridor cleaning 23:00-01:00
-  path1: Art/UI/Item/WorkCard
+  enDescribe2: Rosa's work record card
+  path1: SC101_clue_05
 ```
 
 ### 5.2 需要分析的物品
@@ -158,11 +173,14 @@
   itemType: clue
   canCollected: 1
   canAnalyzed: 1
+  analysedEvidence: EV1122_A
   canCombined: 0
   cnDescribe1: 地板上的拖拽痕迹
-  cnDescribe2: 压痕较深，被拖动的东西至少150磅，普通女性的力量基本无法完成
+  cnDescribe2: 拖拽痕迹
+  cnDescribe3: 压痕较深，被拖动的东西至少150磅，普通女性的力量基本无法完成
   enDescribe1: Drag marks on the floor
-  enDescribe2: Deep indentations, dragged object weighs at least 150 pounds
+  enDescribe2: Drag marks
+  enDescribe3: Deep indentations, dragged object weighs at least 150 pounds
 ```
 
 ### 5.3 环境物品（不可收集）
@@ -176,7 +194,9 @@
   canAnalyzed: 0
   canCombined: 0
   cnDescribe1: 通缉"疤面Tony"的悬赏金高达5000美元
+  cnDescribe2: 通缉令
   enDescribe1: Wanted poster for "Scarface Tony" with a bounty of $5,000
+  enDescribe2: Wanted poster
 ```
 
 ### 5.4 证词/笔记
@@ -190,7 +210,9 @@
   canAnalyzed: 0
   canCombined: 0
   cnDescribe1: 确实有一声枪响...但这声枪响和平时黑帮火拼的声音不太一样，只听到了一声
+  cnDescribe2: Tommy的证词
   enDescribe1: Indeed there was a gunshot... but different from usual gang firefights
+  enDescribe2: Tommy's testimony
 ```
 
 ---
@@ -214,12 +236,14 @@
 | cnName | name | 中文名 |
 | enName | name_en | 英文名 |
 | itemType | type | 物品类型 |
-| cnDescribe1 | description.initial | 初始描述 |
-| cnDescribe2 | analysis.result_description | 分析后描述 |
+| cnDescribe1 | description.initial | 详细描述（位置1） |
+| cnDescribe2 | description.brief | 简单描述（列表显示用） |
+| cnDescribe3 | analysis.result_description | 分析后描述（位置3） |
 | canAnalyzed | analysis.required | 是否需要分析 |
+| analysedEvidence | - | 分析后变成的物品ID |
+| path1 | asset_id | 美术资源ID |
 | - | analysis.action | Preview特有，分析动作描述 |
 | - | analysis.result_name | Preview特有，分析后名称 |
-| - | asset_id | Preview特有，资源ID |
 | - | purpose | Preview特有，设计目的 |
 | - | has_puzzle | Preview特有，是否有谜题 |
 | - | puzzle_description | Preview特有，谜题描述 |
@@ -243,30 +267,34 @@
 ```yaml
 - id: EV1114
   cnName: 毛巾
-  enName: Chloroform-Stained Towel
+  enName: Towel
   itemType: item
   canCollected: 1
   canAnalyzed: 1
+  analysedEvidence: EV1114_A
   canCombined: 0
   cnDescribe1: 一条普通的白色毛巾
-  cnDescribe2: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道
+  cnDescribe2: 白色毛巾
+  cnDescribe3: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道
   enDescribe1: An ordinary white towel
-  enDescribe2: A pungent sweet smell, it's chloroform
+  enDescribe2: White towel
+  enDescribe3: A pungent sweet smell when sniffed closely, it's chloroform
 ```
 
 **对应到 evidences.yaml：**
 ```yaml
 EV1114:
-  name: 沾有氯仿的毛巾
-  name_en: Chloroform-Stained Towel
+  name: 毛巾
+  name_en: Towel
   type: item
   description:
     initial: 一条普通的白色毛巾
+    brief: 白色毛巾
   analysis:
     required: true
     action: 接近闻嗅
     result_name: 沾着氯仿的毛巾
-    result_description: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道，这不是清洁用品
+    result_description: 接近闻嗅时有明显的甜腻化学味，是氯仿的味道
   asset_id: SC101_clue_04
   purpose: 否定Rosa"专心清洁，什么都没看到"的目击谎言
 ```
@@ -289,11 +317,12 @@ EV1114:
 ## 6. 注意事项
 
 1. **ID必须唯一**：同一张表中不能有重复ID
-2. **中英文都要填**：cnName/enName、cnDescribe1/enDescribe1 都必须填写
+2. **中英文都要填**：cnName/enName、cnDescribe1/enDescribe1、cnDescribe2/enDescribe2 都必须填写
 3. **bool值格式**：使用 1 表示是，0 表示否（不要用 true/false）
 4. **合并参数成对**：如果 canCombined=1，combineParameter0 和 combineParameter1 都要填
-5. **分析描述**：如果 canAnalyzed=1，cnDescribe2/enDescribe2 要填写分析后的描述
-6. **路径格式**：美术资源路径使用 `/` 分隔，如 `Art/UI/Item/Name`
+5. **分析描述**：如果 canAnalyzed=1，cnDescribe3/enDescribe3 要填写分析后的描述
+6. **分析物品ID**：如果 canAnalyzed=1，建议填写 analysedEvidence 指定分析后变成的物品
+7. **路径格式**：美术资源路径使用 `/` 分隔，如 `Art/UI/Item/Name`
 
 ---
 
@@ -301,4 +330,6 @@ EV1114:
 
 | 版本 | 日期 | 修改内容 |
 |------|------|----------|
+| v2.1 | 2025-12-07 | path1 字段改为从 evidences.yaml 的 asset_id 读取 |
+| v2.0 | 2025-12-07 | 新增 analysedEvidence 字段；重新定义描述字段用途：cnDescribe1=详细描述、cnDescribe2=简单描述（列表用）、cnDescribe3=分析后描述 |
 | v1.0 | 2025-11-29 | 初始版本，基于 ItemStaticData 表和 evidences.yaml 整理 |

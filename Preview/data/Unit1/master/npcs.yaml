@@ -10,12 +10,26 @@ npcs:
     name_cn: 扎克·布伦南
     role: protagonist
     description: 私家侦探，被陷害成杀害Webb的凶手，必须在72小时内找到真凶。职业操守极强，擅长推理和证据分析，有失眠症，靠糖和咖啡因维持。
+    description_en: A private detective framed for Webb's murder, who must find the real killer within 72 hours. Highly professional, skilled in deduction and evidence analysis, suffers from insomnia and relies on sugar and caffeine.
+    # 关系图配置
+    npcPosX: 10
+    npcPosY: 50
+    npcRelation: NPC109
+    npcRelationParaCn: 调查Webb案件
+    npcRelationParaEn: Investigating Webb case
 
   NPC102:
     name: Emma O'Malley
     name_cn: 艾玛·奥马利
     role: partner
     description: 《芝加哥先驱报》记者，在案发现场救了Zack。聪明勇敢，一直在调查Webb的非法活动，父母死于港口工程意外，立志报道工人处境。
+    description_en: A reporter for the Chicago Herald who saved Zack at the crime scene. Smart and brave, she has been investigating Webb's illegal activities. Her parents died in a port construction accident, driving her to report on workers' conditions.
+    # 关系图配置
+    npcPosX: 10
+    npcPosY: 70
+    npcRelation: NPC101
+    npcRelationParaCn: 调查搭档
+    npcRelationParaEn: Investigation Partner
 
   # ===== 第1章 嫌疑人/证人 =====
   NPC103:
@@ -23,6 +37,7 @@ npcs:
     name_cn: 罗莎·马丁内斯
     role: suspect
     description: 蓝月亮歌舞厅的清洁女工，有个8岁生病的儿子Miguel，因经济困境被Morrison威胁配合栽赃
+    description_en: A cleaning lady at the Blue Moon Club with an 8-year-old sick son Miguel. Due to financial hardship, she was threatened by Morrison to cooperate in framing Zack.
     info:
       loop1:
         - 蓝月亮歌舞厅清洁工，夜班23:00-01:00
@@ -38,12 +53,19 @@ npcs:
         - 看到Jimmy用钥匙进入Webb会客室，行为可疑
       loop5:
         - 看到Vivian从歌舞厅往会客室方向走，携带可疑物品
+    # 关系图配置
+    npcPosX: 30
+    npcPosY: 30
+    npcRelation: NPC104
+    npcRelationParaCn: 被威胁配合栽赃
+    npcRelationParaEn: Threatened to Frame Zack
 
   NPC104:
     name: Morrison
     name_cn: 莫里森
     role: suspect
     description: 芝加哥警局警探，负责Webb谋杀案的调查。实际上是腐败警察，欠疤面Tony 5000美元赌债，被神秘人Whale收买栽赃Zack
+    description_en: A Chicago Police detective in charge of Webb's murder investigation. Actually a corrupt cop who owes Scarface Tony $5,000 in gambling debts and was bribed by the mysterious "Whale" to frame Zack.
     info:
       loop1:
         - 芝加哥警局警探，负责Webb谋杀案调查
@@ -54,12 +76,19 @@ npcs:
         - 被神秘人"Whale"收买，负责栽赃Zack
         - 从家到酒吧只需15分钟，但声称用了30分钟
         - 案发前一天领用了便携式现场勘验箱
+    # 关系图配置
+    npcPosX: 70
+    npcPosY: 20
+    npcRelation: NPC109
+    npcRelationParaCn: 腐败警探/负责调查案件
+    npcRelationParaEn: Corrupt Detective/Lead Investigator
 
   NPC105:
     name: Tommy
     name_cn: 汤米
     role: suspect
     description: 蓝月亮歌舞厅的经理，负责账目和日常运营。表面上是普通经理，实际上深度参与Webb的勒索网络，负责伪装账目
+    description_en: Manager of the Blue Moon Club, responsible for bookkeeping and daily operations. Appears to be an ordinary manager but is deeply involved in Webb's extortion network, handling the falsified accounts.
     info:
       loop1:
         - 蓝月亮歌舞厅经理，住在酒吧楼上
@@ -76,12 +105,19 @@ npcs:
         - 看到Jimmy从Webb办公室拿出古董水壶，行为可疑
       loop5:
         - 知道Webb和Vivian的关系，以及Webb与Rita的新关系
+    # 关系图配置
+    npcPosX: 50
+    npcPosY: 20
+    npcRelation: NPC109
+    npcRelationParaCn: 酒吧经理/勒索共犯
+    npcRelationParaEn: Bar Manager/Extortion Accomplice
 
   NPC106:
     name: Vivian Rose
     name_cn: 薇薇安·罗斯
     role: suspect
     description: 蓝月亮歌舞厅的头牌歌女，被Webb利用接近有钱客人套取秘密进行勒索。发现Webb背叛自己与Rita交往后，内心充满仇恨，有杀人动机但最终没有动手
+    description_en: The star singer at the Blue Moon Club, exploited by Webb to get close to wealthy patrons and extract secrets for blackmail. After discovering Webb's betrayal with Rita, she was filled with hatred and had motive to kill, but ultimately didn't act.
     info:
       loop2:
         - 确认Morrison到达时间是01:00
@@ -93,12 +129,19 @@ npcs:
         - 发现Webb和Rita交往后内心充满仇恨
         - 有杀人动机和计划，但最终没有动手
         - 11点05分去会客室，门锁着被赶走
+    # 关系图配置
+    npcPosX: 30
+    npcPosY: 70
+    npcRelation: NPC109
+    npcRelationParaCn: 情人/被利用者
+    npcRelationParaEn: Lover/Exploited Victim
 
   NPC107:
     name: Jimmy
     name_cn: 吉米
     role: killer
     description: 蓝月亮歌舞厅的厨师，爱尔兰移民。为了妻子Anna和未出生的孩子能获得合法身份，被Whale收买杀害了Webb。案发后在Zack面前认罪，随后自杀身亡
+    description_en: The cook at the Blue Moon Club, an Irish immigrant. To secure legal status for his wife Anna and unborn child, he was bribed by Whale to kill Webb. After the incident, he confessed to Zack and then committed suicide.
     info:
       loop3:
         - 酒吧厨师，与Webb关系密切
@@ -114,12 +157,19 @@ npcs:
         - 利用音乐掩盖枪声，伪造死亡时间
         - 11点杀死Webb，11点05分模仿声音骗走Vivian，11点30分制造假枪声
         - 最终自杀身亡
+    # 关系图配置
+    npcPosX: 70
+    npcPosY: 70
+    npcRelation: NPC109
+    npcRelationParaCn: 凶手/厨师
+    npcRelationParaEn: Killer/Cook
 
   NPC108:
     name: Anna
     name_cn: 安娜
     role: witness
     description: Jimmy的妻子，怀有身孕，不知道丈夫的犯罪行为。善良温柔，Jimmy自杀后向Zack提供了Webb办公室保险柜的密码
+    description_en: Jimmy's wife, pregnant and unaware of her husband's crime. Kind and gentle, she provided Zack with Webb's office safe combination after Jimmy's suicide.
     info:
       loop4:
         - Jimmy的妻子，怀有身孕
@@ -127,26 +177,53 @@ npcs:
         - 允许Zack进入卧室查看书籍
       loop6:
         - Jimmy自杀后，向Zack提供了Webb办公室保险柜的密码
+    # 关系图配置
+    npcPosX: 90
+    npcPosY: 70
+    npcRelation: NPC107
+    npcRelationParaCn: 妻子
+    npcRelationParaEn: Wife
 
   NPC109:
     name: Webb
     name_cn: 韦伯
     role: victim
     description: 蓝月亮歌舞厅的老板，表面做私酒生意，实际经营庞大的勒索网络。利用Vivian套取秘密，承诺给她未来却背叛她与Rita交往
+    description_en: Owner of the Blue Moon Club, ostensibly running a bootleg liquor business but actually operating an extensive extortion network. He exploited Vivian to extract secrets, promised her a future but betrayed her by seeing Rita.
+    # 关系图配置
+    npcPosX: 50
+    npcPosY: 50
+    npcRelation: NPC107
+    npcRelationParaCn: 被杀害
+    npcRelationParaEn: Murdered By
 
   NPC110:
     name: Mrs. Morrison
     name_cn: 莫里森太太
     role: witness
     description: Morrison的妻子，对丈夫的警察工作深信不疑，善良单纯，完全不知道丈夫的腐败行为
+    description_en: Morrison's wife who has complete faith in her husband's police work. Kind and naive, she is completely unaware of his corrupt activities.
     info:
       loop2:
         - Morrison的妻子，对丈夫深信不疑
         - 确认Morrison离家时间为00:30
         - 允许Zack和Emma进入书房调查
+    # 关系图配置
+    npcPosX: 90
+    npcPosY: 20
+    npcRelation: NPC104
+    npcRelationParaCn: 妻子
+    npcRelationParaEn: Wife
 
   NPC111:
     name: Ellcy
     name_cn: 艾尔西
     role: witness
     description: 神秘的新角色，身份待定
+    description_en: A mysterious new character, identity to be determined.
+    # 关系图配置
+    npcPosX: 90
+    npcPosY: 90
+    npcRelation: ""
+    npcRelationParaCn: 神秘人物
+    npcRelationParaEn: Mysterious Character
