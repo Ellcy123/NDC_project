@@ -39,20 +39,24 @@ npcs:
     description: 蓝月亮歌舞厅的清洁女工，有个8岁生病的儿子Miguel，因经济困境被Morrison威胁配合栽赃
     description_en: A cleaning lady at the Blue Moon Club with an 8-year-old sick son Miguel. Due to financial hardship, she was threatened by Morrison to cooperate in framing Zack.
     info:
-      loop1:
-        - 蓝月亮歌舞厅清洁工，夜班23:00-01:00
-        - 单身母亲，儿子Miguel患病需要昂贵药物
-        - 声称在地下室酒窖工作（实际在后台走廊）
-        - 表现紧张，似乎在隐瞒什么
-      loop2:
-        - 被Morrison威胁配合栽赃，内心充满恐惧和愧疚
-        - 在Zack的劝说下说出真相
-      loop3:
-        - 案发当晚11:00音乐极响，无法听到其他声音
-      loop4:
-        - 看到Jimmy用钥匙进入Webb会客室，行为可疑
-      loop5:
-        - 看到Vivian从歌舞厅往会客室方向走，携带可疑物品
+      - id: 1
+        text: 案发当晚一直在地下室酒窖工作
+        text_en: Was working in the basement wine cellar all night
+        source: 循环1 Rosa对话
+        expose_truth: 工作记录卡显示实际在后台走廊工作
+        expose_truth_en: Work record shows she was actually in backstage corridor
+      - id: 2
+        text: 单身母亲，儿子Miguel患病需要昂贵药物
+        text_en: Single mother, son Miguel is ill and needs expensive medication
+        source: 循环1 Rosa储藏室搜索(EV1113)
+      - id: 3
+        text: 被Morrison威胁配合栽赃Zack
+        text_en: Threatened by Morrison to frame Zack
+        source: 循环1 指证后Rosa坦白
+      - id: 4
+        text: 看到Jimmy用钥匙进入Webb会客室
+        text_en: Saw Jimmy use a key to enter Webb's parlor
+        source: 循环4 Rosa对话
     # 关系图配置
     npcPosX: 30
     npcPosY: 30
@@ -67,15 +71,24 @@ npcs:
     description: 芝加哥警局警探，负责Webb谋杀案的调查。实际上是腐败警察，欠疤面Tony 5000美元赌债，被神秘人Whale收买栽赃Zack
     description_en: A Chicago Police detective in charge of Webb's murder investigation. Actually a corrupt cop who owes Scarface Tony $5,000 in gambling debts and was bribed by the mysterious "Whale" to frame Zack.
     info:
-      loop1:
-        - 芝加哥警局警探，负责Webb谋杀案调查
-        - 声称00:30接到电话，01:00到达现场
-        - 行为可疑，似乎早就知道现场情况
-      loop2:
-        - 欠疤面Tony 5000美元赌债，被威胁家人安全
-        - 被神秘人"Whale"收买，负责栽赃Zack
-        - 从家到酒吧只需15分钟，但声称用了30分钟
-        - 案发前一天领用了便携式现场勘验箱
+      - id: 1
+        text: 声称00:30接到匿名电话后立即出警，01:00到达现场
+        text_en: Claims received anonymous call at 00:30 and arrived at scene at 01:00
+        source: 循环2 Morrison办公室对话
+        expose_truth: 从家到酒吧只需15分钟，且提前一天领用现场勘验箱
+        expose_truth_en: Takes only 15 min from home, and picked up investigation kit a day earlier
+      - id: 2
+        text: 芝加哥警局警探，负责Webb谋杀案调查
+        text_en: Chicago Police detective in charge of Webb murder investigation
+        source: 循环1 开场
+      - id: 3
+        text: 欠疤面Tony 5000美元赌债，被威胁家人安全
+        text_en: Owes Scarface Tony $5,000 gambling debt, family threatened
+        source: 循环2 Morrison书房搜索(EV1224)
+      - id: 4
+        text: 被神秘人Whale收买，负责栽赃Zack
+        text_en: Bribed by mysterious Whale to frame Zack
+        source: 循环2 指证后坦白
     # 关系图配置
     npcPosX: 70
     npcPosY: 20
@@ -90,21 +103,24 @@ npcs:
     description: 蓝月亮歌舞厅的经理，负责账目和日常运营。表面上是普通经理，实际上深度参与Webb的勒索网络，负责伪装账目
     description_en: Manager of the Blue Moon Club, responsible for bookkeeping and daily operations. Appears to be an ordinary manager but is deeply involved in Webb's extortion network, handling the falsified accounts.
     info:
-      loop1:
-        - 蓝月亮歌舞厅经理，住在酒吧楼上
-        - 23:30听到一声枪响，与平时黑帮火拼不同
-        - 知道Rosa的排班表和员工动向
-        - 对Webb的其他生意闪烁其词
-      loop2:
-        - 确认从Morrison家到酒吧开车最多15分钟
-      loop3:
-        - 深度参与Webb的勒索网络，负责伪装账目
-        - 记录客户访问时间、停留时长、"购买"次数和金额
-        - 每个古董是一个档案的代号
-      loop4:
-        - 看到Jimmy从Webb办公室拿出古董水壶，行为可疑
-      loop5:
-        - 知道Webb和Vivian的关系，以及Webb与Rita的新关系
+      - id: 1
+        text: 声称Webb的收入全部来自酒类销售
+        text_en: Claims Webb's income all comes from liquor sales
+        source: 循环3 Tommy办公室对话
+        expose_truth: 月收入15000美元，酒类销售仅4000，差额11000来自勒索
+        expose_truth_en: Monthly income $15,000, liquor sales only $4,000, $11,000 gap from extortion
+      - id: 2
+        text: 蓝月亮歌舞厅经理，负责账目和日常运营
+        text_en: Blue Moon Club manager, handles accounts and daily operations
+        source: 循环1 Tommy对话
+      - id: 3
+        text: 深度参与Webb的勒索网络，负责记录客户信息
+        text_en: Deeply involved in Webb's extortion network, records client information
+        source: 循环3 指证后坦白
+      - id: 4
+        text: 看到Jimmy从Webb办公室拿走古董水壶
+        text_en: Saw Jimmy take antique vase from Webb's office
+        source: 循环4 Tommy对话(EV1441)
     # 关系图配置
     npcPosX: 50
     npcPosY: 20
@@ -119,16 +135,24 @@ npcs:
     description: 蓝月亮歌舞厅的头牌歌女，被Webb利用接近有钱客人套取秘密进行勒索。发现Webb背叛自己与Rita交往后，内心充满仇恨，有杀人动机但最终没有动手
     description_en: The star singer at the Blue Moon Club, exploited by Webb to get close to wealthy patrons and extract secrets for blackmail. After discovering Webb's betrayal with Rita, she was filled with hatred and had motive to kill, but ultimately didn't act.
     info:
-      loop2:
-        - 确认Morrison到达时间是01:00
-        - 对Webb的死表面悲伤，内心复杂
-      loop3:
-        - 听到Webb和某人争吵，对方劝Webb不要接危险生意
-      loop5:
-        - 被Webb利用，被迫接近有钱客人套取秘密进行勒索
-        - 发现Webb和Rita交往后内心充满仇恨
-        - 有杀人动机和计划，但最终没有动手
-        - 11点05分去会客室，门锁着被赶走
+      - id: 1
+        text: 声称与Webb只是雇佣关系，没有感情
+        text_en: Claims only employment relationship with Webb, no feelings
+        source: 循环5 Vivian化妆室对话
+        expose_truth: 分手信和撕碎的船票证明曾是恋人关系
+        expose_truth_en: Breakup letter and torn ticket prove they were lovers
+      - id: 2
+        text: 蓝月亮歌舞厅头牌歌女
+        text_en: Star singer at the Blue Moon Club
+        source: 循环2 Vivian对话
+      - id: 3
+        text: 被Webb利用接近有钱客人套取秘密进行勒索
+        text_en: Exploited by Webb to get close to wealthy patrons for blackmail
+        source: 循环5 指证中承认
+      - id: 4
+        text: 案发当晚11:05去会客室被门内的声音赶走
+        text_en: Went to parlor at 11:05 on the night, was told to leave by voice inside
+        source: 循环5 Vivian时间线澄清
     # 关系图配置
     npcPosX: 30
     npcPosY: 70
@@ -143,20 +167,24 @@ npcs:
     description: 蓝月亮歌舞厅的厨师，爱尔兰移民。为了妻子Anna和未出生的孩子能获得合法身份，被Whale收买杀害了Webb。案发后在Zack面前认罪，随后自杀身亡
     description_en: The cook at the Blue Moon Club, an Irish immigrant. To secure legal status for his wife Anna and unborn child, he was bribed by Whale to kill Webb. After the incident, he confessed to Zack and then committed suicide.
     info:
-      loop3:
-        - 酒吧厨师，与Webb关系密切
-        - 曾警告Webb不要接危险生意
-      loop4:
-        - 拥有Webb会客室的钥匙
-        - 从Webb办公室拿走古董水壶并伪装
-        - 知道"Whale"的危险性
-      loop5:
-        - 对Vivian的情况表现出同情
-      loop6:
-        - 真凶，被"Whale"收买杀害Webb
-        - 利用音乐掩盖枪声，伪造死亡时间
-        - 11点杀死Webb，11点05分模仿声音骗走Vivian，11点30分制造假枪声
-        - 最终自杀身亡
+      - id: 1
+        text: 声称案发时一直在厨房，Webb是11:30才死的
+        text_en: Claims was in kitchen during incident, Webb died at 11:30
+        source: 循环6 Jimmy厨房对话
+        expose_truth: 窗外弹孔证明11:30是假枪声，真正枪声在11:00被音乐掩盖
+        expose_truth_en: Bullet hole outside proves 11:30 was fake shot, real shot at 11:00 covered by music
+      - id: 2
+        text: 蓝月亮歌舞厅厨师，爱尔兰移民
+        text_en: Blue Moon Club cook, Irish immigrant
+        source: 循环3 Jimmy对话
+      - id: 3
+        text: 拥有Webb会客室的钥匙
+        text_en: Has key to Webb's parlor
+        source: 循环4 Rosa证词(EV1442)
+      - id: 4
+        text: 为妻子Anna和未出生的孩子获取合法身份而被Whale收买
+        text_en: Bribed by Whale to secure legal status for wife Anna and unborn child
+        source: 循环6 Jimmy供述
     # 关系图配置
     npcPosX: 70
     npcPosY: 70
@@ -171,12 +199,14 @@ npcs:
     description: Jimmy的妻子，怀有身孕，不知道丈夫的犯罪行为。善良温柔，Jimmy自杀后向Zack提供了Webb办公室保险柜的密码
     description_en: Jimmy's wife, pregnant and unaware of her husband's crime. Kind and gentle, she provided Zack with Webb's office safe combination after Jimmy's suicide.
     info:
-      loop4:
-        - Jimmy的妻子，怀有身孕
-        - 不知道丈夫的犯罪行为
-        - 允许Zack进入卧室查看书籍
-      loop6:
-        - Jimmy自杀后，向Zack提供了Webb办公室保险柜的密码
+      - id: 1
+        text: Jimmy的妻子，怀有身孕
+        text_en: Jimmy's wife, pregnant
+        source: 循环4 Anna家对话
+      - id: 2
+        text: 不知道丈夫的犯罪行为
+        text_en: Unaware of husband's crime
+        source: 循环4 Anna家对话
     # 关系图配置
     npcPosX: 90
     npcPosY: 70
@@ -204,10 +234,14 @@ npcs:
     description: Morrison的妻子，对丈夫的警察工作深信不疑，善良单纯，完全不知道丈夫的腐败行为
     description_en: Morrison's wife who has complete faith in her husband's police work. Kind and naive, she is completely unaware of his corrupt activities.
     info:
-      loop2:
-        - Morrison的妻子，对丈夫深信不疑
-        - 确认Morrison离家时间为00:30
-        - 允许Zack和Emma进入书房调查
+      - id: 1
+        text: Morrison的妻子，对丈夫深信不疑
+        text_en: Morrison's wife, has complete faith in husband
+        source: 循环2 Morrison家对话
+      - id: 2
+        text: 确认Morrison于00:30离家
+        text_en: Confirms Morrison left home at 00:30
+        source: 循环2 Mrs. Morrison证词(EV1211)
     # 关系图配置
     npcPosX: 90
     npcPosY: 20
