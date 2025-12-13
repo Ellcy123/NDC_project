@@ -7,40 +7,44 @@ evidences:
   # ===== 第1章 循环1 证据 =====
 
   EV1111:
-    name: 芝加哥警局通缉令
-    name_en: Chicago Police Wanted Poster
+    name: 悬赏通缉令
+    name_en: Wanted Poster
     type: envir
     description:
-      initial: 通缉"疤面Tony"的悬赏金高达5000美元
+      initial: "通缉\"疤面 Tony\"的悬赏令，赏金 5000 美元。\n这就是如今芝加哥的现状——罪犯比好人更值钱。"
+      brief: "通缉\"疤面 Tony\"的悬赏令，赏金 5000 美元。\n这就是如今芝加哥的现状——罪犯比好人更值钱。"
     asset_id: SC101_clue_111
     purpose: 环境叙事，强化1920年代芝加哥黑帮横行的社会背景
 
   EV1112:
-    name: Rosa的女儿照片
-    name_en: Rosa's Daughter Photo
+    name: Miguel 的照片
+    name_en: Photo of Miguel
     type: clue
     description:
-      initial: 照片背面写着"我的小天使Miguel，生日0915，妈妈的一切希望"
+      initial: 照片背面写着："我的小天使 Miguel，生日 0915，妈妈的一切希望"。
+      brief: 照片背面写着："我的小天使 Miguel，生日 0915，妈妈的一切希望"。
     has_puzzle: true
     puzzle_description: 需要四位密码解锁工具箱，密码提示在女儿照片生日上
     asset_id: SC101_clue_112
     purpose: 强化Rosa母爱主题，提供密码线索
 
   EV1113:
-    name: Rosa的医院就诊清单
-    name_en: Rosa's Hospital Bill
+    name: 巨额医药单
+    name_en: Huge Medical Bill
     type: clue
     description:
-      initial: 女儿Miguel的昂贵药物清单，总费用远超Rosa的工资收入，经济压力巨大
+      initial: 女儿 Miguel 的药物清单。总费用远超 Rosa 的薪水。一张能把人逼上绝路的账单。
+      brief: 女儿 Miguel 的药物清单。总费用远超 Rosa 的薪水。一张能把人逼上绝路的账单。
     asset_id: SC101_clue_113
     purpose: 展现Rosa的家庭困境，解释其被胁迫动机
 
   EV1114:
-    name: 沾有氯仿的毛巾
-    name_en: Chloroform-Stained Towel
+    name: 刺鼻的毛巾
+    name_en: Pungent Towel
     type: item
     description:
       initial: 一条普通的白色毛巾
+      brief: 一条普通的白色毛巾
     analysis:
       required: true
       action: 接近闻嗅
@@ -54,7 +58,8 @@ evidences:
     name_en: Work Record Card
     type: item
     description:
-      initial: Rosa Martinez - 11月15日夜班：后台走廊清洁 23:00-01:00，明确显示工作地点是后台走廊，不是地下室酒窖
+      initial: Rosa Martinez - 11 月 15 日夜班：后台走廊清洁 23:00-01:00。白纸黑字写着她在走廊，而不是酒窖。
+      brief: Rosa Martinez - 11 月 15 日夜班：后台走廊清洁 23:00-01:00。白纸黑字写着她在走廊，而不是酒窖。
     asset_id: SC101_clue_115
     purpose: 否定Rosa"在地下室酒窖工作"的地点谎言
 
@@ -63,21 +68,23 @@ evidences:
     name_en: Chloroform Bottle
     type: item
     description:
-      initial: 医用麻醉剂氯仿的玻璃瓶，在歌舞厅一楼走廊垃圾桶内发现，瓶口有少量氯仿残留
+      initial: 医用氯仿瓶。在走廊垃圾桶里发现的，瓶口还没干。
+      brief: 医用氯仿瓶。在走廊垃圾桶里发现的，瓶口还没干。
     asset_id: SC102_clue_121
     purpose: 与沾有氯仿的毛巾相互印证，证明有人在此处使用氯仿
 
   EV1122:
-    name: 地板拖拽痕迹
-    name_en: Floor Drag Marks
+    name: 沉重的拖痕
+    name_en: Heavy Drag Marks
     type: clue
     description:
       initial: 地板上的拖拽痕迹
+      brief: 地板上的拖拽痕迹
     analysis:
       required: true
       action: 测量压痕深度
       result_name: 深度拖拽压痕
-      result_description: 压痕较深，被拖动的东西至少150磅，普通女性的力量基本无法完成
+      result_description: 压痕很深，重物至少 150 磅。普通女性拖不动这么重的东西，除非她是大力士。
     asset_id: SC102_clue_122
     purpose: 否定Rosa的自认，证明她没有足够力量拖拽，揭露Morrison
 
@@ -87,6 +94,7 @@ evidences:
     type: note
     description:
       initial: Tommy在办公室整理账目时，于11点30分听到了枪声。这声枪响和平时黑帮火拼的声音不太一样，只听到了一声
+      brief: Tommy在办公室整理账目时，于11点30分听到了枪声。这声枪响和平时黑帮火拼的声音不太一样，只听到了一声
     asset_id: SC103_note_133
     purpose: 为循环6埋下伏笔，证明枪声时间
 
@@ -97,102 +105,114 @@ evidences:
     name_en: Mrs. Morrison Time Testimony
     type: note
     description:
+      brief: Morrison于00:30从家出发，声称处理紧急案件
       initial: Morrison于00:30从家出发，声称处理紧急案件
     asset_id: SC208_note_211
     purpose: 建立Morrison离家时间，为时间矛盾做铺垫
 
   EV1221:
-    name: 警用便携式现场勘验箱领用单据
-    name_en: Police Field Investigation Kit Receipt
+    name: 勘验箱领用单
+    name_en: Investigation Kit Receipt
     type: item
     description:
-      initial: 案发前一天19:30领用便携式现场勘验箱，里面有各种测量设备，有Morrison签名
+      brief: 案发前一天 19:30 的领用单。Morrison 签了字，领走了一整套现场勘验箱。
+      initial: "案发前一天 19:30 的领用单。Morrison 签了字，领走了一整套现场勘验箱。\n\n**【警用装备领用单细节】**\n领用人：Morrison 警探 (ID: 2847)\n时间：1925年11月02日 19:30\n物品：便携式现场勘验箱 (编号: CSI-0847)\n签名：Thomas Morrison (亲笔)\n归还时间：次日上午（未归还）"
     asset_id: SC209_clue_221
     purpose: 证明Morrison提前准备，否定"临时接警"说法
 
   EV1222:
-    name: 警用便携式现场勘验箱
-    name_en: Police Field Investigation Kit
+    name: 便携式勘验箱
+    name_en: Portable Investigation Kit
     type: item
     description:
-      initial: 便携式现场勘验箱，里面有各种测量设备，可与现场压痕进行比对
+      brief: 便携式现场勘验箱。里面摆着各种测量设备，随时可以用。
+      initial: 便携式现场勘验箱。里面摆着各种测量设备，随时可以用。
     asset_id: SC209_clue_222
     purpose: 与现场痕迹对比证据
 
   EV1223:
-    name: Morrison的收据
-    name_en: Morrison's Receipt
+    name: 挥霍的收据
+    name_en: Lavish Receipts
     type: item
     description:
-      initial: Morrison家中发现的各种收据，包含一些可疑的支出记录
+      brief: 在 Morrison 家发现的一堆收据。上面的开销怎么看都不像是一个警察能负担得起的。
+      initial: 在 Morrison 家发现的一堆收据。上面的开销怎么看都不像是一个警察能负担得起的。
     asset_id: SC209_clue_223
     purpose: 展现Morrison的财务状况
 
   EV1224:
-    name: Morrison的赌债欠条
-    name_en: Morrison's Gambling Debt
+    name: 催命的赌债
+    name_en: Life-threatening Debt
     type: envir
     description:
-      initial: 欠疤面Tony $5000赌债，催债信件威胁家人安全
+      brief: "欠疤面 Tony 5000 美元的赌债欠条，附带一封威胁信。\n一个人被逼到墙角时，什么事都干得出来。"
+      initial: "欠疤面 Tony 5000 美元的赌债欠条，附带一封威胁信。\n一个人被逼到墙角时，什么事都干得出来。"
     asset_id: SC209_clue_224
     purpose: 展现Morrison经济困境，解释犯罪动机
 
   EV1225:
-    name: Whale的匿名联系纸条
-    name_en: Whale's Anonymous Note
+    name: Whale 的字条
+    name_en: Note from Whale
     type: envir
     description:
-      initial: 神秘人"Whale"的联系方式和简单指示，$5000已转入账户
+      brief: 神秘人"Whale"发来的指示，提到 5000 美元已到账。交易很及时。
+      initial: "神秘人\"Whale\"发来的指示，提到 5000 美元已到账。交易很及时。\n\n**【信件内容】**\n我亲爱的\"警探\"先生：\n$5000已转入你那可怜的账户。\n这点小钱对我来说不过是烟灰缸里的零钱。\n对你却能救命，不是吗？\n希望你能像你的曾经一样优秀的完成任务，不然的话......\n\n------ Whale"
     asset_id: SC209_clue_225
     purpose: 为后续循环"Whale"线索埋设伏笔
 
   EV1226:
-    name: 赌场的筹码
-    name_en: Casino Chips
+    name: 磨损的筹码
+    name_en: Worn Chips
     type: envir
     description:
-      initial: 几枚不同面额的赌场筹码，其中一枚背面用小字刻着"最后一次"
+      brief: "几枚赌场筹码。其中一枚背面刻着\"最后一次\"。\n每一个赌徒都这么说过。"
+      initial: "几枚赌场筹码。其中一枚背面刻着\"最后一次\"。\n每一个赌徒都这么说过。"
     asset_id: SC209_clue_226
     purpose: 证实Morrison的赌博成瘾问题
 
   EV1227:
-    name: 1920年代报纸头条
-    name_en: 1920s Newspaper Headlines
+    name: 过期的头条新闻
+    name_en: Old Headlines
     type: envir
     description:
-      initial: Miller工业集团遭神秘勒索，警方介入调查
+      brief: "关于 Miller 集团遭勒索的新闻，警方已介入。\n这种事每天都在发生，只不过这次的主角比较有钱。"
+      initial: "关于 Miller 集团遭勒索的新闻，警方已介入。\n这种事每天都在发生，只不过这次的主角比较有钱。\n\n**【芝加哥晨报 1925年8月15日】**\n**头条：Miller工业集团遭神秘勒索，警方介入调查**\nMiller集团董事长昨日向警方报案，称收到匿名勒索信，要求支付50,000美元。信件暗示掌握该集团\"足以摧毁其声誉的内幕消息\"。\n\n**财经版：Miller集团股价异常波动**\n投资者恐慌，要求调查财务状况。"
     asset_id: SC209_clue_227
     purpose: 强化芝加哥社会的动荡不安
 
   EV1228:
-    name: Morrison的功勋奖章
-    name_en: Morrison's Medal of Honor
+    name: 闪亮的奖章
+    name_en: Shiny Medal
     type: envir
     description:
-      initial: 一枚"英勇服务奖章"，表彰Morrison在一次银行抢劫案中的英勇表现
+      brief: "一枚\"英勇服务奖章\"。表彰他在银行抢劫案中的表现。\n它被擦得很亮，摆在最显眼的地方。也许这是他最后一点像个警察的证明。"
+      initial: "一枚\"英勇服务奖章\"。表彰他在银行抢劫案中的表现。\n它被擦得很亮，摆在最显眼的地方。也许这是他最后一点像个警察的证明。"
     asset_id: SC209_clue_228
     purpose: 误导玩家，增加推理复杂度
 
   EV1209:
-    name: 警用便携式现场勘验箱压痕
-    name_en: Investigation Kit Imprint
+    name: 箱子的压痕
+    name_en: Box Imprint
     type: clue
     description:
+      brief: 一个普通的四方形压痕
       initial: 一个普通的四方形压痕
     analysis:
       required: true
       action: 与便携式现场勘验箱比对
       result_name: 四方形的特殊压痕
-      result_description: 四方形的特殊压痕，完全吻合便携式现场勘验箱的尺寸
+      result_description: 四方形的特殊压痕。尺寸和勘验箱完全吻合。这种巧合通常不是巧合。
+      result_brief: 四方形的特殊压痕。尺寸和勘验箱完全吻合。这种巧合通常不是巧合。
     asset_id: SC210_clue_209
     purpose: 证明Morrison使用便携式现场勘验箱来到现场
 
   EV1231:
-    name: Vivian与Webb的甜蜜合影
-    name_en: Vivian and Webb's Sweet Photo
+    name: 不相称的合影
+    name_en: Mismatched Photo
     type: envir
     description:
-      initial: 早期Vivian与Webb的幸福合影
+      brief: "Vivian 与 Webb 早期的合影。照片里的两人笑得很甜。\n难以想象这和那个冷冰冰的歌女是同一个人。"
+      initial: "Vivian 与 Webb 早期的合影。照片里的两人笑得很甜。\n难以想象这和那个冷冰冰的歌女是同一个人。"
     asset_id: SC210_clue_231
     purpose: 对比显示Vivian情感的巨大落差
 
@@ -201,6 +221,7 @@ evidences:
     name_en: Vivian's Time Testimony
     type: note
     description:
+      brief: 11:00左右Vivian去过Webb办公室，11:20去过街角杂货店，00:10回到化妆室
       initial: 11:00左右Vivian去过Webb办公室，11:20去过街角杂货店，00:10回到化妆室
     asset_id: SC211_note_241
     purpose: 建立Vivian的时间线
@@ -210,6 +231,7 @@ evidences:
     name_en: Tommy's Testimony on Morrison's Route
     type: note
     description:
+      brief: Morrison从后门进入，直接去了Webb的办公室
       initial: Morrison从后门进入，直接去了Webb的办公室
     asset_id: SC203_note_261
     purpose: 证明Morrison熟悉酒吧内部结构
@@ -219,6 +241,7 @@ evidences:
     name_en: Rosa's Testimony on Morrison's Behavior
     type: note
     description:
+      brief: Morrison检查现场时没有使用任何工具，只是草草看了几眼就出来了，像是早就知道现场情况
       initial: Morrison检查现场时没有使用任何工具，只是草草看了几眼就出来了，像是早就知道现场情况
     asset_id: SC201_note_271
     purpose: 证明Morrison早就知道现场布局，因为是他自己布置的
@@ -226,29 +249,35 @@ evidences:
   # ===== 第1章 循环3 证据 =====
 
   EV1311:
-    name: Webb总收入财务汇总
-    name_en: Webb's Total Revenue Summary
+    name: 不明收入汇总
+    name_en: Unexplained Revenue Summary
     type: item
     description:
-      initial: 月总收入15,000美元，与酒类销售差额高达11,000美元来源不明
+    description:
+      brief: 月总收入 15,000 美元。但这上面的酒类销售只有一小部分，剩下的 11,000 美元就像是从天上掉下来的。
+      initial: "月总收入 15,000 美元。但这上面的酒类销售只有一小部分，剩下的 11,000 美元就像是从天上掉下来的。\n\n**【蓝月亮歌舞厅 - 月度财务汇总】**\n1925年9月份\n总收入:$11,000.00\n\n1925年10月份\n总收入:$12,500.00"
     asset_id: SC305_clue_311
     purpose: 否定Tommy"收入全部来自酒类销售"的说法
 
   EV1312:
-    name: Webb总收入财务收入记录
-    name_en: Webb's Revenue Records
+    name: 收入记录本
+    name_en: Income Logbook
     type: item
     description:
-      initial: 其中有比较明确的当月勒索收入，被包装为古董收入
+    description:
+      brief: "Webb 的手写记录。近期收入：$8,000 - 重要客户已到手；$3,000 - 付款已确认。\n底下还有一行字：大鱼的情况越来越紧急了 - 还没上钩。"
+      initial: "Webb 的手写记录。近期收入：$8,000 - 重要客户已到手；$3,000 - 付款已确认。\n底下还有一行字：大鱼的情况越来越紧急了 - 还没上钩。\n\n**【Webb手写内容】**\n近期收入:\n$8,000 - **重要**客户已到手\n$3,000 - 付款已**确认**\n\n大鱼的情况越来越**紧急**了 - 还没上钩。"
     asset_id: SC305_clue_312
     purpose: 循环6第五轮指证，与Jimmy的收入进行对比
 
   EV1313:
-    name: Tommy的详细工作记录
-    name_en: Tommy's Detailed Work Records
+    name: 客户名录
+    name_en: Client List
     type: item
     description:
-      initial: 详细记录客户访问时间、观看古董类型，同一古董多次"销售"记录
+    description:
+      brief: 一份详尽的客户名录。这上面记录的古董交易次数，比店里的古董总数还要多。
+      initial: "一份详尽的客户名录。这上面记录的古董交易次数，比店里的古董总数还要多。\n\n**【客户记录】**\n9月15日 - Thompson先生\n购买物品:中国花瓶\n交易金额:$7,000\n\n9月20日 - Coleman先生\n购买物品:欧洲油画\n交易金额:$9,000\n\n10月22日 - Tisra先生\n购买物品:Bennington陶器\n交易金额:$6,000"
     analysis:
       required: true
       action: 笔迹对比分析
@@ -258,119 +287,145 @@ evidences:
     purpose: 否定Tommy"不知情，只是做账"的狡辩
 
   EV1314:
-    name: VIP客户照片
-    name_en: VIP Client Photos
+    name: VIP 合影
+    name_en: VIP Photos
     type: clue
     description:
-      initial: 三张照片，包括和多位芝加哥政商要人合影照片
+    description:
+      brief: 三张合影。Webb 和议员、银行家、检察官笑得像亲兄弟一样。
+      initial: 三张合影。Webb 和议员、银行家、检察官笑得像亲兄弟一样。
     asset_id: SC305_clue_314
     purpose: 展示Webb勒索网络的规模和影响力
 
   EV1315:
-    name: Webb对Vivian的虚假承诺信件
-    name_en: Webb's False Promise Letter to Vivian
+    name: Webb 的信件
+    name_en: Webb's Letter
     type: envir
     description:
-      initial: Webb写给Vivian的甜言蜜语信件，承诺带她去法国
+    description:
+      brief: "Webb 写给 Vivian 的信。信里说会带她去法国，还提到了已经买好了船票。"
+      initial: "Webb 写给 Vivian 的信。信里说会带她去法国，还提到了已经买好了船票。"
     asset_id: SC305_clue_315
     purpose: 展现Webb的虚伪
 
   EV1316:
-    name: Webb的项链
-    name_en: Webb's Necklace
+    name: 钻石项链
+    name_en: Diamond Necklace
     type: envir
     description:
-      initial: 给Vivian的钻石项链
+    description:
+      brief: 一条昂贵的钻石项链。
+      initial: 一条昂贵的钻石项链。
     asset_id: SC305_clue_316
     purpose: 误导证据
 
   EV1317:
-    name: Webb的私人日记摘录
-    name_en: Webb's Private Diary Excerpt
+    name: Webb 的日记
+    name_en: Webb's Diary
     type: envir
     description:
-      initial: '"这些道貌岸然的家伙...他们的虚伪就是我的财富" 下面有便签写着"WHALE - DANGER"'
+    description:
+      brief: "Webb 的日记。他在嘲笑那些被他勒索的人，底下却贴着一张便利贴：\"WHALE - DANGER\"。\n他以为自己是渔夫，其实只是鱼饵。"
+      initial: "Webb 的日记。他在嘲笑那些被他勒索的人，底下却贴着一张便利贴：\"WHALE - DANGER\"。\n他以为自己是渔夫，其实只是鱼饵。\n\n**【日记摘录】**\n\"这些道貌岸然的家伙，一边高喊禁酒令的神圣，一边偷偷来我这里买最好的加拿大威士忌。他们的虚伪就是我的财富，他们的秘密就是我的保险柜。那帮畜生以为那些事情就能永远埋藏？哈！每一桶血钱都会有利息的。\""
     asset_id: SC305_clue_317
     purpose: 表明Webb的冷酷，为"Whale"线索埋伏笔
 
   EV1318:
-    name: Thompson议员的妥协信件
-    name_en: Senator Thompson's Compromise Letter
+    name: 议员的妥协信
+    name_en: Senator's Compromise Letter
     type: envir
     description:
-      initial: Thompson议员被勒索后写的妥协信件
+    description:
+      brief: "Thompson 议员的亲笔信。字里行间充满了恐慌和妥协。\n这就是那些大人物在阴影里的样子。"
+      initial: "Thompson 议员的亲笔信。字里行间充满了恐慌和妥协。\n这就是那些大人物在阴影里的样子。"
     asset_id: SC305_clue_318
     purpose: 证明Webb的勒索网络
 
   EV1319:
-    name: Coleman银行家的转账记录
-    name_en: Banker Coleman's Transfer Records
+    name: 银行家的转账单
+    name_en: Banker's Transfer Record
     type: envir
     description:
-      initial: Coleman银行家向Webb支付"古董费用"的转账记录
+    description:
+      brief: Coleman 银行家的转账记录。名目是"古董费用"。一笔即使是银行家也得伤筋动骨的巨款。
+      initial: Coleman 银行家的转账记录。名目是"古董费用"。一笔即使是银行家也得伤筋动骨的巨款。
     asset_id: SC305_clue_319
     purpose: 证明勒索金流向
 
   EV1320:
-    name: 古董专业鉴定报告
-    name_en: Antique Appraisal Report
+    name: 鉴定报告
+    name_en: Appraisal Report
     type: item
     description:
-      initial: Bennington陶器实际价值$2000，欧洲油画实际价值$150
+    description:
+      brief: 一份古董鉴定报告。Bennington 陶器估价 2000 美元，欧洲油画估价 150 美元。
+      initial: 一份古董鉴定报告。Bennington 陶器估价 2000 美元，欧洲油画估价 150 美元。
     asset_id: SC305_clue_320
     purpose: 与循环4合并使用，证明Jimmy已知古董价值
 
   EV1322:
-    name: Webb酒吧营业收入记录
-    name_en: Webb's Bar Revenue Records
+    name: 酒吧营业记录
+    name_en: Bar Revenue Records
     type: item
     description:
-      initial: 月净酒类销售收入仅4,000美元，与声称的总收入不符
+    description:
+      brief: 酒吧的营业记录。月净酒类销售只有 4,000 美元。
+      initial: "酒吧的营业记录。月净酒类销售只有 4,000 美元。\n\n**【蓝月亮歌舞厅 - 真实营业收入记录】**\n1925年9月份\n酒类销售: $2,800.00\n食品服务: $700.00\n点歌娱乐: $500.00\n月度总收入:$4,000.00\n\n1925年10月份\n月度总收入:$4,500.00"
     asset_id: SC303_clue_322
     purpose: 证明酒吧正常营业收入有限
 
   EV1323:
-    name: Tommy的同情日记
-    name_en: Tommy's Sympathy Diary
+    name: Tommy 的日记
+    name_en: Tommy's Diary
     type: item
     description:
-      initial: 作为一个有妻儿的男人，看着Vivian小姐被迫做那些不光彩的事情，我深感羞愧（可用于笔迹对比）
+    description:
+      brief: Tommy 的日记。他在里面表达了对 Vivian 遭遇的深切同情和羞愧。一个有良知但在黑帮里活不下去的人。
+      initial: "Tommy 的日记。他在里面表达了对 Vivian 遭遇的深切同情和羞愧。一个有良知但在黑帮里活不下去的人。\n\n**【日记内容】**\n\"作为一个有妻儿的男人，看着Vivian小姐被迫做那些...不光彩的事情来维持生计，我深感羞愧。她本该是个好姑娘，如果这个世道能给像她这样的女孩子一份正当的工作，她就不必沦落到这种地步。\""
     asset_id: SC303_clue_323
     purpose: 展现Tommy对Vivian的同情，为循环5埋伏笔
 
   EV1324:
-    name: Vivian工作安排表
-    name_en: Vivian's Work Schedule
+    name: 特殊服务排班表
+    name_en: Special Service Schedule
     type: clue
     description:
-      initial: Vivian与特定VIP客户的"私人服务"时间安排
+    description:
+      brief: Vivian 与 VIP 客户的"私人服务"时间表。每一次服务的时间都精确到了分钟。
+      initial: "Vivian 与 VIP 客户的\"私人服务\"时间表。每一次服务的时间都精确到了分钟。\n\n**【舞台演出时间表】9月表演条目**\n9月5日周一 8:00PM - 主厅表演\n9月7日周三 8:30PM - 主厅表演\n9月9日周五 9:00PM - 主厅表演\n9月11日周日 7:30PM - 主厅表演\n9月12日周一 10:30PM - Thompson先生(VIP套房) 私人专属表演"
     asset_id: SC303_clue_324
     purpose: 为循环5 Vivian线索埋设伏笔
 
   EV1325:
-    name: Tommy全家福
+    name: Tommy 的全家福
     name_en: Tommy's Family Photo
     type: envir
     description:
-      initial: 照片中Tommy把妻儿环抱在臂弯里
+    description:
+      brief: "照片里 Tommy 把妻儿紧紧护在臂弯里。\n一个男人有了想要保护的东西，就会变得既强壮又软弱。"
+      initial: "照片里 Tommy 把妻儿紧紧护在臂弯里。\n一个男人有了想要保护的东西，就会变得既强壮又软弱。"
     asset_id: SC303_clue_325
     purpose: 展现Tommy的家庭责任感
 
   EV1331:
-    name: 歌舞厅欧洲油画现场照片
-    name_en: Showroom European Painting Photo
+    name: 油画现场照
+    name_en: Oil Painting Photo
     type: clue
     description:
-      initial: 欧洲油画完好摆放原位，与"已售给Coleman"矛盾
+    description:
+      brief: 照片里，那幅欧洲油画还挂在原来的位置。根本没有什么"已售出"，这都是谎言。
+      initial: 照片里，那幅欧洲油画还挂在原来的位置。根本没有什么"已售出"，这都是谎言。
     asset_id: SC313_clue_331
     purpose: 否定Tommy"古董已售出"的谎言
 
   EV1332:
-    name: 歌舞厅中国花瓶现场照片
-    name_en: Showroom Chinese Vase Photo
+    name: 花瓶现场照
+    name_en: Vase Photo
     type: clue
     description:
-      initial: 中国花瓶完好摆放原位，与"已售给Thompson"矛盾
+    description:
+      brief: 照片里，那个中国花瓶完好地摆在架子上。Tommy 说它被卖给了 Thompson，但在照片里它哪儿也没去。
+      initial: 照片里，那个中国花瓶完好地摆在架子上。Tommy 说它被卖给了 Thompson，但在照片里它哪儿也没去。
     asset_id: SC313_clue_332
     purpose: 否定Tommy"古董已售出"的谎言
 
@@ -379,6 +434,8 @@ evidences:
     name_en: Vivian's Quarrel Witness Testimony
     type: note
     description:
+    description:
+      brief: Webb说'别想这么多，多看看我送你的书'，另一个人说'你不要接这个生意，会出大事的'
       initial: Webb说'别想这么多，多看看我送你的书'，另一个人说'你不要接这个生意，会出大事的'
     asset_id: SC311_note_341
     purpose: 否定Jimmy"我们关系一直很好"的和谐谎言
@@ -388,6 +445,8 @@ evidences:
     name_en: Rosa's Music Volume Testimony
     type: note
     description:
+    description:
+      brief: 那时候我在清洁，音乐实在太响了，震得我耳朵疼。那种音量下就算有别的声音我也绝对听不到
       initial: 那时候我在清洁，音乐实在太响了，震得我耳朵疼。那种音量下就算有别的声音我也绝对听不到
     asset_id: SC301_note_351
     purpose: 从Rosa角度证实音乐掩护效果
@@ -397,6 +456,8 @@ evidences:
     name_en: Tommy's Testimony on Jimmy Taking Vase
     type: note
     description:
+    description:
+      brief: Jimmy从Webb先生办公室出来，抱着一个水壶...非常小心翼翼...看到我立刻把水壶藏到身后
       initial: Jimmy从Webb先生办公室出来，抱着一个水壶...非常小心翼翼...看到我立刻把水壶藏到身后
     asset_id: SC303_note_361
     purpose: 证明Jimmy从Webb办公室拿走古董
@@ -404,124 +465,150 @@ evidences:
   # ===== 第1章 循环4 证据 =====
 
   EV1411:
-    name: 伪装成陶泥的古董水壶
-    name_en: Antique Vase Disguised as Clay Pot
+    name: 沾泥的水壶
+    name_en: Muddy Water Pot
     type: item
     description:
-      initial: 看似普通的陶制水壶
+    description:
+      brief: 看似普通的陶制水壶。表面被人为地涂抹了一层泥浆。
+      initial: 看似普通的陶制水壶。表面被人为地涂抹了一层泥浆。
     analysis:
       required: true
       action: 清理表面泥浆
-      result_name: 一个被故意伪装的贵重古董
-      result_description: 表面人为涂抹泥浆伪装，清理后露出古董底色
+      result_name: 伪装的古董
+      result_description: 清理掉那些拙劣的伪装后，露出了下面的古董底色。好东西是藏不住的。
     asset_id: SC414_clue_411
     purpose: 否定Jimmy"不知道是古董，随手拿了破陶器"的盗窃谎言
 
   EV1412:
-    name: Jimmy的奖状
-    name_en: Jimmy's Award Certificate
+    name: 优秀员工奖状
+    name_en: Employee Award
     type: envir
     description:
-      initial: Jimmy自草的推荐信，高度自我夸奖工作能力和忠诚度
+    description:
+      brief: Jimmy 自己起草的推荐信。通篇都是对自己忠诚和能力的溢美之词。
+      initial: Jimmy 自己起草的推荐信。通篇都是对自己忠诚和能力的溢美之词。
     asset_id: SC414_clue_412
     purpose: 强化Jimmy忠诚员工的形象，降低嫌疑度
 
   EV1413:
-    name: Jimmy的厨房手套
-    name_en: Jimmy's Kitchen Gloves
+    name: 厨房手套
+    name_en: Kitchen Gloves
     type: item
     description:
-      initial: 厨房专用手套，指甲缝隙和接缝处残留着极少量的褐色泥土痕迹
+    description:
+      brief: 厨房专用的厚手套。在指甲缝隙和接缝深处，卡着一些褐色的泥土渣。
+      initial: 厨房专用的厚手套。在指甲缝隙和接缝深处，卡着一些褐色的泥土渣。
     asset_id: SC414_clue_413
     purpose: 暗示陶泥处理伪装古董
 
   EV1414:
-    name: 厨房的送餐订单
-    name_en: Kitchen Delivery Order
+    name: 送餐记录
+    name_en: Delivery Record
     type: clue
     description:
-      initial: 当晚有送餐记录，但11点到11点30分没有送餐记录
+    description:
+      brief: 厨房的全部送餐记录。11 点到 11 点 30 分这一栏是空白的。这半个小时里没有任何送餐记录。
+      initial: "厨房的全部送餐记录。11 点到 11 点 30 分这一栏是空白的。这半个小时里没有任何送餐记录。\n\n**【送餐记录表】**\n10:00-10:30:大厅3号桌,牛排,负责人:Jimmy\n10:30-11:00:VIP1,开胃小食拼盘,负责人:小助手Tom\n11:00-11:30:【空白】\n11:30-12:00:VIP2,夜宵三明治,负责人:Jimmy\n12:00-12:30:VIP1,甜点拼盘,负责人:Tom"
     asset_id: SC414_clue_414
     purpose: 否定Jimmy说曾经下楼送餐的说法
 
   EV1421:
-    name: Jimmy家庭合照
+    name: Jimmy 的全家福
     name_en: Jimmy's Family Photo
     type: envir
     description:
-      initial: Jimmy与妻子Anna的温馨合影，写着"我的世界"
+    description:
+      brief: "Jimmy 和妻子 Anna 的合影。照片背面写着\"我的世界\"。\n在这个该死的世道，这就是他仅有的避难所。"
+      initial: "Jimmy 和妻子 Anna 的合影。照片背面写着\"我的世界\"。\n在这个该死的世道，这就是他仅有的避难所。"
     asset_id: SC415_clue_421
     purpose: 展现Jimmy的家庭责任感，解释其犯罪动机
 
   EV1422:
-    name: Whale的联系暗号
-    name_en: Whale's Contact Code
+    name: 神秘字条
+    name_en: Mysterious Note
     type: item
     description:
-      initial: 如果你想清楚了，可以联系我。纸张纹样与Morrison处发现的纸条相同
+    description:
+      brief: "字条上写着：\"如果你想清楚了，可以联系我\"。纸张纹样很眼熟。"
+      initial: "字条上写着：\"如果你想清楚了，可以联系我\"。纸张纹样很眼熟。\n\n**【神秘字条】**\n一张被部分撕毁的便签。\n完整内容:\"如果你想清楚了，可以联系我。\""
     asset_id: SC415_clue_422
     purpose: 证明Jimmy与神秘人"Whale"有联系
 
   EV1423:
-    name: Jimmy给Anna的遗书
-    name_en: Jimmy's Farewell Letter to Anna
+    name: 诀别信
+    name_en: Farewell Letter
     type: envir
     description:
-      initial: 我亲爱的Anna，如果上帝召唤我回家...愿上帝宽恕我的软弱
+    description:
+      brief: "Jimmy 写给 Anna 的信：\n\"亲爱的 Anna：如果上帝召唤我回家，请你一定要活下去。柜子里的钱足够你和孩子回爱尔兰重新开始。原谅我，这是我唯一能为你们做的事。愿上帝宽恕我的软弱。\""
+      initial: "Jimmy 写给 Anna 的信：\n\"亲爱的 Anna：如果上帝召唤我回家，请你一定要活下去。柜子里的钱足够你和孩子回爱尔兰重新开始。原谅我，这是我唯一能为你们做的事。愿上帝宽恕我的软弱。\""
     asset_id: SC415_clue_423
     purpose: 预示Jimmy的最终选择，增强悲剧色彩
 
   EV1424:
-    name: 虎头额外收入记录
-    name_en: Whale Extra Income Records
+    name: 额外收入记录
+    name_en: Extra Income Record
     type: item
     description:
-      initial: 大额现金收入记录，标注"Whale"和$5000金额
+    description:
+      brief: 大额现金收入记录。标注着 "Whale" 和 $5000 金额。
+      initial: "大额现金收入记录。标注着 \"Whale\" 和 $5000 金额。\n\n**【额外收入记录】**\n载体:简陋的小账本\n记录:\"9月18日 - $5000 - 勒索金额已收到\""
     asset_id: SC415_clue_424
     purpose: 揭露Jimmy背叛Webb，收取"Whale"贿赂的动机
 
   EV1425:
-    name: Bennington陶器照片
-    name_en: Bennington Pottery Photo
+    name: 陶器照片
+    name_en: Pottery Photo
     type: item
     description:
-      initial: Bennington陶器的照片
+    description:
+      brief: 一张 Bennington 陶器的照片。
+      initial: 一张 Bennington 陶器的照片。
     asset_id: SC415_clue_425
     purpose: 与古董记录册结合，说明陶器价值
 
   EV1426:
-    name: 古董专业鉴定报告（合并）
-    name_en: Antique Appraisal Report (Merged)
+    name: 鉴定报告
+    name_en: Appraisal Report
     type: item
     description:
-      initial: 由证据320和证据425合并，Bennington陶器实际价值$2000，证明Jimmy已知古董价值
+    description:
+      brief: 由证据 320 和证据 425 合并。这证明了 Jimmy 不仅知道它是个古董，还知道它值多少钱。
+      initial: 由证据 320 和证据 425 合并。这证明了 Jimmy 不仅知道它是个古董，还知道它值多少钱。
     asset_id: SC415_clue_426
     purpose: 证明Jimmy已知这个古董的价值
 
   EV1427:
-    name: 破旧的英语学习书籍
-    name_en: Worn English Learning Book
+    name: 英语教材
+    name_en: English Textbooks
     type: envir
     description:
-      initial: 书页边缘写满了拼写练习，"American Dream"被反复练习
+    description:
+      brief: "破旧的书籍。书页边缘写满了拼写练习，\"American Dream\" 被反复写了无数遍。\n这就是他的梦想，像泡沫一样脆弱。"
+      initial: "破旧的书籍。书页边缘写满了拼写练习，\"American Dream\" 被反复写了无数遍。\n这就是他的梦想，像泡沫一样脆弱。"
     asset_id: SC415_clue_427
     purpose: 体现Jimmy努力融入美国社会的渴望
 
   EV1428:
-    name: 撕掉的移民申请表
-    name_en: Torn Immigration Application
+    name: 撕碎的申请表
+    name_en: Torn Application
     type: envir
     description:
-      initial: 合法身份申请表被撕成碎片，申请费$1500
+    description:
+      brief: "合法身份申请表的碎片。\n$1500 的申请费。对于某些人来说，这就是一道跨不过去的天堑。"
+      initial: "合法身份申请表的碎片。\n$1500 的申请费。对于某些人来说，这就是一道跨不过去的天堑。\n\n**【公民身份申请表】**\n申请人:Jimmy  出生地:爱尔兰,科克郡\n职业:厨师(临时工)\n申请费:$1,500(用红笔重重圈出)\n担保人:无人愿意担保非法移民"
     asset_id: SC415_clue_428
     purpose: 显示合法身份对Jimmy家庭的重要性和经济障碍
 
   EV1431:
-    name: Webb焦虑状态记录
-    name_en: Webb's Anxiety Record
+    name: 警告便签
+    name_en: Warning Note
     type: envir
     description:
-      initial: WHALE很危险 便签
+    description:
+      brief: "一张写得很潦草的便签：\"WHALE 很危险\"。\n恐惧是可以透过纸张传出来的。"
+      initial: "一张写得很潦草的便签：\"WHALE 很危险\"。\n恐惧是可以透过纸张传出来的。"
     asset_id: SC405_clue_431
     purpose: 证明Webb对Whale的恐惧
 
@@ -530,6 +617,8 @@ evidences:
     name_en: Tommy's Testimony on Jimmy Taking the Pot
     type: note
     description:
+    description:
+      brief: Tommy目击Jimmy从Webb办公室拿走陶土水壶，行为异常谨慎
       initial: Tommy目击Jimmy从Webb办公室拿走陶土水壶，行为异常谨慎
     asset_id: SC403_note_441
     purpose: 证明Jimmy从Webb办公室偷取古董
@@ -539,6 +628,8 @@ evidences:
     name_en: Rosa's Testimony on Jimmy's Key
     type: note
     description:
+    description:
+      brief: Rosa看到Jimmy用钥匙进入Webb会客室，但那里没有值钱东西，行为可疑
       initial: Rosa看到Jimmy用钥匙进入Webb会客室，但那里没有值钱东西，行为可疑
     asset_id: SC401_note_442
     purpose: 证明Jimmy有Webb会客室的钥匙，用于循环6第四轮指证
@@ -546,29 +637,35 @@ evidences:
   # ===== 第1章 循环5 证据 =====
 
   EV1511:
-    name: 分手信信件
-    name_en: Breakup Letter Content
+    name: 信件正文
+    name_en: Letter Content
     type: item
     description:
-      initial: Vivian写的分手信正文
+    description:
+      brief: Vivian 写的信。内容是关于分手的。
+      initial: Vivian 写的信。内容是关于分手的。
     asset_id: SC511_clue_511
     purpose: 合并证据组成部分
 
   EV1512:
-    name: 分手信信封
-    name_en: Breakup Letter Envelope
+    name: 信封
+    name_en: Envelope
     type: item
     description:
-      initial: 信封上写着"Webb收"
+    description:
+      brief: 一个信封，上面写着 "Webb 收"。
+      initial: 一个信封，上面写着 "Webb 收"。
     asset_id: SC511_clue_512
     purpose: 合并证据组成部分
 
   EV1513:
-    name: 给Webb的分手信
-    name_en: Breakup Letter to Webb
+    name: 分手信
+    name_en: Breakup Letter
     type: item
     description:
-      initial: Vivian亲笔写的分手信，"我已经受够了，我们之间结束了"
+    description:
+      brief: Vivian 亲笔写的信。"我已经受够了，我们之间结束了"。
+      initial: "Vivian 亲笔写的信。\"我已经受够了，我们之间结束了\"。\n\n**【分手信】**\n\"我已经受够了。三年了，整整三年！你答应过我的事情一件都没有兑现。你说过要给我一个光明的未来。但是现在呢？你做了什么？我不是你的洋娃娃，我也不是你可以随意摆弄的棋子。我们之间结束了。\n-- Vivian\""
     asset_id: SC511_clue_513
     purpose: 否定Vivian"我依然深爱Webb"的爱情谎言
 
@@ -577,45 +674,55 @@ evidences:
     name_en: Torn Ship Ticket
     type: item
     description:
-      initial: 法国邮轮船票被撕成碎片，船期是下个月，如果真要旅行不会撕毁
+    description:
+      brief: "法国邮轮的船票碎片。船期是下个月。\n一张通往自由的票，被撕得粉碎。"
+      initial: "法国邮轮的船票碎片。船期是下个月。\n一张通往自由的票，被撕得粉碎。\n\n**【SS NORMANDIE 船票】**\n航线: 芝加哥港 → 巴黎\n乘客: Miss Vivian Rose\n舱位: 一等舱 套房A-12\n日期: 1924年12月15日\n票价: $450.00 (已付清)"
     has_puzzle: true
     puzzle_description: 拼图小玩法，需要玩家将碎片拼合还原船票
     asset_id: SC511_clue_514
     purpose: 否定Vivian"我们还计划去法国旅行"的旅行计划谎言
 
   EV1515:
-    name: Vivian的个人日记片段
-    name_en: Vivian's Personal Diary Excerpt
+    name: Vivian 的日记
+    name_en: Vivian's Diary
     type: item
     description:
-      initial: 如果有人背叛了我，我会让他遭受世间最痛苦的事情
+    description:
+      brief: "Vivian 的日记片段：\"如果有人背叛了我，我会让他遭受世间最痛苦的事情\"。\n这可不像是一个绝望的女人的语气，更像是一个复仇女神。"
+      initial: "Vivian 的日记片段：\"如果有人背叛了我，我会让他遭受世间最痛苦的事情\"。\n这可不像是一个绝望的女人的语气，更像是一个复仇女神。\n\n**【1924年11月12日】**\n\"今天看到Webb和那个该死的Rita在一起...他从未用那种温柔的眼神看过我...我明白了，所有承诺都是谎言。我只是工具。\n如果有人背叛了我，我会让他遭受世间最痛苦的事情。\n我要让他体验被人利用、抛弃的感觉。\""
     asset_id: SC505_clue_515
     purpose: 否定Vivian"我们是和平分手"的和平分手谎言
 
   EV1516:
-    name: Vivian工作痛苦记录
-    name_en: Vivian's Work Pain Record
+    name: 痛苦记录
+    name_en: Pain Record
     type: clue
     description:
-      initial: 记录与不同客户"服务"的日期和痛苦感受，"我还要忍受多久"
+    description:
+      brief: 记录了与不同客户见面日期和感受。"我还要忍受多久"。
+      initial: "记录了与不同客户见面日期和感受。\"我还要忍受多久\"。\n\n**【痛苦记录】**\n9/3: Thompson参议员 - 3号包厢 - 禁酒令投票内幕\n9/5: Coleman银行家 - 雪茄味令人作呕\n10/7: Tisra - 威士忌+粗暴 - 法庭内幕\n(口红字迹): 我还要忍受多久？！"
     asset_id: SC511_clue_516
     purpose: 展现Vivian被迫从事肮脏工作的内心煎熬
 
   EV1521:
-    name: Rita的照片和联系信息
-    name_en: Rita's Photo and Contact Info
+    name: Rita 的照片
+    name_en: Rita's Photo
     type: clue
     description:
-      initial: Webb的新欢Rita的照片和联系方式
+    description:
+      brief: "Webb 的新欢 Rita 的照片和联系方式。\n对于 Webb 来说，女人就像衣服，旧了就该换了。"
+      initial: "Webb 的新欢 Rita 的照片和联系方式。\n对于 Webb 来说，女人就像衣服，旧了就该换了。"
     asset_id: SC505_clue_521
     purpose: 证明Webb移情别恋
 
   EV1531:
-    name: Vivian演出改动申请
-    name_en: Vivian's Performance Change Request
+    name: 节目更改申请
+    name_en: Performance Change Request
     type: clue
     description:
-      initial: Vivian申请更改当晚演出时间的申请表
+    description:
+      brief: 申请更改当晚演出时间的表格。
+      initial: "申请更改当晚演出时间的表格。\n\n**【节目更改申请】**\n申请人: Vivian\n演出日期: 1925年11月03日\n原定: 11:00PM 《月光小夜曲》(音量2级)\n修改为: 11:00PM 《芝加哥狂想》(爵士重鼓点, 音量5级)"
     asset_id: SC503_clue_531
     purpose: 证明Vivian计划在特定时间离开舞台
 
@@ -624,6 +731,8 @@ evidences:
     name_en: Rosa's Testimony on Vivian's Behavior
     type: note
     description:
+    description:
+      brief: 案发当晚11点左右，Rosa看到Vivian神情紧张地往会客室走，并携带了可疑物品
       initial: 案发当晚11点左右，Rosa看到Vivian神情紧张地往会客室走，并携带了可疑物品
     asset_id: SC501_note_541
     purpose: 证明Vivian当晚有异常行为，计划对Webb不利
@@ -633,6 +742,8 @@ evidences:
     name_en: Tommy's Testimony on Webb and Rita
     type: note
     description:
+    description:
+      brief: Webb最近和一个叫Rita的女人走得很近，Vivian发现后非常痛苦，曾在化妆室哭泣说"我为他做了这么多"
       initial: Webb最近和一个叫Rita的女人走得很近，Vivian发现后非常痛苦，曾在化妆室哭泣说"我为他做了这么多"
     asset_id: SC503_note_551
     purpose: 证明Vivian有杀人动机，Webb背叛了她
@@ -640,34 +751,40 @@ evidences:
   # ===== 第1章 循环6 证据 =====
 
   EV1621:
-    name: 窗外弹孔
-    name_en: Window Bullet Hole
+    name: 窗外的孔洞
+    name_en: Hole outside Window
     type: clue
     description:
-      initial: 窗外的一个孔洞
+    description:
+      brief: 窗外的一个孔洞。
+      initial: 窗外的一个孔洞。
     analysis:
       required: true
       action: 调查孔洞
-      result_name: 窗外的新弹孔
-      result_description: 是一个比较新的枪击孔洞，证明11:30的枪声是故意制造的假象
+      result_name: 新鲜的弹孔
+      result_description: 一个比较新的枪击孔洞。这意味着 11:30 的枪声只是一个障眼法。
     asset_id: SC605_clue_621
     purpose: 否定Jimmy"Webb是11:30死的，我有不在场证明"的时间谎言
 
   EV1631:
-    name: 节目表演记录
-    name_en: Performance Schedule Record
+    name: 节目单
+    name_en: Program List
     type: item
     description:
-      initial: 11:00-11:10是舞台鼓点最强烈时段，《芝加哥狂想》+《爵士风暴》，音量等级5级（最高）
+    description:
+      brief: "11:00-11:10 是《芝加哥狂想》和《爵士风暴》。音量等级 5 级（最高）。\n这是最好的掩护，没人能听见枪声。"
+      initial: "11:00-11:10 是《芝加哥狂想》和《爵士风暴》。音量等级 5 级（最高）。\n这是最好的掩护，没人能听见枪声。\n\n**【节目表演记录】**\n11:00PM - 11:10PM\n曲目：《芝加哥狂想》+ 《爵士风暴》\n风格：激烈爵士，重鼓点节奏\n音量等级：5级（最高音量）\n状态：已表演完"
     asset_id: SC613_clue_631
     purpose: 否定Jimmy"不可能有其他枪声"的声音掩护谎言
 
   EV1632:
-    name: 舞台道具箱中的手枪
-    name_en: Stage Prop Box Gun
+    name: 道具枪
+    name_en: Prop Gun
     type: item
     description:
-      initial: 道具箱中的一把手枪
+    description:
+      brief: 道具箱中的一把手枪。
+      initial: 道具箱中的一把手枪。
     asset_id: SC613_clue_632
     purpose: 暗示Vivian可能计划用枪杀方式行凶
 
@@ -676,6 +793,8 @@ evidences:
     name_en: Rosa's Testimony on Vivian's Suspicious Items
     type: note
     description:
+    description:
+      brief: 那天晚上我看到Vivian离开舞台的时候悄悄把什么东西塞进了包里
       initial: 那天晚上我看到Vivian离开舞台的时候悄悄把什么东西塞进了包里
     asset_id: SC601_note_641
     purpose: 表示当晚Vivian确实有计划想要杀害Webb
@@ -685,16 +804,20 @@ evidences:
     name_en: Vivian's Door Knocking Testimony
     type: note
     description:
+    description:
+      brief: 11点10分的时候来到Webb的会客室门口，平时他都不锁门，但昨天他锁了门
       initial: 11点10分的时候来到Webb的会客室门口，平时他都不锁门，但昨天他锁了门
     asset_id: SC611_note_651
     purpose: 表示当晚11点05时候Webb会客室房门锁着
 
   EV1661:
-    name: 厨房送餐订单记录
-    name_en: Kitchen Delivery Order Record
+    name: 送餐记录
+    name_en: Delivery Record
     type: clue
     description:
-      initial: 当晚有送餐记录，但11点到11点30分没有任何送餐记录
+    description:
+      brief: 厨房的全部送餐记录。11 点到 11 点 30 分没有任何送餐记录。
+      initial: "厨房的全部送餐记录。11 点到 11 点 30 分没有任何送餐记录。\n\n**【送餐记录表】**\n10:00-10:30:大厅3号桌,牛排,负责人:Jimmy\n10:30-11:00:VIP1,开胃小食拼盘,负责人:小助手Tom\n11:00-11:30:【空白】\n11:30-12:00:VIP2,夜宵三明治,负责人:Jimmy\n12:00-12:30:VIP1,甜点拼盘,负责人:Tom"
     asset_id: SC614_clue_661
     purpose: 否定Jimmy"我在曲子开始前下楼送餐"的说法，用于循环6第三轮指证
 
