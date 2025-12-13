@@ -2383,9 +2383,11 @@
                 const displayName = isAnalyzed && evData.analysis?.result_name
                     ? evData.analysis.result_name
                     : evData.name;
-                const displayDescription = isAnalyzed && evData.analysis?.result_description
+                const rawDescription = isAnalyzed && evData.analysis?.result_description
                     ? evData.analysis.result_description
                     : (evData.description?.initial || evData.description);
+                // 将 \n 转换为 <br> 以支持换行显示
+                const displayDescription = rawDescription ? rawDescription.replace(/\n/g, '<br>') : '';
 
                 // 体验版：证据可折叠
                 if (AppState.viewMode === 'flow') {
@@ -2411,7 +2413,7 @@
                                     <div class="evidence-analysis-result">
                                         <div class="result-label">🔍 分析后</div>
                                         ${evData.analysis?.result_name ? `<div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">${evData.analysis.result_name}</div>` : ''}
-                                        ${evData.analysis?.result_description ? `<div style="font-size: 0.9rem; color: var(--text-secondary);">${evData.analysis.result_description}</div>` : ''}
+                                        ${evData.analysis?.result_description ? `<div style="font-size: 0.9rem; color: var(--text-secondary);">${evData.analysis.result_description.replace(/\n/g, '<br>')}</div>` : ''}
                                     </div>
                                 ` : ''}
                             </div>
@@ -2440,7 +2442,7 @@
                             <div class="evidence-analysis-result">
                                 <div class="result-label">🔍 分析后</div>
                                 ${evData.analysis?.result_name ? `<div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">${evData.analysis.result_name}</div>` : ''}
-                                ${evData.analysis?.result_description ? `<div style="font-size: 0.9rem; color: var(--text-secondary);">${evData.analysis.result_description}</div>` : ''}
+                                ${evData.analysis?.result_description ? `<div style="font-size: 0.9rem; color: var(--text-secondary);">${evData.analysis.result_description.replace(/\n/g, '<br>')}</div>` : ''}
                             </div>
                         ` : ''}
                     </div>
