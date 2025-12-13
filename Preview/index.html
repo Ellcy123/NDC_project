@@ -2402,7 +2402,6 @@
                             <div class="evidence-name">${displayName}</div>
                             <div class="evidence-body">
                                 <div class="evidence-description">${displayDescription}</div>
-                                ${note ? `<div class="evidence-note" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">说明：${note}</div>` : ''}
                                 ${extraInfo ? extraInfo : ''}
                                 ${canAnalyze ? `
                                     <button class="evidence-analyze-btn" onclick="event.stopPropagation(); Renderer.analyzeEvidence('${evId}')">
@@ -2431,7 +2430,6 @@
                         </div>
                         <div class="evidence-name">${displayName}</div>
                         <div class="evidence-description">${displayDescription}</div>
-                        ${note ? `<div class="evidence-note" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">说明：${note}</div>` : ''}
                         ${extraInfo ? extraInfo : ''}
                         ${canAnalyze ? `
                             <button class="evidence-analyze-btn" onclick="Renderer.analyzeEvidence('${evId}')">
