@@ -1,0 +1,203 @@
+flowchart TB
+    subgraph L1["循环1: 死者是谁？"]
+        L1_START["L1开场 硬切"]
+        L1_1A["1A 鞋坊店铺区"]
+        L1_1B["1B 鞋坊卧室区"]
+        L1_E101["101 尸体手指照片"]
+        L1_E102["102 Margaret相册"]
+        L1_E103["103 空首饰盒"]
+        L1_E104["104 现场地面照片"]
+        L1_E108["108 通信小本"]
+        L1_E111["111 身份证"]
+        L1_ACCUSE1["指证Morrison 2轮"]
+
+        L1_START --> L1_1A
+        L1_START --> L1_1B
+        L1_1A --> L1_E101
+        L1_1A --> L1_E104
+        L1_1B --> L1_E102
+        L1_1B --> L1_E103
+        L1_1B --> L1_E108
+        L1_E101 & L1_E102 & L1_E103 & L1_E104 --> L1_ACCUSE1
+    end
+
+    subgraph COMBINE1["证据合并"]
+        ADDR_COMBINE["111+108 = Frank地址"]
+    end
+
+    L1_E108 --> ADDR_COMBINE
+    L1_E111 --> ADDR_COMBINE
+
+    subgraph L2["循环2: Frank身上发生了什么？"]
+        L2_FRANK["Frank家"]
+        L2_OHARA["O'Hara家"]
+        L2_CASINO["赌场"]
+        L2_BANK["银行"]
+
+        L2_E201["201 怀表"]
+        L2_E202["202 O'Hara证词"]
+        L2_E206["206 催款单"]
+        L2_E207["207 O'Hara钞票"]
+        L2_E208["208 Vinnie钞票"]
+        L2_E217["217 Leonard曾用名"]
+        L2_ACCUSE2["指证Leonard 3轮"]
+
+        L2_FRANK --> L2_E201
+        L2_FRANK --> L2_E206
+        L2_OHARA --> L2_E202
+        L2_OHARA --> L2_E207
+        L2_E202 -->|对话解锁| L2_CASINO
+        L2_CASINO --> L2_E208
+        L2_E206 -->|地址解锁| L2_BANK
+        L2_BANK --> L2_E217
+    end
+
+    ADDR_COMBINE -->|解锁| L2_FRANK
+    ADDR_COMBINE -->|解锁| L2_OHARA
+    L1_ACCUSE1 --> L2
+
+    subgraph COMBINE2["证据分析"]
+        BILL_ANALYZE["207+208 = 连号分析"]
+    end
+
+    L2_E207 --> BILL_ANALYZE
+    L2_E208 --> BILL_ANALYZE
+    BILL_ANALYZE --> L2_ACCUSE2
+    L2_E217 --> L2_ACCUSE2
+
+    subgraph L3["循环3: 贷款的真相是什么？"]
+        L3_START["L3开场 硬切"]
+        L3_CITY["市政厅"]
+        L3_ARCHIVE["档案室"]
+        L3_OFFICE["Leonard办公室"]
+
+        L3_E304["304 搜查令"]
+        L3_E311["311 遗嘱副本"]
+        L3_E312["312 贷款协议"]
+        L3_E318["318 旧照片"]
+        L3_ACCUSE3["指证Moore 3轮"]
+
+        L3_START --> L3_CITY
+        L3_CITY --> L3_E304
+        L3_E304 -->|搜查令解锁| L3_ARCHIVE
+        L3_E304 -->|搜查令解锁| L3_OFFICE
+        L3_ARCHIVE --> L3_E311
+        L3_ARCHIVE --> L3_E312
+        L3_OFFICE --> L3_E318
+        L3_E312 --> L3_ACCUSE3
+    end
+
+    L2_ACCUSE2 --> L3
+
+    subgraph L4["循环4: Rose是骗子还是真爱？"]
+        L4_BASEMENT["地下室"]
+        L4_DANNY["Danny房间"]
+
+        L4_E418["418 枯萎玫瑰"]
+        L4_E419["419 水杯"]
+        L4_E421["421 银戒指"]
+        L4_E423["423 空怀表盒"]
+        L4_E425["425 钥匙"]
+        L4_ACCUSE4["指证Danny 3轮"]
+        L4_DANNY_CONFESS["Danny自白: 盒子位置"]
+
+        L4_E425 -->|钥匙解锁| L4_BASEMENT
+        L4_BASEMENT --> L4_E418
+        L4_BASEMENT --> L4_E419
+        L4_DANNY --> L4_E423
+        L4_ACCUSE4 --> L4_DANNY_CONFESS
+    end
+
+    L3_ACCUSE3 --> L4
+    L3_E311 -->|遗嘱提及| L4_E425
+
+    subgraph COMBINE3["证据合并"]
+        ROSE_COMBINE["418+419 = 玫瑰复活"]
+        WATCH_COMBINE["201+423 = 偷表真相"]
+    end
+
+    L4_E418 --> ROSE_COMBINE
+    L4_E419 --> ROSE_COMBINE
+    ROSE_COMBINE --> L4_E421
+    L2_E201 --> WATCH_COMBINE
+    L4_E423 --> WATCH_COMBINE
+    WATCH_COMBINE --> L4_ACCUSE4
+
+    subgraph L5["循环5: Frank当晚发生了什么？"]
+        L5_START["L5开场"]
+        L5_FLOOR["Frank家 地板缝隙盒子"]
+
+        L5_E502["502 举报材料"]
+        L5_E503["503 遗书"]
+        L5_ACCUSE5["指证Vinnie 1轮"]
+        L5_VINNIE_CONFESS["Vinnie供出: 码头"]
+        L5_DOCK["码头营救"]
+        L5_E501["501 打火机"]
+
+        L5_START --> L5_FLOOR
+        L5_FLOOR --> L5_E502
+        L5_FLOOR --> L5_E503
+        L5_E502 & L5_E503 --> L5_ACCUSE5
+        L5_ACCUSE5 --> L5_VINNIE_CONFESS
+        L5_VINNIE_CONFESS --> L5_DOCK
+        L5_DOCK --> L5_E501
+    end
+
+    L4_ACCUSE4 --> L5
+    L4_DANNY_CONFESS -->|位置| L5_FLOOR
+    L4_E421 -->|1920密码| L5_FLOOR
+
+    subgraph L6["循环6: 谁是真凶？"]
+        L6_START["L6开场 硬切"]
+        L6_HOSPITAL["医院"]
+        L6_SHOP["鞋坊重访"]
+        L6_LEONARD["Leonard住所"]
+
+        L6_E601["601 烛台"]
+        L6_E606["606 抵押照片"]
+        L6_E608["608 眼镜碎片"]
+        L6_E610["610 空相框"]
+        L6_E612["612 搜查令"]
+        L6_E617["617 镊子"]
+        L6_ACCUSE6["指证Leonard 4轮"]
+
+        L6_START --> L6_HOSPITAL
+        L6_HOSPITAL --> L6_E606
+        L6_HOSPITAL --> L6_E617
+        L6_HOSPITAL --> L6_E612
+        L6_E612 -->|搜查令解锁| L6_LEONARD
+        L6_LEONARD --> L6_E610
+        L6_SHOP --> L6_E601
+    end
+
+    L5_DOCK --> L6
+
+    subgraph COMBINE4["证据对比"]
+        PHOTO_COMPARE["606照片找茬"]
+        GLASS_COMBINE["617+烛台 = 眼镜碎片"]
+        FRAME_COMBINE["318+610 = 兄弟关系"]
+    end
+
+    L6_E606 --> PHOTO_COMPARE
+    PHOTO_COMPARE --> L6_SHOP
+    L6_E617 --> GLASS_COMBINE
+    L6_E601 --> GLASS_COMBINE
+    GLASS_COMBINE --> L6_E608
+    L3_E318 --> FRAME_COMBINE
+    L6_E610 --> FRAME_COMBINE
+    L6_E608 & FRAME_COMBINE --> L6_ACCUSE6
+
+    style L1_ACCUSE1 fill:#ff6b6b
+    style L2_ACCUSE2 fill:#ff6b6b
+    style L3_ACCUSE3 fill:#ff6b6b
+    style L4_ACCUSE4 fill:#ff6b6b
+    style L5_ACCUSE5 fill:#ff6b6b
+    style L6_ACCUSE6 fill:#ff6b6b,stroke:#000,stroke-width:3px
+    style L4_DANNY_CONFESS fill:#90EE90
+    style L5_VINNIE_CONFESS fill:#90EE90
+    style L5_DOCK fill:#87CEEB
+
+    style COMBINE1 fill:#ffd93d
+    style COMBINE2 fill:#ffd93d
+    style COMBINE3 fill:#ffd93d
+    style COMBINE4 fill:#ffd93d
