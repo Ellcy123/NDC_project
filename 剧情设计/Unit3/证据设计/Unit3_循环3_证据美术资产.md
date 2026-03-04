@@ -812,6 +812,59 @@
 
 ---
 
-**文档状态**: ✅ 已完成
-**版本**: v2.0 (PM最终裁定版)
-**生成日期**: 2026-02-12
+## 🔄 系统重构补充（v3.0新增）
+
+### TestimonyItem定义
+
+以下证据在系统重构中被赋予新的TestimonyItem属性，用于支持Timeline/RelationNetwork机制：
+
+#### 33-T-02 锁匠证词 → Timeline型
+
+```json
+{
+  "id": "3031001",
+  "testimonyType": "2",       // Hearsay（见闻：锁匠描述Helen来配钥匙）
+  "testimony": ["高个子女人约两周前（11月6日）来配安全门备用钥匙，手一直在抖", "A tall woman came about two weeks ago (Nov 6) to duplicate a safety door key, her hands were shaking"],
+  "triggerType": "1",          // Timeline
+  "triggerParam": "NPC_Helen, SC3304, 1400, 1500"
+}
+```
+- **原状态**: 无TestimonyItem定义
+- **新状态**: triggerType=1(Timeline)
+- **说明**: 玩家需在时间线上放置此证词，标注"Helen 11/6 14:00-15:00在锁匠店配钥匙"，与楼管证词共同构建准备工作日期链
+
+#### 33-T-03 楼管证词 → Timeline型
+
+```json
+{
+  "id": "3031002",
+  "testimonyType": "2",       // Hearsay（见闻：楼管描述Helen来借钥匙串）
+  "testimony": ["Helen小姐11月5日借走楼顶安全门钥匙串，约半小时后归还", "Miss Helen borrowed the rooftop safety door keychain on Nov 5, returned it about half an hour later"],
+  "triggerType": "1",          // Timeline
+  "triggerParam": "NPC_Helen, SC3305, 1500, 1600"
+}
+```
+- **原状态**: 无TestimonyItem定义
+- **新状态**: triggerType=1(Timeline)
+- **说明**: 玩家需在时间线上放置此证词，标注"Helen 11/5 15:00-16:00借走钥匙串"。与锁匠证词构成日期链：11/5借钥匙→11/6配钥匙→11/20案发，暴露Helen提前15天的准备工作
+
+#### 33-T-01 Bernard Wells证词 → RelationNetwork型
+
+```json
+{
+  "id": "3031003",
+  "testimonyType": "2",       // Hearsay（见闻：Bernard描述Thomas来咨询保险时Helen在场）
+  "testimony": ["Thomas来咨询意外赔付流程时，一个高个子女人在场旁听——Thomas说她是朋友", "When Thomas came to inquire about accidental death payout procedures, a tall woman was present—Thomas said she was a friend"],
+  "triggerType": "2",          // RelationNetwork
+  "triggerParam": "NPC_Bernard, NPC_Helen"
+}
+```
+- **原状态**: 无TestimonyItem定义
+- **新状态**: triggerType=2(RelationNetwork)
+- **说明**: 循环3 R3使用。玩家在关系网中建立Bernard↔Helen连接，交叉验证Bernard描述的"在场女人"就是Helen，证明Helen知道保险赔付条件
+
+---
+
+**文档状态**: ✅ 已更新
+**版本**: v3.0 (系统重构版)
+**生成日期**: 2026-02-18

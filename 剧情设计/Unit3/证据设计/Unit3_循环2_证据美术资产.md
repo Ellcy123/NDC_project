@@ -81,11 +81,11 @@
 │    - 位置：领口右侧，约5×3cm印记                           │
 │    - 状态：口红已干涸，有轻微裂纹                           │
 │  • 整体状态：                                               │
-│    - 已穿过但未洗                                           │
-│    - 有轻微汗渍（腋下部分）                                 │
+│    - 明显发黄陈旧，布满了一层薄灰                           │
+│    - 已穿过但未洗（有轻微汗渍）                             │
 │    - 叠放整齐，刻意藏在衣柜最下层                           │
 │  • 藏匿方式：                                               │
-│    - 衣柜深处最下层，用其他衣物覆盖                         │
+│    - 衣柜最底层的纸盒里，用其他旧衣物死死覆盖               │
 │    - 单独叠放，与其他待洗衣物分开                           │
 │                                                              │
 │  【关键细节】                                                │
@@ -697,6 +697,46 @@
 
 ---
 
-**文档状态**: ✅ 已完成
-**版本**: v2.0 (PM最终裁定版)
-**生成日期**: 2026-02-12
+---
+
+## 🔄 系统重构补充（v3.0新增）
+
+### TestimonyItem定义
+
+以下证据在系统重构中被赋予新的TestimonyItem属性，用于支持Timeline/RelationNetwork机制：
+
+#### 32-T-01 神父证词 → Timeline型
+
+```json
+{
+  "id": "3021001",
+  "testimonyType": "2",       // Hearsay（见闻：神父描述Mary的行为）
+  "testimony": ["Mary于19:50到达教堂，20:10离开，只待了约20分钟", "Mary arrived at church at 19:50, left at 20:10, stayed about 20 minutes"],
+  "triggerType": "1",          // Timeline
+  "triggerParam": "NPC_Mary, SC3202, 1950, 2010"
+}
+```
+- **原状态**: triggerType=0(None)
+- **新状态**: triggerType=1(Timeline)
+- **说明**: 玩家需在时间线上放置此证词，标注"Mary 19:50-20:10在教堂"，暴露20:10之后的45分钟空白期
+
+#### 32-C-01 Mary手链照片 → RelationNetwork型（循环5使用）
+
+```json
+{
+  "id": "3021002",
+  "testimonyType": "2",       // Hearsay（物证推导：手链出现在Bernard办公桌上）
+  "testimony": ["Mary佩戴的雏菊手链在Bernard办公桌留下压痕，证明Mary秘密拜访过Bernard", "Mary's daisy bracelet left an imprint on Bernard's desk, proving she secretly visited Bernard"],
+  "triggerType": "2",          // RelationNetwork
+  "triggerParam": "NPC_Mary, NPC_Bernard"
+}
+```
+- **原状态**: 无TestimonyItem定义
+- **新状态**: triggerType=2(RelationNetwork)
+- **说明**: 循环5 R3使用。玩家在关系网中建立Mary↔Bernard连接，揭示Mary秘密咨询保险赔付的隐藏关系
+
+---
+
+**文档状态**: ✅ 已更新
+**版本**: v3.0 (系统重构版)
+**生成日期**: 2026-02-18

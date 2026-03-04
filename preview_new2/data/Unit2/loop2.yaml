@@ -1,0 +1,45 @@
+title: 威胁链条与连号钞票拼图
+target: 追踪Leonard与Vinnie的雇佣关系，揭露银行黑幕
+time: "11/7 10:00 白天"
+
+opening:
+  - id: 2021
+    characters: [Zack, Emma]
+    purpose: Emma展示调查地图，规划前往O'Hara家/赌场/银行
+    talk: emma_002
+
+scenes:
+  unlocked:
+    - 2202  # Margaret鞋坊-店铺区
+    - 2203  # Margaret鞋坊卧室区
+    - 2206  # Frank和Mrs.O'Hara家门口（地图解锁）
+    - 2207  # 赌场（证据解锁）
+    - 2208  # 银行贵宾室（地图解锁）
+    - 2209  # 银行大厅（Leonard）
+  locked:
+    - id: 2204
+      reason: Morrison势力范围，调查重心在银行和赌场
+    - id: 2311
+      reason: 需要Frank家钥匙（L2指证后Leonard交钥匙）
+    - id: 2312
+      reason: 需要Frank家钥匙
+    - id: 2313
+      reason: 银行内部区域，无权限进入
+    - id: 2314
+      reason: 银行内部区域，无权限进入
+    - id: 2415
+      reason: 需要钥匙才能进入地下室
+    - id: 2618
+      reason: 不知道Leonard住所地址
+  closed: []
+
+expose:
+  scene: 2290
+  target_name: Leonard Ross (Russo)
+  rounds:
+    - lie: 我叫Leonard Ross，与Russo没有关系
+      evidences: [2217, 2205]
+    - lie: 我不认识Vinnie
+      evidences: [2207, 2208]
+    - lie: 银行从未威胁过任何人
+      evidences: [2202, 2213]

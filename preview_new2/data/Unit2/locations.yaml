@@ -1,0 +1,32 @@
+# Unit2 地点层级关系（参考记录）
+# entry: 地图入口场景的 location 编号（后两位）
+# children: 从入口可到达的子场景
+
+locations:
+  - name: Margaret鞋坊
+    entry: 02    # 店铺区
+    children: [03, 15]   # 卧室区、地下室
+
+  - name: 警局
+    entry: 04    # 警局外（电话亭）
+    children: [05]       # 警局
+
+  - name: Frank家
+    entry: 06    # 家门口
+    children: [11, 12]   # 家里、Danny房间
+
+  - name: 银行
+    entry: 09    # 银行大厅
+    children: [08, 13, 14]  # 贵宾室、档案室、Leonard办公室
+
+  - name: 赌场
+    entry: 07
+    children: []
+
+  - name: 医院
+    entry: 17
+    children: []
+
+  - name: Leonard住所
+    entry: 18
+    children: []

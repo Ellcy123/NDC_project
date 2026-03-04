@@ -1,0 +1,365 @@
+# ============================================================
+# Loop 5 — Vinnie认罪与Margaret营救（表面水落石出，实则疑云重重）
+# 本循环说谎者: Vinnie Moretti
+# 核心揭示: Vinnie的打火机在现场+目击吻合→认罪，但认罪存在致命破绽
+# 前序事件: L4揭露Danny诬陷/Rose五年真爱，Rose提供保险箱线索
+# 时间: 1925年11月7日 约21:00 夜晚
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "11月6日当晚Frank身上到底发生了什么？谁去了鞋坊？"
+    secondary:
+      - "Frank的保险箱里有什么？他的'冒险计划'是什么？"
+      - "打火机是谁留在现场的？为什么保存这么完好？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "死者是Frank Kowalski（73岁退休工人），不是Margaret"
+    - "Morrison出于蓝月俱乐部栽赃案被揭发的私怨，故意谎报死者身份"
+    - "Morrison收到匿名电话：'不要多管Margaret Brennan的事'"
+    - "Margaret下落不明，疑被绑架"
+    - "Morrison提出交易：Zack查Frank死因给他一个结案答案，他才去查Margaret下落"
+    # ── L2 post_expose ──
+    - "Leonard真名是Leonard Russo，使用假名Ross在银行工作十年"
+    - "Leonard和Vinnie Moretti是旧相识（童年好友）"
+    - "Leonard雇佣Vinnie暴力催收——提供目标地址，事后分钱"
+    - "连号钞票证明银行→Vinnie的资金链（O'Hara少的钱出现在Vinnie手里）"
+    - "Frank也是被Vinnie'特别关照'的受害者之一"
+    - "Leonard威胁：没有法院令状，无法调查银行内部文件"
+    # ── L3 post_expose ──
+    - "Frank的贷款不是赌博——Leonard代填申请表，Frank不清楚具体内容"
+    - "贷款协议系统性违法：月利率12%=年化289%（州法上限7%）、利滚利、管理费$600"
+    - "贷款协议抬头是'Lakeshore Investment Co.'——投资公司不受银行法利率限制"
+    - "Frank以为去银行借钱，实际被骗签了投资公司协议——系统性欺诈"
+    - "Moore迫于谋杀案审计的恐惧，主动提供Frank遗嘱副本"
+    - "遗嘱：财产归Rose Martinez（如结婚），否则捐给工人互助会；Danny不在继承人中"
+    # ── L4 post_expose ──
+    - "Rose和Frank相恋五年（1920年在医院相识）——因种族偏见秘密交往"
+    - "Frank主动贷款$600修缮鞋坊地下室作为约会场所——不是被Rose骗钱"
+    - "Rose当场签署放弃继承声明——用行动证明不图财产"
+    - "Danny的真实动机：失业缺钱，想继承Frank在拆迁规划区的房产获取补偿"
+    - "Danny因种族偏见和财产贪婪诬陷Rose是'骗子'"
+    - "Rose提供Frank保险箱线索——Frank在11月6日当天原计划做一件'非常冒险的事'"
+  new_directions:
+    - direction: "Frank的举报计划"
+      trigger: "保险箱中发现完整举报材料——Frank收集了12个受害者证据，准备向检察官揭发银行-黑手党"
+    - direction: "11月6日当晚的时间线"
+      trigger: "Rose目击：9点多看到壮汉从鞋坊方向匆忙离开（块头大、深色衣服、像意大利人）——与Vinnie吻合"
+    - direction: "打火机的疑点"
+      trigger: "打火机在火灾现场保存'太完美'——暗示可能是事后放置"
+  post_expose_knowledge:
+    - "Vinnie'认罪'：声称自己纵火杀了Frank——但认罪存在致命破绽"
+    - "Vinnie声称'透过窗户看到Frank在床上睡觉后放火'——但验尸报告显示Frank死于钝器击打，不是火灾"
+    - "打火机保存'太完美'——火灾现场不该有如此完好的金属物品，暗示事后放置"
+    - "Vinnie对Mickey咆哮：'你出卖了Leo！'——Leo指向Leonard"
+    - "Margaret在码头仓库被Mickey救出，虚弱但活着，暂时无法提供证词"
+    - "Frank的举报材料：收集了12个受害者证据，准备揭发银行-黑手党勾结"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: Frank家内部 → 🎬开篇(保险箱)
+# Rose提供保险箱钥匙（L4结尾），Zack打开保险箱发现Frank的举报材料。
+# Frank不是赌博老赖——他是准备揭发银行-黑手党的正义斗士。
+
+opening:
+  scene_id: 2011
+  characters: [Zack, Emma, Rose]
+  purpose: "保险箱揭秘——Frank的举报材料揭示他为正义准备的终极行动，彻底翻转Frank形象"
+  talk: emma_005
+
+  emma_005:
+    is_liar: false
+    motive: "协助Zack打开保险箱——举报材料的发现让案件从'Frank怎么死的'升级为'Frank为什么被杀'"
+    mindset: "从震惊到敬佩——读完举报材料后对Frank肃然起敬，同时意识到杀人动机可能是灭口"
+
+    knows:
+      - "L4揭露Rose和Frank五年真爱，Danny的诬陷被击碎"
+      - "Rose提供保险箱线索：Frank 11/6准备做'非常冒险的事'"
+      - "Rose在L4曾提到11/6当晚'去鞋坊路上看到有人出来'（一笔带过）"
+      - "Foster尸检更新：Frank死于钝器击打头部，不是火灾"
+      - "打火机侧面有'V'字——可能与Vinnie有关"
+
+    does_not_know:
+      - "举报材料的具体内容（即将发现）"
+      - "打火机是Vinnie故意放置的假证据"
+      - "Vinnie会主动'认罪'掩护Leonard"
+      - "Mickey与Margaret位置的联系"
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur:
+      - type: source
+        content: "Frank保险箱举报材料：收集了12个受害者的证据"
+        note: "L5 tony_002 quiz#014 考这个（来源为SC2011证据2502）"
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L5:
+#   鞋坊一楼(1F)      → 🔓废墟搜证(打火机)
+#   鞋坊卧室区        → ⏸️无新线索
+#   鞋坊地下室        → ⏸️无新线索
+#   家门口(2A)        → ⏸️无新线索
+#   Frank家内部       → 🎬开篇(保险箱)
+#   赌场/酒吧         → 🔓搜证(矛盾) → ⚔️指证(Vinnie)
+#   银行大厅          → ⏸️NPC对话
+#   银行贵宾室        → ⏸️NPC对话
+#   银行档案室        → 🔒封锁
+#   Leonard办公室     → 🔒封锁
+#   Frank家次卧(Danny) → ⏸️NPC对话
+#   鞋坊一楼(1F)      → Rose再次对话(目击)
+#   码头              → ⚡突发(营救)
+#   警局外/街道       → 🎭结尾
+
+scenes:
+  # ── SC2002 鞋坊一楼废墟搜证（打火机） ──
+  - id: 2001
+    name: "Margaret鞋坊-店铺区（废墟深度搜证）"
+    evidence:
+      - id: 2501
+        name: "火灾现场的打火机"
+        note: "关键——银色金属打火机，侧面'V'字刻痕，保存'太完美'（Expose R1用）"
+
+  # ── SC2011 Frank家内部（保险箱内容） ──
+  - id: 2011
+    name: "Frank家内部"
+    evidence:
+      - id: 2502
+        name: "Frank的举报材料"
+        note: "关键——致检察官：揭发银行-黑手党勾结，收集12个受害者证据，1925.11.5写就"
+      - id: 2503
+        name: "Frank留给Rose的遗书"
+        note: "场景道具——信封写'To Rose'，Frank预感到危险的遗言"
+      - id: 2504
+        name: "Frank的调查笔记"
+        note: "关键——11/3查Leonard底细 → 11/4跟踪记下住址'北区湖滨大道88号' → 11/5准备去检察官（L6 Leonard住所搜查线索）"
+
+  # ── ⏸️ 鞋坊卧室区（无新线索） ──
+  - id: 2003
+    name: "Margaret鞋坊-卧室区"
+
+  # ── ⏸️ 鞋坊地下室（无新线索） ──
+  - id: 2015
+    name: "Margaret鞋坊-地下室"
+
+  # ── ⏸️ 家门口（无新线索） ──
+  - id: 2006
+    name: "Frank和O'Hara家门口"
+
+  # ── ⏸️ 赌场/酒吧 → 搜证(矛盾) → 指证 ──
+  - id: 2007
+    name: "Silver Moon赌场/酒吧"
+    npcs:
+      tony_002:
+        # ── 基本信息 ──
+        talk: tony_002
+        is_liar: false
+        motive: "帮Zack确认打火机归属——对Vinnie的嚣张忍无可忍，乐意配合侦探收网"
+        mindset: "老江湖的笃定——一眼认出打火机，知道Vinnie这次跑不掉了"
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → tony
+        awareness:  # 以下为L5新获知信息
+          - content: "L2 Zack拆穿Leonard雇佣Vinnie催收"
+            trigger: "L2 Expose后酒吧圈子消息"
+          - content: "Frank被杀的消息传开，酒吧里都在议论"
+            trigger: "案件进展"
+        active_topics: [vinnie(完整)]
+        withheld_topics: []
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "鞋坊废墟发现带'V'字的打火机——Tony是Vinnie常客，能辨认物品归属"  # 9
+          - "Tony在L2已提供Vinnie消费习惯——继续追踪Vinnie在11/6的行踪"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2112001  # Tony辨认打火机："Vinnie的！他每天在这用它点烟，侧面V是他自己刻的，上周还用它给姑娘点烟"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: quiz
+            node: "#014"
+            question: "Frank到底调查了多少个受害者？"
+            answer: "十二个（来源：本循环SC2011证据2502——Frank举报材料'收集了12个受害者的证据'）"
+
+  # ── 银行大厅（⏸️NPC对话） ──
+  - id: 2009
+    name: "Moore银行大厅"
+
+  # ── 银行贵宾室（⏸️NPC对话） ──
+  - id: 2008
+    name: "Moore银行贵宾室"
+
+  # ── 🔒 银行档案室（封锁） ──
+  - id: 2013
+    name: "银行档案室"
+    note: "🔒封锁"
+
+  # ── 🔒 Leonard办公室（封锁） ──
+  - id: 2014
+    name: "Leonard办公室"
+    note: "🔒封锁"
+
+  # ── ⏸️ Frank家次卧（NPC对话） ──
+  - id: 2012
+    name: "Frank家次卧-Danny住处"
+
+  # ── 鞋坊一楼（Rose再次对话：目击证词） ──
+  - id: 2001
+    name: "Margaret鞋坊-店铺区"
+    npcs:
+      rose_002:
+        # ── 基本信息 ──
+        talk: rose_002
+        is_liar: false
+        motive: "Zack追问11/6当晚目击细节——Rose之前一笔带过，现在愿意仔细回忆那个可怕的夜晚"
+        mindset: "回忆痛苦中努力精确——那晚的画面一直折磨她，但她知道每个细节都可能帮助Zack找到真相"
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → rose
+        awareness:  # 以下为L5新获知信息
+          - content: "Danny对Rose的诬陷在L4被击碎，Rose获得清白"
+            trigger: "L4 Expose结果"
+          - content: "保险箱被打开，Frank的举报材料被发现"
+            trigger: "L5 Opening"
+        active_topics: [love(已说过), danny(已说过), witness]
+        withheld_topics: []  # L4 withheld的witness在L5释放
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Rose在L4曾提到11/6当晚看到有人出来——Zack追问详细目击"  # 10
+          - "保险箱发现Frank的举报计划——Rose可能知道Frank当天的行动安排"  # 8
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2081004  # Rose证词：Frank 11/6傍晚说"今晚我要做一件非常冒险的事"，让Rose晚上9点去鞋坊等他
+          - 2081005  # Rose模糊目击：9点多看到壮汉从鞋坊方向匆忙离开（块头大、深色衣服、像意大利人）——与Vinnie吻合
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 赌场/酒吧 → 🔓搜证(矛盾) → ⚔️指证(Vinnie)
+# 指证设计: 1轮（打火机+目击+Tony辨认 → Vinnie"认罪"）
+# 特殊机制: false_confession — Vinnie主动认罪但认罪内容存在致命破绽
+
+expose:
+  target: "Vinnie (05)"
+  total_rounds: 1
+  special_mechanism: false_confession  # Vinnie假认罪——掩护Leonard
+
+  vinnie:
+    # ── 基本信息 ──
+    talk: loop5_vinnie
+    is_liar: true
+    motive: "保护Leonard——在Expose被三重证据逼入死角后，选择用假认罪封死所有追问，替Leonard顶罪"
+    mindset: "从石头般的沉默到爆发——打火机+目击+Tony辨认三重打击下，与其被Zack追查到Leonard，不如自己认了"
+
+    # ── 1. NPC 已知信息 ──
+    # 知识池见 npc_knowledge_pools.yaml → vinnie
+    awareness:  # 以下为L5新获知信息
+      - content: "Zack在L2拆穿了自己和Leonard的雇佣关系"
+        trigger: "L2 Expose结果"
+      - content: "打火机被发现了——Zack来酒吧质问"
+        trigger: "L5搜证阶段"
+    active_topics: [identity(完整), crime(纵火——但声称杀人也是自己干的)]
+    withheld_topics: [crime(真相: Leonard杀了Frank，自己只负责善后)]
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose对象
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 2051003  # ⚠谎言: "最近？没有啊。Frank这几个月不怎么来店里，我至少两三个月没去他那附近了"
+      - 2051004  # Vinnie认罪证词（Expose中假认罪）："是我放的火！Frank是我杀的！透过窗户看到他在床上睡觉后放火"——L6 Expose R4用
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+  # ── 第一轮（也是唯一一轮）：击穿"不在场"谎言 ──
+  # 打火机(2501) + Rose目击(2081005) + Tony辨认(2112001) → 三重打击
+  round_1:
+    lie: "最近很久都没去Frank那附近，至少两三个月了"
+    lie_source: "证词 2051003"
+    usable_evidence:
+      - id: 2501
+        name: "火灾现场的打火机"
+        用途: "鞋坊废墟发现银色打火机，侧面'V'字刻痕——Vinnie的个人物品出现在火灾现场"
+      - id: 2081005
+        name: "Rose模糊目击证词"
+        用途: "11/6晚9点多壮汉从鞋坊匆忙离开——块头大、深色衣服、像意大利人，描述与Vinnie吻合"
+      - id: 2112001
+        name: "Tony辨认打火机证词"
+        用途: "'每天在酒吧用它点烟，上周还用它给姑娘点烟'——不可能'两三个月前'落在鞋坊"
+    result: |
+      Vinnie被三重证据逼入死角：
+      - 打火机V字刻痕 + Tony辨认 = 物品确认是Vinnie的
+      - Tony证实"上周还在用" = 推翻"很久以前落下"的辩解
+      - Rose目击壮汉体格 + 意大利人 = 与Vinnie吻合
+      ★ 特殊机制触发：Vinnie突然打断，主动"认罪" ★
+      - Vinnie暴怒："好！够了！是我！是我放的火！Frank是我杀的！"
+      - 声称"透过窗户看到Frank在床上睡觉——然后放火"
+      - 急切要求被捕："报警吧！我现在就签字！"
+
+  # ── 假认罪分析（本循环不揭露，L6才追究） ──
+  false_confession:
+    content: |
+      Vinnie认罪存在致命破绽：
+      1. 声称"纵火杀的"——但验尸报告显示Frank死于钝器击打，不是火灾
+      2. 声称"看到Frank在床上睡觉"——说明到场时Frank已死（被Leonard打死后Vinnie移尸到床上）
+      3. 认罪太快、太主动——像在保护某人（Leonard）
+      4. 打火机保存"太完美"——火灾现场不该有几乎无烟熏的金属物品，是Vinnie事后放置的假证据
+    emma_doubt: "他的认罪…有问题。"
+
+# ═══════════════════════════════════════
+# PART 2.5: 突发事件
+# ═══════════════════════════════════════
+
+events:
+  - type: sudden
+    scene_id: 2004  # 警局外（Mickey登场）→ 码头（Margaret营救）
+    name: "Mickey登场 + Margaret营救"
+    trigger: "Expose结束后（Vinnie被押送进警局时）"
+    characters: [Zack, Emma, Mickey, Vinnie, Margaret]
+    purpose: "双重冲击——Mickey救出Margaret建立Zack信任 + Vinnie暴露'Leo'连接"
+    result: |
+      Phase 1 — 警局外(2004):
+      - Vinnie戴手铐被押送，Zack和Emma在旁观望
+      - Mickey突然出现："你母亲——我知道她在哪里！废弃码头仓库！"
+      - Vinnie暴怒咆哮："Mickey——！你这个叛徒！你出卖了Leo！"
+      - "Leo"首次明确出现——指向Leonard（Leo = Leonard昵称）
+      Phase 2 — 码头:
+      - Zack跟随Mickey赶往废弃码头仓库
+      - Margaret获救——虚弱但活着
+      - Zack情感爆发，紧紧拥抱母亲
+      后续:
+      - Margaret送往医院，暂时无法接受问询
+      - Zack对Mickey建立完全信任（为Unit 3 Mickey背叛埋下伏笔）
+      - Emma保持警惕：Mickey怎么知道Margaret位置？他和Vinnie/Leo什么关系？
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 2013
+    text: "Vinnie的打火机为什么在鞋坊废墟？——Tony确认他'上周还在用'，不可能两三个月前落下"
+    unlock_condition: "item:2501 + testimony:2112001"
+  - id: 2014
+    text: "Rose看到的壮汉是Vinnie吗？——9点多从鞋坊离开、块头大、像意大利人，与Vinnie完全吻合"
+    unlock_condition: "testimony:2081005 + testimony:2051003"
+  - id: 2015
+    text: "Vinnie认罪说'纵火杀的'——但验尸报告说Frank死于钝器击打，他根本不知道真正死因？"
+    unlock_condition: "testimony:2051003 + item:2502"

@@ -781,6 +781,44 @@ Helen家Jameson（34-I-03）
 
 ---
 
-**文档状态**: ✅ 已完成
-**版本**: v2.0 (PM最终裁定版)
-**生成日期**: 2026-02-12
+## 🔄 系统重构补充（v3.0新增）
+
+### TestimonyItem定义
+
+以下证据在系统重构中被赋予新的TestimonyItem属性，用于支持Timeline/RelationNetwork机制：
+
+#### 34-T-01 Foster血液酒精浓度强调 → Timeline型
+
+```json
+{
+  "id": "3041001",
+  "testimonyType": "2",       // Hearsay（见闻：Foster对血液酒精浓度的专业分析）
+  "testimony": ["BAC 0.25%需要持续补充酒精，从现场只有一瓶Jameson来看，更像是有人一直在给他倒", "BAC 0.25% requires continuous alcohol supply; given only one Jameson bottle at the scene, it's more like someone kept pouring for him"],
+  "triggerType": "1",          // Timeline
+  "triggerParam": "NPC_Helen, SC3002, 2130, 2230"
+}
+```
+- **原状态**: 无TestimonyItem定义
+- **新状态**: triggerType=1(Timeline)
+- **说明**: 玩家需在时间线上放置此证词，标注"Helen 21:30-22:30持续灌酒"时间段。结合楼顶Jameson空瓶(34-I-02)和Thomas家廉价酒(34-C-03)的价格差，推理出"有人在案发前1小时持续灌酒"
+
+#### 34-T-02 Margaret Brennan目击证词 → RelationNetwork型
+
+```json
+{
+  "id": "3041002",
+  "testimonyType": "1",       // SelfStatement（自述：Margaret描述自己目击的事情）
+  "testimony": ["Margaret在22:30看到楼顶三个人影，高个子女人从后面拉了一下，男人失去平衡掉了下来", "Margaret saw three silhouettes on the rooftop at 22:30; the tall woman pulled from behind, and the man lost balance and fell"],
+  "triggerType": "2",          // RelationNetwork
+  "triggerParam": "NPC_Margaret, NPC_Helen"
+}
+```
+- **原状态**: 无TestimonyItem定义
+- **新状态**: triggerType=2(RelationNetwork)
+- **说明**: 循环4 R3使用。玩家在关系网中建立Margaret↔Helen连接，将Margaret目击的"高个子女人"与Helen交叉比对。需同时与Mary的证词对照——三个人对"楼顶发生了什么"各执一词
+
+---
+
+**文档状态**: ✅ 已更新
+**版本**: v3.0 (系统重构版)
+**生成日期**: 2026-02-18

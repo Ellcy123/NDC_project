@@ -1,0 +1,42 @@
+title: Mickey登场与掠夺性贷款揭露
+target: 揭露Moore银行掠夺性贷款欺诈
+time: "11/7 14:00 白天"
+
+opening:
+  - id: 2031
+    characters: [Zack, Emma, Mickey]
+    purpose: 法院令状被拒，Mickey登场协助获取银行内部文件
+    talk: emma_003
+
+scenes:
+  unlocked:
+    - 2302  # Margaret鞋坊-店铺区
+    - 2303  # Margaret鞋坊卧室区
+    - 2306  # Frank和Mrs.O'Hara家门口
+    - 2308  # 银行贵宾室
+    - 2309  # 银行大厅（L2指证后可探索）
+    - 2311  # Frank家里（道具解锁）
+    - 2312  # Danny的房间（对话·证据解锁）
+    - 2313  # 银行档案室（Mickey令状解锁）
+    - 2314  # Leonard办公室（自动解锁）
+  locked:
+    - id: 2304
+      reason: Morrison管辖范围，Mickey建议暂时回避警局
+    - id: 2307
+      reason: Vinnie白天不在赌场，赌场午间不营业
+    - id: 2415
+      reason: 需要钥匙才能进入地下室
+    - id: 2618
+      reason: 不知道Leonard住所地址
+  closed: []
+
+expose:
+  scene: 2390
+  target_name: Harold Moore
+  rounds:
+    - lie: Frank自己签署了所有文件
+      evidences: [2301, 2302, 2303]
+    - lie: 我们的利率完全合法
+      evidences: [2305, 2306, 2308]
+    - lie: Moore银行是正规银行
+      evidences: [2312]

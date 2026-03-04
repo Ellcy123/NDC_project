@@ -1,0 +1,49 @@
+title: 残酷的身份确认
+target: 确认死者不是Margaret，揭穿Morrison故意误导
+time: "11/6 21:00 夜晚"
+
+opening:
+  - id: 2011
+    characters: [Zack]
+    purpose: 独自抵达火灾现场，限时搜索初步证据
+  - id: 2012
+    characters: [Zack, Emma, Morrison]
+    purpose: Emma和Morrison到场，Morrison声称死者是Margaret
+    talk: emma_001
+
+scenes:
+  unlocked:
+    - 2102  # Margaret鞋坊-店铺区
+    - 2103  # Margaret鞋坊卧室区
+    - 2104  # 警局外（电话亭）
+  locked:
+    - id: 2206
+      reason: 尚未发现Frank家地址
+    - id: 2207
+      reason: 尚未发现赌场线索
+    - id: 2208
+      reason: 银行下班了（夜晚不开放）
+    - id: 2309
+      reason: 银行下班了（夜晚不开放）
+    - id: 2311
+      reason: 尚未发现Frank家地址
+    - id: 2312
+      reason: 尚未发现Frank家地址
+    - id: 2313
+      reason: 银行下班了（夜晚不开放）
+    - id: 2314
+      reason: 银行下班了（夜晚不开放）
+    - id: 2415
+      reason: 需要钥匙才能进入地下室
+    - id: 2618
+      reason: 不知道Leonard住所地址
+  closed: []
+
+expose:
+  scene: 2190
+  target_name: Morrison（腐败警察）
+  rounds:
+    - lie: 死者应该就是Margaret
+      evidences: [2101, 2102, 2103, 2104]
+    - lie: 我有尸检调查信息
+      evidences: [2105]

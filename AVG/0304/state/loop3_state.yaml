@@ -1,0 +1,402 @@
+# ============================================================
+# Loop 3 — Mickey登场 + 第一重反转（Frank的正义）
+# 本循环说谎者: Harold Moore
+# 核心揭示: Frank非赌博欠债，贷款被代签、利率违法、投资公司马甲欺诈
+# 前序事件: L2揭露Leonard雇佣Vinnie催收，但法院令状被拒
+# 时间: 1925年11月7日 约14:00 下午
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Frank的贷款真相是什么？为什么欠这么多钱？"
+    secondary:
+      - "贷款申请真的是Frank本人签的吗？"
+      - "协议条款到底合不合法？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "死者是Frank Kowalski（73岁退休工人），不是Margaret"
+    - "Morrison出于蓝月俱乐部栽赃案被揭发的私怨，故意谎报死者身份"
+    - "Morrison收到匿名电话：'不要多管Margaret Brennan的事'"
+    - "Margaret下落不明，疑被绑架"
+    - "Morrison提出交易：Zack查Frank死因给他一个结案答案，他才去查Margaret下落"
+    # ── L2 post_expose ──
+    - "Leonard真名是Leonard Russo，使用假名Ross在银行工作十年"
+    - "Leonard和Vinnie Moretti是旧相识（童年好友）"
+    - "Leonard雇佣Vinnie暴力催收——提供目标地址，事后分钱"
+    - "连号钞票证明银行→Vinnie的资金链（O'Hara少的钱出现在Vinnie手里）"
+    - "Frank也是被Vinnie'特别关照'的受害者之一"
+    - "Leonard威胁：没有法院令状，无法调查银行内部文件"
+  new_directions:
+    - direction: "贷款申请笔迹造假"
+      trigger: "Frank日记写'Leonard帮我填表，我只要签个字' + 银行档案签名流畅有力——与Frank颤抖的真实笔迹完全不同"
+    - direction: "条款系统性违法"
+      trigger: "贷款协议月利率12%=年化289%，州法消费者贷款上限7%，超标40倍"
+    - direction: "投资公司马甲"
+      trigger: "协议抬头是'LAKESHORE INVESTMENT CO.'而非银行，Frank日记却说'去银行借钱'"
+  post_expose_knowledge:
+    - "Frank的贷款不是赌博——Leonard代填申请表，Frank不清楚具体内容"
+    - "贷款协议系统性违法：月利率12%=年化289%（州法上限7%）、利滚利、管理费$600"
+    - "贷款协议抬头是'Lakeshore Investment Co.'——投资公司不受银行法利率限制"
+    - "Frank以为去银行借钱，实际被骗签了投资公司协议——系统性欺诈"
+    - "Moore迫于谋杀案审计的恐惧，主动提供Frank遗嘱副本"
+    - "遗嘱：财产归Rose Martinez（如结婚），否则捐给工人互助会；Danny不在继承人中"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: 市政厅 → 🎬开篇 → ⚡突发(Mickey)
+# Zack去市政厅申请搜查令但被拒，陷入僵局。
+# Mickey突然出现以律师身份递交传票，帮Zack获得银行搜查令。
+
+opening:
+  scene_id: 2010
+  characters: [Zack, Emma, Mickey]
+  purpose: "搜查令被拒陷入僵局——Mickey突发登场以律师身份递交传票，打破调查死结"
+  talk: emma_003
+
+  emma_003:
+    is_liar: false
+    motive: "协助Zack准备搜查令申请——L2证据已经证明Leonard雇佣关系，但法院要求更多证据"
+    mindset: "焦虑中保持务实——预感搜查令会被驳回，但必须走完合法程序"
+
+    knows:
+      - "L2已揭露Leonard雇佣Vinnie暴力催收"
+      - "Leonard威胁'没有法院令状查不到银行内部'"
+      - "连号钞票和Vinnie催债小本子是目前最有力的证据"
+      - "需要进入银行档案室才能查到贷款真实条款"
+      - "Frank欠银行$3,200（Moore在L2声称是赌博债务）"
+
+    does_not_know:
+      - "贷款协议的真实利率（月12%=年化289%）"
+      - "协议是投资公司而非银行"
+      - "Frank日记中关于'Leonard帮我填表'的内容"
+      - "Mickey的真实背景和来历"
+      - "遗嘱中提到的Rose Martinez"
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur:
+      - type: quiz
+        node: "#006"
+        question: "O'Hara拿到的钞票有什么特别的？"
+        answer: "崭新连号20美元（来源：L2 ohara_001——O'Hara展示银行放贷给她的钞票）"
+
+  # ── ⚡突发：Mickey登场 ──
+  # 触发：开篇结束后（Zack搜查令申请被拒）
+  # Mickey以律师身份突然出现，递交传票帮Zack获得银行搜查令
+  sudden_event:
+    name: "Mickey登场"
+    trigger: "开篇结束后（Zack搜查令申请被拒）"
+    characters: [Zack, Emma, Mickey]
+    purpose: "打破调查僵局——Mickey以律师身份递交传票，帮Zack获得银行搜查令"
+    result: |
+      - 获得证据2304（银行搜查令——库克县巡回法院签发）
+      - 解锁银行档案室(SC2013)和Leonard办公室(SC2014)
+      - Mickey展现神秘的法律能力和人脉（伏笔）
+      - Zack对Mickey十二年未联系突然出现产生好奇
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L3:
+#   鞋坊一楼(1F)      → ⏸️暂无新线索
+#   鞋坊卧室区        → ⏸️无新线索
+#   家门口(2A)        → ⏸️无新线索
+#   赌场/酒吧         → ⏸️无新线索
+#   Frank家内部       → 🔓首次解锁(日记)
+#   Frank家次卧(Danny) → 🔓首次解锁(对话)
+#   银行大厅          → ⏸️NPC对话(Leonard)
+#   银行档案室        → 🔓首次解锁
+#   Leonard办公室     → 🔓首次解锁
+#   银行贵宾室        → ⚔️指证(Moore) → 🎭结尾
+#   市政厅            → 🎬开篇 → ⚡突发
+
+scenes:
+  # ── ⏸️ 鞋坊一楼（无新线索） ──
+  - id: 2001
+    name: "Margaret鞋坊-店铺区"
+
+  # ── ⏸️ 鞋坊卧室区（无新线索） ──
+  - id: 2003
+    name: "Margaret鞋坊-卧室区"
+
+  # ── ⏸️ 家门口（无新线索） ──
+  - id: 2006
+    name: "Frank和O'Hara家门口"
+
+  # ── ⏸️ 赌场/酒吧（无新线索） ──
+  - id: 2007
+    name: "Silver Moon赌场/酒吧"
+
+  # ── SC2011 Frank家内部 ──
+  - id: 2011
+    name: "Frank家内部"
+    evidence:
+      - id: 2301
+        name: "牛奶订购签收单"
+        note: "关键——Frank真实笔迹样本，签名颤抖歪斜（分析后获得2302）"
+      - id: 2302
+        name: "Frank签名样本（胶带）"
+        note: "关键——从2301提取的Frank真迹，用于与银行档案签名对比（Expose R1用）"
+      - id: 2314
+        name: "Frank的日记"
+        note: "关键——'Leonard说我年纪大了手抖，他帮我填表'+'去Moore银行借点钱'（Expose R1+R3用）"
+      - id: 2313
+        name: "被翻动的抽屉"
+        note: "场景道具——五斗柜被匆忙翻过，衣物散落，说明有人搜过Frank家"
+      - id: 2315
+        name: "衣柜角落的礼物盒"
+        note: "场景道具——深蓝色丝绒礼品盒(Marshall Field's)，椭圆形凹槽空置，原物不见了"
+      - id: 2316
+        name: "破旧的工作手套"
+        note: "场景道具——几十年的码头工人手套，掌心磨穿，体现Frank的劳动者身份"
+
+  # ── Frank家次卧(Danny) ──
+  - id: 2012
+    name: "Frank家次卧-Danny住处"
+    npcs:
+      danny_001:
+        # ── 基本信息 ──
+        talk: danny_001
+        is_liar: false
+        motive: "被Zack找上门——急于抱怨遗产不公、抹黑Rose，把自己包装成受害者"
+        mindset: "自我中心的焦虑——失业有赌债，一提到Rose和遗产就激动，用种族偏见包装贪欲"
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → danny
+        active_topics: [frank(基础), rose(偏见版), self(失业/从乡下来)]
+        withheld_topics: [self(赌债/拆迁补偿)]
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Frank家搜证发现日记和个人物品——Danny同住可能了解Frank近况"  # 8
+          - "Danny是Frank唯一的亲属——可能知道Frank的社交关系和来访者"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2071001  # Danny确认身份：Frank唯一的侄子，从乡下来后寄住在Frank家
+          - 2071002  # ⚠偏见: Danny声称Rose是"大半年前"才出现的骗子，骗了Frank的钱
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: source
+            content: "Danny声称Rose是大半年前才出现在Frank身边的"
+            note: "L4 ohara_002 quiz#013 考这个"
+          - type: quiz
+            node: "#005"
+            question: "催收的人长什么样？"
+            answer: "一个金发年轻人带着一个意大利壮汉（来源：L2 ohara_001——O'Hara描述上门催收的人）"
+
+  # ── 银行大厅（Leonard再次对话） ──
+  - id: 2009
+    name: "Moore银行大厅"
+    npcs:
+      leonard_002:
+        # ── 基本信息 ──
+        talk: leonard_002
+        is_liar: false
+        motive: "L2被拆穿后的自保——表面示好想甩锅给Moore，实际控制信息不让Zack查得更深"
+        mindset: "从L2的冷静伪装变为小心翼翼——知道Zack有本事，需要更谨慎地管理每句话"
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → leonard
+        awareness:
+          - content: "Zack拆穿了自己的Russo身份和雇佣Vinnie的事实"
+            trigger: "L2 Expose结果"
+          - content: "Zack获得搜查令正式进入银行调查"
+            trigger: "L3 Mickey协助获得搜查令"
+        active_topics: [identity(完整), crime_network(完整含利率/分赃)]
+        withheld_topics: [murder]
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "搜查令获批后进入银行——Leonard是贷款经办人，掌握第一手信息"  # 8
+          - "L2拆穿Leonard后需要深挖——他可能为了自保供出Moore"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2041002  # Leonard声称自己只是执行Moore指令，"我也是打工的"
+          - 2041003  # Leonard提及Moore经手所有"特殊客户"的贷款档案
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC2013 银行档案室 ──
+  - id: 2013
+    name: "银行档案室"
+    evidence:
+      - id: 2305
+        name: "贷款协议-利率条款"
+        note: "关键——第5条'月利率12%复利'=年化289%，抬头为'LAKESHORE INVESTMENT CO.'（Expose R2+R3用）"
+      - id: 2306
+        name: "贷款协议-账户服务条款"
+        note: "关键——第7条'未偿还利息自动计入本金'=利滚利陷阱（Expose R2用）"
+      - id: 2308
+        name: "贷款协议-管理费条款"
+        note: "关键——第12条'月管理费$50'=年$600=本金100%（Expose R2用）"
+      - id: 2310
+        name: "湖滨信托银行私人档案柜"
+        note: "场景道具——上锁玻璃柜，标签'行长专用-机密文件'，可见Frank的文件夹"
+      - id: 2311
+        name: "Frank遗嘱副本"
+        note: "关键——Moore在Expose R3后提供，房产归Rose Martinez，Danny不在继承人中"
+      - id: 2319
+        name: "客户投诉记录"
+        note: "场景道具——角落压着的15-20封投诉信，无人处理，暗示系统性问题"
+
+  # ── SC2014 Leonard办公室 ──
+  - id: 2014
+    name: "Leonard办公室"
+    evidence:
+      - id: 2303
+        name: "湖滨信托银行内部档案"
+        note: "关键——Frank贷款档案，签名流畅有力（与Frank真迹完全不同），备注'客户口头确认'（Expose R1用）"
+      - id: 2309
+        name: "客户账户对账单"
+        note: "关键——页眉'Lakeshore Investment Co.'vs正文'Lakeshore Trust Bank'矛盾（Expose R3用）"
+      - id: 2317
+        name: "伊利诺伊州法律公告"
+        note: "场景道具——消费者贷款法公告，年化利率上限7%，被其他通知遮住大半"
+      - id: 2318
+        name: "压在文件下的旧照片"
+        note: "场景道具——两个男孩合影(1910)，背面'Forever Friends'，一个签名被涂抹"
+      - id: 2320
+        name: "办公桌日历"
+        note: "场景道具——11月多日加班到深夜，11/6异常早走(5pm)，11/7空白"
+    # ── 鉴赏力（场景证据） ──
+    connoisseur:
+      - type: source
+        content: "伊利诺伊州法律公告：消费者贷款年化利率上限7%"
+        note: "L4 leonard_003 quiz#012 考这个（来源为证据2317）"
+
+  # ── SC2008 银行贵宾室（Moore Talk → ⚔️指证） ──
+  - id: 2008
+    name: "银行贵宾室"
+    npcs:
+      moore_001:
+        # ── 基本信息 ──
+        talk: moore_001
+        is_liar: true
+        motive: "维护银行形象——面对搜查令上门，用合同条款'合法性'作为最后防线"
+        mindset: "居高临下到节节败退——从'法律保护我'的自信逐步退守到'投资公司不受银行法限制'的最后赌注"
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → moore
+        awareness:
+          - content: "Zack拿到了搜查令进入银行调查"
+            trigger: "L3 Mickey以律师身份帮助获得传票"
+          - content: "Leonard在L2被拆穿身份和雇佣Vinnie催收的事实"
+            trigger: "L2 Expose后Moore获知"
+        active_topics: [frank_loan(完整), leonard(完整), scheme(被迫暴露)]
+        withheld_topics: []  # L3 Expose中scheme被迫全部释放
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry: null  # Expose对象
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2061003  # ⚠谎言: "这是Frank亲自签字的贷款申请，他清楚知道自己在借什么钱"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 银行贵宾室 → ⚔️指证(Moore) → 🎭结尾
+# 指证设计: 3轮（"Frank亲自签字" → "条款合法" → "投资公司合法，去告我啊"）
+
+expose:
+  target: "Moore (06)"
+  total_rounds: 3
+  # Moore的Talk/证词见上方 scenes → SC2008 → moore_001
+
+  # ── 第一轮：戳破"Frank亲自签字" ──
+  # 日记(2314) + 签名对比(2302 vs 2303) → 笔迹造假
+  round_1:
+    lie: "这是Frank亲自签字的贷款申请，他清楚知道自己在借什么钱"
+    lie_source: "证词 2061003"
+    usable_evidence:
+      - id: 2314
+        name: "Frank的日记"
+        用途: "'Leonard说我年纪大了手抖，他帮我填表，我只要签个字就行'——Frank根本没亲自填写"
+      - id: 2302
+        name: "Frank签名样本（胶带）"
+        用途: "Frank真实笔迹颤抖歪斜——与银行档案流畅有力的签名完全不同"
+      - id: 2303
+        name: "湖滨信托银行内部档案"
+        用途: "档案签名工整流畅，备注'客户口头确认'——这是Leonard代签的证据"
+    result: |
+      Moore被迫承认Leonard代填：
+      - 日记证明Frank只是"签个字"，不知道具体内容
+      - 笔迹对比证明签名不是Frank的
+      - Moore辩解"口头确认"但日记只写"借点钱"，没提赌博、没提$3,200
+      - Moore升级谎言："好吧Frank不清楚，但协议条款完全合法"
+
+  # ── 第二轮：揭露条款系统性违法 ──
+  # 利率(2305) + 利滚利(2306) + 管理费(2308) → 多处违法
+  round_2:
+    lie: "协议条款完全合法，Leonard填的每一条都符合法律规定"
+    lie_source: "Moore对Round 1的新谎言"
+    usable_evidence:
+      - id: 2305
+        name: "贷款协议-利率条款"
+        用途: "月利率12%复利=年化289%，州法上限7%，超标40倍"
+      - id: 2306
+        name: "贷款协议-账户服务条款"
+        用途: "'未偿还利息自动计入本金'=利滚利陷阱，州法禁止利息超本金100%"
+      - id: 2308
+        name: "贷款协议-管理费条款"
+        用途: "月$50×12=$600=本金100%，用'管理费'掩盖变相高利贷"
+    result: |
+      多处违法条款被逐条揭露：
+      - 年化289% vs 州法7% = 超标40倍
+      - 利滚利让Frank永远还不清
+      - 管理费$600=本金100%
+      - Moore无法反驳法律证据，但突然冷静下来
+      - Moore升级谎言："在我们的协议框架下是完全合法的，去法院告我吧"
+      - Moore故意不说破投资公司秘密，暗示"你自己去查协议"
+
+  # ── 第三轮：击穿投资公司马甲 ──
+  # 对账单矛盾(2309) + Frank日记(2314) → 系统性欺诈
+  round_3:
+    lie: "你用这些去法院告我没用——你会成为小丑"
+    lie_source: "Moore对Round 2的新谎言（故意隐瞒投资公司马甲）"
+    usable_evidence:
+      - id: 2309
+        name: "客户账户对账单"
+        用途: "页眉'Lakeshore Investment Co.'vs正文'Lakeshore Trust Bank'——银行用投资公司马甲规避利率限制"
+      - id: 2314
+        name: "Frank的日记（回顾）"
+        用途: "Frank写'去Moore银行借钱'——根本不知道自己签的是投资公司协议"
+    result: |
+      Moore防线彻底崩溃：
+      - 投资公司马甲被揭穿——在银行办公室让老人签投资协议，故意混淆
+      - 即使投资协议"技术合法"，诱骗老人签署=系统性欺诈=刑事犯罪
+      - Moore恐惧Frank的死会引发全面审计
+      - Moore妥协提供Frank遗嘱副本（2311）以自保
+      - 遗嘱揭示：财产归Rose Martinez（如结婚），否则捐给工人互助会
+      - Danny不在继承人名单——引出L4 Danny激烈反应和Rose调查
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 2007
+    text: "Frank真的亲自签了贷款申请吗？——日记说'Leonard帮我填表'，银行签名笔迹完全不同"
+    unlock_condition: "item:2314 + item:2302"
+  - id: 2008
+    text: "贷款条款真的合法吗？——月利率12%=年化289%，州法上限才7%"
+    unlock_condition: "item:2305 + item:2317"
+  - id: 2009
+    text: "为什么对账单页眉是投资公司、正文却是银行？——Frank日记说'去银行借钱'"
+    unlock_condition: "item:2309 + item:2314"

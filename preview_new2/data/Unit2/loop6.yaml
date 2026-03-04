@@ -1,0 +1,52 @@
+title: Leonard终极指证（诱导招供）
+target: 揭露Leonard失手杀害Frank的真相
+time: "11/8 09:00 白天"
+
+opening:
+  - id: 2061
+    characters: [Zack, Emma, Margaret]
+    purpose: 救援被困的Margaret
+    talk: emma_007
+  - id: 2062
+    characters: [Zack, Emma, Margaret]
+    purpose: Margaret恢复意识，证词称看到戴眼镜男人；申请搜查令
+    talk: emma_006
+
+scenes:
+  unlocked:
+    - 2602  # Margaret鞋坊-店铺区（凶器）
+    - 2603  # Margaret鞋坊卧室区
+    - 2605  # 警局
+    - 2606  # Frank和Mrs.O'Hara家门口
+    - 2607  # 赌场
+    - 2608  # 银行贵宾室
+    - 2609  # 银行大厅
+    - 2611  # Frank家里
+    - 2612  # Danny的房间
+    - 2613  # 银行档案室
+    - 2614  # Leonard办公室
+    - 2615  # Margaret鞋坊地下室
+    - 2617  # 医院（Margaret病房）
+    - 2618  # Leonard住所（搜查令解锁）
+  locked:
+    - id: 2604
+      reason: 全力准备指证Leonard，无需联系警局
+  closed: []
+
+expose:
+  scene: 2690
+  target_name: Leonard Russo
+  rounds:
+    - lie: 我当晚根本不在现场
+      evidences: [2601, 2606]
+    - lie: 那不是我的眼镜
+      evidences: [2602]
+    - lie: 我没有伤害任何人
+      evidences: []
+    - lie: 是Vinnie放的火
+      evidences: [2603]
+
+ending:
+  - 2063  # 监狱（结尾·Vinnie表白）
+  - 2064  # 墓地（结尾·Rose悼念）
+  - 2065  # 医院（结尾·Zack反思）
