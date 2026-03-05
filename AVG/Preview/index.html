@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVG Dialog Preview - NDC</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #eee;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            font-size: 1.8em;
+        }
+
+        /* File Upload Area */
+        .upload-area {
+            border: 2px dashed #00d4ff;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0, 212, 255, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: #00ffaa;
+        }
+
+        .upload-area.dragover {
+            background: rgba(0, 255, 170, 0.2);
+            border-color: #00ffaa;
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            color: #00ffaa;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        /* Dialog Area */
+        .dialog-area {
+            display: none;
+        }
+
+        .dialog-area.active {
+            display: block;
+        }
+
+        .dialog-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .dialog-info span {
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .dialog-info .scene-name {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        /* Dialog Card */
+        .dialog-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #00d4ff;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dialog-card.npc {
+            border-left-color: #ff6b9d;
+        }
+
+        .dialog-card.player {
+            border-left-color: #00ffaa;
+        }
+
+        .dialog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .speaker-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .speaker-cn {
+            font-weight: bold;
+            color: #00d4ff;
+            font-size: 1.1em;
+        }
+
+        .speaker-en {
+            color: #888;
+            font-size: 0.85em;
+        }
+
+        .dialog-meta {
+            text-align: right;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .location {
+            color: #ffaa00;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .action {
+            background: rgba(255, 170, 0, 0.1);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .action-cn {
+            color: #ffcc66;
+            margin-bottom: 4px;
+        }
+
+        .action-en {
+            color: #aa8844;
+            font-size: 0.9em;
+        }
+
+        .words {
+            line-height: 1.6;
+        }
+
+        .words-cn {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .words-en {
+            color: #aaa;
+            font-size: 0.95em;
+        }
+
+        /* Branch Options */
+        .branch-options {
+            margin-top: 20px;
+        }
+
+        .branch-title {
+            color: #00ffaa;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .branch-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 170, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1em;
+            transition: all 0.2s;
+        }
+
+        .branch-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.4), rgba(0, 255, 170, 0.2));
+            border-color: #00d4ff;
+            transform: translateX(5px);
+        }
+
+        .branch-btn .option-id {
+            float: right;
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        /* Next Button */
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #00d4ff, #00ffaa);
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .next-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Dialog End */
+        .dialog-end {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 107, 157, 0.1);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .dialog-end h3 {
+            color: #ff6b9d;
+            margin-bottom: 10px;
+        }
+
+        .restart-btn {
+            padding: 10px 30px;
+            background: #ff6b9d;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1em;
+        }
+
+        .restart-btn:hover {
+            background: #ff8db3;
+        }
+
+        /* History Panel */
+        .history-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            border-radius: 6px;
+            color: #00d4ff;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .history-panel {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 300px;
+            max-height: 60vh;
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid #00d4ff;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .history-panel.active {
+            display: block;
+        }
+
+        .history-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .history-item:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .history-item .h-speaker {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .history-item .h-text {
+            color: #aaa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+
+            .dialog-card {
+                padding: 15px;
+            }
+
+            .history-panel {
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AVG Dialog Preview</h1>
+
+        <!-- File Upload -->
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" accept=".json" />
+            <div class="upload-icon">📁</div>
+            <div>点击或拖拽 JSON 文件到此处</div>
+            <div>Click or drag JSON file here</div>
+            <div class="file-name" id="fileName"></div>
+        </div>
+
+        <!-- Dialog Display -->
+        <div class="dialog-area" id="dialogArea">
+            <div class="dialog-info">
+                <span class="scene-name" id="sceneName"></span>
+                <span>ID: <span id="currentId"></span> | Step: <span id="currentStep"></span></span>
+            </div>
+            <div id="dialogContent"></div>
+        </div>
+    </div>
+
+    <!-- History Toggle -->
+    <button class="history-toggle" id="historyToggle">History</button>
+    <div class="history-panel" id="historyPanel">
+        <h4 style="margin-bottom: 10px; color: #00d4ff;">对话历史 / Dialog History</h4>
+        <div id="historyList"></div>
+    </div>
+
+    <script>
+        // Global state
+        let dialogData = [];
+        let dialogMap = {};
+        let history = [];
+        let currentDialog = null;
+
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const dialogArea = document.getElementById('dialogArea');
+        const dialogContent = document.getElementById('dialogContent');
+        const sceneName = document.getElementById('sceneName');
+        const currentIdEl = document.getElementById('currentId');
+        const currentStepEl = document.getElementById('currentStep');
+        const historyToggle = document.getElementById('historyToggle');
+        const historyPanel = document.getElementById('historyPanel');
+        const historyList = document.getElementById('historyList');
+
+        // File upload events
+        uploadArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.json')) {
+                loadFile(file);
+            }
+        });
+
+        // History toggle
+        historyToggle.addEventListener('click', () => {
+            historyPanel.classList.toggle('active');
+        });
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                loadFile(file);
+            }
+        }
+
+        function loadFile(file) {
+            fileName.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    dialogData = JSON.parse(e.target.result);
+                    initDialog();
+                } catch (err) {
+                    alert('JSON 解析错误 / JSON Parse Error: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function initDialog() {
+            // Build dialog map by ID
+            dialogMap = {};
+            dialogData.forEach(d => {
+                dialogMap[d.id] = d;
+            });
+
+            // Reset history
+            history = [];
+            updateHistory();
+
+            // Show dialog area
+            dialogArea.classList.add('active');
+
+            // Start from first dialog
+            if (dialogData.length > 0) {
+                showDialog(dialogData[0].id);
+            }
+        }
+
+        function showDialog(id) {
+            const dialog = dialogMap[id];
+            if (!dialog) {
+                showDialogEnd();
+                return;
+            }
+
+            currentDialog = dialog;
+
+            // Update info bar
+            sceneName.textContent = dialog.videoScene || '-';
+            currentIdEl.textContent = dialog.id;
+            currentStepEl.textContent = dialog.step;
+
+            // Add to history
+            if (dialog.cnWords || dialog.enWords) {
+                history.push({
+                    id: dialog.id,
+                    speaker: dialog.cnSpeaker || dialog.enSpeaker,
+                    text: dialog.cnWords || dialog.enWords
+                });
+                updateHistory();
+            }
+
+            // Render dialog
+            renderDialog(dialog);
+        }
+
+        function renderDialog(dialog) {
+            const isNPC = dialog.speakType === 2;
+            const hasWords = dialog.cnWords || dialog.enWords;
+            const hasAction = dialog.cnAction || dialog.enAction;
+            const hasLocation = dialog.Location;
+
+            let html = '';
+
+            // Only show card if there's content to show
+            if (hasWords || hasAction || hasLocation) {
+                html += `<div class="dialog-card ${isNPC ? 'npc' : 'player'}">`;
+
+                // Header
+                html += `<div class="dialog-header">
+                    <div class="speaker-info">
+                        <span class="speaker-cn">${dialog.cnSpeaker || '-'}</span>
+                        <span class="speaker-en">${dialog.enSpeaker || ''}</span>
+                    </div>
+                    <div class="dialog-meta">
+                        ID: ${dialog.id}<br>
+                        ${dialog.IdSpeaker}
+                    </div>
+                </div>`;
+
+                // Location
+                if (hasLocation) {
+                    html += `<div class="location">📍 ${dialog.Location}</div>`;
+                }
+
+                // Action
+                if (hasAction) {
+                    html += `<div class="action">
+                        <div class="action-cn">[ ${dialog.cnAction} ]</div>
+                        ${dialog.enAction ? `<div class="action-en">[ ${dialog.enAction} ]</div>` : ''}
+                    </div>`;
+                }
+
+                // Words
+                if (hasWords) {
+                    html += `<div class="words">
+                        <div class="words-cn">${dialog.cnWords}</div>
+                        ${dialog.enWords ? `<div class="words-en">${dialog.enWords}</div>` : ''}
+                    </div>`;
+                }
+
+                html += `</div>`;
+            }
+
+            // Handle navigation
+            // Normalize next to string (support both number and string formats)
+            // next=0, next="", next=null, next=undefined, next=-1, next="-1" all mean end
+            const rawNext = dialog.next;
+            const isEndMarker = rawNext === 0 || rawNext === '' || rawNext === null || rawNext === undefined
+                || rawNext === -1 || rawNext === '-1';
+            const nextValue = isEndMarker ? '' : String(rawNext);
+
+            if (dialog.script === 'Lie') {
+                // Expose evidence - 出示证据揭穿谎言
+                const evidenceIds = dialog.ParameterStr0 || '';
+                const targetId = dialog.ParameterInt0;
+                const evidenceCount = dialog.ParameterInt1 || 1;
+
+                html += `<div class="branch-options evidence-select">
+                    <div class="branch-title" style="color: #ff6b9d;">🔍 出示证据揭穿谎言 / Present Evidence to Expose the Lie:</div>
+                    <div class="evidence-info" style="background: rgba(255, 107, 157, 0.1); padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                        <div style="color: #ffaa00; margin-bottom: 5px;">需要证据 / Required Evidence:</div>
+                        <div style="color: #fff; font-weight: bold;">${evidenceIds}</div>
+                        ${evidenceCount > 1 ? `<div style="color: #aaa; font-size: 0.9em; margin-top: 5px;">需要 ${evidenceCount} 件证据 / Need ${evidenceCount} pieces of evidence</div>` : ''}
+                    </div>`;
+
+                if (targetId) {
+                    html += `<button class="branch-btn" style="border-color: #ff6b9d; background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(255, 170, 0, 0.1));" onclick="showDialog(${targetId})">
+                        ✓ 出示证据 [${evidenceIds}]
+                        <span class="option-id">→ ${targetId}</span>
+                    </button>`;
+                }
+
+                html += `</div>`;
+            } else if (dialog.script === 'branches') {
+                // Branch options - support up to 4 options (ParameterStr0-3, ParameterInt0-3)
+                html += `<div class="branch-options">
+                    <div class="branch-title">选择选项 / Choose an option:</div>`;
+
+                // Check each option - use proper existence check to handle ParameterInt value of 0
+                if (dialog.ParameterStr0 !== undefined && dialog.ParameterStr0 !== '' && dialog.ParameterInt0 !== undefined) {
+                    html += createBranchButton(dialog.ParameterStr0, dialog.ParameterInt0);
+                }
+                if (dialog.ParameterStr1 !== undefined && dialog.ParameterStr1 !== '' && dialog.ParameterInt1 !== undefined) {
+                    html += createBranchButton(dialog.ParameterStr1, dialog.ParameterInt1);
+                }
+                if (dialog.ParameterStr2 !== undefined && dialog.ParameterStr2 !== '' && dialog.ParameterInt2 !== undefined) {
+                    html += createBranchButton(dialog.ParameterStr2, dialog.ParameterInt2);
+                }
+                if (dialog.ParameterStr3 !== undefined && dialog.ParameterStr3 !== '' && dialog.ParameterInt3 !== undefined) {
+                    html += createBranchButton(dialog.ParameterStr3, dialog.ParameterInt3);
+                }
+
+                html += `</div>`;
+            } else if (dialog.script === 'Next?') {
+                // Conditional branch (Next?)
+                const nextIds = nextValue ? nextValue.split('/') : [];
+                if (nextIds.length > 1) {
+                    html += `<div class="branch-options">
+                        <div class="branch-title">条件分支 / Conditional Branch:</div>`;
+
+                    nextIds.forEach((nextId, idx) => {
+                        const label = dialog[`ParameterStr${idx}`] || `选项 ${idx + 1}`;
+                        html += createBranchButton(label, parseInt(nextId));
+                    });
+
+                    html += `</div>`;
+                } else if (nextIds.length === 1 && nextIds[0]) {
+                    html += createNextButton(parseInt(nextIds[0]));
+                } else {
+                    html += createEndButton();
+                }
+            } else if (nextValue) {
+                // Simple next
+                const nextIds = nextValue.split('/');
+                if (nextIds.length > 1) {
+                    // Multiple possible nexts without explicit branches
+                    html += `<div class="branch-options">
+                        <div class="branch-title">跳转选项 / Jump Options:</div>`;
+                    nextIds.forEach(nextId => {
+                        const targetDialog = dialogMap[parseInt(nextId)];
+                        const label = targetDialog ? (targetDialog.cnWords || targetDialog.cnAction || `ID: ${nextId}`) : `ID: ${nextId}`;
+                        html += createBranchButton(label.substring(0, 30) + (label.length > 30 ? '...' : ''), parseInt(nextId));
+                    });
+                    html += `</div>`;
+                } else {
+                    html += createNextButton(parseInt(nextIds[0]));
+                }
+            } else {
+                // No next or next=0 - dialog ends
+                html += createEndButton();
+            }
+
+            dialogContent.innerHTML = html;
+        }
+
+        function createBranchButton(text, targetId) {
+            return `<button class="branch-btn" onclick="showDialog(${targetId})">
+                ${text}
+                <span class="option-id">→ ${targetId}</span>
+            </button>`;
+        }
+
+        function createNextButton(targetId) {
+            return `<button class="next-btn" onclick="showDialog(${targetId})">
+                继续 / Continue →
+            </button>`;
+        }
+
+        function createEndButton() {
+            return `<div class="dialog-end">
+                <h3>对话结束 / Dialog End</h3>
+                <p>已到达对话末尾</p>
+                <p>You have reached the end of this dialog.</p>
+                <button class="restart-btn" onclick="restart()">重新开始 / Restart</button>
+            </div>`;
+        }
+
+        function showDialogEnd() {
+            dialogContent.innerHTML = createEndButton();
+        }
+
+        function restart() {
+            history = [];
+            updateHistory();
+            if (dialogData.length > 0) {
+                showDialog(dialogData[0].id);
+            }
+        }
+
+        function updateHistory() {
+            historyList.innerHTML = history.map((h, idx) => `
+                <div class="history-item" onclick="showDialog(${h.id})">
+                    <div class="h-speaker">${h.speaker}</div>
+                    <div class="h-text">${h.text}</div>
+                </div>
+            `).join('');
+        }
+
+        // Jump to specific dialog by ID (for console debugging)
+        window.jumpTo = function(id) {
+            if (dialogMap[id]) {
+                showDialog(id);
+            } else {
+                console.log('Dialog ID not found:', id);
+            }
+        };
+    </script>
+</body>
+</html>

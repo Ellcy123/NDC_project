@@ -1,0 +1,321 @@
+# ============================================================
+# Loop 2 — 威胁链条 + 连号钞票
+# 本循环说谎者: Leonard Ross
+# 核心揭示: 湖滨信托掠夺性贷款，Leonard-Vinnie催收共谋
+# 前序事件: Morrison被拆穿，Frank身份确认，匿名电话曝光
+# 时间: 11/7 10:00 白天
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家上下文（Player Context）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Frank为什么被杀？谁在威胁南区？"
+    secondary:
+      - "匿名电话是谁打的？"
+      - "Morrison交易条件是否值得信任？"
+  known_facts:
+    - "死者是Frank Kowalski（73岁退休工人），不是Margaret"
+    - "Morrison故意谎报死者身份，出于私怨+匿名电话施压"
+    - "Margaret下落不明（失踪）"
+    - "尸检报告尚未出具，但骨骼结构不像女性"
+  new_directions:
+    - direction: "南区威胁网络"
+      trigger: "Emma调查发现O'Hara被威胁、Frank住在鞋坊旁边"
+    - direction: "银行贷款"
+      trigger: "场景道具催款单指向湖滨信托银行"
+  post_expose_knowledge:
+    - "Leonard真名Russo，雇佣Vinnie暴力催收"
+    - "连号钞票证明Leonard-Vinnie分赃"
+    - "Leonard威胁：没搜查令你碰不到银行记录"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+
+opening:
+  scene_id: 2021
+  characters: [Zack, Emma]
+  purpose: Emma展示调查地图，规划前往O'Hara家/赌场/银行
+  talk: emma_002
+
+  emma_002:
+    is_liar: false
+    motive: 交换信息——她在Zack审讯Morrison期间独立调查了南区
+    mindset: 警觉且有原则，担心Zack会为了救Margaret而替Morrison卖命
+
+    knows:
+      - Morrison在说谎（不意外）
+      - Frank住在第15街
+      - O'Hara（寡妇带女儿）住在Frank隔壁，不肯给Emma开门，很害怕
+      - 鞋坊就在Frank家旁边
+      - 纵火犯烧了鞋坊但没碰Frank的家——目标可能是Margaret（误伤Frank），也可能本来就是冲Frank去的
+
+    does_not_know:
+      - O'Hara被谁威胁
+      - 银行贷款的具体情况
+      - Leonard和Vinnie的存在
+
+    lie: null
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+
+scenes:
+  - id: 2202
+    name: Margaret鞋坊-店铺区
+
+  - id: 2203
+    name: Margaret鞋坊卧室区
+
+  - id: 2206
+    name: Frank和O'Hara家门口
+    evidence:
+      - id: 2201
+        name: Frank的怀表
+        note: 关键证据
+      - id: 2203
+        name: Frank门口的牛奶
+      - id: 2204
+        name: 黑手党便条
+        note: 关键证据
+      - id: 2206
+        name: 湖滨信托银行催款单
+        note: 关键证据，可分析
+      - id: 2207
+        name: O'Hara的贷款钞票
+        note: 关键——崭新连号$20面额A73625900-914B（缺905-908），指证Round 2关键证据
+      - id: 2209
+        name: 威胁便条
+        note: 关键证据
+    npcs:
+      ohara_001:
+        talk: ohara_001
+        is_liar: false
+        motive: 没有主动动机——非常害怕，不想跟陌生人说话。但提到钞票和Frank的变化时忍不住倾诉
+        mindset: 高度警惕、不信任。反复看门外，催促Zack快走。只在涉及自身经历（钞票、Frank近况）时才松口
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → ohara
+
+        active_topics: [frank(基础背景), loan(连号钞票+借贷经过)]
+        withheld_topics: [rose, frank(举报部分), neighborhood]
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "场景道具催款单"  # 7
+          - "Frank是死者，基础背景调查"  # 6
+          - "Emma说O'Hara被威胁不开门——但O'Hara不愿展开"  # 5
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2091003  # Frank最近半年的异常
+          - 2091005  # 崭新连号钞票
+          - 2091006  # 钞票序列号
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: source
+            content: "O'Hara描述上门催收的人：一个金发年轻人带着一个意大利壮汉"
+            note: "L3 danny_001 quiz#005考这个"
+
+  - id: 2207
+    name: 赌场
+    evidence:
+      - id: 2208
+        name: Vinnie的钞票
+        note: 关键——3张$20美钞，序列号A73625905B、906B、908B（跳过907B），与O'Hara钞票缺失序列吻合。可分析→派生2702
+      - id: 2211
+        name: 吧台上的旧报纸
+      - id: 2213
+        name: Vinnie催债小本子
+        note: 关键——记录地址和日期，含"L.R.给的地址"，指证Round 3关键证据
+    npcs:
+      tony_001:
+        talk: tony_001
+        is_liar: false
+        motive: 没有主动动机——Zack来找他问Frank。通过鸡尾酒测试后愿意聊
+        mindset: 放松但警惕。在自己的地盘上有安全感，但不会说太多
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → tony
+
+        active_topics: [vinnie]
+        withheld_topics: []  # Tony是观察者，无需保留
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "O'Hara描述了催收的意大利人→赌场可能有线索"  # 8
+          - "O'Hara拿到连号钞票→Vinnie是否也用新钞"  # 7
+          - "O'Hara提过Frank的日常但没提过赌场——Tony是唯一知道Frank去赌场的人"  # 5
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2111001  # Vinnie口头禅"今天又赚了一笔"
+          - 2111002  # 南区好几家老住户最近被逼搬走，都欠了Moore银行的钱
+          - 2111003  # Vinnie下午两三点来，待一小时
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: source
+            content: "SC2207酒吧配方卡上写着招牌鸡尾酒Southside"
+            note: "场景道具——本循环tony_001 quiz#003考这个"
+          - type: quiz
+            node: "#003"
+            question: "酒吧菜单上的鸡尾酒叫什么名字？"
+            answer: "Southside（来源：L2场景2207酒吧配方卡道具）"
+
+      vinnie_001:
+        is_liar: false  # 非本循环指证对象，但在说谎
+        motive: 没有动机跟Zack说话——是被Zack堵住的。想尽快脱身
+        mindset: 被突然搭话，不舒服但保持冷硬。在自己地盘上不怕Zack
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → vinnie
+
+        active_topics: [identity]
+        withheld_topics: [crime]  # L5指证时才释放
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "O'Hara描述的催收者外貌匹配眼前这个人"  # 8
+          - "被动触发（口误），非主动提问"  # null
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2051001  # Vinnie声称最近2-3个月没去过Frank那儿
+          - 2051002  # Vinnie看到Leonard照片时口误"Rus..."
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: source
+            content: 看到Leonard照片时口误说出"Russo"——Leonard的改名前姓氏
+            note: "关键口误——L2 moore_001 #002 考这个"
+
+  - id: 2208
+    name: 银行贵宾室
+    npcs:
+      moore_001:
+        talk: moore_001
+        is_liar: false  # 本循环说谎者是Leonard，但Moore也在隐瞒
+        motive: 维护银行形象，把Zack打发走，必要时甩锅给Leonard
+        mindset: 居高临下，不觉得一个南区侦探能动摇银行。对穷人充满蔑视
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → moore
+
+        active_topics: [frank_loan, leonard(部分：经手贷款+改名)]
+        withheld_topics: [scheme, leonard(档案空白/钥匙特权/业务增长)]
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Frank是死者+欠银行钱"  # 7
+          - "催款单上有银行名，需要找到经办人"  # 8
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2061001  # Moore声称Frank贷款手续合法（$3,200，协议条款完全合法）
+          - 2061002  # 协议抬头暴露空壳公司（Moore Investment Company而非Moore Bank）
+          - 2061003  # Leonard是我最得力的催收员，南区贷款基本都是他在跑
+          - 2061004  # Moore确认Frank欠款3000+
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: quiz
+            node: "#002"
+            question: "Leonard的真实姓氏是什么？"
+            answer: "Russo（来源：L2 vinnie_001的口误）"
+
+  - id: 2209
+    name: 银行大厅
+    npcs:
+      leonard_001:
+        talk: leonard_001
+        is_liar: true  # 本循环指证对象
+        motive: 维护自己"模范银行员工"的形象，让Zack相信贷款合规、自己清白
+        mindset: 从容自信，认为自己的伪装完美。用礼貌和共情话术控制对话节奏
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → leonard
+
+        active_topics: [identity(部分), crime_network(部分：利率/Vinnie雇佣)]
+        withheld_topics: [murder, crime_network(Moore/Miller)]
+        # lie 详见下方 expose 段落
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "O'Hara说利滚利翻倍→经办人知道详情"  # 8
+          - "Vinnie口误后想了解指挥链"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2041001  # ⚠谎言: Leonard声称不认识Russo/Vinnie
+          - 2041002  # Leonard原名Russo，1915年改名为Ross（Moore银行入职档案）
+          - 2041003  # Leonard声称银行工作十年，负责南区贷款催收
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: quiz
+            node: "#004"
+            question: "Frank住在什么地方附近？"
+            answer: "南区33号（来源：L1 emma_001 Morrison对话 202001009）"
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+
+expose:
+  target: Leonard Ross/Russo (204)
+  total_rounds: 3
+
+  round_1:
+    lie: "我叫Leonard Ross。我不认识什么Russo，也不认识什么Vinnie。"
+    lie_source: 证词 2041001
+    usable_evidence:
+      - id: 2051002
+        name: Vinnie口误（证词）
+        用途: Vinnie看到Leonard照片时说出"Russo"而非"Ross"
+      - id: 2041002
+        name: Leonard曾用名（Moore提供）
+        用途: Moore确认Leonard入职档案有改名文件，原名Russo
+    result: Leonard承认童年认识Vinnie，但声称"现在没有任何往来"
+
+  round_2:
+    lie: "我和Vinnie之间不存在任何金钱往来。一分钱都没有。"
+    lie_source: Leonard的新谎言（Round 1后退守）
+    usable_evidence:
+      - id: 2207
+        name: O'Hara的贷款钞票
+        用途: 连号序列A73625900B-914B，其中905-908缺失
+      - id: 2208
+        name: Vinnie的钞票
+        用途: 3张$20美钞，序列号A73625905B、906B、908B——与O'Hara钞票缺失序列吻合
+    result: 同一次取款分成两份——一份给借款人，一份作为Vinnie的抽佣。Leonard承认"偶尔让Vinnie跑跑腿"
+
+  round_3:
+    lie: "我借了他一点钱，让他去帮忙催收而已。这在行业里很常见。"
+    lie_source: Leonard的新谎言（Round 2后继续缩小）
+    usable_evidence:
+      - id: 2111001
+        name: Tony证词——"今天又赚了一笔"
+        用途: Vinnie每次付账都说这句话——不像还债，像领工资
+      - id: 2213
+        name: Vinnie催债小本子
+        用途: 系统性记录地址/日期，含备注"L.R.给的地址有问题"（L.R.=Leonard Russo）
+    result: |
+      Leonard承认系统性雇佣Vinnie催收。
+      但威胁Zack："你没有搜查令，银行的内部记录你连碰都碰不到。"
+
+doubts:
+  - id: 2201
+    text: "Leonard和Vinnie是什么关系？"
+    unlock_condition: "testimony:2051002 + testimony:2041002"
+  - id: 2202
+    text: "连号钞票证明了什么？"
+    unlock_condition: "item:2207 + item:2208"
+  - id: 2203
+    text: "Vinnie的收入来源是什么？"
+    unlock_condition: "testimony:2111001 + item:2213"

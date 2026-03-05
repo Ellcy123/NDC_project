@@ -1,0 +1,266 @@
+# ============================================================
+# Loop 1 — 残酷的身份确认
+# 本循环说谎者: Morrison
+# 核心揭示: 死者不是Margaret，是Frank Kowalski；Morrison腐败渎职
+# 前序事件: Unit 1结束后，Zack和Emma接到消息赶到Margaret鞋坊
+# 时间: 1925年11月6日 约21:00 夜晚
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "死者真的是Margaret吗？"
+    secondary:
+      - "Morrison为什么这么急着结案？"
+      - "火灾是意外还是人为？"
+  known_facts: []  # L1，玩家什么都不知道
+  new_directions:
+    - direction: "婚戒矛盾"
+      trigger: "尸体手指无婚戒 + 相册中Margaret从不摘 + 首饰盒空了 + 现场无金属残留"
+    - direction: "Morrison判断可疑"
+      trigger: "Morrison声称有'尸检调查信息'，但Foster说报告尚未完成、连性别都无法确定"
+  post_expose_knowledge:
+    - "死者是Frank Kowalski（73岁退休工人），不是Margaret"
+    - "Morrison出于蓝月俱乐部栽赃案被揭发的私怨，故意谎报死者身份"
+    - "Morrison收到匿名电话：'不要多管Margaret Brennan的事'"
+    - "Margaret下落不明，疑被绑架"
+    - "Morrison提出交易：Zack查Frank死因给他一个结案答案，他才去查Margaret下落"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: 鞋坊一楼(1F) → 🎬火灾
+# Zack抵达火灾现场，Morrison说"死者应该就是她"，Zack崩溃，
+# Emma冷静地指出Morrison的判断没有任何验证依据，引导Zack开始搜证。
+
+opening:
+  scene_id: 2001
+  characters: [Zack, Emma, Morrison]
+  purpose: "Morrison谎报死者身份 → Zack崩溃 → Emma以事实引导Zack冷静搜证"
+  talk: emma_001
+
+  emma_001:
+    is_liar: false
+    motive: "用事实帮Zack从崩溃中恢复——先给结论再讲依据，引导他质疑Morrison的草率判断"
+    mindset: "以结论带分析的职业惯性——心里担心Margaret，但绝不在没有证据时下结论"
+
+    knows:
+      - "鞋坊着火，里面有一具严重烧焦的尸体"
+      - "Morrison声称死者是Margaret，但没做任何身份核实"
+      - "Morrison说'老房子电线老化'就想结案，连现场都没认真看"
+      - "Morrison的人只拍了照就准备收队"
+      - "Foster是辖区法医，尸检归他管不归Morrison管"
+
+    does_not_know:
+      - "死者的真实身份（Frank Kowalski）"
+      - "Morrison收到过匿名电话"
+      - "Frank的钱包在废墟玄关处幸存"
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur:
+      - type: source
+        content: "Morrison提到鞋坊位于南区33号"
+        note: "L2 leonard_001 quiz#004 考这个"
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L1:
+#   鞋坊一楼(1F)  → 🎬火灾 → 🔓搜证
+#   鞋坊卧室区    → 🔓自由探索
+#   警局          → ⚔️指证(Morrison)
+#   警局外/街道   → 🔓首次解锁 → 🎭结尾
+#
+# 场景ID来源: 证据设计文档 SC2001~SC2005
+
+scenes:
+  # ── SC2001 鞋坊一楼（开篇火灾 → 搜证） ──
+  # 证据设计区分"状态1"(SC2001:火灾现场)和"状态2"(SC2002:搜证)
+  # 开篇后玩家可自由搜索，两种状态的证据均可获得
+  - id: 2001
+    name: "Margaret鞋坊-店铺区"
+    evidence:
+      - id: 2101
+        name: "尸体手指照片"
+        note: "关键——死者左手特写，无名指无婚戒、无佩戴痕迹（Expose R1用）"
+      - id: 2104
+        name: "现场地面照片"
+        note: "关键——尸体周围地面特写，未发现任何金属戒指残留（Expose R1用）"
+      - id: 2106
+        name: "鞋坊营业记录"
+        note: "场景道具——11/6最后一条取件记录'F.K.'，暗示Frank当天来过鞋坊"
+      - id: 2107
+        name: "Frank的拐杖"
+        note: "场景道具——橡木拐杖，握柄刻字'F.K.'，靠在墙角"
+
+  # ── SC2003 鞋坊卧室区 ──
+  - id: 2003
+    name: "Margaret鞋坊-卧室区"
+    evidence:
+      - id: 2102
+        name: "Margaret的相册"
+        note: "关键——3张照片（1893新婚/1898全家福/1924鞋坊），每张都可见Margaret佩戴婚戒（Expose R1用）"
+      - id: 2103
+        name: "空的首饰盒"
+        note: "关键——胡桃木首饰盒，左侧戒指凹槽空置（Expose R1用）"
+      - id: 2108
+        name: "Margaret的通信小本"
+        note: "关键——烧焦残页仅存'Frank Kowalski'和南区地址（部分烧毁）"
+      - id: 2109
+        name: "Patrick的教师证"
+        note: "场景道具——Zack父亲的教师执照，1894年因'从事危害社会稳定活动'被吊销"
+      - id: 2110
+        name: "Patrick的遗物匣"
+        note: "场景道具——工会徽章(1894)、报纸社论剪报、手写纸条'我为正义而战，无愧于心'"
+
+  # ── SC2004 警局外（电话亭） ──
+  - id: 2004
+    name: "警局外（电话亭）"
+    evidence:
+      - id: 2105
+        name: "Foster口供记录"
+        note: "关键——Emma记录的Foster电话内容：尸检报告未完成，连性别都无法确定（Expose R2用）"
+      - id: 2112
+        name: "蓝月亮酒吧事件报纸"
+        note: "场景道具——《艾斯弗德论坛报》1925.11.5头条：Zack侦破蓝月亮枪击案，Morrison为警方发言人"
+    npcs:
+      emma_foster:
+        # ── 基本信息 ──
+        talk: emma_foster
+        is_liar: false
+        motive: "转述Foster的法医初检发现——给Zack一个专业依据去反驳Morrison的草率判断"
+        mindset: "强压住内心的激动——Foster的结果暗示死者可能不是Margaret，但Emma不敢在没有确证前给Zack希望"
+
+        # ── 1. NPC 已知信息 ──（模式 D：一次性 NPC）
+        knows:
+          - "Foster初步骨骼分析：死者可能是男性"
+          - "尸体烧损严重到光看外观连性别都分不出"
+          - "尸检报告最快明天才能完成，现在没有任何正式结论"
+          - "起火点在一楼店面中央，地下室烧损较轻"
+          - "Morrison在骗人——要么知道死者不是Margaret，要么根本没查过就下了结论"
+
+        does_not_know:
+          - "死者的真实身份（Frank Kowalski）"
+          - "Frank被谋杀——钝器伤，死在火灾之前"
+          - "Margaret被绑架"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Morrison说死者是Margaret却没验证——Zack急需法医的专业判断来确认或推翻"  # 9
+          - "火灾是意外还是纵火？需要Foster对起火点的专业分析"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2021001  # Foster初步骨骼分析：死者可能是男性；尸检报告尚未完成
+          - 2021002  # Foster判断：起火点在一楼店面中央，地下室烧损较轻
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 警局 → ⚔️指证(Morrison)
+# 指证设计: 2轮（婚戒矛盾 → 法医口供戳穿虚张声势）
+
+expose:
+  target: "Morrison (03)"
+  total_rounds: 3
+
+  morrison:
+    # ── 基本信息 ──
+    talk: loop1_morrison
+    is_liar: true
+    motive: "省事结案 + 报复Zack（蓝月俱乐部案中Zack揭发了Morrison迷晕栽赃的行为） + 匿名电话让他更不想管"
+    mindset: "懒散的嘲讽——一个私家侦探能翻什么天？被质疑时搬出'程序合法性'的官话挡驾"
+
+    # ── 1. NPC 已知信息 ──
+    # 知识池见 npc_knowledge_pools.yaml → morrison
+    active_topics: [case]
+    withheld_topics: []  # Morrison知识池只有case一个主题，L1 Expose中全部释放
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose对象
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 2031001  # ⚠谎言: "死者应该就是Margaret Brennan，我基于现场情况做出的判断"
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+  # ── 第一轮：婚戒矛盾 ──
+  # 婚戒证据组前三件（2101+2102+2103）建立矛盾
+  round_1:
+    lie: "死者应该就是Margaret，我基于现场情况做出的判断"
+    lie_source: "证词 2031001"
+    usable_evidence:
+      - id: 2101
+        name: "尸体手指照片"
+        用途: "死者手指无婚戒，无佩戴痕迹"
+      - id: 2102
+        name: "Margaret的相册"
+        用途: "3张照片横跨30年，Margaret始终佩戴婚戒——从不摘下"
+      - id: 2103
+        name: "空的首饰盒"
+        用途: "首饰盒戒指凹槽空置——戒指既不在手上也不在盒里"
+    result: |
+      Morrison无法解释婚戒去向：
+      - 手上没戒指 + Margaret从不摘 + 首饰盒也空了 = 戒指去哪了？
+      - Morrison搪塞反驳："火灾很猛烈，戒指可能掉在了现场或被烧毁了"
+
+  # ── 第二轮：真金不怕火炼 ──
+  # 用2104击穿Morrison的"火灾烧毁戒指"搪塞
+  round_2:
+    lie: "火灾很猛烈，戒指可能掉在了现场或被烧毁了"
+    lie_source: "Morrison对Round 1婚戒矛盾的搪塞"
+    usable_evidence:
+      - id: 2104
+        name: "现场地面照片"
+        用途: "真金不怕火炼（黄金熔点1064°C），废墟中未发现任何金属残留——火灾不可能烧毁戒指"
+    result: |
+      物理事实击穿"烧毁"借口：
+      - 黄金熔点1064°C，普通建筑火灾远不及此
+      - 尸体周围地面仔细搜索过，没有任何金属残留
+      - Morrison被迫承认无法解释，转为虚张声势："我有尸检调查信息"
+
+  # ── 第三轮：法医口供戳穿虚张声势 ──
+  # 用Foster口供（2105）证明Morrison根本没有法医依据
+  round_3:
+    lie: "我有尸检调查信息可以证明死者身份"
+    lie_source: "Morrison虚张声势（Round 2后退守）"
+    usable_evidence:
+      - id: 2105
+        name: "Foster口供记录"
+        用途: "Foster说尸检报告最快明天出、连性别都无法确定——Morrison根本没有法医依据"
+    result: |
+      Morrison彻底崩溃：
+      - 承认出于蓝月俱乐部案私怨故意误导Zack（Episode 1栽赃陷害被揭发的恩怨）
+      - 揭露收到匿名电话"不要多管Margaret Brennan的事"
+      - 确认死者是Frank Kowalski（73岁退休工人）——钱包在玄关处幸存可辨认
+      - 获得证据：2111（Frank的钱包，证据袋装）
+      - Morrison摆烂提出交易：Zack查Frank死因给他一个能结案的答案，他去查Margaret下落
+      - Morrison威胁：不配合就拖延命案，不查Margaret失踪
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 2001
+    text: "死者真的是Margaret吗？——手上没戒指，首饰盒空了，现场也没有金属残留"
+    unlock_condition: "item:2101 + item:2102 + item:2103"
+  - id: 2002
+    text: "Morrison声称的'尸检调查信息'可信吗？——Foster说报告还没出"
+    unlock_condition: "testimony:2031001 + item:2105"
+  - id: 2003
+    text: "Morrison为什么要误导身份确认？"
+    unlock_condition: "item:2112 + testimony:2031001"

@@ -1,0 +1,340 @@
+# ============================================================
+# Loop 4 — Rose的黄昏之爱
+# 本循环说谎者: Danny（Expose对象）
+# 核心揭示: Frank和Rose相恋五年（非大半年），贷款是为了爱不是赌博
+# 前序事件: Moore空壳公司被拆穿，遗嘱曝光（全部留给Rose），Danny暴走
+# 时间: 11/7 17:30 白天
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Rose是谁？她和Frank什么关系？Danny的指控成立吗？"
+    secondary:
+      - "Leonard的三年从业空白是什么？"
+  known_facts:
+    - "遗嘱全留给Rose Martinez"
+    - "Moore空壳公司骗局（月息12%=年化289%）"
+    - "Danny不在遗嘱上"
+  new_directions:
+    - direction: "Rose的真实身份"
+      trigger: "遗嘱曝光，Danny指控Rose是骗子"
+    - direction: "物理证据验证居住时间"
+      trigger: "Danny说'大半年'vs需要独立验证"
+  post_expose_knowledge:
+    - "Rose和Frank相爱五年，贷款为修地下室"
+    - "Rose当场放弃继承"
+    - "Danny真实动机：失业+赌债+拆迁补偿"
+    - "保险箱钥匙→下一循环"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+
+opening:
+  scene_id: 2041
+  characters: [Zack, Moore]
+  purpose: Moore提供遗嘱副本，Danny对遗嘱不满
+  talk: emma_004
+
+  emma_004:
+    is_liar: false
+    motive: 交换隔夜情报——Moore的律师送来遗嘱副本，Danny在银行闹事，Leonard有三年空白
+    mindset: 高效、紧迫。连夜调查后很疲倦但不会表现出来
+
+    knows:
+      - Moore的律师把Frank遗嘱副本塞在Zack办公室门下
+      - Danny去湖滨信托砸椅子，大喊遗嘱是假的、Rose操纵签字
+      - Leonard的从业登记有三年空白——声称十年，公开记录只有七年
+      - Rose一直住在Frank的地下室（未烧毁的部分），在整理Frank的遗物
+
+    does_not_know:
+      - Leonard三年空白期干了什么
+      - Rose和Frank的具体相识过程
+      - Danny砸银行是真崩溃还是演戏
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+
+scenes:
+  - id: 2402
+    name: Margaret鞋坊-店铺区
+
+  - id: 2403
+    name: Margaret鞋坊卧室区
+
+  - id: 2406
+    name: Frank和O'Hara家门口
+    npcs:
+      ohara_003:
+        talk: ohara_003
+        is_liar: false
+        motive: 为Frank和Rose说话——她是这条街上最了解他们关系的人
+        mindset: 温暖、坚定。听到Danny说Rose"大半年前才来"时愤怒（"他说大半年？那孩子是真不要脸了！"）
+        # 知识池见 npc_knowledge_pools.yaml → ohara
+
+        active_topics: [frank, rose, neighborhood]
+        withheld_topics: []  # 本循环全部释放
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "遗嘱曝光→Rose是核心悬念→O'Hara是最了解的邻居"  # 10
+          - "补充背景"  # 5
+          - "补充背景"  # 4
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2091004  # Rose至少四五年前就来到这条街
+          - 2071005  # Frank和O'Malley家是老邻居
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: quiz
+            node: "#013"
+            question: "Danny声称Rose在Frank身边多久了？"
+            answer: "大半年前（来源：L3 danny_001 207001201）"
+
+  - id: 2408
+    name: 银行贵宾室
+
+  - id: 2409
+    name: 银行大厅
+
+  - id: 2411
+    name: Frank家里
+
+  - id: 2412
+    name: Danny的房间
+    evidence:
+      - id: 2415
+        name: 火灾新闻报纸
+      - id: 2416
+        name: Danny经济状况证据
+        note: 关键——失业、赌债、房子在拆迁区
+      - id: 2417
+        name: 满汽油桶
+      - id: 2423
+        name: 空怀表盒
+      - id: 2424
+        name: Danny借条
+
+  - id: 2413
+    name: 银行档案室
+    evidence:
+      - id: 2407
+        name: 贷款申请表
+        note: 关键——用途栏"房屋维修——Margaret的地下室"
+      - id: 2412
+        name: 遗嘱附加手写条款
+        note: 关键——"若Rose不愿接受，全部捐给工人互助会"
+
+  - id: 2414
+    name: Leonard办公室
+    npcs:
+      leonard_003:
+        talk: leonard_002
+        is_liar: false
+        motive: 用"疲惫的打工人"人设争取Zack同情，把自己塑造成体制的受害者
+        mindset: 放弃了L3的友好伪装，转为"我们都是被雇来干活的人"的共情策略。比之前更复杂
+        # 知识池见 npc_knowledge_pools.yaml → leonard
+
+        # ── 1. NPC 已知信息 ──
+        awareness:  # 以下为L4新获知信息，基础知识见 npc_knowledge_pools.yaml → leonard
+          - content: Moore被指证后可能会甩锅给自己
+            trigger: L3 Moore被Expose
+          # 共情策略已体现在 motive/mindset 中，不重复
+        active_topics: [identity, crime_network]
+        withheld_topics: [murder]
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "遗嘱曝光→Rose是核心悬念"  # 9
+          - "遗嘱曝光→贷款到底干什么用的"  # 7
+          - "暂时不是焦点"  # 5
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2041006  # Leonard承认见过Rose
+          - 2041004  # Rose看完合同条款后眼神会变
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: quiz
+            node: "#012"
+            question: "档案室发现的Frank贷款合同真实月利率是多少？"
+            answer: "月利率百分之十二（来源：L3 档案室发现）"
+
+  - id: 2415
+    name: Margaret鞋坊地下室
+    evidence:
+      - id: 2401
+        name: 房间旧沙发
+        note: 场景道具——磨损程度=3-5年使用，指证Round 1关键证据
+      - id: 2402
+        name: 地下室褪色窗帘
+        note: 花色严重褪色，至少悬挂三到五年
+      - id: 2403
+        name: 地板固定位置磨痕
+        note: 数年磨损，匹配Rose鞋码
+      - id: 2404
+        name: 照片墙
+      - id: 2408
+        name: 房间维修收据
+        note: 关键——基础装修费用，合理范围
+      - id: 2409
+        name: Margaret租赁协议
+        note: 关键——Margaret免费借地下室给Frank和Rose住
+      - id: 2418
+        name: 枯萎的玫瑰花束
+        note: 可分析→派生2705
+      - id: 2419
+        name: 水杯
+      - id: 2421
+        name: Frank的银戒指
+        note: 关键——内刻"F & R 1940"，五年恋情信物。可分析→派生2704
+      - id: 2422
+        name: 空的戒指盒
+      - id: 2425
+        name: 地下室钥匙
+    npcs:
+      rose_001:
+        talk: rose_001
+        is_liar: false
+        motive: 为Frank说话、说出真相。对Zack完全透明——除了Leonard私下说的那句话
+        mindset: 悲伤但有尊严。不回避任何问题，不为自己辩护（事实本身就是辩护）
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → rose
+
+        active_topics: [love, danny, witness(自然提及——叙述当晚经历时一笔带过)]
+        withheld_topics: [witness_details(完整外貌/时间等细节L5追问时才释放)]
+        # 说明: Rose讲述11/6当晚经历时自然提到"我准备去鞋坊找Frank，
+        # 在路上看到有人从鞋坊出来"，但当时对话焦点在Danny诬陷和爱情故事上，
+        # 这条信息被一笔带过。L5时Zack回想起来主动追问细节。
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "遗嘱全留给她→必须搞清关系"  # 10
+          - "贷款为了什么→Rose知道吗"  # 8
+          - "Danny指控她是骗子"  # 6
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2081006  # Rose1920年在医院认识Frank
+          - 2081001  # Rose和Frank相识五年
+          - 2081007  # Frank最近焦虑发呆，不肯说原因
+          - 2081002  # Rose反对贷款
+          - 2081003  # Rose愿意捐给工人互助会
+          - 2081004  # 约九点，Rose去鞋坊路上看到有人从鞋坊出来（一笔带过，未详述）
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+
+expose:
+  target: Danny Kowalski (207)
+  total_rounds: 3
+  design_note: "三轮按'物证否定时间线 → 文件证据否定动机 → 当面对质否定核心指控'递进"
+
+  danny:
+    talk: loop4_danny
+    is_liar: true
+    motive: 保住继承权——如果能证明Rose是骗子，遗嘱就可以被推翻
+    mindset: 被逼到墙角（遗嘱曝光后他公开暴走），但仍然觉得"血缘=正义"
+    # 知识池见 npc_knowledge_pools.yaml → danny
+
+    # ── 2. 玩家询问意图 ──
+    # Danny是Expose对象，玩家在指证中被动回应而非主动提问
+    player_inquiry: null
+    # lie 详见下方 expose round_1 ~ round_3
+
+  round_1:
+    lie: "那个女人才认识我叔叔不到一年！"
+    lie_source: 证词 2071001
+    usable_evidence:
+      - id: 2401
+        name: 房间旧沙发
+        用途: 沙发磨损程度=3-5年，扶手缝补针脚是护士手法
+      - id: 2402
+        name: 褪色窗帘
+        用途: 花色严重褪色=至少悬挂三到五年阳光照射
+      - id: 2403
+        name: 地板磨痕
+        用途: 固定位置磨损匹配Rose鞋码，从楼梯到床铺区域的路径
+    result: Danny退守——"就算她住了五年又怎样！这恰恰说明她花了五年时间来算计我叔叔！"
+
+  round_2:
+    lie: "Rose骗我叔叔去贷款！六百美元！她把我叔叔害得倾家荡产！"
+    lie_source: Danny的新谎言（Round 1后转向贷款）
+    usable_evidence:
+      - id: 2407
+        name: 贷款申请表
+        用途: 用途栏写的是"房屋维修——Margaret的地下室"
+      - id: 2408
+        name: 房间维修收据
+        用途: 基础装修费用，合理范围
+      - id: 2409
+        name: Margaret租赁协议
+        用途: Margaret免费借地下室给Frank和Rose住
+      - id: 2081002
+        name: Rose证词
+        用途: Rose反对贷款，Frank坚持"不能让女人养自己"
+    result: Danny再退守——"有恩必报？叔叔借六百块给别人修房子，自己欠一屁股债——这叫被人利用！"
+
+  round_3:
+    lie: "Rose就是为了遗产！她想拿走叔叔的一切！"
+    lie_source: Danny的最后防线
+    usable_evidence:
+      - id: 2412
+        name: 遗嘱附加条款
+        用途: Frank写了"若Rose不愿接受，捐给工人互助会"——Frank知道Rose会拒绝
+      - id: 2081003
+        name: Rose证词——愿意捐赠
+        用途: Rose早就对邻居说过会捐出去
+      - id: 2414
+        name: Rose放弃继承声明
+        用途: Rose当场签字放弃继承权
+      - id: 2416
+        name: Danny经济状况证据
+        用途: 失业、赌债、房子在拆迁补偿区
+    result: |
+      Rose本人出场，当着Danny的面签署放弃继承声明。
+      Danny真实动机曝光：失业+赌债，房子在拆迁区有补偿款。
+      Danny崩溃，声称案发当晚在酒吧（不在场证明待验证）。
+
+  派生证据:
+    - id: 2704
+      name: Frank的银戒指（分析后）
+      source: 2421
+    - id: 2705
+      name: 鲜活的玫瑰花束
+      source: 2418 分析获取
+    - id: 2706
+      name: Frank的怀表和表盒
+      source: 2201（L2怀表）+ 2423（空表盒）合成
+
+doubts:
+  - id: 2401
+    text: "Rose和Frank认识多久了？"
+    unlock_condition: "item:2401 + item:2402 + item:2403"
+  - id: 2402
+    text: "贷款的真实用途是什么？"
+    unlock_condition: "item:2407 + item:2408 + item:2409"
+  - id: 2403
+    text: "遗嘱真的对Rose有利吗？"
+    unlock_condition: "item:2412 + testimony:2081003 + item:2414"
+  - id: 2404
+    text: "Danny争遗产的真实动机是什么？"
+    unlock_condition: "item:2416 + item:2412"
