@@ -169,9 +169,15 @@ scenes:
       - id: 2401
         name: "房间旧沙发"
         note: "关键——扶手磨损严重、坐垫凹陷，使用至少3-5年（Expose R1用）"
+      - id: 2402
+        name: "地下室褪色窗帘"
+        note: "关键——褪色明显，长期使用痕迹，悬挂至少3-5年（Expose R1用）"
+      - id: 2403
+        name: "地板固定位置磨痕"
+        note: "关键——特定位置深度磨痕，证明房间被长期固定使用（Expose R1用）"
       - id: 2404
         name: "照片墙"
-        note: "关键——5张照片横跨1920-1925.10.15，证明Frank和Rose关系五年（Expose R1用）"
+        note: "关键——5张照片横跨1920-1925.10.15，证明Frank和Rose关系五年（Expose R1补充）"
       - id: 2408
         name: "房间维修收据"
         note: "关键——1923年$600修缮（窗户/地板/墙面/沙发），付款人Frank Kowalski（Expose R2补充）"
@@ -219,7 +225,7 @@ scenes:
         testimony_ids:
           - 2091003  # O'Hara证实Rose至少四五年前就来到这条街，经常看到Rose去Frank家
           - 2091004  # O'Hara证词：邻居对Frank和黑人女性来往有议论，Rose后来不再公开露面
-          - 2091005  # O'Hara补充催收细节（L2因恐惧未说）：Leonard先来"好心提醒"，2-3天后Vinnie就出现
+          - 2091005  # O'Hara补充催收细节（L2因恐惧未说）：先来一个客客气气的人"好心提醒"，2-3天后就来一个凶狠的大块头
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -272,8 +278,8 @@ scenes:
         connoisseur:
           - type: quiz
             node: "#012"
-            question: "你翻了我的办公室？那你说说——法律规定的利率上限是多少？"
-            answer: "年化7%（来源：L3 SC2014证据2317——伊利诺伊州法律公告，消费者贷款年化利率上限7%）"
+            question: "州法规定贷款利率上限是多少？"
+            answer: "年化7%（来源：L3 SC2014证据2317——伊利诺伊州法律公告）"
 
   # ── 🔒 银行档案室（搜查令失效） ──
   - id: 2013
@@ -289,9 +295,6 @@ scenes:
   - id: 2012
     name: "Frank家次卧-Danny住处"
     evidence:
-      - id: 2414
-        name: "Rose放弃继承声明"
-        note: "关键——Rose在Expose R3戏剧性登场后当场签署（非搜证阶段获得）"
       - id: 2415
         name: "火灾新闻报纸"
         note: "场景道具——1925年9月南区火灾三人葬身，Danny红笔圈注'焦尸无人认领'"
@@ -347,16 +350,21 @@ expose:
   # Danny的Talk/证词见上方 scenes → SC2012 → danny_002
 
   # ── 第一轮：击破"时间"谎言 ──
-  # 旧沙发(2401) + 照片墙(2404) → 关系至少5年，不是"最近"
-  # 注：指证设计原用402(褪色窗帘)+403(地板磨痕)，但这两项无2xxx证据ID
-  #      用2404(照片墙，5张照片横跨1920-1925)替代，证明力更直接
+  # 旧沙发(2401) + 褪色窗帘(2402) + 地板磨痕(2403) → 长期使用证据
+  # 照片墙(2404) → 补充，直接证明关系五年
   round_1:
     lie: "Rose Martinez最近才勾引我叔叔，他老了判断力不行了！"
-    lie_source: "证词 2071002（跨循环/L3——Danny在L3声称Rose是'大半年前才出现的骗子'，L4升级为谎言）"
+    lie_source: "证词 2071001（L3 danny_001 ⚠谎言——Danny声称Rose'最近才勾引叔叔'）"
     usable_evidence:
       - id: 2401
         name: "房间旧沙发"
         用途: "扶手磨损严重、坐垫凹陷至少3-5年——不是'最近'能形成的痕迹"
+      - id: 2402
+        name: "地下室褪色窗帘"
+        用途: "窗帘褪色明显，悬挂至少3-5年——房间被长期使用"
+      - id: 2403
+        name: "地板固定位置磨痕"
+        用途: "特定位置深度磨痕——房间被长期、固定地使用，Margaret鞋坊在一楼，没理由长期使用地下室"
       - id: 2404
         name: "照片墙"
         用途: "5张照片从1920年公园野餐到1925.10.15房间合影——两人关系横跨五年"
@@ -392,8 +400,8 @@ expose:
       - Danny孤注一掷："那她图的就是遗产！遗嘱就是证据！"
 
   # ── 第三轮：击破"财产"诬陷 + 真实动机暴露 ──
-  # 遗嘱(2311跨循环/L3) + Danny经济证据(2416) + Rose放弃继承声明(2414)
-  # → Rose用行动证明清白，Danny贪婪本性暴露
+  # 遗嘱(2311跨循环/L3) + Danny经济证据(2416)
+  # → Rose突发登场用行动证明清白，Danny贪婪本性暴露
   round_3:
     lie: "Rose图遗产！遗嘱写得清清楚楚！一个墨西哥寡妇冲着房产来的！"
     lie_source: "Danny对Round 2的新谎言"
@@ -404,15 +412,12 @@ expose:
       - id: 2416
         name: "Danny经济状况证据"
         用途: "失业通知+信用卡逾期$105+当铺票据+借钱信件草稿——Danny才是缺钱的人"
-      - id: 2414
-        name: "Rose放弃继承声明"
-        用途: "Rose戏剧性登场，当场签署放弃继承——用行动击碎所有质疑"
     result: |
       Danny彻底崩溃：
       - 遗嘱附加条款证明Frank尊重Rose的选择权——不是"逼Rose接受"
       - Danny得意洋洋"口头不作数！她肯定反悔！没人会拒绝几千美元！"
-      - ★ Rose戏剧性推门登场，手持已准备好的放弃继承声明 ★
-      - Rose当场签署(2414)："Frank给我最珍贵的礼物，是这五年的爱。"
+      - ★ Rose戏剧性推门登场 ★
+      - Rose当场宣布放弃继承："Frank给我最珍贵的礼物，是这五年的爱。"
       - Danny经济状况暴露：失业9个月、信用卡逾期、手表戒指典当
       - Emma点破："Danny，你说'没人会拒绝几千美元'…你说的是你自己吧？"
       - 房子在Miller集团拆迁规划区——Danny才是图拆迁补偿的人
@@ -423,9 +428,8 @@ expose:
     name: "Rose推门登场签署放弃继承声明"
     trigger: "Expose R3进行中（Danny叫嚣'没人会拒绝几千美元'之后）"
     characters: [Rose, Zack, Emma, Danny]
-    purpose: "用行动彻底击碎Danny对Rose的所有诬陷——放弃继承声明(2414)当场签署"
+    purpose: "用行动彻底击碎Danny对Rose的所有诬陷——Rose当场宣布放弃继承"
     result: |
-      - 获得证据2414（Rose放弃继承声明）
       - Danny贪婪本性彻底暴露
       - Rose提供Frank保险箱线索——11/6当天计划做"非常冒险的事"（衔接L5）
 
@@ -436,10 +440,24 @@ expose:
 doubts:
   - id: 2010
     text: "Rose和Frank到底认识多久？——Danny说'大半年'，但地下室沙发磨损3-5年、照片横跨五年"
-    unlock_condition: "testimony:2071002 + item:2401"
+    unlock_condition: "testimony:2071001 + item:2401"
   - id: 2011
     text: "Frank的贷款是被Rose骗的还是自愿的？——备注栏写'鞋坊地下室维修'，收据$600全用于修缮"
     unlock_condition: "item:2303 + item:2408"
   - id: 2012
     text: "Danny自己的经济状况如何？——失业通知、逾期账单、典当票据、借钱信件草稿散落一地"
     unlock_condition: "item:2416 + testimony:2071004"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "2026-03-07 FAIL: 2 issues"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "PENDING"
+  expose: "PENDING"

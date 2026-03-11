@@ -53,7 +53,7 @@ player_context:
       trigger: "打火机在火灾现场保存'太完美'——暗示可能是事后放置"
   post_expose_knowledge:
     - "Vinnie'认罪'：声称自己纵火杀了Frank——但认罪存在致命破绽"
-    - "Vinnie声称'透过窗户看到Frank在床上睡觉后放火'——但验尸报告显示Frank死于钝器击打，不是火灾"
+    - "Vinnie声称'透过窗户看到Frank在床上睡觉后放火'——但Frank当晚计划去检察官举报，为什么会在店里睡觉？认罪细节可疑"
     - "打火机保存'太完美'——火灾现场不该有如此完好的金属物品，暗示事后放置"
     - "Vinnie对Mickey咆哮：'你出卖了Leo！'——Leo指向Leonard"
     - "Margaret在码头仓库被Mickey救出，虚弱但活着，暂时无法提供证词"
@@ -82,7 +82,7 @@ opening:
       - "L4揭露Rose和Frank五年真爱，Danny的诬陷被击碎"
       - "Rose提供保险箱线索：Frank 11/6准备做'非常冒险的事'"
       - "Rose在L4曾提到11/6当晚'去鞋坊路上看到有人出来'（一笔带过）"
-      - "Foster尸检更新：Frank死于钝器击打头部，不是火灾"
+      - "Foster的完整尸检报告尚未完成，初步结论待定"
       - "打火机侧面有'V'字——可能与Vinnie有关"
 
     does_not_know:
@@ -126,7 +126,7 @@ scenes:
     evidence:
       - id: 2501
         name: "火灾现场的打火机"
-        note: "关键——银色金属打火机，侧面'V'字刻痕，保存'太完美'（Expose R1用）"
+        note: "关键——银色金属打火机，侧面'V'字刻痕。L1搜证时不存在——Vinnie在L1之后返回现场故意放置，目的是被发现后替Leonard顶罪入狱。保存'太完美'本身就是伪造的证据。（Expose R1用）"
 
   # ── SC2011 Frank家内部（保险箱内容） ──
   - id: 2011
@@ -190,6 +190,34 @@ scenes:
             node: "#014"
             question: "Frank到底调查了多少个受害者？"
             answer: "十二个（来源：本循环SC2011证据2502——Frank举报材料'收集了12个受害者的证据'）"
+
+      vinnie_002:
+        # ── 基本信息 ──
+        talk: vinnie_002
+        is_liar: true
+        motive: "保护Leonard——在Expose被三重证据逼入死角后，选择用假认罪封死所有追问，替Leonard顶罪"
+        mindset: "从石头般的沉默到爆发——打火机+目击+Tony辨认三重打击下，与其被Zack追查到Leonard，不如自己认了"
+
+        # ── 1. NPC 已知信息 ──
+        # 知识池见 npc_knowledge_pools.yaml → vinnie
+        awareness:  # 以下为L5新获知信息
+          - content: "Zack在L2拆穿了自己和Leonard的雇佣关系"
+            trigger: "L2 Expose结果"
+          - content: "打火机被发现了——Zack来酒吧质问"
+            trigger: "L5搜证阶段"
+        active_topics: [identity(完整), crime(纵火——但声称杀人也是自己干的)]
+        withheld_topics: [crime(真相: Leonard杀了Frank，自己只负责善后)]
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry: null  # Expose对象
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2051003  # ⚠谎言: "最近？没有啊。Frank这几个月不怎么来店里，我至少两三个月没去他那附近了"
+          - 2051004  # Vinnie认罪证词（Expose中假认罪）："是我放的火！Frank是我杀的！透过窗户看到他在床上睡觉后放火"——L6 Expose R4用
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
 
   # ── 银行大厅（⏸️NPC对话） ──
   - id: 2009
@@ -260,33 +288,7 @@ expose:
   total_rounds: 1
   special_mechanism: false_confession  # Vinnie假认罪——掩护Leonard
 
-  vinnie:
-    # ── 基本信息 ──
-    talk: loop5_vinnie
-    is_liar: true
-    motive: "保护Leonard——在Expose被三重证据逼入死角后，选择用假认罪封死所有追问，替Leonard顶罪"
-    mindset: "从石头般的沉默到爆发——打火机+目击+Tony辨认三重打击下，与其被Zack追查到Leonard，不如自己认了"
-
-    # ── 1. NPC 已知信息 ──
-    # 知识池见 npc_knowledge_pools.yaml → vinnie
-    awareness:  # 以下为L5新获知信息
-      - content: "Zack在L2拆穿了自己和Leonard的雇佣关系"
-        trigger: "L2 Expose结果"
-      - content: "打火机被发现了——Zack来酒吧质问"
-        trigger: "L5搜证阶段"
-    active_topics: [identity(完整), crime(纵火——但声称杀人也是自己干的)]
-    withheld_topics: [crime(真相: Leonard杀了Frank，自己只负责善后)]
-
-    # ── 2. 玩家询问意图 ──
-    player_inquiry: null  # Expose对象
-
-    # ── 3. 可提取证词 ──
-    testimony_ids:
-      - 2051003  # ⚠谎言: "最近？没有啊。Frank这几个月不怎么来店里，我至少两三个月没去他那附近了"
-      - 2051004  # Vinnie认罪证词（Expose中假认罪）："是我放的火！Frank是我杀的！透过窗户看到他在床上睡觉后放火"——L6 Expose R4用
-
-    # ── 4. 鉴赏力 ──
-    connoisseur: []
+  # Vinnie NPC条目见 scenes → SC2007 → vinnie_002
 
   # ── 第一轮（也是唯一一轮）：击穿"不在场"谎言 ──
   # 打火机(2501) + Rose目击(2081005) + Tony辨认(2112001) → 三重打击
@@ -317,7 +319,7 @@ expose:
   false_confession:
     content: |
       Vinnie认罪存在致命破绽：
-      1. 声称"纵火杀的"——但验尸报告显示Frank死于钝器击打，不是火灾
+      1. 声称"纵火杀的"——（L6法医鉴定报告将揭示Frank死于钝器击打，L5玩家尚不知情）
       2. 声称"看到Frank在床上睡觉"——说明到场时Frank已死（被Leonard打死后Vinnie移尸到床上）
       3. 认罪太快、太主动——像在保护某人（Leonard）
       4. 打火机保存"太完美"——火灾现场不该有几乎无烟熏的金属物品，是Vinnie事后放置的假证据
@@ -361,5 +363,19 @@ doubts:
     text: "Rose看到的壮汉是Vinnie吗？——9点多从鞋坊离开、块头大、像意大利人，与Vinnie完全吻合"
     unlock_condition: "testimony:2081005 + testimony:2051003"
   - id: 2015
-    text: "Vinnie认罪说'纵火杀的'——但验尸报告说Frank死于钝器击打，他根本不知道真正死因？"
-    unlock_condition: "testimony:2051003 + item:2502"
+    text: "Vinnie说Frank'在床上睡觉'——但Frank当晚有举报计划，怎么会在店里睡着？"
+    unlock_condition: "testimony:2051004 + testimony:2081004"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "2026-03-07 FAIL: 2 issues"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "PENDING"
+  expose: "PENDING"

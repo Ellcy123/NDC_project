@@ -35,8 +35,16 @@ expose:
   target_name: Harold Moore
   rounds:
     - lie: Frank自己签署了所有文件
-      evidences: [2301, 2302, 2303]
+      evidences: [2301, 2701, 2303]
     - lie: 我们的利率完全合法
       evidences: [2305, 2306, 2308]
     - lie: Moore银行是正规银行
       evidences: [2312]
+
+events:
+  - id: 2731
+    name: "市政厅（⚡Mickey登场）"
+    characters: [Zack, Emma, Mickey]
+    purpose: Mickey以律师身份递交传票，打破搜查令僵局
+    trigger: "emma_003对话结束后"
+    talk: loop3_event_mickey

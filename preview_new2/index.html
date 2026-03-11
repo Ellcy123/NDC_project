@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NDC Preview v4.0 (New Table)</title>
-    <script src="/NDC_project/Preview/js-yaml.min.js"></script>
+    <script>
+    // js-yaml: 根据环境选择路径
+    (function(){
+        var h = location.hostname;
+        var isLocal = (h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:');
+        var src = isLocal ? '/NDC_project/Preview/js-yaml.min.js' : '/Preview/js-yaml.min.js';
+        document.write('<scr'+'ipt src="'+src+'"><\/scr'+'ipt>');
+    })();
+    </script>
     <style>
         /* ===== CSS Variables ===== */
         :root {
@@ -495,6 +503,7 @@
         .phase-tag.free { background: #2a6b3a; }
         .phase-tag.expose { background: #6b2a2a; }
         .phase-tag.ending { background: #4a2a6b; }
+        .phase-tag.events { background: #b8860b; }
 
         .sidebar-item.locked {
             opacity: 0.6;
@@ -1627,6 +1636,16 @@
                 `;
             }
 
+            // Events (突发事件)
+            if (loop.events && loop.events.length > 0) {
+                html += `
+                    <div class="sidebar-item ${AppState.currentPhase === 'events' ? 'active' : ''}"
+                         onclick="FlowView.showPhase('events')">
+                        <span class="phase-tag events">突发事件</span> (${loop.events.length})
+                    </div>
+                `;
+            }
+
             // Ending (Loop 6 only)
             if (loop.ending && loop.ending.length > 0) {
                 html += `
@@ -1777,7 +1796,7 @@
                 ? `<span style="display:inline-block; padding:0.1rem 0.4rem; border-radius:3px; font-size:0.75rem; margin-left:0.5rem; background:${scene.note === '晚上' ? '#1a237e' : '#e8a735'}; color:${scene.note === '晚上' ? '#90caf9' : '#3e2723'};">${escapeHtml(scene.note)}</span>`
                 : '';
             const prevPhase = AppState.previousPhase || 'opening';
-            const backLabel = prevPhase === 'expose' ? '← 返回指证阶段' : prevPhase === 'ending' ? '← 返回结尾阶段' : prevPhase === 'free' ? '← 返回自由探索' : '← 返回开篇阶段';
+            const backLabel = prevPhase === 'expose' ? '← 返回指证阶段' : prevPhase === 'ending' ? '← 返回结尾阶段' : prevPhase === 'events' ? '← 返回突发事件' : prevPhase === 'free' ? '← 返回自由探索' : '← 返回开篇阶段';
             // Check if this is an opening/ending scene
             const loopRef = AppState.loopData;
             let openingMeta = null;
@@ -1798,6 +1817,16 @@
                     ${noteTag}
                 </div>
             `;
+
+            // Display backgroundImage asset path if available
+            if (scene.backgroundImage) {
+                const bgName = scene.backgroundImage.split('\\').pop();
+                html += `<div style="margin:0.3rem 0 0.5rem; display:flex; align-items:center; gap:0.5rem;">
+                    <span style="color:var(--text-muted); font-size:0.8rem;">背景美术:</span>
+                    <span class="copy-tag" onclick="copyText('${escapeHtml(bgName)}', this)" style="font-size:0.8rem;">🎨 ${escapeHtml(bgName)}</span>
+                    <span style="color:var(--text-muted); font-size:0.7rem;">${escapeHtml(scene.backgroundImage)}</span>
+                </div>`;
+            }
 
             // Opening scene: show characters, purpose, talk files inline
             if (openingMeta) {
@@ -2122,28 +2151,115 @@
                     });
                 }
 
+            } else if (phase === 'events' && loop.events) {
+                html = `
+                    <div class="scene-title"><span class="phase-tag events">突发事件</span> ${escapeHtml(loop.title || '')}</div>
+                    <p style="margin:0.75rem 0; color:var(--text-secondary);"><strong>目标：</strong>${escapeHtml(loop.target || '')}</p>
+                    <div class="scene-container" style="min-height:280px; background:var(--card);"></div>
+                `;
+
+                loop.events.forEach((item, idx) => {
+                    const sid = String(item.id || '');
+                    const scene = DataManager.getScene(sid);
+                    const sceneName = item.name || scene?.sceneName || `场景 ${sid}`;
+                    const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
+                    const characters = item.characters || [];
+                    const purpose = item.purpose || '';
+                    const trigger = item.trigger || '';
+                    const talkFile = item.talk || '';
+
+                    html += `<div class="npc-card" style="margin-bottom:1rem;">`;
+
+                    if (bgUrl) {
+                        html += `<img src="${bgUrl}" onerror="this.style.display='none'" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;" alt="">`;
+                    }
+
+                    html += `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">`;
+                    html += `<span class="phase-tag events">⚡</span>`;
+                    html += `<span style="font-size:1.1rem; font-weight:600; color:var(--text-primary);">${escapeHtml(sceneName)}</span>`;
+                    html += `<span style="color:var(--text-muted); font-size:0.85rem;">(${sid})</span>`;
+                    html += `</div>`;
+
+                    if (trigger) {
+                        html += `<div style="color:var(--highlight); font-size:0.85rem; margin-bottom:0.5rem;">触发: ${escapeHtml(trigger)}</div>`;
+                    }
+
+                    if (characters.length) {
+                        html += `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem;">`;
+                        characters.forEach(c => {
+                            html += `<span style="background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:0.2rem 0.5rem; font-size:0.85rem;">${escapeHtml(c)}</span>`;
+                        });
+                        html += `</div>`;
+                    }
+
+                    if (purpose) {
+                        html += `<div style="color:var(--text-secondary); margin-bottom:0.5rem;">${escapeHtml(purpose)}</div>`;
+                    }
+
+                    if (talkFile) {
+                        const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
+                        const firstId = entries.length > 0 ? entries[0].id : '';
+                        html += `<div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; flex-wrap:wrap;">`;
+                        html += `<span class="copy-tag" onclick="copyText('${escapeHtml(talkFile)}', this)">📄 ${escapeHtml(talkFile)}.json</span>`;
+                        if (entries.length > 0) {
+                            html += `<span style="color:var(--text-muted); font-size:0.8rem;">${entries.length} 句 | 首句ID: ${firstId}</span>`;
+                        } else {
+                            html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
+                        }
+                        if (firstId) {
+                            html += `<button class="btn" onclick="DialogController.startFromTalkId('${firstId}')" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
+                        }
+                        html += `</div>`;
+                    }
+
+                    html += `</div>`;
+                });
+
             } else if (phase === 'ending' && loop.ending) {
                 html = `
                     <div class="scene-title"><span class="phase-tag ending">结尾</span> ${escapeHtml(loop.title || '')}</div>
                     <p style="margin:0.75rem 0; color:var(--text-secondary);"><strong>目标：</strong>${escapeHtml(loop.target || '')}</p>
+                    <div class="scene-container" style="min-height:280px; background:var(--card);"></div>
                     <div class="section-title">结尾场景 (${loop.ending.length})</div>
-                    <div class="evidence-grid">
                 `;
-                loop.ending.forEach(sceneId => {
-                    const sid = String(sceneId);
+                loop.ending.forEach(item => {
+                    const isObj = typeof item === 'object';
+                    const sid = String(isObj ? item.id : item);
                     const scene = DataManager.getScene(sid);
-                    const sceneName = scene?.sceneName || `场景 ${sid}`;
+                    const sceneName = (isObj && item.name) ? item.name : (scene?.sceneName || `场景 ${sid}`);
                     const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
-                    html += `
-                        <div class="evidence-card" onclick="FlowView.showScene('${sid}')" style="cursor:pointer;">
-                            ${bgUrl ? `<img src="${bgUrl}" onerror="this.style.display='none'" style="width:100%;max-height:120px;object-fit:cover;border-radius:4px;margin-bottom:0.5rem;" alt="">` : ''}
-                            <div class="ev-name">${escapeHtml(sceneName)}</div>
-                            <div class="ev-id">ID: ${sid}</div>
-                            ${!scene ? '<div class="ev-art empty">SceneConfig 中未找到</div>' : ''}
-                        </div>
-                    `;
+                    const talkFile = (isObj && item.talk) ? item.talk : '';
+
+                    html += `<div class="npc-card" style="margin-bottom:1rem;">`;
+
+                    if (bgUrl) {
+                        html += `<img src="${bgUrl}" onerror="this.style.display='none'" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;" alt="">`;
+                    }
+
+                    html += `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">`;
+                    html += `<span style="font-size:1.1rem; font-weight:600; color:var(--text-primary);">${escapeHtml(sceneName)}</span>`;
+                    html += `<span style="color:var(--text-muted); font-size:0.85rem;">(${sid})</span>`;
+                    html += `</div>`;
+
+                    if (talkFile) {
+                        const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
+                        const firstId = entries.length > 0 ? entries[0].id : '';
+                        html += `<div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; flex-wrap:wrap;">`;
+                        html += `<span class="copy-tag" onclick="copyText('${escapeHtml(talkFile)}', this)">📄 ${escapeHtml(talkFile)}.json</span>`;
+                        if (entries.length > 0) {
+                            html += `<span style="color:var(--text-muted); font-size:0.8rem;">${entries.length} 句 | 首句ID: ${firstId}</span>`;
+                        } else {
+                            html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
+                        }
+                        if (firstId) {
+                            html += `<button class="btn" onclick="DialogController.startFromTalkId('${firstId}')" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
+                        }
+                        html += `</div>`;
+                    }
+
+                    html += `</div>`;
                 });
-                html += `</div>`;
+                html += ``;
             }
 
             document.getElementById('content').innerHTML = html;

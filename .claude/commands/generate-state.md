@@ -553,6 +553,28 @@ doubts:
 
 ---
 
+## 验证状态更新
+
+完成自检清单后，在 state 文件末尾更新 `validation_status` 段落。对每个自检部分（A-G），根据检查结果记录 PASS 或 FAIL：
+
+```yaml
+validation_status:
+  cross_check: "PENDING"               # 由 cross_check.py 自动更新，不要手动修改
+  structure_completeness: "YYYY-MM-DD PASS"   # Section A
+  evidence_coverage: "YYYY-MM-DD PASS"       # Section B
+  npc_entries: "YYYY-MM-DD PASS"             # Section C
+  goal_alignment: "YYYY-MM-DD PASS"          # Section D
+  info_pacing: "YYYY-MM-DD PASS"             # Section E
+  connoisseur: "YYYY-MM-DD PASS"             # Section F
+  expose: "YYYY-MM-DD PASS"                  # Section G
+```
+
+值格式：`"PENDING"` / `"YYYY-MM-DD PASS"` / `"YYYY-MM-DD FAIL: N issues"`
+
+如果某项检查发现问题，标记为 FAIL 并注明问题数量。日期使用当天日期。
+
+---
+
 ## 输出
 
 输出到：`AVG/对话配置工作及草稿/前置配置/loop{N}_state.yaml`

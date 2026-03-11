@@ -46,7 +46,7 @@ player_context:
     - "Rose提供Frank保险箱线索——Frank在11月6日当天原计划做一件'非常冒险的事'"
     # ── L5 post_expose ──
     - "Vinnie'认罪'：声称自己纵火杀了Frank——但认罪存在致命破绽"
-    - "Vinnie声称'透过窗户看到Frank在床上睡觉后放火'——但验尸报告显示Frank死于钝器击打，不是火灾"
+    - "Vinnie声称'透过窗户看到Frank在床上睡觉后放火'——但Frank当晚计划去检察官举报，为什么会在店里睡觉？认罪细节可疑"
     - "打火机保存'太完美'——火灾现场不该有如此完好的金属物品，暗示事后放置"
     - "Vinnie对Mickey咆哮：'你出卖了Leo！'——Leo指向Leonard"
     - "Margaret在码头仓库被Mickey救出，虚弱但活着，暂时无法提供证词"
@@ -289,7 +289,6 @@ scenes:
       - id: 2509
         name: "没剪标签的高档西装"
         note: "场景道具——衣柜中新西装标签尚在，体现Leonard对中产身份的执念"
-    # 注：指证设计中的609(电话记录)和610(旧报纸剪报)尚无2xxx证据ID，待后续补充
 
   # ── 鞋坊一楼（Rose再次对话-详细） ──
   - id: 2001
@@ -400,15 +399,12 @@ expose:
       - Leonard无法否认巧合，但狡辩："那也不能证明是我的眼镜！很多人都戴眼镜！"
 
   # ── 第二轮：确认"这是你的眼镜" ──
-  # Leonard眼镜观察(OBS-604) + 眼镜维修单据(2505) → 新旧镜片颜色对比
+  # ⚠ 小玩法：出示维修单据前，玩家需要点击Leonard面部，点击不泛黄的那片眼镜片（右眼）即为成功
+  # 眼镜维修单据(2505) → 证明Leonard案发后立即补配镜片
   round_2:
     lie: "就算现场有眼镜碎片，也不能证明是我的。你们没有证据证明那是我的眼镜"
     lie_source: "Leonard对Round 1的新谎言"
     usable_evidence:
-      - id: OBS-604
-        name: "Leonard的眼镜（现场观察）"
-        用途: "观察Leonard当前眼镜：右眼镜片透明崭新，左眼镜片偏黄旧旧——最近补配了右眼镜片"
-        note: "观察证据，无物证编号——玩家在指证现场通过观察获得"
       - id: 2505
         name: "眼镜维修单据"
         用途: "艾斯弗德光学眼镜店：1925.11.7更换右眼镜片（原镜片破损），加急当日取件——案发第二天立即修眼镜"
@@ -503,11 +499,25 @@ expose:
 
 doubts:
   - id: 2016
-    text: "Leonard的眼镜碎片为什么在凶器烛台下方？——案发后不到12小时就去配了新镜片"
-    unlock_condition: "item:2608 + item:2505"
+    text: "Leonard说'整晚在家没去过现场'——但眼镜碎片在凶器下方，案发后12小时配了新镜片"
+    unlock_condition: "testimony:2041005 + item:2608 + item:2505"
   - id: 2017
     text: "Leonard真的只是'去拜访'吗？——Margaret看到Frank倒地流血，烛台凹痕与伤口吻合"
     unlock_condition: "testimony:2101001 + item:2601"
   - id: 2018
-    text: "Frank到底是'受伤倒在地上'还是'在床上睡觉'？——Leonard和Vinnie的说法矛盾"
-    unlock_condition: "testimony:2041005 + testimony:2051004"
+    text: "Margaret说Frank'倒在地上流血'——Vinnie说Frank'在床上睡觉'。两人说法不可能同时为真。"
+    unlock_condition: "testimony:2101001 + testimony:2051004"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "2026-03-07 FAIL: 4 issues"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "PENDING"
+  expose: "PENDING"

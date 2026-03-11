@@ -32,11 +32,11 @@ player_context:
     - "Leonard威胁：没有法院令状，无法调查银行内部文件"
   new_directions:
     - direction: "贷款申请笔迹造假"
-      trigger: "Frank日记写'Leonard帮我填表，我只要签个字' + 银行档案签名流畅有力——与Frank颤抖的真实笔迹完全不同"
+      trigger: "牛奶订购单上Frank颤抖歪斜的真实签名 vs 银行档案上工整流畅的签名——完全不同的笔迹"
     - direction: "条款系统性违法"
       trigger: "贷款协议月利率12%=年化289%，州法消费者贷款上限7%，超标40倍"
     - direction: "投资公司马甲"
-      trigger: "协议抬头是'LAKESHORE INVESTMENT CO.'而非银行，Frank日记却说'去银行借钱'"
+      trigger: "协议抬头是'LAKESHORE INVESTMENT CO.'而非银行，Frank以为自己是在向银行贷款"
   post_expose_knowledge:
     - "Frank的贷款不是赌博——Leonard代填申请表，Frank不清楚具体内容"
     - "贷款协议系统性违法：月利率12%=年化289%（州法上限7%）、利滚利、管理费$600"
@@ -74,7 +74,7 @@ opening:
     does_not_know:
       - "贷款协议的真实利率（月12%=年化289%）"
       - "协议是投资公司而非银行"
-      - "Frank日记中关于'Leonard帮我填表'的内容"
+      - "Frank牛奶订购单上的真实签名特征"
       - "Mickey的真实背景和来历"
       - "遗嘱中提到的Rose Martinez"
 
@@ -141,10 +141,7 @@ scenes:
     evidence:
       - id: 2301
         name: "牛奶订购签收单"
-        note: "关键——Frank真实笔迹样本，签名颤抖歪斜（分析后获得2302）"
-      - id: 2302
-        name: "Frank签名样本（胶带）"
-        note: "关键——从2301提取的Frank真迹，用于与银行档案签名对比（Expose R1用）"
+        note: "关键——Frank真实笔迹样本，签名颤抖歪斜（分析后获得2701签名样本）"
       - id: 2314
         name: "Frank的日记"
         note: "关键——'Leonard说我年纪大了手抖，他帮我填表'+'去Moore银行借点钱'（Expose R1+R3用）"
@@ -181,8 +178,8 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2071001  # Danny确认身份：Frank唯一的侄子，从乡下来后寄住在Frank家
-          - 2071002  # ⚠偏见: Danny声称Rose是"大半年前"才出现的骗子，骗了Frank的钱
+          - 2071001  # ⚠谎言: Danny声称Rose"最近才勾引叔叔"（L4 Expose R1 lie_source）
+          - 2071002  # Danny身份信息：Danny Kowalski，Frank的侄子，一直住在Frank家帮他打理日常
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -193,6 +190,7 @@ scenes:
             node: "#005"
             question: "催收的人长什么样？"
             answer: "一个金发年轻人带着一个意大利壮汉（来源：L2 ohara_001——O'Hara描述上门催收的人）"
+            # ⚠ 叙事动机：Danny自己有赌债，担心同一批催收人会找上自己，所以主动追问催收人的长相特征
 
   # ── 银行大厅（Leonard再次对话） ──
   - id: 2009
@@ -320,7 +318,7 @@ expose:
   # Moore的Talk/证词见上方 scenes → SC2008 → moore_001
 
   # ── 第一轮：戳破"Frank亲自签字" ──
-  # 日记(2314) + 签名对比(2302 vs 2303) → 笔迹造假
+  # 日记(2314) + Frank签名样本(2701) vs 银行档案(2303) → 笔迹造假
   round_1:
     lie: "这是Frank亲自签字的贷款申请，他清楚知道自己在借什么钱"
     lie_source: "证词 2061003"
@@ -328,21 +326,23 @@ expose:
       - id: 2314
         name: "Frank的日记"
         用途: "'Leonard说我年纪大了手抖，他帮我填表，我只要签个字就行'——Frank根本没亲自填写"
-      - id: 2302
-        name: "Frank签名样本（胶带）"
+      - id: 2701
+        name: "Frank签名样本[派生自2301]"
         用途: "Frank真实笔迹颤抖歪斜——与银行档案流畅有力的签名完全不同"
       - id: 2303
         name: "湖滨信托银行内部档案"
         用途: "档案签名工整流畅，备注'客户口头确认'——这是Leonard代签的证据"
     result: |
       Moore被迫承认Leonard代填：
-      - 日记证明Frank只是"签个字"，不知道具体内容
+      - 牛奶订购单上的真实签名颤抖歪斜，银行档案签名工整流畅——不是同一人
       - 笔迹对比证明签名不是Frank的
-      - Moore辩解"口头确认"但日记只写"借点钱"，没提赌博、没提$3,200
+      - Moore辩解"握着手帮签"但两种笔迹完全不同，无法解释
       - Moore升级谎言："好吧Frank不清楚，但协议条款完全合法"
 
   # ── 第二轮：揭露条款系统性违法 ──
   # 利率(2305) + 利滚利(2306) + 管理费(2308) → 多处违法
+  # ⚠ 对话生成注意：本轮三个金融条款证据信息密度极高，
+  # 需要用通俗叙述替代专业术语，如"Frank借了600块最后要还3200——这不是贷款是抢劫"
   round_2:
     lie: "协议条款完全合法，Leonard填的每一条都符合法律规定"
     lie_source: "Moore对Round 1的新谎言"
@@ -392,11 +392,25 @@ expose:
 
 doubts:
   - id: 2007
-    text: "Frank真的亲自签了贷款申请吗？——日记说'Leonard帮我填表'，银行签名笔迹完全不同"
-    unlock_condition: "item:2314 + item:2302"
+    text: "Moore说'Frank亲自签字的贷款'——但牛奶订购单上的真实签名与银行档案笔迹完全不同"
+    unlock_condition: "testimony:2061003 + item:2701"
   - id: 2008
     text: "贷款条款真的合法吗？——月利率12%=年化289%，州法上限才7%"
     unlock_condition: "item:2305 + item:2317"
   - id: 2009
     text: "为什么对账单页眉是投资公司、正文却是银行？——Frank日记说'去银行借钱'"
     unlock_condition: "item:2309 + item:2314"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "2026-03-07 FAIL: 3 issues"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "PENDING"
+  expose: "PENDING"

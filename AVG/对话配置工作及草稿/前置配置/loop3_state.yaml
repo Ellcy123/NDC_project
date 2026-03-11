@@ -112,10 +112,7 @@ scenes:
     evidence:
       - id: 2301
         name: 牛奶订购签收单
-        note: 关键——可分析→派生2701（Frank签名样本胶带）
-      - id: 2302
-        name: Frank签名样本
-        note: 关键——字迹颤抖有力，与贷款申请表签名不同
+        note: 关键——可分析→派生2701（Frank签名样本）
       - id: 2313
         name: 被翻动的抽屉
       - id: 2314
@@ -279,8 +276,8 @@ expose:
       - id: 2301
         name: 牛奶订购签收单
         用途: Frank真实笔迹参照
-      - id: 2302
-        name: Frank签名样本
+      - id: 2701
+        name: Frank签名样本[派生自2301]
         用途: 字迹颤抖有力，与贷款申请表上的光滑精准签名完全不同
       - id: 2303
         name: 银行内部档案
@@ -320,13 +317,13 @@ expose:
 
   派生证据:
     - id: 2701
-      name: Frank签名样本（胶带）
+      name: Frank签名样本
       source: 2301（牛奶订购签收单）分析获取
 
 doubts:
   - id: 2301
     text: "贷款协议是Frank自己签的吗？"
-    unlock_condition: "item:2301 + item:2302 + item:2303"
+    unlock_condition: "item:2301 + item:2701 + item:2303"
   - id: 2302
     text: "协议条款是否合法？"
     unlock_condition: "item:2305 + item:2306 + item:2308"

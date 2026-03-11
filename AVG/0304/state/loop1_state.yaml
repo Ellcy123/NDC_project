@@ -124,9 +124,6 @@ scenes:
   - id: 2004
     name: "警局外（电话亭）"
     evidence:
-      - id: 2105
-        name: "Foster口供记录"
-        note: "关键——Emma记录的Foster电话内容：尸检报告未完成，连性别都无法确定（Expose R2用）"
       - id: 2112
         name: "蓝月亮酒吧事件报纸"
         note: "场景道具——《艾斯弗德论坛报》1925.11.5头条：Zack侦破蓝月亮枪击案，Morrison为警方发言人"
@@ -195,7 +192,11 @@ expose:
       - 2031001  # ⚠谎言: "死者应该就是Margaret Brennan，我基于现场情况做出的判断"
 
     # ── 4. 鉴赏力 ──
-    connoisseur: []
+    connoisseur:
+      - type: quiz
+        node: "#001"
+        question: "Morrison反问Zack'你以为我为什么要这样对你？'"
+        answer: "蓝月亮酒吧案——Morrison栽赃陷害Zack被揭发（来源：EPI01背景，无需游戏内source）"
 
   # ── 第一轮：婚戒矛盾 ──
   # 婚戒证据组前三件（2101+2102+2103）建立矛盾
@@ -233,13 +234,14 @@ expose:
       - Morrison被迫承认无法解释，转为虚张声势："我有尸检调查信息"
 
   # ── 第三轮：法医口供戳穿虚张声势 ──
-  # 用Foster口供（2105）证明Morrison根本没有法医依据
+  # 用Foster证词（2021001）证明Morrison根本没有法医依据
   round_3:
     lie: "我有尸检调查信息可以证明死者身份"
     lie_source: "Morrison虚张声势（Round 2后退守）"
     usable_evidence:
-      - id: 2105
-        name: "Foster口供记录"
+      - id: 2021001
+        name: "Foster初步骨骼分析证词"
+        note: "emma_foster专属证词——Emma转述Foster电话内容，非直接NPC对话获取"
         用途: "Foster说尸检报告最快明天出、连性别都无法确定——Morrison根本没有法医依据"
     result: |
       Morrison彻底崩溃：
@@ -257,10 +259,24 @@ expose:
 doubts:
   - id: 2001
     text: "死者真的是Margaret吗？——手上没戒指，首饰盒空了，现场也没有金属残留"
-    unlock_condition: "item:2101 + item:2102 + item:2103"
+    unlock_condition: "item:2101 + item:2102 + item:2103 + item:2104"
   - id: 2002
     text: "Morrison声称的'尸检调查信息'可信吗？——Foster说报告还没出"
-    unlock_condition: "testimony:2031001 + item:2105"
+    unlock_condition: "testimony:2031001 + testimony:2021001"
   - id: 2003
     text: "Morrison为什么要误导身份确认？"
     unlock_condition: "item:2112 + testimony:2031001"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "2026-03-07 FAIL: 1 issues"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "PENDING"
+  expose: "PENDING"

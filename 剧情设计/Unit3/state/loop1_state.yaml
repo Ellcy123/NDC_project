@@ -1,0 +1,281 @@
+# ============================================================
+# Loop 1 — 不是自杀
+# 本循环说谎者: Morrison
+# 核心揭示: Thomas不是自杀，楼顶有女性在场，不是主动跳下的
+# 前序事件: Unit 2结束后，Zack接到报案赶到Thomas公寓楼
+# 时间: 1928年11月21日 约08:00 早晨（案发后+9.5小时）
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Thomas Sullivan真的是自杀吗？"
+    secondary:
+      - "Morrison为什么急着按自杀结案？"
+      - "楼顶到底发生了什么？"
+  known_facts: []  # L1，玩家对本章案件一无所知
+  new_directions:
+    - direction: "女性脚印矛盾"
+      trigger: "楼顶护栏边有约38码女性脚印，与Thomas靴印面对面分布，不是Morrison说的'只有死者一个人'"
+    - direction: "坠落方式矛盾"
+      trigger: "护栏外侧灰尘无损（没翻越）+ 着地点仅0.8米（无水平初速度）→ 不是主动跳下的"
+  post_expose_knowledge:
+    - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
+    - "楼顶有约38码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
+    - "脚印深浅不一（🔒藏梗：实为两个体重不同的女人，Loop 4揭晓）"
+    - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
+    - "'失足'可能性未排除——开放性结论"
+    - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
+    - "Morrison暗示Continental银行打过招呼，案件比想象的复杂"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: 楼下现场(SC3001) → 🎬案发现场
+# Zack和Emma接报赶到Thomas公寓楼下，Morrison宣布"自杀结案"，
+# Emma冷静引导Zack质疑Morrison判断，开始搜证。
+
+opening:
+  scene_id: 3001
+  characters: [Zack, Emma, Morrison]
+  purpose: "Morrison宣布自杀结案 → Emma引导Zack冷静质疑 → 开始搜证"
+  talk: emma_001
+
+  emma_001:
+    is_liar: false
+    motive: "引导Zack从Morrison的草率判断中抽离——用观察事实替代情绪反应，启动独立搜证"
+    mindset: "冷静警觉——经历Unit1/2后对Morrison的判断本能不信任，但不急于下结论，先看现场"
+
+    knows:
+      - "Thomas Sullivan从公寓楼顶坠楼死亡"
+      - "Morrison声称自杀，想赶在Zack到来前结案"
+      - "Morrison拖延了9.5小时才通知Zack——想处理完再说"
+      - "Morrison在Unit1/2中都有过误导和阻碍的前科"
+
+    does_not_know:
+      - "楼顶有女性脚印"
+      - "Thomas不是主动跳下的"
+      - "Thomas打老婆的事"
+      - "Continental银行打过招呼"
+      - "脚印深浅不一的含义"
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L1:
+#   楼下现场(SC3001) → 🎬开篇 → 🔓搜证
+#   楼顶(SC3002)     → 🔓搜证
+#   停尸房(SC3005)    → 🔓对话（场景信息）
+#   警局(SC3004)      → ⚔️指证(Morrison)
+#   警局外(SC3006)    → 🎭结尾
+
+scenes:
+  # ── SC3001 楼下现场（开篇 → 搜证） ──
+  - id: 3001
+    name: "Thomas公寓楼下现场"
+    evidence:
+      - id: 3101
+        name: "着地点照片"
+        note: "关键——尸体距墙仅0.8米，主动跳跃应≥1.5米（Expose R2用）"
+
+  # ── SC3002 楼顶 ──
+  - id: 3002
+    name: "Thomas公寓楼顶"
+    evidence:
+      - id: 3103
+        name: "男性脚印照片"
+        note: "陷阱——42码Thomas靴印。R1中选此无效（'死者的痕迹'不反驳'只有死者一个人'）"
+      - id: 3104
+        name: "女性脚印照片"
+        note: "关键——约38码，深浅不一、方向杂乱，与Thomas靴印面对面（Expose R1用）。🔒藏梗：实为Mary+Helen两人脚印"
+      - id: 3106
+        name: "护栏灰尘分布照片"
+        note: "关键——外侧灰尘完整无损，内侧有手掌印和衣物擦痕（Expose R2用）"
+      - id: 3107
+        name: "Jameson威士忌空瓶"
+        note: "伏笔——$3好酒，Thomas这种穷酒鬼买不起。循环4揭晓酒是Helen带的"
+
+  # ── SC3005 停尸房（Foster对话，场景信息） ──
+  - id: 3005
+    name: "停尸房"
+    npcs:
+      foster_001:
+        # ── 基本信息 ──
+        talk: foster_001
+        is_liar: false
+        motive: "提供专业法医分析——察觉到某些异常，但选择只陈述事实不做推测"
+        mindset: "职业严谨但意味深长——用语克制，'顿了顿'暗示他比表面知道得多"
+
+        # ── 1. NPC 已知信息 ──（模式 D：一次性 NPC）
+        knows:
+          - "血液酒精浓度0.25%，明显醉酒状态"
+          - "颈椎断裂，符合高处坠落"
+          - "指甲下有少量皮肤组织，经检查为死者本人的——指尖反向剐蹭护栏边缘"
+          - "组织量太少，不是剧烈挣扎，更像坠落瞬间的本能反应"
+
+        does_not_know:
+          - "Thomas被灌醉到0.25%（只知道检测结果，不知道原因）"
+          - "楼顶有两个女人"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "法医对Thomas坠楼的专业分析——确认死因和身体状态"  # 8
+          - "指甲下的组织意味着什么——挣扎还是本能反应？"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []  # Foster信息作为场景对话呈现，不提取为证词道具
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC3006 警局外（过渡/结尾） ──
+  - id: 3006
+    name: "警局外"
+    npcs:
+      emma_002:
+        # ── 基本信息 ──
+        talk: emma_002
+        is_liar: false
+        motive: "代表玩家提问——梳理循环1发现，提出下一步方向"
+        mindset: "冷静支持——帮Zack整理思路，追问关键疑点"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "Morrison宣布自杀但证据不支持"
+          - "楼顶有女性脚印，Morrison说十有八九是Mary"
+          - "Thomas不是主动跳下的"
+          - "Morrison提到Thomas打老婆"
+
+        does_not_know:
+          - "Mary是否真的在楼顶"
+          - "脚印深浅不一的含义"
+          - "Jameson酒的来源"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Morrison甩手后的下一步——去找Mary了解情况"  # 8
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 警局(SC3004) → ⚔️指证(Morrison)
+# 指证设计: 2轮（女性在场 → 不是主动跳下）
+
+expose:
+  target: "Morrison (01)"
+  total_rounds: 2
+
+  morrison:
+    # ── 基本信息 ──
+    talk: loop1_morrison
+    is_liar: true
+    motive: "省事结案 + 银行利益 + 佛系不想管"
+    mindset: "不耐烦的敷衍——被逼问时恼怒，但最终佛系甩手'你想查就去查'"
+
+    # ── 1. NPC 已知信息 ──
+    knows:
+      - "Thomas Sullivan坠楼死亡"
+      - "Thomas打老婆，整栋楼都知道"
+      - "Thomas的妻子叫Mary Sullivan，住楼下"
+      - "Continental银行打过招呼——谋杀案一立，房产变犯罪现场；自杀则今天结案明天查封"
+      - "案发后故意拖延9.5小时"
+
+    does_not_know:
+      - "脚印深浅不一是两个女人"
+      - "Helen的存在和参与"
+      - "Thomas被灌醉"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose对象
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 3101001  # ⚠谎言: "自杀，很明显。这种烂酒鬼，喝多了自己跳下去了"
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+  # ── 第一轮：楼顶不只Thomas一个人 ──
+  # C-04（女性脚印）证明有女性在场，C-03（Thomas脚印）是陷阱
+  round_1:
+    lie: "现场干干净净，只有死者一个人的痕迹"
+    lie_source: "证词 3101001"
+    usable_evidence:
+      - id: 3104
+        name: "女性脚印照片"
+        用途: "约38码女鞋印与Thomas靴印面对面，深夜22:30有女性在场不是偶然"
+    trap_evidence:
+      - id: 3103
+        name: "男性脚印照片"
+        用途: "陷阱——Thomas的42码靴印是'死者的痕迹'，选了不构成反驳"
+    result: |
+      Morrison被迫承认有女性在场：
+      - 先狡辩"公共区域白天有人晒衣服"
+      - Zack用脚印朝向（面对面）和时间点（深夜22:30）反驳
+      - Morrison恼怒"你非要搞出个谋杀案？"
+      - 退守新防线："有人在场不代表有人推他"
+
+  # ── 第二轮：不是主动跳下的 ──
+  # 护栏灰尘（排除翻越）+ 着地点距离（排除主动跳跃）
+  round_2:
+    lie: "这人明显是自己跳下去的。护栏那么矮，喝多了站不稳，一脚踩空就掉了"
+    lie_source: "Morrison对Round 1的退守"
+    usable_evidence:
+      - id: 3106
+        name: "护栏灰尘分布照片"
+        用途: "外侧灰尘完整无损——如果翻越护栏，必然压到外侧灰尘"
+      - id: 3101
+        name: "着地点照片"
+        用途: "尸体距墙仅0.8米，主动跳跃应≥1.5米——无水平初速度"
+    result: |
+      排除"主动跳下"，但"失足"未排除：
+      - Morrison退让"也许不是自己跳的，但喝成那样靠在护栏边，重心不稳就能掉"
+      - 佛系交代Thomas/Mary家事："打老婆，整栋楼都知道"
+      - 甩手："前两回你也见识过了——我这人就这样，能省事就省事。跟我没关系了"
+      - 随口提供Mary信息："Thomas的老婆叫Mary Sullivan，就住楼下"
+      - 暗示银行利益："Continental银行打过招呼"
+      - 警告："这案子比你想的复杂。真相不一定是你想要的"
+      - 🔒开放性结论：失足 vs 被推？脚印深浅不一？Jameson哪来的？
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 3001
+    text: "楼顶不只Thomas一个人——女性脚印与Thomas面对面站在护栏边"
+    unlock_condition: "item:3104 + testimony:3101001"
+  - id: 3002
+    text: "Thomas不是主动跳下的——护栏外侧灰尘无损，着地点仅0.8米"
+    unlock_condition: "item:3106 + item:3101"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PENDING"
+  structure_completeness: "2026-03-11 PASS"
+  evidence_coverage: "2026-03-11 PASS"
+  npc_entries: "2026-03-11 PASS"
+  goal_alignment: "2026-03-11 PASS"
+  info_pacing: "2026-03-11 PASS"
+  connoisseur: "2026-03-11 PASS"
+  expose: "2026-03-11 PASS"
