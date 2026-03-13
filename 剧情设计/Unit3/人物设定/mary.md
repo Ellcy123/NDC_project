@@ -111,7 +111,7 @@ L2（首次指证）：精密的信息控制
 
 L3-L4（被间接保护）：获"正当防卫"判定
 - Helen的"被胁迫"叙事保护了Mary
-- Margaret伪证支持"Thomas扑向Mary"
+- Margaret认知偏差导向的证词支持"Thomas是攻击者"的解读
 - 法庭判正当防卫——"正义得到伸张"
 
 L5（形象裂痕）：银行雏菊压痕
@@ -146,7 +146,7 @@ L6（道德困境核心）：Mickey为她辩护
 
 与Margaret Brennan的关系
 - Margaret目睹Mary被家暴多年
-- Margaret为Mary作伪证——"母亲保护母亲"
+- Margaret的认知偏差——看了Thomas打Mary十年，自动解读为"Thomas是攻击者"
 
 与Bernard Wells的关系
 - Mary去银行研究Thomas死后保险赔付

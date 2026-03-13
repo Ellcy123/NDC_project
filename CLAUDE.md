@@ -51,6 +51,20 @@
 
 ---
 
+## Game System Docs — Read On Demand (DO NOT use @ to auto-load)
+These docs describe game mechanics in detail. Read the relevant one BEFORE working on related content:
+
+| When you are... | Read this first |
+|-----------------|-----------------|
+| Writing/editing dialogue or testimony content | `docs/游戏系统/对话与证词系统.md` |
+| Working with items, analysis, or combine logic | `docs/游戏系统/搜证与物品系统.md` |
+| Modifying DoubtConfig or doubt unlock conditions | `docs/游戏系统/疑点系统.md` |
+| Modifying ExposeData or writing Expose dialogue | `docs/游戏系统/指证系统.md` |
+| Writing connoisseur (鉴赏力) branch nodes | `docs/游戏系统/鉴赏力系统.md` |
+| Need full end-to-end reasoning chain overview | `docs/游戏推理机制完整规则.md` |
+
+---
+
 ## 核心数据架构
 
 ### 层级关系

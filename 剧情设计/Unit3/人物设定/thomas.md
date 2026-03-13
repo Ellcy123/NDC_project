@@ -118,7 +118,7 @@ L5-L6（复杂性浮现）：Thomas也是银行的受害者
 
 与Helen的关系
 - 拉Helen参与杀妻计划，威胁毁掉她名声
-- Helen表面配合实则反水——为Thomas准备的陷阱（护栏油涂在Thomas一侧）
+- Helen表面配合实则反水——为Thomas准备的陷阱（地面油涂在Thomas一侧）
 - 邻居误以为两人有情人关系
 
 与Bernard Wells的关系

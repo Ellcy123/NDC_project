@@ -1,0 +1,483 @@
+# ============================================================
+# Loop 4 — Helen补充指证（假结局）
+# 本循环说谎者: Helen（补充指证）
+# 核心揭示: Helen当晚在楼顶，给Thomas灌酒，最后关头帮Mary反抗Thomas → 正当防卫
+# 前序事件: 循环3结束后，Helen坦白杀妻骗保计划但坚持"那晚在家"
+# 时间: 1928年11月22日 约16:00（案发后+41.5小时）
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "那晚楼顶到底发生了什么？"
+    secondary:
+      - "Helen那晚真的不在楼顶吗？"
+      - "脚印深浅不一——第二组脚印到底是谁的？"
+      - "Thomas平时只喝$0.10廉价酒，那晚楼顶的$3 Jameson是谁的？为什么喝比平时度数高得多的酒？"
+      - "0.25%血液酒精浓度意味着什么？"
+  known_facts:
+    # ── L1 ──
+    - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
+    - "楼顶有约38码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
+    - "脚印深浅不一（🔒藏梗：实为两个体重不同的女人，Loop 4揭晓）"
+    - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
+    - "'失足'可能性未排除——开放性结论"
+    - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
+    - "Morrison暗示Continental银行打过招呼，案件比想象的复杂"
+    # ── L2 ──
+    - "Mary伪造了教堂不在场证明——蜡烛仅烧15分钟，提前背了第23章内容，走前挪书签留蜡烛"
+    - "Mary早就知道Thomas和Helen的关系——三个月前发现衬衫口红印，藏在衣柜深处不洗"
+    - "Mary在楼顶护栏边与Thomas争吵并有肢体接触——祈祷披肩织物在Thomas袖扣上"
+    - "Mary坚持Thomas'失足'掉下去，坚称'只有Thomas和我'"
+    - "Mary被追问Helen是否在楼顶时明显心虚——快速否认，眼神闪烁"
+    - "Mary报警三次家暴无人管"
+    - "Thomas和Helen有'不清不楚的关系'（Mary供出Helen名字）"
+    - "Thomas钱包里有一把形状特殊的钥匙——不像普通房门钥匙，用途不明"
+    - "脚印深浅不一仍未解释——Mary辩称'地面不平整'"
+    # ── L3 ──
+    - "Helen和Thomas有完整的杀妻骗保计划——$10,000人寿保险，受益人Thomas，计划推Mary坠楼伪装意外"
+    - "Helen参与准备工作：以'检查漏水'为由借钥匙串配楼顶安全门钥匙、在地面涂轮椅维护油"
+    - "Helen声称被Thomas胁迫参与——'他威胁毁掉我的名声'"
+    - "Thomas的计划：约Mary到楼顶 → 推Mary → 地面有油Mary会打滑站不稳 → 伪装意外骗保还$12,000债务"
+    - "Thomas欠Continental银行$12,000高利贷"
+    - "Helen始终坚持'那晚在家'——成功守住'不在场'防线"
+    - "第二组女性脚印仍未解释——Helen否认在场但脚印证据暗示另有隐情"
+    - "Bernard Wells（银行保险代理人）见证了Thomas咨询'如何让意外看起来合理'，Helen在场"
+    - "Helen童年目睹父亲家暴母亲（为后续动机铺垫）"
+  new_directions:
+    - direction: "门把手油迹"
+      trigger: "Zack回到楼顶检查门把手，发现外侧略微滑腻、内侧干净——有人沾着油从楼梯间侧进入楼顶"
+    - direction: "Jameson威士忌来源与度数疑问"
+      trigger: "L1 Jameson空瓶($3, 40%ABV)来源仍未解释——Thomas平时只喝$0.10品脱装廉价酒，为什么那晚突然喝上了度数更高、价格贵30倍的好酒？Helen家厨房恰好有同品牌已开封的Jameson"
+    - direction: "Margaret Brennan目击"
+      trigger: "Zack翻案卷发现Thomas公寓楼下离母亲家只有两个街区——Margaret那晚可能路过"
+  post_expose_knowledge:
+    - "Helen当晚在楼顶——门把手油迹+鞋底油迹+Foster三方比对证明Helen独自从楼梯间侧上楼顶"
+    - "两双相似鞋子+脚印深浅不一的真相：Mary和Helen穿着相似的鞋（同码数、同类型），Loop 1的脚印是两个体重不同的女人的混合脚印"
+    - "Jameson威士忌是Helen从家里带上楼顶的——母亲去世后留着的'药酒'"
+    - "Helen持续给Thomas灌酒——0.25%需要持续补充至少一小时，不是'看一眼就走了'"
+    - "Helen解释'心软'：以为Thomas只是想吓唬Mary，直到那晚确认要动手才决定灌醉他阻止"
+    - "Thomas扑向Mary时Helen从身后拉住Thomas，Mary推开Thomas，Thomas失去平衡翻过护栏"
+    - "Helen和Mary事后商量好隐瞒Helen在场——'两个女人把一个男人弄死了，谁会信是防卫？'"
+    - "Helen选择带Jameson（40%ABV）而非Thomas平时喝的廉价酒——度数更高，Thomas上头更快更容易被灌醉。Helen解释为'手边只有母亲的酒'"
+    - "Helen手伤真相：涂油时被护栏锋利处割伤（非'修轮椅'），解释了下午涂油时Thomas帮开门"
+    - "结论：正当防卫——Thomas要杀Mary，Helen和Mary联手反抗"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: 停尸房/Foster实验室(SC3005) → 🎬开篇
+# Zack带着L3结尾的疑问来到Foster实验室——
+# Zack发现门把手外侧滑腻后通知Foster采样分析，引出L4搜证方向。
+
+opening:
+  scene_id: 3005
+  characters: [Zack, Emma, Foster]
+  purpose: "Zack带门把手疑问来Foster实验室 → Foster介绍采样分析能力 → 引出L4搜证方向（门把手+鞋底+Helen家二次搜证）"
+  talk: emma_006
+
+  emma_006:
+    is_liar: false
+    motive: "帮Zack整理L3 Expose后的疑问——Helen的坦白留下了太多不对劲的地方，'那晚在家'这条防线值得继续撬"
+    mindset: "审慎追问——Helen声称被胁迫但准备工作太完美，Emma觉得还有更多真相没被揭开"
+
+    knows:
+      - "Helen和Thomas有杀妻骗保计划（L3 Expose确认）"
+      - "Helen声称被Thomas胁迫参与——配钥匙、涂油"
+      - "Helen坚持'那晚在家'——L3整个Expose未能突破此防线"
+      - "Helen的准备工作极为专业——'被胁迫'能做到这种程度？（L3结尾的核心疑问）"
+      - "脚印深浅不一仍未解释——可能不只Mary一个女人在楼顶"
+      - "Helen童年目睹父亲家暴母亲"
+      - "Bernard Wells见证了Thomas咨询保险赔付流程，Helen在场"
+
+    does_not_know:
+      - "Helen当晚在楼顶"
+      - "Helen鞋底有油迹"
+      - "门把手油迹的含义"
+      - "Jameson是Helen带上去的"
+      - "Helen给Thomas灌酒"
+      - "Margaret那晚路过楼下"
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L4:
+#   楼顶(SC3002)            → 🔓搜证（门把手+护栏检查）
+#   Helen家(SC3301)          → 🔓搜证 → ⚔️指证(Helen补充)
+#   停尸房(SC3005)           → 🎬开篇 → 🔓对话（Foster三方比对+BAC补充）
+#   Thomas家(SC3101)         → 🔓搜证（回访，廉价酒照片）
+#   Margaret家(SC3403)       → 🔓对话（新解锁）
+#   楼下现场(SC3001)         → ⏸️无新线索
+#   Sullivan家(SC3003)       → ⏸️无新线索
+#   Continental银行(SC3303)  → ⏸️无新线索
+#   公寓二楼走廊(SC3306)     → ⏸️无新线索
+#   公寓楼外(SC3008)         → 🎭结尾
+
+scenes:
+  # ── SC3002 楼顶（门把手+护栏搜证） ──
+  - id: 3002
+    name: "Thomas公寓楼顶"
+    evidence:
+      - id: 3401
+        name: "楼顶门外侧把手油迹照片"
+        note: "关键——外侧（楼梯间侧）有轮椅维护油薄膜，Foster采样分析（Expose R1用）"
+      - id: 3402
+        name: "楼顶门内侧把手照片"
+        note: "关键——内侧（天台侧）干净无油迹，与外侧对比证明沾油者从楼梯间侧进入（Expose R1 Zack口头引用）"
+      - id: 3404
+        name: "护栏锋利处特写照片"
+        note: "场景道具——锈蚀金属边缘+干涸血迹，与Helen右手伤口吻合（Zack口头引用，解释Helen手伤和下午涂油时Thomas帮开门）"
+      - id: 3107
+        name: "Jameson威士忌空瓶"
+        note: "场景道具——L1已获得，$3好酒，L4搜证中Zack口头提及与Helen家Jameson的联系"
+
+  # ── SC3301 Helen家（搜证 → 指证） ──
+  - id: 3301
+    name: "Helen家（三楼）"
+    evidence:
+      - id: 3403
+        name: "Helen家门口外出鞋"
+        note: "关键——38码平底鞋，鞋底有轻微油迹残留+楼顶灰尘，送Foster后派生为3405。🔒藏梗揭晓：与L2 Mary的鞋外观相似——同码数同类型，回看L1脚印照片'深浅不一'→两个体重不同女人的混合脚印"
+      - id: 3408
+        name: "Helen家Jameson威士忌"
+        note: "关键——厨房橱柜，已开封剩约1/3，母亲的'药酒'。与楼顶空瓶(3107)同品牌（Expose R2用）"
+    npcs:
+      helen_002:
+        # ── 基本信息 ──
+        talk: helen_002
+        is_liar: true
+        motive: "维持'被胁迫+不在场'形象的最后防线——L3已暴露杀妻骗保计划，现在要守住'那晚在家'。每次被逼退都退到新的安全边界"
+        mindset: "紧张但有准备——预判到Zack会继续追查，'检查油干没干'是提前想好的台词。对Zack表面配合，内心精确控制信息释放"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "完整真相：自己和Mary是合谋者，共同策划杀Thomas（本循环不揭示合谋本质）"
+          - "当晚在楼顶：独自上楼顶、给Thomas灌酒、目击Thomas与Mary冲突、拉住Thomas"
+          - "Helen和Mary事后统一口供：对外只说Mary和Thomas在场，Thomas失足"
+          - "Thomas扑向Mary时自己从身后拉住了他，Mary推开了Thomas"
+          - "Jameson是自己从家里带上去的——母亲的酒"
+          - "Thomas欠$12,000高利贷"
+          - "门把手外侧可能留有油迹（但不确定Zack是否已发现）"
+
+        does_not_know:
+          - "Zack已发现门把手外侧油迹并通知Foster采样"
+          - "Foster完成了三方比对（门把手+鞋底+地面油）"
+          - "Margaret那晚路过楼下目击了坠楼过程"
+          - "Zack检查了她的外出鞋鞋底"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry: null  # Expose对象
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3404001  # ⚠谎言: "Thomas叫我上去检查油干没干，我看了一眼就回来了。他自己在那喝酒，自己带的酒"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC3005 停尸房（开篇 → Foster对话） ──
+  - id: 3005
+    name: "停尸房"
+    evidence:
+      - id: 3405
+        name: "油迹三方比对报告"
+        note: "关键——三方比对（门把手外侧+Helen鞋底+L3地面油），成分完全一致，均为轮椅维护油。附时间线分析（Expose R1用）。派生：3403(Helen鞋)+3401(门把手) → Foster分析 → 3405"
+    npcs:
+      foster_004:
+        # ── 基本信息 ──
+        talk: foster_004
+        is_liar: false
+        motive: "提供三方油迹比对结果+BAC补充分析——新采样设备让他能做更精确的法医分析"
+        mindset: "职业兴奋——三方比对结果令人惊讶（全部一致），同时对BAC持续补充的含义有专业见解"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "L1已知：Thomas血液酒精浓度0.25%，颈椎断裂"
+          - "L3已知：地面油迹是石油基润滑剂，人为涂抹，与Helen家轮椅维护油成分完全一致"
+          - "L4新增：门把手外侧油迹采样+Helen鞋底油迹采样"
+          - "三方比对结果：门把手外侧油+鞋底油+地面油，成分完全一致，均为轮椅维护油"
+          - "BAC 0.25%需要持续补充酒精——从现场只有一瓶Jameson来看，更像是有人一直在给他倒"
+          - "酒精度数差异对醉酒速度的影响：Thomas平时喝的廉价品脱装（低度数劣质调和酒，约15-25%ABV）vs Jameson（40%ABV标准威士忌）——习惯低度数酒的人突然喝高度数酒，同样的量醉得更深更快"
+
+        does_not_know:
+          - "是Helen涂的油还是其他人（只知道油成分一致，不知道谁的手沾了油）"
+          - "Helen和Mary的合谋关系"
+          - "杀妻骗保计划的全貌"
+          - "Thomas当晚醉到什么程度能不能站稳（L4只说'需要持续补充'和'度数差异让他上头更快'，不说'连站都站不稳'）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "三方油迹比对结果——门把手+鞋底+地面油是否一致"  # 9
+          - "0.25%BAC的临床意义——这个浓度需要怎样的饮酒方式"  # 8
+          - "Thomas平时喝廉价酒，那晚喝的Jameson度数高得多——这对醉酒速度有什么影响？"  # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3402001  # Foster BAC分析（Timeline型）："0.25%需要持续补充酒精，更像是有人一直在给他倒。而且Thomas平时喝低度数廉价酒，突然换成40度的Jameson，同样的量上头速度快得多——醉得更深"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC3101 Thomas家（回访搜证） ──
+  - id: 3101
+    name: "Thomas家（一楼）"
+    evidence:
+      - id: 3407
+        name: "Thomas家廉价酒照片"
+        note: "关键——厨房约30-40个空瓶，全是$0.10-$0.15品脱装，无一瓶超过$0.50（Expose R2用，与Helen家Jameson $3形成对比）"
+      - id: 3409
+        name: "Thomas欠债记录"
+        note: "场景道具——Continental银行催款单，欠款$12,000，L1已发现。Expose R2 Zack口头引用（Thomas买不起$3好酒）"
+
+  # ── SC3403 Margaret家（新解锁） ──
+  - id: 3403
+    name: "Margaret家"
+    npcs:
+      margaret_001:
+        # ── 基本信息 ──
+        talk: margaret_001
+        is_liar: false
+        motive: "犹豫但最终愿意配合儿子的调查——案发当晚经过一直压在心里，但害怕被卷入麻烦"
+        mindset: "不安但真诚——看了Thomas打Mary十年，那晚路过楼下看到的事一直让她不安，但此前不想被牵扯进来"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "案发当晚22:30路过Thomas公寓楼下"
+          - "听到楼上有争吵声和挣扎声"
+          - "抬头看到楼顶有模糊人影在动，不止一个"
+          - "然后有人掉了下来"
+          - "吓坏了跑走了"
+          - "Thomas打Mary的事她知道——看了十年"
+          - "离Thomas公寓楼只有两个街区"
+
+        does_not_know:
+          - "楼顶具体发生了什么（仰视三楼+深夜煤气灯=几乎看不清细节）"
+          - "是谁推了谁（看不清具体肢体动作）"
+          - "楼顶有几个人（只看到模糊轮廓）"
+          - "Helen是否在楼顶"
+          - "Helen和Thomas的杀妻骗保计划"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "案发当晚你在楼下看到了什么？"  # 10
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3406001  # Margaret目击证词（RelationNetwork型）："22:30听到楼顶争吵挣扎声，看到模糊人影在动，有人掉下来"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC3001 楼下现场（⏸️无新线索） ──
+  - id: 3001
+    name: "Thomas公寓楼下现场"
+    # L4无新证据，L1证据继承可查看
+
+  # ── SC3003 Sullivan家（⏸️无新线索） ──
+  - id: 3003
+    name: "Sullivan家"
+    # L4无新证据，L2证据继承可查看
+
+  # ── SC3303 Continental银行（⏸️无新线索） ──
+  - id: 3303
+    name: "Continental银行"
+    # L4无新证据，L3证据继承可查看
+
+  # ── SC3306 公寓二楼走廊（⏸️无新线索） ──
+  - id: 3306
+    name: "公寓二楼走廊"
+    # L4无新证据，L3 Liam证词继承可查看
+
+  # ── SC3008 公寓楼外（结尾） ──
+  - id: 3008
+    name: "公寓楼外"
+    npcs:
+      emma_007:
+        # ── 基本信息 ──
+        talk: emma_007
+        is_liar: false
+        motive: "帮Zack消化L4 Expose后的结论——正当防卫，但隐约不安"
+        mindset: "释然但存疑——Helen的坦白令人同情，但Bernard Wells的角色和银行的参与仍是悬念"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "Helen当晚在楼顶——门把手油迹+鞋底油证明"
+          - "Helen给Thomas灌酒——Jameson来自Helen家，0.25%需要持续补充"
+          - "Thomas扑向Mary，Helen拉住Thomas，Mary推开Thomas，Thomas翻过护栏"
+          - "Helen和Mary事后商量隐瞒Helen在场"
+          - "Helen的隐瞒理由：'两个女人把一个男人弄死了，谁会信是防卫？'"
+          - "Bernard Wells见证过Thomas咨询'如何让意外看起来合理'"
+
+        does_not_know:
+          - "Bernard Wells在这个计划中扮演什么角色"
+          - "Thomas这种失业酒鬼是否真能想出这么精密的骗保计划"
+          - "Helen和Mary的合谋是否真的是'事后才商量'"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Helen的坦白结束后——下一步是什么？Bernard Wells和银行的角色"  # 8
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# 派生证据说明
+# ═══════════════════════════════════════
+# 3405 油迹三方比对报告（34-E-01）
+#   获取方式：Zack将Helen外出鞋(3403)和门把手采样交给Foster
+#             → Foster比对 3403鞋底油 + 3401门把手油 + L3的3312地面油 → 生成3405
+#   结论：三处油迹成分完全一致，均为轮椅维护油
+#   用途：Expose R1核心证据，玩家背包只保留3405（3403原始鞋子消失）
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: Helen家(SC3301) → ⚔️指证(Helen补充)
+# 指证设计: 3轮（门把手上的油 → Thomas喝不起的酒 → 谁都没碰他）
+# Helen的Talk/证词见上方 scenes → SC3301 → helen_002
+
+expose:
+  target: "Helen (04)"
+  total_rounds: 3
+
+  # ── 第一轮：门把手上的油 ──
+  # 门把手外侧油迹+Foster三方比对 → Helen当晚独自从楼梯间侧进入楼顶
+  # Zack口头引用：鞋底油迹(3403)、内侧把手照片(3402干净)、护栏锋利处(3404)+Helen手伤
+  round_1:
+    lie: "我把东西都准备好了，但那天晚上我一直待在家里"
+    lie_source: "L3 Helen的坚持（'那晚在家'防线）"
+    usable_evidence:
+      - id: 3405
+        name: "油迹三方比对报告"
+        用途: "三方比对（门把手外侧+鞋底+地面油）成分完全一致——Helen家的油出现在门把手上和她的鞋底"
+      - id: 3401
+        name: "楼顶门外侧把手油迹照片"
+        用途: "视觉辅助——外侧有油膜，侧光下可见"
+    result: |
+      Helen承认当晚上过楼顶：
+      - 辩称"Thomas叫我上去检查油干没干"
+      - 门把手方向揭示：外侧有油+内侧干净=Helen独自从楼梯间侧进入
+      - Helen手伤揭穿："修轮椅"→实为涂油时被护栏割伤→解释下午Thomas帮开门
+      - 两双相似鞋子+脚印深浅不一的真相揭晓：L1脚印是两个体重不同女人的混合脚印
+      - ⚠️Helen退守新谎言："看了一眼就回来了，Thomas自己在那喝酒，自己带的酒"
+      - 新证词 3404001 在此阶段被收集
+
+  # ── 第二轮：Thomas喝不起的酒 ──
+  # Helen家Jameson + Thomas家廉价酒 → 酒是Helen从家里带上去灌的
+  # 口头引用：楼顶Jameson空瓶(3107)、催款单(3409/$12,000)、Timeline系统呈现BAC(3402001)
+  round_2:
+    lie: "Thomas叫我上去检查，我看了一眼就回去了。他自己在那喝酒，自己带的酒"
+    lie_source: "证词 3404001"
+    usable_evidence:
+      - id: 3408
+        name: "Helen家Jameson威士忌"
+        用途: "Helen家厨房同品牌Jameson（已开封剩1/3）——酒来自Helen家，不是Thomas自己的"
+      - id: 3407
+        name: "Thomas家廉价酒照片"
+        用途: "Thomas家全是$0.10-$0.15廉价酒——欠$12,000买不起$3的Jameson"
+    timeline_background:
+      - testimony: 3402001
+        标注: "BAC 0.25%需要持续补充酒精至少一小时——Helen不是'看一眼就走了'。且Thomas习惯低度数廉价酒，突然喝40度Jameson上头更快——Helen选这瓶酒不是随手拿的（L4解读：心软时刻意选强酒快速灌醉Thomas）"
+    result: |
+      Helen含泪承认带酒上楼顶、持续灌酒：
+      - "酒是我带上去的。母亲的酒。""我一直在给他倒。"
+      - 解释"心软"：以为Thomas只是想吓唬Mary，直到那晚确认要动手才决定灌醉他
+      - Zack质疑"短暂停留vs一直倒酒"的时间矛盾，Helen回答"记不清时间了"
+      - 母亲遗物双重含义：L3轮椅油是"凶器来源"，L4母亲的酒是"阻止凶手的工具"
+      - ⚠️Helen退守新谎言："Thomas太醉了自己滑倒了，谁都没碰他"
+
+  # ── 第三轮：谁都没碰他？ ──
+  # Margaret目击证词(RelationNetwork) → "争吵+挣扎+推搡"与Helen"自己滑倒"矛盾
+  # 本轮无需玩家选择证据，通过RelationNetwork系统完成指证
+  round_3:
+    lie: "我给Thomas倒了很多酒。后来Mary到了。Thomas太醉了，站都站不稳，自己滑倒摔下去的。谁都没碰他"
+    lie_source: "Helen R2后的退守"
+    relation_network:
+      - testimony: 3406001
+        连接: "Margaret↔Helen"
+        验证: "Margaret听到争吵挣扎+看到人影推搡 vs Helen'谁都没碰他，自己滑倒'"
+    result: |
+      Helen含泪完整坦白当晚经过：
+      - Thomas扑向Mary → Helen从身后拉住Thomas → Mary推开Thomas → Thomas翻过护栏
+      - 解释隐瞒原因："两个女人把一个男人弄死了——谁会信是防卫？"
+      - Helen和Mary事后商量好隐瞒Helen在场——"我求Mary不要提我在场"
+      - Helen提到Emily："Mary还有个女儿……才8岁……如果Mary被关进监狱……"
+      - 结论：正当防卫——Thomas要杀Mary，Helen和Mary联手反抗
+      - 🔒开放性结论：
+        - Helen真的是"心软"吗？为什么不擦油？
+        - Thomas醉到0.25%真能"扑向Mary"吗？
+        - 两个刚经历创伤的人能这么冷静地统一口供？
+        - Bernard Wells教Thomas"如何让意外看起来合理"——银行什么角色？
+
+# ═══════════════════════════════════════
+# PART 3.5: 过渡事件
+# ═══════════════════════════════════════
+
+events:
+  - type: closing
+    scene_id: 3002
+    name: "Zack楼顶独白"
+    trigger: "Expose结束后"
+    characters: [Zack]
+    purpose: "Zack独自在楼顶护栏边反思——'正当防卫，她们只是想活下去'，但心中隐约不安（Thomas平时喝的那种便宜货，Helen偏偏选了度数最高的Jameson……0.25%……Thomas真的还能站起来扑向Mary？）"
+  - type: closing
+    scene_id: 3008
+    name: "Emma对话"
+    trigger: "楼顶独白后"
+    characters: [Zack, Emma]
+    purpose: "Emma提出下一步方向——Bernard Wells教Thomas'如何让意外看起来合理'，银行在案子里扮演什么角色？"
+  - type: closing
+    scene_id: 3004
+    name: "Mickey介入"
+    trigger: "Emma对话后"
+    characters: [Zack, Mickey]
+    purpose: "Mickey在警局出现：'一个欠$12,000的失业酒鬼能想出这么精密的计划？去问问Bernard Wells' → 引出循环5"
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 3009
+    text: "楼顶门外侧把手有油、内侧干净——有人沾着轮椅维护油从楼梯间侧进入了楼顶"
+    unlock_condition: "item:3401 + item:3402"
+  - id: 3010
+    text: "Helen的鞋底也有同样的油——Foster三方比对全部一致，Helen当晚在楼顶"
+    unlock_condition: "item:3403 + item:3405"
+  - id: 3011
+    text: "Jameson威士忌不是Thomas的——楼顶空瓶和Helen家同品牌，Thomas家全是$0.10廉价酒"
+    unlock_condition: "item:3107 + item:3408 + item:3407"
+  - id: 3012
+    text: "Thomas被人持续灌酒到0.25%——需要至少一小时不间断补充酒精"
+    unlock_condition: "testimony:3402001 + item:3409"
+  - id: 3013
+    text: "有人从楼下看到了那晚楼顶发生的事——争吵、挣扎、人影推搡、有人坠落"
+    unlock_condition: "testimony:3406001"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PENDING"
+  structure_completeness: "2026-03-13 PASS"
+  evidence_coverage: "2026-03-13 PASS"
+  npc_entries: "2026-03-13 PASS"
+  goal_alignment: "2026-03-13 PASS"
+  info_pacing: "2026-03-13 PASS"
+  connoisseur: "2026-03-13 PASS"
+  expose: "2026-03-13 PASS"
