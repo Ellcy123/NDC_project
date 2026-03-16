@@ -323,7 +323,7 @@ Zack作为侦探，有权限获取这些证据：
 - 证据34-C-01至34-I-03、34-E-01、34-T-01、31-D-01
 
 **新增证据**:
-- **证据34-T-02**: Margaret Brennan目击证词（搜证阶段去Margaret家对话获得）— **RelationNetwork型**
+- **证据34-T-02**: Margaret Brennan目击证词（搜证阶段去Margaret鞋坊对话获得）— **RelationNetwork型**
 
 **Margaret目击证词完整内容**：
 ```
@@ -358,7 +358,7 @@ Zack作为侦探，有权限获取这些证据：
 
 **Zack**（坚定）："我去问问她。"
 
-**【切换到Margaret家】**
+**【切换到Margaret鞋坊】**
 
 **Zack**（敲门）："母亲。"
 
