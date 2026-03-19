@@ -75,9 +75,8 @@ opening:
 # 场景状态表 L1:
 #   楼下现场(SC3001) → 🎬开篇 → 🔓搜证
 #   楼顶(SC3002)     → 🔓搜证
-#   法医办公室(SC3005)    → 🔓对话（场景信息）
+#   法医办公室(SC3005)    → 🔓对话（尸检结论 + 随身物品移交）
 #   警局(SC3004)      → ⚔️指证(Morrison)
-#   警局外(SC3006)    → 🎭结尾
 
 scenes:
   # ── SC3001 楼下现场（开篇 → 搜证） ──
@@ -105,10 +104,14 @@ scenes:
         name: "Jameson威士忌空瓶"
         note: "伏笔——$3好酒，Thomas这种穷酒鬼买不起。循环4揭晓酒是Helen带的"
 
-  # ── SC3005 法医办公室（Foster对话，场景信息） ──
+  # ── SC3005 法医办公室（Foster对话 + 搜证） ──
   # 位置：County Hospital（库克县医院）院区内，Coroner's Office
   - id: 3005
     name: "法医办公室"
+    evidence:
+      - id: 3206
+        name: "Thomas随身物品"
+        note: "Thomas钱包中有形状特殊的钥匙（伏笔——L3与Helen家楼顶钥匙比对）。袖扣处发现异源织物纤维——黑色蕾丝，高档编织物，纹理特殊（关键——系统层分析原料）"
     npcs:
       foster_001:
         # ── 基本信息 ──
@@ -123,7 +126,6 @@ scenes:
           - "颈椎断裂，符合高处坠落"
           - "指甲下有少量皮肤组织，经检查为死者本人的——指尖反向剐蹭护栏边缘"
           - "组织量太少，不是剧烈挣扎，更像坠落瞬间的本能反应"
-
         does_not_know:
           - "Thomas被灌醉到0.25%（只知道检测结果，不知道原因）"
           - "楼顶有两个女人"
@@ -135,39 +137,6 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids: []  # Foster信息作为场景对话呈现，不提取为证词道具
-
-        # ── 4. 鉴赏力 ──
-        connoisseur: []
-
-  # ── SC3006 警局外（过渡/结尾） ──
-  - id: 3006
-    name: "警局外"
-    npcs:
-      emma_002:
-        # ── 基本信息 ──
-        talk: emma_002
-        is_liar: false
-        motive: "代表玩家提问——梳理循环1发现，提出下一步方向"
-        mindset: "冷静支持——帮Zack整理思路，追问关键疑点"
-
-        # ── 1. NPC 已知信息 ──
-        knows:
-          - "Morrison宣布自杀但证据不支持"
-          - "楼顶有女性脚印，Morrison说十有八九是Mary"
-          - "Thomas不是主动跳下的"
-          - "Morrison提到Thomas打老婆"
-
-        does_not_know:
-          - "Mary是否真的在楼顶"
-          - "脚印深浅不一的含义"
-          - "Jameson酒的来源"
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "Morrison甩手后的下一步——去找Mary了解情况"  # 8
-
-        # ── 3. 可提取证词 ──
-        testimony_ids: []
 
         # ── 4. 鉴赏力 ──
         connoisseur: []

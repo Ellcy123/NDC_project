@@ -48,7 +48,7 @@ player_context:
     - "Bernard Wells（银行保险代理人）见证了Thomas咨询'如何让意外看起来合理'，Helen在场"
     - "Helen童年目睹父亲家暴母亲（为后续动机铺垫）"
     # ── L4 ──
-    - "Helen当晚在楼顶——门把手油迹+鞋底油迹+Foster三方比对证明Helen独自从楼梯间侧上楼顶"
+    - "Helen当晚在楼顶——门把手油迹+鞋底油迹+油迹比对(系统层)证明Helen独自从楼梯间侧上楼顶"
     - "两双相似鞋子+脚印深浅不一的真相：Mary和Helen穿着相似的鞋（同码数、同类型），Loop 1的脚印是两个体重不同的女人的混合脚印"
     - "Jameson威士忌是Helen从家里带上楼顶的——母亲去世后留着的'药酒'"
     - "Helen持续给Thomas灌酒——0.25%需要持续补充至少一小时，不是'看一眼就走了'"
@@ -93,9 +93,9 @@ opening:
   scene_id: 3004
   characters: [Zack, Emma, Mickey]
   purpose: "Zack整理L5发现表达不安 → Mickey来访触发自由探索 → 为辩论做铺垫"
-  talk: emma_006
+  talk: emma_010
 
-  emma_006:
+  emma_010:
     is_liar: false
     motive: "陪伴Zack整理思路——L5发现Mary可能是主谋后，Emma也在消化这个信息"
     mindset: "沉重但清醒——不急着下结论，但意识到正当防卫判决可能有问题"
@@ -117,7 +117,7 @@ opening:
     # ── 4. 鉴赏力 ──
     connoisseur: []
 
-  # Mickey在开篇短暂出现（来警局找Zack），正式Talk在SC3604
+  # Mickey在开篇短暂出现（来警局找Zack），正式Talk在SC3011
   # Mickey台词仅限："Zack。""我听说你去了Continental银行？""跟我来。我需要跟你谈谈。"
 
 # ═══════════════════════════════════════
@@ -126,12 +126,12 @@ opening:
 #
 # 场景状态表 L6:
 #   警局(SC3004)       → 🎬开篇 → ⏸️
-#   Thomas公寓楼/Margaret鞋坊(SC3601) → 🔓对话（Margaret）
-#   Mary家(SC3602)     → 🔓对话（Mary）— 新解锁
-#   Helen家(SC3603)    → 🔓对话（Helen）
-#   Foster实验室(SC3504) → 🔓搜证（36-E-01）
-#   街角(SC3604)       → 🔓对话（Mickey Talk）— 新场景
-#   街角(SC3605)       → ⚔️辩论（Mickey）— 新场景
+#   Margaret鞋坊(SC3010) → 🔓对话（Margaret）
+#   Sullivan家(SC3003)   → 🔓对话（Mary）— 新解锁
+#   Helen家(SC3008)    → 🔓对话（Helen）
+#   Foster实验室(SC3005) → 🔓搜证（36-E-01）
+#   街角(SC3011)       → 🔓对话（Mickey Talk）— 新场景
+#   街角(SC3011)       → ⚔️辩论（Mickey）— 新场景
 #
 # L6自由探索的核心功能（原设计文档无此阶段，用户确认增加）:
 #   A. 情感铺垫——Margaret/Mary/Helen让玩家亲眼看到Mary的惨状
@@ -139,9 +139,9 @@ opening:
 #   C. 证据获取——Foster实验室获取36-E-01（不再是开篇硬塞）
 
 scenes:
-  # ── SC3601 Thomas公寓楼/Margaret鞋坊（新NPC Margaret） ──
-  - id: 3601
-    name: "Thomas公寓楼/Margaret鞋坊"
+  # ── SC3010 Margaret鞋坊（新NPC Margaret） ──
+  - id: 3010
+    name: "Margaret鞋坊"
     # 解锁契机: L5发现Mary可能是主谋后，Zack想了解Mary的真实生活状况
     # Thomas公寓楼区域在L1起可进入，L6增加Margaret鞋坊作为新可对话位置
     npcs:
@@ -176,9 +176,9 @@ scenes:
         # ── 4. 鉴赏力 ──
         connoisseur: []
 
-  # ── SC3602 Mary家（新解锁） ──
-  - id: 3602
-    name: "Mary家"
+  # ── SC3003 Sullivan家/Mary家（新解锁） ──
+  - id: 3003
+    name: "Sullivan家"
     # 解锁契机: L5发现Mary可能是主谋，但正当防卫已判——Zack需要亲眼看看Mary的生活状态
     # 解锁原因: L2指证Mary时场景是教堂/警局，Mary家此前没有搜查理由
     unlock_trigger: "L5揭示Mary可能是主谋后，Zack决定亲自去看看Mary的生活环境"
@@ -215,8 +215,8 @@ scenes:
         # ── 4. 鉴赏力 ──
         connoisseur: []
 
-  # ── SC3603 Helen家（复用场景，新对话） ──
-  - id: 3603
+  # ── SC3008 Helen家（复用场景，新对话） ──
+  - id: 3008
     name: "Helen家"
     # Helen家在L3起可进入，L6增加新对话内容（判决后态度变化）
     npcs:
@@ -250,8 +250,8 @@ scenes:
         # ── 4. 鉴赏力 ──
         connoisseur: []
 
-  # ── SC3504 Foster实验室（复用场景，新内容） ──
-  - id: 3504
+  # ── SC3005 Foster实验室（复用场景，新内容） ──
+  - id: 3005
     name: "Foster实验室"
     # L5已建立Foster与Zack的合作关系，L6 Zack申请补充分析0.25%酒精浓度的完整生理影响
     evidence:
@@ -267,7 +267,7 @@ scenes:
         mindset: "释然但沉重——承认原报告用词保守是有意为之"
 
         # ── 1. NPC 已知信息 ──（模式B：再次出场）
-        # 知识池见 loop1→foster_001, loop2→foster_002, loop4→foster_004, loop5→foster_005
+        # 知识池见 loop1→foster_001, loop4→开篇对话（L2/L3/L5 Foster不出场）
         awareness:
           - content: "Bernard被拆穿——系统性诱导Thomas骗保"
             trigger: "L5 Expose结果"
@@ -290,8 +290,8 @@ scenes:
         # ── 4. 鉴赏力 ──
         connoisseur: []
 
-  # ── SC3604 街角 — Mickey Talk（新场景） ──
-  - id: 3604
+  # ── SC3011 街角 — Mickey Talk（新场景） ──
+  - id: 3011
     name: "街角"
     # 解锁契机: 开篇中Mickey来警局找Zack说"跟我来谈谈"
     # 解锁原因: Mickey作为辩护律师要在非正式场合和Zack讨论案件现状
@@ -319,7 +319,7 @@ scenes:
           - "辩论邀约——'你如果还要继续，我们辩一场'"
 
         withheld_topics:
-          - "Mickey已私下做了楼顶目击条件勘查（36-E-02）——R5才揭示"
+          - "Mickey已私下做了楼顶目击条件勘查（3610）——R5才揭示"
           - "Margaret证词的物理可行性问题——R5才提出"
 
         # ── 2. 玩家询问意图 ──
@@ -339,13 +339,10 @@ scenes:
   - id: 3002
     name: "Thomas公寓楼顶"
     # L6无新证据
-  - id: 3003
-    name: "Sullivan家"
+  - id: 3009
+    name: "Continental银行"
     # L6无新证据
-  - id: 3502
-    name: "Continental银行Bernard办公室"
-    # L6无新证据
-  - id: 3306
+  - id: 3006
     name: "公寓二楼走廊"
     # L6无新证据
 
@@ -353,10 +350,10 @@ scenes:
 # PART 3: 辩论（Expose — 特殊形式）
 # ═══════════════════════════════════════
 #
-# 场景: 街角(SC3605) → ⚔️辩论(Mickey)
+# 场景: 街角(SC3011) → ⚔️辩论(Mickey)
 # 辩论设计: 5轮控辩对决
 # 形式: Mickey设定议题（辩护论点），Zack用证据反驳
-# Mickey的Talk见上方 scenes → SC3604 → mickey_002
+# Mickey的Talk见上方 scenes → SC3011 → mickey_002
 #
 # ⚠️ 特殊：这不是传统指证。Mickey不是在说谎，而是用相同证据做不同解读。
 # Mickey的"辩护论点"替代传统的"谎言"。
@@ -387,13 +384,13 @@ expose:
   round_2:
     mickey_argument: "Helen心软了——她涂了油，但最后没推Thomas。地面油是准备阶段的残留，不代表她当晚还在执行计划"
     usable_evidence:
-      - id: 3304
+      - id: 3308
         name: "地面涂油示意图"
         用途: "地面油在Thomas一侧——这是给Thomas准备的陷阱，不是给Mary的"
         来源: "L3证据"
       # L4 Helen证词引用：Helen当晚'检查油'而非擦油——有足够时间擦油却没擦
       # L4 第二组脚印+门把手油迹引用：Helen在场的物证链
-      - id: 3305
+      - id: 3309
         name: "第二组脚印特写"
         用途: "脚印矛盾——Helen声称'心软后一直在倒酒'，但脚印分布不支持"
         来源: "L3证据"
@@ -414,7 +411,7 @@ expose:
         用途: "蜡烛仅燃烧约15分钟——证明Mary在教堂停留极短即离开，与L4 Helen灌酒时间线精确配合"
         来源: "L2证据"
       # Timeline系统：完整时间线重建（Mary离开教堂 → 45分钟空白 → 对照Helen楼顶时间线）
-      # R2已用3305（第二组脚印）证明Helen角色，R3聚焦时间线维度
+      # R2已用3309（第二组脚印）证明Helen角色，R3聚焦时间线维度
     result: |
       时间线精确配合=合谋者时间协调，不是恐惧冻结：
       - Mary 20:00离开教堂，20:45才出现——45分钟精确对应Helen在楼顶的准备时间
@@ -446,9 +443,9 @@ expose:
 
   # ── 第五轮：Margaret的认知偏差（最终高潮） ──
   # ⚠️ R5特殊：Mickey不再辩护，而是主动请求停止 + 主动出示证据
-  # 36-E-02由Mickey自己现场勘查制作（不经Foster），R5中Mickey主动出示
+  # 3610由Mickey自己现场勘查制作（不经Foster），R5中Mickey主动出示
   round_5:
-    mickey_action: "请求停止辩论 + 主动出示36-E-02"
+    mickey_action: "请求停止辩论 + 主动出示3610"
     evidence:
       - id: 3610
         name: "楼顶目击条件实地勘查记录"
@@ -477,7 +474,7 @@ expose:
 events:
   # ── Event 1: Emma引导 + 玩家选择 ──
   - type: sudden
-    scene_id: 3605
+    scene_id: 3011
     name: "Emma引导与玩家最终选择"
     trigger: "R5辩论结束后，Mickey说出'你理解了吗？'"
     characters: [Zack, Emma, Mickey]
@@ -490,7 +487,7 @@ events:
 
   # ── Event 2: 共同结局 ──
   - type: ending
-    scene_id: 3605
+    scene_id: 3011
     name: "证据燃烧"
     trigger: "玩家选择后，两条路径汇合"
     characters: [Zack, Mickey, Emma]
@@ -512,11 +509,11 @@ doubts:
     # item:3601 = Foster补充分析（0.25%下无攻击能力） + testimony:3406001 = Margaret目击证词（称看到Thomas攻击Mary）→ 矛盾
   - id: 3602
     text: "Helen的'心软'和地面油的矛盾？"
-    unlock_condition: "item:3304 + testimony:3404001"
+    unlock_condition: "item:3308 + testimony:3404001"
   - id: 3603
     text: "Mary的45分钟空白到底在做什么？"
-    unlock_condition: "item:3201 + item:3305"
-    # item:3201 = L2蜡烛残骸（Mary在教堂停留极短即离开） + item:3305 = L3第二组脚印（楼顶有两个女人）→ Mary提前离开+两人在楼顶=45分钟在做什么？
+    unlock_condition: "item:3201 + item:3309"
+    # item:3201 = L2蜡烛残骸（Mary在教堂停留极短即离开） + item:3309 = L3第二组脚印特写（楼顶有两个女人）→ Mary提前离开+两人在楼顶=45分钟在做什么？
   - id: 3604
     text: "Margaret从地面真的能看清楼顶吗？"
     unlock_condition: "item:3610 + testimony:3406001"

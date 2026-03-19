@@ -60,7 +60,7 @@ These docs describe game mechanics in detail. Read the relevant one BEFORE worki
 | Working with items, analysis, or combine logic | `docs/游戏系统/搜证与物品系统.md` |
 | Modifying DoubtConfig or doubt unlock conditions | `docs/游戏系统/疑点系统.md` |
 | Modifying ExposeData or writing Expose dialogue | `docs/游戏系统/指证系统.md` |
-| Writing connoisseur (鉴赏力) branch nodes | `docs/游戏系统/鉴赏力系统.md` |
+| Writing connoisseur (鉴赏力) branch nodes | `docs/游戏系统/鉴赏力系统.md` + `系统策划/鉴赏力系统/鉴赏力节点设计规则.md`（设计规则）；使用 `/connoisseur` slash command |
 | Need full end-to-end reasoning chain overview | `docs/游戏推理机制完整规则.md` |
 
 ---
