@@ -11,12 +11,13 @@
 # ═══════════════════════════════════════
 
 player_context:
+  chapter_goal: "Thomas真的能独自设计这个骗保计划吗？"
   goals:
     primary: "Bernard在Thomas的骗保计划中扮演了什么角色？"
     secondary:
       - "报纸上的专业批注是谁写的？"
-      - "Bernard办公桌垫板上的压痕说明了什么？"
-      - "垫板边缘的花形压痕从何而来？"
+      - "Bernard和Thomas的联系有多深？"
+      - "Mary去找过Bernard吗？"
   known_facts:
     # ── L1 ──
     - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
@@ -208,7 +209,13 @@ scenes:
           - 3505003  # 保单信息: "Thomas Sullivan的保单——人寿保险，保额$10,000，受益人Thomas Sullivan本人，生效日期1928年10月1日"
 
         # ── 4. 鉴赏力 ──
-        connoisseur: []
+        connoisseur:
+          - type: quiz
+            node: "#104"
+            trigger_mode: "E"
+            question: "Bernard以'标准业务'搪塞，Zack展示对保险行业运作的了解"
+            answer: "代理人每周上门收5到65美分，比邮差还了解每家的事（来源：L3 SC3009 Bernard首次对话）"
+            reward: "Bernard（冷漠）：'……你做了功课。每周10美分，比一杯咖啡还便宜。对南区的爱尔兰人来说，那张保单比圣经还重要——死后没有体面的葬礼是整个家族的耻辱。'"
 
   # ── SC3005 Foster实验室（⏸️已删除） ──
   # 3个小玩法改为系统层分析操作，详见下方「派生证据说明」

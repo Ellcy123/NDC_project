@@ -11,6 +11,7 @@
 # ═══════════════════════════════════════
 
 player_context:
+  chapter_goal: "法庭辩论——为Thomas坠楼案做出最终裁定"
   goals:
     primary: "Mary和Helen是正当防卫，还是预谋杀人？"
     secondary:
@@ -174,7 +175,13 @@ scenes:
         testimony_ids: []  # 无新增，L4的3406001保持不变
 
         # ── 4. 鉴赏力 ──
-        connoisseur: []
+        connoisseur:
+          - type: quiz
+            node: "#103"
+            trigger_mode: "B"
+            question: "Margaret回忆Mary这些年的遭遇，Zack展示对社区沉默的理解"
+            answer: "她报过三次警，警察问一句'没事吧'就走了（来源：L3 SC3006 Liam对话）"
+            reward: "Margaret：'我看着那孩子脸上带着青印去杂货店……看了十年。法律管不到人家前门以里——The law stops at the front door——这是规矩，不是我们不管。'"
 
   # ── SC3003 Sullivan家/Mary家（新解锁） ──
   - id: 3003
@@ -288,7 +295,13 @@ scenes:
         testimony_ids: []  # 信息通过36-E-01报告呈现，不额外提取证词
 
         # ── 4. 鉴赏力 ──
-        connoisseur: []
+        connoisseur:
+          - type: quiz
+            node: "#101"
+            trigger_mode: "C"
+            question: "Zack与Foster聊到案件全靠化学分析推进，展示对法医技术局限的了解"
+            answer: "血迹只能确定是不是人血，确认不了是谁的（来源：L1 SC3005 Foster对话）"
+            reward: "Foster：'你知道吗，德国人已经能用血型来排除嫌疑人了——但我们这边的法官还不认。也许再过十年，法医能做到更多。但目前……我能做的，已经是这个时代的极限了。'"
 
   # ── SC3011 街角 — Mickey Talk（新场景） ──
   - id: 3011

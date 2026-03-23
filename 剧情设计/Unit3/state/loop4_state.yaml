@@ -11,12 +11,13 @@
 # ═══════════════════════════════════════
 
 player_context:
+  chapter_goal: "还原案发当晚楼顶的完整经过"
   goals:
     primary: "那晚楼顶到底发生了什么？"
     secondary:
       - "Helen那晚真的不在楼顶吗？"
       - "脚印深浅不一——第二组脚印到底是谁的？"
-      - "Thomas平时只喝$0.10廉价酒，那晚楼顶的$3 Jameson是谁的？为什么喝比平时度数高得多的酒？"
+      - "楼顶的高档Jameson威士忌是谁带来的？"
   known_facts:
     # ── L1 ──
     - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
@@ -104,7 +105,13 @@ opening:
     lie: null
 
     # ── 4. 鉴赏力 ──
-    connoisseur: []
+    connoisseur:
+      - type: quiz
+        node: "#105"
+        trigger_mode: "D"
+        question: "Emma提到Morrison当初想判自杀结案，Zack引用L1关于验尸官制度的信息"
+        answer: "验尸官是选举出来的，陪审团也是他自己挑的人（来源：L1 SC3001 Emma/Morrison场景）"
+        reward: "Emma：'去年这个区有十七个人"自杀"。验尸官说自杀就是自杀——陪审团是他自己挑的人，谁会反对？Morrison能这么干，就是因为整个系统允许他这么干。'"
 
   # Foster 开篇对话设定（不是独立NPC场景，仅开篇叙事中出现）
   foster_opening:
@@ -232,7 +239,13 @@ scenes:
           - 3406001  # Margaret目击证词（RelationNetwork型）："22:30听到楼顶争吵挣扎声，看到模糊人影在动，有人掉下来"
 
         # ── 4. 鉴赏力 ──
-        connoisseur: []
+        connoisseur:
+          - type: quiz
+            node: "#102"
+            trigger_mode: "B"
+            question: "Margaret提到Mary是虔诚的人常去教堂，Zack提到自己去教堂查过"
+            answer: "5美分一根祈祷蜡烛，可那根只烧了15分钟（来源：L2 SC3007 教堂搜证）"
+            reward: "Margaret：'5美分……Mary每次去都会点一根，替Emily祈祷。那种蜡烛好好烧能烧好几个小时——15分钟……那孩子连祈祷都没来得及说完就走了。'"
 
   # ── SC3001 楼下现场（⏸️无新线索） ──
   - id: 3001
