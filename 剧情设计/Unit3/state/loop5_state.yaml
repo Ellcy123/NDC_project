@@ -11,7 +11,7 @@
 # ═══════════════════════════════════════
 
 player_context:
-  chapter_goal: "Thomas真的能独自设计这个骗保计划吗？"
+  chapter_goal: "追查骗保计划的来龙去脉"
   goals:
     primary: "Bernard在Thomas的骗保计划中扮演了什么角色？"
     secondary:
@@ -135,9 +135,9 @@ opening:
 # ═══════════════════════════════════════
 #
 # L5 场景状态:
-#   SC3003 Sullivan家（L5重搜）   → 🔓搜证（新解锁——重新搜查，找报纸批注）
-#   SC3009 Continental银行（Bernard办公室）→ 🔓搜证/对话（新解锁——Bernard Talk+垫板）→ ⚔️指证
-#   SC3005 Foster实验室          → ⏸️不出现（3个小玩法改为系统层分析；花形压痕移到SC3009搜证；SC3005在L6复用）
+#   SC3003 Sullivan家客厅          → ⏸️无新线索（3501标注报纸已在L2获取）
+#   SC3014 Continental银行Bernard办公室 → 🔓搜证/对话（新解锁——Bernard Talk+垫板）→ ⚔️指证
+#   SC3005 Foster实验室          → ⏸️不出现（3个小玩法改为系统层分析；花形压痕移到SC3014搜证；SC3005在L6复用）
 #   SC3001 楼下现场              → ⏸️无新线索
 #   SC3002 楼顶                  → ⏸️无新线索
 #   SC3007 教堂                  → ⏸️无新线索
@@ -146,27 +146,13 @@ opening:
 #   SC3006 公寓二楼走廊          → ⏸️无新线索
 
 scenes:
-  # ── SC3003 Sullivan家 L5（新解锁——重新搜查） ──
-  # 解锁契机: Mickey指出Thomas的智力水平不足以设计骗保计划，
-  #           且L3 Bernard说Thomas问的问题"很专业"——也许有人给过Thomas什么材料？
-  # 解锁原因: L1-L4搜查Thomas家时关注的是楼顶现场、Helen关系证据、
-  #           廉价酒/欠债记录等，未注意过厨房旧报纸堆中的保险版面批注
-  - id: 3003
-    name: "Sullivan家"
-    unlock_trigger: "Mickey指出Thomas的认知水平与'专业问题'不符——'如果Bernard教过他，也许给了Thomas某种材料'"
-    unlock_reason: "L1-L4未关注Thomas家的纸质材料（报纸、笔记），需要针对性搜查厨房旧报纸堆"
-    evidence:
-      - id: 3501
-        name: "标注报纸"
-        note: "关键——《芝加哥论坛报》1928年10月版保险版面，有大量专业批注+Continental银行内部缩写术语（ACC.D, BEN.CHG, EXC.CLSE, CLM.48HR）。R1笔迹比对的源物证。派生：→小玩法→3502(笔迹比对报告)"
-
-  # ── SC3009 Continental银行Bernard办公室 L5（新解锁——Bernard Talk+垫板搜证） ──
+  # ── SC3014 Continental银行Bernard办公室 L5（新解锁——Bernard Talk+垫板搜证） ──
   # 解锁契机: 笔迹比对确认报纸批注非Thomas所写，专业缩写指向银行内部人员；
   #           已知Bernard曾见证Thomas咨询（L3 Helen供述+L3 Bernard证词3305001）
   # 解锁原因: L3银行场景(SC3009)只开放了公共区域（贷款记录、保险单副本），
   #           Bernard的私人办公室此前没有搜查理由——现在笔迹证据直接指向银行从业者
-  - id: 3009
-    name: "Continental银行（Bernard办公室）"
+  - id: 3014
+    name: "Continental银行Bernard办公室"
     unlock_trigger: "笔迹比对报告(3502)确认批注非Thomas所写+银行内部缩写术语→指向Continental银行从业者→Bernard最可疑"
     unlock_reason: "L3只接触了Bernard在公共区域的证词，未进入其私人办公室搜证；现在有了搜查特定物证的方向（书写工具/办公用品）"
     evidence:
@@ -176,6 +162,15 @@ scenes:
       - id: 3507
         name: "垫板花形压痕照片"
         note: "关键——R3前置。垫板右侧边缘五瓣花形压痕(直径1.2cm)，硬物长时间按压。玩家在Bernard办公室搜证时仔细检查垫板发现。系统层分析：3507+3508(Mary手链照片)→3509(花形压痕比对报告)"
+      - id: 3510
+        name: "办公桌全家福"
+        note: "环境叙事——铜质相框，Bernard与妻子和两个穿校服的孩子，桌角放了好几年"
+      - id: 3511
+        name: "墙上银行年度表彰状"
+        note: "环境叙事——Continental Bank 1927年度服务之星，Bernard Wells"
+      - id: 3512
+        name: "客户名片盒"
+        note: "非指证Item——抽屉里的皮质名片盒，十几张各行各业名片，无案件相关人名"
     npcs:
       bernard_002:
         # ── 基本信息 ──
@@ -205,8 +200,7 @@ scenes:
         # ── 3. 可提取证词 ──
         testimony_ids:
           - 3505001  # ⚠谎言: "Thomas来Continental银行咨询保险，我按照标准流程给他办理了保单。我没有做任何多余的事情。正常的业务往来"
-          - 3505002  # 身份证词: "我是Continental银行保险部代理人，Wells。在这个岗位二十年了"
-          - 3505003  # 保单信息: "Thomas Sullivan的保单——人寿保险，保额$10,000，受益人Thomas Sullivan本人，生效日期1928年10月1日"
+          # 3505002(身份证词)和3505003(保单信息)已前移至L3 bernard_001
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -219,7 +213,7 @@ scenes:
 
   # ── SC3005 Foster实验室（⏸️已删除） ──
   # 3个小玩法改为系统层分析操作，详见下方「派生证据说明」
-  # 花形压痕(3507)已移到SC3009 Bernard办公室搜证获取
+  # 花形压痕(3507)已移到SC3014 Bernard办公室搜证获取
 
   # ── ⏸️无新线索场景 ──
   - id: 3001
@@ -244,16 +238,17 @@ scenes:
 # 以下证据通过系统层证据分析操作生成，不绑定特定场景：
 #
 # 分析1：笔迹比对
-#   3501(标注报纸) → 系统层分析 → 3502(笔迹比对报告) + 3503(对比照片，报告附件)
+#   3501(标注报纸) → 系统层分析 → 3502(笔迹比对报告)
 #   报告描述：报纸批注笔迹(工整专业+银行缩写) vs Thomas笔迹样本(潦草+拼写错误)——完全不同
-#   玩家背包：3501消失，替换为3502
+#   报告内含左右对比照片（Thomas日记潦草字迹 vs 报纸工整批注）
+#   玩家背包：3501保留（垫板压痕分析需要实物对比），同时获得3502
 #
 # 分析2：垫板压痕侧光分析
 #   3504(垫板) + 3501(报纸) → 系统层分析 → 3505(压痕分析报告) + 3506(对比照片，报告附件)
 #   报告描述：侧光分析确认垫板压痕与报纸批注轨迹/字迹/位置完全吻合，'边说边写的节奏'=面对面教学
 #   玩家背包：3504消失，替换为3505
 #
-# 搜证发现：花形压痕（SC3009 Bernard办公室搜证时获取）
+# 搜证发现：花形压痕（SC3014 Bernard办公室搜证时获取）
 #   3507(垫板花形压痕照片) — 玩家在Bernard办公室仔细检查垫板时发现
 #   垫板右侧边缘五瓣花形压痕(1.2cm)，硬物长时间按压
 #   作为Clue类型持久保留（L6 R4需要）
@@ -271,9 +266,9 @@ scenes:
 # PART 3: 指证（Expose）
 # ═══════════════════════════════════════
 #
-# 场景: Continental银行Bernard办公室(SC3009) → ⚔️指证(Bernard)
+# 场景: Continental银行Bernard办公室(SC3014) → ⚔️指证(Bernard)
 # 指证设计: 3轮（报纸上的"课程" → 垫板上的压痕 → 垫板上的小花）
-# Bernard的Talk/证词见上方 scenes → SC3009 → bernard_002
+# Bernard的Talk/证词见上方 scenes → SC3014 → bernard_002
 
 expose:
   target: "Bernard Wells (05)"
@@ -350,7 +345,7 @@ expose:
 
 events:
   - type: closing
-    scene_id: 3009
+    scene_id: 3014
     name: "Continental银行门外——释然到不安"
     trigger: "Expose结束后"
     characters: [Zack, Emma]

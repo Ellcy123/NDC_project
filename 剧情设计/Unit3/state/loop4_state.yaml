@@ -127,7 +127,7 @@ opening:
 # 场景状态表 L4:
 #   楼顶(SC3002)            → 🎬开篇 → 🔓搜证（门把手检查）
 #   Helen家(SC3008)          → 🔓对话 → ⚔️指证(Helen补充)
-#   Sullivan家(SC3003)       → 🔓搜证（回访，廉价酒照片）
+#   Sullivan家客厅(SC3003)   → 🔓对话（回访）
 #   Margaret鞋坊(SC3010)     → 🔓对话（新解锁）
 #   法医办公室(SC3005)       → ⏸️无新线索（BAC分析移到L6 Foster场景）
 #   楼下现场(SC3001)         → ⏸️无新线索
@@ -145,9 +145,7 @@ scenes:
       - id: 3402
         name: "楼顶门内侧把手照片"
         note: "关键——内侧（天台侧）干净无油迹，与外侧对比证明沾油者从楼梯间侧进入（Expose R1 Zack口头引用）"
-      - id: 3107
-        name: "Jameson威士忌空瓶"
-        note: "场景道具——L1已获得，$3好酒，L4搜证中Zack口头提及与Helen家Jameson(L3获得3408)的联系"
+    # 📌 3107(Jameson威士忌空瓶)L1已获得，L4搜证中Zack口头提及与Helen家Jameson(L3获得3408)的联系
     # 📌 3404护栏锋利处已移至L3楼顶搜证获取，L4 Expose R1口头引用
 
   # ── SC3008 Helen家（对话 → 指证） ──
@@ -191,16 +189,43 @@ scenes:
   # BAC专业分析移到L6 Foster场景，L4聚焦Helen灌酒行为本身
   # 二方油迹比对(3405)为系统层操作，详见下方「派生证据说明」
 
-  # ── SC3003 Sullivan家（回访搜证） ──
+  # ── SC3003 Sullivan家客厅（回访对话） ──
+  # 📌 3217(廉价酒)+3218(欠债记录)已前移至L2 Sullivan家搜证获取
   - id: 3003
-    name: "Sullivan家"
-    evidence:
-      - id: 3407
-        name: "Thomas家廉价酒照片"
-        note: "关键——厨房约30-40个空瓶，全是$0.10-$0.15品脱装，无一瓶超过$0.50（Expose R2用，与Helen家Jameson $3形成对比）"
-      - id: 3409
-        name: "Thomas欠债记录"
-        note: "场景道具——Continental银行催款单，欠款$12,000，L1已发现。Expose R2 Zack口头引用（Thomas买不起$3好酒）"
+    name: "Sullivan家客厅"
+    npcs:
+      mary_002:
+        # ── 基本信息 ──
+        talk: mary_002
+        is_liar: false  # L4非Expose对象，仅对话
+        motive: "案件朝正当防卫发展对Mary有利——放松状态下展现'受害者日常'"
+        mindset: "暖色调虚假安全感——信任期，试图让Zack看到一个正在重建生活的受害者"
+
+        # ── 1. NPC 已知信息 ──（模式B：再次出场）
+        awareness:  # 基础知识见 loop2_state → mary_001
+          - content: "Helen和Thomas的杀妻骗保计划已暴露（L3 Expose结果）"
+            trigger: "案件进展传达"
+          - content: "案件朝正当防卫方向发展"
+            trigger: "调查走向"
+
+        active_topics:
+          - "Thomas去世后的生活——Emily的近况"
+          - "对Helen的看法（被追问时仍否认Helen当晚在场）"
+
+        withheld_topics:
+          - "Helen当晚在楼顶（坚决否认）"
+          - "自己和Helen的合谋关系"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Helen那晚在不在楼顶？（L2你否认时很心虚）"  # 8
+          - "Thomas去世后你和Emily怎么样？"  # 6
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []  # 无新证词
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
 
   # ── SC3010 Margaret鞋坊（新解锁） ──
   - id: 3010
@@ -254,7 +279,7 @@ scenes:
 
   # ── SC3009 Continental银行（⏸️无新线索） ──
   - id: 3009
-    name: "Continental银行"
+    name: "Continental银行公共区域"
     # L4无新证据，L3证据继承可查看
 
   # ── SC3006 公寓二楼走廊（⏸️无新线索） ──
@@ -307,7 +332,7 @@ expose:
 
   # ── 第二轮：Thomas喝不起的酒 ──
   # Helen家Jameson + Thomas家廉价酒 → 酒是Helen从家里带上去灌的
-  # 口头引用：楼顶Jameson空瓶(3107)、催款单(3409/$12,000)
+  # 口头引用：楼顶Jameson空瓶(3107)、催款单(3218/$12,000)
   round_2:
     lie: "Thomas叫我上去检查，我看了一眼就回去了。他自己在那喝酒，自己带的酒"
     lie_source: "证词 3404001"
@@ -315,7 +340,7 @@ expose:
       - id: 3408
         name: "Helen家Jameson威士忌"
         用途: "Helen家厨房同品牌Jameson（L3获得，已开封剩1/3）——酒来自Helen家，不是Thomas自己的"
-      - id: 3407
+      - id: 3217
         name: "Thomas家廉价酒照片"
         用途: "Thomas家全是$0.10-$0.15廉价酒——欠$12,000买不起$3的Jameson"
     result: |
@@ -375,16 +400,9 @@ doubts:
   - id: 3009
     text: "楼顶门外侧把手有油、内侧干净——有人沾着轮椅维护油从楼梯间侧进入了楼顶"
     unlock_condition: "item:3401 + item:3402"
-  - id: 3010
-    text: "Helen和Mary穿着几乎一模一样的38码平底鞋——L1楼顶'深浅不一'的脚印可能不是地面不平，而是两个体重不同的女人"
-    unlock_condition: "item:3403 + item:3309"
-    # 3403=Helen外出鞋(L3获得) + 3309=第二组脚印特写(L3获得)
-  - id: 3011
-    text: "Jameson威士忌不是Thomas的——楼顶空瓶和Helen家同品牌，Thomas家全是$0.10廉价酒"
-    unlock_condition: "item:3107 + item:3408 + item:3407"
   - id: 3012
     text: "Thomas被人持续灌酒到0.25%——需要至少一小时不间断补充酒精"
-    unlock_condition: "testimony:3404001 + item:3407"
+    unlock_condition: "testimony:3404001 + item:3217"
   - id: 3013
     text: "有人从楼下看到了那晚楼顶发生的事——争吵、挣扎、人影推搡、有人坠落"
     unlock_condition: "testimony:3406001"

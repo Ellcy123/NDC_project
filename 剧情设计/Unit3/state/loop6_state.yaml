@@ -11,7 +11,7 @@
 # ═══════════════════════════════════════
 
 player_context:
-  chapter_goal: "法庭辩论——为Thomas坠楼案做出最终裁定"
+  chapter_goal: "收集最后的证词，拼出完整真相"
   goals:
     primary: "Mary和Helen是正当防卫，还是预谋杀人？"
     secondary:
@@ -128,7 +128,7 @@ opening:
 # 场景状态表 L6:
 #   警局(SC3004)       → 🎬开篇 → ⏸️
 #   Margaret鞋坊(SC3010) → 🔓对话（Margaret）
-#   Sullivan家(SC3003)   → 🔓对话（Mary）— 新解锁
+#   Sullivan家客厅(SC3003)→ 🔓对话（Mary）— 新解锁
 #   Helen家(SC3008)    → 🔓对话（Helen）
 #   Foster实验室(SC3005) → 🔓搜证（36-E-01）
 #   街角(SC3011)       → 🔓对话（Mickey Talk）— 新场景
@@ -183,9 +183,9 @@ scenes:
             answer: "她报过三次警，警察问一句'没事吧'就走了（来源：L3 SC3006 Liam对话）"
             reward: "Margaret：'我看着那孩子脸上带着青印去杂货店……看了十年。法律管不到人家前门以里——The law stops at the front door——这是规矩，不是我们不管。'"
 
-  # ── SC3003 Sullivan家/Mary家（新解锁） ──
+  # ── SC3003 Sullivan家客厅/Mary家（新解锁） ──
   - id: 3003
-    name: "Sullivan家"
+    name: "Sullivan家客厅"
     # 解锁契机: L5发现Mary可能是主谋，但正当防卫已判——Zack需要亲眼看看Mary的生活状态
     # 解锁原因: L2指证Mary时场景是教堂/警局，Mary家此前没有搜查理由
     unlock_trigger: "L5揭示Mary可能是主谋后，Zack决定亲自去看看Mary的生活环境"
@@ -259,12 +259,15 @@ scenes:
 
   # ── SC3005 Foster实验室（复用场景，新内容） ──
   - id: 3005
-    name: "Foster实验室"
+    name: "法医办公室"
     # L5已建立Foster与Zack的合作关系，L6 Zack申请补充分析0.25%酒精浓度的完整生理影响
     evidence:
       - id: 3601
         name: "Foster血液酒精浓度补充分析报告"
         note: "关键——R1击破证据。补充L1原报告（31-T-01），揭示0.25%下无攻击能力"
+      - id: 3611
+        name: "Foster的旧烟斗和医学院毕业照"
+        note: "环境叙事——石楠木烟斗+1898年毕业合影，Primum non nocere"
     npcs:
       foster_006:
         # ── 基本信息 ──
@@ -353,7 +356,7 @@ scenes:
     name: "Thomas公寓楼顶"
     # L6无新证据
   - id: 3009
-    name: "Continental银行"
+    name: "Continental银行公共区域"
     # L6无新证据
   - id: 3006
     name: "公寓二楼走廊"

@@ -48,7 +48,7 @@ player_context:
 # PART 1: 开篇
 # ═══════════════════════════════════════
 #
-# 场景状态表: Sullivan家(SC3003) → 🎬开篇
+# 场景状态表: Sullivan家客厅(SC3003) → 🎬开篇
 # Zack和Emma来到Sullivan公寓楼，Emma回顾L1发现——
 # Morrison的暗示和脚印线索，引导调查Mary。
 
@@ -90,30 +90,19 @@ opening:
 # 场景状态表 L2:
 #   楼下现场(SC3001)   → ⏸️无新线索（报纸天气版可获取）
 #   楼顶(SC3002)       → ⏸️无新线索
-#   Sullivan家(SC3003)  → 🎬开篇 → 🔓搜证 → ⚔️指证(Mary)
+#   Sullivan家客厅(SC3003) → 🎬开篇 → 🔓搜证 → ⚔️指证(Mary)
+#   Sullivan家卧室(SC3012) → 🔓搜证
 #   法医办公室(SC3005)      → ⏸️无新线索（随身物品已在L1移交）
 #   教堂(SC3007)        → 🔓搜证
 #
 scenes:
-  # ── SC3003 Sullivan家（开篇 → 搜证 → 指证） ──
+  # ── SC3003 Sullivan家客厅（开篇 → 搜证 → 指证） ──
   - id: 3003
-    name: "Sullivan家"
+    name: "Sullivan家客厅"
     evidence:
-      - id: 3203
-        name: "衬衫"
-        note: "关键——卧室衣柜深处纸盒，领口珊瑚红口红印，发黄积灰藏了很久（R3用）"
-      - id: 3204
-        name: "Mary的玫瑰红口红"
-        note: "关键——卧室梳妆台，Elizabeth Arden Rose Blush，与衬衫口红颜色完全不同（R3用）"
-      - id: 3205
-        name: "祈祷披肩"
-        note: "关键——卧室衣柜挂钩，黑色蕾丝，右下角约1cm勾丝破损（R4小玩法原料）"
       - id: 3207
         name: "Mary手链照片"
         note: "场景道具——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作"
-      - id: 3209
-        name: "Mary的外出鞋"
-        note: "🔒藏梗——约38码，鞋底有楼顶灰尘。与L4 Helen的鞋外观相似同码数，脚印'深浅不一'的伏笔"
       - id: 3214
         name: "家暴痕迹"
         note: "场景道具——客厅墙上拳头大小的凹陷、靠墙角的断裂椅子腿、一张被烟头烫过的Mary照片从柜子顶上滑下来。Thomas暴行的视觉证据，为Mary'报警三次无人管'建立情感基础"
@@ -123,6 +112,15 @@ scenes:
       - id: 3216
         name: "Emily房间门栓"
         note: "场景道具——女儿房间门外侧新安装的铁质滑栓，高度约180cm只有成人才能够到。Mary保护Emily的痕迹——从外面锁上，Thomas喝醉时进不去女儿房间"
+      - id: 3218
+        name: "Thomas欠债记录"
+        note: "🔒伏笔——客厅抽屉Continental银行催款单，欠款$12,000。循环4 Expose R2 Zack口头引用"
+      - id: 3217
+        name: "Thomas家廉价酒照片"
+        note: "🔒伏笔——厨房约30-40个空瓶，全是$0.10-$0.15品脱装，无一瓶超过$0.50。循环4 Expose R2用（与Helen家Jameson $3形成对比）"
+      - id: 3501
+        name: "标注报纸"
+        note: "🔒伏笔——《芝加哥论坛报》1928年10月保险版面，有大量专业批注+银行内部缩写术语（ACC.D, BEN.CHG, EXC.CLSE, CLM.48HR）。L2获取时不理解含义；L5笔迹比对+垫板压痕分析的核心物证"
     npcs:
       mary_001:
         # ── 基本信息 ──
@@ -155,6 +153,23 @@ scenes:
 
         # ── 4. 鉴赏力 ──
         connoisseur: []
+
+  # ── SC3012 Sullivan家卧室（搜证） ──
+  - id: 3012
+    name: "Sullivan家卧室"
+    evidence:
+      - id: 3203
+        name: "衬衫"
+        note: "关键——卧室衣柜深处纸盒，领口珊瑚红口红印，发黄积灰藏了很久（R3用）"
+      - id: 3204
+        name: "Mary的玫瑰红口红"
+        note: "关键——卧室梳妆台，Elizabeth Arden Rose Blush，与衬衫口红颜色完全不同（R3用）"
+      - id: 3205
+        name: "祈祷披肩"
+        note: "关键——卧室衣柜挂钩，黑色蕾丝，右下角约1cm勾丝破损（R4小玩法原料）"
+      - id: 3209
+        name: "Mary的外出鞋"
+        note: "🔒藏梗——约38码，鞋底有楼顶灰尘。与L4 Helen的鞋外观相似同码数，脚印'深浅不一'的伏笔"
 
   # ── SC3007 St. Patrick教堂 ──
   - id: 3007
@@ -209,7 +224,7 @@ scenes:
 # PART 3: 指证（Expose）
 # ═══════════════════════════════════════
 #
-# 场景状态表: Sullivan家(SC3003) → ⚔️指证(Mary)
+# 场景状态表: Sullivan家客厅(SC3003) → ⚔️指证(Mary)
 # 指证设计: 4轮（教堂蜡烛 → 大风因果 → 早知奸情 → 见到Thomas）
 # Mary的Talk/证词见上方 scenes → SC3003 → mary_001
 
@@ -309,6 +324,10 @@ doubts:
   - id: 3005
     text: "Mary可能与Thomas有肢体接触——Thomas袖扣织物与祈祷披肩一致"
     unlock_condition: "item:3206 + item:3205"
+  - id: 3014
+    text: "Thomas只喝$0.10廉价酒——楼顶那瓶$3的Jameson不可能是Thomas自己带上去的"
+    unlock_condition: "item:3217 + item:3107"
+    # 3217=Thomas家廉价酒(L2 SC3003获得) + 3107=楼顶Jameson空瓶(L1 SC3002获得)
 
 # ═══════════════════════════════════════
 # 验证状态
