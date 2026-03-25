@@ -9,7 +9,7 @@
     (function(){
         var h = location.hostname;
         var isLocal = (h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:');
-        var src = isLocal ? '/NDC_project/Preview/js-yaml.min.js' : '/Preview/js-yaml.min.js';
+        var src = isLocal ? '/NDC_project/preview_new2/js-yaml.min.js' : '/preview_new2/js-yaml.min.js';
         document.write('<scr'+'ipt src="'+src+'"><\/scr'+'ipt>');
     })();
     </script>
@@ -652,6 +652,7 @@
                 <select id="unitSelect">
                     <option value="Unit1">Unit 1 - Webb谋杀案</option>
                     <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
+                    <option value="Unit3">Unit 3 - Thomas坠楼案</option>
                 </select>
                 <select id="loopSelect">
                     <option value="loop1">Loop 1</option>
@@ -1141,6 +1142,7 @@
         },
 
         chapter(unit) {
+            if (unit === 'Unit3') return 'EPI03';
             return unit === 'Unit2' ? 'EPI02' : 'EPI01';
         },
 
@@ -1156,7 +1158,7 @@
 
         // Scene ID prefix for a given unit+loop: Unit1/loop1 -> "11", Unit2/loop3 -> "23"
         loopPrefix(unit, loop) {
-            const u = unit === 'Unit2' ? '2' : '1';
+            const u = unit === 'Unit3' ? '3' : (unit === 'Unit2' ? '2' : '1');
             const l = loop.replace('loop', '');
             return `${u}${l}`;
         },
@@ -1197,7 +1199,7 @@
         },
 
         getChapterConfig(unit, loop) {
-            const unitNum = unit === 'Unit1' ? 1 : 2;
+            const unitNum = unit === 'Unit3' ? 3 : (unit === 'Unit2' ? 2 : 1);
             const loopNum = parseInt(loop.replace('loop', ''));
             const id = String(unitNum * 100 + loopNum);
             return AppState.chapterConfigMap.get(id) || null;
