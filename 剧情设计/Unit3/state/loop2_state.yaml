@@ -48,14 +48,14 @@ player_context:
 # PART 1: 开篇
 # ═══════════════════════════════════════
 #
-# 场景状态表: Sullivan家客厅(SC3003) → 🎬开篇
-# Zack和Emma来到Sullivan公寓楼，Emma回顾L1发现——
-# Morrison的暗示和脚印线索，引导调查Mary。
+# 场景状态表: 公寓楼门口(SC3013) → 🎬开篇
+# Zack和Emma来到Sullivan公寓楼门口，Emma回顾L1发现——
+# Morrison的暗示和脚印线索，引导调查Mary。敲门后Mary在门口应答。
 
 opening:
-  scene_id: 3003
+  scene_id: 3013
   characters: [Zack, Emma]
-  purpose: "Morrison指名Mary Sullivan → Emma回顾L1脚印证据和Morrison暗示 → 敲Mary家门开始调查"
+  purpose: "Morrison指名Mary Sullivan → Emma回顾L1脚印证据和Morrison暗示 → 公寓楼门口敲门，Mary应门开始调查"
   talk: emma_002
 
   emma_002:
@@ -87,40 +87,27 @@ opening:
 # PART 2: 自由探索
 # ═══════════════════════════════════════
 #
-# 场景状态表 L2:
-#   楼下现场(SC3001)   → ⏸️无新线索（报纸天气版可获取）
-#   楼顶(SC3002)       → ⏸️无新线索
-#   Sullivan家客厅(SC3003) → 🎬开篇 → 🔓搜证 → ⚔️指证(Mary)
-#   Sullivan家卧室(SC3012) → 🔓搜证
-#   法医办公室(SC3005)      → ⏸️无新线索（随身物品已在L1移交）
-#   教堂(SC3007)        → 🔓搜证
+# L2 场景状态（全14场景）:
+#   SC3001 楼下现场              → ⏸️无新线索（报纸已移至L1获取）
+#   SC3002 楼顶                  → ⏸️无新线索
+#   SC3003 Sullivan家客厅        → 🔓搜证（Mary对话后解锁，纯搜证无NPC）
+#   SC3004 警局                  → 🔒Morrison不配合，无法进入
+#   SC3005 法医办公室            → 🔒Foster不在
+#   SC3006 公寓二楼走廊          → 🔒尚未发现二楼线索
+#   SC3007 教堂                  → 🔓搜证
+#   SC3008 Helen家               → 🔒尚未发现Helen线索
+#   SC3009 Continental银行公共区域 → 🔒银行尚未出现在调查方向中
+#   SC3010 Margaret鞋坊          → 🔒尚未发现Margaret线索
+#   SC3011 街角                  → 🔒尚未出现在调查方向中
+#   SC3012 Sullivan家卧室        → 🔓搜证
+#   SC3013 公寓楼门口            → 🎬开篇→🔓对话(Mary)→⚔️指证(Mary)
+#   SC3014 Bernard办公室         → 🔒银行尚未出现在调查方向中
 #
 scenes:
-  # ── SC3003 Sullivan家客厅（开篇 → 搜证 → 指证） ──
-  - id: 3003
-    name: "Sullivan家客厅"
-    evidence:
-      - id: 3207
-        name: "Mary手链照片"
-        note: "场景道具——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作"
-      - id: 3214
-        name: "家暴痕迹"
-        note: "场景道具——客厅墙上拳头大小的凹陷、靠墙角的断裂椅子腿、一张被烟头烫过的Mary照片从柜子顶上滑下来。Thomas暴行的视觉证据，为Mary'报警三次无人管'建立情感基础"
-      - id: 3215
-        name: "Emily蜡笔画"
-        note: "🔒伏笔——冰箱上贴着8岁女儿的蜡笔画：一个女人牵着小女孩的手在阳光下走，旁边一个男人被黑色蜡笔用力涂黑，几乎看不出轮廓。孩子眼中的家庭。循环5-6揭示Helen帮Mary的深层动机——Helen看到Emily想起8岁的自己目睹父亲打母亲"
-      - id: 3216
-        name: "Emily房间门栓"
-        note: "场景道具——女儿房间门外侧新安装的铁质滑栓，高度约180cm只有成人才能够到。Mary保护Emily的痕迹——从外面锁上，Thomas喝醉时进不去女儿房间"
-      - id: 3218
-        name: "Thomas欠债记录"
-        note: "🔒伏笔——客厅抽屉Continental银行催款单，欠款$12,000。循环4 Expose R2 Zack口头引用"
-      - id: 3217
-        name: "Thomas家廉价酒照片"
-        note: "🔒伏笔——厨房约30-40个空瓶，全是$0.10-$0.15品脱装，无一瓶超过$0.50。循环4 Expose R2用（与Helen家Jameson $3形成对比）"
-      - id: 3501
-        name: "标注报纸"
-        note: "🔒伏笔——《芝加哥论坛报》1928年10月保险版面，有大量专业批注+银行内部缩写术语（ACC.D, BEN.CHG, EXC.CLSE, CLM.48HR）。L2获取时不理解含义；L5笔迹比对+垫板压痕分析的核心物证"
+  # ── SC3013 公寓楼门口（开篇 → 对话Mary → 指证Mary） ──
+  # Mary在门口应答，对话和指证都在此完成。Mary暂离后Zack进屋搜证(SC3003)。
+  - id: 3013
+    name: "公寓楼门口"
     npcs:
       mary_001:
         # ── 基本信息 ──
@@ -153,6 +140,33 @@ scenes:
 
         # ── 4. 鉴赏力 ──
         connoisseur: []
+
+  # ── SC3003 Sullivan家客厅（纯搜证，无NPC） ──
+  # Mary对话后解锁，Zack进屋自由搜证。
+  - id: 3003
+    name: "Sullivan家客厅"
+    evidence:
+      - id: 3207
+        name: "Mary手链照片"
+        note: "场景道具——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作"
+      - id: 3214
+        name: "家暴痕迹"
+        note: "场景道具——客厅墙上拳头大小的凹陷、靠墙角的断裂椅子腿、一张被烟头烫过的Mary照片从柜子顶上滑下来。Thomas暴行的视觉证据，为Mary'报警三次无人管'建立情感基础"
+      - id: 3215
+        name: "Emily蜡笔画"
+        note: "🔒伏笔——冰箱上贴着8岁女儿的蜡笔画：一个女人牵着小女孩的手在阳光下走，旁边一个男人被黑色蜡笔用力涂黑，几乎看不出轮廓。孩子眼中的家庭。循环5-6揭示Helen帮Mary的深层动机——Helen看到Emily想起8岁的自己目睹父亲打母亲"
+      - id: 3216
+        name: "Emily房间门栓"
+        note: "场景道具——女儿房间门外侧新安装的铁质滑栓，高度约180cm只有成人才能够到。Mary保护Emily的痕迹——从外面锁上，Thomas喝醉时进不去女儿房间"
+      - id: 3218
+        name: "Thomas欠债记录"
+        note: "🔒伏笔——客厅抽屉Continental银行催款单，欠款$12,000。循环4 Expose R2 Zack口头引用"
+      - id: 3217
+        name: "Thomas家廉价酒照片"
+        note: "🔒伏笔——厨房约30-40个空瓶，全是$0.10-$0.15品脱装，无一瓶超过$0.50。循环4 Expose R2用（与Helen家Jameson $3形成对比）"
+      - id: 3501
+        name: "标注报纸"
+        note: "🔒伏笔——《芝加哥论坛报》1928年10月保险版面，有大量专业批注+银行内部缩写术语（ACC.D, BEN.CHG, EXC.CLSE, CLM.48HR）。L2获取时不理解含义；L5笔迹比对+垫板压痕分析的核心物证"
 
   # ── SC3012 Sullivan家卧室（搜证） ──
   - id: 3012
@@ -192,13 +206,8 @@ scenes:
   # ── SC3005 法医办公室（⏸️无新线索） ──
   # 随身物品(3206)已合并到L1 Foster首次尸检时移交，L2不再需要去法医办公室
 
-  # ── SC3001 楼下现场（报纸可获取） ──
-  - id: 3001
-    name: "Thomas公寓楼下现场"
-    evidence:
-      - id: 3210
-        name: "报纸天气版"
-        note: "关键——Chicago Tribune 1928年11月21日，头版天气栏：'昨夜大风警报，湖区及山区阵风达40英里/小时'（R2用）"
+  # ── SC3001 楼下现场 ──
+  # 📌 报纸天气版(3108)已移至L1 SC3001搜证获取，L2 Expose R2跨循环引用
 
   # ── SC3002 楼顶（⏸️无新线索） ──
   - id: 3002
@@ -224,9 +233,9 @@ scenes:
 # PART 3: 指证（Expose）
 # ═══════════════════════════════════════
 #
-# 场景状态表: Sullivan家客厅(SC3003) → ⚔️指证(Mary)
+# 场景状态表: 公寓楼门口(SC3013) → ⚔️指证(Mary)
 # 指证设计: 4轮（教堂蜡烛 → 大风因果 → 早知奸情 → 见到Thomas）
-# Mary的Talk/证词见上方 scenes → SC3003 → mary_001
+# Mary的Talk/证词见上方 scenes → SC3013 → mary_001
 
 expose:
   target: "Mary Sullivan (03)"
@@ -257,7 +266,7 @@ expose:
     lie: "蜡烛断了、蜡油在第5章——那是我离开之后的事，跟我没关系"
     lie_source: "Mary的R1反驳"
     usable_evidence:
-      - id: 3210
+      - id: 3108
         name: "报纸天气版"
         用途: "11月20日芝加哥大风警报40mph——教堂在山上风力更强，大风从窗缝灌入→吹回书页到第5章→吹倒蜡烛→蜡油封住第5章"
     result: |

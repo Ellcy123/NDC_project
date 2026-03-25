@@ -134,16 +134,21 @@ opening:
 # PART 2: 自由探索
 # ═══════════════════════════════════════
 #
-# L5 场景状态:
-#   SC3003 Sullivan家客厅          → ⏸️无新线索（3501标注报纸已在L2获取）
-#   SC3014 Continental银行Bernard办公室 → 🔓搜证/对话（新解锁——Bernard Talk+垫板）→ ⚔️指证
-#   SC3005 Foster实验室          → ⏸️不出现（3个小玩法改为系统层分析；花形压痕移到SC3014搜证；SC3005在L6复用）
+# L5 场景状态（全14场景）:
 #   SC3001 楼下现场              → ⏸️无新线索
 #   SC3002 楼顶                  → ⏸️无新线索
-#   SC3007 教堂                  → ⏸️无新线索
-#   SC3008 Helen家               → ⏸️无新线索
-#   SC3010 Margaret鞋坊          → ⏸️无新线索
+#   SC3003 Sullivan家客厅        → ⏸️无新线索（Mary在家但无新信息）
+#   SC3004 警局                  → 🎬开篇→⏸️
+#   SC3005 法医办公室            → ❌不出现（小玩法改为系统层分析，L6复用）
 #   SC3006 公寓二楼走廊          → ⏸️无新线索
+#   SC3007 教堂                  → 🔒无新证据
+#   SC3008 Helen家               → 🔓对话(Helen)——新增
+#   SC3009 Continental银行公共区域 → ⏸️无新线索（Bernard在办公室）
+#   SC3010 Margaret鞋坊          → ⏸️无新线索
+#   SC3011 街角                  → 🔒尚未出现在调查方向中
+#   SC3012 Sullivan家卧室        → ⏸️无新线索
+#   SC3013 公寓楼门口            → ⏸️无新线索
+#   SC3014 Bernard办公室         → 🔓搜证/对话(Bernard)→⚔️指证
 
 scenes:
   # ── SC3014 Continental银行Bernard办公室 L5（新解锁——Bernard Talk+垫板搜证） ──
@@ -222,9 +227,30 @@ scenes:
   - id: 3002
     name: "Thomas公寓楼顶"
     # L5无新证据
+  # ── SC3008 Helen家（L5新增对话） ──
   - id: 3008
     name: "Helen家"
-    # L5无新证据
+    npcs:
+      helen_L5:
+        talk: helen_L5
+        is_liar: false
+        motive: "L4正当防卫判决后，Helen心态放松，愿意谈论Bernard和Thomas咨询保险的事"
+        mindset: "释然但仍谨慎——主动配合调查Bernard，但不会主动提及自己在骗保计划中的角色"
+        awareness:
+          - content: "正当防卫判决已下"
+            trigger: "L4结案"
+          - content: "Zack正在追查骗保计划的幕后推手"
+            trigger: "Mickey在L5开篇的质疑"
+        active_topics:
+          - "Bernard和Thomas的保险咨询（Helen作为目击者）"
+          - "Thomas文化水平和Bernard的'耐心指导'"
+        withheld_topics:
+          - "自己也参与了骗保计划的执行"
+        player_inquiry:
+          - "Bernard和Thomas……（Helen目击的咨询过程）"
+          - "Thomas怎么会想到买保险……（Helen视角的Thomas转变）"
+        testimony_ids: []
+        connoisseur: []
   - id: 3010
     name: "Margaret鞋坊"
     # L5无新证据

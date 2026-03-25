@@ -303,6 +303,10 @@
             border-radius: 4px;
             font-size: 0.7rem;
         }
+        .ev-type.type-clue { background: #c0392b; }
+        .ev-type.type-item { background: #2980b9; }
+        .ev-type.type-envir { background: #7f8c8d; }
+        .ev-type.type-note { background: #8e44ad; }
 
         .ev-desc {
             color: var(--text-secondary);
@@ -1140,6 +1144,9 @@
         typeName(type) {
             return { '0': '装饰', '1': '线索', '2': '环境', '3': '道具', '4': '笔记', '5': '门', '6': '可交互道具', '7': '内嵌道具' }[String(type)] || type || '?';
         },
+        typeClass(type) {
+            return { '1': 'type-clue', '2': 'type-envir', '3': 'type-item', '4': 'type-note' }[String(type)] || '';
+        },
 
         chapter(unit) {
             if (unit === 'Unit3') return 'EPI03';
@@ -1733,7 +1740,7 @@
                     <tr onclick="UI.showEvidenceModal('${item.id}')" style="cursor:pointer;">
                         <td class="id-col">${escapeHtml(String(item.id))}</td>
                         <td class="name-col">${escapeHtml(DataManager.itemName(item))}</td>
-                        <td class="type-col">${escapeHtml(DataManager.typeName(item.itemType))}</td>
+                        <td class="type-col"><span class="ev-type ${DataManager.typeClass(item.itemType)}">${escapeHtml(DataManager.typeName(item.itemType))}</span></td>
                         <td class="location-col">${escapeHtml(DataManager.itemLocation(item))}</td>
                         <td class="desc-col">${escapeHtml(truncate(DataManager.itemDesc(item), 80))}</td>
                         <td class="${artClass}">${escapeHtml(truncate(artText, 60))}</td>
@@ -1961,7 +1968,7 @@
                             <div class="ev-name">${escapeHtml(DataManager.itemName(item))}</div>
                             <div class="ev-id">
                                 ID: ${item.id}
-                                <span class="ev-type">${escapeHtml(DataManager.typeName(item.itemType))}</span>
+                                <span class="ev-type ${DataManager.typeClass(item.itemType)}">${escapeHtml(DataManager.typeName(item.itemType))}</span>
                                 ${item.canAnalyzed === 'true' ? '<span class="ev-type" style="background:var(--success)">可分析</span>' : ''}
                             </div>
                             <div class="ev-desc">${escapeHtml(truncate(DataManager.itemDesc(item), 100))}</div>

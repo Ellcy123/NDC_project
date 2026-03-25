@@ -35,43 +35,120 @@ LOOP_META = {
     6: {"title": "辩论", "time": "11/23 18:00 傍晚"},
 }
 
-# 每个Loop的场景分类（从场景总览提取）
-LOOP_SCENES = {
+# 场景ID转换：物理场景ID → 按循环场景ID
+# 编码规范 XYZZ: X=章节(3), Y=循环(1-6), ZZ=场景序号(01-14)
+def to_loop_scene_id(loop_num, physical_scene_id):
+    """3001 + loop 1 → 3101; 3014 + loop 5 → 3514"""
+    suffix = int(physical_scene_id) % 100
+    return int(f"3{loop_num}{suffix:02d}")
+
+# 每个Loop的场景分类（严格按state文件注释配置）
+# unlocked: 🔓活跃 + ⏸️无新线索（玩家可访问的所有场景）— 使用物理ID，输出时转换
+# locked: 尚未解锁场景（玩家未触发条件）
+# closed: ⏸️不出现（该循环中完全不显示的场景）
+# 关键区分：⏸️无新线索 ≠ 不开放，仍在unlocked中
+LOOP_SCENE_CONFIG = {
+    # ── L1 不是自杀 ──
+    # 🔓: 3001(搜证), 3002(搜证), 3005(对话Foster) | ⚔️: 3004(指证Morrison)
+    # 🔒: 其余全部未发现/未出现
     1: {
         "unlocked": [3001, 3002, 3005],
         "locked": [
             {"id": 3003, "reason": "尚未发现Sullivan家线索"},
-            {"id": 3007, "reason": "尚未发现Mary的宗教线索"},
+            {"id": 3006, "reason": "尚未发现二楼线索"},
+            {"id": 3007, "reason": "尚未发现教堂线索"},
             {"id": 3008, "reason": "尚未发现Helen线索"},
             {"id": 3009, "reason": "银行尚未出现在调查方向中"},
             {"id": 3010, "reason": "尚未发现Margaret线索"},
+            {"id": 3011, "reason": "尚未出现在调查方向中"},
+            {"id": 3012, "reason": "尚未发现Sullivan家线索"},
+            {"id": 3013, "reason": "尚未出现在调查方向中"},
+            {"id": 3014, "reason": "银行尚未出现在调查方向中"},
         ],
+        "closed": [],
     },
+    # ── L2 Mary的嫌疑 ──
+    # 🔓: 3013(对话Mary→指证), 3003(搜证), 3012(搜证), 3007(搜证)
+    # ⏸️无新线索: 3001, 3002
+    # 🔒: 3004(Morrison不配合), 3005(Foster不在), 3006(未发现), 3008(未发现Helen),
+    #      3009(银行未出现), 3010(未发现Margaret), 3011(未出现), 3014(银行未出现)
     2: {
-        "unlocked": [3003, 3012, 3007, 3001, 3002],
+        "unlocked": [3013, 3003, 3012, 3007, 3001, 3002],
         "locked": [
+            {"id": 3004, "reason": "Morrison不配合，无法进入"},
+            {"id": 3005, "reason": "Foster不在"},
+            {"id": 3006, "reason": "尚未发现二楼线索"},
             {"id": 3008, "reason": "尚未发现Helen线索"},
             {"id": 3009, "reason": "银行尚未出现在调查方向中"},
             {"id": 3010, "reason": "尚未发现Margaret线索"},
+            {"id": 3011, "reason": "尚未出现在调查方向中"},
+            {"id": 3014, "reason": "银行尚未出现在调查方向中"},
         ],
+        "closed": [],
     },
+    # ── L3 杀妻骗保计划 ──
+    # 🔓: 3008(搜证→指证Helen), 3002(搜证), 3009(搜证/对话Bernard), 3006(对话Liam)
+    # ⏸️无新线索: 3001, 3013
+    # 🔒: 3003/3012(Mary不在+无证据), 3004(无法进入), 3005(Foster不在), 3007(无证据),
+    #      3010(未发现Margaret), 3011(未出现), 3014(办公区域不对外开放)
     3: {
-        "unlocked": [3008, 3002, 3009, 3006, 3001],
+        "unlocked": [3008, 3002, 3009, 3006, 3001, 3013],
         "locked": [
+            {"id": 3003, "reason": "Mary不在家，无新证据"},
+            {"id": 3004, "reason": "无法进入"},
+            {"id": 3005, "reason": "Foster不在"},
+            {"id": 3007, "reason": "无新证据"},
             {"id": 3010, "reason": "尚未发现Margaret线索"},
+            {"id": 3011, "reason": "尚未出现在调查方向中"},
+            {"id": 3012, "reason": "Mary不在家，无新证据"},
+            {"id": 3014, "reason": "办公区域不对外开放"},
         ],
+        "closed": [],
     },
+    # ── L4 门把手上的油 ──
+    # 🔓: 3002(搜证门把手), 3008(对话→指证Helen补充), 3013(回访Mary), 3010(对话Margaret)
+    # ⏸️无新线索: 3001, 3006, 3009
+    # 🔒: 3003/3012(Mary在楼下+无证据), 3004(无法进入), 3005(Foster不在), 3007(无证据),
+    #      3011(未出现), 3014(办公区域不对外开放)
     4: {
-        "unlocked": [3002, 3008, 3003, 3010],
-        "locked": [],
+        "unlocked": [3002, 3008, 3013, 3010, 3001, 3006, 3009],
+        "locked": [
+            {"id": 3003, "reason": "Mary在楼下，无新证据"},
+            {"id": 3004, "reason": "无法进入"},
+            {"id": 3005, "reason": "Foster不在"},
+            {"id": 3007, "reason": "无新证据"},
+            {"id": 3011, "reason": "尚未出现在调查方向中"},
+            {"id": 3012, "reason": "Mary在楼下，无新证据"},
+            {"id": 3014, "reason": "办公区域不对外开放"},
+        ],
+        "closed": [],
     },
+    # ── L5 Bernard的"标准服务" ──
+    # 🔓: 3014(搜证/对话Bernard→指证), 3008(对话Helen新增)
+    # ⏸️无新线索: 3001, 3002, 3003, 3004, 3006, 3009, 3010, 3012, 3013
+    # ❌不出现: 3005
+    # 🔒: 3007(无证据), 3011(未出现)
     5: {
-        "unlocked": [3014],
-        "locked": [],
+        "unlocked": [3014, 3008, 3001, 3002, 3003, 3004, 3006, 3009, 3010, 3012, 3013],
+        "locked": [
+            {"id": 3007, "reason": "无新证据"},
+            {"id": 3011, "reason": "尚未出现在调查方向中"},
+        ],
+        "closed": [3005],
     },
+    # ── L6 辩论 ──
+    # 🔓: 3010(对话Margaret), 3013(对话Mary), 3008(对话Helen), 3005(搜证Foster), 3011(对话Mickey→辩论)
+    # 🎬→⏸️: 3004(开篇)
+    # ⏸️无新线索: 3001, 3002, 3006, 3009, 3014
+    # 🔒: 3003/3012(Mary在楼下+无证据), 3007(无证据)
     6: {
-        "unlocked": [3005, 3010, 3003, 3008, 3011],
-        "locked": [],
+        "unlocked": [3004, 3010, 3013, 3008, 3005, 3011, 3001, 3002, 3006, 3009, 3014],
+        "locked": [
+            {"id": 3003, "reason": "Mary在楼下，无新证据"},
+            {"id": 3007, "reason": "无新证据"},
+            {"id": 3012, "reason": "Mary在楼下，无新证据"},
+        ],
+        "closed": [],
     },
 }
 
@@ -81,7 +158,7 @@ DERIVED_EVIDENCE = {
     3212: {"name": "织物比对报告", "note": "系统层分析：Thomas袖扣织物(3206)+祈祷披肩(3205)→织物比对", "scene": "小玩法派生", "sources": [3206, 3205]},
     3213: {"name": "口红颜色比对报告", "note": "系统层分析：衬衫口红+Mary口红(3204)→颜色比对", "scene": "小玩法派生", "sources": [3203, 3204]},
     # L3 派生
-    3311: {"name": "Foster地面油迹采样报告", "note": "派生中间产物：楼顶地面油迹现场采样→Foster出具采样报告", "scene": "SC3002", "sources": []},
+    3311: {"name": "Foster地面油迹采样报告", "note": "派生中间产物：楼顶地面油迹现场采样→Foster出具采样报告", "scene": "小玩法派生", "sources": []},
     3312: {"name": "油样本化学比对报告", "note": "系统层分析：轮椅维护油(3301)+地面油迹采样(3311)→化学比对", "scene": "小玩法派生", "sources": [3301, 3311]},
     # L4 派生
     3405: {"name": "油迹二方比对报告", "note": "系统层分析：门把手油迹(3401)+地面油比对报告(3312)→二方比对", "scene": "小玩法派生", "sources": [3401, 3312]},
@@ -91,6 +168,762 @@ DERIVED_EVIDENCE = {
     3506: {"name": "垫板压痕vs报纸批注对比照片", "note": "系统层分析：垫板(3504)压痕与报纸批注叠加对比", "scene": "小玩法派生", "sources": [3504, 3501]},
     3508: {"name": "Mary手链照片", "note": "L2回溯获取：Mary手链(原3207)的特写照片，用于花形压痕比对", "scene": "小玩法派生", "sources": [3207]},
     3509: {"name": "花形压痕比对报告", "note": "系统层分析：垫板花形压痕(3507)+Mary手链照片(3508)→比对，雏菊吊坠完全吻合", "scene": "小玩法派生", "sources": [3507, 3508]},
+}
+
+# 证据类型映射（从证据美术资产文档提取）
+# 1=Clue, 2=Environment, 3=Item, 4=Note
+ITEM_TYPE_MAP = {
+    # Loop 1
+    3101: "1", 3103: "1", 3104: "1", 3106: "1",
+    3107: "3", 3206: "3",
+    # Loop 2
+    3201: "3", 3202: "3", 3203: "3", 3204: "3", 3205: "3",
+    3108: "3",
+    3207: "1", 3208: "1", 3209: "3",
+    3212: "3", 3213: "3",
+    3214: "2", 3215: "2", 3216: "3", 3217: "1", 3218: "3",
+    3501: "3",
+    # Loop 3
+    3301: "3", 3302: "3", 3303: "3", 3304: "3",
+    3305: "2", 3306: "1", 3307: "1", 3308: "1", 3309: "1",
+    3311: "1", 3312: "1", 3313: "1", 3314: "1",
+    3403: "3", 3404: "1", 3408: "3",
+    # Loop 4
+    3401: "1", 3402: "1", 3405: "1",
+    # Loop 5
+    3502: "3", 3504: "3", 3505: "3", 3506: "1", 3507: "1",
+    3508: "1", 3509: "1", 3510: "2", 3511: "2", 3512: "3",
+    # Loop 6
+    3601: "3", 3610: "3", 3611: "2",
+}
+
+# 证据类型名称映射（用于sprite命名）
+ITEM_TYPE_NAME_MAP = {"1": "clue", "2": "environment", "3": "item", "4": "note"}
+
+# 证据美术需求描述（从美术对接文档提取）
+ART_CONFIG = {
+    # ===== Loop 1 =====
+    3101: """一张黑白照片，尺寸约10x15cm
+• 照片内容：尸体着地点俯视图
+• 地面血迹呈放射状，中心处已被白布覆盖
+• 距离楼墙约0.8米（可通过背景参照物估算）
+• 玄关边的花坛有压塌痕迹
+• 照片底部有手写标注："现场照片 #001 - 着地点 0.8m"
+• 照片边缘略微卷曲""",
+
+    3103: """一张黑白照片，尺寸约10x15cm
+• 照片内容：楼顶水泥地面上的靴印特写
+• 靴印清晰，尺码约42码
+• 鞋底花纹明显，工作靴款式
+• 靴印位置：护栏边约0.5米处
+• 照片旁放置一把标尺作为尺寸参考
+• 照片底部有手写标注："楼顶脚印 #001 - 男性 42码"
+• 照片边缘略微卷曲""",
+
+    3104: """一张黑白照片，尺寸约10x15cm
+• 照片内容：楼顶水泥地面上的女性鞋印特写
+• 鞋印特征：约38码，深浅不一（部分深、部分浅）
+• 鞋印位置：与Thomas靴印面对面分布
+• 照片旁放置一把标尺作为尺寸参考
+• 照片底部有手写标注："楼顶脚印 #002 - 女性 ~38码"
+• 照片边缘略微卷曲""",
+
+    3106: """一组照片（2张），每张约10x15cm
+【照片A：护栏外侧（面向街道）】
+• 护栏顶端灰尘完整无损
+• 灰尘层约1-2mm厚，呈均匀分布
+• 无手掌印、无擦痕、无扰动痕迹
+• 说明：无人从外侧翻过护栏
+【照片B：护栏内侧（面向楼顶）】
+• 护栏顶端有手掌印（约3-4个模糊掌印）
+• 护栏顶端有衣物擦痕（约15cm长条状，深色织物摩擦）
+• 手掌印与擦痕位置：Thomas坠落点正上方
+• 说明：有人从内侧背部擦过护栏
+• 照片底部有手写标注："护栏痕迹 - Foster侧光拍摄"
+• 照片边缘略微卷曲""",
+
+    3107: """威士忌酒瓶，高约25cm，标准酒瓶造型
+• 品牌：Jameson爱尔兰威士忌
+• 容量：750ml（已空）
+• 瓶身：绿色玻璃，完整无损
+• 瓶口：软木塞已开启，散落在瓶旁
+• 标签：商标清晰可见，价格标签仍在（$3.00）
+• 位置：楼顶护栏边约2米处，倒卧在地
+• 瓶内：残留酒液约10ml（已蒸发大半）""",
+
+    3206: """Thomas尸体随身物品，由Foster法医移交
+• 钱包内容：
+  - 一把老式安全门钥匙，齿形特殊
+  - 不像普通房门钥匙
+  - 有使用磨损痕迹
+  - 少量零钱、无身份证件
+• 右袖扣纽扣处：
+  - 附着少量异源织物纤维
+  - 颜色：黑色
+  - 材质：高档蕾丝编织物
+  - 纹理：特殊玫瑰花纹编织
+  - 来源推测：某种装饰性织物，如披肩或围巾
+  - 断裂方式：被拉扯或勾挂留下，非自然脱落""",
+
+    3108: """报纸剪版，标准报纸尺寸
+• 报纸：Chicago Tribune（芝加哥论坛报）
+• 日期：1928年11月21日
+• 版面：天气预报版
+• 关键内容：
+  - 标题："Gale Warning"（大风警报）
+  - 风速预警：40 mph（约65 km/h）
+  - 生效时间：11月20日夜间至21日凌晨
+  - 区域：芝加哥湖滨及周边地区
+• 纸张状态：略有褶皱，像是被人翻阅过
+• 位置：Thomas公寓楼下大厅报架上""",
+
+    3611: """办公桌另一角，一个磨得发亮的木质烟斗放在一张老照片旁边
+• 烟斗：石楠木，斗钵内壁碳化发黑，使用超过二十年
+• 照片：1898年医学院毕业合影（约15x20cm），十几个穿白大褂的年轻人
+• 其中一个人被钢笔圈了出来——年轻时的Foster
+• 照片下方手写一行拉丁文："Primum non nocere"（首先，不伤害）""",
+
+    # ===== Loop 2 =====
+    3201: """白色祈祷蜡烛，约20cm高，直径2cm
+• 材质：石蜡，白色
+• 燃烧高度：仅烧了约3厘米（约15分钟）
+• 顶端特征：有明显的人为掐灭痕迹
+  - 蜡油凝固不自然，呈指压状
+  - 烛芯被掐断，断口处焦黑
+• 底部：平整，可直立于烛台
+• 位置：教堂祈祷台，Mary专属蜡烛位置""",
+
+    3202: """旧祈祷册，约15x10cm，深棕色皮革封面
+• 封面：深棕色皮革，边角磨损严重
+  - 有30年以上使用痕迹
+  - 正面烫金十字架图案（已褪色）
+• 内页：泛黄厚纸，手工装订
+• 书签：红色丝带书签，夹在第5章
+  - 章节标题：**"宽恕与忍耐"**
+  - 页码清晰可见：P.42-P.58
+• 第23章位置：P.189-P.205
+  - 章节标题：**"正义的审判"**
+  - Mary声称读到此章，但书签不在这里
+• 边缘：有多处手指翻阅的痕迹""",
+
+    3203: """男式白衬衫，标准尺码，棉质
+• 材质：白色棉质，中等质量
+• 尺码：约42码（男性标准）
+• 领口：有明显的**珊瑚红口红印**
+  - 颜色：珊瑚红（Coral），鲜艳但已干涸
+  - 位置：领口右侧，约5x3cm印记
+  - 状态：口红已干涸，有轻微裂纹
+• 整体状态：
+  - 明显发黄陈旧，布满了一层薄灰
+  - 已穿过但未洗（有轻微汗渍）
+  - 叠放整齐，刻意藏在衣柜最下层
+• 藏匿方式：
+  - 衣柜最底层的纸盒里，用其他旧衣物死死覆盖
+  - 单独叠放，与其他待洗衣物分开""",
+
+    3204: """口红，标准化妆品尺寸，金属管身
+• 品牌：Revlon（露华浓）
+• 色号：Rose Blush（玫瑰红）
+• 颜色：玫瑰红（Rose），偏粉色调
+  - 与衬衫上的珊瑚红明显不同
+  - 玫瑰红更偏粉红，珊瑚红更偏橙红
+• 使用程度：快用完了，只剩约1/4
+• 管身：金色金属，有使用磨损
+• 位置：梳妆台上，与其他化妆品摆在一起""",
+
+    3205: """黑色蕾丝祈祷披肩，约150x80cm
+• 材质：高档黑色蕾丝，精致编织
+• 颜色：纯黑色
+• 编织纹理：独特的花纹图案
+  - 蕾丝编织呈玫瑰花纹
+  - 纹理特殊，可用于显微比对
+• 边缘破损：
+  - 位置：右下角边缘
+  - 大小：约1厘米长的勾丝破损
+  - 状态：纤维断裂，像是被拉扯或勾挂
+• 整体状态：保养良好，是母亲遗物
+• 位置：卧室衣柜挂钩上，显眼位置""",
+
+    3207: """一张照片，尺寸约10x15cm，拍摄Mary手腕特写
+• 照片内容：Mary左手手腕特写
+• 手链特征：
+  - 银质链条，约18cm长
+  - 链扣精致，有岁月磨损痕迹
+  - 吊坠：**雏菊花形银质吊坠**
+    - 直径约1.2cm
+    - 五瓣花瓣清晰可见
+    - 花蕊中央有小凸起
+    - 背面刻字："To Mary, with love - Mother"
+• Mary的习惯：经常下意识摸这条手链
+• 照片标注："Mary母亲遗物 - 雏菊手链"
+""",
+
+    3208: """一张黑白照片，尺寸约10x15cm
+• 照片内容：教堂祭坛蜡烛台特写
+• 蜡烛台：多层结构，可放置约20支蜡烛
+• 特定位置：第三排第五个位置
+  - 底座有铭文："M.S."（Mary Sullivan的缩写）
+  - 这是Mary的专属蜡烛位置
+• 蜡烛燃烧痕迹：
+  - 蜡烛高度：约17cm（原高20cm，烧了约3cm）
+  - 燃烧时间：约15分钟
+  - 顶端：人为掐灭痕迹（蜡油凝固不自然）
+• 周围蜡烛：其他位置的蜡烛燃烧高度不一
+• 照片底部标注："Mary专属蜡烛 - 燃烧约15分钟"
+""",
+
+    3209: """女式户外鞋，约38码，低跟款式
+• 尺码：约38码
+• 款式：低跟户外便鞋，深棕色皮革
+• 鞋底特征：
+  - 有明显的楼顶水泥粉尘
+  - 鞋底花纹简单，平底设计
+  - 与楼顶第二组脚印（38码平底）吻合
+• 使用状态：
+  - 皮革表面有磨损，经常穿着
+  - 鞋带系法简洁，方便穿脱
+• 位置：玄关鞋柜底层，不太显眼""",
+
+    3212: """医学报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月21日 14:00
+• 报告编号：ME-1928-1120-02-COMPARE
+• 法医签名：Dr. Foster
+报告内容：
+织物比对分析报告
+样本A：Thomas Sullivan袖扣处织物纤维
+样本B：Mary Sullivan祈祷披肩破损处织物
+比对项目：
+1. 材质比对：样本A高档蕾丝黑色 vs 样本B高档蕾丝黑色 → **完全一致**
+2. 颜色比对：样本A纯黑色 vs 样本B纯黑色 → **完全一致**
+3. 编织纹理比对：样本A玫瑰花纹密度8.2根/cm vs 样本B玫瑰花纹密度8.2根/cm → **完全一致**
+4. 纤维断裂方式：样本A外力拉扯断裂 vs 样本B破损处纤维拉扯断裂 → **断裂方式一致**
+最终结论：Thomas Sullivan袖扣处织物纤维与Mary Sullivan祈祷披肩破损处织物完全一致。
+• 报告附带左右对比的显微镜照片（纹理对齐）""",
+
+    3213: """化学分析报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月21日 13:30
+• 报告编号：ME-1928-1120-03-LIPSTICK
+• 法医签名：Dr. Foster
+报告内容：
+口红成分化学分析报告
+样本A - 男式白衬衫领口口红印：珊瑚红色系（Coral），品牌Maybelline Coral Flame
+样本B - Mary Sullivan使用的口红：玫瑰红色系（Rose），品牌Revlon Rose Blush
+对比结论：
+1. 品牌不同：Maybelline vs Revlon
+2. 色系不同：珊瑚红（偏橙红） vs 玫瑰红（偏粉红）
+3. 成分完全不同：铅丹+胭脂虫红 vs 氧化铁+二氧化钛
+4. 香料不同：玫瑰精油 vs 茉莉精油
+最终结论：衬衫领口口红非Mary Sullivan所有。
+• 报告附带颜色对比卡（珊瑚红vs玫瑰红视觉差异）
+• 报告附带化学成分分析图表""",
+
+    3214: """一组照片（3张），每张约10x15cm
+【照片A：客厅墙面】
+• 墙上有多处拳头砸出的凹陷（约7-8处）
+• 凹陷直径约8-10cm，深度约1-2cm
+• 墙面白色涂料剥落，露出灰色水泥
+• 凹陷边缘有裂纹向外辐射
+【照片B：地面碎片】
+• 地上有一把断裂的椅子腿（约50cm）
+• 椅子腿断口处木纤维撕裂，像是被用力折断
+• 地上散落碎玻璃残渣（约10-15片）
+• 碎玻璃旁有一个酒瓶底座（已破碎）
+【照片C：Mary照片】
+• 桌上有一张Mary抱着女儿的照片（相框）
+• 照片边缘有烟头烫过的痕迹（约3-4处）
+• 相框玻璃有裂纹（从左上角向右下辐射）
+• 照片中Mary微笑着，女儿约5-6岁
+• 照片底部有手写标注："家暴痕迹 - Sullivan家"
+""",
+
+    3215: """一张黑白照片，尺寸约10x15cm
+• 照片内容：女儿房间门上的蜡笔画特写
+• 画作：用彩色蜡笔画在木门上（约30x40cm区域）
+画作内容：
+左侧：一个女人牵着小女孩的手
+• 女人用粉色和黄色画成，头发是黄色
+• 小女孩用红色和蓝色画成，头上有蝴蝶结
+• 两人手牵手，线条简单但温馨
+右侧：一个男人的轮廓
+• 男人比女人高一个头
+• 整个轮廓被黑色蜡笔用力涂黑
+• 涂黑得非常重，蜡笔在某些地方几乎戳破了纸
+• 黑色覆盖层厚重，完全看不出底下的原始颜色
+• 画作右下角有歪歪扭扭的签名："Emily"（女儿名字）
+• 照片底部有手写标注："女儿房间门上 - 男人被涂黑"
+""",
+
+    3216: """门栓，安装在女儿房间门框外侧（客厅一侧）
+• 材质：铁质，黑色涂漆
+• 尺寸：约15cm长
+• 款式：标准滑栓式门栓
+• 安装位置：门框上方，高度约180cm（成人才能够到）
+• 安装痕迹：螺丝孔很新，应该是近期（1-2个月内）安装的
+• 门栓状态：处于未上锁状态（案发时）""",
+
+    3217: """一张黑白照片，尺寸约10x15cm
+• 照片内容：Sullivan家厨房角落的空酒瓶堆
+• 空瓶数量：约30-40个，堆成两排
+• 酒瓶品牌：全部为廉价品脱装（pint），标签可辨认
+  - 价格范围：$0.10-$0.15
+  - 无一瓶超过$0.50
+• 瓶身特征：
+  - 棕色玻璃瓶，容量约473ml（标准品脱）
+  - 多数标签为"Old Crow Bourbon"、"Ten High"等低端品牌
+  - 部分瓶子标签已脱落，瓶身有灰尘
+• 位置：厨房角落，像是随手堆放""",
+
+    3218: """Continental银行催款单，标准信函尺寸（约22x28cm）
+• 纸张：银行官方信纸，顶部印有Continental银行logo
+• 日期：1928年10月15日
+• 收件人：Thomas Sullivan
+• 内容摘要：
+  - 未偿还贷款本金：$10,000
+  - 累计利息：$2,000
+  - 合计欠款：$12,000
+  - 最后还款期限：1928年12月31日
+  - 警告措辞："若未在期限前偿还，银行将启动法律程序"
+• 纸张状态：有多处折痕，像是被反复翻看又塞回去
+• 位置：客厅抽屉最底层，被其他杂物压着""",
+
+    3501: """《芝加哥论坛报》1928年10月版，保险版面
+• 报纸：泛黄旧报纸，约40x30cm
+• 版面：保险专题版面，有多篇保险条款解读文章
+• 批注特征：
+  - 关键段落被圈出（钢笔圈画，黑色墨水）
+    - "意外死亡赔付标准流程"
+    - "受益人变更条件"
+  - 空白处有钢笔备注（字迹工整，专业术语）
+    - "注意90天免赔期"
+    - "事故报告须在48小时内提交"
+    - "受益人指定为投保人时赔付流程"
+• 银行内部缩写术语：
+  - "ACC.D" = Accidental Death（意外死亡）
+  - "BEN.CHG" = Beneficiary Change（受益人变更）
+  - "EXC.CLSE" = Exclusion Clause（免责条款）
+  - "CLM.48HR" = Claim within 48 hours（48小时内申报）
+• 整体状态：被夹在旧报纸堆中，有油渍和折痕""",
+
+    # ===== Loop 3 =====
+    3301: """石油基润滑剂油壶，约200ml容量，铁制
+• 品牌：Standard Oil Lubricant（标准石油润滑剂）
+• 容量：200ml铁制油壶
+• 液位：明显偏低，约剩三分之一（约65ml）
+  - 正常维护轮椅不会用这么多
+  - 涂护栏下方地面区域需要约130ml（2/3瓶）
+• 外观：
+  - 油壶外壁有手印，使用过很多次
+  - 瓶身有生锈痕迹
+  - 标签部分褪色但品牌名称清晰可见
+• 位置：Helen家窗边，母亲轮椅旁的工具箱内""",
+
+    3302: """口红，标准化妆品尺寸，金属管身
+• 品牌：Maybelline（美宝莲）
+• 色号：Coral Flame（珊瑚红）
+• 颜色：珊瑚红（Coral），偏橙红色调
+  - 与循环2衬衫口红印颜色一致
+  - 与Mary的玫瑰红口红明显不同
+• 使用程度：用了约一半
+• 管身：金色金属，简约设计
+• 位置：卧室简易化妆台上""",
+
+    3303: """安全门钥匙，老式款型，铜制
+• 材质：铜制，略有氧化
+• 款式：老式楼房楼顶安全门专用钥匙
+  - 齿形特殊，不常见
+  - 钥匙头部有独特凹槽
+• 新旧程度：看起来很新，最近配的
+• 钥匙环：没有标记，普通金属环
+• 对比：与Thomas随身物品中的钥匙（3206）形状一模一样
+• 位置：Helen家玄关小桌上，显眼位置""",
+
+    3304: """保险单文件，标准表格尺寸（约20x28cm）
+• 纸张：白色保险公司专用表格
+• 顶部Logo：Continental银行标志
+• 日期：1928年10月1日生效
+• 保单编号：CNT-1928-1001-0587
+保单内容：
+被保险人：Mary Sullivan
+受益人：Thomas Sullivan（丈夫）
+保额：$10,000
+保险类型：人寿保险（意外死亡双倍赔付）
+生效日期：1928年10月1日
+90天免赔期：1928年12月30日截止
+特殊条款：
+• 意外死亡（坠楼、溺水、车祸）双倍赔付
+• 自杀免赔（生效两年内）
+• 受益人先于被保险人死亡，保金归被保险人遗产
+保险代理人签名：Bernard Wells""",
+
+    3305: """一张照片，尺寸约10x15cm，拍摄轮椅和工具箱
+• 照片内容：Helen家窗边的母亲轮椅和工具箱特写
+• 轮椅特征：
+  - 老式轮椅，轮轴处有明显的维护痕迹
+  - 轮子磨损严重，但保养良好
+  - 扶手上有岁月磨损痕迹
+• 工具箱特征：
+  - 铁制工具箱，有些生锈
+  - 内容物：扳手、螺丝刀、清洁布、油壶
+  - 油壶品牌："Standard Oil Lubricant"清晰可见
+• 照片标注："母亲遗物 - 轮椅维护工具"
+""",
+
+    3306: """黑白照片，约15x20cm，装在简朴木框内
+• 照片内容：一个瘦弱的女人坐在轮椅上
+• 母亲特征：
+  - 年龄约60岁，瘦弱憔悴
+  - 表情疲惫、眼神绝望
+  - 手上有淡淡的淤青痕迹（细看才能发现）
+• 背景：简陋的房间，墙壁斑驳
+• 照片下方小字："母亲，1926年"
+• 位置：Helen家墙上，唯一的装饰""",
+
+    3307: """一张照片，尺寸约10x15cm，拍摄日记本可见页面
+• 照片内容：Helen日记本半掩状态，可见页面特写
+• 日记本特征：
+  - 简朴的日记本，深棕色封皮
+  - 边角有使用磨损
+• 可见页面内容（11月5日）：
+  "今天向楼管借了钥匙串。"
+  "母亲，请原谅我。"
+• 第二页（玩家可以瞥见一角）：
+  "我的手一直在抖。但为了......"（后面被Helen挡住）
+• 照片标注："Helen日记 - 11月5日"
+""",
+
+    3308: """一张手绘示意图，约20x28cm，Foster的现场记录
+• 图纸内容：楼顶护栏下方地面平面图，标注涂油位置
+• 护栏总长：约15米（楼顶西侧）
+• 涂油段落：
+  - 位置：西侧护栏下方地面
+  - 长度：约1.5米
+  - 标注：红色虚线框标出涂油区域
+• Thomas坠落点：
+  - 标注：红色X标记
+  - 位置：恰好在涂油段落中央
+• 其他区域：地面干净，无油迹
+• 图纸标注：
+  "涂油段落仅1.5米，精确对应坠落点"
+  "其他区域无油迹，证明人为涂抹"
+""",
+
+    3309: """一张照片，尺寸约10x15cm，拍摄脚印特写
+• 照片内容：楼顶水泥地上的第二组女性脚印
+• 脚印特征：
+  - 鞋码：38码平底鞋
+  - 鞋印深度：浅（停留时间短，约5分钟）
+  - 鞋印位置：距护栏约50厘米，护栏边
+• 对比：第一组脚印（37码高跟，Mary的）
+• 照片标注："第二组女性脚印 - 38码平底"
+• Foster备注："停留时间约5分钟，距坠落点不到2米"
+""",
+
+    3311: """医学报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月22日 13:00
+• 报告编号：ME-1928-1120-03-OIL
+• 法医签名：Dr. Foster
+报告内容：
+地面油迹采样分析报告
+采样位置：楼顶西侧护栏下方地面，Thomas Sullivan坠落点附近
+油迹特征：
+- 成分：石油基润滑剂
+- 品牌推测：Standard Oil Lubricant（通用型）
+- 涂抹范围：仅约1.5米，非全段
+- 涂抹方式：人为涂抹，均匀薄层
+- 位置：护栏正下方地面，向外侧无油迹
+时间推测：根据油迹氧化程度，涂抹时间在案发前1-2天
+结论：地面油迹为人为涂抹，非自然形成。涂抹者有明确目的，精确控制涂抹范围（仅Thomas坠落点对应的1.5米）。
+• 报告附带地面油迹棉签采样照片""",
+
+    3312: """化学分析报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月22日 14:00
+• 报告编号：ME-1928-1120-03-COMPARE
+• 法医签名：Dr. Foster
+报告内容：
+油迹化学成分比对分析报告
+样本A：楼顶护栏下方地面油迹（棉签采样）
+样本B：Helen Sullivan家轮椅维护油
+比对项目：
+1. 基础成分：石油基润滑剂 vs 石油基润滑剂 → **完全一致**
+2. 品牌成分：Standard Oil Lubricant特征成分 → **完全一致**
+3. 化学指纹：含添加剂比例14.2% vs 14.2% → **完全一致**
+4. 氧化程度：样本A轻度氧化（地面暴露1-2天） vs 样本B未氧化（密封保存） → 样本A为样本B涂抹后在户外暴露形成
+最终结论：楼顶地面油迹与Helen Sullivan家轮椅维护油成分完全一致。
+• 报告附带化学成分分析图表""",
+
+    3313: """墙面上钉着的一组报纸剪报，覆盖约60x80cm区域
+• 剪报来源：Chicago Tribune、Chicago Daily News等本地报纸
+• 时间跨度：1910年代至1928年，约18年的积累
+• 内容主题：
+  - 女性参政权运动（1920年第19修正案通过）
+  - 家庭暴力相关法律报道
+  - 女性劳工权利争取
+  - "受虐妇女"社会新闻
+• 剪报状态：
+  - 早期剪报（1910s）已泛黄发脆
+  - 近期剪报（1927-1928）纸张较新
+  - 部分剪报有Helen的铅笔划线标注
+• 排列方式：按时间顺序从左到右排列，像是长年持续关注
+• 位置：Helen卧室床对面的墙上，每天醒来第一眼看到""",
+
+    3314: """母亲床头的药瓶和抽屉中的医疗账单
+• 药瓶：
+  - 床头摆放约5-6个棕色玻璃药瓶
+  - 药瓶标签涵盖多种药物（镇静剂、止痛药等）
+  - 最早的药瓶日期：1910年（距今18年）
+  - 最新的药瓶日期：1928年10月
+  - 部分药瓶已空，部分还有残留
+• 医疗账单：
+  - 抽屉中整齐叠放着厚厚一沓账单
+  - 来自多家诊所和药房
+  - 总金额累计数千美元（对Helen的收入而言是巨大负担）
+  - 诊断涉及"老年痴呆症"（dementia）护理
+  - 账单跨度：1910年至1928年，持续18年
+• 整体氛围：床头区域透露长年照料病母的沉重负担""",
+
+    3403: """女式平底鞋，38码，黑色皮革材质
+• 鞋型：1920年代女式低跟平底鞋
+• 颜色：黑色
+• 材质：皮革鞋面，橡胶鞋底
+• 尺码：38码（欧洲尺码）
+• 鞋底油迹特征：
+  - 位置：鞋底前掌和后跟部分
+  - 状态：极轻微的油迹残留
+  - 颜色：深褐色（已部分干涸）
+  - 量：很少，仔细观察才能看到
+• 整体状态：保养良好，常穿鞋
+• 位置：玄关鞋柜右侧，Helen的日常外出鞋""",
+
+    3404: """一张黑白照片，尺寸约10x15cm
+• 照片内容：楼顶护栏某处锈蚀断裂的金属边缘特写
+• 锋利处特征：
+  - 护栏焊接点处金属断裂，形成约2cm的锋利毛刺
+  - 边缘有锈蚀，呈深褐色
+  - 锋利处有少量干涸暗色痕迹（血迹）
+• Foster采样标记：白色粉笔标记"采样点C"
+• 拍摄角度：微距特写，突出锋利边缘和暗色痕迹
+• 照片底部标注："护栏锋利处 - 干涸血迹残留"
+""",
+
+    3408: """Jameson爱尔兰威士忌，已开封，剩约1/3
+• 品牌：Jameson Irish Whiskey（与3107同品牌）
+• 容量：约750ml瓶，剩约250ml
+• 瓶身特征：
+  - 深绿色玻璃瓶身
+  - 标签："JAMESON IRISH WHISKEY"金色字样
+  - 标签下方："ESTD. 1780"
+• 瓶口：软木塞在瓶口，已开封
+• 瓶内状态：约1/3液体，深琥珀色
+• 位置：厨房橱柜中层，放在其他调料瓶旁边
+• 保存状态：瓶身略有灰尘，保存已久""",
+
+    # ===== Loop 4 =====
+    3401: """一张黑白照片，尺寸约10x15cm
+• 照片内容：楼顶安全门外侧把手特写（楼梯间侧）
+• 门把手材质：黑色铁质圆形把手
+• 油迹特征：
+  - 把手握手面有极薄的油膜
+  - 油膜呈微微反光状，在侧光下可见
+  - 覆盖范围：把手中段约8cm长度
+• Foster采样标记：照片右下角有白色粉笔标记"采样点A"
+• 拍摄角度：侧光特写，突出油膜反光效果
+• 照片底部标注："楼顶门外侧把手 - 轮椅维护油成分"
+""",
+
+    3402: """一张黑白照片，尺寸约10x15cm
+• 照片内容：楼顶安全门内侧把手特写（天台侧）
+• 门把手材质：黑色铁质圆形把手（与外侧相同）
+• 把手状态：
+  - 干净，无油迹
+  - 表面略有锈迹（正常老化）
+  - 握手面无反光
+• Foster采样标记：照片右下角有白色粉笔标记"采样点B"
+• 拍摄角度：与3401相同角度，便于对比
+• 照片底部标注："楼顶门内侧把手 - 无油迹"
+""",
+
+    3405: """医学报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月22日 22:00
+• 报告编号：ME-1928-1120-04-OIL-COMPARE
+• 法医签名：Dr. Foster
+报告内容：
+油迹成分二方比对分析报告
+样本A：楼顶门外侧把手油迹（采样点A）
+样本B：楼顶地面油迹（循环3已采样，证据3312）
+比对项目：
+1. 基础成分比对：石油基润滑剂 vs 石油基润滑剂 → **完全一致**
+2. 化学成分详细比对：矿物油75%+石蜡15%+添加剂10% → **完全一致**
+3. 添加剂特征比对：含防锈剂（锌盐类） → **完全一致**
+4. 来源推断：两处油迹成分完全一致，均为轮椅维护用石油基润滑剂
+时间线分析：
+• 样本B（地面油迹）：11月20日下午涂抹
+• 样本A（门把手油）：推测11月20日晚22:00-22:30（沾油者从楼梯间侧进入楼顶时留下）
+最终结论：两处油迹来源相同，均为Helen家轮椅维护油。门把手外侧有油+内侧无油，说明沾油者从楼梯间侧进入楼顶。
+• 报告附带两张显微镜照片（两处油迹的微观结构对比）""",
+
+    # ===== Loop 5 =====
+    3502: """法医笔迹分析报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月23日 11:00
+• 报告编号：ME-1928-1120-05-HANDWRITING
+• 法医签名：Dr. Foster
+报告内容：
+笔迹比对分析报告
+检测对象A：报纸批注笔迹
+检测对象B：Thomas Sullivan笔迹样本（日记、遗书）
+样本A特征：字迹工整，笔画流畅；用词专业：免赔期、受益人变更、意外赔付流程；无拼写错误；使用专业缩写术语：ACC.D, BEN.CHG, EXC.CLSE
+样本B特征：字迹潦草，笔画不稳；用词简单，拼写错误多；教育程度小学水平；日记样本：'I owe mony to bank. Cant pay.'
+比对结论：报纸批注笔迹与Thomas Sullivan笔迹完全不同。报纸批注非Thomas Sullivan所写，写作者具有专业保险知识背景。
+• 报告附带左右对比的笔迹照片""",
+
+    3504: """深棕色皮质书写垫，约40x30cm
+• 材质：深棕色皮革，质地坚韧
+• 尺寸：约40x30cm，标准办公桌书写垫
+• 表面特征：
+  - 磨损严重，有多年使用痕迹
+  - 有多层叠加的压痕（不同深度、不同时间留下）
+  - 有轻微酒渍（Thomas洒的威士忌）
+• 侧光下显现：
+  - 一组清晰的压痕（报纸批注压痕）
+  - 右侧边缘有微小的花形压痕（雏菊吊坠压痕）
+• 位置：Bernard办公室抽屉里，被收起来
+• Bernard说法："Thomas来的时候把酒洒在了我常用的垫板上，我换了这张旧垫板给他用，用完后收进抽屉了"
+""",
+
+    3505: """法医痕迹分析报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月23日 17:00
+• 报告编号：ME-1928-1120-06-IMPRESSION
+• 法医签名：Dr. Foster
+报告内容：
+垫板压痕侧光分析报告
+检测对象：Bernard Wells办公桌皮质垫板
+检测方法：侧光摄影+压痕轨迹比对
+技术说明：使用侧光照射垫板表面，不同深度的压痕产生不同光影效果。Thomas批注时用钢笔圈画+书写，压力不均匀。日常办公多是签名、记录数字，笔迹短、力度均匀。两者压痕轨迹特征不同，可以通过侧光分析区分。
+发现：垫板表面显现一组清晰压痕，压痕轨迹、字迹、位置分布与报纸批注完全吻合。
+压痕特征分析：圈画处压痕最深（用力重）；字迹处压痕力度不均匀（边说边写的节奏）；非预先准备材料，而是现场讲解时书写。
+结论：报纸批注是在Bernard办公桌的这张垫板上书写的，且是Bernard面对面讲解时现场书写的。
+• 报告附带侧光照片（压痕清晰可见）
+• 报告附带对比照片（垫板压痕vs报纸批注）""",
+
+    3506: """一张对比照片，约20x28cm
+• 照片内容：左右对比图
+• 左侧：垫板侧光照片
+  - 侧光照射下，压痕清晰可见
+  - 圈画轨迹呈深色凹陷
+  - 字迹压痕呈不均匀深浅
+• 右侧：报纸批注照片
+  - 圈画轨迹（钢笔黑色）
+  - 批注字迹（工整专业）
+• 标注：红色箭头指出吻合点
+  - "圈画轨迹完全吻合"
+  - "字迹位置完全吻合"
+  - "位置分布完全一致"
+• 叠加效果图：将报纸批注透明叠加在垫板压痕上，完美重合""",
+
+    3507: """一张特写照片，约15x20cm
+• 照片内容：垫板右侧边缘特写
+• 压痕位置：垫板右侧边缘靠近边缘处
+  - 手腕自然搁放时吊坠会按压的位置
+• 压痕特征：
+  - **五瓣花形压痕**，轮廓规整
+  - 直径约1.2厘米
+  - 不是笔迹，而是硬物长时间按压留下的清晰印记
+  - 侧光下清晰可见，有明显的凹陷阴影
+• 标注：红色圆圈标出花形压痕位置
+  - "五瓣花形"
+  - "直径1.2cm"
+  - "硬物长时间按压"
+""",
+
+    3508: """一张照片，尺寸约10x15cm，拍摄Mary手腕特写
+• 照片内容：Mary左手手腕特写
+• 手链特征：
+  - 银质链条，约18cm长
+  - 链扣精致，有岁月磨损痕迹
+  - 吊坠：**雏菊花形银质吊坠**
+    - 直径约1.2厘米
+    - **五瓣花瓣清晰可见**
+    - 花瓣轮廓规整，弧度优雅
+    - 花蕊中央有小凸起
+    - 背面刻字："To Mary, with love - Mother"
+• Mary的习惯：经常下意识摸这条手链
+• 照片标注："Mary母亲遗物 - 雏菊手链"
+""",
+
+    3509: """法医比对分析报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月23日 18:30
+• 报告编号：ME-1928-1120-07-CHARM
+• 法医签名：Dr. Foster
+报告内容：
+花形压痕比对分析报告
+检测对象A：垫板花形压痕
+检测对象B：Mary Sullivan手链雏菊吊坠
+比对项目：
+1. 尺寸比对：压痕直径1.2cm vs 吊坠直径1.2cm → **完全一致**
+2. 形状比对：五瓣花形轮廓规整 vs 五瓣雏菊花形轮廓规整 → **完全一致**
+3. 轮廓弧度比对：显微镜测量吻合度99% → **完全吻合**
+4. 压痕深度分析：深及多层牛皮，至少10-15分钟死死压住，手腕几乎没动，肌肉极度紧绷
+5. 位置分析：垫板右侧边缘，右手手腕自然搁放时吊坠会按压的位置 → **位置吻合**
+最终结论：垫板花形压痕与Mary Sullivan手链雏菊吊坠完全一致。有人戴着这条手链将手腕搁在垫板上长时间坐在Bernard办公桌对面（至少10-15分钟）。
+• 报告附带显微镜对比照片（压痕vs吊坠轮廓叠加）""",
+
+    3510: """桌角一个铜质小相框（约8x10cm）
+• 照片内容：Bernard、妻子和两个穿校服的孩子，背景是公园长椅
+• 相框边缘有些许指纹，被经常拿起来看过
+• 照片约1926年拍摄，孩子们大约6岁和8岁""",
+
+    3511: """办公室墙上挂着一幅裱框证书（约25x35cm）
+• 内容："Continental Bank — 1927年度服务之星"
+• Bernard Wells的名字用花体印刷
+• 下方有银行总裁签名和烫金银行徽标
+• 证书边框是深棕色木质，与办公室装潢一致""",
+
+    3512: """一个棕色皮质名片盒（约10x6cm），搜证时从半开的抽屉中发现
+• 皮质表面磨损，使用多年
+• 内有十几张名片，各行各业：律师、房产经纪、殡仪馆、诊所
+• 按字母顺序整齐排列
+• 无特殊标记或Thomas/Mary相关的名字""",
+
+    # ===== Loop 6 =====
+    3601: """医学报告，标准表格尺寸（约20x28cm）
+• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
+• 日期：1928年11月23日 15:00
+• 报告编号：ME-1928-1120-SUPP-ALCOHOL
+• 法医签名：Dr. Foster
+• 标注：**补充分析报告**（红色印章）
+报告内容：
+血液酒精浓度补充分析报告
+原报告编号：ME-1928-1120-01（1928年11月21日）
+死者Thomas Sullivan血液酒精浓度：0.25%
+补充分析——生理影响评估：
+1. 运动协调性：肌肉协调性严重受损，无法完成复杂动作（如推人、抓人、攀爬），连走直线都做不到，反应速度降低80%以上
+2. 认知能力：判断力几乎完全丧失，意识混乱，短期记忆功能受损
+3. 攻击能力评估：**连挣扎都做不到**，**更不可能主动攻击**，即使有攻击意图身体也无法执行
+4. 指甲下组织量分析：极少（<0.1mg），不像剧烈挣扎留下的痕迹，更像被推时本能抓了一下
+补充结论：Thomas Sullivan在死亡时的血液酒精浓度（0.25%）已达到**严重醉酒状态**，不可能主动发起攻击，不可能完成推人抓人等复杂动作，如果发生肢体冲突死者只能是**被动方**。
+报告右上角Foster手写批注："Zack——我当时不想让一个受害者因为技术细节被起诉。但既然你问了……这就是完整的真相。- F."
+• 报告附带血液酒精浓度对照表（0.05%-0.40%生理影响）
+• 报告附带指甲下组织量对比照片（剧烈挣扎vs本能抓握）""",
+
+    3610: """现场勘查记录，标准表格尺寸（约20x28cm）
+• 纸张：白色普通信纸，手写记录
+• 日期：1928年11月23日
+• 记录人：Mickey Brennan
+• 标注：**实地勘查记录**
+勘查内容：
+楼顶目击条件实地勘查记录
+勘查地点：Greenwood公寓楼 + 楼下人行道
+勘查目的：验证从地面能否看清楼顶活动细节
+项目1——仰角与护栏遮挡：地面到三楼楼顶护栏仰角约65度，护栏高度1.1米完全遮挡站立者下半身，仅能看到肩部以上模糊轮廓，无法分辨具体肢体动作
+项目2——夜间光线条件：案发时间深夜22:30无月光，楼顶无任何照明设施，最近煤气灯距离约15米，从地面仰视楼顶完全处于黑暗中
+项目3——综合评估：65度仰角+无照明，从地面不可能看清楼顶活动细节。任何声称从地面看到楼顶具体动作的证词在物理条件上不成立。""",
 }
 
 # 指证数据（从state的expose部分完整提取）
@@ -105,12 +938,12 @@ EXPOSE_DATA = {
         ],
     },
     2: {
-        "scene": 3003,
+        "scene": 3013,
         "target_name": "Mary Sullivan",
         "npc_id": "303",
         "rounds": [
             {"lie": "那晚我在教堂祈祷了很久，读到第23章，蜡烛烧了很久才走", "evidences": [3202, 3201]},
-            {"lie": "蜡烛断了、蜡油在第5章——那是我离开之后的事，跟我没关系", "evidences": [3210]},
+            {"lie": "蜡烛断了、蜡油在第5章——那是我离开之后的事，跟我没关系", "evidences": [3108]},
             {"lie": "我也是最近才听说Thomas和Helen的事……大概一周前吧", "evidences": [3213, 3204]},
             {"lie": "我上去看了一圈，没找到他，就回来了。我那天晚上根本没见到Thomas", "evidences": [3212]},
         ],
@@ -187,6 +1020,7 @@ SCENES = [
     {"id": "3010", "name": "Margaret鞋坊", "name_en": "MargaretShoeShop"},
     {"id": "3011", "name": "街角", "name_en": "StreetCorner"},
     {"id": "3012", "name": "Sullivan家卧室", "name_en": "SullivanHome_Bedroom"},
+    {"id": "3013", "name": "公寓楼门口", "name_en": "ApartmentEntrance"},
     {"id": "3014", "name": "Continental银行Bernard办公室", "name_en": "ContinentalBank_BernardOffice"},
 ]
 
@@ -195,7 +1029,7 @@ SCENE_EN_MAP = {s["id"]: s["name_en"] for s in SCENES}
 
 # locations.yaml 数据
 LOCATIONS = [
-    {"name": "Thomas公寓楼", "entry": "01", "children": ["02", "03", "06", "12"]},
+    {"name": "Thomas公寓楼", "entry": "01", "children": ["02", "03", "06", "12", "13"]},
     {"name": "警局", "entry": "04", "children": []},
     {"name": "法医办公室", "entry": "05", "children": []},
     {"name": "St. Patrick教堂", "entry": "07", "children": []},
@@ -253,28 +1087,37 @@ def load_all_states():
 def generate_loop_yaml(loop_num, state_data):
     """生成 data/Unit3/loop{N}.yaml"""
     meta = LOOP_META[loop_num]
-    scenes = LOOP_SCENES[loop_num]
+    scenes = LOOP_SCENE_CONFIG[loop_num]
     expose = EXPOSE_DATA[loop_num]
 
     opening_data = state_data.get("opening", {})
+    opening_scene = opening_data.get("scene_id", 0)
+    if opening_scene:
+        opening_scene = to_loop_scene_id(loop_num, opening_scene)
+
+    # unlocked 场景使用按循环ID (3YXX)
+    unlocked_ids = [to_loop_scene_id(loop_num, sid) for sid in scenes["unlocked"]]
+    # locked/closed 场景使用物理ID (30XX)，仅用于名称显示
+    locked_items = scenes.get("locked", [])
+    closed_ids = scenes.get("closed", [])
 
     doc = {
         "title": meta["title"],
         "target": state_data.get("player_context", {}).get("goals", {}).get("primary", ""),
         "time": meta["time"],
         "opening": [{
-            "id": opening_data.get("scene_id", 0),
+            "id": opening_scene,
             "characters": opening_data.get("characters", []),
             "purpose": opening_data.get("purpose", ""),
             "talk": opening_data.get("talk", ""),
         }],
         "scenes": {
-            "unlocked": scenes["unlocked"],
-            "locked": scenes["locked"],
-            "closed": [],
+            "unlocked": unlocked_ids,
+            "locked": locked_items,
+            "closed": closed_ids,
         },
         "expose": {
-            "scene": expose["scene"],
+            "scene": to_loop_scene_id(loop_num, expose["scene"]),
             "target_name": expose["target_name"],
             "rounds": expose["rounds"],
         },
@@ -424,13 +1267,94 @@ def has_epi03(data, chapter_field="Chapter"):
     return any(item.get(chapter_field) == "EPI03" for item in data)
 
 
-def append_scenes_to_json():
-    """追加SceneConfig.json"""
-    data = load_json("SceneConfig.json")
-    if any(item.get("Chapter") == "EPI03" for item in data):
-        print("  [SKIP] SceneConfig.json 已有EPI03场景，跳过")
-        return
+def build_scene_item_ids(states):
+    """从state文件构建 按循环→场景→证据ID 映射（不跨循环合并）
+    返回: {loop_num: {scene_id_str: [item_id_str, ...]}}
+    """
+    result = {}
+    for loop_num, state in states.items():
+        loop_items = {}
+        for scene in state.get("scenes", []):
+            if not isinstance(scene, dict):
+                continue
+            sid = str(scene.get("id", ""))
+            if not sid:
+                continue
+            items = []
+            for ev in scene.get("evidence", []):
+                if isinstance(ev, dict):
+                    eid = str(ev.get("id", ""))
+                    if eid and eid not in items:
+                        items.append(eid)
+            if items:
+                loop_items[sid] = items
+        result[loop_num] = loop_items
+    return result
 
+
+# NPC talk key prefix → NPC ID 映射
+NPC_KEY_TO_ID = {
+    "morrison": "301", "emma": "302", "mary": "303", "helen": "304",
+    "bernard": "305", "liam": "306", "margaret": "307", "mickey": "308",
+    "foster": "309", "emily": "310",
+}
+NPC_ID_MAP = {npc["id"]: npc for npc in NPCS}
+
+
+def build_scene_npc_infos(states):
+    """从state文件构建 按循环→场景→NPCInfos 映射（不跨循环合并）
+    返回: {loop_num: {scene_id_str: [npc_info, ...]}}
+    """
+    result = {}
+    for loop_num, state in states.items():
+        loop_npcs = {}
+        for scene in state.get("scenes", []):
+            if not isinstance(scene, dict):
+                continue
+            sid = str(scene.get("id", ""))
+            npcs_data = scene.get("npcs", {})
+            if not npcs_data or not isinstance(npcs_data, dict):
+                continue
+            infos = []
+            for talk_key in npcs_data.keys():
+                prefix = talk_key.rsplit("_", 1)[0] if "_" in talk_key else talk_key
+                npc_id = NPC_KEY_TO_ID.get(prefix, "")
+                if not npc_id:
+                    continue
+                npc = NPC_ID_MAP.get(npc_id, {})
+                loop_scene_id = to_loop_scene_id(loop_num, sid)
+                infos.append({
+                    "id": f"{npc_id}_{loop_scene_id}",
+                    "NPC": {
+                        "id": npc_id,
+                        "Name": [npc.get("name_cn", ""), npc.get("name_en", "")],
+                        "role": npc.get("role", "5"),
+                        "Chapter": "EPI03",
+                    },
+                    "TalkInfo": {
+                        "id": talk_key,
+                    },
+                })
+            if infos:
+                loop_npcs[sid] = infos
+        result[loop_num] = loop_npcs
+    return result
+
+
+def append_scenes_to_json(states):
+    """追加SceneConfig.json（按循环生成场景条目）
+
+    生成两类条目：
+    1. 静态条目 (30XX): 14个物理场景，仅含名称，供locked/closed显示用
+    2. 按循环条目 (3YXX): 每个循环的活跃场景，含该循环专属的ItemIDs/NPCInfos
+    """
+    data = load_json("SceneConfig.json")
+    data = [item for item in data if item.get("Chapter") != "EPI03"]
+
+    per_loop_items = build_scene_item_ids(states)
+    per_loop_npcs = build_scene_npc_infos(states)
+
+    # 1. 静态条目 (30XX) — 仅场景名称，供locked/closed场景名称查询
     for scene in SCENES:
         data.append({
             "sceneId": scene["id"],
@@ -441,15 +1365,57 @@ def append_scenes_to_json():
             "backgroundMusic": "test",
             "Chapter": "EPI03",
         })
+
+    # 2. 按循环条目 (3YXX) — 每个循环的unlocked + expose + opening场景
+    for loop_num in range(1, 7):
+        config = LOOP_SCENE_CONFIG[loop_num]
+        expose = EXPOSE_DATA[loop_num]
+        state = states[loop_num]
+
+        # 收集需要生成条目的物理场景ID（unlocked + expose + opening，去重）
+        active_scenes = list(config["unlocked"])
+        expose_scene = expose["scene"]
+        if expose_scene not in active_scenes:
+            active_scenes.append(expose_scene)
+        opening_scene = state.get("opening", {}).get("scene_id", 0)
+        if opening_scene and opening_scene not in active_scenes:
+            active_scenes.append(opening_scene)
+
+        for phys_id in active_scenes:
+            loop_sid = str(to_loop_scene_id(loop_num, phys_id))
+            phys_sid = str(phys_id)
+            scene_name = SCENE_NAME_MAP.get(phys_sid, f"场景{phys_sid}")
+            scene_en = SCENE_EN_MAP.get(phys_sid, "")
+
+            entry = {
+                "sceneId": loop_sid,
+                "sceneName": scene_name,
+                "sceneNameEn": scene_en,
+                "sceneType": "1",
+                "backgroundImage": "",
+                "backgroundMusic": "test",
+                "Chapter": "EPI03",
+            }
+
+            # 该循环该场景的证据
+            item_ids = per_loop_items.get(loop_num, {}).get(phys_sid, [])
+            if item_ids:
+                entry["ItemIDs"] = item_ids
+
+            # 该循环该场景的NPC
+            npc_infos = per_loop_npcs.get(loop_num, {}).get(phys_sid, [])
+            if npc_infos:
+                entry["NPCInfos"] = npc_infos
+
+            data.append(entry)
+
     save_json("SceneConfig.json", data)
 
 
 def append_items_to_json(states):
     """追加ItemStaticData.json"""
     data = load_json("ItemStaticData.json")
-    if has_epi03(data):
-        print("  [SKIP] ItemStaticData.json 已有EPI03条目，跳过")
-        return
+    data = [item for item in data if item.get("Chapter") != "EPI03"]
 
     existing_ids = set()
     items_to_add = []
@@ -468,21 +1434,26 @@ def append_items_to_json(states):
                 if eid in existing_ids:
                     continue
                 existing_ids.add(eid)
+                eid_int = int(eid)
+                item_type = ITEM_TYPE_MAP.get(eid_int, "1")
+                type_name = ITEM_TYPE_NAME_MAP.get(item_type, "clue")
+                scene_en = SCENE_EN_MAP.get(scene_id, "")
                 items_to_add.append({
                     "id": eid,
                     "Name": [ev.get("name", ""), f"Evidence_{eid}"],
-                    "itemType": "2",
+                    "itemType": item_type,
                     "canAnalyzed": "false",
                     "canCombined": "false",
                     "Describe": [ev.get("note", "")],
                     "ShortDescribe": [ev.get("name", "")],
-                    "location": [scene_name, SCENE_EN_MAP.get(scene_id, "")],
+                    "location": [scene_name, scene_en],
                     "Chapter": "EPI03",
-                    "folderPath": "",
-                    "desSpritePath": "",
-                    "mapSpritePath": "",
+                    "folderPath": f"EPI03\\{scene_en}" if scene_en else "",
+                    "desSpritePath": f"{type_name}_{eid}_big",
+                    "mapSpritePath": f"{type_name}_{eid}",
+                    "iconPath": f"{type_name}_{eid}_icon",
                     "Position": ["0", "0"],
-                    "ArtRequirement": "",
+                    "ArtRequirement": ART_CONFIG.get(eid_int, ""),
                 })
 
     # 追加派生证据
@@ -492,21 +1463,24 @@ def append_items_to_json(states):
             continue
         existing_ids.add(eid_str)
         scene_label = info.get("scene", "小玩法派生")
+        item_type = ITEM_TYPE_MAP.get(eid, "1")
+        type_name = ITEM_TYPE_NAME_MAP.get(item_type, "clue")
         items_to_add.append({
             "id": eid_str,
             "Name": [info["name"], f"Evidence_{eid_str}"],
-            "itemType": "2",
+            "itemType": item_type,
             "canAnalyzed": "false",
             "canCombined": "false",
             "Describe": [info["note"]],
             "ShortDescribe": [info["name"]],
             "location": [scene_label, ""],
             "Chapter": "EPI03",
-            "folderPath": "",
-            "desSpritePath": "",
-            "mapSpritePath": "",
+            "folderPath": "EPI03\\Derived",
+            "desSpritePath": f"{type_name}_{eid_str}_big",
+            "mapSpritePath": f"{type_name}_{eid_str}",
+            "iconPath": f"{type_name}_{eid_str}_icon",
             "Position": ["0", "0"],
-            "ArtRequirement": "",
+            "ArtRequirement": ART_CONFIG.get(eid, ""),
         })
 
     # 设置 canAnalyzed（如果该物证是某个派生的源）
@@ -530,9 +1504,7 @@ def append_items_to_json(states):
 def append_npcs_to_json():
     """追加NPCStaticData.json"""
     data = load_json("NPCStaticData.json")
-    if has_epi03(data):
-        print("  [SKIP] NPCStaticData.json 已有EPI03条目，跳过")
-        return
+    data = [item for item in data if item.get("Chapter") != "EPI03"]
 
     for npc in NPCS:
         data.append({
@@ -547,9 +1519,7 @@ def append_npcs_to_json():
 def append_doubts_to_json(states):
     """追加DoubtConfig.json"""
     data = load_json("DoubtConfig.json")
-    if any(item.get("Chapter") == "EPI03" for item in data):
-        print("  [SKIP] DoubtConfig.json 已有EPI03条目，跳过")
-        return
+    data = [item for item in data if item.get("Chapter") != "EPI03"]
 
     for loop_num, state in states.items():
         for doubt in state.get("doubts", []):
@@ -583,9 +1553,7 @@ def append_doubts_to_json(states):
 def append_chapter_config(states):
     """追加ChapterConfig.json"""
     data = load_json("ChapterConfig.json")
-    if any(str(item.get("id", "")).startswith("3") for item in data):
-        print("  [SKIP] ChapterConfig.json 已有EPI03条目，跳过")
-        return
+    data = [item for item in data if not str(item.get("id", "")).startswith("3")]
 
     for loop_num in range(1, 7):
         state = states[loop_num]
@@ -624,7 +1592,7 @@ def append_chapter_config(states):
         data.append({
             "id": config_id,
             "initTalk": "",
-            "initScene": str(expose["scene"]),
+            "initScene": str(to_loop_scene_id(loop_num, expose["scene"])),
             "doubts": doubts,
             "exposeNpcId": expose["npc_id"],
             "exposes": exposes,
@@ -655,7 +1623,7 @@ def main():
     generate_talk_summary(states)
 
     print("\n[3/3] 追加JSON数据表...")
-    append_scenes_to_json()
+    append_scenes_to_json(states)
     append_items_to_json(states)
     append_npcs_to_json()
     append_doubts_to_json(states)
