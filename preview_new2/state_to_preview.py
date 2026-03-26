@@ -155,19 +155,19 @@ LOOP_SCENE_CONFIG = {
 # 派生证据（state注释中，YAML解析不到）
 DERIVED_EVIDENCE = {
     # L2 派生
-    3212: {"name": "织物比对报告", "note": "系统层分析：Thomas袖扣织物(3206)+祈祷披肩(3205)→织物比对", "scene": "小玩法派生", "sources": [3206, 3205]},
-    3213: {"name": "口红颜色比对报告", "note": "系统层分析：衬衫口红+Mary口红(3204)→颜色比对", "scene": "小玩法派生", "sources": [3203, 3204]},
+    3212: {"name": "织物比对报告", "note": "系统层分析：Thomas袖扣织物(3206)+祈祷披肩(3205)→织物比对", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3206, 3205]},
+    3213: {"name": "口红颜色比对报告", "note": "系统层分析：衬衫口红+Mary口红(3204)→颜色比对", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3203, 3204]},
     # L3 派生
-    3311: {"name": "Foster地面油迹采样报告", "note": "派生中间产物：楼顶地面油迹现场采样→Foster出具采样报告", "scene": "小玩法派生", "sources": []},
-    3312: {"name": "油样本化学比对报告", "note": "系统层分析：轮椅维护油(3301)+地面油迹采样(3311)→化学比对", "scene": "小玩法派生", "sources": [3301, 3311]},
+    3311: {"name": "Foster地面油迹采样报告", "note": "派生中间产物：楼顶地面油迹现场采样→Foster出具采样报告", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": []},
+    3312: {"name": "油样本化学比对报告", "note": "系统层分析：轮椅维护油(3301)+地面油迹采样(3311)→化学比对", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3301, 3311]},
     # L4 派生
-    3405: {"name": "油迹二方比对报告", "note": "系统层分析：门把手油迹(3401)+地面油比对报告(3312)→二方比对", "scene": "小玩法派生", "sources": [3401, 3312]},
+    3405: {"name": "油迹二方比对报告", "note": "系统层分析：门把手油迹(3401)+地面油比对报告(3312)→二方比对", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3401, 3312]},
     # L5 派生
-    3502: {"name": "笔迹比对报告", "note": "系统层分析：标注报纸(3501)→笔迹比对，确认批注非Thomas所写", "scene": "小玩法派生", "sources": [3501]},
-    3505: {"name": "垫板压痕侧光分析报告", "note": "系统层分析：垫板(3504)+标注报纸(3501)→侧光分析，确认压痕=批注书写痕迹", "scene": "小玩法派生", "sources": [3504, 3501]},
-    3506: {"name": "垫板压痕vs报纸批注对比照片", "note": "系统层分析：垫板(3504)压痕与报纸批注叠加对比", "scene": "小玩法派生", "sources": [3504, 3501]},
-    3508: {"name": "Mary手链照片", "note": "L2回溯获取：Mary手链(原3207)的特写照片，用于花形压痕比对", "scene": "小玩法派生", "sources": [3207]},
-    3509: {"name": "花形压痕比对报告", "note": "系统层分析：垫板花形压痕(3507)+Mary手链照片(3508)→比对，雏菊吊坠完全吻合", "scene": "小玩法派生", "sources": [3507, 3508]},
+    3502: {"name": "笔迹比对报告", "note": "系统层分析：标注报纸(3501)→笔迹比对，确认批注非Thomas所写", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3501]},
+    3505: {"name": "垫板压痕侧光分析报告", "note": "系统层分析：垫板(3504)+标注报纸(3501)→侧光分析，确认压痕=批注书写痕迹", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3504, 3501]},
+    3506: {"name": "垫板压痕vs报纸批注对比照片", "note": "系统层分析：垫板(3504)压痕与报纸批注叠加对比", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3504, 3501]},
+    3508: {"name": "Mary手链照片", "note": "L2回溯获取：Mary手链(原3207)的特写照片，用于花形压痕比对", "scene": "Sullivan家客厅", "scene_en": "SullivanHome_LivingRoom", "sources": [3207]},
+    3509: {"name": "花形压痕比对报告", "note": "系统层分析：垫板花形压痕(3507)+Mary手链照片(3508)→比对，雏菊吊坠完全吻合", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3507, 3508]},
 }
 
 # 证据类型映射（从证据美术资产文档提取）
@@ -1462,7 +1462,8 @@ def append_items_to_json(states):
         if eid_str in existing_ids:
             continue
         existing_ids.add(eid_str)
-        scene_label = info.get("scene", "小玩法派生")
+        scene_label = info.get("scene", "法医办公室")
+        scene_label_en = info.get("scene_en", "ForensicOffice")
         item_type = ITEM_TYPE_MAP.get(eid, "1")
         type_name = ITEM_TYPE_NAME_MAP.get(item_type, "clue")
         items_to_add.append({
@@ -1473,7 +1474,7 @@ def append_items_to_json(states):
             "canCombined": "false",
             "Describe": [info["note"]],
             "ShortDescribe": [info["name"]],
-            "location": [scene_label, ""],
+            "location": [scene_label, scene_label_en],
             "Chapter": "EPI03",
             "folderPath": "EPI03\\Derived",
             "desSpritePath": f"{type_name}_{eid_str}_big",

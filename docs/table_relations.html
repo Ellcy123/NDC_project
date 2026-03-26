@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>NDC 配置表关系图</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
+
+  #canvas { width: 100vw; height: 100vh; position: relative; cursor: grab; }
+  #canvas.dragging { cursor: grabbing; }
+
+  svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+  .table-box {
+    position: absolute;
+    border-radius: 10px;
+    border: 2px solid;
+    min-width: 180px;
+    z-index: 10;
+    transition: box-shadow 0.3s;
+    cursor: grab;
+    user-select: none;
+  }
+  .table-box.box-dragging { cursor: grabbing; z-index: 50; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+  .table-box.highlight { box-shadow: 0 0 24px rgba(255,255,255,0.4); z-index: 30; }
+  .table-box.dimmed { opacity: 0.25; }
+
+  .table-header {
+    padding: 10px 14px 6px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+  }
+  .table-sub {
+    padding: 2px 14px 8px;
+    font-size: 11px;
+    opacity: 0.8;
+  }
+  .table-fields {
+    padding: 8px 14px 10px;
+    font-size: 11px;
+    line-height: 1.6;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-family: 'Consolas', 'Courier New', monospace;
+  }
+  .table-fields .fk { color: #fbbf24; }
+  .table-fields .pk { color: #34d399; font-weight: 600; }
+
+  /* Color groups */
+  .group-core { border-color: #f59e0b; background: linear-gradient(135deg, #451a03 0%, #78350f 100%); }
+  .group-core .table-header { color: #fbbf24; }
+
+  .group-scene { border-color: #3b82f6; background: linear-gradient(135deg, #0c1929 0%, #1e3a5f 100%); }
+  .group-scene .table-header { color: #60a5fa; }
+
+  .group-item { border-color: #10b981; background: linear-gradient(135deg, #022c22 0%, #064e3b 100%); }
+  .group-item .table-header { color: #34d399; }
+
+  .group-talk { border-color: #8b5cf6; background: linear-gradient(135deg, #1e1048 0%, #3b0764 100%); }
+  .group-talk .table-header { color: #a78bfa; }
+
+  .group-expose { border-color: #ef4444; background: linear-gradient(135deg, #1c0606 0%, #450a0a 100%); }
+  .group-expose .table-header { color: #f87171; }
+
+  .group-testimony { border-color: #ec4899; background: linear-gradient(135deg, #1a0515 0%, #4a0d2e 100%); }
+  .group-testimony .table-header { color: #f472b6; }
+
+  .group-misc { border-color: #6b7280; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); }
+  .group-misc .table-header { color: #9ca3af; }
+
+  .group-unused { border-color: #475569; background: linear-gradient(135deg, #111827 0%, #1e293b 100%); opacity: 0.6; border-style: dashed; }
+  .group-unused .table-header { color: #94a3b8; text-decoration: line-through; }
+  .group-unused .unused-badge {
+    display: inline-block; background: #dc2626; color: #fff; font-size: 9px;
+    padding: 1px 5px; border-radius: 3px; margin-left: 6px; text-decoration: none;
+    vertical-align: middle; font-weight: 600;
+  }
+
+  .arrow-label {
+    position: absolute;
+    font-size: 10px;
+    color: #94a3b8;
+    background: rgba(15,23,42,0.85);
+    padding: 1px 5px;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 5;
+    white-space: nowrap;
+  }
+
+  #legend {
+    position: fixed; top: 16px; left: 16px;
+    background: rgba(15,23,42,0.92); border: 1px solid #334155;
+    border-radius: 10px; padding: 16px; z-index: 100;
+    font-size: 12px; backdrop-filter: blur(8px);
+  }
+  #legend h3 { font-size: 15px; margin-bottom: 10px; color: #f1f5f9; }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  #info {
+    position: fixed; bottom: 16px; left: 16px; right: 16px;
+    background: rgba(15,23,42,0.95); border: 1px solid #334155;
+    border-radius: 10px; padding: 16px 20px; z-index: 100;
+    font-size: 13px; backdrop-filter: blur(8px);
+    display: none; max-height: 180px; overflow-y: auto;
+  }
+  #info h4 { color: #fbbf24; margin-bottom: 6px; font-size: 15px; }
+  #info .refs { color: #94a3b8; line-height: 1.7; }
+  #info .refs span { color: #60a5fa; cursor: pointer; text-decoration: underline; }
+  #info .refs span:hover { color: #93c5fd; }
+
+  #title-bar { position: fixed; top: 16px; right: 16px; text-align: right; z-index: 100; }
+  #title-bar h1 { font-size: 20px; color: #f1f5f9; font-weight: 700; }
+  #title-bar p { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+  #zoom-controls { position: fixed; bottom: 16px; right: 16px; z-index: 100; display: flex; gap: 8px; }
+  #zoom-controls button {
+    width: 36px; height: 36px; background: rgba(30,41,59,0.9);
+    border: 1px solid #475569; border-radius: 8px; color: #e2e8f0;
+    font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  #zoom-controls button:hover { background: #334155; }
+</style>
+</head>
+<body>
+
+<div id="canvas">
+  <svg id="arrows"></svg>
+</div>
+
+<div id="legend">
+  <h3>NDC 配置表关系图</h3>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> 核心配置 (ChapterConfig)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> 场景系统 (Scene, NPC)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> 物品系统 (Item)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> 对话系统 (Talk)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> 指证/疑点 (Expose, Doubt)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> 证词系统 (Testimony)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> 其他 / 未使用</div>
+  <div style="margin-top:10px;color:#64748b;font-size:11px;">
+    拖拽模块移动位置<br>
+    点击查看详情 | 滚轮缩放<br>
+    拖拽空白处平移画布
+  </div>
+</div>
+
+<div id="title-bar">
+  <h1>11 Active + 1 Unused</h1>
+  <p>Assets/table/ | Unit1 EPI01</p>
+</div>
+
+<div id="info"></div>
+
+<div id="zoom-controls">
+  <button onclick="zoomIn()">+</button>
+  <button onclick="zoomOut()">&minus;</button>
+  <button onclick="resetView()" style="font-size:13px;">R</button>
+</div>
+
+<script>
+const tables = {
+  ChapterConfig: {
+    group: 'core', x: 560, y: 40,
+    sub: '章节循环主配置',
+    pk: 'id (101=U1L1)',
+    fields: ['initTalk &rarr; Talk', 'initScene &rarr; SceneConfig', 'exposeNpcId &rarr; NPCStaticData', 'doubts[] &rarr; DoubtConfig', 'exposes[] &rarr; ExposeData'],
+    desc: '每个循环(Loop)的顶层配置表。定义该轮的初始对话、初始场景、疑点列表和指证方案。',
+    refs_out: ['Talk(initTalk)', 'SceneConfig(initScene)', 'NPCStaticData(exposeNpcId)', 'DoubtConfig(doubts[])', 'ExposeData(exposes[])'],
+    refs_in: []
+  },
+  SceneConfig: {
+    group: 'scene', x: 240, y: 220,
+    sub: '场景配置 (126个)',
+    pk: 'sceneId (4位: unit+loop+loc)',
+    fields: ['sceneName / sceneNameEn', 'backgroundImage', 'NPCInfos[] &rarr; NPCLoopData', 'ItemIDs[] &rarr; ItemStaticData'],
+    desc: '数据的"超级容器"——NPC和道具仅通过此表与场景关联。同一物理地点在不同Loop中是不同的sceneId。',
+    refs_out: ['NPCLoopData(NPCInfos[])', 'ItemStaticData(ItemIDs[])'],
+    refs_in: ['ChapterConfig(initScene)']
+  },
+  NPCLoopData: {
+    group: 'scene', x: 60, y: 400,
+    sub: 'NPC场景实例',
+    pk: 'id (4位)',
+    fields: ['NPC &rarr; NPCStaticData', 'TalkInfo &rarr; Talk (首次)', 'LoopTalkInfo &rarr; Talk (重复)', 'ResPath / ClickResPath', 'PosX / PosY / PosZ'],
+    desc: 'NPC在特定场景中的具体表现：绑定哪段对话、使用什么立绘、在场景中的位置。',
+    refs_out: ['NPCStaticData(NPC)', 'Talk(TalkInfo)', 'Talk(LoopTalkInfo)'],
+    refs_in: ['SceneConfig(NPCInfos[])']
+  },
+  NPCStaticData: {
+    group: 'scene', x: 60, y: 600,
+    sub: 'NPC基础信息 (11人)',
+    pk: 'id (3位: 101-111)',
+    fields: ['Name[中,英]', 'role (枚举)', 'Chapter', 'IconSmall / IconLarge'],
+    desc: 'NPC的全局静态属性。被多张表引用，是核心参照表。',
+    refs_out: [],
+    refs_in: ['NPCLoopData(NPC)', 'Talk(Speaker)', 'Testimony(npc)', 'ChapterConfig(exposeNpcId)']
+  },
+  ItemStaticData: {
+    group: 'item', x: 440, y: 440,
+    sub: '物品/证据 (224条)',
+    pk: 'id (4-6位)',
+    fields: ['Name[中,英] / Describe[中,英]', 'itemType (0-7枚举)', 'canAnalyzed &rarr; analysedEvidence', 'canCombined &rarr; combineParameter[]', 'folderPath / mapSpritePath', 'Position[X,Y]'],
+    desc: '所有物品的静态定义。包含分析链(毛巾→氯仿毛巾)和合成链。type6/7是可交互道具对。',
+    refs_out: ['ItemStaticData(analysedEvidence)', 'ItemStaticData(combineParameter[])'],
+    refs_in: ['SceneConfig(ItemIDs[])', 'ExposeData(item[])', 'DoubtConfig(condition.Item)']
+  },
+  Talk: {
+    group: 'talk', x: 710, y: 270,
+    sub: '对话链 (单句)',
+    pk: 'id (6-9位)',
+    fields: ['Speaker &rarr; NPCStaticData', 'Words[中,英]', 'next &rarr; Talk (链式)', 'script (DialogueAction枚举)', 'Parameters[] (分支/跳转)', 'video: Episode/Loop/Scene/Id'],
+    desc: '链式对话结构。script字段控制分支(branches)、结束(end)、获得道具(get)、指证(expose)、切场景(change_scene)等。',
+    refs_out: ['NPCStaticData(Speaker)', 'Talk(next)'],
+    refs_in: ['ChapterConfig(initTalk)', 'NPCLoopData(TalkInfo)', 'NPCLoopData(LoopTalkInfo)', 'ExposeData(talkId)']
+  },
+  Testimony: {
+    group: 'testimony', x: 380, y: 680,
+    sub: '证词',
+    pk: 'id',
+    fields: ['npc &rarr; NPCStaticData', 'chapter', 'words[中,英] (含special标签)', 'evidenceItem[] &rarr; TestimonyItem'],
+    desc: 'NPC的完整证词段落。通过&lt;special&gt;标签标记关键信息，内含可提取的证词道具。',
+    refs_out: ['NPCStaticData(npc)', 'TestimonyItem(evidenceItem[])'],
+    refs_in: []
+  },
+  TestimonyItem: {
+    group: 'testimony', x: 640, y: 640,
+    sub: '证词道具',
+    pk: 'id (7位: NPC+loop+seq)',
+    fields: ['testimonyType (自述/见闻)', 'testimony[中,英]', 'triggerType (无/时间线/关系网)', 'triggerParam'],
+    desc: '从证词中提取的单条可收集证据。triggerType决定收集方式：直接获取、时间线核实、或关系网交叉核实。',
+    refs_out: [],
+    refs_in: ['Testimony(evidenceItem[])', 'ExposeData(testimony)', 'DoubtConfig(condition.Timeline/RelNet)']
+  },
+  DoubtConfig: {
+    group: 'expose', x: 880, y: 80,
+    sub: '疑点配置',
+    pk: 'id (4位: unit+loop+seq)',
+    fields: ['condition[] {type, param}', 'text (疑点问题)'],
+    desc: '调查中产生的疑问。condition[]中type=1指道具、type=2指关系网、type=3指时间线，全部满足后疑点解锁。',
+    refs_out: ['ItemStaticData(condition.Item)', 'TestimonyItem(condition.Timeline/RelNet)'],
+    refs_in: ['ChapterConfig(doubts[])']
+  },
+  ExposeData: {
+    group: 'expose', x: 920, y: 320,
+    sub: '指证方案',
+    pk: 'id',
+    fields: ['testimony &rarr; TestimonyItem', 'item[] &rarr; ItemStaticData', 'talkId &rarr; Talk'],
+    desc: '具体的指证方案：选对证词 + 出示正确物品 → 触发指证对话。每轮指证有多个方案(回合)。',
+    refs_out: ['TestimonyItem(testimony)', 'ItemStaticData(item[])', 'Talk(talkId)'],
+    refs_in: ['ChapterConfig(exposes[])']
+  },
+  ExposeConfig: {
+    group: 'unused', x: 920, y: 520,
+    sub: '指证场景UI配置',
+    pk: 'sceneId (2位)',
+    unused: true,
+    fields: ['ExposeNPCID', 'ExposeItemIDCount', 'ExposeItemID[]', 'ExposeTalkID'],
+    desc: '有数据(6条)且TableConfig会加载，但_Project/Scripts下没有任何业务代码引用。指证系统实际通过 ChapterConfig → ExposeData 驱动。早期设计遗留，配置第二章时可跳过。',
+    refs_out: [],
+    refs_in: []
+  },
+  DayTimeConfig: {
+    group: 'misc', x: 100, y: 760,
+    sub: '日期时间配置',
+    pk: 'day',
+    fields: ['startTime (HHMM)', 'endTime (HHMM)'],
+    desc: '定义游戏中的日期和时间范围。目前仅1条记录(day=1103, 全天时段)。独立表，无外键关联。',
+    refs_out: [],
+    refs_in: []
+  }
+};
+
+const relations = [
+  { from: 'ChapterConfig', to: 'Talk', label: 'initTalk', color: '#f59e0b' },
+  { from: 'ChapterConfig', to: 'SceneConfig', label: 'initScene', color: '#f59e0b' },
+  { from: 'ChapterConfig', to: 'NPCStaticData', label: 'exposeNpcId', color: '#f59e0b' },
+  { from: 'ChapterConfig', to: 'DoubtConfig', label: 'doubts[]', color: '#f59e0b' },
+  { from: 'ChapterConfig', to: 'ExposeData', label: 'exposes[]', color: '#f59e0b' },
+  { from: 'SceneConfig', to: 'NPCLoopData', label: 'NPCInfos[]', color: '#3b82f6' },
+  { from: 'SceneConfig', to: 'ItemStaticData', label: 'ItemIDs[]', color: '#3b82f6' },
+  { from: 'NPCLoopData', to: 'NPCStaticData', label: 'NPC', color: '#3b82f6' },
+  { from: 'NPCLoopData', to: 'Talk', label: 'TalkInfo', color: '#3b82f6' },
+  { from: 'Talk', to: 'NPCStaticData', label: 'Speaker', color: '#8b5cf6' },
+  { from: 'ExposeData', to: 'TestimonyItem', label: 'testimony', color: '#ef4444' },
+  { from: 'ExposeData', to: 'ItemStaticData', label: 'item[]', color: '#ef4444' },
+  { from: 'ExposeData', to: 'Talk', label: 'talkId', color: '#ef4444' },
+  { from: 'DoubtConfig', to: 'ItemStaticData', label: 'cond.Item', color: '#ef4444' },
+  { from: 'DoubtConfig', to: 'TestimonyItem', label: 'cond.Time/Rel', color: '#ef4444' },
+  { from: 'Testimony', to: 'NPCStaticData', label: 'npc', color: '#ec4899' },
+  { from: 'Testimony', to: 'TestimonyItem', label: 'evidenceItem[]', color: '#ec4899' },
+  { from: 'Talk', to: 'Talk', label: 'next (chain)', color: '#a78bfa', self: true },
+  { from: 'ItemStaticData', to: 'ItemStaticData', label: 'analyse/combine', color: '#34d399', self: true },
+];
+
+// ============ RENDERING ============
+const canvas = document.getElementById('canvas');
+const svg = document.getElementById('arrows');
+const info = document.getElementById('info');
+
+let scale = 1, panX = 0, panY = 0;
+let isPanning = false, panStartX, panStartY;
+
+// Box dragging state
+let dragBox = null, dragOffsetX = 0, dragOffsetY = 0, dragMoved = false;
+
+const boxElements = {};
+const labelElements = [];
+
+// Create table boxes
+for (const [name, t] of Object.entries(tables)) {
+  const el = document.createElement('div');
+  el.className = `table-box group-${t.group}`;
+  el.dataset.name = name;
+
+  let fieldsHtml = `<span class="pk">PK: ${t.pk}</span><br>`;
+  for (const f of t.fields) {
+    if (f.includes('&rarr;')) {
+      fieldsHtml += `<span class="fk">${f}</span><br>`;
+    } else {
+      fieldsHtml += `${f}<br>`;
+    }
+  }
+
+  const unusedBadge = t.unused ? '<span class="unused-badge">UNUSED</span>' : '';
+  el.innerHTML = `
+    <div class="table-header">${name}${unusedBadge}</div>
+    <div class="table-sub">${t.sub}</div>
+    <div class="table-fields">${fieldsHtml}</div>
+  `;
+
+  canvas.appendChild(el);
+  boxElements[name] = el;
+
+  // ---- Box drag start ----
+  el.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+    dragBox = name;
+    dragMoved = false;
+    const rect = el.getBoundingClientRect();
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+    el.classList.add('box-dragging');
+  });
+}
+
+// ---- Global mouse events ----
+window.addEventListener('mousemove', (e) => {
+  if (dragBox) {
+    // Dragging a box
+    dragMoved = true;
+    const t = tables[dragBox];
+    t.x = (e.clientX - dragOffsetX - panX) / scale;
+    t.y = (e.clientY - dragOffsetY - panY) / scale;
+    updatePositions();
+    return;
+  }
+  if (isPanning) {
+    panX = e.clientX - panStartX;
+    panY = e.clientY - panStartY;
+    updatePositions();
+  }
+});
+
+window.addEventListener('mouseup', (e) => {
+  if (dragBox) {
+    boxElements[dragBox].classList.remove('box-dragging');
+    if (!dragMoved) {
+      // It was a click, not a drag — show info
+      showInfo(dragBox);
+      highlightRelated(dragBox);
+    }
+    dragBox = null;
+    return;
+  }
+  isPanning = false;
+  canvas.classList.remove('dragging');
+});
+
+// Canvas pan
+canvas.addEventListener('mousedown', (e) => {
+  if (e.target.closest('.table-box')) return;
+  isPanning = true;
+  panStartX = e.clientX - panX;
+  panStartY = e.clientY - panY;
+  canvas.classList.add('dragging');
+});
+
+canvas.addEventListener('click', (e) => {
+  if (e.target === canvas || e.target === svg) clearHighlight();
+});
+
+// Zoom
+canvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.08 : 0.08;
+  const newScale = Math.max(0.3, Math.min(2.5, scale + delta));
+  const mx = e.clientX, my = e.clientY;
+  panX = mx - (mx - panX) * (newScale / scale);
+  panY = my - (my - panY) * (newScale / scale);
+  scale = newScale;
+  updatePositions();
+}, { passive: false });
+
+function zoomIn() { scale = Math.min(2.5, scale + 0.15); updatePositions(); }
+function zoomOut() { scale = Math.max(0.3, scale - 0.15); updatePositions(); }
+function resetView() { scale = 1; panX = 0; panY = 0; clearHighlight(); updatePositions(); }
+
+// ============ POSITION & DRAW ============
+function updatePositions() {
+  for (const [name, t] of Object.entries(tables)) {
+    const el = boxElements[name];
+    el.style.left = (t.x * scale + panX) + 'px';
+    el.style.top = (t.y * scale + panY) + 'px';
+    el.style.transform = `scale(${scale})`;
+    el.style.transformOrigin = 'top left';
+  }
+  drawArrows();
+}
+
+function getBoxRect(name) {
+  const el = boxElements[name];
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2, w: r.width, h: r.height, left: r.left, right: r.right, top: r.top, bottom: r.bottom };
+}
+
+function edgePoint(box, tx, ty) {
+  const cx = box.left + box.w/2, cy = box.top + box.h/2;
+  const dx = tx - cx, dy = ty - cy;
+  if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return { x: cx, y: cy };
+  const s = Math.min(box.w/2 / Math.abs(dx || 0.001), box.h/2 / Math.abs(dy || 0.001));
+  return { x: cx + dx*s, y: cy + dy*s };
+}
+
+function drawArrows() {
+  labelElements.forEach(el => el.remove());
+  labelElements.length = 0;
+
+  let h = '<defs>';
+  const colors = new Set(relations.map(r => r.color));
+  for (const c of colors) {
+    h += `<marker id="a${c.slice(1)}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="${c}" opacity="0.7"/></marker>`;
+  }
+  h += '</defs>';
+
+  for (const rel of relations) {
+    const mid = 'a' + rel.color.slice(1);
+
+    if (rel.self) {
+      const b = getBoxRect(rel.from);
+      const x = b.right - 5, y = b.top + 15, r = 18 * scale;
+      h += `<path d="M${x} ${y} C${x+r*2} ${y-r} ${x+r*2} ${y+r*2} ${x} ${y+r}"
+        stroke="${rel.color}" stroke-width="1.5" fill="none" opacity="0.5" marker-end="url(#${mid})"/>`;
+      addLabel(rel.label, x + r*1.5, y + r*0.3);
+      continue;
+    }
+
+    const fb = getBoxRect(rel.from), tb = getBoxRect(rel.to);
+    const fp = edgePoint(fb, tb.x, tb.y), tp = edgePoint(tb, fb.x, fb.y);
+
+    h += `<line x1="${fp.x}" y1="${fp.y}" x2="${tp.x}" y2="${tp.y}"
+      stroke="${rel.color}" stroke-width="1.5" opacity="0.45" marker-end="url(#${mid})"
+      data-from="${rel.from}" data-to="${rel.to}"/>`;
+
+    addLabel(rel.label, (fp.x+tp.x)/2 - 20, (fp.y+tp.y)/2 - 8);
+  }
+
+  svg.innerHTML = h;
+}
+
+function addLabel(text, x, y) {
+  const el = document.createElement('div');
+  el.className = 'arrow-label';
+  el.textContent = text;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  canvas.appendChild(el);
+  labelElements.push(el);
+}
+
+// ============ INFO & HIGHLIGHT ============
+function showInfo(name) {
+  const t = tables[name];
+  let rh = '';
+  if (t.refs_out.length) {
+    rh += '<b>引用 &rarr;</b> ' + t.refs_out.map(r => {
+      const tbl = r.split('(')[0];
+      return `<span onclick="showInfo('${tbl}');highlightRelated('${tbl}')">${r}</span>`;
+    }).join(' | ') + '<br>';
+  }
+  if (t.refs_in.length) {
+    rh += '<b>&larr; 被引用</b> ' + t.refs_in.map(r => {
+      const tbl = r.split('(')[0];
+      return `<span onclick="showInfo('${tbl}');highlightRelated('${tbl}')">${r}</span>`;
+    }).join(' | ');
+  }
+  const badge = t.unused ? ' <span style="background:#dc2626;color:#fff;font-size:11px;padding:2px 6px;border-radius:3px;">UNUSED</span>' : '';
+  info.innerHTML = `<h4>${name}${badge} <span style="font-weight:400;color:#94a3b8;font-size:13px">${t.sub}</span></h4>
+    <p style="margin-bottom:8px;color:#cbd5e1;">${t.desc}</p>
+    <div class="refs">${rh || '<span style="color:#64748b">无外键关联</span>'}</div>`;
+  info.style.display = 'block';
+}
+
+function highlightRelated(name) {
+  const related = new Set([name]);
+  for (const r of relations) {
+    if (r.from === name) related.add(r.to);
+    if (r.to === name) related.add(r.from);
+  }
+  for (const [n, el] of Object.entries(boxElements)) {
+    el.classList.remove('highlight', 'dimmed');
+    if (n === name) el.classList.add('highlight');
+    else if (!related.has(n)) el.classList.add('dimmed');
+  }
+  svg.querySelectorAll('line').forEach(l => {
+    const f = l.getAttribute('data-from'), t = l.getAttribute('data-to');
+    if (f === name || t === name) { l.setAttribute('opacity','1'); l.setAttribute('stroke-width','2.5'); }
+    else { l.setAttribute('opacity','0.12'); l.setAttribute('stroke-width','1'); }
+  });
+}
+
+function clearHighlight() {
+  for (const el of Object.values(boxElements)) el.classList.remove('highlight','dimmed');
+  svg.querySelectorAll('line').forEach(l => { l.setAttribute('opacity','0.45'); l.setAttribute('stroke-width','1.5'); });
+  info.style.display = 'none';
+}
+
+// Init
+updatePositions();
+setTimeout(drawArrows, 100);
+window.addEventListener('resize', drawArrows);
+</script>
+</body>
+</html>
