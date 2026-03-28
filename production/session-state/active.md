@@ -1,72 +1,61 @@
 # Active Session
 
-Last updated: 2026-03-28 14:38:40
+Last updated: 2026-03-28 19:31:02
 
 ## Recently Modified Files
-.agents/skills/asset-naming/skill.md
-.agents/skills/config-table-assistant/skill.md
-.agents/skills/cycle-expose-designer/skill.md
-.agents/skills/daily-summary/skill.md
-.agents/skills/episode-outline-generator/skill.md
-.agents/skills/episode-story-extractor/skill.md
-.agents/skills/premium-puzzle-assistant/CHANGELOG.md
-.agents/skills/premium-puzzle-assistant/skill.md
-.claude/agents/content-director.md
-.claude/commands/connoisseur.md
-.claude/commands/generate-dialogue.md
-.claude/commands/generate-state.md
-.claude/commands/review-dialogue.md
-.claude/settings.json
-CLAUDE.md
-preview_new2/data/Unit3/talk_summary.yaml
+"AVG/0304/\345\257\271\350\257\235\350\215\211\347\250\277/Loop1/loop1_morrison_expose.md"
+AVG/EPI02/Expose/loop1_morrison.json
+"AVG/\345\257\271\350\257\235\351\205\215\347\275\256\345\267\245\344\275\234\345\217\212\350\215\211\347\250\277/\347\224\237\346\210\220\350\215\211\347\250\277/Loop1_\347\224\237\346\210\220\350\215\211\347\250\277.md"
+preview_new2/data/Unit2/story_overview.yaml
+preview_new2/data/Unit3/loop6.yaml
+preview_new2/data/Unit3/story_overview.yaml
 preview_new2/data/table/NPCStaticData.json
 preview_new2/data/table/SceneConfig.json
+preview_new2/data/table/Talk.json
 preview_new2/index.html
 preview_new2/state_to_preview.py
+production/session-state/active.md
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/Unit3_\345\244\247\347\272\262_\344\277\256\350\256\242\347\211\210.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/Unit3_\347\226\221\347\202\271\350\256\276\350\256\241.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/Unit3_\347\276\216\346\234\257\345\217\202\350\200\203_\344\272\272\347\211\251\344\270\216\345\234\272\346\231\257.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/Unit3_\351\211\264\350\265\217\345\212\233\350\256\276\350\256\241.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/state/loop6_state.yaml"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/\344\272\272\347\211\251\350\256\276\345\256\232/bernard.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/\344\272\272\347\211\251\350\256\276\345\256\232/foster.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit3/\344\272\272\347\211\251\350\256\276\345\256\232/helen.md"
 
 ## Unstaged Changes
- .agents/skills/asset-naming/skill.md               |  296 -----
- .agents/skills/config-table-assistant/skill.md     |  436 -------
- .agents/skills/cycle-expose-designer/skill.md      |  443 -------
- .agents/skills/daily-summary/skill.md              |  511 --------
- .agents/skills/episode-outline-generator/skill.md  |  480 --------
- .agents/skills/episode-story-extractor/skill.md    |  446 -------
- .../skills/premium-puzzle-assistant/CHANGELOG.md   |  141 ---
- .agents/skills/premium-puzzle-assistant/skill.md   |  484 --------
- .claude/agents/content-director.md                 |  169 ++-
- .claude/commands/connoisseur.md                    |  283 -----
- .claude/commands/generate-dialogue.md              |  361 ------
- .claude/commands/generate-state.md                 |  608 ----------
- .claude/commands/review-dialogue.md                |  275 -----
- .claude/settings.json                              |   25 +-
- CLAUDE.md                                          |    4 +-
- preview_new2/data/Unit3/talk_summary.yaml          |    2 +-
- preview_new2/data/table/NPCStaticData.json         |   78 +-
- preview_new2/data/table/SceneConfig.json           |  122 +-
- preview_new2/index.html                            |  471 +++++++-
- preview_new2/state_to_preview.py                   |   10 +-
- production/session-state/active.md                 |   35 +-
- ...270\203\345\261\200\350\256\276\350\256\241.md" |  127 +-
- ...270\203\345\261\200\350\256\276\350\256\241.md" |    6 +-
- ...270\203\345\261\200\350\256\276\350\256\241.md" |   12 +-
- ...270\203\345\261\200\350\256\276\350\256\241.md" |    4 +-
- ...270\203\345\261\200\350\256\276\350\256\241.md" |   42 +-
- .../README.md"                                     |  119 --
- ...270\203\345\261\200\350\256\276\350\256\241.md" |  630 ----------
- ...270\203\345\261\200\350\256\276\350\256\241.md" | 1119 ------------------
- ...270\203\345\261\200\350\256\276\350\256\241.md" | 1162 -------------------
- ...270\203\345\261\200\350\256\276\350\256\241.md" | 1106 ------------------
- ...270\203\345\261\200\350\256\276\350\256\241.md" | 1221 --------------------
- ...270\203\345\261\200\350\256\276\350\256\241.md" | 1031 -----------------
- ...72\262_\344\277\256\350\256\242\347\211\210.md" |   12 +-
- ...226\221\347\202\271\350\256\276\350\256\241.md" |   42 +-
- .../Unit3/state/loop3_state.yaml"                  |   14 +-
- .../Unit3/state/loop4_state.yaml"                  |    4 +-
- .../Unit3/state/loop6_state.yaml"                  |    2 +-
- .../liam.md"                                       |  149 ---
- ...272\214\346\245\274\350\265\260\345\273\212.md" |   10 +-
- ...234\272\346\231\257\346\200\273\350\247\210.md" |   10 +-
- ...214\207\350\257\201\350\256\276\350\256\241.md" |   38 +-
- ...276\216\346\234\257\350\265\204\344\272\247.md" |    4 +-
- ...272\213\344\270\215\345\207\272\351\227\250.md" |    2 +-
- 44 files changed, 883 insertions(+), 11663 deletions(-)
+ .../Loop1/loop1_morrison_expose.md"                |   4 +-
+ AVG/EPI02/Expose/loop1_morrison.json               |   4 +-
+ ...224\237\346\210\220\350\215\211\347\250\277.md" |   6 +-
+ preview_new2/data/Unit2/story_overview.yaml        |   2 +-
+ preview_new2/data/Unit3/loop6.yaml                 |   2 +-
+ preview_new2/data/Unit3/story_overview.yaml        |   4 +-
+ preview_new2/data/table/NPCStaticData.json         |  46 +++--
+ preview_new2/data/table/SceneConfig.json           | 126 ++++++-------
+ preview_new2/data/table/Talk.json                  |   8 +-
+ preview_new2/index.html                            |  70 ++++++-
+ preview_new2/state_to_preview.py                   |  90 +++++----
+ production/session-state/active.md                 |  80 ++------
+ ...72\262_\344\277\256\350\256\242\347\211\210.md" |   4 +-
+ ...226\221\347\202\271\350\256\276\350\256\241.md" |   2 +-
+ ...211\251\344\270\216\345\234\272\346\231\257.md" |  18 +-
+ ...265\217\345\212\233\350\256\276\350\256\241.md" |   2 +-
+ .../Unit3/state/loop6_state.yaml"                  |   2 +-
+ .../bernard.md"                                    | 168 +++++------------
+ .../foster.md"                                     | 186 +++++--------------
+ .../helen.md"                                      | 204 ++++++---------------
+ .../margaret.md"                                   | 164 +++++------------
+ .../mary.md"                                       | 199 +++++---------------
+ .../mickey.md"                                     | 186 ++++---------------
+ .../morrison.md"                                   | 158 ++++------------
+ .../seamus.md"                                     | 169 ++++-------------
+ .../thomas.md"                                     | 173 +++++------------
+ ...272\244\344\272\222\350\256\276\350\256\241.md" |   2 +-
+ .../SC3011_\350\241\227\350\247\222.md"            |   2 +-
+ ...234\272\346\231\257\346\200\273\350\247\210.md" |   2 +-
+ ...214\207\350\257\201\350\256\276\350\256\241.md" |   2 +-
+ ...276\251\350\256\272\350\256\276\350\256\241.md" |  14 +-
+ ...216\213\347\227\225\351\227\252\345\233\236.md" |   2 +-
+ ...214\273\345\255\246\345\261\200\351\231\220.md" |   4 +-
+ 33 files changed, 667 insertions(+), 1438 deletions(-)

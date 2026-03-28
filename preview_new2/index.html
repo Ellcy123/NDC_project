@@ -1385,6 +1385,69 @@
             }
         },
 
+        showNpcModal(npcId) {
+            const npc = AppState.npcsMap.get(String(npcId));
+            if (!npc) return;
+            this._modalHistory = [];
+            const roleMap = {'1':'主角','2':'搭档','3':'关键NPC','4':'受害者','5':'NPC','6':'嫌疑人'};
+            const roleName = roleMap[npc.role] || npc.role || '未知';
+            const titleEl = document.getElementById('modalTitle');
+            titleEl.textContent = `${cn(npc.Name)} (ID: ${npc.id})`;
+            titleEl.dataset.itemId = '';
+
+            let html = `
+                <p><strong>英文名：</strong>${escapeHtml(npc.Name?.[1] || '')}</p>
+                <p><strong>角色：</strong>${escapeHtml(roleName)}</p>
+                <p><strong>章节：</strong>${escapeHtml(npc.Chapter || '')}</p>
+                ${npc.IconSmall ? `<p><strong>立绘小图：</strong><span class="copy-tag" onclick="event.stopPropagation();copyText('${escapeHtml(npc.IconSmall)}', this)">${escapeHtml(npc.IconSmall)}</span></p>` : '<p><strong>立绘小图：</strong><span style="color:var(--warning)">未配置</span></p>'}
+                ${npc.IconLarge ? `<p><strong>立绘大图：</strong><span class="copy-tag" onclick="event.stopPropagation();copyText('${escapeHtml(npc.IconLarge)}', this)">${escapeHtml(npc.IconLarge)}</span></p>` : '<p><strong>立绘大图：</strong><span style="color:var(--warning)">未配置</span></p>'}
+            `;
+
+            if (npc.ArtRequirement) {
+                html += `<div class="art-highlight"><strong style="color: var(--highlight);">[ART] 美术需求：</strong><br>${escapeHtmlWithBr(npc.ArtRequirement)}</div>`;
+            } else {
+                html += `<div class="art-missing"><strong>[!] 未填写美术需求</strong></div>`;
+            }
+
+            document.getElementById('modalContent').innerHTML = html;
+            document.getElementById('evidenceModal').classList.add('active');
+        },
+
+        showSceneModal(sceneKey) {
+            const m = (this._cachedMergedScenes || []).find(s => s.key === sceneKey);
+            if (!m) return;
+            this._modalHistory = [];
+            const titleEl = document.getElementById('modalTitle');
+            titleEl.textContent = `${m.sceneName} (${m.sceneNameEn})`;
+            titleEl.dataset.itemId = '';
+
+            const loopTags = m.loops.sort().map(l => `L${l}`).join(' ');
+            const bgName = m.backgroundImage ? m.backgroundImage.split('\\').pop() : '';
+
+            let html = `
+                <p><strong>出现循环：</strong>${escapeHtml(loopTags)}</p>
+                ${bgName ? `<p><strong>背景图：</strong><span class="copy-tag" onclick="event.stopPropagation();copyText('${escapeHtml(bgName)}', this)">${escapeHtml(bgName)}</span></p>` : '<p><strong>背景图：</strong><span style="color:var(--warning)">未配置</span></p>'}
+            `;
+
+            if (m.npcMap.size > 0) {
+                html += `<p><strong>关联NPC：</strong>${m.npcMap.size}个</p>`;
+                m.npcMap.forEach((npcEntry, npcName) => {
+                    const resList = Array.from(npcEntry.resPaths);
+                    const resHtml = resList.map(r => `<span class="copy-tag" onclick="event.stopPropagation();copyText('${escapeHtml(r)}', this)">${escapeHtml(r)}</span>`).join(' ');
+                    html += `<p style="padding-left:1rem;color:var(--text-muted);">└ <span style="color:var(--highlight);">${escapeHtml(npcName)}</span> — ${resList.length}个立绘 ${resHtml}</p>`;
+                });
+            }
+
+            if (m.ArtRequirement) {
+                html += `<div class="art-highlight"><strong style="color: var(--highlight);">[ART] 美术需求：</strong><br>${escapeHtmlWithBr(m.ArtRequirement)}</div>`;
+            } else {
+                html += `<div class="art-missing"><strong>[!] 未填写美术需求</strong></div>`;
+            }
+
+            document.getElementById('modalContent').innerHTML = html;
+            document.getElementById('evidenceModal').classList.add('active');
+        },
+
         showEvidenceModal(id) {
             this._showEvidenceModalInner(id, true);
         },
@@ -1978,7 +2041,7 @@
                 const artText = npc.ArtRequirement || '未填写';
                 const hasIcon = npc.IconSmall || npc.IconLarge;
                 html += `
-                    <tr>
+                    <tr onclick="UI.showNpcModal('${npc.id}')" style="cursor:pointer;">
                         <td class="id-col">${escapeHtml(String(npc.id))}</td>
                         <td class="name-col">${escapeHtml(cn(npc.Name))}</td>
                         <td class="name-col">${escapeHtml(npc.Name?.[1] || '')}</td>
@@ -2038,6 +2101,7 @@
         // ---- Scene Tab ----
         renderSceneTab(allScenes) {
             let merged = this._mergeScenes(allScenes);
+            UI._cachedMergedScenes = merged;
             if (this.filterText) {
                 const q = this.filterText.toLowerCase();
                 merged = merged.filter(m =>
@@ -2105,7 +2169,7 @@
                     const npcArtText = npcEntry.ArtRequirement || '未填写';
                     const resList = Array.from(npcEntry.resPaths);
                     npcRows += `
-                        <tr style="background: rgba(232,198,120,0.03);">
+                        <tr style="background: rgba(232,198,120,0.03); cursor:pointer;" onclick="UI.showNpcModal('${npcEntry.info?.NPC?.id || ''}')">
                             <td style="padding-left:1.5rem; color:var(--text-muted);">└</td>
                             <td class="name-col" style="color:var(--highlight);">${escapeHtml(npcName)}</td>
                             <td class="name-col"></td>
@@ -2117,7 +2181,7 @@
                 }
 
                 html += `
-                    <tr>
+                    <tr onclick="UI.showSceneModal('${escapeHtml(m.key)}')" style="cursor:pointer;">
                         <td style="font-size:0.8rem; color:var(--text-muted);">${loopTags}</td>
                         <td class="name-col">${escapeHtml(m.sceneName)}</td>
                         <td class="name-col">${escapeHtml(m.sceneNameEn)}</td>

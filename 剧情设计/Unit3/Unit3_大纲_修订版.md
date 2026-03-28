@@ -36,7 +36,7 @@
 | 3 | Helen | Helen和Thomas的真正关系？ | Helen和Thomas有杀妻骗保计划（Helen被胁迫）；Helen声称那晚不在场 |
 | 4 | Helen（补充） | 那晚楼顶到底发生了什么？ | Helen当晚在场，最后关头帮Mary反抗Thomas；因害怕担责与Mary约定隐瞒 |
 | 5 | Bernard Wells | Thomas的保险单怎么来的？ | 银行诱导Thomas杀妻骗保；Mary曾来找过Bernard（Bernard没承认，无直接证据） |
-| 6 | Mickey（兄弟推理对决） | 对真相的判断与决定 | 确认Mary和Helen先下手为强；Margaret认知偏差导向的模糊指证；Zack辩论获胜后主动选择销毁证据 |
+| 6 | Mickey（好友推理对决） | 对真相的判断与决定 | 确认Mary和Helen先下手为强；Margaret认知偏差导向的模糊指证；Zack辩论获胜后主动选择销毁证据 |
 
 ---
 
@@ -710,7 +710,7 @@ Mickey宣布正当防卫，为Mary辩护。Zack和Mickey的对话场景。案子
 
 ---
 
-## 循环6：兄弟推理对决
+## 循环6：好友推理对决
 
 **指证对象：** Mickey（非传统指证——Zack扮演控方，Mickey扮演辩方）
 
