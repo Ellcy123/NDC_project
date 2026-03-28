@@ -1,0 +1,424 @@
+# ============================================================
+# Loop 4 — 厨师的秘密 / The Cook's Secret
+# 本循环说谎者: Jimmy (107)
+# 核心揭示: Jimmy不只是厨师，是Webb最信任的助手；Jimmy知道古董水壶真实价值并故意伪装；Jimmy和Webb因Whale问题产生严重矛盾
+# 前序事件: L3揭露Webb的古董勒索网络，Tommy是核心操作者，Whale通过电话威胁Zack
+# 时间: 1925年11月2日（继L3调查）
+# ChapterConfig id: 104
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Webb的勒索生意遇到了大麻烦。Jimmy知道些什么？"
+    secondary:
+      - "神秘人物Whale到底是谁？"
+      - "Jimmy只是一个厨师吗？"
+      - "Webb身边最亲近的人在隐瞒什么？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "Rosa承认被Morrison胁迫，Morrison才是迷晕Zack的幕后指使者"
+    - "Rosa实际在后台走廊工作（非地下室），目睹了部分案发过程"
+    # ── L2 post_expose ──
+    - "Morrison因赌债被Whale收买$5000"
+    - "Whale要处理掉Webb和Zack"
+    - "Webb把Zack当'保险'"
+    # ── L3 post_expose ──
+    - "Webb不只做私酒生意，还经营以古董交易为幌子的勒索网络"
+    - "Tommy是这个勒索网络的核心操作者，负责记账和伪装"
+    - "同一件古董被反复'出售'给不同客户——本质是按月收取保护费"
+    - "Whale通过电话威胁Zack不要再查下去"
+  new_directions:
+    - direction: "Jimmy的真实身份"
+      trigger: "Webb的勒索网络已暴露，但Whale是谁仍是谜——需要调查Webb身边更亲近的人"
+    - direction: "古董水壶的伪装"
+      trigger: "Jimmy厨房里有一只伪装成陶泥的水壶——与Webb办公室的古董鉴定报告有何关联？"
+    - direction: "Jimmy和Webb的矛盾"
+      trigger: "多人证词指向Jimmy从Webb办公室拿走物品、与人发生争吵——厨师为何卷入这些事？"
+  post_expose_knowledge:
+    - "Jimmy不只是厨师，是Webb最信任的助手"
+    - "Jimmy知道古董水壶的真实价值并故意伪装"
+    - "Jimmy和Webb因Whale的勒索问题产生严重矛盾"
+    - "Jimmy警告Webb不要惹Whale但Webb不听"
+    - "Whale是一个极其危险的勒索目标"
+    - "Jimmy暗示Vivian也很可疑，为L5做铺垫"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: 公园(1420) → 🎬开篇
+# L3 Expose结束后，Webb的勒索网络已暴露，但Whale是谁仍是谜。
+# Emma和Zack在公园讨论下一步——需要调查Webb身边更亲近的人，即Jimmy。
+
+opening:
+  scene_id: 1420
+  characters: [Zack, Emma]
+  purpose: "L3 expose后讨论下一步——Webb勒索网络已暴露，Whale是谁仍是谜，需要调查Webb身边更亲近的人Jimmy"
+  talk: 102005001
+
+  emma_talk:
+    is_liar: false
+    motive: "引导Zack把调查方向转向Jimmy——Webb身边最亲近的人可能知道Whale的线索"
+    mindset: "深入推进——勒索网络只是表面，Whale才是真正的威胁，需要从Webb的核心圈子突破"
+
+    knows:
+      - "Webb经营以古董为幌子的勒索网络，Tommy是核心操作者"
+      - "Whale通过电话威胁Zack不要再查"
+      - "Morrison被Whale收买$5000，Whale要处理掉Webb和Zack"
+      - "Tommy暗示真正可怕的不是Webb，而是Whale"
+      - "Jimmy是蓝月亮酒吧的主厨，长期在Webb身边工作"
+
+    does_not_know:
+      - "Jimmy是Webb最信任的助手（不只是厨师）"
+      - "Jimmy知道古董水壶的真实价值"
+      - "Jimmy和Webb因Whale问题产生矛盾"
+      - "Jimmy家的额外收入记录"
+      - "Whale的真实身份"
+
+    lie: null
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L4:
+#   公园(1420)            → 🎬开篇
+#   Jimmy厨房(1411)       → 🔓新解锁, 搜证(3+1证据)
+#   Jimmy家客厅(1413)     → 🔓新解锁, NPC:Anna(108), 搜证(7证据)
+#   Jimmy家卧室(1412)     → 🔓新解锁, 搜证(1证据)
+#   Webb办公室(1408)      → 已解锁, 可调查无新证据
+#   Tommy办公室(1405)     → 已解锁, 对话(Testimony 1054001)
+#   Vivian化妆室(1407)    → 已解锁, 对话(Testimony 1063001)
+#   Rosa储藏室(1401)      → 已解锁, 对话(Jimmy用钥匙进Webb会客室)
+#   酒吧歌舞厅(1409)      → 已解锁, 与Jimmy对话/⚔️指证
+#   酒吧大堂(1410)        → 与Emma对话
+
+scenes:
+  # ── 🎬 公园（开篇） ──
+  - id: 1420
+    name: "公园"
+    note: "开篇场景，Emma与Zack讨论下一步调查方向"
+
+  # ── SC1411 Jimmy厨房（新解锁，搜证） ──
+  - id: 1411
+    name: "Jimmy厨房"
+    note: "🔓新解锁，Jimmy的工作场所，关键搜证地点"
+    evidence:
+      - id: 1411
+        name: "伪装成陶泥的古董水壶"
+        note: "关键——raw状态，需分析后变为1705(沾泥的水壶/分析后)，Expose R1用"
+      - id: 1412
+        name: "Jimmy的奖状"
+        note: "环境叙事——展示Jimmy的厨师身份"
+      - id: 1413
+        name: "Jimmy的厨房手套"
+        note: "环境叙事——日常工作道具"
+      - id: 1414
+        name: "厨房送餐订单/工作表"
+        note: "关键——Doubt 1405(不在场证明)，L6 R4用"
+
+  # ── SC1413 Jimmy家客厅（新解锁，NPC:Anna） ──
+  - id: 1413
+    name: "Jimmy家客厅"
+    note: "🔓新解锁(mapId=103映射)，Anna首次出场，大量搜证"
+    evidence:
+      - id: 1421
+        name: "Jimmy家庭合照"
+        note: "环境叙事——展示Jimmy的家庭生活"
+      - id: 1422
+        name: "Whale的联系暗号"
+        note: "环境叙事——暗示Jimmy与Whale有某种联系"
+      - id: 1423
+        name: "Jimmy给Anna的遗书"
+        note: "环境叙事——暗示Jimmy意识到危险"
+      - id: 1424
+        name: "额外收入记录"
+        note: "关键——Doubt 1404(Jimmy只是厨师吗？)用，L6 R5用"
+      - id: 1425
+        name: "Bennington陶器照片"
+        note: "关键——与古董鉴定报告关联，证明Jimmy知道水壶价值"
+      - id: 1427
+        name: "英语学习书籍"
+        note: "环境叙事——暗示Jimmy和Anna的移民背景"
+      - id: 1428
+        name: "移民申请表"
+        note: "环境叙事——暗示Jimmy计划移民"
+    npcs:
+      anna_001:
+        talk: anna_001
+        is_liar: false
+        motive: "担心Jimmy的安全——Jimmy最近行为异常，Anna希望有人能帮忙"
+        mindset: "焦虑不安——丈夫经常深夜不归、写了遗书，Anna感到丈夫被什么事情纠缠但不肯说"
+
+        knows:
+          - "Jimmy最近经常深夜不归，回来后情绪很差"
+          - "Jimmy写了一封遗书藏在抽屉里（Anna偷看到了）"
+          - "Jimmy除了酒吧的工资，还有'额外的收入'"
+          - "Jimmy最近在学英语，说是'为了将来'"
+          - "有人打过神秘电话找Jimmy，Jimmy接完后脸色很差"
+
+        does_not_know:
+          - "Jimmy在Webb勒索网络中的角色"
+          - "Whale的身份"
+          - "Webb被杀的细节"
+          - "古董水壶的真实价值"
+
+        lie: null
+        connoisseur: []
+
+  # ── SC1412 Jimmy家卧室（新解锁，搜证） ──
+  - id: 1412
+    name: "Jimmy家卧室"
+    note: "🔓新解锁，关键证据地点"
+    evidence:
+      - id: 1429
+        name: "古董鉴定报告"
+        note: "关键——Expose R2用，证明Jimmy了解水壶的真实价值"
+
+  # ── SC1408 Webb办公室（已解锁） ──
+  - id: 1408
+    name: "Webb办公室"
+    note: "已解锁，可调查但无新证据"
+
+  # ── SC1405 Tommy办公室（已解锁，对话） ──
+  - id: 1405
+    name: "Tommy办公室"
+    note: "已解锁，Tommy提供关键证词"
+    npcs:
+      tommy_004:
+        talk: tommy_004
+        is_liar: false
+        motive: "L3被指证后配合调查——不再隐瞒，愿意提供自己知道的信息"
+        mindset: "释然后的配合——被击穿后反而松了口气，但仍对Whale心存恐惧"
+
+        knows:
+          - "自己在L3被完全击穿——勒索网络操作者身份暴露"
+          - "Jimmy经常出入Webb办公室，不只是送饭"
+          - "曾亲眼看到Jimmy从Webb办公室抱出一个古董水壶"
+          - "Webb对Jimmy的信任程度远超其他人"
+
+        does_not_know:
+          - "Jimmy为什么拿走水壶"
+          - "Jimmy和Webb之间矛盾的具体原因"
+          - "Whale的真实身份"
+
+        lie: null
+        connoisseur: []
+
+        testimony_ids:
+          - 1054001  # Tommy证词: 看到Jimmy从Webb办公室抱出古董水壶
+
+  # ── SC1407 Vivian化妆室（已解锁，对话） ──
+  - id: 1407
+    name: "Vivian化妆室"
+    note: "已解锁，Vivian提供争吵目击证词"
+    npcs:
+      vivian_004:
+        talk: vivian_004
+        is_liar: false
+        motive: "回忆起目睹的争吵——与Webb死亡可能有关联，愿意配合"
+        mindset: "仍在消化Webb死亡的冲击——但对Jimmy的异常行为印象深刻"
+
+        knows:
+          - "亲眼目睹Jimmy和另一个人在后门附近激烈争吵"
+          - "争吵中提到了'不能再这样下去'之类的话"
+          - "Jimmy最近脾气变得很暴躁，和以前的老好人形象截然不同"
+
+        does_not_know:
+          - "Jimmy争吵对象的身份"
+          - "争吵的具体原因"
+          - "Jimmy和Webb的矛盾"
+          - "古董水壶的事"
+
+        lie: null
+        connoisseur: []
+
+        testimony_ids:
+          - 1063001  # Vivian证词: 目睹Jimmy和另一人争吵
+
+  # ── SC1401 Rosa储藏室（已解锁，对话） ──
+  - id: 1401
+    name: "Rosa储藏室"
+    note: "已解锁，Rosa提供Jimmy用钥匙进Webb会客室的证词"
+    npcs:
+      rosa_004:
+        talk: rosa_004
+        is_liar: false
+        motive: "配合调查——经过前几轮指证已建立信任，愿意提供有用信息"
+        mindset: "谨慎但配合——对Jimmy拥有Webb会客室钥匙一事感到意外"
+
+        knows:
+          - "看到Jimmy用钥匙打开Webb会客室的门进入"
+          - "普通员工不可能有Webb会客室的钥匙"
+          - "Jimmy在酒吧已工作多年，是最老的员工之一"
+
+        does_not_know:
+          - "Jimmy为什么有钥匙"
+          - "Jimmy在Webb会客室里做了什么"
+          - "Webb勒索网络的细节"
+
+        lie: null
+        connoisseur: []
+
+  # ── SC1409 酒吧歌舞厅（已解锁，Jimmy对话/指证） ──
+  - id: 1409
+    name: "酒吧歌舞厅"
+    note: "已解锁，Jimmy(107)所在场景，对话+⚔️指证"
+    npcs:
+      jimmy_expose:
+        talk: 1071006
+        is_liar: true
+        motive: "隐瞒自己在Webb生意中的深度参与——保护自己和Anna不被Whale报复"
+        mindset: "恐惧驱动的否认——知道太多秘密，一旦说出去就会危及家人安全"
+
+        knows:
+          - "自己不只是厨师，是Webb最信任的助手"
+          - "古董水壶的真实价值（Bennington陶器，价值约$2,000）"
+          - "自己故意把水壶伪装成陶泥制品藏在厨房"
+          - "Webb和Whale之间的紧张关系"
+          - "Whale是一个极其危险的勒索目标"
+          - "Webb不听自己的警告继续招惹Whale"
+          - "Vivian与Webb的关系可能不那么简单"
+
+        does_not_know:
+          - "Webb被杀的完整经过"
+          - "Whale的真实身份"
+          - "Morrison被Whale收买的细节"
+
+        lie: "我从没干过坏事——我就是个厨师，老实做饭而已"
+
+        connoisseur: []
+
+        testimony_ids:
+          - 1071006  # ⚠谎言 "Jimmy声称自己从没干过坏事"
+          - 1071001  # "Jimmy是蓝月亮的主厨"
+
+  # ── SC1410 酒吧大堂（Emma对话） ──
+  - id: 1410
+    name: "酒吧大堂"
+    note: "通过mapId=101映射，与Emma对话"
+
+# ═══════════════════════════════════════
+# 特殊事件
+# ═══════════════════════════════════════
+
+events:
+  # ── 🔍 古董水壶分析 ──
+  # 证据1411(伪装成陶泥的古董水壶) → 分析后派生为1705(沾泥的水壶/分析后)
+  - name: "古董水壶分析"
+    trigger: "玩家对证据1411进行分析操作"
+    evidence_source: 1411
+    result: "证据1411 → 派生为 1705(沾泥的水壶/分析后)，揭示水壶表面的泥层是人为伪装"
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧歌舞厅(1409) → ⚔️指证(Jimmy)
+# 指证设计: 3轮（"从没干过坏事" → 水壶+鉴定报告 → 争吵证词）
+# exposeNpcId: 107 (Jimmy)
+
+expose:
+  target: "Jimmy (107)"
+  total_rounds: 3
+  testimony: 1071006  # "Jimmy声称自己从没干过坏事"
+
+  # ── 第一轮：戳破"从没干过坏事"——水壶伪装 ──
+  # Tommy证词(1054001) + 沾泥的水壶/分析后(1705) → Jimmy偷拿水壶并伪装
+  round_1:
+    id: 13
+    lie: "我从没干过坏事——我就是个厨师，老实做饭而已"
+    lie_source: "证词 1071006（⚠谎言——Jimmy声称自己从没干过坏事）"
+    usable_evidence:
+      - id: 1054001
+        name: "Tommy证词：看到Jimmy从Webb办公室抱出古董水壶"
+        用途: "Tommy亲眼所见——Jimmy从Webb办公室偷拿了古董水壶，'老实厨师'不会做这种事"
+      - id: 1705
+        name: "沾泥的水壶（分析后）"
+        用途: "水壶表面的泥层是人为伪装——Jimmy故意把贵重古董伪装成廉价陶泥制品藏在厨房"
+    result: |
+      Jimmy被迫承认拿了水壶：
+      - Tommy亲眼看到 + 水壶伪装证据 = "从没干过坏事"是彻底的谎言
+      - Jimmy从"我只是帮忙搬东西"退守为"水壶不值钱，Webb让我保管的"
+      - Zack追问：如果不值钱，为什么要用泥巴伪装？
+      - Jimmy沉默后升级谎言："好吧，我拿了水壶，但那只是个普通陶壶，不值几个钱"
+
+  # ── 第二轮：揭穿"不值钱的陶壶"——鉴定报告 ──
+  # 古董鉴定报告(1429) → Jimmy明知水壶价值不菲
+  round_2:
+    id: 14
+    lie: "那只是个普通陶壶，不值几个钱，我只是觉得好看才拿回来"
+    lie_source: "Jimmy对Round 1的新谎言"
+    usable_evidence:
+      - id: 1429
+        name: "古董鉴定报告"
+        用途: "报告明确标注Bennington陶器价值约$2,000——Jimmy家中有Bennington陶器照片(1425)，他完全知道这只水壶的真实价值"
+    result: |
+      Jimmy无法自圆其说：
+      - 鉴定报告白纸黑字写着$2,000，不是"不值几个钱"
+      - Jimmy家中就有Bennington陶器照片——他不可能不认识
+      - Jimmy被迫承认知道水壶价值，声称"我拿走是为了保护它"
+      - Zack追问：保护它不受谁的威胁？
+      - Jimmy情绪激动但拒绝回答，升级防线："我和Webb之间的事你管不着！"
+
+  # ── 第三轮：击穿"我和Webb没有矛盾"——争吵证词 ──
+  # Vivian证词(1063001) → Jimmy和Webb之间确实存在严重矛盾
+  round_3:
+    id: 15
+    lie: "我和Webb之间没有任何问题！我们相处得很好！"
+    lie_source: "Jimmy对Round 2的新谎言"
+    usable_evidence:
+      - id: 1063001
+        name: "Vivian证词：目睹Jimmy和另一人争吵"
+        用途: "Vivian亲眼目睹Jimmy和人激烈争吵——Jimmy声称'相处得很好'与目击证词直接矛盾"
+    result: |
+      Jimmy彻底崩溃：
+      - Vivian的目击证词直接打脸"相处很好"
+      - Jimmy承认和Webb因Whale的问题产生严重分歧
+      - Jimmy坦白：自己警告Webb不要惹Whale，但Webb不听
+      - Jimmy揭示：Whale是一个极其危险的勒索目标，Webb太贪心了
+      - Jimmy承认自己不只是厨师——是Webb最信任的助手，参与了很多"幕后工作"
+      - Jimmy暗示Vivian也很可疑："你应该去问问Vivian，她知道的比她说的多得多"
+      - 为L5(Vivian循环)做铺垫
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1401
+    text: "这个水壶似乎和照片上的一样？"
+    unlock_condition: "item:1705 + item:1429"
+  - id: 1402
+    text: "Jimmy为什么拿这个水壶？"
+    unlock_condition: "testimony:1054001"
+  - id: 1403
+    text: "Jimmy和Webb因为什么产生了矛盾？"
+    unlock_condition: "testimony:1063001"
+    note: "type=2"
+  - id: 1404
+    text: "Jimmy只是厨师吗？"
+    unlock_condition: "testimony:1071001 + item:1424"
+  - id: 1405
+    text: "Jimmy有不在场证明？"
+    unlock_condition: "item:1414"
+clearDoubts: [1205, 1401, 1402, 1403, 1404]
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PENDING"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "N/A (Unit1 no connoisseur system)"
+  expose: "PENDING"

@@ -107,7 +107,7 @@ opening:
 #   SC3003 Sullivan家客厅        → 🔒Mary不在家，无新证据
 #   SC3004 警局                  → 🔒无法进入
 #   SC3005 法医办公室            → 🔒Foster不在
-#   SC3006 公寓二楼走廊          → 🔓对话(Liam Byrne——替代锁匠+楼管)
+#   SC3006 公寓二楼走廊          → 🔓对话(Seamus Byrne——替代锁匠+楼管)
 #   SC3007 教堂                  → 🔒无新证据
 #   SC3008 Helen家               → 🎬开篇→🔓搜证→⚔️指证(Helen)
 #   SC3009 Continental银行公共区域 → 🔓搜证/对话(Bernard Wells)
@@ -172,7 +172,7 @@ scenes:
         does_not_know:
           - "Morrison封锁区L3解锁后，Foster在楼顶发现地面润滑剂"
           - "Zack已拿到Thomas钱包里的钥匙（L2获得）"
-          - "Liam在楼梯间观察到了她的反常行为"
+          - "Seamus在楼梯间观察到了她的反常行为"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry: null  # Expose对象
@@ -261,8 +261,8 @@ scenes:
             content: "保险代理人(debit agent)每周上门收取保费5-65美分，一条街一条街地走，了解每家每户情况"
             note: "L5 bernard_002 quiz#104 考这个（Bernard谈到保险业务运作方式）"
 
-  # ── SC3006 公寓二楼走廊（Liam Byrne——替代锁匠SC3304+楼管SC3305） ──
-  # 设计说明：Liam是退休码头工人，右膝旧伤行动不便，常年在楼梯间抽烟观察邻居。
+  # ── SC3006 公寓二楼走廊（Seamus Byrne——替代锁匠SC3304+楼管SC3305） ──
+  # 设计说明：Seamus是退休码头工人，右膝旧伤行动不便，常年在楼梯间抽烟观察邻居。
   # 一个长期住户的日常观察自然覆盖锁匠+楼管两个独立NPC的信息。
   # 红鲱鱼效果：对Helen的动向了如指掌，初看可疑，实为孤独老人的唯一消遣。
   - id: 3006
@@ -272,7 +272,7 @@ scenes:
         # ── 基本信息 ──
         talk: liam_001
         is_liar: false
-        motive: "终于有人听他说话——Zack是几个月来第一个主动找他聊天的人，Liam配合过度甚至热情"
+        motive: "终于有人听他说话——Zack是几个月来第一个主动找他聊天的人，Seamus配合过度甚至热情"
         mindset: "孤独中的兴奋——Thomas死后连牌搭子都没了，对侦探身份有点崇拜，有问必答但废话多需要引导"
 
         # ── 1. NPC 已知信息 ──
@@ -311,7 +311,7 @@ scenes:
         connoisseur:
           - type: source
             content: "整栋楼都知道Thomas打Mary，但没人说——'家里的事不出门，这是规矩'，警察来了问一句就走"
-            note: "L6 margaret_002 quiz#103 考这个（Liam谈到Thomas家和社区态度）"
+            note: "L6 margaret_002 quiz#103 考这个（Seamus谈到Thomas家和社区态度）"
 
   # ── SC3001 楼下现场（⏸️无新线索） ──
   - id: 3001
@@ -350,7 +350,7 @@ expose:
 
   # ── 第一轮：钥匙开的不是门 ──
   # Thomas钱包钥匙(L2) + Helen楼顶钥匙 = 两把一模一样的安全门钥匙
-  # Timeline系统呈现Liam证词（Helen借钥匙串→次日出门配钥匙，提前15天准备）
+  # Timeline系统呈现Seamus证词（Helen借钥匙串→次日出门配钥匙，提前15天准备）
   round_1:
     lie: "Thomas只是来找我聊天诉苦。那晚他自己上楼顶喝酒，掉了。跟我没关系"
     lie_source: "证词 3304001"

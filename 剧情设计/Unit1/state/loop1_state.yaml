@@ -1,0 +1,314 @@
+# ============================================================
+# Loop 1 — 目击者的沉默 / The Witness's Silence
+# 本循环说谎者: Rosa
+# 核心揭示: Rosa目睹Morrison迷晕Zack全过程，Morrison不知Rosa在场，Rosa出于恐惧+经济压力选择沉默
+# 前序事件: Zack在Webb歌舞厅犯罪现场醒来，发现自己被当作嫌疑人
+# 时间: 1925年 Webb谋杀案案发当夜
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "有人迷晕了我，是谁？这里一定有人看见了什么。"
+    secondary:
+      - "Rosa当晚究竟在哪工作？她说的是实话吗？"
+      - "走廊里的氯仿瓶和拖痕说明了什么？"
+      - "11点30分的枪声是案发时间吗？"
+  known_facts: []  # L1，玩家什么都不知道
+  new_directions:
+    - direction: "Rosa工作地点矛盾"
+      trigger: "工作记录卡显示Rosa在后台走廊工作，但Rosa声称9点半开始在地下室打扫"
+    - direction: "迷晕手法"
+      trigger: "毛巾有甜腻气味(分析后=氯仿) + 走廊发现氯仿瓶 → 有人用氯仿迷晕了Zack"
+    - direction: "拖痕指向现场搬运"
+      trigger: "走廊地板拖痕(分析后=沉重拖痕) → 有人把昏迷的Zack拖到了犯罪现场"
+  post_expose_knowledge:
+    - "Morrison本人在走廊迷晕Zack并拖入会客室，Morrison不知道Rosa在场"
+    - "Rosa实际在后台走廊工作（非地下室），目睹了Morrison迷晕Zack的全过程"
+    - "Rosa事后自行捡走掉落的毛巾藏匿在储物间，Morrison不知情"
+    - "Rosa出于对Morrison的一般性恐惧（知道他是腐败警察）+女儿生病不能丢工作，主动选择沉默"
+    - "真正需要调查的对象转向Morrison"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: Webb会客室开场2 → 🎬开篇
+# Zack在Webb会客室醒来，发现自己被当作嫌疑人。
+# Morrison要逮捕他，Emma出现帮助他脱困，开始调查。
+
+opening:
+  scene_id: 1122
+  characters: [Zack, Emma, Morrison]
+  purpose: "Zack在Webb会客室醒来被当作嫌疑人，Morrison要逮捕他，Emma出现帮助他脱困，开始调查。"
+  talk: 104001005
+
+  emma_001:
+    is_liar: false
+    motive: "帮助Zack脱离Morrison的逮捕，引导他冷静下来开始调查真相"
+    mindset: "果断冷静——相信Zack的清白，需要尽快找到证据证明他不是凶手"
+
+    knows:
+      - "Zack在犯罪现场醒来，身上有可疑痕迹"
+      - "Morrison正准备逮捕Zack"
+      - "歌舞厅后门有异常痕迹（Emma带来的线索）"
+      - "Zack不可能是凶手——他是被人陷害的"
+
+    does_not_know:
+      - "是谁迷晕了Zack"
+      - "Rosa在走廊目击了部分过程"
+      - "Morrison是迷晕Zack的人"
+      - "Rosa目睹了Morrison的行为并选择沉默"
+
+    lie: null
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L1:
+#   Webb会客室开场2  → 🎬开篇 (initScene)
+#   Rosa储藏室       → 🔓探索 (5件证据)
+#   歌舞厅一楼走廊   → 🔓探索 (2件证据)
+#   Tommy办公室      → 对话 (1条证词)
+#   酒吧大堂         → Rosa对话 + ⚔️指证场所
+#
+# 场景ID来源: SceneConfig SC1101~SC1122
+
+scenes:
+  # ── SC1122 Webb会客室开场2（开篇场景） ──
+  - id: 1122
+    name: "Webb会客室开场2"
+    note: "initScene——开篇场景，Morrison对话(104001005)后解锁自由探索"
+    evidence: []
+
+  # ── SC1101 Rosa储藏室 ──
+  - id: 1101
+    name: "Rosa储藏室"
+    evidence:
+      - id: 1111
+        name: "芝加哥警局通缉令"
+        note: "环境叙事——背景氛围道具"
+      - id: 1112
+        name: "Rosa的女儿照片"
+        note: "环境叙事——暗示Rosa的家庭背景"
+      - id: 1113
+        name: "药品清单"
+        note: "环境叙事——暗示Rosa家人(Miguel)生病的经济压力"
+      - id: 1114
+        name: "毛巾"
+        note: "关键——raw状态，分析后变为1701(有甜腻气味的毛巾)（Expose R3用）"
+        analyzed_id: 1701
+      - id: 1115
+        name: "工作记录卡"
+        note: "关键——记录Rosa实际在后台走廊工作（Expose R1用）"
+
+  # ── SC1102 歌舞厅一楼走廊 ──
+  - id: 1102
+    name: "歌舞厅一楼走廊"
+    evidence:
+      - id: 1121
+        name: "氯仿瓶"
+        note: "关键——走廊发现的氯仿瓶（Expose R3用）"
+      - id: 1122
+        name: "地板拖痕"
+        note: "关键——raw状态，分析后变为1702(沉重的拖痕)（Expose R2用）"
+        analyzed_id: 1702
+
+  # ── SC1103 Tommy办公室 ──
+  - id: 1103
+    name: "Tommy办公室"
+    evidence: []
+    npcs:
+      tommy:
+        talk: loop1_tommy
+        is_liar: false
+        motive: "如实回忆当晚听到的情况——Tommy只是在办公室工作时听到了枪声"
+        mindset: "紧张但诚实——案发让他害怕，但愿意配合调查"
+
+        knows:
+          - "11点30分听到一声枪响"
+          - "当时自己在办公室处理账务"
+          - "歌舞厅当晚正常营业"
+
+        does_not_know:
+          - "枪声的具体来源位置"
+          - "Zack被迷晕的事"
+          - "Rosa被Morrison胁迫"
+          - "Morrison是幕后指使者"
+
+        lie: null
+        connoisseur: []
+
+        testimony_ids:
+          - 1051003  # "11点30分听到一声枪响"
+
+  # ── SC1110 酒吧大堂 ──
+  # mapId=101 → sceneId=1110
+  - id: 1110
+    name: "酒吧大堂"
+    note: "Rosa对话场所 + 指证场所"
+    evidence: []
+    npcs:
+      rosa:
+        talk: loop1_rosa
+        is_liar: true
+        motive: "Morrison不知道她在场，但她知道Morrison是危险的腐败警察，加上女儿生病不能丢工作，主动选择沉默"
+        mindset: "自保本能驱动的沉默——不是被迫而是选择，恐惧与自责并存"
+
+        knows:
+          - "自己当晚实际在后台走廊工作（非地下室）"
+          - "目睹Morrison在走廊迷晕Zack并拖入会客室的全过程"
+          - "Morrison不知道她在场目睹了一切"
+          - "事后自行捡走掉落的毛巾藏匿在储物间"
+          - "Morrison是危险的腐败警察"
+
+        does_not_know:
+          - "Webb谋杀案的完整真相"
+          - "Morrison的最终目的"
+          - "其他循环中将要揭露的信息"
+
+        lie:
+          content: "从9点半开始在地下室打扫"
+          truth: "目睹Morrison迷晕Zack全过程，事后自行捡走毛巾藏匿，Morrison不知情"
+
+        connoisseur: []
+
+        testimony_ids:
+          - 1031002  # ⚠谎言: "从9点半开始在地下室打扫"
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧大堂 → ⚔️指证(Rosa)
+# 指证设计: 3轮（工作记录矛盾 → 拖痕证据 → 氯仿证据+毛巾）
+# exposeNpcId: 103 (Rosa)
+
+expose:
+  target: "Rosa (103)"
+  total_rounds: 3
+
+  rosa:
+    talk: loop1_rosa_expose
+    is_liar: true
+    motive: "Morrison不知道她在场，但她知道Morrison危险，加上女儿生病不能冒险——自保驱动的沉默"
+    mindset: "越来越动摇——每一轮证据瓦解她的谎言，玩家点破Morrison不知情后终于开口"
+
+    knows:
+      - "自己当晚实际在后台走廊工作"
+      - "目睹Morrison迷晕Zack并拖入会客室"
+      - "Morrison不知道她在场"
+      - "事后自行捡走毛巾藏匿"
+
+    does_not_know:
+      - "Webb谋杀案的完整真相"
+      - "Morrison的最终计划"
+
+    lie:
+      content: "从9点半开始在地下室打扫"
+      truth: "目睹Morrison迷晕Zack全过程，事后自行捡走毛巾藏匿，Morrison不知情"
+
+    connoisseur: []
+
+    testimony_ids:
+      - 1031002  # ⚠谎言: "从9点半开始在地下室打扫"
+
+  # ── 第一轮：工作记录矛盾 ──
+  # Rosa声称在地下室打扫，但工作记录卡显示她在后台走廊
+  round_1:
+    id: 1
+    lie: "从9点半开始在地下室打扫"
+    lie_source: "证词 1031002"
+    usable_evidence:
+      - id: 1115
+        name: "工作记录卡"
+        用途: "记录显示Rosa当晚被安排在后台走廊工作，与她声称的'地下室打扫'矛盾"
+    result: |
+      Rosa无法解释工作记录与口供的矛盾：
+      - 工作记录卡明确写着她在后台走廊值班，不是地下室
+      - Rosa慌张辩解："记录可能搞错了……我记得是在地下室"
+      - 但无法解释为什么官方工作记录会出错
+
+  # ── 第二轮：拖痕证据 ──
+  # 地板拖痕(分析后)证明有人把昏迷的Zack拖过走廊 → 否定"什么都没发生"
+  round_2:
+    id: 2
+    lie: "什么都没发生（升级谎言）"
+    lie_source: "证词 1031002（延续）"
+    usable_evidence:
+      - id: 1702
+        name: "沉重的拖痕（分析后）"
+        用途: "走廊地板上150磅重物拖痕——昏迷的人被拖过整条走廊，Rosa不可能没注意到"
+    result: |
+      Rosa被迫承认目击，但声称只是旁观者：
+      - 拖痕证明有人被拖过走廊，Rosa无法继续否认
+      - Rosa部分承认："有个人捂住了另一个人的脸…有一股甜腻腻的味道…那个人被拖走了"
+      - 但坚称自己"蹲在墙角什么都没做"
+      - 说漏嘴："后来把地上的东西收了一下"，随即否认
+      - 两个关键埋点：甜腻味道（呼应毛巾氯仿）、捡东西（暗示捡走毛巾）
+
+  # ── 第三轮：氯仿证据 ──
+  # 毛巾(分析后)+氯仿瓶 → 否定"只是旁观者"，Rosa捡走了毛巾证据
+  round_3:
+    id: 3
+    lie: "我只是旁观者（升级谎言）"
+    lie_source: "证词 1031002（延续）"
+    usable_evidence:
+      - id: 1701
+        name: "有甜腻气味的毛巾（分析后）"
+        用途: "毛巾在Rosa储物间找到，上面有氯仿——Rosa把它从走廊带回去藏起来"
+      - id: 1121
+        name: "氯仿瓶"
+        用途: "走廊垃圾桶的氯仿瓶瓶口还是湿的——与毛巾上的氯仿配合证明迷晕手段"
+    result: |
+      证据逼问 → 拉扯 → 分支选项 → Rosa供出Morrison：
+      - Rosa承认事后捡走毛巾藏匿（怕被别人看到）
+      - Zack逼问Rosa说出动手者，Rosa恐惧拒绝
+      - 分支选项：
+        A) "他不知道你捡了毛巾。他根本不知道你看到了。"（安全感路线）
+        B) "你不说，你就是共犯。你女儿怎么办？"（压力路线）
+      - Rosa最终供出Morrison：Morrison在走廊等人经过，捂住Zack的脸，拖入会客室
+      - Rosa躲在拐角目睹全程，Morrison不知她在场
+      - Rosa沉默原因：Morrison是警察，她见过Morrison对付不听话的人，女儿病重不能丢工作
+      - 真正需要调查的对象转向Morrison
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1101
+    text: "Rosa当晚究竟在哪工作？——她说在地下室，但工作记录写的是走廊"
+    unlock_condition: "testimony:1031002 + item:1115"
+    clear: true  # 本循环指证解决
+  - id: 1102
+    text: "这条毛巾为什么有奇怪的味道？——氯仿瓶就在走廊"
+    unlock_condition: "item:1701 + item:1121"
+    clear: true  # 本循环指证解决
+  - id: 1103
+    text: "是谁拖得我？——走廊地板有沉重的拖痕"
+    unlock_condition: "item:1702"
+    clear: true  # 本循环指证解决
+  - id: 1104
+    text: "11点30分的枪声是案发时间吗？"
+    unlock_condition: "testimony:1051003"
+    clear: false  # 遗留至Loop 6
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "2026-03-27 PENDING"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "N/A (Unit1 no connoisseur system)"
+  expose: "PENDING"

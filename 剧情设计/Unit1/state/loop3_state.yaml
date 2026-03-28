@@ -1,0 +1,399 @@
+# ============================================================
+# Loop 3 — 古董的密码 / The Antique Code
+# 本循环说谎者: Tommy (105)
+# 核心揭示: Webb不只做私酒生意，还经营以古董交易为幌子的勒索网络；Tommy是核心操作者
+# 前序事件: L2揭露Morrison被Whale收买栽赃Brennan，Morrison只是照章办事
+# 时间: 1925年11月2日（Webb死后第二天）
+# ChapterConfig id: 103
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Webb为什么需要'保险侦探'？他到底在做什么生意？"
+    secondary:
+      - "Morrison背后的金主是谁？"
+      - "Webb的收入为何远超酒吧营业额？"
+      - "那些古董到底是怎么回事？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "Rosa在清洁时听到会客室有动静，但因害怕没有声张"
+    - "Rosa当晚在楼上走廊清洁而非地下室酒窖"
+    - "Webb当晚在会客室被人杀害"
+    - "现场有血迹被清理的痕迹（Rosa发现的带血毛巾）"
+    - "Rosa的工作记录显示她当晚确实在楼上值班"
+    # ── L2 post_expose ──
+    - "Morrison在00:30从家出发，但酒吧到他家的车程只需15分钟——他不是接到电话后才赶来"
+    - "Morrison到达现场时Webb已经死了"
+    - "Morrison收到指令要将罪名栽赃给Brennan（Zack的母亲Margaret）"
+    - "Morrison只是'照章办事'——背后有人指使（Whale）"
+    - "Morrison与Webb不只是公事公办，Morrison一直在为Webb的非法生意提供保护"
+  new_directions:
+    - direction: "Webb的隐藏收入来源"
+      trigger: "Webb个人收入记录(1311)月总收入远超酒吧营业额(1322)——多出的钱从哪来？"
+    - direction: "古董骗局"
+      trigger: "客户记录显示古董反复'出售'，但油画(1331)和花瓶(1332)仍在歌舞厅原位——从未真正卖出"
+    - direction: "Tommy深度参与"
+      trigger: "不明记录人的客户记录(1313)经笔迹分析确认为Tommy笔迹(1704)——Tommy不只是'做账的'"
+  post_expose_knowledge:
+    - "Webb不只做私酒生意，还经营一个以古董交易为幌子的勒索网络"
+    - "Tommy是这个勒索网络的核心操作者，负责记账和伪装"
+    - "Webb勒索的对象包括Thompson议员、Coleman银行家等政商要人"
+    - "同一件古董被反复'出售'给不同客户——本质是按月收取保护费"
+    - "Tommy只是配合者，真正的问题是Whale——一个更大的威胁"
+    - "Whale通过电话威胁Zack不要再查下去"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: 警局外街道(1321) → 🎬开篇
+# Morrison被指证后，Emma和Zack在警局外讨论下一步。
+# Morrison被Whale收买，需要查清Webb到底在做什么生意，Whale为什么要杀Webb。
+
+opening:
+  scene_id: 1321
+  characters: [Zack, Emma]
+  purpose: "Morrison expose后的过渡——讨论下一步，追查Morrison背后的金主，需要弄清Webb的生意真相"
+  talk: 102004001
+
+  emma_talk:
+    is_liar: false
+    motive: "引导Zack从Morrison线索深入——既然Morrison是被指使的，关键是查清Webb到底在做什么生意、为什么Whale要杀他"
+    mindset: "冷静分析——Morrison只是棋子，真正的答案藏在Webb的生意里"
+
+    knows:
+      - "Morrison被Whale指使栽赃Brennan"
+      - "Morrison到场时Webb已死——Morrison不是凶手"
+      - "Webb在蓝月亮酒吧经营私酒生意"
+      - "Rosa听到会客室有动静但害怕不敢声张"
+      - "需要调查Webb的办公室和财务记录"
+
+    does_not_know:
+      - "Webb的勒索网络（古董骗局）"
+      - "Tommy在勒索网络中的角色"
+      - "Whale的真实身份和动机"
+      - "Webb办公室里的具体内容"
+
+    lie: null
+
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L3:
+#   警局外街道(1321)        → 🎬开篇
+#   Webb办公室(1308)        → 🔓新解锁, 主要证据集中地(~10证据) + ⚡电话事件
+#   酒吧歌舞厅(1309)        → 🔓新解锁, 古董陈列搜证
+#   Tommy办公室(1103/1305)  → 已解锁, 搜证+⚔️指证
+#   Vivian化妆室(1207/1307) → 已解锁, 对话(争吵目击)
+#   Rosa储藏室(1101/1301)   → 已解锁, 对话(音乐音量)
+#   酒吧大堂(1310)          → Tommy对话+⚔️指证
+
+scenes:
+  # ── 🎬 警局外街道（开篇） ──
+  - id: 1321
+    name: "警局外街道"
+    note: "开篇场景，Emma与Zack讨论下一步调查方向"
+
+  # ── SC1308 Webb办公室（新解锁，主要证据集中地） ──
+  - id: 1308
+    name: "Webb办公室"
+    note: "前几个循环为上锁状态，L3首次解封。有不可打开的保险柜（为L6结尾做铺垫）"
+    evidence:
+      - id: 1311
+        name: "Webb个人收入记录"
+        note: "关键——月总收入$15,000，与酒吧实际营业额$4,000差额巨大（Expose R1用）"
+      - id: 1312
+        name: "Webb收入记录(手写)"
+        note: "循环6用——Webb手写近期收入，含'Important/Confirmed/Urgent'标签词（笔迹对比用）"
+      - id: 1313
+        name: "不明记录人的客户记录"
+        note: "关键——详细客户访问时间/古董类型，需笔迹分析→派生1704确认为Tommy笔迹（Expose R3用）"
+      - id: 1314
+        name: "VIP客户照片"
+        note: "环境叙事——Thompson议员、Coleman银行家等政商要人合影，展示勒索网络规模"
+      - id: 1315
+        name: "Webb对Vivian的虚假承诺信件"
+        note: "环境叙事——多封给Vivian的信，承诺'光明未来'，实为欺骗（L5伏笔）"
+      - id: 1316
+        name: "Webb的项链"
+        note: "环境叙事/误导——钻石项链盒内刻'给我最爱的Vivian'，可能误导玩家认为Webb真心"
+      - id: 1317
+        name: "Webb的私人日记摘录"
+        note: "环境叙事——藏在《圣经》夹层，揭示Webb的冷酷计划，附'WHALE=DANGER'便签"
+      - id: 1318
+        name: "Thompson议员的妥协信件"
+        note: "环境叙事——Thompson同意每月$8,000'古董鉴赏费'，证实勒索运作"
+      - id: 1319
+        name: "Coleman银行家转账记录"
+        note: "环境叙事——每月$6,000转入Webb账户，备注'欧洲油画购买'"
+      - id: 1320
+        name: "古董鉴定报告"
+        note: "与L4合并用——中国花瓶实际$15赝品、欧洲油画$150、Bennington陶器$2,000（照片被撕）"
+
+  # ── SC1309 酒吧歌舞厅（新解锁，搜证） ──
+  - id: 1309
+    name: "酒吧歌舞厅"
+    note: "古董陈列区域，证明'已售出'古董仍在原位"
+    evidence:
+      - id: 1331
+        name: "油画现场照"
+        note: "关键——欧洲油画完好挂在墙上，与'已售给Coleman'矛盾（Expose R2用）"
+      - id: 1332
+        name: "花瓶现场照"
+        note: "关键——中国花瓶完好摆放原位，与'已售给Thompson'矛盾（Expose R2用）"
+
+  # ── SC1103/1305 Tommy办公室（已解锁，搜证+指证） ──
+  - id: 1305
+    name: "Tommy办公室"
+    note: "已解锁场景，搜证获取账本和日记，Tommy(105)为Expose目标"
+    evidence:
+      - id: 1322
+        name: "酒吧收入账本"
+        note: "关键——月净酒类销售$4,000，与Webb总收入$15,000严重不符（Expose R1用）"
+      - id: 1323
+        name: "Tommy同情日记"
+        note: "笔迹对比用——含'Important/Confirmed/Urgent'标签词，与1313笔迹分析配合"
+      - id: 1324
+        name: "Vivian工作安排表"
+        note: "环境叙事——Vivian与VIP客户的'私人服务'时间安排（L5伏笔）"
+      - id: 1325
+        name: "Tommy全家福"
+        note: "环境叙事——照片中Tommy把妻儿环抱在臂弯里"
+    npcs:
+      tommy_expose:
+        talk: 1053001
+        is_liar: true
+        motive: "维护Webb的勒索秘密——自己深度参与其中，一旦暴露会连累全家"
+        mindset: "忠诚与恐惧交织——忠于Webb恩情但更怕Whale报复，用'我只是做账的'作最后防线"
+
+        knows:
+          - "Webb经营以古董为幌子的勒索网络"
+          - "自己负责记账和伪装——将勒索收入记录为古董销售"
+          - "勒索对象包括Thompson议员、Coleman银行家等"
+          - "同一件古董反复'出售'——本质是月供保护费"
+          - "Webb最近与某人（Whale）关系紧张"
+
+        does_not_know:
+          - "Whale的完整身份和势力范围"
+          - "Webb被杀的具体经过"
+          - "Morrison被指使栽赃的细节"
+
+        lie: "Webb先生只做私酒生意，没有其他业务"
+
+        connoisseur: []
+
+  # ── SC1207/1307 Vivian化妆室（已解锁，对话） ──
+  - id: 1307
+    name: "Vivian化妆室"
+    note: "已解锁场景，Vivian提供争吵目击证词"
+    npcs:
+      vivian_003:
+        talk: vivian_003
+        is_liar: false
+        motive: "被Zack问到——回忆起当晚听到的争吵，愿意配合调查"
+        mindset: "心事重重——仍在消化Webb死亡的冲击，但愿意说出自己知道的"
+
+        knows:
+          - "当晚听到Webb和某人在会客室激烈争吵"
+          - "争吵内容涉及'不要接这个生意，会出大事'"
+          - "Webb回应对方'别想这么多，多看看我送你的书'"
+          - "Webb最近状态焦虑，经常深夜独自在办公室"
+
+        does_not_know:
+          - "争吵对象的身份"
+          - "Webb勒索网络的具体运作"
+          - "Tommy的深度参与"
+          - "Whale的身份"
+
+        lie: null
+
+        connoisseur: []
+
+  # ── SC1101/1301 Rosa储藏室（已解锁，对话） ──
+  - id: 1301
+    name: "Rosa储藏室"
+    note: "已解锁场景，Rosa提供音乐音量证词（为L6用）"
+    npcs:
+      rosa_003:
+        talk: rosa_003
+        is_liar: false
+        motive: "配合调查——回忆当晚音乐音量情况"
+        mindset: "谨慎配合——经过L1指证后更愿意说实话，但仍有些紧张"
+
+        knows:
+          - "当晚11:00左右音乐非常响，震得耳朵疼"
+          - "在那种音量下，就算有其他声音也绝对听不到"
+          - "自己当时在楼上走廊做清洁"
+
+        does_not_know:
+          - "音乐音量异常响是否有人故意为之"
+          - "Webb办公室里有什么"
+          - "谁杀了Webb"
+
+        lie: null
+
+        connoisseur: []
+
+  # ── SC1310 酒吧大堂（Tommy对话+指证） ──
+  - id: 1310
+    name: "酒吧大堂"
+    note: "通过mapId=101映射，Tommy对话和指证地点"
+    npcs:
+      tommy_talk:
+        talk: tommy_talk
+        is_liar: true
+        motive: "表面配合调查——用'我只管做账'掩饰自己的深度参与"
+        mindset: "小心翼翼——知道Zack在查Webb的生意，需要控制信息不让Zack发现勒索网络"
+
+        knows:
+          - "Webb的酒吧正常营业收入有限"
+          - "Webb有大量来源不明的收入"
+          - "自己负责将这些收入记录为'古董销售'"
+
+        does_not_know:
+          - "Zack已经获得了Webb办公室的收入记录"
+
+        lie: "Webb先生只做私酒生意，没有其他业务"
+
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# 特殊事件
+# ═══════════════════════════════════════
+
+events:
+  # ── ⚡ Whale电话威胁 ──
+  # 触发：Webb办公室(1308)发现私人日记(1317)并关闭线索页面后
+  - name: "Whale电话威胁"
+    scene_id: 1308
+    trigger: "发现Webb私人日记(1317)并关闭线索页面后，电话铃声响起"
+    characters: [Zack, Whale(111)]
+    interaction: "玩家需点击电话进入AVG剧情；若持续未点击并离开房间，事件不可再触发"
+    purpose: "Whale威胁Zack不要再查下去——'对你没有任何好处'"
+    result: |
+      - Whale通过电话直接威胁Zack
+      - 证实Whale一直在监视调查进展
+      - Zack意识到Whale就是幕后最大威胁
+      - 为后续循环Whale线索埋下伏笔
+
+  # ── 🔍 笔迹分析小玩法 ──
+  # 证据1313(不明记录人的客户记录) + 证据1323(Tommy同情日记) → 派生1704
+  - name: "笔迹分析"
+    trigger: "玩家在线索详情页点击【笔迹分析】按钮"
+    evidence_source: 1313
+    compare_with: 1323
+    mechanic: |
+      - 点击1313呼出线索详情页面
+      - 点击【笔迹分析】按钮，呼出背包页面
+      - 玩家从背包选择1323(Tommy同情日记)进行对比
+      - 圈出3个相同的标签词(Important/Confirmed/Urgent)即过关
+      - 过关后1313更新为1704(确认为Tommy笔迹)，【笔迹分析】按钮消失
+    result: "证据1313 → 派生为 1704(不明记录人的客户记录/分析后=Tommy笔迹)"
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: Tommy办公室/酒吧大堂 → ⚔️指证(Tommy)
+# 指证设计: 3轮（"只做私酒" → "古董正常买卖" → "我不知情只是做账"）
+# exposeNpcId: 105 (Tommy)
+
+expose:
+  target: "Tommy (105)"
+  total_rounds: 3
+  testimony: 1053001  # "Webb先生只做私酒生意，没有其他业务"
+
+  # ── 第一轮：戳破"只做私酒生意" ──
+  # Webb个人收入(1311) + 酒吧收入账本(1322) → 收入差额暴露
+  round_1:
+    id: 9
+    lie: "Webb先生只做私酒生意，没有其他业务"
+    lie_source: "证词 1053001"
+    usable_evidence:
+      - id: 1311
+        name: "Webb个人收入记录"
+        用途: "月总收入$15,000——远超酒吧正常营业额，多出的$11,000从何而来？"
+      - id: 1322
+        name: "酒吧收入账本"
+        用途: "月净酒类销售仅$4,000——如果只做私酒，怎么解释$11,000的差额？"
+    result: |
+      Tommy无法解释巨大的收入差额：
+      - Webb月收入$15,000 vs 酒吧营业额$4,000 = $11,000来源不明
+      - Tommy被迫承认还有古董买卖生意
+      - Tommy升级谎言："还有古董买卖，那些是正常的艺术品交易"
+
+  # ── 第二轮：揭穿"古董正常买卖" ──
+  # 油画现场照(1331) + 花瓶现场照(1332) → 古董从未卖出
+  round_2:
+    id: 10
+    lie: "还有古董买卖，中国花瓶卖给了Thompson，欧洲油画卖给了Coleman"
+    lie_source: "Tommy对Round 1的新谎言"
+    usable_evidence:
+      - id: 1331
+        name: "油画现场照"
+        用途: "欧洲油画仍完好挂在歌舞厅墙上——与'已售给Coleman'矛盾"
+      - id: 1332
+        name: "花瓶现场照"
+        用途: "中国花瓶仍完好摆放原位——与'已售给Thompson'矛盾"
+    result: |
+      古董从未真正售出：
+      - 声称卖给Thompson的花瓶还在歌舞厅
+      - 声称卖给Coleman的油画也还挂在墙上
+      - Tommy辩解"客户暂时寄存"但无法解释反复收费
+      - Tommy升级谎言："我只是按Webb指示记账，具体业务我不知情"
+
+  # ── 第三轮：击穿"不知情只是做账" ──
+  # 客户记录(1704=Tommy笔迹) → 深度参与
+  round_3:
+    id: 11
+    lie: "我只是按Webb先生的指示记账！不参与具体业务，不知道Webb是怎么运作的"
+    lie_source: "Tommy对Round 2的新谎言"
+    usable_evidence:
+      - id: 1704
+        name: "不明记录人的客户记录（分析后=Tommy笔迹）"
+        note: "派生自1313，经与1323(Tommy同情日记)笔迹对比确认"
+        用途: "客户记录详细记载访问时间、停留时长、观看古董类型——笔迹与Tommy一致，证明Tommy深度参与勒索网络运作"
+    result: |
+      Tommy彻底崩溃：
+      - 亲手记录的客户日志暴露：不是'做账'，而是勒索网络的核心操作者
+      - 同一件古董反复'出售'给不同客户——本质是按月收取保护费
+      - Tommy承认Webb确实在勒索Thompson、Coleman等政商要人
+      - Tommy痛哭："我只是配合的！我需要这份工作养家！"
+      - 揭示更大威胁：Tommy暗示真正可怕的不是Webb，而是Whale
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1301
+    text: "Webb的收入为何对不上？"
+    unlock_condition: "item:1311 + item:1322"
+  - id: 1302
+    text: "这些古董为什么还在原位？"
+    unlock_condition: "item:1331 + item:1332"
+  - id: 1303
+    text: "这是在记录什么？"
+    unlock_condition: "item:1313 + item:1704"
+clearDoubts: [1301, 1302, 1303]
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PENDING"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "N/A (Unit1 no connoisseur system)"
+  expose: "PENDING"

@@ -1,0 +1,424 @@
+# ============================================================
+# Loop 6 — 真相大白 / The Truth Revealed
+# 本循环说谎者: Jimmy (107)
+# 核心揭示: Jimmy是杀害Webb的真凶；接受Whale的$5000贿赂，杀Webb是向Whale的"投名状"
+# 前序事件: L5揭露Vivian有杀人动机但否认动手，Vivian时间线：约11:05去Webb会客室被拒
+# 时间: 1925年（Webb死后调查最终循环）
+# ChapterConfig id: 106
+#
+# ── 案件时间线重建 (Case timeline reconstruction) ──
+# 11:00  Jimmy kills Webb during loudest music
+# 11:05  Vivian knocks, Jimmy imitates Webb's voice "don't come tonight"
+# 11:10-11:20  Jimmy returns to kitchen (fake alibi)
+# 11:30  Jimmy fires gun out window to fake death time
+# 12:00  Morrison arrives, plants Zack at scene with chloroform
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "杀害Webb的真正凶手是谁？"
+    secondary:
+      - "11:30的枪声到底是怎么回事？"
+      - "Vivian敲门时Webb真的还活着吗？"
+      - "Jimmy和Webb之间的矛盾有多深？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "Rosa被Morrison胁迫撒谎，Morrison才是迷晕Zack的幕后指使者"
+    - "Rosa实际在后台走廊工作，目睹了部分案发过程"
+    # ── L2 post_expose ──
+    - "Morrison被Whale收买$5000"
+    - "Morrison到场时Webb已死——Morrison不是凶手"
+    - "Whale要处理掉Webb和Zack"
+    # ── L3 post_expose ──
+    - "Webb不只做私酒生意，还经营以古董交易为幌子的勒索网络"
+    - "Tommy是勒索网络核心操作者，负责记账和伪装"
+    - "Webb把Zack当'保险'"
+    # ── L4 post_expose ──
+    - "Jimmy不只是厨师，是Webb助手"
+    - "Jimmy和Webb因Whale产生严重矛盾"
+    - "Whale是极危险勒索目标"
+    # ── L5 post_expose ──
+    - "Vivian与Webb爱情虚假，Webb利用Vivian"
+    - "Vivian有杀人动机但否认动手"
+    - "Vivian时间线：约11:05去Webb会客室，被Webb拒绝"
+    - "真凶仍未确定"
+  new_directions:
+    - direction: "伪造枪声"
+      trigger: "Webb会客室窗外的孔洞(1621)经分析后(1706)证明弹孔方向从内向外——11:30的枪声是从室内向窗外开枪伪造的"
+    - direction: "真实死亡时间"
+      trigger: "节目单(1631)显示11:00是当晚音乐最响时段——如果凶手选择在最响的时候动手，真实死亡时间是11:00而非11:30"
+    - direction: "Vivian敲门时Webb已死"
+      trigger: "Vivian证词(1065001)：约11:05去Webb会客室敲门被拒，Webb说'今晚不要再来'——但若Webb已在11:00死亡，开口说话的不可能是Webb本人"
+  post_expose_knowledge:
+    - "Jimmy是杀害Webb的真凶"
+    - "真实时间线：11:00 Jimmy在音乐掩护下杀死Webb → 11:05 模仿Webb声音骗走Vivian → 11:10回厨房制造不在场证明 → 11:30 伪造枪声误导死亡时间 → 12:00 Morrison到场栽赃Zack"
+    - "Jimmy接受了Whale的$5000贿赂，杀Webb是向Whale的'投名状'"
+    - "Jimmy的动机：为妻子Anna和未出生的孩子获得合法身份和金钱"
+    - "Morrison是Whale安排的'双重保险'——既栽赃又确认Jimmy完成任务"
+    - "Jimmy最终选择自杀，认为这是保护家人的唯一方式"
+    - "案件背后的真正操控者是Whale"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: Webb办公室(1608) → 🎬开篇
+# 所有线索指向一个终极问题——真凶是谁。
+# Zack和Emma重新审视所有证据，决定从Webb会客室的新发现开始。
+
+opening:
+  scene_id: 1608
+  characters: [Zack, Emma]
+  purpose: "所有线索指向一个终极问题——真凶是谁。Zack和Emma重新审视所有证据，决定从Webb会客室的新发现开始。"
+  talk: 102007001
+
+  emma_talk:
+    is_liar: false
+    motive: "引导Zack回顾所有已知线索——Morrison是栽赃者、Tommy是帮凶、Vivian有动机但否认——真凶仍隐藏在某个人身上"
+    mindset: "沉稳冷静——五个循环的调查积累即将收网，需要最后一次系统性突破"
+
+    knows:
+      - "Morrison被Whale收买栽赃Zack，但Morrison不是凶手"
+      - "Tommy是Webb勒索网络核心操作者，但不是杀人凶手"
+      - "Vivian有杀人动机但否认动手，时间线显示约11:05去敲门被拒"
+      - "Jimmy和Webb因Whale产生严重矛盾"
+      - "Whale是幕后操控者，要处理掉Webb"
+      - "11:30的枪声是已知的案发时间点——但是否真实存疑"
+
+    does_not_know:
+      - "Jimmy就是真凶"
+      - "11:00才是真实死亡时间"
+      - "11:30的枪声是伪造的"
+      - "Jimmy模仿了Webb的声音骗走Vivian"
+      - "Jimmy接受了Whale的贿赂"
+
+    lie: null
+
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L6:
+#   Webb办公室(1608)        → 🎬开篇, 结尾用(保险柜)
+#   Webb会客室(1604)        → 🔓重新开放(警方封锁解除), 关键证据
+#   酒吧歌舞厅(1609)        → 🔓搜证, 关键证据
+#   Jimmy厨房(1611)         → ⚔️指证Jimmy, 主要指证战场
+#   Rosa储藏室(1601)        → 已解锁, 对话
+#   Vivian化妆室(1607)      → 已解锁, 对话(关键证词)
+#   Tommy办公室(1605)       → 已解锁, 可对话
+#   酒吧大堂(1610)          → 已解锁 (mapId=101→sceneId=1610)
+
+scenes:
+  # ── SC1608 Webb办公室（开篇 + 结尾用保险柜） ──
+  - id: 1608
+    name: "Webb办公室"
+    note: "开篇场景(initScene)，initTalk:102007001。结尾保险柜剧情。"
+
+  # ── SC1604 Webb会客室（重新开放，关键证据） ──
+  - id: 1604
+    name: "Webb会客室"
+    note: "🔓重新开放——L1~L5期间被警方封锁，L6解除封锁可再次进入搜证"
+    evidence:
+      - id: 1621
+        name: "窗外的孔洞"
+        note: "关键——raw状态，分析后变为1706(窗外的孔洞/分析后)，弹孔方向从内向外，证明11:30枪声是从室内向窗外开枪伪造的（Expose R1用）"
+        analyzed_id: 1706
+
+  # ── SC1609 酒吧歌舞厅（搜证） ──
+  - id: 1609
+    name: "酒吧歌舞厅"
+    note: "🔓搜证——获取节目单和舞台道具箱手枪"
+    evidence:
+      - id: 1631
+        name: "节目单"
+        note: "关键——显示11:00是当晚音乐最响时段，真实死亡时间是11:00而非11:30（Expose R2用）"
+      - id: 1632
+        name: "舞台道具箱中的手枪"
+        note: "环境叙事——Vivian计划证据，揭示Vivian确实准备过武器但未实施"
+
+  # ── SC1611 Jimmy厨房（指证Jimmy） ──
+  - id: 1611
+    name: "Jimmy厨房"
+    note: "⚔️指证Jimmy——主要指证战场"
+    npcs:
+      jimmy_expose:
+        talk: 1072003
+        is_liar: true
+        motive: "掩盖杀害Webb的真相——为了妻子Anna和未出生的孩子，接受Whale贿赂杀Webb作为'投名状'"
+        mindset: "绝望中的顽抗——知道一旦真相暴露一切都将结束，但仍试图死守'承认偷窃但否认杀人'的最后防线"
+
+        knows:
+          - "自己在11:00趁音乐最响时杀死Webb"
+          - "11:05模仿Webb声音骗走Vivian"
+          - "11:10回到厨房制造不在场证明"
+          - "11:30从会客室窗户向外开枪伪造死亡时间"
+          - "接受了Whale的$5000贿赂"
+          - "Morrison是Whale安排的'双重保险'"
+
+        does_not_know:
+          - "Zack已经找到窗外弹孔(1621)"
+          - "Zack已经获取节目单(1631)推算真实死亡时间"
+          - "Vivian已提供约11:05敲门被拒的证词"
+
+        lie: "我承认我偷了Webb的钱，但我没有杀他。我那天晚上一直在厨房工作。"
+
+        connoisseur: []
+
+  # ── SC1601 Rosa储藏室（已解锁，对话） ──
+  - id: 1601
+    name: "Rosa储藏室"
+    note: "已解锁场景，Rosa提供关于Vivian携带可疑物品的证词"
+    npcs:
+      rosa_006:
+        talk: rosa_006
+        is_liar: false
+        motive: "配合调查——回忆当晚看到Vivian携带可疑物品的情况"
+        mindset: "配合但紧张——经过多个循环的调查后更愿意说实话"
+
+        knows:
+          - "当晚看到Vivian携带可疑物品经过"
+          - "Vivian当时表情紧张"
+
+        does_not_know:
+          - "Vivian携带的是什么物品"
+          - "Jimmy是真凶"
+          - "案件的完整真相"
+
+        lie: null
+
+        connoisseur: []
+
+  # ── SC1607 Vivian化妆室（已解锁，关键证词） ──
+  - id: 1607
+    name: "Vivian化妆室"
+    note: "已解锁场景——Vivian提供关键证词1065001（Expose R3用）"
+    npcs:
+      vivian_006:
+        talk: vivian_006
+        is_liar: false
+        motive: "说出真相——L5被指证后已无隐瞒必要，愿意完整回忆11:05敲门经过"
+        mindset: "疲惫但坦诚——不再需要掩饰对Webb的恨意，愿意提供一切有用信息"
+
+        knows:
+          - "约11:05去Webb会客室敲门"
+          - "Webb（实为Jimmy模仿）隔门说'今晚不要再来'"
+          - "自己当时确实动过杀Webb的念头"
+          - "自己准备了手枪但最终没有使用"
+
+        does_not_know:
+          - "隔门说话的不是Webb而是Jimmy在模仿"
+          - "Webb在11:00已被Jimmy杀死"
+          - "Jimmy是真凶"
+          - "枪声是伪造的"
+
+        lie: null
+
+        connoisseur: []
+
+        testimony_ids:
+          - 1065001  # "约11:05去Webb会客室，敲门被拒，Webb说今晚不要再来"
+
+  # ── SC1605 Tommy办公室（已解锁，对话） ──
+  - id: 1605
+    name: "Tommy办公室"
+    note: "已解锁场景，可与Tommy对话"
+    npcs:
+      tommy_006:
+        talk: tommy_006
+        is_liar: false
+        motive: "L3被指证后不再隐瞒——配合调查"
+        mindset: "被动配合——已无更多秘密可守"
+
+        knows:
+          - "Webb的勒索网络运作方式"
+          - "Jimmy是Webb的助手，不只是厨师"
+          - "Jimmy和Webb最近关系紧张"
+
+        does_not_know:
+          - "Jimmy是杀害Webb的真凶"
+          - "Jimmy接受了Whale的贿赂"
+          - "枪声是伪造的"
+
+        lie: null
+
+        connoisseur: []
+
+  # ── SC1610 酒吧大堂（已解锁） ──
+  # mapId=101 → sceneId=1610
+  - id: 1610
+    name: "酒吧大堂"
+    note: "已解锁场景（map2Scenes: mapId=101→sceneId=1610）"
+
+# ═══════════════════════════════════════
+# 跨循环证据 (Cross-loop evidence used in L6 expose)
+# ═══════════════════════════════════════
+#
+# From L1 scene 1103: Tommy testimony 1051003 (枪声证词"11:30听到一声枪响") — used narratively in R1
+# From L3 scene 1308: item 1311 (Webb个人收入记录) — Expose R5
+# From L4 scene 1411: item 1414 (厨房工作表) — Expose R4
+# From L4 scene 1413: item 1424 (额外收入记录) — Expose R5
+# From L5 scene 1505: item 1531 (节目更改申请) — used narratively in R2
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: Jimmy厨房(1611) → ⚔️指证(Jimmy)
+# 指证设计: 5轮（弹孔揭露伪造枪声 → 演出记录掩盖真实死亡时间 → Vivian证词推翻时间线 → 送餐记录推翻不在场证明 → 贿赂记录揭露投名状）
+# exposeNpcId: 107 (Jimmy)
+
+expose:
+  target: "Jimmy (107)"
+  total_rounds: 5
+  testimony: 1072003  # ⚠谎言: "Jimmy承认偷窃但否认杀人"
+
+  # ── 第一轮：弹孔揭露伪造枪声 ──
+  # 窗外孔洞/分析后(1706) → 弹孔从内向外，11:30的枪声是伪造的
+  round_1:
+    id: 21
+    lie: "我承认我偷了Webb的钱，但我没有杀他"
+    lie_source: "证词 1072003"
+    usable_evidence:
+      - id: 1706
+        name: "窗外的孔洞（分析后）"
+        note: "派生自1621，经分析确认弹孔方向从内向外"
+        用途: "弹孔方向从内向外——11:30的枪声不是杀人时发出的，是有人从室内向窗外开枪伪造的假枪声"
+    result: |
+      11:30的枪声被证伪：
+      - 弹孔方向从内向外 = 子弹从室内射出窗外
+      - 这不是杀人的枪，而是制造假枪声的枪
+      - 既然11:30不是真实死亡时间，凶手故意误导所有人
+      - Tommy在L1的枪声证词(1051003)也成了被利用的假证——凶手利用枪声让所有人以为Webb在11:30才被杀
+      - Jimmy被迫回应："枪声和我有什么关系？我一直在厨房！"
+
+  # ── 第二轮：演出记录掩盖真实死亡时间 ──
+  # 节目单(1631) → 11:00是当晚音乐最响时段
+  round_2:
+    id: 22
+    lie: "我承认我偷了Webb的钱，但我没有杀他"
+    lie_source: "证词 1072003（延续）"
+    usable_evidence:
+      - id: 1631
+        name: "节目单"
+        用途: "节目单显示11:00是当晚音乐最响的高潮时段——凶手选择在音乐掩护下动手，真实死亡时间是11:00"
+    result: |
+      真实死亡时间锁定11:00：
+      - 节目单显示11:00是全场音乐最响的高潮段落
+      - 凶手刻意选择音乐最响时动手——任何声响都会被掩盖
+      - L5的节目更改申请(1531)佐证——演出时间安排是可以被知情者利用的
+      - 11:00杀人 + 11:30伪造枪声 = 凶手制造了30分钟的时间差来布置不在场证明
+      - Jimmy面色变化："这跟我没关系……我那时候在厨房准备宵夜……"
+
+  # ── 第三轮：Vivian证词推翻时间线 ──
+  # NOTE: R3/R4 order matches CONFIG not original design doc
+  # Vivian证词(1065001) → 约11:05敲门被拒，但Webb已在11:00死亡
+  round_3:
+    id: 23
+    lie: "我承认我偷了Webb的钱，但我没有杀他"
+    lie_source: "证词 1072003（延续）"
+    usable_evidence:
+      - id: 1065001
+        name: "Vivian证词：约11:05去Webb会客室被拒"
+        note: "type=3 (testimony)"
+        用途: "Vivian约11:05去Webb会客室敲门，有人隔门说'今晚不要再来'——但Webb已在11:00死亡，说话的不可能是Webb。是谁在模仿Webb的声音？"
+    result: |
+      11:05的"Webb"不是Webb本人：
+      - Webb在11:00已被杀死（R1+R2已证明）
+      - 约11:05 Vivian敲门，有人用Webb的声音说"今晚不要再来"
+      - 说话的人是凶手——杀死Webb后留在现场，模仿Webb声音骗走Vivian
+      - 凶手必须是对Webb非常熟悉、能模仿其说话方式的人
+      - Jimmy作为Webb的贴身助手，是最有可能模仿Webb声音的人
+      - Jimmy开始慌乱："你……你在胡说……Vivian她搞错了……"
+
+  # ── 第四轮：送餐记录推翻不在场证明 ──
+  # 厨房工作表(1414) → Jimmy的不在场证明存在空白
+  # (carried from L4)
+  round_4:
+    id: 24
+    lie: "我承认我偷了Webb的钱，但我没有杀他"
+    lie_source: "证词 1072003（延续）"
+    usable_evidence:
+      - id: 1414
+        name: "厨房工作表"
+        note: "跨循环证据——来自L4 scene 1411"
+        用途: "厨房工作表显示Jimmy在10:50-11:20之间有一段空白——正好覆盖11:00杀人和11:05模仿Webb声音的时间窗口"
+    result: |
+      不在场证明崩塌：
+      - 厨房工作表明确记录Jimmy在10:50-11:20之间不在厨房
+      - 这段空白完美覆盖：11:00杀人 → 11:05模仿声音骗走Vivian → 11:10-11:20回厨房
+      - Jimmy自称"一直在厨房"的说法被自己的工作记录推翻
+      - 时间线完全吻合：离开厨房→杀人→模仿声音→返回厨房
+      - Jimmy颤抖着说不出话："我……我只是出去透个气……"
+
+  # ── 第五轮（致命）：贿赂记录揭露投名状 ──
+  # 额外收入记录(1424) + Webb个人收入记录(1311) → 与Morrison的$5000形成镜像
+  # (1424 carried from L4, 1311 carried from L3)
+  round_5:
+    id: 25
+    lie: "我承认我偷了Webb的钱，但我没有杀他"
+    lie_source: "证词 1072003（延续）"
+    usable_evidence:
+      - id: 1424
+        name: "额外收入记录"
+        note: "跨循环证据——来自L4 scene 1413"
+        用途: "Jimmy有一笔$5000的不明收入——与Morrison被Whale收买的金额完全一致，这是Whale支付给Jimmy的杀人报酬"
+      - id: 1311
+        name: "Webb个人收入记录"
+        note: "跨循环证据——来自L3 scene 1308"
+        用途: "Webb的收入记录中有Whale相关条目——Whale不惜花大价钱除掉Webb，$5000给Morrison栽赃、$5000给Jimmy动手，这是一场精心策划的暗杀"
+    result: |
+      Jimmy彻底崩溃——投名状真相暴露：
+      - Jimmy的$5000与Morrison的$5000形成完美镜像——都是Whale支付的
+      - Morrison是"双重保险"：栽赃Zack + 确认Jimmy完成任务
+      - Jimmy杀Webb是向Whale的"投名状"——用Webb的命换取Whale的信任
+      - Jimmy的动机：为妻子Anna和未出生的孩子获得合法身份和金钱
+      ★ Jimmy彻底崩溃认罪 ★
+      - "是我做的……11点的时候……音乐最响的时候……我用刀……"
+      - "我模仿Webb的声音赶走了Vivian……然后回厨房假装什么都没发生……"
+      - "11:30我又回去，从窗户开了一枪——让所有人以为那才是Webb被杀的时间……"
+      - "Whale答应我……如果我做了这件事……他会给Anna身份……给我们的孩子一个未来……"
+      后续:
+      - Jimmy意识到一切结束，选择自杀——认为这是保护Anna和孩子的唯一方式
+      - 案件背后的真正操控者是Whale——用金钱和承诺驱使Jimmy和Morrison各司其职
+      - Webb的贪婪和勒索最终招来了毁灭，但真正付出代价的是Jimmy和他的家人
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1601
+    text: "这一枪发生在什么时候？"
+    unlock_condition: "item:1621"
+  - id: 1602
+    text: "Vivian敲门的时候Webb在做什么？"
+    unlock_condition: "testimony:1065001"
+    note: "condition type=3"
+
+# 本循环清除的疑点（含遗留自前序循环的疑点）
+clearDoubts: [1104, 1405, 1504, 1601, 1602]
+# 1104: L1遗留 "11点30分的枪声是案发时间吗？"
+# 1405: L4遗留
+# 1504: L5遗留
+# 1601: 本循环 "这一枪发生在什么时候？"
+# 1602: 本循环 "Vivian敲门的时候Webb在做什么？"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PENDING"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "N/A (Unit1 no connoisseur system)"
+  expose: "PENDING"

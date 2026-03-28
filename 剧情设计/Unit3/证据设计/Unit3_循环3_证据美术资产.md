@@ -30,8 +30,8 @@
 
 **已移除项**:
 - 旧33-T-01 Bernard Wells证词 → Testimony，单独管理
-- 旧3310001 Liam观察证词 → Testimony，单独管理
-- 旧3310002 Liam证词 → Testimony，单独管理
+- 旧3310001 Seamus观察证词 → Testimony，单独管理
+- 旧3310002 Seamus证词 → Testimony，单独管理
 
 ---
 

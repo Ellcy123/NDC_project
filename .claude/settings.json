@@ -47,19 +47,24 @@
     "allow": [
       "Read",
       "Agent",
-      "Bash(ls -lh \"d:/NDC_project/AVG/对话配置工作及草稿/Loop\"*\"对话草稿\"*.md)",
-      "Bash(sed 's/\\\\.md$//')",
-      "Bash(sed 's/\\\\.json$//')",
-      "Bash(xargs md5sum)",
-      "Bash(python3 -c \":*)",
-      "Bash(python3 -u -c \":*)",
-      "Bash(ls -la \"d:\\\\NDC_project\\\\质量检查文档\"\" 2>/dev/null || ls -la \"d:/NDC_project/质量检查文档/ \")",
-      "Bash(claude --version)",
-      "Bash(echo $CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS)"
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git rev-parse*)",
+      "Bash(ls *)",
+      "Bash(python *)",
+      "Bash(python3 *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)"
     ],
     "additionalDirectories": [
       "D:\\NDC_project\\AVG\\对话配置工作及草稿\\前置配置",
-      "d:\\NDC_project\\.claude\\commands",
       "D:\\NDC_project\\docs\\游戏系统",
       "C:\\Users\\Ellcy\\.claude\\channels\\telegram"
     ]

@@ -53,7 +53,7 @@
 | `.claude/agents/` | 10 个专用 agent 定义（state-architect, dialogue-writer, expose-designer 等） |
 | `.claude/rules/` | 6 个路径作用域规则（编辑对应路径文件时自动加载） |
 | `.claude/skills/` | 3 个团队编排 skill（team-design, team-expose, team-loop） |
-| `.claude/commands/` | slash command 定义（avg-dialogue, connoisseur 等） |
+| `.claude/commands/` | slash command 定义（已迁移至 skills，目录保留备用） |
 | `.claude/hooks/` | 自动化校验脚本（对话格式、state 格式） |
 
 ---
@@ -119,7 +119,7 @@ Chapter (章节: EPI01/EPI02/EPI03)
 - **Phase 1**: 只修改 MD 草稿（`AVG/对话配置工作及草稿/Loop{1-6}_对话草稿.md`），不碰 JSON
 - **Phase 2**: 用户明确指示后才执行 `sync_to_json.py` 同步到 JSON
 
-详细的 MD 格式规范和审查清单见 `.claude/commands/avg-dialogue.md`（slash command: `/avg-dialogue`）。
+详细的 MD 格式规范和审查清单见 `AVG/对话配置工作及草稿/AVG对话配置规则.md`。
 
 **修改对话前必须先查阅对应章节的设计文档：**
 | 章节 | 设计文档 |

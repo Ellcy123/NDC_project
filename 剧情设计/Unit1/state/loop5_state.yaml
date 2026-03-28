@@ -1,0 +1,404 @@
+# ============================================================
+# Loop 5 — 歌姬的仇恨 / The Singer's Hatred
+# 本循环说谎者: Vivian (106)
+# 核心揭示: Vivian与Webb的感情是虚假的——Webb一直欺骗利用Vivian；Vivian发现Webb和Rita后恨透Webb，有杀人动机但否认动手
+# 前序事件: L4 expose后，Jimmy暗示Vivian可疑，Emma和Zack决定调查Vivian与Webb的真实关系
+# 时间: 1925年11月2日（Webb死后第二天）
+# ChapterConfig id: 105
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Vivian到底隐瞒了什么秘密？"
+    secondary:
+      - "Vivian和Webb的关系到底是怎样的？"
+      - "分手信和被撕碎的船票说明了什么？"
+      - "Vivian有杀Webb的动机吗？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "Rosa在清洁时听到会客室有动静，但因害怕没有声张"
+    - "Rosa当晚在楼上走廊清洁而非地下室酒窖"
+    - "Webb当晚在会客室被人杀害"
+    - "现场有血迹被清理的痕迹（Rosa发现的带血毛巾）"
+    - "Rosa的工作记录显示她当晚确实在楼上值班"
+    # ── L2 post_expose ──
+    - "Morrison被Whale收买$5000，迷晕Zack并栽赃"
+    - "Whale要处理掉Webb和Zack"
+    - "Webb约Zack去酒吧是把Zack当'保险'——如果Webb出事Zack会调查到底"
+    - "Morrison只是Whale的工具人"
+    # ── L3 post_expose ──
+    - "Webb不只做私酒生意，还经营以古董交易为幌子的勒索网络"
+    - "Tommy是勒索网络的核心操作者，负责记账和伪装"
+    - "Webb勒索的对象包括Thompson议员、Coleman银行家等政商要人"
+    - "同一件古董被反复'出售'——本质是按月收取保护费"
+    - "Whale是极危险的勒索目标——通过电话威胁Zack"
+    # ── L4 post_expose ──
+    - "Jimmy不只是厨师，是Webb的助手"
+    - "Jimmy和Webb因Whale产生矛盾"
+    - "Jimmy暗示Vivian可疑"
+  new_directions:
+    - direction: "Vivian与Webb的秘密恋情"
+      trigger: "化妆室发现分手信（1511信件正文+1512信封→合并为1513分手信），揭示两人关系破裂"
+    - direction: "Webb的背叛"
+      trigger: "Webb办公室沙发垫下发现Vivian的日记(1515)，记录Vivian发现Webb和Rita的愤怒"
+    - direction: "撕碎的船票"
+      trigger: "化妆室发现被撕碎的船票(1514)——Vivian撕碎了两人的逃离计划，暗示她对Webb恨到极点"
+  post_expose_knowledge:
+    - "Vivian与Webb的爱情是虚假的——Webb一直在欺骗和利用Vivian"
+    - "Vivian发现Webb和Rita的关系后恨透了Webb"
+    - "Vivian确实有杀人动机（分手信+撕碎船票+仇恨日记）"
+    - "Vivian承认动过杀机但否认实际动手"
+    - "Vivian提供关键时间线：约11:05去Webb会客室，Webb让她'今晚不要再来'"
+    - "真凶仍未确定，但Vivian排除嫌疑（有动机无行动）"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇
+# ═══════════════════════════════════════
+#
+# 场景状态表: Zack办公室(1519) → 🎬开篇
+# L4 expose后，Jimmy暗示Vivian可疑。Emma和Zack决定调查Vivian与Webb的真实关系。
+
+opening:
+  scene_id: 1519
+  characters: [Zack, Emma]
+  purpose: "L4 expose后，Jimmy暗示Vivian可疑。Emma和Zack决定调查Vivian与Webb的真实关系。"
+  talk: 102006001
+
+  emma_102006001:
+    is_liar: false
+    motive: "引导Zack将注意力转向Vivian——Jimmy的暗示打开了新方向，需要调查Vivian与Webb之间的真实关系"
+    mindset: "谨慎而好奇——Vivian之前一直以Webb恋人的悲伤形象出现，但Jimmy暗示事情没那么简单"
+
+    knows:
+      - "L4 expose后Jimmy暗示Vivian可疑"
+      - "Vivian一直以Webb恋人的悲伤形象出现"
+      - "需要搜查Vivian化妆室和Webb办公室寻找两人关系的线索"
+      - "Jimmy和Webb因Whale产生过矛盾"
+
+    does_not_know:
+      - "Vivian与Webb的感情是虚假的"
+      - "Webb一直在欺骗利用Vivian"
+      - "Webb和Rita的关系"
+      - "Vivian有杀人动机"
+      - "分手信和撕碎船票的存在"
+
+    lie: null
+
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L5:
+#   Zack办公室(1519)       → 🎬开篇
+#   Vivian化妆室(1507)     → 🔓新解锁搜证(Vivian不在), 4+1证据
+#   Webb办公室(1508)       → 已解锁, 搜证(Vivian日记+Rita信息)
+#   Tommy办公室(1505)      → 已解锁, 搜证(节目更改申请)
+#   酒吧歌舞厅(1509)       → 已解锁, Vivian对话 + ⚔️指证
+#   酒吧大堂(1510)         → Tommy对话
+#   Rosa储藏室(1501)       → 已解锁, 对话
+#   Jimmy厨房(1511)        → 已解锁, 可对话Jimmy
+#
+# 地图入口:
+#   mapId=101 → sceneId=1510(酒吧大堂)
+
+scenes:
+  # ── SC1519 Zack办公室（开篇） ──
+  - id: 1519
+    name: "Zack办公室"
+    note: "开篇场景，Emma与Zack讨论L4结果，决定调查Vivian"
+
+  # ── SC1507 Vivian化妆室（🔓新解锁，Vivian不在，主要搜证） ──
+  - id: 1507
+    name: "Vivian化妆室"
+    note: "🔓新解锁——Vivian此时在歌舞厅，化妆室无人可搜证。信件正文+信封合并为分手信"
+    evidence:
+      - id: 1511
+        name: "信件正文"
+        note: "合并前——Webb写给Vivian的分手信正文（与1512合并后得到1513）"
+      - id: 1512
+        name: "信封"
+        note: "合并前——信封（与1511合并后得到1513分手信）"
+      - id: 1513
+        name: "分手信"
+        note: "关键——Webb写给Vivian的分手信（1511+1512合并后），揭示Webb要抛弃Vivian（Expose R1用）"
+        merged_from: [1511, 1512]
+      - id: 1514
+        name: "撕碎的船票"
+        note: "关键——被Vivian愤怒撕碎的两人船票，拼图小玩法还原后揭示Vivian的绝望与仇恨（Expose R2用）"
+      - id: 1516
+        name: "Vivian工作痛苦记录"
+        note: "环境叙事——记录Vivian在酒吧工作的痛苦，侧面展示Webb对她的利用"
+
+  # ── SC1508 Webb办公室（已解锁，搜证） ──
+  - id: 1508
+    name: "Webb办公室"
+    note: "已解锁场景，沙发垫下藏有Vivian日记"
+    evidence:
+      - id: 1515
+        name: "Vivian的日记"
+        note: "关键——在Webb办公室沙发垫下发现，记录Vivian得知Webb和Rita关系后的愤怒与仇恨（Expose R3用）"
+      - id: 1521
+        name: "Rita的照片和联系信息"
+        note: "环境叙事——Webb办公室内发现，佐证Webb与Rita的关系"
+
+  # ── SC1505 Tommy办公室（已解锁，搜证） ──
+  - id: 1505
+    name: "Tommy办公室"
+    note: "已解锁场景，搜证获取节目更改申请"
+    evidence:
+      - id: 1531
+        name: "节目更改申请"
+        note: "Doubt 1504用——为什么要把演出曲目换成最吵的？（遗留至L6，L6 Expose R2关键证据）"
+
+  # ── SC1509 酒吧歌舞厅（已解锁，Vivian对话+指证） ──
+  - id: 1509
+    name: "酒吧歌舞厅"
+    note: "Vivian所在场景，对话+⚔️指证"
+    npcs:
+      vivian_expose:
+        # ── 基本信息 ──
+        talk: vivian_expose
+        is_liar: true
+        motive: "隐瞒自己与Webb的真实关系——维持'深爱Webb'的表象，掩盖发现Webb背叛后的仇恨和杀意"
+        mindset: "表面悲伤实则愤恨——Webb的死让她解脱但不想暴露自己的动机，用'深情恋人'的面具保护自己"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "自己与Webb是3年秘密恋人"
+          - "Webb一直在欺骗自己——与Rita有暧昧关系"
+          - "Webb写了分手信要抛弃自己"
+          - "自己在发现真相后恨透了Webb，动过杀机"
+          - "约11:05去Webb会客室，Webb让她'今晚不要再来'"
+          - "当晚演出曲目被换成最吵的歌"
+
+        does_not_know:
+          - "谁最终杀了Webb"
+          - "Morrison被Whale收买的完整细节"
+          - "Webb勒索网络的全部运作"
+          - "Jimmy暗示了自己可疑"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry: null  # Expose对象
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 1063002  # ⚠谎言: "与Webb是3年秘密恋人，感情深厚，他的死让我很伤心"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC1510 酒吧大堂（Tommy对话） ──
+  - id: 1510
+    name: "酒吧大堂"
+    note: "mapId=101→sceneId=1510，Tommy再次出场（L3 expose后），提供Webb和Rita的证词"
+    npcs:
+      tommy_005:
+        # ── 基本信息 ──
+        talk: tommy_005
+        is_liar: false
+        motive: "L3被指证后态度合作——愿意提供更多信息帮助调查"
+        mindset: "坦诚配合——知道自己已经没有退路，对Webb的其他秘密不再隐瞒"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "最近2个月Webb和一个叫Rita的女人走得很近"
+          - "Webb经常在办公室和Rita通电话"
+          - "Vivian与Webb的关系在Webb圈子里是公开的秘密"
+
+        does_not_know:
+          - "Vivian已经发现Webb和Rita的关系"
+          - "Vivian对Webb的仇恨程度"
+          - "分手信和船票的存在"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Tommy是Webb的核心下属，了解Webb的私人生活和近期交往对象"
+          - "需要Tommy提供Webb和Rita关系的证词来佐证Vivian的动机"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 1055004  # Tommy证词: "最近2个月Webb和一个叫Rita的女人走得很近"（Expose R3用）
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC1501 Rosa储藏室（已解锁，对话） ──
+  - id: 1501
+    name: "Rosa储藏室"
+    note: "已解锁场景，Rosa再次出场提供Vivian工作痛苦的侧面证词"
+    npcs:
+      rosa_005:
+        # ── 基本信息 ──
+        talk: rosa_005
+        is_liar: false
+        motive: "配合调查——Rosa与Vivian同为酒吧底层工作者，了解Vivian的日常状态"
+        mindset: "同情Vivian——知道Vivian在Webb手下过得很辛苦，愿意说出自己观察到的"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "Vivian在酒吧工作很痛苦，经常独自哭泣"
+          - "Webb对Vivian的态度时好时坏，有时很冷漠"
+          - "Vivian最近状态特别差，像是受了很大打击"
+
+        does_not_know:
+          - "Vivian与Webb关系破裂的具体原因"
+          - "分手信和船票的存在"
+          - "Webb与Rita的关系"
+          - "Vivian的杀意"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Rosa是酒吧底层员工，与Vivian有日常接触，可提供Vivian近期情绪和行为的旁证"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []  # Rosa提供Vivian痛苦的侧面描述，但未列为正式Expose证词
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+  # ── SC1511 Jimmy厨房（已解锁，对话） ──
+  - id: 1511
+    name: "Jimmy厨房"
+    note: "已解锁场景（L4 expose后），Jimmy可对话但无新关键证词"
+    npcs:
+      jimmy_005:
+        # ── 基本信息 ──
+        talk: jimmy_005
+        is_liar: false
+        motive: "L4被指证后配合——Jimmy已暗示Vivian可疑，愿意提供更多背景信息"
+        mindset: "谨慎但合作——不想再隐瞒，但也不会主动过多透露"
+
+        # ── 1. NPC 已知信息 ──
+        knows:
+          - "Vivian和Webb的关系曾经很好"
+          - "最近Vivian的态度发生了巨大变化"
+          - "Webb最近心不在焉，可能有新的对象"
+
+        does_not_know:
+          - "分手信的具体内容"
+          - "Webb与Rita的关系细节"
+          - "Vivian的日记内容"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Jimmy是Webb的助手，了解酒吧内部动态，L4暗示Vivian可疑后可追问更多"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []  # Jimmy在L5无新关键证词
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧歌舞厅(1509) → ⚔️指证(Vivian)
+# 指证设计: 3轮
+#   R1: 分手信(1513) → 击穿"感情深厚"
+#   R2: 撕碎的船票(1514) → 揭示Vivian的绝望与仇恨
+#   R3: Tommy证词(1055004) + Vivian日记(1515) → 击穿最后防线
+# exposeNpcId: 106 (Vivian)
+# testimony: 1063002 ("与Webb是3年秘密恋人，感情深厚，他的死让我很伤心")
+
+expose:
+  target: "Vivian (106)"
+  total_rounds: 3
+  testimony: 1063002  # ⚠谎言: "与Webb是3年秘密恋人，感情深厚，他的死让我很伤心"
+
+  # ── 第一轮：击穿"感情深厚" ──
+  # 分手信(1513)直接证明Webb要抛弃Vivian——"感情深厚"是谎言
+  round_1:
+    id: 17
+    lie: "与Webb是3年秘密恋人，感情深厚，他的死让我很伤心"
+    lie_source: "证词 1063002"
+    usable_evidence:
+      - id: 1513
+        name: "分手信（合并后）"
+        用途: "Webb亲笔写给Vivian的分手信——Webb要抛弃Vivian，'感情深厚'是彻底的谎言"
+    result: |
+      分手信击穿"感情深厚"：
+      - Webb白纸黑字要和Vivian分手——3年秘密恋情是Webb单方面的利用
+      - Vivian无法否认分手信的存在，开始动摇
+      - Vivian辩解："他……他只是一时冲动写的，我们的感情是真的……"
+      - 但信中措辞冷酷，明显不是"一时冲动"
+
+  # ── 第二轮：揭示绝望与仇恨 ──
+  # 撕碎的船票(1514)证明Vivian发现真相后的愤怒——不是悲伤而是仇恨
+  round_2:
+    id: 18
+    lie: "与Webb是3年秘密恋人，感情深厚，他的死让我很伤心"
+    lie_source: "证词 1063002"
+    usable_evidence:
+      - id: 1514
+        name: "撕碎的船票"
+        用途: "两人一起远走高飞的船票被Vivian愤怒撕碎——这不是'悲伤'，而是发现被欺骗后的愤怒和仇恨"
+    result: |
+      船票揭示Vivian的真实情绪是仇恨而非悲伤：
+      - 船票是两人离开的计划——被Vivian亲手撕碎
+      - Vivian不是"悲伤的恋人"，而是"被背叛的女人"
+      - Vivian开始崩溃："你不懂！你不懂他对我做了什么！"
+      - 防线动摇，但仍不愿承认杀意
+
+  # ── 第三轮：击穿最后防线 ──
+  # Tommy证词(1055004) + Vivian日记(1515) → Webb和Rita的关系 + Vivian的仇恨日记
+  round_3:
+    id: 19
+    lie: "与Webb是3年秘密恋人，感情深厚，他的死让我很伤心"
+    lie_source: "证词 1063002"
+    usable_evidence:
+      - id: 1055004
+        name: "Tommy证词：Webb最近和Rita走得很近"
+        用途: "第三方证实Webb移情别恋——Vivian不是'被分手'，而是'被替换'"
+      - id: 1515
+        name: "Vivian的日记"
+        用途: "Vivian亲笔日记记录发现Webb和Rita后的愤怒、仇恨和杀意——'感情深厚'的谎言彻底崩塌"
+    result: |
+      Vivian彻底崩溃，承认一切：
+      - Tommy证词证实Webb和Rita走得很近——Vivian发现自己被"替换"
+      - 日记中白纸黑字记录了Vivian的仇恨和杀意
+      - Vivian承认：3年感情是Webb单方面的欺骗和利用
+      - Vivian承认动过杀机——但否认实际动手
+      - Vivian提供关键时间线：约11:05去Webb会客室，Webb让她"今晚不要再来"
+      - Vivian声称离开后再也没回去——"我恨他，但我没有杀他"
+      - 真凶仍未确定，Vivian有动机但无行动证据，排除嫌疑
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1501
+    text: "Vivian真的还爱着Webb吗？——分手信和日记揭示的是仇恨而非深情"
+    unlock_condition: "item:1511 + item:1515"
+  - id: 1502
+    text: "这张船票为什么会被撕碎？——两人远走高飞的计划被Vivian亲手毁掉"
+    unlock_condition: "item:1514"
+  - id: 1503
+    text: "Webb背叛了Vivian吗？——Tommy证实Webb最近和Rita走得很近"
+    unlock_condition: "testimony:1055004"
+  - id: 1504
+    text: "为什么要把演出曲目换成最吵的？——节目更改申请的背后动机不明"
+    unlock_condition: "item:1531"
+
+clearDoubts: [1501, 1502, 1503]  # 1504遗留至L6
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PENDING"
+  structure_completeness: "PENDING"
+  evidence_coverage: "PENDING"
+  npc_entries: "PENDING"
+  goal_alignment: "PENDING"
+  info_pacing: "PENDING"
+  connoisseur: "N/A (Unit1 no connoisseur system)"
+  expose: "PENDING"

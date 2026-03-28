@@ -208,6 +208,47 @@
         .stats .has-art { color: var(--success); }
         .stats .no-art { color: var(--warning); }
 
+        /* ===== Art Tab Bar ===== */
+        .art-tab-bar {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 0;
+            background: var(--secondary);
+            padding: 0 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .art-tab {
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .art-tab:hover { color: var(--text-primary); }
+        .art-tab.active {
+            color: var(--highlight);
+            border-bottom-color: var(--highlight);
+            font-weight: 600;
+        }
+        .art-tab .tab-badge {
+            display: inline-block;
+            background: var(--warning);
+            color: white;
+            padding: 0 0.4rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+        .art-tab .tab-badge.done {
+            background: var(--success);
+        }
+
         /* ===== Scene View ===== */
         .scene-title {
             font-size: 1.2rem;
@@ -668,8 +709,9 @@
                 </select>
                 <button class="btn" onclick="GameController.load()">加载</button>
                 <span style="color:var(--border)">|</span>
-                <button class="btn" id="btnEvidence" onclick="GameController.switchView('evidence')">证据总览</button>
+                <button class="btn" id="btnArt" onclick="GameController.switchView('art')">美术需求总览</button>
                 <button class="btn" id="btnFlow" onclick="GameController.switchView('flow')">流程预览</button>
+                <button class="btn" onclick="UI.showStoryOverview()">故事概览</button>
             </div>
         </div>
 
@@ -785,6 +827,7 @@
 
         talkSummaries: {},
         sceneTalkSummaries: {},
+        storyOverview: {},
         chapterConfigs: [],
         chapterConfigMap: new Map(),
 
@@ -952,6 +995,19 @@
             } catch (e) {
                 console.warn('Talk summaries not available:', e.message);
             }
+        },
+
+        async loadStoryOverview(unit) {
+            AppState.storyOverview = {};
+            try {
+                const path = `${Config.paths.loopConfig}/${unit}/story_overview.yaml`;
+                const data = await this.loadYAML(path);
+                if (data) {
+                    Object.entries(data).forEach(([k, v]) => {
+                        AppState.storyOverview[k] = v;
+                    });
+                }
+            } catch (e) { /* silent */ }
         },
 
         // ===== AVG Talk 加载 =====
@@ -1288,8 +1344,35 @@
 
         _modalHistory: [],
 
+        showStoryOverview() {
+            const loop = AppState.currentLoop;
+            const text = AppState.storyOverview[loop];
+            const titleEl = document.getElementById('modalTitle');
+            const contentEl = document.getElementById('modalContent');
+            this._modalHistory = [];
+            if (titleEl) delete titleEl.dataset.itemId;
+            if (!text) {
+                titleEl.textContent = '故事概览';
+                contentEl.innerHTML = '<p style="color:var(--text-muted)">当前循环暂无故事概览数据</p>';
+                document.getElementById('evidenceModal').classList.add('active');
+                return;
+            }
+            titleEl.textContent = '故事概览 — ' + (loop || '').replace('loop', 'Loop ');
+            const html = text.trim().split('\n').map(line => {
+                line = line.trim();
+                if (!line) return '<br>';
+                if (line.startsWith('【'))
+                    return `<p style="color:var(--highlight);font-weight:600;margin-top:1rem;font-size:1.05rem;">${line}</p>`;
+                return `<p style="margin:0.3rem 0;line-height:1.8;color:var(--text-secondary);">${line}</p>`;
+            }).join('');
+            contentEl.innerHTML = html;
+            document.querySelector('#evidenceModal .modal').style.maxWidth = '800px';
+            document.getElementById('evidenceModal').classList.add('active');
+        },
+
         closeModal() {
             document.getElementById('evidenceModal').classList.remove('active');
+            document.querySelector('#evidenceModal .modal').style.maxWidth = '';
             this._modalHistory = [];
             const titleEl = document.getElementById('modalTitle');
             if (titleEl) delete titleEl.dataset.itemId;
@@ -1380,44 +1463,80 @@
 
         renderSidebar() {
             const sidebar = document.getElementById('sidebar');
-            if (AppState.currentView === 'evidence') {
-                this.renderEvidenceSidebar(sidebar);
+            if (AppState.currentView === 'art') {
+                this.renderArtSidebar(sidebar);
             } else {
                 this.renderFlowSidebar(sidebar);
             }
         },
 
-        renderEvidenceSidebar(sidebar) {
+        renderArtSidebar(sidebar) {
             const chapter = DataManager.chapter(AppState.currentUnit);
-            const items = DataManager.itemsByChapter(chapter);
-            const hasArt = items.filter(i => i.ArtRequirement).length;
-            const noArt = items.length - hasArt;
+            const tab = ArtOverviewView.currentTab;
+            let html = '';
 
-            // Group by location
-            const byLocation = {};
-            items.forEach(i => {
-                const loc = DataManager.itemLocation(i) || '未知位置';
-                if (!byLocation[loc]) byLocation[loc] = [];
-                byLocation[loc].push(i);
-            });
+            if (tab === 'evidence') {
+                const items = DataManager.itemsByChapter(chapter);
+                const hasArt = items.filter(i => i.ArtRequirement).length;
+                const noArt = items.length - hasArt;
+                const byLocation = {};
+                items.forEach(i => {
+                    const loc = DataManager.itemLocation(i) || '未知位置';
+                    if (!byLocation[loc]) byLocation[loc] = [];
+                    byLocation[loc].push(i);
+                });
 
-            let html = `
-                <div class="sidebar-section">证据统计 (${chapter})</div>
-                <div style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                    <div>总计: <strong>${items.length}</strong> 个证据</div>
-                    <div style="color: var(--success);">已填美术需求: ${hasArt}</div>
-                    <div style="color: var(--warning);">未填美术需求: ${noArt}</div>
-                </div>
-                <div class="sidebar-section">按位置分组</div>
-            `;
-
-            for (const loc of Object.keys(byLocation)) {
-                const count = byLocation[loc].length;
-                const artCount = byLocation[loc].filter(i => i.ArtRequirement).length;
                 html += `
-                    <div class="sidebar-item" onclick="EvidenceView.filterByLocation('${loc.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-                        ${escapeHtml(loc)} <span class="badge">${count}</span>
-                        ${artCount < count ? `<span class="badge" style="background:var(--warning)">${count - artCount}</span>` : ''}
+                    <div class="sidebar-section">证据统计 (${chapter})</div>
+                    <div style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        <div>总计: <strong>${items.length}</strong> 个证据</div>
+                        <div style="color: var(--success);">已填美术需求: ${hasArt}</div>
+                        <div style="color: var(--warning);">未填美术需求: ${noArt}</div>
+                    </div>
+                    <div class="sidebar-section">按位置分组</div>
+                `;
+                for (const loc of Object.keys(byLocation)) {
+                    const count = byLocation[loc].length;
+                    const artCount = byLocation[loc].filter(i => i.ArtRequirement).length;
+                    html += `
+                        <div class="sidebar-item" onclick="ArtOverviewView.filterByLocation('${loc.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
+                            ${escapeHtml(loc)} <span class="badge">${count}</span>
+                            ${artCount < count ? `<span class="badge" style="background:var(--warning)">${count - artCount}</span>` : ''}
+                        </div>
+                    `;
+                }
+            } else if (tab === 'npc') {
+                const npcs = AppState.allNPCs.filter(n => n.Chapter === chapter);
+                const hasArt = npcs.filter(n => n.ArtRequirement).length;
+                html += `
+                    <div class="sidebar-section">人物统计 (${chapter})</div>
+                    <div style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        <div>总计: <strong>${npcs.length}</strong> 个人物</div>
+                        <div style="color: var(--success);">已填美术需求: ${hasArt}</div>
+                        <div style="color: var(--warning);">未填美术需求: ${npcs.length - hasArt}</div>
+                    </div>
+                `;
+            } else if (tab === 'scene') {
+                const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : '3';
+                const rawScenes = AppState.allScenes.filter(s => s.sceneId && String(s.sceneId).startsWith(chPrefix));
+                const merged = ArtOverviewView._mergeScenes(rawScenes);
+                const hasArt = merged.filter(m => m.ArtRequirement).length;
+                let totalNpcs = 0, npcWithArt = 0;
+                merged.forEach(m => {
+                    m.npcMap.forEach(entry => {
+                        totalNpcs++;
+                        if (entry.ArtRequirement) npcWithArt++;
+                    });
+                });
+                html += `
+                    <div class="sidebar-section">场景统计 (${chapter})</div>
+                    <div style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        <div>物理场景: <strong>${merged.length}</strong> 个</div>
+                        <div style="color: var(--success);">场景背景已填: ${hasArt}</div>
+                        <div style="color: var(--warning);">场景背景未填: ${merged.length - hasArt}</div>
+                        <div style="margin-top:0.3rem;">场景内NPC: <strong>${totalNpcs}</strong> 个</div>
+                        <div style="color: var(--success);">立绘需求已填: ${npcWithArt}</div>
+                        <div style="color: var(--warning);">立绘需求未填: ${totalNpcs - npcWithArt}</div>
                     </div>
                 `;
             }
@@ -1669,16 +1788,63 @@
         }
     };
 
-    // ===== Evidence View =====
-    const EvidenceView = {
+    // ===== Art Overview View (3 tabs: evidence, npc, scene) =====
+    const ArtOverviewView = {
+        currentTab: 'evidence',
         filterText: '',
         showOnlyNoArt: false,
 
         render() {
             const chapter = DataManager.chapter(AppState.currentUnit);
-            let items = DataManager.itemsByChapter(chapter);
 
-            // Apply filters
+            // Count stats for tab badges
+            const items = DataManager.itemsByChapter(chapter);
+            const evNoArt = items.filter(i => !i.ArtRequirement).length;
+
+            const npcs = AppState.allNPCs.filter(n => n.Chapter === chapter);
+            const npcNoArt = npcs.filter(n => !n.ArtRequirement).length;
+
+            const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : '3';
+            const rawScenes = AppState.allScenes.filter(s => s.sceneId && String(s.sceneId).startsWith(chPrefix));
+            const mergedScenes = this._mergeScenes(rawScenes);
+            const scNoArt = mergedScenes.filter(m => !m.ArtRequirement).length;
+
+            // Tab bar
+            let html = `<div class="art-tab-bar">`;
+            html += `<div class="art-tab ${this.currentTab === 'evidence' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('evidence')">
+                证据需求 ${evNoArt > 0 ? `<span class="tab-badge">${evNoArt}</span>` : `<span class="tab-badge done">${items.length}</span>`}
+            </div>`;
+            html += `<div class="art-tab ${this.currentTab === 'npc' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('npc')">
+                人物需求 ${npcNoArt > 0 ? `<span class="tab-badge">${npcNoArt}</span>` : `<span class="tab-badge done">${npcs.length}</span>`}
+            </div>`;
+            html += `<div class="art-tab ${this.currentTab === 'scene' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('scene')">
+                场景需求 ${scNoArt > 0 ? `<span class="tab-badge">${scNoArt}</span>` : `<span class="tab-badge done">${mergedScenes.length}</span>`}
+            </div>`;
+            html += `</div>`;
+
+            // Tab content
+            if (this.currentTab === 'evidence') {
+                html += this.renderEvidenceTab(items);
+            } else if (this.currentTab === 'npc') {
+                html += this.renderNPCTab(npcs);
+            } else {
+                html += this.renderSceneTab(rawScenes);
+            }
+
+            document.getElementById('content').innerHTML = html;
+            UI.renderSidebar();
+        },
+
+        switchTab(tab) {
+            this.currentTab = tab;
+            this.filterText = '';
+            this.showOnlyNoArt = false;
+            this.render();
+        },
+
+        // ---- Evidence Tab (original logic) ----
+        renderEvidenceTab(allItems) {
+            let items = allItems;
             if (this.filterText) {
                 const q = this.filterText.toLowerCase();
                 items = items.filter(i =>
@@ -1701,12 +1867,12 @@
                     <label>搜索：</label>
                     <input type="text" id="filterInput" placeholder="ID / 名称 / 描述 / 位置..."
                            value="${escapeHtml(this.filterText)}"
-                           oninput="EvidenceView.onFilter(this.value)">
+                           oninput="ArtOverviewView.onFilter(this.value)">
                     <button class="btn ${this.showOnlyNoArt ? 'active' : ''}"
-                            onclick="EvidenceView.toggleNoArt()">
+                            onclick="ArtOverviewView.toggleNoArt()">
                         仅未填美术需求
                     </button>
-                    ${this.filterText ? `<button class="btn" onclick="EvidenceView.clearFilter()">清除筛选</button>` : ''}
+                    ${this.filterText ? `<button class="btn" onclick="ArtOverviewView.clearFilter()">清除筛选</button>` : ''}
                     <span class="stats">
                         显示 ${total} 条 |
                         <span class="has-art">已填 ${hasArt}</span> /
@@ -1749,9 +1915,225 @@
             });
 
             html += `</tbody></table>`;
-            document.getElementById('content').innerHTML = html;
+            return html;
         },
 
+        // ---- NPC Tab ----
+        renderNPCTab(allNPCs) {
+            let npcs = allNPCs;
+            if (this.filterText) {
+                const q = this.filterText.toLowerCase();
+                npcs = npcs.filter(n =>
+                    String(n.id).includes(q) ||
+                    cn(n.Name).toLowerCase().includes(q) ||
+                    (n.Name?.[1] || '').toLowerCase().includes(q) ||
+                    (n.ArtRequirement || '').toLowerCase().includes(q)
+                );
+            }
+            if (this.showOnlyNoArt) {
+                npcs = npcs.filter(n => !n.ArtRequirement);
+            }
+
+            const total = npcs.length;
+            const hasArt = npcs.filter(n => n.ArtRequirement).length;
+
+            let html = `
+                <div class="filter-bar">
+                    <label>搜索：</label>
+                    <input type="text" id="filterInput" placeholder="ID / 名称..."
+                           value="${escapeHtml(this.filterText)}"
+                           oninput="ArtOverviewView.onFilter(this.value)">
+                    <button class="btn ${this.showOnlyNoArt ? 'active' : ''}"
+                            onclick="ArtOverviewView.toggleNoArt()">
+                        仅未填美术需求
+                    </button>
+                    ${this.filterText ? `<button class="btn" onclick="ArtOverviewView.clearFilter()">清除筛选</button>` : ''}
+                    <span class="stats">
+                        显示 ${total} 条 |
+                        <span class="has-art">已填 ${hasArt}</span> /
+                        <span class="no-art">未填 ${total - hasArt}</span>
+                    </span>
+                </div>
+                <table class="evidence-table">
+                    <thead>
+                        <tr>
+                            <th class="id-col">ID</th>
+                            <th class="name-col">中文名</th>
+                            <th class="name-col">英文名</th>
+                            <th class="type-col">头像</th>
+                            <th>美术需求</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            if (npcs.length === 0) {
+                html += `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">
+                    ${AppState.allNPCs.length === 0 ? '请先点击「加载」' : '没有匹配的人物'}
+                </td></tr>`;
+            }
+
+            npcs.forEach(npc => {
+                const artClass = npc.ArtRequirement ? 'art-req' : 'art-req empty';
+                const artText = npc.ArtRequirement || '未填写';
+                const hasIcon = npc.IconSmall || npc.IconLarge;
+                html += `
+                    <tr>
+                        <td class="id-col">${escapeHtml(String(npc.id))}</td>
+                        <td class="name-col">${escapeHtml(cn(npc.Name))}</td>
+                        <td class="name-col">${escapeHtml(npc.Name?.[1] || '')}</td>
+                        <td class="type-col">${hasIcon
+                            ? `<span style="color:var(--success); font-size:0.8rem;">${escapeHtml(npc.IconSmall || npc.IconLarge)}</span>`
+                            : '<span style="color:var(--warning); font-size:0.8rem;">无</span>'}</td>
+                        <td class="${artClass}">${escapeHtml(truncate(artText, 80))}</td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            return html;
+        },
+
+        // ---- Scene dedup helper: merge scenes by sceneNameEn ----
+        _mergeScenes(allScenes) {
+            const map = new Map(); // sceneNameEn → merged object
+            allScenes.forEach(s => {
+                const key = s.sceneNameEn || s.sceneName || String(s.sceneId);
+                if (!map.has(key)) {
+                    map.set(key, {
+                        key,
+                        sceneName: s.sceneName || '',
+                        sceneNameEn: s.sceneNameEn || '',
+                        backgroundImage: s.backgroundImage || '',
+                        ArtRequirement: s.ArtRequirement || '',
+                        loops: [],
+                        npcMap: new Map() // npcNameEn → { info, resPathSet }
+                    });
+                }
+                const m = map.get(key);
+                // Collect loop number from sceneId (2nd digit)
+                const loopNum = String(s.sceneId).length >= 2 ? String(s.sceneId)[1] : '?';
+                if (!m.loops.includes(loopNum)) m.loops.push(loopNum);
+                // Merge ArtRequirement (take first non-empty)
+                if (!m.ArtRequirement && s.ArtRequirement) m.ArtRequirement = s.ArtRequirement;
+                // Merge NPCInfos
+                (s.NPCInfos || []).forEach(info => {
+                    const npcKey = info.NPC?.Name?.[1] || cn(info.NPC?.Name) || String(info.id);
+                    if (!m.npcMap.has(npcKey)) {
+                        m.npcMap.set(npcKey, {
+                            info,
+                            resPaths: new Set(),
+                            ArtRequirement: info.ArtRequirement || ''
+                        });
+                    }
+                    const npcEntry = m.npcMap.get(npcKey);
+                    if (info.ResPath) npcEntry.resPaths.add(info.ResPath.split('\\').pop());
+                    if (info.ClickResPath) npcEntry.resPaths.add(info.ClickResPath.split('\\').pop());
+                    if (!npcEntry.ArtRequirement && info.ArtRequirement) npcEntry.ArtRequirement = info.ArtRequirement;
+                });
+            });
+            return Array.from(map.values());
+        },
+
+        // ---- Scene Tab ----
+        renderSceneTab(allScenes) {
+            let merged = this._mergeScenes(allScenes);
+            if (this.filterText) {
+                const q = this.filterText.toLowerCase();
+                merged = merged.filter(m =>
+                    m.key.toLowerCase().includes(q) ||
+                    m.sceneName.toLowerCase().includes(q) ||
+                    m.sceneNameEn.toLowerCase().includes(q) ||
+                    (m.ArtRequirement || '').toLowerCase().includes(q)
+                );
+            }
+            if (this.showOnlyNoArt) {
+                merged = merged.filter(m => !m.ArtRequirement);
+            }
+
+            const total = merged.length;
+            const hasArt = merged.filter(m => m.ArtRequirement).length;
+
+            let html = `
+                <div class="filter-bar">
+                    <label>搜索：</label>
+                    <input type="text" id="filterInput" placeholder="场景名称..."
+                           value="${escapeHtml(this.filterText)}"
+                           oninput="ArtOverviewView.onFilter(this.value)">
+                    <button class="btn ${this.showOnlyNoArt ? 'active' : ''}"
+                            onclick="ArtOverviewView.toggleNoArt()">
+                        仅未填美术需求
+                    </button>
+                    ${this.filterText ? `<button class="btn" onclick="ArtOverviewView.clearFilter()">清除筛选</button>` : ''}
+                    <span class="stats">
+                        显示 ${total} 个物理场景 |
+                        <span class="has-art">已填 ${hasArt}</span> /
+                        <span class="no-art">未填 ${total - hasArt}</span>
+                    </span>
+                </div>
+                <table class="evidence-table">
+                    <thead>
+                        <tr>
+                            <th style="width:100px;">出现Loop</th>
+                            <th class="name-col">场景名称</th>
+                            <th class="name-col">英文名</th>
+                            <th class="type-col">NPC</th>
+                            <th class="desc-col">背景资源</th>
+                            <th>场景美术需求</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            if (merged.length === 0) {
+                html += `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">
+                    ${AppState.allScenes.length === 0 ? '请先点击「加载」' : '没有匹配的场景'}
+                </td></tr>`;
+            }
+
+            merged.forEach(m => {
+                const artClass = m.ArtRequirement ? 'art-req' : 'art-req empty';
+                const artText = m.ArtRequirement || '未填写';
+                const npcCount = m.npcMap.size;
+                const bgName = m.backgroundImage ? m.backgroundImage.split('\\').pop() : '无';
+                const loopTags = m.loops.sort().map(l => `L${l}`).join(' ');
+
+                // NPC art sub-rows
+                let npcRows = '';
+                for (const [npcName, npcEntry] of m.npcMap) {
+                    const npcArtClass = npcEntry.ArtRequirement ? 'art-req' : 'art-req empty';
+                    const npcArtText = npcEntry.ArtRequirement || '未填写';
+                    const resList = Array.from(npcEntry.resPaths);
+                    npcRows += `
+                        <tr style="background: rgba(232,198,120,0.03);">
+                            <td style="padding-left:1.5rem; color:var(--text-muted);">└</td>
+                            <td class="name-col" style="color:var(--highlight);">${escapeHtml(npcName)}</td>
+                            <td class="name-col"></td>
+                            <td class="type-col" style="font-size:0.75rem; color:var(--text-muted);">${resList.length}个立绘</td>
+                            <td class="desc-col" style="font-size:0.75rem;">${resList.map(r => `<span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(r)}', this)">${escapeHtml(r)}</span>`).join(' ')}</td>
+                            <td class="${npcArtClass}">${escapeHtml(truncate(npcArtText, 60))}</td>
+                        </tr>
+                    `;
+                }
+
+                html += `
+                    <tr>
+                        <td style="font-size:0.8rem; color:var(--text-muted);">${loopTags}</td>
+                        <td class="name-col">${escapeHtml(m.sceneName)}</td>
+                        <td class="name-col">${escapeHtml(m.sceneNameEn)}</td>
+                        <td class="type-col">${npcCount > 0 ? `<span class="badge npc">${npcCount}</span>` : '0'}</td>
+                        <td class="desc-col" style="font-size:0.8rem;">${escapeHtml(bgName)}</td>
+                        <td class="${artClass}">${escapeHtml(truncate(artText, 60))}</td>
+                    </tr>
+                    ${npcRows}
+                `;
+            });
+
+            html += `</tbody></table>`;
+            return html;
+        },
+
+        // ---- Shared filter methods ----
         onFilter(text) {
             this.filterText = text;
             this.render();
@@ -1761,13 +2143,11 @@
             this.filterText = '';
             this.showOnlyNoArt = false;
             this.render();
-            UI.renderSidebar();
         },
 
         toggleNoArt() {
             this.showOnlyNoArt = !this.showOnlyNoArt;
             this.render();
-            UI.renderSidebar();
         },
 
         filterByLocation(loc) {
@@ -2491,7 +2871,8 @@
                 await Promise.all([
                     DataLoader.loadLoopConfig(unit, loop),
                     DataLoader.loadChapterConfig(),
-                    DataLoader.loadTalkSummaries(unit)
+                    DataLoader.loadTalkSummaries(unit),
+                    DataLoader.loadStoryOverview(unit)
                 ]);
                 console.log('Loop config loaded:', AppState.loopData ? 'OK' : 'not found');
 
@@ -2541,11 +2922,11 @@
         switchView(view) {
             AppState.currentView = view;
 
-            document.getElementById('btnEvidence').classList.toggle('active', view === 'evidence');
+            document.getElementById('btnArt').classList.toggle('active', view === 'art');
             document.getElementById('btnFlow').classList.toggle('active', view === 'flow');
 
-            if (view === 'evidence') {
-                EvidenceView.render();
+            if (view === 'art') {
+                ArtOverviewView.render();
             } else {
                 if (AppState.loopData?.opening) {
                     FlowView.showPhase('opening');
@@ -2562,7 +2943,7 @@
 
     // ===== Init =====
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('btnEvidence').classList.add('active');
+        document.getElementById('btnArt').classList.add('active');
     });
     </script>
 </body>
