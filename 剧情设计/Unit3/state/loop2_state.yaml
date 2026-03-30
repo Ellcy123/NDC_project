@@ -141,14 +141,23 @@ scenes:
         # ── 4. 鉴赏力 ──
         connoisseur: []
 
+    # ── 搜身观察（Mary应门时，Zack在门口近距离观察，触发条件：mary_present） ──
+    # 不依赖室内搜证，直接在门口交谈中产出。
+    body_search:
+      trigger: "item:3105 AND scene:mary_present"
+      evidence:
+        - id: 3205
+          name: "祈祷披肩"
+          note: "关键——Zack在门口近距离观察Mary时注意到，黑色蕾丝，右下角约1cm勾丝破损（R4用）"
+        - id: 3207
+          name: "Mary手链照片"
+          note: "Zack在门口近距离观察Mary时注意到——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作（L5垫板压痕雏菊形状比对的铺垫）"
+
   # ── SC3003 Sullivan家客厅（纯搜证，无NPC） ──
   # Mary对话后解锁，Zack进屋自由搜证。
   - id: 3003
     name: "Sullivan家客厅"
     evidence:
-      - id: 3207
-        name: "Mary手链照片"
-        note: "场景道具——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作"
       - id: 3214
         name: "家暴痕迹"
         note: "场景道具——客厅墙上拳头大小的凹陷、靠墙角的断裂椅子腿、一张被烟头烫过的Mary照片从柜子顶上滑下来。Thomas暴行的视觉证据，为Mary'报警三次无人管'建立情感基础"
@@ -178,9 +187,6 @@ scenes:
       - id: 3204
         name: "Mary的玫瑰红口红"
         note: "关键——卧室梳妆台，Elizabeth Arden Rose Blush，与衬衫口红颜色完全不同（R3用）"
-      - id: 3205
-        name: "祈祷披肩"
-        note: "关键——卧室衣柜挂钩，黑色蕾丝，右下角约1cm勾丝破损（R4小玩法原料）"
       - id: 3209
         name: "Mary的外出鞋"
         note: "🔒藏梗——约38码，鞋底有楼顶灰尘。与L4 Helen的鞋外观相似同码数，脚印'深浅不一'的伏笔"
@@ -204,7 +210,7 @@ scenes:
         note: "L4 margaret_001 quiz#102 考这个（教堂搜证时环境信息）"
 
   # ── SC3005 法医办公室（⏸️无新线索） ──
-  # 随身物品(3206)已合并到L1 Foster首次尸检时移交，L2不再需要去法医办公室
+  # 钥匙(3102)+纤维(3105)已合并到L1 Foster首次尸检时移交，L2不再需要去法医办公室
 
   # ── SC3001 楼下现场 ──
   # 📌 报纸天气版(3108)已移至L1 SC3001搜证获取，L2 Expose R2跨循环引用
@@ -223,11 +229,6 @@ scenes:
 #   获取方式：系统层分析——玩家选择衬衫口红样本 + Mary口红 → 颜色比对 → 生成报告
 #   结论：衬衫口红=珊瑚红Maybelline Coral Flame，Mary口红=玫瑰红Elizabeth Arden Rose Blush
 #   用途：R3指证，证明衬衫口红非Mary所有
-#
-# 3212 织物比对报告（32-E-02）
-#   获取方式：系统层分析——玩家选择Thomas随身物品中的袖扣织物(3206) + 祈祷披肩(3205) → 显微比对 → 生成报告
-#   结论：Thomas袖扣织物与Mary祈祷披肩材质、颜色、编织纹理完全一致
-#   用途：R4指证，证明Mary与Thomas有近距离肢体接触
 
 # ═══════════════════════════════════════
 # PART 3: 指证（Expose）
@@ -301,14 +302,14 @@ expose:
       - 情绪从"被动辩解"转为"压抑的愤怒"
 
   # ── 第四轮：证明Mary见到了Thomas ──
-  # 出示织物比对报告（小玩法生成）
+  # 出示祈祷披肩（搜身观察获得）——黑色蕾丝右下角勾丝破损与Thomas袖扣异源纤维特征吻合
   round_4:
     lie: "我上去看了一圈，没找到他，就回来了。我那天晚上根本没见到Thomas"
     lie_source: "Mary在R3末尾的止损回答"
     usable_evidence:
-      - id: 3212
-        name: "织物比对报告"
-        用途: "Thomas袖扣织物与Mary祈祷披肩材质、颜色、编织纹理完全一致——Thomas抓过Mary的披肩"
+      - id: 3205
+        name: "祈祷披肩"
+        用途: "黑色蕾丝，右下角约1cm勾丝破损——与袖扣纤维样本(3105)上的黑色蕾丝异源纤维材质、颜色、编织纹理完全一致，证明Thomas抓过Mary的披肩，两人有近距离肢体接触"
     result: |
       Mary承认在楼顶见到Thomas并有肢体接触：
       - 承认在护栏边与Thomas争吵
@@ -332,7 +333,7 @@ doubts:
     unlock_condition: "item:3203 + item:3204"
   - id: 3005
     text: "Mary可能与Thomas有肢体接触——Thomas袖扣织物与祈祷披肩一致"
-    unlock_condition: "item:3206 + item:3205"
+    unlock_condition: "item:3105 + item:3205"
   - id: 3014
     text: "Thomas只喝$0.10廉价酒——楼顶那瓶$3的Jameson不可能是Thomas自己带上去的"
     unlock_condition: "item:3217 + item:3107"
@@ -344,10 +345,10 @@ doubts:
 
 validation_status:
   cross_check: "PENDING"
-  structure_completeness: "2026-03-12 PASS"
-  evidence_coverage: "2026-03-12 PASS"
-  npc_entries: "2026-03-12 PASS"
-  goal_alignment: "2026-03-12 PASS"
-  info_pacing: "2026-03-12 PASS"
-  connoisseur: "2026-03-12 PASS"
-  expose: "2026-03-12 PASS"
+  structure_completeness: "2026-03-30 PASS（3205/3207移至SC3013 body_search，3212删除）"
+  evidence_coverage: "2026-03-30 PASS"
+  npc_entries: "2026-03-30 PASS"
+  goal_alignment: "2026-03-30 PASS"
+  info_pacing: "2026-03-30 PASS"
+  connoisseur: "2026-03-30 PASS"
+  expose: "2026-03-30 PASS（R4改用3205直接指证，3212已删除）"

@@ -155,7 +155,7 @@ LOOP_SCENE_CONFIG = {
 # 派生证据（state注释中，YAML解析不到）
 DERIVED_EVIDENCE = {
     # L2 派生
-    3212: {"name": "织物比对报告", "note": "系统层分析：Thomas袖扣织物(3206)+祈祷披肩(3205)→织物比对", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3206, 3205]},
+    # 3212 已删除（织物比对报告，Expose R4改为直接使用3205搜身观察Clue）
     3213: {"name": "口红颜色比对报告", "note": "系统层分析：衬衫口红+Mary口红(3204)→颜色比对", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": [3203, 3204]},
     # L3 派生
     3311: {"name": "Foster地面油迹采样报告", "note": "派生中间产物：楼顶地面油迹现场采样→Foster出具采样报告", "scene": "法医办公室", "scene_en": "ForensicOffice", "sources": []},
@@ -175,12 +175,13 @@ DERIVED_EVIDENCE = {
 ITEM_TYPE_MAP = {
     # Loop 1
     3101: "1", 3103: "1", 3104: "1", 3106: "1",
-    3107: "3", 3206: "3",
+    3107: "3", 3102: "3", 3105: "1",
     # Loop 2
-    3201: "3", 3202: "3", 3203: "3", 3204: "3", 3205: "3",
+    3201: "3", 3202: "3", 3203: "3", 3204: "3", 3205: "1",  # 3205 祈祷披肩改为Clue（搜身观察）
     3108: "3",
     3207: "1", 3208: "1", 3209: "3",
-    3212: "3", 3213: "3",
+    # 3212 已删除
+    3213: "3",
     3214: "2", 3215: "2", 3216: "3", 3217: "1", 3218: "3",
     3501: "3",
     # Loop 3
@@ -251,19 +252,18 @@ ART_CONFIG = {
 • 位置：楼顶护栏边约2米处，倒卧在地
 • 瓶内：残留酒液约10ml（已蒸发大半）""",
 
-    3206: """Thomas尸体随身物品，由Foster法医移交
-• 钱包内容：
-  - 一把老式安全门钥匙，齿形特殊
-  - 不像普通房门钥匙
-  - 有使用磨损痕迹
-  - 少量零钱、无身份证件
-• 右袖扣纽扣处：
-  - 附着少量异源织物纤维
-  - 颜色：黑色
-  - 材质：高档蕾丝编织物
-  - 纹理：特殊玫瑰花纹编织
-  - 来源推测：某种装饰性织物，如披肩或围巾
-  - 断裂方式：被拉扯或勾挂留下，非自然脱落""",
+    3102: """Thomas钱包中的一把钥匙
+• 类型：老式安全门钥匙
+• 齿形特殊，与普通房门钥匙明显不同
+• 有使用磨损痕迹，说明经常使用
+• 用途不明——Thomas的公寓并没有这种锁""",
+
+    3105: """Foster法医从Thomas右袖扣提取的异源织物纤维
+• 颜色：黑色
+• 材质：高档手工编织蕾丝
+• 纹理：特殊玫瑰花纹编织
+• 来源推测：某种装饰性织物，如披肩或围巾
+• 断裂方式：被拉扯或勾挂留下，非自然脱落""",
 
     3108: """报纸剪版，标准报纸尺寸
 • 报纸：Chicago Tribune（芝加哥论坛报）
@@ -331,18 +331,18 @@ ART_CONFIG = {
 • 管身：金色金属，有使用磨损
 • 位置：梳妆台上，与其他化妆品摆在一起""",
 
-    3205: """黑色蕾丝祈祷披肩，约150x80cm
+    3205: """Mary身上的黑色蕾丝祈祷披肩（Clue，搜身观察获得）
 • 材质：高档黑色蕾丝，精致编织
 • 颜色：纯黑色
 • 编织纹理：独特的花纹图案
   - 蕾丝编织呈玫瑰花纹
-  - 纹理特殊，可用于显微比对
+  - 纹理特殊，与Foster报告描述的异源织物纤维特征一致
 • 边缘破损：
   - 位置：右下角边缘
   - 大小：约1厘米长的勾丝破损
   - 状态：纤维断裂，像是被拉扯或勾挂
 • 整体状态：保养良好，是母亲遗物
-• 位置：卧室衣柜挂钩上，显眼位置""",
+• 获取方式：Zack搜身观察Mary时注意到""",
 
     3207: """一张照片，尺寸约10x15cm，拍摄Mary手腕特写
 • 照片内容：Mary左手手腕特写
@@ -384,22 +384,7 @@ ART_CONFIG = {
   - 鞋带系法简洁，方便穿脱
 • 位置：玄关鞋柜底层，不太显眼""",
 
-    3212: """医学报告，标准表格尺寸（约20x28cm）
-• 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
-• 日期：1928年11月21日 14:00
-• 报告编号：ME-1928-1120-02-COMPARE
-• 法医签名：Dr. Foster
-报告内容：
-织物比对分析报告
-样本A：Thomas Sullivan袖扣处织物纤维
-样本B：Mary Sullivan祈祷披肩破损处织物
-比对项目：
-1. 材质比对：样本A高档蕾丝黑色 vs 样本B高档蕾丝黑色 → **完全一致**
-2. 颜色比对：样本A纯黑色 vs 样本B纯黑色 → **完全一致**
-3. 编织纹理比对：样本A玫瑰花纹密度8.2根/cm vs 样本B玫瑰花纹密度8.2根/cm → **完全一致**
-4. 纤维断裂方式：样本A外力拉扯断裂 vs 样本B破损处纤维拉扯断裂 → **断裂方式一致**
-最终结论：Thomas Sullivan袖扣处织物纤维与Mary Sullivan祈祷披肩破损处织物完全一致。
-• 报告附带左右对比的显微镜照片（纹理对齐）""",
+    # 3212 已删除（织物比对报告）
 
     3213: """化学分析报告，标准表格尺寸（约20x28cm）
 • 纸张：白色医用报告纸，顶部有艾斯弗德市法医署logo
@@ -536,7 +521,7 @@ ART_CONFIG = {
   - 钥匙头部有独特凹槽
 • 新旧程度：看起来很新，最近配的
 • 钥匙环：没有标记，普通金属环
-• 对比：与Thomas随身物品中的钥匙（3206）形状一模一样
+• 对比：与Thomas的钥匙（3102）形状一模一样
 • 位置：Helen家玄关小桌上，显眼位置""",
 
     3304: """保险单文件，标准表格尺寸（约20x28cm）
@@ -1166,7 +1151,7 @@ EXPOSE_DATA = {
             {"lie": "那晚我在教堂祈祷了很久，读到第23章，蜡烛烧了很久才走", "evidences": [3202, 3201]},
             {"lie": "蜡烛断了、蜡油在第5章——那是我离开之后的事，跟我没关系", "evidences": [3108]},
             {"lie": "我也是最近才听说Thomas和Helen的事……大概一周前吧", "evidences": [3213, 3204]},
-            {"lie": "我上去看了一圈，没找到他，就回来了。我那天晚上根本没见到Thomas", "evidences": [3212]},
+            {"lie": "我上去看了一圈，没找到他，就回来了。我那天晚上根本没见到Thomas", "evidences": [3205]},
         ],
     },
     3: {
@@ -1174,7 +1159,7 @@ EXPOSE_DATA = {
         "target_name": "Helen",
         "npc_id": "304",
         "rounds": [
-            {"lie": "Thomas只是来找我聊天诉苦。那晚他自己上楼顶喝酒，掉了。跟我没关系", "evidences": [3206, 3303]},
+            {"lie": "Thomas只是来找我聊天诉苦。那晚他自己上楼顶喝酒，掉了。跟我没关系", "evidences": [3102, 3303]},
             {"lie": "我只是帮Thomas配了把钥匙。天台我自己从来没上去过。楼顶发生的事跟我没关系", "evidences": [3312, 3308]},
             {"lie": "Thomas说他想在楼顶吓唬Mary，让她害怕不敢再反抗他。油是为了万一……我真的以为只是'吓唬'", "evidences": [3304]},
         ],
@@ -1679,6 +1664,45 @@ def append_items_to_json(states):
             scene_id = str(scene.get("id", ""))
             scene_name = scene.get("name", "")
             for ev in scene.get("evidence", []):
+                if not isinstance(ev, dict):
+                    continue
+                eid = str(ev.get("id", ""))
+                if eid in existing_ids:
+                    continue
+                existing_ids.add(eid)
+                eid_int = int(eid)
+                item_type = ITEM_TYPE_MAP.get(eid_int, "1")
+                type_name = ITEM_TYPE_NAME_MAP.get(item_type, "clue")
+                scene_en = SCENE_EN_MAP.get(scene_id, "")
+                items_to_add.append({
+                    "id": eid,
+                    "Name": [ev.get("name", ""), f"Evidence_{eid}"],
+                    "itemType": item_type,
+                    "canAnalyzed": "false",
+                    "canCombined": "false",
+                    "Describe": [ev.get("note", "")],
+                    "ShortDescribe": [ev.get("name", "")],
+                    "location": [scene_name, scene_en],
+                    "Chapter": "EPI03",
+                    "folderPath": f"EPI03\\{scene_en}" if scene_en else "",
+                    "desSpritePath": f"{type_name}_{eid}_big",
+                    "mapSpritePath": f"{type_name}_{eid}",
+                    "iconPath": f"{type_name}_{eid}_icon",
+                    "Position": ["0", "0"],
+                    "ArtRequirement": ART_CONFIG.get(eid_int, ""),
+                })
+
+    # 从state的scenes.body_search.evidence中提取（搜身观察等小玩法证据）
+    for loop_num, state in states.items():
+        for scene in state.get("scenes", []):
+            if not isinstance(scene, dict):
+                continue
+            scene_id = str(scene.get("id", ""))
+            scene_name = scene.get("name", "")
+            body_search = scene.get("body_search", {})
+            if not isinstance(body_search, dict):
+                continue
+            for ev in body_search.get("evidence", []):
                 if not isinstance(ev, dict):
                     continue
                 eid = str(ev.get("id", ""))
