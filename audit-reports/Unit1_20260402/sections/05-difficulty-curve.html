@@ -1,0 +1,191 @@
+<section class="section" id="section-5">
+  <div class="section-content">
+
+    <!-- Header -->
+    <div class="section-header animate-in">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Difficulty Curve</h2>
+      <p class="section-subtitle">L1-L2 推理步数、信息密度与谜题难度的递进分析</p>
+    </div>
+
+    <!-- Difficulty Trend Chart -->
+    <div class="screen">
+      <h3 class="screen-heading animate-in">难度趋势</h3>
+      <div class="chart-container animate-in"
+           data-values='{"loops":["L1","L2"],"series":[{"name":"推理步数","values":[3,5]},{"name":"信息密度","values":[3,4]},{"name":"谜题难度","values":[2,4]},{"name":"综合难度","values":[3,4]}]}'>
+      </div>
+      <div class="callout callout-info animate-in">
+        <div class="callout-content">
+          <span class="callout-title">趋势解读</span>
+          <p>L1 到 L2 各维度均有合理递进。推理步数从 3 步增至 5 步，谜题难度从 2/5 跃升至 4/5，符合"入门 → 挑战"的设计预期。信息密度增幅较小（3 → 4），说明 L2 的难度提升主要来自推理深度而非信息量堆砌。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Difficulty Analysis Table -->
+    <div class="screen">
+      <h3 class="screen-heading animate-in">各 Loop 难度评估</h3>
+      <table class="audit-table animate-in">
+        <thead>
+          <tr>
+            <th class="sortable-header" data-sort-type="text">Loop</th>
+            <th class="sortable-header" data-sort-type="number">推理步数</th>
+            <th class="sortable-header" data-sort-type="number">信息点数</th>
+            <th class="sortable-header" data-sort-type="text">核心谜题难度</th>
+            <th class="sortable-header" data-sort-type="text">指证难度</th>
+            <th class="sortable-header" data-sort-type="text">综合难度</th>
+            <th>评价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L1</td>
+            <td>3</td>
+            <td>7</td>
+            <td>2/5</td>
+            <td>3/5</td>
+            <td>3/5</td>
+            <td>适中偏易，适合入门</td>
+          </tr>
+          <tr>
+            <td>L2</td>
+            <td>5</td>
+            <td>8</td>
+            <td>4/5</td>
+            <td>4/5</td>
+            <td>4/5</td>
+            <td>适中偏难，合理递进</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Info Density Violations -->
+    <div class="screen">
+      <h3 class="screen-heading animate-in">信息密度违规</h3>
+      <p class="animate-in" style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">每场景/NPC 承载上限为 3 个核心信息点。以下场景超出该阈值。</p>
+      <table class="audit-table animate-in">
+        <thead>
+          <tr>
+            <th class="sortable-header" data-sort-type="text">Loop</th>
+            <th class="sortable-header" data-sort-type="text">位置</th>
+            <th class="sortable-header" data-sort-type="number">信息点数</th>
+            <th>违规描述</th>
+            <th class="sortable-header" data-sort-type="severity">严重度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L2</td>
+            <td>Morrison书房(1206)</td>
+            <td>6</td>
+            <td>超过每场景3件上限，6件证据中3件核心+3件环境</td>
+            <td><span class="severity-badge badge-major">Major</span></td>
+          </tr>
+          <tr>
+            <td>L1</td>
+            <td>Rosa储藏室(1101)</td>
+            <td>5</td>
+            <td>5件证据，其中2件核心+3件环境，略超上限</td>
+            <td><span class="severity-badge badge-minor">Minor</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Frustration Risk Points -->
+    <div class="screen">
+      <h3 class="screen-heading animate-in">挫败风险点</h3>
+      <p class="animate-in" style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">以下设计可能导致玩家因缺乏线索支撑而产生挫败感，需要补充引导或简化推理路径。</p>
+
+      <div class="stagger-children">
+
+        <!-- Issue 1: 拖痕体重推理黑箱 -->
+        <div class="issue-card issue-major animate-in" id="issue-diff-1" data-severity="major" data-loop="L1" data-dimension="玩家视角">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-major">Major</span>
+              <span class="issue-meta-tag">L1</span>
+              <span class="issue-meta-tag">推理黑箱</span>
+              <strong style="color: var(--color-text);">拖痕体重推理黑箱</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p>拖痕分析得出"150磅重物"但玩家无法验证计算过程。推理过程对玩家而言是黑箱操作——系统直接给出结论而非让玩家自行推断。</p>
+            <div class="callout callout-accent" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">建议</span>
+                <p>增加参照物（如"拖痕深度与搬运一个成年男性体重吻合"）或简化表述，避免给出精确数值而无推导依据。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue 2: L2指证R1双证词依赖 -->
+        <div class="issue-card issue-major animate-in" id="issue-diff-2" data-severity="major" data-loop="L2" data-dimension="指证机制">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-major">Major</span>
+              <span class="issue-meta-tag">L2</span>
+              <span class="issue-meta-tag">指证R1</span>
+              <strong style="color: var(--color-text);">L2指证R1双证词依赖</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p>需要同时持有 Tommy 证词(1052002)和 Vivian 证词(1061001)才能构建时间矛盾。漏掉任一就无法完成 R1 指证。这形成了一个隐性的"全收集"前置条件，玩家未必意识到两条证词都是必须的。</p>
+            <div class="callout callout-accent" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">建议</span>
+                <p>在对话设计中增加 NPC 主动提及另一条证词所在位置的暗示，或在指证界面提供提示"还需要更多时间线证据"。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue 3: L1指证R3毛巾前提跳跃 -->
+        <div class="issue-card issue-major animate-in" id="issue-diff-3" data-severity="major" data-loop="L1" data-dimension="指证机制">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-major">Major</span>
+              <span class="issue-meta-tag">L1</span>
+              <span class="issue-meta-tag">指证R3</span>
+              <strong style="color: var(--color-text);">L1指证R3毛巾前提跳跃</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p>"Rosa主动捡走毛巾"这一关键推断缺乏直接证据支持。当前指证逻辑假设玩家能从间接信息推导出 Rosa 的行为动机，但实际证据链存在断点——没有证据直接指向"谁捡走了毛巾"。</p>
+            <div class="callout callout-accent" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">建议</span>
+                <p>在 L1 对话或环境搜证中补充一条间接证据（如"储藏室角落有一块似乎被匆忙塞进去的布料"），为推断提供落脚点。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue 4: L2指证R4推理跳跃 -->
+        <div class="issue-card issue-major animate-in" id="issue-diff-4" data-severity="major" data-loop="L2" data-dimension="指证机制">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-major">Major</span>
+              <span class="issue-meta-tag">L2</span>
+              <span class="issue-meta-tag">指证R4</span>
+              <strong style="color: var(--color-text);">L2指证R4推理跳跃</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p>从"带勘验箱但不使用"到"箱子不是用来办案"存在推理断层。玩家需要自行补完"不使用 → 不是为了办案 → 有其他目的"的逻辑链，但中间缺少引导性证据支撑这一跳跃。</p>
+            <div class="callout callout-accent" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">建议</span>
+                <p>增加一条辅助证据或对话线索（如其他 NPC 提到"Morrison 的箱子似乎从未打开过"），让推理链更完整。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /stagger-children -->
+    </div>
+
+  </div><!-- /section-content -->
+</section>

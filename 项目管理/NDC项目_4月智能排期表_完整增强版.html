@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC项目 - 4月智能排期表（完整增强版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 5px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 0 30px;
+            background: #fafafa;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        thead th {
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        tbody tr.completed {
+            opacity: 0.5;
+            background: #f5f5f5;
+        }
+
+        tbody tr.completed input,
+        tbody tr.completed select {
+            background: #f5f5f5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        tbody td {
+            padding: 12px 10px;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority.p0 {
+            background: #fee;
+            color: #c33;
+        }
+
+        .priority.p1 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status.进行中 {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.待开始 {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status.待验收 {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .status.已完成 {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .milestone-card {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .milestone-card.high-risk {
+            border-color: #ff5252;
+        }
+
+        .milestone-card h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #667eea;
+        }
+
+        .milestone-card.high-risk h3 {
+            color: #ff5252;
+        }
+
+        .milestone-card ul {
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+
+        .risk-card {
+            background: white;
+            border-left: 4px solid #ff5252;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .risk-card .risk-title {
+            font-weight: 600;
+            color: #ff5252;
+            margin-bottom: 8px;
+        }
+
+        .risk-level {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .risk-level.高 {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .risk-level.中 {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .actions {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .gantt-chart {
+            margin-top: 30px;
+            overflow-x: auto;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .gantt-header {
+            display: flex;
+            margin-bottom: 15px;
+            padding-left: 200px;
+        }
+
+        .gantt-date {
+            flex: 1;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            padding: 5px;
+        }
+
+        .gantt-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            min-height: 40px;
+        }
+
+        .gantt-label {
+            width: 200px;
+            font-size: 13px;
+            font-weight: 500;
+            padding-right: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .gantt-timeline {
+            flex: 1;
+            display: flex;
+            position: relative;
+            background: white;
+            border-radius: 4px;
+            min-height: 36px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            padding: 0 8px;
+            top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .gantt-bar.已完成 {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        }
+
+        .gantt-bar.进行中 {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+
+        .gantt-bar.待开始 {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+
+        .gantt-bar.待验收 {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .gantt-bar.milestone {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            border: 2px solid #e65100;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            color: #e65100;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            border-left: 4px solid #ff5252;
+            color: #c62828;
+        }
+
+        .confirm-dialog {
+            background: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .confirm-dialog h3 {
+            color: #ff5252;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .confirm-dialog p {
+            margin-bottom: 25px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .actions, .btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📅 NDC项目 - 4月智能排期表</h1>
+            <p>1920s芝加哥侦探推理游戏 | 截止日期：2026-06-30 | 剩余89天 | 团队：5人（2策划+1程序+2美术）</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="label">策划PM任务</div>
+                <div class="value" id="pmTaskCount">13</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">程序任务</div>
+                <div class="value" id="devTaskCount">9</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">美术任务</div>
+                <div class="value" id="artTaskCount">8</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">4月里程碑</div>
+                <div class="value" id="milestoneCount">6</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">高风险项</div>
+                <div class="value" style="color: #ff5252;">3个</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">📋 总览</div>
+            <div class="tab" onclick="switchTab(1)">👤 策划PM</div>
+            <div class="tab" onclick="switchTab(2)">💻 程序</div>
+            <div class="tab" onclick="switchTab(3)">🎨 美术</div>
+            <div class="tab" onclick="switchTab(4)">🎯 里程碑</div>
+            <div class="tab" onclick="switchTab(5)">⚠️ 风险</div>
+        </div>
+
+        <!-- Tab 0: 总览 -->
+        <div class="tab-content active">
+            <h2 style="margin-bottom: 20px;">🎯 4月核心目标</h2>
+
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px;">✅ 必须达成（P0）</h3>
+                <ul style="margin-top: 10px; line-height: 1.8; margin-left: 20px;">
+                    <li>EPI03对话JSON完成（4/7）</li>
+                    <li>EPI04人物+场景设计定稿（4/14）</li>
+                    <li>程序交接完成，新程序能独立工作（4/14）</li>
+                    <li>EPI03全部美术资产交付（4/26）</li>
+                    <li>程序P0修复+字幕+电话+指证视频（4/25）</li>
+                    <li>EPI04详细设计完成（4/28）</li>
+                </ul>
+            </div>
+
+            <h3 style="margin: 30px 0 15px 0;">📊 整体进度追踪</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>章节</th>
+                        <th>设计</th>
+                        <th>State</th>
+                        <th>对话</th>
+                        <th>AI资产</th>
+                        <th>配表</th>
+                        <th>总进度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>EPI01</strong></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;">100%</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>EPI02</strong></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%;">80%</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>EPI03</strong></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 已完成">100%</span></td>
+                        <td><span class="status 进行中">70%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 54%;">54%</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>EPI04</strong></td>
+                        <td><span class="status 进行中">5%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 1%;">1%</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>EPI05</strong></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td><span class="status 待开始">0%</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;">0%</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab 1: 策划PM -->
+        <div class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>👤 策划PM 排期表（可编辑）</h2>
+                <button class="btn btn-success" onclick="openAddTaskModal('pm')">➕ 添加任务</button>
+            </div>
+
+            <p style="margin-bottom: 20px; color: #666;">
+                <strong>工时：</strong>4月23.5天（满载） | <strong>状态：</strong><span class="status 进行中">重载</span> |
+                <strong>自动保存：</strong><span id="autoSaveStatus">已启用</span>
+            </p>
+
+            <div id="pmTasksContainer"></div>
+
+            <div class="gantt-chart">
+                <h3 style="margin-bottom: 20px;">📊 策划PM 甘特图（动态更新）</h3>
+                <div id="ganttPmContainer"></div>
+            </div>
+        </div>
+
+        <!-- Tab 2: 程序 -->
+        <div class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>💻 程序 排期表（可编辑）</h2>
+                <button class="btn btn-success" onclick="openAddTaskModal('dev')">➕ 添加任务</button>
+            </div>
+
+            <p style="margin-bottom: 20px; color: #666;">
+                <strong>工时：</strong>4月18.3天 | <strong>关键：</strong><span style="color: #ff5252; font-weight: bold;">4/14旧程序离职</span> |
+                <strong>自动保存：</strong><span id="autoSaveStatusDev">已启用</span>
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ 交接黄金期：4/3-4/7</strong><br>
+                这5天必须完成核心知识转移，否则影响后续所有开发！
+            </div>
+
+            <div id="devTasksContainer"></div>
+
+            <div class="gantt-chart">
+                <h3 style="margin-bottom: 20px;">📊 程序 甘特图（动态更新）</h3>
+                <div id="ganttDevContainer"></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: 美术 -->
+        <div class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>🎨 美术 排期表（可编辑）</h2>
+                <button class="btn btn-success" onclick="openAddTaskModal('art')">➕ 添加任务</button>
+            </div>
+
+            <p style="margin-bottom: 20px; color: #666;">
+                <strong>工时：</strong>4月24.8天（vs 20可用天，超载24%） | <strong>状态：</strong><span style="color: #ff5252; font-weight: bold;">超载</span> |
+                <strong>自动保存：</strong><span id="autoSaveStatusArt">已启用</span>
+            </p>
+
+            <div class="alert alert-danger">
+                <strong>🔴 极限冲刺周：W4 (4/21-4/26)</strong><br>
+                需要完成10天工作量，必须AI辅助+加班，或启动外包应急！
+            </div>
+
+            <div id="artTasksContainer"></div>
+
+            <div class="gantt-chart">
+                <h3 style="margin-bottom: 20px;">📊 美术 甘特图（动态更新）</h3>
+                <div id="ganttArtContainer"></div>
+            </div>
+        </div>
+
+        <!-- Tab 4: 里程碑 -->
+        <div class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>🎯 4月里程碑追踪（可编辑）</h2>
+                <button class="btn btn-success" onclick="openAddMilestoneModal()">➕ 添加里程碑</button>
+            </div>
+
+            <div id="milestonesContainer"></div>
+        </div>
+
+        <!-- Tab 5: 风险 -->
+        <div class="tab-content">
+            <h2 style="margin-bottom: 20px;">⚠️ 4月风险管理</h2>
+
+            <div class="risk-card">
+                <div class="risk-title">R1: 美术产能超载24%</div>
+                <p style="margin-bottom: 8px; color: #666; font-size: 14px;">
+                    <strong>风险等级：</strong><span class="risk-level 高">高</span> |
+                    <strong>影响：</strong>EPI03美术交付
+                </p>
+                <p style="margin-bottom: 8px; color: #333; font-size: 14px;">
+                    <strong>应对措施：</strong><br>
+                    1. AI辅助提效：场景用MidJourney生成底图+手工精修（节省30%）<br>
+                    2. 外包应急：提前联系1-2个外包美术，W4启用<br>
+                    3. 加班或周末工作（W4最危险）<br>
+                    4. 砍P2美术：风格校准可简化
+                </p>
+                <p style="color: #666; font-size: 13px;">
+                    <strong>负责人：</strong>PM | <strong>状态：</strong>监控中 | <strong>更新：</strong>4/2<br>
+                    <strong>备注：</strong>W4(4/21-4/26)最危险
+                </p>
+            </div>
+
+            <div class="risk-card">
+                <div class="risk-title">R2: 程序交接窗口短(仅9天)</div>
+                <p style="margin-bottom: 8px; color: #666; font-size: 14px;">
+                    <strong>风险等级：</strong><span class="risk-level 高">高</span> |
+                    <strong>影响：</strong>程序独立开发能力
+                </p>
+                <p style="margin-bottom: 8px; color: #333; font-size: 14px;">
+                    <strong>应对措施：</strong><br>
+                    1. 4/3-4/7黄金期必须完成核心知识转移SOP<br>
+                    2. 保留旧程序线上顾问到4/30（付费，约3-5k）<br>
+                    3. 完善技术文档（架构图+FAQ+代码注释）<br>
+                    4. 4/25里程碑如P0未清零，推迟字幕/电话到5月
+                </p>
+                <p style="color: #666; font-size: 13px;">
+                    <strong>负责人：</strong>PM+程序 | <strong>状态：</strong>执行中 | <strong>更新：</strong>4/2<br>
+                    <strong>备注：</strong>4/3-4/7黄金期
+                </p>
+            </div>
+
+            <div class="risk-card" style="border-left-color: #ff9800;">
+                <div class="risk-title" style="color: #ff9800;">R3: 策划PM持续满载无缓冲</div>
+                <p style="margin-bottom: 8px; color: #666; font-size: 14px;">
+                    <strong>风险等级：</strong><span class="risk-level 中">中</span> |
+                    <strong>影响：</strong>整体进度
+                </p>
+                <p style="margin-bottom: 8px; color: #333; font-size: 14px;">
+                    <strong>应对措施：</strong><br>
+                    1. 及时砍需求（每周Review，发现延期立即砍P1-P3）<br>
+                    2. 新策划W3开始分担对话优化和配表工作<br>
+                    3. 外包策划应急（如果4月底发现5月做不完EPI04+05）
+                </p>
+                <p style="color: #666; font-size: 13px;">
+                    <strong>负责人：</strong>PM | <strong>状态：</strong>监控中 | <strong>更新：</strong>4/2
+                </p>
+            </div>
+
+            <div class="risk-card" style="border-left-color: #ff9800;">
+                <div class="risk-title" style="color: #ff9800;">R4: 新策划上手速度不确定</div>
+                <p style="margin-bottom: 8px; color: #666; font-size: 14px;">
+                    <strong>风险等级：</strong><span class="risk-level 中">中</span> |
+                    <strong>影响：</strong>PM压力+5月排期
+                </p>
+                <p style="margin-bottom: 8px; color: #333; font-size: 14px;">
+                    <strong>应对措施：</strong><br>
+                    1. W2给新策划安排简单实操任务（EPI02对话优化）<br>
+                    2. W3观察新策划的配表验证质量，评估能力<br>
+                    3. 如果W3还无法独立，立即调整5月计划（外包或砍需求）
+                </p>
+                <p style="color: #666; font-size: 13px;">
+                    <strong>负责人：</strong>PM | <strong>状态：</strong>观察中 | <strong>更新：</strong>4/2
+                </p>
+                <p style="margin-top: 10px; padding: 10px; background: #fff3e0; border-radius: 4px; font-size: 13px;">
+                    📌 <strong>W3判断节点</strong>（4/14-4/18）：观察新策划配表验证的质量和速度
+                </p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn btn-primary" onclick="exportAllToJSON()">💾 导出所有数据</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ 打印</button>
+        </div>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">➕ 添加新任务</div>
+            <form id="taskForm">
+                <input type="hidden" id="taskType">
+                <input type="hidden" id="taskEditIndex">
+
+                <div class="form-group">
+                    <label>任务名称 *</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label>开始日期 *</label>
+                    <input type="date" id="taskStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label>结束日期 *</label>
+                    <input type="date" id="taskEndDate" required>
+                </div>
+                <div class="form-group">
+                    <label>优先级</label>
+                    <select id="taskPriority">
+                        <option value="P0">P0 - 必须完成</option>
+                        <option value="P1">P1 - 重要</option>
+                        <option value="P2">P2 - 次要</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>预估工时</label>
+                    <input type="text" id="taskEstimate" placeholder="例如：2天">
+                </div>
+                <div class="form-group" id="responsibleGroup" style="display:none;">
+                    <label>负责人</label>
+                    <input type="text" id="taskResponsible">
+                </div>
+                <div class="form-group">
+                    <label>状态</label>
+                    <select id="taskStatus">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                        <option value="待验收">待验收</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>进度 (%)</label>
+                    <input type="number" id="taskProgress" min="0" max="100" value="0">
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="taskNote" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="taskIsMilestone">
+                        标记为里程碑
+                    </label>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn" onclick="closeTaskModal()" style="background: #999; color: white;">取消</button>
+                    <button type="submit" class="btn btn-success">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Milestone Modal -->
+    <div id="milestoneModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="milestoneModalTitle">➕ 添加新里程碑</div>
+            <form id="milestoneForm">
+                <input type="hidden" id="milestoneEditIndex">
+
+                <div class="form-group">
+                    <label>里程碑名称 *</label>
+                    <input type="text" id="milestoneName" required>
+                </div>
+                <div class="form-group">
+                    <label>日期 *</label>
+                    <input type="date" id="milestoneDate" required>
+                </div>
+                <div class="form-group">
+                    <label>验收标准 *</label>
+                    <textarea id="milestoneStandard" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>风险等级</label>
+                    <select id="milestoneRisk">
+                        <option value="中">中风险</option>
+                        <option value="高">高风险</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>状态</label>
+                    <select id="milestoneStatus">
+                        <option value="待验收">待验收</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="milestoneNote" rows="2"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn" onclick="closeMilestoneModal()" style="background: #999; color: white;">取消</button>
+                    <button type="submit" class="btn btn-success">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Dialog -->
+    <div id="confirmDialog" class="modal">
+        <div class="confirm-dialog">
+            <h3>⚠️ 确认删除</h3>
+            <p id="confirmMessage">确定要删除这个任务吗？此操作不可撤销。</p>
+            <div class="confirm-buttons">
+                <button class="btn" onclick="closeConfirmDialog()" style="background: #999; color: white;">取消</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据存储
+        let pmTasks = [
+            {id: 1, name: 'EPI03对话同步(第1批20个)', startDate: '2026-04-02', endDate: '2026-04-03', priority: 'P0', estimate: '1.5天', actual: '', status: '进行中', progress: 50, note: '', isMilestone: false},
+            {id: 2, name: 'EPI03对话同步(第2批20个)', startDate: '2026-04-03', endDate: '2026-04-04', priority: 'P0', estimate: '1.5天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 3, name: 'EPI03对话同步(第3批12个)+决策方案', startDate: '2026-04-04', endDate: '2026-04-07', priority: 'P0', estimate: '1.5天', actual: '', status: '待开始', progress: 0, note: '🔴必须决策', isMilestone: false},
+            {id: 4, name: 'MS1截止：EPI03对话JSON完成', startDate: '2026-04-07', endDate: '2026-04-07', priority: 'P0', estimate: '-', actual: '-', status: '待验收', progress: 0, note: '📍里程碑', isMilestone: true},
+            {id: 5, name: 'EPI04人物设计(7-10个NPC)', startDate: '2026-04-08', endDate: '2026-04-09', priority: 'P0', estimate: '2天', actual: '', status: '待开始', progress: 0, note: '带新人30%时间', isMilestone: false},
+            {id: 6, name: 'EPI04场景设计(10-14个)', startDate: '2026-04-10', endDate: '2026-04-12', priority: 'P0', estimate: '3天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 7, name: 'MS2截止：EPI04人物+场景设计定稿', startDate: '2026-04-14', endDate: '2026-04-14', priority: 'P0', estimate: '-', actual: '-', status: '待验收', progress: 0, note: '📍里程碑', isMilestone: true},
+            {id: 8, name: 'EPI04证据设计(6份Loop)', startDate: '2026-04-14', endDate: '2026-04-16', priority: 'P0', estimate: '2.5天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 9, name: 'EPI04疑点设计(10-16个)', startDate: '2026-04-17', endDate: '2026-04-18', priority: 'P0', estimate: '2天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 10, name: 'EPI04鉴定设计(8份)', startDate: '2026-04-21', endDate: '2026-04-23', priority: 'P0', estimate: '2.5天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 11, name: 'EPI04小玩法设计(2个)', startDate: '2026-04-24', endDate: '2026-04-25', priority: 'P0', estimate: '2天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 12, name: 'EPI04指证环节设计', startDate: '2026-04-26', endDate: '2026-04-28', priority: 'P0', estimate: '2天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 13, name: 'MS3截止：EPI04指证+疑点+鉴定+小玩法', startDate: '2026-04-28', endDate: '2026-04-28', priority: 'P0', estimate: '-', actual: '-', status: '待验收', progress: 0, note: '📍里程碑，进入5月准备', isMilestone: true}
+        ];
+
+        let devTasks = [
+            {id: 1, name: '知识转移Day1：架构讲解+录屏', startDate: '2026-04-03', endDate: '2026-04-03', priority: 'P0', estimate: '3小时', actual: '', responsible: '旧+新', status: '待开始', progress: 0, note: '🔴黄金期', isMilestone: false},
+            {id: 2, name: '知识转移Day2：P0 bug复现+文档', startDate: '2026-04-04', endDate: '2026-04-04', priority: 'P0', estimate: '4小时', actual: '', responsible: '旧+新', status: '待开始', progress: 0, note: '🔴黄金期', isMilestone: false},
+            {id: 3, name: '知识转移Day3：代码注释+Q&A', startDate: '2026-04-05', endDate: '2026-04-05', priority: 'P0', estimate: '4小时', actual: '', responsible: '旧+新', status: '待开始', progress: 0, note: '🔴黄金期', isMilestone: false},
+            {id: 4, name: '知识转移Day4-5：独立修复2个P0', startDate: '2026-04-08', endDate: '2026-04-09', priority: 'P0', estimate: '2天', actual: '', responsible: '新(旧Review)', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 5, name: '旧程序离职交接', startDate: '2026-04-14', endDate: '2026-04-14', priority: 'P0', estimate: '-', actual: '-', responsible: '旧→新', status: '待验收', progress: 0, note: '🔴关键日', isMilestone: true},
+            {id: 6, name: 'P0修复独立开发(4个核心bug)', startDate: '2026-04-15', endDate: '2026-04-18', priority: 'P0', estimate: '4天', actual: '', responsible: '新', status: '待开始', progress: 0, note: '首次独立milestone', isMilestone: false},
+            {id: 7, name: '字幕系统开发', startDate: '2026-04-21', endDate: '2026-04-23', priority: 'P0', estimate: '3天', actual: '', responsible: '新', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 8, name: '电话+指证视频功能', startDate: '2026-04-24', endDate: '2026-04-25', priority: 'P0', estimate: '2天', actual: '', responsible: '新', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 9, name: 'MS1截止：P0修复+字幕+电话+指证视频', startDate: '2026-04-25', endDate: '2026-04-25', priority: 'P0', estimate: '-', actual: '-', responsible: '新', status: '待验收', progress: 0, note: '📍里程碑', isMilestone: true}
+        ];
+
+        let artTasks = [
+            {id: 1, name: '人物：Mickey/Foster造型+头像', startDate: '2026-04-02', endDate: '2026-04-03', priority: 'P0', estimate: '0.6天', actual: '', status: '进行中', progress: 30, note: '', isMilestone: false},
+            {id: 2, name: '人物：Mary/Helen等5人头像', startDate: '2026-04-03', endDate: '2026-04-04', priority: 'P0', estimate: '1.5天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 3, name: '场景：酒吧/旅馆/街道(6个)', startDate: '2026-04-07', endDate: '2026-04-08', priority: 'P0', estimate: '2.8天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 4, name: '对话场景10个(胸像+背景)', startDate: '2026-04-09', endDate: '2026-04-11', priority: 'P0', estimate: '3.5天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 5, name: 'L1-L6场景+空镜(12个)', startDate: '2026-04-14', endDate: '2026-04-18', priority: 'P0', estimate: '6.2天', actual: '', status: '待开始', progress: 0, note: '', isMilestone: false},
+            {id: 6, name: '证据道具：L1-L6(约40件)', startDate: '2026-04-21', endDate: '2026-04-23', priority: 'P0', estimate: '4.4天', actual: '', status: '待开始', progress: 0, note: '🔴极限冲刺', isMilestone: false},
+            {id: 7, name: '指证场景+对话+空镜(16个)', startDate: '2026-04-24', endDate: '2026-04-26', priority: 'P0', estimate: '5.2天', actual: '', status: '待开始', progress: 0, note: '🔴极限冲刺', isMilestone: false},
+            {id: 8, name: 'MS1截止：EPI03全部美术资产(65项)', startDate: '2026-04-26', endDate: '2026-04-26', priority: 'P0', estimate: '-', actual: '-', status: '待验收', progress: 0, note: '📍里程碑', isMilestone: true}
+        ];
+
+        let milestones = [
+            {id: 1, name: 'MS1(策划)', date: '2026-04-07', standard: 'EPI03对话JSON完成(52个)', risk: '中', status: '待验收', note: '时间紧张'},
+            {id: 2, name: 'MS2(策划)', date: '2026-04-14', standard: 'EPI04人物+场景设计定稿', risk: '中', status: '待验收', note: '需要高质量'},
+            {id: 3, name: '程序交接', date: '2026-04-14', standard: '旧程序离职，新程序独立作战', risk: '高', status: '待验收', note: '⚠️ 知识转移不充分风险 - 只有9天交接窗口'},
+            {id: 4, name: 'MS1(程序)', date: '2026-04-25', standard: 'P0修复+字幕+电话+指证视频', risk: '高', status: '待验收', note: '⚠️ 新人首次大milestone - 能力未验证'},
+            {id: 5, name: 'MS1(美术)', date: '2026-04-26', standard: 'EPI03全部美术资产(65项)', risk: '高', status: '待验收', note: '⚠️ 超载24%，需加班或外包支援'},
+            {id: 6, name: 'MS3(策划)', date: '2026-04-28', standard: 'EPI04指证+疑点+鉴定+小玩法', risk: '中', status: '待验收', note: '进入5月准备'}
+        ];
+
+        let deleteCallback = null;
+
+        // 标签页切换
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            tabs[index].classList.add('active');
+            contents[index].classList.add('active');
+        }
+
+        // 渲染任务表格 (通用)
+        function renderTasks(type) {
+            const tasks = type === 'pm' ? pmTasks : (type === 'dev' ? devTasks : artTasks);
+            const container = document.getElementById(type + 'TasksContainer');
+            const showResponsible = type === 'dev';
+
+            let html = '<table><thead><tr>';
+            html += '<th style="width: 100px;">日期</th>';
+            html += '<th>任务名称</th>';
+            if (showResponsible) html += '<th style="width: 100px;">负责人</th>';
+            html += '<th style="width: 80px;">优先级</th>';
+            html += '<th style="width: 100px;">预估工时</th>';
+            html += '<th style="width: 100px;">实际工时</th>';
+            html += '<th style="width: 120px;">状态</th>';
+            html += '<th style="width: 80px;">进度(%)</th>';
+            html += '<th style="width: 150px;">备注</th>';
+            html += '<th style="width: 80px;">操作</th>';
+            html += '</tr></thead><tbody>';
+
+            // 按状态排序：未完成在前，已完成在后
+            const sortedTasks = [...tasks].sort((a, b) => {
+                if (a.status === '已完成' && b.status !== '已完成') return 1;
+                if (a.status !== '已完成' && b.status === '已完成') return -1;
+                return 0;
+            });
+
+            sortedTasks.forEach((task, originalIndex) => {
+                const index = tasks.findIndex(t => t.id === task.id);
+                const isCompleted = task.status === '已完成';
+                const rowClass = isCompleted ? 'completed' : (task.isMilestone ? 'style="background: #fff3cd;"' : '');
+
+                html += `<tr ${rowClass}>`;
+                html += `<td><input type="date" value="${task.startDate}" onchange="updateTask('${type}', ${index}, 'startDate', this.value)" ${isCompleted ? 'disabled' : ''}></td>`;
+                html += `<td><input type="text" value="${task.name}" onchange="updateTask('${type}', ${index}, 'name', this.value)" ${isCompleted ? 'disabled' : ''}></td>`;
+                if (showResponsible) {
+                    html += `<td><input type="text" value="${task.responsible || ''}" onchange="updateTask('${type}', ${index}, 'responsible', this.value)" ${isCompleted ? 'disabled' : ''}></td>`;
+                }
+                html += `<td><span class="priority ${task.priority.toLowerCase()}">${task.priority}</span></td>`;
+                html += `<td><input type="text" value="${task.estimate}" onchange="updateTask('${type}', ${index}, 'estimate', this.value)" ${isCompleted ? 'disabled' : ''}></td>`;
+                html += `<td><input type="text" value="${task.actual}" onchange="updateTask('${type}', ${index}, 'actual', this.value)" placeholder="填写" ${isCompleted ? 'disabled' : ''}></td>`;
+                html += `<td><select onchange="updateTask('${type}', ${index}, 'status', this.value)" ${isCompleted ? 'disabled' : ''}>`;
+                html += `<option value="待开始" ${task.status === '待开始' ? 'selected' : ''}>待开始</option>`;
+                html += `<option value="进行中" ${task.status === '进行中' ? 'selected' : ''}>进行中</option>`;
+                html += `<option value="已完成" ${task.status === '已完成' ? 'selected' : ''}>已完成</option>`;
+                html += `<option value="待验收" ${task.status === '待验收' ? 'selected' : ''}>待验收</option>`;
+                html += `</select></td>`;
+                html += `<td><input type="number" min="0" max="100" value="${task.progress}" onchange="updateTask('${type}', ${index}, 'progress', this.value)" ${isCompleted ? 'disabled' : ''}></td>`;
+                html += `<td><input type="text" value="${task.note}" onchange="updateTask('${type}', ${index}, 'note', this.value)" ${isCompleted ? 'disabled' : ''}></td>`;
+                html += `<td><button class="btn btn-danger" onclick="showDeleteConfirm('${type}', ${index}, '${task.name}')" ${isCompleted ? 'disabled' : ''}>删除</button></td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+            updateStats();
+            renderGantt(type);
+        }
+
+        // 更新任务
+        function updateTask(type, index, field, value) {
+            const tasks = type === 'pm' ? pmTasks : (type === 'dev' ? devTasks : artTasks);
+            tasks[index][field] = value;
+
+            // 如果状态改为已完成，自动设置进度为100
+            if (field === 'status' && value === '已完成') {
+                tasks[index].progress = 100;
+            }
+
+            saveData();
+            renderTasks(type);
+        }
+
+        // 显示删除确认对话框
+        function showDeleteConfirm(type, index, taskName) {
+            document.getElementById('confirmMessage').textContent = `确定要删除任务"${taskName}"吗？此操作不可撤销。`;
+            document.getElementById('confirmDialog').style.display = 'block';
+            deleteCallback = () => deleteTask(type, index);
+        }
+
+        // 确认删除
+        function confirmDelete() {
+            if (deleteCallback) {
+                deleteCallback();
+                deleteCallback = null;
+            }
+            closeConfirmDialog();
+        }
+
+        // 关闭确认对话框
+        function closeConfirmDialog() {
+            document.getElementById('confirmDialog').style.display = 'none';
+            deleteCallback = null;
+        }
+
+        // 删除任务
+        function deleteTask(type, index) {
+            const tasks = type === 'pm' ? pmTasks : (type === 'dev' ? devTasks : artTasks);
+            tasks.splice(index, 1);
+            saveData();
+            renderTasks(type);
+        }
+
+        // 更新统计
+        function updateStats() {
+            document.getElementById('pmTaskCount').textContent = pmTasks.length;
+            document.getElementById('devTaskCount').textContent = devTasks.length;
+            document.getElementById('artTaskCount').textContent = artTasks.length;
+            document.getElementById('milestoneCount').textContent = milestones.length;
+        }
+
+        // 渲染甘特图
+        function renderGantt(type) {
+            const tasks = type === 'pm' ? pmTasks : (type === 'dev' ? devTasks : artTasks);
+            const container = document.getElementById('gantt' + type.charAt(0).toUpperCase() + type.slice(1) + 'Container');
+
+            const startDate = new Date('2026-04-01');
+            const endDate = new Date('2026-04-30');
+            const days = [];
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                days.push(new Date(d));
+            }
+
+            let html = '<div class="gantt-header">';
+            days.forEach(day => {
+                const dayStr = `${day.getMonth() + 1}/${day.getDate()}`;
+                html += `<div class="gantt-date">${dayStr}</div>`;
+            });
+            html += '</div>';
+
+            tasks.forEach(task => {
+                const taskStart = new Date(task.startDate);
+                const taskEnd = new Date(task.endDate);
+                const totalDays = days.length;
+                const startOffset = Math.floor((taskStart - startDate) / (1000 * 60 * 60 * 24));
+                const duration = Math.floor((taskEnd - taskStart) / (1000 * 60 * 60 * 24)) + 1;
+                const leftPercent = (startOffset / totalDays) * 100;
+                const widthPercent = (duration / totalDays) * 100;
+                const statusClass = task.isMilestone ? 'milestone' : task.status;
+
+                html += '<div class="gantt-row">';
+                html += `<div class="gantt-label" title="${task.name}">${task.name}</div>`;
+                html += '<div class="gantt-timeline">';
+                html += `<div class="gantt-bar ${statusClass}" style="left: ${leftPercent}%; width: ${widthPercent}%;" title="${task.name} (${task.progress}%)">${task.progress}%</div>`;
+                html += '</div>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 打开添加任务模态框
+        function openAddTaskModal(type) {
+            document.getElementById('taskType').value = type;
+            document.getElementById('taskEditIndex').value = '';
+            document.getElementById('modalTitle').textContent = '➕ 添加新任务';
+            document.getElementById('taskForm').reset();
+            document.getElementById('responsibleGroup').style.display = type === 'dev' ? 'block' : 'none';
+            document.getElementById('taskModal').style.display = 'block';
+        }
+
+        // 关闭任务模态框
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        // 任务表单提交
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const type = document.getElementById('taskType').value;
+            const tasks = type === 'pm' ? pmTasks : (type === 'dev' ? devTasks : artTasks);
+
+            const newTask = {
+                id: tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1,
+                name: document.getElementById('taskName').value,
+                startDate: document.getElementById('taskStartDate').value,
+                endDate: document.getElementById('taskEndDate').value,
+                priority: document.getElementById('taskPriority').value,
+                estimate: document.getElementById('taskEstimate').value,
+                actual: '',
+                status: document.getElementById('taskStatus').value,
+                progress: parseInt(document.getElementById('taskProgress').value),
+                note: document.getElementById('taskNote').value,
+                isMilestone: document.getElementById('taskIsMilestone').checked
+            };
+
+            if (type === 'dev') {
+                newTask.responsible = document.getElementById('taskResponsible').value;
+            }
+
+            tasks.push(newTask);
+            saveData();
+            renderTasks(type);
+            closeTaskModal();
+        });
+
+        // 渲染里程碑
+        function renderMilestones() {
+            const container = document.getElementById('milestonesContainer');
+            let html = '';
+
+            milestones.forEach((milestone, index) => {
+                const riskClass = milestone.risk === '高' ? 'high-risk' : '';
+                html += `<div class="milestone-card ${riskClass}">`;
+                html += `<h3><input type="text" value="${milestone.name}" onchange="updateMilestone(${index}, 'name', this.value)" style="border: none; background: transparent; color: inherit; font-size: inherit; font-weight: inherit; padding: 0;"> - <input type="date" value="${milestone.date}" onchange="updateMilestone(${index}, 'date', this.value)" style="border: none; background: transparent; color: inherit; font-size: inherit; padding: 0;"></h3>`;
+                html += `<p style="font-size: 14px; margin-top: 5px;"><strong>验收标准：</strong><input type="text" value="${milestone.standard}" onchange="updateMilestone(${index}, 'standard', this.value)" style="border: none; background: transparent; width: 80%; padding: 2px;"></p>`;
+                html += `<p style="margin-top: 10px; font-size: 14px;">`;
+                html += `风险等级：<select onchange="updateMilestone(${index}, 'risk', this.value)" style="border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); color: inherit; padding: 4px; border-radius: 4px;">`;
+                html += `<option value="中" ${milestone.risk === '中' ? 'selected' : ''}>中风险</option>`;
+                html += `<option value="高" ${milestone.risk === '高' ? 'selected' : ''}>高风险</option>`;
+                html += `</select> | `;
+                html += `状态：<select onchange="updateMilestone(${index}, 'status', this.value)" style="border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); color: inherit; padding: 4px; border-radius: 4px;">`;
+                html += `<option value="待验收" ${milestone.status === '待验收' ? 'selected' : ''}>待验收</option>`;
+                html += `<option value="进行中" ${milestone.status === '进行中' ? 'selected' : ''}>进行中</option>`;
+                html += `<option value="已完成" ${milestone.status === '已完成' ? 'selected' : ''}>已完成</option>`;
+                html += `</select></p>`;
+                if (milestone.note) {
+                    html += `<p style="margin-top: 10px; font-size: 13px; opacity: 0.95;"><input type="text" value="${milestone.note}" onchange="updateMilestone(${index}, 'note', this.value)" style="border: none; background: transparent; width: 100%; padding: 2px; color: inherit;"></p>`;
+                }
+                html += `<div style="margin-top: 15px;"><button class="btn btn-danger" onclick="showDeleteMilestoneConfirm(${index}, '${milestone.name}')">删除里程碑</button></div>`;
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 更新里程碑
+        function updateMilestone(index, field, value) {
+            milestones[index][field] = value;
+            saveData();
+            renderMilestones();
+        }
+
+        // 显示删除里程碑确认
+        function showDeleteMilestoneConfirm(index, name) {
+            document.getElementById('confirmMessage').textContent = `确定要删除里程碑"${name}"吗？此操作不可撤销。`;
+            document.getElementById('confirmDialog').style.display = 'block';
+            deleteCallback = () => deleteMilestone(index);
+        }
+
+        // 删除里程碑
+        function deleteMilestone(index) {
+            milestones.splice(index, 1);
+            saveData();
+            renderMilestones();
+        }
+
+        // 打开添加里程碑模态框
+        function openAddMilestoneModal() {
+            document.getElementById('milestoneEditIndex').value = '';
+            document.getElementById('milestoneModalTitle').textContent = '➕ 添加新里程碑';
+            document.getElementById('milestoneForm').reset();
+            document.getElementById('milestoneModal').style.display = 'block';
+        }
+
+        // 关闭里程碑模态框
+        function closeMilestoneModal() {
+            document.getElementById('milestoneModal').style.display = 'none';
+        }
+
+        // 里程碑表单提交
+        document.getElementById('milestoneForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const newMilestone = {
+                id: milestones.length > 0 ? Math.max(...milestones.map(m => m.id)) + 1 : 1,
+                name: document.getElementById('milestoneName').value,
+                date: document.getElementById('milestoneDate').value,
+                standard: document.getElementById('milestoneStandard').value,
+                risk: document.getElementById('milestoneRisk').value,
+                status: document.getElementById('milestoneStatus').value,
+                note: document.getElementById('milestoneNote').value
+            };
+
+            milestones.push(newMilestone);
+            saveData();
+            renderMilestones();
+            closeMilestoneModal();
+        });
+
+        // 保存数据
+        function saveData() {
+            localStorage.setItem('ndcPmTasks', JSON.stringify(pmTasks));
+            localStorage.setItem('ndcDevTasks', JSON.stringify(devTasks));
+            localStorage.setItem('ndcArtTasks', JSON.stringify(artTasks));
+            localStorage.setItem('ndcMilestones', JSON.stringify(milestones));
+
+            document.getElementById('autoSaveStatus').textContent = '已保存 ✓';
+            document.getElementById('autoSaveStatusDev').textContent = '已保存 ✓';
+            document.getElementById('autoSaveStatusArt').textContent = '已保存 ✓';
+
+            setTimeout(() => {
+                document.getElementById('autoSaveStatus').textContent = '已启用';
+                document.getElementById('autoSaveStatusDev').textContent = '已启用';
+                document.getElementById('autoSaveStatusArt').textContent = '已启用';
+            }, 2000);
+        }
+
+        // 加载数据
+        function loadData() {
+            const savedPm = localStorage.getItem('ndcPmTasks');
+            const savedDev = localStorage.getItem('ndcDevTasks');
+            const savedArt = localStorage.getItem('ndcArtTasks');
+            const savedMilestones = localStorage.getItem('ndcMilestones');
+
+            if (savedPm) pmTasks = JSON.parse(savedPm);
+            if (savedDev) devTasks = JSON.parse(savedDev);
+            if (savedArt) artTasks = JSON.parse(savedArt);
+            if (savedMilestones) milestones = JSON.parse(savedMilestones);
+
+            renderTasks('pm');
+            renderTasks('dev');
+            renderTasks('art');
+            renderMilestones();
+        }
+
+        // 导出所有数据
+        function exportAllToJSON() {
+            const data = {
+                pmTasks,
+                devTasks,
+                artTasks,
+                milestones,
+                exportDate: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NDC项目_4月完整排期_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        // 自动保存
+        setInterval(saveData, 30000);
+
+        // 初始化
+        window.addEventListener('load', loadData);
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

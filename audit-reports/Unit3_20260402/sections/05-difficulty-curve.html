@@ -1,0 +1,122 @@
+<section class="section" id="section-5">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Difficulty Curve</h2>
+      <p class="section-subtitle">难度曲线与信息密度分析</p>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-container animate-in" data-values='{"loops":["L1","L2","L3","L4","L5","L6"],"series":[{"name":"推理步数","values":[2,3,4,3,4,5]},{"name":"信息密度","values":[3,5,5,3,3,2]},{"name":"谜题难度","values":[2,3,4,3,4,4]},{"name":"指证难度","values":[2,3,3,3,3,4]},{"name":"综合难度","values":[2,3,4,3,4,5]}]}'>
+      <!-- SVG rendered here by main.js -->
+    </div>
+
+    <div class="callout callout-warn animate-in">
+      <span class="callout-icon">!</span>
+      <div>
+        <span class="callout-title">W形双峰曲线</span>
+        <p class="callout-content">难度在L3和L5形成两个峰值，L4出现凹陷。L3峰值来自Helen家10+物品信息过载 + 楼顶搜证动机缺失；L5峰值来自跨3个Loop的记忆负担。L4反而是全流程最佳体验点（叙事驱动自然、证据链紧凑）。</p>
+      </div>
+    </div>
+
+    <!-- Info density violations -->
+    <h3 class="screen-heading animate-in">信息密度违规</h3>
+    <table class="audit-table animate-in">
+      <thead>
+        <tr>
+          <th class="sortable-header" data-sort-type="text">Loop</th>
+          <th class="sortable-header" data-sort-type="text">位置</th>
+          <th class="sortable-header" data-sort-type="number">信息点数</th>
+          <th>违规描述</th>
+          <th class="sortable-header" data-sort-type="severity">严重度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>L3</td>
+          <td>SC3008 Helen家</td>
+          <td>10</td>
+          <td>一次投放10件物品(含8件伏笔)，远超单场景3个核心信息点限制。玩家需从中识别2件可用证据。</td>
+          <td><span class="severity-badge badge-major">Major</span></td>
+        </tr>
+        <tr>
+          <td>L2</td>
+          <td>SC3003 Sullivan客厅</td>
+          <td>6</td>
+          <td>6件物品含3件纯伏笔(L4/L5才用)。与L3连续出现高密度投放。</td>
+          <td><span class="severity-badge badge-major">Major</span></td>
+        </tr>
+        <tr>
+          <td>L5</td>
+          <td>SC3014 Bernard办公室</td>
+          <td>5</td>
+          <td>核心物品数量合理，但触发链依赖跨3个Loop记忆(3501报纸、3207手链)。</td>
+          <td><span class="severity-badge badge-major">Major</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Frustration risk points -->
+    <h3 class="screen-heading animate-in">挫败感风险点</h3>
+
+    <div class="issue-card issue-critical animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-critical">Critical</span>
+          <span class="issue-meta-tag">L5</span>
+          <span>标注报纸联想链三重断层</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>信息饥荒 + 推理跳跃</p>
+        <p>玩家需要: (1) 记得L2获得的标注报纸3501 (2) 在Mickey质疑后联想到它 (3) 主动触发系统分析得到3502笔迹比对。15+件背包证据中找到3个Loop前的报纸，联想链过长。</p>
+        <p><strong>修复建议：</strong>Mickey质疑后Emma提供引导："我们在Mary家调查时有什么跟保险/银行相关的东西吗？"</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-critical animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-critical">Critical</span>
+          <span class="issue-meta-tag">L3</span>
+          <span>楼顶二次搜证无叙事动机</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>无效探索</p>
+        <p>SC3002楼顶在L3通过"系统解锁"开放，无NPC引导。玩家不知道要去楼顶。3308涂油示意图是R2核心证据，若未获取则流程卡死。</p>
+        <p><strong>修复建议：</strong>Helen R1结果中加入"涂油时我检查过地面"，给玩家明确理由回楼顶。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-major animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-major">Major</span>
+          <span class="issue-meta-tag">L2</span>
+          <span>搜身观察触发机制不透明</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>碰运气</p>
+        <p>搜身需持有L1证据3105(袖扣纤维)，但触发条件对玩家不可见。3207手链是L5关键前置。</p>
+        <p><strong>修复建议：</strong>Foster对话后Emma提示"那根纤维应该来自某件衣物……如果能看到Mary穿什么就好了"。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-major animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-major">Major</span>
+          <span class="issue-meta-tag">L6</span>
+          <span>辩论机制转变无预告</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>虚假选择</p>
+        <p>从"击穿谎言"变为"同一证据不同解读"。Mickey不是说谎者，玩家需要重新理解"胜利"含义。</p>
+        <p><strong>修复建议：</strong>L6开篇Emma提示"这次不一样……Mickey说的也许不全错"。</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,442 @@
+<section class="section" id="section-4">
+  <div class="section-content">
+
+    <!-- Section Header -->
+    <div class="section-header animate-in">
+      <span class="section-number">04</span>
+      <h1 class="section-title">Character Network</h1>
+      <p class="section-subtitle">人物关系网络与一致性审计 — NPC知识边界、谎言自洽、态度转变</p>
+    </div>
+
+    <!-- Character Relationship Mermaid -->
+    <h2 class="screen-heading animate-in">人物关系图</h2>
+    <div class="mermaid-container animate-in">
+      <div class="mermaid-diagram">
+graph TD
+  ZACK["Zack Brennan&lt;br/&gt;私家侦探"]
+  EMMA["Emma&lt;br/&gt;助手"]
+  ROSA["Rosa&lt;br/&gt;清洁工"]
+  MORRISON["Morrison&lt;br/&gt;警探"]
+  TOMMY["Tommy&lt;br/&gt;酒吧经理"]
+  VIVIAN["Vivian&lt;br/&gt;歌手"]
+  MRS_M["Mrs. Morrison&lt;br/&gt;Morrison妻子"]
+  WEBB["Webb&lt;br/&gt;受害者"]
+
+  ZACK ---|搭档| EMMA
+  ZACK ---|调查| ROSA
+  ZACK ---|指证| MORRISON
+  MORRISON ---|迷晕| ZACK
+  MORRISON ---|威胁/不知在场| ROSA
+  MORRISON ---|妻子| MRS_M
+  MORRISON ---|被收买| WHALE
+  TOMMY ---|酒吧经理| WEBB
+  VIVIAN ---|恋人| WEBB
+  ROSA ---|清洁工| WEBB
+
+  WHALE["Whale&lt;br/&gt;幕后黑手"]
+  WHALE ---|指使| MORRISON
+
+  style ROSA fill:#C93B3B,stroke:#FF4757,color:#fff
+  style MORRISON fill:#C93B3B,stroke:#FF4757,color:#fff
+  style WHALE fill:#252545,stroke:#6B6775,stroke-dasharray: 5 5,color:#9B97A0
+      </div>
+    </div>
+
+    <div class="callout callout-accent animate-in">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div>
+        <span class="callout-title">图例说明</span>
+        <div class="callout-content">
+          <p><span style="color:var(--color-critical);">&#x25A0; 红色节点</span> = L1/L2 被指证对象 &nbsp;&nbsp; <span style="color:var(--color-text-muted);">&#x25A1; 虚线节点</span> = 幕后角色(L1-L2未直接登场)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NPC Character Cards -->
+    <h2 class="screen-heading animate-in">NPC 一致性审计</h2>
+
+    <div class="stagger-children">
+
+      <!-- Rosa (103) -->
+      <div class="character-card animate-in">
+        <div class="collapsible-header character-header">
+          <div style="display:flex;align-items:center;gap:var(--space-4);flex:1;">
+            <div class="character-avatar">R</div>
+            <div>
+              <div class="character-name">Rosa (103)</div>
+              <div class="character-role">L1 说谎者 &middot; 清洁工</div>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <table class="audit-table" style="margin-top:var(--space-2);">
+            <thead>
+              <tr>
+                <th>审计维度</th>
+                <th>L1</th>
+                <th>L2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>知识边界</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>说谎自洽</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-na">N/A</td>
+              </tr>
+              <tr>
+                <td>性格语气</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>态度转变</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-info" style="margin-top:var(--space-4);">
+            <span class="callout-icon">&#x2714;</span>
+            <div>
+              <div class="callout-content"><p>无重大问题。Rosa在L1中的谎言内在逻辑自洽，L2中态度转变（从隐瞒到配合）合理。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Morrison (104) -->
+      <div class="character-card animate-in">
+        <div class="collapsible-header character-header">
+          <div style="display:flex;align-items:center;gap:var(--space-4);flex:1;">
+            <div class="character-avatar">M</div>
+            <div>
+              <div class="character-name">Morrison (104)</div>
+              <div class="character-role">L2 说谎者 &middot; 警探</div>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <table class="audit-table" style="margin-top:var(--space-2);">
+            <thead>
+              <tr>
+                <th>审计维度</th>
+                <th>L1</th>
+                <th>L2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>知识边界</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>说谎自洽</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>性格语气</td>
+                <td class="cell-warn">WARN</td>
+                <td class="cell-warn">WARN</td>
+              </tr>
+              <tr>
+                <td>态度转变</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Morrison Issues -->
+          <div class="issue-card issue-minor" style="margin-top:var(--space-4);" id="issue-I11" data-severity="minor" data-dimension="character" data-loop="L1-L2">
+            <div class="collapsible-header">
+              <div class="issue-meta">
+                <span class="severity-badge badge-minor">Minor</span>
+                <strong>I-11: 称呼不一致 (Detective/Inspector)</strong>
+                <span class="issue-meta-tag">L1-L2</span>
+              </div>
+            </div>
+            <div class="collapsible-body">
+              <p>Morrison在对话中对Zack的称呼在"Detective"和"Inspector"之间切换，缺乏统一。两个称谓在1920s语境中含义不同(Detective=侦探, Inspector=督察)。</p>
+              <p><strong>建议修复：</strong>统一为"Detective"，因为Zack身份为私家侦探。</p>
+            </div>
+          </div>
+
+          <div class="issue-card issue-critical" style="margin-top:var(--space-3);" id="issue-I04" data-severity="critical" data-dimension="character" data-loop="L1-L2">
+            <div class="collapsible-header">
+              <div class="issue-meta">
+                <span class="severity-badge badge-critical">Critical</span>
+                <strong>I-04: Rosa-Morrison在场认知矛盾</strong>
+                <span class="issue-meta-tag">L1-L2</span>
+              </div>
+            </div>
+            <div class="collapsible-body">
+              <p>rosa.md 中设定 Morrison 威胁 Rosa 保持沉默，暗示 Morrison 知道 Rosa 在场。但 state 配置中 Morrison 的知识状态标记为"不知道Rosa在场"。</p>
+              <p><strong>影响：</strong>如果 Morrison 不知道 Rosa 在场，他就没有理由威胁 Rosa；如果他知道，则 state 文件需要更新。两种设定都有合理性，但当前互相矛盾。</p>
+              <p><strong>建议修复：</strong>确定设计意图后统一。若 Morrison 确实威胁了 Rosa，更新 state 为"知道Rosa在场"；若威胁来自其他渠道（如中间人），需在 Rosa 对话中明确说明。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tommy (105) -->
+      <div class="character-card animate-in">
+        <div class="collapsible-header character-header">
+          <div style="display:flex;align-items:center;gap:var(--space-4);flex:1;">
+            <div class="character-avatar">T</div>
+            <div>
+              <div class="character-name">Tommy (105)</div>
+              <div class="character-role">酒吧经理 &middot; 证人</div>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <table class="audit-table" style="margin-top:var(--space-2);">
+            <thead>
+              <tr>
+                <th>审计维度</th>
+                <th>L1</th>
+                <th>L2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>知识边界</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>说谎自洽</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>性格语气</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>态度转变</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-info" style="margin-top:var(--space-4);">
+            <span class="callout-icon">&#x2714;</span>
+            <div>
+              <div class="callout-content"><p>无问题。Tommy作为中立证人，两轮表现一致。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vivian (106) -->
+      <div class="character-card animate-in">
+        <div class="collapsible-header character-header">
+          <div style="display:flex;align-items:center;gap:var(--space-4);flex:1;">
+            <div class="character-avatar">V</div>
+            <div>
+              <div class="character-name">Vivian (106)</div>
+              <div class="character-role">歌手 &middot; Webb恋人</div>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <table class="audit-table" style="margin-top:var(--space-2);">
+            <thead>
+              <tr>
+                <th>审计维度</th>
+                <th>L1</th>
+                <th>L2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>知识边界</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>说谎自洽</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>性格语气</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>态度转变</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-info" style="margin-top:var(--space-4);">
+            <span class="callout-icon">&#x2714;</span>
+            <div>
+              <div class="callout-content"><p>无问题。Vivian仅在L2登场，表现一致。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mrs. Morrison (110) -->
+      <div class="character-card animate-in">
+        <div class="collapsible-header character-header">
+          <div style="display:flex;align-items:center;gap:var(--space-4);flex:1;">
+            <div class="character-avatar">W</div>
+            <div>
+              <div class="character-name">Mrs. Morrison (110)</div>
+              <div class="character-role">Morrison妻子</div>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <table class="audit-table" style="margin-top:var(--space-2);">
+            <thead>
+              <tr>
+                <th>审计维度</th>
+                <th>L1</th>
+                <th>L2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>知识边界</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>说谎自洽</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>性格语气</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>态度转变</td>
+                <td class="cell-na">N/A</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-info" style="margin-top:var(--space-4);">
+            <span class="callout-icon">&#x2714;</span>
+            <div>
+              <div class="callout-content"><p>无问题。Mrs. Morrison仅在L2登场，提供时间线证词，表现合理。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emma (102) -->
+      <div class="character-card animate-in">
+        <div class="collapsible-header character-header">
+          <div style="display:flex;align-items:center;gap:var(--space-4);flex:1;">
+            <div class="character-avatar">E</div>
+            <div>
+              <div class="character-name">Emma (102)</div>
+              <div class="character-role">Zack的助手</div>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <table class="audit-table" style="margin-top:var(--space-2);">
+            <thead>
+              <tr>
+                <th>审计维度</th>
+                <th>L1</th>
+                <th>L2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>知识边界</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-fail">FAIL</td>
+              </tr>
+              <tr>
+                <td>说谎自洽</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>性格语气</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+              <tr>
+                <td>态度转变</td>
+                <td class="cell-pass">PASS</td>
+                <td class="cell-pass">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="issue-card issue-critical" style="margin-top:var(--space-4);" id="issue-I03" data-severity="critical" data-dimension="narrative" data-loop="L2">
+            <div class="collapsible-header">
+              <div class="issue-meta">
+                <span class="severity-badge badge-critical">Critical</span>
+                <strong>I-03: emma_004 违反悬疑感优先原则</strong>
+                <span class="issue-meta-tag">L2</span>
+                <span class="issue-meta-tag">Narrative</span>
+                <span class="issue-meta-tag">Dialogue</span>
+              </div>
+            </div>
+            <div class="collapsible-body">
+              <p>在emma_004中，Zack直接陈述L1的完整真相结论："Rosa被Morrison威胁，Morrison参与了犯罪现场篡改"。</p>
+              <p>这些结论本应由玩家在L1指证过程中自行推理得出，在L2开头以对话形式直接复述，等同于替玩家总结了上一轮的推理成果，削弱了玩家的成就感。</p>
+              <p><strong>建议修复：</strong>将emma_004改为暗示性对话。Emma可以说"根据Rosa的供词，我们接下来应该调查Morrison"，但不应替玩家复述完整推理链。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Knowledge Boundary Violations Table -->
+    <h2 class="screen-heading animate-in">知识边界违规汇总</h2>
+    <div class="animate-in">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th class="sortable-header" data-sort-type="text">Loop</th>
+            <th class="sortable-header" data-sort-type="text">NPC</th>
+            <th>泄露内容</th>
+            <th>应属</th>
+            <th class="sortable-header" data-sort-type="severity">严重度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L2</td>
+            <td>Emma / Zack</td>
+            <td>emma_004 Zack直接陈述L1完整真相结论</td>
+            <td>应由玩家自行推理</td>
+            <td><span class="severity-badge badge-critical">Critical</span></td>
+          </tr>
+          <tr>
+            <td>L1-L2</td>
+            <td>Morrison / Rosa</td>
+            <td>Morrison是否知道Rosa在场的矛盾</td>
+            <td>需统一设定</td>
+            <td><span class="severity-badge badge-critical">Critical</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>

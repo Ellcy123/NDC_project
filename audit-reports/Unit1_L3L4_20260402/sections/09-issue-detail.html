@@ -1,0 +1,238 @@
+<section class="section" id="section-9">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">09</span>
+      <h2 class="section-title">Issue Detail</h2>
+      <p class="section-subtitle">完整问题明细（可筛选 / 排序 / 搜索）</p>
+    </div>
+
+    <div class="filter-bar animate-in">
+      <div class="filter-group">
+        <span class="filter-group-label">Severity</span>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="critical">Critical</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="major">Major</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="minor">Minor</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="suggestion">Suggestion</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Dimension</span>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="evidence">Evidence</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="character">Character</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="dialogue">Dialogue</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="difficulty">Difficulty</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="narrative">Narrative</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Loop</span>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L3">L3</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L4">L4</button>
+      </div>
+      <input type="text" id="issue-search" placeholder="Search issues...">
+      <button class="filter-clear" onclick="clearFilters()">Clear</button>
+      <span class="filter-count">10 / 10 issues</span>
+    </div>
+
+    <div style="margin-bottom: var(--space-4); display: flex; gap: var(--space-2);">
+      <button class="btn" onclick="expandAll('issue-list')">Expand All</button>
+      <button class="btn" onclick="collapseAll('issue-list')">Collapse All</button>
+    </div>
+
+    <div id="issue-list">
+
+      <!-- C1 -->
+      <div class="issue-card issue-critical" id="issue-C1" data-severity="critical" data-dimension="evidence" data-loop="L4">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="issue-meta-tag">L4</span>
+            <span class="issue-meta-tag">Evidence</span>
+            <span style="flex:1;">C1: 证据 1429 三重矛盾</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>证据 1429 存在三重矛盾：(1) Describe = "还没写描述"；(2) canCombined=true 合成为 1426，但 ExposeData id=14 要求原件 1429；(3) 1426 有完整描述而 1429 为空，信息倒挂。</p>
+          <p><strong>影响范围：</strong>L4 Expose R2 核心体验</p>
+          <p><strong>文件位置：</strong><code>ItemStaticData.json (ID:1429, 1426) / ExposeData.json (ID:14)</code></p>
+          <p><strong>修复建议：</strong>&#9312; 决定 Expose R2 用 1429 还是 1426；&#9313; 填写完整描述；&#9314; 如用 1429 则设 canCombined=false 或确保合成不消耗原件。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-high">High</span></p>
+        </div>
+      </div>
+
+      <!-- M1 -->
+      <div class="issue-card issue-major" id="issue-M1" data-severity="major" data-dimension="character" data-loop="L3">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <span class="issue-meta-tag">L3</span>
+            <span class="issue-meta-tag">Character</span>
+            <span style="flex:1;">M1: Tommy 指证年份自相矛盾</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>Tommy 在同一场指证中，R1 说为 Webb 工作"三年"（line 163），R3 说"五年"（line 613）。同一角色、同一场景前后矛盾，破坏 NPC 可信度。</p>
+          <p><strong>影响范围：</strong>L3 Tommy Expose 对话</p>
+          <p><strong>文件位置：</strong><code>AVG/EPI01/Expose/loop3_tommy.json (line 163, 613)</code></p>
+          <p><strong>修复建议：</strong>统一为一个年份（推荐"五年"以匹配 Tommy 背景设定），全文搜索其他对话中的年份引用确保一致。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <!-- M2 -->
+      <div class="issue-card issue-major" id="issue-M2" data-severity="major" data-dimension="difficulty" data-loop="L3">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <span class="issue-meta-tag">L3</span>
+            <span class="issue-meta-tag">Difficulty</span>
+            <span style="flex:1;">M2: 笔迹分析引导不足</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>1313(酒店登记簿) + 1323(Webb私人笔记) 合成 1704(笔迹分析) 是 L3 Expose R3 的唯一正确答案，但无对话或环境线索提示玩家进行笔迹比对。</p>
+          <p><strong>影响范围：</strong>L3 Expose R3 可达性</p>
+          <p><strong>文件位置：</strong><code>loop3_state.yaml (combine section) / Talk files</code></p>
+          <p><strong>修复建议：</strong>在 Tommy 对话或 Webb 办公室搜证时加入暗示笔迹差异的线索。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-medium">Medium</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-high">High</span></p>
+        </div>
+      </div>
+
+      <!-- M3 -->
+      <div class="issue-card issue-major" id="issue-M3" data-severity="major" data-dimension="difficulty" data-loop="L3">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <span class="issue-meta-tag">L3</span>
+            <span class="issue-meta-tag">Difficulty</span>
+            <span style="flex:1;">M3: Webb 办公室证据过载 (10件)</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>Webb 办公室单场景包含 10 件可收集证据，远超设计指南的 3 件/场景上限。信息过载可能导致玩家搜证疲劳。</p>
+          <p><strong>影响范围：</strong>L3 Webb 办公室场景</p>
+          <p><strong>文件位置：</strong><code>loop3_state.yaml (Webb办公室场景)</code></p>
+          <p><strong>修复建议：</strong>将部分证据转为环境叙事，或设计分批解锁机制。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-high">High</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <!-- M4 -->
+      <div class="issue-card issue-major" id="issue-M4" data-severity="major" data-dimension="character" data-loop="L3 L4">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <span class="issue-meta-tag">L3-L4</span>
+            <span class="issue-meta-tag">Character</span>
+            <span style="flex:1;">M4: Rosa/Miguel 性别矛盾</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>对话文件中 Rosa 一致提及"女儿"(daughter)，但角色人设文档中出现"儿子"(son)。子女性别跨文件不一致。</p>
+          <p><strong>影响范围：</strong>Rosa 角色背景（跨 Loop）</p>
+          <p><strong>文件位置：</strong><code>剧情设计/00_世界观与角色/ (人设文档) vs AVG 对话文件</code></p>
+          <p><strong>修复建议：</strong>以对话文件（玩家实际看到的内容）为准，更新人设文档为"女儿"。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-low">Low</span></p>
+        </div>
+      </div>
+
+      <!-- m1 -->
+      <div class="issue-card issue-minor" id="issue-m1" data-severity="minor" data-dimension="dialogue" data-loop="L4">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-minor">Minor</span>
+            <span class="issue-meta-tag">L4-L5</span>
+            <span class="issue-meta-tag">Dialogue</span>
+            <span style="flex:1;">m1: emma_006 引述 Jimmy "问问Vivian" 无对应原话</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>Emma 在 L5 开场（emma_006 step20）说 "Jimmy说'问问Vivian'"，但 loop4_jimmy.json 指证对话中 Jimmy 未说出此话。属 Emma 概括性叙述而非逐字引用。</p>
+          <p><strong>影响范围：</strong>叙述精确性</p>
+          <p><strong>文件位置：</strong><code>AVG/EPI01/Talk/loop4/emma_006.json (line 292)</code></p>
+          <p><strong>修复建议：</strong>改为间接叙述（如"Jimmy暗示了Vivian的参与"），或在指证末尾加入 Jimmy 提及 Vivian 的台词。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-low">Low</span></p>
+        </div>
+      </div>
+
+      <!-- m2 -->
+      <div class="issue-card issue-minor" id="issue-m2" data-severity="minor" data-dimension="narrative" data-loop="L4">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-minor">Minor</span>
+            <span class="issue-meta-tag">L4</span>
+            <span class="issue-meta-tag">Narrative</span>
+            <span style="flex:1;">m2: Rosa Vivian 目击作为 L5 铺垫 &#8212; 注意暗示密度</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>Rosa L4 对话分支 300 提供 Vivian 深夜携包出入会客室的目击证词，获取 TIM010。作为 L5 铺垫效果好，但需注意 L4 中不要再叠加更多 Vivian 暗示，避免提前聚焦。</p>
+          <p><strong>影响范围：</strong>跨 Loop 信息节奏</p>
+          <p><strong>文件位置：</strong><code>AVG/EPI01/Talk/loop4/rosa_007.json (branch 300)</code></p>
+          <p><strong>修复建议：</strong>检查 L4 其他对话中是否有额外 Vivian 暗示，确保 Rosa 分支是唯一铺垫点。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-low">Low</span></p>
+        </div>
+      </div>
+
+      <!-- m3 -->
+      <div class="issue-card issue-minor" id="issue-m3" data-severity="minor" data-dimension="narrative" data-loop="L4">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-minor">Minor</span>
+            <span class="issue-meta-tag">L4</span>
+            <span class="issue-meta-tag">Narrative</span>
+            <span style="flex:1;">m3: Emma 开场个人叙事篇幅较长</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>emma_005 前 8 步为 Emma 父母 1912 年事故的个人故事，约占开场 1/4 篇幅。成功建立情感基调但可能让急于推进的玩家感到节奏慢。</p>
+          <p><strong>影响范围：</strong>L4 开场节奏</p>
+          <p><strong>文件位置：</strong><code>AVG/EPI01/Talk/loop3/emma_005.json (steps 9-16)</code></p>
+          <p><strong>修复建议：</strong>保留但确保 step 16 到 step 17 的过渡紧凑。当前已有自然过渡（"说回正事"类转折）。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span>
+             <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-low">Low</span></p>
+        </div>
+      </div>
+
+      <!-- S1 -->
+      <div class="issue-card issue-suggestion" id="issue-S1" data-severity="suggestion" data-dimension="dialogue" data-loop="L4">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-suggestion">Suggestion</span>
+            <span class="issue-meta-tag">L4-L5</span>
+            <span class="issue-meta-tag">Dialogue</span>
+            <span style="flex:1;">S1: 统一 "要员" / "Whale" 称呼</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>emma_006 中先用"所谓的'要员'"再用"被称为'Whale'的危险人物"。可视为从泛称到专名的自然过渡，但统一使用会减少认知负担。</p>
+          <p><strong>文件位置：</strong><code>AVG/EPI01/Talk/loop4/emma_006.json</code></p>
+          <p><strong>修复建议：</strong>首次使用后统一为 "Whale"，或明确标注等同关系（如"那个被称为'Whale'的要员"）。</p>
+        </div>
+      </div>
+
+      <!-- S2 -->
+      <div class="issue-card issue-suggestion" id="issue-S2" data-severity="suggestion" data-dimension="difficulty" data-loop="L3">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-suggestion">Suggestion</span>
+            <span class="issue-meta-tag">L3</span>
+            <span class="issue-meta-tag">Difficulty</span>
+            <span style="flex:1;">S2: Webb 办公室渐进式证据解锁</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>如需保留 Webb 办公室的 10 件证据，建议设计分批解锁机制，避免一次性呈现全部。</p>
+          <p><strong>文件位置：</strong><code>loop3_state.yaml</code></p>
+          <p><strong>修复建议：</strong>初始只显示 3-4 件表面证据，完成特定对话或互动后再出现隐藏证据（如打开保险箱、翻开日记本内页）。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

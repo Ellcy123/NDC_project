@@ -1,0 +1,283 @@
+<section class="section" id="section-7">
+  <div class="section-content">
+
+    <!-- Header -->
+    <div class="section-header animate-in">
+      <span class="section-number">07</span>
+      <h2 class="section-title">Timeline Audit</h2>
+      <p class="section-subtitle">信息泄露、事实流转、属性一致性与单层真相原则的逐项审查</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-group animate-in">
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-leaks">信息泄露</button>
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-facts">Facts流转</button>
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-attrs">属性一致</button>
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-truth">单层真相</button>
+    </div>
+
+    <!-- ============ Tab 1: 信息泄露 ============ -->
+    <div class="tab-panel" id="tab-leaks" data-tab-group="timeline">
+      <div class="screen">
+        <h3 class="screen-heading animate-in">信息泄露检测</h3>
+        <p class="animate-in" style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">检查是否有不应在当前 Loop 出现的信息提前泄露给玩家。信息泄露直接违反"悬疑感优先"原则。</p>
+
+        <table class="audit-table animate-in">
+          <thead>
+            <tr>
+              <th class="sortable-header" data-sort-type="text">Loop</th>
+              <th>泄露内容</th>
+              <th>出处</th>
+              <th class="sortable-header" data-sort-type="text">应属 Loop</th>
+              <th class="sortable-header" data-sort-type="severity">严重度</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>L2</td>
+              <td>emma_004 中 Zack 陈述"Morrison本人迷晕了你并拖入会客室"等完整结论</td>
+              <td style="font-family: var(--font-mono); font-size: var(--text-xs);">AVG/EPI01/Talk/loop2/emma_004.json</td>
+              <td>应由玩家从L1指证后自行整合</td>
+              <td><span class="severity-badge badge-critical">Critical</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Issue Card for the leak -->
+        <div class="issue-card issue-critical animate-in" id="issue-hm-leak" data-severity="critical" data-loop="L2" data-dimension="知识边界" style="margin-top: var(--space-6);">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-critical">Critical</span>
+              <span class="issue-meta-tag">L2</span>
+              <span class="issue-meta-tag">emma_004</span>
+              <strong style="color: var(--color-text);">Zack 主动陈述完整结论，替玩家做推理</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p>在 emma_004 对话中，Zack 直接向 Emma 陈述"Morrison 本人迷晕了你并拖入会客室"等完整结论链。这些信息应该是玩家通过 L1 指证击破 Rosa 谎言后自行整合的推理成果，而非由 Zack 作为旁白直接宣读。</p>
+            <p style="margin-top: var(--space-3);">此问题直接违反设计原则一"悬疑感优先——绝不提前破梗"中"角色对话中不能替玩家说出结论"的核心要求。</p>
+            <div class="callout callout-warning" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">修复建议</span>
+                <p>改写 emma_004，让 Zack 仅陈述已有证据事实（如"我在后台走廊发现了迷药毛巾和拖痕"），由 Emma 追问后逐步展开，而非一次性倾倒结论。玩家此时应已完成 L1，能自行理解对话暗示。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ Tab 2: Facts流转 ============ -->
+    <div class="tab-panel" id="tab-facts" data-tab-group="timeline">
+      <div class="screen">
+        <h3 class="screen-heading animate-in">Facts 流转验证</h3>
+        <p class="animate-in" style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">验证从 L1 到 L2 的关键事实传递是否准确、完整、无变形。</p>
+
+        <table class="audit-table animate-in">
+          <thead>
+            <tr>
+              <th class="sortable-header" data-sort-type="text">从 Loop</th>
+              <th class="sortable-header" data-sort-type="text">到 Loop</th>
+              <th>应传递的事实</th>
+              <th class="sortable-header" data-sort-type="text">状态</th>
+              <th>问题</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>L1</td>
+              <td>L2</td>
+              <td>Morrison 本人在走廊迷晕 Zack 并拖入会客室</td>
+              <td class="cell-pass">PASS</td>
+              <td>正确传递</td>
+            </tr>
+            <tr>
+              <td>L1</td>
+              <td>L2</td>
+              <td>Rosa 实际在后台走廊工作，目睹全程</td>
+              <td class="cell-pass">PASS</td>
+              <td>正确传递</td>
+            </tr>
+            <tr>
+              <td>L1</td>
+              <td>L2</td>
+              <td>Rosa 事后自行捡走毛巾藏匿</td>
+              <td class="cell-pass">PASS</td>
+              <td>正确传递</td>
+            </tr>
+            <tr>
+              <td>L1</td>
+              <td>L2</td>
+              <td>Rosa 出于恐惧+经济压力选择沉默</td>
+              <td class="cell-pass">PASS</td>
+              <td>正确传递</td>
+            </tr>
+            <tr>
+              <td>L1</td>
+              <td>L2</td>
+              <td>Morrison 不知道 Rosa 在场</td>
+              <td class="cell-warn">WARN</td>
+              <td>rosa.md 中有"威胁"措辞暗示 Morrison 知道 Rosa 在场，与"Morrison 不知情"矛盾</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-info animate-in" style="margin-top: var(--space-6);">
+          <div class="callout-content">
+            <span class="callout-title">审查说明</span>
+            <p>5 条核心事实中 4 条正确传递，1 条存在措辞歧义（WARN）。rosa.md 中的"威胁"一词需要明确区分是 Morrison 对 Rosa 的直接威胁还是 Rosa 主观感受到的间接威慑力。建议统一为后者以保持设定一致性。</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ Tab 3: 属性一致 ============ -->
+    <div class="tab-panel" id="tab-attrs" data-tab-group="timeline">
+      <div class="screen">
+        <h3 class="screen-heading animate-in">属性一致性检查</h3>
+        <p class="animate-in" style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">核对同一证据在不同数据源中的物理属性（日期、地点、描述等）是否前后一致。</p>
+
+        <table class="audit-table animate-in">
+          <thead>
+            <tr>
+              <th class="sortable-header" data-sort-type="text">证据ID</th>
+              <th class="sortable-header" data-sort-type="text">属性</th>
+              <th>Loop 1 描述</th>
+              <th>Loop 2 描述</th>
+              <th class="sortable-header" data-sort-type="text">结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="issue-tl-attr1">
+              <td style="font-family: var(--font-mono);">1115</td>
+              <td>日期</td>
+              <td>ItemStaticData: 11月15日</td>
+              <td>loop1_rosa.json: 11月4日</td>
+              <td class="cell-fail">Critical 矛盾</td>
+            </tr>
+            <tr id="issue-tl-attr2">
+              <td style="font-family: var(--font-mono);">1115</td>
+              <td>地点</td>
+              <td>ItemStaticData: 后台走廊</td>
+              <td>loop1_rosa.json: 一楼走廊</td>
+              <td class="cell-fail">Critical 矛盾</td>
+            </tr>
+            <tr>
+              <td style="font-family: var(--font-mono);">1114 → 1701</td>
+              <td>描述</td>
+              <td>沾湿的毛巾 → 有甜腻气味</td>
+              <td>一致</td>
+              <td class="cell-pass">PASS</td>
+            </tr>
+            <tr>
+              <td style="font-family: var(--font-mono);">1122 → 1702</td>
+              <td>描述</td>
+              <td>沉重的拖痕 → 150磅吻合</td>
+              <td>一致</td>
+              <td class="cell-pass">PASS</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Critical Attribute Issue -->
+        <div class="issue-card issue-critical animate-in" id="issue-tl-attr-detail" data-severity="critical" data-loop="L1" data-dimension="物品描述" style="margin-top: var(--space-6);">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-critical">Critical</span>
+              <span class="issue-meta-tag">证据 1115</span>
+              <span class="issue-meta-tag">日期+地点</span>
+              <strong style="color: var(--color-text);">证据 1115 存在日期与地点双重矛盾</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p><strong>日期矛盾:</strong> ItemStaticData 记录为 11月15日，但 loop1_rosa.json 对话中引用为 11月4日。两处数据不一致将导致玩家在时间推理中得出错误结论。</p>
+            <p style="margin-top: var(--space-3);"><strong>地点矛盾:</strong> ItemStaticData 记录地点为"后台走廊"，而 loop1_rosa.json 对话中提及"一楼走廊"。走廊名称不统一会让玩家困惑这是同一地点还是两个不同位置。</p>
+            <div class="callout callout-warning" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">修复建议</span>
+                <p>确认 1115 号证据的正确日期和地点后，统一 ItemStaticData 和所有引用该证据的对话文件。建议以 ItemStaticData（主数据源）为准，修改 loop1_rosa.json 中的引用。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ Tab 4: 单层真相 ============ -->
+    <div class="tab-panel" id="tab-truth" data-tab-group="timeline">
+      <div class="screen">
+        <h3 class="screen-heading animate-in">单层真相原则</h3>
+        <p class="animate-in" style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">每个 Loop 只应揭示一层真相。验证实际揭示内容是否超出设计阈值。</p>
+
+        <table class="audit-table animate-in">
+          <thead>
+            <tr>
+              <th class="sortable-header" data-sort-type="text">Loop</th>
+              <th>应揭示的真相层</th>
+              <th>实际揭示</th>
+              <th class="sortable-header" data-sort-type="text">结果</th>
+              <th>问题</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>L1</td>
+              <td>Rosa 是目击者，被 Morrison 威胁沉默</td>
+              <td>Rosa 目击 Morrison 迷晕 Zack，出于恐惧沉默</td>
+              <td class="cell-pass">PASS</td>
+              <td>符合单层设计</td>
+            </tr>
+            <tr>
+              <td>L2</td>
+              <td>Morrison 被收买，有预谋</td>
+              <td>Morrison 因赌债被 Whale 收买，预谋迷晕 Zack</td>
+              <td class="cell-warn">WARN</td>
+              <td>同时揭示"被收买"+"预谋"+"Whale 存在"+"Webb 约 Zack 真实目的"，信息量偏多</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- L2 Truth Layer Warning -->
+        <div class="issue-card issue-minor animate-in" id="issue-tl-truth" data-severity="minor" data-loop="L2" data-dimension="单层真相" style="margin-top: var(--space-6);">
+          <div class="collapsible-header">
+            <div class="issue-meta">
+              <span class="severity-badge badge-minor">Minor</span>
+              <span class="issue-meta-tag">L2</span>
+              <span class="issue-meta-tag">单层真相</span>
+              <strong style="color: var(--color-text);">L2 揭示信息量接近超标</strong>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            <p>L2 的核心真相层是"Morrison 被收买且有预谋"，但实际揭示内容涵盖了 4 个信息维度:</p>
+            <ol style="margin: var(--space-3) 0; padding-left: var(--space-6); color: var(--color-text-secondary);">
+              <li>Morrison 因赌债被收买（动机层）</li>
+              <li>迷晕 Zack 是预谋而非临时起意（性质层）</li>
+              <li>Whale 的存在及其幕后角色（人物层）</li>
+              <li>Webb 约 Zack 的真实目的（事件层）</li>
+            </ol>
+            <p style="margin-top: var(--space-3);">虽然这 4 个维度在逻辑上紧密关联，构成一个完整的因果链，但从玩家认知负荷角度看处于边界水平。当前设计尚可接受，因为各维度之间有清晰的因果关系而非独立真相。</p>
+            <div class="callout callout-info" style="margin-top: var(--space-4);">
+              <div class="callout-content">
+                <span class="callout-title">观察</span>
+                <p>如果后续 Loop (L3-L6) 也出现类似的多维度揭示，建议回头拆分 L2 的信息，将"Whale 的存在"延迟到 L3 揭示。但如果这是个案而非模式，当前设计可以保留。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Summary Callout -->
+    <div class="callout callout-accent animate-in" style="margin-top: var(--space-8);">
+      <div class="callout-content">
+        <span class="callout-title">Timeline Audit 总结</span>
+        <p>发现 2 个 Critical 级问题（证据 1115 日期/地点矛盾、emma_004 信息泄露）、1 个 WARN（rosa.md 措辞歧义）、1 个 Minor（L2 信息量偏多）。Critical 问题需要优先修复，直接影响玩家推理正确性和悬疑体验。</p>
+      </div>
+    </div>
+
+  </div><!-- /section-content -->
+</section>

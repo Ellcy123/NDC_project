@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDC项目 智能排期表</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root {
+  --bg:#f4f6f8;--card:#fff;--text:#334155;--muted:#64748b;--border:#e2e8f0;
+  --primary:#475569;--light:#f1f5f9;
+  --done-bg:#bbf7d0;--done-text:#166534;--doing-bg:#bfdbfe;--doing-text:#1e3a8a;
+  --todo-bg:#f1f5f9;--todo-text:#475569;--blocked-bg:#fecaca;--blocked-text:#991b1b;
+  --review-bg:#fef08a;--review-text:#854d0e;
+  --p0:#ef4444;--p1:#f59e0b;--p2:#3b82f6;--p3:#9ca3af;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;min-height:100vh}
+.container{max-width:1600px;margin:0 auto;padding:20px}
+header{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header h1{font-size:20px;font-weight:700}
+header .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.header-actions{display:flex;gap:8px;align-items:center}
+.btn{border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;transition:opacity .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{opacity:.85}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-outline:hover{background:var(--light)}
+
+/* Stats bar */
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat-card .num{font-size:26px;font-weight:700}.stat-card .label{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;transition:all .2s;white-space:nowrap}
+.tab-btn.active{background:var(--light);color:var(--text);font-weight:600}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:14px}
+.section-title{font-size:15px;font-weight:600;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* Chapter Overview Table */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px}
+.overview-table th{background:var(--light);color:var(--muted);font-weight:600;padding:10px 12px;text-align:center;border:1px solid var(--border)}
+.overview-table td{padding:8px 10px;border:1px solid var(--border);text-align:center;vertical-align:middle}
+.cell-progress{display:flex;flex-direction:column;align-items:center;gap:4px}
+.cell-progress input[type=number]{width:60px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;text-align:center;font-size:12px;background:var(--bg);color:var(--text)}
+.mini-bar-ov{width:70px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.mini-bar-ov-fill{height:100%;background:#94a3b8;border-radius:3px;transition:width .3s}
+.done-badge{background:var(--done-bg);color:var(--done-text);padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.total-cell{background:var(--light);font-weight:600}
+.total-bar{width:80px;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:0 auto}
+.total-bar-fill{height:100%;background:#7c8da6;border-radius:4px;transition:width .3s}
+
+/* Task Table */
+.task-table-wrap{overflow-x:auto}
+.task-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1100px}
+.task-table th{background:var(--light);color:var(--muted);font-weight:600;padding:9px 10px;text-align:left;border:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:5}
+.task-table td{padding:7px 10px;border:1px solid var(--border);vertical-align:middle}
+.task-table tr.done-row{opacity:.5}
+.task-table tr.done-row td{background:#f8fafb}
+.task-table input,.task-table select{border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;background:var(--bg);color:var(--text)}
+.task-table input{width:100%}
+.task-table select{min-width:70px}
+.hidden{display:none!important}
+.progress-cell{display:flex;align-items:center;gap:6px}
+.progress-input{width:55px!important}
+.mini-bar{flex:1;min-width:40px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.mini-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.add-btn{background:var(--light);border:1px dashed var(--border);color:var(--muted);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:12px;width:100%;margin-top:8px;transition:all .2s}
+.add-btn:hover{background:var(--border);color:var(--text)}
+.del-btn{background:transparent;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:2px 6px;border-radius:4px}
+.del-btn:hover{background:var(--blocked-bg);color:var(--blocked-text)}
+
+/* Badge */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-done{background:var(--done-bg);color:var(--done-text)}
+.badge-doing{background:var(--doing-bg);color:var(--doing-text)}
+.badge-todo{background:var(--todo-bg);color:var(--todo-text)}
+.badge-blocked{background:var(--blocked-bg);color:var(--blocked-text)}
+
+
+/* Gantt (HTML table for task gantts) */
+.gantt-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px}
+.gantt-table{border-collapse:collapse;font-size:11px;min-width:100%}
+.gantt-table th,.gantt-table td{border:1px solid var(--border)}
+.gantt-name-col{width:200px;min-width:180px;padding:6px 10px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;position:sticky;left:0;z-index:8;background:var(--light)}
+.gantt-day-col{width:20px;min-width:18px;text-align:center;padding:4px 2px;color:var(--muted);font-size:10px}
+.gantt-day-col.weekend{background:#f5f5f5}
+.gantt-bar-row td{padding:3px 0;height:26px}
+.gantt-bar-row .name-cell{background:var(--card);position:sticky;left:0;z-index:4;padding:3px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.gantt-bar-row .name-cell.done-row{opacity:.5}
+.gantt-cell{position:relative;height:24px}
+.gantt-cell.weekend{background:rgba(0,0,0,.03)}
+.gantt-bar{position:absolute;top:4px;bottom:4px;border-radius:3px;opacity:.75}
+.gantt-month-header{text-align:center;font-weight:600;font-size:11px;padding:4px;background:var(--light)}
+
+/* Milestone timeline */
+.ms-timeline{position:relative;padding-left:30px}
+.ms-item{position:relative;padding:14px 0 14px 20px;border-left:2px solid var(--border)}
+.ms-item:last-child{border-left:2px solid transparent}
+.ms-dot{position:absolute;left:-8px;top:18px;width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:var(--card)}
+.ms-item.ms-done .ms-dot{background:var(--done-bg);border-color:var(--done-text)}
+.ms-item.ms-doing .ms-dot{background:var(--doing-bg);border-color:var(--doing-text)}
+.ms-item.ms-overdue .ms-dot{background:var(--blocked-bg);border-color:var(--blocked-text)}
+.ms-content{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 18px}
+.ms-content h3{font-size:14px;font-weight:600;margin-bottom:4px}
+.ms-content .ms-date{font-size:12px;color:var(--muted)}
+.ms-content .ms-status{margin-top:6px}
+
+/* Risk cards */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.risk-card{border-radius:8px;padding:16px;border:1px solid var(--border)}
+.risk-card.risk-high{background:#fef2f2;border-color:#fca5a5}
+.risk-card.risk-mid{background:#fffbeb;border-color:#fcd34d}
+.risk-card.risk-low{background:#f0fdf4;border-color:#86efac}
+.risk-card h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.risk-card p{font-size:12px;color:var(--muted);margin-bottom:4px}
+.risk-card .mitigation{font-size:12px;color:var(--text);font-style:italic}
+
+/* Scan info */
+.scan-info{background:var(--light);border-radius:8px;padding:16px;font-size:12px;color:var(--muted)}
+.scan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px}
+.scan-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 14px}
+.scan-item .scan-label{font-size:11px;color:var(--muted)}
+.scan-item .scan-value{font-size:16px;font-weight:600;color:var(--text)}
+
+/* Dept overview */
+.dept-table{width:100%;border-collapse:collapse;font-size:13px}
+.dept-table th{background:var(--light);color:var(--muted);font-weight:600;padding:10px;border:1px solid var(--border);text-align:center}
+.dept-table td{padding:8px 10px;border:1px solid var(--border);text-align:center}
+
+/* Loading & Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;z-index:1000;pointer-events:none}
+.toast.show{opacity:1}
+
+@media(max-width:900px){
+  .stats-bar{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .risk-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <div class="sub">NDC项目 · 游戏项目管理看板 · 1920s Detective</div>
+      <h1>NDC项目 智能排期表</h1>
+    </div>
+    <div class="header-actions">
+      <span id="scan-time" style="font-size:11px;color:var(--muted)"></span>
+      <button class="btn btn-outline" onclick="exportData()">导出 JSON</button>
+      <button class="btn btn-primary" onclick="refreshData()">刷新数据</button>
+    </div>
+  </header>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="overview">总览</button>
+    <button class="tab-btn" data-tab="planning">策划PM</button>
+    <button class="tab-btn" data-tab="dev">程序</button>
+    <button class="tab-btn" data-tab="art">美术</button>
+    <button class="tab-btn" data-tab="milestones">里程碑</button>
+    <button class="tab-btn" data-tab="risks">风险</button>
+  </div>
+
+  <!-- Tab: 总览 -->
+  <div class="tab-panel active" id="panel-overview">
+    <div class="card">
+      <div class="section-title">剧情章节进度总览</div>
+      <div class="task-table-wrap">
+        <table class="overview-table">
+          <thead><tr><th>章节</th><th>设计</th><th>State</th><th>对话</th><th>AI资产</th><th>配表</th><th>总进度</th></tr></thead>
+          <tbody id="chapter-overview-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">项目总甘特图 <span style="font-size:12px;font-weight:400;color:var(--muted);margin-left:8px">悬停查看详情与依赖</span></div>
+      <div id="project-gantt-wrap" style="overflow-x:auto;padding-bottom:8px">
+        <svg id="project-gantt-svg" style="display:block;min-width:900px"></svg>
+      </div>
+      <div id="pg-tooltip" style="display:none;position:fixed;background:#1e293b;color:#fff;font-size:12px;padding:10px 14px;border-radius:8px;z-index:999;line-height:1.9;pointer-events:none;max-width:280px"></div>
+    </div>
+    <div class="scan-info" id="scan-overview">
+      <strong>项目扫描概况</strong>
+      <div class="scan-grid" id="scan-grid"></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="section-title">各部门进度</div>
+      <div id="dept-overview"></div>
+    </div>
+  </div>
+
+  <!-- Tab: 策划PM -->
+  <div class="tab-panel" id="panel-planning">
+    <div class="card">
+      <div class="section-title">甘特图（策划PM）</div>
+      <div class="gantt-wrap" id="gantt-pm"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">任务列表 <span id="planning-count" style="color:var(--muted);font-weight:400;font-size:12px"></span></div>
+      <div class="task-table-wrap" id="planning-table"></div>
+      <button class="add-btn" onclick="addTask('策划')">+ 添加策划任务</button>
+    </div>
+  </div>
+
+  <!-- Tab: 程序 -->
+  <div class="tab-panel" id="panel-dev">
+    <div class="card">
+      <div class="section-title">甘特图（程序）</div>
+      <div class="gantt-wrap" id="gantt-dev"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">任务列表 <span id="dev-count" style="color:var(--muted);font-weight:400;font-size:12px"></span></div>
+      <div class="task-table-wrap" id="dev-table"></div>
+      <button class="add-btn" onclick="addTask('程序')">+ 添加程序任务</button>
+    </div>
+  </div>
+
+  <!-- Tab: 美术 -->
+  <div class="tab-panel" id="panel-art">
+    <div class="card">
+      <div class="section-title">甘特图（美术）</div>
+      <div class="gantt-wrap" id="gantt-art"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">资源覆盖率</div>
+      <div id="art-coverage"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">美术任务 <span id="art-count" style="color:var(--muted);font-weight:400;font-size:12px"></span></div>
+      <div class="task-table-wrap" id="art-table"></div>
+      <button class="add-btn" onclick="addTask('美术')">+ 添加美术任务</button>
+    </div>
+  </div>
+
+  <!-- Tab: 里程碑 -->
+  <div class="tab-panel" id="panel-milestones">
+    <div class="card">
+      <div class="section-title">里程碑时间轴</div>
+      <div class="ms-timeline" id="ms-timeline"></div>
+      <button class="add-btn" onclick="addMilestone()" style="margin-top:14px">+ 添加里程碑</button>
+    </div>
+  </div>
+
+  <!-- Tab: 风险 -->
+  <div class="tab-panel" id="panel-risks">
+    <div class="card">
+      <div class="section-title">风险追踪</div>
+      <div class="risk-grid" id="risk-grid"></div>
+      <button class="add-btn" onclick="addRisk()" style="margin-top:14px">+ 添加风险项</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// Supabase
+// ============================================
+const SUPABASE_URL = 'https://tyqsamueendpanbfousp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5cXNhbXVlZW5kcGFuYmZvdXNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxOTI1NjMsImV4cCI6MjA5MDc2ODU2M30.qa_EqkXHkq5ki8CYt0cJk-Se2vfj8PTVHci239YblfM';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============================================
+// Global State
+// ============================================
+let allTasks = [];
+let allMilestones = [];
+let allRisks = [];
+let scanData = null;
+
+const STATUSES = ['未开始', '进行中', '已完成', '阻塞'];
+const PRIORITIES = ['P0', 'P1', 'P2', 'P3'];
+const CATEGORIES = ['策划', '程序', '美术'];
+const STATUS_BADGE = { '未开始':'badge-todo', '进行中':'badge-doing', '已完成':'badge-done', '阻塞':'badge-blocked' };
+const PRIORITY_COLOR = { P0:'var(--p0)', P1:'var(--p1)', P2:'var(--p2)', P3:'var(--p3)' };
+
+// Chapter overview (localStorage)
+const OV_KEY = 'ndc_chapter_overview';
+const OV_COLS = ['设计','State','对话','AI资产','配表'];
+const OV_EPIS = ['EPI01','EPI02','EPI03','EPI04','EPI05'];
+let chapterOv = JSON.parse(localStorage.getItem(OV_KEY)) || {
+  EPI01:[100,100,100,100,100], EPI02:[100,100,100,0,100],
+  EPI03:[100,100,70,0,0], EPI04:[5,0,0,0,0], EPI05:[0,0,0,0,0],
+};
+
+// ============================================
+// Init
+// ============================================
+(async function init() {
+  setupTabs();
+  await refreshData();
+})();
+
+async function refreshData() {
+  showToast('加载中...');
+  try {
+    const [taskRes, msRes, riskRes, scanRes] = await Promise.all([
+      db.from('tasks').select('*').order('task_id'),
+      db.from('milestones').select('*').order('target_date'),
+      db.from('risks').select('*').order('severity').order('observation_date', { ascending: false }),
+      db.from('scan_snapshots').select('*').order('scan_time', { ascending: false }).limit(1),
+    ]);
+    allTasks = taskRes.data || [];
+    allMilestones = msRes.data || [];
+    allRisks = riskRes.data || [];
+    scanData = scanRes.data?.[0]?.data || null;
+    const scanTime = scanRes.data?.[0]?.scan_time;
+    document.getElementById('scan-time').textContent = scanTime
+      ? '上次扫描: ' + new Date(scanTime).toLocaleString('zh-CN')
+      : '暂无扫描数据';
+    renderAll();
+    showToast('数据已加载');
+  } catch (e) {
+    showToast('加载失败: ' + e.message);
+    console.error(e);
+  }
+}
+
+function renderAll() {
+  renderStats();
+  renderChapterOverview();
+  renderProjectGantt();
+  renderScanOverview();
+  renderDeptOverview();
+  renderTaskGantt('gantt-pm', '策划', '2026-04-01', '2026-06-30');
+  renderTaskTable('planning', '策划');
+  renderTaskGantt('gantt-dev', '程序', '2026-04-01', '2026-06-30');
+  renderTaskTable('dev', '程序');
+  renderTaskGantt('gantt-art', '美术', '2026-04-01', '2026-05-10');
+  renderArtCoverage();
+  renderTaskTable('art', '美术');
+  renderMilestones();
+  renderRisks();
+}
+
+// ============================================
+// Tabs
+// ============================================
+function setupTabs() {
+  document.getElementById('tabs').addEventListener('click', e => {
+    if (!e.target.classList.contains('tab-btn')) return;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('panel-' + e.target.dataset.tab).classList.add('active');
+  });
+}
+
+// ============================================
+// Stats Bar (per-category like friend's version)
+// ============================================
+function renderStats() {
+  const pm = allTasks.filter(t => t.category === '策划').length;
+  const dev = allTasks.filter(t => t.category === '程序').length;
+  const art = allTasks.filter(t => t.category === '美术').length;
+  const ms = allMilestones.length;
+  const deadline = new Date(2026, 5, 30);
+  const diff = Math.ceil((deadline - new Date()) / 86400000);
+  const daysText = diff > 0 ? diff + '天' : '已截止';
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-card"><div class="num">${pm}</div><div class="label">策划任务数</div></div>
+    <div class="stat-card"><div class="num">${dev}</div><div class="label">程序需求数</div></div>
+    <div class="stat-card"><div class="num">${art}</div><div class="label">美术任务数</div></div>
+    <div class="stat-card"><div class="num">${ms}</div><div class="label">里程碑总数</div></div>
+    <div class="stat-card"><div class="num" style="color:${diff<=30?'var(--p0)':diff<=60?'var(--p1)':'var(--text)'}">${daysText}</div><div class="label">距最终截止</div></div>
+  `;
+}
+
+// ============================================
+// Chapter Overview (EPI01-05 × 5 dimensions)
+// ============================================
+function renderChapterOverview() {
+  const tbody = document.getElementById('chapter-overview-tbody');
+  tbody.innerHTML = '';
+  OV_EPIS.forEach(epi => {
+    const vals = chapterOv[epi] || [0,0,0,0,0];
+    const total = Math.round(vals.reduce((a,b) => a+b, 0) / 5);
+    const tr = document.createElement('tr');
+    let cells = `<td style="font-weight:700;text-align:center">${epi}</td>`;
+    vals.forEach((v, ci) => {
+      if (v >= 100) {
+        cells += `<td><div class="cell-progress"><span class="done-badge" style="cursor:pointer" onclick="updateChapterOv('${epi}',${ci},99)" title="点击可重新编辑">已完成</span><div class="mini-bar-ov"><div class="mini-bar-ov-fill" style="width:100%;background:#86efac"></div></div></div></td>`;
+      } else {
+        cells += `<td><div class="cell-progress"><input type="number" min="0" max="100" value="${v}" onchange="updateChapterOv('${epi}',${ci},this.value)"><div class="mini-bar-ov"><div class="mini-bar-ov-fill" style="width:${v}%"></div></div></div></td>`;
+      }
+    });
+    if (total >= 100) {
+      cells += `<td class="total-cell"><div style="text-align:center"><span class="done-badge">已完成</span></div></td>`;
+    } else if (total <= 0) {
+      cells += `<td class="total-cell"><div style="text-align:center;font-weight:700;color:var(--muted)">0%</div></td>`;
+    } else {
+      cells += `<td class="total-cell"><div style="text-align:center;font-weight:700;margin-bottom:4px">${total}%</div><div class="total-bar"><div class="total-bar-fill" style="width:${total}%"></div></div></td>`;
+    }
+    tr.innerHTML = cells;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateChapterOv(epi, ci, val) {
+  const v = Math.max(0, Math.min(100, parseInt(val) || 0));
+  if (!chapterOv[epi]) chapterOv[epi] = [0,0,0,0,0];
+  chapterOv[epi][ci] = v;
+  localStorage.setItem(OV_KEY, JSON.stringify(chapterOv));
+  renderChapterOverview();
+}
+
+// ============================================
+// Project Gantt (SVG — one row per milestone, grouped by owner)
+// ============================================
+function renderProjectGantt() {
+  const svg = document.getElementById('project-gantt-svg');
+  const tooltip = document.getElementById('pg-tooltip');
+  svg.innerHTML = '';
+
+  if (allMilestones.length === 0) {
+    svg.setAttribute('width', 900); svg.setAttribute('height', 50);
+    const ns = 'http://www.w3.org/2000/svg';
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x',450); t.setAttribute('y',30); t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size',13); t.setAttribute('fill','#94a3b8');
+    t.textContent = '暂无里程碑数据'; svg.appendChild(t); return;
+  }
+
+  const GS = new Date('2026-04-01'), GE = new Date('2026-06-30'), GT = GE - GS;
+  const LW = 180, PR = 16, HH = 30, GH = 26, RH = 28, BH = 16;
+  const ns = 'http://www.w3.org/2000/svg';
+  const mk = (tag, a, txt) => { const e = document.createElementNS(ns, tag); Object.entries(a).forEach(([k,v]) => e.setAttribute(k, String(v))); if (txt !== undefined) e.textContent = txt; return e; };
+
+  function getOwner(m) {
+    const n = m.name || '';
+    if (/程序|DEV/i.test(n)) return '程序';
+    if (/美术|ART/i.test(n)) return '美术';
+    return '策划PM';
+  }
+
+  const msMap = {}; allMilestones.forEach(m => { msMap[m.ms_id] = m; });
+
+  const msData = allMilestones.map(m => {
+    const owner = getOwner(m);
+    const endDate = m.target_date || '2026-06-30';
+    const deps = (m.depends_on || []).filter(d => msMap[d]);
+    let startDate;
+    if (deps.length > 0) {
+      startDate = deps.reduce((lat, d) => { const dd = msMap[d]?.target_date || '2026-04-01'; return dd > lat ? dd : lat; }, '2026-04-01');
+    } else {
+      const ed = new Date(endDate); ed.setDate(ed.getDate() - 14);
+      startDate = ed.toISOString().slice(0,10);
+    }
+    if (startDate >= endDate) {
+      const ed = new Date(endDate); ed.setDate(ed.getDate() - 7);
+      startDate = ed.toISOString().slice(0,10);
+    }
+    return { ...m, owner, startDate, endDate, deps };
+  });
+
+  // Group by owner, each milestone gets its own row
+  const groups = [
+    { key:'策划PM', items: msData.filter(m => m.owner==='策划PM') },
+    { key:'程序',   items: msData.filter(m => m.owner==='程序') },
+    { key:'美术',   items: msData.filter(m => m.owner==='美术') },
+  ].filter(g => g.items.length > 0);
+
+  // Calculate total height
+  let totalRows = 0;
+  groups.forEach(g => { totalRows += 1 + g.items.length; }); // 1 header + N items
+  const cW = Math.max(document.getElementById('project-gantt-wrap')?.clientWidth || 900, 900);
+  const CW = cW - LW - PR;
+  const totalH = HH + totalRows * RH + 4;
+  svg.setAttribute('width', cW); svg.setAttribute('height', totalH);
+
+  const xOf = ds => { const d = new Date(ds); return LW + Math.max(0, Math.min(1, (d-GS)/GT)) * CW; };
+
+  // Defs
+  const defs = mk('defs', {});
+  ['arrow-n','arrow-h'].forEach((id,i) => {
+    const m = mk('marker',{id,markerWidth:7,markerHeight:7,refX:6,refY:3,orient:'auto'});
+    m.appendChild(mk('path',{d:'M0,0 L0,6 L7,3 z',fill:i===0?'#cbd5e1':'#f97316'}));
+    defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+
+  // Background
+  svg.appendChild(mk('rect',{x:0,y:0,width:cW,height:totalH,fill:'#f8fafc',rx:8}));
+
+  // Month headers + grid lines
+  for (let d = new Date(GS); d <= GE; d.setMonth(d.getMonth()+1)) {
+    const x = xOf(d.toISOString().slice(0,10));
+    svg.appendChild(mk('line',{x1:x,y1:HH,x2:x,y2:totalH,stroke:'#e2e8f0','stroke-width':1}));
+    const nm = new Date(d); nm.setMonth(nm.getMonth()+1);
+    const nx = Math.min(xOf(nm.toISOString().slice(0,10)), LW+CW);
+    svg.appendChild(mk('text',{x:(x+nx)/2,y:18,'text-anchor':'middle','font-size':12,'font-weight':'600',fill:'#64748b'},`${d.getMonth()+1}月`));
+  }
+  svg.appendChild(mk('line',{x1:0,y1:HH,x2:cW,y2:HH,stroke:'#e2e8f0','stroke-width':1}));
+
+  // Weekend shading
+  for (let d = new Date(GS); d <= GE; d.setDate(d.getDate()+1)) {
+    if (d.getDay()===0||d.getDay()===6) {
+      const x = xOf(d.toISOString().slice(0,10));
+      const w = CW / ((GE-GS)/86400000+1);
+      svg.appendChild(mk('rect',{x,y:HH,width:w,height:totalH-HH,fill:'rgba(241,245,249,0.5)'}));
+    }
+  }
+
+  // Today line
+  const today = new Date().toISOString().slice(0,10);
+  const tx = xOf(today);
+  if (tx >= LW && tx <= LW+CW) {
+    svg.appendChild(mk('line',{x1:tx,y1:HH,x2:tx,y2:totalH,stroke:'#ef4444','stroke-width':1.5,'stroke-dasharray':'4,3'}));
+    svg.appendChild(mk('text',{x:tx+3,y:HH+12,'font-size':9,fill:'#ef4444'},'今天'));
+  }
+
+  // Label area separator
+  svg.appendChild(mk('line',{x1:LW,y1:0,x2:LW,y2:totalH,stroke:'#e2e8f0','stroke-width':1}));
+
+  // Colors
+  const fillC = {'策划PM':'#bfdbfe','程序':'#bbf7d0','美术':'#fed7aa'};
+  const stkC = {'策划PM':'#93c5fd','程序':'#86efac','美术':'#fdba74'};
+  const txtC = {'策划PM':'#1e3a8a','程序':'#166534','美术':'#9a3412'};
+  const grpBg = {'策划PM':'#eff6ff','程序':'#f0fdf4','美术':'#fff7ed'};
+  const sDash = {'未开始':'6,3','进行中':'none','已完成':'none','待开始':'6,3'};
+  const sOp = {'未开始':0.8,'进行中':1,'已完成':0.45,'待开始':0.8};
+
+  // Render rows
+  let curY = HH;
+  const barPos = {};
+
+  groups.forEach(group => {
+    // Group header row
+    svg.appendChild(mk('rect',{x:0,y:curY,width:cW,height:RH,fill:grpBg[group.key]||'#f1f5f9'}));
+    svg.appendChild(mk('line',{x1:0,y1:curY+RH,x2:cW,y2:curY+RH,stroke:'#e2e8f0','stroke-width':1}));
+    svg.appendChild(mk('text',{x:12,y:curY+RH/2+5,'font-size':12,'font-weight':'700',fill:txtC[group.key]||'#334155'},group.key + ` (${group.items.length})`));
+    curY += RH;
+
+    // Milestone rows
+    group.items.forEach((ms, idx) => {
+      const rowBg = idx % 2 === 0 ? '#ffffff' : '#fafcfe';
+      svg.appendChild(mk('rect',{x:0,y:curY,width:cW,height:RH,fill:rowBg}));
+      svg.appendChild(mk('line',{x1:0,y1:curY+RH,x2:cW,y2:curY+RH,stroke:'#f1f5f9','stroke-width':1}));
+
+      // Milestone name (left side, truncated)
+      const maxLabelChars = Math.floor((LW - 20) / 6.5);
+      const label = ms.name.length > maxLabelChars ? ms.name.slice(0, maxLabelChars - 1) + '...' : ms.name;
+      svg.appendChild(mk('text',{x:14,y:curY+RH/2+4,'font-size':11,fill:'#475569',style:'cursor:default'},label));
+
+      // Bar
+      const x1 = xOf(ms.startDate), x2 = xOf(ms.endDate);
+      const bw = Math.max(x2 - x1, 6);
+      const by = curY + (RH - BH) / 2;
+
+      const rect = mk('rect',{
+        x:x1,y:by,width:bw,height:BH,
+        fill:fillC[ms.owner]||'#e2e8f0',rx:3,
+        stroke:stkC[ms.owner]||'#cbd5e1','stroke-width':1.2,
+        'stroke-dasharray':sDash[ms.status]||'6,3',
+        opacity:sOp[ms.status]||0.8,
+        style:'cursor:pointer;transition:filter .15s'
+      });
+      svg.appendChild(rect);
+
+      // Bar text (date range, inside bar if fits)
+      if (bw > 60) {
+        const barLabel = ms.endDate.slice(5);
+        svg.appendChild(mk('text',{x:x1+bw/2,y:by+BH/2+4,'text-anchor':'middle','font-size':10,'font-weight':'500',fill:txtC[ms.owner]||'#334155',opacity:0.8,style:'pointer-events:none'},barLabel));
+      }
+
+      barPos[ms.ms_id] = { x1, x2, midY: by + BH/2 };
+
+      // Hover events
+      rect.addEventListener('mouseenter', function(e) {
+        rect.setAttribute('filter','brightness(0.85)');
+        svg.querySelectorAll('.dep-arrow').forEach(a => {
+          if (a.dataset.to===ms.ms_id || (ms.depends_on||[]).includes(a.dataset.from)) {
+            a.setAttribute('stroke','#f97316'); a.setAttribute('stroke-width','2');
+            a.setAttribute('marker-end','url(#arrow-h)'); a.setAttribute('opacity','1');
+          }
+        });
+        const dn = ms.deps.map(d => msMap[d]?.name||d);
+        tooltip.innerHTML = `<div style="font-weight:700;margin-bottom:4px">${esc(ms.name)}</div>
+          <div>${ms.startDate} → ${ms.endDate}</div>
+          <div>${ms.owner} · ${ms.status}</div>
+          ${ms.deps.length?'<div>前置: '+dn.map(n=>esc(n)).join(', ')+'</div>':''}
+          ${ms.note?'<div style="color:#fcd34d">'+esc(ms.note)+'</div>':''}`;
+        tooltip.style.display='block';
+      });
+      rect.addEventListener('mousemove', function(e) {
+        tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY-10)+'px';
+      });
+      rect.addEventListener('mouseleave', function() {
+        rect.removeAttribute('filter');
+        svg.querySelectorAll('.dep-arrow').forEach(a => {
+          a.setAttribute('stroke','#cbd5e1'); a.setAttribute('stroke-width','1.2');
+          a.setAttribute('marker-end','url(#arrow-n)'); a.setAttribute('opacity','0.6');
+        });
+        tooltip.style.display='none';
+      });
+
+      curY += RH;
+    });
+  });
+
+  // Dependency arrows (on top of everything)
+  msData.forEach(ms => {
+    (ms.depends_on||[]).forEach(depId => {
+      const from = barPos[depId], to = barPos[ms.ms_id];
+      if (!from||!to) return;
+      const mx = from.x2 + (to.x1 - from.x2) * 0.5;
+      const d = `M${from.x2},${from.midY} C${mx},${from.midY} ${mx},${to.midY} ${to.x1},${to.midY}`;
+      const arrow = mk('path',{d,fill:'none',stroke:'#cbd5e1','stroke-width':'1.2','stroke-dasharray':'5,3','marker-end':'url(#arrow-n)',opacity:'0.6',class:'dep-arrow',style:'transition:stroke .15s'});
+      arrow.dataset.from = depId; arrow.dataset.to = ms.ms_id;
+      svg.appendChild(arrow);
+    });
+  });
+}
+
+// ============================================
+// Task Gantt (HTML table, for PM and Art tabs)
+// ============================================
+function renderTaskGantt(containerId, category, rangeStart, rangeEnd) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const tasks = allTasks.filter(t => t.category === category && t.start_date && t.end_date)
+    .sort((a,b) => (a.start_date||'').localeCompare(b.start_date||''));
+
+  if (tasks.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">任务需要填写开始/截止日期才会显示甘特图</div>';
+    return;
+  }
+
+  const s = new Date(rangeStart), e = new Date(rangeEnd);
+  const days = [];
+  let cur = new Date(s);
+  while (cur <= e) { days.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+
+  // Month groups
+  const months = []; let lastM = -1, mS = 0;
+  days.forEach((d,i) => {
+    if (d.getMonth()!==lastM) {
+      if (lastM>=0) months[months.length-1].count = i-mS;
+      months.push({label:(d.getMonth()+1)+'月',start:i,count:0});
+      mS=i; lastM=d.getMonth();
+    }
+  });
+  if (months.length) months[months.length-1].count = days.length - months[months.length-1].start;
+
+  const barColor = category==='美术' ? '#b0a090' : '#7c8da6';
+
+  let html = '<table class="gantt-table"><thead>';
+  html += '<tr><th class="gantt-name-col">任务名称</th>';
+  months.forEach(m => { html += `<th colspan="${m.count}" class="gantt-month-header">${m.label}</th>`; });
+  html += '</tr><tr><th class="gantt-name-col" style="font-size:10px;color:var(--muted)">状态</th>';
+  days.forEach(d => {
+    const we = d.getDay()===0||d.getDay()===6;
+    html += `<th class="gantt-day-col${we?' weekend':''}">${d.getDate()}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  tasks.forEach(t => {
+    const isDone = t.status === '已完成';
+    const tS = new Date(t.start_date), tE = new Date(t.end_date);
+    html += `<tr class="gantt-bar-row"><td class="name-cell${isDone?' done-row':''}" title="${esc(t.name)}">${esc(t.name)}</td>`;
+    days.forEach(d => {
+      const we = d.getDay()===0||d.getDay()===6;
+      const ds = d.toDateString();
+      const inR = d >= tS && d <= tE;
+      const isF = ds === tS.toDateString(), isL = ds === tE.toDateString();
+      html += `<td class="gantt-cell${we?' weekend':''}">`;
+      if (inR) {
+        const br = isF&&isL?'3px':isF?'3px 0 0 3px':isL?'0 3px 3px 0':'0';
+        html += `<div class="gantt-bar" style="left:0;right:0;background:${isDone?'#86efac':barColor};border-radius:${br}"></div>`;
+      }
+      html += '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+// ============================================
+// Scan Overview
+// ============================================
+function renderScanOverview() {
+  const grid = document.getElementById('scan-grid');
+  if (!scanData) { grid.innerHTML = '<div style="color:var(--muted)">暂无扫描数据 — 运行 python scan_and_upload.py 生成</div>'; return; }
+  const d = scanData.design || {}, dev = scanData.dev || {}, art = scanData.art || {};
+  const units = d.units || {};
+  let html = '';
+  for (const [name, u] of Object.entries(units)) {
+    if (!u.exists) continue;
+    html += `<div class="scan-item"><div class="scan-label">${name}</div>
+      <div class="scan-value">${u.characters||0}角色 / ${u.scenes||0}场景</div>
+      <div style="font-size:11px;color:var(--muted)">${u.state_files||0} state | ${u.evidence_docs||0} 证据 | ${u.expose_docs||0} 指证</div></div>`;
+  }
+  const dlg = d.dialogue || {};
+  for (const epi of ['EPI01','EPI02','EPI03']) {
+    const ep = dlg[epi] || {};
+    html += `<div class="scan-item"><div class="scan-label">${epi} 对话</div>
+      <div class="scan-value">${ep.talk_total||0} Talk + ${ep.expose_total||0} Expose</div></div>`;
+  }
+  html += `<div class="scan-item"><div class="scan-label">配置表</div>
+    <div class="scan-value">${dev.config_xlsx?.total||0} XLSX / ${dev.table_json?.total||0} JSON</div></div>`;
+  html += `<div class="scan-item"><div class="scan-label">美术资源</div>
+    <div class="scan-value">${art.total_files||0} 文件</div>
+    <div style="font-size:11px;color:var(--muted)">MC: ${art.movieclip?.total||0} | AVG: ${art.avg_clip?.total||0} | 语音: ${art.audio?.voice||0}</div></div>`;
+  grid.innerHTML = html;
+}
+
+// ============================================
+// Department Overview
+// ============================================
+function renderDeptOverview() {
+  const el = document.getElementById('dept-overview');
+  const cats = {};
+  for (const cat of CATEGORIES) {
+    const tasks = allTasks.filter(t => t.category === cat);
+    const total = tasks.length, done = tasks.filter(t => t.status==='已完成').length;
+    const doing = tasks.filter(t => t.status==='进行中').length;
+    const p0 = tasks.filter(t => t.priority==='P0' && t.status!=='已完成').length;
+    const pct = total > 0 ? Math.round(done/total*100) : 0;
+    cats[cat] = {total,done,doing,p0,pct};
+  }
+  const aT = allTasks.length, aD = allTasks.filter(t=>t.status==='已完成').length;
+  const aP = aT > 0 ? Math.round(aD/aT*100) : 0;
+
+  el.innerHTML = `<table class="dept-table">
+    <tr><th>部门</th><th>总任务</th><th>已完成</th><th>进行中</th><th>P0待处理</th><th style="min-width:150px">完成率</th></tr>
+    ${CATEGORIES.map(cat => {
+      const c = cats[cat];
+      return `<tr>
+        <td style="font-weight:600;text-align:left;padding-left:14px">${cat}</td>
+        <td>${c.total}</td>
+        <td><span class="badge badge-done">${c.done}</span></td>
+        <td><span class="badge badge-doing">${c.doing}</span></td>
+        <td style="color:${c.p0>0?'var(--p0)':'var(--muted)'};font-weight:${c.p0>0?'700':'400'}">${c.p0}</td>
+        <td><div class="progress-cell" style="justify-content:center"><span>${c.pct}%</span><div class="mini-bar"><div class="mini-bar-fill" style="width:${c.pct}%;background:${c.pct>=80?'#22c55e':c.pct>=40?'#f59e0b':'#94a3b8'}"></div></div></div></td>
+      </tr>`;
+    }).join('')}
+    <tr style="background:var(--light);font-weight:600">
+      <td style="text-align:left;padding-left:14px">总计</td><td>${aT}</td><td>${aD}</td>
+      <td colspan="2">${aT-aD} 剩余</td>
+      <td><div class="progress-cell" style="justify-content:center"><span>${aP}%</span><div class="mini-bar"><div class="mini-bar-fill" style="width:${aP}%;background:#7c8da6"></div></div></div></td>
+    </tr>
+  </table>`;
+}
+
+// ============================================
+// Task Table (策划 / 美术)
+// ============================================
+function renderTaskTable(panelId, category) {
+  const container = document.getElementById(panelId + '-table');
+  const countEl = document.getElementById(panelId + '-count');
+  const tasks = allTasks.filter(t => t.category === category)
+    .sort((a,b) => (a.priority||'P2').localeCompare(b.priority||'P2') || (a.task_id||'').localeCompare(b.task_id||''));
+  if (countEl) countEl.textContent = `(${tasks.length} 项)`;
+
+  if (tasks.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">暂无任务</div>';
+    return;
+  }
+  container.innerHTML = `
+  <table class="task-table"><thead><tr>
+    <th style="width:60px">ID</th><th style="min-width:200px">任务名称</th><th style="width:75px">负责人</th>
+    <th style="width:75px">优先级</th><th style="width:90px">状态</th>
+    <th style="width:65px">预估(天)</th>
+    <th style="width:100px">开始日期</th><th style="width:100px">截止日期</th><th style="min-width:100px">备注</th><th style="width:30px"></th>
+  </tr></thead><tbody>
+  ${tasks.map(t => `
+    <tr class="${t.status==='已完成'?'done-row':''}" data-id="${t.id}">
+      <td style="font-size:11px;color:var(--muted);white-space:nowrap">${esc(t.task_id||'')}</td>
+      <td style="position:relative"><input value="${esc(t.name)}" onchange="updateTask(${t.id},'name',this.value)" />${(t.description||t.dev_note)?`<span style="cursor:pointer;font-size:10px;color:var(--primary);margin-left:4px" onclick="this.parentElement.querySelector('.task-detail').classList.toggle('hidden')">详情</span><div class="task-detail hidden" style="position:absolute;left:0;top:100%;z-index:10;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px;min-width:350px;max-width:500px;box-shadow:0 4px 12px rgba(0,0,0,.15);font-size:12px;line-height:1.6">${t.description?`<div style="margin-bottom:6px"><b>详细描述：</b>${esc(t.description)}</div>`:``}${t.dev_note?`<div><b>程序描述：</b>${esc(t.dev_note)}</div>`:``}</div>`:``}</td>
+      <td><input value="${esc(t.person||'')}" onchange="updateTask(${t.id},'person',this.value)" style="width:65px" /></td>
+      <td><select style="width:70px;color:${PRIORITY_COLOR[t.priority]||'var(--text)'};font-weight:600" onchange="updateTask(${t.id},'priority',this.value)">${PRIORITIES.map(p => `<option ${t.priority===p?'selected':''} style="color:${PRIORITY_COLOR[p]}">${p}</option>`).join('')}</select></td>
+      <td><select style="width:85px" onchange="updateTask(${t.id},'status',this.value)">${STATUSES.map(s => `<option ${t.status===s?'selected':''}>${s}</option>`).join('')}</select></td>
+      <td><input type="number" step="0.1" value="${t.estimated_days||''}" onchange="updateTask(${t.id},'estimated_days',+this.value||null)" style="width:60px" /></td>
+      <td><input type="date" value="${t.start_date||''}" onchange="updateTask(${t.id},'start_date',this.value||null)" style="width:110px" /></td>
+      <td><input type="date" value="${t.end_date||''}" onchange="updateTask(${t.id},'end_date',this.value||null)" style="width:110px" /></td>
+      <td><input value="${esc(t.note||'')}" onchange="updateTask(${t.id},'note',this.value)" /></td>
+      <td><button class="del-btn" onclick="deleteTask(${t.id})" title="删除">x</button></td>
+    </tr>
+  `).join('')}
+  </tbody></table>`;
+}
+
+
+
+// ============================================
+// Art Coverage
+// ============================================
+function renderArtCoverage() {
+  const el = document.getElementById('art-coverage');
+  if (!scanData?.art) { el.innerHTML = '暂无扫描数据'; return; }
+  const art = scanData.art;
+  const items = [
+    {label:'场景',value:art.scene?.total||0},
+    {label:'NPC',value:art.npc?.total||0},
+    {label:'MovieClip',value:art.movieclip?.total||0,warn:art.coverage?.movieclip},
+    {label:'AVG演出',value:art.avg_clip?.total||0,warn:art.coverage?.avg_clip},
+    {label:'UI',value:art.ui?.total||0},
+    {label:'语音',value:art.audio?.voice||0,warn:art.coverage?.voice},
+  ];
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px">
+    ${items.map(i => `<div style="background:var(--light);border-radius:6px;padding:10px 14px;text-align:center">
+      <div style="font-size:20px;font-weight:700;color:${i.value===0?'var(--blocked-text)':'var(--text)'}">${i.value}</div>
+      <div style="font-size:11px;color:var(--muted)">${i.label}</div>
+      ${i.warn?`<div style="font-size:10px;color:var(--muted)">${i.warn}</div>`:''}
+    </div>`).join('')}
+  </div>`;
+}
+
+// ============================================
+// Milestones
+// ============================================
+function renderMilestones() {
+  const container = document.getElementById('ms-timeline');
+  if (allMilestones.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">暂无里程碑</div>'; return;
+  }
+  const today = new Date().toISOString().slice(0,10);
+  container.innerHTML = allMilestones.map(m => {
+    const overdue = m.status!=='已完成' && m.target_date && m.target_date < today;
+    const cls = m.status==='已完成'?'ms-done':overdue?'ms-overdue':m.status==='进行中'?'ms-doing':'';
+    return `<div class="ms-item ${cls}"><div class="ms-dot"></div><div class="ms-content">
+      <h3>${esc(m.name)}</h3>
+      <div class="ms-date">${m.ms_id||''} | 目标: ${m.target_date||'未定'} ${overdue?'<span style="color:var(--blocked-text);font-weight:600">已逾期</span>':''}</div>
+      <div class="ms-status" style="margin-top:6px">
+        <select onchange="updateMilestone(${m.id},'status',this.value)" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:4px">
+          ${STATUSES.slice(0,3).map(s => `<option ${m.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <input type="date" value="${m.target_date||''}" onchange="updateMilestone(${m.id},'target_date',this.value)" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;margin-left:8px" />
+        <button class="del-btn" onclick="deleteMilestone(${m.id})" style="margin-left:8px">x</button>
+      </div>
+      ${m.note?`<div style="margin-top:6px;font-size:12px;color:var(--muted)">${esc(m.note)}</div>`:''}
+    </div></div>`;
+  }).join('');
+}
+
+// ============================================
+// Risks
+// ============================================
+function renderRisks() {
+  const container = document.getElementById('risk-grid');
+  if (allRisks.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">暂无风险项</div>'; return;
+  }
+  const sc = {'高':'risk-high','中':'risk-mid','低':'risk-low'};
+  container.innerHTML = allRisks.map(r => `
+    <div class="risk-card ${sc[r.severity]||'risk-mid'}">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <h3>${esc(r.title)}</h3>
+        <div style="display:flex;gap:4px;align-items:center">
+          <select onchange="updateRisk(${r.id},'severity',this.value)" style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px">${['高','中','低'].map(s => `<option ${r.severity===s?'selected':''}>${s}</option>`).join('')}</select>
+          <select onchange="updateRisk(${r.id},'status',this.value)" style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px">${['观察中','已缓解','已关闭'].map(s => `<option ${r.status===s?'selected':''}>${s}</option>`).join('')}</select>
+          <button class="del-btn" onclick="deleteRisk(${r.id})">x</button>
+        </div>
+      </div>
+      <p>${esc(r.description||'')}</p>
+      ${r.mitigation?`<div class="mitigation">缓解: ${esc(r.mitigation)}</div>`:''}
+      <div style="margin-top:6px;font-size:11px;color:var(--muted)">${r.category||''} | ${r.observation_date||''}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================
+// CRUD
+// ============================================
+async function updateTask(id, field, value) {
+  const { error } = await db.from('tasks').update({ [field]: value, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { showToast('保存失败: ' + error.message); return; }
+  const task = allTasks.find(t => t.id === id);
+  if (task) task[field] = value;
+  if (field === 'status' && value === '已完成') {
+    await db.from('tasks').update({ status: '已完成', updated_at: new Date().toISOString() }).eq('id', id);
+    if (task) task.status = '已完成';
+  }
+  renderAll();
+  showToast('已保存');
+}
+
+async function addTask(category) {
+  const count = allTasks.filter(t => t.category === category).length;
+  const prefix = category==='策划'?'PM':category==='程序'?'DEV':'ART';
+  const taskId = `${prefix}-${String(count+1).padStart(3,'0')}`;
+  const { data, error } = await db.from('tasks').insert({ task_id: taskId, name: '新任务', category, priority: 'P1', status: '未开始' }).select();
+  if (error) { showToast('添加失败: ' + error.message); return; }
+  allTasks.push(data[0]);
+  renderAll();
+  showToast('已添加');
+}
+
+async function deleteTask(id) {
+  if (!confirm('确定删除此任务?')) return;
+  const { error } = await db.from('tasks').delete().eq('id', id);
+  if (error) { showToast('删除失败: ' + error.message); return; }
+  allTasks = allTasks.filter(t => t.id !== id);
+  renderAll();
+  showToast('已删除');
+}
+
+async function updateMilestone(id, field, value) {
+  const { error } = await db.from('milestones').update({ [field]: value, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { showToast('保存失败: ' + error.message); return; }
+  const ms = allMilestones.find(m => m.id === id);
+  if (ms) ms[field] = value;
+  renderAll();
+  showToast('已保存');
+}
+
+async function addMilestone() {
+  const msId = `MS-${String(allMilestones.length+1).padStart(3,'0')}`;
+  const { data, error } = await db.from('milestones').insert({ ms_id: msId, name: '新里程碑', status: '未开始' }).select();
+  if (error) { showToast('添加失败: ' + error.message); return; }
+  allMilestones.push(data[0]);
+  renderMilestones();
+  showToast('已添加');
+}
+
+async function deleteMilestone(id) {
+  if (!confirm('确定删除此里程碑?')) return;
+  const { error } = await db.from('milestones').delete().eq('id', id);
+  if (error) { showToast('删除失败'); return; }
+  allMilestones = allMilestones.filter(m => m.id !== id);
+  renderAll();
+  showToast('已删除');
+}
+
+async function updateRisk(id, field, value) {
+  const { error } = await db.from('risks').update({ [field]: value }).eq('id', id);
+  if (error) { showToast('保存失败'); return; }
+  const r = allRisks.find(r => r.id === id);
+  if (r) r[field] = value;
+  renderRisks();
+  showToast('已保存');
+}
+
+async function addRisk() {
+  const title = prompt('风险标题:');
+  if (!title) return;
+  const { data, error } = await db.from('risks').insert({ title, severity: '中', status: '观察中' }).select();
+  if (error) { showToast('添加失败'); return; }
+  allRisks.push(data[0]);
+  renderRisks();
+  showToast('已添加');
+}
+
+async function deleteRisk(id) {
+  if (!confirm('确定删除?')) return;
+  const { error } = await db.from('risks').delete().eq('id', id);
+  if (error) { showToast('删除失败'); return; }
+  allRisks = allRisks.filter(r => r.id !== id);
+  renderRisks();
+  showToast('已删除');
+}
+
+// ============================================
+// Export & Utils
+// ============================================
+function exportData() {
+  const data = { tasks: allTasks, milestones: allMilestones, risks: allRisks, scanData, chapterOverview: chapterOv, exportTime: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = `ndc_dashboard_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('已导出');
+}
+
+function editTaskModal(id) {
+  const task = allTasks.find(t => t.id === id);
+  if (!task) return;
+  const tabMap = {'策划':'planning','程序':'dev','美术':'art'};
+  const tabName = tabMap[task.category] || 'planning';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  document.getElementById('panel-' + tabName).classList.add('active');
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function progressColor(p) { return p >= 80 ? '#22c55e' : p >= 40 ? '#f59e0b' : '#94a3b8'; }
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>

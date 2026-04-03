@@ -1,0 +1,93 @@
+<section class="section" id="section-6">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2 class="section-title">Dialogue Quality</h2>
+      <p class="section-subtitle">对话质量热力图（12 维度 x Loop）</p>
+    </div>
+
+    <div class="heatmap-container animate-in">
+      <div class="heatmap-grid" style="grid-template-columns: 180px repeat(2, 1fr);">
+        <div class="heatmap-label-y"></div>
+        <div class="heatmap-label-x">L3</div>
+        <div class="heatmap-label-x">L4</div>
+
+        <div class="heatmap-label-y">1. 知识边界</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">2. 信息分配</div>
+        <div class="heatmap-cell" data-level="warn" data-detail="Webb办公室10件证据集中">WARN</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">3. 证词覆盖</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">4. 物品描述准确</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="fail" data-detail="1429 Describe=还没写描述">FAIL</div>
+
+        <div class="heatmap-label-y">5. 角色语气一致</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">6. 对话链完整性</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">7. 证词获取节奏</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">8. ID编码正确性</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">9. 指证谎言机制</div>
+        <div class="heatmap-cell" data-level="warn" data-detail="Tommy年份自相矛盾:三年vs五年">WARN</div>
+        <div class="heatmap-cell" data-level="warn" data-detail="1429合成/使用冲突">WARN</div>
+
+        <div class="heatmap-label-y">10. 鉴赏力节点</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+
+        <div class="heatmap-label-y">11. 玩家视角测试</div>
+        <div class="heatmap-cell" data-level="warn" data-detail="笔迹分析缺引导">WARN</div>
+        <div class="heatmap-cell" data-level="fail" data-detail="1429描述空白无法推理">FAIL</div>
+
+        <div class="heatmap-label-y">12. 平行场景隔离</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+        <div class="heatmap-cell" data-level="pass">PASS</div>
+      </div>
+    </div>
+
+    <h3 class="screen-heading animate-in">跨 Loop 模式问题</h3>
+
+    <div class="issue-card issue-minor animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-minor">Minor</span>
+          <span class="issue-meta-tag">L3-L4</span>
+          <span>Emma 开场对话引述精确度</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p>Emma 在各 Loop 开场（emma_004, emma_005, emma_006）回顾上一轮指证结果时，存在概括性引述而非逐字引用的情况。emma_006 中 "Jimmy说'问问Vivian'" 在指证 JSON 中无对应原话。建议：若引述 NPC 原话，确保指证对话中有对应台词；若为 Emma 自己的概括，改为间接叙述（如"Jimmy 暗示了 Vivian 的参与"）。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-suggestion animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-suggestion">Suggestion</span>
+          <span class="issue-meta-tag">L4-L5</span>
+          <span>称呼一致性："要员" vs "Whale"</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p>emma_006 中同时使用"要员"和"Whale"指代同一角色。虽可视为从泛称到专名的自然过渡，但为减少玩家认知负担，建议在首次使用"Whale"后统一使用该称呼，或明确标注二者等同关系。</p>
+      </div>
+    </div>
+  </div>
+</section>

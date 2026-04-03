@@ -1,0 +1,213 @@
+<section class="section" id="section-9">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">09</span>
+      <h2 class="section-title">Issue Detail</h2>
+      <p class="section-subtitle">完整问题明细（可筛选 / 排序 / 搜索）</p>
+    </div>
+
+    <div class="filter-bar animate-in">
+      <div class="filter-group">
+        <span class="filter-group-label">Severity</span>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="critical">Critical</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="major">Major</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="minor">Minor</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="suggestion">Suggestion</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Dimension</span>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="player">Player</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="evidence">Evidence</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="character">Character</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="timeline">Timeline</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="difficulty">Difficulty</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="narrative">Narrative</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Loop</span>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L1">L1</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L2">L2</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L3">L3</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L4">L4</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L5">L5</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L6">L6</button>
+      </div>
+      <input type="text" id="issue-search" placeholder="Search issues...">
+      <button class="filter-clear" onclick="clearFilters()">Clear</button>
+      <span class="filter-count">17 / 17 issues</span>
+    </div>
+
+    <div style="margin-bottom: var(--space-4); display: flex; gap: var(--space-2);">
+      <button class="btn" onclick="expandAll('issue-list')">Expand All</button>
+      <button class="btn" onclick="collapseAll('issue-list')">Collapse All</button>
+    </div>
+
+    <div id="issue-list">
+
+      <!-- ===== CRITICAL (3) ===== -->
+
+      <div class="issue-card issue-critical" id="issue-C1" data-severity="critical" data-dimension="player" data-loop="L3">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="issue-meta-tag">L3</span>
+            <span class="issue-meta-tag">Player</span>
+            <span style="flex:1;">楼顶二次搜证叙事动机缺失</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>SC3002楼顶在L3通过"系统解锁"开放，无NPC引导。3308(涂油示意图)是R2核心证据，若未获取则流程卡死。</p>
+          <p><strong>影响范围：</strong>L3指证R2 + L6辩论R2</p>
+          <p><strong>文件位置：</strong><code>loop3_state.yaml SC3002</code></p>
+          <p><strong>修复建议：</strong>Helen R1结果中加入"涂油时我检查过地面"，给玩家明确理由回楼顶。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-high">High</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-critical" id="issue-C2" data-severity="critical" data-dimension="player difficulty" data-loop="L5">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="issue-meta-tag">L5</span>
+            <span class="issue-meta-tag">Player</span>
+            <span class="issue-meta-tag">Difficulty</span>
+            <span style="flex:1;">标注报纸联想链三重断层</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>玩家需: (1)记得L2的3501标注报纸 (2)在Mickey质疑后联想到它 (3)主动触发系统分析得到3502笔迹比对。15+件背包中找3Loop前的报纸。</p>
+          <p><strong>影响范围：</strong>L5指证核心路径 + 整体难度曲线</p>
+          <p><strong>文件位置：</strong><code>loop5_state.yaml 指证设计</code></p>
+          <p><strong>修复建议：</strong>Mickey质疑后Emma引导："我们在Mary家调查时有什么跟保险/银行相关的东西吗？"</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-high">High</span></p>
+        </div>
+      </div>
+
+      <!-- C3 L6场景矛盾 — 已修复: loop6_state.yaml SC3011统一为Mickey办公室 -->
+      <!-- M1 3505002/3505003 — 已修复: 重命名为3305002/3305003 -->
+
+      <div class="issue-card issue-major" id="issue-M2" data-severity="major" data-dimension="player difficulty" data-loop="L3">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L3</span><span class="issue-meta-tag">Difficulty</span><span style="flex:1;">SC3008 Helen家物品过载(10+)</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>一次投放10件物品(含8件伏笔)，远超单场景3核心信息点限制。</p>
+          <p><strong>修复建议：</strong>分区呈现(客厅/卧室/厨房)或分批解锁，视觉区分"当前可用"vs"记录备查"。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-medium">Medium</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-high">High</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M3" data-severity="major" data-dimension="difficulty" data-loop="L4">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L4</span><span class="issue-meta-tag">Difficulty</span><span style="flex:1;">Margaret路径动机模糊</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>L4新解锁Margaret鞋坊，缺乏引导动机。</p>
+          <p><strong>修复建议：</strong>Emma开篇对话自然引出"楼下有邻居——Margaret的鞋坊"。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M4" data-severity="major" data-dimension="player" data-loop="L2">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L2</span><span class="issue-meta-tag">Player</span><span style="flex:1;">搜身观察触发机制不透明</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>搜身需持有L1的3105(袖扣纤维)，触发条件不可见。3207手链是L5关键前置。</p>
+          <p><strong>修复建议：</strong>Foster对话后Emma提示"那根纤维应该来自某件衣物"。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M5" data-severity="major" data-dimension="player difficulty" data-loop="L2 L3">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L2/L3</span><span class="issue-meta-tag">Difficulty</span><span style="flex:1;">连续高密度伏笔投放</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>L2客厅6件(3伏笔) + L3 Helen家10件(8伏笔)，连续两Loop信息过载。</p>
+          <p><strong>修复建议：</strong>视觉区分或推迟部分伏笔获取时机。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-medium">Medium</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M6" data-severity="major" data-dimension="player" data-loop="L6">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L6</span><span class="issue-meta-tag">Player</span><span style="flex:1;">辩论机制转变无预告</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>从"击穿谎言"变为"同一证据不同解读"。Mickey不是说谎者。</p>
+          <p><strong>修复建议：</strong>L6开篇Emma提示"这次不一样……Mickey说的也许不全错"。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M7" data-severity="major" data-dimension="player narrative" data-loop="L6">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L6</span><span class="issue-meta-tag">Narrative</span><span style="flex:1;">油位置反转铺垫不足</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>3308涂油示意图"油在Thomas一侧"的方位信息此前未被引导注意。L6辩论R2依赖此。</p>
+          <p><strong>修复建议：</strong>L3/L4证据描述明确包含方位信息。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M8" data-severity="major" data-dimension="character" data-loop="L1">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L1</span><span class="issue-meta-tag">Character</span><span style="flex:1;">Foster L1决策基础缺失</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>Foster在L1选择模糊措辞保护Mary，但L1知情基础不清晰。</p>
+          <p><strong>修复建议：</strong>补充：基于职业经验推断"防卫可能性"而保留解读空间。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-low">Low</span></p>
+        </div>
+      </div>
+
+      <!-- M9 Mary指证轮次 — 已修复: mary.md更新为4轮 -->
+      <!-- M10 Helen withheld — L6已修复(注释移入正文), L5非问题(隐藏预谋性非行为) -->
+
+      <div class="issue-card issue-major" id="issue-M11" data-severity="major" data-dimension="narrative" data-loop="L2">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L2</span><span class="issue-meta-tag">Narrative</span><span style="flex:1;">L2 愤怒→同情对话机制保证缺失</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>家暴证据是辅助项，高效玩家可能跳过，情绪弧只完成前半段。</p>
+          <p><strong>修复建议：</strong>升级家暴证据为主线获取或指证后强制触发环境叙事。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-medium">Medium</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <div class="issue-card issue-major" id="issue-M12" data-severity="major" data-dimension="narrative" data-loop="L2 L5">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-major">Major</span><span class="issue-meta-tag">L2/L5</span><span class="issue-meta-tag">Narrative</span><span style="flex:1;">Mary手链伏笔L2权重不足</span></div></div>
+        <div class="collapsible-body">
+          <p><strong>问题描述：</strong>手链在L2是环境观察道具，L5回收时玩家可能无印象。</p>
+          <p><strong>修复建议：</strong>L2获取时增加Emma评论或特写演出。</p>
+          <p><strong>修复难度：</strong><span class="effort-badge effort-low">Low</span> <strong style="margin-left: var(--space-4);">影响度：</strong><span class="impact-badge impact-medium">Medium</span></p>
+        </div>
+      </div>
+
+      <!-- ===== MINOR (5) ===== -->
+
+      <div class="issue-card issue-minor" id="issue-m1" data-severity="minor" data-dimension="narrative" data-loop="L3 L6">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-minor">Minor</span><span class="issue-meta-tag">L3/L6</span><span class="issue-meta-tag">Narrative</span><span style="flex:1;">Helen日记本L6回收路径缺失</span></div></div>
+        <div class="collapsible-body"><p>L3获取3307"母亲请原谅我"，L6 brief无明确引用设计。</p></div>
+      </div>
+
+      <div class="issue-card issue-minor" id="issue-m2" data-severity="minor" data-dimension="evidence" data-loop="L3">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-minor">Minor</span><span class="issue-meta-tag">L3</span><span class="issue-meta-tag">Evidence</span><span style="flex:1;">3209未出现在Doubt 3010条件中</span></div></div>
+        <div class="collapsible-body"><p>Doubt 3010文本提到鞋子相似但条件不含3209(Mary鞋)。玩家已持有，添加为冗余。</p></div>
+      </div>
+
+      <div class="issue-card issue-minor" id="issue-m3" data-severity="minor" data-dimension="timeline evidence" data-loop="L5">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-minor">Minor</span><span class="issue-meta-tag">L5</span><span class="issue-meta-tag">Timeline</span><span style="flex:1;">疑点3504单证据解锁</span></div></div>
+        <div class="collapsible-body"><p>Doubt 3504仅需item:3507，违反至少两种来源交叉验证设计原则。可补充item:3504(垫板)为第二条件。</p></div>
+      </div>
+
+      <div class="issue-card issue-minor" id="issue-m4" data-severity="minor" data-dimension="difficulty" data-loop="L4">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-minor">Minor</span><span class="issue-meta-tag">L4</span><span class="issue-meta-tag">Difficulty</span><span style="flex:1;">L4难度下降曲线凹陷</span></div></div>
+        <div class="collapsible-body"><p>难度曲线2→3→4→3→4→5，L4相比L3降低。设计上可接受(转折Loop释放张力)。</p></div>
+      </div>
+
+      <div class="issue-card issue-minor" id="issue-m5" data-severity="minor" data-dimension="narrative" data-loop="L3">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-minor">Minor</span><span class="issue-meta-tag">L3</span><span class="issue-meta-tag">Narrative</span><span style="flex:1;">L3结尾无过渡事件</span></div></div>
+        <div class="collapsible-body"><p>L3结束时缺乏向L4的过渡叙事事件。</p></div>
+      </div>
+
+      <!-- ===== SUGGESTION (3) ===== -->
+
+      <!-- S1 known_facts措辞 — 已修复: 全部对齐到post_expose原文 -->
+
+      <div class="issue-card issue-minor" id="issue-S2" data-severity="suggestion" data-dimension="timeline" data-loop="L4">
+        <div class="collapsible-header"><div class="issue-meta"><span class="severity-badge badge-suggestion">Suggestion</span><span class="issue-meta-tag">L4</span><span class="issue-meta-tag">Timeline</span><span style="flex:1;">Zack独白暗示L6核心论点</span></div></div>
+        <div class="collapsible-body"><p>"0.25%...Thomas真的还能站起来扑向Mary？"过于直接。改为更模糊的不安感措辞。</p></div>
+      </div>
+
+      <!-- S3 Bernard blind_spots — 已排除: 设计合理 -->
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,109 @@
+<section id="section-1" class="section">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Executive Summary</h2>
+      <p class="section-subtitle">Unit3 (EPI03) · 6 Loops · 54 证据 · 6 NPC · 基于State设计分析</p>
+    </div>
+
+    <!-- Overall Health Gauge -->
+    <div class="gauge-container animate-in">
+      <svg viewBox="0 0 200 200" width="200" height="200">
+        <circle class="gauge-bg" cx="100" cy="100" r="85" fill="none" stroke="#2a2a3e" stroke-width="14"/>
+        <circle class="gauge-fill" cx="100" cy="100" r="85" fill="none" stroke="#D4A843" stroke-width="14"
+                stroke-dasharray="534" stroke-dashoffset="534" stroke-linecap="round"
+                transform="rotate(-90 100 100)" data-score="79"
+                style="filter: drop-shadow(0 0 6px rgba(212,168,67,0.4));"/>
+        <text class="gauge-score" x="100" y="90" text-anchor="middle" dominant-baseline="middle"
+              font-size="48" font-weight="700" fill="#D4A843" data-target="79">0</text>
+        <text class="gauge-label" x="100" y="120" text-anchor="middle" font-size="12"
+              fill="#6B6775" font-family="'JetBrains Mono',monospace" letter-spacing="0.1em"
+              text-transform="uppercase">OVERALL HEALTH</text>
+      </svg>
+    </div>
+
+    <!-- Summary Callout -->
+    <div class="callout callout-info animate-in">
+      <span class="callout-icon">&#128203;</span>
+      <div>
+        <div class="callout-title">审计结论</div>
+        <div class="callout-content">
+          Unit3整体设计质量良好(79/100)，L5触发链引导和L3信息密度是最大风险点。证据属性跨Loop零矛盾，时序一致性优秀。
+        </div>
+      </div>
+    </div>
+
+    <!-- Severity Score Cards -->
+    <h3 class="screen-heading animate-in">Issue Summary</h3>
+    <div class="score-cards stagger-children">
+      <div class="score-card animate-in severity-critical" style="border-left: 4px solid var(--color-fail)">
+        <div class="score-card-number">2</div>
+        <div class="score-card-label">Critical</div>
+      </div>
+      <div class="score-card animate-in severity-major" style="border-left: 4px solid var(--color-warn)">
+        <div class="score-card-number">9</div>
+        <div class="score-card-label">Major</div>
+      </div>
+      <div class="score-card animate-in severity-minor" style="border-left: 4px solid var(--color-accent)">
+        <div class="score-card-number">5</div>
+        <div class="score-card-label">Minor</div>
+      </div>
+      <div class="score-card animate-in severity-suggestion" style="border-left: 4px solid var(--color-pass)">
+        <div class="score-card-number">1</div>
+        <div class="score-card-label">Suggestion</div>
+      </div>
+    </div>
+
+    <!-- Dimension Scores -->
+    <h3 class="screen-heading animate-in">Dimension Scores</h3>
+    <div class="score-cards stagger-children">
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-warn)">
+        <div class="score-card-number">67</div>
+        <div class="score-card-label">D1 Player Experience</div>
+      </div>
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-pass)">
+        <div class="score-card-number">85</div>
+        <div class="score-card-label">D2 Evidence Chain</div>
+      </div>
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-accent)">
+        <div class="score-card-number">79</div>
+        <div class="score-card-label">D3 Character Consistency</div>
+      </div>
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-pass)">
+        <div class="score-card-number">92</div>
+        <div class="score-card-label">D4 Dialogue Quality</div>
+      </div>
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-pass)">
+        <div class="score-card-number">90</div>
+        <div class="score-card-label">D5 Timeline Consistency</div>
+      </div>
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-warn)">
+        <div class="score-card-number">66</div>
+        <div class="score-card-label">D6 Difficulty Curve</div>
+      </div>
+      <div class="score-card animate-in" style="border-left: 4px solid var(--color-accent)">
+        <div class="score-card-number">76</div>
+        <div class="score-card-label">D7 Narrative Coherence</div>
+      </div>
+    </div>
+
+    <!-- Audit Scope Table -->
+    <h3 class="screen-heading animate-in">Audit Scope</h3>
+    <table class="audit-table animate-in">
+      <thead>
+        <tr>
+          <th class="sortable-header">Parameter</th>
+          <th class="sortable-header">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Target</td><td>Unit3 (EPI03)</td></tr>
+        <tr><td>Loops</td><td>Loop 1 &ndash; Loop 6</td></tr>
+        <tr><td>Evidence Items</td><td>54</td></tr>
+        <tr><td>NPCs Audited</td><td>6 (Morrison, Mary, Helen, Foster, Bernard, Mickey)</td></tr>
+        <tr><td>Dialogue JSON</td><td>0 (state-based analysis only)</td></tr>
+        <tr><td>Data Sources</td><td>State YAML, Evidence Design Docs, NPC Briefs, Expose Designs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,169 @@
+<section class="section" id="section-2">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Evidence Chain</h2>
+      <p class="section-subtitle">证据链路完整性分析</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="score-cards stagger-children" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="score-card animate-in" style="border-color: var(--color-accent);">
+        <div class="score-card-number">54</div>
+        <div class="score-card-label">Total Evidence</div>
+      </div>
+      <div class="score-card animate-in" style="border-color: var(--color-pass);">
+        <div class="score-card-number">40</div>
+        <div class="score-card-label">Active Chains</div>
+      </div>
+      <div class="score-card animate-in" style="border-color: var(--color-warn);">
+        <div class="score-card-number">14</div>
+        <div class="score-card-label">Env / Foreshadow</div>
+      </div>
+    </div>
+
+    <!-- Mermaid Diagram -->
+    <div class="mermaid-container animate-in">
+      <div class="mermaid-diagram">
+graph LR
+  subgraph L1["Loop 1 — 表面案件"]
+    E3101["3101 着地点照片"]
+    E3103["3103 男性脚印(陷阱)"]
+    E3104["3104 女性脚印"]
+    E3106["3106 护栏灰尘"]
+    E3107["3107 Jameson空瓶"]
+    E3108["3108 报纸天气版"]
+    E3102["3102 Thomas钥匙"]
+    E3105["3105 袖扣纤维"]
+    E3611["3611 Foster烟斗照"]
+  end
+  subgraph L2["Loop 2 — Mary伪证"]
+    E3201["3201 蜡烛残骸"]
+    E3202["3202 祈祷册"]
+    E3203["3203 衬衫"]
+    E3204["3204 Mary口红"]
+    E3205["3205 祈祷披肩"]
+    E3207["3207 Mary手链"]
+    E3209["3209 Mary外出鞋"]
+    E3213["3213 口红比对"]
+    E3217["3217 廉价酒"]
+    E3501["3501 标注报纸"]
+  end
+  subgraph L3["Loop 3 — Helen骗保"]
+    E3301["3301 轮椅维护油"]
+    E3303["3303 楼顶钥匙"]
+    E3304["3304 保险单"]
+    E3308["3308 涂油示意图"]
+    E3309["3309 第二组脚印"]
+    E3312["3312 油比对报告"]
+    E3403["3403 Helen外出鞋"]
+    E3408["3408 Helen家Jameson"]
+  end
+  subgraph L4["Loop 4 — 正当防卫"]
+    E3401["3401 门把手油迹"]
+    E3402["3402 门内侧把手"]
+    E3405["3405 油迹二方比对"]
+  end
+  subgraph L5["Loop 5 — Bernard"]
+    E3502["3502 笔迹比对"]
+    E3504["3504 垫板"]
+    E3505["3505 压痕分析"]
+    E3507["3507 花形压痕"]
+    E3508["3508 Mary手链(派生)"]
+    E3509["3509 压痕比对"]
+  end
+  subgraph L6["Loop 6 — 收束"]
+    E3601["3601 BAC补充报告"]
+    E3610["3610 目击条件勘查"]
+  end
+
+  E3104 ==>|"R1击穿"| EXP1["L1 Morrison指证"]
+  E3106 ==>|"R2击穿"| EXP1
+  E3101 ==>|"R2击穿"| EXP1
+  E3103 -.->|"R1陷阱"| EXP1
+
+  E3201 ==>|"R1"| EXP2["L2 Mary指证"]
+  E3202 ==>|"R1"| EXP2
+  E3108 ==>|"R2跨Loop"| EXP2
+  E3213 ==>|"R3"| EXP2
+  E3204 ==>|"R3"| EXP2
+  E3205 ==>|"R4"| EXP2
+
+  E3102 ==>|"R1跨Loop"| EXP3["L3 Helen指证"]
+  E3303 ==>|"R1"| EXP3
+  E3312 ==>|"R2"| EXP3
+  E3308 ==>|"R2"| EXP3
+  E3304 ==>|"R3"| EXP3
+
+  E3405 ==>|"R1"| EXP4["L4 Helen补充指证"]
+  E3401 ==>|"R1"| EXP4
+  E3408 ==>|"R2跨Loop"| EXP4
+  E3217 ==>|"R2跨Loop"| EXP4
+
+  E3502 ==>|"R1"| EXP5["L5 Bernard指证"]
+  E3304 ==>|"R1跨Loop"| EXP5
+  E3505 ==>|"R2A"| EXP5
+  E3507 ==>|"R2B"| EXP5
+
+  E3601 ==>|"R1"| EXP6["L6 Mickey辩论"]
+  E3308 ==>|"R2跨Loop"| EXP6
+  E3309 ==>|"R2跨Loop"| EXP6
+  E3201 ==>|"R3跨Loop"| EXP6
+  E3507 ==>|"R4跨Loop"| EXP6
+  E3509 ==>|"R4"| EXP6
+  E3610 ==>|"R5"| EXP6
+
+  E3207 -->|"分析"| E3508
+  E3508 -->|"比对"| E3509
+  E3501 -->|"分析"| E3502
+  E3504 -->|"分析"| E3505
+  E3301 -->|"比对"| E3312
+  E3401 -->|"比对"| E3405
+
+  style E3103 fill:#888
+  style E3611 fill:#888
+  style E3209 fill:#ffa
+  style E3403 fill:#ffa
+  style E3408 fill:#ffa
+  style E3217 fill:#ffa
+      </div>
+    </div>
+
+    <div class="callout callout-info animate-in">
+      <span class="callout-icon">i</span>
+      <div>
+        <span class="callout-title">图例说明</span>
+        <p class="callout-content">粗箭头=指证使用 | 细箭头=分析/派生 | 虚线=陷阱 | 灰色=环境叙事 | 黄色=伏笔(跨Loop回收)</p>
+      </div>
+    </div>
+
+    <!-- Issues -->
+    <h3 class="screen-heading animate-in">链路问题</h3>
+
+    <!-- M1 3505002/3505003 — 已修复: 重命名为3305002/3305003 -->
+
+    <div class="issue-card issue-minor animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-minor">Minor</span>
+          <span class="issue-meta-tag">L5</span>
+          <span>疑点3504仅需单证据解锁</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p>Doubt 3504"垫板雏菊压痕"仅需item:3507，违反"至少两种来源交叉验证"设计原则。</p>
+        <p><strong>修复建议：</strong>补充item:3504(垫板本身)为第二条件。</p>
+      </div>
+    </div>
+
+    <!-- Evidence efficiency -->
+    <h3 class="screen-heading animate-in">证据使用效率</h3>
+    <div class="callout callout-accent animate-in">
+      <span class="callout-icon">%</span>
+      <div>
+        <span class="callout-title">54 件证据中 40 件参与推理链路</span>
+        <p class="callout-content">使用率 74%。14件环境叙事/伏笔类证据(Emily蜡笔画、家暴痕迹、门栓等)服务于情感铺垫而非直接推理，设计合理。证据属性跨Loop一致性: 20/20 零矛盾。</p>
+      </div>
+    </div>
+  </div>
+</section>

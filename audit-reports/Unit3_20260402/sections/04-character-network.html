@@ -1,0 +1,319 @@
+<section id="section-4" class="section">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Character Network</h2>
+      <p class="section-subtitle">NPC 关系图谱 + 角色一致性审计</p>
+    </div>
+
+    <!-- Mermaid Character Relationship Graph -->
+    <h3 class="screen-heading animate-in">Character Relationship Graph</h3>
+    <div class="mermaid-container animate-in">
+      <pre class="mermaid-diagram">
+graph TD
+  ZACK["Zack Brennan&lt;br/&gt;侦探(玩家)"]
+  MORRISON["Morrison&lt;br/&gt;目击者"]
+  MARY["Mary Sullivan&lt;br/&gt;妻子"]
+  HELEN["Helen&lt;br/&gt;Mary的朋友"]
+  FOSTER["Dr. Foster&lt;br/&gt;法医"]
+  BERNARD["Bernard&lt;br/&gt;保险顾问"]
+  MICKEY["Mickey&lt;br/&gt;检察官"]
+  THOMAS["Thomas Sullivan&lt;br/&gt;死者"]
+
+  ZACK ---|调查| MORRISON
+  ZACK ---|调查| MARY
+  ZACK ---|调查| HELEN
+  ZACK ---|调查| BERNARD
+  ZACK ---|对抗| MICKEY
+  ZACK ---|合作| FOSTER
+  MARY ---|姐妹/共谋| HELEN
+  MARY ---|夫妻/家暴| THOMAS
+  HELEN ---|操纵| BERNARD
+  BERNARD ---|保险骗局| THOMAS
+  MICKEY ---|起诉| MARY
+  FOSTER ---|法医报告| THOMAS
+
+  style MARY fill:#ff6b6b
+  style HELEN fill:#ff6b6b
+  style BERNARD fill:#ffa500
+  style MORRISON fill:#888
+  style MICKEY fill:#6b9fff
+      </pre>
+    </div>
+
+    <!-- NPC Audit Cards -->
+    <h3 class="screen-heading animate-in">NPC Audit Cards</h3>
+
+    <!-- Morrison -->
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar" style="background-color: #888;">M</div>
+        <div>
+          <div class="character-name">Morrison</div>
+          <div class="character-role">L1 目击者 · 0 Issues</div>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Loop 1</th>
+              <th>Loop 2-6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>知识边界</td>
+              <td class="cell-pass">PASS</td>
+              <td>n/a</td>
+            </tr>
+            <tr>
+              <td>说谎自洽</td>
+              <td class="cell-pass">PASS</td>
+              <td>n/a</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout callout-info">
+          <span class="callout-icon">&#9989;</span>
+          <div>
+            <div class="callout-title">说谎自洽分析</div>
+            <div class="callout-content">L1: 声称没看清但实际看到女性身影 — 谎言有内在逻辑(保护自己的安全/不想卷入纠纷)，被指证时的退守路线合理。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mary -->
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar" style="background-color: #ff6b6b;">M</div>
+        <div>
+          <div class="character-name">Mary Sullivan</div>
+          <div class="character-role">L2 核心嫌疑人 · 1 Issue</div>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>L1</th>
+              <th>L2</th>
+              <th>L3-L6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>知识边界</td>
+              <td>n/a</td>
+              <td class="cell-pass">PASS</td>
+              <td>varies</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="issue-card issue-major">
+          <div class="collapsible-header">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>指证轮次文档不匹配</strong>
+          </div>
+          <div class="collapsible-body">
+            <p>mary.md列3轮指证，但state/brief列4轮。文档间的轮次差异会导致实现时逻辑混乱，需统一到4轮版本。</p>
+            <span class="issue-meta-tag">Loop 2</span>
+            <span class="issue-meta-tag">D3 Character</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Helen -->
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar" style="background-color: #ff6b6b;">H</div>
+        <div>
+          <div class="character-name">Helen</div>
+          <div class="character-role">L3-L4 核心 · 3 Issues</div>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>L1-L2</th>
+              <th>L3</th>
+              <th>L4</th>
+              <th>L5</th>
+              <th>L6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>知识边界</td>
+              <td>n/a</td>
+              <td class="cell-pass">PASS</td>
+              <td class="cell-pass">PASS</td>
+              <td class="cell-warn">WARN</td>
+              <td class="cell-warn">WARN</td>
+            </tr>
+            <tr>
+              <td>说谎自洽</td>
+              <td>n/a</td>
+              <td class="cell-pass">PASS</td>
+              <td class="cell-pass">PASS</td>
+              <td colspan="2">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout callout-info">
+          <span class="callout-icon">&#9989;</span>
+          <div>
+            <div class="callout-title">说谎自洽分析</div>
+            <div class="callout-content">L3: 骗保掩饰 — 自洽。L4: 坦白但称正当防卫 — 自洽(策略性部分坦白)。</div>
+          </div>
+        </div>
+
+        <div class="issue-card issue-major">
+          <div class="collapsible-header">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>L5 withheld字段过时</strong>
+          </div>
+          <div class="collapsible-body">
+            <p>"参与骗保执行"在L4已暴露，但L5的state配置仍将其列为withheld。需更新L5 withheld字段，移除已公开信息。</p>
+            <span class="issue-meta-tag">Loop 5</span>
+            <span class="issue-meta-tag">D3 Character</span>
+          </div>
+        </div>
+
+        <div class="issue-card issue-major">
+          <div class="collapsible-header">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>L6 知识边界不精确</strong>
+          </div>
+          <div class="collapsible-body">
+            <p>"不能说预谋/合谋细节" — 边界描述过于模糊。需要明确定义哪些具体信息属于"预谋细节"、哪些属于"合谋细节"，否则对话编写时无法准确把控Helen的知识范围。</p>
+            <span class="issue-meta-tag">Loop 6</span>
+            <span class="issue-meta-tag">D3 Character</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Foster -->
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar" style="background-color: #6bc5d2;">F</div>
+        <div>
+          <div class="character-name">Dr. Foster</div>
+          <div class="character-role">法医 · 1 Issue</div>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Loop 1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>知识边界</td>
+              <td class="cell-pass">PASS</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="issue-card issue-major">
+          <div class="collapsible-header">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>L1 决策基础缺失</strong>
+          </div>
+          <div class="collapsible-body">
+            <p>Foster选择模糊措辞保护Mary，但其知情基础不清晰 — 他为什么知道需要保护Mary？是事先知情还是现场推断？需要补充Foster的动机来源，否则其行为逻辑悬空。</p>
+            <span class="issue-meta-tag">Loop 1</span>
+            <span class="issue-meta-tag">D3 Character</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bernard -->
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar" style="background-color: #ffa500;">B</div>
+        <div>
+          <div class="character-name">Bernard</div>
+          <div class="character-role">L3/L5 保险顾问 · 1 Issue</div>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>L3</th>
+              <th>L5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>知识边界</td>
+              <td class="cell-warn">WARN</td>
+              <td class="cell-pass">PASS</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="issue-card issue-minor">
+          <div class="collapsible-header">
+            <span class="severity-badge badge-minor">Moderate</span>
+            <strong>L3 blind_spots 时间层混淆</strong>
+          </div>
+          <div class="collapsible-body">
+            <p>"Thomas已死"在L3的blind_spots配置中存在时间层混淆 — Bernard在L3时是否已知Thomas死亡？需厘清Bernard在各Loop的信息获取时序。</p>
+            <span class="issue-meta-tag">Loop 3</span>
+            <span class="issue-meta-tag">D5 Timeline</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mickey -->
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar" style="background-color: #6b9fff;">M</div>
+        <div>
+          <div class="character-name">Mickey</div>
+          <div class="character-role">L6 检察官 · 0 Issues</div>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Loop 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>知识边界</td>
+              <td class="cell-pass">PASS</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout callout-info">
+          <span class="callout-icon">&#9989;</span>
+          <div>
+            <div class="callout-title">最终辩论对手</div>
+            <div class="callout-content">Mickey作为L6检察官，知识边界清晰：掌握全部公开案件信息，立场是起诉Mary。辩论机制从"击穿谎言"转为"同一证据不同解读"，角色定位准确。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

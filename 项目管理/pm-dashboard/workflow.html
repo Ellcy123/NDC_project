@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDC PM Dashboard - 工作流说明</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#334155;--muted:#64748b;--border:#e2e8f0;--primary:#475569;--light:#f1f5f9;--accent:#3b82f6;--green:#22c55e;--orange:#f59e0b;--red:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;line-height:1.7}
+.container{max-width:1000px;margin:0 auto;padding:30px 20px}
+h1{font-size:24px;font-weight:700;margin-bottom:6px}
+h2{font-size:18px;font-weight:700;margin:30px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--accent);color:var(--primary)}
+h3{font-size:15px;font-weight:600;margin:20px 0 10px;color:var(--text)}
+p{margin-bottom:10px}
+.subtitle{color:var(--muted);font-size:13px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+
+/* Architecture diagram */
+.arch-diagram{display:flex;flex-direction:column;gap:16px;margin:20px 0}
+.arch-row{display:flex;gap:12px;align-items:stretch;justify-content:center;flex-wrap:wrap}
+.arch-box{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:14px 18px;text-align:center;min-width:160px;flex:1;max-width:250px;position:relative}
+.arch-box.highlight{border-color:var(--accent);background:#eff6ff}
+.arch-box.green{border-color:var(--green);background:#f0fdf4}
+.arch-box.orange{border-color:var(--orange);background:#fffbeb}
+.arch-box.red{border-color:var(--red);background:#fef2f2}
+.arch-box .box-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.arch-box .box-desc{font-size:11px;color:var(--muted)}
+.arch-arrow{text-align:center;font-size:20px;color:var(--muted);padding:4px 0}
+
+/* Flow steps */
+.flow{counter-reset:step}
+.flow-step{position:relative;padding:16px 20px 16px 60px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:10px}
+.flow-step::before{counter-increment:step;content:counter(step);position:absolute;left:18px;top:16px;width:28px;height:28px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.flow-step .step-title{font-weight:600;margin-bottom:4px}
+.flow-step .step-desc{font-size:12px;color:var(--muted)}
+.flow-step code{background:var(--light);padding:2px 6px;border-radius:4px;font-size:12px;font-family:'Cascadia Code','Fira Code',monospace}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+th{background:var(--light);color:var(--muted);font-weight:600;padding:10px 12px;text-align:left;border:1px solid var(--border)}
+td{padding:8px 12px;border:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafbfc}
+
+/* Code block */
+pre{background:#1e293b;color:#e2e8f0;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12px;font-family:'Cascadia Code','Fira Code',monospace;margin:10px 0;line-height:1.6}
+pre .comment{color:#64748b}
+pre .cmd{color:#7dd3fc}
+pre .flag{color:#fbbf24}
+
+/* Badge */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-auto{background:#dbeafe;color:#1e40af}
+.badge-manual{background:#fef3c7;color:#92400e}
+.badge-cloud{background:#d1fae5;color:#065f46}
+
+/* Role labels */
+.role{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;margin-right:6px}
+.role-pm{background:#ede9fe;color:#5b21b6}
+.role-dev{background:#dcfce7;color:#166534}
+.role-art{background:#ffedd5;color:#9a3412}
+.role-all{background:#f1f5f9;color:#475569}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>NDC PM Dashboard 工作流</h1>
+<div class="subtitle">自动化项目管理系统 — 架构、数据流、操作手册</div>
+
+<!-- ==================== 架构总览 ==================== -->
+<h2>一、系统架构</h2>
+
+<div class="arch-diagram">
+  <div class="arch-row">
+    <div class="arch-box orange">
+      <div class="box-title">D:\NDC_project</div>
+      <div class="box-desc">设计文档 / 对话 / 预览数据</div>
+    </div>
+    <div class="arch-box orange">
+      <div class="box-title">D:\NDC</div>
+      <div class="box-desc">Unity 工程 / 配置表 / 美术资源</div>
+    </div>
+  </div>
+  <div class="arch-arrow">&#x25BC; Python 扫描器 (scan_and_upload.py)</div>
+  <div class="arch-row">
+    <div class="arch-box highlight">
+      <div class="box-title">project_state.json</div>
+      <div class="box-desc">自动生成的项目快照<br/><span class="badge badge-auto">自动</span></div>
+    </div>
+  </div>
+  <div class="arch-arrow">&#x25BC; 上传</div>
+  <div class="arch-row">
+    <div class="arch-box green">
+      <div class="box-title">Supabase 云端数据库</div>
+      <div class="box-desc">tasks / milestones / risks / scan_snapshots<br/><span class="badge badge-cloud">免费云端</span></div>
+    </div>
+  </div>
+  <div class="arch-arrow">&#x25BC; &#x25B2; 读写</div>
+  <div class="arch-row">
+    <div class="arch-box highlight">
+      <div class="box-title">dashboard.html</div>
+      <div class="box-desc">6-Tab 仪表盘<br/>所有人通过浏览器访问</div>
+    </div>
+  </div>
+  <div class="arch-arrow">&#x25BC;</div>
+  <div class="arch-row">
+    <div class="arch-box" style="border-color:var(--accent)">
+      <div class="box-title"><span class="role role-pm">PM</span></div>
+      <div class="box-desc">排期决策 / 优先级调整</div>
+    </div>
+    <div class="arch-box" style="border-color:var(--green)">
+      <div class="box-title"><span class="role role-dev">程序</span></div>
+      <div class="box-desc">标记任务完成 / 填工时</div>
+    </div>
+    <div class="arch-box" style="border-color:var(--orange)">
+      <div class="box-title"><span class="role role-art">美术</span></div>
+      <div class="box-desc">标记交付 / 更新进度</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 数据流 ==================== -->
+<h2>二、数据流向</h2>
+
+<div class="card">
+  <div class="card-title">正向：项目状态 → 仪表盘</div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-title">PM 运行扫描</div>
+      <div class="step-desc"><code>python scan_and_upload.py</code> 或 <code>/pm-dashboard</code></div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">3 个扫描器并行执行</div>
+      <div class="step-desc">design_scanner (设计文档) + dev_scanner (配置表/代码) + art_scanner (美术资源)</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">生成 project_state.json</div>
+      <div class="step-desc">保存到 <code>data/project_state.json</code>，包含文件计数、覆盖率、同步状态</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">上传到 Supabase scan_snapshots 表</div>
+      <div class="step-desc">完整 JSON 存入云端，供 dashboard 读取</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">Dashboard 刷新显示最新数据</div>
+      <div class="step-desc">总览 Tab 显示项目扫描概况 + 各部门进度</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">反向：团队编辑 → 数据持久化</div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-title">团队成员打开 Dashboard</div>
+      <div class="step-desc">浏览器直接打开 HTML 文件（或未来的 GitHub Pages URL）</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">修改任务状态/进度/备注</div>
+      <div class="step-desc">所有编辑操作实时写入 Supabase，无需手动保存</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">其他人刷新即可看到更新</div>
+      <div class="step-desc">数据在云端，不存在"改在本地别人看不到"的问题</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 文件结构 ==================== -->
+<h2>三、文件结构</h2>
+
+<div class="card">
+<table>
+  <tr><th style="width:35%">文件</th><th>说明</th><th style="width:80px">类型</th></tr>
+  <tr><td><code>dashboard.html</code></td><td>主仪表盘页面，6 个 Tab：总览/策划/程序/美术/里程碑/风险</td><td><span class="badge badge-manual">手动打开</span></td></tr>
+  <tr><td><code>scan_and_upload.py</code></td><td>扫描 D:\NDC + D:\NDC_project → 生成 JSON → 上传 Supabase</td><td><span class="badge badge-auto">自动</span></td></tr>
+  <tr><td><code>seed_data.py</code></td><td>种子数据导入（182任务+23里程碑+5风险）。仅首次运行。</td><td><span class="badge badge-manual">一次性</span></td></tr>
+  <tr><td><code>scanners/config.py</code></td><td>Supabase URL/Key + 所有路径常量</td><td>配置</td></tr>
+  <tr><td><code>scanners/design_scanner.py</code></td><td>扫描设计文档：Unit人物/场景/证据/指证/State/对话JSON</td><td><span class="badge badge-auto">自动</span></td></tr>
+  <tr><td><code>scanners/dev_scanner.py</code></td><td>扫描程序产出：XLSX配置表/JSON数据表/C#代码/同步状态</td><td><span class="badge badge-auto">自动</span></td></tr>
+  <tr><td><code>scanners/art_scanner.py</code></td><td>扫描美术资源：场景/NPC/MovieClip/AVG演出/UI/语音</td><td><span class="badge badge-auto">自动</span></td></tr>
+  <tr><td><code>data/project_state.json</code></td><td>最新扫描结果（自动生成，勿手动编辑）</td><td><span class="badge badge-auto">自动</span></td></tr>
+  <tr><td><code>workflow.html</code></td><td>本文档</td><td>文档</td></tr>
+</table>
+</div>
+
+<!-- ==================== 扫描内容 ==================== -->
+<h2>四、扫描器检测内容</h2>
+
+<div class="card">
+  <h3>design_scanner.py — 策划产出</h3>
+  <table>
+    <tr><th>检测项</th><th>路径</th><th>指标</th></tr>
+    <tr><td>人物设定</td><td><code>剧情设计/UnitN/人物设定/*.md</code></td><td>MD 文件数</td></tr>
+    <tr><td>场景设计</td><td><code>剧情设计/UnitN/场景/*.md</code></td><td>MD 文件数</td></tr>
+    <tr><td>State 文件</td><td><code>剧情设计/UnitN/state/loopN_state.yaml</code></td><td>YAML 文件数 (目标6)</td></tr>
+    <tr><td>证据设计</td><td><code>剧情设计/UnitN/证据设计/*.md</code></td><td>MD 文件数</td></tr>
+    <tr><td>指证设计</td><td><code>剧情设计/UnitN/循环指证设计/*.md</code></td><td>MD 文件数</td></tr>
+    <tr><td>Talk JSON</td><td><code>AVG/EPI0N/Talk/loopN/*.json</code></td><td>按 Loop 统计 JSON 数</td></tr>
+    <tr><td>Expose JSON</td><td><code>AVG/EPI0N/Expose/*.json</code></td><td>按 Loop 统计 JSON 数</td></tr>
+    <tr><td>对话草稿</td><td><code>AVG/对话配置工作及草稿/生成草稿/</code></td><td>哪些 Loop 有内容</td></tr>
+    <tr><td>预览数据</td><td><code>preview_new2/data/UnitN/</code></td><td>Loop YAML 完整性</td></tr>
+    <tr><td>配置表</td><td><code>preview_new2/data/table/*.json</code></td><td>文件数 + 修改时间</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>dev_scanner.py — 程序产出</h3>
+  <table>
+    <tr><th>检测项</th><th>路径</th><th>指标</th></tr>
+    <tr><td>XLSX 配置表</td><td><code>D:\NDC\res\xls\*.xlsx</code></td><td>文件列表 + 修改时间</td></tr>
+    <tr><td>JSON 数据表</td><td><code>D:\NDC\Assets\table\*.json</code></td><td>文件列表 + 修改时间</td></tr>
+    <tr><td>配置同步</td><td>Preview JSON vs XLSX 修改时间差</td><td>同步/不同步数量</td></tr>
+    <tr><td>C# 脚本</td><td><code>D:\NDC\Assets\Scripts\**\*.cs</code></td><td>总文件数</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>art_scanner.py — 美术资源</h3>
+  <table>
+    <tr><th>检测项</th><th>路径</th><th>指标</th></tr>
+    <tr><td>场景背景</td><td><code>D:\NDC\Assets\Resources\Art\Scene\</code></td><td>按子目录统计文件数</td></tr>
+    <tr><td>NPC 立绘</td><td><code>...\Art\NPC\</code></td><td>按子目录统计</td></tr>
+    <tr><td>MovieClip</td><td><code>...\Art\MovieClip\</code></td><td>按 EPI 统计（关键覆盖率指标）</td></tr>
+    <tr><td>AVG 演出</td><td><code>...\Art\avg_clip\</code></td><td>按 EPI 统计（关键覆盖率指标）</td></tr>
+    <tr><td>UI 素材</td><td><code>...\Art\UI\</code></td><td>总文件数</td></tr>
+    <tr><td>语音</td><td><code>...\Resources\Audio\Talk\</code></td><td>总文件数（当前为0）</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 操作手册 ==================== -->
+<h2>五、日常操作</h2>
+
+<div class="card">
+  <h3><span class="role role-pm">PM</span> 每日操作</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-title">运行扫描（每天一次）</div>
+      <div class="step-desc">
+        在 Claude Code 中：<code>/pm-dashboard</code><br/>
+        或命令行：<code>cd 项目管理/pm-dashboard && python scan_and_upload.py</code>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">打开仪表盘</div>
+      <div class="step-desc">双击 <code>dashboard.html</code>，查看总览 → 检查各部门进度 → 关注逾期里程碑和 P0 任务</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">调整排期</div>
+      <div class="step-desc">修改优先级、调整截止日期、添加备注 → 数据自动保存到 Supabase</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">风险分析（可选）</div>
+      <div class="step-desc">在 Claude Code 中：<code>/pm-dashboard analyze</code> → AI 自动分析风险并给出建议</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3><span class="role role-dev">程序</span> / <span class="role role-art">美术</span> 操作</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-title">打开仪表盘</div>
+      <div class="step-desc">打开 PM 分享的 Dashboard 链接（或本地 HTML 文件）</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">找到自己的任务</div>
+      <div class="step-desc">程序 → 程序 Tab（看板视图）；美术 → 美术 Tab（表格视图）</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-title">更新状态</div>
+      <div class="step-desc">修改状态（未开始→进行中→已完成） / 填写实际工时 / 更新进度百分比</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 命令参考 ==================== -->
+<h2>六、命令参考</h2>
+
+<div class="card">
+<pre>
+<span class="comment"># ===== Claude Code Skill =====</span>
+<span class="cmd">/pm-dashboard</span>            <span class="comment"># 完整流程：扫描 → 上传 → 提示打开</span>
+<span class="cmd">/pm-dashboard</span> <span class="flag">scan</span>       <span class="comment"># 仅扫描，保存本地 JSON（不上传）</span>
+<span class="cmd">/pm-dashboard</span> <span class="flag">analyze</span>    <span class="comment"># AI 风险分析</span>
+<span class="cmd">/pm-dashboard</span> <span class="flag">init</span>       <span class="comment"># 重新导入种子数据（会清空！需确认）</span>
+<span class="cmd">/pm-dashboard</span> <span class="flag">open</span>       <span class="comment"># 显示仪表盘地址</span>
+
+<span class="comment"># ===== 命令行 =====</span>
+<span class="cmd">cd</span> 项目管理/pm-dashboard
+<span class="cmd">python</span> scan_and_upload.py            <span class="comment"># 扫描 + 上传</span>
+<span class="cmd">python</span> scan_and_upload.py <span class="flag">--local</span>    <span class="comment"># 仅扫描，不上传</span>
+<span class="cmd">python</span> scan_and_upload.py <span class="flag">--auto</span>     <span class="comment"># 扫描 + 上传 + 自动更新 auto_link 任务进度</span>
+<span class="cmd">python</span> seed_data.py                  <span class="comment"># 重新导入种子数据</span>
+</pre>
+</div>
+
+<!-- ==================== 技术细节 ==================== -->
+<h2>七、技术栈</h2>
+
+<div class="card">
+<table>
+  <tr><th style="width:120px">组件</th><th>技术</th><th>费用</th></tr>
+  <tr><td>数据库</td><td>Supabase PostgreSQL (免费版)</td><td>0 元</td></tr>
+  <tr><td>前端</td><td>纯 HTML/CSS/JS，通过 Supabase JS SDK (CDN) 连接数据库</td><td>0 元</td></tr>
+  <tr><td>扫描器</td><td>Python 3.11 + supabase-py</td><td>本地运行</td></tr>
+  <tr><td>部署（待做）</td><td>GitHub Pages</td><td>0 元</td></tr>
+  <tr><td>AI 分析</td><td>Claude Code pm-analyst agent</td><td>按使用计费</td></tr>
+</table>
+
+<h3 style="margin-top:16px">Supabase 注意事项</h3>
+<ul style="font-size:13px;padding-left:20px;color:var(--muted)">
+  <li>免费版 500MB 数据库，6 人团队足够</li>
+  <li><strong>7 天无人访问会自动暂停</strong> — 在 Supabase Dashboard 点 Restore 即可恢复（~1分钟）</li>
+  <li>anon key 是公开的（设计如此），安全性通过 RLS 策略控制</li>
+  <li>当前 RLS 策略为"全员可读写"，适合内部小团队</li>
+</ul>
+</div>
+
+<!-- ==================== 未来规划 ==================== -->
+<h2>八、待做事项</h2>
+
+<div class="card">
+<table>
+  <tr><th>事项</th><th>说明</th><th>优先级</th></tr>
+  <tr><td>GitHub Pages 部署</td><td>把 dashboard.html 推到独立 GitHub 仓库，团队在线访问</td><td style="color:var(--red);font-weight:600">高</td></tr>
+  <tr><td>auto_link 关联</td><td>将任务与扫描指标关联，扫描时自动更新进度</td><td style="color:var(--orange);font-weight:600">中</td></tr>
+  <tr><td>甘特图</td><td>总览 Tab 添加 SVG 甘特图（类似朋友版本）</td><td style="color:var(--orange);font-weight:600">中</td></tr>
+  <tr><td>实时同步</td><td>启用 Supabase Realtime，多人同时编辑无需刷新</td><td style="color:var(--muted)">低</td></tr>
+  <tr><td>权限控制</td><td>Supabase Auth 登录，按角色控制编辑权限</td><td style="color:var(--muted)">低</td></tr>
+</table>
+</div>
+
+<div style="text-align:center;padding:30px 0;color:var(--muted);font-size:12px">
+  NDC PM Dashboard v1.0 — 2026.04.03
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDC项目 智能排期表</title>
+<style>
+:root {
+    --bg: #f4f6f8; --card: #ffffff; --text: #334155; --muted: #64748b;
+    --border: #e2e8f0; --primary: #475569; --light: #f1f5f9;
+    --done-bg: #bbf7d0; --done-text: #166534;
+    --doing-bg: #bfdbfe; --doing-text: #1e3a8a;
+    --todo-bg: #f1f5f9;  --todo-text: #475569;
+    --review-bg: #fef08a; --review-text: #854d0e;
+    --risk-bg: #fecaca;  --risk-text: #991b1b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 14px; min-height: 100vh; }
+.container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+header { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+header h1 { font-size: 20px; font-weight: 700; color: var(--text); }
+header .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.export-btn { background: var(--primary); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+.export-btn:hover { opacity: 0.85; }
+.stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.stat-card .num { font-size: 26px; font-weight: 700; color: var(--text); }
+.stat-card .label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.tabs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab-btn { padding: 8px 16px; border-radius: 6px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; transition: all 0.2s; white-space: nowrap; }
+.tab-btn.active { background: var(--light); color: var(--text); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.section-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+/* Overview Table */
+.overview-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.overview-table th { background: var(--light); color: var(--muted); font-weight: 600; padding: 10px 12px; text-align: center; border: 1px solid var(--border); }
+.overview-table td { padding: 8px 10px; border: 1px solid var(--border); text-align: center; vertical-align: middle; }
+.overview-table tr:first-child td { font-weight: 600; }
+.cell-progress { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.cell-progress input[type=number] { width: 60px; border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; text-align: center; font-size: 12px; background: var(--bg); color: var(--text); }
+.cell-progress input[type=number]:disabled { opacity: 0.5; cursor: not-allowed; }
+.mini-bar { width: 70px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.mini-bar-fill { height: 100%; background: #94a3b8; border-radius: 3px; transition: width 0.3s; }
+.done-badge { background: var(--done-bg); color: var(--done-text); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.total-cell { background: var(--light); font-weight: 600; }
+.total-bar { width: 80px; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 0 auto; }
+.total-bar-fill { height: 100%; background: #7c8da6; border-radius: 4px; transition: width 0.3s; }
+
+/* Task Table */
+.task-table-wrap { overflow-x: auto; }
+.task-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
+.task-table th { background: var(--light); color: var(--muted); font-weight: 600; padding: 9px 10px; text-align: left; border: 1px solid var(--border); white-space: nowrap; position: sticky; top: 0; z-index: 5; }
+.task-table td { padding: 7px 10px; border: 1px solid var(--border); vertical-align: middle; }
+.task-table tr.done-row { opacity: 0.5; }
+.task-table tr.done-row td { background: #f8fafb; }
+.task-table input, .task-table select { border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; font-size: 12px; background: var(--bg); color: var(--text); width: 100%; }
+.task-table input:disabled, .task-table select:disabled { opacity: 0.6; cursor: not-allowed; background: #f0f0f0; }
+.add-btn { background: var(--light); border: 1px dashed var(--border); color: var(--muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; width: 100%; margin-top: 10px; transition: all 0.2s; }
+.add-btn:hover { background: var(--border); color: var(--text); }
+.del-btn { background: transparent; border: none; cursor: pointer; color: var(--muted); font-size: 16px; padding: 2px 6px; border-radius: 4px; transition: all 0.2s; }
+.del-btn:hover { background: var(--risk-bg); color: var(--risk-text); }
+.progress-input { width: 55px !important; }
+.progress-cell { display: flex; align-items: center; gap: 6px; }
+.mini-bar2 { flex: 1; min-width: 40px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.mini-bar2-fill { height: 100%; background: #94a3b8; border-radius: 3px; }
+
+/* Status badges */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge-done { background: var(--done-bg); color: var(--done-text); }
+.badge-doing { background: var(--doing-bg); color: var(--doing-text); }
+.badge-todo { background: var(--todo-bg); color: var(--todo-text); }
+.badge-review { background: var(--review-bg); color: var(--review-text); }
+.badge-risk { background: var(--risk-bg); color: var(--risk-text); }
+
+/* Gantt */
+.gantt-wrap { overflow-x: auto; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; }
+.gantt-table { border-collapse: collapse; font-size: 11px; min-width: 100%; }
+.gantt-table th, .gantt-table td { border: 1px solid var(--border); }
+.gantt-header-row th { background: var(--light); position: sticky; top: 0; z-index: 10; }
+.gantt-name-col { width: 200px; min-width: 180px; padding: 6px 10px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; position: sticky; left: 0; z-index: 8; background: var(--light); }
+.gantt-day-col { width: 20px; min-width: 18px; text-align: center; padding: 4px 2px; color: var(--muted); font-size: 10px; }
+.gantt-day-col.weekend { background: #f5f5f5; }
+.gantt-bar-row td { padding: 3px 0; height: 26px; }
+.gantt-bar-row .name-cell { background: var(--card); position: sticky; left: 0; z-index: 4; padding: 3px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+.gantt-bar-row .name-cell.done-row { opacity: 0.5; }
+.gantt-cell { position: relative; height: 24px; }
+.gantt-cell.weekend { background: rgba(0,0,0,0.03); }
+.gantt-bar { position: absolute; top: 4px; bottom: 4px; border-radius: 3px; opacity: 0.75; }
+.gantt-month-header { text-align: center; font-weight: 600; font-size: 11px; padding: 4px; background: var(--light); }
+.week-label { font-size: 9px; color: var(--muted); text-align: center; }
+
+/* Kanban */
+.kanban-wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.kanban-col { background: var(--light); border-radius: 8px; padding: 14px; }
+.kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.kanban-col-title { font-weight: 700; font-size: 14px; }
+.kanban-count { font-size: 11px; color: var(--muted); background: var(--card); border: 1px solid var(--border); padding: 2px 8px; border-radius: 10px; }
+.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); cursor: default; transition: opacity 0.2s; }
+.kanban-card.done-card { opacity: 0.45; }
+.kanban-card .card-name { font-size: 12px; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+.kanban-card .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.kanban-card .card-time { font-size: 11px; color: var(--muted); }
+.kanban-stats { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.kanban-stat { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 12px; }
+.clickable-badge { cursor: pointer; user-select: none; transition: opacity 0.2s; }
+.clickable-badge:hover { opacity: 0.75; }
+
+/* Milestone */
+.milestone-wrap { display: flex; gap: 24px; }
+.milestone-timeline { flex: 0 0 60px; display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
+.month-label { font-size: 11px; font-weight: 700; color: var(--muted); writing-mode: horizontal-tb; margin-bottom: 4px; }
+.timeline-line { width: 2px; flex: 1; background: var(--border); }
+.milestone-list { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.milestone-item { display: flex; gap: 16px; align-items: flex-start; }
+.ms-marker { display: flex; flex-direction: column; align-items: center; gap: 0; flex-shrink: 0; width: 40px; }
+.ms-icon { width: 28px; height: 28px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
+.ms-icon.diamond { border-radius: 4px; transform: rotate(45deg); width: 20px; height: 20px; }
+.ms-icon.diamond span { transform: rotate(-45deg); display: block; font-size: 9px; }
+.ms-icon.square { border-radius: 3px; }
+.ms-icon.done-icon { background: var(--done-bg); border-color: #86efac; color: var(--done-text); }
+.ms-icon.doing-icon { background: var(--doing-bg); border-color: #93c5fd; color: var(--doing-text); border-style: solid; }
+.ms-icon.todo-icon { background: transparent; border-style: dashed; color: var(--muted); }
+.ms-connector { width: 2px; height: 24px; background: var(--border); margin: 0 auto; }
+.ms-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: box-shadow 0.2s; }
+.ms-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.ms-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.ms-card-title { font-weight: 600; font-size: 13px; flex: 1; }
+.ms-date { font-size: 11px; color: var(--muted); }
+.ms-owner-badge { font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+.ms-risk { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.ms-dep { font-size: 11px; color: var(--muted); }
+.ms-note { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+/* Risk cards */
+.risk-list { display: flex; flex-direction: column; gap: 14px; }
+.risk-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; border-left: 5px solid; display: flex; flex-direction: column; gap: 6px; }
+.risk-card.high { border-left-color: #f87171; }
+.risk-card.mid { border-left-color: #fbbf24; }
+.risk-header { display: flex; align-items: center; gap: 10px; }
+.risk-id { font-weight: 700; font-size: 13px; }
+.risk-level { font-size: 11px; padding: 2px 8px; border-radius: 8px; font-weight: 600; }
+.risk-level.high { background: var(--risk-bg); color: var(--risk-text); }
+.risk-level.mid { background: var(--review-bg); color: var(--review-text); }
+.risk-desc { font-size: 12px; color: var(--muted); }
+.risk-action { font-size: 12px; color: var(--text); }
+.risk-action span { color: var(--muted); }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--card); border-radius: 10px; padding: 24px; min-width: 340px; max-width: 480px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+.modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+.modal .modal-body { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.modal .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.modal-btn { padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.modal-btn.cancel { background: var(--light); color: var(--text); }
+.modal-btn.confirm { background: #ef4444; color: #fff; border-color: #ef4444; }
+.modal-btn.confirm:hover { background: #dc2626; }
+.modal-btn.save { background: var(--primary); color: #fff; border-color: var(--primary); }
+.modal-field { margin-bottom: 12px; }
+.modal-field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--muted); }
+.modal-field select, .modal-field input, .modal-field textarea { width: 100%; border: 1px solid var(--border); border-radius: 5px; padding: 7px 10px; font-size: 13px; background: var(--bg); color: var(--text); }
+.modal-field textarea { resize: vertical; min-height: 60px; }
+
+@media (max-width: 900px) {
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .kanban-wrap { grid-template-columns: repeat(2, 1fr); }
+    .milestone-wrap { flex-direction: column; }
+}
+@media (max-width: 600px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .kanban-wrap { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <div class="sub">NDC项目 · 游戏项目管理看板 · 1920s Detective</div>
+      <h1>NDC项目 智能排期表</h1>
+    </div>
+    <button class="export-btn" onclick="exportJSON()">⬇ 导出 JSON</button>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-card"><div class="num" id="stat-pm">42</div><div class="label">策划任务数</div></div>
+    <div class="stat-card"><div class="num" id="stat-dev">76</div><div class="label">程序需求数</div></div>
+    <div class="stat-card"><div class="num" id="stat-art">65</div><div class="label">美术任务数</div></div>
+    <div class="stat-card"><div class="num" id="stat-ms">23</div><div class="label">里程碑总数</div></div>
+    <div class="stat-card"><div class="num" id="stat-days">--</div><div class="label">距最终截止</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">📋 总览</button>
+    <button class="tab-btn" onclick="switchTab(1)">👤 策划PM</button>
+    <button class="tab-btn" onclick="switchTab(2)">💻 程序</button>
+    <button class="tab-btn" onclick="switchTab(3)">🎨 美术</button>
+    <button class="tab-btn" onclick="switchTab(4)">🎯 里程碑</button>
+    <button class="tab-btn" onclick="switchTab(5)">⚠️ 风险</button>
+  </div>
+
+  <!-- TAB 0: Overview -->
+  <div class="tab-panel active" id="tab-0">
+    <div class="card">
+      <div class="section-title">剧情章节进度总览</div>
+      <div class="task-table-wrap">
+        <table class="overview-table" id="overview-table">
+          <thead>
+            <tr>
+              <th>章节</th>
+              <th>设计</th>
+              <th>State</th>
+              <th>对话</th>
+              <th>AI资产</th>
+              <th>配表</th>
+              <th>总进度</th>
+            </tr>
+          </thead>
+          <tbody id="overview-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 项目总甘特图 -->
+    <div class="card" style="margin-top:16px;">
+      <div class="section-title">项目总甘特图 <span style="font-size:12px;font-weight:400;color:#94a3b8;margin-left:8px;">点击里程碑条形查看依赖关系</span></div>
+      <div id="project-gantt-wrap" style="overflow-x:auto;padding-bottom:8px;">
+        <svg id="project-gantt-svg" style="display:block;min-width:900px;"></svg>
+      </div>
+      <!-- tooltip -->
+      <div id="pg-tooltip" style="display:none;position:fixed;background:#1e293b;color:#fff;font-size:12px;padding:10px 14px;border-radius:8px;z-index:999;line-height:1.9;pointer-events:none;max-width:280px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 1: PM -->
+  <div class="tab-panel" id="tab-1">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="section-title">甘特图（策划PM · 2026/4/1 — 2026/6/30）</div>
+      <div class="gantt-wrap" id="gantt-pm"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">任务列表</div>
+      <div class="task-table-wrap">
+        <table class="task-table" id="pm-table">
+          <thead>
+            <tr>
+              <th style="width:36px;">#</th>
+              <th style="min-width:180px;">任务名称</th>
+              <th style="width:110px;">类型</th>
+              <th style="width:70px;">人员</th>
+              <th style="width:90px;">开始日期</th>
+              <th style="width:90px;">截止日期</th>
+              <th style="width:60px;">优先级</th>
+              <th style="width:80px;">状态</th>
+              <th style="width:110px;">进度</th>
+              <th style="width:120px;">备注</th>
+              <th style="width:36px;"></th>
+            </tr>
+          </thead>
+          <tbody id="pm-tbody"></tbody>
+        </table>
+      </div>
+      <button class="add-btn" onclick="addPMTask()">＋ 添加任务</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: Dev -->
+  <div class="tab-panel" id="tab-2">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="kanban-stats" id="dev-stats"></div>
+      <div class="kanban-wrap" id="dev-kanban"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Art -->
+  <div class="tab-panel" id="tab-3">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="section-title">甘特图（美术 · 2026/4/1 — 2026/5/3）</div>
+      <div class="gantt-wrap" id="gantt-art"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">任务列表</div>
+      <div class="task-table-wrap">
+        <table class="task-table" id="art-table">
+          <thead>
+            <tr>
+              <th style="width:36px;">#</th>
+              <th style="min-width:160px;">任务名称</th>
+              <th style="width:90px;">开始日期</th>
+              <th style="width:90px;">截止日期</th>
+              <th style="width:70px;">工作量</th>
+              <th style="width:80px;">状态</th>
+              <th style="width:110px;">进度</th>
+              <th style="width:120px;">备注</th>
+              <th style="width:36px;"></th>
+            </tr>
+          </thead>
+          <tbody id="art-tbody"></tbody>
+        </table>
+      </div>
+      <button class="add-btn" onclick="addArtTask()">＋ 添加任务</button>
+    </div>
+  </div>
+
+  <!-- TAB 4: Milestone -->
+  <div class="tab-panel" id="tab-4">
+    <div class="card">
+      <div class="section-title">里程碑时间线（2026年 4月—6月）</div>
+      <div id="milestone-list" class="milestone-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: Risk -->
+  <div class="tab-panel" id="tab-5">
+    <div class="card">
+      <div class="section-title">风险登记册</div>
+      <div class="risk-list" id="risk-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <h3>⚠️ 确认删除</h3>
+    <div class="modal-body" id="confirm-modal-body"></div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeConfirmModal()">取消</button>
+      <button class="modal-btn confirm" id="confirm-modal-ok">确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- Milestone edit modal -->
+<div class="modal-overlay" id="ms-modal">
+  <div class="modal">
+    <h3>编辑里程碑</h3>
+    <div class="modal-field">
+      <label>状态</label>
+      <select id="ms-modal-status">
+        <option value="待开始">待开始</option>
+        <option value="进行中">进行中</option>
+        <option value="已完成">已完成</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>备注</label>
+      <textarea id="ms-modal-note" rows="3"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeMSModal()">取消</button>
+      <button class="modal-btn save" onclick="saveMSModal()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const STORAGE_PREFIX = 'ndc2_';
+function save(key, val) { localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(val)); }
+function load(key, def) { const v = localStorage.getItem(STORAGE_PREFIX + key); return v !== null ? JSON.parse(v) : def; }
+
+// Overview initial data
+const overviewInitial = {
+  EPI01: [100,100,100,100,100],
+  EPI02: [100,100,100,0,100],
+  EPI03: [100,100,70,0,0],
+  EPI04: [5,0,0,0,0],
+  EPI05: [0,0,0,0,0],
+};
+const overviewCols = ['设计','State','对话','AI资产','配表'];
+
+// PM tasks initial
+const weekStarts = {W1:'2026-04-02',W2:'2026-04-08',W3:'2026-04-14',W4:'2026-04-21',W5:'2026-04-28',W6:'2026-05-06',W7:'2026-05-13',W8:'2026-05-20',W9:'2026-05-27',W10:'2026-06-02',W11:'2026-06-09',W13:'2026-06-23'};
+const pmTasksInitial = [
+  {id:1,name:'EPI03 玩家体验问题修复(3处)',type:'P3对话工程',person:'PM',week:'W1',endDate:'2026-04-05',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:2,name:'EPI03 对话MD→JSON同步(52个)',type:'P3对话工程',person:'PM',week:'W1',endDate:'2026-04-07',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:3,name:'预审Unit4大纲',type:'P1设计文档',person:'PM',week:'W1',endDate:'2026-04-05',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:4,name:'新策划入职材料准备',type:'项目管理',person:'PM',week:'W1',endDate:'2026-04-05',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:5,name:'EPI04 人物设定(7-10份NPC MD)',type:'P1设计文档',person:'PM',week:'W2',endDate:'2026-04-12',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:6,name:'EPI04 场景设计(10-14份)',type:'P1设计文档',person:'PM',week:'W2',endDate:'2026-04-12',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:7,name:'带新策划熟悉项目(~30%)',type:'项目管理',person:'PM',week:'W2',endDate:'2026-04-12',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:8,name:'读EPI01-03设计文档+玩demo',type:'学习',person:'新策划',week:'W2',endDate:'2026-04-12',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:9,name:'熟悉配置表+对话MD规范',type:'学习',person:'新策划',week:'W2',endDate:'2026-04-12',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:10,name:'EPI02 对话优化启动',type:'P3对话优化',person:'新策划',week:'W2',endDate:'2026-04-12',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:11,name:'EPI04 证据设计(6份Loop)',type:'P1设计文档',person:'PM',week:'W3',endDate:'2026-04-18',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:12,name:'EPI04 美术参考文档→交美术',type:'P1设计文档',person:'PM',week:'W3',endDate:'2026-04-18',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:13,name:'EPI02+EPI01 对话优化(~3天)',type:'P3对话优化',person:'新策划',week:'W3',endDate:'2026-04-18',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:14,name:'EPI03 配表验证测试(~2天)',type:'P5配表验证',person:'新策划',week:'W3',endDate:'2026-04-18',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:15,name:'EPI03 AI音色校准',type:'P4 AI资产',person:'新策划',week:'W3',endDate:'2026-04-18',priority:'P2',status:'待开始',progress:0,note:''},
+  {id:16,name:'EPI04 指证设计(6份)',type:'P1设计文档',person:'PM',week:'W4',endDate:'2026-04-26',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:17,name:'EPI04 疑点设计',type:'P1设计文档',person:'PM',week:'W4',endDate:'2026-04-26',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:18,name:'EPI04 鉴赏力设计',type:'P1设计文档',person:'PM',week:'W4',endDate:'2026-04-26',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:19,name:'EPI04 小玩法/突发事件设计',type:'P1设计文档',person:'PM',week:'W4',endDate:'2026-04-26',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:20,name:'EPI01/02 对话优化收尾',type:'P3对话优化',person:'新策划',week:'W4',endDate:'2026-04-26',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:21,name:'EPI03 AI管线启动(TTS/表情/视频)',type:'P4 AI资产',person:'新策划',week:'W4',endDate:'2026-04-26',priority:'P2',status:'待开始',progress:0,note:''},
+  {id:22,name:'精读EPI04设计文档',type:'学习',person:'新策划',week:'W4',endDate:'2026-04-26',priority:'P2',status:'待开始',progress:0,note:''},
+  {id:23,name:'EPI05 故事提炼+大纲',type:'P1设计文档',person:'PM',week:'W5',endDate:'2026-05-05',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:24,name:'EPI04 Talk对话启动',type:'P3对话工程',person:'新策划',week:'W5',endDate:'2026-05-05',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:25,name:'EPI04 State生成(6份)',type:'P2 State',person:'PM',week:'W6',endDate:'2026-05-12',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:26,name:'EPI04 Talk对话(续)',type:'P3对话工程',person:'新策划',week:'W6',endDate:'2026-05-12',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:27,name:'EPI04 Expose对话',type:'P3对话工程',person:'PM',week:'W7',endDate:'2026-05-19',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:28,name:'EPI05 人物/场景/证据设计',type:'P1设计文档',person:'PM',week:'W7',endDate:'2026-05-19',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:29,name:'EPI04 Talk对话收尾+配表验证',type:'P3对话工程',person:'新策划',week:'W7',endDate:'2026-05-19',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:30,name:'EPI05 指证/疑点/鉴赏力+State',type:'P1设计文档',person:'PM',week:'W8',endDate:'2026-05-26',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:31,name:'EPI04 配表验证测试',type:'P5配表验证',person:'新策划',week:'W8',endDate:'2026-05-26',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:32,name:'EPI05 Talk对话(State就纪Loop先行)',type:'P3对话工程',person:'新策划',week:'W8',endDate:'2026-05-26',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:33,name:'EPI05 State生成(6份)',type:'P2 State',person:'PM',week:'W9',endDate:'2026-06-02',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:34,name:'EPI05 Talk对话(续)',type:'P3对话工程',person:'新策划',week:'W9',endDate:'2026-06-02',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:35,name:'EPI05 Expose对话',type:'P3对话工程',person:'PM',week:'W10',endDate:'2026-06-08',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:36,name:'全线审查→内容截止(6/8)',type:'P6数据发布',person:'PM',week:'W10',endDate:'2026-06-08',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:37,name:'EPI05 Talk对话(续2)',type:'P3对话工程',person:'新策划',week:'W10',endDate:'2026-06-08',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:38,name:'质量审查+跨章一致性',type:'P6数据发布',person:'PM',week:'W11',endDate:'2026-06-22',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:39,name:'EPI05 Talk对话续完',type:'P3对话工程',person:'新策划',week:'W11',endDate:'2026-06-22',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:40,name:'跨章对话质检',type:'P6数据发布',person:'新策划',week:'W11',endDate:'2026-06-22',priority:'P1',status:'待开始',progress:0,note:''},
+  {id:41,name:'全线验收：五章全部交付',type:'P6数据发布',person:'PM',week:'W13',endDate:'2026-06-30',priority:'P0',status:'待开始',progress:0,note:''},
+  {id:42,name:'AI资产管线收尾+最终验收',type:'P6数据发布',person:'新策划',week:'W13',endDate:'2026-06-30',priority:'P1',status:'待开始',progress:0,note:''},
+];
+
+// Dev tasks initial
+const devTasksInitial = [
+  // P0-进行中
+  {id:'d1',priority:'P0',name:'部分已经探索区域没有画红圈',estimate:'0.2天',status:'进行中'},
+  {id:'d2',priority:'P0',name:'所有证据划过时增加状态及音效',estimate:'0.1天',status:'进行中'},
+  {id:'d3',priority:'P0',name:'开场报纸时增加文字标题',estimate:'0.1天',status:'进行中'},
+  {id:'d4',priority:'P0',name:'剧情指证打击感',estimate:'待评估',status:'进行中'},
+  {id:'d5',priority:'P0',name:'ESC退出逻辑',estimate:'待评估',status:'进行中'},
+  // P0-待开始
+  {id:'d6',priority:'P0',name:'ESC界面制作',estimate:'',status:'待开始'},
+  {id:'d7',priority:'P0',name:'增加菜单栏气泡',estimate:'',status:'待开始'},
+  {id:'d8',priority:'P0',name:'突发事件打电话环节',estimate:'',status:'待开始'},
+  {id:'d9',priority:'P0',name:'敲泥罐小游戏',estimate:'',status:'待开始'},
+  {id:'d10',priority:'P0',name:'拼船票小游戏',estimate:'',status:'待开始'},
+  {id:'d11',priority:'P0',name:'rosa储物室箱子小游戏',estimate:'',status:'待开始'},
+  {id:'d12',priority:'P0',name:'字迹对比小游戏',estimate:'',status:'待开始'},
+  {id:'d13',priority:'P0',name:'拼凹痕小游戏',estimate:'',status:'待开始'},
+  {id:'d14',priority:'P0',name:'增加在AVG对话时出现道具窗口的逻辑',estimate:'',status:'待开始'},
+  // P1-进行中
+  {id:'d15',priority:'P1',name:'调查界面UI位置按设计稿比对修正',estimate:'',status:'进行中'},
+  {id:'d16',priority:'P1',name:'调整菜单',estimate:'',status:'进行中'},
+  {id:'d17',priority:'P1',name:'CASEBOARD鼠标划过道具外框消失BUG',estimate:'',status:'进行中'},
+  {id:'d18',priority:'P1',name:'对话名称对齐关系',estimate:'',status:'进行中'},
+  {id:'d19',priority:'P1',name:'PICKUP状态下不显示右上角BACK',estimate:'',status:'进行中'},
+  {id:'d20',priority:'P1',name:'对话时人物左右位置区域锁定',estimate:'',status:'进行中'},
+  {id:'d21',priority:'P1',name:'左上角菜单只在场景探索时存在',estimate:'',status:'进行中'},
+  {id:'d22',priority:'P1',name:'证词全部提取完成后动效顺序',estimate:'',status:'进行中'},
+  {id:'d23',priority:'P1',name:'NPC新状态感叹号规则',estimate:'',status:'进行中'},
+  {id:'d24',priority:'P1',name:'提取后的证词自述',estimate:'',status:'进行中'},
+  {id:'d25',priority:'P1',name:'鼠标划过调查按钮区域时动效',estimate:'',status:'进行中'},
+  // P1-待开始
+  {id:'d26',priority:'P1',name:'把音效加入到对应区域',estimate:'',status:'待开始'},
+  {id:'d27',priority:'P1',name:'出现疑点时动效没做',estimate:'',status:'待开始'},
+  {id:'d28',priority:'P1',name:'嫌疑人和OTHER文字页签',estimate:'',status:'待开始'},
+  {id:'d29',priority:'P1',name:'UI EXPOSE盖章效果',estimate:'',status:'待开始'},
+  {id:'d30',priority:'P1',name:'场景探索单击放大镜出现涟漪',estimate:'',status:'待开始'},
+  {id:'d31',priority:'P1',name:'CASEBOARD打开时动效',estimate:'',status:'待开始'},
+  {id:'d32',priority:'P1',name:'播放视频按ESC出现setting界面',estimate:'',status:'待开始'},
+  {id:'d33',priority:'P1',name:'跨章节存档',estimate:'',status:'待开始'},
+  {id:'d34',priority:'P1',name:'章节选择UI',estimate:'',status:'待开始'},
+  {id:'d35',priority:'P1',name:'突发事件-对话版',estimate:'',status:'待开始'},
+  // P2-进行中
+  {id:'d36',priority:'P2',name:'二级场景点击物品时关闭二级场景',estimate:'',status:'进行中'},
+  {id:'d37',priority:'P2',name:'时间线字体样式不对',estimate:'',status:'进行中'},
+  {id:'d38',priority:'P2',name:'场景找到东西后效果',estimate:'',status:'进行中'},
+  {id:'d39',priority:'P2',name:'修改ALERT效果',estimate:'',status:'进行中'},
+  {id:'d40',priority:'P2',name:'场景跳转ZOOM IN',estimate:'',status:'进行中'},
+  {id:'d41',priority:'P2',name:'提取完成分析完成ICON对位置',estimate:'',status:'进行中'},
+  {id:'d42',priority:'P2',name:'场景移动手感优化',estimate:'',status:'进行中'},
+  {id:'d43',priority:'P2',name:'场景人物鼠标悬停AVG ICON',estimate:'',status:'进行中'},
+  {id:'d44',priority:'P2',name:'打字机地图位置不对',estimate:'',status:'进行中'},
+  {id:'d45',priority:'P2',name:'储藏室毛巾详情ESC BUG',estimate:'',status:'进行中'},
+  {id:'d46',priority:'P2',name:'图标配错',estimate:'',status:'进行中'},
+  // P2-待开始
+  {id:'d47',priority:'P2',name:'场景回退后位置相同',estimate:'',status:'待开始'},
+  {id:'d48',priority:'P2',name:'NPC头像点击位置跳动',estimate:'',status:'待开始'},
+  {id:'d49',priority:'P2',name:'关系网线条样式统一',estimate:'',status:'待开始'},
+  {id:'d50',priority:'P2',name:'给场景添加灵动效果',estimate:'',status:'待开始'},
+  {id:'d51',priority:'P2',name:'证词提取页地址下拉菜单',estimate:'',status:'待开始'},
+  {id:'d52',priority:'P2',name:'突发事件-特效版',estimate:'',status:'待开始'},
+  // P3-进行中
+  {id:'d53',priority:'P3',name:'小玩法框架+降级兜底',estimate:'',status:'进行中'},
+  {id:'d54',priority:'P3',name:'疑点系统纸张背景不对',estimate:'',status:'进行中'},
+  {id:'d55',priority:'P3',name:'播放视频时鼠标消失',estimate:'',status:'进行中'},
+  {id:'d56',priority:'P3',name:'指证后左右对话场景画面偏左',estimate:'',status:'进行中'},
+  {id:'d57',priority:'P3',name:'AVG对话名称位置对齐',estimate:'',status:'进行中'},
+  {id:'d58',priority:'P3',name:'欢迎页无存档时继续游戏逻辑',estimate:'',status:'进行中'},
+  {id:'d59',priority:'P3',name:'拾取道具时BACK按钮/CLOSE按钮位置问题',estimate:'',status:'进行中'},
+  {id:'d60',priority:'P3',name:'播放视频时鼠标1s后消失',estimate:'',status:'进行中'},
+  // P3-待开始
+  {id:'d61',priority:'P3',name:'鉴赏力系统',estimate:'',status:'待开始'},
+  {id:'d62',priority:'P3',name:'EPI02冒烟测试',estimate:'',status:'待开始'},
+  {id:'d63',priority:'P3',name:'EPI03冒烟测试',estimate:'',status:'待开始'},
+  {id:'d64',priority:'P3',name:'EPI04冒烟测试',estimate:'',status:'待开始'},
+  {id:'d65',priority:'P3',name:'EPI05冒烟测试',estimate:'',status:'待开始'},
+  {id:'d66',priority:'P3',name:'EPI02小玩法(4个:碘蒸气/利率计算器/玫瑰花蕊/烛台位移)',estimate:'',status:'待开始'},
+  {id:'d67',priority:'P3',name:'EPI03小玩法(6个:织物/口红/油样/油迹/笔迹/侧光压痕比对)',estimate:'',status:'待开始'},
+  {id:'d68',priority:'P3',name:'EPI04小玩法(预留)',estimate:'',status:'待开始'},
+  {id:'d69',priority:'P3',name:'EPI05小玩法(预留)',estimate:'',status:'待开始'},
+  {id:'d70',priority:'P3',name:'开始界面COPYRIGHT字体不对',estimate:'',status:'待开始'},
+  {id:'d71',priority:'P3',name:'五章贯通联调',estimate:'',status:'待开始'},
+  {id:'d72',priority:'P3',name:'全流程测试',estimate:'',status:'待开始'},
+  {id:'d73',priority:'P3',name:'Bug修复+回归测试',estimate:'',status:'待开始'},
+  {id:'d74',priority:'P3',name:'发布准备+上线',estimate:'',status:'待开始'},
+  {id:'d75',priority:'P3',name:'指证环节破绽制作',estimate:'',status:'待开始'},
+];
+
+// Art tasks initial
+const artTasksInitial = [
+  // 截止2026-04-03
+  {id:'a1',name:'Mickey(308)造型+头像',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a2',name:'Foster(309)造型+头像',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a3',name:'Mary(303)头像人设已完成',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a4',name:'Helen(304)头像',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a5',name:'Bernard(305)头像',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a6',name:'Seamus(306)头像',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a7',name:'Margaret(307)头像',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a8',name:'SC3001 Thomas公寓楼下现场',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a9',name:'SC3002 Thomas公寓楼顶',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a10',name:'章节ICON',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a11',name:'二级菜单',startDate:'2026-04-02',endDate:'2026-04-03',estimate:'0.1天',status:'待开始',progress:0,note:''},
+  // 截止2026-04-12
+  {id:'a12',name:'Emily(310)简版设定+头像',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a13',name:'Thomas(311)简版设定+头像',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a14',name:'SC3013公寓楼门口',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a15',name:'SC3004警局',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a16',name:'SC3003 Sullivan家-客厅',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a17',name:'SC3005法医办公室',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a18',name:'SC3006公寓二楼走廊',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a19',name:'SC3007教堂',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a20',name:'SC3008 Helen家',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a21',name:'SC3009 Continental银行',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a22',name:'SC3010 Margaret鞋坊',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a23',name:'SC3011街角',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a24',name:'SC3012 Sullivan家-卧室',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a25',name:'SC3014 Bernard办公室',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a26',name:'Mary x 3场景底图',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.6天',status:'待开始',progress:0,note:''},
+  {id:'a27',name:'Helen x 2场景底图',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.4天',status:'待开始',progress:0,note:''},
+  {id:'a28',name:'Bernard x 2场景底图',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.4天',status:'待开始',progress:0,note:''},
+  // 截止2026-04-18
+  {id:'a29',name:'Mary x SC3013/SC3003/SC3012',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.6天',status:'待开始',progress:0,note:''},
+  {id:'a30',name:'Helen x SC3008',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.4天',status:'待开始',progress:0,note:''},
+  {id:'a31',name:'Bernard x SC3009/SC3014',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.4天',status:'待开始',progress:0,note:''},
+  {id:'a32',name:'Seamus x SC3006',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a33',name:'Morrison x SC3004',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a34',name:'Margaret x SC3010',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a35',name:'Seamus x 1场景底图',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a36',name:'Margaret x 1场景底图',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a37',name:'Mickey x 2场景底图',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.4天',status:'待开始',progress:0,note:''},
+  {id:'a38',name:'Foster x 1场景底图',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a39',name:'Morrison x 1场景底图',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a40',name:'L1证据',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.8天',status:'待开始',progress:0,note:''},
+  {id:'a41',name:'L2证据',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'1.4天',status:'待开始',progress:0,note:''},
+  {id:'a42',name:'门XY+切图',startDate:'2026-04-14',endDate:'2026-04-18',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  // 截止2026-04-26
+  {id:'a43',name:'Mickey x SC3004/SC3011',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.4天',status:'待开始',progress:0,note:''},
+  {id:'a44',name:'Foster x SC3005',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a45',name:'Emma x贯穿5场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'1.0天',status:'待开始',progress:0,note:''},
+  {id:'a46',name:'Zack x贯穿3场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.6天',status:'待开始',progress:0,note:''},
+  {id:'a47',name:'L3证据',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'1.3天',status:'待开始',progress:0,note:''},
+  {id:'a48',name:'L4证据',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.6天',status:'待开始',progress:0,note:''},
+  {id:'a49',name:'L5证据',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'1.1天',status:'待开始',progress:0,note:''},
+  {id:'a50',name:'L6证据',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.2天',status:'待开始',progress:0,note:''},
+  {id:'a51',name:'CASEBOARD道具icon',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.1天',status:'待开始',progress:0,note:''},
+  {id:'a52',name:'侧光压痕分析系统',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a53',name:'花形吊坠比对',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a54',name:'脚印比对',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  {id:'a55',name:'L1 Morrison指证场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a56',name:'L2 Mary指证场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a57',name:'L3 Helen指证场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a58',name:'L5 Bernard指证场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a59',name:'L6控辩辩论指证场景',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.3天',status:'待开始',progress:0,note:''},
+  {id:'a60',name:'指证后左右对话x5个',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'1.0天',status:'待开始',progress:0,note:''},
+  {id:'a61',name:'转场衔接空镜',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'1.2天',status:'待开始',progress:0,note:''},
+  {id:'a62',name:'整体风格校准/去AI化',startDate:'2026-04-21',endDate:'2026-04-26',estimate:'0.5天',status:'待开始',progress:0,note:''},
+  // 截止2026-05-03
+  {id:'a63',name:'开场视频',startDate:'2026-04-28',endDate:'2026-05-03',estimate:'2.0天',status:'待开始',progress:0,note:''},
+  {id:'a64',name:'真相视频',startDate:'2026-04-28',endDate:'2026-05-03',estimate:'2.0天',status:'待开始',progress:0,note:''},
+  {id:'a65',name:'结尾视频',startDate:'2026-04-28',endDate:'2026-05-03',estimate:'1.0天',status:'待开始',progress:0,note:''},
+];
+
+// Milestone initial
+const msInitial = [
+  {id:'ms1',label:'[MS1] EPI03对话同步完成',owner:'策划PM',type:'circle',startDate:'2026-03-31',endDate:'2026-04-07',dep:'EPI03设计定稿',priority:'P0',status:'进行中',risk:'52个对话MD→JSON同步+3处体验问题修复，W1仅3工作日',note:''},
+  {id:'ms2',label:'新策划入职+熟悉期',owner:'策划新人',type:'diamond',startDate:'2026-04-08',endDate:'2026-04-12',dep:'-',priority:'P1',status:'待开始',risk:'全职跑团玩家，W2读文档+玩demo',note:''},
+  {id:'ms3',label:'[MS2] EPI04人物+场景设计定稿',owner:'策划PM',type:'circle',startDate:'2026-04-08',endDate:'2026-04-14',dep:'EPI04大纲+故事提炼',priority:'P0',status:'待开始',risk:'7-10份人物MD+10-14份场景MD，W2仅6天',note:''},
+  {id:'ms4',label:'EPI04美术参考移交',owner:'策划PM',type:'diamond',startDate:'2026-04-14',endDate:'2026-04-14',dep:'MS2',priority:'P1',status:'待开始',risk:'移交给美术部门',note:''},
+  {id:'ms5',label:'旧程序交接完成',owner:'程序',type:'diamond',startDate:'2026-03-31',endDate:'2026-04-14',dep:'-',priority:'P0',status:'进行中',risk:'仅2周交接窗口',note:''},
+  {id:'ms6',label:'EPI03配置表生成+验证',owner:'策划新人',type:'square',startDate:'2026-04-14',endDate:'2026-04-18',dep:'MS1 EPI03对话JSON',priority:'P1',status:'待开始',risk:'-',note:''},
+  {id:'ms7',label:'[程序MS1] 交接+P0核心修复+字幕+电话',owner:'程序',type:'circle',startDate:'2026-04-01',endDate:'2026-04-25',dep:'旧程序交接',priority:'P0',status:'待开始',risk:'10项P0修复+字幕系统+电话环节',note:''},
+  {id:'ms8',label:'[美术MS1] EPI03美术完工',owner:'美术',type:'circle',startDate:'2026-04-01',endDate:'2026-04-26',dep:'-',priority:'P0',status:'进行中',risk:'~296张资产，W3-W4日均需18.9张',note:''},
+  {id:'ms9',label:'[MS3] EPI04指证+疑点+鉴赏力+小玩法',owner:'策划PM',type:'circle',startDate:'2026-04-21',endDate:'2026-04-28',dep:'MS2人物+场景+证据设计',priority:'P0',status:'待开始',risk:'6份指证MD+1份疑点+鉴赏力+小玩法',note:''},
+  {id:'ms10',label:'[MS4] EPI05故事提炼+大纲',owner:'策划PM',type:'circle',startDate:'2026-05-01',endDate:'2026-05-05',dep:'-',priority:'P0',status:'待开始',risk:'五一假期期间实际可用时间不足',note:''},
+  {id:'ms11',label:'[MS5] EPI04 State完成',owner:'策划PM',type:'circle',startDate:'2026-04-29',endDate:'2026-05-12',dep:'MS3 EPI04 P1设计完成',priority:'P0',status:'待开始',risk:'6份loop_state.yaml含五一假期',note:''},
+  {id:'ms12',label:'[美术MS2] EPI02美术完工',owner:'美术',type:'circle',startDate:'2026-04-28',endDate:'2026-05-14',dep:'-',priority:'P1',status:'待开始',risk:'~356张资产',note:''},
+  {id:'ms13',label:'[程序MS2] Demo体验完整',owner:'程序',type:'circle',startDate:'2026-04-28',endDate:'2026-05-23',dep:'程序MS1',priority:'P0',status:'待开始',risk:'新手引导+指证视频+小玩法框架+鉴赏力+EPI02冒烟',note:''},
+  {id:'ms14',label:'[MS6] EPI04对话完成',owner:'策划PM',type:'circle',startDate:'2026-05-12',endDate:'2026-05-26',dep:'MS5 EPI04 State',priority:'P0',status:'待开始',risk:'Talk+Expose JSON全部',note:''},
+  {id:'ms15',label:'EPI05设计文档定稿',owner:'策划PM',type:'square',startDate:'2026-05-05',endDate:'2026-05-26',dep:'MS4 EPI05大纲',priority:'P0',status:'待开始',risk:'仅2.5周产~56份设计文档',note:''},
+  {id:'ms16',label:'[MS7] EPI05 State完成',owner:'策划PM',type:'circle',startDate:'2026-05-27',endDate:'2026-06-02',dep:'EPI05设计文档定稿',priority:'P0',status:'待开始',risk:'-',note:''},
+  {id:'ms17',label:'[美术MS3] EPI04美术完工',owner:'美术',type:'circle',startDate:'2026-05-15',endDate:'2026-06-04',dep:'EPI04美术参考移交',priority:'P1',status:'待开始',risk:'~392张资产，1.5人力日均需19张',note:''},
+  {id:'ms18',label:'[程序MS3] 指证优化+EPI02小玩法+EPI03冒烟',owner:'程序',type:'circle',startDate:'2026-05-26',endDate:'2026-06-06',dep:'程序MS2+EPI03配置就绪',priority:'P0',status:'待开始',risk:'-',note:''},
+  {id:'ms19',label:'[MS8] 内容截止：五章设计+State+EPI01-04对话',owner:'策划PM',type:'circle',startDate:'2026-06-08',endDate:'2026-06-08',dep:'-',priority:'P0',status:'待开始',risk:'策划侧硬截止',note:''},
+  {id:'ms20',label:'[程序MS4] 跨章节存档+EPI04冒烟+特效框架',owner:'程序',type:'circle',startDate:'2026-06-09',endDate:'2026-06-20',dep:'程序MS3+EPI04配置就绪',priority:'P0',status:'待开始',risk:'EPI04配表最早6月初就绪',note:''},
+  {id:'ms21',label:'[MS9] EPI05对话完成',owner:'策划PM',type:'circle',startDate:'2026-05-27',endDate:'2026-06-22',dep:'MS7 EPI05 State',priority:'P0',status:'待开始',risk:'-',note:''},
+  {id:'ms22',label:'[美术MS4] EPI05美术完工',owner:'美术',type:'circle',startDate:'2026-06-05',endDate:'2026-06-28',dep:'EPI05美术参考(5/28前)',priority:'P0',status:'待开始',risk:'~392张资产，仅3.5周',note:''},
+  {id:'ms23',label:'[MS10] 最终验收：五章全部交付可通关',owner:'全部',type:'circle',startDate:'2026-06-23',endDate:'2026-06-30',dep:'MS8+MS9+美术MS4+程序MS4',priority:'P0',status:'待开始',risk:'6/30总截止',note:''},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let overviewData = load('overview', JSON.parse(JSON.stringify(overviewInitial)));
+let pmTasks = load('pm', JSON.parse(JSON.stringify(pmTasksInitial)));
+let devTasks = load('dev', JSON.parse(JSON.stringify(devTasksInitial)));
+let artTasks = load('art', JSON.parse(JSON.stringify(artTasksInitial)));
+let milestones = load('ms', JSON.parse(JSON.stringify(msInitial)));
+
+let pendingDelete = null;
+let editingMsId = null;
+let nextPMId = load('nextPMId', 100);
+let nextArtId = load('nextArtId', 200);
+
+// ============================================================
+// UTILS
+// ============================================================
+function parseDate(s) { if(!s) return null; const p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+function dateStr(d) { const m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'); return `${d.getFullYear()}-${m}-${dd}`; }
+function addDays(d,n) { const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function isWeekend(d) { const w=d.getDay(); return w===0||w===6; }
+function badgeHtml(status) {
+  if(status==='已完成') return `<span class="badge badge-done">已完成</span>`;
+  if(status==='进行中') return `<span class="badge badge-doing">进行中</span>`;
+  if(status==='待开始') return `<span class="badge badge-todo">待开始</span>`;
+  return `<span class="badge">${status}</span>`;
+}
+function statusNext(s) {
+  if(s==='待开始') return '进行中';
+  if(s==='进行中') return '已完成';
+  return '待开始';
+}
+function ownerColor(owner) {
+  if(owner==='策划PM'||owner==='策划新人') return '#bfdbfe';
+  if(owner==='程序') return '#bbf7d0';
+  if(owner==='美术') return '#fed7aa';
+  return '#e9d5ff';
+}
+function ownerTextColor(owner) {
+  if(owner==='策划PM'||owner==='策划新人') return '#1e3a8a';
+  if(owner==='程序') return '#166534';
+  if(owner==='美术') return '#9a3412';
+  return '#6b21a8';
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  updateDaysCounter();
+  renderOverview();
+  renderProjectGantt();
+  renderPMTable();
+  buildGantt('gantt-pm', pmTasks, '2026-04-01', '2026-06-30', t => t.week ? weekStarts[t.week] : t.startDate, t => t.endDate, t => t.status==='已完成', '#7c8da6');
+  renderDevKanban();
+  renderArtTable();
+  buildGantt('gantt-art', artTasks, '2026-04-01', '2026-05-03', t => t.startDate, t => t.endDate, t => t.status==='已完成', '#b0a090');
+  renderMilestones();
+  renderRisks();
+}
+
+function updateDaysCounter() {
+  const today = new Date();
+  const deadline = new Date(2026, 5, 30);
+  const diff = Math.ceil((deadline - today) / 86400000);
+  document.getElementById('stat-days').textContent = diff > 0 ? diff + '天' : '已截止';
+}
+
+// ============================================================
+// TAB SWITCH
+// ============================================================
+function switchTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b,idx) => b.classList.toggle('active', idx===i));
+  document.querySelectorAll('.tab-panel').forEach((p,idx) => p.classList.toggle('active', idx===i));
+}
+
+// ============================================================
+// OVERVIEW
+// ============================================================
+function renderOverview() {
+  const tbody = document.getElementById('overview-tbody');
+  const rows = ['EPI01','EPI02','EPI03','EPI04','EPI05'];
+  tbody.innerHTML = '';
+  rows.forEach(epi => {
+    const vals = overviewData[epi] || [0,0,0,0,0];
+    const total = Math.round(vals.reduce((a,b)=>a+b,0)/5);
+    const tr = document.createElement('tr');
+    let cells = `<td style="font-weight:700;text-align:center;">${epi}</td>`;
+    vals.forEach((v,ci) => {
+      const done = v>=100;
+      cells += `<td>`;
+      if(done) {
+        cells += `<div class="cell-progress"><span class="done-badge">✅ 已完成</span><div class="mini-bar"><div class="mini-bar-fill" style="width:100%;background:#86efac;"></div></div></div>`;
+      } else {
+        cells += `<div class="cell-progress"><input type="number" min="0" max="100" value="${v}" onchange="updateOverview('${epi}',${ci},this.value)"><div class="mini-bar"><div class="mini-bar-fill" id="ov-bar-${epi}-${ci}" style="width:${v}%;"></div></div></div>`;
+      }
+      cells += `</td>`;
+    });
+    const totalDone = total >= 100;
+    cells += `<td class="total-cell">`;
+    if(totalDone) {
+      cells += `<div style="text-align:center;"><span class="done-badge">✅ 已完成</span></div>`;
+    } else {
+      cells += `<div style="text-align:center;font-weight:700;margin-bottom:4px;">${total}%</div><div class="total-bar"><div class="total-bar-fill" style="width:${total}%;"></div></div>`;
+    }
+    cells += `</td>`;
+    tr.innerHTML = cells;
+    tbody.appendChild(tr);
+  });
+}
+
+// ============================================================
+// PROJECT GANTT
+// ============================================================
+function renderProjectGantt() {
+  const svg = document.getElementById('project-gantt-svg');
+  const tooltip = document.getElementById('pg-tooltip');
+  svg.innerHTML = '';
+
+  const GANTT_START = new Date('2026-04-01');
+  const GANTT_END   = new Date('2026-06-30');
+  const TOTAL_MS    = GANTT_END - GANTT_START;
+  const LABEL_W = 72;
+  const PADDING_R = 20;
+  const ROW_H = 46;
+  const BAR_H = 22;
+  const HEADER_H = 36;
+
+  // 里程碑数据（23条，含依赖关系）
+  const msData = [
+    {id:'ms1',  name:'MS1 EPI03对话完成',          owner:'策划PM', type:'ms', start:'2026-03-31', end:'2026-04-07', status:'进行中', dep:[],          risk:'52个对话MD→JSON同步+3处体验修复，W1仅3工作日'},
+    {id:'ms2',  name:'MS2 EPI04人物+场景定稿',      owner:'策划PM', type:'ms', start:'2026-04-08', end:'2026-04-14', status:'待开始', dep:['ms1'],     risk:'7-10份人物MD+10-14份场景MD，W2仅6天'},
+    {id:'ms3',  name:'MS3 EPI04指证+疑点+小玩法',   owner:'策划PM', type:'ms', start:'2026-04-21', end:'2026-04-28', status:'待开始', dep:['ms2'],     risk:'6份指证MD+疑点+鉴赏力+小玩法，W4仅6天'},
+    {id:'ms4',  name:'MS4 EPI05故事+大纲',          owner:'策划PM', type:'ms', start:'2026-05-01', end:'2026-05-05', status:'待开始', dep:[],          risk:'五一假期期间，实际可用时间不足'},
+    {id:'ms5',  name:'MS5 EPI04 State完成',         owner:'策划PM', type:'ms', start:'2026-04-29', end:'2026-05-12', status:'待开始', dep:['ms3'],     risk:'6份loop_state.yaml，含五一假期'},
+    {id:'ms6',  name:'MS6 EPI04对话完成',           owner:'策划PM', type:'ms', start:'2026-05-12', end:'2026-05-26', status:'待开始', dep:['ms5'],     risk:'Talk+Expose JSON全部，PM+新策划分工'},
+    {id:'ms7',  name:'MS7 EPI05 State完成',         owner:'策划PM', type:'ms', start:'2026-05-27', end:'2026-06-02', status:'待开始', dep:['ms4'],     risk:'依赖EPI05设计文档定稿'},
+    {id:'ms8',  name:'MS8 内容截止',                owner:'策划PM', type:'ms', start:'2026-06-08', end:'2026-06-08', status:'待开始', dep:['ms6'],     risk:'策划侧硬截止，五章内容完稿'},
+    {id:'ms9',  name:'MS9 EPI05对话完成',           owner:'策划PM', type:'ms', start:'2026-05-27', end:'2026-06-22', status:'待开始', dep:['ms7'],     risk:''},
+    {id:'pms1', name:'程序MS1 P0修复+字幕+电话',    owner:'程序',   type:'ms', start:'2026-04-01', end:'2026-04-25', status:'待开始', dep:['handover'], risk:'10项P0修复+字幕系统+电话环节'},
+    {id:'pms2', name:'程序MS2 Demo体验完整',        owner:'程序',   type:'ms', start:'2026-04-28', end:'2026-05-23', status:'待开始', dep:['pms1'],    risk:'新手引导+指证视频+小玩法框架+鉴赏力'},
+    {id:'pms3', name:'程序MS3 指证优化+冒烟',       owner:'程序',   type:'ms', start:'2026-05-26', end:'2026-06-06', status:'待开始', dep:['pms2'],    risk:'依赖EPI03配置就绪'},
+    {id:'pms4', name:'程序MS4 存档+冒烟+特效',      owner:'程序',   type:'ms', start:'2026-06-09', end:'2026-06-20', status:'待开始', dep:['pms3'],    risk:'EPI04配表最早6月初就绪'},
+    {id:'handover', name:'旧程序交接完成',          owner:'程序',   type:'kp', start:'2026-03-31', end:'2026-04-14', status:'进行中', dep:[],          risk:'仅2周交接窗口，关键文档必须交付'},
+    {id:'ams1', name:'美术MS1 EPI03完工',           owner:'美术',   type:'ms', start:'2026-04-01', end:'2026-04-26', status:'进行中', dep:[],          risk:'~296张资产，W3-W4日均需18.9张'},
+    {id:'ams2', name:'美术MS2 EPI02完工',           owner:'美术',   type:'ms', start:'2026-04-28', end:'2026-05-14', status:'待开始', dep:[],          risk:'~356张资产'},
+    {id:'ams3', name:'美术MS3 EPI04完工',           owner:'美术',   type:'ms', start:'2026-05-15', end:'2026-06-04', status:'待开始', dep:['ms2'],     risk:'~392张资产，1.5人力日均需19张'},
+    {id:'ams4', name:'美术MS4 EPI05完工',           owner:'美术',   type:'ms', start:'2026-06-05', end:'2026-06-28', status:'待开始', dep:[],          risk:'~392张资产，仅3.5周'},
+    {id:'ms10', name:'MS10 最终验收·五章交付',      owner:'全部',   type:'ms', start:'2026-06-23', end:'2026-06-30', status:'待开始', dep:['ms8','ms9','ams4','pms4'], risk:'6/30总截止，五章可通关+联调完成'},
+  ];
+
+  // 泳道定义
+  const lanes = [
+    { key:'策划PM', label:'策划PM', ids:['ms1','ms2','ms3','ms4','ms5','ms6','ms7','ms8','ms9'] },
+    { key:'程序',   label:'程序',   ids:['handover','pms1','pms2','pms3','pms4'] },
+    { key:'美术',   label:'美术',   ids:['ams1','ams2','ams3','ams4','ms10'] },
+  ];
+
+  // 颜色
+  const ownerFill  = {'策划PM':'#bfdbfe','程序':'#bbf7d0','美术':'#fed7aa','全部':'#e9d5ff'};
+  const ownerStroke= {'策划PM':'#93c5fd','程序':'#86efac','美术':'#fdba74','全部':'#d8b4fe'};
+  const ownerText  = {'策划PM':'#1e3a8a','程序':'#166534','美术':'#9a3412','全部':'#6b21a8'};
+  const statusDash = {'待开始':'6,3','进行中':'none','已完成':'none'};
+  const statusOpacity = {'待开始':0.75,'进行中':1,'已完成':0.5};
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs, text) => {
+    const e = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+
+  // SVG尺寸（响应容器宽度）
+  const containerW = Math.max(document.getElementById('project-gantt-wrap').clientWidth || 900, 900);
+  const CHART_W = containerW - LABEL_W - PADDING_R;
+  const totalH = HEADER_H + lanes.length * ROW_H + 10;
+  svg.setAttribute('width', containerW);
+  svg.setAttribute('height', totalH);
+
+  const xOf = dateStr => {
+    const d = new Date(dateStr);
+    const clamped = Math.max(0, Math.min(1, (d - GANTT_START) / TOTAL_MS));
+    return LABEL_W + clamped * CHART_W;
+  };
+
+  // defs（箭头marker 2种：普通+高亮）
+  const defs = mk('defs', {});
+  ['arrow-normal','arrow-hi'].forEach((mid, i) => {
+    const m = mk('marker', {id:mid, markerWidth:7, markerHeight:7, refX:6, refY:3, orient:'auto'});
+    m.appendChild(mk('path', {d:'M0,0 L0,6 L7,3 z', fill: i===0 ? '#cbd5e1':'#f97316'}));
+    defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+
+  // 背景
+  svg.appendChild(mk('rect', {x:0,y:0,width:containerW,height:totalH,fill:'#f8fafc',rx:8}));
+
+  // 月份表头 + 分割线
+  const months = [];
+  for (let d = new Date(GANTT_START); d <= GANTT_END; d.setMonth(d.getMonth()+1)) {
+    months.push(new Date(d));
+  }
+  months.forEach(m => {
+    const x = xOf(m.toISOString().slice(0,10));
+    svg.appendChild(mk('line', {x1:x,y1:HEADER_H,x2:x,y2:totalH,stroke:'#e2e8f0','stroke-width':1}));
+    const label = `${m.getMonth()+1}月`;
+    const nextM = new Date(m); nextM.setMonth(nextM.getMonth()+1);
+    const nx = Math.min(xOf(nextM.toISOString().slice(0,10)), LABEL_W + CHART_W);
+    svg.appendChild(mk('text', {x:(x+nx)/2, y:20, 'text-anchor':'middle','font-size':12,'font-weight':'600',fill:'#64748b'}, label));
+  });
+  // 表头底线
+  svg.appendChild(mk('line', {x1:0,y1:HEADER_H,x2:containerW,y2:HEADER_H,stroke:'#e2e8f0','stroke-width':1}));
+
+  // 周末遮罩
+  for (let d = new Date(GANTT_START); d <= GANTT_END; d.setDate(d.getDate()+1)) {
+    if (d.getDay()===0||d.getDay()===6) {
+      const x = xOf(d.toISOString().slice(0,10));
+      const w = CHART_W / ((GANTT_END-GANTT_START)/86400000+1);
+      svg.appendChild(mk('rect', {x,y:HEADER_H,width:w,height:totalH-HEADER_H,fill:'rgba(241,245,249,0.7)'}));
+    }
+  }
+
+  // 今日红线
+  const todayX = xOf('2026-04-03');
+  svg.appendChild(mk('line', {x1:todayX,y1:HEADER_H,x2:todayX,y2:totalH,stroke:'#ef4444','stroke-width':1.5,'stroke-dasharray':'4,3'}));
+  svg.appendChild(mk('text', {x:todayX+3,y:HEADER_H+11,'font-size':10,fill:'#ef4444'}, '今天'));
+
+  // 泳道行背景 + 标签
+  lanes.forEach((lane, li) => {
+    const y = HEADER_H + li * ROW_H;
+    svg.appendChild(mk('rect', {x:0,y,width:containerW,height:ROW_H,fill:li%2===0?'#ffffff':'#fafafa'}));
+    svg.appendChild(mk('line', {x1:0,y1:y+ROW_H,x2:containerW,y2:y+ROW_H,stroke:'#e2e8f0','stroke-width':1}));
+    svg.appendChild(mk('text', {x:LABEL_W-8,y:y+ROW_H/2+5,'text-anchor':'end','font-size':12,'font-weight':'600',fill:'#475569'}, lane.label));
+  });
+
+  // 分割线（label区域右侧）
+  svg.appendChild(mk('line', {x1:LABEL_W,y1:0,x2:LABEL_W,y2:totalH,stroke:'#e2e8f0','stroke-width':1}));
+
+  // 建立id→bar位置索引（供箭头使用）
+  const barPos = {};
+
+  // 渲染条形
+  const barEls = {};
+  msData.forEach(ms => {
+    const laneIdx = lanes.findIndex(l => l.ids.includes(ms.id));
+    if (laneIdx < 0) return;
+    const y0 = HEADER_H + laneIdx * ROW_H;
+    const barY = y0 + (ROW_H - BAR_H) / 2;
+    const x1 = xOf(ms.start);
+    const x2 = xOf(ms.end);
+    const bw = Math.max(x2 - x1, 8);
+    const fill = ownerFill[ms.owner] || '#e2e8f0';
+    const stroke = ownerStroke[ms.owner] || '#cbd5e1';
+    const textColor = ownerText[ms.owner] || '#334155';
+    const dash = statusDash[ms.status];
+    const opacity = statusOpacity[ms.status];
+
+    // 条形
+    const rect = mk('rect', {
+      x:x1, y:barY, width:bw, height:BAR_H,
+      fill, rx:4, stroke, 'stroke-width':1.5,
+      'stroke-dasharray':dash, opacity,
+      style:'cursor:pointer;transition:filter 0.15s'
+    });
+    svg.appendChild(rect);
+
+    // 文字
+    if (bw > 28) {
+      const maxChars = Math.floor(bw / 7);
+      const label = ms.name.length > maxChars ? ms.name.slice(0, maxChars-1)+'…' : ms.name;
+      const t = mk('text', {x:x1+6, y:barY+BAR_H/2+4, 'font-size':11, 'font-weight':'600', fill:textColor, style:'pointer-events:none'}, label);
+      svg.appendChild(t);
+    }
+
+    barPos[ms.id] = {x1, x2, midY: barY + BAR_H/2};
+    barEls[ms.id] = {rect, ms};
+
+    // hover → tooltip + 高亮依赖
+    rect.addEventListener('mouseenter', function(e) {
+      // 高亮自身
+      rect.setAttribute('filter', 'brightness(0.88)');
+      // 高亮依赖箭头（通过class查找）
+      svg.querySelectorAll('.dep-arrow').forEach(a => {
+        if (a.dataset.to === ms.id || ms.dep.includes(a.dataset.from)) {
+          a.setAttribute('stroke','#f97316');
+          a.setAttribute('stroke-width','2');
+          a.setAttribute('marker-end','url(#arrow-hi)');
+          a.setAttribute('opacity','1');
+        }
+      });
+      // tooltip
+      const depNames = ms.dep.map(d => {
+        const found = msData.find(m=>m.id===d);
+        return found ? found.name : d;
+      });
+      tooltip.innerHTML = `
+        <div style="font-weight:700;margin-bottom:4px;">${ms.name}</div>
+        <div>📅 ${ms.start} → ${ms.end}</div>
+        <div>👤 ${ms.owner} · ${ms.status}</div>
+        ${ms.dep.length ? '<div>🔗 前置：'+depNames.join('、')+'</div>' : ''}
+        ${ms.risk ? '<div style="color:#fcd34d;">⚠️ '+ms.risk+'</div>' : ''}
+      `;
+      tooltip.style.display = 'block';
+    });
+    rect.addEventListener('mousemove', function(e) {
+      tooltip.style.left = (e.clientX+14)+'px';
+      tooltip.style.top  = (e.clientY-10)+'px';
+    });
+    rect.addEventListener('mouseleave', function() {
+      rect.removeAttribute('filter');
+      svg.querySelectorAll('.dep-arrow').forEach(a => {
+        a.setAttribute('stroke','#cbd5e1');
+        a.setAttribute('stroke-width','1.2');
+        a.setAttribute('marker-end','url(#arrow-normal)');
+        a.setAttribute('opacity','0.6');
+      });
+      tooltip.style.display = 'none';
+    });
+  });
+
+  // 依赖箭头
+  msData.forEach(ms => {
+    ms.dep.forEach(depId => {
+      const from = barPos[depId];
+      const to   = barPos[ms.id];
+      if (!from || !to) return;
+      const fx = from.x2, fy = from.midY;
+      const tx = to.x1,   ty = to.midY;
+      const mx = fx + (tx - fx) * 0.55;
+      const d = `M${fx},${fy} C${mx},${fy} ${mx},${ty} ${tx},${ty}`;
+      const arrow = mk('path', {
+        d, fill:'none', stroke:'#cbd5e1',
+        'stroke-width':'1.2', 'stroke-dasharray':'5,3',
+        'marker-end':'url(#arrow-normal)', opacity:'0.6',
+        class:'dep-arrow', style:'transition:stroke 0.15s'
+      });
+      arrow.dataset.from = depId;
+      arrow.dataset.to   = ms.id;
+      svg.appendChild(arrow);
+    });
+  });
+}
+
+function updateOverview(epi, ci, val) {
+  const v = Math.max(0, Math.min(100, parseInt(val)||0));
+  overviewData[epi][ci] = v;
+  save('overview', overviewData);
+  renderOverview();
+}
+
+// ============================================================
+// GANTT
+// ============================================================
+function buildGantt(containerId, tasks, rangeStart, rangeEnd, getStart, getEnd, isDone, barColor) {
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  const s = parseDate(rangeStart), e = parseDate(rangeEnd);
+  const days = [];
+  let cur = new Date(s);
+  while(cur <= e) { days.push(new Date(cur)); cur = addDays(cur,1); }
+
+  // Group by month for header
+  const months = [];
+  let lastM = -1, mStart = 0;
+  days.forEach((d,i) => {
+    if(d.getMonth() !== lastM) {
+      if(lastM >= 0) months[months.length-1].count = i - mStart;
+      months.push({label: (d.getMonth()+1)+'月', start: i, count:0});
+      mStart = i; lastM = d.getMonth();
+    }
+  });
+  if(months.length) months[months.length-1].count = days.length - months[months.length-1].start;
+
+  let html = '<table class="gantt-table"><thead>';
+  // Month row
+  html += '<tr><th class="gantt-name-col">任务名称</th>';
+  months.forEach(m => { html += `<th colspan="${m.count}" class="gantt-month-header">${m.label}</th>`; });
+  html += '</tr>';
+  // Day row
+  html += '<tr><th class="gantt-name-col" style="font-size:10px;color:var(--muted);">状态</th>';
+  days.forEach(d => {
+    const we = isWeekend(d);
+    html += `<th class="gantt-day-col${we?' weekend':''}">${d.getDate()}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  // Sort: done rows at bottom
+  const sorted = [...tasks].sort((a,b) => {
+    const da = isDone(a)?1:0, db = isDone(b)?1:0;
+    return da - db;
+  });
+
+  sorted.forEach(task => {
+    const done = isDone(task);
+    const tStart = parseDate(getStart(task));
+    const tEnd = parseDate(getEnd(task));
+    html += `<tr class="gantt-bar-row">`;
+    html += `<td class="name-cell${done?' done-row':''}" title="${task.name}">${badgeHtml(task.status||'待开始')} ${task.name}</td>`;
+    days.forEach((d,i) => {
+      const we = isWeekend(d);
+      let barStyle = '';
+      if(tStart && tEnd && d >= tStart && d <= tEnd) {
+        const isFirst = (d.getTime() === tStart.getTime());
+        const isLast = (d.getTime() === tEnd.getTime());
+        const col = done ? '#c8d0c8' : barColor;
+        barStyle = `background:${col};opacity:${done?0.4:0.7};`;
+        if(isFirst) barStyle += 'border-radius:4px 0 0 4px;';
+        if(isLast) barStyle += 'border-radius:0 4px 4px 0;';
+        if(isFirst && isLast) barStyle = `background:${col};opacity:${done?0.4:0.7};border-radius:4px;`;
+        html += `<td class="gantt-cell${we?' weekend':''}"><div style="height:100%;width:100%;${barStyle}"></div></td>`;
+      } else {
+        html += `<td class="gantt-cell${we?' weekend':''}"></td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+// ============================================================
+// PM TABLE
+// ============================================================
+function renderPMTable() {
+  const tbody = document.getElementById('pm-tbody');
+  const sorted = [...pmTasks].sort((a,b) => {
+    const da = a.status==='已完成'?1:0, db = b.status==='已完成'?1:0;
+    return da - db || a.id - b.id;
+  });
+  tbody.innerHTML = '';
+  sorted.forEach((task, idx) => {
+    const done = task.status === '已完成';
+    const tr = document.createElement('tr');
+    if(done) tr.classList.add('done-row');
+    const startDate = weekStarts[task.week] || task.startDate || '';
+    tr.innerHTML = `
+      <td style="text-align:center;color:var(--muted);">${idx+1}</td>
+      <td><input value="${esc(task.name)}" ${done?'disabled':''} style="min-width:170px;" onchange="updatePM(${task.id},'name',this.value)"></td>
+      <td><input value="${esc(task.type)}" ${done?'disabled':''} onchange="updatePM(${task.id},'type',this.value)"></td>
+      <td><input value="${esc(task.person)}" ${done?'disabled':''} style="width:65px;" onchange="updatePM(${task.id},'person',this.value)"></td>
+      <td><input type="date" value="${startDate}" ${done?'disabled':''} style="width:130px;" onchange="updatePM(${task.id},'week',this.value,'startDate')"></td>
+      <td><input type="date" value="${task.endDate||''}" ${done?'disabled':''} style="width:130px;" onchange="updatePM(${task.id},'endDate',this.value)"></td>
+      <td>
+        <select ${done?'disabled':''} onchange="updatePM(${task.id},'priority',this.value)">
+          ${['P0','P1','P2'].map(p=>`<option${task.priority===p?' selected':''}>${p}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <select ${done?'disabled':''} onchange="updatePM(${task.id},'status',this.value)">
+          ${['待开始','进行中','已完成'].map(s=>`<option${task.status===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <div class="progress-cell">
+          <input type="number" class="progress-input" min="0" max="100" value="${task.progress||0}" ${done?'disabled':''} onchange="updatePM(${task.id},'progress',this.value)">
+          <div class="mini-bar2"><div class="mini-bar2-fill" style="width:${task.progress||0}%;"></div></div>
+        </div>
+      </td>
+      <td><input value="${esc(task.note||'')}" ${done?'disabled':''} onchange="updatePM(${task.id},'note',this.value)" placeholder="备注"></td>
+      <td><button class="del-btn" onclick="confirmDelete('pm',${task.id},'${esc(task.name)}')">🗑</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  buildGantt('gantt-pm', pmTasks, '2026-04-01', '2026-06-30',
+    t => { const s = weekStarts[t.week] || t.startDate; return s; },
+    t => t.endDate,
+    t => t.status==='已完成', '#7c8da6');
+}
+
+function updatePM(id, field, val) {
+  const t = pmTasks.find(x=>x.id===id);
+  if(!t) return;
+  if(field==='progress') { t.progress = Math.max(0,Math.min(100,parseInt(val)||0)); }
+  else { t[field] = val; }
+  save('pm', pmTasks);
+  renderPMTable();
+}
+
+function addPMTask() {
+  const newId = nextPMId++;
+  save('nextPMId', nextPMId);
+  pmTasks.push({id:newId,name:'新任务',type:'项目管理',person:'PM',week:'W1',endDate:'2026-04-07',priority:'P1',status:'待开始',progress:0,note:''});
+  save('pm', pmTasks);
+  renderPMTable();
+}
+
+// ============================================================
+// ART TABLE
+// ============================================================
+function renderArtTable() {
+  const tbody = document.getElementById('art-tbody');
+  const sorted = [...artTasks].sort((a,b) => {
+    const da = a.status==='已完成'?1:0, db = b.status==='已完成'?1:0;
+    return da-db || a.id.localeCompare(b.id);
+  });
+  tbody.innerHTML = '';
+  sorted.forEach((task,idx) => {
+    const done = task.status==='已完成';
+    const tr = document.createElement('tr');
+    if(done) tr.classList.add('done-row');
+    tr.innerHTML = `
+      <td style="text-align:center;color:var(--muted);">${idx+1}</td>
+      <td><input value="${esc(task.name)}" ${done?'disabled':''} style="min-width:150px;" onchange="updateArt('${task.id}','name',this.value)"></td>
+      <td><input type="date" value="${task.startDate||''}" ${done?'disabled':''} style="width:130px;" onchange="updateArt('${task.id}','startDate',this.value)"></td>
+      <td><input type="date" value="${task.endDate||''}" ${done?'disabled':''} style="width:130px;" onchange="updateArt('${task.id}','endDate',this.value)"></td>
+      <td><input value="${esc(task.estimate||'')}" ${done?'disabled':''} style="width:65px;" onchange="updateArt('${task.id}','estimate',this.value)"></td>
+      <td>
+        <select ${done?'disabled':''} onchange="updateArt('${task.id}','status',this.value)">
+          ${['待开始','进行中','已完成'].map(s=>`<option${task.status===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <div class="progress-cell">
+          <input type="number" class="progress-input" min="0" max="100" value="${task.progress||0}" ${done?'disabled':''} onchange="updateArt('${task.id}','progress',this.value)">
+          <div class="mini-bar2"><div class="mini-bar2-fill" style="width:${task.progress||0}%;"></div></div>
+        </div>
+      </td>
+      <td><input value="${esc(task.note||'')}" ${done?'disabled':''} onchange="updateArt('${task.id}','note',this.value)" placeholder="备注"></td>
+      <td><button class="del-btn" onclick="confirmDelete('art','${task.id}','${esc(task.name)}')">🗑</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  buildGantt('gantt-art', artTasks, '2026-04-01', '2026-05-03', t => t.startDate, t => t.endDate, t => t.status==='已完成', '#b0a090');
+}
+
+function updateArt(id, field, val) {
+  const t = artTasks.find(x=>x.id===id);
+  if(!t) return;
+  if(field==='progress') { t.progress = Math.max(0,Math.min(100,parseInt(val)||0)); }
+  else { t[field] = val; }
+  save('art', artTasks);
+  renderArtTable();
+}
+
+function addArtTask() {
+  const newId = 'a' + (nextArtId++);
+  save('nextArtId', nextArtId);
+  artTasks.push({id:newId,name:'新美术任务',startDate:'2026-04-08',endDate:'2026-04-12',estimate:'0.5天',status:'待开始',progress:0,note:''});
+  save('art', artTasks);
+  renderArtTable();
+}
+
+// ============================================================
+// DEV KANBAN
+// ============================================================
+function renderDevKanban() {
+  const prios = ['P0','P1','P2','P3'];
+  const statsEl = document.getElementById('dev-stats');
+  const kanban = document.getElementById('dev-kanban');
+
+  // Stats
+  let statsHtml = '';
+  prios.forEach(p => {
+    const all = devTasks.filter(t=>t.priority===p);
+    const done = all.filter(t=>t.status==='已完成');
+    statsHtml += `<div class="kanban-stat"><strong>${p}</strong>: ${done.length}/${all.length} 完成</div>`;
+  });
+  statsEl.innerHTML = statsHtml;
+
+  // Columns
+  let kanHtml = '';
+  prios.forEach(p => {
+    const col = devTasks.filter(t=>t.priority===p);
+    const active = col.filter(t=>t.status!=='已完成').sort((a,b)=>a.id.localeCompare(b.id));
+    const doneItems = col.filter(t=>t.status==='已完成').sort((a,b)=>a.id.localeCompare(b.id));
+    kanHtml += `<div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-title">${p}</span>
+        <span class="kanban-count">${col.length}项</span>
+      </div>`;
+    [...active, ...doneItems].forEach(task => {
+      const isDone = task.status==='已完成';
+      kanHtml += `<div class="kanban-card${isDone?' done-card':''}">
+        <div class="card-name">${esc(task.name)}</div>
+        <div class="card-meta">
+          <span class="clickable-badge" onclick="cycleDevStatus('${task.id}')">${badgeHtml(task.status)}</span>
+          ${task.estimate ? `<span class="card-time">${esc(task.estimate)}</span>` : ''}
+        </div>
+      </div>`;
+    });
+    kanHtml += '</div>';
+  });
+  kanban.innerHTML = kanHtml;
+}
+
+function cycleDevStatus(id) {
+  const t = devTasks.find(x=>x.id===id);
+  if(!t) return;
+  t.status = statusNext(t.status);
+  save('dev', devTasks);
+  renderDevKanban();
+}
+
+// ============================================================
+// MILESTONES
+// ============================================================
+function renderMilestones() {
+  const list = document.getElementById('milestone-list');
+  const sorted = [...milestones].sort((a,b) => {
+    const da = parseDate(a.endDate), db = parseDate(b.endDate);
+    return da - db;
+  });
+  let html = '';
+  sorted.forEach(ms => {
+    const done = ms.status==='已完成';
+    const doing = ms.status==='进行中';
+    let iconClass = 'todo-icon';
+    if(done) iconClass = 'done-icon';
+    else if(doing) iconClass = 'doing-icon';
+
+    let shapeClass = ms.type === 'diamond' ? 'diamond' : ms.type === 'square' ? 'square' : '';
+    const bg = ownerColor(ms.owner);
+    const tc = ownerTextColor(ms.owner);
+    const iconContent = done ? '✓' : ms.type==='diamond' ? '<span>◇</span>' : ms.type==='square' ? '□' : '○';
+
+    html += `<div class="milestone-item">
+      <div class="ms-marker">
+        <div class="ms-icon ${shapeClass} ${iconClass}" onclick="openMSModal('${ms.id}')" title="点击编辑">
+          ${done ? '✓' : ''}
+        </div>
+      </div>
+      <div class="ms-card" onclick="openMSModal('${ms.id}')">
+        <div class="ms-card-header">
+          <span class="ms-card-title">${esc(ms.label)}</span>
+          <span class="ms-owner-badge" style="background:${bg};color:${tc};">${ms.owner}</span>
+          ${badgeHtml(ms.status)}
+          <span class="badge" style="background:#f1f5f9;color:#475569;font-size:10px;">${ms.priority}</span>
+        </div>
+        <div class="ms-dep" style="font-size:11px;color:var(--muted);">截止：${ms.endDate}${ms.dep && ms.dep!=='-' ? ' | 前置：'+esc(ms.dep) : ''}</div>
+        ${ms.risk ? `<div class="ms-note">⚠ ${esc(ms.risk)}</div>` : ''}
+        ${ms.note ? `<div class="ms-note" style="color:var(--text);font-style:normal;">📝 ${esc(ms.note)}</div>` : ''}
+      </div>
+    </div>
+    <div style="width:2px;height:12px;background:var(--border);margin-left:14px;margin-bottom:0;"></div>`;
+  });
+  list.innerHTML = html;
+}
+
+function openMSModal(id) {
+  editingMsId = id;
+  const ms = milestones.find(x=>x.id===id);
+  if(!ms) return;
+  document.getElementById('ms-modal-status').value = ms.status;
+  document.getElementById('ms-modal-note').value = ms.note || '';
+  document.getElementById('ms-modal').classList.add('show');
+}
+function closeMSModal() {
+  document.getElementById('ms-modal').classList.remove('show');
+  editingMsId = null;
+}
+function saveMSModal() {
+  const ms = milestones.find(x=>x.id===editingMsId);
+  if(!ms) return;
+  ms.status = document.getElementById('ms-modal-status').value;
+  ms.note = document.getElementById('ms-modal-note').value;
+  save('ms', milestones);
+  closeMSModal();
+  renderMilestones();
+}
+
+// ============================================================
+// RISKS
+// ============================================================
+function renderRisks() {
+  const risks = [
+    {id:'R1',title:'美术产能超载24%',level:'高风险',desc:'W3-W4日均需18.9张资产',action:'AI辅助+外包+加班'},
+    {id:'R2',title:'程序交接窗口仅2周',level:'高风险',desc:'知识转移不充分可能导致后续开发停滞',action:'保留旧程序顾问+完善文档'},
+    {id:'R3',title:'策划PM持续满载无缓冲',level:'中风险',desc:'无法消化突发需求',action:'及时砍需求+新策划分担'},
+    {id:'R4',title:'新策划上手速度不确定',level:'中风险',desc:'W3是关键判断节点',action:'W3观察配表质量，准备Plan B'},
+  ];
+  const el = document.getElementById('risk-list');
+  el.innerHTML = risks.map(r => `
+    <div class="risk-card ${r.level==='高风险'?'high':'mid'}">
+      <div class="risk-header">
+        <span class="risk-id">${r.id}: ${r.title}</span>
+        <span class="risk-level ${r.level==='高风险'?'high':'mid'}">${r.level}</span>
+      </div>
+      <div class="risk-desc">📌 ${r.desc}</div>
+      <div class="risk-action"><span>应对方案：</span>${r.action}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// DELETE CONFIRM
+// ============================================================
+function confirmDelete(type, id, name) {
+  pendingDelete = {type, id};
+  document.getElementById('confirm-modal-body').textContent = `确定要删除「${name}」吗？此操作不可撤销。`;
+  document.getElementById('confirm-modal-ok').onclick = executeDelete;
+  document.getElementById('confirm-modal').classList.add('show');
+}
+function closeConfirmModal() {
+  document.getElementById('confirm-modal').classList.remove('show');
+  pendingDelete = null;
+}
+function executeDelete() {
+  if(!pendingDelete) return;
+  const {type, id} = pendingDelete;
+  if(type==='pm') {
+    pmTasks = pmTasks.filter(t=>t.id!==id);
+    save('pm', pmTasks);
+    renderPMTable();
+  } else if(type==='art') {
+    artTasks = artTasks.filter(t=>t.id!==id);
+    save('art', artTasks);
+    renderArtTable();
+  }
+  closeConfirmModal();
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+function exportJSON() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    overview: overviewData,
+    pmTasks, devTasks, artTasks, milestones
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'NDC项目_排期数据_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function esc(s) {
+  if(typeof s !== 'string') return s;
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Close modals on overlay click
+document.getElementById('confirm-modal').addEventListener('click', function(e) {
+  if(e.target === this) closeConfirmModal();
+});
+document.getElementById('ms-modal').addEventListener('click', function(e) {
+  if(e.target === this) closeMSModal();
+});
+
+// ============================================================
+// START
+// ============================================================
+init();
+</script>
+</body>
+</html>

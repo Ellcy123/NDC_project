@@ -1,0 +1,153 @@
+<section class="section" id="section-2">
+  <div class="section-content">
+
+    <!-- Section Header -->
+    <div class="section-header animate-in">
+      <span class="section-number">02</span>
+      <h1 class="section-title">Evidence Chain</h1>
+      <p class="section-subtitle">证据链路完整性审计 — 从获取到指证的全链路追踪</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="score-cards stagger-children" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="score-card animate-in" style="border-color: var(--color-info);">
+        <div class="score-card-number" data-target="16" style="color: var(--color-info);">0</div>
+        <div class="score-card-label">总证据数</div>
+      </div>
+      <div class="score-card animate-in" style="border-color: var(--color-success);">
+        <div class="score-card-number" data-target="11" style="color: var(--color-success);">0</div>
+        <div class="score-card-label">完整链路</div>
+      </div>
+      <div class="score-card animate-in" style="border-color: var(--color-critical);">
+        <div class="score-card-number" data-target="5" style="color: var(--color-critical);">0</div>
+        <div class="score-card-label">断裂链路</div>
+      </div>
+    </div>
+
+    <!-- Evidence Chain Mermaid Diagram -->
+    <h2 class="screen-heading animate-in">证据流向图</h2>
+    <div class="mermaid-container animate-in">
+      <div class="mermaid-diagram">
+graph LR
+  subgraph L1["Loop 1 — 目击者的沉默"]
+    E1111["1111 悬赏通缉令"]
+    E1112["1112 Miguel照片"]
+    E1113["1113 巨额医药单"]
+    E1114["1114 沾湿的毛巾"]
+    E1115["1115 工作记录卡"]
+    E1121["1121 氯仿瓶"]
+    E1122["1122 拖痕"]
+    D1701["1701 有甜腻气味的毛巾"]
+    D1702["1702 拖痕分析"]
+  end
+  subgraph L2["Loop 2 — 腐败的警徽"]
+    E1209["1209 箱子压痕"]
+    E1221["1221 勘验箱领用单"]
+    E1223["1223 便携式勘验箱"]
+    E1224["1224 催命的赌债"]
+    E1225["1225 Whale字条"]
+    E1226["1226 磨损筹码"]
+    E1227["1227 过期头条新闻"]
+    E1228["1228 闪亮的奖章"]
+    E1231["1231 不相称的合影"]
+    D1703["1703 压痕分析"]
+  end
+
+  E1114 -->|分析| D1701
+  E1122 -->|分析| D1702
+  E1209 -->|分析| D1703
+
+  E1115 -->|"Expose L1 R1"| EXP1
+  D1702 -->|"Expose L1 R2"| EXP1
+  D1701 -->|"Expose L1 R3"| EXP1
+  E1121 -->|"Expose L1 R3"| EXP1
+
+  E1209 -->|"Expose L2 R3"| EXP2
+  E1221 -->|"Expose L2 R2"| EXP2
+  D1703 -->|"Expose L2 R3"| EXP2
+
+  EXP1{{"指证 Rosa"}}
+  EXP2{{"指证 Morrison"}}
+
+  style E1111 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1112 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1113 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1224 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1225 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1226 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1227 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1228 fill:#252545,stroke:#6B6775,color:#9B97A0
+  style E1231 fill:#252545,stroke:#6B6775,color:#9B97A0
+      </div>
+    </div>
+
+    <div class="callout callout-accent animate-in">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div>
+        <span class="callout-title">灰色节点说明</span>
+        <div class="callout-content">
+          <p>灰色证据(1111/1112/1113/1224-1228/1231)为环境叙事证据，用于世界观构建，不直接参与指证链路。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Broken Chain Issues -->
+    <h2 class="screen-heading animate-in">断裂链路问题</h2>
+
+    <div class="stagger-children">
+
+      <!-- I-01 Critical -->
+      <div class="issue-card issue-critical animate-in" id="issue-I01" data-severity="critical" data-dimension="evidence" data-loop="L1-L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <strong>I-01: 陷阱证据ID缺失 (1261/1241/1271)</strong>
+            <span class="issue-meta-tag">L1-L2</span>
+            <span class="issue-meta-tag">Evidence</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>ExposeConfig 中引用了陷阱证据 ID 1261、1241、1271，但 ItemStaticData 中不存在这些条目。指证界面在运行时将无法加载这些证据的名称和描述，可能导致空白选项或崩溃。</p>
+          <p><strong>影响：</strong>L1 指证 Rosa 和 L2 指证 Morrison 的陷阱选项均受影响。</p>
+          <p><strong>建议修复：</strong>在 ItemStaticData 中补充 1261/1241/1271 三条陷阱证据的完整定义，包含名称、描述及误导性说明文本。</p>
+        </div>
+      </div>
+
+      <!-- I-02 Critical -->
+      <div class="issue-card issue-critical animate-in" id="issue-I02" data-severity="critical" data-dimension="evidence" data-loop="L1">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <strong>I-02: 1115工作记录卡日期/地点矛盾</strong>
+            <span class="issue-meta-tag">L1</span>
+            <span class="issue-meta-tag">Evidence</span>
+            <span class="issue-meta-tag">Timeline</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>ItemStaticData 中 1115 工作记录卡描述为"11月15日，后台走廊"，但对话文件中引用时为"11月4日，一楼走廊"。</p>
+          <p><strong>影响：</strong>该证据是 L1 指证 Rosa R1 的关键物证。日期/地点不一致将使玩家在指证时产生困惑，推理链路断裂。</p>
+          <p><strong>建议修复：</strong>统一 ItemStaticData 与对话文本中的日期和地点描述，以对话剧情设计为准进行校正。</p>
+        </div>
+      </div>
+
+      <!-- Environment evidence (Minor) -->
+      <div class="issue-card issue-minor animate-in" data-severity="minor" data-dimension="evidence" data-loop="L1-L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-minor">Minor</span>
+            <strong>环境叙事证据无直接链路终点</strong>
+            <span class="issue-meta-tag">L1-L2</span>
+            <span class="issue-meta-tag">Evidence</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>证据 1111(悬赏通缉令)、1112(Miguel照片)、1113(巨额医药单)、1224(催命的赌债)、1225(Whale字条)、1226(磨损筹码)、1227(过期头条新闻)、1228(闪亮的奖章)、1231(不相称的合影) 共9件证据仅用于世界观构建和环境叙事，在 L1-L2 范围内无直接链路终点。</p>
+          <p><strong>说明：</strong>这些证据可能在后续循环(L3-L6)中被引用，属于预埋设计。但当前缺乏明确的回收计划文档，建议确认每条环境证据的预期回收时间点。</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

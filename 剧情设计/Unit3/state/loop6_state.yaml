@@ -136,7 +136,7 @@ opening:
 #   SC3008 Helen家               → 🔓对话(Helen)
 #   SC3009 Continental银行公共区域 → ⏸️无新线索
 #   SC3010 Margaret鞋坊          → 🔓对话(Margaret)
-#   SC3011 街角                  → 🔓对话(Mickey)→⚔️辩论
+#   SC3011 Mickey办公室           → 🔓对话(Mickey)→⚔️辩论
 #   SC3012 Sullivan家卧室        → 🔒Mary在楼下，无新证据
 #   SC3013 公寓楼门口            → 🔓对话(Mary)
 #   SC3014 Bernard办公室         → ⏸️无新线索（L5已搜证）
@@ -251,8 +251,11 @@ scenes:
           - "Mary这些年过得很苦（Helen视角的叙述）"
           - "自己的童年经历——父亲家暴母亲，母亲后来精神失常（L3已有伏笔）"
 
-        withheld_topics: []  # L6最终循环
-        # ⚠️ 不能说: 任何关于预谋/合谋的细节（正当防卫已判，她没理由自证预谋）
+        withheld_topics:
+          - "油涂在Thomas一侧是事先设计的陷阱（非Helen声称的'防滑'）"
+          - "她和Mary事前排练过口供——隐瞒Helen在场的方案是提前商量好的"
+          - "Mary去银行问'投保人死了怎么赔'——两人都知道Thomas会死"
+        # ⚠️ 正当防卫已判，Helen没理由自证预谋——以上内容不会主动说出
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
@@ -311,13 +314,13 @@ scenes:
             answer: "血迹只能确定是不是人血，确认不了是谁的（来源：L1 SC3005 Foster对话）"
             reward: "Foster：'你知道吗，德国人已经能用血型来排除嫌疑人了——但我们这边的法官还不认。也许再过十年，法医能做到更多。但目前……我能做的，已经是这个时代的极限了。'"
 
-  # ── SC3011 街角 — Mickey Talk（新场景） ──
+  # ── SC3011 Mickey办公室 — Mickey Talk + 辩论（新场景） ──
   - id: 3011
-    name: "街角"
+    name: "Mickey办公室"
     # 解锁契机: 开篇中Mickey来警局找Zack说"跟我来谈谈"
-    # 解锁原因: Mickey作为辩护律师要在非正式场合和Zack讨论案件现状
-    unlock_trigger: "开篇中Mickey来访，邀Zack出来谈"
-    unlock_reason: "Mickey不想在警局正式场合讨论——这是老朋友之间的对话"
+    # 解锁原因: Mickey带Zack回自己办公室，壁炉、桌上散落证据——私密空间适合深谈
+    unlock_trigger: "开篇中Mickey来访，带Zack回办公室"
+    unlock_reason: "Mickey需要一个私密空间和Zack讨论案件——办公室有壁炉、桌椅，承载结尾演出"
     npcs:
       mickey_002:
         # ── 基本信息 ──
@@ -371,7 +374,7 @@ scenes:
 # PART 3: 辩论（Expose — 特殊形式）
 # ═══════════════════════════════════════
 #
-# 场景: 街角(SC3011) → ⚔️辩论(Mickey)
+# 场景: Mickey办公室(SC3011) → ⚔️辩论(Mickey)
 # 辩论设计: 5轮控辩对决
 # 形式: Mickey设定议题（辩护论点），Zack用证据反驳
 # Mickey的Talk见上方 scenes → SC3011 → mickey_002
@@ -382,7 +385,7 @@ scenes:
 expose:
   target: "Mickey (04) — 辩护律师角色"
   format: "控辩辩论（非传统指证）"
-  location: "街角"
+  location: "Mickey办公室"
   total_rounds: 5
 
   # ── 第一轮：Thomas没有攻击能力 ──

@@ -176,6 +176,12 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ---
 
+## Markdown 格式规则
+
+- **表格单元格内不使用加粗(`**`)**——飞书无法正确识别，会显示为原始星号。需要强调的内容用文字本身表达（如加前缀 `→`、`!` 等）。
+
+---
+
 ## 对话设计核心规则
 
 17 条对话设计规则已外移至 `.claude/rules/dialogue.md`（编辑 `AVG/` 或对话草稿文件时自动加载）。
@@ -224,9 +230,10 @@ copy /Y "D:\NDC_project\story\Testimony.xlsx" "D:\NDC\Config\Datas\story\Testimo
 | 单场景/单 NPC 设计 | `/team-design` |
 | 完整指证设计 | `/team-expose` |
 | 整个 Loop 规划 | `/team-loop` |
+| 全流程体验审计 | `/playthrough-audit Unit1`（~15 分钟，输出交互式 HTML 报告） |
 | 简单改文案/小修 | 不开 team，直接做 |
 
-Agent 定义见 `.claude/agents/`（10 个角色），编排逻辑见对应 skill 的 `SKILL.md`。
+Agent 定义见 `.claude/agents/`（14 个角色），编排逻辑见对应 skill 的 `SKILL.md`。
 
 ---
 

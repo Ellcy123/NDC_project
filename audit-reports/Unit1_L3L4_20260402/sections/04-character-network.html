@@ -1,0 +1,141 @@
+<section class="section" id="section-4">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Character Network</h2>
+      <p class="section-subtitle">人物关系网络与一致性审计</p>
+    </div>
+
+    <div class="mermaid-container animate-in">
+      <div class="mermaid-diagram">
+graph TD
+  ZACK["Zack Brennan<br/>侦探"]
+  EMMA["Emma O'Malley<br/>搭档/记者"]
+  TOMMY["Tommy Chen<br/>L3 指证目标"]
+  JIMMY["Jimmy<br/>L4 指证目标/厨师"]
+  ANNA["Anna<br/>Jimmy 妻子"]
+  ROSA["Rosa<br/>清洁工"]
+  VIVIAN["Vivian<br/>L5 目标"]
+  WEBB["Webb<br/>受害者/走私头目"]
+  WHALE["Whale<br/>幕后人物"]
+
+  ZACK ---|搭档| EMMA
+  ZACK -->|"L3 指证"| TOMMY
+  ZACK -->|"L4 指证"| JIMMY
+  TOMMY ---|"Webb 记账员"| WEBB
+  JIMMY ---|"Webb 厨师/被迫协助"| WEBB
+  JIMMY ---|夫妻| ANNA
+  ROSA ---|"同事/目击者"| JIMMY
+  ROSA -.->|"目击 Vivian 深夜行动"| VIVIAN
+  VIVIAN -.->|"目击争吵"| JIMMY
+  WEBB -.->|"惹怒"| WHALE
+
+  style TOMMY fill:#ff6b6b,stroke:#c0392b,color:#fff
+  style JIMMY fill:#ff6b6b,stroke:#c0392b,color:#fff
+  style VIVIAN fill:#6b9fff,stroke:#2980b9,color:#fff
+  style WEBB fill:#888,stroke:#555,color:#fff
+      </div>
+    </div>
+
+    <h3 class="screen-heading animate-in">NPC 一致性审计</h3>
+
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar">T</div>
+        <div>
+          <div class="character-name">Tommy Chen</div>
+          <div class="character-role">Webb 的记账员 / L3 指证目标</div>
+        </div>
+        <span class="severity-badge badge-major">1 issue</span>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead><tr><th>维度</th><th>L3</th><th>L4</th></tr></thead>
+          <tbody>
+            <tr><td>知识边界</td><td class="cell-pass">PASS</td><td class="cell-na">N/A</td></tr>
+            <tr><td>说谎自洽</td><td class="cell-fail">FAIL</td><td class="cell-na">N/A</td></tr>
+            <tr><td>性格语气</td><td class="cell-pass">PASS</td><td class="cell-na">N/A</td></tr>
+            <tr><td>态度转变</td><td class="cell-pass">PASS</td><td class="cell-na">N/A</td></tr>
+          </tbody>
+        </table>
+        <div class="issue-card issue-major" style="margin-top: var(--space-4);">
+          <p><strong>年份自相矛盾：</strong>Tommy 在同一场指证中，R1 说为 Webb 工作"三年"(line 163: "three years")，R3 又说"五年"(line 613: "five years")。同一人物、同一场景、前后矛盾。</p>
+          <p><strong>修复：</strong>统一为一个数字（结合背景故事确定），推荐改为"五年"以匹配 L3 brief 中 Tommy 的入职时间线。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar">J</div>
+        <div>
+          <div class="character-name">Jimmy</div>
+          <div class="character-role">酒店厨师 / L4 指证目标</div>
+        </div>
+        <span class="severity-badge badge-pass">0 issues</span>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead><tr><th>维度</th><th>L3</th><th>L4</th></tr></thead>
+          <tbody>
+            <tr><td>知识边界</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>说谎自洽</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>性格语气</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>态度转变</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top: var(--space-4); color: var(--color-muted);">Jimmy "从没干过坏事、月度最佳员工" 的自述是其精心维护的伪装人设，属设计意图，非矛盾。指证中从伪装到崩溃的转变合理且有情感冲击力。</p>
+      </div>
+    </div>
+
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar">R</div>
+        <div>
+          <div class="character-name">Rosa</div>
+          <div class="character-role">酒店清洁工</div>
+        </div>
+        <span class="severity-badge badge-major">1 issue</span>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead><tr><th>维度</th><th>L3</th><th>L4</th></tr></thead>
+          <tbody>
+            <tr><td>知识边界</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>说谎自洽</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>性格语气</td><td class="cell-na">N/A</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>人物背景</td><td class="cell-warn">WARN</td><td class="cell-warn">WARN</td></tr>
+          </tbody>
+        </table>
+        <div class="issue-card issue-major" style="margin-top: var(--space-4);">
+          <p><strong>Rosa/Miguel 性别矛盾：</strong>对话文件中一致使用"女儿"(daughter)，但角色人设文档中出现"儿子"(son)。需统一 Rosa 子女设定。</p>
+          <p><strong>修复：</strong>以对话文件（玩家实际看到的内容）为准，更新人设文档中的描述为"女儿"。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="character-card animate-in">
+      <div class="collapsible-header character-header">
+        <div class="character-avatar">E</div>
+        <div>
+          <div class="character-name">Emma O'Malley</div>
+          <div class="character-role">记者 / Zack 搭档</div>
+        </div>
+        <span class="severity-badge badge-minor">1 issue</span>
+      </div>
+      <div class="collapsible-body">
+        <table class="audit-table">
+          <thead><tr><th>维度</th><th>L3开场</th><th>L4开场</th><th>L5开场</th></tr></thead>
+          <tbody>
+            <tr><td>知识边界</td><td class="cell-pass">PASS</td><td class="cell-pass">PASS</td><td class="cell-pass">PASS</td></tr>
+            <tr><td>信息准确度</td><td class="cell-pass">PASS</td><td class="cell-pass">PASS</td><td class="cell-warn">WARN</td></tr>
+            <tr><td>性格语气</td><td class="cell-pass">PASS</td><td class="cell-pass">PASS</td><td class="cell-pass">PASS</td></tr>
+          </tbody>
+        </table>
+        <div class="issue-card issue-minor" style="margin-top: var(--space-4);">
+          <p><strong>emma_006 引述不匹配：</strong>Emma 在 L5 开场（emma_006 step20）说 "Jimmy 最后把矛头指向了她。他说'问问Vivian'"，但 loop4_jimmy.json（指证原文）中无 Jimmy 说出此话的对应台词。属叙述性概括，非逐字引用，影响较小。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

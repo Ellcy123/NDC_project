@@ -1,0 +1,114 @@
+<section class="section" id="section-5">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Difficulty Curve</h2>
+      <p class="section-subtitle">难度曲线与信息密度分析</p>
+    </div>
+
+    <div class="chart-container animate-in" data-values='{"loops":["L3","L4"],"series":[{"name":"推理步数","values":[3,4]},{"name":"信息密度","values":[4,3]},{"name":"谜题难度","values":[3,4]},{"name":"指证难度","values":[3,3]},{"name":"综合难度","values":[3,4]}]}'>
+    </div>
+
+    <h3 class="screen-heading animate-in">逐 Loop 难度分析</h3>
+    <table class="audit-table animate-in">
+      <thead>
+        <tr>
+          <th>Loop</th><th>推理步数</th><th>信息点数</th><th>谜题难度</th><th>指证难度</th><th>综合</th><th>评价</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>L3</td><td>3</td><td>17</td><td>3/5</td><td>3/5</td><td>3/5</td>
+          <td>难度适中，但 Webb 办公室信息密度过高。笔迹分析合成缺乏引导，可能造成部分玩家卡关。</td>
+        </tr>
+        <tr>
+          <td>L4</td><td>4</td><td>13</td><td>4/5</td><td>3/5</td><td>4/5</td>
+          <td>推理复杂度合理递进。但 1429 描述空白导致 Expose R2 从"推理"降级为"猜测"，严重影响体验。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="screen-heading animate-in">信息密度违规</h3>
+    <table class="audit-table animate-in">
+      <thead>
+        <tr>
+          <th class="sortable-header" data-sort-type="text">Loop</th>
+          <th class="sortable-header" data-sort-type="text">位置</th>
+          <th class="sortable-header" data-sort-type="number">信息点数</th>
+          <th>违规描述</th>
+          <th class="sortable-header" data-sort-type="severity">严重度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>L3</td>
+          <td>Webb 办公室</td>
+          <td>10</td>
+          <td>单场景包含 10 件可收集证据，远超 3 件/场景的设计指南。玩家可能在此场景花费过长时间搜集，信息过载。</td>
+          <td><span class="severity-badge badge-major">Major</span></td>
+        </tr>
+        <tr>
+          <td>L3</td>
+          <td>笔迹分析合成</td>
+          <td>N/A</td>
+          <td>1313 + 1323 &#8594; 1704 的合成操作缺乏对话/环境线索引导。玩家需要自行发现两份文件笔迹可比对——这是一个认知跳跃。</td>
+          <td><span class="severity-badge badge-major">Major</span></td>
+        </tr>
+        <tr>
+          <td>L4</td>
+          <td>Expose R2 (1429)</td>
+          <td>N/A</td>
+          <td>证据 1429 描述为空（"还没写描述"），玩家无法基于证据描述做出有意义的选择。指证从"推理挑战"降级为"瞎猜"。</td>
+          <td><span class="severity-badge badge-critical">Critical</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="screen-heading animate-in">挫败感风险点</h3>
+
+    <div class="issue-card issue-major animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-major">Major</span>
+          <span class="issue-meta-tag">L3</span>
+          <span>Webb 办公室信息过载</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>信息过载</p>
+        <p>玩家进入 Webb 办公室后面对 10 件可收集证据，难以判断优先级。长时间搜证后可能产生"收集疲劳"，降低后续推理动力。</p>
+        <p><strong>建议：</strong>将部分证据转为环境叙事（不可收集但提供氛围），或设计分批解锁机制（如完成特定对话后出现新证据）。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-major animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-major">Major</span>
+          <span class="issue-meta-tag">L3</span>
+          <span>笔迹分析认知跳跃</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>推理跳跃</p>
+        <p>玩家从"拥有两份不同文件"到"意识到可以比对笔迹"之间缺乏中间推理步骤。没有 NPC 提及笔迹差异，没有环境线索暗示。</p>
+        <p><strong>建议：</strong>在 Tommy 对话中让其提及"签名"话题，或在搜证时 Zack 内心独白"这笔迹看着眼熟……"。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-critical animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-critical">Critical</span>
+          <span class="issue-meta-tag">L4</span>
+          <span>1429 描述空白导致猜测式指证</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>挫败类型：</strong>虚假选择 / 碰运气</p>
+        <p>Expose R2 要求玩家在背包中选择 1429，但该证据描述为"还没写描述"。玩家面对一个没有信息的选项，无法做出有依据的推理判断。</p>
+        <p><strong>建议：</strong>立即填写 1429 的描述，确保玩家能从证据内容推理出其与 Jimmy 谎言的关联。</p>
+      </div>
+    </div>
+  </div>
+</section>

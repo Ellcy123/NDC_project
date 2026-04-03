@@ -1,0 +1,119 @@
+<section class="section" id="section-2">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Evidence Chain</h2>
+      <p class="section-subtitle">证据链路完整性分析</p>
+    </div>
+
+    <div class="score-cards stagger-children" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="score-card animate-in" style="border-color: var(--color-accent);">
+        <div class="score-card-number" data-target="30">0</div>
+        <div class="score-card-label">总证据数</div>
+      </div>
+      <div class="score-card animate-in" style="border-color: var(--color-pass);">
+        <div class="score-card-number" data-target="27">0</div>
+        <div class="score-card-label">完整链路</div>
+      </div>
+      <div class="score-card animate-in" style="border-color: var(--color-fail);">
+        <div class="score-card-number" data-target="3">0</div>
+        <div class="score-card-label">异常链路</div>
+      </div>
+    </div>
+
+    <div class="mermaid-container animate-in">
+      <div class="mermaid-diagram">
+graph LR
+  subgraph L3["Loop 3 &#8212; Tommy 指证"]
+    E1311["1311 Webb笔记"]
+    E1322["1322 合同文件"]
+    E1331["1331 木箱标签"]
+    E1332["1332 运货清单"]
+    E1313["1313 酒店登记簿"]
+    E1323["1323 Webb私人笔记"]
+    E1704["1704 笔迹分析"]
+    E1317["1317 电话记录"]
+    T1053["T:1053001 Tommy证词"]
+  end
+
+  subgraph L4["Loop 4 &#8212; Jimmy 指证"]
+    T1054["T:1054001 Tommy补充证词"]
+    E1411["1411 水壶"]
+    E1705["1705 水壶分析"]
+    E1429["1429 照片证据"]
+    E1426["1426 合成结果"]
+    T1063["T:1063001 Rosa证词"]
+    T1071["T:1071006 Jimmy证词"]
+  end
+
+  E1313 -.->|"合成"| E1704
+  E1323 -.->|"合成"| E1704
+  E1311 & E1322 -->|"R1证据"| EXP9["ExposeData 9"]
+  T1053 ==>|"R1证词"| EXP9
+  E1331 & E1332 -->|"R2证据"| EXP10["ExposeData 10"]
+  T1053 ==>|"R2证词"| EXP10
+  E1704 -->|"R3证据"| EXP11["ExposeData 11"]
+  T1053 ==>|"R3证词"| EXP11
+  E1317 -.->|"触发"| WHALE["Whale 电话事件"]
+  E1411 -.->|"分析"| E1705
+  T1054 & E1705 -->|"R1证据"| EXP13["ExposeData 13"]
+  T1071 ==>|"R1证词"| EXP13
+  E1429 -->|"R2证据"| EXP14["ExposeData 14"]
+  T1071 ==>|"R2证词"| EXP14
+  E1429 -.->|"合成冲突!"| E1426
+  T1063 -->|"R3证据"| EXP15["ExposeData 15"]
+  T1071 ==>|"R3证词"| EXP15
+  style E1429 fill:#ff6b6b,stroke:#c0392b,color:#fff
+  style E1426 fill:#ff6b6b,stroke:#c0392b,color:#fff
+  style EXP14 fill:#ff6b6b,stroke:#c0392b,color:#fff
+  style E1704 fill:#f39c12,stroke:#e67e22,color:#fff
+      </div>
+    </div>
+
+    <h3 class="screen-heading animate-in">链路异常</h3>
+
+    <div class="issue-card issue-critical animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-critical">Critical</span>
+          <span class="issue-meta-tag">1429</span>
+          <span>证据 1429 三重矛盾</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p><strong>矛盾 1 &#8212; 描述空白：</strong>ItemStaticData 中 1429.Describe = ["还没写描述"]，Expose R2 要求玩家选择此证据，但玩家无法从描述判断其用途。</p>
+        <p><strong>矛盾 2 &#8212; 合成冲突：</strong>1429.canCombined = true，合成参数 [1320, 1425] &#8594; 产出 1426。但 ExposeData id=14 要求使用 1429（原始件），不是 1426（合成件）。若玩家先合成，1429 可能被消耗。</p>
+        <p><strong>矛盾 3 &#8212; 内容倒挂：</strong>1426（合成结果）有完整描述 "证明了 Jimmy 不仅知道它是个古董"，而 1429（源件/Expose 答案）描述为空。</p>
+        <p><strong>修复建议：</strong>&#9312; 确定 Expose R2 应使用 1429 还是 1426；&#9313; 无论哪个，都必须填写完整描述；&#9314; 如用 1429，考虑设 canCombined=false 或确保合成不消耗原件。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-major animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-major">Major</span>
+          <span class="issue-meta-tag">1704</span>
+          <span>笔迹分析链路引导缺失</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p>证据 1313（酒店登记簿）+ 1323（Webb 私人笔记）合成 &#8594; 1704（笔迹分析结果），是 L3 Expose R3 的唯一正确证据。但游戏中缺乏提示玩家将这两件证据进行笔迹比对的引导。</p>
+        <p><strong>认知跳跃：</strong>玩家需要自行意识到"登记簿笔迹"和"私人笔记笔迹"可以比对，且比对结果能击破 Tommy 的谎言。这一推理链没有对话或环境线索支撑。</p>
+        <p><strong>修复建议：</strong>在 Webb 办公室搜证或 Tommy 对话中加入暗示笔迹差异的线索（如 "这签名的笔触和别处见过的不太一样"）。</p>
+      </div>
+    </div>
+
+    <div class="issue-card issue-minor animate-in">
+      <div class="collapsible-header">
+        <div class="issue-meta">
+          <span class="severity-badge badge-minor">Minor</span>
+          <span class="issue-meta-tag">L3-L4</span>
+          <span>证据使用效率</span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <p>L3 共 17 件证据，其中 6 件直接用于指证（35%）；L4 共 13 件证据，其中 5 件用于指证（38%）。其余证据用于环境叙事、疑点触发或合成原料。整体使用率合理，无严重"孤立证据"问题。</p>
+      </div>
+    </div>
+  </div>
+</section>

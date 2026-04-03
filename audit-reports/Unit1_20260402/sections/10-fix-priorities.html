@@ -1,0 +1,289 @@
+<section class="section" id="section-10">
+  <div class="section-content">
+
+    <!-- Section Header -->
+    <div class="section-header animate-in">
+      <span class="section-number">10</span>
+      <h1 class="section-title">Fix Priorities</h1>
+      <p class="section-subtitle">修复优先级 — 按紧急程度排序的行动清单</p>
+    </div>
+
+    <!-- Summary Callout -->
+    <div class="callout callout-info animate-in">
+      <span class="callout-icon">&#x1F4CB;</span>
+      <div>
+        <span class="callout-title">修复总览</span>
+        <div class="callout-content">
+          <p>14 个问题分为 3 个优先级：P1 立即修复（4 项 Critical，本周）、P2 近期修复（6 项 Major，下周）、P3 有空就改（2 Minor + 2 Suggestion）。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- P1 - 立即修复 -->
+    <h2 class="screen-heading animate-in">P1 — 立即修复 (Critical, 本周)</h2>
+
+    <div class="priority-group stagger-children">
+      <div class="priority-group-title animate-in">4 项关键问题，需本周内完成修复</div>
+
+      <div class="priority-item priority-1 animate-in">
+        <span class="priority-num">1</span>
+        <div class="priority-info">
+          <div class="priority-title">陷阱证据 ID 缺失 (1261/1241/1271)</div>
+          <div class="priority-desc">在 ItemStaticData 中补充 3 条陷阱证据记录，确保 ExposeConfig 引用的证据 ID 均有对应实体。</div>
+          <div>
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-high">Impact: High</span>
+            <span class="issue-meta-tag">L1-L2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-1 animate-in">
+        <span class="priority-num">2</span>
+        <div class="priority-info">
+          <div class="priority-title">1115 工作记录卡日期/地点矛盾</div>
+          <div class="priority-desc">统一日期（11月15日）和地点（后台走廊），确保 ItemStaticData 与对话文本一致。</div>
+          <div>
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-high">Impact: High</span>
+            <span class="issue-meta-tag">L1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-1 animate-in">
+        <span class="priority-num">3</span>
+        <div class="priority-info">
+          <div class="priority-title">emma_004 违反悬疑感优先原则</div>
+          <div class="priority-desc">重写 L2 开篇对话，去除 Zack 对 L1 结论的直接陈述，改为 Emma 汇报客观事实。</div>
+          <div>
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="effort-badge effort-medium">Effort: Medium</span>
+            <span class="impact-badge impact-high">Impact: High</span>
+            <span class="issue-meta-tag">L2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-1 animate-in">
+        <span class="priority-num">4</span>
+        <div class="priority-info">
+          <div class="priority-title">Rosa-Morrison 在场认知矛盾</div>
+          <div class="priority-desc">统一角色设定文档与 state 文件，确认"Morrison 不知道 Rosa 在场"，调整 Rosa 恐惧来源。</div>
+          <div>
+            <span class="severity-badge badge-critical">Critical</span>
+            <span class="effort-badge effort-medium">Effort: Medium</span>
+            <span class="impact-badge impact-high">Impact: High</span>
+            <span class="issue-meta-tag">L1-L2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- P2 - 近期修复 -->
+    <h2 class="screen-heading animate-in">P2 — 近期修复 (Major, 下周)</h2>
+
+    <div class="priority-group stagger-children">
+      <div class="priority-group-title animate-in">6 项重要问题，建议下周内完成</div>
+
+      <div class="priority-item priority-2 animate-in">
+        <span class="priority-num">5</span>
+        <div class="priority-info">
+          <div class="priority-title">L1 指证 R3 毛巾前提跳跃</div>
+          <div class="priority-desc">在 Rosa 储藏室搜证时增加毛巾位置暗示，补充"主动藏匿"的推理铺垫。</div>
+          <div>
+            <span class="severity-badge badge-major">Major</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-medium">Impact: Medium</span>
+            <span class="issue-meta-tag">L1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-2 animate-in">
+        <span class="priority-num">6</span>
+        <div class="priority-info">
+          <div class="priority-title">L1 拖痕体重推理黑箱</div>
+          <div class="priority-desc">增加参照物或简化表述，避免"150 磅"精确数字带来的不可验证感。</div>
+          <div>
+            <span class="severity-badge badge-major">Major</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-medium">Impact: Medium</span>
+            <span class="issue-meta-tag">L1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-2 animate-in">
+        <span class="priority-num">7</span>
+        <div class="priority-info">
+          <div class="priority-title">Morrison 书房证据信息过载</div>
+          <div class="priority-desc">将环境叙事证据（头条新闻/奖章）移至其他场景，核心证据保留不超过 4 件。</div>
+          <div>
+            <span class="severity-badge badge-major">Major</span>
+            <span class="effort-badge effort-medium">Effort: Medium</span>
+            <span class="impact-badge impact-medium">Impact: Medium</span>
+            <span class="issue-meta-tag">L2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-2 animate-in">
+        <span class="priority-num">8</span>
+        <div class="priority-info">
+          <div class="priority-title">L2 指证 R4 推理跳跃</div>
+          <div class="priority-desc">在 R3 &rarr; R4 过渡中增加 Morrison 自我辩护，让 R4 用证词精确击破。</div>
+          <div>
+            <span class="severity-badge badge-major">Major</span>
+            <span class="effort-badge effort-medium">Effort: Medium</span>
+            <span class="impact-badge impact-medium">Impact: Medium</span>
+            <span class="issue-meta-tag">L2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-2 animate-in">
+        <span class="priority-num">9</span>
+        <div class="priority-info">
+          <div class="priority-title">L2"无力感"情绪弧缺失</div>
+          <div class="priority-desc">在 Expose 后增加 Whale 威慑力描写和 Emma 对前景的担忧，强化"无力感"情绪传达。</div>
+          <div>
+            <span class="severity-badge badge-major">Major</span>
+            <span class="effort-badge effort-medium">Effort: Medium</span>
+            <span class="impact-badge impact-medium">Impact: Medium</span>
+            <span class="issue-meta-tag">L2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-2 animate-in">
+        <span class="priority-num">10</span>
+        <div class="priority-info">
+          <div class="priority-title">L2 指证 R1 双证词依赖</div>
+          <div class="priority-desc">确认双证词依赖是有意设计并加强引导，或添加备选反驳路径降低卡关风险。</div>
+          <div>
+            <span class="severity-badge badge-major">Major</span>
+            <span class="effort-badge effort-high">Effort: High</span>
+            <span class="impact-badge impact-medium">Impact: Medium</span>
+            <span class="issue-meta-tag">L2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- P3 - 有空就改 -->
+    <h2 class="screen-heading animate-in">P3 — 有空就改 (Minor + Suggestion)</h2>
+
+    <div class="priority-group stagger-children">
+      <div class="priority-group-title animate-in">4 项低优先级改善，不影响核心体验</div>
+
+      <div class="priority-item priority-3 animate-in">
+        <span class="priority-num">11</span>
+        <div class="priority-info">
+          <div class="priority-title">Morrison 称呼不一致</div>
+          <div class="priority-desc">统一为"Detective Morrison"，全局搜索替换即可。</div>
+          <div>
+            <span class="severity-badge badge-minor">Minor</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-low">Impact: Low</span>
+            <span class="issue-meta-tag">L1-L2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-3 animate-in">
+        <span class="priority-num">12</span>
+        <div class="priority-info">
+          <div class="priority-title">Miguel 性别翻转</div>
+          <div class="priority-desc">统一 Miguel 的性别代词为 she/her，修正角色设计文档和对话。</div>
+          <div>
+            <span class="severity-badge badge-minor">Minor</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-low">Impact: Low</span>
+            <span class="issue-meta-tag">L1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-3 animate-in">
+        <span class="priority-num">13</span>
+        <div class="priority-info">
+          <div class="priority-title">Tommy 证词回收周期过长</div>
+          <div class="priority-desc">在 L3/L4 增加回忆触发，保持玩家对 11:30 枪声悬念的记忆。</div>
+          <div>
+            <span class="severity-badge badge-suggestion">Suggestion</span>
+            <span class="effort-badge effort-low">Effort: Low</span>
+            <span class="impact-badge impact-low">Impact: Low</span>
+            <span class="issue-meta-tag">L1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-item priority-3 animate-in">
+        <span class="priority-num">14</span>
+        <div class="priority-info">
+          <div class="priority-title">L2 Whale/Webb 伏笔密度过高</div>
+          <div class="priority-desc">评估是否将"Webb 约 Zack 目的"延迟到 L3 开头，降低 L2 末尾信息负载。</div>
+          <div>
+            <span class="severity-badge badge-suggestion">Suggestion</span>
+            <span class="effort-badge effort-medium">Effort: Medium</span>
+            <span class="impact-badge impact-low">Impact: Low</span>
+            <span class="issue-meta-tag">L2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Effort vs Impact Summary -->
+    <h2 class="screen-heading animate-in">工作量 vs 影响力矩阵</h2>
+
+    <div class="animate-in">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Impact: High</th>
+            <th>Impact: Medium</th>
+            <th>Impact: Low</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Effort: Low</strong></td>
+            <td class="cell-pass">I-01, I-02</td>
+            <td class="cell-pass">I-05, I-08</td>
+            <td>I-11, I-12, I-13</td>
+          </tr>
+          <tr>
+            <td><strong>Effort: Medium</strong></td>
+            <td class="cell-warn">I-03, I-04</td>
+            <td class="cell-warn">I-06, I-07, I-10</td>
+            <td>I-14</td>
+          </tr>
+          <tr>
+            <td><strong>Effort: High</strong></td>
+            <td></td>
+            <td class="cell-fail">I-09</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-accent animate-in">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div>
+        <span class="callout-title">执行建议</span>
+        <div class="callout-content">
+          <p>优先处理左上角（Low Effort + High Impact）的 I-01 和 I-02，这两项只需补充数据即可立即解决。I-03 和 I-04 虽需要中等工作量但影响关键叙事体验，建议紧随其后。P2 中的 I-05 和 I-08 同样是低工作量高回报项，可穿插完成。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

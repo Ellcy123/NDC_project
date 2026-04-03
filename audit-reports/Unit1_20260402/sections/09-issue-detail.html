@@ -1,0 +1,346 @@
+<section class="section" id="section-9">
+  <div class="section-content">
+
+    <!-- Section Header -->
+    <div class="section-header animate-in">
+      <span class="section-number">09</span>
+      <h1 class="section-title">Issue Detail</h1>
+      <p class="section-subtitle">问题全览 — 14 个审计发现的完整清单与分类</p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar animate-in">
+
+      <div class="filter-group">
+        <span class="filter-group-label">严重度</span>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="critical">Critical</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="major">Major</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="minor">Minor</button>
+        <button class="filter-chip" data-filter-group="severity" data-filter-value="suggestion">Suggestion</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-label">维度</span>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="player">Player</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="evidence">Evidence</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="character">Character</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="dialogue">Dialogue</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="timeline">Timeline</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="difficulty">Difficulty</button>
+        <button class="filter-chip" data-filter-group="dimension" data-filter-value="narrative">Narrative</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-label">循环</span>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L1">L1</button>
+        <button class="filter-chip" data-filter-group="loop" data-filter-value="L2">L2</button>
+      </div>
+
+      <div class="filter-group">
+        <input type="text" id="issue-search" placeholder="搜索问题...">
+      </div>
+
+      <div class="filter-group">
+        <button class="filter-clear">清除筛选</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-count">14 / 14 issues</span>
+      </div>
+
+      <div class="filter-group">
+        <button class="expand-all-btn" onclick="document.querySelectorAll('#section-9 .collapsible-body').forEach(b=>b.style.display='block')">展开全部</button>
+        <button class="collapse-all-btn" onclick="document.querySelectorAll('#section-9 .collapsible-body').forEach(b=>b.style.display='')">收起全部</button>
+      </div>
+
+    </div>
+
+    <!-- Issue Cards -->
+    <div class="stagger-children">
+
+      <!-- ============================================================ -->
+      <!-- CRITICAL ISSUES (4)                                          -->
+      <!-- ============================================================ -->
+
+      <!-- I-01 Critical: 陷阱证据ID缺失 -->
+      <div class="issue-card issue-critical animate-in" id="issue-I01" data-severity="critical" data-dimension="evidence" data-loop="L1-L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <strong>I-01: 陷阱证据ID缺失 (1261/1241/1271)</strong>
+            <span class="issue-meta-tag">L1-L2</span>
+            <span class="issue-meta-tag">Evidence</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>ExposeConfig 中 L1 和 L2 的指证配置引用了证据 ID 1261、1241、1271 作为陷阱选项，但这些 ID 在 ItemStaticData 中不存在。玩家在指证界面选择这些选项时可能触发空数据。</p>
+          <p><strong>影响范围：</strong>L1 Expose (loop1_rosa) + L2 Expose (loop2_morrison)</p>
+          <p><strong>相关文件：</strong><code>preview_new2/data/table/ItemStaticData.json</code> + <code>preview_new2/data/table/ExposeData.json</code></p>
+          <p><strong>建议修复：</strong>在 ItemStaticData 中补充 1261、1241、1271 三条证据记录，设计合理的陷阱证据名称和描述。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-high">Impact: High</span></p>
+        </div>
+      </div>
+
+      <!-- I-02 Critical: 1115工作记录卡日期/地点矛盾 -->
+      <div class="issue-card issue-critical animate-in" id="issue-I02" data-severity="critical" data-dimension="evidence" data-loop="L1">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <strong>I-02: 1115 工作记录卡日期/地点矛盾</strong>
+            <span class="issue-meta-tag">L1</span>
+            <span class="issue-meta-tag">Evidence</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>ItemStaticData 中 1115 描述为"11月15日 23:00-01:00 后台走廊清洁"，但 loop1_rosa.json 对话中 Rosa 说的是"11月4日一楼走廊"。日期和地点均不一致，直接影响 L1 指证 R1 的证据-证词矛盾逻辑。</p>
+          <p><strong>影响范围：</strong>L1 证据 1115 + Rosa 对话 + Expose R1</p>
+          <p><strong>相关文件：</strong><code>preview_new2/data/table/ItemStaticData.json</code> / <code>AVG/EPI01/Talk/loop1/rosa_001.json</code></p>
+          <p><strong>建议修复：</strong>统一为 loop1_state.yaml 中的设定（11月15日 后台走廊），修改对话中的日期和地点。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-high">Impact: High</span></p>
+        </div>
+      </div>
+
+      <!-- I-03 Critical: emma_004违反悬疑感优先原则 -->
+      <div class="issue-card issue-critical animate-in" id="issue-I03" data-severity="critical" data-dimension="narrative" data-loop="L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <strong>I-03: emma_004 违反悬疑感优先原则</strong>
+            <span class="issue-meta-tag">L2</span>
+            <span class="issue-meta-tag">Narrative</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>L2 开篇 emma_004.json 中 Zack 直接说出"Morrison 本人迷晕了你并拖入会客室""Morrison 不知道 Rosa 在场""Rosa 出于恐惧选择沉默"等完整结论。违反三大原则之首"悬疑感优先 &mdash; 绝不提前破梗"，剥夺了玩家自行推理的满足感。</p>
+          <p><strong>影响范围：</strong>L2 开篇叙事体验</p>
+          <p><strong>相关文件：</strong><code>AVG/EPI01/Talk/loop2/emma_004.json</code></p>
+          <p><strong>建议修复：</strong>改为 Emma 汇报客观事实（Rosa 愿意配合、Morrison 有嫌疑），Zack 确认调查方向，不说出完整结论。</p>
+          <p><span class="effort-badge effort-medium">Effort: Medium</span> <span class="impact-badge impact-high">Impact: High</span></p>
+        </div>
+      </div>
+
+      <!-- I-04 Critical: Rosa-Morrison在场认知矛盾 -->
+      <div class="issue-card issue-critical animate-in" id="issue-I04" data-severity="critical" data-dimension="character" data-loop="L1-L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-critical">Critical</span>
+            <strong>I-04: Rosa-Morrison 在场认知矛盾</strong>
+            <span class="issue-meta-tag">L1-L2</span>
+            <span class="issue-meta-tag">Character</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>角色设计文档 rosa.md 中提到 Morrison 威胁 Rosa（暗示 Morrison 知道 Rosa 在场），但 loop1_state.yaml 和 L1 post_expose_knowledge 明确写"Morrison 不知道 Rosa 在场"。这一矛盾影响 Rosa 的动机设定和 Morrison 的知识边界。</p>
+          <p><strong>影响范围：</strong>Rosa 角色动机 + Morrison 知识边界 + L1-L2 叙事逻辑</p>
+          <p><strong>相关文件：</strong><code>剧情设计/00_世界观与角色/</code> + <code>剧情设计/Unit1/state/loop1_state.yaml</code></p>
+          <p><strong>建议修复：</strong>统一为 state.yaml 的设定"Morrison 不知道 Rosa 在场"，Rosa 的恐惧来源改为"Morrison 是腐败警察的身份威慑"而非直接威胁。</p>
+          <p><span class="effort-badge effort-medium">Effort: Medium</span> <span class="impact-badge impact-high">Impact: High</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- MAJOR ISSUES (6)                                             -->
+      <!-- ============================================================ -->
+
+      <!-- I-05 Major: L1指证R3毛巾前提跳跃 -->
+      <div class="issue-card issue-major animate-in" id="issue-I05" data-severity="major" data-dimension="player" data-loop="L1">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>I-05: L1 指证 R3 毛巾前提跳跃</strong>
+            <span class="issue-meta-tag">L1</span>
+            <span class="issue-meta-tag">Player</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>R3 需要玩家理解"Rosa 主动捡走毛巾并藏匿"，但没有直接证据支持。毛巾在 Rosa 储物间被发现这一事实本身只能证明毛巾在那里，不能证明是 Rosa 主动藏匿的。</p>
+          <p><strong>影响范围：</strong>L1 Expose R3 推理体验</p>
+          <p><strong>相关文件：</strong><code>AVG/EPI01/Expose/loop1_rosa.json</code></p>
+          <p><strong>建议修复：</strong>在 Rosa 储藏室搜证时增加毛巾位置暗示（如"毛巾被折叠整齐放在角落，不像随便丢的"），或在 R2-R3 过渡对话中加入铺垫。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-medium">Impact: Medium</span></p>
+        </div>
+      </div>
+
+      <!-- I-06 Major: L2指证R4推理跳跃 -->
+      <div class="issue-card issue-major animate-in" id="issue-I06" data-severity="major" data-dimension="player" data-loop="L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>I-06: L2 指证 R4 推理跳跃</strong>
+            <span class="issue-meta-tag">L2</span>
+            <span class="issue-meta-tag">Player</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>R4 需要玩家从"Morrison 带了勘验箱但没使用任何工具"推出"勘验箱不是用来办案的"，推理跳跃较大。玩家可能想到"也许只是忘了用"等替代解释。</p>
+          <p><strong>影响范围：</strong>L2 Expose R4 推理体验</p>
+          <p><strong>相关文件：</strong><code>AVG/EPI01/Expose/loop2_morrison.json</code></p>
+          <p><strong>建议修复：</strong>在 R3 &rarr; R4 过渡中增加 Morrison 的自我辩护（"我带了工具但情况紧急没来得及用"），让 R4 用 Rosa 证词精确击破这一说法。</p>
+          <p><span class="effort-badge effort-medium">Effort: Medium</span> <span class="impact-badge impact-medium">Impact: Medium</span></p>
+        </div>
+      </div>
+
+      <!-- I-07 Major: Morrison书房证据信息过载 -->
+      <div class="issue-card issue-major animate-in" id="issue-I07" data-severity="major" data-dimension="difficulty" data-loop="L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>I-07: Morrison 书房证据信息过载</strong>
+            <span class="issue-meta-tag">L2</span>
+            <span class="issue-meta-tag">Difficulty</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>Morrison 书房 (1206) 包含 6-7 件证据：勘验箱领用单、勘验箱实体、赌债、Whale 字条、筹码、头条新闻、奖章 (含 1228)。远超每场景 3 件的设计上限，玩家信息消化压力大。</p>
+          <p><strong>影响范围：</strong>L2 搜证体验 + 信息密度</p>
+          <p><strong>相关文件：</strong><code>剧情设计/Unit1/state/loop2_state.yaml</code></p>
+          <p><strong>建议修复：</strong>将部分环境叙事证据（如头条新闻/奖章）移至其他场景或减少数量，核心证据保留不超过 4 件。</p>
+          <p><span class="effort-badge effort-medium">Effort: Medium</span> <span class="impact-badge impact-medium">Impact: Medium</span></p>
+        </div>
+      </div>
+
+      <!-- I-08 Major: L1拖痕体重推理黑箱 -->
+      <div class="issue-card issue-major animate-in" id="issue-I08" data-severity="major" data-dimension="difficulty" data-loop="L1">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>I-08: L1 拖痕体重推理黑箱</strong>
+            <span class="issue-meta-tag">L1</span>
+            <span class="issue-meta-tag">Difficulty</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>拖痕 (1122) 分析后得出"150 磅重物拖痕"，但玩家无法验证这一数字的来源。"150 磅"的推算过程对玩家而言是黑箱，可能降低推理参与感。</p>
+          <p><strong>影响范围：</strong>L1 Expose R2 证据说服力</p>
+          <p><strong>相关文件：</strong><code>preview_new2/data/table/ItemStaticData.json</code> (1122/1702 描述)</p>
+          <p><strong>建议修复：</strong>增加参照物（"拖痕深度与成年男性体重一致"）或简化表述，避免精确数字带来的不可验证感。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-medium">Impact: Medium</span></p>
+        </div>
+      </div>
+
+      <!-- I-09 Major: L2指证R1双证词依赖 -->
+      <div class="issue-card issue-major animate-in" id="issue-I09" data-severity="major" data-dimension="difficulty" data-loop="L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>I-09: L2 指证 R1 双证词依赖</strong>
+            <span class="issue-meta-tag">L2</span>
+            <span class="issue-meta-tag">Difficulty</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>R1 反驳 Morrison 的时间线谎言需要同时持有 Tommy 证词 (1052002："车程最多 15 分钟") 和 Vivian 证词 (1061001："午夜 12 点到达")。玩家必须在两个不同场景完成对话才能获得这两条证词，遗漏任一将无法完成 R1。</p>
+          <p><strong>影响范围：</strong>L2 Expose R1 完成条件</p>
+          <p><strong>相关文件：</strong><code>AVG/EPI01/Expose/loop2_morrison.json</code></p>
+          <p><strong>建议修复：</strong>确认这是有意设计（增加探索要求），并在游戏引导中确保玩家有动机访问 Tommy 和 Vivian；或添加备选反驳路径。</p>
+          <p><span class="effort-badge effort-high">Effort: High</span> <span class="impact-badge impact-medium">Impact: Medium</span></p>
+        </div>
+      </div>
+
+      <!-- I-10 Major: L2"无力感"情绪弧缺失 -->
+      <div class="issue-card issue-major animate-in" id="issue-I10" data-severity="major" data-dimension="narrative" data-loop="L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-major">Major</span>
+            <strong>I-10: L2"无力感"情绪弧缺失</strong>
+            <span class="issue-meta-tag">L2</span>
+            <span class="issue-meta-tag">Narrative</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>L2 设计情绪弧为"愤怒 &rarr; 无力"，但实际对话传达更接近"震惊 &rarr; 满足"。Morrison Expose 后虽揭露 Whale，但缺少让玩家感受"即使揭穿 Morrison 也无力对抗更大势力"的场景设计。</p>
+          <p><strong>影响范围：</strong>L2 整体叙事体验</p>
+          <p><strong>相关文件：</strong><code>AVG/EPI01/Expose/loop2_morrison.json</code> + loop2 post-expose</p>
+          <p><strong>建议修复：</strong>在 Expose 后增加 Whale 威慑力描写，例如 Morrison 提到"他们无处不在"，或 Emma 表达对调查前景的担忧。</p>
+          <p><span class="effort-badge effort-medium">Effort: Medium</span> <span class="impact-badge impact-medium">Impact: Medium</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- MINOR ISSUES (2)                                             -->
+      <!-- ============================================================ -->
+
+      <!-- I-11 Minor: Morrison称呼不一致 -->
+      <div class="issue-card issue-minor animate-in" id="issue-I11" data-severity="minor" data-dimension="character" data-loop="L1-L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-minor">Minor</span>
+            <strong>I-11: Morrison 称呼不一致</strong>
+            <span class="issue-meta-tag">L1-L2</span>
+            <span class="issue-meta-tag">Character</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>部分对话中 Morrison 被称为"Detective Morrison"，另一些地方用"Inspector Morrison"。需要统一称呼。</p>
+          <p><strong>影响范围：</strong>角色一致性</p>
+          <p><strong>相关文件：</strong>多个对话 JSON 文件</p>
+          <p><strong>建议修复：</strong>统一为"Detective Morrison"。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-low">Impact: Low</span></p>
+        </div>
+      </div>
+
+      <!-- I-12 Minor: Miguel性别翻转 -->
+      <div class="issue-card issue-minor animate-in" id="issue-I12" data-severity="minor" data-dimension="character" data-loop="L1">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-minor">Minor</span>
+            <strong>I-12: Miguel 性别翻转</strong>
+            <span class="issue-meta-tag">L1</span>
+            <span class="issue-meta-tag">Character</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>Rosa 角色设定中 Miguel 是她的女儿，但部分描述中使用了男性代词或暗示。需要统一为女性。</p>
+          <p><strong>影响范围：</strong>Rosa 背景故事一致性</p>
+          <p><strong>相关文件：</strong>角色设计文档 + 相关对话</p>
+          <p><strong>建议修复：</strong>统一 Miguel 的性别代词为 she/her。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-low">Impact: Low</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SUGGESTIONS (2)                                              -->
+      <!-- ============================================================ -->
+
+      <!-- I-13 Suggestion: Tommy证词遗留至L6回收周期过长 -->
+      <div class="issue-card issue-suggestion animate-in" id="issue-I13" data-severity="suggestion" data-dimension="narrative" data-loop="L1">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-suggestion">Suggestion</span>
+            <strong>I-13: Tommy 证词遗留至 L6 回收周期过长</strong>
+            <span class="issue-meta-tag">L1</span>
+            <span class="issue-meta-tag">Narrative</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>Tommy 的证词 1051003（11:30 枪声）在 L1 获取，但设计到 L6 才回收。跨越 5 个 Loop 的长线伏笔有被玩家遗忘的风险。</p>
+          <p><strong>影响范围：</strong>L1-L6 叙事连贯性</p>
+          <p><strong>相关文件：</strong><code>剧情设计/Unit1/state/</code></p>
+          <p><strong>建议修复：</strong>在中间 Loop（L3 或 L4）增加回忆触发或相关 NPC 提及，保持玩家对枪声悬念的记忆。</p>
+          <p><span class="effort-badge effort-low">Effort: Low</span> <span class="impact-badge impact-low">Impact: Low</span></p>
+        </div>
+      </div>
+
+      <!-- I-14 Suggestion: L2 Whale/Webb伏笔密度过高 -->
+      <div class="issue-card issue-suggestion animate-in" id="issue-I14" data-severity="suggestion" data-dimension="narrative" data-loop="L2">
+        <div class="collapsible-header">
+          <div class="issue-meta">
+            <span class="severity-badge badge-suggestion">Suggestion</span>
+            <strong>I-14: L2 Whale/Webb 伏笔密度过高</strong>
+            <span class="issue-meta-tag">L2</span>
+            <span class="issue-meta-tag">Narrative</span>
+          </div>
+        </div>
+        <div class="collapsible-body">
+          <p>L2 Expose 后同时埋下"Whale 是谁""Webb 约 Zack 的真实目的""Morrison 只是工具人"三条新伏笔。信息密度偏高，玩家消化压力大。</p>
+          <p><strong>影响范围：</strong>L2 结尾体验</p>
+          <p><strong>相关文件：</strong><code>AVG/EPI01/Expose/loop2_morrison.json</code> post-expose</p>
+          <p><strong>建议修复：</strong>评估是否可将"Webb 约 Zack 目的"延迟到 L3 开头通过其他 NPC 揭示，降低 L2 末尾信息负载。</p>
+          <p><span class="effort-badge effort-medium">Effort: Medium</span> <span class="impact-badge impact-low">Impact: Low</span></p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

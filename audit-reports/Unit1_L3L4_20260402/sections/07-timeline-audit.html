@@ -1,0 +1,134 @@
+<section class="section" id="section-7">
+  <div class="section-content">
+    <div class="section-header">
+      <span class="section-number">07</span>
+      <h2 class="section-title">Timeline Audit</h2>
+      <p class="section-subtitle">时序一致性与信息泄露检测</p>
+    </div>
+
+    <div class="tab-group">
+      <button class="tab-btn active" data-tab-group="timeline" data-tab-target="tab-leaks">信息泄露</button>
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-facts">Facts 流转</button>
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-attrs">属性一致</button>
+      <button class="tab-btn" data-tab-group="timeline" data-tab-target="tab-truth">单层真相</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-leaks" data-tab-group="timeline">
+      <div class="callout callout-info animate-in">
+        <span class="callout-icon">&#x2705;</span>
+        <div>
+          <span class="callout-title">无确认的信息泄露</span>
+          <p class="callout-content">经 Phase 3.5 事实验证，此前标记的 2 处"泄露"均为误报：emma_005 属于 L4 开场（非 L3），emma_006 属于 L5 开场（非 L4），内容时序正确。</p>
+        </div>
+      </div>
+
+      <table class="audit-table animate-in">
+        <thead>
+          <tr>
+            <th>Loop</th><th>原始发现</th><th>验证结果</th><th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L3</td>
+            <td>emma_005 "Tommy供了" 泄露 L3 指证结果</td>
+            <td><span class="severity-badge badge-pass">FALSE POSITIVE</span></td>
+            <td>emma_005 实际是 L4 开场对话（state L4: talk=102005001），讨论 L3 指证后续属正常时序。</td>
+          </tr>
+          <tr>
+            <td>L4</td>
+            <td>emma_006 讨论 Jimmy 崩溃和 Vivian</td>
+            <td><span class="severity-badge badge-pass">FALSE POSITIVE</span></td>
+            <td>emma_006 实际是 L5 开场对话，讨论 L4 指证后续属正常时序。Emma 对话文件命名规律：loop{N}/emma_00{N+1} = loop{N+1} 的开场。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-panel" id="tab-facts" data-tab-group="timeline">
+      <table class="audit-table animate-in">
+        <thead>
+          <tr><th>从 Loop</th><th>到 Loop</th><th>应传递的事实</th><th>实际状态</th><th>问题</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L2</td><td>L3</td>
+            <td>Webb 古董走私网络存在、Morrison 涉案</td>
+            <td class="cell-pass">PASS</td>
+            <td>emma_004 正确回顾 L2 发现</td>
+          </tr>
+          <tr>
+            <td>L3</td><td>L4</td>
+            <td>Tommy 记账角色确认、Webb 日记/Whale 代号、笔迹伪造</td>
+            <td class="cell-pass">PASS</td>
+            <td>emma_005 正确传递 L3 指证成果，并引出 Whale/日记新线索</td>
+          </tr>
+          <tr>
+            <td>L4</td><td>L5</td>
+            <td>Jimmy 被迫协助、Vivian 目击争吵、Anna 家庭困境</td>
+            <td class="cell-pass">PASS</td>
+            <td>emma_006 正确总结 L4 发现，自然引出 Vivian 线索</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-panel" id="tab-attrs" data-tab-group="timeline">
+      <table class="audit-table animate-in">
+        <thead>
+          <tr><th>证据ID</th><th>属性</th><th>位置A</th><th>位置B</th><th>矛盾</th><th>严重度</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1429</td>
+            <td>Describe</td>
+            <td>ItemStaticData: "还没写描述"</td>
+            <td>1426.Describe: "证明了Jimmy不仅知道它是个古董"</td>
+            <td>合成结果(1426)有完整描述，但源件(1429)描述为空。信息倒挂。</td>
+            <td><span class="severity-badge badge-critical">Critical</span></td>
+          </tr>
+          <tr>
+            <td>1429</td>
+            <td>canCombined vs ExposeData</td>
+            <td>ItemStaticData: canCombined=true &#8594; 1426</td>
+            <td>ExposeData id=14: item=[1429]</td>
+            <td>Expose 要求原件 1429，但玩家可能已将其合成为 1426。</td>
+            <td><span class="severity-badge badge-critical">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Tommy</td>
+            <td>工作年限</td>
+            <td>loop3_tommy.json line 163: "三年"</td>
+            <td>loop3_tommy.json line 613: "五年"</td>
+            <td>同一场指证中 Tommy 自述年限不一致。</td>
+            <td><span class="severity-badge badge-major">Major</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-panel" id="tab-truth" data-tab-group="timeline">
+      <table class="audit-table animate-in">
+        <thead>
+          <tr><th>Loop</th><th>应揭示的真相层</th><th>实际揭示</th><th>是否超标</th><th>评价</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L3</td>
+            <td>深层网络：Tommy 不只是记账，他参与了整个走私链条</td>
+            <td>Tommy 伪造签名、参与运货、掌握账目</td>
+            <td class="cell-pass">否</td>
+            <td>三轮指证层层递进，从工作范围到走私参与到直接伪造。节奏合理。</td>
+          </tr>
+          <tr>
+            <td>L4</td>
+            <td>被迫的恶：Jimmy 知道古董真相但为家人沉默</td>
+            <td>Jimmy 的厨师伪装、与 Webb 的真实关系、对家人的保护</td>
+            <td class="cell-pass">否</td>
+            <td>情感层面的转折比 L3 更深，道德灰色地带建立成功。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
