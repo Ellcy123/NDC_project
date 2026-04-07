@@ -22,13 +22,13 @@
 
 ## Preview 预览工具
 
-`Preview/` 文件夹包含剧情预览网页工具，用于：
+`preview_new2/` 文件夹包含剧情预览网页工具，用于：
 
 - **团队内部协作** - 策划、编剧、美术等成员查看剧情流程
 - **内容审校** - 检查对话、证据、NPC信息的一致性
 - **进度同步** - 让团队成员了解当前剧情开发状态
 
-🔗 在线预览：https://ellcy123.github.io/NDC_project/Preview/index.html
+🔗 在线预览：https://ndc-preview.vercel.app
 
 ---
 
