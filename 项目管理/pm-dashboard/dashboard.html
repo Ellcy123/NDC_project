@@ -142,6 +142,37 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
   .stats-bar{grid-template-columns:repeat(2,1fr)}
   .risk-grid{grid-template-columns:1fr}
 }
+
+/* Screenshot system */
+.ss-btn{background:var(--light);border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;color:var(--muted);white-space:nowrap;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+.ss-btn:hover{background:var(--doing-bg);color:var(--doing-text)}
+.ss-count{background:var(--doing-bg);color:var(--doing-text);border-radius:8px;padding:0 5px;font-size:10px;font-weight:600;min-width:16px;text-align:center;display:inline-block}
+.ss-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.ss-modal-box{background:var(--card);border-radius:12px;padding:24px;max-width:680px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.ss-modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.ss-modal-header h3{font-size:15px;font-weight:600}
+.ss-modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:4px}
+.ss-modal-close:hover{background:var(--light);color:var(--text)}
+.ss-drop{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--muted);font-size:12px;margin-bottom:16px;transition:all .2s;cursor:pointer;line-height:1.8}
+.ss-drop:hover{border-color:var(--primary);background:var(--light)}
+.ss-drop.dragover{border-color:var(--doing-text);background:var(--doing-bg);color:var(--doing-text)}
+.ss-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.ss-thumb-wrap{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/10;background:var(--bg)}
+.ss-thumb{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform .2s}
+.ss-thumb:hover{transform:scale(1.03)}
+.ss-thumb-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:15px;line-height:20px;text-align:center;opacity:0;transition:opacity .15s}
+.ss-thumb-wrap:hover .ss-thumb-del{opacity:1}
+.ss-lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:950;justify-content:center;align-items:center;cursor:pointer}
+.ss-lightbox img{max-width:92%;max-height:92%;border-radius:6px}
+.ss-uploading{opacity:.5;pointer-events:none}
+
+/* Risk form modal */
+.risk-form label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;font-weight:600}
+.risk-form label:first-child{margin-top:0}
+.risk-form input,.risk-form select,.risk-form textarea{width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;background:var(--bg);color:var(--text);font-family:inherit}
+.risk-form textarea{resize:vertical;min-height:60px}
+.risk-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.risk-form .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
@@ -261,6 +292,83 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
 
 <div class="toast" id="toast"></div>
 
+<!-- Screenshot Modal -->
+<div class="ss-modal-overlay" id="ss-modal" onclick="if(event.target===this)closeScreenshotModal()">
+  <div class="ss-modal-box">
+    <div class="ss-modal-header">
+      <h3 id="ss-modal-title">任务截图</h3>
+      <button class="ss-modal-close" onclick="closeScreenshotModal()">&times;</button>
+    </div>
+    <div class="ss-drop" id="ss-drop" onclick="triggerScreenshotUpload()">
+      拖拽图片到此处 / 点击选择文件 / Ctrl+V 粘贴截图
+    </div>
+    <div class="ss-gallery" id="ss-gallery"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="ss-lightbox" id="ss-lightbox" onclick="closeLightbox()">
+  <img id="ss-lb-img" />
+</div>
+
+<!-- Milestone Editor Modal -->
+<div class="ss-modal-overlay" id="ms-modal" onclick="if(event.target===this)closeMsModal()">
+  <div class="ss-modal-box" style="max-width:520px">
+    <div class="ss-modal-header">
+      <h3 id="ms-modal-title">编辑里程碑</h3>
+      <button class="ss-modal-close" onclick="closeMsModal()">&times;</button>
+    </div>
+    <div class="risk-form">
+      <label>里程碑 ID</label>
+      <input id="mf-msid" placeholder="MS-001" />
+      <label>名称</label>
+      <input id="mf-name" placeholder="里程碑名称" />
+      <div class="form-row">
+        <div><label>目标日期</label><input type="date" id="mf-date" /></div>
+        <div><label>状态</label><select id="mf-status"><option>未开始</option><option>进行中</option><option>已完成</option></select></div>
+      </div>
+      <label>前置依赖 <span style="font-weight:400;color:var(--muted)">(逗号分隔，如 MS-001, MS-003)</span></label>
+      <input id="mf-depends" placeholder="MS-001, MS-003" />
+      <label>备注</label>
+      <textarea id="mf-note" placeholder="备注信息"></textarea>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="closeMsModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveMilestone()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Risk Editor Modal -->
+<div class="ss-modal-overlay" id="risk-modal" onclick="if(event.target===this)closeRiskModal()">
+  <div class="ss-modal-box" style="max-width:520px">
+    <div class="ss-modal-header">
+      <h3 id="risk-modal-title">编辑风险</h3>
+      <button class="ss-modal-close" onclick="closeRiskModal()">&times;</button>
+    </div>
+    <div class="risk-form">
+      <label>标题</label>
+      <input id="rf-title" placeholder="风险标题" />
+      <label>描述</label>
+      <textarea id="rf-desc" placeholder="风险描述"></textarea>
+      <div class="form-row">
+        <div><label>严重程度</label><select id="rf-severity"><option>高</option><option selected>中</option><option>低</option></select></div>
+        <div><label>状态</label><select id="rf-status"><option>观察中</option><option>已缓解</option><option>已关闭</option></select></div>
+      </div>
+      <div class="form-row">
+        <div><label>分类</label><select id="rf-category"><option value="策划">策划</option><option value="程序">程序</option><option value="美术">美术</option><option value="">无分类</option></select></div>
+        <div><label>观察日期</label><input type="date" id="rf-date" /></div>
+      </div>
+      <label>缓解措施</label>
+      <input id="rf-mitigation" placeholder="缓解措施" />
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="closeRiskModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveRisk()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ============================================
 // Supabase
@@ -268,6 +376,7 @@ header .sub{font-size:12px;color:var(--muted);margin-top:2px}
 const SUPABASE_URL = 'https://tyqsamueendpanbfousp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5cXNhbXVlZW5kcGFuYmZvdXNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxOTI1NjMsImV4cCI6MjA5MDc2ODU2M30.qa_EqkXHkq5ki8CYt0cJk-Se2vfj8PTVHci239YblfM';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const STORAGE_BUCKET = 'task-screenshots';
 
 // ============================================
 // Global State
@@ -772,7 +881,7 @@ function renderTaskTable(panelId, category) {
     <th style="width:60px">ID</th><th style="min-width:200px">任务名称</th><th style="width:75px">负责人</th>
     <th style="width:75px">优先级</th><th style="width:90px">状态</th>
     <th style="width:65px">预估(天)</th>
-    <th style="width:100px">开始日期</th><th style="width:100px">截止日期</th><th style="min-width:100px">备注</th><th style="width:30px"></th>
+    <th style="width:100px">开始日期</th><th style="width:100px">截止日期</th><th style="min-width:100px">备注</th><th style="width:70px">截图</th><th style="width:30px"></th>
   </tr></thead><tbody>
   ${tasks.map(t => `
     <tr class="${t.status==='已完成'?'done-row':''}" data-id="${t.id}">
@@ -785,6 +894,7 @@ function renderTaskTable(panelId, category) {
       <td><input type="date" value="${t.start_date||''}" onchange="updateTask(${t.id},'start_date',this.value||null)" style="width:110px" /></td>
       <td><input type="date" value="${t.end_date||''}" onchange="updateTask(${t.id},'end_date',this.value||null)" style="width:110px" /></td>
       <td><input value="${esc(t.note||'')}" onchange="updateTask(${t.id},'note',this.value)" /></td>
+      <td style="text-align:center"><button class="ss-btn" onclick="openScreenshotPanel(${t.id})">${(t.screenshots||[]).length?`<span class="ss-count">${(t.screenshots||[]).length}</span>`:'+'}</button></td>
       <td><button class="del-btn" onclick="deleteTask(${t.id})" title="删除">x</button></td>
     </tr>
   `).join('')}
@@ -829,17 +939,19 @@ function renderMilestones() {
   container.innerHTML = allMilestones.map(m => {
     const overdue = m.status!=='已完成' && m.target_date && m.target_date < today;
     const cls = m.status==='已完成'?'ms-done':overdue?'ms-overdue':m.status==='进行中'?'ms-doing':'';
-    return `<div class="ms-item ${cls}"><div class="ms-dot"></div><div class="ms-content">
-      <h3>${esc(m.name)}</h3>
-      <div class="ms-date">${m.ms_id||''} | 目标: ${m.target_date||'未定'} ${overdue?'<span style="color:var(--blocked-text);font-weight:600">已逾期</span>':''}</div>
-      <div class="ms-status" style="margin-top:6px">
-        <select onchange="updateMilestone(${m.id},'status',this.value)" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:4px">
-          ${STATUSES.slice(0,3).map(s => `<option ${m.status===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-        <input type="date" value="${m.target_date||''}" onchange="updateMilestone(${m.id},'target_date',this.value)" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;margin-left:8px" />
-        <button class="del-btn" onclick="deleteMilestone(${m.id})" style="margin-left:8px">x</button>
+    const deps = (m.depends_on||[]).join(', ');
+    return `<div class="ms-item ${cls}"><div class="ms-dot"></div><div class="ms-content" ondblclick="openMsEditor(${m.id})" style="cursor:pointer">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <h3>${esc(m.name)}</h3>
+        <div style="display:flex;gap:4px;align-items:center">
+          <span class="badge ${m.status==='已完成'?'badge-done':m.status==='进行中'?'badge-doing':'badge-todo'}">${m.status}</span>
+          <button class="btn btn-outline" onclick="event.stopPropagation();openMsEditor(${m.id})" style="padding:3px 8px;font-size:11px">编辑</button>
+          <button class="del-btn" onclick="event.stopPropagation();deleteMilestone(${m.id})">x</button>
+        </div>
       </div>
-      ${m.note?`<div style="margin-top:6px;font-size:12px;color:var(--muted)">${esc(m.note)}</div>`:''}
+      <div class="ms-date">${m.ms_id||''} | 目标: ${m.target_date||'未定'} ${overdue?'<span style="color:var(--blocked-text);font-weight:600">已逾期</span>':''}</div>
+      ${deps?`<div style="margin-top:4px;font-size:11px;color:var(--muted)">前置: ${esc(deps)}</div>`:''}
+      ${m.note?`<div style="margin-top:4px;font-size:12px;color:var(--muted)">${esc(m.note)}</div>`:''}
     </div></div>`;
   }).join('');
 }
@@ -854,18 +966,19 @@ function renderRisks() {
   }
   const sc = {'高':'risk-high','中':'risk-mid','低':'risk-low'};
   container.innerHTML = allRisks.map(r => `
-    <div class="risk-card ${sc[r.severity]||'risk-mid'}">
+    <div class="risk-card ${sc[r.severity]||'risk-mid'}" ondblclick="openRiskEditor(${r.id})" style="cursor:pointer">
       <div style="display:flex;justify-content:space-between;align-items:start">
-        <h3>${esc(r.title)}</h3>
+        <h3>${esc(r.title||'未命名')}</h3>
         <div style="display:flex;gap:4px;align-items:center">
-          <select onchange="updateRisk(${r.id},'severity',this.value)" style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px">${['高','中','低'].map(s => `<option ${r.severity===s?'selected':''}>${s}</option>`).join('')}</select>
-          <select onchange="updateRisk(${r.id},'status',this.value)" style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px">${['观察中','已缓解','已关闭'].map(s => `<option ${r.status===s?'selected':''}>${s}</option>`).join('')}</select>
-          <button class="del-btn" onclick="deleteRisk(${r.id})">x</button>
+          <span class="badge ${r.severity==='高'?'badge-blocked':r.severity==='低'?'badge-done':'badge-doing'}">${r.severity||'中'}</span>
+          <span class="badge ${r.status==='已关闭'?'badge-done':r.status==='已缓解'?'badge-doing':'badge-todo'}">${r.status||'观察中'}</span>
+          <button class="btn btn-outline" onclick="event.stopPropagation();openRiskEditor(${r.id})" style="padding:3px 8px;font-size:11px">编辑</button>
+          <button class="del-btn" onclick="event.stopPropagation();deleteRisk(${r.id})">x</button>
         </div>
       </div>
-      <p>${esc(r.description||'')}</p>
+      ${r.description?`<p>${esc(r.description)}</p>`:''}
       ${r.mitigation?`<div class="mitigation">缓解: ${esc(r.mitigation)}</div>`:''}
-      <div style="margin-top:6px;font-size:11px;color:var(--muted)">${r.category||''} | ${r.observation_date||''}</div>
+      <div style="margin-top:6px;font-size:11px;color:var(--muted)">${r.category||''}${r.observation_date?' | '+r.observation_date:''}</div>
     </div>
   `).join('');
 }
@@ -915,13 +1028,51 @@ async function updateMilestone(id, field, value) {
   showToast('已保存');
 }
 
-async function addMilestone() {
-  const msId = `MS-${String(allMilestones.length+1).padStart(3,'0')}`;
-  const { data, error } = await db.from('milestones').insert({ ms_id: msId, name: '新里程碑', status: '未开始' }).select();
-  if (error) { showToast('添加失败: ' + error.message); return; }
-  allMilestones.push(data[0]);
-  renderMilestones();
-  showToast('已添加');
+function addMilestone() { openMsEditor(); }
+
+// Milestone Editor Modal
+let editingMsId = null;
+
+function openMsEditor(id) {
+  editingMsId = id || null;
+  const m = id ? allMilestones.find(m => m.id === id) : null;
+  document.getElementById('ms-modal-title').textContent = m ? '编辑里程碑' : '新建里程碑';
+  document.getElementById('mf-msid').value = m?.ms_id || `MS-${String(allMilestones.length+1).padStart(3,'0')}`;
+  document.getElementById('mf-name').value = m?.name || '';
+  document.getElementById('mf-date').value = m?.target_date || '';
+  document.getElementById('mf-status').value = m?.status || '未开始';
+  document.getElementById('mf-depends').value = (m?.depends_on||[]).join(', ');
+  document.getElementById('mf-note').value = m?.note || '';
+  document.getElementById('ms-modal').style.display = 'flex';
+}
+
+function closeMsModal() { document.getElementById('ms-modal').style.display = 'none'; }
+
+async function saveMilestone() {
+  const depsRaw = document.getElementById('mf-depends').value;
+  const depends_on = depsRaw ? depsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const data = {
+    ms_id: document.getElementById('mf-msid').value,
+    name: document.getElementById('mf-name').value,
+    target_date: document.getElementById('mf-date').value || null,
+    status: document.getElementById('mf-status').value,
+    depends_on,
+    note: document.getElementById('mf-note').value,
+  };
+  if (!data.name) { showToast('请填写名称'); return; }
+  if (editingMsId) {
+    const { error } = await db.from('milestones').update({...data, updated_at: new Date().toISOString()}).eq('id', editingMsId);
+    if (error) { showToast('保存失败: ' + error.message); return; }
+    const m = allMilestones.find(m => m.id === editingMsId);
+    if (m) Object.assign(m, data);
+  } else {
+    const { data: d, error } = await db.from('milestones').insert(data).select();
+    if (error) { showToast('添加失败: ' + error.message); return; }
+    allMilestones.push(d[0]);
+  }
+  closeMsModal();
+  renderAll();
+  showToast(editingMsId ? '已保存' : '已添加');
 }
 
 async function deleteMilestone(id) {
@@ -942,14 +1093,51 @@ async function updateRisk(id, field, value) {
   showToast('已保存');
 }
 
-async function addRisk() {
-  const title = prompt('风险标题:');
-  if (!title) return;
-  const { data, error } = await db.from('risks').insert({ title, severity: '中', status: '观察中' }).select();
-  if (error) { showToast('添加失败'); return; }
-  allRisks.push(data[0]);
+function addRisk() { openRiskEditor(); }
+
+// Risk Editor Modal
+let editingRiskId = null;
+
+function openRiskEditor(id) {
+  editingRiskId = id || null;
+  const r = id ? allRisks.find(r => r.id === id) : null;
+  document.getElementById('risk-modal-title').textContent = r ? '编辑风险' : '新建风险';
+  document.getElementById('rf-title').value = r?.title || '';
+  document.getElementById('rf-desc').value = r?.description || '';
+  document.getElementById('rf-severity').value = r?.severity || '中';
+  document.getElementById('rf-status').value = r?.status || '观察中';
+  document.getElementById('rf-category').value = r?.category || '';
+  document.getElementById('rf-date').value = r?.observation_date || new Date().toISOString().slice(0,10);
+  document.getElementById('rf-mitigation').value = r?.mitigation || '';
+  document.getElementById('risk-modal').style.display = 'flex';
+}
+
+function closeRiskModal() { document.getElementById('risk-modal').style.display = 'none'; }
+
+async function saveRisk() {
+  const data = {
+    title: document.getElementById('rf-title').value,
+    description: document.getElementById('rf-desc').value,
+    severity: document.getElementById('rf-severity').value,
+    status: document.getElementById('rf-status').value,
+    category: document.getElementById('rf-category').value,
+    observation_date: document.getElementById('rf-date').value || null,
+    mitigation: document.getElementById('rf-mitigation').value,
+  };
+  if (!data.title) { showToast('请填写标题'); return; }
+  if (editingRiskId) {
+    const { error } = await db.from('risks').update(data).eq('id', editingRiskId);
+    if (error) { showToast('保存失败: ' + error.message); return; }
+    const r = allRisks.find(r => r.id === editingRiskId);
+    if (r) Object.assign(r, data);
+  } else {
+    const { data: d, error } = await db.from('risks').insert(data).select();
+    if (error) { showToast('添加失败: ' + error.message); return; }
+    allRisks.push(d[0]);
+  }
+  closeRiskModal();
   renderRisks();
-  showToast('已添加');
+  showToast(editingRiskId ? '已保存' : '已添加');
 }
 
 async function deleteRisk(id) {
@@ -960,6 +1148,152 @@ async function deleteRisk(id) {
   renderRisks();
   showToast('已删除');
 }
+
+// ============================================
+// Screenshots
+// ============================================
+async function uploadScreenshot(taskId, taskDbId, file) {
+  const ext = file.name?.includes('.') ? file.name.split('.').pop() : (file.type?.split('/')[1] || 'png');
+  const path = `${taskId}/${Date.now()}.${ext}`;
+  const { error } = await db.storage.from(STORAGE_BUCKET).upload(path, file, { cacheControl: '3600', upsert: false });
+  if (error) { showToast('上传失败: ' + error.message); return null; }
+  const { data: urlData } = db.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+  const url = urlData.publicUrl;
+  const task = allTasks.find(t => t.id === taskDbId);
+  const screenshots = [...(task?.screenshots || []), url];
+  const { error: e2 } = await db.from('tasks').update({ screenshots, updated_at: new Date().toISOString() }).eq('id', taskDbId);
+  if (e2) { showToast('保存失败: ' + e2.message); return null; }
+  if (task) task.screenshots = screenshots;
+  showToast('已上传');
+  return url;
+}
+
+async function removeScreenshot(taskDbId, idx) {
+  if (!confirm('确定删除此截图?')) return;
+  const task = allTasks.find(t => t.id === taskDbId);
+  if (!task) return;
+  const url = (task.screenshots || [])[idx];
+  if (!url) return;
+  const pathMatch = url.match(new RegExp(STORAGE_BUCKET + '/(.+)$'));
+  if (pathMatch) await db.storage.from(STORAGE_BUCKET).remove([pathMatch[1]]);
+  const screenshots = (task.screenshots || []).filter((_, i) => i !== idx);
+  await db.from('tasks').update({ screenshots, updated_at: new Date().toISOString() }).eq('id', taskDbId);
+  task.screenshots = screenshots;
+  renderScreenshotGallery(taskDbId);
+  renderAll();
+  showToast('已删除截图');
+}
+
+function openScreenshotPanel(taskDbId) {
+  const task = allTasks.find(t => t.id === taskDbId);
+  if (!task) return;
+  const modal = document.getElementById('ss-modal');
+  modal.dataset.taskDbId = taskDbId;
+  modal.dataset.taskId = task.task_id;
+  document.getElementById('ss-modal-title').textContent = task.task_id + ' - ' + task.name + ' 截图';
+  renderScreenshotGallery(taskDbId);
+  modal.style.display = 'flex';
+}
+
+function renderScreenshotGallery(taskDbId) {
+  const task = allTasks.find(t => t.id === taskDbId);
+  const gallery = document.getElementById('ss-gallery');
+  const shots = task?.screenshots || [];
+  if (shots.length === 0) {
+    gallery.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:16px">暂无截图</div>';
+  } else {
+    gallery.innerHTML = shots.map((url, idx) => `
+      <div class="ss-thumb-wrap">
+        <img class="ss-thumb" src="${esc(url)}" onclick="openLightbox(${taskDbId},${idx})" loading="lazy" />
+        <button class="ss-thumb-del" onclick="removeScreenshot(${taskDbId},${idx})">&#215;</button>
+      </div>`).join('');
+  }
+}
+
+function closeScreenshotModal() {
+  document.getElementById('ss-modal').style.display = 'none';
+  renderAll();
+}
+
+function triggerScreenshotUpload() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.onchange = async () => {
+    const modal = document.getElementById('ss-modal');
+    const taskDbId = parseInt(modal.dataset.taskDbId);
+    const taskId = modal.dataset.taskId;
+    const drop = document.getElementById('ss-drop');
+    drop.classList.add('ss-uploading');
+    drop.textContent = '上传中...';
+    for (const file of input.files) {
+      await uploadScreenshot(taskId, taskDbId, file);
+    }
+    drop.classList.remove('ss-uploading');
+    drop.textContent = '拖拽图片到此处 / 点击选择文件 / Ctrl+V 粘贴截图';
+    renderScreenshotGallery(taskDbId);
+  };
+  input.click();
+}
+
+function openLightbox(taskDbId, idx) {
+  const task = allTasks.find(t => t.id === taskDbId);
+  const url = (task?.screenshots || [])[idx];
+  if (!url) return;
+  document.getElementById('ss-lb-img').src = url;
+  document.getElementById('ss-lightbox').style.display = 'flex';
+}
+
+function closeLightbox() {
+  document.getElementById('ss-lightbox').style.display = 'none';
+}
+
+// Paste & drag-drop listeners for screenshot modal
+document.addEventListener('paste', async (e) => {
+  const modal = document.getElementById('ss-modal');
+  if (modal.style.display !== 'flex') return;
+  const items = e.clipboardData?.items;
+  if (!items) return;
+  const taskDbId = parseInt(modal.dataset.taskDbId);
+  const taskId = modal.dataset.taskId;
+  const drop = document.getElementById('ss-drop');
+  let uploaded = false;
+  for (const item of items) {
+    if (!item.type.startsWith('image/')) continue;
+    const file = item.getAsFile();
+    if (!file) continue;
+    if (!uploaded) { drop.classList.add('ss-uploading'); drop.textContent = '上传中...'; }
+    await uploadScreenshot(taskId, taskDbId, file);
+    uploaded = true;
+  }
+  if (uploaded) {
+    drop.classList.remove('ss-uploading');
+    drop.textContent = '拖拽图片到此处 / 点击选择文件 / Ctrl+V 粘贴截图';
+    renderScreenshotGallery(taskDbId);
+  }
+});
+
+(function setupDropZone() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const drop = document.getElementById('ss-drop');
+    if (!drop) return;
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+    drop.addEventListener('drop', async e => {
+      e.preventDefault(); drop.classList.remove('dragover');
+      const modal = document.getElementById('ss-modal');
+      const taskDbId = parseInt(modal.dataset.taskDbId);
+      const taskId = modal.dataset.taskId;
+      drop.classList.add('ss-uploading'); drop.textContent = '上传中...';
+      for (const file of e.dataTransfer.files) {
+        if (!file.type.startsWith('image/')) continue;
+        await uploadScreenshot(taskId, taskDbId, file);
+      }
+      drop.classList.remove('ss-uploading');
+      drop.textContent = '拖拽图片到此处 / 点击选择文件 / Ctrl+V 粘贴截图';
+      renderScreenshotGallery(taskDbId);
+    });
+  });
+})();
 
 // ============================================
 // Export & Utils

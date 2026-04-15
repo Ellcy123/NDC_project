@@ -1,0 +1,393 @@
+# ============================================================
+# Loop 6 — 正义的重量 / The Weight of Justice
+# 本循环说谎者: Morrison (104)，3 阶段指证
+# 核心揭示: Morrison 因赌债被 Whale 操控、被迫配合结案；整个案件是 Whale 对 Webb 的反杀；
+#           Vivian 获释；保险箱开启；南区计划浮出水面——引出 Unit2
+# 前序事件: L5 Jimmy 被指证为真凶，枪杀 Webb 后自杀；凶器手枪(1506)入库
+# ChapterConfig exposeNpcId: 104 (Morrison)
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Morrison 在这件事里扮演了什么角色？他是无能，还是故意包庇？"
+    secondary:
+      - "Morrison 和 Whale 之间究竟是什么关系？"
+      - "能否凭手中的证据当着同僚的面逼 Morrison 认罪？"
+      - "Vivian 能被释放吗？"
+      - "Webb 保险箱里藏着什么——南区计划是什么？"
+  known_facts:
+    # ── L1 post_expose_knowledge 累积 ──
+    - "Webb 在宴会上被枪杀"
+    - "Rosa 指认 Vivian 是凶手（声称 23:30 目击 Vivian 射杀 Webb）"
+    - "Vivian 的手枪（.25 ACP）无硝烟反应——物证不支持 Rosa 指控"
+    - "Rosa 谎言2（23:30 只有 Vivian 在里面）在 L1 暂时无法反驳"
+    - "保密侦探协议书(1101)：Zack 受 Webb 委托保护 Vivian + 财产继承条款"
+    - "Vivian 自认有罪，被 Morrison 禁足化妆室"
+    - "Zack 凭协议书获得 Morrison 的 72 小时调查权"
+    - "Webb 似乎预感到自己会死——主动雇用 Zack 是最后的保障安排"
+    # ── L2 post_expose_knowledge 累积 ──
+    - "Webb 月收入 $15,000，酒吧净利润仅 $4,000——$11,000 差额来自敲诈勒索（酒吧是勒索帝国前台）"
+    - "Tommy 是曾经的执行人，但表示自己已不再参与"
+    - "Webb 自 11 月中旬沉迷 Rita 后停止勒索活动，Tommy 认为他惹上了大人物想转移财产跑路"
+    - "Rita 是 Whale 的间谍（Tommy 在 L2 暗示，L3 进一步确认）"
+    - "Jimmy 经济极度困难（薪水微薄、移民身份办理失败）——动机铺垫"
+    - "Vivian 禁足，心如死灰，听到遗产消息后反锁化妆室"
+    - "Tommy 办公室出现过可疑弹壳，被 Tommy 发现后拿回（伏笔）"
+    # ── L3 post_expose_knowledge 累积 ──
+    - "真正的枪击发生在 23:20 之前——玻璃碎片在垃圾袋下，碎片早于 Rosa 23:20 倒垃圾时已存在"
+    - "Rosa 被人威胁伪证：威胁纸条要挟她女儿高额医疗费，被迫指认 Vivian"
+    - "真凶使用 .45 ACP（与 Vivian 的 .25 ACP 型号不符）"
+    - "Rosa 指证后交出一颗 .45 弹壳（ID 1403，L4 正式入库使用）"
+    - "大家都知道 Vivian 每晚给 Webb 送酒——有人刻意利用这个规律嫁祸 Vivian"
+    - "有人与 Whale 签订合同(1301)，内容涉及大额酬劳——Whale 在幕后操纵"
+    - "Jimmy 在销毁歌点单子（可疑行为，L5 揭晓单子记录了真实枪击时间）"
+    - "Rosa 恳求 Zack 不要暴露她——她的伪证是被迫的，不是主动的"
+    # ── L4 post_expose_knowledge 累积 ──
+    - "Vivian 不是凶手（但曾有杀意）——弹壳(1403, .45)与她的手枪(.25)型号不符，物证排除嫌疑"
+    - "Whale 是 Webb 的仇家——被撕毁合同(1301)显示 Whale 雇人对付 Webb"
+    - "Vivian 在 23:10 去找 Webb，被人用爱尔兰口音喊'Don't be bothering me!'赶走（证词 4061003）"
+    - "Webb 取消巴黎之行是为了保护 Vivian，并非因 Rita 抛弃她——保险箱密码是 Webb 与 Vivian 的相遇日"
+    - "Morrison 看见 .45 弹壳后脸色大变，随即没收弹壳(1403)、撕毁合同(1101)、宣布 Vivian 有罪并逮捕"
+    - "Morrison 在刻意阻碍真相——他认出了弹壳背后的势力关联"
+    # ── L5 post_expose_knowledge 累积 ──
+    - "Jimmy 是真凶：23:00-23:05 趁《芝加哥狂想曲》高潮掩盖枪声，在 Webb 会客室枪杀 Webb"
+    - "Jimmy 模仿 Webb 的爱尔兰口音喊'Don't be bothering me!'骗走 23:10 来访的 Vivian"
+    - "23:30 Jimmy 从二楼空射一枪制造虚假死亡时间，诱使 Vivian 返回发现尸体"
+    - "Jimmy 被 Whale 操控，以签订合同(1301)的方式受雇杀 Webb"
+    - "Jimmy 字迹与威胁纸条(1303)和合同(1301)高度一致——练习书(1504)是关键证据"
+    - "Jimmy 为保护怀孕的妻子 Anna 不受 Whale 报复，在被指证后开枪自杀"
+    - "凶器手枪(1506)——米勒集团特制型——在 cutscene 后入库"
+    - "Tommy 主动交出久远弹壳(1501)，证实这是 Whale（米勒集团）的专用弹药型号"
+  new_directions:
+    - direction: "Morrison 与 Whale 的金钱关联"
+      trigger: "Whale 打来 Morrison 家电话，引出对 Morrison 家的搜证"
+    - direction: "Morrison 家中的秘密文件"
+      trigger: "Morrison 家搜证发现赌债欠条(1601)和借款证据(1602)——揭示 Whale 的经济控制"
+    - direction: "当众指证——以当场击破结案"
+      trigger: "积累足够证据后，Zack 选择在警察局当着 Morrison 同僚的面进行最终指证"
+  post_expose_knowledge:
+    # ── Unit1 最终总结——Vivian 获释，南区计划浮出 ──
+    - "Morrison 因欠下 Whale（疤面熊星集团）$5,000 赌债，又向 Whale 借钱还债，被彻底经济控制"
+    - "Morrison 被 Whale 授意：压下弹壳证据、结案归罪 Vivian、保护 Jimmy 的不在场证明"
+    - "Morrison 并非主谋，而是 Whale 的棋子——整个案件是 Whale 对 Webb 的有组织反杀"
+    - "Morrison 当众被同僚认定失职（涉嫌包庇+伪证），被停职接受调查"
+    - "Vivian 无罪释放——Webb 的遗产依据协议书(1101)保全"
+    - "保险箱密码是 Webb 与 Vivian 相遇日——打开后发现'南区计划'文件"
+    - "南区计划揭示 Whale 在芝加哥南区的更大图谋——Unit2 调查起点"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇（Whale 电话 + Emma 对话）
+# ═══════════════════════════════════════
+#
+# 场景状态表 L6:
+#   ⚡ 突发事件: Whale 打来 Morrison 家电话——"证明正义是否存在"
+#   Morrison 家(1112)   → 🔓搜证（赌债欠条、借钱证据）
+#   警察局(1113)        → ⚔️指证（Morrison 3 阶段）
+#   结局场景(1114)      → 🎬结尾（释放 Vivian；打开保险箱；南区计划）
+#
+# L6 无标准 Opening 对话场景；以 Whale 电话事件切入，随后进入 Morrison 家搜证。
+# Emma 在此作简短的"最后叮嘱"对话，交代调查目标。
+
+opening:
+  scene_id: null  # 无场景 ID——以事件驱动（⚡ 突发电话）切入
+  characters: [Zack, Emma]
+  purpose: "Whale 的电话触发 L6——暗示 Morrison 是棋子。Emma 和 Zack 梳理调查路径，锁定 Morrison 家搜证 + 警察局指证"
+  talk: emma_106
+
+  # ── ⚡ 突发事件：Whale 的电话 ──
+  event:
+    name: "Whale 的电话"
+    trigger: "L5 结束后，Zack 收到消息——Whale 致电 Morrison 家"
+    type: "突发（⚡）"
+    description: |
+      Whale 打来 Morrison 家的电话，留下一句话：
+      "I just want to know if justice still exists in this city."
+      这句话成为 L6 的主题——Zack 意识到 Whale 在玩弄棋局，而 Morrison 是被利用的棋子。
+      Zack 赶往 Morrison 家搜证，随后前往警察局作最终指证。
+    purpose: "触发 L6 调查方向；点明主题'正义的重量'；Morrison 家搜证的叙事理由"
+
+  emma_106:
+    is_liar: false
+    motive: "帮 Zack 梳理最后一步——所有证据指向 Morrison 与 Whale 的关联，必须在 Morrison 同僚面前完成最终指证"
+    mindset: "沉稳而凝重——Jimmy 的死让两人都沉默了一段时间；Whale 的电话像一记警钟，事情还没结束"
+
+    knows:
+      - "Jimmy 是真凶，已自杀身亡；凶器手枪(1506)入库"
+      - "Morrison 在 L4 强行没收弹壳(1403)，阻碍了真相——他一定有苦衷或动机"
+      - "Whale 打来 Morrison 家电话——Morrison 家可能有 Whale 控制他的证据"
+      - "凭手中的证据（弹壳 1501、凶器 1506、回信 1503）可以在公开场合指证 Morrison"
+      - "Vivian 还被关押着，必须尽快完成指证让她获释"
+    does_not_know:
+      - "Morrison 家中的具体证据内容（赌债欠条、借款证明）"
+      - "南区计划的详细内容"
+      - "保险箱里究竟放了什么"
+
+    lie: null
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []  # Unit1 无鉴赏力系统
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索（搜证）
+# ═══════════════════════════════════════
+#
+# 场景状态表 L6 搜证:
+#   Morrison 家(1112) → 🔓搜证（赌债欠条 1601、借钱证据 1602）
+#   警察局(1113)      → ⚔️指证（Morrison 3 阶段指证）
+#   结局场景(1114)    → 🎬结尾（获释 + 保险箱 + 南区计划）
+
+scenes:
+  # ── SC1112 Morrison 家 ──
+  - id: 1112
+    name: "Morrison 家"
+    note: "L6 新解锁。Whale 电话触发后，Zack 赶往 Morrison 家搜证。Morrison 不在场（已去警察局）。房间内有经济往来的关键文件。"
+    evidence:
+      - id: 1601
+        name: "Morrison 赌债欠条（$5,000，疤面熊星）+ 威胁信"
+        note: "关键——Expose 阶段2 核心证据。欠条由疤面熊星集团（Whale 旗下组织）签发，金额 $5,000；威胁信内容涉及'不配合则公开赌债，断送警察生涯'"
+      - id: 1602
+        name: "Morrison 向 Whale 借款的收据"
+        note: "关键——Expose 阶段2 核心证据。Morrison 从 Whale 手下借钱还赌债，相当于将自己卖给了 Whale；收据上有疤面熊星集团印章"
+
+  # ── SC1113 警察局 ──
+  - id: 1113
+    name: "警察局"
+    note: "⚔️ 指证场所——Zack 当着 Morrison 同僚的面进行最终指证。Morrison 在此被逼到无路可退。"
+    evidence: []
+
+  # ── SC1114 结局场景 ──
+  - id: 1114
+    name: "结局场景"
+    note: "🎬 结尾场景——Morrison 被停职、Vivian 释放、打开保险箱、南区计划出现。"
+    evidence: []
+    npcs:
+      vivian_006:
+        # ── 基本信息 ──
+        talk: loop6_vivian_ending
+        is_liar: false
+        motive: "获释后的感激与迷茫——Webb 的案子终于真相大白，但她的生活已彻底改变；保险箱密码只有她知道"
+        mindset: "虚脱后的平静——多天的监禁和压力令她精疲力竭；但看见 Zack 的那一刻，几乎落泪"
+
+        # ── 1. NPC 已知信息（模式 B：第四次出场） ──
+        # 知识池见 npc_knowledge_pools.yaml → vivian（Unit1 版）
+        awareness:
+          - content: "Jimmy 是真正的凶手，已经自杀身亡——杀死 Webb 的不是她"
+            trigger: "L5 Expose 后，Jimmy 自杀的消息传到关押处"
+          - content: "Morrison 被带走接受调查，Zack 完成了指证"
+            trigger: "L6 Morrison 指证结束，消息传到 Vivian"
+          - content: "Webb 的保险箱密码是 Webb 与 Vivian 的相遇日——Webb 从未忘记她"
+            trigger: "L4 指证后 Vivian 意识到（字条+密码）Webb 对她真正的情感"
+
+        active_topics:
+          - "保险箱密码（相遇日——说出密码，帮助打开保险箱）"
+          - "Webb 对自己真实情感的完整表述（情感结尾，释放所有保留）"
+          - "南区计划的存在（Vivian 知道 Webb 提过，但不清楚内容）"
+        withheld_topics: []  # L6 最终循环，全部释放
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"保险箱密码——Vivian 告诉 Zack 密码是 Webb 与她的相遇日\" # 10"
+          - "\"Vivian 对 Jimmy 自杀的感受——她如何看待这个为妻儿铤而走险的人\" # 7"
+          - "\"Webb 的南区计划——Webb 曾提到过吗？\" # 8"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 6061001  # Vivian 说出保险箱密码（Webb 与 Vivian 相遇日）
+          - 6061002  # Vivian 确认 Webb 曾提过"南区有个更大的计划"
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 警察局(1113) → ⚔️指证（Morrison，3 阶段）
+# exposeNpcId: 104 (Morrison)
+#
+# 核心逻辑链:
+#   阶段1: Vivian 手枪(.25 ACP) + Morrison 用的是.45 ACP弹壳(1501) + 凶器(1506, .45 ACP)
+#          → Morrison 声称"Vivian 的手枪是凶器"根本不成立
+#   阶段2: 赌债欠条(1601) + 借款收据(1602)
+#          → Morrison 不是失误，是被 Whale 经济控制后有意压制证据
+#   阶段3: Jimmy 给 Whale 的回信(1503)
+#          → Morrison 声称"Whale 只是放贷的"——回信证明 Whale 是雇凶主使，两者是合谋关系
+#
+# 情绪设计: Morrison 从强硬到崩溃。他不是纯粹的恶人——是被环境摧毁的人。
+# 结局: 同僚当场认定 Morrison 失职（涉嫌包庇），停职调查。Morrison 没有辩解，只是沉默。
+
+expose:
+  target: "Morrison (104)"
+  total_rounds: 3
+
+  morrison:
+    # ── 基本信息 ──
+    talk: loop6_morrison_expose
+    is_liar: true
+    motive: "死守阵地——Morrison 知道一旦认罪，自己的警察生涯彻底终结，Whale 也不会放过他；他选择用谎言撑到最后一刻"
+    mindset: "强硬防守，内心已经崩溃——L4 翻脸、L5 Jimmy 自杀的消息已经传到他耳中；他知道大势已去，但在同僚面前仍要维持一个体面的防线"
+
+    # ── 1. NPC 已知信息（模式 B：第三次出场） ──
+    # 知识池见 npc_knowledge_pools.yaml → morrison（Unit1 版）
+    awareness:
+      - content: "L1 Expose 后 Zack 获得 72 小时调查权——Morrison 开始意识到 Zack 比预想的更难对付"
+        trigger: "L1 Expose 结果（Morrison 被迫同意调查权）"
+      - content: "L4 翻脸——没收弹壳(1403)、撕毁合同(1101)、逮捕 Vivian——押注 Whale 那边的决定已经做出"
+        trigger: "L4 Part7 Morrison 翻脸事件"
+      - content: "Jimmy 已经自杀身亡，凶器手枪(1506)入库——最后一道屏障消失了"
+        trigger: "L5 Jimmy 自杀 cutscene 后，消息在警察局内部传开"
+      - content: "Zack 现在来警察局，手里一定握有新证据——Whale 的电话是 Whale 在测试他，还是放弃了他？"
+        trigger: "Whale 打来 Morrison 家电话（L6 开篇突发事件）"
+
+    active_topics: []  # Expose 对象，无主动 Talk 阶段；知识在 Expose 中被动揭示
+    withheld_topics: []  # L6 最终循环，全部释放
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose 对象，指证中被动回应，非主动提问
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 6041001  # ⚠谎言: Vivian 的手枪就是凶器，逮捕是正当的
+      - 6041002  # ⚠谎言: 临时接警搜查失误，没有故意压制证据
+      - 6041003  # ⚠谎言: Whale 只是一个放贷的商人，和本案没有任何关联
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── 阶段 1：物证层——"Vivian 的手枪就是凶器" ──
+  # 核心逻辑: Morrison 声称凭 Vivian 持枪定罪，但弹道学证据彻底排除 Vivian
+  round_1:
+    lie: "Vivian 当时手持凶器站在现场，我依据现有证据做出逮捕——这是合规的执法"
+    lie_source: "证词 6041001（Morrison 为 L4 逮捕行为辩护）"
+    usable_evidence:
+      - id: 1501
+        name: "Tommy 交出的久远弹壳（.45 ACP，Whale 型号）"
+        用途: "案发现场的弹壳是 .45 ACP 型号——而 Vivian 的手枪是 .25 ACP，根本不可能打出这颗弹壳；Morrison 知道型号不符却仍逮捕 Vivian"
+      - id: 1506
+        name: "凶器手枪（米勒集团特制，.45 ACP）"
+        用途: "Jimmy 自杀后入库的凶器手枪发射 .45 ACP——与 Vivian 的 .25 ACP 手枪完全不同；这是真凶的武器，证明 Morrison 所依据的'现有证据'根本不成立"
+    trap_evidence:
+      - id: 1102
+        name: "Vivian 的手枪（.25 ACP）"
+        陷阱原因: "此物证只能说明 Vivian 的枪未开过（无硝烟），不能直接证明 Morrison 知情伪证——需要弹壳 1501 + 凶器 1506 才能建立完整对比"
+    result: |
+      Zack 用弹壳(1501)和凶器(1506)同台对比：两把枪、两种口径、无法共存。
+      Morrison 被迫放弃"持枪定罪"这条线，转移到程序层面的防线：
+      - "这只能说明我当时在信息不完整的情况下做了判断——这是执法失误，不是故意为之。"
+      - Morrison 升级到阶段2：声称"临时接警搜查失误"
+
+  # ── 阶段 2：财务层——"临时接警搜查失误" ──
+  # 核心逻辑: Morrison 声称只是判断失误，但赌债 + 借款证明他是被 Whale 经济控制的
+  round_2:
+    lie: "我是临时接到报案的，现场搜查过于仓促，有些证据被忽略了——这是专业失误，不存在主观故意"
+    lie_source: "证词 6041002（Morrison 的退守防线）"
+    usable_evidence:
+      - id: 1601
+        name: "Morrison 赌债欠条（$5,000，疤面熊星）+ 威胁信"
+        用途: "Morrison 欠疤面熊星集团（Whale 旗下）$5,000 赌债，并收到威胁信'不配合则公开赌债断送警察生涯'——这不是专业失误，是被经济控制后的主动配合"
+      - id: 1602
+        name: "Morrison 向 Whale 借款的收据"
+        用途: "Morrison 用向 Whale 借款来还赌债，彻底将自己置于 Whale 的控制之下；收据上有疤面熊星集团印章——Morrison 和 Whale 之间有直接的金钱从属关系"
+    trap_evidence: []
+    result: |
+      两份文件同时展示——Morrison 的经济命脉捏在 Whale 手里。
+      周围的同僚开始窃窃私语。Morrison 脸色灰白，但仍在硬撑最后一道防线：
+      - "就算我欠了钱……Whale 只是一个商人。他放贷，我还钱，这跟 Webb 的案子没有任何关系。"
+      - Morrison 升级到阶段3：声称"Whale 只是放贷的，和本案无关"
+
+  # ── 阶段 3：关联层——"Whale 只是放贷的，和本案无关" ──
+  # 核心逻辑: Morrison 切断自己和 Whale 与案件的关联，但回信(1503)证明 Whale 是雇凶主使
+  round_3:
+    lie: "Whale 是个商人，放贷是他的生意——我欠他钱是私人事务，他和 Webb 被杀这件事完全是两码事"
+    lie_source: "证词 6041003（Morrison 最后的防线——切断 Whale 与案件的关联）"
+    usable_evidence:
+      - id: 1503
+        name: "Jimmy 给 Whale 的回信"
+        用途: "回信内容证明：Jimmy 接受了 Whale 的合同（酬劳丰厚）、确认了行动计划——Whale 不是放贷的商人，而是雇凶杀 Webb 的主使者。Morrison 声称 Whale 与案件无关，但回信直接证明 Whale 是凶案的最高指挥"
+    trap_evidence: []
+    result: |
+      Jimmy 的回信摧毁了 Morrison 最后一道防线。
+      警察局里的同僚沉默了。Morrison 低下了头。
+      没有更多的辩解——只有沉默。
+      同僚当场认定 Morrison 涉嫌包庇、压制证据，当场停职接受内部调查。
+      Morrison 被同事带走时，没有说一个字。
+
+  # ── 指证后特殊事件 ──
+  post_expose:
+    note: |
+      Morrison 被停职带走。Zack 转身离开警察局。
+      下一个场景：结局场景(1114)——Vivian 获释，保险箱打开，南区计划出现。
+
+# ═══════════════════════════════════════
+# PART 4: 结局事件（Vivian 获释 + 保险箱）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 结局场景(1114) → 🎬结尾
+# Vivian 无罪释放。Zack 带着保险箱字条(1307)和 Vivian 一起打开保险箱。
+# 保险箱密码 = Webb 与 Vivian 相遇日（Vivian 在此场景说出）。
+# 打开后发现"南区计划"文件——Unit2 起点。
+
+ending:
+  scene_id: 1114
+  characters: [Zack, Emma, Vivian]
+  purpose: "Unit1 收束——Vivian 获释；Webb 的遗嘱依协议书(1101)保全；保险箱开启；南区计划出现，引出 Unit2"
+  talk: loop6_ending
+
+  sequence:
+    - event: "Vivian 无罪释放"
+      description: "Morrison 被停职后，Vivian 的逮捕令自动失效。Zack 在警察局门口见到 Vivian——她已在等候"
+    - event: "前往 Webb 会客室——开保险箱"
+      description: "Zack 拿出保险箱字条(1307)，Vivian 说出密码（Webb 与 Vivian 的相遇日）。保险箱打开"
+    - event: "发现南区计划"
+      description: "保险箱内有一份文件——标题'南区计划（South Side Plan）'。文件内容揭示 Whale 在芝加哥南区更大规模的图谋。Zack 和 Emma 对视：这只是开始"
+    - event: "Unit1 结尾"
+      description: "Emma 说：'Webb 死的时候知道这份计划会被发现吗？' 无人回答。画面定格。"
+
+# ═══════════════════════════════════════
+# PART 5: 证据列表（L6 入库）
+# ═══════════════════════════════════════
+
+evidence:
+  - id: 1601
+    name: "Morrison 赌债欠条（$5,000，疤面熊星）+ 威胁信"
+    note: "关键——Expose 阶段2 核心。Morrison 被 Whale 经济控制的直接证明"
+  - id: 1602
+    name: "Morrison 向 Whale 借款的收据"
+    note: "关键——Expose 阶段2 核心。Morrison 从 Whale 借钱还赌债，金钱从属关系明确"
+
+# ═══════════════════════════════════════
+# PART 6: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 6001
+    text: "Morrison 没收弹壳(1403)是判断失误，还是故意包庇？"
+    unlock_condition: "item:1601 + item:1602"
+    note: "赌债欠条（物证）+ 借款收据（物证）两种财务文件交叉验证——Morrison 有被 Whale 控制的经济动机，排除'纯粹失误'可能"
+  - id: 6002
+    text: "Whale 只是一个放贷的商人，还是这起谋杀的真正指挥者？"
+    unlock_condition: "item:1503 + testimony:5081001"
+    note: "Jimmy 给 Whale 的回信（文件物证）+ Anna 的证词（家庭动机证词）两种来源交叉——回信证明 Whale 雇凶，Anna 证词证明 Jimmy 明知这是杀人合同"
+  - id: 6003
+    text: "Morrison 被 Whale 控制的范围有多深——他是否还卷入了其他案件？"
+    unlock_condition: "item:1601 + item:1503 + testimony:6041002"
+    note: "赌债路线（1601）+ Whale 雇凶回信（1503）+ Morrison 自己的退守证词（6041002）三方交叉——Morrison 的腐败程度为 Unit2 留下悬念"
+
+# ═══════════════════════════════════════
+# 自检清单（Generation Self-Check）
+# ═══════════════════════════════════════
+# A. 结构完整性: player_context / opening / scenes / expose / ending / evidence / doubts — 全部存在 PASS
+# B. 证据覆盖: 设计文档 L6 证据 1601、1602 全部分配到 SC1112；
+#              跨 Loop 证据 1501、1506（Expose 阶段1）、1503（Expose 阶段3）均已引用 PASS
+# C. NPC 条目: Morrison(4块完整, is_liar=true, player_inquiry=null);
+#              Vivian(4块完整, is_liar=false); Emma(knows/does_not_know) PASS
+# D. 目标对齐: primary="Morrison 在这件事里扮演了什么角色？" — 与设计文档一致 PASS
+# E. 信息节奏: L6 是最终循环，post_expose_knowledge 为 Unit1 完整总结，无后续 Loop 需隐藏 PASS
+# F. 鉴赏力: Unit1 无鉴赏力系统，所有 connoisseur: [] PASS
+# G. Expose 逻辑: 阶段1-谎言(凶器)/证据(1501+1506)；阶段2-谎言(失误)/证据(1601+1602)；
+#                 阶段3-谎言(Whale无关)/证据(1503)——每轮谎言有对应证据可反驳 PASS
+# validation_status: PASS

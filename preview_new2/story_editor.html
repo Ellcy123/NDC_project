@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC Story Editor</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a0a; --bg2: #1a1a1a; --card: #1e1212;
+            --accent: #b84040; --gold: #e8c678; --text: #fff;
+            --text2: #ccc; --muted: #888; --success: #4a7c59;
+            --warn: #c41e3a; --border: #333;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
+        #app { display:flex; flex-direction:column; height:100vh; }
+
+        /* Header */
+        header { background:var(--bg2); padding:.5rem 1rem; border-bottom:2px solid var(--accent); display:flex; justify-content:space-between; align-items:center; flex-shrink:0; gap:.75rem; }
+        .hdr-left, .hdr-right { display:flex; align-items:center; gap:.6rem; }
+        .logo { font-size:1.1rem; font-weight:700; color:var(--gold); white-space:nowrap; }
+        select, .btn { background:var(--card); color:var(--text); border:1px solid var(--border); padding:.3rem .6rem; border-radius:4px; cursor:pointer; font-size:.82rem; }
+        .btn:hover { border-color:var(--accent); }
+        .btn-pri { background:var(--accent); border-color:var(--accent); }
+        .btn-pri:hover { background:#c84848; }
+        .btn-save.dirty { border-color:var(--gold); color:var(--gold); font-weight:600; }
+        .badge { background:var(--warn); color:#fff; border-radius:10px; padding:0 5px; font-size:.68rem; margin-left:3px; }
+
+        /* Body */
+        #body { display:flex; flex:1; overflow:hidden; }
+
+        /* Sidebar */
+        #sidebar { width:180px; background:var(--bg2); border-right:1px solid var(--border); padding:.5rem 0; flex-shrink:0; overflow-y:auto; }
+        .nav-item { display:block; padding:.45rem .8rem; color:var(--text2); cursor:pointer; font-size:.82rem; border-left:3px solid transparent; transition:all .15s; }
+        .nav-item:hover { background:rgba(255,255,255,.04); }
+        .nav-item.active { border-left-color:var(--accent); color:var(--gold); background:rgba(184,64,64,.08); }
+        .nav-count { color:var(--muted); font-size:.72rem; margin-left:.3rem; }
+        .nav-sep { height:1px; background:var(--border); margin:.4rem .8rem; }
+
+        /* Main */
+        #main { flex:1; overflow-y:auto; padding:1.2rem 1.5rem; }
+        .section-title { color:var(--gold); font-size:1.05rem; font-weight:600; margin-bottom:.8rem; border-bottom:1px solid var(--border); padding-bottom:.4rem; }
+
+        /* Cards */
+        .card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:.8rem 1rem; margin-bottom:.6rem; position:relative; }
+        .card:hover { border-color:rgba(184,64,64,.4); }
+        .card-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:.4rem; }
+        .card-title { color:var(--gold); font-size:.9rem; font-weight:600; }
+        .card-id { color:var(--muted); font-family:monospace; font-size:.78rem; }
+        .card-note { color:var(--muted); font-size:.78rem; margin-bottom:.4rem; font-style:italic; }
+        .btn-edit { background:none; border:1px solid var(--border); color:var(--muted); padding:.15rem .4rem; border-radius:3px; cursor:pointer; font-size:.78rem; }
+        .btn-edit:hover { color:var(--gold); border-color:var(--gold); }
+
+        /* Sub-sections in cards */
+        .sub-title { color:var(--text2); font-size:.78rem; font-weight:600; margin:.5rem 0 .25rem; }
+        .ev-list { display:flex; flex-wrap:wrap; gap:.25rem; }
+        .ev-chip { display:inline-flex; align-items:center; gap:.25rem; background:rgba(184,64,64,.12); padding:.15rem .45rem; border-radius:3px; font-size:.76rem; }
+        .ev-chip .eid { color:var(--gold); font-family:monospace; font-weight:600; }
+        .ev-chip.key { border:1px solid var(--accent); }
+        .ev-chip .ev-note { color:var(--muted); margin-left:.2rem; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .ev-analyzed { color:var(--accent); font-size:.68rem; }
+
+        .npc-list { display:flex; flex-wrap:wrap; gap:.25rem; margin-top:.2rem; }
+        .npc-badge { display:inline-flex; align-items:center; gap:.25rem; padding:.15rem .45rem; border-radius:3px; font-size:.76rem; cursor:pointer; }
+        .npc-badge:hover { filter:brightness(1.3); }
+        .npc-badge.liar { background:rgba(196,30,58,.18); border:1px solid var(--warn); }
+        .npc-badge.honest { background:rgba(74,124,89,.18); border:1px solid var(--success); }
+
+        /* Expose rounds */
+        .round { border-left:3px solid var(--accent); padding:.6rem .8rem; margin-bottom:.5rem; background:rgba(42,21,21,.5); border-radius:0 4px 4px 0; }
+        .round-hdr { display:flex; justify-content:space-between; align-items:center; }
+        .round-num { color:var(--accent); font-weight:700; font-size:.85rem; }
+        .round-lie { color:var(--warn); font-style:italic; margin:.25rem 0; font-size:.82rem; }
+        .round-lie::before { content:'"'; }
+        .round-lie::after { content:'"'; }
+        .round-src { color:var(--muted); font-size:.72rem; margin-bottom:.3rem; }
+        .round-result { color:var(--text2); font-size:.78rem; white-space:pre-line; max-height:80px; overflow:hidden; cursor:pointer; }
+        .round-result.expanded { max-height:none; }
+        .round-result:hover { color:var(--text); }
+
+        /* Doubts */
+        .doubt-cond { color:var(--muted); font-size:.72rem; font-family:monospace; }
+        .doubt-clear { font-size:.72rem; padding:.1rem .3rem; border-radius:3px; }
+        .doubt-clear.this-loop { background:var(--success); color:#fff; }
+        .doubt-clear.later { background:rgba(184,134,11,.3); color:var(--gold); }
+
+        /* Overview fields */
+        .field { margin-bottom:.5rem; }
+        .field-label { color:var(--muted); font-size:.72rem; font-weight:600; text-transform:uppercase; margin-bottom:.1rem; }
+        .field-val { font-size:.85rem; }
+        .field-list { list-style:none; padding-left:.5rem; }
+        .field-list li { font-size:.82rem; margin-bottom:.15rem; padding-left:.5rem; border-left:2px solid var(--border); }
+        .dir-trigger { color:var(--muted); font-size:.72rem; display:block; }
+
+        /* NPC detail panel */
+        .npc-detail { background:rgba(0,0,0,.3); border:1px solid var(--border); border-radius:4px; padding:.6rem .8rem; margin-top:.4rem; }
+        .npc-detail .field { margin-bottom:.3rem; }
+        .know-item { font-size:.78rem; color:var(--text2); padding:.1rem 0; }
+        .know-item.hidden { color:var(--accent); }
+
+        /* Modal */
+        .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; z-index:100; }
+        .modal { background:var(--bg2); border:1px solid var(--accent); border-radius:8px; width:90%; max-width:750px; max-height:85vh; display:flex; flex-direction:column; }
+        .modal-hdr { display:flex; justify-content:space-between; align-items:center; padding:.6rem 1rem; border-bottom:1px solid var(--border); }
+        .modal-hdr h3 { color:var(--gold); font-size:.95rem; }
+        .modal-x { background:none; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer; }
+        .modal-x:hover { color:var(--text); }
+        .modal-body { padding:.8rem 1rem; overflow-y:auto; flex:1; }
+        .modal-ft { padding:.6rem 1rem; border-top:1px solid var(--border); display:flex; gap:.4rem; justify-content:flex-end; }
+
+        .fg { margin-bottom:.6rem; }
+        .fg label { display:block; color:var(--muted); font-size:.72rem; font-weight:600; margin-bottom:.1rem; }
+        .fg input, .fg textarea, .fg select { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.3rem .5rem; border-radius:4px; font-size:.82rem; font-family:inherit; }
+        .fg input:focus, .fg textarea:focus { border-color:var(--accent); outline:none; }
+        .fg textarea { min-height:50px; resize:vertical; }
+        .fg .hint { color:var(--muted); font-size:.68rem; margin-top:.1rem; }
+        .fg-row { display:flex; gap:.5rem; }
+        .fg-row .fg { flex:1; }
+        .fg-check { display:flex; align-items:center; gap:.4rem; }
+        .fg-check input[type=checkbox] { width:auto; }
+
+        .list-ed .li { display:flex; gap:.3rem; margin-bottom:.2rem; align-items:start; }
+        .list-ed .li textarea, .list-ed .li input { flex:1; }
+        .list-ed .btn-rm { background:none; border:none; color:var(--warn); cursor:pointer; font-size:.85rem; padding:.2rem; }
+        .btn-add { background:none; border:1px dashed var(--border); color:var(--muted); padding:.2rem .5rem; border-radius:3px; cursor:pointer; font-size:.75rem; width:100%; margin-top:.2rem; }
+        .btn-add:hover { border-color:var(--accent); color:var(--text); }
+
+        /* Toast & Status */
+        .toast { position:fixed; bottom:50px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--success); color:#fff; padding:.4rem 1rem; border-radius:5px; font-size:.82rem; z-index:200; transition:transform .3s; pointer-events:none; }
+        .toast.show { transform:translateX(-50%) translateY(0); }
+        .toast.err { background:var(--warn); }
+        footer { background:var(--bg2); padding:.25rem 1rem; border-top:1px solid var(--border); display:flex; gap:1.2rem; font-size:.72rem; color:var(--muted); flex-shrink:0; }
+        .dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:3px; vertical-align:middle; }
+        .dot-on { background:var(--success); }
+        .dot-off { background:var(--muted); }
+
+        /* Empty state */
+        .empty { display:flex; flex-direction:column; align-items:center; justify-content:center; height:60vh; color:var(--muted); gap:.5rem; }
+        .empty code { background:var(--card); padding:.2rem .5rem; border-radius:3px; font-size:.8rem; }
+
+        ::-webkit-scrollbar { width:7px; height:7px; }
+        ::-webkit-scrollbar-track { background:var(--bg); }
+        ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <header>
+        <div class="hdr-left">
+            <span class="logo">NDC Story Editor</span>
+            <select id="sel-unit" onchange="onUnitChange()">
+                <option value="Unit1">Unit 1 (EPI01)</option>
+                <option value="Unit2">Unit 2 (EPI02)</option>
+                <option value="Unit3">Unit 3 (EPI03)</option>
+            </select>
+            <select id="sel-loop" onchange="onLoopChange()"></select>
+        </div>
+        <div class="hdr-right">
+            <button class="btn" onclick="$('file-imp').click()">导入 YAML</button>
+            <input type="file" id="file-imp" accept=".yaml,.yml" style="display:none" onchange="importYAML(this)">
+            <button class="btn btn-save" id="btn-save" onclick="saveToSupabase()">保存<span id="sv-badge" class="badge" style="display:none"></span></button>
+            <button class="btn" onclick="exportYAML()">导出 YAML</button>
+        </div>
+    </header>
+
+    <div id="body">
+        <nav id="sidebar"></nav>
+        <main id="main">
+            <div class="empty" id="empty-state">
+                <p style="font-size:1.1rem">请加载 State 文件</p>
+                <p>点击「导入 YAML」加载本地 state 文件</p>
+                <p>例如: <code>loop1_state.yaml</code></p>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <div class="modal-hdr"><h3 id="m-title"></h3><button class="modal-x" onclick="closeModal()">&times;</button></div>
+            <div class="modal-body" id="m-body"></div>
+            <div class="modal-ft">
+                <button class="btn btn-pri" onclick="confirmEdit()">确定</button>
+                <button class="btn" onclick="closeModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span id="st-conn"></span>
+        <span id="st-info"></span>
+        <span id="st-mod"></span>
+    </footer>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ================================================================
+   NDC Story Editor — Visual state YAML editor
+   ================================================================ */
+
+const SUPABASE_URL = 'https://tyqsamueendpanbfousp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5cXNhbXVlZW5kcGFuYmZvdXNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxOTI1NjMsImV4cCI6MjA5MDc2ODU2M30.qa_EqkXHkq5ki8CYt0cJk-Se2vfj8PTVHci239YblfM';
+
+const SECTIONS = [
+    { id:'overview', label:'概览', icon:'ctx' },
+    { id:'opening', label:'开场', icon:'op' },
+    { id:'scenes',  label:'场景', icon:'sc' },
+    { id:'expose',  label:'指证', icon:'ex' },
+    { id:'doubts',  label:'疑点', icon:'db' },
+    { id:'events',  label:'事件', icon:'ev' },
+];
+
+const NPC_KEY_RE = /^[a-z]+_\d+$|_expose$/;
+
+// ── State ───────────────────────────────────────
+const S = {
+    db: null, connected: false,
+    unit: 'Unit1', loop: 'loop1',
+    section: 'overview',
+    data: null,       // parsed state YAML object
+    dirty: false,     // has unsaved changes
+    expandedNPCs: new Set(),
+};
+let editCtx = null; // { type, ref, path, ... }
+
+const $ = id => document.getElementById(id);
+
+// ── Init ────────────────────────────────────────
+async function init() {
+    // Supabase
+    try {
+        S.db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { error } = await S.db.from('config_tables').select('name').limit(1);
+        if (!error) S.connected = true;
+    } catch(e) { S.connected = false; }
+
+    updateConn();
+    buildLoopSelect();
+
+    // Try loading from Supabase
+    if (S.connected) {
+        const key = stateKey();
+        const { data: row } = await S.db.from('config_tables').select('data').eq('name', key).single();
+        if (row && row.data) {
+            S.data = row.data;
+            renderAll();
+            toast('Loaded from Supabase');
+        }
+    }
+}
+
+function stateKey() { return `state_${S.unit}_${S.loop}`; }
+
+function buildLoopSelect() {
+    const sel = $('sel-loop');
+    sel.innerHTML = '';
+    for (let i = 1; i <= 6; i++) {
+        const o = document.createElement('option');
+        o.value = 'loop' + i;
+        o.textContent = 'Loop ' + i;
+        sel.appendChild(o);
+    }
+}
+
+function onUnitChange() { S.unit = $('sel-unit').value; tryLoad(); }
+function onLoopChange() { S.loop = $('sel-loop').value; tryLoad(); }
+
+async function tryLoad() {
+    if (!S.connected) return;
+    const key = stateKey();
+    const { data: row } = await S.db.from('config_tables').select('data').eq('name', key).single();
+    if (row && row.data) {
+        S.data = row.data;
+        S.dirty = false;
+        renderAll();
+        toast('Loaded ' + key);
+    } else {
+        S.data = null;
+        $('main').innerHTML = '<div class="empty"><p>Supabase 中无此数据</p><p>请导入 YAML 文件</p></div>';
+        buildSidebar();
+    }
+}
+
+// ── Supabase Ops ────────────────────────────────
+async function saveToSupabase() {
+    if (!S.connected || !S.data) { toast('无法保存', 'err'); return; }
+    try {
+        const { error } = await S.db.from('config_tables').upsert({
+            name: stateKey(), data: S.data, updated_by: 'story_editor'
+        });
+        if (error) throw error;
+        S.dirty = false;
+        updateDirty();
+        toast('已保存');
+    } catch(e) { toast('保存失败: ' + e.message, 'err'); }
+}
+
+// ── Import / Export ─────────────────────────────
+function importYAML(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            S.data = jsyaml.load(e.target.result);
+            S.dirty = true;
+            // Detect loop from filename
+            const m = file.name.match(/loop(\d)/i);
+            if (m) { S.loop = 'loop' + m[1]; $('sel-loop').value = S.loop; }
+            renderAll();
+            toast('已导入 ' + file.name);
+        } catch(err) { toast('YAML 解析失败: ' + err.message, 'err'); }
+    };
+    reader.readAsText(file, 'UTF-8');
+    input.value = '';
+}
+
+function exportYAML() {
+    if (!S.data) { toast('无数据', 'err'); return; }
+    const yml = jsyaml.dump(S.data, { indent: 2, lineWidth: 120, noRefs: true, sortKeys: false, quotingType: '"', forceQuotes: false });
+    const blob = new Blob([yml], { type: 'text/yaml;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${S.loop}_state.yaml`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('已导出 ' + a.download);
+}
+
+// ── Render All ──────────────────────────────────
+function renderAll() {
+    buildSidebar();
+    renderSection();
+    updateDirty();
+}
+
+function markDirty() { S.dirty = true; updateDirty(); }
+
+function updateDirty() {
+    const btn = $('btn-save');
+    const badge = $('sv-badge');
+    if (S.dirty) { btn.classList.add('dirty'); badge.style.display = 'inline'; badge.textContent = '!'; }
+    else { btn.classList.remove('dirty'); badge.style.display = 'none'; }
+    $('st-mod').textContent = S.dirty ? '有修改未保存' : '';
+    $('st-info').textContent = S.data ? `${S.unit} ${S.loop}` : '';
+}
+
+// ── Sidebar ─────────────────────────────────────
+function buildSidebar() {
+    const d = S.data;
+    let html = '';
+    for (const s of SECTIONS) {
+        let count = '';
+        if (d) {
+            if (s.id === 'scenes' && d.scenes) count = d.scenes.length;
+            else if (s.id === 'doubts' && d.doubts) count = d.doubts.length;
+            else if (s.id === 'events' && d.events) count = d.events ? d.events.length : 0;
+            else if (s.id === 'expose' && d.expose) {
+                const rounds = Object.keys(d.expose).filter(k => /^round_\d+$/.test(k));
+                count = rounds.length + 'R';
+            }
+        }
+        const active = s.id === S.section ? ' active' : '';
+        const cspan = count !== '' ? `<span class="nav-count">(${count})</span>` : '';
+        html += `<div class="nav-item${active}" onclick="goSection('${s.id}')">${s.label}${cspan}</div>`;
+        if (s.id === 'opening') html += '<div class="nav-sep"></div>';
+        if (s.id === 'expose') html += '<div class="nav-sep"></div>';
+    }
+    $('sidebar').innerHTML = html;
+}
+
+function goSection(id) {
+    S.section = id;
+    buildSidebar();
+    renderSection();
+}
+
+// ── Section Router ──────────────────────────────
+function renderSection() {
+    if (!S.data) { $('main').innerHTML = '<div class="empty"><p>请导入 YAML 文件</p></div>'; return; }
+    const renderers = {
+        overview: renderOverview,
+        opening: renderOpening,
+        scenes: renderScenes,
+        expose: renderExpose,
+        doubts: renderDoubts,
+        events: renderEvents,
+    };
+    (renderers[S.section] || renderOverview)();
+}
+
+// ── OVERVIEW ────────────────────────────────────
+function renderOverview() {
+    const pc = S.data.player_context;
+    if (!pc) { $('main').innerHTML = '<p class="muted">无 player_context</p>'; return; }
+    let h = '<div class="section-title">玩家上下文 <button class="btn-edit" onclick="editOverview()">编辑</button></div>';
+    h += '<div class="card">';
+    h += field('主目标', pc.goals?.primary || '');
+    h += fieldList('次要目标', pc.goals?.secondary || []);
+    h += fieldList('已知事实', pc.known_facts || [], '(空)');
+    h += '</div>';
+
+    if (pc.new_directions?.length) {
+        h += '<div class="card"><div class="sub-title">新调查方向</div>';
+        for (const d of pc.new_directions) {
+            h += `<div class="field"><div class="field-val">${esc(d.direction)}</div><span class="dir-trigger">${esc(d.trigger)}</span></div>`;
+        }
+        h += '</div>';
+    }
+    if (pc.post_expose_knowledge?.length) {
+        h += '<div class="card"><div class="sub-title">指证后揭示</div>';
+        h += fieldList('', pc.post_expose_knowledge);
+        h += '</div>';
+    }
+    $('main').innerHTML = h;
+}
+
+// ── OPENING ─────────────────────────────────────
+function renderOpening() {
+    const op = S.data.opening;
+    if (!op) { $('main').innerHTML = '<p>无 opening</p>'; return; }
+    const { scene, npcs } = splitNPCs(op);
+
+    let h = '<div class="section-title">开场</div>';
+    h += '<div class="card">';
+    h += `<div class="card-hdr"><span class="card-title">${esc(scene.purpose || '')}</span><span class="card-id">Scene ${scene.scene_id}</span></div>`;
+    if (scene.characters) h += `<div style="font-size:.8rem;color:var(--text2)">角色: ${scene.characters.join(', ')}</div>`;
+    if (scene.talk) h += `<div style="font-size:.75rem;color:var(--muted)">Talk: ${scene.talk}</div>`;
+    h += '</div>';
+
+    // NPCs
+    for (const [key, npc] of Object.entries(npcs)) {
+        h += renderNPCCard(key, npc, 'opening');
+    }
+    $('main').innerHTML = h;
+}
+
+// ── SCENES ──────────────────────────────────────
+function renderScenes() {
+    const scenes = S.data.scenes;
+    if (!scenes?.length) { $('main').innerHTML = '<p>无场景数据</p>'; return; }
+
+    let h = '<div class="section-title">调查场景 <button class="btn-edit" onclick="addScene()">+ 新增场景</button></div>';
+    scenes.forEach((sc, i) => {
+        h += `<div class="card">`;
+        h += `<div class="card-hdr">`;
+        h += `<div><span class="card-title">${esc(sc.name)}</span> <span class="card-id">Scene ${sc.id}</span></div>`;
+        h += `<div><button class="btn-edit" onclick="editScene(${i})">编辑</button> <button class="btn-edit" style="color:var(--warn)" onclick="deleteScene(${i})">删除</button></div>`;
+        h += `</div>`;
+        if (sc.note) h += `<div class="card-note">${esc(sc.note)}</div>`;
+
+        // Evidence
+        const evs = sc.evidence || [];
+        h += `<div class="sub-title">证据 (${evs.length})</div><div class="ev-list">`;
+        for (const ev of evs) {
+            const isKey = ev.note && (ev.note.includes('关键') || ev.note.includes('Expose'));
+            h += `<span class="ev-chip${isKey ? ' key' : ''}" title="${esc(ev.note || '')}"><span class="eid">${ev.id}</span> ${esc(ev.name)}`;
+            if (ev.analyzed_id) h += ` <span class="ev-analyzed">→${ev.analyzed_id}</span>`;
+            h += `</span>`;
+        }
+        if (!evs.length) h += '<span class="ev-chip" style="opacity:.5">无证据</span>';
+        h += '</div>';
+
+        // NPCs
+        if (sc.npcs) {
+            h += '<div class="sub-title">NPC</div><div class="npc-list">';
+            for (const [key, npc] of Object.entries(sc.npcs)) {
+                const isLiar = npc.is_liar;
+                const name = npcName(key);
+                h += `<span class="npc-badge ${isLiar ? 'liar' : 'honest'}" onclick="toggleNPC('sc_${i}_${key}')" title="点击展开">${name}${isLiar ? ' [谎]' : ''}</span>`;
+            }
+            h += '</div>';
+            // Expanded NPC details
+            for (const [key, npc] of Object.entries(sc.npcs)) {
+                if (S.expandedNPCs.has(`sc_${i}_${key}`)) {
+                    h += renderNPCDetail(key, npc, `scenes.${i}.npcs.${key}`);
+                }
+            }
+        }
+        h += '</div>';
+    });
+    $('main').innerHTML = h;
+}
+
+// ── EXPOSE ──────────────────────────────────────
+function renderExpose() {
+    const ex = S.data.expose;
+    if (!ex) { $('main').innerHTML = '<p>无指证数据</p>'; return; }
+    const { meta, npcs, rounds } = splitExpose(ex);
+
+    let h = '<div class="section-title">指证 <button class="btn-edit" onclick="editExposeMeta()">编辑设置</button></div>';
+
+    // Meta
+    h += '<div class="card">';
+    h += `<div class="card-hdr"><span class="card-title">目标: ${esc(meta.target || '')}</span><span class="card-id">Scene ${meta.scene_id} | ${meta.total_rounds || '?'}轮</span></div>`;
+    if (meta.style) h += `<div class="card-note">${esc(meta.style)}</div>`;
+    h += '</div>';
+
+    // Expose NPC
+    for (const [key, npc] of Object.entries(npcs)) {
+        h += renderNPCCard(key, npc, 'expose');
+    }
+
+    // Rounds
+    const roundKeys = Object.keys(rounds).sort();
+    for (const rk of roundKeys) {
+        const r = rounds[rk];
+        const rnum = rk.replace('round_', 'R');
+        h += `<div class="round">`;
+        h += `<div class="round-hdr"><span class="round-num">${rnum}</span><button class="btn-edit" onclick="editRound('${rk}')">编辑</button></div>`;
+        h += `<div class="round-lie">${esc(r.lie || '')}</div>`;
+        if (r.lie_source) h += `<div class="round-src">来源: ${esc(r.lie_source)}</div>`;
+        // Evidence
+        if (r.usable_evidence?.length) {
+            h += '<div class="ev-list">';
+            for (const ev of r.usable_evidence) {
+                h += `<span class="ev-chip key" title="${esc(ev['用途'] || ev.usage || '')}"><span class="eid">${ev.id}</span> ${esc(ev.name)}</span>`;
+            }
+            h += '</div>';
+        }
+        if (r.result) {
+            h += `<div class="round-result" onclick="this.classList.toggle('expanded')">${esc(r.result)}</div>`;
+        }
+        h += '</div>';
+    }
+
+    // Add round button
+    h += `<button class="btn-add" onclick="addRound()" style="margin-top:.5rem">+ 添加轮次</button>`;
+    $('main').innerHTML = h;
+}
+
+// ── DOUBTS ──────────────────────────────────────
+function renderDoubts() {
+    const doubts = S.data.doubts;
+    if (!doubts?.length) { $('main').innerHTML = '<p>无疑点</p>'; return; }
+
+    let h = '<div class="section-title">疑点 <button class="btn-edit" onclick="addDoubt()">+ 新增疑点</button></div>';
+    doubts.forEach((d, i) => {
+        const loopNum = parseInt(S.loop.replace('loop', ''));
+        const isThis = d.clear_loop === loopNum;
+        h += '<div class="card">';
+        h += `<div class="card-hdr"><div><span class="card-id">D_${d.id}</span> <span class="doubt-clear ${isThis ? 'this-loop' : 'later'}">L${d.clear_loop}解决</span></div>`;
+        h += `<button class="btn-edit" onclick="editDoubt(${i})">编辑</button></div>`;
+        h += `<div class="field-val" style="margin:.3rem 0">${esc(d.text)}</div>`;
+        h += `<div class="doubt-cond">${esc(d.unlock_condition)}</div>`;
+        h += '</div>';
+    });
+    $('main').innerHTML = h;
+}
+
+// ── EVENTS ──────────────────────────────────────
+function renderEvents() {
+    const events = S.data.events;
+    if (!events?.length) { $('main').innerHTML = '<div class="section-title">事件</div><p style="color:var(--muted)">本循环无特殊事件</p>'; return; }
+
+    let h = '<div class="section-title">事件</div>';
+    events.forEach((ev, i) => {
+        h += '<div class="card">';
+        h += `<div class="card-hdr"><span class="card-title">${esc(ev.name)}</span><button class="btn-edit" onclick="editEvent(${i})">编辑</button></div>`;
+        if (ev.trigger) h += `<div class="card-note">触发: ${esc(ev.trigger)}</div>`;
+        if (ev.characters) h += `<div style="font-size:.78rem">角色: ${ev.characters.join(', ')}</div>`;
+        if (ev.purpose) h += `<div style="font-size:.78rem;color:var(--text2);margin-top:.2rem">${esc(ev.purpose)}</div>`;
+        h += '</div>';
+    });
+    $('main').innerHTML = h;
+}
+
+// ── NPC Helpers ─────────────────────────────────
+function renderNPCCard(key, npc, context) {
+    const name = npcName(key);
+    const expandKey = `${context}_${key}`;
+    let h = `<div class="card" style="border-left:3px solid ${npc.is_liar ? 'var(--warn)' : 'var(--success)'}">`;
+    h += `<div class="card-hdr"><div>`;
+    h += `<span class="card-title" style="cursor:pointer" onclick="toggleNPC('${expandKey}')">${name}</span>`;
+    h += npc.is_liar ? ' <span style="color:var(--warn);font-size:.72rem">[说谎者]</span>' : ' <span style="color:var(--success);font-size:.72rem">[诚实]</span>';
+    h += `</div><button class="btn-edit" onclick="editNPC('${context}','${key}')">编辑</button></div>`;
+    if (npc.motive) h += `<div style="font-size:.78rem;color:var(--text2)">${esc(npc.motive)}</div>`;
+
+    if (S.expandedNPCs.has(expandKey)) {
+        h += renderNPCDetailInline(npc);
+    }
+    h += '</div>';
+    return h;
+}
+
+function renderNPCDetail(key, npc, path) {
+    let h = `<div class="npc-detail">`;
+    h += `<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="card-title">${npcName(key)} 详情</span><button class="btn-edit" onclick="editNPC('scenes','${key}',${parseInt(path.split('.')[1])})">编辑</button></div>`;
+    h += renderNPCDetailInline(npc);
+    h += '</div>';
+    return h;
+}
+
+function renderNPCDetailInline(npc) {
+    let h = '';
+    if (npc.mindset) h += `<div class="field"><div class="field-label">心态</div><div class="field-val" style="font-size:.78rem">${esc(npc.mindset)}</div></div>`;
+    if (npc.knows?.length) {
+        h += '<div class="field"><div class="field-label">知道的</div>';
+        npc.knows.forEach(k => h += `<div class="know-item">+ ${esc(k)}</div>`);
+        h += '</div>';
+    }
+    if (npc.does_not_know?.length) {
+        h += '<div class="field"><div class="field-label">不知道的</div>';
+        npc.does_not_know.forEach(k => h += `<div class="know-item hidden">- ${esc(k)}</div>`);
+        h += '</div>';
+    }
+    if (npc.lie) h += `<div class="field"><div class="field-label">谎言</div><div class="round-lie">${esc(npc.lie)}</div></div>`;
+    if (npc.testimony_ids?.length) h += `<div class="field"><div class="field-label">证词 ID</div><div class="field-val" style="font-size:.78rem;font-family:monospace">${npc.testimony_ids.join(', ')}</div></div>`;
+    if (npc.player_inquiry) {
+        const inq = Array.isArray(npc.player_inquiry) ? npc.player_inquiry : [npc.player_inquiry];
+        if (inq.length && inq[0]) {
+            h += '<div class="field"><div class="field-label">玩家询问理由</div>';
+            inq.forEach(q => h += `<div class="know-item">${esc(q)}</div>`);
+            h += '</div>';
+        }
+    }
+    return h;
+}
+
+function toggleNPC(key) {
+    if (S.expandedNPCs.has(key)) S.expandedNPCs.delete(key);
+    else S.expandedNPCs.add(key);
+    renderSection();
+}
+
+// ── Edit: Overview ──────────────────────────────
+function editOverview() {
+    const pc = S.data.player_context;
+    editCtx = { type: 'overview' };
+    $('m-title').textContent = '编辑玩家上下文';
+    let h = '';
+    h += fgInput('primary', '主目标', pc.goals?.primary || '');
+    h += fgListEditor('secondary', '次要目标', pc.goals?.secondary || []);
+    h += fgListEditor('known_facts', '已知事实', pc.known_facts || []);
+    h += fgListEditor('post_expose', '指证后揭示', pc.post_expose_knowledge || []);
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+// ── Edit: Scene ─────────────────────────────────
+function editScene(idx) {
+    const sc = S.data.scenes[idx];
+    editCtx = { type: 'scene', idx };
+    $('m-title').textContent = `编辑场景 ${sc.id}`;
+    let h = '';
+    h += '<div class="fg-row">';
+    h += fgInput('id', 'Scene ID', sc.id, 'number');
+    h += fgInput('name', '场景名', sc.name);
+    h += '</div>';
+    h += fgTextarea('note', '备注', sc.note || '');
+
+    // Evidence editor
+    h += '<div class="sub-title" style="margin-top:.8rem">证据</div>';
+    h += '<div id="ev-editor">';
+    (sc.evidence || []).forEach((ev, i) => {
+        h += evItemHTML(ev, i);
+    });
+    h += '</div>';
+    h += '<button class="btn-add" onclick="addEvItem()">+ 添加证据</button>';
+
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+function evItemHTML(ev, i) {
+    let h = `<div class="card" style="padding:.4rem .6rem;margin-bottom:.3rem" data-ev-idx="${i}">`;
+    h += '<div class="fg-row">';
+    h += `<div class="fg" style="max-width:80px"><label>ID</label><input name="ev_id_${i}" value="${ev.id || ''}"></div>`;
+    h += `<div class="fg" style="flex:2"><label>名称</label><input name="ev_name_${i}" value="${esc(ev.name || '')}"></div>`;
+    h += `<div class="fg" style="max-width:80px"><label>分析→</label><input name="ev_ana_${i}" value="${ev.analyzed_id || ''}" placeholder="无"></div>`;
+    h += `<div style="padding-top:1.2rem"><button class="btn-edit" style="color:var(--warn)" onclick="this.closest('[data-ev-idx]').remove()">删除</button></div>`;
+    h += '</div>';
+    h += `<div class="fg"><label>备注</label><input name="ev_note_${i}" value="${esc(ev.note || '')}"></div>`;
+    h += '</div>';
+    return h;
+}
+
+function addEvItem() {
+    const container = $('ev-editor');
+    const idx = container.children.length;
+    container.insertAdjacentHTML('beforeend', evItemHTML({ id: '', name: '', note: '' }, idx));
+}
+
+function addScene() {
+    if (!S.data.scenes) S.data.scenes = [];
+    S.data.scenes.push({ id: 0, name: '新场景', note: '', evidence: [] });
+    markDirty();
+    renderSection();
+    editScene(S.data.scenes.length - 1);
+}
+
+function deleteScene(idx) {
+    if (!confirm('确定删除场景 ' + S.data.scenes[idx].name + '？')) return;
+    S.data.scenes.splice(idx, 1);
+    markDirty();
+    renderSection();
+}
+
+// ── Edit: NPC ───────────────────────────────────
+function editNPC(context, key, sceneIdx) {
+    let npc;
+    if (context === 'opening') {
+        npc = S.data.opening[key];
+        editCtx = { type: 'npc', context, key };
+    } else if (context === 'expose') {
+        npc = S.data.expose[key];
+        editCtx = { type: 'npc', context, key };
+    } else {
+        // scenes
+        npc = S.data.scenes[sceneIdx].npcs[key];
+        editCtx = { type: 'npc', context: 'scenes', key, sceneIdx };
+    }
+    if (!npc) return;
+
+    $('m-title').textContent = `编辑 NPC: ${npcName(key)}`;
+    let h = '';
+    h += '<div class="fg-row">';
+    h += fgInput('talk', 'Talk 文件', npc.talk || '');
+    h += `<div class="fg"><label>说谎者</label><div class="fg-check"><input type="checkbox" name="is_liar" ${npc.is_liar ? 'checked' : ''}> <span>${npc.is_liar ? '是' : '否'}</span></div></div>`;
+    h += '</div>';
+    h += fgTextarea('motive', '动机', npc.motive || '');
+    h += fgTextarea('mindset', '心态', npc.mindset || '');
+    h += fgInput('lie', '谎言', npc.lie || '', 'text', '无则留空');
+    h += fgListEditor('knows', '知道的', npc.knows || []);
+    h += fgListEditor('does_not_know', '不知道的', npc.does_not_know || []);
+    h += fgInput('testimony_ids', '证词 ID (逗号分隔)', (npc.testimony_ids || []).join(', '));
+    h += fgListEditor('player_inquiry', '玩家询问理由', Array.isArray(npc.player_inquiry) ? npc.player_inquiry : (npc.player_inquiry ? [npc.player_inquiry] : []));
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+// ── Edit: Expose Meta ───────────────────────────
+function editExposeMeta() {
+    const ex = S.data.expose;
+    editCtx = { type: 'expose_meta' };
+    $('m-title').textContent = '编辑指证设置';
+    let h = '';
+    h += fgInput('target', '目标 (NPC名 + ID)', ex.target || '');
+    h += '<div class="fg-row">';
+    h += fgInput('scene_id', '场景 ID', ex.scene_id || '', 'number');
+    h += fgInput('total_rounds', '总轮数', ex.total_rounds || '', 'number');
+    h += '</div>';
+    h += fgInput('style', '风格描述', ex.style || '', 'text', '可选');
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+// ── Edit: Round ─────────────────────────────────
+function editRound(roundKey) {
+    const r = S.data.expose[roundKey];
+    editCtx = { type: 'round', roundKey };
+    const rnum = roundKey.replace('round_', 'R');
+    $('m-title').textContent = `编辑指证 ${rnum}`;
+    let h = '';
+    h += fgInput('id', 'Round ID', r.id || '');
+    h += fgTextarea('lie', '谎言', r.lie || '');
+    h += fgInput('lie_source', '谎言来源', r.lie_source || '');
+
+    // Usable evidence
+    h += '<div class="sub-title" style="margin-top:.6rem">可用证据</div>';
+    h += '<div id="rnd-ev-editor">';
+    (r.usable_evidence || []).forEach((ev, i) => {
+        h += `<div class="card" style="padding:.4rem .6rem;margin-bottom:.3rem" data-rev-idx="${i}">`;
+        h += '<div class="fg-row">';
+        h += `<div class="fg" style="max-width:80px"><label>ID</label><input name="rev_id_${i}" value="${ev.id || ''}"></div>`;
+        h += `<div class="fg" style="flex:2"><label>名称</label><input name="rev_name_${i}" value="${esc(ev.name || '')}"></div>`;
+        h += `<div style="padding-top:1.2rem"><button class="btn-edit" style="color:var(--warn)" onclick="this.closest('[data-rev-idx]').remove()">删除</button></div>`;
+        h += '</div>';
+        h += `<div class="fg"><label>用途</label><textarea name="rev_use_${i}" style="min-height:40px">${esc(ev['用途'] || ev.usage || '')}</textarea></div>`;
+        h += '</div>';
+    });
+    h += '</div>';
+    h += '<button class="btn-add" onclick="addRndEv()">+ 添加证据</button>';
+
+    h += fgTextarea('result', '结果叙述', r.result || '', '描述本轮指证后的剧情发展');
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+function addRndEv() {
+    const c = $('rnd-ev-editor');
+    const i = c.children.length;
+    let h = `<div class="card" style="padding:.4rem .6rem;margin-bottom:.3rem" data-rev-idx="${i}">`;
+    h += '<div class="fg-row">';
+    h += `<div class="fg" style="max-width:80px"><label>ID</label><input name="rev_id_${i}" value=""></div>`;
+    h += `<div class="fg" style="flex:2"><label>名称</label><input name="rev_name_${i}" value=""></div>`;
+    h += `<div style="padding-top:1.2rem"><button class="btn-edit" style="color:var(--warn)" onclick="this.closest('[data-rev-idx]').remove()">删除</button></div>`;
+    h += '</div>';
+    h += `<div class="fg"><label>用途</label><textarea name="rev_use_${i}" style="min-height:40px"></textarea></div>`;
+    h += '</div>';
+    c.insertAdjacentHTML('beforeend', h);
+}
+
+function addRound() {
+    const ex = S.data.expose;
+    const existing = Object.keys(ex).filter(k => /^round_\d+$/.test(k));
+    const next = existing.length + 1;
+    ex[`round_${next}`] = { id: next, lie: '', lie_source: '', usable_evidence: [], result: '' };
+    if (ex.total_rounds) ex.total_rounds = Math.max(ex.total_rounds, next);
+    markDirty();
+    renderSection();
+    editRound(`round_${next}`);
+}
+
+// ── Edit: Doubt ─────────────────────────────────
+function editDoubt(idx) {
+    const d = S.data.doubts[idx];
+    editCtx = { type: 'doubt', idx };
+    $('m-title').textContent = `编辑疑点 D_${d.id}`;
+    let h = '';
+    h += '<div class="fg-row">';
+    h += fgInput('id', 'ID', d.id, 'number');
+    h += fgInput('clear_loop', '解决循环', d.clear_loop, 'number');
+    h += '</div>';
+    h += fgTextarea('text', '疑点文本', d.text || '');
+    h += fgInput('unlock_condition', '解锁条件', d.unlock_condition || '', 'text', '格式: testimony:ID + item:ID');
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+function addDoubt() {
+    if (!S.data.doubts) S.data.doubts = [];
+    const maxId = S.data.doubts.reduce((m, d) => Math.max(m, d.id || 0), 0);
+    S.data.doubts.push({ id: maxId + 1, text: '', unlock_condition: '', clear_loop: parseInt(S.loop.replace('loop', '')) });
+    markDirty();
+    renderSection();
+    editDoubt(S.data.doubts.length - 1);
+}
+
+// ── Edit: Event ─────────────────────────────────
+function editEvent(idx) {
+    const ev = S.data.events[idx];
+    editCtx = { type: 'event', idx };
+    $('m-title').textContent = '编辑事件';
+    let h = '';
+    h += fgInput('name', '事件名', ev.name || '');
+    h += '<div class="fg-row">';
+    h += fgInput('scene_id', '场景 ID', ev.scene_id || '', 'number');
+    h += fgInput('trigger', '触发条件', ev.trigger || '');
+    h += '</div>';
+    h += fgInput('characters', '角色 (逗号分隔)', (ev.characters || []).join(', '));
+    h += fgTextarea('purpose', '目的', ev.purpose || '');
+    h += fgTextarea('result', '结果', ev.result || '');
+    $('m-body').innerHTML = h;
+    showModal();
+}
+
+// ── Confirm Edit ────────────────────────────────
+function confirmEdit() {
+    if (!editCtx) return;
+    const t = editCtx.type;
+
+    if (t === 'overview') {
+        const pc = S.data.player_context;
+        if (!pc.goals) pc.goals = {};
+        pc.goals.primary = val('primary');
+        pc.goals.secondary = readList('secondary');
+        pc.known_facts = readList('known_facts');
+        pc.post_expose_knowledge = readList('post_expose');
+    }
+    else if (t === 'scene') {
+        const sc = S.data.scenes[editCtx.idx];
+        sc.id = numOrStr(val('id'));
+        sc.name = val('name');
+        sc.note = val('note');
+        // Read evidence
+        const evEls = document.querySelectorAll('#ev-editor [data-ev-idx]');
+        sc.evidence = [...evEls].map(el => {
+            const i = el.dataset.evIdx;
+            const ev = {
+                id: numOrStr(val(`ev_id_${i}`)),
+                name: val(`ev_name_${i}`),
+                note: val(`ev_note_${i}`),
+            };
+            const ana = val(`ev_ana_${i}`);
+            if (ana) ev.analyzed_id = numOrStr(ana);
+            return ev;
+        });
+    }
+    else if (t === 'npc') {
+        let npc;
+        if (editCtx.context === 'opening') npc = S.data.opening[editCtx.key];
+        else if (editCtx.context === 'expose') npc = S.data.expose[editCtx.key];
+        else npc = S.data.scenes[editCtx.sceneIdx].npcs[editCtx.key];
+
+        npc.talk = val('talk');
+        npc.is_liar = document.querySelector('[name=is_liar]').checked;
+        npc.motive = val('motive');
+        npc.mindset = val('mindset');
+        npc.lie = val('lie') || null;
+        npc.knows = readList('knows');
+        npc.does_not_know = readList('does_not_know');
+        const tids = val('testimony_ids');
+        npc.testimony_ids = tids ? tids.split(',').map(s => numOrStr(s.trim())).filter(Boolean) : [];
+        npc.player_inquiry = readList('player_inquiry');
+        if (npc.player_inquiry.length === 0) npc.player_inquiry = null;
+    }
+    else if (t === 'expose_meta') {
+        const ex = S.data.expose;
+        ex.target = val('target');
+        ex.scene_id = numOrStr(val('scene_id'));
+        ex.total_rounds = numOrStr(val('total_rounds'));
+        const style = val('style');
+        if (style) ex.style = style; else delete ex.style;
+    }
+    else if (t === 'round') {
+        const r = S.data.expose[editCtx.roundKey];
+        r.id = numOrStr(val('id'));
+        r.lie = val('lie');
+        r.lie_source = val('lie_source');
+        // Read evidence
+        const revEls = document.querySelectorAll('#rnd-ev-editor [data-rev-idx]');
+        r.usable_evidence = [...revEls].map(el => {
+            const i = el.dataset.revIdx;
+            return {
+                id: numOrStr(val(`rev_id_${i}`)),
+                name: val(`rev_name_${i}`),
+                '用途': val(`rev_use_${i}`),
+            };
+        });
+        r.result = val('result');
+    }
+    else if (t === 'doubt') {
+        const d = S.data.doubts[editCtx.idx];
+        d.id = numOrStr(val('id'));
+        d.text = val('text');
+        d.unlock_condition = val('unlock_condition');
+        d.clear_loop = numOrStr(val('clear_loop'));
+    }
+    else if (t === 'event') {
+        const ev = S.data.events[editCtx.idx];
+        ev.name = val('name');
+        ev.scene_id = numOrStr(val('scene_id'));
+        ev.trigger = val('trigger');
+        ev.characters = val('characters').split(',').map(s => s.trim()).filter(Boolean);
+        ev.purpose = val('purpose');
+        ev.result = val('result');
+    }
+
+    closeModal();
+    markDirty();
+    renderAll();
+}
+
+// ── Modal Helpers ───────────────────────────────
+function showModal() { $('modal').style.display = 'flex'; }
+function closeModal() { $('modal').style.display = 'none'; editCtx = null; }
+
+function val(name) {
+    const el = document.querySelector(`[name="${name}"]`);
+    return el ? el.value : '';
+}
+
+function readList(name) {
+    const els = document.querySelectorAll(`[data-list="${name}"] input, [data-list="${name}"] textarea`);
+    return [...els].map(e => e.value).filter(v => v.trim());
+}
+
+function addListItem(name) {
+    const container = document.querySelector(`[data-list="${name}"]`);
+    const div = document.createElement('div');
+    div.className = 'li';
+    div.innerHTML = `<input value=""><button class="btn-rm" onclick="this.parentElement.remove()">&times;</button>`;
+    container.insertBefore(div, container.querySelector('.btn-add'));
+    div.querySelector('input').focus();
+}
+
+// ── Form Builders ───────────────────────────────
+function fgInput(name, label, value, type, hint) {
+    let h = `<div class="fg"><label>${label}</label><input name="${name}" type="${type || 'text'}" value="${esc(String(value ?? ''))}">`;
+    if (hint) h += `<div class="hint">${hint}</div>`;
+    return h + '</div>';
+}
+function fgTextarea(name, label, value, hint) {
+    let h = `<div class="fg"><label>${label}</label><textarea name="${name}">${esc(String(value ?? ''))}</textarea>`;
+    if (hint) h += `<div class="hint">${hint}</div>`;
+    return h + '</div>';
+}
+function fgListEditor(name, label, items) {
+    let h = `<div class="fg"><label>${label}</label><div class="list-ed" data-list="${name}">`;
+    for (const item of items) {
+        const isLong = String(item).length > 60;
+        h += `<div class="li">${isLong ? `<textarea>${esc(item)}</textarea>` : `<input value="${esc(item)}">`}<button class="btn-rm" onclick="this.parentElement.remove()">&times;</button></div>`;
+    }
+    h += `<button class="btn-add" onclick="addListItem('${name}')">+ 添加</button>`;
+    h += '</div></div>';
+    return h;
+}
+
+// ── Utils ───────────────────────────────────────
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function npcName(key) {
+    const base = key.replace(/_\d+$/, '').replace(/_expose$/, '');
+    return base.charAt(0).toUpperCase() + base.slice(1);
+}
+
+function splitNPCs(obj) {
+    const npcs = {}, scene = {};
+    for (const [k, v] of Object.entries(obj)) {
+        if (NPC_KEY_RE.test(k)) npcs[k] = v;
+        else scene[k] = v;
+    }
+    return { scene, npcs };
+}
+
+function splitExpose(obj) {
+    const rounds = {}, npcs = {}, meta = {};
+    for (const [k, v] of Object.entries(obj)) {
+        if (/^round_\d+$/.test(k)) rounds[k] = v;
+        else if (NPC_KEY_RE.test(k) || k.endsWith('_expose')) npcs[k] = v;
+        else meta[k] = v;
+    }
+    return { meta, npcs, rounds };
+}
+
+function numOrStr(v) {
+    if (v === '' || v === null || v === undefined) return v;
+    const n = Number(v);
+    return isNaN(n) ? v : n;
+}
+
+function field(label, val) {
+    return `<div class="field"><div class="field-label">${label}</div><div class="field-val">${esc(val)}</div></div>`;
+}
+function fieldList(label, items, empty) {
+    let h = '';
+    if (label) h += `<div class="field-label">${label}</div>`;
+    if (!items.length) return h + `<div class="field-val" style="color:var(--muted)">${empty || '(无)'}</div>`;
+    h += '<ul class="field-list">';
+    items.forEach(i => h += `<li>${esc(i)}</li>`);
+    h += '</ul>';
+    return h;
+}
+
+function toast(msg, type) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (type === 'err' ? ' err' : '');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.className = 'toast', 3000);
+}
+
+function updateConn() {
+    $('st-conn').innerHTML = S.connected
+        ? '<span class="dot dot-on"></span>在线'
+        : '<span class="dot dot-off"></span>离线';
+}
+
+// ── Keyboard ────────────────────────────────────
+document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveToSupabase(); }
+    if (e.key === 'Escape' && $('modal').style.display !== 'none') closeModal();
+});
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

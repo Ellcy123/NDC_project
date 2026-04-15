@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC Story Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+        :root {
+            --bg:#0a0a0a; --bg2:#141414; --card:#1e1212; --accent:#b84040;
+            --gold:#e8c678; --text:#fff; --text2:#ccc; --muted:#888;
+            --success:#4a7c59; --warn:#c41e3a; --border:#333;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+        #app{display:flex;flex-direction:column;height:100vh}
+
+        header{background:var(--bg2);padding:.4rem 1rem;border-bottom:2px solid var(--accent);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;z-index:50}
+        .hdr-left,.hdr-right{display:flex;align-items:center;gap:.6rem}
+        .logo{font-size:1.05rem;font-weight:700;color:var(--gold)}
+        .btn,.sel{background:var(--card);color:var(--text);border:1px solid var(--border);padding:.25rem .6rem;border-radius:4px;cursor:pointer;font-size:.8rem}
+        .btn:hover{border-color:var(--accent)}
+        .btn-pri{background:var(--accent);border-color:var(--accent)}
+        .btn-save.dirty{border-color:var(--gold);color:var(--gold);font-weight:600}
+        .zoom-info{color:var(--muted);font-size:.72rem;min-width:40px;text-align:center}
+        .btn-add{background:var(--success);border-color:var(--success);color:#fff}
+
+        /* Canvas */
+        #canvas-wrap{flex:1;overflow:hidden;position:relative;cursor:grab}
+        #canvas-wrap.panning{cursor:grabbing}
+        #canvas{position:absolute;top:0;left:0;transform-origin:0 0}
+        #connections{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+
+        /* Nodes */
+        .node{position:absolute;width:200px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;cursor:grab;user-select:none;z-index:2;transition:box-shadow .15s,border-color .15s}
+        .node:hover{box-shadow:0 0 14px rgba(184,64,64,.3);border-color:rgba(184,64,64,.5)}
+        .node.selected{border-color:var(--gold);box-shadow:0 0 18px rgba(232,198,120,.35)}
+        .node.dragging{cursor:grabbing;z-index:100;opacity:.92}
+
+        .node-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .node-loops{font-size:.62rem;color:var(--muted);background:rgba(255,255,255,.06);padding:0 4px;border-radius:2px}
+        .node-type{font-size:.65rem;padding:1px 5px;border-radius:2px;font-weight:600}
+        .type-key_plot{background:rgba(184,64,64,.3);color:#e88}
+        .type-revelation{background:rgba(232,198,120,.25);color:var(--gold)}
+        .type-emotional{background:rgba(140,80,160,.3);color:#c8a}
+        .type-action{background:rgba(74,124,89,.3);color:#8c8}
+
+        .node-title{font-size:.82rem;font-weight:600;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .node-scenes{font-size:.62rem;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .node-desc{font-size:.68rem;color:var(--text2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3;opacity:.8}
+
+        /* Connection port dots */
+        .port{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--border);cursor:crosshair;z-index:5;opacity:0;transition:opacity .15s}
+        .node:hover .port{opacity:1}
+        .port-out{right:-5px;top:50%;transform:translateY(-50%)}
+        .port-in{left:-5px;top:50%;transform:translateY(-50%)}
+        .port:hover{background:var(--gold);opacity:1}
+
+        /* Detail Panel */
+        #detail{position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--bg2);border-left:2px solid var(--accent);z-index:60;display:none;flex-direction:column;overflow:hidden}
+        #detail.open{display:flex}
+        .det-hdr{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;border-bottom:1px solid var(--border)}
+        .det-hdr h3{color:var(--gold);font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+        .det-x{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;margin-left:.5rem}
+        .det-x:hover{color:var(--text)}
+        .det-body{flex:1;overflow-y:auto;padding:.6rem .8rem}
+        .det-ft{padding:.4rem .8rem;border-top:1px solid var(--border);display:flex;gap:.3rem;justify-content:flex-end}
+
+        .d-section{margin-bottom:.6rem}
+        .d-label{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-bottom:.15rem}
+        .d-val{font-size:.8rem;white-space:pre-line}
+
+        /* Edit fields */
+        .ed-row{margin-bottom:.5rem}
+        .ed-row label{display:block;font-size:.68rem;color:var(--muted);font-weight:600;margin-bottom:.15rem}
+        .ed-row input,.ed-row textarea,.ed-row select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:3px;font-size:.78rem;font-family:inherit}
+        .ed-row input:focus,.ed-row textarea:focus,.ed-row select:focus{border-color:var(--accent);outline:none}
+        .ed-row textarea{min-height:60px;resize:vertical}
+
+        .scene-tag{display:inline-block;background:rgba(184,64,64,.12);padding:.1rem .4rem;border-radius:3px;font-size:.7rem;margin:.1rem .15rem .1rem 0;color:var(--text2)}
+        .scene-tag .x{cursor:pointer;margin-left:.2rem;color:var(--muted)}
+        .scene-tag .x:hover{color:var(--warn)}
+
+        .conn-tag{display:inline-flex;align-items:center;background:rgba(232,198,120,.1);padding:.15rem .4rem;border-radius:3px;font-size:.7rem;margin:.1rem .15rem .1rem 0;color:var(--gold);cursor:pointer}
+        .conn-tag:hover{background:rgba(232,198,120,.2)}
+        .conn-tag .x{margin-left:.3rem;color:var(--muted)}
+        .conn-tag .x:hover{color:var(--warn)}
+
+        .btn-del{background:none;border:1px solid var(--warn);color:var(--warn);padding:.2rem .5rem;border-radius:3px;font-size:.72rem;cursor:pointer;margin-top:.5rem}
+        .btn-del:hover{background:rgba(196,30,58,.15)}
+
+        /* Toast */
+        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--success);color:#fff;padding:.35rem 1rem;border-radius:5px;font-size:.8rem;z-index:200;transition:transform .3s;pointer-events:none}
+        .toast.show{transform:translateX(-50%) translateY(0)}
+        .toast.err{background:var(--warn)}
+
+        /* Status */
+        footer{background:var(--bg2);padding:.2rem 1rem;border-top:1px solid var(--border);display:flex;gap:1rem;font-size:.7rem;color:var(--muted);flex-shrink:0;z-index:50}
+        .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px;vertical-align:middle}
+        .dot-on{background:var(--success)}.dot-off{background:var(--muted)}
+
+        .help{position:fixed;bottom:30px;right:15px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.4rem .6rem;font-size:.68rem;color:var(--muted);z-index:40;line-height:1.5}
+
+        /* Legend */
+        .legend{position:fixed;bottom:30px;left:15px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.4rem .6rem;font-size:.66rem;color:var(--muted);z-index:40;display:flex;gap:.8rem}
+        .legend-item{display:flex;align-items:center;gap:.3rem}
+        .legend-dot{width:10px;height:10px;border-radius:2px}
+
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    </style>
+</head>
+<body>
+<div id="app">
+    <header>
+        <div class="hdr-left">
+            <span class="logo">NDC Story Flow</span>
+            <select class="sel" id="sel-unit" onchange="loadAll()">
+                <option value="Unit1">Unit 1</option>
+                <option value="Unit2">Unit 2</option>
+                <option value="Unit3">Unit 3</option>
+            </select>
+            <button class="btn btn-add" onclick="addNode()">+ 新情节点</button>
+        </div>
+        <div class="hdr-right">
+            <button class="btn" onclick="resetLayout()">重置布局</button>
+            <span class="zoom-info" id="zoom-info">100%</span>
+            <button class="btn btn-save" id="btn-save" onclick="saveAll()">保存到云端</button>
+            <a class="btn" href="story_editor.html" title="打开详细编辑视图">编辑视图</a>
+        </div>
+    </header>
+
+    <div id="canvas-wrap">
+        <div id="canvas">
+            <svg id="connections" width="8000" height="4000"></svg>
+        </div>
+    </div>
+
+    <div id="detail">
+        <div class="det-hdr"><h3 id="det-title"></h3><button class="det-x" onclick="closeDetail()">&times;</button></div>
+        <div class="det-body" id="det-body"></div>
+        <div class="det-ft">
+            <button class="btn btn-del" id="btn-del" onclick="deleteNode()">删除节点</button>
+            <button class="btn btn-pri" onclick="saveNodeEdit()">保存修改</button>
+        </div>
+    </div>
+
+    <footer>
+        <span id="st-conn"></span>
+        <span id="st-info"></span>
+    </footer>
+</div>
+<div class="toast" id="toast"></div>
+<div class="help">空白处拖动平移 · 滚轮缩放 · 点击节点编辑 · 拖动节点调整位置</div>
+<div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(184,64,64,.5)"></div>关键情节</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(232,198,120,.5)"></div>揭示/反转</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(140,80,160,.5)"></div>情感</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(74,124,89,.5)"></div>动作</div>
+</div>
+
+<script>
+/* ================================================================
+   NDC Story Flow — Narrative-level plot point flow chart
+   ================================================================ */
+
+const SUPABASE_URL = 'https://tyqsamueendpanbfousp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5cXNhbXVlZW5kcGFuYmZvdXNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxOTI1NjMsImV4cCI6MjA5MDc2ODU2M30.qa_EqkXHkq5ki8CYt0cJk-Se2vfj8PTVHci239YblfM';
+
+const NODE_W = 200, NODE_H = 100, GAP_X = 60, GAP_Y = 50;
+
+const TYPE_LABELS = {
+    key_plot: '关键情节',
+    revelation: '揭示/反转',
+    emotional: '情感',
+    action: '动作',
+};
+
+// ── Default Unit1 Plot Points ──────────────────
+const DEFAULT_UNIT1 = [
+  {id:"pp_001",title:"开篇：Zack 被栽赃，Emma 解围",description:"Zack 受 Webb 邀约后被人用氯仿迷晕，醒来时 Webb 已死、Morrison 警探宣布 Zack 为头号嫌疑人。记者 Emma 及时赶到，暂时阻止逮捕。",loops:[1],related_scenes:["L1 Webb会客室开场"],plot_type:"key_plot",connections:["pp_002","pp_003"]},
+  {id:"pp_002",title:"毛巾与拖痕：有人刻意迷晕并转移了 Zack",description:"Rosa 储藏室的沾氯仿毛巾与走廊地板上的拖痕，共同证明案发当晚有人预谋用氯仿将 Zack 迷晕并拖入现场。",loops:[1],related_scenes:["L1 Rosa储藏室","L1 一楼走廊"],plot_type:"revelation",connections:["pp_003"]},
+  {id:"pp_003",title:"指证 Rosa：Morrison 是迷晕 Zack 的人",description:"通过三轮指证击破 Rosa 关于工作地点的谎言。Rosa 供出：她亲眼目睹 Morrison 在走廊用氯仿迷晕 Zack 并拖入会客室。",loops:[1],related_scenes:["L1 酒吧大堂（指证）"],plot_type:"key_plot",connections:["pp_004","pp_005"]},
+  {id:"pp_004",title:"Rosa 额外供述：Vivian 当晚情绪激动地出现",description:"Rosa 主动补充：案发当晚她还看到 Vivian 情绪激动、像是哭过，从会客室方向走来。打开了全新的调查方向。",loops:[1],related_scenes:["L1 酒吧大堂（指证后）"],plot_type:"revelation",connections:["pp_006"]},
+  {id:"pp_005",title:"伏笔：Tommy 的枪声证词（11:30）",description:"Tommy 证词称案发当晚 11:30 听到一声枪响。玩家此时将其当作案发时间，但这是 Jimmy 伪造的假死亡时间，真相要到 L5 才揭晓。",loops:[1,5],related_scenes:["L1 Tommy办公室","L5 Webb会客室"],plot_type:"key_plot",connections:["pp_016"]},
+  {id:"pp_006",title:"挖掘 Vivian 与 Webb 的关系：分手信、撕碎船票、仇恨日记",description:"在 Vivian 化妆室和 Webb 办公室发现三件关键证据：Webb 亲笔分手信、被撕碎的船票、Vivian 写下「我会让他承受最痛苦的事」的日记。",loops:[2],related_scenes:["L2 Vivian化妆室","L2 Webb办公室"],plot_type:"revelation",connections:["pp_007"]},
+  {id:"pp_007",title:"指证 Tommy：他在用谎言保护 Vivian",description:"Tommy 声称「Webb 和 Vivian 感情深厚」，被分手信、撕碎船票、仇恨日记三轮击破。Tommy 承认自己一直在撒谎保护 Vivian。",loops:[2],related_scenes:["L2 酒吧大堂（指证）"],plot_type:"key_plot",connections:["pp_008"]},
+  {id:"pp_008",title:"Vivian 有极强的杀人动机，当晚主动去找 Webb",description:"Vivian 的情杀动机被完整建立：三年感情遭背叛、被抛弃、写下仇恨日记，案发当晚主动出门而 Tommy 没能拦住。玩家此时高度怀疑 Vivian。",loops:[2],related_scenes:["L2 Tommy办公室","L2 Rosa储藏室"],plot_type:"emotional",connections:["pp_009","pp_010"]},
+  {id:"pp_009",title:"指证 Vivian：她带枪去找 Webb，但最终没动手",description:"三轮指证击破 Vivian「没去过会客室」的谎言。Vivian 哭诉：约 11:05 去敲门，对方说「今晚不要再来」，她手抖了没进去。关键：她听到的声音是「隔门传来的」。",loops:[3],related_scenes:["L3 酒吧歌舞厅（指证）","L3 Vivian化妆室"],plot_type:"key_plot",connections:["pp_010","pp_011"]},
+  {id:"pp_010",title:"中点转折：Morrison 强行结案，凶器不匹配",description:"Vivian 供述带枪后，Morrison 立即宣布以「情杀」结案。但 Zack 和 Emma 发现：Webb 的致命伤是刀伤，Vivian 带的是枪——凶器根本不匹配。",loops:[3],related_scenes:["L3 酒吧歌舞厅（Morrison介入）"],plot_type:"key_plot",connections:["pp_011","pp_012"]},
+  {id:"pp_011",title:"新疑点：Vivian 敲门时，说话的真的是 Webb 吗？",description:"如果 Webb 在 11:00 已经死了，那 11:05 隔门说话的根本不是 Webb。到 L5 才揭示：说话的是刚杀完人的 Jimmy 在模仿 Webb 的声音。",loops:[3,5],related_scenes:["L3 Vivian指证","L5 Jimmy厨房"],plot_type:"revelation",connections:["pp_016","pp_017"]},
+  {id:"pp_012",title:"暗查 Morrison：时间线矛盾与预谋证据",description:"Morrison 家书房发现：勘验箱领用单显示案发「前一天」就已领取设备，证明他是预谋行动。结合到场时间，时间线出现无法解释的空白。",loops:[4],related_scenes:["L4 Morrison家书房","L4 Tommy办公室"],plot_type:"action",connections:["pp_013"]},
+  {id:"pp_013",title:"揭露 Webb 的勒索帝国：古董是幌子，Tommy 是操盘手",description:"Webb 月收入 $15,000，但酒吧实际营业额仅 $4,000。古董反复「售出」却仍在原位——以古董交易为幌子的勒索网络。笔迹分析确认 Tommy 是核心操作者。",loops:[4],related_scenes:["L4 Webb办公室","L4 酒吧歌舞厅"],plot_type:"revelation",connections:["pp_014"]},
+  {id:"pp_014",title:"Whale 电话威胁：幕后人物开始出手干预",description:"发现 Webb 私人日记中「WHALE=DANGER」便签后，一通神秘电话打来，Whale 直接威胁 Zack 停止调查。",loops:[4],related_scenes:["L4 Webb办公室（电话事件）"],plot_type:"action",connections:["pp_015"]},
+  {id:"pp_015",title:"指证 Morrison：承认被 Whale 收买，但坚称只负责善后",description:"Morrison 被三轮证据击穿，承认收了 Whale 的 $5,000 迷晕 Zack、栽赃、确保快速结案。但他声称「我没杀 Webb，Whale 另有执行者。」",loops:[4],related_scenes:["L4 Morrison办公室（指证）"],plot_type:"key_plot",connections:["pp_016","pp_017"]},
+  {id:"pp_016",title:"揭破伪造枪声：真实死亡时间是 11:00 而非 11:30",description:"窗外弹孔方向从室内向外射出——11:30 的枪声是凶手杀人后故意朝窗外开枪伪造的。结合节目单（11:00 鼓点最强），真实案发时间锁定为 11:00。",loops:[5],related_scenes:["L5 Webb会客室","L5 酒吧歌舞厅"],plot_type:"revelation",connections:["pp_017"]},
+  {id:"pp_017",title:"完整时间线重建：Jimmy 是杀 Webb 的真凶",description:"五条证据链交叉验证：Jimmy 11:00-11:30 工作空白、$5,000 鲸鱼标记收入、Anna 证词、Vivian 11:05 隔门声音。完整时间线浮出水面。",loops:[5],related_scenes:["L5 Jimmy厨房","L5 Jimmy家客厅","L5 Vivian化妆室"],plot_type:"key_plot",connections:["pp_018"]},
+  {id:"pp_018",title:"指证 Jimmy：动机是为妻儿换取合法身份",description:"Jimmy 承认接受 Whale 的 $5,000，以 Webb 的命作为投名状。动机是为妻子 Anna 和未出生的孩子获得合法身份。Anna 得知真相后拒绝和 Jimmy 一起逃走。",loops:[5],related_scenes:["L5 Jimmy厨房（指证）"],plot_type:"emotional",connections:["pp_019"]},
+  {id:"pp_019",title:"Jimmy 自杀：失去 Anna 后选择以死保护妻儿",description:"Anna 的拒绝让 Jimmy 失去了一切。留下遗书（密码线索）后选择结束生命。保险柜密码是结婚纪念日——以爱的形式留下线索。",loops:[5],related_scenes:["L5 Jimmy厨房/Jimmy家"],plot_type:"emotional",connections:["pp_020"]},
+  {id:"pp_020",title:"保险柜开启：录音带中传来 Margaret 的求救声",description:"用结婚纪念日打开保险柜，内有凶器、Webb 遗信、空文件夹，以及一卷录音带。播放后 Zack 识别出母亲 Margaret 的求救声。案件的边界远比想象的大。",loops:[6],related_scenes:["L6 Webb办公室"],plot_type:"revelation",connections:["pp_021"]},
+  {id:"pp_021",title:"情感沉淀：Zack 与 Emma 坦诚交谈",description:"案件结束后，Zack 承认矛盾——案件结了但代价太大。Emma 说「我可以帮你」但没有强求。搭档关系在此种下了根。",loops:[6],related_scenes:["L6 酒吧大堂"],plot_type:"emotional",connections:["pp_022"]},
+  {id:"pp_022",title:"结局钩子：Whale 威胁电话，Zack 决心合作",description:"Whale 电话：「你母亲会为此付出代价。」Zack 握紧拳头看向 Emma：「我改主意了。我们合作。」第一章结束，Unit 2 方向确立。",loops:[6],related_scenes:["L6 酒吧大堂电话处"],plot_type:"key_plot",connections:[]},
+];
+
+// ── State ───────────────────────────────────────
+let db = null, connected = false;
+let unit = 'Unit1';
+let plotPoints = [];   // current plot points data
+let selectedId = null;
+let dirty = false;
+
+// Zoom/Pan
+let zoom = 0.75, panX = 60, panY = 30;
+let isPanning = false, panStart = null;
+
+// Drag
+let drag = null;
+
+// Connection drawing
+let linking = null; // { fromId, tempLine }
+
+const $ = id => document.getElementById(id);
+
+// ── Init ────────────────────────────────────────
+async function init() {
+    try {
+        db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { error } = await db.from('config_tables').select('name').limit(1);
+        if (!error) connected = true;
+    } catch(e) {}
+    $('st-conn').innerHTML = connected
+        ? '<span class="dot dot-on"></span>在线'
+        : '<span class="dot dot-off"></span>离线';
+    await loadAll();
+    applyTransform();
+    setupEvents();
+}
+
+// ── Data Loading ────────────────────────────────
+async function loadAll() {
+    unit = $('sel-unit').value;
+    plotPoints = [];
+
+    const sbKey = `plot_flow_${unit}`;
+    if (connected) {
+        try {
+            const { data: row } = await db.from('config_tables').select('data').eq('name', sbKey).single();
+            if (row && row.data && Array.isArray(row.data) && row.data.length > 0) {
+                plotPoints = row.data;
+            }
+        } catch(e) {}
+    }
+
+    // Use defaults if nothing loaded
+    if (plotPoints.length === 0 && unit === 'Unit1') {
+        plotPoints = JSON.parse(JSON.stringify(DEFAULT_UNIT1));
+    }
+
+    // Ensure positions exist
+    loadPositions();
+    if (plotPoints.some(p => p.x == null)) autoLayout();
+    savePositions();
+
+    $('st-info').textContent = `${unit} · ${plotPoints.length} 个情节点`;
+    renderAll();
+}
+
+// ── Auto Layout ─────────────────────────────────
+function autoLayout() {
+    // Group by primary loop
+    const groups = {};
+    for (const p of plotPoints) {
+        const loop = (p.loops && p.loops[0]) || 1;
+        if (!groups[loop]) groups[loop] = [];
+        groups[loop].push(p);
+    }
+
+    for (let L = 1; L <= 6; L++) {
+        const items = groups[L] || [];
+        const baseY = (L - 1) * (NODE_H + GAP_Y + 60) + 80;
+        items.forEach((p, i) => {
+            if (p.x != null && p.y != null) return; // already positioned
+            p.x = 100 + i * (NODE_W + GAP_X);
+            p.y = baseY;
+        });
+    }
+}
+
+// ── Render ──────────────────────────────────────
+function renderAll() {
+    const canvas = $('canvas');
+    let html = '';
+
+    // Loop lane labels
+    const usedLoops = new Set();
+    plotPoints.forEach(p => (p.loops || []).forEach(l => usedLoops.add(l)));
+    for (let L = 1; L <= 6; L++) {
+        if (!usedLoops.has(L)) continue;
+        // Find min y for this loop's nodes
+        const loopNodes = plotPoints.filter(p => p.loops && p.loops[0] === L);
+        if (loopNodes.length === 0) continue;
+        const minY = Math.min(...loopNodes.map(p => p.y || 0));
+        html += `<div style="position:absolute;left:10px;top:${minY - 25}px;font-size:.82rem;font-weight:700;color:var(--gold);opacity:.5;pointer-events:none;z-index:1">Loop ${L}</div>`;
+    }
+
+    // Nodes
+    for (const p of plotPoints) {
+        const sel = p.id === selectedId ? ' selected' : '';
+        const typeCls = `type-${p.plot_type || 'key_plot'}`;
+        const typeLabel = TYPE_LABELS[p.plot_type] || '关键情节';
+        const loopsText = (p.loops || []).map(l => `L${l}`).join(',');
+        const scenesText = (p.related_scenes || []).join(' · ');
+
+        html += `<div class="node${sel}" id="n_${p.id}" data-id="${p.id}" style="left:${p.x||0}px;top:${p.y||0}px">`;
+        html += `<div class="port port-in"></div><div class="port port-out"></div>`;
+        html += `<div class="node-top"><span class="node-loops">${loopsText}</span><span class="node-type ${typeCls}">${typeLabel}</span></div>`;
+        html += `<div class="node-title" title="${esc(p.title)}">${esc(p.title)}</div>`;
+        if (scenesText) html += `<div class="node-scenes" title="${esc(scenesText)}">${esc(scenesText)}</div>`;
+        if (p.description) html += `<div class="node-desc">${esc(p.description)}</div>`;
+        html += '</div>';
+    }
+
+    canvas.innerHTML = `<svg id="connections" width="8000" height="4000"></svg>` + html;
+    drawConnections();
+}
+
+function drawConnections() {
+    const svg = $('connections');
+    let paths = '';
+
+    for (const p of plotPoints) {
+        if (!p.connections) continue;
+        for (const toId of p.connections) {
+            const to = plotPoints.find(t => t.id === toId);
+            if (!to) continue;
+
+            const x1 = (p.x || 0) + NODE_W;
+            const y1 = (p.y || 0) + NODE_H / 2;
+            const x2 = (to.x || 0);
+            const y2 = (to.y || 0) + NODE_H / 2;
+
+            // Determine if cross-loop
+            const pLoop = (p.loops && p.loops[0]) || 0;
+            const tLoop = (to.loops && to.loops[0]) || 0;
+            const crossLoop = pLoop !== tLoop;
+
+            let color = crossLoop ? '#e8c678' : '#555';
+            let dash = crossLoop ? '6,3' : '';
+            let width = crossLoop ? 1.8 : 1.8;
+            let opacity = crossLoop ? 0.7 : 0.5;
+
+            const dx = x2 - x1, dy = y2 - y1;
+            let d;
+            if (Math.abs(dy) > NODE_H) {
+                // Vertical connection - use S-curve
+                const my = (y1 + y2) / 2;
+                d = `M${x1},${y1} C${x1 + 60},${y1} ${x2 - 60},${y2} ${x2},${y2}`;
+            } else {
+                const cx = Math.max(40, Math.abs(dx) * 0.35);
+                d = `M${x1},${y1} C${x1 + cx},${y1} ${x2 - cx},${y2} ${x2},${y2}`;
+            }
+
+            paths += `<path d="${d}" stroke="${color}" fill="none" stroke-width="${width}" opacity="${opacity}" ${dash ? `stroke-dasharray="${dash}"` : ''}/>`;
+
+            // Arrow
+            paths += `<polygon points="${x2-6},${y2-4} ${x2},${y2} ${x2-6},${y2+4}" fill="${color}" opacity="${opacity}"/>`;
+        }
+    }
+
+    svg.innerHTML = paths;
+}
+
+// ── Node Interaction ────────────────────────────
+function onNodeMouseDown(e, nodeId) {
+    const p = plotPoints.find(x => x.id === nodeId);
+    if (!p) return;
+    drag = {
+        id: nodeId,
+        startMX: e.clientX,
+        startMY: e.clientY,
+        origX: p.x || 0,
+        origY: p.y || 0,
+        moved: false,
+    };
+    const el = $('n_' + nodeId);
+    if (el) el.classList.add('dragging');
+    e.preventDefault();
+}
+
+function onMouseMove(e) {
+    if (isPanning && panStart) {
+        panX = e.clientX - panStart.x;
+        panY = e.clientY - panStart.y;
+        applyTransform();
+        return;
+    }
+    if (!drag) return;
+    const dx = (e.clientX - drag.startMX) / zoom;
+    const dy = (e.clientY - drag.startMY) / zoom;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) drag.moved = true;
+    const p = plotPoints.find(x => x.id === drag.id);
+    if (!p) return;
+    p.x = drag.origX + dx;
+    p.y = drag.origY + dy;
+    const el = $('n_' + drag.id);
+    if (el) { el.style.left = p.x + 'px'; el.style.top = p.y + 'px'; }
+    drawConnections();
+}
+
+function onMouseUp(e) {
+    if (isPanning) {
+        isPanning = false;
+        $('canvas-wrap').classList.remove('panning');
+        return;
+    }
+    if (drag) {
+        const el = $('n_' + drag.id);
+        if (el) el.classList.remove('dragging');
+        if (!drag.moved) {
+            selectNode(drag.id);
+        } else {
+            savePositions();
+        }
+        drag = null;
+    }
+}
+
+function selectNode(id) {
+    selectedId = id;
+    document.querySelectorAll('.node.selected').forEach(el => el.classList.remove('selected'));
+    const el = $('n_' + id);
+    if (el) el.classList.add('selected');
+    showDetail(id);
+}
+
+// ── Detail Panel (Edit Mode) ────────────────────
+function showDetail(id) {
+    const p = plotPoints.find(x => x.id === id);
+    if (!p) return;
+
+    $('det-title').textContent = p.title || '(无标题)';
+
+    let h = '';
+
+    // Title
+    h += `<div class="ed-row"><label>标题</label><input id="ed-title" value="${esc(p.title || '')}"></div>`;
+
+    // Description
+    h += `<div class="ed-row"><label>描述</label><textarea id="ed-desc">${esc(p.description || '')}</textarea></div>`;
+
+    // Plot type
+    h += `<div class="ed-row"><label>情节类型</label><select id="ed-type">`;
+    for (const [k, v] of Object.entries(TYPE_LABELS)) {
+        h += `<option value="${k}" ${p.plot_type === k ? 'selected' : ''}>${v}</option>`;
+    }
+    h += `</select></div>`;
+
+    // Loops
+    h += `<div class="ed-row"><label>涉及 Loop（逗号分隔，如 1,3,5）</label>`;
+    h += `<input id="ed-loops" value="${(p.loops || []).join(',')}"></div>`;
+
+    // Related scenes
+    h += `<div class="ed-row"><label>关联场景</label>`;
+    h += `<div id="ed-scenes">`;
+    (p.related_scenes || []).forEach((s, i) => {
+        h += `<span class="scene-tag">${esc(s)}<span class="x" onclick="removeScene(${i})">&times;</span></span>`;
+    });
+    h += `</div>`;
+    h += `<div style="display:flex;gap:.3rem;margin-top:.3rem"><input id="ed-scene-new" placeholder="输入场景名，回车添加" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.25rem .4rem;border-radius:3px;font-size:.75rem"><button class="btn" onclick="addScene()" style="font-size:.72rem">添加</button></div>`;
+    h += `</div>`;
+
+    // Connections
+    h += `<div class="ed-row"><label>连接到（后续情节点）</label>`;
+    h += `<div id="ed-conns">`;
+    (p.connections || []).forEach((cid, i) => {
+        const target = plotPoints.find(t => t.id === cid);
+        const label = target ? target.title : cid;
+        h += `<span class="conn-tag" title="${esc(label)}">${esc(cid)}<span class="x" onclick="removeConn(${i})">&times;</span></span>`;
+    });
+    h += `</div>`;
+    h += `<div style="display:flex;gap:.3rem;margin-top:.3rem"><select id="ed-conn-new" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.25rem .4rem;border-radius:3px;font-size:.75rem">`;
+    h += `<option value="">选择目标节点...</option>`;
+    plotPoints.filter(t => t.id !== id && !(p.connections || []).includes(t.id))
+        .forEach(t => h += `<option value="${t.id}">${esc(t.id + ': ' + (t.title||'').substring(0,20))}</option>`);
+    h += `</select><button class="btn" onclick="addConn()" style="font-size:.72rem">添加</button></div>`;
+    h += `</div>`;
+
+    // Plot delivery
+    const pd = p.plot_delivery || {};
+    h += `<div style="margin-top:.6rem;border-top:1px solid var(--border);padding-top:.5rem">`;
+    h += `<div class="d-label" style="font-size:.78rem;color:var(--gold)">情节传递标注</div>`;
+    h += `<div class="ed-row"><label>关键情节</label><input id="pd-key" value="${esc(pd.key_plot || '')}"></div>`;
+    h += `<div class="ed-row"><label>情感情节</label><input id="pd-emo" value="${esc(pd.emotional || '')}"></div>`;
+    h += `<div class="ed-row"><label>动作</label><textarea id="pd-act" style="min-height:40px">${esc(pd.action || '')}</textarea></div>`;
+    h += `</div>`;
+
+    $('det-body').innerHTML = h;
+    $('detail').classList.add('open');
+
+    // Enter key for scene add
+    const sceneInput = $('ed-scene-new');
+    if (sceneInput) sceneInput.addEventListener('keydown', e => { if (e.key === 'Enter') addScene(); });
+}
+
+function saveNodeEdit() {
+    if (!selectedId) return;
+    const p = plotPoints.find(x => x.id === selectedId);
+    if (!p) return;
+
+    p.title = $('ed-title').value;
+    p.description = $('ed-desc').value;
+    p.plot_type = $('ed-type').value;
+    p.loops = $('ed-loops').value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+
+    // Plot delivery
+    const pd = {
+        key_plot: $('pd-key').value,
+        emotional: $('pd-emo').value,
+        action: $('pd-act').value,
+    };
+    if (pd.key_plot || pd.emotional || pd.action) p.plot_delivery = pd;
+    else delete p.plot_delivery;
+
+    dirty = true;
+    updateDirty();
+    renderAll();
+    toast('节点已更新');
+    showDetail(selectedId);
+}
+
+function addScene() {
+    if (!selectedId) return;
+    const p = plotPoints.find(x => x.id === selectedId);
+    if (!p) return;
+    const val = $('ed-scene-new').value.trim();
+    if (!val) return;
+    if (!p.related_scenes) p.related_scenes = [];
+    p.related_scenes.push(val);
+    dirty = true; updateDirty();
+    showDetail(selectedId);
+}
+
+function removeScene(idx) {
+    if (!selectedId) return;
+    const p = plotPoints.find(x => x.id === selectedId);
+    if (!p || !p.related_scenes) return;
+    p.related_scenes.splice(idx, 1);
+    dirty = true; updateDirty();
+    showDetail(selectedId);
+}
+
+function addConn() {
+    if (!selectedId) return;
+    const p = plotPoints.find(x => x.id === selectedId);
+    if (!p) return;
+    const val = $('ed-conn-new').value;
+    if (!val) return;
+    if (!p.connections) p.connections = [];
+    if (!p.connections.includes(val)) p.connections.push(val);
+    dirty = true; updateDirty();
+    renderAll();
+    showDetail(selectedId);
+}
+
+function removeConn(idx) {
+    if (!selectedId) return;
+    const p = plotPoints.find(x => x.id === selectedId);
+    if (!p || !p.connections) return;
+    p.connections.splice(idx, 1);
+    dirty = true; updateDirty();
+    renderAll();
+    showDetail(selectedId);
+}
+
+function closeDetail() {
+    $('detail').classList.remove('open');
+    selectedId = null;
+    document.querySelectorAll('.node.selected').forEach(el => el.classList.remove('selected'));
+}
+
+// ── Add / Delete Nodes ──────────────────────────
+function addNode() {
+    const maxId = plotPoints.reduce((max, p) => {
+        const m = p.id.match(/pp_(\d+)/);
+        return m ? Math.max(max, parseInt(m[1])) : max;
+    }, 0);
+    const newId = `pp_${String(maxId + 1).padStart(3, '0')}`;
+
+    // Place near center of viewport
+    const wrap = $('canvas-wrap');
+    const rect = wrap.getBoundingClientRect();
+    const cx = (rect.width / 2 - panX) / zoom;
+    const cy = (rect.height / 2 - panY) / zoom;
+
+    plotPoints.push({
+        id: newId,
+        title: '新情节点',
+        description: '',
+        loops: [1],
+        related_scenes: [],
+        plot_type: 'key_plot',
+        connections: [],
+        x: cx - NODE_W / 2,
+        y: cy - NODE_H / 2,
+    });
+
+    dirty = true; updateDirty();
+    renderAll();
+    selectNode(newId);
+    toast('已添加新节点: ' + newId);
+}
+
+function deleteNode() {
+    if (!selectedId) return;
+    if (!confirm('确定要删除这个情节点吗？')) return;
+
+    // Remove from all connections
+    for (const p of plotPoints) {
+        if (p.connections) {
+            p.connections = p.connections.filter(c => c !== selectedId);
+        }
+    }
+
+    plotPoints = plotPoints.filter(p => p.id !== selectedId);
+    closeDetail();
+    dirty = true; updateDirty();
+    renderAll();
+    toast('节点已删除');
+}
+
+// ── Zoom / Pan ──────────────────────────────────
+function applyTransform() {
+    $('canvas').style.transform = `translate(${panX}px,${panY}px) scale(${zoom})`;
+    $('zoom-info').textContent = Math.round(zoom * 100) + '%';
+}
+
+function onWheel(e) {
+    e.preventDefault();
+    const factor = e.deltaY > 0 ? 0.92 : 1.08;
+    const newZoom = Math.max(0.15, Math.min(2.5, zoom * factor));
+    const rect = $('canvas-wrap').getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    panX = mx - (mx - panX) * (newZoom / zoom);
+    panY = my - (my - panY) * (newZoom / zoom);
+    zoom = newZoom;
+    applyTransform();
+}
+
+// ── Positions Persistence ───────────────────────
+function savePositions() {
+    const pos = {};
+    for (const p of plotPoints) pos[p.id] = { x: Math.round(p.x || 0), y: Math.round(p.y || 0) };
+    localStorage.setItem(`ndc_plotflow_${unit}`, JSON.stringify(pos));
+}
+
+function loadPositions() {
+    const raw = localStorage.getItem(`ndc_plotflow_${unit}`);
+    if (!raw) return;
+    try {
+        const pos = JSON.parse(raw);
+        for (const p of plotPoints) {
+            if (pos[p.id]) {
+                p.x = pos[p.id].x;
+                p.y = pos[p.id].y;
+            }
+        }
+    } catch(e) {}
+}
+
+function resetLayout() {
+    localStorage.removeItem(`ndc_plotflow_${unit}`);
+    for (const p of plotPoints) { delete p.x; delete p.y; }
+    autoLayout();
+    savePositions();
+    renderAll();
+    toast('布局已重置');
+}
+
+// ── Save All to Supabase ────────────────────────
+async function saveAll() {
+    if (!connected) { toast('未连接到 Supabase', 'err'); return; }
+    const sbKey = `plot_flow_${unit}`;
+
+    // Save positions into data
+    savePositions();
+
+    try {
+        const { error } = await db.from('config_tables').upsert({
+            name: sbKey,
+            data: plotPoints,
+            updated_by: 'story_flow',
+        });
+        if (error) throw error;
+        dirty = false;
+        updateDirty();
+        toast('已保存到云端');
+    } catch(e) {
+        toast('保存失败: ' + e.message, 'err');
+    }
+}
+
+function updateDirty() {
+    const btn = $('btn-save');
+    if (dirty) btn.classList.add('dirty');
+    else btn.classList.remove('dirty');
+}
+
+// ── Utils ───────────────────────────────────────
+function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+function toast(msg, type) {
+    const t = $('toast'); t.textContent = msg;
+    t.className = 'toast show' + (type === 'err' ? ' err' : '');
+    clearTimeout(t._t); t._t = setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── Events ──────────────────────────────────────
+function setupEvents() {
+    const wrap = $('canvas-wrap');
+
+    wrap.addEventListener('mousedown', e => {
+        const nodeEl = e.target.closest('.node');
+        if (nodeEl) {
+            onNodeMouseDown(e, nodeEl.dataset.id);
+            return;
+        }
+        // Pan start: click on empty area
+        if (e.button === 0 || e.button === 1 || e.altKey) {
+            isPanning = true;
+            panStart = { x: e.clientX - panX, y: e.clientY - panY };
+            wrap.classList.add('panning');
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    wrap.addEventListener('wheel', onWheel, { passive: false });
+
+    document.addEventListener('keydown', e => {
+        // Don't capture when typing in inputs
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveAll(); }
+        if (e.key === 'Escape') closeDetail();
+        if (e.key === '=' || e.key === '+') { zoom = Math.min(2.5, zoom * 1.1); applyTransform(); }
+        if (e.key === '-') { zoom = Math.max(0.15, zoom * 0.9); applyTransform(); }
+        if (e.key === '0') { zoom = 1; panX = 60; panY = 30; applyTransform(); }
+        if (e.key === 'Delete' && selectedId) deleteNode();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+# ============================================================
+# Loop 2 — 酒吧的秘密 / The Bar's Secret
+# 本循环说谎者: 无（exposeNpcId=0，纯探索 + Tommy 讯问）
+# 核心揭示: Webb 的酒吧是敲诈勒索帝国前台；Tommy 是曾经的执行人；
+#           Rita 是 Whale 间谍；Jimmy 有动机伏笔；Vivian 心如死灰
+# 前序事件: L1 Rosa 教程级指证——击破谎言1（Vivian手枪无硝烟），
+#           谎言2（23:30只有Vivian在里面）暂时无法反驳
+# Loop 结束条件: 完成所有关键对话 + 收集指定证据（非 Expose 触发，需程序确认逻辑）
+# ChapterConfig exposeNpcId: 0
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Rosa 所指控的 23:30 目击站得住脚吗？Webb 死前到底在做什么生意？"
+    secondary:
+      - "Webb 身为酒吧老板，钱从哪里来？是否有见不得光的收入？"
+      - "Tommy 是 Webb 的心腹——他知道多少？"
+      - "Vivian 为何选择自认有罪、心如死灰？"
+      - "Jimmy 的工资单和移民身份让他有没有经济动机？"
+  known_facts:
+    # ── L1 post_expose_knowledge 累积 ──
+    - "Webb 在宴会上被枪杀"
+    - "Rosa 指认 Vivian 是凶手（声称 23:30 目击 Vivian 射杀 Webb）"
+    - "Vivian 的手枪（.25 ACP）无硝烟反应——物证不支持 Rosa 的指控"
+    - "Rosa 谎言2（23:30 只有 Vivian 在里面）暂时无法反驳——Vivian 仍有嫌疑"
+    - "保密侦探协议(1101)：Zack 受 Webb 委托保护 Vivian + 财产继承条款"
+    - "Vivian 自认有罪，被 Morrison 禁足化妆室"
+    - "Zack 凭协议书获得 Morrison 的 72 小时调查权"
+    - "Webb 似乎预感到自己会死——主动雇用 Zack 是最后的保障安排"
+  new_directions:
+    - direction: "Webb 的黑钱来源"
+      trigger: "Webb 办公室可发现个人收入记录(1203)与酒吧账本(1204)——两本账数字差距悬殊"
+    - direction: "Tommy 知道多少"
+      trigger: "收入差额引发追问，Tommy 是 Webb 的唯一心腹，讯问时机成熟"
+    - direction: "Vivian 的心理状态与遗产条款"
+      trigger: "协议书(1101)含财产继承条款——Zack 需要告知 Vivian，观察她的反应"
+    - direction: "Jimmy 的经济困境"
+      trigger: "Jimmy 厨房可发现工资单(1201)——与案件背景的经济动机关联"
+  post_expose_knowledge:
+    # ── L3 known_facts 的来源 ──
+    - "Webb 月收入 $15,000，酒吧净利润仅 $4,000——$11,000 差额来自敲诈勒索（酒吧是勒索帝国前台）"
+    - "Tommy 是曾经的执行人，但表示自己已不再参与"
+    - "Webb 自 11 月中旬沉迷 Rita 后停止勒索活动，Tommy 认为他惹上了大人物想转移财产跑路"
+    - "Rita 是 Whale 的间谍（Tommy 在 L2 暗示，L3 进一步确认）"
+    - "Jimmy 经济极度困难（薪水微薄、移民身份办理失败）——动机铺垫"
+    - "Vivian 禁足，心如死灰，听到遗产消息后反锁化妆室"
+    - "Tommy 办公室出现过可疑弹壳，被 Tommy 发现后拿回（伏笔）"
+
+# ═══════════════════════════════════════
+# PART 1: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L2（无 Opening 硬切，直接进入自由探索）:
+#   Vivian 化妆室(1105)  → 🔓探索（Vivian 禁足；心如死灰；听到遗产消息后反锁）
+#   Jimmy 厨房(1106)     → 🔓探索（Jimmy 工资单；缺钱；厨房工作表不在场证明）
+#   Tommy 办公室(1107)   → 🔓探索（讯问 Tommy；假油画；弹壳被 Tommy 夺回）
+#   歌舞厅(1101)         → 🔓探索（VIP 合影；花瓶现场图——无 NPC）
+#   Webb 办公室(1102)    → 🔓探索（收入记录；账本；客户记录——无 NPC）
+#
+# 注: L2 无 opening 硬切场景；玩家直接在酒吧内开始自由探索。
+
+scenes:
+  # ── SC1105 Vivian 化妆室 ──
+  - id: 1105
+    name: "Vivian 化妆室"
+    note: "L2 Vivian 被 Morrison 禁足于此。此处可与 Vivian 对话（持班表可搜证）；听到遗产条款后 Vivian 沉默，随即反锁房门——触发后续剧情节点"
+    evidence:
+      - id: 1206
+        name: "Vivian 持班表"
+        note: "场景道具——记录 Vivian 每晚准时为 Webb 送酒的规律（23:30 前后）；为 L3 '有人嫁祸 Vivian' 铺垫"
+    npcs:
+      vivian_002:
+        # ── 基本信息 ──
+        talk: loop2_vivian_talk
+        is_liar: false
+        motive: "彻底放弃抗辩——自认有罪的状态下拒绝给自己申辩；听到遗产消息后情绪崩溃，反锁房门"
+        mindset: "心如死灰——L1 被 Morrison 宣布禁足后陷入麻木；协议书遗产条款触发短暂的情绪波动，最终选择反锁，不愿面对任何人"
+
+        # ── 1. NPC 已知信息（模式 B：后续出场） ──
+        # 知识池见 npc_knowledge_pools.yaml → vivian
+        awareness:
+          - content: "自己被 Morrison 正式禁足化妆室，外界对自己的看法是'凶手'"
+            trigger: "L1 Expose 后 Morrison 宣布禁足"
+          - content: "Zack 拿着协议书进来告知财产继承条款——Webb 曾要保护她，但这让她更加痛苦，而非释然"
+            trigger: "L2 Zack 带着协议书(1101)来到化妆室"
+
+        active_topics:
+          - "持班表（承认自己每晚定点送酒是众所周知的规律）"
+          - "自认有罪的心理状态（可表达，但不解释细节）"
+          - "Webb 让她参与勒索的往事（片段流露，不完整）"
+        withheld_topics:
+          - "具体的勒索对象和金额（L4 指证后释放）"
+          - "Don't be bothering me 那晚的细节（L4 指证后 Vivian 主动说出）"
+          - "对 Webb 真实情感的完整表述（L4 情感高潮时释放）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"Vivian 自认有罪——为什么不替自己辩护？\" # 8"
+          - "\"协议书遗产条款——Webb 为什么要保护你？\" # 7"
+          - "\"Rosa 的指控是假的吗——你真的在场吗？\" # 9"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2061001  # Vivian: Webb 让她去帮助勒索别人，她恨他
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── SC1106 Jimmy 厨房 ──
+  - id: 1106
+    name: "Jimmy 厨房"
+    note: "L2 首次有实质对话。Jimmy 在厨房忙碌——可搜证（工资单、厨房工作表）；Jimmy 对 Zack 的询问保持低调，刻意表现为'只是个厨师'"
+    evidence:
+      - id: 1201
+        name: "Jimmy 厨房工资单"
+        note: "场景道具——暗示 Jimmy 收入极低、经济困境（移民身份导致薪资受限）；动机铺垫，不在 L2 提供可操作的指证功能"
+      - id: 1202
+        name: "Jimmy 不在场证明（厨房工作表）"
+        note: "关键——L5 Jimmy 指证 R1 打破时的核心证据。记录 23:00-23:30 厨房工作人员签到，显示 Jimmy 全程在岗。L2 时玩家仅获取，不需立即使用"
+    npcs:
+      jimmy_002:
+        # ── 基本信息 ──
+        talk: loop2_jimmy_talk
+        is_liar: false  # L2 Jimmy 在对话中不说实质性谎言，只是保持沉默和回避
+        motive: "维持'普通厨师'的低调形象——绝不主动透露任何与案件相关的信息"
+        mindset: "表面镇定、礼貌克制——内心知道自己是凶手，L1 指证结果正在观察 Zack 的调查走向；刻意把自己的形象控制在'勤劳但穷困的移民厨师'"
+
+        # ── 1. NPC 已知信息（首次出场，模式 A） ──
+        # 知识池见 npc_knowledge_pools.yaml → jimmy
+        active_topics:
+          - "厨师日常（工作、工资、移民身份困境——正面回答不涉及谎言）"
+          - "对 Webb 的表面态度（感激老板给工作机会，表面无异议）"
+        withheld_topics:
+          - "自己是杀 Webb 的真凶"
+          - "23:00-23:05 趁鼓点高潮段实施枪击的细节"
+          - "23:30 在二楼空射制造假死亡时间"
+          - "威胁纸条是自己写的"
+          - "Whale 合同与 Anna 怀孕的关联"
+          - "歌点单子记录真实枪击时间（已意识到此威胁）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"工资单放在厨房——Jimmy 的工资很低，他需要钱吗？\" # 6"
+          - "\"厨房工作表——23:30 前后 Jimmy 在哪里？\" # 7"
+          - "\"Jimmy 是否了解 Webb 的生意？他知道多少？\" # 5"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids: []
+        # L2 Jimmy 不提取证词。Jimmy 在对话中保持回避，无可入库的关键陈述。
+        # L3 突发场景触发谎言证词(3071001)。
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── SC1107 Tommy 办公室 ──
+  - id: 1107
+    name: "Tommy 办公室"
+    note: "L2 Tommy 首次实质对话——讯问核心场景。玩家在 Webb 办公室收集账本(1203/1204)后返回质问 Tommy；假油画(1208)在此搜证；弹壳事件在此发生（弹壳被 Tommy 发现并夺回，不入库）"
+    evidence:
+      - id: 1208
+        name: "歌舞厅假油画"
+        note: "场景道具——Tommy 办公室内的高仿古董画；Tommy 讯问时用于说明'古董买卖'说法站不住脚（配合笔迹鉴定1701揭示 Tommy 亲自记账）"
+      - id: 1209
+        name: "花瓶现场图"
+        note: "场景道具——歌舞厅/Tommy 办公室附近的现场照片；Tommy 讯问辅助道具，环境叙事用"
+    # 注: 弹壳在 Tommy 抽屉发现后被 Tommy 夺回，不分配 L2 ID，不入库。
+    # L5 Tommy 主动交出时以 1501「久远陈旧的子弹」首次入库。
+    npcs:
+      tommy_002:
+        # ── 基本信息 ──
+        talk: loop2_tommy_talk
+        is_liar: true  # ⚠ Tommy 在讯问中主动声称酒吧只做私酒生意（谎言证词2051001）
+        motive: "在 Zack 的收入差额质疑面前尽量少说——接受询问但只透露有限信息；暗示'大人物'但不点名"
+        mindset: "审慎的配合者——对 Zack 持有一定好感（Webb 的委托让 Tommy 觉得 Zack 是可信的），但自我保护本能驱使他隐瞒最危险的细节；被逼到收入差额时开始松口"
+
+        # ── 1. NPC 已知信息（首次出场，模式 A） ──
+        # 知识池见 npc_knowledge_pools.yaml → tommy
+        active_topics:
+          - "酒吧私酒生意（谎言起点——声称只做私酒）"
+          - "Webb 沉迷 Rita 的情况（愿意透露，不涉及危险信息）"
+          - "Webb 想跑路（暗示性透露，不明说原因）"
+          - "Rita 是 Whale 间谍（暗示，不直接点名 Whale）"
+          - "古董买卖（借口，被笔迹鉴定击破后承认参与记账）"
+        withheld_topics:
+          - "Tommy 是执行人的完整细节（L3 才更坦诚）"
+          - "弹壳的来源和具体意义（L5 才主动交出）"
+          - "Morrison 与 Whale 的关联（Tommy 只有模糊认知，L3 才提）"
+          - "Jimmy 的真实身份（Tommy 不知道）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"收入账本——$15,000 vs $4,000，差额 $11,000 去哪了？\" # 10"
+          - "\"客户记录(1205)笔迹分析后(1701)——是 Tommy 亲自记账？\" # 9"
+          - "\"Webb 在做什么生意？酒吧的真正收入来源是什么？\" # 8"
+          - "\"Rita 是谁——Webb 为什么沉迷她？\" # 6"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2051001  # ⚠谎言: Tommy 声称酒吧只做私酒生意（讯问话题1起点）
+          - 2051002  # Tommy: Webb 沉迷 Rita 后没做勒索了，惹上大人物想跑路
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── SC1101 歌舞厅 ──
+  - id: 1101
+    name: "歌舞厅"
+    note: "L2 自由探索。L1 案发现场外围区域。无 NPC，纯搜证。VIP 合影在此发现；注意：花瓶现场图归属 Tommy 办公室场景（1107），不在此重复"
+    evidence:
+      - id: 1207
+        name: "VIP 合影"
+        note: "场景道具——歌舞厅墙上的顾客合影；环境叙事，暗示酒吧 VIP 客户身份复杂；配合 L2 敲诈勒索背景补充氛围"
+
+  # ── SC1102 Webb 办公室 ──
+  - id: 1102
+    name: "Webb 办公室"
+    note: "L2 搜证核心场景。L1 是'Webb 会客室/案发现场'（剧情场景）；L2 重新解锁后可深入搜证 Webb 的文件。收入差额是 Tommy 讯问的前置条件——玩家需先在此获取1203+1204，再去质问 Tommy"
+    evidence:
+      - id: 1203
+        name: "Webb 个人收入记录（月 $15,000）"
+        note: "关键——Tommy 讯问话题1核心证据。与账本(1204)形成 $11,000 差额，直接反驳'只做私酒生意'的谎言"
+      - id: 1204
+        name: "酒吧收入账本（月净 $4,000）"
+        note: "关键——Tommy 讯问话题1核心证据（配合1203使用）。账本数字远低于 Webb 实际收入，揭示隐性收入来源"
+      - id: 1205
+        name: "客户记录（笔迹待分析→Tommy）"
+        note: "关键——可分析(canAnalyzed)→派生1701客户记录笔迹鉴定。分析前只是名单，分析后揭示笔迹是 Tommy 的，证明他亲自记录勒索客户"
+
+# ═══════════════════════════════════════
+# 派生证据
+# ═══════════════════════════════════════
+
+derived_evidence:
+  - id: 1701
+    name: "客户记录笔迹鉴定"
+    source: canAnalyzed(1205)
+    note: "关键——Tommy 讯问话题2核心。分析1205后获得，证明客户记录的手写内容笔迹与 Tommy 其他文件一致，揭示 Tommy 亲自记账（否定'古董买卖'借口）"
+
+# ═══════════════════════════════════════
+# Tommy 讯问说明（Talk 系统实现）
+# ═══════════════════════════════════════
+#
+# L2 无标准 Expose（exposeNpcId=0）。
+# Tommy 讯问通过 Talk 系统的分支选择实现。
+# 玩家在自由探索中收集足够证据后，可在对话中出示证据触发特定分支：
+#
+# 话题 1——收入差额
+#   前置条件: 玩家持有1203（个人收入记录）+ 1204（账本）
+#   Tommy 谎言(2051001): "酒吧只做私酒生意"
+#   出示证据: 1203 + 1204 → $11,000 差额无法解释
+#   结果: Tommy 承认"有些额外收入"，承认勒索帝国的存在，但自称已退出
+#
+# 话题 2——古董买卖/笔迹
+#   前置条件: 玩家持有1701（笔迹鉴定，由1205分析得来）
+#   Tommy 托词: "那些是古董买卖的客户记录"（指向1208假油画）
+#   出示证据: 1701 → 笔迹是 Tommy 本人的、与勒索客户名单一致
+#   结果: Tommy 承认曾经是执行人，但声称自己已不再参与（Webb 停止勒索后自己也退出了）
+#
+# 讯问结论（自动触发）:
+#   - Webb 的酒吧是敲诈勒索帝国的前台
+#   - Tommy 是曾经的执行人
+#   - Webb 沉迷 Rita 后停止勒索，想转移财产跑路，惹上了大人物（暗示 Whale）
+#   - Rita 是 Whale 派来的间谍
+
+# ═══════════════════════════════════════
+# PART 2: 疑点列表
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 2001
+    text: "Webb 真实收入远超酒吧营业额——差额 $11,000 来自哪里？"
+    unlock_condition: "持有 Webb 个人收入记录(1203) + 酒吧收入账本(1204)（两件物证交叉验证）"
+  - id: 2002
+    text: "客户记录的笔迹——是 Tommy 亲自操刀敲诈勒索？"
+    unlock_condition: "持有客户记录(1205) + 完成笔迹鉴定(1701)（物证派生分析）"
+  - id: 2003
+    text: "Rita 是谁？Tommy 为什么暗示她是间谍？"
+    unlock_condition: "完成 Tommy 讯问话题2（获得证词2051002）+ 持有 VIP 合影(1207)（证词×物证交叉）"
+  - id: 2004
+    text: "Jimmy 厨房工作表记录 23:00-23:30 他在场——那枪声是从哪里来的？"
+    unlock_condition: "持有厨房工作表(1202) + 已知 Vivian 手枪无硝烟（L1 known_facts）（物证×前序知识交叉）"
+
+# ═══════════════════════════════════════
+# 自检清单（Validation）
+# ═══════════════════════════════════════
+#
+# A. 结构完整性
+#   [PASS] player_context（goals/known_facts/new_directions/post_expose_knowledge）全部存在
+#   [PASS] 5个场景全部列出（1105/1106/1107/1101/1102）
+#   [PASS] 无 expose 段落（L2 exposeNpcId=0，符合设计）
+#   [PASS] 派生证据 + Tommy 讯问说明块单独列出
+#   [PASS] doubts 列表存在
+#
+# B. 证据覆盖
+#   [PASS] 1201(SC1106) 1202(SC1106) 1203(SC1102) 1204(SC1102)
+#          1205(SC1102) 1206(SC1105) 1207(SC1101) 1208(SC1107)
+#          1209(SC1107) 1701(派生←1205) 全部分配
+#   [PASS] 弹壳未分配 ID（设计意图：L2被夺回，L5才入库为1501）——符合讨论结论
+#
+# C. NPC 条目
+#   [PASS] Vivian(106) 模式B：awareness + active/withheld + player_inquiry + testimony_ids + connoisseur
+#   [PASS] Jimmy(107) 模式A：active/withheld + player_inquiry + testimony_ids(空) + connoisseur
+#   [PASS] Tommy(105) 模式A：active/withheld + player_inquiry + testimony_ids + connoisseur
+#   [PASS] 歌舞厅(1101)/Webb办公室(1102) 无NPC，无NPC条目——正确
+#
+# D. 目标对齐
+#   [PASS] goals.primary 聚焦 Rosa 指控可靠性 + Webb 生意——与设计文档"好奇→发现暗流"一致
+#   [PASS] post_expose_knowledge 与 loop3_state.yaml 的 known_facts 完全对应
+#
+# E. 信息节奏
+#   [PASS] 未透露 L3 信息（玻璃碎片/威胁纸条/Whale合同/真实枪击时间）
+#   [PASS] 未透露 L4+ 信息（.45弹壳具体意义/Morrison翻脸/Vivian绝笔信）
+#   [PASS] Tommy 暗示"大人物"但不点名 Whale——节奏控制正确
+#   [PASS] Jimmy withheld_topics 完整覆盖 L3-L5 的关键揭示
+#
+# F. 鉴赏力
+#   [PASS] 所有 NPC connoisseur: [] ——Unit1 无鉴赏力系统，符合任务要求
+#
+# G. Expose 逻辑
+#   [PASS] 无 expose 段落，L2 设计为无指证循环——N/A（符合 exposeNpcId=0）
+#   [PASS] Tommy 讯问作为 Talk 系统分支说明块，格式正确（非 expose 结构）
+#   [PASS] 证词2051001标注⚠谎言，在 NPC 条目 testimony_ids 中正确标注
+#
+# validation_status: PASS

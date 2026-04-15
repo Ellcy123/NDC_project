@@ -1,0 +1,311 @@
+# ============================================================
+# Loop 1 — 枪响之夜
+# 本循环说谎者: Rosa (部分指证：仅击破谎言1，谎言2失败)
+# 核心揭示: 表面案件——Webb 被杀，Vivian 是最大嫌疑人；
+#           Zack 获得 72 小时调查权
+# 前序事件: Zack 参加蓝月亮酒吧舞会，与 Webb 签保密侦探合同
+#           23:30 枪响，Morrison 宣布 Webb 死亡，Rosa 指认 Vivian
+# 时间: 1925年，案发当夜
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Webb 死了，Vivian 被指认为凶手。我签了合约要保护她——她真的是凶手吗？"
+    secondary:
+      - "Rosa 的目击证词是真的吗？她说 Vivian 在 23:30 开枪——但手枪上没有硝烟反应"
+      - "Webb 为什么在临死前急着雇佣我？他预感到了什么？"
+      - "Morrison 为什么急于定案？他有什么立场？"
+  known_facts: []  # L1，玩家什么都不知道
+  new_directions:
+    - direction: "Vivian 手枪无硝烟反应"
+      trigger: "检查 Vivian 的手枪 → 枪口无硝烟、弹匣满装 → 不可能刚刚开过枪"
+    - direction: "Rosa 证词疑点"
+      trigger: "Rosa 无法解释为何手枪无硝烟，但谎言2（23:30时间线目击）还无法反驳——留给后续调查"
+    - direction: "Webb 的委托内容"
+      trigger: "协议书揭示 Webb 预感自己会死，并要求 Zack 保护 Vivian、确保她继承遗产"
+  post_expose_knowledge:
+    - "Vivian 的手枪在案发当晚未被使用（无硝烟、弹匣完整）"
+    - "Rosa 的证词存在矛盾：谎言1（手枪物证层面）被击破"
+    - "Rosa 谎言2（时间线目击）暂时无法推翻，Vivian 仍有嫌疑"
+    - "Zack 凭协议书获得了 Morrison 的 72 小时调查许可"
+    - "真正的调查刚刚开始——Rosa 为什么要指认 Vivian？"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇（全硬切剧情）
+# ═══════════════════════════════════════
+#
+# 场景状态表:
+#   酒吧歌舞厅/宴会厅   → 🎬开篇硬切 (舞会氛围，四人相遇)
+#   Webb 会客室         → 🎬剧情硬切 (签约 → 案发 → Morrison 宣布死亡)
+#   酒吧大堂           → ⚔️指证    (Rosa 指认 + Zack 反驳 → 部分击破)
+#   酒吧大门口         → 🎬剧情硬切 (激励事件：Emma 提出疑点，进入自由探索)
+
+opening:
+  # ── 阶段一：宴会厅（🎬开篇硬切） ──
+  stage_1:
+    scene_id: SC1001  # 酒吧歌舞厅/宴会厅
+    characters: [Zack, Emma, Webb, Vivian]
+    purpose: "舞会进行中，《芝加哥狂想曲》演奏，四人相遇。展现 Webb/Vivian 关系，建立角色印象。"
+    note: "全程剧情演出，无自由探索。《芝加哥狂想曲》是重要伏笔——音乐高潮段将成为 L5 证明真实死亡时间的关键。"
+
+    webb_109:
+      is_liar: false
+      motive: "雇佣 Zack 做最后的保障安排——他相信自己快死了"
+      mindset: "表面热情好客，内心焦虑——舞会结束后需要私下见 Zack"
+      knows:
+        - "自己可能在一两天内死去"
+        - "想让 Zack 签署保密协议：保护 Vivian 安全，确保她继承遗产"
+        - "已与 Whale 产生矛盾（细节 L3 揭晓）"
+      does_not_know:
+        - "具体的威胁来自 Jimmy 还是直接来自 Whale"
+        - "Rita 的真实身份（Whale 的间谍，L3 揭晓）"
+      lie: null
+      connoisseur: []
+
+    emma_102:
+      is_liar: false
+      motive: "引导 Zack 进入上流俱乐部宴会厅，介绍圈子里的人"
+      mindset: "轻松社交模式，还不知道今晚会出事"
+      knows:
+        - "Zack 受 Webb 邀请参加舞会"
+        - "Webb 在上流社会有一定声望"
+      does_not_know:
+        - "Webb 与 Zack 签约的真实内容"
+        - "今晚会发生谋杀案"
+      lie: null
+      connoisseur: []
+
+    vivian_106:
+      is_liar: false
+      motive: "正常出席舞会，是 Webb 的女伴"
+      mindset: "表面优雅，内心对 Webb 的感情复杂（L2 揭晓更多）"
+      knows:
+        - "Webb 希望她继承他的财产"
+        - "自己在协助 Webb 的一些事（细节 L2 揭晓）"
+      does_not_know:
+        - "Zack 今晚与 Webb 签约的内容"
+        - "今晚 Webb 会死"
+      lie: null
+      connoisseur: []
+
+  # ── 阶段二：Webb 会客室（🎬剧情硬切） ──
+  stage_2:
+    scene_id: SC1002  # Webb 会客室
+    characters: [Zack, Webb, Morrison]
+    purpose: "签署保密侦探合同 → 23:30 枪响 → Morrison 带人冲入宣布 Webb 死亡"
+    note: |
+      剧情分为两段：
+      (1) 签约段：Webb 向 Zack 说明委托内容，双方签署协议书（关键证据1）
+      (2) 案发段：23:30 枪响后室内一片狼藉，Morrison 进入，宣布 Webb 死亡
+
+    webb_109_signing:
+      is_liar: false
+      motive: "让 Zack 签下合同，保证 Vivian 的安全与遗产继承"
+      mindset: "语气平静但暗含紧迫——'如果我出了什么事，Vivian 的安全就靠你了'"
+      knows:
+        - "保密侦探合同内容：保护 Vivian、确保她继承遗产、给 Zack 在酒吧内的自由调查权"
+        - "自己的生命可能处于危险中"
+      does_not_know:
+        - "Jimmy 今晚就会动手"
+      lie: null
+      connoisseur: []
+
+    morrison_104_entering:
+      is_liar: false  # 此时未说谎，只是陈述现场
+      motive: "作为警察进入现场处理案件"
+      mindset: "公事公办的外表——但后续会主动推动定案"
+      knows:
+        - "Webb 已死亡"
+        - "（暗中）与 Whale 有关联（L6 揭晓）"
+      does_not_know: []  # 此阶段不对玩家显示
+      lie: null
+      connoisseur: []
+
+  # ── 阶段三：酒吧大堂（⚔️指证场景） ──
+  # 详见 PART 3: expose 节
+
+  # ── 阶段四：酒吧大门口（🎬激励事件） ──
+  stage_4:
+    scene_id: SC1003  # 酒吧大门口
+    characters: [Zack, Emma]
+    purpose: "激励事件：Emma 帮 Zack 梳理委托内容，提出核心疑点，正式进入自由探索"
+    note: "本阶段的对话建立 L2 探索目标：Webb 真正怀疑的凶手是谁？"
+
+    emma_102:
+      is_liar: false
+      motive: "帮助 Zack 整理思路，作为他的搭档提出有价值的问题"
+      mindset: "冷静分析——意识到事情比表面复杂"
+      knows:
+        - "Zack 与 Webb 签订了保密侦探合同"
+        - "合同包括：调查 Webb 死因、保护 Vivian 安全、确保 Vivian 继承遗产"
+        - "Morrison 给了 Zack 72 小时调查时间"
+      does_not_know:
+        - "Webb 真正怀疑的凶手是谁"
+        - "Rosa 为何指认 Vivian（L3 揭晓）"
+        - "案发的真实时间和过程"
+      lie: null
+      connoisseur: []
+      # 关键台词提示：
+      # Emma 疑点："但现在 Vivian 看上去是 Webb 案的凶手——那 Webb 本人真正怀疑的凶手是谁？"
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索（本 Loop 无自由探索场景）
+# ═══════════════════════════════════════
+#
+# Loop 1 是纯剧情驱动循环（开篇 + 指证）。
+# 自由探索从 Loop 2 开始。
+# 本节预留结构，实际 scenes 列表仅含开篇/指证中的场景。
+
+scenes: []
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景: 酒吧大堂 → ⚔️指证 (Rosa)
+# 背景: Rosa 站出来指认 Vivian，Morrison 准备逮捕 Vivian
+#       Zack 出面质疑 Rosa 的证词
+# 指证性质: 教程级部分指证
+#   - 谎言1（物证层面）→ 成功击破，但结论有限（Vivian 仍有嫌疑）
+#   - 谎言2（时间线层面）→ 失败，无证据反驳
+# exposeNpcId: 103 (Rosa)
+# 设计意图: 教会玩家"有时候证据不够——调查还要继续"
+
+expose:
+  target: "Rosa (103)"
+  total_rounds: 2  # 1轮成功 + 1轮失败
+
+  rosa:
+    talk: loop1_rosa_expose
+    is_liar: true
+    player_inquiry: null  # 指证对象不设 player_inquiry
+    motive: "被 Jimmy 以威胁纸条胁迫（'指认 Vivian，否则杀你女儿'），出于对女儿安全的恐惧作伪证"
+    mindset: "表面强硬——Morrison 撑腰，但内心恐惧多重——害怕 Jimmy 报复，也害怕谎言被揭穿"
+
+    knows:
+      - "自己在作伪证，Vivian 并非她所见到的凶手"
+      - "收到了 Jimmy 的威胁纸条（L3 揭晓）"
+      - "23:20 她外出倒过垃圾——这个细节后续成为关键（L3 揭晓）"
+    does_not_know:
+      - "真正的凶手是 Jimmy"
+      - "Zack 会找到什么证据反驳她（此时）"
+      - "Whale 是整件事的幕后操控者"
+
+    lie:
+      content: "Vivian 在 23:30 进入会客室射杀了 Webb，现场有她的手枪作为证物"
+      truth: "Rosa 被 Jimmy 威胁作伪证，实际上她是 23:20 倒垃圾后发现了弹壳（L3 揭晓完整真相）"
+
+    connoisseur: []
+
+    testimony_ids:
+      - 1031001  # ⚠谎言: "我亲眼看见 Vivian 在 23:30 进入会客室，听到枪声，之后再没有人进入"
+      - 1031002  # ⚠谎言: "那把手枪是 Vivian 的，就在现场"
+
+  # ── 第一轮：物证层面（成功击破） ──
+  # Rosa 声称现场手枪是 Vivian 的，刚刚用来开枪
+  # Zack 检查手枪 → 无硝烟反应，弹匣满装
+  round_1:
+    id: 1
+    lie: "那把手枪是 Vivian 的，刚刚用来开枪杀了 Webb"
+    lie_source: "证词 1031002"
+    usable_evidence:
+      - id: 1102
+        name: "Vivian 的手枪（无硝烟反应）"
+        note: "关键——手枪枪口无硝烟痕迹、弹匣全满，不可能刚刚开过枪"
+    result: |
+      Zack 出示检查结果，击破物证层面谎言：
+      - 枪口无硝烟反应、弹匣完整 → 这把手枪案发当晚未被使用
+      - Rosa 无法解释，陷入沉默
+      - Morrison 被迫承认"这把枪可能不是凶器"
+      - 但 Rosa 补充（谎言2升级）："就算这把枪没有开过，不代表 Vivian 没有用另一把枪——
+        我亲眼看见她在 23:30 进入会客室，之后再没有人进入过"
+      → 结果：谎言1 击破，但 Vivian 嫌疑未消除（她仍可能用了另一把枪）
+
+  # ── 第二轮：时间线层面（失败） ──
+  # Rosa 声称亲眼目击 Vivian 在 23:30 进入会客室
+  # Zack 无法提供任何证据反驳这一目击陈述
+  round_2:
+    id: 2
+    lie: "我亲眼看见 Vivian 在 23:30 进入会客室，之后再没有人进入过"
+    lie_source: "证词 1031001"
+    usable_evidence: []  # 当前无可用证据
+    result: |
+      指证失败——Zack 没有足够的证据：
+      - 无法证明 Rosa 没有目击到 Vivian
+      - 无法证明 23:30 不是案发时间
+      - Morrison 顺势宣布：目击证人证词成立，Vivian 有重大嫌疑
+      - 教程提示（系统）：有时证据不足，需要继续调查收集更多线索
+      → 结果：指证失败，Vivian 仍处于嫌疑之下
+
+  # ── 指证后续：获得调查权 ──
+  post_expose:
+    note: |
+      Zack 拿出 Webb 签署的协议书（1101），指出 Webb 早就预感到自己会被杀害。
+      凭借部分击破 Rosa 谎言的表现，加上协议书的委托依据，Zack 请求给予 72 小时调查时间。
+      Morrison 勉强同意——但态度冷淡，明显不情愿。
+      → 正式进入自由探索阶段
+
+# ═══════════════════════════════════════
+# 关键证据（本 Loop 涉及）
+# ═══════════════════════════════════════
+
+key_evidence:
+  - id: 1101
+    name: "保密侦探合同（协议书）"
+    note: "关键——Webb 与 Zack 签订的委托协议，包含调查 Webb 死因、保护 Vivian、确保遗产继承等条款；作为 Zack 获得 72 小时调查权的依据"
+    obtained_from: "Webb 会客室（签约段）"
+
+  - id: 1102
+    name: "Vivian 的手枪（无硝烟反应）"
+    note: "关键——击破 Rosa 谎言1 的核心证据；枪口无硝烟、弹匣满装，证明案发当晚此枪未被使用"
+    obtained_from: "酒吧大堂（指证场景，Morrison 出示的'证物'）"
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1101
+    text: "手枪没有硝烟反应——Vivian 的手枪不可能刚刚开过枪，但 Rosa 坚称目击了她进入现场"
+    unlock_condition: "item:1102"
+    clear: true  # 本循环指证（谎言1）解决了物证层面的疑点
+    note: "物证疑点已解，但时间线疑点（谎言2）未解——留给 L3"
+
+  - id: 1102
+    text: "Webb 为什么预感自己会死？协议书说明他早就知道危险在接近——是谁？"
+    unlock_condition: "item:1101"
+    clear: false  # 遗留至后续 Loop
+    note: "L2 开始调查 Webb 的秘密生意时逐渐揭晓"
+
+  - id: 1103
+    text: "Rosa 为什么要指认 Vivian？她真的目击了什么，还是另有原因？"
+    unlock_condition: "testimony:1031001 + testimony:1031002"
+    clear: false  # 遗留至 L3
+    note: "L3 发现威胁纸条后揭晓 Rosa 被 Jimmy 胁迫"
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  # A. 结构完整性
+  structure_completeness: "PASS — opening/scenes/expose/doubts/key_evidence 均存在"
+  # B. 证据覆盖
+  evidence_coverage: "PASS — 协议书(1101) + Vivian手枪(1102) 均已分配；L1 仅2件关键证据符合开篇定位"
+  # C. NPC 条目
+  npc_entries: "PASS — Webb/Emma/Vivian(opening) + Rosa(expose) 均有完整knows/does_not_know/lie/motive/mindset"
+  # D. 目标对齐
+  goal_alignment: "PASS — player_context.goals 与讨论结论 L1 设计要点一致"
+  # E. 信息节奏
+  info_pacing: "PASS — Rosa 被纸条胁迫的真相(L3)、Jimmy是凶手(L5)、Morrison勾结Whale(L6) 均未泄露"
+  # F. 鉴赏力
+  connoisseur: "N/A — Unit1 无鉴赏力系统"
+  # G. Expose 逻辑
+  expose_logic: "PASS — 谎言1(手枪硝烟)对应证据1102；谎言2(时间线目击)无证据→故意失败，符合教程设计"
+  # 整体
+  cross_check: "2026-04-14 PASS"
+  overall: "PASS — 可进入对话生成阶段"

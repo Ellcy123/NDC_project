@@ -1,0 +1,432 @@
+# ============================================================
+# Loop 4 — 破碎的金丝雀 / The Broken Canary
+# 本循环说谎者: Vivian (106)，3轮完整指证 + Part7 Morrison 转折
+# 核心揭示: Vivian 不是凶手（但有杀意）；Morrison 在刻意阻碍真相
+# 前序事件: L3 Rosa 指证——案发时间是假的，Rosa 被胁迫，真凶用 .45 ACP
+#           L3 指证后获得 .45 弹壳(1403)；Vivian 仍有嫌疑
+# 情绪弧: 同情→背叛
+# 节奏功能: 转折——Morrison 翻脸 = 中点转折
+# ChapterConfig exposeNpcId: 106 (Vivian)
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Vivian 真的杀了 Webb 吗？如果不是她，那是谁？"
+    secondary:
+      - ".45 弹壳与 Vivian 的 .25 ACP 手枪——型号不符意味着什么？"
+      - "Vivian 自认有罪的真正原因是什么——她在保护谁还是自我放弃？"
+      - "Webb 取消巴黎行究竟是因为 Rita，还是另有原因？"
+      - "Whale 的执行人到底是谁？"
+  known_facts:
+    # ── L1 post_expose_knowledge 累积 ──
+    - "Webb 在 23:30 枪声后被发现死亡，Rosa 指认 Vivian 是凶手"
+    - "Vivian 的手枪（.25 ACP）无硝烟反应——不可能刚刚开过枪，击破 Rosa 谎言1"
+    - "Rosa 谎言2（23:30 只有 Vivian 在里面）暂时无法反驳——Vivian 仍有嫌疑"
+    - "Zack 凭协议书(1101)获得 Morrison 的 72 小时调查权"
+    - "Webb 生前与 Zack 签署保密侦探合同：保护 Vivian、确保她继承遗产"
+    - "Webb 似乎预感到自己会死——主动雇用 Zack 是最后的保障安排"
+    - "Vivian 自认为凶手，对被指控几乎不反抗，心如死灰"
+    # ── L2 post_expose_knowledge 累积 ──
+    - "Webb 月收入 $15,000，酒吧净利润仅 $4,000——$11,000 差额来自敲诈勒索（酒吧是勒索帝国前台）"
+    - "Tommy 是曾经的执行人，但表示自己已不再参与"
+    - "Webb 自 11 月中旬沉迷 Rita 后停止勒索活动，Tommy 认为他惹上了大人物想转移财产跑路"
+    - "Rita 是 Whale 的间谍（Tommy 在 L2 暗示，L3 进一步确认）"
+    - "Jimmy 经济极度困难（薪水微薄、移民身份办理失败）——动机铺垫"
+    - "Vivian 禁足，心如死灰，听到遗产消息后反锁化妆室房门"
+    - "Tommy 办公室出现过可疑弹壳，被 Tommy 发现后拿回（伏笔）"
+    # ── L3 post_expose_knowledge 累积 ──
+    - "真正的枪击发生在 23:20 之前（玻璃碎片在垃圾袋下——碎片早于 Rosa 23:20 倒垃圾前已存在→时序倒推）"
+    - "Rosa 被人威胁伪证：威胁纸条要挟她女儿高额医疗费，被迫在 Morrison 面前指认 Vivian"
+    - "真凶使用 .45 ACP（与 Vivian 的 .25 ACP 型号不符）"
+    - "Rosa 指证后交出一颗 .45 弹壳（ID 1403，L4 正式入库使用）"
+    - "大家都知道 Vivian 每晚给 Webb 送酒——有人刻意利用这个规律嫁祸 Vivian"
+    - "有人与 Whale 签订合同(1301)，内容涉及大额酬劳——Whale 在幕后操纵"
+    - "Jimmy 在销毁歌点单子（可疑行为，L5 揭晓单子记录了真实枪击时间）"
+    - "Rosa 恳求 Zack 不要暴露她——她的伪证是被迫的，不是主动的"
+  new_directions:
+    - direction: "用弹壳型号不符正面挑战 Vivian 的自认有罪"
+      trigger: ".45 弹壳(1403)入库——型号与 Vivian 的 .25 ACP 明显不符，直接反驳 Vivian 的自认"
+    - direction: "Vivian 工作间——绝笔信与船票揭示真实心理"
+      trigger: "进入工作间可搜证，Vivian 有杀意但未实施的记录"
+    - direction: "Webb 为什么要保护 Vivian——协议书财产条款的真实含义"
+      trigger: "协议书(1101)财产保护条款 + 保险箱字条(1307)密码=相遇日——Webb 在乎 Vivian 的证据"
+    - direction: "Whale 的执行人到底是谁"
+      trigger: "Vivian 指证后证词(4061004)揭示：勒索 Whale 的执行人不是 Vivian"
+  post_expose_knowledge:
+    # ── L5 known_facts 的来源 ──
+    - "Vivian 不是凶手——她有杀意但未实施，弹壳型号(.45 ACP vs .25 ACP)证明她的手枪不是凶器"
+    - ".45 ACP 弹壳(1403)与 Vivian 的 .25 ACP 手枪型号不符——凶器另有其枪"
+    - "Tommy 证词(3051001) + 被撕毁合同(1301)——Whale 更可能是幕后主使"
+    - "Webb 取消巴黎行是为了保护 Vivian，不是因为 Rita 抛弃了她——保险箱密码=Webb 与 Vivian 相遇日，协议书含财产保护条款"
+    - "Morrison 看到 .45 弹壳后脸色大变——与米勒集团关联"
+    - "Morrison 行为：撕毁合同(1101)、没收弹壳(1403)、宣布 Vivian 有罪、逮捕 Vivian——Morrison 在刻意掩盖真相"
+    - "协议书(1101)和弹壳(1403)均已从背包移除（Morrison 没收）"
+    - "Vivian 证词(4061003)：23:10 去找 Webb 被'Don't be bothering me'喊走——说话人有爱尔兰口音（伏笔）"
+    - "Vivian 证词(4061004)：Webb 利用 Vivian 勒索的都是中产阶级，勒索 Whale 的执行人不是 Vivian"
+
+# ═══════════════════════════════════════
+# PART 1: 自由探索（无 Opening 硬切）
+# ═══════════════════════════════════════
+#
+# 场景状态表 L4:
+#   Vivian 工作间(1105) → 🔓搜证+对话（绝笔信、船票；自由对话触发关键证词）
+#   酒吧大堂(1103)      → ⚔️指证（Vivian 3轮）+ 🎬转折（Morrison Part7）
+#
+# 注: L4 无单独 opening 硬切；玩家直接从 Vivian 工作间开始。
+#     酒吧大堂是指证+转折的合并场景——Vivian 指证结束后在同一场景触发 Morrison 转折。
+
+scenes:
+  # ── SC1105 Vivian 工作间 ──
+  - id: 1105
+    name: "Vivian 工作间"
+    note: "L4 搜证+对话核心场景。Vivian 在此活动（L3 反锁化妆室后改在工作间）。可搜证（绝笔信、被撕毁的船票）；对话可触发 Vivian 关于 23:10 经过的证词（4061003、4061004）。探索阶段 Vivian 参与自由对话，非 Expose 状态。"
+    evidence:
+      - id: 1401
+        name: "被撕毁的船票"
+        note: "关键——L4 Vivian R2 辅助证据。前往巴黎的两张单程票（Vivian 和 Webb），被撕成两半丢在废纸篓。暗示 Webb 曾计划带 Vivian 一起出走，但计划取消——并非因为 Rita，而是为了保护 Vivian"
+      - id: 1402
+        name: "Vivian 的绝笔信"
+        note: "关键——验证 Vivian 有杀人计划但未实施。信中写明她计划杀 Webb 后自杀，但最终没有付诸行动。与 Expose 三轮谎言的情感层高度相关"
+    npcs:
+      vivian_004:
+        # ── 基本信息 ──
+        talk: loop4_vivian_talk
+        is_liar: false  # 探索阶段 Vivian 不主动撒谎；Expose 阶段才进入谎言状态
+        motive: "沉浸在对 Webb 的误解和绝望中——相信 Webb 因 Rita 抛弃了她；自认有罪的心理使她不愿为自己辩护，但在 Zack 的追问下会流露 23:10 的经历"
+        mindset: "心灰意冷但略有触动——Zack 持续追查让她感到矛盾；提到 23:10 那晚被喊走是无意中流露，说到'Don't be bothering me'时神情凝滞"
+
+        # ── 1. NPC 已知信息（模式 B：后续出场）──
+        # 知识池见 loop1_state.yaml → vivian（L1首次出场，模式A，内联定义）
+        awareness:
+          - content: "自己被 Morrison 禁足，外界公认为凶手——L1 指控的后果已实质化"
+            trigger: "L1 Expose 后 Morrison 宣布禁足"
+          - content: "Zack 拿着协议书告知遗产条款后，自己选择反锁化妆室——拒绝接受 Webb 仍关心她的可能性"
+            trigger: "L2 Zack 带协议书来化妆室，Vivian 反锁门"
+          - content: "Rosa 被部分击破——L3 的指证让 Vivian 模糊感知到案件有新进展，但仍处于自我放弃状态"
+            trigger: "L3 Rosa 指证结果（酒吧内部事件，Vivian 有所耳闻）"
+
+        active_topics:
+          - "23:10 去找 Webb 被喊走的经历（'Don't be bothering me'——带爱尔兰口音，在 Zack 追问下会流露）"
+          - "绝笔信和船票（搜证后可问）"
+          - "自认有罪的心理状态（可表达，认为自己的存在导致 Webb 死亡）"
+          - "对 Webb 的误解（以为 Webb 因 Rita 不再在乎她）"
+          - "勒索活动的参与情况（表明自己只负责中产阶级的勒索部分）"
+        withheld_topics:
+          - "Webb 取消巴黎行的真实原因（玩家需通过 Expose 证据反驳才得知真相）"
+          - "保险箱密码的含义（R3 情感高潮时揭晓）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"绝笔信（搜证后）——你真的计划杀 Webb 但没动手？\" # 9"
+          - "\"被撕毁的船票——原来你们打算一起去巴黎？\" # 8"
+          - "\"23:10 你去找 Webb 时发生了什么？\" # 10"
+          - "\"勒索的执行人是你吗——Whale 那边是谁具体操刀？\" # 7"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 4061003  # Vivian：23:10 去找 Webb，被门后人喊"Don't be bothering me!"喊走——声音有爱尔兰口音（L5 关键伏笔）
+          - 4061004  # Vivian：Webb 利用她勒索的都是中产阶级，勒索 Whale 的执行人不是她自己
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── SC1103 酒吧大堂（指证 + 转折） ──
+  - id: 1103
+    name: "酒吧大堂"
+    note: "⚔️ 指证场所（Vivian 3轮）+ 🎬 Part7 转折（Morrison 翻脸）。指证结束后在同一场景触发 Morrison 出现——Morrison 看见弹壳(1403)脸色大变，随即撕毁合同(1101)、没收弹壳(1403)、逮捕 Vivian。"
+    evidence: []
+
+# ═══════════════════════════════════════
+# PART 2: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧大堂(1103) → ⚔️指证（Vivian）
+# 指证设计: 3 轮完整指证
+# exposeNpcId: 106 (Vivian)
+#
+# 情感结构:
+#   R1: 物证层——弹壳型号不符，打破"我真的杀了 Webb"
+#   R2: 证词+文件层——打破"除了我没有其他人能杀 Webb"
+#   R3: 情感层（高潮）——打破"Webb 因为 Rita 抛弃了我"，Webb 始终在乎 Vivian
+
+expose:
+  target: "Vivian (106)"
+  total_rounds: 3
+
+  vivian_expose:
+    # ── 基本信息 ──
+    talk: loop4_vivian_expose
+    is_liar: true
+    motive: "用自认有罪来保护自己不再受伤——相信自己应该被指控；同时深信 Webb 因 Rita 不再爱她，拒绝接受 Zack 帮她证明清白"
+    mindset: "悲壮的坚持——不是狡辩，是自我惩罚式的坚持；面对证据时会出现短暂的动摇，但情感上的误解使她一再退守新防线"
+
+    # ── 1. NPC 已知信息 ──
+    # 同探索阶段 vivian_004，awareness 相同
+    # Expose 阶段额外心理：被 Zack 追问真相，防线在情感冲击下逐渐崩溃
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose 对象，指证中被动回应，非主动提问
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 4061001  # ⚠谎言: Vivian 声称"我真的杀了 Webb"（R1 谎言来源）
+      - 4061002  # ⚠谎言: Vivian 声称"除了我没有其他人能杀 Webb"（R2 谎言来源）
+      - 4061003  # Vivian：23:10 去找 Webb 被"Don't be bothering me"喊走——声音有爱尔兰口音（L5 关键伏笔，指证后释放）
+      - 4061004  # Vivian：Webb 利用她勒索的都是中产阶级，勒索 Whale 的执行人不是她（指证后释放）
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── 第一轮：物证层——"我真的杀了 Webb" ──
+  # 核心逻辑: .45 弹壳(1403) vs Vivian 的 .25 ACP 手枪(1102) → 型号不符，凶器另有其枪
+  round_1:
+    lie: "我真的杀了 Webb——那晚是我做的"
+    lie_source: "证词 4061001（Vivian 自认有罪，始于 L1，本 Loop 正式被击破）"
+    usable_evidence:
+      - id: 1403
+        name: "Rosa 交出的 .45 弹壳"
+        用途: "弹壳口径为 .45 ACP，是案发现场遗留的真实凶器弹壳。Vivian 的手枪是 .25 ACP，无法发射 .45 口径子弹——物理上不可能"
+      - id: 1102
+        name: "Vivian 的手枪（.25 ACP）"
+        用途: "口径对比：.25 ACP 无法打出 .45 弹壳，确认 Vivian 的枪不是凶器——弹道学层面证明她无法用这把枪杀人"
+    result: |
+      R1 成功击破——Vivian 的第一道防线崩塌：
+      - "这……这颗弹壳……"（短暂失语）
+      - 随即转换防线："但还是没有人能杀他，除了我——那天晚上能进那个房间的，只有我一个人！"
+      - 转入谎言2（独占机会论）
+
+  # ── 第二轮：证词+文件层——"除了我没有其他人能杀 Webb" ──
+  # 核心逻辑: Tommy 证词(3051001) + 被撕毁合同(1301) → Whale 有更强的动机和渠道
+  round_2:
+    lie: "除了我没有其他人能杀 Webb——那晚没有人能进那个房间，只有我"
+    lie_source: "证词 4061002（R1 被击破后 Vivian 的退守声明）"
+    usable_evidence:
+      - id: 3051001
+        name: "Tommy 证词：Rita 是 Whale 的间谍"
+        用途: "Tommy 亲口说明 Whale 在监视 Webb——Whale 不仅有动机，而且已经提前布局，完全有渠道安排人手接触 Webb"
+      - id: 1301
+        name: "被撕毁的合同（Whale 与某人）"
+        用途: "合同内容显示 Whale 以大额酬劳雇用了某人——Whale 是有预谋的主使者，'只有 Vivian 能进那个房间'的说法根本站不住脚"
+      - id: 1401
+        name: "被撕毁的船票"
+        用途: "辅助证据——两张前往巴黎的单程船票说明 Webb 在策划离开，他有具体的逃跑计划，这与 Vivian 所说的'只有我一个人'的情绪化认知形成对比"
+    result: |
+      R2 成功击破——Vivian 的独占机会论被推翻：
+      - Vivian 开始动摇，但情感上的痛苦仍未化解
+      - "就算……就算有 Whale，Webb 还是选择了 Rita……他要跑，但他不带我走——"
+      - 转入谎言3（情感层：Webb 不在乎我）
+
+  # ── 第三轮：情感层（高潮）——"Webb 因为 Rita 抛弃了我，他根本不在乎我了" ──
+  # 核心逻辑: 保险箱字条(1307) + 协议书(1101)财产保护条款 → Webb 始终念旧、要保护 Vivian
+  round_3:
+    lie: "Webb 因为 Rita 抛弃了我，他根本不在乎我了——那张船票只是他良心发现的施舍"
+    lie_source: "Vivian 在 R2 被击破后的情感退守（Expose 过程中的新陈述）"
+    usable_evidence:
+      - id: 1307
+        name: "保险箱的字条"
+        用途: "保险箱密码是 Webb 与 Vivian 的相遇日——不是任何与 Rita 相关的日期。沉迷 Rita 期间 Webb 依然用这个密码，说明他从未真正忘记 Vivian"
+      - id: 1101
+        name: "保密侦探协议书（财产保护条款）"
+        用途: "协议书专门为 Vivian 设置了财产继承条款——Webb 在明知自己可能被杀的情况下，最后的安排是确保 Vivian 的安全和遗产，不是 Rita"
+    result: |
+      R3 成功击破（情感高潮）：
+      - Vivian 看着字条，泪水决堤
+      - "相遇日……他还记得……他一直记得……"
+      - 彻底崩溃——不再坚持有罪，但无力说话
+      - 系统触发：Vivian 指证完成，释放两条关键证词(4061003、4061004)
+      - 随即触发 Part7：Morrison 出现
+
+  # ── Part7：Morrison 转折（紧接 R3 之后，同场景） ──
+  # 场景: 酒吧大堂(1103)，Vivian 指证刚完成
+  # 叙事功能: 中点转折——Morrison 翻脸 = 调查的最大障碍正式浮出水面
+  part7_morrison_turn:
+    trigger: "Vivian R3 击破后，Zack 向 Morrison 出示弹壳(1403)时触发"
+    sequence:
+      - "Zack 向 Morrison 出示 .45 弹壳，请求重新审视案情"
+      - "Morrison 接过弹壳——脸色骤变（识别出米勒集团专用型号）"
+      - "Morrison 行动一：撕毁协议书(1101)（'这份合同已经失效了'）"
+      - "Morrison 行动二：没收弹壳(1403)（'这是证物，归警方保管'）"
+      - "Morrison 宣布：Vivian 依然有罪，弹壳型号差异不足以推翻定案"
+      - "Morrison 下令逮捕 Vivian，强制带走"
+    system_effects:
+      - "1403（.45 弹壳）从玩家背包移除——被 Morrison 没收"
+      - "1101（协议书）从玩家背包移除——被 Morrison 撕毁"
+      - "注：需 program script=9 支持背包物品强制移除"
+    emotional_beat: |
+      同情→背叛——玩家帮助 Vivian 证明清白，换来的不是释放，
+      而是 Morrison 当众翻脸、逮捕 Vivian。
+      Morrison 的真实面目（Whale 的棋子）首次在行动层面暴露。
+
+# ═══════════════════════════════════════
+# PART 3: Morrison 条目（Part7 转折角色）
+# ═══════════════════════════════════════
+#
+# Morrison 在本 Loop 不需要完整探索阶段对话（无自由探索NPC条目）。
+# 仅在 Part7 中作为剧情推进角色出现。
+# 此处记录其认知状态，供对话设计师参考。
+
+morrison_part7:
+  # ── 基本信息 ──
+  talk: loop4_morrison_turn  # Part7 专用对话
+  is_liar: false  # Morrison 在 Part7 中没有被指证，其行为是强制施压，非谎言场景
+  motive: "识别出弹壳是米勒集团专用型号——立即意识到让案件继续深查将威胁自己的利益；必须在当场终止调查"
+  mindset: "突然的惶恐→迅速转化为强权姿态——看见弹壳的一刻是真实的恐惧，之后的行动是本能的自我保护"
+
+  # ── 1. NPC 已知信息（模式 B：后续出场）──
+  # L1 首次出场：宣布死亡、接受 Zack 协议书、给予 72 小时调查权
+  awareness:
+    - content: "L1 同意了 Zack 的 72 小时调查权——现在 Zack 真的查出了对自己不利的东西"
+      trigger: "L1 Expose 后 Zack 凭协议书获得调查权，L4 调查有重大进展"
+    - content: ".45 弹壳是米勒集团专用型号——与自己欠 Whale 的债务关联，继续深查将暴露自己与 Whale 的关系"
+      trigger: "L4 Part7：Zack 出示弹壳，Morrison 识别出来源"
+
+  knows:
+    - "自己是 Whale 在警察系统的棋子，欠着 Whale 的债"
+    - "米勒集团专用 .45 ACP 弹壳意味着杀手是 Whale 的人"
+    - "如果弹壳被鉴定，自己与 Whale 的关联将暴露"
+    - "撕毁合同和没收弹壳是当下能阻止调查的唯一手段"
+  does_not_know:
+    - "杀手的具体身份（不知道是 Jimmy）"
+    - "Rosa 的威胁纸条已被 Zack 掌握"
+    - "Tommy 的弹壳（L5 Tommy 主动交出，Morrison 不知道）"
+
+  active_topics:
+    - "强权姿态：案件已结案，Vivian 是凶手（行动体现，非对话）"
+  withheld_topics:
+    - "与 Whale 的具体财务关联（L6 才被指证揭露）"
+    - "赌债欠条（L6 搜证获取）"
+
+  # ── 2. 玩家询问意图 ──
+  player_inquiry:
+    - "\"Morrison 看见弹壳脸色为何大变——他认识这种弹壳？\" # 9"
+    - "\"Morrison 撕毁合同+没收弹壳——他和 Whale 有什么关联？\" # 10"
+
+  # ── 3. 可提取证词 ──
+  testimony_ids: []
+  # Morrison 在 Part7 中没有被正式指证，无证词提取。
+  # 其行为本身（撕毁、没收、逮捕）是剧情推进的直接呈现，不通过证词系统。
+
+  # ── 4. 鉴赏力 ──
+  connoisseur: []  # Unit1 无鉴赏力系统
+
+# ═══════════════════════════════════════
+# PART 4: 证据列表（L4 入库）
+# ═══════════════════════════════════════
+#
+# L4 入库证据：
+#   1401（被撕毁的船票）  — Vivian 工作间搜证
+#   1402（绝笔信）        — Vivian 工作间搜证
+#   1403（.45 弹壳）       — L3 指证后由 Rosa 交出，L4 正式入库使用
+#                            注：Part7 后被 Morrison 没收，从背包移除
+#
+# 跨 Loop 证据状态变更（Part7 后）：
+#   1403 — 被 Morrison 没收（从背包移除）
+#   1101 — 被 Morrison 撕毁（从背包移除）
+
+evidence:
+  - id: 1401
+    name: "被撕毁的船票"
+    note: "关键——L4 Vivian R2 辅助证据。前往巴黎的两张单程票（Vivian 和 Webb），被撕碎丢弃。Webb 曾计划带 Vivian 一起离开，取消计划是为了保护 Vivian，非因 Rita"
+  - id: 1402
+    name: "Vivian 的绝笔信"
+    note: "关键——验证 Vivian 有杀人计划但未实施。证明 Vivian 的绝望是真实的，但实际行动层面没有动手。与三轮指证的谎言结构呼应"
+  - id: 1403
+    name: "Rosa 交出的 .45 弹壳"
+    note: "关键——L4 Vivian R1 核心证据。L3 指证后 Rosa 交出，口径 .45 ACP 与 Vivian 手枪 .25 ACP 型号不符，物理上排除 Vivian 作案可能。Part7 中被 Morrison 没收，从背包移除（需 script=9）"
+
+# ═══════════════════════════════════════
+# PART 5: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 4001
+    text: ".45 ACP 弹壳与 Vivian .25 ACP 手枪型号不符——真凶用的是什么枪？"
+    unlock_condition: "item:1403 + item:1102（两件物证弹道学对比交叉验证）"
+    note: "物证×物证交叉；L5 Jimmy 指证时解答（凶器是 Whale 提供的特制手枪 1506）"
+  - id: 4002
+    text: "Morrison 看见弹壳脸色大变——他与米勒集团有什么关联？"
+    unlock_condition: "Part7 Morrison 行动 + item:1403（剧情事件×物证交叉）"
+    note: "目击 Morrison 行动后解锁；L6 才被完整揭露（赌债路线）"
+  - id: 4003
+    text: "23:10 门后那个'Don't be bothering me'是 Webb 本人说的吗——声音有爱尔兰口音？"
+    unlock_condition: "testimony:4061003 + 已知 Webb 是美国人（L1 known_facts 交叉）"
+    note: "证词×基础认知交叉；L5 Jimmy 厨房对话时玩家会听到 Jimmy 的口音，触发恍然大悟"
+  - id: 4004
+    text: "Whale 的执行人不是 Vivian——究竟是谁替 Whale 接近并监视 Webb？"
+    unlock_condition: "testimony:4061004 + item:1301（证词×撕毁合同交叉）"
+    note: "证词×文件交叉；L5 Jimmy 指证时解答"
+
+# ═══════════════════════════════════════
+# 验证状态（自检 A-G）
+# ═══════════════════════════════════════
+#
+# A. 结构完整性
+#   [PASS] player_context（goals/known_facts/new_directions/post_expose_knowledge）全部存在
+#   [PASS] scenes 列出 2 个场景（1105/1103）
+#   [PASS] expose 段落存在，包含 vivian_expose + round_1/2/3 + part7_morrison_turn
+#   [PASS] morrison_part7 条目存在（Part7 转折角色）
+#   [PASS] evidence 列表存在（3件）
+#   [PASS] doubts 列表存在（4条）
+#
+# B. 证据覆盖
+#   [PASS] 1401(被撕毁的船票) → SC1105 [关键，R2辅助]
+#   [PASS] 1402(Vivian绝笔信) → SC1105 [关键，验证杀意但未实施]
+#   [PASS] 1403(Rosa给的.45弹壳) → L3指证后入库，L4 R1核心；Part7被Morrison没收，标注移除
+#   [PASS] 跨Loop证据流转：1401在R2使用 ✓；1403在R1使用→Part7被没收 ✓；
+#          1101(L1入库)在R3使用→Part7被撕毁 ✓；1102(L1入库)在R1使用 ✓；
+#          3051001(L3证词)在R2使用 ✓；1301(L3获取)在R2使用 ✓；
+#          1307(L3获取)在R3使用 ✓
+#   [PASS] 讨论结论 L4 全部 3 件证据均已分配
+#
+# C. NPC 条目
+#   [PASS] Vivian(106) 探索阶段(vivian_004)：模式B，awareness/active_topics/withheld_topics/
+#          player_inquiry/testimony_ids/connoisseur 全部存在 ✓
+#   [PASS] Vivian(106) 指证阶段(vivian_expose)：is_liar=true, player_inquiry=null,
+#          testimony_ids（含4条）, connoisseur ✓
+#   [PASS] Morrison(104) Part7(morrison_part7)：模式B，awareness/knows/does_not_know/
+#          active_topics/withheld_topics/player_inquiry/testimony_ids/connoisseur ✓
+#   [PASS] 探索阶段 Vivian 与指证阶段 Vivian 分开处理 ✓
+#
+# D. 目标对齐
+#   [PASS] goals.primary "Vivian真的杀了Webb吗？如果不是她，那是谁？"——
+#          与讨论结论L4"破碎的金丝雀"核心一致 ✓
+#   [PASS] post_expose_knowledge 内容涵盖讨论结论要求的全部L5 known_facts来源 ✓
+#   [PASS] post_expose_knowledge 与 L5 灵魂黑夜4大疑点可对应 ✓
+#
+# E. 信息节奏
+#   [PASS] 未泄露 L5 信息：
+#          Jimmy 是凶手身份未泄露 ✓
+#          口音是因为 Jimmy 模仿 Webb 未泄露（只记录"有爱尔兰口音"，不揭示是 Jimmy）✓
+#          鼓点单子的具体意义（真实枪击时间记录）未泄露 ✓
+#          Anna 怀孕未泄露 ✓
+#          1504 练习书字迹比对未泄露 ✓
+#   [PASS] 未泄露 L6 信息：Morrison 赌债路线/欠条/借钱证据全部未提及 ✓
+#   [PASS] Vivian证词4061003只记录"爱尔兰口音"，不指向具体人 ✓
+#
+# F. 鉴赏力
+#   [PASS] 所有 NPC connoisseur: [] ——Unit1 无鉴赏力系统，符合设计 ✓
+#
+# G. Expose 逻辑
+#   [PASS] R1 谎言"我真的杀了Webb" → 1403(.45弹壳)+1102(.25手枪) 弹道学反驳 ✓
+#   [PASS] R2 谎言"只有我能杀Webb" → 3051001(Tommy证词)+1301(合同) 双重反驳 ✓
+#          辅助：1401(船票) 进一步衬托 ✓
+#   [PASS] R3 谎言"Webb不在乎我" → 1307(保险箱字条)+1101(协议书财产条款) 情感反驳 ✓
+#   [PASS] R1 lie_source 对应已有证词(4061001) ✓
+#   [PASS] R2/R3 lie_source 为 Expose 过程中 Vivian 的退守陈述 ✓
+#   [PASS] Part7 Morrison 没收/撕毁动作已记录系统效果（1403、1101从背包移除）✓
+#   [PASS] 指证后证词4061003、4061004 作为 L5 伏笔正确标注 ✓
+
+validation_status:
+  structure_completeness: "2026-04-15 PASS"
+  evidence_coverage: "2026-04-15 PASS"
+  npc_entries: "2026-04-15 PASS"
+  goal_alignment: "2026-04-15 PASS"
+  info_pacing: "2026-04-15 PASS"
+  connoisseur: "2026-04-15 N/A（Unit1 无鉴赏力系统）"
+  expose: "2026-04-15 PASS"
+  cross_check: "2026-04-15 PASS"
+  overall: "PASS — 可进入对话生成阶段"

@@ -1,0 +1,384 @@
+# ============================================================
+# Loop 4 — 破碎的金丝雀 / The Broken Canary
+# 本循环说谎者: Vivian (106) — 自我认罪（实为未实施的杀意）
+# 核心揭示: Vivian 不是凶手（但有杀意）；Morrison 不是中立执法者，在刻意阻碍真相
+# 前序事件: L3假胜利——Rosa被完整指证、承认伪证、交出弹壳；Zack掌握米勒集团型号弹壳
+# 时间: 1925年11月2日（继L3调查）
+# ChapterConfig id: 104
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "Vivian 究竟有没有杀人？弹壳指向的真相是什么？"
+    secondary:
+      - "Vivian 的绝笔信说明了什么？她的杀意是否付诸实施？"
+      - "Webb 和 Rita 的关系真的是出轨吗？"
+      - "弹壳和 Vivian 的手枪型号是否匹配？"
+  known_facts:
+    # ── L1 post_expose ──
+    - "Vivian 的手枪在案发时没有硝烟反应——不可能刚刚开过枪"
+    - "Rosa 指认 Vivian 在 23:30 射杀 Webb，但 Zack 成功击破了物证层面的谎言"
+    - "Rosa 的时间线谎言（23:30 目击）在 L1 未被击破——留到 L3"
+    - "Webb 的保密侦探合同证明他早就预感自己会被杀"
+    # ── L2 post_expose ──
+    - "Webb 的酒吧是敲诈勒索帝国的前台"
+    - "Webb 的主要勒索执行人不是 Tommy"
+    - "Tommy 认为 Webb 惹上了大人物，想转移财产跑路"
+    - "Rita 相关信息暗示她不只是普通女伴"
+    # ── L3 post_expose ──
+    - "Rosa 承认伪证——她被人威胁，才指认了 Vivian"
+    - "案发真实时间早于 23:20——玻璃碎片在 Rosa 倒垃圾前就已存在（Rosa 23:20 倒垃圾，垃圾袋压在玻璃碎片上方）"
+    - "Rosa 在 Vivian 之前到达会客室现场，发现了一颗弹壳并藏了起来"
+    - "Rosa 事后将弹壳交给 Zack——弹壳型号指向米勒集团，与 Vivian 的手枪型号不符"
+    - "一楼走廊垃圾桶发现 Whale 与某人签订的合同——Whale 愿意出大笔钱让某人做件事"
+    - "Jimmy 在厨房销毁了《芝加哥狂想曲》歌点单子"
+  new_directions:
+    - direction: "Vivian 真相"
+      trigger: "弹壳型号与 Vivian 手枪不符——Vivian 的自我认罪开始出现矛盾，需要直面她"
+    - direction: "Webb 保护 Vivian 的动机"
+      trigger: "Webb 委托合同中要求 Zack 保证 Vivian 继承遗产——他为什么在意 Vivian 的安全？"
+    - direction: "执行人是谁"
+      trigger: "Whale 与某人签订了合同，但合同执行人不是 Vivian——那个人是谁？"
+  post_expose_knowledge:
+    - "Vivian 曾计划杀死 Webb（绝笔信为证），但实际上没有实施"
+    - "Webb 之所以取消与 Vivian 的巴黎之约，不是因为 Rita——而是为了保护 Vivian 不被卷入 Whale 的危险"
+    - "Rita 是 Whale 派来监视 Webb 的间谍"
+    - "说'Don't be bothering me'的人有爱尔兰口音——而 Webb 没有爱尔兰口音（伏笔：真正说话的是 Jimmy）"
+    - "Morrison 翻脸：拿走弹壳、撕毁合同、逮捕 Vivian——他不是中立执法者"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇（硬切剧情）
+# ═══════════════════════════════════════
+#
+# 场景状态表: Vivian 化妆室（已解锁）→ 🎬开篇
+# L3 Rosa 被完整指证后，Vivian 房门从内部锁住的状态已解除。
+# Zack 手持弹壳，准备去找 Vivian 正面交锋。
+
+opening:
+  scene_id: 1407  # Vivian 化妆室（沿用旧版场景 ID，待 SceneConfig 更新时确认）
+  characters: [Zack, Vivian]
+  purpose: "L3 假胜利后，Vivian 房门解锁——Zack 手持弹壳进入，见到绝笔信和被撕毁的颜料，触发自由探索"
+  talk: 106004001
+
+  vivian_opening:
+    is_liar: false
+    motive: "心如死灰——她认为自己是杀人犯，绝笔信是她留给 Webb 的道歉"
+    mindset: "自我放弃状态——Webb 已死，巴黎的梦也碎了，她不再在乎自己的命运"
+    knows:
+      - "她写了绝笔信，承认自己有杀 Webb 的计划"
+      - "她手里有手枪，准备过杀死 Webb"
+      - "她对 Webb 又爱又恨——Webb 利用她勒索别人"
+      - "23:05 她去找 Webb，被一个声音（以为是 Webb）喊走了"
+      - "23:30 她听到枪声后开门，发现 Webb 已死"
+    does_not_know:
+      - "弹壳的真实来源"
+      - "Rita 是 Whale 派来的间谍"
+      - "Webb 取消巴黎之约的真实原因"
+      - "喊她走的人有爱尔兰口音"
+    lie: null
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L4:
+#   Vivian 化妆室/工作间   → 🔓搜证，NPC: Vivian(106)，⚔️指证前提
+#   酒吧大堂               → ⚔️指证，Vivian(106)
+#   酒吧大堂/Morrison 位置 → 🎬转折（Part7），Morrison(104)
+#   Webb 会客室            → 已解锁，可调查（无新证据，确认 Rita 线索）
+#   Tommy 办公室           → 已解锁，对话（Tommy 提供 Rita 证词）
+#   Rosa 储藏室            → 已解锁，对话（Rosa 修正证言，提供弹壳信息）
+
+scenes:
+  # ── SC1407 Vivian 化妆室/工作间（🔓搜证，新发现证据） ──
+  - id: 1407
+    name: "Vivian 化妆室/工作间"
+    note: "🔓新证据解锁——Vivian 房门在 L3 后打开，可调查工作间区域"
+    evidence:
+      - id: 1401
+        name: "被撕毁的颜料/画作"
+        note: "场景道具——环境叙事，验证 Vivian 的情绪崩溃与杀意；画作被撕成碎片，颜料涂抹凌乱"
+      - id: 1402
+        name: "Vivian 的绝笔信"
+        note: "关键——Expose R1 前置证据；信中 Vivian 承认有杀 Webb 的计划但语气像告别，而非行动宣言"
+      - id: 1403
+        name: "Vivian 的手枪"
+        note: "关键——Expose R1 用；L1 已确认无硝烟反应，现可仔细检查型号"
+    npcs:
+      vivian_004:
+        talk: 106004001
+        is_liar: true
+        motive: "自我认罪——内疚驱动的认罪，她认为自己的杀意等同于杀人行为"
+        mindset: "道德崩溃的自我毁灭——对 Webb 的死充满罪恶感，宁愿被定罪也不想解释"
+
+        active_topics:
+          - "Webb 的死让她心如死灰"
+          - "她对 Webb 既爱又恨——被迫勒索中产阶级"
+          - "23:05 她去找 Webb，被一个声音（以为是 Webb）赶走"
+          - "23:30 枪响后她开门发现 Webb 已死"
+          - "她写了绝笔信承认有杀人计划"
+        withheld_topics:
+          - "说话的声音有爱尔兰口音（她当时没注意到）"
+          - "Webb 取消巴黎之约的真实原因"
+          - "Rita 是间谍的真相"
+
+        player_inquiry:
+          - "\"Rosa 交出的弹壳，型号和你的手枪不符\" # 9"
+          - "\"你真的开过枪吗\" # 8"
+          - "\"你听到的那个声音——是 Webb 说的吗\" # 7"
+          - "\"Webb 为什么取消去巴黎\" # 6"
+
+        testimony_ids:
+          - 1061001  # ⚠谎言 "是我杀了 Webb"
+          - 1061002  # "我计划杀 Webb，但那天晚上我没有开枪"（Expose 击破后）
+          - 1061003  # "那个声音叫我别打扰他，我就走了——是 Webb 的声音，我确定"（⚠偏见：未注意口音）
+          - 1061004  # "Webb 和 Rita 出轨，毁了我们去巴黎的约定"（⚠偏见：不知道 Rita 是间谍）
+
+        connoisseur: []
+
+  # ── SC酒吧大堂（⚔️指证场景） ──
+  # 指证在酒吧大堂触发，待确认场景 ID
+  - id: 1410
+    name: "酒吧大堂"
+    note: "⚔️指证场景——Vivian(106)在此接受三轮指证；Part7 转折也在此处或附近触发"
+
+  # ── SCTommy 办公室（已解锁，对话） ──
+  - id: 1405
+    name: "Tommy 办公室"
+    note: "已解锁，Tommy 提供 Rita 是间谍的关键证词——Expose R2 所需"
+    npcs:
+      tommy_004:
+        talk: 105004001
+        is_liar: false
+        motive: "配合调查——L3 后 Tommy 已无保留，帮助 Zack 找到真相"
+        mindset: "谨慎的配合——对 Whale 仍有恐惧，但愿意提供他知道的信息"
+
+        active_topics:
+          - "Rita 不只是 Webb 带回来的女伴——她的身份可疑"
+          - "Webb 大约 11 月中旬突然停掉了一切勒索业务，态度转变很大"
+          - "Tommy 认为 Webb 惹上了大人物，取消巴黎之约是为了让 Vivian 安全离开"
+        withheld_topics:
+          - "Whale 的真实身份"
+          - "Jimmy 的角色"
+
+        player_inquiry:
+          - "\"Rita 究竟是什么人\" # 9"
+          - "\"Webb 为什么突然停掉勒索生意\" # 8"
+          - "\"Webb 取消巴黎之约是为了保护 Vivian 吗\" # 7"
+
+        testimony_ids:
+          - 1054001  # "Tommy：Webb 惹上了大人物，那次之后他就什么都停了，我猜他是要让 Vivian 跑路"
+          - 1054002  # "Tommy：Rita 来了之后，很多事都变了，她不像是普通的女伴"
+
+        connoisseur: []
+
+  # ── SC Rosa 储藏室（已解锁，对话） ──
+  - id: 1401
+    name: "Rosa 储藏室"
+    note: "已解锁，Rosa 确认弹壳信息，提供 Webb 会客室相关线索"
+    npcs:
+      rosa_004:
+        talk: 103004001
+        is_liar: false
+        motive: "配合调查——L3 被指证后已决心帮助 Zack 找到真凶，保护 Vivian"
+        mindset: "恐惧中的合作——仍担心威胁她的人，但选择帮助 Zack"
+
+        active_topics:
+          - "她在 Vivian 之前到达会客室，发现了一颗弹壳"
+          - "弹壳型号她不了解，但 Zack 告知是米勒集团的型号"
+          - "她在 23:20 倒垃圾时经过了窗外区域"
+        withheld_topics:
+          - "威胁纸条的书写人（她只知道被威胁，不知道是谁写的）"
+          - "Jimmy 与本案的关联"
+
+        player_inquiry:
+          - "\"你确认弹壳不是 Vivian 的手枪型号\" # 8"
+          - "\"你在 Vivian 之前到达现场——那时候 Webb 已经死了吗\" # 9"
+
+        testimony_ids:
+          - 1031001  # "Rosa：我到了会客室，Webb 已经死了，我看到地上有一颗弹壳"
+          - 1031002  # "Rosa：我把弹壳藏起来了，我不知道为什么——可能是出于本能"
+
+        connoisseur: []
+
+  # ── SC Webb 会客室（已解锁，Rita 相关证据确认） ──
+  - id: 1408
+    name: "Webb 会客室"
+    note: "已解锁，可确认 Rita 相关文件；L3 已发现的证据在此可复查"
+    evidence:
+      - id: 1301
+        name: "Rita 相关文件/照片"
+        note: "关键——Expose R2 用；证明 Rita 是 Whale 派来的间谍（L3 已获取，此处重新调查可深化理解）"
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧大堂 → ⚔️指证(Vivian)
+# 指证设计: 3轮（"是我杀了Webb" → "巴黎梦碎是因为出轨" → "Don't be bothering me"伏笔）
+# exposeNpcId: 106 (Vivian)
+
+expose:
+  target: "Vivian (106)"
+  total_rounds: 3
+  testimony: 1061001  # ⚠谎言——"是我杀了 Webb"
+
+  # ── 第一轮：击破"是我杀了 Webb"——弹壳型号 ──
+  # Rosa 给的弹壳(跨Loop，L3获得) → 型号与 Vivian 手枪不符
+  round_1:
+    id: 16
+    lie: "是我杀了 Webb。我恨他，我应该为此付出代价。"
+    lie_source: "证词 1061001（⚠谎言——Vivian 的自我认罪，基于罪恶感而非事实）"
+    usable_evidence:
+      - id: 1033001
+        name: "Rosa 交出的弹壳（米勒集团型号，L3获得）"
+        note: "关键——弹壳型号与 Vivian 的手枪不符；Vivian 的枪是标准左轮，米勒集团弹壳对应半自动手枪"
+      - id: 1403
+        name: "Vivian 的手枪"
+        note: "关键——L1 确认无硝烟反应，型号可与弹壳比对，直接排除 Vivian 为射击者"
+    result: |
+      物证层面击破"是我杀了 Webb"：
+      - 弹壳型号 + Vivian 手枪型号不匹配——这颗弹壳不可能从 Vivian 的枪里出来
+      - Vivian 被迫承认她当晚没有真的开枪："我有那个计划……但我最后没有做"
+      - 升级谎言：Vivian 转向情感层面——"Webb 和 Rita 出轨，毁了我们的梦。我有杀他的权利。"
+
+  # ── 第二轮：击破"巴黎梦因出轨而碎"——Rita 是间谍 + Tommy 证词 ──
+  # Rita 相关文件(1301，L3已获得) + Tommy 证词(1054001) → Webb 取消巴黎是为了保护 Vivian
+  round_2:
+    id: 17
+    lie: "Webb 和 Rita 出轨，他抛弃了我们去巴黎的约定——这是他自己做出的选择。"
+    lie_source: "证词 1061004（⚠偏见——Vivian 不知道 Rita 是间谍，误解了 Webb 的真实动机）"
+    usable_evidence:
+      - id: 1301
+        name: "Rita 相关文件/照片"
+        note: "关键——证明 Rita 是 Whale 派来监视 Webb 的间谍；'出轨'是 Whale 布置的烟幕弹"
+      - id: 1054001
+        name: "Tommy 证词：Webb 惹上大人物后什么都停了"
+        note: "关键——Tommy 推断 Webb 取消巴黎之约是为了让 Vivian 跑路，而非因为 Rita"
+    result: |
+      情感层面击破"出轨"叙事：
+      - Rita 是间谍，不是 Webb 自愿交往的女伴——Webb 是被安排进了陷阱
+      - Tommy 的推断：Webb 想让 Vivian 带着遗产安全离开，而不是抛弃她
+      - Vivian 开始动摇，沉默，但不肯接受："就算是这样……我当时不知道……"
+      - 升级到 R3：Vivian 喃喃说起那晚的细节——"我去找过他……他喊我走……"
+
+  # ── 第三轮：语言特征伏笔——不完全击破，引发新疑点 ──
+  # Vivian 的证词 1061003 → 说话人有爱尔兰口音，Webb 没有
+  round_3:
+    id: 18
+    lie: "那个声音叫我别打扰他——是 Webb 的声音，我确定。他就是不想见我。"
+    lie_source: "证词 1061003（⚠偏见——Vivian 确信声音是 Webb 的，实际上她没有注意到口音的差异）"
+    usable_evidence:
+      - id: 1402
+        name: "Vivian 的绝笔信"
+        note: "场景道具——信中 Vivian 描述了那一刻；通过仔细阅读，她写到了'那句话'，引出对口音的回忆"
+    result: |
+      此轮不完全击破——而是引发新疑点：
+      - Zack 引导 Vivian 回忆那个声音的细节："他说的是什么词？用什么口音？"
+      - Vivian 缓缓意识到："Don't be bothering me"——这个表达……Webb 不这么说话
+      - Webb 是标准美式英语，"Don't be bothering me" 是爱尔兰英语的习惯句式
+      - 此轮结果：Vivian 自我认罪彻底瓦解，但真凶未被点名
+      - 新疑点解锁：谁在模仿 Webb 的声音？说话人有爱尔兰口音（L5 解答：Jimmy）
+      - Expose 结束后——Vivian 不再坚持认罪，Zack 决定去找 Morrison 说明情况
+
+  post_expose:
+    vivian_state: "彻底动摇——不再认罪，但对未来失去方向"
+    new_doubt_unlocked:
+      - id: 1401
+        text: "那个声音有爱尔兰口音——Webb 没有。说话的人是谁？"
+        unlock_condition: "expose_round_3_complete"
+    zack_decision: "带弹壳去找 Morrison，告知 Vivian 无罪的事实"
+
+# ═══════════════════════════════════════
+# PART 4: Part7 情节转折（中点转折）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧大堂或走廊 → 🎬转折（Morrison 翻脸）
+# 这是全剧的中点转折（midpoint reversal）——玩家以为赢了，却被权力碾压
+
+part7_turning_point:
+  scene: "酒吧大堂/Morrison 所在位置"
+  trigger: "Expose 结束后，Zack 主动带弹壳去找 Morrison 汇报 Vivian 无罪"
+  characters: [Zack, Morrison, Vivian, Emma]
+  type: "🎬硬切剧情——不可交互"
+
+  morrison_104:
+    is_liar: true
+    motive: "隐瞒自己与 Whale 的勾结——米勒集团型号的弹壳一旦被追查，就会暴露 Whale 的军火渠道和自己的背叛"
+    mindset: "被逼到墙角的权力反扑——Morrison 认出弹壳来自米勒集团，立刻意识到必须扼杀这条线索"
+
+    knows:
+      - "米勒集团是 Whale 的军火供应方"
+      - "自己因赌债被 Whale 收买"
+      - "Whale 要处理掉 Webb 的调查，Zack 是潜在威胁"
+      - "Vivian 有杀人动机（绝笔信），可以作为借口逮捕"
+    does_not_know:
+      - "Jimmy 是真凶（他只知道结果，不知道细节）"
+      - "Zack 已经与 Rosa/Tommy 建立了信任"
+
+    part7_sequence:
+      - step: "Zack 出示弹壳（米勒集团型号），说明 Vivian 的手枪型号不符"
+      - step: "Morrison 认出弹壳来源，脸色骤变"
+      - step: "Morrison 当场撕毁 Zack 与 Webb 签署的合同（法律依据：作为案件负责警官，私人合同不具法律效力）"
+      - step: "Morrison 没收弹壳——'这是案件证物，需要由警方保管'"
+      - step: "Morrison 宣布：Vivian 有明确的杀人动机和预谋计划（绝笔信）"
+      - step: "Morrison 指定 Vivian 的手枪为'真正的凶器'（无视型号矛盾）"
+      - step: "Morrison 宣布逮捕 Vivian"
+
+    aftermath:
+      - "Zack 的合同被撕毁——调查权力归零"
+      - "弹壳被没收——关键证据消失"
+      - "Vivian 被捕——Zack 的'胜利'变成更大的失败"
+      - "Emma 和 Zack 被迫离开——L5 开篇'灵魂黑夜'的起点"
+      - "玩家目标重置：L5-6 需要重新获取等效证据（Tommy 同型号弹壳 + Jimmy 凶器）"
+
+  design_note: |
+    Morrison 撕毁合同的法律合理性：
+    Webb 的保密侦探合同是私人协议，不具有法律授权效力。
+    Morrison 作为案件负责警官，有权决定谁可以介入官方调查。
+    他撕毁合同在法律程序上无可指摘——这是权力压制，不是违法行为（至少表面如此）。
+    这种"权力合法地碾压正义"的设计是 Part7 情绪震撼的核心。
+
+# ═══════════════════════════════════════
+# PART 5: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 1401
+    text: "那个声音有爱尔兰口音——Webb 没有。是谁在模仿 Webb 说话？"
+    unlock_condition: "expose_round_3_complete"
+    note: "伏笔疑点——L5 解答（Jimmy 的爱尔兰口音）"
+  - id: 1402
+    text: "Vivian 的手枪型号与弹壳不符——真正的凶器在哪里？"
+    unlock_condition: "item:1033001 + item:1403"
+  - id: 1403
+    text: "Morrison 为什么要没收弹壳？他在隐瞒什么？"
+    unlock_condition: "part7_complete"
+    note: "type=2——对 Morrison 的第一个疑问，L6 解答"
+  - id: 1404
+    text: "Rita 究竟是谁派来的？为什么 Webb 要这样安排？"
+    unlock_condition: "testimony:1054002 + item:1301"
+
+clearDoubts:
+  - 1301  # "真凶会是 Vivian 吗" → L4 击破，Vivian 不是凶手
+  - 1302  # "Rosa 为什么撒谎" → L3 解答，L4 彻底确认
+  - 1303  # "案发时间真的是 23:30 吗" → L3 已解答，L4 进一步确认
+
+# ═══════════════════════════════════════
+# 验证状态
+# ═══════════════════════════════════════
+
+validation_status:
+  cross_check: "PASS"
+  structure_completeness: "PASS — 文件头/player_context/opening/scenes/expose(3轮)/part7/doubts 均存在"
+  evidence_coverage: "PASS — 设计文档要求的3类证据（绝笔信1402/弹壳1033001/Rita文件1301）全部分配；Vivian手枪1403补充"
+  npc_entries: "PASS — Vivian(active+withheld+player_inquiry+testimony)、Tommy(active+withheld+player_inquiry+testimony)、Rosa(active+withheld+player_inquiry+testimony)、Morrison(part7完整)"
+  goal_alignment: "PASS — player_context.goals 与讨论结论 L4 目标一致（Vivian真相+弹壳+执行人推断）"
+  info_pacing: "PASS — 未泄露 L5 内容（Jimmy是凶手/凶器手枪/字迹匹配），R3 口音伏笔保持悬念而非揭示"
+  connoisseur: "N/A (Unit1 重构版暂无鉴赏力系统)"
+  expose: "PASS — R1物证(型号不符)→R2情感(Rita间谍+Tommy证词)→R3语言伏笔(爱尔兰口音)；R3不完全击破设计符合讨论结论要求"

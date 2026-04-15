@@ -1,0 +1,478 @@
+# ============================================================
+# Loop 5 — 厨师的代价 / The Cook's Price
+# 本循环说谎者: Jimmy (107)，完整 3 轮指证 + cutscene 自杀
+# 核心揭示: Jimmy 是真凶，被 Whale 利用，为了怀孕妻子 Anna 铤而走险
+# 前序事件: L4 Vivian 三轮指证后 Morrison 翻脸，没收弹壳(1403)，逮捕 Vivian
+# 情绪弧: 决心 → 心碎
+# 节奏功能: 深化——凶手也是受害者
+# ChapterConfig exposeNpcId: 107 (Jimmy)
+# ============================================================
+
+# ═══════════════════════════════════════
+# 玩家视角（本循环）
+# ═══════════════════════════════════════
+
+player_context:
+  goals:
+    primary: "恐吓 Rosa 的人是谁？杀 Webb 的真凶到底是谁？"
+    secondary:
+      - "凶手如何在有人听到枪声时杀的 Webb？"
+      - "Webb 勒索大人物的执行人究竟是谁？"
+      - "Morrison 看见弹壳为何脸色大变？"
+  known_facts:
+    # ── L1 post_expose_knowledge 累积 ──
+    - "Webb 在 23:30 枪声后被发现死亡，Rosa 指认 Vivian 是凶手"
+    - "Vivian 的手枪（.25 ACP）无硝烟反应——不可能刚刚开过枪，击破 Rosa 谎言1"
+    - "Rosa 谎言2（23:30 只有 Vivian 在里面）L1 阶段无法反驳"
+    - "Zack 凭协议书(1101)获得 Morrison 的 72 小时调查权"
+    - "Webb 生前与 Zack 签署保密侦探合同：保护 Vivian、确保她继承遗产"
+    - "Webb 似乎预感到自己会死——主动雇用 Zack 是最后的保障安排"
+    - "Vivian 自认为凶手，对被指控几乎不反抗，心如死灰"
+    # ── L2 post_loop_knowledge 累积 ──
+    - "Webb 月收入 $15,000，酒吧净利润仅 $4,000——$11,000 差额来自敲诈勒索（酒吧是勒索帝国前台）"
+    - "Tommy 是曾经的执行人，但表示自己已不再参与"
+    - "Webb 自 11 月中旬沉迷 Rita 后停止勒索活动，Tommy 认为他惹上了大人物想转移财产跑路"
+    - "Rita 是 Whale 的间谍（Tommy 在 L2 暗示，L3 进一步确认）"
+    - "Jimmy 经济极度困难（薪水微薄、移民身份办理失败）——动机铺垫"
+    - "Vivian 禁足，心如死灰，听到遗产消息后反锁化妆室房门"
+    - "Tommy 办公室出现过可疑弹壳，被 Tommy 发现后拿回（伏笔）"
+    # ── L3 post_expose_knowledge 累积 ──
+    - "真正的枪击发生在 23:20 之前（玻璃碎片在垃圾袋下——碎片早于 Rosa 23:20 倒垃圾前已存在→时序倒推）"
+    - "Rosa 被人威胁伪证：威胁纸条要挟她女儿高额医疗费，被迫在 Morrison 面前指认 Vivian"
+    - "真凶使用 .45 ACP（与 Vivian 的 .25 ACP 型号不符）"
+    - "Rosa 指证后交出一颗 .45 弹壳（ID 1403，L4 已入库使用）"
+    - "大家都知道 Vivian 每晚给 Webb 送酒——有人刻意利用这个规律嫁祸 Vivian"
+    - "有人与 Whale 签订合同(1301)，内容涉及大额酬劳——Whale 在幕后操纵"
+    - "Jimmy 在销毁歌点单子（可疑行为，L5 揭晓单子记录了真实枪击时间）"
+    - "Rosa 恳求 Zack 不要暴露她——她的伪证是被迫的，不是主动的"
+    # ── L4 post_expose_knowledge 累积 ──
+    - "Vivian 不是凶手——弹壳型号不符（.45 ACP vs .25 ACP）证明她的手枪无法打出该弹壳"
+    - "Whale 是主使者——Tommy 证言(3051001)+被撕毁合同(1301)共同指向 Whale 策划了 Webb 之死"
+    - "Webb 通过保险箱字条（密码=相遇日）和协议书保护 Vivian——他对 Vivian 一直有情"
+    - "Morrison 翻脸：认出弹壳(1403)是米勒集团专用型号后脸色大变，随即撕毁合同(1101)、没收弹壳(1403)、宣布 Vivian 有罪并逮捕"
+    - "Vivian 在 23:10 去找 Webb，被'Don't be bothering me'用爱尔兰口音喊走（证词 4061003，L5 真凶口音伏笔）"
+    - "勒索 Whale 的执行人不是 Vivian（证词 4061004）——另有其人"
+  new_directions:
+    - direction: "恐吓 Rosa 的人究竟是谁"
+      trigger: "威胁纸条(1303)字迹 + 爱尔兰身份(1505)线索——可与 Jimmy 家练习书(1504)比对"
+    - direction: "23:10 那个用爱尔兰口音喊 Vivian 的人是谁"
+      trigger: "Vivian 证词(4061003)中的口音细节——现在调查 Jimmy 厨房时可能触发验证"
+    - direction: "鼓点单子真相"
+      trigger: "L3 Jimmy 销毁歌点单子（Tommy 在 L5 清洁间交出完整单子）"
+    - direction: "Morrison 与米勒集团弹壳的关联"
+      trigger: "L4 Part7 Morrison 看见弹壳脸色大变——Tommy 可能知道弹壳来历"
+  post_expose_knowledge:
+    # ── L6 known_facts 的来源 ──
+    - "Jimmy 是真凶——23:00-23:05 趁《芝加哥狂想曲》高潮段掩盖枪声，在 Webb 会客室枪杀 Webb"
+    - "Jimmy 利用音乐高潮掩盖枪声（鼓点单子确认演奏时间与枪击时间完全重合）"
+    - "Jimmy 在 23:05 Vivian 来到门口时锁门，模仿 Webb 的爱尔兰口音喊'Don't be bothering me'骗走 Vivian"
+    - "23:30 Jimmy 在二楼空射一枪制造虚假死亡时间"
+    - "Jimmy 被 Whale 利用，签订杀人合同——酬劳是移民身份办理+大笔现金"
+    - "Jimmy 的字迹与威胁纸条(1303)+合同(1301)字迹为同一人（练习书1504验证）"
+    - "Jimmy 为保护怀孕妻子 Anna 不受 Whale 报复而选择自杀"
+    - "凶器手枪(1506)为米勒集团特制——是连接 Morrison 与 Whale 的关键物证（L6 指证核心）"
+
+# ═══════════════════════════════════════
+# PART 1: 开篇（灵魂黑夜）
+# ═══════════════════════════════════════
+#
+# 场景状态表: 酒吧外/特殊 → 🎬开篇（硬切）
+# Emma 陪 Zack 在酒吧外，梳理 L1-L4 积累的线索，引导玩家聚焦 4 大疑点。
+# 灵魂黑夜结构：Zack 和 Emma 面对混乱信息，逐一拆解——谁威胁了 Rosa？谁是执行人？
+# 凶手如何掩盖枪声？Morrison 为何脸色大变？
+
+opening:
+  scene_id: null  # 特殊场景（酒吧外），无固定场景 ID
+  scene_note: "黎明前/酒吧外。Morrison 逮捕 Vivian 后的夜晚，Zack 和 Emma 在酒吧外沉默面对四大未解疑点。"
+  characters: [Zack, Emma]
+  purpose: "L4 Part7 转折后的情绪落地——Emma 帮 Zack 梳理 4 大疑点，明确今天的调查方向；4 大疑点正式解锁进入系统"
+  talk: emma_105
+
+  emma_105:
+    is_liar: false
+    motive: "帮 Zack 整理思路——Morrison 翻脸代表调查进入最危险阶段，必须在失去调查权前找到真凶"
+    mindset: "沉静而专注——眼前的局面比任何时候都更危险，Emma 选择压住恐惧，把 4 大疑点一条条说清楚"
+
+    knows:
+      - "威胁纸条(1303)存在，某人胁迫了 Rosa——写纸条的人才是案件幕后操控者"
+      - "勒索 Whale 的执行人不是 Vivian（证词 4061004）——是个有爱尔兰口音的人"
+      - "23:10 那个声音用爱尔兰口音喊 Vivian——说明 Webb 的会客室里当时已经有另一个人"
+      - "鼓点单子（Jimmy L3 在销毁）与案发时间有关——Jimmy 为什么要销毁那张单子？"
+      - "Morrison 看见弹壳后脸色大变——弹壳一定有特殊含义，Tommy 应该知道"
+      - "Morrison 逮捕 Vivian 意味着调查窗口正在关闭"
+    does_not_know:
+      - "Jimmy 就是写威胁纸条的人"
+      - "Jimmy 就是真凶"
+      - "Anna 怀孕"
+      - "Tommy 手里有另一颗相同型号的弹壳(1501)"
+      - "Jimmy 家里有练习书(1504)和爱尔兰身份证明(1505)"
+
+    lie: null
+    connoisseur: []
+
+# ═══════════════════════════════════════
+# PART 2: 自由探索
+# ═══════════════════════════════════════
+#
+# 场景状态表 L5:
+#   Rosa 清洁间(1109)  → 🔓对话（Tommy 在此，交出弹壳+鼓点单子）
+#   Jimmy 厨房(1106)   → 🔓对话（口音暴露触发"Don't be bothering me!"）
+#   Jimmy 家(1111)     → 🔓搜证+对话（Anna 怀孕；回信；练习书；爱尔兰身份）
+#   Jimmy 厨房(1106)   → ⚔️指证（3 轮 + cutscene 自杀）
+#
+# 注：Jimmy 厨房(1106) 先作为对话场景，指证触发后转为指证场景
+
+scenes:
+  # ── SC1109 清洁间（Tommy 转移至此） ──
+  - id: 1109
+    name: "Rosa 清洁间"
+    note: "L5 复用。Tommy 主动选择在 Rosa 清洁间等 Zack——Rosa 不在，Tommy 借此确认无人监视。Tommy 信任 Zack，主动交出藏匿的弹壳(1501)和鼓点完整单子(1502)"
+    evidence:
+      - id: 1501
+        name: "久远陈旧的子弹（Tommy 交出）"
+        note: "关键——L5 指证前关键物证；L6 Morrison 阶段1核心。Tommy 说明这颗弹壳与 L4 被没收的 1403 为同一型号，均是米勒集团弹药。替代被 Morrison 没收的 1403 进入玩家背包"
+      - id: 1502
+        name: "芝加哥鼓点完整单子"
+        note: "关键——Expose R1 核心（时间线谜题）。单子记录《芝加哥狂想曲》每段演奏的精确时间，证明 23:00-23:05 是整场舞会最响亮的高潮段，足以掩盖枪声"
+    npcs:
+      tommy_005:
+        # ── 基本信息 ──
+        talk: loop5_tommy_talk
+        is_liar: false
+        motive: "已下定决心帮助 Zack——Morrison 逮捕 Vivian 证明 Whale 的力量已经足以控制执法系统，Tommy 意识到沉默只会让更多无辜者受害"
+        mindset: "沉着而悲凉——Tommy 知道今天交出这些东西等于亲手把自己推上危险的位置，但他已经无路可退"
+
+        # ── 1. NPC 已知信息（模式 B：后续出场，第三次） ──
+        # 知识池见 npc_knowledge_pools.yaml → tommy
+        awareness:
+          - content: "L4 Morrison 逮捕 Vivian 后，Tommy 亲眼目睹弹壳被没收——意识到自己藏的那颗弹壳是现在唯一留下的物证"
+            trigger: "L4 Part7 Morrison 逮捕 Vivian，没收弹壳(1403)"
+          - content: "Morrison 与米勒集团的关联已经明确——弹壳型号就是证据，Morrison 认出了才会那样反应"
+            trigger: "L4 Part7 Morrison 看见弹壳后的反应（Tommy 旁观）"
+
+        active_topics:
+          - "弹壳(1501)的来历与型号（米勒集团弹药）"
+          - "鼓点单子(1502)的内容与意义（23:00-23:05 高潮段时间线）"
+          - "Morrison 与 Whale 关联的推断（Tommy 的观察）"
+        withheld_topics:
+          - "Jimmy 是真凶（Tommy 不知道）"
+          - "Jimmy 家有练习书和爱尔兰身份（Tommy 不知道）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"Tommy L3 暗示Morrison与Whale有关联——追问弹壳的米勒集团含义\" # 9"
+          - "\"Tommy 手里还有弹壳吗——Morrison没收了1403，Tommy这里是否还有备份\" # 10"
+          - "\"鼓点单子——L3 Jimmy 销毁的单子，Tommy 是否有完整版本\" # 8"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3051001  # Rita 是 Whale 间谍（L3 证词，此处可再次确认）
+          - 5051001  # Tommy 交出弹壳：这颗弹壳和 Morrison 没收的那颗是同一型号，都是米勒集团的货
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── SC1106 Jimmy 厨房（对话阶段） ──
+  - id: 1106
+    name: "Jimmy 厨房（对话）"
+    note: "🔓对话。Jimmy 正在厨房工作，表面应对 Zack 的提问。关键设计：在对话中 Jimmy 无意间说出'Don't be bothering me'——爱尔兰口音与 Vivian 证词(4061003)中的口音完全吻合，触发玩家的认知突破"
+    evidence: []
+    npcs:
+      jimmy_005:
+        # ── 基本信息 ──
+        talk: loop5_jimmy_talk
+        is_liar: true  # 对话阶段仍在维持'普通厨师'身份
+        motive: "维持最后一层防线——Jimmy 知道 Zack 越来越接近真相，但只要没有硬证据就不会主动认罪"
+        mindset: "绷紧而疲惫——杀人后的数天已经榨干了 Jimmy 的精神，他比以往任何时候都更小心，但内心的疲惫让他频繁出现语言破绽"
+
+        # ── 1. NPC 已知信息（模式 B：后续出场，第三次） ──
+        # 知识池见 npc_knowledge_pools.yaml → jimmy
+        awareness:
+          - content: "Vivian 已被 Morrison 逮捕——计划的最后一环按部就班执行了"
+            trigger: "L4 Part7 Morrison 逮捕 Vivian（公开信息，酒吧员工均知晓）"
+          - content: "Zack 仍在调查，没有因为 Vivian 被捕而停手——Zack 的追查能力超出预期"
+            trigger: "L5 Zack 再次出现并主动找 Jimmy 问话"
+          - content: "鼓点单子已被销毁——那条关键时间线证据应该已经不存在了"
+            trigger: "L3 Jimmy 亲手烧毁了歌点单子"
+
+        active_topics:
+          - "日常厨房工作（表面对话）"
+          - "不在场证明的维持（23:30 枪声时我在厨房）"
+          - "否认认识 Whale 或执行合同"
+        withheld_topics:
+          - "真实案发时间（23:00-23:05）"
+          - "模仿 Webb 声音骗走 Vivian"
+          - "Anna 怀孕"
+          - "威胁纸条是自己写的"
+          - "合同的存在"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"23:10 会客室外那个爱尔兰口音——想听 Jimmy 说话时是否也有此口音\" # 10"
+          - "\"L3 Jimmy 销毁歌点单子的异常行为——追问他当时在做什么\" # 8"
+          - "\"不在场证明——23:30 枪响时你真的在厨房吗\" # 7"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 5071001  # ⚠谎言: 枪声 23:30 我有不在场证明（Expose R1）
+          - 5071002  # ⚠谎言: Vivian 找过 Webb 说明他还活着（Expose R2）
+          - 5071003  # ⚠谎言: 我没有理由杀 Webb（Expose R3）
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+  # ── SC1111 Jimmy 家（新场景） ──
+  - id: 1111
+    name: "Jimmy 家"
+    note: "🔓搜证+对话（新场景，L5首次解锁）。Jimmy 外出工作期间，Zack 前往 Jimmy 家调查。Anna 独自在家，愿意与 Zack 交谈。此处可发现三件关键证物并获取 Anna 证词"
+    evidence:
+      - id: 1503
+        name: "Jimmy 给 Whale 的回信"
+        note: "关键——Expose R3 + L6 Morrison 阶段3核心。信件内容：Jimmy 接受合同、承诺完成任务，信中措辞体现了Jimmy的爱尔兰背景和对Anna的保护动机"
+      - id: 1504
+        name: "Jimmy 的英语练习书"
+        note: "关键——Expose R3 字迹核心。Jimmy 作为爱尔兰移民练习英语书写的本子，字迹与威胁纸条(1303)和合同(1301)高度一致，是同一人所写的直接证明（裁决4：L5才描述字迹特征）"
+      - id: 1505
+        name: "Jimmy 的爱尔兰商身份证明"
+        note: "关键——Expose R2核心。Jimmy 的爱尔兰移民身份文件，证明他是爱尔兰人，具有爱尔兰口音，与 Vivian 证词(4061003)中'Don't be bothering me'的爱尔兰口音吻合"
+    npcs:
+      anna_001:
+        # ── 基本信息（模式 D：一次性 NPC） ──
+        talk: loop5_anna_talk
+        is_liar: false
+        motive: "不明白 Jimmy 到底做了什么——但她知道最近这段时间 Jimmy 每天回来都很异常，作为妻子她感到不安和困惑"
+        mindset: "脆弱而担忧——怀孕、贫困、丈夫的异常行为三重压力压着她；面对 Zack 的到来她既有警惕也有渴望诉说的冲动"
+
+        knows:
+          - "自己怀孕，需要一大笔钱支付医疗费和安顿费用"
+          - "Jimmy 最近情绪极度异常，归家时间不规律，有时衣服上有可疑痕迹"
+          - "Jimmy 为了移民身份和医疗费四处奔波，承受极大压力"
+          - "家里收入很少，两人生活极度困难"
+          - "Jimmy 对她非常在乎，总说'一切都为了你和孩子'"
+        does_not_know:
+          - "Jimmy 杀了 Webb"
+          - "Jimmy 签订了 Whale 的合同"
+          - "练习书字迹与犯罪有关"
+          - "Jimmy 写了威胁纸条"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"Jimmy 家里的练习书(1504)和回信(1503)——向 Anna 询问这些物品\" # 9"
+          - "\"Anna 怀孕和家庭困境——理解 Jimmy 的行为动机\" # 8"
+          - "\"Jimmy 最近的异常举动——从 Anna 口中获得细节\" # 7"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 5081001  # Anna 怀孕需要一大笔钱（Jimmy 的行动动机）
+
+        # ── 4. 鉴赏力 ──
+        connoisseur: []  # Unit1 无鉴赏力系统
+
+# ═══════════════════════════════════════
+# PART 3: 指证（Expose）
+# ═══════════════════════════════════════
+#
+# 场景状态表: Jimmy 厨房(1106) → ⚔️指证（Jimmy）
+# 指证设计: 3 轮完整指证 + cutscene 自杀
+# exposeNpcId: 107 (Jimmy)
+#
+# 核心推理链:
+#   R1: 鼓点单子(1502)证明 23:00-23:05 是高潮段
+#       + Vivian 证词(4061003)鼓点掩盖枪声
+#       → 真实枪击在 23:00-23:05，Jimmy 的"23:30 不在场"是假的
+#   R2: 爱尔兰身份(1505)证明 Jimmy 有爱尔兰口音
+#       + 证词(4061003)"Don't be bothering me"爱尔兰口音
+#       → Jimmy 就是锁门模仿 Webb 喊走 Vivian 的人，Webb 当时已经死了
+#   R3: 合同(1301)+练习书(1504)字迹比对威胁纸条(1303)
+#       + Anna 证词(5081001)怀孕需要钱
+#       → Jimmy 是合同签订者、纸条书写者，有杀人动机
+
+expose:
+  target: "Jimmy (107)"
+  total_rounds: 3
+  cutscene_after: true
+  cutscene_note: "R3 击破后进入 cutscene：Jimmy 崩溃 → 视觉暗示 Whale 手下在暗处（交易已暴露）→ Jimmy 说'Anna…' → 开枪自杀 → 凶器手枪(1506)入库。系统实现：script=8+script=3 混合"
+
+  jimmy:
+    # ── 基本信息 ──
+    talk: loop5_jimmy_expose
+    is_liar: true
+    motive: "已无退路——如果承认，Whale 必然对 Anna 下手；继续抵赖是唯一能为 Anna 争取时间的办法"
+    mindset: "绝望中的强硬——Jimmy 知道游戏结束了，但保护 Anna 的本能让他坚持到最后一刻；三轮被击破后，视觉确认 Whale 手下就在现场，知道 Anna 已经不安全——唯一的出路是用死换取 Whale 不再追究"
+
+    # ── 1. NPC 已知信息 ──
+    # 知识同 jimmy_005（对话阶段），aware 同上，Expose 阶段无新 awareness
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose 对象，不设 player_inquiry
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 5071001  # ⚠谎言: 枪声 23:30 我有不在场证明（R1 谎言来源）
+      - 5071002  # ⚠谎言: Vivian 找过 Webb 说明他还活着（R2 谎言来源）
+      - 5071003  # ⚠谎言: 我没有理由杀 Webb（R3 谎言来源）
+
+    # ── 4. 鉴赏力 ──
+    connoisseur: []
+
+  # ── 第一轮：时间线——"我有不在场证明，枪声 23:30 我在厨房" ──
+  # 核心逻辑: 鼓点单子证明 23:00-23:05 是高潮段 + Vivian 证词证明鼓点可掩盖枪声
+  # → Jimmy 不在场证明基于假时间线，真实枪击就在 23:00-23:05
+  round_1:
+    lie: "23:30 枪响的时候我在厨房，有工作表为证——我根本没有离开过厨房"
+    lie_source: "证词 5071001（Jimmy 自述不在场证明，基于 23:30 这个假死亡时间）"
+    usable_evidence:
+      - id: 1502
+        name: "芝加哥鼓点完整单子"
+        用途: "单子记录《芝加哥狂想曲》各段精确时间，23:00-23:05 是最响亮的高潮段——在这段时间内枪声完全可能被掩盖。Jimmy 的不在场证明是针对 23:30 假时间线建立的，对真实枪击时间 23:00-23:05 无效"
+      - id: 4061003
+        name: "Vivian 证词：23:10 被爱尔兰口音喊走时鼓点正在演奏"
+        用途: "Vivian 回忆被喊走时鼓点声音很大——证实高潮段演奏时确实可以掩盖枪声；同时证明 23:10 时 Webb 会客室里已有另一个人（Jimmy）"
+    result: |
+      Zack 用鼓点单子证明真实枪击时间不是 23:30：
+      - "《芝加哥狂想曲》23:00 到 23:05 是整晚最响的高潮段——枪声完全可以在这段时间里被掩盖。"
+      - "你的'不在场证明'是针对 23:30 建立的。但如果枪击发生在 23:00-23:05，你的证明就什么都不是。"
+      Jimmy 脸色一变，随即调整防线：
+      - "就算是那样……Vivian 亲自去找过 Webb，说明那时候 Webb 还活着。"
+
+  # ── 第二轮：语言特征——"Vivian 找过 Webb 说明他还活着" ──
+  # 核心逻辑: 爱尔兰身份证明 Jimmy 有爱尔兰口音
+  # + Vivian 证词(4061003)"Don't be bothering me"爱尔兰口音
+  # → Jimmy 锁上门模仿 Webb 的爱尔兰口音喊走了 Vivian，Webb 那时已经死了
+  round_2:
+    lie: "Vivian 亲口说过她 23:10 去找过 Webb，Webb 让她走——说明那时候 Webb 还活着，不是我杀的"
+    lie_source: "证词 5071002（Jimmy 用 Vivian 的证词反驳 Zack，声称这证明 Webb 在 23:10 还活着）"
+    usable_evidence:
+      - id: 1505
+        name: "Jimmy 的爱尔兰商身份证明"
+        用途: "证明 Jimmy 是爱尔兰移民，具有爱尔兰口音——与 Vivian 证词中'Don't be bothering me'的爱尔兰口音吻合；Webb 是美国本地人，不会有爱尔兰口音，说那句话的人只能是 Jimmy"
+      - id: 4061003
+        name: "Vivian 证词：23:10 被'Don't be bothering me'爱尔兰口音喊走"
+        用途: "Vivian 描述的那个声音有爱尔兰口音——Webb 不会有这个口音，只有 Jimmy 这个爱尔兰移民才会。Jimmy 当时锁着门模仿 Webb 的腔调把 Vivian 骗走了，但口音出卖了他"
+    result: |
+      Zack 指出口音的致命漏洞：
+      - "Vivian 说那个声音是爱尔兰口音。Webb 是芝加哥本地人——他说话有爱尔兰腔调吗？"
+      - "你是从爱尔兰来的移民。那句'Don't be bothering me'，说的是你，不是 Webb。"
+      Jimmy 的第二道防线崩塌，沉默片刻后：
+      - "……你根本什么都证明不了。我没有理由杀他。"
+
+  # ── 第三轮：动机+字迹——"我没有理由杀 Webb" ──
+  # 核心逻辑: 合同(1301)证明 Jimmy 被雇用 + 练习书(1504)字迹比对纸条(1303)和合同
+  # + Anna 证词(5081001)怀孕需要钱 → Jimmy 有强烈动机，字迹证明他是执行者
+  round_3:
+    lie: "我没有理由杀 Webb——我只是个厨师，我为什么要那样做？"
+    lie_source: "证词 5071003（Jimmy 的最后防线：否认动机）"
+    usable_evidence:
+      - id: 1301
+        name: "被撕毁的合同（Whale 与某人）"
+        用途: "合同中'某人'的字迹特征在 L5 首次描述（裁决4）——与练习书(1504)和威胁纸条(1303)字迹比对，是同一人的笔迹，证明 Jimmy 就是合同签订者（被雇杀 Webb 的人）"
+      - id: 1504
+        name: "Jimmy 的英语练习书"
+        用途: "练习书字迹与合同(1301)和威胁纸条(1303)高度一致——三份字迹指向同一人，Jimmy 不仅签了杀人合同，还亲手写了威胁 Rosa 的纸条"
+      - id: 1303
+        name: "威胁纸条（含女儿医疗单）"
+        用途: "纸条字迹与练习书(1504)吻合——Jimmy 亲手胁迫了 Rosa；同时纸条的存在本身证明了计划的周密性，这是有预谋的杀人，而非偶发冲动"
+      - id: 5081001
+        name: "Anna 证词：怀孕需要一大笔钱"
+        用途: "Anna 怀孕、医疗费昂贵、Jimmy 经济极度困难——这就是 Jimmy 接受 Whale 合同的理由；不是没有理由，而是被逼到墙角才铤而走险"
+    result: |
+      Zack 用字迹和动机双重击穿最后一道防线：
+      - "三份字迹——合同、威胁纸条、你的英语练习书——是同一个人写的。"
+      - "你妻子怀孕了。你们没有钱。而 Whale 的合同提供了你们需要的一切。"
+      - "这就是理由。"
+      ——cutscene 开始——
+      Jimmy 慢慢放下手中的工具，不再说话。他抬起头，目光扫向厨房的暗处——
+      Whale 的手下就站在那里，全程目睹了这一切。交易已经暴露。
+      Jimmy 的眼神里闪过一瞬间的平静。
+      "Anna……"
+      一声枪响。
+
+  # ── 指证后特殊事件（cutscene + 收尾） ──
+  post_expose:
+    new_evidence:
+      - id: 1506
+        name: "米勒集团特制手枪"
+        note: "关键——L6 Morrison 阶段1核心证据。Jimmy 自杀后从现场获取。手枪为米勒集团特制型号，与弹壳(1501)型号吻合，是连接 Morrison（米勒集团关联）与此案的关键物证"
+        obtained_trigger: "cutscene：Jimmy 自杀后，Zack 从现场获取凶器"
+    cutscene:
+      script_type: "script=8+script=3 混合实现"
+      beats:
+        - "R3 击破后进入 cutscene"
+        - "Jimmy 放下工具，目光扫向厨房暗处"
+        - "视觉暗示：Whale 的手下站在暗处，全程观察（交易暴露，Anna 的安全已无法保证）"
+        - "Jimmy 说出'Anna…'（保护妻子动机的最终体现）"
+        - "枪响，Jimmy 倒下"
+        - "凶器手枪(1506)入库"
+    post_cutscene:
+      note: "Jimmy 自杀后，Zack 和 Emma 感情进展场景。Emma 面对这一切表现出真实的恐惧，但随后拒绝退出调查——'但我不走'。Emma 的台词必须先有真实的恐惧才说这句话，不是空洞口号"
+
+# ═══════════════════════════════════════
+# PART 4: 疑点
+# ═══════════════════════════════════════
+
+doubts:
+  - id: 5001
+    text: "恐吓 Rosa 的人究竟是谁？"
+    unlock_condition: "item:1303 + item:1504"
+    note: "威胁纸条字迹（物证）+ 练习书字迹（物证）两件物证交叉比对——同一人书写，指向 Jimmy"
+  - id: 5002
+    text: "Webb 勒索大人物的执行人是谁？"
+    unlock_condition: "testimony:4061004 + item:1301 + item:1505"
+    note: "Vivian 证词(勒索执行人非Vivian) + 合同(执行人存在) + 爱尔兰身份(口音匹配) 三项交叉——物证×证词两种来源"
+  - id: 5003
+    text: "凶手如何在有人听到枪声时杀的 Webb？"
+    unlock_condition: "item:1502 + item:1302 + testimony:4061003"
+    note: "鼓点单子（演奏时间）+ 玻璃碎片（真实枪击时间）+ Vivian 证词（鼓点声大）三项交叉——物证×物证×证词"
+  - id: 5004
+    text: "Morrison 为何看见弹壳脸色一变？"
+    unlock_condition: "item:1501 + testimony:3051001"
+    note: "新弹壳(1501)型号（物证）+ Tommy 证词（米勒集团关联）——物证×证词两种来源交叉验证"
+
+# ═══════════════════════════════════════
+# 验证状态（自检清单 A-G）
+# ═══════════════════════════════════════
+
+validation_status:
+  # A. 结构完整性
+  structure_completeness: "PASS — player_context / opening / scenes / expose / doubts 均存在且结构完整；4 必填块（已知信息/询问意图/证词/鉴赏力）在所有 NPC 条目中完备"
+  # B. 证据覆盖
+  evidence_coverage: |
+    PASS — 讨论结论 L5 的全部 6 件证据均已分配：
+    1501(Tommy交出弹壳) → SC1109 Tommy 对话 [关键，L6 Morrison 阶段1]
+    1502(芝加哥鼓点完整单子) → SC1109 Tommy 交出 [关键，Expose R1]
+    1503(Jimmy给Whale的回信) → SC1111 Jimmy 家 [关键，Expose R3 + L6 Morrison 阶段3]
+    1504(Jimmy的英语练习书) → SC1111 Jimmy 家 [关键，Expose R3 字迹]
+    1505(Jimmy的爱尔兰商身份证明) → SC1111 Jimmy 家 [关键，Expose R2]
+    1506(米勒集团特制手枪) → post_expose 自杀后获取 [关键，L6 Morrison 阶段1]
+  # C. NPC 条目
+  npc_entries: |
+    PASS — 全部 NPC 的 4 必填块完整：
+    Emma(102) 开篇：knows/does_not_know/lie/connoisseur ✓
+    Tommy(105) 清洁间：awareness/active_topics/withheld_topics/player_inquiry/testimony_ids/connoisseur ✓
+    Jimmy(107) 对话：awareness/active_topics/withheld_topics/player_inquiry/testimony_ids/connoisseur ✓
+    Anna(108) Jimmy家：knows/does_not_know/player_inquiry/testimony_ids/connoisseur ✓（模式D一次性NPC）
+    Jimmy(107) 指证：player_inquiry=null/testimony_ids/connoisseur ✓（Expose对象）
+  # D. 目标对齐
+  goal_alignment: "PASS — player_context.goals 与讨论结论 L5 设计要点一致（主目标：真凶与恐吓者身份；次目标：枪声掩盖机制、执行人身份、Morrison弹壳反应）"
+  # E. 信息节奏
+  info_pacing: |
+    PASS — 信息控制检查：
+    L6 Morrison 指证内容未泄露 ✓（凶器1506入库但具体用途未揭示）
+    L6 赌债欠条(1601)/借钱证据(1602)未出现 ✓
+    合同(1301)字迹特征在 L5 首次描述（裁决4执行）✓
+    Jimmy 自杀动机是保护 Anna，不是被揭穿的逃避 ✓
+    Whale 手下出现是视觉暗示，未揭示 Whale 身份 ✓
+    post_expose_knowledge 为 L6 Morrison 指证提供充分前提（凶器1506、字迹链条、合同关联）✓
+  # F. 鉴赏力
+  connoisseur: "N/A — Unit1 无鉴赏力系统"
+  # G. Expose 逻辑
+  expose_logic: |
+    PASS — 每轮谎言有对应证据可反驳：
+    R1 谎言"23:30不在场证明" → 鼓点单子(1502)+Vivian证词(4061003) 双维度反驳（时间线维度：真实枪击时间是23:00-23:05）✓
+    R2 谎言"Vivian找过Webb说明他还活着" → 爱尔兰身份(1505)+Vivian证词(4061003)口音细节 反驳（语言特征维度：是Jimmy模仿Webb）✓
+    R3 谎言"我没有理由杀Webb" → 合同(1301)+练习书(1504)+纸条(1303)字迹链 + Anna证词(5081001) 双维度反驳（动机层+字迹层）✓
+    cutscene 触发条件正确（R3 finalExpose 后进入）✓
+    凶器(1506)标注为 post_expose 获取 ✓
+  # 整体
+  cross_check: "2026-04-15 PASS"
+  overall: "PASS — 可进入对话生成阶段"

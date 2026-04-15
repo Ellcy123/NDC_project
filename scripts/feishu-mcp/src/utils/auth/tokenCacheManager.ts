@@ -1,0 +1,786 @@
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import { Logger } from '../logger.js';
+import { migrateLegacyTokenCacheIfNeeded } from './legacyCacheMigration.js';
+import { FieldEncryption } from '../encryption.js';
+
+/**
+ * 用户Token信息接口
+ */
+export interface UserTokenInfo {
+  token_type: string;
+  access_token: string;
+  refresh_token: string;
+  scope: string;
+  code: number;
+  expires_at: number;
+  refresh_token_expires_at: number;
+  generated_token: string;
+  client_id: string; // 应用ID，用于刷新token
+  client_secret: string; // 应用密钥，用于刷新token
+}
+
+/**
+ * 租户Token信息接口
+ */
+export interface TenantTokenInfo {
+  app_access_token: string;
+  expires_at: number;
+}
+
+/**
+ * 缓存项接口
+ */
+interface CacheItem<T> {
+  data: T;
+  timestamp: number;
+  expiresAt: number;
+}
+
+/**
+ * Token状态接口
+ */
+export interface TokenStatus {
+  isValid: boolean;
+  isExpired: boolean;
+  canRefresh: boolean;
+  shouldRefresh: boolean; // 是否应该提前刷新
+}
+
+/**
+ * Scope版本信息接口
+ */
+export interface ScopeVersionInfo {
+  scopeVersion: string; // 当前scope版本号
+  scopeList: string[]; // 当前版本所需的scope列表
+  validatedAt: number; // 校验时间戳（秒）
+  validatedVersion: string; // 已校验的版本号
+}
+
+/**
+ * Token缓存管理器
+ * 专门处理用户token和租户token的缓存管理
+ */
+export class TokenCacheManager {
+  private static instance: TokenCacheManager;
+  private cache: Map<string, CacheItem<any>>;
+  private userTokenCacheFile: string;
+  private tenantTokenCacheFile: string;
+  private scopeVersionCacheFile: string;
+  private cacheDir: string;
+  private cleanupTimerId: NodeJS.Timeout | null = null;
+  private fieldEncryption: FieldEncryption;
+
+  /**
+   * 私有构造函数，用于单例模式
+   */
+  private constructor() {
+    this.cache = new Map();
+    this.cacheDir = this.resolveCacheDir();
+    this.userTokenCacheFile = path.join(this.cacheDir, 'user_token_cache.json');
+    this.tenantTokenCacheFile = path.join(this.cacheDir, 'tenant_token_cache.json');
+    this.scopeVersionCacheFile = path.join(this.cacheDir, 'scope_version_cache.json');
+    Logger.info(`Token缓存目录: ${this.cacheDir}`);
+
+    // 初始化字段加密模块
+    this.fieldEncryption = FieldEncryption.getInstance();
+    this.fieldEncryption.initialize();
+
+    migrateLegacyTokenCacheIfNeeded(this.cacheDir, [
+      this.userTokenCacheFile,
+      this.tenantTokenCacheFile,
+      this.scopeVersionCacheFile,
+    ]);
+    this.loadTokenCaches();
+    this.startCacheCleanupTimer();
+  }
+
+  /**
+   * 解析并确保可写的缓存目录
+   */
+  private resolveCacheDir(): string {
+    const candidates = [
+      path.join(os.homedir(), '.cache', 'feishu-mcp'),
+      path.join(os.homedir(), '.feishu-mcp'),
+    ];
+
+    for (const dir of candidates) {
+      try {
+        fs.mkdirSync(dir, { recursive: true });
+        fs.accessSync(dir, fs.constants.R_OK | fs.constants.W_OK);
+        return dir;
+      } catch (error) {
+        Logger.warn(`缓存目录不可用，尝试下一个: ${dir}`, error);
+      }
+    }
+
+    throw new Error('无法找到可读写的缓存目录');
+  }
+
+  /**
+   * 获取TokenCacheManager实例
+   */
+  public static getInstance(): TokenCacheManager {
+    if (!TokenCacheManager.instance) {
+      TokenCacheManager.instance = new TokenCacheManager();
+    }
+    return TokenCacheManager.instance;
+  }
+
+  /**
+   * 系统启动时从本地文件缓存中读取token记录
+   */
+  private loadTokenCaches(): void {
+    this.loadUserTokenCache();
+    this.loadTenantTokenCache();
+    this.loadScopeVersionCache();
+  }
+
+  /**
+   * 加载用户token缓存
+   */
+  private loadUserTokenCache(): void {
+    if (fs.existsSync(this.userTokenCacheFile)) {
+      try {
+        const raw = fs.readFileSync(this.userTokenCacheFile, 'utf-8');
+        const cacheData = JSON.parse(raw);
+        
+        let loadedCount = 0;
+        let decryptedCount = 0;
+        for (const key in cacheData) {
+          if (key.startsWith('user_access_token:')) {
+            // 解密敏感字段
+            const decryptedItem = this.decryptUserTokenSensitiveFields(cacheData[key]);
+            this.cache.set(key, decryptedItem);
+            loadedCount++;
+            if (cacheData[key].data?.access_token && FieldEncryption.isEncrypted(cacheData[key].data.access_token)) {
+              decryptedCount++;
+            }
+          }
+        }
+        
+        Logger.info(`已加载用户token缓存，共 ${loadedCount} 条记录，解密 ${decryptedCount} 条加密记录`);
+      } catch (error) {
+        Logger.warn('加载用户token缓存失败:', error);
+      }
+    } else {
+      Logger.info('用户token缓存文件不存在，将创建新的缓存');
+    }
+  }
+
+  /**
+   * 加载租户token缓存
+   */
+  private loadTenantTokenCache(): void {
+    if (fs.existsSync(this.tenantTokenCacheFile)) {
+      try {
+        const raw = fs.readFileSync(this.tenantTokenCacheFile, 'utf-8');
+        const cacheData = JSON.parse(raw);
+
+        let loadedCount = 0;
+        let decryptedCount = 0;
+        for (const key in cacheData) {
+          if (key.startsWith('tenant_access_token:')) {
+            // 解密敏感字段
+            const decryptedItem = this.decryptTenantTokenSensitiveFields(cacheData[key]);
+            this.cache.set(key, decryptedItem);
+            loadedCount++;
+            if (cacheData[key].data?.app_access_token && FieldEncryption.isEncrypted(cacheData[key].data.app_access_token)) {
+              decryptedCount++;
+            }
+          }
+        }
+        
+        Logger.info(`已加载租户token缓存，共 ${loadedCount} 条记录，解密 ${decryptedCount} 条加密记录`);
+      } catch (error) {
+        Logger.warn('加载租户token缓存失败:', error);
+      }
+    }
+  }
+
+  /**
+   * 根据key获取完整的用户token信息
+   * @param key 缓存键
+   * @returns 完整的用户token信息对象，如果未找到或refresh_token过期则返回null
+   */
+  public getUserTokenInfo(key: string): UserTokenInfo | null {
+    const cacheKey = `user_access_token:${key}`;
+    let cacheItem = this.cache.get(cacheKey);
+
+    // 内存未命中时，尝试从文件重新加载（应对多进程 stdio 场景：callback 在进程 A，API 调用在进程 B）
+    if (!cacheItem && fs.existsSync(this.userTokenCacheFile)) {
+      this.loadUserTokenCache();
+      cacheItem = this.cache.get(cacheKey);
+    }
+
+    if (!cacheItem) {
+      Logger.debug(`用户token信息未找到: ${key}`);
+      return null;
+    }
+
+    const tokenInfo = cacheItem.data as UserTokenInfo;
+    const now = Math.floor(Date.now() / 1000);
+    
+    // 检查refresh_token是否过期（如果有的话）
+    if (tokenInfo.refresh_token && tokenInfo.refresh_token_expires_at) {
+      if (tokenInfo.refresh_token_expires_at < now) {
+        Logger.debug(`用户token的refresh_token已过期，从缓存中删除: ${key}`);
+        this.cache.delete(cacheKey);
+        this.saveUserTokenCache();
+        return null;
+      }
+    } else {
+      // 如果没有refresh_token信息，检查缓存本身是否过期
+      if (Date.now() > cacheItem.expiresAt) {
+        Logger.debug(`用户token缓存已过期: ${key}`);
+        this.cache.delete(cacheKey);
+        this.saveUserTokenCache();
+        return null;
+      }
+    }
+
+    Logger.debug(`获取用户token信息成功: ${key}`);
+    return tokenInfo;
+  }
+
+  /**
+   * 根据key获取用户的access_token值
+   * @param key 缓存键
+   * @returns access_token字符串，如果未找到或已过期则返回null
+   */
+  public getUserToken(key: string): string | null {
+    const tokenInfo = this.getUserTokenInfo(key);
+    return tokenInfo ? tokenInfo.access_token : null;
+  }
+
+  /**
+   * 根据key获取租户token信息
+   * @param key 缓存键
+   * @returns 租户token信息，如果未找到或已过期则返回null
+   */
+  public getTenantTokenInfo(key: string): TenantTokenInfo | null {
+    const cacheKey = `tenant_access_token:${key}`;
+    const cacheItem = this.cache.get(cacheKey);
+    
+    if (!cacheItem) {
+      Logger.debug(`租户token信息未找到: ${key}`);
+      return null;
+    }
+
+    // 检查是否过期
+    if (Date.now() > cacheItem.expiresAt) {
+      Logger.debug(`租户token信息已过期: ${key}`);
+      this.cache.delete(cacheKey);
+      this.saveTenantTokenCache();
+      return null;
+    }
+
+    Logger.debug(`获取租户token信息成功: ${key}`);
+    return cacheItem.data as TenantTokenInfo;
+  }
+
+
+  /**
+   * 删除租户token
+   * @param key 缓存键
+   * @returns 是否成功删除
+   */
+  public removeTenantToken(key: string): boolean {
+    const cacheKey = `tenant_access_token:${key}`;
+    const result = this.cache.delete(cacheKey);
+
+    if (result) {
+      this.saveTenantTokenCache();
+      Logger.debug(`租户token删除成功: ${key}`);
+    }
+
+    return result;
+  }
+
+  /**
+   * 根据key获取租户的access_token值
+   * @param key 缓存键
+   * @returns app_access_token字符串，如果未找到或已过期则返回null
+   */
+  public getTenantToken(key: string): string | null {
+    const tokenInfo = this.getTenantTokenInfo(key);
+    return tokenInfo ? tokenInfo.app_access_token : null;
+  }
+
+  /**
+   * 缓存用户token信息
+   * @param key 缓存键
+   * @param tokenInfo 用户token信息
+   * @param customTtl 自定义TTL（秒），如果不提供则使用refresh_token的过期时间
+   * @returns 是否成功缓存
+   */
+  public cacheUserToken(key: string, tokenInfo: UserTokenInfo, customTtl?: number): boolean {
+    try {
+      const now = Date.now();
+      const cacheKey = `user_access_token:${key}`;
+      
+      // 计算过期时间 - 优先使用refresh_token的过期时间，确保可以刷新
+      let expiresAt: number;
+      if (customTtl) {
+        expiresAt = now + (customTtl * 1000);
+      } else if (tokenInfo.refresh_token_expires_at) {
+        // 使用refresh_token的过期时间，确保在refresh_token有效期内缓存不会被清除
+        expiresAt = tokenInfo.refresh_token_expires_at * 1000; // 转换为毫秒
+        Logger.debug(`使用refresh_token过期时间作为缓存过期时间: ${new Date(expiresAt).toISOString()}`);
+      } else if (tokenInfo.expires_at) {
+        // 如果没有refresh_token_expires_at信息，降级使用access_token的过期时间
+        expiresAt = tokenInfo.expires_at * 1000;
+        Logger.warn(`没有refresh_token过期时间戳，使用access_token过期时间: ${new Date(expiresAt).toISOString()}`);
+      } else {
+        // 最后的降级方案：如果没有任何过期时间信息，设置默认的2小时过期
+        expiresAt = now + (2 * 60 * 60 * 1000); // 2小时
+        Logger.warn(`没有过期时间信息，使用默认2小时作为缓存过期时间`);
+      }
+
+      const cacheItem: CacheItem<UserTokenInfo> = {
+        data: tokenInfo,
+        timestamp: now,
+        expiresAt: expiresAt
+      };
+
+      this.cache.set(cacheKey, cacheItem);
+      this.saveUserTokenCache();
+      
+      Logger.debug(`用户token缓存成功: ${key}, 缓存过期时间: ${new Date(expiresAt).toISOString()}`);
+      return true;
+    } catch (error) {
+      Logger.error(`缓存用户token失败: ${key}`, error);
+      return false;
+    }
+  }
+
+  /**
+   * 缓存租户token信息
+   * @param key 缓存键
+   * @param tokenInfo 租户token信息
+   * @param customTtl 自定义TTL（秒），如果不提供则使用token本身的过期时间
+   * @returns 是否成功缓存
+   */
+  public cacheTenantToken(key: string, tokenInfo: TenantTokenInfo, customTtl?: number): boolean {
+    try {
+      const now = Date.now();
+      const cacheKey = `tenant_access_token:${key}`;
+      
+      // 计算过期时间
+      let expiresAt: number;
+      if (customTtl) {
+        expiresAt = now + (customTtl * 1000);
+      } else if (tokenInfo.expires_at) {
+        expiresAt = tokenInfo.expires_at * 1000; // 转换为毫秒
+      } else {
+        // 如果没有过期时间信息，设置默认的2小时过期
+        expiresAt = now + (2 * 60 * 60 * 1000);
+        Logger.warn(`租户token没有过期时间信息，使用默认2小时`);
+      }
+
+      const cacheItem: CacheItem<TenantTokenInfo> = {
+        data: tokenInfo,
+        timestamp: now,
+        expiresAt: expiresAt
+      };
+
+      this.cache.set(cacheKey, cacheItem);
+      this.saveTenantTokenCache();
+      
+      Logger.debug(`租户token缓存成功: ${key}, 过期时间: ${new Date(expiresAt).toISOString()}`);
+      return true;
+    } catch (error) {
+      Logger.error(`缓存租户token失败: ${key}`, error);
+      return false;
+    }
+  }
+
+  /**
+   * 检查用户token状态
+   * @param key 缓存键
+   * @returns token状态信息
+   */
+  public checkUserTokenStatus(key: string): TokenStatus {
+    const tokenInfo = this.getUserTokenInfo(key);
+    
+    if (!tokenInfo) {
+      return {
+        isValid: false,
+        isExpired: true,
+        canRefresh: false,
+        shouldRefresh: false
+      };
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    const isExpired = tokenInfo.expires_at ? tokenInfo.expires_at < now : false;
+    const timeToExpiry = tokenInfo.expires_at ? Math.max(0, tokenInfo.expires_at - now) : 0;
+    
+    // 判断是否可以刷新
+    const canRefresh = !!(
+      tokenInfo.refresh_token && 
+      tokenInfo.refresh_token_expires_at && 
+      tokenInfo.refresh_token_expires_at > now
+    );
+    
+    // 判断是否应该提前刷新（提前5分钟）
+    const shouldRefresh = timeToExpiry > 0 && timeToExpiry < 300 && canRefresh;
+
+    return {
+      isValid: !isExpired,
+      isExpired,
+      canRefresh,
+      shouldRefresh
+    };
+  }
+
+  /**
+   * 删除用户token
+   * @param key 缓存键
+   * @returns 是否成功删除
+   */
+  public removeUserToken(key: string): boolean {
+    const cacheKey = `user_access_token:${key}`;
+    const result = this.cache.delete(cacheKey);
+    
+    if (result) {
+      this.saveUserTokenCache();
+      Logger.debug(`用户token删除成功: ${key}`);
+    }
+    
+    return result;
+  }
+
+  /**
+   * 保存用户token缓存到文件
+   * 如果启用加密，敏感字段将被加密存储
+   */
+  private saveUserTokenCache(): void {
+    const cacheData: Record<string, any> = {};
+    
+    for (const [key, value] of this.cache.entries()) {
+      if (key.startsWith('user_access_token:')) {
+        // 加密敏感字段后保存
+        cacheData[key] = this.encryptUserTokenSensitiveFields(value);
+      }
+    }
+    
+    try {
+      fs.writeFileSync(this.userTokenCacheFile, JSON.stringify(cacheData, null, 2), 'utf-8');
+      Logger.debug('用户token缓存已保存到文件');
+    } catch (error) {
+      Logger.warn('保存用户token缓存失败:', error);
+    }
+  }
+
+  /**
+   * 保存租户token缓存到文件
+   * 如果启用加密，敏感字段将被加密存储
+   */
+  private saveTenantTokenCache(): void {
+    const cacheData: Record<string, any> = {};
+    
+    for (const [key, value] of this.cache.entries()) {
+      if (key.startsWith('tenant_access_token:')) {
+        // 加密敏感字段后保存
+        cacheData[key] = this.encryptTenantTokenSensitiveFields(value);
+      }
+    }
+    
+    try {
+      fs.writeFileSync(this.tenantTokenCacheFile, JSON.stringify(cacheData, null, 2), 'utf-8');
+      Logger.debug('租户token缓存已保存到文件');
+    } catch (error) {
+      Logger.warn('保存租户token缓存失败:', error);
+    }
+  }
+
+  /**
+   * 加密用户token缓存项的敏感字段
+   * @param cacheItem 缓存项
+   * @returns 加密后的缓存项
+   */
+  private encryptUserTokenSensitiveFields(cacheItem: CacheItem<UserTokenInfo>): CacheItem<UserTokenInfo> {
+    if (!this.fieldEncryption.isEnabled()) {
+      return cacheItem; // 未启用加密，直接返回
+    }
+
+    const data = cacheItem.data;
+    return {
+      ...cacheItem,
+      data: {
+        ...data,
+        access_token: this.fieldEncryption.encryptField(data.access_token),
+        refresh_token: this.fieldEncryption.encryptField(data.refresh_token),
+        client_secret: this.fieldEncryption.encryptField(data.client_secret),
+      }
+    };
+  }
+
+  /**
+   * 解密用户token缓存项的敏感字段
+   * @param cacheItem 缓存项
+   * @returns 解密后的缓存项
+   */
+  private decryptUserTokenSensitiveFields(cacheItem: CacheItem<UserTokenInfo>): CacheItem<UserTokenInfo> {
+    const data = cacheItem.data;
+    
+    return {
+      ...cacheItem,
+      data: {
+        ...data,
+        access_token: this.fieldEncryption.decryptIfNeeded(data.access_token),
+        refresh_token: this.fieldEncryption.decryptIfNeeded(data.refresh_token),
+        client_secret: this.fieldEncryption.decryptIfNeeded(data.client_secret),
+      }
+    };
+  }
+
+  /**
+   * 加密租户token缓存项的敏感字段
+   * @param cacheItem 缓存项
+   * @returns 加密后的缓存项
+   */
+  private encryptTenantTokenSensitiveFields(cacheItem: CacheItem<TenantTokenInfo>): CacheItem<TenantTokenInfo> {
+    if (!this.fieldEncryption.isEnabled()) {
+      return cacheItem; // 未启用加密，直接返回
+    }
+
+    const data = cacheItem.data;
+    return {
+      ...cacheItem,
+      data: {
+        ...data,
+        app_access_token: this.fieldEncryption.encryptField(data.app_access_token),
+      }
+    };
+  }
+
+  /**
+   * 解密租户token缓存项的敏感字段
+   * @param cacheItem 缓存项
+   * @returns 解密后的缓存项
+   */
+  private decryptTenantTokenSensitiveFields(cacheItem: CacheItem<TenantTokenInfo>): CacheItem<TenantTokenInfo> {
+    const data = cacheItem.data;
+    
+    return {
+      ...cacheItem,
+      data: {
+        ...data,
+        app_access_token: this.fieldEncryption.decryptIfNeeded(data.app_access_token),
+      }
+    };
+  }
+
+  /**
+   * 清理过期缓存
+   * 对于用户token，只有在refresh_token过期时才清理
+   * 对于租户token，按缓存过期时间清理
+   * @returns 清理的数量
+   */
+  public cleanExpiredTokens(): number {
+    const now = Date.now();
+    const nowSeconds = Math.floor(now / 1000);
+    let cleanedCount = 0;
+    const keysToDelete: string[] = [];
+    
+    for (const [key, cacheItem] of this.cache.entries()) {
+      let shouldDelete = false;
+      
+      if (key.startsWith('user_access_token:')) {
+        // 用户token：检查refresh_token是否过期
+        const tokenInfo = cacheItem.data as UserTokenInfo;
+        if (tokenInfo.refresh_token && tokenInfo.refresh_token_expires_at) {
+          // 有refresh_token，只有refresh_token过期才删除
+          shouldDelete = tokenInfo.refresh_token_expires_at < nowSeconds;
+          if (shouldDelete) {
+            Logger.debug(`清理用户token - refresh_token已过期: ${key}`);
+          }
+        } else {
+          // 没有refresh_token，按缓存过期时间删除
+          shouldDelete = cacheItem.expiresAt <= now;
+          if (shouldDelete) {
+            Logger.debug(`清理用户token - 无refresh_token且缓存过期: ${key}`);
+          }
+        }
+      } else {
+        // 租户token或其他类型：按缓存过期时间删除
+        shouldDelete = cacheItem.expiresAt <= now;
+        if (shouldDelete) {
+          Logger.debug(`清理过期缓存: ${key}`);
+        }
+      }
+      
+      if (shouldDelete) {
+        keysToDelete.push(key);
+      }
+    }
+    
+    // 批量删除
+    keysToDelete.forEach(key => {
+      this.cache.delete(key);
+      cleanedCount++;
+    });
+    
+    if (cleanedCount > 0) {
+      // 分别保存用户和租户缓存
+      this.saveUserTokenCache();
+      this.saveTenantTokenCache();
+      Logger.info(`清理过期token，删除了 ${cleanedCount} 条记录`);
+    }
+    
+    return cleanedCount;
+  }
+
+  /**
+   * 启动缓存清理定时器
+   */
+  private startCacheCleanupTimer(): void {
+    // 每5分钟清理一次过期缓存
+    this.cleanupTimerId = setInterval(() => {
+      this.cleanExpiredTokens();
+    }, 5 * 60 * 1000);
+    // 不阻止进程在 stdio 模式下自然退出
+    this.cleanupTimerId.unref();
+
+    Logger.info('Token缓存清理定时器已启动，每5分钟执行一次');
+  }
+
+  /**
+   * 获取所有用户token的key列表（不包含前缀）
+   * @returns 用户token的key数组
+   */
+  public getAllUserTokenKeys(): string[] {
+    const keys: string[] = [];
+    
+    for (const [key] of this.cache.entries()) {
+      if (key.startsWith('user_access_token:')) {
+        // 提取clientKey（去掉前缀）
+        const clientKey = key.substring('user_access_token:'.length);
+        keys.push(clientKey);
+      }
+    }
+    
+    Logger.debug(`获取到 ${keys.length} 个用户token keys`);
+    return keys;
+  }
+
+  /**
+   * 获取scope版本信息
+   * @param clientKey 客户端缓存键
+   * @returns scope版本信息，如果未找到则返回null
+   */
+  public getScopeVersionInfo(clientKey: string): ScopeVersionInfo | null {
+    const cacheKey = `scope_version:${clientKey}`;
+    const cacheItem = this.cache.get(cacheKey);
+    
+    if (!cacheItem) {
+      Logger.debug(`Scope版本信息未找到: ${clientKey}`);
+      return null;
+    }
+
+    Logger.debug(`获取Scope版本信息成功: ${clientKey}`);
+    return cacheItem.data as ScopeVersionInfo;
+  }
+
+  /**
+   * 保存scope版本信息
+   * @param clientKey 客户端缓存键
+   * @param scopeVersionInfo scope版本信息
+   * @returns 是否成功保存
+   */
+  public saveScopeVersionInfo(clientKey: string, scopeVersionInfo: ScopeVersionInfo): boolean {
+    try {
+      const cacheKey = `scope_version:${clientKey}`;
+      const now = Date.now();
+      
+      // scope版本信息永久有效，不设置过期时间
+      const cacheItem: CacheItem<ScopeVersionInfo> = {
+        data: scopeVersionInfo,
+        timestamp: now,
+        expiresAt: Number.MAX_SAFE_INTEGER // 永久有效
+      };
+
+      this.cache.set(cacheKey, cacheItem);
+      this.saveScopeVersionCache();
+      
+      Logger.debug(`Scope版本信息保存成功: ${clientKey}, 版本: ${scopeVersionInfo.scopeVersion}`);
+      return true;
+    } catch (error) {
+      Logger.error(`保存Scope版本信息失败: ${clientKey}`, error);
+      return false;
+    }
+  }
+
+  /**
+   * 检查scope版本是否需要校验
+   * @param clientKey 客户端缓存键
+   * @param currentScopeVersion 当前scope版本号
+   * @returns 是否需要校验
+   */
+  public shouldValidateScope(clientKey: string, currentScopeVersion: string): boolean {
+    const scopeVersionInfo = this.getScopeVersionInfo(clientKey);
+    
+    if (!scopeVersionInfo) {
+      Logger.debug(`Scope版本信息不存在，需要校验: ${clientKey}`);
+      return true;
+    }
+
+    // 如果版本号不同，需要重新校验
+    if (scopeVersionInfo.validatedVersion !== currentScopeVersion) {
+      Logger.debug(`Scope版本号已更新，需要重新校验: ${clientKey}, 旧版本: ${scopeVersionInfo.validatedVersion}, 新版本: ${currentScopeVersion}`);
+      return true;
+    }
+
+    Logger.debug(`Scope版本已校验过，无需重复校验: ${clientKey}, 版本: ${currentScopeVersion}`);
+    return false;
+  }
+
+  /**
+   * 加载scope版本缓存
+   */
+  private loadScopeVersionCache(): void {
+    if (fs.existsSync(this.scopeVersionCacheFile)) {
+      try {
+        const raw = fs.readFileSync(this.scopeVersionCacheFile, 'utf-8');
+        const cacheData = JSON.parse(raw);
+        
+        let loadedCount = 0;
+        for (const key in cacheData) {
+          if (key.startsWith('scope_version:')) {
+            this.cache.set(key, cacheData[key]);
+            loadedCount++;
+          }
+        }
+        
+        Logger.info(`已加载Scope版本缓存，共 ${loadedCount} 条记录`);
+      } catch (error) {
+        Logger.warn('加载Scope版本缓存失败:', error);
+      }
+    } else {
+      Logger.info('Scope版本缓存文件不存在，将创建新的缓存');
+    }
+  }
+
+  /**
+   * 保存scope版本缓存到文件
+   */
+  private saveScopeVersionCache(): void {
+    const cacheData: Record<string, any> = {};
+    
+    for (const [key, value] of this.cache.entries()) {
+      if (key.startsWith('scope_version:')) {
+        cacheData[key] = value;
+      }
+    }
+    
+    try {
+      fs.writeFileSync(this.scopeVersionCacheFile, JSON.stringify(cacheData, null, 2), 'utf-8');
+      Logger.debug('Scope版本缓存已保存到文件');
+    } catch (error) {
+      Logger.warn('保存Scope版本缓存失败:', error);
+    }
+  }
+}

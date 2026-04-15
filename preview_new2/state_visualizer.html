@@ -1,0 +1,3152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC State Visualizer</title>
+    <script>
+    (function(){
+        var h = location.hostname;
+        var isLocal = (h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:');
+        var src = isLocal ? '/NDC_project/preview_new2/js-yaml.min.js' : '/preview_new2/js-yaml.min.js';
+        document.write('<scr'+'ipt src="'+src+'"><\/scr'+'ipt>');
+    })();
+    </script>
+    <style>
+        /* ===== DESIGN TOKENS ===== */
+        :root {
+            /* Elevation system: 4-level surfaces */
+            --surface-0: #0c0a09;
+            --surface-1: #1a1614;
+            --surface-2: #28221e;
+            --surface-3: #362e28;
+            --surface-4: #443a32;
+
+            --shadow-1: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-2: 0 3px 6px rgba(0,0,0,0.4), 0 3px 6px rgba(0,0,0,0.3);
+            --shadow-3: 0 10px 20px rgba(0,0,0,0.4), 0 6px 6px rgba(0,0,0,0.3);
+            --shadow-4: 0 14px 28px rgba(0,0,0,0.5), 0 10px 10px rgba(0,0,0,0.3);
+
+            /* 1920s palette */
+            --amber: #d4a24e;
+            --amber-dim: #a67c38;
+            --copper: #c67c3e;
+            --crimson: #b84040;
+            --crimson-dark: #8a2020;
+            --crimson-glow: #e05050;
+            --gold: #e8c678;
+            --gold-dim: #8a7030;
+
+            --ink: #e8e0d4;
+            --ink-secondary: #bfb5a5;
+            --ink-muted: #8a8070;
+            --ink-faint: #5a544c;
+
+            --accent-green: #4a7c59;
+            --accent-blue: #5c7aa8;
+            --accent-purple: #7a5c9e;
+            --accent-purple-light: #c9a8e8;
+            --accent-teal: #3a8a7a;
+
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== GLOBAL RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--surface-0);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            /* Paper noise texture */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--surface-0); }
+        ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--surface-1);
+            padding: 0.6rem 1.5rem;
+            border-bottom: 2px solid var(--crimson);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-2);
+        }
+        .header-title {
+            font-size: 1.15rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .header-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        select, .btn {
+            background: var(--surface-3);
+            color: var(--ink);
+            border: 1px solid var(--surface-4);
+            padding: 0.35rem 0.7rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: border-color var(--transition-fast);
+        }
+        select:hover, select:focus { border-color: var(--amber-dim); outline: none; }
+        .btn {
+            background: var(--crimson);
+            border: none;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: background var(--transition-fast), transform var(--transition-fast);
+        }
+        .btn:hover { background: var(--crimson-glow); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* ===== TAB BAR ===== */
+        .tab-bar {
+            display: flex;
+            background: var(--surface-1);
+            border-bottom: 1px solid var(--surface-3);
+            padding: 0 1rem;
+            position: sticky;
+            top: 42px;
+            z-index: 99;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .tab {
+            padding: 0.6rem 1.1rem;
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: var(--ink-muted);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: color var(--transition-fast), border-color var(--transition-fast);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .tab:hover { color: var(--ink-secondary); }
+        .tab.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            padding: 1.2rem 1.5rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .panel { display: none; }
+        .panel.active { display: block; animation: panelFadeIn 0.3s ease; }
+        @keyframes panelFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== LOADING / ERROR ===== */
+        .loading-msg, .error-msg {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--ink-muted);
+            font-size: 1.1rem;
+        }
+        .error-msg { color: var(--crimson-glow); }
+
+        /* ===== CARD SYSTEM (Elevation-based) ===== */
+        .card {
+            background: var(--surface-1);
+            border: 1px solid var(--surface-3);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-1);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212,162,78,0.04), transparent 40%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        .card:hover::before { opacity: 1; }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+        }
+        .card-elevated {
+            background: var(--surface-2);
+            border-color: var(--surface-4);
+            box-shadow: var(--shadow-2);
+        }
+        .card-elevated:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-3);
+        }
+        .card-title {
+            color: var(--gold);
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== COLLAPSE / EXPAND ANIMATION ===== */
+        .collapsible-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows var(--transition-slow);
+        }
+        .collapsible-wrapper.open {
+            grid-template-rows: 1fr;
+        }
+        .collapsible-inner {
+            overflow: hidden;
+        }
+
+        /* ===== GRIDS ===== */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            margin: 0.1rem;
+            letter-spacing: 0.3px;
+        }
+        .badge-red { background: rgba(184,64,64,0.25); color: var(--crimson-glow); border: 1px solid rgba(184,64,64,0.3); }
+        .badge-green { background: rgba(74,124,89,0.2); color: #6da07a; border: 1px solid rgba(74,124,89,0.25); }
+        .badge-yellow { background: rgba(138,112,48,0.25); color: var(--gold); border: 1px solid rgba(138,112,48,0.3); }
+        .badge-purple { background: rgba(122,92,158,0.2); color: var(--accent-purple-light); border: 1px solid rgba(122,92,158,0.25); }
+        .badge-blue { background: rgba(92,122,168,0.2); color: #8ab4cc; border: 1px solid rgba(92,122,168,0.25); }
+        .badge-gray { background: rgba(138,128,112,0.15); color: var(--ink-muted); border: 1px solid rgba(138,128,112,0.2); }
+
+        /* ===== ANNOTATION BUBBLES ===== */
+        .annotation-bubble {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.15rem;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .annotation-bubble:hover { transform: scale(1.05); }
+        .annotation-bubble.CLIMAX { background: rgba(204,68,68,0.2); color: #e07070; border: 1px solid rgba(204,68,68,0.3); }
+        .annotation-bubble.TURN { background: rgba(200,180,60,0.2); color: #c8c060; border: 1px solid rgba(200,180,60,0.3); }
+        .annotation-bubble.CROSS { background: rgba(122,92,158,0.2); color: #c9a8e8; border: 1px solid rgba(122,92,158,0.3); }
+        .annotation-bubble.PLANT { background: rgba(74,124,89,0.2); color: #6da07a; border: 1px solid rgba(74,124,89,0.3); }
+        .annotation-bubble.AMBUSH { background: rgba(200,120,60,0.2); color: #e8a060; border: 1px solid rgba(200,120,60,0.3); }
+        .annotation-detail {
+            display: none;
+            margin-top: 0.3rem;
+            font-size: 0.78rem;
+            color: var(--ink-secondary);
+            padding: 0.5rem 0.8rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-sm);
+            line-height: 1.5;
+            border-left: 2px solid var(--ink-faint);
+        }
+        .annotation-detail.open { display: block; }
+
+        /* ============================================ */
+        /* PANEL 1: HERO OVERVIEW "剧情仪表盘"          */
+        /* ============================================ */
+        .hero-banner {
+            background: linear-gradient(135deg, #1a0808 0%, var(--surface-0) 60%);
+            border-radius: var(--radius-xl);
+            padding: 2rem 2.5rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--surface-3);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 300px; height: 100%;
+            background: radial-gradient(ellipse at 100% 50%, rgba(184,64,64,0.08), transparent 70%);
+            pointer-events: none;
+        }
+        .hero-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+            margin-bottom: 0.2rem;
+        }
+        .hero-subtitle {
+            color: var(--ink-muted);
+            font-size: 0.88rem;
+            margin-bottom: 0.2rem;
+        }
+        .hero-liar {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .hero-liar-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--crimson);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(184,64,64,0.4);
+        }
+        .hero-liar-name {
+            color: var(--crimson-glow);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .hero-liar-label {
+            color: var(--ink-muted);
+            font-size: 0.75rem;
+        }
+        .hero-reveal {
+            color: var(--ink-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        /* Donut chart metrics */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .metric-card {
+            background: var(--surface-1);
+            border: 1px solid var(--surface-3);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: var(--shadow-1);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+        }
+        .donut-wrapper {
+            width: 52px; height: 52px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .donut-wrapper svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .donut-value {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Liar highlight card */
+        .liar-card {
+            background: linear-gradient(135deg, rgba(184,64,64,0.08), var(--surface-1));
+            border: 1px solid var(--surface-3);
+            border-left: 4px solid var(--crimson);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            box-shadow: var(--shadow-1);
+        }
+        .liar-card-avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--crimson);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 0 16px rgba(184,64,64,0.3);
+        }
+        .liar-card-body { flex: 1; }
+        .liar-card-name { font-weight: 700; color: var(--crimson-glow); font-size: 0.95rem; }
+        .liar-card-detail { font-size: 0.78rem; color: var(--ink-secondary); margin-top: 0.2rem; line-height: 1.5; }
+
+        /* Mini timeline */
+        .mini-timeline {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 0.8rem 0 0.3rem;
+            position: relative;
+            overflow-x: auto;
+        }
+        .mini-timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 20px; right: 20px;
+            height: 2px;
+            background: var(--surface-3);
+            transform: translateY(-50%);
+        }
+        .mini-tl-node {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            min-width: 60px;
+        }
+        .mini-tl-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--surface-0);
+            box-shadow: 0 0 0 1px var(--ink-faint);
+        }
+        .mini-tl-dot.type-opening { background: var(--gold); }
+        .mini-tl-dot.type-explore { background: var(--accent-green); }
+        .mini-tl-dot.type-expose { background: var(--crimson); box-shadow: 0 0 6px rgba(184,64,64,0.5); }
+        .mini-tl-dot.type-closing { background: var(--accent-blue); }
+        .mini-tl-dot.type-sudden_event { background: #e8a060; }
+        .mini-tl-label {
+            font-size: 0.6rem;
+            color: var(--ink-muted);
+            text-align: center;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ============================================ */
+        /* PANEL 2: TENSION CURVE "呼吸的张力曲线"       */
+        /* ============================================ */
+        .canvas-container {
+            position: relative;
+            width: 100%;
+        }
+        .canvas-tooltip {
+            position: absolute;
+            display: none;
+            background: var(--surface-2);
+            border: 1px solid var(--amber-dim);
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            color: var(--ink);
+            max-width: 340px;
+            line-height: 1.5;
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: var(--shadow-3);
+        }
+
+        /* ============================================ */
+        /* PANEL 3: SCENE MAP "空间化分组"               */
+        /* ============================================ */
+        .scene-group {
+            margin-bottom: 1.5rem;
+        }
+        .scene-group-label {
+            font-size: 0.72rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.3rem 0.6rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+        .scene-group-content {
+            border: 1px dashed var(--surface-4);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.8rem;
+        }
+        .scene-card {
+            background: var(--surface-2);
+            border: 1px solid var(--surface-3);
+            border-radius: var(--radius-md);
+            padding: 0.9rem 1rem;
+            cursor: pointer;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+        .scene-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212,162,78,0.06), transparent 40%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        .scene-card:hover::before { opacity: 1; }
+        .scene-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-3);
+            border-color: var(--amber-dim);
+        }
+        .scene-card.locked {
+            opacity: 0.5;
+            position: relative;
+        }
+        .scene-card.locked::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(12,10,9,0.4);
+            backdrop-filter: blur(1px);
+            border-radius: var(--radius-md);
+            pointer-events: none;
+        }
+        .scene-lock-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            z-index: 2;
+            opacity: 0.6;
+        }
+        .scene-card.selected {
+            border-color: var(--gold);
+            box-shadow: 0 0 12px rgba(232,198,120,0.15);
+        }
+        .scene-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+        .scene-card-name { font-weight: 600; font-size: 0.88rem; color: var(--ink); }
+        .scene-card-icon { font-size: 1.1rem; }
+        .scene-card-bubbles { display: flex; gap: 0.4rem; margin-top: 0.35rem; flex-wrap: wrap; }
+        .bubble { font-size: 0.68rem; padding: 0.12rem 0.45rem; border-radius: 8px; }
+        .bubble-ev { background: rgba(212,162,78,0.15); color: var(--amber); border: 1px solid rgba(212,162,78,0.2); }
+        .bubble-npc { background: rgba(74,124,89,0.15); color: #6da07a; border: 1px solid rgba(74,124,89,0.2); }
+
+        /* Density bar (gradient style) */
+        .density-bar-wrap { margin-top: 0.4rem; }
+        .density-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--surface-4);
+            overflow: hidden;
+        }
+        .density-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+        .density-bar-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.15rem;
+        }
+        .density-bar-text {
+            font-size: 0.65rem;
+            color: var(--ink-faint);
+        }
+        .density-tooltip {
+            position: relative;
+            cursor: help;
+        }
+        .density-tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface-3);
+            color: var(--ink-secondary);
+            font-size: 0.68rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+        .density-tooltip:hover::after { opacity: 1; }
+
+        /* Scene detail (collapsible) */
+        .scene-detail {
+            margin-top: 0.8rem;
+            border-top: 1px solid var(--surface-4);
+            padding-top: 0.6rem;
+        }
+        .scene-detail-section { margin-bottom: 0.6rem; }
+        .scene-detail-section h4 {
+            color: var(--amber);
+            font-size: 0.78rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+        .ev-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .ev-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 4px currentColor;
+        }
+
+        /* ============================================ */
+        /* PANEL 4: EVIDENCE GRAPH "侦探证据墙"          */
+        /* ============================================ */
+        .graph-container {
+            width: 100%;
+            height: 650px;
+            border: 1px solid var(--surface-3);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--surface-1);
+            position: relative;
+            box-shadow: var(--shadow-2);
+        }
+        .graph-container svg { width: 100%; height: 100%; }
+        .graph-tooltip {
+            position: absolute;
+            display: none;
+            background: var(--surface-2);
+            border: 1px solid var(--amber-dim);
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--radius-md);
+            font-size: 0.78rem;
+            color: var(--ink);
+            max-width: 280px;
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: var(--shadow-3);
+            line-height: 1.5;
+        }
+        .graph-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .graph-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--ink-muted);
+        }
+        .graph-legend-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .graph-legend-diamond {
+            width: 10px; height: 10px;
+            transform: rotate(45deg);
+            flex-shrink: 0;
+        }
+        .graph-legend-triangle {
+            width: 0; height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid;
+            flex-shrink: 0;
+        }
+        .graph-legend-rect {
+            width: 12px; height: 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        /* Flowing dash animation */
+        @keyframes dashFlow {
+            from { stroke-dashoffset: 20; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* ============================================ */
+        /* PANEL 5: NPC KNOWLEDGE "知识光谱"             */
+        /* ============================================ */
+        .npc-card {
+            background: var(--surface-1);
+            border: 1px solid var(--surface-3);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-1);
+            transition: border-color var(--transition-normal);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { border-color: var(--crimson); box-shadow: var(--shadow-1), 0 0 8px rgba(184,64,64,0.15); }
+            50% { border-color: var(--crimson-glow); box-shadow: var(--shadow-1), 0 0 16px rgba(184,64,64,0.3); }
+        }
+        .npc-card.is-liar {
+            border-color: var(--crimson);
+            border-width: 2px;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        .npc-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.7rem;
+        }
+        .npc-card-name { font-size: 1rem; font-weight: 700; color: var(--gold); }
+        .npc-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .npc-col h4 {
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .npc-col ul { list-style: none; }
+        .npc-col li {
+            font-size: 0.8rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4rem;
+        }
+        .npc-col li::before {
+            content: '';
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.45rem;
+        }
+        .npc-col-knows li { color: var(--ink-secondary); }
+        .npc-col-knows li::before { background: var(--ink-faint); }
+        .npc-col-doesnt li { color: var(--ink-muted); font-size: 0.78rem; }
+        .npc-col-doesnt li::before { background: var(--surface-4); }
+        .conceal-mark {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(184,64,64,0.08),
+                rgba(184,64,64,0.08) 3px,
+                transparent 3px,
+                transparent 6px
+            );
+            padding: 0.15rem 0.3rem;
+            border-radius: var(--radius-sm);
+            margin-left: 0.2rem;
+        }
+        .conceal-tag {
+            background: var(--crimson);
+            color: #fff;
+            font-size: 0.58rem;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            margin-left: 0.3rem;
+            font-weight: 600;
+        }
+        .lie-section {
+            margin-top: 0.7rem;
+            border-top: 1px solid var(--surface-3);
+            padding-top: 0.7rem;
+        }
+        .lie-toggle {
+            cursor: pointer;
+            color: var(--crimson-glow);
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color var(--transition-fast);
+        }
+        .lie-toggle:hover { color: var(--crimson); }
+        .lie-toggle-arrow {
+            transition: transform var(--transition-fast);
+            font-size: 0.7rem;
+        }
+        .lie-toggle-arrow.open { transform: rotate(90deg); }
+        .lie-row { display: grid; grid-template-columns: 56px 1fr; gap: 0.4rem; margin-bottom: 0.4rem; align-items: baseline; }
+        .lie-label { color: var(--crimson-glow); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; }
+        .truth-label { color: var(--accent-green); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; }
+        .npc-motive {
+            margin-top: 0.5rem;
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+            padding: 0.4rem 0.6rem;
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+            border-left: 2px solid var(--amber-dim);
+        }
+
+        /* ============================================ */
+        /* PANEL 6: EXPOSE "法庭攻防战报"                */
+        /* ============================================ */
+        .expose-header {
+            background: linear-gradient(135deg, rgba(184,64,64,0.06), var(--surface-1));
+            border-radius: var(--radius-lg);
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--surface-3);
+            box-shadow: var(--shadow-1);
+        }
+        .expose-target-title {
+            color: var(--gold);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .mindset-bar {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-top: 0.6rem;
+            padding: 0.5rem 0.7rem;
+            background: rgba(184,64,64,0.06);
+            border: 1px solid rgba(184,64,64,0.12);
+            border-radius: var(--radius-md);
+        }
+        .mindset-label {
+            font-size: 0.7rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            padding-top: 0.1rem;
+        }
+        .mindset-text { font-size: 0.82rem; color: var(--ink-secondary); font-style: italic; line-height: 1.5; }
+
+        /* Defense bar */
+        .defense-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        .defense-bar-label {
+            font-size: 0.7rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .defense-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--surface-3);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .defense-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease, background 0.6s ease;
+        }
+        .defense-bar-segments {
+            display: flex;
+            gap: 2px;
+            margin-top: 0.3rem;
+        }
+        .defense-segment {
+            flex: 1;
+            height: 3px;
+            border-radius: 2px;
+            transition: background 0.4s ease;
+        }
+
+        /* Expose round - dual column battle */
+        .expose-round {
+            margin-bottom: 1.2rem;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--surface-3);
+            box-shadow: var(--shadow-1);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+        .expose-round:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+        }
+        .expose-round-header {
+            background: var(--surface-2);
+            padding: 0.7rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--surface-3);
+        }
+        .round-title { color: var(--gold); font-weight: 700; font-size: 0.92rem; }
+        .round-status {
+            font-size: 0.72rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .status-defend { background: rgba(74,124,89,0.2); color: #6da07a; border: 1px solid rgba(74,124,89,0.3); }
+        .status-waver { background: rgba(200,180,60,0.2); color: #c8c060; border: 1px solid rgba(200,180,60,0.3); }
+        .status-break { background: rgba(184,64,64,0.25); color: var(--crimson-glow); border: 1px solid rgba(184,64,64,0.3); }
+
+        /* Battle layout: 3-column grid */
+        .expose-battle {
+            display: grid;
+            grid-template-columns: 1fr 40px 1fr;
+            gap: 0;
+            min-height: 100px;
+        }
+        .battle-left {
+            background: linear-gradient(135deg, rgba(184,64,64,0.04), var(--surface-1));
+            padding: 1rem;
+            border-right: 1px solid var(--surface-3);
+        }
+        .battle-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-2);
+        }
+        .battle-vs {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--surface-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--ink-muted);
+            border: 1px solid var(--surface-4);
+        }
+        .battle-right {
+            background: linear-gradient(135deg, rgba(212,162,78,0.04), var(--surface-1));
+            padding: 1rem;
+        }
+        .battle-section-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .battle-left .battle-section-label { color: var(--crimson-glow); }
+        .battle-right .battle-section-label { color: var(--amber); }
+
+        .lie-quote {
+            font-size: 0.82rem;
+            color: var(--ink-secondary);
+            font-style: italic;
+            line-height: 1.6;
+            padding: 0.4rem 0.6rem;
+            background: rgba(184,64,64,0.06);
+            border-left: 3px solid var(--crimson);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .evidence-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .evidence-chip {
+            padding: 0.3rem 0.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            background: rgba(212,162,78,0.1);
+            border: 1px solid rgba(212,162,78,0.25);
+            color: var(--amber);
+            transition: transform var(--transition-fast);
+        }
+        .evidence-chip:hover { transform: scale(1.03); }
+        .evidence-chip b { font-weight: 700; }
+        .evidence-chip.trap {
+            background: rgba(184,64,64,0.1);
+            border-color: rgba(184,64,64,0.3);
+            color: var(--crimson-glow);
+            transform: rotate(-1deg);
+        }
+        .evidence-chip.trap:hover { transform: rotate(0deg) scale(1.03); }
+        .evidence-chip.auto {
+            background: rgba(92,122,168,0.1);
+            border-color: rgba(92,122,168,0.25);
+            color: #8ab4cc;
+        }
+
+        /* Result area */
+        .expose-result {
+            padding: 0.6rem 1rem;
+            background: var(--surface-2);
+            border-top: 1px solid var(--surface-3);
+        }
+        .result-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+        .result-text {
+            font-size: 0.82rem;
+            white-space: pre-line;
+            line-height: 1.6;
+            color: var(--ink-secondary);
+        }
+
+        /* Final round special */
+        .expose-round.final-round {
+            border: 2px solid var(--crimson);
+            background: linear-gradient(135deg, rgba(184,64,64,0.04), var(--surface-0));
+            position: relative;
+        }
+        .expose-round.final-round::after {
+            content: 'BREAK';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--crimson-glow);
+            letter-spacing: 2px;
+            padding: 0.15rem 0.5rem;
+            border: 1px solid var(--crimson);
+            border-radius: var(--radius-sm);
+            background: rgba(184,64,64,0.15);
+        }
+
+        /* Annotation filters */
+        .annotation-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            padding: 0.5rem 0.7rem;
+            background: var(--surface-2);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--surface-3);
+        }
+        .annotation-filters label {
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+        .annotation-filters label:hover { color: var(--ink-secondary); }
+        .annotation-filters input[type="checkbox"] { accent-color: var(--crimson); }
+
+        /* ===== LINKED HIGHLIGHT ===== */
+        .linked-highlight {
+            box-shadow: 0 0 0 2px var(--gold), var(--shadow-2) !important;
+            transition: box-shadow 0.3s;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
+            .npc-columns { grid-template-columns: 1fr; }
+            .expose-battle { grid-template-columns: 1fr; }
+            .battle-center { height: 30px; }
+            .battle-left, .battle-right { border-right: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">NDC State Visualizer</div>
+        <div class="header-controls">
+            <select id="unitSelect">
+                <option value="1">Unit 1</option>
+                <option value="2">Unit 2</option>
+                <option value="3">Unit 3</option>
+            </select>
+            <select id="loopSelect">
+                <option value="1">Loop 1</option>
+                <option value="2">Loop 2</option>
+                <option value="3">Loop 3</option>
+                <option value="4">Loop 4</option>
+                <option value="5">Loop 5</option>
+                <option value="6">Loop 6</option>
+            </select>
+            <button class="btn" id="loadBtn">加载</button>
+            <span id="statusText" style="color:var(--ink-muted);font-size:0.78rem;margin-left:0.5rem;"></span>
+        </div>
+    </div>
+    <div class="tab-bar" id="tabBar">
+        <div class="tab active" data-panel="overview">剧情仪表盘</div>
+        <div class="tab" data-panel="tension">张力曲线</div>
+        <div class="tab" data-panel="scenes">场景地图</div>
+        <div class="tab" data-panel="graph">证据关系网</div>
+        <div class="tab" data-panel="npcKnowledge">知识光谱</div>
+        <div class="tab" data-panel="expose">攻防战报</div>
+    </div>
+    <div class="main-content">
+        <div id="emptyState" class="loading-msg">选择 Unit 和 Loop 后点击「加载」</div>
+        <div id="panelOverview" class="panel"></div>
+        <div id="panelTension" class="panel"></div>
+        <div id="panelScenes" class="panel"></div>
+        <div id="panelGraph" class="panel"></div>
+        <div id="panelNpcKnowledge" class="panel"></div>
+        <div id="panelExpose" class="panel"></div>
+    </div>
+
+<script>
+// ===== Config =====
+const Config = {
+    get mode() {
+        const h = location.hostname;
+        return (h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:') ? 'local' : 'deploy';
+    },
+    getStatePath(unit, loop) {
+        const base = this.mode === 'local' ? '/NDC_project' : '';
+        return `${base}/剧情设计/Unit${unit}/state/loop${loop}_state.yaml`;
+    }
+};
+
+// ===== Global State =====
+let currentState = null;
+let activePanel = 'overview';
+let tensionNodes = [];
+let annotationFilters = { CLIMAX: true, TURN: true, CROSS: true, PLANT: true, AMBUSH: true };
+let selectedSceneId = null;
+
+// ===== Mouse tracking for card light effects =====
+document.addEventListener('mousemove', (e) => {
+    const cards = document.querySelectorAll('.card, .scene-card, .metric-card');
+    cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', x + 'px');
+        card.style.setProperty('--mouse-y', y + 'px');
+    });
+});
+
+// ===== Tab switching =====
+document.getElementById('tabBar').addEventListener('click', e => {
+    const tab = e.target.closest('.tab');
+    if (!tab || !currentState) return;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activePanel = tab.dataset.panel;
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('panel' + activePanel.charAt(0).toUpperCase() + activePanel.slice(1));
+    if (panel) panel.classList.add('active');
+    // Canvas needs visible container to measure dimensions
+    if (activePanel === 'tension' && tensionNodes.length > 0) {
+        requestAnimationFrame(() => drawTensionCanvas());
+    }
+});
+
+// ===== Load button =====
+document.getElementById('loadBtn').addEventListener('click', async () => {
+    const unit = parseInt(document.getElementById('unitSelect').value);
+    const loop = parseInt(document.getElementById('loopSelect').value);
+    const status = document.getElementById('statusText');
+    const btn = document.getElementById('loadBtn');
+    btn.disabled = true;
+    status.textContent = '加载中...';
+    try {
+        const url = Config.getStatePath(unit, loop);
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${url}`);
+        const raw = await resp.text();
+        const meta = extractMeta(raw, unit, loop);
+        const yaml = jsyaml.load(raw);
+        currentState = normalize(yaml, meta, raw);
+        enrichEvidenceWithExposeInfo(currentState);
+        currentState.annotations = generateAnnotations(currentState);
+        document.getElementById('emptyState').style.display = 'none';
+        renderAll();
+        // Activate overview tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('.tab[data-panel="overview"]').classList.add('active');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panelOverview').classList.add('active');
+        activePanel = 'overview';
+        status.textContent = `Unit${unit} Loop${loop} 已加载`;
+    } catch(err) {
+        status.textContent = '错误: ' + err.message;
+        console.error(err);
+    }
+    btn.disabled = false;
+});
+
+// ===== Meta extraction from comments =====
+function extractMeta(raw, unit, loop) {
+    const lines = raw.split('\n');
+    const meta = { unit, loop, title: '', liar: '', coreReveal: '', precedingEvents: '', timeLabel: '' };
+    const titleRegex = /^#\s*Loop\s*\d+\s*[—–-]+\s*(.+)/;
+    const liarRegex = /# 本循环说谎者[：:]\s*(.+)/;
+    const revealRegex = /# 核心揭示[：:]\s*(.+)/;
+    const preRegex = /# 前序事件[：:]\s*(.+)/;
+    const timeRegex = /# 时间[：:]\s*(.+)/;
+    for (const line of lines) {
+        let m;
+        if ((m = line.match(titleRegex))) meta.title = m[1].trim();
+        if ((m = line.match(liarRegex))) meta.liar = m[1].trim();
+        if ((m = line.match(revealRegex))) meta.coreReveal = m[1].trim();
+        if ((m = line.match(preRegex))) meta.precedingEvents = m[1].trim();
+        if ((m = line.match(timeRegex))) meta.timeLabel = m[1].trim();
+    }
+    return meta;
+}
+
+// ===== Normalize YAML to StateData =====
+function normalize(yaml, meta, raw) {
+    const state = { meta };
+
+    // Player context
+    const pc = yaml.player_context || {};
+    state.playerContext = {
+        chapterGoal: pc.chapter_goal || null,
+        goals: {
+            primary: (pc.goals && pc.goals.primary) || '',
+            secondary: (pc.goals && pc.goals.secondary) || []
+        },
+        knownFacts: pc.known_facts || [],
+        newDirections: (pc.new_directions || []).map(d => ({
+            direction: d.direction || '',
+            trigger: d.trigger || ''
+        })),
+        postExposeKnowledge: pc.post_expose_knowledge || []
+    };
+
+    // Opening
+    const op = yaml.opening || {};
+    const openingNpcs = [];
+    const nonNpcKeys = ['scene_id','characters','purpose','talk','role','discovery','dialogue_tone'];
+    for (const key of Object.keys(op)) {
+        if (nonNpcKeys.includes(key)) continue;
+        const val = op[key];
+        if (val && typeof val === 'object' && ('is_liar' in val || 'knows' in val)) {
+            openingNpcs.push(parseNpc(key, val));
+        }
+    }
+    state.opening = {
+        sceneId: op.scene_id || 0,
+        characters: op.characters || [],
+        purpose: op.purpose || '',
+        talkRef: op.talk || '',
+        npcs: openingNpcs,
+        suddenEvent: null
+    };
+    // Sudden event (Unit2)
+    const suddenSrc = op.sudden_event || yaml.sudden_event || null;
+    if (suddenSrc) {
+        state.opening.suddenEvent = {
+            name: suddenSrc.name || '',
+            trigger: suddenSrc.trigger || '',
+            characters: suddenSrc.characters || [],
+            purpose: suddenSrc.purpose || '',
+            result: suddenSrc.result || ''
+        };
+    }
+
+    // Scenes
+    state.scenes = (yaml.scenes || []).map(s => {
+        const scene = {
+            id: s.id || 0,
+            name: s.name || '',
+            note: s.note || null,
+            sceneType: inferSceneType(s, state.opening.sceneId, true),
+            evidence: (s.evidence || []).map(ev => parseEvidence(ev)),
+            npcs: [],
+            connoisseur: []
+        };
+        if (s.npcs && typeof s.npcs === 'object') {
+            for (const [nk, nv] of Object.entries(s.npcs)) {
+                if (nv && typeof nv === 'object') {
+                    scene.npcs.push(parseNpc(nk, nv));
+                }
+            }
+        }
+        if (s.connoisseur) scene.connoisseur = parseConnoisseurList(s.connoisseur);
+        return scene;
+    });
+
+    // Expose
+    const ex = yaml.expose || {};
+    const rounds = [];
+    for (let i = 1; i <= 10; i++) {
+        const rk = 'round_' + i;
+        if (ex[rk]) {
+            rounds.push(parseExposeRound(ex[rk], i));
+        }
+    }
+    let exposeNpcState = null;
+    const exposeNonRound = ['target','total_rounds'];
+    for (const key of Object.keys(ex)) {
+        if (exposeNonRound.includes(key) || key.startsWith('round_')) continue;
+        const val = ex[key];
+        if (val && typeof val === 'object' && ('is_liar' in val || 'knows' in val)) {
+            exposeNpcState = parseNpc(key, val);
+        }
+    }
+    state.expose = {
+        target: ex.target || '',
+        totalRounds: ex.total_rounds || rounds.length,
+        npcState: exposeNpcState,
+        rounds
+    };
+
+    // Doubts
+    state.doubts = (yaml.doubts || []).map(d => {
+        const conditions = parseUnlockCondition(d.unlock_condition || '');
+        return {
+            id: d.id || 0,
+            text: d.text || '',
+            unlockConditionRaw: d.unlock_condition || '',
+            unlockCondition: conditions,
+            clear: d.clear !== undefined ? d.clear : null
+        };
+    });
+
+    // Special events
+    state.specialEvents = [];
+    if (yaml.events && Array.isArray(yaml.events)) {
+        for (const ev of yaml.events) {
+            state.specialEvents.push({
+                type: ev.type || 'closing',
+                name: ev.name || '',
+                sceneId: ev.scene_id || null,
+                trigger: ev.trigger || '',
+                characters: ev.characters || [],
+                purpose: ev.purpose || '',
+                result: ev.result || null
+            });
+        }
+    }
+
+    // Derived evidence map
+    state.derivedEvidenceMap = buildDerivedMap(raw, state);
+
+    return state;
+}
+
+function parseNpc(key, obj) {
+    return {
+        key,
+        isLiar: obj.is_liar === true,
+        motive: obj.motive || '',
+        mindset: obj.mindset || '',
+        knows: obj.knows || [],
+        doesNotKnow: obj.does_not_know || [],
+        awareness: (obj.awareness || []).map(a => ({
+            content: typeof a === 'string' ? a : (a.content || ''),
+            trigger: typeof a === 'string' ? '' : (a.trigger || '')
+        })),
+        lie: obj.lie ? { content: obj.lie.content || '', truth: obj.lie.truth || '' } : null,
+        testimonyIds: obj.testimony_ids || [],
+        connoisseur: parseConnoisseurList(obj.connoisseur || []),
+        talkRef: obj.talk || ''
+    };
+}
+
+function parseConnoisseurList(arr) {
+    if (!arr || !Array.isArray(arr)) return [];
+    return arr.map(c => ({
+        type: c.type || 'source',
+        nodeId: c.node || null,
+        triggerMode: c.trigger_mode || null,
+        content: c.content || null,
+        noteForFuture: c.note || null,
+        question: c.question || null,
+        answer: c.answer || null,
+        reward: c.reward || null
+    }));
+}
+
+function parseEvidence(ev) {
+    const note = ev.note || '';
+    let category = 'prop';
+    let usage = null;
+    if (note.startsWith('关键')) {
+        category = 'key';
+        const m = note.match(/关键[—\-]+(.+)/);
+        if (m) usage = m[1].trim();
+    } else if (note.startsWith('环境叙事')) {
+        category = 'narrative';
+    } else if (note.startsWith('场景道具') || note.startsWith('非指证')) {
+        category = 'prop';
+    }
+    const id = ev.id || 0;
+    const idStr = String(id);
+    const isDerived = idStr.length === 4 && idStr[1] === '7';
+    return {
+        id,
+        name: ev.name || '',
+        note,
+        category,
+        usage,
+        analyzedId: ev.analyzed_id || null,
+        usedInExposeRounds: [],
+        isTrap: false,
+        isDerived
+    };
+}
+
+function parseExposeRound(r, idx) {
+    return {
+        id: r.id || idx,
+        lie: r.lie || '',
+        lieSource: r.lie_source || '',
+        usableEvidence: (r.usable_evidence || []).map(e => ({
+            id: e.id || 0,
+            name: e.name || '',
+            usage: e['用途'] || e.usage || ''
+        })),
+        trapEvidence: (r.trap_evidence || []).map(e => ({
+            id: e.id || 0,
+            name: e.name || '',
+            usage: e['用途'] || e.usage || ''
+        })),
+        autoFollowupEvidence: (r.auto_followup_evidence || []).map(e => ({
+            id: e.id || 0,
+            name: e.name || '',
+            usage: e['用途'] || e.usage || ''
+        })),
+        result: r.result || '',
+        relationNetwork: r.relation_network || null
+    };
+}
+
+function parseUnlockCondition(str) {
+    if (!str) return [];
+    return str.split(/\s*\+\s*/).map(part => {
+        const m = part.match(/(testimony|item)[：:](\d+)/i);
+        if (m) return { type: m[1].toLowerCase(), id: parseInt(m[2]) };
+        return null;
+    }).filter(Boolean);
+}
+
+function inferSceneType(s, openingSceneId, exposeNpcIsLiar) {
+    const note = (s.note || '').toLowerCase();
+    if (note.includes('initscene') || note.includes('开篇') || s.id === openingSceneId) return 'opening';
+    if (note.includes('指证') || note.includes('\u2694\uFE0F')) return 'expose';
+    const hasEvidence = s.evidence && s.evidence.length > 0;
+    const hasNpcs = s.npcs && Object.keys(s.npcs).length > 0;
+    if (hasNpcs && s.npcs) {
+        const npcValues = typeof s.npcs === 'object' && !Array.isArray(s.npcs) ? Object.values(s.npcs) : [];
+        if (npcValues.some(n => n && n.is_liar === true)) return 'expose';
+    }
+    if (note.includes('\uD83D\uDD12') || note.includes('不可进入') || note.includes('锁定')) return 'locked';
+    if (note.includes('\u23F8\uFE0F') || note.includes('无新线索') || note.includes('无新证据')) return 'idle';
+    if (hasEvidence || hasNpcs) return 'explore';
+    if (!hasEvidence && !hasNpcs) return 'idle';
+    return 'explore';
+}
+
+function buildDerivedMap(raw, state) {
+    const map = {};
+    for (const scene of state.scenes) {
+        for (const ev of scene.evidence) {
+            if (ev.analyzedId) {
+                map[ev.id] = ev.analyzedId;
+            }
+        }
+    }
+    const regex = /# (\d{4})\(.+?\)\s*→\s*.+?\s*→\s*(\d{4})/g;
+    let m;
+    while ((m = regex.exec(raw)) !== null) {
+        map[parseInt(m[1])] = parseInt(m[2]);
+    }
+    const derivedBlock = /# (\d{4})\s+.+?\n#\s+获取方式[：:].*?(\d{4})/g;
+    while ((m = derivedBlock.exec(raw)) !== null) {
+        map[parseInt(m[2])] = parseInt(m[1]);
+    }
+    return map;
+}
+
+function enrichEvidenceWithExposeInfo(state) {
+    const allEvidence = new Map();
+    for (const scene of state.scenes) {
+        for (const ev of scene.evidence) {
+            allEvidence.set(ev.id, ev);
+        }
+    }
+    for (const round of state.expose.rounds) {
+        for (const ue of round.usableEvidence) {
+            const ev = allEvidence.get(ue.id);
+            if (ev) ev.usedInExposeRounds.push(round.id);
+        }
+        for (const te of round.trapEvidence) {
+            const ev = allEvidence.get(te.id);
+            if (ev) { ev.isTrap = true; ev.category = 'trap'; }
+        }
+        for (const ae of round.autoFollowupEvidence) {
+            const ev = allEvidence.get(ae.id);
+            if (ev) ev.usedInExposeRounds.push(round.id);
+        }
+    }
+}
+
+// ===== Information Density =====
+function calcSceneInfoLoad(scene) {
+    let load = 0;
+    for (const ev of scene.evidence) {
+        if (ev.category === 'key') load += 3.0;
+        else if (ev.isDerived) load += 2.5;
+        else if (ev.category === 'narrative') load += 0.5;
+        else load += 0.3;
+    }
+    for (const npc of scene.npcs) {
+        if (npc.isLiar) load += 4.0;
+        if (npc.testimonyIds.length > 0) load += 2.0;
+        if (npc.connoisseur.length > 0) load += 1.5;
+    }
+    return Math.round(load * 10) / 10;
+}
+
+function calcLoopInfoLoad(state) {
+    let total = 0;
+    for (const scene of state.scenes) {
+        total += calcSceneInfoLoad(scene);
+    }
+    const ex = state.expose;
+    total += ex.totalRounds * 5.0;
+    for (const r of ex.rounds) {
+        total += r.usableEvidence.length * 2.0;
+    }
+    total += state.playerContext.postExposeKnowledge.length * 1.5;
+    return Math.round(total * 10) / 10;
+}
+
+function calcDistributionScore(state) {
+    const loads = state.scenes.map(s => calcSceneInfoLoad(s)).filter(l => l > 0);
+    if (loads.length === 0) return 0;
+    const maxL = Math.max(...loads);
+    const sumL = loads.reduce((a,b) => a+b, 0);
+    return sumL > 0 ? Math.round((maxL / sumL) * 100) / 100 : 0;
+}
+
+// ===== Tension Curve =====
+function calcTensionCurve(state) {
+    const nodes = [];
+    let baseTension = 30;
+    const opNpcs = state.opening.npcs;
+    if (opNpcs.some(n => n.isLiar)) baseTension += 15;
+    if (state.opening.suddenEvent) baseTension += 10;
+    if (state.playerContext.knownFacts.length >= 5) baseTension += 10;
+    if (state.playerContext.knownFacts.length === 0) baseTension -= 5;
+    baseTension = Math.max(20, Math.min(60, baseTension));
+    nodes.push({ label: '开篇', tension: baseTension, sceneId: state.opening.sceneId, type: 'opening' });
+
+    if (state.opening.suddenEvent) {
+        nodes.push({
+            label: state.opening.suddenEvent.name,
+            tension: Math.min(85, nodes[nodes.length-1].tension + 20),
+            type: 'sudden_event'
+        });
+    }
+
+    for (const scene of state.scenes) {
+        if (scene.sceneType === 'idle' || scene.sceneType === 'locked' || scene.id === state.opening.sceneId) continue;
+        const contrib = calcSceneTensionContrib(scene, state);
+        if (contrib === 0 && scene.evidence.length === 0 && scene.npcs.length === 0) continue;
+        const prev = nodes[nodes.length-1].tension;
+        const tension = Math.max(0, Math.min(85, prev + contrib));
+        nodes.push({ label: scene.name, tension, sceneId: scene.id, type: scene.sceneType });
+    }
+
+    for (const round of state.expose.rounds) {
+        const tension = calcExposeRoundTension(round);
+        nodes.push({
+            label: `R${round.id}: ${round.lie.substring(0, 16)}...`,
+            tension: Math.min(100, tension),
+            type: 'expose',
+            roundId: round.id
+        });
+    }
+
+    for (const ev of state.specialEvents.filter(e => e.type === 'closing')) {
+        const prev = nodes[nodes.length-1].tension;
+        nodes.push({
+            label: ev.name,
+            tension: Math.max(40, prev - 15),
+            type: 'closing'
+        });
+    }
+
+    return nodes;
+}
+
+function calcSceneTensionContrib(scene, state) {
+    let score = 0;
+    for (const ev of scene.evidence) {
+        if (ev.category === 'key') score += 15;
+        else if (ev.category === 'narrative') score += 3;
+        else if (ev.category === 'prop') score += 2;
+        if (ev.isDerived) score += 10;
+    }
+    if (scene.npcs.length > 0) score += 5;
+    if (scene.npcs.some(n => n.isLiar)) score += 15;
+    if (scene.npcs.some(n => n.testimonyIds.length > 0)) score += 8;
+    if (scene.npcs.some(n => n.connoisseur.length > 0)) score += 4;
+    for (const doubt of state.doubts) {
+        for (const cond of doubt.unlockCondition) {
+            if (cond.type === 'item' && scene.evidence.some(e => e.id === cond.id)) score += 10;
+        }
+    }
+    return score;
+}
+
+function calcExposeRoundTension(round) {
+    let tension = 60 + round.id * 12;
+    const result = round.result || '';
+    if (result.includes('彻底崩溃') || result.includes('防线崩溃') || result.includes('完整坦白')) tension += 15;
+    else if (result.includes('被迫承认')) tension += 8;
+    else if (result.includes('部分承认') || result.includes('含泪承认')) tension += 5;
+    else if (result.includes('辩解') || result.includes('慌张辩解')) tension += 3;
+    tension += round.usableEvidence.length * 5;
+    tension += round.autoFollowupEvidence.length * 8;
+    if (round.trapEvidence.length > 0) tension -= 3;
+    return Math.min(100, tension);
+}
+
+// ===== Annotation Generation =====
+function generateAnnotations(state) {
+    const annotations = [];
+    const tn = calcTensionCurve(state);
+    tensionNodes = tn;
+
+    if (state.expose.rounds.length > 0 && state.playerContext.postExposeKnowledge.length > 0) {
+        const lastRound = state.expose.rounds[state.expose.rounds.length - 1];
+        annotations.push({
+            type: 'CLIMAX',
+            location: 'expose',
+            roundId: lastRound.id,
+            text: `${state.meta.liar || state.expose.target} 在最终轮指证后完整坦白。本循环的情感顶点。`
+        });
+    }
+
+    for (const round of state.expose.rounds) {
+        if (round.result.includes('退守') || round.result.includes('升级谎言')) {
+            if (round.id < state.expose.totalRounds) {
+                annotations.push({
+                    type: 'TURN',
+                    location: 'expose',
+                    roundId: round.id,
+                    text: `R${round.id} 击穿后 NPC 退守新谎言，谎言结构是多层的。`
+                });
+                if (annotations.filter(a => a.type === 'TURN').length >= 2) break;
+            }
+        }
+    }
+
+    for (const doubt of state.doubts) {
+        const types = new Set(doubt.unlockCondition.map(c => c.type));
+        if (types.size >= 2) {
+            annotations.push({
+                type: 'CROSS',
+                location: 'doubt',
+                doubtId: doubt.id,
+                text: `疑点 ${doubt.id} 需要不同来源信息交叉验证（${doubt.unlockConditionRaw}）。`
+            });
+        }
+        if (annotations.filter(a => a.type === 'CROSS').length >= 3) break;
+    }
+    for (const round of state.expose.rounds) {
+        if (round.usableEvidence.length >= 2) {
+            const sceneIds = new Set();
+            for (const ue of round.usableEvidence) {
+                for (const scene of state.scenes) {
+                    if (scene.evidence.some(e => e.id === ue.id)) { sceneIds.add(scene.id); break; }
+                }
+            }
+            if (sceneIds.size >= 2 && annotations.filter(a => a.type === 'CROSS').length < 3) {
+                annotations.push({
+                    type: 'CROSS',
+                    location: 'expose',
+                    roundId: round.id,
+                    text: `R${round.id} 证据来自 ${sceneIds.size} 个不同场景，构成交叉验证。`
+                });
+            }
+        }
+    }
+
+    for (const doubt of state.doubts) {
+        if (doubt.clear === false) {
+            annotations.push({
+                type: 'PLANT',
+                location: 'doubt',
+                doubtId: doubt.id,
+                text: `疑点 ${doubt.id} 本 Loop 未解决，遗留至后续。`
+            });
+            if (annotations.filter(a => a.type === 'PLANT').length >= 2) break;
+        }
+    }
+    for (const round of state.expose.rounds) {
+        if (round.result.includes('\uD83D\uDD12') && annotations.filter(a => a.type === 'PLANT').length < 2) {
+            annotations.push({
+                type: 'PLANT',
+                location: 'expose',
+                roundId: round.id,
+                text: `R${round.id} 包含开放性结论，是后续 Loop 的引子。`
+            });
+        }
+    }
+
+    const allNpcs = getAllNpcs(state);
+    for (const npc of allNpcs) {
+        if (!npc.lie) continue;
+        const motive = npc.motive.toLowerCase();
+        const hasEmotion = ['家庭','恐惧','生存','女儿','孩子','母亲','父亲','童年','压力'].some(k => motive.includes(k));
+        if (hasEmotion) {
+            annotations.push({
+                type: 'AMBUSH',
+                location: 'npc',
+                npcKey: npc.key,
+                text: `${npc.key} 的谎言背后是人性的挣扎（${npc.motive.substring(0, 40)}...）。`
+            });
+            break;
+        }
+    }
+
+    return annotations.slice(0, 5);
+}
+
+function getAllNpcs(state) {
+    const npcs = [...state.opening.npcs];
+    for (const scene of state.scenes) {
+        for (const npc of scene.npcs) npcs.push(npc);
+    }
+    if (state.expose.npcState) npcs.push(state.expose.npcState);
+    return npcs;
+}
+
+// ===== Render All Panels =====
+function renderAll() {
+    renderOverview();
+    renderTension();
+    renderScenes();
+    renderGraph();
+    renderNpcKnowledge();
+    renderExpose();
+}
+
+// ===== SVG Donut Chart Helper =====
+function svgDonut(value, max, color, size) {
+    const r = (size - 4) / 2;
+    const circ = 2 * Math.PI * r;
+    const pct = max > 0 ? Math.min(value / max, 1) : 0;
+    const dashLen = circ * pct;
+    return `<svg viewBox="0 0 ${size} ${size}">
+        <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--surface-3)" stroke-width="4"/>
+        <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+            stroke-dasharray="${dashLen} ${circ - dashLen}" stroke-linecap="round"/>
+    </svg>`;
+}
+
+// ===== Panel 1: Overview (剧情仪表盘) =====
+function renderOverview() {
+    const s = currentState;
+    const m = s.meta;
+    const totalEvidence = s.scenes.reduce((sum, sc) => sum + sc.evidence.length, 0);
+    const totalScenes = s.scenes.filter(sc => sc.sceneType !== 'locked').length;
+    const loopLoad = calcLoopInfoLoad(s);
+    const distScore = calcDistributionScore(s);
+    const tn = calcTensionCurve(s);
+
+    // Liar initial
+    const liarInitial = m.liar ? m.liar.charAt(0).toUpperCase() : '?';
+
+    // Goals
+    const goalsHtml = s.playerContext.goals.secondary.map(g => `<li style="padding:0.15rem 0;font-size:0.82rem;color:var(--ink-secondary);">${esc(g)}</li>`).join('');
+    const postKHtml = s.playerContext.postExposeKnowledge.map(k => `<li style="padding:0.12rem 0;">${esc(k)}</li>`).join('');
+
+    // Density color
+    const densityColor = loopLoad > 70 ? 'var(--crimson-glow)' : loopLoad > 50 ? 'var(--gold)' : 'var(--accent-green)';
+    const densityLabel = loopLoad <= 25 ? '轻量循环' : loopLoad <= 50 ? '标准循环' : loopLoad <= 70 ? '信息较重' : '过载警告';
+    const distLabel = distScore < 0.4 ? '分布均匀' : distScore <= 0.6 ? '轻微集中' : '严重集中';
+    const distColor = distScore > 0.6 ? 'var(--crimson-glow)' : distScore > 0.4 ? 'var(--gold)' : 'var(--accent-green)';
+
+    // Mini timeline HTML
+    let miniTlHtml = '<div class="mini-timeline"><div class="mini-timeline-line"></div>';
+    for (const node of tn) {
+        const lbl = node.label.length > 8 ? node.label.substring(0, 7) + '..' : node.label;
+        miniTlHtml += `<div class="mini-tl-node">
+            <div class="mini-tl-dot type-${node.type}"></div>
+            <div class="mini-tl-label">${esc(lbl)}</div>
+        </div>`;
+    }
+    miniTlHtml += '</div>';
+
+    document.getElementById('panelOverview').innerHTML = `
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-title">Loop ${m.loop} — ${esc(m.title)}</div>
+            <div class="hero-subtitle">${esc(m.timeLabel)}</div>
+            ${m.precedingEvents ? `<div class="hero-subtitle" style="opacity:0.6;">前序: ${esc(m.precedingEvents)}</div>` : ''}
+            <div class="hero-liar">
+                <div class="hero-liar-avatar">${liarInitial}</div>
+                <div>
+                    <div class="hero-liar-name">${esc(m.liar)}</div>
+                    <div class="hero-liar-label">本循环说谎者</div>
+                </div>
+            </div>
+            <div class="hero-reveal">${esc(m.coreReveal)}</div>
+        </div>
+
+        <!-- Donut Metrics -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="donut-wrapper">
+                    ${svgDonut(totalScenes, Math.max(totalScenes, 8), 'var(--accent-green)', 52)}
+                    <div class="donut-value">${totalScenes}</div>
+                </div>
+                <div class="metric-label">可用场景</div>
+            </div>
+            <div class="metric-card">
+                <div class="donut-wrapper">
+                    ${svgDonut(totalEvidence, Math.max(totalEvidence, 15), 'var(--amber)', 52)}
+                    <div class="donut-value">${totalEvidence}</div>
+                </div>
+                <div class="metric-label">证据数</div>
+            </div>
+            <div class="metric-card">
+                <div class="donut-wrapper">
+                    ${svgDonut(s.expose.totalRounds, 5, 'var(--crimson)', 52)}
+                    <div class="donut-value">${s.expose.totalRounds}</div>
+                </div>
+                <div class="metric-label">指证轮次</div>
+            </div>
+            <div class="metric-card">
+                <div class="donut-wrapper">
+                    ${svgDonut(s.doubts.length, Math.max(s.doubts.length, 5), 'var(--accent-purple)', 52)}
+                    <div class="donut-value">${s.doubts.length}</div>
+                </div>
+                <div class="metric-label">疑点数</div>
+            </div>
+        </div>
+
+        <!-- Liar Card + Density Card -->
+        <div class="grid-2">
+            <div class="liar-card">
+                <div class="liar-card-avatar">${liarInitial}</div>
+                <div class="liar-card-body">
+                    <div class="liar-card-name">${esc(m.liar)} — 说谎者</div>
+                    <div class="liar-card-detail">${esc(m.coreReveal)}</div>
+                    ${s.expose.npcState && s.expose.npcState.motive ? `<div class="liar-card-detail" style="margin-top:0.3rem;opacity:0.7;">动机: ${esc(s.expose.npcState.motive)}</div>` : ''}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">信息密度</div>
+                <div style="display:flex;gap:2rem;align-items:center;margin-bottom:0.5rem;">
+                    <div>
+                        <span style="font-size:1.5rem;font-weight:800;color:${densityColor}">${loopLoad}</span>
+                        <span style="color:var(--ink-muted);font-size:0.75rem;margin-left:0.3rem;">总分</span>
+                    </div>
+                    <div>
+                        <span style="font-size:1.5rem;font-weight:800;color:${distColor}">${distScore}</span>
+                        <span style="color:var(--ink-muted);font-size:0.75rem;margin-left:0.3rem;">分布指数</span>
+                    </div>
+                </div>
+                <div style="font-size:0.75rem;color:var(--ink-muted);">
+                    ${densityLabel} | ${distLabel}
+                </div>
+                <div style="font-size:0.65rem;color:var(--ink-faint);margin-top:0.3rem;">
+                    总分: <=25轻量 / <=50标准 / <=70较重 / >70过载 | 分布: <0.4均匀 / 0.4-0.6轻微 / >0.6严重
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals + Post-knowledge -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">玩家目标</div>
+                <div style="font-size:0.9rem;font-weight:600;margin-bottom:0.3rem;">${esc(s.playerContext.goals.primary)}</div>
+                <ul style="list-style:none;">${goalsHtml}</ul>
+                ${s.playerContext.chapterGoal ? `<div style="font-size:0.75rem;color:var(--ink-muted);margin-top:0.4rem;border-top:1px solid var(--surface-3);padding-top:0.4rem;">章节目标: ${esc(s.playerContext.chapterGoal)}</div>` : ''}
+            </div>
+            ${postKHtml ? `
+            <div class="card">
+                <div class="card-title">指证后知识 (${s.playerContext.postExposeKnowledge.length}条)</div>
+                <ul style="list-style:none;font-size:0.8rem;color:var(--ink-secondary);columns:${s.playerContext.postExposeKnowledge.length > 4 ? 2 : 1};column-gap:1.2rem;">${postKHtml}</ul>
+            </div>` : '<div></div>'}
+        </div>
+
+        <!-- Mini Timeline -->
+        <div class="card">
+            <div class="card-title">流程缩略</div>
+            ${miniTlHtml}
+        </div>
+
+        <!-- Annotations -->
+        ${s.annotations.length > 0 ? `
+        <div class="card">
+            <div class="card-title">叙事注解 (${s.annotations.length})</div>
+            ${s.annotations.map(a => `
+                <div class="annotation-bubble ${a.type}" onclick="this.nextElementSibling.classList.toggle('open')">
+                    ${annLabel(a.type)} ${a.location === 'expose' ? 'R' + (a.roundId||'') : a.location === 'doubt' ? '#' + (a.doubtId||'') : a.npcKey || ''}
+                </div>
+                <div class="annotation-detail">${esc(a.text)}</div>
+            `).join('')}
+        </div>` : ''}
+    `;
+}
+
+// ===== Panel 2: Tension Curve (呼吸的张力曲线) =====
+function renderTension() {
+    const s = currentState;
+    tensionNodes = calcTensionCurve(s);
+    if (tensionNodes.length === 0) {
+        document.getElementById('panelTension').innerHTML = '<div class="loading-msg">无张力数据</div>';
+        return;
+    }
+
+    // Mark key nodes — only mark FIRST occurrence of peak
+    const maxTension = Math.max(...tensionNodes.map(n => n.tension));
+    let peakMarked = false;
+    for (let i = 0; i < tensionNodes.length; i++) {
+        const n = tensionNodes[i];
+        n.markers = [];
+        if (n.tension === maxTension && !peakMarked) { n.markers.push(`峰值 ${n.tension}`); peakMarked = true; }
+        if (n.type === 'expose' && n.roundId === s.expose.totalRounds) {
+            n.markers.push('最终指证');
+            if (s.playerContext.postExposeKnowledge.length >= 5) {
+                n.markers.push(`重大揭示 (${s.playerContext.postExposeKnowledge.length}条)`);
+            }
+        }
+        if (i > 0) {
+            const delta = n.tension - tensionNodes[i-1].tension;
+            if (delta >= 20) n.markers.push(`+${delta}`);
+            if (delta <= -15 && n.type !== 'closing') n.markers.push(`${delta}`);
+        }
+        if (n.type === 'sudden_event') n.markers.push('突发事件');
+    }
+
+    document.getElementById('panelTension').innerHTML = `
+        <div class="card" style="padding:1rem 1.2rem;">
+            <div class="card-title">情绪弧线</div>
+            <div style="font-size:0.7rem;color:var(--ink-faint);margin-bottom:0.6rem;">张力值由算法根据场景内容自动估算，仅供参考。点击节点可跳转对应面板。</div>
+            <div class="canvas-container">
+                <canvas id="tensionCanvas" width="1200" height="520" style="width:100%;height:520px;border-radius:var(--radius-md);"></canvas>
+                <div class="canvas-tooltip" id="tensionTooltip"></div>
+            </div>
+        </div>
+    `;
+
+    requestAnimationFrame(() => drawTensionCanvas());
+}
+
+function drawTensionCanvas() {
+    const canvas = document.getElementById('tensionCanvas');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    const W = rect.width;
+    const H = rect.height;
+
+    const padL = 55, padR = 40, padT = 55, padB = 140;
+    const chartW = W - padL - padR;
+    const chartH = H - padT - padB;
+    const nodes = tensionNodes;
+    const n = nodes.length;
+    if (n === 0) return;
+
+    const xStep = n > 1 ? chartW / (n - 1) : chartW / 2;
+
+    // Background
+    ctx.fillStyle = '#0f0d0b';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    for (let v = 0; v <= 100; v += 20) {
+        const y = padT + chartH * (1 - v / 100);
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(W - padR, y);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = '12px Segoe UI';
+        ctx.textAlign = 'right';
+        ctx.fillText(v, padL - 10, y + 3);
+    }
+
+    // Compute points
+    const points = nodes.map((nd, i) => ({
+        x: padL + i * xStep,
+        y: padT + chartH * (1 - nd.tension / 100)
+    }));
+
+    // Phase separators (opening -> explore -> expose)
+    let firstExpose = nodes.findIndex(nd => nd.type === 'expose');
+    if (firstExpose > 0) {
+        const sepX = (points[firstExpose].x + points[firstExpose - 1].x) / 2;
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(sepX, padT);
+        ctx.lineTo(sepX, padT + chartH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Labels
+        ctx.fillStyle = 'rgba(232,198,120,0.5)';
+        ctx.font = 'bold 13px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText('探索阶段', (padL + sepX) / 2, padT - 10);
+        ctx.fillText('指证阶段', (sepX + W - padR) / 2, padT - 10);
+    }
+
+    // Gradient area fill with smooth bezier
+    const areaGrad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+    areaGrad.addColorStop(0, 'rgba(184, 64, 64, 0.3)');
+    areaGrad.addColorStop(0.4, 'rgba(200, 160, 60, 0.12)');
+    areaGrad.addColorStop(0.7, 'rgba(58, 138, 122, 0.08)');
+    areaGrad.addColorStop(1, 'rgba(58, 138, 122, 0.02)');
+
+    ctx.fillStyle = areaGrad;
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, padT + chartH);
+    ctx.lineTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        const cpx = (points[i-1].x + points[i].x) / 2;
+        ctx.quadraticCurveTo(points[i-1].x + (points[i].x - points[i-1].x)*0.5, points[i-1].y,
+                             (points[i-1].x + points[i].x)/2, (points[i-1].y + points[i].y)/2);
+        ctx.quadraticCurveTo(points[i].x - (points[i].x - points[i-1].x)*0.5, points[i].y,
+                             points[i].x, points[i].y);
+    }
+    ctx.lineTo(points[points.length-1].x, padT + chartH);
+    ctx.closePath();
+    ctx.fill();
+
+    // Smooth bezier curve line
+    const lineGrad = ctx.createLinearGradient(padL, 0, W - padR, 0);
+    lineGrad.addColorStop(0, '#4a7c59');
+    lineGrad.addColorStop(0.4, '#d4a24e');
+    lineGrad.addColorStop(0.7, '#b84040');
+    lineGrad.addColorStop(1, '#e05050');
+    ctx.strokeStyle = lineGrad;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        ctx.quadraticCurveTo(
+            (points[i-1].x + points[i].x) / 2, points[i-1].y,
+            (points[i-1].x + points[i].x) / 2, (points[i-1].y + points[i].y) / 2
+        );
+        ctx.quadraticCurveTo(
+            (points[i-1].x + points[i].x) / 2, points[i].y,
+            points[i].x, points[i].y
+        );
+    }
+    ctx.stroke();
+
+    // Dots and labels
+    const typeColors = {
+        opening: '#e8c678',
+        explore: '#4a7c59',
+        expose: '#e05050',
+        closing: '#5c7aa8',
+        sudden_event: '#e8a060'
+    };
+
+    for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        const nd = nodes[i];
+        const dotColor = typeColors[nd.type] || '#b84040';
+        const isClimax = nd.markers.some(m => m.includes('峰值'));
+        const dotR = nd.markers.length > 0 ? 7 : 5;
+
+        // Glow for CLIMAX
+        if (isClimax || nd.type === 'expose') {
+            ctx.save();
+            ctx.shadowColor = dotColor;
+            ctx.shadowBlur = isClimax ? 15 : 8;
+            ctx.fillStyle = dotColor;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, dotR, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Dot
+        ctx.fillStyle = dotColor;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, dotR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Marker annotation above
+        if (nd.markers.length > 0) {
+            const markerText = nd.markers[0];
+            // Background pill for marker
+            ctx.font = 'bold 11px Segoe UI';
+            ctx.textAlign = 'center';
+            const tw = ctx.measureText(markerText).width;
+            ctx.fillStyle = 'rgba(30,20,10,0.85)';
+            ctx.beginPath();
+            ctx.roundRect(p.x - tw/2 - 6, p.y - 30, tw + 12, 18, 4);
+            ctx.fill();
+            ctx.fillStyle = '#e8c678';
+            ctx.fillText(markerText, p.x, p.y - 16);
+        }
+
+        // X-axis label
+        ctx.save();
+        ctx.translate(p.x, H - padB + 16);
+        ctx.rotate(-Math.PI / 6);
+        ctx.fillStyle = 'rgba(232,224,212,0.7)';
+        ctx.font = '12px Segoe UI';
+        ctx.textAlign = 'right';
+        const label = nd.label.length > 12 ? nd.label.substring(0,11) + '..' : nd.label;
+        ctx.fillText(label, 0, 0);
+        ctx.restore();
+    }
+
+    // Store for interaction
+    canvas._tensionPoints = points;
+    canvas._tensionNodes = nodes;
+
+    // Mouse events
+    canvas.onmousemove = (e) => {
+        const r = canvas.getBoundingClientRect();
+        const mx = e.clientX - r.left;
+        const my = e.clientY - r.top;
+        const tooltip = document.getElementById('tensionTooltip');
+        let found = false;
+        for (let i = 0; i < points.length; i++) {
+            const p = points[i];
+            if (Math.abs(mx - p.x) < 18 && Math.abs(my - p.y) < 18) {
+                const nd = nodes[i];
+                const typeLabel = {opening:'开篇',explore:'探索',expose:'指证',closing:'收尾',sudden_event:'突发事件'};
+                tooltip.innerHTML = `<b>${esc(nd.label)}</b><br>张力值: ${nd.tension}<br>阶段: ${typeLabel[nd.type]||nd.type}${nd.markers.length ? '<br><span style="color:var(--gold)">' + nd.markers.join(', ') + '</span>' : ''}`;
+                tooltip.style.display = 'block';
+                tooltip.style.left = (mx + 18) + 'px';
+                tooltip.style.top = (my - 10) + 'px';
+                canvas.style.cursor = 'pointer';
+                found = true;
+                break;
+            }
+        }
+        if (!found) { tooltip.style.display = 'none'; canvas.style.cursor = 'default'; }
+    };
+
+    canvas.onclick = (e) => {
+        const r = canvas.getBoundingClientRect();
+        const mx = e.clientX - r.left;
+        const my = e.clientY - r.top;
+        for (let i = 0; i < points.length; i++) {
+            const p = points[i];
+            if (Math.abs(mx - p.x) < 18 && Math.abs(my - p.y) < 18) {
+                const nd = nodes[i];
+                if (nd.type === 'expose' && nd.roundId) {
+                    switchToPanel('expose');
+                    setTimeout(() => {
+                        const roundEl = document.querySelector(`.expose-round[data-round-id="${nd.roundId}"]`);
+                        if (roundEl) roundEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                } else if (nd.sceneId) {
+                    switchToPanel('scenes');
+                    setTimeout(() => {
+                        highlightSceneAcrossPanels(nd.sceneId);
+                        toggleSceneDetail(nd.sceneId);
+                    }, 100);
+                }
+                break;
+            }
+        }
+    };
+}
+
+function switchToPanel(panelName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-panel="${panelName}"]`).classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel' + panelName.charAt(0).toUpperCase() + panelName.slice(1)).classList.add('active');
+    activePanel = panelName;
+}
+
+// ===== Panel 3: Scene Map (空间化分组) =====
+function renderScenes() {
+    const s = currentState;
+    const sceneTypeIcons = {
+        opening: '\uD83C\uDFAC', explore: '\uD83D\uDD13', locked: '\uD83D\uDD12',
+        idle: '\u23F8\uFE0F', expose: '\u2694\uFE0F', event: '\u26A1', ending: '\uD83C\uDFAD'
+    };
+
+    // Group scenes by type
+    const groups = {
+        active: { label: '活跃场景', scenes: [] },
+        idle: { label: '无新线索', scenes: [] },
+        locked: { label: '锁定场景', scenes: [] }
+    };
+    for (const scene of s.scenes) {
+        if (scene.sceneType === 'locked') groups.locked.scenes.push(scene);
+        else if (scene.sceneType === 'idle') groups.idle.scenes.push(scene);
+        else groups.active.scenes.push(scene);
+    }
+
+    let html = '';
+    for (const [gKey, group] of Object.entries(groups)) {
+        if (group.scenes.length === 0) continue;
+        html += `<div class="scene-group">
+            <div class="scene-group-label">${group.label} (${group.scenes.length})</div>
+            <div class="scene-group-content">`;
+        for (const scene of group.scenes) {
+            const icon = sceneTypeIcons[scene.sceneType] || '';
+            const evCount = scene.evidence.length;
+            const npcCount = scene.npcs.length;
+            const load = calcSceneInfoLoad(scene);
+            const loadPct = Math.min(100, (load / 12) * 100);
+            const loadColor = load > 9 ? '#c41e3a' : load > 6 ? '#c8a020' : '#4a7c59';
+            const isLocked = scene.sceneType === 'locked';
+            const isSelected = scene.id === selectedSceneId;
+            const loadTipText = load <= 3 ? '轻量' : load <= 6 ? '适中' : load <= 9 ? '较重' : '过载';
+
+            html += `
+            <div class="scene-card ${isLocked ? 'locked' : ''} ${isSelected ? 'selected' : ''}"
+                 data-scene-id="${scene.id}" onclick="toggleSceneDetail(${scene.id})">
+                ${isLocked ? '<div class="scene-lock-icon">\uD83D\uDD12</div>' : ''}
+                <div class="scene-card-header">
+                    <span class="scene-card-name">${esc(scene.name)}</span>
+                    <span class="scene-card-icon">${icon}</span>
+                </div>
+                <div class="scene-card-bubbles">
+                    ${evCount > 0 ? `<span class="bubble bubble-ev">${evCount} 件证据</span>` : ''}
+                    ${npcCount > 0 ? `<span class="bubble bubble-npc">${npcCount} NPC</span>` : ''}
+                </div>
+                <div class="density-bar-wrap">
+                    <div class="density-bar">
+                        <div class="density-bar-fill" style="width:${loadPct}%;background:linear-gradient(90deg, ${loadColor}88, ${loadColor});"></div>
+                    </div>
+                    <div class="density-bar-label">
+                        <span class="density-bar-text density-tooltip" data-tip="${loadTipText} (${load})">密度 ${load}</span>
+                        <span class="density-bar-text">${scene.id}</span>
+                    </div>
+                </div>
+                <div class="collapsible-wrapper" id="sceneCollapse_${scene.id}">
+                    <div class="collapsible-inner">
+                        <div class="scene-detail">
+                            ${renderSceneDetailInner(scene)}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+        html += '</div></div>';
+    }
+    document.getElementById('panelScenes').innerHTML = html;
+}
+
+function renderSceneDetailInner(scene) {
+    let html = '';
+    if (scene.evidence.length > 0) {
+        html += '<div class="scene-detail-section"><h4>证据</h4>';
+        for (const ev of scene.evidence) {
+            const catColors = { key: '#e8a838', narrative: '#6b8f9e', prop: '#8e8e8e', derived: '#c67c3e', trap: '#cc4444' };
+            const color = catColors[ev.category] || '#888';
+            const catLabels = { key: '关键', narrative: '叙事', prop: '道具', derived: '派生', trap: '陷阱' };
+            html += `<div class="ev-item">
+                <span class="ev-dot" style="background:${color};color:${color}"></span>
+                <span style="color:var(--ink-muted);font-size:0.72rem;font-weight:600;">${ev.id}</span>
+                <span style="flex:1;">${esc(ev.name)}</span>
+                <span class="badge badge-gray" style="font-size:0.58rem;">${catLabels[ev.category]||ev.category}</span>
+            </div>`;
+        }
+        html += '</div>';
+    }
+    if (scene.npcs.length > 0) {
+        html += '<div class="scene-detail-section"><h4>NPC</h4>';
+        for (const npc of scene.npcs) {
+            html += `<div class="ev-item">
+                <span style="color:var(--gold);font-weight:600;">${esc(npc.key)}</span>
+                ${npc.isLiar ? '<span class="badge badge-red">说谎者</span>' : ''}
+                ${npc.testimonyIds.length > 0 ? `<span class="badge badge-blue">${npc.testimonyIds.length} 条证词</span>` : ''}
+            </div>`;
+        }
+        html += '</div>';
+    }
+    if (scene.note) {
+        html += `<div style="font-size:0.72rem;color:var(--ink-faint);margin-top:0.3rem;">${esc(scene.note)}</div>`;
+    }
+    return html || '<div style="font-size:0.75rem;color:var(--ink-muted);">无内容</div>';
+}
+
+function toggleSceneDetail(sceneId) {
+    const wrapper = document.getElementById('sceneCollapse_' + sceneId);
+    if (!wrapper) return;
+    const isOpen = wrapper.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.collapsible-wrapper[id^="sceneCollapse_"]').forEach(w => w.classList.remove('open'));
+    document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('selected'));
+
+    if (!isOpen) {
+        wrapper.classList.add('open');
+        wrapper.closest('.scene-card').classList.add('selected');
+        selectedSceneId = sceneId;
+    } else {
+        selectedSceneId = null;
+    }
+}
+
+function highlightSceneAcrossPanels(sceneId) {
+    document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('linked-highlight'));
+    const card = document.querySelector(`.scene-card[data-scene-id="${sceneId}"]`);
+    if (card) {
+        card.classList.add('linked-highlight');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => card.classList.remove('linked-highlight'), 2500);
+    }
+}
+
+// ===== Panel 4: Evidence Graph (侦探证据墙) =====
+function renderGraph() {
+    const s = currentState;
+    const { nodes, edges } = buildGraph(s);
+
+    // Force-directed layout
+    const forceNodes = nodes.map(nd => ({
+        ...nd,
+        x: Math.random() * 700 + 50,
+        y: Math.random() * 500 + 50,
+        vx: 0, vy: 0
+    }));
+
+    // Initial positioning by layer for better convergence
+    const layerOrder = { scene: 0, evidence: 1, doubt: 2, expose_round: 3 };
+    const layerCounts = { scene: 0, evidence: 0, doubt: 0, expose_round: 0 };
+    for (const nd of forceNodes) {
+        const layer = layerOrder[nd.type] !== undefined ? layerOrder[nd.type] : 1;
+        const count = layerCounts[nd.type] || 0;
+        nd.x = 100 + layer * 180;
+        nd.y = 40 + count * 50;
+        layerCounts[nd.type] = count + 1;
+    }
+
+    // Build adjacency for force sim
+    const nodeIndex = {};
+    forceNodes.forEach((nd, i) => nodeIndex[nd.id] = i);
+
+    // Run force simulation (~80 iterations)
+    const iterations = 80;
+    const svgW = 800;
+    const svgH = Math.max(550, Math.max(...Object.values(layerCounts)) * 50 + 100);
+
+    for (let iter = 0; iter < iterations; iter++) {
+        const alpha = 1 - iter / iterations;
+        const repulsion = 800 * alpha;
+        const attraction = 0.02 * alpha;
+        const centering = 0.001 * alpha;
+
+        // Repulsion between all nodes
+        for (let i = 0; i < forceNodes.length; i++) {
+            for (let j = i + 1; j < forceNodes.length; j++) {
+                let dx = forceNodes[j].x - forceNodes[i].x;
+                let dy = forceNodes[j].y - forceNodes[i].y;
+                let dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                let force = repulsion / (dist * dist);
+                let fx = (dx / dist) * force;
+                let fy = (dy / dist) * force;
+                forceNodes[i].vx -= fx;
+                forceNodes[i].vy -= fy;
+                forceNodes[j].vx += fx;
+                forceNodes[j].vy += fy;
+            }
+        }
+
+        // Attraction along edges
+        for (const edge of edges) {
+            const si = nodeIndex[edge.source];
+            const ti = nodeIndex[edge.target];
+            if (si === undefined || ti === undefined) continue;
+            const a = forceNodes[si];
+            const b = forceNodes[ti];
+            let dx = b.x - a.x;
+            let dy = b.y - a.y;
+            let dist = Math.sqrt(dx*dx + dy*dy) || 1;
+            let idealDist = 100;
+            let force = (dist - idealDist) * attraction;
+            let fx = (dx / dist) * force;
+            let fy = (dy / dist) * force;
+            a.vx += fx; a.vy += fy;
+            b.vx -= fx; b.vy -= fy;
+        }
+
+        // Centering force
+        for (const nd of forceNodes) {
+            nd.vx += (svgW/2 - nd.x) * centering;
+            nd.vy += (svgH/2 - nd.y) * centering;
+        }
+
+        // Layer constraint (horizontal grouping)
+        for (const nd of forceNodes) {
+            const targetX = 100 + (layerOrder[nd.type] || 1) * 180;
+            nd.vx += (targetX - nd.x) * 0.05 * alpha;
+        }
+
+        // Apply velocity with damping
+        for (const nd of forceNodes) {
+            nd.vx *= 0.6;
+            nd.vy *= 0.6;
+            nd.x += nd.vx;
+            nd.y += nd.vy;
+            nd.x = Math.max(30, Math.min(svgW - 30, nd.x));
+            nd.y = Math.max(30, Math.min(svgH - 30, nd.y));
+        }
+    }
+
+    // Build position map
+    const posMap = {};
+    for (const nd of forceNodes) {
+        posMap[nd.id] = { x: Math.round(nd.x), y: Math.round(nd.y) };
+    }
+
+    // Build SVG
+    let svgDefs = `
+    <defs>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+    </defs>`;
+
+    let svgContent = '';
+
+    // Draw edges as bezier curves with gradients and flowing animation
+    for (const edge of edges) {
+        const sp = posMap[edge.source];
+        const tp = posMap[edge.target];
+        if (!sp || !tp) continue;
+        const mx = (sp.x + tp.x) / 2;
+        const my = (sp.y + tp.y) / 2;
+        // Slight curve offset
+        const dx = tp.x - sp.x;
+        const dy = tp.y - sp.y;
+        const offset = Math.min(30, Math.sqrt(dx*dx+dy*dy) * 0.15);
+        const cx = mx + (dy > 0 ? offset : -offset) * 0.5;
+        const cy = my - (dx > 0 ? offset : -offset) * 0.5;
+
+        const dashAttr = edge.dashed ? `stroke-dasharray="6,4" style="animation: dashFlow 1.5s linear infinite;"` : '';
+        const pathD = `M${sp.x},${sp.y} Q${cx},${cy} ${tp.x},${tp.y}`;
+        svgContent += `<path d="${pathD}" fill="none"
+            stroke="${edge.color}" stroke-width="${edge.width}" ${dashAttr}
+            opacity="0.5" class="graph-edge"
+            data-source="${edge.source}" data-target="${edge.target}" />`;
+    }
+
+    // Draw nodes
+    for (const nd of forceNodes) {
+        const p = posMap[nd.id];
+        if (!p) continue;
+        const r = nd.size / 2;
+
+        if (nd.shape === 'circle') {
+            const isKey = nd.sourceData && nd.sourceData.category === 'key';
+            const filterAttr = isKey ? 'filter="url(#glow)"' : '';
+            svgContent += `<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${nd.color}" stroke="rgba(255,255,255,0.3)" stroke-width="1"
+                class="graph-node" data-node-id="${nd.id}" style="cursor:pointer" ${filterAttr} />`;
+        } else if (nd.shape === 'diamond') {
+            const pts = `${p.x},${p.y-r} ${p.x+r},${p.y} ${p.x},${p.y+r} ${p.x-r},${p.y}`;
+            svgContent += `<polygon points="${pts}" fill="${nd.color}" stroke="rgba(255,255,255,0.3)" stroke-width="1"
+                class="graph-node" data-node-id="${nd.id}" style="cursor:pointer" />`;
+        } else if (nd.shape === 'rect') {
+            svgContent += `<rect x="${p.x-r}" y="${p.y-r*0.7}" width="${r*2}" height="${r*1.4}" rx="4"
+                fill="${nd.color}" stroke="rgba(255,255,255,0.3)" stroke-width="1"
+                class="graph-node" data-node-id="${nd.id}" style="cursor:pointer" />`;
+        } else if (nd.shape === 'triangle') {
+            const pts = `${p.x},${p.y-r} ${p.x+r},${p.y+r*0.7} ${p.x-r},${p.y+r*0.7}`;
+            svgContent += `<polygon points="${pts}" fill="${nd.color}" stroke="rgba(255,255,255,0.3)" stroke-width="1"
+                class="graph-node" data-node-id="${nd.id}" style="cursor:pointer" />`;
+        }
+
+        // Label
+        const labelText = nd.label.length > 10 ? nd.label.substring(0, 9) + '..' : nd.label;
+        svgContent += `<text x="${p.x}" y="${p.y + r + 13}" text-anchor="middle"
+            fill="rgba(255,255,255,0.45)" font-size="8" font-family="Segoe UI">${escSvg(labelText)}</text>`;
+    }
+
+    // Legend
+    const legendHtml = `
+        <div class="graph-legend">
+            <div class="graph-legend-item"><div class="graph-legend-dot" style="background:#E8A838;box-shadow:0 0 4px #E8A838;"></div>关键证据</div>
+            <div class="graph-legend-item"><div class="graph-legend-dot" style="background:#6B8F9E;"></div>叙事证据</div>
+            <div class="graph-legend-item"><div class="graph-legend-dot" style="background:#8E8E8E;"></div>场景道具</div>
+            <div class="graph-legend-item"><div class="graph-legend-diamond" style="background:#7A5C9E;"></div>疑点</div>
+            <div class="graph-legend-item"><div class="graph-legend-triangle" style="border-bottom-color:#C44444;"></div>指证轮</div>
+            <div class="graph-legend-item"><div class="graph-legend-rect" style="background:#4A7C59;"></div>场景</div>
+        </div>`;
+
+    document.getElementById('panelGraph').innerHTML = `
+        ${legendHtml}
+        <div class="graph-container" id="graphContainer">
+            <svg id="graphSvg" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">
+                <rect width="${svgW}" height="${svgH}" fill="#0f0d0b" />
+                ${svgDefs}
+                ${svgContent}
+            </svg>
+            <div class="graph-tooltip" id="graphTooltip"></div>
+        </div>
+    `;
+
+    document.getElementById('graphSvg')._graphNodes = forceNodes;
+    setupGraphInteraction();
+}
+
+function buildGraph(state) {
+    const nodes = [];
+    const edges = [];
+    const nodeIds = new Set();
+
+    function addNode(nd) {
+        if (!nodeIds.has(nd.id)) { nodeIds.add(nd.id); nodes.push(nd); }
+    }
+
+    for (const scene of state.scenes) {
+        if (scene.sceneType === 'idle' || scene.sceneType === 'locked') continue;
+        addNode({
+            id: 'scene_' + scene.id,
+            type: 'scene',
+            label: scene.name,
+            color: '#4A7C59',
+            shape: 'rect',
+            size: 22,
+            sourceData: scene
+        });
+    }
+
+    const derivedNameMap = {};
+    for (const scene of state.scenes) {
+        for (const ev of scene.evidence) {
+            if (ev.analyzedId) derivedNameMap[ev.analyzedId] = ev.name + '(分析后)';
+        }
+    }
+
+    for (const scene of state.scenes) {
+        for (const ev of scene.evidence) {
+            const colorMap = { key: '#E8A838', narrative: '#6B8F9E', prop: '#8E8E8E', derived: '#C67C3E', trap: '#CC4444' };
+            addNode({
+                id: 'evidence_' + ev.id,
+                type: 'evidence',
+                label: ev.name,
+                color: colorMap[ev.category] || '#888',
+                shape: 'circle',
+                size: ev.category === 'key' ? 18 : (ev.isDerived ? 15 : 10),
+                sourceData: ev
+            });
+            if (scene.sceneType !== 'idle' && scene.sceneType !== 'locked') {
+                edges.push({
+                    id: `evidence_${ev.id}_scene_${scene.id}_located_in`,
+                    source: 'evidence_' + ev.id,
+                    target: 'scene_' + scene.id,
+                    type: 'located_in',
+                    color: '#555',
+                    dashed: true,
+                    label: null,
+                    width: 1
+                });
+            }
+            if (ev.analyzedId) {
+                const derivedLabel = derivedNameMap[ev.analyzedId] || `派生 #${ev.analyzedId}`;
+                addNode({
+                    id: 'evidence_' + ev.analyzedId,
+                    type: 'evidence',
+                    label: derivedLabel,
+                    color: '#C67C3E',
+                    shape: 'circle',
+                    size: 15,
+                    sourceData: { id: ev.analyzedId, name: derivedLabel, isDerived: true }
+                });
+                edges.push({
+                    id: `evidence_${ev.analyzedId}_evidence_${ev.id}_derived`,
+                    source: 'evidence_' + ev.analyzedId,
+                    target: 'evidence_' + ev.id,
+                    type: 'derived_from',
+                    color: '#C67C3E',
+                    dashed: true,
+                    label: null,
+                    width: 1
+                });
+            }
+        }
+    }
+
+    for (const doubt of state.doubts) {
+        addNode({
+            id: 'doubt_' + doubt.id,
+            type: 'doubt',
+            label: `D${doubt.id}`,
+            color: '#7A5C9E',
+            shape: 'diamond',
+            size: 16,
+            sourceData: doubt
+        });
+        for (const cond of doubt.unlockCondition) {
+            if (cond.type === 'item') {
+                edges.push({
+                    id: `evidence_${cond.id}_doubt_${doubt.id}_unlocks`,
+                    source: 'evidence_' + cond.id,
+                    target: 'doubt_' + doubt.id,
+                    type: 'unlocks_doubt',
+                    color: '#7A5C9E',
+                    dashed: false,
+                    label: null,
+                    width: 2
+                });
+            }
+            if (cond.type === 'testimony') {
+                edges.push({
+                    id: `testimony_${cond.id}_doubt_${doubt.id}_testimony`,
+                    source: 'doubt_' + doubt.id,
+                    target: 'doubt_' + doubt.id,
+                    type: 'testimony_for',
+                    color: '#5C7AA8',
+                    dashed: true,
+                    label: `T${cond.id}`,
+                    width: 1
+                });
+            }
+        }
+    }
+
+    for (const round of state.expose.rounds) {
+        addNode({
+            id: 'expose_' + round.id,
+            type: 'expose_round',
+            label: `R${round.id}`,
+            color: '#C44444',
+            shape: 'triangle',
+            size: 20,
+            sourceData: round
+        });
+        for (const ue of round.usableEvidence) {
+            edges.push({
+                id: `evidence_${ue.id}_expose_${round.id}_used`,
+                source: 'evidence_' + ue.id,
+                target: 'expose_' + round.id,
+                type: 'used_in_expose',
+                color: '#C44444',
+                dashed: false,
+                label: null,
+                width: 2
+            });
+        }
+        for (const ae of round.autoFollowupEvidence) {
+            edges.push({
+                id: `evidence_${ae.id}_expose_${round.id}_auto`,
+                source: 'evidence_' + ae.id,
+                target: 'expose_' + round.id,
+                type: 'used_in_expose',
+                color: '#5C7AA8',
+                dashed: false,
+                label: null,
+                width: 2
+            });
+        }
+        for (const te of round.trapEvidence) {
+            edges.push({
+                id: `evidence_${te.id}_expose_${round.id}_trap`,
+                source: 'evidence_' + te.id,
+                target: 'expose_' + round.id,
+                type: 'trap_in',
+                color: '#CC4444',
+                dashed: true,
+                label: null,
+                width: 1
+            });
+        }
+    }
+
+    for (const [origId, derivId] of Object.entries(state.derivedEvidenceMap)) {
+        const derivNodeId = 'evidence_' + derivId;
+        if (!nodeIds.has(derivNodeId)) {
+            addNode({
+                id: derivNodeId,
+                type: 'evidence',
+                label: `派生 #${derivId}`,
+                color: '#C67C3E',
+                shape: 'circle',
+                size: 15,
+                sourceData: { id: derivId, name: `派生 #${derivId}`, isDerived: true }
+            });
+        }
+    }
+
+    return { nodes, edges };
+}
+
+function setupGraphInteraction() {
+    const container = document.getElementById('graphContainer');
+    const svg = document.getElementById('graphSvg');
+    const tooltip = document.getElementById('graphTooltip');
+    if (!svg || !container) return;
+
+    let viewBox = svg.viewBox.baseVal;
+    let isPanning = false;
+    let startX, startY;
+
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = e.deltaY > 0 ? 1.1 : 0.9;
+        const rect = container.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const sx = viewBox.x + (mx / rect.width) * viewBox.width;
+        const sy = viewBox.y + (my / rect.height) * viewBox.height;
+        const newW = viewBox.width * factor;
+        const newH = viewBox.height * factor;
+        viewBox.x = sx - (mx / rect.width) * newW;
+        viewBox.y = sy - (my / rect.height) * newH;
+        viewBox.width = newW;
+        viewBox.height = newH;
+    });
+
+    container.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('graph-node')) return;
+        isPanning = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        container.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        const rect = container.getBoundingClientRect();
+        const dx = (e.clientX - startX) * (viewBox.width / rect.width);
+        const dy = (e.clientY - startY) * (viewBox.height / rect.height);
+        viewBox.x -= dx;
+        viewBox.y -= dy;
+        startX = e.clientX;
+        startY = e.clientY;
+    });
+    window.addEventListener('mouseup', () => { isPanning = false; container.style.cursor = 'grab'; });
+    container.style.cursor = 'grab';
+
+    // Store original edge opacities
+    svg.querySelectorAll('.graph-edge').forEach(edge => {
+        edge.dataset.origWidth = edge.getAttribute('stroke-width');
+    });
+
+    svg.addEventListener('mouseover', (e) => {
+        const node = e.target.closest('.graph-node');
+        if (!node) return;
+        const nodeId = node.dataset.nodeId;
+
+        const connectedIds = new Set([nodeId]);
+        svg.querySelectorAll('.graph-edge').forEach(edge => {
+            if (edge.dataset.source === nodeId || edge.dataset.target === nodeId) {
+                edge.setAttribute('opacity', '1');
+                edge.setAttribute('stroke-width', parseFloat(edge.dataset.origWidth) + 1.5);
+                connectedIds.add(edge.dataset.source);
+                connectedIds.add(edge.dataset.target);
+            } else {
+                edge.setAttribute('opacity', '0.08');
+            }
+        });
+
+        svg.querySelectorAll('.graph-node').forEach(n => {
+            if (!connectedIds.has(n.dataset.nodeId)) n.setAttribute('opacity', '0.12');
+        });
+        // Also dim labels
+        svg.querySelectorAll('text').forEach(t => {
+            // Only dim non-connected node labels
+            const prevSibling = t.previousElementSibling;
+            if (prevSibling && prevSibling.classList.contains('graph-node') && !connectedIds.has(prevSibling.dataset.nodeId)) {
+                t.setAttribute('opacity', '0.12');
+            }
+        });
+
+        const cachedNodes = svg._graphNodes || [];
+        const nd = cachedNodes.find(n => n.id === nodeId);
+        if (nd) {
+            const typeLabels = {evidence:'证据',scene:'场景',doubt:'疑点',expose_round:'指证轮'};
+            let tipHtml = `<b>${esc(nd.label)}</b><br>类型: ${typeLabels[nd.type]||nd.type}`;
+            if (nd.sourceData) {
+                if (nd.sourceData.text) tipHtml += `<br>${esc(nd.sourceData.text)}`;
+                if (nd.sourceData.note) tipHtml += `<br>${esc(nd.sourceData.note)}`;
+                if (nd.sourceData.lie) tipHtml += `<br>谎言: ${esc(nd.sourceData.lie.substring(0,40))}...`;
+            }
+            tooltip.innerHTML = tipHtml;
+            const rect = container.getBoundingClientRect();
+            tooltip.style.display = 'block';
+            tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+            tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+        }
+    });
+
+    svg.addEventListener('mouseout', (e) => {
+        const node = e.target.closest('.graph-node');
+        if (!node) return;
+        svg.querySelectorAll('.graph-edge').forEach(edge => {
+            edge.setAttribute('opacity', '0.5');
+            edge.setAttribute('stroke-width', edge.dataset.origWidth || '1');
+        });
+        svg.querySelectorAll('.graph-node').forEach(n => n.setAttribute('opacity', '1'));
+        svg.querySelectorAll('text').forEach(t => t.setAttribute('opacity', '1'));
+        tooltip.style.display = 'none';
+    });
+
+    container.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+}
+
+// ===== Panel 5: NPC Knowledge (知识光谱) =====
+function renderNpcKnowledge() {
+    const s = currentState;
+
+    // Deduplicate: merge scene NPC and expose NPC
+    const npcMap = new Map();
+    for (const npc of s.opening.npcs) {
+        npcMap.set(npc.key, { ...npc, source: '开篇' });
+    }
+    for (const scene of s.scenes) {
+        for (const npc of scene.npcs) {
+            if (npcMap.has(npc.key)) {
+                const existing = npcMap.get(npc.key);
+                existing.knows = [...new Set([...existing.knows, ...npc.knows])];
+                existing.doesNotKnow = [...new Set([...existing.doesNotKnow, ...npc.doesNotKnow])];
+                if (!existing.lie && npc.lie) existing.lie = npc.lie;
+                if (!existing.isLiar && npc.isLiar) existing.isLiar = true;
+                existing.source += ' + 场景';
+            } else {
+                npcMap.set(npc.key, { ...npc, source: '场景' });
+            }
+        }
+    }
+    if (s.expose.npcState) {
+        const enpc = s.expose.npcState;
+        if (npcMap.has(enpc.key)) {
+            const existing = npcMap.get(enpc.key);
+            existing.knows = [...new Set([...existing.knows, ...enpc.knows])];
+            existing.doesNotKnow = [...new Set([...existing.doesNotKnow, ...enpc.doesNotKnow])];
+            if (!existing.lie && enpc.lie) existing.lie = enpc.lie;
+            if (!existing.isLiar && enpc.isLiar) existing.isLiar = true;
+            existing.mindset = enpc.mindset || existing.mindset;
+            existing.source += ' + 指证';
+        } else {
+            npcMap.set(enpc.key, { ...enpc, source: '指证' });
+        }
+    }
+
+    function isConcealed(knowItem, npc) {
+        if (!npc.lie) return false;
+        const truthLower = npc.lie.truth.toLowerCase();
+        const itemLower = knowItem.toLowerCase();
+        const words = itemLower.split(/\s+/).filter(w => w.length > 2);
+        return words.some(w => truthLower.includes(w)) && words.length > 0;
+    }
+
+    function willRevealThisLoop(item) {
+        const postK = s.playerContext.postExposeKnowledge;
+        const itemLower = item.toLowerCase();
+        return postK.some(pk => {
+            const pkLower = pk.toLowerCase();
+            const words = itemLower.split(/\s+/).filter(w => w.length > 3);
+            return words.filter(w => pkLower.includes(w)).length >= 2;
+        });
+    }
+
+    let html = '';
+    for (const [key, npc] of npcMap) {
+        const isLiar = npc.isLiar;
+        const npcInitial = key.charAt(0).toUpperCase();
+
+        html += `<div class="npc-card ${isLiar ? 'is-liar' : ''}">
+            <div class="npc-card-header">
+                <div style="display:flex;align-items:center;gap:0.6rem;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:${isLiar ? 'var(--crimson)' : 'var(--surface-3)'};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;color:${isLiar ? '#fff' : 'var(--ink-muted)'};flex-shrink:0;">${npcInitial}</div>
+                    <div class="npc-card-name">${esc(key)}</div>
+                </div>
+                <div>
+                    ${isLiar ? '<span class="badge badge-red">说谎者</span>' : '<span class="badge badge-gray">诚实</span>'}
+                    <span class="badge badge-gray" style="font-size:0.58rem">${npc.source}</span>
+                </div>
+            </div>
+            <div class="npc-columns">
+                <div class="npc-col npc-col-knows">
+                    <h4>已知信息 (${npc.knows.length})</h4>
+                    <ul>
+                        ${npc.knows.map(k => {
+                            const concealed = isConcealed(k, npc);
+                            return `<li${concealed ? ' class="conceal-mark"' : ''}><span>${esc(k)}</span>${concealed ? '<span class="conceal-tag">隐瞒</span>' : ''}</li>`;
+                        }).join('')}
+                    </ul>
+                </div>
+                <div class="npc-col npc-col-doesnt">
+                    <h4>未知信息 (${npc.doesNotKnow.length})</h4>
+                    <ul>
+                        ${npc.doesNotKnow.map(d => {
+                            const reveal = willRevealThisLoop(d);
+                            return `<li><span>${esc(d)}</span>${reveal ? '<span class="badge badge-yellow" style="font-size:0.55rem;margin-left:0.3rem;">本Loop揭示</span>' : ''}</li>`;
+                        }).join('')}
+                    </ul>
+                </div>
+            </div>
+            ${npc.lie ? `
+            <div class="lie-section">
+                <div class="lie-toggle" onclick="toggleLie(this)">
+                    <span class="lie-toggle-arrow">&#9654;</span> 谎言 vs 真相
+                </div>
+                <div class="collapsible-wrapper" data-lie-content>
+                    <div class="collapsible-inner">
+                        <div style="padding:0.5rem 0;">
+                            <div class="lie-row">
+                                <span class="lie-label">谎言</span>
+                                <span style="font-size:0.82rem;color:var(--ink-secondary);">${esc(npc.lie.content)}</span>
+                            </div>
+                            <div class="lie-row">
+                                <span class="truth-label">真相</span>
+                                <span style="font-size:0.82rem;color:var(--ink-secondary);">${esc(npc.lie.truth)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>` : ''}
+            ${npc.motive ? `<div class="npc-motive">动机: ${esc(npc.motive)}</div>` : ''}
+        </div>`;
+    }
+
+    document.getElementById('panelNpcKnowledge').innerHTML = html || '<div class="loading-msg">无 NPC 数据</div>';
+}
+
+function toggleLie(el) {
+    const wrapper = el.nextElementSibling;
+    const arrow = el.querySelector('.lie-toggle-arrow');
+    if (wrapper) {
+        wrapper.classList.toggle('open');
+        if (arrow) arrow.classList.toggle('open');
+    }
+}
+
+// ===== Panel 6: Expose Breakdown (法庭攻防战报) =====
+function renderExpose() {
+    const s = currentState;
+    const ex = s.expose;
+    if (!ex || ex.rounds.length === 0) {
+        document.getElementById('panelExpose').innerHTML = '<div class="loading-msg">无指证数据</div>';
+        return;
+    }
+
+    const npcState = ex.npcState;
+
+    // Infer round status
+    function inferStatus(result) {
+        if (result.includes('承认') && (result.includes('完整') || result.includes('最终') || result.includes('坦白'))) return { label: '击破', cls: 'status-break' };
+        if (result.includes('含泪') || result.includes('崩') || result.includes('供出')) return { label: '击破', cls: 'status-break' };
+        if (result.includes('部分承认') || result.includes('说漏嘴') || result.includes('退守') || result.includes('动摇')) return { label: '动摇', cls: 'status-waver' };
+        if (result.includes('辩解') || result.includes('慌张') || result.includes('坚称') || result.includes('无法解释')) return { label: '防守', cls: 'status-defend' };
+        return { label: '防守', cls: 'status-defend' };
+    }
+
+    // Defense bar: shows progression from full to broken
+    const defenseStates = ex.rounds.map(r => inferStatus(r.result));
+
+    // Header
+    let html = `
+    <div class="expose-header">
+        <div class="expose-target-title">指证: ${esc(ex.target)} | 共 ${ex.totalRounds} 轮</div>
+        ${npcState && npcState.mindset ? `
+        <div class="mindset-bar">
+            <span class="mindset-label">心态</span>
+            <span class="mindset-text">${esc(npcState.mindset)}</span>
+        </div>` : ''}
+        <div class="defense-bar-container">
+            <span class="defense-bar-label">防御值</span>
+            <div class="defense-bar-segments">
+                ${ex.rounds.map((r, i) => {
+                    const st = defenseStates[i];
+                    const color = st.cls === 'status-defend' ? 'var(--accent-green)' : st.cls === 'status-waver' ? '#c8a020' : 'var(--crimson)';
+                    return `<div class="defense-segment" style="background:${color};" title="R${r.id}: ${st.label}"></div>`;
+                }).join('')}
+            </div>
+        </div>
+    </div>
+
+    <div class="annotation-filters">
+        <label style="font-size:0.82rem;color:var(--gold);font-weight:600;">注解过滤:</label>
+        ${['CLIMAX','TURN','CROSS','PLANT','AMBUSH'].map(t =>
+            `<label><input type="checkbox" checked data-ann-type="${t}" onchange="toggleAnnotation('${t}', this.checked)"> ${annLabel(t)}</label>`
+        ).join('')}
+    </div>`;
+
+    // Rounds as battle cards
+    for (const round of ex.rounds) {
+        const isFinal = round.id === ex.totalRounds;
+        const status = inferStatus(round.result);
+        const allAnnotations = s.annotations.filter(a => a.location === 'expose' && a.roundId === round.id);
+
+        html += `
+        <div class="expose-round ${isFinal ? 'final-round' : ''}" data-round-id="${round.id}">
+            <div class="expose-round-header">
+                <span class="round-title">第 ${round.id} 轮${round.lieSource ? ` — ${esc(round.lieSource)}` : ''}</span>
+                <span class="round-status ${status.cls}">${status.label}</span>
+            </div>
+            <div class="expose-battle">
+                <!-- Left: NPC lie/defense -->
+                <div class="battle-left">
+                    <div class="battle-section-label">NPC 谎言 / 辩护</div>
+                    <div class="lie-quote">${esc(round.lie)}</div>
+                    ${round.trapEvidence.length > 0 ? `
+                    <div style="margin-top:0.6rem;">
+                        <div style="font-size:0.68rem;color:var(--crimson-glow);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:0.3rem;">陷阱证据</div>
+                        <div class="evidence-list">
+                            ${round.trapEvidence.map(e =>
+                                `<div class="evidence-chip trap" title="${escAttr(e.usage)}">
+                                    <b>${e.id}</b> ${esc(e.name)}
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>` : ''}
+                </div>
+
+                <!-- Center: VS -->
+                <div class="battle-center">
+                    <div class="battle-vs">VS</div>
+                </div>
+
+                <!-- Right: Evidence + Result -->
+                <div class="battle-right">
+                    <div class="battle-section-label">可用证据</div>
+                    <div class="evidence-list">
+                        ${round.usableEvidence.map(e =>
+                            `<div class="evidence-chip" title="${escAttr(e.usage)}">
+                                <b>${e.id}</b> ${esc(e.name)}
+                            </div>`
+                        ).join('')}
+                    </div>
+                    ${round.autoFollowupEvidence.length > 0 ? `
+                    <div style="margin-top:0.5rem;">
+                        <div style="font-size:0.68rem;color:#8ab4cc;text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:0.3rem;">自动追问</div>
+                        <div class="evidence-list">
+                            ${round.autoFollowupEvidence.map(e =>
+                                `<div class="evidence-chip auto" title="${escAttr(e.usage)}">
+                                    <b>${e.id}</b> ${esc(e.name)}
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>` : ''}
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="expose-result">
+                <div class="result-label">击穿结果</div>
+                <div class="result-text">${esc(round.result)}</div>
+                ${round.relationNetwork ? `
+                <div style="margin-top:0.5rem;">
+                    <div style="font-size:0.68rem;color:var(--accent-purple-light);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:0.3rem;">关系网络</div>
+                    <div style="font-size:0.78rem;color:var(--ink-secondary);">
+                        ${round.relationNetwork.map(rn =>
+                            `<div style="padding:0.1rem 0;">T${rn.testimony} ${esc(rn['连接'] || rn.connection || '')} — ${esc(rn['验证'] || rn.validation || '')}</div>`
+                        ).join('')}
+                    </div>
+                </div>` : ''}
+            </div>
+
+            ${allAnnotations.length > 0 ? `
+            <div style="padding:0.5rem 1rem;background:var(--surface-1);border-top:1px solid var(--surface-3);">
+                ${allAnnotations.map(a => `
+                    <span class="annotation-bubble ${a.type} ann-${a.type}" onclick="this.nextElementSibling.classList.toggle('open')">${annLabel(a.type)}</span>
+                    <div class="annotation-detail ann-${a.type}">${esc(a.text)}</div>
+                `).join('')}
+            </div>` : ''}
+        </div>`;
+    }
+
+    // Related doubt annotations
+    const doubtAnnotations = s.annotations.filter(a => a.location === 'doubt');
+    if (doubtAnnotations.length > 0) {
+        html += `<div class="card" style="margin-top:0.5rem;">
+            <div class="card-title">相关疑点注解</div>
+            ${doubtAnnotations.map(a => `
+                <span class="annotation-bubble ${a.type} ann-${a.type}" onclick="this.nextElementSibling.classList.toggle('open')">${annLabel(a.type)} D#${a.doubtId || ''}</span>
+                <div class="annotation-detail ann-${a.type}">${esc(a.text)}</div>
+            `).join('')}
+        </div>`;
+    }
+
+    document.getElementById('panelExpose').innerHTML = html;
+}
+
+function toggleAnnotation(type, checked) {
+    annotationFilters[type] = checked;
+    document.querySelectorAll(`.ann-${type}`).forEach(el => {
+        el.style.display = checked ? '' : 'none';
+    });
+}
+
+// ===== Utility =====
+const annTypeLabel = { CLIMAX: '高潮', TURN: '转折', CROSS: '交叉验证', PLANT: '伏笔', AMBUSH: '人性冲击' };
+function annLabel(type) { return annTypeLabel[type] || type; }
+function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(str) {
+    return esc(str).replace(/'/g, '&#39;');
+}
+function escSvg(str) {
+    return esc(str);
+}
+</script>
+</body>
+</html>

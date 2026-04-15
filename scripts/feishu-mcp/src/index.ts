@@ -1,0 +1,49 @@
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { FeishuMcpServer } from "./server.js";
+import { Config } from "./utils/config.js";
+import { Logger } from "./utils/logger.js";
+import { fileURLToPath } from 'url';
+import { resolve } from 'path';
+
+export async function startServer(): Promise<void> {
+  // Check if we're running in stdio mode (e.g., via CLI)
+  const isStdioMode = process.env.NODE_ENV === "cli" || process.argv.includes("--stdio");
+
+  // 获取配置实例
+  const config = Config.getInstance();
+  
+  // 打印配置信息
+  config.printConfig(isStdioMode);
+  
+  // 验证配置
+  if (!config.validate()) {
+    Logger.error("配置验证失败，无法启动服务器");
+    process.exit(1);
+  }
+
+  // 创建MCP服务器
+  const server = new FeishuMcpServer();
+
+  if (isStdioMode) {
+    const transport = new StdioServerTransport();
+
+    // 在stdio模式下也需要启动HTTP服务器以提供callback接口
+    // 启动最小化的HTTP服务器（只提供callback接口）
+    await server.startCallbackServer(config.server.port);
+    await server.connect(transport);
+  } else {
+    Logger.info(`Initializing Feishu MCP Server in HTTP mode on port ${config.server.port}...`);
+    await server.startHttpServer(config.server.port);
+  }
+}
+
+// 跨平台兼容的方式检查是否直接运行
+const currentFilePath = fileURLToPath(import.meta.url);
+const executedFilePath = resolve(process.argv[1]);
+
+if (currentFilePath === executedFilePath) {
+  startServer().catch((error) => {
+    Logger.error('Failed to start server:', error);
+    process.exit(1);
+  });
+}

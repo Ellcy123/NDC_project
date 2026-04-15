@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC Story Editor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #1a1a1a;
+            --card: #2a1515;
+            --accent: #b84040;
+            --highlight: #e8c678;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --success: #4a7c59;
+            --warning: #c41e3a;
+            --border: #333;
+            --cell-edited: rgba(232, 198, 120, 0.12);
+            --cell-hover: rgba(255, 255, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #app { display: flex; flex-direction: column; height: 100vh; }
+
+        /* ===== Header ===== */
+        header {
+            background: var(--secondary);
+            padding: 0.6rem 1.2rem;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header-left, .header-right { display: flex; align-items: center; gap: 0.75rem; }
+        .logo { font-size: 1.15rem; font-weight: 600; color: var(--highlight); }
+        .user-tag { font-size: 0.75rem; color: var(--text-muted); cursor: pointer; }
+        .user-tag:hover { color: var(--text-primary); }
+
+        select, .btn {
+            background: var(--card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        select { padding-right: 1.5rem; }
+        .btn:hover { border-color: var(--accent); }
+        .btn-save.has-changes { border-color: var(--highlight); color: var(--highlight); font-weight: 600; }
+        .btn-primary { background: var(--accent); border-color: var(--accent); }
+        .btn-primary:hover { background: #c84848; }
+        .btn-add { color: var(--success); border-color: var(--success); }
+        .btn-sm { font-size: 0.78rem; padding: 0.2rem 0.5rem; }
+        .badge {
+            background: var(--warning); color: white;
+            border-radius: 10px; padding: 0 6px;
+            font-size: 0.7rem; margin-left: 4px;
+        }
+
+        /* ===== Toolbar ===== */
+        #toolbar {
+            background: var(--secondary);
+            padding: 0.4rem 1.2rem;
+            display: flex; align-items: center; gap: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        #search-input {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            width: 250px;
+        }
+        #search-input:focus { border-color: var(--accent); outline: none; }
+        #row-count { color: var(--text-muted); font-size: 0.8rem; flex: 1; }
+
+        /* ===== Table ===== */
+        #table-container { flex: 1; overflow: auto; position: relative; }
+
+        #data-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+
+        #data-table thead th {
+            position: sticky; top: 0; z-index: 10;
+            background: var(--secondary);
+            padding: 0.45rem 0.65rem;
+            text-align: left; font-weight: 600;
+            color: var(--highlight);
+            border-bottom: 2px solid var(--accent);
+            white-space: nowrap; user-select: none;
+        }
+
+        #data-table tbody td {
+            padding: 0.35rem 0.65rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            max-width: 280px; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap;
+            cursor: pointer; transition: background 0.15s;
+        }
+        #data-table tbody tr:hover td { background: var(--cell-hover); }
+        #data-table tbody tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+        #data-table tbody tr:nth-child(even):hover td { background: var(--cell-hover); }
+
+        td.modified { background: var(--cell-edited) !important; }
+        td.complex { color: var(--text-muted); }
+
+        .col-actions { width: 55px; min-width: 55px; text-align: center; white-space: nowrap; }
+        .btn-icon {
+            background: none; border: none;
+            color: var(--text-muted); cursor: pointer;
+            padding: 2px 4px; font-size: 0.85rem;
+        }
+        .btn-icon:hover { color: var(--text-primary); }
+        .btn-icon.btn-danger:hover { color: var(--warning); }
+
+        .cell-input {
+            width: 100%; min-width: 80px;
+            background: var(--primary);
+            border: 1px solid var(--accent);
+            color: var(--text-primary);
+            padding: 2px 4px; font-size: inherit; outline: none;
+        }
+        .empty { color: var(--text-muted); }
+        .bi-en { color: var(--text-muted); font-size: 0.8em; }
+        .tag {
+            background: rgba(184, 64, 64, 0.2);
+            padding: 1px 6px; border-radius: 3px; font-size: 0.75rem;
+        }
+
+        /* ===== Modal ===== */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: var(--secondary);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            width: 90%; max-width: 720px; max-height: 85vh;
+            display: flex; flex-direction: column;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h3 { color: var(--highlight); font-size: 1rem; }
+        .modal-close {
+            background: none; border: none;
+            color: var(--text-muted); font-size: 1.3rem; cursor: pointer;
+        }
+        .modal-close:hover { color: var(--text-primary); }
+        #modal-body { padding: 1rem; overflow-y: auto; flex: 1; }
+        .modal-footer {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--border);
+            display: flex; gap: 0.5rem; justify-content: flex-end;
+        }
+
+        .form-group { margin-bottom: 0.7rem; }
+        .form-group label {
+            display: block; color: var(--text-muted);
+            font-size: 0.78rem; margin-bottom: 0.15rem;
+            font-weight: 600;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%; background: var(--primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.35rem 0.5rem; border-radius: 4px;
+            font-size: 0.85rem; font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent); outline: none;
+        }
+        .form-group textarea { min-height: 55px; resize: vertical; }
+        .json-editor {
+            font-family: 'Consolas', 'Monaco', monospace;
+            min-height: 120px; width: 100%;
+            background: var(--primary); border: 1px solid var(--border);
+            color: var(--text-primary); padding: 0.5rem;
+            border-radius: 4px; font-size: 0.82rem; resize: vertical;
+        }
+        .json-editor:focus { border-color: var(--accent); outline: none; }
+        .inline-group { display: flex; align-items: start; gap: 0.5rem; margin-bottom: 0.25rem; }
+        .inline-label { color: var(--text-muted); font-size: 0.72rem; min-width: 28px; padding-top: 0.4rem; }
+        .array-item { display: flex; gap: 0.3rem; margin-bottom: 0.25rem; align-items: center; }
+        .array-item input { flex: 1; }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed; bottom: 50px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--success); color: white;
+            padding: 0.5rem 1.2rem; border-radius: 6px;
+            font-size: 0.85rem; z-index: 200;
+            transition: transform 0.3s ease; pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.error { background: var(--warning); }
+        .toast.warn { background: #b8860b; }
+
+        /* ===== Status Bar ===== */
+        #status-bar {
+            background: var(--secondary);
+            padding: 0.3rem 1.2rem;
+            border-top: 1px solid var(--border);
+            display: flex; gap: 1.5rem;
+            font-size: 0.75rem; color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+        .dot-on { background: var(--success); }
+        .dot-off { background: var(--text-muted); }
+        .status-warn { color: var(--highlight); }
+
+        /* ===== Loading / Empty ===== */
+        #empty-state {
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 300px; color: var(--text-muted);
+            gap: 0.5rem;
+        }
+        .loading-text { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="header-left">
+                <span class="logo">NDC Story Editor</span>
+                <select id="table-select" onchange="onTableChange(this.value)"></select>
+            </div>
+            <div class="header-right">
+                <span class="user-tag" id="user-tag" onclick="changeUser()" title="点击修改用户名"></span>
+                <button class="btn btn-save" id="btn-save" onclick="saveToSupabase()">
+                    保存<span id="save-badge" class="badge" style="display:none"></span>
+                </button>
+                <button class="btn" onclick="exportJSON()">导出 JSON</button>
+                <button class="btn" onclick="document.getElementById('file-import').click()">导入 JSON</button>
+                <input type="file" id="file-import" accept=".json" style="display:none" onchange="importJSON(this)">
+            </div>
+        </header>
+
+        <div id="toolbar">
+            <input type="text" id="search-input" placeholder="搜索 ID / 名称 / 内容..." oninput="onSearch(this.value)">
+            <span id="row-count"></span>
+            <button class="btn btn-add btn-sm" onclick="addRow()">+ 新增行</button>
+        </div>
+
+        <div id="table-container">
+            <table id="data-table">
+                <thead id="table-head"></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+            <div id="empty-state">
+                <p>暂无数据</p>
+                <p style="font-size:0.8rem">请先运行 <code>python supabase_sync.py upload</code> 上传数据，或点击「导入 JSON」加载本地文件</p>
+            </div>
+        </div>
+
+        <div id="modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)cancelModal()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title"></h3>
+                    <button class="modal-close" onclick="cancelModal()">&times;</button>
+                </div>
+                <div id="modal-body"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="confirmModal()">确定</button>
+                    <button class="btn" onclick="cancelModal()">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <footer id="status-bar">
+            <span id="status-conn"></span>
+            <span id="status-table"></span>
+            <span id="status-mod"></span>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    /* ================================================================
+       NDC Story Editor — Supabase-backed config table editor
+       ================================================================ */
+
+    // ── Config ──────────────────────────────────────────
+    const SUPABASE_URL = 'https://tyqsamueendpanbfousp.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5cXNhbXVlZW5kcGFuYmZvdXNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxOTI1NjMsImV4cCI6MjA5MDc2ODU2M30.qa_EqkXHkq5ki8CYt0cJk-Se2vfj8PTVHci239YblfM';
+
+    const TABLES = [
+        { name: 'ItemStaticData',  label: '证据/道具',  key: 'id' },
+        { name: 'SceneConfig',     label: '场景配置',    key: 'sceneId' },
+        { name: 'NPCStaticData',   label: 'NPC 数据',   key: 'id' },
+        { name: 'TestimonyItem',   label: '证词条目',    key: 'id' },
+        { name: 'DoubtConfig',     label: '疑点配置',    key: 'id' },
+        { name: 'ExposeData',      label: '指证数据',    key: 'id' },
+        { name: 'ExposeConfig',    label: '指证场景',    key: 'sceneId' },
+        { name: 'Testimony',       label: '证词问题',    key: 'id' },
+        { name: 'ChapterConfig',   label: '章节配置',    key: 'id' },
+    ];
+
+    const TABLE_GROUPS = [
+        { label: '核心配置', items: ['ItemStaticData', 'SceneConfig', 'NPCStaticData'] },
+        { label: '谜题系统', items: ['TestimonyItem', 'DoubtConfig', 'ExposeData', 'ExposeConfig'] },
+        { label: '章节结构', items: ['Testimony', 'ChapterConfig'] },
+    ];
+
+    // Fields that typically hold bilingual [中文, English] arrays
+    const BILINGUAL = new Set(['Name', 'testimony', 'words', 'location', 'Describe', 'ShortDescribe', 'sceneName']);
+
+    // Column display priority
+    const COL_PRIORITY = ['id', 'sceneId', 'Name', 'sceneName', 'sceneNameEn', 'testimony', 'text', 'Chapter', 'itemType'];
+
+    // ── State ───────────────────────────────────────────
+    const S = {
+        db: null,
+        connected: false,
+        currentTable: null,   // { name, label, key }
+        data: [],             // current table rows
+        columns: [],          // detected column names
+        modified: new Set(),  // "rowIdx:field"
+        search: '',
+        editingCell: null,    // currently editing <td>
+        lastSaved: null,
+        lastSavedBy: null,
+        userName: localStorage.getItem('ndc_editor_user') || '',
+    };
+
+    let modalCtx = null; // { mode:'field'|'row', rowIdx, field?, isNew? }
+
+    // ── Init ────────────────────────────────────────────
+    async function init() {
+        // User name
+        if (!S.userName) {
+            S.userName = prompt('请输入你的名字（标记编辑者）:', '') || 'editor';
+            localStorage.setItem('ndc_editor_user', S.userName);
+        }
+        document.getElementById('user-tag').textContent = S.userName;
+
+        // Supabase connection
+        try {
+            S.db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const { error } = await S.db.from('config_tables').select('name').limit(1);
+            if (error) throw error;
+            S.connected = true;
+        } catch (e) {
+            S.connected = false;
+            console.warn('Supabase:', e.message || e);
+        }
+
+        updateConnStatus();
+        populateSelector();
+
+        if (S.connected) {
+            await loadTable(TABLES[0].name);
+        }
+    }
+
+    function changeUser() {
+        const name = prompt('修改用户名:', S.userName);
+        if (name) {
+            S.userName = name;
+            localStorage.setItem('ndc_editor_user', name);
+            document.getElementById('user-tag').textContent = name;
+        }
+    }
+
+    // ── Selector ────────────────────────────────────────
+    function populateSelector() {
+        const sel = document.getElementById('table-select');
+        for (const g of TABLE_GROUPS) {
+            const og = document.createElement('optgroup');
+            og.label = g.label;
+            for (const name of g.items) {
+                const t = TABLES.find(x => x.name === name);
+                if (!t) continue;
+                const opt = document.createElement('option');
+                opt.value = t.name;
+                opt.textContent = `${t.label} (${t.name})`;
+                og.appendChild(opt);
+            }
+            sel.appendChild(og);
+        }
+    }
+
+    function onTableChange(name) { loadTable(name); }
+
+    // ── Data Ops ────────────────────────────────────────
+    async function loadTable(tableName) {
+        const cfg = TABLES.find(t => t.name === tableName);
+        if (!cfg) return;
+
+        S.currentTable = cfg;
+        S.modified.clear();
+        S.search = '';
+        S.lastSaved = null;
+        S.lastSavedBy = null;
+        document.getElementById('search-input').value = '';
+        document.getElementById('table-body').innerHTML = '';
+        document.getElementById('table-head').innerHTML = '';
+        document.getElementById('empty-state').style.display = 'none';
+
+        if (S.connected) {
+            document.getElementById('table-body').innerHTML = '<tr><td class="loading-text" colspan="99">加载中...</td></tr>';
+            try {
+                const { data: row, error } = await S.db
+                    .from('config_tables')
+                    .select('data, updated_at, updated_by')
+                    .eq('name', tableName)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') throw error;
+
+                if (row && Array.isArray(row.data)) {
+                    S.data = row.data;
+                    S.lastSaved = row.updated_at;
+                    S.lastSavedBy = row.updated_by;
+                } else {
+                    S.data = [];
+                    toast(`${tableName} 在 Supabase 中无数据`, 'warn');
+                }
+            } catch (e) {
+                S.data = [];
+                toast('加载失败: ' + (e.message || e), 'error');
+            }
+        } else {
+            S.data = [];
+        }
+
+        S.columns = detectColumns(S.data);
+        renderTable();
+    }
+
+    async function saveToSupabase() {
+        if (!S.connected || !S.currentTable) {
+            toast('未连接 Supabase', 'error');
+            return;
+        }
+        if (S.modified.size === 0) {
+            toast('没有修改需要保存');
+            return;
+        }
+
+        try {
+            const { error } = await S.db.from('config_tables').upsert({
+                name: S.currentTable.name,
+                data: S.data,
+                updated_by: S.userName,
+            });
+            if (error) throw error;
+
+            S.modified.clear();
+            S.lastSavedBy = S.userName;
+            S.lastSaved = new Date().toISOString();
+            renderTable();
+            toast('已保存到 Supabase');
+        } catch (e) {
+            toast('保存失败: ' + (e.message || e), 'error');
+        }
+    }
+
+    // ── Column Detection ────────────────────────────────
+    function detectColumns(data) {
+        const set = new Set();
+        for (const row of data) {
+            for (const k of Object.keys(row)) set.add(k);
+        }
+        return [...set].sort((a, b) => {
+            const ai = COL_PRIORITY.indexOf(a);
+            const bi = COL_PRIORITY.indexOf(b);
+            if (ai !== -1 && bi !== -1) return ai - bi;
+            if (ai !== -1) return -1;
+            if (bi !== -1) return 1;
+            return a.localeCompare(b);
+        });
+    }
+
+    // ── Render ──────────────────────────────────────────
+    function renderTable() {
+        const thead = document.getElementById('table-head');
+        const tbody = document.getElementById('table-body');
+        const empty = document.getElementById('empty-state');
+
+        if (S.data.length === 0) {
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            empty.style.display = 'flex';
+            updateStatusBar();
+            return;
+        }
+        empty.style.display = 'none';
+
+        const filtered = getFiltered();
+
+        // Header
+        let h = '<tr><th class="col-actions">操作</th>';
+        for (const c of S.columns) h += `<th>${esc(c)}</th>`;
+        h += '</tr>';
+        thead.innerHTML = h;
+
+        // Body
+        let b = '';
+        for (const { row, idx } of filtered) {
+            b += `<tr data-row="${idx}">`;
+            b += `<td class="col-actions">`;
+            b += `<button class="btn-icon" data-act="edit" data-row="${idx}" title="编辑">&#9998;</button>`;
+            b += `<button class="btn-icon btn-danger" data-act="del" data-row="${idx}" title="删除">&#10005;</button>`;
+            b += `</td>`;
+            for (const c of S.columns) {
+                const v = row[c];
+                const mod = S.modified.has(`${idx}:${c}`);
+                const complex = isComplex(v);
+                let cls = '';
+                if (mod) cls += ' modified';
+                if (complex) cls += ' complex';
+                b += `<td data-row="${idx}" data-field="${c}" class="${cls.trim()}" title="${esc(JSON.stringify(v) ?? '')}">${cellHTML(v, c)}</td>`;
+            }
+            b += '</tr>';
+        }
+        tbody.innerHTML = b;
+        updateStatusBar();
+    }
+
+    function cellHTML(v, field) {
+        if (v === null || v === undefined || v === '') return '<span class="empty">\u2014</span>';
+
+        if (Array.isArray(v)) {
+            if (v.length === 0) return '<span class="empty">[]</span>';
+            if (typeof v[0] === 'object') return `<span class="tag">[${v.length}]</span>`;
+            // Bilingual
+            if (v.length === 2 && BILINGUAL.has(field)) {
+                return esc(v[0]) + ' <span class="bi-en">/ ' + esc(v[1]) + '</span>';
+            }
+            // ID list or generic
+            return esc(v.join(', '));
+        }
+
+        if (typeof v === 'object') return '<span class="tag">{...}</span>';
+        return esc(String(v));
+    }
+
+    function isComplex(v) {
+        return Array.isArray(v) || (typeof v === 'object' && v !== null);
+    }
+
+    // ── Inline Edit ─────────────────────────────────────
+    function startInlineEdit(td, rowIdx, field) {
+        if (S.editingCell) cancelInline();
+
+        const v = S.data[rowIdx][field];
+        if (isComplex(v)) {
+            openFieldModal(rowIdx, field);
+            return;
+        }
+
+        S.editingCell = td;
+        const cur = (v !== null && v !== undefined) ? String(v) : '';
+
+        td.innerHTML = '';
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.value = cur;
+        inp.className = 'cell-input';
+        inp.addEventListener('blur', () => commitInline(td, rowIdx, field, inp.value));
+        inp.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+            if (e.key === 'Escape') { inp.value = cur; cancelInline(); }
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                inp.blur();
+                // Move to next/prev cell
+                const dir = e.shiftKey ? -1 : 1;
+                const ci = S.columns.indexOf(field);
+                const ni = ci + dir;
+                if (ni >= 0 && ni < S.columns.length) {
+                    const nextTd = document.querySelector(`td[data-row="${rowIdx}"][data-field="${S.columns[ni]}"]`);
+                    if (nextTd) startInlineEdit(nextTd, rowIdx, S.columns[ni]);
+                }
+            }
+        });
+        td.appendChild(inp);
+        inp.focus();
+        inp.select();
+    }
+
+    function commitInline(td, rowIdx, field, newVal) {
+        const old = S.data[rowIdx][field];
+        if (String(old ?? '') !== newVal) {
+            S.data[rowIdx][field] = newVal;
+            S.modified.add(`${rowIdx}:${field}`);
+        }
+        S.editingCell = null;
+        td.innerHTML = cellHTML(S.data[rowIdx][field], field);
+        if (S.modified.has(`${rowIdx}:${field}`)) td.classList.add('modified');
+        updateStatusBar();
+    }
+
+    function cancelInline() {
+        if (!S.editingCell) return;
+        const td = S.editingCell;
+        const ri = parseInt(td.dataset.row);
+        const f = td.dataset.field;
+        td.innerHTML = cellHTML(S.data[ri][f], f);
+        S.editingCell = null;
+    }
+
+    // ── Modal: Field ────────────────────────────────────
+    function openFieldModal(rowIdx, field) {
+        const v = S.data[rowIdx][field];
+        modalCtx = { mode: 'field', rowIdx, field };
+        document.getElementById('modal-title').textContent = `编辑 ${field}`;
+
+        let html = '';
+        if (Array.isArray(v)) {
+            if (v.length > 0 && typeof v[0] === 'object') {
+                html = `<textarea class="json-editor" data-field="${field}" data-type="json">${esc(JSON.stringify(v, null, 2))}</textarea>`;
+            } else if (v.length <= 2 && BILINGUAL.has(field)) {
+                const labels = ['中文', 'English'];
+                for (let i = 0; i < Math.max(v.length, 2); i++) {
+                    const val = v[i] || '';
+                    const isLong = val.length > 60 || val.includes('\n');
+                    html += `<div class="form-group"><label>${labels[i] || `[${i}]`}</label>`;
+                    html += isLong
+                        ? `<textarea data-field="${field}" data-index="${i}">${esc(val)}</textarea>`
+                        : `<input data-field="${field}" data-index="${i}" value="${esc(val)}">`;
+                    html += '</div>';
+                }
+            } else {
+                html = '<div class="array-editor" id="array-editor">';
+                v.forEach((item, i) => {
+                    html += `<div class="array-item"><input data-field="${field}" data-index="${i}" value="${esc(String(item))}"><button class="btn-icon btn-danger" onclick="this.parentElement.remove()">&#10005;</button></div>`;
+                });
+                html += `<button class="btn btn-sm" onclick="addArrayEl('${field}')">+ 添加</button></div>`;
+            }
+        } else if (typeof v === 'object' && v !== null) {
+            html = `<textarea class="json-editor" data-field="${field}" data-type="json">${esc(JSON.stringify(v, null, 2))}</textarea>`;
+        } else {
+            html = `<div class="form-group"><input data-field="${field}" value="${esc(String(v ?? ''))}"></div>`;
+        }
+
+        document.getElementById('modal-body').innerHTML = html;
+        showModal();
+    }
+
+    function addArrayEl(field) {
+        const container = document.getElementById('array-editor');
+        const items = container.querySelectorAll('.array-item');
+        const div = document.createElement('div');
+        div.className = 'array-item';
+        div.innerHTML = `<input data-field="${field}" data-index="${items.length}" value=""><button class="btn-icon btn-danger" onclick="this.parentElement.remove()">&#10005;</button>`;
+        container.insertBefore(div, container.querySelector('.btn'));
+        div.querySelector('input').focus();
+    }
+
+    // ── Modal: Row Editor ───────────────────────────────
+    function openRowEditor(rowIdx) {
+        const row = S.data[rowIdx];
+        const keyVal = row[S.currentTable.key] || '新行';
+        modalCtx = { mode: 'row', rowIdx };
+
+        document.getElementById('modal-title').textContent = `编辑行 ${keyVal}`;
+
+        let html = '<div class="row-editor">';
+        for (const col of S.columns) {
+            const v = row[col];
+            html += `<div class="form-group"><label>${col}</label>`;
+
+            if (Array.isArray(v)) {
+                if (v.length > 0 && typeof v[0] === 'object') {
+                    html += `<textarea class="json-editor" data-field="${col}" data-type="json">${esc(JSON.stringify(v, null, 2))}</textarea>`;
+                } else {
+                    const labels = (v.length <= 2 && BILINGUAL.has(col)) ? ['中文', 'EN'] : null;
+                    v.forEach((item, i) => {
+                        const lbl = labels ? labels[i] : `[${i}]`;
+                        const s = String(item);
+                        html += `<div class="inline-group"><span class="inline-label">${lbl}</span>`;
+                        html += (s.length > 60 || s.includes('\n'))
+                            ? `<textarea data-field="${col}" data-index="${i}" style="flex:1">${esc(s)}</textarea>`
+                            : `<input data-field="${col}" data-index="${i}" value="${esc(s)}" style="flex:1">`;
+                        html += '</div>';
+                    });
+                }
+            } else if (typeof v === 'object' && v !== null) {
+                html += `<textarea class="json-editor" data-field="${col}" data-type="json">${esc(JSON.stringify(v, null, 2))}</textarea>`;
+            } else {
+                const s = (v !== null && v !== undefined) ? String(v) : '';
+                html += (s.length > 60 || s.includes('\n'))
+                    ? `<textarea data-field="${col}">${esc(s)}</textarea>`
+                    : `<input data-field="${col}" value="${esc(s)}">`;
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+
+        document.getElementById('modal-body').innerHTML = html;
+        showModal();
+    }
+
+    // ── Modal: Confirm / Cancel ─────────────────────────
+    function confirmModal() {
+        if (!modalCtx) return;
+        const { mode, rowIdx, field } = modalCtx;
+
+        if (mode === 'field') {
+            const nv = readValue(field);
+            if (nv !== undefined && JSON.stringify(S.data[rowIdx][field]) !== JSON.stringify(nv)) {
+                S.data[rowIdx][field] = nv;
+                S.modified.add(`${rowIdx}:${field}`);
+            }
+        } else if (mode === 'row') {
+            for (const col of S.columns) {
+                const nv = readValue(col);
+                if (nv !== undefined && JSON.stringify(S.data[rowIdx][col]) !== JSON.stringify(nv)) {
+                    S.data[rowIdx][col] = nv;
+                    S.modified.add(`${rowIdx}:${col}`);
+                }
+            }
+        }
+
+        if (modalCtx.isNew) modalCtx.isNew = false;
+        closeModal();
+        renderTable();
+    }
+
+    function cancelModal() {
+        if (modalCtx && modalCtx.isNew) {
+            S.data.pop(); // Remove the newly added row
+        }
+        closeModal();
+        renderTable();
+    }
+
+    function showModal() {
+        document.getElementById('modal').style.display = 'flex';
+        const first = document.querySelector('#modal-body input, #modal-body textarea');
+        if (first) setTimeout(() => first.focus(), 50);
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        modalCtx = null;
+    }
+
+    function readValue(field) {
+        const els = [...document.querySelectorAll(`#modal-body [data-field="${field}"]`)];
+        if (els.length === 0) return undefined;
+
+        const hasIdx = els.some(e => e.dataset.index !== undefined);
+        if (hasIdx) {
+            // Array — collect in DOM order
+            return els.filter(e => e.dataset.index !== undefined).map(e => e.value);
+        }
+
+        const el = els[0];
+        if (el.dataset.type === 'json') {
+            try { return JSON.parse(el.value); }
+            catch { toast('JSON 格式错误: ' + field, 'error'); return undefined; }
+        }
+        return el.value;
+    }
+
+    // ── Row Ops ─────────────────────────────────────────
+    function addRow() {
+        const row = createEmptyRow();
+        S.data.push(row);
+        const idx = S.data.length - 1;
+        modalCtx = { mode: 'row', rowIdx: idx, isNew: true };
+        openRowEditor(idx);
+        modalCtx.isNew = true; // re-set after openRowEditor clears it
+    }
+
+    function deleteRow(rowIdx) {
+        const key = S.currentTable.key;
+        const id = S.data[rowIdx][key] || `#${rowIdx + 1}`;
+        if (!confirm(`确定删除 ${id}？`)) return;
+        S.data.splice(rowIdx, 1);
+        // Adjust modified indices
+        const nm = new Set();
+        for (const k of S.modified) {
+            const [i, f] = [parseInt(k), k.substring(k.indexOf(':') + 1)];
+            if (i < rowIdx) nm.add(k);
+            else if (i > rowIdx) nm.add(`${i - 1}:${f}`);
+        }
+        S.modified = nm;
+        S.modified.add('__deleted__'); // Mark as having changes
+        renderTable();
+    }
+
+    function createEmptyRow() {
+        if (S.data.length === 0) return {};
+        const tpl = S.data[0];
+        const row = {};
+        for (const [k, v] of Object.entries(tpl)) {
+            if (Array.isArray(v)) row[k] = v.map(x => typeof x === 'object' ? {} : '');
+            else if (typeof v === 'object' && v !== null) row[k] = {};
+            else row[k] = '';
+        }
+        return row;
+    }
+
+    // ── Import / Export ─────────────────────────────────
+    function exportJSON() {
+        if (S.data.length === 0) { toast('没有数据可导出', 'warn'); return; }
+        const json = JSON.stringify(S.data, null, 2);
+        const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${S.currentTable.name}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast(`已导出 ${S.currentTable.name}.json`);
+    }
+
+    function importJSON(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (!Array.isArray(data)) throw new Error('JSON 必须是数组');
+                S.data = data;
+                S.columns = detectColumns(data);
+                S.modified.clear();
+                data.forEach((_, i) => S.modified.add(`${i}:__import__`));
+                renderTable();
+                toast(`已导入 ${data.length} 行 — 记得保存到 Supabase`);
+            } catch (err) {
+                toast('导入失败: ' + err.message, 'error');
+            }
+        };
+        reader.readAsText(file, 'UTF-8');
+        input.value = '';
+    }
+
+    // ── Search ──────────────────────────────────────────
+    function onSearch(q) {
+        S.search = q.toLowerCase();
+        renderTable();
+    }
+
+    function getFiltered() {
+        const q = S.search;
+        return S.data
+            .map((row, idx) => ({ row, idx }))
+            .filter(({ row }) => {
+                if (!q) return true;
+                return Object.values(row).some(v =>
+                    JSON.stringify(v).toLowerCase().includes(q)
+                );
+            });
+    }
+
+    // ── Utils ───────────────────────────────────────────
+    function esc(s) {
+        if (s === null || s === undefined) return '';
+        const d = document.createElement('div');
+        d.textContent = String(s);
+        return d.innerHTML;
+    }
+
+    function toast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `toast show ${type}`;
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.className = 'toast', 3000);
+    }
+
+    function updateConnStatus() {
+        const el = document.getElementById('status-conn');
+        el.innerHTML = S.connected
+            ? '<span class="dot dot-on"></span>在线'
+            : '<span class="dot dot-off"></span>离线';
+    }
+
+    function updateStatusBar() {
+        const filtered = getFiltered();
+        document.getElementById('row-count').textContent =
+            S.search ? `${filtered.length} / ${S.data.length} 行` : `${S.data.length} 行`;
+
+        // Modified count
+        const realMods = [...S.modified].filter(k => !k.includes('__')).length;
+        const hasMods = S.modified.size > 0;
+        const modEl = document.getElementById('status-mod');
+        const badge = document.getElementById('save-badge');
+        const btn = document.getElementById('btn-save');
+
+        if (hasMods) {
+            modEl.innerHTML = `<span class="status-warn">${S.modified.size} 处修改</span>`;
+            badge.textContent = S.modified.size;
+            badge.style.display = 'inline';
+            btn.classList.add('has-changes');
+        } else {
+            modEl.textContent = '无修改';
+            badge.style.display = 'none';
+            btn.classList.remove('has-changes');
+        }
+
+        // Table info
+        const infoEl = document.getElementById('status-table');
+        let info = S.currentTable ? S.currentTable.label : '';
+        if (S.lastSavedBy) {
+            const t = S.lastSaved ? new Date(S.lastSaved).toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' }) : '';
+            info += ` · 上次: ${S.lastSavedBy} ${t}`;
+        }
+        infoEl.textContent = info;
+    }
+
+    // ── Event Delegation ────────────────────────────────
+    document.addEventListener('DOMContentLoaded', init);
+
+    document.getElementById('data-table').addEventListener('dblclick', e => {
+        const td = e.target.closest('td[data-field]');
+        if (!td) return;
+        startInlineEdit(td, parseInt(td.dataset.row), td.dataset.field);
+    });
+
+    document.getElementById('data-table').addEventListener('click', e => {
+        const btn = e.target.closest('[data-act]');
+        if (!btn) return;
+        const act = btn.dataset.act;
+        const ri = parseInt(btn.dataset.row);
+        if (act === 'edit') openRowEditor(ri);
+        if (act === 'del') deleteRow(ri);
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            saveToSupabase();
+        }
+        if (e.key === 'Escape') {
+            if (document.getElementById('modal').style.display !== 'none') cancelModal();
+            else cancelInline();
+        }
+    });
+    </script>
+</body>
+</html>

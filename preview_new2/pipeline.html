@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC 流水线播放器</title>
+    <script>
+    (function(){
+        var h = location.hostname;
+        var isLocal = (h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:');
+        var base = location.pathname.includes('/NDC_project/') ? '/NDC_project' : '';
+        var src = isLocal ? base + '/preview_new2/js-yaml.min.js' : '/preview_new2/js-yaml.min.js';
+        document.write('<scr'+'ipt src="'+src+'"><\/scr'+'ipt>');
+    })();
+    </script>
+    <style>
+:root {
+    --primary: #0a0a0a;
+    --secondary: #1a1a1a;
+    --card: #2a1515;
+    --accent: #b84040;
+    --highlight: #e8c678;
+    --text-primary: #fff;
+    --text-secondary: #ccc;
+    --text-muted: #888;
+    --success: #4a7c59;
+    --warning: #c41e3a;
+    --border: #333;
+    --surface: #222;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: var(--primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === Header === */
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1.5rem;
+    background: var(--secondary);
+    border-bottom: 1px solid var(--border);
+    z-index: 50;
+    flex-shrink: 0;
+}
+#header h1 { font-size: 1.1rem; color: var(--highlight); font-weight: 500; }
+.header-controls { display: flex; gap: 0.5rem; align-items: center; }
+.header-controls select, .header-controls button {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.header-controls button { background: var(--accent); border-color: var(--accent); }
+.header-controls button:hover { filter: brightness(1.15); }
+.header-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+.header-nav { display: flex; gap: 0.5rem; align-items: center; }
+.header-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    transition: color 0.15s;
+}
+.header-nav a:hover { color: var(--highlight); }
+
+/* === Main === */
+#main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    min-height: 0;
+}
+
+/* === Stage === */
+#stage {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+#scene-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+#scene-bg.visible { opacity: 1; }
+
+/* idle placeholder */
+#idle-hint {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+    text-align: center;
+    line-height: 2;
+}
+
+/* click area */
+#click-area {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    cursor: pointer;
+    z-index: 20;
+    display: none;
+}
+
+/* === Dialog Box === */
+#dialog-box {
+    position: absolute;
+    bottom: 12px;
+    left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 820px;
+    background: rgba(20, 10, 10, 0.93);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: none;
+    gap: 0.75rem;
+    z-index: 10;
+}
+#dialog-box.visible { display: flex; }
+.dlg-avatar {
+    width: 70px; height: 95px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--surface);
+}
+.dlg-content { flex: 1; min-width: 0; }
+.dlg-speaker { color: var(--highlight); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+.dlg-text { color: var(--text-primary); font-size: 0.92rem; line-height: 1.5; min-height: 2.5em; }
+.dlg-action { color: var(--text-muted); font-size: 0.82rem; font-style: italic; margin-top: 0.3rem; }
+.dlg-hint {
+    position: absolute; right: 1rem; bottom: 0.5rem;
+    color: var(--text-muted); font-size: 0.75rem;
+    animation: blink 1.5s infinite;
+}
+.lie-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--warning); color: white;
+    font-size: 0.72rem; padding: 0.15rem 0.5rem;
+    border-radius: 3px; font-weight: 600;
+    display: none;
+}
+#dialog-box.lie .lie-badge { display: block; }
+
+/* === Branch Buttons === */
+#branch-container {
+    position: absolute;
+    bottom: 150px;
+    left: 50%; transform: translateX(-50%);
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 25;
+    width: 80%; max-width: 600px;
+}
+#branch-container.visible { display: flex; }
+.branch-btn {
+    padding: 0.75rem 1rem;
+    background: rgba(30, 20, 20, 0.92);
+    border: 1px solid var(--accent);
+    color: var(--text-primary);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+}
+.branch-btn:hover { background: rgba(184, 64, 64, 0.3); border-color: var(--highlight); }
+
+/* === Progress Bar === */
+#progress-bar {
+    width: 100%; max-width: 960px;
+    height: 4px;
+    background: var(--surface);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    position: relative;
+    display: none;
+}
+#progress-bar.visible { display: block; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; width: 0%; }
+.progress-text { position: absolute; right: 0; top: -18px; font-size: 0.75rem; color: var(--text-muted); }
+
+/* === Inventory Panel === */
+#inventory-toggle {
+    position: fixed;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 0.75rem 0.35rem;
+    color: var(--highlight);
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 6px 0 0 6px;
+    z-index: 40;
+    transition: right 0.3s;
+    letter-spacing: 2px;
+    display: none;
+}
+#inventory-toggle.visible { display: block; }
+#inventory-panel {
+    position: fixed;
+    right: -320px; top: 0;
+    width: 320px; height: 100vh;
+    background: var(--secondary);
+    border-left: 1px solid var(--border);
+    z-index: 45;
+    transition: right 0.3s;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+#inventory-panel.open { right: 0; }
+.inv-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+.inv-header h3 { color: var(--highlight); font-size: 1rem; }
+#inv-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+.inv-body { flex: 1; overflow-y: auto; padding: 0.75rem; }
+.inv-section-title {
+    color: var(--accent); font-size: 0.85rem; font-weight: 600;
+    margin-bottom: 0.5rem; padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-top: 0.75rem;
+}
+.inv-section-title:first-child { margin-top: 0; }
+.inv-item {
+    display: flex; gap: 0.5rem; padding: 0.4rem;
+    border-radius: 4px; margin-bottom: 0.35rem;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: 0.82rem; align-items: center;
+}
+.inv-item.previous { opacity: 0.6; }
+.inv-item-name { color: var(--text-primary); flex: 1; min-width: 0; }
+.inv-item-loop { color: var(--text-muted); font-size: 0.72rem; flex-shrink: 0; }
+.inv-doubt-item {
+    padding: 0.4rem 0.6rem; margin-bottom: 0.3rem;
+    background: rgba(232, 198, 120, 0.1);
+    border: 1px solid rgba(232, 198, 120, 0.3);
+    border-radius: 4px; font-size: 0.82rem; color: var(--highlight);
+}
+
+/* === Overlays === */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none;
+    justify-content: center; align-items: center;
+    z-index: 60;
+}
+.overlay.visible { display: flex; }
+
+/* Transition */
+#transition-overlay { background: rgba(0,0,0,0.95); flex-direction: column; z-index: 60; }
+.trans-label { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; animation: fadeIn 0.5s; }
+.trans-name { color: var(--highlight); font-size: 1.8rem; font-weight: 300; letter-spacing: 3px; animation: fadeIn 0.8s; }
+
+/* Evidence Reveal */
+#evidence-overlay { background: rgba(0,0,0,0.88); z-index: 65; }
+.evidence-container { text-align: center; }
+.evidence-title { color: var(--highlight); font-size: 1.2rem; margin-bottom: 1.5rem; letter-spacing: 2px; }
+#evidence-cards { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; max-width: 800px; }
+
+/* Flip Card */
+.flip-card { perspective: 800px; width: 140px; height: 200px; cursor: default; }
+.flip-card-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px; overflow: hidden;
+}
+.flip-card-front {
+    background: var(--card); border: 2px solid var(--border);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 2.5rem; color: var(--accent);
+}
+.flip-card-back {
+    background: var(--card); border: 2px solid var(--accent);
+    transform: rotateY(180deg);
+    padding: 0.5rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+}
+.flip-card.flipped { cursor: pointer; }
+.flip-card.flipped:hover .flip-card-back { border-color: var(--highlight); }
+.flip-card.collected .flip-card-inner { opacity: 0.3; transform: rotateY(180deg) scale(0.9); pointer-events: none; }
+.card-img { width: 80px; height: 80px; object-fit: contain; border-radius: 4px; background: var(--surface); }
+.card-name { color: var(--highlight); font-size: 0.78rem; font-weight: 600; text-align: center; }
+.card-desc {
+    color: var(--text-secondary); font-size: 0.7rem; text-align: center;
+    overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+}
+.card-collect-hint { color: var(--accent); font-size: 0.72rem; margin-top: auto; }
+
+/* Doubt Popup */
+#doubt-overlay { background: rgba(0,0,0,0.82); z-index: 70; }
+.doubt-card {
+    background: var(--secondary);
+    border: 2px solid var(--highlight);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    text-align: center;
+    max-width: 400px;
+    animation: doubtPulse 2s infinite;
+}
+.doubt-icon { font-size: 2.5rem; color: var(--highlight); margin-bottom: 0.75rem; }
+.doubt-label { color: var(--highlight); font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: 2px; }
+.doubt-text { color: var(--text-primary); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem; }
+.doubt-confirm {
+    padding: 0.5rem 2rem; background: var(--accent); border: none;
+    color: white; border-radius: 6px; font-size: 0.9rem; cursor: pointer;
+}
+.doubt-confirm:hover { filter: brightness(1.15); }
+
+/* Intro / Complete */
+#intro-overlay { background: rgba(0,0,0,0.96); z-index: 80; }
+.intro-content { text-align: center; max-width: 500px; }
+.intro-loop { color: var(--text-muted); font-size: 0.9rem; letter-spacing: 3px; margin-bottom: 1rem; }
+.intro-title { color: var(--highlight); font-size: 2rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 1.5rem; }
+.intro-target { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6; }
+.intro-start {
+    padding: 0.7rem 2.5rem; background: var(--accent); border: 1px solid var(--accent);
+    color: white; border-radius: 6px; font-size: 1rem; cursor: pointer; letter-spacing: 1px;
+}
+.intro-start:hover { filter: brightness(1.15); }
+
+#complete-overlay { background: rgba(0,0,0,0.96); z-index: 80; }
+.complete-content { text-align: center; max-width: 500px; }
+.complete-title { color: var(--highlight); font-size: 1.5rem; margin-bottom: 1.5rem; letter-spacing: 2px; }
+.complete-summary { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8; margin-bottom: 2rem; text-align: left; }
+.complete-btn {
+    padding: 0.6rem 2rem; background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-primary); border-radius: 6px; font-size: 0.9rem; cursor: pointer;
+}
+
+/* Testimony Toast */
+#testimony-toast {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+    background: rgba(74, 124, 89, 0.92); color: white;
+    padding: 0.6rem 1.5rem; border-radius: 6px; font-size: 0.85rem;
+    display: none; z-index: 55; border: 1px solid var(--success);
+    white-space: nowrap;
+}
+#testimony-toast.visible { display: block; animation: slideUp 0.3s ease-out; }
+
+/* Expose Evidence Presentation */
+#expose-ev-toast {
+    position: fixed; top: 40%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(42, 21, 21, 0.95);
+    border: 2px solid var(--highlight);
+    padding: 1.5rem 2.5rem;
+    border-radius: 10px; text-align: center;
+    display: none; z-index: 75;
+}
+#expose-ev-toast.visible { display: block; animation: evidencePresent 0.5s ease-out; }
+.expose-ev-label { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+.expose-ev-name { color: var(--highlight); font-size: 1.1rem; font-weight: 600; }
+
+/* Loading */
+#loading-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--primary);
+    display: none; justify-content: center; align-items: center;
+    z-index: 90; flex-direction: column; gap: 1rem;
+}
+#loading-overlay.visible { display: flex; }
+.loading-spinner {
+    width: 30px; height: 30px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+.loading-text { color: var(--text-muted); font-size: 0.9rem; }
+
+/* Animations */
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes doubtPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(232,198,120,0.2); }
+    50% { box-shadow: 0 0 25px rgba(232,198,120,0.5); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@keyframes evidencePresent { from { transform: translate(-50%,-50%) scale(0.8); opacity: 0; } to { transform: translate(-50%,-50%) scale(1); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<header id="header">
+    <div class="header-nav">
+        <h1>NDC 流水线播放器</h1>
+        <a href="index.html">主预览</a>
+        <a href="story_flow.html">流程图</a>
+    </div>
+    <div class="header-controls">
+        <select id="unit-select">
+            <option value="1">Unit 1</option>
+            <option value="2">Unit 2</option>
+            <option value="3">Unit 3</option>
+        </select>
+        <select id="loop-select">
+            <option value="1">Loop 1</option>
+            <option value="2">Loop 2</option>
+            <option value="3">Loop 3</option>
+            <option value="4">Loop 4</option>
+            <option value="5">Loop 5</option>
+            <option value="6">Loop 6</option>
+        </select>
+        <button id="start-btn">&#9654; 开始</button>
+    </div>
+</header>
+
+<main id="main">
+    <div id="stage">
+        <div id="idle-hint">选择 Unit 和 Loop，点击「开始」<br>模拟玩家游玩流程</div>
+        <img id="scene-bg" alt="">
+        <div id="click-area"></div>
+        <div id="dialog-box">
+            <img class="dlg-avatar" alt="">
+            <div class="dlg-content">
+                <div class="dlg-speaker"></div>
+                <div class="dlg-text"></div>
+                <div class="dlg-action"></div>
+            </div>
+            <span class="dlg-hint">点击继续</span>
+            <span class="lie-badge">LIE</span>
+        </div>
+        <div id="branch-container"></div>
+    </div>
+    <div id="progress-bar"><div class="progress-fill"></div><span class="progress-text"></span></div>
+</main>
+
+<div id="inventory-toggle">背 包</div>
+<aside id="inventory-panel">
+    <div class="inv-header">
+        <h3>背包</h3>
+        <button id="inv-close">&times;</button>
+    </div>
+    <div class="inv-body" id="inv-body"></div>
+</aside>
+
+<!-- Overlays -->
+<div id="transition-overlay" class="overlay">
+    <div class="trans-label"></div>
+    <div class="trans-name"></div>
+</div>
+
+<div id="evidence-overlay" class="overlay">
+    <div class="evidence-container">
+        <div class="evidence-title">搜 证</div>
+        <div id="evidence-cards"></div>
+    </div>
+</div>
+
+<div id="doubt-overlay" class="overlay">
+    <div class="doubt-card">
+        <div class="doubt-icon">?</div>
+        <div class="doubt-label">疑点解锁</div>
+        <div class="doubt-text"></div>
+        <button class="doubt-confirm">确认</button>
+    </div>
+</div>
+
+<div id="intro-overlay" class="overlay">
+    <div class="intro-content">
+        <div class="intro-loop"></div>
+        <div class="intro-title"></div>
+        <div class="intro-target"></div>
+        <button class="intro-start">开始调查</button>
+    </div>
+</div>
+
+<div id="complete-overlay" class="overlay">
+    <div class="complete-content">
+        <div class="complete-title">循环结束</div>
+        <div class="complete-summary"></div>
+        <button class="complete-btn">返回</button>
+    </div>
+</div>
+
+<div id="testimony-toast"></div>
+<div id="expose-ev-toast">
+    <div class="expose-ev-label">出示证据</div>
+    <div class="expose-ev-name"></div>
+</div>
+
+<div id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">加载数据中...</div>
+</div>
+
+<script>
+// ============================================================
+// Config & Utilities
+// ============================================================
+const Config = {
+    get mode() {
+        const h = location.hostname;
+        return (h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:') ? 'local' : 'deploy';
+    },
+    // Auto-detect base: if URL contains /NDC_project/, server root is D:\
+    // Otherwise server root is D:\NDC_project\
+    get _base() {
+        return location.pathname.includes('/NDC_project/') ? '/NDC_project' : '';
+    },
+    get paths() {
+        if (this.mode === 'deploy') return {
+            tableData: '/preview_new2/data/table',
+            loopConfig: '/preview_new2/data',
+            assets: '/Assets/Resources',
+            avgData: '/AVG'
+        };
+        const b = this._base;
+        return {
+            tableData: `${b}/preview_new2/data/table`,
+            loopConfig: `${b}/preview_new2/data`,
+            assets: b === '/NDC_project' ? '/NDC/Assets/Resources' : '/Assets/Resources',
+            avgData: `${b}/AVG`
+        };
+    },
+    unitToEpi(unit) { return `EPI0${unit}`; },
+    getAssetUrl(path) {
+        if (!path) return '';
+        return `${this.paths.assets}/${path.replace(/\\/g, '/')}.png`;
+    }
+};
+
+function cn(field) {
+    if (Array.isArray(field)) return field[0] || '';
+    return field || '';
+}
+function escapeHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function stripSpecialTags(text) {
+    return (text || '').replace(/<\/?special[^>]*>/gi, '');
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// 状态机修复游戏导出的非标准 JSON
+function fixJson(text) {
+    let out = '';
+    let inStr = false;
+    for (let i = 0; i < text.length; i++) {
+        const c = text.charAt(i);
+        if (!inStr) {
+            out += c;
+            if (c === '"') inStr = true;
+            continue;
+        }
+        if (c === '\\') {
+            const nx = text.charAt(i + 1);
+            if ('"\\\/bfnrt'.includes(nx)) {
+                out += c + nx; i++;
+            } else if (nx === 'u' && /^[0-9a-fA-F]{4}$/.test(text.substring(i + 2, i + 6))) {
+                out += text.substring(i, i + 6); i += 5;
+            } else {
+                out += '\\\\';
+            }
+        } else if (c === '"') {
+            const nx = text.charAt(i + 1);
+            if (nx === '' || ',:]}'.includes(nx)) {
+                out += c; inStr = false;
+            } else if (' \t\r\n'.includes(nx)) {
+                let j = i + 1;
+                while (j < text.length && ' \t\r\n'.includes(text.charAt(j))) j++;
+                const after = text.charAt(j);
+                if (after === '' || ',:]}'.includes(after)) {
+                    out += c; inStr = false;
+                } else {
+                    out += '\\"';
+                }
+            } else {
+                out += '\\"';
+            }
+        } else if (c === '\n') {
+            out += '\\n';
+        } else if (c === '\r') {
+            // skip CR
+        } else {
+            out += c;
+        }
+    }
+    return out;
+}
+
+async function loadJSON(url) {
+    const resp = await fetch(`${url}?t=${Date.now()}`);
+    if (!resp.ok) throw new Error(`Failed to load ${url}: ${resp.status}`);
+    const text = await resp.text();
+    return JSON.parse(fixJson(text));
+}
+async function loadYAML(url) {
+    const resp = await fetch(`${url}?t=${Date.now()}`);
+    if (!resp.ok) throw new Error(`Failed to load ${url}: ${resp.status}`);
+    const text = await resp.text();
+    return jsyaml.load(text);
+}
+
+// ============================================================
+// DOM References
+// ============================================================
+const $ = id => document.getElementById(id);
+const DOM = {
+    stage: $('stage'),
+    sceneBg: $('scene-bg'),
+    idleHint: $('idle-hint'),
+    clickArea: $('click-area'),
+    dialogBox: $('dialog-box'),
+    dlgAvatar: document.querySelector('.dlg-avatar'),
+    dlgSpeaker: document.querySelector('.dlg-speaker'),
+    dlgText: document.querySelector('.dlg-text'),
+    dlgAction: document.querySelector('.dlg-action'),
+    dlgHint: document.querySelector('.dlg-hint'),
+    branchContainer: $('branch-container'),
+    progressBar: $('progress-bar'),
+    progressFill: document.querySelector('.progress-fill'),
+    progressText: document.querySelector('.progress-text'),
+    invToggle: $('inventory-toggle'),
+    invPanel: $('inventory-panel'),
+    invClose: $('inv-close'),
+    invBody: $('inv-body'),
+    transOverlay: $('transition-overlay'),
+    transLabel: document.querySelector('.trans-label'),
+    transName: document.querySelector('.trans-name'),
+    evidenceOverlay: $('evidence-overlay'),
+    evidenceCards: $('evidence-cards'),
+    doubtOverlay: $('doubt-overlay'),
+    doubtText: document.querySelector('.doubt-text'),
+    doubtConfirm: document.querySelector('.doubt-confirm'),
+    introOverlay: $('intro-overlay'),
+    introLoop: document.querySelector('.intro-loop'),
+    introTitle: document.querySelector('.intro-title'),
+    introTarget: document.querySelector('.intro-target'),
+    introStart: document.querySelector('.intro-start'),
+    completeOverlay: $('complete-overlay'),
+    completeSummary: document.querySelector('.complete-summary'),
+    completeBtn: document.querySelector('.complete-btn'),
+    testimonyToast: $('testimony-toast'),
+    exposeEvToast: $('expose-ev-toast'),
+    exposeEvName: document.querySelector('.expose-ev-name'),
+    loadingOverlay: $('loading-overlay'),
+    loadingText: document.querySelector('.loading-text'),
+    unitSelect: $('unit-select'),
+    loopSelect: $('loop-select'),
+    startBtn: $('start-btn'),
+};
+
+// ============================================================
+// DataStore
+// ============================================================
+const DataStore = {
+    scenesMap: new Map(),      // sceneId → scene config
+    itemsMap: new Map(),       // itemId → item data
+    npcsMap: new Map(),        // npcId → npc data
+    talksMap: new Map(),       // talkId(string) → talk entry (AVG format)
+    exposeTalksMap: new Map(), // talkId(string) → expose talk entry
+    testimonies: [],           // Testimony.json entries
+    doubts: [],                // DoubtConfig.json entries
+    exposeConfigs: [],         // ExposeConfig.json entries
+    exposeData: [],            // ExposeData.json entries
+    loopConfigs: {},           // loopNum → loop YAML data
+
+    async loadAll(unit, loopNum) {
+        const epi = Config.unitToEpi(unit);
+        DOM.loadingText.textContent = '加载配置表...';
+
+        // Load table data
+        const [scenes, items, npcs, testimonies, doubts, exposeConfigs, exposeData] = await Promise.all([
+            loadJSON(`${Config.paths.tableData}/SceneConfig.json`),
+            loadJSON(`${Config.paths.tableData}/ItemStaticData.json`),
+            loadJSON(`${Config.paths.tableData}/NPCStaticData.json`),
+            loadJSON(`${Config.paths.tableData}/Testimony.json`),
+            loadJSON(`${Config.paths.tableData}/DoubtConfig.json`),
+            loadJSON(`${Config.paths.tableData}/ExposeConfig.json`),
+            loadJSON(`${Config.paths.tableData}/ExposeData.json`),
+        ]);
+
+        this.scenesMap.clear();
+        scenes.forEach(s => this.scenesMap.set(String(s.sceneId), s));
+
+        this.itemsMap.clear();
+        items.forEach(i => this.itemsMap.set(String(i.id), i));
+
+        this.npcsMap.clear();
+        npcs.forEach(n => this.npcsMap.set(String(n.id), n));
+
+        this.testimonies = testimonies;
+        this.doubts = doubts;
+        this.exposeConfigs = exposeConfigs;
+        this.exposeData = exposeData;
+
+        // Load loop YAML configs (current + all previous for cumulative inventory)
+        DOM.loadingText.textContent = '加载循环配置...';
+        this.loopConfigs = {};
+        const loopPromises = [];
+        for (let i = 1; i <= loopNum; i++) {
+            loopPromises.push(
+                loadYAML(`${Config.paths.loopConfig}/Unit${unit}/loop${i}.yaml`)
+                    .then(data => { this.loopConfigs[i] = data; })
+                    .catch(() => { console.warn(`loop${i}.yaml not found`); })
+            );
+        }
+        await Promise.all(loopPromises);
+
+        // Load AVG Talk files for current loop
+        DOM.loadingText.textContent = '加载对话数据...';
+        this.talksMap.clear();
+        await this._loadAVGTalks(epi, loopNum);
+
+        // Load AVG Expose files for current loop
+        this.exposeTalksMap.clear();
+        await this._loadAVGExpose(epi, loopNum);
+    },
+
+    async _loadAVGTalks(epi, loopNum) {
+        const base = `${Config.paths.avgData}/${epi}/Talk/loop${loopNum}`;
+        try {
+            const manifest = await loadJSON(`${base}/_manifest.json`);
+            const results = await Promise.all(
+                manifest.map(async fn => {
+                    try {
+                        const entries = await loadJSON(`${base}/${fn}`);
+                        return { fn, entries };
+                    } catch { return { fn, entries: [] }; }
+                })
+            );
+            results.forEach(({ fn, entries }) => {
+                const vs = fn.replace(/\.json$/i, '');
+                entries.forEach(e => {
+                    e._videoScene = e.videoScene || vs;
+                    this.talksMap.set(String(e.id), e);
+                });
+            });
+            console.log(`AVG Talk: ${this.talksMap.size} entries loaded`);
+        } catch (e) {
+            console.warn('AVG Talk manifest not found:', e.message);
+        }
+    },
+
+    async _loadAVGExpose(epi, loopNum) {
+        const base = `${Config.paths.avgData}/${epi}/Expose`;
+        try {
+            const manifest = await loadJSON(`${base}/_manifest.json`);
+            const loopFiles = manifest.filter(f => f.startsWith(`loop${loopNum}_`));
+            const results = await Promise.all(
+                loopFiles.map(async fn => {
+                    try {
+                        const entries = await loadJSON(`${base}/${fn}`);
+                        return { fn, entries };
+                    } catch { return { fn, entries: [] }; }
+                })
+            );
+            results.forEach(({ fn, entries }) => {
+                entries.forEach(e => {
+                    this.exposeTalksMap.set(String(e.id), e);
+                });
+            });
+            console.log(`AVG Expose: ${this.exposeTalksMap.size} entries loaded`);
+        } catch (e) {
+            console.warn('AVG Expose manifest not found:', e.message);
+        }
+    },
+
+    // Get dialogue chain from a starting talk ID
+    getDialogueChain(startId, useExpose = false) {
+        const map = useExpose ? this.exposeTalksMap : this.talksMap;
+        const chain = [];
+        let current = map.get(String(startId));
+        const visited = new Set();
+        while (current && !visited.has(String(current.id))) {
+            visited.add(String(current.id));
+            chain.push(current);
+
+            // Check for branch (script "1" or "branches")
+            if ((current.script === '1' || current.script === 'branches') && current.ParameterStr0) {
+                break; // branches handled separately
+            }
+            // Check for Lie (expose only) - stop chaining, handled by expose player
+            if (useExpose && current.script === 'Lie') {
+                break;
+            }
+
+            const nextId = current.next ? String(current.next) : '';
+            if (!nextId || nextId === '0') break;
+
+            // Check for branch via "/" in next
+            if (nextId.includes('/')) break;
+
+            current = map.get(nextId);
+        }
+        return chain;
+    },
+
+    // Get items for a scene, filtered to evidence only (itemType 1=key evidence, 2=normal evidence, 3=consumable)
+    // Excludes doors (type 5), scene transitions (type 8), etc.
+    getSceneItems(sceneId) {
+        const scene = this.scenesMap.get(String(sceneId));
+        if (!scene || !scene.ItemIDs) return [];
+        const evidenceTypes = new Set(['1', '2', '3']);
+        return scene.ItemIDs
+            .map(id => this.itemsMap.get(String(id)))
+            .filter(item => item && evidenceTypes.has(String(item.itemType)));
+    },
+
+    // Get NPC info for a scene
+    getSceneNPCs(sceneId) {
+        const scene = this.scenesMap.get(String(sceneId));
+        if (!scene || !scene.NPCInfos) return [];
+        return scene.NPCInfos;
+    },
+
+    // Get testimony items for NPC in current loop
+    getTestimonyItems(npcId, loopNum) {
+        const result = [];
+        for (const t of this.testimonies) {
+            if (t.npc && t.npc.id !== String(npcId)) continue;
+            if (t.evidenceItem) {
+                for (const ei of t.evidenceItem) {
+                    if (String(ei.id).charAt(0) === String(loopNum)) {
+                        result.push(ei);
+                    }
+                }
+            }
+        }
+        return result;
+    },
+
+    // Get starting talk ID for an NPC in a scene
+    getNPCTalkStartId(npcInfo) {
+        // TalkInfo = first encounter (canonical), use this for pipeline
+        const talk = npcInfo.TalkInfo;
+        if (talk && talk.id) return String(talk.id);
+        // Fallback to LoopTalkInfo
+        const loopTalk = npcInfo.LoopTalkInfo;
+        if (loopTalk && loopTalk.id) return String(loopTalk.id);
+        return null;
+    },
+
+    // Get NPC avatar URL
+    getNPCAvatarUrl(npcId) {
+        const npc = this.npcsMap.get(String(npcId));
+        if (npc && npc.IconLarge) return Config.getAssetUrl(`Art/NPC/${npc.IconLarge}`);
+        return '';
+    },
+
+    // Find talks by videoScene name (for opening_talks)
+    getTalksByVideoScene(sceneName) {
+        const matches = [];
+        for (const [id, talk] of this.talksMap) {
+            if ((talk.videoScene || talk._videoScene) === sceneName) {
+                matches.push(talk);
+            }
+        }
+        matches.sort((a, b) => (a.step || 0) - (b.step || 0));
+        return matches;
+    }
+};
+
+// ============================================================
+// GameState
+// ============================================================
+const GameState = {
+    unit: 1,
+    loopNum: 1,
+    running: false,
+    collectedItems: new Set(),
+    collectedTestimonies: new Set(),
+    unlockedDoubts: new Set(),
+    // Items from previous loops (for cumulative display)
+    previousItems: [],   // [{id, name, loop}]
+    previousDoubts: [],  // [{id, text, loop}]
+
+    reset(unit, loopNum) {
+        this.unit = unit;
+        this.loopNum = loopNum;
+        this.running = false;
+        this.collectedItems.clear();
+        this.collectedTestimonies.clear();
+        this.unlockedDoubts.clear();
+        this.previousItems = [];
+        this.previousDoubts = [];
+    },
+
+    addItem(itemId) {
+        this.collectedItems.add(String(itemId));
+    },
+    addTestimony(tiId) {
+        this.collectedTestimonies.add(String(tiId));
+    },
+    addDoubt(doubtId) {
+        this.unlockedDoubts.add(String(doubtId));
+    },
+
+    // Pre-populate evidence from previous loops
+    populatePreviousLoops() {
+        for (let loop = 1; loop < this.loopNum; loop++) {
+            const loopConfig = DataStore.loopConfigs[loop];
+            if (!loopConfig || !loopConfig.free_phase) continue;
+
+            // Collect items from previous loop scenes
+            for (const sceneId of loopConfig.free_phase) {
+                const items = DataStore.getSceneItems(String(sceneId));
+                items.forEach(item => {
+                    this.previousItems.push({
+                        id: String(item.id),
+                        name: cn(item.Name),
+                        loop: loop
+                    });
+                    this.collectedItems.add(String(item.id));
+                });
+
+                // Collect testimony from NPCs in those scenes
+                const npcs = DataStore.getSceneNPCs(String(sceneId));
+                npcs.forEach(npcInfo => {
+                    const npcId = npcInfo.NPC?.id;
+                    if (!npcId) return;
+                    const tItems = DataStore.getTestimonyItems(npcId, loop);
+                    tItems.forEach(ti => {
+                        this.collectedTestimonies.add(String(ti.id));
+                    });
+                });
+            }
+
+            // Check which doubts would have been unlocked
+            DataStore.doubts.forEach(d => {
+                if (this.isDoubtSatisfied(d) && !this.unlockedDoubts.has(String(d.id))) {
+                    this.unlockedDoubts.add(String(d.id));
+                    this.previousDoubts.push({
+                        id: String(d.id),
+                        text: d.text,
+                        loop: loop
+                    });
+                }
+            });
+        }
+    },
+
+    // Check if a doubt's conditions are all met
+    isDoubtSatisfied(doubt) {
+        if (!doubt.condition) return false;
+        return doubt.condition.every(c => {
+            const param = String(c.param);
+            if (String(c.type) === '1') return this.collectedItems.has(param);   // item
+            if (String(c.type) === '3') return this.collectedTestimonies.has(param); // testimony
+            return false;
+        });
+    }
+};
+
+// ============================================================
+// Inventory UI
+// ============================================================
+const Inventory = {
+    open: false,
+
+    toggle() {
+        this.open = !this.open;
+        DOM.invPanel.classList.toggle('open', this.open);
+        DOM.invToggle.style.right = this.open ? '320px' : '0';
+    },
+
+    render() {
+        let html = '';
+
+        // Evidence section
+        html += '<div class="inv-section-title">证据 / 道具</div>';
+
+        // Previous loops items
+        GameState.previousItems.forEach(pi => {
+            html += `<div class="inv-item previous">
+                <span class="inv-item-name">${escapeHtml(pi.name)}</span>
+                <span class="inv-item-loop">L${pi.loop}</span>
+            </div>`;
+        });
+
+        // Current loop items
+        GameState.collectedItems.forEach(id => {
+            // Skip items already in previousItems
+            if (GameState.previousItems.some(p => p.id === id)) return;
+            const item = DataStore.itemsMap.get(id);
+            if (!item) return;
+            html += `<div class="inv-item">
+                <span class="inv-item-name">${escapeHtml(cn(item.Name))}</span>
+                <span class="inv-item-loop">L${GameState.loopNum}</span>
+            </div>`;
+        });
+
+        // Doubts section
+        html += '<div class="inv-section-title">疑点</div>';
+
+        GameState.previousDoubts.forEach(pd => {
+            html += `<div class="inv-doubt-item previous" style="opacity:0.6">L${pd.loop} | ${escapeHtml(pd.text)}</div>`;
+        });
+
+        GameState.unlockedDoubts.forEach(id => {
+            if (GameState.previousDoubts.some(p => p.id === id)) return;
+            const doubt = DataStore.doubts.find(d => String(d.id) === id);
+            if (!doubt) return;
+            html += `<div class="inv-doubt-item">L${GameState.loopNum} | ${escapeHtml(doubt.text)}</div>`;
+        });
+
+        // Testimony count
+        const currentTestimonies = [...GameState.collectedTestimonies].filter(
+            id => id.charAt(0) === String(GameState.loopNum)
+        );
+        if (currentTestimonies.length > 0 || GameState.collectedTestimonies.size > 0) {
+            html += `<div class="inv-section-title">证词片段</div>`;
+            html += `<div class="inv-item"><span class="inv-item-name">已收集 ${GameState.collectedTestimonies.size} 条证词</span></div>`;
+        }
+
+        DOM.invBody.innerHTML = html;
+    }
+};
+
+// ============================================================
+// Pipeline Controller
+// ============================================================
+const Pipeline = {
+    _advanceResolve: null,
+    _aborted: false,
+
+    async start(unit, loopNum) {
+        this._aborted = false;
+        GameState.reset(unit, loopNum);
+        GameState.running = true;
+
+        DOM.startBtn.disabled = true;
+        DOM.loadingOverlay.classList.add('visible');
+        DOM.idleHint.style.display = 'none';
+        DOM.invToggle.classList.add('visible');
+
+        try {
+            await DataStore.loadAll(unit, loopNum);
+        } catch (e) {
+            DOM.loadingText.textContent = `加载失败: ${e.message}`;
+            await sleep(2000);
+            DOM.loadingOverlay.classList.remove('visible');
+            DOM.startBtn.disabled = false;
+            return;
+        }
+
+        DOM.loadingOverlay.classList.remove('visible');
+
+        const loopConfig = DataStore.loopConfigs[loopNum];
+        if (!loopConfig) {
+            alert(`Loop ${loopNum} 配置不存在`);
+            DOM.startBtn.disabled = false;
+            return;
+        }
+
+        // Pre-populate previous loops
+        GameState.populatePreviousLoops();
+        Inventory.render();
+
+        // Show progress bar
+        DOM.progressBar.classList.add('visible');
+        const totalSteps = (loopConfig.free_phase?.length || 0) + 2; // +2 for opening + expose
+
+        // === INTRO ===
+        await this.showIntro(loopConfig, loopNum);
+        if (this._aborted) return;
+
+        // === OPENING TALKS ===
+        this.updateProgress(0, totalSteps, '开场');
+        if (loopConfig.opening_talks) {
+            for (const talkFile of loopConfig.opening_talks) {
+                await this.playVideoSceneTalks(talkFile);
+                if (this._aborted) return;
+            }
+        }
+
+        // === FREE PHASE ===
+        if (loopConfig.free_phase) {
+            for (let i = 0; i < loopConfig.free_phase.length; i++) {
+                const sceneId = String(loopConfig.free_phase[i]);
+                this.updateProgress(i + 1, totalSteps, DataStore.scenesMap.get(sceneId)?.sceneName || sceneId);
+                await this.playScene(sceneId);
+                if (this._aborted) return;
+            }
+        }
+
+        // === EXPOSE ===
+        if (loopConfig.expose) {
+            this.updateProgress(totalSteps - 1, totalSteps, '指证');
+            await this.playExpose(loopConfig.expose, loopNum);
+        }
+
+        // === COMPLETE ===
+        this.updateProgress(totalSteps, totalSteps, '完成');
+        await this.showComplete(loopConfig, loopNum);
+
+        this.cleanup();
+    },
+
+    cleanup() {
+        GameState.running = false;
+        DOM.startBtn.disabled = false;
+        DOM.progressBar.classList.remove('visible');
+        DOM.sceneBg.classList.remove('visible');
+        DOM.dialogBox.classList.remove('visible');
+        DOM.clickArea.style.display = 'none';
+        DOM.idleHint.style.display = '';
+    },
+
+    abort() {
+        this._aborted = true;
+        if (this._advanceResolve) {
+            this._advanceResolve('abort');
+            this._advanceResolve = null;
+        }
+        // Hide all overlays
+        document.querySelectorAll('.overlay').forEach(o => o.classList.remove('visible'));
+        this.cleanup();
+    },
+
+    updateProgress(current, total, label) {
+        const pct = Math.round((current / total) * 100);
+        DOM.progressFill.style.width = pct + '%';
+        DOM.progressText.textContent = label || '';
+    },
+
+    // --- Intro Screen ---
+    showIntro(loopConfig, loopNum) {
+        return new Promise(resolve => {
+            DOM.introLoop.textContent = `LOOP ${loopNum}`;
+            DOM.introTitle.textContent = loopConfig.title || `循环 ${loopNum}`;
+            DOM.introTarget.textContent = loopConfig.target || '';
+            DOM.introOverlay.classList.add('visible');
+            DOM.introStart.onclick = () => {
+                DOM.introOverlay.classList.remove('visible');
+                resolve();
+            };
+        });
+    },
+
+    // --- Transition ---
+    async showTransition(label, name, duration = 2000) {
+        DOM.transLabel.textContent = label;
+        DOM.transName.textContent = name;
+        DOM.transOverlay.classList.add('visible');
+        await sleep(duration);
+        DOM.transOverlay.classList.remove('visible');
+        await sleep(300);
+    },
+
+    // --- Play opening talks by videoScene filename ---
+    async playVideoSceneTalks(videoSceneName) {
+        const talks = DataStore.getTalksByVideoScene(videoSceneName);
+        if (talks.length === 0) return;
+
+        // Use first talk's location as scene context
+        const firstTalk = talks[0];
+        const location = firstTalk.cnLocation || firstTalk.Location || '';
+        if (location) {
+            await this.showTransition('', location, 1500);
+        }
+
+        // Chain from first talk
+        const startId = String(talks[0].id);
+        await this.playDialogueChain(startId);
+    },
+
+    // --- Play a scene ---
+    async playScene(sceneId) {
+        const scene = DataStore.scenesMap.get(sceneId);
+        if (!scene) return;
+
+        // Transition
+        await this.showTransition('你来到了', scene.sceneName || sceneId);
+
+        // Show scene background
+        const bgUrl = Config.getAssetUrl(scene.backgroundImage);
+        DOM.sceneBg.src = bgUrl;
+        DOM.sceneBg.classList.add('visible');
+        DOM.sceneBg.onerror = () => { DOM.sceneBg.classList.add('visible'); }; // show anyway
+        await sleep(500);
+
+        // Play NPC dialogues
+        const npcs = DataStore.getSceneNPCs(sceneId);
+        for (const npcInfo of npcs) {
+            const startId = DataStore.getNPCTalkStartId(npcInfo);
+            if (startId) {
+                await this.playDialogueChain(startId);
+                if (this._aborted) return;
+            }
+
+            // Collect testimony
+            const npcId = npcInfo.NPC?.id;
+            if (npcId) {
+                await this.collectTestimony(npcId);
+            }
+        }
+
+        // Show evidence
+        const items = DataStore.getSceneItems(sceneId);
+        if (items.length > 0) {
+            await this.showEvidenceReveal(items);
+            if (this._aborted) return;
+        }
+
+        // Check doubts
+        await this.checkDoubts();
+
+        // Hide scene bg before transition to next
+        DOM.sceneBg.classList.remove('visible');
+        await sleep(300);
+    },
+
+    // --- Dialogue Chain Player ---
+    async playDialogueChain(startId, useExpose = false) {
+        let currentId = startId;
+        const map = useExpose ? DataStore.exposeTalksMap : DataStore.talksMap;
+
+        DOM.clickArea.style.display = 'block';
+
+        while (currentId && !this._aborted) {
+            const talk = map.get(String(currentId));
+            if (!talk) break;
+
+            // Show dialogue line
+            const isLie = (talk.script === 'Lie');
+            this.showDialogueLine(talk, isLie);
+
+            // Detect branches
+            const hasBranch = this.detectBranch(talk);
+
+            if (hasBranch) {
+                // Show branch options and wait for selection
+                const branches = this.extractBranches(talk);
+                const selectedId = await this.waitForBranchSelection(branches);
+                if (selectedId === 'abort') return;
+                DOM.dialogBox.classList.remove('visible');
+                currentId = selectedId;
+                continue;
+            }
+
+            if (isLie && useExpose) {
+                // Wait for click, then auto-present evidence
+                const r = await this.waitForAdvance();
+                if (r === 'abort') return;
+
+                const evIdRaw = talk.ParameterStr0 || '';
+                const evId = evIdRaw.replace(/^EV/, '');
+                await this.showExposeEvidence(evId);
+
+                // Jump to post-evidence talk
+                currentId = talk.ParameterInt0 ? String(talk.ParameterInt0) : null;
+                continue;
+            }
+
+            // Wait for click to advance
+            const result = await this.waitForAdvance();
+            if (result === 'abort') return;
+
+            // Next
+            const nextId = talk.next ? String(talk.next) : '';
+            if (!nextId || nextId === '0') break;
+            currentId = nextId;
+        }
+
+        DOM.dialogBox.classList.remove('visible', 'lie');
+        DOM.clickArea.style.display = 'none';
+    },
+
+    showDialogueLine(talk, isLie = false) {
+        const speakerId = (talk.IdSpeaker || '').replace(/^NPC/, '');
+        const speakerName = talk.cnSpeaker || '';
+        const text = stripSpecialTags(talk.cnWords || '');
+        const action = talk.cnAction || '';
+
+        // Avatar
+        const npc = DataStore.npcsMap.get(speakerId);
+        if (npc && npc.IconLarge) {
+            DOM.dlgAvatar.src = Config.getAssetUrl(`Art/NPC/${npc.IconLarge}`);
+            DOM.dlgAvatar.style.display = '';
+        } else {
+            DOM.dlgAvatar.style.display = 'none';
+        }
+
+        DOM.dlgSpeaker.textContent = speakerName;
+        DOM.dlgText.textContent = text;
+        DOM.dlgAction.textContent = action;
+        DOM.dlgAction.style.display = action ? '' : 'none';
+
+        DOM.dialogBox.classList.toggle('lie', isLie);
+        DOM.dialogBox.classList.add('visible');
+    },
+
+    waitForAdvance() {
+        return new Promise(resolve => {
+            this._advanceResolve = resolve;
+        });
+    },
+
+    detectBranch(talk) {
+        // Method 1: script "1" or "branches"
+        if ((talk.script === '1' || talk.script === 'branches') && talk.ParameterStr0) return true;
+        // Method 2: next contains "/"
+        if (talk.next && String(talk.next).includes('/')) return true;
+        return false;
+    },
+
+    extractBranches(talk) {
+        const branches = [];
+        // Method 1: Parameters
+        if ((talk.script === '1' || talk.script === 'branches') && talk.ParameterStr0) {
+            for (let i = 0; i < 3; i++) {
+                const text = talk[`ParameterStr${i}`];
+                const target = talk[`ParameterInt${i}`];
+                if (text && target) {
+                    branches.push({ text, targetId: String(target) });
+                }
+            }
+        }
+        // Method 2: "/" in next
+        else if (talk.next && String(talk.next).includes('/')) {
+            const ids = String(talk.next).split('/');
+            ids.forEach((id, i) => {
+                const text = talk[`ParameterStr${i}`] || `选项 ${i + 1}`;
+                branches.push({ text, targetId: id.trim() });
+            });
+        }
+        return branches;
+    },
+
+    waitForBranchSelection(branches) {
+        return new Promise(resolve => {
+            DOM.branchContainer.innerHTML = '';
+            branches.forEach(b => {
+                const btn = document.createElement('button');
+                btn.className = 'branch-btn';
+                btn.textContent = b.text;
+                btn.onclick = () => {
+                    DOM.branchContainer.classList.remove('visible');
+                    resolve(b.targetId);
+                };
+                DOM.branchContainer.appendChild(btn);
+            });
+            DOM.branchContainer.classList.add('visible');
+            DOM.dlgHint.style.display = 'none';
+        });
+    },
+
+    // --- Testimony Collection ---
+    async collectTestimony(npcId) {
+        const items = DataStore.getTestimonyItems(npcId, GameState.loopNum);
+        if (items.length === 0) return;
+
+        items.forEach(ti => GameState.addTestimony(String(ti.id)));
+        Inventory.render();
+
+        DOM.testimonyToast.textContent = `获得 ${items.length} 条证词`;
+        DOM.testimonyToast.classList.add('visible');
+        await sleep(1500);
+        DOM.testimonyToast.classList.remove('visible');
+        await sleep(200);
+    },
+
+    // --- Evidence Reveal (Flip Cards) ---
+    showEvidenceReveal(items) {
+        return new Promise(async (resolve) => {
+            DOM.evidenceCards.innerHTML = '';
+            const cards = [];
+
+            items.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'flip-card';
+                card.dataset.index = idx;
+
+                const imgUrl = item.desSpritePath ?
+                    Config.getAssetUrl(`${item.folderPath ? item.folderPath + '/' : ''}${item.desSpritePath}`) : '';
+
+                card.innerHTML = `
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">?</div>
+                        <div class="flip-card-back">
+                            <img class="card-img" src="${imgUrl}" alt="" onerror="this.style.display='none'">
+                            <div class="card-name">${escapeHtml(cn(item.Name))}</div>
+                            <div class="card-desc">${escapeHtml(cn(item.ShortDescribe || item.Describe))}</div>
+                            <div class="card-collect-hint">点击拾取</div>
+                        </div>
+                    </div>`;
+                cards.push(card);
+                DOM.evidenceCards.appendChild(card);
+            });
+
+            DOM.evidenceOverlay.classList.add('visible');
+
+            // Flip cards one by one
+            for (let i = 0; i < cards.length; i++) {
+                await sleep(400);
+                cards[i].classList.add('flipped');
+            }
+
+            // Wait for user to collect all
+            let collected = 0;
+            cards.forEach((card, i) => {
+                card.onclick = () => {
+                    if (!card.classList.contains('flipped') || card.classList.contains('collected')) return;
+                    card.classList.add('collected');
+                    GameState.addItem(String(items[i].id));
+                    Inventory.render();
+                    collected++;
+                    if (collected === cards.length) {
+                        setTimeout(() => {
+                            DOM.evidenceOverlay.classList.remove('visible');
+                            resolve();
+                        }, 400);
+                    }
+                };
+            });
+        });
+    },
+
+    // --- Doubt Check ---
+    async checkDoubts() {
+        for (const doubt of DataStore.doubts) {
+            const did = String(doubt.id);
+            if (GameState.unlockedDoubts.has(did)) continue;
+            if (GameState.isDoubtSatisfied(doubt)) {
+                GameState.addDoubt(did);
+                Inventory.render();
+                await this.showDoubtPopup(doubt);
+                if (this._aborted) return;
+            }
+        }
+    },
+
+    showDoubtPopup(doubt) {
+        return new Promise(resolve => {
+            DOM.doubtText.textContent = doubt.text || '';
+            DOM.doubtOverlay.classList.add('visible');
+            DOM.doubtConfirm.onclick = () => {
+                DOM.doubtOverlay.classList.remove('visible');
+                resolve();
+            };
+        });
+    },
+
+    // --- Expose ---
+    async playExpose(exposeConfig, loopNum) {
+        const targetName = exposeConfig.target_name || '';
+        await this.showTransition('指证', targetName, 2000);
+
+        // Show expose scene background
+        const sceneId = String(exposeConfig.scene);
+        const scene = DataStore.scenesMap.get(sceneId);
+        if (scene) {
+            DOM.sceneBg.src = Config.getAssetUrl(scene.backgroundImage);
+            DOM.sceneBg.classList.add('visible');
+            await sleep(500);
+        }
+
+        // Find the expose config matching this loop
+        // ExposeConfig sceneId pattern: first digit = loop, second = sequence
+        // Or we match by scene and lookup ExposeTalkID
+        const loopPrefix = String(loopNum);
+        let expCfg = DataStore.exposeConfigs.find(c =>
+            String(c.sceneId).startsWith(loopPrefix)
+        );
+
+        if (expCfg && expCfg.ExposeTalkID) {
+            await this.playDialogueChain(String(expCfg.ExposeTalkID), true);
+        } else {
+            // Fallback: try to find expose talks by videoScene
+            const vsName = `loop${loopNum}_${targetName.toLowerCase()}`;
+            const talks = [];
+            for (const [id, t] of DataStore.exposeTalksMap) {
+                if ((t.videoScene || '') === vsName) talks.push(t);
+            }
+            if (talks.length > 0) {
+                talks.sort((a, b) => (a.step || 0) - (b.step || 0));
+                await this.playDialogueChain(String(talks[0].id), true);
+            }
+        }
+
+        DOM.sceneBg.classList.remove('visible');
+        await sleep(300);
+    },
+
+    async showExposeEvidence(evId) {
+        const item = DataStore.itemsMap.get(evId);
+        const name = item ? cn(item.Name) : evId;
+        DOM.exposeEvName.textContent = name;
+        DOM.exposeEvToast.classList.add('visible');
+        await sleep(2000);
+        DOM.exposeEvToast.classList.remove('visible');
+        await sleep(300);
+    },
+
+    // --- Complete Screen ---
+    showComplete(loopConfig, loopNum) {
+        return new Promise(resolve => {
+            const itemCount = [...GameState.collectedItems].filter(
+                id => !GameState.previousItems.some(p => p.id === id)
+            ).length;
+            const doubtCount = [...GameState.unlockedDoubts].filter(
+                id => !GameState.previousDoubts.some(p => p.id === id)
+            ).length;
+            const testimonyCount = [...GameState.collectedTestimonies].filter(
+                id => id.charAt(0) === String(loopNum)
+            ).length;
+
+            DOM.completeSummary.innerHTML = `
+                <div style="margin-bottom:1rem;color:var(--highlight);text-align:center;font-size:1.1rem">
+                    Loop ${loopNum} - ${escapeHtml(loopConfig.title || '')}
+                </div>
+                <div>本循环收集：</div>
+                <div style="margin:0.5rem 0 0.5rem 1rem">
+                    证据/道具：${itemCount} 件<br>
+                    证词片段：${testimonyCount} 条<br>
+                    疑点解锁：${doubtCount} 个
+                </div>
+                <div style="margin-top:0.5rem">
+                    累计（含前序循环）：<br>
+                    <span style="margin-left:1rem">证据 ${GameState.collectedItems.size} | 证词 ${GameState.collectedTestimonies.size} | 疑点 ${GameState.unlockedDoubts.size}</span>
+                </div>
+            `;
+            DOM.completeOverlay.classList.add('visible');
+            DOM.completeBtn.onclick = () => {
+                DOM.completeOverlay.classList.remove('visible');
+                resolve();
+            };
+        });
+    }
+};
+
+// ============================================================
+// Event Listeners
+// ============================================================
+DOM.clickArea.onclick = () => {
+    if (Pipeline._advanceResolve) {
+        const r = Pipeline._advanceResolve;
+        Pipeline._advanceResolve = null;
+        DOM.dlgHint.style.display = '';
+        r();
+    }
+};
+
+DOM.startBtn.onclick = () => {
+    if (GameState.running) {
+        Pipeline.abort();
+    } else {
+        const unit = parseInt(DOM.unitSelect.value);
+        const loop = parseInt(DOM.loopSelect.value);
+        DOM.startBtn.textContent = '■ 停止';
+        Pipeline.start(unit, loop).then(() => {
+            DOM.startBtn.textContent = '▶ 开始';
+        });
+    }
+};
+
+DOM.invToggle.onclick = () => Inventory.toggle();
+DOM.invClose.onclick = () => Inventory.toggle();
+
+// Keyboard: Space/Enter to advance
+document.addEventListener('keydown', e => {
+    if (e.code === 'Space' || e.code === 'Enter') {
+        if (Pipeline._advanceResolve) {
+            e.preventDefault();
+            const r = Pipeline._advanceResolve;
+            Pipeline._advanceResolve = null;
+            DOM.dlgHint.style.display = '';
+            r();
+        }
+    }
+});
+
+console.log('NDC 流水线播放器 已就绪');
+</script>
+</body>
+</html>
