@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Unit1 State Viewer (0415)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--dim:#8b949e;--h:#f0f6fc;--blue:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--cyan:#39d2c0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.header h1{font-size:16px;color:var(--h);white-space:nowrap}
+.header .ver{font-size:11px;color:var(--orange);background:var(--orange)22;padding:2px 8px;border-radius:10px}
+.tabs{display:flex;gap:3px;flex-wrap:wrap}
+.tab{padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px;background:transparent;color:var(--dim);border:1px solid transparent;transition:all .15s;white-space:nowrap}
+.tab:hover{background:#1c2128;color:var(--text)}
+.tab.active{background:var(--blue)22;color:var(--blue);border-color:var(--blue)44}
+.tab .liar{font-size:10px;color:var(--red);margin-left:3px}
+.main{max-width:1100px;margin:0 auto;padding:20px}
+.loop-title{font-size:20px;color:var(--h);margin-bottom:3px}
+.loop-sub{color:var(--dim);font-size:12px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.b-liar{background:var(--red)22;color:var(--red)}.b-expose{background:var(--orange)22;color:var(--orange)}.b-explore{background:var(--green)22;color:var(--green)}.b-evidence{background:var(--yellow)22;color:var(--yellow)}.b-doubt{background:var(--blue)22;color:var(--blue)}.b-cut{background:var(--purple)22;color:var(--purple)}.b-cyan{background:var(--cyan)22;color:var(--cyan)}
+.sec{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.sec-h{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;color:var(--h);cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
+.sec-h:hover{background:#1c2128}.sec-h .arr{margin-left:auto;color:var(--dim);font-size:11px;transition:transform .2s}.sec-h.c .arr{transform:rotate(-90deg)}
+.sec-b{padding:14px}.sec-b.hide{display:none}
+.goal-p{font-size:14px;color:var(--yellow);font-weight:500;margin-bottom:6px;padding:7px 10px;background:var(--yellow)0a;border-left:3px solid var(--yellow);border-radius:0 4px 4px 0}
+.goal-s{color:var(--text);font-size:12px;padding-left:14px}
+.goal-s li{margin-bottom:3px}
+.fl{list-style:none;padding:0}.fl li{padding:3px 0 3px 16px;position:relative;font-size:12px}.fl li::before{content:"•";position:absolute;left:4px;color:var(--dim)}
+.sc{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px}
+.sc:last-child{margin-bottom:0}
+.sc-id{font-size:10px;color:var(--dim);font-family:monospace}
+.sc-name{font-size:13px;color:var(--h);font-weight:600;margin:1px 0}
+.sc-note{font-size:11px;color:var(--dim);margin-bottom:6px}
+.ev{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;background:var(--yellow)11;border:1px solid var(--yellow)33;border-radius:4px;font-size:11px;color:var(--yellow);margin:2px 3px 2px 0;position:relative;cursor:default}
+.ev:hover .tip{display:block}
+.tip{display:none;position:absolute;left:0;top:100%;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:5px;font-size:11px;color:var(--text);width:280px;z-index:10;box-shadow:0 4px 12px #0005;white-space:normal}
+.npc{background:#1c2128;border-radius:5px;padding:8px 10px;margin-top:6px}
+.npc-n{font-size:12px;font-weight:600;color:var(--blue)}
+.npc-n .lt{color:var(--red);font-size:10px;margin-left:4px}
+.npc-d{font-size:11px;color:var(--dim);margin-top:3px}
+.npc-d b{color:var(--text);font-weight:500}
+.npc-topics{margin-top:4px;font-size:11px}
+.npc-topics .at{color:var(--green)}.npc-topics .wt{color:var(--red)}
+.er{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px}
+.rn{font-size:11px;font-weight:700;color:var(--orange);margin-bottom:3px}
+.lie{font-size:12px;color:var(--red);font-style:italic;margin-bottom:5px;padding:5px 8px;background:var(--red)08;border-radius:4px}
+.res{font-size:11px;color:var(--text);white-space:pre-line;padding:5px 8px;background:var(--green)08;border-radius:4px;border-left:3px solid var(--green)}
+.di{padding:6px 10px;border-left:3px solid var(--blue);margin-bottom:6px;background:var(--blue)08;border-radius:0 4px 4px 0}
+.di.cl{border-left-color:var(--green);background:var(--green)08}
+.di-id{font-size:10px;color:var(--dim);font-family:monospace}
+.di-t{font-size:12px;color:var(--h)}
+.di-c{font-size:10px;color:var(--dim);margin-top:1px}
+.dir{padding:5px 8px;margin-bottom:5px;background:var(--purple)08;border-left:3px solid var(--purple);border-radius:0 4px 4px 0}
+.dir-n{font-size:12px;color:var(--purple);font-weight:500}
+.dir-t{font-size:11px;color:var(--dim);margin-top:1px}
+.post{padding:3px 0;font-size:11px;color:var(--text);border-bottom:1px solid var(--border)22}.post:last-child{border:none}
+.p7{border:1px solid var(--red)44;border-radius:6px;padding:10px;background:var(--red)06}
+.p7-t{font-size:13px;color:var(--red);font-weight:600;margin-bottom:6px}
+.test{display:inline-block;padding:2px 6px;background:var(--purple)11;border:1px solid var(--purple)33;border-radius:3px;font-size:10px;color:var(--purple);margin:1px;font-family:monospace}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+.vi{padding:6px;background:var(--bg);border-radius:4px;border:1px solid var(--border)}
+.vl{font-size:10px;color:var(--dim)}.vs{font-size:11px;font-weight:600}
+.vp{color:var(--green)}.vpn{color:var(--yellow)}.vn{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Unit1 State Viewer</h1><span class="ver">0415 重构版</span>
+  <div class="tabs" id="tabs"></div>
+</div>
+<div class="main" id="main"></div>
+<script>
+const L=[
+{id:1,title:"枪响之夜",en:"The Night of the Shot",liar:"Rosa (103) 教程级",type:"开篇+指证",
+reveal:"表面案件——Webb被枪杀，Vivian是最大嫌疑人（但物证不支持）",
+goals:{p:"Vivian 真的杀了 Webb 吗？",s:["Rosa 的指认可信吗？","Zack 凭什么卷入这个案件？"]},
+kf:[],
+dirs:[
+{n:"Vivian 的无罪可能",t:"Vivian 手枪(.25 ACP)无硝烟反应——物证不支持 Rosa 指控"},
+{n:"Rosa 的目击可靠性",t:"R1 击破后 Rosa 仍坚持23:30只有Vivian在里面——缺证据反驳"},
+{n:"Zack 的委托关系",t:"协议书(1101)揭示 Webb 预先雇用 Zack 保护 Vivian"}
+],
+post:["Webb 在宴会上被枪杀","Rosa 指认 Vivian 是凶手（声称23:30目击）","Vivian 手枪(.25 ACP)无硝烟反应——击破 Rosa 谎言1","Rosa 谎言2（23:30只有Vivian在里面）暂时无法反驳","保密侦探协议书(1101)：Zack 受 Webb 委托保护 Vivian","Vivian 自认有罪，被 Morrison 禁足化妆室","Zack 凭协议书获得 72 小时调查权","Webb 似乎预感到自己会死"],
+opening:[
+{sc:"1101 酒吧歌舞厅",ty:"🎬",ch:"Zack, Emma, Vivian, Webb",pu:"建立人物关系；舞会气氛；Webb 邀 Zack 签约"},
+{sc:"1102 Webb 会客室",ty:"🎬",ch:"Zack, Webb, Morrison",pu:"签约→案发→Morrison 宣布死亡"},
+{sc:"1103 酒吧大堂",ty:"⚔️",ch:"Zack, Rosa, Morrison",pu:"指证 Rosa（教程级2轮）"},
+{sc:"1104 酒吧大门口",ty:"🎬",ch:"Zack, Emma, Vivian",pu:"激励事件：Vivian自认有罪 + Emma引出L2方向"}
+],
+scenes:[],
+expose:{target:"Rosa (103)",rounds:2,mode:"教程级（R1成功+R2失败）",
+detail:[
+{r:1,lie:"Vivian 手里拿着手枪，一定是她杀的",ev:["1102 Vivian手枪(.25 ACP)——无硝烟反应"],res:"R1成功：手枪未在案发时段发射。Rosa 退守→谎言2"},
+{r:2,lie:"23:30 枪响时候，里面只有 Vivian 一个人",ev:["（无可用证据——设计意图失败）"],res:"R2失败：无法反驳。Morrison 宣布 Vivian 有罪。Zack 凭协议书争得72小时调查权"}
+]},
+evidence:[{id:1101,n:"保密侦探协议书",no:"Zack受Webb委托保护Vivian+财产继承条款"},{id:1102,n:"Vivian的手枪(.25 ACP)",no:"无硝烟反应，证明该枪案发时段未发射"}],
+doubts:[
+{id:1001,t:"Vivian 手枪无硝烟——Rosa 的指认有问题",c:"item:1102+testimony:1031001"},
+{id:1002,t:"Rosa 坚持23:30只有Vivian在里面——目前无法反驳",c:"testimony:1031002+expose_r2_failed"}
+],
+npcs:[
+{name:"Emma",场景:"歌舞厅/大门口",liar:false,motive:"引导 Zack 认识环境/稳住 Zack",active:["宴会现场细节","R2失败后的分析"],withheld:[]},
+{name:"Webb",场景:"会客室(签约→案发)",liar:false,motive:"紧急委托——预感有人要杀自己",active:["委托内容","保护Vivian"],withheld:["具体谁会动手"]},
+{name:"Rosa ⚔️",场景:"酒吧大堂(Expose)",liar:true,motive:"被 Whale 的人威胁——必须指认 Vivian",active:["目击声称(23:30)","Vivian送酒规律"],withheld:["威胁纸条(L3)","藏有弹壳(L3)","23:20倒垃圾(L3)"]},
+{name:"Vivian",场景:"指证现场(硬切)",liar:false,motive:"对Webb之死感到负罪——自认有罪",active:["自认有罪","送酒规律"],withheld:["23:10被喊走(L4)","杀意计划(L4)","保险箱密码(L4)"]}
+],
+val:{structure:"PASS",evidence:"PASS",npc:"PASS",goal:"PASS",pacing:"PASS",connoisseur:"PASS",expose:"PASS"}
+},
+{id:2,title:"酒吧的秘密",en:"The Bar's Secret",liar:"无（纯探索+讯问）",type:"自由探索+Tommy讯问",
+reveal:"Webb酒吧是敲诈勒索帝国前台；Tommy是曾经的执行人；Rita是Whale间谍",
+goals:{p:"Rosa的23:30目击站得住脚吗？Webb死前到底在做什么生意？",s:["Webb钱从哪来？","Tommy知道多少？","Vivian为何自认有罪？","Jimmy的经济动机？"]},
+kf:["Webb被枪杀","Rosa指认Vivian(23:30)","Vivian手枪无硝烟反应","Rosa谎言2暂时无法反驳","协议书(1101)","Vivian自认有罪/禁足","72小时调查权","Webb预感到死亡"],
+dirs:[
+{n:"Webb的黑钱来源",t:"Webb办公室：收入记录(1203)$15,000 vs 账本(1204)$4,000"},
+{n:"Tommy知道多少",t:"收入差额引发追问，Tommy是Webb唯一心腹"},
+{n:"Vivian的心理状态",t:"协议书(1101)含财产继承条款——告知Vivian观察反应"},
+{n:"Jimmy的经济困境",t:"Jimmy厨房发现工资单(1201)"}
+],
+post:["Webb月$15,000 vs 酒吧$4,000——$11,000差额来自敲诈勒索","Tommy是曾经的执行人，但声称已不再参与","Webb沉迷Rita后停止勒索，Tommy认为他惹上大人物想跑路","Rita是Whale间谍","Jimmy经济极度困难","Vivian禁足，心如死灰，听到遗产后反锁","Tommy办公室出现弹壳，被Tommy拿回（伏笔）"],
+opening:[],
+scenes:[
+{id:1105,name:"Vivian化妆室",npcs:["Vivian"],ev:[{id:1206,n:"Vivian持班表"}],note:"Vivian禁足；心如死灰；听到遗产后反锁"},
+{id:1106,name:"Jimmy厨房",npcs:["Jimmy"],ev:[{id:1201,n:"Jimmy工资单"},{id:1202,n:"Jimmy不在场证明(厨房工作表)"}],note:"Jimmy伪装普通厨师"},
+{id:1107,name:"Tommy办公室",npcs:["Tommy ⚠"],ev:[{id:1208,n:"歌舞厅假油画"},{id:1209,n:"花瓶现场图"}],note:"讯问核心场景；弹壳被Tommy夺回"},
+{id:1101,name:"歌舞厅",npcs:[],ev:[{id:1207,n:"VIP合影"}],note:"无NPC，纯搜证"},
+{id:1102,name:"Webb办公室",npcs:[],ev:[{id:1203,n:"Webb收入记录($15,000)"},{id:1204,n:"酒吧账本($4,000)"},{id:1205,n:"客户记录(笔迹待分析)"}],note:"搜证核心：收入差额→Tommy讯问前置"}
+],
+expose:null,
+tommy_interrogation:{
+topics:[
+{name:"收入差额",pre:"1203+1204",lie:"酒吧只做私酒生意(2051001)",result:"Tommy承认有额外收入，承认勒索帝国存在"},
+{name:"古董买卖/笔迹",pre:"1701(由1205分析)",lie:"那些是古董买卖的客户记录",result:"Tommy承认曾经是执行人，声称已退出"}
+]},
+evidence:[{id:1201,n:"Jimmy工资单"},{id:1202,n:"Jimmy不在场证明(厨房工作表)"},{id:1203,n:"Webb收入记录($15,000)"},{id:1204,n:"酒吧账本($4,000)"},{id:1205,n:"客户记录"},{id:1206,n:"Vivian持班表"},{id:1207,n:"VIP合影"},{id:1208,n:"歌舞厅假油画"},{id:1209,n:"花瓶现场图"}],
+derived:[{id:1701,n:"客户记录笔迹鉴定",src:"canAnalyzed(1205)"}],
+doubts:[
+{id:2001,t:"Webb真实收入远超酒吧——$11,000差额来自哪里？",c:"item:1203+item:1204"},
+{id:2002,t:"客户记录笔迹——是Tommy亲自操刀敲诈勒索？",c:"item:1205+derived:1701"},
+{id:2003,t:"Rita是谁？Tommy为什么暗示她是间谍？",c:"testimony:2051002+item:1207"},
+{id:2004,t:"Jimmy厨房工作表记录23:00-23:30在场——枪声从哪来？",c:"item:1202+L1已知"}
+],
+npcs:[
+{name:"Vivian",场景:"化妆室(1105)",liar:false,motive:"彻底放弃抗辩——听到遗产后反锁",active:["持班表","自认有罪状态","Webb让她参与勒索(片段)"],withheld:["勒索具体对象(L4)","Don't be bothering me(L4)","对Webb真实情感(L4)"]},
+{name:"Jimmy",场景:"厨房(1106)",liar:false,motive:"维持普通厨师低调形象",active:["厨师日常","对Webb表面感激"],withheld:["自己是真凶","23:00-23:05枪击","23:30空射","威胁纸条","Whale合同","Anna怀孕"]},
+{name:"Tommy ⚠谎言",场景:"办公室(1107)",liar:true,motive:"接受询问但只透露有限信息",active:["酒吧私酒(谎言起点)","Rita/Webb沉迷","Webb想跑路","古董买卖(借口)"],withheld:["执行人完整细节(L3)","弹壳来源(L5)","Morrison与Whale关联"]}
+],
+val:{structure:"PASS",evidence:"PASS",npc:"PASS",goal:"PASS",pacing:"PASS",connoisseur:"PASS",expose:"N/A"}
+},
+{id:3,title:"虚假的目击",en:"The False Witness",liar:"Rosa (103) 完整2轮",type:"探索+指证",
+reveal:"案发时间是假的；Rosa被Jimmy胁迫；真凶使用.45 ACP（与Vivian的.25 ACP不符）",
+goals:{p:"23:30 是真正的死亡时间吗？Rosa 的目击可靠吗？",s:["会客室窗外弹孔说明什么？","谁威胁了Rosa？","Whale究竟是谁？"]},
+kf:["（L1+L2全部累积知识）"],
+dirs:[
+{n:"Rosa被胁迫的证据",t:"Rosa清洁间发现威胁纸条(1303)——以女儿医疗费为要挟"},
+{n:"真实案发时间",t:"垃圾桶下玻璃碎片(1302)——早于Rosa 23:20倒垃圾→枪击早于23:20"},
+{n:"Whale浮出水面",t:"走廊垃圾桶旁被撕毁合同(1301)——Whale与某人签订"},
+{n:"Jimmy可疑行为",t:"突发事件：Jimmy正在厨房销毁歌点单子"}
+],
+post:["真正枪击发生在23:20之前","Rosa被人威胁伪证","真凶使用.45 ACP","Rosa交出.45弹壳(1403→L4入库)","有人利用Vivian送酒规律嫁祸","Whale与某人签合同(1301)","Jimmy销毁歌点单子","Rosa恳求不要暴露她"],
+opening:[{sc:"1104 酒吧大门口",ty:"🎬",ch:"Zack, Emma",pu:"梳理Webb勒索帝国+锁定Rosa伪证背后操控者"}],
+scenes:[
+{id:1102,name:"Webb会客室/犯罪现场",npcs:[],ev:[{id:1304,n:"Webb与Vivian合影"},{id:1305,n:"Rita的照片"},{id:1306,n:"Morrison的勒索箱"},{id:1307,n:"保险箱的字条"}],note:"L3重新搜证：合影/Rita照片/Morrison箱/保险箱字条"},
+{id:1108,name:"犯罪现场（窗外）",npcs:[],ev:[],note:"新解锁——窗外视角，弹孔方向证明子弹从室内向外穿出"},
+{id:1109,name:"Rosa清洁间",npcs:["Rosa"],ev:[{id:1303,n:"威胁纸条(含女儿医疗单)"}],note:"威胁纸条搜证+Rosa 23:20倒垃圾证词"},
+{id:1106,name:"Jimmy厨房 ⚡突发",npcs:["Jimmy ⚠"],ev:[],note:"Jimmy销毁歌点单子——毁灭时间线证据"},
+{id:1110,name:"一楼走廊垃圾桶",npcs:[],ev:[{id:1302,n:"玻璃碎片(压在垃圾袋下)"},{id:1301,n:"被撕毁的合同(Whale)"}],note:"Expose R1核心+Whale合同"},
+{id:1107,name:"Tommy办公室",npcs:["Tommy"],ev:[],note:"Tommy分享：Webb惹上大人物/Rita是间谍"},
+{id:1105,name:"Vivian工作间",npcs:[],ev:[{id:1308,n:"痛苦记录"}],note:"无NPC，环境叙事"}
+],
+expose:{target:"Rosa (103)",rounds:2,mode:"完整指证",
+detail:[
+{r:1,lie:"23:30 那时候只有 Vivian 在里面——我亲眼看见",ev:["1302 玻璃碎片(分析后有硝烟)","Rosa证词3031001: 23:20倒过垃圾"],res:"碎片产生早于23:20→真实枪击早于23:20→23:30目击不可能。Rosa退守'也许记错时间'"},
+{r:2,lie:"那也许是我记错时间了……反正一定是 Vivian",ev:["1303 威胁纸条"],res:"纸条写明要求说23:30→不是记错是被人写好台词。Rosa彻底崩溃→交出.45弹壳(1403)"}
+]},
+evidence:[{id:1301,n:"被撕毁的合同(Whale)"},{id:1302,n:"玻璃碎片"},{id:1303,n:"威胁纸条"},{id:1304,n:"Webb与Vivian合影"},{id:1305,n:"Rita照片"},{id:1306,n:"Morrison勒索箱"},{id:1307,n:"保险箱字条"},{id:1308,n:"痛苦记录"}],
+doubts:[
+{id:3001,t:"玻璃碎片早于23:20——真实案发时间是什么时候？",c:"item:1302(分析)+testimony:3031001"},
+{id:3002,t:"威胁纸条——是谁胁迫了Rosa？",c:"item:1303"},
+{id:3003,t:"Whale与某人签合同——Whale是谁？",c:"item:1301+Tommy证词"}
+],
+npcs:[
+{name:"Rosa",场景:"清洁间(1109)+大堂(Expose)",liar:"探索时false/指证时true",motive:"配合但回避威胁纸条——害怕女儿安全",active:["23:20倒垃圾(无意泄露)","Vivian送酒规律"],withheld:["弹壳(指证后交出)","纸条书写者(不知道)"]},
+{name:"Jimmy ⚠",场景:"厨房⚡突发",liar:true,motive:"销毁歌点单子(时间线证据)+维持伪装",active:["销毁单子的借口","否认了解勒索"],withheld:["案发时间真相","威胁纸条是自己写的","Anna怀孕","Whale合同"]},
+{name:"Tommy",场景:"办公室(1107)",liar:false,motive:"选择性透露——Whale名字开始浮现",active:["Rita是间谍","Webb惹上大人物"],withheld:["Morrison与Whale关联","弹壳(L5交出)","Jimmy真实身份"]}
+],
+val:{structure:"PASS",evidence:"PASS",npc:"PASS",goal:"PASS",pacing:"PASS",connoisseur:"PASS",expose:"PASS"}
+},
+{id:4,title:"破碎的金丝雀",en:"The Broken Canary",liar:"Vivian (106) 3轮+Part7",type:"探索+指证+转折",
+reveal:"Vivian不是凶手（但有杀意）；Morrison在刻意阻碍真相",
+goals:{p:"Vivian 真的杀了 Webb 吗？如果不是她，那是谁？",s:[".45弹壳与Vivian .25 ACP不符？","Vivian自认有罪的真正原因？","Webb取消巴黎是因Rita还是另有原因？","Whale执行人是谁？"]},
+kf:["（L1-L3全部累积知识）"],
+dirs:[
+{n:"弹壳型号不符→挑战Vivian自认有罪",t:".45弹壳(1403)入库——与Vivian .25 ACP明显不符"},
+{n:"Vivian工作间——绝笔信与船票",t:"进入工作间搜证：有杀意但未实施的记录"},
+{n:"Webb为什么保护Vivian",t:"协议书(1101)财产条款+保险箱字条(1307)密码=相遇日"},
+{n:"Whale执行人是谁",t:"Vivian证词(4061004)：勒索Whale的执行人不是Vivian"}
+],
+post:["Vivian不是凶手——有杀意未实施，弹壳型号证明","Tommy证词+合同→Whale更可能是幕后主使","Webb取消巴黎是保护Vivian——保险箱密码=相遇日","Morrison看到弹壳脸色大变","Morrison撕毁合同+没收弹壳+逮捕Vivian","协议书(1101)和弹壳(1403)从背包移除","Vivian证词(4061003)：23:10被Don't be bothering me喊走——爱尔兰口音","Vivian证词(4061004)：勒索Whale执行人不是Vivian"],
+opening:[],
+scenes:[
+{id:1105,name:"Vivian工作间",npcs:["Vivian"],ev:[{id:1401,n:"被撕毁的船票"},{id:1402,n:"Vivian绝笔信"}],note:"搜证+对话核心；Vivian参与自由对话"},
+{id:1103,name:"酒吧大堂",npcs:[],ev:[],note:"⚔️指证(Vivian 3轮)+🎬Part7转折(Morrison)"}
+],
+expose:{target:"Vivian (106)",rounds:3,mode:"击破自我认罪（物证→证词+文件→情感高潮）",
+detail:[
+{r:1,lie:"我真的杀了 Webb——那晚是我做的",ev:["1403 Rosa交出的.45弹壳","1102 Vivian手枪(.25 ACP)"],res:"弹壳型号+手枪不匹配→Vivian承认没开枪。升级到独占机会论"},
+{r:2,lie:"除了我没有其他人能杀 Webb",ev:["Tommy证词3051001: Rita是Whale间谍","1301 被撕毁合同","1401 被撕毁船票(辅助)"],res:"Whale有动机+渠道。Vivian动摇→升级到情感层"},
+{r:3,lie:"Webb因为Rita抛弃了我，他根本不在乎我了",ev:["1307 保险箱字条(密码=相遇日)","1101 协议书(财产保护条款)"],res:"Webb始终在乎Vivian。情感高潮→泪水→释放证词4061003/4061004→触发Part7"}
+]},
+part7:{
+title:"Morrison翻脸（中点转折）",
+trigger:"Vivian R3击破后，Zack向Morrison出示弹壳(1403)",
+steps:["Zack出示.45弹壳→请求重新审视案情","Morrison接过弹壳——脸色骤变（识别出米勒集团型号）","Morrison撕毁协议书(1101)","Morrison没收弹壳(1403)","Morrison宣布Vivian有罪，下令逮捕"],
+effects:["1403(.45弹壳)从背包移除","1101(协议书)从背包移除"],
+aftermath:["调查权归零","关键证据消失","Vivian被捕——'胜利'变成更大失败"]
+},
+evidence:[{id:1401,n:"被撕毁的船票"},{id:1402,n:"Vivian绝笔信"},{id:1403,n:".45弹壳(Rosa交出→Part7被没收)"}],
+doubts:[
+{id:4001,t:".45 ACP弹壳与Vivian .25 ACP不符——真凶用什么枪？",c:"item:1403+item:1102"},
+{id:4002,t:"Morrison看见弹壳脸色大变——他与米勒集团有何关联？",c:"Part7+item:1403"},
+{id:4003,t:"23:10门后'Don't be bothering me'有爱尔兰口音——谁？",c:"testimony:4061003"},
+{id:4004,t:"Whale执行人不是Vivian——究竟是谁？",c:"testimony:4061004+item:1301"}
+],
+npcs:[
+{name:"Vivian",场景:"工作间(探索)+大堂(Expose)",liar:"探索false/指证true",motive:"自我认罪式坚持→被证据逐步击破",active:["23:10被喊走(追问下流露)","绝笔信和船票","勒索参与情况"],withheld:["Webb取消巴黎真实原因(R3揭晓)","保险箱密码含义(R3)"]},
+{name:"Morrison",场景:"大堂(Part7)",liar:false,motive:"识别出米勒集团弹壳→立即终止调查",active:["强权姿态：案件已结案"],withheld:["与Whale的财务关联(L6)","赌债欠条(L6)"]}
+],
+val:{structure:"PASS",evidence:"PASS",npc:"PASS",goal:"PASS",pacing:"PASS",connoisseur:"PASS",expose:"PASS"}
+},
+{id:5,title:"厨师的代价",en:"The Cook's Price",liar:"Jimmy (107) 3轮+自杀",type:"灵魂黑夜+探索+指证",
+reveal:"Jimmy是真凶，被Whale利用，为怀孕妻子Anna铤而走险",
+goals:{p:"恐吓Rosa的人是谁？杀Webb的真凶到底是谁？",s:["凶手如何在有人听到枪声时杀的Webb？","Webb勒索大人物的执行人是谁？","Morrison看见弹壳为何脸色大变？"]},
+kf:["（L1-L4全部累积知识）"],
+dirs:[
+{n:"恐吓Rosa的人",t:"威胁纸条(1303)字迹+爱尔兰身份(1505)→与Jimmy练习书(1504)比对"},
+{n:"23:10爱尔兰口音的人",t:"Vivian证词(4061003)→Jimmy厨房对话验证"},
+{n:"鼓点单子真相",t:"L3 Jimmy销毁单子→Tommy在L5交出完整版(1502)"},
+{n:"Morrison与弹壳关联",t:"L4 Part7 Morrison脸色大变→Tommy可能知道弹壳来历"}
+],
+post:["Jimmy是真凶：23:00-23:05趁高潮段枪杀Webb","Jimmy利用音乐掩盖枪声","Jimmy 23:05模仿Webb口音喊走Vivian","23:30 Jimmy二楼空射制造假枪声","Jimmy被Whale利用，签合同杀Webb","Jimmy字迹=威胁纸条+合同","Jimmy为保护Anna自杀","凶器手枪(1506)为米勒集团特制——L6核心物证"],
+opening:[{sc:"特殊(酒吧外)",ty:"🎬",ch:"Zack, Emma",pu:"灵魂黑夜——Emma帮Zack梳理4大疑点，明确调查方向"}],
+scenes:[
+{id:1109,name:"Rosa清洁间(Tommy转移至此)",npcs:["Tommy"],ev:[{id:1501,n:"久远陈旧的子弹(Tommy交出)"},{id:1502,n:"芝加哥鼓点完整单子"}],note:"Tommy信任Zack→交出弹壳+鼓点单子"},
+{id:1106,name:"Jimmy厨房(对话)",npcs:["Jimmy ⚠"],ev:[],note:"Jimmy无意说出'Don't be bothering me!'——口音暴露"},
+{id:1111,name:"Jimmy家(新地图)",npcs:["Anna"],ev:[{id:1503,n:"Jimmy给Whale的回信"},{id:1504,n:"Jimmy英语练习书"},{id:1505,n:"Jimmy爱尔兰身份证明"}],note:"搜证+Anna对话：怀孕/回信/练习书/身份证明"}
+],
+expose:{target:"Jimmy (107)",rounds:3,mode:"完整3轮指证+cutscene自杀",
+detail:[
+{r:1,lie:"23:30枪响时我在厨房，有工作表为证",ev:["1502 鼓点完整单子(23:00-23:05高潮段)","Vivian证词4061003(鼓点掩盖枪声)"],res:"不在场证明基于假时间线→真实枪击23:00-23:05。Jimmy退守'Vivian找过Webb说明他还活着'"},
+{r:2,lie:"Vivian亲口说23:10去找Webb——说明那时Webb还活着",ev:["1505 Jimmy爱尔兰身份证明","Vivian证词4061003(爱尔兰口音)"],res:"Jimmy是爱尔兰移民→'Don't be bothering me'的口音就是Jimmy→Webb当时已死→Jimmy锁门骗走Vivian"},
+{r:3,lie:"我没有理由杀 Webb——我只是个厨师",ev:["1301 被撕毁合同+1504 练习书(字迹比对)","1303 威胁纸条(字迹)","Anna证词5081001(怀孕需要钱)"],res:"三份字迹同一人+Anna怀孕→Jimmy被逼铤而走险。→cutscene: Whale手下在暗处→Jimmy说'Anna…'→开枪自杀→凶器1506入库"}
+]},
+evidence:[{id:1501,n:"久远陈旧的子弹(.45 ACP)"},{id:1502,n:"芝加哥鼓点完整单子"},{id:1503,n:"Jimmy给Whale的回信"},{id:1504,n:"Jimmy英语练习书"},{id:1505,n:"Jimmy爱尔兰身份证明"},{id:1506,n:"米勒集团特制手枪(cutscene后入库)"}],
+doubts:[
+{id:5001,t:"恐吓Rosa的人+合同签订者——字迹指向谁？",c:"item:1504+item:1303+item:1301"},
+{id:5002,t:"23:10那个爱尔兰口音——Jimmy就是模仿者？",c:"item:1505+testimony:4061003"},
+{id:5003,t:"鼓点单子确认23:00-23:05高潮段——枪声被掩盖了？",c:"item:1502+testimony:4061003"},
+{id:5004,t:"Morrison与米勒集团弹壳的关联",c:"item:1501(伏笔→L6)"}
+],
+npcs:[
+{name:"Tommy",场景:"清洁间(1109)",liar:false,motive:"已下决心帮助Zack——Morrison逮捕Vivian证明Whale力量已控制执法系统",active:["弹壳来历(米勒集团)","鼓点单子","Morrison与Whale推断"],withheld:["Jimmy是真凶(不知道)"]},
+{name:"Jimmy ⚠",场景:"厨房(对话)+厨房(Expose)",liar:true,motive:"维持最后防线——保护Anna",active:["日常厨房工作","不在场证明","否认Whale"],withheld:["真实案发时间","模仿Webb声音","Anna怀孕","威胁纸条","合同"]},
+{name:"Anna",场景:"Jimmy家(1111)",liar:false,motive:"不明白Jimmy做了什么——担忧的妻子",active:["怀孕需要钱","Jimmy异常举动"],withheld:["Jimmy杀了Webb(不知道)","Whale合同(不知道)"]}
+],
+val:{structure:"PASS",evidence:"PASS",npc:"PASS",goal:"PASS",pacing:"PASS",connoisseur:"PASS",expose:"PASS"}
+},
+{id:6,title:"正义的重量",en:"The Weight of Justice",liar:"Morrison (104) 3阶段",type:"搜证+公开指证+结局",
+reveal:"Morrison因赌债被Whale操控；整个案件是Whale对Webb的反杀；Vivian获释；南区计划",
+goals:{p:"Morrison在这件事里扮演了什么角色？他是无能，还是故意包庇？",s:["Morrison和Whale什么关系？","能否当着同僚面逼Morrison认罪？","Vivian能被释放吗？","保险箱里是什么——南区计划？"]},
+kf:["（L1-L5全部累积知识）"],
+dirs:[
+{n:"Morrison与Whale的金钱关联",t:"Whale打来Morrison家电话→引出搜证"},
+{n:"Morrison家中秘密文件",t:"搜证发现赌债欠条(1601)+借款收据(1602)"},
+{n:"当众指证",t:"积累足够证据→警察局当着同僚面最终指证"}
+],
+post:["Morrison因赌债被Whale经济控制","Morrison被授意：压下证据+结案归罪Vivian+保护Jimmy不在场","Morrison当众被停职","Vivian无罪释放","保险箱密码=Webb与Vivian相遇日→南区计划→Unit2"],
+opening:[{sc:"⚡突发: Whale电话",ty:"⚡",ch:"Zack, Emma",pu:"Whale的电话触发L6——暗示Morrison是棋子。锁定Morrison家搜证+警察局指证"}],
+scenes:[
+{id:1112,name:"Morrison家(新地图)",npcs:[],ev:[{id:1601,n:"Morrison赌债欠条($5,000)+威胁信"},{id:1602,n:"Morrison向Whale借款收据"}],note:"Morrison不在场→搜证赌债+借款"},
+{id:1113,name:"警察局",npcs:["Morrison ⚠"],ev:[],note:"⚔️指证Morrison——当着同僚面"},
+{id:1114,name:"结局场景",npcs:["Vivian"],ev:[],note:"🎬Vivian获释+保险箱→南区计划→Unit2"}
+],
+expose:{target:"Morrison (104)",rounds:3,mode:"公开指证（警察局同僚在场）",
+detail:[
+{r:1,lie:"Vivian当时手持凶器——我依据现有证据逮捕，合规执法",ev:["1501 Tommy弹壳(.45 ACP)","1506 凶器手枪(米勒集团,.45 ACP)"],res:"两把枪两种口径→Vivian .25 ACP不可能。Morrison退守'搜查失误'"},
+{r:2,lie:"我是临时接报案——搜查仓促导致失误，非主观故意",ev:["1601 赌债欠条($5,000)+威胁信","1602 向Whale借款收据"],res:"赌债+借款→Morrison被Whale经济控制→不是失误是配合。同僚开始窃窃私语。Morrison退守'Whale只是放贷的'"},
+{r:3,lie:"Whale是个商人，放贷是他的生意——和Webb被杀完全两码事",ev:["1503 Jimmy给Whale的回信"],res:"回信证明Whale雇凶杀Webb→Whale不是放贷商是主使者。Morrison沉默→同僚认定失职→停职调查"}
+]},
+ending:{
+scene:"1114 结局场景",
+seq:["Vivian无罪释放","前往Webb会客室——开保险箱(密码=相遇日)","发现南区计划文件","Unit1结尾——'Webb死的时候知道这份计划会被发现吗？'"]
+},
+evidence:[{id:1601,n:"赌债欠条($5,000)+威胁信"},{id:1602,n:"向Whale借款收据"}],
+doubts:[
+{id:6001,t:"Morrison没收弹壳——判断失误还是故意包庇？",c:"item:1601+item:1602"},
+{id:6002,t:"Whale只是放贷商人，还是谋杀的指挥者？",c:"item:1503+testimony:5081001"},
+{id:6003,t:"Morrison腐败范围多深——是否还卷入其他案件？",c:"item:1601+item:1503+testimony:6041002"}
+],
+npcs:[
+{name:"Morrison ⚠",场景:"警察局(Expose)",liar:true,motive:"死守阵地——认罪=生涯终结",active:["(Expose阶段被动)"],withheld:["(L6最终循环全部释放)"]},
+{name:"Vivian",场景:"结局(1114)",liar:false,motive:"获释后感激与迷茫——保险箱密码只有她知道",active:["保险箱密码","Webb真实情感","南区计划存在"],withheld:["(L6全部释放)"]}
+],
+val:{structure:"PASS",evidence:"PASS",npc:"PASS",goal:"PASS",pacing:"PASS",connoisseur:"PASS",expose:"PASS"}
+}
+];
+
+let cur=0;
+function renderTabs(){document.getElementById('tabs').innerHTML=L.map((l,i)=>`<div class="tab ${i===cur?'active':''}" onclick="sw(${i})">L${l.id} ${l.title}${l.liar.includes('无')?'':`<span class="liar">⚔${l.liar.split('(')[0].split('（')[0].trim()}</span>`}</div>`).join('')}
+function sw(i){cur=i;renderTabs();render()}
+function S(icon,title,body){return`<div class="sec"><div class="sec-h"><span>${icon}</span>${title}<span class="arr">▼</span></div><div class="sec-b">${body}</div></div>`}
+
+function render(){
+const l=L[cur],m=document.getElementById('main');let h='';
+h+=`<div class="loop-title">Loop ${l.id} — ${l.title} <span style="font-size:14px;color:var(--dim);font-weight:400">${l.en}</span></div>`;
+h+=`<div class="loop-sub"><span class="badge b-liar">说谎者: ${l.liar}</span><span class="badge b-expose">${l.type}</span></div>`;
+h+=`<div style="margin-bottom:14px;padding:8px 12px;background:var(--orange)0a;border:1px solid var(--orange)33;border-radius:6px;font-size:12px;color:var(--orange)">核心揭示: ${l.reveal}</div>`;
+
+// Player Context
+h+=S('🎯','玩家视角',`<div class="goal-p">${l.goals.p}</div><ul class="goal-s">${l.goals.s.map(s=>`<li>${s}</li>`).join('')}</ul>${l.kf.length?`<div style="margin-top:10px"><b style="color:var(--dim);font-size:11px">已知事实</b><ul class="fl">${l.kf.map(f=>`<li>${f}</li>`).join('')}</ul></div>`:''}`);
+
+// Directions
+if(l.dirs.length)h+=S('🧭','新调查方向',l.dirs.map(d=>`<div class="dir"><div class="dir-n">${d.n}</div><div class="dir-t">${d.t}</div></div>`).join(''));
+
+// Opening
+if(l.opening.length)h+=S('🎬','开篇',l.opening.map(o=>`<div class="sc"><span class="badge b-cut">${o.ty}</span> <span class="sc-id">${o.sc}</span><div style="font-size:12px;margin-top:3px">${o.pu}</div><div style="font-size:11px;color:var(--dim)">角色: ${o.ch}</div></div>`).join(''));
+
+// Scenes
+if(l.scenes.length){
+h+=S('🔍','自由探索场景',l.scenes.map(s=>{
+let c=`<div class="sc"><span class="sc-id">${s.id}</span><div class="sc-name">${s.name}</div><div class="sc-note">${s.note}</div>`;
+if(s.ev&&s.ev.length)c+=`<div>${s.ev.map(e=>`<span class="ev">📦${e.id} ${e.n}</span>`).join('')}</div>`;
+if(s.npcs&&s.npcs.length)c+=`<div style="margin-top:3px">${s.npcs.map(n=>`<span class="badge b-explore">👤${n}</span>`).join(' ')}</div>`;
+return c+'</div>';}).join(''));
+}else h+=S('🔍','自由探索场景','<div style="color:var(--dim);font-size:12px">本Loop无自由探索（全程硬切剧情）</div>');
+
+// Tommy讯问 (L2 only)
+if(l.tommy_interrogation){
+const ti=l.tommy_interrogation;
+h+=S('🔎','Tommy 讯问（Talk系统）',ti.topics.map((t,i)=>`<div class="er"><div class="rn">话题${i+1}: ${t.name}</div><div style="font-size:11px;color:var(--dim);margin-bottom:4px">前置: ${t.pre}</div><div class="lie">"${t.lie}"</div><div class="res">${t.result}</div></div>`).join(''));
+}
+
+// Expose
+if(l.expose){
+let ex=`<div style="margin-bottom:10px"><span class="badge b-liar">目标: ${l.expose.target}</span> <span class="badge b-expose">${l.expose.rounds}轮</span> <span style="color:var(--dim);font-size:11px">${l.expose.mode}</span></div>`;
+ex+=l.expose.detail.map(r=>`<div class="er"><div class="rn">第${r.r}轮</div><div class="lie">"${r.lie}"</div><div style="margin:4px 0"><b style="font-size:10px;color:var(--yellow)">使用证据:</b> ${r.ev.map(e=>`<span class="ev" style="font-size:10px">📦${e}</span>`).join('')}</div><div class="res">${r.res}</div></div>`).join('');
+h+=S('⚔️','指证 (Expose)',ex);
+}else h+=S('⚔️','指证','<div style="color:var(--dim);font-size:12px">本Loop无标准指证（exposeNpcId=0）</div>');
+
+// Part7
+if(l.part7){
+let p=`<div class="p7"><div class="p7-t">💥 ${l.part7.title}</div>`;
+p+=`<div style="font-size:11px;color:var(--dim);margin-bottom:6px">触发: ${l.part7.trigger}</div>`;
+p+=`<ol style="padding-left:18px;font-size:12px">${l.part7.steps.map(s=>`<li style="margin-bottom:3px">${s}</li>`).join('')}</ol>`;
+if(l.part7.effects)p+=`<div style="margin-top:8px;padding:6px 8px;background:var(--cyan)08;border-radius:4px;border-left:3px solid var(--cyan)"><b style="font-size:10px;color:var(--cyan)">系统效果:</b><ul class="fl">${l.part7.effects.map(e=>`<li style="color:var(--cyan)">${e}</li>`).join('')}</ul></div>`;
+p+=`<div style="margin-top:8px;padding:6px 8px;background:var(--red)08;border-radius:4px;border-left:3px solid var(--red)"><b style="font-size:10px;color:var(--red)">后果:</b><ul class="fl">${l.part7.aftermath.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+p+='</div>';
+h+=S('💥','Part7 情节转折',p);
+}
+
+// Post Knowledge
+if(l.post.length)h+=S('📖','本轮后玩家获得的知识',l.post.map((p,i)=>`<div class="post">${i+1}. ${p}</div>`).join(''));
+
+// NPC Overview
+if(l.npcs&&l.npcs.length){
+h+=S('👥','NPC 总览',l.npcs.map(n=>{
+let c=`<div class="npc"><div class="npc-n">${n.name}${n.liar===true||String(n.liar).includes('true')?'<span class="lt">⚠说谎</span>':''} <span style="font-size:10px;color:var(--dim)">${n.场景}</span></div>`;
+c+=`<div class="npc-d"><b>动机:</b> ${n.motive}</div>`;
+if(n.active.length)c+=`<div class="npc-topics"><span class="at">可谈:</span> ${n.active.join(' / ')}</div>`;
+if(n.withheld.length)c+=`<div class="npc-topics"><span class="wt">隐瞒:</span> ${n.withheld.join(' / ')}</div>`;
+return c+'</div>';}).join(''));
+}
+
+// Evidence
+h+=S('📦','证据一览',`<div>${l.evidence.map(e=>`<span class="ev">${e.id} ${e.n}${e.no?`<span class="tip">${e.no}</span>`:''}</span>`).join('')}</div>${l.derived?`<div style="margin-top:8px"><b style="font-size:10px;color:var(--cyan)">派生证据:</b> ${l.derived.map(d=>`<span class="ev" style="border-color:var(--cyan)33;color:var(--cyan)">${d.id} ${d.n} ← ${d.src}</span>`).join('')}</div>`:''}`);
+
+// Doubts
+if(l.doubts.length)h+=S('❓','疑点',l.doubts.map(d=>`<div class="di"><span class="di-id">#${d.id}</span><div class="di-t">${d.t}</div><div class="di-c">解锁: ${d.c}</div></div>`).join(''));
+
+// Ending
+if(l.ending){
+h+=S('🏁','结局',`<div style="font-size:13px;color:var(--h);margin-bottom:6px">${l.ending.scene}</div><ol style="padding-left:18px;font-size:12px">${l.ending.seq.map(s=>`<li style="margin-bottom:3px">${s}</li>`).join('')}</ol>`);
+}
+
+// Validation
+const v=l.val;
+h+=S('✅','验证状态',`<div class="vg">${Object.entries(v).map(([k,s])=>`<div class="vi"><div class="vl">${k}</div><div class="vs ${s==='PASS'?'vp':s==='N/A'?'vn':'vpn'}">${s}</div></div>`).join('')}</div>`);
+
+m.innerHTML=h;
+document.querySelectorAll('.sec-h').forEach(el=>{el.addEventListener('click',()=>{el.classList.toggle('c');el.nextElementSibling.classList.toggle('hide')})});
+}
+renderTabs();render();
+</script>
+</body>
+</html>

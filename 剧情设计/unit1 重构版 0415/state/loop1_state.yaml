@@ -26,7 +26,7 @@ player_context:
     - direction: "Zack 的委托关系"
       trigger: "协议书(1101)揭示 Webb 预先雇用了 Zack 保护 Vivian，暗示 Webb 预感到危险"
   post_expose_knowledge:
-    - "Webb 在宴会上被枪杀"
+    - "Webb 在会客室被枪杀（23:30 枪响）"
     - "Rosa 指认 Vivian 是凶手（声称 23:30 目击 Vivian 射杀 Webb）"
     - "Vivian 的手枪（.25 ACP）无硝烟反应——物证不支持 Rosa 指控（R1 成功击破）"
     - "Rosa 谎言2（23:30 只有 Vivian 在里面）暂时无法反驳（R2 失败）"
@@ -40,75 +40,39 @@ player_context:
 # ═══════════════════════════════════════
 #
 # 场景状态表 L1:
-#   酒吧歌舞厅(1101)   → 🎬开篇（舞会进行中，相遇）
-#   Webb 会客室(1102)  → 🎬剧情（签约→案发）
-#   酒吧大堂(1103)     → ⚔️指证（Rosa 指认 + Zack 反驳）
+#   Webb 会客室(1102)  → 🎬开篇（枪响→案发→Rosa 指控）
+#   酒吧大堂(1103)     → ⚔️指证（Rosa 教程级）
 #   酒吧大门口(1104)   → 🎬激励事件（Emma，进入下一循环）
 #
 # L1 全程硬切剧情，无自由探索场景（scenes: []）。
 # 两件证据均在硬切剧情中自动入库，无需玩家主动搜证。
+#
+# 前情：Zack 受 Webb 邀约赴宴，宴前已在会客室签署保密侦探协议(1101)。
+# 舞会、签约等前情均作为背景交代，不作为可玩开篇。
+# 游戏画面从枪响瞬间切入。
 
 opening:
-  # ── 酒吧歌舞厅(1101) ──
-  # 舞会正在进行。Zack 初到，Emma 接应，Vivian 短暂亮相。
-  # Webb 隔空示意 Zack——随后带他去会客室签约。
-  scene_id: 1101
-  characters: [Zack, Emma, Vivian, Webb]
-  purpose: "建立人物关系；舞会气氛；Webb 邀 Zack 签约"
-  talk: emma_001
+  # ── Webb 会客室(1102) — 23:30 枪响 ──
+  # 一声枪响撕裂舞会。画面从黑幕切入——会客室，硝烟，Webb 倒在血泊中。
+  # Morrison 带人冲入封锁现场，宣布 Webb 已经死亡。
+  # Rosa 主动站出指认 Vivian：声称 23:30 目击 Vivian 持枪进入会客室。
+  # Vivian 不否认（"是我杀了 Webb"）。Morrison 准备逮捕 Vivian。
+  # 此时 Zack 出面，凭协议书(1101)获得调查权，指出 Rosa 证言中的矛盾。
+  scene_id: 1102
+  characters: [Zack, Morrison, Rosa, Vivian]
+  purpose: "枪响即开篇——案发、指控、反驳一气呵成。玩家从混乱和冲击中接收核心信息"
 
-  emma_001:
-    is_liar: false
-    motive: "引导 Zack 认识环境与人物——这是她第一次和 Zack 合作，既兴奋又想表现得专业"
-    mindset: "轻快、观察敏锐——宴会现场给她提供了大量细节，她会选择性地分享最有用的部分"
-
-    knows:
-      - "今晚是 Webb 的私人宴会，受邀宾客都是酒吧的重要客户"
-      - "Vivian 是酒吧的驻场歌手，Webb 的心腹"
-      - "Webb 最近行事低调，据说惹上了什么麻烦"
-      - "Morrison 也在场——他和 Webb 有私下往来"
-    does_not_know:
-      - "Webb 找 Zack 谈什么"
-      - "案件的任何细节"
-      - "Rosa 的存在"
-      - "Jimmy 是 Whale 的人"
-
-    lie: null
-
-    # ── 4. 鉴赏力 ──
-    connoisseur: []  # Unit1 无鉴赏力系统
-
-  # ── Webb 会客室(1102) ──
-  # Zack 和 Webb 私下签约。协议书(1101)在此入库。
-  # 随后案发——枪声，Webb 倒地，Morrison 冲入宣布死亡。
-  webb_001:
-    # ── 基本信息 ──（模式 D：一次性 NPC，在本场景死亡）
-    talk: webb_001
-    is_liar: false
-    motive: "紧急委托——Webb 预感到有人要杀自己，以最后的安排确保 Vivian 不受牵连"
-    mindset: "表面镇定、内心焦虑——话语精炼、目的明确，刻意不透露更多危险细节以免吓退 Zack"
-
-    # ── 1. NPC 已知信息（模式 D：一次性 NPC）──
-    knows:
-      - "自己可能即将面临危险"
-      - "Vivian 对自己最忠心，一旦自己死亡她将成为替罪羊"
-      - "协议书中包含：保护 Vivian 的人身安全 + 确保她继承遗产"
-      - "Whale 是让他感到真正危险的人"
-    does_not_know:
-      - "Zack 是否足够可信"
-      - "具体谁会动手（Jimmy 是幕后执行人，Webb 不知道）"
-      - "Rosa 会被胁迫作伪证"
-
-    # ── 2. 玩家询问意图 ──
-    player_inquiry:
-      - "\"Webb 为什么紧急雇用我——具体威胁是什么？\" # 8"
-      - "\"协议书的法律效力——Morrison 能阻止我调查吗？\" # 6"
-
-    # ── 3. 可提取证词 ──
-    testimony_ids: []  # Webb 在签约后立即遇害，证词内容通过硬切剧情呈现，不单独提取
-
-    # ── 4. 鉴赏力 ──
-    connoisseur: []  # Unit1 无鉴赏力系统
+  # ── 开篇节拍 ──
+  # Beat 1 — 黑幕→枪声→会客室：Webb 倒地，室内一片混乱
+  # Beat 2 — Morrison 冲入，封锁现场，宣布 Webb 死亡
+  # Beat 3 — Rosa 挺身指认：「我看到了，11点半 Vivian 进了会客室，枪杀了 Webb」
+  # Beat 4 — Vivian 不否认（「是我杀了 Webb」），Morrison 准备逮捕
+  # Beat 5 — Zack 出示协议书(1101)：「我受 Webb 委托保护 Vivian——她的指控有问题」
+  #           协议书(1101)在此入库
+  # Beat 6 — Morrison 质疑 Zack 的身份，但协议书有法律效力，勉强给予 72 小时调查权
+  # Beat 7 — Vivian 手枪(1102)由 Morrison 缴械后交给 Zack 检视
+  #           手枪(1102)在此入库 → 可分析：无硝烟反应（.25 ACP）
+  # → 直接进入指证环节（Rosa）
 
 # ═══════════════════════════════════════
 # PART 2: 自由探索
