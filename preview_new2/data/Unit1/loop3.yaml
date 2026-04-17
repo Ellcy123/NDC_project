@@ -1,19 +1,56 @@
-title: Tommy勒索网络
-target: Webb的真正生意是什么？
-
-opening:
-  - 1317
+title: 虚假的目击
+target: 找到案发现场（会客室）内的疑点，确认 Rosa 的时间线指控是否在撒谎
+time: 当晚
+opening: []
 opening_talks:
-  - emma_004
-
+- emma_005
 free_phase:
-  - 1308
-  - 1303
-  - 1309
-  - 1307
-  - 1301
-  - 1310
-
+- 1003
+- 1007
+- 1001
+- 1008
+scenes:
+  unlocked:
+  - 1003
+  - 1007
+  - 1001
+  - 1008
+  locked:
+  - id: 1002
+    reason: ''
+  - id: 1004
+    reason: ''
+  - id: 1005
+    reason: ''
+  - id: 1006
+    reason: ''
+  - id: 1009
+    reason: ''
+  - id: 1010
+    reason: ''
+  - id: 1011
+    reason: ''
+  - id: 1012
+    reason: ''
+  - id: 1013
+    reason: ''
+  - id: 1014
+    reason: ''
+  closed: []
 expose:
-  scene: 1310
-  target_name: Tommy
+  scene: 1008
+  target_name: Rosa
+  rounds:
+  - lie: 大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
+    evidences:
+    - '1305'
+    - '3021002'
+  - lie: 可能是我记错了，那可能是 Vivian 之前杀了人，反正一定是她杀的（退守谎言，接近崩溃）
+    evidences:
+    - '1306'
+    - '1307'
+special_cutscenes:
+- type: post_expose_scene
+  subtype: story_dialogue
+  location: 蓝月亮酒吧某处（Zack 和 Emma 对话）
+  summary: 指证 Rosa 完成，Zack 向 Emma 汇报全部收获。

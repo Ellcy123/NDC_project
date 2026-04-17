@@ -1,20 +1,72 @@
-title: Vivian悲惨过去
-target: Vivian和Webb的关系是什么？她为什么要杀Webb？
-
-opening:
-  - 1517
+title: 厨师的代价
+target: 找到 Webb 案的真正凶手——指证他是凶手，让他承认，从而还 Vivian 清白
+time: 凌晨
+opening: []
 opening_talks:
-  - emma_006
-
+- emma_009
 free_phase:
-  - 1507
-  - 1503
-  - 1508
-  - 1510
-  - 1511
-  - 1509
-  - 1501
-
+- 1005
+- 1003
+- 1012
+- 1011
+scenes:
+  unlocked:
+  - 1005
+  - 1003
+  - 1012
+  - 1011
+  locked:
+  - id: 1001
+    reason: ''
+  - id: 1002
+    reason: ''
+  - id: 1004
+    reason: ''
+  - id: 1006
+    reason: ''
+  - id: 1007
+    reason: ''
+  - id: 1008
+    reason: ''
+  - id: 1009
+    reason: ''
+  - id: 1010
+    reason: ''
+  - id: 1013
+    reason: ''
+  - id: 1014
+    reason: ''
+  closed: []
 expose:
-  scene: 1509
-  target_name: Vivian
+  scene: 1011
+  target_name: Jimmy
+  rounds:
+  - lie: 我当天有不在场证明，枪声发生在 11 点半，不可能有其他时间能杀人，如果有枪声大家都能听到
+    evidences:
+    - '1503'
+    - '4011002'
+  - lie: Vivian 当时去找他了！说明当时 Webb 还活着，所以不可能是那会儿作案的
+    evidences:
+    - '1506'
+    - '5041001'
+    - '4011006'
+  - lie: 那个人不是我，我根本没有理由杀 Webb
+    evidences:
+    - '1401'
+    - '5061001'
+special_cutscenes:
+- type: suspect_suicide_sequence
+  subtype: forced_cutscene
+  location: 蓝月亮酒吧后门（与 arrest_cutscene / post_expose_dialogue 同一地点）
+  summary: 【Jimmy 自杀序列——新时序】
+- type: arrest_cutscene
+  subtype: story_cutscene
+  location: 蓝月亮酒吧后门
+  summary: Zack 和 Emma 返回酒吧，带齐了证据。
+- type: post_expose_dialogue
+  subtype: story_dialogue
+  location: 蓝月亮酒吧后门（与 arrest_cutscene / suspect_suicide_sequence 同一地点）
+- type: post_expose_romance
+  subtype: story_dialogue
+  location: 蓝月亮酒吧外（Jimmy 自杀后不久）
+  summary: Jimmy 自杀的冲击——一个人仅仅因为暴露了 Whale 的关联就选择了死亡，
