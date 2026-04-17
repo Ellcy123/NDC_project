@@ -270,6 +270,16 @@ body {
     border: 1px solid rgba(232, 198, 120, 0.3);
     border-radius: 4px; font-size: 0.82rem; color: var(--highlight);
 }
+.inv-testimony {
+    padding: 0.5rem 0.65rem; margin-bottom: 0.4rem;
+    background: rgba(120, 180, 230, 0.08);
+    border-left: 2px solid rgba(120, 180, 230, 0.5);
+    border-radius: 3px;
+    font-size: 0.82rem;
+}
+.inv-testimony-head { display: flex; justify-content: space-between; margin-bottom: 0.25rem; }
+.inv-testimony-npc { color: var(--accent); font-weight: 500; font-size: 0.78rem; }
+.inv-testimony-text { color: var(--text-primary); line-height: 1.55; }
 
 /* === Overlays === */
 .overlay {
@@ -347,6 +357,29 @@ body {
     color: white; border-radius: 6px; font-size: 0.9rem; cursor: pointer;
 }
 .doubt-confirm:hover { filter: brightness(1.15); }
+
+/* Cutscene Popup（剧情段：转折/post_expose/逮捕/终章等） */
+#cutscene-overlay { background: rgba(0,0,0,0.9); z-index: 70; }
+.cutscene-card {
+    background: var(--secondary);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    text-align: left;
+    max-width: 720px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+.cutscene-label { color: var(--accent); font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 0.25rem; text-transform: uppercase; }
+.cutscene-title { color: var(--text-primary); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.75rem; }
+.cutscene-location { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; margin-bottom: 1rem; }
+.cutscene-text { color: var(--text-primary); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem; white-space: pre-wrap; }
+.cutscene-confirm {
+    padding: 0.5rem 2rem; background: var(--accent); border: none;
+    color: white; border-radius: 6px; font-size: 0.9rem; cursor: pointer; display: block; margin: 0 auto;
+}
+.cutscene-confirm:hover { filter: brightness(1.15); }
 
 /* Intro / Complete */
 #intro-overlay { background: rgba(0,0,0,0.96); z-index: 80; }
@@ -504,6 +537,16 @@ body {
         <div class="doubt-label">疑点解锁</div>
         <div class="doubt-text"></div>
         <button class="doubt-confirm">确认</button>
+    </div>
+</div>
+
+<div id="cutscene-overlay" class="overlay">
+    <div class="cutscene-card">
+        <div class="cutscene-label"></div>
+        <div class="cutscene-title"></div>
+        <div class="cutscene-location"></div>
+        <div class="cutscene-text"></div>
+        <button class="cutscene-confirm">继续</button>
     </div>
 </div>
 
@@ -678,6 +721,12 @@ const DOM = {
     evidenceCards: $('evidence-cards'),
     doubtOverlay: $('doubt-overlay'),
     doubtText: document.querySelector('.doubt-text'),
+    cutsceneOverlay: $('cutscene-overlay'),
+    cutsceneLabel: document.querySelector('.cutscene-label'),
+    cutsceneTitle: document.querySelector('.cutscene-title'),
+    cutsceneLocation: document.querySelector('.cutscene-location'),
+    cutsceneText: document.querySelector('.cutscene-text'),
+    cutsceneConfirm: document.querySelector('.cutscene-confirm'),
     doubtConfirm: document.querySelector('.doubt-confirm'),
     introOverlay: $('intro-overlay'),
     introLoop: document.querySelector('.intro-loop'),
@@ -737,6 +786,19 @@ const DataStore = {
         npcs.forEach(n => this.npcsMap.set(String(n.id), n));
 
         this.testimonies = testimonies;
+        // 扁平化的证词条目查询表：id → {text, npcId, npcName}
+        this.testimonyItemsMap = new Map();
+        testimonies.forEach(t => {
+            const npcId = t.npc?.id || '';
+            const npcName = (t.npc?.Name && t.npc.Name[0]) || '';
+            (t.evidenceItem || []).forEach(ei => {
+                this.testimonyItemsMap.set(String(ei.id), {
+                    text: (ei.testimony && ei.testimony[0]) || '',
+                    npcId,
+                    npcName,
+                });
+            });
+        });
         this.doubts = doubts;
         this.exposeConfigs = exposeConfigs;
         this.exposeData = exposeData;
@@ -832,13 +894,14 @@ const DataStore = {
     },
 
     // Get testimony items for NPC in current loop
+    // 证词 ID 格式 {unit:1}{npc:2}{loop:1}{seq:3} —— loop 在第 4 位（charAt(3)）
     getTestimonyItems(npcId, loopNum) {
         const result = [];
         for (const t of this.testimonies) {
             if (t.npc && t.npc.id !== String(npcId)) continue;
             if (t.evidenceItem) {
                 for (const ei of t.evidenceItem) {
-                    if (String(ei.id).charAt(0) === String(loopNum)) {
+                    if (String(ei.id).charAt(3) === String(loopNum)) {
                         result.push(ei);
                     }
                 }
@@ -1023,13 +1086,32 @@ const Inventory = {
             html += `<div class="inv-doubt-item">L${GameState.loopNum} | ${escapeHtml(doubt.text)}</div>`;
         });
 
-        // Testimony count
-        const currentTestimonies = [...GameState.collectedTestimonies].filter(
-            id => id.charAt(0) === String(GameState.loopNum)
-        );
-        if (currentTestimonies.length > 0 || GameState.collectedTestimonies.size > 0) {
-            html += `<div class="inv-section-title">证词片段</div>`;
-            html += `<div class="inv-item"><span class="inv-item-name">已收集 ${GameState.collectedTestimonies.size} 条证词</span></div>`;
+        // Testimony section —— 按 loop 分组展开每条
+        const allIds = [...GameState.collectedTestimonies];
+        if (allIds.length > 0) {
+            html += `<div class="inv-section-title">证词片段 (${allIds.length})</div>`;
+            // 按 loop 分组（loop 位在 ID 第 4 位）
+            const byLoop = {};
+            allIds.forEach(id => {
+                const loop = id.charAt(3) || '?';
+                (byLoop[loop] = byLoop[loop] || []).push(id);
+            });
+            Object.keys(byLoop).sort().forEach(loop => {
+                byLoop[loop].forEach(id => {
+                    const ti = DataStore.testimonyItemsMap.get(id);
+                    if (!ti) {
+                        html += `<div class="inv-item"><span class="inv-item-name" style="color:var(--text-secondary)">${id}（缺证词文本）</span><span class="inv-item-loop">L${loop}</span></div>`;
+                        return;
+                    }
+                    html += `<div class="inv-testimony">
+                        <div class="inv-testimony-head">
+                            <span class="inv-testimony-npc">${escapeHtml(ti.npcName || ti.npcId)}</span>
+                            <span class="inv-item-loop">L${loop}</span>
+                        </div>
+                        <div class="inv-testimony-text">${escapeHtml(ti.text)}</div>
+                    </div>`;
+                });
+            });
         }
 
         DOM.invBody.innerHTML = html;
@@ -1116,6 +1198,14 @@ const Pipeline = {
             await this.playExpose(loopConfig.expose, loopNum);
         }
 
+        // === SPECIAL CUTSCENES（转折 / 逮捕 / 自尽 / 终章 / post_expose 等剧情段）===
+        if (Array.isArray(loopConfig.special_cutscenes)) {
+            for (const cs of loopConfig.special_cutscenes) {
+                await this.playCutscene(cs);
+                if (this._aborted) return;
+            }
+        }
+
         // === COMPLETE ===
         this.updateProgress(totalSteps, totalSteps, '完成');
         await this.showComplete(loopConfig, loopNum);
@@ -1199,7 +1289,11 @@ const Pipeline = {
 
     // --- Play a scene ---
     async playScene(sceneId) {
-        const scene = DataStore.scenesMap.get(sceneId);
+        // 先试 loop-scoped key（loop{N}_{sceneId}）——该条目携带 NPCInfos / ItemIDs；
+        // 找不到再退回静态场景条目（只有背景图等基础信息）。
+        const loopKey = `loop${GameState.loopNum}_${sceneId}`;
+        const scene = DataStore.scenesMap.get(loopKey) || DataStore.scenesMap.get(sceneId);
+        console.log(`[playScene] sceneId=${sceneId}, loopKey=${loopKey}, found=${!!scene}, hasNPCInfos=${!!scene?.NPCInfos?.length}, npcs=${scene?.NPCInfos?.map(n=>n.TalkInfo?.id).join(',')}`);
         if (!scene) return;
 
         // Transition
@@ -1217,8 +1311,8 @@ const Pipeline = {
         }
         await sleep(500);
 
-        // Play NPC dialogues
-        const npcs = DataStore.getSceneNPCs(sceneId);
+        // Play NPC dialogues —— 直接用上面已解析的 loop-scoped scene，避免再查静态条目
+        const npcs = scene.NPCInfos || [];
         for (const npcInfo of npcs) {
             const startId = DataStore.getNPCTalkStartId(npcInfo);
             if (startId) {
@@ -1233,8 +1327,9 @@ const Pipeline = {
             }
         }
 
-        // Show evidence
-        const items = DataStore.getSceneItems(sceneId);
+        // Show evidence —— 同样用 loop-scoped scene 的 ItemIDs
+        const itemIds = scene.ItemIDs || [];
+        const items = itemIds.map(id => DataStore.itemsMap.get(String(id))).filter(Boolean);
         if (items.length > 0) {
             await this.showEvidenceReveal(items);
             if (this._aborted) return;
@@ -1250,8 +1345,24 @@ const Pipeline = {
 
     // --- Dialogue Chain Player ---
     async playDialogueChain(startId, useExpose = false) {
-        let currentId = startId;
         const map = useExpose ? DataStore.exposeTalksMap : DataStore.talksMap;
+
+        // If startId 不是纯数字（如传进来的是 talk_key "vivian_002"），
+        // 把它当 videoScene 查最小 step 的条目，用它的真实数字 id 作为起点。
+        let currentId = startId;
+        if (currentId && !/^\d+$/.test(String(currentId))) {
+            const key = String(currentId);
+            let first = null;
+            for (const [id, t] of map) {
+                if ((t.videoScene || t._videoScene) === key) {
+                    const step = parseInt(t.step) || 0;
+                    if (!first || step < (parseInt(first.step) || 0)) first = t;
+                }
+            }
+            if (first) currentId = String(first.id);
+            else { currentId = null; }
+            console.log(`[playDialogueChain] talk_key=${key} → resolved to ${currentId}`);
+        }
 
         DOM.clickArea.style.display = 'block';
 
@@ -1492,6 +1603,23 @@ const Pipeline = {
         });
     },
 
+    // --- Special Cutscene（转折 / 逮捕 / 自尽 / 终章 / post_expose 等剧情段）---
+    playCutscene(cs) {
+        return new Promise(resolve => {
+            const done = (v) => { this._unregisterAbort(done); resolve(v); };
+            this._registerAbort(done);
+            DOM.cutsceneLabel.textContent = cs.subtype || cs.type || '剧情';
+            DOM.cutsceneTitle.textContent = cs.title || cs.type || '';
+            DOM.cutsceneLocation.textContent = cs.location ? `📍 ${cs.location}` : '';
+            DOM.cutsceneText.textContent = cs.description || cs.summary || '(无描述)';
+            DOM.cutsceneOverlay.classList.add('visible');
+            DOM.cutsceneConfirm.onclick = () => {
+                DOM.cutsceneOverlay.classList.remove('visible');
+                done();
+            };
+        });
+    },
+
     // --- Expose ---
     async playExpose(exposeConfig, loopNum) {
         const targetName = exposeConfig.target_name || '';
@@ -1556,7 +1684,7 @@ const Pipeline = {
                 id => !GameState.previousDoubts.some(p => p.id === id)
             ).length;
             const testimonyCount = [...GameState.collectedTestimonies].filter(
-                id => id.charAt(0) === String(loopNum)
+                id => id.charAt(3) === String(loopNum)
             ).length;
 
             const s = loopConfig.summary;

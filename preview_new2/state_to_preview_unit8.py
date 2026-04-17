@@ -243,6 +243,146 @@ def load_all_states():
 
 
 # ============================================================
+# Testimony 抽取：扫 state 原文 testimony_ids 块里的 "- 7位数字 # 文本" 行
+# ============================================================
+
+_TESTIMONY_LINE = re.compile(r'^\s*-\s+(\d{7})\s*#\s*(.+?)\s*$')
+_TESTIMONY_HEADER = re.compile(r'^\s*testimony_ids:\s*$')
+
+
+def extract_testimonies_from_state():
+    """返回 {tid(8-prefix): {'text':..., 'loop':N, 'npc_id':'80X'}}。
+    tid 第 2-3 位是 NPC code（Unit8 NPC id = '8' + code）。
+    tid 第 4 位是 loop。
+    """
+    collected = {}
+    for loop_num in range(1, 7):
+        path = os.path.join(STATE_DIR, f"loop{loop_num}_state.yaml")
+        with open(path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        in_block = False
+        header_indent = -1
+        for line in lines:
+            if _TESTIMONY_HEADER.match(line):
+                in_block = True
+                header_indent = len(line) - len(line.lstrip())
+                continue
+            if in_block:
+                stripped = line.rstrip("\n")
+                # 空行跳过不退出
+                if not stripped.strip():
+                    continue
+                cur_indent = len(line) - len(line.lstrip())
+                # 缩进回到 header 同级或更浅 → 退出块
+                if cur_indent <= header_indent:
+                    in_block = False
+                    continue
+                m = _TESTIMONY_LINE.match(stripped)
+                if not m:
+                    continue
+                raw_id = m.group(1)
+                text = m.group(2).strip()
+                # 去掉 ⚠谎言:/⚠偏见: 前缀（策划内部标签）
+                text = re.sub(r"^⚠?\s*(谎言|偏见)\s*[:：]\s*", "", text)
+                tid = map_id(raw_id)  # 1-prefix → 8-prefix
+                if tid in collected:
+                    continue  # 首次出现为准
+                # NPC code（ID 第 2-3 位）+ Unit8 前缀 8
+                npc_code = raw_id[1:3]
+                npc_id = "8" + npc_code
+                collected[tid] = {
+                    "text": text,
+                    "loop": loop_num,
+                    "npc_id": npc_id,
+                    "raw_id": raw_id,
+                }
+    return collected
+
+
+def append_testimonies_to_json(testimonies):
+    """写入 Testimony.json（按 NPC 聚合，带 evidenceItem 列表）
+       和 TestimonyItem.json（扁平列表，供其他模块用）。
+    """
+    # --- Testimony.json ---
+    try:
+        tdata = load_json("Testimony.json")
+    except Exception:
+        tdata = []
+    # 清理旧 Unit8 条目（chapter 或 npc.Chapter 为 EPI08；或 id 以 '80' 开头的 9 位）
+    tdata_kept = [
+        it for it in tdata
+        if not (
+            (it.get("npc", {}).get("Chapter") == CHAPTER) or
+            (it.get("chapter") in {"801", "802", "803", "804", "805", "806"})
+        )
+    ]
+
+    # 按 NPC 聚合（一个 NPC 一条 top-level Testimony，evidenceItem 汇总所有 loop 的证词）
+    by_npc = {}
+    for tid, info in testimonies.items():
+        npc_id = info["npc_id"]
+        if npc_id not in NPC_ID_MAP:
+            continue
+        by_npc.setdefault(npc_id, []).append((tid, info))
+
+    for npc_id, items in by_npc.items():
+        npc = NPC_ID_MAP[npc_id]
+        evidence_items = []
+        for tid, info in sorted(items, key=lambda x: x[0]):
+            evidence_items.append({
+                "id": tid,
+                "testimonyType": "1",
+                "testimony": [info["text"], ""],
+                "triggerType": "2",
+                "triggerParam": f"{npc_id},801",  # NPC,Zack
+            })
+        # 合成 trigger id：{npc}{seq=001}{000} → npc_id + "001000"（占位）
+        trigger_id = f"{npc_id}001000"
+        entry = {
+            "id": trigger_id,
+            "npc": {
+                "id": npc_id,
+                "Name": [npc.get("name_cn", ""), npc.get("name_en", "")],
+                "role": npc.get("role", "5"),
+                "Chapter": CHAPTER,
+            },
+            "chapter": f"80{items[0][1]['loop']}",  # 取第一条 loop
+            "words": ["", ""],
+            "evidenceItem": evidence_items,
+        }
+        # NPC icon（有的话）
+        icons = NPC_ICON_CONFIG.get(int(npc_id))
+        if icons:
+            entry["npc"]["IconSmall"] = icons[0]
+            entry["npc"]["IconLarge"] = icons[1]
+        tdata_kept.append(entry)
+
+    save_json("Testimony.json", tdata_kept)
+    print(f"    -> Testimony.json 追加 {len(by_npc)} 个 Unit8 NPC 聚合条目")
+
+    # --- TestimonyItem.json ---
+    try:
+        tidata = load_json("TestimonyItem.json")
+    except Exception:
+        tidata = []
+    # 清理旧 Unit8（id 以 '8' 开头）
+    tidata_kept = [it for it in tidata if not str(it.get("id", "")).startswith("8")]
+    added = 0
+    for tid, info in sorted(testimonies.items()):
+        tidata_kept.append({
+            "id": tid,
+            "testimonyType": "1",
+            "testimony": [info["text"], ""],
+            "triggerType": "2",
+            "triggerParam": f"{info['npc_id']},801",
+        })
+        added += 1
+    save_json("TestimonyItem.json", tidata_kept)
+    print(f"    -> TestimonyItem.json 追加 {added} 条 Unit8 证词条目")
+
+
+# ============================================================
 # Doubt condition 解析
 # ============================================================
 
@@ -520,23 +660,37 @@ def extract_opening_talks(opening_data):
     return talks
 
 
+SECTION_TITLE_MAP = {
+    "turn_cutscene": "情节转折",
+    "suspect_suicide_sequence": "嫌疑人自尽",
+    "arrest_cutscene": "逮捕现场",
+    "post_expose_dialogue": "指证后对话",
+    "post_expose_romance": "指证后·情感戏",
+    "post_expose_scene": "指证后剧情",
+    "ending_sequence": "终章",
+    "phone_call_event": "电话事件",
+}
+
+
 def collect_special_cutscenes(state):
-    """收集 state 中的自造剧情段，返回 [{type, name, location}] 列表"""
+    """收集 state 中的自造剧情段。返回 [{type, title, subtype, location, summary, description}]。
+    description 输出完整文本，供 pipeline 显示成剧情卡。
+    """
     out = []
     for field in SPECIAL_SECTIONS:
         section = state.get(field)
         if not isinstance(section, dict):
             continue
-        entry = {"type": field}
+        entry = {"type": field, "title": SECTION_TITLE_MAP.get(field, field)}
         if section.get("type"):
             entry["subtype"] = section.get("type")
         if section.get("location"):
             entry["location"] = section.get("location")
-        # 摘要（description 的首行）
         desc = section.get("description", "")
         if isinstance(desc, str) and desc.strip():
-            first_line = desc.strip().split("\n")[0][:80]
-            entry["summary"] = first_line
+            text = desc.strip()
+            entry["summary"] = text.split("\n")[0][:80]
+            entry["description"] = text
         out.append(entry)
     return out
 
@@ -1513,6 +1667,9 @@ def main():
     append_npcs_to_json()
     append_doubts_to_json(states)
     append_chapter_config(states)
+    testimonies = extract_testimonies_from_state()
+    print(f"    -> 从 state 抽取到 {len(testimonies)} 条 Unit8 证词")
+    append_testimonies_to_json(testimonies)
 
     print("\n[4/4] 合并 AVG 对话 JSON (Talk / Expose)...")
     dry_run = os.environ.get("AVG_DRY_RUN", "").lower() in ("1", "true", "yes")
