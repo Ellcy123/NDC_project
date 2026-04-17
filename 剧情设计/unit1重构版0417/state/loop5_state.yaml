@@ -38,11 +38,11 @@
 # B. 证据覆盖     PASS — 大纲 loop5 全部证据（15xx 系列，0417 精简版）已分配到场景；
 #                        type 字段全面升级：
 #                          1501 → envir（环境叙事，pickup:false）
-#                          1502 → note（文件笔记）
-#                          1503 → note（文件笔记）
+#                          1502 → item（物品：文件/信件/票据类）
+#                          1503 → item（物品：文件/信件/票据类）
 #                          1504 → 已移除（不是物证，以 jimmy_001 的证词 5041001 承载）
 #                          1505 → envir（环境叙事，pickup:false）——Zack 观察记忆，字迹对白依据
-#                          1506 → note（文件笔记）
+#                          1506 → item（物品：文件/信件/票据类）
 #                          1507 → item（物理道具）
 #                        1507（手枪）标注 loop6_critical；
 #                        1502 metadata 补充 meeting_time:晚上8点 + meeting_location:后门
@@ -261,7 +261,7 @@ scenes:
 
       - id: 1503
         name: "《芝加哥鼓点》完整单子"
-        type: note  # 文件笔记
+        type: item  # 物品（文件/信件/票据类）
         pickup: true
         note: "关键——loop5 Expose round_1 的核心物证；完整记录《芝加哥狂想曲》各段的鼓点节奏与高潮时间点，可精确比对 23:00 鼓点高潮时刻"
         description: "一张乐队演出用的《芝加哥狂想曲》完整鼓点节奏单，清晰标注各乐章的高潮时间点——其中第三乐章鼓点高潮发生在 23:00，是全曲最强的一段爆发。Tommy 留存的这份备份与 Jimmy 在 loop3 销毁的那份来自同一批印刷"
@@ -402,7 +402,7 @@ scenes:
     evidence:
       - id: 1502
         name: "Jimmy 给 Whale 的回信"
-        type: note  # 文件笔记
+        type: item  # 物品（文件/信件/票据类）
         pickup: true
         note: "关键——loop5 Expose round_3 辅助证据；loop6 指证 Morrison round_3 的关键物证；信中内容确认 Jimmy 与 Whale 的直接联络关系，约定在蓝月亮酒吧后门晚上8点见面"
         description: "一封 Jimmy 写给 Whale 的信，内容是回复 Whale 的委托——Jimmy 接受了这件事，并约定在蓝月亮酒吧后门晚上8点见面进行最终的交接。信的末尾有 Jimmy 的签名，字迹中'J'的写法非常独特——倒写的钩"
@@ -428,7 +428,7 @@ scenes:
 
       - id: 1506
         name: "Jimmy 的爱尔兰裔身份证件"
-        type: note  # 文件笔记
+        type: item  # 物品（文件/信件/票据类）
         pickup: true
         note: "关键——loop5 Expose round_2 的核心物证；确认 Jimmy 为爱尔兰裔移民，是 5041001（Jimmy 口音证词）+ 4011006（Vivian 证言）的身份支撑"
         description: "Jimmy 的移民档案或爱尔兰裔身份证明文件——记录他的出生地（爱尔兰科克郡）和移民入境日期。文件上同时显示他的全名：James O'Sullivan（Jimmy 是爱称）"
@@ -957,7 +957,7 @@ evidence_registry:
 
   - id: 1502
     name: "Jimmy 给 Whale 的回信"
-    type: note  # 文件笔记
+    type: item  # 物品（文件/信件/票据类）
     first_scene: s503
     pickup: true
     note: "关键——loop5 Expose round_3 辅助；loop6 指证 Morrison round_3 关键物证；信中约定蓝月亮酒吧后门晚上8点见面（arrest_cutscene 场景地点伏笔）"
@@ -968,7 +968,7 @@ evidence_registry:
 
   - id: 1503
     name: "《芝加哥鼓点》完整单子"
-    type: note  # 文件笔记
+    type: item  # 物品（文件/信件/票据类）
     first_scene: s501
     pickup: true
     note: "关键——loop5 Expose round_1 核心物证；23:00 鼓点高潮时间点的实物记录"
@@ -985,7 +985,7 @@ evidence_registry:
 
   - id: 1506
     name: "Jimmy 的爱尔兰裔身份证件"
-    type: note  # 文件笔记
+    type: item  # 物品（文件/信件/票据类）
     first_scene: s503
     pickup: true
     note: "关键——loop5 Expose round_2 核心物证之一；确认 Jimmy 爱尔兰裔身份，支撑口音谜题逻辑"
