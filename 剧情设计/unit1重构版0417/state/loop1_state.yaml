@@ -116,7 +116,7 @@ opening:
 
 scenes:
   # ── 场景 S1：二楼会客室（现场搜证）──
-  - id: s101
+  - id: 1001
     name: "二楼会客室"
     type: limited_exploration  # 🔓 有限制的自由探索（Morrison 管控现场）
     description: |
@@ -145,18 +145,18 @@ scenes:
         description: "协议内容：Zack 负责保护 Vivian 安全，并确保 Vivian 在 Webb 死后能顺利继承遗产（注：原设计分为 1102 委托单据 + 1103 委托协议书两件，实为同一份合同的不同提法，现合并为 1103 单件；1102 已废弃不再使用）"
 
     npcs:
-      # ── Vivian（沉默 / 认罪状态）──
+      # ── Vivian（沉默状态）──
       vivian_001:
         # ── 基本信息 ──
         talk: vivian_001
         is_liar: false
-        # 注：loop1 的 Vivian 处于震惊/沉默状态；"认罪"是 Rosa 的陈述，不是 Vivian 的主动心态。
-        # 她的谎言（"我杀了 Webb"）是 loop4 指证对象；loop1 中她只是沉默不语，不透露具体行为信息。
-        # ⚠️ 内部真相（loop4 才揭示）：Vivian 是带着自己的小手枪进入会客室的，本来也想杀 Webb——
-        # 她当晚先后两次前往会客室（23:10 本想杀 Webb，被"Don't be bothering me!"挡回；23:30 送酒时间再去）。
-        # loop1 她对外的说辞是"枪是在地上捡起的"——这是掩饰，目的是淡化自己的杀意嫌疑。
-        motive: "表面极度震惊；内心实际更复杂：她本就携枪前来想杀 Webb，却看到 Webb 已死——震惊之余亦在掩饰自己的杀意，避免暴露携枪前来的真相"
-        mindset: "震惊、沉默不语；主动给出'枪是捡的'的说辞为自己脱钩，但除此之外不透露任何具体行为信息；对外界的追问几乎没有反应"
+        # 注：loop1 的 Vivian 处于震惊/沉默状态——对外不给任何说辞，对追问几乎没有反应。
+        # "认罪"行为延后到 loop2 工作室深度对话；她的谎言（"我杀了 Webb"）是 loop4 指证对象。
+        # ⚠️ 内部真相（loop4 才揭示）：Vivian 带着自己的小手枪进入会客室，本来也想杀 Webb——
+        # 她当晚先后两次前往会客室（23:10 本想杀 Webb，被"Don't be bothering me!"挡回；23:30 送酒时间再去，推门发现 Webb 已死）。
+        # loop1 她对这段经过完全沉默，不透露任何信息；玩家在 loop1 只能通过硝烟反应间接证明她不是刚刚开枪的人。
+        motive: "极度震惊、沉默不语——她带枪前来想杀 Webb、却发现 Webb 已死，内心震动混乱，对外选择完全闭口不谈"
+        mindset: "怔愣在原地，对 Rosa 的指控和 Zack/Morrison 的追问都没有反应；不辩解、不认罪、不解释——纯粹的沉默"
 
         # ── 1. NPC 已知信息 ──
         # 知识池见 npc_knowledge_pools.yaml → vivian
@@ -166,32 +166,30 @@ scenes:
         #   - 她平时 23:30 给 Webb 送酒
         #   - 她当晚带着自己的小手枪前来（本来也想杀 Webb）
         #   - 23:10 首次进入会客室门口，听到"别打扰我"被挡在外面（实为 Jimmy 模仿）
-        #   - 23:30 送酒时间再次前来，推门发现 Webb 已死；惊慌中手枪掉落，随后又捡起
+        #   - 23:30 送酒时间再次前来，推门发现 Webb 已死
         #   - Webb 让她协助勒索中产（仙人跳变体）
         #   - Webb 与 Rita 的关系让她心寒
         #   - 她有船票（想逃离），有杀人计划（最终未执行——Webb 先被 Jimmy 杀了）
 
-        active_topics:
-          - "现场经过：她手里的枪是'在地上捡起的'（掩饰说辞，⚠️ 非完整真相）"  # loop1 仅展示最表面的信息
+        active_topics: []  # loop1 Vivian 完全沉默，无主动陈述内容；她在场作为"持枪人"的画面本身是信息
         withheld_topics:
-          - "她实际是带着自己的枪前来的真相（loop4 才承认）"  # 本层是 loop4 Expose 的前置伏笔
+          - "她带着自己的枪前来的真相（loop4 才承认）"  # loop4 Expose round_1 的真正靶子
           - "23:10 她第一次来会客室被挡走的经过"  # loop4 才揭示
           - "她本来也想杀 Webb 的计划（带着杀意携枪前来）"  # loop4 才揭示
           - "勒索细节（仙人跳变体）"  # loop4 才揭示
           - "船票和杀人计划"  # loop4 才揭示
           - "Don't be bothering me! 的细节"  # loop4/loop5 关键伏笔
           - "Webb 让她勒索别人这件事"  # loop2 触碰，loop4 完整揭示
+          - "是否开枪 / 现场经过的任何陈述"  # loop1 完全沉默，loop2 才开始主动说话（且以认罪谎言的形式）
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "Vivian 手持枪——她是否开枪了"  # 9
-          - "Vivian 为何沉默不反驳 Rosa 的指控"  # 8
-          - "Vivian 说'枪是地上捡的'——这是真的吗"  # 7（表层合理，玩家此时无法证伪；loop4 Expose 时才击破）
+          - "Vivian 手持枪——她是否开枪了"  # 9（她不回答，需通过硝烟反应间接判断）
+          - "Vivian 为何完全沉默、不辩解也不反驳 Rosa 的指控"  # 8（反常态度本身是悬念）
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 1011001  # Vivian 沉默不语：极度震惊，面对追问不作回答（不是认罪，是震惊）
-          - 1011002  # ⚠️ 隐瞒：Vivian 说枪是从地上捡起的（表层说辞——掩饰自己带枪前来的真相；loop4 Expose 时被击破）
+          - 1011001  # Vivian 沉默不语：极度震惊，面对追问不作回答（不是认罪，也不辩解——纯粹的沉默）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -406,27 +404,19 @@ post_expose_scene:
 # ─────────────────────────────
 
 doubts:
-  - id: d1001
+  - id: 1101
     text: "Rosa 声称目击 Vivian 在 23:30 杀死 Webb——但她的话可信吗？她真的目击了吗？"
-    unlock_condition: |
-      需要至少两种信息交叉验证：
-      1. Vivian 手枪无硝烟反应（物证：1101）——推翻"刚刚开枪"
-      2. Rosa 的谎言1被击穿（Expose 结果）——她已说过一个谎，整体可信度存疑
+    unlock_condition: "item:1101 + testimony:1021001"
     status: "unlocked_after_expose_round1"
 
-  - id: d1002
+  - id: 1102
     text: "Webb 真正怀疑的凶手是谁？他为何提前立协议、紧急雇佣侦探？"
-    unlock_condition: |
-      需要两种信息：
-      1. Webb 委托协议书（文件证据：1103）——保险倾向
-      2. Emma 的分析证词（1002001+1002002）——外部视角确认异常
+    unlock_condition: "item:1103 + testimony:1002002"
     status: "unlocked_after_post_expose"
 
-  - id: d1003
+  - id: 1201
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
-    unlock_condition: |
-      loop1 阶段无法出现——此疑点将在 loop2 被提出（经由 Tommy 枪声方向证词等引发怀疑），
-      loop3 正式解决（玻璃碎片 + Rosa 倒垃圾时间线交叉验证）。
+    unlock_condition: "locked_until_loop2"  # 状态标记：loop1 阶段此疑点尚未激活，loop2 经由 Tommy 枪声方向证词 + Vivian 平时送酒时间线触发；loop3 由玻璃碎片 + Rosa 倒垃圾证言正式解决
     status: "locked_until_loop2"  # loop2 提出，loop3 解决
 
 # ─────────────────────────────
@@ -439,7 +429,7 @@ evidence_registry:
     name: "Vivian 手里的手枪"
     type: item
     pickup: true
-    first_scene: s101
+    first_scene: 1001
     note: "关键——击破 Rosa 谎言1（无硝烟反应）"
 
   # 注：原 1102 委托单据与 1103 委托协议书已合并为单件 1103（实为同一份合同），1102 ID 废弃
@@ -447,7 +437,7 @@ evidence_registry:
     name: "Webb 委托协议书"
     type: item
     pickup: true
-    first_scene: s101
+    first_scene: 1001
     note: "关键——Webb 和 Zack 签字的委托协议；确立 Zack 合法调查身份 + 建立动机 + 换取 72h 调查期；体现 Webb 保险倾向"
 
   # ── 以下为 Loop1 结束时自动确认的信息（非证据道具，但记录供后续引用）──

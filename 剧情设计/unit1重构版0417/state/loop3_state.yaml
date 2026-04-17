@@ -5,7 +5,7 @@
 # 叙事功能：犯罪现场（自 loop1 之后再次开放）+ 时间线谜题核心解锁 + Rosa 击穿（两轮）
 # 核心体验：round_1 击破时间线谎言（partial_victory / triggers_retreat），
 #           Rosa 立刻退守；round_2 威胁纸条击穿退守谎言（full_breakthrough），Rosa 主动交出弹壳
-# Loop 结束：d1003（时间线谜题）解锁；Rosa 由"说谎者"转变为"协助者"；
+# Loop 结束：1201（时间线谜题）解锁；Rosa 由"说谎者"转变为"协助者"；
 #           .45 弹壳伏笔埋下（loop4 核心），Jimmy 销毁证据伏笔埋下（loop5）
 #
 # 事实源：Unit1_大纲-0417.md（剧情设计/unit1重构版0417/Unit1_大纲-0417.md）
@@ -65,7 +65,7 @@ player_context:
     - "Vivian 曾被 Webb 要求协助勒索中产人士（仙人跳变体），她对此十分憎恨"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
     - "Jimmy 是兼职主厨，有很多副业，但经济困难，对 Webb 的死有隐藏的愧疚"
-    - "新疑点（d1004）：Webb 的勒索执行人换成了谁？那个大人物是谁？"
+    - "新疑点（1202）：Webb 的勒索执行人换成了谁？那个大人物是谁？"
 
   new_directions:
     - direction: "进入会客室犯罪现场——自 loop1 之后再次开放，搜寻被忽视的物证"
@@ -79,13 +79,13 @@ player_context:
     # loop3 指证 Rosa 完整击穿后玩家获得的新知识
     - "玻璃碎片压在垃圾袋下（有硝烟痕迹）——玻璃破碎早于 23:20（Rosa 倒垃圾时间）"
     - "Rosa 23:20 去外面丢过垃圾——垃圾袋放下之前玻璃就碎了，真实枪击时间早于 23:30"
-    - "d1003 解锁：23:30 的枪声不是真正的案发时间，另有更早的真实枪击发生"
+    - "1201 解锁：23:30 的枪声不是真正的案发时间，另有更早的真实枪击发生"
     - "Rosa 是被威胁的——威胁纸条：'11 点半去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿'"
     - "威胁者是刻意嫁祸 Vivian 的人，且此人很熟悉酒吧（大家都知道 Vivian 每晚送酒）"
     - "Rosa 给了 Zack 一个她在现场捡到的弹壳（型号待 loop4 确认），请求 Zack 不要声张"
     - "Rosa 从'被迫说谎者'转变为'协助者'——她本人也是受害者"
     - "Webb 的日记中亲笔写着 WHALE - DANGER 的便利贴——'WHALE'这个名字首次以书面形式出现在玩家视野中（此前只有 Tommy 的口头暗示'大人物'）；Webb 的自注表明他清楚自己是被利用的鱼饵，而非渔夫"
-    - "d1002 进展：Whale 从'Tommy 的猜测'升级为'Webb 日记亲笔提及'——但 Whale 的具体身份与来历仍未揭示"
+    - "1102 进展：Whale 从'Tommy 的猜测'升级为'Webb 日记亲笔提及'——但 Whale 的具体身份与来历仍未揭示"
 
 # ─────────────────────────────
 # 二、开篇（Emma 目标设定对话）
@@ -146,7 +146,7 @@ opening:
 
 scenes:
   # ── 场景 S301：厨房 ──
-  - id: s301
+  - id: 1003
     name: "厨房"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -203,7 +203,7 @@ scenes:
         # ── 2. 玩家询问意图 ──
         player_inquiry:
           - "Jimmy 在销毁鼓点单子——这是什么，为什么要销毁" # 9
-          - "Jimmy 和 Webb 勒索生意有关系吗（d1004 驱动）" # 6
+          - "Jimmy 和 Webb 勒索生意有关系吗（1202 驱动）" # 6
           - "Jimmy 对 Webb 的死有愧疚感——他还是兼职主厨吗" # 5
 
         # ── 3. 可提取证词 ──
@@ -218,7 +218,7 @@ scenes:
             note: "后续 loop5 考题：Jimmy 在 loop3 为什么要销毁《芝加哥狂想曲》鼓点单子（真实案发时间线的关键）"
 
   # ── 场景 S302：大厅 ──
-  - id: s302
+  - id: 1007
     name: "大厅"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -288,7 +288,7 @@ scenes:
             note: "loop3 表层伏笔：为指证 Rosa 后 Rosa 提供弹壳埋下伏笔（玩家会意识到'缺失的子弹被 Rosa 捡去了'）；loop5/6 深度伏笔：Morrison 说这话时神情异常的真正原因是他自己也藏了一颗（loop6 揭示）"
 
   # ── 场景 S303：犯罪现场（会客室）——自 loop1 之后再次开放 ──
-  - id: s303
+  - id: 1001
     name: "犯罪现场（二楼会客室）"
     type: free_exploration  # 🔓 自由探索（自 loop1 之后再次开放）
     description: |
@@ -318,7 +318,7 @@ scenes:
         name: "Webb 的日记"
         type: item  # 物品（文件/信件/票据类）（手写日记 + 便利贴）
         pickup: true
-        note: "关键——WHALE 名字首次书面出现；d1002（Webb 真凶）进展：Whale 从口头猜测升级为书面证据；loop5 可重新调用（Webb 已知自己是鱼饵，暗示勒索对象的危险级别）"
+        note: "关键——WHALE 名字首次书面出现；1102（Webb 真凶）进展：Whale 从口头猜测升级为书面证据；loop5 可重新调用（Webb 已知自己是鱼饵，暗示勒索对象的危险级别）"
         description: "Webb 的私人日记，内页嘲笑了那些被他勒索的人，语气自得。翻到最后几页，夹着一张便利贴，用 Webb 的手书写道：'WHALE - DANGER'。他以为自己是掌网的渔夫，实际上不过是被当作诱饵的鱼"
         acquisition_note: "在会客室搜证阶段可拾取；这是玩家第一次在实物证据中看到'WHALE'这个名字"
         metadata:
@@ -344,7 +344,7 @@ scenes:
     npcs: {}  # 会客室搜证阶段无 NPC 驻场
 
   # ── 场景 S304：清洁间 ──
-  - id: s304
+  - id: 1008
     name: "清洁间"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -507,7 +507,7 @@ expose:
     player_knowledge_gained:
       - "Rosa 的'目击'是被威胁伪造的——她不是真正的目击者"
       - "幕后有人刻意嫁祸 Vivian，且此人对酒吧内部情况（Vivian 每晚送酒）了如指掌"
-      - "d1003 解锁：真实枪击时间早于 23:20（玻璃碎片+倒垃圾时间线推理），23:30 枪声不是案发时间"
+      - "1201 解锁：真实枪击时间早于 23:20（玻璃碎片+倒垃圾时间线推理），23:30 枪声不是案发时间"
       - "Rosa 给了 Zack 一个她在现场捡到的弹壳（型号待 loop4 确认），请求保密"
       - "Rosa 从'被迫说谎者'变成了 Zack 的潜在协助者——她现在愿意配合"
 
@@ -534,7 +534,7 @@ post_expose_scene:
     # ── 1. NPC 已知信息（Emma 特殊模式 C）──
     knows:
       - "Rosa 是被威胁的，她不是真正的目击者"
-      - "玻璃碎片 + 倒垃圾时间线推理：真实枪击时间早于 23:20，23:30 枪声不是案发时间（d1003 解锁）"
+      - "玻璃碎片 + 倒垃圾时间线推理：真实枪击时间早于 23:20，23:30 枪声不是案发时间（1201 解锁）"
       - "幕后有人刻意嫁祸 Vivian，且此人对酒吧内部情况了如指掌（熟悉 Vivian 每晚送酒的习惯）"
       - "Rosa 给了 Zack 一个她在现场捡到的弹壳，请求保密"
       - "Morrison 勘验后说'子弹缺失'——现在看来这也很可疑"
@@ -552,7 +552,7 @@ post_expose_scene:
     # ── 2. 玩家询问意图 ──
     player_inquiry:
       - "loop3 全部收获梳理——时间线谜题解锁的意义是什么" # 9
-      - "幕后嫁祸者是谁——此人很熟悉酒吧（d1004 驱动）" # 8
+      - "幕后嫁祸者是谁——此人很熟悉酒吧（1202 驱动）" # 8
       - "下一步：说服 Vivian 不再认罪——怎么让她开口" # 10
       - "Rosa 给的弹壳——loop4 中如何利用它" # 7
 
@@ -578,22 +578,19 @@ post_expose_scene:
 # ─────────────────────────────
 
 doubts:
-  - id: d1001
+  - id: 1101
     text: "Rosa 声称目击 Vivian 在 23:30 杀死 Webb——但她的话可信吗？她真的目击了吗？"
-    unlock_condition: |
-      需要至少两种信息交叉验证：
-      1. Vivian 手枪无硝烟反应（物证：1101）——推翻"刚刚开枪"
-      2. Rosa 谎言1 被击穿（loop1 Expose 结果）——她已说过一个谎，整体可信度存疑
+    unlock_condition: "item:1101 + testimony:1021001"
+    posed_loop: 1
+    resolved_loop: 3
     status: "resolved_loop3"
-    # loop3 正式击穿 Rosa 的全部谎言，d1001 已得到完整回答：
+    # loop3 正式击穿 Rosa 的全部谎言，1101 已得到完整回答：
     # Rosa 根本不是真正的目击者——她是被威胁伪造的目击证言。
 
-  - id: d1002
+  - id: 1102
     text: "Webb 真正怀疑的凶手是谁？他为何提前立协议、紧急雇佣侦探？"
-    unlock_condition: |
-      需要两种信息：
-      1. Webb 委托协议书（1103）——保险倾向
-      2. Emma 的分析（1002001 + 1002002）——外部视角确认异常
+    unlock_condition: "item:1103 + testimony:1002002"
+    posed_loop: 1
     status: "unlocked_loop1_continuing"
     # loop3 新进展（两条）：
     # 1. Webb 的日记（1309）中亲笔写下"WHALE - DANGER"——Webb 知道自己有危险，且清楚"Whale"这个威胁者的存在；
@@ -601,42 +598,46 @@ doubts:
     # 2. 幕后嫁祸者的存在意味着 Webb 的怀疑是有依据的——有人确实要置 Webb 于死地。
     # 但"Whale 具体是谁"的问题将在 loop4-5 继续深化（被撕毁的合同/Jimmy 回信等）。
 
-  - id: d1003
+  - id: 1201
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
+    unlock_condition: "item:1305 + testimony:3021002"
     posed_loop: 2  # loop2 已由 Tommy 枪声方向证词 + Vivian 平时送酒时间等触发提出
-    resolution_condition: |
-      两种不同来源的信息交叉验证（loop3 解决）：
-      1. 玻璃碎片（1305，有硝烟痕迹，压在垃圾袋下）——物证
-      2. Rosa 的倒垃圾时间节点证言（3021002，23:20）——证人陈述
-      推理链：垃圾袋 23:20 放置 → 碎片在袋下 → 玻璃破碎早于 23:20 →
-              碎片有硝烟 → 来自子弹穿窗 → 真实枪击时间早于 23:20
+    resolved_loop: 3
+    # 推理链：垃圾袋 23:20 放置 → 碎片在袋下 → 玻璃破碎早于 23:20 →
+    #         碎片有硝烟 → 来自子弹穿窗 → 真实枪击时间早于 23:20
+    # 两种不同来源的信息交叉验证（loop3 解决）：
+    # 1. 玻璃碎片（1305，有硝烟痕迹，压在垃圾袋下）——物证
+    # 2. Rosa 的倒垃圾时间节点证言（3021002，23:20）——证人陈述
     status: "resolved_loop3"
     # loop2 提出的核心疑点，本轮正式解决。
 
-  - id: d1004
+  - id: 1202
     text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
-    unlock_condition: |
-      loop2 已解锁，loop3 继续进展：
-      嫁祸者"很熟悉酒吧"——新执行人和嫁祸者可能是同一个人。
-      具体身份仍未揭示，loop4-5 继续深化（loop4 Vivian 证言澄清不是她；loop5 确认是 Jimmy）。
+    unlock_condition: "item:1207 + testimony:2011002"
+    posed_loop: 2
     status: "unlocked_loop2_ongoing"
+    # loop2 已解锁，loop3 继续进展：
+    # 嫁祸者"很熟悉酒吧"——新执行人和嫁祸者可能是同一个人。
+    # 具体身份仍未揭示，loop4-5 继续深化（loop4 Vivian 证言澄清不是她；loop5 确认是 Jimmy）。
 
-  - id: d1011
+  - id: 1203
     text: "Webb 勒索的那个大人物又是谁？"
-    unlock_condition: |
-      loop2 已解锁，loop3 新进展：
-      Webb 日记（1309）WHALE-DANGER 便利贴让名字首次书面出现——
-      "大人物" = Whale 的倾向进一步强化（但仍是 Tommy 口头猜测 + 日记暗示，未完全证实）。
+    unlock_condition: "testimony:2051006 + item:1205"
+    posed_loop: 2
     status: "advancing_loop3"
+    # loop2 已解锁，loop3 新进展：
+    # Webb 日记（1309）WHALE-DANGER 便利贴让名字首次书面出现——
+    # "大人物" = Whale 的倾向进一步强化（但仍是 Tommy 口头猜测 + 日记暗示，未完全证实）。
 
-  - id: d1005
+  - id: 1301
     text: "是谁写了那张威胁纸条，刻意嫁祸 Vivian？此人为何熟悉酒吧内部——他在酒吧里扮演什么角色？"
-    unlock_condition: |
-      loop3 指证 Rosa 完成后解锁，需要两种信息：
-      1. 威胁纸条（1306）——有人刻意设计嫁祸 Vivian
-      2. Rosa 的分析供述——嫁祸者知道 Vivian 每晚送酒习惯，必定熟悉酒吧
+    unlock_condition: "item:1306 + testimony:3021002"
+    posed_loop: 3
     status: "unlocked_loop3"
-    # 新疑点：d1005 本轮解锁。指向酒吧内部人员，loop4/5 继续追查。
+    # 新疑点：1301 本轮解锁。指向酒吧内部人员，loop4/5 继续追查。
+    # loop3 指证 Rosa 完成后解锁，需要两种信息：
+    # 1. 威胁纸条（1306）——有人刻意设计嫁祸 Vivian
+    # 2. Rosa 倒垃圾时间证言（3021002）——暴露嫁祸者知道 Vivian 每晚送酒习惯，必定熟悉酒吧
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop3 全部证据）
@@ -650,30 +651,30 @@ evidence_registry:
   - id: 1301
     name: "《芝加哥狂想曲》鼓点单子碎片"
     type: item  # 物品（文件/信件/票据类）（乐谱文件碎片）
-    first_scene: s301
+    first_scene: 1003
     pickup: true
     note: "场景道具（loop5 伏笔）——信息残缺，只显示'鼓点很响'；loop5 与完整单子拼接揭示真实案发时间线"
 
   - id: 1302
     name: "Webb 和 Vivian 的合影"
     type: envir  # 环境叙事（可查看不可拾取的场景陈设）
-    first_scene: s303
+    first_scene: 1001
     pickup: false
     note: "场景道具——表明 Webb 与 Vivian 之间有真实情感纽带；可查看/触发剧情，不作为玩家持有证据"
 
   - id: 1303
     name: "Rita 的照片"
     type: envir  # 环境叙事（可查看不可拾取的场景陈设）
-    first_scene: s303
+    first_scene: 1001
     pickup: false
     note: "场景道具——Webb 会客室内摆放，显示 Rita 的存在感；可查看/触发剧情，不作为玩家持有证据"
 
   - id: 1309
     name: "Webb 的日记"
     type: item  # 物品（文件/信件/票据类）（手写日记 + 便利贴）
-    first_scene: s303
+    first_scene: 1001
     pickup: true
-    note: "关键——WHALE 名字首次书面出现；d1002（Webb 真凶）进展推进；loop5_reference: true（与 Jimmy 给 Whale 的回信形成叙事闭环）"
+    note: "关键——WHALE 名字首次书面出现；1102（Webb 真凶）进展推进；loop5_reference: true（与 Jimmy 给 Whale 的回信形成叙事闭环）"
     metadata:
       whale_first_mention: true
       loop5_reference: true
@@ -681,28 +682,28 @@ evidence_registry:
   - id: 1304
     name: "保险箱的字条"
     type: item  # 物品（文件/信件/票据类）（手写留言字条）
-    first_scene: s303
+    first_scene: 1001
     pickup: true
     note: "关键（loop4 用）——loop4 指证 Vivian round_3 的击破证据；密码与 Webb 和 Vivian 相遇那天有关"
 
   - id: 1305
     name: "玻璃碎片（垃圾袋下，有硝烟痕迹）"
     type: clue  # 现场线索（拍照取证的现场痕迹，硝烟残留）
-    first_scene: s303
+    first_scene: 1001
     pickup: true
     note: "关键（loop3 核心）——指证 Rosa round_1 的核心证据；时间线推理击穿 23:30 谎言"
 
   - id: 1306
     name: "威胁纸条"
     type: item  # 物品（文件/信件/票据类）（匿名字迹字条）
-    first_scene: s304
+    first_scene: 1008
     pickup: true
     note: "关键（loop3 核心）——指证 Rosa round_2 的核心证据；证明 Rosa 是被威胁伪造目击证言"
 
   - id: 1307
     name: "女儿的医疗单"
     type: item  # 物品（文件/信件/票据类）（医院诊断记录文件）
-    first_scene: s304
+    first_scene: 1008
     pickup: true
     note: "关键（loop3 核心）——指证 Rosa round_2 辅助证据；威胁纸条附件，证明威胁的真实性"
 

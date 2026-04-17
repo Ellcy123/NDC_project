@@ -132,7 +132,7 @@ opening:
 
 scenes:
   # ── 场景 S201：Vivian 工作室 ──
-  - id: s201
+  - id: 1002
     name: "Vivian 的工作室"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -166,7 +166,7 @@ scenes:
         # loop1 建立的知识池摘要（参见 loop1_state.yaml）：
         #   - 平时 23:30 给 Webb 送酒
         #   - 23:10 来到会客室门口，听到"别打扰我"被挡在外面
-        #   - 23:30 回来推门发现 Webb 已死，捡起地上的枪
+        #   - 23:30 回来推门发现 Webb 已死（她带着自己的 .25 ACP 小手枪前来——loop4 才承认）
         #   - Webb 让她协助勒索中产（仙人跳变体）
         #   - Webb 与 Rita 的关系让她心寒
         #   - 她有船票（想逃离），有杀人计划（最终未执行）
@@ -207,7 +207,7 @@ scenes:
             note: "后续 loop4 考题：为何 Vivian 说帮 Webb 勒索 Whale 的'不是她'——她只接触中产目标"
 
   # ── 场景 S202：厨房 ──
-  - id: s202
+  - id: 1003
     name: "厨房"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -293,7 +293,7 @@ scenes:
             note: "后续 loop5 考题：Jimmy 在 loop2 对 Webb 死亡'深感抱歉'——他究竟为什么抱歉（真凶伏笔）"
 
   # ── 场景 S203：Webb 办公室 ──
-  - id: s203
+  - id: 1004
     name: "Webb 办公室"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -334,7 +334,7 @@ scenes:
     npcs: {}  # Webb 办公室无 NPC 驻场
 
   # ── 场景 S204：Tommy 办公室 ──
-  - id: s204
+  - id: 1005
     name: "Tommy 办公室"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -413,6 +413,7 @@ scenes:
           - 2051005  # ⚠谎言: Tommy——你有证据吗，一个歌女的话算什么，酒吧里的账目都是清清白白的（谎言2，Expose round_2 由 1205+1206 击破；Expose 中新产生）
           - 2051003  # ⚠谎言: Tommy——还有古董买卖，花瓶卖给 Thompson、油画卖给 Coleman，都已卖出（谎言3，Expose round_3 由 1209+1210 击破）
           - 2051004  # ⚠谎言: Tommy——自己只是按 Webb 指示记账，不参与具体业务（谎言4，Expose round_4 由 1207 击破）
+          - 2051006  # Tommy 暗示 Webb 惹上了大人物（loop2 Expose 结束后自然流露，非单独证词；指向 Whale 类型的大人物，是疑点 1203 解锁 condition）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -421,7 +422,7 @@ scenes:
             note: "后续循环考题：Tommy 指出枪声来自南方，但真实枪击发生在 23:00（被鼓点掩盖），23:30 是假枪声。Tommy 对方向的陈述是否准确？（辅助时间线推理）"
 
   # ── 场景 S205：歌舞厅 ──
-  - id: s205
+  - id: 1006
     name: "歌舞厅"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -567,7 +568,7 @@ post_expose_scene:
       - "Tommy 暗示 Webb 惹上了大人物想跑路（猜测不点名）"
       - "Vivian 曾被迫参与勒索，对 Webb 深恶痛绝"
       - "Vivian 时间锁定：她在 loop3 前反锁房门，无法深入沟通"
-      - "d1003 本 Loop 正式提出：23:30 真是案发时间吗？（Tommy 枪声方向证词 + Vivian 平时送酒时间线触发怀疑，但解决需 loop3 现场证据）"
+      - "1201 本 Loop 正式提出：23:30 真是案发时间吗？（Tommy 枪声方向证词 + Vivian 平时送酒时间线触发怀疑，但解决需 loop3 现场证据）"
     does_not_know:
       - "那个勒索大人物是 Whale（具体身份未知）"
       - "Jimmy 才是 11 月后的新执行人"
@@ -598,54 +599,40 @@ post_expose_scene:
 # ─────────────────────────────
 
 doubts:
-  - id: d1001
+  - id: 1101
     text: "Rosa 声称目击 Vivian 在 23:30 杀死 Webb——但她的话可信吗？她真的目击了吗？"
-    unlock_condition: |
-      需要至少两种信息交叉验证：
-      1. Vivian 手枪无硝烟反应（物证：1101）——推翻"刚刚开枪"
-      2. Rosa 谎言1 被击穿（loop1 Expose 结果）——她已说过一个谎，整体可信度存疑
+    unlock_condition: "item:1101 + testimony:1021001"
+    posed_loop: 1
+    resolved_loop: 3
     status: "unlocked_after_loop1_expose"  # loop1 已解锁，loop2 继承
 
-  - id: d1002
+  - id: 1102
     text: "Webb 真正怀疑的凶手是谁？他为何提前立协议、紧急雇佣侦探？"
-    unlock_condition: |
-      需要两种信息：
-      1. Webb 委托协议书（1103）——保险倾向
-      2. Emma 的分析（1002001 + 1002002）——外部视角确认异常
+    unlock_condition: "item:1103 + testimony:1002002"
+    posed_loop: 1
+    resolved_loop: 5
     status: "unlocked_after_loop1_post_expose"  # loop1 已解锁，loop2 继承
 
-  - id: d1003
+  - id: 1201
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
-    posed_condition: |
-      loop2 阶段此疑点被正式提出，来源于以下信息：
-      1. Tommy 证言（2051002）：11:30 枪声来自厨房和会客室所在的酒吧南方——暗示方向/来源可能有蹊跷
-      2. Webb 个人收入记录+酒吧账本（指证 Tommy 后确认勒索生意）——凶手可能早有预谋在特殊时机作案
-      3. Vivian 证言（2011003）：平时 11:30 给 Webb 送酒——"23:30 就是案发时间"变成需要核实的假设
-      玩家此时提出怀疑，但无法解决——解决需 loop3 的玻璃碎片 + Rosa 倒垃圾时间线证据。
-    resolution_condition: |
-      loop3 解决此疑点（玻璃碎片 1305 + Rosa 23:20 倒垃圾证言 3021002 交叉验证）。
-    status: "posed_loop2_unresolved"  # loop2 提出、loop3 解决
+    unlock_condition: "testimony:2051002 + item:1208"
+    posed_loop: 2
+    resolved_loop: 3
+    status: "posed_loop2_unresolved"  # loop2 提出（Tommy 枪声方向证词 + Vivian 排班表交叉触发怀疑）、loop3 解决（玻璃碎片 1305 + Rosa 23:20 倒垃圾证言 3021002）
 
-  - id: d1004
+  - id: 1202
     text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
-    unlock_condition: |
-      loop2 Expose Tommy 后解锁——Tommy 供述：
-      1. 11 月中旬后，勒索生意的执行人换了
-      2. 新执行人不是 Tommy 自己
-      玩家此时对 Vivian 的认知尚不清晰（Vivian 仍在禁足 + 自称凶手），
-      因此"会是 Vivian 吗"的怀疑合理；loop4 指证 Vivian 时 Vivian 证言澄清"帮 Webb 勒索 Whale 的人不是她"，
-      loop5 最终由 Jimmy 证据链确认执行人是 Jimmy。
-    status: "unlocked_after_loop2_expose"  # loop2 Expose Tommy 后解锁（拆分自原合并 d1004）
+    unlock_condition: "item:1207 + testimony:2011002"
+    posed_loop: 2
+    resolved_loop: 5
+    status: "unlocked_after_loop2_expose"  # loop2 Expose Tommy 后解锁（客户记录笔迹 = Tommy 曾是执行人 × Vivian 被迫勒索证词，交叉推导"还有其他执行人"）；loop4 Vivian 证言澄清"帮 Webb 勒索 Whale 的不是她"；loop5 Jimmy 证据链确认执行人是 Jimmy
 
-  - id: d1011
+  - id: 1203
     text: "Webb 勒索的那个大人物又是谁？"
-    unlock_condition: |
-      loop2 Expose Tommy 后解锁——Tommy 供述：
-      Webb 勒索惹上了大人物想跑路；Tommy 心中有猜测但不点名。
-      loop3 Webb 日记（1309，WHALE-DANGER）让名字书面出现；
-      loop4 被撕毁合同 + Tommy 证言确认倾向是 Whale；
-      loop5-6 最终闭环 Whale 身份。
-    status: "unlocked_after_loop2_expose"  # 拆分自原 d1004，专指"大人物"维度
+    unlock_condition: "testimony:2051006 + item:1205"
+    posed_loop: 2
+    resolved_loop: 5
+    status: "unlocked_after_loop2_expose"  # loop2 Expose Tommy 后解锁（Tommy 大人物暗示证词 2051006 × Webb 个人收入 $15,000，交叉推导勒索对象非同一般）；loop3 Webb 日记 1309（WHALE-DANGER）书面出现；loop4 被撕毁合同 + Tommy 证言确认倾向是 Whale；loop5-6 最终闭环
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop2 全部证据）
@@ -658,77 +645,77 @@ evidence_registry:
   - id: 1201
     name: "勒索用的照片"
     type: envir
-    first_scene: s201
+    first_scene: 1002
     pickup: false
     note: "场景道具——Vivian 工作室，展示 Webb 勒索业务的直接物证；不可拾取"
 
   - id: 1202
     name: "Jimmy 的工资单"
     type: item
-    first_scene: s202
+    first_scene: 1003
     pickup: true
     note: "场景道具——厨房，暗示 Jimmy 收入来源不止兼职薪资"
 
   - id: 1203
     name: "Jimmy 的不在场证明（厨房工作表）"
     type: item
-    first_scene: s202
+    first_scene: 1003
     pickup: true
     note: "关键——loop5 指证 Jimmy 时证明其不在场证明是伪造的；loop2 作为信息积累"
 
   - id: 1204
     name: "VIP 合影"
     type: envir
-    first_scene: s203
+    first_scene: 1004
     pickup: false
     note: "场景道具——Webb 办公室，显示 Webb 的政商界关系网；不可拾取"
 
   - id: 1205
     name: "Webb 个人收入记录"
     type: item
-    first_scene: s203
+    first_scene: 1004
     pickup: true
     note: "关键——击破 Tommy 谎言2（月收入 $15,000 无法被私酒解释；谎言1 由 Vivian 证言击破）"
 
   - id: 1206
     name: "酒吧收入账本"
     type: item
-    first_scene: s203
+    first_scene: 1004
     pickup: true
     note: "关键——击破 Tommy 谎言2（配合 1205：酒吧月净 $4,000）"
 
   - id: 1207
     name: "不明记录人的客户记录"
     type: item
-    first_scene: s203
+    first_scene: 1004
     pickup: true
     note: "关键——击破 Tommy 谎言4（笔迹分析 = Tommy，证明他亲手参与）"
 
   - id: 1208
     name: "Vivian 的排班表"
     type: envir
-    first_scene: s204
+    first_scene: 1005
     pickup: false
     note: "场景道具——Tommy 办公室，确认 Vivian 每晚 23:30 送酒给 Webb 的习惯；不可拾取"
 
   - id: 1209
     name: "假油画"
     type: clue
-    first_scene: s205
+    first_scene: 1006
     pickup: true
     note: "关键——击破 Tommy 谎言2（油画仍在歌舞厅，根本没有卖出；属于现场取证）"
 
   - id: 1210
     name: "花瓶现场照"
     type: clue
-    first_scene: s205
+    first_scene: 1006
     pickup: true
     note: "关键——击破 Tommy 谎言2（花瓶仍在原位，根本没有卖出；现场拍照取证）"
 
   - id: 1299
     name: "Tommy 抽屉里的弹壳（不可拾取）"
     type: item
-    first_scene: s204
+    first_scene: 1005
     pickup: false
     forbidden_reason: "Tommy 在玩家拿到前迅速将弹壳重新拿回"
     note: "loop5 伏笔——loop5 由 Tommy 主动展示（凭借 Zack 帮助 Vivian 获得信任），loop5 正式化为 1501（envir）"
