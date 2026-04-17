@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Unit1 重构版 0417 · State 总览</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Georgia", "Songti SC", serif;
+  background: linear-gradient(180deg, #1a1410 0%, #0f0a07 100%);
+  color: #e8dcc5; min-height: 100vh; padding: 40px 20px;
+}
+.wrap { max-width: 1200px; margin: 0 auto; }
+
+header {
+  text-align: center; margin-bottom: 48px;
+  border-bottom: 2px solid #b8925a; padding-bottom: 24px;
+}
+header h1 {
+  font-size: 38px; color: #f4cf7f; letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(184, 146, 90, 0.4);
+}
+header .sub {
+  color: #b8925a; font-size: 14px; letter-spacing: 3px;
+  margin-top: 8px; font-style: italic;
+}
+header .en { color: #776050; font-size: 12px; margin-top: 4px; }
+
+.section-title {
+  font-size: 22px; color: #f4cf7f; margin: 40px 0 20px;
+  padding-left: 12px; border-left: 4px solid #b8925a;
+  letter-spacing: 3px;
+}
+
+/* 真相时间线 */
+.timeline {
+  background: rgba(60, 40, 25, 0.3); border: 1px solid #5a4530;
+  border-radius: 8px; padding: 24px; margin-bottom: 32px;
+}
+.timeline h3 { color: #d4a85c; margin-bottom: 16px; font-size: 16px; }
+.tl-track {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+  position: relative;
+}
+.tl-point {
+  background: rgba(0,0,0,0.3); border: 1px solid #6b5239;
+  padding: 12px; border-radius: 6px; position: relative;
+}
+.tl-point .t { color: #f4cf7f; font-weight: bold; font-size: 18px; }
+.tl-point .d { color: #c4b094; font-size: 12px; margin-top: 6px; line-height: 1.5; }
+.tl-point.key { border-color: #c6484b; background: rgba(120, 40, 40, 0.25); }
+.tl-point.key .t { color: #e87b7e; }
+
+/* Loop 网格 */
+.loops { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.loop-card {
+  background: linear-gradient(135deg, rgba(70,50,30,0.35) 0%, rgba(40,28,18,0.35) 100%);
+  border: 1px solid #5a4530; border-radius: 10px;
+  padding: 20px; position: relative; overflow: hidden;
+}
+.loop-card::before {
+  content: attr(data-num); position: absolute; top: -10px; right: 12px;
+  font-size: 80px; color: rgba(184, 146, 90, 0.12);
+  font-weight: bold; font-family: Georgia, serif;
+}
+.loop-card h3 {
+  color: #f4cf7f; font-size: 18px; letter-spacing: 2px;
+  border-bottom: 1px dashed #6b5239; padding-bottom: 10px; margin-bottom: 12px;
+}
+.loop-card .meta {
+  color: #a88968; font-size: 11px; margin-bottom: 10px;
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.loop-card .meta span {
+  background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 3px;
+}
+.loop-card p { color: #d5c7ac; font-size: 13px; line-height: 1.7; }
+.loop-card .hi { color: #e87b7e; font-weight: bold; }
+.loop-card .ev { color: #8bb8c4; }
+
+/* 证据表 */
+.ev-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin-bottom: 32px;
+}
+.ev-col {
+  background: rgba(40,28,18,0.4); border: 1px solid #5a4530;
+  border-radius: 8px; padding: 16px;
+}
+.ev-col h4 {
+  color: #f4cf7f; font-size: 14px; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid #6b5239;
+}
+.ev-col h4 .tag {
+  font-size: 10px; color: #776050; margin-left: 8px; font-weight: normal;
+}
+.ev-col ul { list-style: none; font-size: 11px; color: #c4b094; line-height: 2; }
+.ev-col li::before { content: "▸ "; color: #b8925a; }
+
+/* 颜色 token */
+.t-item { color: #e87b7e; }
+.t-clue { color: #c4a86c; }
+.t-envir { color: #8ba888; }
+.t-note { color: #8bb8c4; }
+
+/* 疑点链 */
+.doubts {
+  background: rgba(60, 40, 25, 0.25); border: 1px solid #5a4530;
+  border-radius: 8px; padding: 20px; font-size: 12px;
+}
+.doubts table { width: 100%; border-collapse: collapse; }
+.doubts th, .doubts td {
+  padding: 8px 10px; text-align: left;
+  border-bottom: 1px solid rgba(107, 82, 57, 0.4);
+}
+.doubts th { color: #d4a85c; font-size: 11px; letter-spacing: 1px; }
+.doubts td { color: #c4b094; }
+.doubts .resolved { color: #8ba888; font-weight: bold; }
+
+footer {
+  margin-top: 48px; padding-top: 20px; border-top: 1px solid #5a4530;
+  text-align: center; color: #776050; font-size: 11px; letter-spacing: 2px;
+}
+footer .v { color: #b8925a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>一 · 蓝月亮酒吧</h1>
+  <div class="sub">UNIT 1 · 重构版 0417 · State 总览</div>
+  <div class="en">The Blue Moon Frame-up · 6 Loops · 37 Evidences · 11 Doubts</div>
+</header>
+
+<!-- 真相时间线 -->
+<h2 class="section-title">真相时间线（幕后）</h2>
+<div class="timeline">
+  <h3>1928 年 11 月 · 某个冬夜的蓝月亮酒吧二楼会客室</h3>
+  <div class="tl-track">
+    <div class="tl-point key">
+      <div class="t">23:00</div>
+      <div class="d"><b>Jimmy 枪杀 Webb</b><br>《芝加哥狂想曲》鼓点高潮掩盖枪声，子弹穿窗落地</div>
+    </div>
+    <div class="tl-point key">
+      <div class="t">23:05</div>
+      <div class="d"><b>Jimmy 模仿 Webb 声音</b><br>"Don't be bothering me!"骗走门外 Vivian——爱尔兰口音破绽</div>
+    </div>
+    <div class="tl-point">
+      <div class="t">23:10</div>
+      <div class="d">Vivian 带着自己的手枪离开；她本也想杀 Webb</div>
+    </div>
+    <div class="tl-point">
+      <div class="t">23:20</div>
+      <div class="d">Rosa 去外面丢垃圾——垃圾袋压住了穿窗的碎玻璃</div>
+    </div>
+    <div class="tl-point key">
+      <div class="t">23:30</div>
+      <div class="d"><b>Jimmy 鸣假枪</b><br>Vivian 推门发现尸体，手上的枪被误认为凶器</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 个 Loop -->
+<h2 class="section-title">叙事结构 · 六个循环</h2>
+<div class="loops">
+
+  <div class="loop-card" data-num="1">
+    <h3>Loop 1 · 激励事件</h3>
+    <div class="meta"><span>⚔️ Rosa (假胜利)</span><span>🎯 假胜利 / 新手教程</span></div>
+    <p>枪响即开场。Rosa 当庭指控 Vivian 持枪杀人。Zack 用<span class="ev">手枪无硝烟反应</span>击破谎言 1——<span class="hi">但谎言 2（23:30 只有 Vivian 在场）刻意打不穿</span>，玩家体验首次"tutorial_failure"。Zack 拿出 Webb 委托协议书换到 72 小时调查期。Morrison 醉醺醺上楼秉公办案，Emma 提出核心疑点：<b>真凶究竟是谁？</b></p>
+  </div>
+
+  <div class="loop-card" data-num="2">
+    <h3>Loop 2 · 酒吧的秘密</h3>
+    <div class="meta"><span>⚔️ Tommy 四层指证</span><span>💰 敲诈勒索生意揭发</span></div>
+    <p>自由探索（上）：Vivian 工作室、厨房、Webb 办公室、Tommy 办公室、歌舞厅。<span class="ev">Vivian 证言（Webb 让她勒索） → 账目差额 $11,000 → 古董仍在 → 笔迹=Tommy</span> 四层退守击破。Tommy 交代：11 月中旬 Webb 沉迷 Rita 后换了执行人，他猜测是大人物（未点名）。<span class="hi">d1003 本轮提出、d1004+d1011 新解锁。</span></p>
+  </div>
+
+  <div class="loop-card" data-num="3">
+    <h3>Loop 3 · 虚假的目击</h3>
+    <div class="meta"><span>⚔️ Rosa 真击穿</span><span>🔍 时间线推理核心</span></div>
+    <p>会客室自 loop1 之后再次开放。获得<span class="ev">玻璃碎片（有硝烟）+ Rosa 23:20 倒垃圾证言</span>——时间线打穿"23:30 是案发时间"的谎言。Rosa 退守后，威胁纸条+女儿医疗单彻底击破：她是被迫说谎。<span class="hi">Rosa 主动交出捡到的弹壳（型号待 loop4 确认），新增：Webb 的日记 "WHALE - DANGER"——Whale 名字首次书面登场。</span></p>
+  </div>
+
+  <div class="loop-card" data-num="4">
+    <h3>Loop 4 · 破碎的金丝雀</h3>
+    <div class="meta"><span>⚔️ Vivian "救"非"审"</span><span>⚡ Part1 情节转折</span></div>
+    <p>基调从推理转为拯救。Tommy 办公室：Zack 以 Webb 日记逼出 Whale 身份+Rita 渗透酒吧的指认。三轮 Expose：<span class="ev">弹壳 .45 vs 手枪 .25 不符 → Whale 有动机 → Webb 最后行动是保护 Vivian</span>。Vivian 交出"Don't be bothering me!"证言。<span class="hi">Morrison 看到 .45 弹壳脸色一变——拿走 1103 协议书、夺走 1308 弹壳、强押无罪的 Vivian 回警局。</span></p>
+  </div>
+
+  <div class="loop-card" data-num="5">
+    <h3>Loop 5 · 厨师的代价</h3>
+    <div class="meta"><span>⚔️ Jimmy 三层 + 自杀</span><span>💥 灵魂黑夜 / 疑点 UI</span></div>
+    <p>Emma 问 Zack 是否继续（酬劳已失），理想主义坚持。三层 Expose：<span class="ev">鼓点掩盖枪声 → 爱尔兰口音模仿 → Anna 怀孕+Whale 委托</span>。round_3 后 Zack 提 Whale 名字→暗处<span class="hi">whistle</span>鸣响。随后 Zack 当面点名"倒写的 J"三物闭环（<span class="ev">1306+1401+1505</span>）揭穿 Jimmy 威胁 Rosa。<span class="hi">Jimmy 崩溃自杀，托付 Anna，米勒集团特制手枪留下。</span></p>
+  </div>
+
+  <div class="loop-card" data-num="6">
+    <h3>Loop 6 · 正义的重量</h3>
+    <div class="meta"><span>⚔️ Morrison 三层单独对质</span><span>🏁 Unit1 收束 + 南区计划</span></div>
+    <p>潜入 Morrison 家搜证：<span class="ev">藏起来的弹壳 + 赌债欠条 + 借 Whale 钱的借据</span>。Whale 亲自打电话："证明这座城市是否还有正义"。警局 Morrison 办公室<span class="hi">单独对质</span>三轮：凶器型号→贿赂关系→Whale 主使。Morrison 当面签下认罪书，Vivian 获释。三人来到会客室，Vivian 用密码打开保险箱，交出 <span class="hi">"南区计划"(1604)</span>——Unit2 的开场钩子。</p>
+  </div>
+
+</div>
+
+<!-- 证据体系 -->
+<h2 class="section-title">证据体系 · 官方 itemType 四分类</h2>
+<div class="ev-grid">
+  <div class="ev-col">
+    <h4 class="t-item">item<span class="tag">可分析 · 6 件</span></h4>
+    <ul>
+      <li>1101 Vivian 手枪</li>
+      <li>1299 Tommy 抽屉弹壳（占位）</li>
+      <li>1308 Rosa 给的弹壳</li>
+      <li>1403 被撕毁的船票</li>
+      <li>1507 米勒集团特制手枪</li>
+      <li>1601 Morrison 藏起来的弹壳</li>
+    </ul>
+  </div>
+  <div class="ev-col">
+    <h4 class="t-clue">clue<span class="tag">现场拍照 · 3 件</span></h4>
+    <ul>
+      <li>1209 假油画</li>
+      <li>1210 花瓶现场照</li>
+      <li>1305 玻璃碎片（有硝烟）</li>
+    </ul>
+  </div>
+  <div class="ev-col">
+    <h4 class="t-envir">envir<span class="tag">环境叙事 · 8 件</span></h4>
+    <ul>
+      <li>1201 勒索用的照片</li>
+      <li>1204 VIP 合影</li>
+      <li>1208 Vivian 排班表</li>
+      <li>1302 Webb/Vivian 合影</li>
+      <li>1303 Rita 的照片</li>
+      <li>1402 痛苦记录</li>
+      <li>1501 久远陈旧弹壳</li>
+      <li>1505 Jimmy 英语练习书</li>
+    </ul>
+  </div>
+  <div class="ev-col">
+    <h4 class="t-note">note<span class="tag">文件笔记 · 20 件</span></h4>
+    <ul>
+      <li>1103 Webb 委托协议书</li>
+      <li>1202/1203 Jimmy 工资单/工作表</li>
+      <li>1205-1207 财务三件套</li>
+      <li>1301 鼓点单子碎片</li>
+      <li>1304 保险箱字条</li>
+      <li>1306 威胁纸条 · 1307 医疗单</li>
+      <li>1309 Webb 的日记</li>
+      <li>1401 被撕毁的合同 · 1404 绝笔信</li>
+      <li>1502 Jimmy 给 Whale 回信</li>
+      <li>1503 鼓点完整单子</li>
+      <li>1506 爱尔兰裔身份证件</li>
+      <li>1602/1603 欠条/借据</li>
+      <li>1604 南区计划 ⭐</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 疑点链 -->
+<h2 class="section-title">疑点链 · 十一个悬念</h2>
+<div class="doubts">
+  <table>
+    <tr><th>ID</th><th>疑点</th><th>提出</th><th>解决</th></tr>
+    <tr><td>d1001</td><td>Rosa 目击是否可信？</td><td>L1</td><td class="resolved">L3</td></tr>
+    <tr><td>d1002</td><td>Webb 真正怀疑的凶手是谁？</td><td>L1</td><td class="resolved">L5</td></tr>
+    <tr><td>d1003</td><td>23:30 真是案发时间吗？</td><td>L2</td><td class="resolved">L3</td></tr>
+    <tr><td>d1004</td><td>新执行人是谁？会是 Vivian 吗？</td><td>L2</td><td class="resolved">L5</td></tr>
+    <tr><td>d1011</td><td>那个大人物是谁？</td><td>L2</td><td class="resolved">L5</td></tr>
+    <tr><td>d1005</td><td>谁写威胁纸条？为何熟悉酒吧？</td><td>L3</td><td class="resolved">L5</td></tr>
+    <tr><td>d1006</td><td>真正的凶器在哪？</td><td>L4</td><td class="resolved">L5</td></tr>
+    <tr><td>d1007</td><td>恐吓 Rosa 的人是谁？</td><td>L5</td><td class="resolved">L5</td></tr>
+    <tr><td>d1008</td><td>勒索 Whale 的执行人？</td><td>L5</td><td class="resolved">L5</td></tr>
+    <tr><td>d1009</td><td>凶手怎么杀 Webb + 嫁祸 Vivian？</td><td>L5</td><td class="resolved">L5</td></tr>
+    <tr><td>d1010</td><td>Morrison 为何看弹壳变脸？</td><td>L5</td><td class="resolved">L6</td></tr>
+  </table>
+</div>
+
+<footer>
+  <div class="v">Unit 1 · Blue Moon · 6 state files · 4165 lines</div>
+  <div>基于 Miro 白板 + 0417 新大纲 · 跨 Loop 证据继承完整 · 官方 itemType 体系合规</div>
+</footer>
+
+</div>
+</body>
+</html>
