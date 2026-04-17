@@ -132,14 +132,14 @@ scenes:
     evidence:
       - id: 1101
         name: "Vivian 手里的手枪"
-        type: physical
+        type: item  # 物理道具（可分析硝烟反应）
         pickup: true
         note: "关键——用于击破 Rosa 谎言1（无硝烟反应证明 Vivian 未开枪）"
         analysis: "分析可得：枪管内无硝烟残留，表明该枪近期未被击发"
 
       - id: 1103
         name: "Webb 委托协议书"
-        type: document
+        type: note  # 文件笔记
         pickup: true
         note: "关键——Webb 和 Zack 签字的委托协议；确立 Zack 合法调查身份 + 换取 Morrison 72h 调查期；证明 Webb 预感被害（保险倾向）"
         description: "协议内容：Zack 负责保护 Vivian 安全，并确保 Vivian 在 Webb 死后能顺利继承遗产（注：原设计分为 1102 委托单据 + 1103 委托协议书两件，实为同一份合同的不同提法，现合并为 1103 单件；1102 已废弃不再使用）"
@@ -437,7 +437,7 @@ evidence_registry:
   # Loop1 = 11xx 系列
   - id: 1101
     name: "Vivian 手里的手枪"
-    type: physical
+    type: item
     pickup: true
     first_scene: s101
     note: "关键——击破 Rosa 谎言1（无硝烟反应）"
@@ -445,7 +445,7 @@ evidence_registry:
   # 注：原 1102 委托单据与 1103 委托协议书已合并为单件 1103（实为同一份合同），1102 ID 废弃
   - id: 1103
     name: "Webb 委托协议书"
-    type: document
+    type: note
     pickup: true
     first_scene: s101
     note: "关键——Webb 和 Zack 签字的委托协议；确立 Zack 合法调查身份 + 建立动机 + 换取 72h 调查期；体现 Webb 保险倾向"

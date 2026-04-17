@@ -180,7 +180,7 @@ scenes:
     evidence:
       - id: 1401
         name: "被撕毁的合同"
-        type: document
+        type: note  # 文件笔记
         pickup: true
         note: "关键——loop4 指证 Vivian round_2 的核心物证；loop5 指证 Jimmy round_3 也将使用此证据"
         description: "从垃圾桶中找到的被撕成碎片的合同残页，拼合后可读出：有一方与'Whale'签订了合同，Whale 愿意出一大笔钱委托对方做一件未明言的事。关键细节：字迹与 Rosa 收到的威胁纸条（1306）上的笔迹高度一致"
@@ -322,21 +322,21 @@ scenes:
     evidence:
       - id: 1402
         name: "痛苦记录"
-        type: environmental
+        type: envir  # 环境叙事
         pickup: false
         note: "场景道具（环境叙事/调查）——验证 Vivian 的杀人计划确实存在；为 Expose 中 Vivian 供述'曾有杀人计划'提供预先信息支撑"
         description: "化妆台上散落的几张纸，写满 Vivian 的内心挣扎——对 Webb 的愤怒、对自己被迫勒索别人的羞耻、对 Rita 出现后的绝望。笔迹凌乱，后半段字迹变成了杀意的涂鸦。可以作为查看道具，但不可拾取带走"
 
       - id: 1403
         name: "被撕毁的船票"
-        type: physical
+        type: item  # 物理道具
         pickup: true
         note: "场景道具——Vivian 曾计划逃离（或与 Webb 一起离开），但船票被撕毁，象征她断绝了逃离的念头；loop4 指证 Vivian 的情感说服素材"
         description: "一张被撕成两半的轮船客票，目的地巴黎，持票人姓名栏上有'Vivian'的字样。撕口整齐，像是经过深思熟虑后的决定"
 
       - id: 1404
         name: "Vivian 的绝笔信"
-        type: document
+        type: note  # 文件笔记
         pickup: true
         note: "场景道具（loop4 Expose 情感素材）——Vivian 在认为自己即将被捕前写下的信，表达她认为自己该死的心态；loop4 指证中可作为'她的死志真实存在'的物证，但其内容同时表明她的扭曲逻辑——她认为自己配不上 Webb 的保护"
         description: "一封未寄出的信，写给不知名的收件人，字里行间是 Vivian 对自己处境的绝望——她认为自己既然被 Webb 当工具，死了也好；但信里没有提到杀人，反而更像是'活不下去'的哀叹"
@@ -821,28 +821,28 @@ evidence_registry:
 
   - id: 1401
     name: "被撕毁的合同"
-    type: document
+    type: note  # 文件笔记
     first_scene: s401
     pickup: true
     note: "关键（loop4 Expose round_2 + loop5 Expose round_3）——Whale 花大笔钱委托酒吧里的人做某件事；字迹与威胁纸条（1306）高度一致"
 
   - id: 1402
     name: "痛苦记录"
-    type: environmental
+    type: envir  # 环境叙事
     first_scene: s403
     pickup: false
     note: "场景道具（环境调查）——验证 Vivian 曾有杀人计划的心理轨迹"
 
   - id: 1403
     name: "被撕毁的船票"
-    type: physical
+    type: item  # 物理道具
     first_scene: s403
     pickup: true
     note: "场景道具——Vivian 曾计划离开，但撕毁了船票；感情戏素材"
 
   - id: 1404
     name: "Vivian 的绝笔信"
-    type: document
+    type: note  # 文件笔记
     first_scene: s403
     pickup: true
     note: "场景道具（loop4 Expose 情感素材）——Vivian 的绝望心态；表明她的认罪是自毁，不是恶意"
@@ -851,7 +851,7 @@ evidence_registry:
 
   - id: 1103
     name: "Webb 委托协议书"
-    type: document
+    type: note  # 文件笔记（继承自 loop1）
     inherited_from: loop1
     status_change:
       loop: 4
@@ -861,7 +861,7 @@ evidence_registry:
 
   - id: 1308
     name: "Rosa 给的弹壳（.45 ACP）"
-    type: physical
+    type: item  # 物理道具（继承自 loop3）
     inherited_from: loop3
     status_change:
       loop: 4

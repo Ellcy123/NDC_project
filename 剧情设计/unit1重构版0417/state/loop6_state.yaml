@@ -3,7 +3,7 @@
 # ============================================================
 #
 # 叙事功能：Part2 收束——搜查 Morrison 家（电话突发事件 + 三件新证据）→
-#           警局转折剧情（Morrison 同僚在场质问）→ 三轮指证 Morrison →
+#           警局转折剧情（Morrison 办公室单独对质）→ 三轮指证 Morrison →
 #           ending_sequence（Morrison 当众认罪 + Vivian 释放 + 保险箱 + 南区计划）
 #           → Unit1 真相闭环 + Unit2 衔接钩子
 #
@@ -11,7 +11,7 @@
 #   - Whale 电话突发事件：唯一一次直接接触 Whale（声音），首次登场，无可拾取物证
 #   - Morrison 家搜证：1601（原 1308 弹壳，从 Morrison 家搜到）+ 1602（赌债欠条+威胁信）
 #     + 1603（Morrison 借 Whale 的借据/转账记录）
-#   - 警局过场：Zack+Emma 带 1507+1502，当着 Morrison 同僚面正式对质
+#   - 警局过场：Zack+Emma 带 1507+1502，进入 Morrison 办公室单独对质
 #   - 三轮指证 Morrison：round_1 凶器身份 / round_2 Morrison-Whale 贿赂关系 / round_3 Whale 主使身份
 #   - ending_sequence：Morrison 认罪 → Vivian 释放 → 保险箱 → 南区计划（1604）交付
 #
@@ -69,7 +69,7 @@ player_context:
     secondary:
       - "在 Morrison 家搜查被他藏起来的弹壳——弹型与真凶器对照，形成完整证据链"
       - "找到 Morrison 与 Whale 有关的财务往来证据，揭穿他收受贿赂的事实"
-      - "带着 1507（真凶器）+ 1502（Jimmy 回信）去警局，在 Morrison 同僚面前公开指证"
+      - "带着 1507（真凶器）+ 1502（Jimmy 回信）去警局，进入 Morrison 办公室单独对质"
       - "救出 Vivian——她在警局已被非法羁押，手上并没有任何实质性证据"
 
   known_facts:
@@ -126,8 +126,8 @@ player_context:
   new_directions:
     - direction: "前往 Morrison 的家搜查——他夺走的弹壳（1308）应该就藏在那里，且他和 Whale 的财务往来也可能留有记录"
       trigger: "loop4 末 Morrison 夺走 1308 弹壳 + Emma 推断：Morrison 不敢销毁物证，只能藏起来"
-    - direction: "带着 1507（真凶器）和 1502（Jimmy 给 Whale 的回信），去警局当着 Morrison 同僚面公开指证"
-      trigger: "loop5 感情戏 Emma 明确提出策略：不能私下谈，必须当着同僚的面，让他无法掩盖"
+    - direction: "带着 1507（真凶器）和 1502（Jimmy 给 Whale 的回信），去警局进入 Morrison 办公室单独对质"
+      trigger: "loop5 感情戏后 Zack 和 Emma 的决定：带齐硬证据直接面对 Morrison，不让他有机会预先准备或传话给 Whale"
     - direction: "解锁 d1010——Morrison 为何看到弹壳脸色一变，他和 Whale 究竟是什么关系"
       trigger: "d1010 在 loop5 灵魂黑夜已标注为'待解'，loop6 是唯一的解锁机会"
 
@@ -138,8 +138,8 @@ player_context:
     - "Morrison 从 Whale 处借了一笔钱来还赌债——这是他们之间的财务纽带，Morrison 因此欠下了 Whale 的人情（1603）"
     - "Morrison 看到 .45 弹壳脸色一变：因为他认出那是米勒集团的弹型，他知道和 Whale/米勒集团相关意味着什么——若坚持追查会危及自己（d1010 完全解锁）"
     - "Whale 是操控整起案件的幕后黑手——Jimmy 给 Whale 的回信（1502）直接确认了 Whale 下达了委托、Jimmy 执行了杀人"
-    - "Morrison 当众认定为警官失职，被同僚记录在案"
-    - "Vivian 在 Morrison 同僚面前当场获释——她终于自由了"
+    - "Morrison 被迫当面签下认罪书（由 Zack+Emma 作见证），承认警官失职：故意压制证据、收受贿赂、错误羁押"
+    - "Morrison 当场签字释放 Vivian——她终于自由了"
     - "Vivian 用保险箱字条（1304）上的密码（Webb 和 Vivian 相遇的那一天）打开了保险箱"
     - "保险箱内取出'南区计划'文件（1604）——这是 Webb 偷听到的内容，交给了 Zack，是 Unit2 的开场钩子"
     - "d1010 最终解锁（Morrison 收受 Whale 贿赂、认出米勒集团弹壳后选择压案）"
@@ -163,7 +163,7 @@ opening:
     但两人需维持身份不被识破，才能完成搜查。
     先去 Morrison 家——他夺走的弹壳一定就藏在那里，
     他与 Whale 的关联也可能留有记录。
-    然后去警局，当着 Morrison 所有同僚的面，一件一件摆出来。
+    然后去警局，直接走进 Morrison 的办公室，单独面对他，一件一件把证据摆出来。
 
   emma_011:
     # ── 基本信息 ──
@@ -177,8 +177,8 @@ opening:
       - "Jimmy 是真凶，1507 是真凶器，1502 直接连接 Jimmy 与 Whale——这三件事已经完全确认"
       - "Morrison 看到 .45 弹壳脸色一变，夺走弹壳（1308），意味着他有意压案——他是最后的阻碍"
       - "Morrison 夺走的 1308 弹壳一定就藏在他家里——他不会销毁它（销毁物证的风险比藏着更大）"
-      - "仅凭 1507 和 1502 就足以在 Morrison 同僚面前证明 Vivian 无罪，但要让 Morrison 认罪，还需要证明他与 Whale 的关系"
-      - "策略：去 Morrison 家，同时寻找弹壳和财务记录——然后去警局，当众摆出所有证据，让他无处躲藏"
+      - "仅凭 1507 和 1502 就足以向 Morrison 证明 Vivian 无罪，但要让 Morrison 认罪，还需要证明他与 Whale 的关系"
+      - "策略：去 Morrison 家，同时寻找弹壳和财务记录——然后去他办公室，单独对质，让他在证据面前无法侥幸"
       - "Anna 和孩子需要保护——Jimmy 把她们托付给了我们"
     does_not_know:
       - "Whale 会亲自打来电话（loop6 突发事件，此刻还未发生）"
@@ -189,14 +189,14 @@ opening:
     # ── 2. 玩家询问意图 ──
     player_inquiry:
       - "搜查 Morrison 家：我们要找什么——弹壳和什么类型的财务记录" # 10
-      - "去警局的策略：为什么要当着同僚的面，而不是私下谈" # 9
+      - "去警局的策略：为什么选择单独进办公室对质，而不是公开质问" # 9
       - "Anna 的安置——她现在怎么办，我们能保护她吗" # 7
       - "Emma 对于接下来的危险有没有担心——Whale 会不会已经盯上了我们" # 8
 
     # ── 3. 可提取证词 ──
     testimony_ids:
       - 6001001  # Emma：Morrison 夺走弹壳不是要销毁它——他是要藏起来，因为那枚弹壳也是对他的威胁
-      - 6001002  # Emma：我们要在所有人面前摆出证据，这样他才无法让案件悄悄消失
+      - 6001002  # Emma：我们要单独进他办公室、把所有证据一件一件摆到他眼前——在只有他和我们三个人的空间里，他没有表演对象，也没有同僚给他台阶
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -259,7 +259,7 @@ scenes:
     evidence:
       - id: 1601
         name: "Morrison 藏起来的子弹弹壳"
-        type: physical
+        type: item  # 物理道具（可分析弹型口径，继承自 1308）
         pickup: true
         inherited_from: 1308
         recovered: true
@@ -273,7 +273,7 @@ scenes:
 
       - id: 1602
         name: "Morrison 欠疤面煞星的赌债欠条和威胁信"
-        type: document
+        type: note  # 文件笔记（赌债欠条+手写威胁信）
         pickup: true
         note: "关键——loop6 Expose round_2 的核心物证之一；证明 Morrison 是个赌鬼且债务缠身，在经济上极度脆弱——这是 Whale 能够收买他的前提"
         description: "一叠皱巴巴的文件：一张签有 Morrison 名字的赌债欠条（欠疤面煞星地下赌场 5000 美元），以及一封夹在其中的手写威胁信，警告他若不还钱就让他从警察局'消失'。Morrison 把这些东西夹在一本旧账本里，显然不希望任何人看到"
@@ -284,7 +284,7 @@ scenes:
 
       - id: 1603
         name: "Morrison 向 Whale 借款的借据"
-        type: document
+        type: note  # 文件笔记（手写借据）
         pickup: true
         note: "关键——loop6 Expose round_2 的核心物证之二；直接证明 Morrison 和 Whale 之间有财务往来——Morrison 欠 Whale 的钱，在处理 Webb 案时选择压案和快速结案，是在还这笔人情"
         description: "一份手写借据，借方是 Morrison，贷方以'W 先生'的名义出现（并非直接写 Whale 的名字，但抬头地址和金额与 Whale 的运作方式高度一致）。金额：6000 美元，时间早于 Webb 案发生约三周。Morrison 用这笔钱还清了疤面煞星的赌债，然后在 Webb 案中选择了快速结案、压制证据"
@@ -301,15 +301,14 @@ scenes:
 
   # ── 场景 S602：警局（转折剧情准备——押送过场）──
   - id: s602
-    name: "警局走廊"
+    name: "警局 Morrison 办公室"
     type: transition_cutscene  # 🎭 过场，玩家有限操作（到达警局后进入指证）
     description: |
       Zack 和 Emma 带着三件新证据（1601、1602、1603）和两件继承证据（1507、1502），
       来到警察局。
-      Morrison 正在局里——他的同僚也在。
-      Zack 不打算私下谈，他要在所有人面前把这件事摆出来。
-      Emma 站在 Zack 身侧，两人走进去的那一步，已经没有退路。
-      进入警局后，正式启动指证序列。
+      Morrison 在自己的办公室里——Zack 选择单独面对他，不是公开对质。
+      Emma 站在 Zack 身侧，两人推门进去的那一步，已经没有退路。
+      进入办公室后，正式启动指证序列。
 
 # ─────────────────────────────
 # 四、指证（⚔️ Expose：Morrison）—— 三层谎言
@@ -322,7 +321,8 @@ expose:
   player_inquiry: null
 
   context: |
-    Zack 在警局当着 Morrison 同僚的面，正式提出质疑。
+    Zack 和 Emma 在 Morrison 办公室里单独对质——没有同僚在场。
+    这是一场只有三个人的审判：Zack、Emma 和 Morrison。
     此时 Zack 手中的证据：
     ── 继承自 loop5 ──
     - 1507（米勒集团特制手枪，真正的凶器）
@@ -334,8 +334,8 @@ expose:
     ── 可追加引用的已知证词 ──
     - 4011001（Vivian 证言：我真的杀了 Webb，loop4 指证的起点）
     - 1101（Vivian 的手枪，.25 ACP，loop1 现场）
-    Morrison 面对同僚在场的局面，最初仍试图维护警察权威。
-    指证在正式诉说和对质中展开。
+    Morrison 没有外援也没有围观——他必须独自面对证据。
+    指证在私密的、压迫感十足的对质中展开。
 
   # ── Morrison NPC 条目（Expose 对象，非自由探索阶段）──
   morrison_expose:
@@ -343,7 +343,7 @@ expose:
     talk: morrison_expose_001
     is_liar: true
     motive: "保住警察职位和个人声誉——他不是彻底的坏人，他是个在贪婪和恐惧中做了糟糕选择的人"
-    mindset: "被逼到墙角但仍在挣扎；在同僚面前保持强硬姿态，但内心知道每轮谎言被击破的时候，就离认罪更近一步"
+    mindset: "被逼到墙角但仍在挣扎；在 Zack 和 Emma 面前一开始还想用警察权威压人，但没有外人可以充当观众——每轮谎言被击破时，他只能一次次独自承受逼近认罪的压力"
 
     # ── 1. NPC 已知信息（模式 B：后续出场，引用知识池）──
     # 知识池见 npc_knowledge_pools.yaml → morrison（Unit1 Morrison，loop1_state.yaml 建立）
@@ -355,8 +355,8 @@ expose:
         trigger: "loop5 Jimmy 自杀事件，Morrison 在警局得到消息"
       - content: "Zack 和 Emma 进入了自己的住所——他发现家里被翻动过，知道 Zack 取走了弹壳（1601）和可能的财务记录"
         trigger: "loop6 S601 Zack 搜查 Morrison 家"
-      - content: "Zack 带着证据走进了警局，且他的同僚都在——这不是私下质问，这是公开对质"
-        trigger: "loop6 S602 Zack 进入警局"
+      - content: "Zack 和 Emma 带着证据直接推门进了他的办公室——没有同僚在场，这是一场只有三个人的对质"
+        trigger: "loop6 S602 Zack+Emma 进入 Morrison 办公室"
 
     active_topics:
       - "三层防线（对应三轮 Expose 谎言）"
@@ -396,7 +396,8 @@ expose:
       Zack 出示 1601（Morrison 家搜到的弹壳）和 1507（真凶器）：
       真正的凶器是 .45 ACP 口径，而 Vivian 的手枪是 .25 ACP——型号根本不符。
       Morrison 夺走的那枚弹壳，就藏在他自己家里。
-      Morrison 的同僚们开始互相看——Morrison 的第一道防线开始松动。
+      Morrison 的脸色第一次失控——他沉默了一瞬，用手摸了摸桌面的相框，
+      才重新抬起头。第一道防线松动。
       Morrison 做出第一次退守：
       "好，也许是我临时接警时搜查失误——但这不代表我有任何问题，后续可以重新调查，不需要现在就释放嫌疑人。"
 
@@ -417,7 +418,8 @@ expose:
       你欠了 Whale 一笔钱，就在案发三周前。你用那笔钱还了赌债。
       然后案子来了，你快速结案，夺走弹壳，把无罪的 Vivian 押进警局。
       这不是失误，这是偿债——偿 Whale 的债。
-      Morrison 的同僚们脸色都变了。Morrison 做出第二次退守：
+      Morrison 的手抖了一下——没有外人帮他圆场，他只能自己面对这些数字。
+      Morrison 做出第二次退守：
       "就算我和 Whale 之间有借贷关系，Whale 只是一个放贷的——他和 Webb 被杀有什么关系？"
 
   # ── 轮次三：Whale 主使身份——"Whale 只是放贷的"──
@@ -449,27 +451,37 @@ ending_sequence:
   location: "警察局内 → 警察局外走廊 → 保险箱场景（Vivian 的工作室/蓝月亮酒吧）"
 
   sequence:
-    # ── 第一幕：Morrison 被认定失职，Vivian 获释 ──
+    # ── 第一幕：Morrison 当面签下认罪书，Vivian 获释 ──
     act_1_morrison_verdict:
       description: |
-        Morrison 在同僚面前当众被认定：警官失职——故意压制证据、收受贿赂、错误羁押无辜嫌疑人。
-        Morrison 同僚中有人当场填写失职记录。Morrison 站在那里，第一次没有任何争辩。
-        Vivian 的羁押令随即被撤销。
-      morrison_status_change: "在职警官 → 警官失职记录，待纪律审查"
+        三轮指证完成后，Morrison 在自己办公室里被逼到最后一步。
+        Zack 推过来一张纸——要 Morrison 当面写下认罪书：
+        警官失职——故意压制证据、收受贿赂、错误羁押无辜嫌疑人。
+        Emma 作为记者见证签字。
+        Morrison 握着笔停顿了很久，第一次没有任何争辩，把名字签了上去。
+        他当场签字撤销了 Vivian 的羁押令——
+        Zack 拿到认罪书和释放令，准备把副本送交 Morrison 的上级以及公开渠道，
+        但这些事留给 ending_sequence 之后的叙事。
+      morrison_status_change: "在职警官 → 签下认罪书，待上级纪律审查（副本由 Emma 以记者身份留存/披露）"
 
-    # ── 第二幕：Vivian 获释，与 Zack 相遇 ──
+    # ── 第二幕：Vivian 获释，与 Zack/Emma 相遇 ──
     act_2_vivian_release:
       description: |
         Vivian 走出警局关押室的那扇门，看到等在走廊的 Zack 和 Emma。
         她没有说话——她低头看了看自己的手，然后抬头，只说了两个字：
         "谢谢你。"
-        Zack 说，还有一件事没有做完。
+        Zack 和 Emma 说："你没事就好。"
+        （顺便聊起芝加哥警局对囚犯的一些待遇问题——羁押期间的体面、饮食、通风、
+         家属探视权；同样是无罪羁押，Vivian 这几天的处境可以被放进 Emma 将要写的报道里，
+         让下一个 Vivian 少受一点这样的对待。）
+        沉默片刻后，Vivian 抬起头说：
+        "还有一件事没有做完。"
       vivian_status_change: "imprisoned（警局羁押）→ released（当场获释）"
 
     # ── 第三幕：保险箱——密码和"南区计划" ──
     act_3_safe_box:
       description: |
-        Vivian 带着 Zack 和 Emma 回到蓝月亮酒吧的会客室（案发现场，现已解封）。
+        Zack、Emma、Vivian 三人一起来到蓝月亮酒吧的会客室（案发现场，现已解封）。
         保险箱还在原处。Vivian 取出了那张字条（1304，loop3 取得的字条，上面是密码提示）——
         密码是：Webb 和 Vivian 相遇的那一天的日期。
         Vivian 一个数字一个数字地拨，保险箱"咔"的一声打开了。
@@ -478,7 +490,7 @@ ending_sequence:
       evidence_obtained:
         - id: 1604
           name: "南区计划"
-          type: document
+          type: note  # 文件笔记（厚实机密文件）
           pickup: true
           unit2_critical: true
           note: "关键——Unit1 结尾收束物 + Unit2 开场核心钩子；内容在 Unit1 内不揭示（悬念），仅标注为 Webb 偷听到的机密文件"
@@ -670,7 +682,7 @@ evidence_registry:
 
   - id: 1601
     name: "Morrison 藏起来的子弹弹壳"
-    type: physical
+    type: item  # 物理道具（可分析弹型口径，继承自 1308）
     first_scene: s601
     pickup: true
     inherited_from: 1308
@@ -685,7 +697,7 @@ evidence_registry:
 
   - id: 1602
     name: "Morrison 欠疤面煞星的赌债欠条和威胁信"
-    type: document
+    type: note  # 文件笔记（赌债欠条+手写威胁信）
     first_scene: s601
     pickup: true
     status: active
@@ -693,7 +705,7 @@ evidence_registry:
 
   - id: 1603
     name: "Morrison 向 Whale 借款的借据"
-    type: document
+    type: note  # 文件笔记（手写借据）
     first_scene: s601
     pickup: true
     status: active
@@ -701,7 +713,7 @@ evidence_registry:
 
   - id: 1604
     name: "南区计划"
-    type: document
+    type: note  # 文件笔记（厚实机密文件）
     first_scene: ending_sequence_act3
     pickup: true
     status: active

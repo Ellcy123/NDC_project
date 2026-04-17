@@ -144,7 +144,7 @@ scenes:
     evidence:
       - id: 1201
         name: "勒索用的照片"
-        type: environmental
+        type: envir  # 环境叙事
         pickup: false
         note: "场景道具——展示 Webb 勒索生意的直接物证（仙人跳变体产物），Vivian 对这些照片深恶痛绝；仅供调查观察，不可拾取"
         description: "一批 compromising 照片，拍摄对象为中产人士（银行家、工程师等），画面涉及私密场合。照片来源是 Webb 命令 Vivian 配合拍摄的"
@@ -218,13 +218,15 @@ scenes:
     evidence:
       - id: 1202
         name: "Jimmy 的工资单"
-        type: document
+        type: note  # 文件笔记
+        pickup: true
         note: "场景道具——显示 Jimmy 作为兼职主厨的薪资远低于其实际支出水平，暗示另有收入来源"
         description: "蓝月亮酒吧支付给 Jimmy 的兼职薪资单，金额偏低，但 Jimmy 声称还有很多副业"
 
       - id: 1203
         name: "Jimmy 的不在场证明（厨房工作表）"
-        type: document
+        type: note  # 文件笔记
+        pickup: true
         note: "关键——loop5 指证 Jimmy 时用于建立 Jimmy 的伪造不在场证明；loop2 阶段作为信息积累"
         description: "厨房值班排班表，显示案发当晚 Jimmy 全程在厨房工作——此后续循环将证明这是伪造的"
 
@@ -302,26 +304,29 @@ scenes:
     evidence:
       - id: 1204
         name: "VIP 合影"
-        type: environmental
+        type: envir  # 环境叙事
         pickup: false
         note: "场景道具——显示 Webb 与政商界人士的广泛关系，暗示其影响力和人脉网络；仅供调查观察，不可拾取"
         description: "Webb 与多位 VIP 人士（政客、商人）的合影照片，表明他在芝加哥上流社会有一定地位"
 
       - id: 1205
         name: "Webb 个人收入记录"
-        type: document
+        type: note  # 文件笔记
+        pickup: true
         note: "关键——用于击破 Tommy 谎言2（月收入 $15,000 vs 酒吧净利 $4,000，差额无法被私酒解释；谎言1 由 Vivian 证言 2011002 击破）"
         description: "Webb 个人财务记录，显示每月收入约 $15,000，来源栏模糊，远超酒吧正常盈利能力"
 
       - id: 1206
         name: "酒吧收入账本"
-        type: document
+        type: note  # 文件笔记
+        pickup: true
         note: "关键——用于击破 Tommy 谎言2（配合 1205 使用：酒吧月净 $4,000 vs Webb 收入 $15,000）"
         description: "蓝月亮酒吧正式账本，记录月净收益约 $4,000，主要来自私酒销售和舞会入场费"
 
       - id: 1207
         name: "不明记录人的客户记录"
-        type: document
+        type: note  # 文件笔记
+        pickup: true
         note: "关键——用于击破 Tommy 谎言4（笔迹分析后确认 = Tommy 的笔迹，证明他深度参与而非只记账）"
         description: "一本客户档案，记录了被勒索对象的个人信息、弱点和金额。封面无署名，笔迹待鉴定"
         analysis: "分析可得：笔迹与 Tommy 在其他文件上的签名高度一致，可认定为 Tommy 本人记录"
@@ -343,7 +348,7 @@ scenes:
     evidence:
       - id: 1208
         name: "Vivian 的排班表"
-        type: environmental
+        type: envir  # 环境叙事
         pickup: false
         note: "场景道具——记录 Vivian 每晚的工作时间，确认她平时 23:30 给 Webb 送酒的习惯（与 Vivian 证言 2011003 交叉验证）；仅供调查观察，不可拾取"
         description: "酒吧演出人员排班表，其中 Vivian 一栏注明：每晚最后一项任务——23:30 送酒至会客室"
@@ -351,7 +356,7 @@ scenes:
       # ⚡ 突发事件：不可拾取的弹壳（占位记录）
       - id: 1299
         name: "Tommy 抽屉里的弹壳（不可拾取）"
-        type: physical
+        type: item  # 物理道具（弹壳占位，loop5 正式化为 1501 envir）
         pickup: false
         forbidden_reason: "Tommy 在玩家拿到前迅速将弹壳重新拿回，玩家只能目击存在，无法获得实物"
         note: "loop5 伏笔——当 Zack 帮助 Vivian 获得 Tommy 信任后，Tommy 会主动将此弹壳展示给 Zack 交谈，随后变成可调查环境道具（玩家可近距离观察鉴定型号，非玩家可持有证据）。弹壳型号与 Webb 案凶器相关"
@@ -428,13 +433,15 @@ scenes:
     evidence:
       - id: 1209
         name: "假油画"
-        type: physical
+        type: clue  # 现场线索（物件在现场，拍照取证）
+        pickup: true
         note: "关键——用于击破 Tommy 谎言2（Tommy 声称油画已卖给 Coleman，但油画仍在现场）"
         description: "装裱精良的油画，挂在歌舞厅墙上。经查是仿品，但仍有一定价值。Tommy 称已卖出，实际仍在原处"
 
       - id: 1210
         name: "花瓶现场照"
-        type: document
+        type: clue  # 现场线索（拍照取证）
+        pickup: true
         note: "关键——用于击破 Tommy 谎言2（Tommy 声称花瓶已卖给 Thompson，但现场照片显示花瓶仍在）"
         description: "一张拍摄歌舞厅陈设的照片，清晰显示那只'已卖出'的花瓶仍摆放在原位。拍摄时间为案发当晚"
 
@@ -650,79 +657,79 @@ evidence_registry:
 
   - id: 1201
     name: "勒索用的照片"
-    type: environmental
+    type: envir
     first_scene: s201
     pickup: false
     note: "场景道具——Vivian 工作室，展示 Webb 勒索业务的直接物证；不可拾取"
 
   - id: 1202
     name: "Jimmy 的工资单"
-    type: document
+    type: note
     first_scene: s202
     pickup: true
     note: "场景道具——厨房，暗示 Jimmy 收入来源不止兼职薪资"
 
   - id: 1203
     name: "Jimmy 的不在场证明（厨房工作表）"
-    type: document
+    type: note
     first_scene: s202
     pickup: true
     note: "关键——loop5 指证 Jimmy 时证明其不在场证明是伪造的；loop2 作为信息积累"
 
   - id: 1204
     name: "VIP 合影"
-    type: environmental
+    type: envir
     first_scene: s203
     pickup: false
     note: "场景道具——Webb 办公室，显示 Webb 的政商界关系网；不可拾取"
 
   - id: 1205
     name: "Webb 个人收入记录"
-    type: document
+    type: note
     first_scene: s203
     pickup: true
     note: "关键——击破 Tommy 谎言2（月收入 $15,000 无法被私酒解释；谎言1 由 Vivian 证言击破）"
 
   - id: 1206
     name: "酒吧收入账本"
-    type: document
+    type: note
     first_scene: s203
     pickup: true
     note: "关键——击破 Tommy 谎言2（配合 1205：酒吧月净 $4,000）"
 
   - id: 1207
     name: "不明记录人的客户记录"
-    type: document
+    type: note
     first_scene: s203
     pickup: true
     note: "关键——击破 Tommy 谎言4（笔迹分析 = Tommy，证明他亲手参与）"
 
   - id: 1208
     name: "Vivian 的排班表"
-    type: environmental
+    type: envir
     first_scene: s204
     pickup: false
     note: "场景道具——Tommy 办公室，确认 Vivian 每晚 23:30 送酒给 Webb 的习惯；不可拾取"
 
   - id: 1209
     name: "假油画"
-    type: physical
+    type: clue
     first_scene: s205
     pickup: true
-    note: "关键——击破 Tommy 谎言2（油画仍在歌舞厅，根本没有卖出）"
+    note: "关键——击破 Tommy 谎言2（油画仍在歌舞厅，根本没有卖出；属于现场取证）"
 
   - id: 1210
     name: "花瓶现场照"
-    type: document
+    type: clue
     first_scene: s205
     pickup: true
-    note: "关键——击破 Tommy 谎言2（花瓶仍在原位，根本没有卖出）"
+    note: "关键——击破 Tommy 谎言2（花瓶仍在原位，根本没有卖出；现场拍照取证）"
 
   - id: 1299
-    name: "Tommy 抽屉里的弹壳（不可拾取占位）"
-    type: physical
+    name: "Tommy 抽屉里的弹壳（不可拾取）"
+    type: item
     first_scene: s204
     pickup: false
     forbidden_reason: "Tommy 在玩家拿到前迅速将弹壳重新拿回"
-    note: "loop5 伏笔——loop5 由 Tommy 主动交付（凭借 Zack 帮助 Vivian 获得信任）"
+    note: "loop5 伏笔——loop5 由 Tommy 主动展示（凭借 Zack 帮助 Vivian 获得信任），loop5 正式化为 1501（envir）"
     loop_available: 5
