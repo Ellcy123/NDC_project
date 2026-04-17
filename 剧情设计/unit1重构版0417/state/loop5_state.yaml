@@ -112,7 +112,7 @@ player_context:
     - "d1006：真正的凶器到底在哪里？（loop4 末建立，loop5 解锁）"
 
   new_directions:
-    - direction: "前往清洁间找 Tommy——他欠 Zack 一个信任，loop2 时没给的弹壳现在应该会交出来；同时找他要鼓点单子"
+    - direction: "前往 Tommy 办公室——因救了 Vivian，他对 Zack 交付了信任，会详细讲述被 Whale 枪击的经历；loop2 时没给的弹壳现在应该会交出来；同时找他要鼓点单子"
       trigger: "loop4 末 Emma 分析：Tommy 看到 Zack 为 Vivian 付出了一切，信任关系已经建立"
     - direction: "前往厨房找 Jimmy——他对 Webb 的死有隐藏的愧疚，被撕毁合同的字迹与威胁纸条相同，他是最重要的调查对象"
       trigger: "被撕毁的合同（1401）字迹与威胁纸条（1306）高度一致；Jimmy 销毁鼓点单子行为可疑（loop3）"
@@ -206,15 +206,18 @@ opening:
 
 scenes:
 
-  # ── 场景 S501：清洁间 ──
+  # ── 场景 S501：Tommy 办公室 ──
   - id: s501
-    name: "清洁间"
+    name: "Tommy 办公室"
     type: free_exploration  # 🔓 自由探索
     description: |
-      Tommy 独自在清洁间。
-      由于 Zack 为 Vivian 付出的一切——尤其是指证 Rosa，揭穿威胁纸条，
-      最终让 Vivian 说出了真话——Tommy 对 Zack 的态度已经彻底转变。
-      loop2 时他夺回了抽屉里那枚弹壳，现在他在清洁间里把它拿给 Zack 看、讲述它的来历。
+      Tommy 在自己的办公室里等 Zack。
+      因 Zack 救了 Vivian——他揭穿 Rosa 的威胁、让 Vivian 说出了真话——
+      Tommy 对 Zack 的态度彻底转变，主动交付了信任。
+      他详细讲述起曾经被 Whale 枪击的经历：
+      他为 Webb 去收勒索款时被人开枪击中大腿（那是 Whale 的一次警告），
+      那次之后 Webb 就让别人接手了相关工作（接手者是谁此时仍不点名，Expose 才揭示）。
+      loop2 时他夺回了抽屉里那枚弹壳，现在他拿出来给 Zack 看、讲述它的来历。
       ⭐ 技术说明：弹壳（1501）为环境叙事道具（environmental，不可拾取），
       承接 loop2 占位符 1299；信息通过 Tommy 证词传达，Zack 不将其收入物证清单。
       Tommy 真正交出的是他手里完整的《芝加哥鼓点单子》——
@@ -515,7 +518,7 @@ expose:
   context: |
     Zack 完成自由探索后，手握：
     - 1503 鼓点完整单子（Tommy 交出）
-    - 旧弹壳信息（1501，环境叙事——Tommy 在清洁间展示并讲述来历；信息以 Tommy 证词形式保存，非手持物证）
+    - 旧弹壳信息（1501，环境叙事——Tommy 在办公室内展示并讲述来历；信息以 Tommy 证词形式保存，非手持物证）
     - 1504 Jimmy 口音词汇（厨房对话中暴露）
     - 1502 Jimmy 给 Whale 的回信（Jimmy 家发现）
     - 1505 英语练习书（Jimmy 家发现，字迹三物之一）

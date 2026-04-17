@@ -240,14 +240,14 @@ reveal:"Jimmy 是真凶（Whale 雇佣）；23:00 鼓点掩盖枪杀；爱尔兰
 goals:{p:"找到真正凶手——指证他，从而还 Vivian 清白",s:["查清四大疑点","寻找真凶器线索","弄清 23:00 音乐高潮与枪声关系","前往 Jimmy 家调查"]},
 kf:["loop1-4 全部累积"],
 dirs:[
-{n:"清洁间找 Tommy",t:"loop2 没给的弹壳应该会交出；鼓点单子"},
+{n:"Tommy 办公室找 Tommy",t:"因救了 Vivian 主动交付信任；loop2 没给的弹壳现在拿出来讲来历；鼓点单子备份交出"},
 {n:"厨房找 Jimmy",t:"对 Webb 有愧疚；合同字迹=威胁纸条；最重要调查对象"},
 {n:"Jimmy 家调查",t:"合同指向酒吧内部执行人；Emma 推断 Jimmy 最可疑"}
 ],
 post:["Jimmy 是 Webb 案真凶——Whale 雇佣；动机：Anna 怀孕急需大笔钱+爱尔兰裔困境","真实案发时间线：23:00 鼓点高潮枪杀 Webb(掩盖枪声)；23:05 模仿 Webb 声音骗走 Vivian；23:10 Vivian 离开；23:30 二楼鸣枪制造假时间","Jimmy 是爱尔兰裔——'Don't be bothering me!' 是爱尔兰裔口音","Jimmy 接受 Whale 委托（1401 合同的签订方）","Jimmy 是威胁 Rosa 的人——字迹三物闭环：1306+1401+1505（倒写的 J）","Whale 在场（交易现场）——鸣笛(whistle)是给 Jimmy 的暗号","Jimmy 为保护 Anna 选择自杀，将 Anna 托付给 Zack+Emma","米勒集团特制手枪(1507)留在自杀现场——真正的凶器","d1006-d1009 解锁","Zack+Emma 决定伪装记者+助理潜入 Morrison 家取回弹壳（loop6 起点）"],
 opening:[{sc:"灵魂黑夜（疑点 UI 开启）",ty:"💥",ch:"Zack, Emma",pu:"酒吧外夜深；四大疑点 UI 正式浮现（d1007/d1008/d1009/d1010）——d1010 loop5 可见但不解锁"}],
 scenes:[
-{id:"s501",name:"清洁间",npcs:["Tommy"],ev:[{id:1501,n:"久远陈旧的子弹🟣",no:"环境叙事，不可拾取；Tommy 展示并讲述来历"},{id:1503,n:"《芝加哥鼓点》完整单子"}],note:"🔓Tommy 主动交付信任；弹壳走环境叙事+鼓点单子备份为物证"},
+{id:"s501",name:"Tommy 办公室",npcs:["Tommy"],ev:[{id:1501,n:"久远陈旧的子弹🟣",no:"环境叙事，不可拾取；Tommy 展示并讲述来历"},{id:1503,n:"《芝加哥鼓点》完整单子"}],note:"🔓因救了 Vivian，Tommy 主动交付信任，讲述曾被 Whale 枪击的经历；弹壳走环境叙事+鼓点单子备份为物证"},
 {id:"s502",name:"厨房 ⚡口音暴露",npcs:["Jimmy"],ev:[{id:1504,n:"Jimmy 爱尔兰口音词汇"}],note:"🔓对话中 Jimmy 脱口'Don't be bothering me!'——爱尔兰裔 Hiberno-English 句式"},
 {id:"s503",name:"Jimmy 家",npcs:["Anna"],ev:[{id:1502,n:"Jimmy 给 Whale 的回信"},{id:1505,n:"Jimmy 家英语练习书"},{id:1506,n:"Jimmy 爱尔兰裔身份证件"}],note:"🔓Anna 首次出场（怀孕+信件+字迹闭环核心）"}
 ],
@@ -278,7 +278,7 @@ doubts:[
 {id:"d1010",t:"Morrison 看子弹为何脸色一变？",c:"unlocked_visible_loop5_unresolved（loop6 解锁）"}
 ],
 npcs:[
-{name:"Tommy",场景:"清洁间(s501)",liar:false,motive:"主动向 Zack 还债——信任关系建立",active:["弹壳同批 .45 ACP","鼓点 23:00 高潮","被枪击来龙去脉","Jimmy 销毁鼓点单子奇怪"],withheld:["接手者=Jimmy（Expose 后才点名）","米勒集团特制手枪(L5 末)","Morrison 与 Whale(L6)"]},
+{name:"Tommy",场景:"办公室(s501)",liar:false,motive:"因救了 Vivian 主动交付信任；详细讲述被 Whale 枪击经历",active:["弹壳同批 .45 ACP","鼓点 23:00 高潮","被 Whale 枪击完整来龙去脉","Jimmy 销毁鼓点单子奇怪"],withheld:["接手者=Jimmy（Expose 后才点名）","米勒集团特制手枪(L5 末)","Morrison 与 Whale(L6)"]},
 {name:"Jimmy ⚔️",场景:"厨房(s502)+后门(Expose)",liar:true,motive:"维持表面正常；心理压力临界点；保护 Anna",active:["厨房工作（不在场证明铺垫）","对 Webb 中性措辞","⚡口音暴露：'Don't be bothering me!'"],withheld:["真凶身份","Anna 怀孕","Whale 回信","英语练习书字迹"]},
 {name:"Anna",场景:"Jimmy 家(s503)",liar:false,motive:"把 Jimmy 的'差事'当成转机；不知情",active:["怀孕+孩子快出生+急需大笔钱","Jimmy 接了重要差事","那封信(她帮找信纸)"],withheld:["Jimmy 是凶手（永远不会完全知道）","Whale 真实身份（只知'大人物'）"]}
 ],
