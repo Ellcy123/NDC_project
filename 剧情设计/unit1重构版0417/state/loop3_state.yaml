@@ -71,7 +71,7 @@ player_context:
     - direction: "进入会客室犯罪现场——自 loop1 之后再次开放，搜寻被忽视的物证"
       trigger: "loop2 末 Emma 提出：Rosa 的时间线说法一直没能反驳，需要重新检查案发现场"
     - direction: "调查 Morrison 勘验现场后的信息：子弹缺失是怎么回事"
-      trigger: "Morrison 在大厅主动提及'子弹缺失'（loop3 新增信息）"
+      trigger: "Morrison 在大厅主动提及'子弹缺失'——为本 loop3 揭发 Rosa 后、Rosa 主动提供弹壳埋下伏笔（loop3 内部形成闭环：'原来缺失的子弹被 Rosa 捡去了'）"
     - direction: "重新审视 Rosa——她被威胁的可能性"
       trigger: "Vivian 认为 Rosa 可信度低 + 大厅 Morrison 证言中隐藏的异常"
 
@@ -224,9 +224,9 @@ scenes:
     description: |
       Morrison 刚完成犯罪现场勘验，在大厅等候。
       Zack 可以从他口中得知子弹缺失的情况，以及他对 Webb 尸体伤口的描述。
-      ⚠️ 设计注意：Morrison 说"子弹缺失"在技术上不算撒谎（确实缺失了），
-      但实际原因是他自己藏起来的（loop6 才揭示）。
-      loop3 玩家只把这当作普通现场信息，不应在此阶段揭示 Morrison 藏证据。
+      ⚠️ 设计意图：Morrison 说"子弹缺失"在本 loop3 的表层叙事作用是
+      ——为后续揭发 Rosa 后 Rosa 主动提供的弹壳埋下伏笔（闭环：缺失的子弹出现在 Rosa 手中）。
+      深层伏笔（Morrison 自己藏了一颗弹壳）保留到 loop6 才揭示；loop3 玩家不应在此阶段得知。
 
     evidence: []  # 大厅无可拾取证据
 
@@ -285,7 +285,7 @@ scenes:
         connoisseur:
           - type: source
             content: "Morrison 说'子弹缺失'时，语气过于简短——像是有意不让对话深入。一般警官会对'找不到子弹'这件异常情况多做解释"
-            note: "loop5/6 消耗：Morrison 说这话时神情异常——为什么子弹会'缺失'？（伏笔：被他自己藏起来了，loop6 才揭示）"
+            note: "loop3 表层伏笔：为指证 Rosa 后 Rosa 提供弹壳埋下伏笔（玩家会意识到'缺失的子弹被 Rosa 捡去了'）；loop5/6 深度伏笔：Morrison 说这话时神情异常的真正原因是他自己也藏了一颗（loop6 揭示）"
 
   # ── 场景 S303：犯罪现场（会客室）——自 loop1 之后再次开放 ──
   - id: s303
