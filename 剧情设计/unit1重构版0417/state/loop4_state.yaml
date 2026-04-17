@@ -30,7 +30,7 @@
 # E. 信息节奏     PASS — 解锁：弹壳型号(.45 ACP)、Whale 主使怀疑（标注 unconfirmed）、
 #                        Vivian 无罪、"Don't be bothering me!"、Morrison 异常；
 #                        锁定：Jimmy 真凶/口音谜题（loop5）、Morrison 藏弹壳（loop6）、
-#                        米勒集团完整身份链（loop5-6）、Rita 间谍（标注 unconfirmed_hypothesis）
+#                        米勒集团完整身份链（loop5-6）；Rita 作为 Whale 渗透酒吧的内线已在 s402 由 Tommy 指认
 # F. 鉴赏力       PASS — emma_007(quiz)/tommy_002(source)/vivian_003(source)/
 #                        morrison_003(source)/morrison_s405(source)/emma_008(quiz)，
 #                        source/quiz 配对完整
@@ -100,7 +100,7 @@ player_context:
     - "Vivian：她在 11:10 来到门口，听到 Webb 大声吼'Don't be bothering me!'，她离开后越来越不对劲，11:30 才回去推开了门"
     - "关键伏笔：'Don't be bothering me!'（loop5 Jimmy 爱尔兰口音谜题的核心证据）"
     - "Whale 更有可能是杀害 Webb 的主使者（强烈怀疑，非完全证实；基于被撕毁合同 + Tommy 证言）"
-    - "Rita 被 Tommy 怀疑是 Whale 的间谍（unconfirmed_hypothesis，仅 Tommy 主观判断，未证实）"
+    - "Rita 是 Whale 派来渗透酒吧的人（Zack 以 Webb 日记 1309 为凭据，在 s402 逼 Tommy 正式指认；Tommy 基于长期观察给出的明确指认，非单纯主观猜测）"
     - "d1006 新建：真正的凶器在哪？（loop5-6 解锁）"
     - "【情节转折】Morrison 看到 .45 弹壳脸色一变，拿走了 1103（Webb 委托协议书），夺走 1308（弹壳），强押 Vivian 回警局"
     - "1103（Webb 委托协议书）已被 Morrison 拿走——内容玩家已知，但无法再作为可出示证物"
@@ -195,23 +195,46 @@ scenes:
 
     npcs: {}  # 一楼走廊此处无 NPC 驻场
 
-  # ── 场景 S402：Tommy 办公室（弹壳型号鉴定触发点）──
+  # ── 场景 S402：Tommy 办公室（Whale 指认 + Rita 身份揭示 + 弹壳型号鉴定）──
   - id: s402
     name: "Tommy 办公室"
     type: free_exploration  # 🔓 自由探索
     description: |
-      Tommy 在自己的办公室。Zack 带着 1308 弹壳来询问他。
-      ⭐ 关键设计：本场景是"弹壳型号鉴定事件"的触发点。
-      Zack 将弹壳给 Tommy 查看时，Tommy 认出了这个弹壳——
-      他见过这个型号的手枪：.45 ACP，警用口径。他描述了那次被枪击的经历：
-      Webb 曾让他去收一笔勒索款，结果被人开枪击中大腿（"Whale 的警告"）。
-      此后 Webb 就让别人接手了相关的工作——Tommy 不点名接手的人是谁。
+      Tommy 在自己的办公室。Zack 带着两件关键道具前来：
+      loop3 从会客室获得的 Webb 日记（1309，上有"WHALE - DANGER"便利贴），
+      以及 loop3 Rosa 给他的 .45 弹壳（1308）。
+
+      ⭐ 核心叙事（主线）：Zack 以 Webb 日记为凭据，逼 Tommy 指认 Whale 并揭示 Rita 身份。
+        1. Zack 谈到 Webb 的日记，要求 Tommy 指认他之前说过的"Webb 勒索的大人物"就是 Whale
+        2. Tommy 沉默
+        3. Zack 强调这对 Vivian 脱罪十分关键
+        4. Tommy 松口："Webb 勒索过很多像 Whale 这样的人……但如此难以对付的，他还是头一个。
+           连这间酒吧，也被他派来的人渗透了。"
+        5. Zack 追问：是谁？
+        6. Tommy：是 Rita。
+      —— 这使得 Rita = Whale 派来的内部渗透者 从"Tommy 主观猜测"升级为"Tommy 明确指认"。
+
+      ⭐ 次线：弹壳型号鉴定事件（触发点）
+        Zack 将 1308 弹壳出示给 Tommy，Tommy 认出这是 .45 ACP 警用弹——
+        他见过这个批次的枪：Webb 曾让他去收勒索款时被人开枪击中大腿（Whale 的一次警告），
+        那次之后 Webb 就让别人接手了相关工作（不点名，loop5 才揭示是 Jimmy）。
       ⚠️ 鉴定事件技术处理：
         - 1308 弹壳的 metadata 在此场景从 "detail_locked" 升级为 ".45 ACP 警用弹"
         - 升级触发条件：Zack 将 1308 出示给 Tommy，Tommy 主动确认型号
         - 此后 1308 在 Expose round_1 可作为"已知型号"的证据使用
 
-    evidence: []  # Tommy 办公室本次无新可拾取证据（弹壳型号升级是 metadata 事件）
+    evidence: []  # Tommy 办公室本次无新可拾取证据；主要是对话 + 弹壳 metadata 升级
+
+    carried_evidence:
+      # 玩家进入 s402 时需要随身携带的关键证据（用于主线对话）
+      - id: 1309
+        name: "Webb 的日记"
+        source_loop: 3
+        usage: "Zack 以此为凭据逼 Tommy 指认 Whale——日记中 'WHALE - DANGER' 便利贴是书面线索"
+      - id: 1308
+        name: "Rosa 给的弹壳（.45 ACP 待鉴定）"
+        source_loop: 3
+        usage: "出示给 Tommy 触发型号鉴定事件（次线）"
 
     evidence_upgrade:
       # ⭐ 弹壳型号鉴定事件（特殊：非新证据，而是已有证据的 metadata 升级）
@@ -245,13 +268,16 @@ scenes:
         awareness:
           - content: "Zack 帮助了 Vivian，把'自己是凶手'的谎言推进到了需要指证的阶段——Zack 是真的在替 Vivian 辩护"
             trigger: "loop3 指证 Rosa 完成后，Tommy 在酒吧内知晓调查进展"
-          - content: "Zack 拿来了一枚弹壳（1308）请他辨认——他认出了这个型号"
-            trigger: "loop4 s402：Zack 将 1308 出示给 Tommy"
+          - content: "Zack 拿出了 Webb 的日记（1309）——日记内侧贴有'WHALE - DANGER'的便利贴"
+            trigger: "loop4 s402：Zack 以 Webb 日记为凭据，逼他指认 Whale"
+          - content: "Zack 还拿来了一枚弹壳（1308）请他辨认——他认出了这个型号"
+            trigger: "loop4 s402：Zack 将 1308 出示给 Tommy（次线）"
 
         active_topics:
-          - "Webb 惹上了大人物（对话1：Zack 询问，Tommy 确认）"
-          - "Zack 询问是否是 Whale——Tommy 表示不仅可能是 Whale 杀了 Webb，Rita 也可能是他派来的间谍（unconfirmed_hypothesis，Tommy 主观判断）"
-          - "弹壳型号鉴定：这枚弹壳（1308）是 .45 ACP 警用弹——他见过这个批次的枪"
+          - "Webb 惹上的大人物就是 Whale（Zack 以 Webb 日记为凭据追问；Tommy 在 Zack 强调'这对 Vivian 脱罪十分关键'后，才松口指认）"
+          - "Tommy 关于 Whale 的判断：'Webb 勒索过很多像 Whale 这样的人……但如此难以对付的，他还是头一个。连这间酒吧，也被他派来的人渗透了'"
+          - "Zack 追问'渗透的人是谁'，Tommy 明确指认：是 Rita（Rita 是 Whale 派来渗透酒吧的人）"
+          - "弹壳型号鉴定（次线）：这枚弹壳（1308）是 .45 ACP 警用弹——他见过这个批次的枪"
           - "被枪击经历：Webb 让他去收勒索时被人在大腿上开了一枪（Whale 的一次警告），之后就由别人接手了相关工作"
         withheld_topics:
           - "接手的新执行人是 Jimmy（loop5 才揭示，Tommy 不点名）"
@@ -261,22 +287,26 @@ scenes:
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "Tommy 手中的弹壳——请他鉴定 1308 的型号（loop3 post_expose 获得的弹壳）" # 10
-          - "Tommy 提到 Webb 惹上了大人物——他说的大人物是 Whale 吗" # 9
-          - "Tommy 对 Rita 的看法——他觉得 Rita 是 Whale 的间谍（unconfirmed_hypothesis）" # 7
+          - "向 Tommy 出示 Webb 日记（1309）——要求指认 Webb 勒索的大人物就是 Whale" # 10（新增主线驱动）
+          - "Zack 强调这对 Vivian 脱罪十分关键——逼 Tommy 松口" # 9
+          - "追问'被派来渗透酒吧的人是谁'——Tommy 指认 Rita" # 9
+          - "请 Tommy 鉴定 1308 弹壳的型号（次线，loop3 post_expose 获得的弹壳）" # 8
           - "被枪击的经历——之后是谁接手了相关工作（Tommy 不会点名）" # 6
 
         # ── 3. 可提取证词 ──
         testimony_ids:
           - 4051001  # Tommy：这枚弹壳是 .45 ACP 警用弹——这个批次的枪我见过
           - 4051002  # Tommy：Webb 让我去收勒索时被人打了一枪（只打大腿），那是 Whale 的警告；那次之后就由别人接手了（不点名）
-          - 4051003  # ⚠偏见: Tommy——他觉得不仅可能是 Whale 杀了 Webb，Rita 也可能是 Whale 派来的间谍（Tommy 的主观猜测，未经证实）
+          - 4051003  # Tommy 正式指认：'Webb 勒索过很多像 Whale 这样的人……但如此难以对付的，他还是头一个。连这间酒吧，也被他派来的人渗透了。'；Zack 追问'是谁'，Tommy：'是 Rita。'（基于经验的明确指认，非单纯主观猜测）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
           - type: source
             content: "Tommy 描述被枪击的经历时，语气里有一丝恐惧——'那次之后就由别人接手了'，他没有说那个人是谁，只是住了口"
             note: "后续 loop5 考题：Tommy 在 loop4 说'之后由别人接手'——那个接手的人是谁？（指向 Jimmy，loop5 揭示）"
+          - type: source
+            content: "Tommy 说出'是 Rita'时，不是在猜测——这是他多年在 Webb 身边观察的结论。他在 Zack 强调'这对 Vivian 脱罪关键'后才松口，意味着他一直知道，只是不敢说出来"
+            note: "本 Loop 或 loop5-6 考题：Tommy 指认 Rita 的依据是什么？（他观察 Rita 接近 Webb 的方式、Rita 不像歌女的行为模式）"
 
   # ── 场景 S403：Vivian 化妆间（loop4 首次开放）──
   - id: s403
@@ -471,7 +501,7 @@ expose:
     Zack 完成自由探索后，手握：
     - 1308 弹壳（已确认为 .45 ACP 警用弹）
     - 1101 Vivian 手枪（.25 ACP，无硝烟反应）
-    - 4051003 Tommy 证言（Whale 可能是主使者；Rita 可能是间谍）
+    - 4051003 Tommy 证言（Zack 以 Webb 日记逼出的指认：Whale 就是 Webb 勒索的大人物；Rita 是 Whale 派来渗透酒吧的内线）
     - 1401 被撕毁的合同（Whale 花大钱委托酒吧里的人做某件事）
     - 1304 保险箱字条（Webb 将保险箱密码留给 Vivian）
     - 1103 Webb 委托协议书（Webb 要 Zack 保护 Vivian、确保遗产）
@@ -507,8 +537,8 @@ expose:
     lie_source: "NPC 的退守谎言（round_1 结果中 Vivian 主动提出，止损式退守）"
     usable_evidence:
       - id: 4051003
-        name: "Tommy 证言（Tommy 认为 Whale 可能是主使者，Rita 可能是间谍）"
-        用途: "Tommy 的判断：Whale 更有可能是杀害 Webb 的主使者——另有其人有动机和能力"
+        name: "Tommy 证言（Zack 以 Webb 日记逼出的指认：Whale 是 Webb 勒索的大人物；Rita 是 Whale 派来渗透酒吧的人）"
+        用途: "Whale 身份由 Tommy 正式指认 + Rita 是 Whale 的内线——Whale 更有可能是杀害 Webb 的主使者，且 Rita 在酒吧内部为 Whale 打探信息/传递渠道"
       - id: 1401
         name: "被撕毁的合同（Whale 花大笔钱委托了酒吧里的某人做事）"
         用途: "实物证据：Whale 与酒吧里的某人签了合同，委托做某件事——直接指向 Whale 是幕后主使者"
@@ -686,7 +716,7 @@ post_expose_scene:
       - "Vivian 曾有过杀人计划（11:10 来门口），但 23:10 听到'Don't be bothering me!'被挡走"
       - "'Don't be bothering me!'——这句话是伏笔（Emma 暂时不知道是谁说的，只知道 Vivian 说听到了）"
       - "被撕毁的合同指向 Whale 是幕后主使（强烈怀疑，非完全证实）"
-      - "Tommy 的怀疑：Rita 可能是 Whale 的间谍（unconfirmed_hypothesis）"
+      - "Tommy 的指认：Rita 是 Whale 派来渗透酒吧的人（s402 对话中 Tommy 在 Zack 追问下明确给出）"
       - "Morrison 看到 .45 弹壳后脸色骤变，拿走协议书（1103），夺走弹壳（1308），强押 Vivian——Morrison 有问题"
       - "1103 已被 Morrison 拿走，1308 已被 Morrison 夺走"
     does_not_know:

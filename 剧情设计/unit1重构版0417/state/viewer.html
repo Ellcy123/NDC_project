@@ -191,12 +191,12 @@ reveal:"Vivian 不是凶手（但曾有杀意）；Don't be bothering me! 伏笔
 goals:{p:"说服 Vivian——让她不再认罪，保全她不被逮捕",s:["鉴定弹壳型号","一楼走廊+Tommy 办公室找 Whale 关联","进入 Vivian 化妆间","指证 Vivian 让她承认不是凶手"]},
 kf:["loop1-3 全部累积"],
 dirs:[
-{n:"前往 Tommy 办公室",t:"弹壳鉴定+是否 Whale+Rita 间谍猜测"},
+{n:"前往 Tommy 办公室",t:"主线：以 Webb 日记逼 Tommy 指认 Whale→Tommy 松口说'Rita 是 Whale 派来渗透酒吧的'；次线：Tommy 鉴定 1308 弹壳型号（.45 ACP）+ 被枪击经历"},
 {n:"一楼走廊搜索",t:"被撕毁合同（指向 Whale）"},
 {n:"进入 Vivian 化妆间",t:"loop3 指证 Rosa 完成后解锁；说服 Vivian 核心目标"},
 {n:"歌舞厅 Vivian 深度对话",t:"她终于愿意沟通；Rita/《芝加哥狂想曲》鼓点（loop5 时间线伏笔）"}
 ],
-post:["弹壳(1308)型号 .45 ACP 警用弹；Vivian 手枪 .25 ACP——型号不符","Tommy：这个弹壳批次他见过；Webb 让他去收勒索被 Whale 枪击（警告）；之后由别人接手","Vivian 承认不是凶手，但曾有过杀人计划（带枪前来想杀 Webb——loop1 声称'枪是捡的'是掩饰）","Vivian 勒索对象仅限孤立银行家/工程师等中产；帮 Webb 勒索 Whale 的人不是她","Vivian 23:10 在门口听到 Webb 大声吼'Don't be bothering me!'——离开后不对劲，11:30 才推门","⭐ 关键伏笔：'Don't be bothering me!'（loop5 Jimmy 爱尔兰口音谜题核心证据）","Whale 更可能是杀害 Webb 主使者（强烈怀疑，基于合同+Tommy证言）","Rita 被 Tommy 怀疑是 Whale 间谍（unconfirmed_hypothesis）","d1006 新建：真正的凶器在哪里？","【情节转折】Morrison 看到 .45 弹壳脸色变→拿走 1103+夺走 1308+强押 Vivian","1103 状态：confiscated_by_morrison；1308 状态：confiscated_by_morrison"],
+post:["弹壳(1308)型号 .45 ACP 警用弹；Vivian 手枪 .25 ACP——型号不符","Tommy：这个弹壳批次他见过；Webb 让他去收勒索被 Whale 枪击（警告）；之后由别人接手","Vivian 承认不是凶手，但曾有过杀人计划（带枪前来想杀 Webb——loop1 声称'枪是捡的'是掩饰）","Vivian 勒索对象仅限孤立银行家/工程师等中产；帮 Webb 勒索 Whale 的人不是她","Vivian 23:10 在门口听到 Webb 大声吼'Don't be bothering me!'——离开后不对劲，11:30 才推门","⭐ 关键伏笔：'Don't be bothering me!'（loop5 Jimmy 爱尔兰口音谜题核心证据）","Whale 更可能是杀害 Webb 主使者（强烈怀疑，基于合同+Tommy证言）","Rita 是 Whale 派来渗透酒吧的内线（Tommy 在 s402 明确指认，基于长期观察——非单纯猜测）","d1006 新建：真正的凶器在哪里？","【情节转折】Morrison 看到 .45 弹壳脸色变→拿走 1103+夺走 1308+强押 Vivian","1103 状态：confiscated_by_morrison；1308 状态：confiscated_by_morrison"],
 opening:[{sc:"Emma 目标设定对话",ty:"🎭",ch:"Zack, Emma",pu:"基调：loop4 是'救 Vivian'非'审 Vivian'；先去 Tommy 鉴定弹壳"}],
 scenes:[
 {id:"s401",name:"一楼走廊(垃圾桶附近)",npcs:[],ev:[{id:1401,n:"被撕毁的合同"}],note:"🔓合同碎片：Whale 花大笔钱委托酒吧里的人；字迹与威胁纸条(1306)高度一致"},
@@ -208,7 +208,7 @@ scenes:[
 expose:{target:"Vivian (101)",rounds:3,mode:"救而非审（物证→证词+文件→情感高潮）",
 detail:[
 {r:1,lie:"我真的杀了 Webb！",ev:["1308 Rosa 给的弹壳(.45 ACP)","1101 Vivian 的小手枪(.25 ACP)"],res:"partial_victory：口径不符——凶器不可能是你的枪。Vivian 退守'除了我没人能杀 Webb'"},
-{r:2,lie:"但除了我是凶手，没有其他人能杀害 Webb！",ev:["4051003 Tommy 证言(Whale 主使/Rita 间谍)","1401 被撕毁的合同(Whale 委托酒吧里的人)"],res:"partial_victory：Whale 有动机+渠道。Vivian 退守情感层'他沉迷 Rita 早忘了我'"},
+{r:2,lie:"但除了我是凶手，没有其他人能杀害 Webb！",ev:["4051003 Tommy 正式指认(Whale 是大人物/Rita 是 Whale 渗透酒吧的内线)","1401 被撕毁的合同(Whale 委托酒吧里的人)"],res:"partial_victory：Whale 有动机+渠道+内线。Vivian 退守情感层'他沉迷 Rita 早忘了我'"},
 {r:3,lie:"就算如此，也是因为他沉迷于 Rita……",ev:["1304 保险箱字条(密码=相遇日)","1103 Webb 委托协议书(保护 Vivian)"],res:"full_breakthrough：Webb 最后行动是保护 Vivian。情感高潮→泪水→释放三条证言（排除 Whale 勒索/11:10 门口/Don't be bothering me!）"}
 ]},
 part7:{
@@ -229,7 +229,7 @@ doubts:[
 {id:"d1006",t:"真正的凶器到底在哪里？",c:"unlocked_loop4（loop5-6 解锁）"}
 ],
 npcs:[
-{name:"Tommy",场景:"办公室(s402)",liar:false,motive:"对 Zack 有限配合；对 Vivian 同情；见弹壳主动说经历",active:["Webb 惹上大人物(Whale)","弹壳 .45 ACP 警用弹","被枪击经历(Whale 警告)","Rita 间谍猜测(unconfirmed)"],withheld:["接手的新执行人是 Jimmy(L5)","抽屉旧弹壳完整背景(L5)","米勒集团(L5-6)"]},
+{name:"Tommy",场景:"办公室(s402)",liar:false,motive:"Zack 以 Webb 日记逼问→对 Vivian 脱罪的同情让他松口；对自身安全仍然警惕",active:["指认 Webb 惹上的大人物就是 Whale(Zack 以日记逼问才松口)","'这间酒吧也被 Whale 派来的人渗透了——是 Rita'(正式指认 Rita 是内线)","弹壳 .45 ACP 警用弹(次线)","被枪击经历(Whale 警告，旧事)"],withheld:["接手的新执行人是 Jimmy(L5)","抽屉旧弹壳完整背景(L5)","米勒集团(L5-6)"]},
 {name:"Vivian ⚔️",场景:"歌舞厅(s404)→Expose",liar:true,motive:"自毁式认罪（不是恶意，认为自己该死）；loop3 后开始动摇",active:["对 Rita 和 Webb 关系看法","《芝加哥狂想曲》鼓点(感情戏；L5 伏笔)","认罪立场(开始有裂缝)"],withheld:["带枪前来的真相+loop1 掩饰说辞击破(Expose 后)","23:10 门口完整经过(Expose 后)","勒索范围(Expose 后)","杀人计划完整时间线(Expose 后)"]},
 {name:"Morrison ⚠",场景:"大厅(s405)+转折",liar:false,motive:"阶段A:评估 Zack 进度；阶段B:识别米勒集团弹壳→立即终止调查",active:["随口询问进展","Vivian 有罪官方立场","看弹壳变脸→拿走 1103+1308+逮捕 Vivian"],withheld:["与 Whale/米勒集团关联(L5-6)","藏弹壳计划(L6)"]}
 ],
