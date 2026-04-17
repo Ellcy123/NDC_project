@@ -1,7 +1,7 @@
 ---
 name: team-dialogue
-description: "从已有 state 文件出发，并行生成整个 Loop 的对话草稿（Talk + Expose），并过一轮审查汇总。用于 state 已定稿，只需补全对话的场景。"
-argument-hint: "[Loop 标识，如 'Unit1 L4' 或 state 文件路径]"
+description: "从用户指定的 state 文件出发，并行生成整个 Loop 的对话草稿（Talk + Expose），并过一轮审查汇总。用于 state 已定稿，只需补全对话的场景。"
+argument-hint: "[state 文件或目录路径；可选：知识池路径、人物设计目录]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 ---
@@ -14,17 +14,35 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 - 只想要整个 Loop 的对话草稿 MD，不想重新跑证据/指证设计
 - 对话改动较大，需要整 Loop 重写（小修单 NPC 用 `/team-design`）
 
+## 输入约定
+
+本 skill **完全由用户提供的路径驱动**，不假设任何默认目录。用户通过 argument 或后续对话告知：
+
+| 必需 | 说明 |
+|------|------|
+| state 路径 | 单个 `loop{N}_state.yaml` 文件，或包含多个 state 的目录（此时会按 loop 顺序逐个处理） |
+| 知识池路径 | `npc_knowledge_pools.yaml`（通常一个 Unit 共用一份） |
+| 人物设计目录 | 包含 `{npc_name}.md` 的目录 |
+
+**解析顺序：**
+
+1. 如果 argument 直接给了路径，按给的用
+2. 如果 argument 只给了 state 路径，先尝试在 state 同目录 / 上级目录找 `npc_knowledge_pools.yaml` 和 `characters/`
+3. 上述都没找到，用 AskUserQuestion 问用户："知识池和人物设计在哪？"——**不要自己猜路径，不要默认回退到 `AVG/对话配置工作及草稿/前置配置/`**
+
 ## 前置检查
 
-开始前必须确认：
+读到 state 后必须确认：
 
-1. state 文件存在且已定稿：
-   - 优先：`AVG/对话配置工作及草稿/前置配置/loop{N}_state.yaml`
-   - 备用：`剧情设计/unit{N} 重构版/state/loop{N}_state.yaml`（若前置配置目录缺失，提醒用户先复制过去）
-2. 知识池存在：`AVG/对话配置工作及草稿/前置配置/npc_knowledge_pools.yaml`
-3. 相关 NPC 人物设计齐全：`AVG/对话配置工作及草稿/前置配置/characters/{npc_name}.md`
+1. state 文件可解析（YAML 合法）
+2. state 里出现的 NPC 名单，每个都能在知识池里找到对应条目
+3. state 里出现的 NPC 名单，每个都能在人物设计目录里找到对应 `{npc_name}.md`
 
-缺失任何一项，停下来 AskUserQuestion 让用户补齐，不要硬跑。
+**任何一项缺失都停下来**，用 AskUserQuestion 列出缺失的 NPC/文件，问用户：
+- "这些 NPC 的人物设计/知识池在哪里？"
+- 或"跳过这些 NPC，只处理已有资料的"（用户选择时才降级）
+
+不要硬跑、不要用占位人设。
 
 ## Pipeline
 
@@ -52,11 +70,11 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 **2a. Talk 部分** — 按 NPC 并行 spawn 多个 `dialogue-writer` agent：
 
 每个 agent prompt 必须包含：
-- 本 Loop state 文件路径（必读）
+- 本 Loop state 文件路径（用户指定的那个，必读）
 - 负责的 NPC 名称
-- 该 NPC 的人物设计 + 知识池路径
+- 该 NPC 的人物设计路径（用户指定目录下的 `{npc}.md`）+ 知识池路径（用户指定的那份）
 - 平行场景隔离约束（哪些场景/信息不能在本 NPC 对话里出现）
-- 产出路径：临时文件 `AVG/对话配置工作及草稿/生成草稿/.temp_Loop{N}_{npc}.md`（避免多 agent 同时写同一文件冲突）
+- 产出路径：临时文件 `AVG/对话配置工作及草稿/生成草稿/.temp_Loop{N}_{npc}.md`（避免多 agent 同时写同一文件冲突；如用户指定了其他输出目录则用用户的）
 
 **2b. Expose 部分** — 若本 Loop 有指证场景：
 - state 里指证方案已定稿 → spawn `dialogue-writer` 写指证对话（多层谎言递进格式）

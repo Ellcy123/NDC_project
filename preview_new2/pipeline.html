@@ -118,7 +118,7 @@ body {
     line-height: 2;
 }
 
-/* click area */
+/* click area — covers dialog-box (z=10) to catch advance clicks; branch buttons (z=25) sit above */
 #click-area {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -361,9 +361,15 @@ body {
 .intro-start:hover { filter: brightness(1.15); }
 
 #complete-overlay { background: rgba(0,0,0,0.96); z-index: 80; }
-.complete-content { text-align: center; max-width: 500px; }
+.complete-content { text-align: center; max-width: 560px; padding: 0 1rem; }
 .complete-title { color: var(--highlight); font-size: 1.5rem; margin-bottom: 1.5rem; letter-spacing: 2px; }
-.complete-summary { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8; margin-bottom: 2rem; text-align: left; }
+.complete-summary { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; margin-bottom: 2rem; text-align: left; max-height: 60vh; overflow-y: auto; }
+.cs-label { color: var(--accent); font-size: 0.82rem; letter-spacing: 1px; margin-bottom: 0.25rem; }
+.cs-text { margin-bottom: 0.9rem; line-height: 1.6; }
+.cs-list { margin: 0.3rem 0 0.9rem 1.1rem; padding: 0; }
+.cs-list li { margin-bottom: 0.3rem; line-height: 1.6; }
+.cs-empty { color: var(--text-muted); font-size: 0.85rem; margin: 0.3rem 0 0.9rem; font-style: italic; }
+.cs-footer { margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.78rem; text-align: center; }
 .complete-btn {
     padding: 0.6rem 2rem; background: var(--surface); border: 1px solid var(--border);
     color: var(--text-primary); border-radius: 6px; font-size: 0.9rem; cursor: pointer;
@@ -435,6 +441,7 @@ body {
             <option value="1">Unit 1</option>
             <option value="2">Unit 2</option>
             <option value="3">Unit 3</option>
+            <option value="4">Unit 4</option>
         </select>
         <select id="loop-select">
             <option value="1">Loop 1</option>
@@ -623,14 +630,18 @@ function fixJson(text) {
     return out;
 }
 
+function _cacheBust(url) {
+    // Only bust cache locally; on deploy we want static asset caching to work.
+    return Config.mode === 'local' ? `${url}?t=${Date.now()}` : url;
+}
 async function loadJSON(url) {
-    const resp = await fetch(`${url}?t=${Date.now()}`);
+    const resp = await fetch(_cacheBust(url));
     if (!resp.ok) throw new Error(`Failed to load ${url}: ${resp.status}`);
     const text = await resp.text();
     return JSON.parse(fixJson(text));
 }
 async function loadYAML(url) {
-    const resp = await fetch(`${url}?t=${Date.now()}`);
+    const resp = await fetch(_cacheBust(url));
     if (!resp.ok) throw new Error(`Failed to load ${url}: ${resp.status}`);
     const text = await resp.text();
     return jsyaml.load(text);
@@ -801,36 +812,6 @@ const DataStore = {
         }
     },
 
-    // Get dialogue chain from a starting talk ID
-    getDialogueChain(startId, useExpose = false) {
-        const map = useExpose ? this.exposeTalksMap : this.talksMap;
-        const chain = [];
-        let current = map.get(String(startId));
-        const visited = new Set();
-        while (current && !visited.has(String(current.id))) {
-            visited.add(String(current.id));
-            chain.push(current);
-
-            // Check for branch (script "1" or "branches")
-            if ((current.script === '1' || current.script === 'branches') && current.ParameterStr0) {
-                break; // branches handled separately
-            }
-            // Check for Lie (expose only) - stop chaining, handled by expose player
-            if (useExpose && current.script === 'Lie') {
-                break;
-            }
-
-            const nextId = current.next ? String(current.next) : '';
-            if (!nextId || nextId === '0') break;
-
-            // Check for branch via "/" in next
-            if (nextId.includes('/')) break;
-
-            current = map.get(nextId);
-        }
-        return chain;
-    },
-
     // Get items for a scene, filtered to evidence only (itemType 1=key evidence, 2=normal evidence, 3=consumable)
     // Excludes doors (type 5), scene transitions (type 8), etc.
     getSceneItems(sceneId) {
@@ -935,22 +916,24 @@ const GameState = {
     populatePreviousLoops() {
         for (let loop = 1; loop < this.loopNum; loop++) {
             const loopConfig = DataStore.loopConfigs[loop];
-            if (!loopConfig || !loopConfig.free_phase) continue;
+            if (!loopConfig) continue;
 
-            // Collect items from previous loop scenes
-            for (const sceneId of loopConfig.free_phase) {
-                const items = DataStore.getSceneItems(String(sceneId));
+            // Union of all scenes referenced by this previous loop
+            const sceneIds = new Set();
+            if (Array.isArray(loopConfig.opening)) loopConfig.opening.forEach(s => sceneIds.add(String(s)));
+            if (Array.isArray(loopConfig.free_phase)) loopConfig.free_phase.forEach(s => sceneIds.add(String(s)));
+            if (loopConfig.expose && loopConfig.expose.scene) sceneIds.add(String(loopConfig.expose.scene));
+
+            for (const sceneId of sceneIds) {
+                const items = DataStore.getSceneItems(sceneId);
                 items.forEach(item => {
-                    this.previousItems.push({
-                        id: String(item.id),
-                        name: cn(item.Name),
-                        loop: loop
-                    });
-                    this.collectedItems.add(String(item.id));
+                    const id = String(item.id);
+                    if (this.collectedItems.has(id)) return;
+                    this.previousItems.push({ id, name: cn(item.Name), loop });
+                    this.collectedItems.add(id);
                 });
 
-                // Collect testimony from NPCs in those scenes
-                const npcs = DataStore.getSceneNPCs(String(sceneId));
+                const npcs = DataStore.getSceneNPCs(sceneId);
                 npcs.forEach(npcInfo => {
                     const npcId = npcInfo.NPC?.id;
                     if (!npcId) return;
@@ -961,14 +944,14 @@ const GameState = {
                 });
             }
 
-            // Check which doubts would have been unlocked
+            // Check which doubts would have been unlocked cumulatively
             DataStore.doubts.forEach(d => {
                 if (this.isDoubtSatisfied(d) && !this.unlockedDoubts.has(String(d.id))) {
                     this.unlockedDoubts.add(String(d.id));
                     this.previousDoubts.push({
                         id: String(d.id),
                         text: d.text,
-                        loop: loop
+                        loop
                     });
                 }
             });
@@ -1058,12 +1041,17 @@ const Inventory = {
 const Pipeline = {
     _advanceResolve: null,
     _aborted: false,
+    _pendingAborts: new Set(),
+
+    _registerAbort(fn) { this._pendingAborts.add(fn); },
+    _unregisterAbort(fn) { this._pendingAborts.delete(fn); },
 
     async start(unit, loopNum) {
         this._aborted = false;
         GameState.reset(unit, loopNum);
         GameState.running = true;
 
+        // Disable only during data load; re-enable right after so the "停止" click works.
         DOM.startBtn.disabled = true;
         DOM.loadingOverlay.classList.add('visible');
         DOM.idleHint.style.display = 'none';
@@ -1075,11 +1063,13 @@ const Pipeline = {
             DOM.loadingText.textContent = `加载失败: ${e.message}`;
             await sleep(2000);
             DOM.loadingOverlay.classList.remove('visible');
+            GameState.running = false;
             DOM.startBtn.disabled = false;
             return;
         }
 
         DOM.loadingOverlay.classList.remove('visible');
+        DOM.startBtn.disabled = false;
 
         const loopConfig = DataStore.loopConfigs[loopNum];
         if (!loopConfig) {
@@ -1148,7 +1138,11 @@ const Pipeline = {
             this._advanceResolve('abort');
             this._advanceResolve = null;
         }
-        // Hide all overlays
+        // Flush overlay-based promises so awaiting callers unwind
+        for (const fn of this._pendingAborts) {
+            try { fn('abort'); } catch {}
+        }
+        this._pendingAborts.clear();
         document.querySelectorAll('.overlay').forEach(o => o.classList.remove('visible'));
         this.cleanup();
     },
@@ -1162,13 +1156,15 @@ const Pipeline = {
     // --- Intro Screen ---
     showIntro(loopConfig, loopNum) {
         return new Promise(resolve => {
+            const done = (v) => { this._unregisterAbort(done); resolve(v); };
+            this._registerAbort(done);
             DOM.introLoop.textContent = `LOOP ${loopNum}`;
             DOM.introTitle.textContent = loopConfig.title || `循环 ${loopNum}`;
             DOM.introTarget.textContent = loopConfig.target || '';
             DOM.introOverlay.classList.add('visible');
             DOM.introStart.onclick = () => {
                 DOM.introOverlay.classList.remove('visible');
-                resolve();
+                done();
             };
         });
     },
@@ -1210,9 +1206,14 @@ const Pipeline = {
 
         // Show scene background
         const bgUrl = Config.getAssetUrl(scene.backgroundImage);
-        DOM.sceneBg.src = bgUrl;
-        DOM.sceneBg.classList.add('visible');
-        DOM.sceneBg.onerror = () => { DOM.sceneBg.classList.add('visible'); }; // show anyway
+        if (bgUrl) {
+            DOM.sceneBg.src = bgUrl;
+            DOM.sceneBg.classList.add('visible');
+            DOM.sceneBg.onerror = () => { /* broken image; still show stage */ };
+        } else {
+            DOM.sceneBg.removeAttribute('src');
+            DOM.sceneBg.classList.remove('visible');
+        }
         await sleep(500);
 
         // Play NPC dialogues
@@ -1328,6 +1329,13 @@ const Pipeline = {
 
     waitForAdvance() {
         return new Promise(resolve => {
+            if (this._advanceResolve) {
+                // Prior resolver still pending — flush it so it doesn't orphan
+                console.warn('waitForAdvance: previous pending resolve auto-flushed');
+                const prev = this._advanceResolve;
+                this._advanceResolve = null;
+                try { prev(); } catch {}
+            }
             this._advanceResolve = resolve;
         });
     },
@@ -1399,6 +1407,9 @@ const Pipeline = {
     // --- Evidence Reveal (Flip Cards) ---
     showEvidenceReveal(items) {
         return new Promise(async (resolve) => {
+            const done = (v) => { this._unregisterAbort(done); resolve(v); };
+            this._registerAbort(done);
+
             DOM.evidenceCards.innerHTML = '';
             const cards = [];
 
@@ -1414,7 +1425,7 @@ const Pipeline = {
                     <div class="flip-card-inner">
                         <div class="flip-card-front">?</div>
                         <div class="flip-card-back">
-                            <img class="card-img" src="${imgUrl}" alt="" onerror="this.style.display='none'">
+                            <img class="card-img" src="${escapeHtml(imgUrl)}" alt="" onerror="this.style.display='none'">
                             <div class="card-name">${escapeHtml(cn(item.Name))}</div>
                             <div class="card-desc">${escapeHtml(cn(item.ShortDescribe || item.Describe))}</div>
                             <div class="card-collect-hint">点击拾取</div>
@@ -1428,6 +1439,7 @@ const Pipeline = {
 
             // Flip cards one by one
             for (let i = 0; i < cards.length; i++) {
+                if (this._aborted) { done('abort'); return; }
                 await sleep(400);
                 cards[i].classList.add('flipped');
             }
@@ -1444,7 +1456,7 @@ const Pipeline = {
                     if (collected === cards.length) {
                         setTimeout(() => {
                             DOM.evidenceOverlay.classList.remove('visible');
-                            resolve();
+                            done();
                         }, 400);
                     }
                 };
@@ -1468,11 +1480,13 @@ const Pipeline = {
 
     showDoubtPopup(doubt) {
         return new Promise(resolve => {
+            const done = (v) => { this._unregisterAbort(done); resolve(v); };
+            this._registerAbort(done);
             DOM.doubtText.textContent = doubt.text || '';
             DOM.doubtOverlay.classList.add('visible');
             DOM.doubtConfirm.onclick = () => {
                 DOM.doubtOverlay.classList.remove('visible');
-                resolve();
+                done();
             };
         });
     },
@@ -1486,18 +1500,21 @@ const Pipeline = {
         const sceneId = String(exposeConfig.scene);
         const scene = DataStore.scenesMap.get(sceneId);
         if (scene) {
-            DOM.sceneBg.src = Config.getAssetUrl(scene.backgroundImage);
-            DOM.sceneBg.classList.add('visible');
+            const bgUrl = Config.getAssetUrl(scene.backgroundImage);
+            if (bgUrl) {
+                DOM.sceneBg.src = bgUrl;
+                DOM.sceneBg.classList.add('visible');
+            } else {
+                DOM.sceneBg.removeAttribute('src');
+                DOM.sceneBg.classList.remove('visible');
+            }
             await sleep(500);
         }
 
-        // Find the expose config matching this loop
-        // ExposeConfig sceneId pattern: first digit = loop, second = sequence
-        // Or we match by scene and lookup ExposeTalkID
-        const loopPrefix = String(loopNum);
-        let expCfg = DataStore.exposeConfigs.find(c =>
-            String(c.sceneId).startsWith(loopPrefix)
-        );
+        // ExposeConfig.sceneId is a 2-digit code: {EPI}{loop}, e.g. "11" = Unit1 Loop1, "23" = Unit2 Loop3.
+        // Match exactly, not by loop-prefix — the old startsWith logic misfires across units.
+        const epiLoopId = `${GameState.unit}${loopNum}`;
+        let expCfg = DataStore.exposeConfigs.find(c => String(c.sceneId) === epiLoopId);
 
         if (expCfg && expCfg.ExposeTalkID) {
             await this.playDialogueChain(String(expCfg.ExposeTalkID), true);
@@ -1541,25 +1558,65 @@ const Pipeline = {
                 id => id.charAt(0) === String(loopNum)
             ).length;
 
-            DOM.completeSummary.innerHTML = `
-                <div style="margin-bottom:1rem;color:var(--highlight);text-align:center;font-size:1.1rem">
-                    Loop ${loopNum} - ${escapeHtml(loopConfig.title || '')}
-                </div>
-                <div>本循环收集：</div>
-                <div style="margin:0.5rem 0 0.5rem 1rem">
-                    证据/道具：${itemCount} 件<br>
-                    证词片段：${testimonyCount} 条<br>
-                    疑点解锁：${doubtCount} 个
-                </div>
-                <div style="margin-top:0.5rem">
-                    累计（含前序循环）：<br>
-                    <span style="margin-left:1rem">证据 ${GameState.collectedItems.size} | 证词 ${GameState.collectedTestimonies.size} | 疑点 ${GameState.unlockedDoubts.size}</span>
-                </div>
-            `;
+            const s = loopConfig.summary;
+            const hasSummary = s && (
+                (s.question && String(s.question).trim()) ||
+                (Array.isArray(s.resolved) && s.resolved.length) ||
+                (Array.isArray(s.remaining) && s.remaining.length)
+            );
+
+            const bullets = (arr) => (Array.isArray(arr) && arr.length)
+                ? `<ul class="cs-list">${arr.map(x => `<li>${escapeHtml(String(x))}</li>`).join('')}</ul>`
+                : `<div class="cs-empty">（待填充）</div>`;
+
+            const header = `
+                <div style="margin-bottom:1.2rem;color:var(--highlight);text-align:center;font-size:1.1rem">
+                    Loop ${loopNum}${loopConfig.title ? ' · ' + escapeHtml(loopConfig.title) : ''}
+                </div>`;
+
+            const footer = `
+                <div class="cs-footer">
+                    本循环：证据 ${itemCount} · 证词 ${testimonyCount} · 疑点 ${doubtCount}
+                    &nbsp;|&nbsp;
+                    累计：证据 ${GameState.collectedItems.size} · 证词 ${GameState.collectedTestimonies.size} · 疑点 ${GameState.unlockedDoubts.size}
+                </div>`;
+
+            let body;
+            if (hasSummary) {
+                body = `
+                    ${s.question ? `
+                    <div class="cs-label">本循环要解决</div>
+                    <div class="cs-text">${escapeHtml(String(s.question))}</div>` : ''}
+
+                    <div class="cs-label">推进 / 发现</div>
+                    ${bullets(s.resolved)}
+
+                    <div class="cs-label">遗留 → 下一循环</div>
+                    ${bullets(s.remaining)}
+                `;
+            } else {
+                // Legacy fallback — older loop yamls without summary section
+                body = `
+                    <div>本循环收集：</div>
+                    <div style="margin:0.5rem 0 0.5rem 1rem">
+                        证据/道具：${itemCount} 件<br>
+                        证词片段：${testimonyCount} 条<br>
+                        疑点解锁：${doubtCount} 个
+                    </div>
+                    <div style="margin-top:0.5rem">
+                        累计（含前序循环）：<br>
+                        <span style="margin-left:1rem">证据 ${GameState.collectedItems.size} | 证词 ${GameState.collectedTestimonies.size} | 疑点 ${GameState.unlockedDoubts.size}</span>
+                    </div>
+                `;
+            }
+
+            DOM.completeSummary.innerHTML = header + body + (hasSummary ? footer : '');
             DOM.completeOverlay.classList.add('visible');
+            const done = (v) => { this._unregisterAbort(done); resolve(v); };
+            this._registerAbort(done);
             DOM.completeBtn.onclick = () => {
                 DOM.completeOverlay.classList.remove('visible');
-                resolve();
+                done();
             };
         });
     }

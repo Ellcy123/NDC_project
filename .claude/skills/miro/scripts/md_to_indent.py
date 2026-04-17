@@ -37,6 +37,9 @@ def main():
     header_depth = 0
     table_mode = False
     table_headers = []
+    # "段落标签" 支持：形如 **xxx**： 或 xxx：（结尾冒号）的段落，
+    # 作为 parent 把后续 bullets 挂在其下
+    label_depth = None  # 当前活跃的段落标签深度；None 表示未启用
 
     for raw in lines:
         line = raw.rstrip()
@@ -46,6 +49,7 @@ def main():
             continue
         if s.startswith('---'):
             table_mode = False
+            label_depth = None
             continue
         m = re.match(r'^(#{1,6})\s+(.+)$', s)
         if m:
@@ -53,6 +57,7 @@ def main():
             out.append((lvl - 1, clean(m.group(2))))
             header_depth = lvl - 1
             table_mode = False
+            label_depth = None  # 新 heading 重置标签
             continue
         if s.startswith('|') and not table_mode:
             cells = [c.strip() for c in s.strip('|').split('|')]
@@ -78,12 +83,25 @@ def main():
         if m:
             indent_str = m.group(1)
             bullet_level = len(indent_str) // 2
-            depth = header_depth + 1 + bullet_level
+            base = label_depth if label_depth is not None else header_depth
+            depth = base + 1 + bullet_level
             t = clean(m.group(2))
             if t: out.append((depth, t))
             continue
+        # 段落：检测是否是"段落标签"（以：或:结尾、非 bullet、非 heading）
+        # 形如 **开场情境**： / 谎言层级： / 实际发展：
         t = clean(s)
-        if t: out.append((header_depth + 1, t))
+        if not t: continue
+        if re.match(r'^[^：:]{1,30}[：:]$', t):
+            # 段落标签：挂在当前 header 或外层标签下
+            base = label_depth if label_depth is not None else header_depth
+            new_depth = base + 1
+            out.append((new_depth, t.rstrip('：:').strip()))
+            label_depth = new_depth  # 后续 bullet 以此为父
+        else:
+            # 普通段落：作为当前 parent 的 child，但不改变 label_depth
+            base = label_depth if label_depth is not None else header_depth
+            out.append((base + 1, t))
 
     with open(args.output, 'w', encoding='utf-8') as f:
         for depth, text in out:
