@@ -131,22 +131,57 @@ EXPOSE_PREFIX_MAP = {
     "690001": "16",  # Loop6 Morrison Expose
 }
 
-# Testimony ID 映射（7 位：旧 {loop1}{npc2}{seq3} → 新 {npc3}{loop1}{seq3}）
-# 旧格式示例：1021001 = loop1 npc02(Rosa) 第1条
-# 新格式：803 (Rosa) + 1 (loop1) + 001 = 8031001
-# 注意 NPC 编码在旧格式中是 2 位（如 02=Emma, 03=Rosa），新格式中是 3 位（8XX）
-OLD_NPC_TO_NEW_NPC = {
-    "01": "801",  # Zack
-    "02": "802",  # Emma
-    "03": "803",  # Rosa
-    "04": "804",  # Morrison
-    "05": "805",  # Tommy
-    "06": "806",  # Vivian
-    "07": "807",  # Jimmy
-    "08": "808",  # Anna
-    "09": "809",  # Webb
-    "10": "810",  # Mrs. Morrison
-    "11": "811",  # Whale
+# Testimony ID 映射（7 位：{NPC3}{轮次1}{序号3}）
+# 旧格式在不同 loop 有不同 ad-hoc 约定，新格式统一为规范 {NPC 801-811}{loop}{seq}。
+# 映射表：旧 4 位前缀 → (新 4 位前缀, seq_offset)
+# seq_offset 用于同一 NPC 同一 loop 的多个对话组避免冲突（如 Emma 的 _001/_002）
+#
+# 新前缀计算：NPC(3) + loop(1) = 4 位
+# 示例：
+#   1001 (Loop1 emma_001) → 8021 + seq offset 0  → 8021001, 8021002, ...
+#   1002 (Loop1 emma_002) → 8021 + seq offset 100 → 8021101, 8021102, ...
+#   1011 (Loop1 vivian_001) → 8061 + seq offset 0
+OLD_TESTIMONY_PREFIX_MAP = {
+    # ── Loop1 ──
+    "1001": ("8021", 0),    # emma_001 (Emma + loop1, group 1)
+    "1002": ("8021", 100),  # emma_002 (Emma + loop1, group 2)
+    "1011": ("8061", 0),    # vivian_001
+    "1021": ("8031", 0),    # rosa_001
+    "1031": ("8041", 0),    # morrison_001
+
+    # ── Loop2 ──
+    "2001": ("8022", 0),    # emma_003
+    "2002": ("8022", 100),  # emma_004
+    "2011": ("8062", 0),    # vivian_002
+    "2041": ("8072", 0),    # jimmy_001 (loop2)
+    "2051": ("8052", 0),    # tommy_001
+
+    # ── Loop3 ──
+    "3001": ("8023", 0),    # emma_005
+    "3002": ("8023", 100),  # emma_006
+    "3021": ("8033", 0),    # rosa_002
+    "3031": ("8043", 0),    # morrison_002
+    "3041": ("8073", 0),    # jimmy_002
+
+    # ── Loop4 ──
+    "4001": ("8024", 0),    # emma_007
+    "4002": ("8024", 100),  # emma_008
+    "4011": ("8064", 0),    # vivian_003 / vivian_expose_001 (跨 loop5 引用时也用)
+    "4031": ("8044", 0),    # morrison_s405 / morrison_003
+    "4051": ("8054", 0),    # tommy_002
+
+    # ── Loop5 ──
+    "5001": ("8025", 0),    # emma_009
+    "5002": ("8025", 100),  # emma_010
+    "5041": ("8075", 0),    # jimmy_001 (loop5)
+    "5051": ("8055", 0),    # tommy_003
+    "5061": ("8085", 0),    # anna_001
+
+    # ── Loop6 ──
+    "6001": ("8026", 0),    # emma_011
+    "6011": ("8066", 0),    # vivian_004
+    "6031": ("8046", 0),    # morrison_expose
+    "6061": ("8086", 0),    # anna_epilogue
 }
 
 # ──────────────────────────────────────────────────────────
@@ -165,10 +200,16 @@ def migrate_dialogue_id(old_id: str, mapping: dict, seq_counter: dict) -> str | 
     把一个旧 9 位对话 ID（可带后缀）迁移到新 9 位 ID。
     返回新 ID；如果前缀未在 mapping 中则返回 None（保留原 ID）。
 
-    seq_counter 用于后缀变体（-A/-B/-C、小写字母、_bridge）的顺序扩展——
-    因为配置表规范不支持后缀，我们把它们展开为独立的连续 ID。
+    后缀处理（避免冲突）：
+    - 无后缀：seq 保持原样（e.g. 010 → 010 → new_prefix + 010）
+    - -A / -a：seq 变为 1XX（首位 1 + 原 seq 后 2 位），范围 100-199
+    - -B / -b：seq 变为 2XX，范围 200-299
+    - -C / -c：seq 变为 3XX
+    - 其他小写字母 d-n（用于 Rosa Expose 崩溃段的 039b-039n 类）：
+        按 ord(letter)-'a'+1 映射到 {code}XX 范围
+        d=4XX, e=5XX, f=6XX, ..., n=14XX (溢出处理)
+    - _bridge：seq 变为 9XX
     """
-    # 拆出 base（前 9 位）和 suffix
     match = re.match(r'^(\d{9})([-_][A-Za-z_]+|[a-z])?$', old_id)
     if not match:
         return None
@@ -179,25 +220,35 @@ def migrate_dialogue_id(old_id: str, mapping: dict, seq_counter: dict) -> str | 
         return None
 
     new_npc, new_group = mapping[old_prefix]
-    old_seq = base[6:9]  # 保留原 sequence 3 位
+    old_seq = base[6:9]  # 原 3 位 seq
 
-    # 如果没有后缀，直接用原 sequence
+    # 无后缀：直接使用原 seq
     if not suffix:
         return f"{new_npc}{new_group}{old_seq}"
 
-    # 有后缀——需要为这个 base 分配扩展 ID
-    # 记录 base 的基础 sequence，为每个 suffix 变体递增
-    counter_key = f"{new_npc}{new_group}{old_seq}"
-    # 第一个 suffix 获得 +100 偏移（避开主序列）
-    # 若同 base 有多个 suffix，从 +100 开始递增
-    if counter_key not in seq_counter:
-        seq_counter[counter_key] = 100
-    else:
-        seq_counter[counter_key] += 1
-    offset = seq_counter[counter_key]
+    # 计算后缀代码（决定百位数）
+    suffix_code = None
 
-    # 新 sequence = 原 seq + offset，保持 3 位
-    new_seq_int = (int(old_seq) + offset) % 1000
+    # 归一化：去除 -_ 前缀
+    suffix_clean = suffix.lstrip('-_').lower()
+
+    if suffix_clean == 'bridge':
+        suffix_code = 9
+    elif len(suffix_clean) == 1 and suffix_clean.isalpha():
+        # 单字母：a=1, b=2, c=3, d=4, e=5, ..., n=14
+        letter_idx = ord(suffix_clean) - ord('a') + 1
+        suffix_code = letter_idx
+    else:
+        # 其他命名后缀（理论上不应出现）
+        suffix_code = 8  # 默认归到 8XX 系
+
+    # 新 seq = 后缀代码 × 100 + (原 seq 后 2 位)
+    # 例：
+    #   605001010-A (old_seq=010, suffix=A=1) → 1*100+10 = 110 → 802011110
+    #   605001010-B (suffix=B=2) → 210 → 802011210
+    #   605001010-C (suffix=C=3) → 310 → 802011310
+    seq_last2 = int(old_seq[-2:])  # 取后 2 位
+    new_seq_int = (suffix_code * 100 + seq_last2) % 1000
     return f"{new_npc}{new_group}{new_seq_int:03d}"
 
 
@@ -232,17 +283,22 @@ def migrate_expose_id(old_id: str) -> str | None:
 
 def migrate_testimony_id(old_id: str) -> str | None:
     """
-    把 7 位 testimony ID（旧 {loop1}{npc2}{seq3}）迁移到 7 位新 ID（{npc3}{loop1}{seq3}）。
-    返回新 ID；若格式不匹配则返回 None。
+    把 7 位 testimony ID 迁移到规范格式 {NPC3}{loop1}{seq3}。
+    基于 OLD_TESTIMONY_PREFIX_MAP 做前缀查表 + seq_offset 重分配。
     """
-    match = re.match(r'^(\d)(\d{2})(\d{3})$', old_id)
+    match = re.match(r'^(\d{4})(\d{3})$', old_id)
     if not match:
         return None
-    loop, old_npc, seq = match.group(1), match.group(2), match.group(3)
-    new_npc = OLD_NPC_TO_NEW_NPC.get(old_npc)
-    if new_npc is None:
+    old_prefix4, old_seq3 = match.group(1), match.group(2)
+    mapping = OLD_TESTIMONY_PREFIX_MAP.get(old_prefix4)
+    if mapping is None:
         return None
-    return f"{new_npc}{loop}{seq}"
+    new_prefix4, seq_offset = mapping
+    new_seq = int(old_seq3) + seq_offset
+    if new_seq >= 1000:
+        # 溢出保护——使用取模
+        new_seq = new_seq % 1000
+    return f"{new_prefix4}{new_seq:03d}"
 
 
 # ──────────────────────────────────────────────────────────

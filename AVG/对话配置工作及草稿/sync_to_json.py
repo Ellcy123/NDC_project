@@ -62,11 +62,12 @@ GEN_MD_DIR = MD_DIR / "生成草稿"              # 生成草稿/
 DEFAULT_EPISODE = "EPI01"
 
 # ============================================================
-# NPC 中文名 → IdSpeaker / enSpeaker 映射（EPI01 权威表）
-# 来源：扫描 AVG/EPI01/Talk/ 下所有现有 JSON 汇总
+# NPC 中文名 → IdSpeaker / enSpeaker 映射
+# EPI01 使用 1XX 系列；Unit8（0417 重构版，EPI08）使用 8XX 系列
+# 根据 --episode 参数选择映射表
 # ============================================================
 
-NPC_SPEAKER_MAP = {
+NPC_SPEAKER_MAP_EPI01 = {
     # 扎克 —— 主角
     "扎克·布伦南":      ("NPC101", "Zack Brennan"),
     "扎克":              ("NPC101", "Zack Brennan"),
@@ -114,6 +115,69 @@ NPC_SPEAKER_MAP = {
     "Whale":             ("NPC111", "Whale"),
     "鲸鱼":              ("NPC111", "Whale"),
 }
+
+# Unit8 = Unit1 0417 重构版，NPC 编码 801-811（与 Unit1 旧数据 101-111 隔离）
+NPC_SPEAKER_MAP_EPI08 = {
+    # Zack 801
+    "扎克·布伦南":      ("NPC801", "Zack Brennan"),
+    "扎克":              ("NPC801", "Zack Brennan"),
+    "Zack":              ("NPC801", "Zack Brennan"),
+    "Zack Brennan":      ("NPC801", "Zack Brennan"),
+
+    # Emma 802
+    "艾玛·奥马利":       ("NPC802", "Emma O'Malley"),
+    "艾玛":              ("NPC802", "Emma O'Malley"),
+    "Emma":              ("NPC802", "Emma O'Malley"),
+    "Emma O'Malley":     ("NPC802", "Emma O'Malley"),
+
+    # Rosa 803
+    "罗莎":              ("NPC803", "Rosa"),
+    "罗莎·马丁内斯":     ("NPC803", "Rosa"),
+    "Rosa":              ("NPC803", "Rosa"),
+    "Rosa Martinez":     ("NPC803", "Rosa"),
+
+    # Morrison 804
+    "莫里森":            ("NPC804", "Morrison"),
+    "Morrison":          ("NPC804", "Morrison"),
+
+    # Tommy 805
+    "汤米":              ("NPC805", "Tommy"),
+    "Tommy":             ("NPC805", "Tommy"),
+
+    # Vivian 806
+    "薇薇安":            ("NPC806", "Vivian"),
+    "薇薇安·罗丝":       ("NPC806", "Vivian"),
+    "薇薇安·罗斯":       ("NPC806", "Vivian"),
+    "维维安":            ("NPC806", "Vivian"),
+    "维维安·罗丝":       ("NPC806", "Vivian"),
+    "维维安·罗斯":       ("NPC806", "Vivian"),
+    "Vivian":            ("NPC806", "Vivian"),
+    "Vivian Rose":       ("NPC806", "Vivian"),
+
+    # Jimmy 807
+    "吉米":              ("NPC807", "Jimmy"),
+    "Jimmy":             ("NPC807", "Jimmy"),
+    "James O'Sullivan":  ("NPC807", "Jimmy"),
+
+    # Anna 808
+    "安娜":              ("NPC808", "Anna"),
+    "Anna":              ("NPC808", "Anna"),
+
+    # Webb 809（死者，偶尔旁白引用）
+    "Webb":              ("NPC809", "Webb"),
+    "韦伯":              ("NPC809", "Webb"),
+
+    # Mrs. Morrison 810
+    "莫里森太太":        ("NPC810", "Mrs. Morrison"),
+    "Mrs. Morrison":     ("NPC810", "Mrs. Morrison"),
+
+    # Whale 811
+    "Whale":             ("NPC811", "Whale"),
+    "鲸鱼":              ("NPC811", "Whale"),
+}
+
+# 当前 episode 激活的映射表——入口函数根据 --episode 设置
+NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 
 # Expose 文件对应关系（loop_num → filename）
 # 注：新 0417 体系按章节重构，Expose 对象不同；此表是回退默认值
@@ -193,24 +257,65 @@ def _parse_tag_line(tag_str):
 
 
 def _normalize_md_text(text):
-    """归一化处理——把 tommy_001 风格的 ```id: xxx / speaker: yyy``` 代码块
-    转换为标准 ### xxx / **speaker** ... > words 格式。
+    """归一化处理——把 fenced 代码块风格转换为标准 ### xxx / **speaker** [...] / > words 格式。
+
+    支持两种变体：
+    1. tommy_001 风格（纯 id+speaker）：
+       ```
+       id: 205104001
+       speaker: Zack（内心观察）
+       ```
+    2. Loop6 Morrison Expose 风格（ID+speaker+text 等多字段）：
+       ```
+       ID: 160001
+       speaker: Morrison
+       text: "台词"
+       action: 动作描述（可选）
+       keyInfoType: ...  # 忽略
+       keyInfoContent: ... # 忽略
+       ```
     """
-    # 匹配形式：
-    # ```
-    # id: 205104001
-    # speaker: Zack（内心观察）
-    # ```
-    # 后跟若干行纯文本，直到下一个 ```id: 或 --- 或下一个 ```
-    pattern = re.compile(
+
+    # ── 变体 2（Loop6 Morrison Expose）：完整 fenced block 带 text/action 字段 ──
+    # 注意：先处理变体 2（更具体），再处理变体 1（更宽松）
+    pattern_v2 = re.compile(
+        r"```\s*\n"
+        r"\s*ID:\s*(\d+)\s*\n"              # ID: 160001
+        r"\s*speaker:\s*([^\n]+?)\n"        # speaker: Morrison
+        r"(?:\s*text:\s*\"?([^\n]*?)\"?\s*\n)?"  # text: "..." (可选)
+        r"(?:\s*action:\s*([^\n]*?)\n)?"    # action: ... (可选)
+        r"(?:\s*keyInfoType:[^\n]*\n)?"     # keyInfoType: ... (忽略)
+        r"(?:\s*keyInfoContent:[^\n]*\n)?"  # keyInfoContent: ... (忽略)
+        r"\s*```",
+        re.MULTILINE,
+    )
+
+    def replace_v2(m):
+        entry_id = m.group(1).strip()
+        speaker = m.group(2).strip()
+        text_line = (m.group(3) or "").strip()
+        action = (m.group(4) or "").strip()
+        # 清理 text 两端可能残留的引号
+        text_line = text_line.strip('"').strip("'")
+        result = f"### {entry_id}\n**{speaker}**"
+        if action:
+            result += f" [{action}]"
+        result += "\n"
+        if text_line:
+            result += f"> {text_line}\n"
+        return result
+
+    text = pattern_v2.sub(replace_v2, text)
+
+    # ── 变体 1（tommy_001 风格）：纯 id+speaker（无 text 行） ──
+    pattern_v1 = re.compile(
         r"```\s*\n\s*id:\s*(\d+)\s*\n\s*speaker:\s*([^\n]+?)\n\s*```",
         re.MULTILINE,
     )
 
-    def replace_block(m):
+    def replace_v1(m):
         entry_id = m.group(1).strip()
         speaker_raw = m.group(2).strip()
-        # 剥离括号内的描述（作为 action），括号外的作为 speaker 名
         action = ""
         speaker = speaker_raw
         pm = re.match(r"^([^（(]+)\s*[（(](.+?)[)）]\s*$", speaker_raw)
@@ -219,7 +324,7 @@ def _normalize_md_text(text):
             action = pm.group(2).strip()
         return f"### {entry_id}\n**{speaker}** [{action}]"
 
-    return pattern.sub(replace_block, text)
+    return pattern_v1.sub(replace_v1, text)
 
 
 def parse_md_file(md_path):
@@ -883,6 +988,14 @@ def main():
         if idx + 1 < len(args):
             episode = args[idx + 1]
             args = args[:idx] + args[idx + 2:]
+
+    # 根据 episode 切换 NPC 映射表（EPI08 = Unit1 0417 重构版，使用 8XX 编码）
+    global NPC_SPEAKER_MAP
+    if episode.upper() == "EPI08":
+        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI08
+        print(f"[INFO] 使用 EPI08 NPC 映射表（8XX 编码）")
+    else:
+        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 
     if "--all" in args:
         # 依次处理两个目录下的 Loop{1-6}_*.md

@@ -40,7 +40,7 @@
 #                          1501 → envir（环境叙事，pickup:false）
 #                          1502 → item（物品：文件/信件/票据类）
 #                          1503 → item（物品：文件/信件/票据类）
-#                          1504 → 已移除（不是物证，以 jimmy_001 的证词 5041001 承载）
+#                          1504 → 已移除（不是物证，以 jimmy_001 的证词 8075001 承载）
 #                          1505 → envir（环境叙事，pickup:false）——Zack 观察记忆，字迹对白依据
 #                          1506 → item（物品：文件/信件/票据类）
 #                          1507 → item（物理道具）
@@ -49,7 +49,7 @@
 # C. NPC 条目     PASS — Emma/Tommy/Jimmy/Anna 各含 4 必填块；
 #                        Jimmy 为 Expose 对象（is_liar:true, player_inquiry:null）；
 #                        Anna 首次出场（模式 A，知识池注释已建立）；
-#                        emma_010 新增 5002003（潜入 Morrison 家决定证词）
+#                        emma_010 新增 8025103（潜入 Morrison 家决定证词）
 # D. 目标对齐     PASS — goals 与大纲"指证 Jimmy 是真凶，证明 Vivian 清白"一致；
 #                        灵魂黑夜的四疑点与大纲条目完全对应；
 #                        post_expose_knowledge 新增"潜入 Morrison 家决定"条目
@@ -209,9 +209,9 @@ opening:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 5001001  # Emma：Morrison 的反应不是普通警官面对证据的反应——他在保护什么
-      - 5001002  # Emma：四大疑点梳理——'Don't be bothering me!'那个声音不是 Webb；合同字迹和纸条字迹相同，写这些东西的人就是凶手
-      - 5001003  # Emma：对 Zack 选择"没有酬劳也要查下去"的态度十分欣赏——此刻正式把 Zack 当作并肩搭档
+      - 8025001  # Emma：Morrison 的反应不是普通警官面对证据的反应——他在保护什么
+      - 8025002  # Emma：四大疑点梳理——'Don't be bothering me!'那个声音不是 Webb；合同字迹和纸条字迹相同，写这些东西的人就是凶手
+      - 8025003  # Emma：对 Zack 选择"没有酬劳也要查下去"的态度十分欣赏——此刻正式把 Zack 当作并肩搭档
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -304,9 +304,9 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 5051001  # Tommy：这枚弹壳（.45 ACP）和被 Morrison 夺走的那枚是同批次——这是 Whale 那边用的枪打出来的
-          - 5051002  # Tommy：我特意留了一份鼓点单子的备份——23:00 的鼓点高潮，整个大厅都听不见别的声音
-          - 5051003  # Tommy：那次之后 Webb 改让别人接手收款了，那个人我知道他是谁，但今天我还不能说（隐瞒话题，loop5 Expose 后点名）
+          - 8055001  # Tommy：这枚弹壳（.45 ACP）和被 Morrison 夺走的那枚是同批次——这是 Whale 那边用的枪打出来的
+          - 8055002  # Tommy：我特意留了一份鼓点单子的备份——23:00 的鼓点高潮，整个大厅都听不见别的声音
+          - 8055003  # Tommy：那次之后 Webb 改让别人接手收款了，那个人我知道他是谁，但今天我还不能说（隐瞒话题，loop5 Expose 后点名）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -323,14 +323,14 @@ scenes:
       ⚡ 突发事件（口音暴露）：
       对话过程中，Jimmy 一时情急或心理压力下脱口说出带有爱尔兰裔口音的词汇表达，
       尤其是"Don't be bothering me!"这个句式——
-      这与 Vivian 在 23:10 门口听到的那句话完全一致（4011006）。
-      口音特征作为 Jimmy 的证词（5041001）记录，供 Expose round_2 使用（非物证形态）。
+      这与 Vivian 在 23:10 门口听到的那句话完全一致（8064006）。
+      口音特征作为 Jimmy 的证词（8075001）记录，供 Expose round_2 使用（非物证形态）。
       Jimmy 的内心已在崩溃边缘，对 Webb 的愧疚在表情中偶尔一闪即逝。
 
     # 注：1504（Jimmy 暴露的爱尔兰裔口音词汇）已移除——不是实物证据，
-    # 仅作为 Jimmy 的 testimony（通过 jimmy 的 testimony_ids 5041001 承载）。
-    # Expose round_2 改为引用 5041001 证词而非 1504 证据。
-    evidence: []  # 本场景无物证，口音信息通过 jimmy 的证词 5041001 承载
+    # 仅作为 Jimmy 的 testimony（通过 jimmy 的 testimony_ids 8075001 承载）。
+    # Expose round_2 改为引用 8075001 证词而非 1504 证据。
+    evidence: []  # 本场景无物证，口音信息通过 jimmy 的证词 8075001 承载
 
     npcs:
       jimmy_001:
@@ -360,7 +360,7 @@ scenes:
         active_topics:
           - "在场——他在厨房工作（不在场证明的铺垫，为 Expose round_1 谎言埋线）"
           - "对 Webb 的死表示沉默或用中性措辞回应——隐藏愧疚"
-          - "⚡ 口音暴露：在对话中脱口说出爱尔兰裔口音表达，该表达以证词 5041001 记录"
+          - "⚡ 口音暴露：在对话中脱口说出爱尔兰裔口音表达，该表达以证词 8075001 记录"
         withheld_topics:
           - "他就是凶手（Expose 阶段才完整揭示）"
           - "Anna 怀孕的事（在 Jimmy 家场景由 Anna 当面揭示）"
@@ -376,14 +376,14 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 5041001  # Jimmy（口音暴露现场记录）：脱口说出"Don't be bothering me!"句式——爱尔兰裔 Hiberno-English 特有表达
-          - 5041002  # ⚠谎言: Jimmy 在询问当晚行动时声称自己一直在厨房——隐瞒实际在 23:00 时进入了会客室
+          - 8075001  # Jimmy（口音暴露现场记录）：脱口说出"Don't be bothering me!"句式——爱尔兰裔 Hiberno-English 特有表达
+          - 8075002  # ⚠谎言: Jimmy 在询问当晚行动时声称自己一直在厨房——隐瞒实际在 23:00 时进入了会客室
 
         # ── 4. 鉴赏力 ──
         connoisseur:
           - type: source
             content: "Jimmy 说话时有一个语言习惯：情急或压力大时会用'Don't be bothering me!'这个句式——这不是美式英语，而是典型的爱尔兰裔英语（Hiberno-English）的惯用语法，意思相当于'Don't bother me'"
-            note: "后续 Expose round_2 消耗：配合 4011006（Vivian 证言）和 1502（爱尔兰裔身份证件）证明 23:10 在门口说话的人是 Jimmy"
+            note: "后续 Expose round_2 消耗：配合 8064006（Vivian 证言）和 1502（爱尔兰裔身份证件）证明 23:10 在门口说话的人是 Jimmy"
 
   # ── 场景 1012：Jimmy 家 ——Anna（首次出场；s503 旧 ID）──
   - id: 1012
@@ -430,7 +430,7 @@ scenes:
         name: "Jimmy 的爱尔兰裔身份证件"
         type: item  # 物品（文件/信件/票据类）
         pickup: true
-        note: "关键——loop5 Expose round_2 的核心物证；确认 Jimmy 为爱尔兰裔移民，是 5041001（Jimmy 口音证词）+ 4011006（Vivian 证言）的身份支撑"
+        note: "关键——loop5 Expose round_2 的核心物证；确认 Jimmy 为爱尔兰裔移民，是 8075001（Jimmy 口音证词）+ 8064006（Vivian 证言）的身份支撑"
         description: "Jimmy 的移民档案或爱尔兰裔身份证明文件——记录他的出生地（爱尔兰科克郡）和移民入境日期。文件上同时显示他的全名：James O'Sullivan（Jimmy 是爱称）"
 
     npcs:
@@ -471,8 +471,8 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 5061001  # Anna：我们的孩子快出生了，家里需要一大笔钱——医院不便宜，爱尔兰人在这座城市不容易
-          - 5061002  # Anna：Jimmy 说接了一件重要的差事，完成了就能解决我们的问题，我信他
+          - 8085001  # Anna：我们的孩子快出生了，家里需要一大笔钱——医院不便宜，爱尔兰人在这座城市不容易
+          - 8085002  # Anna：Jimmy 说接了一件重要的差事，完成了就能解决我们的问题，我信他
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -536,13 +536,13 @@ expose:
     Zack 完成自由探索后，手握：
     - 1503 鼓点完整单子（Tommy 交出）
     - 旧弹壳信息（1501，环境叙事——Tommy 在办公室内展示并讲述来历；信息以 Tommy 证词形式保存，非手持物证）
-    - 5041001 Jimmy 口音证词（厨房对话中暴露——非物证，以 Jimmy 的 testimony 承载）
+    - 8075001 Jimmy 口音证词（厨房对话中暴露——非物证，以 Jimmy 的 testimony 承载）
     - 1502 Jimmy 给 Whale 的回信（Jimmy 家发现）
     - 1505 英语练习书（Jimmy 家 envir 观察——不是手持物证；Zack 的观察记忆，将在 post_expose_dialogue 字迹对白中使用；字迹三物之一）
     - 1506 爱尔兰裔身份证件（Jimmy 家发现）
-    - 5061001 Anna 证言：怀孕 + 急需大笔钱
+    - 8085001 Anna 证言：怀孕 + 急需大笔钱
     - 1401 被撕毁的合同（loop4 发现，Whale 委托某人）
-    - 4011006 Vivian 证言：23:10 在门口听到"Don't be bothering me!"（loop4）
+    - 8064006 Vivian 证言：23:10 在门口听到"Don't be bothering me!"（loop4）
     - 1306 Rosa 威胁纸条（loop3，字迹三物之一）
     Jimmy 面对 Zack 和 Emma 的正面指控。
     核心玩法：
@@ -553,12 +553,12 @@ expose:
   # ── 轮次一：时间线谜题——"枪声发生在 11:30，我有不在场证明"──
   round_1:
     lie: "我当天有不在场证明，枪声发生在 11 点半，不可能有其他时间能杀人，如果有枪声大家都能听到"
-    lie_source: 5041002  # Jimmy 在 Talk 阶段声称自己一直在厨房（不在场证明暗示）
+    lie_source: 8075002  # Jimmy 在 Talk 阶段声称自己一直在厨房（不在场证明暗示）
     usable_evidence:
       - id: 1503
         name: "《芝加哥鼓点》完整单子"
         用途: "完整单子明确标注：23:00 是《芝加哥狂想曲》第三乐章鼓点高潮，全曲最强爆发——此时酒吧内所有人都听不清其他声音，枪声完全可以被掩盖"
-      - id: 4011002
+      - id: 8064002
         name: "Vivian 证言：《芝加哥狂想曲》鼓点很强，那天晚上她期待和 Webb 共舞"
         用途: "Vivian 亲身确认：案发当晚《芝加哥狂想曲》鼓点非常强劲——鼓点高潮足以掩盖枪声；23:00 时整个大厅都沉浸在音乐里，无人能辨别单独的枪声"
     result: partial_victory
@@ -576,10 +576,10 @@ expose:
       - id: 1506
         name: "Jimmy 的爱尔兰裔身份证件"
         用途: "确认 Jimmy 是爱尔兰裔移民——爱尔兰裔英语（Hiberno-English）有独特的语法习惯，'Don't be bothering me!'就是典型的爱尔兰裔英语句式，不是美式英语习惯说法"
-      - id: 5041001
+      - id: 8075001
         name: "Jimmy 口音证词（厨房对话记录，非物证）"
-        用途: "Jimmy 在厨房对话中脱口说出'Don't be bothering me!'这个句式——与 Vivian 23:10 在门口听到的那句话完全一致；该信息以 Jimmy 的 testimony 5041001 承载，不是独立物证"
-      - id: 4011006
+        用途: "Jimmy 在厨房对话中脱口说出'Don't be bothering me!'这个句式——与 Vivian 23:10 在门口听到的那句话完全一致；该信息以 Jimmy 的 testimony 8075001 承载，不是独立物证"
+      - id: 8064006
         name: "Vivian 证言：23:10 在门口听到'Don't be bothering me!'（loop4 指证后交出）"
         用途: "Vivian 确认：她在 23:10 来到会客室门口，听到的声音是'Don't be bothering me!'——这是爱尔兰裔的口音，不是 Webb（美国人）的说话习惯；说话的那个人是 Jimmy，他模仿了 Webb 的声音来骗走 Vivian"
     result: partial_victory
@@ -598,7 +598,7 @@ expose:
       - id: 1401
         name: "被撕毁的合同（Whale 委托某人做一件事）"
         用途: "有人与 Whale 签订了合同，Whale 愿意出一大笔钱——这个人就在酒吧内部；结合字迹一致（与威胁纸条 1306 相同），合同的签订方就是 Jimmy"
-      - id: 5061001
+      - id: 8085001
         name: "Anna 证言：我们的孩子快出生了，家里需要一大笔钱"
         用途: "Anna 亲口说出：家里急需大笔钱来迎接孩子的到来，爱尔兰裔在芝加哥的处境本就艰难——这正是 Jimmy 为何要接受 Whale 委托的根本动机"
     result: expose_complete  # Expose 三轮全部击穿，Jimmy 的逻辑防线已完全瓦解
@@ -844,9 +844,9 @@ post_expose_romance:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 5002001  # Emma：你是一个理想主义者，Zack——你跟我说的不一样，但我们其实是一路人（搭档关系确立）
-      - 5002002  # Emma：下一步：带着真正的凶器（1507）和 Jimmy 给 Whale 的回信（1502），去警局击破 Morrison，当众释放 Vivian
-      - 5002003  # Emma：在那之前，我们需要先进 Morrison 的家——用我的记者身份，你做我的助理，去取回那枚弹壳（loop6 行动前置）
+      - 8025101  # Emma：你是一个理想主义者，Zack——你跟我说的不一样，但我们其实是一路人（搭档关系确立）
+      - 8025102  # Emma：下一步：带着真正的凶器（1507）和 Jimmy 给 Whale 的回信（1502），去警局击破 Morrison，当众释放 Vivian
+      - 8025103  # Emma：在那之前，我们需要先进 Morrison 的家——用我的记者身份，你做我的助理，去取回那枚弹壳（loop6 行动前置）
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -864,35 +864,35 @@ doubts:
   # ── 继承疑点（旧 ID → 新 4 位 ID 映射）──
   - id: 1101  # 旧 d1001
     text: "Rosa 声称目击 Vivian 在 23:30 杀死 Webb——但她的话可信吗？她真的目击了吗？"
-    unlock_condition: "item:1101 + testimony:1021001"
+    unlock_condition: "item:1101 + testimony:8031001"
     status: "resolved_loop3"
 
   - id: 1102  # 旧 d1002
     text: "Webb 真正怀疑的凶手是谁？他为何提前立协议、紧急雇佣侦探？"
-    unlock_condition: "item:1103 + testimony:1002002"
+    unlock_condition: "item:1103 + testimony:8021102"
     status: "resolved_loop5"
     resolution: "Jimmy 是真正的凶手，由 Whale 雇佣执行；Webb 的保险倾向正是预感到 Whale 的报复"
 
   - id: 1201  # 旧 d1003
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
-    unlock_condition: "item:1305 + testimony:3021002"
+    unlock_condition: "item:1305 + testimony:8033002"
     status: "resolved_loop3"
 
   - id: 1202  # 旧 d1004
     text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
-    unlock_condition: "item:1207 + testimony:2011002"
+    unlock_condition: "item:1207 + testimony:8062002"
     status: "resolved_loop5"
     resolution: "新执行人是 Jimmy（Vivian 只曾被迫协助勒索中产，不是 Whale 维度的执行人）"
 
   - id: 1203  # 旧 d1011
     text: "Webb 勒索的那个大人物又是谁？"
-    unlock_condition: "testimony:2051006 + item:1205"
+    unlock_condition: "testimony:8052006 + item:1205"
     status: "resolved_loop5"
     resolution: "大人物是 Whale（loop5 Jimmy 给 Whale 的回信 + 被撕毁合同闭环；完整身份链在 loop6 最终确认）"
 
   - id: 1301  # 旧 d1005
     text: "是谁写了那张威胁纸条，刻意嫁祸 Vivian？此人为何熟悉酒吧内部——他在酒吧里扮演什么角色？"
-    unlock_condition: "item:1306 + testimony:3021002"
+    unlock_condition: "item:1306 + testimony:8033002"
     status: "resolved_loop5"
     resolution: "Jimmy 写了威胁纸条（字迹闭环：1306 + 1401 + 1505）；他熟悉酒吧是因为他是兼职主厨"
 
@@ -914,14 +914,14 @@ doubts:
 
   - id: 1502  # 旧 d1008
     text: "那个 Webb 勒索大人物的执行人是谁，他到底做了什么？"
-    unlock_condition: "item:1401 + testimony:5061001"
+    unlock_condition: "item:1401 + testimony:8085001"
     # 简写语义：被撕毁合同（Whale 委托酒吧内部某人）× Anna 怀孕急需钱证词（Jimmy 动机）——物证 × 证词交叉
     status: "visible_in_loop5_opening_unlock_on_evidence"
     resolution: "Jimmy 是 Whale 雇佣的执行人；他接受委托杀死 Webb，并嫁祸给 Vivian"
 
   - id: 1503  # 旧 d1009
     text: "凶手裁赃 Vivian，但是他又是怎么杀掉 Webb 的？"
-    unlock_condition: "item:1503 + testimony:4011006"
+    unlock_condition: "item:1503 + testimony:8064006"
     # 简写语义：鼓点完整单子（23:00 高潮掩盖枪声）× Vivian "Don't be bothering me!" 证词（23:10 模仿口音破绽）
     status: "visible_in_loop5_opening_unlock_on_evidence"
     resolution: "23:00 趁鼓点高潮枪杀 Webb；23:05 模仿 Webb 声音（爱尔兰口音破绽）骗走 Vivian；23:30 假枪声伪造案发时间"
@@ -945,8 +945,8 @@ evidence_registry:
   #   1308（Rosa 给的弹壳）：confiscated_by_morrison（loop4 末 Morrison 夺走，loop6 揭示）
   #   1401（被撕毁的合同）：active（loop4 取得，loop5 Expose round_3 使用）
   #   1306（Rosa 威胁纸条）：active（loop3 取得，loop5 post_expose_dialogue 字迹对白引用）
-  #   4011006（Vivian 证言 Don't be bothering me!）：active（loop4 指证后取得，loop5 Expose round_2 使用）
-  #   4011002（Vivian 证言 鼓点很强）：active（loop4 取得，loop5 Expose round_1 使用）
+  #   8064006（Vivian 证言 Don't be bothering me!）：active（loop4 指证后取得，loop5 Expose round_2 使用）
+  #   8064002（Vivian 证言 鼓点很强）：active（loop4 取得，loop5 Expose round_1 使用）
 
   - id: 1501
     name: "久远陈旧的子弹（弹壳）"
@@ -974,8 +974,8 @@ evidence_registry:
     pickup: true
     note: "关键——loop5 Expose round_1 核心物证；23:00 鼓点高潮时间点的实物记录"
 
-  # 1504 已移除：不是实物证据，仅作为 jimmy_001 的证词 5041001 承载
-  # Expose round_2 不再引用 1504 物证，改为引用 5041001 证词
+  # 1504 已移除：不是实物证据，仅作为 jimmy_001 的证词 8075001 承载
+  # Expose round_2 不再引用 1504 物证，改为引用 8075001 证词
 
   - id: 1505
     name: "Jimmy 家的英语练习书"

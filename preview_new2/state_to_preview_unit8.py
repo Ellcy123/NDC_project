@@ -176,6 +176,14 @@ def _art_scene_id(scene_id):
     return s
 
 
+def _art_item_id(item_id):
+    """把 Unit8 证据 ID 映回原 1-prefix，用于 sprite/icon 文件名复用。"""
+    s = str(item_id)
+    if s.isdigit() and s.startswith("8"):
+        return "1" + s[1:]
+    return s
+
+
 # 场景背景图路径：sceneId 是 8xxx，但文件名仍指向原 SC1xxx_bg_* 资产
 SCENE_BG_CONFIG = {
     s["id"]: f"Art\\Scene\\Backgrounds\\EPI01\\SC{_art_scene_id(s['id'])}_bg_{s['name_en']}"
@@ -351,24 +359,40 @@ def save_json(filename, data):
 # ============================================================
 
 def build_scene_item_ids(states):
-    """构建 {loop_num: {scene_id_str: [item_id_str, ...]}} 映射（ID 均为 8-prefix）"""
+    """构建 {loop_num: {scene_id_str: [item_id_str, ...]}} 映射（ID 均为 8-prefix）。
+    来源：scenes.[*].evidence + evidence_registry（首次登记且 first_scene 为数字场景 ID）。
+    """
     result = {}
     for loop_num, state in states.items():
         loop_items = {}
+
+        def _append(sid, eid):
+            if not sid or not eid:
+                return
+            loop_items.setdefault(sid, [])
+            if eid not in loop_items[sid]:
+                loop_items[sid].append(eid)
+
         for scene in state.get("scenes", []) or []:
             if not isinstance(scene, dict):
                 continue
             sid = map_id(scene.get("id", ""))
-            if not sid:
-                continue
-            items = []
             for ev in scene.get("evidence", []) or []:
                 if isinstance(ev, dict):
-                    eid = map_id(ev.get("id", ""))
-                    if eid and eid not in items:
-                        items.append(eid)
-            if items:
-                loop_items[sid] = items
+                    _append(sid, map_id(ev.get("id", "")))
+
+        # evidence_registry 里的首次登记（补 scenes.evidence 未覆盖的条目）
+        for ev in state.get("evidence_registry", []) or []:
+            if not isinstance(ev, dict):
+                continue
+            fs = ev.get("first_scene")
+            if fs is None:
+                continue
+            fs_str = str(fs)
+            if not fs_str.isdigit():
+                continue
+            _append(map_id(fs_str), map_id(ev.get("id", "")))
+
         result[loop_num] = loop_items
     return result
 
@@ -687,7 +711,7 @@ def generate_talk_summary(states):
 
 
 # ============================================================
-# JSON 追加（全部处理 Chapter=EPI01）
+# JSON 追加（全部处理 Chapter=EPI08）
 # ============================================================
 
 def append_scenes_to_json(states):
@@ -795,6 +819,8 @@ def append_items_to_json(states):
         note_text = ev.get("note", "") or ""
         desc_text = ev.get("description", "") or note_text
 
+        # 美术资源复用原 1-prefix 命名
+        art_eid = _art_item_id(eid)
         entry = {
             "id": eid,
             "Name": [name_cn, name_en],
@@ -805,10 +831,10 @@ def append_items_to_json(states):
             "ShortDescribe": [name_cn],
             "location": [scene_name, scene_en],
             "Chapter": CHAPTER,
-            "folderPath": f"{CHAPTER}\\{scene_en}" if scene_en else CHAPTER,
-            "desSpritePath": f"{type_name}_{eid}_big",
-            "mapSpritePath": f"{type_name}_{eid}",
-            "iconPath": f"{type_name}_{eid}_icon",
+            "folderPath": f"EPI01\\{scene_en}" if scene_en else "EPI01",
+            "desSpritePath": f"{type_name}_{art_eid}_big",
+            "mapSpritePath": f"{type_name}_{art_eid}",
+            "iconPath": f"{type_name}_{art_eid}_icon",
             "Position": ["0", "0"],
         }
         art = ART_CONFIG.get(eid_int, "")
@@ -852,11 +878,11 @@ def append_items_to_json(states):
 
     data.extend(items_to_add)
     save_json("ItemStaticData.json", data)
-    print(f"    -> 添加了 {len(items_to_add)} 个 EPI01 证据条目")
+    print(f"    -> 添加了 {len(items_to_add)} 个 EPI08 证据条目")
 
 
 def append_npcs_to_json():
-    """追加 NPCStaticData.json（EPI01 部分）"""
+    """追加 NPCStaticData.json（EPI08 部分）"""
     data = load_json("NPCStaticData.json")
     data = [item for item in data if item.get("Chapter") != CHAPTER]
 
@@ -918,7 +944,7 @@ def append_doubts_to_json(states):
             "Chapter": CHAPTER,
         })
     save_json("DoubtConfig.json", data)
-    print(f"    -> 写入 {len(aggregated)} 个 EPI01 疑点条目")
+    print(f"    -> 写入 {len(aggregated)} 个 EPI08 疑点条目")
 
 
 def append_chapter_config(states):
@@ -1015,30 +1041,31 @@ NPC_IDSPEAKER_MAP["NPC_RECORDER"] = "RECORDER"  # 保留原标签，不做转换
 NPC_HAS_ICON = {"803", "804", "805", "806", "807", "808", "810"}
 
 # Expose 每个 loop 对应的 testimony ID（8-prefix）
+# ⚠ 0417 重构版：Rosa/Tommy/Rosa/Vivian/Jimmy/Morrison（与旧 Unit1 顺序不同）
 LOOP_EXPOSE_TESTIMONY = {
-    1: "8031002",  # Rosa
-    2: "8041003",  # Morrison
-    3: "8053001",  # Tommy
-    4: "8071006",  # Jimmy (loop4)
-    5: "8063002",  # Vivian
-    6: "8072003",  # Jimmy (loop6)
+    1: "8031001",  # Rosa (loop1 Expose)
+    2: "8052001",  # Tommy (loop2 Expose)
+    3: "8033001",  # Rosa (loop3 Expose 真击穿)
+    4: "8064001",  # Vivian (loop4 Expose)
+    5: "8075002",  # Jimmy (loop5 Expose)
+    6: "8046001",  # Morrison (loop6 Expose)
 }
 
 # Expose sceneId = "8{loop}" (81/82/83/84/85/86)
 LOOP_EXPOSE_SCENE_ID = {i: f"8{i}" for i in range(1, 7)}
 
-# Expose 目标 NPC id（8-prefix）
+# Expose 目标 NPC id（8-prefix, 0417 重构版顺序）
 LOOP_EXPOSE_NPC = {
     1: "803",  # Rosa
-    2: "804",  # Morrison
-    3: "805",  # Tommy
-    4: "807",  # Jimmy
-    5: "806",  # Vivian
-    6: "807",  # Jimmy
+    2: "805",  # Tommy
+    3: "803",  # Rosa (第二次指证，真击穿)
+    4: "806",  # Vivian
+    5: "807",  # Jimmy
+    6: "804",  # Morrison
 }
 
 LOOP_EXPOSE_NPC_INFO_ID = {
-    1: "2", 2: "2", 3: "2", 4: "1", 5: "2", 6: "3",
+    1: "2", 2: "2", 3: "2", 4: "2", 5: "2", 6: "2",
 }
 
 
@@ -1231,10 +1258,10 @@ def _normalize_expose_talk_entry(src):
 
 
 def load_avg_talks(include_expose=True):
-    """从 AVG/EPI01/Talk/loop{1-6}/*.json 读取所有 Unit1 对话。
+    """从 AVG/EPI08/Talk/loop{1-6}/*.json 读取所有 Unit1 对话。
 
     跳过 _manifest.json；每个文件可能是单条（dict）或数组（list）。
-    可选 include_expose=True：同时把 AVG/EPI01/Expose/*.json 也转成 Talk.json 目标格式
+    可选 include_expose=True：同时把 AVG/EPI08/Expose/*.json 也转成 Talk.json 目标格式
     （保持历史 Talk.json 同时收纳 Talk+Expose 条目的行为）。
     返回扁平化的 Talk.json 目标格式条目列表。
     """
@@ -1278,7 +1305,7 @@ def load_avg_talks(include_expose=True):
 
 
 def load_avg_exposes():
-    """从 AVG/EPI01/Expose/loop{N}_{npc}.json 读取所有指证对话。
+    """从 AVG/EPI08/Expose/loop{N}_{npc}.json 读取所有指证对话。
 
     返回 (expose_talks, expose_configs, expose_data) 三元组：
       expose_talks: ExposeTalk.json 条目列表
@@ -1310,10 +1337,10 @@ def load_avg_exposes():
 
     for loop_num in range(1, 7):
         expose_npc = LOOP_EXPOSE_NPC[loop_num]
-        # 按现有文件名规则
+        # 按 0417 重构版 Expose 对象顺序
         npc_name_map = {
-            1: "rosa", 2: "morrison", 3: "tommy",
-            4: "jimmy", 5: "vivian", 6: "jimmy",
+            1: "rosa", 2: "tommy", 3: "rosa",
+            4: "vivian", 5: "jimmy", 6: "morrison",
         }
         fname = f"loop{loop_num}_{npc_name_map[loop_num]}.json"
         path = os.path.join(AVG_EXPOSE_DIR, fname)
@@ -1467,7 +1494,7 @@ def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     print("=" * 50)
-    print("Unit1 State -> Preview 数据转换（0417 规范化版）")
+    print("Unit8 State -> Preview 数据转换（0417 重构版 8-prefix）")
     print("=" * 50)
 
     print("\n[1/3] 读取 State 文件...")
@@ -1480,7 +1507,7 @@ def main():
     generate_locations_yaml()
     generate_talk_summary(states)
 
-    print("\n[3/4] 追加 JSON 数据表（仅处理 Chapter=EPI01）...")
+    print("\n[3/4] 追加 JSON 数据表（仅处理 Chapter=EPI08）...")
     append_scenes_to_json(states)
     append_items_to_json(states)
     append_npcs_to_json()
@@ -1495,7 +1522,7 @@ def main():
     append_avg_exposes_to_table(e_talks, e_configs, e_data, dry_run=dry_run)
 
     print("\n" + "=" * 50)
-    print("Unit1 preview 数据生成完成")
+    print("Unit8 preview 数据生成完成")
     print(f"YAML 输出: {OUTPUT_DIR}")
     print(f"JSON 更新: {TABLE_DIR}")
     if dry_run:

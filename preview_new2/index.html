@@ -698,6 +698,7 @@
                     <option value="Unit1">Unit 1 - Webb谋杀案</option>
                     <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
                     <option value="Unit3">Unit 3 - Thomas坠楼案</option>
+                    <option value="Unit8">Unit 8 - Webb谋杀案（重构版）</option>
                 </select>
                 <select id="loopSelect">
                     <option value="loop1">Loop 1</option>
@@ -712,6 +713,7 @@
                 <button class="btn" id="btnArt" onclick="GameController.switchView('art')">美术需求总览</button>
                 <button class="btn" id="btnFlow" onclick="GameController.switchView('flow')">流程预览</button>
                 <button class="btn" onclick="UI.showStoryOverview()">故事概览</button>
+                <a class="btn" href="pipeline.html" target="_blank" style="text-decoration:none">流水线流程预览</a>
 
             </div>
         </div>
@@ -1207,6 +1209,7 @@
 
         chapter(unit) {
             if (unit === 'Unit3') return 'EPI03';
+            if (unit === 'Unit8') return 'EPI08';
             return unit === 'Unit2' ? 'EPI02' : 'EPI01';
         },
 
@@ -1220,9 +1223,12 @@
             return AppState.allItems.find(i => Array.isArray(i.combineParameter) && i.combineParameter.includes(id));
         },
 
-        // Scene ID prefix for a given unit+loop: Unit1/loop1 -> "11", Unit2/loop3 -> "23"
+        // Scene ID prefix for a given unit+loop: Unit1/loop1 -> "11", Unit8/loop3 -> "83"
         loopPrefix(unit, loop) {
-            const u = unit === 'Unit3' ? '3' : (unit === 'Unit2' ? '2' : '1');
+            let u = '1';
+            if (unit === 'Unit3') u = '3';
+            else if (unit === 'Unit2') u = '2';
+            else if (unit === 'Unit8') u = '8';
             const l = loop.replace('loop', '');
             return `${u}${l}`;
         },
@@ -1263,7 +1269,10 @@
         },
 
         getChapterConfig(unit, loop) {
-            const unitNum = unit === 'Unit3' ? 3 : (unit === 'Unit2' ? 2 : 1);
+            let unitNum = 1;
+            if (unit === 'Unit3') unitNum = 3;
+            else if (unit === 'Unit2') unitNum = 2;
+            else if (unit === 'Unit8') unitNum = 8;
             const loopNum = parseInt(loop.replace('loop', ''));
             const id = String(unitNum * 100 + loopNum);
             return AppState.chapterConfigMap.get(id) || null;
@@ -1581,7 +1590,7 @@
                     </div>
                 `;
             } else if (tab === 'scene') {
-                const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : '3';
+                const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : chapter === 'EPI08' ? '8' : '3';
                 const rawScenes = AppState.allScenes.filter(s => s.sceneId && String(s.sceneId).startsWith(chPrefix));
                 const merged = ArtOverviewView._mergeScenes(rawScenes);
                 const hasArt = merged.filter(m => m.ArtRequirement).length;
@@ -1868,7 +1877,7 @@
             const npcs = AppState.allNPCs.filter(n => n.Chapter === chapter);
             const npcNoArt = npcs.filter(n => !n.ArtRequirement).length;
 
-            const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : '3';
+            const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : chapter === 'EPI08' ? '8' : '3';
             const rawScenes = AppState.allScenes.filter(s => s.sceneId && String(s.sceneId).startsWith(chPrefix));
             const mergedScenes = this._mergeScenes(rawScenes);
             const scNoArt = mergedScenes.filter(m => !m.ArtRequirement).length;

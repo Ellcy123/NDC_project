@@ -101,8 +101,8 @@ opening:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 1001001  # Emma 确认 Webb 邀请 Zack 参加舞会，Zack 被酒保拒门
-      - 1001002  # Emma 表示若不知真相绝不写报道
+      - 8021001  # Emma 确认 Webb 邀请 Zack 参加舞会，Zack 被酒保拒门
+      - 8021002  # Emma 表示若不知真相绝不写报道
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -194,7 +194,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 1011001  # Vivian 酒后迷糊：半醉失神，面对追问茫然无法作答；偶尔喃喃自语却没说完整
+          - 8061001  # Vivian 酒后迷糊：半醉失神，面对追问茫然无法作答；偶尔喃喃自语却没说完整
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -239,8 +239,8 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 1021001  # ⚠谎言: Rosa 谎言1——Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
-          - 1021002  # ⚠谎言: Rosa 谎言2——23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
+          - 8031001  # ⚠谎言: Rosa 谎言1——Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
+          - 8031002  # ⚠谎言: Rosa 谎言2——23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -284,9 +284,9 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 1031001  # Morrison 宣告：Webb 死亡，Vivian 为主要嫌疑人
-          - 1031002  # Morrison 宣告：准备逮捕 Vivian
-          - 1031003  # Morrison（指证后）：因 Zack 揭穿 Rosa + 委托协议书，同意给 72 小时
+          - 8041001  # Morrison 宣告：Webb 死亡，Vivian 为主要嫌疑人
+          - 8041002  # Morrison 宣告：准备逮捕 Vivian
+          - 8041003  # Morrison（指证后）：因 Zack 揭穿 Rosa + 委托协议书，同意给 72 小时
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -315,7 +315,7 @@ expose:
   # ── 轮次一：击破硝烟谎言 ──
   round_1:
     lie: "Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb"
-    lie_source: 1021001  # Rosa 的指控证词
+    lie_source: 8031001  # Rosa 的指控证词
     usable_evidence:
       - id: 1101
         name: "Vivian 手里的手枪（无硝烟反应）"
@@ -329,7 +329,7 @@ expose:
   # ── 轮次二：时间线谜题（新手教程失败点）──
   round_2:
     lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
-    lie_source: 1021002  # Rosa 的谎言2证词
+    lie_source: 8031002  # Rosa 的谎言2证词
     usable_evidence: []  # 刻意为空——loop1 无证据可反驳
     result: tutorial_failure
     # tutorial_failure 说明：
@@ -393,8 +393,8 @@ post_expose_scene:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 1002001  # Emma 分析：Webb 紧急雇佣侦探不寻常，合同有保险倾向
-      - 1002002  # Emma 关键疑点：Webb 真正怀疑的凶手是谁？（核心悬念）
+      - 8021101  # Emma 分析：Webb 紧急雇佣侦探不寻常，合同有保险倾向
+      - 8021102  # Emma 关键疑点：Webb 真正怀疑的凶手是谁？（核心悬念）
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -411,12 +411,12 @@ post_expose_scene:
 doubts:
   - id: 1101
     text: "Rosa 声称目击 Vivian 在 23:30 杀死 Webb——但她的话可信吗？她真的目击了吗？"
-    unlock_condition: "item:1101 + testimony:1021001"
+    unlock_condition: "item:1101 + testimony:8031001"
     status: "unlocked_after_expose_round1"
 
   - id: 1102
     text: "Webb 真正怀疑的凶手是谁？他为何提前立协议、紧急雇佣侦探？"
-    unlock_condition: "item:1103 + testimony:1002002"
+    unlock_condition: "item:1103 + testimony:8021102"
     status: "unlocked_after_post_expose"
 
   - id: 1201

@@ -129,8 +129,8 @@ opening:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 3001001  # Emma：现在要找的是案发现场内的疑点，验证 Rosa 的时间线说法
-      - 3001002  # Emma：如果 Rosa 是在撒谎，案发现场应该有没有被发现的证据
+      - 8023001  # Emma：现在要找的是案发现场内的疑点，验证 Rosa 的时间线说法
+      - 8023002  # Emma：如果 Rosa 是在撒谎，案发现场应该有没有被发现的证据
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -208,8 +208,8 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3041001  # Jimmy：自己只是一个兼职主厨，和勒索的事没有关系
-          - 3041002  # Jimmy（紧张掩饰）：销毁单子是工作需要，没什么特别的
+          - 8073001  # Jimmy：自己只是一个兼职主厨，和勒索的事没有关系
+          - 8073002  # Jimmy（紧张掩饰）：销毁单子是工作需要，没什么特别的
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -277,9 +277,9 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3031001  # Morrison 口述：现场勘验完成，会客室现在开放
-          - 3031002  # Morrison 口述：子弹缺失——现场没有找到子弹（不解释原因）
-          - 3031003  # Morrison 口述：尸体伤口状况（枪伤位置、大致口径特征等描述性信息）
+          - 8043001  # Morrison 口述：现场勘验完成，会客室现在开放
+          - 8043002  # Morrison 口述：子弹缺失——现场没有找到子弹（不解释原因）
+          - 8043003  # Morrison 口述：尸体伤口状况（枪伤位置、大致口径特征等描述性信息）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -404,8 +404,8 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3021001  # ⚠谎言: Rosa——大家都听到了 23:30 的枪响，当晚无其他枪响，只有 Vivian 在里面，一定是她杀的
-          - 3021002  # Rosa——当晚 23:20，自己去外面丢过一次垃圾（关键时间节点证言）
+          - 8033001  # ⚠谎言: Rosa——大家都听到了 23:30 的枪响，当晚无其他枪响，只有 Vivian 在里面，一定是她杀的
+          - 8033002  # Rosa——当晚 23:20，自己去外面丢过一次垃圾（关键时间节点证言）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -424,7 +424,7 @@ expose:
   player_inquiry: null
 
   context: |
-    Zack 完成自由探索后，手握玻璃碎片（1305）、Rosa 的倒垃圾时间证言（3021002）、
+    Zack 完成自由探索后，手握玻璃碎片（1305）、Rosa 的倒垃圾时间证言（8033002）、
     威胁纸条（1306）和女儿医疗单（1307），决定正式指证 Rosa。
     Rosa 仍然坚持"23:30 枪响时 Vivian 在会客室里"的说法。
     本场指证分两轮：
@@ -437,12 +437,12 @@ expose:
   # ── 轮次一：时间线击穿（partial_victory → triggers_retreat）──
   round_1:
     lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
-    lie_source: 3021001  # Rosa 的谎言证词（清洁间 Talk 阶段已收集）
+    lie_source: 8033001  # Rosa 的谎言证词（清洁间 Talk 阶段已收集）
     usable_evidence:
       - id: 1305
         name: "玻璃碎片（垃圾袋下，有硝烟痕迹）"
-        用途: "碎片压在垃圾袋下：玻璃破碎时间早于垃圾袋放置时间（23:20）；碎片有硝烟痕迹：来源于子弹穿窗；结合 Rosa 自己的证言（3021002），证明真实枪击发生在 23:20 之前，不可能是 23:30 的事"
-      - id: 3021002
+        用途: "碎片压在垃圾袋下：玻璃破碎时间早于垃圾袋放置时间（23:20）；碎片有硝烟痕迹：来源于子弹穿窗；结合 Rosa 自己的证言（8033002），证明真实枪击发生在 23:20 之前，不可能是 23:30 的事"
+      - id: 8033002
         name: "Rosa 证言：23:20 去外面倒过垃圾"
         用途: "Rosa 自己提供的时间节点：垃圾袋是 23:20 放下的，而玻璃碎片压在垃圾袋下方——玻璃破碎必定早于 23:20，真实枪击不是 23:30"
     result: partial_victory
@@ -558,8 +558,8 @@ post_expose_scene:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 3002001  # Emma：时间线谜题已解锁——23:30 是假枪声，真实案发时间更早
-      - 3002002  # Emma：说服 Vivian 不认罪是 loop4 的核心目标，弹壳可能是关键突破口
+      - 8023101  # Emma：时间线谜题已解锁——23:30 是假枪声，真实案发时间更早
+      - 8023102  # Emma：说服 Vivian 不认罪是 loop4 的核心目标，弹壳可能是关键突破口
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -580,7 +580,7 @@ post_expose_scene:
 doubts:
   - id: 1101
     text: "Rosa 声称目击 Vivian 在 23:30 杀死 Webb——但她的话可信吗？她真的目击了吗？"
-    unlock_condition: "item:1101 + testimony:1021001"
+    unlock_condition: "item:1101 + testimony:8031001"
     posed_loop: 1
     resolved_loop: 3
     status: "resolved_loop3"
@@ -589,7 +589,7 @@ doubts:
 
   - id: 1102
     text: "Webb 真正怀疑的凶手是谁？他为何提前立协议、紧急雇佣侦探？"
-    unlock_condition: "item:1103 + testimony:1002002"
+    unlock_condition: "item:1103 + testimony:8021102"
     posed_loop: 1
     status: "unlocked_loop1_continuing"
     # loop3 新进展（两条）：
@@ -600,20 +600,20 @@ doubts:
 
   - id: 1201
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
-    unlock_condition: "item:1305 + testimony:3021002"
+    unlock_condition: "item:1305 + testimony:8033002"
     posed_loop: 2  # loop2 已由 Tommy 枪声方向证词 + Vivian 平时送酒时间等触发提出
     resolved_loop: 3
     # 推理链：垃圾袋 23:20 放置 → 碎片在袋下 → 玻璃破碎早于 23:20 →
     #         碎片有硝烟 → 来自子弹穿窗 → 真实枪击时间早于 23:20
     # 两种不同来源的信息交叉验证（loop3 解决）：
     # 1. 玻璃碎片（1305，有硝烟痕迹，压在垃圾袋下）——物证
-    # 2. Rosa 的倒垃圾时间节点证言（3021002，23:20）——证人陈述
+    # 2. Rosa 的倒垃圾时间节点证言（8033002，23:20）——证人陈述
     status: "resolved_loop3"
     # loop2 提出的核心疑点，本轮正式解决。
 
   - id: 1202
     text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
-    unlock_condition: "item:1207 + testimony:2011002"
+    unlock_condition: "item:1207 + testimony:8062002"
     posed_loop: 2
     status: "unlocked_loop2_ongoing"
     # loop2 已解锁，loop3 继续进展：
@@ -622,7 +622,7 @@ doubts:
 
   - id: 1203
     text: "Webb 勒索的那个大人物又是谁？"
-    unlock_condition: "testimony:2051006 + item:1205"
+    unlock_condition: "testimony:8052006 + item:1205"
     posed_loop: 2
     status: "advancing_loop3"
     # loop2 已解锁，loop3 新进展：
@@ -631,13 +631,13 @@ doubts:
 
   - id: 1301
     text: "是谁写了那张威胁纸条，刻意嫁祸 Vivian？此人为何熟悉酒吧内部——他在酒吧里扮演什么角色？"
-    unlock_condition: "item:1306 + testimony:3021002"
+    unlock_condition: "item:1306 + testimony:8033002"
     posed_loop: 3
     status: "unlocked_loop3"
     # 新疑点：1301 本轮解锁。指向酒吧内部人员，loop4/5 继续追查。
     # loop3 指证 Rosa 完成后解锁，需要两种信息：
     # 1. 威胁纸条（1306）——有人刻意设计嫁祸 Vivian
-    # 2. Rosa 倒垃圾时间证言（3021002）——暴露嫁祸者知道 Vivian 每晚送酒习惯，必定熟悉酒吧
+    # 2. Rosa 倒垃圾时间证言（8033002）——暴露嫁祸者知道 Vivian 每晚送酒习惯，必定熟悉酒吧
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop3 全部证据）
