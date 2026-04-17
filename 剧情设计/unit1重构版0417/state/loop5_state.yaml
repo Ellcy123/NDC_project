@@ -21,33 +21,44 @@
 #   Emma=00, Vivian=01, Rosa=02, Morrison=03, Jimmy=04, Tommy=05, Anna=06
 #
 # 继承状态（loop4 末）：
-#   1103（Webb 委托协议书）：destroyed（内容已知，无法出示）
+#   1103（Webb 委托协议书）：confiscated_by_morrison（被 Morrison 拿走，内容已知，无法出示）
 #   1308（Rosa 给的弹壳）：confiscated_by_morrison（被夺走，loop6 在 Morrison 家重新发现）
 #   Vivian：被强押回警局（不在场）
 #
 # ──────────────────────────────────────────────────────────
-# 自检清单（A-G）
+# 自检清单（A-G）【0417 增量修改后更新】
 # A. 结构完整性   PASS — player_context / opening（soul_dark_night）/ scenes / arrest_cutscene /
 #                        expose / suspect_suicide_sequence / post_expose_romance / doubts /
-#                        evidence_registry 全部存在
+#                        evidence_registry 全部存在；
+#                        arrest_cutscene 新增 hidden_npcs + time 字段；
+#                        round_3 新增 post_round_event（鸣笛机制）；
+#                        suspect_suicide_sequence 新增 audio_sequence 精确时序；
+#                        post_expose_romance 新增 infiltration_plan（loop6 前置）
 # B. 证据覆盖     PASS — 大纲 loop5 所有证据（15xx 系列 7 件）已分配到场景；
-#                        1501 标注 inherited_from:1299；1507（手枪）标注 loop6_critical
+#                        1501 标注 inherited_from:1299；1507（手枪）标注 loop6_critical；
+#                        1502 metadata 补充 meeting_time:晚上8点 + meeting_location:后门
 # C. NPC 条目     PASS — Emma/Tommy/Jimmy/Anna 各含 4 必填块；
 #                        Jimmy 为 Expose 对象（is_liar:true, player_inquiry:null）；
-#                        Anna 首次出场（模式 A，知识池注释已建立）
+#                        Anna 首次出场（模式 A，知识池注释已建立）；
+#                        emma_010 新增 5002003（潜入 Morrison 家决定证词）
 # D. 目标对齐     PASS — goals 与大纲"指证 Jimmy 是真凶，证明 Vivian 清白"一致；
-#                        灵魂黑夜的四疑点与大纲条目完全对应
+#                        灵魂黑夜的四疑点与大纲条目完全对应；
+#                        post_expose_knowledge 新增"潜入 Morrison 家决定"条目
 # E. 信息节奏     PASS — 解锁：Jimmy 真凶、23:00 真实案发时间线、口音谜题、动机（Anna 怀孕）、
-#                        字迹闭环（Jimmy 威胁 Rosa）、Whale 强势地位、米勒集团特制手枪；
+#                        字迹闭环（Jimmy 威胁 Rosa）、Whale 强势地位、米勒集团特制手枪、
+#                        潜入 Morrison 家的行动决定；
 #                        锁定：Morrison 与 Whale 具体关系（loop6）、Morrison 藏弹壳（loop6）、
-#                        Whale 电话事件（loop6）、d1010（Morrison 异常）loop5 不解锁
+#                        Whale 电话事件（loop6）、d1010（Morrison 异常）loop5 不解锁；
+#                        1103 状态从 destroyed 更新为 confiscated_by_morrison（loop4 级联修正）
 # F. 鉴赏力       PASS — tommy_003(source) / anna_001(source) / emma_009(quiz) /
 #                        emma_010(quiz) source/quiz 配对完整
 # G. Expose 逻辑  PASS — round_1 时间线（鼓点单子+Vivian证言）；
 #                        round_2 口音谜题（爱尔兰裔身份+Don't be bothering me!）；
-#                        round_3 动机（被撕毁合同+Anna怀孕证言）；
-#                        round_4 字迹三物（1306+1401+1502英语练习书），维度互不重叠；
-#                        round_4 触发 suspect_suicide，有专属字段记录
+#                        round_3 动机（被撕毁合同+Anna怀孕证言）+ 鸣笛 post_round_event；
+#                        round_4 字迹三物（1306+1401+1505英语练习书），维度互不重叠；
+#                        round_4 触发 suspect_suicide；
+#                        鸣笛（whistle）与枪响（gunshot）严格区分：
+#                          鸣笛=round_3后Whale手下信号；枪响=round_4后Jimmy自杀
 # ──────────────────────────────────────────────────────────
 #
 # validation_status: PASS
@@ -74,7 +85,7 @@ player_context:
     - "Webb 提前雇佣 Zack：合同包含保护 Vivian + 确保其继承遗产的协议"
     - "Rosa 的谎言1（Vivian 刚刚开枪）被推翻，她的整体可信度存疑"
     - "Rosa 的谎言2（23:30 枪声 + 只有 Vivian 在场）在 loop1 无法反驳——时间线悬而未决"
-    - "Webb 委托协议书证明 Webb 早知自己有被害风险（保险倾向）——1103 现已 destroyed"
+    - "Webb 委托协议书证明 Webb 早知自己有被害风险（保险倾向）——1103 已被 Morrison 拿走（confiscated_by_morrison），内容仍在 known_facts，实物无法出示"
     - "Morrison 同意给 Zack 72 小时调查期，暂缓逮捕 Vivian（已被推翻，Vivian 已被强押）"
     - "Emma 指出核心疑点：Webb 真正怀疑的凶手到底是谁？"
     - "Webb 的酒吧除私酒之外在做敲诈勒索生意"
@@ -96,7 +107,7 @@ player_context:
     - "Vivian：帮 Webb 勒索 Whale 的人不是她——另有其人"
     - "Vivian：23:10 在门口听到 Webb 大声吼'Don't be bothering me!'——那个声音是谁的？（⭐ 口音伏笔）"
     - "Whale 更有可能是杀害 Webb 的主使者（强烈怀疑，基于被撕毁合同 + Tommy 证言）"
-    - "【情节转折】Morrison 看到 .45 弹壳脸色一变，撕毁 1103，夺走 1308，强押 Vivian——Morrison 有问题"
+    - "【情节转折】Morrison 看到 .45 弹壳脸色一变，拿走 1103，夺走 1308，强押 Vivian——Morrison 有问题"
     - "d1006：真正的凶器到底在哪里？（loop4 末建立，loop5 解锁）"
 
   new_directions:
@@ -121,6 +132,7 @@ player_context:
     - "d1008 解锁：勒索 Whale 的执行人是 Jimmy（被撕毁合同 + Anna 怀孕证言）"
     - "d1009 解锁：Jimmy 的作案手法（鼓点掩盖枪声 + 模仿口音骗走 Vivian）"
     - "d1006 解锁：真正的凶器是米勒集团特制手枪（1507），已在 Jimmy 自杀现场取得"
+    - "Zack 和 Emma 决定伪装身份潜入 Morrison 家——Emma 以记者身份、Zack 以 Emma 助理假身份进入，目标是取回被 Morrison 没收的弹壳（1308）；这是 loop6 自由探索（下）的行动起点"
 
 # ─────────────────────────────
 # 二、开篇（灵魂黑夜——疑点系统正式启动）
@@ -370,12 +382,14 @@ scenes:
         name: "Jimmy 给 Whale 的回信"
         type: document
         pickup: true
-        note: "关键——loop5 Expose round_3 辅助证据；loop6 指证 Morrison round_3 的关键物证；信中内容确认 Jimmy 与 Whale 的直接联络关系，约定在蓝月亮酒吧后门见面"
-        description: "一封 Jimmy 写给 Whale 的信，内容是回复 Whale 的委托——Jimmy 接受了这件事，并约定在蓝月亮酒吧后门见面进行最终的交接。信的末尾有 Jimmy 的签名，字迹中'J'的写法非常独特——倒写的钩"
+        note: "关键——loop5 Expose round_3 辅助证据；loop6 指证 Morrison round_3 的关键物证；信中内容确认 Jimmy 与 Whale 的直接联络关系，约定在蓝月亮酒吧后门晚上8点见面"
+        description: "一封 Jimmy 写给 Whale 的信，内容是回复 Whale 的委托——Jimmy 接受了这件事，并约定在蓝月亮酒吧后门晚上8点见面进行最终的交接。信的末尾有 Jimmy 的签名，字迹中'J'的写法非常独特——倒写的钩"
         metadata:
           loop6_critical: true
           usage_loop6: "loop6 指证 Morrison round_3：证明 Whale 是操控整起案件的幕后黑手"
           handwriting_note: "Jimmy 签名中'J'倒写——与 1306 和 1401 字迹一致"
+          meeting_time: "晚上8点"
+          meeting_location: "蓝月亮酒吧后门"
 
       - id: 1505
         name: "Jimmy 家的英语练习书"
@@ -450,16 +464,41 @@ scenes:
 
 arrest_cutscene:
   type: story_cutscene  # 🎭 过场剧情（非玩家操作）
-  location: "蓝月亮酒吧厨房 / 酒吧后门附近"
+  location: "蓝月亮酒吧后门"
+  time: "晚上8点左右（呼应 1502 信件约定时间）"
   description: |
     Zack 和 Emma 返回酒吧，带齐了证据。
     Zack 决定：直接找 Jimmy，要求他跟自己去警局，
     指证他是 Webb 案的真正凶手，以此证明 Vivian 的清白。
     Emma 表示支持——她和 Zack 一起行动。
-    两人来到 Jimmy 所在的位置，正式启动指证。
 
-    ⚠️ 设计注意：此时 Jimmy 正处于一场与 Whale 手下的秘密交易（尾款结清），
-    Zack 和 Emma 的闯入，等同于在 Whale 的手下面前公开了这件事。
+    两人来到蓝月亮酒吧后门。
+
+    开场状态（暗示性叙事，非直接展示）：
+    Jimmy 刚刚结束了和 Whale 手下的秘密交易——尾款结清。
+    Zack 和 Emma 抵达时只能见到 Jimmy 的人影，以及他手中提着的装有钱的手提箱。
+    场景光线昏暗，交易刚刚落幕的气息尚未散去。
+
+    Jimmy 看见 Zack 和 Emma 出现，身形微微一僵。
+
+  hidden_npcs:
+    # Whale 的手下此时潜伏于暗处——玩家不可见，但影响叙事氛围
+    - role: "Whale 的手下（复数）"
+      visibility: hidden  # 玩家视角完全不可见
+      presence_mode: "环境暗示——灯影、脚步声、后门另一侧隐约的呼吸声"
+      narrative_function: |
+        Whale 的手下作为不可见的背景存在，影响 Jimmy 的情绪反应：
+        Jimmy 知道他们就在附近，他在 Zack 面前的每一个字都暴露在 Whale 的眼皮底下。
+        这是 Jimmy 情绪紧张（而非单纯心虚）的根本原因。
+        他们的存在将在 round_3 结束时通过"鸣笛"正式提示——那一声哨声是给 Jimmy 的信号：
+        事情已经败露，无法挽回。
+      trigger_event: "round_3 结束（Zack 提到 Whale 名字）→ 手下鸣笛（whistle）"
+
+  design_note: |
+    ⚠️ Zack 和 Emma 的闯入，等同于在 Whale 手下面前公开宣告了 Jimmy 的身份。
+    这一场景是 Jimmy 最终自杀的叙事前提：
+    他知道，指证一旦开始，无论结果如何，自己都已无法保全 Anna。
+    唯一的出路，是在彻底暴露之前，用死亡切断所有通向 Whale 的线索。
 
 # ─────────────────────────────
 # 五、指证（⚔️ Expose：Jimmy）—— 四层谎言
@@ -542,13 +581,27 @@ expose:
       Zack 指出：你有动机——Anna 怀孕，家里急需大笔钱；
       Whale 给了你一个机会：杀掉 Webb，把一切推给 Vivian，换取一大笔钱。
       你签了那份合同，你就是执行人。
-      Jimmy 开始语无伦次，情绪完全崩溃，进入发疯状态：
-      "不是我，我没有，我没有……"
+      Zack 说出"Whale"这个名字的瞬间——
+    post_round_event:
+      trigger: "Zack 在指证中提到 Whale 的名字"
+      event_type: "whistle"  # 鸣笛（whistle），非枪响（gunshot）
+      source: "暗处潜伏的 Whale 手下"
+      audio_cue: "whistle（哨声/鸣笛）——这是给 Jimmy 的暗号，意味着：'你已经暴露，事情败露'"
+      narrative_effect: |
+        一声来自暗处的哨声（鸣笛）刺破夜空。
+        Jimmy 的身体猛地一僵——他知道那声哨是什么意思。
+        那是 Whale 手下给他的信号：你已经暴露了，什么都挽不回了。
+        Jimmy 的眼神从恐惧变成了某种决绝。
+      transition_to_round_4: |
+        Jimmy 在鸣笛的冲击下彻底崩溃，
+        进入非逻辑的情绪性否认状态（发疯）：
+        "不是我，我没有，我没有……"
+        此刻他的崩溃不是被逻辑打穿，而是因为鸣笛揭示了他已无路可退。
 
   # ── 轮次四：字迹三物闭环——Jimmy 发疯，Zack 主动追问收尾 ──
   round_4:
     lie: "不是我，我没有，我没有……（发疯中）"
-    lie_source: "NPC 发疯中的情绪性否认（非新的逻辑谎言，而是心理防线彻底崩溃的表现）"
+    lie_source: "NPC 在鸣笛（whistle）冲击下的情绪性崩溃——非新的逻辑谎言，而是 round_3 结束后 Whale 手下鸣笛所触发的心理防线彻底崩溃的表现；Jimmy 此时已知道自己暴露，发疯是对绝境的本能反应"
     zack_accusation: |
       Zack 接着说：威胁 ROSA 的也是你——
       那张纸条（1306）上面的字，和你家里那本英语练习书（1505）上面的字，
@@ -565,15 +618,15 @@ expose:
       - id: 1505
         name: "Jimmy 家的英语练习书（loop5）"
         用途: "字迹三物之三——同样的倒写 J；三物合一，完整闭环，无可反驳"
-    trigger_mechanism: "Zack 主动追问（非玩家出示证据触发），round_4 是情感 + 逻辑的双重终局"
+    trigger_mechanism: "Zack 主动追问（非玩家出示证据触发），round_4 是情感 + 逻辑的双重终局；Jimmy 的发疯状态由 round_3 后 Whale 手下的鸣笛（whistle）触发，此刻他已无路可退"
     result: suspect_suicide
     result_description: |
       字迹三物的出示打碎了 Jimmy 最后的心理防线。
       Jimmy 没有再开口辩解——他看了一眼暗处的方向（Whale 的手下所在位置），
       明白了一件事：自己已经彻底暴露，不只是对 Zack，也是对 Whale。
       暗处的威胁已经形成——Anna 是危险的。
-      随后的几秒之内，一声来自酒吧后方的鸣笛枪响。
-      Jimmy 做出了选择。
+      Jimmy 拔出了那把米勒集团特制手枪，开枪自杀。
+      （⚠️ 此处枪声是 Jimmy 自己开枪——不是 Whale 手下；鸣笛已在 round_3 结束时发生）
 
 # ─────────────────────────────
 # 六、指证后戏剧（Jimmy 自杀 + Anna 托付 + 感情戏）
@@ -581,22 +634,30 @@ expose:
 
 suspect_suicide_sequence:
   type: forced_cutscene  # 🎬 强制剧情，无玩家操作
-  location: "蓝月亮酒吧内部（Jimmy 正在进行的交易现场附近）"
+  location: "蓝月亮酒吧后门（与 arrest_cutscene 同一地点）"
   description: |
     【Jimmy 自杀序列】
 
-    1. 暴露时刻：
+    1. 暴露时刻（round_3 结束）：
        Zack 和 Emma 指证 Jimmy 的整个过程，等同于在 Whale 手下面前
        公开宣告：Jimmy 和 Whale 的关系、Jimmy 接受的委托、整桩案件的内幕——
        这一切在这一刻都暴露给了"不该知道的人"（也就是说，Whale 知道了 Jimmy 已暴露）。
 
-    2. 鸣笛枪响：
-       来自酒吧后方的一声鸣笛枪响——那是 Whale 手下的信号。
+    2. 鸣笛（round_3 → round_4 之间，Zack 说出 Whale 名字后）：
+       ⚠️ 注意：这里是"鸣笛（whistle）"，不是"枪响（gunshot）"。
+       来自酒吧后门暗处的一声哨声——那是 Whale 手下给 Jimmy 的信号，
+       意思是：事情败露，无法挽回。
        Jimmy 知道这意味着什么：Whale 不会放过知情者，而 Anna 和孩子就是最脆弱的目标。
+       这一声鸣笛触发 Jimmy 的崩溃，进入 round_4 的发疯状态。
 
-    3. Jimmy 的选择：
+    3. round_4 完成——Jimmy 的最后选择：
+       Zack 点出"威胁 Rosa 的也是你"+ 字迹三物（1306 + 1401 + 1505）。
+       Jimmy 的心理防线彻底归零。
+       他没有再开口辩解——看了一眼暗处的方向（Whale 手下所在位置），
+       明白了一件事：自己已经彻底暴露，不只是对 Zack，也是对 Whale。
+       暗处的威胁已经形成——Anna 是危险的。
        为了保护 Anna 和未出生的孩子，Jimmy 做出了最后的选择。
-       在那声枪响之后，他开枪自杀。
+       他拔出了那把曾经杀死 Webb 的米勒集团特制手枪，开枪自杀。
        死前，他看向 Zack 和 Emma，说出了最后的话——
        将 Anna 托付给他们（"请……帮我照顾她"）。
 
@@ -604,6 +665,23 @@ suspect_suicide_sequence:
        Jimmy 的尸体旁，留下了那把米勒集团特制手枪（1507）——
        那把枪，曾经在 23:00 杀死了 Webb，
        现在又杀死了使用它的人。
+
+  audio_sequence:
+    # 声音事件精确时序，用于对话/过场音效配置
+    - step: 1
+      event: "round_3 完成"
+      audio: null
+    - step: 2
+      event: "Zack 说出 Whale 名字"
+      audio: "whistle（鸣笛/哨声）——来自暗处的 Whale 手下"
+      note: "这不是枪声，是哨声/鸣笛信号"
+    - step: 3
+      event: "round_4 进行中（Jimmy 发疯状态）"
+      audio: null
+    - step: 4
+      event: "round_4 完成（字迹三物出示后）"
+      audio: "gunshot（枪响）——Jimmy 自己开枪自杀"
+      note: "这是 Jimmy 自己的枪（1507），不是 Whale 手下开枪"
 
   new_evidence_gained:
     - id: 1507
@@ -625,7 +703,8 @@ suspect_suicide_sequence:
     impact_on_loop6: "Anna 可在 loop6 作为证人提供 Jimmy 与 Whale 关系的补充信息（loop6 选择是否使用）"
 
   whale_power_reveal:
-    description: "Whale 势力首次正面揭示——一声鸣笛枪响背后是 Whale 在场的确认。Jimmy 仅仅是因为指证暴露了 Whale 的关联就吓得自杀，足以说明 Whale 的威慑力不是虚名。"
+    description: "Whale 势力首次正面揭示——round_3 后一声来自暗处的鸣笛（whistle，非枪响）是 Whale 手下在场的确认。Jimmy 仅仅是因为指证暴露了 Whale 的关联、听到鸣笛信号，就选择了自杀，足以说明 Whale 的威慑力不是虚名。"
+    audio_note: "whale 手下的信号是鸣笛（whistle），Jimmy 的自杀才是枪响（gunshot）——两者严格区分"
     significance: "d1010 的核心背景信息——Morrison 看到 .45 弹壳脸色一变，是因为他知道与 Whale/米勒集团有关联意味着什么后果"
 
 # ─────────────────────────────
@@ -643,6 +722,22 @@ post_expose_romance:
     但她同样清醒地选择留下。
     两人的关系在这一刻有了质的变化：不再只是"委托人 + 记者帮手"，
     而是真正意义上的搭档——为了同一个正义，一起走到最后。
+
+    【搭档决定——loop6 前置铺垫】
+    感情戏的最后，两人确认了下一步的具体行动：
+    Morrison 的家里藏有那枚被没收的弹壳（1308）——那是进一步证明 Morrison 与 Whale 关联的直接物证。
+    两人决定以 Emma 的记者身份为掩护、Zack 以 Emma 助理的假身份，
+    潜入 Morrison 的家，去取回那枚子弹。
+    这个决定将作为 loop6 自由探索（下）的开场起点。
+
+  infiltration_plan:
+    # loop6 开场前置铺垫
+    objective: "取回被 Morrison 没收的弹壳（1308）"
+    cover_identity:
+      emma: "记者身份（真实身份）"
+      zack: "Emma 的助理（假身份）"
+    target: "Morrison 的家"
+    significance: "loop6 自由探索（下）的起始事件——两人以此身份进入 Morrison 家，获取 Morrison 欠条/借款证明/藏起来的弹壳等关键物证"
 
   emma_010:
     # ── 基本信息 ──
@@ -676,6 +771,7 @@ post_expose_romance:
     testimony_ids:
       - 5002001  # Emma：你是一个理想主义者，Zack——你跟我说的不一样，但我们其实是一路人（搭档关系确立）
       - 5002002  # Emma：下一步：带着真正的凶器（1507）和 Jimmy 给 Whale 的回信（1502），去警局击破 Morrison，当众释放 Vivian
+      - 5002003  # Emma：在那之前，我们需要先进 Morrison 的家——用我的记者身份，你做我的助理，去取回那枚弹壳（loop6 行动前置）
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -763,7 +859,7 @@ doubts:
 evidence_registry:
   # Loop5 = 15xx 系列（新增 7 件）
   # 继承证据状态：
-  #   1103（Webb 委托协议书）：destroyed（loop4 末 Morrison 撕毁）
+  #   1103（Webb 委托协议书）：confiscated_by_morrison（loop4 末被 Morrison 拿走，未撕毁）
   #   1308（Rosa 给的弹壳）：confiscated_by_morrison（loop4 末 Morrison 夺走，loop6 揭示）
   #   1401（被撕毁的合同）：active（loop4 取得，loop5 Expose round_3 使用）
   #   1306（Rosa 威胁纸条）：active（loop3 取得，loop5 Expose round_4 使用）
@@ -783,9 +879,11 @@ evidence_registry:
     type: document
     first_scene: s503
     pickup: true
-    note: "关键——loop5 Expose round_3 辅助；loop6 指证 Morrison round_3 关键物证"
+    note: "关键——loop5 Expose round_3 辅助；loop6 指证 Morrison round_3 关键物证；信中约定蓝月亮酒吧后门晚上8点见面（arrest_cutscene 场景地点伏笔）"
     metadata:
       loop6_critical: true
+      meeting_time: "晚上8点"
+      meeting_location: "蓝月亮酒吧后门"
 
   - id: 1503
     name: "《芝加哥鼓点》完整单子"
@@ -846,8 +944,8 @@ evidence_registry:
   - id: 1103
     name: "Webb 委托协议书"
     inherited_from: loop1
-    status: destroyed
-    note: "loop4 末 Morrison 撕毁，内容仍在 known_facts，实物不可出示"
+    status: confiscated_by_morrison
+    note: "loop4 末被 Morrison 拿走（未撕毁），内容仍在 known_facts，实物不可出示；被 Morrison 永久控制，下落不明，不再作为可出示证物登场（loop6 Morrison 家搜证中亦未找到）"
 
   - id: 1308
     name: "Rosa 给的弹壳（.45 ACP）"

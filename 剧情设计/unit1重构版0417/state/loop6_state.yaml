@@ -18,6 +18,7 @@
 # 事实源：Unit1_大纲-0417.md（剧情设计/unit1重构版0417/Unit1_大纲-0417.md）
 # 前序文件：loop1–5_state.yaml
 # 生成日期：2026-04-17
+# 最后修订：2026-04-17（增量修改：1103 状态 destroyed→confiscated_by_morrison；opening 补入记者+助理伪装身份承接）
 #
 # NPC 编码（沿用规约）：
 #   Emma=00, Vivian=01, Rosa=02, Morrison=03, Jimmy=04, Tommy=05, Anna=06
@@ -27,7 +28,7 @@
 #   1507（米勒集团特制手枪）：active，在 Zack 手中（loop6 Expose round_1 关键）
 #   1502（Jimmy 给 Whale 的回信）：active，在 Zack 手中（loop6 Expose round_3 关键）
 #   1308（Rosa 给的弹壳）：confiscated_by_morrison → loop6 在 Morrison 家重新发现为 1601
-#   1103（Webb 委托协议书）：destroyed（内容已知，实物不可出示）
+#   1103（Webb 委托协议书）：confiscated_by_morrison（Morrison 拿走，内容已知，实物不可出示；loop6 Morrison 家搜证中未找到）
 #   Anna：处于震惊/丧失状态，被托付给 Zack+Emma
 #   Vivian：仍在警局被押（未释放）
 #   d1010（Morrison 异常）：unlocked_visible_loop5_unresolved → loop6 解锁
@@ -80,7 +81,7 @@ player_context:
     - "Webb 提前雇佣 Zack：合同包含保护 Vivian + 确保其继承遗产的协议"
     - "Rosa 的谎言1（Vivian 刚刚开枪）被推翻，Rosa 整体可信度存疑"
     - "Rosa 的谎言2（23:30 枪声 + 只有 Vivian 在场）在 loop1 无法反驳——时间线悬念"
-    - "Webb 委托协议书证明 Webb 早知自己有被害风险——1103 现已 destroyed"
+    - "Webb 委托协议书证明 Webb 早知自己有被害风险——1103 现已被 Morrison 拿走（confiscated_by_morrison）"
     - "Morrison 同意给 Zack 72 小时调查期（已被推翻，Vivian 已被强押）"
     - "Emma 指出核心疑点：Webb 真正怀疑的凶手到底是谁？"
     # ── loop2 ──
@@ -120,6 +121,7 @@ player_context:
     - "d1008 解锁：勒索 Whale 的执行人是 Jimmy（被撕毁合同 + Anna 怀孕证言）"
     - "d1009 解锁：Jimmy 的作案手法（鼓点掩盖枪声 + 模仿口音骗走 Vivian）"
     - "d1006 解锁：真正的凶器是米勒集团特制手枪（1507），已在 Jimmy 自杀现场取得"
+    - "Zack 和 Emma 决定以记者+助理假身份潜入 Morrison 家搜查——Emma 持记者证，Zack 以 Emma 助理身份进入，伪装身份不可败露"
 
   new_directions:
     - direction: "前往 Morrison 的家搜查——他夺走的弹壳（1308）应该就藏在那里，且他和 Whale 的财务往来也可能留有记录"
@@ -156,6 +158,9 @@ opening:
     真正的凶器（1507）在手，Jimmy 与 Whale 的回信（1502）也在手。
     但 Vivian 依然被关在警局，而那道锁还有一个名字：Morrison。
     Emma 说出了接下来的计划：
+    利用 Emma 的记者身份，Zack 以 Emma 助理的假身份，
+    以采访为由进入 Morrison 的住所——Morrison 不在家（在警局值班），
+    但两人需维持身份不被识破，才能完成搜查。
     先去 Morrison 家——他夺走的弹壳一定就藏在那里，
     他与 Whale 的关联也可能留有记录。
     然后去警局，当着 Morrison 所有同僚的面，一件一件摆出来。
@@ -215,8 +220,9 @@ scenes:
     name: "Morrison 的家"
     type: free_exploration  # 🔓 自由探索
     description: |
-      Zack 和 Emma 来到 Morrison 的住所进行搜查。
-      Morrison 本人不在（在警局值班）——这正是搜查的窗口。
+      Zack 和 Emma 以记者+助理的伪装身份来到 Morrison 的住所。
+      Emma 持记者证以"专访警察日常"为由进入，Zack 以 Emma 助理身份随行。
+      Morrison 本人不在（在警局值班）——这正是搜查的窗口，但两人须维持身份不败露。
       房间布局简陋，但藏着 Morrison 不能让人看到的几样东西：
       一枚他藏起来的弹壳（原 1308，loop6 重新发现，编为 1601）、
       一叠带有威胁意味的赌债欠条（1602）、
@@ -731,5 +737,5 @@ evidence_registry:
   - id: 1103
     name: "Webb 委托协议书"
     inherited_from: loop1
-    status: destroyed
-    note: "loop4 末 Morrison 撕毁，内容仍在 known_facts，实物不可出示"
+    status: confiscated_by_morrison
+    note: "loop4 末 Morrison 拿走（非撕毁），内容仍在 known_facts，实物不可出示；loop6 Morrison 家搜证中未找到（Morrison 未将其留在家中，下落不明）"

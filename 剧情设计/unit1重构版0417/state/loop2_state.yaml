@@ -3,7 +3,7 @@
 # ============================================================
 #
 # 叙事功能：调查 Webb 为何紧急雇人 → 揭穿酒吧生意不只是私酒（敲诈勒索）
-# 核心体验：三层指证——私酒说法击穿 → 古董借口击穿 → 记账推诿击穿
+# 核心体验：四层指证——Vivian 证言击穿私酒谎言 → 账目差额击穿退守 → 古董借口击穿 → 记账推诿击穿
 # Loop 结束：确认 Webb 生意是勒索，Tommy 暗示大人物（Whale），目标转向 Rosa 时间线
 #
 # 事实源：Unit1_大纲-0417.md（剧情设计/unit1重构版0417/Unit1_大纲-0417.md）
@@ -16,12 +16,12 @@
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
-# B. 证据覆盖     PASS — 大纲 loop2 所有证据已分配到场景（10 个可拾取 + 1 个不可拾取弹壳占位）
+# B. 证据覆盖     PASS — 大纲 loop2 所有证据已分配到场景（7 个可拾取 + 3 个环境不可拾取 + 1 个弹壳占位）
 # C. NPC 条目     PASS — Vivian/Jimmy/Tommy/Emma 各含 4 必填块；Tommy 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与大纲"调查 Webb / 指证 Tommy"目标一致
-# E. 信息节奏     PASS — 未泄露 loop3+(玻璃碎片/Rosa纸条/弹壳/Whale细节/Jimmy真凶/米勒集团)；"大人物"仅暗示未点名
+# E. 信息节奏     PASS — 未泄露 loop3+(玻璃碎片/Rosa纸条/弹壳/Whale细节/Jimmy真凶/米勒集团)；"大人物"仅暗示未点名；11:10 Vivian 时间线细节保留至 loop4
 # F. 鉴赏力       PASS — source/quiz 节点完整配对，3 个 source + 1 个 quiz
-# G. Expose 逻辑  PASS — round_1/2/3 各有独立证据组，维度互不重叠，谎言依赖前序证词触发
+# G. Expose 逻辑  PASS — round_1/2/3/4 各有独立证据组或证言，维度互不重叠；round_1 用 Vivian 证言，需自由探索阶段已获取（S201 testimony_ids 含 2011002）
 # ──────────────────────────────────────────────────────────
 #
 # validation_status: PASS
@@ -144,8 +144,9 @@ scenes:
     evidence:
       - id: 1201
         name: "勒索用的照片"
-        type: physical
-        note: "场景道具——展示 Webb 勒索生意的直接物证（仙人跳变体产物），Vivian 对这些照片深恶痛绝"
+        type: environmental
+        pickup: false
+        note: "场景道具——展示 Webb 勒索生意的直接物证（仙人跳变体产物），Vivian 对这些照片深恶痛绝；仅供调查观察，不可拾取"
         description: "一批 compromising 照片，拍摄对象为中产人士（银行家、工程师等），画面涉及私密场合。照片来源是 Webb 命令 Vivian 配合拍摄的"
 
     npcs:
@@ -180,11 +181,10 @@ scenes:
           - "平时 23:30 给 Webb 送酒这件事"
           - "短暂动摇（听到 Webb 的保护意图后，她沉默了）"
         withheld_topics:
-          - "23:10 来到门口被挡走的经过（Don't be bothering me! 细节）"  # loop4 才揭示完整版
+          - "11:30 返回会客室推门发现 Webb 已死的完整经过"  # loop4 才揭示；11:10 那次去门口被挡的真相（Don't be bothering me! 细节）同为 loop4 核心，loop2 玩家对 11:10 的事不知情
           - "船票和杀人计划的完整细节"  # loop4 才揭示
-          - "11 点 30 推开门的经过（发现 Webb 已死）"  # loop4 才揭示
           - "勒索目标仅限于中产孤立人士（不含 Whale 这样的大人物）"  # loop4 才揭示
-          - "Don't be bothering me! 是关键伏笔"  # loop4/loop5 核心
+          - "Don't be bothering me! 是关键伏笔（Jimmy 口音）"  # loop4/loop5 核心，loop2 绝不提示
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
@@ -302,26 +302,27 @@ scenes:
     evidence:
       - id: 1204
         name: "VIP 合影"
-        type: physical
-        note: "场景道具——显示 Webb 与政商界人士的广泛关系，暗示其影响力和人脉网络"
+        type: environmental
+        pickup: false
+        note: "场景道具——显示 Webb 与政商界人士的广泛关系，暗示其影响力和人脉网络；仅供调查观察，不可拾取"
         description: "Webb 与多位 VIP 人士（政客、商人）的合影照片，表明他在芝加哥上流社会有一定地位"
 
       - id: 1205
         name: "Webb 个人收入记录"
         type: document
-        note: "关键——用于击破 Tommy 谎言1（月收入 $15,000 vs 酒吧净利 $4,000，差额无法被私酒解释）"
+        note: "关键——用于击破 Tommy 谎言2（月收入 $15,000 vs 酒吧净利 $4,000，差额无法被私酒解释；谎言1 由 Vivian 证言 2011002 击破）"
         description: "Webb 个人财务记录，显示每月收入约 $15,000，来源栏模糊，远超酒吧正常盈利能力"
 
       - id: 1206
         name: "酒吧收入账本"
         type: document
-        note: "关键——用于击破 Tommy 谎言1（配合 1205 使用：酒吧月净 $4,000 vs Webb 收入 $15,000）"
+        note: "关键——用于击破 Tommy 谎言2（配合 1205 使用：酒吧月净 $4,000 vs Webb 收入 $15,000）"
         description: "蓝月亮酒吧正式账本，记录月净收益约 $4,000，主要来自私酒销售和舞会入场费"
 
       - id: 1207
         name: "不明记录人的客户记录"
         type: document
-        note: "关键——用于击破 Tommy 谎言3（笔迹分析后确认 = Tommy 的笔迹，证明他深度参与而非只记账）"
+        note: "关键——用于击破 Tommy 谎言4（笔迹分析后确认 = Tommy 的笔迹，证明他深度参与而非只记账）"
         description: "一本客户档案，记录了被勒索对象的个人信息、弱点和金额。封面无署名，笔迹待鉴定"
         analysis: "分析可得：笔迹与 Tommy 在其他文件上的签名高度一致，可认定为 Tommy 本人记录"
 
@@ -341,8 +342,9 @@ scenes:
     evidence:
       - id: 1208
         name: "Vivian 的排班表"
-        type: document
-        note: "场景道具——记录 Vivian 每晚的工作时间，确认她平时 23:30 给 Webb 送酒的习惯（与 Vivian 证言 2011003 交叉验证）"
+        type: environmental
+        pickup: false
+        note: "场景道具——记录 Vivian 每晚的工作时间，确认她平时 23:30 给 Webb 送酒的习惯（与 Vivian 证言 2011003 交叉验证）；仅供调查观察，不可拾取"
         description: "酒吧演出人员排班表，其中 Vivian 一栏注明：每晚最后一项任务——23:30 送酒至会客室"
 
       # ⚡ 突发事件：不可拾取的弹壳（占位记录）
@@ -387,10 +389,11 @@ scenes:
         #     - 米勒集团特制手枪的具体型号
 
         active_topics:
-          - "酒吧只有私酒生意（谎言，在 Expose 击破）"
+          - "酒吧只有私酒生意（谎言1，由 Vivian 证言 2011002 在 Expose 击破）"
           - "11:30 枪声来自酒吧南方（厨房和会客室方向）"
-          - "古董买卖说法（花瓶/油画，在 Expose 击破）"
-          - "只是按指示记账（谎言，在 Expose 击破）"
+          - "账目清白、质疑歌女证言（谎言2，由 1205+1206 账目差额在 Expose 击破）"
+          - "古董买卖说法（花瓶/油画，谎言3，由 1209+1210 在 Expose 击破）"
+          - "只是按指示记账（谎言4，由 1207 笔迹在 Expose 击破）"
         withheld_topics:
           - "Webb 惹上大人物想跑路的完整猜测（Expose 后才说出）"
           - "抽屉弹壳的完整背景（loop5 才交付）"
@@ -399,10 +402,11 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2051001  # ⚠谎言: Tommy——酒吧只做了私酒生意，没有干别的
+          - 2051001  # ⚠谎言: Tommy——酒吧只做了私酒生意，没有干别的（谎言1，Expose round_1 由 Vivian 证言 2011002 击破）
           - 2051002  # Tommy——11:30 枪声来自厨房和会客室所在的酒吧南方
-          - 2051003  # ⚠谎言: Tommy——还有古董买卖，花瓶卖给 Thompson、油画卖给 Coleman，都已卖出
-          - 2051004  # ⚠谎言: Tommy——自己只是按 Webb 指示记账，不参与具体业务
+          - 2051005  # ⚠谎言: Tommy——你有证据吗，一个歌女的话算什么，酒吧里的账目都是清清白白的（谎言2，Expose round_2 由 1205+1206 击破；Expose 中新产生）
+          - 2051003  # ⚠谎言: Tommy——还有古董买卖，花瓶卖给 Thompson、油画卖给 Coleman，都已卖出（谎言3，Expose round_3 由 1209+1210 击破）
+          - 2051004  # ⚠谎言: Tommy——自己只是按 Webb 指示记账，不参与具体业务（谎言4，Expose round_4 由 1207 击破）
 
         # ── 4. 鉴赏力 ──
         connoisseur:
@@ -446,32 +450,43 @@ expose:
   player_inquiry: null
 
   context: |
-    Zack 完成自由探索后，将各处收集的证据汇总，
-    意识到 Tommy 关于酒吧生意的陈述存在严重矛盾。
-    Webb 的月收入 $15,000 远超酒吧账面净利 $4,000，
-    而 Tommy 一口咬定酒吧只做私酒——这站不住脚。
-    Zack 决定正式对质 Tommy，要求他解释差额来源。
-    Tommy 将从"只有私酒"→"还有古董"→"只是记账"层层退守，
+    Zack 完成自由探索后，从 Vivian 处得知 Webb 曾强迫她协助勒索他人，
+    据此对 Tommy 关于酒吧生意的陈述发起指证。
+    Tommy 将从"只有私酒"→"质疑证据来源、声称账目清白"→"还有古董买卖"→"只是记账"四层退守，
     最终在客户记录笔迹面前无法狡辩。
+    前提：玩家在 S201 必须已从 Vivian 获取证言 2011002，才能进入 round_1 指证。
 
-  # ── 轮次一：击破"只有私酒"──
+  # ── 轮次一：击破"只有私酒"——用 Vivian 证言 ──
   round_1:
     lie: "酒吧里只有私酒生意，没有干别的"
     lie_source: 2051001  # Tommy 的谎言证词（Talk 阶段已收集）
+    usable_evidence:
+      - id: 2011002
+        name: "Vivian 证言：因为 Webb 一直让她去勒索别人，她恨他"
+        用途: "Vivian 亲身经历证明 Webb 强迫她参与勒索，酒吧生意绝不只是私酒"
+    result: |
+      Tommy 被 Vivian 的亲身证言打了个措手不及，无法否认 Webb 让 Vivian 参与勒索一事。
+      但他立刻转移焦点，退守到新的防线（谎言2）：
+      "你有证据吗？一个歌女的话算什么——酒吧里的账目都是清清白白的。"
+
+  # ── 轮次二（新增）：击破"账目清白"——用账目差额 ──
+  round_2:
+    lie: "你有证据吗，一个歌女的话算什么，酒吧里的账目都是清清白白的"
+    lie_source: "NPC 新谎言（被 Vivian 证言击破后的退守，Expose 中 Tommy 主动提出）"
     usable_evidence:
       - id: 1205
         name: "Webb 个人收入记录（月收入 $15,000）"
         用途: "Webb 每月收入 $15,000，但酒吧账本显示月净只有 $4,000，差额 $11,000 无法用私酒解释"
       - id: 1206
         name: "酒吧收入账本（月净 $4,000）"
-        用途: "配合 1205 使用——酒吧正式账面利润远低于 Webb 的实际收入，两者差额巨大"
+        用途: "配合 1205 使用——酒吧正式账面利润远低于 Webb 的实际收入，两者差额巨大，账目根本不'清白'"
     result: |
-      Tommy 无法解释差额，被迫承认还有别的生意。
-      他立刻转移话题，提出新的说法（谎言2）：
-      "我们还做古董买卖——花瓶我卖给了 Thompson，油画卖给了 Coleman，都已卖出去了。"
+      Tommy 无法解释巨大差额，被迫承认还有别的生意来源。
+      他立刻转移话题，提出新的止损说法（谎言3）：
+      "我们还做古董买卖——花瓶我卖给了 Thompson，油画卖给了 Coleman，都已经卖出去了。"
 
-  # ── 轮次二：击破"古董已卖出"──
-  round_2:
+  # ── 轮次三：击破"古董已卖出"——用现场实物 ──
+  round_3:
     lie: "还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman……都已经卖出去了"
     lie_source: "NPC 的新谎言（Expose 中 Tommy 主动提出，止损式退守）"
     usable_evidence:
@@ -483,24 +498,17 @@ expose:
         用途: "案发当晚拍摄的现场照片清晰显示花瓶仍在原处——同样没有卖出"
     result: |
       Tommy 的"古董买卖"说法被当场击穿。
-      他神色越来越慌，再次退守到新的谎言（谎言3）：
+      他神色越来越慌，再次退守到最后一道防线（谎言4）：
       "好，我承认还有其他生意……但我只是按 Webb 指示记账，不参与具体业务——那本客户记录不是我写的。"
 
-  # ── 轮次三：击破"只是记账"──
-  round_3:
+  # ── 轮次四：击破"只是记账"——用笔迹证据 ──
+  round_4:
     lie: "我只是按 Webb 指示记账，不参与其他具体业务"
     lie_source: "NPC 的新谎言（Expose 中 Tommy 主动提出，最后一道防线）"
     usable_evidence:
       - id: 1207
         name: "不明记录人的客户记录（笔迹 = Tommy）"
         用途: "通过笔迹分析，客户记录上的笔迹与 Tommy 本人笔迹高度一致——他是亲手记录的，不是'按指示'的旁观者"
-      # 设计备注参考（大纲批注张翔松）：
-      # 此处也可追加 Vivian 证言（2011002：Webb 让她勒索别人）作为辅助佐证，
-      # 证明 Webb 勒索生意的执行链条中确实有具体执行人（强化"不只是记账"的逻辑）。
-      # 但核心击破仍靠笔迹证据（1207），Vivian 证言作为次要佐证使用。
-      - id: 2011002
-        name: "Vivian 证言：Webb 让她协助勒索别人"
-        用途: "辅助佐证——Vivian 曾亲自参与执行，说明 Webb 勒索生意有具体执行人。Tommy 声称'只记账'不可信（这套业务需要人执行）"
     result: |
       Tommy 无法辩驳笔迹，彻底承认。
       他的防线崩溃，开始主动补充信息：
@@ -625,10 +633,10 @@ evidence_registry:
 
   - id: 1201
     name: "勒索用的照片"
-    type: physical
+    type: environmental
     first_scene: s201
-    pickup: true
-    note: "场景道具——Vivian 工作室，展示 Webb 勒索业务的直接物证"
+    pickup: false
+    note: "场景道具——Vivian 工作室，展示 Webb 勒索业务的直接物证；不可拾取"
 
   - id: 1202
     name: "Jimmy 的工资单"
@@ -646,38 +654,38 @@ evidence_registry:
 
   - id: 1204
     name: "VIP 合影"
-    type: physical
+    type: environmental
     first_scene: s203
-    pickup: true
-    note: "场景道具——Webb 办公室，显示 Webb 的政商界关系网"
+    pickup: false
+    note: "场景道具——Webb 办公室，显示 Webb 的政商界关系网；不可拾取"
 
   - id: 1205
     name: "Webb 个人收入记录"
     type: document
     first_scene: s203
     pickup: true
-    note: "关键——击破 Tommy 谎言1（月收入 $15,000 无法被私酒解释）"
+    note: "关键——击破 Tommy 谎言2（月收入 $15,000 无法被私酒解释；谎言1 由 Vivian 证言击破）"
 
   - id: 1206
     name: "酒吧收入账本"
     type: document
     first_scene: s203
     pickup: true
-    note: "关键——击破 Tommy 谎言1（配合 1205：酒吧月净 $4,000）"
+    note: "关键——击破 Tommy 谎言2（配合 1205：酒吧月净 $4,000）"
 
   - id: 1207
     name: "不明记录人的客户记录"
     type: document
     first_scene: s203
     pickup: true
-    note: "关键——击破 Tommy 谎言3（笔迹分析 = Tommy，证明他亲手参与）"
+    note: "关键——击破 Tommy 谎言4（笔迹分析 = Tommy，证明他亲手参与）"
 
   - id: 1208
     name: "Vivian 的排班表"
-    type: document
+    type: environmental
     first_scene: s204
-    pickup: true
-    note: "场景道具——Tommy 办公室，确认 Vivian 每晚 23:30 送酒给 Webb 的习惯"
+    pickup: false
+    note: "场景道具——Tommy 办公室，确认 Vivian 每晚 23:30 送酒给 Webb 的习惯；不可拾取"
 
   - id: 1209
     name: "假油画"

@@ -3,12 +3,12 @@
 # ============================================================
 #
 # 叙事功能：Part1 收束——弹壳型号鉴定 + 三轮指证 Vivian（"救"不是"审"）
-#           + 强制剧情转折（Morrison 变脸、撕合同、逮捕 Vivian）
+#           + 强制剧情转折（Morrison 变脸、拿走合同、逮捕 Vivian）
 # 核心体验：
 #   - 自由探索（下）：弹壳型号通过 Tommy 对话确认为 .45 ACP；
 #     被撕毁的合同指向 Whale；Vivian 化妆间解锁，感情戏展开
 #   - 指证 Vivian：基调"救"不是"审"，三轮击破"我杀了Webb"的自毁式谎言
-#   - 情节转折：Morrison 看到 .45 弹壳脸色一变，当场撕毁 1103，夺走 1308，强押 Vivian
+#   - 情节转折：Morrison 看到 .45 弹壳脸色一变，拿走 1103，夺走 1308，强押 Vivian
 #   - Loop4 结尾：确立 loop5-6 目标（真凶器在哪 + 击破 Morrison）
 #
 # 事实源：Unit1_大纲-0417.md（剧情设计/unit1重构版0417/Unit1_大纲-0417.md）
@@ -20,18 +20,20 @@
 #
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening / scenes / expose / turn_cutscene /
-#                        post_expose_scene / doubts / evidence_registry 全部存在
+# A. 结构完整性   PASS — player_context / opening / scenes(S401-S405) / expose /
+#                        turn_cutscene / post_expose_scene / doubts / evidence_registry 全部存在；
+#                        S405 新增 Morrison 大厅场景（两阶段：指证前/指证后）含 pre_turn_trigger
 # B. 证据覆盖     PASS — 大纲 loop4 所有证据（14xx 系列 4 件 + 继承证据状态变化）已分配
-# C. NPC 条目     PASS — Emma/Tommy/Vivian/Morrison 各含 4 必填块；Vivian 为 Expose 对象
-#                        （is_liar:true, player_inquiry:null）
+# C. NPC 条目     PASS — Emma/Tommy/Vivian/Morrison/Morrison_S405 各含 4 必填块；
+#                        Vivian 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与大纲"说服 Vivian 不再认罪"目标一致；Expose 基调"救"
 # E. 信息节奏     PASS — 解锁：弹壳型号(.45 ACP)、Whale 主使怀疑（标注 unconfirmed）、
 #                        Vivian 无罪、"Don't be bothering me!"、Morrison 异常；
 #                        锁定：Jimmy 真凶/口音谜题（loop5）、Morrison 藏弹壳（loop6）、
 #                        米勒集团完整身份链（loop5-6）、Rita 间谍（标注 unconfirmed_hypothesis）
 # F. 鉴赏力       PASS — emma_007(quiz)/tommy_002(source)/vivian_003(source)/
-#                        morrison_003(source)/emma_008(quiz)，source/quiz 配对完整
+#                        morrison_003(source)/morrison_s405(source)/emma_008(quiz)，
+#                        source/quiz 配对完整
 # G. Expose 逻辑  PASS — round_1 弹壳口径 vs 手枪口径不符；round_2 Whale 有动机有能力；
 #                        round_3 Webb 最后行动保护 Vivian；三轮维度互不重叠；
 #                        第一轮 lie_source 来自 Talk 阶段证词（4011001）
@@ -100,8 +102,8 @@ player_context:
     - "Whale 更有可能是杀害 Webb 的主使者（强烈怀疑，非完全证实；基于被撕毁合同 + Tommy 证言）"
     - "Rita 被 Tommy 怀疑是 Whale 的间谍（unconfirmed_hypothesis，仅 Tommy 主观判断，未证实）"
     - "d1006 新建：真正的凶器在哪？（loop5-6 解锁）"
-    - "【情节转折】Morrison 看到 .45 弹壳脸色一变，当场撕毁 1103（Webb 委托协议书），夺走 1308（弹壳），强押 Vivian 回警局"
-    - "1103（Webb 委托协议书）状态变为 destroyed——内容玩家已知，但无法再作为可出示证物"
+    - "【情节转折】Morrison 看到 .45 弹壳脸色一变，拿走了 1103（Webb 委托协议书），夺走 1308（弹壳），强押 Vivian 回警局"
+    - "1103（Webb 委托协议书）已被 Morrison 拿走——内容玩家已知，但无法再作为可出示证物"
     - "1308（.45 弹壳）被 Morrison 夺走——玩家手中不再持有，loop6 揭示被 Morrison 藏起来"
 
 # ─────────────────────────────
@@ -375,6 +377,86 @@ scenes:
             content: "Vivian 说'他没开门、没听到'时，语气不是控诉，而是遗憾——她在说的是她杀人计划前的最后一个关于情感的动作（她去找他，是想最后见一面，不是要杀他）"
             note: "后续 loop5 考题：Vivian 在 loop4 说 Webb 当时'没开门'——实际上 Webb 已经在 23:00-23:05 被杀；那个叫她'别打扰我'的人是谁？（爱尔兰口音谜题伏笔）"
 
+  # ── 场景 S405：酒吧大厅（Morrison 等待区 / 转折剧情触发入口）──
+  - id: s405
+    name: "酒吧大厅（Morrison 等待区）"
+    type: free_exploration  # 🔓 自由探索（阶段 A）/ 🎭 转折触发（阶段 B，指证 Vivian 完成后）
+    description: |
+      Morrison 待在酒吧大厅，等待 Zack 向他总结本轮调查结果。
+      ⭐ 设计目的（大纲批注）：
+        "可以在自由探索（下）的部分做一个待在大厅的 Morrison 来引导玩家
+         要在这个 loop 向他总结自己调查结果的对话，然后指证完 Vivian 自动跳转至
+         这个大厅里，重复点击这个对话就能向下推进转折剧情。"
+
+      【阶段 A：自由探索期（Vivian 指证完成前）】
+      Morrison 正在喝酒，对 Zack 随意搭话；
+      玩家可以选择和他闲聊，但"总结调查结果"的核心对话选项尚未解锁。
+      Morrison 态度散漫，偶尔追问进展，似乎只是随口问问。
+
+      【阶段 B：转折触发期（Vivian 指证完成后——自动跳转至此）】
+      指证 Vivian 完成后，游戏自动将场景切换到酒吧大厅，Morrison 已经等在这里。
+      玩家在此处点击 Morrison，弹出"向他总结调查结果"对话选项——
+      重复点击该对话推进剧情，直至触发 turn_cutscene（Morrison 看到弹壳变脸）。
+      这是 turn_cutscene 的唯一触发入口。
+
+    evidence: []  # 大厅无新可拾取证据
+
+    pre_turn_trigger:
+      # ⭐ 转折剧情触发机制（由此场景阶段 B 触发 turn_cutscene）
+      type: "player_initiated_dialogue"
+      trigger_condition: "expose_vivian 已完成（result: full_breakthrough）"
+      auto_jump: true  # 指证完 Vivian 后自动跳转至本场景
+      dialogue_option: "向 Morrison 总结调查结果（弹出专属选项）"
+      progression: "玩家重复点击该对话选项，推进剧情至 turn_cutscene 触发"
+      note: "Morrison 看到 .45 弹壳（1308）后脸色骤变，是 turn_cutscene 的起点"
+
+    npcs:
+      morrison_s405:
+        # ── 基本信息 ──
+        talk: morrison_s405
+        is_liar: false
+        motive: |
+          阶段 A：表面上是随口等待、顺便追问进展，实际上在评估 Zack 调查到了哪一步；
+          阶段 B：Zack 出示 .45 弹壳后，Morrison 认出了与米勒集团相关的线索，
+          立刻启动强硬模式，转入 turn_cutscene。
+        mindset: |
+          阶段 A：散漫、微醺，偶尔显出职业本能的审慎；
+          阶段 B：脸色骤变，切换为权威压迫模式（与 turn_cutscene 的 morrison_003_turn 衔接）
+
+        # ── 1. NPC 已知信息 ──
+        awareness:
+          - content: "Zack 已完成多轮调查，Rosa 的谎言被戳穿，Vivian 的认罪立场在动摇——Zack 的调查能力超出了他的预期"
+            trigger: "阶段 A：loop3 指证 Rosa 完成后"
+          - content: "Zack 手中持有 .45 弹壳（1308）——这是与米勒集团相关的证物"
+            trigger: "阶段 B：Zack 出示 1308 弹壳汇报推理"
+
+        active_topics:
+          # 阶段 A（自由探索期）
+          - "随口询问 Zack 的调查进展——'你查到什么了？'"
+          - "Morrison 对 Vivian 案件的官方立场（Vivian 有罪）"
+          # 阶段 B（转折触发期，指证完成后解锁）
+          - "Zack 出示弹壳并总结推理：弹壳型号是 .45 ACP，Vivian 的枪是 .25 ACP，凶器不是 Vivian 的枪"
+          - "Morrison 看到 .45 弹壳后脸色骤变（turn_cutscene 触发点）"
+        withheld_topics:
+          - "他看到 .45 弹壳脸色一变的真实原因（与米勒集团的关联，loop5-6 揭示）"
+          - "他拿走 1103 和 1308 之后的计划（turn_cutscene 中执行，loop6 揭示藏弹壳）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "阶段 A：Morrison 对案子进展的看法——他更希望案件尽快结案（疑点 d1002 驱动）" # 7
+          - "阶段 B：向 Morrison 汇报推理并出示 .45 弹壳——触发转折" # 10
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 4031003  # Morrison（阶段 A）：Vivian 案件的官方立场——她有动机，案件已经很清楚了
+          # 注：阶段 B 触发后直接进入 turn_cutscene，不生成新证词条目
+
+        # ── 4. 鉴赏力 ──
+        connoisseur:
+          - type: source
+            content: "Morrison 在阶段 A 随口问'你查到什么了'时，语气看似漫不经心，但眼神里有一丝审视——他其实在评估 Zack 的调查是否已经触碰到了不该碰的东西"
+            note: "后续 loop5-6 考题：Morrison 在 loop4 大厅等待时究竟在担心什么？（与米勒集团/Whale 的关联，loop5-6 揭示）"
+
 # ─────────────────────────────
 # 四、指证（⚔️ Expose：Vivian）
 # ─────────────────────────────
@@ -510,8 +592,8 @@ turn_cutscene:
 
     随后，Morrison 的态度急转直下：
     1. 他不再客气，对 Emma 和 Zack 的态度变得强硬
-    2. 当场撕毁了 Zack 和 Webb 签署的委托协议书（1103）
-       ——1103 状态更新为 destroyed（内容玩家已知，无法再作为证物出示）
+    2. 拿走了那个揭穿的证物——Webb 委托协议书（1103）
+       ——1103 状态更新为 confiscated_by_morrison（内容玩家已知，无法再作为证物出示）
     3. 夺走了 Zack 手中的弹壳（1308）
        ——1308 状态更新为 confiscated_by_morrison
        （loop5 时玩家手中不再持有此弹壳；loop6 揭示被 Morrison 藏起来）
@@ -525,10 +607,10 @@ turn_cutscene:
     # ⭐ 这是 loop4 末证据状态变化的正式记录
     - id: 1103
       name: "Webb 委托协议书"
-      change_type: "destroyed"
-      agent: "Morrison（当场撕毁）"
+      change_type: "confiscated_by_morrison"
+      agent: "Morrison（拿走）"
       player_impact: "玩家手中不再持有 1103 实物；loop5 无法以此证物对抗 Morrison；内容仍在 known_facts 中"
-      reveal_loop: null  # 已永久销毁
+      reveal_loop: null  # 被 Morrison 永久控制；大纲未说明后续返还，1103 不再作为可出示证物登场
 
     - id: 1308
       name: "Rosa 给的弹壳（.45 ACP）"
@@ -553,7 +635,7 @@ turn_cutscene:
 
     active_topics:
       - "强制宣布：Vivian 有动机、有计划，手枪是凶器（谎言性宣告，不在本 Loop 被反驳）"
-      - "撕毁委托协议书 + 夺走弹壳的行动（强制剧情动作）"
+      - "拿走委托协议书（1103）+ 夺走弹壳（1308）的行动（强制剧情动作）"
       - "宣布逮捕 Vivian"
     withheld_topics:
       - "他看到 .45 弹壳脸色一变的真实原因（与米勒集团的关联，loop5-6 揭示）"
@@ -562,12 +644,12 @@ turn_cutscene:
     # ── 2. 玩家询问意图 ──
     player_inquiry:
       - "Morrison 为什么看到 .45 弹壳会脸色骤变（疑点 d1002 / d1006 驱动）" # 9
-      - "Morrison 为什么要撕毁委托协议书——他在阻止什么" # 9
+      - "Morrison 为什么要拿走委托协议书——他在阻止什么" # 9
 
     # ── 3. 可提取证词 ──
     testimony_ids:
       - 4031001  # ⚠谎言: Morrison 宣告——Vivian 有杀人动机和计划，她的手枪就是真正的凶器
-      - 4031002  # Morrison 行动记录：当场撕毁 1103（委托协议书），夺走 1308（弹壳），宣布逮捕 Vivian
+      - 4031002  # Morrison 行动记录：拿走 1103（委托协议书），夺走 1308（弹壳），宣布逮捕 Vivian
 
     # ── 4. 鉴赏力 ──
     connoisseur:
@@ -605,8 +687,8 @@ post_expose_scene:
       - "'Don't be bothering me!'——这句话是伏笔（Emma 暂时不知道是谁说的，只知道 Vivian 说听到了）"
       - "被撕毁的合同指向 Whale 是幕后主使（强烈怀疑，非完全证实）"
       - "Tommy 的怀疑：Rita 可能是 Whale 的间谍（unconfirmed_hypothesis）"
-      - "Morrison 看到 .45 弹壳后脸色骤变，撕毁协议书，夺走弹壳，强押 Vivian——Morrison 有问题"
-      - "1103 已被 Morrison 撕毁，1308 已被 Morrison 夺走"
+      - "Morrison 看到 .45 弹壳后脸色骤变，拿走协议书（1103），夺走弹壳（1308），强押 Vivian——Morrison 有问题"
+      - "1103 已被 Morrison 拿走，1308 已被 Morrison 夺走"
     does_not_know:
       - "Morrison 与 Whale/米勒集团的具体关联（loop5-6 才揭示）"
       - "真正的凶器在哪里（d1006 新建，loop5-6 解锁）"
@@ -696,7 +778,7 @@ doubts:
 
 evidence_registry:
   # Loop4 = 14xx 系列
-  # 继承 Loop1：1101（Vivian 手枪）/ 1102（委托单据）/ 1103（委托协议书，本 Loop 末状态：destroyed）
+  # 继承 Loop1：1101（Vivian 手枪）/ 1102（委托单据）/ 1103（委托协议书，本 Loop 末状态：confiscated_by_morrison）
   # 继承 Loop2：1201–1210 + 1299（占位）
   # 继承 Loop3：1301–1308（1308 本 Loop 末状态：confiscated_by_morrison）
 
@@ -736,9 +818,9 @@ evidence_registry:
     inherited_from: loop1
     status_change:
       loop: 4
-      change: "destroyed"
-      agent: "Morrison（turn_cutscene 中当场撕毁）"
-      note: "玩家 loop5 起无法再以 1103 实物作为证物；但内容已在 known_facts 中记录，玩家知晓其内容"
+      change: "confiscated_by_morrison"
+      agent: "Morrison（turn_cutscene 中拿走）"
+      note: "玩家 loop5 起无法再以 1103 实物作为证物；但内容已在 known_facts 中记录，玩家知晓其内容；被 Morrison 永久控制，大纲未说明后续返还"
 
   - id: 1308
     name: "Rosa 给的弹壳（.45 ACP）"
