@@ -17,6 +17,7 @@ Unit1 State → Preview 数据转换脚本（0417 规范化版）
 6. 无派生证据（DERIVED_EVIDENCE 留空）
 """
 
+import glob
 import json
 import os
 import re
@@ -30,6 +31,11 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 STATE_DIR = os.path.join(PROJECT_ROOT, "剧情设计", "unit1重构版0417", "state")
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "data", "Unit1")
 TABLE_DIR = os.path.join(SCRIPT_DIR, "data", "table")
+
+# AVG 对话源目录
+AVG_DIR = os.path.join(PROJECT_ROOT, "AVG", "EPI01")
+AVG_TALK_DIR = os.path.join(AVG_DIR, "Talk")
+AVG_EXPOSE_DIR = os.path.join(AVG_DIR, "Expose")
 
 CHAPTER = "EPI01"
 
@@ -958,6 +964,478 @@ def append_chapter_config(states):
 
 
 # ============================================================
+# AVG 对话导入（Talk / Expose → Talk.json / ExposeTalk.json / ExposeConfig.json / ExposeData.json）
+# ============================================================
+
+# 源 script → 目标 script 数字代码（见 0415 历史数据分析）
+SCRIPT_CODE_MAP = {
+    "": "",                       # 无 script → 不写入
+    "end": "2",                   # 对话结束
+    "branches": "1",              # 分支选项（带 Parameter 数组）
+    "get": "3",                   # 获取证据/证词/事件
+    "get_Evidence_Box": "4",      # 特殊：获取证物箱
+    "interrupt": "5",             # 中断（loop6 录音打断）
+    "Unlock_Cabaret_Hall": "6",   # 特殊：解锁歌舞厅
+    "Lie": "7",                   # 指证谎言
+}
+
+# NPC IdSpeaker (源格式 "NPC101") → 数字 ID
+# 特殊: NPC_RECORDER 作为录音机旁白
+NPC_IDSPEAKER_MAP = {f"NPC{npc['id']}": npc["id"] for npc in NPCS}
+NPC_IDSPEAKER_MAP["NPC_RECORDER"] = "RECORDER"  # 保留原标签，不做转换
+
+# 哪些 NPC 有 icon（和 Talk.json 现有格式一致）
+NPC_HAS_ICON = {"103", "104", "105", "106", "107", "108", "110"}
+
+# Expose 每个 loop 对应的 testimony ID（与现有 ExposeData.json 一致）
+LOOP_EXPOSE_TESTIMONY = {
+    1: "1031002",  # Rosa
+    2: "1041003",  # Morrison
+    3: "1053001",  # Tommy
+    4: "1071006",  # Jimmy (loop4)
+    5: "1063002",  # Vivian
+    6: "1072003",  # Jimmy (loop6)
+}
+
+# Expose sceneId = "1{loop}" (11/12/13/14/15/16)
+LOOP_EXPOSE_SCENE_ID = {i: f"1{i}" for i in range(1, 7)}
+
+# Expose 目标 NPC id (1-indexed loop → npc_id)
+LOOP_EXPOSE_NPC = {
+    1: "103",  # Rosa
+    2: "104",  # Morrison
+    3: "105",  # Tommy
+    4: "107",  # Jimmy
+    5: "106",  # Vivian
+    6: "107",  # Jimmy
+}
+
+LOOP_EXPOSE_NPC_INFO_ID = {
+    1: "2", 2: "2", 3: "2", 4: "1", 5: "2", 6: "3",
+}
+
+
+def _load_avg_json_file(path):
+    """加载单个 AVG JSON 文件。返回条目列表（dict 会被包进单元素列表）。"""
+    with open(path, "r", encoding="utf-8") as f:
+        d = json.load(f)
+    if isinstance(d, dict):
+        return [d]
+    elif isinstance(d, list):
+        return d
+    else:
+        return []
+
+
+def _normalize_avg_talk_entry(src, source_file_hint=None):
+    """将 AVG 源对话条目转换为 Talk.json 目标格式。
+
+    返回目标格式 dict，或 None（若 IdSpeaker 不识别）。
+    """
+    src_speaker = src.get("IdSpeaker", "")
+    npc_id = NPC_IDSPEAKER_MAP.get(src_speaker)
+
+    # Speaker 块
+    if npc_id and npc_id != "RECORDER":
+        npc = NPC_ID_MAP.get(npc_id, {})
+        speaker = {
+            "id": npc_id,
+            "Name": [npc.get("name_cn", src.get("cnSpeaker", "")),
+                     npc.get("name_en", src.get("enSpeaker", ""))],
+            "role": npc.get("role", "5"),
+            "Chapter": CHAPTER,
+        }
+        if npc_id in NPC_HAS_ICON:
+            icons = NPC_ICON_CONFIG.get(int(npc_id))
+            if icons:
+                speaker["IconSmall"] = icons[0]
+                speaker["IconLarge"] = icons[1]
+    else:
+        # 未识别或 RECORDER：保留名称但不设 id（或用原前缀）
+        speaker = {
+            "id": npc_id if npc_id else src_speaker,
+            "Name": [src.get("cnSpeaker", ""), src.get("enSpeaker", "")],
+            "role": "5",
+            "Chapter": CHAPTER,
+        }
+
+    # 基础字段
+    entry = {
+        "id": str(src.get("id", "")),
+        "step": str(src.get("step", "")),
+        "isRight": "false",
+        "waitTime": str(src.get("waitTime", 0)),
+        "Speaker": speaker,
+    }
+
+    # Location: 优先 cnLocation/enLocation（数组），否则 Location（单字符串）也生成数组
+    cn_loc = src.get("cnLocation", "") or ""
+    en_loc = src.get("enLocation", "") or ""
+    single_loc = src.get("Location", "") or ""
+    if cn_loc or en_loc:
+        entry["Location"] = [cn_loc, en_loc]
+    elif single_loc:
+        entry["Location"] = [single_loc, single_loc]
+
+    # Words
+    entry["Words"] = [src.get("cnWords", "") or "", src.get("enWords", "") or ""]
+
+    # next 字段：源 next 可能是数字、字符串、空串或 "-1" 或 ""
+    src_next = src.get("next", "")
+    # 规范化：空串、null、"-1" 等 ending 标记 → 不写 next
+    src_script = src.get("script", "") or ""
+    if src_script in ("end", "Lie"):
+        # end/Lie 的 next 一般被吞掉（target 中不存在）
+        if src_script == "Lie":
+            # Lie 的 break_next 放在 ParameterInt0，target 里 next 保留为该值
+            pi0 = src.get("ParameterInt0", 0)
+            if pi0 and str(pi0) not in ("0",):
+                entry["next"] = str(pi0)
+        # end: 不设 next
+    else:
+        if src_next not in (None, "", "-1"):
+            entry["next"] = str(src_next)
+
+    # script 映射
+    target_script = SCRIPT_CODE_MAP.get(src_script, "")
+    if target_script:
+        entry["script"] = target_script
+
+    # Parameters 构建
+    # 默认：[{"ParameterInt": "0"}]
+    # branches: 每个非空 ParameterStrN + ParameterIntN 作为一对
+    # get: 有 Str 的 → {ParameterStr, ParameterInt:"0"}
+    # Lie: 强制 default（[{ParameterInt:"0"}]）—— 与现有 Talk.json 一致
+    params = []
+    if src_script == "branches":
+        for i in range(4):  # 0..3
+            ps = src.get(f"ParameterStr{i}", "") or ""
+            pi = src.get(f"ParameterInt{i}", 0)
+            if ps or (pi and str(pi) not in ("0",)):
+                params.append({
+                    "ParameterStr": ps,
+                    "ParameterInt": str(pi) if pi else "0",
+                })
+        if not params:
+            params = [{"ParameterInt": "0"}]
+    elif src_script == "get":
+        # 选用第一个非空 Str（源同时有 ParameterStr0 和 ParameterStr1 的情况：通常只有一个非空）
+        combined_str = ""
+        for i in range(4):
+            ps = src.get(f"ParameterStr{i}", "") or ""
+            if ps:
+                combined_str = ps
+                break
+        if combined_str:
+            params.append({"ParameterStr": combined_str, "ParameterInt": "0"})
+        else:
+            params = [{"ParameterInt": "0"}]
+    elif src_script == "interrupt":
+        # interrupt: ParameterInt0 = 1（标记）
+        pi0 = src.get("ParameterInt0", 0)
+        if pi0 is not None:
+            params = [{"ParameterInt": str(pi0) if pi0 else "0"}]
+        else:
+            params = [{"ParameterInt": "0"}]
+    else:
+        params = [{"ParameterInt": "0"}]
+    entry["Parameters"] = params
+
+    # videoEpisode / videoLoop / videoScene / videoId
+    entry["videoEpisode"] = src.get("videoEpisode", CHAPTER)
+    entry["videoLoop"] = src.get("videoLoop", "")
+    entry["videoScene"] = src.get("videoScene", "") or (source_file_hint or "")
+    entry["videoId"] = str(src.get("videoId", "") or entry["id"])
+
+    return entry
+
+
+def _normalize_expose_talk_entry(src):
+    """将 AVG Expose 源条目转换为 ExposeTalk.json 目标格式。"""
+    src_speaker = src.get("IdSpeaker", "")
+    npc_id = NPC_IDSPEAKER_MAP.get(src_speaker, src_speaker.replace("NPC", ""))
+
+    npc = NPC_ID_MAP.get(npc_id, {})
+    cn_speaker = npc.get("name_cn", src.get("cnSpeaker", ""))
+    en_speaker = npc.get("name_en", src.get("enSpeaker", ""))
+
+    entry = {
+        "id": str(src.get("id", "")),
+        "step": str(src.get("step", "")),
+        "speakType": f"E_{src.get('speakType', 2)}",
+        "waitTime": str(src.get("waitTime", 0)),
+        "IdSpeaker": npc_id,
+        "cnSpeaker": cn_speaker,
+        "enSpeaker": en_speaker,
+        "talkDisplayIndex": str(src.get("talkDisplayIndex", 1 if npc_id == "101" else 2)),
+        "cnWords": src.get("cnWords", "") or "",
+        "enWords": src.get("enWords", "") or "",
+    }
+
+    src_next = src.get("next", "")
+    if src_next not in (None, "", "-1"):
+        entry["next"] = str(src_next)
+
+    # script：Lie / end 等原文保留，空则不写
+    src_script = src.get("script", "") or ""
+    if src_script:
+        entry["script"] = src_script
+
+    # 对 Lie 保留 ParameterStr0 中的证据串（去除 EV 前缀）
+    if src_script == "Lie":
+        ps0 = src.get("ParameterStr0", "") or ""
+        # 去掉 "EV" 前缀并转为逗号分隔数字
+        items = [x.strip().removeprefix("EV") for x in ps0.split(",") if x.strip()]
+        entry["ParameterStr0"] = ",".join(items)
+
+    pi0 = src.get("ParameterInt0", 0)
+    pi1 = src.get("ParameterInt1", 0)
+    pi2 = src.get("ParameterInt2", 0)
+    entry["ParameterInt0"] = str(pi0 if pi0 is not None else 0)
+    entry["ParameterInt1"] = str(pi1 if pi1 is not None else 0)
+    entry["ParameterInt2"] = str(pi2 if pi2 is not None else 0)
+
+    entry["videoEpisode"] = src.get("videoEpisode", CHAPTER)
+    entry["videoLoop"] = src.get("videoLoop", "")
+    entry["videoScene"] = src.get("videoScene", "")
+    entry["videoId"] = str(src.get("videoId", "") or entry["id"])
+
+    return entry
+
+
+def load_avg_talks(include_expose=True):
+    """从 AVG/EPI01/Talk/loop{1-6}/*.json 读取所有 Unit1 对话。
+
+    跳过 _manifest.json；每个文件可能是单条（dict）或数组（list）。
+    可选 include_expose=True：同时把 AVG/EPI01/Expose/*.json 也转成 Talk.json 目标格式
+    （保持历史 Talk.json 同时收纳 Talk+Expose 条目的行为）。
+    返回扁平化的 Talk.json 目标格式条目列表。
+    """
+    talks = []
+    files_loaded = 0
+    for loop_num in range(1, 7):
+        loop_dir = os.path.join(AVG_TALK_DIR, f"loop{loop_num}")
+        if not os.path.isdir(loop_dir):
+            continue
+        for fname in sorted(os.listdir(loop_dir)):
+            if not fname.endswith(".json") or fname.startswith("_manifest"):
+                continue
+            path = os.path.join(loop_dir, fname)
+            scene_hint = fname.removesuffix(".json")
+            entries = _load_avg_json_file(path)
+            for src in entries:
+                tgt = _normalize_avg_talk_entry(src, source_file_hint=scene_hint)
+                if tgt is not None:
+                    talks.append(tgt)
+            files_loaded += 1
+
+    expose_files = 0
+    expose_entries_added = 0
+    if include_expose and os.path.isdir(AVG_EXPOSE_DIR):
+        for fname in sorted(os.listdir(AVG_EXPOSE_DIR)):
+            if not fname.endswith(".json") or fname.startswith("_manifest"):
+                continue
+            path = os.path.join(AVG_EXPOSE_DIR, fname)
+            scene_hint = fname.removesuffix(".json")
+            entries = _load_avg_json_file(path)
+            for src in entries:
+                tgt = _normalize_avg_talk_entry(src, source_file_hint=scene_hint)
+                if tgt is not None:
+                    talks.append(tgt)
+                    expose_entries_added += 1
+            expose_files += 1
+
+    print(f"    [AVG] 读取 {files_loaded} 个 Talk 文件 + {expose_files} 个 Expose 文件，"
+          f"共 {len(talks)} 条对话（其中 Expose {expose_entries_added} 条）")
+    return talks
+
+
+def load_avg_exposes():
+    """从 AVG/EPI01/Expose/loop{N}_{npc}.json 读取所有指证对话。
+
+    返回 (expose_talks, expose_configs, expose_data) 三元组：
+      expose_talks: ExposeTalk.json 条目列表
+      expose_configs: ExposeConfig.json 条目列表（每个 loop 一个）
+      expose_data: ExposeData.json 条目列表（每个 Lie 一条）
+    """
+    expose_talks = []
+    expose_configs = []
+    expose_data = []
+
+    # 从 ExposeData.json 现存的最大 id 继续编号（避免与 Unit2 id 冲突）
+    existing_data = []
+    try:
+        existing_data = load_json("ExposeData.json")
+    except Exception:
+        existing_data = []
+    # 计算 Unit1 最大 id（用于分配新 id）
+    u1_ids = []
+    for it in existing_data:
+        # Unit1 的 testimony 以 1 开头
+        if str(it.get("testimony", "")).startswith("1"):
+            try:
+                u1_ids.append(int(it["id"]))
+            except (TypeError, ValueError):
+                pass
+    next_data_id = max(u1_ids) + 1 if u1_ids else 1
+    # 为保持与现有数据一致，从 1 开始重新分配
+    next_data_id = 1
+
+    for loop_num in range(1, 7):
+        expose_npc = LOOP_EXPOSE_NPC[loop_num]
+        # 按现有文件名规则
+        npc_name_map = {
+            1: "rosa", 2: "morrison", 3: "tommy",
+            4: "jimmy", 5: "vivian", 6: "jimmy",
+        }
+        fname = f"loop{loop_num}_{npc_name_map[loop_num]}.json"
+        path = os.path.join(AVG_EXPOSE_DIR, fname)
+        if not os.path.isfile(path):
+            print(f"    [WARN] Expose file not found: {path}")
+            continue
+        entries = _load_avg_json_file(path)
+        if not entries:
+            continue
+
+        # 1. ExposeTalk 格式转换
+        for src in entries:
+            expose_talks.append(_normalize_expose_talk_entry(src))
+
+        # 2. ExposeConfig：聚合所有 Lie 的证据到 ExposeItemID
+        lie_entries = [e for e in entries if (e.get("script", "") or "") == "Lie"]
+        all_items = []
+        for lie in lie_entries:
+            ps0 = lie.get("ParameterStr0", "") or ""
+            for x in ps0.split(","):
+                x = x.strip().removeprefix("EV")
+                if x and x not in all_items:
+                    all_items.append(x)
+        expose_configs.append({
+            "sceneId": LOOP_EXPOSE_SCENE_ID[loop_num],
+            "ExposeNPCID": LOOP_EXPOSE_NPC[loop_num],
+            "ExposeNPCInfoID": LOOP_EXPOSE_NPC_INFO_ID[loop_num],
+            "ExposeItemIDCount": "1",
+            "ExposeItemID": [",".join(all_items) if all_items else ""],
+            "ExposeTalkID": str(entries[0].get("id", "")),
+        })
+
+        # 3. ExposeData：每个 Lie 一条
+        #    talkId 策略：round 1 = 首个对话 id；round N>1 = 前一个 Lie 的 ParameterInt0
+        first_entry_id = str(entries[0].get("id", ""))
+        testimony_id = LOOP_EXPOSE_TESTIMONY[loop_num]
+
+        prev_break_next = None
+        for idx, lie in enumerate(lie_entries):
+            ps0 = lie.get("ParameterStr0", "") or ""
+            items = [x.strip().removeprefix("EV") for x in ps0.split(",") if x.strip()]
+            if idx == 0:
+                talk_id = first_entry_id
+            else:
+                talk_id = str(prev_break_next) if prev_break_next else first_entry_id
+            expose_data.append({
+                "id": str(next_data_id),
+                "testimony": testimony_id,
+                "item": items,
+                "talkId": talk_id,
+            })
+            next_data_id += 1
+            # 记录本 Lie 的 break_next（下个 round 的 talkId 候选）
+            pi0 = lie.get("ParameterInt0", 0)
+            prev_break_next = pi0 if pi0 else None
+
+    print(f"    [AVG] 读取 {len(expose_talks)} 条 Expose 对话，"
+          f"{len(expose_configs)} 个 ExposeConfig，{len(expose_data)} 条 ExposeData")
+    return expose_talks, expose_configs, expose_data
+
+
+def append_avg_talks_to_table(talks, dry_run=False):
+    """合并 AVG Talk 到 data/table/Talk.json
+
+    清理策略：删除所有 id 以 1[0-6] 开头的 Unit1 旧条目（6 位或 9 位）。
+    保留：id 前缀 2x 的 Unit2 条目 + Chapter != EPI01 的其他条目。
+    """
+    data = load_json("Talk.json")
+    before_count = len(data)
+
+    unit1_prefixes = {"10", "11", "12", "13", "14", "15", "16"}
+    kept = []
+    removed = 0
+    for it in data:
+        iid = str(it.get("id", ""))
+        if iid[:2] in unit1_prefixes:
+            removed += 1
+        else:
+            kept.append(it)
+
+    # 统计保留项的 Chapter 分布（验证 Unit2 未被动）
+    keep_prefix = {}
+    for it in kept:
+        p = str(it.get("id", ""))[:2]
+        keep_prefix[p] = keep_prefix.get(p, 0) + 1
+
+    print(f"    [Talk.json] 原 {before_count} 条；清理 Unit1 旧 {removed} 条；"
+          f"保留 {len(kept)} 条（前缀分布：{keep_prefix}）")
+    print(f"    [Talk.json] 将追加 {len(talks)} 条 AVG 新对话")
+
+    if dry_run:
+        print("    [DRY-RUN] 不写入文件")
+        return
+
+    # 追加
+    kept.extend(talks)
+    save_json("Talk.json", kept)
+    print(f"    [Talk.json] 最终 {len(kept)} 条")
+
+
+def append_avg_exposes_to_table(expose_talks, expose_configs, expose_data, dry_run=False):
+    """合并 AVG Expose 数据到 ExposeTalk.json / ExposeConfig.json / ExposeData.json。
+
+    清理策略：
+      - ExposeTalk.json: 删除 id 前缀 1[1-6] 的 Unit1 条目（全是 Unit1，按需清理）
+      - ExposeConfig.json: 删除 sceneId 前缀 "1" 的 Unit1 条目
+      - ExposeData.json: 删除 testimony 前缀 "1" 的 Unit1 条目
+    """
+    # --- ExposeTalk.json ---
+    etalk = load_json("ExposeTalk.json")
+    before_etalk = len(etalk)
+    u1_prefixes = {"11", "12", "13", "14", "15", "16"}
+    etalk_kept = [it for it in etalk if str(it.get("id", ""))[:2] not in u1_prefixes]
+    print(f"    [ExposeTalk.json] 原 {before_etalk} 条；清理 {before_etalk - len(etalk_kept)} 条；"
+          f"追加 {len(expose_talks)} 条")
+
+    # --- ExposeConfig.json ---
+    econf = load_json("ExposeConfig.json")
+    before_econf = len(econf)
+    # Unit1 sceneId 是 "11"-"16"
+    econf_kept = [it for it in econf if not str(it.get("sceneId", "")).startswith("1")]
+    print(f"    [ExposeConfig.json] 原 {before_econf} 条；清理 {before_econf - len(econf_kept)} 条；"
+          f"追加 {len(expose_configs)} 条")
+
+    # --- ExposeData.json ---
+    edata = load_json("ExposeData.json")
+    before_edata = len(edata)
+    # Unit1 testimony 以 "1" 开头
+    edata_kept = [it for it in edata if not str(it.get("testimony", "")).startswith("1")]
+    unit2_remaining = len(edata_kept)
+    print(f"    [ExposeData.json] 原 {before_edata} 条；清理 {before_edata - len(edata_kept)} 条；"
+          f"追加 {len(expose_data)} 条 (Unit2 保留 {unit2_remaining})")
+
+    if dry_run:
+        print("    [DRY-RUN] 不写入文件")
+        return
+
+    etalk_kept.extend(expose_talks)
+    econf_kept.extend(expose_configs)
+    edata_kept.extend(expose_data)
+
+    save_json("ExposeTalk.json", etalk_kept)
+    save_json("ExposeConfig.json", econf_kept)
+    save_json("ExposeData.json", edata_kept)
+    print(f"    [写入] ExposeTalk={len(etalk_kept)}, "
+          f"ExposeConfig={len(econf_kept)}, ExposeData={len(edata_kept)}")
+
+
+# ============================================================
 # 主流程
 # ============================================================
 
@@ -978,17 +1456,26 @@ def main():
     generate_locations_yaml()
     generate_talk_summary(states)
 
-    print("\n[3/3] 追加 JSON 数据表（仅处理 Chapter=EPI01）...")
+    print("\n[3/4] 追加 JSON 数据表（仅处理 Chapter=EPI01）...")
     append_scenes_to_json(states)
     append_items_to_json(states)
     append_npcs_to_json()
     append_doubts_to_json(states)
     append_chapter_config(states)
 
+    print("\n[4/4] 合并 AVG 对话 JSON (Talk / Expose)...")
+    dry_run = os.environ.get("AVG_DRY_RUN", "").lower() in ("1", "true", "yes")
+    talks = load_avg_talks()
+    e_talks, e_configs, e_data = load_avg_exposes()
+    append_avg_talks_to_table(talks, dry_run=dry_run)
+    append_avg_exposes_to_table(e_talks, e_configs, e_data, dry_run=dry_run)
+
     print("\n" + "=" * 50)
     print("Unit1 preview 数据生成完成")
     print(f"YAML 输出: {OUTPUT_DIR}")
     print(f"JSON 更新: {TABLE_DIR}")
+    if dry_run:
+        print("(AVG_DRY_RUN=1 — AVG 对话部分为预览模式，未写入文件)")
     print("=" * 50)
 
 
