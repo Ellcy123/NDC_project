@@ -34,8 +34,9 @@
 #                        round_3 新增 post_round_event（鸣笛机制）；
 #                        suspect_suicide_sequence 新增 audio_sequence 精确时序；
 #                        post_expose_romance 新增 infiltration_plan（loop6 前置）
-# B. 证据覆盖     PASS — 大纲 loop5 所有证据（15xx 系列 7 件）已分配到场景；
-#                        1501 标注 inherited_from:1299；1507（手枪）标注 loop6_critical；
+# B. 证据覆盖     PASS — 大纲 loop5 所有证据（15xx 系列 6 件正式物证）已分配到场景；
+#                        1501 保留为环境道具（environmental，不可拾取，Tommy 场景内展示）；
+#                        1507（手枪）标注 loop6_critical；
 #                        1502 metadata 补充 meeting_time:晚上8点 + meeting_location:后门
 # C. NPC 条目     PASS — Emma/Tommy/Jimmy/Anna 各含 4 必填块；
 #                        Jimmy 为 Expose 对象（is_liar:true, player_inquiry:null）；
@@ -213,18 +214,19 @@ scenes:
       Tommy 独自在清洁间。
       由于 Zack 为 Vivian 付出的一切——尤其是指证 Rosa，揭穿威胁纸条，
       最终让 Vivian 说出了真话——Tommy 对 Zack 的态度已经彻底转变。
-      loop2 时他夺回了抽屉里那枚弹壳，现在他主动将其交出。
-      ⭐ 技术说明：弹壳（1501）正式化自 loop2 占位符 1299（场景道具，不可拾取）。
-      Tommy 同时交出了他手里完整的《芝加哥鼓点单子》——
+      loop2 时他夺回了抽屉里那枚弹壳，现在他在清洁间里把它拿给 Zack 看、讲述它的来历。
+      ⭐ 技术说明：弹壳（1501）为环境叙事道具（environmental，不可拾取），
+      承接 loop2 占位符 1299；信息通过 Tommy 证词传达，Zack 不将其收入物证清单。
+      Tommy 真正交出的是他手里完整的《芝加哥鼓点单子》——
       loop3 Jimmy 已销毁了酒吧里的鼓点碎片（1301），但 Tommy 另有一份备份。
 
     evidence:
       - id: 1501
         name: "久远陈旧的子弹（弹壳）"
-        type: physical
-        pickup: true
+        type: environmental
+        pickup: false
         inherited_from: 1299
-        note: "关键——Tommy 交付的信任物；与 1308（已被 Morrison 夺走）同批次，均为 .45 ACP 警用弹（米勒集团相关）；loop5 Expose 中作为弹型印证依据（不是主要证据，辅助确认子弹链）"
+        note: "环境叙事——Tommy 场景内展示并讲述来历（那次被枪击的警告）；与 1308 同批次 .45 ACP 警用弹；信息走 Tommy 证词，不作为 Zack 手持物证"
         description: "一颗保存多年、略显陈旧的 .45 ACP 弹壳。Tommy 在某次为 Webb 去收勒索款时被枪击（打中大腿），子弹来自对方——那是 Whale 的一次警告。Tommy 当时捡起了这枚弹壳，一直藏在抽屉里"
         metadata:
           caliber: ".45 ACP"
@@ -260,7 +262,7 @@ scenes:
             trigger: "loop3 s301 Jimmy 销毁鼓点单子的突发事件，Tommy 事后得知或目睹"
 
         active_topics:
-          - "主动交出旧弹壳（1501）——与 1308 同批次；他解释那次被枪击的来龙去脉（Whale 的警告）"
+          - "向 Zack 展示并讲述那枚旧弹壳（1501）的来历——与 1308 同批次；他解释那次被枪击的来龙去脉（Whale 的警告）（环境叙事，不交付物证）"
           - "主动交出鼓点完整单子（1503）——他特意留了一份备份；提示 Zack 注意 23:00 的鼓点高潮"
           - "这个弹壳的批次他见过——Whale 那边用的就是这种警用弹，那次之后 Webb 就改让别人接手收款了（不点名）"
         withheld_topics:
@@ -512,8 +514,8 @@ expose:
 
   context: |
     Zack 完成自由探索后，手握：
-    - 1501 旧弹壳（.45 ACP，Tommy 交付）
     - 1503 鼓点完整单子（Tommy 交出）
+    - 旧弹壳信息（1501，环境叙事——Tommy 在清洁间展示并讲述来历；信息以 Tommy 证词形式保存，非手持物证）
     - 1504 Jimmy 口音词汇（厨房对话中暴露）
     - 1502 Jimmy 给 Whale 的回信（Jimmy 家发现）
     - 1505 英语练习书（Jimmy 家发现，字迹三物之一）
@@ -800,9 +802,14 @@ doubts:
     status: "resolved_loop3"
 
   - id: d1004
-    text: "Webb 的酒吧在做敲诈勒索生意——Tommy 之后的执行人是谁？那个被惹上的大人物又是谁？"
+    text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
     status: "resolved_loop5"
-    resolution: "Jimmy 是新的执行人，Whale 是那个大人物"
+    resolution: "新执行人是 Jimmy（Vivian 只曾被迫协助勒索中产，不是 Whale 维度的执行人）"
+
+  - id: d1011
+    text: "Webb 勒索的那个大人物又是谁？"
+    status: "resolved_loop5"
+    resolution: "大人物是 Whale（loop5 Jimmy 给 Whale 的回信 + 被撕毁合同闭环；完整身份链在 loop6 最终确认）"
 
   - id: d1005
     text: "是谁写了那张威胁纸条，刻意嫁祸 Vivian？此人为何熟悉酒吧内部——他在酒吧里扮演什么角色？"
@@ -868,11 +875,11 @@ evidence_registry:
 
   - id: 1501
     name: "久远陈旧的子弹（弹壳）"
-    type: physical
+    type: environmental
     first_scene: s501
-    pickup: true
-    inherited_from: 1299  # loop2 占位符（Tommy 抽屉，不可拾取），loop5 正式化
-    note: "关键（弹型链辅助）——.45 ACP 警用弹，与 1308 同批次；Tommy 交付，证明弹壳批次的连续性"
+    pickup: false
+    inherited_from: 1299  # loop2 占位符（Tommy 抽屉，不可拾取），loop5 仍保持环境叙事
+    note: "环境叙事——.45 ACP 警用弹，与 1308 同批次；Tommy 场景内展示并讲述来历；信息走 Tommy 证词，Zack 不收入物证清单"
 
   - id: 1502
     name: "Jimmy 给 Whale 的回信"

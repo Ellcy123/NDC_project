@@ -13,7 +13,7 @@
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts 全部存在
-# B. 证据覆盖     PASS — 大纲 loop1 所有证据（手枪/委托单据/委托协议书）已分配到场景
+# B. 证据覆盖     PASS — 大纲 loop1 所有证据（手枪/委托协议书）已分配到场景；1102/1103 合并为 1103
 # C. NPC 条目     PASS — Rosa/Vivian/Morrison/Emma 各含 4 必填块；Morrison 新增 connoisseur source
 # D. 目标对齐     PASS — goals 与大纲"指证 Rosa"新手教程目标一致
 # E. 信息节奏     PASS — 未泄露 loop2+ 内容；Vivian 沉默状态符合信息节奏（"认罪"行为延后到 loop2 自由探索）
@@ -47,7 +47,7 @@ player_context:
     - direction: "调查 Vivian 手中手枪是否开过枪"
       trigger: "Vivian 手持手枪的现场画面——Rosa 以此指控"
     - direction: "核实 Webb 提前立协议保护 Vivian 的真实意图"
-      trigger: "Webb 委托单据出现，且 Webb 已死"
+      trigger: "Webb 委托协议书出现，且 Webb 已死"
 
   post_expose_knowledge:
     # 指证 Rosa 结束后玩家获得的新知识
@@ -123,7 +123,7 @@ scenes:
       Webb 死亡现场——Morrison 控制进入权限。
       Vivian 仍持枪站在原地，对 Webb 的死亡十分惊讶，沉默不语，暂不透露具体行为信息。
       Rosa 在场，玩家在自由探索阶段即可通过与 Rosa 对话获取其谎言和证词（谎言1 + 谎言2）。
-      玩家可以检查 Vivian 手中的手枪，并找到 Webb 的委托单据。
+      玩家可以检查 Vivian 手中的手枪，并找到 Webb 的委托协议书。
     notes: |
       信息流管控要点：
       - Rosa：active_topics 包含谎言1（持枪指控）和谎言2（23:30 时间线），自由探索阶段即可提取证词
@@ -136,17 +136,11 @@ scenes:
         note: "关键——用于击破 Rosa 谎言1（无硝烟反应证明 Vivian 未开枪）"
         analysis: "分析可得：枪管内无硝烟残留，表明该枪近期未被击发"
 
-      - id: 1102
-        name: "Webb 委托单据"
-        type: document
-        note: "关键——Webb 和 Zack 的签字合同，证明 Zack 有合法调查委托"
-        analysis: null
-
       - id: 1103
         name: "Webb 委托协议书"
         type: document
-        note: "关键——用于换取 Morrison 72 小时调查期；证明 Webb 预感被害（保险倾向）"
-        description: "协议内容：Zack 负责保护 Vivian 安全，并确保 Vivian 在 Webb 死后能顺利继承遗产"
+        note: "关键——Webb 和 Zack 签字的委托协议；确立 Zack 合法调查身份 + 换取 Morrison 72h 调查期；证明 Webb 预感被害（保险倾向）"
+        description: "协议内容：Zack 负责保护 Vivian 安全，并确保 Vivian 在 Webb 死后能顺利继承遗产（注：原设计分为 1102 委托单据 + 1103 委托协议书两件，实为同一份合同的不同提法，现合并为 1103 单件；1102 已废弃不再使用）"
 
     npcs:
       # ── Vivian（沉默 / 认罪状态）──
@@ -422,10 +416,9 @@ doubts:
   - id: d1003
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
     unlock_condition: |
-      loop1 阶段无法解锁——此疑点需要后续证据交叉验证：
-      1. 玻璃碎片（loop3 获得，有硝烟痕迹）
-      2. Rosa 的倒垃圾时间节点（loop3 证言）
-    status: "locked_until_loop3"
+      loop1 阶段无法出现——此疑点将在 loop2 被提出（经由 Tommy 枪声方向证词等引发怀疑），
+      loop3 正式解决（玻璃碎片 + Rosa 倒垃圾时间线交叉验证）。
+    status: "locked_until_loop2"  # loop2 提出，loop3 解决
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop1 全部证据）
@@ -439,17 +432,12 @@ evidence_registry:
     first_scene: s101
     note: "关键——击破 Rosa 谎言1（无硝烟反应）"
 
-  - id: 1102
-    name: "Webb 委托单据"
-    type: document
-    first_scene: s101
-    note: "关键——确立 Zack 合法调查身份 / 建立动机"
-
+  # 注：原 1102 委托单据与 1103 委托协议书已合并为单件 1103（实为同一份合同），1102 ID 废弃
   - id: 1103
     name: "Webb 委托协议书"
     type: document
     first_scene: s101
-    note: "关键——换取 72 小时调查期；体现 Webb 保险倾向"
+    note: "关键——Webb 和 Zack 签字的委托协议；确立 Zack 合法调查身份 + 建立动机 + 换取 72h 调查期；体现 Webb 保险倾向"
 
   # ── 以下为 Loop1 结束时自动确认的信息（非证据道具，但记录供后续引用）──
   # 1101_analysis: 手枪分析结果——无硝烟反应（通过分析 1101 获得）

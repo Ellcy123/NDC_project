@@ -742,15 +742,22 @@ doubts:
     # loop3 已解锁：真实枪击时间早于 23:20，23:30 是假枪声。
 
   - id: d1004
-    text: "Webb 的酒吧在做敲诈勒索生意——Tommy 之后的执行人是谁？那个被惹上的大人物又是谁？"
+    text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
     unlock_condition: |
-      需要两种信息交叉验证：
-      1. Tommy 指证后的供述（Webb 勒索生意 + 执行人换人）
-      2. Tommy 对"大人物"的暗示（他心中有猜测但不点名）
+      loop2 Expose Tommy 后解锁。
     status: "advancing_loop4"
     # loop4 新进展：
-    # - "大人物"确认倾向是 Whale（Tommy 直接回应 Zack 询问 + 被撕毁合同印证）
+    # - Vivian 证言（4011005）澄清："帮 Webb 勒索 Whale 的人不是她"——排除 Vivian
     # - 执行人身份仍未点名（loop5 揭示是 Jimmy）
+
+  - id: d1011
+    text: "Webb 勒索的那个大人物又是谁？"
+    unlock_condition: |
+      loop2 Expose Tommy 后解锁。
+    status: "advancing_loop4"
+    # loop4 新进展：
+    # - "大人物"确认倾向是 Whale（Tommy 直接回应 Zack 询问 + 被撕毁合同 1401 印证）
+    # - 仍属"强烈怀疑"，Whale 完整身份在 loop5-6 分段揭示
 
   - id: d1005
     text: "是谁写了那张威胁纸条，刻意嫁祸 Vivian？此人为何熟悉酒吧内部——他在酒吧里扮演什么角色？"
@@ -778,7 +785,7 @@ doubts:
 
 evidence_registry:
   # Loop4 = 14xx 系列
-  # 继承 Loop1：1101（Vivian 手枪）/ 1102（委托单据）/ 1103（委托协议书，本 Loop 末状态：confiscated_by_morrison）
+  # 继承 Loop1：1101（Vivian 手枪）/ 1103（Webb 委托协议书，含调查委托 + 保护 Vivian + 继承遗产条款；原 1102 已合并至 1103；本 Loop 末状态：confiscated_by_morrison）
   # 继承 Loop2：1201–1210 + 1299（占位）
   # 继承 Loop3：1301–1308（1308 本 Loop 末状态：confiscated_by_morrison）
 

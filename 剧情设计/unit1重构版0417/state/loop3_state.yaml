@@ -2,7 +2,7 @@
 # loop3_state.yaml — Unit1 Loop 3: 自由探索（中）/ 指证 Rosa
 # ============================================================
 #
-# 叙事功能：犯罪现场首次开放 + 时间线谜题核心解锁 + Rosa 击穿（两轮）
+# 叙事功能：犯罪现场（自 loop1 之后再次开放）+ 时间线谜题核心解锁 + Rosa 击穿（两轮）
 # 核心体验：round_1 击破时间线谎言（partial_victory / triggers_retreat），
 #           Rosa 立刻退守；round_2 威胁纸条击穿退守谎言（full_breakthrough），Rosa 主动交出弹壳
 # Loop 结束：d1003（时间线谜题）解锁；Rosa 由"说谎者"转变为"协助者"；
@@ -42,7 +42,7 @@ player_context:
   goals:
     primary: "找到案发现场（会客室）内的疑点，确认 Rosa 的时间线指控是否在撒谎"
     secondary:
-      - "犯罪现场（会客室）首次开放——搜寻 Rosa 谎言的物证"
+      - "犯罪现场（会客室）自 loop1 之后再次开放——搜寻 Rosa 谎言的物证"
       - "重新核查所有人的时间节点，寻找 23:30 枪声不是真正案发时间的证据"
       - "了解案发现场窗户玻璃碎片的来源"
 
@@ -68,7 +68,7 @@ player_context:
     - "新疑点（d1004）：Webb 的勒索执行人换成了谁？那个大人物是谁？"
 
   new_directions:
-    - direction: "进入会客室犯罪现场——首次开放，搜寻被忽视的物证"
+    - direction: "进入会客室犯罪现场——自 loop1 之后再次开放，搜寻被忽视的物证"
       trigger: "loop2 末 Emma 提出：Rosa 的时间线说法一直没能反驳，需要重新检查案发现场"
     - direction: "调查 Morrison 勘验现场后的信息：子弹缺失是怎么回事"
       trigger: "Morrison 在大厅主动提及'子弹缺失'（loop3 新增信息）"
@@ -287,10 +287,10 @@ scenes:
             content: "Morrison 说'子弹缺失'时，语气过于简短——像是有意不让对话深入。一般警官会对'找不到子弹'这件异常情况多做解释"
             note: "loop5/6 消耗：Morrison 说这话时神情异常——为什么子弹会'缺失'？（伏笔：被他自己藏起来了，loop6 才揭示）"
 
-  # ── 场景 S303：犯罪现场（会客室）——本 Loop 首次开放 ──
+  # ── 场景 S303：犯罪现场（会客室）——自 loop1 之后再次开放 ──
   - id: s303
     name: "犯罪现场（二楼会客室）"
-    type: free_exploration  # 🔓 自由探索（首次开放）
+    type: free_exploration  # 🔓 自由探索（自 loop1 之后再次开放）
     description: |
       Webb 死亡的案发现场，本 Loop 首次对玩家开放。
       Morrison 完成勘验后离开，Zack 可以独立搜证。
@@ -603,24 +603,31 @@ doubts:
 
   - id: d1003
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
-    unlock_condition: |
-      两种不同来源的信息交叉验证（loop3 解锁）：
+    posed_loop: 2  # loop2 已由 Tommy 枪声方向证词 + Vivian 平时送酒时间等触发提出
+    resolution_condition: |
+      两种不同来源的信息交叉验证（loop3 解决）：
       1. 玻璃碎片（1305，有硝烟痕迹，压在垃圾袋下）——物证
       2. Rosa 的倒垃圾时间节点证言（3021002，23:20）——证人陈述
       推理链：垃圾袋 23:20 放置 → 碎片在袋下 → 玻璃破碎早于 23:20 →
               碎片有硝烟 → 来自子弹穿窗 → 真实枪击时间早于 23:20
-    status: "unlocked_loop3"
-    # loop3 核心疑点，本轮正式解锁。
+    status: "resolved_loop3"
+    # loop2 提出的核心疑点，本轮正式解决。
 
   - id: d1004
-    text: "Webb 的酒吧在做敲诈勒索生意——Tommy 之后的执行人是谁？那个被惹上的大人物又是谁？"
+    text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
     unlock_condition: |
-      需要两种信息交叉验证：
-      1. Tommy 指证后的供述（Webb 勒索生意 + 执行人换人）
-      2. Tommy 对"大人物"的暗示（他心中有猜测但不点名）
+      loop2 已解锁，loop3 继续进展：
+      嫁祸者"很熟悉酒吧"——新执行人和嫁祸者可能是同一个人。
+      具体身份仍未揭示，loop4-5 继续深化（loop4 Vivian 证言澄清不是她；loop5 确认是 Jimmy）。
     status: "unlocked_loop2_ongoing"
-    # loop3 新进展：嫁祸者"很熟悉酒吧"——新执行人和嫁祸者可能是同一个人。
-    # 但具体身份仍未揭示，loop4-5 继续深化。
+
+  - id: d1011
+    text: "Webb 勒索的那个大人物又是谁？"
+    unlock_condition: |
+      loop2 已解锁，loop3 新进展：
+      Webb 日记（1309）WHALE-DANGER 便利贴让名字首次书面出现——
+      "大人物" = Whale 的倾向进一步强化（但仍是 Tommy 口头猜测 + 日记暗示，未完全证实）。
+    status: "advancing_loop3"
 
   - id: d1005
     text: "是谁写了那张威胁纸条，刻意嫁祸 Vivian？此人为何熟悉酒吧内部——他在酒吧里扮演什么角色？"
@@ -637,7 +644,7 @@ doubts:
 
 evidence_registry:
   # Loop3 = 13xx 系列
-  # 继承 Loop1：1101（Vivian 手枪）/ 1102（委托单据）/ 1103（委托协议书）
+  # 继承 Loop1：1101（Vivian 手枪）/ 1103（Webb 委托协议书，含调查委托 + 保护 Vivian + 继承遗产条款；原 1102 已合并至 1103）
   # 继承 Loop2：1201–1210 + 1299（占位）
 
   - id: 1301

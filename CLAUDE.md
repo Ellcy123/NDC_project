@@ -52,7 +52,7 @@
 |------|------|
 | `.claude/agents/` | 10 个专用 agent 定义（state-architect, dialogue-writer, expose-designer 等） |
 | `.claude/rules/` | 6 个路径作用域规则（编辑对应路径文件时自动加载） |
-| `.claude/skills/` | 3 个团队编排 skill（team-design, team-expose, team-loop） |
+| `.claude/skills/` | 4 个团队编排 skill（team-design, team-dialogue, team-expose, team-loop） + 工具类 skill |
 | `.claude/commands/` | slash command 定义（已迁移至 skills，目录保留备用） |
 | `.claude/hooks/` | 自动化校验脚本（对话格式、state 格式） |
 
@@ -228,8 +228,10 @@ copy /Y "D:\NDC_project\story\Testimony.xlsx" "D:\NDC\Config\Datas\story\Testimo
 | 任务类型 | 使用方式 |
 |---------|---------|
 | 单场景/单 NPC 设计 | `/team-design` |
+| State 已定稿，整 Loop 补对话 | `/team-dialogue` |
 | 完整指证设计 | `/team-expose` |
-| 整个 Loop 规划 | `/team-loop` |
+| 整个 Loop 规划（证据→指证→state→对话→鉴赏力→审查） | `/team-loop` |
+| Unit 大纲 → 6 个 state 文件 | `/unit-state-generator` |
 | 全流程体验审计 | `/playthrough-audit Unit1`（~15 分钟，输出交互式 HTML 报告） |
 | 简单改文案/小修 | 不开 team，直接做 |
 

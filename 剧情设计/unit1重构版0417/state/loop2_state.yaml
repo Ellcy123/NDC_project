@@ -336,7 +336,8 @@ scenes:
       Tommy 是酒吧账房，在自己办公室内接受 Zack 的问话。
       他表面承认酒吧有私酒生意，但隐瞒了勒索业务。
       ⚡ 突发事件：玩家调查 Tommy 办公室抽屉时发现了一枚弹壳，
-      但被 Tommy 迅速重新拿回——该弹壳 loop2 无法获得，留至 loop5 才由 Tommy 主动交付。
+      但被 Tommy 迅速重新拿回——该弹壳 loop2 无法获得；loop5 Tommy 才主动将其展示给 Zack 交谈，
+      交谈后该弹壳变成可调查环境道具（玩家可近距离观察鉴定型号，但不作为玩家可持有证据）。
       Tommy 是本 Loop 的 Expose 对象（is_liar: true）。
 
     evidence:
@@ -353,7 +354,7 @@ scenes:
         type: physical
         pickup: false
         forbidden_reason: "Tommy 在玩家拿到前迅速将弹壳重新拿回，玩家只能目击存在，无法获得实物"
-        note: "loop5 伏笔——当 Zack 帮助 Vivian 获得 Tommy 信任后，Tommy 会主动交付此弹壳。弹壳型号与 Webb 案凶器相关"
+        note: "loop5 伏笔——当 Zack 帮助 Vivian 获得 Tommy 信任后，Tommy 会主动将此弹壳展示给 Zack 交谈，随后变成可调查环境道具（玩家可近距离观察鉴定型号，非玩家可持有证据）。弹壳型号与 Webb 案凶器相关"
         loop_available: 5
 
     npcs:
@@ -559,7 +560,7 @@ post_expose_scene:
       - "Tommy 暗示 Webb 惹上了大人物想跑路（猜测不点名）"
       - "Vivian 曾被迫参与勒索，对 Webb 深恶痛绝"
       - "Vivian 时间锁定：她在 loop3 前反锁房门，无法深入沟通"
-      - "Rosa 的时间线谎言（23:30 是案发时间）仍未解决"
+      - "d1003 本 Loop 正式提出：23:30 真是案发时间吗？（Tommy 枪声方向证词 + Vivian 平时送酒时间线触发怀疑，但解决需 loop3 现场证据）"
     does_not_know:
       - "那个勒索大人物是 Whale（具体身份未知）"
       - "Jimmy 才是 11 月后的新执行人"
@@ -608,20 +609,36 @@ doubts:
 
   - id: d1003
     text: "23:30 的枪声真的是案发时间吗？是否有另一把枪——另一个时间节点？"
-    unlock_condition: |
-      loop2 阶段仍然无法解锁——此疑点需要后续证据交叉验证：
-      1. 玻璃碎片（loop3 获得，有硝烟痕迹）
-      2. Rosa 的倒垃圾时间节点（loop3 证言：23:20）
-    status: "locked_until_loop3"  # 时间线玩法，lock 保持
+    posed_condition: |
+      loop2 阶段此疑点被正式提出，来源于以下信息：
+      1. Tommy 证言（2051002）：11:30 枪声来自厨房和会客室所在的酒吧南方——暗示方向/来源可能有蹊跷
+      2. Webb 个人收入记录+酒吧账本（指证 Tommy 后确认勒索生意）——凶手可能早有预谋在特殊时机作案
+      3. Vivian 证言（2011003）：平时 11:30 给 Webb 送酒——"23:30 就是案发时间"变成需要核实的假设
+      玩家此时提出怀疑，但无法解决——解决需 loop3 的玻璃碎片 + Rosa 倒垃圾时间线证据。
+    resolution_condition: |
+      loop3 解决此疑点（玻璃碎片 1305 + Rosa 23:20 倒垃圾证言 3021002 交叉验证）。
+    status: "posed_loop2_unresolved"  # loop2 提出、loop3 解决
 
   - id: d1004
-    text: "Webb 的酒吧在做敲诈勒索生意——Tommy 之后的执行人是谁？那个被惹上的大人物又是谁？"
+    text: "Webb 酒吧勒索生意的新执行人是谁？会是 Vivian 吗？"
     unlock_condition: |
-      需要两种信息交叉验证：
-      1. Tommy 指证后的供述（Webb 勒索生意 + 执行人换人）
-      2. Tommy 对"大人物"的暗示（他心中有猜测但不点名）
-      两种信息来源：Expose 结果（行为证明）+ NPC 主观判断（方向指引）
-    status: "unlocked_after_loop2_expose"  # loop2 Expose Tommy 后解锁
+      loop2 Expose Tommy 后解锁——Tommy 供述：
+      1. 11 月中旬后，勒索生意的执行人换了
+      2. 新执行人不是 Tommy 自己
+      玩家此时对 Vivian 的认知尚不清晰（Vivian 仍在禁足 + 自称凶手），
+      因此"会是 Vivian 吗"的怀疑合理；loop4 指证 Vivian 时 Vivian 证言澄清"帮 Webb 勒索 Whale 的人不是她"，
+      loop5 最终由 Jimmy 证据链确认执行人是 Jimmy。
+    status: "unlocked_after_loop2_expose"  # loop2 Expose Tommy 后解锁（拆分自原合并 d1004）
+
+  - id: d1011
+    text: "Webb 勒索的那个大人物又是谁？"
+    unlock_condition: |
+      loop2 Expose Tommy 后解锁——Tommy 供述：
+      Webb 勒索惹上了大人物想跑路；Tommy 心中有猜测但不点名。
+      loop3 Webb 日记（1309，WHALE-DANGER）让名字书面出现；
+      loop4 被撕毁合同 + Tommy 证言确认倾向是 Whale；
+      loop5-6 最终闭环 Whale 身份。
+    status: "unlocked_after_loop2_expose"  # 拆分自原 d1004，专指"大人物"维度
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop2 全部证据）
@@ -629,7 +646,7 @@ doubts:
 
 evidence_registry:
   # Loop2 = 12xx 系列
-  # 继承 Loop1：1101（Vivian 手枪）/ 1102（委托单据）/ 1103（委托协议书）
+  # 继承 Loop1：1101（Vivian 手枪）/ 1103（Webb 委托协议书，含调查委托 + 保护 Vivian + 继承遗产条款；原 1102 已合并至 1103）
 
   - id: 1201
     name: "勒索用的照片"
