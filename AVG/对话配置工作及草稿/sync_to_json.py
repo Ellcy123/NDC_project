@@ -443,8 +443,21 @@ def parse_md_file(md_path):
         if current_entry is None:
             continue
 
-        # 检测说话人 + 情绪: **扎克·布伦南** [情绪描述]
-        # 说话人行可以直接跟一行，也可以后接 > 对白
+        # 检测说话人 + 情绪 —— 支持两种格式：
+        # 格式 A: **扎克·布伦南** [情绪描述]   （Loop1-5 主流格式，action 在 ** 外部）
+        # 格式 B: **Zack [情绪描述]**            （Loop6 混合格式，action 在 ** 内部）
+        # 注意：格式 B 必须优先匹配，否则格式 A 的 non-greedy 会错误地把 "Zack [情绪描述]" 整体当 speaker
+        speaker_inline_match = re.match(r"^\*\*([^\[\]]+?)\s*\[(.+?)\]\*\*\s*$", line)
+        if speaker_inline_match:
+            speaker_name = speaker_inline_match.group(1).strip()
+            action = speaker_inline_match.group(2).strip()
+            if not current_entry.cn_speaker:
+                current_entry.cn_speaker = speaker_name
+                current_entry.cn_action = action
+            in_words = False
+            continue
+
+        # 格式 A（原有）
         speaker_match = re.match(r"^\*\*(.+?)\*\*\s*(?:\[(.*?)\])?\s*$", line)
         if speaker_match:
             speaker_name = speaker_match.group(1).strip()
@@ -756,8 +769,9 @@ def new_json(json_path, md_entries, episode, loop_num, is_expose=False, dry_run=
 # 同步模式：回写 MD 修改到 JSON
 # ============================================================
 
-def sync_entries(json_path, md_entries, dry_run=False):
-    """将 MD 中的对白同步到 JSON 文件。返回 (changes_list, modified_bool)"""
+def sync_entries(json_path, md_entries, dry_run=False, force_clear=False):
+    """将 MD 中的对白同步到 JSON 文件。返回 (changes_list, modified_bool)
+    force_clear=True 时：若 MD 中 cn_words 为空而 JSON 中非空，也会清空 JSON（危险，慎用）。"""
     with open(json_path, "r", encoding="utf-8") as f:
         json_data = json.load(f)
 
@@ -777,9 +791,10 @@ def sync_entries(json_path, md_entries, dry_run=False):
         je = json_data[idx]
         entry_changes = []
 
-        if md_entry.cn_words and md_entry.cn_words != je.get("cnWords", ""):
+        cn_words_diff = md_entry.cn_words != je.get("cnWords", "")
+        if cn_words_diff and (md_entry.cn_words or force_clear):
             old = je.get("cnWords", "")
-            entry_changes.append(f"    cnWords: {_truncate(old)} → {_truncate(md_entry.cn_words)}")
+            entry_changes.append(f"    cnWords: {_truncate(old)} → {_truncate(md_entry.cn_words) if md_entry.cn_words else '(清空)'}")
             if not dry_run:
                 je["cnWords"] = md_entry.cn_words
 
@@ -876,7 +891,7 @@ def resolve_json_path(filename, loop_num, episode):
 # 主流程
 # ============================================================
 
-def process_single_md(md_path, episode, dry_run=False, mode="auto"):
+def process_single_md(md_path, episode, dry_run=False, mode="auto", force_clear=False):
     """处理单个 MD 文件。mode: auto / new-only / sync-only"""
     md_filename = os.path.basename(md_path)
     loop_num = get_loop_num_from_md(md_filename)
@@ -933,7 +948,7 @@ def process_single_md(md_path, episode, dry_run=False, mode="auto"):
             continue
 
         if action == "sync":
-            changes, modified = sync_entries(json_path, md_entries, dry_run)
+            changes, modified = sync_entries(json_path, md_entries, dry_run, force_clear=force_clear)
             if changes:
                 for line in changes:
                     print(line)
@@ -973,6 +988,9 @@ def main():
     dry_run = "--dry-run" in args
     args = [a for a in args if a != "--dry-run"]
 
+    force_clear = "--force-clear" in args
+    args = [a for a in args if a != "--force-clear"]
+
     mode = "auto"
     if "--new-only" in args:
         mode = "new-only"
@@ -1006,7 +1024,7 @@ def main():
                 GEN_MD_DIR / f"Loop{loop_num}_生成草稿.md",
             ]:
                 if candidates.exists():
-                    process_single_md(candidates, episode, dry_run, mode)
+                    process_single_md(candidates, episode, dry_run, mode, force_clear=force_clear)
                     any_found = True
         if not any_found:
             print("[WARN]未找到任何 Loop{1-6}_*.md 文件")
@@ -1021,7 +1039,7 @@ def main():
         if md_path is None:
             print(f"[ERR] 文件不存在: {arg}（已搜索 {MD_DIR} 和 {GEN_MD_DIR}）")
             continue
-        process_single_md(md_path, episode, dry_run, mode)
+        process_single_md(md_path, episode, dry_run, mode, force_clear=force_clear)
 
 
 if __name__ == "__main__":
