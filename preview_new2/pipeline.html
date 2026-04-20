@@ -1174,18 +1174,32 @@ const Pipeline = {
         if (this._aborted) return;
 
         // === OPENING TALKS ===
+        // 兼容两种 yaml 格式：
+        //   旧 Unit1 风格：opening_talks: [emma_001, ...]（videoScene 名列表）
+        //   新 Unit2/Unit8 风格：opening: [{talk: emma_001, ...}, ...]（结构化条目）
         this.updateProgress(0, totalSteps, '开场');
-        if (loopConfig.opening_talks) {
-            for (const talkFile of loopConfig.opening_talks) {
+        let openingList = loopConfig.opening_talks;
+        if (!openingList && Array.isArray(loopConfig.opening)) {
+            openingList = loopConfig.opening.map(o => o && o.talk).filter(Boolean);
+        }
+        if (openingList) {
+            for (const talkFile of openingList) {
                 await this.playVideoSceneTalks(talkFile);
                 if (this._aborted) return;
             }
         }
 
         // === FREE PHASE ===
-        if (loopConfig.free_phase) {
-            for (let i = 0; i < loopConfig.free_phase.length; i++) {
-                const sceneId = String(loopConfig.free_phase[i]);
+        // 兼容两种 yaml 格式：
+        //   旧：free_phase: [sceneId, ...]
+        //   新：scenes.unlocked: [sceneId, ...]
+        let freePhase = loopConfig.free_phase;
+        if (!freePhase && loopConfig.scenes && Array.isArray(loopConfig.scenes.unlocked)) {
+            freePhase = loopConfig.scenes.unlocked;
+        }
+        if (freePhase) {
+            for (let i = 0; i < freePhase.length; i++) {
+                const sceneId = String(freePhase[i]);
                 this.updateProgress(i + 1, totalSteps, DataStore.scenesMap.get(sceneId)?.sceneName || sceneId);
                 await this.playScene(sceneId);
                 if (this._aborted) return;
@@ -1198,9 +1212,21 @@ const Pipeline = {
             await this.playExpose(loopConfig.expose, loopNum);
         }
 
+        // === EVENTS（突发/强制剧情段，带 talk 的走对话链；无 talk 的跳过）===
+        if (Array.isArray(loopConfig.events)) {
+            for (const ev of loopConfig.events) {
+                if (ev && ev.talk) {
+                    await this.playVideoSceneTalks(String(ev.talk));
+                    if (this._aborted) return;
+                }
+            }
+        }
+
         // === SPECIAL CUTSCENES（转折 / 逮捕 / 自尽 / 终章 / post_expose 等剧情段）===
+        console.log(`[cutscenes] count=${(loopConfig.special_cutscenes || []).length}, aborted=${this._aborted}`);
         if (Array.isArray(loopConfig.special_cutscenes)) {
             for (const cs of loopConfig.special_cutscenes) {
+                console.log(`[cutscene] type=${cs.type}, title=${cs.title}, hasDesc=${!!cs.description}`);
                 await this.playCutscene(cs);
                 if (this._aborted) return;
             }
@@ -1289,11 +1315,7 @@ const Pipeline = {
 
     // --- Play a scene ---
     async playScene(sceneId) {
-        // 先试 loop-scoped key（loop{N}_{sceneId}）——该条目携带 NPCInfos / ItemIDs；
-        // 找不到再退回静态场景条目（只有背景图等基础信息）。
-        const loopKey = `loop${GameState.loopNum}_${sceneId}`;
-        const scene = DataStore.scenesMap.get(loopKey) || DataStore.scenesMap.get(sceneId);
-        console.log(`[playScene] sceneId=${sceneId}, loopKey=${loopKey}, found=${!!scene}, hasNPCInfos=${!!scene?.NPCInfos?.length}, npcs=${scene?.NPCInfos?.map(n=>n.TalkInfo?.id).join(',')}`);
+        const scene = DataStore.scenesMap.get(String(sceneId));
         if (!scene) return;
 
         // Transition
@@ -1367,7 +1389,10 @@ const Pipeline = {
         DOM.clickArea.style.display = 'block';
 
         while (currentId && !this._aborted) {
-            const talk = map.get(String(currentId));
+            // Expose 模式下如果主 map 查不到，fallback 到 talksMap——
+            // 支持 Expose 最后一句 next 跳进普通 Talk JSON（如 L4 Expose→turn_cutscene）
+            let talk = map.get(String(currentId));
+            if (!talk && useExpose) talk = DataStore.talksMap.get(String(currentId));
             if (!talk) break;
 
             // Show dialogue line

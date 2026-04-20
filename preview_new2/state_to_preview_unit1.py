@@ -2,7 +2,7 @@
 """
 Unit1 State → Preview 数据转换脚本（0417 规范化版）
 
-读取 剧情设计/unit1重构版0417/state/loop{1-6}_state.yaml
+读取 剧情设计/Unit8/state/loop{1-6}_state.yaml
 生成 preview_new2/data/Unit1/ 下的 YAML 文件
 追加 preview_new2/data/table/ 下的 JSON 条目（Chapter="EPI01"）
 
@@ -28,7 +28,7 @@ import yaml
 # ============================================================
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
-STATE_DIR = os.path.join(PROJECT_ROOT, "剧情设计", "unit1重构版0417", "state")
+STATE_DIR = os.path.join(PROJECT_ROOT, "剧情设计", "Unit8", "state")
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "data", "Unit1")
 TABLE_DIR = os.path.join(SCRIPT_DIR, "data", "table")
 

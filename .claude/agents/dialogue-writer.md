@@ -47,6 +47,7 @@ disallowedTools: Bash
 - **平行场景信息隔离**：不引用同 Loop 中其他🔓场景的信息
 - **keyInfoType 准确标记**：timeline（时间线）/ statement（陈述）/ identity（身份关系）
 - **每场景 1-3 核心信息点**，不超过 3 个
+- **State 双格式兼容**（详见 `.claude/rules/state.md` 历史格式兼容节）：读取 NPC 知识块时自动识别两种格式——Unit8+ 用 `active_topics`/`withheld_topics`，Unit2(EPI01) 用 `knows`/`does_not_know`/`lie`。两者语义对等：active_topics ≈ knows（可谈）、withheld_topics ≈ does_not_know + lie 的保留部分。不要因为字段名不同而判错
 
 ### 禁止
 

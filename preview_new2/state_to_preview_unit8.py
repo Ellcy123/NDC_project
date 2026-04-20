@@ -2,7 +2,7 @@
 """
 Unit8 State → Preview 数据转换脚本（Unit1 重构版的 8-prefix 版本）
 
-读取 剧情设计/unit1重构版0417/state/loop{1-6}_state.yaml（state 文件保持 1-prefix ID 不动）
+读取 剧情设计/Unit8/state/loop{1-6}_state.yaml（state 文件保持 1-prefix ID 不动）
 生成 preview_new2/data/Unit8/ 下的 YAML 文件
 追加 preview_new2/data/table/ 下的 JSON 条目（Chapter="EPI08"）
 
@@ -31,7 +31,7 @@ import yaml
 # ============================================================
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
-STATE_DIR = os.path.join(PROJECT_ROOT, "剧情设计", "unit1重构版0417", "state")
+STATE_DIR = os.path.join(PROJECT_ROOT, "剧情设计", "Unit8", "state")
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "data", "Unit8")
 TABLE_DIR = os.path.join(SCRIPT_DIR, "data", "table")
 
@@ -83,9 +83,9 @@ LOOP_META = {
 
 # Unit8 物理场景 ID → 中英文名（14 个物理场景，8-prefix）
 SCENES = [
-    {"id": "8001", "name": "二楼会客室", "name_en": "MeetingRoom_2F"},
+    {"id": "8001", "name": "一楼会客室", "name_en": "MeetingRoom_1F"},
     {"id": "8002", "name": "Vivian 工作室", "name_en": "VivianStudio"},
-    {"id": "8003", "name": "厨房", "name_en": "Kitchen"},
+    {"id": "8003", "name": "二楼厨房", "name_en": "Kitchen_2F"},
     {"id": "8004", "name": "Webb 办公室", "name_en": "WebbOffice"},
     {"id": "8005", "name": "Tommy 办公室", "name_en": "TommyOffice"},
     {"id": "8006", "name": "歌舞厅", "name_en": "Ballroom"},
@@ -857,6 +857,39 @@ def generate_talk_summary(states):
         if target_talk and expose_target:
             summaries[target_talk] = f"L{loop_num} 指证：{expose_target}"
 
+        # Expose 每轮 talkId 摘要（从 Expose JSON 追 Lie 链算 talkId）
+        npc_name_map = {1:"rosa",2:"tommy",3:"rosa",4:"vivian",5:"jimmy",6:"morrison"}
+        expose_file = os.path.join(AVG_EXPOSE_DIR, f"loop{loop_num}_{npc_name_map[loop_num]}.json")
+        if os.path.isfile(expose_file):
+            try:
+                with open(expose_file, "r", encoding="utf-8") as f:
+                    ex_entries = json.loads(fix_json(f.read()))
+                if isinstance(ex_entries, dict):
+                    ex_entries = [ex_entries]
+                first_id = str(ex_entries[0].get("id", "")) if ex_entries else ""
+                lies = [e for e in ex_entries if (e.get("script","") or "") == "Lie"]
+                round_keys = ("round_1","round_2","round_3","round_4","round_5")
+                rounds_data = [expose.get(k) for k in round_keys if isinstance(expose.get(k), dict)]
+                prev_break = None
+                for idx, lie in enumerate(lies):
+                    tid = first_id if idx == 0 else (str(prev_break) if prev_break else first_id)
+                    rd = rounds_data[idx] if idx < len(rounds_data) else {}
+                    lie_text = (rd.get("lie") or "").strip()[:40]
+                    evs = []
+                    for e in rd.get("usable_evidence", []) or []:
+                        if isinstance(e, dict):
+                            nm = e.get("name", "") or f"证据{e.get('id','')}"
+                            evs.append(nm)
+                    ev_str = "+".join(evs[:3])
+                    if ev_str and lie_text:
+                        summaries[tid] = f"L{loop_num} R{idx+1}：{ev_str} → 击穿'{lie_text}'"
+                    elif lie_text:
+                        summaries[tid] = f"L{loop_num} R{idx+1}：击穿'{lie_text}'"
+                    pi0 = lie.get("ParameterInt0", 0)
+                    prev_break = pi0 if pi0 else None
+            except Exception as e:
+                print(f"    [WARN] talk_summary Expose 摘要失败 loop{loop_num}: {e}")
+
     doc = {**summaries, "scene_talks": {}}
     path = os.path.join(OUTPUT_DIR, "talk_summary.yaml")
     with open(path, "w", encoding="utf-8") as f:
@@ -868,45 +901,32 @@ def generate_talk_summary(states):
 # JSON 追加（全部处理 Chapter=EPI08）
 # ============================================================
 
+def loop_scene_id(loop_num, phys_id):
+    """Unit2 风格：{8}{loop}{seq2}——seq2 来自物理 ID 末 2 位（8001→01）"""
+    phys_sid = str(phys_id)
+    seq2 = phys_sid[-2:] if len(phys_sid) >= 2 else phys_sid.zfill(2)
+    return f"8{loop_num}{seq2}"
+
+
 def append_scenes_to_json(states):
-    """追加 SceneConfig.json"""
+    """追加 SceneConfig.json —— Unit2 风格：每条 = 单一 loop-scene 组合，4 位 ID"""
     data = load_json("SceneConfig.json")
     data = [item for item in data if item.get("Chapter") != CHAPTER]
 
     per_loop_items = build_scene_item_ids(states)
     per_loop_npcs = build_scene_npc_infos(states)
 
-    # 1. 静态条目（14 个物理场景）
-    for scene in SCENES:
-        entry = {
-            "sceneId": scene["id"],
-            "sceneName": scene["name"],
-            "sceneNameEn": scene["name_en"],
-            "sceneType": "1",
-            "backgroundImage": SCENE_BG_CONFIG.get(scene["id"], ""),
-            "backgroundMusic": "test",
-            "Chapter": CHAPTER,
-        }
-        art = SCENE_ART_CONFIG.get(int(scene["id"]), "")
-        if art:
-            entry["ArtRequirement"] = art
-        data.append(entry)
-
-    # 2. 按 Loop × 场景的条目（含 ItemIDs / NPCInfos）
-    # Unit1 不做 loop 场景 ID 转换（物理 ID 直接作为 sceneId），但每个 (loop, scene) 组合生成独立条目
-    # 使用复合 id 避免和静态条目冲突：loopScene_{loop}_{scene}
+    # 按 Loop × 物理场景 生成条目（无独立静态条目）
+    # sceneId = 8{loop}{seq2}，如 L1 会客室=8101, L3 厨房=8303
     for loop_num in range(1, 7):
         cfg = LOOP_SCENE_CONFIG[loop_num]
         state = states[loop_num]
-        expose = state.get("expose", {}) or {}
 
         active_scenes = list(cfg["unlocked"])
-        # 加入 expose scene 若未包含（Unit8 8-prefix）
         expose_scene_map = {1: 8001, 2: 8005, 3: 8008, 4: 8007, 5: 8011, 6: 8014}
         esid = expose_scene_map.get(loop_num)
         if esid and esid not in active_scenes:
             active_scenes.append(esid)
-        # opening scene_id（若存在，需映射 1xxx → 8xxx）
         opening_sid = state.get("opening", {}).get("scene_id")
         if opening_sid:
             try:
@@ -920,10 +940,10 @@ def append_scenes_to_json(states):
             phys_sid = str(phys_id)
             scene_name = SCENE_NAME_MAP.get(phys_sid, f"场景{phys_sid}")
             scene_en = SCENE_EN_MAP.get(phys_sid, "")
-            loop_scene_id = f"loop{loop_num}_{phys_sid}"
+            new_sid = loop_scene_id(loop_num, phys_sid)
 
             entry = {
-                "sceneId": loop_scene_id,
+                "sceneId": new_sid,
                 "sceneName": scene_name,
                 "sceneNameEn": scene_en,
                 "sceneType": "1",
@@ -947,7 +967,8 @@ def append_scenes_to_json(states):
             data.append(entry)
 
     save_json("SceneConfig.json", data)
-    print(f"    -> 静态场景 {len(SCENES)} 个 + Loop 条目若干")
+    # 粗估条目数：每 Loop 平均 4 个场景 × 6 Loop ≈ 24
+    print(f"    -> EPI08 单条目模式：每 Loop × 物理场景 一条，共约 {sum(len(cfg['unlocked']) for cfg in LOOP_SCENE_CONFIG.values())} 条")
 
 
 def append_items_to_json(states):
@@ -1138,6 +1159,31 @@ def append_chapter_config(states):
             conditions = parse_unlock_condition(condition_str)
             doubts.append({"id": did, "condition": conditions, "text": text})
 
+        # 读对应 loop 的 Expose JSON，按 Lie 顺序算 talkId：
+        # R1 talkId = 首条 id；R(N+1) talkId = 前一条 Lie 的 ParameterInt0（break_next）
+        per_round_talk_ids = []
+        npc_name_map = {1:"rosa",2:"tommy",3:"rosa",4:"vivian",5:"jimmy",6:"morrison"}
+        expose_file = os.path.join(AVG_EXPOSE_DIR, f"loop{loop_num}_{npc_name_map[loop_num]}.json")
+        if os.path.isfile(expose_file):
+            try:
+                with open(expose_file, "r", encoding="utf-8") as f:
+                    ex_raw = f.read()
+                ex_entries = json.loads(fix_json(ex_raw))
+                if isinstance(ex_entries, dict):
+                    ex_entries = [ex_entries]
+                first_id = str(ex_entries[0].get("id", "")) if ex_entries else ""
+                lie_list = [e for e in ex_entries if (e.get("script","") or "") == "Lie"]
+                prev_break = None
+                for li, lie in enumerate(lie_list):
+                    if li == 0:
+                        per_round_talk_ids.append(first_id)
+                    else:
+                        per_round_talk_ids.append(str(prev_break) if prev_break else first_id)
+                    pi0 = lie.get("ParameterInt0", 0)
+                    prev_break = pi0 if pi0 else None
+            except Exception as e:
+                print(f"    [WARN] 读 {expose_file} 失败，talkId 留空: {e}")
+
         exposes = []
         idx = 0
         for round_key in ("round_1", "round_2", "round_3", "round_4", "round_5"):
@@ -1149,15 +1195,17 @@ def append_chapter_config(states):
             for e in rnd.get("usable_evidence", []) or []:
                 if isinstance(e, dict) and e.get("id") is not None:
                     items.append(map_id(e.get("id")))
+            talk_id = per_round_talk_ids[idx-1] if idx-1 < len(per_round_talk_ids) else ""
             exposes.append({
                 "id": str(idx),
                 "testimony": "",
                 "item": items,
-                "talkId": "",
+                "talkId": talk_id,
             })
 
         config_id = f"80{loop_num}"  # 801..806
-        init_scene = expose_scene_map.get(loop_num, 8001)
+        init_scene_phys = expose_scene_map.get(loop_num, 8001)
+        init_scene = loop_scene_id(loop_num, init_scene_phys)  # Unit2 风格：8{loop}{seq2}
         data.append({
             "id": config_id,
             "initTalk": "",
@@ -1656,8 +1704,14 @@ def main():
     print(f"  [OK] 已读取 {len(states)} 个 state 文件")
 
     print("\n[2/3] 生成 Preview YAML 文件...")
-    for i in range(1, 7):
-        generate_loop_yaml(i, states[i])
+    # loop{N}.yaml 手工维护（参考 Unit2 风格：opening 结构化 / scenes 注释 / locked.reason / events）
+    # 脚本不再覆盖，除非环境变量 REGEN_LOOP_YAML=1 明确要求重建
+    if os.environ.get("REGEN_LOOP_YAML", "").lower() in ("1","true","yes"):
+        print("  [!] REGEN_LOOP_YAML=1 —— 重建 loop{N}.yaml（会覆盖手工编辑）")
+        for i in range(1, 7):
+            generate_loop_yaml(i, states[i])
+    else:
+        print("  [skip] loop{N}.yaml 不覆盖（手工维护，REGEN_LOOP_YAML=1 可强制重建）")
     generate_locations_yaml()
     generate_talk_summary(states)
 

@@ -1,59 +1,61 @@
 title: 枪响开场
 target: 阻止 Morrison 逮捕 Vivian——反驳 Rosa 的当场指控，为 Webb 案争取调查时间
-time: 1928-11 某夜 23:30
-opening: []
-opening_talks:
-- emma_001
-free_phase:
-- 8001
+time: "1928-11 某夜 23:30"
+
+opening:
+  - id: 8011
+    characters: [Zack, Emma]
+    purpose: 两人在蓝月亮大门口寒暄——酒保拒 Zack 入场，Emma 凭新闻嗅觉感觉今晚有事
+    talk: emma_001
+  - id: 8012
+    characters: [Zack, Emma, Vivian, Rosa, Morrison]
+    purpose: 23:30 枪响 → 从歌舞厅赶到会客室 → Vivian 持枪怔愣 + Rosa 当场指控 + Morrison 醉醺醺宣告死亡并要逮捕 Vivian
+
 scenes:
   unlocked:
-  - 8001
+    - 8101  # 一楼会客室（现场搜证，Morrison 管控 / 唯一开放场景）
   locked:
-  - id: 8002
-    reason: ''
-  - id: 8003
-    reason: ''
-  - id: 8004
-    reason: ''
-  - id: 8005
-    reason: ''
-  - id: 8006
-    reason: ''
-  - id: 8007
-    reason: ''
-  - id: 8008
-    reason: ''
-  - id: 8009
-    reason: ''
-  - id: 8010
-    reason: ''
-  - id: 8011
-    reason: ''
-  - id: 8012
-    reason: ''
-  - id: 8013
-    reason: ''
-  - id: 8014
-    reason: ''
+    - id: 8102
+      reason: Loop1 聚焦现场搜证——Vivian 工作室尚未在调查动机中
+    - id: 8103
+      reason: 厨房尚未与调查建立关联
+    - id: 8104
+      reason: Webb 办公室 loop2 才开放搜证
+    - id: 8105
+      reason: Tommy 办公室 loop2 才出现在调查方向
+    - id: 8106
+      reason: 歌舞厅 loop2 才开放
+    - id: 8107
+      reason: 大厅区域 loop3 才成为调查焦点
+    - id: 8108
+      reason: 清洁间 loop3 Rosa 谜题浮出后才开放
+    - id: 8109
+      reason: 一楼走廊 loop4 才出现在调查路径
+    - id: 8110
+      reason: Vivian 化妆间 loop4 才解锁（Vivian 被解除监控后）
+    - id: 8111
+      reason: 后门 loop5 凌晨抓捕 Jimmy 才用得上
+    - id: 8112
+      reason: Jimmy 家 loop5 才出现在调查方向
+    - id: 8113
+      reason: Morrison 家 loop6 才进入调查视野
+    - id: 8114
+      reason: 警局 loop6 才有理由进入
   closed: []
+
 expose:
-  scene: 8001
+  scene: 8101
   target_name: Rosa
   rounds:
-  - lie: Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
-    evidences:
-    - '8101'
-  - lie: 大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
-    evidences: []
-special_cutscenes:
-- type: post_expose_scene
-  title: 指证后剧情
-  subtype: story_dialogue
-  location: 蓝月亮酒吧大门口
-  summary: 指证结束，Morrison 给出 72 小时窗口。
-  description: '指证结束，Morrison 给出 72 小时窗口。
+    - lie: "Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb"
+      evidences: [8101]         # Vivian 手里的手枪（无硝烟反应）
+    - lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
+      evidences: []             # tutorial_failure：loop1 无证据可反驳，留待 loop3 击穿
 
-    Zack 和 Emma 在大门口梳理情况——这是 loop1 的叙事收尾
-
-    同时也是 loop2 自由探索（上）的目标设定对话。'
+events:
+  - id: 8091
+    name: "大门口 · 梳理与 72 小时窗口"
+    characters: [Zack, Emma]
+    purpose: Morrison 给出 72h 调查期；Emma 帮 Zack 梳理——Webb 保险倾向 + 下一步调查方向
+    trigger: "Expose Rosa 结束后"
+    talk: emma_002

@@ -1,138 +1,75 @@
 title: 厨师的代价
 target: 找到 Webb 案的真正凶手——指证他是凶手，让他承认，从而还 Vivian 清白
-time: 凌晨
-opening: []
-opening_talks:
-- emma_009
-free_phase:
-- 8005
-- 8003
-- 8012
-- 8011
+time: "凌晨"
+
+opening:
+  - id: 8051
+    characters: [Zack, Emma]
+    purpose: 【承接 loop4】Morrison 强押 Vivian 后——大门口 Zack/Emma 梳理 Part1 失败 + 确立 Part2 双目标（真凶器 + 击破 Morrison）
+    talk: emma_008
+  - id: 8052
+    characters: [Zack, Emma]
+    purpose: 【灵魂黑夜】Part2 开篇——Emma 安慰 Zack，共同梳理四大疑点（UI 正式开启），决定去 Tommy 办公室起头
+    talk: emma_009
+
 scenes:
   unlocked:
-  - 8005
-  - 8003
-  - 8012
-  - 8011
+    - 8505  # Tommy 办公室（交付信任：弹壳 + 鼓点单子 + Whale 细节）
+    - 8503  # 厨房（Jimmy 口音暴露：Don't be bothering me! —— Webb 案 23:10 真实时间）
+    - 8512  # Jimmy 家（Anna 首次出场 + 信件 + 英语练习书 + 爱尔兰裔身份）
+    - 8511  # 蓝月亮酒吧后门（凌晨 —— Expose Jimmy 现行 + 自杀序列）
   locked:
-  - id: 8001
-    reason: ''
-  - id: 8002
-    reason: ''
-  - id: 8004
-    reason: ''
-  - id: 8006
-    reason: ''
-  - id: 8007
-    reason: ''
-  - id: 8008
-    reason: ''
-  - id: 8009
-    reason: ''
-  - id: 8010
-    reason: ''
-  - id: 8013
-    reason: ''
-  - id: 8014
-    reason: ''
+    - id: 8501
+      reason: 案发现场 loop3 已搜完，本 loop 不再出现
+    - id: 8502
+      reason: Vivian 工作室 loop4 已开放，本 loop Vivian 在警局
+    - id: 8504
+      reason: Webb 办公室 loop2 已完结
+    - id: 8506
+      reason: 歌舞厅 loop4 已完结
+    - id: 8507
+      reason: 大厅 loop4 已完结
+    - id: 8508
+      reason: 清洁间 loop3 已完结
+    - id: 8509
+      reason: 一楼走廊 loop4 已完结
+    - id: 8510
+      reason: Vivian 化妆间 loop4 已完结
+    - id: 8513
+      reason: Morrison 家 loop6 才进入
+    - id: 8514
+      reason: 警局 loop6 才进入
   closed: []
+
 expose:
-  scene: 8011
+  scene: 8511
   target_name: Jimmy
   rounds:
-  - lie: 我当天有不在场证明，枪声发生在 11 点半，不可能有其他时间能杀人，如果有枪声大家都能听到
-    evidences:
-    - '8503'
-    - '8064002'
-  - lie: Vivian 当时去找他了！说明当时 Webb 还活着，所以不可能是那会儿作案的
-    evidences:
-    - '8506'
-    - '8075001'
-    - '8064006'
-  - lie: 那个人不是我，我根本没有理由杀 Webb
-    evidences:
-    - '8401'
-    - '8085001'
-special_cutscenes:
-- type: suspect_suicide_sequence
-  title: 嫌疑人自尽
-  subtype: forced_cutscene
-  location: 蓝月亮酒吧后门（与 arrest_cutscene / post_expose_dialogue 同一地点）
-  summary: 【Jimmy 自杀序列——新时序】
-  description: "【Jimmy 自杀序列——新时序】\n\n1. 暴露时刻（Expose round_3 结束）：\n   Zack 和 Emma 指证\
-    \ Jimmy 的整个过程，等同于在 Whale 手下面前\n   公开宣告：Jimmy 和 Whale 的关系、Jimmy 接受的委托、整桩案件的内幕——\n\
-    \   这一切在这一刻都暴露给了\"不该知道的人\"（也就是说，Whale 知道了 Jimmy 已暴露）。\n\n2. 鸣笛（round_3 结束，Zack\
-    \ 说出 Whale 名字后）：\n   ⚠️ 注意：这里是\"鸣笛（whistle）\"，不是\"枪响（gunshot）\"。\n   来自酒吧后门暗处的一声哨声——那是\
-    \ Whale 手下给 Jimmy 的信号，\n   意思是：事情败露，无法挽回。\n   Jimmy 知道这意味着什么：Whale 不会放过知情者，而 Anna\
-    \ 和孩子就是最脆弱的目标。\n   但此时 Jimmy 紧张但还在撑——尚未崩溃。\n\n3. Zack 的字迹对白（post_expose_dialogue——压垮骆驼的最后一根稻草）：\n\
-    \   Zack 对 Jimmy 说：\"威胁 ROSA 的也是你——那个纸条和合同上面的 J 都是倒着写的。\"\n   依据是 Zack 在 Jimmy\
-    \ 家观察到的英语练习书（1505，envir/pickup:false）。\n   这不是 Expose 轮次，而是 Expose 之后的脚本对白。\n\n\
-    4. Jimmy 发疯：\n   字迹对白让 Jimmy 意识到——连 Rosa 那条胁迫线也被 Zack 看穿了。\n   最后的\"受胁迫的傀儡\"伪装也没了。\n\
-    \   Jimmy 进入非逻辑的情绪性否认状态：\n   \"不是我，我没有，我没有……\"\n\n5. Jimmy 的最后选择——自杀：\n   Jimmy\
-    \ 看了一眼暗处的方向（Whale 手下所在位置），\n   明白了一件事：自己已经彻底暴露，不只是对 Zack，也是对 Whale。\n   暗处的威胁已经形成——Anna\
-    \ 是危险的。\n   为了保护 Anna 和未出生的孩子，Jimmy 做出了最后的选择。\n   他拔出了那把曾经杀死 Webb 的米勒集团特制手枪，开枪自杀。\n\
-    \   死前，他看向 Zack 和 Emma，说出了最后的话——\n   将 Anna 托付给他们（\"请……帮我照顾她\"）。\n\n6. 现场遗留：\n\
-    \   Jimmy 的尸体旁，留下了那把米勒集团特制手枪（1507）——\n   那把枪，曾经在 23:00 杀死了 Webb，\n   现在又杀死了使用它的人。"
-- type: arrest_cutscene
-  title: 逮捕现场
-  subtype: story_cutscene
-  location: 蓝月亮酒吧后门
-  summary: Zack 和 Emma 返回酒吧，带齐了证据。
-  description: 'Zack 和 Emma 返回酒吧，带齐了证据。
+    - lie: "我当天有不在场证明，枪声发生在 11 点半，不可能有其他时间能杀人，如果有枪声大家都能听到"
+      evidences: [8503, 8064002]       # 鼓点完整单子 + Vivian 11:10 被挡证词（真实案发时间 23:10）
+    - lie: "Vivian 当时去找他了！说明当时 Webb 还活着，所以不可能是那会儿作案的"
+      evidences: [8506, 8075001, 8064006]    # 爱尔兰身份证件 + Jimmy 口音证词 + Vivian "Don't be bothering me" 证词
+    - lie: "那个人不是我，我根本没有理由杀 Webb"
+      evidences: [8401, 8085001]       # 被撕毁的合同（Whale 身份）+ Anna 证词（动机）
 
-    Zack 决定：直接找 Jimmy，要求他跟自己去警局，
-
-    指证他是 Webb 案的真正凶手，以此证明 Vivian 的清白。
-
-    Emma 表示支持——她和 Zack 一起行动。
-
-
-    两人来到蓝月亮酒吧后门。
-
-
-    开场状态（暗示性叙事，非直接展示）：
-
-    Jimmy 刚刚结束了和 Whale 手下的秘密交易——尾款结清。
-
-    Zack 和 Emma 抵达时只能见到 Jimmy 的人影，以及他手中提着的装有钱的手提箱。
-
-    场景光线昏暗，交易刚刚落幕的气息尚未散去。
-
-
-    Jimmy 看见 Zack 和 Emma 出现，身形微微一僵。'
-- type: post_expose_dialogue
-  title: 指证后对话
-  subtype: story_dialogue
-  location: 蓝月亮酒吧后门（与 arrest_cutscene / suspect_suicide_sequence 同一地点）
-- type: post_expose_romance
-  title: 指证后·情感戏
-  subtype: story_dialogue
-  location: 蓝月亮酒吧外（Jimmy 自杀后不久）
-  summary: Jimmy 自杀的冲击——一个人仅仅因为暴露了 Whale 的关联就选择了死亡，
-  description: 'Jimmy 自杀的冲击——一个人仅仅因为暴露了 Whale 的关联就选择了死亡，
-
-    Zack 意识到这件案子已经远远超出了一桩"私人委托调查"的范畴。
-
-    他要求 Emma 停止调查，不要再跟着他——这太危险了。
-
-    Emma 不赞同。她不是理想主义的幼稚，她清醒地看到了这件事的危险，
-
-    但她同样清醒地选择留下。
-
-    两人的关系在这一刻有了质的变化：不再只是"委托人 + 记者帮手"，
-
-    而是真正意义上的搭档——为了同一个正义，一起走到最后。
-
-
-    【搭档决定——loop6 前置铺垫】
-
-    感情戏的最后，两人确认了下一步的具体行动：
-
-    Morrison 的家里藏有那枚被没收的弹壳（1308）——那是进一步证明 Morrison 与 Whale 关联的直接物证。
-
-    两人决定以 Emma 的记者身份为掩护、Zack 以 Emma 助理的假身份，
-
-    潜入 Morrison 的家，去取回那枚子弹。
-
-    这个决定将作为 loop6 自由探索（下）的开场起点。'
+events:
+  - id: 8591
+    name: "Arrest Cutscene · 后门抓捕"
+    characters: [Zack, Emma, Jimmy]
+    purpose: Zack+Emma 返回后门现行抓捕 Jimmy——他刚结束与 Whale 手下的交易
+    trigger: "自由探索完成 + 携带全部证据"
+  - id: 8592
+    name: "Post-Expose Dialogue · 字迹对白"
+    characters: [Zack, Jimmy]
+    purpose: 三轮 Expose 后 Zack 指出"Rosa 的威胁纸条 J 字倒写——是你"（依据 Jimmy 家英语练习书 1505）。最后一层伪装被揭穿
+    trigger: "Expose Jimmy round_3 之后"
+  - id: 8593
+    name: "Suspect Suicide Sequence · Jimmy 自杀"
+    characters: [Zack, Emma, Jimmy]
+    purpose: 鸣笛（Whale 手下信号）→ Jimmy 发疯 → 用米勒集团手枪自尽 → 托付 Anna → 现场遗留 1507
+    trigger: "post_expose_dialogue 结束后"
+  - id: 8594
+    name: "Post-Expose Romance · 搭档决定"
+    characters: [Zack, Emma]
+    purpose: Zack 要求 Emma 退出调查（危险），Emma 坚守。两人确认 loop6 计划——以记者身份+助理伪装潜入 Morrison 家
+    trigger: "suspect_suicide 后"

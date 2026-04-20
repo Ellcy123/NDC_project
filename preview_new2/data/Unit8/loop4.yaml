@@ -1,88 +1,66 @@
 title: 破碎的金丝雀
 target: 说服 Vivian——让她不再供述自己是凶手，保全她不被逮捕
-time: 当晚
-opening: []
-opening_talks:
-- emma_007
-free_phase:
-- 8009
-- 8005
-- 8010
-- 8006
-- 8007
+time: "当晚"
+
+opening:
+  - id: 8041
+    characters: [Zack, Emma]
+    purpose: 【承接 loop3】Rosa 真击穿 + 弹壳到手——梳理 loop4 目标：说服 Vivian 不再认罪
+    talk: emma_006
+  - id: 8042
+    characters: [Zack, Emma]
+    purpose: 弹壳型号未知 + Morrison 出现在大厅等候。Emma 建议先去 Tommy 办公室鉴定弹壳型号
+    talk: emma_007
+
 scenes:
   unlocked:
-  - 8009
-  - 8005
-  - 8010
-  - 8006
-  - 8007
+    - 8409  # 一楼走廊（垃圾桶附近 —— 被撕毁的合同 1401）
+    - 8405  # Tommy 办公室（弹壳型号鉴定：.45 ACP + Whale 名字浮出 / Rita 是内线）
+    - 8410  # Vivian 化妆间（她的情绪 / 痛苦记录 / 船票）
+    - 8406  # 歌舞厅（Anna 准备登台）
+    - 8407  # 酒吧大厅（Morrison S405 等待区——Part1 转折触发点）
   locked:
-  - id: 8001
-    reason: ''
-  - id: 8002
-    reason: ''
-  - id: 8003
-    reason: ''
-  - id: 8004
-    reason: ''
-  - id: 8008
-    reason: ''
-  - id: 8011
-    reason: ''
-  - id: 8012
-    reason: ''
-  - id: 8013
-    reason: ''
-  - id: 8014
-    reason: ''
+    - id: 8401
+      reason: 会客室 loop3 已搜证完毕，本 loop 聚焦其他场景
+    - id: 8402
+      reason: Vivian 化妆间 8410 已开放——本 loop 不在工作室接触她
+    - id: 8403
+      reason: 厨房 loop2/3 已调查完
+    - id: 8404
+      reason: Webb 办公室 loop2 已搜证完
+    - id: 8408
+      reason: 清洁间 loop3 已完成 Rosa 指证，本 loop 不再进入
+    - id: 8411
+      reason: 后门 loop5 凌晨抓捕 Jimmy 才用上
+    - id: 8412
+      reason: Jimmy 家 loop5 才进入调查方向
+    - id: 8413
+      reason: Morrison 家 loop6 才进入视野
+    - id: 8414
+      reason: 警局 loop6 才进入
   closed: []
+
 expose:
-  scene: 8007
+  scene: 8407
   target_name: Vivian
   rounds:
-  - lie: 我真的杀了 Webb！
-    evidences:
-    - '8308'
-    - '8101'
-  - lie: 但除了我是凶手，没有其他人能够杀害 Webb！
-    evidences:
-    - '8054003'
-    - '8401'
-  - lie: 可是就算如此，也是因为他沉迷于 Rita……
-    evidences:
-    - '8304'
-    - '8103'
-special_cutscenes:
-- type: turn_cutscene
-  title: 情节转折
-  subtype: turn_cutscene
-  location: 蓝月亮酒吧大厅或会客室走廊（Morrison 出现的地方）
-  summary: 【Part1 情节转折——Morrison 逆转】
-  description: "【Part1 情节转折——Morrison 逆转】\n\n1. Zack 先指出：自己已经得到了 Vivian 不认罪的证词（Expose\
-    \ 结果），\n   事后 Morrison 可以再去向 Vivian 亲自求证一次。\n2. 接着 Zack 出示弹壳（1308）并提出推理：凶器型号是\
-    \ .45 ACP，\n   与 Vivian 的 .25 手枪不符——Vivian 无罪（展示 Vivian 无罪的证明）。\n\nMorrison 看到\
-    \ .45 弹壳后，脸色骤变——\n（玩家不知道原因，但可以看到那是\"认出了某种东西\"的表情，不是单纯的惊讶）\n\n随后，Morrison 的态度急转直下：\n\
-    1. 他不再客气，对 Emma 和 Zack 的态度变得强硬\n2. 拿走了那个揭穿的证物——Webb 委托协议书（1103）\n   ——1103 状态更新为\
-    \ confiscated_by_morrison（内容玩家已知，无法再作为证物出示）\n3. 夺走了 Zack 手中的弹壳（1308）\n   ——1308\
-    \ 状态更新为 confiscated_by_morrison\n   （loop5 时玩家手中不再持有此弹壳；loop6 揭示被 Morrison 藏起来）\n\
-    4. 宣布：Vivian 拥有杀人动机和计划，她的手枪就是真正的凶器\n5. 下令将 Vivian 逮捕，押回警局\n\nZack 和 Emma 无力阻止——Morrison\
-    \ 是在场的最高警方权威。\nVivian 被带走时回头看了 Zack 一眼（情感戏收尾）。"
-- type: post_expose_scene
-  title: 指证后剧情
-  subtype: story_dialogue
-  location: 蓝月亮酒吧大门口（Zack 和 Emma 对话）
-  summary: Morrison 强押 Vivian 离开后，Zack 和 Emma 留在酒吧。
-  description: 'Morrison 强押 Vivian 离开后，Zack 和 Emma 留在酒吧。
+    - lie: "我真的杀了 Webb！"
+      evidences: [8308, 8101]           # Rosa 给的弹壳（.45 ACP）+ Vivian 手枪（.25 ACP，口径不符）
+    - lie: "但除了我是凶手，没有其他人能够杀害 Webb！"
+      evidences: [8054003, 8401]        # Tommy 证词（Whale 动机）+ 被撕毁的合同（Whale 身份）
+    - lie: "可是就算如此，也是因为他沉迷于 Rita……"
+      evidences: [8304, 8103]           # 保险箱的字条 + Webb 委托协议书（Webb 保护 Vivian 而非沉迷 Rita）
 
-    两人面对 Part1 的失败——明明拿出了证据，却无法阻止逮捕。
-
-    Emma 帮助 Zack 梳理：Morrison 的异常反应说明了什么？
-
-    接下来必须做两件事：
-
-    1. 找到真正的凶器（Morrison 说 Vivian 的枪是凶器——但弹壳口径不符，真正的凶器还在哪里？）
-
-    2. 击破 Morrison——他藏了什么，他和 Whale 有什么关系？
-
-    🟣 新疑点（1401）：真正的凶器到底在哪？'
+events:
+  - id: 8491
+    name: "Part1 情节转折 · Morrison 变脸"
+    characters: [Zack, Emma, Morrison, Vivian]
+    purpose: Morrison 看到 .45 弹壳脸色骤变 → 态度急转 → 拿走 1103 + 夺走 1308 → 宣布 Vivian 有罪并下令逮捕 → 强押 Vivian 回警局（Vivian 回头看 Zack 一眼）
+    trigger: "Expose Vivian 三轮完成后（Expose JSON 840073 next 自动跳 804004001）"
+    talk: morrison_003_turn
+  - id: 8492
+    name: "指证后 · 大门口 Zack/Emma 对话"
+    characters: [Zack, Emma]
+    purpose: 梳理 Part1 的失败：拿出证据却无法阻止逮捕。确立 Part2 双目标——找真凶器 + 击破 Morrison（🟣 新疑点 8401：真正的凶器到底在哪？）
+    trigger: "turn_cutscene 结束后"
+    talk: emma_008

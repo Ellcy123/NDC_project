@@ -1,59 +1,75 @@
 title: 正义的重量
 target: 击破 Morrison 的谎言，当众迫使他承认吹黑哨，从警局释放无辜的 Vivian
-time: 次日
-opening: []
-opening_talks:
-- emma_011
-free_phase:
-- 8013
-- 8014
-- 8001
+time: "次日"
+
+opening:
+  - id: 8061
+    characters: [Zack, Emma]
+    purpose: 【承接 loop5】Jimmy 自杀后——Zack 要求 Emma 退出，Emma 坚守；确认 loop6 潜入 Morrison 家计划
+    talk: emma_010
+  - id: 8062
+    characters: [Zack, Emma]
+    purpose: 抵达 Morrison 家门口——两人以记者+助理伪装进场
+    talk: emma_011
+  - id: 8063
+    characters: [Zack, Emma]
+    purpose: Morrison 家内搜证段——伪装翻查 + ⚡Whale 电话突发事件（Whale 首次声音登场）
+    talk: morrison_house
+
 scenes:
   unlocked:
-  - 8013
-  - 8014
-  - 8001
+    - 8613  # Morrison 家（伪装搜查 + ⚡Whale 电话突发事件 + 三件关键证据）
+    - 8614  # 警局 Morrison 办公室（单独对质 → 三轮 Expose Morrison）
+    - 8601  # 一楼会客室（保险箱 → 南区计划 1604 → Unit2 钩子）
   locked:
-  - id: 8002
-    reason: ''
-  - id: 8003
-    reason: ''
-  - id: 8004
-    reason: ''
-  - id: 8005
-    reason: ''
-  - id: 8006
-    reason: ''
-  - id: 8007
-    reason: ''
-  - id: 8008
-    reason: ''
-  - id: 8009
-    reason: ''
-  - id: 8010
-    reason: ''
-  - id: 8011
-    reason: ''
-  - id: 8012
-    reason: ''
+    - id: 8602
+      reason: Vivian 工作室 —— 本 loop 她在警局 / 保险箱场景在会客室
+    - id: 8603
+      reason: 厨房 loop5 已完结
+    - id: 8604
+      reason: Webb 办公室 loop2 已完结
+    - id: 8605
+      reason: Tommy 办公室 loop5 已完结
+    - id: 8606
+      reason: 歌舞厅 loop4 已完结
+    - id: 8607
+      reason: 大厅 loop4 已完结
+    - id: 8608
+      reason: 清洁间 loop3 已完结
+    - id: 8609
+      reason: 一楼走廊 loop4 已完结
+    - id: 8610
+      reason: Vivian 化妆间 loop4 已完结
+    - id: 8611
+      reason: 后门 loop5 已完结
+    - id: 8612
+      reason: Jimmy 家 loop5 已完结
   closed: []
+
 expose:
-  scene: 8014
+  scene: 8614
   target_name: Morrison
   rounds:
-  - lie: Vivian 的手枪（1101）就是凶器！她就是凶手！
-    evidences:
-    - '8601'
-    - '8507'
-  - lie: 我只是临时接警、搜查失误——这不是故意的，我后续完全可以重新调查，不需要立刻释放嫌疑人
-    evidences:
-    - '8602'
-    - '8603'
-  - lie: Whale 只是个放贷的，和本案真凶没有任何关系——就算我和他有借贷，那也是私事
-    evidences:
-    - '8502'
-special_cutscenes:
-- type: ending_sequence
-  title: 终章
-  subtype: forced_cutscene
-  location: 警察局内 → 警察局外走廊 → 保险箱场景（Vivian 的工作室/蓝月亮酒吧）
+    - lie: "Vivian 的手枪（1101）就是凶器！她就是凶手！"
+      evidences: [8601, 8507]          # Morrison 藏的弹壳（.45 ACP）+ 米勒集团特制手枪
+    - lie: "我只是临时接警、搜查失误——这不是故意的，我后续完全可以重新调查，不需要立刻释放嫌疑人"
+      evidences: [8602, 8603]          # 赌债欠条+威胁信 + Morrison 向 Whale 借据
+    - lie: "Whale 只是个放贷的，和本案真凶没有任何关系——就算我和他有借贷，那也是私事"
+      evidences: [8502]                # Jimmy 给 Whale 的回信（Whale 主使身份闭环）
+
+events:
+  - id: 8691
+    name: "Morrison 家 · ⚡Whale 电话"
+    characters: [Zack, Emma]
+    purpose: Morrison 不在家；搜查中段响起 Whale 亲自来电（Whale 首次声音登场）："证明给我看这城市是否存在正义"
+    trigger: "Morrison 家搜证过程中"
+  - id: 8692
+    name: "警局过场 · Morrison 办公室"
+    characters: [Zack, Emma, Morrison]
+    purpose: Zack+Emma 带 1507 + 1502 进入 Morrison 办公室单独对质——三轮 Expose 开启
+    trigger: "搜证完成后"
+  - id: 8693
+    name: "Ending Sequence · 真相闭环"
+    characters: [Zack, Emma, Morrison, Vivian, Anna]
+    purpose: Morrison 当众认罪 → Vivian 释放 → 回到会客室开启保险箱 → 取得南区计划（1604，Unit2 钩子，内容不揭示）
+    trigger: "Expose Morrison round_3 完成后"

@@ -1,64 +1,63 @@
 title: 虚假的目击
 target: 找到案发现场（会客室）内的疑点，确认 Rosa 的时间线指控是否在撒谎
-time: 当晚
-opening: []
-opening_talks:
-- emma_005
-free_phase:
-- 8003
-- 8007
-- 8001
-- 8008
+time: "当晚"
+
+opening:
+  - id: 8031
+    characters: [Zack, Emma]
+    purpose: 【承接 loop2】Tommy 指证后汇报——酒吧勒索生意确立，"大人物"仍是暗线
+    talk: emma_004
+  - id: 8032
+    characters: [Zack, Emma]
+    purpose: Emma 提出重审 Rosa 时间线——建议重回案发现场搜寻物证
+    talk: emma_005
+
 scenes:
   unlocked:
-  - 8003
-  - 8007
-  - 8001
-  - 8008
+    - 8303  # 厨房（Jimmy 重访 —— 愧疚感 + 销毁证据伏笔）
+    - 8307  # 大厅（Morrison S3 —— "子弹缺失"伏笔）
+    - 8301  # 犯罪现场 · 一楼会客室（再次开放 —— 玻璃碎片 / 威胁纸条 / 女儿医疗单 / Webb 日记）
+    - 8308  # 清洁间（Expose Rosa 真击穿场景 —— 基于 Rosa 地盘）
   locked:
-  - id: 8002
-    reason: ''
-  - id: 8004
-    reason: ''
-  - id: 8005
-    reason: ''
-  - id: 8006
-    reason: ''
-  - id: 8009
-    reason: ''
-  - id: 8010
-    reason: ''
-  - id: 8011
-    reason: ''
-  - id: 8012
-    reason: ''
-  - id: 8013
-    reason: ''
-  - id: 8014
-    reason: ''
+    - id: 8302
+      reason: Vivian 工作室房门反锁，loop4 才能再次深度对话
+    - id: 8304
+      reason: Webb 办公室 loop2 已搜完，本 loop 调查聚焦案发现场
+    - id: 8305
+      reason: Tommy 办公室 loop2 已指证完毕，本 loop 不再出现在路径
+    - id: 8306
+      reason: 歌舞厅 loop2 已调查完
+    - id: 8309
+      reason: 一楼走廊 loop4 垃圾桶线索才出现
+    - id: 8310
+      reason: Vivian 化妆间 loop4 才解锁
+    - id: 8311
+      reason: 后门 loop5 凌晨抓捕 Jimmy 才用上
+    - id: 8312
+      reason: Jimmy 家 loop5 才进入调查方向
+    - id: 8313
+      reason: Morrison 家 loop6 才进入视野
+    - id: 8314
+      reason: 警局 loop6 才有理由进入
   closed: []
+
 expose:
-  scene: 8008
+  scene: 8308
   target_name: Rosa
   rounds:
-  - lie: 大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
-    evidences:
-    - '8305'
-    - '8033002'
-  - lie: 可能是我记错了，那可能是 Vivian 之前杀了人，反正一定是她杀的（退守谎言，接近崩溃）
-    evidences:
-    - '8306'
-    - '8307'
-special_cutscenes:
-- type: post_expose_scene
-  title: 指证后剧情
-  subtype: story_dialogue
-  location: 蓝月亮酒吧某处（Zack 和 Emma 对话）
-  summary: 指证 Rosa 完成，Zack 向 Emma 汇报全部收获。
-  description: '指证 Rosa 完成，Zack 向 Emma 汇报全部收获。
+    - lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
+      evidences: [8305, 8033002]     # 玻璃碎片（硝烟痕迹）+ Rosa 证词（时间线推理）
+    - lie: "可能是我记错了，那可能是 Vivian 之前杀了人，反正一定是她杀的（退守谎言，接近崩溃）"
+      evidences: [8306, 8307]        # 威胁纸条 + 女儿医疗单 → full_breakthrough
 
-    两人梳理 loop3 的成果，确认 loop4 的目标：
-
-    说服 Vivian，让她不再供述自己是凶手。
-
-    Vivian 的房门现在可以打开了——她需要听到新的真相。'
+events:
+  - id: 8391
+    name: "Post-Expose · Rosa 交出弹壳"
+    characters: [Zack, Rosa]
+    purpose: Rosa 崩溃坦白后，从口袋掏出现场捡到的弹壳（1308，loop3 只说"一个弹壳"，.45 型号留给 loop4 确认）
+    trigger: "Expose Rosa round_2 full_breakthrough"
+  - id: 8392
+    name: "指证后 · Zack/Emma 汇报"
+    characters: [Zack, Emma]
+    purpose: 梳理 loop3 收获，确认 loop4 目标——Vivian 工作室房门打开，她需要听见新真相
+    trigger: "Post-Expose 之后"

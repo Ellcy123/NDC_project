@@ -1,70 +1,61 @@
 title: 酒吧的秘密
 target: 调查 Webb 为何如此紧急雇佣侦探——他究竟怀疑谁会杀他？酒吧里在做什么生意？
-time: 当晚
-opening: []
-opening_talks:
-- emma_003
-free_phase:
-- 8002
-- 8003
-- 8004
-- 8005
-- 8006
+time: "当晚"
+
+opening:
+  - id: 8021
+    characters: [Zack, Emma]
+    purpose: 【承接 loop1】大门口 72 小时窗口梳理——Webb 保险倾向 + 下一步方向
+    talk: emma_002
+  - id: 8022
+    characters: [Zack, Emma]
+    purpose: 从大门口自然过渡——重新进入酒吧开始搜证。Emma 提出调查方向："Webb 真正怀疑的凶手是谁"
+    talk: emma_003
+
 scenes:
   unlocked:
-  - 8002
-  - 8003
-  - 8004
-  - 8005
-  - 8006
+    - 8202  # Vivian 工作室（勒索用的照片 / Webb 勒索生意细节）
+    - 8203  # 厨房（Jimmy 工资单 + 不在场证明）
+    - 8204  # Webb 办公室（账目差额 + VIP 合影 + 记账人）
+    - 8205  # Tommy 办公室（Vivian 排班表；Expose 对象所在）
+    - 8206  # 歌舞厅（Anna 空场 + 古董把戏：假油画 / 花瓶现场）
   locked:
-  - id: 8001
-    reason: ''
-  - id: 8007
-    reason: ''
-  - id: 8008
-    reason: ''
-  - id: 8009
-    reason: ''
-  - id: 8010
-    reason: ''
-  - id: 8011
-    reason: ''
-  - id: 8012
-    reason: ''
-  - id: 8013
-    reason: ''
-  - id: 8014
-    reason: ''
+    - id: 8201
+      reason: 会客室案发现场被 Morrison 封锁——loop3 才再次开放
+    - id: 8207
+      reason: 大厅 loop3 才成为调查焦点
+    - id: 8208
+      reason: 清洁间 loop3 Rosa 真击穿之后才开放
+    - id: 8209
+      reason: 一楼走廊 loop4 才浮出调查路径
+    - id: 8210
+      reason: Vivian 化妆间 loop4 才解锁
+    - id: 8211
+      reason: 后门 loop5 凌晨抓捕 Jimmy 才用得上
+    - id: 8212
+      reason: Jimmy 家 loop5 才进入调查方向
+    - id: 8213
+      reason: Morrison 家 loop6 才进入视野
+    - id: 8214
+      reason: 警局 loop6 才有理由进入
   closed: []
+
 expose:
-  scene: 8005
+  scene: 8205
   target_name: Tommy
   rounds:
-  - lie: 酒吧里只有私酒生意，没有干别的
-    evidences:
-    - '8062002'
-  - lie: 你有证据吗，一个歌女的话算什么，酒吧里的账目都是清清白白的
-    evidences:
-    - '8205'
-    - '8206'
-  - lie: 还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman……都已经卖出去了
-    evidences:
-    - '8209'
-    - '8210'
-  - lie: 我只是按 Webb 指示记账，不参与其他具体业务
-    evidences:
-    - '8207'
-special_cutscenes:
-- type: post_expose_scene
-  title: 指证后剧情
-  subtype: story_dialogue
-  location: 蓝月亮酒吧某处（Zack 和 Emma 对话）
-  summary: Tommy 的指证完成后，Zack 向 Emma 汇报。
-  description: 'Tommy 的指证完成后，Zack 向 Emma 汇报。
+    - lie: "酒吧里只有私酒生意，没有干别的"
+      evidences: [8062002]
+    - lie: "你有证据吗，一个歌女的话算什么，酒吧里的账目都是清清白白的"
+      evidences: [8205, 8206]
+    - lie: "还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman……都已经卖出去了"
+      evidences: [8209, 8210]
+    - lie: "我只是按 Webb 指示记账，不参与其他具体业务"
+      evidences: [8207]
 
-    两人梳理 loop2 的收获，确认 loop3 的目标：
-
-    重新审视 Rosa——她的时间线指控是否真的成立？案发现场有没有被忽视的证据？
-
-    目的：确认自由探索（中）+ Rosa 指证（真）的调查方向。'
+events:
+  - id: 8291
+    name: "指证后 · Zack/Emma 汇报"
+    characters: [Zack, Emma]
+    purpose: Tommy 松口酒吧勒索生意存在——"大人物"仍未点名；loop3 目标转向 Rosa 时间线
+    trigger: "Expose Tommy 结束后"

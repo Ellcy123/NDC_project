@@ -100,7 +100,7 @@ python .claude/skills/miro/scripts/mindmap_delete_tree.py <root_id>
 ```bash
 # 1. Markdown 转 Tab 缩进
 python .claude/skills/miro/scripts/md_to_indent.py \
-  剧情设计/unit1重构版0417/Unit1_大纲-0417.md \
+  剧情设计/Unit8/Unit8_大纲-0417.md \
   -o /tmp/outline.txt
 
 # 2. 先清干净 board 上之前的残留（避免重复）

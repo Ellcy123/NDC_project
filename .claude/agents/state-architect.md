@@ -48,6 +48,10 @@ disallowedTools: Bash
 - **Expose 对象**：`is_liar: true`, `player_inquiry: null`
 - **Transparency 规则**：NPC 可说个人经历，不可说 Expose 结论、不可泄露 blind_spot 信息
 - **validation_status**：必须为 PASS 才可进入对话生成阶段
+- **双格式兼容**（详见 `.claude/rules/state.md` 历史格式兼容节）：
+  - 新建 Unit（Unit8+）一律用新格式：`active_topics`/`withheld_topics`、`unlock_condition` 结构化数组 `[{type, param}]`、evidence 含 `type`/`pickup`/`analysis`/`description`、按需补 `evidence_registry`/`post_expose_scene`/`turn_cutscene`/`ending_sequence`
+  - 读 Unit2 旧文件时按旧字段解析：`knows`/`does_not_know`/`lie`、`unlock_condition: "item:xxx + testimony:yyy"` 字符串按 `+` 分隔
+  - 不主动回溯改 Unit2 已有 state 文件
 
 ### 自检清单
 
