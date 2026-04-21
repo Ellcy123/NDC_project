@@ -24,19 +24,17 @@
 |------|------|
 | `AVG/` | 对话系统：按章节(EPI01/EPI02) → 类型(Talk/Expose) → 循环(loop1-6) 组织的 JSON 对话文件 |
 | `AVG/对话配置工作及草稿/` | 对话 MD 草稿 + 同步脚本 (sync_to_json.py, extract_to_md.py) |
-| `story/` | 游戏数据主表：YAML + XLSX 双格式（ItemStaticData, NPCStaticData, SceneConfig, Talk, Testimony 等） |
-| `Config/` | 事件系统、任务系统等 JSON/XLSX 配置 |
 
-### 预览工具
+### 预览工具与配置表落地
 | 目录 | 内容 |
 |------|------|
-| `preview_new2/` | 新版预览网页（流程图 + 证据表），数据在 `preview_new2/data/` |
+| `preview_new2/` | 预览网页（流程图 + 证据表） |
+| `preview_new2/data/Unit{N}/` | 按 Unit 组织的中间 YAML（loop1-6, locations, story_overview, talk_summary），喂前端流程图 |
+| `preview_new2/data/table/` | **当前配置表落地处**——全局合并的 JSON（DoubtConfig / ItemStaticData / SceneConfig / TestimonyItem 等 16 张活跃表），由 state 经 `/state-to-table` skill 增量合并；Talk / Expose 由 `sync_to_json.py` 维护 |
 
 ### 脚本工具
 | 目录 | 内容 |
 |------|------|
-| `scripts/` | 配置表转换器 (config_table_converter.py) 和子转换器 (converter/) |
-| `scripts/converter/` | evidence_converter.py, npc_converter.py, scene_converter.py, convert_testimony_to_excel.py |
 | `AVG/Tools/` | 对话数据验证 (check_orphaned_ids.py) |
 
 ### 其他
@@ -103,9 +101,9 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 | 格式 | 用途 |
 |------|------|
-| **YAML** | 循环配置 (loop1.yaml)、story/ 目录下的游戏数据、Preview 数据 |
-| **JSON** | AVG 对话文件 (Talk/Expose)、preview_new2/data/table/ 下的预览数据 |
-| **XLSX** | 策划填写的配置表原始格式，通过脚本转为 YAML/JSON |
+| **YAML** | state 文件 (`剧情设计/Unit{N}/state/loop{1-6}_state.yaml`)、Preview 中间数据 (`preview_new2/data/Unit{N}/`) |
+| **JSON** | AVG 对话文件 (Talk/Expose)、`preview_new2/data/table/` 下的全局配置表 |
+| **XLSX** | `preview_new2/data/table/_all_tables.xlsx`（合并视图，给人看，手动同步） |
 | **MD** | 设计文档、对话草稿（Phase 1 工作格式） |
 
 ---
@@ -132,7 +130,7 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 2. 证据与谜题设计
 
-设计文档 → 配置表（XLSX）→ 脚本转换 → 预览验证 → 同步到 D:\NDC
+设计文档 → state YAML（`剧情设计/Unit{N}/state/`）→ `/state-to-table` skill 写入 `preview_new2/data/table/*.json` → 预览验证 → 同步到 D:\NDC
 
 关键约束：
 - 每个场景/NPC 承载 1-3 个核心信息点，不超过 3 个
@@ -141,10 +139,13 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 3. 配置表
 
-- `story/` 目录维护 XLSX + YAML 双格式
-- 用 `story/excel_yaml_converter.py` 进行 XLSX ↔ YAML 互转
-- 用 `scripts/config_table_converter.py` 进行专项转换
-- 最终通过 copy 命令同步到 `D:\NDC\Config\Datas\story\`
+- 落地处：`preview_new2/data/table/*.json`（全局合并，16 张活跃表）
+- 字段规范：[docs/配置表详解.md](docs/配置表详解.md)
+- 数据流：
+  - **非 Talk / Expose 的配置表**：state YAML → `/state-to-table` skill → JSON（增量按 ID 段合并）
+  - **Talk**：MD 草稿 → `sync_to_json.py` → JSON
+  - **Expose 系列**：暂由专用流程或手动维护
+- `_all_tables.xlsx` 是合并视图，仅供查看，由用户手动同步
 
 ---
 
@@ -207,16 +208,14 @@ python sync_to_json.py --all                            # 全量
 # JSON 提取回 MD（验证往返一致性）
 python extract_to_md.py
 
-# 配置表转换
-python scripts/config_table_converter.py
-python story/excel_yaml_converter.py
+# State → 配置表 JSON（非 Talk/Expose）：使用 /state-to-table skill，无独立 py 脚本
 
 # 预览系统启动（从 D:\ 根目录启动，路径配置见 index.html 中 Config.paths）
 python -m http.server 8080 --directory "D:\\"
 # 访问 http://localhost:8080/NDC_project/preview_new2/index.html
 
-# 同步到 Unity 工程
-copy /Y "D:\NDC_project\story\Testimony.xlsx" "D:\NDC\Config\Datas\story\Testimony.xlsx"
+# 同步到 Unity 工程（手动 copy table JSON）
+copy /Y "D:\NDC_project\preview_new2\data\table\*.json" "D:\NDC\Assets\table\"
 ```
 
 ---
@@ -232,6 +231,7 @@ copy /Y "D:\NDC_project\story\Testimony.xlsx" "D:\NDC\Config\Datas\story\Testimo
 | 完整指证设计 | `/team-expose` |
 | 整个 Loop 规划（证据→指证→state→对话→鉴赏力→审查） | `/team-loop` |
 | Unit 大纲 → 6 个 state 文件 | `/unit-state-generator` |
+| State YAML → 配置表 JSON（非 Talk/Expose） | `/state-to-table` |
 | 全流程体验审计 | `/playthrough-audit Unit1`（~15 分钟，输出交互式 HTML 报告） |
 | 简单改文案/小修 | 不开 team，直接做 |
 
@@ -243,5 +243,5 @@ Agent 定义见 `.claude/agents/`（14 个角色），编排逻辑见对应 skil
 
 - **NDC_project** = 内容设计、预配置、预览验证
 - **D:\NDC** = Unity 游戏工程，包含运行时代码和最终资源
-- 数据流向：NDC_project → (脚本转换/手动copy) → D:\NDC
+- 数据流向：state YAML → `/state-to-table` 写入 `preview_new2/data/table/*.json` → 手动 copy 到 `D:\NDC\Assets\table\`；对话走 `sync_to_json.py`
 - 美术资源位于 `D:\NDC\Assets\Resources/`
