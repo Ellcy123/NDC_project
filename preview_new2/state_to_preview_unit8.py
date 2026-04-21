@@ -850,6 +850,32 @@ def generate_talk_summary(states):
                 if talk_id and motive:
                     summaries[talk_id] = f"L{loop_num} {scene_name}：{motive[:60]}"
 
+        # post_expose_scene / post_expose_romance 的 NPC 对白
+        # （emma_002/004/006/008/010 等承接/收尾/感情戏对白）
+        for post_key in ("post_expose_scene", "post_expose_romance"):
+            post_block = state.get(post_key, {}) or {}
+            if not isinstance(post_block, dict):
+                continue
+            label = "收尾/承接" if post_key == "post_expose_scene" else "感情戏/收尾"
+            for npc_key, npc_data in post_block.items():
+                if not isinstance(npc_data, dict):
+                    continue
+                talk_id = npc_data.get("talk", "")
+                motive = npc_data.get("motive", "")
+                if talk_id and motive:
+                    summaries[talk_id] = f"L{loop_num} {label}：{motive[:60]}"
+
+        # turn_cutscene 的 NPC 对白（如 loop4 morrison_003_turn · Part1 情节转折）
+        turn_cut = state.get("turn_cutscene", {}) or {}
+        if isinstance(turn_cut, dict):
+            for npc_key, npc_data in turn_cut.items():
+                if not isinstance(npc_data, dict):
+                    continue
+                talk_id = npc_data.get("talk", "")
+                motive = npc_data.get("motive", "")
+                if talk_id and motive:
+                    summaries[talk_id] = f"L{loop_num} 情节转折：{motive[:60]}"
+
         # expose 的 target_talk
         expose = state.get("expose", {}) or {}
         target_talk = expose.get("target_talk", "")
@@ -889,6 +915,14 @@ def generate_talk_summary(states):
                     prev_break = pi0 if pi0 else None
             except Exception as e:
                 print(f"    [WARN] talk_summary Expose 摘要失败 loop{loop_num}: {e}")
+
+    # 补充：loop{N}.yaml 手工维护的场景级 cutscene 对白（不在 state NPC 结构中）
+    scene_cutscene_talks = {
+        "morrison_house": "L6 Morrison 家：Zack/Emma 伪装记者+助理搜证；中段 Whale 来电（首次声音登场）",
+    }
+    for k, v in scene_cutscene_talks.items():
+        if k not in summaries:
+            summaries[k] = v
 
     doc = {**summaries, "scene_talks": {}}
     path = os.path.join(OUTPUT_DIR, "talk_summary.yaml")

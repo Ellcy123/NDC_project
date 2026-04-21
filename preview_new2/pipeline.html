@@ -142,14 +142,6 @@ body {
     z-index: 10;
 }
 #dialog-box.visible { display: flex; }
-.dlg-avatar {
-    width: 70px; height: 95px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    flex-shrink: 0;
-    background: var(--surface);
-}
 .dlg-content { flex: 1; min-width: 0; }
 .dlg-speaker { color: var(--highlight); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
 .dlg-text { color: var(--text-primary); font-size: 0.92rem; line-height: 1.5; min-height: 2.5em; }
@@ -495,7 +487,6 @@ body {
         <img id="scene-bg" alt="">
         <div id="click-area"></div>
         <div id="dialog-box">
-            <img class="dlg-avatar" alt="">
             <div class="dlg-content">
                 <div class="dlg-speaker"></div>
                 <div class="dlg-text"></div>
@@ -701,7 +692,6 @@ const DOM = {
     idleHint: $('idle-hint'),
     clickArea: $('click-area'),
     dialogBox: $('dialog-box'),
-    dlgAvatar: document.querySelector('.dlg-avatar'),
     dlgSpeaker: document.querySelector('.dlg-speaker'),
     dlgText: document.querySelector('.dlg-text'),
     dlgAction: document.querySelector('.dlg-action'),
@@ -1446,15 +1436,7 @@ const Pipeline = {
         const text = stripSpecialTags(talk.cnWords || '');
         const action = talk.cnAction || '';
 
-        // Avatar
-        const npc = DataStore.npcsMap.get(speakerId);
-        if (npc && npc.IconLarge) {
-            DOM.dlgAvatar.src = Config.getAssetUrl(`Art/NPC/${npc.IconLarge}`);
-            DOM.dlgAvatar.style.display = '';
-        } else {
-            DOM.dlgAvatar.style.display = 'none';
-        }
-
+        // 头像已整体移除（线上无美术，避免 404 噪声）
         DOM.dlgSpeaker.textContent = speakerName;
         DOM.dlgText.textContent = text;
         DOM.dlgAction.textContent = action;

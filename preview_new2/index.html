@@ -586,23 +586,6 @@
             width: 100%; max-width: 100%;
         }
 
-        .dialog-box .dlg-avatar {
-            flex-shrink: 0;
-            width: 80px;
-            height: 110px;
-            border-radius: 6px;
-            overflow: hidden;
-            background: var(--card);
-            border: 1px solid var(--accent);
-        }
-
-        .dialog-box .dlg-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-        }
-
         .dialog-box .dlg-body {
             flex: 1;
             min-width: 0;
@@ -1258,7 +1241,23 @@
         },
 
         getTalk(id) {
-            return AppState.talksMap.get(String(id)) || null;
+            if (id == null) return null;
+            const key = String(id);
+            const direct = AppState.talksMap.get(key);
+            if (direct) return direct;
+            // Unit8 uses videoScene names (e.g. "jimmy_001") as TalkInfo.id —
+            // resolve to the AVG Talk entry with smallest step whose videoScene matches.
+            if (!/^\d+$/.test(key)) {
+                let first = null;
+                for (const talk of AppState.talksMap.values()) {
+                    if (talk.videoScene === key) {
+                        const step = parseInt(talk.step) || 0;
+                        if (!first || step < (parseInt(first.step) || 0)) first = talk;
+                    }
+                }
+                return first || null;
+            }
+            return null;
         },
 
         getTalkSummary(talkId, sceneId) {
@@ -2469,13 +2468,20 @@
                 loop.opening.forEach((item, idx) => {
                     const sid = String(typeof item === 'object' ? item.id : item);
                     const scene = DataManager.getScene(sid);
-                    const sceneName = scene?.sceneName || `场景 ${sid}`;
+                    // 没有对应 SceneConfig 时显示"开场 #N"（opening 条目本就不一定是场景）
+                    const sceneName = scene?.sceneName || `开场 #${idx + 1}`;
                     const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
                     const characters = (typeof item === 'object' && item.characters) ? item.characters : [];
                     const purpose = (typeof item === 'object' && item.purpose) ? item.purpose : '';
                     const talkFile = (typeof item === 'object' && item.talk) ? item.talk : '';
 
-                    html += `<div class="npc-card" style="margin-bottom:1rem; cursor:pointer;" onclick="FlowView.showScene('${sid}')">`;
+                    // Opening 场景可能没有 SceneConfig 条目（如 Unit8 的 8011/8012 cutscene）——
+                    // 卡片点击：有 scene 就跳详情页，没 scene 就不响应（点下面的"播放"按钮起对话）。
+                    if (scene) {
+                        html += `<div class="npc-card" style="margin-bottom:1rem; cursor:pointer;" onclick="FlowView.showScene('${sid}')">`;
+                    } else {
+                        html += `<div class="npc-card" style="margin-bottom:1rem;">`;
+                    }
 
                     // Background image
                     if (bgUrl) {
@@ -2514,14 +2520,16 @@
                             html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
                         }
                         if (firstId) {
-                            html += `<button class="btn" onclick="event.stopPropagation(); FlowView.showScene('${sid}', '${firstId}')" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
+                            // 有 scene 就跳详情并 autoplay；无 scene（opening cutscene）就直接起对话
+                            const playAction = scene
+                                ? `FlowView.showScene('${sid}', '${firstId}')`
+                                : `DialogController.startFromTalkId('${firstId}')`;
+                            html += `<button class="btn" onclick="event.stopPropagation(); ${playAction}" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
                         }
                         html += `</div>`;
                     }
 
-                    if (!scene) {
-                        html += `<div class="ev-art empty">SceneConfig 中未找到</div>`;
-                    }
+                    // Opening 条目本身不是场景——不显示"SceneConfig 中未找到"警告
                     html += `</div>`;
                 });
 
@@ -2798,10 +2806,7 @@
             const action = talk.cnAction || '';
             const isLie = talk.script === 'Lie' || talk.script === 'lie';
             const lieEvidence = isLie ? (talk.Parameters?.[0]?.ParameterStr || '') : '';
-            const iconName = talk.Speaker?.IconSmall;
-            const avatarSrc = iconName
-                ? `${Config.paths.assets}/Art/NPC/Icon/${iconName}.png`
-                : avatarUrl;
+            // 头像已整体移除（线上无美术）
 
             const isLast = (index === chain.length - 1);
             const hasBranches = isLast && node.branches && node.branches.length > 0;
@@ -2825,11 +2830,10 @@
                 </div>`;
             }
 
+            // 头像全部关闭（线上无美术资源，头像大量 404）——对话框由 .dlg-body 铺满整行
             const boxHtml = `
                 <div class="dialog-box">
-                    <div class="dlg-avatar">
-                        ${avatarSrc ? `<img src="${avatarSrc}" onerror="this.style.display='none'" alt="">` : ''}
-                    </div>
+                    `
                     <div class="dlg-body">
                         <div class="dlg-speaker">${escapeHtml(speaker)}</div>
                         ${action ? `<div style="font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-bottom:0.2rem;">(${escapeHtml(action)})</div>` : ''}
@@ -2847,12 +2851,13 @@
                 : document.querySelector('.scene-container');
 
             // Fallback: scene-container missing or collapsed (no background image)
+            // 插入到 #content 内部作为首个子节点——避免被插成 .main flex 兄弟挤在 sidebar 旁
             if (!container || container.offsetHeight < 20) {
                 let fb = document.getElementById('dlg-fallback-container');
                 if (!fb) {
-                    const ref = document.querySelector('.section-title') || document.getElementById('content');
-                    if (ref) {
-                        ref.insertAdjacentHTML('beforebegin',
+                    const contentEl = document.getElementById('content');
+                    if (contentEl) {
+                        contentEl.insertAdjacentHTML('afterbegin',
                             '<div id="dlg-fallback-container" style="position:relative; margin-bottom:1rem; border:1px solid var(--border); border-radius:8px; background:var(--card); padding:0.5rem;"></div>');
                         fb = document.getElementById('dlg-fallback-container');
                     }
