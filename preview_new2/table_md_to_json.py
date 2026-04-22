@@ -77,9 +77,10 @@ def unit_of(tbl: str, id_str: str) -> int | None:
         # 3 位 {unit}{xx}
         return int(s[0]) if s and s[0].isdigit() else None
     if tbl in ("TestimonyItem", "Testimony"):
-        # 7 位 {loop}{npc_code}{seq}；NPC code 第一位 = unit
-        # NPC code 从位置 1 开始 3 位（如 1031002 → 103=NPC → unit 1）
-        return int(s[1]) if len(s) >= 2 and s[1].isdigit() else None
+        # 7 位 {unit}{npc(2)}{loop}{seq(3)}（Unit8/Unit9 新格式）
+        # 或 9 位 {npc(3)}{loop(3)}{seq(3)}（Unit1 旧格式，首字符=unit）
+        # 两种格式首字符都是 unit（Unit1 testimony 如 1031001 首字符 1，Unit9 如 9031001 首字符 9）
+        return int(s[0]) if s and s[0].isdigit() else None
     if tbl == "ChapterConfig":
         # 3 位 {unit}{0}{loop}（如 101-106）
         return int(s[0]) if s and s[0].isdigit() else None
@@ -445,7 +446,8 @@ def normalize_value(v: Any) -> Any:
 def entry_to_json(entry: Entry, context_tables: dict[str, list] | None = None) -> dict:
     """把 Entry 翻译成 JSON 条目（不含与现表的合并）。"""
     ctx = context_tables or {}
-    out: dict[str, Any] = {"id": str(entry.id)}
+    id_key = "sceneId" if entry.table == "SceneConfig" else "id"
+    out: dict[str, Any] = {id_key: str(entry.id)}
     fields = dict(entry.fields)
 
     # 处理引用展开

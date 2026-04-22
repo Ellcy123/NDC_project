@@ -111,7 +111,7 @@ player_context:
 
   post_expose_knowledge:
     # loop5 指证 Jimmy 完整击穿（三轮 Expose + 字迹叙事对白）+ 自杀后戏剧获得的新知识
-    - "Jimmy 是 Webb 案的真正凶手——由 Whale 雇佣，动机：Anna 怀孕急需大笔钱 + 爱尔兰裔移民在芝加哥的困境"
+    - "Jimmy 是 Webb 案的真正凶手——由 Whale 雇佣，动机：Anna 刚合法化但 Jimmy 自己仍是非法身份（正走配偶非配额申请），Anna 怀孕急需大笔钱 + 要让孩子有合法父亲/合法出生——Whale 勒索网络承诺的'身份协议'+ 尾款是他认为的唯一出路"
     - "真实案发时间锁定 23:00–23:05：《芝加哥狂想曲》鼓点高潮时 Jimmy 从 2F 厨房下楼，在 1F 会客室枪杀 Webb；枪声被鼓点掩盖"
     - "23:05 Jimmy 模仿 Webb 声音（爱尔兰裔口音）在门口吼退 Vivian；23:30 从 2F 厨房窗口朝外空射制造假案发时间"
     - "Jimmy 是爱尔兰裔移民——'Don't be bothering me!'是爱尔兰裔 Hiberno-English 特有句法；23:05 在门口说话的是 Jimmy，不是 Webb"
@@ -342,7 +342,7 @@ scenes:
       三件关键证据在此处发现：
       - 9503 Jimmy 给 Whale 的回信（可拾取）
       - 9504 Berlitz 英语练习书（envir，不拾取；Zack 观察到倒写 J，与 9302 纸条、9402 合同一致）
-      - 9505 撕碎的移民申请表（可拾取）
+      - 9505 Anna 的合法移民申请通过通知（可拾取；卧室梳妆抽屉妥善收存；附 Jimmy 配偶非配额资格书）
 
     evidence:
       - id: 9503
@@ -375,12 +375,12 @@ scenes:
           triple_match: true
 
       - id: 9505
-        name: "撕碎的移民申请表 / Torn Immigration Application"
+        name: "Anna 的合法移民申请通过通知 / Anna's Immigration Approval Notice"
         type: item
         pickup: true
         analysis: false
-        description: "Jimmy 撕碎后弃于角落的爱尔兰移民申请表——被 Zack 拼凑后可读：记录出生地（爱尔兰科克郡）、移民入境日期、全名 James O'Sullivan（Jimmy 是爱称）。爱尔兰裔身份的直接证明。"
-        note: "关键——疑点 9501 condition；L5 R2 击穿件（配合 9075001 口音证词）"
+        description: "卧室梳妆抽屉里妥善收存的一叠公文——Anna 才拿到不久的合法移民申请通过通知（收件人：Anna O'Sullivan，原籍爱尔兰科克郡）。通知末页附着一份《非配额移民申请资格书》——申请人 James O'Sullivan（爱尔兰科克郡），申请事由栏填写'Anna O'Sullivan 配偶'，状态一栏尚是空白（待审）。两份文件合起来坐实：Anna 是刚合法化的爱尔兰移民、Jimmy 还是非法身份、正靠 Anna 的通过走配偶豁免路径。"
+        note: "关键——疑点 9501 condition；L5 R2 击穿件（配合 9075001 口音证词）；爱尔兰裔身份坐实通过'Anna 原籍 + 附件 James O'Sullivan 配偶资格书'双重信息"
 
     npcs:
       anna_001:
@@ -481,7 +481,7 @@ expose:
     - 9075001 Jimmy 口音证词（厨房口音暴露，非物证）
     - 9503 Jimmy 给 Whale 的回信（Jimmy 家发现）
     - 9504 Berlitz 英语练习书（Jimmy 家 envir 观察——不是手持物证；将在 post_expose_dialogue 使用）
-    - 9505 撕碎的移民申请表（Jimmy 家发现）
+    - 9505 Anna 的合法移民申请通过通知（Jimmy 家卧室梳妆抽屉发现；附 Jimmy 配偶非配额申请资格书）
     - 9085001 Anna 证言：怀孕 + 急需大笔钱（Jimmy 家获得）
     - 9055001 Tommy 追加证言：知道 Whale 的只有前/现勒索人（Tommy 办公室获得）
     - 9402 被撕毁的合同（L4 发现，Whale 委托某人）
@@ -518,7 +518,7 @@ expose:
     lie: "Vivian 当时去找他了！说明当时 Webb 还活着，所以不可能是那会儿作案的"
     lie_source: "R1 被击破后 Jimmy 主动提出，以 Vivian 的行动为挡箭牌"
     requiredItems:
-      - 9505  # 撕碎移民申请表——确认 Jimmy 爱尔兰裔身份（James O'Sullivan，科克郡）
+      - 9505  # Anna 的合法移民通过通知（附 Jimmy 配偶资格书）——坐实 Jimmy 爱尔兰裔身份（James O'Sullivan，科克郡）
       - 9075001  # Jimmy 口音证词——脱口说出"Don't be bothering me!"，爱尔兰裔 Hiberno-English 特有句法
     # 注：Vivian 证言 9064001"23:05 被 Don't be bothering me! 吼退"作为对话叙事引用，不进 requiredItems——讨论结论裁决 6
     trap_evidence:
@@ -526,8 +526,8 @@ expose:
         reason: "Jimmy 工资单——证明缺钱是动机维度，不反驳口音/身份论点；误用此件将失败"
     usable_evidence:
       - id: 9505
-        name: "撕碎的移民申请表"
-        usage: "确认 Jimmy 是爱尔兰裔移民（James O'Sullivan，爱尔兰科克郡）——爱尔兰裔英语（Hiberno-English）有独特的语法习惯，'Don't be bothering me!'就是典型的爱尔兰裔英语句式，不是美式英语习惯说法"
+        name: "Anna 的合法移民申请通过通知"
+        usage: "Anna 刚拿到合法移民通过通知（原籍爱尔兰科克郡）；附件《非配额移民申请资格书》上写着 James O'Sullivan（Jimmy），以 Anna 配偶身份申请豁免——两件合起来坐实 Jimmy 是来自爱尔兰科克郡的非法身份移民；爱尔兰裔英语（Hiberno-English）有独特语法习惯，'Don't be bothering me!'是典型爱尔兰句式，不是美式英语说法"
       - id: 9075001
         name: "Jimmy 口音证词（厨房对话记录，非物证）"
         usage: "Jimmy 在厨房对话中脱口说出'Don't be bothering me!'——这句话与 Vivian 23:05 在会客室门口听到的完全一致；说那句话的人是 Jimmy，他在 23:05 模仿 Webb 的声音把 Vivian 骗走了"
@@ -933,9 +933,9 @@ doubts:
       - type: 3
         param: "9075001"  # Jimmy 厨房口音暴露证词（唯一归属；触发条件：手下打翻东西/炉子要糊）
       - type: 1
-        param: "9505"  # 撕碎移民申请表（爱尔兰裔身份确认）
+        param: "9505"  # Anna 的合法移民通过通知（附 Jimmy 配偶资格书，爱尔兰裔身份确认）
     status: "visible_L5_opening_unlock_on_evidence"
-    resolution: "Jimmy 是爱尔兰裔移民，'Don't be bothering me!'是 Hiberno-English 特有句法；23:05 说那句话的是 Jimmy，他在模仿 Webb 声音骗走 Vivian"
+    resolution: "Jimmy 是来自爱尔兰科克郡的非法身份移民（附件资格书坐实 James O'Sullivan 身份），'Don't be bothering me!'是 Hiberno-English 特有句法；23:05 说那句话的是 Jimmy，他在模仿 Webb 声音骗走 Vivian"
 
   - id: 9205
     text: "Anna 怀孕需要一大笔钱…（碎片）"
@@ -957,7 +957,7 @@ doubts:
         param: "9085001"  # Anna"怀孕需要一大笔钱"（L5，9205 碎片的 condition）
     status: "visible_L5_opening_unlock_on_evidence"
     f1_merge_note: "父疑点由 F1 碎片（9204 + 9205）合并触发；9204 等待中，9205 解锁瞬间触发父疑点 9502 正式解锁"
-    resolution: "Jimmy 家急需钱：Anna 怀孕医疗费 + 爱尔兰裔在芝加哥的生存困境——这是 Jimmy 接受 Whale 委托杀人的根本动机"
+    resolution: "Jimmy 家急需钱：Anna 怀孕医疗费 + 爱尔兰裔在芝加哥的生存困境（Anna 刚合法、Jimmy 仍非法、孩子等不及）——这是 Jimmy 接受 Whale 委托杀人的根本动机"
 
   - id: 9503
     text: "鼓点高潮掩盖了真实枪声？"
@@ -1042,11 +1042,11 @@ evidence_registry:
     note: "场景道具——L5 R4 叙事收尾引用（倒写 J 闭环）；Zack 观察记忆在 post_expose_dialogue 以对白形式使用，不作为手持物证出示"
 
   - id: 9505
-    name: "撕碎的移民申请表 / Torn Immigration Application"
+    name: "Anna 的合法移民申请通过通知 / Anna's Immigration Approval Notice"
     type: item
-    first_scene: 9012  # Jimmy 家
+    first_scene: 9012  # Jimmy 家（卧室梳妆抽屉）
     pickup: true
-    note: "关键——疑点 9501 condition；L5 Expose R2 击穿件"
+    note: "关键——疑点 9501 condition；L5 Expose R2 击穿件；附件《Jimmy 配偶非配额申请资格书》坐实 James O'Sullivan 爱尔兰裔身份"
 
   - id: 9506
     name: "生锈的 .45 警用弹壳 / Rusted .45 Police-Issue Shell Casing"

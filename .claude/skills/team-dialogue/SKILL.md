@@ -1,149 +1,313 @@
 ---
 name: team-dialogue
-description: "从用户指定的 state 文件出发，并行生成整个 Loop 的对话草稿（Talk + Expose），并过一轮审查汇总。用于 state 已定稿，只需补全对话的场景。"
-argument-hint: "[state 文件或目录路径；可选：知识池路径、人物设计目录]"
+description: "对白撰写 skill：两策划讨论 → dialogue-writer 执笔 → 审查 → 内容总监拍板。产出进游戏的对话 MD 草稿（非预览）。"
+argument-hint: "[state 文件或目录路径]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 ---
 
-编排"State → 对话草稿"的端到端流程。前提：state 文件已定稿。本 skill 只负责对话（Talk + Expose）生成与审查，不动证据/指证/state 设计本身。
+# 对白撰写 Skill
+
+本 skill 产出的对白 MD 经 `sync_to_json.py` 同步到 Unity 工程，是游戏**正式内容**，不是预览/测试稿。所以每一条对白的质量、格式、ID 都要达到出货标准。
 
 ## 适用场景
 
-- state 文件已经通过 `team-loop` 或 `unit-state-generator` 生成并确认
-- 只想要整个 Loop 的对话草稿 MD，不想重新跑证据/指证设计
-- 对话改动较大，需要整 Loop 重写（小修单 NPC 用 `/team-design`）
+- state 文件已通过 `/team-loop` 或 `/unit-state-generator` 定稿
+- 需要整 Loop 或整 Unit 的完整对话草稿（Talk + Expose + 🔵插入剧情）
+- 只改单 NPC 或小改文案：用 `/team-design`，不用本 skill
 
 ## 输入约定
 
-本 skill **完全由用户提供的路径驱动**，不假设任何默认目录。用户通过 argument 或后续对话告知：
+本 skill 由用户提供的路径驱动，不假设默认目录。
 
 | 必需 | 说明 |
 |------|------|
-| state 路径 | 单个 `loop{N}_state.yaml` 文件，或包含多个 state 的目录（此时会按 loop 顺序逐个处理） |
-| 知识池路径 | `npc_knowledge_pools.yaml`（通常一个 Unit 共用一份） |
-| 人物设计目录 | 包含 `{npc_name}.md` 的目录 |
+| state 路径 | 单个 `loop{N}_state.yaml` 或含多个 state 的目录 |
+| 人物设计目录 | 含 `{npc}.md` 的目录，通常在 `剧情设计/Unit{N}/Characters/` |
 
-**解析顺序：**
+**知识池**（`npc_knowledge_pools.yaml`）为可选——Unit8+ 采用 state 内嵌 `active_topics` / `withheld_topics` 格式，无需独立知识池。
 
-1. 如果 argument 直接给了路径，按给的用
-2. 如果 argument 只给了 state 路径，先尝试在 state 同目录 / 上级目录找 `npc_knowledge_pools.yaml` 和 `characters/`
-3. 上述都没找到，用 AskUserQuestion 问用户："知识池和人物设计在哪？"——**不要自己猜路径，不要默认回退到 `AVG/对话配置工作及草稿/前置配置/`**
+**解析顺序**：
+1. argument 直接给路径 → 按给的用
+2. 仅给 state → 在 state 同级 / 上级找 `Characters/`
+3. 都没找到 → 用 AskUserQuestion 问用户，**不假设默认路径**
 
-## 前置检查
+---
 
-读到 state 后必须确认：
+## 核心硬规则（贯穿全流程）
 
-1. state 文件可解析（YAML 合法）
-2. state 里出现的 NPC 名单，每个都能在知识池里找到对应条目
-3. state 里出现的 NPC 名单，每个都能在人物设计目录里找到对应 `{npc_name}.md`
+以下规则在 Phase 2a / 2b / 4 / 5 的所有 agent prompt 中必须原样传递。违反者视为 FAIL。
 
-**任何一项缺失都停下来**，用 AskUserQuestion 列出缺失的 NPC/文件，问用户：
-- "这些 NPC 的人物设计/知识池在哪里？"
-- 或"跳过这些 NPC，只处理已有资料的"（用户选择时才降级）
+### 规则 1：对白格式精简
 
-不要硬跑、不要用占位人设。
+- **单个句子 ≤ 35 个中文字**（含标点）
+- 少旁白：**只在有真实动作发生时**才写旁白（`Morrison 推门而入`）
+- **禁止**氛围填充旁白（如"舞台在唱歌，酒吧的气压和街面不一样"之类与剧情无关的渲染段）
+- **禁止**Zack 的大段内心独白——短句触发，一句即可
+- 每个场景 **1-3 个**核心信息点，超过视为超载
+
+### 规则 2：人物性格必须在对白中"可见"
+
+不允许写"Jimmy 温吞地说"这种描述型处理。人物特征通过以下方式**落在台词/动作里**：
+
+- **用词习惯**（称呼、自称、口头禅、俚语）
+- **停顿节奏**（`……`、"慢半拍"、吞咽后开口）
+- **动作细节**（看手、推眼镜、挪糖果、摸枪柄）
+- **情绪颗粒**（不是"生气地说"，是"杯子轻微抖了一下"）
+
+**硬性要求**：dialogue-writer 产出的每个 NPC 首句对白，必须能让读者在不看 `{npc}.md` 前提下也识别出这是谁。
+
+### 规则 3：语言风格必读
+
+`D:/NDC_project/参考资料/对白语言风格资料/` 下 6 份资料：
+
+- `1920s美国俚语与黑话大全.md`
+- `场合与语域切换.md`
+- `性别与语言.md`
+- `族裔与移民语言特征.md`
+- `职业语言特征.md`
+- `阶级与身份语言差异.md`
+
+narrative-designer / puzzle-designer / dialogue-writer / dialogue-reviewer 都必读此目录。每个 NPC 的族裔 / 性别 / 职业 / 阶级特征必须在对白里有可识别痕迹（不必全部，至少 1-2 个维度立住）。
+
+### 规则 4：state 细节不得压缩
+
+**Unit9 教训**：写手接到高阶摘要后自行补细节，压缩掉了 state 里指定的关键场景节奏（如"酒保拒绝 Zack → Emma 用暗号救场"被压成一句话画面）。
+
+- Phase 2a 讨论时必须逐段读 state 的 `description` / `opening.description` / `interlude.description` 原文
+- Phase 2b writer prompt 必须**原文贴出** state 里指定的场景节奏，禁止复述/压缩
+- 写手在 prompt 中明确："state 里写的每个戏剧节拍都要在对白里展开，不是一行画面带过"
+
+### 规则 5：ID 与文件名（产物进游戏，sync 能识别）
+
+**Talk 对话 ID**：9 位 `9{npc=2}{conv_index=3}{seq=3}`
+
+- 9 = Unit9 标识
+- npc = NPC 编码（2 位）
+- conv_index = NPC 在全 Unit 的第几次出场（3 位，001 起）
+- seq = 该次对话内句子序号（3 位，001 起）
+
+例：`901001001` = Unit9 / Emma(01) / 第 1 次对话 / 第 1 句
+
+**Expose 对话 ID**：9 位 `9{npc=2}9{loop=2}{seq=3}`
+
+- 9 = Unit 标识
+- npc = 被指证对象（2 位）
+- 9 = Expose 标记位（固定 9，与 Talk 区分）
+- loop = Loop 编号（2 位）
+- seq = 句子序号（3 位）
+
+例：`903901001` = Rosa / Expose / Loop1 / 第 1 句
+例：`907905001` = Jimmy / Expose / Loop5 / 第 1 句
+
+**NPC 编码表**（Unit9 标准，其他 Unit 需各自定义）：
+
+| 代码 | NPC | 代码 | NPC |
+|------|-----|------|-----|
+| 01 | Emma | 06 | Vivian |
+| 02 | Zack | 07 | Jimmy |
+| 03 | Rosa | 08 | Anna |
+| 04 | Morrison | 09 | Whale |
+| 05 | Tommy | | |
+
+**JSON 目标文件名**（MD section 头显式写出，对应 `sync_to_json.py` 识别规则）：
+
+- Talk：`{npc}_{conv_index}.json` → 例 `emma_001.json` / `rosa_001.json` / `jimmy_002.json`
+- Expose：`Loop{N}_{npc}.json` → 例 `Loop1_rosa.json` / `Loop5_jimmy.json` / `Loop6_morrison.json`
+
+**MD section 头格式**（sync 必须识别）：
+
+```markdown
+## §1. Opening — {描述}
+## Talk: emma_001.json
+## §2. Scene s{id} — {描述}
+## Talk: rosa_001.json
+## Talk: vivian_001.json
+## §3. Expose — Rosa 指证
+```
+
+### 规则 6：本 skill 不做的事
+
+- 不生成 Repeat 对话（`emma_001_repeat.json`）——另开 skill 处理
+- 不跑 `sync_to_json.py`（Phase 2 用户手动触发）
+- 不重写证据 / 指证 / state（冲突时让用户走上游流程）
+- 不假设独立知识池存在（优先用 state 内嵌 topics）
+
+---
 
 ## Pipeline
 
-### Phase 1: State 拆解与方案确认
+### Phase 0：前置读取（lead 自己做，不 spawn agent）
 
-先读 state 文件，提取：
+lead 读取以下文件，汇总成"上下文包"供后续 agent 使用：
 
-- 本 Loop 涉及的 NPC 列表（Talk 场景）
-- Expose 场景清单（哪些 NPC 触发指证、对应 ExposeID）
-- Opening 需求（硬切场景数量、是否有鉴赏力 source/quiz）
-- 平行场景隔离约束（哪些场景之间不能互相引用）
+- **state**（用户指定的文件或目录下全部 loop state）
+- **Unit 大纲**（`剧情设计/Unit{N}/Unit{N}_大纲.md`）
+- **人物设计**（`剧情设计/Unit{N}/Characters/` 下全部涉及 NPC 的 `{npc}.md`）
+- **语言风格资料**（`参考资料/对白语言风格资料/` 全部 6 份）
+- **对话规则**（`AVG/对话配置工作及草稿/AVG对话配置规则.md` + `.claude/rules/dialogue.md`）
 
-输出一份"对话生成方案"摘要（不写文件，直接呈现）：
-- 计划并行的 dialogue-writer 数量与各自负责的 NPC
-- 计划复用/新写的 Expose 节点
-- 鉴赏力 source/quiz 的初步分布（仅标记位置，详细设计由 connoisseur-designer 或后续 `/team-loop` Phase 5 补）
+若任一必需文件缺失，用 AskUserQuestion 停下来问。
 
-使用 AskUserQuestion 让用户确认：
-- "方案 OK，开始生成"
-- "调整分工（用户指定）"
-- "取消"
+### Phase 1：派发方案确认
 
-### Phase 2: 并行对话生成
+读 state 后提取：
+- 本 Loop/Unit 的 NPC 清单（Talk 场景）
+- Expose 场景清单（对象 NPC、ExposeID、轮次数）
+- 🔵 插入剧情清单（id、title、涉及 NPC、location）
+- Opening 类型（cutscene / 过场对话）
+- 平行场景隔离约束
 
-**2a. Talk 部分** — 按 NPC 并行 spawn 多个 `dialogue-writer` agent：
+输出派发摘要给用户确认：
+- 计划并行的讨论单元（每 NPC + 每 Expose + 每 Interlude）
+- 计划产出的 JSON 文件名清单（`emma_001.json`、`Loop1_rosa.json`、...）
+- 对话 ID 段规划（哪些 NPC 占用哪些 ID 段）
 
-每个 agent prompt 必须包含：
-- 本 Loop state 文件路径（用户指定的那个，必读）
-- 负责的 NPC 名称
-- 该 NPC 的人物设计路径（用户指定目录下的 `{npc}.md`）+ 知识池路径（用户指定的那份）
-- 平行场景隔离约束（哪些场景/信息不能在本 NPC 对话里出现）
-- 产出路径：临时文件 `AVG/对话配置工作及草稿/生成草稿/.temp_Loop{N}_{npc}.md`（避免多 agent 同时写同一文件冲突；如用户指定了其他输出目录则用用户的）
+AskUserQuestion：
+- 方案 OK → 进入 Phase 2
+- 调整分工 → 按用户意见改
+- 取消
 
-**2b. Expose 部分** — 若本 Loop 有指证场景：
-- state 里指证方案已定稿 → spawn `dialogue-writer` 写指证对话（多层谎言递进格式）
-- state 里指证方案缺失或不完整 → 停下来提示用户"此 Loop 需先跑 `/team-expose`"，不要自己补指证设计
+### Phase 2a：两策划并行讨论（每单元一对）
 
-### Phase 3: 合并与格式化
+**讨论单元** = 每 NPC 一次 Talk 对话 + 每 Expose + 每 Interlude。每个单元并行 spawn 一对 narrative-designer + puzzle-designer。
 
-所有并行 agent 返回后，lead（你自己）负责合并：
+**narrative-designer prompt 模板**：
 
-1. 按场景顺序把各 NPC 的临时草稿拼进主文件 `AVG/对话配置工作及草稿/生成草稿/Loop{N}_生成草稿.md`
-2. 按 `AVG对话配置规则.md` 的 MD 格式规范统一字段、分隔符、ID 前缀
-3. 清理临时文件
-4. 对话 ID 冲突校验：9 位 ID 全局唯一
-5. 把合并后的草稿路径呈现给用户
+```
+你是叙事策划。任务：为 {Unit}/{Loop}/{NPC 或 Expose/Interlude ID} 这段对白产出"叙事要点方案"。
+不要写完整对白，只写要点（每段目标、语气、关键台词风格、动作设计、情绪节拍）。
 
-### Phase 4: 并行审查
+必读：
+- state 对应段落（粘贴原文，不压缩）
+- {npc}.md（人物设计）
+- 参考资料/对白语言风格资料/ 全部 6 份
 
-并行 spawn 3 个审查员（对话类默认配置）：
+输出格式：
+1. 每段（opening/branch1/branch2/汇合/...）的叙事目标
+2. 人物声音设计（哪几个可识别特征必须在台词里落地）
+3. 语言风格定位（族裔/阶级/职业/语域切换）
+4. 情绪节拍推荐
+5. 禁忌清单（哪些话不能说、哪些词不能用）
+```
 
-- `dialogue-reviewer`：12 项对话质量清单评分
-- `consistency-checker`：证据物理属性、NPC 陈述、ID 编码一致性
-- `timeline-auditor`：跨 Loop 信息泄露、证据权限时序
+**puzzle-designer prompt 模板**：
 
-每个审查员 prompt 中必须提供：
-- 草稿路径：`AVG/对话配置工作及草稿/生成草稿/Loop{N}_生成草稿.md`
-- state 文件路径
-- 本 Loop 所在 Unit 的大纲/设计文档路径
+```
+你是推理策划。任务：为同一段对白产出"推理要点方案"。
+不要写完整对白，只写要点（分支维度、信息点分布、证据获取时机、Expose 递进逻辑）。
 
-**player-simulator 不纳入默认审查**（它是完整体验审计，更适合在 Loop 全部组件就绪后跑 `/playthrough-audit`）。如用户显式要求，再加入。
+必读：
+- state 对应段落
+- 跨 Loop 隔离约束（后续 Loop 信息在本 Loop 必须隐藏）
+- AVG/对话配置工作及草稿/AVG对话配置规则.md
 
-### Phase 5: 内容总监汇总
+输出格式：
+1. 分支设计（每个分支的信息维度）
+2. 信息点分布（每场景 1-3 个，不超 3）
+3. 证据/证词 get 时机建议（间隔 3-5 句）
+4. Expose 轮次设计（每轮谎言对应什么维度证据）
+5. 禁止破梗清单（本 Loop 必须隐藏什么）
+```
 
-spawn `content-director` agent，输入：
+两策划返回后，lead 自己做"讨论汇总"——把两份要点合并成"统一方案"，解决冲突时原则：
+
+- **信息严密性 > 叙事质感 > 逻辑闭环**（三大原则优先级）
+- 叙事风格和推理信息冲突时，以推理信息为准，让叙事策划找新表达
+- 严重冲突无法调和 → 用 AskUserQuestion 把双方观点摆给用户选
+
+### Phase 2b：dialogue-writer 按方案执笔
+
+每个单元 spawn 一个 `dialogue-writer`，prompt 必须包含：
+
+- Phase 2a 合并后的"统一方案"
+- state 对应段落**原文**（不摘要）
+- `{npc}.md` 路径
+- `参考资料/对白语言风格资料/` 路径（必读）
+- 核心硬规则 §规则1-5（原样粘贴到 prompt 里）
+- 平行场景隔离清单
+- ID 段 + 目标 JSON 文件名
+- 产出路径：临时文件 `AVG/对话配置工作及草稿/{Unit}/.temp_{file_basename}.md`
+
+多 writer 并发允许（不同 NPC 不同临时文件）。
+
+### Phase 3：合并与格式化
+
+lead 负责：
+
+1. 按场景顺序把各临时文件拼入主文件 `AVG/对话配置工作及草稿/{Unit}/Loop{N}_生成草稿.md`
+2. Section 头用标准格式（参见规则 5）
+3. 场景分组头（人类可读）：`## §N. Scene {scene_id} — {描述}`
+4. 🔵 插入剧情用分隔块包裹，嵌在最自然的 Talk 文件里（或独立 `## Talk: loop{N}_interlude_{id}.json`）
+5. 清理 `.temp_*.md`
+6. 全局 ID 唯一性校验
+7. 把合并后的主文件路径呈现给用户
+
+### Phase 4：并行审查
+
+并发 spawn：
+- `dialogue-reviewer` × 每 Loop 一份（12 项质量清单）
+- `consistency-checker` × 1（跨 Loop 证据物理属性、NPC 陈述、ID 编码）
+- `timeline-auditor` × 1（跨 Loop 信息泄露、证据时序、疑点解锁时序）
+
+每审查员 prompt 必带：
 - 草稿路径
-- 3 份审查报告全文
-- Phase 1 的方案摘要
-- 用户原始要求
+- state 路径
+- Unit 大纲路径
+- 核心硬规则（审查清单包含规则 1-5 的所有条）
+
+**player-simulator 不默认跑**——需要整 Unit 就绪后走 `/playthrough-audit`。
+
+### Phase 5：内容总监拍板
+
+spawn `content-director`，输入 3 份审查报告全文 + Phase 1 方案 + 用户原始要求。
 
 输出：
-- FAIL 必修清单 + WARNING 建议改清单
-- 综合评分表
+- 综合评分表（每 Loop PASS / WARNING / FAIL）
+- FAIL 必修清单（按优先级 P0 / P1）
+- WARNING 建议改清单（P1 / P2）
+- 架构决策问题（如需用户裁决）
+- 质感质量定性评估
+- 下一步行动建议
 
-使用 AskUserQuestion：
-- "采纳全部修改"
-- "采纳部分（用户指定）"
-- "保持原稿"
+AskUserQuestion：
+- 采纳全部 → 进入 Phase 6
+- 采纳部分 → 用户指定
+- 保持原稿 → 结束
 
-### Phase 6: 执行修改（可选）
+### Phase 6：执行修改（可选）
 
-若用户选择修改：
-- 按 NPC 维度再次 spawn `dialogue-writer`，只改涉及的 NPC
-- 修改后可选再跑一轮 Phase 4 审查（用户决定）
+按 NPC / 单元维度再 spawn `dialogue-writer`，只改涉及部分。改后可选再跑 Phase 4（用户决定）。
+
+---
 
 ## 产出清单
 
 | 文件 | 路径 | 说明 |
 |------|------|------|
-| 对话草稿 | `AVG/对话配置工作及草稿/生成草稿/Loop{N}_生成草稿.md` | 主产物 |
-| 审查报告（可选保留） | `AVG/对话配置工作及草稿/生成草稿/Loop{N}_审查报告.md` | content-director 汇总版，用户要求时才写 |
+| 对话草稿 | `AVG/对话配置工作及草稿/{Unit}/Loop{N}_生成草稿.md` | 主产物，可直接喂 sync_to_json.py |
+| 审查报告（可选） | `AVG/对话配置工作及草稿/{Unit}/Loop{N}_审查报告.md` | 用户要求才写 |
 
-## 后续手动步骤（本 skill 不做）
+---
 
-1. 对话草稿 → AVG JSON：`python sync_to_json.py Loop{N}_生成草稿.md`（Phase 2，用户触发）
-2. 鉴赏力 source/quiz 的 ID 配对：走 `/connoisseur` 或 `team-loop` Phase 5
-3. State → 配置表 JSON：`python preview_new2/state_to_preview.py`
+## 后续手动步骤（本 skill **不做**）
 
-## 不要做的事
+1. **sync 到 JSON**：`python sync_to_json.py {Unit}/Loop{N}_生成草稿.md`（Phase 2，用户触发）
+2. **Repeat 对话生成**：另开 skill
+3. **鉴赏力 source/quiz 配对**：走 `/connoisseur` 或 `team-loop` Phase 5
+4. **State → 配置表 JSON**：走 `/state-to-table`
 
-- **不要重新设计证据/指证/state**：本 skill 假设 state 已定稿，有争议就停下来让用户先走上游流程
-- **不要并行写同一个主文件**：多个 dialogue-writer 用临时文件隔离，最后由 lead 合并
-- **不要自动同步 JSON**：严格遵守 Phase 1/Phase 2 两阶段分离，JSON 必须用户明确触发
-- **不要跳过前置检查**：state / 知识池 / 人物设计缺一不可
+---
+
+## 禁止事项速查
+
+- ❌ 自动运行 `sync_to_json.py`
+- ❌ 写 Repeat 对话
+- ❌ 压缩 state 里指定的戏剧节奏
+- ❌ Zack 大段内心独白
+- ❌ 单句超过 35 字
+- ❌ 氛围填充旁白（和剧情无关的画面描写）
+- ❌ 用"温吞地说/生气地说"描述代替台词/动作落地
+- ❌ 重写证据/指证/state（上游流程负责）
+- ❌ 并行写同一主文件（用 `.temp_*` 隔离）
+- ❌ 假设独立知识池存在（Unit8+ 用 state 内嵌）
