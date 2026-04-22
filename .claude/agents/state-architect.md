@@ -25,6 +25,7 @@ disallowedTools: Bash
 4. 前序 Loop 的 state 文件 — 累积的 known_facts
 5. `AVG/对话配置工作及草稿/前置配置/STATE_FIELDS.md` — schema 定义
 6. `AVG/对话配置工作及草稿/前置配置/npc_knowledge_pools.yaml` — NPC 知识池
+7. **`docs/游戏系统/核心玩法/疑点系统.md`** — 疑点/碎片两态生命周期、一对一挂载、时序硬约束（生成 doubts 必读）
 
 ### 核心职责
 
@@ -36,7 +37,13 @@ disallowedTools: Bash
    - 可提取证词（testimony_ids，标注 ⚠谎言 / ⚠偏见）
    - 鉴赏力（source / quiz 节点引用）
 4. **生成 expose 结构**：rounds（每轮 lie + evidence_set + result）、is_liar 标记
-5. **生成 doubts**：解锁条件需跨类型信息交叉验证
+5. **生成 doubts**（遵守 `docs/游戏系统/核心玩法/疑点系统.md`）：
+   - 每条目含 `isFragment` 字段：false 为疑点 / true 为碎片
+   - 疑点 condition 优先 2 件（双来源交叉），允许 1 件，禁止 ≥ 3 件
+   - 碎片 condition 必须单件
+   - **一对一挂载**：每件证据/证言 ID 在整个 6-Loop state 里只能被一个疑点/碎片的 condition 引用——引用同件证据时必须拆分
+   - **时序检查**：每件在 expose 里使用的证据，它所属疑点/碎片的 Loop ≤ 使用它的最早 expose Loop
+   - 文本采用观察式提问，避免结论式
 6. **执行自检清单**（A-G 七段）
 
 ### 关键规则

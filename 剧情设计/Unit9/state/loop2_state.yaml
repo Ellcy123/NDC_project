@@ -1,0 +1,625 @@
+# ============================================================
+# loop2_state.yaml — Unit9 Loop 2: 翻开第一层黑——勒索生意
+# ============================================================
+#
+# 叙事功能：调查 Webb 真实生意性质 → 揭穿酒吧不只是私酒（敲诈勒索），指证 Tommy
+# 核心体验：三层退守——正当生意 → 账目清白 → 古董买卖
+#           Webb 从"受害者"变成"勒索者"——玩家第一次认知重构
+# Loop 结束：确认 Webb 勒索生意；Tommy 暗示幕后"大人物"（Whale）；目标转向 Rosa 时间线
+#
+# 权威依据：剧情设计/Unit9/讨论结论.md（第四节 Loop 2）
+# 格式参考：剧情设计/Unit8/state/loop2_state.yaml
+# 前序文件：loop1_state.yaml（L1 post_expose_knowledge 累积为本 Loop known_facts）
+# 生成日期：2026-04-22
+#
+# NPC 编码（沿用 讨论结论.md 附录八 NPCStaticData.id）：
+#   Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, Jimmy=907, Anna=908, Whale=909
+#
+# ──────────────────────────────────────────────────────────
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
+#                        NPC 4 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids/connoisseur）完整
+# B. 证据覆盖     PASS — 讨论结论 L2 全部 7 件证据（9201-9207）+ 2 件场景补充证据（9209/9210）已分配到场景；
+#                        9201 勒索照片→9006（小包厢）；9202 VIP 合影→9011（Webb 办公室）；9203 Webb 收入→9011；
+#                        9204 Tommy 账本→9010（Tommy 办公室）；9205 假油画→9005（歌舞厅）；9206 花瓶照→9005；9207 Jimmy 工资单→9009（Jimmy 厨房）；
+#                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（Jimmy 不在场证明，L5 击穿）
+# C. NPC 条目     PASS — Tommy（Expose 对象，is_liar:true，player_inquiry:null）/ Jimmy / Emma（opening）
+#                        各含 4 必填块；Vivian 化妆室 L2 不可进入，作为锁定场景环境叙事；
+#                        不设 post_expose_scene——L2 结尾对话归 L3 opening 的 emma_loop3_open 承载
+# D. 目标对齐     PASS — goals 与讨论结论"调查 Webb 生意 / 指证 Tommy"完全一致
+# E. 信息节奏     PASS — 未泄露 L3+内容：Rosa 威胁纸条 / 23:30 假枪声 / 玻璃碎片 / Jimmy 真凶身份 /
+#                        保险箱 / 倒写 J / Whale 具体身份 / Morrison 腐败 / Vivian 11:05 敲门细节
+# F. 鉴赏力       PASS — source/quiz 节点均含 content 或 question+answer；Jimmy source 对应 L5 考题
+# G. Expose 逻辑  PASS — R1:9201 击穿正当生意谎言 / R2:9203+9204 击穿账目清白（陷阱:9201）/
+#                        R3:9205+9206 击穿古董说法；三轮维度互不重叠；每件证据挂唯一疑点
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
+# ============================================================
+
+# ─────────────────────────────
+# 一、玩家视角
+# ─────────────────────────────
+
+player_context:
+  goals:
+    primary: "调查 Webb 的酒吧在做什么生意——他为何如此紧急地雇佣侦探？Webb 究竟怀疑谁会杀他？"
+    secondary:
+      - "向酒吧里每个人询问 Webb 的情况"
+      - "找出 Webb 的真实收入来源"
+      - "揭穿 Tommy 关于酒吧生意的说辞是否诚实"
+      - "了解 Vivian 为何选择认罪而不自辩"
+
+  known_facts:
+    # L1 post_expose_knowledge 全部累积至此 + L1 指证后剧情所建立的事实
+    - "Webb 已死亡（Morrison 宣告），死亡地点：蓝月亮酒吧 1F 会客室（South Side）"
+    - "Vivian 手持手枪在现场，但该枪无硝烟反应——她不是刚刚开枪的那个人"
+    - "23:30 众人听到枪响，Zack 和 Emma 从歌舞厅赶到会客室发现 Webb 尸体"
+    - "Webb 提前雇佣 Zack：委托协议书包含保护 Vivian 安全 + 确保 Vivian 继承遗产"
+    - "Rosa 谎言1（Vivian 刚刚开枪）已被推翻，她的整体可信度存疑"
+    - "Rosa 谎言2（23:30 枪声 + 只有 Vivian 在场）在 L1 无法反驳——时间线悬而未决"
+    - "Webb 委托协议书证明 Webb 预见自己有被害风险（保险倾向）"
+    - "Morrison 同意给 Zack 72 小时调查期，暂缓逮捕 Vivian"
+    - "Morrison 要求 Vivian 禁足不得离开酒吧"
+    - "Emma 提出核心疑点：Webb 真正怀疑的凶手到底是谁？"
+
+  new_directions:
+    - direction: "调查 Webb 的酒吧在做什么生意"
+      trigger: "委托协议书显示 Webb 预见自己会死，说明酒吧有隐藏的危险"
+    - direction: "调查 Vivian 为何选择认罪"
+      trigger: "Vivian 沉默不自辩、心如死灰——她在隐瞒什么？"
+    - direction: "调查 Tommy 关于酒吧生意的陈述是否诚实"
+      trigger: "Tommy 是酒吧经理，熟悉账目——他的说辞值得核对"
+    - direction: "关注 Jimmy——他是否与 Webb 有更深关系"
+      trigger: "Jimmy 对 Webb 的死态度异常，夹在忙碌中流露出某种愧疚"
+
+  post_expose_knowledge:
+    # Tommy 指证结束后玩家确认的信息
+    - "Webb 的酒吧除私酒之外在做敲诈勒索生意（仙人跳变体）"
+    - "Tommy 曾是敲诈勒索生意的执行人，但自 11 月中旬 Webb 沉迷 Rita 后就不再执行了"
+    - "11 月中旬之后酒吧的勒索执行人换了——不是 Tommy（暗示另有其人，L2 未点名）"
+    - "Tommy 认为 Webb 因勒索惹上了大人物，想转移财产跑路——他心中有猜测但未点名"
+    - "Vivian 曾被 Webb 强迫协助勒索中产人士（仙人跳），对此深恶痛绝"
+    - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
+    - "Jimmy 是兼职主厨，经济困难，对 Webb 的死有隐藏的愧疚"
+    - "新疑点：Webb 的勒索执行人换成了谁？那个'大人物'是谁？"
+
+# ─────────────────────────────
+# 二、开篇（过场衔接）
+# ─────────────────────────────
+
+opening:
+  type: transition_cutscene  # 🎬 从 L1 大门口 Emma 对话过渡到 L2 自由探索
+  description: |
+    L1 结束时 Zack 和 Emma 在大门口确认目标——"Webb 真正怀疑的凶手是谁？"
+    L2 开篇：两人重新进入酒吧，开始逐一调查酒吧内的每个人。
+    Morrison 仍在场；Vivian 被禁足，房门紧闭，偶尔传出啜泣声。
+    Rosa 在清洁间。Tommy 在自己办公室。Jimmy 在厨房。
+    玩家进入自由探索模式。
+
+  npcs:
+    emma_l2_open:
+      talk: emma_l2_open
+      is_liar: false
+      motive: "作为搭档帮助 Zack 聚焦 L2 调查方向；对真相的坚守驱使她深入"
+      mindset: "清醒而坚定，已完成 L1 的目标定向，开始推进实质调查"
+
+      # ── 1. NPC 已知信息 ──
+      active_topics:
+        - "Vivian 的枪无硝烟反应，Rosa 谎言1 已被击穿"
+        - "Rosa 的时间线谎言（谎言2）无法反驳，时间线真相悬而未决"
+        - "Webb 的委托协议书：保护 Vivian + 确保继承遗产（保险倾向）"
+        - "Morrison 同意 72 小时调查期"
+        - "下一步：调查 Webb 这个人——向酒吧内每个人问 Webb 的情况"
+      withheld_topics:
+        - "Rosa 收到威胁纸条的事（L3 才揭示）"
+        - "Jimmy 对 Webb 有愧疚感的深层原因（L5 才揭示）"
+        - "酒吧收入和 Webb 个人收入的差额细节（需调查后才知）"
+
+      # ── 2. 玩家询问意图 ──
+      player_inquiry:
+        - "\"L1 结束后的方向确认——为什么要调查 Webb 本人\" # 8"
+        - "\"Emma 对今晚舞会和 Webb 的印象\" # 5"
+
+      # ── 3. 可提取证词 ──
+      testimony_ids:
+
+
+# ─────────────────────────────
+# 三、场景（🔓 自由探索）
+# ─────────────────────────────
+
+scenes:
+  # ── 场景 9006：歌舞厅小包厢 ──
+  - id: 9006
+    name: "歌舞厅小包厢"
+    type: free_exploration  # 🔓 自由探索（含 ⚡ 突发事件）
+    description: |
+      酒吧 1F 歌舞厅一侧的私人小包厢，平时供 VIP 使用。
+      Vivian 配合 Webb 拍摄的勒索照片就存放在此处。
+      玩家在此找到仙人跳材料——勒索用的照片。
+      ⚡ 突发事件——Emma 拍照角落观察（详见 sudden_event 字段）：
+         Emma 指出此处的光线与构图像是专门为拍照搭出来的，
+         由她的观察引导 Zack 发现角落里的便携相机——拍摄勒索照片所用的工具。
+
+    sudden_event:
+      type: emma_observation  # 🎭 叙事事件 + 新证据产出
+      trigger: "玩家在小包厢开始搜证后，Emma 环视空间时自然触发"
+      description: |
+        Emma 环顾小包厢一圈，语气平平地说：
+        "这角落——沙发正对墙面，灯光偏暖且压得很低，窗帘又封得死死的。
+         Zack，你不觉得这里更像是一个专门搭出来拍照的小角落吗？"
+        她的观察让 Zack 转向角落的木质抽屉，翻出一台落灰的便携相机——
+        正是 Webb 用来拍摄勒索照片的工具。
+
+    evidence:
+      - id: 9201
+        name: "勒索用的照片 / Blackmail Photos"
+        type: item
+        pickup: true
+        description: "Vivian 和中产阶级人士的暧昧合影；照片背面分别标注'花瓶 $4,000''油画 $7,000'两个化名对应的金额"
+        note: "关键——疑点 9201 condition；L2 R1 击穿件"
+
+      - id: 9209
+        name: "便携相机 / Portable Camera"
+        type: item
+        pickup: true
+        description: "一台 1920 年代的便携相机，机身落灰但机械完好；卷片轴上仍留有半卷未冲洗底片，型号与勒索照片的成像风格吻合——正是拍摄勒索照片所用的工具"
+        note: "场景道具——勒索生意的物证补充，不入 doubt condition；由 Emma 的拍照角落观察（sudden_event）引出"
+
+    npcs: {}  # 小包厢自由探索阶段无 NPC 驻场
+
+  # ── 场景 9005：歌舞厅 ──
+  - id: 9005
+    name: "歌舞厅 / Dance Hall"
+    type: free_exploration  # 🔓 自由探索
+    description: |
+      酒吧 1F 的歌舞表演区。Tommy 声称花瓶和油画已经卖出，
+      但玩家在此能直接看到两件"已卖出"物品仍在现场，
+      成为击破 Tommy 古董谎言的核心证据。
+
+    evidence:
+      - id: 9205
+        name: "假油画 / Forged Painting"
+        type: item
+        pickup: true
+        description: "装裱精良，挂在歌舞厅墙上；画风粗糙，是仿品。Tommy 的账本上写着'已卖给 Coleman'，但实物仍在原处"
+        note: "关键——疑点 9203 condition；L2 R3 击穿件"
+
+      - id: 9206
+        name: "花瓶现场照 / Vase in Scene Photo"
+        type: item
+        pickup: true
+        description: "案发当晚拍摄的歌舞厅陈设照片；清晰显示那只账本上'已卖给 Thompson'的花瓶仍摆放在原位"
+        note: "关键——疑点 9203 condition；L2 R3 击穿件"
+
+    npcs: {}  # 歌舞厅自由探索阶段无 NPC 驻场
+
+  # ── 场景 9011：Webb 办公室 ──
+  - id: 9011
+    name: "Webb 办公室 / Webb's Office"
+    type: free_exploration  # 🔓 自由探索
+    description: |
+      Webb 的个人办公室，藏着他真实财务状况的核心证据。
+      无 NPC 驻场，玩家独立搜证。
+      VIP 合影与收入记录揭示 Webb 与被勒索对象的关系以及真实收入水平。
+
+    evidence:
+      - id: 9202
+        name: "Webb 办公室 VIP 合影 / VIP Group Photo"
+        type: item
+        pickup: true
+        description: "画面里 Thompson 和 Coleman（勒索照片上'花瓶''油画'所指人）正与 Webb 笑着合影；对比勒索照片可认出其身份"
+        note: "关键——疑点 9201 condition；配合 9201 建立'照片上的人就是被勒索的 VIP'推理"
+
+      - id: 9203
+        name: "Webb 收入记录 / Webb's Income Ledger"
+        type: item
+        pickup: true
+        description: "Webb 个人财务记录，月净收入约 $15,000；来源栏模糊，远超酒吧正常盈利能力"
+        note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9204 账本差额）"
+
+    npcs: {}  # Webb 办公室无 NPC 驻场
+
+  # ── 场景 9010：Tommy 办公室 ──
+  - id: 9010
+    name: "Tommy 办公室 / Tommy's Office"
+    type: free_exploration  # 🔓 自由探索 + ⚔️ 指证
+    description: |
+      Tommy 是酒吧经理兼账房，在自己办公室接受 Zack 的问话。
+      他表面承认酒吧有私酒生意，但隐瞒了勒索业务和收入差额。
+      Tommy 的酒吧账本和 Vivian 排班表存放在此。
+      ⚔️ 指证场所：Tommy 是本 Loop 的 Expose 对象（is_liar: true）。
+
+    evidence:
+      - id: 9204
+        name: "Tommy 酒吧账本 / Tommy's Bar Ledger"
+        type: item
+        pickup: true
+        description: "蓝月亮酒吧正式账本，月净收益约 $4,000，主要来自私酒销售和舞会入场费；内标'卖给 Thompson/Coleman'（伪买家化名）"
+        note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9203 收入差额）"
+
+      - id: 9208_vivian_schedule
+        name: "Vivian 排班表 / Vivian's Work Schedule"
+        type: item
+        pickup: false
+        description: "酒吧演出人员排班表，Vivian 一栏注明：每晚最后一项任务——23:30 送酒至会客室"
+        note: "场景道具——确认 Vivian 23:30 送酒习惯（与 Tommy 证言 9052002 交叉印证）；不可拾取"
+
+    npcs:
+      tommy_l2:
+        # ── 基本信息 ──
+        talk: tommy_l2
+        is_liar: true  # Tommy 是本 Loop 的 Expose 对象
+        motive: "隐瞒酒吧的真实勒索业务；不希望被牵扯进 Webb 的死；对 Vivian 有一定同情"
+        mindset: "表面合作，实则层层设防；被逼时会层层退守"
+        player_inquiry: null  # Expose 对象不设 player_inquiry
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "酒吧只有私酒生意（谎言1，L2 R1 指证对象）"
+          - "没有实质性隐性收入，账目清白（谎言2，R2 指证对象）"
+          - "还有古董买卖——花瓶卖给 Thompson，油画卖给 Coleman（谎言3，R3 指证对象）"
+          - "23:30 枪声来自酒吧南方（厨房和会客室方向）"
+          - "Vivian 排班表——她每晚 23:30 给 Webb 送酒（背景信息）"
+        withheld_topics:
+          - "Webb 惹上大人物想跑路的完整猜测（Expose 后才说出）"
+          - "新执行人是谁（不确定，L5 才展开）"
+          - "抽屉里藏着一枚生锈的 .45 警用弹壳（item 9506）——多年前 Tommy 还是勒索执行人时，在一次勒索 Whale 的行动中被 Whale 手下开枪警告时留下，Tommy 捡走当保命凭据；弹底印记 'MILLER ARMS' 与本案 9401/9605 同批次；L5 Tommy 交付信任后才从抽屉取出（纯情感信物，不挂疑点、不作击穿件）"
+          - "11 月中旬后勒索执行人变化的完整背景"
+          - "Whale 具体身份（L4-L5 才揭示）"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 9052003  # Tommy 身份：蓝月亮酒吧的经理
+          - 9052001  # ⚠谎言: Tommy——酒吧里都是正当生意，除了私酒没有别的交易（L2 R1 指证目标）
+          - 9052002  # Tommy——Vivian 的排班表，她每晚 23:30 给 Webb 送酒
+
+
+  # ── 场景 9009：Jimmy 厨房 ──
+  - id: 9009
+    name: "Jimmy 厨房 / Jimmy's Kitchen"
+    type: free_exploration  # 🔓 自由探索
+    description: |
+      Jimmy 在 2F 厨房工作，表面是蓝月亮酒吧兼职主厨。
+      他对 Webb 的死态度复杂，表面表示抱歉，内心藏着愧疚，但不愿多谈。
+      Zack 可以在此找到 Jimmy 的工资单，也可以顺口聊到他的经济状况。
+      ⚠ 设计要求：Jimmy 在 L2 是背景噪音——"很缺钱"证言要非常随口，
+      夹在介绍菜单/抱怨供货之间，不能获得比 Tommy 谎言更多的叙事重量。
+
+    evidence:
+      - id: 9207
+        name: "Jimmy 工资单 / Jimmy's Payslip"
+        type: item
+        pickup: true
+        description: "蓝月亮酒吧支付给 Jimmy 的主厨月薪：$80，勉强支撑家庭基本开支"
+        note: "场景道具——背景证据，显示 Jimmy 经济拮据；不进入 F1 碎片 condition（F1 condition 仅挂证言 9072001）"
+
+      - id: 9210
+        name: "厨房工作表 / Kitchen Work Schedule"
+        type: item
+        pickup: true
+        description: "蓝月亮酒吧 2F 厨房当晚的值班排班表，Jimmy 一栏注明：案发当晚 22:00–00:00 厨房值守；其中 23:00–23:10 一小段为'下楼送餐'（短暂离岗，视为工作流程内的正常调度）——整体表面看仍构成他的不在场证明"
+        note: "场景道具——L2 作为背景信息积累（23:00–23:10 下楼送餐看似普通工作调度，无明显异常）；L5 揭示真实案发时间为 23:00–23:05 时，该段'下楼送餐'正好覆盖枪击窗口——至此伪造不在场证明被击穿；L2 不入 doubt condition"
+
+    npcs:
+      jimmy_l2:
+        # ── 基本信息 ──
+        talk: jimmy_l2
+        is_liar: false  # L2 Jimmy 不撒谎，只是隐瞒信息；真凶身份留 L5
+        motive: "维持表面形象，避免引起怀疑；对 Webb 的死有愧疚但绝不主动提"
+        mindset: "表面镇定，对 Webb 的死表示抱歉；介绍菜单/供货时略显自然，一旦被追问就防御"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "Jimmy 是兼职主厨，还有很多副业（身份确认）"
+          - "对 Webb 的死亡表示抱歉（情绪线索——愧疚感可观察但不解释）"
+          - "Jimmy 很缺钱（经济困难，随口说出，非重点）"
+          - "Vivian 杀 Webb 的事——同病相怜，情有可原（背景陈述）"
+        withheld_topics:
+          - "爱尔兰裔身份和口音特征（L5 关键破绽）"
+          - "Anna 怀孕细节（L5 揭示）"
+          - "接受 Whale 委托的细节（L5 揭示）"
+          - "真实案发时间线 23:00–23:05（L5 核心）"
+          - "威胁 Rosa 的纸条是他写的（L5 揭示）"
+          - "23:05 模仿 Webb 吼退 Vivian（L5 揭示）"
+          - "23:30 假枪声（L5 揭示）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"Jimmy 对 Webb 死亡表现出愧疚感——他到底在愧疚什么\" # 7"
+          - "\"Jimmy 的副业具体是什么（工资单显示收入不匹配）\" # 5"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 9072003  # Jimmy 身份：蓝月亮酒吧的主厨
+          - 9072001  # Jimmy：很缺钱（无意随口说出）——F1 碎片 condition 唯一归属
+          - 9072002  # Jimmy：同病相怜——Vivian 杀 Webb 情有可原（背景陈述）
+
+
+  # ── 场景 9002：Vivian 化妆室 ──
+  - id: 9002
+    name: "Vivian 化妆室 / Vivian's Dressing Room"
+    type: locked  # 🔒 门外啜泣（环境叙事，L2 不可进入）
+    description: |
+      B1 化妆室。Vivian 被 Morrison 禁足于酒吧内，独自待在化妆室里。
+      门是关着的——走过门口可以隐约听见里面的啜泣声。
+      L2 不可进入；L3 才开放正式对话。
+      环境叙事：传达 Vivian 的崩溃状态，激发玩家想进去了解她的驱动力。
+    lock_reason: "Morrison 禁足令 + Vivian 自我封闭，L3 开放"
+
+    evidence: []
+    npcs: {}
+
+  # ── 场景 9003：Webb 会客室 ──
+  - id: 9003
+    name: "Webb 会客室 / Webb's Parlor"
+    type: locked  # 🔒 Morrison 勘验中不可进入
+    description: |
+      1F 南侧 Webb 会客室，仍处于 Morrison 的犯罪现场勘验控制之下。
+      L2 全程不可进入——保护 L3 才开放的玻璃碎片 / 保险箱字条等关键证据不提前泄露。
+    lock_reason: "Morrison 现场勘验中，L3 才开放"
+
+    evidence: []
+    npcs: {}
+
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Tommy）
+# ─────────────────────────────
+
+expose:
+  target: tommy
+  target_talk: tommy_expose_l2
+  is_liar: true
+  player_inquiry: null
+  exposeNpcId: 105
+  total_rounds: 3
+
+  context: |
+    Zack 完成自由探索后，拿到勒索照片（9201）、VIP 合影（9202）、Webb 收入（9203）、
+    Tommy 账本（9204）、假油画（9205）、花瓶现场照（9206），对 Tommy 酒吧生意的说辞发起指证。
+    Tommy 将从"只有私酒"→"账目清白"→"古董买卖"三层退守，
+    最终在古董实物面前无法狡辩。
+
+  # ── 轮次一：击破"正当生意" ──
+  round_1:
+    lie: "酒吧里都是正当生意，除了私酒之外没有别的交易"
+    lie_source: 9052001  # Tommy 的谎言证词（Talk 阶段已收集）
+    usable_evidence:
+      - id: 9201
+        name: "勒索用的照片"
+        purpose: "照片是典型的'仙人跳'材料（Vivian 与中产人士的暧昧合影 + 背面金额标注），不是正当生意能产生的；照片存在本身就反驳'只有私酒'"
+    result: |
+      Tommy 被勒索照片打了个措手不及，无法否认照片的性质。
+      他立刻转移焦点，退守到新防线：
+      "你有证据吗？一个歌女的话算什么——账目上都是清清白白的，那只是 Vivian 小姐的个人爱好。"
+
+  # ── 轮次二：击破"账目清白" ──
+  round_2:
+    lie: "没有实质性收入，收入都来自私酒——酒吧账目都是清清白白的"
+    lie_source: "NPC 新谎言（被 R1 逼退后的退守，Expose 中 Tommy 主动提出）"
+    usable_evidence:
+      - id: 9203
+        name: "Webb 收入记录（月净 $15,000）"
+        purpose: "Webb 每月收入 $15,000，来源模糊；配合 Tommy 账本显示差额"
+      - id: 9204
+        name: "Tommy 酒吧账本（月净 $4,000）"
+        purpose: "酒吧正式账面利润只有 $4,000；两本账差额 $11,000 无法被私酒解释——账目根本不'清白'"
+    trap_evidence:
+      - id: 9201
+        reason: "勒索照片只证明有勒索行为，不能反驳'$11,000 差额'这一数字维度；误用此件会失败"
+    result: |
+      Tommy 无法解释巨大差额，被迫承认还有别的来源。
+      他立刻转移话题，提出新的止损说法：
+      "我们还做古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman，都已经卖出去了。"
+
+  # ── 轮次三：击破"古董买卖" ──
+  round_3:
+    lie: "还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman，都已经卖出去了"
+    lie_source: "NPC 新谎言（Expose 中 Tommy 主动提出，止损式退守）"
+    usable_evidence:
+      - id: 9205
+        name: "假油画（仍在歌舞厅墙上）"
+        purpose: "油画仍然挂在歌舞厅——根本没有卖出去，Tommy 的说法是谎言"
+      - id: 9206
+        name: "花瓶现场照（仍在原位）"
+        purpose: "案发当晚拍摄的现场照片清晰显示花瓶仍在原处——同样没有卖出"
+    result: |
+      Tommy 的"古董买卖"说法被当场击穿。
+      他神色越来越慌，防线彻底崩溃，开始主动补充：
+      - 确认 Webb 的酒吧在做敲诈勒索，自己曾是执行人
+      - 自 11 月中旬 Webb 沉迷 Rita 之后，就不再参与了
+      - 他提到：别人会觉得那是 Webb 沉迷美色；但他认为 Webb 是勒索惹上了某个大人物，
+        想转移财产跑路
+      - 说这句话时，神情暗示他对那个大人物是谁心中有猜测，但未点名
+
+  # ── 指证后剧情 ──
+  post_expose:
+    description: |
+      Tommy 承认勒索生意存在，并暗示 Webb 惹上了大人物想跑路。
+      Zack 获得关键信息：当前执行人不是 Tommy，而是另有其人（L2 未点名）。
+      这将成为 L3 继续调查的核心驱动——Rosa 的时间线谎言 + 幕后执行人是谁。
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Webb 的酒吧在做敲诈勒索生意（已确认）"
+      - "Tommy 是曾经的执行人，11 月中旬之后不再执行"
+      - "现在的执行人不是 Tommy——另有其人（L2 未确认是谁）"
+      - "Webb 可能因勒索惹上了大人物，想转移财产跑路（Tommy 心中有猜测但未点名）"
+
+# ─────────────────────────────
+# 注：L2 不设 post_expose_scene
+#     —— Tommy 指证后的对话梳理与 L3 目标设定，统一归 L3 opening 的 emma_loop3_open 承载，
+#        与 L1 同例，避免跨 Loop 重复对话。
+# ─────────────────────────────
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
+
+doubts:
+  # ID 编码：9{loop}{seq} — Unit9，L2=92xx
+  # condition type: 1=Item（道具）/ 2=RelationNetwork（关系网）/ 3=Timeline（时间线证词）
+  # 一对一挂载：每件证据/证言 ID 在整个 6-Loop state 中只被一个疑点/碎片的 condition 引用
+
+  # ── 继承自 Loop 1（9101 已解锁，L2 进历史面板，待 L3 回填状态）──
+  - id: 9101
+    text: "23:30 的枪响真的是在 Webb 会客室发生的吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9711"   # 无硝烟的手枪（L1 分析派生）
+      - type: 3
+        param: "9031001"  # Rosa 目击证词"23:30 目睹 Vivian 开枪"（⚠谎言）
+    posed_loop: 1
+    resolved_loop: 3
+    status: "archived_unresolved_after_loop1"  # L1 结束归档为"未解"，L3 疑点 9301 解决后历史面板回填
+
+  # ── Loop 2 新增疑点（3 条）+ 碎片（1 条）──
+  - id: 9201
+    text: "这些照片上的人，似乎在哪里见过一样？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9201"   # 勒索用的照片
+      - type: 1
+        param: "9202"   # Webb 办公室 VIP 合影
+    posed_loop: 2
+    resolved_loop: 2
+    status: "posed_loop2"  # L2 Expose 后随 Loop 翻页解决
+
+  - id: 9202
+    text: "两本账为何对不上？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9203"   # Webb 收入记录（月净 $15,000）
+      - type: 1
+        param: "9204"   # Tommy 酒吧账本（月净 $4,000）
+    posed_loop: 2
+    resolved_loop: 2
+    status: "posed_loop2"  # L2 Expose 后随 Loop 翻页解决
+
+  - id: 9203
+    text: "这些东西摆在这里是做什么呢？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9205"   # 假油画
+      - type: 1
+        param: "9206"   # 花瓶现场照
+    posed_loop: 2
+    resolved_loop: 2
+    status: "posed_loop2"  # L2 Expose 后随 Loop 翻页解决
+
+  - id: 9204
+    text: "Jimmy 很缺钱……（碎片）"
+    isFragment: true      # 碎片：单件 condition，等 L5 与 Anna 证言合并为父疑点 9502
+    unlock_condition:
+      - type: 3
+        param: "9072001"  # Jimmy 证言"很缺钱"（唯一归属）
+    posed_loop: 2
+    resolved_loop: 5      # L5 合并入父疑点 9502 时消解
+    status: "fragment_F1_pending_merge"  # 跨 Loop 碎片，持续存在直至 L5 合并
+
+# ─────────────────────────────
+# 六、证据 ID 汇总（Loop 2 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  # L1 继承证据（玩家背包已持有）
+  - id: 9101
+    name: "Vivian 的小手枪 / Vivian's Pocket Pistol"
+    type: item
+    first_loop: 1
+    first_scene: 9003
+    pickup: true
+    note: "L1 Webb 会客室拾取；L1 R1 击穿件；可分析派生 9711"
+
+  - id: 9711
+    name: "无硝烟的手枪（分析派生）/ Pistol Without Gunpowder Residue"
+    type: item
+    first_loop: 1
+    first_scene: 9003
+    pickup: false
+    note: "L1 分析派生；疑点 9101 condition type=1"
+
+  - id: 9103
+    name: "Webb 委托协议书 / Webb's Commission Contract"
+    type: item
+    first_loop: 1
+    first_scene: 9003
+    pickup: true
+    note: "L1 拾取；换取 72h 调查期；非指证击穿件"
+
+  # L2 新增证据
+  - id: 9201
+    name: "勒索用的照片 / Blackmail Photos"
+    type: item
+    first_loop: 2
+    first_scene: 9006
+    pickup: true
+    note: "关键——疑点 9201 condition；L2 R1 击穿件"
+
+  - id: 9202
+    name: "Webb 办公室 VIP 合影 / VIP Group Photo"
+    type: item
+    first_loop: 2
+    first_scene: 9011
+    pickup: true
+    note: "关键——疑点 9201 condition；配合 9201 识别被勒索 VIP 身份"
+
+  - id: 9203
+    name: "Webb 收入记录 / Webb's Income Ledger"
+    type: item
+    first_loop: 2
+    first_scene: 9011
+    pickup: true
+    note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9204）"
+
+  - id: 9204
+    name: "Tommy 酒吧账本 / Tommy's Bar Ledger"
+    type: item
+    first_loop: 2
+    first_scene: 9010
+    pickup: true
+    note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9203）"
+
+  - id: 9205
+    name: "假油画 / Forged Painting"
+    type: item
+    first_loop: 2
+    first_scene: 9005
+    pickup: true
+    note: "关键——疑点 9203 condition；L2 R3 击穿件"
+
+  - id: 9206
+    name: "花瓶现场照 / Vase in Scene Photo"
+    type: item
+    first_loop: 2
+    first_scene: 9005
+    pickup: true
+    note: "关键——疑点 9203 condition；L2 R3 击穿件"
+
+  - id: 9207
+    name: "Jimmy 工资单 / Jimmy's Payslip"
+    type: item
+    first_loop: 2
+    first_scene: 9009
+    pickup: true
+    note: "场景道具——背景证据，不进入 F1 碎片 condition"
+
+  - id: 9209
+    name: "便携相机 / Portable Camera"
+    type: item
+    first_loop: 2
+    first_scene: 9006
+    pickup: true
+    note: "场景道具——勒索生意物证补充；由 sudden_event（Emma 拍照角落观察）引出；不入 doubt condition"
+
+  - id: 9210
+    name: "厨房工作表 / Kitchen Work Schedule"
+    type: item
+    first_loop: 2
+    first_scene: 9009
+    pickup: true
+    note: "场景道具——Jimmy 的表面不在场证明；含 23:00–23:10 下楼送餐（L2 看似普通调度）；L5 揭示真实案发时间 23:00–23:05 时击穿伪造"

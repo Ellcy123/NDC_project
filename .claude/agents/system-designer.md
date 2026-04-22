@@ -66,10 +66,16 @@ Opening 对话 → 自由调查（场景探索 + NPC 对话）
 - triggerType=1 参数格式：`NPC_ID,Scene_ID,StartTime,EndTime`
 - triggerType=2 参数格式：`NPC_ID1,NPC_ID2`
 
-**4. 疑点系统（DoubtConfig）**
+**4. 疑点系统（DoubtConfig）** — 详细规则见 `docs/游戏系统/核心玩法/疑点系统.md`
+- 字段：id / isFragment / condition[] / text
+- isFragment: false=疑点（1–2 件 condition）, true=碎片（严格 1 件 condition）
 - 条件类型：type=1（持有物品）、type=2（关系网验证）、type=3（时间线验证）
-- condition 为数组，支持多条件 AND 组合
 - 所有疑点均为主线疑点
+- **机制硬规则**（配置表校验必查）：
+  - 一对一：同一证据/证言 ID 在所有 DoubtConfig.condition 里只能出现一次
+  - 时序：疑点/碎片的出现 Loop ≤ 它 condition 里任何证据在 ExposeData 里被使用的最早 Loop
+  - 禁止 ≥ 3 件 condition（需拆成多个疑点）
+  - 碎片合并：父疑点 condition = 子碎片 condition 并集；合并发生时子碎片条目隐藏到父疑点
 
 **5. 指证系统（ExposeData）**
 - 每轮指证包含：testimony（NPC证词ID）、item（物证ID列表）、talkId（成功对话ID）

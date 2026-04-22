@@ -1,0 +1,950 @@
+# ============================================================
+# loop6_state.yaml — Unit9 Loop 6: Morrison 家搜证 / 指证 Morrison / Unit9 结束
+# ============================================================
+#
+# 叙事功能：Part3 收束——Morrison 家自由探索（赌债/借款记录 + Whale 电话突发事件）→
+#           警局 Morrison 办公室三轮指证 →
+#           ending_sequence 四幕（制度正义 + Vivian 选择 + 保险箱 + 火海鞋坊）
+#           → Unit9 真相闭环 + Unit2 衔接钩子（南区计划录音盘碎片 9602）
+#
+# 核心体验：
+#   - Whale 电话：七个字、平静、挂断——唯一一次直接接触 Whale 声音
+#   - Morrison 家搜证：9603（赌债欠条）+ 9604（借 Whale 钱记录）+ 9605（藏起来的弹壳，场景道具）+ 9606（马票存根，envir）
+#   - 警局对质：单独三人空间，Morrison 没有外援——三轮指证逐层击穿
+#   - ending_sequence：Act1 Morrison 处分 → Act2 Vivian 选择留下 → Act3 Vivian 开保险箱取出 9602 → Act4 鞋坊火海定格
+#
+# 与 Unit8 loop6 的关系：
+#   Unit9 Loop 6 剧情主干与 Unit8 Loop 6 完全一致；
+#   差异：ID 段切换（8xxx → 9xxx）、Whale 电话台词改为"我在看你们能走多远"（讨论结论裁决）、
+#         ending_sequence Act3 证据改为 9602 虫胶唱片碎片（非整张文件）、
+#         Act4 新增录音内容两关键词：Margaret Brennan + 南区清退（Unit2 开门砖）
+#
+# NPC 编码（Unit9 NPCStaticData）：
+#   Emma=902 / Rosa=903 / Morrison=904 / Tommy=905 / Vivian=906 / Jimmy=907 / Anna=908 / Whale=909
+#
+# Testimony ID 格式：{unit=9}{npc_code=2位}{loop=1位}{seq=3位} = 7 位（Unit8 同款）
+#   Morrison: 9046xxx → 9046001、9046002、9046003
+#   Vivian:   9066xxx → 9066001、9066002
+#   Anna:     9086xxx → 9086001
+#   Whale:    9096xxx → 9096001（插入剧情，不作 condition）
+#
+# 关键继承状态（loop5 末）：
+#   Jimmy：已自杀，确认真凶（is_dead: true）
+#   9601（米勒集团特制手枪）：active，loop5 post_expose 自动入玩家背包（loop6 Expose R1 关键）
+#   9503（Jimmy 给 Whale 的回信）：active，loop5 获得（loop6 Expose R3 关键）
+#   9401（.45 警用弹壳）：active，loop3 获得（loop6 Expose R1 关键）
+#   9304（保险箱字条）：active，loop3 获得（loop6 ending_sequence Act3 使用）
+#   Anna：震惊/丧失状态，被托付给 Zack+Emma
+#   Vivian：仍在警局被押（未释放）
+#   F2（9403）碎片：等待本 Loop 9607 新碎片触发合并为 9602 父疑点
+#
+# ──────────────────────────────────────────────────────────
+# F2 合并数据层说明（讨论结论裁决 7）：
+#   9403（F2，L4 旧碎片，condition=9401）在 doubts 块保留
+#   9607（F2b，L6 新碎片，condition=9601）在 doubts 块保留
+#   9602（父疑点，condition=9401+9601）在 doubts 块保留
+#   运行时：9601 入玩家背包后，9602 父疑点条件满足 → 9602 点亮，9403+9607 同时隐入父疑点卡片内部
+#   UI 层：9403 和 9607 不独立显示，不计入分母；9602 是本 Loop 进度条的第 2 项
+# ──────────────────────────────────────────────────────────
+#
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes（9013 Morrison家 + 9014 警局过场）
+#                        / expose / ending_sequence / doubts / evidence_registry 全部存在
+# B. 证据覆盖     PASS — 讨论结论 L6 所有证据（9601-9606）已分配：
+#                        9601 继承自 L5（Expose R1 + F2b 9607 condition）；
+#                        9602 ending_sequence Act3 保险箱取出；
+#                        9603/9604 Morrison 家拾取（Expose R2 关键）；
+#                        9605 Morrison 家场景道具（不进疑点 condition，裁决 8）；
+#                        9606 Morrison 家 envir（裁决，不作 R2 击穿）；
+#                        继承件 9401/9503/9304 状态注明
+# C. NPC 条目     PASS — Emma（opening）/ Morrison（expose，4 块完整）/ Vivian（ending_sequence，4 块完整）/ Anna（ending_sequence，4 块完整）
+#                        Morrison is_liar:true, player_inquiry:null（Expose 对象规则）
+# D. 目标对齐     PASS — goals 与讨论结论 L6"指证 Morrison / 释放 Vivian / 拿到南区计划录音盘碎片"一致
+# E. 信息节奏     PASS — 本 Loop 揭示：Morrison 债务链 + 凶器匹配；
+#                        9602 南区计划录音内容仅限"Margaret Brennan + 南区清退"两关键词，不展开；
+#                        Whale 七字台词不泄露 Whale 真实背景；Unit2 内容完全不超前
+# F. 鉴赏力       PASS — emma_closing（source+quiz）/ morrison_expose（source）/ vivian_ending（source）/ anna_ending（source） 配对
+# G. Expose 逻辑  PASS — R1 凶器型号匹配（9401+9601）；
+#                        R2 债务利益冲突（9603+9604，两件必须同时）；
+#                        R3 Whale 关联人网络（9503，L5 复用）；
+#                        三轮维度互不重叠（物证口径/财务关系/信件直接指向）
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
+# ============================================================
+
+# ─────────────────────────────
+# 一、玩家视角
+# ─────────────────────────────
+
+player_context:
+  goals:
+    primary: "击破 Morrison 的谎言，迫使他承认吹黑哨，从警局释放无辜的 Vivian"
+    secondary:
+      - "在 Morrison 家搜查他藏起来的证据——找到他与 Whale 之间的财务往来记录"
+      - "带着 9401（.45 弹壳）和 9601（真凶器）去警局，完成凶器型号匹配"
+      - "用 9503（Jimmy 给 Whale 的回信）证明 Whale 不是普通放贷者，而是谋杀主使"
+      - "救出 Vivian——她在警局非法羁押，手上并无任何实质性证据"
+
+  known_facts:
+    # loop1-5 post_expose_knowledge 全部累积
+    # ── loop1 ──
+    - "Webb 已死亡（Morrison 宣告），死亡地点：蓝月亮酒吧 1F Webb 会客室"
+    - "Vivian 手持手枪在现场，但该枪（.25 ACP）无硝烟反应——她不是刚刚开枪的那个人"
+    - "23:30 众人听到枪响，Zack 和 Emma 从歌舞厅赶到会客室"
+    - "Webb 提前雇佣 Zack：委托协议书包含保护 Vivian + 确保其继承遗产；协议书已被 Morrison 拿走"
+    - "Rosa 的谎言1（Vivian 刚开枪）被推翻，Rosa 整体可信度存疑"
+    - "Rosa 的谎言2（23:30 枪声 + 只有 Vivian 在场）在 L1 无法反驳——时间线悬念"
+    - "Morrison 同意给 Zack 72 小时调查期（随后被 Morrison 单方面取消，Vivian 被强押）"
+    - "Emma 敏锐：Webb 真正怀疑的凶手到底是谁？"
+    # ── loop2 ──
+    - "Webb 的酒吧除私酒之外在做敲诈勒索生意（仙人跳变体）"
+    - "Tommy 曾是敲诈勒索生意的执行人，11 月中旬 Webb 沉迷 Rita 后换人"
+    - "11 月中旬之后，勒索执行人换了——不是 Tommy，背后牵涉 Whale"
+    - "Vivian 曾被 Webb 要求协助勒索中产人士，对此十分憎恨"
+    - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
+    - "Jimmy 是主厨，经济困难，对 Webb 的死有隐藏的愧疚"
+    # ── loop3 ──
+    - "玻璃碎片压在垃圾袋下有硝烟——玻璃破碎早于 23:20（Rosa 倒垃圾时间）"
+    - "Rosa 是被胁迫的——纸条指令：'23:30 去 Webb 会客室目睹 Vivian 杀 Webb，否则杀你女儿'"
+    - "纸条上的 J 倒写——胁迫者特殊书写习惯；胁迫者很熟悉酒吧内部"
+    - "Rosa 给了 Zack 一枚 .45 ACP 弹壳（9401），在 L3 指证现场捡到"
+    - "真实枪击时间早于 23:20——23:30 是假枪声制造的伪案发时间"
+    # ── loop4 ──
+    - "被撕毁的合同（9402）：Whale 花大笔钱委托酒吧里某人做某件事"
+    - ".45 ACP 弹壳与 Vivian 手枪（.25 ACP）口径不符——凶器不是 Vivian 的枪"
+    - "Vivian 承认不是凶手，但曾有杀人计划（23:05 被隔门吼退，计划 23:30 再去）"
+    - "Vivian：23:05 在门口听到 Webb 大声吼 'Don't be bothering me!'——那个声音是谁的？（口音伏笔）"
+    - "Whale 雇的人更可能是真正的凶手（被撕毁合同 + Tommy 证言）"
+    - "Morrison 看到 .45 弹壳脸色一变——手停、眼神定、沉默，然后程序性强押 Vivian；Morrison 有问题"
+    - "Morrison 变脸触发：他一眼认出了某种关联，但具体原因 L4 时未知"
+    - "死亡区间锁定在 23:05-23:20（Vivian 被吼退 + Morrison 弹道证言）"
+    # ── loop5 post_expose_knowledge（全部继承）──
+    - "Jimmy 是真凶——被 Whale 雇佣，动机：Anna 怀孕急需大笔钱 + 爱尔兰裔移民困境"
+    - "真实作案时序：23:00 鼓点高潮掩盖枪声，Jimmy 在 1F Webb 会客室枪杀 Webb；23:05 Jimmy 隔门模仿 Webb 声音（爱尔兰习语）骗走 Vivian；23:30 Jimmy 从 2F 厨房窗口空射制造假案发时间"
+    - "'Don't be bothering me!'是爱尔兰裔口音习惯——23:05 在门口说话的不是 Webb，是 Jimmy 在模仿 Webb"
+    - "Jimmy 接受了 Whale 的委托：被撕毁的合同（9402）的签订方就是 Jimmy"
+    - "Jimmy 是威胁 Rosa 的人——纸条（9302）、合同（9402）、Berlitz 英语练习书（9504）三处倒写 J 书写习惯完全一致"
+    - "Whale 在场（后门交易现场）——Jimmy 知道暴露 Whale 关联意味着死亡"
+    - "Jimmy 为保护 Anna 不受 Whale 威胁选择自杀——托付 Anna 后开枪，米勒集团特制手枪（9601）留在现场"
+    - "9601 米勒集团特制手枪是真正的凶器——枪身侧面铭刻'MILLER ARMS · CHI'铭文 + 狮形印记，.45 ACP 口径"
+    - "9501 口音诡计解锁：Jimmy 就是隔门吼退 Vivian 的那个人"
+    - "9502 动机闭合：Jimmy 家急需钱（Anna 怀孕），F1 碎片合并"
+    - "9503 鼓点时间线解锁：《芝加哥狂想曲》鼓点高潮段掩盖了真实案发枪声"
+    - "9504 Whale 关联解锁：Jimmy 给 Whale 的回信直接确认两人有直接生意往来"
+    - "Zack 和 Emma 决定带齐硬证据直面 Morrison：9401 弹壳 + 9601 手枪 + 9503 回信，以及将在 Morrison 家寻找的财务记录"
+
+  new_directions:
+    - direction: "前往 Morrison 的家搜查——他与 Whale 的财务往来可能留有记录，以及他藏起来的其他物证"
+      trigger: "L4 末 Morrison 变脸后的异常行为 + Emma 推断：Morrison 不会销毁物证，只会藏起来"
+    - direction: "带着 9401（真弹壳）和 9601（真凶器）去警局，进入 Morrison 办公室单独对质"
+      trigger: "L5 末 Zack 和 Emma 并肩决定：带齐硬证据，直接面对 Morrison，不让他有机会提前准备"
+    - direction: "解锁疑点 9601——Morrison 为何看到弹壳脸色一变，他和 Whale 究竟是什么关系"
+      trigger: "疑点 9601（Morrison 和 Whale 有金钱关系？）在 L6 搜证后才能满足 condition"
+
+  post_expose_knowledge:
+    # loop6 指证 Morrison 三轮击穿 + ending_sequence 玩家获得的新知识
+    - "Morrison 早就知道真正的凶器型号是 .45 ACP，但故意压下了这条线索——他看见弹壳时的'变脸'就是认出了米勒集团标记"
+    - "Morrison 是赌鬼，欠疤面煞星地下赌场 5000 美元赌债（9603）并受威胁"
+    - "Morrison 在 Webb 案发生前约三周从 Whale 处借了一笔钱还赌债（9604）——财务纽带确认"
+    - "Morrison 欠 Whale 人情，于是在 Webb 案中快速结案、压制证据、错误羁押 Vivian——这不是搜查失误，是主动偿债"
+    - "Morrison 看见 .45 弹壳脸色一变：因为他认出那是米勒集团的弹型——若追查下去，Whale/米勒集团的关联会反过来把他吞掉"
+    - "Whale 是操控整起案件的幕后黑手——Jimmy 给 Whale 的回信（9503）直接确认 Whale 下达委托、Jimmy 执行杀人"
+    - "Morrison 当面签下失职认罪书（由 Zack+Emma 见证）：故意压制证据、收受贿赂、错误羁押无辜"
+    - "Vivian 用保险箱字条（9304）上的密码打开了保险箱——密码是 Webb 与 Vivian 相遇的那一天"
+    - "保险箱内取出'南区计划'录音盘碎片（9602）——Webb 留存的内容，Vivian 将其交给能用上它的人"
+    - "录音碎片中两个关键词：Margaret Brennan、南区清退——Unit2 的开门砖"
+    - "疑点 9601 完全解锁（Morrison 债务被 Whale 钉死）"
+    - "疑点 9602 完全解锁（凶器是米勒集团特制手枪，F2 合并闭环）"
+
+# ─────────────────────────────
+# 二、开篇（过场——灵魂黑夜后，Zack+Emma 准备进入 Morrison 家）
+# ─────────────────────────────
+
+opening:
+  type: cutscene  # 🎬 硬切，无玩家操作
+  location: "蓝月亮酒吧后门 / 深夜街头"
+  description: |
+    Jimmy 自杀后的片刻沉默。
+    Emma 和 Zack 两人站在夜色中整理思路——真凶已死，
+    真正的凶器（9601）在手，Jimmy 与 Whale 的回信（9503）也在手。
+    但 Vivian 依然被关在警局，那道最后的锁还有一个名字：Morrison。
+    Emma 说出了接下来的计划：
+    先去 Morrison 的住所——他和 Whale 之间的往来一定留有记录，找到它。
+    Emma 以记者身份（"专访一线警察的日常"）作掩护，Zack 以 Emma 的助理身份随行——
+    这样既能合法进入 Morrison 家，又不会让他起疑。
+    然后去警局，直接走进 Morrison 的办公室，单独面对他，
+    一件一件把证据摆出来，在没有外人的空间里让他无处可退。
+
+  # ── Emma NPC 条目（opening，非 Expose 对象）──
+  npc:
+    id: 102
+    talk: emma_loop6_open
+    is_liar: false
+    motive: "与 Zack 共同制定 L6 作战策略——她是提案人，也是执行中的搭档"
+    mindset: "Jimmy 自杀的震撼仍未消散，但理智和使命感让她保持冷静；她比 Zack 更清楚接下来每一步的推演"
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "Jimmy 是真凶，9601 是真凶器，9503 直接连接 Jimmy 与 Whale——三件事已完全确认"
+      - "Morrison 看到 .45 弹壳脸色一变，夺走弹壳（9401 从 Rosa 处获取，Morrison 未成功夺走——它一直在 Zack 手中），意味着他有意压案——他是最后的阻碍"
+      - "Morrison 与 Whale 之间的财务往来可能留有记录——去他家找"
+      - "伪装身份：Emma 以记者身份'专访警察日常'合法进入 Morrison 家，Zack 以助理身份随行"
+      - "策略：单独进 Morrison 办公室，没有外援，在压迫感中让他面对证据"
+      - "Anna 和孩子需要保护——Jimmy 把她们托付给了我们"
+    withheld_topics:
+      - "Whale 会在 Morrison 家主动打来电话（此刻还未发生）"
+      - "保险箱里的南区计划录音盘碎片具体内容（ending_sequence 才揭示）"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry:
+      - '"我们去 Morrison 家找什么类型的记录" # 10'
+      - '"去警局的策略——为什么选择单独对质，而不是公开质问" # 9'
+      - '"Anna 现在怎么办，我们能保护她吗" # 7'
+      - '"Whale 会不会已经盯上了我们" # 8'
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+
+
+# ─────────────────────────────
+# 三、场景（🎬 + 🔓 Morrison 家 → 🎬 警局过场）
+# ─────────────────────────────
+
+scenes:
+
+  # ── 场景 9013：Morrison 家（含 Whale 电话突发事件）──
+  - id: 9013
+    name: "Morrison 的家"
+    type: free_exploration  # 🔓 自由探索（搜证为主）
+    # 前段有一小节 🎬 硬切：Zack+Emma 以采访为由进入，Morrison 本人不在
+    description: |
+      Zack 和 Emma 来到 Morrison 的住所。Morrison 本人不在（在警局值班）——这是搜查的窗口。
+      房间陈设简朴却藏着 Morrison 不能让人看到的东西：
+      一叠赌债欠条（9603）、一份向 Whale 借款的记录（9604）、
+      Morrison 自己藏起来的另一枚 .45 弹壳（9605，场景道具，加固藏证行为）、
+      以及一叠厚厚的华盛顿公园赛场马票存根（9606，环境叙事）。
+      搜查进行到中段，Morrison 家的电话突然响起。
+
+    phone_call_event:
+      # Whale 在此唯一一次以"声音"形式直接登场（电话另一端）
+      # 技术处理：叙事事件，不产生可拾取证据；不设 NPC 条目，Whale 未正式出场
+      type: narrative_event
+      interlude:
+        id: "U9-L6-INT-01"
+        title: "Whale 调查电话"
+        outline_anchor: "§L6 🔵 插入剧情：Whale 调查电话"
+      trigger: "玩家搜查到房间中段时，Morrison 家的电话响起"
+      description: |
+        Morrison 家的电话响起。Zack 和 Emma 对视一眼——Zack 接了。
+        电话另一端的声音低沉、不疾不徐，带着一种俯视一切的从容。
+        他知道 Zack 和 Emma 在查案，知道 Jimmy 已经死了，也知道他们接下来要做什么。
+        Zack 问他是谁。对方说：他就是 Whale。
+        Zack 没有开口。
+        Whale 只说了一句话，随后挂断，不等 Zack 回答：
+        "我在看你们能走多远。"
+      whale_line: "我在看你们能走多远"
+      narrative_significance:
+        - "Whale 首次以声音形式直接登场——此前他只是'影子'，现在有了声音"
+        - "七个字、平静、犬儒——不威胁，不阻止，但态度居高临下"
+        - "挂断电话不等 Zack 回答——Whale 不与 Zack 平等对话，他只是'宣告'"
+        - "Unit9 结束后 Whale 的形象依然是'空头像'——玩家知道有这个人，但不知道他是谁"
+      testimony_ids:
+        - 9096001  # Whale（电话）："我在看你们能走多远"——不作为任何疑点 condition；只作插入剧情证言
+
+    evidence:
+      - id: 9603
+        name: "Morrison 欠疤面煞星 5000 美元赌债欠条"
+        name_en: "Morrison's $5,000 Gambling IOU"
+        type: item
+        pickup: true
+        analysis: false
+        description: |
+          一张签有 Morrison 名字的赌债欠条，欠疤面煞星地下赌场 5000 美元；
+          附夹一封手写威胁信，警告他若不还钱就让他从警察局"消失"。
+          Morrison 把这些文件夹在一本旧台历里，显然不希望任何人看到。
+        note: "关键——疑点 9601 condition；L6 R2 击穿件（两件必须同时出示）"
+        metadata:
+          debt_amount: "$5,000"
+          creditor: "疤面煞星地下赌场"
+          significance: "Morrison 经济困境使他成为 Whale 收买的目标——欠了赌债才会去借 Whale 的钱"
+
+      - id: 9604
+        name: "Morrison 借 Whale 钱的记录"
+        name_en: "Morrison's Loan Record from Whale"
+        type: item
+        pickup: true
+        analysis: false
+        description: |
+          一份手写借款记录，借方是 Morrison，贷方以"W 先生"名义出现（地址和金额与 Whale 的运作方式一致）；
+          金额 $6,000，时间早于 Webb 案发生约三周；
+          Morrison 用这笔钱还清了疤面煞星的赌债，然后在 Webb 案中选择了快速结案、压制证据。
+        note: "关键——疑点 9601 condition；L6 R2 击穿件（两件必须同时出示）"
+        metadata:
+          lender_alias: "W 先生"
+          loan_amount: "$6,000"
+          loan_date_relation: "Webb 案发生前约三周"
+          significance: "Morrison 借 Whale 钱 → 欠 Whale 人情 → 压案、强押 Vivian"
+
+      - id: 9605
+        name: "Morrison 藏起来的弹壳"
+        name_en: "Morrison's Hidden Bullet Casing"
+        type: item
+        pickup: true
+        analysis: false
+        description: |
+          一枚 .45 ACP 弹壳，Morrison 从 L4 Webb 会客室现场自己搜到的另一枚（不是 Rosa 给 Zack 的那枚 9401）；
+          弹底印记"MILLER ARMS"——Morrison 收走这枚弹壳正是因为他认出了米勒集团标记；
+          藏在书桌抽屉最深处，用一本过期台历压着。
+        note: "场景道具——不进任何疑点 condition（裁决 8）；加固 Morrison 藏证行为；弹底'MILLER ARMS'与 9601 铭文形成视觉呼应"
+        metadata:
+          caliber: ".45 ACP"
+          stamp: "MILLER ARMS"
+          note: "这是第二枚弹壳，独立于 9401。两枚弹壳物理上是同一批次出厂——进一步锁定凶器来源"
+
+      - id: 9606
+        name: "华盛顿公园赛马场整赛季马票存根"
+        name_en: "Season Stack of Washington Park Racing Stubs"
+        type: item
+        pickup: false  # envir 类型，查看但不入背包
+        analysis: false
+        description: |
+          厚厚一叠赛马场投注存根，Washington Park Racetrack，整个赛季——
+          每一张都是败注，有几张的金额触目惊心。
+          Morrison 把它们塞在床头柜的最底层，没有销毁，只是不想再看见。
+        note: "场景道具（envir）——环境叙事；不作为 R2 击穿件（裁决）；辅助说明 Morrison 赌博成瘾的深度"
+
+  # ── 场景 9014：警局 Morrison 办公室（转折过场，进入指证）──
+  - id: 9014
+    name: "警局 Morrison 办公室"
+    type: transition_cutscene  # 🎭 过场，到达后进入指证
+    description: |
+      Zack 和 Emma 带着五件证据（9401、9601、9503、9603、9604）来到警察局。
+      Morrison 在自己的办公室里——Zack 选择单独面对他，不公开对质。
+      Emma 站在 Zack 身侧，两人推门进去。
+      Morrison 正在向一个下属吹嘘 Vivian 案办得如何神速、手脚如何干净——
+      官僚的得意感令人不适。
+      随后他主动赶走下属，要求私下谈判。
+      这个动作本身就是最强的自证。
+    scene_note: "Morrison 吹嘘语言要有官僚得意感（讨论结论风险 A）；主动赶走下属是自证行为（讨论结论风险 B）"
+
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Morrison）—— 三轮
+# ─────────────────────────────
+
+expose:
+  target: morrison
+  target_npc_id: 104
+  target_talk: morrison_expose_loop6
+  is_liar: true
+  player_inquiry: null
+
+  context: |
+    Zack 和 Emma 在 Morrison 办公室单独对质——没有同僚在场。
+    Morrison 已经赶走了下属，这个动作已经出卖了他。
+    此时 Zack 手中的证据：
+    ── 继承自 loop3 ──
+    - 9401（.45 警用弹壳，Rosa 从会客室地上捡到、交给 Zack，弹底印记"MILLER ARMS"）
+    ── 继承自 loop5 ──
+    - 9601（米勒集团特制手枪，真凶器，铭文"MILLER ARMS · CHI" + 狮形印记）
+    - 9503（Jimmy 给 Whale 的回信，直接确认 Jimmy 受 Whale 委托）
+    ── loop6 Morrison 家新取得 ──
+    - 9603（Morrison 欠疤面煞星 5000 美元赌债欠条）
+    - 9604（Morrison 借 Whale 钱的记录）
+    Morrison 没有外援，没有观众——他必须独自面对每一件证据。
+
+  # ── Morrison NPC 条目（Expose 对象）──
+  morrison_expose:
+    talk: morrison_expose_loop6
+    is_liar: true
+    motive: "保住警察职位和个人声誉——他不是彻底的坏人，是在贪婪和恐惧中做了糟糕选择的人"
+    mindset: |
+      被逼到墙角但仍在挣扎；开场还用警察权威压人，但没有外人可以充当观众——
+      每轮谎言被击破时，他只能一次次独自承受逼近认罪的压力；
+      R2 Morrison 主动赶走下属这一动作已经是自证，他自己也知道
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "三层防线（对应三轮 Expose 谎言）"
+      - "关于为何快速结案的官方说法：搜查失误"
+      - "关于 Whale 的定性：只是放贷的，与本案无关"
+      - "正在向下属吹嘘 Vivian 案办得神速——官僚得意感"
+    withheld_topics:
+      - "Morrison 与 Whale 之间的全部财务往来细节（此为 Expose 内容，不在自由探索阶段泄露）"
+      - "赌债金额与债主身份（指证前 Morrison 不主动提及）"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose 对象，设为 null
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 9046001  # ⚠谎言: Morrison："Vivian 的手枪就是凶器，凶手就是 Vivian！"（R1 起始谎言）
+      - 9046002  # ⚠谎言: Morrison："我只是临时接警，搜查有失误——后续可以重新调查，不需要现在就释放嫌疑人"（R1 被击破后的退守谎言）
+      - 9046003  # ⚠谎言: Morrison："就算我和 Whale 之间有借贷关系，Whale 只是个放贷的——和 Webb、Jimmy 的死无关，那是私人交易"（R2 被击破后的最后防线）
+
+
+  # ── 轮次一：凶器匹配维度 ──
+  round_1:
+    lie: "Vivian 的手枪就是凶器！她就是凶手！"
+    lie_source: 9046001
+    usable_evidence:
+      - id: 9401
+        role: "这枚 .45 ACP 弹壳来自真正的凶器；弹底印记'MILLER ARMS'——不是 Vivian 的 .25 ACP 手枪能打出的口径"
+      - id: 9601
+        role: "米勒集团特制手枪，.45 ACP 口径，铭文'MILLER ARMS · CHI'与弹壳印记完全对应——这才是真凶器；Vivian 的手枪是 .25 ACP，口径根本不符"
+    required_items: [9401, 9601]  # 两件必须同时出示
+    trap_evidence:
+      - id: 9601
+        alone: true
+        reason: "只出示 9601 米勒手枪（不出 9401 弹壳）——Morrison 可辩'还有其他 .45 手枪，不能证明这就是现场用的那把'"
+    result: partial_victory
+    result_description: |
+      Zack 出示 9401（.45 弹壳，弹底"MILLER ARMS"）和 9601（米勒集团特制手枪，.45 ACP）：
+      .45 的弹壳配 .45 的手枪——这把枪才是凶器。Vivian 的枪是 .25，口径根本不符。
+      Morrison 的手停在桌面上——他沉默了一秒，用手摸了摸面前的笔记本封皮，才重新抬头。
+      第一道防线松动。Morrison 做出第一次退守：
+      "好，也许是我临时接警时搜查失误——但后续完全可以重新调查，不需要现在就释放嫌疑人。"
+
+  # ── 轮次二：债务利益冲突维度 ──
+  round_2:
+    lie: "我只是临时接警、搜查失误——这不是故意的，后续可以重新调查，不需要立刻释放嫌疑人"
+    lie_source: 9046002
+    usable_evidence:
+      - id: 9603
+        role: "Morrison 欠疤面煞星 5000 美元赌债、被威胁——财务上极度脆弱，正是可以被收买的时候；这不是'失误'，这是他主动选择的结果"
+      - id: 9604
+        role: "Morrison 向 Whale 借了 $6000，时间在 Webb 案发生前三周——他用这笔钱还了赌债，然后在 Webb 案中选择快速结案、夺走证据；这是贿赂，不是失误"
+    required_items: [9603, 9604]  # 两件必须同时出示
+    trap_evidence:
+      - id: 9603
+        alone: true
+        reason: "只出示 9603 赌债欠条——Morrison 可分别开脱：'我有赌债，和本案有什么关系？'"
+      - id: 9604
+        alone: true
+        reason: "只出示 9604 借款记录——Morrison 可分别开脱：'借钱是合法的，贷方是谁和本案无关'"
+    scene_beat: |
+      讯问剧情节奏：
+      先出示 9603 赌债欠条 → Morrison 脸色大变 → 主动赶走下属要求私下谈判（如果尚未赶走）
+      → Zack 再出示 9604 借款记录
+      Morrison 主动赶走下属这一行为本身就是最强的自证（讨论结论风险 B）
+    result: partial_victory
+    result_description: |
+      Zack 摆出 9603（赌债欠条+威胁信）和 9604（向 Whale 的借款记录）：
+      你欠了 Whale 一笔钱，就在案发三周前。你用那笔钱还了赌债。
+      然后案子来了，你快速结案，压制证据，把无罪的 Vivian 押进警局。
+      这不是失误，这是偿债——偿 Whale 的债。
+      Morrison 的手抖了一下。没有同僚给他台阶，他只能自己面对这些数字。
+      Morrison 做出第二次退守：
+      "就算我和 Whale 之间有借贷关系，Whale 只是个放贷的——和 Webb 被杀有什么关系？"
+
+  # ── 轮次三：Whale 关联人网络维度 ──
+  round_3:
+    lie: "就算我和 Whale 之间有借贷关系，Whale 只是个放贷的，和本案真凶没有任何关系"
+    lie_source: 9046003
+    usable_evidence:
+      - id: 9503
+        role: "Jimmy 给 Whale 的回信——内容是 Jimmy 回复 Whale 的委托：Jimmy 接受了，约定在蓝月亮后门见面尾款交接；Whale 不是放贷的，Whale 是策划 Webb 被杀的幕后主使；Jimmy 是 Whale 雇来的执行者"
+    required_items: [9503]  # L5 获取，L6 复用
+    trap_evidence:
+      - id: 9603
+        reason: "继续用债务证据——债务证据只证明 Morrison 与 Whale 有财务关系，不能触及'Whale 与 Webb/Jimmy 的死有关'这一维度"
+      - id: 9604
+        reason: "同上，债务证据维度已经击穿 R2，不适用于 R3 的'Whale 是否是主使'论点"
+    result: full_victory
+    result_description: |
+      Zack 出示 9503（Jimmy 给 Whale 的回信）：
+      这是 Jimmy 写给 Whale 的信——他接受了 Whale 的委托，然后在那个 23:00 杀死了 Webb。
+      Whale 不是放贷的。Whale 是策划这起谋杀的幕后黑手。
+      你借了他的钱，然后帮他压住了这个案子。
+      Morrison 的最后一道防线彻底崩塌。他低下头，不再开口辩解。
+
+# ─────────────────────────────
+# 五、结束序列（Unit9 结束动画，四幕）
+# ─────────────────────────────
+
+ending_sequence:
+  type: forced_cutscene  # 🎬 强制剧情，无玩家操作
+  interlude:
+    id: "U9-L6-INT-02"
+    title: "Unit 结尾动画（四幕）"
+    outline_anchor: "§Unit 结尾 🔵 插入剧情：Unit 结尾动画"
+  description: "Unit9 完整收束 + Unit2 衔接钩子；四幕连续，不可中断"
+
+  sequence:
+
+    # ── Act 1：制度性的正义——Morrison 处分 ──
+    act_1_morrison_verdict:
+      location: "警局 Morrison 办公室"
+      description: |
+        三轮指证完成后，Morrison 在自己的办公室里被逼到最后一步。
+        Zack 推过来一张纸——要 Morrison 当面写下失职认罪书：
+        警官失职——故意压制证据、收受贿赂、错误羁押无辜嫌疑人。
+        Emma 作为记者见证签字。
+        Morrison 握着笔停顿了很久，第一次没有任何争辩，把名字签了上去。
+        他当场签字撤销了 Vivian 的羁押令。
+        Morrison 被认定"警官失职"，重新立案查证，由上级接手——
+        不是最大的正义，但是能做到的那种正义。
+      morrison_status: "在职警官 → 签下认罪书，待上级纪律审查（副本由 Emma 以记者身份留存/披露）"
+
+    # ── Act 2：Vivian 的选择——留下经营蓝月亮 ──
+    act_2_vivian_choice:
+      location: "警局走廊 → 蓝月亮酒吧"
+      description: |
+        Vivian 走出警局关押室，看到等在走廊的 Zack 和 Emma，以及站在角落的 Anna。
+        她没有说话——低头看了看自己的手，然后抬头，只说了两个字："谢谢你。"
+        之后来到蓝月亮酒吧，Anna 也在。
+        Vivian 看了很久吧台、灯光、那些还没来得及清走的椅子，然后说：
+        "我决定留下来经营这里。"
+        Anna 什么都没说，但她坐了下来。
+        两个被这个案子伤过的女人，在这个房间里沉默地坐着。
+      vivian_status: "imprisoned → released → 主动选择留下经营蓝月亮"
+
+    # ── Act 3：保险箱——密码、字条、录音盘碎片 ──
+    act_3_safe_box:
+      location: "蓝月亮酒吧 1F Webb 会客室（已解封）"
+      description: |
+        Vivian 走到保险箱前，停下来。
+        她从口袋里取出那张字条（9304）——Zack 当年找到的、写着密码提示的那张。
+        密码是：Webb 和 Vivian 相遇的那一天的日期。
+        Vivian 一个数字一个数字地拨，保险箱"咔"的一声打开了。
+        里面有一叠碎片——一张 78 转虫胶唱片被打碎的残骸，边缘还带着烧焦的痕迹。
+        Vivian 把碎片捧起来，交给 Zack，说：
+        "这是 Webb 真正的死因，我将它交给真正能用上的人。"
+      vivian_line: "这是 Webb 真正的死因，我将它交给真正能用上的人"
+      evidence_obtained:
+        - id: 9602
+          name: "'南区计划'录音盘碎片"
+          name_en: "'South Side Plan' Shellac Record Shards"
+          type: item
+          pickup: true
+          analysis: false
+          description: |
+            78 转虫胶唱片碎片（1925 年标准，非 LP 黑胶）；散碎，边缘带烧焦痕迹，需拼合；
+            录制在唱片上的内容指向 Whale 的"南区清退计划"——在会客室里 Zack 拼合了几块，
+            听到了两个关键词：Margaret Brennan，南区清退。
+          note: "关键——Unit2 开门砖；跨 Chapter 持久化道具"
+          metadata:
+            physical_format: "78转虫胶唱片碎片（shellac record shards）"
+            content_keywords:
+              - "Margaret Brennan"
+              - "南区清退"
+            content_revealed: false  # 内容不在 Unit9 内完整展开
+            cross_chapter_persistent: true  # 讨论结论遗留事项 1
+            unit2_opening_hook: true
+            obtained_via: "Vivian 用 9304 字条密码打开保险箱"
+
+    # ── Act 4：火海中的鞋坊——录音、Margaret Brennan、Unit2 钩子 ──
+    act_4_epilogue:
+      location: "Zack 事务所 / 南区鞋坊外街道"
+      description: |
+        Zack 和 Emma 带着碎片来到 Zack 的事务所。
+        Emma 把碎片一块一块拼上留声机，然后放下唱针。
+        录音里先是噪音，然后是一个声音——不是 Whale 的声音，
+        是一个女人的声音，平静地说出一个名字：
+        Margaret Brennan。
+        然后是另一段内容，带着纸张翻动声：南区清退。
+        录音在这里中断——碎片拼不全，后面的内容断掉了。
+        Zack 抬起头，看向窗外。
+        画面切至南区某条街道的定格——那个鞋坊，
+        在那个夜晚，在火海里。
+        Unit9 结束。
+      recording_content:
+        keywords_only: true  # 仅展示两个关键词，不展开内容（讨论结论裁决）
+        keyword_1: "Margaret Brennan"
+        keyword_2: "南区清退"
+        note: "不展开录音具体内容，不给善后台词；Unit2 开门砖"
+      final_image: "火海中的鞋坊定格"
+
+  # ── Vivian 在 ending_sequence 中的 NPC 条目 ──
+  vivian_ending:
+    id: 106
+    talk: vivian_ending_loop6
+    is_liar: false
+    motive: "履行 Webb 的最后委托——将录音盘碎片交给真正能用上它的人；以及，终于能够说一声谢谢"
+    mindset: "从深渊里被拉出来的疲惫与感激；没有走出 Webb 死亡的悲痛，但已经在重新站起来"
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "Morrison 已被认定失职，自己当场获释——Zack 做到了他承诺的事"
+      - "保险箱还在，Webb 给自己留了最后一件事——那些碎片，还在等她去开启"
+      - "密码是那一天——Webb 从来没有真正抛下她；她从来没有忘记这个日期"
+      - "留下经营蓝月亮——为那些还在这个城市里挣扎的人"
+    withheld_topics:
+      - "南区计划录音盘碎片的具体内容（她只知道 Webb 留下了它，不知道内容）"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry:
+      - '"Vivian 开保险箱时的状态——那个密码对她意味着什么" # 9'
+      - '"Vivian 对 Webb 偷听南区计划的知情程度——他告诉过她吗" # 8'
+      - '"Vivian 接下来打算怎么办——为什么选择留下来" # 7'
+      - '"Vivian 对 Anna 的态度——两个被这个案子伤过的女人" # 5'
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 9066001  # Vivian：保险箱的密码是那一天——我们在那家咖啡馆，Webb 说他要记住这个日期；他一直记着
+      - 9066002  # Vivian：他把这些碎片交给我，说如果他出了事，就交给真正能用到它的人——他知道自己会死
+
+
+  # ── Anna 在 ending_sequence 中的 NPC 条目 ──
+  anna_ending:
+    id: 108
+    talk: anna_ending_loop6
+    is_liar: false
+    motive: "找一个地方坐下来——她不知道去哪，但她知道不能一个人待着"
+    mindset: "丧失与麻木交织；她不知道 Jimmy 做了什么，只知道他不在了，孩子还在"
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "Jimmy 已经死了——她还没有全部明白发生了什么"
+      - "Zack 和 Emma 实现了对 Jimmy 的承诺：照顾她"
+      - "孩子——她说，孩子还会来的，她得好好活着"
+    withheld_topics: []
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry:
+      - '"Anna 对 Jimmy 的最后印象——他死前说的最后一句话" # 7'
+      - '"Anna 对未来的打算——一个人、一个孩子、这个城市" # 6'
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 9086001  # Anna："他说……'Anna，照顾好她……'——那是他最后说的话；不是说爱我，但我知道他的意思"
+
+
+# ─────────────────────────────
+# 六、疑点（Doubts）—— Loop 6 最终状态
+# ─────────────────────────────
+
+doubts:
+  # ID 规则：{unit=9}{loop}{seq} — Unit9 疑点 ID 格式 9{loop}{seq}
+  # condition type: 1=Item / 2=RelationNetwork / 3=Timeline（证词）
+  #
+  # ── F2 合并三条说明（裁决 7）──
+  # 9403（F2 旧碎片，L4 建立）+ 9607（F2b 新碎片，L6 建立）合并入 9602（父疑点，L6 建立）
+  # 运行时：9601（米勒手枪）进玩家背包后，9602 的所有 condition 满足 → 9602 点亮，9403/9607 隐入卡片内部
+  # UI 层：9403 和 9607 不独立显示，不计入 L6 进度条分母；9602 是分母第 2 项
+
+  # ── Loop 1 ──
+  - id: 9101
+    text: "23:30 的枪响真的是在 Webb 会客室发生的吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9711"  # 无硝烟手枪（分析派生）
+      - type: 3
+        param: "9031001"  # Rosa 目击证词（L1）⚠谎言
+    loop: 1
+    status: "resolved_loop3_retcon"
+    note: "L1 建立，L2 翻页时归档为'未解'，L3 疑点 9301 解决后历史面板回填真相"
+
+  # ── Loop 2 ──
+  - id: 9201
+    text: "这些照片上的人，似乎在哪里见过一样？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9201"  # 勒索照片
+      - type: 1
+        param: "9202"  # VIP 合影
+    loop: 2
+    status: "resolved_loop2"
+
+  - id: 9202
+    text: "两本账为何对不上？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9203"  # Webb 收入记录
+      - type: 1
+        param: "9204"  # Tommy 账本
+    loop: 2
+    status: "resolved_loop2"
+
+  - id: 9203
+    text: "这些东西摆在这里是做什么呢？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9205"  # 假油画
+      - type: 1
+        param: "9206"  # 花瓶现场照
+    loop: 2
+    status: "resolved_loop2"
+
+  - id: 9204
+    text: "Jimmy 很缺钱…（碎片）"
+    isFragment: true
+    unlock_condition:
+      - type: 3
+        param: "9072001"  # Jimmy 证言"很缺钱"（L2）
+    loop: 2
+    status: "merged_into_9502_loop5"
+    note: "F1 碎片；L2 建立，等 L5 Anna 证言合并为父疑点 9502"
+
+  # ── Loop 3 ──
+  - id: 9301
+    text: "Webb 的死亡时间比 23:30 的枪响更早？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9301"  # 玻璃碎片（压垃圾袋下有硝烟）
+      - type: 3
+        param: "9033001"  # Rosa 证言"11:20 倒垃圾"
+    loop: 3
+    status: "resolved_loop3"
+
+  - id: 9302
+    text: "Rosa 是被胁迫作伪证的？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9302"  # 威胁纸条（倒写 J）
+      - type: 1
+        param: "9303"  # 女儿医疗单
+    loop: 3
+    status: "resolved_loop3"
+
+  - id: 9303
+    text: "Webb 是否真的抛弃了 Vivian 沉迷 Rita？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9304"  # 保险箱字条（密码=相遇日）
+      - type: 1
+        param: "9305"  # Webb 和 Vivian 合影
+    loop: 3
+    status: "resolved_loop3"
+
+  # ── Loop 4 ──
+  - id: 9401
+    text: "Whale 雇的人就在酒吧里？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9402"  # 被撕毁的合同
+      - type: 3
+        param: "9054001"  # Tommy 证言"Rita 也是 Whale 派来的间谍"
+    loop: 4
+    status: "resolved_loop4"
+
+  - id: 9402
+    text: "Webb 的死亡时间是 23:05 到 23:20 之间吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "9064001"  # Vivian 证言"23:05 被隔门吼退"
+      - type: 3
+        param: "9043002"  # Morrison 证言"子弹射穿 Webb 再击中窗户"
+    loop: 4
+    status: "resolved_loop4"
+
+  - id: 9403
+    text: "这枚 .45 警用弹壳是从哪里来的？（碎片）"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "9401"  # .45 警用弹壳（Rosa 给的）
+    loop: 4
+    status: "merged_into_9602_loop6"
+    note: "F2 碎片；L4 建立，等 L6 米勒手枪合并为父疑点 9602"
+
+  # ── Loop 5 ──
+  - id: 9501
+    text: "Jimmy 就是 23:05 隔门吼 Vivian 的那个人？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "9075001"  # Jimmy 厨房"Don't be bothering me!"
+      - type: 1
+        param: "9505"  # 撕碎的移民申请表（爱尔兰裔身份）
+    loop: 5
+    status: "resolved_loop5"
+
+  - id: 9205
+    text: "Anna 怀孕需要一大笔钱…（碎片）"
+    isFragment: true
+    unlock_condition:
+      - type: 3
+        param: "9085001"  # Anna 证言"怀孕，需要一大笔钱"
+    loop: 5
+    status: "merged_into_9502_loop5"
+    note: "F1b 碎片；L5 建立，与 9204（F1）即时合并入父疑点 9502；UI 不独立显示"
+
+  - id: 9502
+    text: "Jimmy 家为什么这么急需钱？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "9072001"  # Jimmy 证言"很缺钱"（F1 原碎片 9204 的 condition）
+      - type: 3
+        param: "9085001"  # Anna 证言"怀孕"（F1b 碎片 9205 的 condition）
+    loop: 5
+    status: "resolved_loop5"
+    note: "F1 父疑点；9204（F1）+ 9205（F1b）隐入此疑点"
+
+  - id: 9503
+    text: "鼓点高潮掩盖了真实枪声？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9501"  # 完整节目单
+      - type: 1
+        param: "9502"  # 节目修改申请
+    loop: 5
+    status: "resolved_loop5"
+
+  - id: 9504
+    text: "Whale 和酒吧里的谁有生意往来？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9503"  # Jimmy 给 Whale 的回信
+      - type: 3
+        param: "9055001"  # Tommy 证言"知道 Whale 的只有前/现勒索人"
+    loop: 5
+    status: "resolved_loop5"
+
+  # ── Loop 6（新建）──
+  - id: 9601
+    text: "Morrison 和 Whale 有金钱关系？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9603"  # Morrison 欠疤面煞星赌债欠条
+      - type: 1
+        param: "9604"  # Morrison 借 Whale 钱的记录
+    loop: 6
+    status: "resolved_loop6"
+    resolution: "Morrison 欠 Whale $6000，欠债前约三周还了疤面煞星 $5000 赌债；于是在 Webb 案中选择快速结案压制证据，偿还 Whale 的人情"
+
+  - id: 9607
+    text: "米勒集团特制手枪从哪里来？（碎片）"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "9601"  # 米勒集团特制手枪（L5 获取，L6 开场玩家已持有）
+    loop: 6
+    status: "merged_into_9602_loop6"
+    note: "F2b 碎片；L6 建立，与 9403（F2）即时合并入父疑点 9602；UI 不独立显示，不计入分母"
+
+  - id: 9602
+    text: "这把枪和那枚弹壳对得上？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9401"  # .45 警用弹壳（F2 旧碎片 9403 的 condition）
+      - type: 1
+        param: "9601"  # 米勒集团特制手枪（F2b 碎片 9607 的 condition）
+    loop: 6
+    status: "resolved_loop6"
+    note: "F2 父疑点；9403（F2）+ 9607（F2b）隐入此疑点；L6 进度条第 2 项"
+    resolution: "米勒集团特制手枪（9601，.45 ACP，铭文'MILLER ARMS · CHI'）+ .45 弹壳（9401，弹底'MILLER ARMS'）口径与品牌完全匹配——凶器是这把手枪，不是 Vivian 的 .25 ACP 手枪"
+
+# ─────────────────────────────
+# 七、证据 ID 汇总（Loop 6 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  # Loop 6 新增证据（96xx）
+  # 继承证据状态：
+  #   9601（米勒集团特制手枪）：active，L5 post_expose 自动入玩家背包，L6 Expose R1 使用
+  #   9503（Jimmy 给 Whale 的回信）：active，L5 获得，L6 Expose R3 使用
+  #   9401（.45 警用弹壳）：active，L3 获得，L6 Expose R1 使用
+  #   9304（保险箱字条）：active，L3 获得，L6 ending_sequence Act3 使用
+
+  # ── Loop 6 新增证据 ──
+
+  - id: 9601
+    name: "米勒集团特制手枪"
+    name_en: "Miller Arms Custom Pistol"
+    type: item
+    first_scene: null  # L5 post_expose 自动入玩家背包，非本 Loop 场景首次获取
+    inherited_from: loop5_post_expose
+    pickup: true
+    status: active
+    note: "关键——疑点 9602 condition（F2b 9607 基础件）；L6 Expose R1 击穿件；真正的凶器"
+    description: |
+      .45 ACP 口径，枪身侧面铭刻"MILLER ARMS · CHI"铭文 + 米勒集团狮形印记（肉眼可读，无需仪器）；
+      这是案发当晚 Jimmy 用于枪杀 Webb 的凶器，也是 Jimmy 自杀时使用的那把枪——同一把枪，两条命。
+    metadata:
+      caliber: ".45 ACP"
+      inscription: "MILLER ARMS · CHI"
+      symbol: "米勒集团狮形印记"
+      first_inscription_visible: "L6 Expose R1（L4 Morrison 变脸时 state 里只写动作，不写铭文）"
+
+  - id: 9602
+    name: "'南区计划'录音盘碎片"
+    name_en: "'South Side Plan' Shellac Record Shards"
+    type: item
+    first_scene: "9003 Act3 保险箱"
+    trigger_event: ending_sequence_act3
+    pickup: true
+    status: active
+    note: "关键——Unit2 开门砖；跨 Chapter 持久化道具"
+    metadata:
+      physical_format: "78转虫胶唱片碎片（shellac record shards）"
+      content_keywords: ["Margaret Brennan", "南区清退"]
+      content_revealed: false
+      cross_chapter_persistent: true
+      unit2_opening_hook: true
+      obtained_via: "Vivian 用 9304 字条密码打开保险箱"
+
+  - id: 9603
+    name: "Morrison 欠疤面煞星 5000 美元赌债欠条"
+    name_en: "Morrison's $5,000 Gambling IOU"
+    type: item
+    first_scene: 9013
+    pickup: true
+    status: active
+    note: "关键——疑点 9601 condition；L6 Expose R2 击穿件（两件必须同时出示）"
+
+  - id: 9604
+    name: "Morrison 借 Whale 钱的记录"
+    name_en: "Morrison's Loan Record from Whale"
+    type: item
+    first_scene: 9013
+    pickup: true
+    status: active
+    note: "关键——疑点 9601 condition；L6 Expose R2 击穿件（两件必须同时出示）"
+
+  - id: 9605
+    name: "Morrison 藏起来的弹壳"
+    name_en: "Morrison's Hidden Bullet Casing"
+    type: item
+    first_scene: 9013
+    pickup: true
+    status: active
+    note: "场景道具——不进任何疑点 condition（裁决 8）；加固 Morrison 藏证行为；弹底印记'MILLER ARMS'"
+
+  - id: 9606
+    name: "华盛顿公园赛马场整赛季马票存根"
+    name_en: "Season Stack of Washington Park Racing Stubs"
+    type: item
+    pickup: false  # envir 类型
+    status: active
+    note: "场景道具（envir）；不作为 R2 击穿件；环境叙事"
+
+  # ── 继承证据（Loop 6 使用）──
+
+  - id: 9601_inherited
+    name: "米勒集团特制手枪"
+    inherited_from: loop5
+    status: active
+    loop6_usage: "Expose R1：出示证明真凶器为 .45 ACP + MILLER ARMS 铭文，匹配 9401 弹壳"
+
+  - id: 9503
+    name: "Jimmy 给 Whale 的回信"
+    inherited_from: loop5
+    status: active
+    loop6_usage: "Expose R3：出示证明 Whale 是幕后主使，非普通放贷者"
+
+  - id: 9401
+    name: ".45 警用弹壳"
+    inherited_from: loop3
+    status: active
+    loop6_usage: "Expose R1：出示配合 9601 形成口径+品牌双重匹配"
+
+  - id: 9304
+    name: "保险箱字条"
+    inherited_from: loop3
+    status: active
+    loop6_usage: "ending_sequence Act3：Vivian 用此字条密码提示打开保险箱取出 9602"

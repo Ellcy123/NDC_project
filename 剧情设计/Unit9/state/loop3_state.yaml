@@ -1,0 +1,652 @@
+# ============================================================
+# loop3_state.yaml — Unit9 Loop 3: 时间线与第一个真相——Rosa 是被威胁的
+# ============================================================
+#
+# 叙事功能：Vivian 化妆室对话（后反锁）+ Jimmy 销毁节目单插入剧情 +
+#           Morrison 弹道证言 + Webb 会客室深度搜证 + 一楼侧巷玻璃碎片 + 指证 Rosa（两轮）
+# 核心体验：round_1 玻璃碎片时序击穿（partial_victory → triggers_retreat），
+#           Rosa 退守"我亲眼看见 Vivian 手里有枪——有枪就是证明！"；
+#           round_2 威胁纸条+医疗单击穿（full_breakthrough），Rosa 崩溃交出 .45 弹壳
+# Loop 结束：疑点 9301/9302/9303 全部解锁；L1 疑点 9101 在历史面板回填；
+#            Rosa 由"被迫说谎者"转变为"协助者"；.45 弹壳伏笔埋下（Loop4 核心）
+#
+# 事实源：剧情设计/Unit9/讨论结论.md（权威依据，定稿 2026-04-22）
+# 前序文件：loop1_state.yaml + loop2_state.yaml
+# 生成日期：2026-04-22
+#
+# NPC 编码（沿用讨论结论 §八 NPC 出场总表）：
+#   Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, Jimmy=907, Anna=908, Whale=909
+#
+# 注：L1 疑点 9101「23:30 的枪响真的是在 Webb 会客室发生的吗？」
+#     在 L3 指证 Rosa 完成后，玩家已获得"真实枪击早于 23:20"的确认。
+#     9101 的历史面板回填（resolved_in: 3）在 L3 state 文件中以 status 字段标注。
+#     L3 state 自身不修改 9101 的 condition，历史面板回填由配置表渲染层处理。
+#
+# ──────────────────────────────────────────────────────────
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes / expose /
+#                        doubts / evidence_registry 全部存在；expose 含 target/is_liar/
+#                        player_inquiry/context/round_1/round_2/post_expose 完整；
+#                        不设 post_expose_scene——L3 结尾对话归 L4 opening 的 emma_L4_001 承载
+# B. 证据覆盖     PASS — 讨论结论 L3 全部 7 件证据（9301-9307）已分配到对应场景；
+#                        9301 玻璃碎片分配 9003（会客室）+ 9008（侧巷）双场景；
+#                        9307 Rita 照片为 envir 场景道具，pickup: false
+# C. NPC 条目     PASS — Vivian/Jimmy/Morrison/Rosa 各含 4 必填块（active_topics/
+#                        withheld_topics / player_inquiry / testimony_ids / connoisseur）；
+#                        Rosa 为 Expose 对象（is_liar:true, player_inquiry:null）
+# D. 目标对齐     PASS — goals 与讨论结论"L3 揭示：真实枪击早于 23:20 + Rosa 被胁迫 +
+#                        Webb 心里未抛弃 Vivian"一致
+# E. 信息节奏     PASS — 未泄露 L4+（Jimmy 凶手身份、.45 口径不符分析、Whale 具体身份、
+#                        Morrison 腐败、鼓点诡计、Vivian 11:05 被吼退细节）；
+#                        倒写 J 只做书写特征记录，不点明是 Jimmy；
+#                        .45 弹壳在 post_expose 只给"一枚弹壳"，口径留 L4 揭示
+# F. 鉴赏力       PASS — Vivian source + Jimmy source + Morrison source/quiz + Rosa source
+#                        节点均有内容；source/quiz 配对完整
+# G. Expose 逻辑  PASS — round_1 有 9301 玻璃碎片 + 9033001 Rosa 倒垃圾证言（时间线推理），
+#                        result=partial_victory；round_2 有 9302 威胁纸条 + 9303 女儿医疗单，
+#                        result=full_breakthrough；每轮 lie 有对应证据可反驳 ✅
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
+# ============================================================
+
+# ─────────────────────────────
+# 一、玩家视角
+# ─────────────────────────────
+
+player_context:
+  goals:
+    primary: "找到案发现场（Webb 会客室）内的关键疑点，确认 Rosa 的时间线指控是否在说谎"
+    secondary:
+      - "Webb 会客室自 Loop1 Morrison 勘验后今日开放——重新搜证，寻找 23:30 枪声不是真正案发时间的物证"
+      - "从侧巷调查窗户破碎时间，看能否与 Rosa 的倒垃圾时间形成关联"
+      - "了解 Morrison 勘验结果：子弹缺失与弹道描述"
+      - "询问 Vivian 为何咬定认罪，同时留意她的情绪状态"
+
+  known_facts:
+    # Loop1 + Loop2 post_expose_knowledge 全部累积
+    - "Webb 已经死亡（Morrison 宣告），死亡地点：蓝月亮酒吧一楼 Webb 会客室"
+    - "Vivian 手持手枪在现场，但该枪无硝烟反应——她不是刚刚开枪的那个人"
+    - "23:30 众人听到枪响，Zack 和 Emma 从歌舞厅赶到会客室"
+    - "Webb 提前雇佣 Zack：合同包含保护 Vivian + 确保其继承遗产，Morrison 同意 72h 调查期"
+    - "Rosa 的谎言1（Vivian 刚刚开枪）被推翻，但谎言2（23:30 枪声 + 只有 Vivian 在场）在 Loop1 无法反驳——时间线悬而未决"
+    - "Webb 的酒吧除私酒之外在做敲诈勒索生意（仙人跳变体手法）"
+    - "Tommy 曾经是勒索执行人，但自从 11 月中旬 Webb 沉迷 Rita 后就被换掉了"
+    - "11 月中旬之后，勒索执行人换了——新的执行人身份未知；背后有一个叫 Whale 的大人物"
+    - "Webb 11 月中旬停了勒索，想转移财产跑路——Tommy 认为他惹上了危险人物"
+    - "Vivian 曾被 Webb 要求协助勒索中产人士，她对此十分憎恨"
+    - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
+    - "Jimmy 是兼职主厨，经济困难——在 Loop2 随口说过'很缺钱'"
+
+  new_directions:
+    - direction: "进入 Webb 会客室（今日正式开放）深度搜证，重点关注窗户玻璃碎片的情况"
+      trigger: "Loop2 末 Emma 提出：Morrison 已完成勘验，会客室今日开放，时间线谜题需要物证支撑"
+    - direction: "去侧巷查看会客室窗外的玻璃碎片与垃圾袋的关系"
+      trigger: "进入会客室后发现没有玻璃的窗户，可透窗望见侧巷垃圾袋下的碎玻璃"
+    - direction: "问 Morrison 现场勘验结果——子弹缺失是怎么回事"
+      trigger: "Emma 提到 Morrison 在大堂等候，且曾说过'子弹缺失'"
+    - direction: "去化妆室和 Rosa 储藏室——Rosa 可信度低，有可能受过威胁"
+      trigger: "时间线疑问驱动；Zack 主观判断 Rosa 动机可疑"
+
+  post_expose_knowledge:
+    # Loop3 指证 Rosa 完整击穿后玩家获得的新知识
+    - "真实枪击早于 23:20：玻璃碎片压在垃圾袋下（23:20 放置），且碎片有硝烟痕迹——枪击发生在 23:20 之前"
+    - "23:30 的枪声不是真正的案发时间——案发比 23:30 早"
+    - "Rosa 是被威胁的：威胁纸条要求她 23:30 去 Webb 会客室指认 Vivian 杀了 Webb，否则杀她女儿"
+    - "威胁纸条上有倒写的 J 书写特征——胁迫者身份未知，但留下了书写破绽"
+    - "胁迫者很熟悉酒吧内部——他知道 Vivian 每晚固定在 23:30 送酒，才能设计这个嫁祸"
+    - "Rosa 给了 Zack 一枚她在现场捡到的弹壳（型号待 Loop4 确认），哀求 Zack 不要声张"
+    - "Webb 的保险箱字条记录密码是他与 Vivian 相遇的那一天——Webb 心里仍记挂着 Vivian"
+    - "Webb 与 Vivian 的合影证明两人曾有真实的情感纽带，与'沉迷 Rita 抛弃 Vivian'的表象形成对比"
+
+# ─────────────────────────────
+# 二、开篇（🎭 Emma 目标设定对话）
+# ─────────────────────────────
+
+opening:
+  type: story_dialogue  # 🎭 剧情对话，设定 Loop3 调查目标
+  location: "蓝月亮酒吧某处（Zack 和 Emma 对话）"
+  description: |
+    Loop2 指证 Tommy 结束后，Zack 向 Emma 汇报。
+    Emma 帮助 Zack 明确 Loop3 的方向：
+    Morrison 已经完成现场勘验，会客室今日开放——
+    目标是找到案发现场内的疑点，以确认 Rosa 到底有没有在说谎。
+    Emma 也提到 Morrison 在大堂等候，说了些勘验情况。
+
+  emma_loop3_open:
+    talk: emma_loop3_open
+    is_liar: false
+    motive: "整合 Loop2 调查结果，帮助 Zack 设定 Loop3 调查重心；对 Rosa 时间线的持续怀疑"
+    mindset: "清醒、聚焦，对'案发现场还有被忽视证据'充满期待"
+
+    active_topics:
+      - "Tommy 的指证结果：Webb 做勒索生意，执行人已换人（不是 Tommy），背后有 Whale"
+      - "Rosa 的时间线谎言仍未击破——会客室今日开放是机会"
+      - "Morrison 在大堂说了勘验情况：子弹缺失，弹道穿窗"
+    withheld_topics:
+      - "Rosa 收到了威胁纸条（Loop3 才揭示）"
+      - "案发现场窗户玻璃碎片的时序推理结论（Loop3 才形成）"
+      - "Jimmy 正在销毁节目单（Loop3 厨房突发事件）"
+
+    player_inquiry:
+      - "\"Loop2 结果整合——下一步调查方向\" # 7"
+      - "\"为什么要进入犯罪现场——Rosa 的时间线谎言需要物证支撑\" # 9"
+      - "\"Morrison 已经勘验完——他有没有说什么异常\" # 6"
+
+    testimony_ids:
+
+
+# ─────────────────────────────
+# 三、场景（🔓 自由探索 + 🎭 插入剧情）
+# ─────────────────────────────
+
+scenes:
+  # ── 场景 9002：Vivian 化妆室（B1）——对话后反锁 ──
+  - id: 9002
+    name: "Vivian 化妆室"
+    floor: "B1"
+    type: free_exploration  # 🔓 自由探索（对话后 post_dialogue_lock: true）
+    post_dialogue_lock: true  # 裁决12：对话结束后场景反锁，Loop3 不可再进入
+    description: |
+      Vivian 独自在化妆室。她仍然咬定自己是凶手。
+      Zack 可以进入对话，Vivian 会给出两条关键证言：
+      她对 Webb 的恨意（被迫勒索别人）以及她每晚 23:30 送酒的惯例。
+      对话结束后化妆室反锁——Loop3 内不再可进入（Loop4 再次开放）。
+      注意：Vivian 在 L3 不提"11:05 去过会客室被吼退"的细节（留到 L4 歌舞厅自由对话）。
+
+    evidence: []  # 化妆室本身无可拾取证据（保险箱字条等在 9003 会客室）
+
+    npcs:
+      vivian_loop3:
+        talk: vivian_loop3
+        is_liar: false
+        # 注：Vivian 在 Loop3 坚持认罪，但这是"自毁式认罪冲动"不是构成指证的核心谎言。
+        # L3 对 Vivian 的询问目的是获取背景证言，不是指证她。
+        motive: "咬定'我杀了 Webb'；内心痛苦但仍不肯松口；对 Zack 的询问保持防御"
+        mindset: "疲惫、紧绷，见到 Zack 有一丝希望但立刻压下去；对提到 Webb 的话题反应激烈"
+
+        active_topics:
+          - "因为 Webb 一直让她去勒索别人，她恨他（背景陈述）"
+          - "她平时都会在 23:30 给 Webb 送酒（时间惯例确认）"
+          # 注：不含 11:05 被吼退的细节——留到 L4 歌舞厅自由对话（裁决 + 讨论结论 风险 D）
+        withheld_topics:
+          - "11:05 准备去杀 Webb、被吼退的完整经过（Loop4 才说）"
+          - "她当晚听到的枪声方向（'从头顶传来'——Loop4 指证后才供述）"
+          - "她对 Whale 的了解（Loop4 才展开）"
+
+        player_inquiry:
+          - "\"Loop2 已知 Vivian 恨 Webb——她为何坚持认罪\" # 7"
+          - "\"Vivian 每晚 23:30 送酒的惯例——能确认时间节点\" # 8"
+          - "\"化妆室的 Vivian 情绪状态，是否有话没说完\" # 5"
+
+        testimony_ids:
+          - 9063001  # Vivian：因为 Webb 一直让她去勒索别人，她恨他
+          - 9063002  # Vivian：她平时都会在 23:30 给 Webb 送酒
+          - 9063003  # ⚠谎言: Vivian 坚持认罪"我真的杀了 Webb"（L4 expose R1 lie_source）
+
+
+  # ── 场景 9009：Jimmy 厨房（2F）——🔵 [U9-L3-INT-01] 插入剧情：销毁节目单 ──
+  - id: 9009
+    name: "Jimmy 厨房"
+    floor: "2F"
+    type: turn_cutscene  # 🎭 插入剧情（突发事件）
+    interlude:
+      id: "U9-L3-INT-01"
+      title: "Jimmy 销毁《芝加哥狂想曲》节目单"
+      outline_anchor: "§L3 自由探索（中）表内 '厨房 — Jimmy' 行"
+    description: |
+      突发事件：Jimmy 正在销毁《芝加哥狂想曲》节目单。
+      Zack 撞见，只来得及抢到碎片——大部分已被烧毁或撕碎。
+      碎片上只剩曲目名"芝加哥狂想""爵士风暴"，无演奏时间。
+      Jimmy 说话时有具体工作理由（"印错了，不能用"），说完就走——短促，不留给玩家追问空间。
+
+    evidence:
+      - id: 9306
+        name: "《芝加哥狂想曲》节目单碎片 / Fragmented Program (Title Only)"
+        type: item
+        pickup: true
+        note: "非 condition 挂载；L5 R1 陷阱证据（碎片无演奏时间，误用会失败）；为 L5 完整节目单 9501 的对比铺设"
+        description: "被撕碎的乐谱节目单碎片，印有《芝加哥狂想曲》和《爵士风暴》等曲目名。Jimmy 销毁过程中 Zack 仅拿到残存部分——曲目名可辨认，但演奏时间一栏已完全缺失，无法确认鼓点高潮的具体时段。"
+        analysis: null
+
+    npcs:
+      jimmy_loop3:
+        talk: jimmy_loop3
+        is_liar: false
+        # 注：Jimmy 是 Loop5 的 Expose 对象。Loop3 中他只是销毁证据，维持"普通主厨"掩护。
+        # 他的台词要有具体工作理由，说完就走，不暴露任何凶手身份相关信息。
+        motive: "销毁关键证据，维持'只是兼职主厨'的掩护；被抓到时迅速用工作理由掩饰"
+        mindset: "紧张但伪装镇定；被 Zack 撞见时措手不及，立即用'印错了'掩饰后快步离开"
+
+        active_topics:
+          - "只是一个兼职主厨，不了解勒索相关的事"
+          - "销毁节目单是因为印错了，不能用——工作正常处理"
+          # 注：不暗示凶手身份，不暗示节目单与案发时间的关联
+        withheld_topics:
+          - "爱尔兰裔身份和习语特征（Loop5 关键破绽）"
+          - "Anna 怀孕细节（Loop5 揭示）"
+          - "真实案发时间（23:00–23:05 枪声）（Loop5 核心）"
+          - "威胁 Rosa 的纸条是他写的（Loop5 揭示）"
+          - "节目单与真实案发时间的关联（Loop5 关键）"
+          - "接受 Whale 委托的细节（Loop5 揭示）"
+
+        player_inquiry:
+          - "\"Jimmy 在销毁节目单——这是什么，为什么要销毁\" # 9"
+          - "\"Jimmy 和 Webb 勒索生意有关系吗\" # 5"
+          - "\"Jimmy 在 Loop2 随口提过'很缺钱'——他目前情况如何\" # 4"
+
+        testimony_ids:
+          - 9073001  # Jimmy：只是一个主厨，不了解勒索
+
+
+  # ── 场景 9004：酒吧大堂（1F）——Morrison 对话 + ⚔️ Rosa 指证 ──
+  - id: 9004
+    name: "酒吧大堂"
+    floor: "1F"
+    type: free_exploration  # 💬 对话场景 + ⚔️ 指证（Morrison 驻留；Rosa 也被叫到大堂等候问话）
+    description: |
+      Morrison 刚完成犯罪现场勘验，在大堂等候。Rosa 也被叫到大堂，
+      局促地站在角落——Morrison 要求几名关键证人留在大堂，以便继续确认证词。
+      Zack 可从 Morrison 口中得知：现场子弹弹壳缺失、子弹是射穿 Webb 后击中窗户（弹道描述）。
+      Morrison 在 L3 以"嫌麻烦但姑且秉公"的态度呈现——不暗示被收买。
+      他说"子弹缺失"时不解释原因，语气简短。
+      任何暗示 Morrison 被收买的内容严格控制在 L4 之后。
+      ⚔️ 指证场所：Rosa 是本 Loop 的 Expose 对象（is_liar: true）。
+      指证发生在大堂——Rosa 在 Morrison 的目光下守住谎言，被击穿时无处退缩。
+
+    evidence: []  # 大堂无可拾取证据
+
+    npcs:
+      morrison_loop3:
+        talk: morrison_loop3
+        is_liar: false
+        # 注：Morrison 说"子弹缺失"是事实（现场确实缺失），他省略了"被我藏起来"的原因。
+        # L3 玩家只知"子弹缺失"，被谁拿走是 Loop6 才揭示的信息。
+        # Morrison 在 L1-L3 必须以"姑且秉公但嫌麻烦"姿态呈现，绝不透露被收买。
+        motive: "汇报勘验结果，维持职业警官形象；对子弹去向刻意不做解释"
+        mindset: "表面权威、职业；说到'子弹缺失'时措辞刻意简短，不给深入追问的空间"
+
+        active_topics:
+          - "搜查了整个酒吧，确认现场子弹弹壳缺失，也没有发现其他枪支"
+          - "子弹是射穿了 Webb 后击中了窗户（弹道证言）"
+          - "会客室现在可以进入了"
+          # 注意：不暗示 Morrison 收买、不提 .45 口径认识、不提他藏弹壳
+        withheld_topics:
+          - "他与 Whale / 米勒集团的债务关系（预先存在；Loop5-6 才揭示）"
+          - "他为何急于结案的真实动机背后的腐败因素（Loop5-6 才揭示）"
+          # 注：Morrison 尚未取走任何弹壳——那一枚 9605 是 L4 他二次勘验现场时偷偷拿走的（裁决 8）；
+          # 因此 L3 Morrison 的"弹壳缺失"证言是真实观察（Rosa 23:30 捡走了一枚，Morrison 搜到的就是这个缺失），不是藏证据
+
+        player_inquiry:
+          - "\"Morrison 勘验完现场——他发现了什么异常\" # 8"
+          - "\"子弹缺失是什么意思——能确认案发时间或凶器吗\" # 7"
+          - "\"会客室现在可以进去了吗\" # 9"
+
+        testimony_ids:
+          - 9043001  # Morrison：搜查了整个酒吧，确认子弹弹壳缺失，没有其他枪支
+          - 9043002  # Morrison：子弹是射穿了 Webb 再击中了窗户（弹道描述）
+
+      rosa_loop3:
+        talk: rosa_loop3
+        is_liar: true  # Rosa 是本 Loop 的 Expose 对象
+        player_inquiry: null  # Expose 对象不设 player_inquiry
+        motive: "迫于威胁维持'目击 Vivian 杀人'的谎言；内心极度恐惧和愧疚，但还未到崩溃临界"
+        mindset: "如履薄冰，守着谎言；在 Morrison 眼皮下更加警惕又疲惫；对自己的处境充满无助"
+
+        active_topics:
+          - "23:20 自己去外面丢过一次垃圾（主动告知——她不知道这个时间节点的推理价值）"
+          - "坚持'目击 Vivian 23:30 杀 Webb'的谎言（Expose 第一轮起点）"
+          # 注：Rosa 在此阶段主动说出倒垃圾时间，因为她不知道玻璃碎片的推理价值
+          # 不含 11:05 被吼退（她当晚不在场）、Vivian 送酒时间等细节（她只知道纸条告诉她的）
+        withheld_topics:
+          - "威胁纸条的具体内容（不主动透露，等待 Expose 第二轮击破）"
+          - "她捡到的弹壳（Expose 结束后才主动交出）"
+          - "威胁者的身份（她本人也不知道是谁写的）"
+
+        testimony_ids:
+          - 9033001  # Rosa：23:20 自己去外面丢过一次垃圾（关键时间节点证言；疑点 9301 condition）
+          - 9033002  # ⚠谎言 Rosa：大家都听到了 23:30 的枪响，没有其他枪响，当时只有 Vivian 在场，一定是她杀的
+
+
+  # ── 场景 9003：Webb 会客室（1F）——深度搜证（Loop3 开放） ──
+  - id: 9003
+    name: "Webb 会客室"
+    floor: "1F"
+    type: free_exploration  # 🔓 深度搜证（Loop3 正式开放）
+    description: |
+      Webb 死亡的案发现场，本 Loop 首次对玩家正式开放（Loop1 仅有限探索）。
+      Morrison 完成勘验后离开，Zack 可独立搜证。
+      关键发现：没有玻璃的窗户——Zack 向窗外侧巷望去，
+      见到垃圾袋正压在碎玻璃上。需要走出员工侧门到侧巷（9008）取回玻璃碎片。
+      会客室内还有保险箱字条、Webb+Vivian 合影（可拾取）、Rita 的照片（环境陈设）。
+
+    evidence:
+      - id: 9304
+        name: "保险箱字条（密码=相遇日） / Safe-Box Password Slip (= Day We Met)"
+        type: item
+        pickup: true
+        note: "关键——疑点 9303 condition；L4 R3 击穿件（反驳 Vivian 情感辩解）；Act3 Vivian 打开保险箱取出 9602"
+        description: "贴在保险箱旁的小纸条，Webb 的笔迹，写道：'密码是我们相遇的那一天。—— W'。字迹工整，像是反复写过。保险箱旁边还摆放着一张合影。"
+        analysis: null
+
+      - id: 9305
+        name: "Webb 和 Vivian 的合影 / Webb & Vivian Photo"
+        type: item
+        pickup: true
+        note: "关键——疑点 9303 condition；与保险箱字条一同揭示 Webb 心里仍记挂 Vivian"
+        description: "一张 Webb 和 Vivian 一起拍摄的合影，两人神态亲密，质感私密，摄于数年前。照片有轻微折痕，但被小心保存——Webb 一直留着它。"
+        analysis: null
+
+      - id: 9307
+        name: "Rita 的照片 / Rita's Photo"
+        type: envir
+        pickup: false
+        note: "场景道具——Webb 会客室内摆放，显示 Rita 的存在感；不是疑点 condition"
+        description: "一张年轻女性（Rita）的照片，摆放在 Webb 的桌上，位置显眼。"
+        analysis: null
+
+      - id: 9301
+        name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
+        type: item
+        pickup: true
+        note: "关键——疑点 9301 condition；L3 R1 击穿件；须从侧巷（9008）拾取，透过会客室无玻璃的窗户可先看到"
+        description: "来自 Webb 会客室窗户的玻璃碎片，散落在窗外侧巷地面。碎片压在垃圾袋的正下方。仔细检查可见碎片表面有明显的硝烟痕迹，说明子弹曾穿窗而过。垃圾袋是 Rosa 在 23:20 放下的。"
+        acquisition_note: "Zack 先从无玻璃的窗户望见垃圾袋下的碎玻璃，走出员工侧门进入侧巷（9008）后正式拾取。"
+        analysis: null
+
+    npcs: {}  # 会客室搜证阶段无 NPC 驻场
+
+  # ── 场景 9008：一楼侧巷（1F 外）——透窗/拾取玻璃碎片 ──
+  - id: 9008
+    name: "一楼侧巷"
+    floor: "1F 外"
+    type: free_exploration  # 🔓 透窗调查 + 实地拾取
+    description: |
+      从员工侧门出去的侧巷，地面有垃圾袋和碎玻璃。
+      玻璃碎片压在垃圾袋下方，是本 Loop 指证 Rosa 的核心物证。
+      拾取碎片（9301）后，时序推理成立：碎片在袋下 → 玻璃破碎早于 23:20（Rosa 倒垃圾时间）→ 真实枪击早于 23:20。
+
+    evidence:
+      # 9301 玻璃碎片在此场景最终拾取（已在 9003 会客室条目下描述，此处为获取场景记录）
+      - id: 9301
+        name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
+        type: item
+        pickup: true
+        note: "关键——同 9003 场景条目；侧巷为实际拾取位置"
+        description: "（见 9003 场景描述）"
+        analysis: null
+
+    npcs: {}  # 侧巷无 NPC
+
+  # ── 场景 9001：Rosa 储藏室（B1）——自由探索（Rosa 本人已去大堂候询） ──
+  - id: 9001
+    name: "Rosa 储藏室"
+    floor: "B1"
+    type: free_exploration  # 🔓 自由探索（仅搜证，Rosa 不在场；⚔️ 指证已移至 9004 大堂）
+    description: |
+      Rosa 本人在 L3 被 Morrison 叫到大堂候询，此刻不在储藏室——
+      但她的私人物品仍留在这里。
+      Zack 可在储藏室角落的清洁箱里找到威胁纸条（含倒写 J 书写特征）
+      及女儿医疗单——这是 L3 指证 Rosa 第二轮的核心证据。
+
+    evidence:
+      - id: 9302
+        name: "威胁纸条（倒写 J） / Threat Note (Inverted J Handwriting)"
+        type: item
+        pickup: true
+        note: "关键——疑点 9302 condition；L3 R2 击穿件；倒写 J 留作 L5 伏笔（L3 不告诉玩家这是 Jimmy）"
+        description: "Blue Moon 酒吧餐巾纸背面，廉价铅笔潦草书写，铅痕深浅不均。内容：'23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。'字迹中，字母 J 的书写方式异常——J 的弯钩朝向与正常书写相反，像是写字时习惯性地把 J 倒着写。其余字母无明显异常。"
+        analysis: null
+
+      - id: 9303
+        name: "女儿医疗单 / Daughter's Medical Bill"
+        type: item
+        pickup: true
+        note: "关键——疑点 9302 condition；L3 R2 辅助击穿件；证明威胁者掌握了 Rosa 女儿的具体病情"
+        description: "Rosa 女儿的医院账单，与威胁纸条一同夹放在储藏室角落的清洁箱里。账单显示女儿有需要持续治疗的病症，医疗费用不低。威胁者不仅知道 Rosa 有女儿，还掌握了具体的医疗状况。"
+        analysis: null
+
+    npcs: {}  # Rosa 已移至 9004 大堂候询，储藏室为纯搜证场景
+
+
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Rosa，于 9004 大堂）
+# ─────────────────────────────
+
+expose:
+  target: rosa
+  exposeNpcId: 103
+  target_talk: rosa_expose_loop3
+  is_liar: true
+  player_inquiry: null
+  total_rounds: 2
+
+  context: |
+    Zack 完成自由探索后，手握玻璃碎片（9301）、Rosa 的倒垃圾证言（9033001）、
+    威胁纸条（9302）和女儿医疗单（9303），决定正式指证 Rosa。
+    Rosa 仍然坚持"23:30 枪响时 Vivian 在会客室里"的说法。
+    本场指证分两轮：
+    - 第一轮：时间线击穿（partial_victory——Rosa 立刻退守，转向"持枪即有罪"继续维持）
+    - 第二轮：威胁纸条击穿（full_breakthrough，Rosa 崩溃）
+
+  # ── 轮次一：时间线击穿（partial_victory → triggers_retreat）──
+  round_1:
+    lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
+    lie_source: 9033002  # Rosa 的谎言证词（储藏室 Talk 阶段已收集）
+    usable_evidence:
+      - id: "9301"
+        name: "玻璃碎片（压垃圾袋下有硝烟）"
+        usage: "碎片压在垃圾袋下：玻璃破碎时间早于垃圾袋放置时间（23:20）；碎片有硝烟痕迹：来源于子弹穿窗。结合 Rosa 自己的证言（9033001），证明真实枪击发生在 23:20 之前，不可能是 23:30 的事——Rosa 声称的'23:30 枪响就是案发'在物理上无法成立。"
+      - id: "9033001"
+        name: "Rosa 证言：23:20 去外面倒过垃圾"
+        usage: "Rosa 自己提供的时间节点：垃圾袋是 23:20 放下的，而玻璃碎片压在垃圾袋下方——玻璃破碎必定早于 23:20，真实枪击不是 23:30。"
+    result: partial_victory
+    triggers_retreat: true
+    result_description: |
+      玻璃碎片 + 时间节点逻辑击穿了 Rosa 的"23:30 是案发时间"说法。
+      Rosa 明显动摇，但随即退守到新的谎言：
+      "也许我记错了时间，但我亲眼看见 Vivian 手里有枪——有枪就是证明！"
+      Rosa 的退守是从"时间论点"转向"持枪论点"——她没有真正认错，
+      而是切换到新的防线继续维持"Vivian 是凶手"。
+
+  # ── 轮次二：威胁纸条击穿（full_breakthrough）──
+  round_2:
+    lie: "也许我记错了时间，但我亲眼看见 Vivian 手里有枪——有枪就是证明！"
+    lie_source: "Rosa 在 round_1 结果中主动提出的退守谎言"
+    usable_evidence:
+      - id: "9302"
+        name: "威胁纸条（倒写 J）"
+        usage: "纸条内容直接证明 Rosa 的'目击证言'是被人威胁说出来的：'23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。'Rosa 不是真正的目击者——她是被指示去说这些话的，包括被告知去指认 Vivian。"
+      - id: "9303"
+        name: "女儿的医疗单"
+        usage: "威胁纸条的附件，证明威胁者掌握了 Rosa 女儿的具体病情信息，威胁是真实且有针对性的——Rosa 被迫配合是可信的，她没有理由无端撒谎。"
+    result: full_breakthrough
+    result_description: |
+      威胁纸条 + 女儿医疗单彻底击穿了 Rosa 的最后防线。
+      Rosa 崩溃，肩膀塌下去，开始哭泣，说出实情：
+      她是被威胁的，那个人知道她女儿的病情，她没有选择。
+      她说：写纸条的人应该很熟悉酒吧——因为纸条里利用了 Vivian 每晚送酒的习惯，
+      不熟悉酒吧内部规律的人不可能知道这个细节。
+      幕后有人刻意嫁祸 Vivian，且此人对酒吧内部情况了如指掌。
+
+  # ── 指证后剧情（Rosa 交出弹壳）──
+  post_expose:
+    description: |
+      Rosa 崩溃后，哭着向 Zack 坦白了一切。
+      讯问结束时，她从衣服口袋里拿出一枚弹壳——
+      说这是她 23:30 进入会客室后在地上捡到的，她保留下来是为了自保，
+      万一写纸条的人反悔，她可以用这个去找警察。
+      她沉默了很长时间，才把弹壳递给 Zack——像是在做一个不可撤回的决定。
+      她哀求 Zack 不要对外声张她坦白的事情，担心威胁者会伤害她的女儿。
+
+    new_evidence_gained:
+      - id: 9401
+        name: ".45 警用弹壳 / .45 ACP Police-Issue Casing"
+        type: item
+        pickup: true
+        note: "关键（Loop4 核心）——Rosa 在现场捡到的一枚弹壳，请求 Zack 保密。Loop3 阶段玩家只知'一枚弹壳'，不揭示口径；Loop4 指证 Vivian 时与 Vivian 手枪（9101）对比后锁定为 .45 ACP 警用弹壳，证明凶器不是 Vivian 的 .25 ACP 手枪"
+        description: "一枚弹壳，Rosa 称是在 Webb 死亡现场地上拾得。外观普通，金属色泽。（注：Loop4 鉴定后确认为 .45 ACP 口径，与 Vivian 的 .25 ACP 手枪不符——Loop3 阶段不揭示具体口径）"
+        metadata:
+          cross_loop_critical: true
+          loop4_critical: true
+          reveal_caliber_in_loop: 4
+
+    player_knowledge_gained:
+      - "Rosa 的'目击'是被威胁伪造的——她不是真正的目击者"
+      - "幕后有人刻意嫁祸 Vivian，且此人对酒吧内部情况了如指掌（熟悉 Vivian 每晚送酒习惯）"
+      - "真实枪击早于 23:20：玻璃碎片时序推理链成立，23:30 枪声不是案发时间"
+      - "威胁纸条上有倒写的 J 书写特征——胁迫者身份未知，但留下了书写破绽"
+      - "Rosa 给了 Zack 一枚她在现场捡到的弹壳（口径待 Loop4 确认），请求保密"
+      - "Rosa 从'被迫说谎者'变成了 Zack 的潜在协助者"
+
+# ─────────────────────────────
+# 注：L3 不设 post_expose_scene
+#     —— Rosa 指证后的对话梳理与 L4 目标设定，统一归 L4 opening 的 emma_L4_001 承载，
+#        与 L1/L2 同例，避免跨 Loop 重复对话。
+# ─────────────────────────────
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
+
+doubts:
+  # ID 编码：9{loop}{seq} — Unit9
+  # condition type: 1=Item / 2=RelationNetwork / 3=Testimony(Timeline)
+  # isFragment: false=疑点 / true=碎片
+
+  # ── 继承/进展 ──
+  - id: 9101
+    text: "23:30 的枪响真的是在 Webb 会客室发生的吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9711"   # 无硝烟的 Vivian 手枪（派生分析件）
+      - type: 3
+        param: "9031001"  # Rosa 目击证词"23:30 目睹 Vivian 开枪"（L1 谎言证词）
+    posed_loop: 1
+    resolved_loop: 3
+    status: "resolved_loop3"
+    # Loop3 指证 Rosa 完整击穿后，玩家已获得"真实枪击早于 23:20"的确认。
+    # 9101 在历史面板回填已解决状态——23:30 不是真正的案发时间。
+    # 注：L3 state 自身不修改 9101 的 condition，历史面板回填由配置表渲染层处理（见文件头注释）。
+
+  - id: 9204
+    text: "Jimmy 很缺钱…（碎片）"
+    isFragment: true
+    unlock_condition:
+      - type: 3
+        param: "9072001"  # Jimmy 证言"很缺钱"（L2 无意随口）
+    posed_loop: 2
+    status: "fragment_ongoing_loop3"
+    # 跨 Loop 碎片，不翻页。Loop5 与 Anna 证言 9085001 合并为父疑点 9502。
+
+  # ── Loop3 新增疑点 ──
+  - id: 9301
+    text: "Webb 的死亡时间比 23:30 的枪响更早？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9301"   # 玻璃碎片（压垃圾袋下有硝烟）——物证
+      - type: 3
+        param: "9033001"  # Rosa 倒垃圾 23:20 证言——时序锚点
+    posed_loop: 3
+    status: "unlocked_loop3"
+    # 推理链：垃圾袋 23:20 放置 → 碎片在袋下 → 玻璃破碎早于 23:20 →
+    #         碎片有硝烟 → 来自子弹穿窗 → 真实枪击早于 23:20
+
+  - id: 9302
+    text: "Rosa 是被胁迫作伪证的？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9302"   # 威胁纸条（倒写 J）
+      - type: 1
+        param: "9303"   # 女儿医疗单
+    posed_loop: 3
+    status: "unlocked_loop3"
+    # 两件物证交叉：纸条证明威胁存在，医疗单证明威胁有针对性——Rosa 被迫伪证
+
+  - id: 9303
+    text: "Webb 是否真的抛弃了 Vivian 沉迷 Rita？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9304"   # 保险箱字条（密码=相遇日）
+      - type: 1
+        param: "9305"   # Webb 和 Vivian 的合影
+    posed_loop: 3
+    status: "unlocked_loop3"
+    # 密码=两人相遇日 + 合影保留多年：Webb 心里从未真正放下 Vivian；
+    # 为 Loop4 R3 击穿 Vivian"Webb 沉迷 Rita 抛弃我"情感辩解保留
+
+# ─────────────────────────────
+# 六、证据 ID 汇总（Loop3 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  # Loop3 = 93xx 系列（裁决1：Unit9 使用 9xxx 独立 ID 段）
+  # 继承 Loop1：9101（Vivian 手枪）/ 9103（Webb 委托协议书）/ 9711（无硝烟手枪分析派生）
+  # 继承 Loop2：9201–9207
+  # Loop3 新增：9301–9307；post_expose 新增 9401（登记 L4 段，L3 post_expose 获得）
+
+  - id: 9301
+    name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
+    type: item
+    first_scene: 9003  # 会客室透窗望见，侧巷（9008）正式拾取
+    pickup: true
+    note: "关键（Loop3 核心）——指证 Rosa round_1 核心证据；疑点 9301 condition；时间线推理击穿 23:30 谎言"
+
+  - id: 9302
+    name: "威胁纸条（倒写 J） / Threat Note (Inverted J Handwriting)"
+    type: item
+    first_scene: 9001
+    pickup: true
+    note: "关键（Loop3 核心）——指证 Rosa round_2 核心证据；疑点 9302 condition；倒写 J 留作 Loop5 伏笔"
+
+  - id: 9303
+    name: "女儿医疗单 / Daughter's Medical Bill"
+    type: item
+    first_scene: 9001
+    pickup: true
+    note: "关键（Loop3 核心）——指证 Rosa round_2 辅助证据；疑点 9302 condition；证明威胁的真实性"
+
+  - id: 9304
+    name: "保险箱字条（密码=相遇日） / Safe-Box Password Slip (= Day We Met)"
+    type: item
+    first_scene: 9003
+    pickup: true
+    note: "关键——疑点 9303 condition；Loop4 R3 击穿件（反驳 Vivian 情感辩解）；Act3 Vivian 用此密码取出 9602"
+
+  - id: 9305
+    name: "Webb 和 Vivian 的合影 / Webb & Vivian Photo"
+    type: item
+    first_scene: 9003
+    pickup: true
+    note: "关键——疑点 9303 condition；与保险箱字条共同揭示 Webb 心里仍记挂 Vivian"
+
+  - id: 9306
+    name: "《芝加哥狂想曲》节目单碎片 / Fragmented Program (Title Only)"
+    type: item
+    first_scene: 9009
+    pickup: true
+    note: "非 condition 挂载；Loop5 R1 陷阱证据（碎片无演奏时间，误用 R1 会失败）"
+
+  - id: 9307
+    name: "Rita 的照片 / Rita's Photo"
+    type: envir
+    first_scene: 9003
+    pickup: false
+    note: "场景道具——Webb 会客室内摆放，环境叙事，不作为疑点 condition"
+
+  - id: 9401
+    name: ".45 警用弹壳 / .45 ACP Police-Issue Casing"
+    type: item
+    first_scene: null  # 非场景拾取，Loop3 指证结束后 Rosa 主动给出
+    given_by: "rosa（post_expose 阶段）"
+    pickup: true
+    note: "关键（Loop4 核心）——Loop3 玩家只知'一枚弹壳'，口径未揭示；Loop4 与 Vivian 手枪（9101）对比后确认为 .45 ACP；证明凶器不是 Vivian 的 .25 ACP 手枪"
+    metadata:
+      cross_loop_critical: true
+      loop4_critical: true
+      reveal_caliber_in_loop: 4
+      note: "ID 登记在 94xx 段（Loop4），但物理获取时间在 Loop3 post_expose"

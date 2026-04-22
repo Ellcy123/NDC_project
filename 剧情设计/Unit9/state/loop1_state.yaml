@@ -1,0 +1,360 @@
+# ============================================================
+# loop1_state.yaml — Unit9 Loop 1: 枪响开场 / 指证 Rosa（新手教程）
+# ============================================================
+#
+# 叙事功能：激励事件（Webb 死亡）+ 玩家入场 + 新手教程级指证
+# 核心体验：假胜利——打穿 Rosa 谎言1，但谎言2（时间线）在 loop1 无法反驳
+# Loop 结束：换取 72 小时调查窗口，Vivian 禁足（假胜利本质）
+#
+# 事实源：讨论结论.md（剧情设计/Unit9/讨论结论.md）
+# 生成日期：2026-04-22
+#
+# ──────────────────────────────────────────────────────────
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
+# B. 证据覆盖     PASS — 讨论结论 loop1 所有证据（9101 小手枪/9711 无硝烟派生/9103 委托协议书）已分配到场景
+# C. NPC 条目     PASS — Rosa/Vivian/Morrison/Emma 各含 active_topics/withheld_topics/player_inquiry/testimony_ids/connoisseur 4 必填块
+# D. 目标对齐     PASS — goals 与讨论结论"指证 Rosa 教学失败"目标一致
+# E. 信息节奏     PASS — 未泄露 loop2+ 内容（勒索生意/Jimmy/Whale/Morrison腐败/Rosa被胁迫均未出现）
+# F. 鉴赏力       PASS — Vivian 枪型口径差异、Morrison 懒惰秉公基线、Emma 新闻直觉各含 source；Emma post_expose 含 quiz
+# G. Expose 逻辑  PASS — round_1 谎言有 9711 可反驳；round_2 usable_evidence: [] 教学失败设计符合讨论结论
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
+# ============================================================
+
+# ─────────────────────────────
+# 一、玩家视角
+# ─────────────────────────────
+
+player_context:
+  goals:
+    primary: "阻止 Morrison 逮捕 Vivian——反驳 Rosa 的当场指控，为 Webb 案争取调查时间"
+    secondary:
+      - "理解 Webb 为何如此紧急雇佣 Zack 担任私家侦探"
+      - "弄清 Vivian 为何手持手枪、为何半醉失神无法回应追问"
+
+  known_facts:
+    # Loop1 是首轮，已知事实来自开篇硬切展示的信息
+    - "Webb 已经死亡（Morrison 宣告），死亡地点：蓝月亮酒吧一楼会客室（1F 南侧）"
+    - "Vivian 手持手枪在现场，Zack 和 Emma 到达时 Rosa 也在场"
+    - "23:30，众人听到枪响，Zack 和 Emma 冲进会客室"
+    - "Webb 提前雇佣 Zack：合同包含保护 Vivian + 确保其继承遗产的协议"
+    - "Zack 被酒保拒于门外过，Webb 的邀请让 Emma 认为今晚会有新闻"
+    - "Morrison 今晚在酒吧喝酒，听到枪响后醉醺醺地赶到现场，一嫌麻烦一边还是姑且秉公接案"
+
+  new_directions:
+    - direction: "调查 Vivian 手中手枪是否开过枪"
+      trigger: "Vivian 手持手枪的现场画面——Rosa 以此指控"
+    - direction: "核实 Webb 提前立协议保护 Vivian 的真实意图"
+      trigger: "Webb 委托协议书出现，且 Webb 已死"
+
+  post_expose_knowledge:
+    # 指证 Rosa 结束后玩家获得的新知识
+    # 注意：这是"假胜利"——loop1 没有真正救出 Vivian，只换到 72h 调查期
+    - "Vivian 手中手枪无硝烟反应——她不是刚刚开枪的那个人（但不排除另有一把枪）"
+    - "Rosa 的谎言1（Vivian 刚刚开枪）被推翻，Morrison 指出硝烟可能消散，Rosa 的话已打折扣"
+    - "谎言2（23:30 枪响 + 只有 Vivian 在场）在本 Loop 无法反驳——时间线谜题留待后续"
+    - "Webb 委托协议书证明 Webb 早知道自己有被害风险，Morrison 认可了 72 小时调查期"
+    - "Webb 紧急雇佣存在'保险倾向'——他提前规划了 Vivian 的继承权，意味着他预感到自己会死"
+    - "Emma 提出核心疑点：Webb 自己真正怀疑的凶手到底是谁？"
+    - "Vivian 被 Morrison 要求禁足"
+
+# ─────────────────────────────
+# 二、开篇（硬切剧情）
+# ─────────────────────────────
+
+opening:
+  type: cutscene  # 🎬 硬切，无玩家操作
+  scene_id: 9004
+  description: |
+    Zack 和 Emma 站在蓝月亮酒吧大门口聊天——酒保刚刚拒绝让 Zack 进入，
+    Emma 凭新闻嗅觉感觉今晚会有大事，以"King Oliver sent us."接头暗语引路入场。
+    两人进入大堂（场景 9004 酒吧大堂），边聊边观看舞台表演。
+    23:30，会客室方向传来枪响。Zack 和 Emma 从歌舞厅赶到会客室——到达时，
+    Vivian 手持一把小手枪怔愣在原地（半醉失神，眼神涣散），Rosa 也在场。
+    随后，同样听到枪响的 Morrison 醉醺醺地赶到查看尸体——他平时就常来蓝月亮喝酒，
+    和 Webb 关系还行；得知是 Webb 死亡，他一边嫌麻烦一边还是姑且秉公办事，
+    宣布 Webb 已经死亡，并表示要逮捕 Vivian。
+
+  emma_001:
+    talk: emma_001
+    is_liar: false
+    motive: "新闻嗅觉驱动，对今晚的舞会抱有期待；同时是 Zack 进入上流俱乐部的引路人"
+    mindset: "职业兴奋感，边聊边观察，即将切换到记者状态"
+
+    # ── 1. NPC 已知信息 ──
+    active_topics:
+      - "Zack 被 Webb 紧急雇佣（Emma 是引路人，但合同细节不清楚）"
+      - "酒保不让 Zack 进酒吧，Emma 以'King Oliver sent us.'接头引路入场"
+      - "Webb 是蓝月亮酒吧老板，今晚举办舞会"
+      - "23:30 枪响，Vivian 手持手枪，Rosa 在场"
+      - "Morrison 宣告 Webb 死亡"
+    withheld_topics:
+      - "Webb 委托协议书的具体内容（保护 Vivian + 继承遗产）"
+      - "手枪是否有硝烟反应"
+      - "Rosa 指控的真实动机"
+      - "勒索生意（loop2 才揭示）"
+      - "Jimmy 存在及其真相（loop5 才揭示）"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry:
+      - "Emma 作为引路人，Zack 需要解释自己与 Webb 的合同关系" # 6
+      - "Emma 的新闻嗅觉——她觉得今晚会发生什么大事" # 5
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+
+
+# ─────────────────────────────
+# 三、场景（有限自由探索）
+# ─────────────────────────────
+
+scenes:
+  # ── 场景 9003：Webb 会客室（现场搜证）──
+  - id: 9003
+    name: "Webb 会客室"
+    type: limited_exploration  # ⏸️ 有限自由探索（Morrison 管控现场）
+    description: |
+      Webb 死亡现场——Morrison 控制进入权限。
+      Vivian 仍持枪站在原地，身上带有酒气，眼神涣散——她在表演前后喝了不少酒，
+      此刻半醉失神，偶尔喃喃自语却没说完整的话，对 Rosa 的指控和 Zack 的追问基本没有反应。
+      Rosa 在场，玩家在自由探索阶段即可通过与 Rosa 对话获取其谎言证词（谎言1 + 谎言2）。
+      玩家可以检查 Vivian 手中的小手枪（可分析硝烟），并找到 Webb 的委托协议书。
+    notes: |
+      信息流管控要点：
+      - Rosa：active_topics 包含谎言1（持枪指控）和谎言2（23:30 时间线），自由探索阶段即可提取证词
+      - Vivian：酒后迷糊 + 失语状态，对追问无清晰回应——"认罪"行为延后到 loop2
+      - Morrison：管控现场，姑且秉公，绝无被收买暗示
+
+    evidence:
+      - id: 9101
+        name: "Vivian 的小手枪"
+        type: item
+        pickup: true
+        note: "关键——L1 R1 击穿前置；可分析硝烟反应"
+        description: "Colt Vest Pocket Model 1908（.25 ACP 口径），枪柄象牙贴片，女士随身护身枪"
+        analysis: "枪管内无硝烟残留、无黑化痕迹——该枪近期未被击发（派生 ID: 9711）"
+
+      - id: 9711
+        name: "无硝烟的手枪（分析派生）"
+        type: item
+        pickup: false  # 分析 9101 后自动获得
+        note: "关键——L1 R1 击穿件；疑点 9101 condition"
+        description: "枪管内无硝烟残留、无黑化痕迹——该枪近期未被击发"
+
+      - id: 9103
+        name: "Webb 委托协议书"
+        type: item
+        pickup: true
+        note: "关键——L1 指证结束剧情换取 72h 调查期；非指证击穿件"
+        description: "Underwood No. 5 打字机打印 + Webb 本人钢笔签名；Zack 负责保护 Vivian 的安全并确保继承遗产"
+
+    npcs:
+      # ── Vivian（酒后迷糊 / 懵）──
+      vivian_001:
+        talk: vivian_001
+        is_liar: false
+        motive: "酒后迷糊——她本带着杀意和小手枪前来，推门发现 Webb 已死，酒精与震惊让她分不清'是不是自己刚刚杀了他'；人来了之后只剩恍惚和懵"
+        mindset: "半醉、失神——站在原地摇晃，眼神涣散，听到追问也只是茫然地看着对方；偶尔喃喃自语却没说完整的话；对 Rosa 的指控没有反应，因为她自己也无法确定发生了什么"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "酒后迷糊的失语状态（她有酒气、眼神涣散、偶尔喃喃自语却没说完整）——她自己也不确定是否杀了 Webb"
+        withheld_topics:
+          - "她带着自己的枪前来的真相（loop4 才承认）"
+          - "23:05 她第一次来会客室被吼退的经过（loop4 才揭示）"
+          - "她本来也想杀 Webb 的计划（带着杀意携枪前来）"
+          - "勒索细节（仙人跳变体）——loop2 触碰，loop4 完整揭示"
+          - "船票和杀人计划"
+          - "Don't be bothering me! 的细节（loop4/loop5 关键伏笔）"
+          - "清晰的现场经过陈述（loop1 酒醉失语，loop2 酒醒后才能组织完整陈述且以认罪谎言形式）"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Vivian 手持枪——她是否开枪了" # 9（她自己也不确定，需通过硝烟反应间接判断）
+          - "Vivian 为何如此恍惚、懵然——她是醉了，还是受了惊吓" # 8（酒气/失神本身是观察线索）
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 9061001  # Vivian 身份：蓝月亮酒吧的歌女
+
+
+      # ── Rosa（当庭指控 / Expose 对象）──
+      rosa_001:
+        talk: rosa_001
+        is_liar: true  # Rosa 是本 Loop 的 Expose 对象
+        motive: "奉匿名威胁者指令，在现场指认 Vivian 为凶手（威胁者以她女儿的安危要挟）"
+        mindset: "恐惧和愧疚并存，说着谎言但内心已经开始动摇"
+        player_inquiry: null  # Expose 对象不设 player_inquiry
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "当场指控（谎言1）：Vivian 手里有枪，她一定是刚刚杀了 Webb"
+          - "时间线指控（谎言2）：23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
+          # 自由探索阶段玩家即可通过对话提取谎言1+谎言2的证词；纸条威胁和弹壳仍属 withheld
+        withheld_topics:
+          - "23:20 倒垃圾的时间节点（loop3 关键）"
+          - "匿名威胁纸条细节（loop3 才揭示）"
+          - "女儿医疗单（loop3 才出现）"
+          - "捡到的 .45 弹壳（loop3 post_expose 才给出）"
+          - "对案发真实时间的知情（她其实知道不是 23:30——loop3 核心）"
+
+        # ── 2. 玩家询问意图（is_liar: true，player_inquiry: null）──
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 9031003  # Rosa 身份：蓝月亮酒吧的清洁工
+          - 9031001  # ⚠谎言: Rosa 谎言1——Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
+          - 9031002  # ⚠谎言: Rosa 谎言2——23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
+
+
+      # ── Morrison（宣告死亡 / 接案警官）──
+      morrison_001:
+        talk: morrison_001
+        is_liar: false
+        motive: "平时常来蓝月亮喝酒，和 Webb 关系还行；今晚醉醺醺不想干活，发现是 Webb 死亡后，一边嫌麻烦一边还是姑且秉公接案——loop1 阶段尚未暴露与 Whale 的关联"
+        mindset: "醉意未消、有些散漫，但职业本能驱动他接案；倾向于接受最简单的解释（Vivian 是凶手）来快速了事；他在 loop1 是懒惰，不是正义感"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "宣布 Webb 死亡"
+          - "接案程序：表示将逮捕嫌疑人 Vivian"
+          - "暂时承认 Zack 的调查委托（若 Zack 出示协议书）"
+          - "R1 击穿后的反驳：硝烟可能消散，不能完全证明枪没被打过"
+        withheld_topics:
+          - "与 Whale / 米勒集团的债务关系（预先存在的旧账；loop5-6 才揭示）"
+          - "他急于结案的懒惰动机背后还有腐败因素（loop5-6 才揭示）"
+          # 注：Morrison 在 L1 尚未对现场做细致勘验，没有自己的弹壳（那一枚是 L4 现场二次勘验时偷偷拿走的——裁决 8）；
+          # 因此 L1 Morrison 没有"藏弹壳""子弹缺失"的观察可以 withheld
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Morrison 是负责此案的警官——Zack 必须向他证明调查权" # 8
+          - "Morrison 为何这么快就要逮捕 Vivian（Rosa 的话可靠吗？）" # 7
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 9041004  # Morrison 身份：警察侦探
+          - 9041001  # Morrison 宣告：Webb 死亡，Vivian 为主要嫌疑人
+          - 9041002  # Morrison 宣告：准备逮捕 Vivian
+          - 9041003  # Morrison（指证后）：因 Zack 揭穿 Rosa + 委托协议书，同意给 72 小时；要求 Vivian 禁足
+
+
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Rosa）
+# ─────────────────────────────
+
+expose:
+  target: rosa
+  target_talk: rosa_expose_001
+  is_liar: true
+  player_inquiry: null
+
+  context: |
+    Rosa 当众指控 Vivian 是凶手，Morrison 准备逮捕 Vivian。
+    Vivian 沉默不反驳，呈现准备认罪的姿态。
+    Zack 必须在这里反击 Rosa 的指控，否则调查权就此终止。
+
+  # ── 轮次一：击破硝烟谎言（有局限） ──
+  round_1:
+    lie: "Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb"
+    lie_source: 9031001  # Rosa 的谎言1证词
+    usable_evidence:
+      - id: 9711
+        name: "无硝烟的手枪（分析派生）"
+        用途: "枪管无硝烟残留，证明该枪近期未被击发，Rosa 所谓'刚刚开枪'不成立"
+    result: |
+      Rosa 的谎言1被推翻：Vivian 手中的枪根本没有开过。
+      Morrison 表情微变，但随即指出"硝烟可能消散"，不再那么肯定——R1 打破但有局限。
+      Rosa 立刻补充新的指控（谎言2），事件进入第二轮。
+      # 风险 A（讨论结论）：Morrison 的"硝烟消散"反驳要带一丝不确定口气，保留玩家"我是对的但还不够"的情绪
+
+  # ── 轮次二：时间线谜题（新手教程失败点）──
+  round_2:
+    lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
+    lie_source: 9031002  # Rosa 的谎言2证词
+    usable_evidence: []  # 刻意为空——loop1 无证据可反驳
+    result: tutorial_failure
+    # tutorial_failure 说明：
+    # 这是整个游戏"时间线玩法"的新手教程版本。
+    # 玩家在此处无论使用什么证据都无法击穿 Rosa 的时间线论点。
+    # 设计意图：让玩家第一次体验"打不穿"的挫败感，
+    # 为后续 loop3 的时间线谜题（玻璃碎片 + Rosa 倒垃圾时间）埋下悬念。
+    # 游戏继续：挫败不等于结束——Zack 转而出示 Webb 委托协议书换取 72 小时调查期。
+
+  # ── 🔵 [U9-L1-INT-01] 插入剧情：指证结束剧情（72h 调查期换取）──
+  post_expose:
+    interlude:
+      id: "U9-L1-INT-01"
+      title: "指证结束剧情——72h 调查期换取"
+      outline_anchor: "§L1 指证结束剧情"
+    description: |
+      尽管谎言2无法被击穿，Zack 揭穿谎言1已使 Rosa 的可信度大打折扣。
+      Zack 出示 Webb 委托协议书（9103）——证明 Webb 预感被害并提前立协议保护 Vivian。
+      Morrison 看在"Zack 揭穿了 Rosa 部分谎言 + Webb 生前委托"的份上，
+      同意给 Zack 72 小时时间进行调查，暂缓逮捕 Vivian；但要求 Vivian 禁足酒吧。
+      # 风险 B（讨论结论）：此处需要 Emma 帮忙换到 72h 的"小正向锚点"，避免玩家带受挫情绪进 L2
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Webb 提前立协议 = 他预感自己会被害（保险倾向），调查 Webb 的目标人物很有价值"
+      - "时间线谜题悬而未决——loop1 的调查目标由此成立"
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
+# 注：L1 指证结束后玩家拿到 72h 并带着"Webb 真正怀疑的凶手是谁"的核心悬念进入 L2；
+#     该大门口梳理对话统一归 L2 opening 的 emma_l2_open 承载，L1 不重复安排 post_expose_scene。
+
+doubts:
+  # 疑点 ID 编码：9{loop}{seq} — Unit9=9, Loop1=1
+  # condition type: 1=Item / 2=RelationNetwork / 3=Timeline
+  # isFragment: false = 疑点 / true = 碎片
+  # 一对一挂载检查：9711 和 9031001 在 6-Loop 全局中只被本疑点引用
+
+  - id: 9101
+    text: "23:30 的枪响真的是在 Webb 会客室发生的吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "9711"       # 无硝烟的手枪（分析派生）——物证
+      - type: 3
+        param: "9031001"    # Rosa 谎言1证词"Vivian 刚刚开枪"——时间线维度
+    posed_loop: 1
+    resolved_loop: 3
+    status: "unlocked_after_expose_round1"
+    # 时序检查：9711 和 9031001 均在 Loop1 获得/触发，posed_loop=1 ≤ 使用它们的最早 expose Loop（L1 R1）—— PASS
+
+# ─────────────────────────────
+# 七、证据 ID 汇总（Loop1 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  # Loop1 = 91xx 系列
+  - id: 9101
+    name: "Vivian 的小手枪"
+    type: item
+    pickup: true
+    first_scene: 9003
+    note: "关键——L1 R1 前置；可分析硝烟反应，分析后派生 9711"
+
+  - id: 9711
+    name: "无硝烟的手枪（分析派生）"
+    type: item
+    pickup: false
+    first_scene: 9003
+    note: "关键——L1 R1 击穿件；疑点 9101 condition（type=1）"
+
+  - id: 9103
+    name: "Webb 委托协议书"
+    type: item
+    pickup: true
+    first_scene: 9003
+    note: "关键——Webb 和 Zack 签字的委托协议；确立 Zack 合法调查身份 + 换取 72h 调查期；体现 Webb 保险倾向；非指证击穿件"
+
+  # ── 以下为 Loop1 结束时自动确认的信息（非证据道具，记录供后续引用）──
+  # 9711_source: 通过分析 9101 获得
+
+# ============================================================
+# validation_status: PASS
+# ============================================================

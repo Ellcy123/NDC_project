@@ -32,9 +32,13 @@ disallowedTools: Write, Edit, Bash
    - 角色不能引用尚未发生的事件
    - NPC 不能提及玩家尚未发现的证据
 
-3. **疑点解锁条件审计**：
+3. **疑点解锁条件审计**（对照 `docs/游戏系统/核心玩法/疑点系统.md`）：
    - 疑点所需的所有证据在该 Loop 及之前的 Loop 中可获取
    - 不依赖后续 Loop 才能获得的信息
+   - **一对一挂载审计**：跨 6 个 state 文件扫描所有 DoubtConfig.condition，同一证据/证言 ID 只能被引用一次——发现多处引用立即报 P0
+   - **时序硬约束审计**：对每件在 ExposeData 里被使用的证据，定位它所属的疑点/碎片——该疑点/碎片的 Loop ≤ 该证据最早指证 Loop；违例导致流程卡死，必报 P0
+   - **condition 件数审计**：疑点 1–2 件，碎片严格 1 件，≥ 3 件必报 P1
+   - **碎片合并审计**：父疑点 condition 是子碎片 condition 并集，合并 Loop ≥ 所有子碎片首现 Loop，禁止碎片+碎片=碎片三层结构
 
 4. **known_facts 累积一致性**：
    - 前序 Loop 的 post_expose_knowledge 正确流入当前 Loop 的 known_facts
