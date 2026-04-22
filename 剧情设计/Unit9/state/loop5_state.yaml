@@ -51,7 +51,7 @@
 #                        emma_opening(quiz) / emma_010(quiz)  source/quiz 配对完整
 # G. Expose 逻辑  PASS — R1 鼓点时间线（9501+9502，陷阱9306无演奏时间）；
 #                        R2 口音身份（9505+9075001，陷阱9207缺钱≠身份维度，4060401仅对话叙事）；
-#                        R3 动机三件组合（9402+9085001+9055001，讨论结论裁决2保留三件）；
+#                        R3 动机三件组合（9402+9085001+9054002，讨论结论裁决2保留三件）；
 #                        R4 叙事收尾（narrative_closure，非指证操作）；
 #                        Vivian 证言 9064001 已正确排除在 requiredItems 之外
 # ──────────────────────────────────────────────────────────
@@ -275,8 +275,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9055001  # Tommy（L5 追加）：知道 Whale 存在的只有前勒索人和现勒索人——注意与 9054002（L4 同内容）是不同 ID
-          - 9055002  # Tommy：对 Morrison 强押 Vivian 表示同情；恳请 Zack 查明真相还 Vivian 清白（情感/托付性证言）
+          # Tommy"知道 Whale 的只有前/现勒索人"复用 L4 9054002，不在本 Loop 重复声明
 
 
   # ── 场景 9009：Jimmy 厨房（口音暴露）──
@@ -483,7 +482,7 @@ expose:
     - 9504 Berlitz 英语练习书（Jimmy 家 envir 观察——不是手持物证；将在 post_expose_dialogue 使用）
     - 9505 Anna 的合法移民申请通过通知（Jimmy 家卧室梳妆抽屉发现；附 Jimmy 配偶非配额申请资格书）
     - 9085001 Anna 证言：怀孕 + 急需大笔钱（Jimmy 家获得）
-    - 9055001 Tommy 追加证言：知道 Whale 的只有前/现勒索人（Tommy 办公室获得）
+    - 9054002 Tommy 证言：知道 Whale 的只有前/现勒索人（L4 已获得，L5 继续使用）
     - 9402 被撕毁的合同（L4 发现，Whale 委托某人）
     - 9302 Rosa 威胁纸条（L3 取得，字迹三物之一）
     - 9064001 Vivian 证言：23:05 在门口听到"Don't be bothering me!"（L4 指证后取得，对话叙事引用，不进 requiredItems）
@@ -546,7 +545,7 @@ expose:
     requiredItems:
       - 9402  # 被撕毁的合同——Whale 花大笔钱委托酒吧内部某人，字迹与纸条一致，签约方是 Jimmy
       - 9085001  # Anna 证言——怀孕急需大笔钱；Jimmy 接受委托的根本动机
-      - 9055001  # Tommy 追加证言——知道 Whale 的只有前/现勒索人，Jimmy 就是现勒索人
+      - 9054002  # Tommy 证言——知道 Whale 的只有前/现勒索人（L4 获得），Jimmy 就是现勒索人
     # 注：三件组合，讨论结论裁决 2——Expose.requiredItems 不受疑点 condition 件数上限约束
     trap_evidence:
       - id: 9403
@@ -558,8 +557,8 @@ expose:
       - id: 9085001
         name: "Anna 证言：我们的孩子快出生了，家里需要一大笔钱"
         usage: "Anna 亲口说出：家里急需大笔钱来迎接孩子的到来，爱尔兰裔在芝加哥的处境本就艰难——这正是 Jimmy 为何要接受 Whale 委托的根本动机"
-      - id: 9055001
-        name: "Tommy 追加证言：知道 Whale 存在的只有前/现勒索人"
+      - id: 9054002
+        name: "Tommy 证言：知道 Whale 存在的只有前/现勒索人（L4 获得）"
         usage: "Tommy 确认：这家酒吧里知道 Whale 存在的人，只有前勒索人和现勒索人；Jimmy 接了 Whale 的委托，说明他就是那个知道 Whale 的现执行人"
     result: expose_complete
     result_description: |
@@ -979,7 +978,7 @@ doubts:
       - type: 1
         param: "9503"  # Jimmy 给 Whale 的回信（物品 ID 9503）
       - type: 3
-        param: "9055001"  # Tommy"知道 Whale 的只有前/现勒索人"（L5 追加证言，唯一归属）
+        param: "9054002"  # Tommy"知道 Whale 的只有前/现勒索人"（L4 取得，L5 使用）
     # 注：疑点 9504 的 condition param=9503 是物品 ID（Jimmy 回信），不是疑点 ID 9503
     status: "visible_L5_opening_unlock_on_evidence"
     resolution: "Whale 与酒吧里的 Jimmy 有直接生意往来——Jimmy 是 Whale 雇佣的执行人，9503 回信证明两者直接联络关系"

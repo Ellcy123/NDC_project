@@ -305,7 +305,7 @@ scenes:
 
         testimony_ids:
           - 9033001  # Rosa：23:20 自己去外面丢过一次垃圾（关键时间节点证言；疑点 9301 condition）
-          - 9033002  # ⚠谎言 Rosa：大家都听到了 23:30 的枪响，没有其他枪响，当时只有 Vivian 在场，一定是她杀的
+          # Rosa"23:30 枪响谎言"复用 L1 9031002，本 Loop 不重复声明
 
 
   # ── 场景 9003：Webb 会客室（1F）——深度搜证（Loop3 开放） ──
@@ -432,7 +432,7 @@ expose:
   # ── 轮次一：时间线击穿（partial_victory → triggers_retreat）──
   round_1:
     lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
-    lie_source: 9033002  # Rosa 的谎言证词（储藏室 Talk 阶段已收集）
+    lie_source: 9031002  # Rosa 的谎言证词（L1 已收集，与 L3 Rosa 陈述同内容，直接复用）
     usable_evidence:
       - id: "9301"
         name: "玻璃碎片（压垃圾袋下有硝烟）"

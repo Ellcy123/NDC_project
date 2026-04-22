@@ -23,10 +23,8 @@
 #   Emma=902 / Rosa=903 / Morrison=904 / Tommy=905 / Vivian=906 / Jimmy=907 / Anna=908 / Whale=909
 #
 # Testimony ID 格式：{unit=9}{npc_code=2位}{loop=1位}{seq=3位} = 7 位（Unit8 同款）
-#   Morrison: 9046xxx → 9046001、9046002、9046003
-#   Vivian:   9066xxx → 9066001、9066002
-#   Anna:     9086xxx → 9086001
-#   Whale:    9096xxx → 9096001（插入剧情，不作 condition）
+#   Morrison: 9046xxx → 9046001、9046002、9046003（R1/R2/R3 指证谎言）
+#   （Vivian/Anna/Whale 的 ending 台词属 🔵 插入剧情，不作可提取证词）
 #
 # 关键继承状态（loop5 末）：
 #   Jimmy：已自杀，确认真凶（is_dead: true）
@@ -250,7 +248,7 @@ scenes:
         - "挂断电话不等 Zack 回答——Whale 不与 Zack 平等对话，他只是'宣告'"
         - "Unit9 结束后 Whale 的形象依然是'空头像'——玩家知道有这个人，但不知道他是谁"
       testimony_ids:
-        - 9096001  # Whale（电话）："我在看你们能走多远"——不作为任何疑点 condition；只作插入剧情证言
+        # Whale 的电话台词属 🔵 phone_call_event 插入剧情，不作为可提取证词
 
     evidence:
       - id: 9603
@@ -581,8 +579,7 @@ ending_sequence:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 9066001  # Vivian：保险箱的密码是那一天——我们在那家咖啡馆，Webb 说他要记住这个日期；他一直记着
-      - 9066002  # Vivian：他把这些碎片交给我，说如果他出了事，就交给真正能用到它的人——他知道自己会死
+      # Vivian 在 ending_sequence Act3 的台词属 🔵 插入剧情，不作为可提取证词
 
 
   # ── Anna 在 ending_sequence 中的 NPC 条目 ──
@@ -607,7 +604,7 @@ ending_sequence:
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 9086001  # Anna："他说……'Anna，照顾好她……'——那是他最后说的话；不是说爱我，但我知道他的意思"
+      # Anna 在 ending_sequence 的台词属 🔵 插入剧情，不作为可提取证词
 
 
 # ─────────────────────────────
@@ -799,7 +796,7 @@ doubts:
       - type: 1
         param: "9503"  # Jimmy 给 Whale 的回信
       - type: 3
-        param: "9055001"  # Tommy 证言"知道 Whale 的只有前/现勒索人"
+        param: "9054002"  # Tommy 证言"知道 Whale 的只有前/现勒索人"（L4 取得）
     loop: 5
     status: "resolved_loop5"
 
