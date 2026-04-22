@@ -24,14 +24,13 @@
 #                        turn_cutscene / post_expose_scene / doubts / evidence_registry 全部存在；
 #                        S405 新增 Morrison 大厅场景（两阶段：指证前/指证后）含 pre_turn_trigger
 # B. 证据覆盖     PASS — 大纲 loop4 所有证据（14xx 系列 4 件 + 继承证据状态变化）已分配
-# C. NPC 条目     PASS — Emma/Tommy/Vivian/Morrison/Morrison_S405 各含 4 必填块；
+# C. NPC 条目     PASS — Emma/Tommy/Vivian/Morrison/Morrison_S405 各含 3 必填块；
 #                        Vivian 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与大纲"说服 Vivian 不再认罪"目标一致；Expose 基调"救"
 # E. 信息节奏     PASS — 解锁：弹壳型号(.45 ACP)、Whale 主使怀疑（标注 unconfirmed）、
 #                        Vivian 无罪、"Don't be bothering me!"、Morrison 异常；
 #                        锁定：Jimmy 真凶/口音谜题（loop5）、Morrison 藏弹壳（loop6）、
 #                        米勒集团完整身份链（loop5-6）；Rita 作为 Whale 渗透酒吧的内线已在 8005（Tommy 办公室）由 Tommy 指认
-# F. 鉴赏力       PASS — emma_007(quiz)/tommy_002(source)/vivian_003(source)/
 #                        morrison_003(source)/morrison_s405(source)/emma_008(quiz)，
 #                        source/quiz 配对完整
 # G. Expose 逻辑  PASS — round_1 弹壳口径 vs 手枪口径不符；round_2 Whale 有动机有能力；
@@ -153,14 +152,7 @@ opening:
       - 8024001  # Emma：loop4 的核心任务是救 Vivian，不是审讯她——她的谎言是自毁，不是恶意
       - 8024002  # Emma：先去搞清楚弹壳的型号，这是说服 Vivian 的关键突破口
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_007_03"
-        question: "Rosa 在 loop3 供述：嫁祸者'很熟悉酒吧'。她具体是根据什么信息得出这个结论的？"
-        answer: "因为威胁纸条利用了'Vivian 每晚固定在 23:30 给 Webb 送酒'这个细节——不熟悉酒吧内部习惯的人不可能知道（来源：loop3 指证 Rosa round_2 后的供述）"
-        note: "承接 loop3 emma_006 的 source 节点，此处出考题；引导玩家在 loop4 自由探索中关注酒吧内部人员"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 三、场景（🔓 自由探索（下））
 # ─────────────────────────────
@@ -297,15 +289,7 @@ scenes:
           - 8054002  # Tommy：Webb 让我去收勒索时被人打了一枪（只打大腿），那是 Whale 的警告；那次之后就由别人接手了（不点名）
           - 8054003  # Tommy 正式指认：'Webb 勒索过很多像 Whale 这样的人……但如此难以对付的，他还是头一个。连这间酒吧，也被他派来的人渗透了。'；Zack 追问'是谁'，Tommy：'是 Rita。'（基于经验的明确指认，非单纯主观猜测）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Tommy 描述被枪击的经历时，语气里有一丝恐惧——'那次之后就由别人接手了'，他没有说那个人是谁，只是住了口"
-            note: "后续 loop5 考题：Tommy 在 loop4 说'之后由别人接手'——那个接手的人是谁？（指向 Jimmy，loop5 揭示）"
-          - type: source
-            content: "Tommy 说出'是 Rita'时，不是在猜测——这是他多年在 Webb 身边观察的结论。他在 Zack 强调'这对 Vivian 脱罪关键'后才松口，意味着他一直知道，只是不敢说出来"
-            note: "本 Loop 或 loop5-6 考题：Tommy 指认 Rita 的依据是什么？（他观察 Rita 作为客人接近 Webb 的方式——她问的问题太精准、来的时机太巧，不像普通光顾的客人）"
-
+        # ── 4.  ──
   # ── 场景 S403：Vivian 化妆间（loop4 首次开放）──
   - id: 8010
     name: "Vivian 化妆间"
@@ -399,12 +383,7 @@ scenes:
           - 8064002  # Vivian——《芝加哥狂想曲》的鼓点很强，是 Webb 最喜欢的一首曲子；我当时希望他能听到，和我最后共舞一曲，可他没开门，没听到（⭐ loop5 时间线伏笔）
           - 8064003  # Vivian——关于 Rita 的态度：她让 Webb 变了，我已经无所谓了（内有对真相的迷惑）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Vivian 说'他没开门、没听到'时，语气不是控诉，而是遗憾——她在说的是她杀人计划前的最后一个关于情感的动作（她去找他，是想最后见一面，不是要杀他）"
-            note: "后续 loop5 考题：Vivian 在 loop4 说 Webb 当时'没开门'——实际上 Webb 已经在 23:00-23:05 被杀；那个叫她'别打扰我'的人是谁？（爱尔兰口音谜题伏笔）"
-
+        # ── 4.  ──
   # ── 场景 S405：酒吧大厅（Morrison 等待区 / 转折剧情触发入口）──
   - id: 8007
     name: "酒吧大厅（Morrison 等待区）"
@@ -479,12 +458,7 @@ scenes:
           - 8044003  # Morrison（阶段 A）：Vivian 案件的官方立场——她有动机，案件已经很清楚了
           # 注：阶段 B 触发后直接进入 turn_cutscene，不生成新证词条目
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Morrison 在阶段 A 随口问'你查到什么了'时，语气看似漫不经心，但眼神里有一丝审视——他其实在评估 Zack 的调查是否已经触碰到了不该碰的东西"
-            note: "后续 loop5-6 考题：Morrison 在 loop4 大厅等待时究竟在担心什么？（与米勒集团/Whale 的关联，loop5-6 揭示）"
-
+        # ── 4.  ──
 # ─────────────────────────────
 # 四、指证（⚔️ Expose：Vivian）
 # ─────────────────────────────
@@ -681,12 +655,7 @@ turn_cutscene:
       - 8044001  # ⚠谎言: Morrison 宣告——Vivian 有杀人动机和计划，她的手枪就是真正的凶器
       - 8044002  # Morrison 行动记录：拿走 8103（委托协议书），夺走 8308（弹壳），宣布逮捕 Vivian
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: source
-        content: "Morrison 看到 .45 弹壳时，脸色骤变——那不是普通警官面对证据的反应，而是认出了某种他不希望被发现的东西"
-        note: "后续 loop5-6 考题：Morrison 为什么看到 .45 弹壳会脸色骤变？（与米勒集团 / Whale 的关联，loop5-6 揭示）"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 六、Part1 转折后（loop4 结尾对话 / loop5-6 目标确立）
 # ─────────────────────────────
@@ -738,14 +707,7 @@ post_expose_scene:
       - 8024101  # Emma：Morrison 对 .45 弹壳的反应不正常——他认出了那个弹壳背后的东西
       - 8024102  # Emma：下一步：找到真正的凶器，然后击破 Morrison——这是 loop5-6 的核心目标
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_008_04"
-        question: "Vivian 在 loop4 指证后说，23:10 她在门口听到'Don't be bothering me!'——这句话有什么异常之处？"
-        answer: "如果 Webb 已经在 23:00-23:05 被杀（loop3 8201 确认真实枪击早于 23:20），那么 23:10 在门口说话的人不可能是 Webb——那个声音是谁的？（伏笔：loop5 Jimmy 爱尔兰口音谜题）"
-        note: "考查玩家是否将 8201（真实枪击时间早于 23:20）和'Don't be bothering me!'的时间节点（23:10）进行了交叉推理；引导进入 loop5 的核心谜题"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 七、疑点（Doubts）
 # ─────────────────────────────

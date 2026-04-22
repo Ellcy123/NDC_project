@@ -40,14 +40,13 @@
 #                        9504 → Jimmy 家（envir，不拾取）；9505 → Jimmy 家（拾取）；
 #                        9506 → Tommy 办公室（生锈的 .45 警用弹壳，Tommy 信任后主动交出，纯情感信物不挂疑点）；
 #                        9601 → post_expose（suspect_suicide_sequence 遗留）
-# C. NPC 条目     PASS — Emma（opening）/ Tommy / Jimmy / Anna 各含 4 必填块；
+# C. NPC 条目     PASS — Emma（opening）/ Tommy / Jimmy / Anna 各含 3 必填块；
 #                        Jimmy Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与"指证 Jimmy 是真凶、证明 Vivian 清白"一致；进度条分母=4
 # E. 信息节奏     PASS — 揭示：Jimmy 真凶 / 鼓点诡计 / 爱尔兰口音 / 动机（Anna + Whale）/
 #                        倒写 J 胁迫 Rosa；
 #                        锁定：Morrison 腐败具体链（L6）/ 米勒集团铭文解读（L6）/ 南区计划（L6）；
 #                        9601 手枪转入背包但铭文细节描述在 L6 state 展开
-# F. 鉴赏力       PASS — tommy_003(source) / jimmy_001(source) / anna_001(source) /
 #                        emma_opening(quiz) / emma_010(quiz)  source/quiz 配对完整
 # G. Expose 逻辑  PASS — R1 鼓点时间线（9501+9502，陷阱9306无演奏时间）；
 #                        R2 口音身份（9505+9075001，陷阱9207缺钱≠身份维度，4060401仅对话叙事）；
@@ -244,8 +243,8 @@ scenes:
           headstamp: "MILLER ARMS"
 
     npcs:
-      tommy_003:
-        talk: tommy_003
+      tommy_004:
+        talk: tommy_004
         is_liar: false
         motive: "对 Vivian 被 Morrison 强押感到心痛却无力；不主动递出证据，但在 Zack 搜到时坦然放行——他愿意 Zack 看到他留下的这份'本来就是要给你的'东西"
         mindset: "沉静、疲惫；对 Zack 有信任和歉意（L2 没配合）；对 Vivian 的遭遇深感同情；对 Jimmy 有隐约猜测但不敢点名——他知道这太危险了"

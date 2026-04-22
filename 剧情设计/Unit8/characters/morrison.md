@@ -96,14 +96,14 @@ Morrison 的选择：
 2. 老练的掩饰能力（散漫背后是计算）：
   - 二十年的办案经验让他擅长掌控场面
   - loop1 的"醉醺醺"是状态，不妨碍他评估现场
-  - loop4 阶段 A 在大厅"随口闲聊"，实际是在评估 Zack 调查到了哪一步（参见 morrison_s405 鉴赏力 source）
+  - loop4 阶段 A 在大厅"随口闲聊"，实际是在评估 Zack 调查到了哪一步（参见 morrison_s405 ）
   - 他知道销毁物证风险更大，所以只是"藏起来"——这是一种老警察的自我保护本能
 
 3. 内心有良知，但来得太晚：
   - Morrison 不是一个彻底的恶人
   - loop6 第二轮退守时语气里有"疲惫，而不是愤怒"——他没有真正想陷害 Vivian，只是想让一切安静下去
   - 被逼到极限时，他握着笔停顿了很久，没有争辩，把名字签了上去
-  - "他是一个典型的'被环境腐蚀的普通人'，而不是主动作恶者"（loop6 morrison_expose 鉴赏力 source）
+  - "他是一个典型的'被环境腐蚀的普通人'，而不是主动作恶者"（loop6 morrison_expose ）
 
 4. 被绝望吞噬的挣扎者：
   - Morrison 不是因为贪婪而腐败，是因为走投无路
@@ -226,7 +226,7 @@ Morrison 是 Whale 的棋子，但他从未与 Whale 正面接触——loop6 是
 - Morrison 是蓝月亮所在街区的治安负责人，平时常来蓝月亮喝酒，和 Webb 关系还行
 - loop1 开场他是醉醺醺赶到现场的——他今晚在吧台喝酒，听到枪响才过来查
 - 这个"醉酒但秉公"的初始状态是重要的性格基线：loop1 的 Morrison 还没有完全变成 Whale 的工具，他只是被动偷懒，倾向于最简单的解释快速了事
-- loop5-6 他选择压案、强押 Vivian，与 loop1 那个"嫌麻烦但还是姑且秉公"的 Morrison 形成鲜明对比——Whale 介入（通过借款）改变了他的选择（loop1 morrison_001 鉴赏力 source）
+- loop5-6 他选择压案、强押 Vivian，与 loop1 那个"嫌麻烦但还是姑且秉公"的 Morrison 形成鲜明对比——Whale 介入（通过借款）改变了他的选择（loop1 morrison_001 ）
 
 与 Rosa 的关系：（0417 版调整）
 
@@ -272,7 +272,7 @@ withheld（loop1）：
 - 他为何急于结案的真实动机（loop5-6 才揭示）
 - 子弹缺失的信息（loop3 他才口述）
 
-叙事要点：loop1 Morrison 是性格基线。他的"醉酒但秉公"是 loop5-6 对照伏笔的 source 节点（morrison_001 鉴赏力）——此时他还有职业操守的底色，loop5-6 的主动吹黑哨才显得更有冲击力。
+叙事要点：loop1 Morrison 是性格基线。他的"醉酒但秉公"是 loop5-6 对照伏笔的 source 节点（morrison_001 ）——此时他还有职业操守的底色，loop5-6 的主动吹黑哨才显得更有冲击力。
 
 loop3 — 勘验结果汇报，刻意简短（morrison_002，场景 s302）
 
@@ -290,7 +290,7 @@ withheld（loop3）：
 - 他藏了 .45 弹壳的事实（loop6 才揭示；玩家只知子弹缺失，不知被谁拿走）
 - 与 Whale / 米勒集团的借贷关系（loop5-6 才揭示）
 
-叙事要点：说"子弹缺失"时语气过于简短——像是有意不让对话深入（morrison_002 鉴赏力 source）。表层伏笔是为指证 Rosa 后 Rosa 提供弹壳埋下铺垫；深层伏笔是 Morrison 自己藏了弹壳（loop6 揭示）。
+叙事要点：说"子弹缺失"时语气过于简短——像是有意不让对话深入（morrison_002 ）。表层伏笔是为指证 Rosa 后 Rosa 提供弹壳埋下铺垫；深层伏笔是 Morrison 自己藏了弹壳（loop6 揭示）。
 
 loop4 — 大厅等待与 Part1 转折（morrison_s405 + morrison_003_turn，场景 s405）
 
@@ -299,11 +299,11 @@ loop4 — 大厅等待与 Part1 转折（morrison_s405 + morrison_003_turn，场
 阶段 A（指证 Vivian 完成前）：
 - 在大厅等候，微醺，随口追问 Zack 的调查进展
 - 声称"Vivian 案件已经很清楚了"
-- 实际在评估 Zack 调查是否触碰了不该碰的东西（morrison_s405 鉴赏力 source）
+- 实际在评估 Zack 调查是否触碰了不该碰的东西（morrison_s405 ）
 
 阶段 B（指证 Vivian 完成后，强制剧情 turn_cutscene）：
 - Zack 出示 .45 弹壳（1308）汇报推理时，Morrison 脸色骤变
-- 那不是普通警官面对证据的反应，而是认出了与米勒集团相关的东西（morrison_003 鉴赏力 source）
+- 那不是普通警官面对证据的反应，而是认出了与米勒集团相关的东西（morrison_003 ）
 - 当机立断：拿走 Webb 委托协议书（1103，状态→confiscated_by_morrison）
 - 夺走弹壳（1308，状态→confiscated_by_morrison，loop6 在其家中重新发现为 1601）
 - 宣布 Vivian 有动机和计划，强押 Vivian 回警局
@@ -379,7 +379,7 @@ Morrison 不在场，但他的家说出了他不肯说的话：
 电话突发事件——Whale 打来电话（此时 Morrison 不在场，是 Zack 接的）：
 - Whale 知道 Zack 在查案，知道 Jimmy 已经死了
 - 他不是来威胁，而是说："证明给我看——这个城市里，是否真正还存在正义。"
-- 这句话与他雇佣 Jimmy 杀人的行为之间，有一道很深的裂缝（s601 phone_call_event 鉴赏力 source）
+- 这句话与他雇佣 Jimmy 杀人的行为之间，有一道很深的裂缝（s601 phone_call_event ）
 
 情感重点：
 - Morrison 的家是他内心的剖面：廉价的家具，皱巴巴的欠条，藏在抽屉深处的弹壳

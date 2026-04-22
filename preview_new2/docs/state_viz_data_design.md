@@ -15,7 +15,7 @@
 |-----------|-------|-------|-------|
 | `player_context.goals` | primary + secondary | primary + secondary | chapter_goal + primary + secondary |
 | `opening.characters` | 直接列表 | 直接列表 | 直接列表 |
-| NPC `connoisseur` 字段 | 总是空数组 `[]` | 有 source/quiz 节点 | 有 source/quiz 节点，含 trigger_mode |
+| NPC `]` | 有 source/quiz 节点 | 有 source/quiz 节点，含 trigger_mode |
 | NPC `awareness` 字段 | 不存在 | 存在（L3+） | 存在 |
 | `sudden_event` 字段 | 不存在 | 存在（如 L3 Mickey 登场） | 不存在 |
 | `events` 字段（过渡事件） | 不存在 | 不存在 | 存在 |
@@ -141,7 +141,6 @@ interface OpeningNpc {
   knows: string[];
   doesNotKnow: string[];
   lie: NpcLie | null;
-  connoisseur: ConnoisseurNode[]; // Unit1 始终为 []
 }
 
 interface SuddenEvent {
@@ -170,8 +169,7 @@ interface Scene {
   // NPC 列表（一个场景可能有多个 NPC，但通常只有一个）
   npcs: SceneNpc[];
 
-  // 场景级鉴赏力节点（Unit2 Leonard办公室 的 connoisseur 挂在场景而非 NPC 上）
-  connoisseur: ConnoisseurNode[];
+  // 场景级）
 }
 
 type SceneType =
@@ -248,8 +246,7 @@ interface SceneNpc {
   // 可提取证词
   testimonyIds: number[];
 
-  // 鉴赏力节点
-  connoisseur: ConnoisseurNode[];
+  // 
 }
 
 interface NpcLie {
@@ -342,7 +339,7 @@ interface SpecialEvent {
 }
 ```
 
-### 2.11 鉴赏力节点
+### 2.11 节点
 
 ```typescript
 interface ConnoisseurNode {
@@ -418,7 +415,7 @@ npc_score(scene) =
     (scene.npcs 非空 ? 5 : 0)
   + (any npc.isLiar ? 15 : 0)
   + (any npc.testimonyIds 非空 ? 8 : 0)
-  + (any npc.connoisseur 非空 ? 4 : 0)  // 鉴赏力有额外互动空间
+  + (any npc.
 
 doubt_proximity_bonus(scene) =
     count(doubts 中 unlockCondition 引用本场景证据) × 10
@@ -696,7 +693,7 @@ InfoLoad(scene) =
   + prop_evidence_count × 0.3
   + npc_is_liar_count × 4.0
   + npc_testimony_count × 2.0
-  + npc_connoisseur_count × 1.5
+  + npc_
   + known_facts_referenced × 1.0
     // known_facts_referenced = 本场景的 newDirections 中引用了多少已知事实
 
@@ -771,7 +768,7 @@ distribution_score(loop) =
 | A10 | expose.round 中有 auto_followup_evidence | "双阶段指证" | 指证轮次节点 |
 | A11 | doubt.clear == false（Unit1 特有） | "遗留疑点，转至后续Loop" | 疑点节点 |
 | A12 | sudden_event 存在 | "突发事件：{name}" | 开篇区域 |
-| A13 | NPC 的 isLiar=true 且 connoisseur 非空 | "说谎者含鉴赏力节点，注意不要泄露谎言" | 证据关联图 NPC 节点 |
+| A13 | NPC 的 isLiar=true 且 ，注意不要泄露谎言" | 证据关联图 NPC 节点 |
 | A14 | 某证据出现在多个 expose 轮（usedInExposeRounds.length >= 2） | "跨轮复用证据" | 证据节点 |
 | A15 | 某关键证据（category='key'）未出现在任何 expose 轮 usable_evidence 中 | "未用于指证的关键证据，检查是否遗漏" | 证据节点 |
 

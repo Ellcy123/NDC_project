@@ -113,13 +113,13 @@ L1是新章节开篇，玩家对本章案件一无所知。
 - 叙事时间点: pre-expose
 - 结构: 线性引导
 - 功能: Emma冷静引导Zack质疑Morrison判断,启动独立搜证
-- 鉴赏力: source——验尸官选举制度(L4 quiz#105考)
+- 
 
 ### Foster — foster_001
 - 场景: SC3005
 - 叙事时间点: pre-expose(独立于指证)
 - 功能: 提供专业法医分析(酒精0.25%,指甲组织)
-- 鉴赏力: source——1920年代血迹鉴定局限(L6 quiz#101考)
+- 
 
 ### Morrison — loop1_morrison (Expose)
 - 场景: SC3004指证

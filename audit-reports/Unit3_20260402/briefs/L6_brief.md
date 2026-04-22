@@ -81,11 +81,11 @@ L1-L5全部。关键新增: Bernard系统诱导,Mary去银行问"投保人死了
 ### Foster(L6)
 - active: 0.25%完整生理影响,承认原报告用词保守
 - 说谎: 无(选择说出完整真相)
-- 鉴赏力: quiz#101(血迹鉴定局限)
+- 
 
 ### Margaret(L6)
 - active: Mary被打碎片记忆,三次报警,Emily
-- 鉴赏力: quiz#103(社区沉默+法律不管家门里)
+- 
 
 ### Helen(L6)
 - active: Mary的苦,自己童年

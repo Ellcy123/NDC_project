@@ -357,7 +357,6 @@ AskUserQuestion：
    - 跳过字段清单
    - 后续手动步骤提示：
      - Talk → `python AVG/对话配置工作及草稿/sync_to_json.py`
-     - 鉴赏力 / Expose → 对应 skill 或手动
      - Unity 同步 → 独立流程（preview → Unity 转换）
 
 ## 不要做的事
@@ -382,6 +381,5 @@ AskUserQuestion：
 
 1. Talk 配置：`python AVG/对话配置工作及草稿/sync_to_json.py`
 2. 指证（Expose）：手动或专用 skill
-3. 鉴赏力节点：暂未纳入配置表
 4. preview → Unity 同步：独立流程（含字段映射 + 拆表 + Unity-flavored JSON 输出）
 5. `_all_tables.xlsx` 同步：手动

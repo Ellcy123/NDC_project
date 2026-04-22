@@ -1,6 +1,6 @@
 ---
 name: team-loop
-description: "编排整个 Loop 的端到端设计：证据 → 指证 → state → 对话 → 鉴赏力 → 全面审查。用于规划整个 Loop。"
+description: "编排整个 Loop 的端到端设计：证据 → 指证 → state → 对话 → 全面审查。用于规划整个 Loop。"
 argument-hint: "[Loop 标识，如 'Unit3 L5']"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
@@ -42,15 +42,7 @@ spawn `state-architect` agent：
 
 呈现所有对话草稿给用户审阅。
 
-### Phase 5: 鉴赏力节点设计
-
-spawn `connoisseur-designer` agent：
-- 提供：state 文件、对话草稿、鉴赏力设计文档
-- 输出：source/quiz 配对设计
-
-使用 AskUserQuestion 让用户确认。
-
-### Phase 6: 全面审查
+### Phase 5: 全面审查
 
 并行 spawn 4 个审查员：
 - `dialogue-reviewer`：对话质量

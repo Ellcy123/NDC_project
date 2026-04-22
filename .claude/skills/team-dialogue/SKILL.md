@@ -363,8 +363,7 @@ AskUserQuestion：
 
 1. **sync 到 JSON**：`python sync_to_json.py {Unit}/Loop{N}_生成草稿.md`（Phase 2，用户触发）
 2. **Repeat 对话生成**：另开 skill
-3. **鉴赏力 source/quiz 配对**：走 `/connoisseur` 或 `team-loop` Phase 5
-4. **State → 配置表 JSON**：走 `/state-to-table`
+3. **State → 配置表 JSON**：走 `/state-to-table`
 
 ---
 

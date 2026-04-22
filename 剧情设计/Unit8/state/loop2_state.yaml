@@ -17,10 +17,9 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
 # B. 证据覆盖     PASS — 大纲 loop2 所有证据已分配到场景（7 个可拾取 + 3 个环境不可拾取 + 1 个弹壳占位）
-# C. NPC 条目     PASS — Vivian/Jimmy/Tommy/Emma 各含 4 必填块；Tommy 为 Expose 对象（is_liar:true, player_inquiry:null）
+# C. NPC 条目     PASS — Vivian/Jimmy/Tommy/Emma 各含 3 必填块；Tommy 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与大纲"调查 Webb / 指证 Tommy"目标一致
 # E. 信息节奏     PASS — 未泄露 loop3+(玻璃碎片/Rosa纸条/弹壳/Whale细节/Jimmy真凶/米勒集团)；"大人物"仅暗示未点名；11:10 Vivian 时间线细节保留至 loop4
-# F. 鉴赏力       PASS — source/quiz 节点完整配对，3 个 source + 1 个 quiz
 # G. Expose 逻辑  PASS — round_1/2/3/4 各有独立证据组或证言，维度互不重叠；round_1 用 Vivian 证言，需自由探索阶段已获取（S201 testimony_ids 含 8062002）
 # ──────────────────────────────────────────────────────────
 #
@@ -118,14 +117,7 @@ opening:
       - 8022001  # Emma：两人进入酒吧，开始调查——确认 loop2 调查目标
       - 8022002  # Emma：如果 Webb 预感到自己会死，他怀疑的人一定在酒吧里
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_003_04"
-        question: "loop1 的委托协议书里，除了保护 Vivian，还有什么特别的条款让 Emma 觉得 Webb '有保险倾向'？"
-        answer: "协议书要求 Zack 确保 Vivian 在 Webb 死后能顺利继承遗产——Webb 雇佣合同时已经预想到自己会死（来源：loop1 8103 证据）"
-        note: "考查玩家是否从 loop1 带来了对'保险倾向'的理解，引导进入 loop2 的调查动机"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 三、场景（🔓 自由探索）
 # ─────────────────────────────
@@ -200,12 +192,7 @@ scenes:
           - 8062003  # Vivian——平时都会在 23:30 给 Webb 送酒
           - 8062004  # Vivian 动摇：听到 Webb 要她继承遗产的消息后，沉默，说要再想想
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Vivian 说 Webb 让她勒索的都是'孤立的中产人士'（银行家、工程师等），不是有背景的大人物"
-            note: "后续 loop4 考题：为何 Vivian 说帮 Webb 勒索 Whale 的'不是她'——她只接触中产目标"
-
+        # ── 4.  ──
   # ── 场景 S202：厨房 ──
   - id: 8003
     name: "厨房"
@@ -286,12 +273,7 @@ scenes:
           - 8072002  # Jimmy：对 Webb 的死深感抱歉（语气愧疚但不解释原因）
           - 8072003  # Jimmy：自己很缺钱，副业多是为了补贴家用
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Jimmy 对 Webb 死亡表示的'抱歉'语气，和一般的员工/同事对老板遇难的反应不一样——更像是当事人的愧疚"
-            note: "后续 loop5 考题：Jimmy 在 loop2 对 Webb 死亡'深感抱歉'——他究竟为什么抱歉（真凶伏笔）"
-
+        # ── 4.  ──
   # ── 场景 S203：Webb 办公室 ──
   - id: 8004
     name: "Webb 办公室"
@@ -415,12 +397,7 @@ scenes:
           - 8052004  # ⚠谎言: Tommy——自己只是按 Webb 指示记账，不参与具体业务（谎言4，Expose round_4 由 8207 击破）
           - 8052006  # Tommy 暗示 Webb 惹上了大人物（loop2 Expose 结束后自然流露，非单独证词；指向 Whale 类型的大人物，是疑点 8203 解锁 condition）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Tommy 说起 23:30 枪声来自'酒吧南方'时，用词非常精确——他明确指向了厨房和会客室方向"
-            note: "后续循环考题：Tommy 指出枪声来自南方，但真实枪击发生在 23:00（被鼓点掩盖），23:30 是假枪声。Tommy 对方向的陈述是否准确？（辅助时间线推理）"
-
+        # ── 4.  ──
   # ── 场景 S205：歌舞厅 ──
   - id: 8006
     name: "歌舞厅"
@@ -588,12 +565,7 @@ post_expose_scene:
       - 8022101  # Emma：Webb 是做勒索生意的，但谁是现在的执行人——这才是关键
       - 8022102  # Emma：Rosa 的时间线说法一直没能反驳，下一步要重新检查案发现场
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: source
-        content: "Emma 指出：Tommy 说'大人物'时神情有异，他心中有猜测但不敢说——这个大人物一定不是普通人"
-        note: "后续 loop4 考题：Tommy 心中猜测的'大人物'是谁？（指向 Whale）"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 六、疑点（Doubts）
 # ─────────────────────────────

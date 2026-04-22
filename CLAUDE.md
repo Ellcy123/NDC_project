@@ -65,7 +65,6 @@ These docs describe game mechanics in detail. Read the relevant one BEFORE worki
 | Working with items, analysis, or combine logic | `docs/游戏系统/核心玩法/搜证与物品系统.md` |
 | Modifying DoubtConfig or doubt unlock conditions | `docs/游戏系统/核心玩法/疑点系统.md` |
 | Modifying ExposeData or writing Expose dialogue | `docs/游戏系统/核心玩法/指证系统.md` |
-| Writing connoisseur (鉴赏力) branch nodes | `docs/游戏系统/核心玩法/鉴赏力系统.md` + `docs/游戏系统/核心玩法/鉴赏力节点设计规则.md`（设计规则）；使用 `/connoisseur` slash command |
 | Need full end-to-end reasoning chain overview | `docs/游戏推理机制完整规则.md` |
 
 ---
@@ -229,7 +228,7 @@ copy /Y "D:\NDC_project\preview_new2\data\table\*.json" "D:\NDC\Assets\table\"
 | 单场景/单 NPC 设计 | `/team-design` |
 | State 已定稿，整 Loop 补对话 | `/team-dialogue` |
 | 完整指证设计 | `/team-expose` |
-| 整个 Loop 规划（证据→指证→state→对话→鉴赏力→审查） | `/team-loop` |
+| 整个 Loop 规划（证据→指证→state→对话→审查） | `/team-loop` |
 | Unit 大纲 → 6 个 state 文件 | `/unit-state-generator` |
 | State YAML → 配置表 JSON（非 Talk/Expose） | `/state-to-table` |
 | 全流程体验审计 | `/playthrough-audit Unit1`（~15 分钟，输出交互式 HTML 报告） |

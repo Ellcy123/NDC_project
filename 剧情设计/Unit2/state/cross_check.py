@@ -501,7 +501,7 @@ validation_status:
   npc_entries: "PENDING"
   goal_alignment: "PENDING"
   info_pacing: "PENDING"
-  connoisseur: "PENDING"
+   "PENDING"
   expose: "PENDING"
 '''
         content = content.rstrip() + '\n' + vs_block

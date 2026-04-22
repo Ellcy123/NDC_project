@@ -14,10 +14,9 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts 全部存在
 # B. 证据覆盖     PASS — 大纲 loop1 所有证据（手枪/委托协议书）已分配到场景；8102/8103 合并为 8103
-# C. NPC 条目     PASS — Rosa/Vivian/Morrison/Emma 各含 4 必填块；Morrison 新增 connoisseur source
+# C. NPC 条目     PASS — Rosa/Vivian/Morrison/Emma 各含 3 必填块
 # D. 目标对齐     PASS — goals 与大纲"指证 Rosa"新手教程目标一致
 # E. 信息节奏     PASS — 未泄露 loop2+ 内容；Vivian 沉默状态符合信息节奏（"认罪"行为延后到 loop2 自由探索）
-# F. 鉴赏力       PASS — .45/.25 口径差异设为 source；Morrison 醉酒但秉公新增 source（loop5-6 对照伏笔）
 # G. Expose 逻辑  PASS — round_1 lie 表述已统一为"杀了 Webb"；round_2 仍无证据可反驳（tutorial_failure）
 # ──────────────────────────────────────────────────────────
 #
@@ -104,12 +103,7 @@ opening:
       - 8021001  # Emma 确认 Webb 邀请 Zack 参加舞会，Zack 被酒保拒门
       - 8021002  # Emma 表示若不知真相绝不写报道
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: source
-        content: "Emma 以新闻记者的判断力感觉今晚舞会不寻常——在枪响之前就有直觉"
-        note: "后续循环可出考题：Emma 的直觉来源是什么（酒保异常 / Webb 举止紧张等）"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 三、场景（🔓 自由探索 + 🎭 剧情触发）
 # ─────────────────────────────
@@ -196,12 +190,7 @@ scenes:
         testimony_ids:
           - 8061001  # Vivian 酒后迷糊：半醉失神，面对追问茫然无法作答；偶尔喃喃自语却没说完整
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Vivian 的手枪是 Colt 1908 袖珍手枪（.25 ACP 口径），适合女性防身"
-            note: "后续 loop4 考题：为何 Vivian 的枪不可能是凶器（.25 ACP vs .45 ACP 弹壳型号不符）"
-
+        # ── 4.  ──
       # ── Rosa（当庭指控 / Expose 对象）──
       rosa_001:
         # ── 基本信息 ──
@@ -242,12 +231,7 @@ scenes:
           - 8031001  # ⚠谎言: Rosa 谎言1——Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
           - 8031002  # ⚠谎言: Rosa 谎言2——23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Rosa 的神态——说指控台词时眼神游移，与确信目击者的镇定形成对比"
-            note: "鉴赏力素材：观察 NPC 肢体语言/情绪状态判断证词可信度"
-
+        # ── 4.  ──
       # ── Morrison（宣告死亡 / 接案警官）──
       morrison_001:
         # ── 基本信息 ──
@@ -288,15 +272,7 @@ scenes:
           - 8041002  # Morrison 宣告：准备逮捕 Vivian
           - 8041003  # Morrison（指证后）：因 Zack 揭穿 Rosa + 委托协议书，同意给 72 小时
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Morrison 接案流程过于简洁——仅凭 Rosa 一面之词 + Vivian 持枪就准备结案，没有勘验现场"
-            note: "后续 loop5-6 考题：Morrison 急于结案的真实原因（与 Whale 的关联）"
-          - type: source
-            content: "Morrison 今晚醉醺醺赶到会客室，得知是认识的 Webb 死亡后，仍旧勉力秉公接案——这是 loop1 Morrison 的初始性格基线"
-            note: "loop5-6 性格对照伏笔：loop1 Morrison 醉酒但尚存职业操守，与 loop5-6 Morrison 主动吹黑哨的反转形成鲜明对比，暗示 Whale 介入改变了他的选择"
-
+        # ── 4.  ──
 # ─────────────────────────────
 # 四、指证（⚔️ Expose：Rosa）
 # ─────────────────────────────
@@ -396,14 +372,7 @@ post_expose_scene:
       - 8021101  # Emma 分析：Webb 紧急雇佣侦探不寻常，合同有保险倾向
       - 8021102  # Emma 关键疑点：Webb 真正怀疑的凶手是谁？（核心悬念）
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_002_06"
-        question: "Webb 的委托协议书中，除了保护 Vivian，还有什么特殊条款？"
-        answer: "确保 Vivian 在 Webb 死后能顺利继承遗产——意味着 Webb 立协议时已经预想到自己会死（来源：loop1 现场 8103 证据）"
-        note: "考查玩家是否注意到'保险倾向'这个细节，引导其理解 Webb 的主观预判"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 六、疑点（Doubts）
 # ─────────────────────────────

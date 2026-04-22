@@ -183,7 +183,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 - schema 定义：`AVG/对话配置工作及草稿/前置配置/STATE_FIELDS.md`
 - 格式参考：已有的 state 文件（如 `剧情设计/Unit3/state/` 或前一次生成的文件）
 - player_context.known_facts = 前序 Loop 的 post_expose_knowledge 累积
-- NPC 条目 4 必填区块：已知信息、玩家询问意图、可提取证词、鉴赏力
+- NPC 条目 4 必填区块：已知信息、玩家询问意图、可提取证词
 - Expose 对象：is_liar: true, player_inquiry: null
 - 每轮指证用不同维度的证据
 - 不泄露后续 Loop 的信息

@@ -30,7 +30,7 @@
 | [时间线系统.md](游戏系统/核心玩法/时间线系统.md) | DayTimeConfig, TestimonyItem |
 | [疑点系统.md](游戏系统/核心玩法/疑点系统.md) | DoubtConfig |
 | [指证系统.md](游戏系统/核心玩法/指证系统.md) | ExposeData, ChapterConfig |
-| [鉴赏力系统.md](游戏系统/核心玩法/鉴赏力系统.md) | 鉴赏力评分系统 |
+| [](游戏系统/核心玩法
 | [场景系统.md](游戏系统/核心玩法/场景系统.md) | SceneConfig, LocationConfig, MapConfig |
 
 ### 外围功能（3篇）

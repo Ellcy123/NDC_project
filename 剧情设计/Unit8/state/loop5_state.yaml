@@ -46,7 +46,7 @@
 #                          8507 → item（物理道具）
 #                        8507（手枪）标注 loop6_critical；
 #                        8502 metadata 补充 meeting_time:晚上8点 + meeting_location:后门
-# C. NPC 条目     PASS — Emma/Tommy/Jimmy/Anna 各含 4 必填块；
+# C. NPC 条目     PASS — Emma/Tommy/Jimmy/Anna 各含 3 必填块；
 #                        Jimmy 为 Expose 对象（is_liar:true, player_inquiry:null）；
 #                        Anna 首次出场（模式 A，知识池注释已建立）；
 #                        emma_010 新增 8025103（潜入 Morrison 家决定证词）
@@ -59,7 +59,6 @@
 #                        锁定：Morrison 与 Whale 具体关系（loop6）、Morrison 藏弹壳（loop6）、
 #                        Whale 电话事件（loop6）、8504（Morrison 异常）loop5 不解锁；
 #                        8103 状态从 destroyed 更新为 confiscated_by_morrison（loop4 级联修正）
-# F. 鉴赏力       PASS — tommy_003(source) / anna_001(source) / emma_009(quiz) /
 #                        emma_010(quiz) source/quiz 配对完整
 # G. Expose 逻辑  PASS（3 层结构，字迹对白后移）
 #                        round_1 时间线（鼓点单子+Vivian证言）；
@@ -213,14 +212,7 @@ opening:
       - 8025002  # Emma：四大疑点梳理——'Don't be bothering me!'那个声音不是 Webb；合同字迹和纸条字迹相同，写这些东西的人就是凶手
       - 8025003  # Emma：对 Zack 选择"没有酬劳也要查下去"的态度十分欣赏——此刻正式把 Zack 当作并肩搭档
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_009_03"
-        question: "Tommy 在 loop4 说'之后由别人接手了相关工作'，住了口没说名字。根据目前已知的线索，最有可能接手的是谁？理由是什么？"
-        answer: "Jimmy——理由：Jimmy 在 loop3 厨房销毁鼓点单子（有意隐藏证据）；Jimmy 对 Webb 的死有隐藏的愧疚；被撕毁合同字迹与威胁纸条一致，合同写作者在酒吧内部（来源：loop3 s301 jimmy突发事件 + loop4 s401 被撕毁合同 + loop2 s204 tommy_001证言）"
-        note: "承接 loop4 tommy_002 的 source 节点，此处出考题；引导玩家在 loop5 自由探索中重点关注 Jimmy"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 三、场景（🔓 自由探索（上）——loop5）
 # ─────────────────────────────
@@ -308,12 +300,7 @@ scenes:
           - 8055002  # Tommy：我特意留了一份鼓点单子的备份——23:00 的鼓点高潮，整个大厅都听不见别的声音
           - 8055003  # Tommy：那次之后 Webb 改让别人接手收款了，那个人我知道他是谁，但今天我还不能说（隐瞒话题，loop5 Expose 后点名）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Tommy 交出弹壳时说：'我当时以为藏着没用，现在我看到了——你比我想象的更认真。' 他说这话时眼神里有一种比信任更重的东西，像是某种愧疚终于找到了出口"
-            note: "后续 loop6 可出考题：Tommy 在 loop5 说'那个人我知道他是谁'——他知道 Jimmy 是真凶吗？他为何一直没说？（loop6 感情戏 / 补充信息链素材）"
-
+        # ── 4.  ──
   # ── 场景 8003：厨房 ——Jimmy（口音暴露；复用 loop2/3，s502 旧 ID）──
   - id: 8003
     name: "厨房"
@@ -379,12 +366,7 @@ scenes:
           - 8075001  # Jimmy（口音暴露现场记录）：脱口说出"Don't be bothering me!"句式——爱尔兰裔 Hiberno-English 特有表达
           - 8075002  # ⚠谎言: Jimmy 在询问当晚行动时声称自己一直在厨房——隐瞒实际在 23:00 时进入了会客室
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Jimmy 说话时有一个语言习惯：情急或压力大时会用'Don't be bothering me!'这个句式——这不是美式英语，而是典型的爱尔兰裔英语（Hiberno-English）的惯用语法，意思相当于'Don't bother me'"
-            note: "后续 Expose round_2 消耗：配合 8064006（Vivian 证言）和 8502（爱尔兰裔身份证件）证明 23:10 在门口说话的人是 Jimmy"
-
+        # ── 4.  ──
   # ── 场景 8012：Jimmy 家 ——Anna（首次出场；s503 旧 ID）──
   - id: 8012
     name: "Jimmy 家"
@@ -474,12 +456,7 @@ scenes:
           - 8085001  # Anna：我们的孩子快出生了，家里需要一大笔钱——医院不便宜，爱尔兰人在这座城市不容易
           - 8085002  # Anna：Jimmy 说接了一件重要的差事，完成了就能解决我们的问题，我信他
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Anna 说'我信他'时，语气里没有质疑，只有依赖——她不知道丈夫做了什么，但她用这三个字承担了所有。这是 Jimmy 选择自杀来保护她的根源"
-            note: "后续 Expose 自杀剧情消耗：Jimmy 为保护 Anna 不受 Whale 威胁选择自杀，'我信他'这个细节是情感驱动力的来源"
-
+        # ── 4.  ──
 # ─────────────────────────────
 # 四、过场剧情（抓捕 Jimmy 现行）
 # ─────────────────────────────
@@ -848,14 +825,7 @@ post_expose_romance:
       - 8025102  # Emma：下一步：带着真正的凶器（8507）和 Jimmy 给 Whale 的回信（8502），去警局击破 Morrison，当众释放 Vivian
       - 8025103  # Emma：在那之前，我们需要先进 Morrison 的家——用我的记者身份，你做我的助理，去取回那枚弹壳（loop6 行动前置）
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_010_03"
-        question: "Jimmy 在自杀前回看了一眼暗处。Emma 分析：那一眼意味着什么？"
-        answer: "那一眼是确认——他确认了 Whale 的手下已经知道他暴露了，也确认了 Anna 会成为 Whale 的目标。自杀是他唯一能保护 Anna 的方式：死了之后，Whale 没有理由再威胁一个不知情的孕妇（来源：loop5 suspect_suicide_sequence + anna_001 证词）"
-        note: "考查玩家对 Jimmy 自杀动机的理解：不是逃跑，而是保护；引导玩家在 loop6 关注 Whale 对'清楚知情者'和'不知情者'的不同处理方式"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 八、疑点（Doubts）
 # ─────────────────────────────

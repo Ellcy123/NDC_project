@@ -51,10 +51,6 @@ def scan_unit(unit_name):
     if os.path.isdir(minigame_dir):
         result["minigames"] = count_md(minigame_dir)
 
-    connoisseur_dir = os.path.join(unit_dir, "鉴赏力")
-    if os.path.isdir(connoisseur_dir):
-        result["connoisseur"] = count_md(connoisseur_dir)
-
     sudden_dir = os.path.join(unit_dir, "突发事件")
     if os.path.isdir(sudden_dir):
         result["sudden_events"] = count_md(sudden_dir)

@@ -35,7 +35,6 @@ disallowedTools: Bash
    - 已知信息（active_topics / withheld_topics）
    - 玩家询问意图（player_inquiry，格式 `"{驱动信息来源}" # {分数 0-10}`）
    - 可提取证词（testimony_ids，标注 ⚠谎言 / ⚠偏见）
-   - 鉴赏力（source / quiz 节点引用）
 4. **生成 expose 结构**：rounds（每轮 lie + evidence_set + result）、is_liar 标记
 5. **生成 doubts**（遵守 `docs/游戏系统/核心玩法/疑点系统.md`）：
    - 每条目含 `isFragment` 字段：false 为疑点 / true 为碎片
@@ -68,7 +67,7 @@ disallowedTools: Bash
 - C. NPC 条目：每个 NPC 的 4 必填块完整
 - D. 目标对齐：player_context.goals 与设计文档一致
 - E. 信息节奏：本 Loop 不泄露后续 Loop 内容
-- F. 鉴赏力：source/quiz 配对完整
+- F. quiz 配对完整
 - G. Expose 逻辑：每轮 lie 有对应证据可反驳
 
 ### 禁止
@@ -84,4 +83,4 @@ disallowedTools: Bash
 ### 上下级关系
 
 - **上级**：content-director、用户
-- **协作**：expose-designer（接收指证方案）、evidence-designer（接收证据 ID）、connoisseur-designer（接收鉴赏力节点）
+- **协作**：expose-designer（接收指证方案）、evidence-designer（接收证据 ID）、（接收）

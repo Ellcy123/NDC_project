@@ -483,8 +483,8 @@ def parse_md_file(md_path):
             # 跳过 > [Loop N...] / > [Scene xxx] 等转场 meta
             if re.match(r"^\[(Loop|Scene|场景|循环|Phase|Round)\s", content):
                 continue
-            # 跳过 > 鉴赏力 / > Quiz / > 答案 / > Source 等标注
-            if re.match(r"^(鉴赏力|Quiz|答案|Source|Note|注)[（(：:\s]", content):
+            # 跳过 >  / > Quiz / > 答案 / > Source 等标注
+            if re.match(r"^(Quiz|答案|Source|Note|注)[（(：:\s]", content):
                 continue
 
             # Expose Lie 出示证据选项（优先于普通 branches）: - ❶ 出示 XXX → `target`（正确：...）

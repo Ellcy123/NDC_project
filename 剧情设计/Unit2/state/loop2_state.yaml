@@ -72,9 +72,7 @@ opening:
 
     lie: null
 
-    # ── 4. 鉴赏力 ──
-    connoisseur: []
-
+    # ── 4.  ──
 # ═══════════════════════════════════════
 # PART 2: 自由探索
 # ═══════════════════════════════════════
@@ -147,15 +145,7 @@ scenes:
         testimony_ids:
           - 2091001  # O'Hara冷淡确认Frank欠银行钱、被人催过债，警告"别去招惹那帮人"
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "O'Hara的钞票是崭新连号20美元"
-            note: "L3 emma_003 quiz#006 考这个"
-          - type: source
-            content: "O'Hara描述上门催收的人：一个金发年轻人带着一个意大利壮汉"
-            note: "L3 danny_001 quiz#005 考这个"
-
+        # ── 4.  ──
   # ── SC2007 Silver Moon赌场/酒吧 ──
   - id: 2007
     name: "Silver Moon赌场/酒吧"
@@ -192,16 +182,7 @@ scenes:
           - 2111001  # Tony确认Vinnie用崭新钞票消费，得意说"今天又赚了一笔"
           - 2111002  # Tony证词：Vinnie每次说"赚钱""收钱"，从不说"还债"
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "酒吧吧台配方卡上写着招牌鸡尾酒Southside"
-            note: "L2 tony_001 quiz#003 考这个（来源为SC2007场景环境道具，非Tony台词）"
-          - type: quiz
-            node: "#003"
-            question: "我这儿的招牌鸡尾酒叫什么？"
-            answer: "Southside（来源：本循环SC2007吧台配方卡）"
-
+        # ── 4.  ──
       vinnie_001:
         # ── 基本信息 ──
         talk: vinnie_001
@@ -224,12 +205,7 @@ scenes:
           - 2051001  # Vinnie否认认识银行职员或参与任何催收
           - 2051002  # Vinnie看到Leonard照片时脱口而出"我不认识什么Russo!"（口误暴露旧名）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Vinnie看到Leonard照片时口误说出'Russo'"
-            note: "L2 moore_001 quiz#002 考这个"
-
+        # ── 4.  ──
   # ── Moore银行贵宾室 ──
   - id: 2008
     name: "Moore银行贵宾室"
@@ -256,13 +232,7 @@ scenes:
           - 2061001  # Moore确认Frank因"赌博"借贷$600，当前欠款$3,200
           - 2061002  # Moore提供Leonard入职档案改名记录（原名Russo → Ross）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: quiz
-            node: "#002"
-            question: "Vinnie提到Leonard时叫他什么？"
-            answer: "Russo（来源：本循环vinnie_001——看到Leonard照片时的口误）"
-
+        # ── 4.  ──
   # ── SC2009 Moore银行大厅（自由探索对话 → ⚔️指证） ──
   - id: 2009
     name: "Moore银行大厅"
@@ -288,13 +258,7 @@ scenes:
         testimony_ids:
           - 2041001  # ⚠谎言: "Vinnie Moretti？我不认识这个人"
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: quiz
-            node: "#004"
-            question: "鞋坊在哪条街？"
-            answer: "南区33号（来源：L1 emma_001开篇——Morrison提到鞋坊位于南区33号）"
-
+        # ── 4.  ──
 # ═══════════════════════════════════════
 # PART 3: 指证（Expose）
 # ═══════════════════════════════════════
@@ -305,7 +269,7 @@ scenes:
 expose:
   target: "Leonard (04)"
   total_rounds: 3
-  # Leonard的Talk/证词/鉴赏力见上方 scenes → SC2009 → leonard_001
+  # Leonard的Talk/证词/见上方 scenes → SC2009 → leonard_001
 
   # ── 第一轮：否认认识Vinnie ──
   # Vinnie口误"Russo" + Moore提供改名记录 → 证实Leonard就是Russo
@@ -389,5 +353,4 @@ validation_status:
   npc_entries: "PENDING"
   goal_alignment: "PENDING"
   info_pacing: "PENDING"
-  connoisseur: "PENDING"
   expose: "PENDING"

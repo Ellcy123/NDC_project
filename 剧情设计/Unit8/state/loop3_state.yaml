@@ -20,13 +20,13 @@
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / post_expose_scene / doubts / evidence_registry 全部存在
 # B. 证据覆盖     PASS — 大纲 loop3 所有证据（13xx 系列 9 件）已分配到场景；弹壳在 post_expose 获得
 #                        新增 8309 Webb 的日记（会客室）；8302/8303 改为 environmental/pickup:false
-# C. NPC 条目     PASS — Emma/Jimmy/Morrison/Rosa 各含 4 必填块；Rosa 为 Expose 对象（is_liar:true, player_inquiry:null）
+# C. NPC 条目     PASS — Emma/Jimmy/Morrison/Rosa 各含 3 必填块；Rosa 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与大纲"找案发现场疑点，确定 Rosa 是否在说谎"目标一致
 # E. 信息节奏     PASS — 未泄露 loop4+（被撕毁合同/Whale 身份/Jimmy 真凶完整证据/Morrison 藏弹壳真相/米勒集团）
 #                        .45 弹壳仅给"一个弹壳"，型号 loop4 才确认
 #                        8309 Webb 日记中"WHALE-DANGER"首次出现——loop3 只揭示"Webb 知道自己有危险"，
 #                        不揭示 Whale 身份/来历/与 Jimmy 关系（loop4-5 才展开），节奏合规
-# F. 鉴赏力       PASS — source/quiz 节点完整配对：Morrison 神情异常 source + 2 quiz；8309 新增 source 节点
+# F.        REMOVED（系统已删除）
 # G. Expose 逻辑  PASS — round_1 有玻璃碎片+Rosa 证言（时间线推理），result=partial_victory；
 #                        round_2 有威胁纸条+女儿医疗单，result=full_breakthrough
 # ──────────────────────────────────────────────────────────
@@ -132,14 +132,7 @@ opening:
       - 8023001  # Emma：现在要找的是案发现场内的疑点，验证 Rosa 的时间线说法
       - 8023002  # Emma：如果 Rosa 是在撒谎，案发现场应该有没有被发现的证据
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: quiz
-        node: "#emma_005_04"
-        question: "Tommy 在 loop2 指证后，对'大人物'的暗示是什么样的态度？"
-        answer: "他说这句话时神情异常，像是心中有猜测但不敢说出来——意味着这个大人物比普通商界人物更危险（来源：loop2 emma_004 connoisseur source）"
-        note: "考查玩家是否记住了 Tommy 说话时的异常神情，引导其后续追问 Whale 的身份"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 三、场景（🔓 自由探索）
 # ─────────────────────────────
@@ -211,12 +204,7 @@ scenes:
           - 8073001  # Jimmy：自己只是一个兼职主厨，和勒索的事没有关系
           - 8073002  # Jimmy（紧张掩饰）：销毁单子是工作需要，没什么特别的
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Jimmy 被抓到销毁鼓点单子时，措手不及的紧张反应——与一个'普通厨师处理不重要文件'的淡定完全不符"
-            note: "后续 loop5 考题：Jimmy 在 loop3 为什么要销毁《芝加哥狂想曲》鼓点单子（真实案发时间线的关键）"
-
+        # ── 4.  ──
   # ── 场景 S302：大厅 ──
   - id: 8007
     name: "大厅"
@@ -236,7 +224,7 @@ scenes:
         talk: morrison_002
         is_liar: false
         # 注：Morrison 说"子弹缺失"是事实陈述（确实缺失），但他省略了"被我藏起来"的原因。
-        # 这不构成谎言（他没有说错），但在 testimony_ids 和 connoisseur 中要做特殊标注。
+        # 这不构成谎言（他没有说错），但在 testimony_ids 和  中要做特殊标注。
         motive: "向 Zack 汇报勘验结果，维持尽职警官的形象；刻意不提子弹去向"
         mindset: "表面权威、职业，说到'子弹缺失'时措辞刻意简单，不给 Zack 追问的空间"
 
@@ -281,12 +269,7 @@ scenes:
           - 8043002  # Morrison 口述：子弹缺失——现场没有找到子弹（不解释原因）
           - 8043003  # Morrison 口述：尸体伤口状况（枪伤位置、大致口径特征等描述性信息）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Morrison 说'子弹缺失'时，语气过于简短——像是有意不让对话深入。一般警官会对'找不到子弹'这件异常情况多做解释"
-            note: "loop3 表层伏笔：为指证 Rosa 后 Rosa 提供弹壳埋下伏笔（玩家会意识到'缺失的子弹被 Rosa 捡去了'）；loop5/6 深度伏笔：Morrison 说这话时神情异常的真正原因是他自己也藏了一颗（loop6 揭示）"
-
+        # ── 4.  ──
   # ── 场景 S303：犯罪现场（会客室）——自 loop1 之后再次开放 ──
   - id: 8001
     name: "犯罪现场（一楼会客室）"
@@ -407,12 +390,7 @@ scenes:
           - 8033001  # ⚠谎言: Rosa——大家都听到了 23:30 的枪响，当晚无其他枪响，只有 Vivian 在里面，一定是她杀的
           - 8033002  # Rosa——当晚 23:20，自己去外面丢过一次垃圾（关键时间节点证言）
 
-        # ── 4. 鉴赏力 ──
-        connoisseur:
-          - type: source
-            content: "Rosa 主动提及'23:20 倒垃圾'的细节时，措辞自然随意——她完全不知道这个时间节点和案发现场的玻璃碎片有什么关联"
-            note: "设计意图：Rosa 无意中提供了击穿自己谎言的关键时间节点，体现她的认知盲区。后续可出考题考查玩家是否把握了时间线推理链"
-
+        # ── 4.  ──
 # ─────────────────────────────
 # 四、指证（⚔️ Expose：Rosa）
 # ─────────────────────────────
@@ -561,18 +539,7 @@ post_expose_scene:
       - 8023101  # Emma：时间线谜题已解锁——23:30 是假枪声，真实案发时间更早
       - 8023102  # Emma：说服 Vivian 不认罪是 loop4 的核心目标，弹壳可能是关键突破口
 
-    # ── 4. 鉴赏力 ──
-    connoisseur:
-      - type: source
-        content: "Webb 的日记里贴着'WHALE - DANGER'便利贴——他把那些被他勒索的人称为猎物，自以为是渔夫，却在日记里留下了对自己危险处境的警告。他根本没有想到自己才是被当作鱼饵的那条鱼"
-        note: "loop5 消耗：考查玩家是否注意到 Webb 日记中渔夫/鱼饵的隐喻——Webb 的自大与他实际是 Whale 棋子的处境形成反讽；与 loop5 Jimmy 受 Whale 委托的证据链形成闭环"
-
-      - type: quiz
-        node: "#emma_006_05"
-        question: "Rosa 说：嫁祸者'很熟悉酒吧'。她是根据什么信息得出这个结论的？"
-        answer: "因为威胁纸条的内容利用了'Vivian 每晚固定在 23:30 给 Webb 送酒'这个习惯——不熟悉酒吧内部规律的人不可能知道这个细节（来源：loop3 指证 Rosa round_2 之后的供述）"
-        note: "考查玩家是否把握了'嫁祸者熟悉酒吧'这条推理线索，引导后续关注酒吧内部人员"
-
+    # ── 4.  ──
 # ─────────────────────────────
 # 六、疑点（Doubts）
 # ─────────────────────────────

@@ -28,7 +28,6 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 - state 任务 → `state-architect`
 - 证据任务 → `evidence-designer`
 - 指证任务 → `expose-designer`
-- 鉴赏力任务 → `connoisseur-designer`
 
 在 agent prompt 中提供完整上下文：任务描述、相关文件路径、用户的具体要求。
 

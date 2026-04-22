@@ -18,7 +18,6 @@ State 文件中的内容严格分为三个阶段，不可混合：
 1. **已知信息**：active_topics（可谈话题）/ withheld_topics（保留话题）
 2. **玩家询问意图**：player_inquiry，格式 `"{驱动信息来源}" # {分数 0-10}`
 3. **可提取证词**：testimony_ids，标注 ⚠谎言 / ⚠偏见
-4. **鉴赏力**：source / quiz 节点引用
 
 ## 格式规范
 - Testimony ID：7 位数字 `{loop}{npc_code}{sequence}`
