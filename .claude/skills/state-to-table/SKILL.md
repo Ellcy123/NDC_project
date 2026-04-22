@@ -1,29 +1,31 @@
 ---
 name: state-to-table
-description: "把一个 Unit 的 state YAML（loop1-6）落地到 preview_new2/data/table/ 下的配置表 JSON。三段式：LLM 写临时 MD → py 脚本 dry-run → py 脚本写入。覆盖除 Talk / Expose 以外的 16 张活跃表。"
+description: "把一个 Unit 的 state YAML（loop1-6）落地到 preview_new2/data/table/ 下的预览版配置表 JSON。三段式：LLM 写临时 MD → py 脚本 dry-run → py 脚本写入。覆盖 6 张活跃表（DoubtConfig / ItemStaticData / NPCStaticData / SceneConfig / Testimony / TestimonyItem）+ ChapterConfig 部分写入。"
 argument-hint: "[Unit 编号或 state 目录路径；可选：--tables 表名清单]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 ---
 
-把 Unit 的 state YAML 翻译成游戏配置表 JSON。**只覆盖非 Talk / Expose 的活跃表**——Talk 由 `sync_to_json.py` 处理，Expose 系列由用户排除。
+把 Unit 的 state YAML 翻译成预览版配置表 JSON。**目标：`preview_new2/data/table/*.json`**（preview 端 11 张表的子集，结构跟 Unity 真表不完全一致，preview 是给前端展示用的视图）。
+
+> **范围说明**：preview 端只有 11 张表，缺 LocationConfig / NPCLoopData / DayTimeConfig / GameFlowConfig / MapConfig 等 5 张 Unity 端独有表。本 skill 不补——这些表的对齐由独立的 preview→Unity 同步流程负责。SceneConfig 字段平铺、NPCInfos 内联 NPCLoopData 也是 preview 现状，本 skill 沿用。
 
 ## 设计原则：LLM 不直接写 JSON
 
-为了避免 LLM 全表重写出格式错误、丢条目、字段漂移，本 skill 严格三段：
+为避免 LLM 全表重写出格式错误、丢条目、字段漂移，严格三段：
 
 | 阶段 | 谁干 | 输入 | 输出 |
 |---|---|---|---|
-| Phase 1 | **LLM**（按本 SKILL 的推断手册） | state YAML + Unit 大纲 | 临时 MD（每 Loop 一份） |
-| Phase 2 | **py 脚本**（[preview_new2/table_md_to_json.py](../../../preview_new2/table_md_to_json.py)） | 临时 MD | JSON 条目数组 → 与现表合并、按 ID 排序、写文件、json.load 自校验 |
-| Phase 3 | **LLM** | 校验通过的报告 | 删临时 MD、给用户最终 diff 摘要 |
+| Phase 1 | **LLM**（按本 SKILL 推断手册） | state YAML + Unit 大纲 | 临时 MD（每 Loop 一份） |
+| Phase 2 | **py 脚本**（[preview_new2/table_md_to_json.py](../../../preview_new2/table_md_to_json.py)） | 临时 MD | 解析 → 与现表合并、按 ID 排序、写文件、json.load 自校验 |
+| Phase 3 | **LLM** | 校验通过后 | 删临时 MD、给用户最终 diff 摘要 |
 
 **LLM 完全不写 JSON**。py 脚本完全不做业务推断（推断规则只在本 SKILL 手册里）。
 
 ## 适用场景
 
-- 一个 Unit 的 6 个 state 文件已定稿，需要落地到 `preview_new2/data/table/*.json`
-- 单个 state 改了，需要按 ID 段更新
+- 一个 Unit 的 6 个 state 文件已定稿，需要落地到 preview 配置表
+- 单个 state 改了，按 ID 段更新
 - **不适用**：state 还没定稿（先走 `/team-loop` 或 `/unit-state-generator`）
 
 ## 输入约定
@@ -39,35 +41,40 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 
 ## 处理范围
 
-### 完全写入（11 张表）
+### 完全写入（6 张表）
 
 | 表 | state 数据源 |
 |---|---|
 | ItemStaticData | `scenes[].evidence[]`（含派生证据） |
 | NPCStaticData | NPC 块的基础信息（仅本 Unit 首次出现的 NPC） |
-| LocationConfig | `scenes[].name` + 美术参考 |
-| SceneConfig | `scenes[]`（不含 Talk 字段） |
-| NPCLoopData | `scenes[].npcs.*` 实例（TalkInfo / LoopTalkInfo 留空） |
+| SceneConfig | `scenes[]` + `scenes[].npcs.*`（NPC 实例内联到 NPCInfos）|
 | DoubtConfig | `doubts[]`（含字符串/结构化两种格式） |
 | TestimonyItem | NPC 块的 `testimony_ids` + 证词内容 |
-| Testimony | NPC 块的证词原文（evidenceItem 引用 TestimonyItem ID） |
-| DayTimeConfig | state 文件头部注释的时间 |
-| MapConfig | 跨 Unit 共享，按需新增 |
-| GameFlowConfig | Unit 大纲（章节名、loopCount、死者、开篇视频） |
+| Testimony | NPC 块的证词原文（evidenceItem 内联 TestimonyItem 对象） |
 
 ### 部分写入（1 张表）
 
 | 表 | 写入字段 | 跳过字段（py 脚本保留原值或留空） |
 |---|---|---|
-| ChapterConfig | `id` / `initScene` / `doubts` / `topBg` / `bottomBg` | `initTalk` / `exposeNpcId` / `exposes` |
+| ChapterConfig | `id` / `initScene` / `doubts` / `topBg` / `bottomBg` | `initTalk` / `exposeNpcId` / `exposes` / `suspectVideoPos` / `suspectTalkPos` / `zackTalkPos` |
 
 ### 完全跳过
 
 | 表 | 原因 |
 |---|---|
 | Talk | 由 `AVG/对话配置工作及草稿/sync_to_json.py` 处理 |
-| ExposeData / ExposeConfig / ExposeTalk | 用户明确排除 |
-| ChapterStepConfig | 空表，预留未用 |
+| ExposeData / ExposeConfig / ExposeTalk | 用户明确排除（指证系列） |
+
+### NPCInfos / Talk 字段的处理
+
+SceneConfig.NPCInfos 内联了完整 NPC + TalkInfo + LoopTalkInfo 对象：
+
+- **NPC** 子对象：本 skill 填写（基于 NPCStaticData）
+- **TalkInfo / LoopTalkInfo** 子对象：本 skill **写空对象 `{}` 或保留原值**——由 sync_to_json 后续填充
+- **ResPath / ClickResPath**：本 skill 推断填写
+- **PosX / Posy / PosZ**：本 skill 写空字符串（待美术补）
+
+合并策略：如某 sceneId 在表中已有 NPCInfos 且 TalkInfo 非空，py 脚本**保留原 TalkInfo**，只覆盖本 skill 关心的字段（NPC / ResPath / Position）。
 
 ## Phase 1: LLM 写临时 MD
 
@@ -75,7 +82,7 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 
 `preview_new2/data/_table_drafts/Unit{N}/Loop{N}.md`
 
-每个 Loop 一份，与 state 文件一一对应。完成后 Phase 3 自动清理。
+每 Loop 一份，与 state 文件一一对应。Phase 3 写入成功后自动清理；失败时保留以供手修。
 
 ### MD 格式规范（py 脚本依赖此格式解析）
 
@@ -87,10 +94,7 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 ### 3101 - 着地点照片 / Landing Spot Photo
 - itemType: 1
 - canAnalyzed: false
-- analysedEvidence: ""
-- beforeAnalysedEvidence: ""
 - canCombined: false
-- combineParameter: []
 - Describe: |
     案发现场尸体距墙仅 0.8 米，主动跳跃应 ≥1.5 米——无水平初速度。
 - ShortDescribe: 着地点照片
@@ -99,7 +103,6 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 - folderPath: EPI03\ThomasBuildingDownstairs
 - desSpritePath: SC3001_item_01_big
 - mapSpritePath: SC3001_item_01
-- iconPath: ""
 - Position: 待补充（美术）
 - ArtRequirement: 待补充（美术）
 
@@ -114,43 +117,28 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 - Chapter: EPI03
 - IconSmall: morrison_small
 - IconLarge: morrison_big
-- color: 待补充
-
-## LocationConfig
-
-### 301 - Thomas公寓楼下现场 / ThomasBuildingDownstairs
-- sceneType: 1
-- backgroundImage: Art\Scene\Backgrounds\EPI03\SC3001_bg_ThomasBuildingDownstairs
-- ambientSound: 待补充
 
 ## SceneConfig
 
-### 3101 - Thomas公寓楼下现场
-- location_ref: 301
+### 3101 - Thomas公寓楼下现场 / ThomasBuildingDownstairs
+- sceneType: 1
+- backgroundImage: Art\Scene\Backgrounds\EPI03\SC3001_bg_ThomasBuildingDownstairs
 - backgroundMusic: 待补充
-- unlockCondition: ""
-- NPCInfos_ref: []
 - ItemIDs: [3101, 3108]
-- note: ""
-
-## NPCLoopData
-
-### 30101 - Morrison @ SC3104
-- npc_ref: 301
-- TalkInfo: 待补充（Talk 由 sync_to_json 维护）
-- LoopTalkInfo: 待补充（Talk 由 sync_to_json 维护）
-- ResPath: Art\Scene\NPC\EPI03\SC3104_npc_Morrison1
-- ClickResPath: Art\Scene\NPC\EPI03\SC3104_npc_Morrison2
-- PosX: 待补充（美术）
-- PosY: 待补充（美术）
-- PosZ: 待补充（美术）
+- NPCInfos:
+  - npc_ref: 301
+    instance_id: 30101
+    ResPath: Art\Scene\NPC\EPI03\SC3104_npc_Morrison1
+    ClickResPath: Art\Scene\NPC\EPI03\SC3104_npc_Morrison2
+    PosX: 待补充（美术）
+    Posy: 待补充（美术）
+    PosZ: 待补充（美术）
 
 ## TestimonyItem
 
 ### 3101001 - Morrison 自述结案
 - testimonyType: 1
-- testimony: |
-    自杀，很明显。这种烂酒鬼，喝多了自己跳下去了。
+- testimony: 自杀，很明显。这种烂酒鬼，喝多了自己跳下去了。
 - testimony_en: 待补充
 - triggerType: 0
 - triggerParam: "301"
@@ -169,9 +157,17 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 
 ### 3001 - 楼顶不只Thomas一个人
 - text: 楼顶不只Thomas一个人——女性脚印与Thomas面对面站在护栏边
+- Chapter: EPI03
 - condition:
   - {type: 1, param: 3104}
   - {type: 3, param: 3101001}
+
+### 9201 - Jimmy 很缺钱（碎片示例）
+- text: Jimmy 很缺钱（碎片）
+- Chapter: EPI09
+- isFragment: true
+- condition:
+  - {type: 3, param: 9021001}
 
 ## ChapterConfig (部分写入)
 
@@ -180,81 +176,61 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 - doubts_ref: [3001, 3002]
 - topBg: Art/Scene/Expose/epi03/top_morrison
 - bottomBg: Art/Scene/Expose/epi03/morrison
-- _skip_fields: [initTalk, exposeNpcId, exposes]
-
-## DayTimeConfig
-
-### 3101
-- startTime: 0800
-- endTime: 0900
-
-## MapConfig
-
-### 待补充
-
-## GameFlowConfig
-
-### 3
-- loopCount: 6
-- chapterName: 待补充
-- openingVideo: 待补充
-- deceased_ref: 309
+- _skip_fields: [initTalk, exposeNpcId, exposes, suspectVideoPos, suspectTalkPos, zackTalkPos]
 ```
 
 ### MD 字段语法约定（py 脚本依赖）
 
-- **表名**：`## {TableName}`，必须与 docs/配置表详解.md 表名一致
-- **条目**：`### {id} - {可读描述}`，id 必须能解析为字符串
+- **表名**：`## {TableName}`，必须与 preview JSON 文件名一致
+- **条目**：`### {id} - {可读描述}`
 - **字段**：`- {key}: {value}`
 - **多行字符串**：`- {key}: |` + 缩进续行
-- **数组**：`- {key}: [a, b, c]` 或多行 `-` 缩进
-- **结构化数组**：`- condition:` + 缩进 `- {type: X, param: Y}`
-- **跳过字段**：值写 `待补充` 或 `待补充（说明）` → py 脚本翻译为空字符串/空数组
-- **跨条目引用**：`{key}_ref: {id}` 或 `{key}_refs: [id, id]` → py 脚本展开成完整内联对象（依据 docs 中"内联存储"约定）
+- **数组**：`- {key}: [a, b, c]`
+- **结构化数组**（如 condition）：`- condition:` + 缩进 `- {type: X, param: Y}`
+- **嵌套对象数组**（如 NPCInfos）：`- NPCInfos:` + 缩进 `- key: value`
+- **跳过字段**：值写 `待补充` 或 `待补充（说明）` → py 脚本翻译为空字符串/不写
+- **跨条目引用**：`{key}_ref: {id}` 或 `{key}_refs: [id, id]` → py 脚本展开成完整内联对象
 - **部分写入标记**：`_skip_fields: [...]` → py 脚本保留 table 中原值（条目存在）或留空（新增）
 
 ## LLM 推断规则手册
 
-> 全部字段规范见 [docs/配置表详解.md](../../../docs/配置表详解.md)。本节列出 LLM 写 MD 时如何**推断**字段值。
+> 全部字段规范见 [docs/配置表详解.md](../../../docs/配置表详解.md)（注意 docs 描述的是 Unity 真表，preview 字段子集见上）。
 >
-> 原则：**能推就推，推不出就写"待补充"**。py 脚本对"待补充"的处理是统一的（→ 空字符串/空数组），不要写 null 或假值。
+> 原则：**能推就推，推不出就写"待补充"**。py 脚本对"待补充"的处理是统一的。
 
-### ID 段推断（按 Unit 编号）
+### ID 段推断
 
 | 表 | ID 公式 |
 |---|---|
 | ItemStaticData | 4 位，`{unit}{loop}{xx}`，派生证据 `{unit}7{xx}` |
 | NPCStaticData | 3 位，`{unit}{xx}`（如 Unit3 → 301-310） |
-| LocationConfig | 看现有约定（EPI01=1xx，EPI02=2xxx；EPI03 段需先扫现有数据确认） |
 | SceneConfig | 4 位，`{unit}{loop}{location}`，物理 ID 转：`int(f"{unit}{loop}{physical_id % 100:02d}")` |
-| NPCLoopData | 5 位，`{npc_id}{loop}{seq:02d}` |
 | TestimonyItem | 7 位，`{loop}{npc_code}{seq}` |
 | Testimony | 与 TestimonyItem 同段（容器 ID） |
 | DoubtConfig | 4 位，`{unit}{loop}{seq}` |
-| ChapterConfig | `{unit}0{loop}` 或 `{unit}{loop}`（先扫现表确认约定） |
-| DayTimeConfig | 用 sceneId 作 day |
-| GameFlowConfig | chapterId = unit |
+| ChapterConfig | 3 位 `{unit}0{loop}`（看现有约定：EPI01 是 101/102/103…） |
+| NPCInfos.instance_id（嵌入 SceneConfig） | 4 位 `{npc_seq}{loop}{seq:02d}`，先扫现表确认约定 |
 
-### 字段推断
+### 字段推断（按表）
 
 #### ItemStaticData
 
-| 字段 | 推断方式 |
+| 字段 | 推断 |
 |---|---|
-| Name | `[中文名, 英文名]`，英文名查 Unit 美术参考文档；查不到 `["xxx", "待补充"]` |
+| Name | `[中文名, 英文名]`，英文名查 Unit 美术参考；查不到 `["xxx", "待补充"]` |
 | itemType | name/note 关键词推：照片/痕迹/脚印 → 1 (clue)；瓶/钥匙/文件/票据/笔记/烟斗 → 3 (item)；门 → 5；上楼梯 → 8；下楼梯 → 9；纯装饰 → 0；环境叙事 → 2 |
-| canAnalyzed | 若有派生证据指向（state 或 note 提到"分析后..."）→ true，否则 false |
-| analysedEvidence | 派生证据 ID（如有），否则空字符串 |
-| beforeAnalysedEvidence | 派生证据反向指回（如有） |
-| canCombined / combineParameter | state 标注合成则填，否则 false / 空数组 |
-| Describe | `note` 字段去掉 `关键——` / `陷阱——` / `伏笔——` / `场景道具` 前缀；如 note 太短可结合 evidence 上下文扩展 |
+| canAnalyzed | 若有派生证据指向（state/note 提到"分析后..."）→ true，否则 false |
+| analysedEvidence | 派生证据 ID（如有），否则不写 key |
+| beforeAnalysedEvidence | 派生证据反向指回（如有），否则不写 key |
+| canCombined / combineParameter | state 标注合成则填，否则 false / 不写 combineParameter key |
+| Describe | `note` 字段去掉 `关键——` / `陷阱——` / `伏笔——` / `场景道具` 前缀；可结合 evidence 上下文扩展 |
 | ShortDescribe | 同 Describe 但截短 |
-| location | `[scenes[].name, 英文场景名]`，英文名查 Unit 美术参考；查不到写 `["xxx", "待补充"]` |
+| location | `[scenes[].name, 英文场景名]` |
 | Chapter | `EPI0{N}` |
 | folderPath | `EPI0{N}\\{location_en}` |
 | desSpritePath | `SC{sceneId}_item_{后两位}_big`（sceneId 用本 Loop 转换后的） |
 | mapSpritePath | `SC{sceneId}_item_{后两位}` |
-| iconPath | 空字符串（除非 state 明示） |
+| iconPath | 不写（或 ""），除非 state 明示 |
 | Position / ArtRequirement | `待补充（美术）` |
 
 #### NPCStaticData
@@ -262,77 +238,65 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
 | 字段 | 推断 |
 |---|---|
 | Name | `[中文全名, 英文全名]` |
-| role | `1`=死者（Unit 大纲指明）/ `2`=is_liar 为 true 或 motive 含犯罪动机 / `3`=证人 / `4`=主角（Zack/Emma） |
+| role | `1`=死者 / `2`=is_liar 为 true 或 motive 含犯罪动机 / `3`=证人 / `4`=主角（Zack/Emma） |
 | Chapter | `EPI0{N}` |
-| IconSmall / IconLarge | `{name_lower}_small` / `{name_lower}_big` |
-| color | `待补充` |
+| IconSmall / IconLarge | `{name_lower}_small` / `{name_lower}_big`；主角/幕后角色不写这两字段 |
 
-**已存在则在 MD 里仍要写完整条目**——py 脚本会按 ID 比对，相同 ID 字段不同时按 MD 为准；完全相同则跳过。如要避免动跨 Unit NPC，LLM 不要把它们写进 MD。
+> **跨 Unit 已存在的 NPC**（如 Zack）：LLM 不要写进 MD。py 脚本看到 MD 里没有就不动。
 
-#### LocationConfig
-
-| 字段 | 推断 |
-|---|---|
-| Name | `[scenes[].name, 英文场景名]` |
-| sceneType | `1` (dialogue) 默认；指证场景查 ChapterConfig 引用判断；过场 `3` |
-| backgroundImage | `Art\\Scene\\Backgrounds\\EPI0{N}\\SC{sceneId}_bg_{en_name}` |
-| ambientSound | `待补充` |
-
-#### SceneConfig
+#### SceneConfig（注意 preview 字段平铺，不是 Unity 的 location 子对象）
 
 | 字段 | 推断 |
 |---|---|
 | sceneId | 物理 ID 按 Loop 转换 |
-| location_ref | LocationConfig.id（py 脚本展开成内联对象） |
+| sceneName | `scenes[].name` 中文部分 |
+| sceneNameEn | 英文场景名 |
+| sceneType | `"1"` (dialogue) 默认；指证场景 `"2"`；过场 `"3"` |
+| backgroundImage | `Art\\Scene\\Backgrounds\\EPI0{N}\\SC{sceneId}_bg_{en_name}` |
 | backgroundMusic | `待补充` |
-| unlockCondition | state 注释中的"🔒尚未发现 xxx" |
-| NPCInfos_ref | NPCLoopData.id 数组（py 脚本展开） |
 | ItemIDs | `scenes[].evidence[].id` 字符串数组 |
-| note | 空字符串 |
-
-#### NPCLoopData
-
-| 字段 | 推断 |
-|---|---|
-| npc_ref | NPCStaticData.id（py 脚本展开） |
-| TalkInfo / LoopTalkInfo | `待补充（Talk 由 sync_to_json 维护）` → py 脚本写 `{}` 或保留原值 |
-| ResPath | `Art\\Scene\\NPC\\EPI0{N}\\SC{sceneId}_npc_{name}1` |
-| ClickResPath | 同上但末尾 `2` |
-| PosX / PosY / PosZ | `待补充（美术）` |
+| NPCInfos | 数组，每元素含 `npc_ref / instance_id / ResPath / ClickResPath / PosX / Posy / PosZ`；TalkInfo / LoopTalkInfo 由 py 脚本写空对象 `{}` 或保留原值 |
+| note | 不写或 `""` |
 
 #### DoubtConfig
 
 | 字段 | 推断 |
 |---|---|
 | text | `doubts[].text` |
-| condition | 解析 `unlock_condition`：<br>**新格式**（结构化数组）→ 直接复制<br>**旧格式**（字符串 `item:xxx + testimony:yyy`）→ `+` 分隔，每段：`item:xxx` → `{type: 1, param: "xxx"}`；`relation:xxx` → `{type: 2}`；`testimony:xxx` 或 `timeline:xxx` → `{type: 3}` |
+| Chapter | `EPI0{N}` |
+| isFragment | 可选，布尔。state 中 `doubts[].is_fragment: true` → 写 `true`；缺省/false → 不写该字段（反序列化默认 false）。碎片的 condition 通常只有 1 条 |
+| condition | 解析 `unlock_condition`：<br>**新格式**（结构化数组）→ 直接复制<br>**旧格式**（字符串 `item:xxx + testimony:yyy`）→ `+` 分隔，每段：`item:xxx` → `{type: 1}`；`relation:xxx` → `{type: 2}`；`testimony:xxx` 或 `timeline:xxx` → `{type: 3}` |
 
-#### TestimonyItem / Testimony
+#### TestimonyItem
 
 | 字段 | 推断 |
 |---|---|
-| testimonyType | `1` 自述（NPC 谈自己） / `2` 见闻（NPC 谈他人）—— 看 `testimony_ids` 注释 |
-| testimony / words | 从 state 的 `# ⚠谎言: "xxx"` 注释或对话草稿提取；找不到 `待补充` |
-| testimony_en / words_en | `待补充` |
+| testimonyType | `1` 自述（NPC 谈自己） / `2` 见闻（NPC 谈他人） |
+| testimony | `[中文摘要, 英文摘要]`；从 state 的 `# ⚠谎言: "xxx"` 注释或对话草稿提取；找不到 `待补充` |
 | triggerType | `0` 无条件 / `1` 时间线 / `2` 关系网 |
-| triggerParam | 见 [docs §3.8](../../../docs/配置表详解.md) 格式 |
+| triggerParam | `"NPCID,sceneId,startTime,endTime"`（时间线）/ `"NPCID1,NPCID2"`（关系网）/ `"NPCID"`（无条件） |
+
+> preview 端 TestimonyItem 不含 `truth / shortTruth / shortDesc`（这些是 Unity 端独有），本 skill 不写。
+
+#### Testimony（preview 端简化版）
+
+| 字段 | 推断 |
+|---|---|
+| npc | NPCStaticData 内联对象（py 脚本展开） |
+| chapter | ChapterConfig.id（如 `"301"`） |
+| words | `[中文证词全文, 英文证词全文]`；从对话草稿合并 `<special>` 标记 |
+| evidenceItem | TestimonyItem 内联对象数组（如有；preview 端 evidenceItem 字段非必填） |
 
 #### ChapterConfig（部分写入）
 
 | 字段 | 推断 |
 |---|---|
+| id | `{unit}0{loop}` 或 `{unit}{loop}`（按 EPI01 现有约定 → `101`-`106`，EPI03 应为 `301`-`306`） |
 | initScene | 该 Loop 的 opening 场景 ID |
-| doubts_ref | DoubtConfig.id 列表 |
-| topBg / bottomBg | `Art/Scene/Expose/epi0{N}/top_{npc_lower}` / `Art/Scene/Expose/epi0{N}/{npc_lower}` |
-| _skip_fields | `[initTalk, exposeNpcId, exposes]` |
-
-#### DayTimeConfig / GameFlowConfig / MapConfig
-
-| 表 | 推断 |
-|---|---|
-| DayTimeConfig | state 头部"时间: 1928年11月21日 约08:00" → day=sceneId, startTime/endTime=HHMM |
-| GameFlowConfig | Unit 大纲取 chapterName / loopCount / openingVideo / deceased_ref |
-| MapConfig | 仅当 state 提到新地图点（Unit 大纲中的 location 列表）时新增；否则 `### 待补充`（py 脚本跳过本表） |
+| doubts | DoubtConfig 内联对象数组（py 展开 doubts_ref） |
+| topBg | `Art/Scene/Expose/epi0{N}/top_{npc_lower}` |
+| bottomBg | `Art/Scene/Expose/epi0{N}/{npc_lower}` |
+| _skip_fields | `[initTalk, exposeNpcId, exposes, suspectVideoPos, suspectTalkPos, zackTalkPos]` |
 
 ## 旧 / 新 state 格式兼容
 
@@ -351,7 +315,7 @@ LLM 在 Phase 1 自动识别两种格式都吃下；写 MD 时统一成新格式
 1. 解析 argument 取 Unit 编号；没给就 AskUserQuestion 问
 2. 读 Unit 大纲（如 `剧情设计/Unit{N}/Unit{N}_大纲*.md`）
 3. 顺序读 6 个 `loop{1-6}_state.yaml`
-4. 扫一眼现有 `preview_new2/data/table/*.json`：了解本 Unit 段已有哪些条目（用于差异说明，不影响 MD 内容）
+4. 扫一眼现有 `preview_new2/data/table/*.json`：了解本 Unit 段已有哪些条目（用于差异说明）
 5. 自动检测 state 格式版本（旧字符串 / 新结构化）
 6. **逐 Loop 生成 MD**：写到 `preview_new2/data/_table_drafts/Unit{N}/Loop{N}.md`
    - 按本 SKILL 的"推断规则手册"填字段
@@ -366,11 +330,11 @@ LLM 在 Phase 1 自动识别两种格式都吃下；写 MD 时统一成新格式
 
 1. 输出"Phase 1 摘要"：
    - 各表条目数（6 个 Loop 合计）
-   - 留白字段清单（"PosX/PosY 留空 N 处，色值留空 N 处..."）
+   - 留白字段清单（"PosX/Posy 留空 N 处, backgroundMusic 留空 N 处..."）
    - MD 文件路径列表（让用户能手改）
 2. AskUserQuestion：
    - "MD 看起来 OK，跑 dry-run"
-   - "我先手改一下 MD（用户改完再回来跑）"
+   - "我先手改一下 MD"
    - "取消"
 3. 跑 `python preview_new2/table_md_to_json.py Unit{N} --dry-run`
 4. 把脚本的 dry-run 报告（每张表新增/更新条数 + ID 列表）原样呈现
@@ -390,32 +354,34 @@ AskUserQuestion：
 3. 成功后清理：删 `preview_new2/data/_table_drafts/Unit{N}/`
 4. 输出最终报告：
    - 各表写入条数
-   - 跳过字段清单（"ChapterConfig.initTalk 留空待 sync_to_json 补，共 6 处"）
+   - 跳过字段清单
    - 后续手动步骤提示：
      - Talk → `python AVG/对话配置工作及草稿/sync_to_json.py`
      - 鉴赏力 / Expose → 对应 skill 或手动
-     - `_all_tables.xlsx` 由用户手动同步
+     - Unity 同步 → 独立流程（preview → Unity 转换）
 
 ## 不要做的事
 
 - **不要直接写 / 编辑 `preview_new2/data/table/*.json`**：所有写入走 py 脚本
 - **不要重写 Talk / Expose 系列表**
-- **不要碰其他 Unit 的条目**：py 脚本按 ID 段过滤，跨 Unit 数据原样保留
+- **不要碰其他 Unit 的条目**：py 脚本按 ID 段过滤
 - **不要凭空补 Position / 美术资源路径**：state 没的就写 `待补充`
-- **不要在没 dry-run + 用户确认的情况下直接跑写入命令**
-- **不要假设默认 Unit**：argument 没给就 AskUserQuestion 问
-- **不要修改 `_all_tables.xlsx`**：用户手动同步
-- **不要在脚本失败时清理 MD**：保留临时文件，让用户能手修
+- **不要在没 dry-run + 用户确认的情况下直接跑写入**
+- **不要假设默认 Unit**
+- **不要修改 `_all_tables.xlsx`**
+- **不要在脚本失败时清理 MD**
+- **不要尝试生成 LocationConfig / NPCLoopData / DayTimeConfig / GameFlowConfig / MapConfig**：preview 端没有这 5 张表，本 skill 不补
+- **不要写 truth / shortDesc / shortTruth / color** 等 Unity 端独有字段
 
 ## 与现有脚本的关系
 
-- `preview_new2/state_to_preview*.py`：生成 `preview_new2/data/Unit{N}/*.yaml`（前端流程图用），也会追加 table——本 skill 与之**互不重叠且不替代**。如要更新 Unit{N}/yaml，仍走原 py。本 skill 只管 `table/*.json`。
-- 如未来要统一，可让 py 脚本同时吐 Unit{N}/yaml + table/json，但本 skill 当前不承担。
+- `preview_new2/state_to_preview*.py`：生成 `preview_new2/data/Unit{N}/*.yaml`（前端流程图用）+ 也会追加 table。本 skill 与之**互不重叠**——本 skill 只管 `table/*.json` 的写入；如要更新 Unit{N}/yaml，仍走原 py。
+- `AVG/对话配置工作及草稿/sync_to_json.py`：维护 Talk + ExposeTalk 的对话内容。本 skill 在 SceneConfig.NPCInfos 里写空 TalkInfo，等 sync_to_json 后续填。
 
 ## 后续步骤（不在本 skill 范围）
 
 1. Talk 配置：`python AVG/对话配置工作及草稿/sync_to_json.py`
 2. 指证（Expose）：手动或专用 skill
 3. 鉴赏力节点：暂未纳入配置表
-4. `_all_tables.xlsx` 同步：手动
-5. 同步到 Unity 工程：`copy /Y "preview_new2\data\table\*.json" "D:\NDC\Assets\table\"`
+4. preview → Unity 同步：独立流程（含字段映射 + 拆表 + Unity-flavored JSON 输出）
+5. `_all_tables.xlsx` 同步：手动
