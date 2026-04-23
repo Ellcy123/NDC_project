@@ -28,18 +28,20 @@
 #                        doubts / evidence_registry 全部存在；expose 含 target/is_liar/
 #                        player_inquiry/context/round_1/round_2/post_expose 完整；
 #                        不设 post_expose_scene——L3 结尾对话归 L4 opening 的 emma_L4_001 承载
-# B. 证据覆盖     PASS — 讨论结论 L3 全部 7 件证据（9301-9307）已分配到对应场景；
+# B. 证据覆盖     PASS — L3 全部 8 件证据（9301-9308）已分配到对应场景；
 #                        9301 玻璃碎片分配 9003（会客室）+ 9008（侧巷）双场景；
-#                        9307 Rita 照片为 envir 场景道具，pickup: false
+#                        9307 Rita 照片为 envir 场景道具，pickup: false；
+#                        9308 Webb 勒索日记（叙事证据，不挂疑点，不可分析，pickup: true）
 # C. NPC 条目     PASS — Vivian/Jimmy/Morrison/Rosa 各含 3 必填块（active_topics/
 #                        withheld_topics / player_inquiry / testimony_ids / ）；
 #                        Rosa 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与讨论结论"L3 揭示：真实枪击早于 23:20 + Rosa 被胁迫 +
 #                        Webb 心里未抛弃 Vivian"一致
-# E. 信息节奏     PASS — 未泄露 L4+（Jimmy 凶手身份、.45 口径不符分析、Whale 具体身份、
+# E. 信息节奏     PASS — 未泄露 L4+（Jimmy 凶手身份、.45 口径不符分析、Whale 具体身份与 Rita 间谍关系、
 #                        Morrison 腐败、鼓点诡计、Vivian 11:05 被吼退细节）；
 #                        倒写 J 只做书写特征记录，不点明是 Jimmy；
-#                        .45 弹壳在 post_expose 只给"一枚弹壳"，口径留 L4 揭示
+#                        .45 弹壳在 post_expose 只给"一枚弹壳"，口径留 L4 揭示；
+#                        9308 只给"Whale 名字 + Webb 警觉"，不给身份/合同/间谍/借款——这些留 L4-L6 揭示
 # F.        REMOVED（系统已删除）
 #                        节点均有内容；source/quiz 配对完整
 # G. Expose 逻辑  PASS — round_1 有 9301 玻璃碎片 + 9033001 Rosa 倒垃圾证言（时间线推理），
@@ -72,10 +74,11 @@ player_context:
     - "Rosa 的谎言1（Vivian 刚刚开枪）被推翻，但谎言2（23:30 枪声 + 只有 Vivian 在场）在 Loop1 无法反驳——时间线悬而未决"
     - "Webb 的酒吧除私酒之外在做敲诈勒索生意（仙人跳变体手法）"
     - "Tommy 曾经是勒索执行人，但自从 11 月中旬 Webb 沉迷 Rita 后就被换掉了"
-    - "11 月中旬之后，勒索执行人换了——新的执行人身份未知；背后有一个叫 Whale 的大人物"
-    - "Webb 11 月中旬停了勒索，想转移财产跑路——Tommy 认为他惹上了危险人物"
+    - "11 月中旬之后，勒索执行人换了——新的执行人身份未知；Tommy 暗示 Webb 惹上了一个'大人物'但没有点名"
+    - "Webb 11 月中旬停了勒索，想转移财产跑路——Tommy 认为他惹上了危险人物（名字仍未揭示）"
     - "Vivian 曾被 Webb 要求协助勒索中产人士，她对此十分憎恨"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
+    - "Morrison 对 Vivian 的笔录问话已告一段落，Vivian 此时回到化妆室独处"
     - "Jimmy 是兼职主厨，经济困难——在 Loop2 随口说过'很缺钱'"
 
   new_directions:
@@ -98,6 +101,7 @@ player_context:
     - "Rosa 给了 Zack 一枚她在现场捡到的弹壳（型号待 Loop4 确认），哀求 Zack 不要声张"
     - "Webb 的保险箱字条记录密码是他与 Vivian 相遇的那一天——Webb 心里仍记挂着 Vivian"
     - "Webb 与 Vivian 的合影证明两人曾有真实的情感纽带，与'沉迷 Rita 抛弃 Vivian'的表象形成对比"
+    - "Webb 生前已警觉 Whale 是威胁——在他的勒索记录日记扉页亲笔写下了 'Whale — Danger'；这把 Emma opening 口述的'大人物 Tommy 叫他 Whale'升级为 Webb 亲笔的物证警觉，情感重量显著加重（具体身份、在酒吧内的行动、与 Morrison 的借款关系都留待后续 Loop）"
 
 # ─────────────────────────────
 # 二、开篇（🎭 Emma 目标设定对话）
@@ -120,7 +124,7 @@ opening:
     mindset: "清醒、聚焦，对'案发现场还有被忽视证据'充满期待"
 
     active_topics:
-      - "Tommy 的指证结果：Webb 做勒索生意，执行人已换人（不是 Tommy），背后有 Whale"
+      - "Tommy 的指证结果：Webb 做勒索生意，执行人已换人（不是 Tommy），背后有一个 Tommy 没点名的'大人物'"
       - "Rosa 的时间线谎言仍未击破——会客室今日开放是机会"
       - "Morrison 在大堂说了勘验情况：子弹缺失，弹道穿窗"
     withheld_topics:
@@ -148,7 +152,7 @@ scenes:
     type: free_exploration  # 🔓 自由探索（对话后 post_dialogue_lock: true）
     post_dialogue_lock: true  # 裁决12：对话结束后场景反锁，Loop3 不可再进入
     description: |
-      Vivian 独自在化妆室。她仍然咬定自己是凶手。
+      Morrison 的笔录问话告一段落后，Vivian 独自回到化妆室。她仍然咬定自己是凶手。
       Zack 可以进入对话，Vivian 会给出两条关键证言：
       她对 Webb 的恨意（被迫勒索别人）以及她每晚 23:30 送酒的惯例。
       对话结束后化妆室反锁——Loop3 内不再可进入（Loop4 再次开放）。
@@ -318,7 +322,8 @@ scenes:
       Morrison 完成勘验后离开，Zack 可独立搜证。
       关键发现：没有玻璃的窗户——Zack 向窗外侧巷望去，
       见到垃圾袋正压在碎玻璃上。需要走出员工侧门到侧巷（9008）取回玻璃碎片。
-      会客室内还有保险箱字条、Webb+Vivian 合影（可拾取）、Rita 的照片（环境陈设）。
+      会客室内还有保险箱字条、Webb+Vivian 合影、Webb 的勒索记录日记
+      （扉页亲笔写着 "Whale — Danger"，可拾取）、Rita 的照片（环境陈设）。
 
     evidence:
       - id: 9304
@@ -344,6 +349,18 @@ scenes:
         note: "场景道具——Webb 会客室内摆放，显示 Rita 的存在感；不是疑点 condition"
         description: "一张年轻女性（Rita）的照片，摆放在 Webb 的桌上，位置显眼。"
         analysis: null
+
+      - id: 9308
+        name: "Webb 的勒索记录日记（扉页写 Whale—Danger） / Webb's Blackmail Ledger (Cover Page: Whale—Danger)"
+        type: item
+        pickup: true
+        note: "叙事证据——Whale 名字的首次物证（Emma opening 仅为口述转达 Tommy 暗示；9308 是 Webb 亲笔的警觉证明，情感重量更大）；不挂疑点 condition；不可分析；L4 Tommy 对话引用此件作为 Zack 的正面追问起点"
+        description: "Webb 桌边抽屉里的一本小皮面日记，封面磨旧，右下角烫金的'W.'。翻开扉页，Webb 的钢笔字，右上角写着一行较大的字：'Whale — Danger'，末尾重重一道横划。再往后翻是短条目式的人名缩写和金额——这是 Webb 自己的勒索生意黑账。 Webb 在扉页上专门把 Whale 和 Danger 写在一起，像是在提醒自己，或者，像是写完还盯着看过很久。"
+        analysis: null
+        metadata:
+          narrative_only: true
+          first_whale_physical_evidence: true  # Whale 名字的首次物证浮现（L3 Emma opening 已口述过名字，但此处是 Webb 亲笔警觉的物证证明）
+          info_budget: "仅加固'Webb 生前已警觉 Whale 是威胁'；不暗示 Whale 的具体身份、不暗示酒吧内的现任勒索人/Rita 间谍/Morrison 借款——这些留 L4-L6"
 
       - id: 9301
         name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
@@ -587,7 +604,8 @@ evidence_registry:
   # Loop3 = 93xx 系列（裁决1：Unit9 使用 9xxx 独立 ID 段）
   # 继承 Loop1：9101（Vivian 手枪）/ 9103（Webb 委托协议书）/ 9711（无硝烟手枪分析派生）
   # 继承 Loop2：9201–9207
-  # Loop3 新增：9301–9307；post_expose 新增 9401（登记 L4 段，L3 post_expose 获得）
+  # Loop3 新增：9301–9308；post_expose 新增 9401（登记 L4 段，L3 post_expose 获得）
+  # 9308：Webb 勒索日记（叙事证据，不挂任何 doubt condition，不可分析；Whale 名字的首次物证——Webb 亲笔警觉）
 
   - id: 9301
     name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
@@ -637,6 +655,13 @@ evidence_registry:
     first_scene: 9003
     pickup: false
     note: "场景道具——Webb 会客室内摆放，环境叙事，不作为疑点 condition"
+
+  - id: 9308
+    name: "Webb 的勒索记录日记（扉页写 Whale—Danger） / Webb's Blackmail Ledger (Cover Page: Whale—Danger)"
+    type: item
+    first_scene: 9003
+    pickup: true
+    note: "叙事证据——Whale 名字的首次物证浮现（Emma opening 已口述过 Tommy 暗示，9308 是 Webb 亲笔警觉的物证，情感重量更大）；不挂任何 doubt condition；不可分析；L4 Tommy 对话引用此件作为 Zack 追问'Whale 是谁'的起点"
 
   - id: 9401
     name: ".45 警用弹壳 / .45 ACP Police-Issue Casing"

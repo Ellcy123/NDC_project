@@ -24,7 +24,7 @@
 #                        9204 Tommy 账本→9010（Tommy 办公室）；9205 假油画→9005（歌舞厅）；9206 花瓶照→9005；9207 Jimmy 工资单→9009（Jimmy 厨房）；
 #                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（Jimmy 不在场证明，L5 击穿）
 # C. NPC 条目     PASS — Tommy（Expose 对象，is_liar:true，player_inquiry:null）/ Jimmy / Emma（opening）
-#                        各含 3 必填块；Vivian 化妆室 L2 不可进入，作为锁定场景环境叙事；
+#                        各含 3 必填块；Vivian 在 L2 全程被 Morrison 就地问话、不可接触——化妆室场景不出现；
 #                        不设 post_expose_scene——L2 结尾对话归 L3 opening 的 emma_loop3_open 承载
 # D. 目标对齐     PASS — goals 与讨论结论"调查 Webb 生意 / 指证 Tommy"完全一致
 # E. 信息节奏     PASS — 未泄露 L3+内容：Rosa 威胁纸条 / 23:30 假枪声 / 玻璃碎片 / Jimmy 真凶身份 /
@@ -59,7 +59,7 @@ player_context:
     - "Rosa 谎言2（23:30 枪声 + 只有 Vivian 在场）在 L1 无法反驳——时间线悬而未决"
     - "Webb 委托协议书证明 Webb 预见自己有被害风险（保险倾向）"
     - "Morrison 同意给 Zack 72 小时调查期，暂缓逮捕 Vivian"
-    - "Morrison 要求 Vivian 禁足不得离开酒吧"
+    - "Morrison 把 Vivian 带到酒吧大堂一角配合笔录问话，L2 期间玩家无法接触"
     - "Emma 提出核心疑点：Webb 真正怀疑的凶手到底是谁？"
 
   new_directions:
@@ -92,7 +92,8 @@ opening:
   description: |
     L1 结束时 Zack 和 Emma 在大门口确认目标——"Webb 真正怀疑的凶手是谁？"
     L2 开篇：两人重新进入酒吧，开始逐一调查酒吧内的每个人。
-    Morrison 仍在场；Vivian 被禁足，房门紧闭，偶尔传出啜泣声。
+    Morrison 把 Vivian 带到大堂一角做笔录问话，两人全程处于"警方办案"状态，
+    玩家无法接近也无法打扰——化妆室空着，Vivian 本人不在场。
     Rosa 在清洁间。Tommy 在自己办公室。Jimmy 在厨房。
     玩家进入自由探索模式。
 
@@ -313,7 +314,6 @@ scenes:
           - "Jimmy 是兼职主厨，还有很多副业（身份确认）"
           - "对 Webb 的死亡表示抱歉（情绪线索——愧疚感可观察但不解释）"
           - "Jimmy 很缺钱（经济困难，随口说出，非重点）"
-          - "Vivian 杀 Webb 的事——同病相怜，情有可原（背景陈述）"
         withheld_topics:
           - "爱尔兰裔身份和口音特征（L5 关键破绽）"
           - "Anna 怀孕细节（L5 揭示）"
@@ -332,22 +332,7 @@ scenes:
         testimony_ids:
           - 9072003  # Jimmy 身份：蓝月亮酒吧的主厨，还有副业
           - 9072001  # Jimmy：很缺钱（无意随口说出）——F1 碎片 condition 唯一归属
-          - 9072002  # Jimmy：同病相怜——Vivian 杀 Webb 情有可原（背景陈述）
 
-
-  # ── 场景 9002：Vivian 化妆室 ──
-  - id: 9002
-    name: "Vivian 化妆室 / Vivian's Dressing Room"
-    type: locked  # 🔒 门外啜泣（环境叙事，L2 不可进入）
-    description: |
-      B1 化妆室。Vivian 被 Morrison 禁足于酒吧内，独自待在化妆室里。
-      门是关着的——走过门口可以隐约听见里面的啜泣声。
-      L2 不可进入；L3 才开放正式对话。
-      环境叙事：传达 Vivian 的崩溃状态，激发玩家想进去了解她的驱动力。
-    lock_reason: "Morrison 禁足令 + Vivian 自我封闭，L3 开放"
-
-    evidence: []
-    npcs: {}
 
   # ── 场景 9003：Webb 会客室 ──
   - id: 9003

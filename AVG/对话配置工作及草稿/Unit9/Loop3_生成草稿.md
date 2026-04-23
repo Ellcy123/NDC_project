@@ -5,7 +5,7 @@
 > **Unit 大纲**：`剧情设计/Unit9/Unit9_大纲.md`
 > **来源流水线**：team-dialogue skill · Phase 2a 五对策划讨论 → Phase 2b 五个 writer 并行执笔 → Phase 3 合并
 >
-> **覆盖范围**：Opening（Emma 目标设定）+ Scene 9002（Vivian 化妆室）+ Scene 9009 Interlude（Jimmy 厨房）+ Scene 9004（Morrison 大堂 + Rosa Talk + Rosa Expose 2轮 + post_expose）
+> **覆盖范围**：Opening（Emma 目标设定）+ Scene 9002（Vivian 化妆室）+ Scene 9009 Interlude（Jimmy 厨房）+ Scene 9004（Morrison 大堂 + Rosa Talk + Rosa Expose 2轮 + post_expose）+ Scene 9003（Webb 会客室 · 9308 日记拾取旁白）
 >
 > **涉及 NPC**：艾玛·奥马利（Emma）/ 扎克·布伦南（Zack）/ 薇薇安·罗斯（Vivian）/ Jimmy O'Sullivan / 莫里森侦探（Morrison）/ 罗莎·马丁内斯（Rosa）
 >
@@ -30,6 +30,9 @@
 > - 9043001 / 9043002（Morrison）
 > - 9033001（Rosa Talk）
 >
+> **场景拾取获取证物 ID**（Scene 9003 Webb 会客室）：
+> - 9308（Webb 勒索日记，扉页写 "Whale — Danger"——Whale 名字的首次物证；Emma opening 已口述，9308 加重为 Webb 亲笔警觉）
+
 > **post_expose 获取证物 ID**：
 > - 9401（.45 弹壳，L3 不揭示口径）
 
@@ -932,6 +935,64 @@ Source / Quiz 标记：
 
 
 ---
+
+---
+
+## §4.5 Scene 9003（Webb 会客室 1F）— 9308 Webb 勒索日记拾取旁白（写手引导 · 非 Talk 文件）
+
+> **生成日期**：2026-04-23
+> **Loop**：3
+> **场景**：9003 Webb 会客室（Morrison 勘验完成后正式开放）
+> **性质**：⚠️ 本段**不是** Talk 对话文件——9003 场景的其余证据（9304 保险箱字条 / 9305 合影 / 9307 Rita 照片 / 9301 玻璃碎片）均无 Talk，走点击拾取 + ItemStaticData.describe 呈现。9308 同样，本段为**写手引导文本**，实际实现落点如下：
+>   - 主体 describe：直接写入 `ItemStaticData[9308].describe`（Webb 日记整体叙述）
+>   - Zack 心证旁白（见下）：若 Unity 端支持拾取瞬间的短 narration 气泡，用文案 ①②③；若不支持，整合进 describe 第二段
+> **触发**：玩家在 9003 场景内点击 Webb 桌边抽屉，拾取 9308
+> **get 证据**：9308（Webb 勒索记录日记，扉页写 "Whale — Danger"）
+
+---
+
+<!--
+  信息节奏锁定（loop3_state.yaml 信息预算）：
+  - 只让玩家从本件获知：Whale 这个名字 + Webb 亲笔、亲自警觉
+  - 不让 Zack 推断：Whale 的身份 / 在酒吧里的手下 / 与 Morrison 的关系（这些留 L4-L6）
+  - Zack 不在此处替玩家 dot-connect——他只读到字、停了一下、收起来
+
+  禁忌：
+  - ❌ 不说"原来 Webb 怕的大人物就是 Whale"（替玩家连线，违反原则一）
+  - ❌ 不说"Tommy 在 L2 暗示过的大人物就是他"（同样替玩家结论）
+  - ❌ 不点名 Rita / Jimmy / Morrison 与 Whale 的任何可能关系
+  - ❌ 不识读黑账里的人名缩写（Webb 用 T.H. / C.L. 之类占位，Zack 不在此刻解读）
+-->
+
+### 节拍 ① — 翻开扉页
+
+**[场景旁白]** 桌边抽屉最里层。皮面日记，封面磨旧，右下角烫金一个 "W."。翻开——
+
+### 节拍 ② — 扉页字样
+
+**扎克·布伦南（心证）** 扉页右上角，Webb 的钢笔字，比内文大一圈，末尾一道重横划压着纸面。
+> "Whale — Danger."
+>
+> ……他自己写的。自己给自己留的提醒。
+
+### 节拍 ③ — 合上收起
+
+**扎克·布伦南（心证）** 往后翻——短条目，人名缩写，金额。Webb 自己做这门生意的记录。他在这本里面。
+>
+> （合上日记，用大拇指压了一下扉页的折痕，收进外套内侧口袋）
+
+**📋 获取证物 9308**：Webb 的勒索记录日记——扉页亲笔写着 "Whale — Danger"。Webb 生前就已经在怕这个人。
+
+---
+
+<!-- 节拍结束。Zack 不追加推断台词，不 dot-connect 到 Tommy 的"大人物"暗示——玩家自己会连。
+     L4 Emma opening 901004018 引导玩家带这本日记去 Tommy 办公室，Tommy 对话（905003007a-b）完成"正面确认"。-->
+
+**Unity 实现提示（给程序/策划）：**
+- 9308 是纯 item 类型，pickup=true，analysis=null
+- ItemStaticData.describe 建议用节拍 ①+② 的内容（约 80-120 字）
+- 若拾取瞬间有 barge-in 旁白气泡，用节拍 ②+③（Zack 的两段心证）
+- 本件不参与任何 doubt condition，不参与任何 expose usable_evidence
 
 ---
 

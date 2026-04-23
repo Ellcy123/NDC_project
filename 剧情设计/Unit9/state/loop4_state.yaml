@@ -88,13 +88,14 @@ player_context:
     - ".45 警用弹壳（9401）已在玩家背包——L3 post_expose Rosa 交出；弹底印记可见'MILLER ARMS'批号（L4 玩家尚不明白含义）"
     - "保险箱字条（9304）：密码与 Webb 和 Vivian 相遇那天有关"
     - "Webb 和 Vivian 合影（9305）——Webb 一直保留，感情仍在"
+    - "Webb 勒索记录日记（9308）扉页亲笔写着 'Whale — Danger'——Webb 生前已经把 Whale 认定为威胁；L3 玩家已经知道 Whale 这个名字，但身份、在酒吧内的具体动作、与 Morrison 的关系都还未知"
     - "疑点 9101（23:30 枪响可疑）已在 L3 回填为'已解决'——23:30 是假枪声"
 
   new_directions:
     - direction: "前往一楼走廊垃圾桶——嫁祸者熟悉酒吧，可能留有合谋痕迹；新线索或在此处"
       trigger: "Rosa 供述'嫁祸者很熟悉酒吧'；L4 开场 Emma 提示走廊垃圾桶附近有新线索"
-    - direction: "前往 Tommy 办公室——追问他暗示的大人物是否就是 Whale；带上 .45 弹壳请他辨认"
-      trigger: "L3 post_expose 获得 .45 弹壳（9401）；Tommy 在 L2 曾暗示 Webb 惹上大人物，对方心中有猜测"
+    - direction: "前往 Tommy 办公室——Webb 的黑账扉页写着 'Whale — Danger'，带上 .45 弹壳和这本日记去追问 Tommy：Whale 到底是谁，Webb 生前怕的是什么"
+      trigger: "L3 post_expose 获得 .45 弹壳（9401）+ L3 会客室搜得 Webb 勒索日记（9308）；Tommy 在 L2 曾暗示 Webb 惹上大人物，对方心中有猜测"
     - direction: "进入 Vivian 化妆室——L3 指证 Rosa 完成后化妆室可再次进入，取得说服 Vivian 的物证"
       trigger: "L3 post_expose 后 Vivian 化妆室（9002）再次开放"
     - direction: "在歌舞厅找 Vivian 进行深度对话——她终于愿意正面沟通"
@@ -141,7 +142,7 @@ opening:
         - "真实枪击时间早于 23:20——9301 玻璃碎片 + 9033001 Rosa 证言交叉确认"
         - "幕后嫁祸者熟悉酒吧内部，刻意针对 Vivian 的送酒习惯"
         - "Rosa 给了 Zack 一枚 .45 警用弹壳（9401）——弹底有'MILLER ARMS'字样，含义暂不明"
-        - "Tommy 在 L2 暗示'Webb 惹上了大人物'——他心中有猜测"
+        - "Webb 勒索日记（9308）扉页写着 'Whale — Danger'——Webb 生前怕一个叫 Whale 的人；这个名字 Tommy 在 L2 暗示的'大人物'大概率就是他，要去 Tommy 办公室对质确认"
         - "Vivian 化妆室（9002）在 L4 再次开放"
         - "L4 的核心目标：说服 Vivian 不再认罪，这是'救'她，不是审她"
         - "一楼走廊垃圾桶附近有新线索值得搜查"
@@ -188,20 +189,24 @@ scenes:
 
     npcs: {}
 
-  # ── 场景 9010：Tommy 办公室（Whale 指认 + Rita 间谍证言）──
+  # ── 场景 9010：Tommy 办公室（Whale 确认 + Rita 间谍证言）──
   - id: 9010
     name: "Tommy 办公室"
     type: free_exploration
     description: |
-      Tommy 在自己的办公室。Zack 带着 .45 弹壳（9401）前来追问。
+      Tommy 在自己的办公室。Zack 带着 .45 弹壳（9401）和 Webb 的勒索日记（9308）前来追问。
 
-      核心叙事（主线）：Zack 出示 .45 弹壳并追问 Webb 惹上的大人物——
-      Tommy 在 Zack 强调"这对 Vivian 脱罪十分关键"后松口指认：
-      大人物就是 Whale；Whale 甚至在酒吧里派了人渗透（Rita）。
-      Tommy 正式指认："这个酒吧里知道 Whale 的，除了 Webb，只有前勒索人和现勒索人。"
+      核心叙事（主线）：Zack 直接把日记扉页翻给 Tommy 看——"Whale — Danger"——
+      再出示 .45 弹壳，追问 Whale 到底是谁。Zack 强调"这对 Vivian 脱罪十分关键"后，
+      Tommy 松口：是的，就是 Whale——Webb 生前怕的就是他。
+      Tommy 进一步指认：Whale 甚至在酒吧里派了人渗透（Rita）；
+      "这个酒吧里知道 Whale 的，除了 Webb，只有前勒索人和现勒索人。"
 
       弹壳背景（次线）：Tommy 认出 9401 弹壳，给出他见过这类枪的亲身经历（被枪击大腿）；
       之后那份工作由另一个人接手（不点名，L5 才揭示是 Jimmy）。
+
+      信息节奏：Whale 的名字在 L3 已浮出（Webb 日记），L4 Tommy 不再是"首次命名"，
+      而是"确认 + 扩展"——他把名字和具体行动（Rita 间谍）、身份边界（谁知道 Whale 的范围）绑定。
 
     evidence: []
 
@@ -209,7 +214,11 @@ scenes:
       - id: 9401
         name: ".45 警用弹壳（L3 post_expose 继承）"
         source_loop: 3
-        usage: "出示给 Tommy，触发 Rita 间谍指认 + Whale 身份确认对话链"
+        usage: "出示给 Tommy，触发 Rita 间谍指认 + Whale 行动范围确认对话链"
+      - id: 9308
+        name: "Webb 勒索日记（L3 会客室继承，扉页写 Whale — Danger）"
+        source_loop: 3
+        usage: "出示给 Tommy 作为追问起点——Webb 生前已警觉 Whale，Tommy 必须正面回答而不能再含糊其辞"
 
     npcs:
       tommy_L4_001:
@@ -220,7 +229,7 @@ scenes:
 
         # ── 1. 已知信息 ──
         active_topics:
-          - "Webb 惹上的大人物就是 Whale（Zack 强调'这对 Vivian 脱罪关键'后，Tommy 松口正式指认）"
+          - "Zack 翻开 Webb 日记扉页问 'Whale — Danger' 是谁——Tommy 在'对 Vivian 脱罪关键'的前提下松口确认：就是 Whale，Webb 生前怕的那个人"
           - "Rita 也是 Whale 派来的间谍——Tommy 多年在 Webb 身边观察，她问的问题太精准、来的时机太巧（证词 9054001）"
           - "酒吧里知道 Whale 的，除了 Webb，就只有前勒索人和现勒索人（证词 9054002）"
           - "那次之后就由别人接手了相关工作（不点名）"
@@ -232,7 +241,7 @@ scenes:
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - '"出示 .45 弹壳（9401）追问 Webb 惹上的大人物是否就是 Whale" # 10'
+          - '"翻开 Webb 日记（9308）扉页 + 出示 .45 弹壳（9401），追问 Whale 到底是谁" # 10'
           - '"强调这对 Vivian 脱罪关键——逼 Tommy 松口正式指认 Rita 是间谍" # 9'
           - '"酒吧里知道 Whale 的人范围有多小——追问前勒索人和现勒索人（证词 9054002）" # 8'
           - '"被枪击的经历——那之后是谁接手了（Tommy 不会点名）" # 6'
@@ -488,28 +497,17 @@ expose:
   post_expose:
     description: |
       Vivian 彻底崩溃，从"求死认罪"到"接受被救"的情感转变完成。
-      她开始主动说出真相——三条关键证言。
+      她开始主动说出真相——关键证言（23:05 门口被吼退经过）。
       随后，Morrison 进入 Webb 会客室，正式触发 turn_cutscene。
-      Vivian 被押走时听到枪声"从头顶方向传来"（为 L5 假枪声诡计埋伏笔）。
+      Vivian 被押走时听到枪声"从头顶方向传来"（为 L5 假枪声诡计埋伏笔——
+      以叙事伏笔形式呈现，不作为可提取证词）。
 
     new_evidence_gained: null
 
     new_testimony_gained:
-      - id: 9064005
-        content: "Webb 利用 Vivian 勒索的都是孤立的银行家、工程师等中产阶级不抱团人士；帮 Webb 勒索 Whale 的人不是她"
-        significance: "确认 Vivian 的勒索范围，排除她与 Whale 直接对抗；为 L5 指证 Jimmy 奠基"
-
       - id: 9064006
         content: "Vivian 在 23:05 准备去杀 Webb，在门口听到'Don't be bothering me!'就退走了；她越来越觉得不对劲，23:30 才回去推开了门"
         significance: "23:05 时间节点确认；'Don't be bothering me!'是 L5 爱尔兰口音谜题的关键伏笔"
-
-      - id: 9064007
-        content: "被带走时，Vivian 感觉枪声是从头顶方向传来的（23:30 那声枪响）"
-        significance: "⭐ L5 假枪声诡计伏笔——枪响来自头顶（2F 厨房），不是 1F 会客室"
-        metadata:
-          cross_loop_critical: true
-          loop5_critical: true
-          usage: "L5 指证 Jimmy R1 的叙事背景支撑；鼓点遮掩假枪声的方向伏笔"
 
     player_knowledge_gained:
       - "Vivian 承认不是凶手，但曾有过杀人计划（23:05 来门口被挡、23:30 推门发现 Webb 已死）"
@@ -742,7 +740,7 @@ evidence_registry:
   # L4 = 94xx 系列（L4 新引入证据）
   # 继承 L1：9101（Vivian 手枪）/ 9103（Webb 委托协议书，本 Loop 末被没收）/ 9711（派生）
   # 继承 L2：9201-9207
-  # 继承 L3：9301-9307（9304 保险箱字条在 L4 R3 使用）
+  # 继承 L3：9301-9308（9304 保险箱字条在 L4 R3 使用；9308 Webb 勒索日记在 L4 Tommy 办公室对话引用作为追问起点）
   # 特别说明：9401 为 L3 post_expose 继承，L4 开场玩家背包已持有——不设 pickup 节点
 
   - id: 9401
