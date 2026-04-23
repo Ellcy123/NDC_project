@@ -19,10 +19,11 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
 #                        NPC 3 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
-# B. 证据覆盖     PASS — 讨论结论 L2 全部 7 件证据（9201-9207）+ 2 件场景补充证据（9209/9210）已分配到场景；
+# B. 证据覆盖     PASS — 讨论结论 L2 全部 7 件证据（9201-9207）+ 2 件场景补充证据（9209/9210）+ 2 件环境证据（9211/9212）已分配到场景；
 #                        9201 勒索照片→9006（小包厢）；9202 VIP 合影→9011（Webb 办公室）；9203 Webb 收入→9011；
 #                        9204 Tommy 账本→9010（Tommy 办公室）；9205 假油画→9005（歌舞厅）；9206 花瓶照→9005；9207 Jimmy 工资单→9009（Jimmy 厨房）；
-#                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（Jimmy 不在场证明，L5 击穿）
+#                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（Jimmy 不在场证明，L5 击穿）；
+#                        9211 对墙沙发 / 9212 封死窗帘→9006（小包厢环境叙事——勒索拍摄角落的构图与隔绝）
 # C. NPC 条目     PASS — Tommy（Expose 对象，is_liar:true，player_inquiry:null）/ Jimmy / Emma（opening）
 #                        各含 3 必填块；Vivian 在 L2 全程被 Morrison 就地问话、不可接触——化妆室场景不出现；
 #                        不设 post_expose_scene——L2 结尾对话归 L3 opening 的 emma_loop3_open 承载
@@ -54,7 +55,7 @@ player_context:
     - "Webb 已死亡（Morrison 宣告），死亡地点：蓝月亮酒吧 1F 会客室（South Side）"
     - "Vivian 手持手枪在现场，但该枪无硝烟反应——她不是刚刚开枪的那个人"
     - "23:30 众人听到枪响，Zack 和 Emma 从歌舞厅赶到会客室发现 Webb 尸体"
-    - "Webb 提前雇佣 Zack：委托协议书包含保护 Vivian 安全 + 确保 Vivian 继承遗产"
+    - "Webb 提前雇佣 Zack 作为遗嘱执行人：委托协议书内容为确保 Vivian 顺利继承 Webb 遗产；按 slayer rule，Vivian 若被定罪谋杀则遗嘱链断，Zack 必须排除嫌疑才能履职"
     - "Rosa 谎言1（Vivian 刚刚开枪）已被推翻，她的整体可信度存疑"
     - "Rosa 谎言2（23:30 枪声 + 只有 Vivian 在场）在 L1 无法反驳——时间线悬而未决"
     - "Webb 委托协议书证明 Webb 预见自己有被害风险（保险倾向）"
@@ -108,7 +109,7 @@ opening:
       active_topics:
         - "Vivian 的枪无硝烟反应，Rosa 谎言1 已被击穿"
         - "Rosa 的时间线谎言（谎言2）无法反驳，时间线真相悬而未决"
-        - "Webb 的委托协议书：保护 Vivian + 确保继承遗产（保险倾向）"
+        - "Webb 的委托协议书：指定 Zack 为遗嘱执行人 + 确保 Vivian 顺利继承遗产（保险倾向）"
         - "Morrison 同意 72 小时调查期"
         - "下一步：调查 Webb 这个人——向酒吧内每个人问 Webb 的情况"
       withheld_topics:
@@ -157,7 +158,7 @@ scenes:
         name: "勒索用的照片 / Blackmail Photos"
         type: item
         pickup: true
-        description: "Vivian 和中产阶级人士的暧昧合影；照片背面分别标注'花瓶 $4,000''油画 $7,000'两个化名对应的金额"
+        description: "一件证据含两张黑白照片：一张是 Vivian 与 Thompson 的暧昧合影，背面钢笔标注'花瓶 $4,000'；另一张是 Vivian 与 Coleman 的暧昧合影，背面钢笔标注'油画 $7,000'。两张照片的化名与金额对应勒索进账，伪装成古董买卖"
         note: "关键——疑点 9201 condition；L2 R1 击穿件"
 
       - id: 9209
@@ -166,6 +167,22 @@ scenes:
         pickup: true
         description: "一台 1920 年代的便携相机，机身落灰但机械完好；卷片轴上仍留有半卷未冲洗底片，型号与勒索照片的成像风格吻合——正是拍摄勒索照片所用的工具"
         note: "场景道具——勒索生意的物证补充，不入 doubt condition；由 Emma 的拍照角落观察（sudden_event）引出"
+
+      - id: 9211
+        name: "对墙摆放的沙发 / Wall-Facing Sofa"
+        type: envir  # 环境叙事
+        pickup: false
+        analysis: false
+        description: "包厢角落的一张深色丝绒沙发，被刻意摆成正对墙面的角度——墙面空白干净，恰好是一块拍照用的背景板。坐姿合影从这个角度拍出来，人物面孔会被完整框进画面"
+        note: "场景道具——构成'拍摄勒索照片的专用角落'环境叙事；不入 doubt condition"
+
+      - id: 9212
+        name: "封死的窗帘 / Tightly Drawn Curtains"
+        type: envir  # 环境叙事
+        pickup: false
+        analysis: false
+        description: "厚重的深色丝绒窗帘紧紧封死，看不到外面任何光线；窗帘边缘用别针固定，像是不允许被轻易拉开。即使在大白天，这间小包厢也会完全隔绝外界视线"
+        note: "场景道具——构成'拍摄勒索照片的隐蔽环境'叙事；不入 doubt condition"
 
     npcs: {}  # 小包厢自由探索阶段无 NPC 驻场
 
@@ -606,3 +623,19 @@ evidence_registry:
     first_scene: 9009
     pickup: true
     note: "场景道具——Jimmy 的表面不在场证明；含 23:00–23:10 下楼送餐（L2 看似普通调度）；L5 揭示真实案发时间 23:00–23:05 时击穿伪造"
+
+  - id: 9211
+    name: "对墙摆放的沙发 / Wall-Facing Sofa"
+    type: envir
+    first_loop: 2
+    first_scene: 9006
+    pickup: false
+    note: "场景道具——小包厢拍照构图环境；不入 doubt condition"
+
+  - id: 9212
+    name: "封死的窗帘 / Tightly Drawn Curtains"
+    type: envir
+    first_loop: 2
+    first_scene: 9006
+    pickup: false
+    note: "场景道具——小包厢隔绝外界视线环境；不入 doubt condition"
