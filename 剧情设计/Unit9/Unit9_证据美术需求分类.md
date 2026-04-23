@@ -40,11 +40,10 @@
 **当前 ArtRequirement**（原文）：
 正式法律文件，letter size 纸张（约 22 × 28 cm）
 • 纸张：奶白色商业厚纸，纸纹细腻，整体微微泛黄
-• 排版：标题居中加粗 "PROTECTION & INHERITANCE AGREEMENT"
+• 排版：标题居中加粗 "ESTATE EXECUTION AGREEMENT"
 • 字体：Underwood No. 5 打字机字体，英文正文，油墨浓淡略有不均（部分字母压印较深、部分较浅）
-• 正文主要条款两条（英文），编号 1. 2.
-  1. Bodyguard duty of Mr. Zack Brennan toward Miss Vivian
-  2. Guarantee of Miss Vivian as sole heir upon Mr. Webb's death
+• 正文主要条款一条（英文），编号 1.
+  1. Mr. Zack Brennan is appointed as executor to ensure Miss Vivian's full inheritance of Mr. Webb's estate
 • 签名栏：Webb 的钢笔签名（深蓝黑色墨水，笔锋刚劲），轻微划痕
 • Zack 签名位置留空或待签
 • 日期栏：印有日期 "October 31, 1928"（案发前三天）
@@ -53,15 +52,14 @@
 • 整体气质：1920s 美国私人合同风格
 
 **重点（信息表达必不可少）**：
-1. 条款1：Zack Brennan 负责保护 Vivian 的人身安全
-2. 条款2：Webb 身故后 Vivian 继承全部财产
-3. 日期：October 31, 1928（案发前三天）
-4. Webb 的钢笔签名
+1. 条款：Zack Brennan 作为遗嘱执行人，确保 Vivian 顺利继承 Webb 名下全部财产
+2. 日期：October 31, 1928（案发前三天）
+3. Webb 的钢笔签名
 
 **美术参考（不影响推理）**：
 - 奶白色商业厚纸，纸纹细腻，整体微微泛黄
 - Underwood No. 5 打字机字体，油墨浓淡略有不均
-- "PROTECTION & INHERITANCE AGREEMENT" 标题排版样式
+- "ESTATE EXECUTION AGREEMENT" 标题排版样式
 - Webb 个人火漆印章（暗红色，字母 "W" 款）
 - 纸张对折痕迹、右下角卷边
 - 1920s 美国私人合同整体气质
@@ -386,6 +384,7 @@
 **重点（信息表达必不可少）**：
 1. 手写内容完整可读：「密码是我们相遇的那一天。
 2. 签名「
+3. 左上角小字（给我最爱的Vivan）
 
 **美术参考（不影响推理）**：
 - 纸张尺寸约 8×12 cm，白色 / 奶色
