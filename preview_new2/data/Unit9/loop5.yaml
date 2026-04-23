@@ -1,0 +1,70 @@
+title: 厨师的代价
+target: 找到 Webb 案真凶器 + 指证真正的凶手——还 Vivian 清白
+time: "凌晨"
+
+opening:
+  - id: 9851
+    characters: [Zack, Emma]
+    purpose: 【承接 loop4】Morrison 强押 Vivian + 撕毁协议书 + 夺走弹壳后——酒吧外 Emma 陪 Zack 灵魂黑夜；疑点系统 UI 正式浮现（四大疑点：James 口音 / James 家需钱 / 鼓点掩盖枪声 / Whale 与酒吧谁有往来）；Emma 正式把 Zack 当并肩搭档
+    talk: emma_opening_loop5
+
+scenes:
+  unlocked:
+    蓝月亮酒吧:
+      - 9004  # 酒吧大堂（入门前厅 + 吧台通道；Vivian 被押走后大堂冷清）
+      - 9007  # 一楼走廊（通道可通行；垃圾桶之前已翻过）
+      - 9009  # James 厨房（⚡突发：James 脱口"Don't be bothering me!"——爱尔兰裔口音暴露）
+      - 9010  # Tommy 办公室（Tommy 交付信任：完整节目单 + 节目修改申请 + 生锈 .45 弹壳）
+    James 家:
+      - 9012  # 🆕 James 家卧室（Anna 合法移民通知 + James 配偶非配额资格书——坐实 James 爱尔兰裔非法身份）
+      - 9015  # 🆕 James 家客厅（Anna 首次出场——James 给 Whale 的回信 + Berlitz 英语练习书倒写 J）
+  locked:
+    蓝月亮酒吧:
+      - id: 9001
+        reason: 储藏室空着，Rosa 也走了
+      - id: 9002
+        reason: 化妆室的门锁着，Vivian 已经被带走了
+      - id: 9003
+        reason: 会客室该拿的东西早拿完了
+      - id: 9005
+        reason: 歌舞厅熄了灯，台子是空的
+      - id: 9006
+        reason: 小包厢那边早翻过了
+      - id: 9008
+        reason: 侧巷的玻璃碎片早带走了
+      - id: 9011
+        reason: Webb 办公室之前搜过了，没遗漏
+  closed: []
+
+expose:
+  scene: "蓝月亮酒吧后门（凌晨抓捕 James 现行 / 无独立场景 ID）"
+  target_name: James
+  rounds:
+    - lie: "我当天有不在场证明，枪声发生在 23:30，不可能有其他时间能杀人，如果有枪声大家都能听到"
+      evidences: [9501, 9502]            # 完整节目单 + 节目修改申请（23:00 鼓点高潮掩盖真实枪声）
+    - lie: "Vivian 当时去找他了！说明当时 Webb 还活着，所以不可能是那会儿作案的"
+      evidences: [9505, 9075001]         # Anna 移民通知（附 James 配偶资格书，坐实爱尔兰裔身份）+ James 口音证词
+    - lie: "那个人不是我，我根本没有理由杀 Webb"
+      evidences: [9402, 9085001, 9054002]  # 被撕毁合同 + Anna 证言（怀孕需大笔钱）+ Tommy 证言（知道 Whale 只有前/现勒索人）
+
+events:
+  - id: 9951
+    name: "Arrest Cutscene · 后门抓捕"
+    characters: [Zack, Emma, James]
+    purpose: Zack+Emma 返回酒吧后门——James 刚结束和 Whale 手下的交易前兆（米勒手枪待交付，尾款未收）；Whale 手下潜伏暗处（hidden_npcs）
+    trigger: "自由探索完成 + 携带全部证据"
+  - id: 9952
+    name: "Post-Expose Dialogue · 字迹三物闭环"
+    characters: [Zack, James]
+    purpose: 三轮 Expose 后 Zack 凭 James 家观察记忆点名——"威胁 Rosa 的也是你，纸条（9302）和合同（9402）上的 J 都是倒着写的（9504 英语练习书）"——最后一层伪装被揭穿
+    trigger: "Expose James round_3 完成 + 鸣笛响起后"
+  - id: 9953
+    name: "Suspect Suicide Sequence · James 自杀"
+    characters: [Zack, Emma, James]
+    purpose: 字迹对白击溃 James 心理防线 → James 为保护 Anna 不受 Whale 报复 → 用米勒集团特制手枪自尽 → 临终托付 Anna → 现场遗留真凶器 9601
+    trigger: "post_expose_dialogue 结束后"
+  - id: 9954
+    name: "Post-Expose Romance · 搭档决定"
+    characters: [Zack, Emma]
+    purpose: Zack 要求 Emma 退出调查（太危险），Emma 坚守；两人确认 L6 计划——Emma 记者身份 + Zack 助理伪装潜入 Morrison 家
+    trigger: "suspect_suicide_sequence 后"

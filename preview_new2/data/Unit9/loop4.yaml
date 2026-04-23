@@ -1,0 +1,51 @@
+title: 破碎的金丝雀
+target: 说服 Vivian 不再供述自己是凶手——这不是审讯，是"救人"
+time: "当晚"
+
+opening:
+  - id: 9841
+    characters: [Zack, Emma]
+    purpose: 【承接 loop3】Rosa 真击穿 + .45 弹壳到手——梳理 L4 目标：救 Vivian；Emma 提示一楼走廊垃圾桶有新线索 + 先去 Tommy 办公室鉴定弹壳型号
+    talk: emma_L4_001
+
+scenes:
+  unlocked:
+    蓝月亮酒吧:
+      - 9002  # Vivian 化妆室（loop3 对话后反锁，本 Loop 重新开放——痛苦记录/船票/绝笔信/Colt 广告卡）
+      - 9003  # Webb 会客室（Expose Vivian 场所，无新拾取证据；背包已持 9304 字条）
+      - 9004  # 酒吧大厅（Morrison 等待区 / Part1 情节转折触发入口——看见 .45 弹壳变脸）
+      - 9005  # 歌舞厅（Vivian 首次正面对话——23:05 被吼退 / 鼓点证言 / Whale 认知）
+      - 9007  # 🆕 一楼走廊（垃圾桶内被撕毁合同——Whale 委托酒吧内某人）
+      - 9010  # Tommy 办公室（Whale 身份确认 + Rita 是间谍的正式指认 + .45 弹壳背景）
+  locked:
+    蓝月亮酒吧:
+      - id: 9001
+        reason: Rosa 已经全盘坦白，储藏室该翻的昨晚都翻过了
+      - id: 9006
+        reason: 小包厢早就搜过，里面不会有新东西
+      - id: 9008
+        reason: 侧巷的玻璃碎片昨晚收进证据袋了
+      - id: 9009
+        reason: 厨房这会儿没开火，James 也不在灶台边
+      - id: 9011
+        reason: Webb 办公室之前翻过，没有漏下的东西
+  closed: []
+
+expose:
+  scene: 9003
+  target_name: Vivian
+  rounds:
+    - lie: "我真的杀了 Webb！"
+      evidences: [9401, 9101]            # .45 ACP 弹壳 + Vivian .25 ACP 小手枪（口径不符）
+    - lie: "但除了我是凶手，没有其他人能杀 Webb！"
+      evidences: [9054001, 9402]         # Tommy 证言（Rita 是 Whale 间谍）+ 被撕毁合同（Whale 花钱委托酒吧内某人）
+    - lie: "可是就算如此，也是因为他沉迷于 Rita……"
+      evidences: [9304]                  # 保险箱字条（密码=相遇日，Webb 心里仍记挂 Vivian）
+
+events:
+  - id: 9941
+    name: "Part1 情节转折 · Morrison 变脸"
+    characters: [Zack, Emma, Morrison, Vivian]
+    purpose: Zack 出示 .45 弹壳汇报推理 → Morrison 看到弹壳脸色骤变 → 态度急转：当场撕毁委托协议书（9103 destroyed_by_morrison）+ 夺走 .45 弹壳（9401 confiscated_by_morrison）→ 宣布逮捕并强押 Vivian 回警局
+    trigger: "Expose Vivian 三轮完成后（进入 turn_cutscene）"
+    talk: morrison_turn_L4

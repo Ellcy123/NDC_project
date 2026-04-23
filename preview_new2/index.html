@@ -682,6 +682,7 @@
                     <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
                     <option value="Unit3">Unit 3 - Thomas坠楼案</option>
                     <option value="Unit8">Unit 8 - Webb谋杀案（重构版）</option>
+                    <option value="Unit9">Unit 9 - 黑哨之夜</option>
                 </select>
                 <select id="loopSelect">
                     <option value="loop1">Loop 1</option>
@@ -1193,6 +1194,7 @@
         chapter(unit) {
             if (unit === 'Unit3') return 'EPI03';
             if (unit === 'Unit8') return 'EPI08';
+            if (unit === 'Unit9') return 'EPI09';
             return unit === 'Unit2' ? 'EPI02' : 'EPI01';
         },
 
@@ -1212,6 +1214,7 @@
             if (unit === 'Unit3') u = '3';
             else if (unit === 'Unit2') u = '2';
             else if (unit === 'Unit8') u = '8';
+            else if (unit === 'Unit9') u = '9';
             const l = loop.replace('loop', '');
             return `${u}${l}`;
         },
@@ -1272,6 +1275,7 @@
             if (unit === 'Unit3') unitNum = 3;
             else if (unit === 'Unit2') unitNum = 2;
             else if (unit === 'Unit8') unitNum = 8;
+            else if (unit === 'Unit9') unitNum = 9;
             const loopNum = parseInt(loop.replace('loop', ''));
             const id = String(unitNum * 100 + loopNum);
             return AppState.chapterConfigMap.get(id) || null;
@@ -1589,7 +1593,7 @@
                     </div>
                 `;
             } else if (tab === 'scene') {
-                const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : chapter === 'EPI08' ? '8' : '3';
+                const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : chapter === 'EPI08' ? '8' : chapter === 'EPI09' ? '9' : '3';
                 const rawScenes = AppState.allScenes.filter(s => s.sceneId && String(s.sceneId).startsWith(chPrefix));
                 const merged = ArtOverviewView._mergeScenes(rawScenes);
                 const hasArt = merged.filter(m => m.ArtRequirement).length;
@@ -1876,7 +1880,7 @@
             const npcs = AppState.allNPCs.filter(n => n.Chapter === chapter);
             const npcNoArt = npcs.filter(n => !n.ArtRequirement).length;
 
-            const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : chapter === 'EPI08' ? '8' : '3';
+            const chPrefix = chapter === 'EPI01' ? '1' : chapter === 'EPI02' ? '2' : chapter === 'EPI08' ? '8' : chapter === 'EPI09' ? '9' : '3';
             const rawScenes = AppState.allScenes.filter(s => s.sceneId && String(s.sceneId).startsWith(chPrefix));
             const mergedScenes = this._mergeScenes(rawScenes);
             const scNoArt = mergedScenes.filter(m => !m.ArtRequirement).length;
@@ -2833,7 +2837,6 @@
             // 头像全部关闭（线上无美术资源，头像大量 404）——对话框由 .dlg-body 铺满整行
             const boxHtml = `
                 <div class="dialog-box">
-                    `
                     <div class="dlg-body">
                         <div class="dlg-speaker">${escapeHtml(speaker)}</div>
                         ${action ? `<div style="font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-bottom:0.2rem;">(${escapeHtml(action)})</div>` : ''}

@@ -1,0 +1,75 @@
+title: 正义的重量
+target: 击破 Morrison 的谎言——迫使他承认压案吹黑哨，释放无辜的 Vivian
+time: "次日"
+
+opening:
+  - id: 9861
+    characters: [Zack, Emma]
+    purpose: 【承接 loop5】James 自杀后深夜——Emma 制定 L6 作战策略：先以记者+助理伪装潜入 Morrison 家（找回被夺走的 9401 弹壳 + Whale 财务往来），再到警局单独对质
+    talk: emma_loop6_open
+
+scenes:
+  unlocked:
+    蓝月亮酒吧:
+      - 9004  # 酒吧大堂（入门前厅 + 吧台通道；次日冷清，仅作通道）
+      - 9007  # 一楼走廊（通道可通行；垃圾桶之前已翻过）
+    Morrison 家:
+      - 9013  # 🆕 Morrison 家客厅（⚡Whale 电话突发事件 + 华盛顿公园马票存根 envir 叙事）
+      - 9016  # 🆕 Morrison 家书房（赌债欠条 + 借 Whale 钱记录 + 找回被夺走的 9401 .45 弹壳）
+  locked:
+    蓝月亮酒吧:
+      - id: 9001
+        reason: 储藏室之前翻过了，Rosa 也不在
+      - id: 9002
+        reason: 化妆室锁着——Vivian 的事还没了结
+      - id: 9003
+        reason: 会客室的封条没撤，Morrison 还没签字
+      - id: 9005
+        reason: 歌舞厅没灯没乐，今天不营业
+      - id: 9006
+        reason: 小包厢之前翻过了，什么都没留下
+      - id: 9008
+        reason: 侧巷的玻璃碎片早就进了证据袋
+      - id: 9009
+        reason: 敲厨房那扇门也不会有人应了——James 已经走了
+      - id: 9010
+        reason: Tommy 能说的都说了，再去也问不出新的
+      - id: 9011
+        reason: Webb 办公室那本账早查清楚了
+    James 家:
+      - id: 9012
+        reason: 卧室是 Anna 一个人的地方——她刚失去丈夫，不宜打扰
+      - id: 9015
+        reason: Anna 在客厅独自坐着，这会儿不适合再去搅她
+    警局:
+      - id: 9014
+        reason: 踏进这扇门就是对质 Morrison——证据得先凑齐
+  closed: []
+
+expose:
+  scene: 9014
+  target_name: Morrison
+  rounds:
+    - lie: "Vivian 的手枪就是凶器！她就是凶手！"
+      evidences: [9401, 9601]            # 找回的 .45 弹壳 + 米勒集团特制手枪（口径+铭文对应）
+    - lie: "我只是临时接警、搜查失误——后续可以重新调查，不需要现在就释放嫌疑人"
+      evidences: [9603, 9604]            # Morrison 赌债欠条 + 借 Whale 钱记录（偿债而非失误）
+    - lie: "就算我和 Whale 之间有借贷关系，Whale 只是个放贷的——和 Webb、James 的死无关"
+      evidences: [9503]                  # James 给 Whale 的回信（Whale 是主使，James 是执行者）
+
+events:
+  - id: 9961
+    name: "Morrison 家 · ⚡Whale 调查电话"
+    characters: [Zack, Emma]
+    purpose: 搜查到中段客厅电话响起——Whale 首次以声音登场：知道 James 已死、知道他们在查案；只说一句"我在看你们能走多远"后挂断，不等回答
+    trigger: "9013 客厅或 9016 书房任一搜查进行到中段"
+  - id: 9962
+    name: "警局过场 · Morrison 办公室"
+    characters: [Zack, Emma, Morrison]
+    purpose: Zack+Emma 带五件证据（9401/9601/9503/9603/9604）进 Morrison 办公室；Morrison 正吹嘘 Vivian 案办得神速 → 主动赶走下属要求私下谈判（已是自证）
+    trigger: "搜证完成后"
+  - id: 9963
+    name: "Ending Sequence · 四幕结尾"
+    characters: [Zack, Emma, Morrison, Vivian, Anna]
+    purpose: Morrison 签下失职认罪书、撤销 Vivian 羁押令 → Vivian 回蓝月亮决定留下经营 → 用 9304 字条密码打开保险箱取出"南区计划"录音盘碎片（9602）→ Zack 事务所拼合录音：Margaret Brennan、南区清退（Unit2 开门砖）
+    trigger: "Expose Morrison round_3 完成后"

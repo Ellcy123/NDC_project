@@ -1,0 +1,43 @@
+title: 酒吧的秘密
+target: 调查 Webb 为何如此紧急雇佣侦探——他究竟怀疑谁会杀他？酒吧里在做什么生意？
+time: "当晚"
+
+opening:
+  - id: 9821
+    characters: [Zack, Emma]
+    purpose: 【承接 loop1】大门口 72h 窗口梳理——Webb 保险倾向 + 调查方向："Webb 真正怀疑的凶手是谁"；Morrison 把 Vivian 带到大堂笔录问话，玩家无法接触
+    talk: emma_l2_open
+
+scenes:
+  unlocked:
+    蓝月亮酒吧:
+      - 9004  # 酒吧大堂（入门前厅 + 吧台通道；Morrison 正在角落给 Vivian 做笔录，玩家可穿行但不能打扰）
+      - 9007  # 一楼走廊（连接大堂 / 歌舞厅 / 会客室的必经通道；本 loop 无搜证内容）
+      - 9005  # 🆕 歌舞厅（假油画 + 花瓶现场照——反驳 Tommy 古董买卖说辞）
+      - 9006  # 🆕 歌舞厅小包厢（勒索用照片 + 便携相机——Webb 勒索生意细节）
+      - 9009  # 🆕 James 厨房（James 工资单 + 厨房工作表——不在场证明伏笔）
+      - 9010  # 🆕 Tommy 办公室（Tommy 账本；Expose 对象所在）
+      - 9011  # 🆕 Webb 办公室（Webb 个人收入 vs 酒吧净收入差额 + VIP 合影）
+  locked:
+    蓝月亮酒吧:
+      - id: 9003
+        reason: Morrison 勘验中，这一间谁也别想进
+  closed: []
+
+expose:
+  scene: 9010
+  target_name: Tommy
+  rounds:
+    - lie: "酒吧里只有私酒生意，没有干别的"
+      evidences: [9201]                  # 勒索用照片
+    - lie: "账目都是清清白白的，你有证据吗"
+      evidences: [9203, 9204]            # Webb 个人收入 + Tommy 账本
+    - lie: "还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman"
+      evidences: [9205, 9206]            # 假油画 + 花瓶现场照
+
+events:
+  - id: 9921
+    name: "指证后 · Tommy 松口"
+    characters: [Zack, Tommy]
+    purpose: Tommy 松口酒吧在做仙人跳变体勒索；暗示 Webb 11 月中旬之后换了执行人；"大人物"仍未点名（Whale 浮出要留到 L3 日记揭示）
+    trigger: "Expose Tommy 结束后"

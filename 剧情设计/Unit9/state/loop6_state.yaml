@@ -30,7 +30,7 @@
 #   James：已自杀，确认真凶（is_dead: true）
 #   9601（米勒集团特制手枪）：active，loop5 post_expose 自动入玩家背包（loop6 Expose R1 关键）
 #   9503（James 给 Whale 的回信）：active，loop5 获得（loop6 Expose R3 关键）
-#   9401（.45 警用弹壳）：confiscated_by_morrison（L4 末被夺走，L5 整段不在玩家手中；loop6 Scene 9013 Morrison 家搜证找回 → 状态→retrieved_from_confiscation；loop6 Expose R1 关键）
+#   9401（.45 警用弹壳）：confiscated_by_morrison（L4 末被夺走，L5 整段不在玩家手中；loop6 Scene 9016 Morrison 家书房搜证找回 → 状态→retrieved_from_confiscation；loop6 Expose R1 关键）
 #   9103（Webb 委托协议书）：destroyed_by_morrison（L4 末被当场撕毁，实物永久销毁）
 #   9304（保险箱字条）：active，loop3 获得（loop6 ending_sequence Act3 使用）
 #   Anna：震惊/丧失状态，被托付给 Zack+Emma
@@ -47,14 +47,14 @@
 # ──────────────────────────────────────────────────────────
 #
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening / scenes（9013 Morrison家 + 9014 警局过场）
+# A. 结构完整性   PASS — player_context / opening / scenes（9013 Morrison 家客厅 + 9016 Morrison 家书房 + 9014 警局过场）
 #                        / expose / ending_sequence / doubts / evidence_registry 全部存在
 # B. 证据覆盖     PASS — 讨论结论 L6 所有证据已分配：
 #                        9601 继承自 L5（Expose R1 + F2b 9607 condition）；
 #                        9602 ending_sequence Act3 保险箱取出；
-#                        9603/9604 Morrison 家拾取（Expose R2 关键）；
-#                        9606 Morrison 家 envir（马票存根，裁决）；
-#                        9401 继承件，L4 末被 Morrison 当场夺走，本 Loop Scene 9013 Morrison 家找回（retrieved_from_confiscation）→ Expose R1 关键；
+#                        9603/9604 Morrison 家书房拾取（Expose R2 关键）；
+#                        9606 Morrison 家客厅 envir（马票存根，裁决）；
+#                        9401 继承件，L4 末被 Morrison 当场夺走，本 Loop Scene 9016 Morrison 家书房找回（retrieved_from_confiscation）→ Expose R1 关键；
 #                        继承件 9503/9304 状态注明
 # C. NPC 条目     PASS — Emma（opening）/ Morrison（expose，4 块完整）/ Vivian（ending_sequence，4 块完整）/ Anna（ending_sequence，4 块完整）
 #                        Morrison is_liar:true, player_inquiry:null（Expose 对象规则）
@@ -128,7 +128,7 @@ player_context:
     - "9601 米勒集团特制手枪是真正的凶器——枪身侧面铭刻'MILLER ARMS · CHI'铭文 + 狮形印记，.45 ACP 口径"
     - "9501 口音诡计解锁：James 就是隔门吼退 Vivian 的那个人"
     - "9502 动机闭合：James 家急需钱（Anna 怀孕），F1 碎片合并"
-    - "9503 鼓点时间线解锁：《芝加哥狂想曲》鼓点高潮段掩盖了真实案发枪声"
+    - "9503 鼓点时间线解锁：《艾斯弗德狂想曲》鼓点高潮段掩盖了真实案发枪声"
     - "9504 Whale 关联解锁：James 给 Whale 的回信直接确认两人有直接生意往来"
     - "Zack 和 Emma 决定先进 Morrison 家：找回被 Morrison 夺走的 9401 弹壳（L4 被夺后一直藏在他家中）+ 寻找他与 Whale 的财务记录；然后带齐 9601 手枪 + 9503 回信直面 Morrison"
 
@@ -213,20 +213,17 @@ opening:
 
 scenes:
 
-  # ── 场景 9013：Morrison 家（含 Whale 电话突发事件）──
+  # ── 场景 9013：Morrison 家客厅（含 Whale 电话突发事件 + 9606 马票环境叙事）──
+  # 复用 EPI01 SC005_bg_MorrisonHomeLivingRoom
   - id: 9013
-    name: "Morrison 的家"
+    name: "Morrison 家客厅"
     type: free_exploration  # 🔓 自由探索（搜证为主）
     # 前段有一小节 🎬 硬切：Zack+Emma 以采访为由进入，Morrison 本人不在
     description: |
-      Zack 和 Emma 来到 Morrison 的住所。Morrison 本人不在（在警局值班）——这是搜查的窗口。
-      房间陈设简朴却藏着 Morrison 不能让人看到的东西：
-      一叠赌债欠条（9603）、一份向 Whale 借款的记录（9604）、
-      以及 L4 末被 Morrison 当场夺走后藏匿于此的那枚 .45 弹壳（9401，本 Loop 找回 → 状态 retrieved_from_confiscation）——
-      Morrison 没有销毁它，只是藏在书桌抽屉最深处用过期台历压着，
-      因为他知道这枚弹壳是他与米勒集团关联的唯一物证，一旦销毁反而无法向 Whale 交差，只能藏。
-      此外还有一叠厚厚的华盛顿公园赛场马票存根（9606，环境叙事）。
-      搜查进行到中段，Morrison 家的电话突然响起。
+      Zack 和 Emma 来到 Morrison 的住所客厅。Morrison 本人不在（在警局值班）——这是搜查的窗口。
+      客厅陈设简朴，墙角一部老式台机电话格外显眼，矮柜底层塞着一叠厚厚的华盛顿公园赛场马票存根
+      （9606，环境叙事）。搜查进行到中段，客厅的电话突然响起——Whale 调查电话事件在此触发。
+      核心藏匿证据（9603 赌债欠条 / 9604 借 Whale 钱记录 / 9401 弹壳找回）在相邻的 9016 书房。
 
     phone_call_event:
       # Whale 在此唯一一次以"声音"形式直接登场（电话另一端）
@@ -236,9 +233,9 @@ scenes:
         id: "U9-L6-INT-01"
         title: "Whale 调查电话"
         outline_anchor: "§L6 🔵 插入剧情：Whale 调查电话"
-      trigger: "玩家搜查到房间中段时，Morrison 家的电话响起"
+      trigger: "玩家搜查到中段时（可由 9013 客厅或 9016 书房进入的任一场景触发），客厅电话响起"
       description: |
-        Morrison 家的电话响起。Zack 和 Emma 对视一眼——Zack 接了。
+        Morrison 家客厅的电话响起。Zack 和 Emma 对视一眼——Zack 接了。
         电话另一端的声音低沉、不疾不徐，带着一种俯视一切的从容。
         他知道 Zack 和 Emma 在查案，知道 James 已经死了，也知道他们接下来要做什么。
         Zack 问他是谁。对方说：他就是 Whale。
@@ -253,6 +250,33 @@ scenes:
         - "Unit9 结束后 Whale 的形象依然是'空头像'——玩家知道有这个人，但不知道他是谁"
       testimony_ids:
         # Whale 的电话台词属 🔵 phone_call_event 插入剧情，不作为可提取证词
+
+    evidence:
+      - id: 9606
+        name: "华盛顿公园赛马场整赛季马票存根"
+        name_en: "Season Stack of Washington Park Racing Stubs"
+        type: item
+        pickup: false  # envir 类型，查看但不入背包
+        analysis: false
+        description: |
+          厚厚一叠赛马场投注存根，Washington Park Racetrack，整个赛季——
+          每一张都是败注，有几张的金额触目惊心。
+          Morrison 把它们塞在客厅矮柜的最底层，没有销毁，只是不想再看见。
+        note: "场景道具（envir）——环境叙事；不作为 R2 击穿件（裁决）；辅助说明 Morrison 赌博成瘾的深度"
+
+
+  # ── 场景 9016：Morrison 家书房（核心搜证场景）──
+  # 复用 EPI01 SC006_bg_MorrisonHomeStudy
+  - id: 9016
+    name: "Morrison 家书房"
+    type: free_exploration  # 🔓 自由探索（与 9013 客厅同步开放；Morrison 本人不在）
+    description: |
+      Morrison 的私人书房。书桌抽屉最深处藏着他最不想让人看到的东西：
+      一叠赌债欠条（9603）、一份向 Whale 借款的记录（9604）、
+      以及 L4 末被 Morrison 当场夺走后藏匿于此的那枚 .45 弹壳（9401，本 Loop 找回 → 状态 retrieved_from_confiscation）——
+      Morrison 没有销毁它，只是藏在书桌抽屉最深处用过期台历压着，
+      因为他知道这枚弹壳是他与米勒集团关联的唯一物证，一旦销毁反而无法向 Whale 交差，只能藏。
+      桌面上另一枚弹壳（9605）作为藏证行为的补充叙事道具。
 
     evidence:
       - id: 9603
@@ -288,7 +312,7 @@ scenes:
           loan_date_relation: "Webb 案发生前约三周"
           significance: "Morrison 借 Whale 钱 → 欠 Whale 人情 → 压案、强押 Vivian"
 
-      # ── 9401 找回事件（L4 末被 Morrison 当场夺走，藏匿于此，L6 Scene 9013 找回）──
+      # ── 9401 找回事件（L4 末被 Morrison 当场夺走，藏匿于此，L6 Scene 9016 找回）──
       - id: 9401
         name: ".45 警用弹壳（找回）"
         name_en: ".45 ACP Police-Issue Casing (Retrieved)"
@@ -308,23 +332,11 @@ scenes:
           stamp: "MILLER ARMS"
           status_transition:
             from: "confiscated_by_morrison（L4 末起）"
-            to: "retrieved_from_confiscation（L6 Scene 9013 触发）"
+            to: "retrieved_from_confiscation（L6 Scene 9016 触发）"
           narrative_function:
-            - "完成 L4 末的物证债——被夺走的弹壳在 Morrison 家找回，叙事闭环"
+            - "完成 L4 末的物证债——被夺走的弹壳在 Morrison 家书房找回，叙事闭环"
             - "实物回到 Zack 背包，玩家进 Expose 场景时手上有 [9401, 9601, 9503, 9603, 9604] 五件齐备"
             - "与 9601 米勒手枪会合——弹壳的米勒集团印记与手枪的 MILLER ARMS · CHI 铭文视觉呼应，R1 凶器匹配成立"
-
-      - id: 9606
-        name: "华盛顿公园赛马场整赛季马票存根"
-        name_en: "Season Stack of Washington Park Racing Stubs"
-        type: item
-        pickup: false  # envir 类型，查看但不入背包
-        analysis: false
-        description: |
-          厚厚一叠赛马场投注存根，Washington Park Racetrack，整个赛季——
-          每一张都是败注，有几张的金额触目惊心。
-          Morrison 把它们塞在床头柜的最底层，没有销毁，只是不想再看见。
-        note: "场景道具（envir）——环境叙事；不作为 R2 击穿件（裁决）；辅助说明 Morrison 赌博成瘾的深度"
 
   # ── 场景 9014：警局 Morrison 办公室（转折过场，进入指证）──
   - id: 9014
@@ -859,7 +871,7 @@ evidence_registry:
   # 继承证据状态：
   #   9601（米勒集团特制手枪）：active，L5 post_expose 自动入玩家背包，L6 Expose R1 使用
   #   9503（James 给 Whale 的回信）：active，L5 获得，L6 Expose R3 使用
-  #   9401（.45 警用弹壳）：confiscated_by_morrison（L4 末被夺走），本 Loop Scene 9013 找回（retrieved_from_confiscation），L6 Expose R1 使用
+  #   9401（.45 警用弹壳）：confiscated_by_morrison（L4 末被夺走），本 Loop Scene 9016 找回（retrieved_from_confiscation），L6 Expose R1 使用
   #   9304（保险箱字条）：active，L3 获得，L6 ending_sequence Act3 使用
 
   # ── Loop 6 新增证据 ──
@@ -903,7 +915,7 @@ evidence_registry:
     name: "Morrison 欠疤面煞星 5000 美元赌债欠条"
     name_en: "Morrison's $5,000 Gambling IOU"
     type: item
-    first_scene: 9013
+    first_scene: 9016  # Morrison 家书房
     pickup: true
     status: active
     note: "关键——疑点 9601 condition；L6 Expose R2 击穿件（两件必须同时出示）"
@@ -912,7 +924,7 @@ evidence_registry:
     name: "Morrison 借 Whale 钱的记录"
     name_en: "Morrison's Loan Record from Whale"
     type: item
-    first_scene: 9013
+    first_scene: 9016  # Morrison 家书房
     pickup: true
     status: active
     note: "关键——疑点 9601 condition；L6 Expose R2 击穿件（两件必须同时出示）"
@@ -958,9 +970,9 @@ evidence_registry:
         note: "L5 整段玩家手中不持有"
       - loop: 6
         status: retrieved_from_confiscation
-        note: "L6 Scene 9013 Morrison 家搜证找回，实物回归玩家背包"
+        note: "L6 Scene 9016 Morrison 家书房搜证找回，实物回归玩家背包"
     status: retrieved_from_confiscation
-    loop6_usage: "Scene 9013 找回 → Expose R1：配合 9601 形成口径+品牌双重匹配"
+    loop6_usage: "Scene 9016 找回 → Expose R1：配合 9601 形成口径+品牌双重匹配"
 
   - id: 9304
     name: "保险箱字条"

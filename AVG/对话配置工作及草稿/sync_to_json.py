@@ -180,6 +180,9 @@ NPC_SPEAKER_MAP_EPI08 = {
     "鲸鱼":              ("NPC811", "Whale"),
 }
 
+# EPI09 = Unit9 正式输出目录（NPC 编码沿用 8XX，与 EPI08 共享映射表）
+NPC_SPEAKER_MAP_EPI09 = NPC_SPEAKER_MAP_EPI08
+
 # 当前 episode 激活的映射表——入口函数根据 --episode 设置
 NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 
@@ -880,10 +883,11 @@ def resolve_json_path(filename, loop_num, episode):
     talk_dir = BASE / episode / "Talk"
     expose_dir = BASE / episode / "Expose"
 
-    # Expose 文件：开头 loopN_ 或 _expose 结尾
+    # Expose 文件：开头 loopN_ 或 _expose 结尾（大小写不敏感，兼容 Loop1_rosa.json）
+    fn_lower = filename.lower()
     is_expose = (
-        filename.startswith("loop") and "_" in filename
-    ) or filename.endswith("_expose.json")
+        fn_lower.startswith("loop") and "_" in filename
+    ) or fn_lower.endswith("_expose.json")
 
     if is_expose:
         return expose_dir / filename, True
@@ -1011,11 +1015,17 @@ def main():
             episode = args[idx + 1]
             args = args[:idx] + args[idx + 2:]
 
-    # 根据 episode 切换 NPC 映射表（EPI08 = Unit1 0417 重构版，使用 8XX 编码）
+    # 根据 episode 切换 NPC 映射表
+    # EPI08 = Unit1 0417 重构版（8XX 编码，已废弃但保留）
+    # EPI09 = Unit9 正式输出目录（沿用 8XX 编码，复用 EPI08 映射）
     global NPC_SPEAKER_MAP
-    if episode.upper() == "EPI08":
+    ep_upper = episode.upper()
+    if ep_upper == "EPI08":
         NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI08
         print(f"[INFO] 使用 EPI08 NPC 映射表（8XX 编码）")
+    elif ep_upper == "EPI09":
+        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI09
+        print(f"[INFO] 使用 EPI09 NPC 映射表（Unit9，沿用 8XX 编码）")
     else:
         NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 

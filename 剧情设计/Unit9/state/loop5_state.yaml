@@ -24,7 +24,8 @@
 #   合并瞬间：9205 解锁时立即隐入 9502，UI 不独立显示；数据层保留三条 DoubtConfig 条目
 #
 # 场景 ID 说明（90xx 段，与物品/疑点 ID 严格分离）：
-#   9012 = James 家（场景，L5 新开放）
+#   9012 = James 家卧室（场景，L5 新开放；9505 Anna 移民通知）
+#   9015 = James 家客厅（场景，L5 新开放；Anna 迎客 + 9503 回信 + 9504 英语练习书）
 #   9009 = James 厨房；9010 = Tommy 办公室
 #   物品 9401 = .45 警用弹壳（91xx-96xx 为物品/疑点段）
 #
@@ -32,12 +33,12 @@
 #
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening（灵魂黑夜 Emma）/ scenes（Tommy、James 厨房、James 家）/
+# A. 结构完整性   PASS — player_context / opening（灵魂黑夜 Emma）/ scenes（Tommy、James 厨房、James 家卧室、James 家客厅）/
 #                        arrest_cutscene / expose（3 轮）/ post_expose_dialogue / suspect_suicide_sequence /
 #                        post_expose_romance / doubts / evidence_registry 全部存在
 # B. 证据覆盖     PASS — 讨论结论 L5 全部证据（9501-9505）已分配到场景；
-#                        9501 → Tommy 办公室；9502 → Tommy 办公室；9503 → James 家（拾取）；
-#                        9504 → James 家（envir，不拾取）；9505 → James 家（拾取）；
+#                        9501 → Tommy 办公室；9502 → Tommy 办公室；9503 → James 家客厅（拾取）；
+#                        9504 → James 家客厅（envir，不拾取）；9505 → James 家卧室（拾取）；
 #                        9506 → Tommy 办公室（生锈的 .45 警用弹壳，Tommy 信任后主动交出，纯情感信物不挂疑点）；
 #                        9601 → post_expose（suspect_suicide_sequence 遗留）
 # C. NPC 条目     PASS — Emma（opening）/ Tommy / James / Anna 各含 3 必填块；
@@ -86,7 +87,7 @@ player_context:
     - "Vivian 曾被 Webb 要求协助勒索中产人士，对此十分憎恨"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
     - "James 是兼职主厨，有很多副业，但经济困难，对 Webb 的死有隐藏的愧疚"
-    - "James 在 L3 厨房被抓到销毁《芝加哥狂想曲》节目单（原因未知）"
+    - "James 在 L3 厨房被抓到销毁《艾斯弗德狂想曲》节目单（原因未知）"
     - "玻璃碎片压在垃圾袋下（有硝烟痕迹）——玻璃破碎早于 23:20（Rosa 倒垃圾时间）"
     - "Rosa 23:20 去外面丢过垃圾——真实枪击时间早于 23:30"
     - "Rosa 是被威胁的——威胁纸条：'23:30 去 Webb 会客室，说你目击 Vivian 杀 Webb，否则杀你女儿'"
@@ -111,7 +112,7 @@ player_context:
   post_expose_knowledge:
     # loop5 指证 James 完整击穿（三轮 Expose + 字迹叙事对白）+ 自杀后戏剧获得的新知识
     - "James 是 Webb 案的真正凶手——由 Whale 雇佣，动机：Anna 刚合法化但 James 自己仍是非法身份（正走配偶非配额申请），Anna 怀孕急需大笔钱 + 要让孩子有合法父亲/合法出生——Whale 勒索网络承诺的'身份协议'+ 尾款是他认为的唯一出路"
-    - "真实案发时间锁定 23:00–23:05：《芝加哥狂想曲》鼓点高潮时 James 从 2F 厨房下楼，在 1F 会客室枪杀 Webb；枪声被鼓点掩盖"
+    - "真实案发时间锁定 23:00–23:05：《艾斯弗德狂想曲》鼓点高潮时 James 从 2F 厨房下楼，在 1F 会客室枪杀 Webb；枪声被鼓点掩盖"
     - "23:05 James 模仿 Webb 声音（爱尔兰裔口音）在门口吼退 Vivian；23:30 从 2F 厨房窗口朝外空射制造假案发时间"
     - "James 是爱尔兰裔移民——'Don't be bothering me!'是爱尔兰裔 Hiberno-English 特有句法；23:05 在门口说话的是 James，不是 Webb"
     - "James 接受了 Whale 的委托：被撕毁合同（9402）的签订方是 James"
@@ -216,14 +217,14 @@ scenes:
         type: item
         pickup: true
         analysis: false
-        description: "蓝月亮酒吧 1928 年 11 月 3 日演出完整节目单，含各曲目演奏时间。《芝加哥狂想曲》第三乐章鼓点高潮发生在 23:00，是全曲最强爆发段——约 5 分钟内整个大厅都听不见其他声音。被 Tommy 特意留了一份备份，夹在办公桌文件堆里——由玩家搜证发现。"
+        description: "蓝月亮酒吧 1928 年 11 月 3 日演出完整节目单，含各曲目演奏时间。《艾斯弗德狂想曲》第三乐章鼓点高潮发生在 23:00，是全曲最强爆发段——约 5 分钟内整个大厅都听不见其他声音。被 Tommy 特意留了一份备份，夹在办公桌文件堆里——由玩家搜证发现。"
         note: "关键——疑点 9503 condition；L5 R1 击穿件；玩家主动搜证获取（非 Tommy 主动交付）"
       - id: 9502
         name: "节目修改申请 / Program Modification Request"
         type: item
         pickup: true
         analysis: false
-        description: "Vivian 亲笔签名的申请单：将 1928 年 11 月 3 日节目《Moonlight Bay》改为《芝加哥狂想曲》，并注明音量调至 5 级（最高）。与 9501 一同留在 Tommy 办公桌文件堆中——由玩家搜证发现。Tommy 看到被翻出时只是平静地说：本来也是想给你的。"
+        description: "Vivian 亲笔签名的申请单：将 1928 年 11 月 3 日节目《Moonlight Bay》改为《艾斯弗德狂想曲》，并注明音量调至 5 级（最高）。与 9501 一同留在 Tommy 办公桌文件堆中——由玩家搜证发现。Tommy 看到被翻出时只是平静地说：本来也是想给你的。"
         note: "关键——疑点 9503 condition；L5 R1 击穿件；玩家主动搜证获取（非 Tommy 主动交付）"
       - id: 9506
         name: "生锈的 .45 警用弹壳 / Rusted .45 Police-Issue Shell Casing"
@@ -329,18 +330,37 @@ scenes:
           - 9075002  # ⚠谎言: James——"我当天有不在场证明，枪声发生在 23:30，不可能有其他时间能杀人，如果有枪声大家都能听到"（三层复合不在场证明，L5 R1 指证谎言源；被 9501 完整节目单 + 9502 节目修改申请击穿：23:00 鼓点高潮掩盖了真实枪声）
 
 
-  # ── 场景 9012：James 家（Anna 首次出场；新开放）──
+  # ── 场景 9012：James 家卧室（新开放，搜证为主）──
   # 注：场景 ID 已迁至 90xx 段（90 = 场景命名空间），与物品 ID 9401（.45 警用弹壳）彻底分离
+  # 复用 EPI01 SC012_bg_JamesHomeBedroom（原 Jimmy 家卧室）
   - id: 9012
-    name: "James 家"
+    name: "James 家卧室"
     type: free_exploration  # 🔓 自由探索（新开放）
     description: |
-      Zack 和 Emma 来到 James 的家。Anna 是 James 的妻子，L5 首次出场。
+      James 和 Anna 的卧室，陈设简朴。梳妆抽屉里妥善收存着一叠 Anna 最近
+      收到的合法移民公文——Anna 本人在 9015 客厅迎客，卧室为纯搜证场景。
+
+    evidence:
+      - id: 9505
+        name: "Anna 的合法移民申请通过通知 / Anna's Immigration Approval Notice"
+        type: item
+        pickup: true
+        analysis: false
+        description: "卧室梳妆抽屉里妥善收存的一叠公文——Anna 才拿到不久的合法移民申请通过通知（收件人：Anna O'Sullivan，原籍爱尔兰科克郡）。通知末页附着一份《非配额移民申请资格书》——申请人 James O'Sullivan（爱尔兰科克郡），申请事由栏填写'Anna O'Sullivan 配偶'，状态一栏尚是空白（待审）。两份文件合起来坐实：Anna 是刚合法化的爱尔兰移民、James 还是非法身份、正靠 Anna 的通过走配偶豁免路径。"
+        note: "关键——疑点 9501 condition；L5 R2 击穿件（配合 9075001 口音证词）；爱尔兰裔身份坐实通过'Anna 原籍 + 附件 James O'Sullivan 配偶资格书'双重信息"
+
+
+  # ── 场景 9015：James 家客厅（Anna 首次出场迎客 + 回信/英语书）──
+  # 复用 EPI01 SC013_bg_JamesHomeLivingRoom（原 Jimmy 家客厅）
+  - id: 9015
+    name: "James 家客厅"
+    type: free_exploration  # 🔓 自由探索（新开放）
+    description: |
+      Zack 和 Emma 进入 James 家客厅——Anna 在这里迎接。Anna 是 James 的妻子，L5 首次出场。
       Anna 不知道 James 是凶手——她只知道丈夫接了一件"重要的差事"，说能解决经济困难。
-      三件关键证据在此处发现：
+      客厅桌面上放着两件关键证据：
       - 9503 James 给 Whale 的回信（可拾取）
       - 9504 Berlitz 英语练习书（envir，不拾取；Zack 观察到倒写 J，与 9302 纸条、9402 合同一致）
-      - 9505 Anna 的合法移民申请通过通知（可拾取；卧室梳妆抽屉妥善收存；附 James 配偶非配额资格书）
 
     evidence:
       - id: 9503
@@ -372,14 +392,6 @@ scenes:
           letter_habit: "倒写的 J"
           triple_match: true
 
-      - id: 9505
-        name: "Anna 的合法移民申请通过通知 / Anna's Immigration Approval Notice"
-        type: item
-        pickup: true
-        analysis: false
-        description: "卧室梳妆抽屉里妥善收存的一叠公文——Anna 才拿到不久的合法移民申请通过通知（收件人：Anna O'Sullivan，原籍爱尔兰科克郡）。通知末页附着一份《非配额移民申请资格书》——申请人 James O'Sullivan（爱尔兰科克郡），申请事由栏填写'Anna O'Sullivan 配偶'，状态一栏尚是空白（待审）。两份文件合起来坐实：Anna 是刚合法化的爱尔兰移民、James 还是非法身份、正靠 Anna 的通过走配偶豁免路径。"
-        note: "关键——疑点 9501 condition；L5 R2 击穿件（配合 9075001 口音证词）；爱尔兰裔身份坐实通过'Anna 原籍 + 附件 James O'Sullivan 配偶资格书'双重信息"
-
     npcs:
       anna_001:
         talk: anna_001
@@ -397,7 +409,7 @@ scenes:
         #   - Whale 是谁（只知道丈夫"欠了个大人物一个人情"的说法）
         #   - James 在本 Loop 末会选择自杀
         active_topics:
-          - "她怀孕了，孩子快出生了，家里急需一大笔钱（医疗费、生活费、爱尔兰裔在芝加哥的处境）"
+          - "她怀孕了，孩子快出生了，家里急需一大笔钱（医疗费、生活费、爱尔兰裔在艾斯弗德的处境）"
           - "James 接了一件'差事'，说完成了就能解决他们的问题——她不追问细节，她信他"
           - "James 写了一封信，说是给'一个生意上的人'——她帮他找来的信纸"
         withheld_topics:
@@ -500,10 +512,10 @@ expose:
     usable_evidence:
       - id: 9501
         name: "完整节目单"
-        usage: "完整节目单明确标注：23:00 是《芝加哥狂想曲》第三乐章鼓点高潮，全曲最强爆发——此时酒吧内所有人都听不清其他声音，枪声完全可以被掩盖"
+        usage: "完整节目单明确标注：23:00 是《艾斯弗德狂想曲》第三乐章鼓点高潮，全曲最强爆发——此时酒吧内所有人都听不清其他声音，枪声完全可以被掩盖"
       - id: 9502
         name: "节目修改申请"
-        usage: "Vivian 亲笔申请将节目改为《芝加哥狂想曲》并调至最高音量——23:00 鼓点高潮的出现是有人事先安排的，并非偶然"
+        usage: "Vivian 亲笔申请将节目改为《艾斯弗德狂想曲》并调至最高音量——23:00 鼓点高潮的出现是有人事先安排的，并非偶然"
     result: partial_victory
     result_description: |
       Zack 指出：23:00 的鼓点高潮足以掩盖枪声——真实案发时间是 23:00–23:05，不是 23:30。
@@ -555,7 +567,7 @@ expose:
         usage: "Whale 花大笔钱委托酒吧内部某人做件事；合同字迹与 Rosa 威胁纸条（9302）字迹高度一致——同一人所写；签约方就是 James"
       - id: 9085001
         name: "Anna 证言：我们的孩子快出生了，家里需要一大笔钱"
-        usage: "Anna 亲口说出：家里急需大笔钱来迎接孩子的到来，爱尔兰裔在芝加哥的处境本就艰难——这正是 James 为何要接受 Whale 委托的根本动机"
+        usage: "Anna 亲口说出：家里急需大笔钱来迎接孩子的到来，爱尔兰裔在艾斯弗德的处境本就艰难——这正是 James 为何要接受 Whale 委托的根本动机"
       - id: 9054002
         name: "Tommy 证言：知道 Whale 存在的只有前/现勒索人（L4 获得）"
         usage: "Tommy 确认：这家酒吧里知道 Whale 存在的人，只有前勒索人和现勒索人；James 接了 Whale 的委托，说明他就是那个知道 Whale 的现执行人"
@@ -955,7 +967,7 @@ doubts:
         param: "9085001"  # Anna"怀孕需要一大笔钱"（L5，9205 碎片的 condition）
     status: "visible_L5_opening_unlock_on_evidence"
     f1_merge_note: "父疑点由 F1 碎片（9204 + 9205）合并触发；9204 等待中，9205 解锁瞬间触发父疑点 9502 正式解锁"
-    resolution: "James 家急需钱：Anna 怀孕医疗费 + 爱尔兰裔在芝加哥的生存困境（Anna 刚合法、James 仍非法、孩子等不及）——这是 James 接受 Whale 委托杀人的根本动机"
+    resolution: "James 家急需钱：Anna 怀孕医疗费 + 爱尔兰裔在艾斯弗德的生存困境（Anna 刚合法、James 仍非法、孩子等不及）——这是 James 接受 Whale 委托杀人的根本动机"
 
   - id: 9503
     text: "鼓点高潮掩盖了真实枪声？"
@@ -967,7 +979,7 @@ doubts:
         param: "9502"  # 节目修改申请（Vivian 申请改曲并调至最高音量）
     # 注：疑点 9503 的 condition param 9501/9502 是物品 ID，与疑点 ID 9501/9502 同号不同系统——物品 ID 和疑点 ID namespace 独立
     status: "visible_L5_opening_unlock_on_evidence"
-    resolution: "Vivian 申请的《芝加哥狂想曲》23:00 鼓点高潮足以掩盖枪声；James 就在此时趁鼓点枪杀了 Webb"
+    resolution: "Vivian 申请的《艾斯弗德狂想曲》23:00 鼓点高潮足以掩盖枪声；James 就在此时趁鼓点枪杀了 Webb"
     design_note: "疑点 9503 的 unlock_condition 引用物品 ID 9501（完整节目单）和 9502（节目修改申请），与疑点 ID 9501/9502 同号；系统层面 condition.param 指向物品 ID namespace，不与疑点 ID 冲突"
 
   - id: 9504
@@ -1024,7 +1036,7 @@ evidence_registry:
   - id: 9503
     name: "James 给 Whale 的回信 / James's Reply Letter to Whale"
     type: item
-    first_scene: 9012  # James 家
+    first_scene: 9015  # James 家客厅
     pickup: true
     note: "关键——疑点 9504 condition；L5 Expose R3 击穿件之一；L6 R3 复用"
     metadata:
@@ -1035,14 +1047,14 @@ evidence_registry:
   - id: 9504
     name: "Berlitz 英语练习书 / Berlitz English Practice Book"
     type: envir  # 环境叙事（场景道具，不拾取）
-    first_scene: 9012  # James 家
+    first_scene: 9015  # James 家客厅
     pickup: false
     note: "场景道具——L5 R4 叙事收尾引用（倒写 J 闭环）；Zack 观察记忆在 post_expose_dialogue 以对白形式使用，不作为手持物证出示"
 
   - id: 9505
     name: "Anna 的合法移民申请通过通知 / Anna's Immigration Approval Notice"
     type: item
-    first_scene: 9012  # James 家（卧室梳妆抽屉）
+    first_scene: 9012  # James 家卧室（梳妆抽屉）
     pickup: true
     note: "关键——疑点 9501 condition；L5 Expose R2 击穿件；附件《James 配偶非配额申请资格书》坐实 James O'Sullivan 爱尔兰裔身份"
 
