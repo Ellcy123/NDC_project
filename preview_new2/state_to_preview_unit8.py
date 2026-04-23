@@ -94,7 +94,7 @@ SCENES = [
     {"id": "8009", "name": "一楼走廊", "name_en": "Corridor_1F"},
     {"id": "8010", "name": "Vivian 化妆间", "name_en": "VivianDressingRoom"},
     {"id": "8011", "name": "蓝月亮酒吧后门", "name_en": "BarBackDoor"},
-    {"id": "8012", "name": "Jimmy 家", "name_en": "JimmyHome"},
+    {"id": "8012", "name": "James 家", "name_en": "JamesHome"},
     {"id": "8013", "name": "Morrison 家", "name_en": "MorrisonHome"},
     {"id": "8014", "name": "警局 Morrison 办公室", "name_en": "PoliceStation_MorrisonOffice"},
 ]
@@ -138,7 +138,7 @@ NPCS = [
     {"id": "804", "name_cn": "莫里森", "name_en": "Morrison", "role": "5"},
     {"id": "805", "name_cn": "汤米", "name_en": "Tommy", "role": "5"},
     {"id": "806", "name_cn": "薇薇安·罗斯", "name_en": "Vivian Rose", "role": "5"},
-    {"id": "807", "name_cn": "吉米", "name_en": "Jimmy", "role": "5"},
+    {"id": "807", "name_cn": "詹姆斯", "name_en": "James", "role": "5"},
     {"id": "808", "name_cn": "安娜", "name_en": "Anna", "role": "5"},
     {"id": "809", "name_cn": "韦布", "name_en": "Webb", "role": "1"},
     {"id": "810", "name_cn": "莫里森太太", "name_en": "Mrs. Morrison", "role": "5"},
@@ -154,7 +154,7 @@ NPC_KEY_TO_ID = {
     "morrison": "804",
     "tommy": "805",
     "vivian": "806",
-    "jimmy": "807",
+    "james": "807",
     "anna": "808",
     "webb": "809",
     "whale": "811",
@@ -163,7 +163,7 @@ NPC_KEY_TO_ID = {
 # NPC 图标配置（命名规则: firstname_small / firstname_big，美术文件名未变）
 NPC_ICON_CONFIG = {int(k): (f"{name}_small", f"{name}_big") for k, name in {
     "801": "zack", "802": "emma", "803": "rosa", "804": "morrison",
-    "805": "tommy", "806": "vivian", "807": "jimmy", "808": "anna",
+    "805": "tommy", "806": "vivian", "807": "james", "808": "anna",
     "809": "webb", "810": "mrsmorrison", "811": "whale",
 }.items()}
 
@@ -190,10 +190,10 @@ SCENE_BG_CONFIG = {
     for s in SCENES
 }
 
-# locations.yaml 数据（按"酒吧"主楼 + Morrison 家 + Jimmy 家 + 警局组织）
+# locations.yaml 数据（按"酒吧"主楼 + Morrison 家 + James 家 + 警局组织）
 LOCATIONS = [
     {"name": "蓝月亮酒吧", "entry": "07", "children": ["01", "02", "03", "04", "05", "06", "08", "09", "10", "11"]},
-    {"name": "Jimmy 家", "entry": "12", "children": []},
+    {"name": "James 家", "entry": "12", "children": []},
     {"name": "Morrison 家", "entry": "13", "children": []},
     {"name": "警局", "entry": "14", "children": []},
 ]
@@ -765,7 +765,7 @@ def generate_loop_yaml(loop_num, state):
         "rosa": "Rosa",
         "tommy": "Tommy",
         "vivian": "Vivian",
-        "jimmy": "Jimmy",
+        "james": "James",
         "morrison": "Morrison",
     }
     target_display = expose_target_display_map.get(target_name, target_name)
@@ -884,7 +884,7 @@ def generate_talk_summary(states):
             summaries[target_talk] = f"L{loop_num} 指证：{expose_target}"
 
         # Expose 每轮 talkId 摘要（从 Expose JSON 追 Lie 链算 talkId）
-        npc_name_map = {1:"rosa",2:"tommy",3:"rosa",4:"vivian",5:"jimmy",6:"morrison"}
+        npc_name_map = {1:"rosa",2:"tommy",3:"rosa",4:"vivian",5:"james",6:"morrison"}
         expose_file = os.path.join(AVG_EXPOSE_DIR, f"loop{loop_num}_{npc_name_map[loop_num]}.json")
         if os.path.isfile(expose_file):
             try:
@@ -1171,7 +1171,7 @@ def append_chapter_config(states):
         2: "805",  # Tommy
         3: "803",  # Rosa（真击破）
         4: "806",  # Vivian
-        5: "807",  # Jimmy
+        5: "807",  # James
         6: "804",  # Morrison
     }
 
@@ -1196,7 +1196,7 @@ def append_chapter_config(states):
         # 读对应 loop 的 Expose JSON，按 Lie 顺序算 talkId：
         # R1 talkId = 首条 id；R(N+1) talkId = 前一条 Lie 的 ParameterInt0（break_next）
         per_round_talk_ids = []
-        npc_name_map = {1:"rosa",2:"tommy",3:"rosa",4:"vivian",5:"jimmy",6:"morrison"}
+        npc_name_map = {1:"rosa",2:"tommy",3:"rosa",4:"vivian",5:"james",6:"morrison"}
         expose_file = os.path.join(AVG_EXPOSE_DIR, f"loop{loop_num}_{npc_name_map[loop_num]}.json")
         if os.path.isfile(expose_file):
             try:
@@ -1277,13 +1277,13 @@ NPC_IDSPEAKER_MAP["NPC_RECORDER"] = "RECORDER"  # 保留原标签，不做转换
 NPC_HAS_ICON = {"803", "804", "805", "806", "807", "808", "810"}
 
 # Expose 每个 loop 对应的 testimony ID（8-prefix）
-# ⚠ 0417 重构版：Rosa/Tommy/Rosa/Vivian/Jimmy/Morrison（与旧 Unit1 顺序不同）
+# ⚠ 0417 重构版：Rosa/Tommy/Rosa/Vivian/James/Morrison（与旧 Unit1 顺序不同）
 LOOP_EXPOSE_TESTIMONY = {
     1: "8031001",  # Rosa (loop1 Expose)
     2: "8052001",  # Tommy (loop2 Expose)
     3: "8033001",  # Rosa (loop3 Expose 真击穿)
     4: "8064001",  # Vivian (loop4 Expose)
-    5: "8075002",  # Jimmy (loop5 Expose)
+    5: "8075002",  # James (loop5 Expose)
     6: "8046001",  # Morrison (loop6 Expose)
 }
 
@@ -1296,7 +1296,7 @@ LOOP_EXPOSE_NPC = {
     2: "805",  # Tommy
     3: "803",  # Rosa (第二次指证，真击穿)
     4: "806",  # Vivian
-    5: "807",  # Jimmy
+    5: "807",  # James
     6: "804",  # Morrison
 }
 
@@ -1576,7 +1576,7 @@ def load_avg_exposes():
         # 按 0417 重构版 Expose 对象顺序
         npc_name_map = {
             1: "rosa", 2: "tommy", 3: "rosa",
-            4: "vivian", 5: "jimmy", 6: "morrison",
+            4: "vivian", 5: "james", 6: "morrison",
         }
         fname = f"loop{loop_num}_{npc_name_map[loop_num]}.json"
         path = os.path.join(AVG_EXPOSE_DIR, fname)

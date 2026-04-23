@@ -68,7 +68,7 @@ def load_testimonies(unit_dir: Path) -> dict:
         'NPC104': ['Morrison'],
         'NPC105': ['Tommy'],
         'NPC106': ['Vivian'],
-        'NPC107': ['Jimmy'],
+        'NPC107': ['James'],
         'NPC108': ['Anna'],
         'NPC110': ['Mrs. Morrison', 'Morrison夫人'],
     }

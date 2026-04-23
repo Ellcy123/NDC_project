@@ -13,7 +13,7 @@
 # 生成日期：2026-04-22
 #
 # NPC 编码（沿用 讨论结论.md 附录八 NPCStaticData.id）：
-#   Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, Jimmy=907, Anna=908, Whale=909
+#   Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, James=907, Anna=908, Whale=909
 #
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
@@ -21,14 +21,14 @@
 #                        NPC 3 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
 # B. 证据覆盖     PASS — 讨论结论 L2 全部 7 件证据（9201-9207）+ 2 件场景补充证据（9209/9210）+ 2 件环境证据（9211/9212）已分配到场景；
 #                        9201 勒索照片→9006（小包厢）；9202 VIP 合影→9011（Webb 办公室）；9203 Webb 收入→9011；
-#                        9204 Tommy 账本→9010（Tommy 办公室）；9205 假油画→9005（歌舞厅）；9206 花瓶照→9005；9207 Jimmy 工资单→9009（Jimmy 厨房）；
-#                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（Jimmy 不在场证明，L5 击穿）；
+#                        9204 Tommy 账本→9010（Tommy 办公室）；9205 假油画→9005（歌舞厅）；9206 花瓶照→9005；9207 James 工资单→9009（James 厨房）；
+#                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（James 不在场证明，L5 击穿）；
 #                        9211 对墙沙发 / 9212 封死窗帘→9006（小包厢环境叙事——勒索拍摄角落的构图与隔绝）
-# C. NPC 条目     PASS — Tommy（Expose 对象，is_liar:true，player_inquiry:null）/ Jimmy / Emma（opening）
+# C. NPC 条目     PASS — Tommy（Expose 对象，is_liar:true，player_inquiry:null）/ James / Emma（opening）
 #                        各含 3 必填块；Vivian 在 L2 全程被 Morrison 就地问话、不可接触——化妆室场景不出现；
 #                        不设 post_expose_scene——L2 结尾对话归 L3 opening 的 emma_loop3_open 承载
 # D. 目标对齐     PASS — goals 与讨论结论"调查 Webb 生意 / 指证 Tommy"完全一致
-# E. 信息节奏     PASS — 未泄露 L3+内容：Rosa 威胁纸条 / 23:30 假枪声 / 玻璃碎片 / Jimmy 真凶身份 /
+# E. 信息节奏     PASS — 未泄露 L3+内容：Rosa 威胁纸条 / 23:30 假枪声 / 玻璃碎片 / James 真凶身份 /
 #                        保险箱 / 倒写 J / Whale 具体身份 / Morrison 腐败 / Vivian 11:05 敲门细节
 # G. Expose 逻辑  PASS — R1:9201 击穿正当生意谎言 / R2:9203+9204 击穿账目清白（陷阱:9201）/
 #                        R3:9205+9206 击穿古董说法；三轮维度互不重叠；每件证据挂唯一疑点
@@ -70,8 +70,8 @@ player_context:
       trigger: "Vivian 沉默不自辩、心如死灰——她在隐瞒什么？"
     - direction: "调查 Tommy 关于酒吧生意的陈述是否诚实"
       trigger: "Tommy 是酒吧经理，熟悉账目——他的说辞值得核对"
-    - direction: "关注 Jimmy——他是否与 Webb 有更深关系"
-      trigger: "Jimmy 对 Webb 的死态度异常，夹在忙碌中流露出某种愧疚"
+    - direction: "关注 James——他是否与 Webb 有更深关系"
+      trigger: "James 对 Webb 的死态度异常，夹在忙碌中流露出某种愧疚"
 
   post_expose_knowledge:
     # Tommy 指证结束后玩家确认的信息
@@ -81,7 +81,7 @@ player_context:
     - "Tommy 认为 Webb 因勒索惹上了大人物，想转移财产跑路——他心中有猜测但未点名"
     - "Vivian 曾被 Webb 强迫协助勒索中产人士（仙人跳），对此深恶痛绝"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
-    - "Jimmy 是兼职主厨，经济困难，对 Webb 的死有隐藏的愧疚"
+    - "James 是兼职主厨，经济困难，对 Webb 的死有隐藏的愧疚"
     - "新疑点：Webb 的勒索执行人换成了谁？那个'大人物'是谁？"
 
 # ─────────────────────────────
@@ -95,7 +95,7 @@ opening:
     L2 开篇：两人重新进入酒吧，开始逐一调查酒吧内的每个人。
     Morrison 把 Vivian 带到大堂一角做笔录问话，两人全程处于"警方办案"状态，
     玩家无法接近也无法打扰——化妆室空着，Vivian 本人不在场。
-    Rosa 在清洁间。Tommy 在自己办公室。Jimmy 在厨房。
+    Rosa 在清洁间。Tommy 在自己办公室。James 在厨房。
     玩家进入自由探索模式。
 
   npcs:
@@ -114,7 +114,7 @@ opening:
         - "下一步：调查 Webb 这个人——向酒吧内每个人问 Webb 的情况"
       withheld_topics:
         - "Rosa 收到威胁纸条的事（L3 才揭示）"
-        - "Jimmy 对 Webb 有愧疚感的深层原因（L5 才揭示）"
+        - "James 对 Webb 有愧疚感的深层原因（L5 才揭示）"
         - "酒吧收入和 Webb 个人收入的差额细节（需调查后才知）"
 
       # ── 2. 玩家询问意图 ──
@@ -292,45 +292,45 @@ scenes:
           - 9052001  # ⚠谎言: Tommy——酒吧里都是正当生意，除了私酒没有别的交易（L2 R1 指证目标）
 
 
-  # ── 场景 9009：Jimmy 厨房 ──
+  # ── 场景 9009：James 厨房 ──
   - id: 9009
-    name: "Jimmy 厨房 / Jimmy's Kitchen"
+    name: "James 厨房 / James's Kitchen"
     type: free_exploration  # 🔓 自由探索
     description: |
-      Jimmy 在 2F 厨房工作，表面是蓝月亮酒吧兼职主厨。
+      James 在 2F 厨房工作，表面是蓝月亮酒吧兼职主厨。
       他对 Webb 的死态度复杂，表面表示抱歉，内心藏着愧疚，但不愿多谈。
-      Zack 可以在此找到 Jimmy 的工资单，也可以顺口聊到他的经济状况。
-      ⚠ 设计要求：Jimmy 在 L2 是背景噪音——"很缺钱"证言要非常随口，
+      Zack 可以在此找到 James 的工资单，也可以顺口聊到他的经济状况。
+      ⚠ 设计要求：James 在 L2 是背景噪音——"很缺钱"证言要非常随口，
       夹在介绍菜单/抱怨供货之间，不能获得比 Tommy 谎言更多的叙事重量。
 
     evidence:
       - id: 9207
-        name: "Jimmy 工资单 / Jimmy's Payslip"
+        name: "James 工资单 / James's Payslip"
         type: item
         pickup: true
-        description: "蓝月亮酒吧支付给 Jimmy 的主厨月薪：$80，勉强支撑家庭基本开支"
-        note: "场景道具——背景证据，显示 Jimmy 经济拮据；不进入 F1 碎片 condition（F1 condition 仅挂证言 9072001）"
+        description: "蓝月亮酒吧支付给 James 的主厨月薪：$80，勉强支撑家庭基本开支"
+        note: "场景道具——背景证据，显示 James 经济拮据；不进入 F1 碎片 condition（F1 condition 仅挂证言 9072001）"
 
       - id: 9210
         name: "厨房工作表 / Kitchen Work Schedule"
         type: item
         pickup: true
-        description: "蓝月亮酒吧 2F 厨房当晚的值班排班表，Jimmy 一栏注明：案发当晚 22:00–00:00 厨房值守；其中 23:00–23:10 一小段为'下楼送餐'（短暂离岗，视为工作流程内的正常调度）——整体表面看仍构成他的不在场证明"
+        description: "蓝月亮酒吧 2F 厨房当晚的值班排班表，James 一栏注明：案发当晚 22:00–00:00 厨房值守；其中 23:00–23:10 一小段为'下楼送餐'（短暂离岗，视为工作流程内的正常调度）——整体表面看仍构成他的不在场证明"
         note: "场景道具——L2 作为背景信息积累（23:00–23:10 下楼送餐看似普通工作调度，无明显异常）；L5 揭示真实案发时间为 23:00–23:05 时，该段'下楼送餐'正好覆盖枪击窗口——至此伪造不在场证明被击穿；L2 不入 doubt condition"
 
     npcs:
-      jimmy_l2:
+      james_l2:
         # ── 基本信息 ──
-        talk: jimmy_l2
-        is_liar: false  # L2 Jimmy 不撒谎，只是隐瞒信息；真凶身份留 L5
+        talk: james_l2
+        is_liar: false  # L2 James 不撒谎，只是隐瞒信息；真凶身份留 L5
         motive: "维持表面形象，避免引起怀疑；对 Webb 的死有愧疚但绝不主动提"
         mindset: "表面镇定，对 Webb 的死表示抱歉；介绍菜单/供货时略显自然，一旦被追问就防御"
 
         # ── 1. NPC 已知信息 ──
         active_topics:
-          - "Jimmy 是兼职主厨，还有很多副业（身份确认）"
+          - "James 是兼职主厨，还有很多副业（身份确认）"
           - "对 Webb 的死亡表示抱歉（情绪线索——愧疚感可观察但不解释）"
-          - "Jimmy 很缺钱（经济困难，随口说出，非重点）"
+          - "James 很缺钱（经济困难，随口说出，非重点）"
         withheld_topics:
           - "爱尔兰裔身份和口音特征（L5 关键破绽）"
           - "Anna 怀孕细节（L5 揭示）"
@@ -342,13 +342,13 @@ scenes:
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "\"Jimmy 对 Webb 死亡表现出愧疚感——他到底在愧疚什么\" # 7"
-          - "\"Jimmy 的副业具体是什么（工资单显示收入不匹配）\" # 5"
+          - "\"James 对 Webb 死亡表现出愧疚感——他到底在愧疚什么\" # 7"
+          - "\"James 的副业具体是什么（工资单显示收入不匹配）\" # 5"
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9072003  # Jimmy 身份：蓝月亮酒吧的主厨，还有副业
-          - 9072001  # Jimmy：很缺钱（无意随口说出）——F1 碎片 condition 唯一归属
+          - 9072003  # James 身份：蓝月亮酒吧的主厨，还有副业
+          - 9072001  # James：很缺钱（无意随口说出）——F1 碎片 condition 唯一归属
 
 
   # ── 场景 9003：Webb 会客室 ──
@@ -512,11 +512,11 @@ doubts:
     status: "posed_loop2"  # L2 Expose 后随 Loop 翻页解决
 
   - id: 9204
-    text: "Jimmy 很缺钱……（碎片）"
+    text: "James 很缺钱……（碎片）"
     isFragment: true      # 碎片：单件 condition，等 L5 与 Anna 证言合并为父疑点 9502
     unlock_condition:
       - type: 3
-        param: "9072001"  # Jimmy 证言"很缺钱"（唯一归属）
+        param: "9072001"  # James 证言"很缺钱"（唯一归属）
     posed_loop: 2
     resolved_loop: 5      # L5 合并入父疑点 9502 时消解
     status: "fragment_F1_pending_merge"  # 跨 Loop 碎片，持续存在直至 L5 合并
@@ -601,7 +601,7 @@ evidence_registry:
     note: "关键——疑点 9203 condition；L2 R3 击穿件"
 
   - id: 9207
-    name: "Jimmy 工资单 / Jimmy's Payslip"
+    name: "James 工资单 / James's Payslip"
     type: item
     first_loop: 2
     first_scene: 9009
@@ -622,7 +622,7 @@ evidence_registry:
     first_loop: 2
     first_scene: 9009
     pickup: true
-    note: "场景道具——Jimmy 的表面不在场证明；含 23:00–23:10 下楼送餐（L2 看似普通调度）；L5 揭示真实案发时间 23:00–23:05 时击穿伪造"
+    note: "场景道具——James 的表面不在场证明；含 23:00–23:10 下楼送餐（L2 看似普通调度）；L5 揭示真实案发时间 23:00–23:05 时击穿伪造"
 
   - id: 9211
     name: "对墙摆放的沙发 / Wall-Facing Sofa"

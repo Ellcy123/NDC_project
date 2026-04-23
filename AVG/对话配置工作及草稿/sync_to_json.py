@@ -154,10 +154,14 @@ NPC_SPEAKER_MAP_EPI08 = {
     "Vivian":            ("NPC806", "Vivian"),
     "Vivian Rose":       ("NPC806", "Vivian"),
 
-    # Jimmy 807
-    "吉米":              ("NPC807", "Jimmy"),
-    "Jimmy":             ("NPC807", "Jimmy"),
-    "James O'Sullivan":  ("NPC807", "Jimmy"),
+    # James 807（Unit9：昵称 James / 全名 James O'Sullivan，与 EPI01 的 Jimmy 区分）
+    "James":             ("NPC807", "James"),
+    "James O'Sullivan":  ("NPC807", "James"),
+    # MD 草稿中文 speaker 兼容（保留旧的中文称呼，避免 sync 失败）
+    "吉米":              ("NPC807", "James"),
+    "吉米·奥沙利文":    ("NPC807", "James"),
+    "詹姆斯":            ("NPC807", "James"),
+    "詹姆斯·奥沙利文":  ("NPC807", "James"),
 
     # Anna 808
     "安娜":              ("NPC808", "Anna"),

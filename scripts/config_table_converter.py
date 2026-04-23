@@ -37,9 +37,9 @@ class ConfigTableConverter:
         'NPC106': 6,   # 薇薇安 (Vivian)
         'NPC107': 7,   # 韦伯 (Webb)
         'NPC108': 8,   # 安娜 (Anna Webb)
-        'NPC109': 9,   # 吉米 (Jimmy)
+        'NPC109': 9,   # 詹姆斯 (James)
         'NPC110': 10,  # 莫里森夫人 (Mrs. Morrison)
-        'NPC111': 11,  # Anna (Jimmy's wife)
+        'NPC111': 11,  # Anna (James's wife)
     }
 
     def __init__(self):
@@ -231,25 +231,25 @@ class ConfigTableConverter:
             "中国花瓶完好摆放原位，与\"已售给Thompson\"矛盾": "Chinese vase still in place, contradicts 'sold to Thompson'",
             "Webb说'别想这么多，多看看我送你的书'，另一个人说'你不要接这个生意，会出大事的'": "Webb said 'Don't think too much, read the books I gave you', another person said 'Don't take this job, something bad will happen'",
             "那时候我在清洁，音乐实在太响了，震得我耳朵疼。那种音量下就算有别的声音我也绝对听不到": "I was cleaning then, the music was so loud it hurt my ears. I couldn't hear anything else at that volume",
-            "Jimmy从Webb先生办公室出来，抱着一个水壶...非常小心翼翼...看到我立刻把水壶藏到身后": "Jimmy came out of Mr. Webb's office carrying a vase... very carefully... hid it behind his back when he saw me",
+            "James从Webb先生办公室出来，抱着一个水壶...非常小心翼翼...看到我立刻把水壶藏到身后": "James came out of Mr. Webb's office carrying a vase... very carefully... hid it behind his back when he saw me",
 
             # ===== 物品描述翻译 - 循环4 =====
             "看似普通的陶制水壶": "Seemingly ordinary clay pot",
             "表面人为涂抹泥浆伪装，清理后露出古董底色": "Surface deliberately smeared with mud to disguise, reveals antique underneath when cleaned",
-            "Jimmy自草的推荐信，高度自我夸奖工作能力和忠诚度": "Jimmy's self-written recommendation letter, praising his own abilities and loyalty",
+            "James自草的推荐信，高度自我夸奖工作能力和忠诚度": "James's self-written recommendation letter, praising his own abilities and loyalty",
             "厨房专用手套，指甲缝隙和接缝处残留着极少量的褐色泥土痕迹": "Kitchen gloves with traces of brown mud in nail gaps and seams",
             "当晚有送餐记录，但11点到11点30分没有送餐记录": "Delivery records that night, but no deliveries between 11:00 and 11:30",
-            "Jimmy与妻子Anna的温馨合影，写着\"我的世界\"": "Warm photo of Jimmy with wife Anna, inscribed 'My World'",
+            "James与妻子Anna的温馨合影，写着\"我的世界\"": "Warm photo of James with wife Anna, inscribed 'My World'",
             "如果你想清楚了，可以联系我。纸张纹样与Morrison处发现的纸条相同": "If you've made up your mind, contact me. Paper pattern matches note found at Morrison's",
             "我亲爱的Anna，如果上帝召唤我回家...愿上帝宽恕我的软弱": "My dear Anna, if God calls me home... may God forgive my weakness",
             "大额现金收入记录，标注\"Whale\"和$5000金额": "Large cash income record, marked 'Whale' and $5,000",
             "Bennington陶器的照片": "Photo of Bennington pottery",
-            "由证据320和证据425合并，Bennington陶器实际价值$2000，证明Jimmy已知古董价值": "Merged from evidence 320 and 425, Bennington pottery worth $2,000, proves Jimmy knew the value",
+            "由证据320和证据425合并，Bennington陶器实际价值$2000，证明James已知古董价值": "Merged from evidence 320 and 425, Bennington pottery worth $2,000, proves James knew the value",
             "书页边缘写满了拼写练习，\"American Dream\"被反复练习": "Book margins filled with spelling practice, 'American Dream' written repeatedly",
             "合法身份申请表被撕成碎片，申请费$1500": "Legal status application torn to pieces, application fee $1,500",
             "WHALE很危险 便签": "'WHALE is dangerous' sticky note",
-            "Tommy目击Jimmy从Webb办公室拿走陶土水壶，行为异常谨慎": "Tommy witnessed Jimmy taking clay pot from Webb's office, acting unusually careful",
-            "Rosa看到Jimmy用钥匙进入Webb会客室，但那里没有值钱东西，行为可疑": "Rosa saw Jimmy use key to enter Webb's parlor, but nothing valuable there, suspicious behavior",
+            "Tommy目击James从Webb办公室拿走陶土水壶，行为异常谨慎": "Tommy witnessed James taking clay pot from Webb's office, acting unusually careful",
+            "Rosa看到James用钥匙进入Webb会客室，但那里没有值钱东西，行为可疑": "Rosa saw James use key to enter Webb's parlor, but nothing valuable there, suspicious behavior",
 
             # ===== 物品描述翻译 - 循环5 =====
             "Vivian写的分手信正文": "Body of Vivian's breakup letter",
@@ -452,7 +452,7 @@ class ConfigTableConverter:
             "发现Webb和Rita交往后内心充满仇恨": "Filled with hatred after discovering Webb was seeing Rita",
             "有杀人动机和计划，但最终没有动手": "Had motive and plan to kill, but ultimately didn't act",
             "11点05分去会客室，门锁着被赶走": "Went to parlor at 11:05, door was locked and was turned away",
-            # Jimmy
+            # James
             "酒吧厨师，与Webb关系密切": "Bar cook, close relationship with Webb",
             "曾警告Webb不要接危险生意": "Once warned Webb against taking dangerous business",
             "拥有Webb会客室的钥匙": "Has key to Webb's parlor",
@@ -463,10 +463,10 @@ class ConfigTableConverter:
             "11点杀死Webb，11点05分模仿声音骗走Vivian，11点30分制造假枪声": "Killed Webb at 11:00, imitated voice to drive away Vivian at 11:05, created fake gunshot at 11:30",
             "最终自杀身亡": "Eventually committed suicide",
             # Anna
-            "Jimmy的妻子，怀有身孕": "Jimmy's wife, pregnant",
+            "James的妻子，怀有身孕": "James's wife, pregnant",
             "不知道丈夫的犯罪行为": "Unaware of husband's crime",
             "允许Zack进入卧室查看书籍": "Allowed Zack to enter bedroom to check books",
-            "Jimmy自杀后，向Zack提供了Webb办公室保险柜的密码": "After Jimmy's suicide, provided Zack with Webb's office safe combination",
+            "James自杀后，向Zack提供了Webb办公室保险柜的密码": "After James's suicide, provided Zack with Webb's office safe combination",
             # Mrs. Morrison
             "Morrison的妻子，对丈夫深信不疑": "Morrison's wife, has complete faith in husband",
             "确认Morrison离家时间为00:30": "Confirms Morrison left home at 00:30",
@@ -973,9 +973,9 @@ class ConfigTableConverter:
             "到底是谁把我迷晕了，还想把杀人的罪名扣在我头上？": "Who knocked me out and tried to frame me for murder?",
             "Morrison为什么要陷害我？背后是谁指使？": "Why is Morrison framing me? Who's behind this?",
             "Webb的真正生意是什么？": "What was Webb's real business?",
-            "Jimmy和Webb的真实关系是什么？": "What's the real relationship between Jimmy and Webb?",
+            "James和Webb的真实关系是什么？": "What's the real relationship between James and Webb?",
             "Vivian和Webb的关系是什么？她为什么要杀Webb？": "What's Vivian's relationship with Webb? Why would she kill him?",
-            "Jimmy如何杀害Webb并伪造时间线？": "How did Jimmy kill Webb and fake the timeline?",
+            "James如何杀害Webb并伪造时间线？": "How did James kill Webb and fake the timeline?",
         }
 
         for loop_num in sorted(self.loops.keys()):
@@ -1028,22 +1028,22 @@ class ConfigTableConverter:
             "到底是谁把我迷晕了，还想把杀人的罪名扣在我头上？": "Who knocked me out and tried to frame me for murder?",
             "Morrison为什么要陷害我？背后是谁指使？": "Why is Morrison framing me? Who's behind this?",
             "Webb的真正生意是什么？": "What was Webb's real business?",
-            "Jimmy和Webb的真实关系是什么？": "What's the real relationship between Jimmy and Webb?",
+            "James和Webb的真实关系是什么？": "What's the real relationship between James and Webb?",
             "Vivian和Webb的关系是什么？她为什么要杀Webb？": "What's Vivian's relationship with Webb? Why would she kill him?",
-            "Jimmy如何杀害Webb并伪造时间线？": "How did Jimmy kill Webb and fake the timeline?",
+            "James如何杀害Webb并伪造时间线？": "How did James kill Webb and fake the timeline?",
             # 核心谎言
             "Rosa声称一直在地下室酒窖工作，什么都没看到": "Rosa claims she was working in the basement cellar and saw nothing",
             "Morrison声称凌晨0点半接警后立即赶到现场": "Morrison claims he rushed to the scene immediately after receiving the call at 12:30 AM",
             "Tommy声称Webb只做私酒生意，没有其他业务": "Tommy claims Webb only dealt in bootleg liquor, nothing else",
-            "Jimmy声称自己只是普通厨师，和Webb只是普通雇佣关系": "Jimmy claims he's just an ordinary cook with a simple employer relationship with Webb",
+            "James声称自己只是普通厨师，和Webb只是普通雇佣关系": "James claims he's just an ordinary cook with a simple employer relationship with Webb",
             "Vivian声称自己和Webb只是普通的雇佣关系": "Vivian claims she and Webb had just a normal employer relationship",
-            "Jimmy声称案发时一直在厨房，有不在场证明": "Jimmy claims he was in the kitchen the whole time with an alibi",
+            "James声称案发时一直在厨房，有不在场证明": "James claims he was in the kitchen the whole time with an alibi",
             # 下一目标
             "Morrison为何要陷害我？": "Why is Morrison framing me?",
             "Webb在勒索谁？为什么Whale要杀他？": "Who was Webb blackmailing? Why did Whale want him dead?",
-            "Jimmy和Webb的关系是什么？Webb勒索的\"Whale\"是谁？": "What's Jimmy's relationship with Webb? Who is the 'Whale' Webb was blackmailing?",
+            "James和Webb的关系是什么？Webb勒索的\"Whale\"是谁？": "What's James's relationship with Webb? Who is the 'Whale' Webb was blackmailing?",
             "Vivian和Webb的关系是什么？她知道Whale是谁吗？": "What's Vivian's relationship with Webb? Does she know who Whale is?",
-            "Jimmy是真凶吗？他如何伪造时间线？": "Is Jimmy the real killer? How did he fake the timeline?",
+            "James是真凶吗？他如何伪造时间线？": "Is James the real killer? How did he fake the timeline?",
             "Whale是谁？他为什么要杀Webb？": "Who is Whale? Why did he want Webb dead?",
         }
 
@@ -1118,11 +1118,11 @@ class ConfigTableConverter:
             {'loop': 1, 'time': '01:00', 'cn': 'Morrison到达现场', 'en': 'Morrison arrives at the scene', 'npc': 'NPC104', 'scene': 'SC1004'},
             {'loop': 2, 'time': '00:30', 'cn': 'Morrison离开家前往酒吧', 'en': 'Morrison leaves home for the bar', 'npc': 'NPC104', 'scene': ''},
             {'loop': 3, 'time': '23:00', 'cn': '音乐声极响，无法听到其他声音', 'en': 'Music is extremely loud, impossible to hear other sounds', 'npc': '', 'scene': 'SC1010'},
-            {'loop': 4, 'time': '23:00', 'cn': 'Rosa看到Jimmy用钥匙进入Webb会客室', 'en': 'Rosa sees Jimmy entering Webb parlor with a key', 'npc': 'NPC107', 'scene': 'SC1004'},
+            {'loop': 4, 'time': '23:00', 'cn': 'Rosa看到James用钥匙进入Webb会客室', 'en': 'Rosa sees James entering Webb parlor with a key', 'npc': 'NPC107', 'scene': 'SC1004'},
             {'loop': 5, 'time': '23:00', 'cn': 'Vivian从歌舞厅往会客室方向走', 'en': 'Vivian walks from the club towards the parlor', 'npc': 'NPC106', 'scene': 'SC1010'},
-            {'loop': 6, 'time': '23:00', 'cn': 'Jimmy杀死Webb', 'en': 'Jimmy kills Webb', 'npc': 'NPC107', 'scene': 'SC1004'},
-            {'loop': 6, 'time': '23:05', 'cn': 'Jimmy模仿Webb声音骗走Vivian', 'en': 'Jimmy imitates Webb\'s voice to drive away Vivian', 'npc': 'NPC107', 'scene': 'SC1004'},
-            {'loop': 6, 'time': '23:30', 'cn': 'Jimmy制造假枪声', 'en': 'Jimmy creates fake gunshot sound', 'npc': 'NPC107', 'scene': 'SC1004'},
+            {'loop': 6, 'time': '23:00', 'cn': 'James杀死Webb', 'en': 'James kills Webb', 'npc': 'NPC107', 'scene': 'SC1004'},
+            {'loop': 6, 'time': '23:05', 'cn': 'James模仿Webb声音骗走Vivian', 'en': 'James imitates Webb\'s voice to drive away Vivian', 'npc': 'NPC107', 'scene': 'SC1004'},
+            {'loop': 6, 'time': '23:30', 'cn': 'James制造假枪声', 'en': 'James creates fake gunshot sound', 'npc': 'NPC107', 'scene': 'SC1004'},
         ]
 
         for idx, event in enumerate(timeline_events, 1):

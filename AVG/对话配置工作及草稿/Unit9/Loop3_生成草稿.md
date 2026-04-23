@@ -5,14 +5,14 @@
 > **Unit 大纲**：`剧情设计/Unit9/Unit9_大纲.md`
 > **来源流水线**：team-dialogue skill · Phase 2a 五对策划讨论 → Phase 2b 五个 writer 并行执笔 → Phase 3 合并
 >
-> **覆盖范围**：Opening（Emma 目标设定）+ Scene 9002（Vivian 化妆室）+ Scene 9009 Interlude（Jimmy 厨房）+ Scene 9004（Morrison 大堂 + Rosa Talk + Rosa Expose 2轮 + post_expose）+ Scene 9003（Webb 会客室 · 9308 日记拾取旁白）
+> **覆盖范围**：Opening（Emma 目标设定）+ Scene 9002（Vivian 化妆室）+ Scene 9009 Interlude（James 厨房）+ Scene 9004（Morrison 大堂 + Rosa Talk + Rosa Expose 2轮 + post_expose）+ Scene 9003（Webb 会客室 · 9308 日记拾取旁白）
 >
-> **涉及 NPC**：艾玛·奥马利（Emma）/ 扎克·布伦南（Zack）/ 薇薇安·罗斯（Vivian）/ Jimmy O'Sullivan / 莫里森侦探（Morrison）/ 罗莎·马丁内斯（Rosa）
+> **涉及 NPC**：艾玛·奥马利（Emma）/ 扎克·布伦南（Zack）/ 薇薇安·罗斯（Vivian）/ James O'Sullivan / 莫里森侦探（Morrison）/ 罗莎·马丁内斯（Rosa）
 >
 > **JSON 目标文件**：
 > - `emma_003.json`（Opening）
 > - `vivian_002.json`（Vivian Talk @ Scene 9002）
-> - `jimmy_002.json`（Jimmy Interlude @ Scene 9009）
+> - `james_002.json`（James Interlude @ Scene 9009）
 > - `morrison_002.json`（Morrison Talk @ Scene 9004）
 > - `rosa_002.json`（Rosa Talk @ Scene 9004）
 > - `Loop3_rosa.json`（Rosa Expose + post_expose）
@@ -20,13 +20,13 @@
 > **ID 段分配**（Unit9 编码：`9{npc}{conv}{seq}` / Expose `9{npc}9{loop}{seq}`）：
 > - Emma = 01 → `901003xxx`
 > - Vivian = 06 → `906002xxx`
-> - Jimmy = 07 → `907002xxx`
+> - James = 07 → `907002xxx`
 > - Morrison = 04 → `904002xxx`
 > - Rosa = 03 → `903002xxx`（Talk），`903903xxx`（Expose），`903904xxx`（post_expose）
 >
 > **证词 ID**：
 > - 9063001 / 9063002 / 9063003（Vivian）
-> - 9073001（Jimmy）
+> - 9073001（James）
 > - 9043001 / 9043002（Morrison）
 > - 9033001（Rosa Talk）
 >
@@ -605,26 +605,26 @@ Source / Quiz 标记：
 
 ---
 
-## §3. Scene 9009（Jimmy 厨房 2F）— 🔵 插入剧情 U9-L3-INT-01
+## §3. Scene 9009（James 厨房 2F）— 🔵 插入剧情 U9-L3-INT-01
 
-# Loop 3 — Jimmy 厨房插入剧情草稿（Unit9）
+# Loop 3 — James 厨房插入剧情草稿（Unit9）
 
 > **生成日期**：2026-04-22
-> **场景**：U9-L3-INT-01 · Jimmy 厨房（2F，场景 9009）
+> **场景**：U9-L3-INT-01 · James 厨房（2F，场景 9009）
 > **类型**：turn_cutscene（线性，无玩家分支）
-> **JSON 目标文件**：`jimmy_002.json`
+> **JSON 目标文件**：`james_002.json`
 > **核心信息点**：
 > - 9306《芝加哥狂想曲》节目单碎片（get）
-> - 9073001 证词：Jimmy 只是主厨（get）
-> **ID 段**：`907002xxx`（Jimmy=07，conv_index=002）
+> - 9073001 证词：James 只是主厨（get）
+> **ID 段**：`907002xxx`（James=07，conv_index=002）
 
 ---
 
-## Talk: jimmy_002.json
+## Talk: james_002.json
 
 > 场景：蓝月亮酒吧 2F 厨房（9009）
-> 模式：turn_cutscene（Zack 闯入，Jimmy 说完就走）
-> 节拍：①闯入 ②撞见 ③Zack 捡碎片 ④Jimmy 解释 ⑤离开
+> 模式：turn_cutscene（Zack 闯入，James 说完就走）
+> 节拍：①闯入 ②撞见 ③Zack 捡碎片 ④James 解释 ⑤离开
 
 ---
 
@@ -640,11 +640,11 @@ Source / Quiz 标记：
 ---
 
 <!-- ══════════════════════════════
-     节拍二：撞见——Jimmy 回头
+     节拍二：撞见——James 回头
      ══════════════════════════════ -->
 
 ### 907002002
-**Jimmy O'Sullivan** [听见动静，回头。目光在 Zack 身上停了一秒，肩膀落下来]
+**James O'Sullivan** [听见动静，回头。目光在 Zack 身上停了一秒，肩膀落下来]
 > Brennan 先生。
 
 ### 907002003
@@ -652,7 +652,7 @@ Source / Quiz 标记：
 > 你在烧什么？
 
 ### 907002004
-**Jimmy O'Sullivan** [转回去，把剩下的纸往灶口靠了靠，声音平]
+**James O'Sullivan** [转回去，把剩下的纸往灶口靠了靠，声音平]
 > 旧单子。
 
 <!-- 几片还没烧完的纸屑从灶口边飘出来，落在地砖上。 -->
@@ -680,19 +680,19 @@ Source / Quiz 标记：
 ---
 
 <!-- ══════════════════════════════
-     节拍四：Jimmy 解释
+     节拍四：James 解释
      ══════════════════════════════ -->
 
 ### 907002008
-**Jimmy O'Sullivan** [侧身把灶阀拧小，火苗压下去。然后转过来，不看那片碎片]
+**James O'Sullivan** [侧身把灶阀拧小，火苗压下去。然后转过来，不看那片碎片]
 > 印错了。演出那边说，这版不能用。
 
 ### 907002009
-**Jimmy O'Sullivan** [顿了一下]
+**James O'Sullivan** [顿了一下]
 > 我就是厨房里的人，Brennan 先生。这种事，我不管的。
 
 <!-- get: 9073001 -->
-<!-- 证词：Jimmy 只是主厨，不了解演出事务。 -->
+<!-- 证词：James 只是主厨，不了解演出事务。 -->
 
 ---
 
@@ -701,15 +701,15 @@ Source / Quiz 标记：
      ══════════════════════════════ -->
 
 ### 907002010
-**Jimmy O'Sullivan** [从灶台旁拿起一条抹布，转身往里走]
+**James O'Sullivan** [从灶台旁拿起一条抹布，转身往里走]
 > 您慢走。
 
-<!-- Jimmy 步伐平稳，没有回头。厨房里只剩炉火的细微响声和那片碎片还在 Zack 手里。 -->
+<!-- James 步伐平稳，没有回头。厨房里只剩炉火的细微响声和那片碎片还在 Zack 手里。 -->
 
 ### 907002011
 **扎克·布伦南** [站在原地，低头看了一眼手里的碎片]
 
-<!-- Jimmy 已经消失在厨房深处。碎片上，两行曲目名清晰，演奏时间一栏空白。 -->
+<!-- James 已经消失在厨房深处。碎片上，两行曲目名清晰，演奏时间一栏空白。 -->
 
 ---
 
@@ -718,11 +718,11 @@ Source / Quiz 标记：
 > | ID | 类型 | 内容 | 获取节点 |
 > |----|------|------|---------|
 > | 9306 | 证据 | 《芝加哥狂想曲》节目单碎片（曲目名可辨，演奏时间缺失） | 907002005 |
-> | 9073001 | 证词 | Jimmy 只是主厨，不了解演出事务 | 907002009 |
+> | 9073001 | 证词 | James 只是主厨，不了解演出事务 | 907002009 |
 >
 > **ID 用量**：907002001 — 907002011（共 11 个节点）
 > **两次 get 间隔**：907002005 → 907002009，间隔 3 句（节点 006、007、008）——符合规则
-> **Jimmy 禁忌检查**：
+> **James 禁忌检查**：
 > - 无爱尔兰语习语或口音标记 ✓
 > - 无 Anna / 怀孕 / 合法身份提及 ✓
 > - 未追回碎片 ✓
@@ -954,7 +954,7 @@ Source / Quiz 标记：
    禁忌：
    - ❌ 不说"原来 Webb 怕的大人物就是 Whale"（替玩家连线，违反原则一）
    - ❌ 不说"Tommy 在 L2 暗示过的大人物就是他"（同样替玩家结论）
-   - ❌ 不点名 Rita / Jimmy / Morrison 与 Whale 的任何可能关系
+   - ❌ 不点名 Rita / James / Morrison 与 Whale 的任何可能关系
    - ❌ 不识读黑账里的人名缩写（Webb 用 T.H. / C.L. 之类占位，Zack 不在此刻解读）
 -->
 

@@ -38,7 +38,7 @@
 ## Loop 5
 
 **状态**：未出现
-**说明**：L5 聚焦 Jimmy 线 + 蓝月亮酒吧后门 arrest_cutscene。警局未出现。
+**说明**：L5 聚焦 James 线 + 蓝月亮酒吧后门 arrest_cutscene。警局未出现。
 
 ---
 
@@ -70,8 +70,8 @@ Morrison 正在向一个下属吹嘘 Vivian 案办得如何神速、手脚如何
 | ID | 来源 | 用途 |
 |---|---|---|
 | 9401 | L3 Rosa post_expose 继承 | .45 弹壳（Morrison R1 / R2 线索） |
-| 9601 | L5 Jimmy 自杀现场继承 | 米勒集团特制手枪（R3 凶器闭环） |
-| 9503 | L5 Jimmy 家 | Jimmy 给 Whale 的回信（R3 Whale 关联维度） |
+| 9601 | L5 James 自杀现场继承 | 米勒集团特制手枪（R3 凶器闭环） |
+| 9503 | L5 James 家 | James 给 Whale 的回信（R3 Whale 关联维度） |
 | 9603 | L6 Morrison 家 | 赌债欠条（R2 同时出示） |
 | 9604 | L6 Morrison 家 | 借 Whale 钱记录（R2 同时出示） |
 

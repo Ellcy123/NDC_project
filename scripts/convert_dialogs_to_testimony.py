@@ -21,7 +21,7 @@ SPEAKER_NUM = {
     'NPC104': 4,  # Morrison
     'NPC105': 5,  # Tommy
     'NPC106': 6,  # Vivian Rose
-    'NPC107': 7,  # Jimmy
+    'NPC107': 7,  # James
     'NPC108': 8,  # Anna
     'NPC109': 9,  # Webb
     'NPC110': 10, # Mrs. Morrison

@@ -2,7 +2,7 @@
 # loop3_state.yaml — Unit9 Loop 3: 时间线与第一个真相——Rosa 是被威胁的
 # ============================================================
 #
-# 叙事功能：Vivian 化妆室对话（后反锁）+ Jimmy 销毁节目单插入剧情 +
+# 叙事功能：Vivian 化妆室对话（后反锁）+ James 销毁节目单插入剧情 +
 #           Morrison 弹道证言 + Webb 会客室深度搜证 + 一楼侧巷玻璃碎片 + 指证 Rosa（两轮）
 # 核心体验：round_1 玻璃碎片时序击穿（partial_victory → triggers_retreat），
 #           Rosa 退守"我亲眼看见 Vivian 手里有枪——有枪就是证明！"；
@@ -15,7 +15,7 @@
 # 生成日期：2026-04-22
 #
 # NPC 编码（沿用讨论结论 §八 NPC 出场总表）：
-#   Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, Jimmy=907, Anna=908, Whale=909
+#   Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, James=907, Anna=908, Whale=909
 #
 # 注：L1 疑点 9101「23:30 的枪响真的是在 Webb 会客室发生的吗？」
 #     在 L3 指证 Rosa 完成后，玩家已获得"真实枪击早于 23:20"的确认。
@@ -32,14 +32,14 @@
 #                        9301 玻璃碎片分配 9003（会客室）+ 9008（侧巷）双场景；
 #                        9307 Rita 照片为 envir 场景道具，pickup: false；
 #                        9308 Webb 勒索日记（叙事证据，不挂疑点，不可分析，pickup: true）
-# C. NPC 条目     PASS — Vivian/Jimmy/Morrison/Rosa 各含 3 必填块（active_topics/
+# C. NPC 条目     PASS — Vivian/James/Morrison/Rosa 各含 3 必填块（active_topics/
 #                        withheld_topics / player_inquiry / testimony_ids / ）；
 #                        Rosa 为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与讨论结论"L3 揭示：真实枪击早于 23:20 + Rosa 被胁迫 +
 #                        Webb 心里未抛弃 Vivian"一致
-# E. 信息节奏     PASS — 未泄露 L4+（Jimmy 凶手身份、.45 口径不符分析、Whale 具体身份与 Rita 间谍关系、
+# E. 信息节奏     PASS — 未泄露 L4+（James 凶手身份、.45 口径不符分析、Whale 具体身份与 Rita 间谍关系、
 #                        Morrison 腐败、鼓点诡计、Vivian 11:05 被吼退细节）；
-#                        倒写 J 只做书写特征记录，不点明是 Jimmy；
+#                        倒写 J 只做书写特征记录，不点明是 James；
 #                        .45 弹壳在 post_expose 只给"一枚弹壳"，口径留 L4 揭示；
 #                        9308 只给"Whale 名字 + Webb 警觉"，不给身份/合同/间谍/借款——这些留 L4-L6 揭示
 # F.        REMOVED（系统已删除）
@@ -79,7 +79,7 @@ player_context:
     - "Vivian 曾被 Webb 要求协助勒索中产人士，她对此十分憎恨"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
     - "Morrison 对 Vivian 的笔录问话已告一段落，Vivian 此时回到化妆室独处"
-    - "Jimmy 是兼职主厨，经济困难——在 Loop2 随口说过'很缺钱'"
+    - "James 是兼职主厨，经济困难——在 Loop2 随口说过'很缺钱'"
 
   new_directions:
     - direction: "进入 Webb 会客室（今日正式开放）深度搜证，重点关注窗户玻璃碎片的情况"
@@ -130,7 +130,7 @@ opening:
     withheld_topics:
       - "Rosa 收到了威胁纸条（Loop3 才揭示）"
       - "案发现场窗户玻璃碎片的时序推理结论（Loop3 才形成）"
-      - "Jimmy 正在销毁节目单（Loop3 厨房突发事件）"
+      - "James 正在销毁节目单（Loop3 厨房突发事件）"
 
     player_inquiry:
       - "\"Loop2 结果整合——下一步调查方向\" # 7"
@@ -189,20 +189,20 @@ scenes:
           - 9063003  # ⚠谎言: Vivian 坚持认罪"我真的杀了 Webb"（L4 expose R1 lie_source）
 
 
-  # ── 场景 9009：Jimmy 厨房（2F）——🔵 [U9-L3-INT-01] 插入剧情：销毁节目单 ──
+  # ── 场景 9009：James 厨房（2F）——🔵 [U9-L3-INT-01] 插入剧情：销毁节目单 ──
   - id: 9009
-    name: "Jimmy 厨房"
+    name: "James 厨房"
     floor: "2F"
     type: turn_cutscene  # 🎭 插入剧情（突发事件）
     interlude:
       id: "U9-L3-INT-01"
-      title: "Jimmy 销毁《芝加哥狂想曲》节目单"
-      outline_anchor: "§L3 自由探索（中）表内 '厨房 — Jimmy' 行"
+      title: "James 销毁《芝加哥狂想曲》节目单"
+      outline_anchor: "§L3 自由探索（中）表内 '厨房 — James' 行"
     description: |
-      突发事件：Jimmy 正在销毁《芝加哥狂想曲》节目单。
+      突发事件：James 正在销毁《芝加哥狂想曲》节目单。
       Zack 撞见，只来得及抢到碎片——大部分已被烧毁或撕碎。
       碎片上只剩曲目名"芝加哥狂想""爵士风暴"，无演奏时间。
-      Jimmy 说话时有具体工作理由（"印错了，不能用"），说完就走——短促，不留给玩家追问空间。
+      James 说话时有具体工作理由（"印错了，不能用"），说完就走——短促，不留给玩家追问空间。
 
     evidence:
       - id: 9306
@@ -210,14 +210,14 @@ scenes:
         type: item
         pickup: true
         note: "非 condition 挂载；L5 R1 陷阱证据（碎片无演奏时间，误用会失败）；为 L5 完整节目单 9501 的对比铺设"
-        description: "被撕碎的乐谱节目单碎片，印有《芝加哥狂想曲》和《爵士风暴》等曲目名。Jimmy 销毁过程中 Zack 仅拿到残存部分——曲目名可辨认，但演奏时间一栏已完全缺失，无法确认鼓点高潮的具体时段。"
+        description: "被撕碎的乐谱节目单碎片，印有《芝加哥狂想曲》和《爵士风暴》等曲目名。James 销毁过程中 Zack 仅拿到残存部分——曲目名可辨认，但演奏时间一栏已完全缺失，无法确认鼓点高潮的具体时段。"
         analysis: null
 
     npcs:
-      jimmy_loop3:
-        talk: jimmy_loop3
+      james_loop3:
+        talk: james_loop3
         is_liar: false
-        # 注：Jimmy 是 Loop5 的 Expose 对象。Loop3 中他只是销毁证据，维持"普通主厨"掩护。
+        # 注：James 是 Loop5 的 Expose 对象。Loop3 中他只是销毁证据，维持"普通主厨"掩护。
         # 他的台词要有具体工作理由，说完就走，不暴露任何凶手身份相关信息。
         motive: "销毁关键证据，维持'只是兼职主厨'的掩护；被抓到时迅速用工作理由掩饰"
         mindset: "紧张但伪装镇定；被 Zack 撞见时措手不及，立即用'印错了'掩饰后快步离开"
@@ -235,12 +235,12 @@ scenes:
           - "接受 Whale 委托的细节（Loop5 揭示）"
 
         player_inquiry:
-          - "\"Jimmy 在销毁节目单——这是什么，为什么要销毁\" # 9"
-          - "\"Jimmy 和 Webb 勒索生意有关系吗\" # 5"
-          - "\"Jimmy 在 Loop2 随口提过'很缺钱'——他目前情况如何\" # 4"
+          - "\"James 在销毁节目单——这是什么，为什么要销毁\" # 9"
+          - "\"James 和 Webb 勒索生意有关系吗\" # 5"
+          - "\"James 在 Loop2 随口提过'很缺钱'——他目前情况如何\" # 4"
 
         testimony_ids:
-          - 9073001  # Jimmy：只是一个主厨，不了解勒索
+          - 9073001  # James：只是一个主厨，不了解勒索
 
 
   # ── 场景 9004：酒吧大堂（1F）——Morrison 对话 + ⚔️ Rosa 指证 ──
@@ -411,7 +411,7 @@ scenes:
         name: "威胁纸条（倒写 J） / Threat Note (Inverted J Handwriting)"
         type: item
         pickup: true
-        note: "关键——疑点 9302 condition；L3 R2 击穿件；倒写 J 留作 L5 伏笔（L3 不告诉玩家这是 Jimmy）"
+        note: "关键——疑点 9302 condition；L3 R2 击穿件；倒写 J 留作 L5 伏笔（L3 不告诉玩家这是 James）"
         description: "Blue Moon 酒吧餐巾纸背面，廉价铅笔潦草书写，铅痕深浅不均。内容：'23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。'字迹中，字母 J 的书写方式异常——J 的弯钩朝向与正常书写相反，像是写字时习惯性地把 J 倒着写。其余字母无明显异常。"
         analysis: null
 
@@ -548,11 +548,11 @@ doubts:
     # 注：L3 state 自身不修改 9101 的 condition，历史面板回填由配置表渲染层处理（见文件头注释）。
 
   - id: 9204
-    text: "Jimmy 很缺钱…（碎片）"
+    text: "James 很缺钱…（碎片）"
     isFragment: true
     unlock_condition:
       - type: 3
-        param: "9072001"  # Jimmy 证言"很缺钱"（L2 无意随口）
+        param: "9072001"  # James 证言"很缺钱"（L2 无意随口）
     posed_loop: 2
     status: "fragment_ongoing_loop3"
     # 跨 Loop 碎片，不翻页。Loop5 与 Anna 证言 9085001 合并为父疑点 9502。

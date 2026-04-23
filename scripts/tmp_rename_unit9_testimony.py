@@ -42,9 +42,9 @@ MAPPING = {
 LOOP6_HEADER_REPLACEMENTS = [
     (
         "# NPC 编码（来自讨论结论第八节）：\n"
-        "#   Emma=102 / Rosa=103 / Morrison=104 / Tommy=105 / Vivian=106 / Jimmy=107 / Anna=108 / Whale=111",
+        "#   Emma=102 / Rosa=103 / Morrison=104 / Tommy=105 / Vivian=106 / James=107 / Anna=108 / Whale=111",
         "# NPC 编码（Unit9 NPCStaticData）：\n"
-        "#   Emma=902 / Rosa=903 / Morrison=904 / Tommy=905 / Vivian=906 / Jimmy=907 / Anna=908 / Whale=909",
+        "#   Emma=902 / Rosa=903 / Morrison=904 / Tommy=905 / Vivian=906 / James=907 / Anna=908 / Whale=909",
     ),
     (
         "# Testimony ID 格式：{loop=6}{npc_code=3位}{seq=2位} = 7 位\n"
@@ -63,8 +63,8 @@ LOOP6_HEADER_REPLACEMENTS = [
 # 其他 Loop header 里的 "Emma=102" 类 EPI01 NPC 标注 → 改为 Unit9 9xx（可选）
 SHARED_HEADER_REPLACEMENTS = [
     (
-        "Emma=102, Rosa=103, Morrison=104, Tommy=105, Vivian=106, Jimmy=107, Anna=108",
-        "Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, Jimmy=907, Anna=908, Whale=909",
+        "Emma=102, Rosa=103, Morrison=104, Tommy=105, Vivian=106, James=107, Anna=108",
+        "Emma=902, Rosa=903, Morrison=904, Tommy=905, Vivian=906, James=907, Anna=908, Whale=909",
     ),
 ]
 
