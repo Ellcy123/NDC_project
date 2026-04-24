@@ -43,7 +43,7 @@
 
 player_context:
   goals:
-    primary: "调查 Webb 的酒吧在做什么生意——他为何如此紧急地雇佣侦探？Webb 究竟怀疑谁会杀他？"
+    primary: "Webb 这么急着让我当侦探——他在怕什么？"
     secondary:
       - "向酒吧里每个人询问 Webb 的情况"
       - "找出 Webb 的真实收入来源"
@@ -81,7 +81,7 @@ player_context:
     - "Tommy 认为 Webb 因勒索惹上了大人物，想转移财产跑路——他心中有猜测但未点名"
     - "Vivian 曾被 Webb 强迫协助勒索中产人士（仙人跳），对此深恶痛绝"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
-    - "James 是兼职主厨，经济困难，对 Webb 的死有隐藏的愧疚"
+    - "James 是兼职厨师，经济困难，对 Webb 的死有隐藏的愧疚"
     - "新疑点：Webb 的勒索执行人换成了谁？那个'大人物'是谁？"
 
 # ─────────────────────────────
@@ -297,7 +297,7 @@ scenes:
     name: "James 厨房 / James's Kitchen"
     type: free_exploration  # 🔓 自由探索
     description: |
-      James 在 2F 厨房工作，表面是蓝月亮酒吧兼职主厨。
+      James 在 2F 厨房工作，表面是蓝月亮酒吧兼职厨师。
       他对 Webb 的死态度复杂，表面表示抱歉，内心藏着愧疚，但不愿多谈。
       Zack 可以在此找到 James 的工资单，也可以顺口聊到他的经济状况。
       ⚠ 设计要求：James 在 L2 是背景噪音——"很缺钱"证言要非常随口，
@@ -308,7 +308,7 @@ scenes:
         name: "James 工资单 / James's Payslip"
         type: item
         pickup: true
-        description: "蓝月亮酒吧支付给 James 的主厨月薪：$80，勉强支撑家庭基本开支"
+        description: "蓝月亮酒吧支付给 James 的兼职厨师月薪：$80，勉强支撑家庭基本开支"
         note: "场景道具——背景证据，显示 James 经济拮据；不进入 F1 碎片 condition（F1 condition 仅挂证言 9072001）"
 
       - id: 9210
@@ -328,7 +328,7 @@ scenes:
 
         # ── 1. NPC 已知信息 ──
         active_topics:
-          - "James 是兼职主厨，还有很多副业（身份确认）"
+          - "James 是兼职厨师，还有很多副业（身份确认）"
           - "对 Webb 的死亡表示抱歉（情绪线索——愧疚感可观察但不解释）"
           - "James 很缺钱（经济困难，随口说出，非重点）"
         withheld_topics:
@@ -347,7 +347,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9072003  # James 身份：蓝月亮酒吧的主厨，还有副业
+          - 9072003  # James 身份：蓝月亮酒吧的兼职厨师，还有副业
           - 9072001  # James：很缺钱（无意随口说出）——F1 碎片 condition 唯一归属
 
 

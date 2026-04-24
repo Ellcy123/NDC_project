@@ -73,17 +73,17 @@
 
 ---
 
-## 9007 - 一楼走廊
+## 9007 - 酒吧一楼走廊
 
 **美术资源**：复用 EPI01（已有）
-- sceneName: 一楼走廊 / First Floor Corridor
+- sceneName: 酒吧一楼走廊 / BarFirstFloorCorridor
 - backgroundImage: `Art\Scene\Backgrounds\EPI01\SC002_bg_CabaretFirstFloorCorridor`
 
 ---
 
 ## 9008 - 一楼侧巷（🆕 新增）
 
-**用途说明**：纯指证硬切场景——仅在指证流程中作为 CG 背景硬切出现，不作为可探索场景存在；玩家无法从任何场景步行/过渡进入，因此无需考虑与周边场景（9004 酒吧大堂 / 9007 一楼走廊）之间的衔接视角或入口对位。
+**用途说明**：纯指证硬切场景——仅在指证流程中作为 CG 背景硬切出现，不作为可探索场景存在；玩家无法从任何场景步行/过渡进入，因此无需考虑与周边场景（9004 酒吧大堂 / 9007 酒吧一楼走廊）之间的衔接视角或入口对位。
 
 **当前 ArtRequirement**：
 蓝月亮酒吧一楼侧门外的狭窄后巷，约 2 m 宽、延伸 6-8 m 深。
@@ -174,11 +174,31 @@
 
 ---
 
+## 9017 - 酒吧二楼走廊（🆕 地图连接节点）
+
+**美术资源**：复用 EPI01（已有）
+- sceneName: 酒吧二楼走廊 / BarSecondFloorCorridor
+- backgroundImage: `Art\Scene\Backgrounds\EPI01\SC014_bg_CabaretSecondFloorCorridor`
+
+**用途**：2F 布局上本就存在的走廊，作为玩家从 1F 进入 2F 各房间的过渡空间。无证据、无 NPC、不进入任何 Loop 的 state scenes 段——仅 SceneConfig + 美术资源挂载。
+
+---
+
+## 9018 - 厨房走廊（🆕 地图连接节点）
+
+**美术资源**：复用 EPI01（已有）
+- sceneName: 厨房走廊 / KitchenCorridor
+- backgroundImage: `Art\Scene\Backgrounds\EPI01\SC016_bg_kitchenCorridor`
+
+**用途**：通往 James 厨房（9009）的独立走廊/楼梯——厨房是酒吧内的单独空间；此楼梯与 9007 酒吧一楼走廊的楼梯是**两条不同的楼梯**。无证据、无 NPC、不进入任何 Loop 的 state scenes 段——仅 SceneConfig + 美术资源挂载。
+
+---
+
 # 综合报告
 
 ## 场景数统计
-共 **16 个场景**（原 14 个 → 拆分 James 家 / Morrison 家为各两间房后）：
-- **14 个复用 EPI01 背景**（无需新增美术）
+共 **18 个场景**（原 14 个 → 拆分 James 家 / Morrison 家为各两间房 + 补 2F 走廊与厨房走廊两个地图连接节点后）：
+- **16 个复用 EPI01 背景**（无需新增美术）
 - **2 个新增场景**（需美术新画）：
   - 9006 歌舞厅小包厢（`EPI09\SC9006_bg_SmallBox`）
   - 9008 一楼侧巷（`EPI09\SC9008_bg_SideAlley`）
@@ -195,5 +215,6 @@
 ## 对 SceneConfig.json 的影响
 - 原 9012/9013 两条目需改写（名称、backgroundImage、ItemIDs 重新分配）
 - 新增 9015/9016 两条目
+- 新增 9017/9018 两条地图连接节点（无 NPC、无证据，不进入 state scenes 段）
 - 其余 12 个复用场景的 backgroundImage 从占位的 `EPI09\SC9XXX_bg_XXX` 改回 EPI01 实际资源路径
 - 2 个新增场景保持 `EPI09\SC9006_bg_SmallBox` / `EPI09\SC9008_bg_SideAlley` 占位路径，待美术交付后替换

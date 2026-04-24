@@ -58,7 +58,7 @@
 
 player_context:
   goals:
-    primary: "找到案发现场（Webb 会客室）内的关键疑点，确认 Rosa 的时间线指控是否在说谎"
+    primary: "23:30 的那声枪响，真是 Webb 倒下的那一刻吗？"
     secondary:
       - "Webb 会客室自 Loop1 Morrison 勘验后今日开放——重新搜证，寻找 23:30 枪声不是真正案发时间的物证"
       - "从侧巷调查窗户破碎时间，看能否与 Rosa 的倒垃圾时间形成关联"
@@ -79,7 +79,7 @@ player_context:
     - "Vivian 曾被 Webb 要求协助勒索中产人士，她对此十分憎恨"
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
     - "Morrison 对 Vivian 的笔录问话已告一段落，Vivian 此时回到化妆室独处"
-    - "James 是兼职主厨，经济困难——在 Loop2 随口说过'很缺钱'"
+    - "James 是兼职厨师，经济困难——在 Loop2 随口说过'很缺钱'"
 
   new_directions:
     - direction: "进入 Webb 会客室（今日正式开放）深度搜证，重点关注窗户玻璃碎片的情况"
@@ -217,13 +217,13 @@ scenes:
       james_loop3:
         talk: james_loop3
         is_liar: false
-        # 注：James 是 Loop5 的 Expose 对象。Loop3 中他只是销毁证据，维持"普通主厨"掩护。
+        # 注：James 是 Loop5 的 Expose 对象。Loop3 中他只是销毁证据，维持"普通厨师"掩护。
         # 他的台词要有具体工作理由，说完就走，不暴露任何凶手身份相关信息。
-        motive: "销毁关键证据，维持'只是兼职主厨'的掩护；被抓到时迅速用工作理由掩饰"
+        motive: "销毁关键证据，维持'只是兼职厨师'的掩护；被抓到时迅速用工作理由掩饰"
         mindset: "紧张但伪装镇定；被 Zack 撞见时措手不及，立即用'印错了'掩饰后快步离开"
 
         active_topics:
-          - "只是一个兼职主厨，不了解勒索相关的事"
+          - "只是一个兼职厨师，不了解勒索相关的事"
           - "销毁节目单是因为印错了，不能用——工作正常处理"
           # 注：不暗示凶手身份，不暗示节目单与案发时间的关联
         withheld_topics:
@@ -240,23 +240,22 @@ scenes:
           - "\"James 在 Loop2 随口提过'很缺钱'——他目前情况如何\" # 4"
 
         testimony_ids:
-          - 9073001  # James：只是一个主厨，不了解勒索
+          - 9073001  # James：只是一个兼职厨师，不了解勒索
 
 
-  # ── 场景 9004：酒吧大堂（1F）——Morrison 对话 + ⚔️ Rosa 指证 ──
+  # ── 场景 9004：酒吧大堂（1F）——Morrison 对话（Rosa 已躲回 9001 储藏室） ──
   - id: 9004
     name: "酒吧大堂"
     floor: "1F"
-    type: free_exploration  # 💬 对话场景 + ⚔️ 指证（Morrison 驻留；Rosa 也被叫到大堂等候问话）
+    type: free_exploration  # 💬 对话场景（Morrison 驻留；⚔️ 指证已迁至 9001 Rosa 储藏室）
     description: |
-      Morrison 刚完成犯罪现场勘验，在大堂等候。Rosa 也被叫到大堂，
-      局促地站在角落——Morrison 要求几名关键证人留在大堂，以便继续确认证词。
+      Morrison 刚完成犯罪现场勘验，在大堂等候。
       Zack 可从 Morrison 口中得知：现场子弹弹壳缺失、子弹是射穿 Webb 后击中窗户（弹道描述）。
       Morrison 在 L3 以"嫌麻烦但姑且秉公"的态度呈现——不暗示被收买。
       他说"子弹缺失"时不解释原因，语气简短。
       任何暗示 Morrison 被收买的内容严格控制在 L4 之后。
-      ⚔️ 指证场所：Rosa 是本 Loop 的 Expose 对象（is_liar: true）。
-      指证发生在大堂——Rosa 在 Morrison 的目光下守住谎言，被击穿时无处退缩。
+      注：Rosa 本应在大堂候询，但因 Morrison 问话强度过大，她已自行躲回 9001 储藏室（她的地盘），
+      Zack 完成自由探索 + 搜证后将带证据跟进至储藏室，对 Rosa 发起指证。
 
     evidence: []  # 大堂无可拾取证据
 
@@ -289,27 +288,6 @@ scenes:
         testimony_ids:
           - 9043001  # Morrison：搜查了整个酒吧，确认子弹弹壳缺失，没有其他枪支
           - 9043002  # Morrison：子弹是射穿了 Webb 再击中了窗户（弹道描述）
-
-      rosa_loop3:
-        talk: rosa_loop3
-        is_liar: true  # Rosa 是本 Loop 的 Expose 对象
-        player_inquiry: null  # Expose 对象不设 player_inquiry
-        motive: "迫于威胁维持'目击 Vivian 杀人'的谎言；内心极度恐惧和愧疚，但还未到崩溃临界"
-        mindset: "如履薄冰，守着谎言；在 Morrison 眼皮下更加警惕又疲惫；对自己的处境充满无助"
-
-        active_topics:
-          - "23:20 自己去外面丢过一次垃圾（主动告知——她不知道这个时间节点的推理价值）"
-          - "坚持'目击 Vivian 23:30 杀 Webb'的谎言（Expose 第一轮起点）"
-          # 注：Rosa 在此阶段主动说出倒垃圾时间，因为她不知道玻璃碎片的推理价值
-          # 不含 11:05 被吼退（她当晚不在场）、Vivian 送酒时间等细节（她只知道纸条告诉她的）
-        withheld_topics:
-          - "威胁纸条的具体内容（不主动透露，等待 Expose 第二轮击破）"
-          - "她捡到的弹壳（Expose 结束后才主动交出）"
-          - "威胁者的身份（她本人也不知道是谁写的）"
-
-        testimony_ids:
-          - 9033001  # Rosa：23:20 自己去外面丢过一次垃圾（关键时间节点证言；疑点 9301 condition）
-          # Rosa"23:30 枪响谎言"复用 L1 9031002，本 Loop 不重复声明
 
 
   # ── 场景 9003：Webb 会客室（1F）——深度搜证（Loop3 开放） ──
@@ -395,16 +373,18 @@ scenes:
 
     npcs: {}  # 侧巷无 NPC
 
-  # ── 场景 9001：Rosa 储藏室（B1）——自由探索（Rosa 本人已去大堂候询） ──
+  # ── 场景 9001：Rosa 储藏室（B1）——自由探索 + ⚔️ Expose Rosa ──
   - id: 9001
     name: "Rosa 储藏室"
     floor: "B1"
-    type: free_exploration  # 🔓 自由探索（仅搜证，Rosa 不在场；⚔️ 指证已移至 9004 大堂）
+    type: free_exploration  # 🔓 自由探索（搜证）+ ⚔️ 指证（Rosa 驻场，本 Loop 的 Expose 对象）
     description: |
-      Rosa 本人在 L3 被 Morrison 叫到大堂候询，此刻不在储藏室——
-      但她的私人物品仍留在这里。
-      Zack 可在储藏室角落的清洁箱里找到威胁纸条（含倒写 J 书写特征）
-      及女儿医疗单——这是 L3 指证 Rosa 第二轮的核心证据。
+      Rosa 本应在 9004 大堂候询，但 Morrison 的问话强度令她喘不过气——
+      她自行躲回了自己的地盘：储藏室。Zack 搜证找到威胁纸条（9302，含倒写 J 书写特征）
+      和女儿医疗单（9303）——这是 L3 指证 Rosa 第二轮的核心证据。
+      搜证完毕后，Zack 带着证据跟进储藏室对 Rosa 发起指证。
+      私密对质（Morrison 不在场）让 Rosa 崩溃时没有 Morrison 旁观造成的社交顾忌，
+      也避免 L3 阶段过早暴露"Morrison 听到威胁纸条细节"导致其被收买伏笔破梗。
 
     evidence:
       - id: 9302
@@ -423,11 +403,31 @@ scenes:
         description: "Rosa 女儿的医院账单，与威胁纸条一同夹放在储藏室角落的清洁箱里。账单显示女儿有需要持续治疗的病症，医疗费用不低。威胁者不仅知道 Rosa 有女儿，还掌握了具体的医疗状况。"
         analysis: null
 
-    npcs: {}  # Rosa 已移至 9004 大堂候询，储藏室为纯搜证场景
+    npcs:
+      rosa_loop3:
+        talk: rosa_loop3
+        is_liar: true  # Rosa 是本 Loop 的 Expose 对象
+        player_inquiry: null  # Expose 对象不设 player_inquiry
+        motive: "迫于威胁维持'目击 Vivian 杀人'的谎言；内心极度恐惧和愧疚，但还未到崩溃临界；躲回储藏室（自己的地盘）寻求一点安全感"
+        mindset: "如履薄冰，守着谎言；躲开 Morrison 后表面稍稍放松但内心更紧绷——她知道 Zack 已经嗅到不对劲会跟来"
+
+        active_topics:
+          - "23:20 自己去外面丢过一次垃圾（主动告知——她不知道这个时间节点的推理价值）"
+          - "坚持'目击 Vivian 23:30 杀 Webb'的谎言（Expose 第一轮起点）"
+          # 注：Rosa 在此阶段主动说出倒垃圾时间，因为她不知道玻璃碎片的推理价值
+          # 不含 11:05 被吼退（她当晚不在场）、Vivian 送酒时间等细节（她只知道纸条告诉她的）
+        withheld_topics:
+          - "威胁纸条的具体内容（不主动透露，等待 Expose 第二轮击破）"
+          - "她捡到的弹壳（Expose 结束后才主动交出）"
+          - "威胁者的身份（她本人也不知道是谁写的）"
+
+        testimony_ids:
+          - 9033001  # Rosa：23:20 自己去外面丢过一次垃圾（关键时间节点证言；疑点 9301 condition）
+          # Rosa"23:30 枪响谎言"复用 L1 9031002，本 Loop 不重复声明
 
 
 # ─────────────────────────────
-# 四、指证（⚔️ Expose：Rosa，于 9004 大堂）
+# 四、指证（⚔️ Expose：Rosa，于 9001 Rosa 储藏室）
 # ─────────────────────────────
 
 expose:
@@ -437,10 +437,13 @@ expose:
   is_liar: true
   player_inquiry: null
   total_rounds: 2
+  scene_id: 9001  # 指证发生在 Rosa 的储藏室（Rosa 自行躲回地盘），Morrison 不在场
 
   context: |
     Zack 完成自由探索后，手握玻璃碎片（9301）、Rosa 的倒垃圾证言（9033001）、
-    威胁纸条（9302）和女儿医疗单（9303），决定正式指证 Rosa。
+    威胁纸条（9302）和女儿医疗单（9303），跟进 Rosa 储藏室发起指证。
+    Morrison 不在场——私密对质让 Rosa 崩溃时可以真实情绪流露，
+    也避免 Morrison 听到威胁纸条细节而破坏 L3 阶段的"姑且秉公"人设伏笔。
     Rosa 仍然坚持"23:30 枪响时 Vivian 在会客室里"的说法。
     本场指证分两轮：
     - 第一轮：时间线击穿（partial_victory——Rosa 立刻退守，转向"持枪即有罪"继续维持）
