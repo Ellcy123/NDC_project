@@ -13,6 +13,7 @@
 |---|---|---|
 | 场景背景图 | **2 张** | 9006 小包厢 / 9008 侧巷 |
 | NPC 场景立绘 | **5 个角色槽 / 10 张 PNG**（每槽 2 姿态：default + click） | 9003 × 3 + 9014 × 1 + 9015 × 1 |
+| 证据美术（需新画） | 详见 [`Unit9_证据美术需求分类.md`](Unit9_证据美术需求分类.md) | 原复用 EPI01 的 9207 / 9403 / 9604 因内容冲突改为新画；其余纯原创的新画件（9103 / 9201 / 9209 / 9301 / 9302 / 9304 / 9306 / 9401 / 9402 / 9405 / 9503 / 9505 / 9601 / 9602 / 9605 / 9606 / 9711 等）亦在该表 |
 
 ## 1.2 优先级建议
 
@@ -23,6 +24,9 @@
 | 🟡 P1 中 | 9014 警局 Morrison | L6 最终指证戏，但只占 1 个 NPC 槽 |
 | 🟡 P1 中 | 9006 小包厢背景 | L2 可选探索场景，无 NPC 驻场 |
 | 🟢 P2 低 | 9008 侧巷背景 | 仅作指证硬切 CG，可用简化稿 |
+| 🔴 P0 最高 | 9207 James 工资单（新画） | Unit9 职位 Part-time Cook（兼职厨师）+ 月薪 $80，与 Unit1 Head Chef / $500 冲突，必须新画 |
+| 🔴 P0 最高 | 9604 Morrison 借 Whale 钱的记录（新画） | Unit9 双方正式借据 $6,000 与 Unit1 Whale 单方字条 $5,000 冲突，必须新画 |
+| 🟡 P1 中 | 9403 Vivian 的绝笔信（新画） | Unit9 绝笔信性质与 Unit1 分手信性质冲突，必须新画 |
 
 ---
 
@@ -185,7 +189,7 @@
 | 9002 | Vivian 化妆室 | 🔓 自由探索（纯搜证） | — | — |
 | 9004 | 酒吧大堂（Morrison 等待区） | 🔓 自由探索 + ⚔️ Expose Vivian | Morrison | ✅ 复用 EPI01 `SC210_npc_Morrison1/2` |
 | 9005 | 歌舞厅 | 🔓 自由探索 + ⚔️ Expose Vivian | Vivian | ✅ 复用 EPI01 `SC509_npc_Vivian1/2` |
-| 9007 | 一楼走廊 | 🔓 自由探索 | — | — |
+| 9007 | 酒吧一楼走廊 | 🔓 自由探索 | — | — |
 | 9010 | Tommy 办公室 | 🔓 自由探索 | Tommy | ✅ 复用 EPI01 `SC103_npc_Tommy1/2`（复用） |
 
 ### Loop 5（4 个场景 / 3 个 NPC 槽）
@@ -217,7 +221,7 @@
 | 9004 | 酒吧大堂 | `EPI01\SC010_bg_BarLobby` | ✅ 复用 |
 | 9005 | 歌舞厅 | `EPI01\SC009_bg_BarCabaret` | ✅ 复用 |
 | **9006** | **歌舞厅小包厢** | `EPI09\SC9006_bg_SmallBox` | 🆕 **需新画** |
-| 9007 | 一楼走廊 | `EPI01\SC002_bg_CabaretFirstFloorCorridor` | ✅ 复用 |
+| 9007 | 酒吧一楼走廊 | `EPI01\SC002_bg_CabaretFirstFloorCorridor` | ✅ 复用 |
 | **9008** | **一楼侧巷** | `EPI09\SC9008_bg_SideAlley` | 🆕 **需新画** |
 | 9009 | James 厨房 | `EPI01\SC011_bg_JamesKitchen` | ✅ 复用 |
 | 9010 | Tommy 办公室 | `EPI01\SC003_bg_TommyOffice` | ✅ 复用 |
@@ -227,8 +231,10 @@
 | 9014 | 警局 Morrison 办公室 | `EPI01\SC018_bg_MorrisonOffice` | ✅ 复用 |
 | 9015 | James 家客厅 | `EPI01\SC013_bg_JamesHomeLivingRoom` | ✅ 复用 |
 | 9016 | Morrison 家书房 | `EPI01\SC006_bg_MorrisonHomeStudy` | ✅ 复用 |
+| 9017 | 酒吧二楼走廊（🆕 地图连接节点） | `EPI01\SC014_bg_CabaretSecondFloorCorridor` | ✅ 复用 |
+| 9018 | 厨房走廊（🆕 地图连接节点） | `EPI01\SC016_bg_kitchenCorridor` | ✅ 复用 |
 
-**背景图小结**：**14 复用 / 2 新画**。
+**背景图小结**：**16 复用 / 2 新画**（9017 / 9018 为地图连接节点，无证据/无 NPC，不进入 state scenes 段）。
 
 ---
 

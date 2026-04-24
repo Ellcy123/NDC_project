@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NDC Preview v4.0 (New Table)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;600&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
     <script>
     // js-yaml: 根据环境选择路径
     (function(){
@@ -14,30 +17,67 @@
     })();
     </script>
     <style>
-        /* ===== CSS Variables ===== */
+        /* ===== NOIR PALETTE (legacy names preserved; prototype tokens added) ===== */
         :root {
             --primary: #0a0a0a;
-            --secondary: #1a1a1a;
-            --card: #2a1515;
+            --secondary: #121212;
+            --card: #201d1a;
             --accent: #b84040;
             --highlight: #e8c678;
-            --text-primary: #ffffff;
-            --text-secondary: #cccccc;
-            --text-muted: #888888;
-            --success: #4a7c59;
-            --warning: #c41e3a;
-            --border: #333;
+            --text-primary: #f0e6d2;
+            --text-secondary: #d8cfbb;
+            --text-muted: #968c78;
+            --success: #6b8f5e;
+            --warning: #c78a3a;
+            --border: #2e2823;
+            --coal-3: #1a1818;
+            --ink: #201d1a;
+            --ink-2: #2a2623;
+            --rule: #2e2823;
+            --rule-2: #3a322b;
+            --gold-2: #b89650;
+            --parchment: #f0e6d2;
+            --parch-mute: #c9bfa9;
+            --text-dim: #968c78;
+            --text-faint: #60584c;
+            --brick: #b84040;
+            --brick-2: #8a2e2e;
+            --gold: #e8c678;
+            --ok: #6b8f5e;
+            --ok-2: #3f5a38;
+            --warn: #c78a3a;
+            --miss: #b84040;
+            --locked: #4a443d;
+            --ff-serif: "Playfair Display", "Noto Serif SC", "Cormorant Garamond", Georgia, serif;
+            --ff-sans: "Inter", "Noto Sans SC", ui-sans-serif, system-ui, -apple-system, sans-serif;
+            --ff-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, Menlo, monospace;
+        }
+
+        /* ===== Paper grain & vignette (fixed overlays, pointer-events: none) ===== */
+        .grain {
+            pointer-events: none;
+            position: fixed; inset: 0; z-index: 9999;
+            opacity: .06; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.85 0 0 0 0 0.7 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        }
+        .vignette {
+            pointer-events: none;
+            position: fixed; inset: 0; z-index: 9998;
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.45) 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: var(--ff-sans);
             background: var(--primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            color: var(--text-secondary);
+            line-height: 1.55;
             height: 100vh;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            font-size: 13px;
         }
 
         .app {
@@ -46,41 +86,194 @@
             height: 100vh;
         }
 
-        /* ===== Header ===== */
+        /* ===== Header (noir topbar) ===== */
         .header {
-            background: var(--secondary);
-            padding: 0.75rem 1.5rem;
-            border-bottom: 2px solid var(--accent);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.02) 0%, rgba(0,0,0,.25) 100%),
+                var(--secondary);
+            padding: 0 1.25rem;
+            height: 56px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .header::after {
+            content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-2) 20%, var(--gold-2) 80%, transparent);
+            opacity: .18;
         }
 
         .header-title {
-            font-size: 1.25rem;
-            color: var(--highlight);
+            font-family: var(--ff-serif);
+            font-size: 1rem;
+            color: var(--parchment);
             font-weight: 600;
+            letter-spacing: .04em;
         }
 
+        /* ===== Brand block (left of header) ===== */
+        .brand {
+            display: flex; align-items: center; gap: 10px;
+            min-width: 200px;
+        }
+        .brand-mark {
+            width: 28px; height: 28px; border-radius: 2px;
+            background: var(--primary); border: 1px solid var(--gold-2);
+            display: grid; place-items: center;
+            color: var(--highlight); font-family: var(--ff-serif); font-weight: 700;
+            font-size: 14px; letter-spacing: .05em;
+            box-shadow: 0 0 0 1px var(--secondary) inset;
+            flex-shrink: 0;
+        }
+        .brand-text { line-height: 1.15; }
+        .brand-name {
+            font-family: var(--ff-serif); font-size: 15px;
+            color: var(--parchment); letter-spacing: .04em;
+        }
+        .brand-sub {
+            font-family: var(--ff-mono); font-size: 9.5px;
+            color: var(--text-faint); letter-spacing: .18em; text-transform: uppercase;
+            margin-top: 1px;
+        }
+
+        /* ===== Header center (unit/loop pickers + load) ===== */
+        .header-center {
+            flex: 1;
+            display: flex; align-items: center; gap: 10px;
+            justify-content: center;
+        }
+        .header-right {
+            display: flex; gap: 4px; align-items: center;
+            min-width: 200px; justify-content: flex-end;
+        }
+
+        /* select-group: UNIT label + <select> together in a framed pill */
+        .select-group {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--coal-3); border: 1px solid var(--border); border-radius: 2px;
+            height: 30px; padding: 0 8px 0 10px;
+            transition: border-color .15s ease-out;
+        }
+        .select-group:hover { border-color: var(--gold-2); }
+        .select-group:focus-within { border-color: var(--gold-2); }
+        .select-group .select-label {
+            font-family: var(--ff-mono); font-size: 9.5px;
+            color: var(--gold-2); letter-spacing: .18em;
+            flex-shrink: 0;
+        }
+        .select-group select {
+            border: 0; background: transparent; height: 28px;
+            padding: 0 22px 0 0;
+            background-position: right 2px center;
+        }
+        .select-group select:hover, .select-group select:focus { border: 0; }
+
+        /* Legacy .header-controls fallback (still referenced nowhere now, but safe) */
         .header-controls {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.4rem;
             align-items: center;
         }
 
-        select, .btn {
-            background: var(--card);
-            color: var(--text-primary);
-            border: 1px solid var(--accent);
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
+        /* primary/ghost button variants */
+        .btn.primary {
+            background: var(--highlight); color: var(--primary);
+            border-color: var(--highlight);
+            font-weight: 600;
+        }
+        .btn.primary:hover {
+            background: var(--gold-2); color: var(--primary);
+            border-color: var(--gold-2);
+        }
+        .btn.ghost {
+            background: transparent; color: var(--text-secondary);
+            border-color: transparent;
+            text-decoration: none;
+        }
+        .btn.ghost:hover {
+            color: var(--highlight); border-color: var(--border); background: var(--coal-3);
         }
 
-        .btn { background: var(--accent); border: none; }
-        .btn:hover { background: #d44; }
-        .btn.active { background: var(--highlight); color: #000; }
+        /* ===== Main Tabs (below header, above main) ===== */
+        .main-tabs {
+            display: flex; align-items: flex-end;
+            padding: 0 20px;
+            background: var(--secondary);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .main-tab {
+            position: relative;
+            padding: 12px 18px 10px;
+            font-family: var(--ff-serif);
+            font-size: 13px; letter-spacing: .04em;
+            color: var(--text-muted); background: transparent;
+            border: 0; cursor: pointer;
+            transition: color .15s ease-out;
+            text-decoration: none;
+            display: inline-flex; align-items: baseline;
+        }
+        .main-tab:hover { color: var(--parchment); }
+        .main-tab .tab-idx {
+            font-family: var(--ff-mono); font-size: 10px;
+            color: var(--gold-2); margin-right: 6px;
+        }
+        .main-tab.active { color: var(--parchment); }
+        .main-tab.active::after {
+            content: ""; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px;
+            background: var(--accent);
+        }
+        .tab-meta {
+            margin-left: auto;
+            font-family: var(--ff-mono); font-size: 10px;
+            color: var(--text-faint);
+            padding-bottom: 12px; letter-spacing: .08em;
+        }
+
+        select {
+            background: var(--coal-3);
+            color: var(--parchment);
+            border: 1px solid var(--border);
+            padding: 0 1.8rem 0 0.7rem;
+            height: 30px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: var(--ff-sans);
+            font-size: 12px;
+            letter-spacing: .02em;
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23b89650' stroke-width='1.3' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: border-color .15s ease-out, background-color .15s ease-out;
+        }
+        select:hover, select:focus { border-color: var(--gold-2); outline: none; }
+        select option { background: var(--secondary); color: var(--parchment); }
+
+        .btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0 0.9rem;
+            height: 30px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .08em;
+            transition: color .15s ease-out, border-color .15s ease-out, background .15s ease-out;
+            display: inline-flex; align-items: center;
+        }
+        .btn:hover { color: var(--highlight); border-color: var(--gold-2); background: var(--coal-3); }
+        .btn.active {
+            color: var(--primary);
+            background: var(--highlight);
+            border-color: var(--highlight);
+        }
+        .btn.active:hover { background: var(--highlight); color: var(--primary); }
 
         /* ===== Main Layout ===== */
         .main {
@@ -89,270 +282,548 @@
             overflow: hidden;
         }
 
-        /* ===== Sidebar ===== */
+        /* ===== Sidebar (noir with shell) ===== */
         .sidebar {
-            width: 240px;
+            width: 260px;
             background: var(--secondary);
             border-right: 1px solid var(--border);
             overflow-y: auto;
-            padding: 0.5rem 0;
+            overflow-x: hidden;
+            padding: 0 0 2rem;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: width .2s ease-out;
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 3px; }
+
+        .side-head {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid var(--rule);
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .side-title {
+            font-family: var(--ff-serif); font-size: 13px;
+            color: var(--parchment); letter-spacing: .04em;
+        }
+
+        .loop-row {
+            padding: 10px 12px 4px;
+            display: flex; gap: 4px; flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        .loop-chip {
+            font-family: var(--ff-mono); font-size: 10px;
+            padding: 4px 7px;
+            border-radius: 2px;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            color: var(--text-dim);
+            cursor: pointer;
+            letter-spacing: .05em;
+            transition: color .15s, border-color .15s, background .15s, box-shadow .25s;
+        }
+        .loop-chip:hover { color: var(--parchment); border-color: var(--rule-2); }
+        .loop-chip.active {
+            color: var(--gold);
+            border-color: var(--gold-2);
+            background: linear-gradient(180deg, rgba(232,198,120,.08), rgba(232,198,120,.02));
+            box-shadow: 0 0 0 1px rgba(232,198,120,.15) inset, 0 0 12px -2px rgba(232,198,120,.18);
+        }
+        .loop-chip.locked { color: var(--locked); cursor: not-allowed; }
+
+        .loop-current {
+            padding: 8px 14px 14px;
+            border-bottom: 1px dashed var(--rule);
+            flex-shrink: 0;
+        }
+        .loop-current .kicker {
+            font: 500 10px/1 var(--ff-sans);
+            color: var(--gold);
+            letter-spacing: .2em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .loop-current-title {
+            font-family: var(--ff-serif);
+            font-size: 15px;
+            color: var(--parchment);
+            letter-spacing: .01em;
+            line-height: 1.3;
+        }
+
+        .sidebar-body {
+            padding: 4px 0 16px;
+            flex: 1;
+            min-height: 0;
         }
 
         .sidebar-section {
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-            color: var(--highlight);
+            padding: 0.9rem 0.9rem 0.3rem;
+            font-family: var(--ff-sans);
+            font-weight: 600;
+            font-size: 9.5px;
+            color: var(--text-faint);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.5rem;
+            letter-spacing: .22em;
+            margin-top: 0.2rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .sidebar-section::before {
+            content: ""; width: 4px; height: 4px; background: var(--gold-2); border-radius: 50%; opacity: .6;
+            flex-shrink: 0;
+        }
+        .sidebar-section::after {
+            content: ""; flex: 1; height: 1px; background: var(--border); opacity: .6;
         }
 
         .sidebar-item {
-            padding: 0.5rem 1rem;
+            position: relative;
+            padding: 0.45rem 0.8rem 0.45rem 1rem;
             cursor: pointer;
-            border-left: 3px solid transparent;
-            transition: all 0.15s;
-            font-size: 0.85rem;
+            border-left: none;
+            transition: background .15s ease-out, color .15s ease-out;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            display: flex; align-items: center; gap: 8px;
         }
-
-        .sidebar-item:hover { background: rgba(184, 64, 64, 0.1); }
+        .sidebar-item::before {
+            content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px;
+            background: var(--accent);
+            transform: scaleY(0); transform-origin: top;
+            transition: transform .2s ease-out;
+        }
+        .sidebar-item:hover { background: rgba(232,198,120,.04); }
+        .sidebar-item:hover::before { transform: scaleY(1); }
         .sidebar-item.active {
-            background: rgba(184, 64, 64, 0.2);
-            border-left-color: var(--accent);
+            background: rgba(232,198,120,.07);
+            color: var(--parchment);
         }
+        .sidebar-item.active::before { transform: scaleY(1); background: var(--highlight); }
 
         .badge {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 0 0.4rem;
-            border-radius: 8px;
-            font-size: 0.7rem;
-            margin-left: 0.3rem;
+            display: inline-flex; align-items: center; gap: 3px;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            letter-spacing: .02em;
+            padding: 1px 5px;
+            border-radius: 2px;
+            background: var(--coal-3);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            min-width: 22px;
+            justify-content: center;
+            margin-left: 0.25rem;
         }
-        .badge.npc { background: var(--success); }
+        .badge.npc {
+            color: var(--success);
+            border-color: color-mix(in srgb, var(--success) 40%, var(--border));
+            background: color-mix(in srgb, var(--success) 6%, var(--coal-3));
+        }
 
-        /* ===== Content ===== */
+        /* ===== Content (main view, noir) ===== */
         .content {
             flex: 1;
             overflow-y: auto;
-            padding: 1.5rem;
+            padding: 22px 24px 60px;
+            animation: viewIn .22s ease-out;
         }
+        @keyframes viewIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .content::-webkit-scrollbar { width: 8px; }
+        .content::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 4px; }
 
-        /* ===== Evidence Table ===== */
+        /* ===== Art Table (evidence-table -> noir .art-table) ===== */
         .evidence-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 12px;
         }
-
         .evidence-table th {
             background: var(--secondary);
-            padding: 0.6rem 0.8rem;
+            padding: 10px 12px;
             text-align: left;
-            border-bottom: 2px solid var(--accent);
-            font-size: 0.8rem;
-            color: var(--highlight);
+            border-bottom: 1px solid var(--rule);
+            font-family: var(--ff-sans);
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .18em;
+            color: var(--text-faint);
             position: sticky;
             top: 0;
-            z-index: 1;
+            z-index: 2;
         }
-
         .evidence-table td {
-            padding: 0.5rem 0.8rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.85rem;
-            vertical-align: top;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--rule);
+            color: var(--text-primary);
+            vertical-align: middle;
+            font-size: 12px;
         }
+        .evidence-table tr:hover td { background: color-mix(in srgb, var(--gold) 4%, var(--secondary)); }
+        .evidence-table .art-req { color: var(--parchment); font-weight: 500; }
+        .evidence-table .art-req.empty {
+            color: var(--brick);
+            font-style: normal;
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .06em;
+        }
+        .evidence-table tr.missing td,
+        .evidence-table tr:has(.art-req.empty) td { background: color-mix(in srgb, var(--brick) 6%, transparent); }
+        .evidence-table tr.missing td:first-child,
+        .evidence-table tr:has(.art-req.empty) td:first-child { box-shadow: inset 3px 0 0 var(--brick); }
 
-        .evidence-table tr:hover { background: rgba(184, 64, 64, 0.1); }
+        .id-col { width: 72px; font-family: var(--ff-mono); font-size: 11px; color: var(--gold); letter-spacing: .06em; }
+        .type-col { width: 88px; }
+        .name-col { width: 170px; font-family: var(--ff-serif); font-weight: 600; font-size: 13px; color: var(--parchment); }
+        .location-col { width: 160px; color: var(--text-muted); font-size: 11.5px; }
+        .desc-col { max-width: 320px; color: var(--parch-mute); font-size: 11.5px; line-height: 1.55; }
 
-        .evidence-table .art-req { color: var(--highlight); font-weight: 500; }
-        .evidence-table .art-req.empty { color: var(--warning); font-style: italic; }
-
-        .id-col { width: 60px; color: var(--text-muted); }
-        .type-col { width: 80px; }
-        .name-col { width: 160px; font-weight: 500; }
-        .location-col { width: 150px; color: var(--text-secondary); }
-        .desc-col { max-width: 300px; }
-
-        /* ===== Filter Bar ===== */
+        /* ===== Filter Bar (.filter-bar -> .art-filters vibe) ===== */
         .filter-bar {
             display: flex;
-            gap: 0.5rem;
+            gap: 10px;
             align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.5rem 0.75rem;
-            background: var(--secondary);
-            border-radius: 4px;
+            margin-bottom: 14px;
+            padding: 10px 12px;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            border-radius: 2px;
             flex-wrap: wrap;
         }
-
-        .filter-bar label { color: var(--text-muted); font-size: 0.85rem; }
-
-        .filter-bar input {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            width: 200px;
+        .filter-bar label {
+            color: var(--text-faint);
+            font-family: var(--ff-sans); font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .18em;
         }
+        .filter-bar input {
+            background: var(--primary);
+            border: 1px solid var(--rule);
+            color: var(--parchment);
+            padding: 6px 10px;
+            height: 30px;
+            border-radius: 2px;
+            font-family: var(--ff-sans); font-size: 12px;
+            width: 240px;
+            outline: none;
+            transition: border-color .15s ease-out, background .15s ease-out;
+        }
+        .filter-bar input::placeholder { color: var(--text-faint); }
+        .filter-bar input:focus { border-color: var(--gold-2); }
+        .filter-bar .btn { height: 30px; }
 
         .stats {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-family: var(--ff-mono); font-size: 10.5px;
+            letter-spacing: .08em;
             margin-left: auto;
         }
-        .stats .has-art { color: var(--success); }
-        .stats .no-art { color: var(--warning); }
+        .stats .has-art { color: var(--ok); }
+        .stats .no-art  { color: var(--brick); }
 
-        /* ===== Art Tab Bar ===== */
+        /* ===== Art Sub-Tab Bar (.art-tab-bar -> .sub-tabs) ===== */
         .art-tab-bar {
             display: flex;
-            gap: 0;
-            border-bottom: 2px solid var(--border);
-            margin-bottom: 0;
-            background: var(--secondary);
-            padding: 0 1rem;
+            gap: 2px;
+            border-bottom: 1px solid var(--rule);
+            margin: 0 0 14px;
+            background: transparent;
+            padding: 0 2px;
             position: sticky;
             top: 0;
             z-index: 5;
         }
         .art-tab {
-            padding: 0.6rem 1.2rem;
+            padding: 10px 16px;
             cursor: pointer;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: color 0.2s, border-color 0.2s;
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .1em;
+            color: var(--text-dim);
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid transparent;
+            margin-bottom: -1px;
+            transition: color .15s;
+            position: relative;
         }
-        .art-tab:hover { color: var(--text-primary); }
-        .art-tab.active {
-            color: var(--highlight);
-            border-bottom-color: var(--highlight);
-            font-weight: 600;
+        .art-tab:hover { color: var(--parchment); }
+        .art-tab.active { color: var(--gold); font-weight: 500; }
+        .art-tab.active::after {
+            content: ""; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 1px;
+            background: var(--gold);
         }
         .art-tab .tab-badge {
             display: inline-block;
-            background: var(--warning);
-            color: white;
-            padding: 0 0.4rem;
-            border-radius: 8px;
-            font-size: 0.7rem;
-            margin-left: 0.4rem;
+            background: var(--brick);
+            color: var(--parchment);
+            padding: 1px 6px;
+            border-radius: 2px;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            letter-spacing: .04em;
+            margin-left: 6px;
             vertical-align: middle;
         }
         .art-tab .tab-badge.done {
-            background: var(--success);
+            background: color-mix(in srgb, var(--ok) 18%, var(--coal-3));
+            color: var(--ok);
+            border: 1px solid color-mix(in srgb, var(--ok) 40%, var(--rule));
         }
 
-        /* ===== Scene View ===== */
+        /* ===== Scene View (.scene-container -> .scene-stage) ===== */
         .scene-title {
-            font-size: 1.2rem;
-            color: var(--highlight);
-            margin-bottom: 0.5rem;
+            font-family: var(--ff-serif);
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: .01em;
+            color: var(--parchment);
+            margin: 4px 0 10px;
         }
 
         .scene-container {
             position: relative;
-            border-radius: 8px;
+            border-radius: 0;
             overflow: hidden;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border);
-            background: #000;
-            min-height: 320px;
+            margin-bottom: 18px;
+            border: 1px solid var(--rule);
+            background:
+                radial-gradient(ellipse at 30% 40%, rgba(232,198,120,.14), transparent 55%),
+                radial-gradient(ellipse at 70% 70%, rgba(184,64,64,.08), transparent 60%),
+                linear-gradient(180deg, #1a1612 0%, #0c0906 100%);
+            min-height: 360px;
+            box-shadow: 0 1px 0 rgba(232,198,120,.05) inset, 0 24px 50px -20px rgba(0,0,0,.85);
+        }
+        .scene-container::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            box-shadow: inset 0 0 160px 20px rgba(0,0,0,.7);
+        }
+        .scene-container::before {
+            content: "● REC";
+            position: absolute; top: 10px; left: 14px; z-index: 3;
+            font-family: var(--ff-mono);
+            font-size: 10px; letter-spacing: .22em;
+            color: var(--brick);
+            pointer-events: none;
+            text-shadow: 0 0 6px rgba(184,64,64,.5);
+            animation: noir-shimmer 1.4s step-end infinite;
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            color: var(--text-faint);
+        }
+        .empty-state-mark {
+            font-family: var(--ff-serif);
+            font-weight: 700;
+            font-size: 48px;
+            letter-spacing: .1em;
+            color: var(--text-faint);
+            border: 1px solid var(--rule);
+            padding: 18px 28px;
+            background: var(--coal-3);
+            box-shadow: 0 24px 60px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(232,198,120,.06) inset;
+        }
+        .empty-state-text {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--text-muted);
         }
 
         .scene-container .scene-bg {
             width: 100%;
             display: block;
-            max-height: 400px;
+            max-height: 440px;
             object-fit: cover;
+            filter: saturate(.85) contrast(1.05);
         }
 
         .npc-on-scene {
             position: absolute;
             transform: translate(-50%, -80%);
             cursor: pointer;
-            transition: filter 0.15s;
+            transition: transform .18s ease-out, filter .15s ease-out;
+            z-index: 2;
         }
-
         .npc-on-scene img {
-            height: 120px;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+            height: 130px;
+            filter: drop-shadow(0 18px 22px rgba(0,0,0,.9));
         }
-
-        .npc-on-scene:hover img { filter: drop-shadow(0 2px 8px rgba(184,64,64,0.6)) brightness(1.1); }
-
+        .npc-on-scene:hover { transform: translate(-50%, -82%); }
+        .npc-on-scene:hover img {
+            filter: drop-shadow(0 0 12px rgba(232,198,120,.35)) drop-shadow(0 18px 22px rgba(0,0,0,.9)) brightness(1.06);
+        }
         .npc-on-scene .npc-label {
             text-align: center;
-            font-size: 0.7rem;
-            color: var(--highlight);
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            letter-spacing: .04em;
+            color: var(--parchment);
+            background: rgba(0,0,0,.8);
+            border: 1px solid var(--rule-2);
+            padding: 2px 8px;
+            border-radius: 2px;
             text-shadow: 0 1px 3px #000;
-            margin-top: 0.15rem;
+            margin-top: 4px;
+            display: inline-block;
         }
+        .npc-on-scene:hover .npc-label { color: var(--gold); border-color: var(--gold-2); }
+
+        /* 缺立绘时的占位框 —— 320×440 × 20% → 64×88 */
+        .npc-figure-miss {
+            width: 64px; height: 88px;
+            background:
+                repeating-linear-gradient(45deg, rgba(184,64,64,.8) 0 2px, rgba(20,5,5,.55) 2px 6px),
+                rgba(20, 5, 5, .85);
+            border: 2px solid var(--brick);
+            display: grid; place-items: center;
+            font-family: var(--ff-serif);
+            font-size: 28px; font-weight: 700;
+            color: rgba(184, 64, 64, 0);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.9),
+                0 0 12px rgba(184,64,64,.5),
+                inset 0 0 0 1px rgba(184,64,64,.6),
+                0 10px 14px -8px rgba(0,0,0,.9);
+            transition: border-color .15s, transform .15s ease-out;
+        }
+        .npc-on-scene.missing { z-index: 2; }
+        .npc-on-scene.missing:hover .npc-figure-miss {
+            border-color: var(--gold-2);
+            color: var(--gold);
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        /* 缺立绘的名字标签 —— 做成明显可交互的胶囊按钮(暗底 + 砖红边 + 浅字 + 轻微外发光) */
+        .npc-on-scene.missing .npc-label {
+            background: rgba(15, 5, 5, .92);
+            border: 1px solid var(--brick);
+            color: var(--parchment);
+            padding: 4px 12px;
+            font-size: 11.5px;
+            letter-spacing: .06em;
+            font-weight: 500;
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.7),
+                0 0 10px rgba(184,64,64,.4),
+                0 4px 8px -2px rgba(0,0,0,.8);
+            margin-top: 6px;
+        }
+        .npc-on-scene.missing:hover .npc-label {
+            color: var(--primary);
+            background: var(--gold);
+            border-color: var(--gold);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.7),
+                0 0 14px rgba(232,198,120,.6),
+                0 4px 8px -2px rgba(0,0,0,.8);
+        }
+
+        /* 无坐标 NPC 自动散布在场景上 —— 标签样式由 .missing 主导，这里不再额外覆盖 */
 
         .scene-bg {
             width: 100%;
-            max-height: 300px;
+            max-height: 320px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border);
+            border-radius: 0;
+            margin-bottom: 12px;
+            border: 1px solid var(--rule);
         }
 
         .section-title {
-            font-size: 1rem;
-            color: var(--highlight);
-            margin: 1.25rem 0 0.5rem;
-            padding-bottom: 0.3rem;
-            border-bottom: 1px solid var(--border);
+            font-family: var(--ff-serif);
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: .02em;
+            color: var(--parchment);
+            margin: 22px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--rule);
+            position: relative;
+        }
+        .section-title::after {
+            content: ""; position: absolute; left: 0; bottom: -1px; width: 60px; height: 1px;
+            background: var(--gold-2);
         }
 
-        /* ===== Evidence Cards ===== */
+        /* ===== Evidence Cards (.evidence-card -> .ev-card noir) ===== */
         .evidence-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 10px;
         }
 
         .evidence-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.75rem;
+            position: relative;
+            background: var(--ink);
+            border: 1px solid var(--rule);
+            border-radius: 0;
+            padding: 12px 13px 11px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: transform .2s ease-out, border-color .15s ease-out, box-shadow .2s ease-out;
+            overflow: hidden;
         }
-
+        .evidence-card::before {
+            content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+            background: var(--gold-2); opacity: .35;
+        }
         .evidence-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-1px);
+            border-color: var(--gold-2);
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 1px rgba(232,198,120,.25) inset, 0 10px 22px -10px rgba(0,0,0,.9);
         }
 
-        .ev-name { font-weight: 600; margin-bottom: 0.3rem; }
-        .ev-id { color: var(--text-muted); font-size: 0.75rem; }
+        .ev-name {
+            font-family: var(--ff-serif); font-weight: 600;
+            font-size: 15px;
+            line-height: 1.25;
+            color: var(--parchment);
+            margin: 2px 0 8px;
+        }
+        .ev-id {
+            font-family: var(--ff-mono);
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: .08em;
+        }
 
         .ev-type {
             display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 0 0.4rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--rule);
+            padding: 1px 6px;
+            border-radius: 2px;
+            font-family: var(--ff-mono);
+            font-size: 9.5px;
+            letter-spacing: .05em;
         }
-        .ev-type.type-clue { background: #c0392b; }
-        .ev-type.type-item { background: #2980b9; }
-        .ev-type.type-envir { background: #7f8c8d; }
-        .ev-type.type-note { background: #8e44ad; }
+        .ev-type.type-clue  { color: var(--brick); border-color: var(--brick-2); }
+        .ev-type.type-item  { color: #6ea3c8; border-color: color-mix(in srgb, #6ea3c8 40%, var(--rule)); }
+        .ev-type.type-envir { color: var(--text-muted); border-color: var(--rule-2); }
+        .ev-type.type-note  { color: #a280c4; border-color: color-mix(in srgb, #a280c4 40%, var(--rule)); }
 
         .ev-desc {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            margin-top: 0.3rem;
+            color: var(--parch-mute);
+            font-size: 11.5px;
+            margin-top: 4px;
+            line-height: 1.55;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -360,223 +831,1298 @@
         }
 
         .ev-art {
-            font-size: 0.8rem;
-            margin-top: 0.3rem;
-            padding-top: 0.3rem;
-            border-top: 1px solid var(--border);
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            letter-spacing: .06em;
+            margin-top: 8px;
+            padding-top: 7px;
+            border-top: 1px solid var(--rule);
+            display: inline-flex; align-items: center; gap: 6px;
         }
-        .ev-art.filled { color: var(--highlight); }
-        .ev-art.empty { color: var(--warning); }
+        .ev-art::before {
+            content: ""; width: 6px; height: 6px; border-radius: 50%;
+            background: currentColor;
+        }
+        .ev-art.filled { color: var(--ok); }
+        .ev-art.empty  { color: var(--brick); }
+        .ev-art.empty::before { box-shadow: 0 0 6px var(--brick); }
 
         /* ===== NPC Cards ===== */
         .npc-card {
-            background: var(--card);
-            border: 1px solid var(--success);
-            border-radius: 6px;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
+            background: var(--ink);
+            border: 1px solid var(--rule);
+            border-left: 2px solid var(--ok);
+            border-radius: 0;
+            padding: 12px 13px;
+            margin-bottom: 8px;
         }
-
-        .npc-name { font-weight: 600; color: var(--success); }
-
+        .npc-name {
+            font-family: var(--ff-serif); font-weight: 600; font-size: 14px;
+            color: var(--parchment);
+        }
         .npc-dialogue {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-top: 0.3rem;
+            color: var(--parch-mute);
+            font-size: 12.5px;
+            margin-top: 6px;
+            font-family: var(--ff-serif);
             font-style: italic;
+            border-left: 2px solid var(--gold-2);
+            padding: 4px 0 4px 12px;
         }
-
         .npc-meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.3rem;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            letter-spacing: .08em;
+            margin-top: 6px;
         }
 
         /* ===== Production Spec ===== */
         .prod-spec {
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px dashed var(--border);
-            font-size: 0.8rem;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--rule);
+            font-size: 12px;
         }
         .prod-spec .spec-row {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            margin-bottom: 0.25rem;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 4px;
             flex-wrap: wrap;
         }
         .prod-spec .spec-label {
-            color: var(--text-muted);
-            min-width: 5.5em;
+            font-family: var(--ff-mono);
+            color: var(--text-faint);
+            font-size: 10px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            min-width: 6em;
             flex-shrink: 0;
         }
         .prod-spec .spec-summary {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            margin-bottom: 0.3rem;
-            line-height: 1.4;
+            color: var(--parch-mute);
+            font-size: 12px;
+            margin-bottom: 4px;
+            line-height: 1.55;
         }
-        .copy-tag {
-            font-family: monospace;
-            background: var(--bg);
-            padding: 2px 6px;
-            border-radius: 3px;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            font-size: 0.78rem;
-            color: var(--text);
-        }
-        .copy-tag:hover { border-color: var(--highlight); }
 
-        /* ===== Modal ===== */
+        /* ===== Modal -> Right-side Drawer (noir) ===== */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(3px);
             z-index: 100;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-end;  /* drawer slides from right */
+            align-items: stretch;
         }
-
-        .modal-overlay.active { display: flex; }
+        .modal-overlay.active {
+            display: flex;
+            animation: drawerBackdrop .22s ease-out;
+        }
+        @keyframes drawerBackdrop {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
 
         .modal {
             background: var(--secondary);
-            border: 1px solid var(--accent);
-            border-radius: 8px;
-            padding: 1.5rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
+            border: 0;
+            border-left: 1px solid var(--gold-2);
+            border-radius: 0;
+            padding: 28px 32px 40px;
+            width: 600px;
+            max-width: 92vw;
+            max-height: none;
+            height: 100vh;
             overflow-y: auto;
+            position: relative;
+            box-shadow: -24px 0 60px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(232,198,120,.08) inset;
+            animation: drawerSlideIn .28s cubic-bezier(.2, .8, .25, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
         }
+        @keyframes drawerSlideIn {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
+        }
+        .modal::-webkit-scrollbar { width: 6px; }
+        .modal::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 3px; }
 
         .modal-title {
-            font-size: 1.1rem;
-            color: var(--highlight);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
+            font-family: var(--ff-serif); font-weight: 600;
+            font-size: 22px;
+            color: var(--parchment);
+            margin: 0;
+            padding: 2px 40px 18px 0;
+            border-bottom: 1px solid var(--rule);
+            letter-spacing: .01em;
+            flex-shrink: 0;
         }
+        .modal .drawer-kicker { font-size: 10px; margin-bottom: 6px; }
+        .modal .drawer-name { font-size: 24px; line-height: 1.15; margin-top: 0; }
+        .modal .drawer-sub  { font-size: 11.5px; margin-top: 5px; }
 
         .modal-close {
-            float: right;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
+            position: absolute;
+            top: 22px; right: 22px;
+            float: none;
+            background: transparent;
+            border: 1px solid var(--rule);
+            color: var(--text-dim);
+            font-size: 16px;
             line-height: 1;
+            width: 30px; height: 30px;
+            display: grid; place-items: center;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: color .15s, border-color .15s;
+            z-index: 1;
         }
-        .modal-close:hover { color: var(--text-primary); }
+        .modal-close:hover { color: var(--gold); border-color: var(--gold-2); }
 
-        .modal p { margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .modal strong { color: var(--text-secondary); }
+        .modal p { margin-bottom: 8px; font-size: 12.5px; color: var(--parch-mute); line-height: 1.6; }
+        .modal strong { color: var(--parchment); font-weight: 500; }
+
+        /* ===== NPC Drawer — rich 3-section layout ===== */
+        .modal .drawer-kicker {
+            font-family: var(--ff-mono); font-size: 10px;
+            color: var(--gold); letter-spacing: .18em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .modal .drawer-name {
+            font-family: var(--ff-serif); font-weight: 600;
+            font-size: 22px;
+            color: var(--parchment);
+            letter-spacing: .01em;
+            line-height: 1.2;
+        }
+        .modal .drawer-sub {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: .08em;
+            margin-top: 3px;
+        }
+
+        .npc-section { display: grid; gap: 12px; }
+        /* modalContent 本身是普通 div,没有 flex gap —— 给它一个列式 flex 确保 section 间有呼吸 */
+        .modal #modalContent {
+            display: flex;
+            flex-direction: column;
+        }
+        .modal #modalContent > .npc-section + .npc-section {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px dashed var(--rule);
+        }
+        .npc-section .smallcap {
+            font: 600 10px/1 var(--ff-sans);
+            text-transform: uppercase;
+            letter-spacing: .22em;
+            color: var(--text-faint);
+            display: inline-flex; align-items: center;
+            margin-bottom: 2px;
+        }
+        .npc-section .section-count {
+            display: inline-block;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            color: var(--gold);
+            margin-left: 8px;
+            letter-spacing: .08em;
+        }
+        .section-head-row {
+            display: flex; align-items: center; gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Section 1: 立绘 + 资源名 + 美术需求 */
+        .npc-portrait-section {
+            grid-template-columns: 60px 1fr;
+            align-items: start;
+            gap: 14px;
+        }
+        .npc-portrait {
+            width: 60px; height: 80px;
+            background: var(--coal);
+            border: 1px solid var(--gold-2);
+            position: relative;
+            overflow: hidden;
+        }
+        .npc-portrait img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: top center;   /* 立绘是竖幅的,容器 112×80 横向,只露顶部(脸/肩) */
+            display: block;
+        }
+        .npc-portrait::before {
+            content: ""; position: absolute; inset: 3px;
+            background: repeating-linear-gradient(-45deg, rgba(232,198,120,.08) 0 2px, transparent 2px 5px);
+            pointer-events: none; z-index: 0;
+        }
+        .npc-portrait img { position: relative; z-index: 1; }
+        .npc-portrait.missing,
+        .npc-portrait.miss-broken {
+            border-color: var(--brick);
+            background: color-mix(in srgb, var(--brick) 10%, var(--coal));
+        }
+        .npc-portrait.missing::before,
+        .npc-portrait.miss-broken::before {
+            background: repeating-linear-gradient(45deg, rgba(184,64,64,.15) 0 3px, transparent 3px 7px);
+        }
+        .npc-portrait-q {
+            position: absolute; inset: 0; display: grid; place-items: center;
+            font-family: var(--ff-serif); font-size: 22px; font-weight: 700;
+            color: var(--brick); opacity: .7;
+            z-index: 2;
+        }
+        .npc-portrait-meta { min-width: 0; }
+
+        /* copy-asset button (borrowed from prototype) */
+        .copy-asset {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--coal-3); border: 1px solid var(--rule);
+            padding: 6px 9px; cursor: pointer; border-radius: 2px;
+            color: var(--parchment);
+            transition: border-color .15s, background .15s, transform .1s;
+            max-width: 100%; margin-top: 6px;
+        }
+        .copy-asset:hover { border-color: var(--gold-2); background: var(--ink); }
+        .copy-asset:active { transform: scale(.985); }
+        .copy-asset-dot {
+            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+        }
+        .copy-asset-dot.ok   { background: var(--ok); }
+        .copy-asset-dot.miss { background: var(--brick); box-shadow: 0 0 6px var(--brick); }
+        .copy-asset-name {
+            font-family: var(--ff-mono); font-size: 11px;
+            color: var(--gold); letter-spacing: .03em;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            min-width: 0; flex: 1;
+        }
+        .copy-asset-ico {
+            font-family: var(--ff-mono); font-size: 10px;
+            color: var(--text-faint); letter-spacing: .08em; flex-shrink: 0;
+            text-transform: uppercase;
+        }
+        .copy-asset:hover .copy-asset-ico { color: var(--gold); }
+
+        .npc-art-req {
+            font-family: var(--ff-serif);
+            font-size: 14px; line-height: 1.7;
+            color: var(--parch-mute);
+            margin: 6px 0 14px;
+        }
+
+        /* ===== Phase cards (opening / ending / events) — noir scene-card 风格 ===== */
+        .phase-goal {
+            display: flex; align-items: baseline; gap: 10px;
+            margin: 6px 0 18px;
+            padding: 8px 12px;
+            background: var(--coal-3);
+            border-left: 2px solid var(--gold-2);
+        }
+        .phase-goal-label {
+            font-family: var(--ff-sans);
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .22em;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+        .phase-goal-text {
+            font-family: var(--ff-serif);
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: var(--parch-mute);
+        }
+
+        .phase-scene-card {
+            background: var(--ink);
+            border: 1px solid var(--rule);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: border-color .15s, transform .15s ease-out, box-shadow .2s ease-out;
+            position: relative;
+        }
+        .phase-scene-card.clickable { cursor: pointer; }
+        .phase-scene-card.clickable::before {
+            content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+            background: var(--gold-2); opacity: .35;
+            transition: opacity .15s;
+        }
+        .phase-scene-card.clickable:hover {
+            border-color: var(--gold-2);
+            transform: translateY(-1px);
+            box-shadow: 0 0 0 1px rgba(232,198,120,.2) inset, 0 10px 22px -10px rgba(0,0,0,.9);
+        }
+        .phase-scene-card.clickable:hover::before { opacity: .8; background: var(--gold); }
+
+        .phase-scene-bg {
+            width: 100%;
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid var(--rule);
+            filter: saturate(.85) contrast(1.05);
+            position: relative;
+        }
+        .phase-scene-bg::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,.45) 100%);
+        }
+
+        /* Cutscene / 无 SceneConfig 条目的占位条带 —— 渐变 + 胶片斜纹 + ID 水印 */
+        .phase-scene-bg.placeholder {
+            filter: none;
+            background:
+                radial-gradient(ellipse at 30% 35%, rgba(232,198,120,.10), transparent 55%),
+                radial-gradient(ellipse at 70% 75%, rgba(184,64,64,.08), transparent 60%),
+                repeating-linear-gradient(135deg, rgba(232,198,120,.035) 0 1px, transparent 1px 7px),
+                linear-gradient(180deg, #1a1612 0%, #0c0906 100%);
+        }
+        .phase-scene-bg.placeholder::before {
+            content: attr(data-kind) " · " attr(data-id);
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+            font-family: var(--ff-mono);
+            font-size: 13px;
+            letter-spacing: .3em;
+            color: var(--text-faint);
+            z-index: 1;
+            white-space: nowrap;
+        }
+        /* 占位条带顶部还加一个"REC"点缀,跟场景舞台 UI 呼应 */
+        .phase-scene-bg.placeholder::after {
+            content: "● " attr(data-kind);
+            position: absolute; top: 10px; left: 14px;
+            font-family: var(--ff-mono);
+            font-size: 9.5px;
+            letter-spacing: .22em;
+            color: var(--brick);
+            background: none;
+            inset: auto;
+            animation: noir-shimmer 1.4s step-end infinite;
+        }
+
+        .phase-scene-body {
+            padding: 14px 16px 16px;
+            display: grid;
+            gap: 10px;
+        }
+        .phase-scene-head {
+            display: flex; align-items: baseline; gap: 10px;
+        }
+        .phase-scene-title {
+            font-family: var(--ff-serif);
+            font-weight: 600;
+            font-size: 17px;
+            color: var(--parchment);
+            margin: 0;
+            letter-spacing: .01em;
+            line-height: 1.2;
+        }
+        .phase-scene-id {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: .08em;
+        }
+
+        .phase-scene-chars {
+            display: flex; flex-wrap: wrap; gap: 5px;
+        }
+        .char-pill {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            padding: 3px 9px;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            color: var(--parch-mute);
+            letter-spacing: .04em;
+            border-radius: 2px;
+            transition: border-color .15s, color .15s;
+        }
+        .char-pill:hover {
+            border-color: var(--gold-2);
+            color: var(--parchment);
+        }
+
+        .phase-scene-purpose {
+            font-family: var(--ff-serif);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--parch-mute);
+        }
+
+        .phase-scene-trigger {
+            display: flex; align-items: baseline; gap: 10px;
+            padding: 6px 10px;
+            background: color-mix(in srgb, var(--warn) 8%, var(--coal-3));
+            border-left: 2px solid var(--warn);
+        }
+        .trigger-label {
+            font-family: var(--ff-sans); font-weight: 600;
+            font-size: 9.5px; text-transform: uppercase;
+            letter-spacing: .22em; color: var(--warn);
+            flex-shrink: 0;
+        }
+        .trigger-text {
+            font-family: var(--ff-mono);
+            font-size: 11.5px;
+            color: var(--parch-mute);
+            letter-spacing: .02em;
+        }
+
+        .phase-scene-talk {
+            display: flex; align-items: center; gap: 10px;
+            flex-wrap: wrap;
+            padding-top: 10px;
+            border-top: 1px dashed var(--rule);
+        }
+        .phase-scene-talk .copy-asset {
+            margin-top: 0;
+            flex-shrink: 1;
+            min-width: 0;
+            max-width: 360px;
+        }
+        .talk-meta {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            color: var(--text-dim);
+            letter-spacing: .04em;
+        }
+        .talk-meta.miss { color: var(--brick); }
+        .talk-meta-id { color: var(--gold); letter-spacing: .06em; }
+        .phase-play-btn {
+            margin-left: auto;
+            height: 30px;
+            font-size: 11px;
+            padding: 0 14px;
+            letter-spacing: .08em;
+        }
+
+        /* ===== Section 2: AVG 对白流水(drawer 内嵌) ===== */
+        .dlg-entry-empty {
+            font-family: var(--ff-mono); font-size: 10.5px;
+            color: var(--text-faint); letter-spacing: .06em;
+            font-style: italic;
+        }
+        .npc-dialog-section { gap: 8px; }
+        .npc-dialog-stage { display: block; min-height: 10px; }
+
+        /* talk id 芯片行 */
+        .avg-tabs {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+        .avg-tab {
+            padding: 5px 11px;
+            border: 1px solid var(--rule);
+            background: var(--coal-2);
+            color: var(--text-dim);
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .08em;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: border-color .15s, color .15s, background .15s;
+        }
+        .avg-tab:hover { border-color: var(--gold-2); color: var(--parchment); }
+        .avg-tab.active {
+            border-color: var(--gold); color: var(--gold);
+            background: var(--ink);
+        }
+
+        /* scene context 行 */
+        .avg-ctx {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: .04em;
+            padding: 4px 0 10px;
+            border-bottom: 1px dashed var(--rule-2);
+            margin-bottom: 2px;
+        }
+        .avg-ctx-scene { color: var(--gold); }
+        .avg-ctx-sep { color: var(--text-faint); margin: 0 6px; }
+        .avg-ctx-desc { color: var(--text-dim); }
+
+        /* 主舞台(stage)—— drawer 内唯一的对白区 */
+        .avg-stage {
+            position: relative;
+            background:
+                linear-gradient(180deg, rgba(232,198,120,.03), transparent 40%),
+                var(--coal-3);
+            border: 1px solid var(--rule-2);
+            padding: 20px 22px 16px;
+            min-height: 220px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .avg-stage:hover { border-color: var(--gold-2); }
+        .avg-stage:focus-visible { border-color: var(--gold); }
+        .avg-stage::before {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at top, transparent 55%, rgba(0,0,0,.35) 100%);
+            pointer-events: none;
+        }
+        .avg-stage.done { cursor: default; }
+
+        /* 每条台词 */
+        .avg-stream {
+            display: grid; gap: 18px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 6px;
+            /* 不用 smooth —— rebuild 会导致「滚到顶再滚下来」的视觉跳跃 */
+        }
+        .avg-stream::-webkit-scrollbar { width: 4px; }
+        .avg-stream::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 2px; }
+
+        .avg-line { position: relative; }
+        .avg-line.current { animation: avg-line-in .18s ease-out; }
+        @keyframes avg-line-in {
+            from { opacity: 0; transform: translateY(3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .avg-line.self::before {
+            content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px;
+            width: 2px; background: var(--gold);
+        }
+        .avg-line.protagonist::before {
+            content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px;
+            width: 2px; background: #6ea3c8;  /* 冷蓝 —— 主角 Zack */
+        }
+        .avg-line.partner::before {
+            content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px;
+            width: 2px; background: #d17089;  /* 水红 —— 搭档 Emma */
+        }
+
+        .avg-who {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+        .avg-line.self .avg-who { color: var(--gold); }
+        .avg-line.protagonist .avg-who { color: #90b4d0; }
+        .avg-line.partner .avg-who { color: #e098ab; }
+
+        .avg-mood {
+            color: var(--text-faint);
+            font-size: 9.5px;
+            margin-left: 4px;
+            font-style: italic;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        /* 打字中的光标(▌) —— 金色闪烁,只在 .avg-text.typing 后出现 */
+        .avg-text.typing::after {
+            content: "▌";
+            color: var(--gold);
+            margin-left: 1px;
+            font-weight: 400;
+            animation: avg-caret-blink .8s steps(2) infinite;
+        }
+        @keyframes avg-caret-blink { 50% { opacity: 0; } }
+
+        /* NPC / self 对白文字：纯白；主角(Zack) 单独用冷蓝以便一眼区分 */
+        .avg-text,
+        .avg-line.self .avg-text,
+        .avg-line.faded .avg-text,
+        .avg-line.faded.self .avg-text {
+            font-family: var(--ff-serif);
+            font-size: 15px;
+            color: #ffffff;
+            line-height: 1.65;
+            font-style: normal;
+            letter-spacing: .01em;
+        }
+        .avg-line.protagonist .avg-text,
+        .avg-line.faded.protagonist .avg-text {
+            font-family: var(--ff-serif);
+            font-size: 15px;
+            color: #b8d4e8;  /* 冷蓝——和 protagonist 左侧色条、说话人名保持一致 */
+            line-height: 1.65;
+            font-style: normal;
+            letter-spacing: .01em;
+        }
+        .avg-line.partner .avg-text,
+        .avg-line.faded.partner .avg-text {
+            font-family: var(--ff-serif);
+            font-size: 15px;
+            color: #f2bccb;  /* 水红——搭档 Emma；与 Zack 冷蓝形成 CP 对比 */
+            line-height: 1.65;
+            font-style: normal;
+            letter-spacing: .01em;
+        }
+        .avg-line.faded { opacity: 1; }
+        /* 说话人头部色仍保留区分(self 金色 / protagonist 冷蓝 / 其他 text-dim) —— 是判断「谁在说」的唯一视觉线索 */
+
+        .avg-lie {
+            margin-top: 6px;
+            padding: 4px 8px;
+            background: color-mix(in srgb, var(--brick) 15%, transparent);
+            border-left: 2px solid var(--brick);
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            color: var(--gold);
+            letter-spacing: .04em;
+        }
+
+        /* footer(进度 + 提示) */
+        .avg-footer {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--rule-2);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .1em;
+        }
+        .avg-progress { color: var(--gold); }
+        .avg-sep { color: var(--text-faint); margin: 0 5px; }
+        .avg-hint { color: var(--text-faint); text-transform: uppercase; }
+
+        /* branches 块 */
+        .avg-branches {
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--rule-2);
+            display: grid;
+            gap: 6px;
+        }
+        .avg-branch-btn {
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            border-left: 2px solid var(--gold-2);
+            color: var(--parch-mute);
+            padding: 8px 12px;
+            cursor: pointer;
+            text-align: left;
+            font-family: var(--ff-serif);
+            font-size: 13px;
+            transition: color .15s, border-color .15s, background .15s, transform .15s ease-out;
+        }
+        .avg-branch-btn:hover {
+            border-color: var(--gold-2);
+            border-left-color: var(--gold);
+            color: var(--parchment);
+            background: var(--ink);
+            transform: translateX(2px);
+        }
+
+        /* 控制 pill(重播 / 上一句 / 下一句 / 关闭) */
+        .avg-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .avg-pill {
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            color: var(--text-dim);
+            padding: 7px 14px;
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .08em;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: border-color .15s, color .15s, background .15s;
+        }
+        .avg-pill:hover:not(:disabled) {
+            border-color: var(--gold-2);
+            color: var(--parchment);
+        }
+        .avg-pill:disabled { opacity: .4; cursor: not-allowed; }
+        .avg-pill.on {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--ink);
+        }
+        .avg-pill.on:hover:not(:disabled) {
+            background: color-mix(in srgb, var(--gold) 10%, var(--ink));
+        }
+
+        /* Section 3: 证词引用块(默认折叠) */
+        .npc-testimony-section { gap: 0; }
+        .testimony-toggle {
+            display: flex; align-items: center; gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            color: var(--text-dim);
+            cursor: pointer;
+            text-align: left;
+            transition: border-color .15s, color .15s, background .15s;
+            font-family: inherit;
+        }
+        .testimony-toggle:hover {
+            border-color: var(--gold-2);
+            color: var(--parchment);
+            background: var(--ink);
+        }
+        .testimony-toggle .chev {
+            font-family: var(--ff-mono);
+            font-size: 12px;
+            color: var(--gold);
+            transition: transform .2s ease-out;
+            display: inline-block;
+        }
+        .npc-testimony-section:not(.collapsed) .testimony-toggle .chev { transform: rotate(90deg); }
+        .testimony-toggle .smallcap { margin: 0; letter-spacing: .22em; }
+        .testimony-toggle .section-count {
+            font-family: var(--ff-mono); font-size: 11px;
+            color: var(--gold); letter-spacing: .08em;
+            margin-left: 0;
+        }
+        .testimony-toggle .toggle-hint {
+            margin-left: auto;
+            font-family: var(--ff-mono);
+            font-size: 9.5px;
+            color: var(--text-faint);
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+        .npc-testimony-section:not(.collapsed) .testimony-toggle .toggle-hint::before {
+            content: "点击收起";
+        }
+        .npc-testimony-section:not(.collapsed) .testimony-toggle .toggle-hint {
+            font-size: 0;  /* 隐藏原文本,用 ::before 替换 */
+        }
+        .npc-testimony-section:not(.collapsed) .testimony-toggle .toggle-hint::before {
+            font-size: 9.5px;
+            content: "点击收起";
+        }
+        .npc-testimony-list-wrap {
+            overflow: hidden;
+            max-height: 2000px;
+            transition: max-height .3s ease-out, padding .2s ease-out;
+            padding-top: 10px;
+        }
+        .npc-testimony-section.collapsed .npc-testimony-list-wrap {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .npc-testimony-list { display: grid; gap: 12px; }
+        .npc-testimony-item {
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            border-left: 2px solid var(--gold-2);
+            padding: 10px 14px;
+        }
+        .npc-testimony-item .quote {
+            border-left: none;
+            padding: 0;
+            font-family: var(--ff-serif); font-style: italic;
+            font-size: 14px; color: var(--parchment);
+            line-height: 1.55;
+        }
+        .npc-testimony-item .quote-en {
+            font-family: var(--ff-serif); font-style: italic;
+            font-size: 11.5px; color: var(--parch-mute);
+            line-height: 1.5; margin-top: 3px;
+            opacity: .8;
+        }
+        .npc-testimony-item .quote-meta {
+            font: 500 10px var(--ff-mono);
+            color: var(--text-dim); margin-top: 6px;
+            letter-spacing: .08em;
+        }
+
+        /* staggered entry for drawer content sections */
+        .modal #modalContent > * {
+            animation: drawerSectionIn .22s ease-out both;
+        }
+        .modal #modalContent > *:nth-child(1) { animation-delay: .12s; }
+        .modal #modalContent > *:nth-child(2) { animation-delay: .16s; }
+        .modal #modalContent > *:nth-child(3) { animation-delay: .20s; }
+        .modal #modalContent > *:nth-child(4) { animation-delay: .24s; }
+        .modal #modalContent > *:nth-child(n+5) { animation-delay: .28s; }
+        @keyframes drawerSectionIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
 
         .art-highlight {
-            background: rgba(232, 198, 120, 0.1);
-            border: 1px solid var(--highlight);
-            border-radius: 4px;
-            padding: 0.75rem;
-            margin-top: 0.75rem;
+            background: rgba(232, 198, 120, 0.06);
+            border: 1px solid var(--gold-2);
+            border-left: 3px solid var(--gold);
+            border-radius: 0;
+            padding: 10px 14px;
+            margin-top: 10px;
+            color: var(--parchment);
+            font-size: 12.5px;
+            line-height: 1.6;
         }
 
+        /* copy-tag (JS uses this class on clickable ID / path chips in modal) */
         .copy-tag {
-            background: rgba(232, 198, 120, 0.15);
-            color: var(--highlight);
-            padding: 2px 8px;
-            border-radius: 3px;
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: var(--ff-mono);
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            color: var(--gold);
+            padding: 3px 8px;
+            border-radius: 2px;
             cursor: pointer;
-            font-family: monospace;
-            transition: background 0.2s;
+            font-size: 11px;
+            letter-spacing: .04em;
+            transition: border-color .15s ease-out, background .15s ease-out, transform .1s;
+            vertical-align: baseline;
         }
-        .copy-tag:hover { background: rgba(232, 198, 120, 0.3); }
+        .copy-tag:hover { border-color: var(--gold-2); background: var(--ink); }
+        .copy-tag:active { transform: scale(.98); }
+
         .derive-link {
-            background: rgba(100, 180, 255, 0.1);
-            border-left: 3px solid rgba(100, 180, 255, 0.6);
-            padding: 6px 10px;
-            margin: 6px 0;
-            border-radius: 0 4px 4px 0;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            border-left: 3px solid var(--gold-2);
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 0;
             cursor: pointer;
-            transition: background 0.2s;
+            color: var(--parch-mute);
+            font-size: 12px;
+            line-height: 1.5;
+            transition: border-color .15s, background .15s, transform .15s ease-out;
         }
-        .derive-link:hover { background: rgba(100, 180, 255, 0.25); }
+        .derive-link:hover {
+            border-color: var(--gold-2);
+            border-left-color: var(--gold);
+            background: var(--ink);
+            transform: translateX(2px);
+        }
 
         .art-missing {
-            background: rgba(196, 30, 58, 0.1);
-            border: 1px solid var(--warning);
-            border-radius: 4px;
-            padding: 0.75rem;
-            margin-top: 0.75rem;
-            color: var(--warning);
+            background: color-mix(in srgb, var(--brick) 8%, transparent);
+            border: 1px solid var(--brick-2);
+            border-left: 3px solid var(--brick);
+            border-radius: 0;
+            padding: 10px 14px;
+            margin-top: 10px;
+            color: var(--brick);
+            font-family: var(--ff-mono);
+            font-size: 11.5px;
+            letter-spacing: .04em;
         }
 
-        /* ===== Expose ===== */
+        /* ===== Expose rounds ===== */
         .expose-round {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
+            background: var(--ink);
+            border: 1px solid var(--rule);
+            border-left: 3px solid var(--brick);
+            border-radius: 0;
+            padding: 14px 16px;
+            margin-bottom: 10px;
         }
-
-        .round-title { color: var(--warning); font-weight: 600; margin-bottom: 0.5rem; }
-
+        .round-title {
+            font-family: var(--ff-serif);
+            color: var(--brick);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            letter-spacing: .02em;
+        }
         .evidence-tag {
             display: inline-block;
-            background: var(--secondary);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
-            margin: 0.2rem;
-            font-size: 0.85rem;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            color: var(--parchment);
+            padding: 4px 10px;
+            border-radius: 2px;
+            margin: 3px;
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .04em;
         }
 
-        /* ===== Phase Tags ===== */
+        /* ===== Phase Tags (noir outlined) ===== */
         .phase-tag {
             display: inline-block;
-            padding: 0.15rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 2px;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .06em;
             margin-right: 0.3rem;
+            border: 1px solid currentColor;
+            background: transparent;
         }
-        .phase-tag.opening { background: #2a4a6b; }
-        .phase-tag.free { background: #2a6b3a; }
-        .phase-tag.expose { background: #6b2a2a; }
-        .phase-tag.ending { background: #4a2a6b; }
-        .phase-tag.events { background: #b8860b; }
+        .phase-tag.opening { color: #6ea3c8; }
+        .phase-tag.free    { color: var(--success); }
+        .phase-tag.expose  { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+        .phase-tag.ending  { color: #a280c4; }
+        .phase-tag.events  { color: var(--warning); }
+        .phase-tag.doubt   { color: var(--gold); background: color-mix(in srgb, var(--gold) 8%, transparent); }
+
+        /* ===== Doubt Drawer (疑点详情浮层) ===== */
+        .doubt-drawer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--gold);
+            padding-bottom: 6px;
+            flex-shrink: 0;
+        }
+        .doubt-drawer-meta .doubt-label::before {
+            content: '◆';
+            margin-right: 6px;
+            color: var(--gold);
+        }
+        .doubt-drawer-meta .doubt-progress {
+            padding: 3px 10px;
+            border: 1px solid var(--rule-2);
+            border-radius: 999px;
+            color: var(--parch-mute);
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .1em;
+            background: transparent;
+        }
+        .doubt-drawer-meta .doubt-progress.done {
+            color: var(--primary);
+            border-color: var(--gold);
+            background: var(--gold);
+            font-weight: 600;
+        }
+        .doubt-drawer-title {
+            font-family: var(--ff-serif);
+            font-weight: 600;
+            font-size: 19px;
+            color: var(--parchment);
+            line-height: 1.45;
+            padding: 2px 0 14px;
+            border-bottom: 1px solid var(--rule);
+            margin-bottom: 4px;
+            flex-shrink: 0;
+        }
+        .doubt-cond-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .doubt-cond-row {
+            display: grid;
+            grid-template-columns: 18px 56px 88px 1fr 12px;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 4px;
+            border-bottom: 1px dashed var(--rule);
+            cursor: pointer;
+            transition: background .15s;
+        }
+        .doubt-cond-row:hover { background: rgba(232,198,120,.04); }
+        .doubt-cond-row .cond-icon {
+            font-size: 13px;
+            color: var(--text-faint);
+            justify-self: center;
+            line-height: 1;
+        }
+        .doubt-cond-row .cond-type {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .doubt-cond-row .cond-pid {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--gold-2);
+            letter-spacing: .02em;
+        }
+        .doubt-cond-row .cond-name {
+            color: var(--parch-mute);
+            font-size: 12.5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .doubt-cond-row .cond-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--rule-2);
+            justify-self: end;
+        }
+        .doubt-cond-row.sat .cond-icon { color: var(--gold); }
+        .doubt-cond-row.sat .cond-name { color: var(--parchment); }
+        .doubt-cond-row.sat .cond-dot  { background: var(--gold); box-shadow: 0 0 8px color-mix(in srgb, var(--gold) 60%, transparent); }
+        .doubt-cond-row.item   .cond-icon::before { content: '◇'; }
+        .doubt-cond-row.item.sat .cond-icon::before { content: '◆'; }
+        .doubt-cond-row.testi  .cond-icon::before { content: '▤'; }
+        .doubt-cond-row.testi.sat .cond-icon::before { content: '▦'; }
+        .doubt-cond-row.rel    .cond-icon::before { content: '△'; }
+        .doubt-cond-row.rel.sat .cond-icon::before { content: '▲'; }
+        .doubt-cond-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--rule);
+        }
+        .doubt-cond-toolbar button {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--rule-2);
+            color: var(--text-muted);
+            padding: 6px 10px;
+            font-size: 11px;
+            font-family: var(--ff-mono);
+            letter-spacing: .1em;
+            cursor: pointer;
+            transition: all .15s;
+            border-radius: 2px;
+        }
+        .doubt-cond-toolbar button:hover {
+            border-color: var(--gold-2);
+            color: var(--gold);
+        }
+        .sidebar-item.doubt-item .badge.done {
+            color: var(--gold);
+            border-color: var(--gold-2);
+            background: color-mix(in srgb, var(--gold) 8%, var(--coal-3));
+        }
+        /* ===== 疑点悬浮窗（当前任务面板，玩家游戏内的 CURRENT CASE） ===== */
+        #doubtFloat {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            width: 268px;
+            padding: 12px 14px 14px;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 4%, var(--secondary)) 0%, var(--secondary) 100%);
+            border: 1px solid var(--rule-2);
+            border-left: 2px solid var(--gold-2);
+            box-shadow: 0 12px 40px -12px rgba(0,0,0,.75), 0 0 0 1px rgba(232,198,120,.04) inset;
+            cursor: pointer;
+            z-index: 50;
+            transition: transform .18s, border-color .18s, box-shadow .18s;
+            user-select: none;
+        }
+        #doubtFloat.doubt-float-hidden { display: none; }
+        #doubtFloat:hover {
+            transform: translateY(-1px);
+            border-color: var(--gold);
+            box-shadow: 0 14px 44px -10px rgba(0,0,0,.85), 0 0 0 1px rgba(232,198,120,.12) inset;
+        }
+        #doubtFloat .df-kicker {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--gold);
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--rule);
+        }
+        #doubtFloat .df-kicker .df-label::before {
+            content: '◆';
+            margin-right: 6px;
+        }
+        #doubtFloat .df-target {
+            font-family: var(--ff-serif);
+            font-size: 14px;
+            color: var(--parchment);
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: .01em;
+            margin-top: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        #doubtFloat .df-progress-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--rule);
+        }
+        #doubtFloat .df-progress-label {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        #doubtFloat .df-progress-pill {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .1em;
+            color: var(--parch-mute);
+            padding: 2px 9px;
+            border: 1px solid var(--rule-2);
+            border-radius: 999px;
+            background: var(--coal-3);
+        }
+        #doubtFloat.done {
+            border-left-color: var(--gold);
+        }
+        #doubtFloat.done .df-progress-pill {
+            color: var(--primary);
+            background: var(--gold);
+            border-color: var(--gold);
+            font-weight: 600;
+        }
+        #doubtFloat .df-bar {
+            height: 3px;
+            background: var(--coal-3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        #doubtFloat .df-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-2), var(--gold));
+            transition: width .24s ease-out;
+        }
+        #doubtFloat .df-hint {
+            font-family: var(--ff-mono);
+            font-size: 9.5px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-top: 10px;
+            text-align: right;
+        }
+        /* 列表模式下每张疑点卡片 */
+        .doubt-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 2px 0 14px;
+            border-bottom: 1px solid var(--rule);
+            flex-shrink: 0;
+        }
+        .doubt-list-header .dl-title {
+            font-family: var(--ff-serif);
+            font-size: 20px;
+            color: var(--parchment);
+            font-weight: 600;
+        }
+        .doubt-list-header .dl-sub {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            color: var(--text-muted);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+        .doubt-list-empty {
+            padding: 40px 10px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12.5px;
+        }
+        .doubt-card {
+            padding: 12px 14px;
+            border: 1px solid var(--rule);
+            border-left: 2px solid var(--rule-2);
+            background: color-mix(in srgb, var(--gold) 2%, var(--coal-3));
+            margin-bottom: 10px;
+            transition: border-color .15s;
+        }
+        .doubt-card.done {
+            border-left-color: var(--gold);
+            background: color-mix(in srgb, var(--gold) 5%, var(--coal-3));
+        }
+        .doubt-card .doubt-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--gold);
+            padding-bottom: 6px;
+        }
+        .doubt-card .doubt-card-meta .doubt-label::before {
+            content: '◆';
+            margin-right: 6px;
+            color: var(--gold);
+        }
+        .doubt-card .doubt-card-meta .doubt-progress {
+            padding: 2px 9px;
+            border: 1px solid var(--rule-2);
+            border-radius: 999px;
+            color: var(--parch-mute);
+            font-size: 10.5px;
+        }
+        .doubt-card.done .doubt-card-meta .doubt-progress {
+            color: var(--primary);
+            background: var(--gold);
+            border-color: var(--gold);
+            font-weight: 600;
+        }
+        .doubt-card .doubt-card-title {
+            font-family: var(--ff-serif);
+            font-weight: 600;
+            font-size: 15.5px;
+            color: var(--parchment);
+            line-height: 1.45;
+            margin: 4px 0 8px;
+        }
 
         .sidebar-item.locked {
-            opacity: 0.6;
-            cursor: default;
+            color: var(--locked);
+            cursor: help;
         }
-        .sidebar-item.locked:hover { background: none; }
+        .sidebar-item.locked:hover { background: rgba(232,198,120,.02); }
+        .sidebar-item.locked:hover::before { transform: scaleY(1); background: var(--locked); }
         .sidebar-item.closed {
-            opacity: 0.35;
+            color: var(--text-faint);
+            opacity: 0.55;
             cursor: default;
             text-decoration: line-through;
+            text-decoration-color: var(--text-faint);
         }
         .sidebar-item.closed:hover { background: none; }
+        .sidebar-item.closed:hover::before { transform: scaleY(0); }
 
-        /* ===== Dialog Box (one-line-at-a-time, preview_new style) ===== */
+        /* ===== Dialog Box (noir film subtitle look) ===== */
         .dialog-box {
             position: absolute;
-            bottom: 10px;
+            bottom: 14px;
             left: 50%;
             transform: translateX(-50%);
             width: 92%;
-            max-width: 820px;
-            background: rgba(20, 10, 10, 0.95);
-            border: 2px solid var(--accent);
-            border-radius: 8px;
-            padding: 1rem 1.25rem;
+            max-width: 840px;
+            background: rgba(10, 10, 10, 0.92);
+            border: 1px solid var(--gold-2);
+            border-radius: 0;
+            padding: 14px 18px;
             display: flex;
-            gap: 1rem;
+            gap: 14px;
             z-index: 10;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 24px 40px -16px rgba(0,0,0,.85), 0 0 0 1px rgba(232,198,120,.08) inset;
+        }
+        .dialog-box::before {
+            content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+            background: var(--gold-2); opacity: .6;
         }
 
         #dlg-fallback-container .dialog-box {
@@ -592,128 +2138,234 @@
         }
 
         .dialog-box .dlg-speaker {
-            color: var(--highlight);
+            font-family: var(--ff-serif);
+            color: var(--gold);
             font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
+            font-size: 13px;
+            letter-spacing: .06em;
+            margin-bottom: 6px;
         }
 
         .dialog-box .dlg-text {
-            font-size: 1rem;
-            line-height: 1.8;
+            font-family: var(--ff-serif);
+            font-size: 16px;
+            line-height: 1.7;
             min-height: 40px;
-            color: var(--text-primary);
+            color: var(--parchment);
+            letter-spacing: .01em;
         }
 
         .dialog-box .dlg-id {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 0.2rem;
+            font-family: var(--ff-mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            letter-spacing: .1em;
+            margin-top: 6px;
         }
 
         .dialog-box .dlg-controls {
             display: flex;
             justify-content: flex-end;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .dialog-box .dlg-branches {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .dialog-box .branch-btn {
-            background: var(--card);
-            border: 1px solid var(--accent);
-            color: var(--text-primary);
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
+            background: var(--coal-3);
+            border: 1px solid var(--rule);
+            border-left: 2px solid var(--gold-2);
+            color: var(--parch-mute);
+            padding: 8px 12px;
+            border-radius: 0;
             cursor: pointer;
             text-align: left;
-            transition: all 0.2s;
-            font-size: 0.9rem;
+            transition: color .15s, border-color .15s, background .15s, transform .15s ease-out;
+            font-family: var(--ff-serif);
+            font-size: 13.5px;
         }
-
         .dialog-box .branch-btn:hover {
-            background: var(--accent);
-            border-color: var(--highlight);
+            background: var(--ink);
+            border-color: var(--gold-2);
+            border-left-color: var(--gold);
+            color: var(--parchment);
+            transform: translateX(2px);
         }
 
         .dlg-close-btn {
             position: absolute;
-            top: 0.3rem;
-            right: 0.5rem;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
+            top: 6px;
+            right: 10px;
+            background: transparent;
+            border: 1px solid var(--rule);
+            color: var(--text-dim);
+            font-size: 14px;
             cursor: pointer;
             line-height: 1;
+            width: 22px; height: 22px;
+            display: grid; place-items: center;
+            border-radius: 2px;
+            transition: color .15s, border-color .15s;
         }
-        .dlg-close-btn:hover { color: var(--text-primary); }
+        .dlg-close-btn:hover { color: var(--gold); border-color: var(--gold-2); }
 
         /* ===== Status Bar ===== */
         .status-bar {
             background: var(--secondary);
-            padding: 0.4rem 1.5rem;
+            padding: 0.35rem 1.25rem;
             border-top: 1px solid var(--border);
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--text-faint);
+            letter-spacing: .06em;
         }
 
-        /* ===== Scrollbar ===== */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--primary); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        /* ===== Scrollbar (noir) ===== */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--coal-3); }
+        ::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-2); }
+
+        /* ===== Added micro-motion (from prototype) ===== */
+        @keyframes noir-shimmer {
+            0%, 100% { opacity: .55; }
+            50%      { opacity: 1; }
+        }
+        .ev-art.empty::before { animation: noir-shimmer 2.4s ease-in-out infinite; }
+
+        @keyframes ev-card-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .evidence-card { animation: ev-card-in .22s ease-out both; }
+        .evidence-card:nth-child(1) { animation-delay: .02s; }
+        .evidence-card:nth-child(2) { animation-delay: .05s; }
+        .evidence-card:nth-child(3) { animation-delay: .08s; }
+        .evidence-card:nth-child(4) { animation-delay: .11s; }
+        .evidence-card:nth-child(5) { animation-delay: .14s; }
+        .evidence-card:nth-child(6) { animation-delay: .17s; }
+        .evidence-card:nth-child(n+7) { animation-delay: .19s; }
+
+        @keyframes scene-row-in {
+            from { opacity: 0; transform: translateX(-6px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .sidebar-item { animation: scene-row-in .2s ease-out both; }
+
+        /* respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+        }
     </style>
 </head>
 <body>
     <div class="app">
         <!-- Header -->
         <div class="header">
-            <div class="header-title">NDC Preview v4.0</div>
-            <div class="header-controls">
-                <select id="unitSelect">
-                    <option value="Unit1">Unit 1 - Webb谋杀案</option>
-                    <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
-                    <option value="Unit3">Unit 3 - Thomas坠楼案</option>
-                    <option value="Unit8">Unit 8 - Webb谋杀案（重构版）</option>
-                    <option value="Unit9">Unit 9 - 黑哨之夜</option>
-                </select>
-                <select id="loopSelect">
-                    <option value="loop1">Loop 1</option>
-                    <option value="loop2">Loop 2</option>
-                    <option value="loop3">Loop 3</option>
-                    <option value="loop4">Loop 4</option>
-                    <option value="loop5">Loop 5</option>
-                    <option value="loop6">Loop 6</option>
-                </select>
-                <button class="btn" onclick="GameController.load()">加载</button>
-                <span style="color:var(--border)">|</span>
-                <button class="btn" id="btnArt" onclick="GameController.switchView('art')">美术需求总览</button>
-                <button class="btn" id="btnFlow" onclick="GameController.switchView('flow')">流程预览</button>
-                <button class="btn" onclick="UI.showStoryOverview()">故事概览</button>
-                <a class="btn" href="pipeline.html" target="_blank" style="text-decoration:none">流水线流程预览</a>
-
+            <div class="brand">
+                <span class="brand-mark">N</span>
+                <div class="brand-text">
+                    <div class="brand-name">NDC Preview</div>
+                    <div class="brand-sub">内容工作台 · BUILD 0.4.2</div>
+                </div>
             </div>
+            <div class="header-center">
+                <div class="select-group">
+                    <span class="select-label">UNIT</span>
+                    <select id="unitSelect">
+                        <option value="Unit1">Unit 1 - Webb谋杀案</option>
+                        <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
+                        <option value="Unit3">Unit 3 - Thomas坠楼案</option>
+                        <option value="Unit8">Unit 8 - Webb谋杀案（重构版）</option>
+                        <option value="Unit9">Unit 9 - 黑哨之夜</option>
+                    </select>
+                </div>
+                <!-- LOOP select is hidden; loop chips in sidebar are the visible control. Kept in DOM so JS can read/write #loopSelect.value -->
+                <div class="select-group" style="display:none;" aria-hidden="true">
+                    <span class="select-label">LOOP</span>
+                    <select id="loopSelect">
+                        <option value="loop1">Loop 1</option>
+                        <option value="loop2">Loop 2</option>
+                        <option value="loop3">Loop 3</option>
+                        <option value="loop4">Loop 4</option>
+                        <option value="loop5">Loop 5</option>
+                        <option value="loop6">Loop 6</option>
+                    </select>
+                </div>
+                <button class="btn primary" onclick="GameController.load()">加载</button>
+            </div>
+            <div class="header-right">
+                <button class="btn ghost" onclick="UI.showStoryOverview()">故事概览</button>
+                <a class="btn ghost" href="pipeline.html" target="_blank">流水线</a>
+            </div>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="main-tabs">
+            <button class="main-tab" id="btnFlow" onclick="GameController.switchView('flow')">
+                <span class="tab-idx">01</span>流程预览
+            </button>
+            <button class="main-tab" id="btnArt" onclick="GameController.switchView('art')">
+                <span class="tab-idx">02</span>美术需求总览
+            </button>
+            <span class="tab-meta" id="tabMeta"></span>
         </div>
 
         <!-- Main -->
         <div class="main">
-            <div class="sidebar" id="sidebar"></div>
+            <aside class="sidebar">
+                <div class="side-head">
+                    <div class="side-title">Loops</div>
+                </div>
+                <div class="loop-row">
+                    <button class="loop-chip" data-loop="loop1" onclick="pickLoop('loop1')">LOOP 1</button>
+                    <button class="loop-chip" data-loop="loop2" onclick="pickLoop('loop2')">LOOP 2</button>
+                    <button class="loop-chip" data-loop="loop3" onclick="pickLoop('loop3')">LOOP 3</button>
+                    <button class="loop-chip" data-loop="loop4" onclick="pickLoop('loop4')">LOOP 4</button>
+                    <button class="loop-chip" data-loop="loop5" onclick="pickLoop('loop5')">LOOP 5</button>
+                    <button class="loop-chip" data-loop="loop6" onclick="pickLoop('loop6')">LOOP 6</button>
+                </div>
+                <div class="loop-current">
+                    <div class="kicker">CURRENT · <span id="loopCurrentChapter">—</span></div>
+                    <div class="loop-current-title" id="loopCurrentTitle">选择 Loop 开始</div>
+                </div>
+                <div id="sidebar" class="sidebar-body"></div>
+            </aside>
             <div class="content" id="content">
-                <div style="color: var(--text-muted); text-align: center; margin-top: 40vh;">
-                    选择 Unit 和 Loop，点击「加载」开始
+                <div class="empty-state">
+                    <div class="empty-state-mark">NDC</div>
+                    <div class="empty-state-text">选择 Unit 和 Loop，点击「加载」开始</div>
                 </div>
             </div>
         </div>
 
         <!-- Status -->
         <div class="status-bar" id="statusBar">就绪</div>
+    </div>
+
+    <!-- Noir overlays (pointer-events: none, safe against all JS) -->
+    <div class="vignette"></div>
+    <div class="grain"></div>
+
+    <!-- 疑点悬浮窗（CURRENT CASE 风格） -->
+    <div id="doubtFloat" class="doubt-float-hidden" onclick="DoubtView.showList()" title="点击查看本 Loop 全部疑点">
+        <div class="df-kicker">
+            <span class="df-label" id="doubtFloatKicker">当前目标</span>
+            <span id="doubtFloatLoop">LOOP —</span>
+        </div>
+        <div class="df-target" id="doubtFloatTarget">—</div>
+        <div class="df-bar"><div class="df-bar-fill" id="doubtFloatBarFill" style="width:0%;"></div></div>
+        <div class="df-progress-row">
+            <span class="df-progress-label">疑点进度</span>
+            <span class="df-progress-pill" id="doubtFloatPill">0 / 0</span>
+        </div>
+        <div class="df-hint">点击展开 ›</div>
     </div>
 
     <!-- Evidence Modal -->
@@ -725,7 +2377,49 @@
         </div>
     </div>
 
+    <!-- Doubt Drawer -->
+    <div class="modal-overlay" id="doubtModal" onclick="if(event.target===this) DoubtView.close()">
+        <div class="modal">
+            <button class="modal-close" onclick="DoubtView.close()">&times;</button>
+            <div id="doubtDrawerContent"></div>
+        </div>
+    </div>
+
     <script>
+    // ===== Sidebar chip helpers =====
+    function pickLoop(loopId) {
+        const sel = document.getElementById('loopSelect');
+        if (sel) sel.value = loopId;
+        if (typeof GameController !== 'undefined' && GameController.load) {
+            GameController.load();
+        }
+    }
+
+    function syncLoopChips() {
+        const current = (typeof AppState !== 'undefined' && AppState.currentLoop) || 'loop1';
+        document.querySelectorAll('.loop-chip').forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.loop === current);
+        });
+    }
+
+    function syncLoopHeader() {
+        const titleEl = document.getElementById('loopCurrentTitle');
+        const chapterEl = document.getElementById('loopCurrentChapter');
+        if (!titleEl || typeof AppState === 'undefined') return;
+        const loop = AppState.loopData;
+        const loopKey = AppState.currentLoop || 'loop1';
+        if (loop && loop.title) {
+            titleEl.textContent = loop.title;
+        } else {
+            titleEl.textContent = loopKey.replace('loop', 'Loop ');
+        }
+        if (chapterEl) {
+            const ch = (typeof DataManager !== 'undefined' && DataManager.chapter)
+                ? DataManager.chapter(AppState.currentUnit) : '';
+            chapterEl.textContent = ch || (AppState.currentUnit || '—');
+        }
+    }
+
     // ===== Utilities =====
     function stripPrefix(id) {
         if (id == null) return '';
@@ -806,11 +2500,16 @@
         allScenes: [],
         allNPCs: [],
         allTalks: [],
+        allTestimonies: [],
+        allDoubts: [],
 
         itemsMap: new Map(),
         scenesMap: new Map(),
         npcsMap: new Map(),
         talksMap: new Map(),
+        testimoniesByNpc: new Map(),
+        doubtsMap: new Map(),
+        satisfiedConditions: new Set(),
 
         talkSummaries: {},
         sceneTalkSummaries: {},
@@ -906,15 +2605,21 @@
             const base = Config.paths.tableData;
             const t = `?t=${Date.now()}`;
 
-            const [items, scenes, npcs] = await Promise.all([
+            const [items, scenes, npcs, testimonies, doubts] = await Promise.all([
                 this.loadJSON(`${base}/ItemStaticData.json${t}`),
                 this.loadJSON(`${base}/SceneConfig.json${t}`),
-                this.loadJSON(`${base}/NPCStaticData.json${t}`)
+                this.loadJSON(`${base}/NPCStaticData.json${t}`),
+                this.loadJSON(`${base}/TestimonyItem.json${t}`).catch(() => []),
+                this.loadJSON(`${base}/DoubtConfig.json${t}`).catch(() => [])
             ]);
 
             AppState.allItems = items;
             AppState.allScenes = scenes;
             AppState.allNPCs = npcs;
+            AppState.allTestimonies = Array.isArray(testimonies) ? testimonies : [];
+            AppState.allDoubts = Array.isArray(doubts) ? doubts : [];
+            AppState.doubtsMap.clear();
+            AppState.allDoubts.forEach(d => AppState.doubtsMap.set(String(d.id), d));
 
             AppState.itemsMap.clear();
             items.forEach(i => AppState.itemsMap.set(String(i.id), i));
@@ -925,7 +2630,19 @@
             AppState.npcsMap.clear();
             npcs.forEach(n => AppState.npcsMap.set(String(n.id), n));
 
-            console.log(`Table data loaded: ${items.length} items, ${scenes.length} scenes, ${npcs.length} NPCs`);
+            // testimony 归属 NPC 的正确规则：testimony.id 前 3 位 === npc.id
+            // 编码: {chapter1}{npcShort2}{group1}{seq3} ，例 1031001 = 章1 + NPC "03"(即 NPC 103 Rosa) + 组1 + 序001
+            // 验证: 166/166 条 testimony 的 head(3) 都精确命中 NPCStaticData 的 id，比 triggerParam 精确
+            AppState.testimoniesByNpc = new Map();
+            const npcIdSet = new Set(npcs.map(n => String(n.id)));
+            AppState.allTestimonies.forEach(t => {
+                const head = String(t.id).substring(0, 3);
+                if (!npcIdSet.has(head)) return;
+                if (!AppState.testimoniesByNpc.has(head)) AppState.testimoniesByNpc.set(head, []);
+                AppState.testimoniesByNpc.get(head).push(t);
+            });
+
+            console.log(`Table data loaded: ${items.length} items, ${scenes.length} scenes, ${npcs.length} NPCs, ${AppState.allTestimonies.length} testimonies`);
         },
 
         async loadLoopConfig(unit, loop) {
@@ -1243,6 +2960,19 @@
             return scene.ItemIDs.filter(id => !this.getItem(id));
         },
 
+        // Find talk file (videoScene) where given NPC id is the primary non-Zack speaker
+        // Used when SceneConfig.NPCInfos[i].TalkInfo.id is empty (Unit9 case)
+        findTalkForNPC(npcId) {
+            if (!npcId) return '';
+            const target = `NPC${String(npcId)}`;
+            for (const talk of AppState.allTalks) {
+                if (talk.IdSpeaker === target && talk.videoScene) {
+                    return talk.videoScene;
+                }
+            }
+            return '';
+        },
+
         getTalk(id) {
             if (id == null) return null;
             const key = String(id);
@@ -1389,6 +3119,13 @@
             this._modalHistory = [];
             const titleEl = document.getElementById('modalTitle');
             if (titleEl) delete titleEl.dataset.itemId;
+            // if a dialog was playing inside the drawer, close it to clear DialogController state
+            if (typeof DialogController !== 'undefined'
+                && DialogController._state
+                && DialogController._state.containerId === 'npcDrawerDialog') {
+                DialogController.close();
+                DialogController._state.containerId = null;
+            }
         },
 
         modalBack() {
@@ -1398,32 +3135,195 @@
             }
         },
 
-        showNpcModal(npcId) {
+        // NPC drawer (rich, 3 sections) ——
+        //   showNpcModal(npcId)         : 仅 NPC 档案(从 Art 视图或无场景上下文调用)
+        //   showNpcModal(npcId, sceneNpcIdx) : 带场景上下文(ResPath + Talk/LoopTalk 入口 + 对白内嵌)
+        showNpcModal(npcId, sceneNpcIdx) {
             const npc = AppState.npcsMap.get(String(npcId));
             if (!npc) return;
             this._modalHistory = [];
+
+            const scene = (sceneNpcIdx != null) ? DataManager.getScene(AppState.currentSceneId) : null;
+            const sceneInfo = (scene && scene.NPCInfos) ? scene.NPCInfos[sceneNpcIdx] : null;
+
+            // 场景里实际用的立绘路径(ResPath) —— 只显示这个,不铺 IconLarge/Small
+            const resPath = sceneInfo?.ResPath || '';
+            const resUrl  = resPath ? Config.getAssetUrl(resPath) : '';
+            const hasRes  = !!resPath;
+
+            // Talk / LoopTalk 入口(仅场景上下文)
+            const talkId = sceneInfo
+                ? (sceneInfo.TalkInfo?.id || DataManager.findTalkForNPC(npc.id) || '')
+                : '';
+            const loopTalkId = sceneInfo?.LoopTalkInfo?.id || '';
+
+            // 角色身份
             const roleMap = {'1':'主角','2':'搭档','3':'关键NPC','4':'受害者','5':'NPC','6':'嫌疑人'};
             const roleName = roleMap[npc.role] || npc.role || '未知';
+
             const titleEl = document.getElementById('modalTitle');
-            titleEl.textContent = `${cn(npc.Name)} (ID: ${npc.id})`;
+            const cnName = cn(npc.Name) || npc.id;
+            const enName = npc.Name?.[1] || '';
+            titleEl.innerHTML = `
+                <div class="drawer-kicker">NPC · #${escapeHtml(String(npc.id))}</div>
+                <div class="drawer-name">${escapeHtml(cnName)}</div>
+                <div class="drawer-sub">${escapeHtml(roleName)}${enName ? ' · ' + escapeHtml(enName) : ''}${npc.Chapter ? ' · ' + escapeHtml(npc.Chapter) : ''}</div>
+            `;
             titleEl.dataset.itemId = '';
 
-            let html = `
-                <p><strong>英文名：</strong>${escapeHtml(npc.Name?.[1] || '')}</p>
-                <p><strong>角色：</strong>${escapeHtml(roleName)}</p>
-                <p><strong>章节：</strong>${escapeHtml(npc.Chapter || '')}</p>
-                ${npc.IconSmall ? `<p><strong>立绘小图：</strong><span class="copy-tag" onclick="event.stopPropagation();copyText('${escapeHtml(npc.IconSmall)}', this)">${escapeHtml(npc.IconSmall)}</span></p>` : '<p><strong>立绘小图：</strong><span style="color:var(--warning)">未配置</span></p>'}
-                ${npc.IconLarge ? `<p><strong>立绘大图：</strong><span class="copy-tag" onclick="event.stopPropagation();copyText('${escapeHtml(npc.IconLarge)}', this)">${escapeHtml(npc.IconLarge)}</span></p>` : '<p><strong>立绘大图：</strong><span style="color:var(--warning)">未配置</span></p>'}
-            `;
-
-            if (npc.ArtRequirement) {
-                html += `<div class="art-highlight"><strong style="color: var(--highlight);">[ART] 美术需求：</strong><br>${escapeHtmlWithBr(npc.ArtRequirement)}</div>`;
+            // ============ Section 1: 立绘 + 资源名 + 美术需求 ============
+            let html = `<section class="npc-section npc-portrait-section">`;
+            html += `<div class="npc-portrait ${hasRes ? '' : 'missing'}">`;
+            if (hasRes) {
+                html += `<img src="${resUrl}" alt="${escapeHtml(cnName)}" onerror="this.closest('.npc-portrait').classList.add('miss-broken'); this.remove();">`;
             } else {
-                html += `<div class="art-missing"><strong>[!] 未填写美术需求</strong></div>`;
+                html += `<div class="npc-portrait-q">?</div>`;
             }
+            html += `</div>`;
+            html += `<div class="npc-portrait-meta">`;
+            if (npc.ArtRequirement) {
+                html += `<div class="smallcap">美术需求</div>`;
+                html += `<div class="npc-art-req">${escapeHtmlWithBr(npc.ArtRequirement)}</div>`;
+            }
+            if (!resPath) {
+                html += `<div class="art-missing">[!] NPCInfo.ResPath 未填,场景里没有指定立绘</div>`;
+            }
+            html += `</div></section>`;
+
+            // ============ Section 2: 对白(drawer 内嵌，AVG 流水式) ============
+            // scene context(场景名 · NPC 简述)，AVG tabs(talk / loopTalk id 芯片)，stage 容器由 DialogController 填充
+            const sceneName = scene?.sceneName || '';
+            html += `<section class="npc-section npc-dialog-section">`;
+
+            // tabs 行 —— 一个或两个 id 芯片(首次/重复)
+            if (talkId || loopTalkId) {
+                html += `<div class="avg-tabs">`;
+                if (talkId) {
+                    html += `<button class="avg-tab active" data-talk="${escapeHtml(talkId)}" onclick="UI._switchNpcTab(this, ${sceneNpcIdx}, 'talk')">#${escapeHtml(talkId)}</button>`;
+                }
+                if (loopTalkId && loopTalkId !== talkId) {
+                    html += `<button class="avg-tab" data-talk="${escapeHtml(loopTalkId)}" onclick="UI._switchNpcTab(this, ${sceneNpcIdx}, 'loopTalk')">#${escapeHtml(loopTalkId)}</button>`;
+                }
+                html += `</div>`;
+            }
+
+            // scene context line
+            if (sceneName || cnName) {
+                html += `<div class="avg-ctx mono">`;
+                if (sceneName) html += `<span class="avg-ctx-scene">${escapeHtml(sceneName)}</span>`;
+                if (sceneName && cnName) html += `<span class="avg-ctx-sep">·</span>`;
+                html += `<span class="avg-ctx-desc">${escapeHtml(cnName)} · ${talkId || loopTalkId ? '点击 stage 播放' : '无对话'}</span>`;
+                html += `</div>`;
+            }
+
+            // stage 容器 —— DialogController._renderStream 会往这里写 .avg-stage 等
+            html += `<div id="npcDrawerDialog" class="npc-dialog-stage"></div>`;
+
+            if (!talkId && !loopTalkId) {
+                html += `<div class="dlg-entry-empty" style="padding:10px 0;">该 NPC 在本场景无对话</div>`;
+            }
+            html += `</section>`;
+
+            // ============ Section 3: 相关证词 (默认折叠) ============
+            const testimonies = AppState.testimoniesByNpc?.get(String(npc.id)) || [];
+            const hasTestimonies = testimonies.length > 0;
+            html += `<section class="npc-section npc-testimony-section collapsed">`;
+            html += `<button class="testimony-toggle" onclick="UI._toggleTestimony(this)" type="button">
+                <span class="chev">▸</span>
+                <span class="smallcap">相关证词</span>
+                <span class="section-count">${testimonies.length}</span>
+                ${hasTestimonies ? '<span class="toggle-hint">点击展开</span>' : ''}
+            </button>`;
+            html += `<div class="npc-testimony-list-wrap">`;
+            if (hasTestimonies) {
+                html += `<div class="npc-testimony-list">`;
+                testimonies.forEach(t => {
+                    const zh = (Array.isArray(t.testimony) ? t.testimony[0] : t.testimony) || '';
+                    const en = (Array.isArray(t.testimony) ? t.testimony[1] : '') || '';
+                    html += `<div class="npc-testimony-item">
+                        <div class="quote">"${escapeHtml(zh)}"</div>
+                        ${en ? `<div class="quote-en">${escapeHtml(en)}</div>` : ''}
+                        <div class="quote-meta">#${escapeHtml(String(t.id))} · type ${escapeHtml(String(t.testimonyType || '?'))}${t.triggerType ? ' · trigger ' + escapeHtml(String(t.triggerType)) : ''}</div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } else {
+                html += `<div class="dlg-entry-empty" style="padding:10px 0;">暂无绑定到该 NPC 的证词(或 TestimonyItem 未加载)</div>`;
+            }
+            html += `</div>`;
+            html += `</section>`;
 
             document.getElementById('modalContent').innerHTML = html;
             document.getElementById('evidenceModal').classList.add('active');
+
+            // 自动开播第一段对话(优先 talk，没有就 loopTalk)
+            if (sceneNpcIdx != null) {
+                if (talkId) {
+                    setTimeout(() => DialogController.start(sceneNpcIdx, 'talk', 'npcDrawerDialog'), 60);
+                } else if (loopTalkId) {
+                    setTimeout(() => DialogController.start(sceneNpcIdx, 'loopTalk', 'npcDrawerDialog'), 60);
+                }
+            }
+        },
+
+        // 相关证词折叠 / 展开
+        _toggleTestimony(btn) {
+            const section = btn.closest('.npc-testimony-section');
+            if (!section) return;
+            section.classList.toggle('collapsed');
+        },
+
+        // tab 切换 —— 激活对应 tab 并重新开播那一段
+        _switchNpcTab(tabEl, sceneNpcIdx, talkType) {
+            tabEl.parentElement.querySelectorAll('.avg-tab').forEach(t => t.classList.remove('active'));
+            tabEl.classList.add('active');
+            DialogController.start(sceneNpcIdx, talkType, 'npcDrawerDialog');
+        },
+
+        // 场景点击 NPC 立绘/roster/info 卡 → 调这个(传 NPCInfos 的 index)
+        showNpcDrawerBySceneIdx(sceneNpcIdx) {
+            const scene = DataManager.getScene(AppState.currentSceneId);
+            const info = scene?.NPCInfos?.[sceneNpcIdx];
+            const npcId = info?.NPC?.id;
+            if (!npcId) return;
+            this.showNpcModal(npcId, sceneNpcIdx);
+        },
+
+        // 卡片 "▶ 播放" 按钮的便捷入口 —— 位置参数版(避免 inline onclick 里 JSON 转义)
+        playTalkInDrawer(talkId, kicker, title, sub) {
+            this.showDialogDrawer(talkId, {
+                kicker: kicker || 'DIALOG',
+                title: title || ('Talk #' + talkId),
+                sub: sub || ''
+            });
+        },
+
+        // 通用对白抽屉 —— 无 NPC 上下文的场合(cutscene / event / ending / expose)用这个
+        showDialogDrawer(talkId, opts) {
+            if (!talkId) return;
+            opts = opts || {};
+            const titleEl = document.getElementById('modalTitle');
+            const contentEl = document.getElementById('modalContent');
+            this._modalHistory = [];
+            if (titleEl) delete titleEl.dataset.itemId;
+
+            titleEl.innerHTML = `
+                <div class="drawer-kicker">${escapeHtml(opts.kicker || 'DIALOG')}</div>
+                <div class="drawer-name">${escapeHtml(opts.title || 'Talk #' + talkId)}</div>
+                ${opts.sub ? `<div class="drawer-sub">${escapeHtml(opts.sub)}</div>` : ''}
+            `;
+
+            let inner = `<section class="npc-section npc-dialog-section">`;
+            if (opts.contextLine) {
+                inner += `<div class="avg-ctx mono">${opts.contextLine}</div>`;
+            }
+            inner += `<div id="npcDrawerDialog" class="npc-dialog-stage"></div>`;
+            inner += `</section>`;
+            contentEl.innerHTML = inner;
+
+            document.getElementById('evidenceModal').classList.add('active');
+            // 等 drawer slide-in 一帧再 start(containerId 传 'npcDrawerDialog' 走 stream 路径)
+            setTimeout(() => DialogController.startFromTalkId(talkId, 'npcDrawerDialog'), 60);
         },
 
         showSceneModal(sceneKey) {
@@ -1544,6 +3444,9 @@
             } else {
                 this.renderFlowSidebar(sidebar);
             }
+            // sync static sidebar shell (loop chips + current loop title)
+            if (typeof syncLoopChips === 'function') syncLoopChips();
+            if (typeof syncLoopHeader === 'function') syncLoopHeader();
         },
 
         renderArtSidebar(sidebar) {
@@ -1630,10 +3533,9 @@
                 return;
             }
 
-            // Loop title, time & target
-            html += `<div class="sidebar-section">${escapeHtml(loop.title || AppState.currentLoop)}</div>`;
+            // Loop title now rendered by static .loop-current above; only time remains here
             if (loop.time) {
-                html += `<div style="padding: 0.15rem 1rem; font-size: 0.75rem; color: var(--highlight);">${escapeHtml(loop.time)}</div>`;
+                html += `<div style="padding: 0.15rem 1rem; font-family: var(--ff-mono); font-size: 10px; color: var(--gold); letter-spacing: .1em;">${escapeHtml(loop.time)}</div>`;
             }
             if (loop.target) {
                 html += `<div style="padding: 0.3rem 1rem; font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(loop.target)}</div>`;
@@ -1650,10 +3552,19 @@
             }
 
             // Scene list: support both old free_phase and new scenes{unlocked,locked,closed}
+            // Unit9 yaml uses nested form { unlocked: { 地点A: [id...], 地点B: [id...] } }
+            // Other units use flat form { unlocked: [id, id, ...] }; flatten if object.
+            const flattenScenes = (raw) => {
+                if (Array.isArray(raw)) return raw;
+                if (raw && typeof raw === 'object') {
+                    return Object.values(raw).flat();
+                }
+                return [];
+            };
             if (loop.scenes) {
-                const unlocked = loop.scenes.unlocked || [];
-                const locked = loop.scenes.locked || [];
-                const closed = loop.scenes.closed || [];
+                const unlocked = flattenScenes(loop.scenes.unlocked);
+                const locked = flattenScenes(loop.scenes.locked);
+                const closed = flattenScenes(loop.scenes.closed);
                 const locations = AppState.locationsData?.locations;
 
                 // Helper: extract location code (last 2 digits) from scene ID
@@ -1861,6 +3772,215 @@
             }
 
             sidebar.innerHTML = html;
+        }
+    };
+
+    // ===== Doubt View (疑点详情浮层) =====
+    const DoubtView = {
+        // Unit3 30xx 系列 ID 未在 ID 中编码 loop, 需要静态映射
+        _u3loopMap: {
+            '3001': 'loop1', '3002': 'loop1',
+            '3003': 'loop2', '3004': 'loop2', '3005': 'loop2', '3014': 'loop2',
+            '3006': 'loop3', '3007': 'loop3', '3008': 'loop3', '3010': 'loop3', '3011': 'loop3',
+            '3009': 'loop4', '3012': 'loop4', '3013': 'loop4'
+        },
+
+        unitPrefix(unit) {
+            if (unit === 'Unit1') return '1';
+            if (unit === 'Unit3') return '3';
+            if (unit === 'Unit9') return '9';
+            return null;
+        },
+
+        doubtLoop(id) {
+            const s = String(id);
+            if (this._u3loopMap[s]) return this._u3loopMap[s];
+            const d = s[1];
+            if (d >= '1' && d <= '6') return 'loop' + d;
+            return null;
+        },
+
+        doubtsInLoop(unit, loop) {
+            const prefix = this.unitPrefix(unit);
+            if (!prefix) return [];
+            return AppState.allDoubts.filter(d => {
+                const s = String(d.id);
+                return s[0] === prefix && this.doubtLoop(s) === loop;
+            });
+        },
+
+        condKey(c) { return `${c.type}:${c.param}`; },
+
+        isSat(c) { return AppState.satisfiedConditions.has(this.condKey(c)); },
+
+        progress(doubt) {
+            const conds = doubt.condition || [];
+            const done = conds.filter(c => this.isSat(c)).length;
+            return { done, total: conds.length };
+        },
+
+        resolveCondition(c) {
+            const type = String(c.type);
+            const pid = String(c.param);
+            if (type === '1') {
+                const item = AppState.itemsMap.get(pid);
+                return {
+                    cls: 'item',
+                    typeLabel: '道具',
+                    name: item ? (cn(item.Name) || '(未命名)') : '(未找到)'
+                };
+            }
+            if (type === '3') {
+                const t = AppState.allTestimonies.find(x => String(x.id) === pid);
+                let textZh = '(未找到)';
+                let npcName = '';
+                if (t && t.testimony) textZh = cn(t.testimony) || '(无文本)';
+                const npcId = pid.length >= 3 ? pid.slice(0, 3) : '';
+                const npc = AppState.npcsMap.get(npcId);
+                if (npc) npcName = cn(npc.Name) || '';
+                return {
+                    cls: 'testi',
+                    typeLabel: '证词',
+                    name: npcName ? `${npcName}·${textZh}` : textZh
+                };
+            }
+            if (type === '2') {
+                return { cls: 'rel', typeLabel: '关系网', name: `关系连接 ${pid}` };
+            }
+            return { cls: '', typeLabel: '未知', name: pid };
+        },
+
+        showList() {
+            this.render();
+            document.getElementById('doubtModal').classList.add('active');
+        },
+
+        render() {
+            const doubts = this.doubtsInLoop(AppState.currentUnit, AppState.currentLoop);
+            const loopLabel = (AppState.currentLoop || '').replace('loop', 'Loop ');
+            const doneCount = doubts.filter(d => {
+                const p = this.progress(d);
+                return p.total > 0 && p.done === p.total;
+            }).length;
+
+            let html = `
+                <div class="doubt-list-header">
+                    <span class="dl-title">疑点面板</span>
+                    <span class="dl-sub">${escapeHtml(AppState.currentUnit)} · ${escapeHtml(loopLabel)} · ${doneCount}/${doubts.length}</span>
+                </div>
+            `;
+
+            if (doubts.length === 0) {
+                html += `<div class="doubt-list-empty">当前 Loop 暂无疑点配置</div>`;
+                document.getElementById('doubtDrawerContent').innerHTML = html;
+                return;
+            }
+
+            html += `<div class="doubt-cond-toolbar" style="margin-top:0;border-top:0;padding-top:0;">
+                <button onclick="DoubtView.setAllLoop(true)">全部已满足</button>
+                <button onclick="DoubtView.setAllLoop(false)">全部清除</button>
+            </div>`;
+
+            doubts.forEach(doubt => {
+                const { done, total } = this.progress(doubt);
+                const isDone = total > 0 && done === total;
+
+                html += `
+                    <div class="doubt-card ${isDone ? 'done' : ''}">
+                        <div class="doubt-card-meta">
+                            <span class="doubt-label">疑点 · #${escapeHtml(String(doubt.id))}</span>
+                            <span class="doubt-progress">${done} / ${total}</span>
+                        </div>
+                        <div class="doubt-card-title">${escapeHtml(doubt.text || '(无文本)')}</div>
+                        <div class="doubt-cond-list">
+                `;
+
+                (doubt.condition || []).forEach(c => {
+                    const info = this.resolveCondition(c);
+                    const sat = this.isSat(c);
+                    const type = String(c.type);
+                    const param = String(c.param);
+                    html += `
+                        <div class="doubt-cond-row ${info.cls} ${sat ? 'sat' : ''}"
+                             onclick="DoubtView.toggleCondition('${type}','${param}')">
+                            <span class="cond-icon"></span>
+                            <span class="cond-type">${escapeHtml(info.typeLabel)}</span>
+                            <span class="cond-pid">#${escapeHtml(param)}</span>
+                            <span class="cond-name" title="${escapeHtml(info.name)}">${escapeHtml(info.name)}</span>
+                            <span class="cond-dot"></span>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('doubtDrawerContent').innerHTML = html;
+        },
+
+        // 同步右上角入口按钮的徽章文字和样式
+        refreshEntry() {
+            const el = document.getElementById('doubtFloat');
+            if (!el) return;
+            // 隐藏条件：美术视图 / 未加载 Loop / 仍在开篇对白阶段 / 尚未选中任何阶段
+            if (AppState.currentView === 'art'
+                || !AppState.loopData
+                || AppState.currentPhase === 'opening'
+                || AppState.currentPhase == null) {
+                el.classList.add('doubt-float-hidden');
+                return;
+            }
+            el.classList.remove('doubt-float-hidden');
+
+            const loopData = AppState.loopData;
+            const doubts = this.doubtsInLoop(AppState.currentUnit, AppState.currentLoop);
+            const doneCount = doubts.filter(d => {
+                const p = this.progress(d);
+                return p.total > 0 && p.done === p.total;
+            }).length;
+
+            const loopLabel = (AppState.currentLoop || '').replace('loop', 'LOOP ');
+            // 注：loop.title 是策划导航标签（含剧透，如"厨师的代价"→James），
+            //     绝不可展示给玩家——浮窗只显示 target 问句。
+            const loopTarget = loopData.target || '(本 Loop 未填写目标)';
+
+            document.getElementById('doubtFloatKicker').textContent = '当前目标';
+            document.getElementById('doubtFloatLoop').textContent = loopLabel;
+            document.getElementById('doubtFloatTarget').textContent = loopTarget;
+            document.getElementById('doubtFloatPill').textContent =
+                doubts.length === 0 ? '无配置' : `${doneCount} / ${doubts.length}`;
+
+            const pct = doubts.length === 0 ? 0 : Math.round((doneCount / doubts.length) * 100);
+            document.getElementById('doubtFloatBarFill').style.width = pct + '%';
+            el.classList.toggle('done', doubts.length > 0 && doneCount === doubts.length);
+        },
+
+        toggleCondition(type, param) {
+            const key = `${type}:${param}`;
+            if (AppState.satisfiedConditions.has(key)) AppState.satisfiedConditions.delete(key);
+            else AppState.satisfiedConditions.add(key);
+            this.render();
+            this.refreshEntry();
+        },
+
+        setAllLoop(val) {
+            const doubts = this.doubtsInLoop(AppState.currentUnit, AppState.currentLoop);
+            doubts.forEach(d => {
+                (d.condition || []).forEach(c => {
+                    const key = this.condKey(c);
+                    if (val) AppState.satisfiedConditions.add(key);
+                    else AppState.satisfiedConditions.delete(key);
+                });
+            });
+            this.render();
+            this.refreshEntry();
+        },
+
+        close() {
+            document.getElementById('doubtModal').classList.remove('active');
         }
     };
 
@@ -2194,7 +4314,7 @@
                 }
 
                 html += `
-                    <tr onclick="UI.showSceneModal('${escapeHtml(m.key)}')" style="cursor:pointer;">
+                    <tr data-scene-key="${escapeHtml(m.key)}" onclick="UI.showSceneModal(this.dataset.sceneKey)" style="cursor:pointer;">
                         <td style="font-size:0.8rem; color:var(--text-muted);">${loopTags}</td>
                         <td class="name-col">${escapeHtml(m.sceneName)}</td>
                         <td class="name-col">${escapeHtml(m.sceneNameEn)}</td>
@@ -2241,6 +4361,7 @@
             AppState.previousPhase = AppState.currentPhase || 'opening';
             AppState.currentPhase = 'scene';
             AppState.currentSceneId = sceneId;
+            if (typeof DoubtView !== 'undefined') DoubtView.refreshEntry();
 
             const scene = DataManager.getScene(sceneId);
             if (!scene) {
@@ -2330,23 +4451,49 @@
                 html += `<img class="scene-bg" src="${bgUrl}" onerror="this.style.display='none';" alt="">`;
             }
 
-            // Place NPC sprites on the scene
+            // 所有 NPC 都在场景里占位 —— 无坐标的自动按"缺失"数量在场景底部 40% 区域等距散布
+            // 效果:像原型一样,每个人都有一个大砖红占位框贴在场景上,一眼看清"这里少个人"
+            const totalNoPos = npcInfos.filter(i => !(parseFloat(i.PosX) > 0 || parseFloat(i.Posy) > 0)).length;
+            let autoIdx = 0;
             npcInfos.forEach((info, npcIdx) => {
                 const resA = info.ResPath ? Config.getAssetUrl(info.ResPath) : '';
-                if (!resA) return;
                 const npcName = info.NPC?.Name?.[1] || cn(info.NPC?.Name) || '?';
                 const px = parseFloat(info.PosX) || 0;
                 const py = parseFloat(info.Posy) || 0;
-                const leftPct = (px / REF_W * 100).toFixed(1);
-                const topPct = (py / REF_H * 100).toFixed(1);
+                const hasPos = (px > 0 || py > 0);
 
-                html += `
-                    <div class="npc-on-scene" style="left:${leftPct}%; top:${topPct}%;"
-                         onclick="DialogController.start(${npcIdx}, 'talk')">
-                        <img src="${resA}" onerror="this.parentElement.style.display='none'" alt="">
-                        <div class="npc-label">${escapeHtml(npcName)}</div>
-                    </div>
-                `;
+                let leftPct, topPct;
+                if (hasPos) {
+                    leftPct = (px / REF_W * 100).toFixed(1);
+                    topPct  = (py / REF_H * 100).toFixed(1);
+                } else {
+                    // 自动散布:占场景宽度 70%,垂直位置 65%(大致在人物中线高度)
+                    const span = 70;
+                    const start = 50 - span / 2;
+                    const i = autoIdx++;
+                    leftPct = totalNoPos > 1 ? (start + (span / (totalNoPos - 1)) * i).toFixed(1) : 50;
+                    topPct = 65;
+                }
+
+                if (resA) {
+                    // 图片可能 404(艺术资源未交付) —— onerror 要用 figure-miss 红框替换 <img>,而不是简单移除
+                    html += `
+                        <div class="npc-on-scene${hasPos ? '' : ' auto-placed'}" style="left:${leftPct}%; top:${topPct}%;"
+                             onclick="UI.showNpcDrawerBySceneIdx(${npcIdx})">
+                            <img src="${resA}" onerror="var p=this.parentElement; p.classList.add('missing'); var d=document.createElement('div'); d.className='npc-figure-miss'; d.textContent='?'; this.replaceWith(d);" alt="">
+                            <div class="npc-label">${escapeHtml(npcName)}</div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="npc-on-scene missing${hasPos ? '' : ' auto-placed'}" style="left:${leftPct}%; top:${topPct}%;"
+                             title="${hasPos ? '缺立绘资源' : '缺立绘 · 无坐标'}"
+                             onclick="UI.showNpcDrawerBySceneIdx(${npcIdx})">
+                            <div class="npc-figure-miss">?</div>
+                            <div class="npc-label">${escapeHtml(npcName)}</div>
+                        </div>
+                    `;
+                }
             });
 
             html += `</div>`;
@@ -2358,7 +4505,8 @@
                 html += `<div class="section-title">NPC (${npcInfos.length}) — 点击场景中的人物或下方按钮开始对话</div>`;
                 npcInfos.forEach((info, npcIdx) => {
                     const npcName = info.NPC?.Name?.[1] || cn(info.NPC?.Name) || info.NPC?.id || '?';
-                    const talkId = info.TalkInfo?.id || '';
+                    // Auto-fallback: when TalkInfo.id is empty, infer from loaded AVG talks by NPC speaker (Unit9 case)
+                    const talkId = info.TalkInfo?.id || DataManager.findTalkForNPC(info.NPC?.id) || '';
                     const loopTalkId = info.LoopTalkInfo?.id || '';
                     const hasStateB = !!info.ClickResPath;
 
@@ -2370,10 +4518,10 @@
                     html += `</div>`;
                     html += `<div style="display:flex; gap:0.5rem; margin-left:auto;">`;
                     if (talkId) {
-                        html += `<button class="btn" onclick="DialogController.start(${npcIdx}, 'talk')">首次对话 (${talkId})</button>`;
+                        html += `<button class="btn" onclick="UI.showNpcDrawerBySceneIdx(${npcIdx})">首次对话 (${talkId})</button>`;
                     }
                     if (loopTalkId && loopTalkId !== talkId) {
-                        html += `<button class="btn" onclick="DialogController.start(${npcIdx}, 'loopTalk')">重复对话 (${loopTalkId})</button>`;
+                        html += `<button class="btn" onclick="UI.showNpcDrawerBySceneIdx(${npcIdx})">重复对话 (${loopTalkId})</button>`;
                     }
                     if (!talkId && !loopTalkId) {
                         html += `<span style="color:var(--text-muted); font-size:0.85rem;">无对话</span>`;
@@ -2392,14 +4540,7 @@
                     if (talkId) {
                         html += `<div class="spec-row"><span class="spec-label">Talk ID:</span><span class="copy-tag" onclick="copyText('${talkId}', this)">${talkId}</span></div>`;
                     }
-                    if (info.ResPath) {
-                        const resName = info.ResPath.split('\\').pop();
-                        html += `<div class="spec-row"><span class="spec-label">立绘 A:</span><span class="copy-tag" onclick="copyText('${escapeHtml(resName)}', this)">${escapeHtml(resName)}</span></div>`;
-                    }
-                    if (info.ClickResPath) {
-                        const clickName = info.ClickResPath.split('\\').pop();
-                        html += `<div class="spec-row"><span class="spec-label">立绘 B:</span><span class="copy-tag" onclick="copyText('${escapeHtml(clickName)}', this)">${escapeHtml(clickName)}</span></div>`;
-                    }
+                    // 立绘 A / B 的路径字段已迁移到 NPC drawer 的 copy-asset 里,这里不再重复显示
                     if (sceneNameEn && npcKey) {
                         const videoNpc = `${sceneNameEn}_${npcKey}`;
                         const videoZack = `${sceneNameEn}_Zack`;
@@ -2457,6 +4598,7 @@
         showPhase(phase) {
             AppState.currentPhase = phase;
             AppState.currentSceneId = null;
+            if (typeof DoubtView !== 'undefined') DoubtView.refreshEntry();
             const loop = AppState.loopData;
             if (!loop) return;
 
@@ -2465,76 +4607,80 @@
             if (phase === 'opening' && loop.opening) {
                 html = `
                     <div class="scene-title"><span class="phase-tag opening">开篇</span> ${escapeHtml(loop.title || '')}</div>
-                    <p style="margin:0.75rem 0; color:var(--text-secondary);"><strong>目标：</strong>${escapeHtml(loop.target || '')}</p>
+                    ${loop.target ? `<div class="phase-goal"><span class="phase-goal-label">目标</span><span class="phase-goal-text">${escapeHtml(loop.target)}</span></div>` : ''}
                 `;
 
-                // Each opening scene as a full card
                 loop.opening.forEach((item, idx) => {
                     const sid = String(typeof item === 'object' ? item.id : item);
                     const scene = DataManager.getScene(sid);
-                    // 没有对应 SceneConfig 时显示"开场 #N"（opening 条目本就不一定是场景）
                     const sceneName = scene?.sceneName || `开场 #${idx + 1}`;
                     const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
                     const characters = (typeof item === 'object' && item.characters) ? item.characters : [];
                     const purpose = (typeof item === 'object' && item.purpose) ? item.purpose : '';
                     const talkFile = (typeof item === 'object' && item.talk) ? item.talk : '';
 
-                    // Opening 场景可能没有 SceneConfig 条目（如 Unit8 的 8011/8012 cutscene）——
-                    // 卡片点击：有 scene 就跳详情页，没 scene 就不响应（点下面的"播放"按钮起对话）。
-                    if (scene) {
-                        html += `<div class="npc-card" style="margin-bottom:1rem; cursor:pointer;" onclick="FlowView.showScene('${sid}')">`;
-                    } else {
-                        html += `<div class="npc-card" style="margin-bottom:1rem;">`;
-                    }
+                    const clickable = !!scene;
+                    const cardOpen = clickable
+                        ? `<div class="phase-scene-card clickable" onclick="FlowView.showScene('${sid}')">`
+                        : `<div class="phase-scene-card">`;
+                    html += cardOpen;
 
-                    // Background image
+                    // 顶部条带 —— 有图贴图,没图用 noir 占位(cutscene 条目通常不在 SceneConfig)
                     if (bgUrl) {
-                        html += `<img src="${bgUrl}" onerror="this.style.display='none'" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;" alt="">`;
+                        html += `<div class="phase-scene-bg" style="background-image:url('${bgUrl}')"></div>`;
+                    } else {
+                        html += `<div class="phase-scene-bg placeholder" data-id="${escapeHtml(sid)}" data-kind="CUTSCENE"></div>`;
                     }
 
-                    // Scene name + ID
-                    html += `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">`;
-                    html += `<span style="font-size:1.1rem; font-weight:600; color:var(--text-primary);">${escapeHtml(sceneName)}</span>`;
-                    html += `<span style="color:var(--text-muted); font-size:0.85rem;">(${sid})</span>`;
-                    html += `</div>`;
+                    html += `<div class="phase-scene-body">`;
 
-                    // Characters
+                    // 标题 + ID
+                    html += `<div class="phase-scene-head">
+                        <h2 class="phase-scene-title">${escapeHtml(sceneName)}</h2>
+                        <span class="phase-scene-id">#${escapeHtml(sid)}</span>
+                    </div>`;
+
+                    // characters
                     if (characters.length) {
-                        html += `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem;">`;
+                        html += `<div class="phase-scene-chars">`;
                         characters.forEach(c => {
-                            html += `<span style="background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:0.2rem 0.5rem; font-size:0.85rem;">${escapeHtml(c)}</span>`;
+                            html += `<span class="char-pill">${escapeHtml(c)}</span>`;
                         });
                         html += `</div>`;
                     }
 
-                    // Purpose
+                    // purpose (衬线斜体 描述)
                     if (purpose) {
-                        html += `<div style="color:var(--text-secondary); margin-bottom:0.5rem;">${escapeHtml(purpose)}</div>`;
+                        html += `<div class="phase-scene-purpose">${escapeHtml(purpose)}</div>`;
                     }
 
-                    // Per-scene talk file
+                    // talk file row
                     if (talkFile) {
                         const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
                         const firstId = entries.length > 0 ? entries[0].id : '';
-                        html += `<div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; flex-wrap:wrap;" onclick="event.stopPropagation()">`;
-                        html += `<span class="copy-tag" onclick="copyText('${escapeHtml(talkFile)}', this)">📄 ${escapeHtml(talkFile)}.json</span>`;
-                        if (entries.length > 0) {
-                            html += `<span style="color:var(--text-muted); font-size:0.8rem;">${entries.length} 句 | 首句ID: ${firstId}</span>`;
+                        const loaded = entries.length > 0;
+                        // 点"播放"→ 侧边 drawer streaming(无论 cutscene 还是真实场景,都走 drawer)
+                        const kicker = scene ? 'OPENING · SCENE' : 'OPENING · CUTSCENE';
+                        const sub = `${talkFile}.json · 首句 #${firstId}`;
+                        const playAction = `UI.playTalkInDrawer('${firstId}', '${escapeHtml(kicker)}', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
+                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
+                            <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                            <span class="copy-asset-name">${escapeHtml(talkFile)}.json</span>
+                            <span class="copy-asset-ico">copy</span>
+                        </span>`;
+                        if (loaded) {
+                            html += `<span class="talk-meta">${entries.length} 句 · 首句 <span class="talk-meta-id">#${firstId}</span></span>`;
                         } else {
-                            html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
+                            html += `<span class="talk-meta miss">未加载</span>`;
                         }
                         if (firstId) {
-                            // 有 scene 就跳详情并 autoplay；无 scene（opening cutscene）就直接起对话
-                            const playAction = scene
-                                ? `FlowView.showScene('${sid}', '${firstId}')`
-                                : `DialogController.startFromTalkId('${firstId}')`;
-                            html += `<button class="btn" onclick="event.stopPropagation(); ${playAction}" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
+                            html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
                         }
                         html += `</div>`;
                     }
 
-                    // Opening 条目本身不是场景——不显示"SceneConfig 中未找到"警告
-                    html += `</div>`;
+                    html += `</div></div>`; // close body, card
                 });
 
             } else if (phase === 'expose' && loop.expose) {
@@ -2629,8 +4775,7 @@
             } else if (phase === 'events' && loop.events) {
                 html = `
                     <div class="scene-title"><span class="phase-tag events">突发事件</span> ${escapeHtml(loop.title || '')}</div>
-                    <p style="margin:0.75rem 0; color:var(--text-secondary);"><strong>目标：</strong>${escapeHtml(loop.target || '')}</p>
-                    <div class="scene-container" style="min-height:280px; background:var(--card);"></div>
+                    ${loop.target ? `<div class="phase-goal"><span class="phase-goal-label">目标</span><span class="phase-goal-text">${escapeHtml(loop.target)}</span></div>` : ''}
                 `;
 
                 loop.events.forEach((item, idx) => {
@@ -2642,59 +4787,71 @@
                     const purpose = item.purpose || '';
                     const trigger = item.trigger || '';
                     const talkFile = item.talk || '';
+                    const clickable = !!scene;
 
-                    html += `<div class="npc-card" style="margin-bottom:1rem;">`;
+                    html += clickable
+                        ? `<div class="phase-scene-card clickable" onclick="FlowView.showScene('${sid}')">`
+                        : `<div class="phase-scene-card">`;
 
                     if (bgUrl) {
-                        html += `<img src="${bgUrl}" onerror="this.style.display='none'" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;" alt="">`;
+                        html += `<div class="phase-scene-bg" style="background-image:url('${bgUrl}')"></div>`;
+                    } else {
+                        html += `<div class="phase-scene-bg placeholder" data-id="${escapeHtml(sid)}" data-kind="EVENT"></div>`;
                     }
 
-                    html += `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">`;
-                    html += `<span class="phase-tag events">⚡</span>`;
-                    html += `<span style="font-size:1.1rem; font-weight:600; color:var(--text-primary);">${escapeHtml(sceneName)}</span>`;
-                    html += `<span style="color:var(--text-muted); font-size:0.85rem;">(${sid})</span>`;
-                    html += `</div>`;
+                    html += `<div class="phase-scene-body">`;
+                    html += `<div class="phase-scene-head">
+                        <span class="phase-tag events">⚡ 事件</span>
+                        <h2 class="phase-scene-title">${escapeHtml(sceneName)}</h2>
+                        <span class="phase-scene-id">#${escapeHtml(sid)}</span>
+                    </div>`;
 
                     if (trigger) {
-                        html += `<div style="color:var(--highlight); font-size:0.85rem; margin-bottom:0.5rem;">触发: ${escapeHtml(trigger)}</div>`;
+                        html += `<div class="phase-scene-trigger"><span class="trigger-label">触发</span><span class="trigger-text">${escapeHtml(trigger)}</span></div>`;
                     }
 
                     if (characters.length) {
-                        html += `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem;">`;
+                        html += `<div class="phase-scene-chars">`;
                         characters.forEach(c => {
-                            html += `<span style="background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:0.2rem 0.5rem; font-size:0.85rem;">${escapeHtml(c)}</span>`;
+                            html += `<span class="char-pill">${escapeHtml(c)}</span>`;
                         });
                         html += `</div>`;
                     }
 
                     if (purpose) {
-                        html += `<div style="color:var(--text-secondary); margin-bottom:0.5rem;">${escapeHtml(purpose)}</div>`;
+                        html += `<div class="phase-scene-purpose">${escapeHtml(purpose)}</div>`;
                     }
 
                     if (talkFile) {
                         const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
                         const firstId = entries.length > 0 ? entries[0].id : '';
-                        html += `<div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; flex-wrap:wrap;">`;
-                        html += `<span class="copy-tag" onclick="copyText('${escapeHtml(talkFile)}', this)">📄 ${escapeHtml(talkFile)}.json</span>`;
-                        if (entries.length > 0) {
-                            html += `<span style="color:var(--text-muted); font-size:0.8rem;">${entries.length} 句 | 首句ID: ${firstId}</span>`;
+                        const loaded = entries.length > 0;
+                        const sub = `${talkFile}.json · 首句 #${firstId}`;
+                        const playAction = `UI.playTalkInDrawer('${firstId}', 'EVENT', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
+                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
+                            <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                            <span class="copy-asset-name">${escapeHtml(talkFile)}.json</span>
+                            <span class="copy-asset-ico">copy</span>
+                        </span>`;
+                        if (loaded) {
+                            html += `<span class="talk-meta">${entries.length} 句 · 首句 <span class="talk-meta-id">#${firstId}</span></span>`;
                         } else {
-                            html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
+                            html += `<span class="talk-meta miss">未加载</span>`;
                         }
                         if (firstId) {
-                            html += `<button class="btn" onclick="DialogController.startFromTalkId('${firstId}')" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
+                            html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
                         }
                         html += `</div>`;
                     }
 
-                    html += `</div>`;
+                    html += `</div></div>`;
                 });
 
             } else if (phase === 'ending' && loop.ending) {
                 html = `
                     <div class="scene-title"><span class="phase-tag ending">结尾</span> ${escapeHtml(loop.title || '')}</div>
-                    <p style="margin:0.75rem 0; color:var(--text-secondary);"><strong>目标：</strong>${escapeHtml(loop.target || '')}</p>
-                    <div class="scene-container" style="min-height:280px; background:var(--card);"></div>
+                    ${loop.target ? `<div class="phase-goal"><span class="phase-goal-label">目标</span><span class="phase-goal-text">${escapeHtml(loop.target)}</span></div>` : ''}
                     <div class="section-title">结尾场景 (${loop.ending.length})</div>
                 `;
                 loop.ending.forEach(item => {
@@ -2704,37 +4861,49 @@
                     const sceneName = (isObj && item.name) ? item.name : (scene?.sceneName || `场景 ${sid}`);
                     const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
                     const talkFile = (isObj && item.talk) ? item.talk : '';
+                    const clickable = !!scene;
 
-                    html += `<div class="npc-card" style="margin-bottom:1rem;">`;
+                    html += clickable
+                        ? `<div class="phase-scene-card clickable" onclick="FlowView.showScene('${sid}')">`
+                        : `<div class="phase-scene-card">`;
 
                     if (bgUrl) {
-                        html += `<img src="${bgUrl}" onerror="this.style.display='none'" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;" alt="">`;
+                        html += `<div class="phase-scene-bg" style="background-image:url('${bgUrl}')"></div>`;
+                    } else {
+                        html += `<div class="phase-scene-bg placeholder" data-id="${escapeHtml(sid)}" data-kind="ENDING"></div>`;
                     }
 
-                    html += `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">`;
-                    html += `<span style="font-size:1.1rem; font-weight:600; color:var(--text-primary);">${escapeHtml(sceneName)}</span>`;
-                    html += `<span style="color:var(--text-muted); font-size:0.85rem;">(${sid})</span>`;
-                    html += `</div>`;
+                    html += `<div class="phase-scene-body">`;
+                    html += `<div class="phase-scene-head">
+                        <h2 class="phase-scene-title">${escapeHtml(sceneName)}</h2>
+                        <span class="phase-scene-id">#${escapeHtml(sid)}</span>
+                    </div>`;
 
                     if (talkFile) {
                         const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
                         const firstId = entries.length > 0 ? entries[0].id : '';
-                        html += `<div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; flex-wrap:wrap;">`;
-                        html += `<span class="copy-tag" onclick="copyText('${escapeHtml(talkFile)}', this)">📄 ${escapeHtml(talkFile)}.json</span>`;
-                        if (entries.length > 0) {
-                            html += `<span style="color:var(--text-muted); font-size:0.8rem;">${entries.length} 句 | 首句ID: ${firstId}</span>`;
+                        const loaded = entries.length > 0;
+                        const sub = `${talkFile}.json · 首句 #${firstId}`;
+                        const playAction = `UI.playTalkInDrawer('${firstId}', 'ENDING', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
+                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
+                            <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                            <span class="copy-asset-name">${escapeHtml(talkFile)}.json</span>
+                            <span class="copy-asset-ico">copy</span>
+                        </span>`;
+                        if (loaded) {
+                            html += `<span class="talk-meta">${entries.length} 句 · 首句 <span class="talk-meta-id">#${firstId}</span></span>`;
                         } else {
-                            html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
+                            html += `<span class="talk-meta miss">未加载</span>`;
                         }
                         if (firstId) {
-                            html += `<button class="btn" onclick="DialogController.startFromTalkId('${firstId}')" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
+                            html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
                         }
                         html += `</div>`;
                     }
 
-                    html += `</div>`;
+                    html += `</div></div>`;
                 });
-                html += ``;
             }
 
             document.getElementById('content').innerHTML = html;
@@ -2752,14 +4921,14 @@
             sceneId: '',
         },
 
-        start(npcIdx, talkType) {
+        start(npcIdx, talkType, containerId) {
             const scene = DataManager.getScene(AppState.currentSceneId);
             const info = scene?.NPCInfos?.[npcIdx];
             if (!info) return;
 
             const talkId = talkType === 'loopTalk'
                 ? (info.LoopTalkInfo?.id || '')
-                : (info.TalkInfo?.id || '');
+                : (info.TalkInfo?.id || DataManager.findTalkForNPC(info.NPC?.id) || '');
             if (!talkId) return;
 
             const resA = info.ResPath ? Config.getAssetUrl(info.ResPath) : '';
@@ -2771,7 +4940,8 @@
                 history: [],
                 avatarUrl: resA || resB,
                 sceneId: AppState.currentSceneId,
-                containerId: null,
+                containerId: containerId || null,
+                focusSpeakerId: info.NPC?.id || '',
             };
 
             if (this._state.chain.length === 0) {
@@ -2791,90 +4961,225 @@
                 return;
             }
             const firstIcon = chain.find(n => n.talk.Speaker?.IconSmall)?.talk.Speaker?.IconSmall;
+            const firstSpeakerId = chain[0]?.talk?.Speaker?.id || '';
             this._state = {
                 chain, index: 0, history: [],
                 avatarUrl: firstIcon ? `${Config.paths.assets}/Art/NPC/Icon/${firstIcon}.png` : '',
                 sceneId: '', containerId: containerId || null,
+                focusSpeakerId: firstSpeakerId,
             };
             this._render();
         },
 
         _render() {
-            const { chain, index, avatarUrl } = this._state;
-            if (!chain.length) { this.close(); return; }
+            if (!this._state.chain.length) { this.close(); return; }
 
-            const node = chain[index];
-            const talk = node.talk;
-            const speaker = cn(talk.Speaker?.Name) || talk.Speaker?.id || '?';
-            const words = cn(talk.Words) || '';
-            const action = talk.cnAction || '';
-            const isLie = talk.script === 'Lie' || talk.script === 'lie';
-            const lieEvidence = isLie ? (talk.Parameters?.[0]?.ParameterStr || '') : '';
-            // 头像已整体移除（线上无美术）
+            // 所有对白都在 drawer 里 streaming。没 containerId 说明调用方没走 drawer 入口 ——
+            // 用 UI.showDialogDrawer 兜底,把当前 chain 的首句 id 送进去开 drawer(再回头调 startFromTalkId 传 containerId)
+            if (!this._state.containerId) {
+                const firstTalkId = this._state.chain[0]?.talk?.id;
+                if (firstTalkId && typeof UI !== 'undefined' && UI.showDialogDrawer) {
+                    UI.showDialogDrawer(String(firstTalkId));
+                }
+                return;
+            }
+            this._renderStream();
+        },
 
-            const isLast = (index === chain.length - 1);
-            const hasBranches = isLast && node.branches && node.branches.length > 0;
-            const isEnd = isLast && !node.branches;
+        // 流水式渲染(drawer 专用)：lines[0..index] 全部堆叠，淡化旧的，高亮当前
+        _renderStream() {
+            const { chain, index, containerId, focusSpeakerId } = this._state;
+            const stage = document.getElementById(containerId);
+            if (!stage) return;
 
-            let controlsHtml;
+            const total = chain.length;
+            const curNode = chain[index];
+            const curTalk = curNode.talk;
+            const isLast = (index === total - 1);
+            const hasBranches = isLast && curNode.branches && curNode.branches.length > 0;
+            const isEnd = isLast && !curNode.branches;
+            const canPrev = index > 0 || this._state.history.length > 0;
+            // 主角 Zack / 搭档 Emma 在不同 Unit 的 NPC id 不统一，按姓名判断更稳
+            const PROTAGONIST_NAMES = ['Zack', 'Zack Brennan', '扎克', '扎克·布伦南'];
+            const PARTNER_NAMES = ['Emma', "Emma O'Malley", '艾玛', '艾玛·奥马利'];
+
+            const buildLineHtml = (i) => {
+                const n = chain[i];
+                const t = n.talk;
+                const speakerName = cn(t.Speaker?.Name) || t.Speaker?.id || '?';
+                const speakerId = String(t.Speaker?.id || '');
+                const words = cn(t.Words) || '';
+                const action = t.cnAction || '';
+                const isCurrent = (i === index);
+                const isSelf = focusSpeakerId && speakerId === String(focusSpeakerId);
+                const speakerNameEn = t.Speaker?.Name?.[1] || '';
+                const isProtagonist = PROTAGONIST_NAMES.includes(speakerName)
+                    || PROTAGONIST_NAMES.includes(speakerNameEn);
+                const isPartner = PARTNER_NAMES.includes(speakerName)
+                    || PARTNER_NAMES.includes(speakerNameEn);
+                const isLie = t.script === 'Lie' || t.script === 'lie';
+                const lieEv = isLie ? (t.Parameters?.[0]?.ParameterStr || '') : '';
+                const roleCls = isProtagonist ? 'protagonist' : (isPartner ? 'partner' : (isSelf ? 'self' : ''));
+                return `
+                    <div class="avg-line ${isCurrent ? 'current' : 'faded'} ${roleCls}">
+                        <div class="avg-who">${escapeHtml(speakerName)}${action ? `<span class="avg-mood">(${escapeHtml(action)})</span>` : ''}</div>
+                        <div class="avg-text">&ldquo;${escapeHtml(words)}&rdquo;</div>
+                        ${isLie ? `<div class="avg-lie">&#x1f3af; 指证点 · 证据 ${escapeHtml(lieEv)}</div>` : ''}
+                    </div>
+                `;
+            };
+
+            let footerHtml;
             if (hasBranches) {
-                controlsHtml = `<div class="dlg-branches">`;
-                node.branches.forEach(b => {
-                    controlsHtml += `<button class="branch-btn" onclick="DialogController.selectBranch('${b.targetId}')">${escapeHtml(b.text)}</button>`;
+                let branchBtns = '';
+                curNode.branches.forEach(b => {
+                    branchBtns += `<button class="avg-branch-btn" onclick="DialogController.selectBranch('${b.targetId}')">${escapeHtml(b.text)}</button>`;
                 });
-                controlsHtml += `</div>`;
+                footerHtml = `<div class="avg-branches">${branchBtns}</div>`;
             } else {
-                const canPrev = index > 0 || this._state.history.length > 0;
-                controlsHtml = `<div class="dlg-controls">
-                    <button class="btn" onclick="DialogController.prev()" ${canPrev ? '' : 'disabled'}>上一句</button>
-                    ${isEnd
-                        ? `<button class="btn" onclick="DialogController.close()">结束对话</button>`
-                        : `<button class="btn" onclick="DialogController.next()">下一句</button>`
-                    }
-                </div>`;
+                const hintText = isEnd ? '对白结束' : '点击 / 空格 继续 ▸';
+                footerHtml = `
+                    <div class="avg-footer">
+                        <span class="avg-progress mono">${index + 1} / ${total}<span class="avg-sep">·</span>Talk #${escapeHtml(String(curTalk.id || '?'))}</span>
+                        <span class="avg-hint mono">${hintText}</span>
+                    </div>
+                `;
             }
 
-            // 头像全部关闭（线上无美术资源，头像大量 404）——对话框由 .dlg-body 铺满整行
-            const boxHtml = `
-                <div class="dialog-box">
-                    <div class="dlg-body">
-                        <div class="dlg-speaker">${escapeHtml(speaker)}</div>
-                        ${action ? `<div style="font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-bottom:0.2rem;">(${escapeHtml(action)})</div>` : ''}
-                        <div class="dlg-text">${escapeHtml(words)}</div>
-                        ${isLie ? `<div style="margin:0.3rem 0; padding:0.3rem 0.6rem; background:#6b2a2a; border:1px solid var(--accent); border-radius:4px; font-size:0.8rem; color:var(--highlight);">&#x1f3af; 指证点 | 证据: ${escapeHtml(lieEvidence)}</div>` : ''}
-                        <div class="dlg-id">Talk #${talk.id || '?'} | ${index + 1}/${chain.length}</div>
-                        ${controlsHtml}
-                    </div>
-                    <button class="dlg-close-btn" onclick="DialogController.close()" title="关闭">&times;</button>
+            const controlsHtml = `
+                <div class="avg-controls">
+                    <button class="avg-pill" onclick="DialogController.replay()" ${canPrev ? '' : 'disabled'}>&#x21bb; 重播本段</button>
+                    <button class="avg-pill" onclick="DialogController.prev()" ${canPrev ? '' : 'disabled'}>&larr; 上一句</button>
+                    ${!isEnd && !hasBranches ? '<button class="avg-pill on" onclick="DialogController.next()">下一句 &rarr;</button>' : ''}
+                    ${isEnd ? '<button class="avg-pill on" onclick="DialogController.close()">关闭</button>' : ''}
                 </div>
             `;
 
-            let container = this._state.containerId
-                ? document.getElementById(this._state.containerId)
-                : document.querySelector('.scene-container');
+            const existing = stage.querySelector('.avg-stream');
+            const alreadyRendered = existing ? existing.children.length : 0;
+            // 可 append：stream 已存在 + 链还是同一条 + 至少有 1 条新行要追加(alreadyRendered ≤ index)
+            // 严格 ≤ index(不是 ≤ index+1)：避免同 index 二次渲染把 .current 误改为 .faded 又没新行接上
+            const sameChain = existing && stage._avgRenderedChain === chain;
+            const canAppend = existing && sameChain && alreadyRendered > 0 && alreadyRendered <= index;
 
-            // Fallback: scene-container missing or collapsed (no background image)
-            // 插入到 #content 内部作为首个子节点——避免被插成 .main flex 兄弟挤在 sidebar 旁
-            if (!container || container.offsetHeight < 20) {
-                let fb = document.getElementById('dlg-fallback-container');
-                if (!fb) {
-                    const contentEl = document.getElementById('content');
-                    if (contentEl) {
-                        contentEl.insertAdjacentHTML('afterbegin',
-                            '<div id="dlg-fallback-container" style="position:relative; margin-bottom:1rem; border:1px solid var(--border); border-radius:8px; background:var(--card); padding:0.5rem;"></div>');
-                        fb = document.getElementById('dlg-fallback-container');
-                    }
+            if (canAppend) {
+                // 1) 上次的 .current → .faded
+                const prevCurrent = existing.querySelector('.avg-line.current');
+                if (prevCurrent) {
+                    prevCurrent.classList.remove('current');
+                    prevCurrent.classList.add('faded');
                 }
-                container = fb;
-                if (!container) return;
+                // 2) 追加 [alreadyRendered..index] 的新行(通常 1 行)
+                let newHtml = '';
+                for (let i = alreadyRendered; i <= index; i++) newHtml += buildLineHtml(i);
+                if (newHtml) existing.insertAdjacentHTML('beforeend', newHtml);
+
+                // 3) 只替换 footer，不动 stream
+                const outer = stage.querySelector('.avg-stage');
+                if (outer) {
+                    const oldFooter = outer.querySelector('.avg-footer, .avg-branches');
+                    if (oldFooter) oldFooter.outerHTML = footerHtml;
+                    else outer.insertAdjacentHTML('beforeend', footerHtml);
+                    outer.classList.toggle('done', isEnd);
+                    if (!isEnd && !hasBranches) outer.setAttribute('onclick', 'DialogController.next()');
+                    else outer.removeAttribute('onclick');
+                }
+                // 4) 替换 controls
+                const oldControls = stage.querySelector('.avg-controls');
+                if (oldControls) oldControls.outerHTML = controlsHtml;
+                else stage.insertAdjacentHTML('beforeend', controlsHtml);
+
+                // 5) 只在确实追加了新行时 scroll 到底；其它情况 scrollTop 保持
+                if (newHtml) {
+                    existing.scrollTop = existing.scrollHeight;
+                    // 新 current 行启动打字机
+                    const newCurrent = existing.querySelector('.avg-line.current .avg-text');
+                    if (newCurrent) this._startTypewriter(newCurrent);
+                }
+                return;
             }
 
-            const oldBox = container.querySelector('.dialog-box');
-            if (oldBox) oldBox.remove();
-            container.insertAdjacentHTML('beforeend', boxHtml);
+            // 全量重建（首次开播 / replay / prev / branch 切换）
+            this._stopTypewriter();
+            let linesHtml = '';
+            for (let i = 0; i <= index; i++) linesHtml += buildLineHtml(i);
+
+            const clickHandler = (!hasBranches && !isEnd) ? 'onclick="DialogController.next()"' : '';
+            stage.innerHTML = `
+                <div class="avg-stage${isEnd ? ' done' : ''}" ${clickHandler} tabindex="0">
+                    <div class="avg-stream">${linesHtml}</div>
+                    ${footerHtml}
+                </div>
+                ${controlsHtml}
+            `;
+            // 标记这次渲染对应的 chain 引用；后续 _renderStream 会比对，不一致则强制重建
+            stage._avgRenderedChain = chain;
+            const stream = stage.querySelector('.avg-stream');
+            if (stream) stream.scrollTop = stream.scrollHeight;
+            // 当前句启动打字机(全量重建/首次开播/replay/prev 场景)
+            const curText = stage.querySelector('.avg-line.current .avg-text');
+            if (curText) this._startTypewriter(curText);
+        },
+
+        // 打字机效果 —— 按字符逐一揭露当前行，22ms/char，末尾带闪烁光标
+        _startTypewriter(textEl) {
+            if (!textEl) return;
+            this._stopTypewriter();
+            const full = textEl.textContent;
+            textEl.dataset.full = full;
+            textEl.textContent = '';
+            textEl.classList.add('typing');
+            this._state.typing = true;
+            this._state.typeEl = textEl;
+            let i = 0;
+            this._state.typeInterval = setInterval(() => {
+                i++;
+                textEl.textContent = full.slice(0, i);
+                if (i >= full.length) {
+                    clearInterval(this._state.typeInterval);
+                    this._state.typeInterval = null;
+                    this._state.typing = false;
+                    textEl.classList.remove('typing');
+                }
+            }, 22);
+        },
+
+        // 立即填完当前在打的行(点击 / 空格可跳过打字)
+        _completeTypewriter() {
+            if (!this._state.typeInterval) return;
+            clearInterval(this._state.typeInterval);
+            this._state.typeInterval = null;
+            this._state.typing = false;
+            const el = this._state.typeEl;
+            if (el && el.dataset.full != null) {
+                el.textContent = el.dataset.full;
+                el.classList.remove('typing');
+            }
+            this._state.typeEl = null;
+        },
+
+        // 彻底停掉(切链/close 用)
+        _stopTypewriter() {
+            if (this._state.typeInterval) {
+                clearInterval(this._state.typeInterval);
+                this._state.typeInterval = null;
+            }
+            this._state.typing = false;
+            this._state.typeEl = null;
+        },
+
+        replay() {
+            this._state.index = 0;
+            this._state.history = [];
+            this._render();
         },
 
         next() {
+            // 还在打字时：第一次 click/next 先跳完当前句；第二次才真推进
+            if (this._state.typing) {
+                this._completeTypewriter();
+                return;
+            }
             const { chain, index } = this._state;
             if (index < chain.length - 1) {
                 this._state.index++;
@@ -2911,12 +5216,18 @@
         },
 
         close() {
-            const container = this._state.containerId
-                ? document.getElementById(this._state.containerId)
-                : (document.querySelector('.scene-container') || document.getElementById('dlg-fallback-container'));
-            if (!container) return;
-            const box = container.querySelector('.dialog-box');
-            if (box) box.remove();
+            this._stopTypewriter();
+            const cid = this._state.containerId;
+            if (cid) {
+                const stage = document.getElementById(cid);
+                if (stage) stage.innerHTML = '';
+                // fallback 容器用完就删，保持 #content 干净；drawer 容器(#npcDrawerDialog)由 drawer 自己管理
+                if (cid === 'dlg-fallback-container') {
+                    const fb = document.getElementById(cid);
+                    if (fb && fb.parentElement) fb.remove();
+                }
+                this._state.containerId = null;
+            }
         }
     };
 
@@ -3007,6 +5318,15 @@
             document.getElementById('btnArt').classList.toggle('active', view === 'art');
             document.getElementById('btnFlow').classList.toggle('active', view === 'flow');
 
+            // 美术需求总览不需要 Loops 按钮（按 Unit 维度展示，不按 Loop 切换）
+            const hideLoops = (view === 'art');
+            const sideHead = document.querySelector('.sidebar > .side-head');
+            const loopRow = document.querySelector('.sidebar > .loop-row');
+            const loopCurrent = document.querySelector('.sidebar > .loop-current');
+            if (sideHead) sideHead.style.display = hideLoops ? 'none' : '';
+            if (loopRow) loopRow.style.display = hideLoops ? 'none' : '';
+            if (loopCurrent) loopCurrent.style.display = hideLoops ? 'none' : '';
+
             if (view === 'art') {
                 ArtOverviewView.render();
             } else {
@@ -3020,12 +5340,22 @@
             }
 
             UI.renderSidebar();
+            if (typeof DoubtView !== 'undefined') DoubtView.refreshEntry();
         }
     };
 
     // ===== Init =====
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btnArt').classList.add('active');
+        // initial loop chip sync (shows loop1 active by default)
+        if (typeof syncLoopChips === 'function') syncLoopChips();
+        // 初始默认为美术需求总览视图 → 隐藏 Loops 按钮区
+        const sideHead = document.querySelector('.sidebar > .side-head');
+        const loopRow = document.querySelector('.sidebar > .loop-row');
+        const loopCurrent = document.querySelector('.sidebar > .loop-current');
+        if (sideHead) sideHead.style.display = 'none';
+        if (loopRow) loopRow.style.display = 'none';
+        if (loopCurrent) loopCurrent.style.display = 'none';
     });
     </script>
 </body>
