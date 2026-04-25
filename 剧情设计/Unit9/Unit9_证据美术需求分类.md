@@ -595,12 +595,12 @@ Unit9 目前规划了 4 个分析玩法（详见 [剧情设计/Unit9/小玩法/]
 
 #### 9309 - Rosa 女儿的照片（L3 环境，可复用）
 
-**美术资源**：复用 Unit1 **1112 Miguel 的照片** / Photo of Miguel
+**美术资源**：复用 Unit1 **1112 Isabel 的照片** / Photo of Isabel
 - 文件夹: EPI01\RosaStorageRoom
 - 详情大图: SC101_environment_112_big
 - 场景小图: SC101_environment_112
 - 画面：黑白女儿照片，下方手写"我的天使 · 0915"（Unit1 原图已有 1924.09.15 拍摄日期，与"0915"密码完全兼容）
-- Unit9 是否需要调整"Miguel"名字为女儿名字由策划决定，美术素材本身直接复用
+- Unit9 是否需要调整"Isabel"名字为女儿名字由策划决定，美术素材本身直接复用
 
 ### 玩法实装对已列证据的微调
 

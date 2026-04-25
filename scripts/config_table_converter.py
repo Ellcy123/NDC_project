@@ -184,8 +184,8 @@ class ConfigTableConverter:
         translations = {
             # ===== 物品描述翻译 - 循环1 =====
             "通缉\"疤面Tony\"的悬赏金高达5000美元": "A wanted poster with a $5,000 bounty on 'Scarface Tony'",
-            "照片背面写着\"我的小天使Miguel，生日0915，妈妈的一切希望\"": "On the back: 'My little angel Miguel, birthday 0915, mom's only hope'",
-            "女儿Miguel的昂贵药物清单，总费用远超Rosa的工资收入，经济压力巨大": "Expensive medication list for son Miguel, total cost far exceeds Rosa's wages",
+            "照片背面写着\"我的小天使Isabel，生日0915，妈妈的一切希望\"": "On the back: 'My little angel Isabel, birthday 0915, mom's only hope'",
+            "女儿Isabel的昂贵药物清单，总费用远超Rosa的工资收入，经济压力巨大": "Expensive medication list for son Isabel, total cost far exceeds Rosa's wages",
             "一条普通的白色毛巾": "An ordinary white towel",
             "接近闻嗅时有明显的甜腻化学味，是氯仿的味道，这不是清洁用品": "A distinct sweet chemical smell - chloroform, not cleaning supplies",
             "Rosa Martinez - 11月15日夜班：后台走廊清洁 23:00-01:00，明确显示工作地点是后台走廊，不是地下室酒窖": "Rosa Martinez - Nov 15 night shift: Backstage corridor 23:00-01:00, clearly shows work location is backstage corridor, not basement",
@@ -413,16 +413,16 @@ class ConfigTableConverter:
             # ===== 证词对话翻译 =====
             "Rosa，我们又见面了。": "Rosa, we meet again.",
             "Brennan先生……我正在打扫，马上就走，您如果——": "Mr. Brennan... I'm cleaning, about to leave, if you—",
-            "谢谢你告诉我真相。接下来照常工作，照顾 Miguel。Morrison由我来处理。": "Thank you for telling me the truth. Keep working as usual, take care of Miguel. I'll handle Morrison.",
+            "谢谢你告诉我真相。接下来照常工作，照顾 Isabel。Morrison由我来处理。": "Thank you for telling me the truth. Keep working as usual, take care of Isabel. I'll handle Morrison.",
             "他会杀我的……": "He'll kill me...",
             "他不会知道是你说的。Rosa，我对付过比他更脏的人。": "He won't know you talked. Rosa, I've dealt with dirtier people than him.",
             "谢谢您……我真的别无选择……": "Thank you... I really had no choice...",
-            "你为 Miguel 已经做得够多。剩下的交给我。": "You've done enough for Miguel. Leave the rest to me.",
+            "你为 Isabel 已经做得够多。剩下的交给我。": "You've done enough for Isabel. Leave the rest to me.",
 
             # ===== NPC info 翻译 =====
             # Rosa
             "蓝月亮歌舞厅清洁工，夜班23:00-01:00": "Blue Moon Club cleaner, night shift 23:00-01:00",
-            "单身母亲，儿子Miguel患病需要昂贵药物": "Single mother, son Miguel is ill and needs expensive medication",
+            "单身母亲，儿子Isabel患病需要昂贵药物": "Single mother, son Isabel is ill and needs expensive medication",
             "声称在地下室酒窖工作（实际在后台走廊）": "Claims to work in basement cellar (actually in backstage corridor)",
             "表现紧张，似乎在隐瞒什么": "Appears nervous, seems to be hiding something",
             "被Morrison威胁配合栽赃，内心充满恐惧和愧疚": "Threatened by Morrison to cooperate in framing, filled with fear and guilt",
