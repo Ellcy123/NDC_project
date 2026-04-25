@@ -213,6 +213,21 @@ scenes:
       这是情感信物，不挂疑点、不作击穿件，但弹底"MILLER ARMS"印记与 9401 同批次——
       为 Unit2 埋下米勒集团在南区布局年头已久的旁证。
 
+      【玩家选择节点 1：Tommy 离开】
+      交出弹壳后，Tommy 突然说自己今晚必须离开酒吧——他感觉到 Whale 的人一直在盯着这里，
+      他不能再待下去了。玩家在此面临第一个选择节点（正确答案：放他走）：
+      - 拦住他 → bad_ending_1（Tommy 判断被怀疑，立刻封口；Whale 手下察觉异动，局势崩溃；loop 失败）
+      - 等等   → bad_ending_1（Tommy 沉默离去，什么都没留下；loop 失败）
+      - 放他走 → correct_path，触发 Emma 时间限制 + 玩家选择节点 2
+
+      【玩家选择节点 2：去找谁】
+      Tommy 离开后，Emma 立刻说：时间只够再去一个地方——Rosa、Vivian、James，你去哪？
+      （正确答案：James）
+      - 去找 Rosa   → bad_ending_2（Rosa 已供出一切无新线索，James 趁机跑路；loop 失败）
+      - 去找 Vivian → bad_ending_3（Vivian 被关押无法接触，时间白费，James 跑路；loop 失败。
+                       讽刺：玩家相信了"她自首了"这个最大的谎言）
+      - 去找 James  → correct_path，进入 Scene 9009 James 厨房
+
     evidence:
       - id: 9501
         name: "完整节目单 / Complete Program List"
@@ -278,6 +293,42 @@ scenes:
         # ── 3. 可提取证词 ──
         testimony_ids:
           # Tommy"知道 Whale 的只有前/现勒索人"复用 L4 9054002，不在本 Loop 重复声明
+
+        # ── 4. 玩家选择节点 ──
+        player_choices:
+          choice_1:
+            trigger: "Tommy 交出 9506 后宣布今晚必须离开（Whale 的人在盯着他）"
+            correct_answer: let_go
+            options:
+              - id: stop_tommy
+                label: "拦住他"
+                result: bad_ending_1
+                note: "Tommy 封口拒绝合作；loop 失败"
+              - id: wait
+                label: "再等等"
+                result: bad_ending_1
+                note: "Tommy 沉默离去；loop 失败"
+              - id: let_go
+                label: "放他走"
+                result: correct_path
+                note: "触发 Emma 时间限制 + choice_2"
+          choice_2:
+            trigger: "Emma：时间只够再去一个地方——Rosa、Vivian、James，你去哪？"
+            precondition: "choice_1 = let_go"
+            correct_answer: go_james
+            options:
+              - id: go_rosa
+                label: "去找 Rosa"
+                result: bad_ending_2
+                note: "Rosa 无新线索，James 趁机跑路；loop 失败"
+              - id: go_vivian
+                label: "去找 Vivian"
+                result: bad_ending_3
+                note: "Vivian 被关押无法接触；相信了最大的谎言；loop 失败"
+              - id: go_james
+                label: "去找 James"
+                result: correct_path
+                note: "进入 Scene 9009 James 厨房"
 
 
   # ── 场景 9009：James 厨房（口音暴露）──
