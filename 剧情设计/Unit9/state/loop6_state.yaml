@@ -15,9 +15,9 @@
 #
 # 与 Unit8 loop6 的关系：
 #   Unit9 Loop 6 剧情主干与 Unit8 Loop 6 完全一致；
-#   差异：ID 段切换（8xxx → 9xxx）、Whale 电话台词改为"我在看你们能走多远"（讨论结论裁决）、
+#   差异：ID 段切换（8xxx → 9xxx）、Whale 电话台词压轴句以草稿落地版为准（草稿 909001005，非"我在看你们能走多远"硬约束）、
 #         ending_sequence Act3 证据改为 9602 虫胶唱片碎片（非整张文件）、
-#         Act4 新增录音内容两关键词：Margaret Brennan + 南区清退（Unit2 开门砖）
+#         Act4 录音内容完整 3 段对齐 Unit1 emma_009 真实版（非"仅 2 关键词"早期方案）
 #
 # NPC 编码（Unit9 NPCStaticData）：
 #   Emma=902 / Rosa=903 / Morrison=904 / Tommy=905 / Vivian=906 / James=907 / Anna=908 / Whale=909 / MrsMorrison=910
@@ -60,8 +60,8 @@
 #                        Morrison is_liar:true, player_inquiry:null（Expose 对象规则）
 # D. 目标对齐     PASS — goals 与讨论结论 L6"指证 Morrison / 释放 Vivian / 拿到南区计划录音盘碎片"一致
 # E. 信息节奏     PASS — 本 Loop 揭示：Morrison 债务链 + 凶器匹配；
-#                        9602 南区计划录音内容仅限"Margaret Brennan + 南区清退"两关键词，不展开；
-#                        Whale 七字台词不泄露 Whale 真实背景；Unit2 内容完全不超前
+#                        9602 南区计划录音完整 3 段对齐 Unit1 emma_009（Moore 银行注资 / 1912 年家属名单 / 11 月初消失计划 / Margaret Brennan + 鞋坊）；
+#                        Whale 电话台词以草稿落地版为准（草稿 909001005），不泄露 Whale 真实背景；Unit2 内容完全不超前
 # G. Expose 逻辑  PASS — R1 凶器型号匹配（9401+9601）；
 #                        R2 债务利益冲突（9603+9604，两件必须同时）；
 #                        R3 Whale 关联人网络（9503，L5 复用）；
@@ -151,7 +151,12 @@ player_context:
     - "Morrison 当面签下失职认罪书（由 Zack+Emma 见证）：故意压制证据、收受贿赂、错误羁押无辜"
     - "Vivian 用保险箱字条（9304）上的密码打开了保险箱——密码是 Webb 与 Vivian 相遇的那一天"
     - "保险箱内取出'南区计划'录音盘碎片（9602）——Webb 留存的内容，Vivian 将其交给能用上它的人"
-    - "录音碎片中两个关键词：Margaret Brennan、南区清退——Unit2 的开门砖"
+    - "录音碎片完整 3 段释放（与 Unit1 emma_009 真实版对齐）："
+    - "  · Moore 银行注资到位——南区清退计划已有外部资金支撑（资金来源 = Unit2 谜底之一）"
+    - "  · 1912 年家属名单确认——Margaret Brennan 在第一批目标内，'家属'指向 1912 年某事件（Unit2 核心谜题）"
+    - "  · 11 月初消失计划——名单上的'钉子'必须在 11 月初彻底消失（时间窗口紧迫）"
+    - "  · '钉子要清洗'——Whale 把目标人称为'钉子'，James/Webb 是已清洗的，Margaret 是未清洗的"
+    - "录音核心关键词：Margaret Brennan、南区清退、Moore 银行、1912 年家属名单——Unit2 的开门砖"
     - "疑点 9601 完全解锁（Morrison 债务被 Whale 钉死）"
     - "疑点 9602 完全解锁（凶器是米勒集团特制手枪，F2 合并闭环）"
 
@@ -178,7 +183,7 @@ opening:
 
   # ── Emma NPC 条目（opening，非 Expose 对象）──
   npc:
-    id: 102
+    id: 902
     talk: emma_loop6_open
     is_liar: false
     motive: "与 Zack 共同制定 L6 作战策略——她是提案人，也是执行中的搭档"
@@ -269,11 +274,7 @@ scenes:
         - "她在节拍 7 去厨房的真实动机——评估眼前局面，给自己一个不在场的窗口"
 
       # ── 2. 玩家询问意图 ──
-      player_inquiry:
-        - '"对丈夫工作压力的感受" # 6'
-        - '"关于排班/作息细节" # 7'
-        - '"对最近这阵子丈夫状态变化的观察" # 8'
-        - '"婚姻和家庭日常的描述" # 4'
+      player_inquiry: []  # 草稿中 Mrs. Morrison 是 cutscene NPC（开门 + 厨房 + 送行），不进入玩家探索询问轮
 
       # ── 3. 可提取证词 ──
       testimony_ids:
@@ -301,14 +302,15 @@ scenes:
         "Brennan。"
         "你比我想的有耐心。"
         "James 那个孩子可惜了——他差一点就上岸。"
-        Zack 没有回应。Whale 不期待他回应。最后一句："我在看你们能走多远。"挂断。
+        Zack 没有回应。Whale 不期待他回应。最后一句以草稿落地版为准（草稿 909001005，犬儒看客视角的"继续往下挖吧"宣告），挂断。
         Whale 把活人和死人都用工具视角评价——对 Zack 是"棋盘上有耐心的变量"，对 James 是"差一点上岸的孩子"。
         Zack 把听筒放回叉簧，没有立刻转身——cutscene 在他的沉默中解除。Emma 全程在客厅放风见证，但不发声。
       whale_lines:
+        # 压轴句以草稿落地版为准（草稿 909001005 已采用）；以下为节拍参考，最终台词以 MD 草稿为准
         - "Brennan。"
         - "你比我想的有耐心。"
         - "James 那个孩子可惜了——他差一点就上岸。"
-        - "我在看你们能走多远。"  # 压轴宣告固定不动
+        - "[压轴宣告——具体台词以草稿 909001005 落地版为准]"
       narrative_significance:
         - "Whale 首次以声音形式直接登场——此前他只是'影子'，现在有了声音"
         - "3-5 句犬儒工具评价 + 压轴宣告，挂断——他对在世的人和死去的人都用工具视角评价"
@@ -345,7 +347,6 @@ scenes:
       以及 L4 末被 Morrison 当场夺走后藏匿于此的那枚 .45 弹壳（9401，本 Loop 找回 → 状态 retrieved_from_confiscation）——
       Morrison 没有销毁它，只是藏在书桌抽屉最深处用过期台历压着，
       因为他知道这枚弹壳是他与米勒集团关联的唯一物证，一旦销毁反而无法向 Whale 交差，只能藏。
-      桌面上另一枚弹壳（9605）作为藏证行为的补充叙事道具。
 
     evidence:
       - id: 9603
@@ -427,7 +428,7 @@ scenes:
 
 expose:
   target: morrison
-  target_npc_id: 104
+  target_npc_id: 904
   target_talk: morrison_expose_loop6
   is_liar: true
   player_inquiry: null
@@ -472,7 +473,7 @@ expose:
     # ── 3. 可提取证词 ──
     testimony_ids:
       - 9046001  # ⚠谎言: Morrison："Vivian 的手枪就是凶器，凶手就是 Vivian！"（R1 起始谎言）
-      - 9046002  # ⚠谎言: Morrison："我只是临时接警，搜查有失误——后续可以重新调查，不需要现在就释放嫌疑人"（R1 被击破后的退守谎言）
+      - 9046002  # ⚠谎言: Morrison："带走弹壳只是无心的纰漏，后续可以走流程慢慢查——不需要立刻释放 Vivian"（R1 被击破后的退守谎言）
       - 9046003  # ⚠谎言: Morrison："就算我和 Whale 之间有借贷关系，Whale 只是个放贷的——和 Webb、James 的死无关，那是私人交易"（R2 被击破后的最后防线）
 
 
@@ -602,16 +603,24 @@ ending_sequence:
 
     # ── Act 2：Vivian 的选择——留下经营蓝月亮 ──
     act_2_vivian_choice:
-      location: "警局走廊 → 蓝月亮酒吧"
+      location: "蓝月亮酒吧大堂"
       description: |
-        Vivian 走出警局关押室，看到等在走廊的 Zack 和 Emma，以及站在角落的 Anna。
-        她没有说话——低头看了看自己的手，然后抬头，只说了两个字："谢谢你。"
-        之后来到蓝月亮酒吧，Anna 也在。
-        Vivian 看了很久吧台、灯光、那些还没来得及清走的椅子，然后说：
-        "我决定留下来经营这里。"
-        Anna 什么都没说，但她坐了下来。
-        两个被这个案子伤过的女人，在这个房间里沉默地坐着。
-      vivian_status: "imprisoned → released → 主动选择留下经营蓝月亮"
+        Vivian 获释一段时间后，Zack 和 Emma 时常去探望 Anna。某天，Vivian 打电话相约两人在蓝月亮见面。
+        蓝月亮酒吧大堂。白天的光线照进来，显得这里有些空旷和萧瑟。
+        Anna 坐在角落的椅子上，双手交叠放在膝盖上，安静地看着空气里的浮尘。
+        Vivian 站在吧台后整理玻璃杯，没有化妆，眼底的疲惫清晰可见。
+        门铃响起——Emma 推门进来，Zack 在身后。Vivian 抬起头。
+        她从吧台下取出一个没封口的信封，推过桌面：警察撤封后，她去开了 Webb 的保险箱，
+        里面有 Webb 留给她的信，还有一张去巴黎的头等舱船票连着一笔钱。
+        她说三年来她以为自己恨他到只剩开枪一条路，结果到最后他连这个资格都剥夺了，还给她留了条后路。
+        她看着角落里的 Anna——两个女人隔着几张空桌子，没有任何语言交流，但有一种沉重的理解横在中间。
+        Anna 昨天来找过她，想知道 James 在厨房最后的时间都在干什么；她答不上来。
+        她在这里唱了三年，却从来没看过这座酒吧底下的人是怎么活的。
+        她不去巴黎了。她会接手这里，继续开门，至少要等到那些在厨房和后巷干活的人拿到合法身份——
+        算是她替 Webb 补上没付的账。
+        Zack 第一次对她表现出真正的认同："这不是一笔好算的账。"
+        Vivian 看着他，不再有防备，也没有感激："我知道。所以在那之前，我们得先把 Webb 真正的账算清。跟我来吧。"
+      vivian_status: "imprisoned → released → 主动选择留下经营蓝月亮 + 接过 Webb 未竟的账"
 
     # ── Act 3：保险箱——密码、字条、录音盘碎片 + Vivian 退场 ──
     act_3_safe_box:
@@ -716,7 +725,7 @@ ending_sequence:
 
   # ── Vivian 在 ending_sequence 中的 NPC 条目 ──
   vivian_ending:
-    id: 106
+    id: 906
     talk: vivian_ending_loop6
     is_liar: false
     motive: "履行 Webb 的最后委托——将录音盘碎片交给真正能用上它的人；以及，终于能够说一声谢谢"
@@ -745,7 +754,7 @@ ending_sequence:
 
   # ── Anna 在 ending_sequence 中的 NPC 条目 ──
   anna_ending:
-    id: 108
+    id: 908
     talk: anna_ending_loop6
     is_liar: false
     motive: "找一个地方坐下来——她不知道去哪，但她知道不能一个人待着"

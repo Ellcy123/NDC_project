@@ -38,7 +38,7 @@
 # D. 目标对齐     PASS — goals 与讨论结论"L3 揭示：真实枪击早于 23:20 + Rosa 被胁迫 +
 #                        Webb 心里未抛弃 Vivian"一致
 # E. 信息节奏     PASS — 未泄露 L4+（James 凶手身份、.45 口径不符分析、Whale 具体身份与 Rita 间谍关系、
-#                        Morrison 腐败、鼓点诡计、Vivian 11:05 被吼退细节）；
+#                        Morrison 腐败、鼓点诡计、Vivian 23:05 被吼退细节）；
 #                        倒写 J 只做书写特征记录，不点明是 James；
 #                        .45 弹壳在 post_expose 只给"一枚弹壳"，口径留 L4 揭示；
 #                        9308 只给"Whale 名字 + Webb 警觉"，不给身份/合同/间谍/借款——这些留 L4-L6 揭示
@@ -156,7 +156,7 @@ scenes:
       Zack 可以进入对话，Vivian 会给出两条关键证言：
       她对 Webb 的恨意（被迫勒索别人）以及她每晚 23:30 送酒的惯例。
       对话结束后化妆室反锁——Loop3 内不再可进入（Loop4 再次开放）。
-      注意：Vivian 在 L3 不提"11:05 去过会客室被吼退"的细节（留到 L4 歌舞厅自由对话）。
+      注意：Vivian 在 L3 不提"23:05 去过会客室被吼退"的细节（留到 L4 歌舞厅自由对话）。
 
     evidence: []  # 化妆室本身无可拾取证据（保险箱字条等在 9003 会客室）
 
@@ -172,9 +172,10 @@ scenes:
         active_topics:
           - "因为 Webb 一直让她去勒索别人，她恨他（背景陈述）"
           - "她平时都会在 23:30 给 Webb 送酒（时间惯例确认）"
-          # 注：不含 11:05 被吼退的细节——留到 L4 歌舞厅自由对话（裁决 + 讨论结论 风险 D）
+          - "Webb 要求她对外说'包养'，用以掩饰真实情人关系（被动追问下吐露）"
+          # 注：不含 23:05 被吼退的细节——留到 L4 歌舞厅自由对话（裁决 + 讨论结论 风险 D）
         withheld_topics:
-          - "11:05 准备去杀 Webb、被吼退的完整经过（Loop4 才说）"
+          - "23:05 准备去杀 Webb、被吼退的完整经过（Loop4 才说）"
           - "她当晚听到的枪声方向（'从头顶传来'——Loop4 指证后才供述）"
           - "她对 Whale 的了解（Loop4 才展开）"
 
@@ -225,6 +226,7 @@ scenes:
         active_topics:
           - "只是一个兼职厨师，不了解勒索相关的事"
           - "销毁节目单是因为印错了，不能用——工作正常处理"
+          - "对 Vivian 被迫陪客的同情陈述（普通厨师视角，不暴露任何凶手信息）"
           # 注：不暗示凶手身份，不暗示节目单与案发时间的关联
         withheld_topics:
           - "爱尔兰裔身份和习语特征（Loop5 关键破绽）"
@@ -277,8 +279,8 @@ scenes:
         withheld_topics:
           - "他与 Whale / 米勒集团的债务关系（预先存在；Loop5-6 才揭示）"
           - "他为何急于结案的真实动机背后的腐败因素（Loop5-6 才揭示）"
-          # 注：Morrison 尚未取走任何弹壳——那一枚 9605 是 L4 他二次勘验现场时偷偷拿走的（裁决 8）；
-          # 因此 L3 Morrison 的"弹壳缺失"证言是真实观察（Rosa 23:30 捡走了一枚，Morrison 搜到的就是这个缺失），不是藏证据
+          # 注：Morrison 在 L4 二次勘验时未取走任何弹壳；L3 Morrison 的"弹壳缺失"证言是真实观察——
+          # 现场缺失的那一枚对应 Rosa 23:30 捡走的弹壳（即 post_expose 阶段交给 Zack 的 9401），不是藏证据
 
         player_inquiry:
           - "\"Morrison 勘验完现场——他发现了什么异常\" # 8"
@@ -382,25 +384,37 @@ scenes:
       Rosa 本应在 9004 大堂候询，但 Morrison 的问话强度令她喘不过气——
       她自行躲回了自己的地盘：储藏室。Zack 搜证找到威胁纸条（9302，含倒写 J 书写特征）
       和女儿医疗单（9303）——这是 L3 指证 Rosa 第二轮的核心证据。
+      角落木架上摆着一个上锁的小铁盒；墙上挂着一张女儿的黑白照片（envir 9309），
+      照片下方手写"我的天使 · 0915"——这是铁盒密码锁玩法的提示。
+      玩家点击铁盒进入小玩法（参考 小玩法/L3_女儿生日密码锁.md），
+      输入 0915（女儿生日 MMDD）后同时获得 9302 + 9303。
       搜证完毕后，Zack 带着证据跟进储藏室对 Rosa 发起指证。
       私密对质（Morrison 不在场）让 Rosa 崩溃时没有 Morrison 旁观造成的社交顾忌，
       也避免 L3 阶段过早暴露"Morrison 听到威胁纸条细节"导致其被收买伏笔破梗。
 
     evidence:
+      - id: 9309
+        name: "Rosa 女儿的照片 / Rosa's Daughter Photo"
+        type: envir
+        pickup: false
+        analysis: false
+        note: "场景道具——铁盒密码锁玩法的提示来源；不挂任何 doubt condition；L3 玩法专用"
+        description: "墙上一张黑白照片，约 10 岁女孩，笑容温柔。相框背后/照片下方手写：'我的天使 · 0915'——这是 Rosa 给女儿的称呼和女儿的生日（MM-DD）。这串数字是角落铁盒密码锁的密码。"
+
       - id: 9302
         name: "威胁纸条（倒写 J） / Threat Note (Inverted J Handwriting)"
         type: item
         pickup: true
-        note: "关键——疑点 9302 condition；L3 R2 击穿件；倒写 J 留作 L5 伏笔（L3 不告诉玩家这是 James）"
-        description: "Blue Moon 酒吧餐巾纸背面，廉价铅笔潦草书写，铅痕深浅不均。内容：'23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。'字迹中，字母 J 的书写方式异常——J 的弯钩朝向与正常书写相反，像是写字时习惯性地把 J 倒着写。其余字母无明显异常。"
+        note: "关键——疑点 9302 condition；L3 R2 击穿件；倒写 J 留作 L5 伏笔（L3 不告诉玩家这是 James）；通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得"
+        description: "Blue Moon 酒吧餐巾纸背面，廉价铅笔潦草书写，铅痕深浅不均。内容：'23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。'字迹中，字母 J 的书写方式异常——J 的弯钩朝向与正常书写相反，像是写字时习惯性地把 J 倒着写。其余字母无明显异常。从角落木架上的小铁盒中取出（盒锁四位拨轮，密码 0915 = 女儿生日 MMDD）——通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得。"
         analysis: null
 
       - id: 9303
         name: "女儿医疗单 / Daughter's Medical Bill"
         type: item
         pickup: true
-        note: "关键——疑点 9302 condition；L3 R2 辅助击穿件；证明威胁者掌握了 Rosa 女儿的具体病情"
-        description: "Rosa 女儿的医院账单，与威胁纸条一同夹放在储藏室角落的清洁箱里。账单显示女儿有需要持续治疗的病症，医疗费用不低。威胁者不仅知道 Rosa 有女儿，还掌握了具体的医疗状况。"
+        note: "关键——疑点 9302 condition；L3 R2 辅助击穿件；证明威胁者掌握了 Rosa 女儿的具体病情；通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得"
+        description: "Rosa 女儿的医院账单，与威胁纸条一同放在储藏室角落上锁的小铁盒里。账单显示女儿有需要持续治疗的病症，医疗费用不低。威胁者不仅知道 Rosa 有女儿，还掌握了具体的医疗状况。账单上记载病人姓名 Isabel Martinez、出生 1916-09-15。通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得。"
         analysis: null
 
     npcs:
@@ -415,7 +429,7 @@ scenes:
           - "23:20 自己去外面丢过一次垃圾（主动告知——她不知道这个时间节点的推理价值）"
           - "坚持'目击 Vivian 23:30 杀 Webb'的谎言（Expose 第一轮起点）"
           # 注：Rosa 在此阶段主动说出倒垃圾时间，因为她不知道玻璃碎片的推理价值
-          # 不含 11:05 被吼退（她当晚不在场）、Vivian 送酒时间等细节（她只知道纸条告诉她的）
+          # 不含 23:05 被吼退（她当晚不在场）、Vivian 送酒时间等细节（她只知道纸条告诉她的）
         withheld_topics:
           - "威胁纸条的具体内容（不主动透露，等待 Expose 第二轮击破）"
           - "她捡到的弹壳（Expose 结束后才主动交出）"
@@ -665,6 +679,13 @@ evidence_registry:
     first_scene: 9003
     pickup: true
     note: "叙事证据——Whale 名字的首次物证浮现（Emma opening 已口述过 Tommy 暗示，9308 是 Webb 亲笔警觉的物证，情感重量更大）；不挂任何 doubt condition；不可分析；L4 Tommy 对话引用此件作为 Zack 追问'Whale 是谁'的起点"
+
+  - id: 9309
+    name: "Rosa 女儿的照片 / Rosa's Daughter Photo"
+    type: envir
+    first_scene: 9001
+    pickup: false
+    note: "场景道具——铁盒密码锁玩法的提示来源（相框背手写'我的天使 · 0915'= 女儿生日 MMDD）；不挂任何 doubt condition；不可拾取；L3 储藏室密码锁玩法专用"
 
   - id: 9401
     name: ".45 警用弹壳 / .45 ACP Police-Issue Casing"

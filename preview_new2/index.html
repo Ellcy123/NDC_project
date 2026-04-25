@@ -2008,6 +2008,63 @@
             margin-top: 10px;
             text-align: right;
         }
+        /* 收起按钮 */
+        #doubtFloat .df-collapse-btn {
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 22px; height: 22px;
+            background: transparent;
+            border: 1px solid var(--rule);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 12px; line-height: 1;
+            border-radius: 2px;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: color .15s, border-color .15s, transform .2s;
+            z-index: 1;
+        }
+        #doubtFloat .df-collapse-btn:hover {
+            color: var(--gold);
+            border-color: var(--gold-2);
+        }
+        /* 默认隐藏迷你态 */
+        #doubtFloat .df-mini { display: none; }
+        /* 折叠状态：缩小、切换显示、按钮翻转为 ⌄ */
+        #doubtFloat.collapsed {
+            width: auto;
+            padding: 6px 10px;
+        }
+        #doubtFloat.collapsed .df-body { display: none; }
+        #doubtFloat.collapsed .df-mini {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding-right: 26px; /* 给右上角的折叠按钮让位 */
+            cursor: pointer;
+        }
+        #doubtFloat.collapsed .df-collapse-btn {
+            transform: rotate(180deg);
+        }
+        #doubtFloat .df-mini-icon {
+            color: var(--gold); font-size: 11px;
+        }
+        #doubtFloat .df-mini-label {
+            font-family: var(--ff-mono); font-size: 10.5px;
+            letter-spacing: .14em; text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        #doubtFloat .df-mini-pill {
+            font-family: var(--ff-mono); font-size: 10.5px;
+            letter-spacing: .1em; color: var(--parch-mute);
+            padding: 1px 8px;
+            border: 1px solid var(--rule-2); border-radius: 999px;
+            background: var(--coal-3);
+        }
+        #doubtFloat.collapsed.done .df-mini-pill {
+            color: var(--primary);
+            background: var(--gold);
+            border-color: var(--gold);
+            font-weight: 600;
+        }
         /* 列表模式下每张疑点卡片 */
         .doubt-list-header {
             display: flex;
@@ -2274,6 +2331,36 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
         }
+
+        /* ===== Mobile (≤ 768px) — 不影响桌面 ===== */
+        @media (max-width: 768px) {
+            /* 整页改为可纵向滚（桌面是 100vh + overflow:hidden 锁死） */
+            body { font-size: 12.5px; height: auto; overflow: auto; }
+            .app  { height: auto; min-height: 100vh; }
+
+            /* Header：换行折叠，副标题/边距收紧 */
+            .header { height: auto; min-height: 52px; padding: 8px 12px;
+                      flex-wrap: wrap; gap: 8px; }
+            .brand         { min-width: 0; }
+            .brand-sub     { display: none; }
+            .header-center { order: 3; flex-basis: 100%; justify-content: flex-start; gap: 6px; }
+            .header-right  { min-width: 0; }
+            .select-group  { height: 28px; }
+
+            /* Tabs：横向可滑，meta 隐藏 */
+            .main-tabs { padding: 0 8px; overflow-x: auto; }
+            .main-tab  { padding: 10px 12px 8px; font-size: 12px; white-space: nowrap; }
+            .tab-meta  { display: none; }
+
+            /* 主区横→纵：sidebar 顶部限高，内容在下 */
+            .main    { flex-direction: column; overflow: visible; }
+            .sidebar { width: 100%; max-height: 220px;
+                       border-right: 0; border-bottom: 1px solid var(--border); }
+            .content { padding: 14px 12px 60px; overflow: visible; }
+
+            /* 证据表横向滚动而不是挤变形 */
+            .evidence-table { display: block; overflow-x: auto; white-space: nowrap; }
+        }
     </style>
 </head>
 <body>
@@ -2314,7 +2401,6 @@
             </div>
             <div class="header-right">
                 <button class="btn ghost" onclick="UI.showStoryOverview()">故事概览</button>
-                <a class="btn ghost" href="pipeline.html" target="_blank">流水线</a>
             </div>
         </div>
 
@@ -2366,18 +2452,28 @@
     <div class="grain"></div>
 
     <!-- 疑点悬浮窗（CURRENT CASE 风格） -->
-    <div id="doubtFloat" class="doubt-float-hidden" onclick="DoubtView.showList()" title="点击查看本 Loop 全部疑点">
-        <div class="df-kicker">
-            <span class="df-label" id="doubtFloatKicker">当前目标</span>
-            <span id="doubtFloatLoop">LOOP —</span>
+    <div id="doubtFloat" class="doubt-float-hidden">
+        <button class="df-collapse-btn" onclick="event.stopPropagation(); DoubtView.toggleCollapsed()" title="收起/展开" aria-label="收起">⌃</button>
+        <!-- 展开态主体，点击打开疑点列表 -->
+        <div class="df-body" onclick="DoubtView.showList()" title="点击查看本 Loop 全部疑点">
+            <div class="df-kicker">
+                <span class="df-label" id="doubtFloatKicker">当前目标</span>
+                <span id="doubtFloatLoop">LOOP —</span>
+            </div>
+            <div class="df-target" id="doubtFloatTarget">—</div>
+            <div class="df-bar"><div class="df-bar-fill" id="doubtFloatBarFill" style="width:0%;"></div></div>
+            <div class="df-progress-row">
+                <span class="df-progress-label">疑点进度</span>
+                <span class="df-progress-pill" id="doubtFloatPill">0 / 0</span>
+            </div>
+            <div class="df-hint">点击展开 ›</div>
         </div>
-        <div class="df-target" id="doubtFloatTarget">—</div>
-        <div class="df-bar"><div class="df-bar-fill" id="doubtFloatBarFill" style="width:0%;"></div></div>
-        <div class="df-progress-row">
-            <span class="df-progress-label">疑点进度</span>
-            <span class="df-progress-pill" id="doubtFloatPill">0 / 0</span>
+        <!-- 折叠态药丸，点击展开回完整面板 -->
+        <div class="df-mini" onclick="DoubtView.toggleCollapsed()" title="点击展开">
+            <span class="df-mini-icon">◆</span>
+            <span class="df-mini-label">疑点</span>
+            <span class="df-mini-pill" id="doubtFloatMiniPill">0/0</span>
         </div>
-        <div class="df-hint">点击展开 ›</div>
     </div>
 
     <!-- Evidence Modal -->
@@ -3962,12 +4058,27 @@
             document.getElementById('doubtFloatKicker').textContent = '当前目标';
             document.getElementById('doubtFloatLoop').textContent = loopLabel;
             document.getElementById('doubtFloatTarget').textContent = loopTarget;
-            document.getElementById('doubtFloatPill').textContent =
-                doubts.length === 0 ? '无配置' : `${doneCount} / ${doubts.length}`;
+            const progressText = doubts.length === 0 ? '无配置' : `${doneCount} / ${doubts.length}`;
+            document.getElementById('doubtFloatPill').textContent = progressText;
+            const miniPillEl = document.getElementById('doubtFloatMiniPill');
+            if (miniPillEl) miniPillEl.textContent = doubts.length === 0 ? '—' : `${doneCount}/${doubts.length}`;
 
             const pct = doubts.length === 0 ? 0 : Math.round((doneCount / doubts.length) * 100);
             document.getElementById('doubtFloatBarFill').style.width = pct + '%';
             el.classList.toggle('done', doubts.length > 0 && doneCount === doubts.length);
+
+            // 应用折叠状态（仅当用户曾主动折叠过才生效；默认展开）
+            if (localStorage.getItem('ndcDoubtFloatCollapsed') === '1') {
+                el.classList.add('collapsed');
+            }
+        },
+
+        // 折叠/展开浮窗（状态写入 localStorage，刷新后保持）
+        toggleCollapsed() {
+            const el = document.getElementById('doubtFloat');
+            if (!el) return;
+            const collapsed = el.classList.toggle('collapsed');
+            localStorage.setItem('ndcDoubtFloatCollapsed', collapsed ? '1' : '0');
         },
 
         toggleCondition(type, param) {
