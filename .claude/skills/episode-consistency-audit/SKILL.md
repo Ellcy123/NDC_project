@@ -65,11 +65,11 @@ user-invocable: true
 
 ---
 
-## Phase 2 — 7 维并行扇出
+## Phase 2 — 8 维并行扇出
 
 通过 Agent tool 在**单条消息内**并行启动以下任务（独立 context、互不可见）。每个任务的 prompt 都明确告知 Unit 号 + 输出 jsonl 路径。
 
-### 并行批 A（6 个 agent 同时启动）
+### 并行批 A（7 个 agent 同时启动）
 
 | 维度 | subagent_type | 输出 |
 |---|---|---|
@@ -79,6 +79,7 @@ user-invocable: true
 | A 人物档案 | `character-fact-auditor` | `.audit/{Unit}/issues/A-character.jsonl` |
 | B 称谓 | `addressing-auditor` | `.audit/{Unit}/issues/B-addressing.jsonl` |
 | G 多视角 | `multi-perspective-auditor` | `.audit/{Unit}/issues/G-perspective.jsonl` |
+| H 对话 ID 编排 | `consistency-checker` | `.audit/{Unit}/issues/H-dialogue-id.jsonl` |
 
 每个 agent 的输入 prompt 模板：
 
@@ -175,7 +176,7 @@ python .claude/skills/episode-consistency-audit/references/build_report.py {Unit
 报告结构：
 - 顶部：扫描范围摘要（多少文件、issue 分级数、事实表清单）
 - 一级筛选：严重度（P0 / P1 / P2 / needs_human）
-- 二级筛选：维度（A 人物 / B 称谓 / C 时间线 / D 物证 / E 年代 / F 声纹 / G 多视角 / X 对话兜底）
+- 二级筛选：维度（A 人物 / B 称谓 / C 时间线 / D 物证 / E 年代 / F 声纹 / G 多视角 / H 对话ID / X 对话兜底）
 - 三级筛选：Loop（L1–L6）
 - 每条 issue 卡片：原台词 + 高亮违规字段 + 违反的 fact 引用 + 修复建议 + dismissal reason（如有）
 

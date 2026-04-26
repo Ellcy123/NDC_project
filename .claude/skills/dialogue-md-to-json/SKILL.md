@@ -67,16 +67,61 @@ allowed-tools: Read, Glob, Grep, Bash, AskUserQuestion
 #### A. 结构性错误（必须拦截）
 
 - [ ] MD 文件存在：`AVG/对话配置工作及草稿/Unit9/Loop{N}_生成草稿.md`
-- [ ] 每个 `### {id}` 标题是 9 位数字（格式 `{loop}{scene}{seq}`）
+- [ ] 每个 `### {id}` 标题是 **9 位纯数字**——无字母后缀（a/b/c/A/B）、无下划线后缀
 - [ ] 每个对话条目都有 `**说话人**`（旁白除外）
 - [ ] 每段 `## Talk: xxx.json` / `## Expose: xxx.json` 文件名格式合法（含 `.json` 后缀）
+
+##### A+. ID 编排规则（必须拦截，不通过则建议先跑 `/dialogue-id-reorder`）
+
+**ID 格式**：
+- [ ] Talk ID = `9{npc=2}{conv=3}{seq=3}`，共 9 位
+- [ ] Expose ID = `9{npc=2}9{loop=2}{seq=3}`，共 9 位（第 4 位固定 9）
+- [ ] NPC 编码正确（01=Emma, 02=Zack, 03=Rosa, 04=Morrison, 05=Tommy, 06=Vivian, 07=Jimmy/James, 08=Anna, 09=Whale）
+
+**ID 连续性**：
+- [ ] 同一 section 内主线 `001`–`0xx` 无跳号、无重复
+- [ ] 分支路径 `1xx`/`2xx`/`3xx` 各段内部连续，从 x01 起
+- [ ] 汇合段 `4xx` 内部连续，从 401 起
+- [ ] 双分支文件：第二组分支 `5xx`/`6xx`，第二组汇合 `8xx`
+- [ ] Expose 主线 `001` 递增，陷阱路径 `1xx`/`2xx`/`3xx`/`4xx`
+
+**ID 唯一性**：
+- [ ] 同一文件内无重复 ID
+- [ ] 同一 section 内无跨文件前缀（如 morrison_001 中不应出现 `901xxxxxx`）
+
+**conv 编号**：
+- [ ] 本 Loop 使用的 conv 编号不与其他 Loop 冲突——参照 NPC conv 追踪表：
+
+| NPC | L1 | L2 | L3 | L4 | L5 | L6 |
+|-----|----|----|----|----|----|----|
+| Emma(01) | 001 | 002 | 003 | 004 | 005 | 006,007 |
+| Rosa(03) | 001 | — | 002,003 | — | — | 004 |
+| Morrison(04) | 001,002 | — | 003 | 004,005 | — | 006+ |
+| Tommy(05) | — | 001,002 | — | 003 | 004 | 005 |
+| Vivian(06) | 001 | — | 002 | 003,004 | — | 005 |
+| James(07) | — | 001 | 002 | — | 003 | 004 |
+| Anna(08) | — | — | — | — | 001 | 002 |
+| Whale(09) | — | — | — | — | — | 001 |
+
+**section 头匹配**：
+- [ ] `## Talk: {npc}_{conv}.json` 的 npc/conv 与其下 ID 段前缀一致
+- [ ] `## Expose: Loop{N}_{npc}.json` 的 npc/loop 与其下 ID 段前缀一致
+
+**字数合规**：
+- [ ] 每句台词（`> ` 开头）中文字符数 ≤ 35（含中文标点；不含英文/数字/空格/`[...]`动作/`<!-- -->`注释/`📋`系统行）
+
+**post_expose 拆分**：
+- [ ] State 中声明的 post_expose 已从 Expose 文件拆出为独立 `## Talk:` section，使用独立 conv 编号
+
+> **拦截策略**：A+ 任一项 FAIL 时，输出完整错误列表并建议："请先运行 `/dialogue-id-reorder Unit9 Loop{N}` 修复 ID 问题后再重新同步。" 用户可选择强行写入（escape hatch），但报告中会标红。
 
 #### B. 跨表引用错误（默认拦截，可强行写入）
 
 - [ ] `` `get` → {testimonyId} `` 中的 testimonyId **存在于 TestimonyItem.json**（不限本 Loop，跨 Loop 合法）
-- [ ] `Lie` 行的 `🎯 可用证据: {ids}` 每个 ID **存在于 ItemStaticData.json**
+- [ ] `Lie` 行的可用证据 ID **存在于 ItemStaticData.json**
 - [ ] 分支 `→ {id}` 跳转目标 **存在于本 MD 文件内**
 - [ ] `→ 汇合至 {id}` 目标存在于本 MD 文件内
+- [ ] Expose 陷阱 `→ 回到 {id}` 目标存在于本 MD 文件内（指向 Lie/branches 节点）
 
 #### C. NPC 警告（不拦截，列出由用户决定）
 

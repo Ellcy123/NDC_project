@@ -2950,7 +2950,7 @@
             try {
                 const allFiles = await this.listJsonFiles(dirUrl);
                 // 筛选当前 loop 的 expose 文件 (如 loop1_rosa.json)
-                const loopFiles = allFiles.filter(f => f.startsWith(`loop${loopNum}_`));
+                const loopFiles = allFiles.filter(f => f.toLowerCase().startsWith(`loop${loopNum}_`));
 
                 if (loopFiles.length === 0) {
                     console.warn(`No AVG Expose files found for ${loop}`);
@@ -3072,10 +3072,40 @@
         // Used when SceneConfig.NPCInfos[i].TalkInfo.id is empty (Unit9 case)
         findTalkForNPC(npcId) {
             if (!npcId) return '';
-            const target = `NPC${String(npcId)}`;
+            const sid = String(npcId);
+            // Helper: find first talk ID by videoScene name
+            const firstIdByScene = (sceneName) => {
+                const entries = AppState.allTalks
+                    .filter(t => t.videoScene === sceneName)
+                    .sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id));
+                return entries.length > 0 ? entries[0].id : '';
+            };
+            // convertAVGTalk stores Speaker.id as raw number (e.g. "807"), no "NPC" prefix
+            // Try direct match (design ID 907)
             for (const talk of AppState.allTalks) {
-                if (talk.IdSpeaker === target && talk.videoScene) {
-                    return talk.videoScene;
+                if (talk.Speaker?.id === sid && talk.videoScene) {
+                    return firstIdByScene(talk.videoScene) || talk.id;
+                }
+            }
+            // Fallback: 9XX → 8XX (EPI09 uses 8XX NPC codes)
+            if (sid.startsWith('9')) {
+                const epiId = '8' + sid.slice(1);
+                for (const talk of AppState.allTalks) {
+                    if (talk.Speaker?.id === epiId && talk.videoScene) {
+                        return firstIdByScene(talk.videoScene) || talk.id;
+                    }
+                }
+            }
+            // Fallback: match by NPC chinese name
+            const npcData = this.getNPC(sid);
+            if (npcData) {
+                const npcName = cn(npcData.Name);
+                if (npcName) {
+                    for (const talk of AppState.allTalks) {
+                        if (talk.Speaker?.Name?.[0] === npcName && talk.videoScene) {
+                            return firstIdByScene(talk.videoScene) || talk.id;
+                        }
+                    }
                 }
             }
             return '';
@@ -3663,9 +3693,10 @@
             // Unit9 yaml uses nested form { unlocked: { 地点A: [id...], 地点B: [id...] } }
             // Other units use flat form { unlocked: [id, id, ...] }; flatten if object.
             const flattenScenes = (raw) => {
-                if (Array.isArray(raw)) return raw;
+                const extractId = (x) => (x && typeof x === 'object' && x.id != null) ? x.id : x;
+                if (Array.isArray(raw)) return raw.map(extractId);
                 if (raw && typeof raw === 'object') {
-                    return Object.values(raw).flat();
+                    return Object.values(raw).flat().map(extractId);
                 }
                 return [];
             };
@@ -3709,7 +3740,7 @@
                 // Render unlocked scenes grouped by location
                 if (unlocked.length > 0) {
                     html += `<div class="sidebar-section">解锁 (${unlocked.length})</div>`;
-                    const { groups, noGroup } = groupByLocation(unlocked, id => String(id));
+                    const { groups, noGroup } = groupByLocation(unlocked, id => String(typeof id === 'object' ? id.id : id));
 
                     for (const [locName, sceneIds] of groups) {
                         html += `<div style="padding:0.3rem 1rem 0.1rem; font-size:0.75rem; color:var(--highlight); font-weight:600;">${escapeHtml(locName)}</div>`;
@@ -4675,6 +4706,74 @@
                 });
             }
 
+            // YAML talks fallback — when SceneConfig has no NPCInfos but YAML lists talks for this scene
+            if (npcInfos.length === 0 && loopRef?.scenes?.unlocked) {
+                const yamlScenes = Object.values(loopRef.scenes.unlocked).flat();
+                const yamlEntry = yamlScenes.find(s => s && typeof s === 'object' && String(s.id) === sceneId);
+                const yamlTalks = yamlEntry?.talks || [];
+                const yamlSuddenEvents = yamlEntry?.sudden_events || [];
+
+                if (yamlTalks.length > 0) {
+                    html += `<div class="section-title">对话</div>`;
+                    yamlTalks.forEach(talkName => {
+                        const entries = AppState.allTalks.filter(t => t.videoScene === talkName).sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id));
+                        const firstId = entries.length > 0 ? entries[0].id : '';
+                        const loaded = entries.length > 0;
+                        const sub = `${talkName}.json · ${entries.length} 句`;
+                        const playAction = `UI.playTalkInDrawer('${firstId}', 'TALK', '${escapeHtml(talkName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        html += `<div class="phase-scene-talk" style="margin:0.5rem 0;">`;
+                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkName)}', this)">
+                            <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                            <span class="copy-asset-name">${escapeHtml(talkName)}.json</span>
+                            <span class="copy-asset-ico">copy</span>
+                        </span>`;
+                        if (loaded) {
+                            html += `<span class="talk-meta">${entries.length} 句 · 首句 <span class="talk-meta-id">#${firstId}</span></span>`;
+                        } else {
+                            html += `<span class="talk-meta miss">未加载</span>`;
+                        }
+                        if (firstId) {
+                            html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
+                        }
+                        html += `</div>`;
+                    });
+                }
+
+                if (yamlSuddenEvents.length > 0) {
+                    html += `<div class="section-title">⚡ 突发事件</div>`;
+                    yamlSuddenEvents.forEach(se => {
+                        const seStartId = se.start_id ? String(se.start_id) : '';
+                        html += `<div style="margin:0.5rem 0; padding:0.6rem; background:var(--ink); border:1px solid var(--rule); border-radius:6px;">`;
+                        html += `<div style="font-weight:600; color:var(--warning);">⚡ ${escapeHtml(se.name || '突发事件')}</div>`;
+                        if (seStartId) {
+                            const playAction = `UI.playTalkInDrawer('${seStartId}', 'EVENT', '${escapeHtml(se.name || '').replace(/'/g, '&apos;')}', '从 #${seStartId} 开始')`;
+                            html += `<button class="btn primary" onclick="${playAction}" style="margin-top:0.4rem;">▶ 播放</button>`;
+                        }
+                        html += `</div>`;
+                    });
+                }
+            }
+
+            // Also show YAML talks for scenes WITH NPCInfos but where talks field adds extra files not covered by NPC
+            if (npcInfos.length > 0 && loopRef?.scenes?.unlocked) {
+                const yamlScenes = Object.values(loopRef.scenes.unlocked).flat();
+                const yamlEntry = yamlScenes.find(s => s && typeof s === 'object' && String(s.id) === sceneId);
+                const yamlSuddenEvents = yamlEntry?.sudden_events || [];
+                if (yamlSuddenEvents.length > 0) {
+                    html += `<div class="section-title">⚡ 突发事件</div>`;
+                    yamlSuddenEvents.forEach(se => {
+                        const seStartId = se.start_id ? String(se.start_id) : '';
+                        html += `<div style="margin:0.5rem 0; padding:0.6rem; background:var(--ink); border:1px solid var(--rule); border-radius:6px;">`;
+                        html += `<div style="font-weight:600; color:var(--warning);">⚡ ${escapeHtml(se.name || '突发事件')}</div>`;
+                        if (seStartId) {
+                            const playAction = `UI.playTalkInDrawer('${seStartId}', 'EVENT', '${escapeHtml(se.name || '').replace(/'/g, '&apos;')}', '从 #${seStartId} 开始')`;
+                            html += `<button class="btn primary" onclick="${playAction}" style="margin-top:0.4rem;">▶ 播放</button>`;
+                        }
+                        html += `</div>`;
+                    });
+                }
+            }
+
             // Evidence
             if (evidenceItems.length > 0) {
                 html += `<div class="section-title">证据 / 道具 (${evidenceItems.length})</div>`;
@@ -4813,7 +4912,8 @@
                 const chapCfg = DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop);
                 const exposes = chapCfg?.exposes || [];
 
-                // Find the opening entry of the expose (the entry before the first Lie)
+                // Find the opening entry of the expose
+                // Priority: 1) ChapterConfig exposes[0].talkId  2) YAML expose.talk field
                 const firstLieTalkId = exposes[0]?.talkId;
                 let exposeStartId = firstLieTalkId ? String(firstLieTalkId) : '';
                 if (firstLieTalkId) {
@@ -4822,6 +4922,15 @@
                             exposeStartId = id;
                             break;
                         }
+                    }
+                }
+                // Fallback: use YAML expose.talk to find first entry by videoScene match
+                if (!exposeStartId && exp.talk) {
+                    const exposeTalks = AppState.allTalks
+                        .filter(t => t.videoScene === exp.talk)
+                        .sort((a, b) => Number(a.videoId) - Number(b.videoId));
+                    if (exposeTalks.length > 0) {
+                        exposeStartId = exposeTalks[0].id || String(exposeTalks[0].videoId);
                     }
                 }
 
@@ -4893,6 +5002,44 @@
                             </div>
                         `;
                     });
+                }
+
+                // Post-expose section (指证后剧情)
+                if (exp.post_expose) {
+                    const pe = exp.post_expose;
+                    const peTalkFile = pe.talk || '';
+                    const peEntries = peTalkFile ? AppState.allTalks.filter(t => t.videoScene === peTalkFile).sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id)) : [];
+                    const peFirstId = peEntries.length > 0 ? peEntries[0].id : '';
+
+                    html += `<div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--rule);">`;
+                    html += `<div class="section-title" style="color:var(--highlight);">指证后 · ${escapeHtml(pe.name || 'Post-Expose')}</div>`;
+
+                    if (pe.characters?.length) {
+                        html += `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin:0.5rem 0;">`;
+                        pe.characters.forEach(c => { html += `<span class="char-pill">${escapeHtml(c)}</span>`; });
+                        html += `</div>`;
+                    }
+                    if (pe.purpose) {
+                        html += `<p style="margin:0.5rem 0; color:var(--text-secondary);">${escapeHtml(pe.purpose)}</p>`;
+                    }
+                    if (peTalkFile) {
+                        const sub = `${peTalkFile}.json · ${peEntries.length} 句`;
+                        const playAction = `UI.playTalkInDrawer('${peFirstId}', 'POST-EXPOSE', '${escapeHtml(pe.name || '').replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        html += `<div class="phase-scene-talk" style="margin-top:0.5rem;">`;
+                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(peTalkFile)}', this)">
+                            <span class="copy-asset-dot ${peEntries.length > 0 ? 'ok' : 'miss'}"></span>
+                            <span class="copy-asset-name">${escapeHtml(peTalkFile)}.json</span>
+                            <span class="copy-asset-ico">copy</span>
+                        </span>`;
+                        if (peEntries.length > 0) {
+                            html += `<span class="talk-meta">${peEntries.length} 句 · 首句 <span class="talk-meta-id">#${peFirstId}</span></span>`;
+                        }
+                        if (peFirstId) {
+                            html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
+                        }
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
                 }
 
             } else if (phase === 'events' && loop.events) {

@@ -6,18 +6,25 @@ opening:
   - id: 9831
     characters: [Zack, Emma]
     purpose: 【承接 loop2】Tommy 指证后汇报——酒吧勒索生意确立，"大人物"仍是暗线；Emma 提出会客室今日开放 + 重审 Rosa 时间线，建议重回案发现场搜寻物证
-    talk: emma_loop3_open
+    talk: emma_003
 
 scenes:
   unlocked:
     蓝月亮酒吧:
-      - 9301  # 🆕 Rosa 储藏室（威胁纸条 + 女儿医疗单——Rosa 受胁迫的证据）
-      - 9302  # 🆕 Vivian 化妆室（23:30 送酒惯例；对话后 post_dialogue_lock 反锁）
-      - 9303  # Webb 会客室（Morrison 勘验完成解封；保险箱字条 + 合影 + Webb 日记"Whale - Danger" + 无玻璃的窗户）
-      - 9304  # 酒吧大堂（Morrison 弹道证言"子弹缺失" + Expose Rosa 场所）
-      - 9307  # 一楼走廊（通道可通行，本 loop 无搜证内容）
-      - 9308  # 🆕 一楼侧巷（玻璃碎片实地拾取 / 透窗望见垃圾袋压碎玻璃）
-      - 9309  # James 厨房（突发：James 销毁《艾斯弗德狂想曲》鼓点单子）
+      - id: 9301  # Rosa 储藏室
+        talks: [rosa_002]
+      - id: 9302  # Vivian 化妆室
+        talks: [vivian_002]
+      - id: 9303  # Webb 会客室
+      - id: 9304  # 酒吧大堂
+        talks: [morrison_003]
+      - 9307  # 一楼走廊
+      - 9308  # 一楼侧巷
+      - id: 9309  # James 厨房
+        talks: [james_002]
+        sudden_events:
+          - name: "James 销毁鼓点节目单"
+            start_id: 907002008
   locked:
     蓝月亮酒吧:
       - id: 9005
@@ -33,20 +40,14 @@ scenes:
 expose:
   scene: 9301
   target_name: Rosa
+  talk: Loop3_rosa
   rounds:
     - lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
       evidences: [9301, 9033001]         # 玻璃碎片（有硝烟、压在 11:20 放下的垃圾袋下）+ Rosa 倒垃圾时间证言
     - lie: "可能是我记错了，那可能是 Vivian 之前就杀了 Webb（退守，接近崩溃）"
       evidences: [9302, 9303]            # 威胁纸条（倒写 J）+ 女儿医疗单 → full_breakthrough
-
-events:
-  - id: 9931
-    name: "Post-Expose · Rosa 交出弹壳"
+  post_expose:
+    name: "Rosa 交出弹壳"
     characters: [Zack, Rosa]
-    purpose: Rosa 崩溃坦白后，哀求下从口袋掏出在现场捡到的 .45 弹壳（9401，L3 只说"一枚弹壳"，口径/米勒集团印记留到 L4 Tommy 办公室确认）
-    trigger: "Expose Rosa round_2 full_breakthrough"
-  - id: 9932
-    name: "指证后 · Zack/Emma 汇报"
-    characters: [Zack, Emma]
-    purpose: 梳理 L3 收获——真实枪击时间早于 23:20；有人嫁祸 Vivian，很熟悉酒吧内部；确立 L4 目标：救 Vivian（不再认罪）+ 鉴定弹壳型号
-    trigger: "Post-Expose 之后"
+    purpose: Rosa 崩溃坦白后交出 .45 弹壳（9401）
+    talk: rosa_003

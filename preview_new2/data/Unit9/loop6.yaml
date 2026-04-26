@@ -6,16 +6,18 @@ opening:
   - id: 9861
     characters: [Zack, Emma]
     purpose: 【承接 loop5】James 自杀后深夜——Emma 制定 L6 作战策略：先以记者+助理伪装潜入 Morrison 家（找回被夺走的 9401 弹壳 + Whale 财务往来），再到警局单独对质
-    talk: emma_loop6_open
+    talk: emma_007
 
 scenes:
   unlocked:
     蓝月亮酒吧:
-      - 9604  # 酒吧大堂（入门前厅 + 吧台通道；次日冷清，仅作通道）
-      - 9607  # 一楼走廊（通道可通行；垃圾桶之前已翻过）
+      - 9604  # 酒吧大堂
+      - 9607  # 一楼走廊
     Morrison 家:
-      - 9613  # 🆕 Morrison 家客厅（⚡Whale 电话突发事件 + 华盛顿公园马票存根 envir 叙事）
-      - 9616  # 🆕 Morrison 家书房（赌债欠条 + 借 Whale 钱记录 + 找回被夺走的 9401 .45 弹壳）
+      - id: 9613  # Morrison 家客厅
+        talks: [morrison_house_006]
+      - id: 9616  # Morrison 家书房
+        talks: [morrison_house_006]
   locked:
     蓝月亮酒吧:
       - id: 9001
@@ -49,6 +51,7 @@ scenes:
 expose:
   scene: 9614
   target_name: Morrison
+  talk: Loop6_morrison
   rounds:
     - lie: "Vivian 的手枪就是凶器！她就是凶手！"
       evidences: [9401, 9601]            # 找回的 .45 弹壳 + 米勒集团特制手枪（口径+铭文对应）
@@ -57,19 +60,13 @@ expose:
     - lie: "就算我和 Whale 之间有借贷关系，Whale 只是个放贷的——和 Webb、James 的死无关"
       evidences: [9503]                  # James 给 Whale 的回信（Whale 是主使，James 是执行者）
 
+  # 9961 "Whale 电话" 对话包含在 morrison_house_006（Talk）内
+  # 9962 "警局过场" 对话包含在 Loop6_morrison（Expose）内
+
 events:
-  - id: 9961
-    name: "Morrison 家 · ⚡Whale 调查电话"
-    characters: [Zack, Emma]
-    purpose: 搜查到中段客厅电话响起——Whale 首次以声音登场：知道 James 已死、知道他们在查案；只说一句"我在看你们能走多远"后挂断，不等回答
-    trigger: "9013 客厅或 9016 书房任一搜查进行到中段"
-  - id: 9962
-    name: "警局过场 · Morrison 办公室"
-    characters: [Zack, Emma, Morrison]
-    purpose: Zack+Emma 带五件证据（9401/9601/9503/9603/9604）进 Morrison 办公室；Morrison 正吹嘘 Vivian 案办得神速 → 主动赶走下属要求私下谈判（已是自证）
-    trigger: "搜证完成后"
   - id: 9963
     name: "Ending Sequence · 四幕结尾"
     characters: [Zack, Emma, Morrison, Vivian, Anna]
-    purpose: Morrison 签下失职认罪书、撤销 Vivian 羁押令 → Vivian 回蓝月亮决定留下经营 → 用 9304 字条密码打开保险箱取出"南区计划"录音盘碎片（9602）+ Vivian 退场 → Zack/Emma 就地在 Webb 会客室留声机上拼合录音（3 段男声：Moore 银行注资+南区清退启动 / "钉子"11月初消失 / 1912家属名单+Margaret Brennan+鞋坊）→ Zack 完整反问"这怎么可能"+ Emma 认人 + 推算时间紧迫 → 抓外套冲门 → 车内黑屏 5 步对话（坐稳/母亲还在店里/油门踩到底/那是烟/不！！！）→ Margaret 鞋坊外火光冲天 → Zack 试图冲入火场喊"妈——！！"（end，与 Unit1 emma_009.json 真实版对齐）
+    purpose: Morrison 签下失职认罪书 → Vivian 回蓝月亮 → 录音碎片 → 冲向南区 → 火海定格
     trigger: "Expose Morrison round_3 完成后"
+    talk: ending_006

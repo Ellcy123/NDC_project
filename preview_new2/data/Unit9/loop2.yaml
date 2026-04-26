@@ -6,18 +6,27 @@ opening:
   - id: 9821
     characters: [Zack, Emma]
     purpose: 【承接 loop1】大门口 72h 窗口梳理——Webb 保险倾向 + 调查方向："Webb 真正怀疑的凶手是谁"；Morrison 把 Vivian 带到大堂笔录问话，玩家无法接触
-    talk: emma_l2_open
+    talk: emma_002
 
 scenes:
   unlocked:
     蓝月亮酒吧:
-      - 9204  # 酒吧大堂（入门前厅 + 吧台通道；Morrison 正在角落给 Vivian 做笔录，玩家可穿行但不能打扰）
-      - 9207  # 一楼走廊（连接大堂 / 歌舞厅 / 会客室的必经通道；本 loop 无搜证内容）
-      - 9205  # 🆕 歌舞厅（假油画 + 花瓶现场照——反驳 Tommy 古董买卖说辞）
-      - 9206  # 🆕 歌舞厅小包厢（勒索用照片 + 便携相机——Webb 勒索生意细节）
-      - 9209  # 🆕 James 厨房（James 工资单 + 厨房工作表——不在场证明伏笔）
-      - 9210  # 🆕 Tommy 办公室（Tommy 账本；Expose 对象所在）
-      - 9211  # 🆕 Webb 办公室（Webb 个人收入 vs 酒吧净收入差额 + VIP 合影）
+      - 9204  # 酒吧大堂
+      - 9207  # 一楼走廊
+      - id: 9205  # 歌舞厅（假油画 + 花瓶现场照）
+      - id: 9206  # 歌舞厅小包厢（勒索用照片 + 便携相机）
+        talks: [emma_002]
+        sudden_events:
+          - name: "Emma 打碎相机 + 发现勒索照片"
+            start_id: 901002403
+      - id: 9209  # James 厨房
+        talks: [james_001]
+      - id: 9210  # Tommy 办公室
+        talks: [tommy_001]
+        sudden_events:
+          - name: "Tommy 抽屉弹壳"
+            start_id: 905001501
+      - id: 9211  # Webb 办公室
   locked:
     蓝月亮酒吧:
       - id: 9003
@@ -27,17 +36,16 @@ scenes:
 expose:
   scene: 9210
   target_name: Tommy
+  talk: Loop2_tommy
   rounds:
     - lie: "酒吧里只有私酒生意，没有干别的"
-      evidences: [9201]                  # 勒索用照片
+      evidences: [9201]
     - lie: "账目都是清清白白的，你有证据吗"
-      evidences: [9203, 9204]            # Webb 个人收入 + Tommy 账本
+      evidences: [9203, 9204]
     - lie: "还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman"
-      evidences: [9205, 9206]            # 假油画 + 花瓶现场照
-
-events:
-  - id: 9921
+      evidences: [9205, 9206]
+  post_expose:
     name: "指证后 · Tommy 松口"
     characters: [Zack, Tommy]
-    purpose: Tommy 松口酒吧在做仙人跳变体勒索；暗示 Webb 11 月中旬之后换了执行人；"大人物"仍未点名（Whale 浮出要留到 L3 日记揭示）
-    trigger: "Expose Tommy 结束后"
+    purpose: Tommy 松口酒吧在做仙人跳变体勒索；暗示 Webb 11 月中旬之后换了执行人
+    talk: tommy_002

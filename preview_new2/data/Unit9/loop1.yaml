@@ -4,32 +4,29 @@ time: "1928-11-03 某夜 23:30"
 
 opening:
   - id: 9811
-    characters: [Zack, Emma]
-    purpose: 两人在蓝月亮大门口寒暄——酒保拒 Zack 入场，Emma 以"King Oliver sent us."接头引路入场
-    talk: emma_001
-  - id: 9812
     characters: [Zack, Emma, Vivian, Rosa, Morrison]
-    purpose: 23:30 枪响 → 从歌舞厅赶到会客室 → Vivian 持枪怔愣（半醉失神）+ Rosa 当场指控 + Morrison 醉醺醺宣告 Webb 死亡并要逮捕 Vivian
+    purpose: Zack 被酒保拦在蓝月亮大门外 → Emma 以"King Oliver sent us."接头暗语引路入场 → 两人进入大堂寒暄，商定合作协议 → 23:30 枪响从会客室方向传来 → Zack 和 Emma 冲入会客室：Vivian 手持小手枪怔愣原地（半醉失神），Rosa 靠墙当场指控"是她杀了 Webb" → Morrison 醉醺醺赶到，宣告 Webb 死亡并准备逮捕 Vivian
+    talk: emma_001
 
 scenes:
   unlocked:
     蓝月亮酒吧:
-      - 9103  # 🆕 Webb 会客室（limited_exploration / Morrison 管控现场；手枪无硝烟分析 + 委托协议书）
+      - id: 9103  # Webb 会客室（limited_exploration / Morrison 管控现场）
+        talks: [vivian_001, rosa_001, morrison_001]
   locked: {}
   closed: []
 
 expose:
   scene: 9103
   target_name: Rosa
+  talk: Loop1_rosa
   rounds:
     - lie: "Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb"
-      evidences: [9711]             # 无硝烟手枪（9101 分析派生）
+      evidences: [9711]
     - lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
-      evidences: []                 # tutorial_failure：loop1 无证据可反驳，留待 loop3 击穿
-
-events:
-  - id: 9911
+      evidences: []
+  post_expose:
     name: "指证结束剧情 · 72h 调查期换取"
     characters: [Zack, Emma, Morrison]
-    purpose: Zack 出示 Webb 委托协议书（9103）+ slayer rule 法律对价——Morrison 同意给 72h 调查期，暂缓逮捕 Vivian；Emma 抛出核心悬念"Webb 真正怀疑的凶手是谁"
-    trigger: "Expose Rosa 结束（tutorial_failure）后"
+    purpose: Zack 出示 Webb 委托协议书 + slayer rule 法律对价——Morrison 同意给 72h 调查期
+    talk: morrison_002
