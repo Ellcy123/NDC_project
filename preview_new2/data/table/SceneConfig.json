@@ -6776,6 +6776,30 @@
     "ArtRequirement": "**美术资源**：复用 EPI01（已有）\n- sceneName: 厨房走廊 / KitchenCorridor\n- backgroundImage: `Art\\Scene\\Backgrounds\\EPI01\\SC016_bg_kitchenCorridor`\n\n**用途**：地图连接节点——通往 James 厨房（9009）的独立走廊/楼梯空间；与 9007 一楼走廊的楼梯是两条不同的楼梯，厨房是酒吧内的单独空间。无证据、无 NPC，不进入任何 Loop 的 state scenes 段。"
   },
   {
+    "sceneId": "9019",
+    "NPCInfos": [],
+    "ItemIDs": [],
+    "sceneName": "Webb 会客室（L3 勘验后）",
+    "sceneNameEn": "Webb's Parlor (L3 Post-Investigation)",
+    "sceneType": "1",
+    "Chapter": "EPI09",
+    "backgroundImage": "Art\\Scene\\Backgrounds\\EPI09\\SC9019_bg_WebbReception",
+    "backgroundMusic": "",
+    "ArtRequirement": "**用途**：L3 会客室深度搜证——🔓 free_exploration（Morrison 勘验完毕、尸体已运走）。物理上同 9003 会客室，但勘验后状态。\n\n**当前 ArtRequirement**（需新画）：\n• 复用 9003 视角构图，但：\n  - 尸体已无（地板/沙发上仅余警察粉笔轮廓 + 暗色血迹痕）\n  - 沙发归位、案发感消退\n  - 窗户依旧破碎、无玻璃（核心搜证锚点，引导玩家点击进入 9020）\n• 整体光线：白天/明亮自然光，与 9003 夜晚暧昧光形成对比\n\n**L3 证据视觉锚点（4 件 pickup item + 1 件 envir）**：\n1. 9304 保险箱字条——墙上保险箱旁，一张小纸条\n2. 9305 Webb 和 Vivian 合影——9304 字条旁簇拥（同位置），相框立着\n3. 9307 Rita 的照片（envir 不可拾取）——Webb 桌上显眼位置摆放（与勒索日记区分开）\n4. 9308 Webb 勒索记录日记（封面右下烫金 'W.'）——Webb 桌边抽屉位置，抽屉口能识别有书状物\n5. 破窗——窗户依旧无玻璃，玩家点击触发进入 9020\n\n**重点（信息表达必不可少）**：\n1. 同房间案发感消退（粉笔轮廓 + 已清理）\n2. 窗户依旧破碎且无玻璃（点击锚点）\n3. 4 件证据各有独立视觉位置，不要全堆在桌面"
+  },
+  {
+    "sceneId": "9020",
+    "NPCInfos": [],
+    "ItemIDs": [],
+    "sceneName": "侧巷（L3 破窗向外搜证视角）",
+    "sceneNameEn": "Side Alley (L3 Through-Broken-Window View)",
+    "sceneType": "1",
+    "Chapter": "EPI09",
+    "backgroundImage": "Art\\Scene\\Backgrounds\\EPI09\\SC9020_bg_BrokenWindowOut",
+    "backgroundMusic": "",
+    "ArtRequirement": "**用途**：L3 玩家在 9019 会客室点击破窗后进入的侧巷搜证视角——伸手拾取 9301 玻璃碎片。**与 9008 区别**：9008 是 L5 指证 James 硬切 CG（外部俯视、暗处尾款交易，不可探索）；9020 是 L3 玩家可探索/拾取证据的搜证视角（屋内向外、强调碎片+袋视觉锚点）。\n\n**当前 ArtRequirement**（需新画）：\n• 视角：屋内向外，破碎窗框为前景（玻璃缺口参差形成画面边缘）\n• 中景：侧巷地面，两个黑色垃圾袋清晰可见\n• 关键证据视觉锚点：\n  - 几片明显的玻璃碎片露出垃圾袋外足够多——玩家一眼能识别'这里有玻璃可拾取'\n  - 碎片压在垃圾袋下方的物理关系清楚（袋边缘骑在碎片上）\n  - 碎片有亮度/反光，与周围地面区分\n• 光线：白天侧巷阴影 + 屋内回光，前景暗、远景明（自然透窗光对比）\n• 侧巷氛围：1920s 芝加哥典型侧巷——红砖墙、石板地、低调阴湿\n\n**重点（信息表达必不可少）**：\n1. 玻璃碎片在窗外不在窗内（弹道由内→外）\n2. 碎片压在垃圾袋下方（关键时序：袋 23:20 放下→碎片更早→枪击早于 23:30）\n3. 碎片反光足够，玩家直觉能拾取"
+  },
+  {
     "sceneId": "9101",
     "NPCInfos": [],
     "ItemIDs": [],
@@ -6814,7 +6838,7 @@
           "IconLarge": "vivian_big"
         },
         "TalkInfo": {
-          "id": "906001005"
+          "id": "906001001"
         },
         "LoopTalkInfo": {},
         "ResPath": "Art\\Scene\\NPC\\EPI09\\SC9003_npc_Vivian1",
@@ -8321,7 +8345,7 @@
       {
         "id": "9131",
         "NPC": {
-          "id": "810",
+          "id": "910",
           "Name": [
             "莫里森太太",
             "Mrs. Morrison"

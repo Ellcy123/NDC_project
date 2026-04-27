@@ -180,8 +180,68 @@ NPC_SPEAKER_MAP_EPI08 = {
     "鲸鱼":              ("NPC811", "Whale"),
 }
 
-# EPI09 = Unit9 正式输出目录（NPC 编码沿用 8XX，与 EPI08 共享映射表）
-NPC_SPEAKER_MAP_EPI09 = NPC_SPEAKER_MAP_EPI08
+# EPI09 = Unit9 正式输出目录（NPC 编码 9XX，与 NPCStaticData EPI09 entries 一致）
+NPC_SPEAKER_MAP_EPI09 = {
+    # Zack 901
+    "扎克·布伦南":      ("NPC901", "Zack"),
+    "扎克":              ("NPC901", "Zack"),
+    "Zack":              ("NPC901", "Zack"),
+    "Zack Brennan":      ("NPC901", "Zack"),
+
+    # Emma 902
+    "艾玛·奥马利":       ("NPC902", "Emma"),
+    "艾玛":              ("NPC902", "Emma"),
+    "Emma":              ("NPC902", "Emma"),
+    "Emma O'Malley":     ("NPC902", "Emma"),
+
+    # Rosa 903
+    "罗莎":              ("NPC903", "Rosa"),
+    "罗莎·马丁内斯":     ("NPC903", "Rosa"),
+    "Rosa":              ("NPC903", "Rosa"),
+    "Rosa Martinez":     ("NPC903", "Rosa"),
+
+    # Morrison 904
+    "莫里森":            ("NPC904", "Morrison"),
+    "莫里森侦探":        ("NPC904", "Morrison"),
+    "Morrison":          ("NPC904", "Morrison"),
+
+    # Tommy 905
+    "汤米":              ("NPC905", "Tommy"),
+    "汤米·康纳利":       ("NPC905", "Tommy"),
+    "Tommy":             ("NPC905", "Tommy"),
+
+    # Vivian 906
+    "薇薇安":            ("NPC906", "Vivian"),
+    "薇薇安·罗丝":       ("NPC906", "Vivian"),
+    "薇薇安·罗斯":       ("NPC906", "Vivian"),
+    "维维安":            ("NPC906", "Vivian"),
+    "维维安·罗丝":       ("NPC906", "Vivian"),
+    "维维安·罗斯":       ("NPC906", "Vivian"),
+    "Vivian":            ("NPC906", "Vivian"),
+    "Vivian Rose":       ("NPC906", "Vivian"),
+
+    # James 907
+    "James":             ("NPC907", "James"),
+    "James O'Sullivan":  ("NPC907", "James"),
+    "詹姆斯·奥沙利文":   ("NPC907", "James"),
+    "吉米":              ("NPC907", "James"),
+    "吉米·奥沙利文":    ("NPC907", "James"),
+    "詹姆斯":            ("NPC907", "James"),
+
+    # Anna 908
+    "安娜":              ("NPC908", "Anna"),
+    "安娜·奥沙利文":     ("NPC908", "Anna"),
+    "Anna":              ("NPC908", "Anna"),
+
+    # Whale 909
+    "Whale":             ("NPC909", "Whale"),
+    "鲸鱼":              ("NPC909", "Whale"),
+
+    # Mrs. Morrison 910
+    "莫里森太太":        ("NPC910", "Mrs. Morrison"),
+    "Mrs. Morrison":     ("NPC910", "Mrs. Morrison"),
+    "莫里森夫人":        ("NPC910", "Mrs. Morrison"),
+}
 
 # 当前 episode 激活的映射表——入口函数根据 --episode 设置
 NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01

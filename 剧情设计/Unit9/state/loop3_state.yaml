@@ -29,7 +29,7 @@
 #                        player_inquiry/context/round_1/round_2/post_expose 完整；
 #                        不设 post_expose_scene——L3 结尾对话归 L4 opening 的 emma_L4_001 承载
 # B. 证据覆盖     PASS — L3 全部 8 件证据（9301-9308）已分配到对应场景；
-#                        9301 玻璃碎片分配 9003（会客室）+ 9008（侧巷）双场景；
+#                        9301 玻璃碎片分配 9019（会客室透窗望见）+ 9020（侧巷搜证视角拾取）双场景；
 #                        9307 Rita 照片为 envir 场景道具，pickup: false；
 #                        9308 Webb 勒索日记（叙事证据，不挂疑点，不可分析，pickup: true）
 # C. NPC 条目     PASS — Vivian/James/Morrison/Rosa 各含 3 必填块（active_topics/
@@ -158,7 +158,7 @@ scenes:
       对话结束后化妆室反锁——Loop3 内不再可进入（Loop4 再次开放）。
       注意：Vivian 在 L3 不提"23:05 去过会客室被吼退"的细节（留到 L4 歌舞厅自由对话）。
 
-    evidence: []  # 化妆室本身无可拾取证据（保险箱字条等在 9003 会客室）
+    evidence: []  # 化妆室本身无可拾取证据（保险箱字条等在 9019 会客室）
 
     npcs:
       vivian_loop3:
@@ -292,16 +292,16 @@ scenes:
           - 9043002  # Morrison：子弹是射穿了 Webb 再击中了窗户（弹道描述）
 
 
-  # ── 场景 9003：Webb 会客室（1F）——深度搜证（Loop3 开放） ──
-  - id: 9003
-    name: "Webb 会客室"
+  # ── 场景 9019：Webb 会客室（L3 勘验后态，物理同 L1 的 9003）——深度搜证（Loop3 开放） ──
+  - id: 9019
+    name: "Webb 会客室（L3 勘验后）"
     floor: "1F"
     type: free_exploration  # 🔓 深度搜证（Loop3 正式开放）
     description: |
-      Webb 死亡的案发现场，本 Loop 首次对玩家正式开放（Loop1 仅有限探索）。
+      Webb 死亡的案发现场（物理上同 L1 的 9003，本 Loop 为勘验后状态）。
       Morrison 完成勘验后离开，Zack 可独立搜证。
       关键发现：没有玻璃的窗户——Zack 向窗外侧巷望去，
-      见到垃圾袋正压在碎玻璃上。需要走出员工侧门到侧巷（9008）取回玻璃碎片。
+      见到垃圾袋正压在碎玻璃上。点击破窗进入侧巷搜证视角（9020）拾取玻璃碎片。
       会客室内还有保险箱字条、Webb+Vivian 合影、Webb 的勒索记录日记
       （扉页亲笔写着 "Whale — Danger"，可拾取）、Rita 的照片（环境陈设）。
 
@@ -346,34 +346,35 @@ scenes:
         name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
         type: item
         pickup: true
-        note: "关键——疑点 9301 condition；L3 R1 击穿件；须从侧巷（9008）拾取，透过会客室无玻璃的窗户可先看到"
+        note: "关键——疑点 9301 condition；L3 R1 击穿件；须从侧巷搜证视角（9020）拾取，透过会客室无玻璃的窗户可先看到"
         description: "来自 Webb 会客室窗户的玻璃碎片，散落在窗外侧巷地面。碎片压在垃圾袋的正下方。仔细检查可见碎片表面有明显的硝烟痕迹，说明子弹曾穿窗而过。垃圾袋是 Rosa 在 23:20 放下的。"
-        acquisition_note: "Zack 先从无玻璃的窗户望见垃圾袋下的碎玻璃，走出员工侧门进入侧巷（9008）后正式拾取。"
+        acquisition_note: "Zack 先从无玻璃的窗户望见垃圾袋下的碎玻璃，点击破窗进入侧巷搜证视角（9020）拾取。"
         analysis: null
 
     npcs: {}  # 会客室搜证阶段无 NPC 驻场
 
-  # ── 场景 9008：一楼侧巷（1F 外）——透窗/拾取玻璃碎片 ──
-  - id: 9008
-    name: "一楼侧巷"
+  # ── 场景 9020：侧巷（L3 破窗向外搜证视角）——透窗拾取玻璃碎片 ──
+  # 注：与 9008 区分——9008 是 L5 指证 James 硬切 CG（外部俯视、不可探索）；9020 是 L3 玩家可探索的破窗向外搜证视角
+  - id: 9020
+    name: "侧巷（L3 破窗向外搜证视角）"
     floor: "1F 外"
-    type: free_exploration  # 🔓 透窗调查 + 实地拾取
+    type: free_exploration  # 🔓 透窗搜证 + 拾取
     description: |
-      从员工侧门出去的侧巷，地面有垃圾袋和碎玻璃。
-      玻璃碎片压在垃圾袋下方，是本 Loop 指证 Rosa 的核心物证。
+      从 9019 会客室点击破窗后进入的侧巷搜证视角——透过破窗看向窗外侧巷。
+      地面有两个黑色垃圾袋，玻璃碎片压在垃圾袋下方，是本 Loop 指证 Rosa 的核心物证。
       拾取碎片（9301）后，时序推理成立：碎片在袋下 → 玻璃破碎早于 23:20（Rosa 倒垃圾时间）→ 真实枪击早于 23:20。
 
     evidence:
-      # 9301 玻璃碎片在此场景最终拾取（已在 9003 会客室条目下描述，此处为获取场景记录）
+      # 9301 玻璃碎片在此视角最终拾取（已在 9019 会客室条目下提示可见，此处为获取场景记录）
       - id: 9301
         name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
         type: item
         pickup: true
-        note: "关键——同 9003 场景条目；侧巷为实际拾取位置"
-        description: "（见 9003 场景描述）"
+        note: "关键——同 9019 场景条目；破窗向外视角为实际拾取位置"
+        description: "（见 9019 场景描述）"
         analysis: null
 
-    npcs: {}  # 侧巷无 NPC
+    npcs: {}  # 9020 无 NPC
 
   # ── 场景 9001：Rosa 储藏室（B1）——自由探索 + ⚔️ Expose Rosa ──
   - id: 9001
@@ -627,7 +628,7 @@ evidence_registry:
   - id: 9301
     name: "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag, With Gunpowder Residue"
     type: item
-    first_scene: 9003  # 会客室透窗望见，侧巷（9008）正式拾取
+    first_scene: 9020  # 9019 会客室透窗望见，9020 侧巷搜证视角正式拾取
     pickup: true
     note: "关键（Loop3 核心）——指证 Rosa round_1 核心证据；疑点 9301 condition；时间线推理击穿 23:30 谎言"
 
@@ -648,14 +649,14 @@ evidence_registry:
   - id: 9304
     name: "保险箱字条（密码=相遇日） / Safe-Box Password Slip (= Day We Met)"
     type: item
-    first_scene: 9003
+    first_scene: 9019
     pickup: true
     note: "关键——疑点 9303 condition；Loop4 R3 击穿件（反驳 Vivian 情感辩解）；Act3 Vivian 用此密码取出 9602"
 
   - id: 9305
     name: "Webb 和 Vivian 的合影 / Webb & Vivian Photo"
     type: item
-    first_scene: 9003
+    first_scene: 9019
     pickup: true
     note: "关键——疑点 9303 condition；与保险箱字条共同揭示 Webb 心里仍记挂 Vivian"
 
@@ -669,14 +670,14 @@ evidence_registry:
   - id: 9307
     name: "Rita 的照片 / Rita's Photo"
     type: envir
-    first_scene: 9003
+    first_scene: 9019
     pickup: false
     note: "场景道具——Webb 会客室内摆放，环境叙事，不作为疑点 condition"
 
   - id: 9308
     name: "Webb 的勒索记录日记（扉页写 Whale—Danger） / Webb's Blackmail Ledger (Cover Page: Whale—Danger)"
     type: item
-    first_scene: 9003
+    first_scene: 9019
     pickup: true
     note: "叙事证据——Whale 名字的首次物证浮现（Emma opening 已口述过 Tommy 暗示，9308 是 Webb 亲笔警觉的物证，情感重量更大）；不挂任何 doubt condition；不可分析；L4 Tommy 对话引用此件作为 Zack 追问'Whale 是谁'的起点"
 
