@@ -124,7 +124,8 @@ player_context:
 
 opening:
   type: story_dialogue
-  location: "蓝月亮酒吧（某处，Zack 和 Emma 对话）"
+  location: "酒吧大堂（Zack 和 Emma 对话）"
+  emma_talk_scene_id: 9024  # Emma 对话 AVG 专用场景：酒吧大堂（复用 EPI01\SC010_bg_BarLobby）
   description: |
     L3 指证 Rosa 完成后，Emma 协助 Zack 梳理 L4 调查方向。
     核心基调确认：L4 的目标是"救 Vivian"——说服她不再供述自己是凶手。
@@ -787,6 +788,7 @@ evidence_registry:
     first_available_loop: 4
     pickup: false
     description: ".45 ACP 弹壳；Rosa 23:30 指认时从 Webb 会客室地上捡走后交给 Zack（L3 post_expose）；弹底印记**模糊不可见**，需经铅笔拓印小玩法（参见 剧情设计/Unit9/小玩法/L4_弹壳铅笔拓印.md）才能识别外圈'WCC - .45 ACP'与内圈'MILLER ARMS'铭文——产出派生证据 9702。"
+    analysis: "弹壳弹底铅笔拓印——外圈 'WCC - .45 ACP' 确认 .45 警用口径；内圈 'MILLER ARMS' L4 暂不解其义（派生 ID: 9702）"
     note: "关键——F2 碎片 9403 condition；L4 R1 击穿件（与派生 9702 配对）；L6 R1 击穿件（与 9601 配对）"
     status_change:
       loop: 4

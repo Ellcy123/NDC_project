@@ -34,7 +34,7 @@
 ## §1. Opening — 蓝月亮酒吧大门口 → 大堂 → Webb 会客室（23:30 前后）
 
 ## Talk: emma_001.json
-> 场景：蓝月亮酒吧大门口（9004 前置）→ 大堂（场景 9004）→ Webb 会客室门口（23:30 枪响后）
+> 场景：蓝月亮酒吧大门口（**sceneId 9021，L1 Emma 对话 AVG 专用** — 复用 EPI01\AVG\bluemoon_outside）→ 大堂（场景 9004）→ Webb 会客室门口（23:30 枪响后）
 > 模式：Cutscene（type: cutscene，无玩家操作）
 > 核心目标：①酒保拒绝 + 接头暗语建立蓝月亮高门槛；②Emma/Zack 关系起点——各取所需的合作协议；③23:30 枪响 + 冲入现场（Rosa / Vivian / Morrison 同框）
 

@@ -42,7 +42,7 @@
 
 ## Talk: emma_005.json
 
-> 场景：蓝月亮酒吧外台阶，L4 失败后
+> 场景：蓝月亮酒吧外街道（**sceneId 9025，L5 Emma 对话 AVG 专用** — 复用 EPI01\AVG\bluemoon_outside，与 L1 9021 同图不同 Loop / sceneId 独立），L4 失败后
 > 模式：story_dialogue（纯情绪戏，无案件复盘）
 > 核心目标：
 >   ①节拍一（001-004）——废墟感开场：Emma 递烟，Zack 拒绝；"什么都不剩"+ "一败溃地"+ Emma 控诉

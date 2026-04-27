@@ -90,6 +90,8 @@ player_context:
 
 opening:
   type: transition_cutscene  # 🎬 从 L1 大门口 Emma 对话过渡到 L2 自由探索
+  location: "街角（L1→L2 过渡节点）→ 进入酒吧开始 L2 自由探索"
+  emma_talk_scene_id: 9022  # Emma 对话 AVG 专用场景：街角（用 leungwei 概念图 streetcorner_concept）
   description: |
     L1 结束时 Zack 和 Emma 在大门口确认目标——"Webb 真正怀疑的凶手是谁？"
     L2 开篇：两人重新进入酒吧，开始逐一调查酒吧内的每个人。
@@ -173,6 +175,7 @@ scenes:
         type: item
         pickup: true
         description: "一件证据含两张黑白照片：一张是 Vivian 与 Thompson 的暧昧合影，另一张是 Vivian 与 Coleman 的暧昧合影。两张照片背面均有几处淡黄褐色污渍，肉眼看不出意义，需经煤油灯烘烤显影后才能读出真实金额标注（产出派生证据 9706）。原始可见信息仅为'两张暧昧合影 + Vivian 与中产人士'，金额不可见。"
+        analysis: "煤油灯加热背面，柠檬汁字迹显影：'花瓶 — $4,000 / 油画 — $7,000'——Webb 的勒索账本（派生 ID: 9706）"
         note: "关键——疑点 9201 condition；经烘烤显影派生 9706（L2 R1 击穿件已改为 9706）；获取路径：通过 sudden_event（camera_breaks_envelope_revealed）派生拾取——Emma 失手打碎相机后，Zack 蹲下捡碎片时摸到柜底厚信封而获得；非纯 free_exploration 点击。pickup:true 表示玩家最终入背包，但触发节点是 sudden_event 而非自由探索点击"
 
       - id: 9209
@@ -594,6 +597,7 @@ evidence_registry:
     first_loop: 2
     first_scene: 9006
     pickup: true
+    analysis: "煤油灯加热背面，柠檬汁字迹显影：'花瓶 — $4,000 / 油画 — $7,000'——Webb 的勒索账本（派生 ID: 9706）"
     note: "关键——疑点 9201 condition；原始状态背面仅有淡黄褐色污渍（金额不可见），经煤油灯烘烤派生 9706"
 
   - id: 9706

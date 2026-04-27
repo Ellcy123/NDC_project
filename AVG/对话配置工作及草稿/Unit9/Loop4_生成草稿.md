@@ -40,7 +40,7 @@
 
 ## Talk: emma_004.json
 
-> 场景：蓝月亮酒吧（某处，L3 结束后 Zack 与 Emma 站定）
+> 场景：酒吧大堂（**sceneId 9024，L4 Emma 对话 AVG 专用** — 复用 EPI01\SC010_bg_BarLobby，L3 结束后 Zack 与 Emma 站定）
 > 模式：story_dialogue
 > 核心目标：
 >   ①主干——Emma 整合 L3 战果（Rosa 受胁、嫁祸者熟悉酒吧、.45 弹壳在手）

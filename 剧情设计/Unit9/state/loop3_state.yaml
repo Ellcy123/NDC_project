@@ -109,7 +109,8 @@ player_context:
 
 opening:
   type: story_dialogue  # 🎭 剧情对话，设定 Loop3 调查目标
-  location: "蓝月亮酒吧某处（Zack 和 Emma 对话）"
+  location: "酒吧一楼走廊（Zack 和 Emma 对话）"
+  emma_talk_scene_id: 9023  # Emma 对话 AVG 专用场景：酒吧一楼走廊（复用 EPI01\SC002_bg_CabaretFirstFloorCorridor）
   description: |
     Loop2 指证 Tommy 结束后，Zack 向 Emma 汇报。
     Emma 帮助 Zack 明确 Loop3 的方向：
@@ -521,6 +522,7 @@ expose:
         pickup: true
         note: "关键（Loop4 核心）——Rosa 在现场捡到的一枚弹壳，请求 Zack 保密。Loop3 阶段玩家只知'一枚弹壳'，不揭示口径；Loop4 指证 Vivian 时与 Vivian 手枪（9101）对比后锁定为 .45 ACP 警用弹壳，证明凶器不是 Vivian 的 .25 ACP 手枪"
         description: "一枚弹壳，Rosa 称是在 Webb 死亡现场地上拾得。外观普通，金属色泽。（注：Loop4 鉴定后确认为 .45 ACP 口径，与 Vivian 的 .25 ACP 手枪不符——Loop3 阶段不揭示具体口径）"
+        analysis: "弹壳弹底铅笔拓印——外圈 'WCC - .45 ACP' 确认 .45 警用口径；内圈 'MILLER ARMS' L4 暂不解其义（派生 ID: 9702）"
         metadata:
           cross_loop_critical: true
           loop4_critical: true
@@ -694,6 +696,7 @@ evidence_registry:
     first_scene: null  # 非场景拾取，Loop3 指证结束后 Rosa 主动给出
     given_by: "rosa（post_expose 阶段）"
     pickup: true
+    analysis: "弹壳弹底铅笔拓印——外圈 'WCC - .45 ACP' 确认 .45 警用口径；内圈 'MILLER ARMS' L4 暂不解其义（派生 ID: 9702）"
     note: "关键（Loop4 核心）——Loop3 玩家只知'一枚弹壳'，口径未揭示；Loop4 与 Vivian 手枪（9101）对比后确认为 .45 ACP；证明凶器不是 Vivian 的 .25 ACP 手枪"
     metadata:
       cross_loop_critical: true

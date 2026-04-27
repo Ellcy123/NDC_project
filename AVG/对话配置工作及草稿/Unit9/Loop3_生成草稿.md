@@ -53,11 +53,11 @@
 
 ---
 
-## §1. Opening — 蓝月亮酒吧某处（Emma 整合 Loop2 信息 + 明确 Loop3 方向）
+## §1. Opening — 酒吧一楼走廊（Emma 整合 Loop2 信息 + 明确 Loop3 方向）
 
 ## Talk: emma_003.json
 
-> 场景：蓝月亮酒吧某处，Loop2 指证 Tommy 结束后
+> 场景：酒吧一楼走廊（**sceneId 9023，L3 Emma 对话 AVG 专用** — 复用 EPI01\SC002_bg_CabaretFirstFloorCorridor），Loop2 指证 Tommy 结束后
 > 模式：cutscene（type: story_dialogue）
 > 核心目标：
 > ①Emma 抛出新情报：Morrison 已问完 Vivian、Vivian 认罪（"我杀了 Webb"）

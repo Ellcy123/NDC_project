@@ -240,16 +240,55 @@
 
 ---
 
+## 9027 - James 家门口（🆕 空镜）
+
+**美术资源**：🆕 新画
+- sceneName: James 家门口 / James's Home Entrance
+- backgroundImage: `Art\Scene\Backgrounds\EPI09\SC9027_bg_JamesHomeEntrance`
+
+**用途**：地图连接节点（空镜）——玩家进入 James 家室内（9012 卧室 / 9015 客厅）前的外景过渡帧，做地点 establish。无证据、无 NPC，不进入任何 Loop 的 state scenes 段；仅 SceneConfig + 美术资源挂载。
+
+**画面建议**：1920s 芝加哥工人阶层联排住宅外门——红砖外墙、木门带铸铁门牌号、门口几级水泥台阶；可有晾衣绳/小盆栽等生活气息细节；时段白天（与室内同光照基调）。无人物。
+
+---
+
+## 9028 - Morrison 家门口（🆕 空镜）
+
+**美术资源**：🆕 新画
+- sceneName: Morrison 家门口 / Morrison's Home Entrance
+- backgroundImage: `Art\Scene\Backgrounds\EPI09\SC9028_bg_MorrisonHomeEntrance`
+
+**用途**：地图连接节点（空镜）——玩家进入 Morrison 家室内（9013 客厅 / 9016 书房）前的外景过渡帧，做地点 establish。无证据、无 NPC，不进入任何 Loop 的 state scenes 段；仅 SceneConfig + 美术资源挂载。
+
+**画面建议**：1920s 芝加哥中产砖石老宅门廊——砖石外墙、木质大门带铸铁号牌"MORRISON"、门廊台阶 + 雪松/黄杨等修剪整齐的庭院植物；时段白天（与室内同光照基调）。无人物。
+
+---
+
+## 9029 - 警局门口（🆕 空镜）
+
+**美术资源**：🆕 新画
+- sceneName: 警局门口 / Police Station Entrance
+- backgroundImage: `Art\Scene\Backgrounds\EPI09\SC9029_bg_PoliceStationEntrance`
+
+**用途**：地图连接节点（空镜）——玩家进入警局室内（9014 警局 Morrison 办公室）前的外景过渡帧，做地点 establish。无证据、无 NPC，不进入任何 Loop 的 state scenes 段；仅 SceneConfig + 美术资源挂载。
+
+**画面建议**：1920s 芝加哥市政警察局外门——砖石/石灰岩外墙、宽石阶、入口立柱 + 警徽石牌"POLICE"或"CHICAGO POLICE DEPARTMENT"；可有挂壁式煤气灯/铁艺路灯柱等时代细节；时段白天。无人物。
+
+---
+
 # 综合报告
 
 ## 场景数统计
-共 **20 个场景**（原 18 个 + L3 会客室拆分新增 9019/9020 两个 sceneId）：
+共 **23 个场景**（原 18 个 + L3 会客室拆分新增 9019/9020 + 3 个外景空镜 9027/9028/9029）：
 - **16 个复用 EPI01 背景**（无需新增美术）
-- **4 个新增场景**（需美术新画）：
+- **7 个新增场景**（需美术新画）：
   - 9006 歌舞厅小包厢（`EPI09\SC9006_bg_SmallBox`）
   - 9008 一楼侧巷（`EPI09\SC9008_bg_SideAlley`）— L5 指证 James 硬切 CG
   - 9019 Webb 会客室 L3 勘验后（`EPI09\SC9019_bg_WebbReception`）— L3 深度搜证
   - 9020 侧巷 L3 破窗向外搜证视角（`EPI09\SC9020_bg_BrokenWindowOut`）— L3 玻璃碎片拾取
+  - 9027 James 家门口（`EPI09\SC9027_bg_JamesHomeEntrance`）— 进入 James 家前的外景空镜
+  - 9028 Morrison 家门口（`EPI09\SC9028_bg_MorrisonHomeEntrance`）— 进入 Morrison 家前的外景空镜
+  - 9029 警局门口（`EPI09\SC9029_bg_PoliceStationEntrance`）— 进入警局前的外景空镜
 
 ## James 家 / Morrison 家的拆分方案
 
@@ -264,5 +303,6 @@
 - 原 9012/9013 两条目需改写（名称、backgroundImage、ItemIDs 重新分配）
 - 新增 9015/9016 两条目
 - 新增 9017/9018 两条地图连接节点（无 NPC、无证据，不进入 state scenes 段）
+- 新增 9027/9028/9029 三条外景空镜节点（同 9017/9018 性质——无 NPC、无证据，不进入 state scenes 段）
 - 其余 12 个复用场景的 backgroundImage 从占位的 `EPI09\SC9XXX_bg_XXX` 改回 EPI01 实际资源路径
-- 4 个新增场景占位路径：`EPI09\SC9006_bg_SmallBox` / `EPI09\SC9008_bg_SideAlley` / `EPI09\SC9019_bg_WebbReception` / `EPI09\SC9020_bg_BrokenWindowOut`，待美术交付后替换
+- 7 个新增场景占位路径：`EPI09\SC9006_bg_SmallBox` / `EPI09\SC9008_bg_SideAlley` / `EPI09\SC9019_bg_WebbReception` / `EPI09\SC9020_bg_BrokenWindowOut` / `EPI09\SC9027_bg_JamesHomeEntrance` / `EPI09\SC9028_bg_MorrisonHomeEntrance` / `EPI09\SC9029_bg_PoliceStationEntrance`，待美术交付后替换
