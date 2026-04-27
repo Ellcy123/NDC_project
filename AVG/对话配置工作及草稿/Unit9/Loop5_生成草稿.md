@@ -1649,8 +1649,9 @@ Tommy 离开宣告（015-020）
 
 ---
 
-## §6. suspect_suicide_sequence — James 自杀
+## Talk: james_suicide_001.json
 
+<!-- 原标题：§6. suspect_suicide_sequence — James 自杀 -->
 > 强制剧情，无玩家操作。
 > Interlude ID: U9-L5-INT-01
 > 音效序列：whistle（R3 后）已出现 → 此处产生 gunshot（James 自己开枪）

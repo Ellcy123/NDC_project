@@ -51,5 +51,10 @@ expose:
     - lie: "那个人不是我，我根本没有理由杀 Webb"
       evidences: [9402, 9085001, 9054002]  # 被撕毁合同 + Anna 证言（怀孕需大笔钱）+ Tommy 证言（知道 Whale 只有前/现勒索人）
 
-  # L5 events（9951-9954）无独立对话文件，全部包含在 Loop5_james.json（Expose）内
-    trigger: "suspect_suicide_sequence 后"
+events:
+  - id: 9953
+    name: "Suspect Suicide Sequence · James 自杀"
+    characters: [Zack, Emma, James]
+    purpose: 字迹对白击溃 James 心理防线 → James 为保护 Anna 不受 Whale 报复 → 用米勒集团特制手枪自尽 → 临终托付 Anna → 现场遗留真凶器 9601
+    trigger: "post_expose_dialogue 结束后"
+    talk: james_suicide_001

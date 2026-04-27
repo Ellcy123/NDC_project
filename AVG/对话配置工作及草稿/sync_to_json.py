@@ -817,7 +817,9 @@ def sync_entries(json_path, md_entries, dry_run=False, force_clear=False):
             if not dry_run:
                 je["cnSpeaker"] = md_entry.cn_speaker
 
-        if md_entry.branch_options:
+        # Lie 节点的 ParameterStr0 由 lie_correct_evidence 控制（EV{id} 格式），
+        # 不应被 branch_options 的 opt_text 覆盖（sync 一致性 bug 修复）
+        if md_entry.branch_options and (md_entry.script_tag or "").lower() != "lie":
             for i, (opt_text, _) in enumerate(md_entry.branch_options):
                 if i > 2:
                     break

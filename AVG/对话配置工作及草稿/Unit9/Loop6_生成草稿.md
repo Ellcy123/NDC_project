@@ -496,8 +496,9 @@
      🔴 Whale_001 — 突发事件 (Interlude U9-L6-INT-01)
      ══════════════════════════════════ -->
 
-## Whale Interlude: U9-L6-INT-01（Whale 调查电话）
+## Talk: whale_001.json
 
+<!-- 原标题：Whale Interlude: U9-L6-INT-01（Whale 调查电话） -->
 > 触发：玩家在 9016 书房疑点 9601 condition 满足后（9603 + 9604 均已获取）自动触发
 > 模式：Cutscene（forced_cutscene，不可中断）
 > 切场景：9016 书房 → 9013 客厅（电话铃从客厅传来）
@@ -559,6 +560,10 @@
      节拍 8：自由探索书桌最深抽屉 → retrieve 9401
      拾取无台词；时间压力来自厨房水壶鸣声（场景音效层处理，不在对白文档内）
      ══════════════════════════════════ -->
+
+## Talk: morrison_house_006.json
+
+<!-- 切回主文件（Whale 段已结束，回到 Mrs.Morrison 接待主线 + retrieve 弹壳 + 告辞） -->
 
 ### 904016006 `retrieve` → 9401
 > 📋 找回证据: 9401「.45 警用弹壳」（状态变更：confiscated_by_morrison → retrieved_from_confiscation）

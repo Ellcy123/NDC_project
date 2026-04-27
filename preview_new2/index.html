@@ -3890,14 +3890,19 @@
                 `;
             }
 
-            // Events (突发事件)
+            // Events (突发事件) — 每个事件单独一行展示
             if (loop.events && loop.events.length > 0) {
-                html += `
-                    <div class="sidebar-item ${AppState.currentPhase === 'events' ? 'active' : ''}"
-                         onclick="FlowView.showPhase('events')">
-                        <span class="phase-tag events">突发事件</span> (${loop.events.length})
-                    </div>
-                `;
+                loop.events.forEach((event, idx) => {
+                    const fullName = event.name || `Event ${idx + 1}`;
+                    const displayName = fullName.replace(/^(突发|Cutscene|Post-Expose|警局过场|情节转折|Ending|Suspect Suicide Sequence|Arrest Cutscene|Post-Expose Dialogue|Post-Expose Romance)\s*[·:]\s*/, '');
+                    html += `
+                        <div class="sidebar-item ${AppState.currentPhase === 'events' ? 'active' : ''}"
+                             onclick="FlowView.showPhase('events', ${idx})"
+                             title="${escapeHtml(fullName)}">
+                            <span class="phase-tag events">突发</span> ${escapeHtml(displayName)}
+                        </div>
+                    `;
+                });
             }
 
             // Ending (Loop 6 only)
@@ -4817,7 +4822,7 @@
             }
         },
 
-        showPhase(phase) {
+        showPhase(phase, scrollToIdx) {
             AppState.currentPhase = phase;
             AppState.currentSceneId = null;
             if (typeof DoubtView !== 'undefined') DoubtView.refreshEntry();
@@ -5178,6 +5183,19 @@
 
             document.getElementById('content').innerHTML = html;
             UI.renderSidebar();
+
+            // 若指定了 scrollToIdx，滚动到对应事件卡片并高亮
+            if (typeof scrollToIdx === 'number' && scrollToIdx >= 0) {
+                requestAnimationFrame(() => {
+                    const cards = document.querySelectorAll('#content .phase-scene-card');
+                    const target = cards[scrollToIdx];
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        target.style.outline = '2px solid var(--highlight, #ffcc00)';
+                        setTimeout(() => { target.style.outline = ''; }, 1800);
+                    }
+                });
+            }
         }
     };
 
