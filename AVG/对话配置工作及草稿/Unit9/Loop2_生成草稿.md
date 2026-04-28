@@ -10,7 +10,9 @@
 > **涉及 NPC**：艾玛·奥马利（Emma）/ 扎克·布伦南（Zack）/ 汤米·康纳利（Tommy）/ 詹姆斯·奥沙利文（James）
 >
 > **JSON 目标文件**：
-> - `emma_002.json`（Opening transition_cutscene + Scene 9006 突发事件）
+> - `emma_streetcorner_002.json`（Opening transition_cutscene @ sceneId 9022 街角）
+> - `emma_smallroom_entry_002.json`（Scene 9006 小包厢 · 进场对白：点击 Emma 立绘触发，含分支 A/B）
+> - `emma_smallroom_camera_002.json`（Scene 9006 小包厢 · 相机突发事件：点击柜中相机触发，含烘烤显影 + 后续分支）
 > - `tommy_001.json`（Tommy Talk @ Scene 9010）
 > - `james_001.json`（James Talk @ Scene 9009）
 > - `Loop2_tommy.json`（Tommy Expose 3 轮）
@@ -27,10 +29,10 @@
 
 ---
 
-## §1. Opening — 街角 → 进入酒吧（L1→L2 衔接）
+## §1. Opening — 街角（L1→L2 衔接）
 
-## Talk: emma_002.json
-> 场景：街角（**sceneId 9022，L2 Emma 对话 AVG 专用** — 用 leungwei 概念图 `streetcorner_concept`，L1→L2 过渡节点）→ 进入酒吧开始 L2 自由探索
+## Talk: emma_streetcorner_002.json
+> 场景：街角（**sceneId 9022，L2 Emma 对话 AVG 专用** — 用 leungwei 概念图 `streetcorner_concept`，L1→L2 过渡节点）→ 街角对话结束后进入酒吧开始 L2 自由探索
 > 模式：transition_cutscene（无玩家操作）→ 过渡至自由探索
 > 核心目标：①定锚 L1 战果（Vivian 枪无硝烟、Rosa 谎言1 已破、时间线悬而未决）；②切入调查驱动句（Webb 的酒吧在做什么？）；③行动分配 + 场景氛围建立（Vivian 啜泣、Morrison 仍在、各人位置）
 
@@ -124,12 +126,19 @@
 
 ---
 
-## §2. Scene 9006 — 歌舞厅小包厢（搜证 + Emma 突发事件）
+## §2. Scene 9006 — 歌舞厅小包厢（进场对白 + 相机突发事件）
 
-> 场景：酒吧 1F 歌舞厅一侧私人小包厢
-> 模式：free_exploration（🔓 自由探索 + ⚡ 突发事件）
-> 证据产出：9201 勒索照片（玩家点击拾取）；9209 便携相机（包好的碎片，玩家点击柜中相机触发突发事件，事件末尾 Zack 用手帕包好后入背包）
-> 核心信息点：2 件（勒索生意的实物证据 + 拍摄工具）
+> **拆分说明**：本场景两条独立触发线，拆为 2 个 Talk 文件 ——
+> ①`emma_smallroom_entry_002.json`：玩家**点击 Emma 立绘**触发进场对白（含分支 A/B → 汇合）
+> ②`emma_smallroom_camera_002.json`：玩家**点击柜中相机（item 9209）**触发突发事件（发现照片 + 烘烤显影 + 后续分支）
+> 两段无强制顺序，但叙事上"进场段"应先发生（Emma 立绘可被先点；相机段也可独立触发）。
+
+## Talk: emma_smallroom_entry_002.json
+> 场景：酒吧 1F 歌舞厅一侧私人小包厢（**sceneId 9006**）
+> 模式：free_exploration · NPC 立绘点击触发
+> 触发：玩家点击 Emma 立绘 → 从 901002020 开始
+> ID 段：901002020 – 901002402（含分支 A/B 路径）
+> 核心目标：Emma 已先入场打量房间，Zack 进门后两人寒暄；分支 A/B 提供两种氛围读法；汇合到"有意思 / 不太对劲"，玩家进入自由探索模式
 
 ---
 
@@ -208,6 +217,18 @@
 <!-- ══════════════════════════════════
      玩家点击矮木柜 → 发现相机 → 突发事件 → 柜底发现勒索照片
      ══════════════════════════════════ -->
+
+---
+
+## Talk: emma_smallroom_camera_002.json
+> 场景：酒吧 1F 歌舞厅一侧私人小包厢（**sceneId 9006**）
+> 模式：sudden_event（⚡ 突发事件，玩家点击柜中相机 9209 触发）
+> 触发：玩家点击柜中便携相机道具（item 9209）→ 从 901002403 开始
+> ID 段：901002403 – 901002801（相机发现 + 照片烘烤显影 + 后续分支 ❶/❷ → 汇合收尾）
+> 证据产出：9201 勒索照片（柜底拾取）；9209 便携相机（事件末尾 Zack 用手帕包好后入背包）；9706 带金额显影的勒索照片（玩家在道具栏对 9201 烘烤派生）
+> 核心信息点：2 件（勒索生意的实物证据 + 拍摄工具）
+
+---
 
 <!-- [Zack 的目光落在角落的矮木柜上。柜门半掩，露出一截金属边。] -->
 

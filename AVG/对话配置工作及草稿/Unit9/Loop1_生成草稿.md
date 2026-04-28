@@ -10,7 +10,9 @@
 > **涉及 NPC**：艾玛·奥马利（Emma）/ 扎克·布伦南（Zack）/ 酒保 / 薇薇安·罗斯（Vivian）/ 罗莎·马丁内斯（Rosa）/ 莫里森侦探（Morrison）
 >
 > **JSON 目标文件**：
-> - `emma_001.json`（Opening cutscene + Emma 大堂对话）
+> - `emma_entrance_001.json`（Opening 节拍一+二，sceneId 9021 酒吧大门口）
+> - `emma_lobby_001.json`（Opening 节拍三+四+五，sceneId 9004 大堂——同盟协议 + 23:30 枪响）
+> - `emma_parlor_001.json`（Opening 节拍六，sceneId 9003 会客室门口——Vivian 持枪 + Morrison 到场）
 > - `vivian_001.json`（Vivian Talk @ Scene 9003）
 > - `rosa_001.json`（Rosa Talk @ Scene 9003）
 > - `morrison_001.json`（Morrison Talk @ Scene 9003）
@@ -33,10 +35,15 @@
 
 ## §1. Opening — 蓝月亮酒吧大门口 → 大堂 → Webb 会客室（23:30 前后）
 
-## Talk: emma_001.json
-> 场景：蓝月亮酒吧大门口（**sceneId 9021，L1 Emma 对话 AVG 专用** — 复用 EPI01\AVG\bluemoon_outside）→ 大堂（场景 9004）→ Webb 会客室门口（23:30 枪响后）
+> **拆分说明**：本 Opening 物理跨 3 个 sceneId，按场景拆为 3 个 Talk 文件——
+> ①`emma_entrance_001.json` (9021 大门口) → ②`emma_lobby_001.json` (9004 大堂) → ③`emma_parlor_001.json` (9003 会客室门口)。
+> 三个文件共享 conv=001 的 ID 段（901001xxx 连号不重排），切分点见各 Talk header。
+
+## Talk: emma_entrance_001.json
+> 场景：蓝月亮酒吧大门口（**sceneId 9021，L1 Emma 对话 AVG 专用** — 复用 EPI01\AVG\bluemoon_outside）
 > 模式：Cutscene（type: cutscene，无玩家操作）
-> 核心目标：①酒保拒绝 + 接头暗语建立蓝月亮高门槛；②Emma/Zack 关系起点——各取所需的合作协议；③23:30 枪响 + 冲入现场（Rosa / Vivian / Morrison 同框）
+> 核心目标：酒保拒绝 + 接头暗语建立蓝月亮高门槛
+> ID 段：901001001 – 901001010（节拍一 Zack 独自被拦 + 节拍二 Emma 出现暗语开门）
 
 ---
 
@@ -94,6 +101,16 @@
 ### 901001010
 **艾玛·奥马利** [走进去，脚步没停，头也没回]
 > 进来再说。
+
+<!-- [Emma 推门入内，Zack 跟进。场景由 9021 大门口切到 9004 大堂。] -->
+
+---
+
+## Talk: emma_lobby_001.json
+> 场景：蓝月亮酒吧 1F 大堂（**sceneId 9004**，复用 EPI01\AVG\bluemoon_lobby）
+> 模式：Cutscene（type: cutscene，无玩家操作）
+> 核心目标：①Emma/Zack 关系起点——各取所需的合作协议；②23:30 枪响 + 大堂骚动 → 引出会客室
+> ID 段：901001011 – 901001027（节拍三 进大堂 + 节拍四 商定协议 + 节拍五 23:30 枪响）
 
 ---
 
@@ -183,13 +200,23 @@
 **艾玛·奥马利** [跟上，声音微微颤了一下]
 > 听上去像是……在 Webb 的会客室。
 
+<!-- [两人挤过人流，沿走廊绕到后堂南侧。场景由 9004 大堂切到 9003 Webb 会客室门口。] -->
+
+---
+
+## Talk: emma_parlor_001.json
+> 场景：Webb 会客室门口（**sceneId 9003**，复用 EPI01\AVG\webb_parlor_door）
+> 模式：Cutscene（type: cutscene，无玩家操作）
+> 核心目标：①到达现场——Vivian 持枪呆立 + Rosa 当场指证；②Morrison 赶到 + 宣告逮捕推力
+> ID 段：901001028 – 901001041（节拍六 到达 + 节拍七 Morrison 宣告）
+
 ---
 
 <!-- ══════════════════════════════════
-     节拍四：冲向会客室——到达时
+     节拍六：冲向会客室——到达时
      ══════════════════════════════════ -->
 
-<!-- 两人挤过人流，沿走廊绕到后堂南侧。会客室的门半开着。Zack推开门的一刻，视线扫过房间：Rosa 站在门边靠墙，Vivian 站在房间正中，手里握着一把小手枪，枪管朝下，手指没有扣扳机，眼神涣散，望着地板和空气之间的某处 -->
+<!-- 会客室的门半开着。Zack推开门的一刻，视线扫过房间：Rosa 站在门边靠墙，Vivian 站在房间正中，手里握着一把小手枪，枪管朝下，手指没有扣扳机，眼神涣散，望着地板和空气之间的某处 -->
 
 ### 901001028
 **薇薇安·罗斯** 

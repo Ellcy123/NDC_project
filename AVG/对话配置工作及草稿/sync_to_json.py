@@ -3,7 +3,7 @@
 MD ↔ JSON 同步 / 生成脚本
 ========================
 
-两种模式：
+三种模式：
 
 1. **同步模式**（JSON 已存在）
    将 MD 草稿中修改过的中文对白回写到对应的 JSON 文件。
@@ -27,11 +27,21 @@ MD ↔ JSON 同步 / 生成脚本
      - ParameterStr/Int：按 script 类型填写
      - videoEpisode/Loop/Id/Scene：从 MD 文件名和 ## Talk: 段落提取
 
+3. **协调模式**（--reconcile）
+   适用于 MD 拆分 / 合并 / 重命名场景。处理:
+     - 跨文件 ID 迁移（同一 ID 从 emma_002.json 搬到 emma_smallroom_002.json）
+     - 幽灵条目清理（JSON 里有但 MD 已删除——默认 warn，加 --purge 才删）
+     - 空文件自动删除（迁移后变空的旧文件）
+     - _manifest.json 自动重写
+   保留已翻译字段（enWords / enAction / enSpeaker）不被清空。
+
 用法:
   python sync_to_json.py Loop2_生成草稿.md              # 默认：自动判断（存在→同步，不存在→新建）
   python sync_to_json.py Loop2_生成草稿.md --dry-run    # 预览
   python sync_to_json.py Loop2_生成草稿.md --new-only   # 只新建，已有 JSON 跳过
   python sync_to_json.py Loop2_生成草稿.md --sync-only  # 只同步，不存在就跳过
+  python sync_to_json.py Loop2_生成草稿.md --reconcile  # 协调模式（推荐用于 MD 拆分后）
+  python sync_to_json.py Loop2_生成草稿.md --reconcile --purge  # 协调 + 删除幽灵条目
   python sync_to_json.py --all                           # 同步/新建所有 Loop
   python sync_to_json.py Loop2_生成草稿.md --episode EPI01  # 指定章节（默认 EPI01）
 """
@@ -910,6 +920,331 @@ def _truncate(s, maxlen=50):
 
 
 # ============================================================
+# 协调模式：跨文件迁移 + 幽灵清理 + manifest 重写
+# ============================================================
+
+def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_bucket,
+                              fname, episode, loop_num, is_expose):
+    """以现有 JSON 条目为底，把 MD 的最新内容覆盖进去。
+
+    保留：enWords / enAction / enSpeaker（人工译文）
+    覆盖：cnSpeaker / cnAction / cnWords / step / next / videoScene / videoLoop / videoEpisode /
+          script / IdSpeaker / speakType / branches Param* / Lie Param* / get Param*
+    """
+    ent = dict(existing)
+    md_e = md_entry
+
+    if md_e.cn_speaker:
+        ent["cnSpeaker"] = md_e.cn_speaker
+        speaker_info = _lookup_speaker(md_e.cn_speaker)
+        if speaker_info:
+            ent["IdSpeaker"], ent["enSpeaker"] = speaker_info
+        ent["speakType"] = _infer_speak_type(md_e.cn_speaker)
+    ent["cnAction"] = md_e.cn_action or ""
+    ent["cnWords"] = md_e.cn_words or ""
+
+    # step / next
+    ent["step"] = idx_in_bucket + 1
+    if idx_in_bucket + 1 < len(all_entries_in_bucket):
+        ent["next"] = str(all_entries_in_bucket[idx_in_bucket + 1].id)
+    else:
+        ent["next"] = ""
+
+    tag = (md_e.script_tag or "").lower()
+    if tag == "end":
+        ent["next"] = ""
+
+    # script 字段
+    if tag in ("get", "branches", "end", "expose", "lie"):
+        ent["script"] = "Lie" if (is_expose and tag == "lie") else tag
+    elif tag:
+        ent["script"] = tag
+    else:
+        ent["script"] = ""
+
+    # video* 字段（迁移后跟新文件名走）
+    ent["videoEpisode"] = episode
+    ent["videoLoop"] = f"loop{loop_num}"
+    ent["videoScene"] = Path(fname).stem
+    ent["videoId"] = str(md_e.id)
+
+    # Location（如果 MD 有给）
+    if md_e.location:
+        ent["Location"] = md_e.location
+
+    # 重置 Parameter 字段（避免老的 branches 数据残留），再按 tag 填新值
+    p_str = ["", "", ""]
+    p_int = [0, 0, 0]
+
+    if tag == "get":
+        target = md_e.script_tag_target
+        if target:
+            if len(target) == 4:
+                p_str[0] = f"EV{target}"
+            else:
+                p_str[0] = target
+    elif tag == "branches":
+        for i, (opt_text, opt_target) in enumerate(md_e.branch_options[:3]):
+            p_str[i] = opt_text
+            try:
+                p_int[i] = int(opt_target)
+            except (ValueError, TypeError):
+                pass
+        # branches 主 next 由 ParameterInt 决定，主字段清空
+        ent["next"] = ""
+    elif is_expose and tag == "lie":
+        if md_e.lie_correct_evidence:
+            p_str[0] = ",".join(f"EV{ev}" for ev in md_e.lie_correct_evidence)
+        if md_e.lie_correct_next:
+            try:
+                p_int[0] = int(md_e.lie_correct_next)
+            except (ValueError, TypeError):
+                pass
+        if md_e.lie_round:
+            p_int[1] = md_e.lie_round
+
+    ent["ParameterStr0"] = p_str[0]
+    ent["ParameterStr1"] = p_str[1]
+    ent["ParameterStr2"] = p_str[2]
+    ent["ParameterInt0"] = p_int[0]
+    ent["ParameterInt1"] = p_int[1]
+    ent["ParameterInt2"] = p_int[2]
+
+    return ent
+
+
+def _reconcile_dir(loop_dir, buckets, episode, loop_num, dry_run, purge, is_expose,
+                   scope_filter=None):
+    """协调一个目录（loopN/ 或 Expose/）的 JSON 与 MD bucket。
+
+    scope_filter: 可选 callable(filename)->bool，控制扫描时哪些文件算"在作用域内"。
+                  Talk 默认 None（loopN/ 目录本身已天然按 Loop 隔离）。
+                  Expose 应传 lambda f: f.lower().startswith(f"loop{loop_num}_")
+                  避免误把别的 Loop 的 Expose 文件标成 stale。
+    """
+
+    # ── Step 1: MD 期望的 ID → 文件 / Entry 映射 ──
+    md_id_to_file = {}
+    md_id_to_entry = {}
+    md_file_to_entries = {}
+    for fname, entries in buckets.items():
+        md_file_to_entries[fname] = entries
+        for e in entries:
+            md_id_to_file[e.id] = fname
+            md_id_to_entry[e.id] = e
+
+    # ── Step 2: 扫描目录里所有现存 JSON（按作用域过滤）──
+    json_id_to_file = {}
+    json_id_to_entry = {}
+    json_file_entries = {}
+
+    if loop_dir.exists():
+        for jf in sorted(loop_dir.glob("*.json")):
+            if jf.name == "_manifest.json":
+                continue
+            if scope_filter and not scope_filter(jf.name):
+                continue
+            try:
+                with open(jf, "r", encoding="utf-8") as f:
+                    entries = json.load(f)
+            except Exception as ex:
+                print(f"  [WARN] 无法读取 {jf.name}: {ex}")
+                continue
+            json_file_entries[jf.name] = entries
+            for ent in entries:
+                eid = ent.get("id")
+                if eid is None:
+                    continue
+                json_id_to_file[eid] = jf.name
+                json_id_to_entry[eid] = ent
+
+    # ── Step 3: 行动分类 ──
+    new_count = 0
+    update_count = 0
+    migrate_count = 0
+    migrations = []  # (id, from, to)
+    for md_id, target_file in md_id_to_file.items():
+        current_file = json_id_to_file.get(md_id)
+        if current_file is None:
+            new_count += 1
+        elif current_file == target_file:
+            update_count += 1
+        else:
+            migrate_count += 1
+            migrations.append((md_id, current_file, target_file))
+
+    stale_actions = [(jid, jfile) for jid, jfile in json_id_to_file.items()
+                     if jid not in md_id_to_file]
+
+    print(f"\n[Plan · {loop_dir.name}] new={new_count}, update={update_count}, "
+          f"migrate={migrate_count}, stale={len(stale_actions)}")
+
+    if migrations:
+        print(f"\n[Migrate]")
+        for mid, mfrom, mto in sorted(migrations)[:30]:
+            print(f"  {mid}: {mfrom} → {mto}")
+        if len(migrations) > 30:
+            print(f"  ... +{len(migrations) - 30} more")
+
+    if stale_actions:
+        marker = "(--purge 已开启，将删除)" if purge else "(默认保留，加 --purge 才删)"
+        print(f"\n[Stale] {marker}")
+        for sid, sfile in stale_actions[:20]:
+            print(f"  {sid} in {sfile}")
+        if len(stale_actions) > 20:
+            print(f"  ... +{len(stale_actions) - 20} more")
+
+    # ── Step 4: 构建输出 ──
+    output_files = {}
+
+    for fname, entries in md_file_to_entries.items():
+        # Expose Lie 轮次
+        if is_expose:
+            lie_count = 0
+            for e in entries:
+                if (e.script_tag or "").lower() == "lie":
+                    lie_count += 1
+                    e.lie_round = lie_count
+
+        out_list = []
+        warnings = []
+        for idx, md_e in enumerate(entries):
+            existing = json_id_to_entry.get(md_e.id)
+            if existing:
+                ent = _merge_md_into_json_entry(
+                    existing, md_e, entries, idx, fname,
+                    episode, loop_num, is_expose,
+                )
+            else:
+                ent = _build_entry(
+                    md_e, entries, idx,
+                    episode=episode,
+                    loop_num=loop_num,
+                    scene_name=Path(fname).stem,
+                    is_expose=is_expose,
+                    warnings=warnings,
+                )
+                if ent.get("script") == "branches":
+                    ent["next"] = ""
+            out_list.append(ent)
+        output_files[fname] = out_list
+        for w in warnings:
+            print(w)
+
+    # ── Step 5: 处理幽灵条目 ──
+    if not purge and stale_actions:
+        # 按原文件保留幽灵条目
+        for jfile, original_entries in json_file_entries.items():
+            for orig in original_entries:
+                eid = orig.get("id")
+                if eid in md_id_to_file:
+                    continue
+                output_files.setdefault(jfile, []).append(orig)
+
+    # ── Step 6: 写文件 ──
+    for fname, entries in sorted(output_files.items()):
+        if not entries:
+            continue
+        json_path = loop_dir / fname
+        if not dry_run:
+            json_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(entries, f, ensure_ascii=False, indent=2)
+        tag = "WRITE" if not dry_run else "PLAN"
+        print(f"  [{tag}] {fname}: {len(entries)} 条")
+
+    # ── Step 7: 删除空文件（迁移后变空的旧文件）──
+    # 仅考虑作用域内的文件——避免误删别的 Loop 的文件（如 Expose 共享目录）
+    if loop_dir.exists():
+        for jf in sorted(loop_dir.glob("*.json")):
+            if jf.name == "_manifest.json":
+                continue
+            if scope_filter and not scope_filter(jf.name):
+                continue
+            still_has_content = jf.name in output_files and output_files[jf.name]
+            if not still_has_content:
+                if not dry_run:
+                    jf.unlink()
+                tag = "DELETE" if not dry_run else "PLAN-DELETE"
+                print(f"  [{tag}] {jf.name}（已迁空 / 已废弃）")
+
+    # ── Step 8: 重写 manifest ──
+    # 写入后扫描目录得到真实最终列表；干跑下手工模拟一次"写入后的目录状态"
+    if dry_run:
+        final_files_set = set()
+        if loop_dir.exists():
+            for jf in loop_dir.glob("*.json"):
+                if jf.name == "_manifest.json":
+                    continue
+                in_scope = (scope_filter is None) or scope_filter(jf.name)
+                if in_scope:
+                    # 作用域内：是否会被删/留要看 output_files
+                    if jf.name in output_files and output_files[jf.name]:
+                        final_files_set.add(jf.name)
+                else:
+                    # 作用域外：不动
+                    final_files_set.add(jf.name)
+        # 新写入的文件
+        for fname, entries in output_files.items():
+            if entries:
+                final_files_set.add(fname)
+        final_files = sorted(final_files_set)
+    else:
+        final_files = sorted(
+            jf.name for jf in loop_dir.glob("*.json")
+            if jf.name != "_manifest.json"
+        )
+    manifest_path = loop_dir / "_manifest.json"
+    if not dry_run:
+        loop_dir.mkdir(parents=True, exist_ok=True)
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            json.dump(final_files, f, ensure_ascii=False, indent=2)
+    tag = "WRITE" if not dry_run else "PLAN"
+    print(f"  [{tag}] _manifest.json: {len(final_files)} 个文件")
+
+
+def reconcile_md_to_loop_dir(md_path, episode, dry_run=False, purge=False):
+    """协调模式入口：处理跨文件迁移、幽灵清理、manifest 重写。"""
+    md_filename = os.path.basename(md_path)
+    loop_num = get_loop_num_from_md(md_filename)
+    if loop_num is None:
+        print(f"[ERR] 无法从文件名 {md_filename} 提取 Loop 号")
+        return
+
+    parsed = parse_md_file(md_path)
+    if not parsed:
+        print("  没有解析到任何对话条目")
+        return
+
+    prefix = "[预览] " if dry_run else ""
+    print(f"\n{prefix}Reconcile {md_filename} (Loop {loop_num}, Episode {episode})"
+          f"{' --purge' if purge else ''}")
+    print("=" * 70)
+
+    # 分离 Talk 和 Expose
+    talk_buckets = {}
+    expose_buckets = {}
+    for fname, entries in parsed.items():
+        _, is_expose = resolve_json_path(fname, loop_num, episode)
+        if is_expose:
+            expose_buckets[fname] = entries
+        else:
+            talk_buckets[fname] = entries
+
+    if talk_buckets:
+        talk_dir = BASE / episode / "Talk" / f"loop{loop_num}"
+        _reconcile_dir(talk_dir, talk_buckets, episode, loop_num,
+                       dry_run, purge, is_expose=False)
+
+    if expose_buckets:
+        expose_dir = BASE / episode / "Expose"
+        # Expose/ 是共享目录，按 LoopN_ 前缀过滤
+        scope = lambda n: n.lower().startswith(f"loop{loop_num}_")
+        _reconcile_dir(expose_dir, expose_buckets, episode, loop_num,
+                       dry_run, purge, is_expose=True, scope_filter=scope)
+
+
+# ============================================================
 # 路径解析
 # ============================================================
 
@@ -1061,6 +1396,12 @@ def main():
     force_clear = "--force-clear" in args
     args = [a for a in args if a != "--force-clear"]
 
+    reconcile = "--reconcile" in args
+    args = [a for a in args if a != "--reconcile"]
+
+    purge = "--purge" in args
+    args = [a for a in args if a != "--purge"]
+
     mode = "auto"
     if "--new-only" in args:
         mode = "new-only"
@@ -1100,7 +1441,10 @@ def main():
                 GEN_MD_DIR / f"Loop{loop_num}_生成草稿.md",
             ]:
                 if candidates.exists():
-                    process_single_md(candidates, episode, dry_run, mode, force_clear=force_clear)
+                    if reconcile:
+                        reconcile_md_to_loop_dir(candidates, episode, dry_run=dry_run, purge=purge)
+                    else:
+                        process_single_md(candidates, episode, dry_run, mode, force_clear=force_clear)
                     any_found = True
         if not any_found:
             print("[WARN]未找到任何 Loop{1-6}_*.md 文件")
@@ -1115,7 +1459,10 @@ def main():
         if md_path is None:
             print(f"[ERR] 文件不存在: {arg}（已搜索 {MD_DIR} 和 {GEN_MD_DIR}）")
             continue
-        process_single_md(md_path, episode, dry_run, mode, force_clear=force_clear)
+        if reconcile:
+            reconcile_md_to_loop_dir(md_path, episode, dry_run=dry_run, purge=purge)
+        else:
+            process_single_md(md_path, episode, dry_run, mode, force_clear=force_clear)
 
 
 if __name__ == "__main__":
