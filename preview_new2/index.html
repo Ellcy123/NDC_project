@@ -4699,11 +4699,18 @@
                     if (talkId) {
                         html += `<div class="spec-row"><span class="spec-label">Talk ID:</span><span class="copy-tag" onclick="copyText('${talkId}', this)">${talkId}</span></div>`;
                     }
-                    // 立绘 A / B 的路径字段已迁移到 NPC drawer 的 copy-asset 里,这里不再重复显示
-                    if (sceneNameEn && npcKey) {
-                        const videoNpc = `${sceneNameEn}_${npcKey}`;
-                        const videoZack = `${sceneNameEn}_Zack`;
-                        html += `<div class="spec-row"><span class="spec-label">视频底图:</span><span class="copy-tag" onclick="copyText('${videoNpc}', this)">${videoNpc}</span> <span class="copy-tag" onclick="copyText('${videoZack}', this)">${videoZack}</span></div>`;
+                    // 立绘资源名（给美术看）—— 直接读 ResPath / ClickResPath 的文件名
+                    if (info.ResPath || info.ClickResPath) {
+                        html += `<div class="spec-row"><span class="spec-label">立绘:</span>`;
+                        if (info.ResPath) {
+                            const nameA = info.ResPath.split('\\').pop();
+                            html += ` <span class="copy-tag" onclick="copyText('${nameA}', this)" title="默认态">${nameA}</span>`;
+                        }
+                        if (info.ClickResPath) {
+                            const nameB = info.ClickResPath.split('\\').pop();
+                            html += ` <span class="copy-tag" onclick="copyText('${nameB}', this)" title="点击态">${nameB}</span>`;
+                        }
+                        html += `</div>`;
                     }
                     html += `</div>`;
 
