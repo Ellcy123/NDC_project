@@ -122,7 +122,7 @@ Moore 银行大厅。Leonard Russo 在他的工位上，西装笔挺，眼镜是
 |---|:---:|---|
 | Leonard（leonard_loop6_bank） | true（本场景说谎，但 Expose 对象为 Leonard 住所 10017） | 6050001（⚠谎言："Frank 的死是场悲剧，但和我无关。那天晚上我整晚都在家，从来没有见过 Frank"——L6 R1 谎言锚，唯一可预先收集的 testimony）|
 
-**Leonard blind_spots（L6 大厅阶段）**：他当晚到过鞋坊（L6 R1 被眼镜碎片 + Margaret 目击击穿）；打斗细节（L6 R3 被货物箱凹陷 + Margaret 证词击穿）；37 秒电话（电话账单 10608 是 R1 陷阱选项，需配合其他证据）；Vinnie 为他顶罪的真实情感深度（L6 R4 击穿后揭示）。
+**Leonard blind_spots（L6 大厅阶段）**：他当晚到过鞋坊（L6 R1 被眼镜碎片 + Margaret 目击击穿）；打斗细节（L6 R3 被货物箱凹陷 + Margaret 证词击穿）；Vinnie 为他顶罪的真实情感深度（L6 R4 击穿后揭示）。
 
 ### 可获取证据
 

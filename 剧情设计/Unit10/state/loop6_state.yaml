@@ -49,7 +49,7 @@
 #                        10601/10602/10603 → 10006 Margaret 病房；
 #                        10604/10605/10606 → 10001 鞋坊废墟（10605 需持 10603 触发）；
 #                        10607 → 10004 Morrison 警局过场（自动产出）；
-#                        10608/10609/10610/10611 → 10017 Leonard 住所；
+#                        10609/10610/10611 → 10017 Leonard 住所；
 #                        继承件 5080002b/4090004 状态注明
 # C. NPC 条目     PASS — Margaret（scenes 10006，4 块）/ Leonard scenes（10011，4 块）/
 #                        Morrison（scenes 10004 过场，仅过场 NPC 简版）/
@@ -251,8 +251,8 @@ scenes:
       - id: 10601
         name: "法医鉴定报告"
         name_en: "Forensic Examination Report"
-        type: document
-        itemType: 1
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: |
@@ -265,8 +265,8 @@ scenes:
       - id: 10602
         name: "房屋抵押证明"
         name_en: "Property Mortgage Certificate"
-        type: document
-        itemType: 1
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: |
@@ -279,8 +279,8 @@ scenes:
       - id: 10603
         name: "医用镊子（15cm）"
         name_en: "Medical Forceps (15cm)"
-        type: tool
-        itemType: 4
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: |
@@ -316,8 +316,8 @@ scenes:
       - id: 10604
         name: "烛台"
         name_en: "Brass Candlestick"
-        type: prop
-        itemType: 2
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: |
@@ -329,8 +329,8 @@ scenes:
       - id: 10605
         name: "眼镜碎片（烟熏黄色旧镜片）"
         name_en: "Spectacle Lens Fragment (Smoke-yellowed)"
-        type: prop
-        itemType: 2
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: |
@@ -348,7 +348,7 @@ scenes:
       - id: 10606
         name: "凹陷的货物箱"
         name_en: "Dented Cargo Box"
-        type: prop
+        type: envir
         itemType: 2
         pickup: false  # envir，查看不入背包（too heavy）；但可拍照/记录
         analysis: false
@@ -412,8 +412,8 @@ scenes:
       - id: 10607
         name: "搜查令（Leonard 住所，Morrison 签字版）"
         name_en: "Search Warrant — Leonard Ross Residence (Signed)"
-        type: key
-        itemType: 5
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: |
@@ -505,7 +505,6 @@ expose:
     - 10605 眼镜碎片（烟熏黄色旧镜片，镊子夹出）
     - 10606 凹陷货物箱（记录/照片，3cm 凹陷、西装面料纤维）
     ── 场景 10017 搜证取得 ──
-    - 10608 Vinnie 接听端电话账单（Leonard 留的副本，L6 搜证取得）
     - 10609 旧报纸剪报（1915 Russo 家被纵火，环境叙事）
     - 10610 眼镜维修单据（左眼新镜片，右眼旧镜片）
     - 10611 空相框（背面刻字"To Leo, 1910"，环境叙事）
@@ -515,27 +514,12 @@ expose:
 
   # ── Leonard 住所搜证证据（进入 Expose 场景后先搜证再指证）──
   scene_evidence:
-    - id: 10608
-      name: "Vinnie 接听端电话账单（Leonard 留副本）"
-      name_en: "Vinnie's Phone Bill Copy (Leonard's Copy)"
-      type: document
-      itemType: 1
-      pickup: true
-      analysis: false
-      description: |
-        这是 Vinnie 公寓接听端的电话账单副本，由 Leonard 保管——作为他对 Vinnie 的"把柄"。
-        账单显示 11月6日晚 8:05，从 Margaret 鞋坊附近的公用电话亭打出，
-        接听方为 Vinnie 公寓，通话时长 37 秒。
-        Leonard 留了这份副本，说明他把这通电话作为控制 Vinnie 的工具——
-        凶案当晚的求助记录，他没有销毁，反而保存为筹码。
-      note: "L6 R1 陷阱选项——只证明有通话，不能证明 Leonard 当晚在鞋坊现场"
-
     - id: 10609
       name: "旧报纸剪报（1915 Russo 家被纵火）"
       name_en: "1915 Newspaper Clipping — Russo Family Fire"
-      type: document
-      itemType: 1
-      pickup: false  # envir，查看不入背包
+      type: envir
+      itemType: 2
+      pickup: false  # 环境叙事——Leonard 私物，纯叙事，跨章伏笔
       analysis: false
       description: |
         1915 年《芝加哥论坛报》剪报，标题：南区一意大利裔家庭住所遭纵火，一人重伤。
@@ -545,8 +529,8 @@ expose:
     - id: 10610
       name: "眼镜维修单据"
       name_en: "Eyeglass Repair Receipt"
-      type: document
-      itemType: 1
+      type: item
+      itemType: 3
       pickup: true
       analysis: false
       description: |
@@ -558,7 +542,7 @@ expose:
     - id: 10611
       name: "空相框"
       name_en: "Empty Picture Frame"
-      type: prop
+      type: envir
       itemType: 2
       pickup: false  # envir
       analysis: false
@@ -616,9 +600,7 @@ expose:
       - id: 6110001
         role: "Margaret 8:16 在街角亲眼目击戴眼镜西装男独自从鞋坊方向踉跄离开——她差点撞上他；Leonard 整晚在家的说法与此直接矛盾"
     required_items: [10605, 6110001]
-    trap_evidence:
-      - id: 10608
-        reason: "电话账单只证明当晚有一通 37 秒的电话从鞋坊附近打出，不能证明是 Leonard 打的，更不能证明 Leonard 在鞋坊现场"
+    trap_evidence: []  # R1 无陷阱选项——10605 + 6110001 双件构成直接击穿
     result: partial_victory
     result_description: |
       Zack 出示 10605（烟熏黄色眼镜碎片）和 6110001（Margaret 目击证词）：
@@ -924,17 +906,13 @@ evidence_registry:
     pickup: true
     note: "关键——解锁场景 10017"
 
-  - id: 10608
-    name: "Vinnie 接听端电话账单（Leonard 留副本）"
-    source_scene: 10017
-    pickup: true
-    note: "L6 R1 陷阱选项"
-
   - id: 10609
     name: "旧报纸剪报（1915 Russo 家纵火）"
+    type: envir
+    itemType: 2
     source_scene: 10017
-    pickup: false  # envir
-    note: "场景道具（envir）"
+    pickup: false
+    note: "环境叙事——跨章伏笔；不进任何 expose / 疑点 condition"
 
   - id: 10610
     name: "眼镜维修单据"

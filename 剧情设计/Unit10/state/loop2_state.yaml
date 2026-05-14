@@ -170,8 +170,9 @@ scenes:
       # ── Frank 家门口塞着的物证 ──
       - id: 10203
         name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
-        type: item
-        pickup: true
+        type: envir
+        itemType: 2
+        pickup: false  # 环境观察——催款单贴在 Frank 家门口可看不可拿走
         description: "印着'湖滨信托银行（Lakeshore Trust Bank）'抬头的正式催款通知，注明 Frank Kowalski 的欠款金额（当前欠债 3,200$）和最终还款日期，落款人为'贷款部主任 Leonard Ross'。"
         analysis: false
         note: "场景道具——背景信息，显示 Frank 的债务规模和银行贷款部门关联；L2 R2 陷阱选项（催款单只证银行追债，不证资金链走向 Vinnie）"
@@ -179,6 +180,7 @@ scenes:
       - id: 10204
         name: "威胁便条 / Threatening Note"
         type: item
+        itemType: 3
         pickup: true
         description: "一张皱巴巴的便条，用粗笔写着：'再不还钱，不只是你倒霉。' 没有署名。字迹粗粝，不像正式文件。"
         analysis: false
@@ -188,6 +190,7 @@ scenes:
       - id: 10201
         name: "Leonard 名片 / Leonard's Business Card"
         type: item
+        itemType: 3
         pickup: true
         description: "湖滨信托银行（Lakeshore Trust Bank）贷款专员 Leonard Ross 的名片，正面印着银行地址和电话；名片右下角有一行比正文小一号的字体：'Lakeshore Investment Co.'——当前看不出意义，L3 才有用。"
         analysis: false
@@ -196,6 +199,7 @@ scenes:
       - id: 10202
         name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
         type: item
+        itemType: 3
         pickup: true
         description: "O'Hara 还贷款时用的五张连号新钞，序列号 900B–909B 中缺失 905B、906B、907B、908B、909B（五张；O'Hara 实际持有 900B–904B，序号连续但中间跳空）。钞票上印刷清晰，明显是同批次新钞。"
         analysis: false
@@ -355,14 +359,20 @@ scenes:
       Vinnie Moretti 是这里的常客，常坐在角落；
       Tony 是酒保，见多识广，消息灵通——但生面孔进来他不会主动交底。
 
-      🎮 Silver Moon 破冰玩法触发：Zack 主动找 Tony 搭话选"陪 Tony 喝一杯"，
-      进入两段式 sequence——
-      第一段【调酒考验】：1920s speakeasy 圈内人验证仪式；Tony 出 1920s 鸡尾酒题
-      （Bee's Knees / Manhattan / Whiskey Sour）。答对 2 题 Tony 视为自己人，给：
+      🎮 Silver Moon 破冰玩法触发（对话内嵌问答 + 环境观察）：
+      【调酒考验（必经，对话内嵌）】：Zack 在 Tony 对话流里选"我常来这种地方"假装熟客分支 →
+      Tony 反诘"那你知道我们这边的招牌酒用什么吗？" → 普通对话框弹 4 选 1 选项。
+      玩家可选直接答 或 选"我再想想"回到自由探索看环境线索（墙上海报"Bee's Knees-$0.50"/
+      吧台尽头 Tony 手写小单 Gin+Lemon+Honey / 酒架蜂蜜罐 Bee's 标签——三处任 1-2 处即可推出）。
+      答对 → Tony 视为自己人，给：
         - testimony 2070002（Vinnie "赚了一笔"）
         - testimony 2070003（Frank 经常喝酒，Tony 不知动机；L4 callback 钩子）
-      第二段【骰子赌博】：1920s 大小奇偶押注。累计赢 30$ 解锁 Tony 给 10206 钞票。
-      保底：连输 5 把 + 钱包<5$，Tony"借本钱"+直接给钞票。
+      答错 → Tony"再想想"，对话返回，可无限重试无惩罚。
+      【骰子赌博（可选）】：调酒答对后 Tony 在对话里递骰子——"要不要来一场紧张刺激的赌博？打发打发时间"
+      玩家在对话选 "玩 / 不玩"：
+        选玩 → 进入骰子玩法（1920s 大小奇偶），累计赢 30$ Tony 顺手用 Vinnie 喝酒留下的零钱结账给 10206（自己不知是线索）
+        选不玩 → 看 Margaret 面子 Tony 仍给 10206（不卡主线），但失去跨章节熟客关系
+      保底：骰子连输 5 把 + 钱包<5$，Tony"借本钱"+直接给钞票。
       跨章节可重玩。详见 `剧情设计/Unit10/小玩法/L2_赌场_骰子赌博.md`。
 
       Vinnie 在 Tony 试探下脱口而出"Russo"是本 Loop 最重要的对话时刻：
@@ -372,6 +382,7 @@ scenes:
       - id: 10205
         name: "Vinnie 催债小本子 / Vinnie's Collection Ledger"
         type: item
+        itemType: 3
         pickup: true
         description: "Vinnie 随身携带的小记账本，记录催债对象名单、地址和金额；其中有一栏标注'L.R.'（首字母缩写，不是全名），旁边写着一个街区地址——正是湖滨信托银行的地址。"
         analysis: false
@@ -380,10 +391,11 @@ scenes:
       - id: 10206
         name: "Vinnie 的钞票（序号 905B/906B/908B） / Vinnie's Banknotes"
         type: item
+        itemType: 3
         pickup: true
-        description: "Tony 在玩家陪他玩骰子赢一定额度后递出的三张新钞，序列号分别是 905B、906B、908B——Tony 主动交代来源：'这几张新票是 Vinnie 最近给的，他来这儿喝酒结账留下的零钱，我没敢花。号码连得有意思——他甩出来的时候我就注意到了。'恰好填补 O'Hara 那张连号钞票中缺失的大部分（O'Hara 持有 900B–904B，Vinnie 这边有 905B/906B/908B，合起来序号基本连续）。"
+        description: "Tony 在玩家陪他玩骰子赢一定额度后顺手用来结账的三张新钞，序列号分别是 905B、906B、908B——Tony 一边给一边随口说了一句'这几张是上礼拜 Vinnie 来这儿喝酒结账留下的零钱'就把钞票递了过来，自己没意识到这是线索。号码恰好填补 O'Hara 那张连号钞票中缺失的大部分（O'Hara 持有 900B–904B，Vinnie 这边有 905B/906B/908B，合起来序号基本连续）——这关联是 Zack 自己看出来的。"
         analysis: false
-        note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10202 双件并排出示连号关系，证明这批钱来自同一资金池）；获取条件：Silver Moon 破冰玩法第二段（骰子赌博）累计赢 30$ 或触发连输保底；Tony 主动交代钞票来源是 Vinnie，构成叙事链闭环"
+        note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10202 双件并排出示连号关系，证明这批钱来自同一资金池）；获取条件：Silver Moon 破冰玩法骰子段累计赢 30$（或选不玩跳过路径看 Margaret 面子直接给）；Tony 凑巧用 Vinnie 留的零钱给 Zack 结账，自己不知是线索——L2 期间 Tony 始终不知道这几张钞票的侦探价值"
 
     npcs:
       vinnie_l2:
@@ -425,8 +437,8 @@ scenes:
           - "Vinnie 花钱时说的是'赚了一笔'，不是'还了债'——这个细节 Tony 记得清楚"
           - "Tony 留意过 Vinnie 手中新钞的号码——他收的时候扫了一眼（为 10206 提供真实性支撑）"
           - "Frank 也常在这一带喝酒——一杯啤酒能坐一晚上；Tony 以为他是丧偶老头打发夜晚（误读：Tony 不知 Frank 真实动机是暗中监管侄子 Danny 赌博——L4 callback 钩子）"
-          - "出 1920s 调酒题考客人——验证生面孔是不是警察/线人（禁酒令圈内人验证仪式）"
-          - "玩家骰子赢 30$ 后主动交代 10206 钞票来源：是 Vinnie 最近喝酒结账留下的零钱（'我没敢花'），钞票号码连得有意思——构成钞票来源叙事链闭环"
+          - "出 1920s 调酒题考客人——Zack 假装熟客时 Tony 反诘"那你知道我们这边的招牌酒用什么吗"；玩家可在场景里观察墙上海报/吧台手写小单/酒架蜂蜜罐三处任一线索推出 Bee's Knees 答案（禁酒令圈内人验证仪式）"
+          - "玩家骰子赢 30$ 后用 Vinnie 留下的零钱结账，顺手交代来源'上礼拜 Vinnie 来喝酒结账留下的'——Tony 自己不知是线索，只是随口一说；号码连号是 Zack 自己看出来的"
         withheld_topics:
           - "Tony 知道的 Vinnie 过去更多劣迹（不主动说，被问到时会含糊）"
           - "Tony 与 Silver Moon 赌场老板的关系（背景信息，不进 L2 推理链）"
@@ -624,7 +636,8 @@ evidence_registry:
   # L1 继承证据（玩家背包已持有，列出供参考）
   - id: 10101
     name: "尸体手指照片 / Corpse Finger Photo"
-    type: item
+    type: clue
+    itemType: 1
     first_loop: 1
     first_scene: 10001
     pickup: true
@@ -633,6 +646,7 @@ evidence_registry:
   - id: 10102
     name: "Margaret 相册 / Margaret's Photo Album"
     type: item
+    itemType: 3
     first_loop: 1
     first_scene: 10002
     pickup: true
@@ -641,6 +655,7 @@ evidence_registry:
   - id: 10103
     name: "空的首饰盒 / Empty Jewelry Box"
     type: item
+    itemType: 3
     first_loop: 1
     first_scene: 10002
     pickup: true
@@ -648,7 +663,8 @@ evidence_registry:
 
   - id: 10104
     name: "现场地面照片 / Crime Scene Floor Photo"
-    type: item
+    type: clue
+    itemType: 1
     first_loop: 1
     first_scene: 10001
     pickup: true
@@ -658,6 +674,7 @@ evidence_registry:
   - id: 10201
     name: "Leonard 名片 / Leonard's Business Card"
     type: item
+    itemType: 3
     first_loop: 2
     first_scene: 10007
     pickup: true
@@ -667,6 +684,7 @@ evidence_registry:
   - id: 10202
     name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
     type: item
+    itemType: 3
     first_loop: 2
     first_scene: 10007
     pickup: true
@@ -675,7 +693,8 @@ evidence_registry:
 
   - id: 10203
     name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
-    type: item
+    type: envir
+    itemType: 2
     first_loop: 2
     first_scene: 10007
     pickup: true
@@ -685,6 +704,7 @@ evidence_registry:
   - id: 10204
     name: "威胁便条 / Threatening Note"
     type: item
+    itemType: 3
     first_loop: 2
     first_scene: 10007
     pickup: true
@@ -694,6 +714,7 @@ evidence_registry:
   - id: 10205
     name: "Vinnie 催债小本子 / Vinnie's Collection Ledger"
     type: item
+    itemType: 3
     first_loop: 2
     first_scene: 100015
     pickup: true
@@ -703,6 +724,7 @@ evidence_registry:
   - id: 10206
     name: "Vinnie 的钞票（序号 905B/906B/908B） / Vinnie's Banknotes"
     type: item
+    itemType: 3
     first_loop: 2
     first_scene: 100015
     pickup: true

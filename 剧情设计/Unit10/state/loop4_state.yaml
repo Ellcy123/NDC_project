@@ -198,6 +198,7 @@ scenes:
       - id: 10402
         name: "地下室旧沙发（磨损 3-5 年）/ Old Sofa in Basement (3-5 Years of Wear)"
         type: envir
+        itemType: 2
         pickup: false
         analysis: false
         description: "一张陈旧的双人沙发，扶手和坐垫的磨损痕迹均匀，判断已经被规律使用了至少三到五年。"
@@ -206,6 +207,7 @@ scenes:
       - id: 10409
         name: "枯萎的玫瑰花束 / Withered Bouquet of Roses"
         type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "一捧已经枯萎的红玫瑰，包装纸印着南区花店字样。花瓣大部分已脱水蜷曲，但茎部插在一个空花瓶里——Frank 曾仔细布置过，只是没等到把水加上。花蕊中央似乎藏着什么——但隔着干枯的花瓣看不清，需要先让花复活。"
@@ -214,6 +216,7 @@ scenes:
       - id: 10410
         name: "水杯 / Water Glass"
         type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "桌边一个普通玻璃水杯，杯里还剩半杯清水——Frank 显然准备过给玫瑰浇水，但来不及完成。杯壁上沾着一点水痕，像是被手指摸过。"
@@ -222,6 +225,7 @@ scenes:
       - id: 10403
         name: "求婚戒指 / Engagement Ring"
         type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "一枚嵌着小碎钻的金戒指，藏在玫瑰复活后的花蕊之间。戒圈内侧刻有 'F & L 1921'。戒指尺寸为女性手型，明显不是 Margaret 的尺码——这是 Frank 给 Lula 定制的。"
@@ -229,8 +233,9 @@ scenes:
 
       - id: 10406
         name: "维修收据（600$ 全用于地下室）/ Repair Receipt ($600, Basement Renovation)"
-        type: document
-        pickup: true
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事——地下室桌上单据，可看不可拿走
         analysis: false
         description: "一张 1923 年的室内维修收据，委托人是 Frank Kowalski，金额 600 美元，施工地点是本地下室，项目包括：更换地板、添置隔热层、安装电灯。收据上附有 Margaret 鞋坊的副本章。"
         note: "场景道具——环境叙事（Frank 把大笔积蓄用于布置约会场所，佐证真爱）；不进指证主链，不进疑点 condition；L4 R2 陷阱选项（花销属于 Frank 为 Lula 的付出，与 Danny 经济动机无直接关联）"
@@ -339,7 +344,8 @@ scenes:
     evidence:
       - id: 10404
         name: "空怀表盒（含 Tony 便条）/ Empty Pocket Watch Case (with Tony's Note)"
-        type: prop
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "一个皮制怀表盒，表盒内空无一物，但盒盖内侧夹着一张便条，Tony（Silver Moon 赌场酒保）手写：'100 块，怀表抵押。——Tony'。便条日期是上周（11月1日）。"
@@ -347,7 +353,8 @@ scenes:
 
       - id: 10405
         name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found in Danny's Room)"
-        type: prop
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "一枚金婚戒，内圈刻着'P & M 1901'（Patrick Brennan 与 Margaret 的婚戒）。婚戒被藏在 Danny 床垫下的一个小布包里。"
@@ -355,8 +362,9 @@ scenes:
 
       - id: 10407
         name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
-        type: document
-        pickup: true
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事——次卧书架的遗嘱副本，可看不可拿走
         analysis: false
         description: "Frank Kowalski 遗嘱的副本，正文打印，末尾有一条 Frank 亲笔手写的附加条款：'如我与 Lula Washington 成婚，所有财产一并归 Lula。——Frank K.'字迹颤抖但清晰，签名与牛奶订购单（10301）笔迹风格一致。"
         note: "L4 R3 陷阱选项——遗嘱本身是动机证据（Danny 担心失去继承权），但不能证明 Lula 是否是真爱；R1 陷阱（不反驳 Danny 不在场谎言）；L5/L6 叙事参照"
@@ -537,7 +545,8 @@ expose:
     new_evidence_gained:
       - id: 10408
         name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
-        type: key
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 的嘱托在'需要的时候'交出。L5 在 Frank 家主屋开间（10018）开小铁盒使用一次后归档。"
@@ -742,6 +751,7 @@ evidence_registry:
   - id: 10402
     name: "地下室旧沙发（磨损 3-5 年）/ Old Sofa in Basement"
     type: envir
+    itemType: 2
     first_scene: 10010
     pickup: false
     analysis: false
@@ -751,6 +761,7 @@ evidence_registry:
   - id: 10403
     name: "求婚戒指 / Engagement Ring"
     type: item
+    itemType: 3
     first_scene: 10010
     pickup: true
     analysis: false
@@ -760,6 +771,7 @@ evidence_registry:
   - id: 10409
     name: "枯萎的玫瑰花束 / Withered Bouquet of Roses"
     type: item
+    itemType: 3
     first_scene: 10010
     pickup: true
     analysis: false
@@ -769,6 +781,7 @@ evidence_registry:
   - id: 10410
     name: "水杯 / Water Glass"
     type: item
+    itemType: 3
     first_scene: 10010
     pickup: true
     analysis: false
@@ -777,7 +790,8 @@ evidence_registry:
 
   - id: 10404
     name: "空怀表盒（含 Tony 便条）/ Empty Pocket Watch Case (with Tony's Note)"
-    type: prop
+    type: item
+    itemType: 3
     first_scene: 10009
     pickup: true
     analysis: false
@@ -786,7 +800,8 @@ evidence_registry:
 
   - id: 10405
     name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found at Danny's)"
-    type: prop
+    type: item
+    itemType: 3
     first_scene: 10009
     pickup: true
     analysis: false
@@ -795,25 +810,28 @@ evidence_registry:
 
   - id: 10406
     name: "维修收据（600$ 全用于地下室）/ Repair Receipt ($600, Basement Renovation)"
-    type: document
+    type: envir
+    itemType: 2
     first_scene: 10010
-    pickup: true
+    pickup: false
     analysis: false
     description: "一张 1923 年的室内维修收据，委托人 Frank Kowalski，金额 600$，施工地点为鞋坊地下室。项目：更换地板、添置隔热层、安装电灯。"
     note: "场景道具——环境叙事（Frank 的真爱物证）；L4 R2 陷阱选项；不进疑点 condition"
 
   - id: 10407
     name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
-    type: document
+    type: envir
+    itemType: 2
     first_scene: 10009
-    pickup: true
+    pickup: false
     analysis: false
     description: "Frank Kowalski 遗嘱副本，正文打印，末尾有 Frank 亲笔手写附加条款：'如我与 Lula Washington 成婚，所有财产一并归 Lula。——Frank K.'字迹颤抖但清晰。"
     note: "L4 R1/R3 陷阱选项——遗嘱是动机证据但不能反驳'不在场'和'Lula 是否真爱'；L5/L6 叙事参照"
 
   - id: 10408
     name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
-    type: key
+    type: item
+    itemType: 3
     first_scene: 10020  # post_expose_scene 由 Lula 隔窗或随后交出
     pickup: true
     analysis: false
@@ -824,14 +842,16 @@ evidence_registry:
 
   - id: 10308
     name: "Margaret 鞋坊地下室钥匙 / Basement Key"
-    type: key
+    type: item
+    itemType: 3
     inherited_from: "loop3_post_expose"
     first_available_loop: 4
     usage: "L4 解锁 10010 地下室；状态维持持有"
 
   - id: 10309
     name: "Frank 家钥匙 / Frank's House Key"
-    type: key
+    type: item
+    itemType: 3
     inherited_from: "loop3_post_expose"
     first_available_loop: 3
     usage: "L3 已解锁 Frank 家门（街角 10007 → 主屋 10018）；L4 继续持有，解锁 10009 次卧"

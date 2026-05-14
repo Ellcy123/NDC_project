@@ -134,7 +134,8 @@ scenes:
     evidence:
       - id: 10101
         name: "尸体手指照片"
-        type: photo
+        type: clue
+        itemType: 1
         pickup: true
         note: "关键——L1 R1 击穿件；疑点 10101 condition"
         description: |
@@ -143,7 +144,8 @@ scenes:
 
       - id: 10104
         name: "现场地面照片"
-        type: photo
+        type: clue
+        itemType: 1
         pickup: true
         note: "关键——L1 R2 击穿件；疑点 10102 condition"
         description: |
@@ -153,8 +155,9 @@ scenes:
 
       - id: 10105
         name: "鞋坊营业记录"
-        type: document
-        pickup: true
+        type: envir
+        itemType: 2
+        pickup: false  # 环境观察——雇员名单可看不可拿走
         note: "场景道具——L1 R1 陷阱选项；雇员 Frank 身份线索"
         description: |
           Margaret 鞋坊 1925 年度营业台账，记录修鞋单和进货账。
@@ -180,7 +183,8 @@ scenes:
     evidence:
       - id: 10102
         name: "Margaret 相册"
-        type: book
+        type: item
+        itemType: 3
         pickup: true
         note: "关键——L1 R1 击穿件；疑点 10101 condition"
         description: |
@@ -190,7 +194,8 @@ scenes:
 
       - id: 10103
         name: "空的首饰盒"
-        type: prop
+        type: item
+        itemType: 3
         pickup: true
         note: "关键——L1 R1 击穿件；疑点 10102 condition"
         description: |
@@ -200,7 +205,8 @@ scenes:
 
       - id: 10106
         name: "卧室开放式厨房失火点照片"
-        type: photo
+        type: clue
+        itemType: 1
         pickup: true
         note: "场景道具——Morrison 编造死因依据；L1 R3 陷阱选项；Emma 皱眉（N4 藏梗）"
         description: |
@@ -211,8 +217,9 @@ scenes:
 
       - id: 10107
         name: "Patrick 遗物匣"
-        type: prop
-        pickup: false  # isUsable=false，仅环境叙事
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事，不可拾取
         note: "场景道具——Zack 父亲情感锚点，环境叙事"
         description: |
           橡木小匣，刻有"P.B."首字母。Zack 一眼认出——这是父亲 Patrick Brennan 的遗物。
@@ -222,6 +229,7 @@ scenes:
       - id: 10108
         name: "地下室的门（打不开）"
         type: door
+        itemType: 5
         pickup: false  # 不可拾取，场景互动道具
         note: "场景道具——L3 解锁；环境叙事"
         description: |
@@ -535,49 +543,56 @@ evidence_registry:
 
   - id: 10101
     name: "尸体手指照片"
-    type: photo
+    type: clue
+    itemType: 1
     pickup: true
     first_scene: 10001
     note: "关键——L1 R1 击穿件；疑点 10101 condition（type=1）"
 
   - id: 10102
     name: "Margaret 相册"
-    type: book
+    type: item
+    itemType: 3
     pickup: true
     first_scene: 10002
     note: "关键——L1 R1 击穿件；疑点 10101 condition（type=1）"
 
   - id: 10103
     name: "空的首饰盒"
-    type: prop
+    type: item
+    itemType: 3
     pickup: true
     first_scene: 10002
     note: "关键——L1 R2 陷阱选项（实质为 R2 trap）；疑点 10102 condition（type=1）；首饰盒凹槽划痕=戒指脱落物理伏笔（L4/L5 回收）"
 
   - id: 10104
     name: "现场地面照片"
-    type: photo
+    type: clue
+    itemType: 1
     pickup: true
     first_scene: 10001
     note: "关键——L1 R2 击穿件；疑点 10102 condition（type=1）；描述含'细筛无金属残留+火温说明'（P1 风险处理）"
 
   - id: 10105
     name: "鞋坊营业记录"
-    type: document
-    pickup: true
+    type: envir
+    itemType: 2
+    pickup: false
     first_scene: 10001
     note: "场景道具——L1 R1 陷阱选项；仅证明雇员身份，不反驳死者身份判断"
 
   - id: 10106
     name: "卧室开放式厨房失火点照片"
-    type: photo
+    type: clue
+    itemType: 1
     pickup: true
     first_scene: 10002
     note: "场景道具——Morrison 编造死因依据；L1 R3 陷阱选项（维度错误：死因≠身份）；Emma 皱眉藏梗（N4，L4 回收）"
 
   - id: 10107
     name: "Patrick 遗物匣"
-    type: prop
+    type: envir
+    itemType: 2
     pickup: false
     first_scene: 10002
     note: "场景道具——环境叙事，Zack 父亲情感锚点；isUsable=false"
@@ -585,6 +600,7 @@ evidence_registry:
   - id: 10108
     name: "地下室的门（打不开）"
     type: door
+    itemType: 5
     pickup: false
     first_scene: 10002
     note: "场景道具——L3 解锁；地下室 Frank+Lula 约会空间的伏笔；isUsable=false（L1 阶段不可互动）"

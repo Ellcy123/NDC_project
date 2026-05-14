@@ -211,42 +211,44 @@ scenes:
     description: |
       搜查令解锁的档案室，存放着大量贷款协议原件。
       Zack 在这里找到了 Frank 贷款协议的三个关键条款页——
-      这三份文件是合成"贷款计算玩法分析报告 10701"的原料，
+      这三份文件是触发"贷款计算器小玩法"的输入：玩家从物品栏点击任一件的"分析"按钮即可启动玩法，
+      玩法 UI 内提示补足其余两份条款，三件齐全后自动产出 10701 派生分析报告；
       也是击穿 Moore R2"协议完全合法"谎言的核心证据。
+      详见 `剧情设计/Unit10/小玩法/L3_银行_贷款计算器.md`。
       此外，一个标着"湖滨信托银行私人档案柜"的柜子里存放着 Frank 的房产证明（10307），
       但目前无法取出（Moore 在指证后才允许查看）。
     evidence:
       - id: 10303
         name: "贷款协议第 5 条（年单利 12%）/ Loan Agreement Clause 5 (12% Simple Annual Interest)"
         type: item
-        itemType: document
+        itemType: 3
         pickup: true
-        note: "合成 10701 原料之一；L3 R2 指证件来源"
+        note: "贷款计算器小玩法触发件之一（物品栏点击 → 启动玩法 → 提示补足另两件 → 产出 10701）；L3 R2 指证件来源"
         description: "Frank Kowalski 贷款协议第 5 条正文：'贷款利率为年利率 12%（单利），按月结算，每月利息 = 本金 × 1%。'条款措辞标准，但与第 7 条、第 12 条叠加后产生惊人的累计债务。"
         analysis: null
 
       - id: 10304
         name: "贷款协议第 7 条（利滚利条款）/ Loan Agreement Clause 7 (Compound Interest)"
         type: item
-        itemType: document
+        itemType: 3
         pickup: true
-        note: "合成 10701 原料之二"
+        note: "贷款计算器小玩法触发件之二；与 10303/10305 在玩法 UI 内补齐后自动算出 10701"
         description: "Frank Kowalski 贷款协议第 7 条：'如当月利息未按时缴纳，未缴利息并入本金，按照第 5 条利率计息（复利）。'这是利滚利条款——一旦某月还不上利息，欠款就会滚动加大。"
         analysis: null
 
       - id: 10305
         name: "贷款协议第 12 条（月管理费 50$）/ Loan Agreement Clause 12 (Monthly Service Fee $50)"
         type: item
-        itemType: document
+        itemType: 3
         pickup: true
-        note: "合成 10701 原料之三"
+        note: "贷款计算器小玩法触发件之三；与 10303/10304 在玩法 UI 内补齐后自动算出 10701"
         description: "Frank Kowalski 贷款协议第 12 条：'贷款期间每月收取档案管理及服务费 50 美元，独立于利息计算，不受第 5、7 条调整。'以'服务费'名义每月多收 50$，5 年下来是额外 3,000$——相当于本金的 5 倍。"
         analysis: null
 
       - id: 10307
         name: "Frank 房产证明 / Frank's Property Deed"
-        type: item
-        itemType: document
+        type: envir
+        itemType: 2
         pickup: false  # 档案室内可见，但不可取出；post_expose 阶段 Moore 允许查看
         note: "场景道具——档案室内可见（湖滨信托银行私人档案柜）；L3 post_expose Moore 允许查看但不交付；附带 10308+10309 两把钥匙"
         description: "Frank Kowalski 名下的南区老宅房产证明，存档于湖滨信托银行私人档案柜。文件显示房产现处于抵押状态。证明上夹着两把钥匙——一把是 Margaret 鞋坊地下室的（10308），另一把是 Frank 家大门的（10309）。Danny 误以为这是 Frank 另一处不知名房产，一并拿来交给了银行。"
@@ -271,7 +273,7 @@ scenes:
       - id: 10302
         name: "LAKESHORE TRUST BANK 客户贷款档案 / LAKESHORE TRUST BANK Customer Loan File"
         type: item
-        itemType: document
+        itemType: 3
         pickup: true
         note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10301 牛奶签收单直接对比签名笔迹）"
         description: "Frank Kowalski 客户贷款档案，原始贷款 600$，日期 1923 年 11 月 1 日，贷款用途栏填写'赌博娱乐'。签名栏：Frank Kowalski——字迹工整流畅，笔画连贯，无任何颤抖或停顿痕迹。以 Frank 73 岁、手部关节老化的实际情况来看，这份签名异乎寻常地稳定。"
@@ -280,7 +282,7 @@ scenes:
       - id: 10306
         name: "客户账户对账单（内部存档版本）/ Account Statement (Internal Archive Version)"
         type: item
-        itemType: document
+        itemType: 3
         pickup: true
         note: "关键——疑点 10303 condition；L3 R3 击破件；内部存档版本，Leonard 管理疏失误归入客户文件夹"
         description: "Frank Kowalski 账户对账单，内部存档版本（Leonard 误将此版本归入客户文件夹）。页眉右上角小字：'Lakeshore Investment Co. No.4872'（投资公司）。正文开户银行一栏：'开户银行：Lakeshore Trust Bank'（银行）。同一份文件，页眉是投资公司、正文是银行——两者不是同一家机构，这份文件在说不同的事：对外称银行，内部记为投资公司——这是系统性欺骗的直接证据。"
@@ -288,18 +290,18 @@ scenes:
 
       - id: 10310
         name: "Leonard 与 Vinnie 童年合照（1910）/ Leonard & Vinnie Childhood Photo (1910)"
-        type: item
-        itemType: photo
-        pickup: true
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事——Leonard 办公室桌上压在文件下，可看不可拿走
         note: "场景道具——环境叙事；L6 空相框 10611 跨 Loop 呼应；第三重反转伏笔铺线"
         description: "Leonard 办公室桌上压在文件下的一张旧照片，摄于 1910 年，两个南区街头的少年，神态亲近。背面工整蓝色钢笔字：'To Leo, Best Friends Forever - 1910'。照片被特意保存，虽然已经被文件压在下面——像是刻意收起来，但又没有丢掉。"
         analysis: null
 
       - id: 10311
         name: "伊利诺伊州法律公告 / Illinois State Legal Notice"
-        type: item
-        itemType: document
-        pickup: true
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事——Leonard 办公室墙上贴的公告，可看不可拿走
         note: "场景道具——环境叙事；L3 R2 陷阱选项（Moore 会用投资公司马甲挡掉单一法规约束）"
         description: "一份贴在 Leonard 办公室墙上的伊利诺伊州法律公告，标注银行业利率上限法规：'消费性贷款年化利率不得超过 36%（1916 年伊利诺伊州银行法）。'这是银行正规业务的法律约束——但 Lakeshore Investment Co. 以投资公司身份规避了银行法的适用范围。"
         analysis: null
@@ -324,7 +326,7 @@ scenes:
       - id: 10301
         name: "牛奶订购签收单（Frank 真迹，颤抖歪斜）/ Milk Delivery Receipt (Frank's Authentic Signature)"
         type: item
-        itemType: document
+        itemType: 3
         pickup: true
         note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10302 贷款档案直接对比签名笔迹）"
         description: "Frank 家主屋开放式厨房台面上的牛奶订购签收单，Frank Kowalski 的亲笔签名。字迹颤抖歪斜，笔画粗细不均，几个字母明显停顿过——这是老年人手部关节退化的典型书写特征。与贷款档案上的工整流畅签名形成鲜明对比。"
@@ -510,7 +512,7 @@ expose:
       - id: 10308
         name: "Margaret 鞋坊地下室钥匙 / Margaret's Shoe Shop Basement Key"
         type: item
-        itemType: key
+        itemType: 3
         pickup: true
         note: "关键——L4 解锁场景 1003（Margaret 鞋坊地下室）；Frank 房产证上附带，Danny 误以为是 Frank 另一处房产一并交来"
         description: "一把旧铁钥匙，附着在 Frank 房产证明的回形针上。Moore 说 Danny 把这把钥匙和房产证一起交来的，不知道是哪里的门。钥匙齿形简单，像是某个地下室或仓库的。"
@@ -519,7 +521,7 @@ expose:
       - id: 10309
         name: "Frank 家钥匙 / Frank's House Key"
         type: item
-        itemType: key
+        itemType: 3
         pickup: true
         note: "关键——解锁 10018（Frank 家主屋（开间））+ 10009（Frank 家次卧）；L5 前置（小铁盒钥匙 10408 需进屋后才能使用）"
         description: "Frank 家大门的钥匙，同样夹在房产证上。Moore 说这批钥匙都是 Danny 一并交来的——Danny 可能以为这些都是 Frank 名下房产的钥匙。"
@@ -604,7 +606,7 @@ evidence_registry:
   - id: 10301
     name: "牛奶订购签收单（Frank 真迹，颤抖歪斜）/ Milk Delivery Receipt (Frank's Authentic Signature)"
     type: item
-    itemType: document
+    itemType: 3
     first_scene: 10018
     pickup: true
     note: "关键——疑点 10301 condition；与 10302 直接对比签名笔迹；L3 R1 击破件之一"
@@ -612,7 +614,7 @@ evidence_registry:
   - id: 10302
     name: "LAKESHORE TRUST BANK 客户贷款档案 / LAKESHORE TRUST BANK Customer Loan File"
     type: item
-    itemType: document
+    itemType: 3
     first_scene: 10014
     pickup: true
     note: "关键——疑点 10301 condition；与 10301 直接对比签名笔迹；L3 R1 击破件之一"
@@ -620,7 +622,7 @@ evidence_registry:
   - id: 10303
     name: "贷款协议第 5 条（年单利 12%）/ Loan Agreement Clause 5"
     type: item
-    itemType: document
+    itemType: 3
     first_scene: 10013
     pickup: true
     note: "合成 10701 原料之一；不单独进疑点 condition"
@@ -628,7 +630,7 @@ evidence_registry:
   - id: 10304
     name: "贷款协议第 7 条（利滚利条款）/ Loan Agreement Clause 7"
     type: item
-    itemType: document
+    itemType: 3
     first_scene: 10013
     pickup: true
     note: "合成 10701 原料之二；不单独进疑点 condition"
@@ -636,7 +638,7 @@ evidence_registry:
   - id: 10305
     name: "贷款协议第 12 条（月管理费 50$）/ Loan Agreement Clause 12"
     type: item
-    itemType: document
+    itemType: 3
     first_scene: 10013
     pickup: true
     note: "合成 10701 原料之三；不单独进疑点 condition"
@@ -644,15 +646,15 @@ evidence_registry:
   - id: 10306
     name: "客户账户对账单（内部存档版本）/ Account Statement (Internal Archive Version)"
     type: item
-    itemType: document
+    itemType: 3
     first_scene: 10014
     pickup: true
     note: "关键——疑点 10303 condition；L3 R3 击破件；内部存档版本，Leonard 管理疏失误归入客户文件夹"
 
   - id: 10307
     name: "Frank 房产证明 / Frank's Property Deed"
-    type: item
-    itemType: document
+    type: envir
+    itemType: 2
     first_scene: 10013  # 档案室内可见
     pickup: false  # 仅可查看，不可取出；post_expose 允许查看
     note: "场景道具——L3 post_expose Moore 允许查看不交付；附带 10308+10309；L4 叙事参照"
@@ -660,7 +662,7 @@ evidence_registry:
   - id: 10308
     name: "Margaret 鞋坊地下室钥匙 / Margaret's Shoe Shop Basement Key"
     type: item
-    itemType: key
+    itemType: 3
     first_scene: null
     given_by: "moore（post_expose 阶段，从 Frank 房产证上的回形针取下）"
     pickup: true
@@ -669,7 +671,7 @@ evidence_registry:
   - id: 10309
     name: "Frank 家钥匙 / Frank's House Key"
     type: item
-    itemType: key
+    itemType: 3
     first_scene: null
     given_by: "moore（post_expose 阶段，从 Frank 房产证上的回形针取下）"
     pickup: true
@@ -677,16 +679,16 @@ evidence_registry:
 
   - id: 10310
     name: "Leonard 与 Vinnie 童年合照（1910）/ Leonard & Vinnie Childhood Photo (1910)"
-    type: item
-    itemType: photo
+    type: envir
+    itemType: 2
     first_scene: 10014
     pickup: true
     note: "场景道具——环境叙事；L6 空相框 10611 跨 Loop 呼应；第三重反转铺线；不进疑点 condition"
 
   - id: 10311
     name: "伊利诺伊州法律公告 / Illinois State Legal Notice"
-    type: item
-    itemType: document
+    type: envir
+    itemType: 2
     first_scene: 10014
     pickup: true
     note: "场景道具——环境叙事；L3 R2 陷阱选项（Moore 用投资公司马甲反驳单一法规）；不进疑点 condition"
@@ -694,7 +696,7 @@ evidence_registry:
   - id: 10701
     name: "贷款计算玩法分析报告（派生）/ Loan Calculation Analysis Report (Derived)"
     type: derived
-    itemType: document
+    itemType: 3
     first_scene: null
     given_by: "合成自 10303+10304+10305（CASE BOARD 合成）"
     pickup: true

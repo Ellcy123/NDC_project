@@ -267,7 +267,8 @@ scenes:
     evidence:
       - id: 10501
         name: "火灾现场打火机 / Lighter Found at Fire Scene"
-        type: prop
+        type: item
+        itemType: 3
         pickup: true
         analysis: false
         description: "银色金属打火机，侧面刻有 V 字样。在鞋坊废墟靠近入口处的灰烬中发现，完好无损——普通打火机在火灾温度下外壳会熔变，此件无任何热损痕迹。"
@@ -453,7 +454,8 @@ evidence_registry:
   new_items:
     - id: 10501
       name: "火灾现场打火机 / Lighter Found at Fire Scene"
-      itemType: prop
+      type: item
+      itemType: 3
       obtain_scene: 10001
       obtain_method: pickup
       note: "关键——L5 R1 击穿件；疑点 10501 condition"
@@ -461,7 +463,8 @@ evidence_registry:
 
     - id: 10502
       name: "Frank 的举报材料 / Frank's Whistleblower Documents"
-      itemType: document
+      type: item
+      itemType: 3
       obtain_scene: 10018
       obtain_method: story_auto
       note: "剧情——开篇小铁盒取出；L5 末 Mickey 拿走（removed_from_inventory）；不进玩家长期背包；L6 指证不依赖"
@@ -470,10 +473,11 @@ evidence_registry:
 
     - id: 10503
       name: "Frank 留给 Lula 的遗书 / Frank's Letter to Lula"
-      itemType: document
+      type: envir
+      itemType: 2
       obtain_scene: 10018
       obtain_method: story_auto
-      note: "环境叙事——isUsable=false；不进指证/疑点 condition；情感载体"
+      note: "环境叙事——不可拾取，仅观察；不进指证/疑点 condition；情感载体"
       first_loop: 5
       isUsable: false
 
