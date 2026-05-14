@@ -290,8 +290,12 @@ scenes:
         name: "Webb 收入记录 / Webb's Income Ledger"
         type: item
         pickup: true
-        description: "Webb 个人财务记录，月净收入约 $15,000；来源栏模糊，远超酒吧正常盈利能力"
-        note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9204 账本差额）"
+        description: |
+          Webb 个人月度收支记录（1928 年 9–10 月）：
+          - SEPTEMBER 1928：Base $4,000 + 花瓶 / Vase $4,000 = Total $8,000
+          - OCTOBER 1928：Base $4,500 + 油画 / Painting $7,000 = Total $11,500
+          Base 与酒吧月营收（9204）完全一致；额外项以"花瓶/油画"为名目入个人账，不走酒吧公账
+        note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9204 账本差额）；额外项金额与 9706 勒索金额精确匹配"
 
     npcs: {}  # Webb 办公室无 NPC 驻场
 
@@ -331,7 +335,11 @@ scenes:
         name: "Tommy 酒吧账本 / Tommy's Bar Ledger"
         type: item
         pickup: true
-        description: "蓝月亮酒吧正式账本，月净收益约 $4,000，主要来自私酒销售和舞会入场费；内标'卖给 Thompson/Coleman'（伪买家化名）"
+        description: |
+          蓝月亮酒吧 1928 年 9–10 月正式财务记录：
+          - SEPTEMBER 1928：Liquor $2,800 / Food $700 / Music $500 → Monthly Revenue $4,000
+          - OCTOBER 1928：Liquor $3,200 / Food $800 / Music $500 → Monthly Revenue $4,500
+          纯营收明细，无暗号；与 9203 Webb 个人 Base 一一对应
         note: "关键——疑点 9202 condition；L2 R2 击穿件（配合 9203 收入差额）"
 
       - id: 9208_vivian_schedule
@@ -479,11 +487,11 @@ expose:
     lie_source: "NPC 新谎言（被 R1 逼退后的退守，Expose 中 Tommy 主动提出）"
     usable_evidence:
       - id: 9203
-        name: "Webb 收入记录（月净 $15,000）"
-        purpose: "Webb 每月收入 $15,000，来源模糊；配合 Tommy 账本显示差额"
+        name: "Webb 收入记录（1928 年 9–10 月）"
+        purpose: "Webb 个人收入：9 月 Base $4,000 + 花瓶 $4,000；10 月 Base $4,500 + 油画 $7,000——Base 与酒吧营收完美对齐，但'花瓶/油画'两笔合计 $11,000 不在酒吧账上"
       - id: 9204
-        name: "Tommy 酒吧账本（月净 $4,000）"
-        purpose: "酒吧正式账面利润只有 $4,000；两本账差额 $11,000 无法被私酒解释——账目根本不'清白'"
+        name: "Tommy 酒吧账本（9 月 $4,000 / 10 月 $4,500）"
+        purpose: "酒吧合法营收 9 月 $4,000、10 月 $4,500；与 9203 Webb Base 完美一致——Webb 已经把酒吧利润全部计入个人收入，所谓'花瓶/油画'共 $11,000 必然来自账外，账目根本不'清白'"
     trap_evidence:
       - id: 9201
         reason: "未显影的原始勒索照片——背面只有淡黄褐色污渍，金额不可见；即便玩家未做烘烤直接拿来出示，也只能证明'存在暧昧合影'这一性质维度，无法反驳'$11,000 差额'这一数字维度；误用此件会失败"
