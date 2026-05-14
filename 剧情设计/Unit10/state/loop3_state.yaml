@@ -4,11 +4,11 @@
 #
 # 叙事功能：市政厅过场（令状被拒）→ Moore 银行门口 Mickey 律师登场/递交传票 →
 #           银行大厅 Leonard 背景证词 → 档案室 + Leonard 办公室搜证 →
-#           Frank 家内部（牛奶签收单） → Frank 家次卧（Danny 初见） →
+#           Frank 家主屋（开间）（牛奶签收单） → Frank 家次卧（Danny 初见） →
 #           指证 Moore（3 轮：笔迹 / 贷款计算 / 对账单矛盾）→ post_expose 钥匙 + 第一重反转
 #
 # 核心体验：
-#   R1 笔迹对比——"Frank 亲自签字"谎言被 10702 派生报告击穿
+#   R1——"Frank 亲自签字"谎言被 10301+10302 双件直接对比击穿（两份签名肉眼可辨笔迹不一致）
 #   R2 贷款计算玩法——"协议条款完全合法"被 10701 派生分析报告击穿
 #        （年单利 12% + 月管理费 50$，5 年合计 3,960$，年化 112%，超州法 36% 上限）
 #   R3 对账单双头——"去告我没用"被 10306 内部存档对账单击穿
@@ -32,7 +32,7 @@
 #                        doubts / evidence_registry 全部存在；
 #                        expose 含 target/is_liar/player_inquiry/context/
 #                        round_1/round_2/round_3/post_expose 完整
-# B. 证据覆盖     PASS — L3 全部 12 件证据（10301-10311 + 派生 10701/10702）
+# B. 证据覆盖     PASS — L3 全部 11 件证据（10301-10311 + 派生 10701；笔迹对比已删除，R1 改双件直接对比）
 #                        已分配到对应场景；
 #                        10307（Frank 房产证）/ 10308（地下室钥匙）/ 10309（Frank 家钥匙）
 #                        在 post_expose 给予；10310/10311 为环境叙事道具
@@ -41,7 +41,7 @@
 #                        Mickey 作为过场 NPC 单独标注（opening 段）
 # D. 目标对齐     PASS — goals 与讨论结论"L3 揭示：Frank 不是赌博老赖 /
 #                        Moore 系统性欺诈 / Mickey 律师登场"一致
-# E. 信息节奏     PASS — 未泄露 L4+（Lula 真爱 / Danny 目击 / 保险箱材料 /
+# E. 信息节奏     PASS — 未泄露 L4+（Lula 真爱 / Danny 目击 / 小铁盒材料 /
 #                        Frank 死因 / Leonard 凶手身份）；
 #                        Danny 次卧仅有声称 Lula 是骗子的背景对话，不展开；
 #                        Moore 坦白"Danny 把房产证给银行"属于 L3 post_expose 合法揭示
@@ -49,7 +49,7 @@
 #                        10301 + 10302 → 疑点 10301；
 #                        10701（单件派生）→ 疑点 10302；
 #                        10306（单件）→ 疑点 10303
-# G. Expose 逻辑  PASS — R1 有 10702 笔迹对比报告（合成自 10301+10302）；
+# G. Expose 逻辑  PASS — R1 用 10301（Frank 真迹）+ 10302（贷款档案签名）双件直接对比击穿（无派生）；
 #                        R2 有 10701 贷款计算分析报告（合成自 10303+10304+10305）；
 #                        R3 有 10306 对账单；每轮 lie 有对应证据可反驳 ✅
 #                        时序检查：所有指证用件的疑点出现 Loop（3）≤ 使用 Loop（3）✅
@@ -128,11 +128,11 @@ opening:
     随后过场：Mickey 与 Emma 互换分工——
     Emma 去跟进法医鉴定和 Margaret 病情，Mickey 留下来协助 Zack 查银行。
   scenes_involved:
-    - id: 1016
-      name: "市政厅/法院"
-      type: cutscene  # 🎬 纯过场，无搜证
-      description: "Zack 拿 Leonard 信封到法院被拒——令状申请失败，调查陷入僵局。"
-    - id: 1006
+    - id: 10016
+      name: "市政厅/法院大门外台阶"
+      type: cutscene  # 🎬 纯过场，无搜证，户外场景
+      description: "Zack 站在芝加哥市政厅大门前的石阶上，递信封给守门警卫——警卫扫一眼摇头，连门都不让进。整段过场全程发生在户外台阶，玩家不踏入建筑内部。"
+    - id: 10006
       name: "圣心医院-Margaret 病房（L3 过场）"
       type: cutscene  # 🎬 纯过场（Emma 交代去向）
       description: "Mickey 和 Emma 商议分工：Emma 去法医 + 医院，Mickey 留下帮 Zack 查银行。"
@@ -151,7 +151,7 @@ opening:
     withheld_topics:
       - "自己的真实身份和动机——Unit11+ 揭示是 Whale"
       - "Frank 为什么找 Mickey 做律师的真实原因（监控 Frank 检举进度）"
-      - "检举材料的具体位置（L5 才会知道保险箱里有）"
+      - "检举材料的具体位置（L5 才会知道小铁盒里有）"
     player_inquiry:
       - "\"Mickey 是 Frank 的律师——他知道 Frank 银行纠纷的什么内情\" # 8"
       - "\"Mickey 怎么拿到传票的——这代表什么\" # 9"
@@ -164,8 +164,8 @@ opening:
 
 scenes:
 
-  # ── 场景 1011：Moore 银行-大厅（L3 自由探索）──
-  - id: 1011
+  # ── 场景 10011：Moore 银行-大厅（L3 自由探索）──
+  - id: 10011
     name: "Moore 银行-大厅"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -201,8 +201,8 @@ scenes:
           - 3050001  # Leonard：我们的内部档案和对客文件是分开管理的（R9 替代方案 A 铺垫；10306 解释）
 
 
-  # ── 场景 1013：Moore 银行-档案室（搜查令解锁）──
-  - id: 1013
+  # ── 场景 10013：Moore 银行-档案室（搜查令解锁）──
+  - id: 10013
     name: "Moore 银行-档案室"
     type: locked_exploration  # 🔒 搜查令解锁后可进入
     unlock_condition:
@@ -253,8 +253,8 @@ scenes:
         analysis: null
 
 
-  # ── 场景 1014：Moore 银行-Leonard 办公室（搜查令解锁）──
-  - id: 1014
+  # ── 场景 10014：Moore 银行-Leonard 办公室（搜查令解锁）──
+  - id: 10014
     name: "Moore 银行-Leonard 办公室"
     type: locked_exploration  # 🔒 搜查令解锁后可进入
     unlock_condition:
@@ -262,7 +262,7 @@ scenes:
         param: "搜查令"
     description: |
       Leonard 的个人办公室，比档案室更私人的空间。
-      贷款档案（10302）是 L3 R1 笔迹对比的关键物件——
+      贷款档案（10302）是 L3 R1 双件直接对比的关键物件——
       签名栏字迹工整流畅，与 Frank 年迈手颤的习惯不符。
       客户账户对账单（10306）是内部存档版本，因 Leonard 管理疏失被误归入客户文件夹——
       页眉右上角小字"Lakeshore Investment Co. No.4872"与正文"开户银行：Lakeshore Trust Bank"形成矛盾。
@@ -273,9 +273,9 @@ scenes:
         type: item
         itemType: document
         pickup: true
-        note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10301 牛奶签收单合成 10702 笔迹对比报告）"
+        note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10301 牛奶签收单直接对比签名笔迹）"
         description: "Frank Kowalski 客户贷款档案，原始贷款 600$，日期 1923 年 11 月 1 日，贷款用途栏填写'赌博娱乐'。签名栏：Frank Kowalski——字迹工整流畅，笔画连贯，无任何颤抖或停顿痕迹。以 Frank 73 岁、手部关节老化的实际情况来看，这份签名异乎寻常地稳定。"
-        analysis: "与 Frank 牛奶订购签收单（10301）合成 → 10702 笔迹对比报告"
+        analysis: null  # 直接出示对比 10301，无派生证据
 
       - id: 10306
         name: "客户账户对账单（内部存档版本）/ Account Statement (Internal Archive Version)"
@@ -305,32 +305,34 @@ scenes:
         analysis: null
 
 
-  # ── 场景 1008：Frank 家门口 → 内部（L3 post_expose 钥匙解锁）──
-  - id: 1008
-    name: "Frank 家门口 → 内部"
-    type: locked_exploration  # 🔒 L3 post_expose 后 10309 钥匙解锁内部
+  # ── 场景 10018：Frank 家主屋（开间客厅+床+开放式厨房）──
+  - id: 10018
+    name: "Frank 家主屋（开间）"
+    type: locked_exploration  # 🔒 L3 post_expose 后 10309 钥匙解锁
     unlock_condition:
       - type: item
         param: "10309 Frank 家钥匙（post_expose 给予）"
     description: |
-      Frank 家的大门——L2 时敲门无人应答，无法进入。
-      L3 post_expose 后 Moore 给出了 Frank 家钥匙（10309），
-      大门解锁，Zack 可以进入内部。
-      Frank 家内部主屋是 L5 保险箱的所在地（L5 再深度搜证），
-      但 L3 进入目的只是取得 Frank 的日常签名真迹（10301 牛奶订购签收单）。
+      Frank 家的大门——L2 时敲门无人应答，无法进入；
+      L3 post_expose 后 Moore 给出了 Frank 家钥匙（10309），大门解锁。
+      内部是 1920 年代南区常见的开间布局：客厅、Frank 的床、开放式厨房一体相连，
+      没有隔墙。一张旧沙发对着窗户，床靠墙摆放，床和墙之间有一道窄缝隙——
+      L5 会在床后缝隙里发现藏着的小铁盒（10408 备用钥匙打开）。
+      L3 进入目的只是取得 Frank 的日常签名真迹——厨房台面上有一张牛奶订购签收单。
+      （次卧 10009 是 Danny 寄居的独立小房间，从主屋出来另开门进入。）
     evidence:
       - id: 10301
         name: "牛奶订购签收单（Frank 真迹，颤抖歪斜）/ Milk Delivery Receipt (Frank's Authentic Signature)"
         type: item
         itemType: document
         pickup: true
-        note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10302 贷款档案合成 10702 笔迹对比报告）"
-        description: "Frank 家厨房台面上的牛奶订购签收单，Frank Kowalski 的亲笔签名。字迹颤抖歪斜，笔画粗细不均，几个字母明显停顿过——这是老年人手部关节退化的典型书写特征。与贷款档案上的工整流畅签名形成鲜明对比。"
-        analysis: "与贷款档案（10302）合成 → 10702 笔迹对比报告"
+        note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10302 贷款档案直接对比签名笔迹）"
+        description: "Frank 家主屋开放式厨房台面上的牛奶订购签收单，Frank Kowalski 的亲笔签名。字迹颤抖歪斜，笔画粗细不均，几个字母明显停顿过——这是老年人手部关节退化的典型书写特征。与贷款档案上的工整流畅签名形成鲜明对比。"
+        analysis: null  # 直接出示对比 10302，无派生证据
 
 
-  # ── 场景 1009：Frank 家次卧-Danny 住处（搜查令解锁，L3 Danny 初见）──
-  - id: 1009
+  # ── 场景 10009：Frank 家次卧-Danny 住处（搜查令解锁，L3 Danny 初见）──
+  - id: 10009
     name: "Frank 家次卧-Danny 住处"
     type: locked_exploration  # 🔒 L3 post_expose 10309 钥匙后可进入
     unlock_condition:
@@ -369,8 +371,8 @@ scenes:
           - 3090001  # Danny：声称 Lula "在勾引叔叔"（背景信息；L4 R3 动机参照）
 
 
-  # ── 场景 1012：Moore 银行-贵宾室（⚔️ 指证场景）──
-  - id: 1012
+  # ── 场景 10012：Moore 银行-贵宾室（⚔️ 指证场景）──
+  - id: 10012
     name: "Moore 银行-贵宾室"
     type: expose_scene  # ⚔️ 指证场景
     description: |
@@ -407,7 +409,7 @@ scenes:
 
 
 # ─────────────────────────────
-# 四、指证（⚔️ Expose：Harold Moore，于 1012 Moore 银行-贵宾室）
+# 四、指证（⚔️ Expose：Harold Moore，于 10012 Moore 银行-贵宾室）
 # ─────────────────────────────
 
 expose:
@@ -418,34 +420,37 @@ expose:
   is_liar: true
   player_inquiry: null
   total_rounds: 3
-  scene_id: 1012  # 指证发生在 Moore 银行贵宾室（Moore 行长办公室）
+  scene_id: 10012  # 指证发生在 Moore 银行贵宾室（Moore 行长办公室）
 
   context: |
     Mickey 和 Zack 手持搜查令进入贵宾室，正式询问 Frank 检举银行的事。
-    Zack 已收集：10702 笔迹对比报告（合成自 10301 + 10302）、
-    10701 贷款计算分析报告（合成自 10303 + 10304 + 10305）、
-    10306 内部存档版对账单。
+    Zack 已收集：10301 牛奶订购签收单（Frank 真迹）、10302 贷款档案（签名工整流畅）、
+    10701 贷款计算分析报告（合成自 10303 + 10304 + 10305）、10306 内部存档版对账单。
     Mickey 在场形成法律威胁，但不主导指证——Zack 出示证据，Mickey 偶尔补一句"这涉及欺诈罪款项"。
     Moore 在 L3 的三轮谎言依次被击穿：
-    - R1：Frank 亲自签字（笔迹伪造 → 被 10702 击穿）
+    - R1：Frank 亲自签字（笔迹伪造 → 被 10301+10302 双件直接对比击穿）
     - R2：协议完全合法（掠夺性贷款 → 被 10701 击穿）
     - R3：去告我没用（投资公司马甲欺骗 → 被 10306 击穿）
 
-  # ── 轮次一：笔迹伪造击穿 ──
+  # ── 轮次一：笔迹伪造击穿（双件直接对比，无派生）──
   round_1:
     lie: "Frank 亲自签字申请了 3,200 美元的赌博贷款，银行手续全部合规，我们没有任何问题。"
     lie_source: 3060001
     usable_evidence:
-      - id: "10702"
-        name: "笔迹对比报告（派生）"
-        usage: "牛奶订购签收单（Frank 真迹，颤抖歪斜）vs 贷款档案签名（工整流畅无颤抖）——两份签名出自不同人手，Frank 从未亲自签过这份协议。"
-    trap_evidence:
       - id: "10301"
-        name: "牛奶订购签收单（单独）"
-        reason: "真迹本身只能说明 Frank 签名有特征，无法直接证明'档案上的签名是假的'——必须合成对比报告 10702 才能构成反驳"
+        name: "牛奶订购签收单（Frank 真迹，颤抖歪斜）"
+        usage: "Frank 73 岁、手部关节老化的实际笔迹——颤抖歪斜、笔画粗细不均、明显停顿。Zack 把这份签名摆在 Moore 面前。"
+      - id: "10302"
+        name: "Lakeshore Trust Bank 客户贷款档案（签名工整流畅）"
+        usage: "贷款档案上的 Frank Kowalski 签名工整流畅、笔画连贯无颤抖——肉眼可辨与 10301 的真迹完全不是同一人写的。两份签名并排呈上，Moore 无从辩驳。"
+    required_items: ["10301", "10302"]
+    trap_evidence:
+      - id: "10310"
+        name: "Leonard 与 Vinnie 童年合照"
+        reason: "维度错误——童年合照只能反映 Leonard-Vinnie 私交，与 Frank 签名是否伪造无直接关系；R1 的维度是签名真伪，不是 Leonard 的社交圈"
     result: full_breakthrough
     result_description: |
-      10702 笔迹对比报告击穿了"Frank 亲自签字"的谎言。
+      10301 + 10302 双件并排出示，签名笔迹明显不一致——Frank 真迹颤抖歪斜，档案签名工整流畅。
       Moore 眉头皱起，沉默片刻，然后说：
       "就算如此，协议条款本身是完全合法的。去告我吧。"
       Moore 切换到 R2 新防线——看起来是承认了代签，但转向主张"条款合法"。
@@ -516,7 +521,7 @@ expose:
         type: item
         itemType: key
         pickup: true
-        note: "关键——解锁 1008（Frank 家内部）+ 1009（Frank 家次卧）；L5 前置（保险箱钥匙 10408 需进屋后才能使用）"
+        note: "关键——解锁 10018（Frank 家主屋（开间））+ 10009（Frank 家次卧）；L5 前置（小铁盒钥匙 10408 需进屋后才能使用）"
         description: "Frank 家大门的钥匙，同样夹在房产证上。Moore 说这批钥匙都是 Danny 一并交来的——Danny 可能以为这些都是 Frank 名下房产的钥匙。"
         analysis: null
 
@@ -560,7 +565,7 @@ doubts:
     resolved_loop: 3
     status: "unlocked_loop3"
     # 推理链：Frank 真迹颤抖歪斜 + 档案签名工整流畅 → 两份签名出自不同人 → 档案是伪造签名
-    # 合成 10702 笔迹对比报告后疑点确立；L3 R1 击穿 Moore"Frank 亲自签字"谎言时解决
+    # 玩家集齐 10301 + 10302 后疑点确立；L3 R1 击穿 Moore"Frank 亲自签字"谎言时解决
 
   - id: 10302
     text: "这真的是合法贷款吗？"
@@ -593,30 +598,30 @@ doubts:
 evidence_registry:
   # Loop3 = 103xx 系列（Unit10 使用 10xxx 独立 ID 段，loop3=103xx，派生=107xx）
   # 继承：Loop1（10101-10108）/ Loop2（10201-10206）/ 跨 Loop 碎片 10204
-  # Loop3 新增：10301-10311；派生：10701 / 10702
+  # Loop3 新增：10301-10311；派生：10701（贷款计算分析）
   # post_expose 给予：10307（不交付，可查看）/ 10308（钥匙）/ 10309（钥匙）
 
   - id: 10301
     name: "牛奶订购签收单（Frank 真迹，颤抖歪斜）/ Milk Delivery Receipt (Frank's Authentic Signature)"
     type: item
     itemType: document
-    first_scene: 1008
+    first_scene: 10018
     pickup: true
-    note: "关键——疑点 10301 condition；与 10302 合成 10702 笔迹对比报告；L3 R1 击破件来源"
+    note: "关键——疑点 10301 condition；与 10302 直接对比签名笔迹；L3 R1 击破件之一"
 
   - id: 10302
     name: "LAKESHORE TRUST BANK 客户贷款档案 / LAKESHORE TRUST BANK Customer Loan File"
     type: item
     itemType: document
-    first_scene: 1014
+    first_scene: 10014
     pickup: true
-    note: "关键——疑点 10301 condition；与 10301 合成 10702；L3 R1 击破件来源"
+    note: "关键——疑点 10301 condition；与 10301 直接对比签名笔迹；L3 R1 击破件之一"
 
   - id: 10303
     name: "贷款协议第 5 条（年单利 12%）/ Loan Agreement Clause 5"
     type: item
     itemType: document
-    first_scene: 1013
+    first_scene: 10013
     pickup: true
     note: "合成 10701 原料之一；不单独进疑点 condition"
 
@@ -624,7 +629,7 @@ evidence_registry:
     name: "贷款协议第 7 条（利滚利条款）/ Loan Agreement Clause 7"
     type: item
     itemType: document
-    first_scene: 1013
+    first_scene: 10013
     pickup: true
     note: "合成 10701 原料之二；不单独进疑点 condition"
 
@@ -632,7 +637,7 @@ evidence_registry:
     name: "贷款协议第 12 条（月管理费 50$）/ Loan Agreement Clause 12"
     type: item
     itemType: document
-    first_scene: 1013
+    first_scene: 10013
     pickup: true
     note: "合成 10701 原料之三；不单独进疑点 condition"
 
@@ -640,7 +645,7 @@ evidence_registry:
     name: "客户账户对账单（内部存档版本）/ Account Statement (Internal Archive Version)"
     type: item
     itemType: document
-    first_scene: 1014
+    first_scene: 10014
     pickup: true
     note: "关键——疑点 10303 condition；L3 R3 击破件；内部存档版本，Leonard 管理疏失误归入客户文件夹"
 
@@ -648,7 +653,7 @@ evidence_registry:
     name: "Frank 房产证明 / Frank's Property Deed"
     type: item
     itemType: document
-    first_scene: 1013  # 档案室内可见
+    first_scene: 10013  # 档案室内可见
     pickup: false  # 仅可查看，不可取出；post_expose 允许查看
     note: "场景道具——L3 post_expose Moore 允许查看不交付；附带 10308+10309；L4 叙事参照"
 
@@ -668,13 +673,13 @@ evidence_registry:
     first_scene: null
     given_by: "moore（post_expose 阶段，从 Frank 房产证上的回形针取下）"
     pickup: true
-    note: "关键——L3 post_expose 解锁 1008（Frank 家内部）+ 1009（Frank 家次卧）；L5 保险箱前置"
+    note: "关键——L3 post_expose 解锁 10018（Frank 家主屋（开间））+ 10009（Frank 家次卧）；L5 小铁盒前置"
 
   - id: 10310
     name: "Leonard 与 Vinnie 童年合照（1910）/ Leonard & Vinnie Childhood Photo (1910)"
     type: item
     itemType: photo
-    first_scene: 1014
+    first_scene: 10014
     pickup: true
     note: "场景道具——环境叙事；L6 空相框 10611 跨 Loop 呼应；第三重反转铺线；不进疑点 condition"
 
@@ -682,7 +687,7 @@ evidence_registry:
     name: "伊利诺伊州法律公告 / Illinois State Legal Notice"
     type: item
     itemType: document
-    first_scene: 1014
+    first_scene: 10014
     pickup: true
     note: "场景道具——环境叙事；L3 R2 陷阱选项（Moore 用投资公司马甲反驳单一法规）；不进疑点 condition"
 
@@ -696,12 +701,3 @@ evidence_registry:
     note: "关键——疑点 10302 condition；L3 R2 击破件；贷款计算玩法产出"
     description: "将贷款协议三条款（第 5/7/12 条）综合计算的分析报告。本金 600$，年单利 12%×5 年 = 360$，月管理费 50$×60 月 = 3,000$，5 年合计约 3,960$。折合年化（含管理费）约 112%，远超伊利诺伊州法 36% 上限。"
 
-  - id: 10702
-    name: "笔迹对比报告（派生）/ Handwriting Comparison Report (Derived)"
-    type: derived
-    itemType: document
-    first_scene: null
-    given_by: "合成自 10301+10302（CASE BOARD 合成）"
-    pickup: true
-    note: "关键——L3 R1 击破物证；贷款档案签名 vs Frank 真迹的对比分析"
-    description: "将牛奶订购签收单（Frank 真迹）与贷款档案签名并排比对的分析报告。真迹：颤抖歪斜，多处停顿；档案签名：工整流畅，连笔。结论：两份签名的书写习惯、笔压模式、字母形态均存在显著差异，不属于同一人所写。"

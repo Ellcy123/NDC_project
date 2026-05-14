@@ -3,12 +3,12 @@
 # ============================================================
 #
 # 叙事功能：真爱反转 + Danny 嫌疑揭露
-#   - 1006 医院过场（Mickey 在场；Emma 透露医院是 Miller 资助的伏笔）
-#   - 1003 地下室（L3 钥匙 10308 解锁；玫瑰花蕊找戒指小玩法）
-#   - 1001 鞋坊店铺区（Lula 在场，Frank 生前秘密的见证者）
-#   - 1007 O'Hara 家门口（目击证词）
-#   - 1009 Frank 家次卧（Danny 不在，搜证）
-#   - 1015 Silver Moon 赌场（指证 Danny，3 轮）
+#   - 10006 医院过场（Mickey 在场；Emma 透露医院是 Miller 资助的伏笔）
+#   - 10010 地下室（L3 钥匙 10308 解锁；玫瑰花蕊找戒指小玩法）
+#   - 10001 鞋坊店铺区（Lula 在场，Frank 生前秘密的见证者）
+#   - 10007 O'Hara 家门口（目击证词）
+#   - 10009 Frank 家次卧（Danny 不在，搜证）
+#   - 10020 Frank 家厕所（指证 Danny，3 轮；Danny 拉肚子在马桶上；Lula 在厕所小窗外签放弃继承协议）
 #
 # 核心体验：
 #   - 揭示 Frank ↔ Lula 五年真爱（第二重反转：Frank 是为爱奋斗的英雄）
@@ -28,19 +28,19 @@
 #
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening / scenes(S1006/S1003/S1001/S1007/S1009) /
-#                        expose / post_expose_scene / doubts / evidence_registry 全部存在
+# A. 结构完整性   PASS — player_context / opening / scenes(S10006/S10010/S10001/S10007/S10009/S10020) /
+#                        expose（scene_id=10020 Frank 家厕所）/ post_expose_scene / doubts / evidence_registry 全部存在
 # B. 证据覆盖     PASS — 讨论结论 L4 所有证据（10402-10408 共 7 件）已分配到场景；
 #                        10408 在 post_expose_scene 由 Lula 交出，不在自由探索场景 pickup；
-#                        维修收据 10406 归入 1003 地下室（支撑叙事，不进疑点 condition）
-# C. NPC 条目     PASS — Emma（opening 1006）/ Mickey（opening 1006）/ Lula（S1001）/
-#                        O'Hara（S1007）/ Danny（S1009 + expose）各含 4 必填块；
+#                        维修收据 10406 归入 10010 地下室（支撑叙事，不进疑点 condition）
+# C. NPC 条目     PASS — Emma（opening 10006）/ Mickey（opening 10006）/ Lula（S10001 + R3 隔窗签字）/
+#                        O'Hara（S10007）/ Danny（S10020 厕所 + expose）各含 4 必填块；
 #                        Danny 在指证场为 Expose 对象（is_liar:true, player_inquiry:null）
 # D. 目标对齐     PASS — goals 与讨论结论"Lula 是骗子还是真爱？Danny 的诬陷能否击破？"一致；
 #                        三轮维度（不在场/动机/诬陷 Lula）互不重叠
 # E. 信息节奏     PASS — 揭示：Frank-Lula 五年真感情 / Danny 收贿目击 / 婚戒下落 / O'Hara 目击；
 #                        锁定：纵火者身份 / Frank 死亡原因（钝器）/ Leonard 凶手身份 / 眼镜碎片；
-#                        Emma 的 Miller 资助伏笔在 1006 过场给出，本 Loop 内不回收
+#                        Emma 的 Miller 资助伏笔在 10006 过场给出，本 Loop 内不回收
 # F. Quiz 配对    PASS — 无 quiz 场景；testimony_ids 与对话场景 ID 格式对应
 # G. Expose 逻辑  PASS — R1 O'Hara 目击+婚戒（Danny 撒谎不在场）；
 #                        R2 Moore 坦白房产证+空怀表盒（Danny 有经济动机）；
@@ -59,12 +59,12 @@ player_context:
   goals:
     primary: "Lula 是骗子还是真爱？Danny 的诬陷能否击破？"
     secondary:
-      - "前往 1006 圣心医院——Mickey 在场，听他说已安排了证明 Lula 清白的人；Emma 有什么新消息？"
-      - "用 L3 拿到的 10308 钥匙打开鞋坊地下室（1003）——Frank 的秘密约会场所藏着什么？"
-      - "在 1001 鞋坊店铺区找到 Lula，正面了解 Frank 和她的关系"
-      - "去 1007 O'Hara 家门口，追问她是否目击了当晚的任何异常"
-      - "去 1009 Frank 家次卧（Danny 不在），搜查 Danny 的房间"
-      - "前往 1015 Silver Moon 赌场找到 Danny，用证据击破他的谎言"
+      - "前往 10006 圣心医院——Mickey 在场，听他说已安排了证明 Lula 清白的人；Emma 有什么新消息？"
+      - "用 L3 拿到的 10308 钥匙打开鞋坊地下室（10010）——Frank 的秘密约会场所藏着什么？"
+      - "在 10001 鞋坊店铺区找到 Lula，正面了解 Frank 和她的关系"
+      - "去 10007 O'Hara 家门口，追问她是否目击了当晚的任何异常"
+      - "去 10009 Frank 家次卧（Danny 不在），搜查 Danny 的房间"
+      - "去 Frank 家厕所（10020）找 Danny——他正拉肚子蹲马桶上，跑不掉；用证据击破他的谎言"
 
   known_facts:
     # L1-L3 累积的已知事实
@@ -73,7 +73,7 @@ player_context:
     - "Morrison 在 L1 承诺：'你要真能拿出他是被人杀的硬证据，我签搜查令'"
     - "银行雇佣黑手党暴力催债：Leonard 雇佣 Vinnie 向 Frank 等人催债"
     - "连号钞票拼图已完成：O'Hara 手里的贷款钞票和 Vinnie 手里的是同一批（L2 揭示）"
-    - "Frank 的贷款档案上的签名是伪造的——笔迹对比报告（10702）已证明与 Frank 真迹不符"
+    - "Frank 的贷款档案上的签名是伪造的——10301 牛奶签收单（真迹）与 10302 贷款档案签名（工整流畅）双件直接对比即可证明"
     - "Moore 银行通过掠夺性贷款条款（年单利 12% + 利滚利 + 月管理费 50$）系统性欺诈借款人"
     - "同一份对账单页眉是投资公司、正文是银行——两套身份马甲（疑点 10303 已揭示）"
     - "Mickey 律师在 L3 以递交传票的方式登场，帮 Zack 拿到了银行搜查令"
@@ -84,37 +84,37 @@ player_context:
     - "Moore 银行是投资公司（Lakeshore Investment Co.）的马甲，Leonard 名片上已有暗示（L2 视觉伏笔）"
 
   new_directions:
-    - direction: "去圣心医院（1006）——Mickey 在那里，他说已经联系了能证明 Lula 来历清白的人；Emma 有最新消息"
+    - direction: "去圣心医院（10006）——Mickey 在那里，他说已经联系了能证明 Lula 来历清白的人；Emma 有最新消息"
       trigger: "L3 post_expose 后，Mickey 约 Zack 次日下午医院见面，确认调查策略"
-    - direction: "用 10308 钥匙开鞋坊地下室（1003）——Frank 把私人秘密藏在这里，和 Lula 的约会场所可能有线索"
+    - direction: "用 10308 钥匙开鞋坊地下室（10010）——Frank 把私人秘密藏在这里，和 Lula 的约会场所可能有线索"
       trigger: "10308 地下室钥匙在 L3 post_expose 获得；地下室过去打不开（L1/L2/L3 的 10108 门锁）"
-    - direction: "在鞋坊店铺区（1001）找到 Lula——她早就知道 Frank 的一切，现在是开口的时候了"
+    - direction: "在鞋坊店铺区（10001）找到 Lula——她早就知道 Frank 的一切，现在是开口的时候了"
       trigger: "Mickey 预先安排 Lula 来鞋坊，L4 开篇已暗示'有人等在那里'"
-    - direction: "去 O'Hara 家（1007）——她是当晚在场的邻居，L4 需要追问她是否目击了 Frank 或 Danny 出门"
+    - direction: "去 O'Hara 家（10007）——她是当晚在场的邻居，L4 需要追问她是否目击了 Frank 或 Danny 出门"
       trigger: "L2 曾去过 O'Hara 家，她是信息来源；现在追问当晚时间线细节"
-    - direction: "搜查 Danny 的房间（1009 次卧，Danny 不在）——他在做什么？他有没有隐瞒什么？"
+    - direction: "搜查 Danny 的房间（10009 次卧，Danny 不在）——他在做什么？他有没有隐瞒什么？"
       trigger: "10309 Frank 家钥匙 L3 post_expose 获得；L3 Danny 只是对话，没有搜证机会"
-    - direction: "去 Silver Moon 赌场（1015）找到 Danny，正式指证他"
+    - direction: "去 Frank 家厕所（10020）找 Danny——Danny 拉肚子蹲在马桶上，逃不了；指证全程在此发生"
       trigger: "搜证完成后，Danny 的谎言已有足够证据击破"
 
   post_expose_knowledge:
     # L4 指证 Danny 完整击穿后玩家获得的新知识
     - "Danny 在街边目击了大块头打晕 Margaret 并顺手捡了婚戒——他不是凶手，是机会主义目击者"
     - "Danny 目击证词 4090004 进入玩家背包：8 点多壮汉从鞋坊方向匆忙离开，块头大、深色衣服、像意大利人；打晕了 Margaret；看见戒指从她手旁滚出来反光"
-    - "Lula 提供 10408 保险箱备用钥匙（L5 在 Frank 家主屋开保险箱用一次）"
+    - "Lula 提供 10408 小铁盒备用钥匙（L5 在 Frank 家主屋开小铁盒用一次）"
     - "Lula 证词 4100001 落地：'Frank 不会做饭，而且绝对不会擅自用 Margaret 的厨房做饭'——回收 L1 Emma 皱眉伏笔，铺垫'火从何而来'的 L5/L6 推论"
     - "Lula 证词 4100002：'Frank 的工资一直在给 Danny 还赌债！'——Danny 经济压力有了量级概念"
     - "Frank 和 Lula 是五年真感情，地下室是他们的秘密约会场所"
     - "父疑点 10401 正式点亮：Danny 为了掩盖自己把叔叔房产证卖给银行的秘密，与 Leonard 合谋沉默"
 
 # ─────────────────────────────
-# 二、开篇（圣心医院 1006 过场）
+# 二、开篇（圣心医院 10006 过场）
 # ─────────────────────────────
 
 opening:
   type: cutscene
-  location: "圣心医院-Margaret 病房（场景 1006）"
-  scene_id: 1006
+  location: "圣心医院-Margaret 病房（场景 10006）"
+  scene_id: 10006
   description: |
     L4 自动触发的开篇过场。Mickey 和 Emma 已在医院。
     Margaret 仍昏迷，Zack 在病床边沉默片刻。
@@ -133,11 +133,11 @@ opening:
 
       # ── 1. 已知信息 ──
       active_topics:
-        - "已经联系了能证明 Lula 来历清白的人——如果 Danny 那边出问题，有后手（伏笔：Lula 会在赌场后门等候）"
-        - "建议 Zack 先去鞋坊地下室，再去找 Lula，最后再去赌场找 Danny"
+        - "已经联系了能证明 Lula 来历清白的人——如果 Danny 那边出问题，有后手（伏笔：Lula 会在 Frank 家厕所小窗外等候）"
+        - "建议 Zack 先去鞋坊地下室，再去找 Lula，最后再去 Frank 家厕所找 Danny"
         - "提醒 Zack：Danny 卖房产证换沉默这件事，Moore 已经承认了（3060004），这是最有力的动机线索"
       withheld_topics:
-        - "Lula 具体被安排在赌场后门的细节（Expose R3 Lula 进门时才揭示）"
+        - "Lula 具体被安排在 Frank 家厕所小窗外的细节（Expose R3 Lula 隔窗签字时才揭示）"
         - "Mickey 与 Whale 的真实关系（Unit11+ 揭示）"
         - "Miller 集团和医院的具体关联深度（Unit10 内不回收）"
 
@@ -181,8 +181,8 @@ opening:
 # ─────────────────────────────
 
 scenes:
-  # ── 场景 1003：Margaret 鞋坊-地下室 ──
-  - id: 1003
+  # ── 场景 10010：Margaret 鞋坊-地下室 ──
+  - id: 10010
     name: "Margaret 鞋坊-地下室"
     type: free_exploration
     unlock_condition:
@@ -222,8 +222,8 @@ scenes:
     npcs: {}
 
 
-  # ── 场景 1001：Margaret 鞋坊-店铺区（Lula 在场）──
-  - id: 1001
+  # ── 场景 10001：Margaret 鞋坊-店铺区（Lula 在场）──
+  - id: 10001
     name: "Margaret 鞋坊-店铺区"
     type: free_exploration
     description: |
@@ -247,9 +247,9 @@ scenes:
           - "'Frank 不会做饭，绝对不会擅自用 Margaret 的厨房做饭'——这是 Frank 的原则，他尊重 Margaret 的空间（证词 4100001；回收 L1 Emma 皱眉伏笔）"
           - "她和 Frank 已经认识五年，地下室是 Margaret 借给他们的约会场所——Margaret 知道这段感情，支持他们"
           - "Frank 当晚（11月6日）下午 5 点半在圣卢克医院告诉她'今晚要做一件非常冒险的事，让她这段时间别来找他'——她从那以后再也没见过他"
-          - "Frank 曾拜托她保管一把备用钥匙（10408），说是'保险箱用的，以后会用到'"
+          - "Frank 曾拜托她保管一把备用钥匙（10408），说是'小铁盒用的，以后会用到'"
         withheld_topics:
-          - "Frank 保险箱里具体放了什么（L5 才揭开：举报材料和遗书）"
+          - "Frank 小铁盒里具体放了什么（L5 才揭开：举报材料和遗书）"
           - "Lula 是否知道 Danny 卖房产证的事（她不知道）"
           - "Lula 在 Expose R3 的戏剧性登场安排（玩家届时自然知晓）"
 
@@ -266,8 +266,8 @@ scenes:
           - 4100002  # Lula：Frank 的工资一直在给 Danny 还赌债（L4 R2 辅助件；疑点 10404 补充语境）
 
 
-  # ── 场景 1007：Mrs. O'Hara 家门口 ──
-  - id: 1007
+  # ── 场景 10007：Mrs. O'Hara 家门口 ──
+  - id: 10007
     name: "Mrs. O'Hara 家门口"
     type: free_exploration
     description: |
@@ -306,18 +306,19 @@ scenes:
           - 4040002  # O'Hara：Lula 至少四五年前就来这条街，经常去 Frank 家（L4 R3 击破件；疑点 10403 condition）
 
 
-  # ── 场景 1009：Frank 家次卧-Danny 住处（Danny 不在）──
-  - id: 1009
+  # ── 场景 10009：Frank 家次卧-Danny 住处（Danny 不在）──
+  - id: 10009
     name: "Frank 家次卧-Danny 住处"
     type: free_exploration
     unlock_condition:
       - type: 1
         param: "10309"  # L3 post_expose 获得的 Frank 家钥匙
     description: |
-      继承 L3 已解锁状态。Danny 不在家（去了赌场）。
-      玩家可以独立搜证。
+      继承 L3 已解锁状态。Danny 这次在家——但他正蹲在厕所（10020）拉肚子，逃不出来。
+      玩家可以独立在次卧搜证，从隔壁厕所偶尔传来他的呻吟与马桶冲水声。
       三件关键物件：空怀表盒（含 Tony 便条）、Margaret 婚戒、Frank 遗嘱副本。
       Danny 的房间展示了他的经济困境和机会主义本质。
+      搜证完成后，Zack 可以走到隔壁厕所门口正式对峙 Danny——指证场景见 10020。
 
     evidence:
       - id: 10404
@@ -347,6 +348,58 @@ scenes:
     npcs: {}
 
 
+  # ── 场景 10020：Frank 家厕所（Danny 拉肚子+L4 指证场+Lula 小窗签字）──
+  - id: 10020
+    name: "Frank 家厕所"
+    type: expose_scene  # ⚔️ 指证场（兼对话场，Danny 蹲马桶上）
+    unlock_condition:
+      - type: 1
+        param: "10309"  # 与 10009 同一钥匙解锁（Frank 家入口已通）
+    description: |
+      Frank 家厕所——逼仄的木门半敞，地板上一双 Danny 的拖鞋东倒西歪。
+      Danny 蹲在马桶上拉肚子，狼狈、出汗、面如土色。Zack 推开虚掩的门走进去——
+      Danny 既不能站起来，也无处可逃，只能边按肚子边和 Zack 说话。
+      厕所侧墙有一扇约 30cm × 40cm 的小窗，朝向后巷，平时透光通风用。
+      Lula 早在 Mickey 安排下守在小窗外，等待 R3 出现时隔窗签下放弃继承协议。
+      （指证戏剧性：本应严肃的法庭式对峙发生在最不体面的环境里，
+      Danny 的所有狡辩都伴随着马桶冲水的声响——这是这个角色应得的羞耻。）
+
+    evidence: []  # 指证场，无可拾取证据；R3 时 Lula 隔窗递入"放弃继承协议"作为演出道具，不进 ItemStaticData
+
+    npcs:
+      danny_l4:
+        talk: danny_l4_toilet
+        is_liar: true  # L4 Expose 对象
+        motive: "面对铁证下意识撒谎；不是凶手，但是机会主义者——曾为赌债卖叔叔房产证"
+        mindset: "肚子疼+被指证双重狼狈；一边按肚子一边狡辩，越被击穿越慌乱；R3 后看到 Lula 在小窗外签字才彻底崩溃"
+        player_inquiry: null  # Expose 对象
+
+        active_topics:
+          - "11月6日当晚的去向（谎言锚：在家）"
+          - "Frank 房产证去向（Danny 很疑惑 Zack 怎么知道）"
+          - "怀表去向（追问下退守'随便抵押的'）"
+          - "对 Lula 的态度（机会主义诬陷——'她才是骗子'）"
+        withheld_topics:
+          - "Danny 当晚目击 Vinnie 打晕 Margaret 并捡走婚戒（post_expose 才坦白，4090004 进入证词池）"
+          - "Frank 一直在替 Danny 还赌债（Lula 在 post_expose 才补充 4100002）"
+
+        testimony_ids:
+          - 4090001  # ⚠谎言锚: "11月6日当晚我在家，哪儿都没去"（R1 谎言锚，唯一可收集 testimony）
+          # R2/R3 退守对白为 Expose 内部，无 testimony ID
+
+      lula_l4_window:
+        # Lula 隔厕所小窗演出，不在场对话——R3 出现时隔窗签字
+        talk: null
+        is_liar: false
+        motive: "5 年隐忍最后爆发——主动出头为 Frank 正名 + 为 Zack 提供 Danny 诬陷的反证"
+        mindset: "平静、坚定；不哭、不闹；签字这一刻是她在 Unit10 内的高光"
+
+        active_topics:
+          - "（演出性质，仅 R3 隔窗签放弃继承协议；签完递入 Frank 不会做饭/工资还债等补充证词）"
+        withheld_topics:
+          - "她和 Mickey 在 L4 前已经约好等候在厕所外的细节（'我在外面'就够了）"
+
+
 # ─────────────────────────────
 # 四、指证（Expose：Danny Kowalski）
 # ─────────────────────────────
@@ -354,7 +407,7 @@ scenes:
 expose:
   target: danny
   target_talk: danny_expose_L4
-  scene_id: 1015
+  scene_id: 10020  # Frank 家厕所——Danny 蹲马桶上无处可逃
   is_liar: true
   player_inquiry: null
   exposeNpcId: 109
@@ -368,9 +421,12 @@ expose:
     - 10404 空怀表盒（Tony 便条：怀表抵押换 100$，上周）
     - 4040002 O'Hara 证词：Lula 至少四五年前就常来这条街
     - 10403 求婚戒指（F & L 1921，玫瑰花蕊找戒指小玩法产出）
-    Danny 在 Silver Moon 赌场。他第一反应会撒谎（整晚在家），然后逐步退守。
+    Danny 在 Frank 家厕所拉肚子。Zack 推门进去时他正蹲在马桶上，狼狈、按肚子、面如土色。
+    他第一反应会撒谎（整晚在家），然后逐步退守——所有狡辩都伴随着肠胃叫声和马桶冲水。
     L4 的情感基调：Danny 是个可悲的机会主义者，不是凶手——
-    最终击破后他会交出目击证词，是这个 Loop 真正重要的信息。
+    最终击破后他会交出目击证词（4090004），是这个 Loop 真正重要的信息。
+    R3 收尾的关键演出：Lula 隔着厕所侧墙小窗（朝后巷的 30cm × 40cm 通风窗）平静签下放弃继承协议——
+    Danny 在马桶上仰头看小窗，对比构图极具冲击。
 
   # ── 轮次一：Danny 不在场谎言 ──
   round_1:
@@ -435,10 +491,10 @@ expose:
         name: "求婚戒指（F & L 1921）"
         note: "关键——1921 年定制，五年前已存在；Frank 的真爱物证；疑点 10403 condition"
         usage: "这枚戒指刻着'F & L 1921'，是 Frank 定制的求婚戒指，藏在他们约会的地下室里。这是五年的真情实感。"
-      - id: "lula_enters"
-        name: "Lula 戏剧性进门签字（游戏内演出）"
-        note: "关键——R3 指证时 Lula 推门入场，走向桌子，无言签下放弃继承声明；行动先于语言"
-        usage: "（Lula 推开赌场后门，走到桌边，不说话，拿起桌上的纸，签上自己的名字，放下——然后才抬头。）"
+      - id: "lula_window_signature"
+        name: "Lula 隔厕所小窗签字（游戏内演出）"
+        note: "关键——R3 指证时 Lula 出现在厕所侧墙小窗外，隔窗递入放弃继承协议、当 Danny 面平静签下名字"
+        usage: "（厕所侧墙的小窗一暗。Lula 的脸出现在窗外。她不说话，把一张折好的纸从窗格递进来，拿起 Zack 递过去的笔，在窗台上签下名字——'Lula Washington'——签完抬起头，平静地看着马桶上的 Danny。Danny 仰着脸，按着肚子，说不出话。）"
     requiredItems:
       - 4040002
       - 10403
@@ -447,8 +503,9 @@ expose:
         trap_reason: "遗嘱本身不能证明 Lula 是否是真爱——只证明 Frank 做了遗嘱安排，Danny 会用'她骗他签的'来反驳"
     result: full_breakthrough
     result_description: |
-      Lula 走进来，签下放弃继承声明，然后才开口。
-      Danny 再无话可说——他是彻底的机会主义者，不是凶手。
+      Lula 出现在厕所小窗外，平静签下放弃继承协议，然后才开口。
+      Danny 仰着脸看着小窗，肚子还在咕咕响，整个人垮了下去。
+      他再无话可说——他是彻底的机会主义者，不是凶手。
       他慌乱地摊牌：当晚他确实出门去赌场，回来时在街边看到了大块头打晕 Margaret、
       戒指从她手旁滚出来，他顺手捡走了。
 
@@ -457,18 +514,18 @@ expose:
     description: |
       Danny 的目击证词 4090004 进入玩家背包（L5 击穿件之一，已确认挂入 L5 疑点 10501 condition）。
       Lula 补充证词 4100001（Frank 不会做饭/不用 Margaret 厨房）和 4100002（工资给 Danny 还债）。
-      Lula 交出 10408 保险箱备用钥匙，说：Frank 说这把钥匙以后会用到，现在交给 Zack 比放在我手上更合适。
+      Lula 交出 10408 小铁盒备用钥匙，说：Frank 说这把钥匙以后会用到，现在交给 Zack 比放在我手上更合适。
       全场沉默。Danny 站起来要走，没有人拦他。
       Zack 心里清楚：Danny 是这个案子最坏的旁观者，但不是杀人的那一个。
 
     new_evidence_gained:
       - id: 10408
-        name: "Lula 保险箱备用钥匙 / Lula's Spare Safebox Key"
+        name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
         type: key
         pickup: true
         analysis: false
-        description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Safebox'。Lula 保管了两年，按 Frank 的嘱托在'需要的时候'交出。L5 在 Frank 家主屋（1010）开保险箱使用一次后归档。"
-        note: "关键——L5 开 Frank 家保险箱（1010）的唯一钥匙；使用后归档，L6 不再需要"
+        description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 的嘱托在'需要的时候'交出。L5 在 Frank 家主屋开间（10018）开小铁盒使用一次后归档。"
+        note: "关键——L5 开 Frank 家主屋开间床后小铁盒（10018）的唯一钥匙；使用后归档，L6 不再需要"
 
     new_testimony_gained:
       - id: 4090004
@@ -482,7 +539,7 @@ expose:
       - "大块头、深色衣服、走路像意大利人——Vinnie 的体型特征初步浮现（L5 疑点 10501 核心）"
       - "Frank 的工资一直给 Danny 还赌债（Lula 证词 4100002）"
       - "Frank 不会做饭，绝对不会用 Margaret 的厨房（Lula 证词 4100001）——L1 Emma 皱眉伏笔正式回收"
-      - "10408 保险箱备用钥匙到手——L5 可以进入 Frank 家主屋开保险箱"
+      - "10408 小铁盒备用钥匙到手——L5 可以进入 Frank 家主屋开小铁盒"
       - "父疑点 10401 已满足全部 condition（2090001 + 3060004），在本 Loop 末点亮"
 
 
@@ -662,14 +719,14 @@ doubts:
 
 evidence_registry:
   # L4 = 104xx 系列（L4 新引入证据）
-  # 继承 L3 post_expose：10308（地下室钥匙，解锁 1003）、10309（Frank 家钥匙，已解锁 1009）
+  # 继承 L3 post_expose：10308（地下室钥匙，解锁 10010）、10309（Frank 家钥匙，已解锁 10009）
   # 跨 Loop 指证使用：3060004（L3 Moore 坦白证词，L4 R2 使用）
   # L4 末新增：10408（post_expose 由 Lula 交出）
 
   - id: 10402
     name: "地下室旧沙发（磨损 3-5 年）/ Old Sofa in Basement"
     type: envir
-    first_scene: 1003
+    first_scene: 10010
     pickup: false
     analysis: false
     description: "一张陈旧的双人沙发，扶手和坐垫的磨损痕迹均匀，判断已经被规律使用了至少三到五年。旁边放着一个空花瓶，花瓶口有干枯玫瑰花瓣的残留。"
@@ -678,7 +735,7 @@ evidence_registry:
   - id: 10403
     name: "求婚戒指 / Engagement Ring"
     type: item
-    first_scene: 1003
+    first_scene: 10010
     pickup: true
     analysis: false
     description: "一枚嵌着小碎钻的金戒指，藏在玫瑰残枝的花蕊之间。戒圈内侧刻有'F & L 1921'。戒指尺寸略大，是为手指较粗的人定制的，不合 Margaret 手型。"
@@ -687,7 +744,7 @@ evidence_registry:
   - id: 10404
     name: "空怀表盒（含 Tony 便条）/ Empty Pocket Watch Case (with Tony's Note)"
     type: prop
-    first_scene: 1009
+    first_scene: 10009
     pickup: true
     analysis: false
     description: "一个皮制怀表盒，表盒内空无一物，但盒盖内侧夹着一张便条，Tony（Silver Moon 赌场酒保）手写：'100 块，怀表抵押。——Tony'。便条日期是上周（11月1日）。"
@@ -696,7 +753,7 @@ evidence_registry:
   - id: 10405
     name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found at Danny's)"
     type: prop
-    first_scene: 1009
+    first_scene: 10009
     pickup: true
     analysis: false
     description: "一枚金婚戒，内圈刻着'P & M 1901'。婚戒被藏在 Danny 床垫下的一个小布包里。"
@@ -705,7 +762,7 @@ evidence_registry:
   - id: 10406
     name: "维修收据（600$ 全用于地下室）/ Repair Receipt ($600, Basement Renovation)"
     type: document
-    first_scene: 1003
+    first_scene: 10010
     pickup: true
     analysis: false
     description: "一张 1923 年的室内维修收据，委托人 Frank Kowalski，金额 600$，施工地点为鞋坊地下室。项目：更换地板、添置隔热层、安装电灯。"
@@ -714,20 +771,20 @@ evidence_registry:
   - id: 10407
     name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
     type: document
-    first_scene: 1009
+    first_scene: 10009
     pickup: true
     analysis: false
     description: "Frank Kowalski 遗嘱副本，正文打印，末尾有 Frank 亲笔手写附加条款：'如我与 Lula Washington 成婚，所有财产一并归 Lula。——Frank K.'字迹颤抖但清晰。"
     note: "L4 R1/R3 陷阱选项——遗嘱是动机证据但不能反驳'不在场'和'Lula 是否真爱'；L5/L6 叙事参照"
 
   - id: 10408
-    name: "Lula 保险箱备用钥匙 / Lula's Spare Safebox Key"
+    name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
     type: key
-    first_scene: 1015  # post_expose_scene 由 Lula 交出
+    first_scene: 10020  # post_expose_scene 由 Lula 隔窗或随后交出
     pickup: true
     analysis: false
-    description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Safebox'。Lula 保管了两年，按 Frank 嘱托交给 Zack。L5 在 Frank 家主屋（1010）开保险箱使用一次。"
-    note: "关键——L5 解锁 Frank 家主屋保险箱（1010）的唯一途径"
+    description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 嘱托交给 Zack。L5 在 Frank 家主屋开间（10018）开小铁盒使用一次。"
+    note: "关键——L5 解锁 Frank 家主屋小铁盒（1010）的唯一途径"
 
   # ── 本 Loop 使用的跨 Loop 证据（继承状态，不新建）──
 
@@ -736,14 +793,14 @@ evidence_registry:
     type: key
     inherited_from: "loop3_post_expose"
     first_available_loop: 4
-    usage: "L4 解锁 1003 地下室；状态维持持有"
+    usage: "L4 解锁 10010 地下室；状态维持持有"
 
   - id: 10309
     name: "Frank 家钥匙 / Frank's House Key"
     type: key
     inherited_from: "loop3_post_expose"
     first_available_loop: 3
-    usage: "L3 已解锁 Frank 家门（1008→1010）；L4 继续持有，解锁 1009 次卧"
+    usage: "L3 已解锁 Frank 家门（街角 10007 → 主屋 10018）；L4 继续持有，解锁 10009 次卧"
 
   - id: 3060004
     name: "Moore 指证后坦白证词：Danny 把房产证给了银行"

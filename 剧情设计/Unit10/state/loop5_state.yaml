@@ -3,7 +3,7 @@
 # ============================================================
 #
 # 叙事功能：
-#   - 开篇：Frank 家保险箱开启（10502 举报材料 + 10503 遗书），Mickey 离场邀 Zack 当律师
+#   - 开篇：Frank 家小铁盒开启（10502 举报材料 + 10503 遗书），Mickey 离场邀 Zack 当律师
 #   - 二选一分支：律师 → 三幕坏结局过场（黑屏白字+静态画面）→ 回到选择点重选（不锁存档）
 #   - 主线分支：继续当侦探，废墟深度搜证（10501 打火机）+ Silver Moon 赌场指证 Vinnie
 #   - 指证 Vinnie（1 轮）：语速反常+细节不对+抢话认罪（安排感）
@@ -22,23 +22,23 @@
 #   Danny=09（NPC 1008）— 注：4090004 是 L4 已入袋的证词
 #
 # 场景 ID（讨论结论定稿，4 位格式）：
-#   1010 = Frank 家内部-主屋（保险箱场景）
-#   1006 = 圣心医院-Margaret 病房（L5 末 Foster 电话过场）
-#   1001 = Margaret 鞋坊-店铺区（废墟深度搜证）
-#   1015 = Silver Moon 赌场（指证 Vinnie）
+#   10018 = Frank 家主屋（开间客厅+床+开放式厨房；床后缝隙藏小铁盒）
+#   10006 = 圣心医院-Margaret 病房（L5 末 Foster 电话过场）
+#   10001 = Margaret 鞋坊-店铺区（废墟深度搜证）
+#   10015 = Silver Moon 赌场（指证 Vinnie）
 #
 # known_facts 来源：loop1-4 post_expose_knowledge 全部累积
 #
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening（Frank 家保险箱 + 二选一）/
+# A. 结构完整性   PASS — player_context / opening（Frank 家小铁盒 + 二选一）/
 #                        lawyer_bad_ending_sequence / scenes（鞋坊废墟、Silver Moon）/
 #                        expose（Vinnie 单轮）/ post_expose_scene / doubts /
 #                        evidence_registry 全部存在
-# B. 证据覆盖     PASS — 10501 → 场景 1001（废墟搜证）；10502 → 开篇保险箱（Mickey 拿走）；
-#                        10503 → 开篇保险箱（环境叙事，isUsable=false）
+# B. 证据覆盖     PASS — 10501 → 场景 10001（废墟搜证）；10502 → 开篇小铁盒（Mickey 拿走）；
+#                        10503 → 开篇小铁盒（环境叙事，isUsable=false）
 #                        讨论结论 L5 全部 3 件证据已分配；4090004（L4 已入袋）在 expose 中引用
-# C. NPC 条目     PASS — Emma（过场提及）/ Tony（场景 1015）/ Vinnie（Expose，is_liar:true）
+# C. NPC 条目     PASS — Emma（过场提及）/ Tony（场景 10015）/ Vinnie（Expose，is_liar:true）
 #                        各含 4 必填块；Tony 4 块完整；Vinnie is_liar=true player_inquiry=null
 # D. 目标对齐     PASS — goals 与"查清 Frank 当晚真相，揭穿 Vinnie 谎言"一致；进度条分母=2
 # E. 信息节奏     PASS — 揭示：Vinnie 当晚在鞋坊（打火机+Tony辨认+Danny目击）；
@@ -64,7 +64,7 @@ player_context:
   goals:
     primary: "Frank 被杀那晚到底发生了什么？谁在案发现场，谁做了什么？"
     secondary:
-      - "查清保险箱里的举报材料指向谁——Frank 冒险收集这些证据，是针对什么人"
+      - "查清小铁盒里的举报材料指向谁——Frank 冒险收集这些证据，是针对什么人"
       - "查清打火机为何在废墟里完好无损——火灾现场的痕迹是否经过伪造"
       - "查清 Vinnie 与案发当晚的关联——他说'两三个月没去'，这是真话吗"
       - "决定下一步：站在法庭上当律师，还是继续追查真相"
@@ -79,13 +79,13 @@ player_context:
     - "Mickey 是 Frank 的律师，本约定当晚来检举银行犯罪行为但 Frank 没出现；在路边发现昏迷的 Margaret，送医后发电报告知 Zack"
     - "Moore 银行实施掠夺性贷款（年单利 12% + 月管理费 50$，5 年总计约 3,960$）；使用 Lakeshore Investment Co. 马甲规避银行法"
     - "Leonard 雇佣 Vinnie 暴力催债，对半分成；Leonard 童年改名（Russo → Ross）以融入白人社会"
-    - "Frank 贷款协议签名是伪造的——笔迹对比报告 10702 揭示真相"
+    - "Frank 贷款协议签名是伪造的——10301 + 10302 双件直接对比签名笔迹即可证明"
     - "Danny 在 L2 银行大厅偷听到 Leonard 谈 Frank 房产证；Moore 承认是 Danny 把房产证给了银行换沉默（证词 3060004）"
     - "Danny 坦承：11月6日晚与 Frank 同路出门去赌场（被 O'Hara 目击），并非凶手"
     - "Danny 目击证词（4090004）：晚 8 点多，块头大深色衣服像意大利人的壮汉从鞋坊方向匆忙离开，还打晕了 Margaret；看见戒指从她手旁滚出来反光"
     - "Margaret 的婚戒出现在 Danny 房间——Danny 在街边顺手捡走的；已物归原主"
     - "Lula Washington 是 Frank 相恋五年的真爱，圣卢克医院护士；二人秘密约会地点是 Margaret 鞋坊地下室（Margaret 借出并支持）"
-    - "Lula 提供了 Frank 家保险箱备用钥匙 10408（L4 post_expose 入袋）"
+    - "Lula 提供了 Frank 家小铁盒备用钥匙 10408（L4 post_expose 入袋）"
     - "Frank 不会做饭，绝不会用 Margaret 的厨房——Lula 证词 4100001 回收 L1 Emma 皱眉伏笔（'厨房失火点'是 Morrison 编造的，也与实际不符）"
     - "O'Hara 目击：11月6日晚 7 点 Frank 出门前后脚 Danny 也出门，走同一条路"
     - "O'Hara 目击：Lula 至少四五年前就来这条街，经常去 Frank 家"
@@ -94,8 +94,8 @@ player_context:
     - "Mickey 在 L4 hospital 说'他已联系了可以证明 Lula 来历清白的人，如果 Danny 那边有问题，我有后手'——Lula 果然在 L4 R3 指证时现身"
 
   new_directions:
-    - direction: "前往 Frank 家，用保险箱备用钥匙 10408 开启保险箱——Frank 一定留下了什么"
-      trigger: "L4 post_expose：Lula 交出保险箱备用钥匙 10408，告知保险箱里有举报材料"
+    - direction: "前往 Frank 家，用小铁盒备用钥匙 10408 开启小铁盒——Frank 一定留下了什么"
+      trigger: "L4 post_expose：Lula 交出小铁盒备用钥匙 10408，告知小铁盒里有举报材料"
     - direction: "选择：当律师回法庭，还是继续调查 Frank 死因"
       trigger: "Mickey 离场邀请时的二选一分支（主线=继续当侦探）"
     - direction: "前往鞋坊废墟深度搜证——案发现场是否还藏有被忽略的物证"
@@ -117,15 +117,18 @@ player_context:
     - "疑点 10502 解锁：Vinnie 的认罪说'是我放的火，Frank 是我杀的'——但 Frank 是被钝器打死的，他怎么能说自己是凶手？（L6 深化）"
 
 # ─────────────────────────────
-# 二、开篇（Frank 家保险箱 + 二选一分支）
+# 二、开篇（Frank 家小铁盒 + 二选一分支）
 # ─────────────────────────────
 
 opening:
   type: scripted_cutscene
-  location: "Frank 家内部-主屋（场景 1010）"
-  scene_id: 1010
+  location: "Frank 家主屋开间（场景 10018）"
+  scene_id: 10018
   description: |
-    Zack 用 L4 Lula 给的保险箱备用钥匙 10408 打开保险箱。
+    Zack 重访 Frank 家主屋——L3 来过这里拿牛奶签收单，但当时没注意到床和墙之间那道窄缝。
+    Lula 在 L4 给的备用钥匙（10408）配的不是小铁盒，而是 Frank 藏在床后缝隙里的小铁盒。
+    Zack 把床稍微挪开，伸手从缝隙里取出一个 15cm × 10cm 的铁皮小盒——
+    上面有一把简易挂锁，钥匙 10408 正好对得上。
     内容：Frank 的举报材料（10502）和留给 Lula 的遗书（10503）。
 
     Lula 恳求 Zack 和 Mickey 帮她查清 Frank 死亡的真相。
@@ -152,7 +155,7 @@ opening:
       talk: mickey_005_frank_house
       is_liar: false
       motive: "拿走举报材料以律师身份打官司；邀请 Zack 入伙（表面善意，真身 Whale 的伏笔——Unit10 不暴雷）"
-      mindset: "从容、笃定；对 Zack 表现出信任和拉拢；对保险箱内容表现出'这正是我需要的'态度"
+      mindset: "从容、笃定；对 Zack 表现出信任和拉拢；对小铁盒内容表现出'这正是我需要的'态度"
 
       # ── 1. NPC 已知信息 ──
       active_topics:
@@ -179,12 +182,12 @@ opening:
     lula_002:
       talk: lula_002_frank_house
       is_liar: false
-      motive: "恳求查清 Frank 之死；在保险箱打开的那一刻，她能感受到 Frank 为她和为正义拼尽了一切"
+      motive: "恳求查清 Frank 之死；在小铁盒打开的那一刻，她能感受到 Frank 为她和为正义拼尽了一切"
       mindset: "悲痛中带着坚定；她不哭，但眼圈红了；她信任 Zack，也第一次面对 Frank 留给她的遗书"
 
       # ── 1. NPC 已知信息 ──
       active_topics:
-        - "保险箱里的遗书（10503）——Frank 在里面告诉了她什么（内容由对话作者编写，不在 state 中展开）"
+        - "小铁盒里的遗书（10503）——Frank 在里面告诉了她什么（内容由对话作者编写，不在 state 中展开）"
         - "恳求 Zack 不要放弃——'他花了那么多时间收集这些，不是为了让它们被锁回去'"
         - "对 Mickey 的感谢——'没有你们，我什么都做不了'"
       withheld_topics:
@@ -195,7 +198,7 @@ opening:
       # ── 2. 玩家询问意图 ──
       player_inquiry:
         - '"遗书里 Frank 说了什么？" # 7'
-        - '"你知道 Frank 在保险箱里放了什么吗？" # 8'
+        - '"你知道 Frank 在小铁盒里放了什么吗？" # 8'
 
       # ── 3. 可提取证词 ──
       testimony_ids:
@@ -247,8 +250,8 @@ lawyer_bad_ending_sequence:
 
 scenes:
 
-  # ── 场景 1001：Margaret 鞋坊-店铺区（废墟深度搜证）──
-  - id: 1001
+  # ── 场景 10001：Margaret 鞋坊-店铺区（废墟深度搜证）──
+  - id: 10001
     name: "Margaret 鞋坊-店铺区（废墟深度搜证）"
     type: free_exploration  # 🔓 自由探索
     unlock_condition:
@@ -270,8 +273,8 @@ scenes:
         description: "银色金属打火机，侧面刻有 V 字样。在鞋坊废墟靠近入口处的灰烬中发现，完好无损——普通打火机在火灾温度下外壳会熔变，此件无任何热损痕迹。"
         note: "关键——L5 R1 击穿件；疑点 10501 condition"
 
-  # ── 场景 1015：Silver Moon 赌场/酒吧 ──
-  - id: 1015
+  # ── 场景 10015：Silver Moon 赌场/酒吧 ──
+  - id: 10015
     name: "Silver Moon 赌场"
     type: free_exploration  # 🔓 自由探索（含指证入口）
     unlock_condition:
@@ -316,7 +319,7 @@ scenes:
 # ─────────────────────────────
 
 expose:
-  scene_id: 1015
+  scene_id: 10015
   target_npc: Vinnie
   npc_code: "08"
   is_liar: true
@@ -451,7 +454,7 @@ evidence_registry:
     - id: 10501
       name: "火灾现场打火机 / Lighter Found at Fire Scene"
       itemType: prop
-      obtain_scene: 1001
+      obtain_scene: 10001
       obtain_method: pickup
       note: "关键——L5 R1 击穿件；疑点 10501 condition"
       first_loop: 5
@@ -459,16 +462,16 @@ evidence_registry:
     - id: 10502
       name: "Frank 的举报材料 / Frank's Whistleblower Documents"
       itemType: document
-      obtain_scene: 1010
+      obtain_scene: 10018
       obtain_method: story_auto
-      note: "剧情——开篇保险箱取出；L5 末 Mickey 拿走（removed_from_inventory）；不进玩家长期背包；L6 指证不依赖"
+      note: "剧情——开篇小铁盒取出；L5 末 Mickey 拿走（removed_from_inventory）；不进玩家长期背包；L6 指证不依赖"
       first_loop: 5
       removed_at: "L5 post_expose（Mickey 离场前已取走）"
 
     - id: 10503
       name: "Frank 留给 Lula 的遗书 / Frank's Letter to Lula"
       itemType: document
-      obtain_scene: 1010
+      obtain_scene: 10018
       obtain_method: story_auto
       note: "环境叙事——isUsable=false；不进指证/疑点 condition；情感载体"
       first_loop: 5
@@ -476,8 +479,8 @@ evidence_registry:
 
   carried_items_used_in_expose:
     - id: 10408
-      name: "Lula 保险箱备用钥匙 / Lula's Spare Strongbox Key"
-      note: "L4 post_expose 取得；L5 开篇使用一次（开保险箱）后失效，从背包移除"
+      name: "Lula 小铁盒备用钥匙 / Lula's Spare Strongbox Key"
+      note: "L4 post_expose 取得；L5 开篇使用一次（开小铁盒）后失效，从背包移除"
       from_loop: 4
       used_and_consumed: true
 

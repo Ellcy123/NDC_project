@@ -21,11 +21,11 @@
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
 #                        NPC 4 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
 # B. 证据覆盖     PASS — 讨论结论 L2 全部 6 件证据（10201-10206）已分配到场景；
-#                        10201 Leonard 名片→1007（O'Hara 家）；10202 O'Hara 钞票→1007；
-#                        10203 催款单→1008（Frank 家门口）；10204 威胁便条→1008；
-#                        10205 Vinnie 催债小本子→1015（Silver Moon）；
-#                        10206 Vinnie 的钞票→1015；
-#                        场景 1006（医院过场）/ 1011（银行大厅）/ 1012（贵宾室）无证据，仅剧情
+#                        10201 Leonard 名片→10007（O'Hara 家）；10202 O'Hara 钞票→10007；
+#                        10203 催款单→10007（街角，Frank 家门口侧）；10204 威胁便条→10007；
+#                        10205 Vinnie 催债小本子→10015（Silver Moon）；
+#                        10206 Vinnie 的钞票→10015；
+#                        场景 1006（医院过场）/ 10011（银行大厅）/ 10012（贵宾室）无证据，仅剧情
 # C. NPC 条目     PASS — Leonard（Expose 对象，is_liar:true，player_inquiry:null）4 必填块完整；
 #                        O'Hara / Moore / Vinnie / Tony / Danny（偷听演出）/ Emma / Mickey 各含完整 4 块
 # D. 目标对齐     PASS — goals 与讨论结论"揭露银行雇佣黑手党暴力催债 / 指证 Leonard"完全一致
@@ -130,7 +130,7 @@ opening:
         - "Mickey 主动邀请 Zack 加入律所担任律师——不急，随时欢迎"
       withheld_topics:
         - "Mickey 真实身份是 Whale（Unit9 已登场的反派），Unit10 内绝对不暴雷"
-        - "Frank 检举材料的具体内容（L5 保险箱才揭示）"
+        - "Frank 检举材料的具体内容（L5 小铁盒才揭示）"
         - "Mickey 是否认识 Leonard / Moore（L3 开始协助后才有更多接触）"
         - "Whale 派的黑手党匿名电话 Morrison（伏笔，本 Loop 不揭示）"
 
@@ -150,25 +150,48 @@ opening:
 # ─────────────────────────────
 
 scenes:
-  # ── 场景 1007：Mrs. O'Hara 家门口 ──
-  - id: 1007
-    name: "Mrs. O'Hara 家门口"
+  # ── 场景 10007：Frank 家与 O'Hara 家街角（两户邻居共用外观） ──
+  - id: 10007
+    name: "Frank 家与 O'Hara 家街角"
     type: free_exploration  # 🔓 自由探索
     description: |
-      南区同一街区的老邻居 O'Hara 太太。Zack 是 Margaret 的儿子，
+      南区某街角——Frank Kowalski 家和 Mrs. O'Hara 家是隔壁邻居，
+      两户共用一条街边小道，前门相距不过 5 米。Zack 站在街角可以同时观察两户外观。
+
+      Frank 家门口：敲门无人应（Frank 已死，Danny 不在家）。
+      门把手上塞着两件物证——银行催款单和威胁便条，体现 Frank 生前的暴力催债压力。
+      Frank 家内部此时仍锁定（L3 搜查令后才可进入）。
+
+      O'Hara 家门口：老邻居 O'Hara 太太。Zack 是 Margaret 的儿子，
       这个身份让 O'Hara 对他稍微放下警惕——但她本能上不信任陌生人。
-      O'Hara 家有 Frank 来催债的直接遗留物证：银行催债专员留下的名片（10201）
-      和她自己还贷款时收到的连号新钞（10202）。
-      关键时刻：O'Hara 提供 Leonard 银行名片，并告知银行地址——解锁场景 1011。
+      关键时刻：O'Hara 提供 Leonard 银行名片，并告知银行地址——解锁场景 10011。
 
     evidence:
+      # ── Frank 家门口塞着的物证 ──
+      - id: 10203
+        name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
+        type: item
+        pickup: true
+        description: "印着'湖滨信托银行（Lakeshore Trust Bank）'抬头的正式催款通知，注明 Frank Kowalski 的欠款金额（当前欠债 3,200$）和最终还款日期，落款人为'贷款部主任 Leonard Ross'。"
+        analysis: false
+        note: "场景道具——背景信息，显示 Frank 的债务规模和银行贷款部门关联；L2 R2 陷阱选项（催款单只证银行追债，不证资金链走向 Vinnie）"
+
+      - id: 10204
+        name: "威胁便条 / Threatening Note"
+        type: item
+        pickup: true
+        description: "一张皱巴巴的便条，用粗笔写着：'再不还钱，不只是你倒霉。' 没有署名。字迹粗粝，不像正式文件。"
+        analysis: false
+        note: "背景信息——体现催债暴力性质；碎片 10204 的 condition（type:3 param:2090001 即 Danny 旁听证词），不作为指证击穿件"
+
+      # ── O'Hara 给的物证 ──
       - id: 10201
         name: "Leonard 名片 / Leonard's Business Card"
         type: item
         pickup: true
         description: "湖滨信托银行（Lakeshore Trust Bank）贷款专员 Leonard Ross 的名片，正面印着银行地址和电话；名片右下角有一行比正文小一号的字体：'Lakeshore Investment Co.'——当前看不出意义，L3 才有用。"
         analysis: false
-        note: "场景道具——提供银行地址，解锁场景 1011；L2 R1 陷阱选项（名片本身不证明 Leonard 与催债人相识）；右下角小字为 L3 伏笔"
+        note: "场景道具——提供银行地址，解锁场景 10011；L2 R1 陷阱选项（名片本身不证明 Leonard 与催债人相识）；右下角小字为 L3 伏笔"
 
       - id: 10202
         name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
@@ -208,39 +231,13 @@ scenes:
           - 2040002  # O'Hara：最后一次催债来的人个子很大，不像银行的人
 
 
-  # ── 场景 1008：Frank 家门口 ──
-  - id: 1008
-    name: "Frank 家门口"
-    type: free_exploration  # 🔓 自由探索
-    description: |
-      Frank 的住所门口——敲门无人应（Frank 已死，Danny 不在家）。
-      门口塞着两件物证：银行催款单和威胁便条。
-      这两件东西说明 Frank 生前承受的暴力催债压力，
-      也为后续查 Leonard 提供背景证据。
-      场景 1008 内部此时仍锁定（L3 搜查令后才可进入）。
-
-    evidence:
-      - id: 10203
-        name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
-        type: item
-        pickup: true
-        description: "印着'湖滨信托银行（Lakeshore Trust Bank）'抬头的正式催款通知，注明 Frank Kowalski 的欠款金额（当前欠债 3,200$）和最终还款日期，落款人为'贷款部主任 Leonard Ross'。"
-        analysis: false
-        note: "场景道具——背景信息，显示 Frank 的债务规模和银行贷款部门关联；L2 R2 陷阱选项（催款单只证银行追债，不证资金链走向 Vinnie）"
-
-      - id: 10204
-        name: "威胁便条 / Threatening Note"
-        type: item
-        pickup: true
-        description: "一张皱巴巴的便条，用粗笔写着：'再不还钱，不只是你倒霉。' 没有署名。字迹粗粝，不像正式文件。"
-        analysis: false
-        note: "背景信息——体现催债暴力性质；碎片 10204 的 condition（type:3 param:2090001 即 Danny 旁听证词），不作为指证击穿件"
+  # 场景 10008 已合并至 10007（Frank 家与 O'Hara 家是邻居，共用街角外观）
 
     npcs: {}  # 敲门无人应，无 NPC 驻场
 
 
-  # ── 场景 1011：Moore 银行大厅（⚔️ 指证 + 🔓 探索） ──
-  - id: 1011
+  # ── 场景 10011：Moore 银行大厅（⚔️ 指证 + 🔓 探索） ──
+  - id: 10011
     name: "Moore 银行大厅（Leonard 工位）"
     type: expose_and_exploration  # ⚔️ 指证主场 + 🔓 搜证阶段（O'Hara 提供地址后解锁）
     description: |
@@ -307,8 +304,8 @@ scenes:
           - 2090001  # Danny 旁听演出证词：在银行大厅偷听到 Danny 和 Leonard 商量 Frank 的房产证（碎片 10204 condition）
 
 
-  # ── 场景 1012：Moore 银行贵宾室（部分） ──
-  - id: 1012
+  # ── 场景 10012：Moore 银行贵宾室（部分） ──
+  - id: 10012
     name: "Moore 银行贵宾室（部分开放）"
     type: free_exploration  # 🔓 部分开放——Leonard 问话结束后，Moore 主动出来引 Zack 进去
     description: |
@@ -349,8 +346,8 @@ scenes:
           - 2060001  # Moore：Leonard 改名档案陈述——"他的原名是 Russo，1918 年在我们银行的档案里做了改名登记"（L2 R1 击破件之一 + 疑点 10201 condition）
 
 
-  # ── 场景 1015：Silver Moon 赌场/酒吧 ──
-  - id: 1015
+  # ── 场景 10015：Silver Moon 赌场/酒吧 ──
+  - id: 10015
     name: "Silver Moon 赌场/酒吧"
     type: free_exploration  # 🔓 自由探索
     description: |
@@ -615,7 +612,7 @@ evidence_registry:
     name: "尸体手指照片 / Corpse Finger Photo"
     type: item
     first_loop: 1
-    first_scene: 1001
+    first_scene: 10001
     pickup: true
     note: "L1 搜证拾取；疑点 10101 condition；L1 R1 击穿件"
 
@@ -623,7 +620,7 @@ evidence_registry:
     name: "Margaret 相册 / Margaret's Photo Album"
     type: item
     first_loop: 1
-    first_scene: 1002
+    first_scene: 10002
     pickup: true
     note: "L1 搜证拾取；疑点 10101 condition；L1 R1 击穿件"
 
@@ -631,7 +628,7 @@ evidence_registry:
     name: "空的首饰盒 / Empty Jewelry Box"
     type: item
     first_loop: 1
-    first_scene: 1002
+    first_scene: 10002
     pickup: true
     note: "L1 搜证拾取；疑点 10102 condition；凹槽有'今天临时取出过'的轻微划痕（戒指脱落物理伏笔）"
 
@@ -639,7 +636,7 @@ evidence_registry:
     name: "现场地面照片 / Crime Scene Floor Photo"
     type: item
     first_loop: 1
-    first_scene: 1001
+    first_scene: 10001
     pickup: true
     note: "L1 搜证拾取；疑点 10102 condition；L1 R2 击穿件；描述明确细筛无金属残留"
 
@@ -648,16 +645,16 @@ evidence_registry:
     name: "Leonard 名片 / Leonard's Business Card"
     type: item
     first_loop: 2
-    first_scene: 1007
+    first_scene: 10007
     pickup: true
     analysis: false
-    note: "场景道具——解锁银行地址（场景 1011）；L2 R1 陷阱选项；右下角小字 Lakeshore Investment Co. 为 L3 伏笔；不进疑点 condition"
+    note: "场景道具——解锁银行地址（场景 10011）；L2 R1 陷阱选项；右下角小字 Lakeshore Investment Co. 为 L3 伏笔；不进疑点 condition"
 
   - id: 10202
     name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
     type: item
     first_loop: 2
-    first_scene: 1007
+    first_scene: 10007
     pickup: true
     analysis: false
     note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10206 连号拼图）"
@@ -666,7 +663,7 @@ evidence_registry:
     name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
     type: item
     first_loop: 2
-    first_scene: 1008
+    first_scene: 10007
     pickup: true
     analysis: false
     note: "场景道具——背景信息；L2 R2 陷阱选项；不进疑点 condition"
@@ -675,7 +672,7 @@ evidence_registry:
     name: "威胁便条 / Threatening Note"
     type: item
     first_loop: 2
-    first_scene: 1008
+    first_scene: 10007
     pickup: true
     analysis: false
     note: "背景信息——体现催债暴力性质；不作为指证击穿件"
@@ -684,7 +681,7 @@ evidence_registry:
     name: "Vinnie 催债小本子 / Vinnie's Collection Ledger"
     type: item
     first_loop: 2
-    first_scene: 1015
+    first_scene: 100015
     pickup: true
     analysis: false
     note: "关键——疑点 10203 condition；L2 R3 击穿件（配合 2070002）"
@@ -693,7 +690,7 @@ evidence_registry:
     name: "Vinnie 的钞票（序号 905B/906B/908B） / Vinnie's Banknotes"
     type: item
     first_loop: 2
-    first_scene: 1015
+    first_scene: 100015
     pickup: true
     analysis: false
     note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10202 拼出连号完整性）"

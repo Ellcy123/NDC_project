@@ -25,14 +25,14 @@
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
 # A. 结构完整性   PASS — loop_id / loop_title / loop_time / player_context / opening /
-#                        scenes（1001 限时搜证 / 1002 限时搜证 / 1003 搜证后 Morrison 对话 / 1004 警局指证 / 1005 事务所过场）/
+#                        scenes（10001 限时搜证 / 10002 限时搜证 / 10003 搜证后 Morrison 对话 / 10004 警局指证 / 10005 事务所过场）/
 #                        phone_booth_cutscene / expose / doubts / evidence_registry / cross_loop_setup 全部存在
 # B. 证据覆盖     PASS — 讨论结论 L1 全部 8 件证据（10101-10108）已分配：
-#                        1001 场景：10101 / 10104 / 10105；
-#                        1002 场景：10102 / 10103 / 10106 / 10107 / 10108；
-#                        1003 场景：无可拾取证据（纯 Morrison 对话）；
+#                        10001 场景：10101 / 10104 / 10105；
+#                        10002 场景：10102 / 10103 / 10106 / 10107 / 10108；
+#                        10003 场景：无可拾取证据（纯 Morrison 对话）；
 #                        证词 1030001（Foster via Emma）挂在电话亭过场段
-# C. NPC 条目     PASS — Morrison（is_liar:true，挂在 scene_1003，搜证完成后才可对话）/ Emma（挂在 scene_1002）；
+# C. NPC 条目     PASS — Morrison（is_liar:true，挂在 scene_10003，搜证完成后才可对话）/ Emma（挂在 scene_10002）；
 #                        两个 NPC 全部含 active_topics / withheld_topics / player_inquiry / testimony_ids
 # D. 目标对齐     PASS — goals 与讨论结论"确认死者身份，揭穿 Morrison 误导"一致
 # E. 信息节奏     PASS — L2+ 内容（银行/黑手党/Mickey 重逢/Leonard/Vinnie/钞票拼图）均未超前；
@@ -44,7 +44,7 @@
 #                        R2 谎言（Expose 内部退守对白，无 testimony ID）由 10104 反驳；
 #                        R3 谎言（Expose 内部退守对白，无 testimony ID）由 1030001 反驳；
 #                        陷阱选项各自有明确"看似相关但不构成反驳"的逻辑原因
-# H. 谎言收集规则 PASS — 仅 R1 谎言锚作可收集 testimony（挂在 scene_1003）；
+# H. 谎言收集规则 PASS — 仅 R1 谎言锚作可收集 testimony（挂在 scene_10003）；
 #                        R2/R3 谎言为 Expose 内部退守对白，无 testimony ID，写在 expose.round_X.lie 字段
 # ──────────────────────────────────────────────────────────
 #
@@ -101,7 +101,7 @@ player_context:
 
 opening:
   type: cutscene  # 🎬 硬切，无玩家操作
-  scene_id: 1001  # Margaret 鞋坊-店铺区（L1 开篇状态：尸体在场，消防刚离开）
+  scene_id: 10001  # Margaret 鞋坊-店铺区（L1 开篇状态：尸体在场，消防刚离开）
   description: |
     深夜。Zack 和 Emma 赶到 Margaret 鞋坊门外——街上还有消防残留的水渍，
     焦味弥漫，玻璃碎片散落路边。Morrison 站在门口，神情疲惫，手里夹着烟。
@@ -117,8 +117,8 @@ opening:
 # ─────────────────────────────
 
 scenes:
-  # ── 场景 1001：Margaret 鞋坊-店铺区（限时搜证）──
-  - id: 1001
+  # ── 场景 10001：Margaret 鞋坊-店铺区（限时搜证）──
+  - id: 10001
     name: "Margaret 鞋坊-店铺区"
     type: timed_exploration  # ⏸️ 限时探索——尸体被抬走前
     unlock_condition:
@@ -128,8 +128,8 @@ scenes:
       店铺区前半段：展示台、鞋架、收银台焦黑；火势主要在卧室区，这里烟尘重但结构完整。
       尸体在卧室区方向，白布盖着，能看到伸出来的手——老年男性，手指无戒指，也无佩戴痕迹。
       Morrison 站在旁边，偶尔看表，姿态很明显：催人快点。
-      限时搜证阶段 Morrison 不可对话（仅环境存在），搜证完成后场景 1003 才解锁可询问。
-    timer_note: "尸体被抬走前；完成搜证后切到 1002 卧室区，两区搜证均完成后触发尸体抬走、解锁场景 1003"
+      限时搜证阶段 Morrison 不可对话（仅环境存在），搜证完成后场景 10003 才解锁可询问。
+    timer_note: "尸体被抬走前；完成搜证后切到 10002 卧室区，两区搜证均完成后触发尸体抬走、解锁场景 10003"
 
     evidence:
       - id: 10101
@@ -161,12 +161,12 @@ scenes:
           雇员栏手写：Frank Kowalski，按件计酬，每周三、六工作。
           最后一页有 Frank 11月5日的工时记录。
 
-    # 限时搜证阶段无可对话 NPC——Morrison 在场但不可询问，对话挂在场景 1003
+    # 限时搜证阶段无可对话 NPC——Morrison 在场但不可询问，对话挂在场景 10003
 
-  # ── 场景 1002：Margaret 鞋坊-卧室区（限时）──
-  - id: 1002
+  # ── 场景 10002：Margaret 鞋坊-卧室区（限时）──
+  - id: 10002
     name: "Margaret 鞋坊-卧室区"
-    type: timed_exploration  # ⏸️ 限时探索——与 1001 共用计时
+    type: timed_exploration  # ⏸️ 限时探索——与 10001 共用计时
     unlock_condition:
       - type: auto
         param: "L1_opening_complete"
@@ -263,13 +263,13 @@ scenes:
           # 注：1030001 为 Foster 意见经 Emma 转述，证词 ID 挂在 Emma NPC 条目，
           #     来源注明为 Foster（NPC04），电话亭过场中触发
 
-  # ── 场景 1003：Margaret 鞋坊-店铺区（搜证后 Morrison 对话）──
-  - id: 1003
+  # ── 场景 10003：Margaret 鞋坊-店铺区（搜证后 Morrison 对话）──
+  - id: 10003
     name: "Margaret 鞋坊-店铺区（搜证后）"
     type: free_exploration  # 🔓 自由对话——限时计时结束后解锁
     unlock_condition:
       - type: auto
-        param: "scene_1001_complete AND scene_1002_complete"
+        param: "scene_10001_complete AND scene_10002_complete"
     description: |
       限时计时结束，尸体被抬走，现场清空——只剩 Morrison 还在店铺区，烟抽到一半，等程序走完。
       他这才转过身来，示意 Zack 有什么问题现在问、问完他要回警局。
@@ -308,13 +308,17 @@ scenes:
           # 注：R2 谎言（"戒指可能烧毁"）和 R3 谎言（"我有尸检信息"）为 Expose 内部退守对白，
           #     不进 testimony 池、不可预先收集——见 expose.round_2 / round_3 的 lie 字段
 
-  # ── 电话亭过场（非独立场景，1003 Morrison 对话完成后自动触发）──
+  # ── 场景 10019：鞋坊外/警局外电话亭过场（10003 Morrison 对话完成后自动触发）──
   # 搜证完成 + Morrison 现场对话完成 → 过场剧情：Emma 在警局附近公用电话亭联系 Foster
   # Foster 告知：尸检最快明天，连性别都无法确认
   # Emma 转述给 Zack，证词 1030001 进入玩家可用证词池
-  phone_booth_cutscene:
-    type: auto_trigger  # 1003 完成后自动触发
-    trigger_condition: "scene_1003_complete"
+  - id: 10019
+    name: "鞋坊外/警局外电话亭过场"
+    type: cutscene  # 🎬 过场，无玩家操作
+    unlock_condition:
+      - type: auto
+        param: "scene_10003_complete"
+    trigger_condition: "scene_10003_complete"
     description: |
       鞋坊外。Zack 站在街边，Emma 去附近公用电话亭拨了一通电话。
       不到两分钟，Emma 回来，神情平静但眼神带着确认的意味。
@@ -324,8 +328,8 @@ scenes:
     testimony_unlocked:
       - 1030001  # Foster（Emma 转）进入证词池
 
-  # ── 场景 1004：警局-Morrison 办公区（指证场）──
-  - id: 1004
+  # ── 场景 10004：警局-Morrison 办公区（指证场）──
+  - id: 10004
     name: "警局-Morrison 办公区"
     type: expose_scene  # ⚔️ 指证场
     unlock_condition:
@@ -336,8 +340,8 @@ scenes:
       Zack 带着证据进来，Morrison 没有站起来，只是抬头看了一眼。
       EPI01 的旧账悬在空气里——他知道 Zack 来者不善，但他更知道自己手上有的是借口。
 
-  # ── 场景 1005：Zack 侦探事务所（过场）──
-  - id: 1005
+  # ── 场景 10005：Zack 侦探事务所（过场）──
+  - id: 10005
     name: "Zack 侦探事务所"
     type: cutscene  # 🎬 过场，指证结束后自动触发
     unlock_condition:
@@ -361,7 +365,7 @@ scenes:
 expose:
   target: morrison
   target_talk: morrison_expose_l1
-  scene_id: 1004
+  scene_id: 10004
   is_liar: true
   player_inquiry: null
 
@@ -498,13 +502,13 @@ cross_loop_setup:
   # ── L1 的藏梗层（后续 Loop 才回收的伏笔）──
   planted_foreshadowing:
     - foreshadow_id: "N4_frank_cant_cook"
-      description: "Emma 在 1002 看到 10106 厨房失火点时皱眉但不说——Frank 不会做饭（Lula L4 证词 4100001 回收）"
-      planted_in: "scene_1002 / item_10106 description"
+      description: "Emma 在 10002 看到 10106 厨房失火点时皱眉但不说——Frank 不会做饭（Lula L4 证词 4100001 回收）"
+      planted_in: "scene_10002 / item_10106 description"
       resolved_in: "L4 expose_post / Lula 4100001"
 
     - foreshadow_id: "N_mickey_telegram"
       description: "Mickey 发来的电报知道 Margaret 位置——他是谁？他为什么在场？（L2 医院重逢展开）"
-      planted_in: "scene_1005 cutscene"
+      planted_in: "scene_10005 cutscene"
       resolved_in: "L2 opening"
 
     - foreshadow_id: "N_whale_phone_call"
@@ -519,7 +523,7 @@ cross_loop_setup:
 
     - foreshadow_id: "N_basement_door"
       description: "10108 地下室门打不开——Frank 和 Lula 的秘密约会空间（L3 解锁）"
-      planted_in: "scene_1002 / item_10108"
+      planted_in: "scene_10002 / item_10108"
       resolved_in: "L3 post_expose / L4 地下室搜证"
 
 # ─────────────────────────────
@@ -533,56 +537,56 @@ evidence_registry:
     name: "尸体手指照片"
     type: photo
     pickup: true
-    first_scene: 1001
+    first_scene: 10001
     note: "关键——L1 R1 击穿件；疑点 10101 condition（type=1）"
 
   - id: 10102
     name: "Margaret 相册"
     type: book
     pickup: true
-    first_scene: 1002
+    first_scene: 10002
     note: "关键——L1 R1 击穿件；疑点 10101 condition（type=1）"
 
   - id: 10103
     name: "空的首饰盒"
     type: prop
     pickup: true
-    first_scene: 1002
+    first_scene: 10002
     note: "关键——L1 R2 陷阱选项（实质为 R2 trap）；疑点 10102 condition（type=1）；首饰盒凹槽划痕=戒指脱落物理伏笔（L4/L5 回收）"
 
   - id: 10104
     name: "现场地面照片"
     type: photo
     pickup: true
-    first_scene: 1001
+    first_scene: 10001
     note: "关键——L1 R2 击穿件；疑点 10102 condition（type=1）；描述含'细筛无金属残留+火温说明'（P1 风险处理）"
 
   - id: 10105
     name: "鞋坊营业记录"
     type: document
     pickup: true
-    first_scene: 1001
+    first_scene: 10001
     note: "场景道具——L1 R1 陷阱选项；仅证明雇员身份，不反驳死者身份判断"
 
   - id: 10106
     name: "卧室开放式厨房失火点照片"
     type: photo
     pickup: true
-    first_scene: 1002
+    first_scene: 10002
     note: "场景道具——Morrison 编造死因依据；L1 R3 陷阱选项（维度错误：死因≠身份）；Emma 皱眉藏梗（N4，L4 回收）"
 
   - id: 10107
     name: "Patrick 遗物匣"
     type: prop
     pickup: false
-    first_scene: 1002
+    first_scene: 10002
     note: "场景道具——环境叙事，Zack 父亲情感锚点；isUsable=false"
 
   - id: 10108
     name: "地下室的门（打不开）"
     type: door
     pickup: false
-    first_scene: 1002
+    first_scene: 10002
     note: "场景道具——L3 解锁；地下室 Frank+Lula 约会空间的伏笔；isUsable=false（L1 阶段不可互动）"
 
   # ── 证词（不在 ItemStaticData，记录供 TestimonyItem 配置表用）──
@@ -593,7 +597,7 @@ evidence_registry:
       loop: 1
       text: "死者应该就是 Margaret，基于现场情况判断"
       is_lie: true
-      collected_at: "scene_1003 (Morrison 搜证后对话)"
+      collected_at: "scene_10003 (Morrison 搜证后对话)"
       use: "L1 R1 谎言锚"
 
     - id: 1030001

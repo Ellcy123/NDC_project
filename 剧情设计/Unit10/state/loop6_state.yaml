@@ -2,9 +2,9 @@
 # loop6_state.yaml — Unit10 Loop 6: Leonard 终极指证
 # ============================================================
 #
-# 叙事功能：终局收束——Margaret 苏醒证词（1006）→ 鞋坊废墟深度搜证（1001）→
-#           Morrison 警局过场签搜查令（1004）→ Leonard 银行大厅谎言锚（1011）→
-#           Leonard 住所 4 轮指证（1017，含诱导招供 R3-R4 之间）→
+# 叙事功能：终局收束——Margaret 苏醒证词（10006）→ 鞋坊废墟深度搜证（10001）→
+#           Morrison 警局过场签搜查令（10004）→ Leonard 银行大厅谎言锚（10011）→
+#           Leonard 住所 4 轮指证（10017，含诱导招供 R3-R4 之间）→
 #           ending_sequence（Vinnie 字条 + Lula 悼念 + Zack 苦笑 Moore 银行）
 #
 # 核心体验：
@@ -24,12 +24,12 @@
 #   Leonard   6050001（R1 谎言锚，仅此一条作 testimony；R2/R3/R4 谎言为 Expose 内部退守对白，无 ID）
 #
 # 关键继承状态（loop5 末）：
-#   10601 法医鉴定报告：loop6 在 1006 Margaret 病房取得（Foster 提供实物）
+#   10601 法医鉴定报告：loop6 在 10006 Margaret 病房取得（Foster 提供实物）
 #   10502 Frank 举报材料：removed_from_inventory（L5 末 Mickey 带走）
 #   4090004 Danny 目击证词：active，L4 指证后取得，挂 L5 疑点 10501 condition
 #   5030001 Foster 电话证词：active，L5 末取得（引擎点火）
 #   5080002b Vinnie 假认罪细节：active，L5 指证取得，L6 R4 击破件
-#   10603 镊子：loop6 在 1006 取得（Margaret 病房 Foster 提供）
+#   10603 镊子：loop6 在 10006 取得（Margaret 病房 Foster 提供）
 #
 # ──────────────────────────────────────────────────────────
 # 疑点一对一挂载验证（跨 6 Loop 全局）：
@@ -43,17 +43,17 @@
 # ──────────────────────────────────────────────────────────
 #
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening / scenes（1006/1001/1004/1011）
+# A. 结构完整性   PASS — player_context / opening / scenes（10006/10001/10004/10011）
 #                        / expose / ending_sequence / doubts / evidence_registry 全部存在
 # B. 证据覆盖     PASS — 10601-10611 全部分配：
-#                        10601/10602/10603 → 1006 Margaret 病房；
-#                        10604/10605/10606 → 1001 鞋坊废墟（10605 需持 10603 触发）；
-#                        10607 → 1004 Morrison 警局过场（自动产出）；
-#                        10608/10609/10610/10611 → 1017 Leonard 住所；
+#                        10601/10602/10603 → 10006 Margaret 病房；
+#                        10604/10605/10606 → 10001 鞋坊废墟（10605 需持 10603 触发）；
+#                        10607 → 10004 Morrison 警局过场（自动产出）；
+#                        10608/10609/10610/10611 → 10017 Leonard 住所；
 #                        继承件 5080002b/4090004 状态注明
-# C. NPC 条目     PASS — Margaret（scenes 1006，4 块）/ Leonard scenes（1011，4 块）/
-#                        Morrison（scenes 1004 过场，仅过场 NPC 简版）/
-#                        Leonard expose（1017，4 块，is_liar:true）
+# C. NPC 条目     PASS — Margaret（scenes 10006，4 块）/ Leonard scenes（10011，4 块）/
+#                        Morrison（scenes 10004 过场，仅过场 NPC 简版）/
+#                        Leonard expose（10017，4 块，is_liar:true）
 #                        Leo妻子：哑角，无 NPCStaticData，仅 environment_narrative
 # D. 目标对齐     PASS — goals 与讨论结论 L6"Leonard 是真凶 / 诱导招供 / Margaret 苏醒"一致
 # E. 信息节奏     PASS — 本 Loop 揭示：Leonard 误杀真相 + Vinnie 单方面深爱顶罪；
@@ -91,7 +91,7 @@ player_context:
     - "Leonard 给签名信封让 Zack 去市政厅申请搜查令——门房不认账"
     - "Vinnie 在 Tony 试探下口误脱口'Russo'——两人比表面上亲密得多"
     # ── loop3 post_expose ──
-    - "Frank 贷款签名是伪造的——笔迹对比报告（10702）证明"
+    - "Frank 贷款签名是伪造的——10301 + 10302 双件直接对比即可证明"
     - "贷款条款违法：年单利12% + 利滚利 + 月管理费50$，5年合计≈3960$"
     - "对账单双重身份：页眉投资公司/正文银行（同一套欺诈体系）"
     - "Moore 承认 Frank 不是赌博贷款，是银行做的手脚"
@@ -162,8 +162,8 @@ opening:
 
 scenes:
 
-  # ── 场景 1006：圣心医院——Margaret 苏醒，Foster 提供报告 ──
-  - id: 1006
+  # ── 场景 10006：圣心医院——Margaret 苏醒，Foster 提供报告 ──
+  - id: 10006
     name: "圣心医院 Margaret 病房"
     type: free_exploration  # 🔓 自由探索（L6 Margaret 苏醒，可交互）
     loop_flag: "margaret_awake"
@@ -260,7 +260,7 @@ scenes:
           关键结论：头骨伤口形状与圆底钝器一致，烛台底部吻合（不排除其他同类工具）；
           伤口出血在火灾前即已停止，确认 Frank 在火灾之前已死于钝器击打，非烟熏或烧伤致死。
           报告注明"花费整整一天排除替代假设"——措辞极其谨慎，但结论清晰。
-        note: "关键——兑现 Morrison L1 承诺；携此前往 1004 警局触发搜查令过场"
+        note: "关键——兑现 Morrison L1 承诺；携此前往 10004 警局触发搜查令过场"
 
       - id: 10602
         name: "房屋抵押证明"
@@ -286,15 +286,15 @@ scenes:
         description: |
           标准医用不锈钢镊子，15cm 长，Foster 借给 Zack 用于现场取证。
           适合夹取嵌入地板缝隙的细小物证而不损坏样本。
-        note: "场景道具——用于 1001 夹取地板缝隙中的 10605 眼镜碎片；canCombined=true，combineParameter=[10605,10603]"
+        note: "场景道具——用于 10001 夹取地板缝隙中的 10605 眼镜碎片；canCombined=true，combineParameter=[10605,10603]"
         metadata:
           canCombined: true
           combineParameter: [10605, 10603]
           usage_note: "玩家发现地板缝隙反光后，需持有 10603 才能触发夹取交互，产出 10605"
 
 
-  # ── 场景 1001：Margaret 鞋坊-店铺区（深度搜证，L6 地板缝隙）──
-  - id: 1001
+  # ── 场景 10001：Margaret 鞋坊-店铺区（深度搜证，L6 地板缝隙）──
+  - id: 10001
     name: "Margaret 鞋坊-店铺区（深度搜证）"
     type: free_exploration  # 🔓 自由探索
     loop_flag: "deep_search_l6"
@@ -359,8 +359,8 @@ scenes:
           record_method: "场景交互后自动记录为笔记条目进入玩家 CASE BOARD"
 
 
-  # ── 场景 1004：警局 Morrison 办公区（过场，Morrison 签搜查令）──
-  - id: 1004
+  # ── 场景 10004：警局 Morrison 办公区（过场，Morrison 签搜查令）──
+  - id: 10004
     name: "警局 Morrison 办公区"
     type: transition_cutscene  # 🎬 过场，自动触发
     unlock_condition: "持有 10601 法医鉴定报告"
@@ -412,12 +412,12 @@ scenes:
         analysis: false
         description: |
           正式搜查令，授权搜查北区湖滨大道 88 号 Leonard Ross（Russo）住所，Morrison 警官签字。
-          搜查令是进入 1017 Leonard 住所的解锁钥匙。
-        note: "关键——解锁场景 1017；Morrison 兑现 L1 承诺的物证"
+          搜查令是进入 10017 Leonard 住所的解锁钥匙。
+        note: "关键——解锁场景 10017；Morrison 兑现 L1 承诺的物证"
 
 
-  # ── 场景 1011：Moore 银行大厅（Leonard 谎言锚台词）──
-  - id: 1011
+  # ── 场景 10011：Moore 银行大厅（Leonard 谎言锚台词）──
+  - id: 10011
     name: "Moore 银行大厅"
     type: free_exploration  # 🔓 自由探索（Leonard 在工位，可短暂交互）
     description: |
@@ -474,7 +474,7 @@ expose:
   target_talk: leonard_expose_loop6
   is_liar: true
   player_inquiry: null
-  scene_id: 1017
+  scene_id: 10017
 
   scene_setup:
     name: "Leonard 住所（北区湖滨大道 88 号）"
@@ -490,15 +490,15 @@ expose:
 
   context: |
     Zack 持搜查令进入 Leonard 住所。此时 Zack 手中的证据：
-    ── 场景 1006 取得 ──
+    ── 场景 10006 取得 ──
     - 10601 法医鉴定报告（Frank 死于钝器）
     - 10602 房屋抵押证明（含烛台原位内景照片）
     - 10603 医用镊子（已用于取出 10605）
-    ── 场景 1001 取得 ──
+    ── 场景 10001 取得 ──
     - 10604 烛台（凶器，已取得）
     - 10605 眼镜碎片（烟熏黄色旧镜片，镊子夹出）
     - 10606 凹陷货物箱（记录/照片，3cm 凹陷、西装面料纤维）
-    ── 场景 1017 搜证取得 ──
+    ── 场景 10017 搜证取得 ──
     - 10608 Vinnie 接听端电话账单（Leonard 留的副本，L6 搜证取得）
     - 10609 旧报纸剪报（1915 Russo 家被纵火，环境叙事）
     - 10610 眼镜维修单据（左眼新镜片，右眼旧镜片）
@@ -878,67 +878,67 @@ evidence_registry:
   # 本 Loop 新增证据
   - id: 10601
     name: "法医鉴定报告"
-    source_scene: 1006
+    source_scene: 10006
     pickup: true
     note: "关键——兑现 Morrison 承诺；R3 陷阱反驳基础"
 
   - id: 10602
     name: "房屋抵押证明"
-    source_scene: 1006
+    source_scene: 10006
     pickup: true
     note: "关键——L6 R3 击破件；疑点 10603 condition"
 
   - id: 10603
     name: "医用镊子"
-    source_scene: 1006
+    source_scene: 10006
     pickup: true
     note: "场景道具——取出 10605 所需；canCombined"
 
   - id: 10604
     name: "烛台"
-    source_scene: 1001
+    source_scene: 10001
     pickup: true
     note: "R3 陷阱选项"
 
   - id: 10605
     name: "眼镜碎片（烟熏黄色旧镜片）"
-    source_scene: 1001
+    source_scene: 10001
     pickup: true
     note: "关键——L6 R1 击破件；需持 10603 触发取出"
 
   - id: 10606
     name: "凹陷的货物箱"
-    source_scene: 1001
+    source_scene: 10001
     pickup: false  # envir，记录进 CASE BOARD
     note: "关键——L6 R3 击破件；疑点 10603 condition"
 
   - id: 10607
     name: "搜查令（Morrison 签字）"
-    source_scene: 1004
+    source_scene: 10004
     pickup: true
-    note: "关键——解锁场景 1017"
+    note: "关键——解锁场景 10017"
 
   - id: 10608
     name: "Vinnie 接听端电话账单（Leonard 留副本）"
-    source_scene: 1017
+    source_scene: 10017
     pickup: true
     note: "L6 R1 陷阱选项"
 
   - id: 10609
     name: "旧报纸剪报（1915 Russo 家纵火）"
-    source_scene: 1017
+    source_scene: 10017
     pickup: false  # envir
     note: "场景道具（envir）"
 
   - id: 10610
     name: "眼镜维修单据"
-    source_scene: 1017
+    source_scene: 10017
     pickup: true
     note: "关键——L6 R2 击破件；疑点 10602 condition"
 
   - id: 10611
     name: "空相框"
-    source_scene: 1017
+    source_scene: 10017
     pickup: false  # envir
     note: "场景道具（envir）——L3 合照跨 Loop 呼应"
 
@@ -957,6 +957,6 @@ evidence_registry:
 
   - id: 6110001
     name: "Margaret 苏醒目击证词"
-    source_scene: 1006
+    source_scene: 10006
     source_loop: 6
     note: "关键——L6 R1 + R3 击破件；疑点 10601 condition"
