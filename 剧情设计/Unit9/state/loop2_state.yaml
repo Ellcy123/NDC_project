@@ -142,7 +142,7 @@ scenes:
       Vivian 配合 Webb 拍摄的勒索照片就存放在此处。
       玩家在此找到仙人跳材料——勒索用的照片；拍摄工具便携相机在突发事件中被 Emma 失手打碎，碎片留在原地作为环境观察。
       ⚡ 突发事件——相机失手打碎引出柜底信封（详见 sudden_event 字段）：
-         玩家点击矮木柜 → 看到柜中便携相机（高亮可点击但未入背包/未显示详情）
+         玩家点击矮木柜 → 看到柜中便携相机 9213（完好态，环境物，高亮可点击但未入背包/未显示详情）
          → 玩家点击相机道具触发突发事件 → Emma 接相机时不慎打碎
          → 蹲下捡碎片时 Zack 摸到柜底厚信封 → 9201 勒索照片现身（相机碎片 9209 作为环境叙事留在原地）。
          核心：勒索照片（9201）产出；相机碎片（9209）为环境叙事。
@@ -183,6 +183,14 @@ scenes:
         description: "一件证据含两张黑白照片：一张是 Vivian 与 Thompson 的暧昧合影，另一张是 Vivian 与 Coleman 的暧昧合影。两张照片背面均有几处淡黄褐色污渍，肉眼看不出意义，需经煤油灯烘烤显影后才能读出真实金额标注（产出派生证据 9706）。原始可见信息仅为'两张暧昧合影 + Vivian 与中产人士'，金额不可见。"
         analysis: "煤油灯加热背面，柠檬汁字迹显影：'花瓶 — $4,000 / 油画 — $7,000'——Webb 的勒索账本（派生 ID: 9706）"
         note: "关键——疑点 9201 condition；经烘烤显影派生 9706（L2 R1 击穿件已改为 9706）；获取路径：通过 sudden_event（camera_breaks_envelope_revealed）派生拾取——Emma 失手打碎相机后，Zack 蹲下捡碎片时摸到柜底厚信封而获得；非纯 free_exploration 点击。pickup:true 表示玩家最终入背包，但触发节点是 sudden_event 而非自由探索点击"
+
+      - id: 9213
+        name: "便携相机（完好）/ Portable Camera (Intact)"
+        type: envir  # 环境叙事
+        pickup: false
+        analysis: false
+        description: "1920s 35mm 便携相机——落在矮木柜深处，机身蒙了一层薄灰，卷片轴上仍留有半卷未冲洗底片；皮腔折叠完整，镜头铜环未变形。"
+        note: "场景道具——sudden_event 触发前的相机原状；玩家点击它即触发 camera_breaks_envelope_revealed，事件后由 9209（碎片态）替换。不入背包、不入 doubt condition。"
 
       - id: 9209
         name: "便携相机（包好的碎片）/ Broken Camera (Wrapped)"
@@ -695,6 +703,14 @@ evidence_registry:
     first_scene: 9006
     pickup: false
     note: "场景道具——sudden_event（camera_breaks_envelope_revealed）中 Emma 失手砸碎的相机碎片，作为环境叙事留在矮木柜旁；不入背包、不入 doubt condition；该事件主要产出为 9201 勒索照片"
+
+  - id: 9213
+    name: "便携相机（完好）/ Portable Camera (Intact)"
+    type: envir
+    first_loop: 2
+    first_scene: 9006
+    pickup: false
+    note: "场景道具——sudden_event 触发前的相机原状；玩家点击它即触发 camera_breaks_envelope_revealed，事件后由 9209（碎片态）替换。不入背包、不入 doubt condition。"
 
   - id: 9210
     name: "厨房工作表 / Kitchen Work Schedule"
