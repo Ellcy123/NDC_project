@@ -640,18 +640,19 @@ ending_sequence:
 
     # ── Act 3：保险箱——密码、字条、录音盘碎片 + Vivian 退场 ──
     act_3_safe_box:
-      location: "蓝月亮酒吧 1F Webb 会客室（已解封）"
+      location: "蓝月亮酒吧 1F Webb 办公室（已解封）"  # 保险箱所在地
       description: |
-        Vivian 走到保险箱前，停下来。
-        她从口袋里取出那张字条（9304）——Zack 当年找到的、写着密码提示的那张。
+        Vivian 带 Zack 和 Emma 离开大堂，穿过走廊，推开 Webb 办公室的门——保险箱就在这里。
+        她走到保险箱前，停下来。
+        她从口袋里取出那张字条（9304）——Zack 当年在会客室桌上找到的、写着密码提示的那张。
         密码是：Webb 和 Vivian 相遇的那一天的日期。
         Vivian 一个数字一个数字地拨，保险箱"咔"的一声打开了。
         里面有一叠碎片——一张 78 转虫胶唱片被打碎的残骸，边缘还带着烧焦的痕迹。
         Vivian 把碎片捧起来，交给 Zack，说：
         "这是 Webb 真正的死因，我将它交给真正能用上的人。"
-        交完之后 Vivian 转身走出会客室，把门轻轻带上——她说："我先回大堂——这间屋子里的事，从今晚起不再是我的。"
+        交完之后 Vivian 转身走出办公室，把门轻轻带上——她说："我先回大堂——这间屋子里的事，从今晚起不再是我的。"
         她不需要听碎片的内容；她把碎片交给了该交的人，自己留下空间。
-        Zack 和 Emma 单独留在会客室——和那把保险箱、那叠碎片、和墙角那台 Webb 留下的老式留声机。
+        Zack 和 Emma 单独留在办公室——和那把保险箱、那叠碎片、和墙角那台 Webb 留下的老式留声机。
       vivian_line: "这是 Webb 真正的死因，我将它交给真正能用上的人"
       vivian_exit_line: "我先回大堂——这间屋子里的事，从今晚起不再是我的。"
       evidence_obtained:
@@ -659,6 +660,7 @@ ending_sequence:
           name: "'南区计划'录音盘碎片"
           name_en: "'South Side Plan' Shellac Record Shards"
           type: item
+          itemType: 3
           pickup: true
           analysis: false
           description: |
@@ -1058,11 +1060,12 @@ evidence_registry:
     name: "'南区计划'录音盘碎片"
     name_en: "'South Side Plan' Shellac Record Shards"
     type: item
-    first_scene: "9003 Act3 保险箱"
+    itemType: 3
+    first_scene: 9011  # Webb 办公室——保险箱所在地（只有办公室有保险箱，会客室没有；其他 L3/L6 会客室证据 9304/9305 等不动）
     trigger_event: ending_sequence_act3
     pickup: true
     status: active
-    note: "关键——Unit2 开门砖；跨 Chapter 持久化道具"
+    note: "关键——Unit2 开门砖；跨 Chapter 持久化道具；保险箱在 Webb 办公室"
     metadata:
       physical_format: "78转虫胶唱片碎片（shellac record shards）"
       content_keywords: ["Margaret Brennan", "南区清退"]

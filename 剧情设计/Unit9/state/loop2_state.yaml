@@ -19,7 +19,7 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
 #                        NPC 3 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
-# B. 证据覆盖     PASS — 讨论结论 L2 全部 7 件证据（9201-9207）+ 2 件场景补充证据（9209/9210）+ 2 件环境证据（9211/9212）已分配到场景；
+# B. 证据覆盖     PASS — 讨论结论 L2 全部 7 件证据（9201-9207）+ 1 件场景补充证据（9210）+ 3 件环境证据（9209/9211/9212）已分配到场景；
 #                        9201 勒索照片→9006（小包厢）；9202 VIP 合影→9011（Webb 办公室）；9203 Webb 收入→9011；
 #                        9204 Tommy 账本→9010（Tommy 办公室）；9205 假油画→9005（歌舞厅）；9206 花瓶照→9005；9207 James 工资单→9009（James 厨房）；
 #                        9209 便携相机→9006（sudden_event 产出）；9210 厨房工作表→9009（James 不在场证明，L5 击穿）；
@@ -140,16 +140,15 @@ scenes:
     description: |
       酒吧 1F 歌舞厅一侧的私人小包厢，平时供 VIP 使用。
       Vivian 配合 Webb 拍摄的勒索照片就存放在此处。
-      玩家在此找到仙人跳材料——勒索用的照片 + 拍摄工具便携相机（在突发事件中被 Emma 失手打碎，最终以"包好的碎片"形态入背包）。
+      玩家在此找到仙人跳材料——勒索用的照片；拍摄工具便携相机在突发事件中被 Emma 失手打碎，碎片留在原地作为环境观察。
       ⚡ 突发事件——相机失手打碎引出柜底信封（详见 sudden_event 字段）：
          玩家点击矮木柜 → 看到柜中便携相机（高亮可点击但未入背包/未显示详情）
          → 玩家点击相机道具触发突发事件 → Emma 接相机时不慎打碎
-         → 蹲下捡碎片时 Zack 摸到柜底厚信封 → Zack 用手帕包好碎相机后入背包
-         → 9201 勒索照片现身。
-         核心：相机（9209，包好的碎片版）+ 勒索照片（9201）双产出。
+         → 蹲下捡碎片时 Zack 摸到柜底厚信封 → 9201 勒索照片现身（相机碎片 9209 作为环境叙事留在原地）。
+         核心：勒索照片（9201）产出；相机碎片（9209）为环境叙事。
 
     sudden_event:
-      type: camera_breaks_envelope_revealed  # 🎭 叙事事件 + 双证据产出（9209 + 9201）
+      type: camera_breaks_envelope_revealed  # 🎭 叙事事件 + 单证据产出（9201 入背包）；9209 相机碎片为环境叙事，不入背包
       trigger: "玩家在小包厢点击角落矮木柜（柜门半掩、露出金属边）→ 看到柜中便携相机（高亮可点击但未入背包/未显示详情）→ 玩家点击相机道具触发"
       description: |
         节奏（精确匹配 Loop2 草稿 §2 901002050–901002059）：
@@ -164,16 +163,15 @@ scenes:
         ④ 收拾碎片时 Emma 先看见——蹲下来瞥见柜底，喊出
            「Brennan！柜子底下还藏着这个！」Zack「嗯？」一声蹲下，
            手伸进柜底——指尖碰到一个硬角，抽出来是一个厚信封。
-        ⑤ Zack 站起身。从口袋掏出手帕，把相机残骸 + 散落镜片一起包好放进证据袋。
-           Zack（无奈）："碎了也是证据。底片应该还能洗。"
+        ⑤ Zack 站起身。地上散落着相机外壳和镜片碎片——只能留在原地。
+           Zack（无奈）："这相机算是废了。底片应该还能洗。"
            Emma（懊恼小声）："……我赔。"
            信封中是两张暧昧合影（Vivian × Thompson / Coleman），
            背面有几处淡黄褐色污渍，肉眼看不出文字——
            这正是 9201「勒索用的照片」原始未显影态。
-           → 玩家获得 9209「便携相机（包好的碎片）」+ 9201 勒索照片 入背包。
-        重点：相机 + 9201 是双产出；玩家在背包里只能查看"包好的碎相机"形态详情，
-              永远没有机会看到完整相机的道具详情——
-              这是设计上刻意保留的"事件即破坏"瞬间感。
+           → 玩家获得 9201 勒索照片入背包；相机碎片（9209）作为场景环境观察留在矮木柜旁。
+        重点：相机碎片是环境叙事——玩家亲眼见到"事件即破坏"的瞬间，
+              却无法把碎片带走，强化"完整相机的道具详情永远无缘"的设计意图。
               对应草稿对白节点：901002050（点击相机触发）→ 901002052（接住碎片）→
                                 901002055（柜底摸到信封）→ 901002057（Emma 喊柜底还有这个）。
 
@@ -188,10 +186,11 @@ scenes:
 
       - id: 9209
         name: "便携相机（包好的碎片）/ Broken Camera (Wrapped)"
-        type: item
-        pickup: true
+        type: envir  # 环境叙事
+        pickup: false
+        analysis: false
         description: "1920s 便携相机的碎片，Zack 用手帕包好——Emma 失手砸的。卷片轴上半卷未冲洗底片倒是没事，成像风格和勒索照片一样。"
-        note: "场景道具——勒索生意的物证补充，不入 doubt condition；由 sudden_event（camera_breaks_envelope_revealed）引出，玩家点击矮木柜中相机触发事件后入背包；玩家在背包里只能查看包好的碎片形态详情"
+        note: "场景道具——sudden_event（camera_breaks_envelope_revealed）中 Emma 失手打碎的相机碎片，呈现勒索拍摄工具的物证语境，不入背包、不进 doubt condition；该事件主要产出为 9201 勒索照片"
 
       - id: 9211
         name: "对墙摆放的沙发 / Wall-Facing Sofa"
@@ -216,7 +215,7 @@ scenes:
       emma_l2_smallbox:
         talk: emma_l2_smallbox
         is_liar: false
-        motive: "陪同 Zack 搜证；触发 sudden_event 取出相机 → 失手打碎 → 引出柜底厚信封（9209 + 9201 双产出）"
+        motive: "陪同 Zack 搜证；触发 sudden_event 取出相机 → 失手打碎 → 引出柜底厚信封（9201 入背包；9209 相机碎片作为环境叙事留在原地）"
         mindset: "专注、好奇——刚踏入小包厢就敏锐察觉柜门半掩；打碎相机后短暂懊恼但立即转向收拾碎片，盯到柜底另有夹层"
 
         # ── 1. NPC 已知信息 ──
@@ -691,11 +690,11 @@ evidence_registry:
 
   - id: 9209
     name: "便携相机（包好的碎片）/ Broken Camera (Wrapped)"
-    type: item
+    type: envir
     first_loop: 2
     first_scene: 9006
-    pickup: true
-    note: "场景道具——勒索生意物证补充；由 sudden_event（camera_breaks_envelope_revealed）引出，玩家点击矮木柜中相机触发事件后入背包，背包里只能查看包好的碎片形态详情；不入 doubt condition"
+    pickup: false
+    note: "场景道具——sudden_event（camera_breaks_envelope_revealed）中 Emma 失手砸碎的相机碎片，作为环境叙事留在矮木柜旁；不入背包、不入 doubt condition；该事件主要产出为 9201 勒索照片"
 
   - id: 9210
     name: "厨房工作表 / Kitchen Work Schedule"

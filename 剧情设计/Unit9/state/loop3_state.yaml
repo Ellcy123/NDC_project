@@ -210,6 +210,7 @@ scenes:
       - id: 9306
         name: "《艾斯弗德狂想曲》节目单碎片 / Fragmented Program (Title Only)"
         type: item
+        itemType: 3  # 道具（state→table 用，覆盖默认推断）
         pickup: true
         note: "非 condition 挂载；L5 R1 陷阱证据（碎片无演奏时间，误用会失败）；为 L5 完整节目单 9501 的对比铺设"
         description: "被撕碎的乐谱节目单碎片，印有《艾斯弗德狂想曲》和《爵士风暴》等曲目名。James 销毁过程中 Zack 仅拿到残存部分——曲目名可辨认，但演奏时间一栏已完全缺失，无法确认鼓点高潮的具体时段。"
@@ -303,8 +304,9 @@ scenes:
       Morrison 完成勘验后离开，Zack 可独立搜证。
       关键发现：没有玻璃的窗户——Zack 向窗外侧巷望去，
       见到垃圾袋正压在碎玻璃上。点击破窗进入侧巷搜证视角（9020）拾取玻璃碎片。
-      会客室内还有保险箱字条、Webb+Vivian 合影、Webb 的勒索记录日记
-      （扉页亲笔写着 "Whale — Danger"，可拾取）、Rita 的照片（环境陈设）。
+      Webb 桌面上还能找到密码字条（保险箱本体在 Webb 办公室，本场景不出现）、
+      Webb+Vivian 合影、Webb 的勒索记录日记（扉页亲笔写着 "Whale — Danger"，可拾取）、
+      Rita 的照片（环境陈设）。
 
     evidence:
       - id: 9304
@@ -312,7 +314,7 @@ scenes:
         type: item
         pickup: true
         note: "关键——疑点 9303 condition；L4 R3 击穿件（反驳 Vivian 情感辩解）；Act3 Vivian 打开保险箱取出 9602"
-        description: "贴在保险箱旁的小纸条，Webb 的笔迹，写道：'密码是我们相遇的那一天。—— W'。字迹工整，像是反复写过。保险箱旁边还摆放着一张合影。"
+        description: "Webb 会客室桌面上的一张小纸条，Webb 的笔迹，写道：'密码是我们相遇的那一天。—— W'。字迹工整，像是反复写过。桌上还摆放着一张合影（保险箱本体放在 Webb 办公室）。"
         analysis: null
 
       - id: 9305
@@ -398,6 +400,7 @@ scenes:
       - id: 9309
         name: "Rosa 女儿的照片 / Rosa's Daughter Photo"
         type: envir
+        itemType: 2  # 环境（state→table 用）
         pickup: false
         analysis: false
         note: "场景道具——铁盒密码锁玩法的提示来源；不挂任何 doubt condition；L3 玩法专用"
@@ -406,6 +409,7 @@ scenes:
       - id: 9302
         name: "威胁纸条（倒写 J） / Threat Note (Inverted J Handwriting)"
         type: item
+        itemType: 3  # 道具（state→table 用）
         pickup: true
         note: "关键——疑点 9302 condition；L3 R2 击穿件；倒写 J 留作 L5 伏笔（L3 不告诉玩家这是 James）；通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得"
         description: "Blue Moon 酒吧餐巾纸背面，廉价铅笔潦草书写，铅痕深浅不均。内容：'23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。'字迹中，字母 J 的书写方式异常——J 的弯钩朝向与正常书写相反，像是写字时习惯性地把 J 倒着写。其余字母无明显异常。从角落木架上的小铁盒中取出（盒锁四位拨轮，密码 0915 = 女儿生日 MMDD）——通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得。"
@@ -414,6 +418,7 @@ scenes:
       - id: 9303
         name: "女儿医疗单 / Daughter's Medical Bill"
         type: item
+        itemType: 3  # 道具（state→table 用）
         pickup: true
         note: "关键——疑点 9302 condition；L3 R2 辅助击穿件；证明威胁者掌握了 Rosa 女儿的具体病情；通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得"
         description: "Rosa 女儿的医院账单，与威胁纸条一同放在储藏室角落上锁的小铁盒里。账单显示女儿有需要持续治疗的病症，医疗费用不低。威胁者不仅知道 Rosa 有女儿，还掌握了具体的医疗状况。账单上记载病人姓名 Isabel Martinez、出生 1916-09-15。通过铁盒密码锁玩法（输入 0915 = 女儿生日 MMDD）同时获得。"
@@ -637,6 +642,7 @@ evidence_registry:
   - id: 9302
     name: "威胁纸条（倒写 J） / Threat Note (Inverted J Handwriting)"
     type: item
+    itemType: 3
     first_scene: 9001
     pickup: true
     note: "关键（Loop3 核心）——指证 Rosa round_2 核心证据；疑点 9302 condition；倒写 J 留作 Loop5 伏笔"
@@ -644,6 +650,7 @@ evidence_registry:
   - id: 9303
     name: "女儿医疗单 / Daughter's Medical Bill"
     type: item
+    itemType: 3
     first_scene: 9001
     pickup: true
     note: "关键（Loop3 核心）——指证 Rosa round_2 辅助证据；疑点 9302 condition；证明威胁的真实性"
@@ -665,6 +672,7 @@ evidence_registry:
   - id: 9306
     name: "《艾斯弗德狂想曲》节目单碎片 / Fragmented Program (Title Only)"
     type: item
+    itemType: 3
     first_scene: 9009
     pickup: true
     note: "非 condition 挂载；Loop5 R1 陷阱证据（碎片无演奏时间，误用 R1 会失败）"
@@ -686,6 +694,7 @@ evidence_registry:
   - id: 9309
     name: "Rosa 女儿的照片 / Rosa's Daughter Photo"
     type: envir
+    itemType: 2
     first_scene: 9001
     pickup: false
     note: "场景道具——铁盒密码锁玩法的提示来源（相框背手写'我的天使 · 0915'= 女儿生日 MMDD）；不挂任何 doubt condition；不可拾取；L3 储藏室密码锁玩法专用"
