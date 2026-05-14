@@ -3,7 +3,7 @@
 **state ID**：`10015`（100xx = Unit10 场景命名空间；L2 自由探索；L4 Danny 指证；L5 Vinnie 指证）
 
 **位置**：南区 Silver Moon 赌场兼酒吧，Vinnie Moretti 的常驻地，Tony 担任酒保
-**戏剧作用**：L2 连号钞票拼图的关键环节（10205 + 10206 + 2070001/2070002）；L4 Danny 三轮指证（⚔️）；L5 Vinnie 一轮指证（⚔️），Vinnie 假认罪揭示，Foster 电话过场
+**戏剧作用**：L2 连号钞票对比的关键证据来源（10205 + 10206 + 2070001/2070002）；L4 Danny 三轮指证（⚔️）；L5 Vinnie 一轮指证（⚔️），Vinnie 假认罪揭示，Foster 电话过场
 
 ---
 

@@ -30,7 +30,7 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes(S10006/S10010/S10001/S10007/S10009/S10020) /
 #                        expose（scene_id=10020 Frank 家厕所）/ post_expose_scene / doubts / evidence_registry 全部存在
-# B. 证据覆盖     PASS — 讨论结论 L4 所有证据（10402-10408 共 7 件）已分配到场景；
+# B. 证据覆盖     PASS — L4 所有证据（10402-10410 共 9 件，新增 10409 枯萎玫瑰 + 10410 水杯做玫瑰花蕊玩法 input）已分配到场景；
 #                        10408 在 post_expose_scene 由 Lula 交出，不在自由探索场景 pickup；
 #                        维修收据 10406 归入 10010 地下室（支撑叙事，不进疑点 condition）
 # C. NPC 条目     PASS — Emma（opening 10006）/ Mickey（opening 10006）/ Lula（S10001 + R3 隔窗签字）/
@@ -72,7 +72,7 @@ player_context:
     - "Margaret 并未死亡——她在鞋坊外街边被人打晕，现在圣心医院接受治疗（昏迷）"
     - "Morrison 在 L1 承诺：'你要真能拿出他是被人杀的硬证据，我签搜查令'"
     - "银行雇佣黑手党暴力催债：Leonard 雇佣 Vinnie 向 Frank 等人催债"
-    - "连号钞票拼图已完成：O'Hara 手里的贷款钞票和 Vinnie 手里的是同一批（L2 揭示）"
+    - "连号钞票对比已完成：O'Hara 手里的贷款钞票和 Vinnie 手里的是同一批（L2 揭示）"
     - "Frank 的贷款档案上的签名是伪造的——10301 牛奶签收单（真迹）与 10302 贷款档案签名（工整流畅）双件直接对比即可证明"
     - "Moore 银行通过掠夺性贷款条款（年单利 12% + 利滚利 + 月管理费 50$）系统性欺诈借款人"
     - "同一份对账单页眉是投资公司、正文是银行——两套身份马甲（疑点 10303 已揭示）"
@@ -200,16 +200,32 @@ scenes:
         type: envir
         pickup: false
         analysis: false
-        description: "一张陈旧的双人沙发，扶手和坐垫的磨损痕迹均匀，判断已经被规律使用了至少三到五年。旁边放着一个空花瓶，花瓶口有干枯玫瑰花瓣的残留。"
+        description: "一张陈旧的双人沙发，扶手和坐垫的磨损痕迹均匀，判断已经被规律使用了至少三到五年。"
         note: "场景道具——环境叙事（Frank 和 Lula 五年秘密相会的物证）；isUsable=false；不进疑点 condition"
+
+      - id: 10409
+        name: "枯萎的玫瑰花束 / Withered Bouquet of Roses"
+        type: item
+        pickup: true
+        analysis: false
+        description: "一捧已经枯萎的红玫瑰，包装纸印着南区花店字样。花瓣大部分已脱水蜷曲，但茎部插在一个空花瓶里——Frank 曾仔细布置过，只是没等到把水加上。花蕊中央似乎藏着什么——但隔着干枯的花瓣看不清，需要先让花复活。"
+        note: "L4 玫瑰花蕊找戒指小玩法 input；与 10410 水杯合成可揭出 10403 求婚戒指"
+
+      - id: 10410
+        name: "水杯 / Water Glass"
+        type: item
+        pickup: true
+        analysis: false
+        description: "桌边一个普通玻璃水杯，杯里还剩半杯清水——Frank 显然准备过给玫瑰浇水，但来不及完成。杯壁上沾着一点水痕，像是被手指摸过。"
+        note: "L4 玫瑰花蕊找戒指小玩法 input；与 10409 枯萎玫瑰合成"
 
       - id: 10403
         name: "求婚戒指 / Engagement Ring"
         type: item
         pickup: true
         analysis: false
-        description: "一枚嵌着小碎钻的金戒指，藏在玫瑰残枝的花蕊之间。戒圈内侧刻有 'F & L 1921'。戒指尺寸略大，是为手指较粗的人定制的——但目测不合 Margaret 手型。"
-        note: "关键——疑点 10403 condition；L4 R3 指证件；玫瑰花蕊找戒指小玩法产出（参见 剧情设计/Unit2/小玩法/L4_地下室_玫瑰花蕊找戒指.md）"
+        description: "一枚嵌着小碎钻的金戒指，藏在玫瑰复活后的花蕊之间。戒圈内侧刻有 'F & L 1921'。戒指尺寸为女性手型，明显不是 Margaret 的尺码——这是 Frank 给 Lula 定制的。"
+        note: "关键——疑点 10403 condition；L4 R3 指证件；玫瑰花蕊找戒指小玩法产出（10409 + 10410 → 10403；详见 剧情设计/Unit10/小玩法/L4_地下室_玫瑰花蕊找戒指.md）"
 
       - id: 10406
         name: "维修收据（600$ 全用于地下室）/ Repair Receipt ($600, Basement Renovation)"
@@ -738,8 +754,26 @@ evidence_registry:
     first_scene: 10010
     pickup: true
     analysis: false
-    description: "一枚嵌着小碎钻的金戒指，藏在玫瑰残枝的花蕊之间。戒圈内侧刻有'F & L 1921'。戒指尺寸略大，是为手指较粗的人定制的，不合 Margaret 手型。"
-    note: "关键——疑点 10403 condition；L4 R3 指证件；玫瑰花蕊找戒指小玩法产出"
+    description: "一枚嵌着小碎钻的金戒指，藏在玫瑰复活后的花蕊之间。戒圈内侧刻有'F & L 1921'。戒指为女性尺码，明显不是 Margaret 的，是 Frank 给 Lula 定制的。"
+    note: "关键——疑点 10403 condition；L4 R3 指证件；玫瑰花蕊找戒指小玩法产出（10409 + 10410 合成）"
+
+  - id: 10409
+    name: "枯萎的玫瑰花束 / Withered Bouquet of Roses"
+    type: item
+    first_scene: 10010
+    pickup: true
+    analysis: false
+    description: "Frank 准备的求婚布置——一捧已枯萎的红玫瑰，茎部插在空花瓶里；花蕊中央藏着东西，但隔着干枯花瓣看不清。"
+    note: "L4 玫瑰花蕊找戒指小玩法 input；与 10410 水杯合成揭出 10403 戒指；不进疑点 condition"
+
+  - id: 10410
+    name: "水杯 / Water Glass"
+    type: item
+    first_scene: 10010
+    pickup: true
+    analysis: false
+    description: "桌边一只玻璃水杯，杯里剩半杯清水——Frank 准备给玫瑰浇水但来不及。"
+    note: "L4 玫瑰花蕊找戒指小玩法 input；与 10409 合成；不进疑点 condition"
 
   - id: 10404
     name: "空怀表盒（含 Tony 便条）/ Empty Pocket Watch Case (with Tony's Note)"
