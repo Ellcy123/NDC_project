@@ -9,7 +9,7 @@
 #
 # 核心体验：
 #   - Margaret 苏醒证词：8:16 街角目击 + 面包袋情节 + 戒指反光细节
-#   - 镊子+碎片机制：持 10603 才能夹出地板缝隙的 10605
+#   - 镊子+碎片机制：先移开烛台 10604 显形柜子缝隙，持 10603 才能夹出 10605
 #   - Morrison 兑现 L1 承诺：出示 10601 法医报告自动触发签搜查令过场
 #   - Leonard 4 轮指证（物证/维修单/独自离开+打斗/假认罪细节）
 #   - 诱导招供系统（R3-R4 之间）：诱导槽 0-100%，3 节点，错误不增不减
@@ -45,12 +45,14 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes（10006/10001/10004/10011）
 #                        / expose / ending_sequence / doubts / evidence_registry 全部存在
-# B. 证据覆盖     PASS — 10601-10611 全部分配：
+# B. 证据覆盖     PASS — 10601-10610（除 10608/10611）全部分配：
 #                        10601/10602/10603 → 10006 Margaret 病房；
 #                        10604/10605/10606 → 10001 鞋坊废墟（10605 需持 10603 触发）；
 #                        10607 → 10004 Morrison 警局过场（自动产出）；
-#                        10609/10610/10611 → 10017 Leonard 住所；
+#                        10609/10610 → 10017 Leonard 住所；
 #                        继承件 5080002b/4090004 状态注明
+#                        【2026-05-15 修订】10611 空相框已与 Miro 对齐删除（含 R2 trap）；
+#                        10608 Leonard-Vinnie 电话记录在 Miro 也已删除，无 evidence 条目
 # C. NPC 条目     PASS — Margaret（scenes 10006，4 块）/ Leonard scenes（10011，4 块）/
 #                        Morrison（scenes 10004 过场，仅过场 NPC 简版）/
 #                        Leonard expose（10017，4 块，is_liar:true）
@@ -127,7 +129,7 @@ player_context:
   post_expose_knowledge:
     # loop6 指证 Leonard 四轮击穿 + ending_sequence 玩家获得的新知识
     - "Leonard 就是真凶——11月6日约 8:00 到鞋坊威胁 Frank 交出举报材料，争执中用烛台失手打死 Frank"
-    - "打斗中 Leonard 眼镜被碰碎（碎片掉入烛台下方地板缝隙）——维修单左眼新片与碎片旧片对应"
+    - "打斗中 Leonard 眼镜被碰碎，碎片掉进柜子缝隙；案发后烛台原位（柜子上）遮住了缝隙——L6 玩家须先移开/拿走烛台才能发现碎片，反向证明碎片掉落时间早于烛台被移动（即案发那一刻）"
     - "Margaret 8:16 在街角目击了戴眼镜西装男（Leonard）独自踉跄从鞋坊方向离开"
     - "货物箱 3cm 凹陷（成人背部高度）证明打斗激烈，烛台方向与凶器吻合"
     - "Vinnie 认罪的'床上睡觉'细节是破绽——Leonard 打死 Frank 后尸体在地上，Vinnie 到场才把尸体移到床上伪装，Vinnie 应该知道尸体在地上，但他说'窗户看到在床上睡觉'——说明他在护着 Leonard 编的故事"
@@ -170,7 +172,7 @@ scenes:
     description: |
       圣心医院。病房光线柔和。Margaret Brennan 已经苏醒，坐在床上，神情平静但疲惫。
       Foster 法医也在——她提前到了，带来了 10601 法医鉴定报告实物、10602 房屋抵押证明（原件）、
-      以及 10603 医用镊子（配合鞋坊地板缝隙取证用）。
+      以及 10603 医用镊子（配合鞋坊柜子缝隙取证用）。
       Margaret 的第一反应不是问自己的伤，而是问 Frank 的案子——
       然后才问 Zack 自己昏迷期间发生了什么。
       这个顺序是 Margaret 角色弧的灵魂：她先是鞋坊主人、Frank 的朋友，然后才是 Zack 的母亲。
@@ -285,25 +287,25 @@ scenes:
         analysis: false
         description: |
           标准医用不锈钢镊子，15cm 长，Foster 借给 Zack 用于现场取证。
-          适合夹取嵌入地板缝隙的细小物证而不损坏样本。
-        note: "场景道具——用于 10001 夹取地板缝隙中的 10605 眼镜碎片；canCombined=true，combineParameter=[10605,10603]"
+          适合夹取嵌入柜子缝隙的细小物证而不损坏样本。
+        note: "场景道具——用于 10001 夹取柜子缝隙中的 10605 眼镜碎片；canCombined=true，combineParameter=[10605,10603]"
         metadata:
           canCombined: true
           combineParameter: [10605, 10603]
-          usage_note: "玩家发现地板缝隙反光后，需持有 10603 才能触发夹取交互，产出 10605"
+          usage_note: "玩家发现柜子缝隙反光后，需持有 10603 才能触发夹取交互，产出 10605"
 
 
-  # ── 场景 10001：Margaret 鞋坊-店铺区（深度搜证，L6 地板缝隙）──
+  # ── 场景 10001：Margaret 鞋坊-店铺区（深度搜证，L6 柜子缝隙）──
   - id: 10001
     name: "Margaret 鞋坊-店铺区（深度搜证）"
     type: free_exploration  # 🔓 自由探索
     loop_flag: "deep_search_l6"
     description: |
-      鞋坊废墟。L5 已经搜过一轮，但地板缝隙里还有东西——
+      鞋坊废墟。L5 已经搜过一轮，但柜子缝隙里还有东西——
       一丁点反光，几乎不可能注意到，除非你蹲下来仔细看。
       烛台（10604）就在卧室区原位附近（实际卧室区废墟与店铺区相连，环境叙事 NPC 不在场）。
       凹陷的货物箱（10606）在店铺区靠墙位置，高度吻合成人背部。
-      地板缝隙的反光物是烟熏黄色的眼镜碎片（10605）——需持有 10603 镊子才能夹出。
+      柜子缝隙的反光物是烟熏黄色的眼镜碎片（10605）——需持有 10603 镊子才能夹出。
       没有 NPC，只有废墟的沉默和偶尔路过的邻居脚步声。
 
       🎮 烛台找茬小玩法触发：
@@ -334,7 +336,7 @@ scenes:
         pickup: true
         analysis: false
         description: |
-          从烛台下方地板缝隙夹出的眼镜镜片碎片，火灾烟尘留下明显的烟熏黄色着色。
+          从烛台原位（柜子上）拿走后露出的柜子缝隙夹出的眼镜镜片碎片，火灾烟尘留下明显的烟熏黄色着色。
           碎片形状为右眼镜片的一部分——老旧镜片，非新换的透明镜片。
           找到这块碎片需要持有镊子（10603）蹲下仔细操作，否则缝隙太深无法徒手取出。
         note: "关键——L6 R1 击破件；疑点 10601 condition"
@@ -505,9 +507,8 @@ expose:
     - 10605 眼镜碎片（烟熏黄色旧镜片，镊子夹出）
     - 10606 凹陷货物箱（记录/照片，3cm 凹陷、西装面料纤维）
     ── 场景 10017 搜证取得 ──
-    - 10609 旧报纸剪报（1915 Russo 家被纵火，环境叙事）
+    - 10609 旧报纸剪报（1900 南区双家纵火，环境叙事）
     - 10610 眼镜维修单据（左眼新镜片，右眼旧镜片）
-    - 10611 空相框（背面刻字"To Leo, 1910"，环境叙事）
     ── 继承自前序 Loop ──
     - 5080002b Vinnie 假认罪细节（"透过窗户看到他在床上睡觉"）
     - 4090004 Danny 目击证词（8点多壮汉从鞋坊方向离开，打晕 Margaret）
@@ -515,14 +516,14 @@ expose:
   # ── Leonard 住所搜证证据（进入 Expose 场景后先搜证再指证）──
   scene_evidence:
     - id: 10609
-      name: "旧报纸剪报（1915 Russo 家被纵火）"
-      name_en: "1915 Newspaper Clipping — Russo Family Fire"
+      name: "旧报纸剪报（1900 南区双家纵火）"
+      name_en: "1900 Newspaper Clipping — Russo & Moretti Double Arson"
       type: envir
       itemType: 2
       pickup: false  # 环境叙事——Leonard 私物，纯叙事，跨章伏笔
       analysis: false
       description: |
-        1915 年《芝加哥论坛报》剪报，标题：南区一意大利裔家庭住所遭纵火，一人重伤。
+        1900 年《艾斯弗德论坛报》剪报，标题：南区双家纵火案——Russo 与 Moretti 两户意大利裔家庭住所协同遭纵火，两家父母全部遇难，两名男孩（10 岁、6 岁）由教区收容。
         剪报已发黄，压在书桌底层。Russo 家的创伤——Leonard 这个人的某种起源。
       note: "场景道具（envir）——环境叙事，解释 Leonard 改名融入白人社会的背景动机"
 
@@ -538,20 +539,6 @@ expose:
         项目：左眼镜片更换（新镜片，透明），右眼镜片未更换（旧镜片，备注"有轻微烟熏色，客户选择不换"）。
         单据上有 Leonard 的签名。
       note: "关键——L6 R2 击破件；疑点 10602 condition；镜片新旧对比小玩法"
-
-    - id: 10611
-      name: "空相框"
-      name_en: "Empty Picture Frame"
-      type: envir
-      itemType: 2
-      pickup: false  # envir
-      analysis: false
-      description: |
-        一个放在书柜角落的空相框，背面铁笔刻字："To Leo, 1910"。
-        相框里没有照片——照片已经不在了。
-        L3 中在 Leonard 办公室找到的童年合照（10310，1910 年，背面写"Best Friends Forever"）
-        和这个相框是一对：合照从这里被取走，放进了办公室。
-      note: "场景道具（envir）——环境叙事；L3 童年合照 10310 跨 Loop 呼应；Vinnie 与 Leonard 少年情谊的痕迹"
 
   # ── Leonard NPC 条目（Expose 对象）──
   leonard_expose:
@@ -596,7 +583,7 @@ expose:
     lie_source: 6050001
     usable_evidence:
       - id: 10605
-        role: "鞋坊地板缝隙里夹出来的眼镜碎片——烟熏黄色旧镜片，与 Leonard 新配眼镜的右眼旧镜片同款；地板缝隙位置在烛台下方，打斗时眼镜被碰碎的碎片落入缝隙，不会自己出现在那里"
+        role: "鞋坊柜子缝隙里夹出来的眼镜碎片——烟熏黄色旧镜片，与 Leonard 新配眼镜的右眼旧镜片同款；柜子缝隙位置在烛台下方，打斗时眼镜被碰碎的碎片落入缝隙，不会自己出现在那里"
       - id: 6110001
         role: "Margaret 8:16 在街角亲眼目击戴眼镜西装男独自从鞋坊方向踉跄离开——她差点撞上他；Leonard 整晚在家的说法与此直接矛盾"
     required_items: [10605, 6110001]
@@ -604,7 +591,7 @@ expose:
     result: partial_victory
     result_description: |
       Zack 出示 10605（烟熏黄色眼镜碎片）和 6110001（Margaret 目击证词）：
-      这块碎片从鞋坊地板缝隙里取出来——烛台下方，旧镜片。
+      这块碎片从鞋坊柜子缝隙里取出来——烛台下方，旧镜片。
       而你今天配的眼镜：左眼新片透明，右眼旧片偏黄。
       同时，我母亲当晚 8:16 在街角，差点撞上一个戴眼镜的西装男，
       从鞋坊方向独自踉跄离开。
@@ -623,14 +610,12 @@ expose:
     mini_game:
       type: lens_comparison
       description: "将 10605 眼镜碎片拖拽至 10610 维修单，触发新旧镜片视觉对比——碎片与维修单备注'右眼旧镜片、烟熏色'完全吻合"
-    trap_evidence:
-      - id: 10611
-        reason: "空相框与眼镜碎片归属无关——知道 Leonard 和 Vinnie 的童年关系不能证明碎片是 Leonard 的"
+    trap_evidence: []  # R2 无陷阱件——原 10611 空相框已与 Miro 对齐删除
     result: partial_victory
     result_description: |
       Zack 出示 10610（眼镜维修单据）并引导对比：
       案发次日，你去配了新眼镜。左眼换了新片，右眼旧片没换——维修单上写着"轻微烟熏色"。
-      而地板缝隙里的碎片：烟熏黄色，旧镜片。一模一样。
+      而柜子缝隙里的碎片：烟熏黄色，旧镜片。一模一样。
       Leonard 的嘴唇动了一下，然后他换了方向：
       "好。我承认，我那天去拜访过 Frank。但那是和平拜访——我不小心摔了眼镜，
       Frank 帮我扶起来，把我送出门。他送我出门的时候还好好的。"
@@ -907,7 +892,7 @@ evidence_registry:
     note: "关键——解锁场景 10017"
 
   - id: 10609
-    name: "旧报纸剪报（1915 Russo 家纵火）"
+    name: "旧报纸剪报（1900 南区双家纵火）"
     type: envir
     itemType: 2
     source_scene: 10017
@@ -919,12 +904,6 @@ evidence_registry:
     source_scene: 10017
     pickup: true
     note: "关键——L6 R2 击破件；疑点 10602 condition"
-
-  - id: 10611
-    name: "空相框"
-    source_scene: 10017
-    pickup: false  # envir
-    note: "场景道具（envir）——L3 合照跨 Loop 呼应"
 
   # 继承件（状态注明）
   - id: 5080002b

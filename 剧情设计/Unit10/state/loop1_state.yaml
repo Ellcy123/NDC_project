@@ -150,7 +150,7 @@ scenes:
         note: "关键——L1 R2 击穿件；疑点 10102 condition"
         description: |
           卧室区地面照片：消防已细筛过，无任何金属残留物——无戒指、无衣物金属配件、无烟灰中的金属熔核。
-          照片中可见消防人员的筛查记录注记。火灾烟尘高度未达熔金温度（黄金熔点 1064°C，普通建筑火灾一般不超过 700°C）。
+          照片中可见消防人员的筛查记录注记。现场温度未达熔金点（MAX TEMP. ≈ 650°F）。
           备注：店内消防迅速扑灭，O'Hara 事后提到"幸好没烧开"。
 
       - id: 10105
@@ -162,7 +162,7 @@ scenes:
         description: |
           Margaret 鞋坊 1925 年度营业台账，记录修鞋单和进货账。
           雇员栏手写：Frank Kowalski，按件计酬，每周三、六工作。
-          最后一页有 Frank 11月5日的工时记录。
+          最后一页有 Frank 11月6日（案发当天）的预定到岗排班——锚定 Frank 在案发当晚原本就会出现在鞋坊。
 
     # 限时搜证阶段无可对话 NPC——Morrison 在场但不可询问，对话挂在场景 10003
 
@@ -220,11 +220,16 @@ scenes:
         type: envir
         itemType: 2
         pickup: false  # 环境叙事，不可拾取
-        note: "场景道具——Zack 父亲情感锚点，环境叙事"
+        note: "场景道具——Zack 父亲情感锚点；Patrick 工人运动领袖身份的视觉锚 + 跨 Unit Chekhov's gun（'FOR THE MANY WE PAY THE FEW' 在 Unit4 才解开）"
         description: |
-          橡木小匣，刻有"P.B."首字母。Zack 一眼认出——这是父亲 Patrick Brennan 的遗物。
+          橡木小匣，顶盖刻有"P.B."首字母——Zack 一眼认出是父亲 Patrick Brennan 的遗物。
+          匣身正面嵌着一枚氧化发暗的工人运动领袖徽章，徽章上可读"P. BRENNAN — ORGANIZER"
+          或"STRIKE COMMITTEE · A.R.U. 1894"——表明 Patrick 是 1894 Pullman 大罢工的组织者/领袖，
+          不是普通参与者。匣身侧面还刻有一行较小的英文短语"FOR THE MANY WE PAY THE FEW"——
+          Patrick 1890s–1900s 在工人聚会上反复宣讲的独创信条（非公开名言，只在最亲近的圈子里口传）。
           匣子放在卧室角落最稳当的地方，说明 Margaret 一直带着它。
           Zack 停顿了一下，没有打开。
+          注：Zack 不在 Unit10 内点破"父亲教过这句话"——这句话的全部意义在 Unit4 解开。
 
       - id: 10108
         name: "地下室的门（打不开）"
@@ -235,7 +240,8 @@ scenes:
         description: |
           卧室区角落的一扇木门，向下通往地下室。
           门锁是新换的铸铁锁，非常牢固。Zack 试了试，推不开。
-          门下方有轻微的积灰，看起来平时不常走。
+          门下方地面无积灰，门槛被反复踩踏出明显的磨痕——这扇门虽然锁着，但平时经常被人开启走过。
+          （崭新铸铁锁 vs 频繁使用痕迹的反差是视觉伏笔——L3/L4 揭示 Frank+Lula 的秘密约会空间在地下室。）
 
     npcs:
       emma_l1_scene:
@@ -408,7 +414,7 @@ expose:
     usable_evidence:
       - id: 10104
         name: "现场地面照片"
-        用途: "消防细筛现场地面无任何金属残留——黄金熔点 1064°C，普通建筑火灾达不到；戒指不可能被烧毁，现场也没找到"
+        用途: "消防细筛现场地面无任何金属残留——现场温度未达熔金点（MAX TEMP. ≈ 650°F）；戒指不可能被烧毁，现场也没找到"
     trap_evidence:
       - id: 10103
         name: "空的首饰盒"

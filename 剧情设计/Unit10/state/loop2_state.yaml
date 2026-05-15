@@ -20,19 +20,21 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
 #                        NPC 4 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
-# B. 证据覆盖     PASS — 讨论结论 L2 全部 6 件证据（10201-10206）已分配到场景；
-#                        10201 Leonard 名片→10007（O'Hara 家）；10202 O'Hara 钞票→10007；
+# B. 证据覆盖     PASS — 讨论结论 L2 全部 5 件证据（10202-10206）已分配到场景；
+#                        10202 O'Hara 钞票→10007；
 #                        10203 催款单→10007（街角，Frank 家门口侧）；10204 威胁便条→10007；
 #                        10205 Vinnie 催债小本子→10015（Silver Moon）；
 #                        10206 Vinnie 的钞票→10015；
 #                        场景 1006（医院过场）/ 10011（银行大厅）/ 10012（贵宾室）无证据，仅剧情
+#                        【2026-05-15 修订】原 10201 Leonard 名片删除（与 Miro Unit2 大纲0511 对齐）——
+#                        银行地址改由 O'Hara 口头告知；R1 击破不再依赖名片陷阱，仅用 2080001+2060001
 # C. NPC 条目     PASS — Leonard（Expose 对象，is_liar:true，player_inquiry:null）4 必填块完整；
 #                        O'Hara / Moore / Vinnie / Tony / Danny（偷听演出）/ Emma / Mickey 各含完整 4 块
 # D. 目标对齐     PASS — goals 与讨论结论"揭露银行雇佣黑手党暴力催债 / 指证 Leonard"完全一致
 # E. 信息节奏     PASS — 未泄露 L3+ 内容：掠夺性贷款细节/笔迹伪造/Mickey 律师辅助/Frank 房产证/
 #                        Lula 真爱/Danny 嫌疑/Vinnie 纵火/眼镜碎片/Leonard 真凶身份
 # F. quiz 配对    PASS — 无 quiz 设计，本 Loop 无此需求
-# G. Expose 逻辑  PASS — R1:2080001+2060001 击穿"不认识 Russo"谎言（陷阱:10201）；
+# G. Expose 逻辑  PASS — R1:2080001+2060001 击穿"不认识 Russo"谎言（无陷阱件）；
 #                        R2:10202+10206 连号拼图击穿"只是认识没来往"（陷阱:10203）；
 #                        R3:2070002+10205 击穿"那是借给 Vinnie 的钱"（陷阱:2070001）；
 #                        三轮维度互不重叠；每件击穿件唯一挂载对应疑点/碎片
@@ -43,7 +45,7 @@
 #   2080001 → 疑点 10201 only  |  2060001 → 疑点 10201 only
 #   2070002 → 疑点 10203 only  |  10205 → 疑点 10203 only
 #   2090001 → 碎片 10204 only
-#   10201 / 10203 / 10204 / 2070001 未进任何 condition（背景信息/陷阱选项）
+#   10203 / 10204 / 2070001 未进任何 condition（背景信息/陷阱选项）
 #
 # 时序检查（L_doubt ≤ min(L_use)）：
 #   疑点 10201（posed_loop=2）→ 击穿件 2080001/2060001 用于 L2 R1：2 ≤ 2  PASS
@@ -138,7 +140,7 @@ opening:
       player_inquiry:
         - "\"Mickey 为什么在路边（街角在哪、时间几点）找到 Margaret\" # 6"
         - "\"Frank 作为你的客户准备检举什么——大概知道什么程度\" # 8"
-        - "\"12 年没联系，你怎么知道我还在芝加哥\" # 5"
+        - "\"12 年没联系，你怎么知道我还在艾斯弗德\" # 5"
 
       # ── 3. 可提取证词 ──
       testimony_ids:
@@ -164,7 +166,7 @@ scenes:
 
       O'Hara 家门口：老邻居 O'Hara 太太。Zack 是 Margaret 的儿子，
       这个身份让 O'Hara 对他稍微放下警惕——但她本能上不信任陌生人。
-      关键时刻：O'Hara 提供 Leonard 银行名片，并告知银行地址——解锁场景 10011。
+      关键时刻：O'Hara 口头告知 Leonard Ross 是 Frank 的银行贷款经理 + 银行地址——解锁场景 10011。
 
     evidence:
       # ── Frank 家门口塞着的物证 ──
@@ -187,15 +189,6 @@ scenes:
         note: "背景信息——体现催债暴力性质；碎片 10204 的 condition（type:3 param:2090001 即 Danny 旁听证词），不作为指证击穿件"
 
       # ── O'Hara 给的物证 ──
-      - id: 10201
-        name: "Leonard 名片 / Leonard's Business Card"
-        type: item
-        itemType: 3
-        pickup: true
-        description: "湖滨信托银行（Lakeshore Trust Bank）贷款专员 Leonard Ross 的名片，正面印着银行地址和电话；名片右下角有一行比正文小一号的字体：'Lakeshore Investment Co.'——当前看不出意义，L3 才有用。"
-        analysis: false
-        note: "场景道具——提供银行地址，解锁场景 10011；L2 R1 陷阱选项（名片本身不证明 Leonard 与催债人相识）；右下角小字为 L3 伏笔"
-
       - id: 10202
         name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
         type: item
@@ -214,7 +207,7 @@ scenes:
 
         # ── 1. NPC 已知信息 ──
         active_topics:
-          - "银行催债专员曾来敲门，留下名片（10201）——说法是'上门服务'"
+          - "银行催债专员曾来敲门——说法是'上门服务'；她记得 Leonard Ross 是 Frank 的贷款经理，以及银行的具体地址（口头告知 Zack，解锁场景 10011）"
           - "她用连号新钞（10202）偿还了贷款的一部分"
           - "Frank 和她同一街区，平时偶尔打招呼——她知道 Frank 有债务困扰"
           - "Frank 上周还出来倒垃圾，看着比以前老了很多"
@@ -485,9 +478,7 @@ expose:
           purpose: "Vinnie 脱口说'不认识什么 Russo'——说明 Russo 这个名字对他有意义，他见过 Leonard 原名叫 Russo 的人"
         - id: 2060001
           purpose: "Moore 的银行档案记录：Leonard 原名正是 Russo，1918 年改名——两人'不认识'的说法直接破功"
-      trap:
-        - id: 10201
-          reason: "Leonard 自印的名片只证明他是银行职员、他留过名片——不能证明他与 Vinnie 相识，误用失败"
+      trap: []  # R1 无陷阱件——R1 由证词（2060001 Moore 改名档案陈述 + 2080001 Vinnie 口误）双件击穿；与 Miro Unit2 大纲0511 对齐
     result: |
       Leonard 被 Vinnie 的口误和档案改名双重击中，无法否认两人认识。
       立刻退守新防线："我们只是认识——认识不等于有来往，更不等于他替我做什么。"
@@ -525,7 +516,7 @@ expose:
     result: |
       Leonard 的三层防线全面崩溃。
       他假装叹气，改换策略——"好吧，Frank 的确欠银行的钱，我用了一些……非正规的方式催收，
-      你也知道芝加哥是什么地方，这种事很普遍。"
+      你也知道艾斯弗德是什么地方，这种事很普遍。"
       表情从惊慌变为假善意：掏出一个信封，说"这里有我的亲笔介绍信，你拿去市政厅
       申请搜查令，如果真能查出什么，我会全力配合。"
       内心：他知道这封信根本没用，只是在拖延 Zack。
@@ -671,16 +662,6 @@ evidence_registry:
     note: "L1 搜证拾取；疑点 10102 condition；L1 R2 击穿件；描述明确细筛无金属残留"
 
   # L2 新增证据
-  - id: 10201
-    name: "Leonard 名片 / Leonard's Business Card"
-    type: item
-    itemType: 3
-    first_loop: 2
-    first_scene: 10007
-    pickup: true
-    analysis: false
-    note: "场景道具——解锁银行地址（场景 10011）；L2 R1 陷阱选项；右下角小字 Lakeshore Investment Co. 为 L3 伏笔；不进疑点 condition"
-
   - id: 10202
     name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
     type: item
@@ -716,7 +697,7 @@ evidence_registry:
     type: item
     itemType: 3
     first_loop: 2
-    first_scene: 100015
+    first_scene: 10015
     pickup: true
     analysis: false
     note: "关键——疑点 10203 condition；L2 R3 击穿件（配合 2070002）"
@@ -726,7 +707,7 @@ evidence_registry:
     type: item
     itemType: 3
     first_loop: 2
-    first_scene: 100015
+    first_scene: 10015
     pickup: true
     analysis: false
     note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10202 拼出连号完整性）"

@@ -10,7 +10,7 @@
 # 核心体验：
 #   R1——"Frank 亲自签字"谎言被 10301+10302 双件直接对比击穿（两份签名肉眼可辨笔迹不一致）
 #   R2 贷款计算玩法——"协议条款完全合法"被 10701 派生分析报告击穿
-#        （年单利 12% + 月管理费 50$，5 年合计 3,960$，年化 112%，超州法 36% 上限）
+#        （年单利 12% + 月管理费 50$，5 年合计 3,960$，年化 112%，超州法 7% 上限（约 16 倍））
 #   R3 对账单双头——"去告我没用"被 10306 内部存档对账单击穿
 #   第一重叙事反转：Frank 从"赌博老赖"翻转为"被欺骗的老人"
 #   Mickey 律师身份登场——感激 + Whale 伏笔已种
@@ -32,7 +32,7 @@
 #                        doubts / evidence_registry 全部存在；
 #                        expose 含 target/is_liar/player_inquiry/context/
 #                        round_1/round_2/round_3/post_expose 完整
-# B. 证据覆盖     PASS — L3 全部 11 件证据（10301-10311 + 派生 10701；笔迹对比已删除，R1 改双件直接对比）
+# B. 证据覆盖     PASS — L3 全部 9 件证据（10301-10303 合订, 10306-10311 + 派生 10701；10304/10305 已并入 10303 合订本）
 #                        已分配到对应场景；
 #                        10307（Frank 房产证）/ 10308（地下室钥匙）/ 10309（Frank 家钥匙）
 #                        在 post_expose 给予；10310/10311 为环境叙事道具
@@ -50,7 +50,7 @@
 #                        10701（单件派生）→ 疑点 10302；
 #                        10306（单件）→ 疑点 10303
 # G. Expose 逻辑  PASS — R1 用 10301（Frank 真迹）+ 10302（贷款档案签名）双件直接对比击穿（无派生）；
-#                        R2 有 10701 贷款计算分析报告（合成自 10303+10304+10305）；
+#                        R2 有 10701 贷款计算分析报告（10303 合订本经穿孔卡片机玩法产出）；
 #                        R3 有 10306 对账单；每轮 lie 有对应证据可反驳 ✅
 #                        时序检查：所有指证用件的疑点出现 Loop（3）≤ 使用 Loop（3）✅
 # ──────────────────────────────────────────────────────────
@@ -103,9 +103,11 @@ player_context:
     # Loop3 指证 Moore 完整击穿后玩家获得的新知识
     - "Frank 不是赌博老赖：贷款并非 Frank 自愿申请 3,200$ 赌博贷款，协议签名是 Leonard 代签的伪造"
     - "Moore 承认：Danny 把 Frank 房产证给了银行——换取沉默，不是 Frank 本人行为"
-    - "Moore 银行掠夺性贷款体系：年单利 12% + 月管理费 50$，5 年合计约 3,960$，年化约 112%——远超伊利诺伊州法 36% 上限"
-    - "贷款用途被 Leonard 填写为'赌博'——实际 Frank 贷款是用于房屋修缮（地下室）"
+    - "Moore 银行掠夺性贷款体系：年单利 12% + 月管理费 50$，5 年合计约 3,960$，年化约 112%——远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）"
+    - "Frank 申请贷款的真实用途是房屋修缮（地下室）——10302 档案如实填写"
     - "Lakeshore Investment Co. 是银行的投资公司马甲——内部文件用投资公司名义，对客户称银行"
+    - "Frank 借的是信用贷款（无抵押），房产证在银行档案柜是 Danny 私下交付的结果——并非合法抵押"
+    - "银行（通过 Leonard 传话）跟 Danny 的交易：交房产证 → 停催债 + 房子被处置后分给 Danny 一大笔钱（玩家此时不知此承诺是否会兑现）"
     - "房产证明 10307 附带了两把钥匙：Margaret 鞋坊地下室钥匙（10308）+ Frank 家钥匙（10309）"
     - "Danny 误以为这是 Frank 另一处不知名的房产一并交给了银行——地下室的秘密还未揭开"
     - "Mickey 律师身份登场：专业、有能力、为 Zack 打开了银行的大门（Whale 伏笔深种）"
@@ -131,7 +133,7 @@ opening:
     - id: 10016
       name: "市政厅/法院大门外台阶"
       type: cutscene  # 🎬 纯过场，无搜证，户外场景
-      description: "Zack 站在芝加哥市政厅大门前的石阶上，递信封给守门警卫——警卫扫一眼摇头，连门都不让进。整段过场全程发生在户外台阶，玩家不踏入建筑内部。"
+      description: "Zack 站在艾斯弗德市政厅大门前的石阶上，递信封给守门警卫——警卫扫一眼摇头，连门都不让进。整段过场全程发生在户外台阶，玩家不踏入建筑内部。"
     - id: 10006
       name: "圣心医院-Margaret 病房（L3 过场）"
       type: cutscene  # 🎬 纯过场（Emma 交代去向）
@@ -210,40 +212,21 @@ scenes:
         param: "搜查令（Mickey 递交传票后银行提供）"
     description: |
       搜查令解锁的档案室，存放着大量贷款协议原件。
-      Zack 在这里找到了 Frank 贷款协议的三个关键条款页——
-      这三份文件是触发"贷款计算器小玩法"的输入：玩家从物品栏点击任一件的"分析"按钮即可启动玩法，
-      玩法 UI 内提示补足其余两份条款，三件齐全后自动产出 10701 派生分析报告；
-      也是击穿 Moore R2"协议完全合法"谎言的核心证据。
+      Zack 在这里找到了 Frank 贷款协议的合订本（含第 5/7/12 条三页）——
+      这份文件是"贷款计算器小玩法"的输入：玩家从物品栏点击 10303 的"分析"按钮即可启动穿孔卡片机玩法，
+      玩法完成后自动产出 10701 派生分析报告；也是击穿 Moore R2"协议完全合法"谎言的核心证据。
       详见 `剧情设计/Unit10/小玩法/L3_银行_贷款计算器.md`。
       此外，一个标着"湖滨信托银行私人档案柜"的柜子里存放着 Frank 的房产证明（10307），
       但目前无法取出（Moore 在指证后才允许查看）。
     evidence:
       - id: 10303
-        name: "贷款协议第 5 条（年单利 12%）/ Loan Agreement Clause 5 (12% Simple Annual Interest)"
+        name: "LAKESHORE TRUST BANK 贷款协议（含第 5/7/12 条，三页合订）/ Loan Agreement (Clauses 5/7/12, 3-page bound)"
         type: item
         itemType: 3
         pickup: true
-        note: "贷款计算器小玩法触发件之一（物品栏点击 → 启动玩法 → 提示补足另两件 → 产出 10701）；L3 R2 指证件来源"
-        description: "Frank Kowalski 贷款协议第 5 条正文：'贷款利率为年利率 12%（单利），按月结算，每月利息 = 本金 × 1%。'条款措辞标准，但与第 7 条、第 12 条叠加后产生惊人的累计债务。"
-        analysis: null
-
-      - id: 10304
-        name: "贷款协议第 7 条（利滚利条款）/ Loan Agreement Clause 7 (Compound Interest)"
-        type: item
-        itemType: 3
-        pickup: true
-        note: "贷款计算器小玩法触发件之二；与 10303/10305 在玩法 UI 内补齐后自动算出 10701"
-        description: "Frank Kowalski 贷款协议第 7 条：'如当月利息未按时缴纳，未缴利息并入本金，按照第 5 条利率计息（复利）。'这是利滚利条款——一旦某月还不上利息，欠款就会滚动加大。"
-        analysis: null
-
-      - id: 10305
-        name: "贷款协议第 12 条（月管理费 50$）/ Loan Agreement Clause 12 (Monthly Service Fee $50)"
-        type: item
-        itemType: 3
-        pickup: true
-        note: "贷款计算器小玩法触发件之三；与 10303/10304 在玩法 UI 内补齐后自动算出 10701"
-        description: "Frank Kowalski 贷款协议第 12 条：'贷款期间每月收取档案管理及服务费 50 美元，独立于利息计算，不受第 5、7 条调整。'以'服务费'名义每月多收 50$，5 年下来是额外 3,000$——相当于本金的 5 倍。"
-        analysis: null
+        note: "关键——疑点 10302 condition 上游（点击分析触发穿孔卡片机玩法 → 产出 10701）；L3 R2 指证件来源"
+        description: "Frank Kowalski 贷款协议合订本，三页合订一份。第 5 条：年利率 12%（单利），按月结算，每月利息 = 本金 × 1%。第 7 条：当月利息未按时缴纳则并入本金继续按第 5 条计息（利滚利）。第 12 条：贷款期间每月收取档案管理及服务费 50 美元，独立于利息计算。三条条款单独看都措辞标准，但叠加后产生惊人的累计债务——必须通过穿孔卡片机玩法演算才能显现高利贷本质。"
+        analysis: 10701
 
       - id: 10307
         name: "Frank 房产证明 / Frank's Property Deed"
@@ -251,7 +234,7 @@ scenes:
         itemType: 2
         pickup: false  # 档案室内可见，但不可取出；post_expose 阶段 Moore 允许查看
         note: "场景道具——档案室内可见（湖滨信托银行私人档案柜）；L3 post_expose Moore 允许查看但不交付；附带 10308+10309 两把钥匙"
-        description: "Frank Kowalski 名下的南区老宅房产证明，存档于湖滨信托银行私人档案柜。文件显示房产现处于抵押状态。证明上夹着两把钥匙——一把是 Margaret 鞋坊地下室的（10308），另一把是 Frank 家大门的（10309）。Danny 误以为这是 Frank 另一处不知名房产，一并拿来交给了银行。"
+        description: "Frank Kowalski 名下的南区老宅房产证明，**未办理任何合法抵押**——只是被物理放进了湖滨信托银行私人档案柜（不该放的地方）。证明上夹着两把钥匙——一把是 Margaret 鞋坊地下室的（10308），另一把是 Frank 家大门的（10309）。Danny 误以为这是 Frank 另一处不知名房产，私自带来交给银行换取沉默——Frank 本人对此完全不知情。"
         analysis: null
 
 
@@ -276,7 +259,7 @@ scenes:
         itemType: 3
         pickup: true
         note: "关键——疑点 10301 condition；L3 R1 击破件之一（与 10301 牛奶签收单直接对比签名笔迹）"
-        description: "Frank Kowalski 客户贷款档案，原始贷款 600$，日期 1923 年 11 月 1 日，贷款用途栏填写'赌博娱乐'。签名栏：Frank Kowalski——字迹工整流畅，笔画连贯，无任何颤抖或停顿痕迹。以 Frank 73 岁、手部关节老化的实际情况来看，这份签名异乎寻常地稳定。"
+        description: "Frank Kowalski 客户贷款档案，原始贷款 600$，日期 1923 年 11 月 1 日，贷款用途栏填写'房屋修缮'（Home Repair / Renovation）。签名栏：Frank Kowalski——字迹工整流畅，笔画连贯，无任何颤抖或停顿痕迹。以 Frank 73 岁、手部关节老化的实际情况来看，这份签名异乎寻常地稳定。"
         analysis: null  # 直接出示对比 10301，无派生证据
 
       - id: 10306
@@ -289,12 +272,12 @@ scenes:
         analysis: null
 
       - id: 10310
-        name: "Leonard 与 Vinnie 童年合照（1910）/ Leonard & Vinnie Childhood Photo (1910)"
+        name: "Leonard 与 Vinnie 童年合照（1900）/ Leonard & Vinnie Childhood Photo (1900)"
         type: envir
         itemType: 2
         pickup: false  # 环境叙事——Leonard 办公室桌上压在文件下，可看不可拿走
-        note: "场景道具——环境叙事；L6 空相框 10611 跨 Loop 呼应；第三重反转伏笔铺线"
-        description: "Leonard 办公室桌上压在文件下的一张旧照片，摄于 1910 年，两个南区街头的少年，神态亲近。背面工整蓝色钢笔字：'To Leo, Best Friends Forever - 1910'。照片被特意保存，虽然已经被文件压在下面——像是刻意收起来，但又没有丢掉。"
+        note: "场景道具——环境叙事；第三重反转伏笔铺线（'Leo' 昵称是 Leonard 旧名 Russo 的少年痕迹，L6 揭示）"
+        description: "Leonard 办公室桌上压在文件下的一张旧照片，摄于 1900 年，两个南区街头的少年（Leonard 与 Vinnie 都 10 岁，案发 1928 年时各 38 / 34 岁），神态亲近。背面工整蓝色钢笔字：'To Leo, Best Friends Forever - 1900'。照片被特意保存，虽然已经被文件压在下面——像是刻意收起来，但又没有丢掉。"
         analysis: null
 
       - id: 10311
@@ -303,7 +286,7 @@ scenes:
         itemType: 2
         pickup: false  # 环境叙事——Leonard 办公室墙上贴的公告，可看不可拿走
         note: "场景道具——环境叙事；L3 R2 陷阱选项（Moore 会用投资公司马甲挡掉单一法规约束）"
-        description: "一份贴在 Leonard 办公室墙上的伊利诺伊州法律公告，标注银行业利率上限法规：'消费性贷款年化利率不得超过 36%（1916 年伊利诺伊州银行法）。'这是银行正规业务的法律约束——但 Lakeshore Investment Co. 以投资公司身份规避了银行法的适用范围。"
+        description: "一份贴在 Leonard 办公室墙上的伊利诺伊州法律公告，标注利率上限法规：'消费性贷款年化利率不得超过 7%（1879 年伊利诺伊州高利贷法 Illinois Usury Act）。'这是商业贷款的法律约束——但 Lakeshore Investment Co. 以投资公司身份规避了适用范围。"
         analysis: null
 
 
@@ -427,7 +410,7 @@ expose:
   context: |
     Mickey 和 Zack 手持搜查令进入贵宾室，正式询问 Frank 检举银行的事。
     Zack 已收集：10301 牛奶订购签收单（Frank 真迹）、10302 贷款档案（签名工整流畅）、
-    10701 贷款计算分析报告（合成自 10303 + 10304 + 10305）、10306 内部存档版对账单。
+    10701 贷款计算分析报告（10303 合订本经穿孔卡片机玩法产出）、10306 内部存档版对账单。
     Mickey 在场形成法律威胁，但不主导指证——Zack 出示证据，Mickey 偶尔补一句"这涉及欺诈罪款项"。
     Moore 在 L3 的三轮谎言依次被击穿：
     - R1：Frank 亲自签字（笔迹伪造 → 被 10301+10302 双件直接对比击穿）
@@ -464,7 +447,7 @@ expose:
     usable_evidence:
       - id: "10701"
         name: "贷款计算玩法分析报告（派生）"
-        usage: "三条款叠加分析：年单利 12%（第 5 条）+ 利滚利（第 7 条）+ 月管理费 50$（第 12 条），5 年本金 600$ 累计债务约 3,960$，折合年化约 112%——远超伊利诺伊州法 36% 上限。这不是'完全合法'，这是系统性违法。"
+        usage: "三条款叠加分析：年单利 12%（第 5 条）+ 利滚利（第 7 条）+ 月管理费 50$（第 12 条），5 年本金 600$ 累计债务约 3,960$，折合年化约 112%——远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）。这不是'完全合法'，这是系统性违法。"
     trap_evidence:
       - id: "10311"
         name: "伊利诺伊州法律公告"
@@ -488,7 +471,7 @@ expose:
     trap_evidence:
       - id: "10307"
         name: "Frank 房产证明"
-        reason: "房产证只证明抵押行为，不能证明'双重身份欺诈'这个维度——R3 需要的是对账单的双头证据，而非抵押事实"
+        reason: "房产证只能证明 Danny 与银行有私下交易（信用贷款下不正当地置入档案柜），不能证明银行'双重身份欺诈'这个维度——R3 需要的是 10306 对账单的双头证据"
     result: full_breakthrough
     result_description: |
       10306 对账单击穿了"去告我没用"的虚张声势。
@@ -501,8 +484,9 @@ expose:
   post_expose:
     description: |
       在 Mickey 法律威胁下，Moore 恐惧 Frank 死亡引发审计，主动妥协，坦白真相。
-      关键揭示一：Frank 并非赌博欠债——是银行内部做的手脚，Leonard 代填了协议。
-      关键揭示二：房产证明并非 Frank 自愿出借——是侄子 Danny 把房产证给了银行换取沉默。
+      关键揭示一：Frank 并非赌博欠债——贷款档案上的签名是 Leonard 代签的伪造（用途如实填'房屋修缮'，但 Frank 本人从未在档案上签字）。
+      关键揭示二：Frank 当初借的是信用贷款（无抵押），房产证明并非 Frank 自愿出借——是侄子 Danny 把房产证私自交给了银行。
+      银行（通过 Leonard 传话）承诺 Danny：交出房产证 → 银行停止暴力催债 + 房子被处置后分给 Danny 一大笔钱。
       Moore 允许查看（不交付）Frank 房产证明 10307。
       Zack 看到房产证上夹着两把钥匙——Moore 解释说 Danny 一并交来的。
       钥匙交给 Zack：一把 Margaret 鞋坊地下室钥匙（10308），一把 Frank 家钥匙（10309）。
@@ -574,11 +558,11 @@ doubts:
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "10701"  # 贷款计算玩法分析报告（派生，合成自 10303+10304+10305）
+        param: "10701"  # 贷款计算玩法分析报告（派生，10303 合订本经穿孔卡片机玩法产出）
     posed_loop: 3
     resolved_loop: 3
     status: "unlocked_loop3"
-    # 单件派生证据触发——玩家完成贷款计算玩法（合成三条款 → 10701）后疑点确立；
+    # 单件派生证据触发——玩家完成贷款计算玩法（10303 合订本 → 10701）后疑点确立；
     # L3 R2 击穿 Moore"协议条款完全合法"谎言时解决
 
   - id: 10303
@@ -599,7 +583,7 @@ doubts:
 
 evidence_registry:
   # Loop3 = 103xx 系列（Unit10 使用 10xxx 独立 ID 段，loop3=103xx，派生=107xx）
-  # 继承：Loop1（10101-10108）/ Loop2（10201-10206）/ 跨 Loop 碎片 10204
+  # 继承：Loop1（10101-10108）/ Loop2（10202-10206，原 10201 名片已删除）/ 跨 Loop 碎片 10204
   # Loop3 新增：10301-10311；派生：10701（贷款计算分析）
   # post_expose 给予：10307（不交付，可查看）/ 10308（钥匙）/ 10309（钥匙）
 
@@ -620,28 +604,12 @@ evidence_registry:
     note: "关键——疑点 10301 condition；与 10301 直接对比签名笔迹；L3 R1 击破件之一"
 
   - id: 10303
-    name: "贷款协议第 5 条（年单利 12%）/ Loan Agreement Clause 5"
+    name: "LAKESHORE TRUST BANK 贷款协议（含第 5/7/12 条，三页合订）/ Loan Agreement (Clauses 5/7/12, 3-page bound)"
     type: item
     itemType: 3
     first_scene: 10013
     pickup: true
-    note: "合成 10701 原料之一；不单独进疑点 condition"
-
-  - id: 10304
-    name: "贷款协议第 7 条（利滚利条款）/ Loan Agreement Clause 7"
-    type: item
-    itemType: 3
-    first_scene: 10013
-    pickup: true
-    note: "合成 10701 原料之二；不单独进疑点 condition"
-
-  - id: 10305
-    name: "贷款协议第 12 条（月管理费 50$）/ Loan Agreement Clause 12"
-    type: item
-    itemType: 3
-    first_scene: 10013
-    pickup: true
-    note: "合成 10701 原料之三；不单独进疑点 condition"
+    note: "点击分析触发穿孔卡片机玩法，产出 10701；本件不单独进疑点 condition"
 
   - id: 10306
     name: "客户账户对账单（内部存档版本）/ Account Statement (Internal Archive Version)"
@@ -678,12 +646,12 @@ evidence_registry:
     note: "关键——L3 post_expose 解锁 10018（Frank 家主屋（开间））+ 10009（Frank 家次卧）；L5 小铁盒前置"
 
   - id: 10310
-    name: "Leonard 与 Vinnie 童年合照（1910）/ Leonard & Vinnie Childhood Photo (1910)"
+    name: "Leonard 与 Vinnie 童年合照（1900）/ Leonard & Vinnie Childhood Photo (1900)"
     type: envir
     itemType: 2
     first_scene: 10014
     pickup: true
-    note: "场景道具——环境叙事；L6 空相框 10611 跨 Loop 呼应；第三重反转铺线；不进疑点 condition"
+    note: "场景道具——环境叙事；第三重反转铺线（'Leo' 昵称是 Leonard 旧名 Russo 少年痕迹，L6 揭示）；不进疑点 condition"
 
   - id: 10311
     name: "伊利诺伊州法律公告 / Illinois State Legal Notice"
@@ -698,8 +666,8 @@ evidence_registry:
     type: derived
     itemType: 3
     first_scene: null
-    given_by: "合成自 10303+10304+10305（CASE BOARD 合成）"
+    given_by: "10303 分析（穿孔卡片机玩法产出）"
     pickup: true
     note: "关键——疑点 10302 condition；L3 R2 击破件；贷款计算玩法产出"
-    description: "将贷款协议三条款（第 5/7/12 条）综合计算的分析报告。本金 600$，年单利 12%×5 年 = 360$，月管理费 50$×60 月 = 3,000$，5 年合计约 3,960$。折合年化（含管理费）约 112%，远超伊利诺伊州法 36% 上限。"
+    description: "将贷款协议三条款（第 5/7/12 条）综合计算的分析报告。本金 600$，年单利 12%×5 年 = 360$，月管理费 50$×60 月 = 3,000$，5 年合计约 3,960$。折合年化（含管理费）约 112%，远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）。"
 

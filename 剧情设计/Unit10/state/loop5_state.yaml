@@ -3,7 +3,7 @@
 # ============================================================
 #
 # 叙事功能：
-#   - 开篇：Frank 家小铁盒开启（10502 举报材料 + 10503 遗书），Mickey 离场邀 Zack 当律师
+#   - 开篇：Frank 家小铁盒开启（10502 举报材料 + 10503 情书），Mickey 离场邀 Zack 当律师
 #   - 二选一分支：律师 → 三幕坏结局过场（黑屏白字+静态画面）→ 回到选择点重选（不锁存档）
 #   - 主线分支：继续当侦探，废墟深度搜证（10501 打火机）+ Silver Moon 赌场指证 Vinnie
 #   - 指证 Vinnie（1 轮）：语速反常+细节不对+抢话认罪（安排感）
@@ -11,7 +11,7 @@
 #   - Mickey 拿走 10502（叙事特写，棕色皮制公文包两个铜扣），10502 removed_from_inventory
 #
 # 证据 ID 段：10xxx（Unit10 独立段）
-#   - L5 新增物品：10501（火灾现场打火机）/ 10502（Frank 举报材料）/ 10503（Frank 遗书）
+#   - L5 新增物品：10501（火灾现场打火机）/ 10502（Frank 举报材料）/ 10503（Frank 情书）
 #   - L5 末 Mickey 拿走 10502：removed_from_inventory 标注
 #
 # NPC 编码（Unit10）：
@@ -90,7 +90,7 @@ player_context:
     - "O'Hara 目击：11月6日晚 7 点 Frank 出门前后脚 Danny 也出门，走同一条路"
     - "O'Hara 目击：Lula 至少四五年前就来这条街，经常去 Frank 家"
     - "地下室旧沙发磨损 3-5 年，与 Lula 证词互证；求婚戒指（10403）藏在玫瑰花蕊中"
-    - "Frank 遗嘱：房产捐给工人互助会，如与 Lula 结婚则归 Lula；Lula 当场签署放弃继承（演出）"
+    - "Frank 遗嘱：全部遗产默认归 Lula Washington（法定受遗赠人）；若 Lula 拒绝则兜底捐艾斯弗德工人互助会；Lula 当场签署放弃继承——放弃她本该完整获得的遗产，启动兜底条款"
     - "Mickey 在 L4 hospital 说'他已联系了可以证明 Lula 来历清白的人，如果 Danny 那边有问题，我有后手'——Lula 果然在 L4 R3 指证时现身"
 
   new_directions:
@@ -129,7 +129,7 @@ opening:
     Lula 在 L4 给的备用钥匙（10408）配的不是小铁盒，而是 Frank 藏在床后缝隙里的小铁盒。
     Zack 把床稍微挪开，伸手从缝隙里取出一个 15cm × 10cm 的铁皮小盒——
     上面有一把简易挂锁，钥匙 10408 正好对得上。
-    内容：Frank 的举报材料（10502）和留给 Lula 的遗书（10503）。
+    内容：Frank 的举报材料（10502，演出件——Mickey 会拿走）和留给 Lula 的情书（10503，纯情感叙事载体，Lula 第一次捧读 Frank 八年积累的告白）。
 
     Lula 恳求 Zack 和 Mickey 帮她查清 Frank 死亡的真相。
 
@@ -183,11 +183,11 @@ opening:
       talk: lula_002_frank_house
       is_liar: false
       motive: "恳求查清 Frank 之死；在小铁盒打开的那一刻，她能感受到 Frank 为她和为正义拼尽了一切"
-      mindset: "悲痛中带着坚定；她不哭，但眼圈红了；她信任 Zack，也第一次面对 Frank 留给她的遗书"
+      mindset: "悲痛中带着坚定；她不哭，但眼圈红了；她信任 Zack，也第一次面对 Frank 留给她的情书"
 
       # ── 1. NPC 已知信息 ──
       active_topics:
-        - "小铁盒里的遗书（10503）——Frank 在里面告诉了她什么（内容由对话作者编写，不在 state 中展开）"
+        - "小铁盒里的情书（10503）——Frank 在里面告诉了她什么（内容由对话作者编写，不在 state 中展开）"
         - "恳求 Zack 不要放弃——'他花了那么多时间收集这些，不是为了让它们被锁回去'"
         - "对 Mickey 的感谢——'没有你们，我什么都做不了'"
       withheld_topics:
@@ -197,7 +197,7 @@ opening:
 
       # ── 2. 玩家询问意图 ──
       player_inquiry:
-        - '"遗书里 Frank 说了什么？" # 7'
+        - '"情书里 Frank 说了什么？" # 7'
         - '"你知道 Frank 在小铁盒里放了什么吗？" # 8'
 
       # ── 3. 可提取证词 ──
@@ -472,12 +472,12 @@ evidence_registry:
       removed_at: "L5 post_expose（Mickey 离场前已取走）"
 
     - id: 10503
-      name: "Frank 留给 Lula 的遗书 / Frank's Letter to Lula"
+      name: "Frank 留给 Lula 的情书 / Frank's Love Letter to Lula"
       type: envir
       itemType: 2
       obtain_scene: 10018
       obtain_method: story_auto
-      note: "环境叙事——不可拾取，仅观察；不进指证/疑点 condition；情感载体"
+      note: "环境叙事——不可拾取，仅观察；不进指证/疑点 condition；纯情感载体：Frank 长年累月写给 Lula 的私人情书，记录八年情感与求婚承诺，不含任何案情/检举内容"
       first_loop: 5
       isUsable: false
 
