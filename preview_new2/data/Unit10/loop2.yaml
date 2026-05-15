@@ -1,0 +1,82 @@
+title: 威胁链条与连号钞票对比
+target: 谁在向 Frank 暴力催债？Vinnie 背后的雇主是谁？
+time: "11月7日 凌晨—白天"
+
+opening:
+  - id: 10201
+    characters: [Zack, Emma, Mickey, Margaret]
+    purpose: 圣心医院 Margaret 病房（10006）——Mickey Donnelly 以 Frank 代理律师身份正式登场，透露 Frank 原约定今日来检举银行；三人分工（Mickey+Zack 查银行，Emma 跟 Foster + Margaret）
+
+scenes:
+  unlocked:
+    圣心医院:
+      - id: 10006  # Margaret 病房（Mickey 首登）
+        talks: [mickey_l2_hospital]
+    Frank 家邻街:
+      - id: 10007  # Frank/O'Hara 街角（O'Hara 目击证词）
+        talks: [ohara_l2_street]
+    Moore 银行:
+      - id: 10011  # 银行大厅（Leonard 指证场 + 自由探索）
+        talks: [leonard_l2_lobby]
+      - id: 10012  # 银行贵宾室（Moore 部分开放，口头信息）
+        talks: [moore_l2_parlor]
+    Silver Moon:
+      - id: 10015  # 赌场（Tony/Vinnie 对话 + 骰子玩法）
+        talks: [tony_l2_casino, vinnie_l2_casino]
+        sudden_events:
+          - name: "Tony 试探 → Vinnie 口误暴露 Russo"
+            start_id: 208000X  # 突发事件 #2 触发节点
+  locked:
+    Margaret 鞋坊:
+      - id: 10001
+        reason: 鞋坊本 Loop 调查重心不在此（L1 已完成限时搜证）
+      - id: 10002
+        reason: 卧室区 L1 已搜证
+      - id: 10010
+        reason: 地下室——尚不知入口（L3 钥匙 10308 解锁）
+    Frank 家:
+      - id: 10009
+        reason: Frank 家次卧——L3 post_expose 钥匙 10309 解锁
+      - id: 10018
+        reason: Frank 家主屋——L3 钥匙解锁
+      - id: 10020
+        reason: Frank 家厕所——L4 才出现
+    Moore 银行:
+      - id: 10013
+        reason: 档案室——L3 搜查令解锁
+      - id: 10014
+        reason: Leonard 办公室——L3 搜查令解锁
+    市政厅:
+      - id: 10016
+        reason: L3 拿 Leonard 信封去申请才出现
+    Leonard 住所:
+      - id: 10017
+        reason: L6 搜查令解锁
+    警局:
+      - id: 10004
+        reason: L1 已完成 Morrison 指证
+  closed: [10003, 10005, 10019]  # L1 收尾过场场景
+
+expose:
+  scene: 10011
+  target_name: Leonard
+  talk: Loop2_leonard
+  rounds:
+    - lie: "我不认识任何催债的人"
+      evidences: [2060001, 2080001]  # Moore 透露 Leonard 原名 Russo + Vinnie 口误"我不记得什么 Russo"
+    - lie: "我们只是认识，没有合作"
+      evidences: [10202, 10206]  # O'Hara 缺号钞票 905-909B + Vinnie 钞票 905/906/908B（连号拼合，5$ 联邦储备券同版式）
+    - lie: "那是我私下借给 Vinnie 的钱"
+      evidences: [2070002, 10205]  # Tony 证词（Vinnie 说"赚了一笔"不是"还债"）+ Vinnie 催债小本子（L.R. 字样）
+  post_expose:
+    name: "Leonard 假善意给信封"
+    characters: [Zack, Leonard]
+    purpose: Leonard 承认雇佣 Vinnie 暴力催债；假装"帮忙"递给 Zack 签着自己名字的信封让去市政厅申请搜查令（L3 揭穿是陷阱）
+    talk: leonard_l2_postexpose
+
+events:
+  - id: 10291
+    name: "L2 突发 · 银行偷听 Danny ↔ Leonard 商量房产证"
+    characters: [Zack, Danny, Leonard]
+    purpose: 银行大厅自由探索时走近 Leonard 办公室门口（10014 外），偷听到 Danny 和 Leonard 商量 Frank 房产证的碎片对话（动态漫画 #3）
+    trigger: "进入 10011 大厅自由探索且未触发其他事件时"
