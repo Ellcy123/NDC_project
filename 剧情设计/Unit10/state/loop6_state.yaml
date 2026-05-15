@@ -16,7 +16,7 @@
 #   - 结局：Vinnie 狱中上吊 / Leonard 假释生不如死 / Lula 悼念 / Zack 苦笑
 #
 # NPC 编码（Unit10 NPCStaticData 新建，Morrison/Emma 复用既有 ID）：
-#   Margaret=1106 / Foster=1103 / Leonard=1105 / Leo妻子=无（哑角演出，不分配）
+#   Margaret=1106 / Foster=1103 / Leonard=1105 / Leo妻子(Edith Ross)=1107（L6 §10017 对话 NPC，非哑角；NPC code 12）
 #   Morrison=Unit9既有ID=904（复用）/ Emma=Unit9既有ID=902（复用）
 #
 # Testimony ID 格式：{loop=6}{npc_code=2位}{seq=3位} = 6位 → 按项目惯例写为 6{code}{seq}
@@ -56,7 +56,7 @@
 # C. NPC 条目     PASS — Margaret（scenes 10006，4 块）/ Leonard scenes（10011，4 块）/
 #                        Morrison（scenes 10004 过场，仅过场 NPC 简版）/
 #                        Leonard expose（10017，4 块，is_liar:true）
-#                        Leo妻子：哑角，无 NPCStaticData，仅 environment_narrative
+#                        Leo妻子 Edith Ross：L6 §10017 自由探索对话 NPC，4 块齐全（active/withheld/inquiry/testimony）；R4 诱导招供前裙角演出帧保留
 # D. 目标对齐     PASS — goals 与讨论结论 L6"Leonard 是真凶 / 诱导招供 / Margaret 苏醒"一致
 # E. 信息节奏     PASS — 本 Loop 揭示：Leonard 误杀真相 + Vinnie 单方面深爱顶罪；
 #                        Whale 伏笔（Mickey 真身）Unit10 内不暴雷；Unit11+ 内容无超前
@@ -491,10 +491,12 @@ expose:
       北区湖滨大道 88 号，Leonard Russo 的住所。与南区的逼仄贫民街区完全不同——
       米色石灰岩外墙，铸铁栏杆，门童制服笔挺。
       搜查令让 Zack 合法进入。Leonard 在客厅等待，他以为这只是例行搜查。
-      他的妻子在楼上——她端茶上楼，裙角消失在楼梯转角，没有回头。
+      他的妻子 Edith Ross 在客厅——是本场自由探索阶段的对话 NPC（角色档见 `Characters/edith.md`），玩家可以走近她对话，
+      听到她对 Leonard 最近反常的观察（眼镜换了、夜里失眠、出门时间反常）。
+      她对话时端着茶盘背对 Leonard，回答简短不带情绪，问完她会端着茶盘上楼，裙角消失在楼梯转角。
     environment_narrative:
-      - "进场时：Leonard 妻子从厨房走出，端着茶盘上楼，背对客人，裙角在楼梯转角消失。全程无对白。"
-      - "R4 诱导招供触底前：Leonard 望向楼梯，Zack 视线跟着他——楼梯顶端，她的裙角再次出现一瞬，然后消失。Leonard 转回头，开口招供。"
+      - "进场氛围：客厅安静，Edith 端着茶盘站在通往楼梯的过道——玩家可走近触发对话；对话结束后她端茶上楼，裙角在楼梯转角消失"
+      - "R4 诱导招供触底前演出帧：Leonard 望向楼梯，Zack 视线跟着他——楼梯顶端 Edith 的裙角再次出现一瞬（她下楼取东西又上去），然后消失。Leonard 转回头，开口招供"
 
   context: |
     Zack 持搜查令进入 Leonard 住所。此时 Zack 手中的证据：
@@ -575,6 +577,44 @@ expose:
       - 6050001  # ⚠谎言: "Frank 的死是场悲剧，但和我无关。那天晚上我整晚都在家，从来没有见过 Frank"（R1 谎言锚，唯一可收集 testimony）
       # 注：R2 / R3 / R4 谎言（眼镜不能证明 / 拜访时摔坏 / Vinnie 烧死）为 Expose 内部退守对白，
       #     不进 testimony 池、不可预先收集——见下方 round_2 / round_3 / round_4 的 lie 字段
+
+
+  # ── Edith Ross NPC 条目（Leonard 妻子，L6 §10017 自由探索对话 NPC）──
+  edith_ross:
+    talk: edith_ross_loop6
+    is_liar: false
+    motive: "保持自己的离场选项——她不为 Leonard 撒谎，不为 Leonard 隐瞒；她对 Frank 案不在意，但她对 Leonard 最近反常的事实陈述是中立的"
+    mindset: |
+      冷漠、疲态、节能。她没有爱了，所以她不为 Leonard 多说一句话；
+      她也没有恨，所以她不会主动指控他。她说她观察到的事实，仅此。
+      她对 Zack 没有抗拒也没有合作——回答简短，问完就停。
+      她不知道 Leonard 是凶手——她只知道他这两个月反常（换眼镜 / 失眠 / 出门时间不对）。
+      她在客厅端着茶盘站着，对话结束就端茶上楼。
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "Leonard 最近两个月换了新眼镜（左眼新片透明、右眼旧片未换——10610 视觉证据的旁证）"
+      - "Leonard 最近夜里不睡——具体两个月内开始的失眠"
+      - "Leonard 最近出门时间反常——11月6日晚出门时间也不正常，她没在意是几点"
+      - "她对 Leonard 工作上的事不问——她从不主动了解 Lakeshore Trust Bank 的事"
+      - "她对 Frank Kowalski 没印象——只听过 Leonard 在书房跟另一个穿西装的人提过一次（"那个老顽固"）"
+    withheld_topics:
+      - "她在心里已经准备离开 Leonard 这件事（不主动说出来）"
+      - "她对 Leonard 是凶手的可能性的内心猜测（她没有证据，也不愿主动指控；如果玩家直接问，她回'我不知道，那是他的事'）"
+      - "她和 Leonard 婚姻无爱的具体细节（不主动展开）"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry:
+      - '"Leonard 最近反常——眼镜 / 失眠 / 出门" # 10'
+      - '"她对 Leonard 工作的态度" # 6'
+      - '"她对 Frank 的印象 / 案子的看法" # 4'
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 6120001  # Edith："Leonard 最近换了新眼镜——左眼是新片，右眼没换。两个月前开始的"（10610 维修单的旁证，强化 R2 击破链）
+      - 6120002  # Edith："他最近夜里不睡。也不说原因。我也没问"（Leonard 反常行为的旁证；可在 Expose 中作为 R1/R2 辅助语境，但非必需）
+      - 6120003  # Edith："那天晚上他几点出门的？……我没看。但不是正常的时间"（间接削弱 Leonard "整晚在家"的 R1 谎言）
+      # 注：testimony ID 格式 {loop:1}{npc_code:2}{seq:4} = 7位；Edith NPC code 12（Leo妻子，已确认）
 
 
   # ── 轮次一：否认到场维度 ──

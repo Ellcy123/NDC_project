@@ -13,8 +13,8 @@
 # 核心体验：
 #   - 揭示 Frank ↔ Lula 五年真爱（第二重反转：Frank 是为爱奋斗的英雄）
 #   - Danny 是目击者兼机会主义者，非凶手
-#   - 开篇 Mickey 一句伏笔："我已经联系了可以证明 Lula 来历清白的人"
-#   - R3 Lula 戏剧性进门签放弃继承，是本 Loop 情感高峰
+#   - 开篇 Mickey + Emma 圣心医院战术碰头（无 Mickey-Lula 安排伏笔）
+#   - R3 Lula 隔厕所小窗举证签字，是本 Loop 情感高峰（Lula 自发跟随 Zack/Mickey 到 Frank 家，进不了男厕所只能在侧墙小窗外听）
 #   - 4100001 回收 L1 Emma 皱眉伏笔（Frank 不会做饭/不用 Margaret 厨房）
 #
 # 权威来源：剧情设计/Unit10/讨论结论.md（四、Loop4 章节 + 五、关键设计问题与裁决）
@@ -84,12 +84,12 @@ player_context:
     - "Moore 银行是投资公司（Lakeshore Investment Co.）的马甲，Leonard 名片上已有暗示（L2 视觉伏笔）"
 
   new_directions:
-    - direction: "去圣心医院（10006）——Mickey 在那里，他说已经联系了能证明 Lula 来历清白的人；Emma 有最新消息"
+    - direction: "去圣心医院（10006）——Mickey 在那里，跟 Emma 战术碰头确认 L4 调查路线"
       trigger: "L3 post_expose 后，Mickey 约 Zack 次日下午医院见面，确认调查策略"
     - direction: "用 10308 钥匙开鞋坊地下室（10010）——Frank 把私人秘密藏在这里，和 Lula 的约会场所可能有线索"
       trigger: "10308 地下室钥匙在 L3 post_expose 获得；地下室过去打不开（L1/L2/L3 的 10108 门锁）"
     - direction: "在鞋坊店铺区（10001）找到 Lula——她早就知道 Frank 的一切，现在是开口的时候了"
-      trigger: "Mickey 预先安排 Lula 来鞋坊，L4 开篇已暗示'有人等在那里'"
+      trigger: "Lula 听说 Frank 死讯后自发来 Margaret 鞋坊等候——这是她在 Unit10 内的第一次公开出场"
     - direction: "去 O'Hara 家（10007）——她是当晚在场的邻居，L4 需要追问她是否目击了 Frank 或 Danny 出门"
       trigger: "L2 曾去过 O'Hara 家，她是信息来源；现在追问当晚时间线细节"
     - direction: "搜查 Danny 的房间（10009 次卧，Danny 不在）——他在做什么？他有没有隐瞒什么？"
@@ -118,8 +118,8 @@ opening:
   description: |
     L4 自动触发的开篇过场。Mickey 和 Emma 已在医院。
     Margaret 仍昏迷，Zack 在病床边沉默片刻。
-    Mickey 开口：一句"我已经联系了可以证明 Lula 来历清白的人，如果 Danny 那边有问题，我有后手。"
-    这句话给玩家一个"有人在等待出现"的预感（Whale 控制信息流伏笔，Unit10 内不揭示）。
+    Mickey 简短点拨 L4 调查路线（建议先去鞋坊地下室 → 然后找 Lula → 最后找 Danny），
+    并提示"Danny 卖房产证换沉默"是 L4 R2 最有力的动机线索（呼应 L3 Moore 3060004 坦白）。
     Emma 压低声音告诉 Zack：这家医院是 Miller 资助的（Miller 集团伏笔节点，本 Loop 内不回收）。
     三人确认 L4 调查方向后分开行动：Mickey 处理法律事务，Emma 继续陪 Margaret/联系 Foster，
     Zack 去追查 Lula 和 Danny。
@@ -133,7 +133,7 @@ opening:
 
       # ── 1. 已知信息 ──
       active_topics:
-        - "已经联系了能证明 Lula 来历清白的人——如果 Danny 那边出问题，有后手（伏笔：Lula 会在 Frank 家厕所小窗外等候）"
+        - "建议 L4 调查路线：地下室 → Lula → Danny；Danny 卖房产证给银行换沉默（L3 Moore 3060004 坦白）是 R2 最有力的动机线索"
         - "建议 Zack 先去鞋坊地下室，再去找 Lula，最后再去 Frank 家厕所找 Danny"
         - "提醒 Zack：Danny 卖房产证换沉默这件事，Moore 已经承认了（3060004），这是最有力的动机线索"
       withheld_topics:
@@ -143,7 +143,7 @@ opening:
 
       # ── 2. 玩家询问意图 ──
       player_inquiry:
-        - '"Mickey 说联系了能证明 Lula 清白的人——那个人是谁" # 7'
+        - '"Mickey 对 Lula 的看法 / Lula 是否会出现" # 5'
         - '"下一步调查路线——地下室/Lula/Danny 的顺序如何安排" # 8'
         - '"Danny 卖房产证这件事——Moore 的坦白已经够用吗" # 6'
 
@@ -249,7 +249,7 @@ scenes:
     type: free_exploration
     description: |
       L4 自动解锁。废墟状态的店铺区，Lula 在这里等待。
-      Mickey 预先安排 Lula 来此——她是第一次公开面对 Frank 案的相关人。
+      Lula 听说 Frank 死讯后自发到此——她是第一次公开面对 Frank 案的相关人。
       Lula 的出现本身就是一种陈述：她来了，她没有躲。
       本场景是玩家对 Lula 的第一印象，信息量大但情绪克制。
 
@@ -384,7 +384,7 @@ scenes:
       Danny 蹲在马桶上拉肚子，狼狈、出汗、面如土色。Zack 推开虚掩的门走进去——
       Danny 既不能站起来，也无处可逃，只能边按肚子边和 Zack 说话。
       厕所侧墙有一扇约 30cm × 40cm 的小窗，朝向后巷，平时透光通风用。
-      Lula 早在 Mickey 安排下守在小窗外，等待 R3 出现时隔窗签下放弃继承协议。
+      Lula 跟着 Zack 和 Mickey 一起到了 Frank 家，但她进不了男厕所——只能站在侧墙小窗外把全过程听下来；R3 时她从小窗外举起已签好的放弃继承协议给 Danny 看。
       （指证戏剧性：本应严肃的法庭式对峙发生在最不体面的环境里，
       Danny 的所有狡辩都伴随着马桶冲水的声响——这是这个角色应得的羞耻。）
 
