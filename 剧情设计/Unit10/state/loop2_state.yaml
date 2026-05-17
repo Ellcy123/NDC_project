@@ -105,6 +105,7 @@ player_context:
 
 opening:
   type: cutscene  # 🎬 硬切过场——圣心医院病房
+  talk: opening_l2_hospital
   location: "圣心医院 Margaret 病房（场景 1006）"
   description: |
     L2 自动触发。Zack 持 Mickey 电报赶到圣心医院。
@@ -116,42 +117,43 @@ opening:
     Zack 谢过，表示先自己查。Mickey 不催，笑着说"随时来找我"。
     Mickey 离开后，Zack 开始 L2 自由探索。
 
-  npcs:
-    mickey_l2_hospital:
-      talk: mickey_l2_hospital
-      is_liar: false
-      motive: "以律师身份告知 Frank 是他的客户；邀请 Zack 加入律所；建立'可靠盟友'印象"
-      mindset: "沉稳、自信，对 Zack 有一种老友式的亲切——不催促，不施压，显得很靠谱"
-
-      # ── 1. NPC 已知信息 ──
-      active_topics:
-        - "Frank Kowalski 是 Mickey 的法律客户，约定今天前来检举银行-黑手党勾结材料，但 Frank 没有出现"
-        - "Mickey 在街边发现昏迷的 Margaret，叫救护车送来圣心医院（他是 Margaret 入院的直接原因）"
-        - "Mickey 是律师事务所合伙人，事务所在市中心，在本地法律圈有人脉"
-        - "Mickey 是 Zack 的童年好友（12 年没联系，重新出现）"
-        - "Mickey 主动邀请 Zack 加入律所担任律师——不急，随时欢迎"
-      withheld_topics:
-        - "Mickey 真实身份是 Whale（Unit9 已登场的反派），Unit10 内绝对不暴雷"
-        - "Frank 检举材料的具体内容（L5 小铁盒才揭示）"
-        - "Mickey 是否认识 Leonard / Moore（L3 开始协助后才有更多接触）"
-        - "Whale 派的黑手党匿名电话 Morrison（伏笔，本 Loop 不揭示）"
-
-      # ── 2. 玩家询问意图 ──
-      player_inquiry:
-        - "\"Mickey 为什么在路边（街角在哪、时间几点）找到 Margaret\" # 6"
-        - "\"Frank 作为你的客户准备检举什么——大概知道什么程度\" # 8"
-        - "\"12 年没联系，你怎么知道我还在艾斯弗德\" # 5"
-
-      # ── 3. 可提取证词 ──
-      testimony_ids:
-        - 2030001  # Mickey：Frank 是我的法律客户，约好今天来检举银行-黑手党勾结材料，但他没来
-        - 2030002  # Mickey：我在街边发现 Margaret 昏迷，立刻叫救护车送到圣心医院
-
 # ─────────────────────────────
 # 三、场景（🔓 自由探索）
 # ─────────────────────────────
 
 scenes:
+  # ── 场景 10006：圣心医院 Margaret 病房（Mickey 首登，自由探索） ──
+  - id: 10006
+    name: "圣心医院 Margaret 病房"
+    type: free_exploration  # 🔓 自由探索
+    description: |
+      Margaret 病房。Margaret 未醒，呼吸平稳。Mickey 在开篇过场后留在病房附近，
+      Zack 可主动找他追问 Frank 检举案与 Margaret 入院经过。
+    npcs:
+      mickey_l2_hospital:
+        talk: mickey_l2_hospital
+        is_liar: false
+        motive: "以律师身份告知 Frank 是他的客户；邀请 Zack 加入律所；建立'可靠盟友'印象"
+        mindset: "沉稳、自信，对 Zack 有一种老友式的亲切——不催促，不施压，显得很靠谱"
+        active_topics:
+          - "Frank Kowalski 是 Mickey 的法律客户，约定今天前来检举银行-黑手党勾结材料，但 Frank 没有出现"
+          - "Mickey 在街边发现昏迷的 Margaret，叫救护车送来圣心医院（他是 Margaret 入院的直接原因）"
+          - "Mickey 是律师事务所合伙人，事务所在市中心，在本地法律圈有人脉"
+          - "Mickey 是 Zack 的童年好友（12 年没联系，重新出现）"
+          - "Mickey 主动邀请 Zack 加入律所担任律师——不急，随时欢迎"
+        withheld_topics:
+          - "Mickey 真实身份是 Whale（Unit9 已登场的反派），Unit10 内绝对不暴雷"
+          - "Frank 检举材料的具体内容（L5 小铁盒才揭示）"
+          - "Mickey 是否认识 Leonard / Moore（L3 开始协助后才有更多接触）"
+          - "Whale 派的黑手党匿名电话 Morrison（伏笔，本 Loop 不揭示）"
+        player_inquiry:
+          - "\"Mickey 为什么在路边（街角在哪、时间几点）找到 Margaret\" # 6"
+          - "\"Frank 作为你的客户准备检举什么——大概知道什么程度\" # 8"
+          - "\"12 年没联系，你怎么知道我还在艾斯弗德\" # 5"
+        testimony_ids:
+          - 2030001  # Mickey：Frank 是我的法律客户，约好今天来检举银行-黑手党勾结材料，但他没来
+          - 2030002  # Mickey：我在街边发现 Margaret 昏迷，立刻叫救护车送到圣心医院
+
   # ── 场景 10007：Frank 家与 O'Hara 家街角（两户邻居共用外观） ──
   - id: 10007
     name: "Frank 家与 O'Hara 家街角"
@@ -199,8 +201,8 @@ scenes:
         note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10206 拼出连号完整性）"
 
     npcs:
-      ohara_l2:
-        talk: ohara_l2
+      ohara_l2_street:
+        talk: ohara_l2_street
         is_liar: false
         motive: "保护自己；不愿惹麻烦；但认出 Zack 是 Margaret 的儿子后稍微松动"
         mindset: "开门梯度信息披露——不认识 Emma 就关门；认出 Zack 是 Margaret 儿子才稍微放下警惕；不主动多说"
@@ -250,8 +252,8 @@ scenes:
     evidence: []  # 指证场，无可拾取证据
 
     npcs:
-      leonard_l2:
-        talk: leonard_l2
+      leonard_l2_lobby:
+        talk: leonard_l2_lobby
         is_liar: true  # Leonard 是本 Loop 的 Expose 对象
         motive: "隐瞒 Leonard-Vinnie 雇佣催债关系；维护银行'合规'形象；表面假装合作，实则层层退守"
         mindset: "西装革履、措辞谨慎；表面配合，每层谎言都有准备好的退守话术；被证据击穿后装出'假善意'"
@@ -277,8 +279,8 @@ scenes:
           #     不进 testimony 池、不可预先收集——见 expose.round_2 / round_3 的 lie 字段
 
       danny_l2_bystander:
-        # Danny 是"偷听演出"——在大厅角落和 Leonard 低语，看到 Zack 进来后警觉离开
-        # 无对话交互，仅演出性质
+        # 【演出帧·非对话】属场景 10011 银行大厅；Danny 在角落和 Leonard 低语，见 Zack 进来警觉离开
+        # talk:null 无对话文件；仅承载证词 2090001（疑点碎片 10204 condition）；勿当作"多余对话"清理
         talk: null
         is_liar: false
         motive: "在大厅和 Leonard 谈 Frank 房产证的事（不知道 Zack 是谁，看到陌生人便警觉离开）"
@@ -326,6 +328,7 @@ scenes:
           - "Moore 是湖滨信托银行行长兼 Lakeshore Investment Co. 投资公司负责人"
           - "银行对所有客户的催收均走合法流程（傲慢陈述，非谎言，只是站在权力立场上的陈述）"
           - "Leonard 的档案原名是 Russo，改名 Ross 是他的个人选择，银行档案有记录"
+          - "Frank 当初因赌博借了 600$、如今连本带利欠 3,200$（Moore 傲慢误导口径，非谎言、不作 testimony 收集；L3'非赌博掠夺性贷款反转'的伏笔种子——本 Loop 玩家接受'Frank 赌博自作自受'印象，L3 才推翻；对齐大纲 L324）"
         withheld_topics:
           - "掠夺性贷款的真实利率机制（L3 搜查令后才揭示）"
           - "Lakeshore Investment Co. 的马甲性质（L3 才揭示）"
@@ -391,8 +394,8 @@ scenes:
         note: "关键——疑点 10202 condition；L2 R2 击穿件（配合 10202 双件并排出示连号关系，证明这批钱来自同一资金池）；获取条件：Silver Moon 破冰玩法骰子段累计赢 30$（或选不玩跳过路径看 Margaret 面子直接给）；Tony 凑巧用 Vinnie 留的零钱给 Zack 结账，自己不知是线索——L2 期间 Tony 始终不知道这几张钞票的侦探价值"
 
     npcs:
-      vinnie_l2:
-        talk: vinnie_l2
+      vinnie_l2_casino:
+        talk: vinnie_l2_casino
         is_liar: false  # L2 Vinnie 不是指证对象；否认 Russo 是口误不是谎言链
         motive: "保护自己；不暴露和 Leonard 的雇佣关系；越否认越用力，反而漏了破绽"
         mindset: "警觉、防御；Tony 试探时用力否认，结果口误说出'Russo'；否认后装作无事发生"
@@ -418,8 +421,8 @@ scenes:
         testimony_ids:
           - 2080001  # ⚠口误：Vinnie——"我不记得什么 Russo！"（口误否认，实为破绽；L2 R1 击破件 + 疑点 10201 condition）
 
-      tony_l2:
-        talk: tony_l2
+      tony_l2_casino:
+        talk: tony_l2_casino
         is_liar: false
         motive: "消息灵通，但对生面孔警惕；只有通过 1920s speakeasy 圈内人验证（调酒考验）后才交底；对 Vinnie 的行为有观察"
         mindset: "圆滑、镇定；擦杯子时观察一切；陌生人进来先用调酒题验身份——这是禁酒令时期黑帮酒吧老板的日常自保；答对题后用说闲话的语气传递关键信息"
@@ -455,7 +458,7 @@ scenes:
 
 expose:
   target: leonard
-  target_talk: leonard_expose_l2
+  target_talk: Loop2_leonard
   is_liar: true
   player_inquiry: null
   exposeNpcId: 1005  # Unit10 Leonard 的 NPCStaticData ID（待程序确认）
@@ -523,6 +526,7 @@ expose:
 
   # ── 指证后剧情 ──
   post_expose:
+    talk: leonard_l2_postexpose
     description: |
       Leonard 承认雇用 Vinnie 暴力催债，但将其美化为"非正规但普遍的做法"。
       他递给 Zack 一个信封（签着自己名字的介绍信），声称凭此可申请搜查令。
@@ -678,9 +682,9 @@ evidence_registry:
     itemType: 2
     first_loop: 2
     first_scene: 10007
-    pickup: true
+    pickup: false  # 2026-05-17 内容总监裁定：与 scene 层 pickup:false 及 note"场景道具不可拾取"语义统一（修 state 内部矛盾）
     analysis: false
-    note: "场景道具——背景信息；L2 R2 陷阱选项；不进疑点 condition"
+    note: "场景道具——背景信息；L2 R2 陷阱选项；不进疑点 condition；门口可观察不可拾取"
 
   - id: 10204
     name: "威胁便条 / Threatening Note"

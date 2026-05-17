@@ -5,6 +5,7 @@ time: "1928-11-06 晚 9:00"
 opening:
   - id: 10101
     characters: [Zack, Emma, Morrison]
+    talk: opening_l1_crimescene
     purpose: Margaret 鞋坊火灾现场（10001）——Morrison 夹烟通报"死者应该是 Margaret"，给 5 分钟限时搜证窗口
 
 scenes:
@@ -13,6 +14,9 @@ scenes:
       - id: 10001  # 鞋坊店铺区（限时搜证）
         talks: [morrison_l1_lobby]
       - id: 10002  # 鞋坊卧室区（限时搜证）
+    鞋坊外电话亭:
+      - id: 10019  # 电话亭（自由探索）——玩家主动进入，Emma 联系 Foster；Foster 经 Emma 转述"尸检最快明天"，证词 1030001 进入证词池；Emma 一句带过 Miller 资助伏笔
+        talks: [emma_l1_phonebooth]
   locked:
     Margaret 鞋坊:
       - id: 10003
@@ -69,11 +73,6 @@ expose:
     talk: morrison_l1_postexpose
 
 events:
-  - id: 10191
-    name: "L1 收尾过场 · 电话亭联系 Foster"
-    characters: [Zack, Emma, Foster]
-    purpose: 鞋坊外电话亭（10019）——Emma 联系 Foster，Foster 答复"尸检最快明天"，证词 1030001 进入证词池；Emma 一句带过医院 Miller 资助伏笔
-    trigger: "scene_10003_complete（搜证 + Morrison 对话完成后自动）"
   - id: 10192
     name: "L1→L2 过场 · 事务所收 Mickey 电报"
     characters: [Zack]

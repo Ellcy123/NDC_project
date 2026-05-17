@@ -31,7 +31,7 @@
 #                        10001 场景：10101 / 10104 / 10105；
 #                        10002 场景：10102 / 10103 / 10106 / 10107 / 10108；
 #                        10003 场景：无可拾取证据（纯 Morrison 对话）；
-#                        证词 1030001（Foster via Emma）挂在电话亭过场段
+#                        证词 1030001（Foster via Emma）挂在电话亭场景（自由探索）
 # C. NPC 条目     PASS — Morrison（is_liar:true，挂在 scene_10003，搜证完成后才可对话）/ Emma（挂在 scene_10002）；
 #                        两个 NPC 全部含 active_topics / withheld_topics / player_inquiry / testimony_ids
 # D. 目标对齐     PASS — goals 与讨论结论"确认死者身份，揭穿 Morrison 误导"一致
@@ -101,6 +101,7 @@ player_context:
 
 opening:
   type: cutscene  # 🎬 硬切，无玩家操作
+  talk: opening_l1_crimescene
   scene_id: 10001  # Margaret 鞋坊-店铺区（L1 开篇状态：尸体在场，消防刚离开）
   description: |
     深夜。Zack 和 Emma 赶到 Margaret 鞋坊门外——街上还有消防残留的水渍，
@@ -243,40 +244,6 @@ scenes:
           门下方地面无积灰，门槛被反复踩踏出明显的磨痕——这扇门虽然锁着，但平时经常被人开启走过。
           （崭新铸铁锁 vs 频繁使用痕迹的反差是视觉伏笔——L3/L4 揭示 Frank+Lula 的秘密约会空间在地下室。）
 
-    npcs:
-      emma_l1_scene:
-        talk: emma_l1_scene
-        is_liar: false
-        motive: |
-          朋友身份介入——帮 Zack 调查；
-          同时保持记者本能，观察现场细节。
-          她不会把情绪表现出来，但 Zack 身边有她在场，他能感觉到。
-        mindset: |
-          安静，专注，偶尔说一句关键观察。
-          看到 10106 时皱眉，但没开口——她知道这里有什么不对，但现在不是说的时候。
-          一边搜证一边帮 Zack 整理思路：这里有什么，那里有什么，归纳，不结论。
-
-        active_topics:
-          - "现场观察：卧室区的整体状况、烧毁程度"
-          - "相册和首饰盒的发现——帮 Zack 整理'戒指'这条线"
-          - "Morrison 的态度：他为什么这么快就下结论"
-          - "提出联系 Foster（Emma 认识这位法医，以前认识，都受 Miller 集团资助——Emma 一句话带过，不深入）"
-          - "看到 10106 失火点时皱眉（不说话，只是停顿）"
-        withheld_topics:
-          - "10106 皱眉的真实原因（'Frank 不会做饭'——L4 Lula 证词才回收）"
-          - "Foster 与 Miller 集团的深层关系（L5+ 才展开）"
-          - "Emma 自己与 Miller 集团的关联（Unit11 才揭晓）"
-          - "Mickey 是谁（L2 医院才正式介绍）"
-
-        player_inquiry:
-          - "'Morrison 怎么能这么快就说是 Margaret？'" # 8
-          - "'你认识法医？能不能问问尸检的状态？'" # 7
-
-        testimony_ids:
-          - 1030001  # Foster（Emma 转）："尸检最快明天，连性别都未定"——L1 R3 击穿件
-          # 注：1030001 为 Foster 意见经 Emma 转述，证词 ID 挂在 Emma NPC 条目，
-          #     来源注明为 Foster（NPC04），电话亭过场中触发
-
   # ── 场景 10003：Margaret 鞋坊-店铺区（搜证后 Morrison 对话）──
   - id: 10003
     name: "Margaret 鞋坊-店铺区（搜证后）"
@@ -292,8 +259,8 @@ scenes:
     evidence: []  # 此阶段无可拾取证据，纯对话
 
     npcs:
-      morrison_l1_scene:
-        talk: morrison_l1_scene
+      morrison_l1_lobby:
+        talk: morrison_l1_lobby
         is_liar: true  # Morrison 是本 Loop Expose 对象
         motive: |
           EPI01 旧仇（Morrison 曾栽赃 Zack）+ 接到匿名黑手党电话警告别深究 +
@@ -322,25 +289,37 @@ scenes:
           # 注：R2 谎言（"戒指可能烧毁"）和 R3 谎言（"我有尸检信息"）为 Expose 内部退守对白，
           #     不进 testimony 池、不可预先收集——见 expose.round_2 / round_3 的 lie 字段
 
-  # ── 场景 10019：鞋坊外/警局外电话亭过场（10003 Morrison 对话完成后自动触发）──
-  # 搜证完成 + Morrison 现场对话完成 → 过场剧情：Emma 在警局附近公用电话亭联系 Foster
-  # Foster 告知：尸检最快明天，连性别都无法确认
+  # ── 场景 10019：鞋坊外电话亭（自由探索 🔓）──
+  # 限时搜证结束、自由探索阶段开放即可进，玩家主动前往；与 10003 同一道门，无额外前置
+  # 进入后：Emma 在公用电话亭联系 Foster，Foster 告知：尸检最快明天，连性别都无法确认
   # Emma 转述给 Zack，证词 1030001 进入玩家可用证词池
   - id: 10019
-    name: "鞋坊外/警局外电话亭过场"
-    type: cutscene  # 🎬 过场，无玩家操作
+    name: "鞋坊外电话亭"
+    type: free_exploration  # 🔓 自由探索，玩家主动进入
     unlock_condition:
       - type: auto
-        param: "scene_10003_complete"
-    trigger_condition: "scene_10003_complete"
+        param: "scene_10001_complete AND scene_10002_complete"
     description: |
-      鞋坊外。Zack 站在街边，Emma 去附近公用电话亭拨了一通电话。
-      不到两分钟，Emma 回来，神情平静但眼神带着确认的意味。
+      鞋坊外街边的公用电话亭。Emma 拨了一通电话。
+      不到两分钟，Emma 挂断，神情平静但眼神带着确认的意味。
       她对 Zack 说："Foster 说，至少明天才有初步结果。现在连性别都没法确认。"
       停顿。"她补了一句——'你们警察局那边别乱说话。'"
       Emma 小声加了一句背景："我们以前认识。她现在受 Miller 集团资助，不太方便正式表态。"
-    testimony_unlocked:
-      - 1030001  # Foster（Emma 转）进入证词池
+
+    npcs:
+      emma_l1_phonebooth:
+        talk: emma_l1_phonebooth
+        is_liar: false
+        active_topics:
+          - "转述 Foster 答复：尸检最快明天，现在连性别都没法确认"
+          - "转述 Foster 提醒：警察局那边别乱说话"
+          - "一句带过：与 Foster 以前认识，Foster 现受 Miller 集团资助、不便正式表态（伏笔，不深入）"
+        withheld_topics:
+          - "Foster 与 Miller 集团的深层关系（L5+ 才展开）"
+          - "Emma 自己与 Miller 集团的关联（Unit11 才揭晓）"
+        testimony_ids:
+          - 1030001  # Foster（Emma 转）："尸检最快明天，连性别都未定"——L1 R3 击穿件
+          # 注：1030001 为 Foster 意见经 Emma 转述，证词 ID 挂 Emma 电话亭条目，来源注明 Foster（NPC04）
 
   # ── 场景 10004：警局-Morrison 办公区（指证场）──
   - id: 10004
@@ -378,7 +357,7 @@ scenes:
 
 expose:
   target: morrison
-  target_talk: morrison_expose_l1
+  target_talk: Loop1_morrison
   scene_id: 10004
   is_liar: true
   player_inquiry: null
@@ -439,6 +418,7 @@ expose:
       Morrison 沉默了几秒，最终收起了装腔作势的姿态，承认死者实为 Frank Kowalski。
 
   post_expose:
+    talk: morrison_l1_postexpose
     description: |
       Morrison 收起架子，语气变成疲惫的坦白：
       - 承认动机：EPI01 旧仇 + 省事结案——Frank 死了，意外火灾好结案，没人追问。

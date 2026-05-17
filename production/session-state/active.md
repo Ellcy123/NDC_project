@@ -1,60 +1,53 @@
 # Active Session
 
-Last updated: 2026-05-15 15:27:08
+Last updated: 2026-05-17 22:08:57
 
 ## Recently Modified Files
-CLAUDE.md
+.claude/agents/narrative-designer.md
+.claude/skills/team-dialogue/SKILL.md
+.claude/skills/unit-state-generator/SKILL.md
+preview_new2/data/Unit10/locations.yaml
+preview_new2/data/Unit10/loop1.yaml
+preview_new2/data/Unit10/loop2.yaml
+preview_new2/data/Unit10/loop3.yaml
+preview_new2/data/Unit10/loop4.yaml
+preview_new2/data/Unit10/loop5.yaml
+preview_new2/data/Unit10/loop6.yaml
 production/session-state/active.md
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/danny.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/leonard.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/lula.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/margaret.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/ohara.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/tony.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Characters/vinnie.md"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Unit10_\345\244\247\347\272\262.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/Unit10_\346\227\266\344\273\243\347\273\206\350\212\202\350\241\245\345\205\205.md"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/state/loop1_state.yaml"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/state/loop2_state.yaml"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/state/loop3_state.yaml"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/state/loop4_state.yaml"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/state/loop5_state.yaml"
 "\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/state/loop6_state.yaml"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/\345\234\272\346\231\257/04_\350\255\246\345\261\200Morrison\345\212\236\345\205\254\345\214\272.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/\345\234\272\346\231\257/06_\345\234\243\345\277\203\345\214\273\351\231\242Margaret\347\227\205\346\210\277.md"
-"\345\211\247\346\203\205\350\256\276\350\256\241/Unit10/\345\234\272\346\231\257/09_Margaret\351\236\213\345\235\212\345\234\260\344\270\213\345\256\244.md"
+"\345\211\247\346\203\205\350\256\276\350\256\241/Unit9/Characters/morrison.md"
+"\345\217\202\350\200\203\350\265\204\346\226\231/\345\257\271\347\231\275\350\257\255\350\250\200\351\243\216\346\240\274\350\265\204\346\226\231/1920s\347\276\216\345\233\275\344\277\232\350\257\255\344\270\216\351\273\221\350\257\235\345\244\247\345\205\250.md"
 
 ## Unstaged Changes
- CLAUDE.md                                          |   14 +
- production/session-state/active.md                 |   24 +-
- .../Unit10/Characters/danny.md"                    |    6 +-
- .../Unit10/Characters/leonard.md"                  |   16 +-
- .../Unit10/Characters/lula.md"                     |    4 +-
- .../Unit10/Characters/margaret.md"                 |    2 +-
- .../Unit10/Characters/ohara.md"                    |    4 +-
- .../Unit10/Characters/tony.md"                     |    6 +-
- .../Unit10/Characters/vinnie.md"                   |    8 +-
- .../Unit10/Unit10_\345\244\247\347\272\262.md"     |   40 +-
- ...273\206\350\212\202\350\241\245\345\205\205.md" |   14 +-
- .../Unit10/state/loop1_state.yaml"                 |   14 +-
- .../Unit10/state/loop2_state.yaml"                 |   45 +-
- .../Unit10/state/loop3_state.yaml"                 |  104 +-
- .../Unit10/state/loop4_state.yaml"                 |   20 +-
- .../Unit10/state/loop5_state.yaml"                 |   18 +-
- .../Unit10/state/loop6_state.yaml"                 |   67 +-
- ...orrison\345\212\236\345\205\254\345\214\272.md" |    2 +-
- ...351\231\242Margaret\347\227\205\346\210\277.md" |    2 +-
- ...235\212\345\234\260\344\270\213\345\256\244.md" |    4 +-
- ...241\214\350\264\265\345\256\276\345\256\244.md" |    4 +-
- ...241\214\346\241\243\346\241\210\345\256\244.md" |   12 +-
- ...224\277\345\216\205\346\263\225\351\231\242.md" |    4 +-
- .../16_Leonard\344\275\217\346\211\200.md"         |    6 +-
- ...254\276\350\256\241\347\256\227\345\231\250.md" |   73 +-
- ...225\212\346\211\276\346\210\222\346\214\207.md" |   18 +-
- ...203\233\345\217\260\346\211\276\350\214\254.md" |   14 +-
- ...217\231\344\272\213\347\255\226\345\210\222.md" |  550 ---------
- ...216\250\347\220\206\347\255\226\345\210\222.md" | 1166 --------------------
- ...263\273\347\273\237\347\255\226\345\210\222.md" |  515 ---------
- ...256\250\350\256\272\347\273\223\350\256\272.md" |  825 --------------
- ...231\251\347\202\271\346\270\205\345\215\225.md" |  125 ---
- 32 files changed, 250 insertions(+), 3476 deletions(-)
+ .claude/agents/narrative-designer.md               |   2 +-
+ .claude/skills/team-dialogue/SKILL.md              | 443 +++++++--------------
+ .claude/skills/unit-state-generator/SKILL.md       |   1 +
+ preview_new2/data/Unit10/locations.yaml            |   2 +-
+ preview_new2/data/Unit10/loop1.yaml                |   9 +-
+ preview_new2/data/Unit10/loop2.yaml                |   1 +
+ preview_new2/data/Unit10/loop3.yaml                |   2 +
+ preview_new2/data/Unit10/loop4.yaml                |   1 +
+ preview_new2/data/Unit10/loop5.yaml                |   1 +
+ preview_new2/data/Unit10/loop6.yaml                |   1 +
+ production/session-state/active.md                 |  60 +--
+ .../Unit10/Unit10_\345\244\247\347\272\262.md"     |   4 +-
+ .../Unit10/state/loop1_state.yaml"                 |  78 ++--
+ .../Unit10/state/loop2_state.yaml"                 |  92 +++--
+ .../Unit10/state/loop3_state.yaml"                 |  36 +-
+ .../Unit10/state/loop4_state.yaml"                 |  71 +---
+ .../Unit10/state/loop5_state.yaml"                 |  72 +---
+ .../Unit10/state/loop6_state.yaml"                 |  15 +-
+ .../Unit9/Characters/morrison.md"                  |   2 +-
+ ...273\221\350\257\235\345\244\247\345\205\250.md" |   2 +
+ ...257\255\345\237\237\345\210\207\346\215\242.md" |   2 +
+ ...210\253\344\270\216\350\257\255\350\250\200.md" |   2 +
+ ...257\255\350\250\200\347\211\271\345\276\201.md" |   2 +
+ ...257\255\350\250\200\347\211\271\345\276\201.md" |   2 +
+ ...257\255\350\250\200\345\267\256\345\274\202.md" |   2 +
+ 25 files changed, 321 insertions(+), 584 deletions(-)

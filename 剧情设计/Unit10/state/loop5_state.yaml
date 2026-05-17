@@ -122,6 +122,7 @@ player_context:
 
 opening:
   type: scripted_cutscene
+  talk: opening_l5_frankhome
   location: "Frank 家主屋开间（场景 10018）"
   scene_id: 10018
   description: |
@@ -149,60 +150,6 @@ opening:
         label: "继续当侦探——查清真相"
         result: main_path
         note: "进入主线，进入自由探索阶段"
-
-  npcs:
-    mickey_005:
-      talk: mickey_005_frank_house
-      is_liar: false
-      motive: "拿走举报材料以律师身份打官司；邀请 Zack 入伙（表面善意，真身 Whale 的伏笔——Unit10 不暴雷）"
-      mindset: "从容、笃定；对 Zack 表现出信任和拉拢；对小铁盒内容表现出'这正是我需要的'态度"
-
-      # ── 1. NPC 已知信息 ──
-      active_topics:
-        - "Frank 举报材料的法律价值——'这就是 Frank 准备的，让他的死不白费'"
-        - "邀请 Zack 做二辩律师——'你有调查经验，法庭上也用得上'"
-        - "对 Margaret 状态的关心（Margaret 仍在昏迷治疗）——'你母亲需要你'"
-        - "对 Vinnie、Leonard 等人的态度——'这些人会在法庭上受到应有的惩罚'"
-      withheld_topics:
-        - "Mickey 真身是 Whale——Unit10 内不暴雷"
-        - "Mickey 拿走举报材料的真实目的（销毁或控制证据）——Unit11+ 揭示"
-        - "Frank 被钝器打死的真实死因——Mickey 此时不知道（或假装不知道）"
-        - "Leonard 才是真凶——L6 揭示"
-
-      # ── 2. 玩家询问意图 ──
-      player_inquiry:
-        - '"你确定靠这些材料能打赢官司吗？" # 6'
-        - '"这些材料能证明 Frank 是怎么死的吗？" # 7'
-        - '"我现在更想查清 Frank 怎么死的" # 8'
-
-      # ── 3. 可提取证词 ──
-      testimony_ids:
-        # Mickey 本 Loop 无指证用证词；他的行为是剧情演出，不进 TestimonyItem
-
-    lula_002:
-      talk: lula_002_frank_house
-      is_liar: false
-      motive: "恳求查清 Frank 之死；在小铁盒打开的那一刻，她能感受到 Frank 为她和为正义拼尽了一切"
-      mindset: "悲痛中带着坚定；她不哭，但眼圈红了；她信任 Zack，也第一次面对 Frank 留给她的情书"
-
-      # ── 1. NPC 已知信息 ──
-      active_topics:
-        - "小铁盒里的情书（10503）——Frank 在里面告诉了她什么（内容由对话作者编写，不在 state 中展开）"
-        - "恳求 Zack 不要放弃——'他花了那么多时间收集这些，不是为了让它们被锁回去'"
-        - "对 Mickey 的感谢——'没有你们，我什么都做不了'"
-      withheld_topics:
-        - "Frank 的死亡细节（Lula 不知道真正死因，只知道有火）"
-        - "Leonard 是真凶（L6 揭示）"
-        - "Vinnie 是纵火者（L5 Expose 揭示，此时 Lula 不知道）"
-
-      # ── 2. 玩家询问意图 ──
-      player_inquiry:
-        - '"情书里 Frank 说了什么？" # 7'
-        - '"你知道 Frank 在小铁盒里放了什么吗？" # 8'
-
-      # ── 3. 可提取证词 ──
-      testimony_ids:
-        # Lula L5 开篇无新指证用证词
 
 # ─────────────────────────────
 # 律师坏结局序列（选律师时触发）
@@ -289,8 +236,8 @@ scenes:
     evidence: []  # 本场景无可拾取物证，证据从 Zack 背包出示
 
     npcs:
-      tony_002:
-        talk: tony_002_silver_moon_l5
+      tony_l5_casino:
+        talk: tony_l5_casino
         is_liar: false
         motive: "Vinnie 是他的常客，他对这段关系有点微妙——不完全帮衬，但也不主动出卖；打火机认出来是认出来了，他不会为 Vinnie 撒谎"
         mindset: "平静、职业感；擦吧台，听 Zack 说，短句回答；对 Vinnie 有一种'江湖习惯'的默契，但事到临头不会做伪证"
@@ -315,6 +262,17 @@ scenes:
             content: "这 V 字，Vinnie 的！每天在这用它点烟，上周还用它给姑娘点烟"
             note: "关键——L5 R1 击穿件；疑点 10501 condition"
 
+      vinnie_l5_casino:
+        talk: vinnie_l5_casino
+        is_liar: true  # L5 Expose 对象——辨认打火机后对其出示证据进入指证
+        player_inquiry: null  # Expose 对象，谎言/退守见 expose 段
+        active_topics:
+          - "Vinnie 在角落位置，对 Zack 的接近保持戒备（指证前的接触入口）"
+        withheld_topics:
+          - "纵火/杀 Frank 的真相（认罪在 expose 段，安排感演出——L6 反转）"
+        testimony_ids:
+          - 5080001  # ⚠谎言锚: "最近很久没去 Frank 那附近，至少两三个月了"（L5 R1 谎言锚，详见 expose.setup_dialogue）
+
 # ─────────────────────────────
 # 四、指证（Vinnie · 1 轮）
 # ─────────────────────────────
@@ -323,6 +281,7 @@ expose:
   scene_id: 10015
   target_npc: Vinnie
   npc_code: "08"
+  target_talk: Loop5_vinnie
   is_liar: true
   player_inquiry: null
   rational: "Vinnie 是 Frank 已死后才到场的从犯，有充分理由快速认罪止血；L6 会继续追问 Leonard 才是真凶"
@@ -382,6 +341,7 @@ expose:
 
 post_expose_scene:
   type: scripted_cutscene
+  talk: vinnie_l5_postexpose
   location: "Silver Moon 赌场外街道 → 附近公用电话亭"
   description: |
     Vinnie 坐上警车离去。

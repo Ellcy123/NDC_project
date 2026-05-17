@@ -1,0 +1,3879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>一致性审计报告 — Unit9</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="page-header">
+  <h1>一致性审计报告 — Unit9</h1>
+  <div class="summary"><span><span class="k">扫描时间:</span><span class="v">2026-04-26 12:40</span></span>
+  <span><span class="k">EPI:</span><span class="v">EPI09</span></span>
+  <span><span class="k">对话文件:</span><span class="v">0</span></span>
+  <span><span class="k">P0:</span><span class="v">41</span></span>
+  <span><span class="k">P1:</span><span class="v">3</span></span>
+  <span><span class="k">P2:</span><span class="v">55</span></span>
+  <span><span class="k">待定:</span><span class="v">34</span></span>
+  <span><span class="k">已驳回:</span><span class="v">7</span></span>
+  <span><span class="k">事实表:</span><span class="v">event_perspectives, events, items, characters, addressing</span></span></div>
+</header>
+
+<nav class="filters">
+  <label>严重度：
+    <select id="sev-filter">
+      <option value="">全部</option>
+      <option value="P0">P0 严重</option>
+      <option value="P1">P1 中度</option>
+      <option value="P2">P2 轻微</option>
+      <option value="needs_human">待定</option>
+    </select>
+  </label>
+  <label>维度：
+    <select id="dim-filter">
+      <option value="">全部</option>
+      <option value="A">A 人物档案</option>
+      <option value="B">B 称谓</option>
+      <option value="C">C 时间线</option>
+      <option value="D">D 物证</option>
+      <option value="E">E 年代用语</option>
+      <option value="F">F 声纹</option>
+      <option value="G">G 多视角</option>
+      <option value="X">X 对话兜底</option>
+    </select>
+  </label>
+  <label>Loop：
+    <select id="loop-filter">
+      <option value="">全部</option>
+      <option value="L1">Loop 1</option>
+      <option value="L2">Loop 2</option>
+      <option value="L3">Loop 3</option>
+      <option value="L4">Loop 4</option>
+      <option value="L5">Loop 5</option>
+      <option value="L6">Loop 6</option>
+    </select>
+  </label>
+  <label class="dismissed-toggle">
+    <input type="checkbox" id="show-dismissed"> 显示已驳回
+  </label>
+  <span class="counter" id="visible-count"></span>
+</nav>
+
+<main id="issue-list">
+<article class="issue" data-sev="P0" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902096</span>
+  </header>
+  <div class="type-line">类型: <span class="type">fact_inconsistency</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">将&#x27;Whale的恋人&#x27;改为&#x27;Webb的恋人&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902096&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;event_ref&quot;: &quot;E007_Webb经营勒索生意&quot;,
+  &quot;type&quot;: &quot;fact_inconsistency&quot;,
+  &quot;npc_a&quot;: &quot;Tommy&quot;,
+  &quot;npc_b&quot;: &quot;N/A&quot;,
+  &quot;detail&quot;: &quot;Tommy post_expose说&#x27;Vivian小��，是，Whale的恋人&#x27;，但Vivian是Webb的恋人而非Whale的；Vivian甚至不知道Whale是谁&quot;,
+  &quot;suggestion&quot;: &quot;将&#x27;Whale的恋人&#x27;改为&#x27;Webb的恋人&#x27;&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;factual contradiction confirmed against characters.json/events.json&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902094</span>
+  </header>
+  <div class="type-line">类型: <span class="type">withheld_leaked</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">删除&#x27;Moore&#x27;，改为&#x27;Tisra、Whale……还有别的大人物&#x27;或仅保留Tommy确实知道的名字</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902094&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;event_ref&quot;: &quot;E022_保险箱与南区计划录音&quot;,
+  &quot;type&quot;: &quot;withheld_leaked&quot;,
+  &quot;npc_a&quot;: &quot;Tommy&quot;,
+  &quot;npc_b&quot;: &quot;N/A&quot;,
+  &quot;detail&quot;: &quot;Tommy L2提及&#x27;Moore&#x27;——Moore银行注资仅在E022南区计划录音中出现(L6才揭示)，Tommy对E022标记为absent，不应知道Moore&quot;,
+  &quot;suggestion&quot;: &quot;删除&#x27;Moore&#x27;，改为&#x27;Tisra、Whale……还有别的大人物&#x27;或仅保留Tommy确实知道的名字&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;factual contradiction confirmed against characters.json/events.json&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004003</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">L5台词&#x27;二十年&#x27;与L2台词&#x27;五年&#x27;及档案&#x27;五年依附&#x27;直接矛盾，需统一为五年或调整档案</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004003&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;npc&quot;: &quot;Tommy&quot;,
+  &quot;field&quot;: &quot;history&quot;,
+  &quot;fact_value&quot;: &quot;档案记&#x27;五年依附&#x27;；L2 905002105 Tommy自述&#x27;我在这儿干了五年&#x27;&quot;,
+  &quot;dialog_value&quot;: &quot;我在这里守了二十年&quot;,
+  &quot;suggestion&quot;: &quot;L5台词&#x27;二十年&#x27;与L2台词&#x27;五年&#x27;及档案&#x27;五年依附&#x27;直接矛盾，需统一为五年或调整档案&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;factual contradiction confirmed against characters.json/events.json&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902096</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">疑似笔误——应为&#x27;Webb的恋人&#x27;而非&#x27;Whale的恋人&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902096&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;npc&quot;: &quot;Vivian&quot;,
+  &quot;field&quot;: &quot;relationships&quot;,
+  &quot;fact_value&quot;: &quot;Vivian与Webb关系为&#x27;深爱与深恨&#x27;；Vivian与Whale无任何关系记录&quot;,
+  &quot;dialog_value&quot;: &quot;Vivian小姐，是，Whale的恋人&quot;,
+  &quot;suggestion&quot;: &quot;疑似笔误——应为&#x27;Webb的恋人&#x27;而非&#x27;Whale的恋人&#x27;&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;factual contradiction confirmed against characters.json/events.json&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901013</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>莫里森侦探/扎克·布伦南</strong></div>
+  
+  
+  <div class="suggestion">将第二次出现的 903901013 改为其他未使用 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901013&quot;,
+  &quot;speaker&quot;: &quot;莫里森侦探/扎克·布伦南&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901013 出现两次：line 876 和 line 903，内容完全不同&quot;,
+  &quot;suggestion&quot;: &quot;将第二次出现的 903901013 改为其他未使用 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901014</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>莫里森侦探</strong></div>
+  
+  
+  <div class="suggestion">给第二次出现分配新 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901014&quot;,
+  &quot;speaker&quot;: &quot;莫里森侦探&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901014 出现两次：line 886 和 line 907，内容不同&quot;,
+  &quot;suggestion&quot;: &quot;给第二次出现分配新 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901022</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克/莫里森</strong></div>
+  
+  
+  <div class="suggestion">陷阱分支内 ID 需去重</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901022&quot;,
+  &quot;speaker&quot;: &quot;扎克/莫里森&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901022 出现两次：line 923 和 line 935，内容不同&quot;,
+  &quot;suggestion&quot;: &quot;陷阱分支内 ID 需去重&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901042</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克/莫里森</strong></div>
+  
+  
+  <div class="suggestion">陷阱分支 ID 需唯一值</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901042&quot;,
+  &quot;speaker&quot;: &quot;扎克/莫里森&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901042 出现两次：line 840 和 line 983，内容不同&quot;,
+  &quot;suggestion&quot;: &quot;陷阱分支 ID 需唯一值&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901071</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">post_expose 段落需逐一分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901071&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901071 出现 5 次（line 1069/1077/1081/1089/1107），分属不同角色&quot;,
+  &quot;suggestion&quot;: &quot;post_expose 段落需逐一分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901072</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901072&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901072 出现两次：line 1093 和 line 1102，内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901018</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克/罗莎</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901018&quot;,
+  &quot;speaker&quot;: &quot;扎克/罗莎&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;903901018 出现两次：line 890 和 line 1073，内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#901001028</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>艾玛</strong></div>
+  
+  
+  <div class="suggestion">morrison_001 中应改为 904001xxx 段 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901001028&quot;,
+  &quot;speaker&quot;: &quot;艾玛&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901001028 在 emma_001 段（line 195）和 morrison_001 分支A（line 678）跨文件冲突&quot;,
+  &quot;suggestion&quot;: &quot;morrison_001 中应改为 904001xxx 段 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#901002004</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">逐一分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901002004&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901002004 出现 3 次（line 51/59/63），不同说话人不同台词&quot;,
+  &quot;suggestion&quot;: &quot;逐一分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#901002057</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">拆分为唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901002057&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901002057 出现 4 次（line 224/232/236/244），分属 Emma 和 Zack&quot;,
+  &quot;suggestion&quot;: &quot;拆分为唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#901002059</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901002059&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901002059 出现两次（line 228 和 256），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902096</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>汤米</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902096&quot;,
+  &quot;speaker&quot;: &quot;汤米&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;905902096 出现两次（line 1083 和 1091），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#901003001</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>艾玛</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901003001&quot;,
+  &quot;speaker&quot;: &quot;艾玛&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901003001 出现两次（line 77 和 85），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#901003002</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901003002&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901003002 出现两次（line 81 和 90），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#901003020</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901003020&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901003020 出现两次（line 189 和 197），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#901003021</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>艾玛</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901003021&quot;,
+  &quot;speaker&quot;: &quot;艾玛&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901003021 出现两次（line 193 和 201），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md vs Loop3#907002001-013</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>詹姆斯</strong></div>
+  
+  
+  <div class="suggestion">Loop3 james interlude 应使用不同 conv_index</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md vs Loop3&quot;,
+  &quot;line_id&quot;: &quot;907002001-013&quot;,
+  &quot;speaker&quot;: &quot;詹姆斯&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;907002xxx 段在 Loop2 和 Loop3 跨 Loop 完全重叠&quot;,
+  &quot;suggestion&quot;: &quot;Loop3 james interlude 应使用不同 conv_index&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md vs Loop6#906002001-009</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>薇薇安</strong></div>
+  
+  
+  <div class="suggestion">Loop6 ending Vivian 段应使用不同 conv_index</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md vs Loop6&quot;,
+  &quot;line_id&quot;: &quot;906002001-009&quot;,
+  &quot;speaker&quot;: &quot;薇薇安&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;906002xxx 段在 Loop3 和 Loop6 跨 Loop 完全重叠&quot;,
+  &quot;suggestion&quot;: &quot;Loop6 ending Vivian 段应使用不同 conv_index&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#901004007</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901004007&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;901004007 出现两次（line 80 和 92），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904004003</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>莫里森/扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904004003&quot;,
+  &quot;speaker&quot;: &quot;莫里森/扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;904004003 出现两次（line 866 和 869），不同说话人&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904004005</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克/莫里森</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904004005&quot;,
+  &quot;speaker&quot;: &quot;扎克/莫里森&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;904004005 出现两次（line 883 和 887），不同说话人&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904004006</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904004006&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;904004006 出现两次（line 891 和 899），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904004007</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>莫里森</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904004007&quot;,
+  &quot;speaker&quot;: &quot;莫里森&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;904004007 出现两次（line 895 和 903），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906003103</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>薇薇安</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003103&quot;,
+  &quot;speaker&quot;: &quot;薇薇安&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;906003103 出现两次（line 462 和 470），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#905003205</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905003205&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;905003205 出现两次（line 295 和 303），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#905003206</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>汤米</strong></div>
+  
+  
+  <div class="suggestion">分配唯一 ID</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905003206&quot;,
+  &quot;speaker&quot;: &quot;汤米&quot;,
+  &quot;check_id&quot;: 1,
+  &quot;check_name&quot;: &quot;ID 唯一性&quot;,
+  &quot;detail&quot;: &quot;905003206 出现两次（line 299 和 307），内容不同&quot;,
+  &quot;suggestion&quot;: &quot;分配唯一 ID&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002312</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>汤米</strong></div>
+  
+  
+  <div class="suggestion">改为合适序列位置</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002312&quot;,
+  &quot;speaker&quot;: &quot;汤米&quot;,
+  &quot;check_id&quot;: 2,
+  &quot;check_name&quot;: &quot;ID 格式&quot;,
+  &quot;detail&quot;: &quot;905002312 打断 102-103 序列连续性，疑似编辑残留&quot;,
+  &quot;suggestion&quot;: &quot;改为合适序列位置&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901004_trap</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配 ID 并加 ### 标头</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901004_trap&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 3,
+  &quot;check_name&quot;: &quot;说话人标记&quot;,
+  &quot;detail&quot;: &quot;陷阱❷收尾台词无 ID 和 ### 标记&quot;,
+  &quot;suggestion&quot;: &quot;分配 ID 并加 ### 标头&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901030_trap</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配 ID 并加 ### 标头</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901030_trap&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 3,
+  &quot;check_name&quot;: &quot;说话人标记&quot;,
+  &quot;detail&quot;: &quot;陷阱❸收尾台词无 ID&quot;,
+  &quot;suggestion&quot;: &quot;分配 ID 并加 ### 标头&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901040_trap</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">分配 ID 并加 ### 标头</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901040_trap&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 3,
+  &quot;check_name&quot;: &quot;说话人标记&quot;,
+  &quot;detail&quot;: &quot;陷阱❹收尾台词无 ID&quot;,
+  &quot;suggestion&quot;: &quot;分配 ID 并加 ### 标头&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#901001006</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">如纯动作节点用注释处理</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901001006&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;只有舞台指示无台词文本&quot;,
+  &quot;suggestion&quot;: &quot;如纯动作节点用注释处理&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#901001029</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">同上</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901001029&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;只有舞台指示无台词文本&quot;,
+  &quot;suggestion&quot;: &quot;同上&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#906001402</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>N/A</strong></div>
+  
+  
+  <div class="suggestion">标注 speakType 或删除 ID 改注释</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906001402&quot;,
+  &quot;speaker&quot;: &quot;N/A&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;条件 get 节点无说话人无台词&quot;,
+  &quot;suggestion&quot;: &quot;标注 speakType 或删除 ID 改注释&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002004</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">改为注释或添加台词</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002004&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;只有舞台指示无台词&quot;,
+  &quot;suggestion&quot;: &quot;改为注释或添加台词&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904013</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>薇薇安</strong></div>
+  
+  
+  <div class="suggestion">确认 sync 工具对省略号处理</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904013&quot;,
+  &quot;speaker&quot;: &quot;薇薇安&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;台词仅为&#x27;……&#x27;&quot;,
+  &quot;suggestion&quot;: &quot;确认 sync 工具对省略号处理&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907003031</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>詹姆斯</strong></div>
+  
+  
+  <div class="suggestion">改为注释或添加台词</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907003031&quot;,
+  &quot;speaker&quot;: &quot;詹姆斯&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;只有舞台指示无台词&quot;,
+  &quot;suggestion&quot;: &quot;改为注释或添加台词&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P0" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P0">P0 严重</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907003032</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">同上</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P0&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907003032&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 4,
+  &quot;check_name&quot;: &quot;空台词&quot;,
+  &quot;detail&quot;: &quot;只有舞台指示无台词&quot;,
+  &quot;suggestion&quot;: &quot;同上&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: ID duplicates/structural issues are objectively verifiable&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="C" data-loop="L1">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">C 时间线</span>
+    <span class="badge loop">L1</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901062</span>
+  </header>
+  <div class="type-line">类型: <span class="type">time_mismatch</span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  
+  
+  <div class="suggestion">将 Morrison 台词中 &#x27;11:30&#x27; 改为 &#x27;23:30&#x27;，同一文件 summary table 行也需同步修改</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;C&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901062&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;loop&quot;: &quot;L1&quot;,
+  &quot;type&quot;: &quot;time_mismatch&quot;,
+  &quot;expected&quot;: &quot;23:30&quot;,
+  &quot;actual&quot;: &quot;11:30&quot;,
+  &quot;event_ref&quot;: &quot;E005_假枪声与误导指认&quot;,
+  &quot;suggestion&quot;: &quot;将 Morrison 台词中 &#x27;11:30&#x27; 改为 &#x27;23:30&#x27;，同一文件 summary table 行也需同步修改&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;mechanical: time notation mismatch&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901052</span>
+  </header>
+  <div class="type-line">类型: <span class="type">fact_inconsistency</span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  
+  
+  <div class="suggestion">需确认Morrison案发当晚23:30的确切位置：如果常客在场则合理，如果从外面被叫来则需改台词</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901052&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;event_ref&quot;: &quot;E001_Webb被枪杀&quot;,
+  &quot;type&quot;: &quot;fact_inconsistency&quot;,
+  &quot;npc_a&quot;: &quot;Morrison&quot;,
+  &quot;npc_b&quot;: &quot;N/A&quot;,
+  &quot;detail&quot;: &quot;Morrison L1说&#x27;当晚我在吧台&#x27;，但event_perspectives E005标注Morrison presence=&#x27;事后听说&#x27;——如果他不在酒吧内就不能说&#x27;在吧台&#x27;&quot;,
+  &quot;suggestion&quot;: &quot;需确认Morrison案发当晚23:30的确切位置：如果常客在场则合理，如果从外面被叫来则需改台词&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;Morrison 23:00-23:30不在酒吧，&#x27;当晚我在吧台&#x27;与事实矛盾&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002003</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">Tommy称Morrison为&#x27;警长&#x27;，档案职位为&#x27;侦探&#x27;；需统一职称</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002003&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;npc&quot;: &quot;Morrison&quot;,
+  &quot;field&quot;: &quot;occupation&quot;,
+  &quot;fact_value&quot;: &quot;艾斯弗德警察局侦探，本案负责人&quot;,
+  &quot;dialog_value&quot;: &quot;Morrison 警长&quot;,
+  &quot;suggestion&quot;: &quot;Tommy称Morrison为&#x27;警长&#x27;，档案职位为&#x27;侦探&#x27;；需统一职称&quot;,
+  &quot;verdict&quot;: &quot;confirmed&quot;,
+  &quot;verify_reason&quot;: &quot;Tommy称&#x27;警长&#x27;与档案&#x27;侦探&#x27;是不同警衔，构成真矛盾&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="C" data-loop="L2">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">C 时间线</span>
+    <span class="badge loop">L2</span>
+    <span class="file">剧情设计/Unit9/state/loop2_state.yaml#line 32</span>
+  </header>
+  <div class="type-line">类型: <span class="type">time_mismatch</span></div>
+  <div class="speaker"><strong>N/A</strong></div>
+  
+  
+  <div class="suggestion">注释中 &#x27;Vivian 11:05 敲门细节&#x27; 改为 &#x27;23:05&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;C&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;剧情设计/Unit9/state/loop2_state.yaml&quot;,
+  &quot;line_id&quot;: &quot;line 32&quot;,
+  &quot;speaker&quot;: &quot;N/A&quot;,
+  &quot;loop&quot;: &quot;L2&quot;,
+  &quot;type&quot;: &quot;time_mismatch&quot;,
+  &quot;expected&quot;: &quot;23:05&quot;,
+  &quot;actual&quot;: &quot;11:05&quot;,
+  &quot;event_ref&quot;: &quot;E002_James模仿Webb吼退Vivian&quot;,
+  &quot;suggestion&quot;: &quot;注释中 &#x27;Vivian 11:05 敲门细节&#x27; 改为 &#x27;23:05&#x27;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="C" data-loop="L4">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">C 时间线</span>
+    <span class="badge loop">L4</span>
+    <span class="file">剧情设计/Unit9/state/loop4_state.yaml#lines 10,41,309,332</span>
+  </header>
+  <div class="type-line">类型: <span class="type">time_mismatch</span></div>
+  <div class="speaker"><strong>N/A</strong></div>
+  
+  
+  <div class="suggestion">State 文件中 &#x27;11:05&#x27; 统一改为 &#x27;23:05&#x27;，尤其 line 309 active_topics 描述可能被对话写手误用</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;C&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;剧情设计/Unit9/state/loop4_state.yaml&quot;,
+  &quot;line_id&quot;: &quot;lines 10,41,309,332&quot;,
+  &quot;speaker&quot;: &quot;N/A&quot;,
+  &quot;loop&quot;: &quot;L4&quot;,
+  &quot;type&quot;: &quot;time_mismatch&quot;,
+  &quot;expected&quot;: &quot;23:05&quot;,
+  &quot;actual&quot;: &quot;11:05&quot;,
+  &quot;event_ref&quot;: &quot;E002_James模仿Webb吼退Vivian&quot;,
+  &quot;suggestion&quot;: &quot;State 文件中 &#x27;11:05&#x27; 统一改为 &#x27;23:05&#x27;，尤其 line 309 active_topics 描述可能被对话写手误用&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="C" data-loop="L4">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">C 时间线</span>
+    <span class="badge loop">L4</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#line 415</span>
+  </header>
+  <div class="type-line">类型: <span class="type">time_mismatch</span></div>
+  <div class="speaker"><strong>N/A</strong></div>
+  
+  
+  <div class="suggestion">草稿 header 中 &#x27;11:05 被吼退&#x27; 改为 &#x27;23:05&#x27;；注意实际台词 &#x27;十一点过五分&#x27; 作为口语可接受</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;C&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;line 415&quot;,
+  &quot;speaker&quot;: &quot;N/A&quot;,
+  &quot;loop&quot;: &quot;L4&quot;,
+  &quot;type&quot;: &quot;time_mismatch&quot;,
+  &quot;expected&quot;: &quot;23:05&quot;,
+  &quot;actual&quot;: &quot;11:05&quot;,
+  &quot;event_ref&quot;: &quot;E002_James模仿Webb吼退Vivian&quot;,
+  &quot;suggestion&quot;: &quot;草稿 header 中 &#x27;11:05 被吼退&#x27; 改为 &#x27;23:05&#x27;；注意实际台词 &#x27;十一点过五分&#x27; 作为口语可接受&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="C" data-loop="L6">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">C 时间线</span>
+    <span class="badge loop">L6</span>
+    <span class="file">剧情设计/Unit9/state/loop6_state.yaml#line 858</span>
+  </header>
+  <div class="type-line">类型: <span class="type">time_mismatch</span></div>
+  <div class="speaker"><strong>N/A</strong></div>
+  
+  
+  <div class="suggestion">注释中 &#x27;11:20 倒垃圾&#x27; 改为 &#x27;23:20 倒垃圾&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;C&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;剧情设计/Unit9/state/loop6_state.yaml&quot;,
+  &quot;line_id&quot;: &quot;line 858&quot;,
+  &quot;speaker&quot;: &quot;N/A&quot;,
+  &quot;loop&quot;: &quot;L6&quot;,
+  &quot;type&quot;: &quot;time_mismatch&quot;,
+  &quot;expected&quot;: &quot;23:20&quot;,
+  &quot;actual&quot;: &quot;11:20&quot;,
+  &quot;event_ref&quot;: &quot;E004_Rosa倒垃圾压碎片&quot;,
+  &quot;suggestion&quot;: &quot;注释中 &#x27;11:20 倒垃圾&#x27; 改为 &#x27;23:20 倒垃圾&#x27;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904106</span>
+  </header>
+  <div class="type-line">类型: <span class="type">stance_mismatch</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  
+  
+  <div class="suggestion">PASS（设计意图明确）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904106&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;event_ref&quot;: &quot;E002_James模仿Webb吼退Vivian&quot;,
+  &quot;type&quot;: &quot;stance_mismatch&quot;,
+  &quot;npc_a&quot;: &quot;Vivian&quot;,
+  &quot;npc_b&quot;: &quot;James&quot;,
+  &quot;detail&quot;: &quot;Vivian L4 post_expose引用完整英文&#x27;Don&#x27;t be bothering me!&#x27;与James L5脱口同句——措辞一致是设计核心线索，PASS&quot;,
+  &quot;suggestion&quot;: &quot;PASS（设计意图明确）&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#907002008</span>
+  </header>
+  <div class="type-line">类型: <span class="type">fact_inconsistency</span></div>
+  <div class="speaker"><strong>James</strong></div>
+  
+  
+  <div class="suggestion">PASS（设计性对比）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907002008&quot;,
+  &quot;speaker&quot;: &quot;James&quot;,
+  &quot;event_ref&quot;: &quot;E010_James销毁节目单&quot;,
+  &quot;type&quot;: &quot;fact_inconsistency&quot;,
+  &quot;npc_a&quot;: &quot;James&quot;,
+  &quot;npc_b&quot;: &quot;Tommy&quot;,
+  &quot;detail&quot;: &quot;James L3声称节目单&#x27;印错了不能用&#x27;(deceptive)；Tommy L5主动交出完整备份(truthful)——立场差异完全覆盖叙述矛盾，PASS&quot;,
+  &quot;suggestion&quot;: &quot;PASS（设计性对比）&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#903903_postexpose</span>
+  </header>
+  <div class="type-line">类型: <span class="type">fact_inconsistency</span></div>
+  <div class="speaker"><strong>Rosa</strong></div>
+  
+  
+  <div class="suggestion">PASS（单方叙述，无跨NPC问题）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903903_postexpose&quot;,
+  &quot;speaker&quot;: &quot;Rosa&quot;,
+  &quot;event_ref&quot;: &quot;E009_James威胁Rosa作伪证&quot;,
+  &quot;type&quot;: &quot;fact_inconsistency&quot;,
+  &quot;npc_a&quot;: &quot;Rosa&quot;,
+  &quot;npc_b&quot;: &quot;James&quot;,
+  &quot;detail&quot;: &quot;Rosa L3 post_expose复述纸条内容与events.json原文高度一致——合理（如实复述），PASS&quot;,
+  &quot;suggestion&quot;: &quot;PASS（单方叙述，无跨NPC问题）&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="D" data-loop="?">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">D 物证</span>
+    <span class="badge loop">?</span>
+    <span class="file">N/A#N/A</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>N/A</strong></div>
+  
+  
+  <div class="suggestion">Re-run D-items audit if needed</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;D&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;N/A&quot;,
+  &quot;line_id&quot;: &quot;N/A&quot;,
+  &quot;speaker&quot;: &quot;N/A&quot;,
+  &quot;item_id&quot;: &quot;N/A&quot;,
+  &quot;field&quot;: &quot;_meta&quot;,
+  &quot;expected&quot;: &quot;agent completed but output not captured&quot;,
+  &quot;actual&quot;: &quot;consistency-checker agent ran successfully but JSONL was not written to disk due to tool limitations&quot;,
+  &quot;suggestion&quot;: &quot;Re-run D-items audit if needed&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="?">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">?</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#emma段引用</span>
+  </header>
+  <div class="type-line">类型: <span class="type">other_character_bleed</span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  <div class="claim">绞肉机</div>
+  
+  <div class="suggestion">给两个角色分配不同的比喻</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;emma段引用&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;text&quot;: &quot;绞肉机&quot;,
+  &quot;type&quot;: &quot;other_character_bleed&quot;,
+  &quot;detail&quot;: &quot;&#x27;绞肉机&#x27;比喻在 Emma 和 Morrison 台词中同时出现，跨角色用词重复&quot;,
+  &quot;suggestion&quot;: &quot;给两个角色分配不同的比喻&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/EPI09/Expose/Loop1_rosa.json#903901021</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Rosa</strong></div>
+  <div class="claim">那正是她的枪，先生。她手里拿着凶器，站在死者边上——这正好支持了我说的。</div>
+  
+  <div class="suggestion">改为直觉式重复</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/EPI09/Expose/Loop1_rosa.json&quot;,
+  &quot;line_id&quot;: &quot;903901021&quot;,
+  &quot;speaker&quot;: &quot;Rosa&quot;,
+  &quot;text&quot;: &quot;那正是她的枪，先生。她手里拿着凶器，站在死者边上——这正好支持了我说的。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;这正好支持了我说的&#x27;是律师closing statement式修辞，超出Rosa教育水平&quot;,
+  &quot;suggestion&quot;: &quot;改为直觉式重复&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#903903068</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Rosa</strong></div>
+  <div class="claim">是有人专门设计了这件事。不是我自己想陷害她。</div>
+  
+  <div class="suggestion">改为具体表述如&#x27;是有人……逼我这么做的&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903903068&quot;,
+  &quot;speaker&quot;: &quot;Rosa&quot;,
+  &quot;text&quot;: &quot;是有人专门设计了这件事。不是我自己想陷害她。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;专门设计&#x27;是高度抽象的策划类用语，崩溃状态不会用&quot;,
+  &quot;suggestion&quot;: &quot;改为具体表述如&#x27;是有人……逼我这么做的&#x27;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#903904004b</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Rosa</strong></div>
+  <div class="claim">但我也不知道该给谁。给警察……我已经在他们面前说过谎了。给别人……我不认识别人。</div>
+  
+  <div class="suggestion">打散结构</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903904004b&quot;,
+  &quot;speaker&quot;: &quot;Rosa&quot;,
+  &quot;text&quot;: &quot;但我也不知道该给谁。给警察……我已经在他们面前说过谎了。给别人……我不认识别人。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;给X…原因。给Y…原因&#x27;对称排比是AI生成典型骨架，与Rosa散乱无助感冲突&quot;,
+  &quot;suggestion&quot;: &quot;打散结构&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004036</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_register</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">现在它在你手里，比在我这里有用。至于那份员工地址簿……</div>
+  
+  <div class="suggestion">拆成两个动作，Tommy 只说&#x27;上面有地址。&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004036&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;现在它在你手里，比在我这里有用。至于那份员工地址簿……&quot;,
+  &quot;type&quot;: &quot;modern_register&quot;,
+  &quot;detail&quot;: &quot;&#x27;至于&#x27;是现代书面过渡词，AI 式&#x27;顺便补充说明&#x27;结构&quot;,
+  &quot;suggestion&quot;: &quot;拆成两个动作，Tommy 只说&#x27;上面有地址。&#x27;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002103</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_register</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">实际上，排班、库存、调度……</div>
+  
+  <div class="suggestion">去掉&#x27;实际上&#x27;直接起句</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002103&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;实际上，排班、库存、调度……&quot;,
+  &quot;type&quot;: &quot;modern_register&quot;,
+  &quot;detail&quot;: &quot;&#x27;实际上&#x27;是 AI 生成文本最常见的逻辑连接词&quot;,
+  &quot;suggestion&quot;: &quot;去掉&#x27;实际上&#x27;直接起句&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004036A</span>
+  </header>
+  <div class="type-line">类型: <span class="type">era_anachronism</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">仔细想清楚你们收集到的线索，去找那个最可疑的凶手吧。</div>
+  
+  <div class="suggestion">如保留改用行业语言：&#x27;你该去找的人，不在这屋里。&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004036A&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;仔细想清楚你们收集到的线索，去找那个最可疑的凶手吧。&quot;,
+  &quot;type&quot;: &quot;era_anachronism&quot;,
+  &quot;detail&quot;: &quot;&#x27;线索&#x27;和&#x27;凶手&#x27;在1920s美国俚语环境下不自然&quot;,
+  &quot;suggestion&quot;: &quot;如保留改用行业语言：&#x27;你该去找的人，不在这屋里。&#x27;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906003308</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">监狱比舞台更恐怖，但它也更安全。</div>
+  
+  <div class="suggestion">改为具体感受</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003308&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;监狱比舞台更恐怖，但它也更安全。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;抽象哲学格言，Vivian 更倾向具象表达而非整齐的悖论&quot;,
+  &quot;suggestion&quot;: &quot;改为具体感受&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#906002004</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">我在这里唱了三年，却从来没睁开眼睛看过这座酒吧底下的人是怎么活的。</div>
+  
+  <div class="suggestion">更简短直接的自我认知</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906002004&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;我在这里唱了三年，却从来没睁开眼睛看过这座酒吧底下的人是怎么活的。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;没睁开眼睛看过&#x27;是现代自省套话；&#x27;怎么活的&#x27;过于冗长&quot;,
+  &quot;suggestion&quot;: &quot;更简短直接的自我认知&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906003302</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">等你察觉到不对劲的时候，已经找不到词语来反驳他了。我早就习惯了。</div>
+  
+  <div class="suggestion">用行为展示而非解释</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003302&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;等你察觉到不对劲的时候，已经找不到词语来反驳他了。我早就习惯了。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;过于自我分析，Vivian 不会这样 meta 叙述自己的应对机制&quot;,
+  &quot;suggestion&quot;: &quot;用行为展示而非解释&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#901002051</span>
+  </header>
+  <div class="type-line">类型: <span class="type">tech_anachronism</span></div>
+  <div class="speaker"><strong>艾玛·奥马利</strong></div>
+  <div class="claim">35mm的便携相机？怎么会出现在这？</div>
+  
+  <div class="suggestion">1925年存在便携式相机（如Kodak Vest Pocket），但&quot;35mm便携相机&quot;的说法具有现代摄影爱好者语感。建议改为：&quot;这台小相机——怎么会藏在这里？&quot;或保留型号感但换成当时真实存在的表述。</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901002051&quot;,
+  &quot;speaker&quot;: &quot;艾玛·奥马利&quot;,
+  &quot;text&quot;: &quot;35mm的便携相机？怎么会出现在这？&quot;,
+  &quot;type&quot;: &quot;tech_anachronism&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;1925年存在便携式相机（如Kodak Vest Pocket），但\&quot;35mm便携相机\&quot;的说法具有现代摄影爱好者语感。建议改为：\&quot;这台小相机——怎么会藏在这里？\&quot;或保留型号感但换成当时真实存在的表述。&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902033</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>汤米·康纳利</strong></div>
+  <div class="claim">先生，客人们出手阔绰……有些打赏也是有的……</div>
+  
+  <div class="suggestion">&quot;出手阔绰&quot;是现代中文惯用语，1920s翻译腔应更直白。建议：&quot;先生，有些客人……给的小费也是有的……&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902033&quot;,
+  &quot;speaker&quot;: &quot;汤米·康纳利&quot;,
+  &quot;text&quot;: &quot;先生，客人们出手阔绰……有些打赏也是有的……&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;出手阔绰\&quot;是现代中文惯用语，1920s翻译腔应更直白。建议：\&quot;先生，有些客人……给的小费也是有的……\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902035</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>汤米·康纳利</strong></div>
+  <div class="claim">不，您别这么作践她！Vivian小姐不是那种人！</div>
+  
+  <div class="suggestion">&quot;作践&quot;在1925年的中文语境中可接受，但Zack/Tommy对话基调为英语翻译腔，&quot;作践&quot;带有旧白话味道不协调。可改为：&quot;别这样说她，Vivian小姐不是那种人！&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902035&quot;,
+  &quot;speaker&quot;: &quot;汤米·康纳利&quot;,
+  &quot;text&quot;: &quot;不，您别这么作践她！Vivian小姐不是那种人！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;作践\&quot;在1925年的中文语境中可接受，但Zack/Tommy对话基调为英语翻译腔，\&quot;作践\&quot;带有旧白话味道不协调。可改为：\&quot;别这样说她，Vivian小姐不是那种人！\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902072</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">现在，古董这套说辞也编不下去了。账本里那一万一，到底是什么腌臜钱？</div>
+  
+  <div class="suggestion">&quot;腌臜钱&quot;是方言/口语，不符合Zack的冷调英语翻译腔。可改为：&quot;现在，古董这套说辞也站不住脚了。账本里那一万一，到底是从哪里来的？&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902072&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;现在，古董这套说辞也编不下去了。账本里那一万一，到底是什么腌臜钱？&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;腌臜钱\&quot;是方言/口语，不符合Zack的冷调英语翻译腔。可改为：\&quot;现在，古董这套说辞也站不住脚了。账本里那一万一，到底是从哪里来的？\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902094</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>汤米·康纳利</strong></div>
+  <div class="claim">Tisra、Whale、Moore……我想，Webb 八成是碰了不该碰的人。</div>
+  
+  <div class="suggestion">&quot;八成&quot;是现代口语比例用法，偏现代白话。建议改为：&quot;大概是，Webb惹上了不该惹的人。&quot;或&quot;依我看，Webb撞上了他惹不起的人。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902094&quot;,
+  &quot;speaker&quot;: &quot;汤米·康纳利&quot;,
+  &quot;text&quot;: &quot;Tisra、Whale、Moore……我想，Webb 八成是碰了不该碰的人。&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;八成\&quot;是现代口语比例用法，偏现代白话。建议改为：\&quot;大概是，Webb惹上了不该惹的人。\&quot;或\&quot;依我看，Webb撞上了他惹不起的人。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906003108b</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>薇薇安·罗斯</strong></div>
+  <div class="claim">所以我决定，等送酒的时候，等十一点半，我回去再次杀了他。</div>
+  
+  <div class="suggestion">&quot;再次杀了他&quot;的&quot;再次&quot;用法在此语境中逻辑奇怪（她第一次去23:05没杀成，不存在&quot;再次&quot;），且句式带有现代叙事的直白感，与Vivian冷锐的角色声音不符。建议改为：&quot;所以我等到十一点半，等送酒的时候，回去把这件事做完。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003108b&quot;,
+  &quot;speaker&quot;: &quot;薇薇安·罗斯&quot;,
+  &quot;text&quot;: &quot;所以我决定，等送酒的时候，等十一点半，我回去再次杀了他。&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;再次杀了他\&quot;的\&quot;再次\&quot;用法在此语境中逻辑奇怪（她第一次去23:05没杀成，不存在\&quot;再次\&quot;），且句式带有现代叙事的直白感，与Vivian冷锐的角色声音不符。建议改为：\&quot;所以我等到十一点半，等送酒的时候，回去把这件事做完。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#905003335</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>汤米·康纳利</strong></div>
+  <div class="claim">这片儿能干这种活的，多半都是……身份不大干净的人。Webb先生有渠道，能把芝加哥的合法身份递到他们手上。</div>
+  
+  <div class="suggestion">&quot;这片儿&quot;是北京口语，不符合Tommy的受过教育的账房腔调（英语翻译体）。建议：&quot;这一带能接这种活的，大多是……身份不清白的人。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905003335&quot;,
+  &quot;speaker&quot;: &quot;汤米·康纳利&quot;,
+  &quot;text&quot;: &quot;这片儿能干这种活的，多半都是……身份不大干净的人。Webb先生有渠道，能把芝加哥的合法身份递到他们手上。&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;这片儿\&quot;是北京口语，不符合Tommy的受过教育的账房腔调（英语翻译体）。建议：\&quot;这一带能接这种活的，大多是……身份不清白的人。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906003302</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>薇薇安·罗斯</strong></div>
+  <div class="claim">等你察觉到不对劲的时候，已经找不到词语来反驳他了。我早就习惯了。</div>
+  
+  <div class="suggestion">&quot;找不到词语来反驳他&quot;有现代辩论语感。建议改为：&quot;等你察觉到不对劲，已经没有退路了。我早就习惯了。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003302&quot;,
+  &quot;speaker&quot;: &quot;薇薇安·罗斯&quot;,
+  &quot;text&quot;: &quot;等你察觉到不对劲的时候，已经找不到词语来反驳他了。我早就习惯了。&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;找不到词语来反驳他\&quot;有现代辩论语感。建议改为：\&quot;等你察觉到不对劲，已经没有退路了。我早就习惯了。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#901005003</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">彻底出局。一败涂地。</div>
+  
+  <div class="suggestion">&quot;彻底出局&quot;带有现代商业/竞技语言色彩（&quot;出局&quot;在1925年的中文对话里不常见）。建议：&quot;彻底完了。一塌糊涂。&quot;或保留&quot;一败涂地&quot;，删去&quot;出局&quot;：&quot;就这样？一败涂地。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901005003&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;彻底出局。一败涂地。&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;彻底出局\&quot;带有现代商业/竞技语言色彩（\&quot;出局\&quot;在1925年的中文对话里不常见）。建议：\&quot;彻底完了。一塌糊涂。\&quot;或保留\&quot;一败涂地\&quot;，删去\&quot;出局\&quot;：\&quot;就这样？一败涂地。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004030D</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>艾玛·奥马利</strong></div>
+  <div class="claim">等一下。你去哪？案子刚查到关键，你这借口找得太拙劣了。你是不是怕我们接下来查到你头上，想畏罪潜逃？</div>
+  
+  <div class="suggestion">&quot;畏罪潜逃&quot;是现代法律用语（中文），在1920s英语翻译腔对白中显得程式化。建议：&quot;你这借口太差了。是不是怕我们查到你，想趁机溜掉？&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004030D&quot;,
+  &quot;speaker&quot;: &quot;艾玛·奥马利&quot;,
+  &quot;text&quot;: &quot;等一下。你去哪？案子刚查到关键，你这借口找得太拙劣了。你是不是怕我们接下来查到你头上，想畏罪潜逃？&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;畏罪潜逃\&quot;是现代法律用语（中文），在1920s英语翻译腔对白中显得程式化。建议：\&quot;你这借口太差了。是不是怕我们查到你，想趁机溜掉？\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907005036</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">&quot;Don&#x27;t be bothering me!&quot; 这种典型的爱尔兰倒装句法，土生土长的美国人 Webb，一辈子也说不出来！</div>
+  
+  <div class="suggestion">&quot;土生土长&quot;是现代中文惯用语搭配，带有现代新闻/纪录片解说腔。建议改为：&quot;Don&#x27;t be bothering me！这是爱尔兰人才说的话，Webb 是地道的美国人，他一辈子也想不出这种句子！&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907005036&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;\&quot;Don&#x27;t be bothering me!\&quot; 这种典型的爱尔兰倒装句法，土生土长的美国人 Webb，一辈子也说不出来！&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;土生土长\&quot;是现代中文惯用语搭配，带有现代新闻/纪录片解说腔。建议改为：\&quot;Don&#x27;t be bothering me！这是爱尔兰人才说的话，Webb 是地道的美国人，他一辈子也想不出这种句子！\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906022b</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>莫里森</strong></div>
+  <div class="claim">操……Brennan！你他妈敢去我家翻东西？！</div>
+  
+  <div class="suggestion">&quot;他妈&quot;是现代汉语粗口，在1920s英语翻译腔对白里出戏。1920s芝加哥警察粗话的翻译感应是&quot;damn&quot;等。建议：&quot;见鬼……Brennan，你竟敢去我家翻东西？！&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906022b&quot;,
+  &quot;speaker&quot;: &quot;莫里森&quot;,
+  &quot;text&quot;: &quot;操……Brennan！你他妈敢去我家翻东西？！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;他妈\&quot;是现代汉语粗口，在1920s英语翻译腔对白里出戏。1920s芝加哥警察粗话的翻译感应是\&quot;damn\&quot;等。建议：\&quot;见鬼……Brennan，你竟敢去我家翻东西？！\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906075b</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>莫里森</strong></div>
+  <div class="claim">操。五千块钱……就为了五千块钱的赌债，我他妈把自己卷进这种烂事里。</div>
+  
+  <div class="suggestion">同上，&quot;他妈&quot;出戏。建议：&quot;见鬼。五千块钱……就为了五千块钱的赌债，我把自己卷进了这种烂事里。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906075b&quot;,
+  &quot;speaker&quot;: &quot;莫里森&quot;,
+  &quot;text&quot;: &quot;操。五千块钱……就为了五千块钱的赌债，我他妈把自己卷进这种烂事里。&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;同上，\&quot;他妈\&quot;出戏。建议：\&quot;见鬼。五千块钱……就为了五千块钱的赌债，我把自己卷进了这种烂事里。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906077</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>莫里森</strong></div>
+  <div class="claim">释放令我会签的。但这事没完，Brennan。这摊浑水比你想象的深得多。你以为你掀翻的是我？</div>
+  
+  <div class="suggestion">&quot;掀翻&quot;在此比喻义是现代中文俚语化表达。建议：&quot;你以为你扳倒的是我？&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906077&quot;,
+  &quot;speaker&quot;: &quot;莫里森&quot;,
+  &quot;text&quot;: &quot;释放令我会签的。但这事没完，Brennan。这摊浑水比你想象的深得多。你以为你掀翻的是我？&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;掀翻\&quot;在此比喻义是现代中文俚语化表达。建议：\&quot;你以为你扳倒的是我？\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906078</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>莫里森</strong></div>
+  <div class="claim">你这他妈是自己往 Whale 的绞肉机里跳。咱们走着瞧，看你能活到哪一天。</div>
+  
+  <div class="suggestion">&quot;他妈&quot;同前。&quot;绞肉机&quot;比喻可接受，但整体口气过于现代匪帮腔。建议：&quot;你是自己往 Whale 那边撞。走着瞧，Brennan。看你能撑到哪一天。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906078&quot;,
+  &quot;speaker&quot;: &quot;莫里森&quot;,
+  &quot;text&quot;: &quot;你这他妈是自己往 Whale 的绞肉机里跳。咱们走着瞧，看你能活到哪一天。&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;他妈\&quot;同前。\&quot;绞肉机\&quot;比喻可接受，但整体口气过于现代匪帮腔。建议：\&quot;你是自己往 Whale 那边撞。走着瞧，Brennan。看你能撑到哪一天。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#901007021</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>艾玛·奥马利</strong></div>
+  <div class="claim">像他这种老油条，就算把刀架在脖子上，也不一定第一轮就会崩溃——但只要我们能带着那些证据走进那扇门，主动权就在我们手里。</div>
+  
+  <div class="suggestion">&quot;老油条&quot;是现代中文口语（强调世故圆滑的人），在1920s英语翻译腔中出戏。建议：&quot;像他这种老狐狸，就算把证据摆在眼前，第一回合也未必会松口——但只要我们带着那些东西走进那扇门，主动权就在我们手里。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901007021&quot;,
+  &quot;speaker&quot;: &quot;艾玛·奥马利&quot;,
+  &quot;text&quot;: &quot;像他这种老油条，就算把刀架在脖子上，也不一定第一轮就会崩溃——但只要我们能带着那些证据走进那扇门，主动权就在我们手里。&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;老油条\&quot;是现代中文口语（强调世故圆滑的人），在1920s英语翻译腔中出戏。建议：\&quot;像他这种老狐狸，就算把证据摆在眼前，第一回合也未必会松口——但只要我们带着那些东西走进那扇门，主动权就在我们手里。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905041</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">冷眼看着他像小丑般的挣扎</div>
+  
+  <div class="suggestion">&quot;像小丑般的挣扎&quot;是现代中文讽刺语言（&quot;小丑&quot;的贬义用法在中文语境中是2010s以后网络语言）。建议改舞台指示：&quot;冷眼看着他语无伦次地挣扎&quot;或&quot;冷冷地盯着他&quot;。</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905041&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;冷眼看着他像小丑般的挣扎&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;像小丑般的挣扎\&quot;是现代中文讽刺语言（\&quot;小丑\&quot;的贬义用法在中文语境中是2010s以后网络语言）。建议改舞台指示：\&quot;冷眼看着他语无伦次地挣扎\&quot;或\&quot;冷冷地盯着他\&quot;。&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#901004004</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">Morrison 也许懒得对 Rosa 怎么样。可一旦她做伪证的事落到警局手里，上了法庭，大陪审团会怎么看她？你是记者，你会不清楚？</div>
+  
+  <div class="suggestion">&quot;大陪审团&quot;（grand jury）在1920s美国确实存在，但表达方式&quot;大陪审团会怎么看她&quot;在中文翻译腔中有些生硬。可简化：&quot;可一旦她伪证的事摆上法庭，法官怎么判她？你当记者的，还不清楚？&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901004004&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;Morrison 也许懒得对 Rosa 怎么样。可一旦她做伪证的事落到警局手里，上了法庭，大陪审团会怎么看她？你是记者，你会不清楚？&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;大陪审团\&quot;（grand jury）在1920s美国确实存在，但表达方式\&quot;大陪审团会怎么看她\&quot;在中文翻译腔中有些生硬。可简化：\&quot;可一旦她伪证的事摆上法庭，法官怎么判她？你当记者的，还不清楚？\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002010</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>（设计注释）</strong></div>
+  <div class="claim">---xiugai</div>
+  
+  <div class="suggestion">文档内出现的&quot;---xiugai&quot;（修改标记）应在正式草稿中清理，不影响年代审计，但提示该处内容可能未完成审查。</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002010&quot;,
+  &quot;speaker&quot;: &quot;（设计注释）&quot;,
+  &quot;text&quot;: &quot;---xiugai&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;文档内出现的\&quot;---xiugai\&quot;（修改标记）应在正式草稿中清理，不影响年代审计，但提示该处内容可能未完成审查。&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#902007007</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>留声机录音（男声）</strong></div>
+  <div class="claim">……Moore 银行注资已到位……南区清退计划全面启动……</div>
+  
+  <div class="suggestion">&quot;注资&quot;是现代金融词汇（investment injection），1920s语境应改为：&quot;Moore 银行的款项已经到位&quot;。&quot;清退计划&quot;也是现代行政用语，可改为：&quot;南区拆迁行动全面开始&quot;或&quot;南区驱逐计划已全面启动&quot;。</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;902007007&quot;,
+  &quot;speaker&quot;: &quot;留声机录音（男声）&quot;,
+  &quot;text&quot;: &quot;……Moore 银行注资已到位……南区清退计划全面启动……&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;注资\&quot;是现代金融词汇（investment injection），1920s语境应改为：\&quot;Moore 银行的款项已经到位\&quot;。\&quot;清退计划\&quot;也是现代行政用语，可改为：\&quot;南区拆迁行动全面开始\&quot;或\&quot;南区驱逐计划已全面启动\&quot;。&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#906002005</span>
+  </header>
+  <div class="type-line">类型: <span class="type">translation_smell</span></div>
+  <div class="speaker"><strong>薇薇安·罗斯</strong></div>
+  <div class="claim">我会接手这里，继续开门。至少，得等那些在厨房和后巷干活的人，拿到合法的身份。算是我替他补上没付的账。</div>
+  
+  <div class="suggestion">&quot;算是我替他补上没付的账&quot;语感现代（财务结算比喻），且&quot;接手&quot;在商业语境下是现代词。建议：&quot;我准备把这里撑下去，继续开门。先得等那些在厨房和后巷干活的人，拿到他们的合法文件。这是他欠他们的，我来还。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906002005&quot;,
+  &quot;speaker&quot;: &quot;薇薇安·罗斯&quot;,
+  &quot;text&quot;: &quot;我会接手这里，继续开门。至少，得等那些在厨房和后巷干活的人，拿到合法的身份。算是我替他补上没付的账。&quot;,
+  &quot;type&quot;: &quot;translation_smell&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;算是我替他补上没付的账\&quot;语感现代（财务结算比喻），且\&quot;接手\&quot;在商业语境下是现代词。建议：\&quot;我准备把这里撑下去，继续开门。先得等那些在厨房和后巷干活的人，拿到他们的合法文件。这是他欠他们的，我来还。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002105</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>汤米</strong></div>
+  
+  
+  <div class="suggestion">统一为 ### 行内 get → ID 格式</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002105&quot;,
+  &quot;speaker&quot;: &quot;汤米&quot;,
+  &quot;check_id&quot;: 8,
+  &quot;check_name&quot;: &quot;证据出示格式&quot;,
+  &quot;detail&quot;: &quot;get 9052003 格式与其他 Loop 的 ### 行内 get 格式不一致&quot;,
+  &quot;suggestion&quot;: &quot;统一为 ### 行内 get → ID 格式&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002206</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>汤米</strong></div>
+  
+  
+  <div class="suggestion">统一格式</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002206&quot;,
+  &quot;speaker&quot;: &quot;汤米&quot;,
+  &quot;check_id&quot;: 8,
+  &quot;check_name&quot;: &quot;证据出示格式&quot;,
+  &quot;detail&quot;: &quot;get/show 写为独立反引号行，格式不一致&quot;,
+  &quot;suggestion&quot;: &quot;统一格式&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901004</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>系统</strong></div>
+  
+  
+  <div class="suggestion">用系统标记包裹分离</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901004&quot;,
+  &quot;speaker&quot;: &quot;系统&quot;,
+  &quot;check_id&quot;: 10,
+  &quot;check_name&quot;: &quot;旁白/系统文本&quot;,
+  &quot;detail&quot;: &quot;Lie 节点下的出示证据选择列表混在角色台词区块中&quot;,
+  &quot;suggestion&quot;: &quot;用系统标记包裹分离&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904005</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>系统</strong></div>
+  
+  
+  <div class="suggestion">同上</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904005&quot;,
+  &quot;speaker&quot;: &quot;系统&quot;,
+  &quot;check_id&quot;: 10,
+  &quot;check_name&quot;: &quot;旁白/系统文本&quot;,
+  &quot;detail&quot;: &quot;同上——Lie 节点出示证据列表与角色台词混合&quot;,
+  &quot;suggestion&quot;: &quot;同上&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901015</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>罗莎</strong></div>
+  
+  
+  <div class="suggestion">R1→R2 过渡中复述用新措辞</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901015&quot;,
+  &quot;speaker&quot;: &quot;罗莎&quot;,
+  &quot;check_id&quot;: 11,
+  &quot;check_name&quot;: &quot;重复台词&quot;,
+  &quot;detail&quot;: &quot;R1 台词与 R2 谎言 903901050 内容高度重复&quot;,
+  &quot;suggestion&quot;: &quot;R1→R2 过渡中复述用新措辞&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904080</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>薇薇安</strong></div>
+  
+  
+  <div class="suggestion">R3 Lie 应有变化或新情绪层次</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904080&quot;,
+  &quot;speaker&quot;: &quot;薇薇安&quot;,
+  &quot;check_id&quot;: 11,
+  &quot;check_name&quot;: &quot;重复台词&quot;,
+  &quot;detail&quot;: &quot;R3 Lie 与 906904065 台词几乎完全相同&quot;,
+  &quot;suggestion&quot;: &quot;R3 Lie 应有变化或新情绪层次&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902013</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>汤米</strong></div>
+  
+  
+  <div class="suggestion">换一种说法</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902013&quot;,
+  &quot;speaker&quot;: &quot;汤米&quot;,
+  &quot;check_id&quot;: 11,
+  &quot;check_name&quot;: &quot;重复台词&quot;,
+  &quot;detail&quot;: &quot;&#x27;清清白白&#x27;出现 3 次&quot;,
+  &quot;suggestion&quot;: &quot;换一种说法&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906006</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>莫里森</strong></div>
+  
+  
+  <div class="suggestion">精简开场</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906006&quot;,
+  &quot;speaker&quot;: &quot;莫里森&quot;,
+  &quot;check_id&quot;: 11,
+  &quot;check_name&quot;: &quot;重复台词&quot;,
+  &quot;detail&quot;: &quot;Morrison 开场重复表态案件已定性&quot;,
+  &quot;suggestion&quot;: &quot;精简开场&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905013</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>詹姆斯</strong></div>
+  
+  
+  <div class="suggestion">Expose Lie 可更简短复述</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905013&quot;,
+  &quot;speaker&quot;: &quot;詹姆斯&quot;,
+  &quot;check_id&quot;: 11,
+  &quot;check_name&quot;: &quot;重复台词&quot;,
+  &quot;detail&quot;: &quot;Expose R1 Lie 与 Talk 分支C 完整重复三层不在场证明&quot;,
+  &quot;suggestion&quot;: &quot;Expose Lie 可更简短复述&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#901002001-015</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">可考虑提前插入轻量选择</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901002001-015&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;L2 Opening 约 15 句无分支/出示&quot;,
+  &quot;suggestion&quot;: &quot;可考虑提前插入轻量选择&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#901006001-011</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">如技术允许可提前触发分支</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901006001-011&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;L6 Opening 11 句无交互&quot;,
+  &quot;suggestion&quot;: &quot;如技术允许可提前触发分支&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904004001-023</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">可酌情精简中段</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904004001-023&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;turn_cutscene 23 句全线性&quot;,
+  &quot;suggestion&quot;: &quot;可酌情精简中段&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#902007006-021</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">ending cutscene 保持原样</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;902007006-021&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;ending_sequence 16 句全线性&quot;,
+  &quot;suggestion&quot;: &quot;ending cutscene 保持原样&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905068-076</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">保持原样</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905068-076&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;suspect_suicide_sequence 9 句全线性&quot;,
+  &quot;suggestion&quot;: &quot;保持原样&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#906001005</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">改为尾随主线编号</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906001005&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 2,
+  &quot;check_name&quot;: &quot;ID 格式&quot;,
+  &quot;detail&quot;: &quot;分支节点 006001005 在 008 之后出现，打破阅读顺序&quot;,
+  &quot;suggestion&quot;: &quot;改为尾随主线编号&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P2" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-P2">P2 轻微</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#901001019</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">补全或重新编排</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P2&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901001019&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 2,
+  &quot;check_name&quot;: &quot;ID 格式&quot;,
+  &quot;detail&quot;: &quot;序列从 017 跳到 019 缺少 018&quot;,
+  &quot;suggestion&quot;: &quot;补全或重新编排&quot;,
+  &quot;verdict&quot;: &quot;unverified_p2&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="?">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">?</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#multiple</span>
+  </header>
+  <div class="type-line">类型: <span class="type">era_anachronism</span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  <div class="claim">他妈(出现3处)</div>
+  
+  <div class="suggestion">统一替换为年代风格粗口</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;multiple&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;text&quot;: &quot;他妈(出现3处)&quot;,
+  &quot;type&quot;: &quot;era_anachronism&quot;,
+  &quot;detail&quot;: &quot;&#x27;他妈&#x27;是现代汉语粗口，1920s 翻译腔应为&#x27;见鬼&#x27;&#x27;该死&#x27;等&quot;,
+  &quot;suggestion&quot;: &quot;统一替换为年代风格粗口&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906022b</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  <div class="claim">操……你他妈</div>
+  
+  <div class="suggestion">改为冷硬反应如沉默+站起来，或低声说&#x27;你去过我家。&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906022b&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;text&quot;: &quot;操……你他妈&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;角色档案禁忌明确写&#x27;不会情绪失控咆哮&#x27;，拍桌骂人与Morrison&#x27;降温型威胁&#x27;人设矛盾&quot;,
+  &quot;suggestion&quot;: &quot;改为冷硬反应如沉默+站起来，或低声说&#x27;你去过我家。&#x27;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/EPI09/Expose/Loop1_rosa.json#903901061</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Rosa</strong></div>
+  <div class="claim">就算那把枪没打过——那声枪响还是在23:30。还是只有那一声。还是只有Vivian在里面。这些都没变，先生。</div>
+  
+  <div class="suggestion">拆散平行结构，加入口吃和重复</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/EPI09/Expose/Loop1_rosa.json&quot;,
+  &quot;line_id&quot;: &quot;903901061&quot;,
+  &quot;speaker&quot;: &quot;Rosa&quot;,
+  &quot;text&quot;: &quot;就算那把枪没打过——那声枪响还是在23:30。还是只有那一声。还是只有Vivian在里面。这些都没变，先生。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;三个&#x27;还是&#x27;构成修辞三连击是辩论技巧，不是清洁工在极度紧张下能即兴组织的&quot;,
+  &quot;suggestion&quot;: &quot;拆散平行结构，加入口吃和重复&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902094</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">Tisra、Whale、Moore……我想，Webb八成是碰了不该碰的人。前段时间，他也急着转移财产……但那已经来不及了。</div>
+  
+  <div class="suggestion">砍掉 Tisra/Moore 只保留 Whale，改为干燥短句</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902094&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;Tisra、Whale、Moore……我想，Webb八成是碰了不该碰的人。前段时间，他也急着转移财产……但那已经来不及了。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;post-expose 应为干燥念账目腔，此处三个名字白送+叙事性总结超标。Moore 是 L6 才揭示的名字&quot;,
+  &quot;suggestion&quot;: &quot;砍掉 Tisra/Moore 只保留 Whale，改为干燥短句&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902096</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_register</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">他们两位的事……比较复杂，我也不清楚知道更多东西了。</div>
+  
+  <div class="suggestion">改为&#x27;……那两位的事，我不掺和。&#x27;或直接沉默</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902096&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;他们两位的事……比较复杂，我也不清楚知道更多东西了。&quot;,
+  &quot;type&quot;: &quot;modern_register&quot;,
+  &quot;detail&quot;: &quot;&#x27;比较复杂&#x27;是现代客服/学术腔缓冲词，&#x27;不清楚知道更多东西了&#x27;语法别扭像 AI 拼凑&quot;,
+  &quot;suggestion&quot;: &quot;改为&#x27;……那两位的事，我不掺和。&#x27;或直接沉默&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004003</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">我在这里守了二十年。看着她从连拍子都踩不准，学到现在能用声音撑满大厅。</div>
+  
+  <div class="suggestion">改为极短句如&#x27;……五年了。&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004003&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;我在这里守了二十年。看着她从连拍子都踩不准，学到现在能用声音撑满大厅。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;1)事实错误:应为五年非二十年 2)温情导师口吻违反禁忌&#x27;L5不忏悔不煽情&#x27;&quot;,
+  &quot;suggestion&quot;: &quot;改为极短句如&#x27;……五年了。&#x27;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004035</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">刚才在外面盯梢的那些人，是Whale派来的。几年前，我不知死活地想要勒索Whale，这是他的人给我的警告——一颗打偏的子弹。我把它捡回来藏着，本来以为总有一天能用它翻盘。</div>
+  
+  <div class="suggestion">拆成交互式推进：Tommy 无声塞弹壳→Zack 追问→Tommy 只给最短句</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004035&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;刚才在外面盯梢的那些人，是Whale派来的。几年前，我不知死活地想要勒索Whale，这是他的人给我的警告——一颗打偏的子弹。我把它捡回来藏着，本来以为总有一天能用它翻盘。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;L5 设计要求&#x27;台词尽可能少让道具承重&#x27;，此处突变叙事者做三句长篇自白&quot;,
+  &quot;suggestion&quot;: &quot;拆成交互式推进：Tommy 无声塞弹壳→Zack 追问→Tommy 只给最短句&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#905004036A</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  <div class="claim">真凶就藏在这几个人当中。留给你们的时间不多了……仔细想清楚你们收集到的线索，去找那个最可疑的凶手吧。</div>
+  
+  <div class="suggestion">整句删除或改为极短离场台词如&#x27;……走了。&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905004036A&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;text&quot;: &quot;真凶就藏在这几个人当中。留给你们的时间不多了……仔细想清楚你们收集到的线索，去找那个最可疑的凶手吧。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;1)违反&#x27;从不主动揭发任何人&#x27; 2)&#x27;线索&#x27;&#x27;凶手&#x27;是游戏任务提示NPC口吻非角色台词 3)现代侦探术语&quot;,
+  &quot;suggestion&quot;: &quot;整句删除或改为极短离场台词如&#x27;……走了。&#x27;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906003108b</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">所以我决定，等送酒的时候，等十一点半，我回去再次杀了他。</div>
+  
+  <div class="suggestion">改为更情感化的表述，修正&#x27;再次&#x27;逻辑</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003108b&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;所以我决定，等送酒的时候，等十一点半，我回去再次杀了他。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;再次杀了他&#x27;逻辑错误(她第一次未杀成)，机械叙述不符 Vivian 语感&quot;,
+  &quot;suggestion&quot;: &quot;改为更情感化的表述，修正&#x27;再次&#x27;逻辑&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904065</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">是因为他沉迷于Rita吗？即使他早就把我忘了，也是因为别人而死吗？难道我对他来说什么真的就什么都不是了吗？</div>
+  
+  <div class="suggestion">只保留一个核心问题，删去其余</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904065&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;是因为他沉迷于Rita吗？即使他早就把我忘了，也是因为别人而死吗？难道我对他来说什么真的就什么都不是了吗？&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;三连修辞问是 AI 写作模式，Vivian 声纹应为单一尖锐提问而非连续堆叠；末句过度煽情&quot;,
+  &quot;suggestion&quot;: &quot;只保留一个核心问题，删去其余&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904032</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">也许我只是还没来得及扣下扳机，他就被别人抢先了。但杀他的计划是我定的……Brennan，没开枪可洗脱不了我的罪名。</div>
+  
+  <div class="suggestion">改为更情绪化、更碎片化的表述</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904032&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;也许我只是还没来得及扣下扳机，他就被别人抢先了。但杀他的计划是我定的……Brennan，没开枪可洗脱不了我的罪名。&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;杀他的计划是我定的&#x27;是法庭辩护逻辑，情绪应更原始而非这么条理清晰&quot;,
+  &quot;suggestion&quot;: &quot;改为更情绪化、更碎片化的表述&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="F" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">F 声纹</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904015</span>
+  </header>
+  <div class="type-line">类型: <span class="type">out_of_voice</span></div>
+  <div class="speaker"><strong>Vivian</strong></div>
+  <div class="claim">可除了我是凶手，没有其他人能够杀害Webb！这个酒吧里，只有我有动机，也只有我带了枪！</div>
+  
+  <div class="suggestion">改为更失控的短句</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;F&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904015&quot;,
+  &quot;speaker&quot;: &quot;Vivian&quot;,
+  &quot;text&quot;: &quot;可除了我是凶手，没有其他人能够杀害Webb！这个酒吧里，只有我有动机，也只有我带了枪！&quot;,
+  &quot;type&quot;: &quot;out_of_voice&quot;,
+  &quot;detail&quot;: &quot;&#x27;能够&#x27;过于正式；三重子句逻辑排列过于结构化，情绪崩溃时不应如此有条理&quot;,
+  &quot;suggestion&quot;: &quot;改为更失控的短句&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902034</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">别装了。这绝不是什么&quot;个人爱好&quot;和赏钱，这是一场有组织的色情交易，对吧？</div>
+  
+  <div class="suggestion">&quot;色情交易&quot;是现代法律/媒体用语，1920s语境应避免。可改为：&quot;这不是什么私人的爱好，这是有计划的敲诈——Webb拿 Vivian 当饵，引人上钩，然后收封口费。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902034&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;别装了。这绝不是什么\&quot;个人爱好\&quot;和赏钱，这是一场有组织的色情交易，对吧？&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;色情交易\&quot;是现代法律/媒体用语，1920s语境应避免。可改为：\&quot;这不是什么私人的爱好，这是有计划的敲诈——Webb拿 Vivian 当饵，引人上钩，然后收封口费。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#906003306</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">看来他把你保护……放在某条线以内。（It seems he&#x27;s keeping you... I mean, promoting you within some boundaries.）</div>
+  
+  <div class="suggestion">英文括注中的&quot;promoting you within some boundaries&quot;是现代职场语言，完全无法对应1925年语境。括注本身作为设计注释可保留，但正文台词的中文部分&quot;放在某条线以内&quot;翻译腔也偏生硬。建议删除括注英文，正文改为：&quot;看来他一直把你圈在某个范围里。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906003306&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;看来他把你保护……放在某条线以内。（It seems he&#x27;s keeping you... I mean, promoting you within some boundaries.）&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;英文括注中的\&quot;promoting you within some boundaries\&quot;是现代职场语言，完全无法对应1925年语境。括注本身作为设计注释可保留，但正文台词的中文部分\&quot;放在某条线以内\&quot;翻译腔也偏生硬。建议删除括注英文，正文改为：\&quot;看来他一直把你圈在某个范围里。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#906002406e</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>薇薇安·罗斯</strong></div>
+  <div class="claim">估计不知道在哪，还会有个协议，要我给谁做嫁衣吧（Carry someone else&#x27;s water）</div>
+  
+  <div class="suggestion">&quot;给谁做嫁衣&quot;是现代中文惯用语（出自民间故事联系到现代商业语境）。括注的英文&quot;Carry someone else&#x27;s water&quot;也是现代俚语（2010s以后才流行）。两处均需替换。建议：&quot;大概在什么地方还有另一份合同，要我继续替别人卖命吧。&quot;括注删除。</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906002406e&quot;,
+  &quot;speaker&quot;: &quot;薇薇安·罗斯&quot;,
+  &quot;text&quot;: &quot;估计不知道在哪，还会有个协议，要我给谁做嫁衣吧（Carry someone else&#x27;s water）&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;给谁做嫁衣\&quot;是现代中文惯用语（出自民间故事联系到现代商业语境）。括注的英文\&quot;Carry someone else&#x27;s water\&quot;也是现代俚语（2010s以后才流行）。两处均需替换。建议：\&quot;大概在什么地方还有另一份合同，要我继续替别人卖命吧。\&quot;括注删除。&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905052</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">Anna 急需一笔救命钱，而 Whale 刚好需要一条听话的狗来咬死 Webb，顺便把脏水泼到 Vivian 身上。真是天作之合啊！</div>
+  
+  <div class="suggestion">&quot;天作之合&quot;通常指婚配良缘，用在这里形成反讽，但&quot;感叹号&quot;违反Zack人设禁忌（Zack不使用感叹号）。&quot;把脏水泼到&quot;是现代中文惯用语。建议改为：&quot;Anna 需要一笔救命钱，Whale 需要一条肯听话的人除掉 Webb，顺手把这件事推到 Vivian 身上。正好，两全其美。&quot;（去感叹号，去&quot;脏水泼&quot;）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905052&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;Anna 急需一笔救命钱，而 Whale 刚好需要一条听话的狗来咬死 Webb，顺便把脏水泼到 Vivian 身上。真是天作之合啊！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;天作之合\&quot;通常指婚配良缘，用在这里形成反讽，但\&quot;感叹号\&quot;违反Zack人设禁忌（Zack不使用感叹号）。\&quot;把脏水泼到\&quot;是现代中文惯用语。建议改为：\&quot;Anna 需要一笔救命钱，Whale 需要一条肯听话的人除掉 Webb，顺手把这件事推到 Vivian 身上。正好，两全其美。\&quot;（去感叹号，去\&quot;脏水泼\&quot;）&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905063</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">为了你那笔可悲的赏金，你不仅从背后开枪崩了 Webb！你还把一个无辜的小女孩当作筹码，去逼迫一个绝望的母亲替你做伪证！你的双手早就沾满了洗不掉的血！</div>
+  
+  <div class="suggestion">三处感叹号违反Zack人设（Zack从不使用感叹号）。&quot;当作筹码&quot;是现代博弈/商业语言。&quot;做伪证&quot;虽然是法律用语但可接受。建议将三个感叹号全部改为句号，&quot;当作筹码&quot;改为&quot;当作威胁的把柄&quot;。</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905063&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;为了你那笔可悲的赏金，你不仅从背后开枪崩了 Webb！你还把一个无辜的小女孩当作筹码，去逼迫一个绝望的母亲替你做伪证！你的双手早就沾满了洗不掉的血！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;三处感叹号违反Zack人设（Zack从不使用感叹号）。\&quot;当作筹码\&quot;是现代博弈/商业语言。\&quot;做伪证\&quot;虽然是法律用语但可接受。建议将三个感叹号全部改为句号，\&quot;当作筹码\&quot;改为\&quot;当作威胁的把柄\&quot;。&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905069</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">James——别做傻事！</div>
+  
+  <div class="suggestion">&quot;别做傻事&quot;带感叹号，违反Zack人设。建议改为：&quot;James——把枪放下。&quot;（冷静陈述，不用感叹号）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905069&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;James——别做傻事！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;别做傻事\&quot;带感叹号，违反Zack人设。建议改为：\&quot;James——把枪放下。\&quot;（冷静陈述，不用感叹号）&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#902007011</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>艾玛·奥马利</strong></div>
+  <div class="claim">Brennan 先生，那是你母亲的名字！&quot;1912 年家属&quot;……这是什么意思？！</div>
+  
+  <div class="suggestion">Emma角色设定的禁忌之一是有感叹号但不滥用，此处双感叹号&quot;？！&quot;对Emma尚可接受，但&quot;这是什么意思？！&quot;连续符号略显现代电视剧腔。建议保留紧迫感但改为：&quot;Brennan，那是你母亲的名字——&#x27;1912年家属&#x27;……这是什么？！&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;902007011&quot;,
+  &quot;speaker&quot;: &quot;艾玛·奥马利&quot;,
+  &quot;text&quot;: &quot;Brennan 先生，那是你母亲的名字！\&quot;1912 年家属\&quot;……这是什么意思？！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;Emma角色设定的禁忌之一是有感叹号但不滥用，此处双感叹号\&quot;？！\&quot;对Emma尚可接受，但\&quot;这是什么意思？！\&quot;连续符号略显现代电视剧腔。建议保留紧迫感但改为：\&quot;Brennan，那是你母亲的名字——&#x27;1912年家属&#x27;……这是什么？！\&quot;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#902007015</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>艾玛·奥马利</strong></div>
+  <div class="claim">坐我的车！我来开！快！！</div>
+  
+  <div class="suggestion">&quot;快！！&quot;双感叹号是现代网文/漫画用法，脱离1920s文学语感。建议改为：&quot;快，坐我的车！我开！&quot;（一个感叹号，简洁有力）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;902007015&quot;,
+  &quot;speaker&quot;: &quot;艾玛·奥马利&quot;,
+  &quot;text&quot;: &quot;坐我的车！我来开！快！！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;快！！\&quot;双感叹号是现代网文/漫画用法，脱离1920s文学语感。建议改为：\&quot;快，坐我的车！我开！\&quot;（一个感叹号，简洁有力）&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#902007020</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">不……别是那里……求求你……不！！！</div>
+  
+  <div class="suggestion">三个感叹号（！！！）是完全的现代漫画/轻小说用法。Zack在极端情绪下可以有感叹号，但不能是三连。建议：&quot;不……求求你……别是那里——！&quot;（保留一处，更有克制感）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;902007020&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;不……别是那里……求求你……不！！！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;三个感叹号（！！！）是完全的现代漫画/轻小说用法。Zack在极端情绪下可以有感叹号，但不能是三连。建议：\&quot;不……求求你……别是那里——！\&quot;（保留一处，更有克制感）&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#902007017</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">再快点！Emma，求你了，再快点！！母亲还在店里……她还在店里！</div>
+  
+  <div class="suggestion">&quot;！！&quot;再次出现。Zack此刻崩溃是叙事需要，但双感叹号出戏。建议：&quot;再快一点……Emma，求你，再快一点。她还在店里——她还在店里。&quot;（保留情绪但去掉多余感叹号）</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;902007017&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;再快点！Emma，求你了，再快点！！母亲还在店里……她还在店里！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;！！\&quot;再次出现。Zack此刻崩溃是叙事需要，但双感叹号出戏。建议：\&quot;再快一点……Emma，求你，再快一点。她还在店里——她还在店里。\&quot;（保留情绪但去掉多余感叹号）&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="E" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">E 年代用语</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905046</span>
+  </header>
+  <div class="type-line">类型: <span class="type">modern_word</span></div>
+  <div class="speaker"><strong>扎克·布伦南</strong></div>
+  <div class="claim">孩子马上就要出生了，如果再拿不到一大笔钱去打点医院和合法身份，你们的孩子就只能像阴沟里的老鼠一样见不得光！这是她亲口告诉我的！</div>
+  
+  <div class="suggestion">&quot;像阴沟里的老鼠一样见不得光&quot;是现代中文的强烈比喻语，非Zack的冷调风格。感叹号也违反Zack人设。建议：&quot;孩子快出来了，再拿不到一笔钱，连医院的门都进不去，孩子只能生在这座城市的暗处。这是她亲口说的。&quot;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;E&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905046&quot;,
+  &quot;speaker&quot;: &quot;扎克·布伦南&quot;,
+  &quot;text&quot;: &quot;孩子马上就要出生了，如果再拿不到一大笔钱去打点医院和合法身份，你们的孩子就只能像阴沟里的老鼠一样见不得光！这是她亲口告诉我的！&quot;,
+  &quot;type&quot;: &quot;modern_word&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;suggestion&quot;: &quot;\&quot;像阴沟里的老鼠一样见不得光\&quot;是现代中文的强烈比喻语，非Zack的冷调风格。感叹号也违反Zack人设。建议：\&quot;孩子快出来了，再拿不到一笔钱，连医院的门都进不去，孩子只能生在这座城市的暗处。这是她亲口说的。\&quot;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;subjective judgment required (era/voice)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904116</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">让 Zack 只重复 Vivian 的话，不替玩家连接</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904116&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 5,
+  &quot;check_name&quot;: &quot;Zack 代答&quot;,
+  &quot;detail&quot;: &quot;Zack 直接替玩家说出&#x27;从头顶传来=二楼=Tommy和James&#x27;的推理结论&quot;,
+  &quot;suggestion&quot;: &quot;让 Zack 只重复 Vivian 的话，不替玩家连接&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904004006</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">弱化为模糊表述如&#x27;这个口径对不上&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904004006&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 5,
+  &quot;check_name&quot;: &quot;Zack 代答&quot;,
+  &quot;detail&quot;: &quot;cutscene 中 Zack 直接说出口径排除结论&quot;,
+  &quot;suggestion&quot;: &quot;弱化为模糊表述如&#x27;这个口径对不上&#x27;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905023</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">保留矛盾点出但删减推理动机归因</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905023&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 5,
+  &quot;check_name&quot;: &quot;Zack 代答&quot;,
+  &quot;detail&quot;: &quot;Expose R1 击破措辞过于完整，近旁白级解释&quot;,
+  &quot;suggestion&quot;: &quot;保留矛盾点出但删减推理动机归因&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905037</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">保留事实陈述删除推测细节</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905037&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 5,
+  &quot;check_name&quot;: &quot;Zack 代答&quot;,
+  &quot;detail&quot;: &quot;R2 击破含&#x27;捏着嗓子模仿&#x27;等未经证实的推测性细节&quot;,
+  &quot;suggestion&quot;: &quot;保留事实陈述删除推测细节&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#901002005</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>艾玛</strong></div>
+  
+  
+  <div class="suggestion">改为更谨慎的表述如&#x27;她的证词有问题&#x27;</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;901002005&quot;,
+  &quot;speaker&quot;: &quot;艾玛&quot;,
+  &quot;check_id&quot;: 5,
+  &quot;check_name&quot;: &quot;Zack 代答&quot;,
+  &quot;detail&quot;: &quot;Emma L2 Opening 直接断言&#x27;Rosa 明显在撒谎&#x27;，L1 R2 教程尚未正式击破&quot;,
+  &quot;suggestion&quot;: &quot;改为更谨慎的表述如&#x27;她的证词有问题&#x27;&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#903901010-019</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">减少过渡句数</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903901010-019&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;R1 击破后到 R2 谎言之间约 10 句无交互&quot;,
+  &quot;suggestion&quot;: &quot;减少过渡句数&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#906904090-116</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">中间插入确认/出示选择点</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;906904090-116&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;R3 击破+post_expose 约 20 句连续无交互&quot;,
+  &quot;suggestion&quot;: &quot;中间插入确认/出示选择点&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905041-053</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">给 James 更多实质反应或缩短</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905041-053&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;R3 击破 13 句连续 Zack 独白无 James 实质回应&quot;,
+  &quot;suggestion&quot;: &quot;给 James 更多实质反应或缩短&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#907905057-067</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">缩减至 8 句以内</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907905057-067&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;narrative_closure 11 句连续无交互&quot;,
+  &quot;suggestion&quot;: &quot;缩减至 8 句以内&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906041-046</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>扎克</strong></div>
+  
+  
+  <div class="suggestion">两张纸间给 Morrison 一句回应</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906041-046&quot;,
+  &quot;speaker&quot;: &quot;扎克&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;R2 击破 6 句连续出示两份证据间 Morrison 无回应&quot;,
+  &quot;suggestion&quot;: &quot;两张纸间给 Morrison 一句回应&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="needs_human" data-dim="X" data-loop="L9">
+  <header>
+    <span class="badge sev-needs_human">待定</span>
+    <span class="badge dim">X 对话兜底</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md#903903060-068</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>多个</strong></div>
+  
+  
+  <div class="suggestion">中间增加一次简短确认</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;X&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop3_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;903903060-068&quot;,
+  &quot;speaker&quot;: &quot;多个&quot;,
+  &quot;check_id&quot;: 12,
+  &quot;check_name&quot;: &quot;节奏&quot;,
+  &quot;detail&quot;: &quot;R2 路径约 15 句连续（含崩溃陈述），其中约 10 句无交互&quot;,
+  &quot;suggestion&quot;: &quot;中间增加一次简短确认&quot;,
+  &quot;verdict&quot;: &quot;needs_human&quot;,
+  &quot;verify_reason&quot;: &quot;design judgment required (Zack代答/pacing)&quot;
+}</pre></details>
+</article>
+</main>
+
+<details class="dismissed-section">
+  <summary>已驳回（Phase 3 复核认为不是问题，7 条）</summary>
+  <div id="dismissed-list">
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md#904001102</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  
+  
+  <div class="suggestion">Morrison自称&#x27;警察&#x27;，档案记为&#x27;侦探&#x27;——职称不一致</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop1_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904001102&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;npc&quot;: &quot;Morrison&quot;,
+  &quot;field&quot;: &quot;occupation&quot;,
+  &quot;fact_value&quot;: &quot;艾斯弗德警察局侦探，本案负责人&quot;,
+  &quot;dialog_value&quot;: &quot;二十二分局，警察&quot;,
+  &quot;suggestion&quot;: &quot;Morrison自称&#x27;警察&#x27;，档案记为&#x27;侦探&#x27;——职称不一致&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;L1&#x27;警察&#x27;是口语泛称、L6&#x27;探长&#x27;是敬称变体，可接受&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md#904906007</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Emma</strong></div>
+  
+  
+  <div class="suggestion">Emma称Morrison为&#x27;探长&#x27;，与档案&#x27;侦探&#x27;及L1自述&#x27;警察&#x27;和L2 Tommy称&#x27;警长&#x27;构成三重不一致</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop6_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904906007&quot;,
+  &quot;speaker&quot;: &quot;Emma&quot;,
+  &quot;npc&quot;: &quot;Morrison&quot;,
+  &quot;field&quot;: &quot;occupation&quot;,
+  &quot;fact_value&quot;: &quot;艾斯弗德警察局侦探，本案负责人&quot;,
+  &quot;dialog_value&quot;: &quot;Morrison 探长&quot;,
+  &quot;suggestion&quot;: &quot;Emma称Morrison为&#x27;探长&#x27;，与档案&#x27;侦探&#x27;及L1自述&#x27;警察&#x27;和L2 Tommy称&#x27;警长&#x27;构成三重不一致&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;L1&#x27;警察&#x27;是口语泛称、L6&#x27;探长&#x27;是敬称变体，可接受&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md#904003011A</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Morrison</strong></div>
+  
+  
+  <div class="suggestion">Morrison声称从警20年（隐含25岁入行），档案未记录——需确认并补档或调整台词</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop4_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;904003011A&quot;,
+  &quot;speaker&quot;: &quot;Morrison&quot;,
+  &quot;npc&quot;: &quot;Morrison&quot;,
+  &quot;field&quot;: &quot;history&quot;,
+  &quot;fact_value&quot;: &quot;服务年限未记载&quot;,
+  &quot;dialog_value&quot;: &quot;我干这行二十年了&quot;,
+  &quot;suggestion&quot;: &quot;Morrison声称从警20年（隐含25岁入行），档案未记录——需确认并补档或调整台词&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;档案缺失非矛盾。Mrs.Morrison&#x27;貌合神离二十年&#x27;可佐证。建议补档&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#907002103</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>James</strong></div>
+  
+  
+  <div class="suggestion">James声称与Webb共事一年多，档案未记载——需确认并补档</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;907002103&quot;,
+  &quot;speaker&quot;: &quot;James&quot;,
+  &quot;npc&quot;: &quot;James&quot;,
+  &quot;field&quot;: &quot;history&quot;,
+  &quot;fact_value&quot;: &quot;任职时长未记��&quot;,
+  &quot;dialog_value&quot;: &quot;毕竟共事了一年多&quot;,
+  &quot;suggestion&quot;: &quot;James声称与Webb共事一年多，档案未记载——需确认并补档&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;档案缺失非矛盾，建议补档&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905902086</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">Tommy声称一年半前受伤转岗，档案未记录——需确认并补档</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905902086&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;npc&quot;: &quot;Tommy&quot;,
+  &quot;field&quot;: &quot;history&quot;,
+  &quot;fact_value&quot;: &quot;受伤/转岗具体时间未记载&quot;,
+  &quot;dialog_value&quot;: &quot;一年半以前是我在趟。然后，我挨了一枪&quot;,
+  &quot;suggestion&quot;: &quot;Tommy声称一年半前受伤转岗，档案未记录——需确认并补档&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;档案缺失非矛盾，建议补档&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="A" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">A 人物档案</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md#908001014</span>
+  </header>
+  <div class="type-line">类型: <span class="type"></span></div>
+  <div class="speaker"><strong>Anna</strong></div>
+  
+  
+  <div class="suggestion">Anna声称与James结婚两年，档案未记录——需确认并补档</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;A&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop5_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;908001014&quot;,
+  &quot;speaker&quot;: &quot;Anna&quot;,
+  &quot;npc&quot;: &quot;Anna&quot;,
+  &quot;field&quot;: &quot;family&quot;,
+  &quot;fact_value&quot;: &quot;婚龄未记载&quot;,
+  &quot;dialog_value&quot;: &quot;两年了（结婚时长）&quot;,
+  &quot;suggestion&quot;: &quot;Anna声称与James结婚两年，档案未记录——需确认并补档&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;档案缺失非矛盾，建议补档&quot;
+}</pre></details>
+</article>
+<article class="issue" data-sev="P1" data-dim="G" data-loop="L9">
+  <header>
+    <span class="badge sev-P1">P1 中度</span>
+    <span class="badge dim">G 多视角</span>
+    <span class="badge loop">L9</span>
+    <span class="file">AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md#905002301</span>
+  </header>
+  <div class="type-line">类型: <span class="type">fact_inconsistency</span></div>
+  <div class="speaker"><strong>Tommy</strong></div>
+  
+  
+  <div class="suggestion">需人工确认场景地图空间关系</div>
+  
+  <details class="raw-toggle"><summary>原始 JSON</summary><pre class="raw">{
+  &quot;_dim&quot;: &quot;G&quot;,
+  &quot;severity&quot;: &quot;P1&quot;,
+  &quot;file&quot;: &quot;AVG/对话配置工作及草稿/Unit9/Loop2_生成草稿.md&quot;,
+  &quot;line_id&quot;: &quot;905002301&quot;,
+  &quot;speaker&quot;: &quot;Tommy&quot;,
+  &quot;event_ref&quot;: &quot;E005_假枪声���误导指认&quot;,
+  &quot;type&quot;: &quot;fact_inconsistency&quot;,
+  &quot;npc_a&quot;: &quot;Tommy&quot;,
+  &quot;npc_b&quot;: &quot;Vivian&quot;,
+  &quot;detail&quot;: &quot;Tommy(2F)说枪声从南边=厨房方向传来；Vivian(1F)说从头顶=2F传来。物理上可自洽但需确认2F厨房在Tommy办公室南侧&quot;,
+  &quot;suggestion&quot;: &quot;需人工确认场景地图空间关系&quot;,
+  &quot;verdict&quot;: &quot;dismissed&quot;,
+  &quot;verify_reason&quot;: &quot;Tommy(2F)和Vivian(1F)方向描述均指向2F厨房窗口，物理自洽&quot;
+}</pre></details>
+</article>
+  </div>
+</details>
+
+<details class="meta-conflicts">
+  <summary>事实表自相矛盾（7 条）</summary>
+  <div id="meta-list">
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">items :: I9201_勒索用的照片 / physical</span>
+  </header>
+  <div class="claim">ItemStaticData Describe 写&#x27;背面写着花瓶 $4,000 / 油画 $7,000&#x27;（金额直接可见）；state YAML 写&#x27;背面仅有淡黄褐色污渍，肉眼看不出意义，需经煤油灯烘烤显影后才能读出&#x27;。以 state（设计稿）为准，ItemStaticData 描述可能未同步烘烤玩法改动。</div>
+</article>
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">items :: I9207_James工资单 / physical</span>
+  </header>
+  <div class="claim">ItemStaticData Describe 写&#x27;主厨，$80&#x27;；state YAML 和美术需求写&#x27;Part-time Cook（兼职厨师），$80&#x27;。职位称呼不一致：ItemStaticData 用&#x27;主厨&#x27;，设计文档用&#x27;兼职厨师&#x27;。以设计文档为准（Part-time Cook）。</div>
+</article>
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">items :: I9306_节目单碎片 / physical</span>
+  </header>
+  <div class="claim">ItemStaticData Name[0] 写&#x27;《芝加哥狂想曲》&#x27;；state YAML 和美术需求写&#x27;《艾斯弗德狂想曲》(Rhapsody of Esford)&#x27;。曲名不一致。以 state（设计稿）为准。</div>
+</article>
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">items :: I9501_完整节目单 / physical</span>
+  </header>
+  <div class="claim">ItemStaticData Describe 写&#x27;11:00-11:10&#x27;且曲名为《芝加哥狂想》；state YAML 写&#x27;23:00 鼓点高潮&#x27;且曲名为《艾斯弗德狂想曲》。时间和曲名均不一致。以 state（设计稿）为准。</div>
+</article>
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">items :: I9502_节目修改申请 / physical</span>
+  </header>
+  <div class="claim">ItemStaticData Describe 写曲名&#x27;《芝加哥狂想》&#x27;且日期&#x27;1925年11月03日&#x27;；state YAML 写&#x27;《艾斯弗德狂想曲》&#x27;且时间线为1928年。曲名和年份均不一致。以 state（设计稿）为准。</div>
+</article>
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">items :: I9505_Anna合法移民申请通知 / physical</span>
+  </header>
+  <div class="claim">ItemStaticData Name 写&#x27;撕碎的移民申请表&#x27;且 Describe 写&#x27;James 撕碎的移民申请表&#x27;；state YAML 和美术需求写&#x27;Anna 的合法移民申请通过通知（附 James 配偶资格书）&#x27;，明确是&#x27;被妥善保存（收在抽屉里的重要证件，不是撕毁/损坏）&#x27;。名称和状态完全矛盾。以 state（设计稿）为准。</div>
+</article>
+<article class="issue" data-sev="P1" data-dim="X" data-loop="?">
+  <header>
+    <span class="badge sev-P1">事实表冲突</span>
+    <span class="file">characters :: Morrison</span>
+  </header>
+  <div class="claim">[{&quot;field&quot;: &quot;blind_spots&quot;, &quot;detail&quot;: &quot;Morrison在L1&#x27;尚不知本案会牵出Whale&#x27;（大纲/时间线明确），但其债务关系与Whale案发前三周就已存在；他不知道的是&#x27;本案证据会指向Whale&#x27;而非&#x27;Whale本人的存在&#x27;&quot;}]</div>
+</article>
+  </div>
+</details>
+
+<footer>
+  <p>由 episode-consistency-audit skill 生成 · 2026-04-26 12:40:03</p>
+</footer>
+
+<script>
+function applyFilter() {
+  const sev = document.getElementById('sev-filter').value;
+  const dim = document.getElementById('dim-filter').value;
+  const loop = document.getElementById('loop-filter').value;
+  let visible = 0;
+  document.querySelectorAll('#issue-list .issue').forEach(el => {
+    let show = true;
+    if (sev && el.dataset.sev !== sev) show = false;
+    if (dim && el.dataset.dim !== dim) show = false;
+    if (loop && el.dataset.loop !== loop) show = false;
+    el.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('visible-count').textContent = `显示 ${visible} 条`;
+}
+['sev-filter', 'dim-filter', 'loop-filter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', applyFilter);
+});
+applyFilter();
+</script>
+</body>
+</html>

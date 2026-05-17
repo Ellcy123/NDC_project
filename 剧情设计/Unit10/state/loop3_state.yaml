@@ -118,6 +118,7 @@ player_context:
 
 opening:
   type: cutscene_sequence  # 🎬 过场序列
+  talk: opening_l3_cityhall
   description: |
     L2 末 Zack 拿着 Leonard 给的信封赶到市政厅/法院，
     门房看了信直接摆手：这不够，需要有效律师签名的正式申请。
@@ -134,10 +135,6 @@ opening:
       name: "市政厅/法院大门外台阶"
       type: cutscene  # 🎬 纯过场，无搜证，户外场景
       description: "Zack 站在艾斯弗德市政厅大门前的石阶上，递信封给守门警卫——警卫扫一眼摇头，连门都不让进。整段过场全程发生在户外台阶，玩家不踏入建筑内部。"
-    - id: 10006
-      name: "圣心医院-Margaret 病房（L3 过场）"
-      type: cutscene  # 🎬 纯过场（Emma 交代去向）
-      description: "Mickey 和 Emma 商议分工：Emma 去法医 + 医院，Mickey 留下帮 Zack 查银行。"
 
   mickey_entrance:
     npc: mickey
@@ -178,8 +175,8 @@ scenes:
     evidence: []
 
     npcs:
-      leonard_loop3_lobby:
-        talk: leonard_loop3_lobby
+      leonard_l3_lobby:
+        talk: leonard_l3_lobby
         is_liar: false
         motive: "在搜查令面前维持专业形象；为内部存档版对账单 10306 预埋管理疏失的解释"
         mindset: "表面配合，内心警惕；知道 Zack 已经拿到搜查令，尽量让事情看起来正常"
@@ -293,13 +290,13 @@ scenes:
   # ── 场景 10018：Frank 家主屋（开间客厅+床+开放式厨房）──
   - id: 10018
     name: "Frank 家主屋（开间）"
-    type: locked_exploration  # 🔒 L3 post_expose 后 10309 钥匙解锁
+    type: free_exploration  # 🔓 L3 Danny 已回 Frank 家，应门让 Zack 进入（不需搜查令/10309）
     unlock_condition:
-      - type: item
-        param: "10309 Frank 家钥匙（post_expose 给予）"
+      - type: auto
+        param: "L3_danny_returned（L2 敲门无人应；L3 Danny 已回家应门，Zack 可进主屋与次卧；不依赖 post_expose 的 10309）"
     description: |
-      Frank 家的大门——L2 时敲门无人应答，无法进入；
-      L3 post_expose 后 Moore 给出了 Frank 家钥匙（10309），大门解锁。
+      Frank 家的大门——L2 时敲门无人应答（Frank 已死，Danny 不在）；
+      L3 Danny 已回到 Frank 家，他来应门，Zack 得以进入（不需搜查令，与 post_expose 的 10309 钥匙无关——10309 保留作 L5 小铁盒/叙事前置）。
       内部是 1920 年代南区常见的开间布局：客厅、Frank 的床、开放式厨房一体相连，
       没有隔墙。一张旧沙发对着窗户，床靠墙摆放，床和墙之间有一道窄缝隙——
       L5 会在床后缝隙里发现藏着的小铁盒（10408 备用钥匙打开）。
@@ -319,10 +316,10 @@ scenes:
   # ── 场景 10009：Frank 家次卧-Danny 住处（搜查令解锁，L3 Danny 初见）──
   - id: 10009
     name: "Frank 家次卧-Danny 住处"
-    type: locked_exploration  # 🔒 L3 post_expose 10309 钥匙后可进入
+    type: free_exploration  # 🔓 随主屋一同进入（Danny 应门后从主屋另开门进次卧；不需搜查令/10309）
     unlock_condition:
-      - type: item
-        param: "10309 Frank 家钥匙"
+      - type: auto
+        param: "scene_10018_entered"
     description: |
       Frank 家次卧是 Danny Kowalski 住的地方。
       L3 阶段 Danny 刚回来，Zack 第一次见到他。
@@ -331,8 +328,8 @@ scenes:
     evidence: []
 
     npcs:
-      danny_loop3:
-        talk: danny_loop3
+      danny_l3_bedroom:
+        talk: danny_l3_bedroom
         is_liar: false  # L3 Danny 不是指证对象，仅背景信息
         motive: "Frank 侄子，失业，住在 Frank 家打理日常；对 Lula 有敌意；不知道 Zack 已经知道房产证的事"
         mindset: "不耐烦，防御性；提到 Lula 时语气轻蔑；对 Zack 的调查持疏远态度"
@@ -370,7 +367,7 @@ scenes:
 
     npcs:
       moore_expose:
-        talk: moore_expose_loop3
+        talk: Loop3_moore
         is_liar: true  # Moore 是本 Loop 的 Expose 对象
         player_inquiry: null
         motive: "保护银行合法外皮；恐惧 Frank 死亡引发审计但表面镇定；在律师在场时被迫应对"
@@ -401,7 +398,7 @@ expose:
   target: moore
   target_display_name: "Harold Moore"
   exposeNpcId: 106
-  target_talk: moore_expose_loop3
+  target_talk: Loop3_moore
   is_liar: true
   player_inquiry: null
   total_rounds: 3
@@ -482,6 +479,7 @@ expose:
 
   # ── 指证后剧情 ──
   post_expose:
+    talk: moore_l3_postexpose
     description: |
       在 Mickey 法律威胁下，Moore 恐惧 Frank 死亡引发审计，主动妥协，坦白真相。
       关键揭示一：Frank 并非赌博欠债——贷款档案上的签名是 Leonard 代签的伪造（用途如实填'房屋修缮'，但 Frank 本人从未在档案上签字）。
@@ -643,23 +641,23 @@ evidence_registry:
     first_scene: null
     given_by: "moore（post_expose 阶段，从 Frank 房产证上的回形针取下）"
     pickup: true
-    note: "关键——L3 post_expose 解锁 10018（Frank 家主屋（开间））+ 10009（Frank 家次卧）；L5 小铁盒前置"
+    note: "关键——L5 小铁盒前置（床后藏盒需进屋）；L3 进 Frank 家已由 Danny 应门、不依赖此钥匙；post_expose 给予作叙事延续"
 
   - id: 10310
     name: "Leonard 与 Vinnie 童年合照（1900）/ Leonard & Vinnie Childhood Photo (1900)"
     type: envir
     itemType: 2
     first_scene: 10014
-    pickup: true
-    note: "场景道具——环境叙事；第三重反转铺线（'Leo' 昵称是 Leonard 旧名 Russo 少年痕迹，L6 揭示）；不进疑点 condition"
+    pickup: false
+    note: "场景道具——环境叙事；第三重反转铺线（'Leo' 昵称是 Leonard 旧名 Russo 少年痕迹，L6 揭示）；不进疑点 condition；可看不可拿走（与 scene 块及 10307 一致，L3 Phase5 用户拍板修正）"
 
   - id: 10311
     name: "伊利诺伊州法律公告 / Illinois State Legal Notice"
     type: envir
     itemType: 2
     first_scene: 10014
-    pickup: true
-    note: "场景道具——环境叙事；L3 R2 陷阱选项（Moore 用投资公司马甲反驳单一法规）；不进疑点 condition"
+    pickup: false
+    note: "场景道具——环境叙事；L3 R2 陷阱选项（Moore 用投资公司马甲反驳单一法规）；不进疑点 condition；可看不可拿走（与 scene 块及 10307 一致，L3 Phase5 用户拍板修正）"
 
   - id: 10701
     name: "贷款计算玩法分析报告（派生）/ Loan Calculation Analysis Report (Derived)"

@@ -1,0 +1,478 @@
+{
+  "_meta": {
+    "generated": "2026-04-26",
+    "sources": [
+      "剧情设计/Unit9/Characters/*.md",
+      "剧情设计/Unit9/Unit9_大纲.md",
+      "AVG/对话配置工作及草稿/Unit9/Loop1-6_生成草稿.md"
+    ],
+    "note": "只抽 Unit9 中实际出现的角色对，change_conditions 仅记录设计文档或草稿中有明确依据的改口"
+  },
+
+  "Zack->Emma": {
+    "default_form": "O'Malley",
+    "formal_form": "O'Malley 小姐",
+    "intimate_form": null,
+    "third_party_form": "O'Malley / 那个记者",
+    "change_conditions": [],
+    "context_rules": "全程用姓氏 O'Malley 直呼；L1 开场曾对 Morrison 称她为 'O'Malley 小姐'（901001032 '记者助理' 戏谑），此后不再加敬称"
+  },
+
+  "Emma->Zack": {
+    "default_form": "Brennan 先生",
+    "formal_form": "Brennan 先生",
+    "intimate_form": "Zack",
+    "third_party_form": "Brennan 先生 / Zack Brennan",
+    "change_conditions": [
+      {
+        "loop": 1,
+        "event": "Opening 大堂初识",
+        "new_form": "Brennan 先生（初始正式称谓）",
+        "reversible": false
+      },
+      {
+        "loop": 4,
+        "event": "Morrison 变脸强押 Vivian 后（904004022），Emma 首次省略敬称",
+        "new_form": "Brennan……（省略先生，情绪紧张时偶尔出现）",
+        "reversible": false
+      },
+      {
+        "loop": 5,
+        "event": "L5 Opening 灵魂暗夜讨论 + Emma 拒绝退出后关系质变",
+        "new_form": "Zack（偶尔出现，情感高峰时用名字）",
+        "reversible": false
+      }
+    ],
+    "context_rules": "日常 Brennan 先生；L4 后偶尔省略敬称直呼 Brennan；L5 后情感高峰处偶用 Zack（如 L6 901006 段火海场景）；向第三人介绍用全名 Zack Brennan"
+  },
+
+  "Emma->Vivian": {
+    "default_form": "Vivian",
+    "formal_form": "Vivian",
+    "intimate_form": null,
+    "third_party_form": "Vivian / 那个被锁在牢里的女人（L6 opening）",
+    "change_conditions": [],
+    "context_rules": "直呼名字 Vivian，不加敬称；向第三人提到时有时用描述性指代"
+  },
+
+  "Emma->Morrison": {
+    "default_form": "Morrison",
+    "formal_form": "Morrison",
+    "intimate_form": null,
+    "third_party_form": "Morrison",
+    "change_conditions": [],
+    "context_rules": "直呼姓氏，不加敬称"
+  },
+
+  "Emma->Anna": {
+    "default_form": "夫人",
+    "formal_form": "夫人",
+    "intimate_form": "Anna",
+    "third_party_form": "Anna",
+    "change_conditions": [
+      {
+        "loop": 5,
+        "event": "L5 Anna 家访中逐步建立信任",
+        "new_form": "Anna（对第三人提及时直呼名字）",
+        "reversible": false
+      }
+    ],
+    "context_rules": "面对面称 '夫人'（908001005）；向 Zack 或第三人提到时用 Anna"
+  },
+
+  "Morrison->Zack": {
+    "default_form": "Brennan",
+    "formal_form": "Brennan",
+    "intimate_form": null,
+    "third_party_form": "Brennan / 那个侦探",
+    "change_conditions": [],
+    "context_rules": "全程 Brennan 无敬称——警察对私家侦探的居高临下态度；L1 初见调侃为 '助理先生'（901001641）"
+  },
+
+  "Morrison->Emma": {
+    "default_form": "O'Malley 小姐",
+    "formal_form": "O'Malley 小姐",
+    "intimate_form": null,
+    "third_party_form": "那个女记者",
+    "change_conditions": [],
+    "context_rules": "L1 面对面称 'O'Malley 小姐' / '记者小姐'；L6 警局场景直接用 '那个女记者'（去掉敬称，不再维持表面礼节）"
+  },
+
+  "Morrison->Vivian": {
+    "default_form": "Vivian",
+    "formal_form": "Vivian Rose",
+    "intimate_form": null,
+    "third_party_form": "那个姓 Rose 的女人 / 这姑娘",
+    "change_conditions": [
+      {
+        "loop": 4,
+        "event": "L4 变脸强押——切换为程序性执法语言",
+        "new_form": "Vivian Rose（全名+逮捕令格式）",
+        "reversible": false
+      },
+      {
+        "loop": 6,
+        "event": "L6 被指证后的妥协释放",
+        "new_form": "那个姓 Rose 的女人（贬义疏远）",
+        "reversible": false
+      }
+    ],
+    "context_rules": "L1 随意称 '这姑娘'（904001037）；L4 逮捕时用全名 Vivian Rose（程序性）；L6 释放时用 '那个姓 Rose 的女人'——语态从散漫到冷酷到疲惫"
+  },
+
+  "Morrison->Webb": {
+    "default_form": "Webb",
+    "formal_form": "Webb",
+    "intimate_form": null,
+    "third_party_form": "Webb",
+    "change_conditions": [],
+    "context_rules": "疏远的职业性称呼，直呼姓氏，不加敬称"
+  },
+
+  "Tommy->Zack": {
+    "default_form": "Brennan 先生",
+    "formal_form": "Brennan 先生",
+    "intimate_form": null,
+    "third_party_form": "Brennan 先生",
+    "change_conditions": [],
+    "context_rules": "全程 Brennan 先生，圆滑有礼的酒吧经理腔调；即使 L5 交出弹壳时也维持敬称"
+  },
+
+  "Tommy->Webb": {
+    "default_form": "Webb 先生",
+    "formal_form": "Webb 先生",
+    "intimate_form": null,
+    "third_party_form": "Webb 先生",
+    "change_conditions": [],
+    "context_rules": "始终 Webb 先生——下属对老板的习惯性敬称，即使在指证崩溃后也不改口"
+  },
+
+  "Tommy->Vivian": {
+    "default_form": "Vivian 小姐",
+    "formal_form": "Vivian 小姐",
+    "intimate_form": null,
+    "third_party_form": "Vivian 小姐",
+    "change_conditions": [],
+    "context_rules": "始终 Vivian 小姐——保护性的同情通过敬称体现"
+  },
+
+  "Tommy->James": {
+    "default_form": "James",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "接班人 / 那个新来的",
+    "change_conditions": [],
+    "context_rules": "直呼名字 James（前辈对后辈）；向 Zack 提及时用隐晦指代如 '接班人'，避免直接点名（L4 谨慎期）"
+  },
+
+  "Tommy->Whale": {
+    "default_form": "Whale",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Whale / 大人物",
+    "change_conditions": [],
+    "context_rules": "L2 post_expose 用 '大人物' 模糊指代；L4 被 Webb 日记逼到正面后松口用 Whale 本名"
+  },
+
+  "Vivian->Zack": {
+    "default_form": "Brennan 先生",
+    "formal_form": "Brennan 先生",
+    "intimate_form": null,
+    "third_party_form": "Brennan 先生",
+    "change_conditions": [],
+    "context_rules": "L1 酒醉失语无完整称呼；L3 起用 Brennan 先生；L6 托付保险箱时仍用 Brennan 先生"
+  },
+
+  "Vivian->Webb": {
+    "default_form": "Webb / 他",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "他 / Webb",
+    "change_conditions": [],
+    "context_rules": "直呼 Webb 无敬称（亲密关系 + 愤恨交织）；更多时候用 '他' 代指，避免说出名字——说名字意味着承认痛苦"
+  },
+
+  "Vivian->Emma": {
+    "default_form": "O'Malley 小姐",
+    "formal_form": "O'Malley 小姐",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "L3 用 O'Malley 小姐（保持距离的尊重）；L3 邀请报道时点名称呼"
+  },
+
+  "Vivian->Tommy": {
+    "default_form": "Tommy",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Tommy",
+    "change_conditions": [],
+    "context_rules": "直呼名字（L4 906003100 'Tommy 也不过是个被压榨的跑腿的'）——同事关系，不客气但不恶意"
+  },
+
+  "Rosa->Zack": {
+    "default_form": "先生",
+    "formal_form": "先生",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "全程用 '先生' 泛称，不直呼姓名——移民身份的距离感和恐惧"
+  },
+
+  "Rosa->Morrison": {
+    "default_form": "Morrison 先生",
+    "formal_form": "Morrison 先生",
+    "intimate_form": null,
+    "third_party_form": "Morrison 先生",
+    "change_conditions": [],
+    "context_rules": "L1 Expose 中呼救用 'Morrison 先生'（903901 段）——对权威的依附和恐惧"
+  },
+
+  "Rosa->Vivian": {
+    "default_form": "Vivian / Vivian 小姐",
+    "formal_form": "Vivian 小姐",
+    "intimate_form": null,
+    "third_party_form": "她 / Vivian",
+    "change_conditions": [],
+    "context_rules": "伪证中用 Vivian（指控语态）或 Vivian 小姐（恐惧中的礼节）；L3 崩溃后不再主动提及 Vivian 名字"
+  },
+
+  "Rosa->Webb": {
+    "default_form": "Webb 先生",
+    "formal_form": "Webb 先生",
+    "intimate_form": null,
+    "third_party_form": "Webb 先生",
+    "change_conditions": [],
+    "context_rules": "始终 Webb 先生——清洁工对老板的习惯性敬称"
+  },
+
+  "Rosa->Emma": {
+    "default_form": "Emma 小姐",
+    "formal_form": "Emma 小姐",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "L1 Morrison Talk 中提及 'Emma 小姐'（904001018）——对女性略多亲近但仍带敬称"
+  },
+
+  "James->Zack": {
+    "default_form": "Brennan 先生",
+    "formal_form": "Brennan 先生",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "全程 Brennan 先生——克制的敬称；L5 被击穿后仍用 'Brennan 先生' 托付 Anna（角色档案明确: '拜托你……Anna 不知道'）；指证中偶尔退缩用泛称 '先生'"
+  },
+
+  "James->Webb": {
+    "default_form": "他 / Webb",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "他 / Webb / Webb 先生（L2 客气期）",
+    "change_conditions": [
+      {
+        "loop": 5,
+        "event": "L5 指证被击穿后——愧疚与痛苦浮出",
+        "new_form": "Webb（去掉敬称，承认关系真实性）",
+        "reversible": false
+      }
+    ],
+    "context_rules": "L2 克制期用 'Webb 先生'（属下身份掩护）；L5 被击穿后用 'Webb'（不再维持距离）"
+  },
+
+  "James->Anna": {
+    "default_form": "Anna",
+    "formal_form": null,
+    "intimate_form": "Anna",
+    "third_party_form": "我的 Anna / Anna",
+    "change_conditions": [],
+    "context_rules": "直呼名字，提到她时声音变软；L5 临终托付: '我的 Anna……她什么都不知道'"
+  },
+
+  "Anna->Zack": {
+    "default_form": "先生",
+    "formal_form": "先生",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "泛称 '先生'——移民警惕本能，不直呼姓名"
+  },
+
+  "Anna->James": {
+    "default_form": "他 / James",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "他",
+    "change_conditions": [],
+    "context_rules": "多用 '他' 代指丈夫（L5 对话中几乎不直呼 James 名字，用 '他' 更自然——妻子谈丈夫的口吻）"
+  },
+
+  "Anna->Emma": {
+    "default_form": null,
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "L5 对话中 Anna 不直接称呼 Emma——通过肢体语言（看 Emma）和代词交流；无直接称谓实例"
+  },
+
+  "Zack->Vivian": {
+    "default_form": "Vivian 小姐",
+    "formal_form": "Vivian 小姐",
+    "intimate_form": null,
+    "third_party_form": "Vivian",
+    "change_conditions": [
+      {
+        "loop": 6,
+        "event": "L6 Vivian 被释放后、保险箱交付场景",
+        "new_form": "Vivian（省略敬称，信任关系建立后）",
+        "reversible": false
+      }
+    ],
+    "context_rules": "L1-L4 用 Vivian 小姐（委托人身份的礼节）；L3 面对面仍为 'Vivian 小姐'（906003 261 行）；L6 省略敬称直呼 Vivian（906002 794 行）"
+  },
+
+  "Zack->Morrison": {
+    "default_form": "Morrison",
+    "formal_form": "Morrison",
+    "intimate_form": null,
+    "third_party_form": "Morrison",
+    "change_conditions": [],
+    "context_rules": "直呼姓氏无敬称；L6 指证场景语气更平、更冷"
+  },
+
+  "Zack->Tommy": {
+    "default_form": "Tommy",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Tommy",
+    "change_conditions": [],
+    "context_rules": "直呼名字 Tommy（私家侦探对酒吧经理，非正式场合）"
+  },
+
+  "Zack->James": {
+    "default_form": "James",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "James",
+    "change_conditions": [],
+    "context_rules": "直呼名字 James（907905007 'Evening, James'）；L2 中性对话亦直呼名字"
+  },
+
+  "Zack->Rosa": {
+    "default_form": "Rosa",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Rosa / 那个清洁工",
+    "change_conditions": [],
+    "context_rules": "L1 Expose 开场直呼 Rosa；向 Tommy 提及时可能用描述性指代"
+  },
+
+  "Zack->Webb": {
+    "default_form": "Webb",
+    "formal_form": "Webb 先生",
+    "intimate_form": null,
+    "third_party_form": "Webb / 死去的委托人",
+    "change_conditions": [],
+    "context_rules": "L1 酒保处用 'Webb 先生'（初访礼节）；此后直呼 Webb——职业性冷淡"
+  },
+
+  "Zack->Anna": {
+    "default_form": "O'Sullivan 太太",
+    "formal_form": "O'Sullivan 太太",
+    "intimate_form": null,
+    "third_party_form": "Anna / 他的妻子",
+    "change_conditions": [],
+    "context_rules": "面对面称 'O'Sullivan 太太'（908001013）；向 Morrison 等第三人提及时用 Anna 或 '他的妻子'"
+  },
+
+  "Whale->Zack": {
+    "default_form": "Brennan",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "L6 电话中直呼 Brennan 无敬称——棋手对棋手的犬儒注视；3-5 句内说完即挂"
+  },
+
+  "Whale->James": {
+    "default_form": null,
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "James 那个孩子",
+    "change_conditions": [],
+    "context_rules": "L6 电话中用 'James 那个孩子'——工具视角的犬儒评价，不含感情"
+  },
+
+  "Zack->Whale": {
+    "default_form": null,
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Whale",
+    "change_conditions": [],
+    "context_rules": "L6 电话中 Zack 沉默未直接称呼 Whale；向 Morrison/Emma 讨论时用 Whale"
+  },
+
+  "Emma->James": {
+    "default_form": "James",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "James",
+    "change_conditions": [],
+    "context_rules": "直呼名字 James；L6 opening 讨论时用 James"
+  },
+
+  "Emma->Rosa": {
+    "default_form": "Rosa",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Rosa",
+    "change_conditions": [],
+    "context_rules": "直呼名字"
+  },
+
+  "Emma->Tommy": {
+    "default_form": "Tommy",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Tommy",
+    "change_conditions": [],
+    "context_rules": "直呼名字"
+  },
+
+  "Emma->Webb": {
+    "default_form": "Webb",
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": "Webb",
+    "change_conditions": [],
+    "context_rules": "直呼姓氏；L1 opening 中用 'Webb'（大堂讨论）"
+  },
+
+  "James->Tommy": {
+    "default_form": null,
+    "formal_form": null,
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "Unit9 对话中无 James 直接称呼 Tommy 的实例（两人不在同一场景有直接交谈）"
+  },
+
+  "Zack->MrsMorrison": {
+    "default_form": "莫里森太太",
+    "formal_form": "莫里森太太",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "L6 Morrison 家搜证场景——面对面称 '莫里森太太'"
+  },
+
+  "Emma->MrsMorrison": {
+    "default_form": "莫里森太太",
+    "formal_form": "莫里森太太",
+    "intimate_form": null,
+    "third_party_form": null,
+    "change_conditions": [],
+    "context_rules": "L6 Morrison 家场景——Emma 用 '莫里森太太' 搪塞借口（904013 段）"
+  }
+}

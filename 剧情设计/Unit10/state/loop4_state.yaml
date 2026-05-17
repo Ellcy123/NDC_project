@@ -113,6 +113,7 @@ player_context:
 
 opening:
   type: cutscene
+  talk: opening_l4_hospital
   location: "圣心医院-Margaret 病房（场景 10006）"
   scene_id: 10006
   description: |
@@ -123,58 +124,6 @@ opening:
     Emma 压低声音告诉 Zack：这家医院是 Miller 资助的（Miller 集团伏笔节点，本 Loop 内不回收）。
     三人确认 L4 调查方向后分开行动：Mickey 处理法律事务，Emma 继续陪 Margaret/联系 Foster，
     Zack 去追查 Lula 和 Danny。
-
-  npcs:
-    mickey_L4_001:
-      talk: mickey_L4_001
-      is_liar: false
-      motive: "掌控信息流动，给 Zack 方向感但保留自己的底牌；让 Zack 感到'有人在背后支撑'"
-      mindset: "从容、有把握，每句话都是精确计算过的信息投放；对 Lula 的安排胸有成竹"
-
-      # ── 1. 已知信息 ──
-      active_topics:
-        - "建议 L4 调查路线：地下室 → Lula → Danny；Danny 卖房产证给银行换沉默（L3 Moore 3060004 坦白）是 R2 最有力的动机线索"
-        - "建议 Zack 先去鞋坊地下室，再去找 Lula，最后再去 Frank 家厕所找 Danny"
-        - "提醒 Zack：Danny 卖房产证换沉默这件事，Moore 已经承认了（3060004），这是最有力的动机线索"
-      withheld_topics:
-        - "Lula 具体被安排在 Frank 家厕所小窗外的细节（Expose R3 Lula 隔窗签字时才揭示）"
-        - "Mickey 与 Whale 的真实关系（Unit11+ 揭示）"
-        - "Miller 集团和医院的具体关联深度（Unit10 内不回收）"
-
-      # ── 2. 玩家询问意图 ──
-      player_inquiry:
-        - '"Mickey 对 Lula 的看法 / Lula 是否会出现" # 5'
-        - '"下一步调查路线——地下室/Lula/Danny 的顺序如何安排" # 8'
-        - '"Danny 卖房产证这件事——Moore 的坦白已经够用吗" # 6'
-
-      # ── 3. 可提取证词 ──
-      testimony_ids: []
-
-    emma_L4_001:
-      talk: emma_L4_001
-      is_liar: false
-      motive: "陪伴 Zack 同时收集医院和 Foster 端的信息；把 Miller 伏笔递出去"
-      mindset: "温和而专注，比 Mickey 更在意情感节奏；对 Margaret 的担忧是真实的"
-
-      # ── 1. 已知信息 ──
-      active_topics:
-        - "这家医院是 Miller 资助的——Emma 是无意中从护士长那里得知的（Miller 集团伏笔，轻描淡写）"
-        - "Foster 那边还没有新消息，但她说案发超过一天后才能出结论（时序铺垫）"
-        - "Zack 出门前 Emma 叮嘱：注意 Danny 这个人，他对 Zack 接触 Lula 的事一直很抵制"
-      withheld_topics:
-        - "Foster 最终的法医结论（L5 末才有）"
-        - "Miller 集团和 Whale/Mickey 之间的关联（Unit11+ 揭示）"
-        - "Margaret 的苏醒时间（L5 末脱险）"
-
-      # ── 2. 玩家询问意图 ──
-      player_inquiry:
-        - '"Emma 提到医院是 Miller 资助的——Miller 是谁" # 6'
-        - '"Foster 那边有没有新进展" # 7'
-        - '"Emma 对 Lula 这个人有什么判断" # 5'
-
-      # ── 3. 可提取证词 ──
-      testimony_ids: []
-
 
 # ─────────────────────────────
 # 三、场景（自由探索）
@@ -256,8 +205,8 @@ scenes:
     evidence: []
 
     npcs:
-      lula_L4_001:
-        talk: lula_L4_001
+      lula_l4_storefront:
+        talk: lula_l4_storefront
         is_liar: false
         motive: "为 Frank 发声，澄清外界对他（和她）的所有误解；情感真实，没有表演"
         mindset: "悲伤但平静，像是哭过了现在只剩清醒；对 Zack 信任（因为 Mickey 已打过招呼），对外界判断早已习惯"
@@ -299,8 +248,8 @@ scenes:
     evidence: []
 
     npcs:
-      ohara_L4_001:
-        talk: ohara_L4_001
+      ohara_l4_street:
+        talk: ohara_l4_street
         is_liar: false
         motive: "作为邻居尽自己所知讲述，她只说看到的，不猜测动机"
         mindset: "谨慎、实诚，对 Zack 是 Margaret 儿子这一点有一定信任；不会主动多说，但被追问会认真回忆"
@@ -391,8 +340,8 @@ scenes:
     evidence: []  # 指证场，无可拾取证据；R3 时 Lula 隔窗递入"放弃继承协议"作为演出道具，不进 ItemStaticData
 
     npcs:
-      danny_l4:
-        talk: danny_l4_toilet
+      danny_l4_bathroom:
+        talk: danny_l4_bathroom
         is_liar: true  # L4 Expose 对象
         motive: "面对铁证下意识撒谎；不是凶手，但是机会主义者——曾为赌债卖叔叔房产证"
         mindset: "肚子疼+被指证双重狼狈；一边按肚子一边狡辩，越被击穿越慌乱；R3 后看到 Lula 在小窗外签字才彻底崩溃"
@@ -412,7 +361,8 @@ scenes:
           # R2/R3 退守对白为 Expose 内部，无 testimony ID
 
       lula_l4_window:
-        # Lula 隔厕所小窗演出，不在场对话——R3 出现时隔窗签字
+        # 【演出帧·非对话】属 Danny 指证（Loop4_danny / 场景 10020）R3 环节；隔厕所小窗递入放弃继承协议、当 Danny 面签字
+        # talk:null 无对话文件；R3 演出 + 补充证词来源；勿当作"多余对话"清理
         talk: null
         is_liar: false
         motive: "5 年隐忍最后爆发——主动出头为 Frank 正名 + 为 Zack 提供 Danny 诬陷的反证"
@@ -430,7 +380,7 @@ scenes:
 
 expose:
   target: danny
-  target_talk: danny_expose_L4
+  target_talk: Loop4_danny
   scene_id: 10020  # Frank 家厕所——Danny 蹲马桶上无处可逃
   is_liar: true
   player_inquiry: null
@@ -535,6 +485,7 @@ expose:
 
   # ── 指证后剧情 ──
   post_expose_scene:
+    talk: danny_l4_postexpose
     description: |
       Danny 的目击证词 4090004 进入玩家背包（L5 击穿件之一，已确认挂入 L5 疑点 10501 condition）。
       Lula 补充证词 4100001（Frank 不会做饭/不用 Margaret 厨房）和 4100002（工资给 Danny 还债）。

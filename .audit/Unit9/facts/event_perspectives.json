@@ -1,0 +1,1311 @@
+{
+  "E001_Webb被枪杀": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "亲手从2F厨房下楼到1F Webb会客室，用米勒集团特制手枪(.45 ACP)枪杀Webb；知道鼓点高潮掩盖了枪声；知道子弹穿窗击碎玻璃",
+      "presented_version": {
+        "L1": null,
+        "L2": "普通厨师，对Webb死亡表示抱歉（隐藏愧疚伪装成同情）",
+        "L3": "同L2，被撞见销毁节目单时以'印错了'搪塞",
+        "L4": null,
+        "L5": "23:00-23:05有不在场证明（厨房工作表标注下楼送餐）；被三轮指证击穿后承认'是我'"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1-L4:deceptive（伪装无辜厨师）, L5 Expose R3后:truthful（被击穿承认）",
+      "permitted_lies": [
+        "声称23:00-23:10在2F厨房下楼送餐（厨房工作表9210）",
+        "否认与Webb死亡有关",
+        "声称只是普通厨师，不涉及案件"
+      ],
+      "withheld_in_loop": {
+        "L1": ["James不出场，玩家不知其存在"],
+        "L2": ["真实案发时间23:00-23:05", "他是凶手", "使用的是米勒集团特制手枪"],
+        "L3": ["同L2，加上销毁节目单的真实原因（掩盖鼓点时间线）"],
+        "L4": ["同L3"],
+        "L5": ["Expose前仍维持不在场证明"]
+      }
+    },
+    "Webb": {
+      "presence": "在场",
+      "true_knowledge": "被杀者本人，23:00-23:05被James枪杀",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Vivian": {
+      "presence": "缺席",
+      "true_knowledge": "案发时在1F歌舞厅，不知Webb已死；23:30推门才发现尸体",
+      "presented_version": {
+        "L1": "酒醉失语，无完整陈述",
+        "L2": "声称'是我杀了他'（自毁式认罪，她以为自己的杀意等同于行为）",
+        "L3": "咬定认罪不松口",
+        "L4": "被三轮指证击穿后承认'我想杀他，但我没有'",
+        "L5": null,
+        "L6": "已承认不是凶手"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:partial（失语）, L2-L3:deceptive（自毁式认罪）, L4 R3后:truthful",
+      "permitted_lies": [
+        "声称是自己杀了Webb（L2-L4 R2，自毁式认罪而非恶意栽赃）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["她带枪去会客室的计划", "23:05被'Webb'吼退的经过", "杀意"],
+        "L2": ["同L1"],
+        "L3": ["同L1"],
+        "L4": ["Expose前仍咬定认罪"]
+      }
+    },
+    "Rosa": {
+      "presence": "缺席",
+      "true_knowledge": "案发时不在现场（在B1储藏室或其他位置）；23:30按纸条指令到场时Webb已死；她真实知道23:30不是案发时间，因为她23:20倒垃圾时Webb会客室方向无异常",
+      "presented_version": {
+        "L1": "声称23:30目睹Vivian开枪杀Webb",
+        "L3": "R1退守为'也许记错时间但亲眼看见Vivian有枪'；R2崩溃后坦白被威胁纸条逼迫作伪证"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:deceptive, L3 R1:deceptive, L3 R2后:truthful, L6:truthful",
+      "permitted_lies": [
+        "声称23:30亲眼目睹Vivian开枪杀Webb（L1-L3 R1）",
+        "退守为'也许记错时间但Vivian确实有枪'（L3 R1）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["23:20倒垃圾的时间节点", "威胁纸条的存在", "捡到的.45弹壳", "真实案发时间不是23:30"],
+        "L3": ["Expose前仍维持伪证"]
+      }
+    },
+    "Morrison": {
+      "presence": "缺席",
+      "true_knowledge": "案发时不在酒吧；23:30+才赶到现场宣布死亡；L1-L3不知本案牵涉Whale；L4看见.45弹壳后认出米勒集团标记，意识到案件指向Whale",
+      "presented_version": {
+        "L1": "以醉醺醺老警察姿态宣布Webb死亡、锁定Vivian为嫌疑人",
+        "L3": "汇报子弹缺失和弹道信息（partial：给出部分真实信息）",
+        "L4": "看到弹壳后变脸，以程序语言强押Vivian、撕毁协议书",
+        "L6": "被指证三轮击穿后签字认罪"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:partial（姑且秉公但有懒惰动机）, L3:partial, L4:deceptive（主动压案）, L6:deceptive→被击穿",
+      "permitted_lies": [
+        "伪装成姑且秉公的老警察（L1-L3）",
+        "声称按程序逮捕Vivian是执法行为（L4，实为压案）",
+        "声称Whale只是放贷的，借钱不能说明什么（L6 R2退守）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["与Whale的债务关系", "急于结案的腐败因素"],
+        "L3": ["同L1"],
+        "L4": ["认出弹壳上米勒集团标记的真实含义", "压案的真实动机"],
+        "L6": ["Expose前仍否认腐败"]
+      }
+    },
+    "Tommy": {
+      "presence": "缺席",
+      "true_knowledge": "案发时在2F Tommy办公室，不知23:00-23:05发生了什么；23:30+才赶到现场；知道Webb可能惹上Whale（基于多年勒索经验），猜测Webb的死与大人物有关",
+      "presented_version": {
+        "L2": "暗示Webb惹上大人物想跑路，但不说Whale的名字",
+        "L4": "正式指认Rita是Whale间谍，给出'知道Whale的只有前/现勒索人'",
+        "L5": "交出完整节目单和修改申请，暗示方向指向James但不点名"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2:deceptive（隐瞒勒索网络直到被指证击穿）, L4:truthful, L5:truthful",
+      "permitted_lies": [
+        "声称酒吧只有私酒生意（L2 R1谎言）",
+        "声称账目清白无隐性收入（L2 R2谎言）",
+        "声称花瓶和油画是真古董交易（L2 R3谎言）"
+      ],
+      "withheld_in_loop": {
+        "L2": ["勒索网络完整细节（Expose前）", "新执行人是谁", "Whale具体身份", "抽屉里的生锈弹壳"],
+        "L4": ["新执行人是James（猜到但不点名）"],
+        "L5": ["接手的新执行人名字（交出证物但不说James的名）"]
+      }
+    },
+    "Emma": {
+      "presence": "缺席",
+      "true_knowledge": "案发时与Zack在1F酒吧大堂；23:30听到枪响后与Zack冲向现场；全程不知真实案发时间",
+      "presented_version": {
+        "L1": "如实描述听到枪响后冲向现场的经过"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "缺席",
+      "true_knowledge": "案发时被酒保拦在门外→经Emma引路进入大堂；23:30听到枪响后冲向现场",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E002_James模仿Webb吼退Vivian": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "亲自在Webb会客室内锁门，模仿Webb爱尔兰式口音吼出'Don't be bothering me!'骗走Vivian",
+      "presented_version": {
+        "L2": "不提此事",
+        "L3": "不提此事",
+        "L5": "厨房口音脱口暴露后被指证击穿"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L5 Expose前:deceptive（隐瞒）, L5 Expose后:truthful",
+      "permitted_lies": [
+        "否认曾离开2F厨房",
+        "否认会模仿Webb说话"
+      ],
+      "withheld_in_loop": {
+        "L2": ["23:05模仿Webb的事实"],
+        "L3": ["同L2"],
+        "L5": ["Expose前仍隐瞒"]
+      }
+    },
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "23:05到达Webb会客室门口敲门，被门内传来的'Webb'的声音吼退；她以为说话者是Webb本人；L5前不知说话者是James",
+      "presented_version": {
+        "L1": "酒醉失语不提此事",
+        "L2": "不提（维持'是我杀的'叙事）",
+        "L3": "不提",
+        "L4": "post_expose后主动补充'23:05我去敲门被Webb吼退'以及'23:30枪声从头顶方向传来'"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1-L3:partial/deceptive（隐瞒23:05敲门经过）, L4 post_expose:truthful（给出关键证言）",
+      "permitted_lies": [
+        "隐瞒23:05携枪去会客室敲门的事实（L1-L3）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["23:05敲门被吼退", "带枪的杀意", "'Don't be bothering me!'的细节"],
+        "L2": ["同L1"],
+        "L3": ["同L1"],
+        "L4": ["Expose前仍不说23:05细节"]
+      }
+    },
+    "Webb": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E003_James上楼归位": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "23:05-23:10从1F Webb会客室上楼返回2F厨房，利用厨房工作表'23:00-23:10下楼送餐'作为不在场证明",
+      "presented_version": {
+        "L2": "以厨房工作为日常背景，不提此事",
+        "L5": "声称有不在场证明（厨房工作表），被击穿后承认"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L5 Expose前:deceptive, L5 Expose后:truthful",
+      "permitted_lies": [
+        "声称23:00-23:10在2F厨房正常下楼送餐（利用厨房工作表9210）"
+      ],
+      "withheld_in_loop": {
+        "L2": ["23:05-23:10的真实行踪"],
+        "L3": ["同L2"],
+        "L5": ["Expose前仍用不在场证明"]
+      }
+    },
+    "Rosa": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E004_Rosa倒垃圾压碎片": {
+    "Rosa": {
+      "presence": "在场",
+      "true_knowledge": "23:20从B1储藏室上1F走到侧巷垃圾区放下垃圾袋；她不知道垃圾袋压在了玻璃碎片上方（碎片是23:00-23:05子弹穿窗产生的）",
+      "presented_version": {
+        "L1": "不提23:20倒垃圾",
+        "L3": "被击穿后坦白23:20确实去倒过垃圾"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:deceptive（隐瞒倒垃圾时间）, L3 R2后:truthful",
+      "permitted_lies": [
+        "隐瞒23:20倒垃圾的行为（L1-L3 R1）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["23:20倒垃圾的时间节点"],
+        "L3": ["Expose前仍隐瞒此时间"]
+      }
+    },
+    "James": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E005_假枪声与误导指认": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "23:30从2F厨房窗口朝外空射一枪制造假枪声；这是他设计的诡计核心——让所有人误以为23:30才是案发时刻",
+      "presented_version": {
+        "L2": "不提此事",
+        "L5": "被三轮指证击穿后承认假枪声诡计"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L5 Expose前:deceptive, L5 Expose后:truthful",
+      "permitted_lies": [
+        "声称23:30在2F厨房工作（不在场证明）",
+        "否认23:30开过枪"
+      ],
+      "withheld_in_loop": {
+        "L2": ["23:30假枪声的存在"],
+        "L3": ["同L2"],
+        "L5": ["Expose前仍隐瞒"]
+      }
+    },
+    "Rosa": {
+      "presence": "在场",
+      "true_knowledge": "按匿名威胁纸条指令在23:30紧随枪声跑进1F Webb会客室指认Vivian；趁乱从地上捡走一枚.45弹壳；她知道自己在作伪证",
+      "presented_version": {
+        "L1": "声称23:30亲眼目睹Vivian开枪杀Webb",
+        "L3": "R2崩溃后坦白是按纸条指令执行的伪证"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:deceptive, L3 R2后:truthful",
+      "permitted_lies": [
+        "声称亲眼目睹Vivian23:30开枪杀Webb（L1-L3 R1）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["威胁纸条的存在", "捡到.45弹壳", "伪证的事实"],
+        "L3": ["Expose前仍维持伪证"]
+      }
+    },
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "23:30按送酒惯例推门进入Webb会客室，看见Webb尸体后陷入混乱；手中.25柯尔特从未开过火；她听出枪声'从头顶方向传来'（L4 post_expose才说出）",
+      "presented_version": {
+        "L1": "酒醉失语",
+        "L2": "声称'是我杀了他'",
+        "L4": "被击穿后承认不是凶手；补充'枪声从头顶方向传来'"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:partial, L2-L4 R2:deceptive（自毁认罪）, L4 R3后:truthful",
+      "permitted_lies": [
+        "声称是自己杀了Webb（L2-L4 R2）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["枪声从头顶方向传来的感知", "杀意"],
+        "L2": ["同L1"],
+        "L3": ["同L1"],
+        "L4": ["Expose前仍咬定认罪"]
+      }
+    },
+    "Morrison": {
+      "presence": "事后听说",
+      "true_knowledge": "23:30+才赶到现场；从现场情形判断23:30是案发时刻（与所有人一样被误导）；L4看到.45弹壳后认出米勒集团标记",
+      "presented_version": {
+        "L1": "以为23:30就是案发时间，姑且秉公处理",
+        "L4": "看到弹壳后以程序语言压案"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1-L3:partial（被假枪声误导的真实判断）, L4:deceptive（认出弹壳后主动压案）",
+      "permitted_lies": [
+        "伪装成被假枪声误导的普通判断（L4后实为知情压案）"
+      ],
+      "withheld_in_loop": {
+        "L4": ["认出弹壳米勒标记的含义", "压案的真实动机"]
+      }
+    },
+    "Emma": {
+      "presence": "事后听说",
+      "true_knowledge": "23:30与Zack在大堂听到枪响后冲向现场；被假枪声误导以为23:30是案发时刻",
+      "presented_version": {
+        "L1": "如实描述23:30听到枪响后的情况"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "事后听说",
+      "true_knowledge": "23:30与Emma在大堂听到枪响后冲向现场；被假枪声误导",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Tommy": {
+      "presence": "事后听说",
+      "true_knowledge": "案发时在2F Tommy办公室，听到枪响后赶到；被假枪声误导以为23:30是案发时刻；后续基于勒索经验猜测Webb的死与Whale有关",
+      "presented_version": {
+        "L2": "声称枪声从酒吧南方（厨房和会客室方向）传来"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E006_Zack和Emma到达现场": {
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "从1F酒吧大堂穿过人群冲向1F Webb会客室；到达时Rosa在门边、Vivian手握.25柯尔特怔愣在尸体旁",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": {
+      "presence": "在场",
+      "true_knowledge": "与Zack一起到达现场，如实观察到Rosa和Vivian的状态",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": {
+      "presence": "在场",
+      "true_knowledge": "随后赶到，宣布Webb死亡，锁定Vivian为嫌疑人；此时尚不知案件牵涉Whale",
+      "presented_version": {
+        "L1": "醉醺醺但姑且秉公地宣布死亡、表示要逮捕Vivian"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "伪装成单纯嫌麻烦的老警察（隐藏背后懒惰以外的动机尚未激活——L1时腐败动机尚未被触发）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["与Whale的债务关系（此时尚未被激活为压案动机）"]
+      }
+    },
+    "Rosa": {
+      "presence": "在场",
+      "true_knowledge": "站在门边，刚执行完伪证指认Vivian；手中暗藏刚捡到的.45弹壳",
+      "presented_version": {
+        "L1": "维持'亲眼目睹Vivian开枪'的证词"
+      },
+      "stance": "deceptive",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "声称亲眼目睹Vivian开枪"
+      ],
+      "withheld_in_loop": {
+        "L1": [".45弹壳", "威胁纸条", "伪证事实"]
+      }
+    },
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "手握.25柯尔特面容呆滞站在Webb尸体旁；枪从未击发；她刚经历推门发现Webb已死的冲击",
+      "presented_version": {
+        "L1": "酒醉失语，无完整表达"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L1": ["她带枪来原本是想杀Webb"]
+      }
+    },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E007_Webb经营勒索生意": {
+    "Tommy": {
+      "presence": "在场",
+      "true_knowledge": "五年来作为Webb的勒索执行人，亲手管理账本和代号系统（花瓶=Thompson，油画=Coleman）；知道VIP包厢是仙人跳拍照地点；知道Vivian被利用；知道Webb的月收入$15,000中$11,000来自勒索",
+      "presented_version": {
+        "L2": "R1:声称酒吧只有私酒生意→R2:声称账目清白→R3:声称古董是真买卖→被击穿后承认勒索网络全貌"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2 Expose前:deceptive（三轮谎言递进退守）, L2 Expose后:truthful",
+      "permitted_lies": [
+        "声称酒吧只有私酒生意（L2 R1）",
+        "声称没有隐性收入，账目清白（L2 R2）",
+        "声称花瓶和油画是真古董交易（L2 R3）"
+      ],
+      "withheld_in_loop": {
+        "L2": ["勒索网络的完整运作方式（Expose前）", "Webb惹上大人物的细节（Expose后才暗示）", "新执行人身份"]
+      }
+    },
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "被Webb利用三年，在VIP包厢充当仙人跳诱饵；她知道自己被利用但不知勒索网络全貌的财务细节",
+      "presented_version": {
+        "L2": "维持'是我杀了他'，不主动谈勒索",
+        "L4": "被击穿后承认被利用的事实"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "隐瞒被利用做仙人跳的细节（L1-L3，因维持认罪叙事）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["勒索细节"],
+        "L2": ["同L1"],
+        "L3": ["同L1"]
+      }
+    },
+    "James": {
+      "presence": "事后听说",
+      "true_knowledge": "作为现任勒索执行人（接替Tommy），知道Webb的勒索生意全貌；知道11月中旬Webb突然停掉业务",
+      "presented_version": {
+        "L2": "以'普通厨师'面目，不提勒索",
+        "L5": "被击穿后承认是现任执行人"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L5 Expose前:deceptive, L5 Expose后:truthful",
+      "permitted_lies": [
+        "否认知道Webb的勒索生意",
+        "声称只是兼职厨师"
+      ],
+      "withheld_in_loop": {
+        "L2": ["他是现任勒索执行人", "勒索收入的去向"],
+        "L5": ["Expose前仍隐瞒"]
+      }
+    },
+    "Webb": {
+      "presence": "在场",
+      "true_knowledge": "勒索网络的设计者和运营者",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Rosa": {
+      "presence": "缺席",
+      "true_knowledge": "作为酒吧清洁工知道一些酒吧内部运作，但不了解勒索网络细节",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E008_James接受Whale委托": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "作为现任勒索执行人接受Whale书信委托杀Webb；与Whale通过书信联系，签约并约定蓝月亮后门尾款交接；动机：Anna怀孕急需钱+身份协议",
+      "presented_version": {
+        "L2": "不提此事",
+        "L5": "被击穿后承认接受Whale委托"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L5 Expose前:deceptive, L5 Expose后:truthful",
+      "permitted_lies": [
+        "否认认识Whale",
+        "否认与任何委托有关",
+        "声称只是普通厨师"
+      ],
+      "withheld_in_loop": {
+        "L2": ["接受Whale委托的事实", "与Whale的书信往来"],
+        "L3": ["同L2"],
+        "L5": ["Expose前仍隐瞒"]
+      }
+    },
+    "Whale": {
+      "presence": "在场",
+      "true_knowledge": "亲自发起委托，通过书信联系James签订合同，约定蓝月亮后门尾款交接",
+      "presented_version": {
+        "L6": "电话中以犬儒评价带过——'James那个孩子可惜了，差一点就上岸'"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Tommy": {
+      "presence": "缺席",
+      "true_knowledge": "猜到接班人可能是James但选择不深想；知道'知道Whale的只有前/现勒索人'这一条规则",
+      "presented_version": {
+        "L4": "暗示嫌疑范围：'知道Whale的只有前/现勒索人'",
+        "L5": "仍不点名James"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L2": ["猜到接班人是James"],
+        "L4": ["猜到但不点名"],
+        "L5": ["交出证物但仍不说James的名"]
+      }
+    },
+    "Rosa": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E009_James威胁Rosa作伪证": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "亲手在Blue Moon餐巾纸背面写下威胁纸条，附带Rosa女儿Isabel的医疗单，放入Rosa储藏室铁盒中；纸条要求Rosa 23:30去Webb会客室指认Vivian",
+      "presented_version": {
+        "L2": "不提此事",
+        "L5": "被击穿后承认（字迹倒写J与英语练习书对应）"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L5 Expose前:deceptive, L5 post_expose对白:truthful",
+      "permitted_lies": [
+        "否认写过任何纸条",
+        "否认认识Rosa的女儿"
+      ],
+      "withheld_in_loop": {
+        "L2": ["威胁纸条是他写的"],
+        "L3": ["同L2——此时纸条已被发现但胁迫者身份未知"],
+        "L5": ["Expose前仍隐瞒"]
+      }
+    },
+    "Rosa": {
+      "presence": "在场",
+      "true_knowledge": "收到威胁纸条，知道写纸条的人熟悉酒吧内部但L3前不知道是谁；纸条要求23:30去指认Vivian，否则杀她女儿；附带女儿医疗单",
+      "presented_version": {
+        "L1": "执行纸条指令作伪证，不提纸条",
+        "L3": "R2崩溃后交出纸条，坦白被威胁经过"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:deceptive（按指令行事）, L3 R2后:truthful",
+      "permitted_lies": [
+        "隐瞒威胁纸条的存在（L1-L3 R1）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["威胁纸条", "女儿医疗单", "被胁迫的事实"],
+        "L3": ["Expose前仍隐瞒"]
+      }
+    },
+    "Vivian": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E010_James销毁节目单": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "主动销毁酒吧内所有《艾斯弗德狂想曲》节目单以掩盖鼓点高潮时间线——如果节目单存在，23:00鼓点高潮=掩盖枪声的时间就可被推导",
+      "presented_version": {
+        "L3": "被Zack撞见时以'印错了，不能用'搪塞后快步离开"
+      },
+      "stance": "deceptive",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "声称节目单印错了不能用"
+      ],
+      "withheld_in_loop": {
+        "L3": ["销毁节目单的真实原因是掩盖鼓点时间线"]
+      }
+    },
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "撞见James销毁过程，抢到碎片但碎片上只剩曲目名，演奏时间已完全缺失",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Tommy": {
+      "presence": "缺席",
+      "true_knowledge": "办公室文件堆里保有完整节目单备份（9501）和节目修改申请（9502）；L5才交出",
+      "presented_version": {
+        "L5": "交出完整节目单和修改申请：'本来也是想给你的'"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L3:partial（知道但不交出）, L5:truthful",
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L3": ["持有完整节目单备份"],
+        "L4": ["同L3"]
+      }
+    },
+    "Rosa": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E011_Vivian修改节目申请": {
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "一个月前亲笔签名申请将11月3日节目从《Moonlight Bay》改为《艾斯弗德狂想曲》并注明音量5级；动机：让Webb听到，和她最后共舞一曲；她不知道这客观上为James的枪声提供了掩护",
+      "presented_version": {
+        "L1": "不提此事",
+        "L4": "不提（维持认罪叙事）",
+        "L5": "节目修改申请由Tommy交出，Vivian的签名被玩家看到"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L1": ["修改节目的事实"],
+        "L2": ["同L1"],
+        "L3": ["同L1"],
+        "L4": ["同L1"]
+      }
+    },
+    "Tommy": {
+      "presence": "在场",
+      "true_knowledge": "作为酒吧经理接收了Vivian的节目修改申请，批准执行；持有申请原件",
+      "presented_version": {
+        "L5": "交出节目修改申请（9502），确认Vivian的签名"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L2": ["持有节目修改申请"],
+        "L3": ["同L2"],
+        "L4": ["同L2"]
+      }
+    },
+    "James": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E012_Morrison变脸强押Vivian": {
+    "Morrison": {
+      "presence": "在场",
+      "true_knowledge": "看到.45弹壳后认出弹底印记'MILLER ARMS'属于米勒集团——他因欠Whale钱而知道米勒集团的意义；当场决定压案：撕毁协议书、夺走弹壳、强押Vivian",
+      "presented_version": {
+        "L4": "以纯粹程序语言宣布逮捕Vivian——'Vivian小姐有杀人动机，有计划，有作案能力。我要执行逮捕。'",
+        "L6": "被指证时否认压案动机：'Whale是个放贷的，借钱不能说明什么'"
+      },
+      "stance": "deceptive",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "声称逮捕Vivian是正常执法程序",
+        "否认夺走弹壳有不当动机",
+        "声称撕毁协议书是因为调查期已满"
+      ],
+      "withheld_in_loop": {
+        "L4": ["认出米勒集团标记的真实含义", "压案是为Whale偿债"],
+        "L5": ["弹壳藏在家中书房"],
+        "L6": ["Expose前仍否认腐败"]
+      }
+    },
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "被Morrison强押回警局；她不震惊——她早就知道证据在这个系统里不等于自由",
+      "presented_version": {
+        "L4": "不反抗，沉默被带走"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "亲眼目睹Morrison脸色骤变、撕毁协议书、夺走弹壳、强押Vivian；手里拿着正确证据却无能为力",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": {
+      "presence": "事后听说",
+      "true_knowledge": "得知Morrison强押Vivian和撕毁协议书",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Rosa": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E013_Morrison借Whale钱还赌债": {
+    "Morrison": {
+      "presence": "在场",
+      "true_knowledge": "欠疤面煞星5000美元赌债（Washington Park赛马场），从Whale（以'W先生'名义）处借款$6,000还清；借款时间早于Webb案约三周；知道疤面煞星放贷网络背后是Whale",
+      "presented_version": {
+        "L6": "R1:否认与弹壳有关→R2:声称Whale只是放贷的→R3:被赌债证据击穿后签字"
+      },
+      "stance": "deceptive",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "否认与Whale有债务关系",
+        "声称Whale只是个普通放贷者",
+        "声称借钱和Webb案无关"
+      ],
+      "withheld_in_loop": {
+        "L1": ["赌债和借款事实"],
+        "L2": ["同L1"],
+        "L3": ["同L1"],
+        "L4": ["同L1"],
+        "L5": ["同L1"],
+        "L6": ["Expose前仍否认"]
+      }
+    },
+    "Whale": {
+      "presence": "在场",
+      "true_knowledge": "通过放贷网络向Morrison发放$6,000借款，以此换取Webb案快速结案的权力租约",
+      "presented_version": {
+        "L6": "电话中不提债务细节"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Rosa": {
+      "presence": "缺席",
+      "true_knowledge": "L4后被Morrison'叮嘱不要多嘴'，隐约知道Morrison想让事情不被查清",
+      "presented_version": {
+        "L6": "主动提供Morrison相关证词"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E014_James自杀": {
+    "James": {
+      "presence": "在场",
+      "true_knowledge": "在蓝月亮后门与Whale手下进行尾款交易时被Zack和Emma当场指证；用米勒集团特制手枪自杀；自杀前将Anna托付给Zack和Emma",
+      "presented_version": {
+        "L5": "被指证击穿后不辩解，陈述完动机后举枪自杀"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "亲眼目睹James自杀；接受James临终托付Anna的请求",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": {
+      "presence": "在场",
+      "true_knowledge": "亲眼目睹James自杀；与Zack一起被托付照顾Anna",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Anna": {
+      "presence": "缺席",
+      "true_knowledge": "事后得知丈夫死亡，但不知道是自杀、不知道James是凶手、不知道Whale委托内容",
+      "presented_version": {
+        "L6": "沉默承受丧夫之痛"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Whale": {
+      "presence": "门外",
+      "true_knowledge": "通过手下在场监控尾款交易；暗处哨声导致James意识到暴露后果，触发自杀决定",
+      "presented_version": {
+        "L6": "电话中以犬儒视角评价'James那个孩子可惜了——他差一点就上岸'"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E015_Webb预雇Zack为遗嘱执行人": {
+    "Webb": {
+      "presence": "在场",
+      "true_knowledge": "预见自己会被害，雇佣Zack为遗嘱执行人，指定确保Vivian顺利继承遗产；深层动机：知道南区计划名单上有Margaret Brennan，Zack必然被钉在案件上",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "持有Webb签署的委托协议书；L1-L5不知Webb雇他的隐藏动机（南区名单有Margaret Brennan）；L6录音才得知",
+      "presented_version": {
+        "L1": "出示协议书换取72h调查期"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": {
+      "presence": "事后听说",
+      "true_knowledge": "L1看到协议书，承认Zack的调查权；L4撕毁协议书",
+      "presented_version": {
+        "L1": "承认协议书有效，给予72h调查期",
+        "L4": "撕毁协议书"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:partial（姑且承认）, L4:deceptive（撕毁压案）",
+      "permitted_lies": [
+        "声称撕毁协议书是因为调查期满（L4实为压案）"
+      ],
+      "withheld_in_loop": {
+        "L4": ["撕毁协议书的真实动机"]
+      }
+    },
+    "Vivian": {
+      "presence": "缺席",
+      "true_knowledge": "知道Webb雇了Zack但不了解委托的深层含义",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E016_Whale电话": {
+    "Whale": {
+      "presence": "在场",
+      "true_knowledge": "打电话到Morrison家座机，叫出Zack的姓'Brennan'，以犬儒看客视角发表评价后挂断；全知Zack的调查进展",
+      "presented_version": {
+        "L6": "3-5句犬儒评价——对Zack是'棋盘上有趣的变量'，对James是'用过的工具'"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "在Morrison家接到Whale电话，全程未回应，听完后沉默",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": {
+      "presence": "事后听说",
+      "true_knowledge": "得知Zack接到Whale电话",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E017_Webb停止勒索并布置遗产": {
+    "Webb": {
+      "presence": "在场",
+      "true_knowledge": "11月中旬沉迷Rita后停掉勒索生意，开始布置遗产继承（雇Zack），撤换Tommy，在勒索日记扉页写下'Whale — Danger'",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Tommy": {
+      "presence": "在场",
+      "true_knowledge": "11月中旬被Webb从勒索执行人位置撤换，不知原因；知道Webb突然停了勒索业务",
+      "presented_version": {
+        "L2": "Expose后暗示Webb惹上大人物想跑路"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L2": ["Webb停止勒索的完整原因", "Rita在其中的角色"]
+      }
+    },
+    "James": {
+      "presence": "事后听说",
+      "true_knowledge": "作为现任勒索执行人，Webb突然中止业务导致他的副业和身份协议同时断掉；这加速了他接受Whale委托的决定",
+      "presented_version": {
+        "L2": "不提此事"
+      },
+      "stance": "deceptive",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "否认知道Webb的勒索业务"
+      ],
+      "withheld_in_loop": {
+        "L2": ["业务中止对他的影响"],
+        "L5": ["Expose前仍隐瞒"]
+      }
+    },
+    "Vivian": {
+      "presence": "缺席",
+      "true_knowledge": "不知Webb停止勒索的事实；只知道Webb沉迷了一个叫Rita的女人（误解为移情）",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Rita": {
+      "presence": "在场",
+      "true_knowledge": "作为Whale间谍渗透酒吧，Webb主动靠近她（Webb想摸清间谍身份）",
+      "presented_version": {},
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E018_Rita渗透酒吧": {
+    "Rita": {
+      "presence": "在场",
+      "true_knowledge": "受Whale派遣渗透蓝月亮酒吧；具体情报任务内容不明",
+      "presented_version": {},
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Webb": {
+      "presence": "在场",
+      "true_knowledge": "主动靠近Rita是为了摸清渗透者身份，不是真正沉迷；但没有把真相告诉Vivian",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Tommy": {
+      "presence": "事后听说",
+      "true_knowledge": "怀疑并最终确认Rita是Whale派来的间谍",
+      "presented_version": {
+        "L4": "正式指认Rita是Whale间谍"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2-L3:partial（知道但不说）, L4:truthful",
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L2": ["Rita是间谍的判断"],
+        "L3": ["同L2"]
+      }
+    },
+    "Vivian": {
+      "presence": "缺席",
+      "true_knowledge": "只知道Webb沉迷Rita，误以为Rita是情敌；不知道Webb靠近Rita是为了摸清间谍身份",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Whale": {
+      "presence": "在场",
+      "true_knowledge": "派遣Rita渗透酒吧，将其作为情报工具使用",
+      "presented_version": {},
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "James": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E019_Vivian带枪计划杀Webb": {
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "携带Colt Vest Pocket Model 1908（.25 ACP）前往Webb会客室，原本计划亲手杀Webb；化妆室内有被撕毁的船票和绝笔信；23:05被隔门吼退后计划23:30再来",
+      "presented_version": {
+        "L1": "酒醉失语不提",
+        "L2": "声称'是我杀了他'（将杀意等同于行为）",
+        "L3": "咬定认罪",
+        "L4": "R1-R2仍认罪→R3承认'我想杀他，但我没有'"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L1:partial, L2-L4 R2:deceptive（自毁认罪）, L4 R3:truthful",
+      "permitted_lies": [
+        "声称是自己杀了Webb（L2-L4 R2，基于真实杀意的自毁式认罪）"
+      ],
+      "withheld_in_loop": {
+        "L1": ["杀意", "船票和绝笔信", "携枪前往的计划"],
+        "L2": ["杀意的'未遂'本质——她真以为自己成功了"],
+        "L3": ["同L2"],
+        "L4": ["Expose前仍咬定认罪"]
+      }
+    },
+    "James": {
+      "presence": "缺席",
+      "true_knowledge": "不知道Vivian也计划杀Webb",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Rosa": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E020_Morrison藏匿弹壳": {
+    "Morrison": {
+      "presence": "在场",
+      "true_knowledge": "将从Zack手中夺走的.45弹壳藏在自家书房抽屉最深处，用过期台历压着，外裹小块布包；不销毁是因为销毁无法向Whale交差",
+      "presented_version": {
+        "L6": "R1被找到弹壳后仍否认→最终被击穿"
+      },
+      "stance": "deceptive",
+      "stance_evolution": null,
+      "permitted_lies": [
+        "否认弹壳在自己手中",
+        "否认藏匿证据"
+      ],
+      "withheld_in_loop": {
+        "L4": ["弹壳的去向"],
+        "L5": ["弹壳藏在家中书房"],
+        "L6": ["Expose前仍否认"]
+      }
+    },
+    "Zack": {
+      "presence": "缺席",
+      "true_knowledge": "L4知道弹壳被Morrison夺走；L6在Morrison家书房搜到弹壳",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Mrs. Morrison": {
+      "presence": "缺席",
+      "true_knowledge": "不知丈夫藏匿弹壳，不知丈夫与Whale的关系",
+      "presented_version": {
+        "L6": "在家接待Zack和Emma，被Emma支去厨房"
+      },
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" }
+  },
+
+  "E021_Tommy曾勒索Whale被警告": {
+    "Tommy": {
+      "presence": "在场",
+      "true_knowledge": "约1925-1926年作为Webb勒索执行人时触及Whale生意，被Whale手下开枪警告；捡走现场.45弹壳（9506，弹底'MILLER ARMS'）当保命凭据",
+      "presented_version": {
+        "L2": "sudden_event短暂露出抽屉弹壳后锁回",
+        "L4": "看到弹壳时说'我见过这种枪'",
+        "L5": "主动交出生锈弹壳：'本来也是想给你的'"
+      },
+      "stance": "evolving",
+      "stance_evolution": "L2:partial（短暂露出后隐藏）, L4:partial（确认但不交出）, L5:truthful（信任交付）",
+      "permitted_lies": [],
+      "withheld_in_loop": {
+        "L2": ["弹壳的来源和意义", "自己曾是勒索执行人"],
+        "L4": ["弹壳仍不交出"]
+      }
+    },
+    "Whale": {
+      "presence": "在场",
+      "true_knowledge": "通过手下开枪警告Tommy，不允许勒索行为触及自己的生意线",
+      "presented_version": {},
+      "stance": "partial",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "James": { "presence": "缺席" },
+    "Morrison": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Vivian": { "presence": "缺席" },
+    "Emma": { "presence": "缺席" },
+    "Zack": { "presence": "缺席" },
+    "Webb": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  },
+
+  "E022_保险箱与南区计划录音": {
+    "Vivian": {
+      "presence": "在场",
+      "true_knowledge": "使用保险箱字条（9304）上的密码（Webb与Vivian相遇日）打开保险箱，取出南区计划录音盘碎片（9602）；将碎片交给Zack：'这是Webb真正的死因'；她不知道录音的完整含义",
+      "presented_version": {
+        "L6": "主动打开保险箱并将录音碎片托付给Zack"
+      },
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Zack": {
+      "presence": "在场",
+      "true_knowledge": "接收录音碎片并在留声机上播放；听到内容涉及Moore银行注资、1912年家属名单、Margaret Brennan+鞋坊",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Emma": {
+      "presence": "在场",
+      "true_knowledge": "与Zack一起听到录音内容",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Webb": {
+      "presence": "缺席",
+      "true_knowledge": "生前将录音碎片存入保险箱，密码设为与Vivian的相遇日",
+      "presented_version": {},
+      "stance": "truthful",
+      "stance_evolution": null,
+      "permitted_lies": [],
+      "withheld_in_loop": {}
+    },
+    "Morrison": { "presence": "缺席" },
+    "Rosa": { "presence": "缺席" },
+    "Tommy": { "presence": "缺席" },
+    "James": { "presence": "缺席" },
+    "Anna": { "presence": "缺席" },
+    "Whale": { "presence": "缺席" },
+    "Rita": { "presence": "缺席" },
+    "Mrs. Morrison": { "presence": "缺席" }
+  }
+}

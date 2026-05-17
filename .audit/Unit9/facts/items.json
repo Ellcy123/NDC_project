@@ -1,0 +1,919 @@
+{
+  "I9101_Vivian的小手枪": {
+    "name": "Vivian 的小手枪 / Vivian's Pocket Pistol",
+    "loop_first_appear": 1,
+    "first_holder": "Vivian",
+    "physical": {
+      "material": "金属（钢）+ 象牙贴片枪柄",
+      "color": null,
+      "size": "Colt Vest Pocket Model 1908 标准尺寸（紧凑女士随身款）",
+      "brand": "Colt Vest Pocket Model 1908",
+      "marks": "无硝烟残留（分析后确认近期未击发）",
+      "count": 1,
+      "caliber": ".25 ACP"
+    },
+    "current_location_per_loop": {
+      "L1": "Webb 会客室（Vivian 手中） → 玩家背包",
+      "L2": "玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包（L4 R1 击穿件）",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（L1 R1 前置件；可分析派生 9711）",
+    "derived_from": null,
+    "referenced_in": "L1 Webb 会客室搜证 / L1 Expose R1 / L4 Expose R1（与 9702 配对）"
+  },
+  "I9711_无硝烟的手枪": {
+    "name": "无硝烟的手枪（分析派生） / Pistol Without Gunpowder Residue",
+    "loop_first_appear": 1,
+    "first_holder": null,
+    "physical": {
+      "material": "同 9101",
+      "color": "冷灰金属色调",
+      "size": "同 9101",
+      "brand": "同 9101",
+      "marks": "枪管内壁清洁光亮，无黑色碳化残留；右侧手写注记：No Residue — Z.B.",
+      "count": 1,
+      "caliber": ".25 ACP"
+    },
+    "current_location_per_loop": {
+      "L1": "分析 9101 后自动获得",
+      "L2": "玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "派生证据（L1 R1 击穿件；疑点 9101 condition）",
+    "derived_from": "9101",
+    "referenced_in": "L1 Expose R1 击穿 Rosa 谎言1"
+  },
+  "I9103_Webb委托协议书": {
+    "name": "Webb 委托协议书 / Webb's Commission Contract",
+    "loop_first_appear": 1,
+    "first_holder": null,
+    "physical": {
+      "material": "奶白色商业厚纸",
+      "color": "微微泛黄",
+      "size": "标准法律文件尺寸",
+      "brand": "Underwood No. 5 打字机字体",
+      "marks": "Webb 钢笔签名（深蓝黑色墨水，笔锋刚劲）；右上角 Webb 火漆印章（暗红色'W'款）；中央折痕；右下角轻微卷边；标题 ESTATE EXECUTION AGREEMENT；日期 October 31, 1928",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L1": "Webb 会客室 → 玩家背包",
+      "L2": "玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包 → destroyed_by_morrison（L4 turn_cutscene 被 Morrison 当场撕毁）",
+      "L5": "已销毁（实物永久不存在）",
+      "L6": "已销毁"
+    },
+    "narrative_role": "直接证据（换取 72h 调查期；非击穿件）",
+    "derived_from": null,
+    "referenced_in": "L1 post_expose 换取 72h / L4 turn_cutscene 被撕毁"
+  },
+  "I9201_勒索用的照片": {
+    "name": "勒索用的照片 / Blackmail Photos",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "1920s 亚光相纸",
+      "color": "黑白",
+      "size": "每张约 10×15 cm，一组 3-4 张",
+      "brand": null,
+      "marks": "边缘微泛黄，有指纹和折痕；背面有淡黄褐色污渍（原始态金额不可见，需烘烤显影）",
+      "count": 2,
+      "_conflict": "ItemStaticData Describe 写'背面写着花瓶 $4,000 / 油画 $7,000'（金额直接可见）；state YAML 写'背面仅有淡黄褐色污渍，肉眼看不出意义，需经煤油灯烘烤显影后才能读出'。以 state（设计稿）为准，ItemStaticData 描述可能未同步烘烤玩法改动。"
+    },
+    "current_location_per_loop": {
+      "L2": "歌舞厅小包厢（sudden_event 柜底信封） → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9201 condition；经烘烤派生 9706）",
+    "derived_from": null,
+    "referenced_in": "L2 小包厢 sudden_event / L2 疑点 9201 / L2 R2 陷阱证据"
+  },
+  "I9706_带金额显影的勒索照片": {
+    "name": "带金额显影的勒索照片 / Revealed Blackmail Photo",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "同 9201 相纸",
+      "color": "黑白；背面焦褐色柠檬汁显影字迹",
+      "size": "同 9201",
+      "brand": null,
+      "marks": "背面显影字迹：Vase — $4,000 / Painting — $7,000；纸张边缘轻微焦褐",
+      "count": 2
+    },
+    "current_location_per_loop": {
+      "L2": "煤油灯烘烤 9201 后派生获得 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "派生证据（L2 R1 击穿件）",
+    "derived_from": "9201",
+    "_note": "尚未写入 ItemStaticData.json（小玩法实装后新增）",
+    "referenced_in": "L2 Expose R1 击穿 Tommy 谎言1"
+  },
+  "I9202_VIP合影": {
+    "name": "Webb 办公室 VIP 合影 / VIP Group Photo",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "照片",
+      "color": "黑白",
+      "size": null,
+      "brand": null,
+      "marks": "Thompson 和 Coleman 与 Webb 合影；笑容僵硬",
+      "count": 3
+    },
+    "current_location_per_loop": {
+      "L2": "Webb 办公室 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9201 condition）",
+    "derived_from": null,
+    "referenced_in": "L2 Webb 办公室搜证 / 疑点 9201"
+  },
+  "I9203_Webb收入记录": {
+    "name": "Webb 收入记录 / Webb's Income Ledger",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "纸质财务记录",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "月净收入约 $15,000；来源栏模糊",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "Webb 办公室 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9202 condition；L2 R2 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L2 Expose R2（配合 9204）"
+  },
+  "I9204_Tommy酒吧账本": {
+    "name": "Tommy 酒吧账本 / Tommy's Bar Ledger",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "纸质账本",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "月净收益约 $4,000；内标'卖给 Thompson/Coleman'",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "Tommy 办公室 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9202 condition；L2 R2 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L2 Expose R2（配合 9203）"
+  },
+  "I9205_假油画": {
+    "name": "假油画 / Forged Painting",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "油画（仿品）",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "装裱精良但画风粗糙；Tommy 账本上写'已卖给 Coleman'但实物仍在原处",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "歌舞厅墙上 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9203 condition；L2 R3 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L2 Expose R3"
+  },
+  "I9206_花瓶现场照": {
+    "name": "花瓶现场照 / Vase in Scene Photo",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "照片",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "案发当晚拍摄；花瓶仍在原位",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "歌舞厅 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9203 condition；L2 R3 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L2 Expose R3"
+  },
+  "I9207_James工资单": {
+    "name": "James 工资单 / James's Payslip",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "淡黄/米白薪资用纸",
+      "color": "淡黄/米白",
+      "size": "1920s 工资单格式",
+      "brand": null,
+      "marks": "职位 Part-time Cook；员工 James O'Sullivan；月薪 $80.00；发薪方 Blue Moon Cabaret；签批人 Tommy；时间 October 1928",
+      "count": 1,
+      "_conflict": "ItemStaticData Describe 写'主厨，$80'；state YAML 和美术需求写'Part-time Cook（兼职厨师），$80'。职位称呼不一致：ItemStaticData 用'主厨'，设计文档用'兼职厨师'。以设计文档为准（Part-time Cook）。"
+    },
+    "current_location_per_loop": {
+      "L2": "James 厨房 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包（L5 R2 陷阱证据）",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "场景道具（背景证据；不进 F1 碎片 condition；L5 R2 陷阱）",
+    "derived_from": null,
+    "referenced_in": "L2 James 厨房搜证 / L5 R2 陷阱"
+  },
+  "I9208_Vivian排班表": {
+    "name": "Vivian 排班表 / Vivian's Work Schedule",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "纸质排班表",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "Vivian 一栏注明每晚 23:30 送酒至会客室",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "Tommy 办公室（不可拾取）"
+    },
+    "narrative_role": "场景道具（确认 Vivian 23:30 送酒习惯；不可拾取）",
+    "derived_from": null,
+    "referenced_in": "L2 Tommy 办公室"
+  },
+  "I9209_便携相机": {
+    "name": "便携相机 / Portable Camera",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "黑色皮革外壳 + 金属包边",
+      "color": "黑色",
+      "size": "约 15×10×5 cm（折叠状态）；Kodak Vest Pocket 型",
+      "brand": "Kodak Vest Pocket 或类似型号",
+      "marks": "表面薄灰；金属件有光泽；卷片轴上半卷未冲洗底片",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "歌舞厅小包厢（sudden_event） → 玩家背包"
+    },
+    "narrative_role": "场景道具（勒索生意物证补充；不入 doubt condition）",
+    "derived_from": null,
+    "referenced_in": "L2 小包厢 sudden_event"
+  },
+  "I9210_厨房工作表": {
+    "name": "厨房工作表 / Kitchen Work Schedule",
+    "loop_first_appear": 2,
+    "first_holder": null,
+    "physical": {
+      "material": "纸质排班表",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "James 案发当晚 22:00-00:00 值守；23:00-23:10 下楼送餐",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L2": "James 厨房 → 玩家背包",
+      "L3": "玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包（L5 揭示 23:00-23:05 覆盖枪击窗口）",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "场景道具（L2 背景；L5 击穿 James 伪造不在场证明）",
+    "derived_from": null,
+    "referenced_in": "L2 James 厨房 / L5 时间线推理"
+  },
+  "I9301_玻璃碎片": {
+    "name": "玻璃碎片（压垃圾袋下有硝烟） / Glass Shards Under Trash Bag",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "透明玻璃",
+      "color": "透明；表面灰黑色硝烟痕迹",
+      "size": "散落范围约 20×30 cm；最大约 8 cm，最小指甲盖大小",
+      "brand": null,
+      "marks": "硝烟痕迹附着；碎片压在垃圾袋底部（碎片在下，袋子在上，覆盖约 2/3）；边缘锋利",
+      "count": null
+    },
+    "current_location_per_loop": {
+      "L3": "一楼侧巷（Webb 会客室窗外） → 玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9301 condition；L3 R1 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L3 Expose R1（时间线击穿）"
+  },
+  "I9302_威胁纸条": {
+    "name": "威胁纸条（倒写 J） / Threat Note (Inverted J)",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "白色薄餐巾纸",
+      "color": "白色",
+      "size": "约 15×15 cm",
+      "brand": "Blue Moon Saloon（正面隐约透出 Logo）",
+      "marks": "廉价铅笔/炭笔手写；字迹潦草铅痕深浅不均；被揉过又展平的折痕；J 字母弯钩方向与标准反转（4 处：Just×3 + job×1）；英文内容：Just go to Mr. Webb's parlor at 23:30. Just say you saw Miss Vivian kill him. Just do this job — or your daughter dies.",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Rosa 储藏室铁盒（密码锁 0915） → 玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包（L5 narrative_closure 引用）",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9302 condition；L3 R2 击穿件；倒写 J 伏笔→L5）",
+    "derived_from": null,
+    "referenced_in": "L3 Expose R2 / L5 narrative_closure 字迹闭环"
+  },
+  "I9303_女儿医疗单": {
+    "name": "女儿医疗单 / Daughter's Medical Bill",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "医疗账单纸",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "病人姓名 Isabel Martinez；出生 1916-09-15；费用远超 Rosa 薪水",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Rosa 储藏室铁盒（密码锁 0915） → 玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9302 condition；L3 R2 辅助击穿件）",
+    "derived_from": null,
+    "referenced_in": "L3 Expose R2"
+  },
+  "I9304_保险箱字条": {
+    "name": "保险箱字条（密码=相遇日） / Safe-Box Password Slip",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "白色/奶色便签纸",
+      "color": "白/奶色",
+      "size": "约 8×12 cm",
+      "brand": null,
+      "marks": "Webb 钢笔手写；主文：Password: the day we met. — W；左上角小字：To my dearest Vivian；签名落款 W；纸张轻微折角",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Webb 会客室 → 玩家背包",
+      "L4": "玩家背包（L4 R3 击穿件）",
+      "L5": "玩家背包",
+      "L6": "玩家背包（ending Act3 Vivian 用此密码开保险箱）"
+    },
+    "narrative_role": "直接证据（疑点 9303 condition；L4 R3 击穿件；L6 Act3 保险箱密码）",
+    "derived_from": null,
+    "referenced_in": "L4 Expose R3 / L6 ending_sequence Act3"
+  },
+  "I9305_Webb和Vivian的合影": {
+    "name": "Webb 和 Vivian 的合影 / Webb & Vivian Photo",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "照片",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "两人神态亲密；摄于数年前；轻微折痕但被小心保存",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Webb 会客室 → 玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9303 condition）",
+    "derived_from": null,
+    "referenced_in": "L3 Webb 会客室搜证 / 疑点 9303"
+  },
+  "I9306_节目单碎片": {
+    "name": "《艾斯弗德狂想曲》节目单碎片 / Fragmented Program (Title Only)",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "1920s 酒吧节目单印刷纸",
+      "color": null,
+      "size": "残存约原节目单 40-60%",
+      "brand": null,
+      "marks": "被撕碎 + 边缘烧焦；曲目名可辨：Rhapsody of Esford / Jazz Storm；演奏时间一栏完全缺失/被撕去",
+      "count": 1,
+      "_conflict": "ItemStaticData Name[0] 写'《芝加哥狂想曲》'；state YAML 和美术需求写'《艾斯弗德狂想曲》(Rhapsody of Esford)'。曲名不一致。以 state（设计稿）为准。"
+    },
+    "current_location_per_loop": {
+      "L3": "James 厨房（突发事件 James 销毁中抢到） → 玩家背包",
+      "L4": "玩家背包",
+      "L5": "玩家背包（L5 R1 陷阱证据）",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "陷阱证据（L5 R1 陷阱——无演奏时间，误用失败；为 9501 完整节目单做对比铺设）",
+    "derived_from": null,
+    "referenced_in": "L3 James 厨房突发事件 / L5 R1 陷阱"
+  },
+  "I9307_Rita的照片": {
+    "name": "Rita 的照片 / Rita's Photo",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "照片",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "年轻女性照片；背面写：给最亲爱的 Webb，你的 Rita",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Webb 会客室（envir，不可拾取）"
+    },
+    "narrative_role": "场景道具（环境叙事；不挂疑点）",
+    "derived_from": null,
+    "referenced_in": "L3 Webb 会客室"
+  },
+  "I9308_Webb勒索记录日记": {
+    "name": "Webb 的勒索记录日记（扉页写 Whale—Danger） / Webb's Blackmail Ledger",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "小皮面日记",
+      "color": "封面磨旧",
+      "size": null,
+      "brand": null,
+      "marks": "右下角烫金'W.'；扉页 Webb 钢笔字右上角：Whale — Danger（末尾重重横划）；后页短条目式人名缩写和金额",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Webb 会客室 → 玩家背包",
+      "L4": "玩家背包（L4 Tommy 办公室追问起点）",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "叙事证据（Whale 名字首次物证；不挂疑点 condition）",
+    "derived_from": null,
+    "referenced_in": "L3 Webb 会客室 / L4 Tommy 办公室对话"
+  },
+  "I9309_Rosa女儿的照片": {
+    "name": "Rosa 女儿的照片 / Rosa's Daughter Photo",
+    "loop_first_appear": 3,
+    "first_holder": null,
+    "physical": {
+      "material": "黑白照片 + 相框",
+      "color": "黑白",
+      "size": null,
+      "brand": null,
+      "marks": "约 10 岁女孩；相框背后/下方手写：我的天使 · 0915",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L3": "Rosa 储藏室墙上（envir，不可拾取）"
+    },
+    "narrative_role": "场景道具（铁盒密码锁玩法提示源；不挂疑点）",
+    "derived_from": null,
+    "referenced_in": "L3 储藏室密码锁玩法"
+  },
+  "I9401_45警用弹壳": {
+    "name": ".45 警用弹壳 / .45 ACP Police-Issue Casing",
+    "loop_first_appear": 3,
+    "first_holder": "Rosa（23:30 从 Webb 会客室地上捡走）",
+    "physical": {
+      "material": "黄铜",
+      "color": "铜质色泽",
+      "size": "约 2 cm",
+      "brand": null,
+      "marks": "弹底圆形印记：MILLER ARMS（肉眼略模糊，铅笔拓印后清晰→派生 9702）；略有磨损，边缘有凹痕",
+      "count": 1,
+      "caliber": ".45 ACP"
+    },
+    "current_location_per_loop": {
+      "L3": "Rosa post_expose 交给 Zack → 玩家背包",
+      "L4": "玩家背包 → confiscated_by_morrison（L4 turn_cutscene 被 Morrison 当场夺走）",
+      "L5": "Morrison 家书房（玩家不持有）",
+      "L6": "Morrison 家书房 → retrieved_from_confiscation → 玩家背包（L6 R1 击穿件）"
+    },
+    "narrative_role": "直接证据（跨 Loop 核心；F2 碎片 9403 condition；L4 R1 / L6 R1 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L3 post_expose / L4 R1+turn_cutscene / L6 Morrison 家找回 / L6 R1"
+  },
+  "I9702_45弹壳拓印件": {
+    "name": ".45 警用弹壳拓印件（弹底 MILLER ARMS 印记） / .45 ACP Casing Rubbing",
+    "loop_first_appear": 4,
+    "first_holder": null,
+    "physical": {
+      "material": "蜡纸（半透明轻黄，细腻纤维纹路）",
+      "color": "灰色铅笔笔触",
+      "size": null,
+      "brand": null,
+      "marks": "外圈：WCC · .45 ACP；内圈：MILLER ARMS；铅笔侧锋颗粒质感",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L4": "铅笔拓印 9401 后派生获得 → 玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "派生证据（L4 R1 击穿件；L6 R1 复用）",
+    "derived_from": "9401",
+    "_note": "尚未写入 ItemStaticData.json（小玩法实装后新增）",
+    "referenced_in": "L4 Expose R1 / L6 Expose R1"
+  },
+  "I9402_被撕毁的合同": {
+    "name": "被撕毁的合同 / Torn Contract",
+    "loop_first_appear": 4,
+    "first_holder": null,
+    "physical": {
+      "material": "奶白色正式法律合同纸",
+      "color": "奶白",
+      "size": "拼合约 letter size 的 70%",
+      "brand": null,
+      "marks": "撕碎残页；甲方化名 Whale；委托条款：a service to be performed at the specified location；金额 $5,000；乙方签名栏开头一个'J'倒写（弯钩方向颠倒，乍看像'T'）",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L4": "一楼走廊垃圾桶 → 玩家背包",
+      "L5": "玩家背包（L5 R3 击穿件之一）",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9401 condition；L4 R2 击穿件；L5 R3 再用）",
+    "derived_from": null,
+    "referenced_in": "L4 R2 / L5 R3 / L5 narrative_closure 字迹闭环"
+  },
+  "I9403_Vivian的绝笔信": {
+    "name": "Vivian 的绝笔信 / Vivian's Suicide Letter",
+    "loop_first_appear": 4,
+    "first_holder": null,
+    "physical": {
+      "material": "淡奶色信纸",
+      "color": "淡奶色，边缘略旧",
+      "size": "letter size（约 22×28 cm）",
+      "brand": null,
+      "marks": "Vivian 手写（与 9502 同笔迹）；钢笔/墨水；字迹从工整到后段崩溃；水渍/泪痕局部；未完成/未寄出；关键短语如'I've decided to end it all'；署名 Vivian；无杀人意向描述",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L4": "Vivian 化妆室 → 玩家背包",
+      "L5": "玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "陷阱证据（L4 R2 陷阱——只证 Vivian 有死志，不反驳 Whale 行动维度）",
+    "derived_from": null,
+    "referenced_in": "L4 R2 陷阱"
+  },
+  "I9404_被撕毁的船票": {
+    "name": "被撕毁的船票 / Torn Boat Ticket",
+    "loop_first_appear": 4,
+    "first_holder": null,
+    "physical": {
+      "material": "船票纸",
+      "color": null,
+      "size": null,
+      "brand": "SS NORMANDIE",
+      "marks": "撕成两半；目的地巴黎；持票人 Vivian；一等舱 A-12；票价 $450.00（已付清）",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L4": "Vivian 化妆室 → 玩家背包"
+    },
+    "narrative_role": "场景道具（情感素材；无推理引用）",
+    "derived_from": null,
+    "referenced_in": "L4 Vivian 化妆室"
+  },
+  "I9405_Colt广告卡": {
+    "name": "枪盒内衬的 Colt 广告卡 / Colt Advertising Card",
+    "loop_first_appear": 4,
+    "first_holder": null,
+    "physical": {
+      "material": "印刷品",
+      "color": "1920s 柔和色调",
+      "size": "约 10×15 cm",
+      "brand": "Colt Vest Pocket",
+      "marks": "大标题：A Lady's Silent Protection；红丝绒枪盒内衬背景",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L4": "Vivian 化妆室（envir，不可拾取）"
+    },
+    "narrative_role": "场景道具（环境叙事；不进疑点 condition）",
+    "derived_from": null,
+    "referenced_in": "L4 Vivian 化妆室"
+  },
+  "I9406_Vivian的痛苦记录": {
+    "name": "Vivian 的痛苦记录 / Vivian's Anguish Journal",
+    "loop_first_appear": 4,
+    "first_holder": null,
+    "physical": {
+      "material": "散落纸张",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "Vivian 内心挣扎；笔迹凌乱；后半段杀意涂鸦",
+      "count": null
+    },
+    "current_location_per_loop": {
+      "L4": "Vivian 化妆室化妆台（envir，不可拾取）"
+    },
+    "narrative_role": "场景道具（心理轨迹验证；不挂疑点）",
+    "derived_from": null,
+    "referenced_in": "L4 Vivian 化妆室"
+  },
+  "I9501_完整节目单": {
+    "name": "完整节目单 / Complete Program List",
+    "loop_first_appear": 5,
+    "first_holder": "Tommy（办公桌文件堆）",
+    "physical": {
+      "material": "1920s 酒吧节目单印刷纸",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "1928 年 11 月 3 日演出完整节目单；含各曲目演奏时间；《艾斯弗德狂想曲》第三乐章鼓点高潮 23:00；音量等级 5 级（最高）",
+      "count": 1,
+      "_conflict": "ItemStaticData Describe 写'11:00-11:10'且曲名为《芝加哥狂想》；state YAML 写'23:00 鼓点高潮'且曲名为《艾斯弗德狂想曲》。时间和曲名均不一致。以 state（设计稿）为准。"
+    },
+    "current_location_per_loop": {
+      "L5": "Tommy 办公室文件堆 → 玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9503 condition；L5 R1 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L5 Expose R1"
+  },
+  "I9502_节目修改申请": {
+    "name": "节目修改申请 / Program Modification Request",
+    "loop_first_appear": 5,
+    "first_holder": "Tommy（办公桌文件堆）",
+    "physical": {
+      "material": "申请表纸",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "Vivian 亲笔签名；将 Moonlight Bay 改为《艾斯弗德狂想曲》；音量调至 5 级（最高）；日期 1928 年 11 月 3 日",
+      "count": 1,
+      "_conflict": "ItemStaticData Describe 写曲名'《芝加哥狂想》'且日期'1925年11月03日'；state YAML 写'《艾斯弗德狂想曲》'且时间线为1928年。曲名和年份均不一致。以 state（设计稿）为准。"
+    },
+    "current_location_per_loop": {
+      "L5": "Tommy 办公室文件堆 → 玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9503 condition；L5 R1 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L5 Expose R1"
+  },
+  "I9503_James给Whale的回信": {
+    "name": "James 给 Whale 的回信 / James's Reply to Whale",
+    "loop_first_appear": 5,
+    "first_holder": null,
+    "physical": {
+      "material": "普通信纸（白/淡奶色）",
+      "color": "白/淡奶色",
+      "size": "letter size（约 22×28 cm）",
+      "brand": null,
+      "marks": "抬头 Mr. Whale,；正文 Tonight, 8 PM, back door.；所有 J 倒写（与 9302/9402/9504 一致）；签名 James；草稿/未完成感（涂改划改留白）；平摊未装信封",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L5": "James 家客厅 → 玩家背包",
+      "L6": "玩家背包（L6 R3 击穿件）"
+    },
+    "narrative_role": "直接证据（疑点 9504 condition；L5 R3 击穿件之一；L6 R3 复用）",
+    "derived_from": null,
+    "referenced_in": "L5 R3 / L6 R3"
+  },
+  "I9504_Berlitz英语练习书": {
+    "name": "Berlitz 英语练习书 / Berlitz English Practice Book",
+    "loop_first_appear": 5,
+    "first_holder": null,
+    "physical": {
+      "material": "淡黄色课本纸",
+      "color": "淡黄",
+      "size": null,
+      "brand": "BERLITZ METHOD FOR ENGLISH LEARNERS",
+      "marks": "扉页手写 James, Oct. 1927；大量造句练习字迹歪斜但努力工整；所有 J 倒写（与 9302/9402/9503 一致）；边缘磨损",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L5": "James 家客厅（envir，不可拾取）"
+    },
+    "narrative_role": "场景道具（L5 narrative_closure 引用——倒写 J 闭环；Zack 凭观察记忆点名）",
+    "derived_from": null,
+    "referenced_in": "L5 narrative_closure 字迹闭环"
+  },
+  "I9505_Anna合法移民申请通知": {
+    "name": "Anna 的合法移民申请通过通知（附 James 配偶资格书） / Anna's Immigration Approval Notice",
+    "loop_first_appear": 5,
+    "first_holder": null,
+    "physical": {
+      "material": "淡奶色官方公文纸",
+      "color": "淡奶色",
+      "size": "letter size（约 22×28 cm）× 2 份装订",
+      "brand": "U.S. Department of Labor — Bureau of Immigration",
+      "marks": "主件：Immigration Approval Notice；申请人 Anna O'Sullivan；APPROVED 批准印章（红色）；附件：Non-Quota Spouse Eligibility Form；申请人 James O'Sullivan；出生地 Cork, Ireland；两份夹放/装订；被妥善保存",
+      "count": 2,
+      "_conflict": "ItemStaticData Name 写'撕碎的移民申请表'且 Describe 写'James 撕碎的移民申请表'；state YAML 和美术需求写'Anna 的合法移民申请通过通知（附 James 配偶资格书）'，明确是'被妥善保存（收在抽屉里的重要证件，不是撕毁/损坏）'。名称和状态完全矛盾。以 state（设计稿）为准。"
+    },
+    "current_location_per_loop": {
+      "L5": "James 家卧室梳妆抽屉 → 玩家背包",
+      "L6": "玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9501 condition；L5 R2 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L5 Expose R2（配合 9075001 口音证词）"
+  },
+  "I9506_生锈的45警用弹壳": {
+    "name": "生锈的 .45 警用弹壳 / Rusted .45 Police-Issue Shell Casing",
+    "loop_first_appear": 5,
+    "first_holder": "Tommy（抽屉深处）",
+    "physical": {
+      "material": "黄铜（锈迹斑斑）",
+      "color": "铜色 + 锈迹",
+      "size": "约 2 cm",
+      "brand": null,
+      "marks": "表面明显锈迹；弹底印记 MILLER ARMS（与 9401 同批次）",
+      "count": 1,
+      "caliber": ".45 ACP"
+    },
+    "current_location_per_loop": {
+      "L5": "Tommy 办公室（Tommy 主动交付） → 玩家背包"
+    },
+    "narrative_role": "场景道具（纯情感信物；不挂疑点不作击穿件；Unit2 钩子）",
+    "derived_from": null,
+    "_note": "尚未写入 ItemStaticData.json",
+    "referenced_in": "L5 Tommy 办公室（信任交付场景）"
+  },
+  "I9601_米勒集团特制手枪": {
+    "name": "米勒集团特制手枪 / Miller Arms Custom Pistol",
+    "loop_first_appear": 5,
+    "first_holder": "James（自杀遗留）",
+    "physical": {
+      "material": "蓝黑色金属 + 深色木纹/胶木握把",
+      "color": "蓝黑色",
+      "size": "全长约 20 cm（比 9101 明显更大）；M1911 风格军用款",
+      "brand": "MILLER ARMS · CHI（枪身侧面浮雕/刻字）",
+      "marks": "枪身铭文 MILLER ARMS · CHI；另一侧狮形印记（浮雕 logo）；枪管有使用痕迹；.45 ACP 口径",
+      "count": 1,
+      "caliber": ".45 ACP"
+    },
+    "current_location_per_loop": {
+      "L5": "蓝月亮酒吧后门（James 自杀现场） → 玩家背包",
+      "L6": "玩家背包（L6 R1 击穿件）"
+    },
+    "narrative_role": "直接证据（真正凶器；疑点 9602 condition；L6 R1 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L5 James 自杀遗留 / L6 Expose R1"
+  },
+  "I9602_南区计划录音盘碎片": {
+    "name": "'南区计划'录音盘碎片 / South Side Plan Shellac Record Shards",
+    "loop_first_appear": 6,
+    "first_holder": null,
+    "physical": {
+      "material": "虫胶唱片（shellac record）",
+      "color": "深棕色/黑色哑光",
+      "size": "原直径约 25 cm；碎片拼合约 60-70%",
+      "brand": null,
+      "marks": "边缘烧焦痕迹（炭黑色，轻微卷曲）；中心标签残存字样 S. Side Plan；唱纹螺旋线",
+      "count": null
+    },
+    "current_location_per_loop": {
+      "L6": "Webb 会客室保险箱（Vivian 用 9304 密码打开） → 玩家背包"
+    },
+    "narrative_role": "直接证据（Unit2 开门砖；跨 Chapter 持久化道具）",
+    "derived_from": null,
+    "referenced_in": "L6 ending_sequence Act3-Act4"
+  },
+  "I9603_Morrison赌债欠条": {
+    "name": "Morrison 赌债欠条 / Morrison's $5,000 Gambling IOU",
+    "loop_first_appear": 6,
+    "first_holder": null,
+    "physical": {
+      "material": "纸质欠条",
+      "color": null,
+      "size": null,
+      "brand": null,
+      "marks": "Morrison 签名；欠疤面煞星地下赌场 $5,000；附手写威胁信",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L6": "Morrison 家书房抽屉 → 玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9601 condition；L6 R2 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L6 Expose R2（配合 9604）"
+  },
+  "I9604_Morrison借Whale钱的记录": {
+    "name": "Morrison 借 Whale 钱的记录 / Morrison's Loan Record from Whale",
+    "loop_first_appear": 6,
+    "first_holder": null,
+    "physical": {
+      "material": "奶色纸张，略微泛黄",
+      "color": "奶色/泛黄",
+      "size": "半张 letter 纸或便笺纸",
+      "brand": null,
+      "marks": "借方 Morrison；贷方 Mr. W / Whale；金额 $6,000；时间 October 14, 1928（案发前约三周）；钢笔书写略正式；有折痕（长期压抽屉底）",
+      "count": 1
+    },
+    "current_location_per_loop": {
+      "L6": "Morrison 家书房抽屉 → 玩家背包"
+    },
+    "narrative_role": "直接证据（疑点 9601 condition；L6 R2 击穿件）",
+    "derived_from": null,
+    "referenced_in": "L6 Expose R2（配合 9603）"
+  },
+  "I9605_Morrison藏起来的弹壳": {
+    "name": "Morrison 藏起来的弹壳 / Morrison's Hidden Bullet Casing",
+    "loop_first_appear": 6,
+    "first_holder": "Morrison",
+    "physical": {
+      "material": "黄铜",
+      "color": "铜质，略有磨损",
+      "size": "约 2 cm",
+      "brand": null,
+      "marks": "弹底 MILLER ARMS 字样清晰可见；.45 ACP 规格；藏在书桌抽屉深处压在旧台历下",
+      "count": 1,
+      "caliber": ".45 ACP"
+    },
+    "current_location_per_loop": {
+      "L6": "Morrison 家书房（envir，查看不入背包）"
+    },
+    "narrative_role": "场景道具（不进疑点 condition；叙事加固 Morrison 藏证行为）",
+    "derived_from": null,
+    "referenced_in": "L6 Morrison 家书房搜证"
+  },
+  "I9606_华盛顿公园赛马场马票存根": {
+    "name": "华盛顿公园赛马场马票存根 / Washington Park Racing Stubs",
+    "loop_first_appear": 6,
+    "first_holder": null,
+    "physical": {
+      "material": "赛马票纸",
+      "color": "不同色票按场次区分",
+      "size": "总体约 20×15 cm；单张约 5×10 cm",
+      "brand": "WASHINGTON PARK RACETRACK",
+      "marks": "厚叠整赛季败注；全部盖 LOST 章或无兑奖痕迹；少数几张金额 $500-$1,000",
+      "count": null
+    },
+    "current_location_per_loop": {
+      "L6": "Morrison 家客厅矮柜底层（envir，不可拾取）"
+    },
+    "narrative_role": "场景道具（环境叙事；不作击穿件）",
+    "derived_from": null,
+    "referenced_in": "L6 Morrison 家客厅"
+  },
+  "_metadata": {
+    "generated": "2026-04-26",
+    "source_files": [
+      "剧情设计/Unit9/Unit9_证据美术需求分类.md",
+      "剧情设计/Unit9/state/loop1-6_state.yaml",
+      "preview_new2/data/table/ItemStaticData.json",
+      "剧情设计/Unit9/Unit9_大纲.md"
+    ],
+    "total_items": 38,
+    "conflict_count": 4,
+    "items_not_in_ItemStaticData": ["9506", "9702", "9706"],
+    "conflict_items": {
+      "9201": "ItemStaticData 写背面金额直接可见；state YAML 写需烘烤显影",
+      "9207": "ItemStaticData 写'主厨'；设计文档写'Part-time Cook（兼职厨师）'",
+      "9306_9501_9502": "ItemStaticData 曲名写'芝加哥狂想(曲)'；设计文档写'艾斯弗德狂想曲(Rhapsody of Esford)'；9501/9502 的 ItemStaticData 时间也有出入（11:00 vs 23:00，1925 vs 1928）",
+      "9505": "ItemStaticData Name 写'撕碎的移民申请表'且状态为撕碎；设计文档明确写'合法移民申请通过通知'且'被妥善保存不是撕毁'"
+    }
+  }
+}
