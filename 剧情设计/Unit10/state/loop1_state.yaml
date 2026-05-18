@@ -436,7 +436,7 @@ expose:
 # ─────────────────────────────
 # 五、疑点（Doubts）
 # ─────────────────────────────
-# 进度条分母：2 项（2 疑点）
+# 进度条分母：3 项（3 疑点）
 # condition type: 1=Item / 2=RelationNetwork / 3=Testimony/Timeline
 # isFragment: false = 疑点 / true = 碎片
 # 一对一挂载检查（全局 6-Loop）：
@@ -444,6 +444,7 @@ expose:
 #   10102 → 仅被疑点 10101 condition 引用
 #   10103 → 仅被疑点 10102 condition 引用
 #   10104 → 仅被疑点 10102 condition 引用
+#   1030001 → 仅被疑点 10103 condition 引用（Foster 证词单件触发"Morrison 草率结案"疑问）
 # 时序检查：所有 condition 件在 L1 取得，posed_loop=1 ≤ 使用它们的最早 expose Loop（L1）—— PASS
 # 谎言收集规则：仅 R1 谎言锚（1010001）作 testimony；R2/R3 谎言为 Expose 内部退守对白，无 testimony ID
 
@@ -472,9 +473,17 @@ doubts:
     resolved_loop: 1
     status: "unlocked_after_expose_round2"
 
-  # 注：原 R3 疑点（Morrison 尸检谎言 vs Foster 证词）已删除——
-  # R3 谎言为 Expose 内部退守对白（无 testimony ID），矛盾在指证当场被 Foster 证词（1030001）直接击穿，
-  # 不另设独立疑点
+  - id: 10103
+    text: "Morrison 凭什么这么快定死者身份？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "1030001"  # Foster 证词："尸检最快明天，连性别都未定"
+    posed_loop: 1
+    resolved_loop: 1
+    status: "unlocked_after_expose_round3"
+    # Foster 证词单件触发——玩家拿到法医说"尸检最快明天"那一刻，立刻意识到 Morrison 现在的"死者就是 Margaret"是没根据的草率结论
+    # L1 R3 击穿 Morrison"我有尸检调查信息"虚张声势时解决
 
 # ─────────────────────────────
 # 六、指证后知识

@@ -884,16 +884,19 @@ doubts:
     status: "unlocked_loop6"
     # L6 R3 击穿 Leonard"拜访摔坏眼镜"谎言时解决（确认现场有激烈打斗）
 
-  # 疑点 10604——Vinnie 假认罪"床上睡觉"细节
+  # 疑点 10604——Vinnie 假认罪 vs 现场打斗痕迹
   - id: 10604
     isFragment: false
-    text: "Vinnie 看到的 Frank 真在床上吗？"
+    text: "Frank 当晚真的在睡觉吗？"
     unlock_condition:
       - type: 3
-        param: "5080002b"  # Vinnie 假认罪细节证词
+        param: "5080002b"  # Vinnie 假认罪细节："透过窗户看到他在床上睡觉，然后放火"
+      - type: 1
+        param: "10606"     # 凹陷货物箱——现场有激烈打斗痕迹，与"睡觉"说法矛盾
     posed_loop: 6
     resolved_loop: 6
     status: "unlocked_loop6"
+    # 双件 condition：Vinnie 说在床上睡 + 现场凹陷货物箱证明有激烈打斗 → 睡觉中的人不会撞凹货物箱
     # L6 R4 / 诱导招供击穿 Leonard"Vinnie 烧死的"甩锅时解决（Vinnie 假认罪护短的真相揭示）
 
   # 疑点 10502——Vinnie 认罪 vs 法医钝器结论矛盾（原 L5 疑点，因解锁件全在 L5 expose 后才能凑齐，迁至 L6）

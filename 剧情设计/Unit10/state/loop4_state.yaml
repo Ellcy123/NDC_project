@@ -105,7 +105,7 @@ player_context:
     - "Lula 证词 4100001 落地：'Frank 不会做饭，而且绝对不会擅自用 Margaret 的厨房做饭'——回收 L1 Emma 皱眉伏笔，铺垫'火从何而来'的 L5/L6 推论"
     - "Lula 证词 4100002：'Frank 的工资一直在给 Danny 还赌债！'——Danny 经济压力有了量级概念"
     - "Frank 和 Lula 是五年真感情，地下室是他们的秘密约会场所"
-    - "父疑点 10401 正式点亮：Danny 为了掩盖自己把叔叔房产证卖给银行的秘密，与 Leonard 合谋沉默"
+    - "父疑点 10401 正式点亮：Danny 在拿叔叔换钱——出让房产证 + 经济极度拮据（合并原 10404 经济动机）"
 
 # ─────────────────────────────
 # 二、开篇（圣心医院 10006 过场）
@@ -233,7 +233,7 @@ scenes:
         # ── 3. 可提取证词 ──
         testimony_ids:
           - 4100001  # Lula：Frank 不会做饭，绝对不会擅自用 Margaret 的厨房做饭（回收 L1 Emma 皱眉伏笔；不进指证主链，post_expose 剧情解释用）
-          - 4100002  # Lula：Frank 的工资一直在给 Danny 还赌债（L4 R2 辅助件；疑点 10404 补充语境）
+          - 4100002  # Lula：Frank 的工资一直在给 Danny 还赌债（L4 R2 辅助件；疑点 10401 经济动机语境）
 
 
   # ── 场景 10007：Mrs. O'Hara 家门口 ──
@@ -298,7 +298,7 @@ scenes:
         pickup: true
         analysis: false
         description: "一个皮制怀表盒，表盒内空无一物，但盒盖内侧夹着一张便条，Tony（Silver Moon 赌场酒保）手写：'100 块，怀表抵押。——Tony'。便条日期是上周（11月1日）。"
-        note: "关键——疑点 10404 condition；L4 R2 指证件"
+        note: "关键——疑点 10401 condition（合并后）；L4 R2 指证件"
 
       - id: 10405
         name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found in Danny's Room)"
@@ -437,7 +437,7 @@ expose:
         usage: "Moore 银行的 Harold Moore 已经承认了：是 Danny 把 Frank 的房产证交给了银行。你为了让银行催债催到叔叔头上、为了还你自己的赌债——这就是你的动机。"
       - id: 10404
         name: "空怀表盒（含 Tony 便条）"
-        note: "关键——怀表抵押换 100$，上周；Danny 经济状况极度拮据；疑点 10404 condition"
+        note: "关键——怀表抵押换 100$，上周；Danny 经济状况极度拮据；疑点 10401 condition（合并后）"
         usage: "你的怀表上周已经拿去赌场抵押换了 100 块。还有 Lula 说的：Frank 的工资一直在给你还债。你真的没有理由杀他？"
     requiredItems:
       - 3060004
@@ -516,7 +516,7 @@ expose:
       - "Frank 的工资一直给 Danny 还赌债（Lula 证词 4100002）"
       - "Frank 不会做饭，绝对不会用 Margaret 的厨房（Lula 证词 4100001）——L1 Emma 皱眉伏笔正式回收"
       - "10408 小铁盒备用钥匙到手——L5 可以进入 Frank 家主屋开小铁盒"
-      - "父疑点 10401 已满足全部 condition（2090001 + 3060004），在本 Loop 末点亮"
+      - "父疑点 10401 已满足全部 condition（2090001 + 3060004 + 10404），在本 Loop 末点亮"
 
 
 # ─────────────────────────────
@@ -555,8 +555,15 @@ doubts:
     resolved_loop: 1
     status: "resolved_loop1"
 
-  # 注：原 L1 疑点 10103（Morrison 尸检谎言 vs Foster 证词）已在 Loop1 删除——
-  # R3 谎言（1010003）为 Expose 内部退守对白无 testimony ID，矛盾由 Foster 证词在 Expose 当场击穿，不另设疑点
+  - id: 10103
+    text: "Morrison 凭什么这么快定死者身份？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "1030001"  # Foster 证词
+    posed_loop: 1
+    resolved_loop: 1
+    status: "resolved_loop1"
 
   - id: 10201
     text: "Leonard 和 Vinnie 真的不认识？"
@@ -571,7 +578,7 @@ doubts:
     status: "resolved_loop2"
 
   - id: 10202
-    text: "O'Hara 缺的钞票怎么会在 Vinnie 手里？"
+    text: "这些钞票为什么互相是连号的？"
     isFragment: false
     unlock_condition:
       - type: 1
@@ -639,16 +646,18 @@ doubts:
   # ── L4 新建疑点/碎片 ──
 
   - id: 10401
-    text: "Danny 为什么把房产证给了银行？"
+    text: "Danny 是不是在拿叔叔换钱？"
     isFragment: false
     unlock_condition:
       - type: 3
         param: "2090001"  # L2 碎片：Danny 和 Leonard 谈房产证（碎片 10204 归并入父疑点）
       - type: 3
         param: "3060004"  # L3 指证后 Moore 坦白：Danny 把房产证给了银行
+      - type: 1
+        param: "10404"    # 空怀表盒（Tony 便条 — 抵押换 100$）；L4 经济动机件
     posed_loop: 4
     status: "unlocked_loop4"
-    resolution_note: "父疑点，由 L2 碎片 10204 + L3 证词 3060004 合并；L4 R2 击穿件之一；本 Loop 末通过指证 Danny 解决"
+    resolution_note: "父疑点，由 L2 碎片 10204 + L3 证词 3060004 + L4 空怀表盒 合并：行为（出让房产证）+ 动机（穷得抵押怀表）= Danny 在拿叔叔换钱；L4 R2 击穿件；本 Loop 末通过指证 Danny 解决"
     resolved_loop: 4
 
   - id: 10402
@@ -677,16 +686,8 @@ doubts:
     resolved_loop: 4
     resolution_note: "L4 R3 指证击穿后解决：Frank 与 Lula 是真实的五年感情，Lula 不是骗子"
 
-  - id: 10404
-    text: "Danny 为什么这么缺钱？"
-    isFragment: false
-    unlock_condition:
-      - type: 1
-        param: "10404"  # 空怀表盒（含 Tony 便条）
-    posed_loop: 4
-    status: "unlocked_loop4"
-    resolved_loop: 4
-    resolution_note: "L4 R2 击穿辅助：Danny 经济极度拮据，有强烈动机暗中出卖叔叔换取债务减免"
+  # 注：原疑点 10404「Danny 为什么这么缺钱？」已合并入父疑点 10401（"Danny 是不是在拿叔叔换钱？"）——
+  # 行为（出让房产证）+ 动机（穷得抵押怀表）本质都指向"拿叔叔换钱"，作为同一个疑问更紧凑
 
 
 # ─────────────────────────────
@@ -747,7 +748,7 @@ evidence_registry:
     pickup: true
     analysis: false
     description: "一个皮制怀表盒，表盒内空无一物，但盒盖内侧夹着一张便条，Tony（Silver Moon 赌场酒保）手写：'100 块，怀表抵押。——Tony'。便条日期是上周（11月1日）。"
-    note: "关键——疑点 10404 condition；L4 R2 指证件"
+    note: "关键——疑点 10401 condition（合并后）；L4 R2 指证件"
 
   - id: 10405
     name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found at Danny's)"

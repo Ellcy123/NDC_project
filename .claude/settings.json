@@ -1,7 +1,37 @@
 {
-  "effortLevel": "xhigh",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Agent",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git rev-parse*)",
+      "Bash(ls *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(mv -f \"Loop2_生成草稿_V2.md\" \"Loop2_生成草稿.md\")",
+      "Bash(mv -f \"Loop3_生成草稿_V2.md\" \"Loop3_生成草稿.md\")",
+      "Bash(mv -f \"Loop4_生成草稿_V2.md\" \"Loop4_生成草稿.md\")",
+      "Bash(mv -f \"Loop5_生成草稿_V2.md\" \"Loop5_生成草稿.md\")",
+      "Bash(mv -f \"Loop6_生成草稿_V2.md\" \"Loop6_生成草稿.md\")"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)"
+    ],
+    "additionalDirectories": [
+      "D:\\NDC_project\\AVG\\对话配置工作及草稿\\前置配置",
+      "D:\\NDC_project\\docs\\游戏系统",
+      "C:\\Users\\Ellcy\\.claude\\channels\\telegram"
+    ]
   },
   "hooks": {
     "PreToolUse": [
@@ -39,30 +69,5 @@
       }
     ]
   },
-  "permissions": {
-    "allow": [
-      "Read",
-      "Agent",
-      "Bash(git status*)",
-      "Bash(git diff*)",
-      "Bash(git log*)",
-      "Bash(git branch*)",
-      "Bash(git rev-parse*)",
-      "Bash(ls *)",
-      "Bash(python *)",
-      "Bash(python3 *)"
-    ],
-    "deny": [
-      "Bash(rm -rf *)",
-      "Bash(git push --force*)",
-      "Bash(git push -f *)",
-      "Bash(git reset --hard*)",
-      "Bash(git clean -f*)"
-    ],
-    "additionalDirectories": [
-      "D:\\NDC_project\\AVG\\对话配置工作及草稿\\前置配置",
-      "D:\\NDC_project\\docs\\游戏系统",
-      "C:\\Users\\Ellcy\\.claude\\channels\\telegram"
-    ]
-  }
+  "effortLevel": "xhigh"
 }

@@ -573,8 +573,15 @@ doubts:
     resolved_loop: 1
     status: "archived_resolved_after_loop1"
 
-  # 注：原 L1 疑点 10103（Morrison 尸检谎言 vs Foster 证词）已在 Loop1 删除——
-  # R3 谎言（1010003）为 Expose 内部退守对白无 testimony ID，矛盾由 Foster 证词在 Expose 当场击穿，不另设疑点
+  - id: 10103
+    text: "Morrison 凭什么这么快定死者身份？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "1030001"  # Foster 证词
+    posed_loop: 1
+    resolved_loop: 1
+    status: "archived_resolved_after_loop1"
 
   # ── Loop 2 新增疑点（3 条）+ 碎片（1 条）──
   - id: 10201
@@ -590,7 +597,7 @@ doubts:
     status: "posed_loop2"  # L2 Expose 后随 Loop 翻页解决
 
   - id: 10202
-    text: "O'Hara 缺的钞票怎么会在 Vinnie 手里？"
+    text: "这些钞票为什么互相是连号的？"
     isFragment: false
     unlock_condition:
       - type: 1
