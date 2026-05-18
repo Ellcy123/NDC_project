@@ -366,13 +366,13 @@ post_expose_scene:
 # ─────────────────────────────
 # 六、疑点（DoubtConfig 条目）
 # ─────────────────────────────
-# 进度条分母：2 项（2 疑点）
+# 进度条分母：1 项（1 疑点）
 # 一对一挂载检查：
 #   10501 → 疑点 10501（本 Loop 新件）
 #   5070001 → 疑点 10501（本 Loop 新件）
 #   4090004 → 疑点 10501（跨 Loop 件，L4 末取得，L5 疑点=L5，时序合规：4090004 取得在 L4 末，疑点 10501 在 L5，L5 ≥ L4，✅）
-#   5080002a → 疑点 10502（本 Loop 新件）
-#   5080002b → 疑点 10604（L6 疑点，留 L6 挂，此处仅记录）
+#   5080002a → 疑点 10502（已迁至 L6，因 5080002a + 10601 法医报告 两件均在 L5 expose 后才能凑齐）
+#   5080002b → 疑点 10604（L6 疑点）
 # ─────────────────────────────
 
 doubts:
@@ -392,18 +392,6 @@ doubts:
     # 3 件 condition（讨论结论 5.1 裁决：4090004 必须挂疑点 condition；单疑点件数无硬上限，≤2 为推荐非强制）；
     # 时序合规：4090004 在 L4 post_expose 取得，疑点首现 L5 ≥ L4 ✅
     # L5 R1 击穿 Vinnie"很久没去 Frank 那附近"谎言时解决
-
-  - id: 10502
-    isFragment: false
-    text: "Vinnie 真的杀了 Frank 吗？"
-    unlock_condition:
-      - type: 3
-        param: "5080002a"  # Vinnie 假认罪主体证词："是我！绑架了 Margaret！因为她看见是我放的火！Frank 是我杀的！"
-    posed_loop: 5
-    resolved_loop: 6
-    status: "posed_loop5_resolved_loop6"
-    # 单件证词 condition；Frank 被钝器致死是 L5 末 Foster 电话揭示的——疑点首现于 Foster 电话后
-    #（知道死因与认罪矛盾）；Vinnie 是假认罪、真凶 Leonard 在 L6 才揭，故 resolved_loop=6
 
 # ─────────────────────────────
 # 七、证据注册表（Evidence Registry）

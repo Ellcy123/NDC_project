@@ -351,21 +351,19 @@ scenes:
       - id: 10606
         name: "凹陷的货物箱"
         name_en: "Dented Cargo Box"
-        type: envir
-        itemType: 2
-        pickup: false  # envir，查看不入背包（too heavy）；但可拍照/记录
+        type: clue
+        itemType: 1
+        pickup: true   # clue：场景交互取证（拍照）入背包
         analysis: false
         description: |
           靠墙的木制货物箱，中部有明显的 3cm 深凹陷，高度约 1.2m，吻合成人背部位置。
-          凹陷边缘有衣物纤维残留（深色，西装面料）。
           这种程度的凹陷需要相当大的力量冲击——像是有人被用力撞或压在箱子上。
         note: "关键——L6 R3 击破件之一；疑点 10603 condition（与 10602 联用）"
         metadata:
           dent_depth: "3cm"
           dent_height: "~1.2m（成人背部高度）"
-          fiber_residue: "深色西装面料纤维"
-          pickup: false
-          record_method: "场景交互后自动记录为笔记条目进入玩家 CASE BOARD"
+          pickup: true
+          record_method: "场景交互后取证（拍照）入背包"
 
 
   # ── 场景 10004：警局 Morrison 办公区（过场，Morrison 签搜查令）──
@@ -491,12 +489,18 @@ expose:
     description: |
       北区湖滨大道 88 号，Leonard Russo 的住所。与南区的逼仄贫民街区完全不同——
       米色石灰岩外墙，铸铁栏杆，门童制服笔挺。
-      搜查令让 Zack 合法进入。Leonard 在客厅等待，他以为这只是例行搜查。
-      他的妻子 Edith Ross 在客厅——是本场自由探索阶段的对话 NPC（角色档见 `Characters/edith.md`），玩家可以走近她对话，
+      Leonard 此刻还在 Moore 银行（§5 末他借口"客户没办完"拖延，没跟回来）。
+      Zack/Emma 持搜查令独自上门——开门的是 Edith Ross（角色档见 `Characters/edith.md`），
+      Leonard 妻子。她是本场自由探索阶段的对话 NPC——玩家可以走近她对话，
       听到她对 Leonard 最近反常的观察（眼镜换了、夜里失眠、出门时间反常）。
-      她对话时端着茶盘背对 Leonard，回答简短不带情绪，问完她会端着茶盘上楼，裙角消失在楼梯转角。
+      她对话时端着茶盘，回答简短不带情绪，问完她会端着茶盘上楼，裙角消失在楼梯转角。
+      Edith 上楼后，玩家继续搜证（10609 envir + 10610 pickup）。
+      搜证近尾声时 Leonard 从银行回到家，进门撞见 Zack 已经搜过——
+      他以为这只是例行搜查，表演配合（"搜查令我看见了，请自便"+拇指压袖口）。
+      Leonard 的 pre-expose 对话发生在他回家之后；Expose 紧接其后启动。
     environment_narrative:
-      - "进场氛围：客厅安静，Edith 端着茶盘站在通往楼梯的过道——玩家可走近触发对话；对话结束后她端茶上楼，裙角在楼梯转角消失"
+      - "Zack/Emma 进场氛围：Edith 应门，端茶站在通往楼梯的过道——玩家可走近触发对话；对话结束后她端茶上楼，裙角在楼梯转角消失。Leonard 尚未到家"
+      - "Leonard 到家：Edith 已上楼后，Leonard 进门——他没看到 Edith 接待 Zack 的过程，但看到 Zack 已经搜过的痕迹（10610 已不在书桌侧）；他面色没变，但拇指压袖口"
       - "R4 诱导招供触底前演出帧：Leonard 望向楼梯，Zack 视线跟着他——楼梯顶端 Edith 的裙角再次出现一瞬（她下楼取东西又上去），然后消失。Leonard 转回头，开口招供"
 
   context: |
@@ -508,7 +512,7 @@ expose:
     ── 场景 10001 取得 ──
     - 10604 烛台（凶器，已取得）
     - 10605 眼镜碎片（烟熏黄色旧镜片，镊子夹出）
-    - 10606 凹陷货物箱（记录/照片，3cm 凹陷、西装面料纤维）
+    - 10606 凹陷货物箱（记录/照片，3cm 凹陷，成人背部高度）
     ── 场景 10017 搜证取得 ──
     - 10609 旧报纸剪报（1900 南区双家纵火，环境叙事）
     - 10610 眼镜维修单据（左眼新镜片，右眼旧镜片）
@@ -669,7 +673,7 @@ expose:
       - id: 6110001
         role: "Margaret 证词的'独自'细节——8:16 她目击的西装男是独自一人，踉跄离开，像看不清路；如果是'和平拜访'、Frank 把你送出门，为什么是踉跄的、像看不清路的状态？而且是独自——没有 Frank 相送"
       - id: 10606
-        role: "货物箱 3cm 凹陷（成人背部高度，深色西装面料纤维）——这里发生过激烈的打斗；货物箱被人猛力撞过，西装面料纤维留在凹陷边缘；和平拜访不会留下这个"
+        role: "货物箱 3cm 凹陷（成人背部高度）——这里发生过激烈的打斗；货物箱被人狠狠撞过，留下深陷的痕迹；和平拜访不会留下这个"
     required_items: [6110001, 10606]
     trap_evidence:
       - id: 10604
@@ -679,8 +683,8 @@ expose:
       Zack 拿出两件：
       一：你母亲 Margaret——8:16，她目击你独自踉跄离开，像看不清路。和平拜访之后，Frank 把你送出门，
       你为什么是踉跄的？为什么是独自的？
-      二：货物箱——3cm 凹陷，高度和你的背部一样，凹陷边缘有深色西装面料的纤维。
-      这间屋子里发生了非常激烈的打斗，而你的西装在那里留下了痕迹。
+      二：货物箱——3cm 凹陷，高度和你的背部一样。
+      这间屋子里发生过非常激烈的打斗——有人被狠狠撞到了箱子上。
       Leonard 盯着桌面。他不说话了。
 
   # ── 诱导招供系统（R3 击穿后，R4 开始前）──
@@ -802,31 +806,40 @@ ending_sequence:
 
     # ── Act 3：Lula 悼念 ──
     act_3_lula_mourning:
-      location: "鞋坊附近街角（室外，傍晚）"
+      location: "Frank 墓地（傍晚）"
       description: |
-        Lula 一个人站在鞋坊废墟对面的街角。她没有哭，只是站着，手里什么都没有拿。
-        Zack 和 Emma 走过来，站在她身旁，三个人都不说话。
-        过了一会儿，Lula 说："他想把举报材料交出去，是因为他觉得这样子他们就可以光明正大了。"
-        再过一会儿，她转身走了。
-        Zack 和 Emma 原地站着，看着废墟方向。
-      lula_line: "他想把举报材料交出去，是因为他觉得这样子他们就可以光明正大了。"
+        Lula 一个人站在 Frank 的墓碑前。她没有哭，只是站着，
+        手里什么都没有拿。Zack 和 Emma 从墓地小径走过来，
+        在她身后停下，没有立刻上前。
+        过了一会儿，Lula 开口——三句话，每句之间有沉默间隔，
+        不一口气说完，对着墓碑说，不回头：
+      lula_lines:
+        - "Frank……我终于可以光明正大地说我爱你了，但你已经不在了。"
+        - "你答应过我，做完这件事就带我离开。现在我自由了，但你不在了。"
+        - "他想把举报材料交出去，是因为他觉得这样子他们就可以光明正大了。"
+      note: "三句话按顺序，中间各有沉默间隔；Lula 不回头看 Zack/Emma；说完转身从他们身边走过，仍不说话"
 
     # ── Act 4：Zack 苦笑——Moore 银行 ──
     act_4_zack_moore:
-      location: "鞋坊废墟对面的街角（Lula 离开后）"
+      location: "Frank 墓地（Lula 转身走后，Zack/Emma 留下）"
       description: |
-        Lula 的背影消失在街口。Emma 还在 Zack 身边。
-        Zack 盯着废墟，沉默了几秒，然后苦笑了一下。
-        Zack 台词："Moore 银行呢？真正的罪犯还在逍遥法外。"
-        Emma 没有立刻回答。
-        她看着 Zack，过了一会儿说："我们还没完。"
+        Lula 的背影从墓地小径走远。Zack 和 Emma 站在 Frank 墓碑前。
+        四句对话，按顺序：
+        1. Zack（低声，像跟自己说）："Vinnie 故意留下打火机。一开始就打算认罪。"
+        2. Emma（停一拍）："至少正义得到了伸张。"
+        3. Zack（盯着墓碑，苦笑）："Moore 银行呢？真正的罪犯还在逍遥法外。"
+        4. Emma（停一会儿，看着 Zack）："我们还没完。"
         画面在两人对视中淡出。
-      zack_line: "Moore 银行呢？真正的罪犯还在逍遥法外。"
-      emma_line: "我们还没完。"
+      zack_lines:
+        - "Vinnie 故意留下打火机。一开始就打算认罪。"
+        - "Moore 银行呢？真正的罪犯还在逍遥法外。"
+      emma_lines:
+        - "至少正义得到了伸张。"
+        - "我们还没完。"
       cross_unit_hook: "Moore / 掠夺性贷款体制 / 银行-黑手党共谋——Unit11 开门钩子"
 
 # ─────────────────────────────
-# 六、疑点（DoubtConfig，L6 进度条分母=4）
+# 六、疑点（DoubtConfig，L6 进度条分母=5）
 # ─────────────────────────────
 
 doubts:
@@ -883,6 +896,20 @@ doubts:
     status: "unlocked_loop6"
     # L6 R4 / 诱导招供击穿 Leonard"Vinnie 烧死的"甩锅时解决（Vinnie 假认罪护短的真相揭示）
 
+  # 疑点 10502——Vinnie 认罪 vs 法医钝器结论矛盾（原 L5 疑点，因解锁件全在 L5 expose 后才能凑齐，迁至 L6）
+  - id: 10502
+    isFragment: false
+    text: "Vinnie 真的杀了 Frank 吗？"
+    unlock_condition:
+      - type: 3
+        param: "5080002a"  # L5 Vinnie 假认罪主体证词（跨 Loop 携带）
+      - type: 1
+        param: "10601"     # L6 圣心医院取得的法医鉴定报告——Frank 死于钝器
+    posed_loop: 6
+    resolved_loop: 6
+    status: "unlocked_loop6"
+    # 不直接打入 expose round；L6 全局指证 Leonard 后随之解决
+
 # ─────────────────────────────
 # 七、证据注册表（evidence_registry，L6 全局）
 # ─────────────────────────────
@@ -923,7 +950,7 @@ evidence_registry:
   - id: 10606
     name: "凹陷的货物箱"
     source_scene: 10001
-    pickup: false  # envir，记录进 CASE BOARD
+    pickup: true   # clue：拍照入背包
     note: "关键——L6 R3 击破件；疑点 10603 condition"
 
   - id: 10607

@@ -379,12 +379,15 @@ expose:
       - id: 10102
         name: "Margaret 相册"
         用途: "30 年照片无一例外佩戴婚戒——证明 Margaret 从不摘戒"
+      - id: 10103
+        name: "空的首饰盒"
+        用途: "戒指凹槽空置——Margaret 出门没带走戒指；三件合并构成'婚戒矛盾'推理链"
     trap_evidence:
       - id: 10105
         name: "鞋坊营业记录"
         trap_reason: "只证明 Frank 是雇员，说明可能死的是雇员，但不能反驳'死者是否是 Margaret'"
     result: |
-      Morrison 被迫承认：尸体手指无戒指，而 Margaret 从不摘婚戒——"死者就是 Margaret"这个结论出现了矛盾。
+      Morrison 被迫承认：尸体手指无戒指 + Margaret 从不摘婚戒 + 家中首饰盒空置——"死者就是 Margaret"这个结论彻底崩溃。
       Morrison 立刻转移阵地：进入谎言2（戒指去向）。
 
   round_2:
@@ -394,10 +397,7 @@ expose:
       - id: 10104
         name: "现场地面照片"
         用途: "消防细筛现场地面无任何金属残留——现场温度未达熔金点（MAX TEMP. ≈ 650°F）；戒指不可能被烧毁，现场也没找到"
-    trap_evidence:
-      - id: 10103
-        name: "空的首饰盒"
-        trap_reason: "首饰盒空只证明戒指不在家里，不能反驳'戒指可能掉在现场或被烧毁'——Morrison 会说'也许她带去现场了'"
+    trap_evidence: []  # 10103 已移至 R1 usable；R2 陷阱待补
     result: |
       Morrison 被迫承认：现场无金属残留，普通火灾温度不可能熔化金戒指。
       戒指的物理去向无法用"被烧毁"来解释。Morrison 最后一道防线：进入谎言3（声称有尸检信息）。
@@ -549,7 +549,7 @@ evidence_registry:
     itemType: 3
     pickup: true
     first_scene: 10002
-    note: "关键——L1 R2 陷阱选项（实质为 R2 trap）；疑点 10102 condition（type=1）；首饰盒凹槽划痕=戒指脱落物理伏笔（L4/L5 回收）"
+    note: "关键——L1 R1 击穿件（三件之一）；疑点 10102 condition（type=1）；首饰盒凹槽划痕=戒指脱落物理伏笔（L4/L5 回收）"
 
   - id: 10104
     name: "现场地面照片"
