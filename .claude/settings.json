@@ -18,7 +18,23 @@
       "Bash(mv -f \"Loop3_生成草稿_V2.md\" \"Loop3_生成草稿.md\")",
       "Bash(mv -f \"Loop4_生成草稿_V2.md\" \"Loop4_生成草稿.md\")",
       "Bash(mv -f \"Loop5_生成草稿_V2.md\" \"Loop5_生成草稿.md\")",
-      "Bash(mv -f \"Loop6_生成草稿_V2.md\" \"Loop6_生成草稿.md\")"
+      "Bash(mv -f \"Loop6_生成草稿_V2.md\" \"Loop6_生成草稿.md\")",
+      "Bash(awk '{print length\\($0\\), substr\\($0,1,3\\)}')",
+      "Bash(mv \"剧情设计/Unit10/功能清单.md\" \"剧情设计/Unit10/功能清单.md.tmp\")",
+      "Bash(mv \"剧情设计/Unit10/功能清单.md.tmp\" \"剧情设计/Unit10/功能清单.md\")",
+      "Bash(mkdir \"剧情设计/Unit10/_test_lock_dir\")",
+      "Bash(rmdir \"剧情设计/Unit10/_test_lock_dir\")",
+      "Bash(touch \"剧情设计/Unit10/.touchtest\")",
+      "Bash(rmdir \"剧情设计/Unit10\")",
+      "Bash(ls -d \"剧情设计/Unit\"*)",
+      "Bash(sed -n '25,32p' \"preview_new2/data/Unit2/loop2.yaml\")",
+      "Bash(sed -n '5,12p' \"AVG/对话配置工作及草稿/Unit2/Loop2_生成草稿.md\")",
+      "Bash(sed -n '6,13p' \"AVG/对话配置工作及草稿/Unit2/Loop3_生成草稿.md\")",
+      "Bash(sed -n '18,26p' \"剧情设计/Unit2/state/loop6_state.yaml\")",
+      "Bash(grep -rn -E \"场景 100[36]|Scene 100[36]\" \"剧情设计/Unit2/\" \"AVG/对话配置工作及草稿/Unit2/\")",
+      "Bash(grep -rn \"证据 5 位\\\\|证据5位\" \"剧情设计/Unit2/\" \"AVG/对话配置工作及草稿/Unit2/\")",
+      "Bash(grep -rn -E \"^\\\\s+- id: \\([0-9]{3,4}\\)\\\\s\" \"剧情设计/Unit2/state/\")",
+      "Bash(grep -rn -E \"\\(target_npc_id|npc_ref\\):\\\\s*[0-9]+\" \"剧情设计/Unit2/state/\")"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -30,7 +46,8 @@
     "additionalDirectories": [
       "D:\\NDC_project\\AVG\\对话配置工作及草稿\\前置配置",
       "D:\\NDC_project\\docs\\游戏系统",
-      "C:\\Users\\Ellcy\\.claude\\channels\\telegram"
+      "C:\\Users\\Ellcy\\.claude\\channels\\telegram",
+      "D:\\NDC_project\\preview_new2\\data\\_table_drafts\\Unit2"
     ]
   },
   "hooks": {
