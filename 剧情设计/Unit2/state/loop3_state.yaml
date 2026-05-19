@@ -2,7 +2,7 @@
 # loop3_state.yaml — Unit2 Loop 3: Mickey 登场 + 掠夺性贷款揭露
 # ============================================================
 #
-# 叙事功能：市政厅过场（令状被拒）→ Moore 银行门口 Mickey 律师登场/递交传票 →
+# 叙事功能：市政厅过场（令状被拒）→ 湖滨信托银行门口 Mickey 律师登场/递交传票 →
 #           银行大厅 Leonard 背景证词 → 档案室 + Leonard 办公室搜证 →
 #           Frank 家主屋（开间）（牛奶签收单） → Frank 家次卧（Danny 初见） →
 #           指证 Moore（3 轮：笔迹 / 贷款计算 / 对账单矛盾）→ post_expose 钥匙 + 第一重反转
@@ -64,7 +64,7 @@
 
 player_context:
   goals:
-    primary: "Frank 的贷款到底是怎么一回事？Moore 银行对 Frank 做了什么？"
+    primary: "Frank 的贷款到底是怎么一回事？湖滨信托银行对 Frank 做了什么？"
     secondary:
       - "L2 末尾拿到 Leonard 给的信封去市政厅申请令状——应该会被拒"
       - "Mickey 律师以什么方式出现？他的专业能力能不能打开银行档案室的门"
@@ -86,7 +86,7 @@ player_context:
     - "银行撞见 Danny：他在和 Leonard 商量 Frank 的房产证（L2 偷听到的碎片信息）"
     - "O'Hara 贷款钞票（连号缺 905-909B）与 Vinnie 钞票（905/906/908B）拼合——证明资金流向"
     - "Vinnie 催债小本子末尾写'L.R. 给的地址有问题'——证明 Vinnie 与 Leonard 的雇佣关系"
-    - "Moore 银行贵宾室——Moore 行长声称 Frank 因'赌博'借贷 600$，当前欠款 3,200$"
+    - "湖滨信托银行贵宾室——Moore 行长声称 Frank 因'赌博'借贷 600$，当前欠款 3,200$"
     - "Leonard 假善意给的信封，市政厅门房见信连门都不开——Zack 调查陷入僵局"
 
   new_directions:
@@ -103,7 +103,7 @@ player_context:
     # Loop3 指证 Moore 完整击穿后玩家获得的新知识
     - "Frank 不是赌博老赖：贷款并非 Frank 自愿申请 3,200$ 赌博贷款，协议签名是 Leonard 代签的伪造"
     - "Moore 承认：Danny 把 Frank 房产证给了银行——换取沉默，不是 Frank 本人行为"
-    - "Moore 银行掠夺性贷款体系：年单利 12% + 月管理费 50$，5 年合计约 3,960$，年化约 112%——远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）"
+    - "湖滨信托银行掠夺性贷款体系：年单利 12% + 月管理费 50$，5 年合计约 3,960$，年化约 112%——远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）"
     - "Frank 申请贷款的真实用途是房屋修缮（地下室）——2302 档案如实填写"
     - "Lakeshore Investment Co. 是银行的投资公司马甲——内部文件用投资公司名义，对客户称银行"
     - "Frank 借的是信用贷款（无抵押），房产证在银行档案柜是 Danny 私下交付的结果——并非合法抵押"
@@ -123,7 +123,7 @@ opening:
     L2 末 Zack 拿着 Leonard 给的信封赶到市政厅/法院，
     门房看了信直接摆手：这不够，需要有效律师签名的正式申请。
     Zack 在市政厅台阶上停了一下——调查陷入僵局。
-    他转而回到 Moore 银行门口，打算再试试别的办法。
+    他转而回到 湖滨信托银行门口，打算再试试别的办法。
     就在银行门口，一个陌生男人走上台阶，从公文包里拿出一叠文件，
     礼貌但不容拒绝地递给银行门卫：这是法院签署的传票，请通知你们行长。
     那人回过头，看到 Zack，停了一下，微微一笑：
@@ -163,9 +163,9 @@ opening:
 
 scenes:
 
-  # ── 场景 2011：Moore 银行-大厅（L3 自由探索）──
+  # ── 场景 2011：湖滨信托银行-大厅（L3 自由探索）──
   - id: 2011
-    name: "Moore 银行-大厅"
+    name: "湖滨信托银行-大厅"
     type: free_exploration  # 🔓 自由探索
     description: |
       Mickey 递交传票后，银行大厅的气氛明显变了。
@@ -200,9 +200,9 @@ scenes:
           - 2073001  # Leonard：我们的内部档案和对客文件是分开管理的（R9 替代方案 A 铺垫；2306 解释）
 
 
-  # ── 场景 2013：Moore 银行-档案室（搜查令解锁）──
+  # ── 场景 2013：湖滨信托银行-档案室（搜查令解锁）──
   - id: 2013
-    name: "Moore 银行-档案室"
+    name: "湖滨信托银行-档案室"
     type: locked_exploration  # 🔒 搜查令解锁后可进入
     unlock_condition:
       - type: item
@@ -235,9 +235,9 @@ scenes:
         analysis: null
 
 
-  # ── 场景 2014：Moore 银行-Leonard 办公室（搜查令解锁）──
+  # ── 场景 2014：湖滨信托银行-Leonard 办公室（搜查令解锁）──
   - id: 2014
-    name: "Moore 银行-Leonard 办公室"
+    name: "湖滨信托银行-Leonard 办公室"
     type: locked_exploration  # 🔒 搜查令解锁后可进入
     unlock_condition:
       - type: item
@@ -353,9 +353,9 @@ scenes:
           - 2113001  # Danny：声称 Lula "在勾引叔叔"（背景信息；L4 R3 动机参照）
 
 
-  # ── 场景 2012：Moore 银行-贵宾室（⚔️ 指证场景）──
+  # ── 场景 2012：湖滨信托银行-贵宾室（⚔️ 指证场景）──
   - id: 2012
-    name: "Moore 银行-贵宾室"
+    name: "湖滨信托银行-贵宾室"
     type: expose_scene  # ⚔️ 指证场景
     description: |
       Moore 行长的办公室，贵宾室。
@@ -391,7 +391,7 @@ scenes:
 
 
 # ─────────────────────────────
-# 四、指证（⚔️ Expose：Harold Moore，于 2012 Moore 银行-贵宾室）
+# 四、指证（⚔️ Expose：Harold Moore，于 2012 湖滨信托银行-贵宾室）
 # ─────────────────────────────
 
 expose:
@@ -402,7 +402,7 @@ expose:
   is_liar: true
   player_inquiry: null
   total_rounds: 3
-  scene_id: 2012  # 指证发生在 Moore 银行贵宾室（Moore 行长办公室）
+  scene_id: 2012  # 指证发生在 湖滨信托银行贵宾室（Moore 行长办公室）
 
   context: |
     Mickey 和 Zack 手持搜查令进入贵宾室，正式询问 Frank 检举银行的事。

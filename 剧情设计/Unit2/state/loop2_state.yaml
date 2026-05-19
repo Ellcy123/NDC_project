@@ -89,7 +89,7 @@ player_context:
     - direction: "Frank 的邻居 O'Hara 可能知道情况——南区老街坊知道的最多"
       trigger: "Frank 住在南区，从 L1 线索推测邻居能提供贷款/催债背景"
     - direction: "银行和催债人的关联——找到催债人的名字"
-      trigger: "Frank 的贷款来自 Moore 银行，催债暴力行为可能由银行指使"
+      trigger: "Frank 的贷款来自 湖滨信托银行，催债暴力行为可能由银行指使"
 
   post_expose_knowledge:
     # Leonard 指证结束后玩家确认的信息
@@ -125,7 +125,7 @@ scenes:
   # ── 场景 2006：圣心医院 Margaret 病房（Mickey 首登，自由探索） ──
   - id: 2006
     name: "圣心医院 Margaret 病房"
-    type: free_exploration  # 🔓 自由探索
+    type: cutscene  # 改为纯 cutscene（开篇过场，NPC 不可对话，testimony 由演出发放）  # 🔓 自由探索
     description: |
       Margaret 病房。Margaret 未醒，呼吸平稳。Mickey 在开篇过场后留在病房附近，
       Zack 可主动找他追问 Frank 检举案与 Margaret 入院经过。
@@ -235,9 +235,9 @@ scenes:
     npcs: {}  # 敲门无人应，无 NPC 驻场
 
 
-  # ── 场景 2011：Moore 银行大厅（⚔️ 指证 + 🔓 探索） ──
+  # ── 场景 2011：湖滨信托银行大厅（⚔️ 指证 + 🔓 探索） ──
   - id: 2011
-    name: "Moore 银行大厅（Leonard 工位）"
+    name: "湖滨信托银行大厅（Leonard 工位）"
     type: expose_and_exploration  # ⚔️ 指证主场 + 🔓 搜证阶段（O'Hara 提供地址后解锁）
     description: |
       O'Hara 提供 Leonard 名片地址后解锁。
@@ -303,9 +303,9 @@ scenes:
           - 2112001  # Danny 旁听演出证词：在银行大厅偷听到 Danny 和 Leonard 商量 Frank 的房产证（碎片 2204 condition）
 
 
-  # ── 场景 2012：Moore 银行贵宾室（部分） ──
+  # ── 场景 2012：湖滨信托银行贵宾室（部分） ──
   - id: 2012
-    name: "Moore 银行贵宾室（部分开放）"
+    name: "湖滨信托银行贵宾室（部分开放）"
     type: free_exploration  # 🔓 部分开放——Leonard 问话结束后，Moore 主动出来引 Zack 进去
     description: |
       Leonard 的指证结束后，Moore 行长主动出来，邀 Zack 进贵宾室"私下聊几句"。

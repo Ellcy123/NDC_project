@@ -5,7 +5,7 @@
 # 叙事功能：终局收束——Margaret 苏醒证词（2006）→ 鞋坊废墟深度搜证（2001）→
 #           Morrison 警局过场签搜查令（2004）→ Leonard 银行大厅谎言锚（2011）→
 #           Leonard 住所 4 轮指证（2017，含诱导招供 R3-R4 之间）→
-#           ending_sequence（Vinnie 字条 + Lula 悼念 + Zack 苦笑 Moore 银行）
+#           ending_sequence（Vinnie 字条 + Lula 悼念 + Zack 苦笑 湖滨信托银行）
 #
 # 核心体验：
 #   - Margaret 苏醒证词：8:16 街角目击 + 面包袋情节 + 戒指反光细节
@@ -88,7 +88,7 @@ player_context:
     - "死者确认后 Zack 收到 Mickey 电报：Margaret 在圣心医院接受治疗"
     - "Morrison 透露有匿名黑手党电话警告别深究此案"
     # ── loop2 post_expose ──
-    - "Leonard Russo（改名 Ross）是 Moore 银行贷款专员，雇用 Vinnie 暴力催债"
+    - "Leonard Russo（改名 Ross）是 湖滨信托银行贷款专员，雇用 Vinnie 暴力催债"
     - "Leonard 与 Vinnie 之间有钞票资金链（连号 O'Hara 钞票 + Vinnie 手持同批钞票）"
     - "Leonard 给签名信封让 Zack 去市政厅申请搜查令——门房不认账"
     - "Vinnie 在 Tony 试探下口误脱口'Russo'——两人比表面上亲密得多"
@@ -138,7 +138,7 @@ player_context:
     - "Vinnie 在狱中上吊自杀——Foster 在指证后到场，递交 Vinnie 枕下的字条"
     - "字条内容：'Leo——这件事，让我替你做完。我从来没指望你知道。但能再帮你一次也好。——V.'"
     - "Leonard 假释后生不如死——知道了 Vinnie 为他做的一切，再无法用'我不知道'来自欺"
-    - "Lula 悼念 Frank；Zack 苦笑：Moore 银行真正的罪犯还在逍遥法外"
+    - "Lula 悼念 Frank；Zack 苦笑：湖滨信托银行真正的罪犯还在逍遥法外"
     - "疑点 2601/2602/2603/2604 全部解锁"
 
 # ─────────────────────────────
@@ -168,7 +168,7 @@ scenes:
   # ── 场景 2006：圣心医院——Margaret 苏醒，Foster 提供报告 ──
   - id: 2006
     name: "圣心医院 Margaret 病房"
-    type: free_exploration  # 🔓 自由探索（L6 Margaret 苏醒，可交互）
+    type: cutscene  # 改为纯 cutscene（开篇过场，NPC 不可对话，testimony 由演出发放）  # 🔓 自由探索（L6 Margaret 苏醒，可交互）
     loop_flag: "margaret_awake"
     description: |
       圣心医院。病房光线柔和。Margaret Brennan 已经苏醒，坐在床上，神情平静但疲惫。
@@ -273,7 +273,7 @@ scenes:
         pickup: true
         analysis: false
         description: |
-          Moore 银行出具的鞋坊房屋抵押证明，附原始内景照片数张。
+          湖滨信托银行出具的鞋坊房屋抵押证明，附原始内景照片数张。
           其中一张照片清晰显示卧室区角落的烛台在原位——30cm 黄铜圆底烛台，
           底部有轻微磨损，尚未移动。
           与 L6 现场的烛台（2604）位置参照，可对比"原位"与"现场"的位置差。
@@ -423,12 +423,12 @@ scenes:
         note: "关键——解锁场景 2017；Morrison 兑现 L1 承诺的物证"
 
 
-  # ── 场景 2011：Moore 银行大厅（Leonard 谎言锚台词）──
+  # ── 场景 2011：湖滨信托银行大厅（Leonard 谎言锚台词）──
   - id: 2011
-    name: "Moore 银行大厅"
+    name: "湖滨信托银行大厅"
     type: free_exploration  # 🔓 自由探索（Leonard 在工位，可短暂交互）
     description: |
-      Moore 银行大厅。Leonard Russo 在他的工位上，西装笔挺，眼镜是新配的——
+      湖滨信托银行大厅。Leonard Russo 在他的工位上，西装笔挺，眼镜是新配的——
       左眼是透明的新镜片，右眼是旧镜片（颜色略显偏黄，但在室内光线下不那么明显）。
       他知道 Zack 在追这件案子，但此刻还不知道 Zack 拿着搜查令和眼镜碎片。
       他表现出得体的惋惜和无辜。
@@ -489,7 +489,7 @@ expose:
     description: |
       北区湖滨大道 88 号，Leonard Russo 的住所。与南区的逼仄贫民街区完全不同——
       米色石灰岩外墙，铸铁栏杆，门童制服笔挺。
-      Leonard 此刻还在 Moore 银行（§5 末他借口"客户没办完"拖延，没跟回来）。
+      Leonard 此刻还在 湖滨信托银行（§5 末他借口"客户没办完"拖延，没跟回来）。
       Zack/Emma 持搜查令独自上门——开门的是 Edith Ross（角色档见 `Characters/edith.md`），
       Leonard 妻子。她是本场自由探索阶段的对话 NPC——玩家可以走近她对话，
       听到她对 Leonard 最近反常的观察（眼镜换了、夜里失眠、出门时间反常）。
@@ -756,7 +756,7 @@ expose:
 
 ending_sequence:
   type: forced_cutscene  # 🎬 强制剧情，无玩家操作
-  description: "Unit2 终局收束；含 Vinnie 字条 / Lula 悼念 / Zack 苦笑 Moore 银行"
+  description: "Unit2 终局收束；含 Vinnie 字条 / Lula 悼念 / Zack 苦笑 湖滨信托银行"
 
   sequence:
 
@@ -819,7 +819,7 @@ ending_sequence:
         - "他想把举报材料交出去，是因为他觉得这样子他们就可以光明正大了。"
       note: "三句话按顺序，中间各有沉默间隔；Lula 不回头看 Zack/Emma；说完转身从他们身边走过，仍不说话"
 
-    # ── Act 4：Zack 苦笑——Moore 银行 ──
+    # ── Act 4：Zack 苦笑——湖滨信托银行 ──
     act_4_zack_moore:
       location: "Frank 墓地（Lula 转身走后，Zack/Emma 留下）"
       description: |
@@ -827,12 +827,12 @@ ending_sequence:
         四句对话，按顺序：
         1. Zack（低声，像跟自己说）："Vinnie 故意留下打火机。一开始就打算认罪。"
         2. Emma（停一拍）："至少正义得到了伸张。"
-        3. Zack（盯着墓碑，苦笑）："Moore 银行呢？真正的罪犯还在逍遥法外。"
+        3. Zack（盯着墓碑，苦笑）："湖滨信托银行呢？真正的罪犯还在逍遥法外。"
         4. Emma（停一会儿，看着 Zack）："我们还没完。"
         画面在两人对视中淡出。
       zack_lines:
         - "Vinnie 故意留下打火机。一开始就打算认罪。"
-        - "Moore 银行呢？真正的罪犯还在逍遥法外。"
+        - "湖滨信托银行呢？真正的罪犯还在逍遥法外。"
       emma_lines:
         - "至少正义得到了伸张。"
         - "我们还没完。"

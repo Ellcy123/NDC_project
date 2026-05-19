@@ -42,14 +42,14 @@
 ## Loop 2
 
 **状态**：未出现
-**说明**：L2 调查重心转向圣心医院（见 Mickey）、O'Hara 家门口、Frank 家门口、Moore 银行、Silver Moon 赌场，鞋坊店铺区本 Loop 不开放。
+**说明**：L2 调查重心转向圣心医院（见 Mickey）、O'Hara 家门口、Frank 家门口、湖滨信托银行、Silver Moon 赌场，鞋坊店铺区本 Loop 不开放。
 
 ---
 
 ## Loop 3
 
 **状态**：未出现
-**说明**：L3 调查重心在市政厅过场、Moore 银行大厅/档案室/Leonard 办公室、Frank 家内部，鞋坊店铺区本 Loop 不开放。
+**说明**：L3 调查重心在市政厅过场、湖滨信托银行大厅/档案室/Leonard 办公室、Frank 家内部，鞋坊店铺区本 Loop 不开放。
 
 ---
 
