@@ -1,4 +1,4 @@
-# Unit 9：黑哨之夜 - Vivian Rose
+# Unit 9：黑哨之夜 - Vivian Gray
 
 ---
 
@@ -6,7 +6,7 @@
 
 | 字段 | 内容 |
 |------|------|
-| 姓名 | Vivian Rose |
+| 姓名 | Vivian Gray |
 | NPC ID | 106 |
 | 年龄 | 约 27 岁 |
 | 种族 | 混血 |
