@@ -1,503 +1,996 @@
 # ============================================================
-# Loop 6 — Leonard终极指证（真相水落石出，两种爱的悲剧镜像）
-# 本循环说谎者: Leonard Russo (Leon Ross)
-# 核心揭示: Leonard争执中失手杀Frank，Vinnie为保护童年好友顶罪纵火伪造现场
-# 前序事件: L5 Vinnie假认罪暴露破绽，Margaret在码头被Mickey救出
-# 时间: 1925年11月8日 约09:00 上午
+# loop6_state.yaml — Unit2 Loop 6: Leonard 终极指证
+# ============================================================
+#
+# 叙事功能：终局收束——Margaret 苏醒证词（2006）→ 鞋坊废墟深度搜证（2001）→
+#           Morrison 警局过场签搜查令（2004）→ Leonard 银行大厅谎言锚（2011）→
+#           Leonard 住所 4 轮指证（2017，含诱导招供 R3-R4 之间）→
+#           ending_sequence（Vinnie 字条 + Lula 悼念 + Zack 苦笑 Moore 银行）
+#
+# 核心体验：
+#   - Margaret 苏醒证词：8:16 街角目击 + 面包袋情节 + 戒指反光细节
+#   - 镊子+碎片机制：先移开烛台 2604 显形柜子缝隙，持 2603 才能夹出 2605
+#   - Morrison 兑现 L1 承诺：出示 2601 法医报告自动触发签搜查令过场
+#   - Leonard 4 轮指证（物证/维修单/独自离开+打斗/假认罪细节）
+#   - 诱导招供系统（R3-R4 之间）：诱导槽 0-100%，3 节点，错误不增不减
+#   - 结局：Vinnie 狱中上吊 / Leonard 假释生不如死 / Lula 悼念 / Zack 苦笑
+#
+# NPC 编码（Unit2 NPCStaticData 全 Unit2 独立分配，不跨 Unit 复用）：
+#   Margaret=213 / Foster=215 / Leonard=207 / Edith=214（L6 §2017 对话 NPC，非哑角；NPC code 14）
+#   Morrison=203 / Emma=202（Unit2 独立 NPC ID，不跨 Unit 复用）
+#
+# Testimony ID 格式：{unit=2}{npc_code:02d}{loop:1d}{seq:03d} = 7位
+#   Margaret 2136001（目击证词）
+#   Leonard   2076001（R1 谎言锚，仅此一条作 testimony；R2/R3/R4 谎言为 Expose 内部退守对白，无 ID）
+#
+# 关键继承状态（loop5 末）：
+#   2601 法医鉴定报告：loop6 在 2006 Margaret 病房取得（Foster 提供实物）
+#   2502 Frank 举报材料：removed_from_inventory（L5 末 Mickey 带走）
+#   2114004 Danny 目击证词：active，L4 指证后取得，挂 L5 疑点 2501 condition
+#   2155001 Foster 电话证词：active，L5 末取得（引擎点火）
+#   2105002b Vinnie 假认罪细节：active，L5 指证取得，L6 R4 击破件
+#   2603 镊子：loop6 在 2006 取得（Margaret 病房 Foster 提供）
+#
+# ──────────────────────────────────────────────────────────
+# 疑点一对一挂载验证（跨 6 Loop 全局）：
+#   2605 → 疑点 2601 condition（本 Loop 新增）✅
+#   2136001 → 疑点 2601 condition（本 Loop 新增）✅
+#   2610 → 疑点 2602 condition（本 Loop 新增）✅
+#   2606 → 疑点 2603 condition（本 Loop 新增）✅
+#   2602 → 疑点 2603 condition（本 Loop 新增）✅
+#   2105002b → 疑点 2604 condition（本 Loop 新增）✅
+#   无重复引用与其他 Loop 疑点冲突
+# ──────────────────────────────────────────────────────────
+#
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes（2006/2001/2004/2011）
+#                        / expose / ending_sequence / doubts / evidence_registry 全部存在
+# B. 证据覆盖     PASS — 2601-2610（除 2608/2611）全部分配：
+#                        2601/2602/2603 → 2006 Margaret 病房；
+#                        2604/2605/2606 → 2001 鞋坊废墟（2605 需持 2603 触发）；
+#                        2607 → 2004 Morrison 警局过场（自动产出）；
+#                        2609/2610 → 2017 Leonard 住所；
+#                        继承件 2105002b/2114004 状态注明
+#                        【2026-05-15 修订】2611 空相框已与 Miro 对齐删除（含 R2 trap）；
+#                        2608 Leonard-Vinnie 电话记录在 Miro 也已删除，无 evidence 条目
+# C. NPC 条目     PASS — Margaret（scenes 2006，4 块）/ Leonard scenes（2011，4 块）/
+#                        Morrison（scenes 2004 过场，仅过场 NPC 简版）/
+#                        Leonard expose（2017，4 块，is_liar:true）
+#                        Leo妻子 Edith Ross：L6 §2017 自由探索对话 NPC，4 块齐全（active/withheld/inquiry/testimony）；R4 诱导招供前裙角演出帧保留
+# D. 目标对齐     PASS — goals 与讨论结论 L6"Leonard 是真凶 / 诱导招供 / Margaret 苏醒"一致
+# E. 信息节奏     PASS — 本 Loop 揭示：Leonard 误杀真相 + Vinnie 单方面深爱顶罪；
+#                        Whale 伏笔（Mickey 真身）Unit2 内不暴雷；Unit11+ 内容无超前
+# F. quiz 配对    PASS — 4 疑点分母与 L6 进度条设计一致
+# G. Expose 逻辑  PASS — R1(2605+2136001) / R2(2610小玩法) /
+#                        R3(2136001独自+2606) / [诱导招供] / R4(2105002b) 维度互不重叠
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
 # ============================================================
 
-# ═══════════════════════════════════════
-# 玩家视角（本循环）
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 一、玩家视角
+# ─────────────────────────────
 
 player_context:
   goals:
-    primary: "Frank到底是怎么死的？Vinnie的认罪为什么漏洞百出？"
+    primary: "Frank 是被人杀死的——但凶手是谁？L5 认罪的 Vinnie 真的能是凶手吗？"
     secondary:
-      - "8:20从鞋坊离开的'戴眼镜男人'是谁？"
-      - "Margaret苏醒后能提供什么关键证词？"
-  known_facts:
-    # ── L1 post_expose ──
-    - "死者是Frank Kowalski（73岁退休工人），不是Margaret"
-    - "Morrison出于蓝月俱乐部栽赃案被揭发的私怨，故意谎报死者身份"
-    - "Morrison收到匿名电话：'不要多管Margaret Brennan的事'"
-    - "Margaret下落不明，疑被绑架"
-    - "Morrison提出交易：Zack查Frank死因给他一个结案答案，他才去查Margaret下落"
-    # ── L2 post_expose ──
-    - "Leonard真名是Leonard Russo，使用假名Ross在银行工作十年"
-    - "Leonard和Vinnie Moretti是旧相识（童年好友）"
-    - "Leonard雇佣Vinnie暴力催收——提供目标地址，事后分钱"
-    - "连号钞票证明银行→Vinnie的资金链（O'Hara少的钱出现在Vinnie手里）"
-    - "Frank也是被Vinnie'特别关照'的受害者之一"
-    - "Leonard威胁：没有法院令状，无法调查银行内部文件"
-    # ── L3 post_expose ──
-    - "Frank的贷款不是赌博——Leonard代填申请表，Frank不清楚具体内容"
-    - "贷款协议系统性违法：月利率12%=年化289%（州法上限7%）、利滚利、管理费$600"
-    - "贷款协议抬头是'Lakeshore Investment Co.'——投资公司不受银行法利率限制"
-    - "Frank以为去银行借钱，实际被骗签了投资公司协议——系统性欺诈"
-    - "Moore迫于谋杀案审计的恐惧，主动提供Frank遗嘱副本"
-    - "遗嘱：财产归Rose Martinez（如结婚），否则捐给工人互助会；Danny不在继承人中"
-    # ── L4 post_expose ──
-    - "Rose和Frank相恋五年（1920年在医院相识）——因种族偏见秘密交往"
-    - "Frank主动贷款$600修缮鞋坊地下室作为约会场所——不是被Rose骗钱"
-    - "Rose当场签署放弃继承声明——用行动证明不图财产"
-    - "Danny的真实动机：失业缺钱，想继承Frank在拆迁规划区的房产获取补偿"
-    - "Danny因种族偏见和财产贪婪诬陷Rose是'骗子'"
-    - "Rose提供Frank保险箱线索——Frank在11月6日当天原计划做一件'非常冒险的事'"
-    # ── L5 post_expose ──
-    - "Vinnie'认罪'：声称自己纵火杀了Frank——但认罪存在致命破绽"
-    - "Vinnie声称'透过窗户看到Frank在床上睡觉后放火'——但Frank当晚计划去检察官举报，为什么会在店里睡觉？认罪细节可疑"
-    - "打火机保存'太完美'——火灾现场不该有如此完好的金属物品，暗示事后放置"
-    - "Vinnie对Mickey咆哮：'你出卖了Leo！'——Leo指向Leonard"
-    - "Margaret在码头仓库被Mickey救出，虚弱但活着，暂时无法提供证词"
-    - "Frank的举报材料：收集了12个受害者证据，准备揭发银行-黑手党勾结"
-  new_directions:
-    - direction: "烛台凶器与眼镜碎片"
-      trigger: "鞋坊废墟深度搜查——用镊子从烛台下方地板缝隙夹出眼镜碎片，烛台底部凹痕与Frank头骨伤口吻合"
-    - direction: "Leonard到过现场"
-      trigger: "Margaret证词：8:20看到戴眼镜西装男人从鞋坊匆忙离开 + 眼镜碎片在凶器旁 + Leonard近期补配右眼镜片"
-    - direction: "Leonard vs Vinnie证词矛盾"
-      trigger: "Leonard说Frank'受伤倒在地上'，Vinnie说Frank'在床上睡觉'——两人的说法不可能同时为真"
-  post_expose_knowledge:
-    - "Leonard失手杀害Frank——争执中用烛台打了Frank头部，Frank当场死亡"
-    - "Leonard杀人后打电话叫Vinnie来处理——Vinnie移尸到床上、纵火、伪造火灾现场"
-    - "Vinnie为保护Leonard顶罪——故意留下打火机、主动认罪"
-    - "Vinnie和Leonard的证词致命矛盾：Leonard说'Frank受伤倒在地上'，Vinnie说'Frank在床上睡觉'"
-    - "Vinnie对Leonard的单方面悲剧之爱——从童年延续至今，深爱但不被知晓"
-    - "Margaret证词：11/6晚回家看到Frank倒地流血，想检查时被人从后面打晕"
+      - "去医院——Margaret 苏醒了，她可能目击了当晚的某些事"
+      - "回鞋坊废墟做最后一遍深度搜证——还有什么被遗漏的物证"
+      - "用 Foster 的法医报告 2601 兑现 Morrison 的承诺，让他签搜查令"
+      - "持搜查令进入 Leonard 住所，把证据全部摆上桌"
 
-# ═══════════════════════════════════════
-# PART 1: 开篇
-# ═══════════════════════════════════════
-#
-# 场景状态表: 医院(SC2017) → 🎬开篇 → 🔓搜证
-# Margaret在码头被Mickey救出后住院治疗，L6开始时苏醒。
-# 她提供关键证词：看到戴眼镜男人离开、Frank倒地流血、被人打晕。
-# Zack获得Margaret证词后，申请Leonard住所搜查令。
+  known_facts:
+    # ── loop1 post_expose ──
+    - "死者是 Frank Kowalski（73 岁退休工人，Margaret 鞋坊雇员），不是 Margaret"
+    - "Morrison 以'省事结案'动机误导调查；承诺'拿出硬证据我签搜查令'"
+    - "死者确认后 Zack 收到 Mickey 电报：Margaret 在圣心医院接受治疗"
+    - "Morrison 透露有匿名黑手党电话警告别深究此案"
+    # ── loop2 post_expose ──
+    - "Leonard Russo（改名 Ross）是 Moore 银行贷款专员，雇用 Vinnie 暴力催债"
+    - "Leonard 与 Vinnie 之间有钞票资金链（连号 O'Hara 钞票 + Vinnie 手持同批钞票）"
+    - "Leonard 给签名信封让 Zack 去市政厅申请搜查令——门房不认账"
+    - "Vinnie 在 Tony 试探下口误脱口'Russo'——两人比表面上亲密得多"
+    # ── loop3 post_expose ──
+    - "Frank 贷款签名是伪造的——2301 + 2302 双件直接对比即可证明"
+    - "贷款条款违法：年单利12% + 利滚利 + 月管理费50$，5年合计≈3960$"
+    - "对账单双重身份：页眉投资公司/正文银行（同一套欺诈体系）"
+    - "Moore 承认 Frank 不是赌博贷款，是银行做的手脚"
+    - "Danny 把 Frank 房产证给了银行换沉默（Moore 坦白，证词 2083004）"
+    - "房产证附带两把钥匙：地下室钥匙（2308）和 Frank 家钥匙（2309）"
+    - "Mickey 律师首次正面登场——以律师身份递交传票获得银行搜查令"
+    # ── loop4 post_expose ──
+    - "Frank 与 Lula Washington 秘密相恋五年（圣卢克医院护士，非裔）"
+    - "Danny 当晚并非在家，与 Frank 走了同一条路（O'Hara 目击 2064001）"
+    - "Margaret 婚戒在 Danny 房间（2405）——Danny 在街边顺手捡走"
+    - "Danny 目击：8点多壮汉从鞋坊方向匆忙离开，块头大深色衣服像意大利人，打晕了 Margaret；看见戒指从她手旁滚出来反光（2114004）"
+    - "Danny 不是凶手：他只是受害者旁观者+顺手贼；经济状况极差（空怀表盒 2404）"
+    - "Lula 提供保险箱备用钥匙 2408；Frank 不会做饭也绝不会用 Margaret 的厨房（2124001）"
+    - "Lula 戏剧性签署放弃继承——对 Frank 的感情是真的"
+    # ── loop5 post_expose ──
+    - "打火机 2501（V 字样）在废墟完好无损；Tony 确认是 Vinnie 的（2095001）"
+    - "Vinnie 当晚在鞋坊——但他的快速认罪细节有问题"
+    - "Vinnie 假认罪：'是我绑架了 Margaret！Frank 是我杀的！'（2105002a）"
+    - "Vinnie 假认罪细节：'我透过窗户看到他在床上睡觉，然后放火！'（2105002b）"
+    - "Foster 法医电话（2155001）：Frank 似乎并非火灾致死，很可能是钝器击打凶杀"
+    - "Vinnie 认罪细节有内在矛盾：若 Frank 打斗中倒地，Vinnie 到场时他怎么还在床上"
+    - "Mickey 拿走 Frank 举报材料（2502），邀 Zack 当律师；Zack 拒绝，继续追查真凶"
+    - "律师/侦探分支已选定侦探路线——追查 Frank 真正的死因"
+
+  new_directions:
+    - direction: "前往圣心医院——Margaret 苏醒，她当晚外出目击了某人；她的证词可能是指向真凶的关键"
+      trigger: "L5 末 Foster 电话告知 Frank 死于钝器、非火灾——且 Margaret 当晚街角方向与凶手逃离路线一致"
+    - direction: "带着 2601 法医报告去警局找 Morrison——他 L1 承诺过'有硬证据就签搜查令'"
+      trigger: "L5 末 Foster 提供法医报告实物 2601（花了整整一天才出初步结论）"
+    - direction: "持搜查令进 Leonard 住所做最终对质——Leonard 有动机、有机会、有串谋 Vinnie 的记录"
+      trigger: "Margaret 目击证词 + 眼镜碎片 + 搜查令解锁 Leonard 住所"
+
+  post_expose_knowledge:
+    # loop6 指证 Leonard 四轮击穿 + ending_sequence 玩家获得的新知识
+    - "Leonard 就是真凶——11月6日约 8:00 到鞋坊威胁 Frank 交出举报材料，争执中用烛台失手打死 Frank"
+    - "打斗中 Leonard 眼镜被碰碎，碎片掉进柜子缝隙；案发后烛台原位（柜子上）遮住了缝隙——L6 玩家须先移开/拿走烛台才能发现碎片，反向证明碎片掉落时间早于烛台被移动（即案发那一刻）"
+    - "Margaret 8:16 在街角目击了戴眼镜西装男（Leonard）独自踉跄从鞋坊方向离开"
+    - "货物箱 3cm 凹陷（成人背部高度）证明打斗激烈，烛台方向与凶器吻合"
+    - "Vinnie 认罪的'床上睡觉'细节是破绽——Leonard 打死 Frank 后尸体在地上，Vinnie 到场才把尸体移到床上伪装，Vinnie 应该知道尸体在地上，但他说'窗户看到在床上睡觉'——说明他在护着 Leonard 编的故事"
+    - "Vinnie 单方面深爱 Leonard——他顶罪不是出于任何利益交换，只是不想让 Leonard 受苦"
+    - "Leonard 不知道 Vinnie 为他能做到如此（双重信息不对称）"
+    - "Vinnie 在狱中上吊自杀——Foster 在指证后到场，递交 Vinnie 枕下的字条"
+    - "字条内容：'Leo——这件事，让我替你做完。我从来没指望你知道。但能再帮你一次也好。——V.'"
+    - "Leonard 假释后生不如死——知道了 Vinnie 为他做的一切，再无法用'我不知道'来自欺"
+    - "Lula 悼念 Frank；Zack 苦笑：Moore 银行真正的罪犯还在逍遥法外"
+    - "疑点 2601/2602/2603/2604 全部解锁"
+
+# ─────────────────────────────
+# 二、开篇（过场——Foster 电话后，Zack 前往医院）
+# ─────────────────────────────
 
 opening:
-  scene_id: 2017
-  characters: [Zack, Margaret, Emma]
-  purpose: "Margaret苏醒——叙述11/6夜经历（看到戴眼镜男人离开、Frank倒地、被人打晕），开启真凶追查方向。证词提取在自由探索阶段的SC2017完成。"
-  talk: emma_006
+  type: cutscene  # 🎬 硬切，无玩家操作
+  talk: opening_l6_hospital
+  location: "Zack 事务所（L5 末接到 Foster 电话后，整理思路）"
+  description: |
+    L5 末 Vinnie 认罪后，Foster 的电话打破了一切"结案"的幻觉。
+    Frank 不是被火烧死的——是钝器击打。Vinnie 认罪细节里有个不对劲的地方：
+    他说"透过窗户看到 Frank 在床上睡觉"——但如果 Frank 是在打斗中被杀、倒在地上，
+    是谁把他移到床上的？Vinnie 到场时尸体应该还在地上。
+    Zack 注意到：Vinnie 认罪的方式太主动、太快、太干净——像是精心准备的结局。
+    他需要找到真凶。
+    Foster 说明天（11/8 09:00）她会在圣心医院，法医报告实物届时取到。
+    同时——Margaret 苏醒了。
 
-  emma_006:
-    is_liar: false
-    motive: "陪Zack去医院——Margaret的证词可能是突破Vinnie认罪破绽、指向真凶的关键"
-    mindset: "谨慎的期待——Vinnie认罪有破绽+'Leo'指向Leonard，Margaret的证词可能串联一切，但不能提前下结论"
-
-    knows:
-      - "Vinnie已认罪但存在致命破绽（声称纵火杀人，但法医说钝器伤）"
-      - "打火机保存太完好——暗示事后放置，Vinnie可能在替人顶罪"
-      - "Vinnie咆哮'你出卖了Leo！'——Leo指向Leonard"
-      - "Margaret在码头被Mickey救出，正在医院恢复"
-      - "Frank的举报材料揭示他在收集12个受害者证据准备揭发银行-黑手党"
-      - "Rose在L5目击：9点多壮汉从鞋坊方向匆忙离开（与Vinnie吻合）"
-
-    does_not_know:
-      - "Margaret在11/6夜的具体经历（即将得知）"
-      - "Leonard就是杀害Frank的凶手"
-      - "Leonard用烛台打了Frank头部"
-      - "Vinnie为Leonard移尸、纵火、伪造现场的完整经过"
-
-    lie: null
-
-    # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 2: 自由探索
-# ═══════════════════════════════════════
-#
-# 场景状态表 L6:
-#   医院              → 🎬开篇 → 🔓搜证
-#   鞋坊一楼(1F)      → 🔓废墟搜证(凶器)
-#   鞋坊卧室区        → ⏸️无新线索
-#   鞋坊地下室        → ⏸️无新线索
-#   家门口(2A)        → ⏸️无新线索
-#   Frank家内部       → ⏸️无新线索
-#   赌场/酒吧         → 🔓无新线索(Vinnie不在)
-#   银行大厅          → ⚔️终极指证
-#   银行贵宾室        → ⏸️NPC对话
-#   银行档案室        → 🔒封锁
-#   Leonard办公室     → 🔒封锁
-#   Frank家次卧(Danny) → ⏸️NPC对话
-#   鞋坊一楼(1F)      → Rose再次对话(详细)
-#   Leonard住所       → 🔓搜查令 → ⚔️终极指证
-#   警局              → 🔓获取搜查令
-#   监狱              → 🎭结尾
-#   墓地              → 🎭结尾
+# ─────────────────────────────
+# 三、场景
+# ─────────────────────────────
 
 scenes:
-  # ── SC2017 圣心医院（自由探索：搜证 + Margaret问询） ──
-  # 开篇对话见上方 opening 段落；以下为自由探索阶段
-  - id: 2017
-    name: "圣心医院-Margaret病房"
-    evidence:
-      - id: 2606
-        name: "房屋抵押证明（含照片）"
-        note: "关键——附带鞋坊内景照片(1925.11.06拍摄)，可见墙角烛台原始位置（与火灾后对比发现烛台被移动）"
-      - id: 2617
-        name: "镊子"
-        note: "关键——医用金属镊子15cm，用于从SC2001地板缝隙中夹出眼镜碎片2608"
-    npcs:
-      margaret_001:
-        # ── 基本信息 ──
-        talk: margaret_001
+
+  # ── 场景 2006：圣心医院——Margaret 苏醒，Foster 提供报告 ──
+  - id: 2006
+    name: "圣心医院 Margaret 病房"
+    type: free_exploration  # 🔓 自由探索（L6 Margaret 苏醒，可交互）
+    loop_flag: "margaret_awake"
+    description: |
+      圣心医院。病房光线柔和。Margaret Brennan 已经苏醒，坐在床上，神情平静但疲惫。
+      Foster 法医也在——她提前到了，带来了 2601 法医鉴定报告实物、2602 房屋抵押证明（原件）、
+      以及 2603 医用镊子（配合鞋坊柜子缝隙取证用）。
+      Margaret 的第一反应不是问自己的伤，而是问 Frank 的案子——
+      然后才问 Zack 自己昏迷期间发生了什么。
+      这个顺序是 Margaret 角色弧的灵魂：她先是鞋坊主人、Frank 的朋友，然后才是 Zack 的母亲。
+      Margaret 目击证词是 L6 最关键的新信息源——她当晚街角看到的细节直指 Leonard。
+
+    npc:
+      - id: 213  # Margaret Brennan
+        name: "Margaret Brennan"
+        talk: margaret_l6_hospital
         is_liar: false
-        motive: "为了Frank和Zack的正义——虚弱但清醒，要把11/6夜目击的一切告诉儿子"
-        mindset: "劫后余生的坚定——被囚禁多日的恐惧未消，但母亲的责任让她咬牙回忆每个细节"
+        motive: "说出当晚所见——她一直昏迷，醒来第一件事是把记忆里的细节交给 Zack"
+        mindset: |
+          苏醒后神情平静而专注。她不自怜，不强调自己的伤痛。
+          她记得当晚出去买东西，记得街角的那个男人，记得戒指滚出来的声音——
+          这些细节她一直保存在意识里，等待能说出来的时刻。
+          她知道 Frank 死了，但不知道是谁杀的。她把自己知道的全说出来。
 
-        # ── 1. NPC 已知信息 ──（模式 D：一次性 NPC）
-        knows:
-          - "11/6晚约8点外出买东西，8:20左右回到鞋坊附近"
-          - "回来途中在街角看到一个戴眼镜的西装男人从鞋坊方向匆匆离开，走路踉跄像看不清路"
-          - "进门后看到Frank倒在店铺区地上，头上流了很多血"
-          - "想检查Frank的伤势时突然被人从背后打晕，之后完全失去意识"
-          - "醒来时在阴暗的仓库里被绑着，直到Mickey来救她"
-
-        does_not_know:
-          - "打晕她的人是谁（完全从背后袭击，没有看到）"
-          - "Frank的具体死因（钝器击打头部）"
-          - "戴眼镜男人的身份（天色暗，只看到轮廓和眼镜反光）"
-          - "Leonard Russo的存在及其犯罪"
-          - "Vinnie的存在及其认罪"
+        # ── 1. 已知信息 ──
+        active_topics:
+          - "当晚她约 7:45 外出，去街对面洗衣店取衣服并顺道买了面包"
+          - "8:16 左右从洗衣店出来，提着面包袋，街角差点撞上一个戴眼镜的西装男——他独自从鞋坊方向踉跄离开，像看不清路"
+          - "西装男的外貌：戴眼镜、西装、步伐踉跄、独自一人"
+          - "她没有看到 Vinnie——她只看到了那个西装男"
+          - "随后遭到从背后袭击，失去意识，没有看到打她的人"
+          - "她感觉戒指那一刻从手指脱落——撞击地面时手腕磕到了路缘"
+          - "醒来后 Mickey 律师告知她在圣心医院，但她不知道 Mickey 和她的案子的关联"
+        withheld_topics:
+          - "Leonard 的名字和身份——她不知道她目击的那个人叫什么"
+          - "凶案全貌——她不知道 Frank 是被打死的，不知道 Leonard 就是那个西装男"
+          - "Vinnie 纵火 + 打晕她的关联——她没看到打她的人"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "Margaret是11/6当晚鞋坊唯一的目击者——她的证词可能指向真凶"  # 10
-          - "Margaret被囚禁在仓库多日——绑架经过和绑架者身份"  # 8
+          - '"当晚你在什么时间、什么地点外出" # 10'
+          - '"你看到的那个男人的外貌特征" # 10'
+          - '"你是怎么知道时间是 8:16 的" # 8'
+          - '"你当时提着什么，有没有撞到他" # 7'
+          - '"你是否注意到他的眼镜有什么异常" # 9'
+          - '"你被袭击之前最后看到了什么" # 9'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2101001  # Margaret证词：回来途中看到戴眼镜西装男人从鞋坊匆忙离开（踉跄/看不清路），进门发现Frank倒地流血，想检查伤势时被人从背后打晕
+          - 2136001  # "8:16 街角目击戴眼镜西装男独自从鞋坊方向匆忙离开，走路踉跄，像看不清路；我提着面包袋从洗衣店出来，差点撞上他；看见戒指从她手旁滚出来反光（备注：戒指是她自己的婚戒，Vinnie 打晕她倒地时手腕撞路缘脱落）"
 
-        # ── 4.  ──
-  # ── SC2001 Margaret鞋坊-店铺区（废墟搜证：凶器） ──
-  - id: 2001
-    name: "Margaret鞋坊-店铺区（废墟搜证-凶器）"
+      - id: 215  # Foster
+        name: "Dr. Foster"
+        talk: foster_l6_hospital
+        is_liar: false
+        motive: "把法医报告实物交给 Zack——她花了整整一天，这是她能做的事"
+        mindset: |
+          职业冷静，措辞谨慎。她不做超越证据的结论，但在可以说的范围内尽量说清楚。
+          她在 L5 末电话里已经告知了初步结论，现在是交付实物报告。
+          她亲自来是因为这份报告的分量——口头告知和白纸黑字是两回事。
+
+        # ── 1. 已知信息 ──
+        active_topics:
+          - "法医报告显示 Frank 头骨伤口形状与圆底钝器一致，烛台底部吻合（不排除其他同类工具）"
+          - "伤口是致命的——Frank 在火灾之前已经死亡，不是火灾致死"
+          - "报告花了整整一天——非火灾致死本身就需要排除一切其他可能，这不是快速工作能完成的"
+          - "房屋抵押证明（2602）包含内景照片，其中烛台在原位——可作为凶器位置参照"
+          - "镊子（2603）用于鞋坊现场可能存在的细小物证取样"
+        withheld_topics:
+          - "Foster 本人与 Miller 集团的资助关系——这不是她主动提的话题（叙事伏笔，Unit2 内保留）"
+          - "Vinnie 字条的存在——她此刻还不知道 Vinnie 已经自杀"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - '"伤口的具体形状和凶器的对应关系" # 9'
+          - '"烛台作为凶器的证据强度——报告有多确定" # 9'
+          - '"房屋抵押证明里的内景照片是哪张拍的" # 7'
+          - '"镊子的用途——你认为现场还有什么物证没找到" # 8'
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          # Foster 不提供独立证词 ID；其信息通过对话获得，2601 实物进入玩家背包
+
     evidence:
       - id: 2601
-        name: "烛台（凶器）"
-        note: "关键——黄铜烛台高约30cm，被烟熏黑，底部凹痕露出铜色与Frank头骨伤口吻合（Expose R3用）"
-      - id: 2607
-        name: "凹陷的货物箱"
-        note: "场景道具——木质货物箱中部偏上凹陷约3cm（成人背部高度），证明现场发生过激烈打斗"
-      - id: 2608
-        name: "眼镜碎片"
-        note: "关键——用镊子(2617)从烛台下方地板缝隙夹出，光学玻璃约1.5×1cm偏黄色（旧镜片特征）（Expose R1用）"
-  # ── SC2005 警局（获取搜查令 + 法医报告） ──
-  - id: 2005
-    name: "警局"
-    evidence:
-      - id: 2613
         name: "法医鉴定报告"
-        note: "关键——库克县法医办公室正式鉴定：死因为头部钝器击打，结论'非火灾致死'（全案关键证据）"
-    npcs:
-      morrison_002:
-        # ── 基本信息 ──
-        talk: morrison_002
-        is_liar: false
-        motive: "被迫签搜查令——Margaret证词+Vinnie认罪+Mickey持续施压让他无法再拖延"
-        mindset: "不情愿但无奈——知道不签字会被Mickey曝光丑闻，咬牙配合只想尽快了事"
+        name_en: "Forensic Examination Report"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: |
+          Foster 法医出具的正式报告，盖有法医署印章。
+          关键结论：头骨伤口形状与圆底钝器一致，烛台底部吻合（不排除其他同类工具）；
+          伤口出血在火灾前即已停止，确认 Frank 在火灾之前已死于钝器击打，非烟熏或烧伤致死。
+          报告注明"花费整整一天排除替代假设"——措辞极其谨慎，但结论清晰。
+        note: "关键——兑现 Morrison L1 承诺；携此前往 2004 警局触发搜查令过场"
 
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → morrison
-        awareness:  # 以下为L6新获知信息
-          - content: "Vinnie已认罪纵火杀害Frank"
-            trigger: "L5 Expose结果"
-          - content: "Margaret在码头仓库被Mickey救出"
-            trigger: "L5突发事件"
-          - content: "Mickey律师持续施压要求配合调查"
-            trigger: "L6当前"
-        active_topics: [case]
-        withheld_topics: []
+      - id: 2602
+        name: "房屋抵押证明"
+        name_en: "Property Mortgage Certificate"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: |
+          Moore 银行出具的鞋坊房屋抵押证明，附原始内景照片数张。
+          其中一张照片清晰显示卧室区角落的烛台在原位——30cm 黄铜圆底烛台，
+          底部有轻微磨损，尚未移动。
+          与 L6 现场的烛台（2604）位置参照，可对比"原位"与"现场"的位置差。
+        note: "关键——L6 R3 击破件之一；疑点 2603 condition"
 
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "Margaret证词指向戴眼镜男人——需要Morrison签发Leonard住所搜查令"  # 9
-          - "法医鉴定报告已完成——Morrison作为辖区警官可以提供"  # 7
+      - id: 2603
+        name: "医用镊子（15cm）"
+        name_en: "Medical Forceps (15cm)"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: |
+          标准医用不锈钢镊子，15cm 长，Foster 借给 Zack 用于现场取证。
+          适合夹取嵌入柜子缝隙的细小物证而不损坏样本。
+        note: "场景道具——用于 2001 夹取柜子缝隙中的 2605 眼镜碎片；canCombined=true，combineParameter=[2605,2603]"
+        metadata:
+          canCombined: true
+          combineParameter: [2605, 2603]
+          usage_note: "玩家发现柜子缝隙反光后，需持有 2603 才能触发夹取交互，产出 2605"
 
-        # ── 3. 可提取证词 ──
-        testimony_ids: []  # Morrison在L6仅签搜查令和提供法医报告，无新证词
 
-        # ── 4.  ──
-  # ── SC2009 银行大厅（自由探索：Leonard Talk） ──
-  - id: 2009
-    name: "银行大厅"
-    npcs:
-      leonard_004:
-        # ── 基本信息 ──
-        talk: leonard_004
-        is_liar: true
-        motive: "掩盖失手杀人真相——维护十年假身份构建的中产生活，宁可让Vinnie的认罪成为定论"
-        mindset: "从自信到崩溃的完整弧线——R1坚决否认→R2被眼镜击穿→R3以为承认打斗没事→R4被Vinnie证词反杀"
-
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → leonard
-        awareness:  # 以下为L6新获知信息
-          - content: "Zack在L2拆穿了Russo身份和雇佣Vinnie催收"
-            trigger: "L2 Expose结果"
-          - content: "Moore在L3被击穿——贷款骗局和投资公司马甲暴露"
-            trigger: "L3 Expose结果"
-          - content: "Vinnie已认罪纵火杀害Frank"
-            trigger: "L5 Expose结果"
-          - content: "Margaret被救出，可能已恢复意识提供证词"
-            trigger: "L5突发事件后"
-        active_topics: [identity(完整), crime_network(完整), murder(被迫暴露)]
-        withheld_topics: []  # L6终极指证，全部释放
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry: null  # Expose对象
-
-        # ── 3. 可提取证词 ──
-        testimony_ids:
-          - 2041005  # ⚠谎言: "Frank的死是场悲剧，但和我无关。那天晚上我整晚都在家，从来没有见过Frank"
-
-        # ── 4.  ──
-  # ── SC2018 Leonard住所（搜查令搜证 → ⚔️终极指证） ──
-  - id: 2018
-    name: "Leonard住所-北区湖滨大道88号"
-    evidence:
-      - id: 2505
-        name: "眼镜维修单据"
-        note: "关键——艾斯弗德光学眼镜店：客户Leonard Moore，1925.11.7更换右眼镜片（原镜片破损），加急当日取件（Expose R2用）"
-      - id: 2506
-        name: "空相框"
-        note: "关键——银质相框15×20cm挂墙上但里面空了，背面刻字'To Leo, Best Friends Forever - 1910'（与L3 2318旧照片跨循环关联）"
-      - id: 2507
-        name: "《火灾死亡的法医学特征》"
-        note: "场景道具——医学专业书籍，翻到火灾致死特征章节，页角折起（Leonard研究过火灾伪装）"
-      - id: 2508
-        name: "《绅士礼仪指南》"
-        note: "场景道具——书脊磨旧，Leonard学习中产礼仪的痕迹"
-      - id: 2509
-        name: "没剪标签的高档西装"
-        note: "场景道具——衣柜中新西装标签尚在，体现Leonard对中产身份的执念"
-
-  # ── 鞋坊一楼（Rose再次对话-详细） ──
+  # ── 场景 2001：Margaret 鞋坊-店铺区（深度搜证，L6 柜子缝隙）──
   - id: 2001
-    name: "Margaret鞋坊-店铺区"
-    npcs:
-      rose_003:
-        # ── 基本信息 ──
-        talk: rose_003
-        is_liar: false
-        motive: "Frank的真相即将水落石出——Rose愿意提供更多11/6细节帮助Zack锁定真凶"
-        mindset: "悲痛中的平静——知道Frank为正义而死后，悲伤化为庄严的使命感"
+    name: "Margaret 鞋坊-店铺区（深度搜证）"
+    type: free_exploration  # 🔓 自由探索
+    loop_flag: "deep_search_l6"
+    description: |
+      鞋坊废墟。L5 已经搜过一轮，但柜子缝隙里还有东西——
+      一丁点反光，几乎不可能注意到，除非你蹲下来仔细看。
+      烛台（2604）就在卧室区原位附近（实际卧室区废墟与店铺区相连，环境叙事 NPC 不在场）。
+      凹陷的货物箱（2606）在店铺区靠墙位置，高度吻合成人背部。
+      柜子缝隙的反光物是烟熏黄色的眼镜碎片（2605）——需持有 2603 镊子才能夹出。
+      没有 NPC，只有废墟的沉默和偶尔路过的邻居脚步声。
 
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → rose
-        awareness:  # 以下为L6新获知信息
-          - content: "Vinnie已认罪但认罪存在破绽"
-            trigger: "L5 Expose结果传开"
-          - content: "Margaret在码头被救出，正在医院恢复"
-            trigger: "L5突发事件"
-          - content: "Frank的举报材料揭示他在为12个受害者讨公道"
-            trigger: "L5保险箱开启后"
-        active_topics: [love(已说过), danny(已说过), witness(已说过，L6提供更多细节)]
-        withheld_topics: []
+      🎮 烛台找茬小玩法触发：
+      玩家持有 2602 房屋抵押证明（含案发前店铺内景照片）进入本场景后，可调用 2602 叠加到现实废墟上，
+      通过"找不同"机制揭示三处异常——烛台移位、柜面打斗划痕、货物箱凹陷。
+      详见 `剧情设计/Unit2/小玩法/L6_鞋坊_烛台找茬.md`。
+      玩法揭示后 2604 / 2606 进入可拾取/记录状态；2605 需持 2603 镊子嵌套取出。
+
+    evidence:
+      - id: 2604
+        name: "烛台"
+        name_en: "Brass Candlestick"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: |
+          黄铜圆底烛台，30cm 高。底部有明显的暗红色锈迹状污渍（血迹与火灾烟熏的混合物），
+          底部边缘有细微的凹痕——与 Foster 报告描述的"圆底钝器"形状高度吻合。
+          对比 2602 房屋抵押证明内景照片，这把烛台的位置已从原位移动过。
+        note: "R3 陷阱选项——凶器维度，但需先破'和平拜访'谎言才能进入凶器归属讨论；单独出示无法击穿 R3；本物证由烛台找茬玩法揭示位置后可拾取"
+
+      - id: 2605
+        name: "眼镜碎片（烟熏黄色旧镜片）"
+        name_en: "Spectacle Lens Fragment (Smoke-yellowed)"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: |
+          从烛台原位（柜子上）拿走后露出的柜子缝隙夹出的眼镜镜片碎片，火灾烟尘留下明显的烟熏黄色着色。
+          碎片形状为右眼镜片的一部分——老旧镜片，非新换的透明镜片。
+          找到这块碎片需要持有镊子（2603）蹲下仔细操作，否则缝隙太深无法徒手取出。
+        note: "关键——L6 R1 击破件；疑点 2601 condition"
+        metadata:
+          canCombined: true
+          combineParameter: [2605, 2603]
+          lens_eye: "右眼"
+          color: "烟熏黄色（旧镜片，非新换）"
+          obtain_prerequisite: "玩家需先持有 2603 镊子才能触发取出交互"
+
+      - id: 2606
+        name: "凹陷的货物箱"
+        name_en: "Dented Cargo Box"
+        type: clue
+        itemType: 1
+        pickup: true   # clue：场景交互取证（拍照）入背包
+        analysis: false
+        description: |
+          靠墙的木制货物箱，中部有明显的 3cm 深凹陷，高度约 1.2m，吻合成人背部位置。
+          这种程度的凹陷需要相当大的力量冲击——像是有人被用力撞或压在箱子上。
+        note: "关键——L6 R3 击破件之一；疑点 2603 condition（与 2602 联用）"
+        metadata:
+          dent_depth: "3cm"
+          dent_height: "~1.2m（成人背部高度）"
+          pickup: true
+          record_method: "场景交互后取证（拍照）入背包"
+
+
+  # ── 场景 2004：警局 Morrison 办公区（过场，Morrison 签搜查令）──
+  - id: 2004
+    name: "警局 Morrison 办公区"
+    type: transition_cutscene  # 🎬 过场，自动触发
+    unlock_condition: "持有 2601 法医鉴定报告"
+    description: |
+      Zack 带着 2601 法医报告来到警局。Morrison 正在办公室整理文件。
+      Zack 把报告推过去——没有多余的话。
+      Morrison 看了两遍，盯着报告沉默了一会儿。
+      他 L1 说过"你要真能拿出他是被人杀的硬证据，我签搜查令"。
+      这句话现在回来了。
+      他拿起笔，在搜查令（2607）上签了字。没有反驳，没有条件，只是签字。
+      这不是悔改——这是一个疲惫的腐败警察兑现了他唯一的一句话。
+
+    npc:
+      - id: 203  # Morrison
+        name: "Morrison"
+        talk: morrison_l6_warrant
+        is_liar: false
+        motive: "兑现 L1 的承诺——他说过的话不能全部没用，这是他为数不多的体面"
+        mindset: |
+          疲惫、沉默。他不争辩，不拖延。
+          签搜查令这个动作本身就是他对这件事的全部态度。
+          这不代表他良心发现，只代表他当时那句话不是空话。
+
+        # ── 1. 已知信息 ──
+        active_topics:
+          - "法医报告确认 Frank 死于钝器，非火灾——证据确凿"
+          - "L1 的承诺：'有硬证据就签搜查令'"
+          - "搜查令指向北区湖滨大道 88 号 Leonard Russo（Ross）住所"
+        withheld_topics:
+          - "Morrison 与 Whale 之间的往来——这不是他在这个场景里会说的话"
+          - "他对 Leonard 的了解程度——他只知道签令，不参与后续"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "Margaret证词揭示8:20还有另一个人——Rose可能补充更多当晚细节（壮汉离开的方向、声音等）"  # 7
-          - "Rose最了解Frank 11/6当天的行动安排——可能补充Frank出门前的准备"  # 6
+          - '"这份报告对你来说意味着什么" # 6'
+          - '"搜查令对 Leonard 住所有效期多长" # 5'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2081006  # Rose补充壮汉细节：离开时往北走、脚步很重像在跑、好像还回头看了一眼——进一步锁定Vinnie行动轨迹
+          # Morrison 在本场景不产生可提取证词——这是过场，他的唯一动作是签字
 
-        # ── 4.  ──
-  # ── ⏸️ 鞋坊卧室区（无新线索） ──
-  - id: 2003
-    name: "Margaret鞋坊-卧室区"
+    evidence:
+      - id: 2607
+        name: "搜查令（Leonard 住所，Morrison 签字版）"
+        name_en: "Search Warrant — Leonard Ross Residence (Signed)"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: |
+          正式搜查令，授权搜查北区湖滨大道 88 号 Leonard Ross（Russo）住所，Morrison 警官签字。
+          搜查令是进入 2017 Leonard 住所的解锁钥匙。
+        note: "关键——解锁场景 2017；Morrison 兑现 L1 承诺的物证"
 
-  # ── ⏸️ 鞋坊地下室（无新线索） ──
-  - id: 2015
-    name: "Margaret鞋坊-地下室"
 
-  # ── ⏸️ 家门口（无新线索） ──
-  - id: 2006
-    name: "Frank和O'Hara家门口"
-
-  # ── ⏸️ Frank家内部（无新线索） ──
+  # ── 场景 2011：Moore 银行大厅（Leonard 谎言锚台词）──
   - id: 2011
-    name: "Frank家内部"
+    name: "Moore 银行大厅"
+    type: free_exploration  # 🔓 自由探索（Leonard 在工位，可短暂交互）
+    description: |
+      Moore 银行大厅。Leonard Russo 在他的工位上，西装笔挺，眼镜是新配的——
+      左眼是透明的新镜片，右眼是旧镜片（颜色略显偏黄，但在室内光线下不那么明显）。
+      他知道 Zack 在追这件案子，但此刻还不知道 Zack 拿着搜查令和眼镜碎片。
+      他表现出得体的惋惜和无辜。
+      他的台词是接下来 R1-R4 谎言链的预铺锚点。
 
-  # ── 赌场/酒吧（Vinnie已被捕，无新线索） ──
-  - id: 2007
-    name: "Silver Moon赌场/酒吧"
-    note: "Vinnie已被捕，酒吧无新线索"
+    npc:
+      - id: 207  # Leonard Russo
+        name: "Leonard Russo（Ross）"
+        talk: leonard_l6_lobby
+        is_liar: true  # 本场景说谎，is_liar 标注但非 Expose 对象
+        motive: "维持无辜形象——他知道 Zack 在查这件事，尽量表现得镇定和无辜"
+        mindset: |
+          表面镇定，内心紧张。他在 L2 已经被指证过一次（催债关联），但那次没有触及当晚的真相。
+          现在他不知道 Zack 手上有什么新东西。
+          他的策略是：完全否认与 Frank 的任何当晚接触，把一切推给 Vinnie 和"悲剧偶然"。
+          他对 Vinnie 的认罪是松了一口气的——他以为事情就这样结束了。
 
-  # ── ⏸️ 银行贵宾室（NPC对话） ──
-  - id: 2008
-    name: "Moore银行贵宾室"
+        # ── 1. 已知信息 ──
+        active_topics:
+          - "Leonard 公开的立场：Frank 的死是悲剧，与他无关"
+          - "L2 已承认雇 Vinnie 催债，但将其定性为'正常的催债安排'"
+          - "他提到 Vinnie 认罪，语气是'此事已了'"
+          - "他对 Zack 的调查表示'配合'，但措辞都在设防"
+        withheld_topics:
+          - "当晚他到过鞋坊这件事——他绝不会主动提"
+          - "烛台 / 眼镜碎片 / 打斗的任何细节"
+          - "他打电话给 Vinnie 求助的 37 秒通话"
+          - "Vinnie 为他顶罪的任何暗示"
 
-  # ── 🔒 银行档案室（封锁） ──
-  - id: 2013
-    name: "银行档案室"
-    note: "🔒封锁"
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - '"你对 Vinnie 的认罪怎么看" # 7'
+          - '"11月6日晚上你整晚在哪里" # 10'
+          - '"你和 Frank 最后一次见面是什么时候" # 9'
 
-  # ── 🔒 Leonard办公室（封锁） ──
-  - id: 2014
-    name: "Leonard办公室"
-    note: "🔒封锁"
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 2076001  # ⚠谎言: "Frank 的死是场悲剧，但和我无关。那天晚上我整晚都在家，从来没有见过 Frank"（R1 谎言锚，唯一可收集 testimony）
+          # 注：R2 / R3 / R4 谎言（"眼镜不能证明" / "拜访时摔坏眼镜" / "Vinnie 烧死"）为 Expose 内部退守对白，
+          #     不进 testimony 池、不可预先收集——见 expose.round_2 / round_3 / round_4 的 lie 字段
 
-  # ── ⏸️ Frank家次卧（NPC对话） ──
-  - id: 2012
-    name: "Frank家次卧-Danny住处"
 
-# ═══════════════════════════════════════
-# PART 3: 指证（Expose）
-# ═══════════════════════════════════════
-#
-# 场景状态表: Leonard住所(SC2018) → 🔓搜查令搜证 → ⚔️终极指证
-#             银行大厅(SC2009) → ⚔️终极指证
-# 指证设计: 4轮（否认到场 → 否认眼镜 → 诱导招供 → 揭穿甩锅Vinnie）
-# 特殊机制: 第3轮「诱导招供」— 大火烧毁直接证据，靠心理战术突破
-#   诱导招供槽（3次话术选择 + QTE心理压迫）
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Leonard）——四轮 + 诱导招供
+# ─────────────────────────────
 
 expose:
-  target: "Leonard (04)"
-  total_rounds: 4
-  special_mechanism: coerced_confession  # R3诱导招供
-  # Leonard的Talk/证词见上方 scenes → SC2009 → leonard_004
+  target: leonard
+  target_npc_id: 207
+  target_talk: Loop6_leonard
+  is_liar: true
+  player_inquiry: null
+  scene_id: 2017
 
-  # ── 第一轮：击破"我没去过现场" ──
-  # 眼镜碎片(2608) + Margaret证词(2101001) → 证明Leonard到过现场
-  round_1:
-    lie: "我整晚在家，从来没有见过Frank，更没去过Margaret的鞋坊"
-    lie_source: "证词 2041005"
-    usable_evidence:
-      - id: 2608
-        name: "眼镜碎片"
-        用途: "烛台下方地板缝隙发现光学玻璃碎片，偏黄色（旧镜片特征）——凶手戴眼镜且在打斗中眼镜摔碎"
-      - id: 2101001
-        name: "Margaret证词"
-        用途: "11/6晚8:20在街角看到戴眼镜西装男人从鞋坊匆忙离开，走路踉跄像看不清路——目击者确认有戴眼镜的人从现场离开"
-    result: |
-      Leonard态度从自信转为动摇：
-      - 眼镜碎片卡在凶器烛台下方 = 凶手戴眼镜
-      - Margaret目击戴眼镜男人从鞋坊方向离开，走路踉跄（暗示眼镜碎了看不清）
-      - Leonard无法否认巧合，但狡辩："那也不能证明是我的眼镜！很多人都戴眼镜！"
+  scene_setup:
+    name: "Leonard 住所（北区湖滨大道 88 号）"
+    unlock_condition: "持有 2607 搜查令"
+    description: |
+      北区湖滨大道 88 号，Leonard Russo 的住所。与南区的逼仄贫民街区完全不同——
+      米色石灰岩外墙，铸铁栏杆，门童制服笔挺。
+      Leonard 此刻还在 Moore 银行（§5 末他借口"客户没办完"拖延，没跟回来）。
+      Zack/Emma 持搜查令独自上门——开门的是 Edith Ross（角色档见 `Characters/edith.md`），
+      Leonard 妻子。她是本场自由探索阶段的对话 NPC——玩家可以走近她对话，
+      听到她对 Leonard 最近反常的观察（眼镜换了、夜里失眠、出门时间反常）。
+      她对话时端着茶盘，回答简短不带情绪，问完她会端着茶盘上楼，裙角消失在楼梯转角。
+      Edith 上楼后，玩家继续搜证（2609 envir + 2610 pickup）。
+      搜证近尾声时 Leonard 从银行回到家，进门撞见 Zack 已经搜过——
+      他以为这只是例行搜查，表演配合（"搜查令我看见了，请自便"+拇指压袖口）。
+      Leonard 的 pre-expose 对话发生在他回家之后；Expose 紧接其后启动。
+    environment_narrative:
+      - "Zack/Emma 进场氛围：Edith 应门，端茶站在通往楼梯的过道——玩家可走近触发对话；对话结束后她端茶上楼，裙角在楼梯转角消失。Leonard 尚未到家"
+      - "Leonard 到家：Edith 已上楼后，Leonard 进门——他没看到 Edith 接待 Zack 的过程，但看到 Zack 已经搜过的痕迹（2610 已不在书桌侧）；他面色没变，但拇指压袖口"
+      - "R4 诱导招供触底前演出帧：Leonard 望向楼梯，Zack 视线跟着他——楼梯顶端 Edith 的裙角再次出现一瞬（她下楼取东西又上去），然后消失。Leonard 转回头，开口招供"
 
-  # ── 第二轮：确认"这是你的眼镜" ──
-  # ⚠ 小玩法：出示维修单据前，玩家需要点击Leonard面部，点击不泛黄的那片眼镜片（右眼）即为成功
-  # 眼镜维修单据(2505) → 证明Leonard案发后立即补配镜片
-  round_2:
-    lie: "就算现场有眼镜碎片，也不能证明是我的。你们没有证据证明那是我的眼镜"
-    lie_source: "Leonard对Round 1的新谎言"
-    usable_evidence:
-      - id: 2505
-        name: "眼镜维修单据"
-        用途: "艾斯弗德光学眼镜店：1925.11.7更换右眼镜片（原镜片破损），加急当日取件——案发第二天立即修眼镜"
-    result: |
-      新旧镜片对比击穿否认：
-      - Leonard右眼镜片崭新透明 vs 左眼镜片偏黄 = 最近补配
-      - 维修单据证实11/7当天更换右眼镜片（案发后不到12小时）
-      - 现场碎片偏黄 = 与Leonard左眼旧镜片颜色一致
-      - Leonard被迫承认到过现场："好吧，是我的眼镜。我那晚确实去了鞋坊"
-      - 编造新谎言："我只是去拜访Frank，不小心摔坏了眼镜，仅此而已！"
+  context: |
+    Zack 持搜查令进入 Leonard 住所。此时 Zack 手中的证据：
+    ── 场景 2006 取得 ──
+    - 2601 法医鉴定报告（Frank 死于钝器）
+    - 2602 房屋抵押证明（含烛台原位内景照片）
+    - 2603 医用镊子（已用于取出 2605）
+    ── 场景 2001 取得 ──
+    - 2604 烛台（凶器，已取得）
+    - 2605 眼镜碎片（烟熏黄色旧镜片，镊子夹出）
+    - 2606 凹陷货物箱（记录/照片，3cm 凹陷，成人背部高度）
+    ── 场景 2017 搜证取得 ──
+    - 2609 旧报纸剪报（1900 南区双家纵火，环境叙事）
+    - 2610 眼镜维修单据（左眼新镜片，右眼旧镜片）
+    ── 继承自前序 Loop ──
+    - 2105002b Vinnie 假认罪细节（"透过窗户看到他在床上睡觉"）
+    - 2114004 Danny 目击证词（8点多壮汉从鞋坊方向离开，打晕 Margaret）
 
-  # ── 第三轮：诱导招供 — 承认暴力冲突 ──
-  # 特殊机制：诱导招供槽（3次话术选择 + QTE心理压迫）
-  # 前置心理战术：告知"Vinnie已认罪"诱导Leonard放松警惕
-  # Margaret证词(2101001打斗部分) + 烛台凶器(2601) + 眼镜碎片(2608)
-  round_3:
-    lie: "我只是去拜访Frank，想劝他不要和银行作对。谈话中不小心摔坏了眼镜，但我绝对没有伤害他"
-    lie_source: "Leonard对Round 2的新谎言"
-    special_mechanism:
-      type: coerced_confession
+  # ── Leonard 住所搜证证据（进入 Expose 场景后先搜证再指证）──
+  scene_evidence:
+    - id: 2609
+      name: "旧报纸剪报（1900 南区双家纵火）"
+      name_en: "1900 Newspaper Clipping — Russo & Moretti Double Arson"
+      type: envir
+      itemType: 2
+      pickup: false  # 环境叙事——Leonard 私物，纯叙事，跨章伏笔
+      analysis: false
       description: |
-        大火烧毁了血迹、指纹等直接证据，Zack手中只有物理证据（烛台凹痕+眼镜碎片）
-        和间接证词（Margaret），无法100%确凿定罪。
-        必须使用「诱导招供」策略：告知Leonard"Vinnie已认罪"，
-        引导他以为"承认打斗没事"，从而主动承认用烛台打了Frank。
-      nodes:
-        - node: 1
-          timing: "告知Vinnie认罪后"
-          correct: "暗示'Vinnie已承担罪行，即使那晚有其他人和Frank争执也不要紧'"
-          wrong: "直接威胁'你最好老实交代'"
-          effect: "+30%"
-        - node: 2
-          timing: "出示烛台凹痕+眼镜碎片证据后"
-          correct: "再次强调'Vinnie已经认罪了，你只需要告诉我真相'"
-          wrong: "过于激进'证据确凿！再不承认就强制措施！'"
-          effect: "+40%"
-        - node: 3
-          timing: "Leonard犹豫动摇时"
-          correct: "温和追问'发生了什么，Leonard？'"
-          wrong: "威胁'你最好现在就承认，否则后果自负！'"
-          effect: "+30% → 触发QTE"
-      qte: "诱导槽100%时触发心理压迫QTE——镜头特写Leonard额头冒汗、双手颤抖，玩家3秒内按键完成"
-    usable_evidence:
-      - id: 2101001
-        name: "Margaret证词（打斗部分）"
-        用途: "Margaret回来途中听到争吵声和冲突声，进门看到Frank倒地流血——不是'拜访'，是暴力打斗"
-      - id: 2601
-        name: "烛台（凶器）"
-        用途: "烛台底座凹痕与Foster法医报告中Frank头骨致命伤口完全吻合——凶器确认"
-      - id: 2608
-        name: "眼镜碎片（回顾）"
-        用途: "碎片卡在烛台底部缝隙——用烛台打人时眼镜碎裂，碎片嵌入凶器"
-    result: |
-      诱导招供成功——Leonard崩溃承认：
-      - 诱导槽满后QTE触发，Leonard心理防线彻底崩溃
-      - 承认11/6晚去鞋坊试图说服Frank交出举报材料
-      - 承认争执升级为暴力冲突，抓起烛台打了Frank头部
-      - 详细描述："他倒在地上，头上流血，拐杖掉了，爬不起来！"
-      - 关键狡辩："但我离开时他还活着！只是受伤！"
-      - 甩锅Vinnie："Vinnie已经认罪了！是Vinnie后来烧死了他！我只是故意伤害，不是杀人！"
+        1900 年《艾斯弗德论坛报》剪报，标题：南区双家纵火案——Russo 与 Moretti 两户意大利裔家庭住所协同遭纵火，两家父母全部遇难，两名男孩（10 岁、6 岁）由教区收容。
+        剪报已发黄，压在书桌底层。Russo 家的创伤——Leonard 这个人的某种起源。
+      note: "场景道具（envir）——环境叙事，解释 Leonard 改名融入白人社会的背景动机"
 
-  # ── 第四轮（致命）：揭穿甩锅Vinnie的谎言 ──
-  # Vinnie认罪证词(2051004/L5跨循环) → 证词矛盾一击致命
+    - id: 2610
+      name: "眼镜维修单据"
+      name_en: "Eyeglass Repair Receipt"
+      type: item
+      itemType: 3
+      pickup: true
+      analysis: false
+      description: |
+        眼镜店出具的维修单据，日期为 11月7日（案发次日）。
+        项目：左眼镜片更换（新镜片，透明），右眼镜片未更换（旧镜片，备注"有轻微烟熏色，客户选择不换"）。
+        单据上有 Leonard 的签名。
+      note: "关键——L6 R2 击破件；疑点 2602 condition；镜片新旧对比小玩法"
+
+  # ── Leonard NPC 条目（Expose 对象）──
+  leonard_expose:
+    talk: leonard_l6_home  # 场景 2017 Leonard 住所对话（与 expose.target_talk: Loop6_leonard 区分——同 loop2 leonard_l2_lobby vs Loop2_leonard 模式）
+    is_liar: true
+    motive: "保住自由和生活——他有妻子、有工作、有北区的生活，他不愿意为一次失手付出一切代价"
+    mindset: |
+      他以为 Vinnie 的认罪已经把这件事封死了。
+      搜查令让他表面镇定，但开始警觉。
+      当眼镜碎片出现在桌上，他真正慌了——但仍在战术性撤退，每次只承认被证明的那一层。
+      他不是恶人，他是在一步一步错下去的人：雇 Vinnie 催债→失手打死 Frank→打电话求助 Vinnie→
+      任由 Vinnie 纵火→接受 Vinnie 顶罪。每一步他都告诉自己"只是这一次"。
+      R4 招供前他望向楼梯——他知道妻子在楼上，他知道她不爱他，他知道他会失去这一切，
+      然后他开口说了真相。
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "四层谎言防线（对应 R1-R4）"
+      - "Leonard 对 Vinnie 的认罪的态度：'Vinnie 为这件事认了罪，案子已经结了'"
+      - "表面无辜立场：'我当天晚上一直在家，从没见过 Frank'"
+      - "被逼后退守：'就算有碎片，不能证明是我的眼镜'"
+      - "二次退守：'我拜访过 Frank，是和平拜访，摔了眼镜，他把我送出门'"
+      - "R4 诱导招供后：把一切推给 Vinnie——'我打伤了 Frank，但是 Vinnie 说不如直接死了算了，然后是他烧死的'"
+    withheld_topics:
+      - "Vinnie 对他的情感深度——他真的不知道 Vinnie 为他能做到如此"
+      - "他知道 Vinnie 认罪是假认罪这件事——他不会主动说，怕供词矛盾"
+      - "烛台是他随手拿起来的，不是预谋凶器"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry: null  # Expose 对象，设为 null
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 2076001  # ⚠谎言: "Frank 的死是场悲剧，但和我无关。那天晚上我整晚都在家，从来没有见过 Frank"（R1 谎言锚，唯一可收集 testimony）
+      # 注：R2 / R3 / R4 谎言（眼镜不能证明 / 拜访时摔坏 / Vinnie 烧死）为 Expose 内部退守对白，
+      #     不进 testimony 池、不可预先收集——见下方 round_2 / round_3 / round_4 的 lie 字段
+
+
+  # ── Edith Ross NPC 条目（Leonard 妻子，L6 §2017 自由探索对话 NPC）──
+  edith_ross:
+    talk: edith_l6_home
+    is_liar: false
+    motive: "保持自己的离场选项——她不为 Leonard 撒谎，不为 Leonard 隐瞒；她对 Frank 案不在意，但她对 Leonard 最近反常的事实陈述是中立的"
+    mindset: |
+      冷漠、疲态、节能。她没有爱了，所以她不为 Leonard 多说一句话；
+      她也没有恨，所以她不会主动指控他。她说她观察到的事实，仅此。
+      她对 Zack 没有抗拒也没有合作——回答简短，问完就停。
+      她不知道 Leonard 是凶手——她只知道他这两个月反常（换眼镜 / 失眠 / 出门时间不对）。
+      她在客厅端着茶盘站着，对话结束就端茶上楼。
+
+    # ── 1. 已知信息 ──
+    active_topics:
+      - "Leonard 最近两个月换了新眼镜（左眼新片透明、右眼旧片未换——2610 视觉证据的旁证）"
+      - "Leonard 最近夜里不睡——具体两个月内开始的失眠"
+      - "Leonard 最近出门时间反常——11月6日晚出门时间也不正常，她没在意是几点"
+      - "她对 Leonard 工作上的事不问——她从不主动了解 Lakeshore Trust Bank 的事"
+      - "她对 Frank Kowalski 没印象——只听过 Leonard 在书房跟另一个穿西装的人提过一次（"那个老顽固"）"
+    withheld_topics:
+      - "她在心里已经准备离开 Leonard 这件事（不主动说出来）"
+      - "她对 Leonard 是凶手的可能性的内心猜测（她没有证据，也不愿主动指控；如果玩家直接问，她回'我不知道，那是他的事'）"
+      - "她和 Leonard 婚姻无爱的具体细节（不主动展开）"
+
+    # ── 2. 玩家询问意图 ──
+    player_inquiry:
+      - '"Leonard 最近反常——眼镜 / 失眠 / 出门" # 10'
+      - '"她对 Leonard 工作的态度" # 6'
+      - '"她对 Frank 的印象 / 案子的看法" # 4'
+
+    # ── 3. 可提取证词 ──
+    testimony_ids:
+      - 2146001  # Edith："Leonard 最近换了新眼镜——左眼是新片，右眼没换。两个月前开始的"（2610 维修单的旁证，强化 R2 击破链）
+      - 2146002  # Edith："他最近夜里不睡。也不说原因。我也没问"（Leonard 反常行为的旁证；可在 Expose 中作为 R1/R2 辅助语境，但非必需）
+      - 2146003  # Edith："那天晚上他几点出门的？……我没看。但不是正常的时间"（间接削弱 Leonard "整晚在家"的 R1 谎言）
+      # 注：testimony ID 格式 {unit=2}{npc_code:02d}{loop:1d}{seq:03d} = 7位；Edith NPC code 14
+
+
+  # ── 轮次一：否认到场维度 ──
+  round_1:
+    lie: "Frank 的死是场悲剧，但和我无关。那天晚上我整晚都在家，从来没有见过 Frank。"
+    lie_source: 2076001
+    usable_evidence:
+      - id: 2605
+        role: "鞋坊柜子缝隙里夹出来的眼镜碎片——烟熏黄色旧镜片，与 Leonard 新配眼镜的右眼旧镜片同款；柜子缝隙位置在烛台下方，打斗时眼镜被碰碎的碎片落入缝隙，不会自己出现在那里"
+      - id: 2136001
+        role: "Margaret 8:16 在街角亲眼目击戴眼镜西装男独自从鞋坊方向踉跄离开——她差点撞上他；Leonard 整晚在家的说法与此直接矛盾"
+    required_items: [2605, 2136001]
+    trap_evidence: []  # R1 无陷阱选项——2605 + 2136001 双件构成直接击穿
+    result: partial_victory
+    result_description: |
+      Zack 出示 2605（烟熏黄色眼镜碎片）和 2136001（Margaret 目击证词）：
+      这块碎片从鞋坊柜子缝隙里取出来——烛台下方，旧镜片。
+      而你今天配的眼镜：左眼新片透明，右眼旧片偏黄。
+      同时，我母亲当晚 8:16 在街角，差点撞上一个戴眼镜的西装男，
+      从鞋坊方向独自踉跄离开。
+      整晚在家，是这么整晚在家的吗？
+      Leonard 的眼神定了一秒。第一道防线开始松动：
+      "就算有眼镜碎片……那也不能证明是我的眼镜。"
+
+  # ── 轮次二：否认眼镜归属维度 ──
+  round_2:
+    lie: "就算有眼镜碎片，也不能证明是我的。"
+    lie_source: null  # R2 谎言为 Expose 内部退守对白，无 testimony ID（R1 被破后 Leonard 当场说出）
+    usable_evidence:
+      - id: 2610
+        role: "眼镜维修单据——案发次日（11月7日）Leonard 去配了新眼镜，左眼换了新镜片（透明），右眼旧镜片未换（备注'有轻微烟熏色'）。旧镜片的烟熏色 + 碎片的烟熏黄色 + 案发时间完全对应；小玩法：将碎片拖拽到维修单旁边进行新旧镜片对比——颜色、磨损纹路完全吻合"
+    required_items: [2610]
+    mini_game:
+      type: lens_comparison
+      description: "将 2605 眼镜碎片拖拽至 2610 维修单，触发新旧镜片视觉对比——碎片与维修单备注'右眼旧镜片、烟熏色'完全吻合"
+    trap_evidence: []  # R2 无陷阱件——原 2611 空相框已与 Miro 对齐删除
+    result: partial_victory
+    result_description: |
+      Zack 出示 2610（眼镜维修单据）并引导对比：
+      案发次日，你去配了新眼镜。左眼换了新片，右眼旧片没换——维修单上写着"轻微烟熏色"。
+      而柜子缝隙里的碎片：烟熏黄色，旧镜片。一模一样。
+      Leonard 的嘴唇动了一下，然后他换了方向：
+      "好。我承认，我那天去拜访过 Frank。但那是和平拜访——我不小心摔了眼镜，
+      Frank 帮我扶起来，把我送出门。他送我出门的时候还好好的。"
+
+  # ── 轮次三：否认暴力打斗维度 ──
+  round_3:
+    lie: "我当天拜访 Frank，不小心摔坏了眼镜，Frank 怕我摔了还把我送出门呢。"
+    lie_source: null  # R3 谎言为 Expose 内部退守对白，无 testimony ID（R2 被破后 Leonard 当场说出）
+    usable_evidence:
+      - id: 2136001
+        role: "Margaret 证词的'独自'细节——8:16 她目击的西装男是独自一人，踉跄离开，像看不清路；如果是'和平拜访'、Frank 把你送出门，为什么是踉跄的、像看不清路的状态？而且是独自——没有 Frank 相送"
+      - id: 2606
+        role: "货物箱 3cm 凹陷（成人背部高度）——这里发生过激烈的打斗；货物箱被人狠狠撞过，留下深陷的痕迹；和平拜访不会留下这个"
+    required_items: [2136001, 2606]
+    trap_evidence:
+      - id: 2604
+        reason: "烛台是凶器维度，需要先击破'和平拜访'这一层，才能进入凶器归属的讨论；现在出示只会让 Leonard 转移话题到'你怎么证明凶器是烛台'"
+    result: partial_victory
+    result_description: |
+      Zack 拿出两件：
+      一：你母亲 Margaret——8:16，她目击你独自踉跄离开，像看不清路。和平拜访之后，Frank 把你送出门，
+      你为什么是踉跄的？为什么是独自的？
+      二：货物箱——3cm 凹陷，高度和你的背部一样。
+      这间屋子里发生过非常激烈的打斗——有人被狠狠撞到了箱子上。
+      Leonard 盯着桌面。他不说话了。
+
+  # ── 诱导招供系统（R3 击穿后，R4 开始前）──
+  induce_system:
+    enabled: true
+    mechanic_exception_note: |
+      此阶段豁免"喂话禁止"规则——机制特例 induce_system.enabled=true。
+      仅在本阶段内豁免；L6 其他对话仍严格遵守"不替玩家说出结论"原则。
+    gauge:
+      max: 100
+      initial: 0
+      win_threshold: 100
+    nodes:
+      - node_id: "induce_1"
+        prompt: "我知道那晚你没有计划要杀他——这只是失控的一瞬间，对吗？"
+        correct_choice: "温和追问（上述台词）"
+        wrong_choice: "强硬威胁（'你最好现在交代，否则……'）"
+        correct_delta: +30
+        wrong_delta: 0  # 错误选项不增不减，防止卡关
+        effect_description: "Leonard 的眼神略微软化——有人说出了他藏在心里的话，他的防线出现了细小的裂缝"
+
+      - node_id: "induce_2"
+        prompt: "你打电话给 Vinnie——你只是需要有人帮你处理那个局面，你没有想到后来发生的那些事。"
+        correct_choice: "温和追问"
+        wrong_choice: "强硬威胁"
+        correct_delta: +40
+        wrong_delta: 0
+        effect_description: "Leonard 的手放在膝盖上，手指轻轻捏了一下——那通 37 秒的电话是他无法否认的，而有人把它说出来不是在指控他，而是在理解他"
+
+      - node_id: "induce_3"
+        prompt: "你不知道 Vinnie 会做那些事——你以为他只是来帮你处理一下，然后你回家了。"
+        correct_choice: "温和追问"
+        wrong_choice: "强硬威胁"
+        correct_delta: +30
+        wrong_delta: 0
+        effect_description: "诱导槽达到 100%。Leonard 望向楼梯——楼梯顶端，妻子裙角一闪而过，消失。他转回头，开口说话了。"
+
+    qte:
+      trigger: "诱导槽达到 100%"
+      description: "3 秒按键 QTE（移动端适配方案待程序确认 U-P1-3），成功触发 Leonard 开口招供进入 R4"
+      mobile_note: "移动端输入方式待程序确认 U-P1-3"
+
+  # ── 轮次四：R4 谎言——甩锅 Vinnie 维度 ──
   round_4:
-    lie: "我打伤了Frank，但Vinnie说不如直接死了算了，然后烧死了他。真正的杀人犯是Vinnie！"
-    lie_source: "Leonard对Round 3的新谎言（主动甩锅Vinnie）"
+    lie: "我打伤了 Frank，但 Vinnie 说不如直接死了算了，然后是 Vinnie 烧死了他。"
+    lie_source: null  # R4 谎言为 Expose 内部退守/甩锅对白，无 testimony ID（诱导招供后 Leonard 当场说出）
     usable_evidence:
-      - id: 2051004
-        name: "Vinnie认罪证词（L5跨循环）"
-        用途: |
-          Vinnie说"我透过窗户看到那老头正在床上睡觉，然后我放火了"——
-          Frank"在床上睡觉"，不是Leonard说的"受伤倒在地上、拐杖掉了、爬不起来"。
-          两人说法不可能同时为真。
-    result: |
-      证词矛盾一击致命——Leonard彻底崩溃：
-      - Leonard说Frank"受伤倒在地上，拐杖掉了，爬不起来"
-      - Vinnie说Frank"正在床上睡觉"
-      - Vinnie到场时Frank已死 → Vinnie把尸体从地上移到床上，伪装"睡梦中死于火灾"
-      - Vinnie不知道Leonard和Frank打过架 = Vinnie到场时Frank已经死了
-      ★ Leonard完全崩溃认罪 ★
-      - "是我做的…我用烛台砸了他…他当场就不呼吸了…我知道他死了…"
-      - "我吓坏了…花了十年才有今天的生活…我不能坐牢…我打电话给Vinnie…"
-      - "我不知道他会移动尸体…我不知道他会认罪…Vinnie他…为我做了这么多…"
-      后续:
-      - Vinnie为保护Leonard：移尸到床上、纵火伪造现场、故意留下打火机、主动认罪
-      - Leonard震惊于Vinnie的牺牲，但更多是因为被揭穿而崩溃
-      - 两种爱的悲剧镜像：Frank+Rose相互深爱却不能公开，Vinnie+Leonard单方面深爱却不被知晓
+      - id: 2105002b
+        role: "Vinnie 假认罪的细节：'我透过窗户看到 Frank 在床上睡觉，然后放火'——Vinnie 说到场时 Frank 在床上；但如果 Frank 是在打斗中倒地死亡，尸体应该在地上。是 Vinnie 自己把尸体搬上了床，然后说'看到他睡在床上'——他在保护 Leonard，编了一个'没有人打他'的故事。你说是 Vinnie 建议杀了他，但 Vinnie 到场时根本不知道 Frank 怎么死的——他只知道'这里有一具尸体，Leonard 需要帮忙'"
+    required_items: [2105002b]
+    trap_evidence:
+      - id: 2105002a
+        reason: "Vinnie 假认罪主体（'是我杀的 Frank！'）反而支持 Leonard 的甩锅——单独使用只会强化 Vinnie 是凶手的印象，正确做法是用细节矛盾 2105002b 戳破 Vinnie 护着 Leonard 的谎言"
+    result: full_victory
+    result_description: |
+      Zack 拿出 Vinnie 的认罪记录，引出那句话：
+      "我透过窗户看到他在床上睡觉，然后放火。"
+      Vinnie 说，他到的时候 Frank 在床上。
+      但你刚才说的是：Frank 是在打斗中倒下的，你打伤了他。
+      打斗中倒下的人，不会自己爬回床上。
+      是 Vinnie 把他抬上床的——Vinnie 到场时已经是一具尸体了，他不知道你们之间发生了什么，
+      他只知道你需要帮忙，然后他编了一个'没有人打他、只是睡觉然后失火'的故事。
+      Vinnie 不是在认罪。Vinnie 是在替你掩护一个他根本不知道全貌的故事。
+      Leonard 长时间没有说话。然后低下头，不再看 Zack。
 
-# ═══════════════════════════════════════
-# PART 4: 疑点
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 五、结束序列（Unit2 Loop6 收束）
+# ─────────────────────────────
+
+ending_sequence:
+  type: forced_cutscene  # 🎬 强制剧情，无玩家操作
+  description: "Unit2 终局收束；含 Vinnie 字条 / Lula 悼念 / Zack 苦笑 Moore 银行"
+
+  sequence:
+
+    # ── Act 1：Foster 到来，递交 Vinnie 字条 ──
+    act_1_foster_note:
+      location: "Leonard 住所客厅（指证完成后，Foster 到场）"
+      description: |
+        指证完成后，Leonard 低着头。片刻后有人敲门——Foster。
+        她走进来，没有多余的神情，从外套口袋里取出一张叠好的纸条递给 Zack。
+        Foster 台词："狱卒在他枕下找到的。按规矩本来要烧掉。我替你留了下来。"
+        Zack 接过纸条，打开。
+        字条文本（手写，字迹粗糙，墨水浓淡不均）：
+
+          Leo——
+          这件事，让我替你做完。
+          我从来没指望你知道。
+          但能再帮你一次也好。
+          ——V.
+
+        Zack 读完，把纸条折回去。
+        Leonard 在旁边——他没有抬头，不知道 Zack 手里是什么，但他察觉到了气氛变化。
+        这张字条不进 ItemStaticData，不进推理证据链——只是情感载体。
+      foster_line: "狱卒在他枕下找到的。按规矩本来要烧掉。我替你留了下来。"
+      vinnie_note_text: |
+        Leo——
+        这件事，让我替你做完。
+        我从来没指望你知道。
+        但能再帮你一次也好。
+        ——V.
+      note: "字条不分配 ItemStaticData ID，仅演出；字条文本保留四句中文版本（讨论结论 5.3）"
+      vinnie_status: "已在狱中上吊自杀（Leonard 招供后玩家得知）"
+
+    # ── Act 2：Leonard 知晓 Vinnie 字条 ──
+    act_2_leonard_learns:
+      location: "Leonard 住所客厅"
+      description: |
+        Zack 把字条放到 Leonard 面前的桌上，没有说话。
+        Leonard 的眼神落下去，看到字条上的字。他认出了那个笔迹。
+        他读完之后没有眼泪——只是很长时间没有动。
+        Leonard 最终抬起头，开口，声音很低：
+        "我不知道他会……"
+        然后就没有后续了。
+        假释文件之后，Leonard 会以自由人的身份离开——
+        但他知道了 Vinnie 为他做的一切，他没有办法用"我不知道"来活下去了。
+      leonard_note: "Leonard 假释，生不如死——知道了 Vinnie 的真相之后"
+      leonard_status: "假释，生不如死"
+
+    # ── Act 3：Lula 悼念 ──
+    act_3_lula_mourning:
+      location: "Frank 墓地（傍晚）"
+      description: |
+        Lula 一个人站在 Frank 的墓碑前。她没有哭，只是站着，
+        手里什么都没有拿。Zack 和 Emma 从墓地小径走过来，
+        在她身后停下，没有立刻上前。
+        过了一会儿，Lula 开口——三句话，每句之间有沉默间隔，
+        不一口气说完，对着墓碑说，不回头：
+      lula_lines:
+        - "Frank……我终于可以光明正大地说我爱你了，但你已经不在了。"
+        - "你答应过我，做完这件事就带我离开。现在我自由了，但你不在了。"
+        - "他想把举报材料交出去，是因为他觉得这样子他们就可以光明正大了。"
+      note: "三句话按顺序，中间各有沉默间隔；Lula 不回头看 Zack/Emma；说完转身从他们身边走过，仍不说话"
+
+    # ── Act 4：Zack 苦笑——Moore 银行 ──
+    act_4_zack_moore:
+      location: "Frank 墓地（Lula 转身走后，Zack/Emma 留下）"
+      description: |
+        Lula 的背影从墓地小径走远。Zack 和 Emma 站在 Frank 墓碑前。
+        四句对话，按顺序：
+        1. Zack（低声，像跟自己说）："Vinnie 故意留下打火机。一开始就打算认罪。"
+        2. Emma（停一拍）："至少正义得到了伸张。"
+        3. Zack（盯着墓碑，苦笑）："Moore 银行呢？真正的罪犯还在逍遥法外。"
+        4. Emma（停一会儿，看着 Zack）："我们还没完。"
+        画面在两人对视中淡出。
+      zack_lines:
+        - "Vinnie 故意留下打火机。一开始就打算认罪。"
+        - "Moore 银行呢？真正的罪犯还在逍遥法外。"
+      emma_lines:
+        - "至少正义得到了伸张。"
+        - "我们还没完。"
+      cross_unit_hook: "Moore / 掠夺性贷款体制 / 银行-黑手党共谋——Unit11 开门钩子"
+
+# ─────────────────────────────
+# 六、疑点（DoubtConfig，L6 进度条分母=5）
+# ─────────────────────────────
 
 doubts:
-  - id: 2016
-    text: "Leonard说'整晚在家没去过现场'——但眼镜碎片在凶器下方，案发后12小时配了新镜片"
-    unlock_condition: "testimony:2041005 + item:2608 + item:2505"
-  - id: 2017
-    text: "Leonard真的只是'去拜访'吗？——Margaret看到Frank倒地流血，烛台凹痕与伤口吻合"
-    unlock_condition: "testimony:2101001 + item:2601"
-  - id: 2018
-    text: "Margaret说Frank'倒在地上流血'——Vinnie说Frank'在床上睡觉'。两人说法不可能同时为真。"
-    unlock_condition: "testimony:2101001 + testimony:2051004"
 
-# ═══════════════════════════════════════
-# 验证状态
-# ═══════════════════════════════════════
+  # 疑点 2601——眼镜碎片 + Margaret 目击
+  - id: 2601
+    isFragment: false
+    text: "鞋坊地板里的眼镜碎片是谁的？"
+    unlock_condition:
+      - type: 1
+        param: "2605"  # 持有眼镜碎片（烟熏黄色旧镜片）
+      - type: 3
+        param: "2136001"  # Margaret 目击证词
+    posed_loop: 6
+    resolved_loop: 6
+    status: "unlocked_loop6"
+    # L6 R1 击穿 Leonard"那天晚上整晚在家"谎言时解决
 
-validation_status:
-  cross_check: "2026-03-07 FAIL: 4 issues"
-  structure_completeness: "PENDING"
-  evidence_coverage: "PENDING"
-  npc_entries: "PENDING"
-  goal_alignment: "PENDING"
-  info_pacing: "PENDING"
-  expose: "PENDING"
+  # 疑点 2602——维修单新旧镜片对比
+  - id: 2602
+    isFragment: false
+    text: "Leonard 的旧镜片去哪了？"
+    unlock_condition:
+      - type: 1
+        param: "2610"  # 持有眼镜维修单据
+    posed_loop: 6
+    resolved_loop: 6
+    status: "unlocked_loop6"
+    # L6 R2 击穿 Leonard"碎片不能证明是我的"谎言时解决
+
+  # 疑点 2603——货物箱凹陷 + 房屋抵押证明
+  - id: 2603
+    isFragment: false
+    text: "鞋坊里发生过打斗？"
+    unlock_condition:
+      - type: 1
+        param: "2606"  # 记录/拍照货物箱凹陷
+      - type: 1
+        param: "2602"  # 持有房屋抵押证明（含烛台原位内景照片）
+    posed_loop: 6
+    resolved_loop: 6
+    status: "unlocked_loop6"
+    # L6 R3 击穿 Leonard"拜访摔坏眼镜"谎言时解决（确认现场有激烈打斗）
+
+  # 疑点 2604——Vinnie 假认罪 vs 现场打斗痕迹
+  - id: 2604
+    isFragment: false
+    text: "Frank 当晚真的在睡觉吗？"
+    unlock_condition:
+      - type: 3
+        param: "2105002b"  # Vinnie 假认罪细节："透过窗户看到他在床上睡觉，然后放火"
+      - type: 1
+        param: "2606"     # 凹陷货物箱——现场有激烈打斗痕迹，与"睡觉"说法矛盾
+    posed_loop: 6
+    resolved_loop: 6
+    status: "unlocked_loop6"
+    # 双件 condition：Vinnie 说在床上睡 + 现场凹陷货物箱证明有激烈打斗 → 睡觉中的人不会撞凹货物箱
+    # L6 R4 / 诱导招供击穿 Leonard"Vinnie 烧死的"甩锅时解决（Vinnie 假认罪护短的真相揭示）
+
+  # 疑点 2502——Vinnie 认罪 vs 法医钝器结论矛盾（原 L5 疑点，因解锁件全在 L5 expose 后才能凑齐，迁至 L6）
+  - id: 2502
+    isFragment: false
+    text: "Vinnie 真的杀了 Frank 吗？"
+    unlock_condition:
+      - type: 3
+        param: "2105002a"  # L5 Vinnie 假认罪主体证词（跨 Loop 携带）
+      - type: 1
+        param: "2601"     # L6 圣心医院取得的法医鉴定报告——Frank 死于钝器
+    posed_loop: 6
+    resolved_loop: 6
+    status: "unlocked_loop6"
+    # 不直接打入 expose round；L6 全局指证 Leonard 后随之解决
+
+# ─────────────────────────────
+# 七、证据注册表（evidence_registry，L6 全局）
+# ─────────────────────────────
+
+evidence_registry:
+
+  # 本 Loop 新增证据
+  - id: 2601
+    name: "法医鉴定报告"
+    source_scene: 2006
+    pickup: true
+    note: "关键——兑现 Morrison 承诺；R3 陷阱反驳基础"
+
+  - id: 2602
+    name: "房屋抵押证明"
+    source_scene: 2006
+    pickup: true
+    note: "关键——L6 R3 击破件；疑点 2603 condition"
+
+  - id: 2603
+    name: "医用镊子"
+    source_scene: 2006
+    pickup: true
+    note: "场景道具——取出 2605 所需；canCombined"
+
+  - id: 2604
+    name: "烛台"
+    source_scene: 2001
+    pickup: true
+    note: "R3 陷阱选项"
+
+  - id: 2605
+    name: "眼镜碎片（烟熏黄色旧镜片）"
+    source_scene: 2001
+    pickup: true
+    note: "关键——L6 R1 击破件；需持 2603 触发取出"
+
+  - id: 2606
+    name: "凹陷的货物箱"
+    source_scene: 2001
+    pickup: true   # clue：拍照入背包
+    note: "关键——L6 R3 击破件；疑点 2603 condition"
+
+  - id: 2607
+    name: "搜查令（Morrison 签字）"
+    source_scene: 2004
+    pickup: true
+    note: "关键——解锁场景 2017"
+
+  - id: 2609
+    name: "旧报纸剪报（1900 南区双家纵火）"
+    type: envir
+    itemType: 2
+    source_scene: 2017
+    pickup: false
+    note: "环境叙事——跨章伏笔；不进任何 expose / 疑点 condition"
+
+  - id: 2610
+    name: "眼镜维修单据"
+    source_scene: 2017
+    pickup: true
+    note: "关键——L6 R2 击破件；疑点 2602 condition"
+
+  # 继承件（状态注明）
+  - id: 2105002b
+    name: "Vinnie 假认罪细节证词"
+    source_loop: 5
+    status: active
+    note: "关键——L6 R4 击破件；疑点 2604 condition"
+
+  - id: 2114004
+    name: "Danny 目击证词"
+    source_loop: 4
+    status: active
+    note: "挂 L5 疑点 2501 condition；L6 R1 击破件补充参照（非主要击破件）"
+
+  - id: 2136001
+    name: "Margaret 苏醒目击证词"
+    source_scene: 2006
+    source_loop: 6
+    note: "关键——L6 R1 + R3 击破件；疑点 2601 condition"

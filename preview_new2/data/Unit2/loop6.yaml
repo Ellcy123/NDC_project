@@ -1,58 +1,95 @@
-title: Leonard终极指证（诱导招供）
-target: 揭露Leonard失手杀害Frank的真相
-time: "11/8 09:00 白天"
+title: Leonard 终极指证
+target: Leonard 才是真凶——Margaret 目击 + 法医钝器致死 + 眼镜碎片击穿
+time: "11月8日 早晨—白天"
 
 opening:
-  - id: 2061
-    characters: [Zack, Mickey, Margaret, Emma]
-    purpose: 码头营救Margaret + 医院送医
-    talk: loop6_rescue
-  - id: 2062
-    characters: [Zack, Emma, Margaret]
-    purpose: Margaret恢复意识，证词称看到戴眼镜男人；申请搜查令
-    talk: emma_006
+  - id: 2601
+    characters: [Zack, Emma, Margaret, Foster]
+    talk: opening_l6_hospital
+    purpose: 圣心医院 Margaret 病房（2006）——Margaret 苏醒，提供 8:16 街角目击证词 2136001（戴眼镜西装男踉跄独自从鞋坊方向离开）；Foster 交付 2601 法医报告 + 2602 房屋抵押证明 + 2603 医用镊子
 
 scenes:
   unlocked:
-    - 2602  # Margaret鞋坊-店铺区（凶器）
-    - 2603  # Margaret鞋坊卧室区
-    - 2605  # 警局
-    - 2606  # Frank和Mrs.O'Hara家门口
-    - 2607  # 赌场
-    - 2608  # 银行贵宾室
-    - 2609  # 银行大厅
-    - 2611  # Frank家里
-    - 2612  # Danny的房间
-    - 2613  # 银行档案室
-    - 2614  # Leonard办公室
-    - 2615  # Margaret鞋坊地下室
-    - 2617  # 医院（Margaret病房）
-    - 2618  # Leonard住所（搜查令解锁）
+    圣心医院:
+      - id: 2006  # Margaret 苏醒病房（开篇）
+        talks: [margaret_l6_hospital, foster_l6_hospital]
+    Margaret 鞋坊:
+      - id: 2001  # 鞋坊废墟（烛台找茬小玩法 → 2604 烛台 + 2605 眼镜碎片 + 2606 货物箱凹陷）
+    警局:
+      - id: 2004  # Morrison 签搜查令过场（持 2601 自动触发）
+        talks: [morrison_l6_warrant]
+    Moore 银行:
+      - id: 2011  # 大厅（Leonard 谎言锚台词 + 新配眼镜细节）
+        talks: [leonard_l6_lobby]
+    Leonard 住所:
+      - id: 2017  # 搜查令解锁——4 轮指证场 + Edith Ross 自由探索对话 NPC（2609 旧报纸剪报 + 2610 眼镜维修单）
+        talks: [leonard_l6_home, edith_l6_home]
   locked:
-    - id: 2604
-      reason: 全力准备指证Leonard，无需联系警局
-  closed: []
+    Margaret 鞋坊:
+      - id: 2002
+        reason: L1 已搜证
+      - id: 2010
+        reason: L4 已完成
+    Moore 银行:
+      - id: 2012
+        reason: L3 已完成 Moore 指证
+      - id: 2013
+        reason: L3 已搜证
+      - id: 2014
+        reason: L3 已搜证
+    Frank 家:
+      - id: 2007
+        reason: L4 已访
+      - id: 2009
+        reason: L3-L4 已搜证
+      - id: 2018
+        reason: L5 已访
+      - id: 2020
+        reason: L4 已完成 Danny 指证
+    Silver Moon:
+      - id: 2015
+        reason: L5 已完成 Vinnie 指证（Vinnie 已被押走）
+  closed: [2003, 2005, 2019, 2016]
 
 expose:
-  scene: 2690
-  target_name: Leonard Russo
+  scene: 2017
+  target_name: Leonard
+  talk: Loop6_leonard
   rounds:
-    - lie: 我当晚根本不在现场
-      evidences: [2601, 2606]
-    - lie: 那不是我的眼镜
-      evidences: [2602]
-    - lie: 我没有伤害任何人
-      evidences: []
-    - lie: 是Vinnie放的火
-      evidences: [2603]
+    - lie: "Frank 的死和我无关，那天晚上我整晚都在家，从来没见过 Frank"
+      evidences: [2605, 2136001]  # 眼镜碎片（烟熏黄旧镜片）+ Margaret 8:16 目击
+    - lie: "就算有眼镜碎片，也不能证明是我的眼镜"
+      evidences: [2610]  # 眼镜维修单据（11/7 案发次日，左眼新片右眼旧片 + Edith 旁证 2146001）
+    - lie: "我和平拜访 Frank，摔了眼镜，他把我送出门"
+      evidences: [2136001, 2606]  # Margaret 目击"独自踉跄"+ 货物箱凹陷（3cm + 西装纤维）
+    - lie: "我打了 Frank，但 Vinnie 说不如直接死了算了，然后是他烧死的"
+      evidences: [2105002b]  # Vinnie 假认罪细节漏洞"透过窗户看到床上睡觉"（实际死在地上，Vinnie 替罪 + 移尸）
+  expose_special:
+    name: 诱导招供系统
+    description: R3→R4 桥段，3 节点诱导槽 0-100%；Edith 裙角再次出现一瞬是 Leonard 招供触发点（不是配合演出，她下楼取东西又上去）
+  post_expose:
+    name: "Leonard 招供 + Vinnie 替罪揭穿"
+    characters: [Zack, Leonard]
+    purpose: Leonard 招供——他用烛台失手打死 Frank，呼叫 Vinnie，Vinnie 移尸到床上 + 纵火 + 顶罪
 
-ending:
-  - id: 2063
-    name: "监狱（Vinnie表白）"
-    talk: loop6_ending_prison
-  - id: 2064
-    name: "鞋坊废墟（Rose悼念）"
-    talk: loop6_ending_rubble
-  - id: 2065
-    name: "医院走廊（Zack反思）"
-    talk: loop6_ending_hospital
+events:
+  - id: 2691
+    name: "ENDING-1 Foster 客厅递字条"
+    characters: [Zack, Emma, Leonard, Foster]
+    purpose: Leonard 住所客厅 R4 招供后——Foster 进来，从口袋取出 Vinnie 枕下字条递给 Zack："狱卒在他枕下找到的。按规矩本来要烧掉。我替你留了下来。"
+    trigger: "Loop6_leonard Expose R4 full_victory 后自动"
+  - id: 2692
+    name: "ENDING-2 Leonard 知晓字条"
+    characters: [Zack, Leonard]
+    purpose: 同客厅——Zack 把字条放到 Leonard 面前。Leonard 读完，认出笔迹，无泪长时间不动，最终低声："我不知道他会……"截断无后续。Leonard 假释生不如死
+    trigger: "ENDING-1 末"
+  - id: 2693
+    name: "ENDING-3 Frank 墓地 Lula 悼念"
+    characters: [Lula, Zack, Emma]
+    purpose: Frank 墓地（傍晚）——Lula 站墓碑前对着墓碑说三句（"我终于可以光明正大地说我爱你了，但你已经不在了"/"你答应过我做完这件事就带我离开，现在我自由了，但你不在了"/"他想把举报材料交出去，是因为觉得这样子就可以光明正大了"），中间有沉默间隔；说完不回头转身从 Zack/Emma 身边走过
+    trigger: "ENDING-2 末"
+  - id: 2694
+    name: "ENDING-4 墓地 Zack 反讽收束"
+    characters: [Zack, Emma]
+    purpose: 同墓地——Lula 走远后，Zack 站 Frank 墓碑前，低声："Vinnie 故意留下打火机。一开始就打算认罪。"Emma 停一拍："至少正义得到了伸张。"Zack 盯墓碑苦笑："Moore 银行呢？真正的罪犯还在逍遥法外。"Emma 看着 Zack："我们还没完。"两人对视淡出（Unit11 钩子）
+    trigger: "ENDING-3 末——Unit2 全集收束"

@@ -1,49 +1,73 @@
-title: Rose深情告白（黄昏之爱）
-target: 证明Rose与Frank的五年恋情是真爱，揭穿Danny的继承动机
-time: "11/7 17:30 白天"
+title: 黄昏之爱 / 指证 Danny Kowalski
+target: Lula 是骗子还是真爱？Danny 的诬陷能否击破？
+time: "11月7日 下午"
 
 opening:
-  - id: 2041
-    characters: [Zack, Moore]
-    purpose: Moore提供遗嘱副本，Danny对遗嘱不满
-    talk: emma_004
+  - id: 2401
+    characters: [Zack, Mickey, Emma, Margaret]
+    talk: opening_l4_hospital
+    purpose: 圣心医院 Margaret 病房（2006）——Mickey + Emma 战术碰头，建议调查路线（地下室 → Lula → Danny）；Emma 端咖啡补医院 Miller 资助伏笔
 
 scenes:
   unlocked:
-    - 2402  # Margaret鞋坊-店铺区（Rose在此对话）
-    - 2403  # Margaret鞋坊卧室区
-    - 2406  # Frank和Mrs.O'Hara家门口
-    - 2408  # 银行贵宾室
-    - 2409  # 银行大厅
-    - 2411  # Frank家里
-    - 2412  # Danny的房间（搜证·新版）
-    - 2413  # 银行档案室
-    - 2414  # Leonard办公室
-    - 2415  # Margaret鞋坊地下室（钥匙+遗嘱首次解锁）
+    Margaret 鞋坊:
+      - id: 2010  # 地下室（2308 钥匙解锁，玫瑰花蕊找戒指小玩法 → 2403 求婚戒指）
+      - id: 2001  # 鞋坊店铺区（Lula 自发到场等候）
+        talks: [lula_l4_storefront]
+    Frank 家:
+      - id: 2007  # O'Hara 街角（追问时间线）
+        talks: [ohara_l4_street]
+      - id: 2009  # Frank 家次卧（Danny 不在，深度搜证：2404 空怀表盒 + 2405 婚戒 + 2407 遗嘱副本）
+      - id: 2020  # Frank 家厕所（Danny 指证场——Danny 蹲马桶上）
+        talks: [danny_l4_bathroom]
+        sudden_events:
+          - name: "R3 Lula 隔窗举证签字"
+            note: 动态漫画 #5——Lula 跟随到 Frank 家但进不了男厕所，只能在侧墙小窗外听全过程，R3 从小窗外举起已签好的放弃继承协议给 Danny 看
+    圣心医院:
+      - id: 2006  # 开篇碰头（Margaret 仍昏迷）
   locked:
-    - id: 2404
-      reason: 案件焦点转向遗产纠纷，无需联系警局
-    - id: 2407
-      reason: Vinnie外出，赌场傍晚未开门
-    - id: 2618
-      reason: Frank笔记提到地址但无搜查令
-  closed: []
+    Margaret 鞋坊:
+      - id: 2002
+        reason: L1 已搜证
+    Moore 银行:
+      - id: 2011
+        reason: L2-L3 已完成
+      - id: 2012
+        reason: L3 已完成 Moore 指证
+      - id: 2013
+        reason: L3 已搜证
+      - id: 2014
+        reason: L3 已搜证
+    Frank 家:
+      - id: 2018
+        reason: L3 已访（取 2301）；L5 才有新搜证（床缝小铁盒）
+    Silver Moon:
+      - id: 2015
+        reason: L4 调查重心不在赌场——L5 才重启
+    Leonard 住所:
+      - id: 2017
+        reason: L6 搜查令解锁
+    警局:
+      - id: 2004
+        reason: L1 已完成
+  closed: [2003, 2005, 2019, 2016]
 
 expose:
-  scene: 2490
-  target_name: Danny Kowalski
+  scene: 2020
+  target_name: Danny
+  talk: Loop4_danny
   rounds:
-    - lie: Rose才认识Frank不到一年
-      evidences: [2401, 2402, 2403]
-    - lie: Rose利用Frank的钱
-      evidences: [2408, 2410]
-    - lie: Rose会争夺遗产
-      evidences: [2404, 2406, 2413]
-
-events:
-  - id: 2741
-    name: "Danny住处（⚡Rose登场）"
-    characters: [Zack, Emma, Danny, Rose]
-    purpose: Rose推门当场签署放弃继承声明，击碎Danny所有指控
-    trigger: "Expose R3进行中"
-    talk: loop4_event_rose
+    - lie: "11月6日当晚我在家，哪儿都没去"
+      evidences: [2064001, 2405]  # O'Hara 目击（Frank 7 点出门前后脚 Danny 也出门）+ Margaret 婚戒在 Danny 床垫下
+    - lie: "我没有理由杀我叔叔"
+      evidences: [2083004, 2404]  # Moore 坦白（Danny 把房产证给银行）+ 空怀表盒（Tony 便条：怀表抵押 100$）
+    - lie: "是 Lula！她是个感情骗子，骗我叔叔签了遗嘱"
+      evidences: [2064002, 2403]  # O'Hara 证词（Lula 五年前就来这条街）+ 求婚戒指"F & L 1923"
+      special_演出: Lula 隔窗举证（动态漫画 #5）—— Lula 自发跟到 Frank 家，进不了男厕所只能在小窗外听；R3 时举起已签好的放弃继承协议给 Danny 看
+  post_expose:
+    name: "第二重叙事反转 · Danny 坦白目击 + Lula 交钥匙"
+    characters: [Zack, Danny, Lula]
+    purpose: |
+      Danny 坦白目击证词 2114004（晚 8 点多壮汉从鞋坊方向匆忙离开，打晕 Margaret，看见戒指反光，他顺手捡走）；
+      Lula 交出 2408 小铁盒备用钥匙 + 补充证词 2124001（Frank 不会做饭/不用 Margaret 厨房）+ 2124002（Frank 工资一直在还 Danny 赌债）。
+    talk: danny_l4_postexpose

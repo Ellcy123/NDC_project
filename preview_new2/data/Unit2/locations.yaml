@@ -1,32 +1,62 @@
-# Unit2 地点层级关系（参考记录）
-# entry: 地图入口场景的 location 编号（后两位）
-# children: 从入口可到达的子场景
+# Unit2 场景汇总（19 个场景，state ID 2001-2020 跳过 2008）
+# 用途：preview_new2 前端流程图地点引用
+# 版本：v0.1 / 2026-05-15 骨架（待 state_to_preview_unit10.py 自动生成完整数据）
 
 locations:
-  - name: Margaret鞋坊
-    entry: 02    # 店铺区
-    children: [01, 03, 15]   # 开篇搜证、卧室区、地下室
-
-  - name: 警局
-    entry: 04    # 警局外（电话亭）
-    children: [05]       # 警局
-
-  - name: Frank家
-    entry: 06    # 家门口
-    children: [11, 12]   # 家里、Danny房间
-
-  - name: 银行
-    entry: 09    # 银行大厅
-    children: [08, 13, 14]  # 贵宾室、档案室、Leonard办公室
-
-  - name: 赌场
-    entry: 07
-    children: []
-
-  - name: 医院
-    entry: 17
-    children: []
-
-  - name: Leonard住所
-    entry: 18
-    children: []
+  - id: 2001
+    name: Margaret 鞋坊店铺区
+    name_en: Margaret_ShoeShop_StoreFront
+  - id: 2002
+    name: Margaret 鞋坊卧室区
+    name_en: Margaret_ShoeShop_Bedroom
+  - id: 2003
+    name: Margaret 鞋坊店铺区搜证后
+    name_en: Margaret_ShoeShop_StoreFront_PostInvestigation
+  - id: 2004
+    name: 警局 Morrison 办公区
+    name_en: PoliceStation_MorrisonOffice
+  - id: 2005
+    name: Zack 侦探事务所
+    name_en: ZackDetectiveOffice
+  - id: 2006
+    name: 圣心医院 Margaret 病房
+    name_en: SacredHeartHospital_MargaretRoom
+  - id: 2007
+    name: Frank 家 / O'Hara 家街角
+    name_en: FrankOHaraStreetCorner
+  - id: 2009
+    name: Frank 家次卧 Danny 住处
+    name_en: FrankHome_DannyGuestRoom
+  - id: 2010
+    name: Margaret 鞋坊地下室
+    name_en: Margaret_ShoeShop_Basement
+  - id: 2011
+    name: Moore 银行大厅
+    name_en: MooreBank_Lobby
+  - id: 2012
+    name: Moore 银行贵宾室
+    name_en: MooreBank_VIPParlor
+  - id: 2013
+    name: Moore 银行档案室
+    name_en: MooreBank_ArchiveRoom
+  - id: 2014
+    name: Moore 银行 Leonard 办公室
+    name_en: MooreBank_LeonardOffice
+  - id: 2015
+    name: Silver Moon 赌场
+    name_en: SilverMoon_Casino
+  - id: 2016
+    name: 市政厅 / 法院
+    name_en: CityHall_Courthouse
+  - id: 2017
+    name: Leonard 住所
+    name_en: LeonardResidence
+  - id: 2018
+    name: Frank 家主屋开间
+    name_en: FrankHome_MainRoom
+  - id: 2019
+    name: 鞋坊外电话亭
+    name_en: ShoeShopExterior_PhoneBooth
+  - id: 2020
+    name: Frank 家厕所
+    name_en: FrankHome_Bathroom

@@ -1,48 +1,80 @@
-title: Vinnie纵火认罪（误导性结局）
-target: 表面结案，追查Vinnie纵火真相
-time: "11/7 21:00 夜晚"
+title: Vinnie 纵火认罪（误导性结局）
+target: 谁纵火？真凶是 Vinnie 吗？（伪结局——L6 真相反转）
+time: "11月7日 傍晚"
 
 opening:
-  - id: 2051
-    characters: [Zack, Emma, Rose]
-    purpose: Rose的钥匙打开保险箱，发现Frank举报材料+Rose提供目击证词
-    talk: emma_005
+  - id: 2501
+    characters: [Zack, Mickey, Lula]
+    talk: opening_l5_frankhome
+    purpose: Frank 家主屋（2018）——挪床取出小铁盒（动态漫画 #6）+ 2408 钥匙开锁 → Frank 八年举报材料 + 给 Lula 的情书；Mickey 拿走举报材料（2502 移出背包）；Lula 第一次捧读情书 + 恳求查清死因；二选一分支选择 UI [当律师 / 继续当侦探]
 
 scenes:
   unlocked:
-    - 2502  # Margaret鞋坊-店铺区（深度搜索·含Rose目击证词）
-    - 2503  # Margaret鞋坊卧室区
-    - 2506  # Frank和Mrs.O'Hara家门口
-    - 2507  # 赌场（Vinnie对质）
-    - 2511  # Frank家里
-    - 2512  # Danny的房间
-    - 2515  # Margaret鞋坊地下室
+    Margaret 鞋坊:
+      - id: 2001  # 鞋坊废墟（L5 深度搜证 → 2501 打火机）
+    Silver Moon:
+      - id: 2015  # 赌场（Tony 辨认打火机 + Vinnie 一轮指证场）
+        talks: [tony_l5_casino, vinnie_l5_casino]
+    Frank 家:
+      - id: 2018  # Frank 家主屋（开篇小铁盒已开 + 后续可回访）
   locked:
-    - id: 2504
-      reason: 夜晚无人值守，电话亭无法使用
-    - id: 2618
-      reason: Frank笔记提到地址但无搜查令
-  closed:
-    - id: 2208
-      reason: 银行下班了（夜晚不开放）
-    - id: 2309
-      reason: 银行下班了（夜晚不开放）
-    - id: 2313
-      reason: 银行下班了（夜晚不开放）
-    - id: 2314
-      reason: 银行下班了（夜晚不开放）
+    Moore 银行:
+      - id: 2011
+        reason: L2-L3 已完成
+      - id: 2012
+        reason: L3 已完成
+      - id: 2013
+        reason: L3 已搜证
+      - id: 2014
+        reason: L3 已搜证
+    Frank 家:
+      - id: 2007
+        reason: L4 已访（O'Hara 证词已收集）
+      - id: 2009
+        reason: L3-L4 已搜证
+      - id: 2020
+        reason: L4 已完成 Danny 指证
+    Margaret 鞋坊:
+      - id: 2002
+        reason: L1 已搜证
+      - id: 2010
+        reason: L4 已完成（玫瑰花蕊小玩法 + 求婚戒指）
+    圣心医院:
+      - id: 2006
+        reason: L4 已访（Margaret 仍昏迷）；L5 末 Foster 电话过场（不在场景列表内）
+    Leonard 住所:
+      - id: 2017
+        reason: L6 搜查令解锁
+    警局:
+      - id: 2004
+        reason: L1 已完成
+  closed: [2003, 2005, 2019, 2016]
 
 expose:
-  scene: 2590
-  target_name: Vinnie Moretti
+  scene: 2015
+  target_name: Vinnie
+  talk: Loop5_vinnie
   rounds:
-    - lie: Vinnie抢先认罪
-      evidences: [2501, 2502]
+    - lie: "我两三个月没去 Frank 那附近了"
+      evidences: [2501, 2095001, 2114004]  # 鞋坊废墟里完好打火机（V 标）+ Tony 证词（上周还见 Vinnie 用）+ Danny 目击（壮汉从鞋坊方向）
+  post_expose:
+    name: "Vinnie 抢话认罪（误导）"
+    characters: [Zack, Vinnie]
+    purpose: |
+      Vinnie 突然语速反常、抢话认罪："是我！绑架 Margaret！Frank 是我杀的！透过窗户看到他在床上睡觉，然后纵火！"
+      ——细节漏洞（L6 R4 揭穿：Frank 实际死在地上，是 Leonard 用烛台打死的，Vinnie 移尸到床上 + 纵火 + 替罪）
+    talk: vinnie_l5_postexpose
 
 events:
-  - id: 2751
-    name: "警局外（⚡Mickey登场）"
-    characters: [Zack, Emma, Mickey, Vinnie]
-    purpose: Mickey提供Margaret位置，Vinnie暴露"Leo"
-    trigger: "Expose结束后（Vinnie被押送时）"
-    talk: loop5_event_police
+  - id: 2591
+    name: "L5 二选一分支 · 律师 vs 侦探"
+    characters: [Zack, Mickey]
+    purpose: 小铁盒开启后 Mickey 邀请 Zack 当律师——选当律师触发坏结局 3 幕黑屏白字过场（暂不做），结束后回到分支点；选当侦探推进主线
+    trigger: "小铁盒打开 + Mickey 拿走举报材料后"
+  - id: 2592
+    name: "L5→L6 转场 · Vinnie 上警车 + Foster 双消息"
+    characters: [Zack, Emma, Vinnie, Foster]
+    purpose: |
+      Vinnie 被警察押上警车（戴铐涣散）；Zack/Emma 去电话亭报喜 + 询问母亲状况；
+      Foster 双消息：(1) Margaret 苏醒了，让 Zack/Emma 来医院；(2) Frank 似乎不是火灾烧死，很可能是钝器击打凶杀（动态漫画 #7 + 特殊场景 §7）
+    trigger: "Vinnie Expose 完成后自动"

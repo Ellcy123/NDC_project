@@ -102,13 +102,15 @@ Chapter (章节: EPI01/EPI02/EPI03)
 - EPI02: 2xxx 系列（loop1=21xx, loop2=22xx, ...）
 - 派生证据: 17xx (EPI01), 27xx (EPI02)
 
-**对话 ID：**
-- 9 位数字，格式: `{loop}{scene}{sequence}`
-- 例: 105001005 = loop1, scene 05(Tommy), 第 005 句
+**对话 ID（Talk.id）：**
+- 普通对话: 9 位 `{NPC:3位}{对话组:3位}{句序:3位}`
+- 例: 105001001 = NPC 105 (Tommy) / 对话组 001 / 句序 001
+- 指证对话: 6 位 `{轮次:2位}{序号:4位}`
+- 例: 110001 = Loop1 指证 / 第 1 句
 
 **证词 ID (TestimonyItem)：**
-- 7 位数字，格式: `{loop}{npc}{sequence}`
-- 例: 1031002 = loop1 的 03 号 NPC 的第 002 条证词
+- 7 位 `{NPC:3位}{loop:1位}{seq:3位}`
+- 例: 1031002 = NPC 103 (Rosa) / Loop1 / 第 002 条
 
 ### 数据格式分工
 

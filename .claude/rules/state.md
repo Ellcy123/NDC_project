@@ -20,7 +20,10 @@ State 文件中的内容严格分为三个阶段，不可混合：
 3. **可提取证词**：testimony_ids，标注 ⚠谎言 / ⚠偏见
 
 ## 格式规范
-- Testimony ID：7 位数字 `{loop}{npc_code}{sequence}`
+- Testimony ID：`{NPC_ID:3位}{loop:1位}{seq:3位}`，7 位
+  - 例：Unit9 `9031002` = NPC 903 / Loop1 / 002
+  - 例：Unit2 `2031001` = NPC 203 Morrison / Loop1 / 001
+  - 完整字段规范见 [docs/配置表详解.md](../../docs/配置表详解.md)
 - Player inquiry：`"{驱动信息来源}" # {分数 0-10}`
 - Expose 对象：`is_liar: true`, `player_inquiry: null`
 - Evidence note：`关键——{用途}` / `场景道具` / 空

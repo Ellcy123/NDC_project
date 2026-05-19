@@ -1,442 +1,816 @@
 # ============================================================
-# Loop 4 — Frank和Rose的五年真爱（第二重叙事反转）
-# 本循环说谎者: Danny Kowalski
-# 核心揭示: Frank和Rose相恋五年，Danny因种族偏见和财产贪婪诬陷Rose
-# 前序事件: L3击穿Moore贷款骗局，遗嘱揭示Rose Martinez为继承人
-# 时间: 1925年11月7日 约17:30 傍晚
+# loop4_state.yaml — Unit2 Loop 4: 黄昏之爱 / 指证 Danny Kowalski
+# ============================================================
+#
+# 叙事功能：真爱反转 + Danny 嫌疑揭露
+#   - 2006 医院过场（Mickey 在场；Emma 透露医院是 Miller 资助的伏笔）
+#   - 2010 地下室（L3 钥匙 2308 解锁；玫瑰花蕊找戒指小玩法）
+#   - 2001 鞋坊店铺区（Lula 在场，Frank 生前秘密的见证者）
+#   - 2007 O'Hara 家门口（目击证词）
+#   - 2009 Frank 家次卧（Danny 不在，搜证）
+#   - 2020 Frank 家厕所（指证 Danny，3 轮；Danny 拉肚子在马桶上；Lula 在厕所小窗外签放弃继承协议）
+#
+# 核心体验：
+#   - 揭示 Frank ↔ Lula 五年真爱（第二重反转：Frank 是为爱奋斗的英雄）
+#   - Danny 是目击者兼机会主义者，非凶手
+#   - 开篇 Mickey + Emma 圣心医院战术碰头（无 Mickey-Lula 安排伏笔）
+#   - R3 Lula 隔厕所小窗举证签字，是本 Loop 情感高峰（Lula 自发跟随 Zack/Mickey 到 Frank 家，进不了男厕所只能在侧墙小窗外听）
+#   - 2124001 回收 L1 Emma 皱眉伏笔（Frank 不会做饭/不用 Margaret 厨房）
+#
+# 权威来源：剧情设计/Unit2/讨论结论.md（四、Loop4 章节 + 五、关键设计问题与裁决）
+# 格式参考：剧情设计/Unit9/state/loop4_state.yaml
+# 前序文件：loop3_state.yaml（L3 post_expose 获得 2308 地下室钥匙 + 2309 Frank 家钥匙）
+# 生成日期：2026-05-13
+#
+# NPC 编码（Unit2）：
+#   Emma=00（code 000）, Mickey=01（code 010）, O'Hara=04（code 040）
+#   Danny=09（code 090）, Lula=10（code 100）
+#
+# ──────────────────────────────────────────────────────────
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes(S2006/S2010/S2001/S2007/S2009/S2020) /
+#                        expose（scene_id=2020 Frank 家厕所）/ post_expose_scene / doubts / evidence_registry 全部存在
+# B. 证据覆盖     PASS — L4 所有证据（2402-2410 共 9 件，新增 2409 枯萎玫瑰 + 2410 水杯做玫瑰花蕊玩法 input）已分配到场景；
+#                        2408 在 post_expose_scene 由 Lula 交出，不在自由探索场景 pickup；
+#                        维修收据 2406 归入 2010 地下室（支撑叙事，不进疑点 condition）
+# C. NPC 条目     PASS — Emma（opening 2006）/ Mickey（opening 2006）/ Lula（S2001 + R3 隔窗签字）/
+#                        O'Hara（S2007）/ Danny（S2020 厕所 + expose）各含 4 必填块；
+#                        Danny 在指证场为 Expose 对象（is_liar:true, player_inquiry:null）
+# D. 目标对齐     PASS — goals 与讨论结论"Lula 是骗子还是真爱？Danny 的诬陷能否击破？"一致；
+#                        三轮维度（不在场/动机/诬陷 Lula）互不重叠
+# E. 信息节奏     PASS — 揭示：Frank-Lula 五年真感情 / Danny 收贿目击 / 婚戒下落 / O'Hara 目击；
+#                        锁定：纵火者身份 / Frank 死亡原因（钝器）/ Leonard 凶手身份 / 眼镜碎片；
+#                        Emma 的 Miller 资助伏笔在 2006 过场给出，本 Loop 内不回收
+# F. Quiz 配对    PASS — 无 quiz 场景；testimony_ids 与对话场景 ID 格式对应
+# G. Expose 逻辑  PASS — R1 O'Hara 目击+婚戒（Danny 撒谎不在场）；
+#                        R2 Moore 坦白房产证+空怀表盒（Danny 有经济动机）；
+#                        R3 O'Hara 四五年证词+求婚戒指+Lula 戏剧性签字（打破诬陷 Lula）；
+#                        每轮 lie 有对应唯一维度证据
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
 # ============================================================
 
-# ═══════════════════════════════════════
-# 玩家视角（本循环）
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 一、玩家视角
+# ─────────────────────────────
 
 player_context:
   goals:
-    primary: "遗嘱上的Rose Martinez是谁？她和Frank真的是什么关系？"
+    primary: "Lula 是骗子还是真爱？Danny 的诬陷能否击破？"
     secondary:
-      - "Danny说Rose是骗子——这是事实还是偏见？"
-      - "Frank为什么把财产留给Rose而不是唯一的侄子Danny？"
-  known_facts:
-    # ── L1 post_expose ──
-    - "死者是Frank Kowalski（73岁退休工人），不是Margaret"
-    - "Morrison出于蓝月俱乐部栽赃案被揭发的私怨，故意谎报死者身份"
-    - "Morrison收到匿名电话：'不要多管Margaret Brennan的事'"
-    - "Margaret下落不明，疑被绑架"
-    - "Morrison提出交易：Zack查Frank死因给他一个结案答案，他才去查Margaret下落"
-    # ── L2 post_expose ──
-    - "Leonard真名是Leonard Russo，使用假名Ross在银行工作十年"
-    - "Leonard和Vinnie Moretti是旧相识（童年好友）"
-    - "Leonard雇佣Vinnie暴力催收——提供目标地址，事后分钱"
-    - "连号钞票证明银行→Vinnie的资金链（O'Hara少的钱出现在Vinnie手里）"
-    - "Frank也是被Vinnie'特别关照'的受害者之一"
-    - "Leonard威胁：没有法院令状，无法调查银行内部文件"
-    # ── L3 post_expose ──
-    - "Frank的贷款不是赌博——Leonard代填申请表，Frank不清楚具体内容"
-    - "贷款协议系统性违法：月利率12%=年化289%（州法上限7%）、利滚利、管理费$600"
-    - "贷款协议抬头是'Lakeshore Investment Co.'——投资公司不受银行法利率限制"
-    - "Frank以为去银行借钱，实际被骗签了投资公司协议——系统性欺诈"
-    - "Moore迫于谋杀案审计的恐惧，主动提供Frank遗嘱副本"
-    - "遗嘱：财产归Rose Martinez（如结婚），否则捐给工人互助会；Danny不在继承人中"
-  new_directions:
-    - direction: "Rose Martinez的真实身份和与Frank的关系"
-      trigger: "遗嘱写着'Rose Martinez'作为继承人——L3之前从未听说此人"
-    - direction: "Danny的真实动机"
-      trigger: "Danny在L3对遗嘱反应激烈、种族攻击Rose——但他自己失业欠债住在Frank家"
-    - direction: "鞋坊地下室的秘密"
-      trigger: "Margaret鞋坊地下室首次可进入——Rose的钥匙打开了隐藏空间"
-  post_expose_knowledge:
-    - "Rose和Frank相恋五年（1920年在医院相识）——因种族偏见秘密交往"
-    - "Frank主动贷款$600修缮鞋坊地下室作为约会场所——不是被Rose骗钱"
-    - "Rose当场签署放弃继承声明——用行动证明不图财产"
-    - "Danny的真实动机：失业缺钱，想继承Frank在拆迁规划区的房产获取补偿"
-    - "Danny因种族偏见和财产贪婪诬陷Rose是'骗子'"
-    - "Rose提供Frank保险箱线索——Frank在11月6日当天原计划做一件'非常冒险的事'"
+      - "前往 2006 圣心医院——Mickey 在场，听他说已安排了证明 Lula 清白的人；Emma 有什么新消息？"
+      - "用 L3 拿到的 2308 钥匙打开鞋坊地下室（2010）——Frank 的秘密约会场所藏着什么？"
+      - "在 2001 鞋坊店铺区找到 Lula，正面了解 Frank 和她的关系"
+      - "去 2007 O'Hara 家门口，追问她是否目击了当晚的任何异常"
+      - "去 2009 Frank 家次卧（Danny 不在），搜查 Danny 的房间"
+      - "去 Frank 家厕所（2020）找 Danny——他正拉肚子蹲马桶上，跑不掉；用证据击破他的谎言"
 
-# ═══════════════════════════════════════
-# PART 1: 开篇
-# ═══════════════════════════════════════
-#
-# 场景状态表: 银行贵宾室 → 🎬开篇
-# L3 Expose结束后，Moore交出遗嘱(2311)自保。
-# 遗嘱揭示Rose Martinez——全新的调查方向打开。
+  known_facts:
+    # L1-L3 累积的已知事实
+    - "死者是 Frank Kowalski（73 岁退休工人），Margaret 鞋坊的雇员，住在南区"
+    - "Margaret 并未死亡——她在鞋坊外街边被人打晕，现在圣心医院接受治疗（昏迷）"
+    - "Morrison 在 L1 承诺：'你要真能拿出他是被人杀的硬证据，我签搜查令'"
+    - "银行雇佣黑手党暴力催债：Leonard 雇佣 Vinnie 向 Frank 等人催债"
+    - "连号钞票对比已完成：O'Hara 手里的贷款钞票和 Vinnie 手里的是同一批（L2 揭示）"
+    - "Frank 的贷款档案上的签名是伪造的——2301 牛奶签收单（真迹）与 2302 贷款档案签名（工整流畅）双件直接对比即可证明"
+    - "Moore 银行通过掠夺性贷款条款（年单利 12% + 利滚利 + 月管理费 50$）系统性欺诈借款人"
+    - "同一份对账单页眉是投资公司、正文是银行——两套身份马甲（疑点 2303 已揭示）"
+    - "Mickey 律师在 L3 以递交传票的方式登场，帮 Zack 拿到了银行搜查令"
+    - "Mickey 在 L3 post_expose 后将 Frank 房产证上附带的两把钥匙交给 Zack：2308（鞋坊地下室）和 2309（Frank 家）"
+    - "Moore 在 L3 指证后坦白：Danny 把 Frank 的房产证给了银行换沉默（证词 2083004）"
+    - "L2 在银行大厅曾目击 Danny 和 Leonard 悄悄商量 Frank 的房产证（碎片 2204 已解锁）"
+    - "Frank 家主屋在 L3 post_expose 后可进入（2309 钥匙）；Danny 住在次卧"
+    - "Moore 银行是投资公司（Lakeshore Investment Co.）的马甲，Leonard 名片上已有暗示（L2 视觉伏笔）"
+
+  new_directions:
+    - direction: "去圣心医院（2006）——Mickey 在那里，跟 Emma 战术碰头确认 L4 调查路线"
+      trigger: "L3 post_expose 后，Mickey 约 Zack 次日下午医院见面，确认调查策略"
+    - direction: "用 2308 钥匙开鞋坊地下室（2010）——Frank 把私人秘密藏在这里，和 Lula 的约会场所可能有线索"
+      trigger: "2308 地下室钥匙在 L3 post_expose 获得；地下室过去打不开（L1/L2/L3 的 2108 门锁）"
+    - direction: "在鞋坊店铺区（2001）找到 Lula——她早就知道 Frank 的一切，现在是开口的时候了"
+      trigger: "Lula 听说 Frank 死讯后自发来 Margaret 鞋坊等候——这是她在 Unit2 内的第一次公开出场"
+    - direction: "去 O'Hara 家（2007）——她是当晚在场的邻居，L4 需要追问她是否目击了 Frank 或 Danny 出门"
+      trigger: "L2 曾去过 O'Hara 家，她是信息来源；现在追问当晚时间线细节"
+    - direction: "搜查 Danny 的房间（2009 次卧，Danny 不在）——他在做什么？他有没有隐瞒什么？"
+      trigger: "2309 Frank 家钥匙 L3 post_expose 获得；L3 Danny 只是对话，没有搜证机会"
+    - direction: "去 Frank 家厕所（2020）找 Danny——Danny 拉肚子蹲在马桶上，逃不了；指证全程在此发生"
+      trigger: "搜证完成后，Danny 的谎言已有足够证据击破"
+
+  post_expose_knowledge:
+    # L4 指证 Danny 完整击穿后玩家获得的新知识
+    - "Danny 在街边目击了大块头打晕 Margaret 并顺手捡了婚戒——他不是凶手，是机会主义目击者"
+    - "Danny 目击证词 2114004 进入玩家背包：8 点多壮汉从鞋坊方向匆忙离开，块头大、深色衣服、像意大利人；打晕了 Margaret；看见戒指从她手旁滚出来反光"
+    - "Lula 提供 2408 小铁盒备用钥匙（L5 在 Frank 家主屋开小铁盒用一次）"
+    - "Lula 证词 2124001 落地：'Frank 不会做饭，而且绝对不会擅自用 Margaret 的厨房做饭'——回收 L1 Emma 皱眉伏笔，铺垫'火从何而来'的 L5/L6 推论"
+    - "Lula 证词 2124002：'Frank 的工资一直在给 Danny 还赌债！'——Danny 经济压力有了量级概念"
+    - "Frank 和 Lula 是五年真感情，地下室是他们的秘密约会场所"
+    - "父疑点 2401 正式点亮：Danny 在拿叔叔换钱——出让房产证 + 经济极度拮据（合并原 2404 经济动机）"
+
+# ─────────────────────────────
+# 二、开篇（圣心医院 2006 过场）
+# ─────────────────────────────
 
 opening:
-  scene_id: 2008
-  characters: [Zack, Emma, Moore]
-  purpose: "Moore交出遗嘱自保——遗嘱揭示Rose Martinez为继承人，打开全新调查方向"
-  talk: moore_002
+  type: cutscene
+  talk: opening_l4_hospital
+  location: "圣心医院-Margaret 病房（场景 2006）"
+  scene_id: 2006
+  description: |
+    L4 自动触发的开篇过场。Mickey 和 Emma 已在医院。
+    Margaret 仍昏迷，Zack 在病床边沉默片刻。
+    Mickey 简短点拨 L4 调查路线（建议先去鞋坊地下室 → 然后找 Lula → 最后找 Danny），
+    并提示"Danny 卖房产证换沉默"是 L4 R2 最有力的动机线索（呼应 L3 Moore 2083004 坦白）。
+    Emma 压低声音告诉 Zack：这家医院是 Miller 资助的（Miller 集团伏笔节点，本 Loop 内不回收）。
+    三人确认 L4 调查方向后分开行动：Mickey 处理法律事务，Emma 继续陪 Margaret/联系 Foster，
+    Zack 去追查 Lula 和 Danny。
 
-  moore_002:
-    is_liar: false
-    motive: "L3被击穿后试图自保——主动交出遗嘱换取Zack暂时不追究投资公司欺诈"
-    mindset: "恐惧驱动的配合——谋杀案审计的威胁远比贷款骗局可怕，愿意交代部分信息换取喘息空间"
-
-    # ── 1. NPC 已知信息 ──
-    # 知识池见 npc_knowledge_pools.yaml → moore
-    awareness:  # L4新获知
-      - content: "自己在L3被完全击穿——笔迹造假、违法条款、投资公司马甲全部暴露"
-        trigger: "L3 Expose结果"
-    active_topics: [frank_loan(完整), leonard(完整), scheme(已暴露)]
-    withheld_topics: []  # L3已全部释放
-
-    # ── 4.  ──
-  emma_004:
-    is_liar: false
-    motive: "协助Zack消化遗嘱冲击——Rose Martinez是全新人物，需要规划下一步调查方向"
-    mindset: "从L3法律胜利切换到人物调查——遗嘱揭示Frank有秘密感情生活，Danny的激烈反应可疑"
-
-    knows:
-      - "L3 Moore Expose击穿贷款骗局——贷款不是赌博，是系统性欺诈"
-      - "遗嘱将财产留给Rose Martinez（如结婚），否则捐给工人互助会"
-      - "Danny不在继承人名单中，在L3得知遗嘱后反应激烈"
-      - "Danny在L3声称Rose是'大半年前才出现的骗子'"
-      - "鞋坊地下室之前一直锁着，可能藏有线索"
-
-    does_not_know:
-      - "Rose Martinez的真实身份和背景"
-      - "Rose和Frank交往了五年（不是Danny说的大半年）"
-      - "鞋坊地下室是Frank和Rose的秘密约会场所"
-      - "Danny的真实经济状况（失业、欠债、典当）"
-      - "Frank贷款$600是为了修缮地下室约会场所"
-
-    lie: null
-
-    # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 2: 自由探索
-# ═══════════════════════════════════════
-#
-# 场景状态表 L4:
-#   鞋坊一楼(1F)      → ⏸️暂无新线索
-#   鞋坊卧室区        → ⏸️无新线索
-#   鞋坊地下室        → 🔓首次解锁
-#   家门口(2A)        → ⏸️无新线索（O'Hara对话）
-#   Frank家内部       → ⏸️无新线索
-#   赌场/酒吧         → ⏸️无新线索
-#   银行大厅          → ⏸️NPC对话(Leonard)
-#   银行贵宾室        → 🎬开篇
-#   银行档案室        → 🔒封锁（搜查令失效）
-#   Leonard办公室     → 🔒封锁（搜查令失效）
-#   Frank家次卧(Danny) → 🔓搜证 → ⚔️指证(Danny)
-#   鞋坊一楼(1F)      → Rose可对话（Rose家场景已删除，Rose出现在鞋坊）
+# ─────────────────────────────
+# 三、场景（自由探索）
+# ─────────────────────────────
 
 scenes:
-  # ── 鞋坊一楼（Rose可对话） ──
-  - id: 2001
-    name: "Margaret鞋坊-店铺区"
-    npcs:
-      rose_001:
-        # ── 基本信息 ──
-        talk: rose_001
-        is_liar: false
-        motive: "Frank的死让她走出五年的隐藏——第一次在外人面前承认这段感情，想帮Zack了解真实的Frank"
-        mindset: "悲痛中的坚定——失去爱人的痛苦让每句话带感情重量，但绝不为自己辩解，只讲事实"
+  # ── 场景 2010：Margaret 鞋坊-地下室 ──
+  - id: 2010
+    name: "Margaret 鞋坊-地下室"
+    type: free_exploration
+    unlock_condition:
+      - type: 1
+        param: "2308"  # L3 post_expose 获得的地下室钥匙
+    description: |
+      L3 末用 2308 钥匙解锁的地下室。空间昏暗，但有人精心布置过——
+      旧沙发、玫瑰残枝、手写便条的痕迹，这里是 Frank 和 Lula 秘密约会的场所。
+      玫瑰花蕊找戒指小玩法在本场景初始化（2403 求婚戒指产出）。
+      L1/L2/L3 的 2108 门锁状态同步更新为"已解锁"。
 
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → rose
-        active_topics: [love, danny]
-        withheld_topics: [witness]  # L5才释放（11/6晚目击异常）
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "遗嘱继承人Rose Martinez——必须了解她和Frank的关系真相"  # 10
-          - "Danny声称Rose是骗子——需要Rose的视角来交叉验证"  # 9
-
-        # ── 3. 可提取证词 ──
-        testimony_ids:
-          - 2081001  # Rose确认身份：1920年在芝加哥县立医院认识Frank（护士照顾摔断腿的Frank），相恋五年
-          - 2081002  # Rose证词：每周在Margaret鞋坊地下室约会，Margaret免费借房间给他们
-          - 2081003  # Rose证词：曾劝Frank不要贷款（"Frank，别去那家银行！"），Frank坚持修地下室
-
-        # ── 4.  ──
-  # ── ⏸️ 鞋坊卧室区（无新线索） ──
-  - id: 2003
-    name: "Margaret鞋坊-卧室区"
-
-  # ── SC2015 Margaret鞋坊地下室（首次解锁） ──
-  - id: 2015
-    name: "Margaret鞋坊-地下室"
     evidence:
-      - id: 2425
-        name: "地下室钥匙"
-        note: "场景道具——老式铜钥匙，拴着红色针织玫瑰吊坠"
-      - id: 2401
-        name: "房间旧沙发"
-        note: "关键——扶手磨损严重、坐垫凹陷，使用至少3-5年（Expose R1用）"
       - id: 2402
-        name: "地下室褪色窗帘"
-        note: "关键——褪色明显，长期使用痕迹，悬挂至少3-5年（Expose R1用）"
-      - id: 2403
-        name: "地板固定位置磨痕"
-        note: "关键——特定位置深度磨痕，证明房间被长期固定使用（Expose R1用）"
-      - id: 2404
-        name: "照片墙"
-        note: "关键——5张照片横跨1920-1925.10.15，证明Frank和Rose关系五年（Expose R1补充）"
-      - id: 2408
-        name: "房间维修收据"
-        note: "关键——1923年$600修缮（窗户/地板/墙面/沙发），付款人Frank Kowalski（Expose R2补充）"
+        name: "地下室旧沙发（磨损 3-5 年）/ Old Sofa in Basement (3-5 Years of Wear)"
+        type: envir
+        itemType: 2
+        pickup: false
+        analysis: false
+        description: "一张陈旧的双人沙发，扶手和坐垫的磨损痕迹均匀，判断已经被规律使用了至少三到五年。"
+        note: "场景道具——环境叙事（Frank 和 Lula 五年秘密相会的物证）；isUsable=false；不进疑点 condition"
+
       - id: 2409
-        name: "Margaret租赁协议"
-        note: "关键——1920年6月'免费借给Frank和Rose使用地下室'（Expose R2用）"
-      - id: 2418
-        name: "枯萎的玫瑰花束"
-        note: "场景道具——约12朵红玫瑰干枯，桌面蜡烛+白桌布，像是准备求婚但未完成"
-      - id: 2419
-        name: "水杯"
-        note: "场景道具——大半杯清水，可与2418合并获得鲜活玫瑰花束（合并产物420）"
-      - id: 2421
-        name: "Frank的银戒指"
-        note: "关键——内刻'R & F, 1920.04.30-Forever'，0430是保险箱密码线索"
-      - id: 2422
-        name: "空的戒指盒"
-        note: "场景道具——深蓝色天鹅绒盒，戒指已被取出藏在玫瑰花蕊中"
+        name: "枯萎的玫瑰花束 / Withered Bouquet of Roses"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: "一捧已经枯萎的红玫瑰，包装纸印着南区花店字样。花瓣大部分已脱水蜷曲，但茎部插在一个空花瓶里——Frank 曾仔细布置过，只是没等到把水加上。花蕊中央似乎藏着什么——但隔着干枯的花瓣看不清，需要先让花复活。"
+        note: "L4 玫瑰花蕊找戒指小玩法 input；与 2410 水杯合成可揭出 2403 求婚戒指"
 
-  # ── ⏸️ 家门口（O'Hara对话） ──
-  - id: 2006
-    name: "Frank和O'Hara家门口"
+      - id: 2410
+        name: "水杯 / Water Glass"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: "桌边一个普通玻璃水杯，杯里还剩半杯清水——Frank 显然准备过给玫瑰浇水，但来不及完成。杯壁上沾着一点水痕，像是被手指摸过。"
+        note: "L4 玫瑰花蕊找戒指小玩法 input；与 2409 枯萎玫瑰合成"
+
+      - id: 2403
+        name: "求婚戒指 / Engagement Ring"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: "一枚嵌着小碎钻的金戒指，藏在玫瑰复活后的花蕊之间。戒圈内侧刻有 'F & L 1923'。戒指尺寸为女性手型，明显不是 Margaret 的尺码——这是 Frank 给 Lula 定制的。"
+        note: "关键——疑点 2403 condition；L4 R3 指证件；玫瑰花蕊找戒指小玩法产出（2409 + 2410 → 2403；详见 剧情设计/Unit2/小玩法/L4_地下室_玫瑰花蕊找戒指.md）"
+
+      - id: 2406
+        name: "维修收据（600$ 全用于地下室）/ Repair Receipt ($600, Basement Renovation)"
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事——地下室桌上单据，可看不可拿走
+        analysis: false
+        description: "一张 1923 年的室内维修收据，委托人是 Frank Kowalski，金额 600 美元，施工地点是本地下室，项目包括：更换地板、添置隔热层、安装电灯。收据上附有 Margaret 鞋坊的副本章。"
+        note: "场景道具——环境叙事（Frank 把大笔积蓄用于布置约会场所，佐证真爱）；不进指证主链，不进疑点 condition；L4 R2 陷阱选项（花销属于 Frank 为 Lula 的付出，与 Danny 经济动机无直接关联）"
+
+    npcs: {}
+
+
+  # ── 场景 2001：Margaret 鞋坊-店铺区（Lula 在场）──
+  - id: 2001
+    name: "Margaret 鞋坊-店铺区"
+    type: free_exploration
+    description: |
+      L4 自动解锁。废墟状态的店铺区，Lula 在这里等待。
+      Lula 听说 Frank 死讯后自发到此——她是第一次公开面对 Frank 案的相关人。
+      Lula 的出现本身就是一种陈述：她来了，她没有躲。
+      本场景是玩家对 Lula 的第一印象，信息量大但情绪克制。
+
+    evidence: []
+
     npcs:
-      ohara_002:
-        # ── 基本信息 ──
-        talk: ohara_002
+      lula_l4_storefront:
+        talk: lula_l4_storefront
         is_liar: false
-        motive: "主动为Rose说话——十年老邻居Frank死了，Rose被Danny诬陷，O'Hara觉得不能沉默"
-        mindset: "从L2的恐惧转为同情——Danny的种族攻击让O'Hara想起自己身为爱尔兰移民受过的偏见"
+        motive: "为 Frank 发声，澄清外界对他（和她）的所有误解；情感真实，没有表演"
+        mindset: "悲伤但平静，像是哭过了现在只剩清醒；对 Zack 信任（因为 Mickey 已打过招呼），对外界判断早已习惯"
 
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → ohara
-        awareness:  # 以下为L4新获知信息
-          - content: "遗嘱将Frank的财产留给Rose Martinez，Danny对此极度不满"
-            trigger: "L3 Expose后消息传开"
-        active_topics: [frank(基础背景), loan(催收细节——L2因恐惧未说), rose, neighborhood]
-        withheld_topics: []  # L2 withheld的loan(催收细节)/rose/neighborhood在L4全部释放
+        # ── 1. 已知信息 ──
+        active_topics:
+          - "Frank 的工资一直在给 Danny 还赌债——她亲耳听 Frank 说的（证词 2124002）"
+          - "'Frank 不会做饭，绝对不会擅自用 Margaret 的厨房做饭'——这是 Frank 的原则，他尊重 Margaret 的空间（证词 2124001；回收 L1 Emma 皱眉伏笔）"
+          - "她和 Frank 已经认识五年，地下室是 Margaret 借给他们的约会场所——Margaret 知道这段感情，支持他们"
+          - "Frank 当晚（11月6日）下午 5 点半在圣卢克医院告诉她'今晚要做一件非常冒险的事，让她这段时间别来找他'——她从那以后再也没见过他"
+          - "Frank 曾拜托她保管一把备用钥匙（2408），说是'小铁盒用的，以后会用到'"
+        withheld_topics:
+          - "Frank 小铁盒里具体放了什么（L5 才揭开：举报材料和情书）"
+          - "Lula 是否知道 Danny 卖房产证的事（她不知道）"
+          - "Lula 在 Expose R3 的戏剧性登场安排（玩家届时自然知晓）"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "遗嘱提到Rose Martinez——O'Hara是Frank的十年老邻居，最了解两人来往"  # 9
-          - "Danny声称Rose'大半年前'才出现——O'Hara作为见证者可以确认或反驳"  # 8
+          - '"Frank 当晚 5:30 说要做冒险的事——他告诉 Lula 什么了吗" # 9'
+          - '"Frank 工资一直给 Danny 还债——这是 Lula 亲眼目睹的吗" # 8'
+          - '"Frank 不会做饭这件事——Lula 有多确定" # 7'
+          - '"这把备用钥匙（2408）——Frank 怎么交代的" # 6'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2091003  # O'Hara证实Rose至少四五年前就来到这条街，经常看到Rose去Frank家
-          - 2091004  # O'Hara证词：邻居对Frank和黑人女性来往有议论，Rose后来不再公开露面
-          - 2091005  # O'Hara补充催收细节（L2因恐惧未说）：先来一个客客气气的人"好心提醒"，2-3天后就来一个凶狠的大块头
+          - 2124001  # Lula：Frank 不会做饭，绝对不会擅自用 Margaret 的厨房做饭（回收 L1 Emma 皱眉伏笔；不进指证主链，post_expose 剧情解释用）
+          - 2124002  # Lula：Frank 的工资一直在给 Danny 还赌债（L4 R2 辅助件；疑点 2401 经济动机语境）
 
-        # ── 4.  ──
-  # ── ⏸️ Frank家内部（无新线索） ──
-  - id: 2011
-    name: "Frank家内部"
 
-  # ── ⏸️ 赌场/酒吧（无新线索） ──
+  # ── 场景 2007：Mrs. O'Hara 家门口 ──
   - id: 2007
-    name: "Silver Moon赌场/酒吧"
+    name: "Mrs. O'Hara 家门口"
+    type: free_exploration
+    description: |
+      L4 自动解锁（继承 L2 已访问状态）。O'Hara 对 Zack 的信任度因 L2 略有提升。
+      L4 重点追问：当晚 Frank 和 Danny 出门的时间和方向细节。
+      O'Hara 是本 Loop 核心目击证人，提供两条关键证词。
 
-  # ── 银行大厅（Leonard对话） ──
-  - id: 2009
-    name: "Moore银行大厅"
+    evidence: []
+
     npcs:
-      leonard_003:
-        # ── 基本信息 ──
-        talk: leonard_003
+      ohara_l4_street:
+        talk: ohara_l4_street
         is_liar: false
-        motive: "Moore崩溃后的自保观望——想摸清Zack的调查方向，避免自己更大的秘密被牵出"
-        mindset: "比L3更加警惕——Moore的投资公司马甲暴露后Leonard意识到审计迟早来，需要为自己准备退路"
+        motive: "作为邻居尽自己所知讲述，她只说看到的，不猜测动机"
+        mindset: "谨慎、实诚，对 Zack 是 Margaret 儿子这一点有一定信任；不会主动多说，但被追问会认真回忆"
 
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → leonard
-        awareness:  # 以下为L4新获知信息
-          - content: "Zack拆穿了自己的Russo身份和雇佣Vinnie催收的事实"
-            trigger: "L2 Expose结果"
-          - content: "Moore在L3被击穿——贷款骗局和投资公司马甲暴露"
-            trigger: "L3 Expose结果"
-          - content: "Frank遗嘱曝光：财产归Rose Martinez"
-            trigger: "L3 Expose后Moore提供遗嘱"
-        active_topics: [identity(完整), crime_network(完整含利率/分赃)]
-        withheld_topics: [murder]
+        # ── 1. 已知信息 ──
+        active_topics:
+          - "11月6日晚上约七点，Frank 出门，前后脚侄子 Danny 也出门，走的同一条路（主街方向）（证词 2064001）"
+          - "Lula 这个人她认识——至少四五年前就常在这条街出现，经常去 Frank 家（证词 2064002）"
+          - "火灾那晚她没有出门（消防局记录已记载她电话报警的时间，非直接目击者）"
+        withheld_topics:
+          - "O'Hara 无法证明 Danny 尾随 Frank（她只看到两人走了同一条路，时间前后脚）"
+          - "Vinnie 打晕 Margaret 的过程（她没有目击）"
+          - "Margaret 婚戒的最终下落（她不知道）"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "Moore崩溃后Leonard的态度可能变化——可能透露更多来自保"  # 6
-          - "Leonard是Frank贷款经办人——可能知道贷款用途细节"  # 5
+          - '"当晚 Frank 出门的时间和方向——Danny 是同时出门的吗" # 10'
+          - '"O'Hara 认不认识 Lula——她多久前开始出现的" # 8'
+          - '"O'Hara 当晚有没有看到其他异常" # 6'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2041004  # Leonard提及Frank贷款备注写的是"房屋维修"，声称不知道具体维修哪里
+          - 2064001  # O'Hara：Frank 晚上 7 点出门，前后脚侄子 Danny 也出门，走的同一条路（L4 R1 击破件；疑点 2402 condition）
+          - 2064002  # O'Hara：Lula 至少四五年前就来这条街，经常去 Frank 家（L4 R3 击破件；疑点 2403 condition）
 
-        # ── 4.  ──
-  # ── 🔒 银行档案室（搜查令失效） ──
-  - id: 2013
-    name: "银行档案室"
-    note: "🔒封锁——L3搜查令已失效，无法再次进入"
 
-  # ── 🔒 Leonard办公室（搜查令失效） ──
-  - id: 2014
-    name: "Leonard办公室"
-    note: "🔒封锁——L3搜查令已失效，无法再次进入"
+  # ── 场景 2009：Frank 家次卧-Danny 住处（Danny 不在）──
+  - id: 2009
+    name: "Frank 家次卧-Danny 住处"
+    type: free_exploration
+    unlock_condition:
+      - type: 1
+        param: "2309"  # L3 post_expose 获得的 Frank 家钥匙
+    description: |
+      继承 L3 已解锁状态。Danny 这次在家——但他正蹲在厕所（2020）拉肚子，逃不出来。
+      玩家可以独立在次卧搜证，从隔壁厕所偶尔传来他的呻吟与马桶冲水声。
+      三件关键物件：空怀表盒（含 Tony 便条）、Margaret 婚戒、Frank 遗嘱副本。
+      Danny 的房间展示了他的经济困境和机会主义本质。
+      搜证完成后，Zack 可以走到隔壁厕所门口正式对峙 Danny——指证场景见 2020。
 
-  # ── SC2012 Frank家次卧-Danny住处（搜证→指证） ──
-  - id: 2012
-    name: "Frank家次卧-Danny住处"
     evidence:
-      - id: 2415
-        name: "火灾新闻报纸"
-        note: "场景道具——1925年9月南区火灾三人葬身，Danny红笔圈注'焦尸无人认领'"
-      - id: 2416
-        name: "Danny经济状况证据"
-        note: "关键——失业通知(1925.2)+信用卡逾期$105.50+当铺票据+借钱信件草稿（Expose R3用）"
-      - id: 2417
-        name: "满汽油桶"
-        note: "场景道具——5加仑Standard Oil满油桶藏在床底，干净无使用痕迹（伏笔）"
-      - id: 2423
-        name: "空怀表盒"
-        note: "场景道具——深棕色皮质怀表盒空置（与L2 Frank怀表2201跨循环关联）"
-      - id: 2424
-        name: "Danny借条"
-        note: "场景道具——'借用一下，Frank叔叔 — Danny'（与2423怀表盒跨循环合并）"
+      - id: 2404
+        name: "空怀表盒（含 Tony 便条）/ Empty Pocket Watch Case (with Tony's Note)"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: "一个皮制怀表盒，表盒内空无一物，但盒盖内侧夹着一张便条，Tony（Silver Moon 赌场酒保）手写：'100 块，怀表抵押。——Tony'。便条日期是上周（11月1日）。"
+        note: "关键——疑点 2401 condition（合并后）；L4 R2 指证件"
+
+      - id: 2405
+        name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found in Danny's Room)"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: "一枚金婚戒，内圈刻着'P & M 1901'（Patrick Brennan 与 Margaret 的婚戒）。婚戒被藏在 Danny 床垫下的一个小布包里。"
+        note: "关键——疑点 2402 condition；L4 R1 指证件"
+
+      - id: 2407
+        name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
+        type: envir
+        itemType: 2
+        pickup: false  # 环境叙事——次卧书架的遗嘱副本，可看不可拿走
+        analysis: false
+        description: "Frank Kowalski 遗嘱的副本，正文打印的主条款：'本人将全部遗产遗赠予 Lula Washington 小姐。'末尾 Frank 亲笔手写附加条款（兜底）：'若 Washington 小姐拒绝继承，遗产将转赠艾斯弗德工人互助会。——Frank K.'字迹颤抖但清晰，签名与牛奶订购单（2301）笔迹风格一致。Lula 是法定受遗赠人——这是 L4 R3 她当场签放弃继承声明的法律前提。"
+        note: "L4 R3 陷阱选项——遗嘱本身是动机证据（Danny 担心失去继承权），但不能证明 Lula 是否是真爱；R1 陷阱（不反驳 Danny 不在场谎言）；L5/L6 叙事参照"
+
+    npcs: {}
+
+
+  # ── 场景 2020：Frank 家厕所（Danny 拉肚子+L4 指证场+Lula 小窗签字）──
+  - id: 2020
+    name: "Frank 家厕所"
+    type: expose_scene  # ⚔️ 指证场（兼对话场，Danny 蹲马桶上）
+    unlock_condition:
+      - type: 1
+        param: "2309"  # 与 2009 同一钥匙解锁（Frank 家入口已通）
+    description: |
+      Frank 家厕所——逼仄的木门半敞，地板上一双 Danny 的拖鞋东倒西歪。
+      Danny 蹲在马桶上拉肚子，狼狈、出汗、面如土色。Zack 推开虚掩的门走进去——
+      Danny 既不能站起来，也无处可逃，只能边按肚子边和 Zack 说话。
+      厕所侧墙有一扇约 30cm × 40cm 的小窗，朝向后巷，平时透光通风用。
+      Lula 跟着 Zack 和 Mickey 一起到了 Frank 家，但她进不了男厕所——只能站在侧墙小窗外把全过程听下来；R3 时她从小窗外举起已签好的放弃继承协议给 Danny 看。
+      （指证戏剧性：本应严肃的法庭式对峙发生在最不体面的环境里，
+      Danny 的所有狡辩都伴随着马桶冲水的声响——这是这个角色应得的羞耻。）
+
+    evidence: []  # 指证场，无可拾取证据；R3 时 Lula 隔窗递入"放弃继承协议"作为演出道具，不进 ItemStaticData
+
     npcs:
-      danny_002:
-        # ── 基本信息 ──
-        talk: danny_002
-        is_liar: true
-        motive: "遗产被剥夺的愤怒——得知遗嘱后满腔怨恨，急于向任何人控诉Rose的'骗局'"
-        mindset: "自我正义的偏执——坚信自己才是Frank唯一的家人，用种族偏见包装贪欲"
+      danny_l4_bathroom:
+        talk: danny_l4_bathroom
+        is_liar: true  # L4 Expose 对象
+        motive: "面对铁证下意识撒谎；不是凶手，但是机会主义者——曾为赌债卖叔叔房产证"
+        mindset: "肚子疼+被指证双重狼狈；一边按肚子一边狡辩，越被击穿越慌乱；R3 后看到 Lula 在小窗外签字才彻底崩溃"
+        player_inquiry: null  # Expose 对象
 
-        # ── 1. NPC 已知信息 ──
-        # 知识池见 npc_knowledge_pools.yaml → danny
-        awareness:  # 以下为L4新获知信息
-          - content: "遗嘱将Frank的财产留给Rose Martinez，自己不在继承人名单中"
-            trigger: "L3 Expose后遗嘱公开"
-        active_topics: [frank(完整), rose(偏见版), self(完整含失业/拆迁)]
-        withheld_topics: []  # L4 Expose中全部释放
+        active_topics:
+          - "11月6日当晚的去向（谎言锚：在家）"
+          - "Frank 房产证去向（Danny 很疑惑 Zack 怎么知道）"
+          - "怀表去向（追问下退守'随便抵押的'）"
+          - "对 Lula 的态度（机会主义诬陷——'她才是骗子'）"
+        withheld_topics:
+          - "Danny 当晚目击 Vinnie 打晕 Margaret 并捡走婚戒（post_expose 才坦白，2114004 进入证词池）"
+          - "Frank 一直在替 Danny 还赌债（Lula 在 post_expose 才补充 2124002）"
 
-        # ── 2. 玩家询问意图 ──
-        player_inquiry: null  # Expose对象
-
-        # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2071004  # Danny抱怨自己才是Frank唯一的家人，Rose一个外人凭什么继承
+          - 2114001  # ⚠谎言锚: "11月6日当晚我在家，哪儿都没去"（R1 谎言锚，唯一可收集 testimony）
+          # R2/R3 退守对白为 Expose 内部，无 testimony ID
 
-        # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 3: 指证（Expose）
-# ═══════════════════════════════════════
-#
-# 场景状态表: Frank家次卧(Danny) → 🔓搜证 → ⚔️指证(Danny)
-# 指证设计: 3轮（"Rose最近才来" → "Rose骗叔叔贷款" → "Rose图遗产"）
-# 核心冲突: Danny的种族偏见+财产贪婪 vs Rose的五年真爱+无私放弃
+      lula_l4_window:
+        # 【演出帧·非对话】属 Danny 指证（Loop4_danny / 场景 2020）R3 环节；隔厕所小窗递入放弃继承协议、当 Danny 面签字
+        # talk:null 无对话文件；R3 演出 + 补充证词来源；勿当作"多余对话"清理
+        talk: null
+        is_liar: false
+        motive: "5 年隐忍最后爆发——主动出头为 Frank 正名 + 为 Zack 提供 Danny 诬陷的反证"
+        mindset: "平静、坚定；不哭、不闹；签字这一刻是她在 Unit2 内的高光"
+
+        active_topics:
+          - "（演出性质，仅 R3 隔窗签放弃继承协议；签完递入 Frank 不会做饭/工资还债等补充证词）"
+        withheld_topics:
+          - "她和 Mickey 在 L4 前已经约好等候在厕所外的细节（'我在外面'就够了）"
+
+
+# ─────────────────────────────
+# 四、指证（Expose：Danny Kowalski）
+# ─────────────────────────────
 
 expose:
-  target: "Danny (07)"
+  target: danny
+  target_talk: Loop4_danny
+  scene_id: 2020  # Frank 家厕所——Danny 蹲马桶上无处可逃
+  is_liar: true
+  player_inquiry: null
+  exposeNpcId: 109
   total_rounds: 3
-  # Danny的Talk/证词见上方 scenes → SC2012 → danny_002
 
-  # ── 第一轮：击破"时间"谎言 ──
-  # 旧沙发(2401) + 褪色窗帘(2402) + 地板磨痕(2403) → 长期使用证据
-  # 照片墙(2404) → 补充，直接证明关系五年
+  context: |
+    Zack 搜证完成后，手握：
+    - 2064001 O'Hara 证词：Frank 7 点出门，Danny 前后脚走了同一条路
+    - 2405 Margaret 的婚戒（Danny 床垫下找到）
+    - 2083004 Moore 指证后坦白证词：Danny 把 Frank 房产证给了银行
+    - 2404 空怀表盒（Tony 便条：怀表抵押换 100$，上周）
+    - 2064002 O'Hara 证词：Lula 至少四五年前就常来这条街
+    - 2403 求婚戒指（F & L 1923，玫瑰花蕊找戒指小玩法产出）
+    Danny 在 Frank 家厕所拉肚子。Zack 推门进去时他正蹲在马桶上，狼狈、按肚子、面如土色。
+    他第一反应会撒谎（整晚在家），然后逐步退守——所有狡辩都伴随着肠胃叫声和马桶冲水。
+    L4 的情感基调：Danny 是个可悲的机会主义者，不是凶手——
+    最终击破后他会交出目击证词（2114004），是这个 Loop 真正重要的信息。
+    R3 收尾的关键演出：Lula 隔着厕所侧墙小窗（朝后巷的 30cm × 40cm 通风窗）平静签下放弃继承协议——
+    Danny 在马桶上仰头看小窗，对比构图极具冲击。
+
+  # ── 轮次一：Danny 不在场谎言 ──
   round_1:
-    lie: "Rose Martinez最近才勾引我叔叔，他老了判断力不行了！"
-    lie_source: "证词 2071001（L3 danny_001 ⚠谎言——Danny声称Rose'最近才勾引叔叔'）"
+    lie: "11月6日当晚我在家，哪儿都没去。"
+    lie_source: 2114001  # Danny 谎言锚证词
     usable_evidence:
-      - id: 2401
-        name: "房间旧沙发"
-        用途: "扶手磨损严重、坐垫凹陷至少3-5年——不是'最近'能形成的痕迹"
-      - id: 2402
-        name: "地下室褪色窗帘"
-        用途: "窗帘褪色明显，悬挂至少3-5年——房间被长期使用"
-      - id: 2403
-        name: "地板固定位置磨痕"
-        用途: "特定位置深度磨痕——房间被长期、固定地使用，Margaret鞋坊在一楼，没理由长期使用地下室"
-      - id: 2404
-        name: "照片墙"
-        用途: "5张照片从1920年公园野餐到1925.10.15房间合影——两人关系横跨五年"
-    result: |
-      Danny被迫承认两人认识已久：
-      - 沙发磨损3-5年 + 照片横跨1920-1925 = "最近"是彻底的谎言
-      - Danny从"最近"退守为"认识久一点"
-      - Rose（在场）含泪证实："我和Frank相爱五年了…"
-      - Danny转移攻击角度："就算认识久了，她还是骗子！叔叔的贷款就是因为她！"
+      - id: 2064001
+        name: "O'Hara 证词：Frank 7 点出门，前后脚 Danny 也出门，走同一条路"
+        note: "关键——O'Hara 目击 Danny 出门，直接反驳不在场谎言；疑点 2402 condition"
+        usage: "邻居 O'Hara 亲眼目睹：Frank 晚上 7 点出门，Danny 紧跟着也出了门，走的是同一条路——怎么能说整晚在家？"
+      - id: 2405
+        name: "Margaret 的婚戒"
+        note: "关键——婚戒只能来自案发现场附近，Danny 必须在场才能拿到；疑点 2402 condition"
+        usage: "这枚婚戒内刻'P & M 1901'，是 Margaret 从不摘下的婚戒。它在你床垫底下。Margaret 在街边倒地时戒指脱落——你当晚必定在场。"
+    requiredItems:
+      - 2064001
+      - 2405
+    trap_evidence:
+      - id: 2407
+        trap_reason: "遗嘱是动机证据，不能反驳 Danny 不在场的谎言——误用会失败"
+    result: partial_victory
+    result_description: |
+      Danny 被两件证据当场击穿。他短暂沉默，随后退守：
+      "好吧，我出门了。但我没有理由杀我叔叔！"
 
-  # ── 第二轮：击破"金钱"诬陷 ──
-  # 银行内部档案(2303跨循环/L3) + Margaret租赁协议(2409) + 维修收据(2408)
-  # → 贷款是Frank主动为爱付出，Rose从未索取
+  # ── 轮次二：Danny 说自己没有动机 ──
   round_2:
-    lie: "Rose骗我叔叔贷款！$3,200的债都是她害的！"
-    lie_source: "Danny对Round 1的新谎言"
+    lie: "我没有理由杀我叔叔！"
+    lie_source: null  # R2 谎言为 Expose 内部退守对白，无 testimony ID（R1 被破后 Danny 当场说出）
     usable_evidence:
-      - id: 2303
-        name: "湖滨信托银行内部档案（跨循环/L3）"
-        用途: "贷款备注栏'贷款用途：房屋维修 - Margaret鞋坊地下室'——Frank主动贷款修房间"
-      - id: 2409
-        name: "Margaret租赁协议"
-        用途: "1920年Margaret免费借地下室给Frank和Rose——Rose从未索取任何东西"
-      - id: 2408
-        name: "房间维修收据"
-        用途: "$600全部用于地下室修缮——Frank自愿为爱付出，不是被骗"
-    result: |
-      贷款真相击碎"骗钱"诬陷：
-      - 贷款用途明确是"Margaret鞋坊地下室维修"，Frank主动选择
-      - Margaret免费出借空间五年，Rose从未要求物质回报
-      - 维修收据$600与贷款原始金额完全吻合
-      - Rose（在场，哽咽）："我甚至劝过Frank别贷款…我说不需要新沙发…但他坚持…"
-      - Danny孤注一掷："那她图的就是遗产！遗嘱就是证据！"
+      - id: 2083004
+        name: "Moore 指证后坦白证词：Danny 把 Frank 的房产证给了银行"
+        note: "关键——Danny 暗中出卖叔叔房产证换自己的沉默，有明确经济动机；父疑点 2401 condition"
+        usage: "Moore 银行的 Harold Moore 已经承认了：是 Danny 把 Frank 的房产证交给了银行。你为了让银行催债催到叔叔头上、为了还你自己的赌债——这就是你的动机。"
+      - id: 2404
+        name: "空怀表盒（含 Tony 便条）"
+        note: "关键——怀表抵押换 100$，上周；Danny 经济状况极度拮据；疑点 2401 condition（合并后）"
+        usage: "你的怀表上周已经拿去赌场抵押换了 100 块。还有 Lula 说的：Frank 的工资一直在给你还债。你真的没有理由杀他？"
+    requiredItems:
+      - 2083004
+      - 2404
+    trap_evidence:
+      - id: 2402
+        trap_reason: "旧沙发属于 Frank 为 Lula 布置约会场所的证据，与 Danny 的经济动机无直接关联——误用会失败"
+      - id: 2406
+        trap_reason: "维修收据是 Frank 为 Lula 的花销，证明 Frank 感情真实，但无法反驳 Danny 的'没有动机'谎言"
+    result: partial_victory
+    result_description: |
+      Danny 被击穿，慌乱起来：
+      "就算我缺钱，Lula 才是真正的威胁！她是个感情骗子，骗我叔叔签了遗嘱！"
 
-  # ── 第三轮：击破"财产"诬陷 + 真实动机暴露 ──
-  # 遗嘱(2311跨循环/L3) + Danny经济证据(2416)
-  # → Rose突发登场用行动证明清白，Danny贪婪本性暴露
+  # ── 轮次三：Danny 诬陷 Lula ──
   round_3:
-    lie: "Rose图遗产！遗嘱写得清清楚楚！一个墨西哥寡妇冲着房产来的！"
-    lie_source: "Danny对Round 2的新谎言"
+    lie: "是 Lula！她是个感情骗子，骗我叔叔签了遗嘱！"
+    lie_source: null  # R3 谎言为 Expose 内部退守对白，无 testimony ID（R2 被破后 Danny 当场说出）
     usable_evidence:
-      - id: 2311
-        name: "Frank遗嘱副本（跨循环/L3）"
-        用途: "附加手写条款'若Rose不愿接受，全部捐给工人互助会'——Frank尊重Rose的选择权"
-      - id: 2416
-        name: "Danny经济状况证据"
-        用途: "失业通知+信用卡逾期$105+当铺票据+借钱信件草稿——Danny才是缺钱的人"
-    result: |
-      Danny彻底崩溃：
-      - 遗嘱附加条款证明Frank尊重Rose的选择权——不是"逼Rose接受"
-      - Danny得意洋洋"口头不作数！她肯定反悔！没人会拒绝几千美元！"
-      - ★ Rose戏剧性推门登场 ★
-      - Rose当场宣布放弃继承："Frank给我最珍贵的礼物，是这五年的爱。"
-      - Danny经济状况暴露：失业9个月、信用卡逾期、手表戒指典当
-      - Emma点破："Danny，你说'没人会拒绝几千美元'…你说的是你自己吧？"
-      - 房子在Miller集团拆迁规划区——Danny才是图拆迁补偿的人
-      - Rose提供保险箱线索：Frank在11/6当天原计划做一件"非常冒险的事"
+      - id: 2064002
+        name: "O'Hara 证词：Lula 至少四五年前就来这条街"
+        note: "关键——五年前 Frank 房子还没有被盯上；Lula 与 Frank 认识时无法提前预谋遗嘱；疑点 2403 condition"
+        usage: "邻居 O'Hara 说 Lula 四五年前就来这条街了。五年前 Frank 的房子还没被银行盯上、遗嘱还没有写——你说她'骗遗嘱'，骗谁的？"
+      - id: 2403
+        name: "求婚戒指（F & L 1923）"
+        note: "关键——1923 年定制（共度 5 周年纪念），五年前已存在；Frank 的真爱物证；疑点 2403 condition"
+        usage: "这枚戒指刻着'F & L 1923'，是 Frank 1923 年关系正式确立时定制的求婚戒指，藏在他们约会的地下室里。五年承诺，五年等待——这是真情实感的物理证据。"
+      - id: "lula_window_signature"
+        name: "Lula 隔厕所小窗签字（游戏内演出）"
+        note: "关键——R3 指证时 Lula 出现在厕所侧墙小窗外，隔窗递入放弃继承协议、当 Danny 面平静签下名字"
+        usage: "（厕所侧墙的小窗一暗。Lula 的脸出现在窗外。她不说话，把一张折好的纸从窗格递进来，拿起 Zack 递过去的笔，在窗台上签下名字——'Lula Washington'——签完抬起头，平静地看着马桶上的 Danny。Danny 仰着脸，按着肚子，说不出话。）"
+    requiredItems:
+      - 2064002
+      - 2403
+    trap_evidence:
+      - id: 2407
+        trap_reason: "遗嘱本身不能证明 Lula 是否是真爱——只证明 Frank 做了遗嘱安排，Danny 会用'她骗他签的'来反驳"
+    result: full_breakthrough
+    result_description: |
+      Lula 出现在厕所小窗外，平静签下放弃继承协议，然后才开口。
+      Danny 仰着脸看着小窗，肚子还在咕咕响，整个人垮了下去。
+      他再无话可说——他是彻底的机会主义者，不是凶手。
+      他慌乱地摊牌：当晚他确实出门去赌场，回来时在街边看到了大块头打晕 Margaret、
+      戒指从她手旁滚出来，他顺手捡走了。
 
-  # ── ⚡突发：Rose戏剧性登场 ──
-  sudden_event:
-    name: "Rose推门登场签署放弃继承声明"
-    trigger: "Expose R3进行中（Danny叫嚣'没人会拒绝几千美元'之后）"
-    characters: [Rose, Zack, Emma, Danny]
-    purpose: "用行动彻底击碎Danny对Rose的所有诬陷——Rose当场宣布放弃继承"
-    result: |
-      - Danny贪婪本性彻底暴露
-      - Rose提供Frank保险箱线索——11/6当天计划做"非常冒险的事"（衔接L5）
+  # ── 指证后剧情 ──
+  post_expose_scene:
+    talk: danny_l4_postexpose
+    description: |
+      Danny 的目击证词 2114004 进入玩家背包（L5 击穿件之一，已确认挂入 L5 疑点 2501 condition）。
+      Lula 补充证词 2124001（Frank 不会做饭/不用 Margaret 厨房）和 2124002（工资给 Danny 还债）。
+      Lula 交出 2408 小铁盒备用钥匙，说：Frank 说这把钥匙以后会用到，现在交给 Zack 比放在我手上更合适。
+      全场沉默。Danny 站起来要走，没有人拦他。
+      Zack 心里清楚：Danny 是这个案子最坏的旁观者，但不是杀人的那一个。
 
-# ═══════════════════════════════════════
-# PART 4: 疑点
-# ═══════════════════════════════════════
+    new_evidence_gained:
+      - id: 2408
+        name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
+        type: item
+        itemType: 3
+        pickup: true
+        analysis: false
+        description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 的嘱托在'需要的时候'交出。L5 在 Frank 家主屋开间（2018）开小铁盒使用一次后归档。"
+        note: "关键——L5 开 Frank 家主屋开间床后小铁盒（2018）的唯一钥匙；使用后归档，L6 不再需要"
+
+    new_testimony_gained:
+      - id: 2114004
+        npc: danny
+        content: "当晚 8 点多，我在街边看到一个壮汉从鞋坊方向匆忙离开——块头大，深色衣服，走路像意大利人。他打晕了 Margaret，戒指从她手旁滚出来反光，我顺手捡走了。"
+        significance: "L5 疑点 2501 condition；Vinnie 在场时间和体型特征的旁证；Danny 的目击是 L5 确认纵火者身份的关键之一"
+        note: "已确认挂入 L5 疑点 2501 condition；时序合规（L4 末取得，疑点 2501 属 L5）"
+
+    player_knowledge_gained:
+      - "Danny 不是凶手——他是机会主义目击者，趁乱捡走了婚戒"
+      - "大块头、深色衣服、走路像意大利人——Vinnie 的体型特征初步浮现（L5 疑点 2501 核心）"
+      - "Frank 的工资一直给 Danny 还赌债（Lula 证词 2124002）"
+      - "Frank 不会做饭，绝对不会用 Margaret 的厨房（Lula 证词 2124001）——L1 Emma 皱眉伏笔正式回收"
+      - "2408 小铁盒备用钥匙到手——L5 可以进入 Frank 家主屋开小铁盒"
+      - "父疑点 2401 已满足全部 condition（2112001 + 2083004 + 2404），在本 Loop 末点亮"
+
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
 
 doubts:
-  - id: 2010
-    text: "Rose和Frank到底认识多久？——Danny说'大半年'，但地下室沙发磨损3-5年、照片横跨五年"
-    unlock_condition: "testimony:2071001 + item:2401"
-  - id: 2011
-    text: "Frank的贷款是被Rose骗的还是自愿的？——备注栏写'鞋坊地下室维修'，收据$600全用于修缮"
-    unlock_condition: "item:2303 + item:2408"
-  - id: 2012
-    text: "Danny自己的经济状况如何？——失业通知、逾期账单、典当票据、借钱信件草稿散落一地"
-    unlock_condition: "item:2416 + testimony:2071004"
+  # ID 编码：104xx 系列（Unit2 L4）
+  # condition type: 1=Item / 2=RelationNetwork / 3=Testimony（Timeline 标记）
+  # isFragment: false=疑点 / true=碎片
+  # 一对一挂载：每件证据/证言 ID 在整个 6-Loop state 里只被一个疑点/碎片的 condition 引用
 
-# ═══════════════════════════════════════
-# 验证状态
-# ═══════════════════════════════════════
+  # ── 继承自 L1-L3（状态更新）──
 
-validation_status:
-  cross_check: "2026-03-07 FAIL: 2 issues"
-  structure_completeness: "PENDING"
-  evidence_coverage: "PENDING"
-  npc_entries: "PENDING"
-  goal_alignment: "PENDING"
-  info_pacing: "PENDING"
-  expose: "PENDING"
+  - id: 2101
+    text: "死者真的是 Margaret 吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2101"  # 尸体手指照片
+      - type: 1
+        param: "2102"  # Margaret 相册
+    posed_loop: 1
+    resolved_loop: 1
+    status: "resolved_loop1"
+
+  - id: 2102
+    text: "Margaret 的婚戒去哪了？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2103"  # 空的首饰盒
+      - type: 1
+        param: "2104"  # 现场地面照片
+    posed_loop: 1
+    resolved_loop: 1
+    status: "resolved_loop1"
+
+  - id: 2103
+    text: "Morrison 凭什么这么快定死者身份？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "2151001"  # Foster 证词
+    posed_loop: 1
+    resolved_loop: 1
+    status: "resolved_loop1"
+
+  - id: 2201
+    text: "Leonard 和 Vinnie 真的不认识？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "2102001"  # Vinnie 口误证词
+      - type: 3
+        param: "2082001"  # Moore 关于改名档案陈述
+    posed_loop: 2
+    resolved_loop: 2
+    status: "resolved_loop2"
+
+  - id: 2202
+    text: "这些钞票为什么互相是连号的？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2202"  # O'Hara 贷款钞票
+      - type: 1
+        param: "2206"  # Vinnie 的钞票
+    posed_loop: 2
+    resolved_loop: 2
+    status: "resolved_loop2"
+
+  - id: 2203
+    text: "Vinnie 的这笔新钱是哪儿来的？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "2092002"  # Tony 证词
+      - type: 1
+        param: "2205"  # Vinnie 催债小本子
+    posed_loop: 2
+    resolved_loop: 2
+    status: "resolved_loop2"
+
+  - id: 2204
+    text: "Danny 在和 Leonard 谈什么？…（碎片）"
+    isFragment: true
+    unlock_condition:
+      - type: 3
+        param: "2112001"  # Danny/Leo 旁听证词
+    posed_loop: 2
+    status: "fragment_pending_merge_2401"
+    fragment_note: "L4 碎片；与 L3 证词 2083004 合并为父疑点 2401（首现 L4）"
+
+  - id: 2301
+    text: "Frank 真的签过这份贷款协议吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2301"  # 牛奶订购签收单（Frank 真迹）
+      - type: 1
+        param: "2302"  # 贷款档案（签名工整流畅）
+    posed_loop: 3
+    resolved_loop: 3
+    status: "resolved_loop3"
+
+  - id: 2302
+    text: "这真的是合法贷款吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2701"  # 贷款计算玩法分析报告（派生）
+    posed_loop: 3
+    resolved_loop: 3
+    status: "resolved_loop3"
+
+  - id: 2303
+    text: "Lakeshore Investment 和银行是什么关系？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2306"  # 客户账户对账单（内部存档版）
+    posed_loop: 3
+    resolved_loop: 3
+    status: "resolved_loop3"
+
+  # ── L4 新建疑点/碎片 ──
+
+  - id: 2401
+    text: "Danny 是不是在拿叔叔换钱？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "2112001"  # L2 碎片：Danny 和 Leonard 谈房产证（碎片 2204 归并入父疑点）
+      - type: 3
+        param: "2083004"  # L3 指证后 Moore 坦白：Danny 把房产证给了银行
+      - type: 1
+        param: "2404"    # 空怀表盒（Tony 便条 — 抵押换 100$）；L4 经济动机件
+    posed_loop: 4
+    status: "unlocked_loop4"
+    resolution_note: "父疑点，由 L2 碎片 2204 + L3 证词 2083004 + L4 空怀表盒 合并：行为（出让房产证）+ 动机（穷得抵押怀表）= Danny 在拿叔叔换钱；L4 R2 击穿件；本 Loop 末通过指证 Danny 解决"
+    resolved_loop: 4
+
+  - id: 2402
+    text: "Margaret 的婚戒怎么会在 Danny 房间？"
+    isFragment: false
+    unlock_condition:
+      - type: 3
+        param: "2064001"  # O'Hara：Frank 7 点出门前后脚 Danny 也出门走同路
+      - type: 1
+        param: "2405"  # Margaret 的婚戒（Danny 处）
+    posed_loop: 4
+    status: "unlocked_loop4"
+    resolved_loop: 4
+    resolution_note: "L4 R1 指证击穿后解决：Danny 确实当晚在外，并在街边捡走了婚戒"
+
+  - id: 2403
+    text: "Frank 和 Lula 是真感情吗？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "2403"  # 求婚戒指（F & L 1923）
+      - type: 3
+        param: "2064002"  # O'Hara：Lula 四五年前就来这条街
+    posed_loop: 4
+    status: "unlocked_loop4"
+    resolved_loop: 4
+    resolution_note: "L4 R3 指证击穿后解决：Frank 与 Lula 是真实的五年感情，Lula 不是骗子"
+
+  # 注：原疑点 2404「Danny 为什么这么缺钱？」已合并入父疑点 2401（"Danny 是不是在拿叔叔换钱？"）——
+  # 行为（出让房产证）+ 动机（穷得抵押怀表）本质都指向"拿叔叔换钱"，作为同一个疑问更紧凑
+
+
+# ─────────────────────────────
+# 六、证据 ID 汇总（Loop4 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  # L4 = 104xx 系列（L4 新引入证据）
+  # 继承 L3 post_expose：2308（地下室钥匙，解锁 2010）、2309（Frank 家钥匙，已解锁 2009）
+  # 跨 Loop 指证使用：2083004（L3 Moore 坦白证词，L4 R2 使用）
+  # L4 末新增：2408（post_expose 由 Lula 交出）
+
+  - id: 2402
+    name: "地下室旧沙发（磨损 3-5 年）/ Old Sofa in Basement"
+    type: envir
+    itemType: 2
+    first_scene: 2010
+    pickup: false
+    analysis: false
+    description: "一张陈旧的双人沙发，扶手和坐垫的磨损痕迹均匀，判断已经被规律使用了至少三到五年。旁边放着一个空花瓶，花瓶口有干枯玫瑰花瓣的残留。"
+    note: "场景道具——环境叙事（Frank 和 Lula 五年秘密相会的物证）；isUsable=false"
+
+  - id: 2403
+    name: "求婚戒指 / Engagement Ring"
+    type: item
+    itemType: 3
+    first_scene: 2010
+    pickup: true
+    analysis: false
+    description: "一枚嵌着小碎钻的金戒指，藏在玫瑰复活后的花蕊之间。戒圈内侧刻有'F & L 1923'。戒指为女性尺码，明显不是 Margaret 的，是 Frank 给 Lula 定制的。"
+    note: "关键——疑点 2403 condition；L4 R3 指证件；玫瑰花蕊找戒指小玩法产出（2409 + 2410 合成）"
+
+  - id: 2409
+    name: "枯萎的玫瑰花束 / Withered Bouquet of Roses"
+    type: item
+    itemType: 3
+    first_scene: 2010
+    pickup: true
+    analysis: false
+    description: "Frank 准备的求婚布置——一捧已枯萎的红玫瑰，茎部插在空花瓶里；花蕊中央藏着东西，但隔着干枯花瓣看不清。"
+    note: "L4 玫瑰花蕊找戒指小玩法 input；与 2410 水杯合成揭出 2403 戒指；不进疑点 condition"
+
+  - id: 2410
+    name: "水杯 / Water Glass"
+    type: item
+    itemType: 3
+    first_scene: 2010
+    pickup: true
+    analysis: false
+    description: "桌边一只玻璃水杯，杯里剩半杯清水——Frank 准备给玫瑰浇水但来不及。"
+    note: "L4 玫瑰花蕊找戒指小玩法 input；与 2409 合成；不进疑点 condition"
+
+  - id: 2404
+    name: "空怀表盒（含 Tony 便条）/ Empty Pocket Watch Case (with Tony's Note)"
+    type: item
+    itemType: 3
+    first_scene: 2009
+    pickup: true
+    analysis: false
+    description: "一个皮制怀表盒，表盒内空无一物，但盒盖内侧夹着一张便条，Tony（Silver Moon 赌场酒保）手写：'100 块，怀表抵押。——Tony'。便条日期是上周（11月1日）。"
+    note: "关键——疑点 2401 condition（合并后）；L4 R2 指证件"
+
+  - id: 2405
+    name: "Margaret 的婚戒（Danny 处）/ Margaret's Wedding Ring (Found at Danny's)"
+    type: item
+    itemType: 3
+    first_scene: 2009
+    pickup: true
+    analysis: false
+    description: "一枚金婚戒，内圈刻着'P & M 1901'。婚戒被藏在 Danny 床垫下的一个小布包里。"
+    note: "关键——疑点 2402 condition；L4 R1 指证件"
+
+  - id: 2406
+    name: "维修收据（600$ 全用于地下室）/ Repair Receipt ($600, Basement Renovation)"
+    type: envir
+    itemType: 2
+    first_scene: 2010
+    pickup: false
+    analysis: false
+    description: "一张 1923 年的室内维修收据，委托人 Frank Kowalski，金额 600$，施工地点为鞋坊地下室。项目：更换地板、添置隔热层、安装电灯。"
+    note: "场景道具——环境叙事（Frank 的真爱物证）；L4 R2 陷阱选项；不进疑点 condition"
+
+  - id: 2407
+    name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
+    type: envir
+    itemType: 2
+    first_scene: 2009
+    pickup: false
+    analysis: false
+    description: "Frank Kowalski 遗嘱副本，主条款打印'全部遗产遗赠予 Lula Washington'；末尾 Frank 亲笔手写兜底条款：'若 Washington 小姐拒绝继承，遗产转赠艾斯弗德工人互助会。——Frank K.'字迹颤抖但清晰。"
+    note: "L4 R1/R3 陷阱选项——遗嘱是动机证据但不能反驳'不在场'和'Lula 是否真爱'；L5/L6 叙事参照"
+
+  - id: 2408
+    name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
+    type: item
+    itemType: 3
+    first_scene: 2020  # post_expose_scene 由 Lula 隔窗或随后交出
+    pickup: true
+    analysis: false
+    description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 嘱托交给 Zack。L5 在 Frank 家主屋开间（2018）开小铁盒使用一次。"
+    note: "关键——L5 解锁 Frank 家主屋小铁盒（1010）的唯一途径"
+
+  # ── 本 Loop 使用的跨 Loop 证据（继承状态，不新建）──
+
+  - id: 2308
+    name: "Margaret 鞋坊地下室钥匙 / Basement Key"
+    type: item
+    itemType: 3
+    inherited_from: "loop3_post_expose"
+    first_available_loop: 4
+    usage: "L4 解锁 2010 地下室；状态维持持有"
+
+  - id: 2309
+    name: "Frank 家钥匙 / Frank's House Key"
+    type: item
+    itemType: 3
+    inherited_from: "loop3_post_expose"
+    first_available_loop: 3
+    usage: "L3 已解锁 Frank 家门（街角 2007 → 主屋 2018）；L4 继续持有，解锁 2009 次卧"
+
+  - id: 2083004
+    name: "Moore 指证后坦白证词：Danny 把房产证给了银行"
+    type: testimony
+    inherited_from: "loop3_post_expose"
+    first_available_loop: 4
+    usage: "L4 R2 指证击穿件；父疑点 2401 condition"
