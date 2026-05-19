@@ -28,8 +28,8 @@
 #                        scenes（2001 限时搜证 / 2002 限时搜证 / 2003 搜证后 Morrison 对话 / 2004 警局指证 / 2005 事务所过场）/
 #                        phone_booth_cutscene / expose / doubts / evidence_registry / cross_loop_setup 全部存在
 # B. 证据覆盖     PASS — 讨论结论 L1 全部 8 件证据（2101-2108）已分配：
-#                        2001 场景：2101 / 2104 / 2105；
-#                        2002 场景：2102 / 2103 / 2106 / 2107 / 2108；
+#                        2001 场景：2101 / 2104 / 2105 / 2108；
+#                        2002 场景：2102 / 2103 / 2106 / 2107；
 #                        2003 场景：无可拾取证据（纯 Morrison 对话）；
 #                        证词 2151001（Foster via Emma）挂在电话亭场景（自由探索）
 # C. NPC 条目     PASS — Morrison（is_liar:true，挂在 scene_2003，搜证完成后才可对话）/ Emma（挂在 scene_2002）；
@@ -164,6 +164,17 @@ scenes:
           Margaret 鞋坊 1925 年度营业台账，记录修鞋单和进货账。
           雇员栏手写：Frank Kowalski，按件计酬，每周三、六工作。
           最后一页有 Frank 11月6日（案发当天）的预定到岗排班——锚定 Frank 在案发当晚原本就会出现在鞋坊。
+      - id: 2108
+        name: "地下室的门（打不开）"
+        type: door
+        itemType: 5
+        pickup: false  # 不可拾取，场景互动道具
+        note: "场景道具——L3 解锁；环境叙事"
+        description: |
+          店铺区角落的一扇木门，向下通往地下室。
+          门锁是新换的铸铁锁，非常牢固。Zack 试了试，推不开。
+          门下方地面无积灰，门槛被反复踩踏出明显的磨痕——这扇门虽然锁着，但平时经常被人开启走过。
+          （崭新铸铁锁 vs 频繁使用痕迹的反差是视觉伏笔——L3/L4 揭示 Frank+Lula 的秘密约会空间在地下室。）
 
     # 限时搜证阶段无可对话 NPC——Morrison 在场但不可询问，对话挂在场景 2003
 
@@ -231,18 +242,6 @@ scenes:
           匣子放在卧室角落最稳当的地方，说明 Margaret 一直带着它。
           Zack 停顿了一下，没有打开。
           注：Zack 不在 Unit2 内点破"父亲教过这句话"——这句话的全部意义在 Unit4 解开。
-
-      - id: 2108
-        name: "地下室的门（打不开）"
-        type: door
-        itemType: 5
-        pickup: false  # 不可拾取，场景互动道具
-        note: "场景道具——L3 解锁；环境叙事"
-        description: |
-          卧室区角落的一扇木门，向下通往地下室。
-          门锁是新换的铸铁锁，非常牢固。Zack 试了试，推不开。
-          门下方地面无积灰，门槛被反复踩踏出明显的磨痕——这扇门虽然锁着，但平时经常被人开启走过。
-          （崭新铸铁锁 vs 频繁使用痕迹的反差是视觉伏笔——L3/L4 揭示 Frank+Lula 的秘密约会空间在地下室。）
 
   # ── 场景 2003：Margaret 鞋坊-店铺区（搜证后 Morrison 对话）──
   - id: 2003
@@ -526,7 +525,7 @@ cross_loop_setup:
 
     - foreshadow_id: "N_basement_door"
       description: "2108 地下室门打不开——Frank 和 Lula 的秘密约会空间（L3 解锁）"
-      planted_in: "scene_2002 / item_2108"
+      planted_in: "scene_2001 / item_2108"
       resolved_in: "L3 post_expose / L4 地下室搜证"
 
 # ─────────────────────────────
@@ -597,7 +596,7 @@ evidence_registry:
     type: door
     itemType: 5
     pickup: false
-    first_scene: 2002
+    first_scene: 2001
     note: "场景道具——L3 解锁；地下室 Frank+Lula 约会空间的伏笔；isUsable=false（L1 阶段不可互动）"
 
   # ── 证词（不在 ItemStaticData，记录供 TestimonyItem 配置表用）──

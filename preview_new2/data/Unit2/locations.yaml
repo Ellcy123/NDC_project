@@ -1,62 +1,43 @@
-# Unit2 场景汇总（19 个场景，state ID 2001-2020 跳过 2008）
+# Unit2 场景汇总（9 个建筑分组，参考 Unit9 风格）
 # 用途：preview_new2 前端流程图地点引用
-# 版本：v0.1 / 2026-05-15 骨架（待 state_to_preview_unit10.py 自动生成完整数据）
+# 物理位置 ID 段：01-20（跳 08）
+# 实际 sceneId（在 SceneConfig 表里）= {unit=2}{loop}{物理 ID 后两位}
+# 例：L1 的 Margaret 鞋坊店铺区 sceneId = 2101；L4 = 2401
+# 版本：v0.2 / 2026-05-19 重构为 Unit9 风格
 
 locations:
-  - id: 2001
-    name: Margaret 鞋坊店铺区
-    name_en: Margaret_ShoeShop_StoreFront
-  - id: 2002
-    name: Margaret 鞋坊卧室区
-    name_en: Margaret_ShoeShop_Bedroom
-  - id: 2003
-    name: Margaret 鞋坊店铺区搜证后
-    name_en: Margaret_ShoeShop_StoreFront_PostInvestigation
-  - id: 2004
-    name: 警局 Morrison 办公区
-    name_en: PoliceStation_MorrisonOffice
-  - id: 2005
-    name: Zack 侦探事务所
-    name_en: ZackDetectiveOffice
-  - id: 2006
-    name: 圣心医院 Margaret 病房
-    name_en: SacredHeartHospital_MargaretRoom
-  - id: 2007
-    name: Frank 家 / O'Hara 家街角
-    name_en: FrankOHaraStreetCorner
-  - id: 2009
-    name: Frank 家次卧 Danny 住处
-    name_en: FrankHome_DannyGuestRoom
-  - id: 2010
-    name: Margaret 鞋坊地下室
-    name_en: Margaret_ShoeShop_Basement
-  - id: 2011
-    name: Moore 银行大厅
-    name_en: MooreBank_Lobby
-  - id: 2012
-    name: Moore 银行贵宾室
-    name_en: MooreBank_VIPParlor
-  - id: 2013
-    name: Moore 银行档案室
-    name_en: MooreBank_ArchiveRoom
-  - id: 2014
-    name: Moore 银行 Leonard 办公室
-    name_en: MooreBank_LeonardOffice
-  - id: 2015
-    name: Silver Moon 赌场
-    name_en: SilverMoon_Casino
-  - id: 2016
-    name: 市政厅 / 法院
-    name_en: CityHall_Courthouse
-  - id: 2017
-    name: Leonard 住所
-    name_en: LeonardResidence
-  - id: 2018
-    name: Frank 家主屋开间
-    name_en: FrankHome_MainRoom
-  - id: 2019
-    name: 鞋坊外电话亭
-    name_en: ShoeShopExterior_PhoneBooth
-  - id: 2020
-    name: Frank 家厕所
-    name_en: FrankHome_Bathroom
+  - name: Margaret 鞋坊
+    entry: "01"          # 店铺区（主入口）
+    children: ["02", "03", "10", "19"]  # 卧室区 / 搜证后状态 / 地下室 / 外电话亭
+
+  - name: 警局
+    entry: "04"
+    children: []
+
+  - name: Zack 事务所
+    entry: "05"
+    children: []
+
+  - name: 圣心医院
+    entry: "06"
+    children: []
+
+  - name: Frank 家
+    entry: "07"          # 街角入口
+    children: ["09", "18", "20"]  # 次卧（Danny）/ 主屋 / 厕所
+
+  - name: Moore 银行
+    entry: "11"          # 大厅
+    children: ["12", "13", "14"]  # 贵宾室 / 档案室 / Leonard 办公室
+
+  - name: Silver Moon 赌场
+    entry: "15"
+    children: []
+
+  - name: 市政厅 / 法院
+    entry: "16"
+    children: []
+
+  - name: Leonard 住所
+    entry: "17"
+    children: []
