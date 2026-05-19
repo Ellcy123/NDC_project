@@ -662,11 +662,44 @@ def parse_unit_drafts(unit: int) -> list[Entry]:
 
 def group_by_table(entries: list[Entry]) -> dict[str, list[Entry]]:
     out: dict[str, list[Entry]] = {t: [] for t in ALL_TABLES}
+    # 按 (table, id) 去重；同 ID 多次出现时合并字段（场景跨 Loop 复用场景）
+    index: dict[tuple[str, str], Entry] = {}
     for e in entries:
-        if e.table not in out:
-            out[e.table] = []
-        out[e.table].append(e)
+        key = (e.table, e.id)
+        if key not in index:
+            index[key] = e
+            if e.table not in out:
+                out[e.table] = []
+            out[e.table].append(e)
+        else:
+            _merge_entries(index[key], e)
     return out
+
+
+def _merge_entries(base: Entry, extra: Entry) -> None:
+    """同 ID 多次出现的合并：ItemIDs / NPCInfos / doubts_ref / evidenceItem_refs 做并集，其他字段以先到为准（保留首次值）。"""
+    for k, v in extra.fields.items():
+        if k not in base.fields:
+            base.fields[k] = v
+            continue
+        old = base.fields[k]
+        # 列表字段做并集
+        if k in ("ItemIDs", "doubts_ref", "evidenceItem_refs") and isinstance(old, list) and isinstance(v, list):
+            seen = {str(x) for x in old}
+            for item in v:
+                if str(item) not in seen:
+                    old.append(item)
+                    seen.add(str(item))
+        # NPCInfos：按 instance_id 去重合并
+        elif k == "NPCInfos" and isinstance(old, list) and isinstance(v, list):
+            seen_inst = {str(x.get("instance_id", "")) for x in old if isinstance(x, dict)}
+            for ni in v:
+                if isinstance(ni, dict):
+                    inst = str(ni.get("instance_id", ""))
+                    if inst and inst not in seen_inst:
+                        old.append(ni)
+                        seen_inst.add(inst)
+        # 其他字段：保留 base 值（首次出现的）
 
 
 def build_context(entries_by_table: dict[str, list[Entry]]) -> dict[str, list[dict]]:
