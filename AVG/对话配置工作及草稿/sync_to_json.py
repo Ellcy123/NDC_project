@@ -429,14 +429,21 @@ def parse_md_file(md_path):
 
     for line in lines:
         # HTML 注释跨行处理：<!-- ... -->
+        # 用计数法防嵌套行内注释干扰: 每行 <!-- 增加 depth, --> 减少
         if in_html_comment:
-            if "-->" in line:
+            opens = line.count("<!--")
+            closes = line.count("-->")
+            # 行内对 (<!--...-->) = opens==closes 不改变深度
+            # 行尾真正的关闭: closes > opens
+            if closes > opens:
                 in_html_comment = False
             continue
         # 单行注释直接跳过；多行注释开启状态
         stripped_line = line.strip()
         if stripped_line.startswith("<!--"):
-            if "-->" not in stripped_line:
+            opens = line.count("<!--")
+            closes = line.count("-->")
+            if opens > closes:
                 in_html_comment = True
             continue
 
@@ -600,6 +607,18 @@ def parse_md_file(md_path):
             if content.startswith("→"):
                 continue
 
+            # 跳过纯标签行: > **出示证据：** / > **核心信息** / > **证据/证词清单** 等
+            if re.match(r"^\*\*[^*\n]+\*\*\s*[:：]?\s*$", content):
+                in_words = False
+                continue
+
+            # 剥 <special>...</special> 包装但保留内部对白
+            content = re.sub(r"</?special>", "", content)
+            # 剥行内 HTML 注释 <!-- ... -->
+            content = re.sub(r"<!--.*?-->", "", content).strip()
+            if not content:
+                continue
+
             # 普通对白
             if in_words:
                 current_entry.cn_words += "\n" + content
@@ -610,11 +629,36 @@ def parse_md_file(md_path):
 
         # 非 > 开头且非 ### 开头——可能是未加 > 的对白（tommy 代码块展开后的情况）
         stripped = line.strip()
+        # 跳过孤立 --> 行（嵌套 html 注释场景：外层多行注释 + 行内注释干扰了 in_html_comment 状态）
+        if stripped == "-->" or stripped.startswith("-->"):
+            continue
+        # 跳过策划标注行: `get: xxx` / `show: xxx` / 📋 ... / 🎯 ... / 信息点统计 / 节拍注释 / keyInfoType
+        if stripped.startswith("`") and re.match(r"^`(get|show)[:\s_]", stripped):
+            continue
+        if stripped.startswith("📋") or stripped.startswith("🎯"):
+            continue
+        if "信息点统计" in stripped or "核心信息获取小结" in stripped or "节拍注释" in stripped:
+            continue
+        if "keyInfoType" in stripped or "keyInfoContent" in stripped:
+            continue
+        if stripped.startswith("<special>") or stripped.startswith("</special>") or stripped == "</special>":
+            continue
+        # 跳过任意非对白的设计师笔记行 (含明显设计标记词)
+        designer_keywords = ["分支汇合节点", "信息隔离", "禁忌检查", "Source / Quiz 标记",
+                             "节拍分布", "证词分配", "证据 get 顺序", "get 间隔检查",
+                             "post_dialogue_lock", "lie_source", "talkDisplayIndex"]
+        if any(kw in stripped for kw in designer_keywords):
+            continue
         if current_entry is not None and stripped and not stripped.startswith("<!--") \
                 and not stripped.startswith("```") and not stripped.startswith("---") \
                 and not stripped.startswith("→") and not stripped.startswith("##") \
                 and not stripped.startswith("|") and not stripped.startswith("- ") \
                 and not stripped.startswith("**") and not stripped.startswith("> "):
+            # 剥 <special>...</special> 包装但保留内部对白
+            stripped = re.sub(r"</?special>", "", stripped)
+            stripped = re.sub(r"<!--.*?-->", "", stripped).strip()
+            if not stripped:
+                continue
             # 视为对白的延续（tommy 代码块风格）
             if current_entry.cn_words:
                 current_entry.cn_words += "\n" + stripped

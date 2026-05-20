@@ -34,8 +34,10 @@
 #                        round_1/round_2/round_3/post_expose 完整
 # B. 证据覆盖     PASS — L3 全部 9 件证据（2301-2303 合订, 2306-2311 + 派生 2701；2304/2305 已并入 2303 合订本）
 #                        已分配到对应场景；
-#                        2307（Frank 房产证）/ 2308（地下室钥匙）/ 2309（Frank 家钥匙）
+#                        2307（Frank 房产证）/ 2308（地下室钥匙——Danny 自己也说不上是哪里的）
 #                        在 post_expose 给予；2310/2311 为环境叙事道具
+#                        【2026-05-20 修订】原 2309 Frank 家钥匙删除——房产证只夹一把"不知是哪儿的"钥匙
+#                        悬念更纯粹；scene 2018 Frank 家主屋本就由 Danny 应门自动解锁，不依赖钥匙
 # C. NPC 条目     PASS — Leonard（大厅）/ Moore（贵宾室 Expose）/ Danny（次卧）
 #                        各含 4 必填块；Moore is_liar:true, player_inquiry:null；
 #                        Mickey 作为过场 NPC 单独标注（opening 段）
@@ -84,7 +86,7 @@ player_context:
     - "Leonard 承认雇佣 Vinnie 暴力催债——Frank 是受害者"
     - "Leonard 假善意给了签着自己名字的信封让 Zack 去市政厅申请搜查令（实际无效）"
     - "银行撞见 Danny：他在和 Leonard 商量 Frank 的房产证（L2 偷听到的碎片信息）"
-    - "O'Hara 贷款钞票（连号缺 905-909B）与 Vinnie 钞票（905/906/908B）拼合——证明资金流向"
+    - "O'Hara 贿赂钞票（901B / 905B）与 Tony 找零钞票（902B / 903B / 904B）拼回连号 901–905——证明资金从 Leonard 经手放贷流出，再经 O'Hara 之手分流给 Vinnie"
     - "Vinnie 催债小本子末尾写'L.R. 给的地址有问题'——证明 Vinnie 与 Leonard 的雇佣关系"
     - "湖滨信托银行贵宾室——Moore 行长声称 Frank 因'赌博'借贷 600$，当前欠款 3,200$"
     - "Leonard 假善意给的信封，市政厅门房见信连门都不开——Zack 调查陷入僵局"
@@ -108,8 +110,8 @@ player_context:
     - "Lakeshore Investment Co. 是银行的投资公司马甲——内部文件用投资公司名义，对客户称银行"
     - "Frank 借的是信用贷款（无抵押），房产证在银行档案柜是 Danny 私下交付的结果——并非合法抵押"
     - "银行（通过 Leonard 传话）跟 Danny 的交易：交房产证 → 停催债 + 房子被处置后分给 Danny 一大笔钱（玩家此时不知此承诺是否会兑现）"
-    - "房产证明 2307 附带了两把钥匙：Margaret 鞋坊地下室钥匙（2308）+ Frank 家钥匙（2309）"
-    - "Danny 误以为这是 Frank 另一处不知名的房产一并交给了银行——地下室的秘密还未揭开"
+    - "房产证明 2307 文件夹层里掉出一把旧铁钥匙（2308）——Danny 把它和房产证一并交给银行，自己说不上是哪里的，只说从 Frank 抽屉里一并拿来"
+    - "这把神秘钥匙暗示 Frank 有 Danny 不知道的活动——地下室的秘密还未揭开（L4 才揭示是 Margaret 鞋坊地下室）"
     - "Mickey 律师身份登场：专业、有能力、为 Zack 打开了银行的大门（Whale 伏笔深种）"
 
 # ─────────────────────────────
@@ -230,8 +232,8 @@ scenes:
         type: envir
         itemType: 2
         pickup: false  # 档案室内可见，但不可取出；post_expose 阶段 Moore 允许查看
-        note: "场景道具——档案室内可见（湖滨信托银行私人档案柜）；L3 post_expose Moore 允许查看但不交付；附带 2308+2309 两把钥匙"
-        description: "Frank Kowalski 名下的南区老宅房产证明，**未办理任何合法抵押**——只是被物理放进了湖滨信托银行私人档案柜（不该放的地方）。证明上夹着两把钥匙——一把是 Margaret 鞋坊地下室的（2308），另一把是 Frank 家大门的（2309）。Danny 误以为这是 Frank 另一处不知名房产，私自带来交给银行换取沉默——Frank 本人对此完全不知情。"
+        note: "场景道具——档案室内可见（湖滨信托银行私人档案柜）；L3 post_expose Moore 允许查看但不交付；文件夹层里夹着一把不知是哪儿的旧铁钥匙（2308）"
+        description: "Frank Kowalski 名下的南区老宅房产证明，**未办理任何合法抵押**——只是被物理放进了湖滨信托银行私人档案柜（不该放的地方）。文件夹层里夹着一把旧铁钥匙（2308），Danny 把它和房产证一起交给银行换取沉默——他自己也说不上这把钥匙是哪里的，只说是从 Frank 抽屉里一并拿来的。Frank 本人对此完全不知情。"
         analysis: null
 
 
@@ -290,16 +292,16 @@ scenes:
   # ── 场景 2018：Frank 家主屋（开间客厅+床+开放式厨房）──
   - id: 2018
     name: "Frank 家主屋（开间）"
-    type: free_exploration  # 🔓 L3 Danny 已回 Frank 家，应门让 Zack 进入（不需搜查令/2309）
+    type: free_exploration  # 🔓 L3 Danny 已回 Frank 家，应门让 Zack 进入（不需搜查令、不需钥匙）
     unlock_condition:
       - type: auto
-        param: "L3_danny_returned（L2 敲门无人应；L3 Danny 已回家应门，Zack 可进主屋与次卧；不依赖 post_expose 的 2309）"
+        param: "L3_danny_returned（L2 敲门无人应；L3 Danny 已回家应门，Zack 可进主屋与次卧；不需要钥匙）"
     description: |
       Frank 家的大门——L2 时敲门无人应答（Frank 已死，Danny 不在）；
-      L3 Danny 已回到 Frank 家，他来应门，Zack 得以进入（不需搜查令，与 post_expose 的 2309 钥匙无关——2309 保留作 L5 小铁盒/叙事前置）。
+      L3 Danny 已回到 Frank 家，他来应门，Zack 得以进入（不需搜查令也不需要钥匙）。
       内部是 1920 年代南区常见的开间布局：客厅、Frank 的床、开放式厨房一体相连，
       没有隔墙。一张旧沙发对着窗户，床靠墙摆放，床和墙之间有一道窄缝隙——
-      L5 会在床后缝隙里发现藏着的小铁盒（2408 备用钥匙打开）。
+      L5 开篇 Lula 会带 Zack 来此，从床后缝隙取出一个密码锁小铁盒（玩家用对话选项答出相遇年 1923 开盒）。
       L3 进入目的只是取得 Frank 的日常签名真迹——厨房台面上有一张牛奶订购签收单。
       （次卧 2009 是 Danny 寄居的独立小房间，从主屋出来另开门进入。）
     evidence:
@@ -316,7 +318,7 @@ scenes:
   # ── 场景 2009：Frank 家次卧-Danny 住处（搜查令解锁，L3 Danny 初见）──
   - id: 2009
     name: "Frank 家次卧-Danny 住处"
-    type: free_exploration  # 🔓 随主屋一同进入（Danny 应门后从主屋另开门进次卧；不需搜查令/2309）
+    type: free_exploration  # 🔓 随主屋一同进入（Danny 应门后从主屋另开门进次卧；不需钥匙）
     unlock_condition:
       - type: auto
         param: "scene_2018_entered"
@@ -486,9 +488,9 @@ expose:
       关键揭示二：Frank 当初借的是信用贷款（无抵押），房产证明并非 Frank 自愿出借——是侄子 Danny 把房产证私自交给了银行。
       银行（通过 Leonard 传话）承诺 Danny：交出房产证 → 银行停止暴力催债 + 房子被处置后分给 Danny 一大笔钱。
       Moore 允许查看（不交付）Frank 房产证明 2307。
-      Zack 看到房产证上夹着两把钥匙——Moore 解释说 Danny 一并交来的。
-      钥匙交给 Zack：一把 Margaret 鞋坊地下室钥匙（2308），一把 Frank 家钥匙（2309）。
-      诡异感浮现：难道 Frank 还有不为人知的地方？
+      Moore 翻开房产证，文件夹层里掉出一把旧铁钥匙——
+      "Danny 把这个一并交来的，他自己也说不上是哪里的，只说从 Frank 抽屉里拿来。"
+      钥匙交给 Zack（2308）。诡异感浮现：难道 Frank 在某个地方有 Danny 不知道的事？
 
     new_evidence_gained:
       - id: 2308
@@ -496,24 +498,15 @@ expose:
         type: item
         itemType: 3
         pickup: true
-        note: "关键——L4 解锁场景 2010（Margaret 鞋坊地下室）；Frank 房产证上附带，Danny 误以为是 Frank 另一处房产一并交来"
-        description: "一把旧铁钥匙，附着在 Frank 房产证明的回形针上。Moore 说 Danny 把这把钥匙和房产证一起交来的，不知道是哪里的门。钥匙齿形简单，像是某个地下室或仓库的。"
-        analysis: null
-
-      - id: 2309
-        name: "Frank 家钥匙 / Frank's House Key"
-        type: item
-        itemType: 3
-        pickup: true
-        note: "关键——解锁 2018（Frank 家主屋（开间））+ 2009（Frank 家次卧）；L5 前置（小铁盒钥匙 2408 需进屋后才能使用）"
-        description: "Frank 家大门的钥匙，同样夹在房产证上。Moore 说这批钥匙都是 Danny 一并交来的——Danny 可能以为这些都是 Frank 名下房产的钥匙。"
+        note: "关键——L4 解锁场景 2010（Margaret 鞋坊地下室）；从 Frank 房产证文件夹层取出，Danny 自己说不上是哪里的"
+        description: "一把旧铁钥匙，从 Frank 房产证的文件夹层里掉出。Moore 说 Danny 把这把钥匙和房产证一起交来的——Danny 自己也说不上是哪里的，只说是从 Frank 抽屉里一并拿来。钥匙齿形简单，像是某个地下室或仓库的。"
         analysis: null
 
     player_knowledge_gained:
       - "Frank 不是赌博老赖：贷款协议是 Leonard 代签的伪造，Frank 从未亲自申请 3,200$ 赌博贷款"
       - "Moore 系统性欺诈：掠夺性贷款年化约 112%，Lakeshore Investment Co. 是银行规避法律的马甲"
       - "Danny 把 Frank 房产证给了银行——Moore 明确说了，Danny 换取了沉默"
-      - "两把神秘钥匙：地下室钥匙（2308）和 Frank 家钥匙（2309）——难道 Frank 还有秘密的地方"
+      - "一把神秘钥匙（2308）：Danny 自己也说不上是哪里的——难道 Frank 有 Danny 不知道的活动"
       - "Mickey 在场的威慑力是关键——没有他，Moore 不会低头"
 
 # ─────────────────────────────
@@ -581,9 +574,9 @@ doubts:
 
 evidence_registry:
   # Loop3 = 103xx 系列（Unit2 使用 10xxx 独立 ID 段，loop3=103xx，派生=107xx）
-  # 继承：Loop1（2101-2108）/ Loop2（2202-2206，原 2201 名片已删除）/ 跨 Loop 碎片 2204
+  # 继承：Loop1（2101-2108）/ Loop2（2201 Leonard 名片 + 2202-2206）/ 跨 Loop 碎片 2204
   # Loop3 新增：2301-2311；派生：2701（贷款计算分析）
-  # post_expose 给予：2307（不交付，可查看）/ 2308（钥匙）/ 2309（钥匙）
+  # post_expose 给予：2307（不交付，可查看）/ 2308（一把不知是哪儿的旧铁钥匙）
 
   - id: 2301
     name: "牛奶订购签收单（Frank 真迹，颤抖歪斜）/ Milk Delivery Receipt (Frank's Authentic Signature)"
@@ -623,25 +616,16 @@ evidence_registry:
     itemType: 2
     first_scene: 2013  # 档案室内可见
     pickup: false  # 仅可查看，不可取出；post_expose 允许查看
-    note: "场景道具——L3 post_expose Moore 允许查看不交付；附带 2308+2309；L4 叙事参照"
+    note: "场景道具——L3 post_expose Moore 允许查看不交付；文件夹层夹着 2308 一把不知是哪儿的旧铁钥匙；L4 叙事参照"
 
   - id: 2308
     name: "Margaret 鞋坊地下室钥匙 / Margaret's Shoe Shop Basement Key"
     type: item
     itemType: 3
     first_scene: null
-    given_by: "moore（post_expose 阶段，从 Frank 房产证上的回形针取下）"
+    given_by: "moore（post_expose 阶段，从 Frank 房产证文件夹层里掉出，Danny 自己说不上是哪里的）"
     pickup: true
     note: "关键——L4 解锁场景 2010（Margaret 鞋坊地下室）"
-
-  - id: 2309
-    name: "Frank 家钥匙 / Frank's House Key"
-    type: item
-    itemType: 3
-    first_scene: null
-    given_by: "moore（post_expose 阶段，从 Frank 房产证上的回形针取下）"
-    pickup: true
-    note: "关键——L5 小铁盒前置（床后藏盒需进屋）；L3 进 Frank 家已由 Danny 应门、不依赖此钥匙；post_expose 给予作叙事延续"
 
   - id: 2310
     name: "Leonard 与 Vinnie 童年合照（1900）/ Leonard & Vinnie Childhood Photo (1900)"

@@ -4,7 +4,7 @@
 #
 # 叙事功能：追查 Frank 为何被杀的背景 → 揭露银行-黑手党暴力催债雇佣关系，指证 Leonard
 # 核心体验：三层退守——"不认识催债人" → "只是认识没来往" → "那是借给 Vinnie 的钱"
-#           连号钞票对比"啊哈"时刻：O'Hara 的缺号钞票 + Vinnie 手中的钞票恰好可拼完
+#           连号钞票对比"啊哈"时刻：O'Hara 贿赂的两张钞票（901B+905B）+ Tony 处赢得的三张（902B/903B/904B）恰好拼回连号 901–905
 # Loop 结束：Leonard-Vinnie 雇佣分成确认；Leonard 给假信封让 Zack 申请搜查令（实际无效）
 #
 # 权威依据：剧情设计/Unit2/讨论结论.md（第四节 Loop 2）+ 五节裁决
@@ -20,21 +20,27 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
 #                        NPC 4 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
-# B. 证据覆盖     PASS — 讨论结论 L2 全部 5 件证据（2202-2206）已分配到场景；
+# B. 证据覆盖     PASS — 讨论结论 L2 全部 6 件证据（2201-2206）已分配到场景；
+#                        2201 Leonard 名片→2007（Frank 家门口邮筒，与催款单一起拾取）；
 #                        2202 O'Hara 钞票→2007；
-#                        2203 催款单→2007（街角，Frank 家门口侧）；2204 威胁便条→2007；
+#                        2203 催款单→2007（街角，Frank 家门口邮筒）；2204 威胁便条→2007；
 #                        2205 Vinnie 催债小本子→2015（Silver Moon）；
 #                        2206 Vinnie 的钞票→2015；
 #                        场景 2006（医院过场）/ 2011（银行大厅）/ 2012（贵宾室）无证据，仅剧情
-#                        【2026-05-15 修订】原 2201 Leonard 名片删除（与 Miro Unit2 大纲0511 对齐）——
-#                        银行地址改由 O'Hara 口头告知；R1 击破不再依赖名片陷阱，仅用 2102001+2082001
+#                        【2026-05-20 修订】2201 Leonard 名片恢复（与 Miro 最新对齐）——
+#                        从 Frank 家门口邮筒拾取（与 2203 催款单同处），解锁银行场景 2011；
+#                        银行地址不再由 O'Hara 口头告知，改由 Leonard 名片承载；
+#                        L2 R1 陷阱选项 2201（"只证 Leonard 是银行职员，不证认识 Vinnie"），
+#                        击穿件仍是 2102001+2082001；右下角小字 'Lakeshore Investment Co.' 为 L3 伏笔
+#                        【2026-05-20 修订】O'Hara 口头告知改为 Silver Moon 赌场地址 → 解锁场景 2015
+#                        【2026-05-20 修订】2204 威胁便条由 item 改 envir（门缝可观察不可拾取）
 # C. NPC 条目     PASS — Leonard（Expose 对象，is_liar:true，player_inquiry:null）4 必填块完整；
 #                        O'Hara / Moore / Vinnie / Tony / Danny（偷听演出）/ Emma / Mickey 各含完整 4 块
 # D. 目标对齐     PASS — goals 与讨论结论"揭露银行雇佣黑手党暴力催债 / 指证 Leonard"完全一致
 # E. 信息节奏     PASS — 未泄露 L3+ 内容：掠夺性贷款细节/笔迹伪造/Mickey 律师辅助/Frank 房产证/
 #                        Lula 真爱/Danny 嫌疑/Vinnie 纵火/眼镜碎片/Leonard 真凶身份
 # F. quiz 配对    PASS — 无 quiz 设计，本 Loop 无此需求
-# G. Expose 逻辑  PASS — R1:2102001+2082001 击穿"不认识 Russo"谎言（无陷阱件）；
+# G. Expose 逻辑  PASS — R1:2102001+2082001 击穿"不认识 Russo"谎言（陷阱:2201 Leonard 名片）；
 #                        R2:2202+2206 连号拼图击穿"只是认识没来往"（陷阱:2203）；
 #                        R3:2092002+2205 击穿"那是借给 Vinnie 的钱"（陷阱:2092001）；
 #                        三轮维度互不重叠；每件击穿件唯一挂载对应疑点/碎片
@@ -45,7 +51,7 @@
 #   2102001 → 疑点 2201 only  |  2082001 → 疑点 2201 only
 #   2092002 → 疑点 2203 only  |  2205 → 疑点 2203 only
 #   2112001 → 碎片 2204 only
-#   2203 / 2204 / 2092001 未进任何 condition（背景信息/陷阱选项）
+#   2201 / 2203 / 2204 / 2092001 未进任何 condition（背景信息/陷阱选项；2201 同时承担场景解锁功能）
 #
 # 时序检查（L_doubt ≤ min(L_use)）：
 #   疑点 2201（posed_loop=2）→ 击穿件 2102001/2082001 用于 L2 R1：2 ≤ 2  PASS
@@ -163,15 +169,25 @@ scenes:
       两户共用一条街边小道，前门相距不过 5 米。Zack 站在街角可以同时观察两户外观。
 
       Frank 家门口：敲门无人应（Frank 已死，Danny 不在家）。
-      门把手上塞着两件物证——银行催款单和威胁便条，体现 Frank 生前的暴力催债压力。
-      Frank 家内部此时仍锁定（L3 搜查令后才可进入）。
+      门口邮筒/门缝塞着三件物证——Leonard 名片（2201，可拾取，含银行地址）、银行催款单（2203，环境观察）和威胁便条（2204，环境观察），体现 Frank 生前的暴力催债压力。
+      催款单 + 名片是银行催债的标准做法（"如有疑问请联系 Leonard Ross"）；威胁便条是 Vinnie 后续上门留下的非正规渠道。
+      Frank 家内部此时仍锁定（L3 Danny 应门后才可进入）。
 
       O'Hara 家门口：老邻居 O'Hara 太太。Zack 是 Margaret 的儿子，
       这个身份让 O'Hara 对他稍微放下警惕——但她本能上不信任陌生人。
-      关键时刻：O'Hara 口头告知 Leonard Ross 是 Frank 的银行贷款经理 + 银行地址——解锁场景 2011。
+      关键时刻：O'Hara 口头告知 Silver Moon 赌场的位置（Frank 常去那一带喝酒、看 Danny 赌博）——解锁场景 2015。
 
     evidence:
-      # ── Frank 家门口塞着的物证 ──
+      # ── Frank 家门口邮筒/门缝塞着的物证 ──
+      - id: 2201
+        name: "Leonard 名片 / Leonard's Business Card"
+        type: item
+        itemType: 3
+        pickup: true  # 玩家拾取；与 2203 催款单同处（催债流程标准做法：催款单 + 联系人名片绑定塞门缝）
+        description: "湖滨信托银行催债专员留下的名片。正面印着 'Leonard Ross — Head of Loan Department, Lakeshore Trust Bank'，附银行地址（217 N. State St., Ashford）。右下角有一行很小的字 'Lakeshore Investment Co.'——L3 才会揭示这是银行的投资公司马甲伏笔，L2 阶段不点破。"
+        analysis: false
+        note: "关键——解锁场景 2011（玩家拿到名片 → 名片背地址解锁银行大厅）；L2 R1 陷阱选项（'只证 Leonard 是银行职员，不证认识 Vinnie'，单独出示无法击穿 R1）；右下角 'Lakeshore Investment Co.' 小字为 L3 投资公司马甲伏笔"
+
       - id: 2203
         name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
         type: envir
@@ -183,22 +199,22 @@ scenes:
 
       - id: 2204
         name: "威胁便条 / Threatening Note"
-        type: item
-        itemType: 3
-        pickup: true
-        description: "一张皱巴巴的便条，用粗笔写着：'再不还钱，不只是你倒霉。' 没有署名。字迹粗粝，不像正式文件。"
+        type: envir
+        itemType: 2
+        pickup: false  # 环境观察——便条塞在门缝里可看不可拿走
+        description: "一张皱巴巴的便条，用粗笔写着：'再不还钱，下次就不只是警告。' 没有署名。字迹粗粝，不像正式文件——明显是 Vinnie 上门留下的非正规威胁。"
         analysis: false
-        note: "背景信息——体现催债暴力性质；碎片 2204 的 condition（type:3 param:2112001 即 Danny 旁听证词），不作为指证击穿件"
+        note: "场景道具——背景信息，体现催债暴力性质；不进任何疑点 condition，不作为指证击穿件"
 
       # ── O'Hara 给的物证 ──
       - id: 2202
-        name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
+        name: "O'Hara 贿赂的两张连号钞票（901B / 905B） / O'Hara's Bribe Banknotes"
         type: item
         itemType: 3
         pickup: true
-        description: "O'Hara 还贷款时用的五张连号新钞，序列号 900B–909B 中缺失 905B、906B、907B、908B、909B（五张；O'Hara 实际持有 900B–904B，序号连续但中间跳空）。钞票上印刷清晰，明显是同批次新钞。"
+        description: "O'Hara 慌乱中塞给 Zack 的两张新钞，序列号 901B 和 905B——中间隔着 902B、903B、904B 三张的空缺。钞票印刷清晰、票面未流通，明显是同批次新钞。O'Hara 原本从 Leonard 那里借到的就是连号 901B–905B 共五张，其中 902B/903B/904B 三张已经被上门催债的 Vinnie 收走，她自己只留下头尾两张应急——这次为了求 Zack 不要把她在家的事说出去，把仅剩的两张都塞了出来。"
         analysis: false
-        note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2206 拼出连号完整性）"
+        note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2206 拼出连号 901–905 完整序列）"
 
     npcs:
       ohara_l2_street:
@@ -209,8 +225,11 @@ scenes:
 
         # ── 1. NPC 已知信息 ──
         active_topics:
-          - "银行催债专员曾来敲门——说法是'上门服务'；她记得 Leonard Ross 是 Frank 的贷款经理，以及银行的具体地址（口头告知 Zack，解锁场景 2011）"
-          - "她用连号新钞（2202）偿还了贷款的一部分"
+          - "银行催债专员曾来敲门——说法是'上门服务'；她记得 Leonard Ross 是 Frank 的贷款经理（银行地址不必她说，名片上就有）"
+          - "Frank 经常去 Silver Moon 赌场那一带——他自己不赌，只是去看他侄子 Danny 输钱；她口头告诉 Zack 赌场具体位置（解锁场景 2015 Silver Moon）"
+          - "Zack 表明侦探身份后，O'Hara 误以为他是来追问她家里的事，慌乱中从抽屉里抓出两张新钞塞过来求他别说她在家（2202：901B + 905B 两张连号钞票）——这是她仅剩的钱"
+          - "她借的就是连号一批新钞五张（901B–905B），自己只留下头尾 901B / 905B 两张救急，中间三张 902B / 903B / 904B 已经被上门催债的人收走"
+          - "Leonard 经手贷款时每次都要扣一笔'手续费'——欠条按借款全额签字，到手却少几张票子；这'手续费'到底进了谁的口袋，她不敢问（2062003）"
           - "Frank 和她同一街区，平时偶尔打招呼——她知道 Frank 有债务困扰"
           - "Frank 上周还出来倒垃圾，看着比以前老了很多"
           - "催债的人来过不止一次，最后一次来的人不一样——个子大，不像银行的人"
@@ -218,16 +237,20 @@ scenes:
           - "O'Hara 自己也有贷款（可以问出来，但不主动说）——债务规模她觉得羞耻不愿多提"
           - "她看到 Frank 家门口出入的人的具体细节（L4 才问出——她目击 Frank 和 Danny 前后脚出门）"
           - "Vinnie 打晕 Margaret 的事（她没目击，但 L4 才被追问出 Frank/Danny 同时出门的时间线）"
+          - "Leonard 把扣下的'手续费'挪到投资公司账户——L3 才揭示的财务造假结构，O'Hara 自己也不知道"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "\"O'Hara 用连号新钞还贷款——钱从哪儿来的，序号为什么不完整\" # 7"
+          - "\"O'Hara 塞过来的两张新钞——钱从哪儿来的，为什么序号是 901 和 905\" # 7"
+          - "\"Leonard 经手贷款时扣的'手续费'到底是什么名目——欠条和实际到手的差额\" # 8"
           - "\"催债的人是什么样的人，最后一次来的'个子大的人'是什么时候\" # 8"
+          - "\"Frank 平时都去哪儿——有没有听说他去过 Silver Moon 那边\" # 7（O'Hara 告知赌场地址）"
 
         # ── 3. 可提取证词 ──
         testimony_ids:
           - 2062001  # O'Hara：银行催债专员来敲门，留下名片，说是"上门服务"
           - 2062002  # O'Hara：最后一次催债来的人个子很大，不像银行的人
+          - 2062003  # O'Hara：Leonard 经手贷款时每次都要扣"手续费"——欠条按全额写，到手按扣完算（L3 掠夺性贷款铺垫；L2 不作为击穿件，但增强 R2 资金链暗示）
 
 
   # 场景 2008 已合并至 2007（Frank 家与 O'Hara 家是邻居，共用街角外观）
@@ -238,9 +261,12 @@ scenes:
   # ── 场景 2011：湖滨信托银行大厅（⚔️ 指证 + 🔓 探索） ──
   - id: 2011
     name: "湖滨信托银行大厅（Leonard 工位）"
-    type: expose_and_exploration  # ⚔️ 指证主场 + 🔓 搜证阶段（O'Hara 提供地址后解锁）
+    type: expose_and_exploration  # ⚔️ 指证主场 + 🔓 搜证阶段（Leonard 名片解锁）
+    unlock_condition:
+      - type: 1
+        param: "2201"  # Leonard 名片含银行地址，玩家拾取后解锁
     description: |
-      O'Hara 提供 Leonard 名片地址后解锁。
+      玩家拾取 Leonard 名片（2201）后解锁——名片正面印的银行地址（217 N. State St., Ashford）就是这里。
       银行大厅宽敞、气派，Leonard Ross 坐在开放式工位上接待 Zack。
       他表情平静，语气专业，配合回答但层层退守。
       Danny 出现在大厅角落（演出性质，玩家可观察但无对话）——
@@ -349,7 +375,10 @@ scenes:
   # ── 场景 2015：Silver Moon 赌场/酒吧 ──
   - id: 2015
     name: "Silver Moon 赌场/酒吧"
-    type: free_exploration  # 🔓 自由探索
+    type: locked_exploration  # 🔒→🔓 O'Hara 口头告知赌场地址后解锁
+    unlock_condition:
+      - type: story_flag
+        param: "ohara_told_casino_address（场景 2007 O'Hara 街角对话中口头告知 Silver Moon 赌场位置）"
     description: |
       南区的 Silver Moon 赌场，低调的爵士乐在背景中持续流淌。
       Vinnie Moretti 是这里的常客，常坐在角落；
@@ -385,13 +414,13 @@ scenes:
         note: "关键——疑点 2203 condition；L2 R3 击穿件（配合 Tony 证词 2092002，证明 Vinnie 是受 L.R. 指使的催债人）"
 
       - id: 2206
-        name: "Vinnie 的钞票（序号 905B/906B/908B） / Vinnie's Banknotes"
+        name: "Tony 找零的连号钞票（902B / 903B / 904B） / Tony's Change Banknotes"
         type: item
         itemType: 3
         pickup: true
-        description: "Tony 在玩家陪他玩骰子赢一定额度后顺手用来结账的三张新钞，序列号分别是 905B、906B、908B——Tony 一边给一边随口说了一句'这几张是上礼拜 Vinnie 来这儿喝酒结账留下的零钱'就把钞票递了过来，自己没意识到这是线索。号码恰好填补 O'Hara 那张连号钞票中缺失的大部分（O'Hara 持有 900B–904B，Vinnie 这边有 905B/906B/908B，合起来序号基本连续）——这关联是 Zack 自己看出来的。"
+        description: "Tony 在玩家陪他玩骰子赢一定额度后顺手用来结账的三张新钞，序列号 902B、903B、904B——连号三张。Tony 一边递一边随口说'这几张是上礼拜 Vinnie 来这儿喝酒结账留下的零钱'，自己没意识到这是线索。这三张序号恰好填进 O'Hara 那两张（901B / 905B）中间的空缺，五张拼回完整连号 901–905——同一批次的钱，经 O'Hara 之手分流给 Vinnie，再被 Vinnie 在 Silver Moon 消费时留给 Tony。号码连号是 Zack 自己看出来的。"
         analysis: false
-        note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2202 双件并排出示连号关系，证明这批钱来自同一资金池）；获取条件：Silver Moon 破冰玩法骰子段累计赢 30$（或选不玩跳过路径看 Margaret 面子直接给）；Tony 凑巧用 Vinnie 留的零钱给 Zack 结账，自己不知是线索——L2 期间 Tony 始终不知道这几张钞票的侦探价值"
+        note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2202 双件并排出示连号 901–905 完整序列，证明这批钱来自同一资金池）；获取条件：Silver Moon 破冰玩法骰子段累计赢 30$（或选不玩跳过路径看 Margaret 面子直接给）；Tony 凑巧用 Vinnie 留的零钱给 Zack 结账，自己不知是线索——L2 期间 Tony 始终不知道这几张钞票的侦探价值"
 
     npcs:
       vinnie_l2_casino:
@@ -429,12 +458,12 @@ scenes:
 
         # ── 1. NPC 已知信息 ──
         active_topics:
-          - "Vinnie 最近花新钞，说'今天又赚了一笔'；上周给姑娘点烟那天还花掉了两张新票（907B/909B 的去向）"
-          - "Vinnie 花钱时说的是'赚了一笔'，不是'还了债'——这个细节 Tony 记得清楚"
-          - "Tony 留意过 Vinnie 手中新钞的号码——他收的时候扫了一眼（为 2206 提供真实性支撑）"
+          - "Vinnie 最近花新钞，说'今天又赚了一笔'——这个细节 Tony 记得清楚（Vinnie 用的不是'还债'的措辞）"
+          - "Vinnie 花钱时说的是'赚了一笔'，不是'还了债'——这个区别 Tony 当时就觉得奇怪"
+          - "Tony 留意过 Vinnie 手中新钞的号码——他收的时候扫了一眼，是连号一串（为 2206 提供真实性支撑）"
           - "Frank 也常在这一带喝酒——一杯啤酒能坐一晚上；Tony 以为他是丧偶老头打发夜晚（误读：Tony 不知 Frank 真实动机是暗中监管侄子 Danny 赌博——L4 callback 钩子）"
           - "出 1920s 调酒题考客人——Zack 假装熟客时 Tony 反诘"那你知道我们这边的招牌酒用什么吗"；玩家可在场景里观察墙上海报/吧台手写小单/酒架蜂蜜罐三处任一线索推出 Bee's Knees 答案（禁酒令圈内人验证仪式）"
-          - "玩家骰子赢 30$ 后用 Vinnie 留下的零钱结账，顺手交代来源'上礼拜 Vinnie 来喝酒结账留下的'——Tony 自己不知是线索，只是随口一说；号码连号是 Zack 自己看出来的"
+          - "玩家骰子赢 30$ 后用 Vinnie 留下的零钱结账（2206：902B/903B/904B 连号三张），顺手交代来源'上礼拜 Vinnie 来喝酒结账留下的'——Tony 自己不知是线索，只是随口一说；号码连号是 Zack 自己看出来的"
         withheld_topics:
           - "Tony 知道的 Vinnie 过去更多劣迹（不主动说，被问到时会含糊）"
           - "Tony 与 Silver Moon 赌场老板的关系（背景信息，不进 L2 推理链）"
@@ -448,7 +477,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2092001  # Tony：Vinnie 用崭新钞票消费，说今天又赚了一笔；上周给姑娘点烟那天还花掉了两张新票（钞票缺号闭环：907B/909B 去向；L2 R3 陷阱选项 + 钞票缺号闭环）
+          - 2092001  # Tony：Vinnie 用崭新钞票消费，说"今天又赚了一笔"（L2 R3 陷阱选项——"赚了一笔"单独使用无法反驳"借来的钱花掉"）
           - 2092002  # Tony：Vinnie 说钱是赚来的，不是还来的（L2 R3 击破件 + 疑点 2203 condition）；获取条件：调酒考验答对 2 题
           - 2092003  # Tony：Frank 常在这一带喝酒，孤单老头（L4 callback 钩子；Tony 不知真实动机——监管侄子 Danny）；获取条件：调酒考验答对 2 题
 
@@ -465,11 +494,11 @@ expose:
   total_rounds: 3
 
   context: |
-    Zack 完成自由探索后，持有 O'Hara 贷款钞票（2202）、Vinnie 催债小本子（2205）、
-    Vinnie 的钞票（2206），加上证词 Vinnie 口误（2102001）、Moore 改名档案陈述（2082001）、
+    Zack 完成自由探索后，持有 O'Hara 贿赂钞票（2202：901B+905B）、Vinnie 催债小本子（2205）、
+    Tony 找零钞票（2206：902B/903B/904B），加上证词 Vinnie 口误（2102001）、Moore 改名档案陈述（2082001）、
     Tony 钱是赚来的（2092002），对 Leonard 在银行大厅发起指证。
     Leonard 将从"不认识催债的人"→"只是认识没来往"→"那是借给 Vinnie 的钱"三层退守，
-    最终在连号钞票+催债小本子面前防线崩溃。
+    最终在连号钞票（901–905 完整序列）+催债小本子面前防线崩溃。
 
   # ── 轮次一：击破"不认识催债的人" ──
   round_1:
@@ -481,7 +510,9 @@ expose:
           purpose: "Vinnie 脱口说'不认识什么 Russo'——说明 Russo 这个名字对他有意义，他见过 Leonard 原名叫 Russo 的人"
         - id: 2082001
           purpose: "Moore 的银行档案记录：Leonard 原名正是 Russo，1918 年改名——两人'不认识'的说法直接破功"
-      trap: []  # R1 无陷阱件——R1 由证词（2082001 Moore 改名档案陈述 + 2102001 Vinnie 口误）双件击穿；与 Miro Unit2 大纲0511 对齐
+      trap:
+        - id: 2201
+          reason: "Leonard 名片只证明他是银行职员（贷款部主任），不能证明他与 Vinnie 相识——R1 要击穿的是'不认识催债的人'，需要 Russo 这个旧名作为认识 Vinnie 的锚点，单出示名片只会让 Leonard 说'我是银行职员，谁都可能拿到我名片'"
     result: |
       Leonard 被 Vinnie 的口误和档案改名双重击中，无法否认两人认识。
       立刻退守新防线："我们只是认识——认识不等于有来往，更不等于他替我做什么。"
@@ -493,15 +524,16 @@ expose:
     evidence_set:
       usable:
         - id: 2202
-          purpose: "O'Hara 用连号新钞（900B–904B）还贷款——序号中间有缺口"
+          purpose: "O'Hara 塞给 Zack 的两张连号新钞（901B、905B）——中间隔着 902B/903B/904B 三张空缺，钱本身来自 Leonard 经手放贷"
         - id: 2206
-          purpose: "Vinnie 手中的钞票（905B/906B/908B）恰好补上缺口——两批钱来自同一资金池，Leonard 和 Vinnie 之间有资金流动，不只是'认识'"
+          purpose: "Tony 找零的三张连号新钞（902B、903B、904B）恰好填补 O'Hara 那两张中间的空缺——五张拼回完整连号 901–905，证明同一批资金从 Leonard 流出，经 O'Hara 之手分流给 Vinnie，再被 Vinnie 在 Silver Moon 消费时留给 Tony；Leonard 和 Vinnie 之间有资金流动，不只是'认识'"
       trap:
         - id: 2203
           reason: "催款单只证明银行在追债，不能证明资金链具体流向 Vinnie——只解决银行有催债的问题，不解决谁在催"
     result: |
-      连号钞票对比直接展示资金流通，Leonard 无法解释为何 O'Hara 还给银行的钱
-      会出现在 Vinnie 手中。被迫再退守："那是我私下借给 Vinnie 的钱，他还给我——怎么用是他的事。"
+      连号钞票拼图直接展示资金流通——O'Hara 借到的 901–905 连号新钞，中间三张
+      经 Vinnie 转手出现在 Tony 找零里。Leonard 无法解释为何自己经手放给 O'Hara 的钱
+      会绕一圈出现在 Vinnie 的零钱里。被迫再退守："那是我私下借给 Vinnie 的钱，他还给我——怎么用是他的事。"
 
   # ── 轮次三：击破"那是借给 Vinnie 的钱" ──
   round_3:
@@ -601,9 +633,9 @@ doubts:
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "2202"  # O'Hara 贷款钞票（连号缺 905–909B）
+        param: "2202"  # O'Hara 贿赂的两张连号钞票（901B / 905B）
       - type: 1
-        param: "2206"  # Vinnie 的钞票（编号 905B/906B/908B）
+        param: "2206"  # Tony 找零的连号钞票（902B / 903B / 904B）
     posed_loop: 2
     resolved_loop: 2
     status: "posed_loop2"
@@ -673,15 +705,25 @@ evidence_registry:
     note: "L1 搜证拾取；疑点 2102 condition；L1 R2 击穿件；描述明确细筛无金属残留"
 
   # L2 新增证据
+  - id: 2201
+    name: "Leonard 名片 / Leonard's Business Card"
+    type: item
+    itemType: 3
+    first_loop: 2
+    first_scene: 2007
+    pickup: true  # 玩家拾取（Frank 家门口邮筒，与催款单一起塞门缝）
+    analysis: false
+    note: "关键——解锁场景 2011 银行大厅；L2 R1 陷阱选项（只证职位，不证认识 Vinnie）；右下角小字 'Lakeshore Investment Co.' 为 L3 投资公司马甲伏笔"
+
   - id: 2202
-    name: "O'Hara 贷款钞票（连号缺 905–909B） / O'Hara's Loan Banknotes"
+    name: "O'Hara 贿赂的两张连号钞票（901B / 905B） / O'Hara's Bribe Banknotes"
     type: item
     itemType: 3
     first_loop: 2
     first_scene: 2007
     pickup: true
     analysis: false
-    note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2206 连号拼图）"
+    note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2206 拼出连号 901–905 完整序列）"
 
   - id: 2203
     name: "湖滨信托银行催款单 / Lakeshore Trust Bank Demand Notice"
@@ -695,13 +737,13 @@ evidence_registry:
 
   - id: 2204
     name: "威胁便条 / Threatening Note"
-    type: item
-    itemType: 3
+    type: envir
+    itemType: 2
     first_loop: 2
     first_scene: 2007
-    pickup: true
+    pickup: false  # 环境观察——便条塞门缝，可看不可拾取
     analysis: false
-    note: "背景信息——体现催债暴力性质；不作为指证击穿件"
+    note: "场景道具——背景信息；体现催债暴力性质；不进任何疑点 condition；门缝可观察不可拾取"
 
   - id: 2205
     name: "Vinnie 催债小本子 / Vinnie's Collection Ledger"
@@ -714,11 +756,11 @@ evidence_registry:
     note: "关键——疑点 2203 condition；L2 R3 击穿件（配合 2092002）"
 
   - id: 2206
-    name: "Vinnie 的钞票（序号 905B/906B/908B） / Vinnie's Banknotes"
+    name: "Tony 找零的连号钞票（902B / 903B / 904B） / Tony's Change Banknotes"
     type: item
     itemType: 3
     first_loop: 2
     first_scene: 2015
     pickup: true
     analysis: false
-    note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2202 拼出连号完整性）"
+    note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2202 拼出连号 901–905 完整序列）"

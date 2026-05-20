@@ -19,7 +19,7 @@
 #
 # 权威来源：剧情设计/Unit2/讨论结论.md（四、Loop4 章节 + 五、关键设计问题与裁决）
 # 格式参考：剧情设计/Unit9/state/loop4_state.yaml
-# 前序文件：loop3_state.yaml（L3 post_expose 获得 2308 地下室钥匙 + 2309 Frank 家钥匙）
+# 前序文件：loop3_state.yaml（L3 post_expose 获得 2308 旧铁钥匙——Danny 自己说不上是哪里的）
 # 生成日期：2026-05-13
 #
 # NPC 编码（Unit2）：
@@ -30,9 +30,9 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes(S2006/S2010/S2001/S2007/S2009/S2020) /
 #                        expose（scene_id=2020 Frank 家厕所）/ post_expose_scene / doubts / evidence_registry 全部存在
-# B. 证据覆盖     PASS — L4 所有证据（2402-2410 共 9 件，新增 2409 枯萎玫瑰 + 2410 水杯做玫瑰花蕊玩法 input）已分配到场景；
-#                        2408 在 post_expose_scene 由 Lula 交出，不在自由探索场景 pickup；
+# B. 证据覆盖     PASS — L4 所有证据（2402-2410 共 8 件，新增 2409 枯萎玫瑰 + 2410 水杯做玫瑰花蕊玩法 input）已分配到场景；
 #                        维修收据 2406 归入 2010 地下室（支撑叙事，不进疑点 condition）
+#                        【2026-05-20 修订】原 2408 备用钥匙删除——小铁盒改成密码锁，L5 开篇 Lula 取盒 + 玩家答密码（玫瑰戒指 "F & L 1923" 即密码）
 # C. NPC 条目     PASS — Emma（opening 2006）/ Mickey（opening 2006）/ Lula（S2001 + R3 隔窗签字）/
 #                        O'Hara（S2007）/ Danny（S2020 厕所 + expose）各含 4 必填块；
 #                        Danny 在指证场为 Expose 对象（is_liar:true, player_inquiry:null）
@@ -72,15 +72,15 @@ player_context:
     - "Margaret 并未死亡——她在鞋坊外街边被人打晕，现在圣心医院接受治疗（昏迷）"
     - "Morrison 在 L1 承诺：'你要真能拿出他是被人杀的硬证据，我签搜查令'"
     - "银行雇佣黑手党暴力催债：Leonard 雇佣 Vinnie 向 Frank 等人催债"
-    - "连号钞票对比已完成：O'Hara 手里的贷款钞票和 Vinnie 手里的是同一批（L2 揭示）"
+    - "连号钞票对比已完成：O'Hara 贿赂的两张（901B / 905B）和 Tony 找零的三张（902B / 903B / 904B）拼回连号 901–905，是同一批资金（L2 揭示）"
     - "Frank 的贷款档案上的签名是伪造的——2301 牛奶签收单（真迹）与 2302 贷款档案签名（工整流畅）双件直接对比即可证明"
     - "湖滨信托银行通过掠夺性贷款条款（年单利 12% + 利滚利 + 月管理费 50$）系统性欺诈借款人"
     - "同一份对账单页眉是投资公司、正文是银行——两套身份马甲（疑点 2303 已揭示）"
     - "Mickey 律师在 L3 以递交传票的方式登场，帮 Zack 拿到了银行搜查令"
-    - "Mickey 在 L3 post_expose 后将 Frank 房产证上附带的两把钥匙交给 Zack：2308（鞋坊地下室）和 2309（Frank 家）"
+    - "Mickey 在 L3 post_expose 后将房产证文件夹层里的一把旧铁钥匙交给 Zack（2308——Danny 自己也说不上是哪里的）"
     - "Moore 在 L3 指证后坦白：Danny 把 Frank 的房产证给了银行换沉默（证词 2083004）"
     - "L2 在银行大厅曾目击 Danny 和 Leonard 悄悄商量 Frank 的房产证（碎片 2204 已解锁）"
-    - "Frank 家主屋在 L3 post_expose 后可进入（2309 钥匙）；Danny 住在次卧"
+    - "Frank 家主屋在 L3 Danny 应门时已进入；L4 Danny 蹲厕所自顾不暇，门没锁——Zack 推门即可进"
     - "湖滨信托银行是投资公司（Lakeshore Investment Co.）的马甲，Leonard 名片上已有暗示（L2 视觉伏笔）"
 
   new_directions:
@@ -93,7 +93,7 @@ player_context:
     - direction: "去 O'Hara 家（2007）——她是当晚在场的邻居，L4 需要追问她是否目击了 Frank 或 Danny 出门"
       trigger: "L2 曾去过 O'Hara 家，她是信息来源；现在追问当晚时间线细节"
     - direction: "搜查 Danny 的房间（2009 次卧，Danny 不在）——他在做什么？他有没有隐瞒什么？"
-      trigger: "2309 Frank 家钥匙 L3 post_expose 获得；L3 Danny 只是对话，没有搜证机会"
+      trigger: "L4 Danny 蹲厕所自顾不暇，门没锁，Zack 推门即入；L3 Danny 在主屋只是对话，没有搜证机会"
     - direction: "去 Frank 家厕所（2020）找 Danny——Danny 拉肚子蹲在马桶上，逃不了；指证全程在此发生"
       trigger: "搜证完成后，Danny 的谎言已有足够证据击破"
 
@@ -101,7 +101,7 @@ player_context:
     # L4 指证 Danny 完整击穿后玩家获得的新知识
     - "Danny 在街边目击了大块头打晕 Margaret 并顺手捡了婚戒——他不是凶手，是机会主义目击者"
     - "Danny 目击证词 2114004 进入玩家背包：8 点多壮汉从鞋坊方向匆忙离开，块头大、深色衣服、像意大利人；打晕了 Margaret；看见戒指从她手旁滚出来反光"
-    - "Lula 提供 2408 小铁盒备用钥匙（L5 在 Frank 家主屋开小铁盒用一次）"
+    - "Lula 提到 Frank 在主屋床后藏了一个上密码锁的铁盒，里面有他冒险收集的东西（钩子；L5 开篇 Lula 带 Zack 去取并演密码玩法）"
     - "Lula 证词 2124001 落地：'Frank 不会做饭，而且绝对不会擅自用 Margaret 的厨房做饭'——回收 L1 Emma 皱眉伏笔，铺垫'火从何而来'的 L5/L6 推论"
     - "Lula 证词 2124002：'Frank 的工资一直在给 Danny 还赌债！'——Danny 经济压力有了量级概念"
     - "Frank 和 Lula 是五年真感情，地下室是他们的秘密约会场所"
@@ -217,9 +217,10 @@ scenes:
           - "'Frank 不会做饭，绝对不会擅自用 Margaret 的厨房做饭'——这是 Frank 的原则，他尊重 Margaret 的空间（证词 2124001；回收 L1 Emma 皱眉伏笔）"
           - "她和 Frank 已经认识五年，地下室是 Margaret 借给他们的约会场所——Margaret 知道这段感情，支持他们"
           - "Frank 当晚（11月6日）下午 5 点半在圣卢克医院告诉她'今晚要做一件非常冒险的事，让她这段时间别来找他'——她从那以后再也没见过他"
-          - "Frank 曾拜托她保管一把备用钥匙（2408），说是'小铁盒用的，以后会用到'"
+          - "Frank 在主屋床后藏了一个上密码锁的小铁盒——他告诉过 Lula 这件事，说'里面有事关命的东西，密码是只有我们俩懂的那一年'"
         withheld_topics:
           - "Frank 小铁盒里具体放了什么（L5 才揭开：举报材料和情书）"
+          - "密码具体是什么（Lula 知道是相遇年 1923，但 L4 不直接告诉玩家——L5 开盒时让玩家通过对话选项答出）"
           - "Lula 是否知道 Danny 卖房产证的事（她不知道）"
           - "Lula 在 Expose R3 的戏剧性登场安排（玩家届时自然知晓）"
 
@@ -228,7 +229,7 @@ scenes:
           - '"Frank 当晚 5:30 说要做冒险的事——他告诉 Lula 什么了吗" # 9'
           - '"Frank 工资一直给 Danny 还债——这是 Lula 亲眼目睹的吗" # 8'
           - '"Frank 不会做饭这件事——Lula 有多确定" # 7'
-          - '"这把备用钥匙（2408）——Frank 怎么交代的" # 6'
+          - '"Frank 留下的那个小铁盒——他怎么交代密码的" # 6'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
@@ -281,8 +282,8 @@ scenes:
     name: "Frank 家次卧-Danny 住处"
     type: free_exploration
     unlock_condition:
-      - type: 1
-        param: "2309"  # L3 post_expose 获得的 Frank 家钥匙
+      - type: auto
+        param: "L4_danny_in_bathroom（Danny 蹲厕所自顾不暇，门没锁；L3 已熟门熟路，Zack 推门即入；不需钥匙）"
     description: |
       继承 L3 已解锁状态。Danny 这次在家——但他正蹲在厕所（2020）拉肚子，逃不出来。
       玩家可以独立在次卧搜证，从隔壁厕所偶尔传来他的呻吟与马桶冲水声。
@@ -311,9 +312,9 @@ scenes:
 
       - id: 2407
         name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
-        type: envir
-        itemType: 2
-        pickup: false  # 环境叙事——次卧书架的遗嘱副本，可看不可拿走
+        type: item
+        itemType: 3
+        pickup: true  # 玩家拾取（Danny 次卧书架抽屉）
         analysis: false
         description: "Frank Kowalski 遗嘱的副本，正文打印的主条款：'本人将全部遗产遗赠予 Lula Washington 小姐。'末尾 Frank 亲笔手写附加条款（兜底）：'若 Washington 小姐拒绝继承，遗产将转赠艾斯弗德工人互助会。——Frank K.'字迹颤抖但清晰，签名与牛奶订购单（2301）笔迹风格一致。Lula 是法定受遗赠人——这是 L4 R3 她当场签放弃继承声明的法律前提。"
         note: "L4 R3 陷阱选项——遗嘱本身是动机证据（Danny 担心失去继承权），但不能证明 Lula 是否是真爱；R1 陷阱（不反驳 Danny 不在场谎言）；L5/L6 叙事参照"
@@ -326,8 +327,8 @@ scenes:
     name: "Frank 家厕所"
     type: expose_scene  # ⚔️ 指证场（兼对话场，Danny 蹲马桶上）
     unlock_condition:
-      - type: 1
-        param: "2309"  # 与 2009 同一钥匙解锁（Frank 家入口已通）
+      - type: auto
+        param: "scene_2009_entered（与次卧同属 Frank 家内部，进入次卧即可走到隔壁厕所；不需钥匙）"
     description: |
       Frank 家厕所——逼仄的木门半敞，地板上一双 Danny 的拖鞋东倒西歪。
       Danny 蹲在马桶上拉肚子，狼狈、出汗、面如土色。Zack 推开虚掩的门走进去——
@@ -489,19 +490,14 @@ expose:
     description: |
       Danny 的目击证词 2114004 进入玩家背包（L5 击穿件之一，已确认挂入 L5 疑点 2501 condition）。
       Lula 补充证词 2124001（Frank 不会做饭/不用 Margaret 厨房）和 2124002（工资给 Danny 还债）。
-      Lula 交出 2408 小铁盒备用钥匙，说：Frank 说这把钥匙以后会用到，现在交给 Zack 比放在我手上更合适。
+      Lula 看向 Zack，眼神沉了一下：「Frank 在他家主屋床后藏了一个小铁盒——上了密码锁。
+      里面是他冒险收集的东西。明天我带你去拿。密码只有我们俩懂——
+      到了那里，你要自己说出来。」
       全场沉默。Danny 站起来要走，没有人拦他。
       Zack 心里清楚：Danny 是这个案子最坏的旁观者，但不是杀人的那一个。
+      [L5 开篇承接：Lula 主屋取盒 + 密码考验 + 开盒]
 
-    new_evidence_gained:
-      - id: 2408
-        name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
-        type: item
-        itemType: 3
-        pickup: true
-        analysis: false
-        description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 的嘱托在'需要的时候'交出。L5 在 Frank 家主屋开间（2018）开小铁盒使用一次后归档。"
-        note: "关键——L5 开 Frank 家主屋开间床后小铁盒（2018）的唯一钥匙；使用后归档，L6 不再需要"
+    new_evidence_gained: []  # L4 post_expose 只给口头钩子，铁盒物件 L5 开篇取得
 
     new_testimony_gained:
       - id: 2114004
@@ -515,7 +511,7 @@ expose:
       - "大块头、深色衣服、走路像意大利人——Vinnie 的体型特征初步浮现（L5 疑点 2501 核心）"
       - "Frank 的工资一直给 Danny 还赌债（Lula 证词 2124002）"
       - "Frank 不会做饭，绝对不会用 Margaret 的厨房（Lula 证词 2124001）——L1 Emma 皱眉伏笔正式回收"
-      - "2408 小铁盒备用钥匙到手——L5 可以进入 Frank 家主屋开小铁盒"
+      - "Frank 主屋床后藏有一个密码锁小铁盒——L5 开篇 Lula 带 Zack 去取，密码是相遇年 1923（玩家用对话选项答出）"
       - "父疑点 2401 已满足全部 condition（2112001 + 2083004 + 2404），在本 Loop 末点亮"
 
 
@@ -582,9 +578,9 @@ doubts:
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "2202"  # O'Hara 贷款钞票
+        param: "2202"  # O'Hara 贿赂的两张连号钞票（901B / 905B）
       - type: 1
-        param: "2206"  # Vinnie 的钞票
+        param: "2206"  # Tony 找零的连号钞票（902B / 903B / 904B）
     posed_loop: 2
     resolved_loop: 2
     status: "resolved_loop2"
@@ -696,9 +692,9 @@ doubts:
 
 evidence_registry:
   # L4 = 104xx 系列（L4 新引入证据）
-  # 继承 L3 post_expose：2308（地下室钥匙，解锁 2010）、2309（Frank 家钥匙，已解锁 2009）
+  # 继承 L3 post_expose：2308（旧铁钥匙，Danny 自己说不上是哪里的——L4 试出是 Margaret 鞋坊地下室）
   # 跨 Loop 指证使用：2083004（L3 Moore 坦白证词，L4 R2 使用）
-  # L4 末新增：2408（post_expose 由 Lula 交出）
+  # L4 末口头钩子：Lula 告知 Frank 主屋床后有密码锁铁盒（无新 evidence 入袋）
 
   - id: 2402
     name: "地下室旧沙发（磨损 3-5 年）/ Old Sofa in Basement"
@@ -772,23 +768,15 @@ evidence_registry:
 
   - id: 2407
     name: "Frank 遗嘱副本（含手写条款）/ Frank's Will (Copy with Handwritten Clause)"
-    type: envir
-    itemType: 2
+    type: item
+    itemType: 3
     first_scene: 2009
-    pickup: false
+    pickup: true  # 玩家拾取（Danny 次卧书架抽屉）
     analysis: false
     description: "Frank Kowalski 遗嘱副本，主条款打印'全部遗产遗赠予 Lula Washington'；末尾 Frank 亲笔手写兜底条款：'若 Washington 小姐拒绝继承，遗产转赠艾斯弗德工人互助会。——Frank K.'字迹颤抖但清晰。"
     note: "L4 R1/R3 陷阱选项——遗嘱是动机证据但不能反驳'不在场'和'Lula 是否真爱'；L5/L6 叙事参照"
 
-  - id: 2408
-    name: "Lula 小铁盒备用钥匙 / Lula's Spare Iron Box Key"
-    type: item
-    itemType: 3
-    first_scene: 2020  # post_expose_scene 由 Lula 隔窗或随后交出
-    pickup: true
-    analysis: false
-    description: "一把黄铜小钥匙，标签上 Frank 用铅笔写着'Iron Box'。Lula 保管了两年，按 Frank 嘱托交给 Zack。L5 在 Frank 家主屋开间（2018）开小铁盒使用一次。"
-    note: "关键——L5 解锁 Frank 家主屋小铁盒（1010）的唯一途径"
+  # 原 2408 备用钥匙已删除（2026-05-20）——小铁盒改为密码锁，L5 开篇 Lula 取盒 + 玩家答密码（1923 = 玫瑰戒指刻字 = 相遇年）
 
   # ── 本 Loop 使用的跨 Loop 证据（继承状态，不新建）──
 
@@ -799,14 +787,6 @@ evidence_registry:
     inherited_from: "loop3_post_expose"
     first_available_loop: 4
     usage: "L4 解锁 2010 地下室；状态维持持有"
-
-  - id: 2309
-    name: "Frank 家钥匙 / Frank's House Key"
-    type: item
-    itemType: 3
-    inherited_from: "loop3_post_expose"
-    first_available_loop: 3
-    usage: "L3 已解锁 Frank 家门（街角 2007 → 主屋 2018）；L4 继续持有，解锁 2009 次卧"
 
   - id: 2083004
     name: "Moore 指证后坦白证词：Danny 把房产证给了银行"

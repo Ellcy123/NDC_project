@@ -3,7 +3,8 @@
 # ============================================================
 #
 # 叙事功能：
-#   - 开篇：Frank 家小铁盒开启（2502 举报材料 + 2503 情书），Mickey 离场邀 Zack 当律师
+#   - 开篇：Lula 带 Zack 进 Frank 家主屋床后取出密码锁铁盒；玩家用对话选项答密码（1923 = 相遇年，玫瑰戒指刻字）开盒；
+#           取出 2502 举报材料 + 2503 情书；Mickey 离场邀 Zack 当律师
 #   - 二选一分支：律师 → 三幕坏结局过场（黑屏白字+静态画面）→ 回到选择点重选（不锁存档）
 #   - 主线分支：继续当侦探，废墟深度搜证（2501 打火机）+ Silver Moon 赌场指证 Vinnie
 #   - 指证 Vinnie（1 轮）：语速反常+细节不对+抢话认罪（安排感）
@@ -22,7 +23,7 @@
 #   Danny=09（NPC 1008）— 注：2114004 是 L4 已入袋的证词
 #
 # 场景 ID（讨论结论定稿，4 位格式）：
-#   2018 = Frank 家主屋（开间客厅+床+开放式厨房；床后缝隙藏小铁盒）
+#   2018 = Frank 家主屋（开间客厅+床+开放式厨房；床后缝隙藏密码锁小铁盒，L5 开篇 Lula 取盒 + 密码考验）
 #   2006 = 圣心医院-Margaret 病房（L5 末 Foster 电话过场）
 #   2001 = Margaret 鞋坊-店铺区（废墟深度搜证）
 #   2015 = Silver Moon 赌场（指证 Vinnie）
@@ -31,7 +32,7 @@
 #
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
-# A. 结构完整性   PASS — player_context / opening（Frank 家小铁盒 + 二选一）/
+# A. 结构完整性   PASS — player_context / opening（Frank 家主屋 Lula 取盒 + 密码玩法 + 二选一）/
 #                        lawyer_bad_ending_sequence / scenes（鞋坊废墟、Silver Moon）/
 #                        expose（Vinnie 单轮）/ post_expose_scene / doubts /
 #                        evidence_registry 全部存在
@@ -85,7 +86,7 @@ player_context:
     - "Danny 目击证词（2114004）：晚 8 点多，块头大深色衣服像意大利人的壮汉从鞋坊方向匆忙离开，还打晕了 Margaret；看见戒指从她手旁滚出来反光"
     - "Margaret 的婚戒出现在 Danny 房间——Danny 在街边顺手捡走的；已物归原主"
     - "Lula Washington 是 Frank 相恋五年的真爱，圣卢克医院护士；二人秘密约会地点是 Margaret 鞋坊地下室（Margaret 借出并支持）"
-    - "Lula 提供了 Frank 家小铁盒备用钥匙 2408（L4 post_expose 入袋）"
+    - "Lula 在 L4 post_expose 提到 Frank 主屋床后藏有一个密码锁小铁盒——L5 开篇带 Zack 去取，密码是相遇年 1923"
     - "Frank 不会做饭，绝不会用 Margaret 的厨房——Lula 证词 2124001 回收 L1 Emma 皱眉伏笔（'厨房失火点'是 Morrison 编造的，也与实际不符）"
     - "O'Hara 目击：11月6日晚 7 点 Frank 出门前后脚 Danny 也出门，走同一条路"
     - "O'Hara 目击：Lula 至少四五年前就来这条街，经常去 Frank 家"
@@ -94,8 +95,8 @@ player_context:
     - "Lula 在 L4 自发出现在 Margaret 鞋坊店铺区 + R3 厕所小窗外——跟随 Zack/Mickey 到 Frank 家，进不了男厕所只能站在侧墙小窗外听全过程；R3 举证已签好的放弃继承协议"
 
   new_directions:
-    - direction: "前往 Frank 家，用小铁盒备用钥匙 2408 开启小铁盒——Frank 一定留下了什么"
-      trigger: "L4 post_expose：Lula 交出小铁盒备用钥匙 2408，告知小铁盒里有举报材料"
+    - direction: "Lula 带 Zack 去 Frank 家主屋取床后密码锁小铁盒——Frank 一定留下了什么"
+      trigger: "L4 post_expose：Lula 提到 Frank 留了密码锁铁盒；密码是只有他们俩懂的那一年（玫瑰戒指 F & L 1923 即密码线索）"
     - direction: "选择：当律师回法庭，还是继续调查 Frank 死因"
       trigger: "Mickey 离场邀请时的二选一分支（主线=继续当侦探）"
     - direction: "前往鞋坊废墟深度搜证——案发现场是否还藏有被忽略的物证"
@@ -117,7 +118,7 @@ player_context:
     - "疑点 2502 解锁：Vinnie 的认罪说'是我放的火，Frank 是我杀的'——但 Frank 是被钝器打死的，他怎么能说自己是凶手？（L6 深化）"
 
 # ─────────────────────────────
-# 二、开篇（Frank 家小铁盒 + 二选一分支）
+# 二、开篇（Frank 家主屋 Lula 取盒 + 密码考验 + 二选一分支）
 # ─────────────────────────────
 
 opening:
@@ -126,11 +127,53 @@ opening:
   location: "Frank 家主屋开间（场景 2018）"
   scene_id: 2018
   description: |
-    Zack 重访 Frank 家主屋——L3 来过这里拿牛奶签收单，但当时没注意到床和墙之间那道窄缝。
-    Lula 在 L4 给的备用钥匙（2408）配的不是小铁盒，而是 Frank 藏在床后缝隙里的小铁盒。
-    Zack 把床稍微挪开，伸手从缝隙里取出一个 15cm × 10cm 的铁皮小盒——
-    上面有一把简易挂锁，钥匙 2408 正好对得上。
-    内容：Frank 的举报材料（2502，演出件——Mickey 会拿走）和留给 Lula 的情书（2503，纯情感叙事载体，Lula 第一次捧读 Frank 八年积累的告白）。
+    Zack 和 Lula、Mickey 一起重访 Frank 家主屋。
+    Lula 走到床边蹲下，从床和墙之间的窄缝里取出一个 15cm × 10cm 的铁皮小盒——
+    盒面是密码盘（四位数转盘），没有钥匙孔。
+    Lula 把铁盒放在桌上，看向 Zack：
+    「Frank 给这盒子设了密码……四位数，那一年的。
+     只有我们俩懂的那一年。你应该知道是什么意思。」
+
+    [Zack 心中浮现：玫瑰花蕊里那枚戒指——"F & L 1923"]
+
+  password_puzzle:
+    type: dialogue_choice
+    correct_answer: "1923"
+    correct_hint_source: "L4 玫瑰花蕊小玩法揭示的 2403 求婚戒指内圈刻字 'F & L 1923'"
+    retry_policy: unlimited  # 答错可无限重试，无惩罚
+
+    options:
+      - value: "1901"
+        is_correct: false
+        trap_reason: "Margaret 与 Patrick 婚戒刻字年（2405 内圈 'P & M 1901'）——别人的年份，不是 Frank 和 Lula 的"
+      - value: "1918"
+        is_correct: false
+        trap_reason: "Leonard 改名 Russo → Ross 的年份（L2 Moore 证词 2082001）——和 Frank 无关"
+      - value: "1923"
+        is_correct: true
+        unlock: "铁盒打开，取出 2502 举报材料 + 2503 情书"
+      - value: "1928"
+        is_correct: false
+        trap_reason: "案发当年——结束的年份，不是开始的年份"
+
+    on_wrong:
+      lula_reaction: |
+        Lula 摇了摇头，眼神低下去：
+        「……不是。Frank 不会用别人的年份。他要的，是只有我们两个人懂的那一年。」
+        [选项重新出现，玩家可继续尝试]
+
+    on_correct:
+      lula_reaction: |
+        Lula 长出一口气，眼眶微红：
+        「……对。是那一年。」
+        [她拨动密码盘：1—9—2—3。三声咔嗒，盒盖弹起。]
+
+  reveal_contents: |
+    盒内有两件东西：
+    - 一叠装订整齐的文件（2502 Frank 的举报材料——Mickey 会拿走）
+    - 一沓信纸（2503 Frank 写给 Lula 的情书，Lula 第一次捧读 Frank 八年积累的告白）
+
+    Lula 抱着情书的瞬间，时间停了一下。
 
     Lula 恳求 Zack 和 Mickey 帮她查清 Frank 死亡的真相。
 
@@ -430,12 +473,6 @@ evidence_registry:
       isUsable: false
 
   carried_items_used_in_expose:
-    - id: 2408
-      name: "Lula 小铁盒备用钥匙 / Lula's Spare Strongbox Key"
-      note: "L4 post_expose 取得；L5 开篇使用一次（开小铁盒）后失效，从背包移除"
-      from_loop: 4
-      used_and_consumed: true
-
     - id: 2114004
       name: "Danny 目击证词（L4 post_expose 入袋）"
       type: testimony
