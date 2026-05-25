@@ -574,7 +574,7 @@ def parse_md_file(md_path):
             # Expose Lie 出示证据选项（优先于普通 branches）: - ❶ 出示 XXX → `target`（正确：...）
             if current_entry.script_tag == "lie":
                 lie_opt_match = re.match(
-                    r"^-\s*[❶❷❸]\s*(?:出示|同时出示|仅出示)?\s*(.+?)\s*→\s*`?(\d+)`?\s*(?:[(（](.+?)[)）])?",
+                    r"^-\s*[❶❷❸❹❺❻❼❽❾]?\s*(?:出示|同时出示|仅出示)?\s*(.+?)\s*→\s*`?(\d+)`?\s*(?:[(（](.+?)[)）])?",
                     content,
                 )
                 if lie_opt_match:
@@ -589,7 +589,7 @@ def parse_md_file(md_path):
 
             # 检测分支选项: - ❶ 文本 → `target`
             branch_match = re.match(
-                r"^-\s*[❶❷❸➊➋➌①②③\d()()\[\]]+\s*(.+?)\s*→\s*`?(\d+)`?",
+                r"^-\s*[❶❷❸❹❺❻❼❽❾➊➋➌➍➎➏➐➑➒①②③④⑤⑥⑦⑧⑨\d()()\[\]]+\s*(.+?)\s*→\s*`?(\d+)`?",
                 content,
             )
             if branch_match:
