@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC Formal Blueprint</title>
+    <style>
+        :root {
+            --bg: #0b0c0d;
+            --panel: #15181c;
+            --panel2: #1e2329;
+            --line: #303842;
+            --text: #f0efe9;
+            --muted: #9ca5ad;
+            --gold: #d6b56d;
+            --red: #b8433d;
+            --blue: #6094b5;
+            --green: #72a77e;
+            --violet: #9a83b5;
+            --orange: #c78a3b;
+            --mono: "Cascadia Mono", Consolas, monospace;
+            --sans: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            overflow: hidden;
+        }
+
+        button, input, select {
+            font: inherit;
+            color: inherit;
+        }
+
+        button, .file-label {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--panel2);
+            padding: 7px 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button:hover, .file-label:hover { border-color: var(--gold); color: var(--gold); }
+        .file-label input { display: none; }
+
+        .app {
+            height: 100%;
+            display: grid;
+            grid-template-rows: 54px 1fr 28px;
+        }
+
+        header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 16px;
+            padding: 0 14px;
+            background: #111317;
+            border-bottom: 2px solid #74302e;
+        }
+
+        .brand {
+            color: var(--gold);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .status {
+            color: var(--muted);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        select, input[type="search"] {
+            min-width: 120px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #0f1215;
+            padding: 8px 9px;
+            outline: none;
+        }
+
+        input[type="search"] { min-width: 260px; }
+
+        main {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 280px 1fr 380px;
+        }
+
+        aside, .inspector {
+            min-height: 0;
+            overflow: auto;
+            background: var(--panel);
+        }
+
+        aside { border-right: 1px solid var(--line); }
+        .inspector { border-left: 1px solid var(--line); }
+
+        .block {
+            padding: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .block-title {
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .metric {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 9px;
+            background: rgba(255,255,255,.025);
+        }
+
+        .metric strong {
+            display: block;
+            font-family: var(--mono);
+            color: var(--text);
+            font-size: 18px;
+        }
+
+        .metric span { color: var(--muted); font-size: 11px; }
+
+        .type-list {
+            display: grid;
+            gap: 5px;
+        }
+
+        .type-row {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .type-row input { width: auto; }
+
+        .issue-list, .edge-list {
+            display: grid;
+            gap: 7px;
+        }
+
+        .mini {
+            padding: 8px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: rgba(255,255,255,.025);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .workspace {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+            background:
+                linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        .graph {
+            position: relative;
+            min-width: 2700px;
+            min-height: 1600px;
+        }
+
+        #edges {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+        }
+
+        .node {
+            position: absolute;
+            width: 210px;
+            min-height: 72px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #171b20;
+            box-shadow: 0 12px 28px rgba(0,0,0,.28);
+            padding: 9px;
+            cursor: pointer;
+        }
+
+        .node:hover, .node.selected {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(214,181,109,.13), 0 12px 28px rgba(0,0,0,.32);
+        }
+
+        .node.has-error {
+            border-color: rgba(184,67,61,.95);
+            box-shadow: 0 0 0 2px rgba(184,67,61,.18), 0 12px 28px rgba(0,0,0,.32);
+        }
+
+        .node.has-warning {
+            border-color: rgba(199,138,59,.9);
+            box-shadow: 0 0 0 2px rgba(199,138,59,.14), 0 12px 28px rgba(0,0,0,.32);
+        }
+
+        .node-type {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .node-title {
+            font-weight: 800;
+            line-height: 1.25;
+            word-break: break-word;
+        }
+
+        .node-sub {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+            line-height: 1.25;
+            max-height: 32px;
+            overflow: hidden;
+        }
+
+        .node-badges {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 7px;
+        }
+
+        .issue-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 999px;
+            font-size: 11px;
+            border: 1px solid var(--line);
+        }
+
+        .issue-badge.error {
+            color: #ffb0aa;
+            border-color: rgba(184,67,61,.75);
+            background: rgba(184,67,61,.16);
+        }
+
+        .issue-badge.warning {
+            color: #ffd99c;
+            border-color: rgba(199,138,59,.72);
+            background: rgba(199,138,59,.13);
+        }
+
+        .node.loop { border-color: rgba(214,181,109,.65); }
+        .node.scene { border-color: rgba(96,148,181,.55); }
+        .node.talk { border-color: rgba(114,167,126,.45); }
+        .node.doubt { border-color: rgba(184,67,61,.6); }
+        .node.expose { border-color: rgba(199,138,59,.65); }
+        .node.condition { border-color: rgba(154,131,181,.55); }
+
+        .pill {
+            display: inline-block;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 2px 7px;
+            color: var(--muted);
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .pill.error { color: #ffb0aa; border-color: rgba(184,67,61,.75); }
+        .pill.warning { color: #ffd99c; border-color: rgba(199,138,59,.72); }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            gap: 8px;
+            padding: 12px 14px;
+        }
+
+        .kv .key { color: var(--muted); }
+        .mono { font-family: var(--mono); }
+        .muted { color: var(--muted); }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
+            background: #111317;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header>
+        <div class="brand">NDC Config Relation Graph</div>
+        <div class="status" id="status">正在读取正式配置图谱...</div>
+        <div class="toolbar">
+            <select id="loopSelect"></select>
+            <input id="search" type="search" placeholder="搜索节点 / ID / 文本">
+            <button id="fitBtn">重排</button>
+            <a class="file-label" href="./flow_blueprint.html">流程蓝图</a>
+            <a class="file-label" href="./blueprint_editor.html">草稿蓝图</a>
+            <label class="file-label">
+                导入图谱
+                <input id="graphFile" type="file" accept=".json,application/json">
+            </label>
+        </div>
+    </header>
+
+    <main>
+        <aside>
+            <div class="block">
+                <div class="block-title">图谱概览</div>
+                <div class="metric-grid" id="metrics"></div>
+            </div>
+            <div class="block">
+                <div class="block-title">节点类型</div>
+                <div class="type-list" id="typeFilters"></div>
+            </div>
+            <div class="block">
+                <div class="block-title">校验叠层</div>
+                <label class="type-row">
+                    <input type="checkbox" id="onlyIssues">
+                    <span>只看问题节点</span>
+                    <span id="issueNodeCount" class="mono">0</span>
+                </label>
+            </div>
+            <div class="block">
+                <div class="block-title">当前可见</div>
+                <div class="issue-list" id="visibleSummary"></div>
+            </div>
+        </aside>
+
+        <section class="workspace" id="workspace">
+            <div class="graph" id="graph">
+                <svg id="edges"></svg>
+                <div id="nodes"></div>
+            </div>
+        </section>
+
+        <section class="inspector">
+            <div class="block">
+                <div class="block-title">节点详情</div>
+                <div id="details" class="muted">请选择一个节点。</div>
+            </div>
+            <div class="block">
+                <div class="block-title">关联边</div>
+                <div class="edge-list" id="edgeDetails"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span id="footerLeft">Formal config relation graph</span>
+        <span>细颗粒度配置关系图：用于查断链，不是剧情流程图</span>
+    </footer>
+</div>
+
+<script>
+const graphUrls = [
+    "data/formal/blueprint_graph.json",
+    "/preview_new2/data/formal/blueprint_graph.json",
+    "/NDC_project/preview_new2/data/formal/blueprint_graph.json"
+];
+
+const typeLabels = {
+    loop: "Loop",
+    scene: "Scene",
+    talk: "Talk",
+    npc: "NPC",
+    item: "Item",
+    testimony: "谈话笔记",
+    testimony_item: "证词道具",
+    doubt: "疑点",
+    condition: "条件",
+    expose: "指证",
+    resource: "资源"
+};
+
+const typeOrder = ["loop", "scene", "talk", "npc", "item", "testimony", "testimony_item", "doubt", "condition", "expose", "resource"];
+
+const S = {
+    graph: null,
+    loop: "all",
+    search: "",
+    onlyIssues: false,
+    visibleTypes: new Set(typeOrder),
+    selected: null,
+    positioned: []
+};
+
+function $(id) { return document.getElementById(id); }
+function esc(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function short(value, n = 120) {
+    const text = String(value ?? "");
+    return text.length > n ? text.slice(0, n - 1) + "…" : text;
+}
+
+async function loadGraph() {
+    let lastError = null;
+    for (const url of graphUrls) {
+        try {
+            const res = await fetch(`${url}?t=${Date.now()}`);
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+            S.graph = await res.json();
+            $("status").textContent = `已读取 ${url} · ${S.graph.generatedAt}`;
+            initControls();
+            render();
+            return;
+        } catch (err) {
+            lastError = err;
+        }
+    }
+    $("status").textContent = `未能自动读取图谱，可手动导入 blueprint_graph.json。${lastError?.message || ""}`;
+    initControls();
+    renderEmpty();
+}
+
+function initControls() {
+    const loops = new Set(["all"]);
+    (S.graph?.nodes || []).forEach(n => { if (n.loop) loops.add(n.loop); });
+    $("loopSelect").innerHTML = [...loops].sort((a, b) => a === "all" ? -1 : Number(a.replace(/\D/g, "")) - Number(b.replace(/\D/g, "")))
+        .map(loop => `<option value="${esc(loop)}">${loop === "all" ? "全部 Loop" : loop.replace("loop", "Loop ")}</option>`).join("");
+    $("loopSelect").value = S.loop;
+
+    $("typeFilters").innerHTML = typeOrder.map(type => {
+        const count = S.graph?.summary?.nodeTypes?.[type] || 0;
+        const issueCount = (S.graph?.nodes || []).filter(n => n.type === type && n.issueCount).length;
+        return `<label class="type-row">
+            <input type="checkbox" data-type="${esc(type)}" ${S.visibleTypes.has(type) ? "checked" : ""}>
+            <span>${esc(typeLabels[type] || type)}</span>
+            <span class="mono">${count}${issueCount ? ` / !${issueCount}` : ""}</span>
+        </label>`;
+    }).join("");
+    $("issueNodeCount").textContent = S.graph?.summary?.nodesWithIssues || 0;
+    $("onlyIssues").checked = S.onlyIssues;
+}
+
+function nodeVisible(node) {
+    if (!S.visibleTypes.has(node.type)) return false;
+    if (S.onlyIssues && !node.issueCount) return false;
+    if (S.loop !== "all" && node.loop && node.loop !== S.loop) return false;
+    if (S.loop !== "all" && !node.loop && !["npc"].includes(node.type)) return false;
+    if (!S.search) return true;
+    const haystack = JSON.stringify(node).toLowerCase();
+    return haystack.includes(S.search.toLowerCase());
+}
+
+function edgeVisible(edge, nodeMap) {
+    return nodeMap.has(edge.from) && nodeMap.has(edge.to);
+}
+
+function layoutNodes(nodes) {
+    const lanes = new Map();
+    typeOrder.forEach((type, i) => lanes.set(type, { x: 30 + i * 245, y: 34, index: i }));
+    const unknown = { x: 30 + typeOrder.length * 245, y: 34, index: typeOrder.length };
+    return nodes.map(node => {
+        const lane = lanes.get(node.type) || unknown;
+        const out = { ...node, x: lane.x, y: lane.y };
+        lane.y += node.type === "talk" ? 118 : 104;
+        return out;
+    });
+}
+
+function render() {
+    if (!S.graph) return renderEmpty();
+    const visible = (S.graph.nodes || []).filter(nodeVisible);
+    S.positioned = layoutNodes(visible);
+    const nodeMap = new Map(S.positioned.map(n => [n.id, n]));
+    const edges = (S.graph.edges || []).filter(e => edgeVisible(e, nodeMap));
+
+    renderMetrics(visible, edges);
+    renderVisibleSummary(visible, edges);
+    renderNodes(S.positioned);
+    renderEdges(edges, nodeMap);
+    renderInspector();
+    $("footerLeft").textContent = `${visible.length} nodes · ${edges.length} edges`;
+}
+
+function renderEmpty() {
+    $("metrics").innerHTML = `<div class="mini">暂无图谱数据</div>`;
+    $("nodes").innerHTML = "";
+    $("edges").innerHTML = "";
+}
+
+function renderMetrics(nodes, edges) {
+    const allNodes = S.graph?.summary?.nodes || 0;
+    const allEdges = S.graph?.summary?.edges || 0;
+    const issueSummary = S.graph?.summary?.issues || {};
+    $("metrics").innerHTML = [
+        ["总节点", allNodes],
+        ["总边", allEdges],
+        ["可见节点", nodes.length],
+        ["可见边", edges.length],
+        ["错误", issueSummary.error || 0],
+        ["警告", issueSummary.warning || 0]
+    ].map(([label, value]) => `<div class="metric"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join("");
+}
+
+function renderVisibleSummary(nodes, edges) {
+    const byType = {};
+    nodes.forEach(n => byType[n.type] = (byType[n.type] || 0) + 1);
+    $("visibleSummary").innerHTML = Object.entries(byType)
+        .sort((a, b) => typeOrder.indexOf(a[0]) - typeOrder.indexOf(b[0]))
+        .map(([type, count]) => `<div class="mini">${esc(typeLabels[type] || type)} <span class="mono">${count}</span></div>`)
+        .join("") + visibleIssueSummary(nodes) || `<div class="mini">没有匹配节点</div>`;
+}
+
+function renderNodes(nodes) {
+    $("nodes").innerHTML = nodes.map(n => `
+        <div class="node ${esc(n.type)} ${n.issueSeverity ? `has-${esc(n.issueSeverity)}` : ""} ${S.selected === n.id ? "selected" : ""}"
+             data-id="${esc(n.id)}"
+             style="left:${n.x}px;top:${n.y}px">
+            <div class="node-type"><span>${esc(typeLabels[n.type] || n.type)}</span><span class="mono">${esc(n.key || "")}</span></div>
+            <div class="node-title">${esc(short(n.label, 54))}</div>
+            <div class="node-sub">${esc(short(n.subtitle || "", 76))}</div>
+            ${n.issueCount ? `<div class="node-badges"><span class="issue-badge ${esc(n.issueSeverity)}">${esc(n.issueSeverity)} ${esc(n.issueCount)}</span></div>` : ""}
+        </div>
+    `).join("");
+}
+
+function visibleIssueSummary(nodes) {
+    const errors = nodes.filter(n => n.issueSeverity === "error").length;
+    const warnings = nodes.filter(n => n.issueSeverity === "warning").length;
+    if (!errors && !warnings) return "";
+    return `
+        <div class="mini"><span class="pill error">error</span> <span class="mono">${errors}</span> 个节点</div>
+        <div class="mini"><span class="pill warning">warning</span> <span class="mono">${warnings}</span> 个节点</div>
+    `;
+}
+
+function renderEdges(edges, nodeMap) {
+    const paths = edges.map(edge => {
+        const a = nodeMap.get(edge.from);
+        const b = nodeMap.get(edge.to);
+        if (!a || !b) return "";
+        const x1 = a.x + 210;
+        const y1 = a.y + 36;
+        const x2 = b.x;
+        const y2 = b.y + 36;
+        const mx = Math.max(40, Math.abs(x2 - x1) * 0.42);
+        const color = edgeColor(edge.type);
+        return `<path d="M${x1},${y1} C${x1 + mx},${y1} ${x2 - mx},${y2} ${x2},${y2}"
+            fill="none" stroke="${color}" stroke-width="1.4" opacity=".58" marker-end="url(#arrow)"></path>`;
+    }).join("");
+    $("edges").innerHTML = `<defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="rgba(214,181,109,.68)"></path>
+        </marker>
+    </defs>${paths}`;
+}
+
+function edgeColor(type) {
+    if (type.includes("doubt") || type.includes("condition")) return "rgba(184,67,61,.78)";
+    if (type.includes("expose")) return "rgba(199,138,59,.76)";
+    if (type.includes("talk") || type.includes("branch")) return "rgba(114,167,126,.66)";
+    if (type.includes("scene")) return "rgba(96,148,181,.66)";
+    return "rgba(214,181,109,.58)";
+}
+
+function renderInspector() {
+    const node = (S.graph?.nodes || []).find(n => n.id === S.selected);
+    if (!node) {
+        $("details").innerHTML = `<span class="muted">请选择一个节点。</span>`;
+        $("edgeDetails").innerHTML = "";
+        return;
+    }
+    $("details").innerHTML = `
+        <div class="kv">
+            <div class="key">类型</div><div>${esc(typeLabels[node.type] || node.type)}</div>
+            <div class="key">ID</div><div class="mono">${esc(node.key || node.id)}</div>
+            <div class="key">Loop</div><div>${esc(node.loop || "全局")}</div>
+            <div class="key">表</div><div class="mono">${esc(node.table || "")}</div>
+            <div class="key">标题</div><div>${esc(node.label || "")}</div>
+            <div class="key">副标题</div><div>${esc(node.subtitle || "")}</div>
+            <div class="key">问题</div><div>${node.issueCount ? `<span class="pill ${esc(node.issueSeverity)}">${esc(node.issueSeverity)} ${esc(node.issueCount)}</span>` : "无"}</div>
+        </div>
+        ${renderNodeIssues(node)}
+        <div class="block-title" style="padding:0 14px 8px">Meta</div>
+        <div style="padding:0 14px 14px"><pre>${esc(JSON.stringify(node.meta || {}, null, 2))}</pre></div>
+    `;
+    const related = (S.graph.edges || []).filter(e => e.from === node.id || e.to === node.id).slice(0, 120);
+    $("edgeDetails").innerHTML = related.map(edge => {
+        const other = edge.from === node.id ? edge.to : edge.from;
+        return `<div class="mini">
+            <div><span class="pill">${esc(edge.type)}</span> ${esc(edge.label || "")}</div>
+            <div class="mono">${esc(edge.from === node.id ? "→" : "←")} ${esc(other)}</div>
+        </div>`;
+    }).join("") || `<div class="mini">暂无关联边</div>`;
+}
+
+function renderNodeIssues(node) {
+    if (!node.issues?.length) return "";
+    return `
+        <div class="block-title" style="padding:0 14px 8px">校验问题</div>
+        <div class="edge-list" style="padding:0 14px 14px">
+            ${node.issues.map(issue => `
+                <div class="mini">
+                    <div><span class="pill ${esc(issue.severity)}">${esc(issue.severity)}</span> <span class="mono">${esc(issue.type)}</span></div>
+                    <div>${esc(issue.message || "")}</div>
+                    <div class="mono">${esc(issue.source?.field || "")} → ${esc(issue.source?.value || "")}</div>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+$("loopSelect").addEventListener("change", e => {
+    S.loop = e.target.value;
+    render();
+});
+
+$("search").addEventListener("input", e => {
+    S.search = e.target.value.trim();
+    render();
+});
+
+$("typeFilters").addEventListener("change", e => {
+    const type = e.target?.dataset?.type;
+    if (!type) return;
+    if (e.target.checked) S.visibleTypes.add(type);
+    else S.visibleTypes.delete(type);
+    render();
+});
+
+$("onlyIssues").addEventListener("change", e => {
+    S.onlyIssues = e.target.checked;
+    render();
+});
+
+$("nodes").addEventListener("click", e => {
+    const el = e.target.closest(".node");
+    if (!el) return;
+    S.selected = el.dataset.id;
+    render();
+});
+
+$("fitBtn").addEventListener("click", () => render());
+
+$("graphFile").addEventListener("change", e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        S.graph = JSON.parse(reader.result);
+        $("status").textContent = `已导入 ${file.name}`;
+        initControls();
+        render();
+    };
+    reader.readAsText(file, "utf-8");
+});
+
+loadGraph();
+</script>
+</body>
+</html>

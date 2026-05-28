@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AVG Editor</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <h1>AVG Editor</h1>
+    <span class="phase">Phase 1 · 只读视图</span>
+    <div class="status" v-if="!loading">已载入 {{ tablesLoadedCount }} 张表</div>
+    <button class="back-btn" @click="navBack" :disabled="!canBack" title="返回上一节点">←</button>
+  </header>
+
+  <div v-if="loading" class="loading">载入中...</div>
+
+  <div v-else class="layout">
+
+    <!-- 左侧导航树 -->
+    <aside class="nav">
+      <div v-for="u in units" :key="u" class="nav-unit">
+        <div class="nav-unit-head" @click="toggleUnit(u)">
+          <span class="caret" :class="{open: unitOpen[u]}">▶</span>
+          <span>Unit {{ u }}</span>
+        </div>
+        <div v-show="unitOpen[u]" class="nav-loops">
+          <div v-for="l in 6" :key="l" class="nav-loop">
+            <div class="nav-loop-head" @click="toggleLoop(u, l)">
+              <span class="caret" :class="{open: loopOpen[`${u}-${l}`]}">▶</span>
+              <span @click.stop="selectLoop(u, l)" class="nav-loop-title">
+                Loop {{ l }}
+                <span class="loop-title-cn">{{ chapterTitle(u, l) }}</span>
+              </span>
+            </div>
+            <div v-show="loopOpen[`${u}-${l}`]" class="nav-loop-body">
+              <div class="nav-section" v-if="loopScenesWithContent(u, l).length > 0">
+                📍 场景 ({{ loopScenesWithContent(u, l).length }})
+              </div>
+              <div v-for="s in loopScenesWithContent(u, l)" :key="s.sceneId"
+                   class="nav-item"
+                   :class="{active: isSelected('scene', s.sceneId)}"
+                   @click="selectScene(s.sceneId)">
+                <span class="nav-item-icon">{{ sceneIcon(s) }}</span>
+                <span class="nav-item-name">{{ sceneName(s) }}</span>
+                <span class="nav-item-id">#{{ s.sceneId }}</span>
+              </div>
+
+              <template v-if="loopScenesEmpty(u, l).length > 0">
+                <div class="nav-section nav-section-collapsible" @click="toggleEmptyScenes(u, l)">
+                  <span class="caret" :class="{open: emptyScenesOpen[`${u}-${l}`]}">▶</span>
+                  空场景 ({{ loopScenesEmpty(u, l).length }})
+                </div>
+                <div v-show="emptyScenesOpen[`${u}-${l}`]"
+                     v-for="s in loopScenesEmpty(u, l)" :key="'empty-' + s.sceneId"
+                     class="nav-item nav-item-muted"
+                     :class="{active: isSelected('scene', s.sceneId)}"
+                     @click="selectScene(s.sceneId)">
+                  <span class="nav-item-icon">📍</span>
+                  <span class="nav-item-name">{{ sceneName(s) }}</span>
+                  <span class="nav-item-id">#{{ s.sceneId }}</span>
+                </div>
+              </template>
+
+              <template v-if="loopDoubts(u, l).length > 0">
+                <div class="nav-section">❓ 疑点 ({{ loopDoubts(u, l).length }})</div>
+                <div v-for="d in loopDoubts(u, l)" :key="d.id"
+                     class="nav-item"
+                     :class="{active: isSelected('doubt', d.id)}"
+                     @click="selectDoubt(d.id)">
+                  <span class="nav-item-icon">❓</span>
+                  <span class="nav-item-name">{{ d.text }}</span>
+                  <span class="nav-item-id">#{{ d.id }}</span>
+                </div>
+              </template>
+
+              <template v-if="loopExposes(u, l).length > 0">
+                <div class="nav-section">⚔️ 指证回合 ({{ loopExposes(u, l).length }})</div>
+                <div v-for="e in loopExposes(u, l)" :key="e.id"
+                     class="nav-item"
+                     :class="{active: isSelected('expose', e.id)}"
+                     @click="selectExpose(e.id)">
+                  <span class="nav-item-icon">⚔️</span>
+                  <span class="nav-item-name">R{{ e.id }}{{ e.testimony && e.testimony !== '0' ? ' · ' + testimonyItemPreview(e.testimony) : '' }}</span>
+                  <span class="nav-item-id">#{{ e.id }}</span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右侧详情面板 -->
+    <section class="detail">
+      <div v-if="!selected" class="placeholder">
+        在左侧选择节点查看详情。
+      </div>
+
+      <!-- Loop 详情 -->
+      <div v-else-if="selected.type === 'loop'" class="detail-card">
+        <div class="detail-head">
+          <h2>Loop {{ selected.loop }} <span class="cn">{{ chapterTitle(selected.unit, selected.loop) }}</span></h2>
+          <span class="badge ok">🟢</span>
+        </div>
+        <div class="detail-body">
+          <div class="kv-row" v-if="chapterById(selected.id)">
+            <div class="kv-label">章节简述</div>
+            <div class="kv-value">{{ localText(chapterById(selected.id).chapterBrief) }}</div>
+          </div>
+          <div class="kv-row" v-if="chapterById(selected.id)">
+            <div class="kv-label">本章目标</div>
+            <div class="kv-value">{{ localText(chapterById(selected.id).chapterGoal) }}</div>
+          </div>
+          <div class="kv-row" v-if="chapterById(selected.id)">
+            <div class="kv-label">开篇 Talk</div>
+            <div class="kv-value">
+              <a class="ref-chip talk" @click="selectTalk(chapterById(selected.id).initTalk)">
+                {{ talkPreview(chapterById(selected.id).initTalk) }}
+                <span class="chip-id">#{{ chapterById(selected.id).initTalk }}</span>
+              </a>
+            </div>
+          </div>
+          <div class="kv-row" v-if="chapterById(selected.id)">
+            <div class="kv-label">开篇场景</div>
+            <div class="kv-value">
+              <a class="ref-chip scene" @click="selectScene(chapterById(selected.id).initScene)">
+                {{ sceneName(sceneById(chapterById(selected.id).initScene)) }}
+                <span class="chip-id">#{{ chapterById(selected.id).initScene }}</span>
+              </a>
+            </div>
+          </div>
+          <div class="kv-row" v-if="chapterById(selected.id) && chapterById(selected.id).exposeNpcId">
+            <div class="kv-label">指证对象</div>
+            <div class="kv-value">
+              <a class="ref-chip npc" @click="selectNpc(chapterById(selected.id).exposeNpcId)">
+                {{ npcName(chapterById(selected.id).exposeNpcId) }}
+                <span class="chip-id">#{{ chapterById(selected.id).exposeNpcId }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 详情 -->
+      <div v-else-if="selected.type === 'scene'" class="detail-card">
+        <div v-if="!sceneById(selected.id)" class="error">场景 #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>
+              <span class="scene-icon-big">{{ sceneIcon(sceneById(selected.id)) }}</span>
+              {{ sceneName(sceneById(selected.id)) }}
+            </h2>
+            <span class="id-big">#{{ selected.id }}</span>
+            <span class="badge" :class="sceneBadge(selected.id).cls">{{ sceneBadge(selected.id).icon }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row">
+              <div class="kv-label">地点</div>
+              <div class="kv-value">{{ locationName(sceneById(selected.id)) }} (sceneType={{ sceneTypeRaw(sceneById(selected.id)) }})</div>
+            </div>
+            <div class="kv-row" v-if="sceneById(selected.id).firstEnterTalk">
+              <div class="kv-label">开篇 Talk</div>
+              <div class="kv-value">
+                <a class="ref-chip talk" @click="selectTalk(sceneById(selected.id).firstEnterTalk)">
+                  {{ talkPreview(sceneById(selected.id).firstEnterTalk) }}
+                  <span class="chip-id">#{{ sceneById(selected.id).firstEnterTalk }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row" v-if="displayItemIds(sceneById(selected.id)).length > 0">
+              <div class="kv-label">道具 ({{ displayItemIds(sceneById(selected.id)).length }})</div>
+              <div class="kv-value">
+                <a v-for="itemId in displayItemIds(sceneById(selected.id))" :key="itemId"
+                   class="ref-chip item" @click="selectItem(itemId)"
+                   :class="{broken: !itemById(itemId)}">
+                  <span class="chip-icon">{{ itemTypeIcon(itemId) }}</span>
+                  {{ itemName(itemId) }}
+                  <span class="chip-id">#{{ itemId }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row" v-if="(sceneById(selected.id).NPCInfos || []).length > 0">
+              <div class="kv-label">NPC ({{ sceneById(selected.id).NPCInfos.length }})</div>
+              <div class="kv-value">
+                <a v-for="(info, idx) in sceneById(selected.id).NPCInfos" :key="idx"
+                   class="ref-chip npc" @click="selectNpc(npcId(info))"
+                   :class="{broken: !npcById(npcId(info))}">
+                  {{ npcName(npcId(info)) }}
+                  <span class="chip-id">#{{ npcId(info) }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Item 详情 -->
+      <div v-else-if="selected.type === 'item'" class="detail-card">
+        <div v-if="!itemById(selected.id)" class="error">道具 #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>{{ itemTypeIcon(selected.id) }} {{ itemName(selected.id) }}</h2>
+            <span class="id-big">#{{ selected.id }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row" v-for="(v, k) in itemDisplayFields(selected.id)" :key="k">
+              <div class="kv-label">{{ k }}</div>
+              <div class="kv-value" v-html="v"></div>
+            </div>
+            <div class="kv-row" v-if="itemUsedIn(selected.id).length > 0">
+              <div class="kv-label">被引用于</div>
+              <div class="kv-value">
+                <a v-for="ref in itemUsedIn(selected.id)" :key="ref.key"
+                   class="ref-chip" :class="ref.type"
+                   @click="selectByRef(ref)">
+                  {{ ref.label }}
+                  <span class="chip-id">{{ ref.id }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- NPC 详情 -->
+      <div v-else-if="selected.type === 'npc'" class="detail-card">
+        <div v-if="!npcById(selected.id)" class="error">NPC #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>👤 {{ npcName(selected.id) }}</h2>
+            <span class="id-big">#{{ selected.id }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row" v-for="(v, k) in npcDisplayFields(selected.id)" :key="k">
+              <div class="kv-label">{{ k }}</div>
+              <div class="kv-value">{{ v }}</div>
+            </div>
+            <div class="kv-row" v-if="npcLoopEntries(selected.id).length > 0">
+              <div class="kv-label">Loop 实例 ({{ npcLoopEntries(selected.id).length }})</div>
+              <div class="kv-value">
+                <div v-for="lpd in npcLoopEntries(selected.id)" :key="lpd.id" class="sub-row">
+                  <span class="ref-chip">NPCLoopData #{{ lpd.id }}</span>
+                  <a v-if="lpd.TalkInfo && lpd.TalkInfo.id"
+                     class="ref-chip talk" @click="selectTalk(lpd.TalkInfo.id)">
+                    TalkInfo {{ talkPreview(lpd.TalkInfo.id) }}
+                    <span class="chip-id">#{{ lpd.TalkInfo.id }}</span>
+                  </a>
+                  <a v-if="lpd.LoopTalkInfo && lpd.LoopTalkInfo.id"
+                     class="ref-chip talk" @click="selectTalk(lpd.LoopTalkInfo.id)">
+                    LoopTalk {{ talkPreview(lpd.LoopTalkInfo.id) }}
+                    <span class="chip-id">#{{ lpd.LoopTalkInfo.id }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Talk 详情 -->
+      <div v-else-if="selected.type === 'talk'" class="detail-card">
+        <div v-if="!talkById(selected.id)" class="error">Talk #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>💬 {{ talkSpeakerName(selected.id) }}</h2>
+            <span class="id-big">#{{ selected.id }}</span>
+            <span class="badge" :class="talkBadge(selected.id).cls">{{ talkBadge(selected.id).icon }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row">
+              <div class="kv-label">台词</div>
+              <div class="kv-value">{{ localText(talkById(selected.id).Words) }}</div>
+            </div>
+            <div class="kv-row" v-if="talkScriptLabel(selected.id)">
+              <div class="kv-label">动作</div>
+              <div class="kv-value">{{ talkScriptLabel(selected.id) }}</div>
+            </div>
+            <div class="kv-row" v-if="talkBranches(selected.id).length > 0">
+              <div class="kv-label">分支</div>
+              <div class="kv-value">
+                <div v-for="(br, i) in talkBranches(selected.id)" :key="i" class="sub-row">
+                  <span>{{ br.text }}</span>
+                  →
+                  <a class="ref-chip talk" @click="selectTalk(br.next)">
+                    {{ talkPreview(br.next) }}
+                    <span class="chip-id">#{{ br.next }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="kv-row" v-if="talkById(selected.id).next">
+              <div class="kv-label">下一句</div>
+              <div class="kv-value">
+                <a class="ref-chip talk" @click="selectTalk(talkById(selected.id).next)">
+                  {{ talkPreview(talkById(selected.id).next) }}
+                  <span class="chip-id">#{{ talkById(selected.id).next }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row" v-if="talkById(selected.id).videoScene">
+              <div class="kv-label">视频锚</div>
+              <div class="kv-value">{{ talkById(selected.id).videoEpisode }} / {{ talkById(selected.id).videoLoop }} / {{ talkById(selected.id).videoScene }}</div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Doubt 详情 -->
+      <div v-else-if="selected.type === 'doubt'" class="detail-card">
+        <div v-if="!doubtById(selected.id)" class="error">疑点 #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>❓ {{ doubtById(selected.id).text }}</h2>
+            <span class="id-big">#{{ selected.id }}</span>
+            <span class="badge" :class="doubtBadge(selected.id).cls">{{ doubtBadge(selected.id).icon }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row">
+              <div class="kv-label">触发条件</div>
+              <div class="kv-value">
+                <div v-for="(c, i) in doubtById(selected.id).condition" :key="i" class="sub-row">
+                  <span class="cond-type">{{ conditionTypeLabel(c.type) }}</span>
+                  <a class="ref-chip" :class="conditionRefType(c)"
+                     @click="selectByCondition(c)">
+                    {{ conditionRefLabel(c) }}
+                    <span class="chip-id">#{{ c.param }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Expose 详情 -->
+      <div v-else-if="selected.type === 'expose'" class="detail-card">
+        <div v-if="!exposeById(selected.id)" class="error">指证回合 #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>⚔️ 指证回合 R{{ selected.id }}</h2>
+            <span class="badge" :class="exposeBadge(selected.id).cls">{{ exposeBadge(selected.id).icon }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row" v-if="exposeById(selected.id).testimony && exposeById(selected.id).testimony !== '0'">
+              <div class="kv-label">谎言锚（证词）</div>
+              <div class="kv-value">
+                <a class="ref-chip testimony" @click="selectTestimonyItem(exposeById(selected.id).testimony)">
+                  {{ testimonyItemPreview(exposeById(selected.id).testimony) }}
+                  <span class="chip-id">#{{ exposeById(selected.id).testimony }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row" v-if="(exposeById(selected.id).item || []).length > 0">
+              <div class="kv-label">击穿证据</div>
+              <div class="kv-value">
+                <a v-for="itemId in exposeById(selected.id).item" :key="itemId"
+                   class="ref-chip item" @click="selectItem(itemId)"
+                   :class="{broken: !itemById(itemId) && !testimonyItemById(itemId)}">
+                  {{ itemOrTestimonyName(itemId) }}
+                  <span class="chip-id">#{{ itemId }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row" v-if="exposeById(selected.id).talkId">
+              <div class="kv-label">触发对话</div>
+              <div class="kv-value">
+                <a class="ref-chip talk" @click="selectTalk(exposeById(selected.id).talkId)">
+                  {{ talkPreview(exposeById(selected.id).talkId) }}
+                  <span class="chip-id">#{{ exposeById(selected.id).talkId }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- TestimonyItem 详情 -->
+      <div v-else-if="selected.type === 'testimonyItem'" class="detail-card">
+        <div v-if="!testimonyItemById(selected.id)" class="error">证词条目 #{{ selected.id }} 不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>💬 证词条目</h2>
+            <span class="id-big">#{{ selected.id }}</span>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row">
+              <div class="kv-label">陈述</div>
+              <div class="kv-value">{{ localText(testimonyItemById(selected.id).testimony) }}</div>
+            </div>
+            <div class="kv-row" v-if="testimonyItemById(selected.id).truth">
+              <div class="kv-label">真相</div>
+              <div class="kv-value">{{ localText(testimonyItemById(selected.id).truth) }}</div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">类型</div>
+              <div class="kv-value">testimonyType={{ testimonyItemById(selected.id).testimonyType }} · triggerType={{ testimonyItemById(selected.id).triggerType }}</div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+    </section>
+  </div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>

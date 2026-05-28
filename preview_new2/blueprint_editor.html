@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDC Blueprint Editor</title>
+    <script src="js-yaml.min.js"></script>
+    <style>
+        :root {
+            --bg: #090908;
+            --panel: #141312;
+            --panel-2: #1d1715;
+            --panel-3: #221b18;
+            --ink: #f4efe5;
+            --muted: #9d9388;
+            --faint: #6f665e;
+            --line: #39312d;
+            --line-2: #51433b;
+            --red: #b8433d;
+            --red-2: #7b302e;
+            --gold: #d6b56d;
+            --amber: #c78a3b;
+            --green: #5f8b68;
+            --blue: #557b9b;
+            --violet: #7a6595;
+            --shadow: 0 16px 38px rgba(0, 0, 0, .34);
+            --mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+            --sans: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--sans);
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+            color: inherit;
+        }
+
+        button {
+            border: 1px solid var(--line-2);
+            background: #1b1715;
+            border-radius: 6px;
+            padding: 7px 10px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        button:hover { border-color: var(--gold); color: var(--gold); }
+        button.primary { background: var(--red-2); border-color: var(--red); color: #fff; }
+        button.ghost { background: transparent; }
+        button.small { padding: 5px 8px; font-size: 12px; }
+        button.danger:hover { border-color: var(--red); color: #ffb5ad; }
+        button.active { border-color: var(--gold); color: var(--gold); background: rgba(214, 181, 109, .08); }
+
+        input, textarea, select {
+            width: 100%;
+            background: #0f0e0d;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 8px 9px;
+            outline: none;
+        }
+
+        textarea { min-height: 74px; resize: vertical; line-height: 1.45; }
+        input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+        label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+
+        #app {
+            display: grid;
+            grid-template-rows: 54px 1fr 28px;
+            height: 100%;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 0 14px;
+            background: #11100f;
+            border-bottom: 2px solid var(--red-2);
+        }
+
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            min-width: 260px;
+        }
+
+        .brand-title { color: var(--gold); font-weight: 800; letter-spacing: 0; }
+        .brand-sub { color: var(--muted); font-size: 12px; white-space: nowrap; }
+        .toolbar, .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 8px; }
+        .toolbar-left select { width: 132px; }
+        .toolbar-right { justify-content: flex-end; flex-wrap: wrap; }
+
+        #workspace {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 260px 1fr 360px;
+        }
+
+        aside, #inspector {
+            min-height: 0;
+            overflow: auto;
+            background: var(--panel);
+        }
+
+        aside { border-right: 1px solid var(--line); }
+        #inspector { border-left: 1px solid var(--line); }
+        .side-block { padding: 14px; border-bottom: 1px solid var(--line); }
+        .side-title {
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .loop-title { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+        .loop-target { color: var(--muted); font-size: 13px; line-height: 1.45; }
+        .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+        .metric {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 9px;
+            background: rgba(255,255,255,.025);
+        }
+        .metric strong { display: block; font-family: var(--mono); color: var(--ink); font-size: 17px; }
+        .metric span { color: var(--muted); font-size: 11px; }
+
+        .nav-list { display: flex; flex-direction: column; gap: 6px; }
+        .nav-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 8px 9px;
+            background: rgba(255,255,255,.02);
+            cursor: pointer;
+        }
+        .nav-item:hover { border-color: var(--line-2); background: rgba(255,255,255,.04); }
+        .nav-item.active { border-color: var(--gold); color: var(--gold); }
+        .nav-label { font-size: 13px; font-weight: 700; }
+        .nav-count { color: var(--faint); font-family: var(--mono); font-size: 12px; }
+
+        .status-list { display: grid; gap: 7px; }
+        .status-row {
+            display: grid;
+            grid-template-columns: 18px 1fr;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-top: 3px;
+            background: var(--faint);
+        }
+        .dot.ok { background: var(--green); }
+        .dot.warn { background: var(--amber); }
+        .dot.err { background: var(--red); }
+
+        #canvas-wrap {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+            background:
+                linear-gradient(rgba(214,181,109,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(214,181,109,.035) 1px, transparent 1px),
+                radial-gradient(circle at 18% 14%, rgba(184, 67, 61, .09), transparent 30%),
+                #0b0a09;
+            background-size: 32px 32px, 32px 32px, auto, auto;
+        }
+
+        #canvas {
+            position: relative;
+            width: 1600px;
+            min-height: 980px;
+            transform-origin: 0 0;
+        }
+
+        #edges {
+            position: absolute;
+            inset: 0;
+            width: 1600px;
+            height: 980px;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .node {
+            position: absolute;
+            width: 220px;
+            min-height: 90px;
+            border: 1px solid var(--line-2);
+            border-radius: 8px;
+            background: rgba(29, 23, 21, .96);
+            box-shadow: var(--shadow);
+            cursor: grab;
+            user-select: none;
+            overflow: hidden;
+        }
+        .node:active { cursor: grabbing; }
+        .node.selected {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 1px rgba(214,181,109,.25), var(--shadow);
+        }
+        .node-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            background: rgba(0,0,0,.16);
+        }
+        .node-type {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .node-id {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--faint);
+            white-space: nowrap;
+        }
+        .node-title {
+            padding: 9px 10px 2px;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+        }
+        .node-sub {
+            padding: 4px 10px 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }
+        .node-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 0 10px 10px;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            max-width: 100%;
+            border: 1px solid rgba(255,255,255,.09);
+            border-radius: 999px;
+            padding: 2px 7px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .tag.hot { color: #fff; border-color: rgba(184,67,61,.55); background: rgba(184,67,61,.16); }
+        .tag.gold { color: var(--gold); border-color: rgba(214,181,109,.35); }
+        .tag.green { color: #b9ddbd; border-color: rgba(95,139,104,.45); }
+        .tag.blue { color: #b7d4ea; border-color: rgba(85,123,155,.5); }
+        .node.objective { border-color: rgba(214,181,109,.55); }
+        .node.scene { border-color: rgba(85,123,155,.5); }
+        .node.expose { border-color: rgba(184,67,61,.7); }
+        .node.event { border-color: rgba(199,138,59,.7); }
+        .node.doubt { border-color: rgba(122,101,149,.7); }
+        .node.locked { opacity: .72; }
+        .node.official { border-style: dashed; }
+
+        .edge-path { fill: none; stroke: rgba(214,181,109,.38); stroke-width: 2; }
+        .edge-path.event { stroke: rgba(199,138,59,.48); }
+        .edge-path.doubt { stroke: rgba(122,101,149,.5); stroke-dasharray: 5 5; }
+        .edge-path.locked { stroke: rgba(111,102,94,.36); stroke-dasharray: 8 6; }
+
+        .canvas-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: linear-gradient(#0d0c0b, rgba(13,12,11,.84));
+            border-bottom: 1px solid var(--line);
+        }
+        .tool-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .search { width: 240px; }
+
+        #inspector .inner { padding: 14px; }
+        .inspector-empty {
+            color: var(--muted);
+            line-height: 1.5;
+            font-size: 13px;
+            padding: 22px 4px;
+        }
+        .inspector-title {
+            display: flex;
+            align-items: start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .inspector-title h2 {
+            margin: 0;
+            color: var(--gold);
+            font-size: 17px;
+            line-height: 1.25;
+        }
+        .form-grid { display: grid; gap: 12px; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .hint { color: var(--faint); font-size: 11px; margin-top: 5px; line-height: 1.35; }
+
+        .ref-box, .check-box {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px;
+            background: rgba(255,255,255,.025);
+            margin-top: 12px;
+        }
+        .ref-title {
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .kv {
+            display: grid;
+            grid-template-columns: 88px 1fr;
+            gap: 8px;
+            padding: 4px 0;
+            border-top: 1px solid rgba(255,255,255,.05);
+            font-size: 12px;
+        }
+        .kv:first-of-type { border-top: 0; }
+        .kv .k { color: var(--faint); }
+        .kv .v { color: var(--muted); overflow-wrap: anywhere; }
+
+        .list-editor { display: grid; gap: 8px; }
+        .list-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 7px;
+            align-items: start;
+        }
+        .round-card, .cond-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 9px;
+            background: rgba(0,0,0,.14);
+        }
+        .round-card + .round-card, .cond-card + .cond-card { margin-top: 8px; }
+        .pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+        .mono { font-family: var(--mono); }
+        .muted { color: var(--muted); }
+        .danger-text { color: #ffb5ad; }
+
+        footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 12px;
+            background: #11100f;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
+        }
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 44px;
+            transform: translate(-50%, 80px);
+            max-width: min(560px, calc(100vw - 28px));
+            background: #1f2b21;
+            border: 1px solid var(--green);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            z-index: 80;
+            box-shadow: var(--shadow);
+            transition: transform .22s ease;
+            font-size: 13px;
+        }
+        .toast.show { transform: translate(-50%, 0); }
+        .toast.err { background: #301b1a; border-color: var(--red); }
+
+        .banner {
+            display: none;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--amber);
+            border-radius: 8px;
+            background: rgba(199,138,59,.12);
+            color: #f3d4a4;
+            font-size: 13px;
+        }
+        .banner.show { display: flex; }
+
+        ::-webkit-scrollbar { width: 9px; height: 9px; }
+        ::-webkit-scrollbar-track { background: #0d0c0b; }
+        ::-webkit-scrollbar-thumb { background: #3d3631; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5a4d43; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <header>
+        <div class="brand">
+            <div class="brand-title">NDC Blueprint Editor</div>
+            <div class="brand-sub">独立草稿页</div>
+        </div>
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <select id="unitSelect"></select>
+                <select id="loopSelect"></select>
+                <button class="primary" id="loadBtn">加载</button>
+            </div>
+            <div class="toolbar-right">
+                <input type="file" id="importFile" accept=".yaml,.yml,.json" hidden>
+                <input type="file" id="configFolder" webkitdirectory directory multiple hidden>
+                <button id="folderBtn">选择配置目录</button>
+                <button id="importBtn">导入</button>
+                <button id="exportYamlBtn">导出 YAML</button>
+                <button id="exportJsonBtn">导出 JSON</button>
+                <button onclick="location.href='flow_blueprint.html'">流程蓝图</button>
+                <button onclick="location.href='formal_blueprint.html'">配置关系图</button>
+                <button id="resetDraftBtn" class="danger">清除草稿</button>
+            </div>
+        </div>
+    </header>
+
+    <div id="workspace">
+        <aside>
+            <div class="side-block">
+                <div class="side-title">当前循环</div>
+                <div class="loop-title" id="loopTitle">未加载</div>
+                <div class="loop-target" id="loopTarget">请选择 Unit / Loop。</div>
+                <div class="metric-grid" id="metrics"></div>
+            </div>
+            <div class="side-block">
+                <div class="side-title">阶段</div>
+                <div class="nav-list" id="phaseNav"></div>
+            </div>
+            <div class="side-block">
+                <div class="side-title">配置检查</div>
+                <div class="status-list" id="checks"></div>
+            </div>
+        </aside>
+
+        <main id="canvas-wrap">
+            <div class="canvas-toolbar">
+                <div class="tool-group">
+                    <button id="showPlayableBtn" class="small active">可玩结构</button>
+                    <button id="showAllBtn" class="small">含锁定</button>
+                    <button id="addSceneBtn" class="small">新增场景</button>
+                    <button id="addEventBtn" class="small">新增事件</button>
+                    <button id="addDoubtBtn" class="small">新增疑点</button>
+                </div>
+                <div class="tool-group">
+                    <input id="searchBox" class="search" placeholder="搜索节点 / ID / 目标">
+                    <button id="layoutBtn" class="small">重排</button>
+                </div>
+            </div>
+            <div id="draftBanner" class="banner">
+                <span id="draftText">发现浏览器草稿。</span>
+                <div class="tool-group">
+                    <button id="restoreDraftBtn" class="small primary">恢复草稿</button>
+                    <button id="dismissDraftBtn" class="small">忽略</button>
+                </div>
+            </div>
+            <div id="canvas">
+                <svg id="edges"></svg>
+                <div id="nodes"></div>
+            </div>
+        </main>
+
+        <section id="inspector">
+            <div class="inner" id="inspectorInner">
+                <div class="inspector-empty">加载一个 Loop 后，点击蓝图节点即可编辑。这里不会写回原文件，只会保存浏览器草稿并支持导出。</div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <span id="statusLeft">未加载</span>
+        <span id="statusRight">Standalone file: blueprint_editor.html</span>
+    </footer>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+const UNITS = ["Unit1", "Unit2", "Unit3", "Unit4", "Unit8", "Unit9"];
+const LOOPS = ["loop1", "loop2", "loop3", "loop4", "loop5", "loop6"];
+const TABLE_FILES = ["SceneConfig", "ItemStaticData", "NPCStaticData", "DoubtConfig", "ExposeConfig", "ExposeData", "Testimony"];
+
+const TYPE_LABEL = {
+    objective: "目标",
+    opening: "开场",
+    scene: "场景",
+    expose: "指证",
+    round: "轮次",
+    postExpose: "指证后",
+    event: "事件",
+    doubt: "疑点"
+};
+
+const CONDITION_TYPES = {
+    "1": "证据/道具",
+    "2": "事件",
+    "3": "证词"
+};
+
+const U3_DOUBT_LOOP = {
+    "3001": "loop1", "3002": "loop1",
+    "3003": "loop2", "3004": "loop2", "3005": "loop2", "3014": "loop2",
+    "3006": "loop3", "3007": "loop3", "3008": "loop3", "3010": "loop3", "3011": "loop3",
+    "3009": "loop4", "3012": "loop4", "3013": "loop4"
+};
+
+const S = {
+    unit: localStorage.getItem("ndc_bp_unit") || "Unit2",
+    loop: localStorage.getItem("ndc_bp_loop") || "loop1",
+    data: null,
+    sourceText: "",
+    sourceKind: "yaml",
+    tables: {},
+    maps: {},
+    localFiles: new Map(),
+    localRootName: "",
+    selectedId: null,
+    nodes: [],
+    edges: [],
+    filter: "playable",
+    query: "",
+    dirty: false,
+    draftAvailable: null,
+    drag: null
+};
+
+function esc(v) {
+    return String(v ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    }[c]));
+}
+
+function asArray(v) {
+    if (Array.isArray(v)) return v;
+    if (v == null || v === "") return [];
+    return [v];
+}
+
+function csv(v) {
+    return asArray(v).map((x) => String(x).trim()).filter(Boolean).join(", ");
+}
+
+function fromCsv(v, numeric = false) {
+    return String(v || "")
+        .split(",")
+        .map((x) => x.trim())
+        .filter(Boolean)
+        .map((x) => numeric && /^-?\d+$/.test(x) ? Number(x) : x);
+}
+
+function loopNumber() {
+    const n = String(S.loop).replace(/\D/g, "");
+    return n || "1";
+}
+
+function unitNumber() {
+    return String(S.unit).replace(/\D/g, "") || "";
+}
+
+function draftKey() {
+    return `ndc_blueprint_draft_${S.unit}_${S.loop}`;
+}
+
+function posKey() {
+    return `ndc_blueprint_positions_${S.unit}_${S.loop}`;
+}
+
+function getPositions() {
+    try { return JSON.parse(localStorage.getItem(posKey()) || "{}"); }
+    catch { return {}; }
+}
+
+function setPositions(pos) {
+    localStorage.setItem(posKey(), JSON.stringify(pos));
+}
+
+function normalizeLocalPath(path) {
+    return String(path || "").replace(/\\/g, "/").replace(/^\/+/, "").toLowerCase();
+}
+
+function findLocalText(suffixes) {
+    if (!S.localFiles.size) return null;
+    const wanted = asArray(suffixes).map(normalizeLocalPath);
+    for (const [path, file] of S.localFiles.entries()) {
+        if (wanted.some((suffix) => path.endsWith(suffix))) {
+            return { path, ...file };
+        }
+    }
+    return null;
+}
+
+function init() {
+    $("unitSelect").innerHTML = UNITS.map((u) => `<option value="${u}">${u}</option>`).join("");
+    $("loopSelect").innerHTML = LOOPS.map((l) => `<option value="${l}">${l.replace("loop", "Loop ")}</option>`).join("");
+    $("unitSelect").value = S.unit;
+    $("loopSelect").value = S.loop;
+
+    $("loadBtn").addEventListener("click", loadSelectedLoop);
+    $("unitSelect").addEventListener("change", () => { S.unit = $("unitSelect").value; localStorage.setItem("ndc_bp_unit", S.unit); });
+    $("loopSelect").addEventListener("change", () => { S.loop = $("loopSelect").value; localStorage.setItem("ndc_bp_loop", S.loop); });
+    $("folderBtn").addEventListener("click", () => $("configFolder").click());
+    $("configFolder").addEventListener("change", importConfigFolder);
+    $("importBtn").addEventListener("click", () => $("importFile").click());
+    $("importFile").addEventListener("change", importFile);
+    $("exportYamlBtn").addEventListener("click", exportYaml);
+    $("exportJsonBtn").addEventListener("click", exportJson);
+    $("resetDraftBtn").addEventListener("click", clearDraft);
+    $("restoreDraftBtn").addEventListener("click", restoreDraft);
+    $("dismissDraftBtn").addEventListener("click", () => $("draftBanner").classList.remove("show"));
+    $("showPlayableBtn").addEventListener("click", () => setFilter("playable"));
+    $("showAllBtn").addEventListener("click", () => setFilter("all"));
+    $("layoutBtn").addEventListener("click", resetLayout);
+    $("addSceneBtn").addEventListener("click", addScene);
+    $("addEventBtn").addEventListener("click", addEvent);
+    $("addDoubtBtn").addEventListener("click", addDoubt);
+    $("searchBox").addEventListener("input", (e) => { S.query = e.target.value.trim().toLowerCase(); renderAll(); });
+
+    loadTables();
+    loadSelectedLoop();
+}
+
+async function loadTables() {
+    const nextTables = { ...S.tables };
+
+    if (S.localFiles.size) {
+        for (const name of TABLE_FILES) {
+            const hit = findLocalText([
+                `data/table/${name}.json`,
+                `table/${name}.json`,
+                `${name}.json`
+            ]);
+            if (!hit) continue;
+            try {
+                nextTables[name] = JSON.parse(hit.text);
+            } catch (err) {
+                toast(`本地 ${name}.json 解析失败：${err.message}`, true);
+            }
+        }
+    }
+
+    const results = await Promise.allSettled(TABLE_FILES.map(async (name) => {
+        if (nextTables[name]) return [name, nextTables[name]];
+        const res = await fetch(`data/table/${name}.json`, { cache: "no-store" });
+        if (!res.ok) throw new Error(`${name}: ${res.status}`);
+        return [name, await res.json()];
+    }));
+
+    S.tables = nextTables;
+    results.forEach((r) => {
+        if (r.status === "fulfilled") S.tables[r.value[0]] = r.value[1];
+    });
+    buildMaps();
+    renderStatus();
+}
+
+function buildMaps() {
+    S.maps = {};
+    for (const name of Object.keys(S.tables)) {
+        const rows = Array.isArray(S.tables[name]) ? S.tables[name] : [];
+        S.maps[name] = Object.fromEntries(rows.map((row) => [String(row.sceneId ?? row.id ?? row.EventID ?? ""), row]));
+    }
+}
+
+async function loadSelectedLoop() {
+    S.unit = $("unitSelect").value;
+    S.loop = $("loopSelect").value;
+    localStorage.setItem("ndc_bp_unit", S.unit);
+    localStorage.setItem("ndc_bp_loop", S.loop);
+    $("draftBanner").classList.remove("show");
+
+    try {
+        const local = findLocalText([
+            `data/${S.unit}/${S.loop}.yaml`,
+            `data/${S.unit}/${S.loop}.yml`,
+            `${S.unit}/${S.loop}.yaml`,
+            `${S.unit}/${S.loop}.yml`
+        ]);
+        let text;
+        if (local) {
+            text = local.text;
+        } else {
+            const res = await fetch(`data/${S.unit}/${S.loop}.yaml`, { cache: "no-store" });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            text = await res.text();
+        }
+        S.sourceText = text;
+        S.sourceKind = "yaml";
+        S.data = jsyaml.load(text) || {};
+        normalizeData();
+        S.selectedId = "objective";
+        S.dirty = false;
+        checkDraft();
+        renderAll();
+        toast(local ? `已从本地目录加载 ${S.unit} ${S.loop}` : `已加载 ${S.unit} ${S.loop}`);
+    } catch (err) {
+        S.data = blankLoop();
+        S.selectedId = "objective";
+        S.dirty = false;
+        renderAll();
+        toast(`无法自动读取 data/${S.unit}/${S.loop}.yaml，可用“导入”加载。`, true);
+    }
+}
+
+function blankLoop() {
+    return {
+        title: "",
+        target: "",
+        time: "",
+        opening: [],
+        scenes: { unlocked: {}, locked: {}, closed: [] },
+        expose: { scene: "", target_name: "", talk: "", rounds: [] },
+        events: [],
+        doubts: []
+    };
+}
+
+function normalizeData() {
+    if (!S.data || typeof S.data !== "object") S.data = blankLoop();
+    if (!S.data.opening) S.data.opening = [];
+    if (!S.data.scenes && S.data.free_phase) {
+        S.data.scenes = { unlocked: { "自由探索": asArray(S.data.free_phase) }, locked: {}, closed: [] };
+    }
+    if (!S.data.scenes) S.data.scenes = { unlocked: {}, locked: {}, closed: [] };
+    if (!S.data.expose) S.data.expose = { scene: "", target_name: "", talk: "", rounds: [] };
+    if (!S.data.events) S.data.events = [];
+}
+
+function checkDraft() {
+    const raw = localStorage.getItem(draftKey());
+    if (!raw) {
+        S.draftAvailable = null;
+        return;
+    }
+    try {
+        const draft = JSON.parse(raw);
+        S.draftAvailable = draft;
+        $("draftText").textContent = `发现 ${new Date(draft.updatedAt).toLocaleString()} 的浏览器草稿。`;
+        $("draftBanner").classList.add("show");
+    } catch {
+        S.draftAvailable = null;
+    }
+}
+
+function restoreDraft() {
+    if (!S.draftAvailable) return;
+    S.data = S.draftAvailable.data || blankLoop();
+    normalizeData();
+    S.dirty = true;
+    $("draftBanner").classList.remove("show");
+    renderAll();
+    toast("已恢复浏览器草稿");
+}
+
+function clearDraft() {
+    localStorage.removeItem(draftKey());
+    S.draftAvailable = null;
+    $("draftBanner").classList.remove("show");
+    toast("已清除当前 Loop 的浏览器草稿");
+}
+
+function markDirty() {
+    S.dirty = true;
+    localStorage.setItem(draftKey(), JSON.stringify({ updatedAt: Date.now(), data: S.data }));
+    renderStatus();
+}
+
+function setFilter(mode) {
+    S.filter = mode;
+    $("showPlayableBtn").classList.toggle("active", mode === "playable");
+    $("showAllBtn").classList.toggle("active", mode === "all");
+    renderAll();
+}
+
+function resetLayout() {
+    localStorage.removeItem(posKey());
+    renderAll();
+    toast("节点布局已重排");
+}
+
+async function importConfigFolder(e) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    const readable = files.filter((file) => /\.(ya?ml|json)$/i.test(file.name));
+    const loaded = await Promise.all(readable.map(async (file) => {
+        const rel = normalizeLocalPath(file.webkitRelativePath || file.name);
+        return [rel, { name: file.name, text: await file.text() }];
+    }));
+
+    S.localFiles = new Map(loaded);
+    S.localRootName = files[0]?.webkitRelativePath?.split(/[\\/]/)[0] || "本地目录";
+    await loadTables();
+    await loadSelectedLoop();
+    toast(`已读取 ${S.localRootName}：${loaded.length} 个 YAML/JSON 文件`);
+    e.target.value = "";
+}
+
+function importFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const text = String(reader.result || "");
+            S.sourceText = text;
+            S.sourceKind = file.name.toLowerCase().endsWith(".json") ? "json" : "yaml";
+            S.data = S.sourceKind === "json" ? JSON.parse(text) : jsyaml.load(text);
+            normalizeData();
+            S.selectedId = "objective";
+            markDirty();
+            renderAll();
+            toast(`已导入 ${file.name}`);
+        } catch (err) {
+            toast(`导入失败：${err.message}`, true);
+        }
+    };
+    reader.readAsText(file, "utf-8");
+    e.target.value = "";
+}
+
+function exportYaml() {
+    if (!S.data) return;
+    const text = jsyaml.dump(S.data, { indent: 2, lineWidth: 120, noRefs: true, sortKeys: false });
+    download(`${S.unit}_${S.loop}_blueprint.yaml`, text, "text/yaml;charset=utf-8");
+}
+
+function exportJson() {
+    if (!S.data) return;
+    download(`${S.unit}_${S.loop}_blueprint.json`, JSON.stringify(S.data, null, 2), "application/json;charset=utf-8");
+}
+
+function download(name, text, type) {
+    const blob = new Blob([text], { type });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
+
+function renderAll() {
+    buildGraph();
+    renderSidebar();
+    renderCanvas();
+    renderInspector();
+    renderStatus();
+}
+
+function renderStatus() {
+    const tableCount = Object.keys(S.tables).length;
+    const source = S.localFiles.size ? `本地目录 ${S.localRootName}` : "相对 data 目录";
+    $("statusLeft").textContent = S.data
+        ? `${S.unit} ${S.loop} | ${S.dirty ? "有未导出改动" : "已加载"} | 表引用 ${tableCount}/${TABLE_FILES.length}`
+        : "未加载";
+    $("statusRight").textContent = `${source} | 草稿保存在浏览器 localStorage，不会改原文件`;
+}
+
+function renderSidebar() {
+    const d = S.data || {};
+    $("loopTitle").textContent = d.title || "(未填写标题)";
+    $("loopTarget").textContent = d.target || "(未填写循环目标)";
+
+    const counts = getCounts();
+    $("metrics").innerHTML = [
+        metric(counts.opening, "开场"),
+        metric(counts.unlocked, "可探索"),
+        metric(counts.events, "事件"),
+        metric(counts.doubts, "疑点")
+    ].join("");
+
+    const phases = [
+        ["objective", "循环目标", 1],
+        ["opening", "开场", counts.opening],
+        ["scene", "场景", counts.unlocked + counts.locked + counts.closed],
+        ["expose", "指证 AVG", counts.rounds],
+        ["event", "突发事件", counts.events],
+        ["doubt", "疑点", counts.doubts]
+    ];
+    $("phaseNav").innerHTML = phases.map(([id, label, count]) => `
+        <div class="nav-item ${selectedType() === id ? "active" : ""}" onclick="selectFirstType('${id}')">
+            <span class="nav-label">${label}</span>
+            <span class="nav-count">${count}</span>
+        </div>
+    `).join("");
+
+    $("checks").innerHTML = runChecks().map((c) => `
+        <div class="status-row"><span class="dot ${c.level}"></span><span>${esc(c.text)}</span></div>
+    `).join("");
+}
+
+function metric(value, label) {
+    return `<div class="metric"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`;
+}
+
+function getCounts() {
+    const scenes = collectScenes();
+    return {
+        opening: asArray(S.data?.opening).length,
+        unlocked: scenes.filter((s) => s.status === "unlocked").length,
+        locked: scenes.filter((s) => s.status === "locked").length,
+        closed: scenes.filter((s) => s.status === "closed").length,
+        rounds: asArray(S.data?.expose?.rounds).length,
+        events: asArray(S.data?.events).length + countSceneEvents(),
+        doubts: collectDoubts().length
+    };
+}
+
+function runChecks() {
+    if (!S.data) return [{ level: "warn", text: "尚未加载 Loop" }];
+    const checks = [];
+    checks.push({ level: S.data.title ? "ok" : "warn", text: S.data.title ? "已填写循环标题" : "循环标题为空" });
+    checks.push({ level: S.data.target ? "ok" : "warn", text: S.data.target ? "已填写循环目标" : "循环目标为空" });
+
+    const missingScenes = collectScenes()
+        .filter((s) => sceneId(s.entry) && !lookup("SceneConfig", sceneId(s.entry)))
+        .map((s) => sceneId(s.entry));
+    checks.push({
+        level: missingScenes.length ? "warn" : "ok",
+        text: missingScenes.length ? `SceneConfig 未找到：${missingScenes.slice(0, 4).join(", ")}${missingScenes.length > 4 ? "..." : ""}` : "场景 ID 可在 SceneConfig 中匹配"
+    });
+
+    const ex = S.data.expose || {};
+    checks.push({ level: ex.target_name || ex.target ? "ok" : "warn", text: ex.target_name || ex.target ? "已配置指证目标" : "指证目标为空" });
+    checks.push({ level: asArray(ex.rounds).length ? "ok" : "warn", text: asArray(ex.rounds).length ? `指证轮次 ${asArray(ex.rounds).length} 轮` : "未配置指证轮次" });
+
+    const doubtCount = collectDoubts().length;
+    checks.push({ level: doubtCount ? "ok" : "warn", text: doubtCount ? `当前 Loop 可查看 ${doubtCount} 个疑点` : "当前 Loop 暂无疑点引用" });
+
+    return checks;
+}
+
+function selectedType() {
+    return S.nodes.find((n) => n.id === S.selectedId)?.type || "objective";
+}
+
+function selectFirstType(type) {
+    const node = S.nodes.find((n) => n.type === type) || S.nodes.find((n) => n.id === "objective");
+    if (node) selectNode(node.id);
+}
+
+function buildGraph() {
+    const pos = getPositions();
+    const nodes = [];
+    const edges = [];
+    const q = S.query;
+    const visible = (node) => {
+        if (!q) return true;
+        return [node.title, node.subtitle, node.refId, node.type, ...(node.tags || [])].join(" ").toLowerCase().includes(q);
+    };
+    const add = (node) => {
+        const saved = pos[node.id];
+        if (saved) {
+            node.x = saved.x;
+            node.y = saved.y;
+        }
+        if (visible(node)) nodes.push(node);
+    };
+    const addEdge = (from, to, kind = "") => edges.push({ from, to, kind });
+
+    add({
+        id: "objective",
+        type: "objective",
+        x: 40,
+        y: 74,
+        title: S.data?.title || "(未填写标题)",
+        subtitle: S.data?.target || "(未填写目标)",
+        tags: [S.data?.time || `${S.unit} ${S.loop}`]
+    });
+
+    const opening = asArray(S.data?.opening);
+    opening.forEach((entry, i) => {
+        const id = `opening:${i}`;
+        add({
+            id,
+            type: "opening",
+            x: 42,
+            y: 230 + i * 126,
+            refId: sceneId(entry),
+            title: openingTitle(entry, i),
+            subtitle: entryPurpose(entry) || talkText(entry) || "开场节点",
+            tags: compactTags([sceneId(entry), talkText(entry), charactersText(entry)]),
+            meta: { index: i, entry }
+        });
+        addEdge("objective", id);
+    });
+
+    const scenes = collectScenes();
+    let sceneY = 92;
+    scenes.forEach((scene, i) => {
+        if (S.filter === "playable" && scene.status !== "unlocked") return;
+        const id = `scene:${scene.key}`;
+        const sid = sceneId(scene.entry);
+        const ref = lookup("SceneConfig", sid);
+        const sudden = sceneSuddenEvents(scene.entry);
+        add({
+            id,
+            type: "scene",
+            x: 350,
+            y: sceneY,
+            refId: sid,
+            title: sceneTitle(scene.entry, ref),
+            subtitle: sceneSubtitle(scene, ref),
+            tags: compactTags([sid, scene.location, scene.status, talkText(scene.entry), sudden.length ? `${sudden.length} 事件` : ""]),
+            cls: scene.status === "locked" ? "locked" : "",
+            meta: scene
+        });
+        opening.forEach((_, oi) => addEdge(`opening:${oi}`, id, scene.status === "locked" ? "locked" : ""));
+        if (!opening.length) addEdge("objective", id, scene.status === "locked" ? "locked" : "");
+
+        sudden.forEach((ev, evIndex) => {
+            const evId = `sceneEvent:${scene.key}:${evIndex}`;
+            add({
+                id: evId,
+                type: "event",
+                x: 625,
+                y: sceneY + evIndex * 104,
+                refId: ev.id,
+                title: ev.name || `场景突发事件 ${evIndex + 1}`,
+                subtitle: ev.purpose || ev.trigger || "",
+                tags: compactTags([ev.id, ev.trigger, ev.talk]),
+                meta: { source: "scene", scene, index: evIndex, entry: ev }
+            });
+            addEdge(id, evId, "event");
+        });
+
+        sceneY += 126 + Math.max(0, sudden.length - 1) * 104;
+    });
+
+    const ex = S.data?.expose || {};
+    add({
+        id: "expose",
+        type: "expose",
+        x: 760,
+        y: 150,
+        refId: ex.scene,
+        title: ex.target_name || ex.target || "指证 AVG",
+        subtitle: ex.scene ? `Scene ${ex.scene}` : "未配置指证场景",
+        tags: compactTags([ex.talk, `${asArray(ex.rounds).length} 轮`]),
+        meta: { entry: ex }
+    });
+    scenes.filter((s) => S.filter === "all" || s.status === "unlocked").forEach((s) => addEdge(`scene:${s.key}`, "expose"));
+
+    asArray(ex.rounds).forEach((round, i) => {
+        const id = `round:${i}`;
+        add({
+            id,
+            type: "round",
+            x: 1030,
+            y: 100 + i * 112,
+            title: `第 ${i + 1} 轮`,
+            subtitle: round.lie || "(未填写谎言)",
+            tags: compactTags([`证据 ${asArray(round.evidences).length}`, csv(round.evidences)]),
+            meta: { index: i, entry: round }
+        });
+        addEdge("expose", id);
+    });
+
+    if (ex.post_expose) {
+        add({
+            id: "postExpose",
+            type: "postExpose",
+            x: 760,
+            y: 412,
+            title: ex.post_expose.name || "指证后",
+            subtitle: ex.post_expose.purpose || "",
+            tags: compactTags([ex.post_expose.talk, charactersText(ex.post_expose)]),
+            meta: { entry: ex.post_expose }
+        });
+        addEdge("expose", "postExpose", "event");
+    }
+
+    asArray(S.data?.events).forEach((ev, i) => {
+        const id = `event:${i}`;
+        add({
+            id,
+            type: "event",
+            x: 760,
+            y: 540 + i * 116,
+            refId: ev.id,
+            title: ev.name || `事件 ${i + 1}`,
+            subtitle: ev.purpose || ev.trigger || "",
+            tags: compactTags([ev.id, ev.trigger, ev.talk]),
+            meta: { source: "loop", index: i, entry: ev }
+        });
+        addEdge(ex.post_expose ? "postExpose" : "expose", id, "event");
+    });
+
+    const doubts = collectDoubts();
+    doubts.forEach((d, i) => {
+        const id = d._local ? `doubtLocal:${i}` : `doubt:${d.id}`;
+        add({
+            id,
+            type: "doubt",
+            x: 350,
+            y: 620 + i * 112,
+            refId: d.id,
+            title: d.text || `疑点 ${d.id}`,
+            subtitle: doubtCondText(d),
+            tags: compactTags([d.id, d._local ? "草稿" : "正式表", `${asArray(d.condition).length} 条件`]),
+            cls: d._local ? "" : "official",
+            meta: { index: i, entry: d }
+        });
+        addEdge("objective", id, "doubt");
+        addEdge(id, "expose", "doubt");
+    });
+
+    S.nodes = nodes;
+    S.edges = edges.filter((e) => nodes.some((n) => n.id === e.from) && nodes.some((n) => n.id === e.to));
+    if (!S.nodes.some((n) => n.id === S.selectedId)) S.selectedId = S.nodes[0]?.id || null;
+}
+
+function renderCanvas() {
+    const html = S.nodes.map((n) => `
+        <div class="node ${esc(n.type)} ${esc(n.cls || "")} ${n.id === S.selectedId ? "selected" : ""}"
+             data-node-id="${esc(n.id)}"
+             style="left:${n.x}px;top:${n.y}px;width:${n.w || 220}px">
+            <div class="node-head">
+                <span class="node-type">${esc(TYPE_LABEL[n.type] || n.type)}</span>
+                <span class="node-id">${esc(n.refId || n.id)}</span>
+            </div>
+            <div class="node-title">${esc(n.title)}</div>
+            <div class="node-sub">${esc(n.subtitle)}</div>
+            <div class="node-tags">${(n.tags || []).slice(0, 5).map((t, i) => `<span class="tag ${i === 0 ? "gold" : ""}">${esc(t)}</span>`).join("")}</div>
+        </div>
+    `).join("");
+    $("nodes").innerHTML = html;
+    document.querySelectorAll(".node").forEach((el) => {
+        el.addEventListener("pointerdown", nodePointerDown);
+        el.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectNode(el.dataset.nodeId);
+        });
+    });
+    drawEdges();
+}
+
+function drawEdges() {
+    const byId = Object.fromEntries(S.nodes.map((n) => [n.id, n]));
+    const paths = S.edges.map((e) => {
+        const a = byId[e.from];
+        const b = byId[e.to];
+        if (!a || !b) return "";
+        const x1 = a.x + (a.w || 220);
+        const y1 = a.y + 46;
+        const x2 = b.x;
+        const y2 = b.y + 46;
+        const dx = Math.max(80, Math.abs(x2 - x1) * .45);
+        const d = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+        return `<path class="edge-path ${esc(e.kind || "")}" d="${d}"></path>`;
+    }).join("");
+    $("edges").innerHTML = `<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="rgba(214,181,109,.55)"></path></marker></defs>${paths}`;
+}
+
+function nodePointerDown(e) {
+    if (e.button !== 0) return;
+    const id = e.currentTarget.dataset.nodeId;
+    const node = S.nodes.find((n) => n.id === id);
+    if (!node) return;
+    selectNode(id);
+    S.drag = { id, startX: e.clientX, startY: e.clientY, x: node.x, y: node.y };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.currentTarget.addEventListener("pointermove", nodePointerMove);
+    e.currentTarget.addEventListener("pointerup", nodePointerUp, { once: true });
+}
+
+function nodePointerMove(e) {
+    if (!S.drag) return;
+    const node = S.nodes.find((n) => n.id === S.drag.id);
+    if (!node) return;
+    node.x = Math.max(8, S.drag.x + e.clientX - S.drag.startX);
+    node.y = Math.max(58, S.drag.y + e.clientY - S.drag.startY);
+    const el = document.querySelector(`[data-node-id="${CSS.escape(node.id)}"]`);
+    if (el) {
+        el.style.left = `${node.x}px`;
+        el.style.top = `${node.y}px`;
+    }
+    drawEdges();
+}
+
+function nodePointerUp(e) {
+    e.currentTarget.removeEventListener("pointermove", nodePointerMove);
+    if (S.drag) {
+        const pos = getPositions();
+        const node = S.nodes.find((n) => n.id === S.drag.id);
+        if (node) pos[node.id] = { x: Math.round(node.x), y: Math.round(node.y) };
+        setPositions(pos);
+    }
+    S.drag = null;
+}
+
+function selectNode(id) {
+    S.selectedId = id;
+    renderCanvas();
+    renderInspector();
+    renderSidebar();
+}
+
+function renderInspector() {
+    const node = S.nodes.find((n) => n.id === S.selectedId);
+    if (!node) {
+        $("inspectorInner").innerHTML = `<div class="inspector-empty">暂无可编辑节点。</div>`;
+        return;
+    }
+
+    const actions = node.type !== "objective" && !node.cls?.includes("official")
+        ? `<button class="small danger" onclick="deleteSelected()">删除</button>`
+        : "";
+    let html = `
+        <div class="inspector-title">
+            <h2>${esc(TYPE_LABEL[node.type] || node.type)} · ${esc(node.title)}</h2>
+            <div class="tool-group">${actions}</div>
+        </div>
+    `;
+
+    if (node.type === "objective") html += formObjective();
+    else if (node.type === "opening") html += formOpening(node);
+    else if (node.type === "scene") html += formScene(node);
+    else if (node.type === "expose") html += formExpose();
+    else if (node.type === "round") html += formRound(node);
+    else if (node.type === "postExpose") html += formPostExpose();
+    else if (node.type === "event") html += formEvent(node);
+    else if (node.type === "doubt") html += formDoubt(node);
+
+    html += referenceBox(node);
+    $("inspectorInner").innerHTML = html;
+}
+
+function bindInput(path, value, type = "text", extra = "") {
+    const id = `f_${Math.random().toString(36).slice(2)}`;
+    const safe = esc(value ?? "");
+    const attr = `data-path="${esc(path)}" ${extra}`;
+    setTimeout(() => {
+        const el = $(id);
+        if (el) {
+            el.addEventListener("input", fieldChanged);
+            el.addEventListener("change", fieldCommitted);
+        }
+    });
+    if (type === "textarea") return `<textarea id="${id}" ${attr}>${safe}</textarea>`;
+    return `<input id="${id}" type="${type}" value="${safe}" ${attr}>`;
+}
+
+function field(label, path, value, type = "text", hint = "") {
+    return `<div><label>${esc(label)}</label>${bindInput(path, value, type)}${hint ? `<div class="hint">${esc(hint)}</div>` : ""}</div>`;
+}
+
+function formObjective() {
+    return `
+        <div class="form-grid">
+            ${field("循环标题", "title", S.data.title || "")}
+            ${field("循环目标", "target", S.data.target || "", "textarea")}
+            ${field("时间/状态", "time", S.data.time || "")}
+        </div>
+        <div class="ref-box">
+            <div class="ref-title">结构操作</div>
+            <div class="tool-group">
+                <button class="small" onclick="ensurePostExpose()">补一个指证后节点</button>
+                <button class="small" onclick="addOpening()">新增开场</button>
+                <button class="small" onclick="addExposeRound()">新增指证轮次</button>
+            </div>
+        </div>
+    `;
+}
+
+function formOpening(node) {
+    const entry = getOpeningEntry(node.meta.index);
+    return `
+        <div class="form-grid">
+            ${field("场景 ID", `opening.${node.meta.index}.id`, sceneId(entry))}
+            ${field("角色", `opening.${node.meta.index}.characters`, charactersText(entry), "text", "用逗号分隔。")}
+            ${field("AVG Talk", `opening.${node.meta.index}.talk`, talkText(entry))}
+            ${field("目的/剧情功能", `opening.${node.meta.index}.purpose`, entryPurpose(entry), "textarea")}
+        </div>
+    `;
+}
+
+function formScene(node) {
+    const s = node.meta;
+    const entry = getSceneEntry(s);
+    return `
+        <div class="form-grid">
+            <div class="field-row">
+                ${field("场景 ID", `scene.${s.key}.id`, sceneId(entry))}
+                ${field("地点分组", `scene.${s.key}.location`, s.location || "")}
+            </div>
+            ${field("Talk 列表", `scene.${s.key}.talks`, csv(entry?.talks || []), "text", "用逗号分隔，导出时写为数组。")}
+            ${field("锁定原因", `scene.${s.key}.reason`, entry?.reason || "", "textarea")}
+            ${sceneEventEditor(s)}
+        </div>
+    `;
+}
+
+function sceneEventEditor(scene) {
+    const events = sceneSuddenEvents(getSceneEntry(scene));
+    return `
+        <div class="ref-box">
+            <div class="ref-title">场景突发事件</div>
+            ${events.map((ev, i) => `
+                <div class="round-card">
+                    ${field("事件名", `scene.${scene.key}.sudden_events.${i}.name`, ev.name || "")}
+                    ${field("触发", `scene.${scene.key}.sudden_events.${i}.trigger`, ev.trigger || "")}
+                    ${field("目的", `scene.${scene.key}.sudden_events.${i}.purpose`, ev.purpose || "", "textarea")}
+                    ${field("Talk", `scene.${scene.key}.sudden_events.${i}.talk`, ev.talk || "")}
+                </div>
+            `).join("") || `<div class="muted">当前场景没有内嵌突发事件。</div>`}
+            <button class="small" style="margin-top:8px" onclick="addSceneEvent('${esc(scene.key)}')">新增场景事件</button>
+        </div>
+    `;
+}
+
+function formExpose() {
+    const ex = S.data.expose || {};
+    return `
+        <div class="form-grid">
+            <div class="field-row">
+                ${field("指证场景", "expose.scene", ex.scene || "")}
+                ${field("目标 NPC", "expose.target_name", ex.target_name || ex.target || "")}
+            </div>
+            ${field("Expose Talk", "expose.talk", ex.talk || "")}
+            <div class="ref-box">
+                <div class="ref-title">轮次</div>
+                <div class="pill-row">${asArray(ex.rounds).map((r, i) => `<button class="small" onclick="selectNode('round:${i}')">第 ${i + 1} 轮</button>`).join("") || `<span class="muted">暂无轮次</span>`}</div>
+                <button class="small" style="margin-top:8px" onclick="addExposeRound()">新增轮次</button>
+            </div>
+        </div>
+    `;
+}
+
+function formRound(node) {
+    const i = node.meta.index;
+    const round = S.data.expose.rounds[i] || {};
+    return `
+        <div class="form-grid">
+            ${field("谎言/待击破陈述", `expose.rounds.${i}.lie`, round.lie || "", "textarea")}
+            ${field("证据 ID", `expose.rounds.${i}.evidences`, csv(round.evidences), "text", "用逗号分隔。")}
+            ${field("结果/击破后文本", `expose.rounds.${i}.result`, round.result || "", "textarea")}
+        </div>
+    `;
+}
+
+function formPostExpose() {
+    const post = S.data.expose.post_expose || {};
+    return `
+        <div class="form-grid">
+            ${field("名称", "expose.post_expose.name", post.name || "")}
+            ${field("角色", "expose.post_expose.characters", charactersText(post), "text", "用逗号分隔。")}
+            ${field("目的/剧情功能", "expose.post_expose.purpose", post.purpose || "", "textarea")}
+            ${field("Talk", "expose.post_expose.talk", post.talk || "")}
+        </div>
+    `;
+}
+
+function formEvent(node) {
+    const ev = node.meta.entry;
+    const prefix = node.meta.source === "scene"
+        ? `scene.${node.meta.scene.key}.sudden_events.${node.meta.index}`
+        : `events.${node.meta.index}`;
+    return `
+        <div class="form-grid">
+            <div class="field-row">
+                ${field("事件 ID", `${prefix}.id`, ev.id || "")}
+                ${field("事件名", `${prefix}.name`, ev.name || "")}
+            </div>
+            ${field("角色", `${prefix}.characters`, charactersText(ev), "text", "用逗号分隔。")}
+            ${field("目的", `${prefix}.purpose`, ev.purpose || "", "textarea")}
+            ${field("触发条件", `${prefix}.trigger`, ev.trigger || "", "textarea")}
+            ${field("Talk", `${prefix}.talk`, ev.talk || "")}
+        </div>
+    `;
+}
+
+function formDoubt(node) {
+    const d = node.meta.entry;
+    const official = !d._local;
+    const prefix = official ? "" : `doubts.${localDoubtIndex(d)}`;
+    if (official) {
+        return `
+            <div class="ref-box">
+                <div class="ref-title">正式表疑点</div>
+                <div class="kv"><div class="k">ID</div><div class="v mono">${esc(d.id)}</div></div>
+                <div class="kv"><div class="k">文本</div><div class="v">${esc(d.text)}</div></div>
+                <div class="kv"><div class="k">条件</div><div class="v">${esc(doubtCondText(d))}</div></div>
+                <div class="hint">这是 data/table/DoubtConfig.json 的引用节点。若要改正文，建议先新增草稿疑点，确认后再同步正式表。</div>
+            </div>
+        `;
+    }
+    return `
+        <div class="form-grid">
+            ${field("疑点 ID", `${prefix}.id`, d.id || "")}
+            ${field("疑点文本", `${prefix}.text`, d.text || "", "textarea")}
+            ${field("解决循环", `${prefix}.clear_loop`, d.clear_loop || loopNumber(), "number")}
+            <div class="ref-box">
+                <div class="ref-title">条件</div>
+                ${asArray(d.condition).map((c, i) => `
+                    <div class="cond-card">
+                        <div class="field-row">
+                            ${field("类型", `${prefix}.condition.${i}.type`, c.type || "1")}
+                            ${field("参数", `${prefix}.condition.${i}.param`, c.param || "")}
+                        </div>
+                    </div>
+                `).join("") || `<div class="muted">暂无条件。</div>`}
+                <button class="small" style="margin-top:8px" onclick="addDoubtCondition(${localDoubtIndex(d)})">新增条件</button>
+            </div>
+        </div>
+    `;
+}
+
+function referenceBox(node) {
+    let html = "";
+    if (node.type === "scene" || node.type === "opening") {
+        const sid = node.refId || sceneId(node.meta?.entry);
+        const scene = lookup("SceneConfig", sid);
+        html += `<div class="ref-box"><div class="ref-title">SceneConfig 引用</div>`;
+        if (!scene) html += `<div class="muted">未找到 Scene ${esc(sid || "(空)")}</div>`;
+        else {
+            html += kv("场景名", scene.sceneName || scene.location?.Name?.[0] || "");
+            html += kv("英文名", scene.sceneNameEn || "");
+            html += kv("背景", scene.backgroundImage || scene.backgroundMusic || "");
+            html += kv("道具", itemNames(scene.ItemIDs));
+            html += kv("NPC", npcNames(scene.NPCInfos));
+        }
+        html += `</div>`;
+    }
+    if (node.type === "expose") {
+        const cfg = exposeConfigForCurrent();
+        html += `<div class="ref-box"><div class="ref-title">ExposeConfig 引用</div>`;
+        if (!cfg) html += `<div class="muted">未匹配到当前 Loop 的 ExposeConfig。</div>`;
+        else {
+            html += kv("Scene", cfg.sceneId);
+            html += kv("NPC", npcName(cfg.ExposeNPCID));
+            html += kv("物品", asArray(cfg.ExposeItemID).join(" / "));
+            html += kv("Talk", cfg.ExposeTalkID);
+        }
+        html += `</div>`;
+    }
+    if (node.type === "round") {
+        const round = node.meta.entry || {};
+        html += `<div class="ref-box"><div class="ref-title">证据引用</div>`;
+        const ids = asArray(round.evidences);
+        html += ids.length ? ids.map((id) => kv(id, itemName(id) || testimonyName(id) || "未匹配")).join("") : `<div class="muted">暂无证据。</div>`;
+        html += `</div>`;
+    }
+    return html;
+}
+
+function kv(k, v) {
+    return `<div class="kv"><div class="k">${esc(k)}</div><div class="v">${esc(v || "")}</div></div>`;
+}
+
+function fieldChanged(e) {
+    const path = e.currentTarget.dataset.path;
+    setByPath(path, e.currentTarget.value);
+    markDirty();
+}
+
+function fieldCommitted() {
+    renderAll();
+}
+
+function setByPath(path, value) {
+    if (!path) return;
+    if (path.startsWith("opening.")) return setOpeningPath(path, value);
+    if (path.startsWith("scene.")) return setScenePath(path, value);
+    const parts = path.split(".");
+    let obj = S.data;
+    for (let i = 0; i < parts.length - 1; i++) {
+        const p = parts[i];
+        const next = parts[i + 1];
+        if (obj[p] == null) obj[p] = /^\d+$/.test(next) ? [] : {};
+        obj = obj[p];
+    }
+    const key = parts[parts.length - 1];
+    obj[key] = coerceValue(path, value);
+}
+
+function coerceValue(path, value) {
+    if (path.endsWith(".characters")) return fromCsv(value);
+    if (path.endsWith(".talks")) return fromCsv(value);
+    if (path.endsWith(".evidences")) return fromCsv(value, true);
+    if (path.endsWith(".clear_loop")) return Number(value || loopNumber());
+    if (path.endsWith(".id") || path.endsWith(".scene")) return /^\d+$/.test(String(value)) ? Number(value) : value;
+    return value;
+}
+
+function setOpeningPath(path, value) {
+    const parts = path.split(".");
+    const index = Number(parts[1]);
+    const key = parts[2];
+    let entry = getOpeningEntry(index);
+    if (typeof entry !== "object" || entry == null) {
+        entry = { id: entry || "" };
+        S.data.opening[index] = entry;
+    }
+    entry[key] = coerceValue(path, value);
+}
+
+function setScenePath(path, value) {
+    const parts = path.split(".");
+    const key = parts[1];
+    const scene = collectScenes().find((s) => s.key === key);
+    if (!scene) return;
+    if (parts[2] === "location") {
+        moveScene(scene, value);
+        return;
+    }
+    let entry = getSceneEntry(scene);
+    if (typeof entry !== "object" || entry == null) {
+        entry = { id: entry || "" };
+        setSceneEntry(scene, entry);
+    }
+    if (parts[2] === "sudden_events") {
+        const evIndex = Number(parts[3]);
+        const evKey = parts[4];
+        if (!entry.sudden_events) entry.sudden_events = [];
+        if (!entry.sudden_events[evIndex]) entry.sudden_events[evIndex] = {};
+        entry.sudden_events[evIndex][evKey] = coerceValue(path, value);
+        return;
+    }
+    entry[parts[2]] = coerceValue(path, value);
+}
+
+function selectSceneContainer(status) {
+    if (!S.data.scenes) S.data.scenes = {};
+    if (!S.data.scenes[status]) S.data.scenes[status] = {};
+    return S.data.scenes[status];
+}
+
+function collectScenes() {
+    const out = [];
+    const scenes = S.data?.scenes || {};
+    ["unlocked", "locked", "closed"].forEach((status) => {
+        const src = scenes[status];
+        if (!src) return;
+        if (Array.isArray(src)) {
+            src.forEach((entry, index) => out.push({
+                key: `${status}:root:${index}`,
+                status,
+                location: "",
+                index,
+                entry,
+                shape: "array"
+            }));
+        } else if (typeof src === "object") {
+            Object.entries(src).forEach(([location, list]) => {
+                asArray(list).forEach((entry, index) => out.push({
+                    key: `${status}:${location}:${index}`,
+                    status,
+                    location,
+                    index,
+                    entry,
+                    shape: "grouped"
+                }));
+            });
+        }
+    });
+    return out;
+}
+
+function getSceneEntry(scene) {
+    const container = S.data.scenes?.[scene.status];
+    if (!container) return scene.entry;
+    if (scene.shape === "array") return container[scene.index];
+    return asArray(container[scene.location])[scene.index];
+}
+
+function setSceneEntry(scene, entry) {
+    const container = selectSceneContainer(scene.status);
+    if (scene.shape === "array") container[scene.index] = entry;
+    else {
+        if (!Array.isArray(container[scene.location])) container[scene.location] = [];
+        container[scene.location][scene.index] = entry;
+    }
+}
+
+function moveScene(scene, newLocation) {
+    newLocation = String(newLocation || "未分组").trim();
+    if (scene.shape !== "grouped" || newLocation === scene.location) return;
+    const container = selectSceneContainer(scene.status);
+    const list = container[scene.location] || [];
+    const [entry] = list.splice(scene.index, 1);
+    if (!list.length) delete container[scene.location];
+    if (!container[newLocation]) container[newLocation] = [];
+    container[newLocation].push(entry);
+}
+
+function getOpeningEntry(index) {
+    if (!Array.isArray(S.data.opening)) S.data.opening = [];
+    return S.data.opening[index];
+}
+
+function sceneId(entry) {
+    if (entry == null) return "";
+    if (typeof entry === "object") return String(entry.id ?? entry.scene ?? entry.sceneId ?? "");
+    return String(entry);
+}
+
+function openingTitle(entry, i) {
+    const sid = sceneId(entry);
+    const ref = lookup("SceneConfig", sid);
+    return ref?.sceneName || (sid ? `开场 Scene ${sid}` : `开场 ${i + 1}`);
+}
+
+function sceneTitle(entry, ref) {
+    const sid = sceneId(entry);
+    if (entry && typeof entry === "object" && entry.name) return entry.name;
+    return ref?.sceneName || (sid ? `Scene ${sid}` : "(未填写场景)");
+}
+
+function sceneSubtitle(scene, ref) {
+    const entry = getSceneEntry(scene);
+    if (entry?.reason) return entry.reason;
+    if (entry?.purpose) return entry.purpose;
+    if (ref?.sceneNameEn) return ref.sceneNameEn;
+    return scene.status === "unlocked" ? "可探索场景" : scene.status;
+}
+
+function entryPurpose(entry) {
+    return typeof entry === "object" && entry ? (entry.purpose || "") : "";
+}
+
+function talkText(entry) {
+    if (!entry || typeof entry !== "object") return "";
+    if (entry.talk) return String(entry.talk);
+    if (entry.talks) return csv(entry.talks);
+    return "";
+}
+
+function charactersText(entry) {
+    if (!entry || typeof entry !== "object") return "";
+    return csv(entry.characters || entry.Character || []);
+}
+
+function sceneSuddenEvents(entry) {
+    return asArray(entry && typeof entry === "object" ? entry.sudden_events : []);
+}
+
+function countSceneEvents() {
+    return collectScenes().reduce((sum, s) => sum + sceneSuddenEvents(s.entry).length, 0);
+}
+
+function compactTags(values) {
+    return values.map((v) => String(v ?? "").trim()).filter(Boolean);
+}
+
+function collectDoubts() {
+    const local = asArray(S.data?.doubts).map((d) => ({ ...d, _local: true }));
+    const official = asArray(S.tables.DoubtConfig)
+        .filter((d) => doubtLoop(d.id) === S.loop)
+        .map((d) => ({ ...d, _local: false }));
+    const localIds = new Set(local.map((d) => String(d.id)));
+    return [...local, ...official.filter((d) => !localIds.has(String(d.id)))];
+}
+
+function localDoubtIndex(doubt) {
+    return asArray(S.data.doubts).findIndex((d) => String(d.id) === String(doubt.id));
+}
+
+function doubtLoop(id) {
+    const s = String(id || "");
+    if (U3_DOUBT_LOOP[s]) return U3_DOUBT_LOOP[s];
+    const u = unitNumber();
+    if (u && s.startsWith(u) && s.length >= 2) return `loop${s[1]}`;
+    if (s.length >= 2) return `loop${s[1]}`;
+    return "";
+}
+
+function doubtCondText(d) {
+    return asArray(d.condition).map((c) => {
+        const type = CONDITION_TYPES[String(c.type)] || `类型${c.type}`;
+        const resolved = itemName(c.param) || testimonyName(c.param) || "";
+        return `${type}:${c.param}${resolved ? ` ${resolved}` : ""}`;
+    }).join(" / ");
+}
+
+function lookup(table, id) {
+    if (id == null || id === "") return null;
+    return S.maps?.[table]?.[String(id)] || null;
+}
+
+function itemName(id) {
+    const it = lookup("ItemStaticData", id);
+    return it ? asArray(it.Name)[0] || "" : "";
+}
+
+function testimonyName(id) {
+    const t = lookup("Testimony", id);
+    if (!t) return "";
+    return asArray(t.Name || t.name || t.Words || t.text)[0] || t.text || "";
+}
+
+function npcName(id) {
+    const npc = lookup("NPCStaticData", id);
+    return npc ? asArray(npc.Name)[0] || String(id) : String(id || "");
+}
+
+function itemNames(ids) {
+    return asArray(ids).map((id) => `${id}${itemName(id) ? ` ${itemName(id)}` : ""}`).join(" / ");
+}
+
+function npcNames(infos) {
+    return asArray(infos).map((info) => {
+        if (info?.NPC?.Name) return asArray(info.NPC.Name)[0];
+        if (info?.NPC?.id) return npcName(info.NPC.id);
+        if (info?.id) return npcName(info.id);
+        return "";
+    }).filter(Boolean).join(" / ");
+}
+
+function exposeConfigForCurrent() {
+    const ex = S.data?.expose || {};
+    const scene = String(ex.scene || "");
+    const configs = asArray(S.tables.ExposeConfig);
+    return configs.find((c) => String(c.sceneId) === scene)
+        || configs.find((c) => String(c.sceneId) === `${unitNumber()}${loopNumber()}`)
+        || null;
+}
+
+function addOpening() {
+    if (!Array.isArray(S.data.opening)) S.data.opening = [];
+    S.data.opening.push({ id: "", characters: [], talk: "", purpose: "" });
+    markDirty();
+    renderAll();
+    selectNode(`opening:${S.data.opening.length - 1}`);
+}
+
+function addScene() {
+    if (!S.data.scenes) S.data.scenes = {};
+    if (!S.data.scenes.unlocked || Array.isArray(S.data.scenes.unlocked)) S.data.scenes.unlocked = { "未分组": [] };
+    if (!S.data.scenes.unlocked["未分组"]) S.data.scenes.unlocked["未分组"] = [];
+    S.data.scenes.unlocked["未分组"].push({ id: "", talks: [] });
+    markDirty();
+    renderAll();
+}
+
+function addEvent() {
+    if (!Array.isArray(S.data.events)) S.data.events = [];
+    S.data.events.push({ id: "", name: "", characters: [], purpose: "", trigger: "", talk: "" });
+    markDirty();
+    renderAll();
+    selectNode(`event:${S.data.events.length - 1}`);
+}
+
+function addSceneEvent(sceneKey) {
+    const scene = collectScenes().find((s) => s.key === sceneKey);
+    if (!scene) return;
+    let entry = getSceneEntry(scene);
+    if (typeof entry !== "object" || entry == null) {
+        entry = { id: entry || "" };
+        setSceneEntry(scene, entry);
+    }
+    if (!Array.isArray(entry.sudden_events)) entry.sudden_events = [];
+    entry.sudden_events.push({ id: "", name: "", purpose: "", trigger: "", talk: "" });
+    markDirty();
+    renderAll();
+}
+
+function addExposeRound() {
+    if (!S.data.expose) S.data.expose = {};
+    if (!Array.isArray(S.data.expose.rounds)) S.data.expose.rounds = [];
+    S.data.expose.rounds.push({ lie: "", evidences: [], result: "" });
+    markDirty();
+    renderAll();
+    selectNode(`round:${S.data.expose.rounds.length - 1}`);
+}
+
+function ensurePostExpose() {
+    if (!S.data.expose) S.data.expose = {};
+    if (!S.data.expose.post_expose) S.data.expose.post_expose = { name: "", characters: [], purpose: "", talk: "" };
+    markDirty();
+    renderAll();
+    selectNode("postExpose");
+}
+
+function addDoubt() {
+    if (!Array.isArray(S.data.doubts)) S.data.doubts = [];
+    const base = `${unitNumber()}${loopNumber()}`;
+    const next = S.data.doubts.length + 1;
+    S.data.doubts.push({ id: `${base}${String(next).padStart(2, "0")}`, text: "", condition: [], clear_loop: Number(loopNumber()) });
+    markDirty();
+    renderAll();
+}
+
+function addDoubtCondition(index) {
+    if (!S.data.doubts[index]) return;
+    if (!Array.isArray(S.data.doubts[index].condition)) S.data.doubts[index].condition = [];
+    S.data.doubts[index].condition.push({ type: "1", param: "" });
+    markDirty();
+    renderAll();
+}
+
+function deleteSelected() {
+    const node = S.nodes.find((n) => n.id === S.selectedId);
+    if (!node) return;
+    if (node.type === "opening") S.data.opening.splice(node.meta.index, 1);
+    else if (node.type === "round") S.data.expose.rounds.splice(node.meta.index, 1);
+    else if (node.type === "event" && node.meta.source === "loop") S.data.events.splice(node.meta.index, 1);
+    else if (node.type === "event" && node.meta.source === "scene") {
+        const entry = getSceneEntry(node.meta.scene);
+        entry.sudden_events.splice(node.meta.index, 1);
+    } else if (node.type === "scene") deleteScene(node.meta);
+    else return;
+    S.selectedId = "objective";
+    markDirty();
+    renderAll();
+}
+
+function deleteScene(scene) {
+    const container = S.data.scenes?.[scene.status];
+    if (!container) return;
+    if (scene.shape === "array") container.splice(scene.index, 1);
+    else {
+        const list = container[scene.location] || [];
+        list.splice(scene.index, 1);
+        if (!list.length) delete container[scene.location];
+    }
+}
+
+window.selectNode = selectNode;
+window.selectFirstType = selectFirstType;
+window.addOpening = addOpening;
+window.addExposeRound = addExposeRound;
+window.ensurePostExpose = ensurePostExpose;
+window.addSceneEvent = addSceneEvent;
+window.addDoubtCondition = addDoubtCondition;
+window.deleteSelected = deleteSelected;
+
+function toast(msg, isErr = false) {
+    const el = $("toast");
+    el.textContent = msg;
+    el.classList.toggle("err", isErr);
+    el.classList.add("show");
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+init();
+</script>
+</body>
+</html>
