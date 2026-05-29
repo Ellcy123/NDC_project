@@ -40,17 +40,51 @@ user-invocable: false
 
 ## 1. 数据源与读写规则
 
-### 1.1 数据源
-- 直接读写 `d:/NDC/Assets/table/*.json`
-- **不走** `state.yaml` 二次配表（state 仅作为设计草稿，不持久化进 JSON 的字段会丢失，由配表层面决策是否新增字段保存）
+### 1.1 架构（2026-05-28 v0.2 修订）
 
-### 1.2 写回规则
-- 保存按钮 → 写回对应 JSON
-- 弹窗询问是否触发 `res/json_to_excel.py` 同步 Excel（CLAUDE.md 规定不可自动跑）
+**编辑器持有独立副本**，不直接读写 Unity 表。理由：Unity 表的 schema 由 `res/xml/*.xml` 锁死，加设计期字段（如 ArtRequirement、openInLoops、循环目标、陷阱原因）需要改 XML + 重新生成 C# + 改运行时。我们的副本可自由加任意设计期字段。
+
+```
+avg_editor web UI（设计入口）
+       ↕ 读写
+d:/NDC_project/avg_editor/data/table/*.json （上游，SoT）
+   · 沿用 Unity 字段
+   · 加设计期字段（见 §1.4）
+       │
+       │ 同步工具（剥设计期字段）
+       ▼
+d:/NDC/Assets/table/*.json（Unity 下游，运行时消费）
+       │
+       │ 单向导出（按需）
+       ▼
+_snapshot.xlsx（只读快照，不反向写）
+```
+
+**preview_new2/data/table/ 不再用**——历史屎山，不沿用其数据。
+
+### 1.2 种子迁移
+`seed.py`：从 `d:/NDC/Assets/table/*.json` 拷过来，加默认空的设计期字段。幂等（已存在则跳过，`--force` 覆盖）。
+
+### 1.3 写回规则（Phase 2 起）
+- 保存按钮 → 写回 `d:/NDC_project/avg_editor/data/table/*.json`
+- 手动按钮触发"同步到 Unity"（不自动），剥设计期字段后写到 `d:/NDC/Assets/table/`
 - 写回前显示 diff 让用户审
 
-### 1.3 弃用表清单（永不编辑）
-Event / ExposeTalk / Task / TaskConfig / TimeLineEvent / UITextConfig
+### 1.4 设计期字段（不进 Unity 表）
+
+| 表 | 字段 | 用途 |
+|----|------|------|
+| NPCStaticData | `ArtRequirement` | 立绘 / 头像 / 表情图美术需求 |
+| ItemStaticData | `ArtRequirement` | 道具图标 / 模型美术需求 |
+| SceneConfig | `ArtRequirement` | 场景背景 / 环境音效美术需求 |
+| SceneConfig | `openInLoops: [N,...]` | 场景在哪些 Loop 实际开放（解决"门都配了但场景未必开放"的判断难题） |
+| MapConfig | `ArtRequirement` | 地图小图标美术需求 |
+| ChapterConfig | `ArtRequirement` | 章节封面 / 过场动画美术需求 |
+
+后续可继续加；同步工具读这张表就知道要剥掉哪些。
+
+### 1.5 弃用表清单（不种入副本）
+Event / ExposeTalk / Task / TaskConfig / TimeLineEvent / UITextConfig（共 6 张，副本目录里不出现）
 
 ---
 
@@ -298,3 +332,4 @@ preview_new2 暂不删除，直到 Phase 1 跑稳。
 
 ## 修订记录
 - 2026-05-28 v0.1：初版，沉淀讨论结论（Ellcy + Claude）
+- 2026-05-28 v0.2：架构改为"编辑器持有独立副本"。§1 改写，新增 §1.4 设计期字段表；§3 校正 sceneType 实测发现；Phase 0 完成；Phase 1 完成（只读视图 + ID 解析 + 校验徽章）；种子迁移完成。
