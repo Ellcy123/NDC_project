@@ -20,9 +20,11 @@ spawn `evidence-designer` agent：
 
 ### Phase 2: 指证谜题设计
 
-spawn `expose-designer` agent：
-- 提供：证据方案、指证目标 NPC
-- 输出：通过质检的指证方案列表
+先判断这个指证有没有"真实多解"（多个维度都能当主攻、关键线索归属有取舍）：
+- 单解 / 路数明确 → spawn 一个 `expose-designer`，输出通过质检的方案列表。
+- 有真实多解 → 并行 spawn 两个 `expose-designer`，二者【互相看不见】各盲产一版完整方案（路数雷同则令其一换主攻维度重产）；lead 对比两版分歧点。
+
+> 不可切的别硬切：单解就单 agent，别为显得认真无脑双倍烧 token。
 
 使用 AskUserQuestion 让用户选择方案。
 

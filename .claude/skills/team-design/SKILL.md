@@ -31,6 +31,9 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 
 在 agent prompt 中提供完整上下文：任务描述、相关文件路径、用户的具体要求。
 
+【盲产双方案档 —— 仅"复杂/重大"级且该设计点有真实多解时启用】
+并行 spawn 两个同类型设计师，互相看不见，各盲产一版完整初稿；路数雷同则令其一换思路重产。lead 对比两版分歧点，连同两版一起呈给用户。中等及以下任务仍单设计师产出，不强行翻倍成本。
+
 等待设计师返回初稿，呈现给用户审阅。
 
 使用 AskUserQuestion 询问用户：

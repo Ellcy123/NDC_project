@@ -10,14 +10,17 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 
 ## Pipeline
 
-### Phase 1: 谜题方案生成
+### Phase 1: 谜题方案生成（盲产双方案）
 
-spawn `expose-designer` agent：
+并行 spawn 两个 `expose-designer` agent，二者【互相看不见对方产出】，各拿相同输入独立解题：
 - 提供：Loop 信息、指证目标 NPC、当前章节已有指证设计（避免重复）
-- expose-designer 生成多个方案，过 5 层质检
-- 只输出通过质检的方案
+- 每个 agent 各产出一版完整指证方案，各自过 5 层质检，只留通过的
+- 两版路数若雷同 → 令其一换一条主攻维度重产，确保是真正独立的两条思路
 
-使用 AskUserQuestion 让用户选择方案。
+> 不要用"单个 agent 一次生成多个方案"——同一次生成里后一版知道前一版长啥样，分歧是假的。必须两个 agent 盲产。
+
+lead 把两版方案摆一起，标出分歧点（主攻维度 / 谎言层级 / 证据需求差异）。
+使用 AskUserQuestion 让用户在两版（或其融合）之间选择。
 
 ### Phase 2: State 写入
 

@@ -1,0 +1,35 @@
+# Unit4 Loop4 配置模板（结构模板，待填充内容）
+# 字段说明见 d:\NDC_project\配置表规则\ 或 Unit3/loop1.yaml 示例
+
+title: ""                  # 循环标题，如 "Rosa现场目击指证"
+target: ""                 # 本 Loop 玩家核心动机，一句话问句
+time: ""                   # 时间标签，如 "11/21 08:00 早晨"
+
+# 开场编排：登场场景 → 开场对话
+opening:
+  - id: 0                  # 开场场景 ID
+    characters: []         # 出场角色（Zack / Emma / NPC 名）
+    purpose: ""            # 开场要达成的叙事目的
+    talk: ""               # 开场对话文件名（如 emma_001）
+
+# 场景状态
+scenes:
+  unlocked: []             # 本 Loop 开放探索的场景 ID 列表
+  locked:                  # 本 Loop 仍锁定的场景
+    - id: 0
+      reason: ""           # 解锁所需条件
+  closed: []               # 本 Loop 主动关闭的场景
+
+# 指证配置
+expose:
+  scene: 0                 # 指证发生的场景 ID
+  target_name: ""          # 指证对象（显示名）
+  rounds:                  # 指证轮次
+    - lie: ""              # 该轮的谎言原文
+      evidences: []        # 击破谎言需要的证据 ID 列表
+
+# 循环结束叙事小结（驱动 pipeline "循环结束" 页）
+summary:
+  question: ""             # 本 Loop 入场时的核心问题（玩家带着什么疑问进来）
+  resolved: []             # 本 Loop 推进/解决了什么（2-3 条要点，bullet list）
+  remaining: []            # 遗留问题 / 引出下一 Loop 的钩子（1-2 条）

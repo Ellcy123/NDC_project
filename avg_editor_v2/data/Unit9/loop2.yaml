@@ -1,0 +1,55 @@
+title: 酒吧的秘密
+target: Webb 这么急着让我当侦探——他在怕什么？
+time: "当晚"
+
+opening:
+  - id: 9821
+    characters: [Zack, Emma]
+    purpose: 【承接 loop1】街角（场景 9022）72h 窗口梳理——Webb 保险倾向 + 调查方向："Webb 真正怀疑的凶手是谁"；Morrison 把 Vivian 带到大堂笔录问话，玩家无法接触
+    talk: emma_streetcorner_002
+
+scenes:
+  unlocked:
+    蓝月亮酒吧:
+      - 9204  # 酒吧大堂
+      - 9207  # 一楼走廊
+      - id: 9205  # 歌舞厅（假油画 + 花瓶现场照）
+      - id: 9206  # 歌舞厅小包厢（勒索用照片 + 便携相机；Emma 立绘可点击）
+        talks: [emma_smallroom_entry_002, emma_smallroom_camera_002]
+        # NPC 立绘配置：Emma 站在场景内，玩家点击立绘触发 emma_smallroom_entry_002（901002020 起）
+        # SceneConfig.NPCInfos 需补 Emma 条目，TalkInfo.id = 901002020
+        sudden_events:
+          - name: "Emma 打碎相机 + 发现勒索照片"
+            trigger: click_item
+            target: 9209  # 柜中便携相机
+            start_id: 901002403
+      - id: 9209  # James 厨房
+        talks: [james_001]
+      - id: 9210  # Tommy 办公室
+        talks: [tommy_001]
+        sudden_events:
+          - name: "Tommy 抽屉弹壳"
+            start_id: 905001501
+      - id: 9211  # Webb 办公室
+  locked:
+    蓝月亮酒吧:
+      - id: 9003
+        reason: Morrison 勘验中，这一间谁也别想进
+  closed: []
+
+expose:
+  scene: 9210
+  target_name: Tommy
+  talk: Loop2_tommy
+  rounds:
+    - lie: "酒吧里只有私酒生意，没有干别的"
+      evidences: [9201]
+    - lie: "账目都是清清白白的，你有证据吗"
+      evidences: [9203, 9204]
+    - lie: "还有古董买卖——花瓶卖给了 Thompson，油画卖给了 Coleman"
+      evidences: [9205, 9206]
+  post_expose:
+    name: "指证后 · Tommy 松口"
+    characters: [Zack, Tommy]
+    purpose: Tommy 松口酒吧在做仙人跳变体勒索；暗示 Webb 11 月中旬之后换了执行人
+    talk: tommy_002

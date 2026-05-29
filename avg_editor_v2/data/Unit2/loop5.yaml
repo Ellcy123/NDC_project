@@ -1,0 +1,80 @@
+title: Vinnie 纵火认罪（误导性结局）
+target: 谁纵火？真凶是 Vinnie 吗？（伪结局——L6 真相反转）
+time: "11月7日 傍晚"
+
+opening:
+  - id: 2501
+    characters: [Zack, Mickey, Lula]
+    talk: opening_l5_frankhome
+    purpose: Frank 家主屋（2518）——挪床取出小铁盒（动态漫画 #6）+ 2408 钥匙开锁 → Frank 八年举报材料 + 给 Lula 的情书；Mickey 拿走举报材料（2502 移出背包）；Lula 第一次捧读情书 + 恳求查清死因；二选一分支选择 UI [当律师 / 继续当侦探]
+
+scenes:
+  unlocked:
+    Margaret 鞋坊:
+      - id: 2501  # 鞋坊废墟（L5 深度搜证 → 2501 打火机）
+    Silver Moon:
+      - id: 2515  # 赌场（Tony 辨认打火机 + Vinnie 一轮指证场）
+        talks: [tony_l5_casino, vinnie_l5_casino]
+    Frank 家:
+      - id: 2518  # Frank 家主屋（开篇小铁盒已开 + 后续可回访）
+  locked:
+    湖滨信托银行:
+      - id: 2511
+        reason: L2-L3 已完成
+      - id: 2512
+        reason: L3 已完成
+      - id: 2513
+        reason: L3 已搜证
+      - id: 2514
+        reason: L3 已搜证
+    Frank 家:
+      - id: 2507
+        reason: L4 已访（O'Hara 证词已收集）
+      - id: 2509
+        reason: L3-L4 已搜证
+      - id: 2520
+        reason: L4 已完成 Danny 指证
+    Margaret 鞋坊:
+      - id: 2502
+        reason: L1 已搜证
+      - id: 2510
+        reason: L4 已完成（玫瑰花蕊小玩法 + 求婚戒指）
+    圣心医院:
+      - id: 2506
+        reason: L4 已访（Margaret 仍昏迷）；L5 末 Foster 电话过场（不在场景列表内）
+    Leonard 住所:
+      - id: 2517
+        reason: L6 搜查令解锁
+    警局:
+      - id: 2504
+        reason: L1 已完成
+  closed: [2503, 2505, 2519, 2516]
+
+expose:
+  scene: 2515
+  target_name: Vinnie
+  talk: Loop5_vinnie
+  rounds:
+    - lie: "我两三个月没去 Frank 那附近了"
+      evidences: [2501, 2095001, 2114004]  # 鞋坊废墟里完好打火机（V 标）+ Tony 证词（上周还见 Vinnie 用）+ Danny 目击（壮汉从鞋坊方向）
+  post_expose:
+    name: "Vinnie 抢话认罪（误导）"
+    characters: [Zack, Vinnie]
+    purpose: |
+      Vinnie 突然语速反常、抢话认罪："是我！绑架 Margaret！Frank 是我杀的！透过窗户看到他在床上睡觉，然后纵火！"
+      ——细节漏洞（L6 R4 揭穿：Frank 实际死在地上，是 Leonard 用烛台打死的，Vinnie 移尸到床上 + 纵火 + 替罪）
+    talk: vinnie_l5_postexpose
+
+events:
+  - id: 2591
+    name: "L5 二选一分支 · 律师 vs 侦探"
+    characters: [Zack, Mickey]
+    purpose: 小铁盒开启后 Mickey 邀请 Zack 当律师——选当律师触发坏结局 3 幕黑屏白字过场（暂不做），结束后回到分支点；选当侦探推进主线
+    trigger: "小铁盒打开 + Mickey 拿走举报材料后"
+  - id: 2592
+    name: "L5→L6 转场 · Vinnie 上警车 + Foster 双消息"
+    characters: [Zack, Emma, Vinnie, Foster]
+    purpose: |
+      Vinnie 被警察押上警车（戴铐涣散）；Zack/Emma 去电话亭报喜 + 询问母亲状况；
+      Foster 双消息：(1) Margaret 苏醒了，让 Zack/Emma 来医院；(2) Frank 似乎不是火灾烧死，很可能是钝器击打凶杀（动态漫画 #7 + 特殊场景 §7）
+    trigger: "Vinnie Expose 完成后自动"

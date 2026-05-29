@@ -21,6 +21,13 @@
 
     <!-- 左侧导航树 -->
     <aside class="nav">
+      <div class="nav-top-section">
+        <div class="nav-top-entry"
+             :class="{active: selected && selected.type === 'assetList' || selected && selected.type === 'artAsset'}"
+             @click="selectAssetList">
+          🎨 美术资源 ({{ T.ArtAssetConfig.length }})
+        </div>
+      </div>
       <div v-for="u in units" :key="u" class="nav-unit">
         <div class="nav-unit-head" @click="toggleUnit(u)">
           <span class="caret" :class="{open: unitOpen[u]}">▶</span>
@@ -36,29 +43,40 @@
               </span>
             </div>
             <div v-show="loopOpen[`${u}-${l}`]" class="nav-loop-body">
-              <div class="nav-section" v-if="loopScenesWithContent(u, l).length > 0">
-                📍 场景 ({{ loopScenesWithContent(u, l).length }})
+              <div class="nav-section" v-if="loopScenes(u, l).length > 0">
+                📍 场景 ({{ loopScenes(u, l).length }})
               </div>
-              <div v-for="s in loopScenesWithContent(u, l)" :key="s.sceneId"
-                   class="nav-item"
-                   :class="{active: isSelected('scene', s.sceneId)}"
+              <div v-for="s in loopScenes(u, l)" :key="s.sceneId"
+                   class="nav-item nav-item-rich"
+                   :class="[{active: isSelected('scene', s.sceneId)}, sceneCategoryClass[sceneCategory(s)]]"
                    @click="selectScene(s.sceneId)">
-                <span class="nav-item-icon">{{ sceneIcon(s) }}</span>
-                <span class="nav-item-name">{{ sceneName(s) }}</span>
-                <span class="nav-item-id">#{{ s.sceneId }}</span>
+                <div class="nav-item-row">
+                  <span class="nav-item-icon">{{ sceneIcon(s) }}</span>
+                  <span class="nav-item-name">{{ sceneName(s) }}</span>
+                  <span class="nav-item-id">#{{ s.sceneId }}</span>
+                </div>
+                <div class="nav-item-meta" v-if="sceneCategory(s) > 0 || sceneNpcNames(s).length > 0">
+                  <span class="meta-cat" v-if="sceneCategory(s) > 0"
+                        :class="sceneCategoryClass[sceneCategory(s)]">
+                    {{ sceneCategoryLabel[sceneCategory(s)] }}
+                  </span>
+                  <span class="meta-npcs" v-if="sceneNpcNames(s).length > 0">
+                    👤 {{ sceneNpcNames(s).join(' · ') }}
+                  </span>
+                </div>
               </div>
 
-              <template v-if="loopScenesEmpty(u, l).length > 0">
-                <div class="nav-section nav-section-collapsible" @click="toggleEmptyScenes(u, l)">
-                  <span class="caret" :class="{open: emptyScenesOpen[`${u}-${l}`]}">▶</span>
-                  空场景 ({{ loopScenesEmpty(u, l).length }})
+              <template v-if="loopScenesUnmarked(u, l).length > 0">
+                <div class="nav-section nav-section-collapsible" @click="toggleUnmarkedScenes(u, l)" title="sceneId 前缀属于此 Loop 但 openInLoops 未包含">
+                  <span class="caret" :class="{open: unmarkedScenesOpen[`${u}-${l}`]}">▶</span>
+                  未标记开放 ({{ loopScenesUnmarked(u, l).length }})
                 </div>
-                <div v-show="emptyScenesOpen[`${u}-${l}`]"
-                     v-for="s in loopScenesEmpty(u, l)" :key="'empty-' + s.sceneId"
-                     class="nav-item nav-item-muted"
+                <div v-show="unmarkedScenesOpen[`${u}-${l}`]"
+                     v-for="s in loopScenesUnmarked(u, l)" :key="'unmark-' + s.sceneId"
+                     class="nav-item nav-item-unmarked"
                      :class="{active: isSelected('scene', s.sceneId)}"
                      @click="selectScene(s.sceneId)">
-                  <span class="nav-item-icon">📍</span>
+                  <span class="nav-item-icon">⚪</span>
                   <span class="nav-item-name">{{ sceneName(s) }}</span>
                   <span class="nav-item-id">#{{ s.sceneId }}</span>
                 </div>
@@ -97,6 +115,119 @@
     <section class="detail">
       <div v-if="!selected" class="placeholder">
         在左侧选择节点查看详情。
+      </div>
+
+      <!-- 美术资源总览（表格） -->
+      <div v-else-if="selected.type === 'assetList'" class="art-overview">
+        <div class="art-overview-head">
+          <h2>🎨 美术需求总览</h2>
+        </div>
+        <div class="art-filter-bar">
+          <label>搜索：</label>
+          <input v-model="artFilter.q" type="text" placeholder="文件名 / 中文名 / 需求内容…" class="art-search-input">
+          <button class="art-filter-btn" :class="{active: artFilter.onlyEmpty}"
+                  @click="artFilter.onlyEmpty = !artFilter.onlyEmpty">
+            仅未填美术需求
+          </button>
+          <button class="art-filter-btn" v-if="artFilter.q || artFilter.onlyEmpty"
+                  @click="artFilter.q = ''; artFilter.onlyEmpty = false">
+            清除筛选
+          </button>
+          <span class="art-stats">
+            显示 {{ filteredAssets.length }} 条 · 总计 {{ assetStats.total }} ·
+            <span class="art-has">已填 {{ assetStats.filled }}</span> /
+            <span class="art-no">未填 {{ assetStats.empty }}</span>
+          </span>
+        </div>
+        <table class="art-table">
+          <thead>
+            <tr>
+              <th class="col-file">文件名</th>
+              <th class="col-cn">中文名</th>
+              <th class="col-count">场景数</th>
+              <th class="col-art">美术需求</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="filteredAssets.length === 0">
+              <td colspan="4" class="art-empty-row">没有匹配的条目</td>
+            </tr>
+            <tr v-for="a in filteredAssets" :key="a.id"
+                @click="selectAsset(a.id)"
+                :class="{'row-empty': !a.ArtRequirement}">
+              <td class="col-file">
+                <code class="asset-filename">{{ assetFilename(a) }}</code>
+                <button class="copy-btn" @click="copyText(assetFilename(a), $event)" title="复制文件名">📋</button>
+              </td>
+              <td class="col-cn">{{ (a.displayName.split(' · ').slice(1).join(' · ')) || '—' }}</td>
+              <td class="col-count">{{ scenesUsingAsset(a.id).length }}</td>
+              <td class="col-art" :class="{'art-cell-empty': !a.ArtRequirement}">
+                <span v-if="!a.ArtRequirement" class="art-empty-tag">未填写</span>
+                <span v-else class="art-preview">{{ a.ArtRequirement.substring(0, 80) }}{{ a.ArtRequirement.length > 80 ? '…' : '' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 单个美术资源详情 -->
+      <div v-else-if="selected.type === 'artAsset'" class="detail-card">
+        <div v-if="!assetById(selected.id)" class="error">资源不存在</div>
+        <template v-else>
+          <div class="detail-head">
+            <h2>🎨 {{ assetById(selected.id).displayName }}</h2>
+            <div class="edit-controls">
+              <template v-if="!editMode">
+                <button class="edit-btn" @click="enterEdit">✏️ 编辑</button>
+              </template>
+              <template v-else>
+                <span v-if="isDirty" class="dirty-indicator">● 未保存</span>
+                <span v-if="saveStatus === 'saving'" class="saving-indicator">保存中…</span>
+                <span v-if="saveStatus === 'saved'" class="saved-indicator">✓ 已保存</span>
+                <button class="save-btn" @click="saveEdit" :disabled="saveStatus === 'saving' || !isDirty">💾 保存</button>
+                <button class="cancel-btn" @click="exitEdit">✕ 取消</button>
+              </template>
+            </div>
+          </div>
+          <div class="detail-body">
+            <div class="kv-row">
+              <div class="kv-label">显示名</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ assetById(selected.id).displayName }}</template>
+                <template v-else><input v-model="draft.displayName" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">图片路径</div>
+              <div class="kv-value">
+                <span class="path-text">{{ assetById(selected.id).id }}</span>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">使用此图的场景 ({{ scenesUsingAsset(selected.id).length }})</div>
+              <div class="kv-value">
+                <a v-for="s in scenesUsingAsset(selected.id)" :key="s.sceneId"
+                   class="ref-chip scene" @click="selectScene(s.sceneId)">
+                  {{ sceneName(s) }}
+                  <span class="chip-id">#{{ s.sceneId }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">美术需求</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!assetById(selected.id).ArtRequirement" class="empty-field">（未填）</span>
+                  <pre v-else class="art-req">{{ assetById(selected.id).ArtRequirement }}</pre>
+                </template>
+                <template v-else>
+                  <textarea v-model="draft.ArtRequirement" class="art-edit" rows="10"
+                            placeholder="详细的美术需求描述（构图 / 色调 / 时间 / 灯光 / 重点视觉元素 / 参考图 / ...）"></textarea>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
 
       <!-- Loop 详情 -->
@@ -155,18 +286,87 @@
             </h2>
             <span class="id-big">#{{ selected.id }}</span>
             <span class="badge" :class="sceneBadge(selected.id).cls">{{ sceneBadge(selected.id).icon }}</span>
+            <div class="edit-controls">
+              <template v-if="!editMode">
+                <button class="edit-btn" @click="enterEdit">✏️ 编辑</button>
+              </template>
+              <template v-else>
+                <span v-if="isDirty" class="dirty-indicator">● 未保存</span>
+                <span v-if="saveStatus === 'saving'" class="saving-indicator">保存中…</span>
+                <span v-if="saveStatus === 'saved'" class="saved-indicator">✓ 已保存</span>
+                <button class="save-btn" @click="saveEdit" :disabled="saveStatus === 'saving' || !isDirty">💾 保存</button>
+                <button class="cancel-btn" @click="exitEdit">✕ 取消</button>
+              </template>
+            </div>
           </div>
           <div class="detail-body">
             <div class="kv-row">
               <div class="kv-label">地点</div>
-              <div class="kv-value">{{ locationName(sceneById(selected.id)) }} (sceneType={{ sceneTypeRaw(sceneById(selected.id)) }})</div>
+              <div class="kv-value">{{ locationName(sceneById(selected.id)) }}</div>
             </div>
-            <div class="kv-row" v-if="sceneById(selected.id).firstEnterTalk">
+            <div class="kv-row" v-if="sceneAssetId(sceneById(selected.id)) && assetById(sceneAssetId(sceneById(selected.id)))">
+              <div class="kv-label">美术资源</div>
+              <div class="kv-value">
+                <a class="ref-chip asset-chip" @click="selectAsset(sceneAssetId(sceneById(selected.id)))">
+                  🎨 {{ assetById(sceneAssetId(sceneById(selected.id))).displayName }}
+                  <span v-if="assetById(sceneAssetId(sceneById(selected.id))).ArtRequirement" class="art-filled-mini">✓</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">场景分类</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span class="category-pill" :class="sceneCategoryClass[sceneCategory(sceneById(selected.id))]">
+                    {{ sceneCategoryIcon[sceneCategory(sceneById(selected.id))] }}
+                    {{ sceneCategoryLabel[sceneCategory(sceneById(selected.id))] }}
+                  </span>
+                  <span class="legacy-hint">（原 sceneType={{ sceneTypeRaw(sceneById(selected.id)) }} 已弃用）</span>
+                </template>
+                <template v-else>
+                  <select v-model.number="draft.sceneCategory" class="edit-select">
+                    <option :value="0">未分类</option>
+                    <option :value="1">🎬 对话场景</option>
+                    <option :value="2">🔍 探索场景</option>
+                    <option :value="3">⚔️ 指证场景</option>
+                  </select>
+                </template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">开放 Loop</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="(sceneById(selected.id).openInLoops || []).length === 0" class="empty-field">（未设置）</span>
+                  <span v-else v-for="l in sceneById(selected.id).openInLoops" :key="l" class="loop-pill">L{{ l }}</span>
+                </template>
+                <template v-else>
+                  <label v-for="l in 6" :key="l" class="loop-checkbox">
+                    <input type="checkbox" :checked="(draft.openInLoops || []).includes(l)" @change="toggleDraftLoop(l)">
+                    L{{ l }}
+                  </label>
+                </template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">美术需求</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!sceneById(selected.id).ArtRequirement" class="empty-field">（未填）</span>
+                  <pre v-else class="art-req">{{ sceneById(selected.id).ArtRequirement }}</pre>
+                </template>
+                <template v-else>
+                  <textarea v-model="draft.ArtRequirement" class="art-edit" rows="5"
+                            placeholder="描述这个场景的美术需求（背景图 / 环境音 / 视觉细节 / ...）"></textarea>
+                </template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="firstEnterTalkId(sceneById(selected.id))">
               <div class="kv-label">开篇 Talk</div>
               <div class="kv-value">
-                <a class="ref-chip talk" @click="selectTalk(sceneById(selected.id).firstEnterTalk)">
-                  {{ talkPreview(sceneById(selected.id).firstEnterTalk) }}
-                  <span class="chip-id">#{{ sceneById(selected.id).firstEnterTalk }}</span>
+                <a class="ref-chip talk" @click="selectTalk(firstEnterTalkId(sceneById(selected.id)))">
+                  {{ talkPreview(firstEnterTalkId(sceneById(selected.id))) }}
+                  <span class="chip-id">#{{ firstEnterTalkId(sceneById(selected.id)) }}</span>
                 </a>
               </div>
             </div>
@@ -204,11 +404,128 @@
           <div class="detail-head">
             <h2>{{ itemTypeIcon(selected.id) }} {{ itemName(selected.id) }}</h2>
             <span class="id-big">#{{ selected.id }}</span>
+            <div class="edit-controls">
+              <template v-if="!editMode">
+                <button class="edit-btn" @click="enterEdit">✏️ 编辑</button>
+              </template>
+              <template v-else>
+                <span v-if="isDirty" class="dirty-indicator">● 未保存</span>
+                <span v-if="saveStatus === 'saving'" class="saving-indicator">保存中…</span>
+                <span v-if="saveStatus === 'saved'" class="saved-indicator">✓ 已保存</span>
+                <button class="save-btn" @click="saveEdit" :disabled="saveStatus === 'saving' || !isDirty">💾 保存</button>
+                <button class="cancel-btn" @click="exitEdit">✕ 取消</button>
+              </template>
+            </div>
           </div>
           <div class="detail-body">
-            <div class="kv-row" v-for="(v, k) in itemDisplayFields(selected.id)" :key="k">
-              <div class="kv-label">{{ k }}</div>
-              <div class="kv-value" v-html="v"></div>
+            <div class="kv-row">
+              <div class="kv-label">中文名</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (itemById(selected.id).Name || [])[0] || '?' }}</template>
+                <template v-else><input v-model="draft.Name[0]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">英文名</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (itemById(selected.id).Name || [])[1] || '' }}</template>
+                <template v-else><input v-model="draft.Name[1]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">类型</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ itemTypeIcon(selected.id) }} {{ itemTypeLabel(itemById(selected.id).itemType) }}</template>
+                <template v-else>
+                  <select v-model="draft.itemType" class="edit-select">
+                    <option v-for="o in ITEM_TYPE_OPTIONS" :key="o.value" :value="o.value">{{ o.label }}</option>
+                  </select>
+                </template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">中文描述</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!(itemById(selected.id).description || [])[0]" class="empty-field">（未填）</span>
+                  <span v-else>{{ (itemById(selected.id).description || [])[0] }}</span>
+                </template>
+                <template v-else><textarea v-model="draft.description[0]" class="art-edit" rows="3" placeholder="中文描述"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">英文描述</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!(itemById(selected.id).description || [])[1]" class="empty-field">（未填）</span>
+                  <span v-else>{{ (itemById(selected.id).description || [])[1] }}</span>
+                </template>
+                <template v-else><textarea v-model="draft.description[1]" class="art-edit" rows="3" placeholder="English description"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">可分析</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ itemById(selected.id).canAnalyzed ? '是' : '否' }}</template>
+                <template v-else><input type="checkbox" v-model="draft.canAnalyzed" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">可合成</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ itemById(selected.id).canCombined ? '是' : '否' }}</template>
+                <template v-else><input type="checkbox" v-model="draft.canCombined" /></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="(itemById(selected.id).analysedEvidence && itemById(selected.id).analysedEvidence !== '0')">
+              <div class="kv-label">分析后→</div>
+              <div class="kv-value">
+                <a class="ref-chip item" @click="selectItem(itemById(selected.id).analysedEvidence)"
+                   :class="{broken: !itemById(itemById(selected.id).analysedEvidence)}">
+                  {{ itemName(itemById(selected.id).analysedEvidence) }}
+                  <span class="chip-id">#{{ itemById(selected.id).analysedEvidence }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">图标路径</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!itemById(selected.id).iconPath" class="empty-field">（未填）</span>
+                  <span v-else class="path-text">{{ itemById(selected.id).iconPath }}</span>
+                </template>
+                <template v-else><input v-model="draft.iconPath" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">文件夹</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!itemById(selected.id).folderPath" class="empty-field">（未填）</span>
+                  <span v-else class="path-text">{{ itemById(selected.id).folderPath }}</span>
+                </template>
+                <template v-else><input v-model="draft.folderPath" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || itemById(selected.id).ActionParam">
+              <div class="kv-label">交互文本</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ itemById(selected.id).ActionParam || '' }}</template>
+                <template v-else><input v-model="draft.ActionParam" class="edit-text" placeholder="互动时的提示文字" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">美术需求</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!itemById(selected.id).ArtRequirement" class="empty-field">（未填）</span>
+                  <pre v-else class="art-req">{{ itemById(selected.id).ArtRequirement }}</pre>
+                </template>
+                <template v-else>
+                  <textarea v-model="draft.ArtRequirement" class="art-edit" rows="5"
+                            placeholder="描述这个道具的美术需求（图标 / 模型 / 视觉细节 / ...）"></textarea>
+                </template>
+              </div>
             </div>
             <div class="kv-row" v-if="itemUsedIn(selected.id).length > 0">
               <div class="kv-label">被引用于</div>
@@ -232,11 +549,64 @@
           <div class="detail-head">
             <h2>👤 {{ npcName(selected.id) }}</h2>
             <span class="id-big">#{{ selected.id }}</span>
+            <div class="edit-controls">
+              <template v-if="!editMode">
+                <button class="edit-btn" @click="enterEdit">✏️ 编辑</button>
+              </template>
+              <template v-else>
+                <span v-if="isDirty" class="dirty-indicator">● 未保存</span>
+                <span v-if="saveStatus === 'saving'" class="saving-indicator">保存中…</span>
+                <span v-if="saveStatus === 'saved'" class="saved-indicator">✓ 已保存</span>
+                <button class="save-btn" @click="saveEdit" :disabled="saveStatus === 'saving' || !isDirty">💾 保存</button>
+                <button class="cancel-btn" @click="exitEdit">✕ 取消</button>
+              </template>
+            </div>
           </div>
           <div class="detail-body">
-            <div class="kv-row" v-for="(v, k) in npcDisplayFields(selected.id)" :key="k">
-              <div class="kv-label">{{ k }}</div>
-              <div class="kv-value">{{ v }}</div>
+            <div class="kv-row">
+              <div class="kv-label">中文名</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (npcById(selected.id).Name || [])[0] || '?' }}</template>
+                <template v-else><input v-model="draft.Name[0]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">英文名</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (npcById(selected.id).Name || [])[1] || '' }}</template>
+                <template v-else><input v-model="draft.Name[1]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">角色</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ ({1:'死者',2:'嫌疑人',3:'其他',4:'主角'})[String(npcById(selected.id).role)] || `role=${npcById(selected.id).role}` }}</template>
+                <template v-else>
+                  <select v-model="draft.role" class="edit-select">
+                    <option v-for="o in ROLE_OPTIONS" :key="o.value" :value="o.value">{{ o.label }}</option>
+                  </select>
+                </template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">Chapter</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ npcById(selected.id).Chapter || '' }}</template>
+                <template v-else><input v-model="draft.Chapter" class="edit-text" placeholder="EPI01 / EPI02 ..." /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">美术需求</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  <span v-if="!npcById(selected.id).ArtRequirement" class="empty-field">（未填）</span>
+                  <pre v-else class="art-req">{{ npcById(selected.id).ArtRequirement }}</pre>
+                </template>
+                <template v-else>
+                  <textarea v-model="draft.ArtRequirement" class="art-edit" rows="5"
+                            placeholder="描述这个 NPC 的美术需求（立绘 / 头像 / 表情 / ...）"></textarea>
+                </template>
+              </div>
             </div>
             <div class="kv-row" v-if="npcLoopEntries(selected.id).length > 0">
               <div class="kv-label">Loop 实例 ({{ npcLoopEntries(selected.id).length }})</div>
@@ -260,49 +630,44 @@
         </template>
       </div>
 
-      <!-- Talk 详情 -->
-      <div v-else-if="selected.type === 'talk'" class="detail-card">
+      <!-- Talk 详情（对话链气泡视图） -->
+      <div v-else-if="selected.type === 'talk'" class="detail-card talk-detail">
         <div v-if="!talkById(selected.id)" class="error">Talk #{{ selected.id }} 不存在</div>
         <template v-else>
           <div class="detail-head">
-            <h2>💬 {{ talkSpeakerName(selected.id) }}</h2>
-            <span class="id-big">#{{ selected.id }}</span>
+            <h2>💬 对话链</h2>
+            <span class="id-big">起点 #{{ selected.id }}</span>
+            <span class="talk-chain-len">链长 {{ buildDialogueChain(selected.id).length }}</span>
             <span class="badge" :class="talkBadge(selected.id).cls">{{ talkBadge(selected.id).icon }}</span>
           </div>
-          <div class="detail-body">
-            <div class="kv-row">
-              <div class="kv-label">台词</div>
-              <div class="kv-value">{{ localText(talkById(selected.id).Words) }}</div>
-            </div>
-            <div class="kv-row" v-if="talkScriptLabel(selected.id)">
-              <div class="kv-label">动作</div>
-              <div class="kv-value">{{ talkScriptLabel(selected.id) }}</div>
-            </div>
-            <div class="kv-row" v-if="talkBranches(selected.id).length > 0">
-              <div class="kv-label">分支</div>
-              <div class="kv-value">
-                <div v-for="(br, i) in talkBranches(selected.id)" :key="i" class="sub-row">
-                  <span>{{ br.text }}</span>
-                  →
-                  <a class="ref-chip talk" @click="selectTalk(br.next)">
-                    {{ talkPreview(br.next) }}
-                    <span class="chip-id">#{{ br.next }}</span>
-                  </a>
+          <div class="talk-stream">
+            <div v-for="(node, idx) in buildDialogueChain(selected.id)" :key="idx" class="avg-line"
+                 :class="node.talk ? 'kind-' + speakerKind(node.talk.Speaker && node.talk.Speaker.id) : 'kind-missing'">
+              <template v-if="node.talk">
+                <div class="avg-who">
+                  <span class="avg-name">{{ localText(node.talk.Speaker && node.talk.Speaker.Name) || '?' }}</span>
+                  <span class="avg-id">#{{ node.talk.id }}</span>
+                  <span v-if="talkScriptLabel(node.talk.id)" class="avg-script">{{ talkScriptLabel(node.talk.id) }}</span>
                 </div>
-              </div>
+                <div class="avg-text">{{ localText(node.talk.Words) || '（空台词）' }}</div>
+                <div v-if="node.branches" class="avg-branches">
+                  <div class="avg-branches-label">玩家选择：</div>
+                  <button v-for="(br, i) in node.branches" :key="i"
+                          class="avg-branch-btn"
+                          @click="selectTalk(br.targetId)">
+                    {{ br.text || '(无选项文本)' }}
+                    <span class="avg-branch-arrow">→ #{{ br.targetId }}</span>
+                  </button>
+                </div>
+              </template>
+              <template v-else>
+                <div class="avg-missing">⚠️ Talk #{{ node.missingId }} 不存在（链断裂）</div>
+              </template>
             </div>
-            <div class="kv-row" v-if="talkById(selected.id).next">
-              <div class="kv-label">下一句</div>
-              <div class="kv-value">
-                <a class="ref-chip talk" @click="selectTalk(talkById(selected.id).next)">
-                  {{ talkPreview(talkById(selected.id).next) }}
-                  <span class="chip-id">#{{ talkById(selected.id).next }}</span>
-                </a>
-              </div>
-            </div>
-            <div class="kv-row" v-if="talkById(selected.id).videoScene">
-              <div class="kv-label">视频锚</div>
-              <div class="kv-value">{{ talkById(selected.id).videoEpisode }} / {{ talkById(selected.id).videoLoop }} / {{ talkById(selected.id).videoScene }}</div>
+          </div>
+          <div class="talk-footer">
+            <div v-if="talkById(selected.id).videoScene" class="talk-video-anchor">
+              📹 视频锚: {{ talkById(selected.id).videoEpisode }} / {{ talkById(selected.id).videoLoop }} / {{ talkById(selected.id).videoScene }}
             </div>
           </div>
         </template>
@@ -316,8 +681,36 @@
             <h2>❓ {{ doubtById(selected.id).text }}</h2>
             <span class="id-big">#{{ selected.id }}</span>
             <span class="badge" :class="doubtBadge(selected.id).cls">{{ doubtBadge(selected.id).icon }}</span>
+            <div class="edit-controls">
+              <template v-if="!editMode">
+                <button class="edit-btn" @click="enterEdit">✏️ 编辑</button>
+              </template>
+              <template v-else>
+                <span v-if="isDirty" class="dirty-indicator">● 未保存</span>
+                <span v-if="saveStatus === 'saving'" class="saving-indicator">保存中…</span>
+                <span v-if="saveStatus === 'saved'" class="saved-indicator">✓ 已保存</span>
+                <button class="save-btn" @click="saveEdit" :disabled="saveStatus === 'saving' || !isDirty">💾 保存</button>
+                <button class="cancel-btn" @click="exitEdit">✕ 取消</button>
+              </template>
+            </div>
           </div>
           <div class="detail-body">
+            <div class="kv-row">
+              <div class="kv-label">疑点文本</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ doubtById(selected.id).text }}</template>
+                <template v-else><textarea v-model="draft.text" class="art-edit" rows="2"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">类型</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ doubtById(selected.id).isFragment ? '碎片' : '完整疑点' }}</template>
+                <template v-else>
+                  <label class="edit-checkbox"><input type="checkbox" v-model="draft.isFragment"> 是碎片（isFragment）</label>
+                </template>
+              </div>
+            </div>
             <div class="kv-row">
               <div class="kv-label">触发条件</div>
               <div class="kv-value">
@@ -384,19 +777,125 @@
           <div class="detail-head">
             <h2>💬 证词条目</h2>
             <span class="id-big">#{{ selected.id }}</span>
+            <div class="edit-controls">
+              <template v-if="!editMode">
+                <button class="edit-btn" @click="enterEdit">✏️ 编辑</button>
+              </template>
+              <template v-else>
+                <span v-if="isDirty" class="dirty-indicator">● 未保存</span>
+                <span v-if="saveStatus === 'saving'" class="saving-indicator">保存中…</span>
+                <span v-if="saveStatus === 'saved'" class="saved-indicator">✓ 已保存</span>
+                <button class="save-btn" @click="saveEdit" :disabled="saveStatus === 'saving' || !isDirty">💾 保存</button>
+                <button class="cancel-btn" @click="exitEdit">✕ 取消</button>
+              </template>
+            </div>
           </div>
           <div class="detail-body">
-            <div class="kv-row">
-              <div class="kv-label">陈述</div>
-              <div class="kv-value">{{ localText(testimonyItemById(selected.id).testimony) }}</div>
+            <div class="kv-row" v-if="testimonyItemNpcId(selected.id)">
+              <div class="kv-label">来自</div>
+              <div class="kv-value">
+                <a class="ref-chip npc" @click="selectNpc(testimonyItemNpcId(selected.id))"
+                   :class="{broken: !npcById(testimonyItemNpcId(selected.id))}">
+                  {{ npcName(testimonyItemNpcId(selected.id)) }}
+                  <span class="chip-id">#{{ testimonyItemNpcId(selected.id) }}</span>
+                </a>
+                <span class="loop-pill" v-if="testimonyItemLoop(selected.id)">
+                  L{{ testimonyItemLoop(selected.id) }}
+                </span>
+              </div>
             </div>
-            <div class="kv-row" v-if="testimonyItemById(selected.id).truth">
-              <div class="kv-label">真相</div>
-              <div class="kv-value">{{ localText(testimonyItemById(selected.id).truth) }}</div>
+            <div class="kv-row">
+              <div class="kv-label">陈述（中）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).testimony || [])[0] || '' }}</template>
+                <template v-else><textarea v-model="draft.testimony[0]" class="art-edit" rows="2"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || (testimonyItemById(selected.id).testimony || [])[1]">
+              <div class="kv-label">陈述（英）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).testimony || [])[1] || '' }}</template>
+                <template v-else><textarea v-model="draft.testimony[1]" class="art-edit" rows="2"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || ((testimonyItemById(selected.id).shortDesc || [])[0])">
+              <div class="kv-label">陈述摘要（中）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).shortDesc || [])[0] || '' }}</template>
+                <template v-else><input v-model="draft.shortDesc[0]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || ((testimonyItemById(selected.id).shortDesc || [])[1])">
+              <div class="kv-label">陈述摘要（英）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).shortDesc || [])[1] || '' }}</template>
+                <template v-else><input v-model="draft.shortDesc[1]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">真相（中）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).truth || [])[0] || '' }}</template>
+                <template v-else><textarea v-model="draft.truth[0]" class="art-edit" rows="2"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || (testimonyItemById(selected.id).truth || [])[1]">
+              <div class="kv-label">真相（英）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).truth || [])[1] || '' }}</template>
+                <template v-else><textarea v-model="draft.truth[1]" class="art-edit" rows="2"></textarea></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || ((testimonyItemById(selected.id).shortTruth || [])[0])">
+              <div class="kv-label">真相摘要（中）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).shortTruth || [])[0] || '' }}</template>
+                <template v-else><input v-model="draft.shortTruth[0]" class="edit-text" /></template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="editMode || ((testimonyItemById(selected.id).shortTruth || [])[1])">
+              <div class="kv-label">真相摘要（英）</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ (testimonyItemById(selected.id).shortTruth || [])[1] || '' }}</template>
+                <template v-else><input v-model="draft.shortTruth[1]" class="edit-text" /></template>
+              </div>
             </div>
             <div class="kv-row">
               <div class="kv-label">类型</div>
-              <div class="kv-value">testimonyType={{ testimonyItemById(selected.id).testimonyType }} · triggerType={{ testimonyItemById(selected.id).triggerType }}</div>
+              <div class="kv-value">
+                <template v-if="!editMode">{{ testimonyTypeLabel(testimonyItemById(selected.id).testimonyType) }}</template>
+                <template v-else>
+                  <select v-model="draft.testimonyType" class="edit-select">
+                    <option v-for="o in TESTIMONY_TYPE_OPTIONS" :key="o.value" :value="o.value">{{ o.label }}</option>
+                  </select>
+                </template>
+              </div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">触发</div>
+              <div class="kv-value">
+                <template v-if="!editMode">
+                  {{ triggerTypeLabel(testimonyItemById(selected.id).triggerType) }}
+                  <span v-if="testimonyItemById(selected.id).triggerParam" class="trigger-param">
+                    · {{ triggerParamDisplay(testimonyItemById(selected.id)) }}
+                  </span>
+                </template>
+                <template v-else>
+                  <select v-model="draft.triggerType" class="edit-select">
+                    <option v-for="o in TRIGGER_TYPE_OPTIONS" :key="o.value" :value="o.value">{{ o.label }}</option>
+                  </select>
+                  <input v-model="draft.triggerParam" class="edit-text" placeholder="参数: NPCID  或  NPCID,sceneId,startTime,endTime  或  NPCID1,NPCID2" style="margin-left: 8px; flex: 1; min-width: 280px;" />
+                </template>
+              </div>
+            </div>
+            <div class="kv-row" v-if="testimonyContaining(selected.id)">
+              <div class="kv-label">所属证词组</div>
+              <div class="kv-value">
+                <span class="ref-chip testimony">
+                  Testimony #{{ testimonyContaining(selected.id).id }}
+                  <span class="chip-id">{{ localText(testimonyContaining(selected.id).words).substring(0, 30) }}{{ localText(testimonyContaining(selected.id).words).length > 30 ? '…' : '' }}</span>
+                </span>
+              </div>
             </div>
           </div>
         </template>
