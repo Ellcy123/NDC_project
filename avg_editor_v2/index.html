@@ -477,6 +477,1072 @@
         .evidence-table tr.missing td:first-child,
         .evidence-table tr:has(.art-req.empty) td:first-child { box-shadow: inset 3px 0 0 var(--brick); }
 
+        /* ===== UnitFlow Overview ===== */
+        .unit-flow-page {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .unit-flow-hero {
+            border: 1px solid var(--rule);
+            background: color-mix(in srgb, var(--secondary) 88%, #000 12%);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .unit-flow-kicker {
+            color: var(--highlight);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .unit-flow-title {
+            margin-top: 0.25rem;
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .unit-flow-alias {
+            margin-top: 0.45rem;
+            color: var(--warning);
+            font-size: 0.85rem;
+        }
+        .loop-flow-rail {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(120px, 1fr));
+            gap: 0.65rem;
+        }
+        .loop-flow-card {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.8rem;
+            background: var(--card);
+            cursor: pointer;
+            min-height: 106px;
+        }
+        .loop-flow-card:hover,
+        .loop-flow-card.active {
+            border-color: var(--highlight);
+            background: color-mix(in srgb, var(--highlight) 7%, var(--card));
+        }
+        .loop-flow-num {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-family: var(--mono);
+        }
+        .loop-flow-name {
+            margin-top: 0.35rem;
+            color: var(--text);
+            font-weight: 800;
+        }
+        .loop-flow-goal {
+            margin-top: 0.35rem;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+        .flow-detail-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            gap: 1rem;
+        }
+        .flow-panel {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            background: var(--card);
+            padding: 1rem;
+        }
+        .flow-panel h2,
+        .flow-panel h3 {
+            margin: 0;
+            color: var(--text);
+        }
+        .flow-panel-sub {
+            margin-top: 0.35rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .flow-stage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-top: 1rem;
+        }
+        .flow-stage {
+            border: 1px solid var(--rule);
+            border-left: 4px solid var(--highlight);
+            border-radius: 8px;
+            padding: 0.8rem;
+            background: color-mix(in srgb, var(--secondary) 82%, #000 18%);
+        }
+        .flow-stage-title {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            color: var(--text);
+            font-weight: 800;
+        }
+        .flow-stage-type {
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+        }
+        .flow-stage-summary {
+            margin-top: 0.35rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .flow-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.65rem;
+        }
+        .flow-chip {
+            border: 1px solid var(--rule);
+            border-radius: 999px;
+            padding: 0.22rem 0.55rem;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            background: var(--secondary);
+        }
+        .flow-chip.clickable {
+            cursor: pointer;
+        }
+        .flow-chip.clickable:hover {
+            border-color: var(--highlight);
+            color: var(--highlight);
+        }
+        .flow-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            margin-top: 0.8rem;
+        }
+        .flow-list-item {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.7rem;
+            background: color-mix(in srgb, var(--secondary) 86%, #000 14%);
+        }
+        .flow-list-title {
+            color: var(--text);
+            font-weight: 750;
+        }
+        .flow-list-sub {
+            margin-top: 0.25rem;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+        .flow-warning {
+            border: 1px solid color-mix(in srgb, var(--warning) 55%, var(--rule));
+            color: var(--warning);
+            border-radius: 8px;
+            padding: 0.7rem;
+            background: color-mix(in srgb, var(--warning) 8%, transparent);
+        }
+        .flow-edit-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.7rem;
+            margin-top: 1rem;
+        }
+        .flow-edit-field {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.65rem;
+            background: color-mix(in srgb, var(--secondary) 82%, #000 18%);
+        }
+        .flow-edit-field.wide {
+            grid-column: 1 / -1;
+        }
+        .flow-edit-label {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            color: var(--highlight);
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .flow-edit-ref {
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-weight: 500;
+        }
+        .flow-edit-input,
+        .flow-edit-textarea {
+            width: 100%;
+            margin-top: 0.45rem;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: var(--primary);
+            color: var(--text);
+            padding: 0.55rem;
+            font: inherit;
+            line-height: 1.45;
+        }
+        .flow-edit-textarea {
+            min-height: 76px;
+            resize: vertical;
+        }
+        .flow-edit-commit {
+            margin-top: 0.45rem;
+            padding: 0.24rem 0.55rem;
+            font-size: 0.75rem;
+        }
+        .change-log-panel {
+            margin-top: 1rem;
+            border: 1px solid color-mix(in srgb, var(--highlight) 45%, var(--rule));
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--highlight) 6%, var(--card));
+            padding: 0.85rem;
+        }
+        .change-log-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            color: var(--text);
+            font-weight: 800;
+        }
+        .change-log-actions {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+        .change-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-top: 0.7rem;
+        }
+        .change-log-item {
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            padding: 0.55rem;
+            background: var(--secondary);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            line-height: 1.4;
+        }
+        .change-log-item strong {
+            color: var(--text);
+        }
+        .change-log-empty {
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            margin-top: 0.65rem;
+        }
+        .doubt-edit-card {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.7rem;
+            background: color-mix(in srgb, var(--secondary) 86%, #000 14%);
+            margin-top: 0.55rem;
+        }
+        .doubt-edit-title {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            color: var(--text);
+            font-weight: 800;
+        }
+        .dep-row,
+        .dep-add-row {
+            display: grid;
+            grid-template-columns: 92px 96px minmax(0, 1fr) 142px;
+            grid-template-areas:
+                "depType depParam depLabel depActions"
+                "depType depParam depStatus depActions";
+            gap: 0.36rem 0.55rem;
+            align-items: center;
+            margin-top: 0.5rem;
+            padding: 0.55rem;
+            border: 1px solid color-mix(in srgb, var(--rule) 84%, transparent);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--primary) 72%, transparent);
+        }
+        .dep-add-row {
+            margin-top: 0.65rem;
+            border-style: dashed;
+            background: color-mix(in srgb, var(--secondary) 72%, transparent);
+        }
+        .dep-row select,
+        .dep-row input,
+        .dep-add-row select,
+        .dep-add-row input {
+            width: 100%;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: var(--primary);
+            color: var(--text);
+            padding: 0.42rem;
+            font: inherit;
+            font-size: 0.82rem;
+            min-height: 35px;
+        }
+        .dep-row select,
+        .dep-add-row select {
+            grid-area: depType;
+        }
+        .dep-row input,
+        .dep-add-row input {
+            grid-area: depParam;
+        }
+        .dep-label {
+            grid-area: depLabel;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.3;
+            min-width: 0;
+        }
+        .dep-status {
+            grid-area: depStatus;
+            justify-self: start;
+            border: 1px solid var(--rule);
+            border-radius: 999px;
+            padding: 0.22rem 0.45rem;
+            text-align: center;
+            font-size: 0.74rem;
+            white-space: nowrap;
+        }
+        .dep-status.current,
+        .dep-status.previous {
+            color: var(--success);
+            border-color: color-mix(in srgb, var(--success) 55%, var(--rule));
+            background: color-mix(in srgb, var(--success) 8%, transparent);
+        }
+        .dep-status.future,
+        .dep-status.missing {
+            color: var(--warning);
+            border-color: color-mix(in srgb, var(--warning) 55%, var(--rule));
+            background: color-mix(in srgb, var(--warning) 8%, transparent);
+        }
+        .dep-status.unknown {
+            color: var(--text-muted);
+        }
+        .dep-actions {
+            grid-area: depActions;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.3rem;
+            align-self: stretch;
+        }
+        .dep-actions .btn {
+            padding: 0.22rem 0.35rem;
+            font-size: 0.74rem;
+            min-width: 0;
+            white-space: nowrap;
+        }
+        .dep-actions .btn.ghost {
+            grid-column: 1 / -1;
+        }
+        .dep-add-row .dep-actions {
+            grid-template-columns: 1fr;
+        }
+        .dep-picker-modal {
+            width: min(860px, calc(100vw - 48px));
+            max-width: calc(100vw - 48px);
+            box-sizing: border-box;
+        }
+        .dep-picker-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+            min-width: 0;
+        }
+        .dep-picker-title {
+            color: var(--text);
+            font-weight: 900;
+            font-size: 1rem;
+        }
+        .dep-picker-sub {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+        }
+        .dep-picker-tools {
+            display: grid;
+            grid-template-columns: 150px minmax(0, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 0.75rem;
+            min-width: 0;
+        }
+        .dep-picker-tools select,
+        .dep-picker-tools input {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: var(--primary);
+            color: var(--text);
+            padding: 0.52rem 0.6rem;
+            font: inherit;
+            font-size: 0.86rem;
+        }
+        .dep-picker-list {
+            display: grid;
+            gap: 0.55rem;
+            max-height: min(60vh, 560px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 0.35rem;
+            min-width: 0;
+        }
+        .dep-picker-item {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            background: var(--secondary);
+            padding: 0.65rem 0.7rem;
+            cursor: pointer;
+            box-sizing: border-box;
+            max-width: 100%;
+            min-width: 0;
+            overflow: hidden;
+            transition: border-color .15s ease, transform .15s ease, background .15s ease;
+        }
+        .dep-picker-item:hover {
+            border-color: var(--highlight);
+            background: color-mix(in srgb, var(--secondary) 82%, var(--highlight) 18%);
+            transform: translateY(-1px);
+        }
+        .dep-picker-item-top {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(76px, auto);
+            gap: 0.75rem;
+            align-items: start;
+            min-width: 0;
+        }
+        .dep-picker-item-name {
+            color: var(--text);
+            font-weight: 800;
+            line-height: 1.35;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .dep-picker-item-meta {
+            margin-top: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            line-height: 1.45;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .dep-picker-id {
+            color: var(--highlight);
+            font-family: var(--ff-mono);
+            font-size: 0.78rem;
+            text-align: right;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .dep-picker-empty {
+            border: 1px dashed var(--rule);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .flow-mini-editor {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.7rem;
+            background: color-mix(in srgb, var(--secondary) 84%, #000 16%);
+            margin-top: 1rem;
+        }
+        .flow-mini-editor-title {
+            color: var(--text);
+            font-weight: 850;
+            margin-bottom: 0.55rem;
+        }
+        .flow-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .flow-module-card {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.82rem;
+            background: color-mix(in srgb, var(--secondary) 86%, #000 14%);
+            min-width: 0;
+        }
+        .flow-module-card.wide {
+            grid-column: 1 / -1;
+        }
+        .flow-module-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .flow-module-title {
+            color: var(--text);
+            font-weight: 850;
+            font-size: 0.92rem;
+        }
+        .flow-module-hint {
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            margin-top: 0.18rem;
+        }
+        .flow-module-body {
+            margin-top: 0.65rem;
+            min-width: 0;
+        }
+        .flow-module-list {
+            display: grid;
+            gap: 0.42rem;
+            min-width: 0;
+        }
+        .flow-module-list.compact {
+            gap: 0.34rem;
+        }
+        .flow-module-line {
+            display: grid;
+            grid-template-columns: 5.2rem minmax(0, 1fr);
+            gap: 0.55rem;
+            align-items: baseline;
+            min-width: 0;
+        }
+        .flow-module-line.vertical {
+            display: block;
+            border-top: 1px solid color-mix(in srgb, var(--rule) 72%, transparent);
+            padding-top: 0.42rem;
+        }
+        .flow-module-line.vertical:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+        .flow-module-line span {
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+        .flow-module-line strong {
+            display: block;
+            color: var(--text);
+            font-size: 0.84rem;
+            line-height: 1.42;
+            font-weight: 650;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .flow-module-line em {
+            display: block;
+            margin-top: 0.2rem;
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            font-style: normal;
+        }
+        .flow-editor-shell {
+            margin-top: 1rem;
+            border: 1px solid var(--rule);
+            border-radius: 10px;
+            background: color-mix(in srgb, var(--secondary) 88%, #000 12%);
+            padding: 0.9rem;
+        }
+        .flow-editor-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.8rem;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        .flow-editor-kicker {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .flow-editor-title {
+            color: var(--text);
+            font-size: 1.05rem;
+            font-weight: 900;
+            margin-top: 0.16rem;
+        }
+        .flow-editor-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.42rem;
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+            padding: 0.62rem 0;
+        }
+        .flow-editor-tab {
+            border: 1px solid var(--rule);
+            border-radius: 999px;
+            background: var(--primary);
+            color: var(--text-secondary);
+            padding: 0.42rem 0.72rem;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+        .flow-editor-tab.active,
+        .flow-editor-tab:hover {
+            border-color: var(--highlight);
+            color: var(--highlight);
+            background: color-mix(in srgb, var(--secondary) 82%, var(--highlight) 18%);
+        }
+        .flow-editor-body {
+            margin-top: 0.85rem;
+        }
+        .validation-page {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .validation-toolbar {
+            display: flex;
+            gap: 0.55rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 0.75rem;
+        }
+        .validation-toolbar select {
+            min-width: 150px;
+        }
+        .validation-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .validation-stat-card {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            background: var(--card);
+            padding: 0.85rem;
+        }
+        .validation-stat-num {
+            color: var(--text);
+            font-size: 1.35rem;
+            font-weight: 900;
+        }
+        .validation-stat-label {
+            margin-top: 0.18rem;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+        .validation-list {
+            display: grid;
+            gap: 0.62rem;
+        }
+        .validation-issue {
+            border: 1px solid var(--rule);
+            border-left: 4px solid var(--text-muted);
+            border-radius: 8px;
+            background: var(--card);
+            padding: 0.78rem;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.7rem;
+            align-items: start;
+        }
+        .validation-issue.error {
+            border-left-color: var(--brick);
+        }
+        .validation-issue.warn {
+            border-left-color: var(--warning);
+        }
+        .validation-issue-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.42rem;
+            margin-bottom: 0.38rem;
+        }
+        .validation-severity {
+            border-radius: 999px;
+            padding: 0.16rem 0.45rem;
+            font-size: 0.68rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            border: 1px solid var(--rule);
+        }
+        .validation-severity.error {
+            color: var(--brick);
+            border-color: color-mix(in srgb, var(--brick) 54%, var(--rule));
+        }
+        .validation-severity.warn {
+            color: var(--warning);
+            border-color: color-mix(in srgb, var(--warning) 54%, var(--rule));
+        }
+        .validation-module {
+            color: var(--highlight);
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+        .validation-loop {
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+        }
+        .validation-message {
+            color: var(--text);
+            font-weight: 820;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+        .validation-detail {
+            margin-top: 0.28rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+        .validation-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            justify-content: flex-end;
+        }
+        .validation-actions .btn {
+            padding: 0.26rem 0.52rem;
+            font-size: 0.74rem;
+        }
+        .validation-empty {
+            border: 1px dashed var(--rule);
+            border-radius: 8px;
+            color: var(--text-muted);
+            background: color-mix(in srgb, var(--secondary) 84%, #000 16%);
+            padding: 1.2rem;
+            text-align: center;
+        }
+        @media (max-width: 980px) {
+            .flow-overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .flow-module-card.wide {
+                grid-column: auto;
+            }
+            .validation-summary-grid,
+            .validation-issue {
+                grid-template-columns: 1fr;
+            }
+            .validation-actions {
+                justify-content: flex-start;
+            }
+        }
+        .flow-entry-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+        .flow-entry-field {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        .flow-entry-field label {
+            grid-column: 1 / -1;
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .flow-entry-field input,
+        .flow-entry-field select,
+        .expose-item-row input,
+        .scene-add-row select {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: var(--primary);
+            color: var(--text);
+            padding: 0.46rem 0.52rem;
+            font: inherit;
+            font-size: 0.82rem;
+        }
+        .scene-edit-list,
+        .expose-edit-list {
+            display: grid;
+            gap: 0.48rem;
+            margin-top: 0.55rem;
+        }
+        .scene-edit-row,
+        .expose-edit-card {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--primary) 72%, transparent);
+            padding: 0.58rem;
+        }
+        .scene-edit-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.45rem 0.65rem;
+            align-items: center;
+        }
+        .scene-edit-row.pending-closed {
+            opacity: 0.62;
+        }
+        .scene-edit-name,
+        .expose-edit-title {
+            color: var(--text);
+            font-weight: 800;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .scene-edit-meta,
+        .expose-edit-meta {
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            margin-top: 0.18rem;
+        }
+        .scene-edit-actions,
+        .expose-item-actions {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .scene-add-row,
+        .expose-item-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.4rem;
+            align-items: center;
+            margin-top: 0.45rem;
+        }
+        .expose-item-row {
+            grid-template-columns: 96px minmax(0, 1fr) auto;
+            padding-top: 0.45rem;
+            border-top: 1px solid color-mix(in srgb, var(--rule) 75%, transparent);
+        }
+        .expose-add-row {
+            grid-template-columns: 96px 120px minmax(0, 1fr) auto;
+        }
+        .expose-round-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.6rem;
+            align-items: start;
+        }
+        .expose-target-box {
+            margin-top: 0.55rem;
+            border: 1px solid color-mix(in srgb, var(--highlight) 34%, var(--rule));
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--highlight) 5%, var(--primary));
+            padding: 0.55rem 0.62rem;
+        }
+        .expose-target-title {
+            color: var(--text);
+            font-size: 0.82rem;
+            font-weight: 850;
+            overflow-wrap: anywhere;
+        }
+        .expose-target-meta,
+        .expose-material-detail {
+            margin-top: 0.24rem;
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }
+        .expose-material-card {
+            min-width: 0;
+        }
+        .expose-material-title {
+            color: var(--text);
+            font-size: 0.83rem;
+            font-weight: 800;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }
+        .expose-material-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.28rem;
+            margin-top: 0.32rem;
+        }
+        .expose-add-type {
+            width: 96px;
+        }
+        .expose-item-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.35;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .event-edit-list,
+        .event-param-list {
+            display: grid;
+            gap: 0.55rem;
+        }
+        .event-group {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--secondary) 86%, #000 14%);
+            padding: 0.68rem;
+        }
+        .event-group-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text);
+            font-weight: 850;
+            margin-bottom: 0.5rem;
+        }
+        .event-edit-card {
+            border: 1px solid color-mix(in srgb, var(--rule) 80%, transparent);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--primary) 72%, transparent);
+            padding: 0.62rem;
+            margin-top: 0.48rem;
+        }
+        .event-edit-top {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.55rem;
+            align-items: start;
+        }
+        .event-edit-title {
+            color: var(--text);
+            font-weight: 850;
+            overflow-wrap: anywhere;
+        }
+        .event-edit-meta,
+        .event-quote {
+            margin-top: 0.22rem;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }
+        .event-quote {
+            color: var(--text-secondary);
+            border-left: 2px solid var(--rule);
+            padding-left: 0.55rem;
+            margin: 0.55rem 0;
+        }
+        .event-edit-grid,
+        .event-param-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.45rem;
+            align-items: end;
+        }
+        .event-edit-grid label {
+            display: grid;
+            gap: 0.24rem;
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+        .event-edit-grid input,
+        .event-edit-grid select,
+        .event-param-row input {
+            width: 100%;
+            min-width: 0;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            background: var(--primary);
+            color: var(--text);
+            padding: 0.42rem;
+            font: inherit;
+            font-size: 0.82rem;
+        }
+        .event-param-row {
+            grid-template-columns: 70px 96px minmax(0, 1fr) auto;
+            margin-top: 0.38rem;
+        }
+        .event-param-list.readonly {
+            margin-top: 0.45rem;
+            gap: 0.34rem;
+        }
+        .event-param-read {
+            display: grid;
+            grid-template-columns: 70px 90px minmax(0, 1fr);
+            gap: 0.45rem;
+            align-items: baseline;
+            border-top: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+            padding-top: 0.34rem;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+        }
+        .event-param-read span {
+            color: var(--highlight);
+            font-weight: 850;
+        }
+        .event-param-read strong {
+            color: var(--text);
+            font-weight: 750;
+        }
+        .event-param-read em {
+            color: var(--text-muted);
+            font-style: normal;
+            overflow-wrap: anywhere;
+        }
+        .event-param-label {
+            color: var(--highlight);
+            font-size: 0.74rem;
+            font-weight: 850;
+        }
+        .scene-edit-actions .btn,
+        .expose-item-actions .btn,
+        .flow-entry-field .btn,
+        .scene-add-row .btn,
+        .event-edit-grid .btn,
+        .event-param-row .btn {
+            padding: 0.23rem 0.5rem;
+            font-size: 0.74rem;
+        }
+        @media (max-width: 1100px) {
+            .loop-flow-rail,
+            .flow-detail-grid,
+            .flow-edit-grid,
+            .flow-entry-grid,
+            .scene-edit-row,
+            .scene-add-row,
+            .expose-round-head,
+            .expose-add-row,
+            .event-edit-top,
+            .event-edit-grid,
+            .event-param-row,
+            .event-param-read,
+            .expose-item-row {
+                grid-template-columns: 1fr;
+            }
+            .expose-add-type {
+                width: 100%;
+            }
+            .dep-row,
+            .dep-add-row,
+            .dep-picker-tools {
+                grid-template-columns: 1fr;
+            }
+            .dep-picker-modal {
+                width: min(680px, calc(100vw - 24px));
+                max-width: calc(100vw - 24px);
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+            .dep-picker-head {
+                flex-direction: column;
+            }
+            .dep-picker-item-top {
+                grid-template-columns: 1fr;
+            }
+            .dep-picker-id {
+                text-align: left;
+            }
+        }
+
         .id-col { width: 72px; font-family: var(--ff-mono); font-size: 11px; color: var(--gold); letter-spacing: .06em; }
         .type-col { width: 88px; }
         .name-col { width: 170px; font-family: var(--ff-serif); font-weight: 600; font-size: 13px; color: var(--parchment); }
@@ -2410,6 +3476,9 @@
             <button class="main-tab" id="btnArt" onclick="GameController.switchView('art')">
                 <span class="tab-idx">02</span>美术需求总览
             </button>
+            <button class="main-tab" id="btnValidate" onclick="GameController.switchView('validate')">
+                <span class="tab-idx">03</span>配置校验
+            </button>
             <span class="tab-meta" id="tabMeta"></span>
         </div>
 
@@ -2488,6 +3557,14 @@
         <div class="modal">
             <button class="modal-close" onclick="DoubtView.close()">&times;</button>
             <div id="doubtDrawerContent"></div>
+        </div>
+    </div>
+
+    <!-- Dependency Picker -->
+    <div class="modal-overlay" id="depPickerModal" onclick="if(event.target===this) FlowOverviewView.closeDependencyPicker()">
+        <div class="modal dep-picker-modal">
+            <button class="modal-close" onclick="FlowOverviewView.closeDependencyPicker()">&times;</button>
+            <div id="depPickerContent"></div>
         </div>
     </div>
 
@@ -2595,6 +3672,7 @@
         allTalks: [],
         allTestimonies: [],
         allDoubts: [],
+        allTimelineEvents: [],
 
         itemsMap: new Map(),
         scenesMap: new Map(),
@@ -2602,11 +3680,15 @@
         talksMap: new Map(),
         testimoniesByNpc: new Map(),
         doubtsMap: new Map(),
+        timelineEventIds: new Set(),
         satisfiedConditions: new Set(),
 
         talkSummaries: {},
         sceneTalkSummaries: {},
         storyOverview: {},
+        unitFlowData: null,
+        unitFlow: null,
+        pendingChanges: [],
         chapterConfigs: [],
         chapterConfigMap: new Map(),
         artAssetMap: new Map(),
@@ -2699,20 +3781,27 @@
             const base = Config.paths.tableData;
             const t = `?t=${Date.now()}`;
 
-            const [items, scenes, npcs, testimonies, doubts, artAssets] = await Promise.all([
+            const [items, scenes, npcs, testimonies, doubts, artAssets, timelineEventsRaw] = await Promise.all([
                 this.loadJSON(`${base}/ItemStaticData.json${t}`),
                 this.loadJSON(`${base}/SceneConfig.json${t}`),
                 this.loadJSON(`${base}/NPCStaticData.json${t}`),
                 this.loadJSON(`${base}/TestimonyItem.json${t}`).catch(() => []),
                 this.loadJSON(`${base}/DoubtConfig.json${t}`).catch(() => []),
-                this.loadJSON(`${base}/ArtAssetConfig.json${t}`).catch(() => [])
+                this.loadJSON(`${base}/ArtAssetConfig.json${t}`).catch(() => []),
+                this.loadJSON(`${base}/TimeLineEvent.json${t}`)
+                    .catch(() => this.loadJSON(`/Assets/table/TimeLineEvent.json${t}`).catch(() => []))
             ]);
+            const timelineEvents = Array.isArray(timelineEventsRaw)
+                ? timelineEventsRaw
+                : (Array.isArray(timelineEventsRaw?.value) ? timelineEventsRaw.value : []);
 
             AppState.allItems = items;
             AppState.allScenes = scenes;
             AppState.allNPCs = npcs;
             AppState.allTestimonies = Array.isArray(testimonies) ? testimonies : [];
             AppState.allDoubts = Array.isArray(doubts) ? doubts : [];
+            AppState.allTimelineEvents = timelineEvents;
+            AppState.timelineEventIds = new Set(timelineEvents.map(e => String(e.TimeEvent ?? e.id ?? '')).filter(Boolean));
             AppState.doubtsMap.clear();
             AppState.allDoubts.forEach(d => AppState.doubtsMap.set(String(d.id), d));
 
@@ -2823,6 +3912,19 @@
                     });
                 }
             } catch (e) { /* silent */ }
+        },
+
+        async loadUnitFlow(unit) {
+            AppState.unitFlowData = null;
+            AppState.unitFlow = null;
+            try {
+                const path = `/data/formal/unit_flow.json?t=${Date.now()}`;
+                const data = await this.loadJSON(path);
+                AppState.unitFlowData = data;
+                AppState.unitFlow = data?.units?.[unit] || null;
+            } catch (e) {
+                console.warn('UnitFlow not available:', e.message);
+            }
         },
 
         // ===== AVG Talk 加载 =====
@@ -4376,6 +5478,2236 @@
         }
     };
 
+    // ===== Unit Flow Overview (planning-level, not dialogue-line graph) =====
+    const FlowOverviewView = {
+        editableFields: {
+            title: { label: 'Loop 标题', tableField: 'chapterTitle', multiline: false },
+            goal: { label: '循环目标', tableField: 'chapterGoal', multiline: true },
+            brief: { label: 'Loop 简述', tableField: 'chapterBrief', multiline: true },
+            newDoubtTitle: { label: '新疑点标题', tableField: 'newDoubtTitle', multiline: false },
+            newDoubtContent: { label: '新疑点内容', tableField: 'newDoubtContent', multiline: true },
+            summaryContent: { label: 'Loop 总结', tableField: 'summaryContent', multiline: true },
+        },
+        pickerState: null,
+        editPage: null,
+        _originalTalkEvents: new Map(),
+
+        render() {
+            const flow = AppState.unitFlow;
+            const content = document.getElementById('content');
+            if (!flow || !Array.isArray(flow.loops) || flow.loops.length === 0) {
+                content.innerHTML = `
+                    <div class="unit-flow-page">
+                        <div class="flow-warning">
+                            当前 Unit 没有 UnitFlow 数据。请先运行 <code>build_unit_flow.py</code>，或检查 ChapterConfig 是否有对应 Unit。
+                        </div>
+                    </div>
+                `;
+                UI.renderSidebar();
+                return;
+            }
+            this.applyPendingToFlow();
+
+            const selectedId = AppState.currentLoop || flow.loops[0].id;
+            const selected = flow.loops.find(l => l.id === selectedId) || flow.loops[0];
+            this.ensureOriginals(selected);
+            const aliasText = flow.formalUnit && flow.formalUnit !== flow.unit
+                ? `当前展示的是 ${escapeHtml(flow.unit)} 的设计名，正式配置映射到 ${escapeHtml(flow.formalUnit)}。`
+                : '';
+
+            let html = `<div class="unit-flow-page">`;
+            html += `
+                <section class="unit-flow-hero">
+                    <div class="unit-flow-kicker">Unit Flow · ${escapeHtml(flow.chapter || '')}</div>
+                    <div class="unit-flow-title">${escapeHtml(flow.unit)} · ${escapeHtml(flow.title || '')}</div>
+                    ${aliasText ? `<div class="unit-flow-alias">${aliasText}</div>` : ''}
+                </section>
+            `;
+
+            html += `<section class="loop-flow-rail">`;
+            flow.loops.forEach(loop => {
+                const active = loop.id === selected.id ? 'active' : '';
+                html += `
+                    <article class="loop-flow-card ${active}" onclick="FlowOverviewView.pick('${escapeHtml(loop.id)}')">
+                        <div class="loop-flow-num">${escapeHtml(loop.chapterId || '')} · ${escapeHtml(loop.id)}</div>
+                        <div class="loop-flow-name">${escapeHtml(loop.title || '')}</div>
+                        <div class="loop-flow-goal">${escapeHtml(loop.goal || '未配置目标')}</div>
+                    </article>
+                `;
+            });
+            html += `</section>`;
+
+            const isEditing = this.editPage && this.editPage.loopId === selected.id;
+            html += `
+                <section class="flow-detail-grid">
+                    <div class="flow-panel">
+                        <h2>${escapeHtml(selected.title || selected.id)}</h2>
+                        <div class="flow-panel-sub">${escapeHtml(selected.brief || '')}</div>
+                        <div class="flow-chip-row">
+                            <span class="flow-chip">目标：${escapeHtml(selected.goal || '未配置')}</span>
+                            <span class="flow-chip">开篇 Talk：${escapeHtml(selected.initTalk || '未配置')}</span>
+                            <span class="flow-chip clickable" onclick="FlowView.showScene('${escapeHtml(selected.initScene || '')}')">开篇场景：${escapeHtml(selected.initScene || '未配置')}</span>
+                        </div>
+                        ${isEditing ? this.renderModuleEditor(selected) : this.renderLoopOverview(selected)}
+                    </div>
+                    <aside class="flow-panel">
+                        ${this.renderLoopFacts(selected)}
+                        ${this.renderChangeLog()}
+                    </aside>
+                </section>
+            `;
+
+            html += `</div>`;
+            content.innerHTML = html;
+            UI.renderSidebar();
+        },
+
+        pick(loopId) {
+            // Use the existing loader path so scene details, AVG talks, expose talks,
+            // and sidebar state all stay aligned with the selected Loop.
+            this.editPage = null;
+            pickLoop(loopId);
+        },
+
+        openModuleEditor(loopId, module) {
+            this.editPage = { loopId, module: module || 'loopText' };
+            this.render();
+        },
+
+        closeModuleEditor() {
+            this.editPage = null;
+            this.render();
+        },
+
+        switchModuleEditor(module) {
+            if (!this.editPage) return;
+            this.editPage.module = module || 'loopText';
+            this.render();
+        },
+
+        ensureOriginals(loop) {
+            if (!loop || loop._originalEditable) return;
+            loop._originalEditable = {};
+            Object.keys(this.editableFields).forEach(field => {
+                loop._originalEditable[field] = loop[field] || '';
+            });
+            loop._originalEntry = {
+                initTalk: loop.initTalk || '',
+                initScene: loop.initScene || '',
+            };
+            loop._originalScenes = JSON.parse(JSON.stringify(loop.scenes || []));
+            loop._originalDoubts = JSON.parse(JSON.stringify(loop.doubts || []));
+            loop._originalExposes = JSON.parse(JSON.stringify(loop.exposes || []));
+        },
+
+        renderLoopOverview(loop) {
+            return `
+                ${this.renderStages(loop)}
+                <div class="flow-overview-grid">
+                    ${this.renderModuleSummaryCard(loop, 'loopText')}
+                    ${this.renderModuleSummaryCard(loop, 'entry')}
+                    ${this.renderModuleSummaryCard(loop, 'scenes')}
+                    ${this.renderModuleSummaryCard(loop, 'events')}
+                    ${this.renderModuleSummaryCard(loop, 'doubts')}
+                    ${this.renderModuleSummaryCard(loop, 'exposes')}
+                </div>
+            `;
+        },
+
+        moduleMeta(module) {
+            const meta = {
+                loopText: { label: 'Loop 文案', hint: '目标、简述、新疑点、总结' },
+                entry: { label: '入口配置', hint: '开篇 Talk 与初始场景' },
+                scenes: { label: '场景配置', hint: '开放场景、开篇场景、场景归属' },
+                events: { label: '事件 / AVG', hint: '只读查看 Talk 脚本事件和参数' },
+                doubts: { label: '疑点配置', hint: '疑点文本与前置依赖' },
+                exposes: { label: '指证道具', hint: '每轮指证材料' },
+            };
+            return meta[module] || meta.loopText;
+        },
+
+        renderModuleSummaryCard(loop, module) {
+            const meta = this.moduleMeta(module);
+            const body = {
+                loopText: this.renderLoopTextSummary(loop),
+                entry: this.renderEntrySummary(loop),
+                scenes: this.renderScenesSummary(loop),
+                events: this.renderEventsSummary(loop),
+                doubts: this.renderDoubtsSummary(loop),
+                exposes: this.renderExposesSummary(loop),
+            }[module] || '';
+            return `
+                <article class="flow-module-card ${module === 'scenes' ? 'wide' : ''}">
+                    <div class="flow-module-head">
+                        <div>
+                            <div class="flow-module-title">${escapeHtml(meta.label)}</div>
+                            <div class="flow-module-hint">${escapeHtml(meta.hint)}</div>
+                        </div>
+                        <button type="button" class="btn primary" onclick="FlowOverviewView.openModuleEditor('${escapeHtml(loop.id)}','${escapeHtml(module)}')">编辑</button>
+                    </div>
+                    <div class="flow-module-body">${body}</div>
+                </article>
+            `;
+        },
+
+        renderLoopTextSummary(loop) {
+            const lines = [
+                ['目标', loop.goal || '未配置'],
+                ['简述', loop.brief || '未配置'],
+                ['新疑点', loop.newDoubtTitle || loop.newDoubtContent || '未配置'],
+                ['总结', loop.summaryContent || '未配置'],
+            ];
+            return `<div class="flow-module-list">${lines.map(([k, v]) => `
+                <div class="flow-module-line"><span>${escapeHtml(k)}</span><strong>${escapeHtml(v)}</strong></div>
+            `).join('')}</div>`;
+        },
+
+        renderEntrySummary(loop) {
+            const scene = AppState.scenesMap.get(String(loop.initScene || ''));
+            return `<div class="flow-module-list">
+                <div class="flow-module-line"><span>开篇 Talk</span><strong>${escapeHtml(loop.initTalk || '未配置')}</strong></div>
+                <div class="flow-module-line"><span>初始场景</span><strong>${escapeHtml(loop.initScene || '未配置')} ${scene ? `· ${escapeHtml(this.sceneName(scene))}` : ''}</strong></div>
+            </div>`;
+        },
+
+        renderScenesSummary(loop) {
+            const scenes = loop.scenes || [];
+            if (!scenes.length) return `<div class="flow-list-sub">本 Loop 暂无开放场景。</div>`;
+            return `<div class="flow-module-list compact">${scenes.slice(0, 8).map(s => `
+                <div class="flow-module-line">
+                    <span>${String(loop.initScene || '') === String(s.id) ? '开篇' : '场景'}</span>
+                    <strong>${escapeHtml(s.id)} · ${escapeHtml(s.name || `Scene ${s.id}`)}</strong>
+                </div>
+            `).join('')}${scenes.length > 8 ? `<div class="flow-list-sub">还有 ${scenes.length - 8} 个场景，进入编辑页查看。</div>` : ''}</div>`;
+        },
+
+        renderEventsSummary(loop) {
+            const events = this.talkEventsForLoop(loop);
+            if (!events.length) return `<div class="flow-list-sub">当前已加载 Talk 中暂无脚本事件。</div>`;
+            const grouped = this.groupEvents(events);
+            return `<div class="flow-module-list compact">${Object.entries(grouped).slice(0, 5).map(([kind, list]) => `
+                <div class="flow-module-line">
+                    <span>${escapeHtml(kind)}</span>
+                    <strong>${list.length} 个节点</strong>
+                </div>
+            `).join('')}${events.length > 12 ? `<div class="flow-list-sub">共 ${events.length} 个事件节点，进入编辑页查看。</div>` : ''}</div>`;
+        },
+
+        renderDoubtsSummary(loop) {
+            const doubts = loop.doubts || [];
+            if (!doubts.length) return `<div class="flow-list-sub">本 Loop 暂无疑点。</div>`;
+            return `<div class="flow-module-list compact">${doubts.map(d => `
+                <div class="flow-module-line vertical">
+                    <span>疑点 #${escapeHtml(d.id)}</span>
+                    <strong>${escapeHtml(d.text || '未配置疑点文本')}</strong>
+                    <em>${(d.conditions || []).length} 条前置依赖</em>
+                </div>
+            `).join('')}</div>`;
+        },
+
+        renderExposesSummary(loop) {
+            const exposes = loop.exposes || [];
+            if (!exposes.length) return `<div class="flow-list-sub">本 Loop 暂无指证配置。</div>`;
+            return `<div class="flow-module-list compact">${exposes.map(e => `
+                <div class="flow-module-line vertical">
+                    <span>第 ${escapeHtml(e.id || '?')} 轮 · Talk ${escapeHtml(e.talkId || '未配置')}</span>
+                    <strong>${escapeHtml(e.testimonyLabel || '无被攻击证词')}</strong>
+                    <em>${(e.items || []).length} 个指证材料</em>
+                </div>
+            `).join('')}</div>`;
+        },
+
+        renderModuleEditor(loop) {
+            const module = this.editPage?.module || 'loopText';
+            const tabs = ['loopText', 'entry', 'scenes', 'events', 'doubts', 'exposes'].map(key => {
+                const active = key === module ? 'active' : '';
+                return `<button type="button" class="flow-editor-tab ${active}" onclick="FlowOverviewView.switchModuleEditor('${key}')">${escapeHtml(this.moduleMeta(key).label)}</button>`;
+            }).join('');
+            const body = {
+                loopText: this.renderEditForm(loop, false),
+                entry: this.renderEntryEditor(loop),
+                scenes: this.renderScenesEditor(loop),
+                events: this.renderEventsViewer(loop),
+                doubts: this.renderDoubts(loop),
+                exposes: this.renderExposes(loop),
+            }[module] || this.renderEditForm(loop, false);
+            return `
+                <div class="flow-editor-shell">
+                    <div class="flow-editor-head">
+                        <div>
+                            <div class="flow-editor-kicker">二级编辑 · ${escapeHtml(loop.id)}</div>
+                            <div class="flow-editor-title">${escapeHtml(this.moduleMeta(module).label)}</div>
+                        </div>
+                        <button type="button" class="btn ghost" onclick="FlowOverviewView.closeModuleEditor()">返回总览</button>
+                    </div>
+                    <div class="flow-editor-tabs">${tabs}</div>
+                    <div class="flow-editor-body">${body}</div>
+                </div>
+            `;
+        },
+
+        renderEditForm(loop, includeEntry = true) {
+            let html = `<div class="flow-edit-grid">`;
+            Object.entries(this.editableFields).forEach(([field, meta]) => {
+                const value = loop[field] || '';
+                const wide = meta.multiline ? 'wide' : '';
+                const ref = `ChapterConfig.${meta.tableField}[0]`;
+                const inputId = `flow-edit-${loop.id}-${field}`;
+                html += `<label class="flow-edit-field ${wide}">`;
+                html += `<span class="flow-edit-label"><span>${escapeHtml(meta.label)}</span><span class="flow-edit-ref">${escapeHtml(ref)}</span></span>`;
+                if (meta.multiline) {
+                    html += `<textarea id="${escapeHtml(inputId)}" class="flow-edit-textarea" onchange="FlowOverviewView.updateLoopText('${escapeHtml(loop.id)}','${escapeHtml(field)}',this.value)">${escapeHtml(value)}</textarea>`;
+                } else {
+                    html += `<input id="${escapeHtml(inputId)}" class="flow-edit-input" value="${escapeHtml(value)}" onchange="FlowOverviewView.updateLoopText('${escapeHtml(loop.id)}','${escapeHtml(field)}',this.value)">`;
+                }
+                html += `<button type="button" class="btn flow-edit-commit" onclick="event.preventDefault(); FlowOverviewView.updateLoopTextFromInput('${escapeHtml(loop.id)}','${escapeHtml(field)}')">记录修改</button>`;
+                html += `</label>`;
+            });
+            html += `</div>`;
+            if (includeEntry) html += this.renderEntryEditor(loop);
+            return html;
+        },
+
+        renderEntryEditor(loop) {
+            const sceneOptions = this.renderSceneOptions(loop.initScene);
+            return `
+                <div class="flow-mini-editor">
+                    <div class="flow-mini-editor-title">入口与初始场景</div>
+                    <div class="flow-entry-grid">
+                        <div class="flow-entry-field">
+                            <label>ChapterConfig.initTalk</label>
+                            <input id="flow-entry-${escapeHtml(loop.id)}-initTalk" value="${escapeHtml(loop.initTalk || '')}" placeholder="开篇 Talk ID">
+                            <button type="button" class="btn" onclick="FlowOverviewView.updateEntryFieldFromInput('${escapeHtml(loop.id)}','initTalk')">记录</button>
+                        </div>
+                        <div class="flow-entry-field">
+                            <label>ChapterConfig.initScene</label>
+                            <select id="flow-entry-${escapeHtml(loop.id)}-initScene">${sceneOptions}</select>
+                            <button type="button" class="btn" onclick="FlowOverviewView.updateEntryFieldFromInput('${escapeHtml(loop.id)}','initScene')">记录</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        },
+
+        renderSceneOptions(current) {
+            const chapter = this.currentFormalChapter();
+            const scenes = AppState.allScenes
+                .filter(s => !chapter || String(s.sceneId || '').startsWith(this.chapterDigit()))
+                .sort((a, b) => Number(a.sceneId || 0) - Number(b.sceneId || 0));
+            let html = `<option value="">未配置</option>`;
+            scenes.forEach(s => {
+                const id = String(s.sceneId || '');
+                const selected = String(current || '') === id ? 'selected' : '';
+                const label = `${id} · ${this.sceneName(s)}`;
+                html += `<option value="${escapeHtml(id)}" ${selected}>${escapeHtml(label)}</option>`;
+            });
+            return html;
+        },
+
+        updateEntryFieldFromInput(loopId, field) {
+            const el = document.getElementById(`flow-entry-${loopId}-${field}`);
+            if (!el) return;
+            this.updateEntryField(loopId, field, el.value);
+        },
+
+        updateEntryField(loopId, field, value) {
+            const loop = this.findLoop(loopId);
+            if (!loop || !['initTalk', 'initScene'].includes(field)) return;
+            this.ensureOriginals(loop);
+            const oldValue = loop._originalEntry?.[field] || '';
+            const newValue = String(value || '').trim();
+            loop[field] = newValue;
+            const opening = (loop.flow || []).find(s => s.type === 'opening');
+            if (opening) {
+                if (!opening.refs) opening.refs = {};
+                if (field === 'initTalk') {
+                    opening.refs.talkId = newValue;
+                    opening.summary = `从 Talk ${newValue || '未配置'} 进入本 Loop。`;
+                } else {
+                    opening.refs.sceneId = newValue;
+                }
+            }
+            const key = `ChapterConfig:${loop.chapterId}:${field}`;
+            this.recordChapterScalarChange(loop, {
+                key,
+                action: newValue === oldValue ? 'remove' : 'update',
+                id: loop.chapterId,
+                field,
+                label: field === 'initTalk' ? '开篇 Talk' : '初始场景',
+                valuePath: field,
+                old: oldValue,
+                new: newValue,
+            });
+            this.render();
+        },
+
+        updateLoopTextFromInput(loopId, field) {
+            const el = document.getElementById(`flow-edit-${loopId}-${field}`);
+            if (!el) return;
+            this.updateLoopText(loopId, field, el.value);
+        },
+
+        updateLoopText(loopId, field, value) {
+            const flow = AppState.unitFlow;
+            const loop = flow?.loops?.find(l => l.id === loopId);
+            const meta = this.editableFields[field];
+            if (!loop || !meta) return;
+            this.ensureOriginals(loop);
+
+            const oldValue = loop._originalEditable[field] || '';
+            const newValue = String(value || '').trim();
+            loop[field] = newValue;
+            if (field === 'summaryContent') {
+                const summary = (loop.flow || []).find(s => s.type === 'summary');
+                if (summary) summary.summary = newValue;
+            }
+            if (field === 'goal' && AppState.loopData && loop.id === AppState.currentLoop) {
+                AppState.loopData.target = newValue;
+            }
+
+            const key = `ChapterConfig:${loop.chapterId}:${meta.tableField}:0`;
+            const idx = AppState.pendingChanges.findIndex(c => c.key === key);
+            if (newValue === oldValue) {
+                if (idx >= 0) AppState.pendingChanges.splice(idx, 1);
+            } else {
+                const change = {
+                    key,
+                    action: 'update',
+                    source: 'avg_editor_v2',
+                    unit: AppState.currentUnit,
+                    formalUnit: flow.formalUnit || flow.unit,
+                    loop: loop.id,
+                    table: 'ChapterConfig',
+                    id: loop.chapterId,
+                    field: meta.tableField,
+                    valuePath: `${meta.tableField}[0]`,
+                    label: meta.label,
+                    old: oldValue,
+                    new: newValue,
+                    updatedAt: new Date().toISOString(),
+                };
+                if (idx >= 0) AppState.pendingChanges[idx] = change;
+                else AppState.pendingChanges.push(change);
+            }
+            this.render();
+        },
+
+        recordChapterScalarChange(loop, change) {
+            if (change.action === 'remove') {
+                AppState.pendingChanges = AppState.pendingChanges.filter(c => c.key !== change.key);
+                return;
+            }
+            const idx = AppState.pendingChanges.findIndex(c => c.key === change.key);
+            const payload = {
+                ...change,
+                source: 'avg_editor_v2',
+                unit: AppState.currentUnit,
+                formalUnit: AppState.unitFlow?.formalUnit || AppState.unitFlow?.unit,
+                loop: loop.id,
+                table: 'ChapterConfig',
+                affectedTables: ['ChapterConfig'],
+                updatedAt: new Date().toISOString(),
+            };
+            if (idx >= 0) AppState.pendingChanges[idx] = payload;
+            else AppState.pendingChanges.push(payload);
+        },
+
+        applyPendingToFlow() {
+            const flow = AppState.unitFlow;
+            if (!flow?.loops) return;
+            AppState.pendingChanges
+                .filter(c => c.table === 'ChapterConfig' && c.formalUnit === (flow.formalUnit || flow.unit))
+                .forEach(c => {
+                    const loop = flow.loops.find(l => String(l.chapterId) === String(c.id));
+                    if (!loop) return;
+                    const field = Object.keys(this.editableFields).find(k => this.editableFields[k].tableField === c.field);
+                    this.ensureOriginals(loop);
+                    if (field) {
+                        loop[field] = c.new;
+                        if (field === 'summaryContent') {
+                            const summary = (loop.flow || []).find(s => s.type === 'summary');
+                            if (summary) summary.summary = c.new;
+                        }
+                        return;
+                    }
+                    if (c.field === 'initTalk' || c.field === 'initScene') {
+                        loop[c.field] = c.new || '';
+                        const opening = (loop.flow || []).find(s => s.type === 'opening');
+                        if (opening) {
+                            if (!opening.refs) opening.refs = {};
+                            if (c.field === 'initTalk') {
+                                opening.refs.talkId = c.new || '';
+                                opening.summary = `从 Talk ${c.new || '未配置'} 进入本 Loop。`;
+                            } else {
+                                opening.refs.sceneId = c.new || '';
+                            }
+                        }
+                        return;
+                    }
+                    if (c.field === 'doubts') {
+                        this.applyDoubtChange(loop, c);
+                    } else if (c.field === 'exposes') {
+                        this.applyExposeChange(loop, c);
+                    }
+                });
+        },
+
+        applyDoubtChange(loop, change) {
+            if (!Array.isArray(loop.doubts)) loop.doubts = [];
+            const doubt = loop.doubts.find(d => String(d.id) === String(change.doubtId));
+            if (!doubt) return;
+            if (change.kind === 'doubt_text') {
+                doubt.text = change.new || '';
+                return;
+            }
+            if (!Array.isArray(doubt.conditions)) doubt.conditions = [];
+            if (change.kind === 'doubt_condition_update') {
+                const next = change.new || {};
+                doubt.conditions[change.conditionIndex] = {
+                    type: String(next.type || ''),
+                    param: String(next.param || ''),
+                    ...this.resolveDependency(next.type, next.param, loop.loop),
+                };
+            } else if (change.kind === 'doubt_condition_insert') {
+                const exists = doubt.conditions.some(c => String(c.type) === String(change.new?.type) && String(c.param) === String(change.new?.param));
+                if (!exists) {
+                    const next = change.new || {};
+                    doubt.conditions.push({
+                        type: String(next.type || ''),
+                        param: String(next.param || ''),
+                        ...this.resolveDependency(next.type, next.param, loop.loop),
+                    });
+                }
+            } else if (change.kind === 'doubt_condition_delete') {
+                doubt.conditions.splice(change.conditionIndex, 1);
+            }
+        },
+
+        renderStages(loop) {
+            const stages = loop.flow || [];
+            if (!stages.length) {
+                return `<div class="flow-stage-list"><div class="flow-warning">这个 Loop 暂无阶段链。</div></div>`;
+            }
+            let html = `<div class="flow-stage-list">`;
+            stages.forEach((stage, idx) => {
+                html += `
+                    <div class="flow-stage">
+                        <div class="flow-stage-title">
+                            <span>${idx + 1}. ${escapeHtml(stage.title || stage.type)}</span>
+                            <span class="flow-stage-type">${escapeHtml(stage.type || '')}</span>
+                        </div>
+                        <div class="flow-stage-summary">${escapeHtml(stage.summary || '')}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            return html;
+        },
+
+        renderLoopFacts(loop) {
+            let html = `<h3>本 Loop 配置摘要</h3>`;
+
+            const issues = this.validate(loop);
+            if (issues.length) {
+                html += `<div class="flow-list">`;
+                issues.forEach(issue => {
+                    html += `<div class="flow-warning">${escapeHtml(issue)}</div>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `<div class="flow-list">`;
+            html += `
+                <div class="flow-list-item">
+                    <div class="flow-list-title">开放场景 · ${loop.scenes?.length || 0}</div>
+                    <div class="flow-list-sub">${(loop.scenes || []).slice(0, 4).map(s => `${escapeHtml(s.id)} ${escapeHtml(s.name || '')}`).join('<br>') || '暂无开放场景'}</div>
+                </div>
+            `;
+
+            html += `
+                <div class="flow-list-item">
+                    <div class="flow-list-title">疑点 · ${loop.doubts?.length || 0}</div>
+                    <div class="flow-list-sub">${(loop.doubts || []).map(d => `#${escapeHtml(d.id)} · ${(d.conditions || []).length} 条依赖`).join('<br>') || '暂无疑点'}</div>
+                </div>
+            `;
+
+            html += `
+                <div class="flow-list-item">
+                    <div class="flow-list-title">指证 · ${loop.exposes?.length || 0}</div>
+                    <div class="flow-list-sub">${(loop.exposes || []).map(e => `第 ${escapeHtml(e.id || '?')} 轮 · ${(e.items || []).length} 个材料`).join('<br>') || '暂无指证'}</div>
+                </div>
+            `;
+            html += `</div>`;
+
+            return html;
+        },
+
+        renderScenesEditor(loop) {
+            const scenes = loop.scenes || [];
+            let html = `<div class="scene-edit-list">`;
+            if (!scenes.length) {
+                html += `<div class="flow-list-sub">本 Loop 暂无开放场景。</div>`;
+            }
+            scenes.forEach(s => {
+                const pendingClosed = s.pendingIsOpen === false ? 'pending-closed' : '';
+                const init = String(loop.initScene || '') === String(s.id) ? `<span class="flow-chip">开篇</span>` : '';
+                html += `
+                    <div class="scene-edit-row ${pendingClosed}">
+                        <div>
+                            <div class="scene-edit-name">${escapeHtml(s.name || `Scene ${s.id}`)} ${init}</div>
+                            <div class="scene-edit-meta">${escapeHtml(s.id)} · ${escapeHtml(s.kind || 'unknown')} · NPC ${s.npcCount || 0} · 道具 ${s.itemCount || 0}</div>
+                        </div>
+                        <div class="scene-edit-actions">
+                            <button type="button" class="btn" onclick="FlowView.showScene('${escapeHtml(s.id)}')">查看</button>
+                            <button type="button" class="btn" onclick="FlowOverviewView.updateEntryField('${escapeHtml(loop.id)}','initScene','${escapeHtml(s.id)}')">设为开篇</button>
+                            <button type="button" class="btn ghost" onclick="FlowOverviewView.setSceneOpen('${escapeHtml(loop.id)}','${escapeHtml(s.id)}',false)">关闭</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="scene-add-row">
+                    <select id="scene-add-${escapeHtml(loop.id)}">${this.renderSceneOptions('')}</select>
+                    <button type="button" class="btn" onclick="FlowOverviewView.addSceneToLoop('${escapeHtml(loop.id)}')">加入本 Loop</button>
+                </div>
+            `;
+            html += `</div>`;
+            return html;
+        },
+
+        sceneName(scene) {
+            if (!scene) return '';
+            const loc = scene.location || {};
+            return scene.sceneName || cn(loc.Name) || `Scene ${scene.sceneId || scene.id || ''}`;
+        },
+
+        sceneNodeFromScene(scene, loop) {
+            const sid = String(scene?.sceneId || '');
+            const itemIds = (scene?.ItemIDs || []).map(x => String(x));
+            return {
+                id: sid,
+                name: this.sceneName(scene),
+                kind: DataManager.sceneKind(scene) || 'unknown',
+                isInit: sid === String(loop?.initScene || ''),
+                npcCount: (scene?.NPCInfos || []).length,
+                itemCount: itemIds.filter(id => AppState.itemsMap.has(id)).length,
+                itemIds,
+            };
+        },
+
+        setSceneOpen(loopId, sceneId, isOpen) {
+            const loop = this.findLoop(loopId);
+            const scene = AppState.scenesMap.get(String(sceneId));
+            if (!loop || !scene) return;
+            this.ensureOriginals(loop);
+            const sid = String(sceneId);
+            if (!Array.isArray(loop.scenes)) loop.scenes = [];
+            let node = loop.scenes.find(s => String(s.id) === sid);
+            if (!node && isOpen) {
+                node = this.sceneNodeFromScene(scene, loop);
+                loop.scenes.push(node);
+                loop.scenes.sort((a, b) => Number(a.id || 0) - Number(b.id || 0));
+            }
+            if (node) node.pendingIsOpen = !!isOpen;
+
+            this.recordSceneFieldChange(loop, scene, 'isOpen', scene.isOpen === false ? false : true, !!isOpen);
+            if (isOpen && Number(scene.loop) !== Number(loop.loop)) {
+                this.recordSceneFieldChange(loop, scene, 'loop', scene.loop ?? '', Number(loop.loop));
+            }
+            this.render();
+        },
+
+        addSceneToLoop(loopId) {
+            const el = document.getElementById(`scene-add-${loopId}`);
+            const sceneId = String(el?.value || '').trim();
+            if (!sceneId) {
+                UI.updateStatus('请选择要加入的场景');
+                return;
+            }
+            this.setSceneOpen(loopId, sceneId, true);
+        },
+
+        recordSceneFieldChange(loop, scene, field, oldValue, newValue) {
+            const sid = String(scene.sceneId || '');
+            const oldNorm = oldValue == null ? '' : oldValue;
+            const newNorm = newValue == null ? '' : newValue;
+            const key = `SceneConfig:${sid}:${field}`;
+            const idx = AppState.pendingChanges.findIndex(c => c.key === key);
+            if (String(oldNorm) === String(newNorm)) {
+                if (idx >= 0) AppState.pendingChanges.splice(idx, 1);
+                return;
+            }
+            const change = {
+                key,
+                action: 'update',
+                source: 'avg_editor_v2',
+                unit: AppState.currentUnit,
+                formalUnit: AppState.unitFlow?.formalUnit || AppState.unitFlow?.unit,
+                loop: loop.id,
+                table: 'SceneConfig',
+                id: sid,
+                field,
+                valuePath: field,
+                label: `${this.sceneName(scene)} · ${field}`,
+                old: oldNorm,
+                new: newNorm,
+                affectedTables: ['SceneConfig'],
+                updatedAt: new Date().toISOString(),
+            };
+            if (idx >= 0) AppState.pendingChanges[idx] = change;
+            else AppState.pendingChanges.push(change);
+        },
+
+        talkEventsForLoop(loop) {
+            const currentLoop = loop?.id || AppState.currentLoop;
+            if (currentLoop && currentLoop !== AppState.currentLoop) return [];
+            return (AppState.allTalks || [])
+                .filter(t => String(t.script || '').trim())
+                .filter(t => this.shouldShowTalkEvent(t.script))
+                .sort((a, b) => Number(a.id || 0) - Number(b.id || 0));
+        },
+
+        shouldShowTalkEvent(script) {
+            const s = String(script || '').trim().toLowerCase();
+            if (!s) return false;
+            return !['branches', '1', 'end'].includes(s);
+        },
+
+        eventKind(script) {
+            const s = String(script || '').trim();
+            const lower = s.toLowerCase();
+            if (!s) return '普通对白';
+            if (['new_npc_in', 'npc_out'].includes(lower)) return 'NPC 入退场';
+            if (lower === 'exhibit') return '出示道具';
+            if (lower.includes('comic')) return '动态漫画';
+            if (lower === 'interrupt') return '突发打断';
+            if (lower === 'get' || lower.startsWith('get_')) return '获取';
+            if (lower === 'lie') return '指证点';
+            if (lower === 'branches' || lower === '1') return '分支';
+            if (lower === 'end') return '结束';
+            return '其他事件';
+        },
+
+        groupEvents(events) {
+            return events.reduce((acc, event) => {
+                const script = String(event.script || '').trim() || '(empty)';
+                if (!acc[script]) acc[script] = [];
+                acc[script].push(event);
+                return acc;
+            }, {});
+        },
+
+        eventScriptOptions(current) {
+            const scripts = [
+                '',
+                'new_npc_in',
+                'npc_out',
+                'exhibit',
+                'interrupt',
+                'get',
+                'get_Evidence_Box',
+                'Lie',
+                'branches',
+                'end',
+            ];
+            const cur = String(current || '');
+            if (cur && !scripts.includes(cur)) scripts.push(cur);
+            return scripts.map(s => {
+                const label = s || '普通对白（空 script）';
+                return `<option value="${escapeHtml(s)}" ${s === cur ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+            }).join('');
+        },
+
+        renderEventsViewer(loop) {
+            const events = this.talkEventsForLoop(loop);
+            if (!events.length) {
+                return `<div class="flow-list-sub">当前已加载 Talk 中暂无脚本事件。切到对应 Loop 并点击「加载」后，这里会扫描该 Loop 的 AVG Talk / Expose 节点。</div>`;
+            }
+            const grouped = this.groupEvents(events);
+            return `<div class="event-edit-list">` + Object.entries(grouped).map(([kind, list]) => `
+                <div class="event-group">
+                    <div class="event-group-head">
+                        <span>script: ${escapeHtml(kind)}</span>
+                        <span class="flow-chip">${escapeHtml(this.eventKind(kind))} · ${list.length} 个节点</span>
+                    </div>
+                    ${list.map(t => this.renderTalkEventSummary(t)).join('')}
+                </div>
+            `).join('') + `</div>`;
+        },
+
+        renderTalkEventSummary(talk) {
+            const speaker = cn(talk.Speaker?.Name) || talk.Speaker?.id || '旁白';
+            const words = cn(talk.Words) || '';
+            const params = Array.from({ length: 3 }, (_, idx) => talk.Parameters?.[idx] || { ParameterInt: '0', ParameterStr: '' })
+                .filter(p => String(p.ParameterInt ?? '0') !== '0' || String(p.ParameterStr ?? '').trim());
+            return `
+                <div class="event-edit-card">
+                    <div class="event-edit-top">
+                        <div>
+                            <div class="event-edit-title">Talk #${escapeHtml(talk.id)} · ${escapeHtml(talk.videoScene || '未知文件')}</div>
+                            <div class="event-edit-meta">${escapeHtml(speaker)} · step ${escapeHtml(talk.step || '')} · next ${escapeHtml(talk.next || '空')}</div>
+                        </div>
+                        <span class="dep-status current">${escapeHtml(this.eventKind(talk.script))}</span>
+                    </div>
+                    <div class="event-quote">${escapeHtml(truncate(words || '(无对白文本)', 120))}</div>
+                    ${params.length ? `<div class="event-param-list readonly">${params.map((p, idx) => `
+                        <div class="event-param-read">
+                            <span>参数 ${idx}</span>
+                            <strong>Int ${escapeHtml(String(p.ParameterInt ?? '0'))}</strong>
+                            <em>${escapeHtml(String(p.ParameterStr ?? '')) || 'Str 空'}</em>
+                        </div>
+                    `).join('')}</div>` : `<div class="event-edit-meta">无有效参数</div>`}
+                </div>
+            `;
+        },
+
+        renderTalkEventParams(loop, talk) {
+            const params = Array.from({ length: 3 }, (_, idx) => talk.Parameters?.[idx] || { ParameterInt: '0', ParameterStr: '' });
+            return `<div class="event-param-list">${params.map((p, idx) => `
+                <div class="event-param-row">
+                    <div class="event-param-label">参数 ${idx}</div>
+                    <input id="talk-event-param-int-${escapeHtml(talk.id)}-${idx}" value="${escapeHtml(p.ParameterInt ?? '0')}" placeholder="ParameterInt">
+                    <input id="talk-event-param-str-${escapeHtml(talk.id)}-${idx}" value="${escapeHtml(p.ParameterStr ?? '')}" placeholder="ParameterStr">
+                    <button type="button" class="btn" onclick="FlowOverviewView.updateTalkEventParamFromInput('${escapeHtml(loop.id)}','${escapeHtml(talk.id)}',${idx})">记录</button>
+                </div>
+            `).join('')}</div>`;
+        },
+
+        ensureTalkEventOriginal(talk) {
+            const key = String(talk?.id || '');
+            if (!key || this._originalTalkEvents.has(key)) return;
+            this._originalTalkEvents.set(key, {
+                script: talk.script || '',
+                Parameters: JSON.parse(JSON.stringify(talk.Parameters || [])),
+            });
+        },
+
+        findTalkEvent(talkId) {
+            return (AppState.allTalks || []).find(t => String(t.id) === String(talkId)) || null;
+        },
+
+        updateTalkEventScriptFromInput(loopId, talkId) {
+            const el = document.getElementById(`talk-event-script-${talkId}`);
+            this.updateTalkEventScript(loopId, talkId, el?.value);
+        },
+
+        updateTalkEventScript(loopId, talkId, value) {
+            const loop = this.findLoop(loopId);
+            const talk = this.findTalkEvent(talkId);
+            if (!loop || !talk) return;
+            this.ensureTalkEventOriginal(talk);
+            const oldValue = this._originalTalkEvents.get(String(talkId))?.script || '';
+            const newValue = String(value || '').trim();
+            talk.script = newValue;
+            this.recordTalkEventChange(loop, talk, {
+                key: `Talk:${talkId}:script`,
+                action: newValue === oldValue ? 'remove' : 'update',
+                field: 'script',
+                valuePath: 'script',
+                label: `Talk ${talkId} 事件 script`,
+                old: oldValue,
+                new: newValue,
+            });
+            this.render();
+        },
+
+        updateTalkEventParamFromInput(loopId, talkId, paramIdx) {
+            const intEl = document.getElementById(`talk-event-param-int-${talkId}-${paramIdx}`);
+            const strEl = document.getElementById(`talk-event-param-str-${talkId}-${paramIdx}`);
+            this.updateTalkEventParam(loopId, talkId, paramIdx, intEl?.value, strEl?.value);
+        },
+
+        updateTalkEventParam(loopId, talkId, paramIdx, intValue, strValue) {
+            const loop = this.findLoop(loopId);
+            const talk = this.findTalkEvent(talkId);
+            if (!loop || !talk) return;
+            this.ensureTalkEventOriginal(talk);
+            if (!Array.isArray(talk.Parameters)) talk.Parameters = [];
+            while (talk.Parameters.length <= paramIdx) talk.Parameters.push({ ParameterInt: '0', ParameterStr: '' });
+            const originalParams = this._originalTalkEvents.get(String(talkId))?.Parameters || [];
+            const oldValue = originalParams[paramIdx] || { ParameterInt: '0', ParameterStr: '' };
+            const newValue = {
+                ParameterInt: String(intValue ?? '0').trim() || '0',
+                ParameterStr: String(strValue ?? '').trim(),
+            };
+            talk.Parameters[paramIdx] = newValue;
+            this.recordTalkEventChange(loop, talk, {
+                key: `Talk:${talkId}:Parameters:${paramIdx}`,
+                action: JSON.stringify(oldValue) === JSON.stringify(newValue) ? 'remove' : 'update',
+                field: 'Parameters',
+                valuePath: `Parameters[${paramIdx}]`,
+                label: `Talk ${talkId} 事件参数 ${paramIdx}`,
+                old: oldValue,
+                new: newValue,
+            });
+            this.render();
+        },
+
+        recordTalkEventChange(loop, talk, change) {
+            if (change.action === 'remove') {
+                AppState.pendingChanges = AppState.pendingChanges.filter(c => c.key !== change.key);
+                return;
+            }
+            const idx = AppState.pendingChanges.findIndex(c => c.key === change.key);
+            const payload = {
+                ...change,
+                source: 'avg_editor_v2',
+                unit: AppState.currentUnit,
+                formalUnit: AppState.unitFlow?.formalUnit || AppState.unitFlow?.unit,
+                loop: loop.id,
+                table: 'Talk新增表',
+                id: String(talk.id),
+                talkFile: talk.videoScene || '',
+                speakerId: talk.Speaker?.id || '',
+                affectedTables: ['Talk新增表', 'AVG JSON'],
+                updatedAt: new Date().toISOString(),
+            };
+            if (idx >= 0) AppState.pendingChanges[idx] = payload;
+            else AppState.pendingChanges.push(payload);
+        },
+
+        renderDoubts(loop) {
+            const doubts = loop.doubts || [];
+            if (!doubts.length) return `<div class="flow-list-sub">本 Loop 未配置疑点。</div>`;
+            return doubts.map(d => `
+                <div class="doubt-edit-card">
+                    <div class="doubt-edit-title">
+                        <span>疑点 #${escapeHtml(d.id)}</span>
+                        <span class="flow-stage-type">${escapeHtml(loop.id)}</span>
+                    </div>
+                    <textarea id="doubt-text-${escapeHtml(loop.id)}-${escapeHtml(d.id)}"
+                              class="flow-edit-textarea"
+                              onchange="FlowOverviewView.updateDoubtText('${escapeHtml(loop.id)}','${escapeHtml(d.id)}',this.value)">${escapeHtml(d.text || '')}</textarea>
+                    <button type="button" class="btn flow-edit-commit"
+                            onclick="FlowOverviewView.updateDoubtTextFromInput('${escapeHtml(loop.id)}','${escapeHtml(d.id)}')">记录疑点文本</button>
+                    <div class="flow-list-sub" style="margin-top:0.65rem;">前置依赖</div>
+                    ${(d.conditions || []).map((c, idx) => this.renderDependencyRow(loop, d, c, idx)).join('')}
+                    ${this.renderDependencyAddRow(loop, d)}
+                </div>
+            `).join('');
+        },
+
+        renderDependencyRow(loop, doubt, condition, idx) {
+            const dep = this.resolveDependency(condition.type, condition.param, loop.loop);
+            return `
+                <div class="dep-row">
+                    <select id="dep-type-${escapeHtml(loop.id)}-${escapeHtml(doubt.id)}-${idx}">
+                        ${this.renderTypeOptions(condition.type)}
+                    </select>
+                    <input id="dep-param-${escapeHtml(loop.id)}-${escapeHtml(doubt.id)}-${idx}" value="${escapeHtml(condition.param || '')}" placeholder="ID">
+                    <div class="dep-label">${escapeHtml(dep.label)}</div>
+                    <div class="dep-status ${escapeHtml(dep.status)}">${escapeHtml(dep.statusText)}</div>
+                    <div class="dep-actions">
+                        <button class="btn" onclick="FlowOverviewView.openDependencyPicker('${escapeHtml(loop.id)}','${escapeHtml(doubt.id)}',${idx},'edit')">选择</button>
+                        <button class="btn" onclick="FlowOverviewView.updateDoubtCondition('${escapeHtml(loop.id)}','${escapeHtml(doubt.id)}',${idx})">记录</button>
+                        <button class="btn ghost" onclick="FlowOverviewView.removeDoubtCondition('${escapeHtml(loop.id)}','${escapeHtml(doubt.id)}',${idx})">删除</button>
+                    </div>
+                </div>
+            `;
+        },
+
+        renderDependencyAddRow(loop, doubt) {
+            return `
+                <div class="dep-add-row">
+                    <select id="dep-add-type-${escapeHtml(loop.id)}-${escapeHtml(doubt.id)}">
+                        ${this.renderTypeOptions('1')}
+                    </select>
+                    <input id="dep-add-param-${escapeHtml(loop.id)}-${escapeHtml(doubt.id)}" value="" placeholder="新增依赖 ID">
+                    <div class="dep-label">新增一条必须先获得的道具或证词</div>
+                    <div class="dep-status unknown">待添加</div>
+                    <div class="dep-actions">
+                        <button class="btn" onclick="FlowOverviewView.openDependencyPicker('${escapeHtml(loop.id)}','${escapeHtml(doubt.id)}',-1,'add')">选择</button>
+                        <button class="btn" onclick="FlowOverviewView.addDoubtCondition('${escapeHtml(loop.id)}','${escapeHtml(doubt.id)}')">新增依赖</button>
+                    </div>
+                </div>
+            `;
+        },
+
+        renderTypeOptions(current) {
+            const opts = [
+                ['1', '道具'],
+                ['2', '关系'],
+                ['3', '时间线证词'],
+                ['4', '证词'],
+            ];
+            return opts.map(([value, label]) =>
+                `<option value="${value}" ${String(current) === value ? 'selected' : ''}>${label}</option>`
+            ).join('');
+        },
+
+        openDependencyPicker(loopId, doubtId, idx, mode) {
+            const typeId = mode === 'add'
+                ? `dep-add-type-${loopId}-${doubtId}`
+                : `dep-type-${loopId}-${doubtId}-${idx}`;
+            const type = document.getElementById(typeId)?.value || '1';
+            this.pickerState = {
+                loopId,
+                doubtId,
+                idx: Number(idx),
+                mode: mode || 'edit',
+                type: String(type),
+                query: '',
+            };
+            this.renderDependencyPicker();
+            document.getElementById('depPickerModal')?.classList.add('active');
+        },
+
+        openExposeItemPicker(loopId, exposeIdx, itemIdx, mode) {
+            const loop = this.findLoop(loopId);
+            const expose = loop?.exposes?.[Number(exposeIdx)];
+            const currentItem = expose?.items?.[Number(itemIdx)];
+            const addType = document.getElementById(`expose-add-type-${loopId}-${exposeIdx}`)?.value;
+            const inferredType = mode === 'add'
+                ? (addType || '1')
+                : this.inferExposeMaterialType(currentItem?.id || currentItem || '');
+            this.pickerState = {
+                target: 'exposeItem',
+                loopId,
+                exposeIdx: Number(exposeIdx),
+                itemIdx: Number(itemIdx),
+                mode: mode || 'edit',
+                type: inferredType || '1',
+                query: '',
+            };
+            this.renderDependencyPicker();
+            document.getElementById('depPickerModal')?.classList.add('active');
+        },
+
+        closeDependencyPicker() {
+            document.getElementById('depPickerModal')?.classList.remove('active');
+        },
+
+        switchDependencyPickerType(type) {
+            if (!this.pickerState) return;
+            this.pickerState.type = String(type || '1');
+            this.pickerState.query = '';
+            this.renderDependencyPicker();
+        },
+
+        filterDependencyPicker(query) {
+            if (!this.pickerState) return;
+            this.pickerState.query = String(query || '');
+            this.renderDependencyPicker();
+        },
+
+        renderDependencyPicker() {
+            const state = this.pickerState;
+            const content = document.getElementById('depPickerContent');
+            if (!state || !content) return;
+            const loop = this.findLoop(state.loopId);
+            const doubt = loop?.doubts?.find(d => String(d.id) === String(state.doubtId));
+            const expose = state.target === 'exposeItem' ? loop?.exposes?.[state.exposeIdx] : null;
+            const type = String(state.type || '1');
+            const query = String(state.query || '').trim();
+            const allOptions = this.dependencyCatalog(type, loop);
+            const options = this.filterDependencyOptions(allOptions, query).slice(0, 160);
+            const typeLabel = this.dependencyTypeLabel(type);
+            const title = state.target === 'exposeItem' ? '选择指证材料' : `选择${typeLabel}依赖`;
+            const sub = state.target === 'exposeItem'
+                ? `${loop?.title || state.loopId} · 指证第 ${expose?.id || state.exposeIdx + 1} 轮`
+                : `${loop?.title || state.loopId} · 疑点 ${state.doubtId}${doubt?.text ? ' · ' + truncate(doubt.text, 28) : ''}`;
+
+            let html = `
+                <div class="dep-picker-head">
+                    <div>
+                        <div class="dep-picker-title">${escapeHtml(title)}</div>
+                        <div class="dep-picker-sub">${escapeHtml(sub)}</div>
+                    </div>
+                    <span class="dep-status unknown">${escapeHtml(state.mode === 'add' ? '新增' : '替换当前项')}</span>
+                </div>
+                <div class="dep-picker-tools">
+                    <select onchange="FlowOverviewView.switchDependencyPickerType(this.value)">
+                        ${this.renderTypeOptions(type)}
+                    </select>
+                    <input id="dep-picker-search" value="${escapeHtml(query)}"
+                           placeholder="搜索名称 / ID / 来源 Loop / 地点 / NPC"
+                           oninput="FlowOverviewView.filterDependencyPicker(this.value)">
+                </div>
+            `;
+
+            if (!options.length) {
+                html += `<div class="dep-picker-empty">没有匹配的候选项。可以换类型、换关键词，或回到条件行手填 ID。</div>`;
+            } else {
+                html += `<div class="dep-picker-list">`;
+                options.forEach(opt => {
+                    html += `
+                        <div class="dep-picker-item" onclick="FlowOverviewView.selectDependencyFromPicker('${escapeHtml(opt.type)}','${escapeHtml(opt.param)}')">
+                            <div class="dep-picker-item-top">
+                                <div class="dep-picker-item-name">${escapeHtml(opt.name || '(无标题)')}</div>
+                                <div class="dep-picker-id">${escapeHtml(opt.param)}</div>
+                            </div>
+                            <div class="dep-picker-item-meta">
+                                ${escapeHtml(opt.meta || '')}
+                                ${opt.detail ? `<br>${escapeHtml(opt.detail)}` : ''}
+                            </div>
+                            <div class="flow-chip-row" style="margin-top:0.45rem;">
+                                <span class="dep-status ${escapeHtml(opt.status || 'unknown')}">${escapeHtml(opt.statusText || '来源未知')}</span>
+                                ${opt.kind ? `<span class="flow-chip">${escapeHtml(opt.kind)}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            content.innerHTML = html;
+            const search = document.getElementById('dep-picker-search');
+            if (search) {
+                search.focus();
+                search.setSelectionRange(search.value.length, search.value.length);
+            }
+        },
+
+        selectDependencyFromPicker(type, param) {
+            const state = this.pickerState;
+            if (!state) return;
+            const chosenType = String(type || '').trim();
+            const chosenParam = String(param || '').trim();
+            if (!chosenType || !chosenParam) return;
+
+            if (state.target === 'exposeItem') {
+                this.closeDependencyPicker();
+                if (state.mode === 'add') {
+                    this.addExposeItem(state.loopId, state.exposeIdx, chosenParam);
+                } else {
+                    this.updateExposeItem(state.loopId, state.exposeIdx, state.itemIdx, chosenParam);
+                }
+                UI.updateStatus(`已选择指证材料 ${chosenParam}`);
+                return;
+            }
+
+            if (state.mode === 'add') {
+                this.closeDependencyPicker();
+                this.insertDoubtCondition(state.loopId, state.doubtId, chosenType, chosenParam);
+                UI.updateStatus(`已新增依赖 ${chosenType}:${chosenParam}`);
+                return;
+            }
+
+            this.closeDependencyPicker();
+            this.commitDoubtCondition(state.loopId, state.doubtId, state.idx, chosenType, chosenParam);
+            UI.updateStatus(`已选择依赖 ${chosenType}:${chosenParam}`);
+        },
+
+        dependencyCatalog(type, loop) {
+            const typ = String(type || '1');
+            const chapter = this.currentFormalChapter();
+            const currentLoop = loop?.loop || 0;
+            const withDep = (raw) => {
+                const dep = this.resolveDependency(raw.type, raw.param, currentLoop);
+                return { ...raw, ...dep };
+            };
+
+            if (typ === '1') {
+                return AppState.allItems
+                    .filter(i => !chapter || i.Chapter === chapter)
+                    .filter(i => !['0', '5'].includes(String(i.itemType || '')))
+                    .map(i => withDep({
+                        type: '1',
+                        param: String(i.id),
+                        name: cn(i.Name) || `(道具 ${i.id})`,
+                        meta: `L${this.loopFromItemId(i.id) || '?'} · ${DataManager.typeName(i.itemType)} · ${cn(i.location) || '未配置地点'}`,
+                        detail: cn(i.ShortDescribe) || cn(i.Describe) || '',
+                    }));
+            }
+
+            if (typ === '2') {
+                const seen = new Set();
+                const out = [];
+                this.unitTestimonies().filter(t => this.isRelationTestimony(t)).forEach(t => {
+                    seen.add(String(t.id));
+                    out.push(withDep({
+                        type: '2',
+                        param: String(t.id),
+                        name: cn(t.shortDesc) || cn(t.testimony) || `关系 ${t.id}`,
+                        meta: `L${this.loopFromTestimonyId(t.id) || '?'} · ${this.testimonyNpcName(t)} · 关系证词`,
+                        detail: cn(t.testimony) || '',
+                    }));
+                });
+                this.existingRelationParams().forEach(pid => {
+                    if (seen.has(pid)) return;
+                    out.push(withDep({
+                        type: '2',
+                        param: pid,
+                        name: `关系连接 ${pid}`,
+                        meta: '来自现有疑点配置',
+                        detail: '',
+                    }));
+                });
+                return out;
+            }
+
+            const testimonies = this.unitTestimonies().filter(t => {
+                if (typ === '3') return this.isTimelineTestimony(t);
+                if (typ === '4') return !this.isTimelineTestimony(t) && !this.isRelationTestimony(t);
+                return true;
+            });
+
+            return testimonies.map(t => withDep({
+                type: typ,
+                param: String(t.id),
+                name: cn(t.shortDesc) || cn(t.testimony) || `(证词 ${t.id})`,
+                meta: `L${this.loopFromTestimonyId(t.id) || '?'} · ${this.testimonyNpcName(t)}${typ === '3' ? ' · ' + (this.timeLabelForTestimony(t) || '时间线') : ''}`,
+                detail: cn(t.testimony) || '',
+            }));
+        },
+
+        filterDependencyOptions(options, query) {
+            const q = String(query || '').trim().toLowerCase();
+            if (!q) return options;
+            return options.filter(opt => [
+                opt.param,
+                opt.name,
+                opt.meta,
+                opt.detail,
+                opt.statusText,
+            ].some(v => String(v || '').toLowerCase().includes(q)));
+        },
+
+        currentFormalChapter() {
+            if (AppState.unitFlow?.chapter) return AppState.unitFlow.chapter;
+            const formal = AppState.unitFlow?.formalUnit || AppState.currentUnit;
+            if (formal === 'Unit1' || AppState.currentUnit === 'Unit9') return 'EPI01';
+            return DataManager.chapter(formal);
+        },
+
+        chapterDigit() {
+            const m = String(this.currentFormalChapter() || '').match(/\d+/);
+            return m ? String(Number(m[0])) : '';
+        },
+
+        unitTestimonies() {
+            const digit = this.chapterDigit();
+            return AppState.allTestimonies.filter(t => !digit || String(t.id).startsWith(digit));
+        },
+
+        dependencyTypeLabel(type) {
+            return { '1': '道具', '2': '关系', '3': '时间线证词', '4': '证词' }[String(type)] || '依赖';
+        },
+
+        isTimelineTestimony(t) {
+            // 规则来自 config-table-language-rules:
+            // 时间线证词必须是 TestimonyItem.triggerType = Timeline，
+            // triggerParam = NPCID,日期代码,开始时间,结束时间；
+            // 若 TimeLineEvent 已加载，还必须存在同 ID 事件行。
+            const triggerType = this.normalizeTriggerType(t?.triggerType);
+            if (triggerType !== 'Timeline') return false;
+            if (!this.hasTimelineParam(t?.triggerParam)) return false;
+            if (AppState.timelineEventIds?.size) {
+                return AppState.timelineEventIds.has(String(t?.id || ''));
+            }
+            return true;
+        },
+
+        isRelationTestimony(t) {
+            return this.normalizeTriggerType(t?.triggerType) === 'RelationNetwork';
+        },
+
+        normalizeTriggerType(value) {
+            const raw = String(value ?? 'None').trim();
+            if (raw === '1' || raw.toLowerCase() === 'timeline') return 'Timeline';
+            if (raw === '2' || raw.toLowerCase() === 'relationnetwork') return 'RelationNetwork';
+            return 'None';
+        },
+
+        hasTimelineParam(triggerParam) {
+            const parts = String(triggerParam || '').split(',').map(v => v.trim());
+            if (parts.length < 4) return false;
+            return /^\d{3}$/.test(parts[0])
+                && /^\d{4}$/.test(parts[1])
+                && /^\d{3,4}$/.test(parts[2])
+                && /^\d{3,4}$/.test(parts[3]);
+        },
+
+        testimonyNpcName(t) {
+            const id = String(t?.id || '').slice(0, 3);
+            const npc = AppState.npcsMap.get(id);
+            return cn(npc?.Name) || `NPC ${id || '?'}`;
+        },
+
+        timeLabelForTestimony(t) {
+            const parts = String(t?.triggerParam || '').split(',').map(v => v.trim()).filter(Boolean);
+            if (parts.length < 4) return '';
+            const start = this.formatClock(parts[2]);
+            const end = this.formatClock(parts[3]);
+            if (start && end && start !== end) return `${start}-${end}`;
+            return start || '';
+        },
+
+        formatClock(raw) {
+            const s = String(raw || '').padStart(4, '0');
+            return `${s.slice(0, 2)}:${s.slice(2)}`;
+        },
+
+        existingRelationParams() {
+            const out = new Set();
+            const scanConds = (conds) => (conds || []).forEach(c => {
+                if (String(c.type) === '2' && c.param) out.add(String(c.param));
+            });
+            (AppState.allDoubts || []).forEach(d => scanConds(d.condition));
+            (AppState.unitFlow?.loops || []).forEach(l => (l.doubts || []).forEach(d => scanConds(d.conditions)));
+            return Array.from(out);
+        },
+
+        updateDoubtTextFromInput(loopId, doubtId) {
+            const el = document.getElementById(`doubt-text-${loopId}-${doubtId}`);
+            if (!el) return;
+            this.updateDoubtText(loopId, doubtId, el.value);
+        },
+
+        updateDoubtText(loopId, doubtId, value) {
+            const loop = this.findLoop(loopId);
+            const doubt = loop?.doubts?.find(d => String(d.id) === String(doubtId));
+            if (!loop || !doubt) return;
+            this.ensureOriginals(loop);
+            const original = this.originalDoubt(loop, doubtId);
+            const oldValue = original?.text || '';
+            const newValue = String(value || '').trim();
+            doubt.text = newValue;
+            this.recordDoubtChange(loop, {
+                key: `ChapterConfig:${loop.chapterId}:doubts:${doubtId}:text`,
+                action: newValue === oldValue ? 'remove' : 'update',
+                kind: 'doubt_text',
+                id: loop.chapterId,
+                label: `疑点 ${doubtId} 文本`,
+                valuePath: `doubts[id=${doubtId}].text`,
+                old: oldValue,
+                new: newValue,
+                doubtId: String(doubtId),
+            });
+            this.render();
+        },
+
+        updateDoubtCondition(loopId, doubtId, idx) {
+            const typeEl = document.getElementById(`dep-type-${loopId}-${doubtId}-${idx}`);
+            const paramEl = document.getElementById(`dep-param-${loopId}-${doubtId}-${idx}`);
+            const type = String(typeEl?.value || '').trim();
+            const param = String(paramEl?.value || '').trim();
+            if (!type || !param) {
+                UI.updateStatus('依赖类型和 ID 都不能为空');
+                return;
+            }
+            this.commitDoubtCondition(loopId, doubtId, idx, type, param);
+        },
+
+        commitDoubtCondition(loopId, doubtId, idx, type, param) {
+            const loop = this.findLoop(loopId);
+            const doubt = loop?.doubts?.find(d => String(d.id) === String(doubtId));
+            if (!loop || !doubt) return;
+            this.ensureOriginals(loop);
+            const typ = String(type || '').trim();
+            const pid = String(param || '').trim();
+            if (!typ || !pid) {
+                UI.updateStatus('依赖类型和 ID 都不能为空');
+                return;
+            }
+            const dep = this.resolveDependency(type, param, loop.loop);
+            const nextCondition = { type: typ, param: pid, ...dep };
+            const original = this.originalDoubt(loop, doubtId);
+            const oldCondition = original?.conditions?.[idx] || null;
+            const oldPair = oldCondition ? { type: String(oldCondition.type), param: String(oldCondition.param) } : null;
+            doubt.conditions[idx] = nextCondition;
+            this.recordDoubtChange(loop, {
+                key: `ChapterConfig:${loop.chapterId}:doubts:${doubtId}:condition:${idx}`,
+                action: JSON.stringify(oldPair) === JSON.stringify({ type: typ, param: pid }) ? 'remove' : 'update',
+                kind: 'doubt_condition_update',
+                id: loop.chapterId,
+                label: `疑点 ${doubtId} 依赖 #${idx + 1}`,
+                valuePath: `doubts[id=${doubtId}].condition[${idx}]`,
+                old: oldPair,
+                new: { type: typ, param: pid },
+                doubtId: String(doubtId),
+                conditionIndex: idx,
+                dependency: dep,
+            });
+            this.render();
+        },
+
+        addDoubtCondition(loopId, doubtId) {
+            const loop = this.findLoop(loopId);
+            const doubt = loop?.doubts?.find(d => String(d.id) === String(doubtId));
+            if (!loop || !doubt) return;
+            this.ensureOriginals(loop);
+            const typeEl = document.getElementById(`dep-add-type-${loopId}-${doubtId}`);
+            const paramEl = document.getElementById(`dep-add-param-${loopId}-${doubtId}`);
+            const type = String(typeEl?.value || '').trim();
+            const param = String(paramEl?.value || '').trim();
+            if (!type || !param) {
+                UI.updateStatus('新增依赖需要填写类型和 ID');
+                return;
+            }
+            this.insertDoubtCondition(loopId, doubtId, type, param);
+        },
+
+        insertDoubtCondition(loopId, doubtId, type, param) {
+            const loop = this.findLoop(loopId);
+            const doubt = loop?.doubts?.find(d => String(d.id) === String(doubtId));
+            if (!loop || !doubt) return;
+            this.ensureOriginals(loop);
+            const typ = String(type || '').trim();
+            const pid = String(param || '').trim();
+            if (!typ || !pid) {
+                UI.updateStatus('新增依赖需要填写类型和 ID');
+                return;
+            }
+            const dep = this.resolveDependency(typ, pid, loop.loop);
+            const idx = (doubt.conditions || []).length;
+            if (!Array.isArray(doubt.conditions)) doubt.conditions = [];
+            doubt.conditions.push({ type: typ, param: pid, ...dep });
+            this.recordDoubtChange(loop, {
+                key: `ChapterConfig:${loop.chapterId}:doubts:${doubtId}:condition:add:${idx}:${typ}:${pid}`,
+                action: 'insert',
+                kind: 'doubt_condition_insert',
+                id: loop.chapterId,
+                label: `疑点 ${doubtId} 新增依赖`,
+                valuePath: `doubts[id=${doubtId}].condition[${idx}]`,
+                old: null,
+                new: { type: typ, param: pid },
+                doubtId: String(doubtId),
+                conditionIndex: idx,
+                dependency: dep,
+            });
+            this.render();
+        },
+
+        removeDoubtCondition(loopId, doubtId, idx) {
+            const loop = this.findLoop(loopId);
+            const doubt = loop?.doubts?.find(d => String(d.id) === String(doubtId));
+            if (!loop || !doubt || !Array.isArray(doubt.conditions)) return;
+            this.ensureOriginals(loop);
+            const removed = doubt.conditions[idx];
+            doubt.conditions.splice(idx, 1);
+            this.recordDoubtChange(loop, {
+                key: `ChapterConfig:${loop.chapterId}:doubts:${doubtId}:condition:${idx}:delete`,
+                action: 'delete',
+                kind: 'doubt_condition_delete',
+                id: loop.chapterId,
+                label: `疑点 ${doubtId} 删除依赖 #${idx + 1}`,
+                valuePath: `doubts[id=${doubtId}].condition[${idx}]`,
+                old: removed ? { type: removed.type, param: removed.param } : null,
+                new: null,
+                doubtId: String(doubtId),
+                conditionIndex: idx,
+            });
+            this.render();
+        },
+
+        recordDoubtChange(loop, change) {
+            if (change.action === 'remove') {
+                AppState.pendingChanges = AppState.pendingChanges.filter(c => c.key !== change.key);
+                return;
+            }
+            const idx = AppState.pendingChanges.findIndex(c => c.key === change.key);
+            const payload = {
+                ...change,
+                source: 'avg_editor_v2',
+                unit: AppState.currentUnit,
+                formalUnit: AppState.unitFlow?.formalUnit || AppState.unitFlow?.unit,
+                loop: loop.id,
+                table: 'ChapterConfig',
+                field: 'doubts',
+                affectedTables: change.kind === 'doubt_text' ? ['ChapterConfig', 'DoubtConfig'] : ['ChapterConfig'],
+                updatedAt: new Date().toISOString(),
+            };
+            if (idx >= 0) AppState.pendingChanges[idx] = payload;
+            else AppState.pendingChanges.push(payload);
+        },
+
+        findLoop(loopId) {
+            return AppState.unitFlow?.loops?.find(l => l.id === loopId) || null;
+        },
+
+        originalDoubt(loop, doubtId) {
+            return (loop._originalDoubts || []).find(d => String(d.id) === String(doubtId)) || null;
+        },
+
+        resolveDependency(type, param, currentLoop) {
+            const typ = String(type || '').trim();
+            const pid = String(param || '').trim();
+            let kind = '未知';
+            let name = '未找到';
+            let exists = false;
+            let sourceLoopNum = 0;
+
+            if (typ === '1') {
+                kind = '道具';
+                const item = AppState.itemsMap.get(pid);
+                exists = !!item;
+                name = item ? (cn(item.Name) || '(未命名)') : '未找到';
+                sourceLoopNum = this.loopFromItemId(pid);
+            } else if (typ === '3' || typ === '4') {
+                kind = typ === '3' ? '时间线证词' : '证词';
+                const testimony = AppState.allTestimonies.find(t => String(t.id) === pid);
+                exists = !!testimony;
+                name = testimony ? (cn(testimony.shortDesc) || cn(testimony.testimony) || '(无文本)') : '未找到';
+                sourceLoopNum = this.loopFromTestimonyId(pid);
+            } else if (typ === '2') {
+                kind = '关系';
+                const testimony = AppState.allTestimonies.find(t => String(t.id) === pid);
+                exists = !!pid && (!!testimony || this.existingRelationParams().includes(pid));
+                name = testimony ? (cn(testimony.shortDesc) || cn(testimony.testimony) || `关系连接 ${pid}`) : (pid ? `关系连接 ${pid}` : '未填写');
+                sourceLoopNum = testimony ? this.loopFromTestimonyId(pid) : 0;
+            }
+
+            let status = 'unknown';
+            let statusText = '来源未知';
+            if (!exists) {
+                status = 'missing';
+                statusText = '未找到';
+            } else if (sourceLoopNum > currentLoop) {
+                status = 'future';
+                statusText = `未来依赖 L${sourceLoopNum}`;
+            } else if (sourceLoopNum < currentLoop && sourceLoopNum > 0) {
+                status = 'previous';
+                statusText = `前置依赖 L${sourceLoopNum}`;
+            } else if (sourceLoopNum === currentLoop) {
+                status = 'current';
+                statusText = `当前 Loop L${sourceLoopNum}`;
+            }
+
+            return {
+                kind,
+                name,
+                label: `${kind} ${pid} · ${name}`,
+                exists,
+                sourceLoop: sourceLoopNum ? `loop${sourceLoopNum}` : '',
+                sourceLoopNum,
+                status,
+                statusText,
+            };
+        },
+
+        loopFromItemId(id) {
+            const pid = String(id || '');
+            const source = AppState.allItems.find(i => String(i.analysedEvidence || '') === pid);
+            const raw = source ? String(source.id || '') : pid;
+            const digit = raw[1];
+            return digit >= '1' && digit <= '6' ? Number(digit) : 0;
+        },
+
+        loopFromTestimonyId(id) {
+            const pid = String(id || '');
+            const digit = pid[3];
+            return digit >= '1' && digit <= '6' ? Number(digit) : 0;
+        },
+
+        renderExposes(loop) {
+            const exposes = loop.exposes || [];
+            if (!exposes.length) return `<div class="flow-list-sub">本 Loop 未配置指证。</div>`;
+            return `<div class="expose-edit-list">` + exposes.map((e, exposeIdx) => `
+                <div class="expose-edit-card">
+                    <div class="expose-round-head">
+                        <div>
+                            <div class="expose-edit-title">第 ${escapeHtml(e.id || '?')} 轮 · Talk ${escapeHtml(e.talkId || '未配置')}</div>
+                            <div class="expose-edit-meta">ChapterConfig.exposes[${exposeIdx}].item</div>
+                        </div>
+                        <span class="dep-status ${escapeHtml(this.exposeRoundStatus(loop, e))}">${escapeHtml((e.items || []).length)} 个材料</span>
+                    </div>
+                    ${this.renderExposeTarget(loop, e)}
+                    ${(e.items || []).map((item, itemIdx) => this.renderExposeItemRow(loop, e, exposeIdx, item, itemIdx)).join('')}
+                    <div class="expose-item-row expose-add-row">
+                        <select id="expose-add-type-${escapeHtml(loop.id)}-${exposeIdx}" class="expose-add-type">
+                            ${this.renderTypeOptions('1')}
+                        </select>
+                        <input id="expose-add-${escapeHtml(loop.id)}-${exposeIdx}" value="" placeholder="新增指证材料 ID">
+                        <div class="expose-item-label">新增一条指证道具/证词材料</div>
+                        <div class="expose-item-actions">
+                            <button type="button" class="btn" onclick="FlowOverviewView.openExposeItemPicker('${escapeHtml(loop.id)}',${exposeIdx},-1,'add')">选择</button>
+                            <button type="button" class="btn" onclick="FlowOverviewView.addExposeItemFromInput('${escapeHtml(loop.id)}',${exposeIdx})">新增</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') + `</div>`;
+        },
+
+        renderExposeTarget(loop, expose) {
+            const tid = String(expose?.testimony || '').trim();
+            if (!tid || tid === '0') {
+                return `
+                    <div class="expose-target-box">
+                        <div class="expose-target-title">本轮没有配置被攻击证词</div>
+                        <div class="expose-target-meta">ChapterConfig.exposes.testimony 为空或为 0。</div>
+                    </div>
+                `;
+            }
+            const material = this.resolveExposeMaterial(tid, loop.loop);
+            return `
+                <div class="expose-target-box">
+                    <div class="expose-target-title">被攻击证词：${escapeHtml(material.name)}</div>
+                    <div class="expose-target-meta">
+                        ${escapeHtml(material.kind)} ${escapeHtml(tid)} · ${escapeHtml(material.statusText)}
+                        ${material.detail ? ` · ${escapeHtml(truncate(material.detail, 72))}` : ''}
+                    </div>
+                </div>
+            `;
+        },
+
+        exposeRoundStatus(loop, expose) {
+            const items = expose?.items || [];
+            if (items.some(item => this.resolveExposeMaterial(item.id || item, loop.loop).status === 'missing')) return 'missing';
+            if (items.some(item => this.resolveExposeMaterial(item.id || item, loop.loop).status === 'future')) return 'future';
+            return 'current';
+        },
+
+        renderExposeItemRow(loop, expose, exposeIdx, item, itemIdx) {
+            const material = this.resolveExposeMaterial(item.id || item, loop.loop);
+            return `
+                <div class="expose-item-row">
+                    <input id="expose-item-${escapeHtml(loop.id)}-${exposeIdx}-${itemIdx}" value="${escapeHtml(item.id || item || '')}" placeholder="材料 ID">
+                    <div class="expose-material-card">
+                        <div class="expose-material-title">${escapeHtml(material.name)}</div>
+                        <div class="expose-material-chips">
+                            <span class="flow-chip">${escapeHtml(material.kind)}</span>
+                            <span class="flow-chip">#${escapeHtml(material.id || item.id || item || '')}</span>
+                            <span class="dep-status ${escapeHtml(material.status)}">${escapeHtml(material.statusText)}</span>
+                        </div>
+                        ${material.detail ? `<div class="expose-material-detail">${escapeHtml(truncate(material.detail, 96))}</div>` : ''}
+                    </div>
+                    <div class="expose-item-actions">
+                        <button type="button" class="btn" onclick="FlowOverviewView.openExposeItemPicker('${escapeHtml(loop.id)}',${exposeIdx},${itemIdx},'edit')">选择</button>
+                        <button type="button" class="btn" onclick="FlowOverviewView.updateExposeItemFromInput('${escapeHtml(loop.id)}',${exposeIdx},${itemIdx})">记录</button>
+                        <button type="button" class="btn ghost" onclick="FlowOverviewView.removeExposeItem('${escapeHtml(loop.id)}',${exposeIdx},${itemIdx})">删除</button>
+                    </div>
+                </div>
+            `;
+        },
+
+        resolveExposeMaterial(id, currentLoop = 0) {
+            const pid = String(id || '').trim();
+            const type = this.inferExposeMaterialType(pid);
+            const item = AppState.itemsMap.get(pid);
+            if (item) {
+                const dep = this.resolveDependency('1', pid, currentLoop || this.loopFromItemId(pid));
+                return {
+                    ...dep,
+                    id: pid,
+                    type: '1',
+                    kind: '道具',
+                    name: cn(item.Name) || '(未命名)',
+                    label: `道具 ${pid} · ${cn(item.Name) || '(未命名)'}`,
+                    detail: cn(item.ShortDescribe) || cn(item.Describe) || cn(item.location) || '',
+                };
+            }
+            const testimony = AppState.allTestimonies.find(t => String(t.id) === pid);
+            if (testimony) {
+                const typ = this.isTimelineTestimony(testimony) ? '3' : (this.isRelationTestimony(testimony) ? '2' : '4');
+                const dep = this.resolveDependency(typ, pid, currentLoop || this.loopFromTestimonyId(pid));
+                const kind = typ === '3' ? '时间线证词' : (typ === '2' ? '关系证词' : '证词');
+                const name = cn(testimony.shortDesc) || cn(testimony.testimony) || '(无文本)';
+                const extra = typ === '3' ? this.timeLabelForTestimony(testimony) : this.testimonyNpcName(testimony);
+                return {
+                    ...dep,
+                    id: pid,
+                    type: typ,
+                    kind,
+                    name,
+                    label: `${kind} ${pid} · ${name}`,
+                    detail: `${extra || ''}${extra ? ' · ' : ''}${cn(testimony.testimony) || ''}`,
+                };
+            }
+            return {
+                id: pid,
+                type,
+                kind: '未知',
+                name: '未找到',
+                label: `材料 ${pid || '空'} · 未找到`,
+                detail: '',
+                exists: false,
+                status: 'missing',
+                statusText: '未找到',
+                sourceLoop: '',
+                sourceLoopNum: 0,
+            };
+        },
+
+        inferExposeMaterialType(id) {
+            const pid = String(id || '').trim();
+            if (AppState.itemsMap.has(pid)) return '1';
+            const testimony = AppState.allTestimonies.find(t => String(t.id) === pid);
+            if (testimony) {
+                if (this.isTimelineTestimony(testimony)) return '3';
+                if (this.isRelationTestimony(testimony)) return '2';
+                return '4';
+            }
+            return '1';
+        },
+
+        exposeItemIds(expose) {
+            return (expose?.items || []).map(item => String(item.id || item || '').trim()).filter(Boolean);
+        },
+
+        originalExposeItemIds(loop, exposeIdx) {
+            const expose = loop?._originalExposes?.[exposeIdx];
+            return this.exposeItemIds(expose);
+        },
+
+        updateExposeItemFromInput(loopId, exposeIdx, itemIdx) {
+            const el = document.getElementById(`expose-item-${loopId}-${exposeIdx}-${itemIdx}`);
+            this.updateExposeItem(loopId, exposeIdx, itemIdx, el?.value);
+        },
+
+        addExposeItemFromInput(loopId, exposeIdx) {
+            const el = document.getElementById(`expose-add-${loopId}-${exposeIdx}`);
+            this.addExposeItem(loopId, exposeIdx, el?.value);
+        },
+
+        updateExposeItem(loopId, exposeIdx, itemIdx, id) {
+            const loop = this.findLoop(loopId);
+            const expose = loop?.exposes?.[exposeIdx];
+            const pid = String(id || '').trim();
+            if (!loop || !expose || !pid) return;
+            this.ensureOriginals(loop);
+            if (!Array.isArray(expose.items)) expose.items = [];
+            const material = this.resolveExposeMaterial(pid, loop.loop);
+            expose.items[itemIdx] = { id: pid, name: material.name, kind: material.kind };
+            this.recordExposeItemsChange(loop, exposeIdx);
+            this.render();
+        },
+
+        addExposeItem(loopId, exposeIdx, id) {
+            const loop = this.findLoop(loopId);
+            const expose = loop?.exposes?.[exposeIdx];
+            const pid = String(id || '').trim();
+            if (!loop || !expose || !pid) {
+                UI.updateStatus('请填写或选择指证材料 ID');
+                return;
+            }
+            this.ensureOriginals(loop);
+            if (!Array.isArray(expose.items)) expose.items = [];
+            const material = this.resolveExposeMaterial(pid, loop.loop);
+            expose.items.push({ id: pid, name: material.name, kind: material.kind });
+            this.recordExposeItemsChange(loop, exposeIdx);
+            this.render();
+        },
+
+        removeExposeItem(loopId, exposeIdx, itemIdx) {
+            const loop = this.findLoop(loopId);
+            const expose = loop?.exposes?.[exposeIdx];
+            if (!loop || !expose || !Array.isArray(expose.items)) return;
+            this.ensureOriginals(loop);
+            expose.items.splice(itemIdx, 1);
+            this.recordExposeItemsChange(loop, exposeIdx);
+            this.render();
+        },
+
+        recordExposeItemsChange(loop, exposeIdx) {
+            const expose = loop.exposes?.[exposeIdx];
+            if (!expose) return;
+            const oldItems = this.originalExposeItemIds(loop, exposeIdx);
+            const newItems = this.exposeItemIds(expose);
+            const oldDetails = oldItems.map(id => this.exposeMaterialChangeDetail(id, loop.loop));
+            const newDetails = newItems.map(id => this.exposeMaterialChangeDetail(id, loop.loop));
+            const key = `ChapterConfig:${loop.chapterId}:exposes:${exposeIdx}:item`;
+            const idx = AppState.pendingChanges.findIndex(c => c.key === key);
+            if (JSON.stringify(oldItems) === JSON.stringify(newItems)) {
+                if (idx >= 0) AppState.pendingChanges.splice(idx, 1);
+                return;
+            }
+            const change = {
+                key,
+                action: 'update',
+                kind: 'expose_items',
+                source: 'avg_editor_v2',
+                unit: AppState.currentUnit,
+                formalUnit: AppState.unitFlow?.formalUnit || AppState.unitFlow?.unit,
+                loop: loop.id,
+                table: 'ChapterConfig',
+                id: loop.chapterId,
+                field: 'exposes',
+                valuePath: `exposes[${exposeIdx}].item`,
+                label: `指证第 ${expose.id || exposeIdx + 1} 轮材料`,
+                old: oldItems,
+                new: newItems,
+                oldDetails,
+                newDetails,
+                exposeIndex: exposeIdx,
+                exposeRoundId: expose.id || '',
+                exposeTalkId: expose.talkId || '',
+                targetTestimony: expose.testimony || '',
+                affectedTables: ['ChapterConfig', 'ExposeData'],
+                updatedAt: new Date().toISOString(),
+            };
+            if (idx >= 0) AppState.pendingChanges[idx] = change;
+            else AppState.pendingChanges.push(change);
+        },
+
+        applyExposeChange(loop, change) {
+            const expose = loop.exposes?.[change.exposeIndex];
+            if (!expose || change.kind !== 'expose_items') return;
+            expose.items = (change.new || []).map(id => ({
+                id: String(id),
+                name: this.resolveExposeMaterial(id, loop.loop).name,
+                kind: this.resolveExposeMaterial(id, loop.loop).kind,
+            }));
+        },
+
+        exposeMaterialChangeDetail(id, currentLoop) {
+            const material = this.resolveExposeMaterial(id, currentLoop);
+            return {
+                id: String(id || ''),
+                type: material.type,
+                kind: material.kind,
+                name: material.name,
+                exists: material.exists,
+                sourceLoop: material.sourceLoop,
+                sourceLoopNum: material.sourceLoopNum,
+                status: material.status,
+                statusText: material.statusText,
+            };
+        },
+
+        validate(loop) {
+            const issues = [];
+            if (!loop.goal) issues.push('缺少循环目标');
+            if (!loop.initTalk) issues.push('缺少开篇 Talk');
+            if (!loop.initScene) issues.push('缺少开篇场景');
+            if (!loop.scenes || loop.scenes.length === 0) issues.push('没有开放场景');
+            if ((loop.exposes || []).length > 0 && (loop.doubts || []).length === 0) issues.push('有指证但没有疑点门槛');
+            (loop.exposes || []).forEach(e => {
+                if (e.testimony && String(e.testimony) !== '0') {
+                    const target = this.resolveExposeMaterial(e.testimony, loop.loop);
+                    if (target.status === 'missing') issues.push(`指证第 ${e.id || '?'} 轮被攻击证词 ${e.testimony} 未找到`);
+                    if (target.status === 'future') issues.push(`指证第 ${e.id || '?'} 轮被攻击证词来自未来 L${target.sourceLoopNum}`);
+                }
+                (e.items || []).forEach(item => {
+                    const mid = item.id || item;
+                    const material = this.resolveExposeMaterial(mid, loop.loop);
+                    if (material.status === 'missing') issues.push(`指证第 ${e.id || '?'} 轮材料 ${mid} 未找到`);
+                    if (material.status === 'future') issues.push(`指证第 ${e.id || '?'} 轮材料 ${mid} 来自未来 L${material.sourceLoopNum}`);
+                });
+            });
+            (loop.doubts || []).forEach(d => {
+                (d.conditions || []).forEach(c => {
+                    const dep = this.resolveDependency(c.type, c.param, loop.loop);
+                    if (dep.status === 'missing') issues.push(`疑点 ${d.id} 的依赖 ${c.type}:${c.param} 未找到`);
+                    if (dep.status === 'future') issues.push(`疑点 ${d.id} 使用了未来依赖 ${c.type}:${c.param}`);
+                });
+            });
+            return issues;
+        },
+
+        renderChangeLog() {
+            const changes = AppState.pendingChanges || [];
+            let html = `
+                <div class="change-log-panel">
+                    <div class="change-log-head">
+                        <span>待应用修改 · ${changes.length}</span>
+                        <span class="change-log-actions">
+                            <button class="btn" onclick="FlowOverviewView.copyChangeLog()">复制</button>
+                            <button class="btn" onclick="FlowOverviewView.exportChangeLog()">导出 JSON</button>
+                            <button class="btn ghost" onclick="FlowOverviewView.clearChangeLog()">清空</button>
+                        </span>
+                    </div>
+            `;
+            if (!changes.length) {
+                html += `<div class="change-log-empty">暂无修改。这里会记录网页改动，之后交给 AI 同步正式配置。</div>`;
+            } else {
+                html += `<div class="change-log-list">`;
+                changes.forEach(c => {
+                    html += `
+                        <div class="change-log-item">
+                            <strong>${escapeHtml(c.loop)} · ${escapeHtml(c.label)}</strong><br>
+                            ${escapeHtml(c.table)} #${escapeHtml(c.id)} · ${escapeHtml(c.valuePath)}<br>
+                            <span style="color:var(--text-muted);">原：</span>${escapeHtml(this.displayValue(c.old))}<br>
+                            <span style="color:var(--highlight);">新：</span>${escapeHtml(this.displayValue(c.new))}
+                            ${c.dependency ? `<br><span style="color:var(--text-muted);">${escapeHtml(c.dependency.statusText || '')}</span>` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            html += `</div>`;
+            return html;
+        },
+
+        displayValue(value) {
+            if (value == null) return '空';
+            if (typeof value === 'object') return truncate(JSON.stringify(value), 90);
+            return truncate(String(value), 90);
+        },
+
+        changeLogPayload() {
+            return {
+                schemaVersion: 1,
+                type: 'ndc_editor_change_log',
+                generatedAt: new Date().toISOString(),
+                source: 'avg_editor_v2',
+                target: 'formal_config',
+                changes: AppState.pendingChanges.map(({ key, ...rest }) => rest),
+            };
+        },
+
+        copyChangeLog() {
+            const text = JSON.stringify(this.changeLogPayload(), null, 2);
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(text).then(() => UI.updateStatus('已复制 change log'));
+            } else {
+                UI.updateStatus('当前浏览器不支持剪贴板复制，请使用导出 JSON');
+            }
+        },
+
+        exportChangeLog() {
+            const text = JSON.stringify(this.changeLogPayload(), null, 2);
+            const blob = new Blob([text], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ndc_change_log_${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            UI.updateStatus('已导出 change log JSON');
+        },
+
+        clearChangeLog() {
+            const flow = AppState.unitFlow;
+            (flow?.loops || []).forEach(loop => {
+                if (loop._originalEditable) {
+                    Object.entries(loop._originalEditable).forEach(([field, value]) => {
+                        loop[field] = value;
+                        if (field === 'summaryContent') {
+                            const summary = (loop.flow || []).find(s => s.type === 'summary');
+                            if (summary) summary.summary = value;
+                        }
+                    });
+                }
+                if (loop._originalEntry) {
+                    loop.initTalk = loop._originalEntry.initTalk || '';
+                    loop.initScene = loop._originalEntry.initScene || '';
+                    const opening = (loop.flow || []).find(s => s.type === 'opening');
+                    if (opening) {
+                        if (!opening.refs) opening.refs = {};
+                        opening.refs.talkId = loop.initTalk;
+                        opening.refs.sceneId = loop.initScene;
+                        opening.summary = `从 Talk ${loop.initTalk || '未配置'} 进入本 Loop。`;
+                    }
+                }
+                if (loop._originalScenes) {
+                    loop.scenes = JSON.parse(JSON.stringify(loop._originalScenes));
+                }
+                if (loop._originalDoubts) {
+                    loop.doubts = JSON.parse(JSON.stringify(loop._originalDoubts));
+                }
+                if (loop._originalExposes) {
+                    loop.exposes = JSON.parse(JSON.stringify(loop._originalExposes));
+                }
+            });
+            AppState.pendingChanges = [];
+            this.render();
+            UI.updateStatus('已清空待应用修改');
+        },
+    };
+
+    const ValidationOverviewView = {
+        severityFilter: 'all',
+        moduleFilter: 'all',
+
+        moduleLabel(module) {
+            return {
+                loopText: 'Loop 文案',
+                entry: '入口配置',
+                scenes: '场景配置',
+                events: '事件 / AVG',
+                doubts: '疑点配置',
+                exposes: '指证道具',
+            }[module] || module || '配置';
+        },
+
+        render() {
+            const content = document.getElementById('content');
+            const flow = AppState.unitFlow;
+            if (!flow || !Array.isArray(flow.loops) || flow.loops.length === 0) {
+                content.innerHTML = `
+                    <div class="validation-page">
+                        <div class="flow-warning">当前 Unit 没有 UnitFlow 数据。请先点击「加载」。</div>
+                    </div>
+                `;
+                UI.renderSidebar();
+                return;
+            }
+
+            FlowOverviewView.applyPendingToFlow();
+            const issues = this.collectIssues();
+            const filtered = this.filterIssues(issues);
+            const errorCount = issues.filter(i => i.severity === 'error').length;
+            const warnCount = issues.filter(i => i.severity === 'warn').length;
+            const affectedLoops = new Set(issues.map(i => i.loopId).filter(Boolean)).size;
+
+            let html = `
+                <div class="validation-page">
+                    <section class="unit-flow-hero">
+                        <div class="unit-flow-kicker">Config Validation · ${escapeHtml(flow.chapter || '')}</div>
+                        <div class="unit-flow-title">${escapeHtml(flow.unit)} · 配置校验总览</div>
+                        <div class="unit-flow-alias">按正式表结构检查入口、场景、疑点依赖、指证材料和来源 Loop。</div>
+                        <div class="validation-toolbar">
+                            <select onchange="ValidationOverviewView.setSeverityFilter(this.value)">
+                                ${this.renderFilterOption('all', '全部严重度', this.severityFilter)}
+                                ${this.renderFilterOption('error', '只看错误', this.severityFilter)}
+                                ${this.renderFilterOption('warn', '只看警告', this.severityFilter)}
+                            </select>
+                            <select onchange="ValidationOverviewView.setModuleFilter(this.value)">
+                                ${this.renderFilterOption('all', '全部模块', this.moduleFilter)}
+                                ${['loopText', 'entry', 'scenes', 'events', 'doubts', 'exposes'].map(m => this.renderFilterOption(m, this.moduleLabel(m), this.moduleFilter)).join('')}
+                            </select>
+                            <button class="btn" onclick="ValidationOverviewView.render()">重新校验</button>
+                        </div>
+                    </section>
+
+                    <section class="validation-summary-grid">
+                        ${this.renderStat('全部问题', issues.length)}
+                        ${this.renderStat('错误', errorCount)}
+                        ${this.renderStat('警告', warnCount)}
+                        ${this.renderStat('影响 Loop', affectedLoops)}
+                    </section>
+
+                    <section class="flow-panel">
+                        <h3>校验结果 · ${filtered.length}</h3>
+                        ${filtered.length ? `<div class="validation-list">${filtered.map(i => this.renderIssue(i)).join('')}</div>` : `<div class="validation-empty">当前筛选下没有问题。这个小检查员暂时可以歇一口气。</div>`}
+                    </section>
+                </div>
+            `;
+            content.innerHTML = html;
+            UI.renderSidebar();
+        },
+
+        renderFilterOption(value, label, current) {
+            return `<option value="${escapeHtml(value)}" ${String(value) === String(current) ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+        },
+
+        renderStat(label, value) {
+            return `
+                <div class="validation-stat-card">
+                    <div class="validation-stat-num">${escapeHtml(String(value))}</div>
+                    <div class="validation-stat-label">${escapeHtml(label)}</div>
+                </div>
+            `;
+        },
+
+        filterIssues(issues) {
+            return issues.filter(i => {
+                if (this.severityFilter !== 'all' && i.severity !== this.severityFilter) return false;
+                if (this.moduleFilter !== 'all' && i.module !== this.moduleFilter) return false;
+                return true;
+            });
+        },
+
+        setSeverityFilter(value) {
+            this.severityFilter = String(value || 'all');
+            this.render();
+        },
+
+        setModuleFilter(value) {
+            this.moduleFilter = String(value || 'all');
+            this.render();
+        },
+
+        renderIssue(issue) {
+            const moduleLabel = this.moduleLabel(issue.module);
+            return `
+                <article class="validation-issue ${escapeHtml(issue.severity)}">
+                    <div>
+                        <div class="validation-issue-top">
+                            <span class="validation-severity ${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span>
+                            <span class="validation-module">${escapeHtml(moduleLabel)}</span>
+                            <span class="validation-loop">${escapeHtml(issue.loopId || 'Unit')}</span>
+                            ${issue.table ? `<span class="flow-chip">${escapeHtml(issue.table)}${issue.id ? ` #${escapeHtml(issue.id)}` : ''}</span>` : ''}
+                        </div>
+                        <div class="validation-message">${escapeHtml(issue.message)}</div>
+                        ${issue.detail ? `<div class="validation-detail">${escapeHtml(issue.detail)}</div>` : ''}
+                    </div>
+                    <div class="validation-actions">
+                        ${issue.loopId ? `<button class="btn" onclick="ValidationOverviewView.focusLoop('${escapeHtml(issue.loopId)}')">定位 Loop</button>` : ''}
+                        ${issue.loopId ? `<button class="btn primary" onclick="ValidationOverviewView.editIssue('${escapeHtml(issue.loopId)}','${escapeHtml(issue.editModule || issue.module)}')">去编辑</button>` : ''}
+                    </div>
+                </article>
+            `;
+        },
+
+        collectIssues() {
+            const issues = [];
+            const flow = AppState.unitFlow;
+            (flow?.loops || []).forEach(loop => {
+                FlowOverviewView.ensureOriginals(loop);
+                this.checkLoopText(loop, issues);
+                this.checkEntry(loop, issues);
+                this.checkScenes(loop, issues);
+                this.checkEvents(loop, issues);
+                this.checkDoubts(loop, issues);
+                this.checkExposes(loop, issues);
+            });
+            return issues;
+        },
+
+        addIssue(issues, loop, module, severity, message, detail, table, id, field, editModule) {
+            issues.push({
+                severity,
+                module,
+                loopId: loop?.id || '',
+                loopTitle: loop?.title || '',
+                message,
+                detail: detail || '',
+                table: table || 'ChapterConfig',
+                id: id || loop?.chapterId || '',
+                field: field || '',
+                editModule: editModule || module,
+            });
+        },
+
+        checkLoopText(loop, issues) {
+            if (!loop.title) this.addIssue(issues, loop, 'loopText', 'warn', 'Loop 标题未配置', 'ChapterConfig.chapterTitle[0] 为空。', 'ChapterConfig', loop.chapterId, 'chapterTitle');
+            if (!loop.goal) this.addIssue(issues, loop, 'loopText', 'error', '循环目标未配置', '玩家进入本 Loop 后缺少明确目标文本。', 'ChapterConfig', loop.chapterId, 'chapterGoal');
+            if (!loop.brief) this.addIssue(issues, loop, 'loopText', 'warn', 'Loop 简述未配置', '一级流程总览会缺少本 Loop 的剧情摘要。', 'ChapterConfig', loop.chapterId, 'chapterBrief');
+        },
+
+        checkEntry(loop, issues) {
+            if (!loop.initTalk) {
+                this.addIssue(issues, loop, 'entry', 'error', '开篇 Talk 未配置', 'ChapterConfig.initTalk 为空，Loop 开头没有入口对白。', 'ChapterConfig', loop.chapterId, 'initTalk');
+            }
+            if (!loop.initScene) {
+                this.addIssue(issues, loop, 'entry', 'error', '初始场景未配置', 'ChapterConfig.initScene 为空，进入 Loop 后无法定位主场景。', 'ChapterConfig', loop.chapterId, 'initScene');
+                return;
+            }
+            const scene = AppState.scenesMap.get(String(loop.initScene));
+            if (!scene) {
+                this.addIssue(issues, loop, 'entry', 'error', `初始场景 ${loop.initScene} 不存在`, 'SceneConfig 中找不到该 sceneId。', 'ChapterConfig', loop.chapterId, 'initScene');
+                return;
+            }
+            if (Number(scene.loop) !== Number(loop.loop)) {
+                this.addIssue(issues, loop, 'entry', 'warn', `初始场景 ${loop.initScene} 不属于当前 Loop`, `SceneConfig.loop=${scene.loop || '空'}，当前是 L${loop.loop}。`, 'SceneConfig', loop.initScene, 'loop');
+            }
+            const opened = (loop.scenes || []).some(s => String(s.id) === String(loop.initScene));
+            if (!opened) {
+                this.addIssue(issues, loop, 'entry', 'warn', `初始场景 ${loop.initScene} 不在开放场景列表`, '玩家可能能进入场景，但流程总览和开放场景配置不一致。', 'ChapterConfig', loop.chapterId, 'initScene', 'scenes');
+            }
+        },
+
+        checkScenes(loop, issues) {
+            const scenes = loop.scenes || [];
+            if (!scenes.length) {
+                this.addIssue(issues, loop, 'scenes', 'error', '没有开放场景', 'SceneConfig 中没有该 Loop 的 isOpen 场景。', 'SceneConfig', '', 'isOpen');
+                return;
+            }
+            scenes.forEach(s => {
+                const scene = AppState.scenesMap.get(String(s.id));
+                if (!scene) {
+                    this.addIssue(issues, loop, 'scenes', 'error', `开放场景 ${s.id} 不存在`, 'UnitFlow 中出现了 SceneConfig 找不到的场景。', 'SceneConfig', s.id, 'sceneId');
+                    return;
+                }
+                if (Number(scene.loop) !== Number(loop.loop)) {
+                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 ${s.id} 的 loop 归属不一致`, `SceneConfig.loop=${scene.loop || '空'}，当前展示在 L${loop.loop}。`, 'SceneConfig', s.id, 'loop');
+                }
+                if (!s.kind || s.kind === 'unknown') {
+                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 ${s.id} 缺少底图类型`, 'ArtAssetConfig.sceneKind 未识别，流程页无法判断探索/对白底图。', 'ArtAssetConfig', scene.backgroundImage || '', 'sceneKind');
+                }
+            });
+        },
+
+        checkEvents(loop, issues) {
+            if (loop.id !== AppState.currentLoop) return;
+            const events = FlowOverviewView.talkEventsForLoop(loop);
+            events.forEach(talk => {
+                const script = String(talk.script || '').trim().toLowerCase();
+                const p0 = talk.Parameters?.[0] || {};
+                const p1 = talk.Parameters?.[1] || {};
+                if (script === 'new_npc_in' && (!p0.ParameterInt || String(p0.ParameterInt) === '0')) {
+                    this.addIssue(issues, loop, 'events', 'error', `Talk ${talk.id} 的 new_npc_in 缺少 NPCLoopData ID`, 'Parameters[0].ParameterInt 应为 NPCLoopData 表 ID。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
+                }
+                if (script === 'npc_out' && (!p0.ParameterInt || String(p0.ParameterInt) === '0')) {
+                    this.addIssue(issues, loop, 'events', 'error', `Talk ${talk.id} 的 npc_out 缺少 NPC ID`, 'Parameters[0].ParameterInt 应为 NPC id。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
+                }
+                if (script === 'exhibit') {
+                    if (!p0.ParameterInt || String(p0.ParameterInt) === '0') {
+                        this.addIssue(issues, loop, 'events', 'error', `Talk ${talk.id} 的 exhibit 缺少物品 ID`, 'Parameters[0].ParameterInt 应为要展示的物品 ID。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
+                    }
+                    if (!p1.ParameterInt || String(p1.ParameterInt) === '0') {
+                        this.addIssue(issues, loop, 'events', 'warn', `Talk ${talk.id} 的 exhibit 缺少展示档位`, 'Parameters[1].ParameterInt 建议配置 1/2/3。', 'Talk新增表', talk.id, 'Parameters[1].ParameterInt', 'events');
+                    }
+                }
+                if (!talk.next && !['end', 'branches', '1'].includes(script)) {
+                    this.addIssue(issues, loop, 'events', 'warn', `Talk ${talk.id} 没有 next`, '如果不是结束或分支节点，可能会导致对白链断开。', 'Talk新增表', talk.id, 'next', 'events');
+                }
+            });
+        },
+
+        checkDoubts(loop, issues) {
+            (loop.doubts || []).forEach(d => {
+                if (!d.text) {
+                    this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${d.id} 缺少文本`, 'DoubtConfig/ChapterConfig 中的疑点展示文本为空。', 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].text`);
+                }
+                if (!d.conditions || d.conditions.length === 0) {
+                    this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${d.id} 没有前置依赖`, '玩家可能不收集关键材料也能推进疑点。', 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition`);
+                }
+                (d.conditions || []).forEach((c, idx) => {
+                    const dep = FlowOverviewView.resolveDependency(c.type, c.param, loop.loop);
+                    if (dep.status === 'missing') {
+                        this.addIssue(issues, loop, 'doubts', 'error', `疑点 ${d.id} 的依赖 ${c.type}:${c.param} 未找到`, dep.label, 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition[${idx}]`);
+                    } else if (dep.status === 'future') {
+                        this.addIssue(issues, loop, 'doubts', 'error', `疑点 ${d.id} 使用未来依赖`, `${dep.label} · ${dep.statusText}`, 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition[${idx}]`);
+                    }
+                    this.checkDependencyType(loop, issues, d, c, idx);
+                });
+            });
+        },
+
+        checkDependencyType(loop, issues, doubt, condition, idx) {
+            const typ = String(condition.type || '');
+            const pid = String(condition.param || '');
+            const testimony = AppState.allTestimonies.find(t => String(t.id) === pid);
+            if (!testimony) return;
+            if (typ === '3' && !FlowOverviewView.isTimelineTestimony(testimony)) {
+                this.addIssue(issues, loop, 'doubts', 'error', `疑点 ${doubt.id} 把非时间线证词配置成时间线`, `证词 ${pid} 没有有效 Timeline triggerParam。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
+            }
+            if (typ === '4' && FlowOverviewView.isTimelineTestimony(testimony)) {
+                this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${doubt.id} 的证词类型可疑`, `证词 ${pid} 是时间线证词，当前条件类型写成普通证词。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
+            }
+            if (typ === '4' && FlowOverviewView.isRelationTestimony(testimony)) {
+                this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${doubt.id} 的证词类型可疑`, `证词 ${pid} 是关系证词，当前条件类型写成普通证词。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
+            }
+        },
+
+        checkExposes(loop, issues) {
+            (loop.exposes || []).forEach(e => {
+                if (!e.talkId) {
+                    this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮缺少 Talk`, 'ChapterConfig.exposes.talkId 为空。', 'ChapterConfig', loop.chapterId, 'exposes.talkId');
+                }
+                if (e.testimony && String(e.testimony) !== '0') {
+                    const target = FlowOverviewView.resolveExposeMaterial(e.testimony, loop.loop);
+                    if (target.status === 'missing') {
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮被攻击证词不存在`, `证词 ${e.testimony} 未找到。`, 'ChapterConfig', loop.chapterId, 'exposes.testimony');
+                    } else if (target.status === 'future') {
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮攻击了未来证词`, `证词 ${e.testimony} 来自 ${target.statusText}。`, 'ChapterConfig', loop.chapterId, 'exposes.testimony');
+                    }
+                }
+                if (!e.items || e.items.length === 0) {
+                    this.addIssue(issues, loop, 'exposes', 'warn', `指证第 ${e.id || '?'} 轮没有材料`, 'ChapterConfig.exposes.item 为空，玩家可能无法完成本轮指证。', 'ChapterConfig', loop.chapterId, 'exposes.item');
+                }
+                (e.items || []).forEach((item, idx) => {
+                    const mid = item.id || item;
+                    const material = FlowOverviewView.resolveExposeMaterial(mid, loop.loop);
+                    if (material.status === 'missing') {
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮材料 ${mid} 未找到`, '既不是有效道具，也不是有效证词。', 'ChapterConfig', loop.chapterId, `exposes[id=${e.id}].item[${idx}]`);
+                    } else if (material.status === 'future') {
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮材料来自未来`, `${material.kind} ${mid} · ${material.statusText}`, 'ChapterConfig', loop.chapterId, `exposes[id=${e.id}].item[${idx}]`);
+                    }
+                });
+            });
+        },
+
+        async focusLoop(loopId) {
+            const sel = document.getElementById('loopSelect');
+            if (sel) sel.value = loopId;
+            if (GameController?.load) await GameController.load();
+            this.render();
+        },
+
+        async editIssue(loopId, module) {
+            const sel = document.getElementById('loopSelect');
+            if (sel) sel.value = loopId;
+            AppState.currentView = 'flow';
+            if (GameController?.load) await GameController.load();
+            FlowOverviewView.openModuleEditor(loopId, module || 'loopText');
+        },
+    };
+
     // ===== Art Overview View (3 tabs: evidence, npc, scene) =====
     const ArtOverviewView = {
         currentTab: 'evidence',
@@ -5821,7 +9153,8 @@
                 await Promise.all([
                     DataLoader.loadLoopConfig(unit, loop),
                     DataLoader.loadTalkSummaries(unit),
-                    DataLoader.loadStoryOverview(unit)
+                    DataLoader.loadStoryOverview(unit),
+                    DataLoader.loadUnitFlow(unit)
                 ]);
                 console.log('Loop config loaded:', AppState.loopData ? 'OK' : 'not found');
 
@@ -5873,6 +9206,7 @@
 
             document.getElementById('btnArt').classList.toggle('active', view === 'art');
             document.getElementById('btnFlow').classList.toggle('active', view === 'flow');
+            document.getElementById('btnValidate').classList.toggle('active', view === 'validate');
 
             // 美术需求总览不需要 Loops 按钮（按 Unit 维度展示，不按 Loop 切换）
             const hideLoops = (view === 'art');
@@ -5885,14 +9219,10 @@
 
             if (view === 'art') {
                 ArtOverviewView.render();
+            } else if (view === 'validate') {
+                ValidationOverviewView.render();
             } else {
-                if (AppState.loopData?.opening) {
-                    FlowView.showPhase('opening');
-                } else {
-                    document.getElementById('content').innerHTML =
-                        '<p style="color:var(--text-muted); text-align:center; margin-top:20vh;">该循环暂无场景数据</p>';
-                    UI.renderSidebar();
-                }
+                FlowOverviewView.render();
             }
 
             UI.renderSidebar();
@@ -5902,16 +9232,10 @@
 
     // ===== Init =====
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('btnArt').classList.add('active');
+        document.getElementById('btnFlow').classList.add('active');
         // initial loop chip sync (shows loop1 active by default)
         if (typeof syncLoopChips === 'function') syncLoopChips();
-        // 初始默认为美术需求总览视图 → 隐藏 Loops 按钮区
-        const sideHead = document.querySelector('.sidebar > .side-head');
-        const loopRow = document.querySelector('.sidebar > .loop-row');
-        const loopCurrent = document.querySelector('.sidebar > .loop-current');
-        if (sideHead) sideHead.style.display = 'none';
-        if (loopRow) loopRow.style.display = 'none';
-        if (loopCurrent) loopCurrent.style.display = 'none';
+        if (typeof syncLoopHeader === 'function') syncLoopHeader();
     });
     </script>
 </body>
