@@ -1,0 +1,15 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+
+[mcp_servers.elevenlabs]
+command = "npx"
+args = [
+    "-y",
+    "@microagents/mcp-server-elevenlabs",
+]
+
+[mcp_servers.elevenlabs.env]
+ELEVENLABS_API_KEY = "sk_4d9d6805ebd1e8bc7dfea19fee48793df236f72e34e1ce3b"

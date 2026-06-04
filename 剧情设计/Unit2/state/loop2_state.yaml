@@ -20,27 +20,29 @@
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在；
 #                        NPC 4 必填块（active_topics/withheld_topics/player_inquiry/testimony_ids）完整
-# B. 证据覆盖     PASS — 讨论结论 L2 全部 6 件证据（2201-2206）已分配到场景；
+# B. 证据覆盖     PASS — 讨论结论 L2 证据（2201-2206）+ 当前对白新增 2208 已分配到场景；
 #                        2201 Leonard 名片→2007（Frank 家门口邮筒，与催款单一起拾取）；
 #                        2202 O'Hara 钞票→2007；
 #                        2203 催款单→2007（街角，Frank 家门口邮筒）；2204 威胁便条→2007；
 #                        2205 Vinnie 催债小本子→2015（Silver Moon）；
 #                        2206 Vinnie 的钞票→2015；
-#                        场景 2006（医院过场）/ 2011（银行大厅）/ 2012（贵宾室）无证据，仅剧情
+#                        场景 2006（医院过场）/ 2011（银行大厅）无证据，仅剧情；
+#                        场景 2012（贵宾室门口）获取 2208 Leon 嘉奖奖杯
 #                        【2026-05-20 修订】2201 Leonard 名片恢复（与 Miro 最新对齐）——
 #                        从 Frank 家门口邮筒拾取（与 2203 催款单同处），解锁银行场景 2011；
 #                        银行地址不再由 O'Hara 口头告知，改由 Leonard 名片承载；
 #                        L2 R1 陷阱选项 2201（"只证 Leonard 是银行职员，不证认识 Vinnie"），
-#                        击穿件仍是 2102001+2082001；右下角小字 'Lakeshore Investment Co.' 为 L3 伏笔
+#                        击穿件调整为 2102001+2208；右下角小字 'Lakeshore Investment Co.' 为 L3 伏笔
 #                        【2026-05-20 修订】O'Hara 口头告知改为 Silver Moon 赌场地址 → 解锁场景 2015
 #                        【2026-05-20 修订】2204 威胁便条由 item 改 envir（门缝可观察不可拾取）
 # C. NPC 条目     PASS — Leonard（Expose 对象，is_liar:true，player_inquiry:null）4 必填块完整；
-#                        O'Hara / Moore / Vinnie / Tony / Danny（偷听演出）/ Emma / Mickey 各含完整 4 块
+#                        O'Hara / Vinnie / Tony / Danny（偷听演出）/ Emma / Mickey 各含完整 4 块；
+#                        Moore 在 L2 仅作为贵宾室环境人影，不配置 Talk
 # D. 目标对齐     PASS — goals 与讨论结论"揭露银行雇佣黑手党暴力催债 / 指证 Leonard"完全一致
 # E. 信息节奏     PASS — 未泄露 L3+ 内容：掠夺性贷款细节/笔迹伪造/Mickey 律师辅助/Frank 房产证/
 #                        Lula 真爱/Danny 嫌疑/Vinnie 纵火/眼镜碎片/Leonard 真凶身份
 # F. quiz 配对    PASS — 无 quiz 设计，本 Loop 无此需求
-# G. Expose 逻辑  PASS — R1:2102001+2082001 击穿"不认识 Russo"谎言（陷阱:2201 Leonard 名片）；
+# G. Expose 逻辑  PASS — R1:2102001+2208 击穿"不认识 Russo"谎言（陷阱:2201 Leonard 名片）；
 #                        R2:2202+2206 连号拼图击穿"只是认识没来往"（陷阱:2203）；
 #                        R3:2092002+2205 击穿"那是借给 Vinnie 的钱"（陷阱:2092001）；
 #                        三轮维度互不重叠；每件击穿件唯一挂载对应疑点/碎片
@@ -48,13 +50,13 @@
 #
 # 一对一挂载检查（证据 ↔ 疑点/碎片 唯一性）：
 #   2202 → 疑点 2202 only  |  2206 → 疑点 2202 only
-#   2102001 → 疑点 2201 only  |  2082001 → 疑点 2201 only
+#   2102001 → 疑点 2201 only  |  2208 → 疑点 2201 only
 #   2092002 → 疑点 2203 only  |  2205 → 疑点 2203 only
 #   2112001 → 碎片 2204 only
 #   2201 / 2203 / 2204 / 2092001 未进任何 condition（背景信息/陷阱选项；2201 同时承担场景解锁功能）
 #
 # 时序检查（L_doubt ≤ min(L_use)）：
-#   疑点 2201（posed_loop=2）→ 击穿件 2102001/2082001 用于 L2 R1：2 ≤ 2  PASS
+#   疑点 2201（posed_loop=2）→ 击穿件 2102001/2208 用于 L2 R1：2 ≤ 2  PASS
 #   疑点 2202（posed_loop=2）→ 击穿件 2202/2206 用于 L2 R2：2 ≤ 2  PASS
 #   疑点 2203（posed_loop=2）→ 击穿件 2092002/2205 用于 L2 R3：2 ≤ 2  PASS
 #   碎片 2204（posed_loop=2）→ 仅进 L4 父疑点 2401 condition，L4 使用：2 ≤ 4  PASS
@@ -332,44 +334,25 @@ scenes:
   # ── 场景 2012：湖滨信托银行贵宾室（部分） ──
   - id: 2012
     name: "湖滨信托银行贵宾室（部分开放）"
-    type: free_exploration  # 🔓 部分开放——Leonard 问话结束后，Moore 主动出来引 Zack 进去
+    type: free_exploration  # 🔓 部分开放——Leonard 问话后，Zack 从走廊经过贵宾室门口
     description: |
-      Leonard 的指证结束后，Moore 行长主动出来，邀 Zack 进贵宾室"私下聊几句"。
-      贵宾室豪华、压迫感强——Moore 坐在巨大的桃木桌后面，像在接受觐见而不是问话。
-      Moore 此时只提供口头信息（无可搜证的证据），
-      态度傲慢，暗示银行"完全合规"，给 Zack 一种墙高门厚的压迫感。
-      这一场景奠定 L3 Moore 指证的情绪基底。
+      Zack 从 Leonard 工位离开，往出口方向走。
+      贵宾室的门虚掩着，里面透出苏格兰威士忌的气味；Moore 的人影在里面，但没有主动交谈。
+      Zack 透过门缝看到壁炉架上的银质嘉奖杯，底座刻着 "L. Russ-"，
+      末尾字母 "o" 被人以尖锐工具刮掉，原刻字轮廓仍可辨认。
+      这不是 Moore 口头证词，而是玩家点击获得的物证，用于 L2 R1 与 Vinnie 的 Russo 口误并置。
 
-    evidence: []  # 仅口头信息，无可拾取证据
+    evidence:
+      - id: 2208
+        name: "Leon嘉奖奖杯 / Leon's Award Trophy"
+        type: item
+        itemType: 3
+        pickup: true
+        description: "银行 1916 年颁发的嘉奖杯，底座原刻 'L. Russo'，末尾字母 'o' 被人以尖锐工具划去；刮痕明显，原字轮廓仍可辨认。"
+        analysis: false
+        note: "关键——疑点 2201 condition；L2 R1 击穿件之一，配合 2102001 Vinnie 口误证明 Leonard/Ross 与 Russo 旧名对应"
 
-    npcs:
-      moore_l2_parlor:
-        talk: moore_l2_parlor
-        is_liar: false  # L2 Moore 不是指证对象，只提供背景口头信息
-        motive: "傲慢地展示银行的权势；不把 Zack 当威胁；顺口透露 Leonard 的档案名字"
-        mindset: "俯视一切；措辞合法合规；对 Zack 带一点轻蔑的礼貌"
-
-        # ── 1. NPC 已知信息 ──
-        active_topics:
-          - "Moore 是湖滨信托银行行长兼 Lakeshore Investment Co. 投资公司负责人"
-          - "银行对所有客户的催收均走合法流程（傲慢陈述，非谎言，只是站在权力立场上的陈述）"
-          - "Leonard 的档案原名是 Russo，改名 Ross 是他的个人选择，银行档案有记录"
-          - "Frank 当初因赌博借了 600$、如今连本带利欠 3,200$（Moore 傲慢误导口径，非谎言、不作 testimony 收集；L3'非赌博掠夺性贷款反转'的伏笔种子——本 Loop 玩家接受'Frank 赌博自作自受'印象，L3 才推翻；对齐大纲 L324）"
-        withheld_topics:
-          - "掠夺性贷款的真实利率机制（L3 搜查令后才揭示）"
-          - "Lakeshore Investment Co. 的马甲性质（L3 才揭示）"
-          - "Danny 把 Frank 房产证给了银行的细节（L3 指证后坦白）"
-          - "对账单页眉/正文矛盾（R9 替代方案 A，L3 才揭示）"
-          - "银行和黑手党勾结的全貌（L3 才揭示）"
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "\"Leonard 的档案名字是 Russo 改的——这件事你怎么知道\" # 7"
-          - "\"银行催债有没有走合法之外的渠道\" # 9"
-
-        # ── 3. 可提取证词 ──
-        testimony_ids:
-          - 2082001  # Moore：Leonard 改名档案陈述——"他的原名是 Russo，1918 年在我们银行的档案里做了改名登记"（L2 R1 击破件之一 + 疑点 2201 condition）
+    npcs: {}  # 无 L2 Moore Talk；Moore 只作为贵宾室内的人影/环境存在
 
 
   # ── 场景 2015：Silver Moon 赌场/酒吧 ──
@@ -495,7 +478,7 @@ expose:
 
   context: |
     Zack 完成自由探索后，持有 O'Hara 贿赂钞票（2202：901B+905B）、Vinnie 催债小本子（2205）、
-    Tony 找零钞票（2206：902B/903B/904B），加上证词 Vinnie 口误（2102001）、Moore 改名档案陈述（2082001）、
+    Tony 找零钞票（2206：902B/903B/904B），加上证词 Vinnie 口误（2102001）、Leon 嘉奖奖杯（2208）、
     Tony 钱是赚来的（2092002），对 Leonard 在银行大厅发起指证。
     Leonard 将从"不认识催债的人"→"只是认识没来往"→"那是借给 Vinnie 的钱"三层退守，
     最终在连号钞票（901–905 完整序列）+催债小本子面前防线崩溃。
@@ -508,13 +491,13 @@ expose:
       usable:
         - id: 2102001
           purpose: "Vinnie 脱口说'不认识什么 Russo'——说明 Russo 这个名字对他有意义，他见过 Leonard 原名叫 Russo 的人"
-        - id: 2082001
-          purpose: "Moore 的银行档案记录：Leonard 原名正是 Russo，1918 年改名——两人'不认识'的说法直接破功"
+        - id: 2208
+          purpose: "Leon 嘉奖奖杯底座原刻 L. Russo，末尾字母被刮掉——证明 Leonard/Ross 与 Russo 旧名对应"
       trap:
         - id: 2201
           reason: "Leonard 名片只证明他是银行职员（贷款部主任），不能证明他与 Vinnie 相识——R1 要击穿的是'不认识催债的人'，需要 Russo 这个旧名作为认识 Vinnie 的锚点，单出示名片只会让 Leonard 说'我是银行职员，谁都可能拿到我名片'"
     result: |
-      Leonard 被 Vinnie 的口误和档案改名双重击中，无法否认两人认识。
+      Leonard 被 Vinnie 的口误和奖杯旧名双重击中，无法否认两人认识。
       立刻退守新防线："我们只是认识——认识不等于有来往，更不等于他替我做什么。"
 
   # ── 轮次二：击破"只是认识没来往" ──
@@ -622,8 +605,8 @@ doubts:
     unlock_condition:
       - type: 3
         param: "2102001"  # Vinnie 口误证词："我不记得什么 Russo！"
-      - type: 3
-        param: "2082001"  # Moore 改名档案陈述：Leonard 原名 Russo，1918 年改名 Ross
+      - type: 1
+        param: "2208"  # Leon 嘉奖奖杯：底座原刻 L. Russo，末尾字母被刮掉
     posed_loop: 2
     resolved_loop: 2
     status: "posed_loop2"  # L2 Expose 后随 Loop 翻页解决

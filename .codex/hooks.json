@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/tisrashi/NDC_project/.codex/hooks/validate-all.sh'",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/tisrashi/NDC_project/.codex/hooks/pre-compact.sh'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/tisrashi/NDC_project/.codex/hooks/session-start.sh'",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

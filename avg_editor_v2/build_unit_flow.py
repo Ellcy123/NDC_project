@@ -285,6 +285,7 @@ def build():
             "chapterId": chapter_id,
             "title": cn(ch.get("chapterTitle"), f"Loop {loop_num}"),
             "brief": cn(ch.get("chapterBrief")),
+            "openingBrief": cn(ch.get("openingBrief")),
             "goal": cn(ch.get("chapterGoal")),
             "initTalk": normalize_id(ch.get("initTalk")),
             "initScene": init_scene_id,
