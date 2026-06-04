@@ -4048,10 +4048,23 @@
     }
 
     // ===== Configuration =====
-    // avg_editor_v2: server.py 作为根服务，挂载点见 server.py 注释
+    // 本地由 avg_editor_v2/server.py 挂载 /data；Vercel 直接按仓库静态目录访问。
     const Config = {
-        get mode() { return 'local'; },
+        get mode() {
+            const host = location.hostname;
+            return (host.includes('vercel.app') || host !== 'localhost' && host !== '127.0.0.1')
+                ? 'vercel'
+                : 'local';
+        },
         get paths() {
+            if (this.mode === 'vercel') {
+                return {
+                    tableData: '/avg_editor_v2/data/table',
+                    loopConfig: '/avg_editor_v2/data',
+                    assets: '/Assets/Resources',
+                    avgData: '/AVG'
+                };
+            }
             return {
                 tableData: '/data/table',
                 loopConfig: '/data',
