@@ -394,6 +394,38 @@
             color: var(--parchment);
         }
         .sidebar-item.active::before { transform: scaleY(1); background: var(--highlight); }
+        .sidebar-item.sidebar-expose-item {
+            display: block;
+            line-height: 1.45;
+        }
+        .sidebar-expose-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .sidebar-expose-rounds {
+            margin-top: 0.45rem;
+            display: grid;
+            gap: 0.35rem;
+        }
+        .sidebar-expose-round {
+            border-left: 2px solid color-mix(in srgb, var(--brick) 70%, var(--border));
+            padding-left: 0.45rem;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+        .sidebar-expose-round strong {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .sidebar-expose-round em {
+            display: block;
+            margin-top: 0.12rem;
+            font-style: normal;
+            color: var(--text-faint);
+        }
 
         .badge {
             display: inline-flex; align-items: center; gap: 3px;
@@ -476,6 +508,200 @@
         .evidence-table tr:has(.art-req.empty) td { background: color-mix(in srgb, var(--brick) 6%, transparent); }
         .evidence-table tr.missing td:first-child,
         .evidence-table tr:has(.art-req.empty) td:first-child { box-shadow: inset 3px 0 0 var(--brick); }
+        .art-scene-list {
+            display: grid;
+            gap: 0.85rem;
+            margin-top: 1rem;
+        }
+        .art-scene-card {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--secondary) 88%, #000 12%);
+            overflow: hidden;
+        }
+        .art-scene-card.dialogue {
+            border-color: color-mix(in srgb, #6ea3c8 36%, var(--rule));
+        }
+        .art-scene-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.75rem;
+            padding: 0.8rem 0.9rem;
+            border-bottom: 1px solid var(--rule);
+        }
+        .art-scene-actions {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .art-scene-title {
+            color: var(--text);
+            font-weight: 850;
+            overflow-wrap: anywhere;
+        }
+        .art-scene-meta {
+            margin-top: 0.22rem;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+        .art-scene-body {
+            display: grid;
+            gap: 0.7rem;
+            padding: 0.82rem 0.9rem 0.95rem;
+        }
+        .art-scene-card.collapsed .art-scene-body {
+            display: none;
+        }
+        .art-scene-brief {
+            margin-top: 0.34rem;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+        .art-scene-section-title {
+            color: var(--highlight);
+            font-size: 0.78rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+        .art-npc-mount-list {
+            display: grid;
+            gap: 0.45rem;
+            margin-top: 0.42rem;
+        }
+        .art-npc-mount-row {
+            display: grid;
+            grid-template-columns: auto minmax(70px, 0.22fr) minmax(0, 1fr);
+            gap: 0.5rem;
+            align-items: center;
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.45rem 0.55rem;
+            background: color-mix(in srgb, var(--card) 88%, #000 12%);
+        }
+        .art-npc-mount-name {
+            color: var(--text);
+            font-weight: 850;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .art-npc-mount-assets {
+            display: flex;
+            gap: 0.38rem;
+            align-items: center;
+            flex-wrap: wrap;
+            min-width: 0;
+        }
+        .art-npc-mount-empty {
+            color: var(--brick);
+            font-family: var(--ff-mono);
+            font-size: 0.72rem;
+            letter-spacing: .04em;
+        }
+        .art-req-box {
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.62rem 0.7rem;
+            background: color-mix(in srgb, var(--primary) 70%, transparent);
+            color: var(--parchment);
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+        .art-req-box.empty {
+            color: var(--brick);
+            font-family: var(--ff-mono);
+            font-size: 0.74rem;
+            letter-spacing: .04em;
+            background: color-mix(in srgb, var(--brick) 7%, var(--primary));
+            border-color: color-mix(in srgb, var(--brick) 45%, var(--rule));
+        }
+        .art-evidence-list {
+            display: grid;
+            gap: 0.45rem;
+        }
+        .art-evidence-row {
+            display: grid;
+            grid-template-columns: minmax(190px, 0.44fr) minmax(0, 1fr) auto;
+            gap: 0.62rem;
+            align-items: center;
+            border: 1px solid var(--rule);
+            border-radius: 8px;
+            padding: 0.42rem 0.58rem;
+            cursor: pointer;
+            background: color-mix(in srgb, var(--card) 90%, #000 10%);
+        }
+        .art-evidence-row:hover {
+            border-color: var(--highlight);
+            background: color-mix(in srgb, var(--highlight) 6%, var(--card));
+        }
+        .art-evidence-main {
+            min-width: 0;
+        }
+        .art-evidence-name {
+            color: var(--text);
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .art-evidence-meta,
+        .art-evidence-desc {
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            line-height: 1.35;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .art-evidence-status {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.38rem;
+            white-space: nowrap;
+        }
+        .art-evidence-pill {
+            border: 1px solid var(--rule);
+            border-radius: 999px;
+            padding: 0.18rem 0.48rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+        }
+        .art-evidence-pill.filled {
+            color: var(--success);
+            border-color: color-mix(in srgb, var(--success) 55%, var(--rule));
+            background: color-mix(in srgb, var(--success) 8%, transparent);
+        }
+        .art-evidence-pill.empty {
+            color: var(--brick);
+            border-color: color-mix(in srgb, var(--brick) 55%, var(--rule));
+            background: color-mix(in srgb, var(--brick) 8%, transparent);
+        }
+        .art-evidence-detail {
+            color: var(--highlight);
+            font-size: 0.74rem;
+            font-weight: 850;
+        }
+        .art-unbound-block {
+            margin-top: 1.2rem;
+            border: 1px solid color-mix(in srgb, var(--warning) 45%, var(--rule));
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--warning) 6%, var(--card));
+            padding: 0.9rem;
+        }
+        @media (max-width: 920px) {
+            .art-scene-head,
+            .art-npc-mount-row,
+            .art-evidence-row {
+                grid-template-columns: 1fr;
+            }
+        }
 
         /* ===== UnitFlow Overview ===== */
         .unit-flow-page {
@@ -2377,7 +2603,6 @@
         }
         .npc-dialog-section { gap: 8px; }
         .npc-dialog-stage { display: block; min-height: 10px; }
-
         /* talk id 芯片行 */
         .avg-tabs {
             display: flex; gap: 8px; flex-wrap: wrap;
@@ -2617,6 +2842,112 @@
         }
         .avg-pill.on:hover:not(:disabled) {
             background: color-mix(in srgb, var(--gold) 10%, var(--ink));
+        }
+
+        .dialog-script-editor {
+            margin-top: 12px;
+            padding: 14px;
+            border: 1px solid var(--rule-2);
+            background:
+                linear-gradient(135deg, color-mix(in srgb, var(--gold) 5%, transparent), transparent 38%),
+                var(--coal-2);
+            display: grid;
+            gap: 12px;
+        }
+        .dialog-script-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .dialog-script-title {
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: .08em;
+        }
+        .dialog-script-meta {
+            margin-top: 4px;
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            color: var(--text-faint);
+            letter-spacing: .05em;
+        }
+        .dialog-script-line {
+            padding: 10px 12px;
+            border: 1px dashed var(--rule-2);
+            color: var(--parch-mute);
+            font-family: var(--ff-serif);
+            font-size: 13px;
+            line-height: 1.7;
+            background: var(--coal-3);
+        }
+        .dialog-script-rule {
+            padding: 9px 11px;
+            border-left: 2px solid var(--gold-2);
+            color: var(--text-dim);
+            background: color-mix(in srgb, var(--gold) 5%, var(--coal-3));
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            line-height: 1.65;
+        }
+        .dialog-script-grid {
+            display: grid;
+            grid-template-columns: minmax(110px, 0.28fr) minmax(0, 1fr);
+            gap: 8px;
+            align-items: center;
+        }
+        .dialog-script-param-list {
+            display: grid;
+            gap: 8px;
+        }
+        .dialog-script-param-row {
+            display: grid;
+            grid-template-columns: 68px minmax(88px, 0.34fr) minmax(0, 1fr);
+            gap: 8px;
+            align-items: center;
+        }
+        .dialog-script-label {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            color: var(--text-dim);
+            letter-spacing: .08em;
+        }
+        .dialog-script-label small {
+            display: block;
+            margin-top: 3px;
+            color: var(--text-faint);
+            letter-spacing: .02em;
+            line-height: 1.35;
+        }
+        .dialog-script-editor input,
+        .dialog-script-editor select {
+            min-width: 0;
+            padding: 8px 10px;
+            border: 1px solid var(--rule);
+            border-radius: 2px;
+            background: var(--coal-3);
+            color: var(--parchment);
+            font-family: var(--ff-mono);
+            font-size: 11px;
+            outline: none;
+        }
+        .dialog-script-editor input:focus,
+        .dialog-script-editor select:focus {
+            border-color: var(--gold-2);
+        }
+        .dialog-script-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 760px) {
+            .dialog-script-head,
+            .dialog-script-grid,
+            .dialog-script-param-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Section 3: 证词引用块(默认折叠) */
@@ -3669,7 +4000,9 @@
         allItems: [],
         allScenes: [],
         allNPCs: [],
+        allNPCLoops: [],
         allTalks: [],
+        tableTalks: [],
         allTestimonies: [],
         allDoubts: [],
         allTimelineEvents: [],
@@ -3781,10 +4114,12 @@
             const base = Config.paths.tableData;
             const t = `?t=${Date.now()}`;
 
-            const [items, scenes, npcs, testimonies, doubts, artAssets, timelineEventsRaw] = await Promise.all([
+            const [items, scenes, npcs, npcLoops, talks, testimonies, doubts, artAssets, timelineEventsRaw] = await Promise.all([
                 this.loadJSON(`${base}/ItemStaticData.json${t}`),
                 this.loadJSON(`${base}/SceneConfig.json${t}`),
                 this.loadJSON(`${base}/NPCStaticData.json${t}`),
+                this.loadJSON(`${base}/NPCLoopData.json${t}`).catch(() => []),
+                this.loadJSON(`${base}/Talk.json${t}`).catch(() => []),
                 this.loadJSON(`${base}/TestimonyItem.json${t}`).catch(() => []),
                 this.loadJSON(`${base}/DoubtConfig.json${t}`).catch(() => []),
                 this.loadJSON(`${base}/ArtAssetConfig.json${t}`).catch(() => []),
@@ -3798,6 +4133,8 @@
             AppState.allItems = items;
             AppState.allScenes = scenes;
             AppState.allNPCs = npcs;
+            AppState.allNPCLoops = Array.isArray(npcLoops) ? npcLoops : [];
+            AppState.tableTalks = Array.isArray(talks) ? talks : [];
             AppState.allTestimonies = Array.isArray(testimonies) ? testimonies : [];
             AppState.allDoubts = Array.isArray(doubts) ? doubts : [];
             AppState.allTimelineEvents = timelineEvents;
@@ -3840,7 +4177,7 @@
                 AppState.testimoniesByNpc.get(head).push(t);
             });
 
-            console.log(`Table data loaded: ${items.length} items, ${scenes.length} scenes, ${npcs.length} NPCs, ${AppState.allTestimonies.length} testimonies`);
+            console.log(`Table data loaded: ${items.length} items, ${scenes.length} scenes, ${npcs.length} NPCs, ${AppState.tableTalks.length} table talks, ${AppState.allTestimonies.length} testimonies`);
         },
 
         async loadLoopConfig(unit, loop) {
@@ -3995,6 +4332,32 @@
             return params.length > 0 ? params : [{ ParameterInt: '0' }];
         },
 
+        normalizeTableTalk(raw) {
+            const talk = { ...raw };
+            talk.id = String(talk.id || '');
+            talk.step = String(talk.step || '');
+            talk.next = talk.next ? String(talk.next) : '';
+            talk.videoId = talk.videoId ? String(talk.videoId) : talk.id;
+            if (!Array.isArray(talk.Parameters)) talk.Parameters = [];
+            return talk;
+        },
+
+        seedTableTalks(loop) {
+            const episode = DataManager.chapter(AppState.currentUnit);
+            let count = 0;
+            (AppState.tableTalks || []).forEach(raw => {
+                const talk = this.normalizeTableTalk(raw);
+                if (!talk.id) return;
+                if (talk.videoEpisode && talk.videoEpisode !== episode) return;
+                if (talk.videoLoop && talk.videoLoop !== loop) return;
+                if (AppState.talksMap.has(talk.id)) return;
+                AppState.talksMap.set(talk.id, talk);
+                AppState.allTalks.push(talk);
+                count++;
+            });
+            return count;
+        },
+
         // 加载指定 loop 的所有 AVG Talk 文件
         async loadAVGTalks(loop) {
             const base = Config.paths.avgData;
@@ -4003,13 +4366,14 @@
 
             AppState.talksMap.clear();
             AppState.allTalks = [];
-            let totalLoaded = 0;
+            const tableLoaded = this.seedTableTalks(loop);
+            let totalLoaded = tableLoaded;
 
             try {
                 const files = await this.listJsonFiles(dirUrl);
                 if (files.length === 0) {
                     console.warn(`No AVG Talk files found in ${dirUrl}`);
-                    return 0;
+                    return tableLoaded;
                 }
 
                 const results = await Promise.all(
@@ -4031,13 +4395,19 @@
                     entries.forEach(raw => {
                         const talk = this.convertAVGTalk(raw);
                         if (!talk.videoScene) talk.videoScene = vs;
+                        const existed = AppState.talksMap.has(talk.id);
                         AppState.talksMap.set(talk.id, talk);
-                        AppState.allTalks.push(talk);
-                        totalLoaded++;
+                        if (!existed) {
+                            AppState.allTalks.push(talk);
+                            totalLoaded++;
+                        } else {
+                            const idx = AppState.allTalks.findIndex(t => String(t.id) === String(talk.id));
+                            if (idx >= 0) AppState.allTalks[idx] = talk;
+                        }
                     });
                 });
 
-                console.log(`AVG Talk loaded: ${totalLoaded} entries from ${files.length} files (${loop})`);
+                console.log(`Talk loaded: ${totalLoaded} entries (${tableLoaded} table + AVG files from ${files.length} files, ${loop})`);
             } catch (e) {
                 console.warn('AVG Talk loading failed:', e.message);
             }
@@ -4055,7 +4425,17 @@
             try {
                 const allFiles = await this.listJsonFiles(dirUrl);
                 // 筛选当前 loop 的 expose 文件 (如 loop1_rosa.json)
-                const loopFiles = allFiles.filter(f => f.toLowerCase().startsWith(`loop${loopNum}_`));
+                // Match current loop expose files. New: Expose_L{loop}_npc.json; legacy: loop{loop}_npc.json.
+
+                const loopFiles = allFiles.filter(f => {
+
+                    const lower = f.toLowerCase();
+
+                    return lower.startsWith(`expose_l${loopNum}_`) ||
+
+                        lower.startsWith(`loop${loopNum}_`);
+
+                });
 
                 if (loopFiles.length === 0) {
                     console.warn(`No AVG Expose files found for ${loop}`);
@@ -4113,6 +4493,19 @@
         itemDesc(item) { return cn(item?.Describe); },
         itemShortDesc(item) { return cn(item?.ShortDescribe); },
         itemLocation(item) { return cn(item?.location); },
+        itemActionParamIds(item) {
+            const raw = item?.ActionParam;
+            if (raw === null || raw === undefined || raw === '') return [];
+            const parts = Array.isArray(raw) ? raw : String(raw).split(',');
+            return parts.map(x => stripPrefix(String(x).trim())).filter(id => id && id !== '0');
+        },
+        itemSceneBindingLabel(item) {
+            const binding = item?._sceneBinding;
+            if (!binding || binding.kind === 'direct') return '';
+            const parentName = binding.parentName || binding.parentId || '可交互道具';
+            if (binding.kind === 'embedded_state') return `打开态：${parentName}`;
+            return `来自可交互道具：${parentName}`;
+        },
 
         typeName(type) {
             return { '0': '装饰', '1': '线索', '2': '环境', '3': '道具', '4': '笔记', '5': '门', '6': '可交互道具', '7': '内嵌道具' }[String(type)] || type || '?';
@@ -4204,11 +4597,66 @@
                 .map(m => ({ ...m, loops: [...m.loops].sort((a, b) => a - b) }));
         },
 
-        // Get evidence items from a scene's ItemIDs (skip IDs not in ItemStaticData)
+        // Get evidence items from a scene.
+        // SceneConfig only stores direct ItemIDs; Type6 interactive items can spawn Type7,
+        // and Type7.ActionParam can contain child evidence IDs that also belong to this scene.
         sceneEvidence(sceneId) {
             const scene = this.getScene(sceneId);
             if (!scene?.ItemIDs) return [];
-            return scene.ItemIDs.map(id => this.getItem(id)).filter(Boolean);
+            const byId = new Map();
+            const addItem = (item, binding) => {
+                if (!item) return;
+                const id = String(item.id || '');
+                if (!id || byId.has(id)) return;
+                byId.set(id, binding ? { ...item, _sceneBinding: binding } : item);
+            };
+            const addEmbeddedChildren = (embeddedItem, parentItem) => {
+                if (!embeddedItem) return;
+                const parentBinding = {
+                    kind: 'embedded_state',
+                    parentId: String(parentItem?.id || ''),
+                    parentName: this.itemName(parentItem),
+                    embeddedId: String(embeddedItem.id || ''),
+                    embeddedName: this.itemName(embeddedItem),
+                };
+                addItem(embeddedItem, parentBinding);
+                this.itemActionParamIds(embeddedItem).forEach(childId => {
+                    const child = this.getItem(childId);
+                    addItem(child, {
+                        kind: 'embedded_child',
+                        parentId: parentBinding.parentId,
+                        parentName: parentBinding.parentName,
+                        embeddedId: parentBinding.embeddedId,
+                        embeddedName: parentBinding.embeddedName,
+                    });
+                });
+            };
+            scene.ItemIDs.forEach(id => {
+                const item = this.getItem(id);
+                if (!item) return;
+                addItem(item, { kind: 'direct' });
+                const type = String(item.itemType || '');
+                if (type === '6') {
+                    this.itemActionParamIds(item).forEach(targetId => {
+                        const target = this.getItem(targetId);
+                        if (!target) return;
+                        if (String(target.itemType || '') === '7') {
+                            addEmbeddedChildren(target, item);
+                        } else {
+                            addItem(target, {
+                                kind: 'embedded_child',
+                                parentId: String(item.id || ''),
+                                parentName: this.itemName(item),
+                                embeddedId: '',
+                                embeddedName: '',
+                            });
+                        }
+                    });
+                } else if (type === '7') {
+                    addEmbeddedChildren(item, item);
+                }
+            });
+            return Array.from(byId.values()).sort((a, b) => Number(a.id || 0) - Number(b.id || 0));
         },
 
         sceneNPCs(sceneId) {
@@ -4308,6 +4756,38 @@
             if (!resPath) return '';
             const m = resPath.match(/_npc_([A-Za-z]+)\d*$/);
             return m ? m[1] : '';
+        },
+
+        currentLoopExposeTalks(loop = AppState.currentLoop) {
+            const loopNum = String(loop || '').replace('loop', '');
+            if (!loopNum) return [];
+            const prefixes = [`expose_l${loopNum}_`, `loop${loopNum}_`];
+            return AppState.allTalks.filter(t => {
+                const scene = String(t.videoScene || '').toLowerCase();
+                return prefixes.some(prefix => scene.startsWith(prefix));
+            }).sort((a, b) => {
+                const stepA = Number(a.step || 999999);
+                const stepB = Number(b.step || 999999);
+                if (stepA !== stepB) return stepA - stepB;
+                return Number(a.id || 0) - Number(b.id || 0);
+            });
+        },
+
+        getExposeStartTalkId(loop = AppState.currentLoop) {
+            const sourceTalks = this.currentLoopExposeTalks(loop);
+            if (sourceTalks.length > 0) return String(sourceTalks[0].id);
+
+            const chapCfg = this.getChapterConfig(AppState.currentUnit, loop);
+            const firstLieTalkId = chapCfg?.exposes?.[0]?.talkId;
+            if (!firstLieTalkId) return '';
+            let startId = String(firstLieTalkId);
+            for (const [id, talk] of AppState.talksMap) {
+                if (talk.next === String(firstLieTalkId)) {
+                    startId = id;
+                    break;
+                }
+            }
+            return startId;
         },
 
         // 从起始 Talk ID 遍历对话链，返回节点数组
@@ -4998,11 +5478,60 @@
                 html += `<div class="sidebar-section">📍 底图未登记 (${byKind.unknown.length})</div>`;
                 byKind.unknown.forEach(s => html += renderScene(s));
             }
-            // 指证不是独立场景：本 Loop 若有 ExposeData 方案则给一个标记
+            // Expose is not a standalone scene, but it still needs a clickable dialogue entry.
+
             const exposeCount = (chapter && Array.isArray(chapter.exposes)) ? chapter.exposes.length : 0;
+
             if (exposeCount > 0) {
-                html += `<div class="sidebar-section"><span class="phase-tag expose">⚔️ 指证</span> 本 Loop ${exposeCount} 个指证方案（复用探索场景）</div>`;
+
+                const exposeStartId = DataManager.getExposeStartTalkId(AppState.currentLoop);
+
+                const exposeTalkCount = DataManager.currentLoopExposeTalks(AppState.currentLoop).length;
+
+                const exposeNpc = chapter?.exposeNpcId ? AppState.npcsMap.get(String(chapter.exposeNpcId)) : null;
+                const targetName = loop.expose?.target_name || cn(exposeNpc?.Name) || chapter.exposeNpcId || '';
+                const exposeRoundLines = (chapter.exposes || []).map((exposeEntry, idx) => {
+                    const targetId = String(exposeEntry?.testimony || '').trim();
+                    const target = targetId && targetId !== '0' && typeof FlowOverviewView !== 'undefined' && FlowOverviewView.resolveExposeMaterial
+                        ? FlowOverviewView.resolveExposeMaterial(targetId, AppState.currentLoop)
+                        : null;
+                    const materials = Array.isArray(exposeEntry?.item) ? exposeEntry.item : [];
+                    const materialNames = materials.map(id => {
+                        const material = typeof FlowOverviewView !== 'undefined' && FlowOverviewView.resolveExposeMaterial
+                            ? FlowOverviewView.resolveExposeMaterial(id, AppState.currentLoop)
+                            : null;
+                        return material?.name || String(id);
+                    }).filter(Boolean).slice(0, 2);
+                    const more = materials.length > 2 ? ` 等${materials.length}个材料` : '';
+                    const roundName = target?.name || '材料组合推理';
+                    const materialText = materialNames.length ? `材料：${materialNames.join(' + ')}${more}` : '未配置材料';
+                    return `<div class="sidebar-expose-round"><span>第 ${escapeHtml(exposeEntry?.id || idx + 1)} 轮</span><strong>${escapeHtml(roundName)}</strong><em>${escapeHtml(materialText)}</em></div>`;
+                }).join('');
+
+                html += `<div class="sidebar-section"><span class="phase-tag expose">⚔️ 指证</span></div>`;
+
+                html += `
+
+                    <div class="sidebar-item sidebar-expose-item ${AppState.currentPhase === 'expose' ? 'active' : ''}"
+
+                         onclick="FlowView.showPhase('expose')">
+
+                        <div class="sidebar-expose-head">
+
+                            <span class="phase-tag expose">指证</span>
+
+                            <span>${escapeHtml(targetName || '本 Loop 指证')}</span>
+
+                            <span class="badge">${exposeCount}轮</span>
+
+                        </div>
+                    </div>
+
+
+                `;
+
             }
+
 
             sidebar.innerHTML = html;
             return;
@@ -6049,8 +6578,12 @@
                 html += `<div class="flow-list-sub">本 Loop 暂无开放场景。</div>`;
             }
             scenes.forEach(s => {
-                const pendingClosed = s.pendingIsOpen === false ? 'pending-closed' : '';
+                const isPendingClosed = s.pendingIsOpen === false;
+                const pendingClosed = isPendingClosed ? 'pending-closed' : '';
                 const init = String(loop.initScene || '') === String(s.id) ? `<span class="flow-chip">开篇</span>` : '';
+                const toggleLabel = isPendingClosed ? '打开' : '关闭';
+                const toggleNext = isPendingClosed ? 'true' : 'false';
+                const toggleClass = isPendingClosed ? 'btn' : 'btn ghost';
                 html += `
                     <div class="scene-edit-row ${pendingClosed}">
                         <div>
@@ -6060,7 +6593,7 @@
                         <div class="scene-edit-actions">
                             <button type="button" class="btn" onclick="FlowView.showScene('${escapeHtml(s.id)}')">查看</button>
                             <button type="button" class="btn" onclick="FlowOverviewView.updateEntryField('${escapeHtml(loop.id)}','initScene','${escapeHtml(s.id)}')">设为开篇</button>
-                            <button type="button" class="btn ghost" onclick="FlowOverviewView.setSceneOpen('${escapeHtml(loop.id)}','${escapeHtml(s.id)}',false)">关闭</button>
+                            <button type="button" class="${toggleClass}" onclick="FlowOverviewView.setSceneOpen('${escapeHtml(loop.id)}','${escapeHtml(s.id)}',${toggleNext})">${toggleLabel}</button>
                         </div>
                     </div>
                 `;
@@ -6244,7 +6777,7 @@
                 <div class="event-edit-card">
                     <div class="event-edit-top">
                         <div>
-                            <div class="event-edit-title">Talk #${escapeHtml(talk.id)} · ${escapeHtml(talk.videoScene || '未知文件')}</div>
+                            <div class="event-edit-title">${escapeHtml(talk.videoScene || '未知文件')} · step ${escapeHtml(talk.step || '?')} · ${escapeHtml(this.eventKind(talk.script))}</div>
                             <div class="event-edit-meta">${escapeHtml(speaker)} · step ${escapeHtml(talk.step || '')} · next ${escapeHtml(talk.next || '空')}</div>
                         </div>
                         <span class="dep-status current">${escapeHtml(this.eventKind(talk.script))}</span>
@@ -7500,8 +8033,66 @@
             this.render();
         },
 
+        readableLoop(loop) {
+            if (!loop) return 'Unit';
+            const name = loop.title ? ` · ${loop.title}` : '';
+            return `${loop.id || `loop${loop.loop || ''}`}${name}`;
+        },
+
+        readableScene(sceneId) {
+            const sid = String(sceneId || '').trim();
+            const scene = AppState.scenesMap.get(sid);
+            if (!scene) return sid ? `场景未找到 · ${sid}` : '场景未填写';
+            const name = FlowOverviewView.sceneName ? FlowOverviewView.sceneName(scene) : (scene.sceneName || scene.Name || '');
+            return `${name || '未命名场景'} · ${sid}`;
+        },
+
+        readableTalk(talkId) {
+            const tid = String(talkId || '').trim();
+            const talk = AppState.talksMap.get(tid) || AppState.talksMap.get(Number(tid));
+            if (!talk) return tid ? `Talk 未找到 · ${tid}` : 'Talk 未填写';
+            const speaker = talk.speakerName || talk.speaker || talk.npcName || '';
+            const scene = talk.videoScene || talk.file || talk.source || '';
+            const step = talk.step ? `step ${talk.step}` : '';
+            const text = cn(talk.Words) || cn(talk.content1) || cn(talk.Content1) || cn(talk.text) || cn(talk.content) || '';
+            const summary = text ? truncate(text.replace(/\s+/g, ' '), 28) : (talk.script ? `${talk.script} 事件` : '无文本');
+            return [scene, step, speaker, summary].filter(Boolean).join(' · ');
+        },
+
+        readableDoubt(doubt) {
+            const did = String(doubt?.id || '').trim();
+            const text = doubt?.text ? ` · ${truncate(doubt.text, 42)}` : '';
+            return `疑点 ${did || '未填写'}${text}`;
+        },
+
+        readableDependency(type, param, loop) {
+            const dep = FlowOverviewView.resolveDependency(type, param, loop?.loop || loop || 0);
+            const bits = [dep.label, dep.statusText].filter(Boolean);
+            return bits.join(' · ');
+        },
+
+        readableMaterial(id, loop) {
+            const material = FlowOverviewView.resolveExposeMaterial(id, loop?.loop || loop || 0);
+            const bits = [material.label, material.detail ? truncate(material.detail, 72) : '', material.statusText].filter(Boolean);
+            return bits.join(' · ');
+        },
+
+        readableIssueRef(issue) {
+            const table = issue.table || 'ChapterConfig';
+            const id = String(issue.id || '').trim();
+            if (table === 'ChapterConfig') {
+                const loop = AppState.unitFlow?.loops?.find(l => String(l.chapterId) === id || String(l.id) === String(issue.loopId));
+                return loop ? `${table} · ${this.readableLoop(loop)}` : `${table}${id ? ` · ${id}` : ''}`;
+            }
+            if (table === 'SceneConfig') return `${table} · ${this.readableScene(id)}`;
+            if (table === 'Talk新增表' || table === 'Talk') return `${table} · ${this.readableTalk(id)}`;
+            if (table === 'ArtAssetConfig') return `${table} · ${id || '资源未填写'}`;
+            return `${table}${id ? ` · ${id}` : ''}`;
+        },
+
         renderIssue(issue) {
             const moduleLabel = this.moduleLabel(issue.module);
+            const refLabel = this.readableIssueRef(issue);
             return `
                 <article class="validation-issue ${escapeHtml(issue.severity)}">
                     <div>
@@ -7509,7 +8100,8 @@
                             <span class="validation-severity ${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span>
                             <span class="validation-module">${escapeHtml(moduleLabel)}</span>
                             <span class="validation-loop">${escapeHtml(issue.loopId || 'Unit')}</span>
-                            ${issue.table ? `<span class="flow-chip">${escapeHtml(issue.table)}${issue.id ? ` #${escapeHtml(issue.id)}` : ''}</span>` : ''}
+                            ${issue.table ? `<span class="flow-chip">${escapeHtml(refLabel)}</span>` : ''}
+                            ${issue.field ? `<span class="flow-chip">${escapeHtml(issue.field)}</span>` : ''}
                         </div>
                         <div class="validation-message">${escapeHtml(issue.message)}</div>
                         ${issue.detail ? `<div class="validation-detail">${escapeHtml(issue.detail)}</div>` : ''}
@@ -7568,15 +8160,15 @@
             }
             const scene = AppState.scenesMap.get(String(loop.initScene));
             if (!scene) {
-                this.addIssue(issues, loop, 'entry', 'error', `初始场景 ${loop.initScene} 不存在`, 'SceneConfig 中找不到该 sceneId。', 'ChapterConfig', loop.chapterId, 'initScene');
+                this.addIssue(issues, loop, 'entry', 'error', `初始场景不存在：${this.readableScene(loop.initScene)}`, 'SceneConfig 中找不到该 sceneId。', 'ChapterConfig', loop.chapterId, 'initScene');
                 return;
             }
             if (Number(scene.loop) !== Number(loop.loop)) {
-                this.addIssue(issues, loop, 'entry', 'warn', `初始场景 ${loop.initScene} 不属于当前 Loop`, `SceneConfig.loop=${scene.loop || '空'}，当前是 L${loop.loop}。`, 'SceneConfig', loop.initScene, 'loop');
+                this.addIssue(issues, loop, 'entry', 'warn', `初始场景不属于当前 Loop：${this.readableScene(loop.initScene)}`, `SceneConfig.loop=${scene.loop || '空'}，当前是 L${loop.loop}。`, 'SceneConfig', loop.initScene, 'loop');
             }
             const opened = (loop.scenes || []).some(s => String(s.id) === String(loop.initScene));
             if (!opened) {
-                this.addIssue(issues, loop, 'entry', 'warn', `初始场景 ${loop.initScene} 不在开放场景列表`, '玩家可能能进入场景，但流程总览和开放场景配置不一致。', 'ChapterConfig', loop.chapterId, 'initScene', 'scenes');
+                this.addIssue(issues, loop, 'entry', 'warn', `初始场景不在开放场景列表：${this.readableScene(loop.initScene)}`, '玩家可能能进入场景，但流程总览和开放场景配置不一致。', 'ChapterConfig', loop.chapterId, 'initScene', 'scenes');
             }
         },
 
@@ -7589,14 +8181,14 @@
             scenes.forEach(s => {
                 const scene = AppState.scenesMap.get(String(s.id));
                 if (!scene) {
-                    this.addIssue(issues, loop, 'scenes', 'error', `开放场景 ${s.id} 不存在`, 'UnitFlow 中出现了 SceneConfig 找不到的场景。', 'SceneConfig', s.id, 'sceneId');
+                    this.addIssue(issues, loop, 'scenes', 'error', `开放场景不存在：${this.readableScene(s.id)}`, 'UnitFlow 中出现了 SceneConfig 找不到的场景。', 'SceneConfig', s.id, 'sceneId');
                     return;
                 }
                 if (Number(scene.loop) !== Number(loop.loop)) {
-                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 ${s.id} 的 loop 归属不一致`, `SceneConfig.loop=${scene.loop || '空'}，当前展示在 L${loop.loop}。`, 'SceneConfig', s.id, 'loop');
+                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 loop 归属不一致：${this.readableScene(s.id)}`, `SceneConfig.loop=${scene.loop || '空'}，当前展示在 L${loop.loop}。`, 'SceneConfig', s.id, 'loop');
                 }
                 if (!s.kind || s.kind === 'unknown') {
-                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 ${s.id} 缺少底图类型`, 'ArtAssetConfig.sceneKind 未识别，流程页无法判断探索/对白底图。', 'ArtAssetConfig', scene.backgroundImage || '', 'sceneKind');
+                    this.addIssue(issues, loop, 'scenes', 'warn', `场景缺少底图类型：${this.readableScene(s.id)}`, 'ArtAssetConfig.sceneKind 未识别，流程页无法判断探索/对白底图。', 'ArtAssetConfig', scene.backgroundImage || '', 'sceneKind');
                 }
             });
         },
@@ -7609,39 +8201,41 @@
                 const p0 = talk.Parameters?.[0] || {};
                 const p1 = talk.Parameters?.[1] || {};
                 if (script === 'new_npc_in' && (!p0.ParameterInt || String(p0.ParameterInt) === '0')) {
-                    this.addIssue(issues, loop, 'events', 'error', `Talk ${talk.id} 的 new_npc_in 缺少 NPCLoopData ID`, 'Parameters[0].ParameterInt 应为 NPCLoopData 表 ID。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
+                    this.addIssue(issues, loop, 'events', 'error', `new_npc_in 缺少 NPCLoopData：${this.readableTalk(talk.id)}`, 'Parameters[0].ParameterInt 应为 NPCLoopData 表 ID。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
                 }
                 if (script === 'npc_out' && (!p0.ParameterInt || String(p0.ParameterInt) === '0')) {
-                    this.addIssue(issues, loop, 'events', 'error', `Talk ${talk.id} 的 npc_out 缺少 NPC ID`, 'Parameters[0].ParameterInt 应为 NPC id。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
+                    this.addIssue(issues, loop, 'events', 'error', `npc_out 缺少 NPC：${this.readableTalk(talk.id)}`, 'Parameters[0].ParameterInt 应为 NPC id。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
                 }
                 if (script === 'exhibit') {
                     if (!p0.ParameterInt || String(p0.ParameterInt) === '0') {
-                        this.addIssue(issues, loop, 'events', 'error', `Talk ${talk.id} 的 exhibit 缺少物品 ID`, 'Parameters[0].ParameterInt 应为要展示的物品 ID。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
+                        this.addIssue(issues, loop, 'events', 'error', `exhibit 缺少展示物品：${this.readableTalk(talk.id)}`, 'Parameters[0].ParameterInt 应为要展示的物品 ID。', 'Talk新增表', talk.id, 'Parameters[0].ParameterInt', 'events');
                     }
                     if (!p1.ParameterInt || String(p1.ParameterInt) === '0') {
-                        this.addIssue(issues, loop, 'events', 'warn', `Talk ${talk.id} 的 exhibit 缺少展示档位`, 'Parameters[1].ParameterInt 建议配置 1/2/3。', 'Talk新增表', talk.id, 'Parameters[1].ParameterInt', 'events');
+                        this.addIssue(issues, loop, 'events', 'warn', `exhibit 缺少展示档位：${this.readableTalk(talk.id)}`, 'Parameters[1].ParameterInt 建议配置 1/2/3。', 'Talk新增表', talk.id, 'Parameters[1].ParameterInt', 'events');
                     }
                 }
                 if (!talk.next && !['end', 'branches', '1'].includes(script)) {
-                    this.addIssue(issues, loop, 'events', 'warn', `Talk ${talk.id} 没有 next`, '如果不是结束或分支节点，可能会导致对白链断开。', 'Talk新增表', talk.id, 'next', 'events');
+                    this.addIssue(issues, loop, 'events', 'warn', `Talk 没有 next：${this.readableTalk(talk.id)}`, '如果不是结束或分支节点，可能会导致对白链断开。', 'Talk新增表', talk.id, 'next', 'events');
                 }
             });
         },
 
         checkDoubts(loop, issues) {
             (loop.doubts || []).forEach(d => {
+                const doubtLabel = this.readableDoubt(d);
                 if (!d.text) {
-                    this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${d.id} 缺少文本`, 'DoubtConfig/ChapterConfig 中的疑点展示文本为空。', 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].text`);
+                    this.addIssue(issues, loop, 'doubts', 'warn', `${doubtLabel} 缺少文本`, 'DoubtConfig/ChapterConfig 中的疑点展示文本为空。', 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].text`);
                 }
                 if (!d.conditions || d.conditions.length === 0) {
-                    this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${d.id} 没有前置依赖`, '玩家可能不收集关键材料也能推进疑点。', 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition`);
+                    this.addIssue(issues, loop, 'doubts', 'warn', `${doubtLabel} 没有前置依赖`, '玩家可能不收集关键材料也能推进疑点。', 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition`);
                 }
                 (d.conditions || []).forEach((c, idx) => {
                     const dep = FlowOverviewView.resolveDependency(c.type, c.param, loop.loop);
+                    const depLabel = this.readableDependency(c.type, c.param, loop);
                     if (dep.status === 'missing') {
-                        this.addIssue(issues, loop, 'doubts', 'error', `疑点 ${d.id} 的依赖 ${c.type}:${c.param} 未找到`, dep.label, 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition[${idx}]`);
+                        this.addIssue(issues, loop, 'doubts', 'error', `${doubtLabel} 的依赖未找到`, depLabel, 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition[${idx}]`);
                     } else if (dep.status === 'future') {
-                        this.addIssue(issues, loop, 'doubts', 'error', `疑点 ${d.id} 使用未来依赖`, `${dep.label} · ${dep.statusText}`, 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition[${idx}]`);
+                        this.addIssue(issues, loop, 'doubts', 'error', `${doubtLabel} 使用未来依赖`, depLabel, 'ChapterConfig', loop.chapterId, `doubts[id=${d.id}].condition[${idx}]`);
                     }
                     this.checkDependencyType(loop, issues, d, c, idx);
                 });
@@ -7653,14 +8247,16 @@
             const pid = String(condition.param || '');
             const testimony = AppState.allTestimonies.find(t => String(t.id) === pid);
             if (!testimony) return;
+            const doubtLabel = this.readableDoubt(doubt);
+            const materialLabel = this.readableMaterial(pid, loop);
             if (typ === '3' && !FlowOverviewView.isTimelineTestimony(testimony)) {
-                this.addIssue(issues, loop, 'doubts', 'error', `疑点 ${doubt.id} 把非时间线证词配置成时间线`, `证词 ${pid} 没有有效 Timeline triggerParam。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
+                this.addIssue(issues, loop, 'doubts', 'error', `${doubtLabel} 把非时间线证词配置成时间线`, `${materialLabel}；没有有效 Timeline triggerParam。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
             }
             if (typ === '4' && FlowOverviewView.isTimelineTestimony(testimony)) {
-                this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${doubt.id} 的证词类型可疑`, `证词 ${pid} 是时间线证词，当前条件类型写成普通证词。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
+                this.addIssue(issues, loop, 'doubts', 'warn', `${doubtLabel} 的证词类型可疑`, `${materialLabel}；这是时间线证词，当前条件类型写成普通证词。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
             }
             if (typ === '4' && FlowOverviewView.isRelationTestimony(testimony)) {
-                this.addIssue(issues, loop, 'doubts', 'warn', `疑点 ${doubt.id} 的证词类型可疑`, `证词 ${pid} 是关系证词，当前条件类型写成普通证词。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
+                this.addIssue(issues, loop, 'doubts', 'warn', `${doubtLabel} 的证词类型可疑`, `${materialLabel}；这是关系证词，当前条件类型写成普通证词。`, 'ChapterConfig', loop.chapterId, `doubts[id=${doubt.id}].condition[${idx}]`);
             }
         },
 
@@ -7672,9 +8268,9 @@
                 if (e.testimony && String(e.testimony) !== '0') {
                     const target = FlowOverviewView.resolveExposeMaterial(e.testimony, loop.loop);
                     if (target.status === 'missing') {
-                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮被攻击证词不存在`, `证词 ${e.testimony} 未找到。`, 'ChapterConfig', loop.chapterId, 'exposes.testimony');
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮被攻击证词不存在`, this.readableMaterial(e.testimony, loop), 'ChapterConfig', loop.chapterId, 'exposes.testimony');
                     } else if (target.status === 'future') {
-                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮攻击了未来证词`, `证词 ${e.testimony} 来自 ${target.statusText}。`, 'ChapterConfig', loop.chapterId, 'exposes.testimony');
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮攻击了未来证词`, this.readableMaterial(e.testimony, loop), 'ChapterConfig', loop.chapterId, 'exposes.testimony');
                     }
                 }
                 if (!e.items || e.items.length === 0) {
@@ -7684,9 +8280,9 @@
                     const mid = item.id || item;
                     const material = FlowOverviewView.resolveExposeMaterial(mid, loop.loop);
                     if (material.status === 'missing') {
-                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮材料 ${mid} 未找到`, '既不是有效道具，也不是有效证词。', 'ChapterConfig', loop.chapterId, `exposes[id=${e.id}].item[${idx}]`);
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮材料未找到`, `${this.readableMaterial(mid, loop)}；既不是有效道具，也不是有效证词。`, 'ChapterConfig', loop.chapterId, `exposes[id=${e.id}].item[${idx}]`);
                     } else if (material.status === 'future') {
-                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮材料来自未来`, `${material.kind} ${mid} · ${material.statusText}`, 'ChapterConfig', loop.chapterId, `exposes[id=${e.id}].item[${idx}]`);
+                        this.addIssue(issues, loop, 'exposes', 'error', `指证第 ${e.id || '?'} 轮材料来自未来`, this.readableMaterial(mid, loop), 'ChapterConfig', loop.chapterId, `exposes[id=${e.id}].item[${idx}]`);
                     }
                 });
             });
@@ -7708,45 +8304,40 @@
         },
     };
 
-    // ===== Art Overview View (3 tabs: evidence, npc, scene) =====
+    // ===== Art Overview View (scene-first art requirements) =====
     const ArtOverviewView = {
-        currentTab: 'evidence',
+        currentTab: 'scene',
         filterText: '',
         showOnlyNoArt: false,
+        expandedAssets: new Set(),
 
         render() {
             const chapter = DataManager.chapter(AppState.currentUnit);
 
             // Count stats for tab badges
             const items = DataManager.itemsByChapter(chapter);
-            const evNoArt = items.filter(i => !i.ArtRequirement).length;
 
             const npcs = AppState.allNPCs.filter(n => n.Chapter === chapter);
             const npcNoArt = npcs.filter(n => !n.ArtRequirement).length;
 
             const sceneAssets = DataManager.artAssetsForChapter(chapter);
-            const scNoArt = sceneAssets.filter(a => !a.ArtRequirement).length;
+            const sceneStats = this.sceneEvidenceStats(chapter, items, sceneAssets);
 
             // Tab bar
             let html = `<div class="art-tab-bar">`;
-            html += `<div class="art-tab ${this.currentTab === 'evidence' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('evidence')">
-                证据需求 ${evNoArt > 0 ? `<span class="tab-badge">${evNoArt}</span>` : `<span class="tab-badge done">${items.length}</span>`}
+            html += `<div class="art-tab ${this.currentTab === 'scene' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('scene')">
+                场景与证据需求 ${sceneStats.missing > 0 ? `<span class="tab-badge">${sceneStats.missing}</span>` : `<span class="tab-badge done">${sceneStats.total}</span>`}
             </div>`;
             html += `<div class="art-tab ${this.currentTab === 'npc' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('npc')">
                 人物需求 ${npcNoArt > 0 ? `<span class="tab-badge">${npcNoArt}</span>` : `<span class="tab-badge done">${npcs.length}</span>`}
             </div>`;
-            html += `<div class="art-tab ${this.currentTab === 'scene' ? 'active' : ''}" onclick="ArtOverviewView.switchTab('scene')">
-                场景需求 ${scNoArt > 0 ? `<span class="tab-badge">${scNoArt}</span>` : `<span class="tab-badge done">${sceneAssets.length}</span>`}
-            </div>`;
             html += `</div>`;
 
             // Tab content
-            if (this.currentTab === 'evidence') {
-                html += this.renderEvidenceTab(items);
-            } else if (this.currentTab === 'npc') {
+            if (this.currentTab === 'npc') {
                 html += this.renderNPCTab(npcs);
             } else {
-                html += this.renderSceneTab(sceneAssets);
+                html += this.renderSceneTab(sceneAssets, items, chapter);
             }
 
             document.getElementById('content').innerHTML = html;
@@ -7754,7 +8345,7 @@
         },
 
         switchTab(tab) {
-            this.currentTab = tab;
+            this.currentTab = tab === 'evidence' ? 'scene' : tab;
             this.filterText = '';
             this.showOnlyNoArt = false;
             this.render();
@@ -7953,31 +8544,300 @@
             return Array.from(map.values());
         },
 
-        // ---- Scene Tab ----（直接读底图表 ArtAssetConfig，按 sceneKind 分两块）
-        renderSceneTab(sceneAssets) {
-            let list = sceneAssets;
-            if (this.filterText) {
-                const q = this.filterText.toLowerCase();
-                list = list.filter(a =>
-                    (a.Name || '').toLowerCase().includes(q) ||
-                    (a.displayName || '').toLowerCase().includes(q) ||
-                    (a.ArtRequirement || '').toLowerCase().includes(q)
-                );
-            }
-            if (this.showOnlyNoArt) {
-                list = list.filter(a => !a.ArtRequirement);
-            }
+        artScenesForChapter(chapter) {
+            const unitPrefix = String(AppState.currentUnit || '').replace(/[^\d]/g, '') || (chapter === 'EPI02' ? '2' : '1');
+            return AppState.allScenes
+                .filter(s => String(s.sceneId || '').startsWith(unitPrefix) || String(s.backgroundImage || '').includes(chapter))
+                .sort((a, b) => Number(a.loop || 0) - Number(b.loop || 0) || String(a.sceneId || '').localeCompare(String(b.sceneId || '')));
+        },
 
-            const total = list.length;
-            const hasArt = list.filter(a => a.ArtRequirement).length;
-            // 缓存供详情弹窗按文件名反查
+        assetRowsForChapter(sceneAssets, chapter) {
+            const scenes = this.artScenesForChapter(chapter);
+            const rows = sceneAssets.map(asset => {
+                const assetId = String(asset.id || '');
+                const usedScenes = scenes.filter(scene => String(scene.backgroundImage || scene.location?.backgroundImage || '') === assetId);
+                return {
+                    asset,
+                    scenes: usedScenes,
+                    evidenceItems: this.isExploreAsset(asset) ? this.uniqueItemsFromScenes(usedScenes) : [],
+                };
+            });
+            const registered = new Set(sceneAssets.map(asset => String(asset.id || '')));
+            const missingAssetRows = [];
+            const missingMap = new Map();
+            scenes.forEach(scene => {
+                const bg = String(scene.backgroundImage || scene.location?.backgroundImage || '');
+                if (!bg || registered.has(bg)) return;
+                if (!missingMap.has(bg)) {
+                    missingMap.set(bg, {
+                        asset: {
+                            id: bg,
+                            displayName: bg.split('\\').pop(),
+                            Name: '未登记底图',
+                            sceneKind: DataManager.sceneKind(scene) || '',
+                            ArtRequirement: '',
+                            _missingAsset: true,
+                        },
+                        scenes: [],
+                        evidenceItems: [],
+                    });
+                }
+                missingMap.get(bg).scenes.push(scene);
+            });
+            missingMap.forEach(row => {
+                row.evidenceItems = this.isExploreAsset(row.asset) ? this.uniqueItemsFromScenes(row.scenes) : [];
+                missingAssetRows.push(row);
+            });
+            return rows.concat(missingAssetRows).sort((a, b) => {
+                const ak = this.assetKind(a.asset);
+                const bk = this.assetKind(b.asset);
+                if (ak !== bk) return ak.localeCompare(bk);
+                return String(a.asset.displayName || a.asset.id || '').localeCompare(String(b.asset.displayName || b.asset.id || ''));
+            });
+        },
+
+        assetForScene(scene) {
+            const bg = scene?.backgroundImage || scene?.location?.backgroundImage || '';
+            return AppState.artAssetMap.get(String(bg)) || null;
+        },
+
+        assetKind(asset) {
+            return String(asset?.sceneKind || '').toLowerCase() || 'unknown';
+        },
+
+        isExploreAsset(asset) {
+            return this.assetKind(asset) === 'explore';
+        },
+
+        sceneKindForArt(scene) {
+            return DataManager.sceneKind(scene) || this.assetForScene(scene)?.sceneKind || '';
+        },
+
+        isExploreScene(scene) {
+            return String(this.sceneKindForArt(scene)).toLowerCase() === 'explore';
+        },
+
+        uniqueItemsFromScenes(scenes) {
+            const byId = new Map();
+            scenes.forEach(scene => {
+                DataManager.sceneEvidence(scene.sceneId).forEach(item => byId.set(String(item.id), item));
+            });
+            return Array.from(byId.values()).sort((a, b) => Number(a.id || 0) - Number(b.id || 0));
+        },
+
+        boundExploreItemIds(assetRows) {
+            const ids = new Set();
+            assetRows.filter(row => this.isExploreAsset(row.asset)).forEach(row => {
+                row.evidenceItems.forEach(item => ids.add(String(item.id)));
+            });
+            return ids;
+        },
+
+        sceneEvidenceStats(chapter, items, sceneAssets) {
+            const assetRows = this.assetRowsForChapter(sceneAssets, chapter);
+            const boundIds = this.boundExploreItemIds(assetRows);
+            const boundItems = new Map();
+            assetRows.filter(row => this.isExploreAsset(row.asset)).forEach(row => {
+                row.evidenceItems.forEach(item => boundItems.set(String(item.id), item));
+            });
+            const sceneMissing = assetRows.filter(row => !row.asset?.ArtRequirement).length;
+            const itemMissing = new Map([...Array.from(boundItems.entries()), ...items.filter(i => !boundIds.has(String(i.id))).map(i => [String(i.id), i])]);
+            return {
+                total: assetRows.length + items.length,
+                missing: sceneMissing + Array.from(itemMissing.values()).filter(i => !i.ArtRequirement).length,
+            };
+        },
+
+        itemMatchesArtFilter(item, q) {
+            if (!q) return true;
+            return String(item.id || '').includes(q)
+                || DataManager.itemName(item).toLowerCase().includes(q)
+                || DataManager.itemDesc(item).toLowerCase().includes(q)
+                || DataManager.itemLocation(item).toLowerCase().includes(q)
+                || (item.ArtRequirement || '').toLowerCase().includes(q);
+        },
+
+        assetRowMatchesArtFilter(row, q) {
+            if (!q) return true;
+            const asset = row.asset || {};
+            const bgName = asset.displayName || (asset.id || '').split('\\').pop();
+            return (asset.Name || '').toLowerCase().includes(q)
+                || (bgName || '').toLowerCase().includes(q)
+                || (asset.ArtRequirement || '').toLowerCase().includes(q)
+                || (asset.id || '').toLowerCase().includes(q)
+                || row.scenes.some(scene =>
+                    String(scene.sceneId || '').includes(q)
+                    || (scene.sceneName || '').toLowerCase().includes(q)
+                    || (scene.sceneNameEn || '').toLowerCase().includes(q)
+                )
+                || row.evidenceItems.some(item => this.itemMatchesArtFilter(item, q));
+        },
+
+        renderArtRequirementBox(text, emptyText = '未填写') {
+            const hasText = String(text || '').trim();
+            return `<div class="art-req-box ${hasText ? '' : 'empty'}">${hasText ? escapeHtmlWithBr(text) : escapeHtml(emptyText)}</div>`;
+        },
+
+        renderArtEvidenceRows(items, emptyText) {
+            if (!items.length) {
+                return `<div class="flow-list-sub">${escapeHtml(emptyText)}</div>`;
+            }
+            return `<div class="art-evidence-list">${items.map(item => {
+                const bindingLabel = DataManager.itemSceneBindingLabel(item);
+                const meta = [
+                    DataManager.typeName(item.itemType),
+                    DataManager.itemLocation(item) || '无获得地点',
+                    bindingLabel,
+                ].filter(Boolean).join(' · ');
+                const hasArt = String(item.ArtRequirement || '').trim();
+                return `
+                    <div class="art-evidence-row" title="点击查看详情" onclick="UI.showEvidenceModal('${escapeHtml(item.id)}')">
+                        <div class="art-evidence-main">
+                            <div class="art-evidence-name">${escapeHtml(DataManager.itemName(item) || '未命名')}</div>
+                            <div class="art-evidence-meta">${escapeHtml(meta)}</div>
+                        </div>
+                        <div class="art-evidence-desc">${escapeHtml(truncate(DataManager.itemDesc(item), 110))}</div>
+                        <div class="art-evidence-status">
+                            <span class="art-evidence-pill ${hasArt ? 'filled' : 'empty'}">${hasArt ? '需求已填' : '未填需求'}</span>
+                            <span class="art-evidence-detail">详情</span>
+                        </div>
+                    </div>
+                `;
+            }).join('')}</div>`;
+        },
+
+        renderNpcMounts(mounts) {
+            if (!mounts.length) {
+                return `<div class="flow-list-sub">无 NPC 挂载</div>`;
+            }
+            return `
+                <div class="art-npc-mount-list">
+                    ${mounts.map(m => {
+                        const loopText = m.loops.length ? m.loops.map(loop => `L${loop}`).join(' / ') : 'L?';
+                        const resTag = m.resName
+                            ? `<span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(m.resName)}', this)">默认立绘 · ${escapeHtml(m.resName)}</span>`
+                            : `<span class="art-npc-mount-empty">默认立绘未填</span>`;
+                        const clickTag = m.clickResName
+                            ? `<span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(m.clickResName)}', this)">点击态 · ${escapeHtml(m.clickResName)}</span>`
+                            : `<span class="art-npc-mount-empty">点击态未填</span>`;
+                        return `
+                            <div class="art-npc-mount-row">
+                                <span class="flow-chip">${escapeHtml(loopText)}</span>
+                                <span class="art-npc-mount-name">${escapeHtml(m.name || m.npcId || '未知 NPC')}</span>
+                                <div class="art-npc-mount-assets">${resTag}${clickTag}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        },
+
+        renderSceneArtCard(row) {
+            const asset = row.asset;
+            const kind = this.assetKind(asset) || 'unknown';
+            const isExplore = kind === 'explore';
+            const bgName = asset?.displayName || (asset?.id || '').split('\\').pop();
+            const assetKey = this.assetRowKey(row);
+            const expanded = this.expandedAssets.has(assetKey);
+            const evidenceItems = isExplore ? row.evidenceItems : [];
+            const mounts = asset ? DataManager.npcMountsForBg(asset.id) : [];
+            const sceneText = row.scenes.length
+                ? row.scenes.map(scene => `${scene.sceneName || `场景 ${scene.sceneId}`}（${scene.sceneId} / L${scene.loop || '?'}）`).join('；')
+                : '没有 SceneConfig 使用这张底图';
+            const briefScenes = row.scenes.length ? `使用场景 ${row.scenes.length}` : '未被场景使用';
+            const evidenceBrief = isExplore ? `证据/道具 ${evidenceItems.length}` : '对话底图不挂证据';
+            const artBrief = asset?.ArtRequirement ? '底图需求已填' : '底图需求未填';
+            const kindLabel = isExplore ? '探索场景底图' : (kind === 'dialogue' ? '对话场景底图' : '未分类底图');
+            return `
+                <article class="art-scene-card ${kind === 'dialogue' ? 'dialogue' : ''} ${expanded ? 'expanded' : 'collapsed'}">
+                    <div class="art-scene-head">
+                        <div>
+                            <div class="art-scene-title">${escapeHtml(asset?.Name || bgName || '未命名底图')}${asset?._missingAsset ? ' · 未登记' : ''}</div>
+                            <div class="art-scene-meta">
+                                ${escapeHtml(kindLabel)}
+                                ${bgName ? ` · <span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(bgName)}', this)">${escapeHtml(bgName)}</span>` : ''}
+                            </div>
+                            <div class="art-scene-brief">${escapeHtml(briefScenes)} · ${escapeHtml(evidenceBrief)} · ${escapeHtml(artBrief)}</div>
+                        </div>
+                        <div class="art-scene-actions">
+                            <button class="btn primary" onclick="ArtOverviewView.toggleAssetExpanded('${escapeHtml(assetKey)}')">${expanded ? '收起' : '展开'}</button>
+                        </div>
+                    </div>
+                    <div class="art-scene-body">
+                        <div>
+                            <div class="art-scene-section-title">底图需求</div>
+                            ${this.renderArtRequirementBox(asset?.ArtRequirement || '', '底图美术需求未填写')}
+                        </div>
+                        <div>
+                            <div class="art-scene-section-title">使用场景</div>
+                            <div class="art-scene-meta">${escapeHtml(sceneText)}</div>
+                        </div>
+                        <div>
+                            <div class="art-scene-section-title">人物挂载 · ${mounts.length}</div>
+                            ${this.renderNpcMounts(mounts)}
+                        </div>
+                        <div>
+                            <div class="art-scene-section-title">${isExplore ? `场景内证据 / 道具 · ${evidenceItems.length}` : '证据 / 道具'}</div>
+                            ${isExplore ? this.renderArtEvidenceRows(evidenceItems, '这个探索场景没有绑定证据/道具。') : `<div class="flow-list-sub">对话场景不配置证据需求。</div>`}
+                        </div>
+                    </div>
+                </article>
+            `;
+        },
+
+        renderUnboundEvidenceBlock(items) {
+            return `
+                <section class="art-unbound-block">
+                    <div class="art-scene-section-title">未绑定探索场景的证据需求 · ${items.length}</div>
+                    <div class="art-scene-meta" style="margin-bottom:0.65rem;">这些证据/道具没有挂到任何探索场景的 SceneConfig.ItemIDs 下，可能是背包、分析、NPC 给予、指证专用，或还没配置场景归属。</div>
+                    ${this.renderArtEvidenceRows(items, '没有未绑定探索场景的证据需求。')}
+                </section>
+            `;
+        },
+
+        assetRowKey(row) {
+            return btoa(unescape(encodeURIComponent(String(row?.asset?.id || row?.asset?.displayName || row?.asset?.Name || 'unknown'))))
+                .replace(/=+$/g, '');
+        },
+
+        toggleAssetExpanded(assetKey) {
+            const key = String(assetKey || '');
+            if (!key) return;
+            if (this.expandedAssets.has(key)) this.expandedAssets.delete(key);
+            else this.expandedAssets.add(key);
+            this.render();
+        },
+
+        // ---- Scene Tab ----（场景优先：探索场景下挂证据，对话场景不挂证据）
+        renderSceneTab(sceneAssets, allItems, chapter) {
             UI._artByFile = {};
-            list.forEach(a => { UI._artByFile[a.displayName || (a.id || '').split('\\').pop()] = a; });
+            sceneAssets.forEach(a => { UI._artByFile[a.displayName || (a.id || '').split('\\').pop()] = a; });
+
+            const assetRowsAll = this.assetRowsForChapter(sceneAssets, chapter);
+            const q = (this.filterText || '').toLowerCase();
+            const boundIds = this.boundExploreItemIds(assetRowsAll);
+            const unboundAll = allItems
+                .filter(item => !boundIds.has(String(item.id)))
+                .sort((a, b) => Number(a.id || 0) - Number(b.id || 0));
+
+            const assetRows = assetRowsAll.filter(row => {
+                if (!this.assetRowMatchesArtFilter(row, q)) return false;
+                if (!this.showOnlyNoArt) return true;
+                return !row.asset?.ArtRequirement || row.evidenceItems.some(item => !item.ArtRequirement);
+            });
+
+            let unboundItems = unboundAll.filter(item => this.itemMatchesArtFilter(item, q));
+            if (this.showOnlyNoArt) unboundItems = unboundItems.filter(item => !item.ArtRequirement);
+
+            const shownEvidenceCount = assetRows.reduce((sum, row) => sum + row.evidenceItems.length, 0) + unboundItems.length;
+            const missingCount = assetRows.filter(row => !row.asset?.ArtRequirement).length
+                + assetRows.reduce((sum, row) => sum + row.evidenceItems.filter(item => !item.ArtRequirement).length, 0)
+                + unboundItems.filter(item => !item.ArtRequirement).length;
 
             let html = `
                 <div class="filter-bar">
                     <label>搜索：</label>
-                    <input type="text" id="filterInput" placeholder="中文名 / 文件名 / 美术需求..."
+                    <input type="text" id="filterInput" placeholder="场景 / 底图 / 证据 / 道具 / 美术需求..."
                            value="${escapeHtml(this.filterText)}"
                            oninput="ArtOverviewView.onFilter(this.value)">
                     <button class="btn ${this.showOnlyNoArt ? 'active' : ''}"
@@ -7986,98 +8846,29 @@
                     </button>
                     ${this.filterText ? `<button class="btn" onclick="ArtOverviewView.clearFilter()">清除筛选</button>` : ''}
                     <span class="stats">
-                        显示 ${total} 张底图 |
-                        <span class="has-art">已填 ${hasArt}</span> /
-                        <span class="no-art">未填 ${total - hasArt}</span>
+                        显示 ${assetRows.length} 张底图 · ${shownEvidenceCount} 条证据/道具 |
+                        <span class="no-art">未填 ${missingCount}</span>
                     </span>
                 </div>
             `;
 
-            if (total === 0) {
-                html += `<p style="text-align:center; color:var(--text-muted); padding:2rem;">
-                    ${AppState.artAssetMap.size === 0 ? '请先点击「加载」' : '没有匹配的底图'}
-                </p>`;
-                return html;
+            if (!assetRows.length && !unboundItems.length) {
+                return html + `<p style="text-align:center; color:var(--text-muted); padding:2rem;">没有匹配的底图或证据需求。</p>`;
             }
 
-            const renderGroup = (rows, label) => {
-                if (rows.length === 0) return '';
-                let h = `<div style="margin:1.4rem 0 0.6rem; padding:0.5rem 0.8rem; font-size:1.5rem; font-weight:700; color:var(--highlight); border-left:5px solid var(--highlight); border-bottom:2px solid rgba(232,198,120,0.35); background:rgba(232,198,120,0.06); letter-spacing:1px;">${label} <span style="font-size:1rem; font-weight:500; color:var(--text-muted);">(${rows.length})</span></div>`;
-                h += `<table class="evidence-table">
-                    <thead><tr>
-                        <th class="name-col">中文名</th>
-                        <th class="desc-col">文件名（点击复制）</th>
-                        <th>NPC · 预名称 · Loop</th>
-                        <th>美术需求</th>
-                    </tr></thead><tbody>`;
-                rows.forEach(a => {
-                    const artClass = a.ArtRequirement ? 'art-req' : 'art-req empty';
-                    const artText = a.ArtRequirement || '未填写';
-                    const fn = a.displayName || (a.id || '').split('\\').pop();
-                    const mounts = DataManager.npcMountsForBg(a.id);
-                    let npcCell;
-                    if (mounts.length === 0) {
-                        npcCell = '<span style="color:var(--text-muted);">—</span>';
-                    } else {
-                        npcCell = mounts.map(m => {
-                            const loopTag = m.loops.length
-                                ? ` <span style="color:var(--text-muted); font-size:0.7rem;">${m.loops.map(l => 'L' + l).join(',')}</span>`
-                                : '';
-                            const resTag = m.resName
-                                ? ` <span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(m.resName)}', this)">${escapeHtml(m.resName)}</span>`
-                                : '';
-                            const clickTag = (m.clickResName && m.clickResName !== m.resName)
-                                ? ` <span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(m.clickResName)}', this)">${escapeHtml(m.clickResName)}</span>`
-                                : '';
-                            return `<div style="margin:2px 0;"><span style="color:var(--highlight);">${escapeHtml(m.name)}</span>${loopTag}${resTag}${clickTag}</div>`;
-                        }).join('');
-                    }
-                    const exReuse = (a.exposeReuseLoops && a.exposeReuseLoops.length)
-                        ? ` <span style="background:#b5466a; color:#fff; border-radius:3px; padding:0 0.3rem; font-size:0.68rem; font-weight:700;">⚔️指证 ${a.exposeReuseLoops.map(l => 'L' + l).join(',')}</span>`
-                        : '';
-                    h += `
-                        <tr onclick="UI.showArtAssetModal('${escapeHtml(fn)}')" style="cursor:pointer;">
-                            <td class="name-col">${escapeHtml(a.Name || '')}${exReuse}</td>
-                            <td class="desc-col"><span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(fn)}', this)">${escapeHtml(fn)}</span></td>
-                            <td style="font-size:0.8rem;">${npcCell}</td>
-                            <td class="${artClass}">${escapeHtml(truncate(artText, 80))}</td>
-                        </tr>`;
-                    // 突发事件：在底图行下面展开子行（缩进 + 橙色），点击看完整详情
-                    (a.events || []).forEach(e => {
-                        const loopTag = (e.loop !== undefined && e.loop !== null)
-                            ? ` <span style="color:var(--text-muted); font-size:0.7rem;">L${e.loop}</span>` : '';
-                        const resTag = e.resName
-                            ? `<span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(e.resName)}', this)">${escapeHtml(e.resName)}</span>`
-                            : '';
-                        const reqClass = e.req ? 'art-req' : 'art-req empty';
-                        const reqText = e.req || '未填写';
-                        h += `
-                        <tr onclick="UI.showArtAssetModal('${escapeHtml(fn)}')" style="cursor:pointer; background:rgba(255,155,106,0.06);">
-                            <td style="padding-left:1.5rem; font-size:0.85rem;">
-                                <span style="display:inline-block; background:#ff9b6a; color:#3e2723; border-radius:3px; padding:0 0.35rem; font-size:0.7rem; font-weight:700; margin-right:0.4rem;">突发事件</span>
-                                <span style="color:#ff9b6a;">${escapeHtml(e.name || '')}</span>${loopTag}
-                            </td>
-                            <td class="desc-col">${resTag}</td>
-                            <td></td>
-                            <td class="${reqClass}" style="font-size:0.78rem;">${escapeHtml(truncate(reqText, 60))}</td>
-                        </tr>`;
-                    });
-                });
-                h += `</tbody></table>`;
-                return h;
-            };
-
-            const KINDS = [
-                { key: 'explore',  label: '🔍 探索场景底图' },
-                { key: 'dialogue', label: '🎬 对话场景底图' },
+            const groups = [
+                { key: 'explore', label: '探索底图 · 证据跟随底图', rows: assetRows.filter(row => this.isExploreAsset(row.asset)) },
+                { key: 'dialogue', label: '对话底图 · 不配置证据', rows: assetRows.filter(row => this.assetKind(row.asset) === 'dialogue') },
+                { key: 'unknown', label: '未分类底图', rows: assetRows.filter(row => !['explore', 'dialogue'].includes(this.assetKind(row.asset))) },
             ];
-            KINDS.forEach(k => {
-                html += renderGroup(list.filter(a => (a.sceneKind || 'explore') === k.key), k.label);
-            });
-            // 未知类型兜底
-            const known = new Set(KINDS.map(k => k.key));
-            html += renderGroup(list.filter(a => !known.has(a.sceneKind || 'explore')), '📍 未分类底图');
 
+            groups.forEach(group => {
+                if (!group.rows.length) return;
+                html += `<div style="margin:1.4rem 0 0.6rem; padding:0.5rem 0.8rem; font-size:1.15rem; font-weight:800; color:var(--highlight); border-left:5px solid var(--highlight); border-bottom:1px solid rgba(232,198,120,0.35); background:rgba(232,198,120,0.06);">${escapeHtml(group.label)} <span style="font-size:0.86rem; color:var(--text-muted);">(${group.rows.length})</span></div>`;
+                html += `<div class="art-scene-list">${group.rows.map(row => this.renderSceneArtCard(row)).join('')}</div>`;
+            });
+
+            html += this.renderUnboundEvidenceBlock(unboundItems);
             return html;
         },
 
@@ -8509,43 +9300,88 @@
                     html += `</div></div>`; // close body, card
                 });
 
-            } else if (phase === 'expose' && loop.expose) {
-                const exp = loop.expose;
-                const expScene = DataManager.getScene(String(exp.scene));
-                const expSceneName = expScene?.sceneName || `场景 ${exp.scene}`;
+            } else if (phase === 'expose' && (loop.expose || (DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop)?.exposes || []).length)) {
                 const chapCfg = DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop);
+                const exp = loop.expose || {};
+                const exposeNpc = chapCfg?.exposeNpcId ? AppState.npcsMap.get(String(chapCfg.exposeNpcId)) : null;
+                const expTargetName = exp.target_name || cn(exposeNpc?.Name) || chapCfg?.exposeNpcId || '';
+                const expSceneId = exp.scene || chapCfg?.initScene || loop.initScene || '';
+                const expScene = expSceneId ? DataManager.getScene(String(expSceneId)) : null;
+                const expSceneName = expScene?.sceneName || (expSceneId ? `场景 ${expSceneId}` : '未配置场景');
                 const exposes = chapCfg?.exposes || [];
+                const exposeRounds = (exp.rounds && exp.rounds.length)
+                    ? exp.rounds.map((round, idx) => {
+                        const exposeEntry = exposes[idx] || {};
+                        return {
+                            index: idx,
+                            id: exposeEntry.id || idx + 1,
+                            lie: round.lie || '',
+                            lieDetail: '',
+                            evidences: round.evidences || exposeEntry.item || exposeEntry.items || [],
+                            talkId: exposeEntry.talkId || '',
+                            targetTestimony: exposeEntry.testimony || '',
+                        };
+                    })
+                    : exposes.map((exposeEntry, idx) => {
+                        const targetId = String(exposeEntry?.testimony || '').trim();
+                        const hasTarget = targetId && targetId !== '0';
+                        const target = hasTarget && typeof FlowOverviewView !== 'undefined' && FlowOverviewView.resolveExposeMaterial
+                            ? FlowOverviewView.resolveExposeMaterial(targetId, AppState.currentLoop)
+                            : null;
+                        const materialIds = Array.isArray(exposeEntry?.item)
+                            ? exposeEntry.item
+                            : (Array.isArray(exposeEntry?.items) ? exposeEntry.items.map(item => item.id || item) : []);
+                        return {
+                            index: idx,
+                            id: exposeEntry?.id || idx + 1,
+                            lie: target ? target.name : '材料组合推理（未配置被攻击证词）',
+                            lieDetail: target?.detail || '',
+                            evidences: materialIds,
+                            talkId: exposeEntry?.talkId || '',
+                            targetTestimony: targetId,
+                        };
+                    });
 
-                // Find the opening entry of the expose
-                // Priority: 1) ChapterConfig exposes[0].talkId  2) YAML expose.talk field
-                const firstLieTalkId = exposes[0]?.talkId;
-                let exposeStartId = firstLieTalkId ? String(firstLieTalkId) : '';
-                if (firstLieTalkId) {
-                    for (const [id, t] of AppState.talksMap) {
-                        if (t.next === String(firstLieTalkId)) {
-                            exposeStartId = id;
-                            break;
-                        }
-                    }
-                }
-                // Fallback: use YAML expose.talk to find first entry by videoScene match
+                const exposeTalks = DataManager.currentLoopExposeTalks();
+
+
+                let exposeStartId = DataManager.getExposeStartTalkId();
+
+
+                // Fallback: use YAML expose.talk to find first entry by videoScene match.
+
+
                 if (!exposeStartId && exp.talk) {
-                    const exposeTalks = AppState.allTalks
+
+
+                    const yamlExposeTalks = AppState.allTalks
+
+
                         .filter(t => t.videoScene === exp.talk)
-                        .sort((a, b) => Number(a.videoId) - Number(b.videoId));
-                    if (exposeTalks.length > 0) {
-                        exposeStartId = exposeTalks[0].id || String(exposeTalks[0].videoId);
+
+
+                        .sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id));
+
+
+                    if (yamlExposeTalks.length > 0) {
+
+
+                        exposeStartId = yamlExposeTalks[0].id || String(yamlExposeTalks[0].videoId);
+
+
                     }
+
+
                 }
 
                 html = `
                     <div class="scene-title">
                         <span class="phase-tag expose">指证阶段</span>
-                        目标: ${escapeHtml(exp.target_name || '')}
+                        目标: ${escapeHtml(expTargetName)}
                     </div>
                     <p style="margin:0.75rem 0; color:var(--text-secondary);">
-                        场景: <span style="cursor:pointer; text-decoration:underline;" onclick="FlowView.showScene('${exp.scene}')">${escapeHtml(expSceneName)} (${exp.scene})</span>
-                        ${exp.rounds ? ` | 共 ${exp.rounds.length} 轮` : ''}
+                        场景: ${expSceneId ? `<span style="cursor:pointer; text-decoration:underline;" onclick="FlowView.showScene('${expSceneId}')">${escapeHtml(expSceneName)} (${expSceneId})</span>` : `<span>${escapeHtml(expSceneName)}</span>`}
+                        ${exposeRounds.length ? ` | 共 ${exposeRounds.length} 轮` : ''}
                     </p>
                 `;
 
@@ -8560,28 +9396,34 @@
                 if (exposeStartId) {
                     html += `
                         <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:1rem;">
-                            <button class="btn" onclick="DialogController.startFromTalkId('${exposeStartId}')" style="font-size:0.9rem;">&#x25B6; 播放整场指证</button>
+                            <button class="btn" onclick="UI.playTalkInDrawer('${exposeStartId}', 'EXPOSE', '完整指证对话', '从 #${exposeStartId} 开始')" style="font-size:0.9rem;">&#x25B6; 播放整场指证</button>
                             <span style="color:var(--text-muted); font-size:0.8rem;">从开场到结尾完整播放</span>
                         </div>
                     `;
                 }
 
-                if (exp.rounds) {
-                    exp.rounds.forEach((round, idx) => {
-                        const exposeEntry = exposes[idx];
-                        const exposeTalkId = exposeEntry?.talkId || '';
+                if (exposeRounds.length) {
+                    exposeRounds.forEach((round, idx) => {
+                        const exposeTalkId = round.talkId || '';
                         const exposeSummary = exposeTalkId ? DataManager.getTalkSummary(exposeTalkId) : '';
+                        const roundLabel = round.id || idx + 1;
 
                         html += `
                             <div class="expose-round">
-                                <div class="round-title">第 ${idx + 1} 轮</div>
-                                <p><strong>谎言：</strong>"${escapeHtml(round.lie || '')}"</p>
+                                <div class="round-title">第 ${escapeHtml(roundLabel)} 轮</div>
+                                <p><strong>被攻击证词 / 谎言：</strong>"${escapeHtml(round.lie || '未配置')}"</p>
                         `;
+                        if (round.lieDetail) {
+                            html += `<div class="spec-summary">${escapeHtml(truncate(round.lieDetail, 120))}</div>`;
+                        }
+                        if (round.targetTestimony && String(round.targetTestimony) !== '0') {
+                            html += `<div class="spec-row"><span class="spec-label">证词：</span><span class="copy-tag" onclick="copyText('${escapeHtml(round.targetTestimony)}', this)">${escapeHtml(round.targetTestimony)}</span></div>`;
+                        }
                         if (exposeTalkId || exposeSummary) {
                             html += `<div class="prod-spec" style="margin:0.3rem 0;">`;
                             if (exposeTalkId) {
-                                html += `<div class="spec-row"><span class="spec-label">Talk ID:</span><span class="copy-tag" onclick="copyText('${exposeTalkId}', this)">${exposeTalkId}</span>`;
-                                html += ` <button class="btn" onclick="event.stopPropagation(); DialogController.startFromTalkId('${exposeTalkId}')" style="font-size:0.8rem; padding:0.2rem 0.6rem; margin-left:0.5rem;">&#x25B6; 播放本轮</button>`;
+                                html += `<div class="spec-row"><span class="spec-label">Talk：</span><span class="copy-tag" onclick="copyText('${exposeTalkId}', this)">${exposeTalkId}</span>`;
+                                html += ` <button class="btn" onclick="event.stopPropagation(); UI.playTalkInDrawer('${exposeTalkId}', 'EXPOSE', '第 ${escapeHtml(roundLabel)} 轮指证', 'Talk #${exposeTalkId}')" style="font-size:0.8rem; padding:0.2rem 0.6rem; margin-left:0.5rem;">&#x25B6; 播放本轮</button>`;
                                 html += `</div>`;
                             }
                             if (exposeSummary) {
@@ -8593,13 +9435,19 @@
                                 <p style="margin-top:0.3rem;"><strong>所需证据：</strong></p>
                                 <div style="margin:0.3rem 0;">
                         `;
-                        (round.evidences || []).forEach(evId => {
-                            const item = DataManager.getItem(String(evId));
-                            const name = item ? DataManager.itemName(item) : String(evId);
-                            html += `<span class="evidence-tag" ${item ? `onclick="UI.showEvidenceModal('${evId}')" style="cursor:pointer"` : ''}>${escapeHtml(name)} (${evId})</span>`;
+                        (round.evidences || []).forEach(ev => {
+                            const evId = String(ev?.id || ev || '').trim();
+                            if (!evId) return;
+                            const item = DataManager.getItem(evId);
+                            const material = typeof FlowOverviewView !== 'undefined' && FlowOverviewView.resolveExposeMaterial
+                                ? FlowOverviewView.resolveExposeMaterial(evId, AppState.currentLoop)
+                                : null;
+                            const name = material?.name || (item ? DataManager.itemName(item) : evId);
+                            const kind = material?.kind ? ` · ${material.kind}` : '';
+                            html += `<span class="evidence-tag" ${item ? `onclick="UI.showEvidenceModal('${evId}')" style="cursor:pointer"` : ''}>${escapeHtml(name)}${kind} (${escapeHtml(evId)})</span>`;
                         });
                         if (!round.evidences || round.evidences.length === 0) {
-                            html += `<span style="color:var(--text-muted); font-size:0.85rem;">无需证据</span>`;
+                            html += `<span style="color:var(--text-muted); font-size:0.85rem;">未配置指证材料</span>`;
                         }
                         html += `
                                 </div>
@@ -8878,6 +9726,7 @@
             const { chain, index, containerId, focusSpeakerId } = this._state;
             const stage = document.getElementById(containerId);
             if (!stage) return;
+            this.closeScriptEditor(false);
 
             const total = chain.length;
             const curNode = chain[index];
@@ -8937,6 +9786,7 @@
                 <div class="avg-controls">
                     <button class="avg-pill" onclick="DialogController.replay()" ${canPrev ? '' : 'disabled'}>&#x21bb; 重播本段</button>
                     <button class="avg-pill" onclick="DialogController.prev()" ${canPrev ? '' : 'disabled'}>&larr; 上一句</button>
+                    <button class="avg-pill" onclick="DialogController.openCurrentScriptEditor()">挂 script</button>
                     ${!isEnd && !hasBranches ? '<button class="avg-pill on" onclick="DialogController.next()">下一句 &rarr;</button>' : ''}
                     ${isEnd ? '<button class="avg-pill on" onclick="DialogController.close()">关闭</button>' : ''}
                 </div>
@@ -9006,6 +9856,360 @@
             // 当前句启动打字机(全量重建/首次开播/replay/prev 场景)
             const curText = stage.querySelector('.avg-line.current .avg-text');
             if (curText) this._startTypewriter(curText);
+        },
+
+        currentTalk() {
+            return this._state.chain?.[this._state.index]?.talk || null;
+        },
+
+        scriptPresetOptions(current) {
+            const scripts = [
+                '',
+                'new_npc_in',
+                'npc_out',
+                'exhibit',
+                'get',
+                'Lie',
+                'comic',
+                'interrupt',
+                'end',
+            ];
+            const cur = String(current || '');
+            if (cur && !scripts.includes(cur)) scripts.push(cur);
+            return [
+                `<option value="__custom__"${scripts.includes(cur) ? '' : ' selected'}>常用 script / 自定义</option>`,
+                ...scripts.map(s => {
+                    const label = s ? `${s} · ${FlowOverviewView.eventKind(s)}` : '空 script · 普通对白';
+                    return `<option value="${escapeHtml(s)}"${s === cur ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+                })
+            ].join('');
+        },
+
+        scriptRule(script) {
+            const key = String(script || '').trim().toLowerCase();
+            const unused = {
+                intLabel: '不用填',
+                intHint: '保留 0',
+                strLabel: '不用填',
+                strHint: '留空',
+            };
+            const rawRows = [
+                { intLabel: 'ParameterInt', intHint: '原始 Int', strLabel: 'ParameterStr', strHint: '原始 Str' },
+                { intLabel: 'ParameterInt', intHint: '原始 Int', strLabel: 'ParameterStr', strHint: '原始 Str' },
+                { intLabel: 'ParameterInt', intHint: '原始 Int', strLabel: 'ParameterStr', strHint: '原始 Str' },
+            ];
+            if (key === 'npc_out') {
+                return {
+                    title: 'npc_out：让一个场景 NPC 退场',
+                    hint: '参数0.ParameterInt = NPC id；ParameterStr 不使用。保存前请确认选的是要离开的角色。',
+                    rows: [
+                        { intLabel: '退场 NPC', intHint: 'NPCStaticData.id', intSource: 'npc', strLabel: '不用填', strHint: '留空' },
+                        unused,
+                        unused,
+                    ],
+                };
+            }
+            if (key === 'new_npc_in') {
+                return {
+                    title: 'new_npc_in：让一个 NPC 实例入场',
+                    hint: '参数0.ParameterInt = NPCLoopData 表 ID；参数0.ParameterStr = 入场提示文本；参数1.ParameterStr = 提示位置，格式 x,y。',
+                    rows: [
+                        { intLabel: '入场实例', intHint: 'NPCLoopData.id', intSource: 'npcloop', strLabel: '提示文本', strHint: '如 Wait! / TAP...' },
+                        { intLabel: '不用填', intHint: '保留 0', strLabel: '提示位置', strHint: 'x,y anchoredPosition' },
+                        unused,
+                    ],
+                };
+            }
+            if (key === 'exhibit') {
+                return {
+                    title: 'exhibit：在当前句出示物品',
+                    hint: '参数0.Int = 物品ID，参数0.Str = x；参数1.Int = 档位 1/2/3，参数1.Str = y；参数2.Str = 自定义展示文字，可空。',
+                    rows: [
+                        { intLabel: '展示物品', intHint: 'ItemStaticData.id', intSource: 'item', strLabel: '位置 x', strHint: '数值' },
+                        { intLabel: '展示档位', intHint: '1/2/3', intSource: 'grade', strLabel: '位置 y', strHint: '数值' },
+                        { intLabel: '不用填', intHint: '保留 0', strLabel: '展示文字', strHint: '空则用默认文案' },
+                    ],
+                };
+            }
+            if (key === 'get' || key.startsWith('get_')) {
+                return {
+                    title: 'get：获得一个配置对象',
+                    hint: '通常参数0.Int 指向获得的道具/证据 ID。只有真正“获得”的内容才挂 get，普通谈话笔记不要挂。',
+                    rows: [
+                        { intLabel: '获得目标', intHint: 'ItemStaticData.id', intSource: 'item', strLabel: '提示/备注', strHint: '可空' },
+                        unused,
+                        unused,
+                    ],
+                };
+            }
+            if (key === 'lie') {
+                return {
+                    title: 'Lie：标记这句是指证点',
+                    hint: '当前显示逻辑读取参数0.ParameterStr 作为指证证据/证词 ID；这里应选择已有证据或证词。',
+                    rows: [
+                        { intLabel: '不用填', intHint: '保留 0', strLabel: '指证材料', strHint: '证据/证词 ID', strSource: 'evidence' },
+                        unused,
+                        unused,
+                    ],
+                };
+            }
+            if (key === 'comic' || key.includes('comic')) {
+                return {
+                    title: 'comic：播放动态漫画/突发图',
+                    hint: '漫画类参数目前按旧配置保留原始输入；建议只在确认资源名和代码读取方式后填写。',
+                    rows: rawRows,
+                };
+            }
+            return {
+                title: script ? '自定义 script：按原始参数填写' : '普通对白：不触发事件',
+                hint: script ? '这个 script 暂无专用规则，参数区保留原始 Int / Str 输入。' : '空 script 表示普通对白，一般不需要填写任何参数。',
+                rows: rawRows,
+            };
+        },
+
+        optionHtml(value, label, selected) {
+            return `<option value="${escapeHtml(String(value ?? ''))}"${String(value ?? '') === String(selected ?? '') ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+        },
+
+        npcOptions(selected) {
+            const chapter = DataManager.chapter(AppState.currentUnit);
+            return [
+                this.optionHtml('0', '选择 NPC', selected),
+                ...AppState.allNPCs
+                    .filter(n => !chapter || n.Chapter === chapter)
+                    .map(n => this.optionHtml(n.id, `${cn(n.Name) || n.id} · NPC ${n.id}`, selected))
+            ].join('');
+        },
+
+        npcLoopOptions(selected) {
+            const chapter = DataManager.chapter(AppState.currentUnit);
+            const currentLoop = AppState.currentLoop;
+            const rows = (AppState.allNPCLoops || [])
+                .filter(n => !chapter || n.NPC?.Chapter === chapter)
+                .map(n => {
+                    const talkLoop = n.TalkInfo?.videoLoop || n.LoopTalkInfo?.videoLoop || '';
+                    const loc = cn(n.TalkInfo?.Location) || cn(n.LoopTalkInfo?.Location) || '未知场景';
+                    const name = cn(n.NPC?.Name) || n.NPC?.id || '未知 NPC';
+                    return {
+                        id: String(n.id || ''),
+                        label: `${name} · ${loc} · NPCLoop ${n.id}${talkLoop ? ` · ${talkLoop}` : ''}`,
+                        current: talkLoop === currentLoop,
+                    };
+                })
+                .sort((a, b) => Number(b.current) - Number(a.current) || a.label.localeCompare(b.label));
+            return [
+                this.optionHtml('0', '选择入场 NPC 实例', selected),
+                ...rows.map(r => this.optionHtml(r.id, r.current ? `当前 ${r.label}` : r.label, selected))
+            ].join('');
+        },
+
+        itemOptions(selected) {
+            const chapter = DataManager.chapter(AppState.currentUnit);
+            const rows = DataManager.itemsByChapter(chapter)
+                .map(i => ({
+                    id: String(i.id || ''),
+                    label: `${cn(i.Name) || i.id} · ${DataManager.typeName(i.Type)} ${i.id}`,
+                }))
+                .sort((a, b) => a.label.localeCompare(b.label));
+            return [
+                this.optionHtml('0', '选择道具/证据', selected),
+                ...rows.map(r => this.optionHtml(r.id, r.label, selected))
+            ].join('');
+        },
+
+        evidenceOptions(selected) {
+            const chapterNum = String(AppState.currentUnit || '').replace(/[^\d]/g, '') || '1';
+            const chapter = DataManager.chapter(AppState.currentUnit);
+            const itemRows = DataManager.itemsByChapter(chapter).map(i => ({
+                id: String(i.id || ''),
+                label: `[道具] ${cn(i.Name) || i.id} · ${DataManager.typeName(i.Type)} ${i.id}`,
+            }));
+            const testimonyRows = (AppState.allTestimonies || [])
+                .filter(t => String(t.id || '').startsWith(chapterNum))
+                .map(t => ({
+                    id: String(t.id || ''),
+                    label: `[证词] ${cn(t.shortDesc) || truncate(cn(t.testimony), 26) || t.id} · ${t.id}`,
+                }));
+            return [
+                this.optionHtml('', '选择证据/证词', selected),
+                ...itemRows.concat(testimonyRows)
+                    .sort((a, b) => a.label.localeCompare(b.label))
+                    .map(r => this.optionHtml(r.id, r.label, selected))
+            ].join('');
+        },
+
+        intControlHtml(row, param, idx) {
+            const value = String(param?.ParameterInt ?? '0');
+            const id = `dialog-script-param-int-${idx}`;
+            if (row.intSource === 'npc') return `<select id="${id}">${this.npcOptions(value)}</select>`;
+            if (row.intSource === 'npcloop') return `<select id="${id}">${this.npcLoopOptions(value)}</select>`;
+            if (row.intSource === 'item') return `<select id="${id}">${this.itemOptions(value)}</select>`;
+            if (row.intSource === 'grade') {
+                return `<select id="${id}">
+                    ${this.optionHtml('0', '选择档位', value)}
+                    ${this.optionHtml('1', '档位 1 · here.', value)}
+                    ${this.optionHtml('2', '档位 2 · show!', value)}
+                    ${this.optionHtml('3', '档位 3 · look this!!', value)}
+                </select>`;
+            }
+            return `<input id="${id}" value="${escapeHtml(value)}" placeholder="${escapeHtml(row.intHint || 'ParameterInt')}">`;
+        },
+
+        strControlHtml(row, param, idx) {
+            const value = String(param?.ParameterStr ?? '');
+            const id = `dialog-script-param-str-${idx}`;
+            if (row.strSource === 'evidence') return `<select id="${id}">${this.evidenceOptions(value)}</select>`;
+            return `<input id="${id}" value="${escapeHtml(value)}" placeholder="${escapeHtml(row.strHint || 'ParameterStr')}">`;
+        },
+
+        readScriptEditorParams() {
+            return Array.from({ length: 3 }, (_, idx) => ({
+                ParameterInt: String(document.getElementById(`dialog-script-param-int-${idx}`)?.value ?? '0').trim() || '0',
+                ParameterStr: String(document.getElementById(`dialog-script-param-str-${idx}`)?.value ?? '').trim(),
+            }));
+        },
+
+        renderScriptParamList(script, params) {
+            const rule = this.scriptRule(script);
+            return rule.rows.map((row, idx) => {
+                const p = params?.[idx] || { ParameterInt: '0', ParameterStr: '' };
+                return `
+                    <div class="dialog-script-param-row">
+                        <div class="dialog-script-label">参数 ${idx}<small>${escapeHtml(row.intLabel || 'ParameterInt')} / ${escapeHtml(row.strLabel || 'ParameterStr')}</small></div>
+                        ${this.intControlHtml(row, p, idx)}
+                        ${this.strControlHtml(row, p, idx)}
+                    </div>
+                `;
+            }).join('');
+        },
+
+        updateScriptParamRules(scriptValue) {
+            const script = scriptValue ?? document.getElementById('dialog-script-value')?.value ?? '';
+            const params = this.readScriptEditorParams();
+            const rule = this.scriptRule(script);
+            const ruleEl = document.getElementById('dialog-script-rule');
+            if (ruleEl) ruleEl.innerHTML = `<strong>${escapeHtml(rule.title)}</strong><br>${escapeHtml(rule.hint)}`;
+            const list = document.getElementById('dialog-script-param-list');
+            if (list) list.innerHTML = this.renderScriptParamList(script, params);
+        },
+
+        renderScriptEditor(talk) {
+            if (!talk) return '';
+            const speaker = cn(talk.Speaker?.Name) || talk.Speaker?.id || '旁白';
+            const words = cn(talk.Words) || '(无对白文本)';
+            const script = String(talk.script || '');
+            const params = Array.from({ length: 3 }, (_, idx) => talk.Parameters?.[idx] || { ParameterInt: '0', ParameterStr: '' });
+            const rule = this.scriptRule(script);
+            return `
+                <div id="dialogScriptEditor" class="dialog-script-editor" onclick="event.stopPropagation()">
+                    <div class="dialog-script-head">
+                        <div>
+                            <div class="dialog-script-title">当前句挂 script · Talk #${escapeHtml(String(talk.id || '?'))}</div>
+                            <div class="dialog-script-meta">${escapeHtml(talk.videoScene || 'Talk 表回填')} · step ${escapeHtml(String(talk.step || '?'))} · ${escapeHtml(speaker)}</div>
+                        </div>
+                        <button type="button" class="avg-pill" onclick="DialogController.closeScriptEditor()">关闭</button>
+                    </div>
+                    <div class="dialog-script-line">${escapeHtml(words)}</div>
+                    <div class="dialog-script-grid">
+                        <div class="dialog-script-label">script</div>
+                        <div class="dialog-script-grid" style="grid-template-columns: minmax(150px, 0.36fr) minmax(0, 1fr);">
+                            <select id="dialog-script-preset" onchange="DialogController.applyScriptPreset(this.value)">${this.scriptPresetOptions(script)}</select>
+                            <input id="dialog-script-value" value="${escapeHtml(script)}" placeholder="例如 exhibit / npc_out / Lie" onchange="DialogController.updateScriptParamRules(this.value)">
+                        </div>
+                    </div>
+                    <div id="dialog-script-rule" class="dialog-script-rule">
+                        <strong>${escapeHtml(rule.title)}</strong><br>${escapeHtml(rule.hint)}
+                    </div>
+                    <div id="dialog-script-param-list" class="dialog-script-param-list">
+                        ${this.renderScriptParamList(script, params)}
+                    </div>
+                    <div class="dialog-script-actions">
+                        <button type="button" class="avg-pill" onclick="DialogController.saveCurrentScriptEditor()">保存到修改记录</button>
+                    </div>
+                </div>
+            `;
+        },
+
+        openCurrentScriptEditor() {
+            const talk = this.currentTalk();
+            if (!talk) {
+                UI.updateStatus('当前没有可编辑的 Talk 句子');
+                return;
+            }
+            const stage = document.getElementById(this._state.containerId);
+            if (!stage) return;
+            this.closeScriptEditor(false);
+            const controls = stage.querySelector('.avg-controls');
+            if (controls) controls.insertAdjacentHTML('afterend', this.renderScriptEditor(talk));
+            else stage.insertAdjacentHTML('beforeend', this.renderScriptEditor(talk));
+        },
+
+        closeScriptEditor(showStatus = true) {
+            const editor = document.getElementById('dialogScriptEditor');
+            if (editor) editor.remove();
+            if (showStatus) UI.updateStatus('已关闭当前句 script 编辑');
+        },
+
+        applyScriptPreset(value) {
+            if (value === '__custom__') return;
+            const input = document.getElementById('dialog-script-value');
+            if (input) input.value = value;
+            this.updateScriptParamRules(value);
+        },
+
+        saveCurrentScriptEditor() {
+            const talk = this.currentTalk();
+            if (!talk) {
+                UI.updateStatus('当前没有可保存的 Talk 句子');
+                return;
+            }
+            const loop = FlowOverviewView.findLoop(AppState.currentLoop) || { id: AppState.currentLoop || 'loop?' };
+            FlowOverviewView.ensureTalkEventOriginal(talk);
+
+            const oldState = FlowOverviewView._originalTalkEvents.get(String(talk.id)) || { script: '', Parameters: [] };
+            const newScript = String(document.getElementById('dialog-script-value')?.value || '').trim();
+            const rule = this.scriptRule(newScript);
+            talk.script = newScript;
+            FlowOverviewView.recordTalkEventChange(loop, talk, {
+                key: `Talk:${talk.id}:script`,
+                action: newScript === (oldState.script || '') ? 'remove' : 'update',
+                field: 'script',
+                valuePath: 'script',
+                label: `当前句 Talk ${talk.id} script`,
+                old: oldState.script || '',
+                new: newScript,
+                scriptRule: rule.title,
+            });
+
+            if (!Array.isArray(talk.Parameters)) talk.Parameters = [];
+            while (talk.Parameters.length < 3) talk.Parameters.push({ ParameterInt: '0', ParameterStr: '' });
+            const editorParams = this.readScriptEditorParams();
+            for (let idx = 0; idx < 3; idx++) {
+                const oldValue = oldState.Parameters?.[idx] || { ParameterInt: '0', ParameterStr: '' };
+                const newValue = editorParams[idx] || { ParameterInt: '0', ParameterStr: '' };
+                const rowRule = rule.rows?.[idx] || {};
+                talk.Parameters[idx] = newValue;
+                FlowOverviewView.recordTalkEventChange(loop, talk, {
+                    key: `Talk:${talk.id}:Parameters:${idx}`,
+                    action: JSON.stringify(oldValue) === JSON.stringify(newValue) ? 'remove' : 'update',
+                    field: 'Parameters',
+                    valuePath: `Parameters[${idx}]`,
+                    label: `当前句 Talk ${talk.id} 参数 ${idx} · ${rowRule.intLabel || 'ParameterInt'} / ${rowRule.strLabel || 'ParameterStr'}`,
+                    old: oldValue,
+                    new: newValue,
+                    scriptRule: rule.title,
+                    parameterRule: {
+                        index: idx,
+                        intLabel: rowRule.intLabel || 'ParameterInt',
+                        strLabel: rowRule.strLabel || 'ParameterStr',
+                        intHint: rowRule.intHint || '',
+                        strHint: rowRule.strHint || '',
+                    },
+                });
+            }
+
+            UI.updateStatus(`已记录 Talk ${talk.id} 的 script 修改`);
+            this._renderStream();
         },
 
         // 打字机效果 —— 按字符逐一揭露当前行，22ms/char，末尾带闪烁光标
