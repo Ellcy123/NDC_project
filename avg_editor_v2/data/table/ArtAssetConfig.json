@@ -45,7 +45,15 @@
     "displayName": "SC9006_bg_SmallBox",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": ""
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L2 Emma 接相机失手 → 柜底翻出勒索照片",
+        "resName": "l2_camera_drop_01",
+        "loop": 2,
+        "req": "**美术资产**：`l2_camera_drop_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L2 / 9006 歌舞厅小包厢\n类型：⚡ 突发事件（自由探索期玩家动作触发）\n触发条件：玩家点击矮木柜 → 看到柜中便携相机（高亮可点击但未入背包/未显示详情）→ 玩家点击相机道具触发突发事件\n\n叙事作用：\n- 双产出节点——同时获得 9209 便携相机（拍摄工具）+ 9201 勒索照片（仙人跳产物）\n- 相机打碎是引出柜底信封的\"桥梁动作\"，让\"找到勒索照片\"不显得过于直白——玩家是因为\"蹲下捡碎片\"才偶然摸到柜底信封\n- 揭示蓝月亮 VIP 小包厢的真实用途（勒索拍摄角落）\n\n在场角色：Zack、Emma\n\n音效：\n- 木柜拉开吱呀声\n- 玻璃碎裂 + 相机金属砸地脆响（同步）\n- 信封从木柜底缝抽出的纸张摩擦声"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC002_bg_CabaretFirstFloorCorridor",
@@ -61,7 +69,15 @@
     "displayName": "SC9008_bg_SideAlley",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": ""
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L5 后门巷道 — 车灯骤亮（James 自杀）",
+        "resName": "l5_alley_headlights_01",
+        "loop": 5,
+        "req": "**美术资产**：`l5_alley_headlights_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L5 / 后门巷道（嵌在 Loop5_james.json，narrative_closure 完成后、james_suicide_001.json 开始前）\n类型：🎬 强制剧情（嵌在 narrative_closure 末尾，无玩家操作）\n触发条件：907905062（Zack \"停下！Emma O'Malley！\"）台词播放完成后强制触发\n\n叙事作用：\n- 刚才鸣笛的车骤然打开前灯——全场曝光，制造光线冲突\n- Emma 被车灯直射：逼迫她从最激烈的愤怒状态骤然回归现实（情绪强制刹车）\n- James 背对车灯，脸色在光影对比下更加惨白——\"已经做完决定的人\"的最后姿态\n- James 望向暗处（哨声消失的方向）= 确认 Whale 的人已撤退、自己无路可退 → 心理转折\n\n在场角色：Zack、Emma、James、黑色车辆\n\nSTORY\n詹姆斯·奥沙利文（慢慢转向 Zack 和 Emma。眼底的惊恐已经变成了一片死寂，他凄惨地笑了一下）\n\"小姐……你说得对……全被你们猜中了。但我没办法和你们去警局作证了。\"\n扎克·布伦南（察觉到了那死气沉沉的眼神，猛地往前半步）\n\"James——别做傻事！\"\n詹姆斯·奥沙利文（慢慢转向 Zack 和 Emma。眼底的惊恐已经变成了一片死寂，他凄惨地笑了一下）\n\"那辆车，那辆车，是 Whale 派来的……只有我死，这笔账才会清。\"\n艾玛·奥马利（惊呼出声，向前冲去）\n\"别拿枪！\"\n詹姆斯·奥沙利文（绝望地看了最后一眼这片黑暗的夜空，眼泪混着冷汗砸下）\n\"他们会拿 Anna 和孩子的命来逼我……我只能这么选。但是她什么都不知道……\"\n詹姆斯·奥沙利文（用尽最后的力气，带着卑微的祈求看向 Zack）\n\"……求求你们……别让她知道我是个杀人犯……照顾好她……\"\n艾玛·奥马利（停在原地。看着地面，笔记本滑落）\n\"\"\n扎克·布伦南（站在那里。嘴里的糖停止了转动）\n\"\"\n扎克·布伦南（过了很久，低声说）\n\"该死……\"\n\n音效：\n- 布料摩擦声（拉住肩膀，0.2 秒）\n- 车灯启动低频电气哼鸣（0.3 秒）\n- 后门深处寂静风声（可选）"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC011_bg_JimmyKitchen",
@@ -69,7 +85,21 @@
     "displayName": "SC011_bg_JimmyKitchen",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": ""
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L3 James 销毁《艾斯弗德狂想曲》节目单",
+        "resName": "l3_james_burn_program_01",
+        "loop": 3,
+        "req": "**美术资产**：`l3_james_burn_program_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L3 / 9009 James 厨房（2F）\n类型：🔵 插入剧情（id: U9-L3-INT-01）\n触发条件：Zack 推开 2F James 厨房门即触发（无需玩家其他操作）\n\n叙事作用：\n- 玩家撞见 James 主动销毁《艾斯弗德狂想曲》节目单——抢到的碎片只剩曲目名（\"艾斯弗德狂想\"\"爵士风暴\"），无演奏时间\n- 表面\"印错了不能用\"是借口，真实意图是销毁鼓点高潮时段证据（L5 R1 鼓点诡计的反向设计）\n- 9306 节目单碎片是 L5 R1 的陷阱证据——如玩家在指证时直接用碎片，因无演奏时间会失败；为后续 L5 完整节目单 9501 的对比铺设\n- James 动作短促，说完就走，不留追问空间——保持\"普通厨师\"伪装\n\n在场角色：Zack、James\n\n音效：\n- 火焰呼啸 + 纸页焦化爆裂\n- 木门推开吱呀声\n- James 鞋底转身脚步声\n\n台词：\n- James（不回头，平淡）：\"印错了，不能用。\"\n- Zack（捡起碎片）：\"……艾斯弗德狂想，爵士风暴，这是今晚的演出节目单。\""
+      },
+      {
+        "name": "L5 炉锅沸溢 → James 口音暴露",
+        "resName": "l5_pot_overflow_01",
+        "loop": 5,
+        "req": "**美术资产**：`l5_pot_overflow_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L5 / 9009 James 厨房\n类型：⚡ 突发事件（无人引起的厨房事故，James 反射性脱口）\n触发条件：三条问询分支汇合后强制触发——对话进行到一半，炉子上的锅突然剧烈沸溢（高汤漫出、蒸汽冲起，或壁炉旁堆放的木柴/托盘因火势窜高而倾倒），无人引起的厨房事故\n\n叙事作用：\n- 揭示 James 是爱尔兰裔移民——\"Don't be bothering me!\"是 Hiberno-English 特有句法\n- 与 Vivian 在 23:05 门口听到的那句话完全一致（证词 9064001）→ 锁定\"23:05 隔门吼 Vivian 的人是 James，不是 Webb\"\n- 口音特征以证词 9075001 记录，供 L5 Expose R2（口音身份）使用——非物证形态，靠\"亲耳听见\"完成\n- 关键设计：James 不是对 Zack 说，而是对失控的炉火/沸溢的反射性咒骂——是他忙乱中压不住的本能反应（如果是对 Zack 说，玩家会怀疑是表演；对锅说=真实下意识）\n\n在场角色：Zack、James\n\n音效：\n- 高汤溢出咕嘟声 + 蒸汽喷射\"嘶——\"声 + 金属托盘掀翻砸地\"哐\"声（三层叠加）\n\n台词：\n- James（对锅，反射性）：\"Don't be bothering me!\"（字幕标注：Hiberno-English / 爱尔兰口音）\n- James（用\"做菜烦躁\"遮掩）：\"……抱歉，这锅不能洒。\"\n- Zack（心理旁白）：[Vivian 在门口听到的那句话……是这个声音。]"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC003_bg_TommyOffice",
@@ -77,7 +107,15 @@
     "displayName": "SC003_bg_TommyOffice",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": ""
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L2 Tommy 抽屉弹壳惊鸿一瞥",
+        "resName": "l2_tommy_drawer_01",
+        "loop": 2,
+        "req": "**美术资产**：`l2_tommy_drawer_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L2 / 9010 Tommy 办公室\n类型：⚡ 突发事件 + 证据预曝光（道具不入背包，留待 L5）\n触发条件：玩家点击 Tommy 办公桌半掩的抽屉（抽屉里有金属物件微微反光作为视觉提示）\n\n叙事作用：\n- L2 仅以\"视觉惊鸿一瞥\"形式预曝光 .45 警用弹壳（item 9506），玩家此时不获得任何道具\n- 留待 L5 Tommy 交付信任后才从抽屉取出——是 Tommy 角色弧线\"从拒绝到信任\"的物理凭据\n- 弹底印记 \"MILLER ARMS\" 与本案 9401 同批次——为 L4-L5 米勒集团线埋伏笔\n\n在场角色：Zack、Tommy\n\n音效：\n- 抽屉拉开木头摩擦声\n- 抽屉砸进桌体\"啪\"脆响\n\n台词：\n- Zack（看到弹壳）：\"带着底印的警用弹壳？你留着这玩意儿当护身符？\"\n- Tommy（推抽屉锁死）：\"这是我自己的事。跟今晚的案子没半点关系。\"\n- Zack（退后）：\"行。你的地盘。\""
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC008_bg_WebbOffice",
@@ -125,7 +163,15 @@
     "displayName": "SC006_bg_MorrisonHomeStudy",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": ""
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L6 Whale 调查电话",
+        "resName": "l6_whale_call_01",
+        "loop": 6,
+        "req": "**美术资产**：`l6_whale_call_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L6 / 9016 Morrison 家书房\n类型：🔵 插入剧情（id: U9-L6-INT-01）\n触发条件：玩家在 9016 书房疑点 9601 condition 满足后（9603 + 9604 均已获取），书房电话铃骤响 → 玩家点击书房电话才触发该突发事件（铃响是状态展示，不强制 cutscene；玩家要主动接电话）。全程不切场景：Zack 始终在 9016 书房；Emma 始终在 9013 客厅放风见证；Mrs. Morrison 始终在厨房未察觉\n\n叙事作用：\n- Whale 首次以声音形式直接登场——此前他只是\"影子\"，现在有了声音\n- 叫 Zack 的姓 = 全知凝视的第一个具体物证（他知道你的名字，他从一开始就在看）\n- 把 James 的死轻巧带过为\"差一点上岸的孩子\"——犬儒到底，James 在他眼里只是用过的工具\n- 挂断不等 Zack 回答——Whale 不与 Zack 平等对话，他只是\"宣告\"\n- Unit9 结束后 Whale 的形象依然是\"空头像\"——玩家知道有这个人，但不知道他是谁\n\n在场角色：Zack、Emma、Whale（声音）、Mrs. Morrison（不出场）\n\n音效：\n- 电话铃声（持续作环境音）\n- 听筒被按起的卡哒声 + 铃声戛然而止\n- 电话另一端约两秒呼吸声\n- 电话挂断\"咔哒\"脆响\n\n台词参考（最终以草稿 909001005 为准）：\n- Whale：\"Brennan。\"\n- \"你比我想的有耐心。\"\n- \"James 那个孩子可惜了——他差一点就上岸。\"\n- [压轴宣告]"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC014_bg_CabaretSecondFloorCorridor",
@@ -157,7 +203,15 @@
     "displayName": "SC9021_bg_BlueMoonEntrance",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": ""
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L1 酒保拒绝 → Emma 暗语引路",
+        "resName": "l1_barkeeper_passcode_01",
+        "loop": 1,
+        "req": "**美术资产**：`l1_barkeeper_passcode_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L1 / 9004 蓝月亮酒吧大门口\n类型：嵌在 L1 Opening cutscene 起始瞬间（无玩家操作）\n触发条件：游戏开场自动进入 L1 Opening；该方格漫画位于 Opening 最起始，先于 Zack/Emma 进入大堂、先于 23:30 枪响\n\n叙事作用：\n- 开篇第一组角色基调——确立 Zack\"褪色风衣的私家侦探\"与 Emma\"已经混进上流圈的女记者\"的反差关系\n- 通过\"King Oliver sent us.\"暗号点明蓝月亮的地下俱乐部属性（禁酒令背景）\n- Emma 报暗号的从容感为后续她\"主动引路\"的角色定位埋伏笔\n\n在场角色：酒保、Emma、Zack\n\n音效：\n- 关门声脆响\n- 三道插销依次拉开（\"咔哒——咔哒——咔哒\"，由内向外）\n- Emma 入场前奏（脚步声 / 衣料摩擦声，可选）"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9022_bg_StreetCorner",
@@ -478,7 +532,15 @@
     "displayName": "SC2606_bg_SacredHeartHospital_MargaretRoom",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2206——圣心医院三楼靠窗单人病房\n- 建筑结构（场景连通）：同 2206\n- 时间状态：1925 年 11/12 上午，L6 开篇——承接特殊场景需求 §7 末 Zack/Emma 赶到医院（衔接特殊场景需求 §8）\n- 环境痕迹：病房光线柔和，窗外有高架铁路的隆隆声远远传来；Margaret 苏醒坐在床上神情平静但疲惫——身上有淤伤但眼睛清亮，纱布缠头；床头花瓶里有花\n- 关键道具锚点（按位）：\n  · 2601 法医鉴定报告（Foster 从医生袍口袋取出递给 Zack）\n  · 2602 房屋抵押证明（含案发前店铺内景照片，Foster 同步交付）\n  · 2603 医用镊子 15cm（Foster 借给 Zack，前往 2601 鞋坊取出 2605 眼镜碎片所需，canCombined=true）\n- NPC 在场：Margaret Brennan（苏醒立绘新建：坐姿 + 纱布缠头 + 眼神清晰但身体虚弱；给出关键目击证词 2136001——8:16 街角看见戴眼镜西装男独自踉跄从鞋坊方向离开）；Foster（白大褂 + 双手交付物件 + 严肃说明姿态新立绘）；Emma 在场（陪伴）\n- 画面情绪：母亲苏醒的克制重逢 + 关键目击证词解锁——Margaret 第一反应不是问自己安危而是问 Frank 案子（角色弧灵魂：鞋坊主人第一、母亲第二）；\"去把那个人找出来\"\n\n【美术参考】\n- 时代风格：与 2206 同\n- 色调：与 2206 同 + 上午晨光（与 L2 同时间段但 Margaret 状态完全不同——L2 昏迷 vs L6 坐起说话）\n- 光源：上午自然光从窗户进入（柔和均匀打在 Margaret 脸上）\n- 氛围：与 2206 同 + Margaret 坐姿苏醒新立绘（纱布缠头+眼神清晰）、Foster 从医生袍口袋取出三件物证的姿态、三件物证 2601/2602/2603 的道具特写帧\n- 跨 Loop 注：本图复用 2206 底图基础 + L6 时态差异——Margaret 苏醒坐起、Foster 在场交付物证、上午晨光（特殊场景需求 §8）"
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：圣心医院三楼靠窗单人病房——一张床、床头柜、窗边座椅、基础监护设备。\n- 建筑结构（场景连通）：这是 Margaret 病房的对话/AVG 场景，不承担探索场景功能。\n- 时间状态：1925 年 11/12 上午，L6 开篇后段——Margaret 苏醒，Foster 在场，Zack/Emma 到达病房。\n- 关键道具锚点：无可拾取证据/道具。2601 法医鉴定报告、2602 房屋抵押证明、2603 医用镊子统一归入“圣心医院”探索场景需求；病房中只作为剧情交付/对白提及，不作为场景内可搜证物。\n- NPC 在场：Margaret Brennan（苏醒坐姿，纱布缠头，身体虚弱但眼神清醒）；Foster（白大褂，严肃说明）；Emma（陪伴）。\n- 画面情绪：母亲苏醒后的克制重逢，以及关键线索即将被交付的安静压力。\n\n【美术参考】\n- 时代风格：1920s 芝加哥私立教会医院单人病房，白色墙面、木地板、黄铜床栏。\n- 色调：白、浅木色、浅蓝监护设备，上午自然光柔和。\n- 光源：窗户自然光为主，床头灯弱补光。\n- 跨 Loop 注：病房对白底图与 2206/2406 同体系，但本场表现 Margaret 苏醒与 Foster 在场；探索证据需求不要挂在本图下。"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2621_bg_SacredHeartHospital",
+    "Name": "圣心医院",
+    "displayName": "SC2621_bg_SacredHeartHospital",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：圣心医院的独立探索场景，必须与“圣心医院 Margaret 病房”对话/AVG 场景区分。\n- 场景用途：承载医院线索相关证据/道具，不挂 NPC 对话。\n- 证据/道具：2601 法医鉴定报告、2602 房屋抵押证明、2603 医用镊子。\n- 表现重点：医院公共探索区域或取证台面，让玩家理解这些物品来自医院线索链，而不是病房里的可点击搜证物。\n- 命名说明：当前 2601/2602/2603 的道具图仍沿用 SC2606_item_* 资源名；资源命名暂不强制改，只需要归属到圣心医院探索场景。\n\n【美术参考】\n- 时代风格：1920s 私立医院公共空间或档案/取证台面。\n- 色调：白、浅木色、黄铜、浅蓝医疗器械色。\n- 光源：干净冷静的自然光或走廊灯光。\n- 氛围：消毒水、病历夹、医疗纸张、整齐但压抑的医院秩序感。"
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2316_bg_CityHall_Courthouse",

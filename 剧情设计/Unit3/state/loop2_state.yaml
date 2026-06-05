@@ -20,7 +20,7 @@ player_context:
       - "Thomas和Helen是什么关系？"
   known_facts:
     - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
-    - "楼顶有约38码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
+    - "楼顶有约37码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
     - "脚印深浅不一（🔒藏梗：实为两个体重不同的女人，Loop 4揭晓）"
     - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
     - "'失足'可能性未排除——开放性结论"
@@ -41,7 +41,6 @@ player_context:
     - "Mary被追问Helen是否在楼顶时明显心虚——快速否认，眼神闪烁"
     - "Mary报警三次家暴无人管"
     - "Thomas和Helen有'不清不楚的关系'（Mary供出Helen名字）"
-    - "Thomas钱包里有一把形状特殊的钥匙——不像普通房门钥匙"
     - "脚印深浅不一仍未解释——Mary辩称'地面不平整'"
 
 # ═══════════════════════════════════════
@@ -65,7 +64,7 @@ opening:
 
     knows:
       - "Thomas不是自杀，有女性在场"
-      - "楼顶有约38码女性脚印，深浅不一"
+      - "楼顶有约37码女性脚印，深浅不一"
       - "Morrison说Thomas打老婆，脚印十有八九是Mary的"
       - "Morrison提到Mary Sullivan住楼下"
       - "Continental银行打过招呼"
@@ -186,7 +185,7 @@ scenes:
         note: "关键——卧室梳妆台，Elizabeth Arden Rose Blush，与衬衫口红颜色完全不同（R3用）"
       - id: 3209
         name: "Mary的外出鞋"
-        note: "🔒藏梗——约38码，鞋底有楼顶灰尘。与L4 Helen的鞋外观相似同码数，脚印'深浅不一'的伏笔"
+        note: "🔒藏梗——37码小皮鞋，鞋底有楼顶灰尘。与L4 Helen的鞋外观相似同码数，脚印'深浅不一'的伏笔"
 
   # ── SC3007 St. Patrick教堂 ──
   - id: 3007
@@ -201,8 +200,31 @@ scenes:
       - id: 3208
         name: "教堂祈祷台照片"
         note: "场景道具——蜡油沿祈祷台横向流淌凝固，非正常燃尽的圆形蜡池"
+    npcs:
+      priest_001:
+        # ── 基本信息 ──
+        talk: priest_001
+        is_liar: false
+        motive: "无意中提供Mary案发当晚行迹的旁证，承担氛围与主题功能"
+        mindset: "平静虔诚——对夜晚来访的信众印象深刻，对尘世困苦抱同情"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "当晚看到Mary在教堂祈祷，但停留时间极短就离开了"
+          - "人们做某些事之前，会先到教堂寻求神的允许"
+          - "Thomas以前也来祈祷过"
+
+        withheld_topics: []
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry: '"Morrison指名Mary Sullivan，教堂神父是唯一第三方证人" # 6'
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3206001  # 神父证词：当晚看到Mary祈祷，停留极短；Thomas以前也来过（氛围/主题）
+        # 注：神父证词仅作疑点/氛围支撑，不进Mary指证的usable_evidence
   # ── SC3005 法医办公室（⏸️无新线索） ──
-  # 钥匙(3102)+纤维(3105)已合并到L1 Foster首次尸检时移交，L2不再需要去法医办公室
+  # 纤维(3105)已合并到L1 Foster首次尸检时移交，L2不再需要去法医办公室
 
   # ── SC3001 楼下现场 ──
   # 📌 报纸天气版(3108)已移至L1 SC3001搜证获取，L2 Expose R2跨循环引用
@@ -210,7 +232,7 @@ scenes:
   # ── SC3002 楼顶（⏸️无新线索） ──
   - id: 3002
     name: "Thomas公寓楼顶"
-    # L2无新证据，L1证据（脚印、护栏灰尘、Jameson空瓶）继承可查看
+    # L2无新证据，L1证据（脚印3103/3104、Jameson空瓶3107）继承可查看；护栏核心区仍被警戒线封锁，L3才开放
 
 # ═══════════════════════════════════════
 # 派生证据说明
@@ -328,7 +350,7 @@ doubts:
     unlock_condition: "item:3105 + item:3205"
   - id: 3014
     text: "Thomas只喝$0.10廉价酒——楼顶那瓶$3的Jameson不可能是Thomas自己带上去的"
-    unlock_condition: "item:3217 + item:3107"
+    unlock_condition: "item:3217"
     # 3217=Thomas家廉价酒(L2 SC3003获得) + 3107=楼顶Jameson空瓶(L1 SC3002获得)
 
 # ═══════════════════════════════════════
@@ -337,9 +359,9 @@ doubts:
 
 validation_status:
   cross_check: "PENDING"
-  structure_completeness: "2026-03-30 PASS（3205/3207移至SC3013 body_search，3212删除）"
+  structure_completeness: "2026-03-30 PASS（3205/3207移至SC3013 body_search，3212删除）/ 2026-06-05 V2迁移（删post_expose钥匙条目；3209改37码；新增神父NPC；护栏注释更新）"
   evidence_coverage: "2026-03-30 PASS"
-  npc_entries: "2026-03-30 PASS"
+  npc_entries: "2026-06-05 PASS（新增SC3007神父NPC priest_001，含3206001证词）"
   goal_alignment: "2026-03-30 PASS"
   info_pacing: "2026-03-30 PASS"
   expose: "2026-03-30 PASS（R4改用3205直接指证，3212已删除）"

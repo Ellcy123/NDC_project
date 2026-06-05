@@ -540,6 +540,24 @@
             color: var(--text);
             font-weight: 850;
             overflow-wrap: anywhere;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+        .art-event-badge {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid color-mix(in srgb, var(--brick) 72%, var(--rule));
+            border-radius: 999px;
+            padding: 0.08rem 0.45rem;
+            background: color-mix(in srgb, var(--brick) 18%, transparent);
+            color: #f2b0a8;
+            box-shadow: 0 0 0 1px rgba(184, 64, 64, 0.12) inset;
+            font-size: 0.68rem;
+            font-weight: 850;
+            line-height: 1.45;
+            white-space: nowrap;
         }
         .art-scene-meta {
             margin-top: 0.22rem;
@@ -8929,6 +8947,32 @@
             `;
         },
 
+        renderArtEventRows(events) {
+            if (!events.length) {
+                return `<div class="flow-list-sub">这张底图没有配置突发事件动态漫画。</div>`;
+            }
+            return `
+                <div class="art-scene-event-list">
+                    ${events.map(e => {
+                        const loopText = e.loop ? `L${e.loop}` : '未填循环';
+                        const name = e.name || e.title || e.id || '未命名突发事件';
+                        const resName = e.resName || e.asset || e.file || '';
+                        const req = e.req || e.requirement || e.ArtRequirement || e.description || '';
+                        return `
+                            <div class="art-evidence-row art-event-row" title="Open art asset detail" role="button" tabindex="0" onclick="UI.showArtAssetModal('${escapeHtml(e.__assetFile || '')}')">
+                                <div class="art-evidence-main">
+                                    <div class="art-evidence-title">${escapeHtml(name)}</div>
+                                    <div class="art-evidence-sub">突发事件 &middot; ${escapeHtml(loopText)}${resName ? ` &middot; ${escapeHtml(resName)}` : ''}</div>
+                                </div>
+                                ${req ? `<div class="art-evidence-desc">${escapeHtml(req)}</div>` : ''}
+                                <span class="art-status ok">已配置</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        },
+
         renderSceneArtCard(row) {
             const asset = row.asset;
             const kind = this.assetKind(asset) || 'unknown';
@@ -8937,24 +8981,26 @@
             const assetKey = this.assetRowKey(row);
             const expanded = this.expandedAssets.has(assetKey);
             const evidenceItems = isExplore ? row.evidenceItems : [];
+            const artEvents = (asset?.events || []).map(e => ({ ...e, __assetFile: bgName }));
             const mounts = asset ? DataManager.npcMountsForBg(asset.id) : [];
             const sceneText = row.scenes.length
                 ? row.scenes.map(scene => `${scene.sceneName || `场景 ${scene.sceneId}`}（${scene.sceneId} / L${scene.loop || '?'}）`).join('；')
                 : '没有 SceneConfig 使用这张底图';
             const briefScenes = row.scenes.length ? `使用场景 ${row.scenes.length}` : '未被场景使用';
             const evidenceBrief = isExplore ? `证据/道具 ${evidenceItems.length}` : '对话底图不挂证据';
+            const eventBrief = artEvents.length ? `\u7a81\u53d1\u4e8b\u4ef6 ${artEvents.length}` : '\u65e0\u7a81\u53d1\u4e8b\u4ef6';
             const artBrief = asset?.ArtRequirement ? '底图需求已填' : '底图需求未填';
             const kindLabel = isExplore ? '探索场景底图' : (kind === 'dialogue' ? '对话场景底图' : '未分类底图');
             return `
                 <article class="art-scene-card ${kind === 'dialogue' ? 'dialogue' : ''} ${expanded ? 'expanded' : 'collapsed'}">
                     <div class="art-scene-head">
                         <div>
-                            <div class="art-scene-title">${escapeHtml(asset?.Name || bgName || '未命名底图')}${asset?._missingAsset ? ' · 未登记' : ''}</div>
+                            <div class="art-scene-title"><span>${escapeHtml(asset?.Name || bgName || '\u672a\u547d\u540d\u5e95\u56fe')}${asset?._missingAsset ? ' &middot; \u672a\u767b\u8bb0' : ''}</span>${artEvents.length ? `<span class="art-event-badge">${escapeHtml(eventBrief)}</span>` : ''}</div>
                             <div class="art-scene-meta">
                                 ${escapeHtml(kindLabel)}
                                 ${bgName ? ` · <span class="copy-tag" onclick="event.stopPropagation(); copyText('${escapeHtml(bgName)}', this)">${escapeHtml(bgName)}</span>` : ''}
                             </div>
-                            <div class="art-scene-brief">${escapeHtml(briefScenes)} · ${escapeHtml(evidenceBrief)} · ${escapeHtml(artBrief)}</div>
+                            <div class="art-scene-brief">${escapeHtml(briefScenes)} &middot; ${escapeHtml(evidenceBrief)} &middot; ${escapeHtml(eventBrief)} &middot; ${escapeHtml(artBrief)}</div>
                         </div>
                         <div class="art-scene-actions">
                             <button class="btn primary" onclick="ArtOverviewView.toggleAssetExpanded('${escapeHtml(assetKey)}')">${expanded ? '收起' : '展开'}</button>
@@ -8972,6 +9018,10 @@
                         <div>
                             <div class="art-scene-section-title">人物挂载 · ${mounts.length}</div>
                             ${this.renderNpcMounts(mounts)}
+                        </div>
+                        <div>
+                            <div class="art-scene-section-title">\u7a81\u53d1\u4e8b\u4ef6\u52a8\u6001\u6f2b\u753b &middot; ${artEvents.length}</div>
+                            ${this.renderArtEventRows(artEvents)}
                         </div>
                         <div>
                             <div class="art-scene-section-title">${isExplore ? `场景内证据 / 道具 · ${evidenceItems.length}` : '证据 / 道具'}</div>
