@@ -818,6 +818,80 @@
             color: var(--text-secondary);
             line-height: 1.45;
         }
+        .flow-opening-preview {
+            margin-top: 0.7rem;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.18);
+        }
+        .flow-opening-brief {
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 0.55rem;
+        }
+        .flow-opening-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+        .flow-opening-play-card {
+            appearance: none;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.6rem;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--brick);
+            border-radius: 2px;
+            background:
+                repeating-linear-gradient(45deg, rgba(184,64,64,.46) 0 2px, rgba(20,5,5,.58) 2px 7px),
+                rgba(20, 5, 5, .9);
+            color: var(--parchment);
+            cursor: pointer;
+            text-align: left;
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.85),
+                0 0 12px rgba(184,64,64,.45),
+                inset 0 0 0 1px rgba(184,64,64,.35),
+                0 10px 16px -10px rgba(0,0,0,.9);
+            transition: transform .16s ease-out, border-color .15s ease-out, background .15s ease-out, box-shadow .15s ease-out;
+        }
+        .flow-opening-play-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold);
+            background:
+                repeating-linear-gradient(45deg, rgba(184,64,64,.56) 0 2px, rgba(20,5,5,.64) 2px 7px),
+                rgba(24, 7, 7, .94);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.85),
+                0 0 16px rgba(232,198,120,.34),
+                inset 0 0 0 1px rgba(232,198,120,.22),
+                0 12px 18px -10px rgba(0,0,0,.95);
+        }
+        .flow-opening-play-title {
+            display: block;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+        .flow-opening-play-meta {
+            display: block;
+            margin-top: 0.28rem;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+        .flow-opening-play-action {
+            flex: 0 0 auto;
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
         .flow-chip-row {
             display: flex;
             flex-wrap: wrap;
@@ -3974,10 +4048,23 @@
     }
 
     // ===== Configuration =====
-    // avg_editor_v2: server.py 作为根服务，挂载点见 server.py 注释
+    // 本地由 avg_editor_v2/server.py 挂载 /data；Vercel 直接按仓库静态目录访问。
     const Config = {
-        get mode() { return 'local'; },
+        get mode() {
+            const host = location.hostname;
+            return (host.includes('vercel.app') || host !== 'localhost' && host !== '127.0.0.1')
+                ? 'vercel'
+                : 'local';
+        },
         get paths() {
+            if (this.mode === 'vercel') {
+                return {
+                    tableData: '/avg_editor_v2/data/table',
+                    loopConfig: '/avg_editor_v2/data',
+                    assets: '/Assets/Resources',
+                    avgData: '/AVG'
+                };
+            }
             return {
                 tableData: '/data/table',
                 loopConfig: '/data',
@@ -4189,8 +4276,16 @@
             const chapter = AppState.chapterConfigMap ? AppState.chapterConfigMap.get(chapterId) : null;
             if (chapter) {
                 AppState.loopData = {
+                    id: loop,
+                    loop: loopNum,
+                    chapterId,
                     title: (chapter.chapterTitle || [''])[0] || '',
+                    brief: (chapter.chapterBrief || [''])[0] || '',
                     target: (chapter.chapterGoal || [''])[0] || '',
+                    goal: (chapter.chapterGoal || [''])[0] || '',
+                    openingBrief: (chapter.openingBrief || [''])[0] || '',
+                    initTalk: chapter.initTalk || '',
+                    initScene: chapter.initScene || '',
                     time: '',
                     _derived: true,
                 };
@@ -4316,7 +4411,8 @@
                 videoEpisode: entry.videoEpisode || '',
                 videoLoop: entry.videoLoop || '',
                 videoScene: entry.videoScene || '',
-                videoId: entry.videoId ? String(entry.videoId) : ''
+                videoId: entry.videoId ? String(entry.videoId) : '',
+                openingBrief: entry.openingBrief || null
             };
         },
 
@@ -4671,23 +4767,76 @@
             return scene.ItemIDs.filter(id => !this.getItem(id));
         },
 
-        // Find talk file (videoScene) where given NPC id is the primary non-Zack speaker
-        // Used when SceneConfig.NPCInfos[i].TalkInfo.id is empty (Unit9 case)
+        talkEntriesByScene(videoScene) {
+            const sceneName = String(videoScene || '').trim();
+            if (!sceneName) return [];
+            return AppState.allTalks
+                .filter(t => String(t.videoScene || '') === sceneName)
+                .sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id));
+        },
+
+        firstTalkIdByScene(videoScene) {
+            const entries = this.talkEntriesByScene(videoScene);
+            return entries.length > 0 ? String(entries[0].id || '') : '';
+        },
+
+        // Preferred NPC entry contract:
+        // TalkInfo/LoopTalkInfo.videoScene names the AVG JSON file, and .id names the first Talk.
+        // NPC speaker/name inference is kept only as a historical fallback for incomplete rows.
+        resolveNpcTalkEntry(entry, npcId, opts = {}) {
+            const label = opts.label || 'TalkInfo';
+            const allowFallback = opts.allowFallback !== false;
+            const id = String(entry?.id || '').trim();
+            const videoScene = String(entry?.videoScene || '').trim();
+
+            if (videoScene && id) {
+                const talk = this.getTalk(id);
+                if (!talk) {
+                    return { ok: false, id: '', videoScene, message: `${label} 配置错误：找不到 Talk ${id}（${videoScene}.json）` };
+                }
+                if (talk.videoScene && String(talk.videoScene) !== videoScene) {
+                    return { ok: false, id: '', videoScene, message: `${label} 配置不一致：Talk ${id} 不属于 ${videoScene}.json，而属于 ${talk.videoScene}.json` };
+                }
+                return { ok: true, id, videoScene, source: 'explicit' };
+            }
+
+            if (videoScene) {
+                const firstId = this.firstTalkIdByScene(videoScene);
+                if (!firstId) {
+                    return { ok: false, id: '', videoScene, message: `${label} 配置错误：找不到 ${videoScene}.json 的对话数据` };
+                }
+                return { ok: true, id: firstId, videoScene, source: 'videoScene' };
+            }
+
+            if (id) {
+                const talk = this.getTalk(id);
+                if (!talk) {
+                    return { ok: false, id: '', videoScene: '', message: `${label} 配置错误：找不到 Talk ${id}` };
+                }
+                return { ok: true, id: String(talk.id || id), videoScene: talk.videoScene || '', source: 'legacy-id' };
+            }
+
+            if (allowFallback) {
+                const fallbackId = this.findTalkForNPC(npcId);
+                if (fallbackId) {
+                    const talk = this.getTalk(fallbackId);
+                    return { ok: true, id: String(fallbackId), videoScene: talk?.videoScene || '', source: 'npc-fallback' };
+                }
+            }
+
+            return { ok: false, id: '', videoScene: '', message: `${label} 未配置对话入口` };
+        },
+
+        // Find talk file (videoScene) where given NPC id is the primary non-Zack speaker.
+        // Historical fallback only; new SceneConfig rows should use TalkInfo.videoScene + TalkInfo.id.
         findTalkForNPC(npcId) {
             if (!npcId) return '';
             const sid = String(npcId);
-            // Helper: find first talk ID by videoScene name
-            const firstIdByScene = (sceneName) => {
-                const entries = AppState.allTalks
-                    .filter(t => t.videoScene === sceneName)
-                    .sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id));
-                return entries.length > 0 ? entries[0].id : '';
-            };
             // convertAVGTalk stores Speaker.id as raw number (e.g. "807"), no "NPC" prefix
             // Try direct match (design ID 907)
             for (const talk of AppState.allTalks) {
                 if (talk.Speaker?.id === sid && talk.videoScene) {
-                    return firstIdByScene(talk.videoScene) || talk.id;
+                    return this.firstTalkIdByScene(talk.videoScene) || talk.id;
                 }
             }
             // Fallback: 9XX → 8XX (EPI09 uses 8XX NPC codes)
@@ -4695,7 +4844,7 @@
                 const epiId = '8' + sid.slice(1);
                 for (const talk of AppState.allTalks) {
                     if (talk.Speaker?.id === epiId && talk.videoScene) {
-                        return firstIdByScene(talk.videoScene) || talk.id;
+                        return this.firstTalkIdByScene(talk.videoScene) || talk.id;
                     }
                 }
             }
@@ -4706,7 +4855,7 @@
                 if (npcName) {
                     for (const talk of AppState.allTalks) {
                         if (talk.Speaker?.Name?.[0] === npcName && talk.videoScene) {
-                            return firstIdByScene(talk.videoScene) || talk.id;
+                            return this.firstTalkIdByScene(talk.videoScene) || talk.id;
                         }
                     }
                 }
@@ -4925,10 +5074,14 @@
             const hasRes  = !!resPath;
 
             // Talk / LoopTalk 入口(仅场景上下文)
-            const talkId = sceneInfo
-                ? (sceneInfo.TalkInfo?.id || DataManager.findTalkForNPC(npc.id) || '')
-                : '';
-            const loopTalkId = sceneInfo?.LoopTalkInfo?.id || '';
+            const talkResolved = sceneInfo
+                ? DataManager.resolveNpcTalkEntry(sceneInfo.TalkInfo, npc.id, { label: 'TalkInfo' })
+                : { ok: false, id: '' };
+            const loopTalkResolved = sceneInfo
+                ? DataManager.resolveNpcTalkEntry(sceneInfo.LoopTalkInfo, npc.id, { label: 'LoopTalkInfo', allowFallback: false })
+                : { ok: false, id: '' };
+            const talkId = talkResolved.ok ? talkResolved.id : '';
+            const loopTalkId = loopTalkResolved.ok ? loopTalkResolved.id : '';
 
             // 角色身份
             const roleMap = {'1':'主角','2':'搭档','3':'关键NPC','4':'受害者','5':'NPC','6':'嫌疑人'};
@@ -4944,7 +5097,7 @@
             `;
             titleEl.dataset.itemId = '';
 
-            // ============ Section 1: 立绘 + 资源名 + 美术需求 ============
+            // ============ Section 1: 立绘 ============
             let html = `<section class="npc-section npc-portrait-section">`;
             html += `<div class="npc-portrait ${hasRes ? '' : 'missing'}">`;
             if (hasRes) {
@@ -4954,10 +5107,6 @@
             }
             html += `</div>`;
             html += `<div class="npc-portrait-meta">`;
-            if (npc.ArtRequirement) {
-                html += `<div class="smallcap">美术需求</div>`;
-                html += `<div class="npc-art-req">${escapeHtmlWithBr(npc.ArtRequirement)}</div>`;
-            }
             if (!resPath) {
                 html += `<div class="art-missing">[!] NPCInfo.ResPath 未填,场景里没有指定立绘</div>`;
             }
@@ -4985,7 +5134,10 @@
                 html += `<div class="avg-ctx mono">`;
                 if (sceneName) html += `<span class="avg-ctx-scene">${escapeHtml(sceneName)}</span>`;
                 if (sceneName && cnName) html += `<span class="avg-ctx-sep">·</span>`;
-                html += `<span class="avg-ctx-desc">${escapeHtml(cnName)} · ${talkId || loopTalkId ? '点击 stage 播放' : '无对话'}</span>`;
+                const unresolved = (!talkId && !loopTalkId && (talkResolved.message || loopTalkResolved.message))
+                    ? `无对话 · ${talkResolved.message || loopTalkResolved.message}`
+                    : '无对话';
+                html += `<span class="avg-ctx-desc">${escapeHtml(cnName)} · ${talkId || loopTalkId ? '点击 stage 播放' : unresolved}</span>`;
                 html += `</div>`;
             }
 
@@ -6512,6 +6664,49 @@
             }
         },
 
+        renderOpeningStage(loop, stage) {
+            const items = (typeof FlowView !== 'undefined' && FlowView.resolveOpeningItems)
+                ? FlowView.resolveOpeningItems(loop)
+                : [];
+            const item = items[0] || {};
+            const firstId = String(item.firstId || stage?.refs?.talkId || loop.initTalk || '').trim();
+            const sceneId = String(item.id || stage?.refs?.sceneId || loop.initScene || '').trim();
+            const talk = firstId ? DataManager.getTalk(firstId) : null;
+            const talkFile = item.talk || talk?.videoScene || '';
+            const entries = talkFile ? DataManager.talkEntriesByScene(talkFile) : [];
+            const scene = sceneId ? DataManager.getScene(sceneId) : null;
+            const sceneName = scene?.sceneName || (sceneId ? `场景 ${sceneId}` : '开篇');
+            const brief = item.purpose || loop.openingBrief || '';
+            const loaded = entries.length > 0 || !!talk;
+            const sub = talkFile ? `${talkFile}.json · 首句 #${firstId}` : `首句 #${firstId}`;
+            const title = escapeHtml(sceneName).replace(/'/g, '&apos;');
+            const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+            const playAction = firstId
+                ? `UI.playTalkInDrawer('${escapeHtml(firstId)}', 'OPENING', '${title}', '${safeSub}')`
+                : '';
+
+            return `
+                <div class="flow-opening-preview">
+                    ${brief ? `<div class="flow-opening-brief">${escapeHtml(brief)}</div>` : ''}
+                    <div class="flow-opening-row">
+                        <span>${escapeHtml(sceneName)}${sceneId ? ` · ${escapeHtml(sceneId)}` : ''}</span>
+                        ${talkFile ? `<span>${escapeHtml(talkFile)}.json</span>` : ''}
+                        ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : '<span>未配置首句</span>'}
+                        ${loaded ? `<span>${entries.length || 1} 句</span>` : '<span style="color:var(--warning);">未加载</span>'}
+                    </div>
+                    ${firstId && loaded ? `
+                        <button type="button" class="flow-opening-play-card" onclick="${playAction}">
+                            <span>
+                                <span class="flow-opening-play-title">播放开篇对白</span>
+                                <span class="flow-opening-play-meta">${escapeHtml(sceneName)}${talkFile ? ` · ${escapeHtml(talkFile)}.json` : ''} · 首句 #${escapeHtml(firstId)} · ${entries.length || 1} 句</span>
+                            </span>
+                            <span class="flow-opening-play-action">打开</span>
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+        },
+
         renderStages(loop) {
             const stages = loop.flow || [];
             if (!stages.length) {
@@ -6519,6 +6714,7 @@
             }
             let html = `<div class="flow-stage-list">`;
             stages.forEach((stage, idx) => {
+                const openingExtra = stage.type === 'opening' ? this.renderOpeningStage(loop, stage) : '';
                 html += `
                     <div class="flow-stage">
                         <div class="flow-stage-title">
@@ -6526,6 +6722,7 @@
                             <span class="flow-stage-type">${escapeHtml(stage.type || '')}</span>
                         </div>
                         <div class="flow-stage-summary">${escapeHtml(stage.summary || '')}</div>
+                        ${openingExtra}
                     </div>
                 `;
             });
@@ -8899,6 +9096,39 @@
 
     // ===== Flow View =====
     const FlowView = {
+        openingBriefText(value) {
+            if (!value) return '';
+            if (Array.isArray(value)) return value[0] || '';
+            if (typeof value === 'object') return value.cn || value.zh || value.text || '';
+            return String(value);
+        },
+
+        resolveOpeningItems(loop) {
+            if (Array.isArray(loop?.opening) && loop.opening.length > 0) return loop.opening;
+
+            const chapter = DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop);
+            const initTalk = String(loop?.initTalk || chapter?.initTalk || '').trim();
+            const initScene = String(loop?.initScene || chapter?.initScene || '').trim();
+            if (!initTalk && !initScene) return [];
+
+            const talk = initTalk ? DataManager.getTalk(initTalk) : null;
+            const talkFile = talk?.videoScene || '';
+            const purpose = this.openingBriefText(chapter?.openingBrief)
+                || this.openingBriefText(talk?.openingBrief)
+                || this.openingBriefText(loop?.openingBrief)
+                || this.openingBriefText(chapter?.chapterBrief)
+                || loop?.brief
+                || '';
+
+            return [{
+                id: initScene,
+                talk: talkFile,
+                firstId: initTalk,
+                purpose,
+                _source: 'ChapterConfig.initTalk'
+            }];
+        },
+
         showScene(sceneId, autoPlayTalkId) {
             AppState.previousPhase = AppState.currentPhase || 'opening';
             AppState.currentPhase = 'scene';
@@ -8934,6 +9164,11 @@
                     String(typeof item === 'object' ? item.id : item) === String(sceneId)
                 );
                 if (openingMeta && typeof openingMeta !== 'object') openingMeta = null;
+            }
+            if (!openingMeta) {
+                openingMeta = this.resolveOpeningItems(loopRef).find(item =>
+                    String(item?.id || '') === String(sceneId)
+                ) || null;
             }
 
             let html = `
@@ -8971,8 +9206,8 @@
                 }
                 if (openingMeta.talk) {
                     const fileName = openingMeta.talk;
-                    const entries = AppState.allTalks.filter(t => t.videoScene === fileName);
-                    const firstId = entries.length > 0 ? entries[0].id : '';
+                    const entries = DataManager.talkEntriesByScene(fileName);
+                    const firstId = openingMeta.firstId || (entries.length > 0 ? entries[0].id : '');
                     html += `<div style="display:flex; align-items:center; gap:0.75rem; margin:0.5rem 0; flex-wrap:wrap;">`;
                     html += `<span class="copy-tag" onclick="copyText('${escapeHtml(fileName)}', this)">📄 ${escapeHtml(fileName)}.json</span>`;
                     if (entries.length > 0) {
@@ -8980,10 +9215,18 @@
                     } else {
                         html += `<span style="color:var(--warning); font-size:0.8rem;">(未加载)</span>`;
                     }
-                    if (firstId) {
-                        html += `<button class="btn" onclick="DialogController.startFromTalkId('${firstId}')" style="font-size:0.85rem; padding:0.3rem 0.8rem;">▶ 播放</button>`;
-                    }
                     html += `</div>`;
+                    if (firstId) {
+                        html += `
+                            <button type="button" class="flow-opening-play-card" onclick="DialogController.startFromTalkId('${firstId}')">
+                                <span>
+                                    <span class="flow-opening-play-title">播放开篇对白</span>
+                                    <span class="flow-opening-play-meta">${escapeHtml(scene.sceneName)} · ${escapeHtml(fileName)}.json · 首句 #${escapeHtml(firstId)} · ${entries.length || 1} 句</span>
+                                </span>
+                                <span class="flow-opening-play-action">打开</span>
+                            </button>
+                        `;
+                    }
                 }
             }
 
@@ -9047,9 +9290,10 @@
                 html += `<div class="section-title">NPC (${npcInfos.length}) — 点击场景中的人物或下方按钮开始对话</div>`;
                 npcInfos.forEach((info, npcIdx) => {
                     const npcName = info.NPC?.Name?.[1] || cn(info.NPC?.Name) || info.NPC?.id || '?';
-                    // Auto-fallback: when TalkInfo.id is empty, infer from loaded AVG talks by NPC speaker (Unit9 case)
-                    const talkId = info.TalkInfo?.id || DataManager.findTalkForNPC(info.NPC?.id) || '';
-                    const loopTalkId = info.LoopTalkInfo?.id || '';
+                    const talkResolved = DataManager.resolveNpcTalkEntry(info.TalkInfo, info.NPC?.id, { label: 'TalkInfo' });
+                    const loopTalkResolved = DataManager.resolveNpcTalkEntry(info.LoopTalkInfo, info.NPC?.id, { label: 'LoopTalkInfo', allowFallback: false });
+                    const talkId = talkResolved.ok ? talkResolved.id : '';
+                    const loopTalkId = loopTalkResolved.ok ? loopTalkResolved.id : '';
                     const hasStateB = !!info.ClickResPath;
 
                     html += `<div class="npc-card">`;
@@ -9066,7 +9310,8 @@
                         html += `<button class="btn" onclick="UI.showNpcDrawerBySceneIdx(${npcIdx})">重复对话 (${loopTalkId})</button>`;
                     }
                     if (!talkId && !loopTalkId) {
-                        html += `<span style="color:var(--text-muted); font-size:0.85rem;">无对话</span>`;
+                        const msg = talkResolved.message || loopTalkResolved.message || '无对话';
+                        html += `<span style="color:var(--text-muted); font-size:0.85rem;">${escapeHtml(msg)}</span>`;
                     }
                     html += `</div></div>`;
 
@@ -9221,20 +9466,27 @@
 
             let html = '';
 
-            if (phase === 'opening' && loop.opening) {
+            const openingItems = this.resolveOpeningItems(loop);
+
+            if (phase === 'opening' && openingItems.length > 0) {
                 html = `
                     <div class="scene-title"><span class="phase-tag opening">开篇</span> ${escapeHtml(loop.title || '')}</div>
                     ${loop.target ? `<div class="phase-goal"><span class="phase-goal-label">目标</span><span class="phase-goal-text">${escapeHtml(loop.target)}</span></div>` : ''}
                 `;
 
-                loop.opening.forEach((item, idx) => {
-                    const sid = String(typeof item === 'object' ? item.id : item);
+                openingItems.forEach((item, idx) => {
+                    const itemObj = (item && typeof item === 'object') ? item : { id: item };
+                    const sid = String(itemObj.id || '');
                     const scene = DataManager.getScene(sid);
                     const sceneName = scene?.sceneName || `开场 #${idx + 1}`;
                     const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
-                    const characters = (typeof item === 'object' && item.characters) ? item.characters : [];
-                    const purpose = (typeof item === 'object' && item.purpose) ? item.purpose : '';
-                    const talkFile = (typeof item === 'object' && item.talk) ? item.talk : '';
+                    const characters = itemObj.characters || [];
+                    const purpose = itemObj.purpose || '';
+                    const firstIdFromItem = String(itemObj.firstId || itemObj.talkId || '').trim();
+                    let talkFile = itemObj.talk || '';
+                    if (!talkFile && firstIdFromItem) {
+                        talkFile = DataManager.getTalk(firstIdFromItem)?.videoScene || '';
+                    }
 
                     const clickable = !!scene;
                     const cardOpen = clickable
@@ -9272,20 +9524,27 @@
                     }
 
                     // talk file row
-                    if (talkFile) {
-                        const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
-                        const firstId = entries.length > 0 ? entries[0].id : '';
-                        const loaded = entries.length > 0;
+                    if (talkFile || firstIdFromItem) {
+                        const entries = talkFile ? DataManager.talkEntriesByScene(talkFile) : [];
+                        const firstId = firstIdFromItem || (entries.length > 0 ? entries[0].id : '');
+                        const loaded = entries.length > 0 || !!DataManager.getTalk(firstId);
                         // 点"播放"→ 侧边 drawer streaming(无论 cutscene 还是真实场景,都走 drawer)
                         const kicker = scene ? 'OPENING · SCENE' : 'OPENING · CUTSCENE';
-                        const sub = `${talkFile}.json · 首句 #${firstId}`;
+                        const sub = talkFile ? `${talkFile}.json · 首句 #${firstId}` : `首句 #${firstId}`;
                         const playAction = `UI.playTalkInDrawer('${firstId}', '${escapeHtml(kicker)}', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
                         html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
-                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
-                            <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
-                            <span class="copy-asset-name">${escapeHtml(talkFile)}.json</span>
-                            <span class="copy-asset-ico">copy</span>
-                        </span>`;
+                        if (talkFile) {
+                            html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
+                                <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                                <span class="copy-asset-name">${escapeHtml(talkFile)}.json</span>
+                                <span class="copy-asset-ico">copy</span>
+                            </span>`;
+                        } else {
+                            html += `<span class="copy-asset" title="由 ChapterConfig.initTalk 兜底生成">
+                                <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                                <span class="copy-asset-name">Talk #${escapeHtml(firstId)}</span>
+                            </span>`;
+                        }
                         if (loaded) {
                             html += `<span class="talk-meta">${entries.length} 句 · 首句 <span class="talk-meta-id">#${firstId}</span></span>`;
                         } else {
@@ -9661,10 +9920,16 @@
             const info = scene?.NPCInfos?.[npcIdx];
             if (!info) return;
 
-            const talkId = talkType === 'loopTalk'
-                ? (info.LoopTalkInfo?.id || '')
-                : (info.TalkInfo?.id || DataManager.findTalkForNPC(info.NPC?.id) || '');
-            if (!talkId) return;
+            const entry = talkType === 'loopTalk' ? info.LoopTalkInfo : info.TalkInfo;
+            const resolved = DataManager.resolveNpcTalkEntry(entry, info.NPC?.id, {
+                label: talkType === 'loopTalk' ? 'LoopTalkInfo' : 'TalkInfo',
+                allowFallback: talkType !== 'loopTalk',
+            });
+            if (!resolved.ok || !resolved.id) {
+                UI.updateStatus(resolved.message || '该 NPC 无对话入口');
+                return;
+            }
+            const talkId = resolved.id;
 
             const resA = info.ResPath ? Config.getAssetUrl(info.ResPath) : '';
             const resB = info.ClickResPath ? Config.getAssetUrl(info.ClickResPath) : '';

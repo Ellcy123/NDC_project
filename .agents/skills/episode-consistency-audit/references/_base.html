@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>一致性审计报告 — {{UNIT}}</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="page-header">
+  <h1>一致性审计报告 — {{UNIT}}</h1>
+  <div class="summary">{{SUMMARY}}</div>
+</header>
+
+<nav class="filters">
+  <label>严重度：
+    <select id="sev-filter">
+      <option value="">全部</option>
+      <option value="P0">P0 严重</option>
+      <option value="P1">P1 中度</option>
+      <option value="P2">P2 轻微</option>
+      <option value="needs_human">待定</option>
+    </select>
+  </label>
+  <label>维度：
+    <select id="dim-filter">
+      <option value="">全部</option>
+      <option value="A">A 人物档案</option>
+      <option value="B">B 称谓</option>
+      <option value="C">C 时间线</option>
+      <option value="D">D 物证</option>
+      <option value="E">E 年代用语</option>
+      <option value="F">F 声纹</option>
+      <option value="G">G 多视角</option>
+      <option value="X">X 对话兜底</option>
+    </select>
+  </label>
+  <label>Loop：
+    <select id="loop-filter">
+      <option value="">全部</option>
+      <option value="L1">Loop 1</option>
+      <option value="L2">Loop 2</option>
+      <option value="L3">Loop 3</option>
+      <option value="L4">Loop 4</option>
+      <option value="L5">Loop 5</option>
+      <option value="L6">Loop 6</option>
+    </select>
+  </label>
+  <label class="dismissed-toggle">
+    <input type="checkbox" id="show-dismissed"> 显示已驳回
+  </label>
+  <span class="counter" id="visible-count"></span>
+</nav>
+
+<main id="issue-list">
+{{ISSUES}}
+</main>
+
+<details class="dismissed-section">
+  <summary>已驳回（Phase 3 复核认为不是问题，{{DISMISSED_COUNT}} 条）</summary>
+  <div id="dismissed-list">
+{{DISMISSED}}
+  </div>
+</details>
+
+<details class="meta-conflicts">
+  <summary>事实表自相矛盾（{{META_COUNT}} 条）</summary>
+  <div id="meta-list">
+{{META_CONFLICTS}}
+  </div>
+</details>
+
+<footer>
+  <p>由 episode-consistency-audit skill 生成 · {{TIMESTAMP}}</p>
+</footer>
+
+<script>
+function applyFilter() {
+  const sev = document.getElementById('sev-filter').value;
+  const dim = document.getElementById('dim-filter').value;
+  const loop = document.getElementById('loop-filter').value;
+  let visible = 0;
+  document.querySelectorAll('#issue-list .issue').forEach(el => {
+    let show = true;
+    if (sev && el.dataset.sev !== sev) show = false;
+    if (dim && el.dataset.dim !== dim) show = false;
+    if (loop && el.dataset.loop !== loop) show = false;
+    el.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('visible-count').textContent = `显示 ${visible} 条`;
+}
+['sev-filter', 'dim-filter', 'loop-filter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', applyFilter);
+});
+applyFilter();
+</script>
+</body>
+</html>

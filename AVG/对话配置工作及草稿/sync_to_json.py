@@ -319,7 +319,7 @@ def _parse_tag_line(tag_str):
         tag_name = backtick.group(1).strip().lower()
 
     # 提取 → 后的目标（简单情况：get → 1234）
-    arrow = re.search(r"→\s*(\d+)", tag_str)
+    arrow = re.search(r"→\s*([0-9A-Za-z]+)", tag_str)
     if arrow:
         target = arrow.group(1)
 
@@ -327,7 +327,7 @@ def _parse_tag_line(tag_str):
     if tag_name == "lie":
         m_correct = re.search(r"正确证据[:：]\s*([0-9A-Za-z,+\s]+)", tag_str)
         if m_correct:
-            evs = re.findall(r"[0-9]+", m_correct.group(1))
+            evs = re.findall(r"[0-9A-Za-z]+", m_correct.group(1))
             lie_info["correct_evidence"] = evs
 
     return tag_name, target, lie_info
@@ -770,7 +770,7 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
         if target:
             # 证词 ID 是 7 位数字，证据 ID 是 4 位（1xxx）
             # 按长度推断：7 位证词直接写；4 位证据加 EV 前缀
-            if len(target) == 4:
+            if len(target) == 4 and target.isdigit():
                 p_str[0] = f"EV{target}"
             else:
                 p_str[0] = target
@@ -788,7 +788,10 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
         # Expose Lie 结构
         # ParameterStr0 = 正确证据 EV 列表（逗号分隔）
         if md_entry.lie_correct_evidence:
-            p_str[0] = ",".join(f"EV{ev}" for ev in md_entry.lie_correct_evidence)
+            p_str[0] = ",".join(
+                f"EV{ev}" if len(ev) == 4 and ev.isdigit() else ev
+                for ev in md_entry.lie_correct_evidence
+            )
         # ParameterInt0 = 正确路径 next（整数）
         if md_entry.lie_correct_next:
             try:
@@ -1023,7 +1026,7 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
     if tag == "get":
         target = md_e.script_tag_target
         if target:
-            if len(target) == 4:
+            if len(target) == 4 and target.isdigit():
                 p_str[0] = f"EV{target}"
             else:
                 p_str[0] = target
@@ -1038,7 +1041,10 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
         ent["next"] = ""
     elif is_expose and tag == "lie":
         if md_e.lie_correct_evidence:
-            p_str[0] = ",".join(f"EV{ev}" for ev in md_e.lie_correct_evidence)
+            p_str[0] = ",".join(
+                f"EV{ev}" if len(ev) == 4 and ev.isdigit() else ev
+                for ev in md_e.lie_correct_evidence
+            )
         if md_e.lie_correct_next:
             try:
                 p_int[0] = int(md_e.lie_correct_next)

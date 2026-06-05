@@ -88,7 +88,7 @@ player_context:
     - "银行撞见 Danny：他在和 Leonard 商量 Frank 的房产证（L2 偷听到的碎片信息）"
     - "O'Hara 贿赂钞票（901B / 905B）与 Tony 找零钞票（902B / 903B / 904B）拼回连号 901–905——证明资金从 Leonard 经手放贷流出，再经 O'Hara 之手分流给 Vinnie"
     - "Vinnie 催债小本子末尾写'L.R. 给的地址有问题'——证明 Vinnie 与 Leonard 的雇佣关系"
-    - "湖滨信托银行贵宾室——Moore 行长声称 Frank 因'赌博'借贷 600$，当前欠款 3,200$"
+    - "Leonard 在指证后声称 Frank 因'赌博'借贷 600$，当前欠款 3,200$；Zack 先接受这个表层说法，L3 再由 Moore 指证推翻"
     - "Leonard 假善意给的信封，市政厅门房见信连门都不开——Zack 调查陷入僵局"
 
   new_directions:
@@ -355,21 +355,43 @@ scenes:
           - 2113001  # Danny：声称 Lula "在勾引叔叔"（背景信息；L4 R3 动机参照）
 
 
-  # ── 场景 2012：湖滨信托银行-贵宾室（⚔️ 指证场景）──
+  # ── 场景 2012：湖滨信托银行-贵宾室（Moore 先手对话 + ⚔️ 指证场景）──
   - id: 2012
     name: "湖滨信托银行-贵宾室"
     type: expose_scene  # ⚔️ 指证场景
     description: |
       Moore 行长的办公室，贵宾室。
-      Mickey 和 Zack 一起进入，询问 Frank 检举银行的事。
+      Mickey 和 Zack 一起进入，先通过 moore_l3_parlor 收到 Moore 的身份与合规说法，
+      再进入 Loop3_moore 指证 Frank 贷款文件的三层问题。
       Moore 在有律师在场的压力下依然尝试用"合法"谎言应对——
       但三轮指证会依次击穿他的防线。
       R2 Moore 突然冷静："协议框架下合法，去告我吧"——故意留悬念让 Zack 自己去查协议（引出 R3）。
     evidence: []
 
     npcs:
+      moore_l3_parlor:
+        talk: moore_l3_parlor
+        stage: pre_expose_talk
+        is_liar: true
+        motive: "先手定义叙事：把 Frank 的遭遇包装成合法贷款与个人失败，试图在正式指证前压住 Zack 和 Mickey"
+        mindset: "表面礼貌从容，实际在测试 Mickey 的法律威胁有多强；把每句话都说成可辩护的商业话术"
+
+        active_topics:
+          - "自称湖滨信托银行行长，在任二十三年"
+          - "Frank 亲自签字申请贷款，银行手续全部合规，从没有针对 Frank 的犯罪行为"
+          - "把 Frank 的债务说成个人选择和赌博后果，而不是银行系统性欺诈"
+        withheld_topics:
+          - "贷款申请表是 Leonard 代签的"
+          - "Lakeshore Investment Co. 是银行规避法律的马甲"
+          - "Danny 把 Frank 房产证交给银行"
+
+        testimony_ids:
+          - 2083001  # Moore：Frank 亲自签字申请赌博贷款，银行手续全部合规（R1 谎言锚）
+          - 2083002  # Moore：湖滨信托银行行长，在任二十三年（身份信息）
+
       moore_expose:
         talk: Loop3_moore
+        prerequisite_talk: moore_l3_parlor
         is_liar: true  # Moore 是本 Loop 的 Expose 对象
         player_inquiry: null
         motive: "保护银行合法外皮；恐惧 Frank 死亡引发审计但表面镇定；在律师在场时被迫应对"
@@ -652,4 +674,3 @@ evidence_registry:
     pickup: true
     note: "关键——疑点 2302 condition；L3 R2 击破件；贷款计算玩法产出"
     description: "将贷款协议三条款（第 5/7/12 条）综合计算的分析报告。本金 600$，年单利 12%×5 年 = 360$，月管理费 50$×60 月 = 3,000$，5 年合计约 3,960$。折合年化（含管理费）约 112%，远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）。"
-

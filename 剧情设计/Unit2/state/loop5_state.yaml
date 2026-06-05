@@ -146,9 +146,9 @@ opening:
       - value: "1901"
         is_correct: false
         trap_reason: "Margaret 与 Patrick 婚戒刻字年（2405 内圈 'P & M 1901'）——别人的年份，不是 Frank 和 Lula 的"
-      - value: "1918"
+      - value: "1916"
         is_correct: false
-        trap_reason: "Leonard 改名 Russo → Ross 的年份（L2 Moore 证词 2082001）——和 Frank 无关"
+        trap_reason: "Leon 嘉奖奖杯的颁发年份（L2 物证 2208）——这是 Leonard 旧名线索，不是 Frank 和 Lula 的年份"
       - value: "1923"
         is_correct: true
         unlock: "铁盒打开，取出 2502 举报材料 + 2503 情书"
@@ -379,22 +379,27 @@ expose:
       - "语速反常：相比 L2 在酒吧时的冷静沉默，此次极度急切"
 
 # ─────────────────────────────
-# 五、指证后剧情（Foster 电话过场）
+# 五、指证后剧情（Vinnie 离场 + Foster 电话过场）
 # ─────────────────────────────
 
 post_expose_scene:
-  type: scripted_cutscene
-  talk: vinnie_l5_postexpose
-  location: "Silver Moon 赌场外街道 → 附近公用电话亭"
+  type: scripted_cutscene_sequence
+  talk: vinnie_l5_postexpose_bar
+  talk_sequence:
+    - vinnie_l5_postexpose_bar
+    - vinnie_l5_postexpose_phone
+  location: "Silver Moon 赌场 → 街角公用电话亭"
   description: |
-    Vinnie 坐上警车离去。
-    Zack 和 Emma 站在夜里，事情好像已经告一段落——但又感觉哪里不对。
-    两人走向附近的公用电话亭，打电话给 Foster 报喜，顺便问 Margaret 状况。
+    指证后先切 vinnie_l5_postexpose_bar：Vinnie 在赌场里高调认罪，
+    当众让 Tony 报警，主动去警局自首。
+    Zack 注意到这一切太快、太完整，像是早就排练好的结局。
+    随后切 vinnie_l5_postexpose_phone：Zack 和 Emma 到街角公用电话亭，
+    给 Foster 打电话报喜，却被法医结论反转。
 
   foster_phone_call:
     testimony_id: 2155001
     speaker: "Foster（电话中）"
-    content: "Margaret 已经脱离生命危险，但……有件事我得告诉你们，你们来一趟医院。Frank 似乎并不是因为火灾被烧死的——很可能是和某人博弈后的凶杀。我花了整整一天才有这个初步结论。"
+    content: "Frank 并不是因为火灾被烧死的。他很可能是和某人博弈后，被钝器打击致死。还有，Margaret 醒了，她有话要对你们说。"
     note: "L6 引擎点火；法医反转锚点；实物报告 2601 在 L6 医院取得"
 
   inventory_change:
@@ -404,7 +409,7 @@ post_expose_scene:
 
   scene_transition:
     next_loop: loop6
-    trigger: "Foster 电话内容传达后，Zack 和 Emma 决定去医院——L6 开始"
+    trigger: "Foster 电话内容传达后，Zack 和 Emma 立即赶往圣心医院——L6 开始"
 
 # ─────────────────────────────
 # 六、疑点（DoubtConfig 条目）
