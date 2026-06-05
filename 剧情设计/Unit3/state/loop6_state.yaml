@@ -22,7 +22,7 @@ player_context:
   known_facts:
     # ── L1 ──
     - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
-    - "楼顶有约38码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
+    - "楼顶有约37码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
     - "脚印深浅不一（实为两个体重不同的女人，Loop 4已揭晓）"
     - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
     - "'失足'可能性未排除——开放性结论"
@@ -36,11 +36,10 @@ player_context:
     - "Mary被追问Helen是否在楼顶时明显心虚——快速否认，眼神闪烁"
     - "Mary报警三次家暴无人管"
     - "Thomas和Helen有'不清不楚的关系'（Mary供出Helen名字）"
-    - "Thomas钱包里有一把形状特殊的钥匙——不像普通房门钥匙"
     - "脚印深浅不一仍未解释——Mary辩称'地面不平整'"
     # ── L3 ──
     - "Helen和Thomas有完整的杀妻骗保计划——$10,000人寿保险，受益人Thomas，计划推Mary坠楼伪装意外"
-    - "Helen参与准备工作：以'检查漏水'为由借钥匙串配楼顶安全门钥匙、在地面涂轮椅维护油"
+    - "Helen参与准备工作：准备期Thomas把全楼唯一天台钥匙交给Helen布置陷阱，Helen在地面涂轮椅维护油"
     - "Helen声称被Thomas胁迫参与——'他威胁毁掉我的名声'"
     - "Thomas的计划：约Mary到楼顶 → 推Mary → 地面有油Mary会打滑站不稳 → 伪装意外骗保还$12,000债务"
     - "Thomas欠Continental银行$12,000高利贷"
@@ -49,15 +48,15 @@ player_context:
     - "Bernard Wells（银行保险代理人）见证了Thomas咨询'如何让意外看起来合理'，Helen在场"
     - "Helen童年目睹父亲家暴母亲（为后续动机铺垫）"
     # ── L4 ──
-    - "Helen当晚在楼顶——门把手油迹+油迹二方比对(系统层)证明Helen独自从楼梯间侧上楼顶"
-    - "两双相似鞋子+脚印深浅不一的真相：Mary和Helen穿着相似的鞋（同码数、同类型），Loop 1的脚印是两个体重不同的女人的混合脚印"
+    - "Helen当晚在楼顶——门把手油迹+油迹二方比对(系统层)证明Helen独自从楼梯间侧（外侧）上楼顶"
+    - "两双相似鞋子+脚印深浅不一的真相：Mary和Helen穿着相似的鞋（同码数37码、同类型），Loop 1的脚印是两个体重不同的女人的混合脚印"
     - "Jameson威士忌是Helen从家里带上楼顶的——母亲去世后留着的'药酒'"
     - "Helen持续给Thomas灌酒——0.25%需要持续补充至少一小时，不是'看一眼就走了'"
     - "Helen解释'心软'：以为Thomas只是想吓唬Mary，直到那晚确认要动手才决定灌醉他阻止"
     - "Thomas扑向Mary时Helen从身后拉住Thomas，Mary推开Thomas，Thomas失去平衡翻过护栏"
     - "Helen和Mary事后商量好隐瞒Helen在场——'两个女人把一个男人弄死了，谁会信是防卫？'"
     - "Helen选择带Jameson（40%ABV）而非Thomas平时喝的廉价酒——度数更高，Thomas上头更快更容易被灌醉。Helen解释为'手边只有母亲的酒'"
-    - "Helen手伤真相：涂油时被护栏锋利处割伤（非'修轮椅'），解释了下午涂油时Thomas帮开门"
+    - "Helen手伤真相：布置陷阱时被护栏锋利处割伤（非'修轮椅'），当天下午Thomas帮她开门/递油壶（手伤握不住），Thomas手上因此沾油"
     - "结论：正当防卫——Thomas要杀Mary，Helen和Mary联手反抗"
     # ── L5 ──
     - "Bernard亲手在报纸上标注了保险条款关键段落，教Thomas理解'意外死亡'的赔付条件"
@@ -128,8 +127,8 @@ opening:
 #   SC3002 楼顶                  → ⏸️无新线索
 #   SC3003 Sullivan家客厅        → 🔒Mary在楼下，无新证据
 #   SC3004 警局                  → 🎬开篇→⏸️
-#   SC3005 法医办公室            → 🔓搜证(Foster场景复用，36-E-01)
-#   SC3006 公寓二楼走廊          → ⏸️无新线索
+#   SC3005 法医办公室            → 🔓搜证(Foster场景复用，3601)
+#   SC3006 公寓二楼走廊          → 🔓对话(Seamus)+出证3606/3606001（V2新增）
 #   SC3007 教堂                  → 🔒无新证据
 #   SC3008 Helen家               → 🔓对话(Helen)
 #   SC3009 Continental银行公共区域 → ⏸️无新线索
@@ -143,7 +142,7 @@ opening:
 # L6自由探索的核心功能（原设计文档无此阶段，用户确认增加）:
 #   A. 情感铺垫——Margaret/Mary/Helen让玩家亲眼看到Mary的惨状
 #   B. 逻辑松动——Mickey以律师视角分析推翻正当防卫的现实后果
-#   C. 证据获取——Foster实验室获取36-E-01（不再是开篇硬塞）
+#   C. 证据获取——Foster实验室获取3601（不再是开篇硬塞）
 
 scenes:
   # ── SC3010 Margaret鞋坊（新NPC Margaret） ──
@@ -262,7 +261,7 @@ scenes:
     evidence:
       - id: 3601
         name: "Foster血液酒精浓度补充分析报告"
-        note: "关键——R1击破证据。补充L1原报告（31-T-01），揭示0.25%下无攻击能力"
+        note: "关键——R1击破证据。补充L1原报告（3111 Foster坠楼分析），揭示0.25%下无攻击能力"
     npcs:
       foster_006:
         # ── 基本信息 ──
@@ -290,7 +289,7 @@ scenes:
           - "0.25%酒精浓度到底意味着什么？Foster原报告为什么用词保守？"  # 10
 
         # ── 3. 可提取证词 ──
-        testimony_ids: []  # 信息通过36-E-01报告呈现，不额外提取证词
+        testimony_ids: []  # 信息通过3601报告呈现，不额外提取证词
 
         # ── 4.  ──
   # ── SC3011 Mickey办公室 — Mickey Talk + 辩论（新场景） ──
@@ -333,6 +332,42 @@ scenes:
         testimony_ids: []  # Talk阶段，不提取证词
 
         # ── 4.  ──
+  # ── SC3006 公寓二楼走廊（V2新增：Seamus对话+出证） ──
+  - id: 3006
+    name: "公寓二楼走廊"
+    # L6 V2改动：从⏸️无新线索 → 🔓对话(Seamus)+出证3606/3606001
+    evidence:
+      - id: 3606
+        name: "Seamus持有的最后一瓶轮椅润滑油"
+        note: "关键——R3击破主证据。案发前一天Helen把家里最后一瓶油送给Seamus，说'以后也不需要了'"
+      - id: 3606001
+        name: "Seamus L6证词（最后一瓶油）"
+        note: "关键——R3配合3606。案发前一天Helen送油并说'以后也不需要了'"
+    npcs:
+      seamus_002:
+        # ── 基本信息 ──
+        talk: seamus_002
+        is_liar: false
+        motive: "Seamus拿着Helen送的那瓶油正在润轮椅——被Zack问起，回忆起案发前一天的事"
+        mindset: "疑惑但坦诚——Helen送油时说'以后不需要了'，当时没多想，现在想来意味深长"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "案发前一天Helen把家里最后一瓶轮椅润滑油送给我，说'以后也不需要了'"
+          - "Thomas是天台管理者，全楼只有一把钥匙（重申L3证词3310001）"
+
+        withheld_topics: []  # L6终轮，无withheld
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "\"Helen案发前一天送了最后一瓶油\" # 9"
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3606001  # Seamus L6证词（最后一瓶油）
+
+        # ── 4. ──
+
   # ── ⏸️ 无新线索场景 ──
   - id: 3001
     name: "Thomas公寓楼下现场"
@@ -342,9 +377,6 @@ scenes:
     # L6无新证据
   - id: 3009
     name: "Continental银行公共区域"
-    # L6无新证据
-  - id: 3006
-    name: "公寓二楼走廊"
     # L6无新证据
 
 # ═══════════════════════════════════════
@@ -366,7 +398,7 @@ expose:
   total_rounds: 5
 
   # ── 第一轮：Thomas没有攻击能力 ──
-  # 36-E-01（L6新证据）证明0.25%下无攻击能力，L1尸检报告补充指甲组织分析
+  # 3601（L6新证据）证明0.25%下无攻击能力，含L1尸检数据的补充解读（配合3111 Foster坠楼分析）
   round_1:
     mickey_argument: "Thomas打了Mary多少年？酗酒者的暴力是肌肉记忆，不需要清醒。0.25%对这种人不算什么。Margaret亲眼看到他在推Mary。正当防卫，没问题"
     usable_evidence:
@@ -380,62 +412,71 @@ expose:
       - 指甲下组织量极少=被推时本能反应，不是剧烈挣扎
       - Mickey退守："Helen那边我说不过你——但Mary不是策划者"
 
-  # ── 第二轮：Helen没有反悔 ──
-  # L3地面涂油示意图+L4证据证明Helen从头到尾在合谋
+  # ── 第二轮：Helen没有反悔（V2：Jameson三件套证明从头合谋，非临时心软） ──
+  # §B6.1 R2：3107+3408+3217 Jameson三件套击破"Helen可能最后心软没执行计划"
   round_2:
-    mickey_argument: "Helen心软了——她涂了油，但最后没推Thomas。地面油是准备阶段的残留，不代表她当晚还在执行计划"
+    mickey_argument: "Helen可能最后心软了，没执行计划。地面油是准备阶段的残留，不代表她当晚还在执行计划"
     usable_evidence:
-      - id: 3308
-        name: "地面涂油示意图"
-        用途: "地面油在Thomas一侧——这是给Thomas准备的陷阱，不是给Mary的"
+      - id: 3107
+        name: "Jameson空瓶"
+        用途: "楼顶Jameson空瓶（L1发现）——Thomas欠债买不起$3好酒，这瓶酒不是Thomas自带的"
+        来源: "L1证据"
+      - id: 3408
+        name: "Helen家Jameson威士忌"
+        用途: "Helen家同品牌Jameson——楼顶空瓶与Helen家同款，Helen特意带高度数Jameson灌Thomas"
         来源: "L3证据"
-      # L4 Helen证词引用：Helen当晚'检查油'而非擦油——有足够时间擦油却没擦
-      # L4 第二组脚印+门把手油迹引用：Helen在场的物证链
-      - id: 3309
-        name: "第二组脚印特写"
-        用途: "脚印矛盾——Helen声称'心软后一直在倒酒'，但脚印分布不支持"
-        来源: "L3证据"
-    result: |
-      Zack证明Helen从头到尾在合谋：
-      - 地面油在Thomas一侧=给Thomas准备的陷阱
-      - Helen"检查油"而非擦油=确认陷阱就位
-      - 有足够时间擦油却没擦=从没打算放弃计划
-      - Mickey退守："Mary不是策划者——45分钟是恐惧"
-
-  # ── 第三轮：Mary的45分钟不是恐惧（转折点） ──
-  # L2蜡烛残骸（教堂时间线）+Timeline系统重建证明时间精确配合
-  round_3:
-    mickey_argument: "Mary的45分钟空白是恐惧冻结反应。一个被家暴十年的女人听到楼顶传来动静——她不是在观望，她是吓呆了"
-    usable_evidence:
-      - id: 3201
-        name: "蜡烛残骸"
-        用途: "蜡烛仅燃烧约15分钟——证明Mary在教堂停留极短即离开，与L4 Helen灌酒时间线精确配合"
+      - id: 3217
+        name: "Thomas家廉价酒照片"
+        用途: "Thomas平时只喝廉价酒——$3 Jameson根本不是Thomas自带，是Helen从家里带来的"
         来源: "L2证据"
-      # Timeline系统：完整时间线重建（Mary离开教堂 → 45分钟空白 → 对照Helen楼顶时间线）
-      # R2已用3309（第二组脚印）证明Helen角色，R3聚焦时间线维度
     result: |
-      时间线精确配合=合谋者时间协调，不是恐惧冻结：
-      - Mary 20:00离开教堂，20:45才出现——45分钟精确对应Helen在楼顶的准备时间
-      - **Mickey反击**（转折）："她报警三次，Zack。三次。没有一个人帮她"
-      - Zack第一次沉默
+      Zack用Jameson三件套证明Helen从头合谋，非临时心软：
+      - Helen特意带高度数Jameson（40%ABV）=有意让Thomas快速醉倒
+      - Thomas欠债根本买不起Jameson=酒是Helen带来的
+      - 从头合谋，而非临时心软
+      - Mickey退守："进入R3"
+
+  # ── 第三轮：油迹时间线（V2：Seamus最后一瓶油+门内侧干净，推翻"听到吵架才去"） ──
+  # §B6.1 R3：3606 Seamus最后一瓶油 + 3402门内侧干净 + 时间线还原
+  round_3:
+    mickey_argument: "Helen是听到吵架后才去，不然门把手油迹怎么解释——临时上楼不是合谋"
+    usable_evidence:
+      - id: 3606
+        name: "Seamus持有的最后一瓶轮椅润滑油"
+        用途: "案发前一天Helen已把家里最后一瓶油送给Seamus，说'以后也不需要了'——提前处理好了所有油，说明是事先计划好的行动，不是临时起意"
+        来源: "L6新证据（SC3006 Seamus）"
+      - id: 3402
+        name: "楼顶门内侧把手照片（干净）"
+        用途: "门内侧（天台侧）干净——若Helen临时听到吵架才上去，从楼梯间侧进入，油迹分布与门内侧干净吻合；但送油/提前计划说明Helen早就准备好了，不是临时决定"
+        来源: "L4证据"
+      # 时间线还原：完整链——案发前一天送油（预谋）→ 案发当晚带Jameson上楼（执行）→ 时间线精确配合
+    result: |
+      Seamus最后一瓶油+门内侧干净→时间线还原完整链：
+      - 案发前一天Helen已送出最后一瓶油"以后不需要了"=事先就打算不再需要油
+      - 门内侧（天台侧）干净="听到吵架临时去"油迹说法不成立
+      - 完整时间线：提前处理油→带Jameson上楼→Helen从头执行合谋计划
+      - **进入A/B/C推理选项**：当天涂油/留下油迹的人只能是——
+        A: Helen自己 → 短反馈后汇合
+        B: Mary和Thomas → 短反馈后汇合
+        C: Helen和Mary（正确）→ 推理演出继续
       - Mickey退守："就算有预谋，那也是求生不是谋杀"
 
   # ── 第四轮：经济动机（情感高潮） ──
   # L5雏菊压痕+Bernard供述证明Mary有经济动机
+  # §0.5决策：3509不作为独立usable_evidence，通过3507出示+推理演出完成；3207通过对白关联演出
   round_4:
     mickey_argument: "就算有预谋，那也是被家暴者的求生。Mary去银行不是为了钱——是为了确认如果Thomas死了，她和Emily能不能活下去"
     usable_evidence:
       - id: 3507
         name: "垫板花形压痕照片"
-        用途: "雏菊压痕证明Mary亲自去过Bernard办公桌前——主动研究保险条款"
+        用途: "雏菊五瓣花形压痕（1.2cm）=有戴花饰女人长时间坐在对面；通过推理演出关联3207 Mary手链（不单独出示3207/3509），确认来访者就是Mary，主动研究保险条款"
         来源: "L5证据"
-      - id: 3509
-        name: "花形压痕比对报告"
-        用途: "压痕与Mary手链吊坠完全吻合——确认来访者就是Mary"
-        来源: "L5证据"
+      # 3207 Mary手链照片（L2获得）通过Zack/Emma对白指出"垫板花形——和Mary那条雏菊手链"关联，不作为独立usable_evidence出示
+      # 3509花形压痕比对报告：按§0.5决策不作为独立可出示证据，通过系统层推理演出完成
       # Bernard供述引用：Mary询问的是"投保人死了怎么赔"
     result: |
       雏菊压痕+Bernard供述=Mary有明确的经济动机：
+      - 3507垫板花形压痕=有女人来过Bernard桌前；Emma/Zack对白：花形与Mary雏菊手链吻合
       - Mary主动研究了Thomas死后的保险赔付
       - 询问角度是"投保人死了"而非"被保险人死了"
       - **Mickey反击**："一个母亲在确认生存手段。Emily八岁"
@@ -506,18 +547,25 @@ events:
 doubts:
   - id: 3601
     text: "Thomas在0.25%酒精浓度下真的能攻击Mary吗？"
-    unlock_condition: "item:3601 + testimony:3406001"
+    unlock_condition: "item:3601"
     # item:3601 = Foster补充分析（0.25%下无攻击能力） + testimony:3406001 = Margaret目击证词（称看到Thomas攻击Mary）→ 矛盾
   - id: 3602
     text: "Helen的'心软'和地面油的矛盾？"
-    unlock_condition: "item:3308 + testimony:3404001"
+    unlock_condition: "testimony:3404001"
+    # item:3308 = 地面涂油示意图（油在Thomas一侧=给Thomas的陷阱，非防滑） + testimony:3404001 = Helen谎言证词（声称心软/油是下午蹭的）→ 矛盾
   - id: 3603
     text: "Mary的45分钟空白到底在做什么？"
-    unlock_condition: "item:3201 + item:3309"
+    unlock_condition: "testimony:3206001"
     # item:3201 = L2蜡烛残骸（Mary在教堂停留极短即离开） + item:3309 = L3第二组脚印特写（楼顶有两个女人）→ Mary提前离开+两人在楼顶=45分钟在做什么？
   - id: 3604
     text: "Margaret从地面真的能看清楼顶吗？"
-    unlock_condition: "item:3610 + testimony:3406001"
+    unlock_condition: "item:3610"
+    # item:3610 = 楼顶目击条件勘查记录（仰角65°+护栏遮挡+无光） + testimony:3406001 = Margaret目击证词（模糊词"好像""应该是"）→ 证词可信度存疑
+  - id: 3605
+    text: "Thomas被持续灌酒至少一小时——Jameson从哪来的？"
+    unlock_condition: "item:3408"
+    # item:3408 = Helen家Jameson威士忌（L3获得） + item:3217 = Thomas家廉价酒照片（L2获得，Thomas只喝廉价酒）→ 楼顶$3 Jameson不是Thomas自带，是Helen带来的；灌酒是事先安排
+    # 注：此疑点从L4灌酒疑点(3012)迁入L6，L4已删除3012；L6 R2配套疑点
 
 # ═══════════════════════════════════════
 # 验证状态
