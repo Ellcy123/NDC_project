@@ -3890,6 +3890,17 @@
                 `;
             }
 
+
+
+            if (loop.expose?.post_expose) {
+                const pe = loop.expose.post_expose;
+                html += `
+                    <div class="sidebar-item ${AppState.currentPhase === 'postExpose' ? 'active' : ''}"
+                         onclick="FlowView.showPhase('postExpose')">
+                        <span class="phase-tag expose">指证后</span> ${escapeHtml(pe.name || pe.talk || '指证后剧情')}
+                    </div>
+                `;
+            }
             // Events (突发事件) — 每个事件单独一行展示
             if (loop.events && loop.events.length > 0) {
                 loop.events.forEach((event, idx) => {
@@ -4542,7 +4553,7 @@
                 ? `<span style="display:inline-block; padding:0.1rem 0.4rem; border-radius:3px; font-size:0.75rem; margin-left:0.5rem; background:${scene.note === '晚上' ? '#1a237e' : '#e8a735'}; color:${scene.note === '晚上' ? '#90caf9' : '#3e2723'};">${escapeHtml(scene.note)}</span>`
                 : '';
             const prevPhase = AppState.previousPhase || 'opening';
-            const backLabel = prevPhase === 'expose' ? '← 返回指证阶段' : prevPhase === 'ending' ? '← 返回结尾阶段' : prevPhase === 'events' ? '← 返回突发事件' : prevPhase === 'free' ? '← 返回自由探索' : '← 返回开篇阶段';
+            const backLabel = prevPhase === 'expose' ? '← 返回指证阶段' : prevPhase === 'postExpose' ? '← 返回指证后剧情' : prevPhase === 'ending' ? '← 返回结尾阶段' : prevPhase === 'events' ? '← 返回突发事件' : prevPhase === 'free' ? '← 返回自由探索' : '← 返回开篇阶段';
             // Check if this is an opening/ending scene
             const loopRef = AppState.loopData;
             let openingMeta = null;
@@ -4829,6 +4840,56 @@
             }
         },
 
+        renderPostExposeBlock(pe, options = {}) {
+            if (!pe) return '';
+            const peTalkFile = pe.talk || '';
+            const peEntries = peTalkFile
+                ? AppState.allTalks
+                    .filter(t => t.videoScene === peTalkFile)
+                    .sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id))
+                : [];
+            const peFirstId = peEntries.length > 0 ? peEntries[0].id : '';
+            const title = pe.name || 'Post-Expose';
+            let html = options.wrap
+                ? '<div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--rule);">'
+                : '';
+
+            html += `<div class="section-title" style="color:var(--highlight);">指证后 · ${escapeHtml(title)}</div>`;
+
+            if (pe.characters?.length) {
+                html += `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin:0.5rem 0;">`;
+                pe.characters.forEach(c => { html += `<span class="char-pill">${escapeHtml(c)}</span>`; });
+                html += `</div>`;
+            }
+            if (pe.purpose) {
+                html += `<p style="margin:0.5rem 0; color:var(--text-secondary);">${escapeHtml(pe.purpose)}</p>`;
+            }
+            if (peTalkFile) {
+                const sub = `${peTalkFile}.json · ${peEntries.length} 句`;
+                const safeTitle = escapeHtml(title).replace(/'/g, '&apos;');
+                const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+                const playAction = `UI.playTalkInDrawer('${peFirstId}', 'POST-EXPOSE', '${safeTitle}', '${safeSub}')`;
+                html += `<div class="phase-scene-talk" style="margin-top:0.5rem;">`;
+                html += `<span class="copy-asset" onclick="copyText('${escapeHtml(peTalkFile)}', this)">
+                    <span class="copy-asset-dot ${peEntries.length > 0 ? 'ok' : 'miss'}"></span>
+                    <span class="copy-asset-name">${escapeHtml(peTalkFile)}.json</span>
+                    <span class="copy-asset-ico">copy</span>
+                </span>`;
+                if (peEntries.length > 0) {
+                    html += `<span class="talk-meta">${peEntries.length} 句 · 首句 <span class="talk-meta-id">#${peFirstId}</span></span>`;
+                } else {
+                    html += `<span class="talk-meta miss">对话未加载，请检查 AVG JSON 或 manifest</span>`;
+                }
+                if (peFirstId) {
+                    html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
+                }
+                html += `</div>`;
+            }
+
+            html += options.wrap ? '</div>' : '';
+            return html;
+        },
+
         showPhase(phase, scrollToIdx) {
             AppState.currentPhase = phase;
             AppState.currentSceneId = null;
@@ -5053,6 +5114,14 @@
                     }
                     html += `</div>`;
                 }
+
+            } else if (phase === 'postExpose' && loop.expose?.post_expose) {
+                const pe = loop.expose.post_expose;
+                html = `
+                    <div class="scene-title"><span class="phase-tag expose">指证后</span> ${escapeHtml(pe.name || loop.title || '')}</div>
+                    ${loop.target ? `<div class="phase-goal"><span class="phase-goal-label">目标</span><span class="phase-goal-text">${escapeHtml(loop.target)}</span></div>` : ''}
+                `;
+                html += this.renderPostExposeBlock(pe, { wrap: false });
 
             } else if (phase === 'events' && loop.events) {
                 html = `
