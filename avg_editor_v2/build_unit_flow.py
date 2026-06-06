@@ -162,6 +162,7 @@ def build():
 
     items_by_id = {normalize_id(i.get("id")): i for i in items}
     testimony_by_id = {normalize_id(t.get("id")): t for t in testimonies}
+    scenes_by_id = {normalize_id(s.get("sceneId")): s for s in scenes}
     art_by_id = {normalize_id(a.get("id")): a for a in art_assets}
     analyzed_source_by_id = {
         normalize_id(i.get("analysedEvidence")): normalize_id(i.get("id"))
@@ -245,6 +246,27 @@ def build():
                 ],
             })
 
+        post_expose_segments = []
+        for seg in ch.get("postExposeSegments") or []:
+            scene_id = normalize_id(seg.get("sceneId"))
+            scene = scenes_by_id.get(scene_id)
+            post_expose_segments.append({
+                "order": first_number(seg.get("order")) or len(post_expose_segments) + 1,
+                "type": normalize_id(seg.get("type")) or "talk",
+                "title": normalize_id(seg.get("title")),
+                "brief": normalize_id(seg.get("brief")),
+                "sceneId": scene_id,
+                "sceneName": scene_name(scene) if scene else "",
+                "sceneKind": scene_kind(scene, art_by_id) if scene else "",
+                "videoEpisode": normalize_id(seg.get("videoEpisode")),
+                "videoLoop": normalize_id(seg.get("videoLoop")),
+                "videoScene": normalize_id(seg.get("videoScene")),
+                "entryTalkId": normalize_id(seg.get("entryTalkId")),
+                "transitionFrom": normalize_id(seg.get("transitionFrom")),
+                "transitionLabel": normalize_id(seg.get("transitionLabel")),
+            })
+        post_expose_segments.sort(key=lambda s: s["order"])
+
         flow = []
         flow.append({
             "type": "opening",
@@ -272,6 +294,17 @@ def build():
                 "summary": f"{len(exposes)} 轮指证，目标 NPC {normalize_id(ch.get('exposeNpcId')) or '未配置'}。",
                 "refs": {"npcId": normalize_id(ch.get("exposeNpcId")), "roundCount": len(exposes)},
             })
+        if post_expose_segments:
+            titles = " / ".join(s["title"] or s["videoScene"] or f"段落{s['order']}" for s in post_expose_segments)
+            flow.append({
+                "type": "postExpose",
+                "title": "指证后剧情",
+                "summary": f"{len(post_expose_segments)} 段指证后剧情：{titles}",
+                "refs": {
+                    "segmentCount": len(post_expose_segments),
+                    "sceneIds": [s["sceneId"] for s in post_expose_segments if s["sceneId"]],
+                },
+            })
         flow.append({
             "type": "summary",
             "title": "Loop 收束",
@@ -296,6 +329,7 @@ def build():
             "scenes": scene_nodes,
             "doubts": doubts,
             "exposes": exposes,
+            "postExposeSegments": post_expose_segments,
             "flow": flow,
         })
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-04T10:33:45.688076+00:00",
+  "generatedAt": "2026-06-05T15:08:35.668737+00:00",
   "source": "avg_editor_v2/data/table",
   "purpose": "planning-level flow overview for editor UI",
   "units": {
@@ -16,6 +16,7 @@
           "chapterId": "101",
           "title": "枪响之夜",
           "brief": "Rosa的证词指向Vivian，但未开火的手枪让23:30枪响出现裂缝。",
+          "openingBrief": "",
           "goal": "23:30那声枪响，真来自Vivian手中的枪吗？",
           "initTalk": "101001001",
           "initScene": "1021",
@@ -96,6 +97,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -151,6 +153,7 @@
           "chapterId": "102",
           "title": "黑账浮现",
           "brief": "Webb的委托把调查引向他的真实生意，照片、账本和古董交易露出勒索网络。",
+          "openingBrief": "",
           "goal": "Webb为何在死前匆忙立下那份遗嘱？",
           "initTalk": "101002001",
           "initScene": "1022",
@@ -458,6 +461,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -519,6 +523,7 @@
           "chapterId": "103",
           "title": "时间裂缝",
           "brief": "重新开放的会客室、侧巷玻璃和Rosa的生活线索，把假枪声和伪证串在一起。",
+          "openingBrief": "",
           "goal": "Rosa究竟在替谁掩盖那声枪响？",
           "initTalk": "101003001",
           "initScene": "1007",
@@ -759,6 +764,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -818,6 +824,7 @@
           "chapterId": "104",
           "title": "歌姬沉默",
           "brief": ".45弹壳、“鲸鱼”的线索和Vivian的绝望认罪，说明真正的危险仍藏在酒吧里。",
+          "openingBrief": "",
           "goal": "Vivian为什么宁愿认罪，也不肯说出真相？",
           "initTalk": "101004001",
           "initScene": "1024",
@@ -1026,6 +1033,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -1083,6 +1091,7 @@
           "chapterId": "105",
           "title": "暗夜真相",
           "brief": "James的口音、Anna的处境和被隐藏的节目单，把真实枪声与真凶身份推到台前。",
+          "openingBrief": "",
           "goal": "真正的枪声到底发生在什么时刻？",
           "initTalk": "101005000",
           "initScene": "1025",
@@ -1358,6 +1367,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -1419,6 +1429,7 @@
           "chapterId": "106",
           "title": "警徽阴影",
           "brief": "Morrison家中的债务、借款记录和被藏起的弹壳，揭开他为何压住真相。",
+          "openingBrief": "",
           "goal": "Morrison压下的，究竟是案件还是自己的罪证？",
           "initTalk": "101006001",
           "initScene": "1026",
@@ -1554,6 +1565,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -1617,6 +1629,7 @@
           "chapterId": "201",
           "title": "残酷的身份确认",
           "brief": "Morrison 迅速把死者认定为 Margaret，但婚戒、首饰盒和火场残留让身份结论出现裂缝。",
+          "openingBrief": "",
           "goal": "死者是谁——真的是母亲 Margaret 吗？",
           "initTalk": "201001001",
           "initScene": "2101",
@@ -1663,20 +1676,11 @@
               "itemIds": []
             },
             {
-              "id": "2104",
-              "name": "警局 Morrison 办公区-夜晚",
-              "kind": "explore",
-              "isInit": false,
-              "npcCount": 1,
-              "itemCount": 0,
-              "itemIds": []
-            },
-            {
               "id": "2119",
               "name": "鞋坊外电话亭-夜晚",
               "kind": "explore",
               "isInit": false,
-              "npcCount": 2,
+              "npcCount": 1,
               "itemCount": 0,
               "itemIds": []
             }
@@ -1807,6 +1811,23 @@
               ]
             }
           ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "Morrison 承认旧仇结案",
+              "brief": "Morrison 承认死者是 Frank Kowalski，透露黑手党匿名电话警告，并承诺有硬证据就签搜查令。",
+              "sceneId": "2104",
+              "sceneName": "警局 Morrison 办公区-夜晚",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop1",
+              "videoScene": "morrison_l1_postexpose",
+              "entryTalkId": "203002001",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            }
+          ],
           "flow": [
             {
               "type": "opening",
@@ -1820,9 +1841,9 @@
             {
               "type": "exploration",
               "title": "自由探索",
-              "summary": "5 个开放场景，其中 5 个探索底图、0 个对话底图。",
+              "summary": "4 个开放场景，其中 4 个探索底图、0 个对话底图。",
               "refs": {
-                "sceneCount": 5
+                "sceneCount": 4
               }
             },
             {
@@ -1847,6 +1868,17 @@
               }
             },
             {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：Morrison 承认旧仇结案",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "2104"
+                ]
+              }
+            },
+            {
               "type": "summary",
               "title": "Loop 收束",
               "summary": "未配置总结",
@@ -1862,6 +1894,7 @@
           "chapterId": "202",
           "title": "威胁链条与连号钞票",
           "brief": "Frank 的债务线索把调查引向湖滨信托银行和 Silver Moon，连号钞票拼出 Leonard 与 Vinnie 的催债分成链。",
+          "openingBrief": "",
           "goal": "Margaret 为什么被打晕？她的昏迷和 Frank 的死亡有什么关系？",
           "initTalk": "201002001",
           "initScene": "2206",
@@ -1898,7 +1931,7 @@
               "name": "湖滨信托银行大厅-白天",
               "kind": "explore",
               "isInit": false,
-              "npcCount": 2,
+              "npcCount": 1,
               "itemCount": 0,
               "itemIds": []
             },
@@ -1907,9 +1940,11 @@
               "name": "湖滨信托银行贵宾室-白天",
               "kind": "explore",
               "isInit": false,
-              "npcCount": 1,
-              "itemCount": 0,
-              "itemIds": []
+              "npcCount": 0,
+              "itemCount": 1,
+              "itemIds": [
+                "2208"
+              ]
             },
             {
               "id": "2215",
@@ -1942,11 +1977,11 @@
                   "statusText": "当前 Loop L2"
                 },
                 {
-                  "type": "4",
-                  "param": "2082001",
-                  "kind": "证词",
-                  "name": "他的原名是 Russo，1918 年在我们银行的档案里做了改名登记",
-                  "label": "证词 2082001 · 他的原名是 Russo，1918 年在我们银行的档案里做了改名登记",
+                  "type": "1",
+                  "param": "2208",
+                  "kind": "道具",
+                  "name": "Leon嘉奖奖杯",
+                  "label": "道具 2208 · Leon嘉奖奖杯",
                   "exists": true,
                   "sourceLoop": "loop2",
                   "sourceLoopNum": 2,
@@ -2046,8 +2081,8 @@
                   "name": "未找到"
                 },
                 {
-                  "id": "2082001",
-                  "name": "未找到"
+                  "id": "2208",
+                  "name": "Leon嘉奖奖杯"
                 }
               ]
             },
@@ -2082,6 +2117,23 @@
                   "name": "Vinnie 催债小本子"
                 }
               ]
+            }
+          ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "Leonard 假善意给信封",
+              "brief": "Leonard 承认雇佣 Vinnie 暴力催债，又假装帮忙递出签着自己名字的信封，引导 Zack 去市政厅申请搜查令。",
+              "sceneId": "2211",
+              "sceneName": "湖滨信托银行大厅-白天",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop2",
+              "videoScene": "leonard_l2_postexpose",
+              "entryTalkId": "207003001",
+              "transitionFrom": "",
+              "transitionLabel": ""
             }
           ],
           "flow": [
@@ -2125,6 +2177,17 @@
               }
             },
             {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：Leonard 假善意给信封",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "2211"
+                ]
+              }
+            },
+            {
               "type": "summary",
               "title": "Loop 收束",
               "summary": "未配置总结",
@@ -2140,6 +2203,7 @@
           "chapterId": "203",
           "title": "Mickey 登场与掠夺性贷款",
           "brief": "Mickey 用律师身份打开银行搜查入口，档案、贷款计算和对账单揭露湖滨信托对 Frank 的掠夺性贷款。",
+          "openingBrief": "",
           "goal": "Frank 的贷款到底是怎么一回事？湖滨信托银行对 Frank 做了什么？",
           "initTalk": "201003001",
           "initScene": "2316",
@@ -2332,6 +2396,23 @@
               ]
             }
           ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "房产证与旧铁钥匙交付",
+              "brief": "Moore 坦白贷款与房产证交易，房产证夹层掉出旧铁钥匙，Zack 取得后续调查入口。",
+              "sceneId": "2312",
+              "sceneName": "湖滨信托银行贵宾室-白天",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop3",
+              "videoScene": "moore_l3_postexpose",
+              "entryTalkId": "208004001",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            }
+          ],
           "flow": [
             {
               "type": "opening",
@@ -2372,6 +2453,17 @@
               }
             },
             {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：房产证与旧铁钥匙交付",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "2312"
+                ]
+              }
+            },
+            {
               "type": "summary",
               "title": "Loop 收束",
               "summary": "未配置总结",
@@ -2387,6 +2479,7 @@
           "chapterId": "204",
           "title": "黄昏之爱与 Danny 指证",
           "brief": "Lula 的长期恋情推翻“骗子”判断，Danny 的房产交易和戒指出现让他成为新的嫌疑人。",
+          "openingBrief": "圣心医院里，Margaret 仍在昏迷。Mickey 和 Emma 与 Zack 碰头，确认下一步要追查鞋坊地下室、Lula 与 Danny 的谎言；Emma 也提到医院受 Miller 资助。",
           "goal": "Lula 是骗子还是真爱？Danny 的诬陷能否击破？",
           "initTalk": "201004001",
           "initScene": "2406",
@@ -2614,6 +2707,23 @@
               ]
             }
           ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "Danny 坦白目击与 Lula 补证",
+              "brief": "厕所指证结束后进入 Frank 家主屋会合，Danny 坦白当晚目击，Lula 补充 Frank 不会做饭和工资流向。",
+              "sceneId": "2418",
+              "sceneName": "Frank 家主屋会合-黄昏",
+              "sceneKind": "dialogue",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop4",
+              "videoScene": "danny_l4_postexpose",
+              "entryTalkId": "211005001",
+              "transitionFrom": "2420",
+              "transitionLabel": "Frank 家厕所 → Frank 家主屋会合"
+            }
+          ],
           "flow": [
             {
               "type": "opening",
@@ -2654,6 +2764,17 @@
               }
             },
             {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：Danny 坦白目击与 Lula 补证",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "2418"
+                ]
+              }
+            },
+            {
               "type": "summary",
               "title": "Loop 收束",
               "summary": "未配置总结",
@@ -2669,6 +2790,7 @@
           "chapterId": "205",
           "title": "Vinnie 纵火认罪",
           "brief": "打火机、目击证词和赌场线索把纵火指向 Vinnie，他快速认罪却留下保护他人的违和感。",
+          "openingBrief": "",
           "goal": "Frank 被杀那晚到底发生了什么？谁在案发现场，谁做了什么？",
           "initTalk": "201005001",
           "initScene": "2518",
@@ -2776,6 +2898,38 @@
               ]
             }
           ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "Vinnie 抢话认罪",
+              "brief": "Vinnie 在 Silver Moon 赌场主动认下纵火与杀人，形成误导性结案。",
+              "sceneId": "2515",
+              "sceneName": "Silver Moon 赌场-夜晚",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop5",
+              "videoScene": "vinnie_l5_postexpose_bar",
+              "entryTalkId": "210006001",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            },
+            {
+              "order": 2,
+              "type": "talk",
+              "title": "Foster 电话双消息",
+              "brief": "Zack 和 Emma 到赌场外电话亭联系 Foster，得知 Margaret 苏醒，以及 Frank 可能死于钝器击打。",
+              "sceneId": "2519",
+              "sceneName": "Silver Moon 赌场外电话亭-夜晚",
+              "sceneKind": "dialogue",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop5",
+              "videoScene": "vinnie_l5_postexpose_phone",
+              "entryTalkId": "215005001",
+              "transitionFrom": "2515",
+              "transitionLabel": "Silver Moon 赌场 → 赌场外街角电话亭"
+            }
+          ],
           "flow": [
             {
               "type": "opening",
@@ -2814,6 +2968,18 @@
               }
             },
             {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "2 段指证后剧情：Vinnie 抢话认罪 / Foster 电话双消息",
+              "refs": {
+                "segmentCount": 2,
+                "sceneIds": [
+                  "2515",
+                  "2519"
+                ]
+              }
+            },
+            {
               "type": "summary",
               "title": "Loop 收束",
               "summary": "未配置总结",
@@ -2829,6 +2995,7 @@
           "chapterId": "206",
           "title": "Leonard 终极指证",
           "brief": "Margaret 苏醒后的目击、鞋坊废墟深搜和 Leonard 住所证据合拢，击穿 Vinnie 替罪后的真正凶手。",
+          "openingBrief": "",
           "goal": "Frank 是被人杀死的——但凶手是谁？L5 认罪的 Vinnie 真的能是凶手吗？",
           "initTalk": "201006001",
           "initScene": "2606",
@@ -2867,12 +3034,8 @@
               "kind": "dialogue",
               "isInit": true,
               "npcCount": 2,
-              "itemCount": 3,
-              "itemIds": [
-                "2601",
-                "2602",
-                "2603"
-              ]
+              "itemCount": 0,
+              "itemIds": []
             },
             {
               "id": "2611",
@@ -2888,11 +3051,24 @@
               "name": "Leonard 住所-白天",
               "kind": "explore",
               "isInit": false,
-              "npcCount": 2,
+              "npcCount": 1,
               "itemCount": 2,
               "itemIds": [
                 "2609",
                 "2610"
+              ]
+            },
+            {
+              "id": "2621",
+              "name": "圣心医院",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 3,
+              "itemIds": [
+                "2601",
+                "2602",
+                "2603"
               ]
             }
           ],
@@ -3094,6 +3270,23 @@
               ]
             }
           ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "Leonard 招供与 Vinnie 替罪揭穿",
+              "brief": "Leonard 招供自己用烛台失手打死 Frank，并承认呼叫 Vinnie 移尸、纵火和顶罪。",
+              "sceneId": "2617",
+              "sceneName": "Leonard 住所-白天",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI02",
+              "videoLoop": "loop6",
+              "videoScene": "leonard_l6_postexpose",
+              "entryTalkId": "207007001",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            }
+          ],
           "flow": [
             {
               "type": "opening",
@@ -3107,9 +3300,9 @@
             {
               "type": "exploration",
               "title": "自由探索",
-              "summary": "5 个开放场景，其中 4 个探索底图、1 个对话底图。",
+              "summary": "6 个开放场景，其中 5 个探索底图、1 个对话底图。",
               "refs": {
-                "sceneCount": 5
+                "sceneCount": 6
               }
             },
             {
@@ -3136,6 +3329,17 @@
               }
             },
             {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：Leonard 招供与 Vinnie 替罪揭穿",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "2617"
+                ]
+              }
+            },
+            {
               "type": "summary",
               "title": "Loop 收束",
               "summary": "未配置总结",
@@ -3159,6 +3363,7 @@
           "chapterId": "101",
           "title": "枪响之夜",
           "brief": "Rosa的证词指向Vivian，但未开火的手枪让23:30枪响出现裂缝。",
+          "openingBrief": "",
           "goal": "23:30那声枪响，真来自Vivian手中的枪吗？",
           "initTalk": "101001001",
           "initScene": "1021",
@@ -3239,6 +3444,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -3294,6 +3500,7 @@
           "chapterId": "102",
           "title": "黑账浮现",
           "brief": "Webb的委托把调查引向他的真实生意，照片、账本和古董交易露出勒索网络。",
+          "openingBrief": "",
           "goal": "Webb为何在死前匆忙立下那份遗嘱？",
           "initTalk": "101002001",
           "initScene": "1022",
@@ -3601,6 +3808,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -3662,6 +3870,7 @@
           "chapterId": "103",
           "title": "时间裂缝",
           "brief": "重新开放的会客室、侧巷玻璃和Rosa的生活线索，把假枪声和伪证串在一起。",
+          "openingBrief": "",
           "goal": "Rosa究竟在替谁掩盖那声枪响？",
           "initTalk": "101003001",
           "initScene": "1007",
@@ -3902,6 +4111,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -3961,6 +4171,7 @@
           "chapterId": "104",
           "title": "歌姬沉默",
           "brief": ".45弹壳、“鲸鱼”的线索和Vivian的绝望认罪，说明真正的危险仍藏在酒吧里。",
+          "openingBrief": "",
           "goal": "Vivian为什么宁愿认罪，也不肯说出真相？",
           "initTalk": "101004001",
           "initScene": "1024",
@@ -4169,6 +4380,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -4226,6 +4438,7 @@
           "chapterId": "105",
           "title": "暗夜真相",
           "brief": "James的口音、Anna的处境和被隐藏的节目单，把真实枪声与真凶身份推到台前。",
+          "openingBrief": "",
           "goal": "真正的枪声到底发生在什么时刻？",
           "initTalk": "101005000",
           "initScene": "1025",
@@ -4501,6 +4714,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
@@ -4562,6 +4776,7 @@
           "chapterId": "106",
           "title": "警徽阴影",
           "brief": "Morrison家中的债务、借款记录和被藏起的弹壳，揭开他为何压住真相。",
+          "openingBrief": "",
           "goal": "Morrison压下的，究竟是案件还是自己的罪证？",
           "initTalk": "101006001",
           "initScene": "1026",
@@ -4697,6 +4912,7 @@
               ]
             }
           ],
+          "postExposeSegments": [],
           "flow": [
             {
               "type": "opening",
