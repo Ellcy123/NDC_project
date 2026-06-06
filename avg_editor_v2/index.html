@@ -3887,7 +3887,6 @@
                 <button class="btn primary" onclick="GameController.load()">加载</button>
             </div>
             <div class="header-right">
-                <button class="btn ghost" onclick="UI.showStoryOverview()">故事概览</button>
             </div>
         </div>
 
@@ -4121,9 +4120,6 @@
         timelineEventIds: new Set(),
         satisfiedConditions: new Set(),
 
-        talkSummaries: {},
-        sceneTalkSummaries: {},
-        storyOverview: {},
         unitFlowData: null,
         unitFlow: null,
         pendingChanges: [],
@@ -4326,42 +4322,6 @@
                 console.warn('ChapterConfig not available:', e.message);
                 AppState.chapterConfigs = [];
             }
-        },
-
-        async loadTalkSummaries(unit) {
-            AppState.talkSummaries = {};
-            AppState.sceneTalkSummaries = {};
-            try {
-                const path = `${Config.paths.loopConfig}/${unit}/talk_summary.yaml`;
-                const data = await this.loadYAML(path);
-                if (!data) return;
-                // 分离 scene_talks 和普通摘要
-                Object.entries(data).forEach(([key, val]) => {
-                    if (key === 'scene_talks' && typeof val === 'object') {
-                        Object.entries(val).forEach(([sceneId, summary]) => {
-                            AppState.sceneTalkSummaries[String(sceneId)] = summary;
-                        });
-                    } else {
-                        AppState.talkSummaries[String(key)] = val;
-                    }
-                });
-                console.log(`Talk summaries loaded: ${Object.keys(AppState.talkSummaries).length} entries, ${Object.keys(AppState.sceneTalkSummaries).length} scene overrides`);
-            } catch (e) {
-                console.warn('Talk summaries not available:', e.message);
-            }
-        },
-
-        async loadStoryOverview(unit) {
-            AppState.storyOverview = {};
-            try {
-                const path = `${Config.paths.loopConfig}/${unit}/story_overview.yaml`;
-                const data = await this.loadYAML(path);
-                if (data) {
-                    Object.entries(data).forEach(([k, v]) => {
-                        AppState.storyOverview[k] = v;
-                    });
-                }
-            } catch (e) { /* silent */ }
         },
 
         async loadUnitFlow(unit) {
@@ -4901,13 +4861,6 @@
             return null;
         },
 
-        getTalkSummary(talkId, sceneId) {
-            if (sceneId && AppState.sceneTalkSummaries[String(sceneId)]) {
-                return AppState.sceneTalkSummaries[String(sceneId)];
-            }
-            return AppState.talkSummaries[String(talkId)] || '';
-        },
-
         getChapterConfig(unit, loop) {
             let unitNum = 1;
             if (unit === 'Unit3') unitNum = 3;
@@ -5068,32 +5021,6 @@
         },
 
         _modalHistory: [],
-
-        showStoryOverview() {
-            const loop = AppState.currentLoop;
-            const text = AppState.storyOverview[loop];
-            const titleEl = document.getElementById('modalTitle');
-            const contentEl = document.getElementById('modalContent');
-            this._modalHistory = [];
-            if (titleEl) delete titleEl.dataset.itemId;
-            if (!text) {
-                titleEl.textContent = '故事概览';
-                contentEl.innerHTML = '<p style="color:var(--text-muted)">当前循环暂无故事概览数据</p>';
-                document.getElementById('evidenceModal').classList.add('active');
-                return;
-            }
-            titleEl.textContent = '故事概览 — ' + (loop || '').replace('loop', 'Loop ');
-            const html = text.trim().split('\n').map(line => {
-                line = line.trim();
-                if (!line) return '<br>';
-                if (line.startsWith('【'))
-                    return `<p style="color:var(--highlight);font-weight:600;margin-top:1rem;font-size:1.05rem;">${line}</p>`;
-                return `<p style="margin:0.3rem 0;line-height:1.8;color:var(--text-secondary);">${line}</p>`;
-            }).join('');
-            contentEl.innerHTML = html;
-            document.querySelector('#evidenceModal .modal').style.maxWidth = '800px';
-            document.getElementById('evidenceModal').classList.add('active');
-        },
 
         closeModal() {
             document.getElementById('evidenceModal').classList.remove('active');
@@ -9559,14 +9486,10 @@
                     html += `</div></div>`;
 
                     // Production spec area
-                    const summary = talkId ? DataManager.getTalkSummary(talkId, sceneId) : '';
                     const npcKey = DataManager.extractNpcKey(info.ResPath);
                     const sceneNameEn = scene.sceneNameEn || '';
 
                     html += `<div class="prod-spec">`;
-                    if (summary) {
-                        html += `<div class="spec-summary">${escapeHtml(summary)}</div>`;
-                    }
                     if (talkId) {
                         html += `<div class="spec-row"><span class="spec-label">Talk ID:</span><span class="copy-tag" onclick="copyText('${talkId}', this)">${talkId}</span></div>`;
                     }
@@ -9907,7 +9830,6 @@
                 if (exposeRounds.length) {
                     exposeRounds.forEach((round, idx) => {
                         const exposeTalkId = round.talkId || '';
-                        const exposeSummary = exposeTalkId ? DataManager.getTalkSummary(exposeTalkId) : '';
                         const roundLabel = round.id || idx + 1;
 
                         html += `
@@ -9921,16 +9843,11 @@
                         if (round.targetTestimony && String(round.targetTestimony) !== '0') {
                             html += `<div class="spec-row"><span class="spec-label">证词：</span><span class="copy-tag" onclick="copyText('${escapeHtml(round.targetTestimony)}', this)">${escapeHtml(round.targetTestimony)}</span></div>`;
                         }
-                        if (exposeTalkId || exposeSummary) {
+                        if (exposeTalkId) {
                             html += `<div class="prod-spec" style="margin:0.3rem 0;">`;
-                            if (exposeTalkId) {
-                                html += `<div class="spec-row"><span class="spec-label">Talk：</span><span class="copy-tag" onclick="copyText('${exposeTalkId}', this)">${exposeTalkId}</span>`;
-                                html += ` <button class="btn" onclick="event.stopPropagation(); UI.playTalkInDrawer('${exposeTalkId}', 'EXPOSE', '第 ${escapeHtml(roundLabel)} 轮指证', 'Talk #${exposeTalkId}')" style="font-size:0.8rem; padding:0.2rem 0.6rem; margin-left:0.5rem;">&#x25B6; 播放本轮</button>`;
-                                html += `</div>`;
-                            }
-                            if (exposeSummary) {
-                                html += `<div class="spec-summary">${escapeHtml(exposeSummary)}</div>`;
-                            }
+                            html += `<div class="spec-row"><span class="spec-label">Talk：</span><span class="copy-tag" onclick="copyText('${exposeTalkId}', this)">${exposeTalkId}</span>`;
+                            html += ` <button class="btn" onclick="event.stopPropagation(); UI.playTalkInDrawer('${exposeTalkId}', 'EXPOSE', '第 ${escapeHtml(roundLabel)} 轮指证', 'Talk #${exposeTalkId}')" style="font-size:0.8rem; padding:0.2rem 0.6rem; margin-left:0.5rem;">&#x25B6; 播放本轮</button>`;
+                            html += `</div>`;
                             html += `</div>`;
                         }
                         html += `
@@ -10845,8 +10762,6 @@
                 await DataLoader.loadChapterConfig();
                 await Promise.all([
                     DataLoader.loadLoopConfig(unit, loop),
-                    DataLoader.loadTalkSummaries(unit),
-                    DataLoader.loadStoryOverview(unit),
                     DataLoader.loadUnitFlow(unit)
                 ]);
                 console.log('Loop config loaded:', AppState.loopData ? 'OK' : 'not found');
