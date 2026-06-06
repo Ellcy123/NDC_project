@@ -4368,7 +4368,7 @@
             AppState.unitFlowData = null;
             AppState.unitFlow = null;
             try {
-                const path = `/data/formal/unit_flow.json?t=${Date.now()}`;
+                const path = `${Config.paths.loopConfig}/formal/unit_flow.json?t=${Date.now()}`;
                 const data = await this.loadJSON(path);
                 AppState.unitFlowData = data;
                 AppState.unitFlow = data?.units?.[unit] || null;
@@ -4917,6 +4917,48 @@
             const loopNum = parseInt(loop.replace('loop', ''));
             const id = String(unitNum * 100 + loopNum);
             return AppState.chapterConfigMap.get(id) || null;
+        },
+
+        normalizePostExposeSegment(seg, index = 0) {
+            const videoScene = String(seg?.videoScene || seg?.talk || '').replace(/\.json$/i, '').trim();
+            return {
+                order: Number(seg?.order || index + 1),
+                type: String(seg?.type || 'talk'),
+                title: String(seg?.title || seg?.name || videoScene || `指证后剧情 ${index + 1}`),
+                brief: String(seg?.brief || seg?.purpose || ''),
+                sceneId: String(seg?.sceneId || seg?.scene || '').trim(),
+                sceneName: String(seg?.sceneName || ''),
+                videoEpisode: String(seg?.videoEpisode || ''),
+                videoLoop: String(seg?.videoLoop || AppState.currentLoop || ''),
+                videoScene,
+                entryTalkId: String(seg?.entryTalkId || seg?.id || '').trim(),
+                transitionFrom: String(seg?.transitionFrom || ''),
+                transitionLabel: String(seg?.transitionLabel || ''),
+                characters: Array.isArray(seg?.characters) ? seg.characters : []
+            };
+        },
+
+        postExposeSegments(chapter, legacyExpose) {
+            const explicit = Array.isArray(chapter?.postExposeSegments)
+                ? chapter.postExposeSegments
+                : [];
+            if (explicit.length) {
+                return explicit
+                    .map((seg, idx) => this.normalizePostExposeSegment(seg, idx))
+                    .sort((a, b) => a.order - b.order);
+            }
+
+            const legacy = legacyExpose?.post_expose;
+            if (!legacy) return [];
+            return [this.normalizePostExposeSegment({
+                order: 1,
+                type: 'talk',
+                title: legacy.name || 'Post-Expose',
+                brief: legacy.purpose || '',
+                sceneId: legacy.scene || legacyExpose?.scene || '',
+                videoScene: legacy.talk || '',
+                characters: legacy.characters || []
+            }, 0)];
         },
 
         extractNpcKey(resPath) {
@@ -5659,7 +5701,7 @@
                 const exposeTalkCount = DataManager.currentLoopExposeTalks(AppState.currentLoop).length;
 
                 const exposeNpc = chapter?.exposeNpcId ? AppState.npcsMap.get(String(chapter.exposeNpcId)) : null;
-                const targetName = loop.expose?.target_name || cn(exposeNpc?.Name) || chapter.exposeNpcId || '';
+                const targetName = ld?.expose?.target_name || cn(exposeNpc?.Name) || chapter.exposeNpcId || '';
                 const exposeRoundLines = (chapter.exposes || []).map((exposeEntry, idx) => {
                     const targetId = String(exposeEntry?.testimony || '').trim();
                     const target = targetId && targetId !== '0' && typeof FlowOverviewView !== 'undefined' && FlowOverviewView.resolveExposeMaterial
@@ -5700,6 +5742,26 @@
 
                 `;
 
+            }
+
+            const postSegments = DataManager.postExposeSegments(chapter, ld?.expose);
+            if (postSegments.length > 0) {
+                const segmentNames = postSegments
+                    .map(seg => seg.title || seg.videoScene)
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .join(' / ');
+                const more = postSegments.length > 2 ? ` 等${postSegments.length}段` : '';
+                html += `
+                    <div class="sidebar-item sidebar-expose-item ${AppState.currentPhase === 'postExpose' ? 'active' : ''}"
+                         onclick="FlowView.showPhase('postExpose')">
+                        <div class="sidebar-expose-head">
+                            <span class="phase-tag expose">指证后</span>
+                            <span>${escapeHtml(segmentNames || '指证后剧情')}${escapeHtml(more)}</span>
+                            <span class="badge">${postSegments.length}段</span>
+                        </div>
+                    </div>
+                `;
             }
 
 
@@ -6725,6 +6787,61 @@
             `;
         },
 
+        postExposeSegmentsForLoop(loop) {
+            const fromFlow = Array.isArray(loop?.postExposeSegments) ? loop.postExposeSegments : [];
+            if (fromFlow.length) {
+                return fromFlow
+                    .map((seg, idx) => DataManager.normalizePostExposeSegment(seg, idx))
+                    .sort((a, b) => a.order - b.order);
+            }
+            const chapter = DataManager.getChapterConfig(AppState.currentUnit, loop?.id || AppState.currentLoop);
+            return DataManager.postExposeSegments(chapter, null);
+        },
+
+        renderPostExposeStage(loop, stage) {
+            const segments = this.postExposeSegmentsForLoop(loop);
+            if (!segments.length) {
+                return `<div class="flow-opening-preview"><div class="flow-warning">这个 Loop 暂无指证后剧情入口。</div></div>`;
+            }
+            const cards = segments.map(seg => {
+                const scene = seg.sceneId ? DataManager.getScene(seg.sceneId) : null;
+                const sceneName = seg.sceneName || scene?.sceneName || (seg.sceneId ? `场景 ${seg.sceneId}` : '指证后剧情');
+                const entries = seg.videoScene ? DataManager.talkEntriesByScene(seg.videoScene) : [];
+                const firstId = seg.entryTalkId || (entries[0]?.id ? String(entries[0].id) : '');
+                const talk = firstId ? DataManager.getTalk(firstId) : null;
+                const loaded = entries.length > 0 || !!talk;
+                const count = entries.length || (talk ? 1 : 0);
+                const sub = `${sceneName}${seg.videoScene ? ` · ${seg.videoScene}.json` : ''}${firstId ? ` · 首句 #${firstId}` : ''}`;
+                const title = escapeHtml(seg.title || sceneName).replace(/'/g, '&apos;');
+                const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+                const playAction = firstId
+                    ? `UI.playTalkInDrawer('${escapeHtml(firstId)}', 'POST-EXPOSE', '${title}', '${safeSub}')`
+                    : '';
+                return `
+                    <div class="flow-opening-preview">
+                        ${seg.brief ? `<div class="flow-opening-brief">${escapeHtml(seg.brief)}</div>` : ''}
+                        <div class="flow-opening-row">
+                            <span>${escapeHtml(sceneName)}${seg.sceneId ? ` · ${escapeHtml(seg.sceneId)}` : ''}</span>
+                            ${seg.transitionLabel ? `<span>${escapeHtml(seg.transitionLabel)}</span>` : ''}
+                            ${seg.videoScene ? `<span>${escapeHtml(seg.videoScene)}.json</span>` : ''}
+                            ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : '<span>未配置首句</span>'}
+                            ${loaded ? `<span>${count} 句</span>` : '<span style="color:var(--warning);">未加载</span>'}
+                        </div>
+                        ${firstId && loaded ? `
+                            <button type="button" class="flow-opening-play-card" onclick="${playAction}">
+                                <span>
+                                    <span class="flow-opening-play-title">播放指证后剧情 · ${escapeHtml(seg.title || sceneName)}</span>
+                                    <span class="flow-opening-play-meta">${escapeHtml(sub)} · ${count} 句</span>
+                                </span>
+                                <span class="flow-opening-play-action">打开</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            return `<div class="flow-opening-preview">${cards}</div>`;
+        },
+
         renderStages(loop) {
             const stages = loop.flow || [];
             if (!stages.length) {
@@ -6733,6 +6850,7 @@
             let html = `<div class="flow-stage-list">`;
             stages.forEach((stage, idx) => {
                 const openingExtra = stage.type === 'opening' ? this.renderOpeningStage(loop, stage) : '';
+                const postExposeExtra = stage.type === 'postExpose' ? this.renderPostExposeStage(loop, stage) : '';
                 html += `
                     <div class="flow-stage">
                         <div class="flow-stage-title">
@@ -6741,6 +6859,7 @@
                         </div>
                         <div class="flow-stage-summary">${escapeHtml(stage.summary || '')}</div>
                         ${openingExtra}
+                        ${postExposeExtra}
                     </div>
                 `;
             });
@@ -6779,6 +6898,13 @@
                 <div class="flow-list-item">
                     <div class="flow-list-title">指证 · ${loop.exposes?.length || 0}</div>
                     <div class="flow-list-sub">${(loop.exposes || []).map(e => `第 ${escapeHtml(e.id || '?')} 轮 · ${(e.items || []).length} 个材料`).join('<br>') || '暂无指证'}</div>
+                </div>
+            `;
+            const postSegments = this.postExposeSegmentsForLoop(loop);
+            html += `
+                <div class="flow-list-item">
+                    <div class="flow-list-title">指证后剧情 · ${postSegments.length}</div>
+                    <div class="flow-list-sub">${postSegments.map(s => `${escapeHtml(s.order)}. ${escapeHtml(s.title || s.videoScene || '未命名')}`).join('<br>') || '暂无指证后剧情'}</div>
                 </div>
             `;
             html += `</div>`;
@@ -9179,6 +9305,73 @@
             }];
         },
 
+        resolvePostExposeSegments(loop) {
+            const chapter = DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop);
+            return DataManager.postExposeSegments(chapter, loop?.expose);
+        },
+
+        renderPostExposeSegmentCards(segments) {
+            if (!segments.length) {
+                return `<div class="flow-warning">当前 Loop 暂无指证后剧情入口。</div>`;
+            }
+            let html = '';
+            segments.forEach(seg => {
+                const scene = seg.sceneId ? DataManager.getScene(seg.sceneId) : null;
+                const sceneName = seg.sceneName || scene?.sceneName || (seg.sceneId ? `场景 ${seg.sceneId}` : '指证后剧情');
+                const bgUrl = scene ? Config.getAssetUrl(scene.backgroundImage) : '';
+                const entries = seg.videoScene ? DataManager.talkEntriesByScene(seg.videoScene) : [];
+                const firstId = seg.entryTalkId || (entries[0]?.id ? String(entries[0].id) : '');
+                const talk = firstId ? DataManager.getTalk(firstId) : null;
+                const loaded = entries.length > 0 || !!talk;
+                const count = entries.length || (talk ? 1 : 0);
+                const sub = `${sceneName}${seg.videoScene ? ` · ${seg.videoScene}.json` : ''}${firstId ? ` · 首句 #${firstId}` : ''}`;
+                const title = escapeHtml(seg.title || sceneName).replace(/'/g, '&apos;');
+                const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+                const playAction = firstId
+                    ? `UI.playTalkInDrawer('${escapeHtml(firstId)}', 'POST-EXPOSE', '${title}', '${safeSub}')`
+                    : '';
+                const cardOpen = firstId && loaded ? ` onclick="${playAction}"` : '';
+                html += firstId && loaded
+                    ? `<div class="phase-scene-card clickable"${cardOpen}>`
+                    : `<div class="phase-scene-card">`;
+                if (bgUrl) {
+                    html += `<div class="phase-scene-bg" style="background-image:url('${bgUrl}')"></div>`;
+                } else {
+                    html += `<div class="phase-scene-bg placeholder" data-id="${escapeHtml(seg.sceneId || '')}" data-kind="POST-EXPOSE"></div>`;
+                }
+                html += `<div class="phase-scene-body">`;
+                html += `<div class="phase-scene-head">
+                    <span class="phase-tag expose">指证后</span>
+                    <h2 class="phase-scene-title">${escapeHtml(seg.title || sceneName)}</h2>
+                    ${seg.sceneId ? `<span class="phase-scene-id">#${escapeHtml(seg.sceneId)}</span>` : ''}
+                </div>`;
+                if (seg.transitionLabel) {
+                    html += `<div class="phase-scene-trigger"><span class="trigger-label">转场</span><span class="trigger-text">${escapeHtml(seg.transitionLabel)}</span></div>`;
+                }
+                if (seg.brief) {
+                    html += `<div class="phase-scene-purpose">${escapeHtml(seg.brief)}</div>`;
+                }
+                html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
+                if (seg.videoScene) {
+                    html += `<span class="copy-asset" onclick="copyText('${escapeHtml(seg.videoScene)}', this)">
+                        <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
+                        <span class="copy-asset-name">${escapeHtml(seg.videoScene)}.json</span>
+                        <span class="copy-asset-ico">copy</span>
+                    </span>`;
+                }
+                if (loaded) {
+                    html += `<span class="talk-meta">${count} 句${firstId ? ` · 首句 <span class="talk-meta-id">#${escapeHtml(firstId)}</span>` : ''}</span>`;
+                } else {
+                    html += `<span class="talk-meta miss">未加载</span>`;
+                }
+                if (firstId && loaded) {
+                    html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
+                }
+                html += `</div></div></div>`;
+            });
+            return html;
+        },
+
         showScene(sceneId, autoPlayTalkId) {
             AppState.previousPhase = AppState.currentPhase || 'opening';
             AppState.currentPhase = 'scene';
@@ -9765,43 +9958,24 @@
                     });
                 }
 
-                // Post-expose section (指证后剧情)
-                if (exp.post_expose) {
-                    const pe = exp.post_expose;
-                    const peTalkFile = pe.talk || '';
-                    const peEntries = peTalkFile ? AppState.allTalks.filter(t => t.videoScene === peTalkFile).sort((a, b) => Number(a.videoId || a.id) - Number(b.videoId || b.id)) : [];
-                    const peFirstId = peEntries.length > 0 ? peEntries[0].id : '';
-
+                const postSegments = this.resolvePostExposeSegments(loop);
+                if (postSegments.length) {
                     html += `<div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--rule);">`;
-                    html += `<div class="section-title" style="color:var(--highlight);">指证后 · ${escapeHtml(pe.name || 'Post-Expose')}</div>`;
-
-                    if (pe.characters?.length) {
-                        html += `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin:0.5rem 0;">`;
-                        pe.characters.forEach(c => { html += `<span class="char-pill">${escapeHtml(c)}</span>`; });
-                        html += `</div>`;
-                    }
-                    if (pe.purpose) {
-                        html += `<p style="margin:0.5rem 0; color:var(--text-secondary);">${escapeHtml(pe.purpose)}</p>`;
-                    }
-                    if (peTalkFile) {
-                        const sub = `${peTalkFile}.json · ${peEntries.length} 句`;
-                        const playAction = `UI.playTalkInDrawer('${peFirstId}', 'POST-EXPOSE', '${escapeHtml(pe.name || '').replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
-                        html += `<div class="phase-scene-talk" style="margin-top:0.5rem;">`;
-                        html += `<span class="copy-asset" onclick="copyText('${escapeHtml(peTalkFile)}', this)">
-                            <span class="copy-asset-dot ${peEntries.length > 0 ? 'ok' : 'miss'}"></span>
-                            <span class="copy-asset-name">${escapeHtml(peTalkFile)}.json</span>
-                            <span class="copy-asset-ico">copy</span>
-                        </span>`;
-                        if (peEntries.length > 0) {
-                            html += `<span class="talk-meta">${peEntries.length} 句 · 首句 <span class="talk-meta-id">#${peFirstId}</span></span>`;
-                        }
-                        if (peFirstId) {
-                            html += `<button class="btn primary phase-play-btn" onclick="event.stopPropagation(); ${playAction}">▶ 播放</button>`;
-                        }
-                        html += `</div>`;
-                    }
+                    html += `<div class="section-title" style="color:var(--highlight);">指证后剧情 · ${postSegments.length} 段</div>`;
+                    html += this.renderPostExposeSegmentCards(postSegments);
                     html += `</div>`;
                 }
+
+            } else if (phase === 'postExpose') {
+                const postSegments = this.resolvePostExposeSegments(loop);
+                html = `
+                    <div class="scene-title">
+                        <span class="phase-tag expose">指证后剧情</span>
+                        ${escapeHtml(loop.title || '')}
+                    </div>
+                    ${loop.target ? `<div class="phase-goal"><span class="phase-goal-label">目标</span><span class="phase-goal-text">${escapeHtml(loop.target)}</span></div>` : ''}
+                `;
+                html += this.renderPostExposeSegmentCards(postSegments);
 
             } else if (phase === 'events' && loop.events) {
                 html = `

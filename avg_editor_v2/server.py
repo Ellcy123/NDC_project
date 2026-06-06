@@ -45,7 +45,7 @@ EDITABLE_FIELDS = {
     'MapConfig':      {'ArtRequirement', 'Name'},
     'ChapterConfig':  {'ArtRequirement', 'chapterTitle', 'chapterBrief', 'chapterGoal',
                        'openingBrief', 'summaryTitle', 'summaryContent',
-                       'newDoubtTitle', 'newDoubtContent'},
+                       'newDoubtTitle', 'newDoubtContent', 'postExposeSegments'},
     'DoubtConfig':    {'text', 'isFragment'},
     'TestimonyItem':  {'testimony', 'truth', 'shortDesc', 'shortTruth',
                        'testimonyType', 'triggerType', 'triggerParam'},
