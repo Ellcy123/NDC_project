@@ -72,6 +72,7 @@ EPI02_SPEAKER_MAP = {
     "Tony": ("NPC209", "Tony"),
 
     "维尼": ("NPC210", "Vinnie Moretti"),
+    "文森特": ("NPC210", "Vinnie Moretti"),
     "Vinnie": ("NPC210", "Vinnie Moretti"),
     "Vinnie Moretti": ("NPC210", "Vinnie Moretti"),
 
