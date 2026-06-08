@@ -105,6 +105,7 @@ Talk.id            ←  ChapterConfig.initTalk / ExposeData.talkId / NPCLoopData
 - chapterGoal 写悬疑问句，不写穿谜底。
 - 点击只触发对白的物件用 `itemType=talk`，不要伪装成 NPC。
 - 同一语义不要既配高亮证词又配普通证词（案情分析会重复）。
+- 美术 `XYposition.txt` / 坐标表给的坐标，**原封不动写入配置**。不要做 `x-1280`、`800-y`、中心锚点换算；只有用户明确说美术坐标写错，才按用户指定值人工修正。
 
 ## 7. 校验闸门
 

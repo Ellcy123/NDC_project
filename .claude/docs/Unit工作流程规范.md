@@ -230,9 +230,6 @@ python -m http.server 8080 --directory "D:\\"
 
 部署到 GitHub Pages 见 `preview_new2/DEPLOY.md`。
 
-**可用 skill**：
-- `avg-interface` — AVG 游戏交互界面设计（流水线播放、对话预览、证据展示、场景切换）。
-
 **注意事项**：
 - **ID 重编排在生成 JSON 前做**（Unit9 `b6e1ad7` "全章对话 ID 重编排 + JSON 生成 + 预览部署"是一次完成的）。
 - JSON 落地后发现的问题，**修改 MD 后重新 sync**，不要直接改 JSON。

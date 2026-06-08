@@ -69,7 +69,6 @@ Vinnie那个黑手党很危险。
 但我不能再等了。"
 
 
-
 <!-- Mickey 很快把材料分好类。职业习惯，不多解释。 -->
 
 <!-- Zack 没碰那个旧信封。那不是案卷。Lula 的视线从文件上移开，落在信封上，过了一会儿才伸手。 -->
@@ -558,14 +557,7 @@ Zack 走到钢琴旁，没有说话，把打火机放在琴盖上。
 
 @evidence "废墟打火机（2501，现场完好发现）" -> r1_break #correct
 @evidence "Tony 辨认证词（上周还在用它给姑娘点烟）" -> r1_break #correct
-@evidence "Danny 目击证词（当晚 8 点多壮汉从鞋坊方向离开）" -> r1_trap #trap "仅仅是一个模糊的目击证词，不能直接证明你最近去了现场。你完全可以说那个人不是你。"
 
-@label r1_trap
-
-**维尼** [手指随意按响了一个低音琴键，嗤笑一声]
-> 这街上大块头多得是，谁知道是不是哪个酒鬼路过？你凭什么断定那个人是我？没有别的证据，别在这儿浪费时间。
-
-@goto r1_present
 
 @label r1_break
 
@@ -621,15 +613,7 @@ Zack 走到钢琴旁，没有说话，把打火机放在琴盖上。
 @label r2_present
 
 @evidence "Danny 目击证词（当晚 8 点多壮汉从鞋坊方向离开，打晕了Margaret）" -> r2_break #correct
-@evidence "废墟打火机（2501，现场完好发现）" -> r2_trap #trap "单独出示无法反驳'没打晕 Margaret'——Vinnie 可以说'我在场但没打人，是别人动的手'；需要配合 Danny 目击才能完成'那个壮汉就是你'的推理。"
-@evidence "Tony 辨认证词（上周还在用它给姑娘点烟）" -> r2_trap #trap "Tony 证词强化'最近在场'的事实，但不能反驳'没打晕 Margaret'——Vinnie 可以说'我在场，但不是我打的人'。"
 
-@label r2_trap
-
-**维尼** [冷笑了一声]
-> 这东西你刚才已经说过了。它能证明我具体哪一天、哪一分钟站在鞋坊门口吗？不能。
-
-@goto r2_present
 
 @label r2_break
 

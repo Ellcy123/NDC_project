@@ -1,348 +1,412 @@
-﻿# Unit2 AVG 特殊场景与人物调度需求
+# Unit2 AVG 特殊场景需求
 
-**版本**：v3.0 / 2026-06-06
-**用途**：根据当前 D:/NDC_project/AVG/EPI02 对白，整理 Unit2 非自由探索阶段的 AVG 场景、角色进出场与叙事承接。
-**边界**：本文件只写场景段落、对白挂点、角色调度和叙事作用；不写具体美术资产命名，不写具体分镜格数。突发瞬间见《Unit2_AVG突发事件动态漫画需求》。
+版本：v3.2 / 2026-06-08
 
----
+说明：本文件只记录 Unit2 AVG 对话过程中需要额外说明的特殊场景、过场场面和角色画面调度。它不是 NPC 立绘资源清单，也不是自由探索场景的 NPC 挂载表。
 
-## 总规则
+## 配置边界
 
-- “特殊场景”指 Loop 开篇、指证后收束、章节转场、全 Unit 结尾等非普通点击搜证段。
-- 如果同一个 Talk 文件内部发生地点切换，本表按叙事段落写清楚，不强行拆成多个资产需求。
-- 人物进出场以当前对白为准：如果旧文档漏了、写多了或位置错了，以本版为准。
-- 指证轮次本身不在本表逐轮描述；只在角色有明确入场、离场、场景翻面时记录。
-
----
+- 普通自由探索阶段的可点击 NPC，不在这里写；它们应该走 SceneConfig 的 NPC 挂载。
+- 普通探索底图、证据道具、容器道具，不在这里展开；它们应该走 ArtAssetConfig / Item / SceneConfig。
+- 突发事件动态漫画只在这里点到叙事位置，具体需求以《Unit2_AVG突发事件动态漫画.md》为准。
+- 这里写的“角色调度”只表示 AVG 画面中谁在场、谁离开、谁通过电话/门外/画面外参与，不代表要在 ArtAssetConfig 里新增任何角色资源字段。
+- AVG 场景可以有独立于自由探索场景的底图命名；如果只是同一探索底图复用，则由配置表引用同一个背景资产，不在本文强行拆成新图。
 
 ## 总览
 
-| 编号 | Loop | 文件 | 场景段落 | 重点调度 |
+| Loop | 场景 | 挂载对白 / 触发点 | 需求类型 | 叙事作用 |
 |---|---|---|---|---|
-| §1 | L1 | Talk/loop1/opening_l1_crimescene.json | 鞋坊火灾现场开场 | Morrison 拦人，Emma 中途挡住 Morrison，Zack 冲进现场 |
-| §2 | L2 | Talk/loop2/opening_l2_hospital.json + mickey_l2_hospital.json | 圣心医院 Margaret 苏醒消息与 Mickey 正式登场 | Margaret 昏迷在床，Mickey 留守医院，Zack/Emma 外出调查 |
-| §3 | L3 | Talk/loop3/opening_l3_cityhall.json | 银行/市政门口被拒，Mickey 递交律令入场 | Emma 离队去医院，Zack/Mickey 进入银行 |
-| §4 | L3 | Talk/loop3/moore_l3_postexpose.json | Moore 指证后交出旧钥匙 | Moore 失势，Mickey 法律压制，Zack 接下地下室线索 |
-| §5 | L4 | Talk/loop4/opening_l4_hospital.json | 医院战术碰头 | Emma 留医院，Zack/Mickey 去地下室与 Danny 线 |
-| §6 | L5 | Talk/loop5/opening_l5_frankhome.json | Frank 家铁盒与律师/侦探分歧 | Lula 入场，Mickey 带材料去法院，Zack/Emma 转去废墟 |
-| §7 | L5 | Talk/loop5/vinnie_l5_postexpose_bar.json | Vinnie 认罪后赌场离场 | Vinnie 主动自首，Tony 打电话，Zack 仍怀疑 |
-| §8 | L5 | Talk/loop5/vinnie_l5_postexpose_phone.json | 电话亭 Foster 死因反转 | Emma 通电话，Zack/Emma 立刻去医院 |
-| §9 | L6 | Talk/loop6/opening_l6_hospital.json + margaret_l6_hospital.json | Margaret 苏醒、Foster 留证、Margaret 目击 | Foster 退场睡觉，Margaret 交代目击与旧照片 |
-| §10 | L6 | Talk/loop6/morrison_l6_warrant.json | Morrison 签发搜查令 | Zack 用尸检报告逼 Morrison 承认凶杀 |
-| §11 | L6 | Talk/loop6/edith_l6_home.json + Expose/Loop6_leonard.json + leonard_l6_postexpose.json | Leonard 家搜查、Edith 入场拆穿、Leonard 自首 | Edith 先放行搜查，指证中再拖箱入场，结尾离开 |
-| §12 | L6 | Talk/loop6/ending_l6_cemetery.json | Frank 墓地结尾 | Lula 正门悼念，Mickey 带来坏消息与新案子 |
-
----
-
-## §1 · L1 鞋坊火灾现场开场
-
-**挂载文件**：Talk/loop1/opening_l1_crimescene.json
-
-**挂载对白**：
-- 201001001 Zack：“里面发生了什么事？！”
-- 201001004 Morrison：“这里头意外失火了……”
-- 201001009 Morrison：“在那白布下面呢。”
-- 201001011 Zack：“让开！”
-- 201001014 Emma：一步挡在 Morrison 面前。
-- 201001021 Emma：“Zack，快进去！”
-
-**叙事作用**：
-- 建立 Unit2 的第一误导：玩家和 Zack 以为白布下是 Margaret。
-- 建立 Morrison 的粗暴冷淡，以及 Emma 能用记者身份短暂压住警局的功能。
-- 直接把玩家送入 L1 火灾现场调查。
-
-**人物进出场**：
-- 开场在场：Zack、Morrison，背景可有警员。
-- Emma 在 201001014 入场，挡住 Morrison，为 Zack 争取时间。
-- 结尾 Zack 冲进现场，Emma 和 Morrison 留在外侧形成阻拦关系。
-
----
-
-## §2 · L2 圣心医院与 Mickey 正式登场
-
-**挂载文件**：Talk/loop2/opening_l2_hospital.json；Talk/loop2/mickey_l2_hospital.json
-
-**挂载对白**：
-- 201002001 Zack：“她真的醒过吗？”
-- 201002008 Mickey：“她醒着的时候，问过你。”
-- 205002015 Mickey：“昨晚八点四十五左右……”
-- 205002020 Mickey：“她伤得很重。医生说她像是被人从后面重重打晕的。”
-- 205002027 Mickey：“Frank Kowalski 是我的客户。”
-- 205002041 Mickey：“我绝不相信这是巧合。”
-- 205002056 Mickey：“我会留在医院看着 Margaret。”
-
-**叙事作用**：
-- 把 L1 电报的悬念落地：Margaret 确实还活着，但仍在危险中。
-- Mickey 以“救助 Margaret 的人”和“Frank 的代理律师”双重身份建立可信度。
-- 给出 L2 调查入口：O'Hara 和 Silver Moon。
-
-**人物进出场**：
-- 开场在场：Zack、Emma、Mickey、昏迷 Margaret。
-- Mickey 始终保持医院留守位，不跟随 Zack 外出。
-- Zack/Emma 离场去南区走访，Mickey 留下看护 Margaret。
-
----
-
-## §3 · L3 银行/市政门口被拒，Mickey 递交律令入场
-
-**挂载文件**：Talk/loop3/opening_l3_cityhall.json
-
-**挂载对白**：
-- 201003007 Emma：“这是你们银行的贷款经理提供的亲笔签名信！”
-- 201003011 门卫：“也许昨天有用，但是今天不行。”
-- 201003025 Mickey：从画面右侧走上台阶，“等等。”
-- 201003026 Mickey：递出法院签署文件。
-- 201003033 Mickey：“拿去吧。章是真的，法官签名也是真的。”
-- 201003048 Mickey：“银行这边的战局我会和 Zack 接手。”
-- 201003056 Emma：“医院那边交给我。”
-- 201003064 Mickey：“走吧，Zack，让我们去教教他们什么叫规矩。”
-
-**叙事作用**：
-- Leonard 的签名信失效，证明银行已提前封路。
-- Mickey 以真正有效的法院文件入场，完成“精英律师救场”。
-- 队伍分工改变：Emma 离队去医院，Zack 与 Mickey 进入银行战线。
-
-**人物进出场**：
-- 开场：Zack、Emma、门卫。
-- Mickey 在 201003025 从画面右侧入场，改变局势。
-- Emma 在 201003056 接受医院守护任务，从银行线退出。
-- 结尾 Zack/Mickey 进入银行。
-
----
-
-## §4 · L3 Moore 指证后交出旧钥匙
-
-**挂载文件**：Talk/loop3/moore_l3_postexpose.json
-
-**挂载对白**：
-- 208004013 Mickey：“伪造文书，掠夺性贷款。”
-- 208004017 Moore：“你……你是 Mickey Donnelly？？？”
-- 208004027 Zack：“Leo 说 Frank 的房产证明抵押给银行了。”
-- 208004038 Moore：取出厚信封扔在桌上。
-- 208004042 Moore：“既然你们这么想查，不如拿去自己试试。”
-- 208004049 Mickey：“今晚先去见见还活着的人。”
-- 208004052 Zack：“至于这把钥匙……”
-
-**叙事作用**：
-- Moore 被法律压力压住，从傲慢转成保身。
-- 旧钥匙把调查从银行转回 Frank 和 Margaret 的实际生活空间：鞋坊地下室。
-- 同时把 Danny 的房产证交易正式拉进主线。
-
-**人物进出场**：
-- 在场：Zack、Mickey、Moore。
-- 无新角色入场；重点是 Moore 从主导位退到被迫交出线索。
-- 结尾 Zack/Mickey 离开，带走旧钥匙。
-
----
-
-## §5 · L4 医院战术碰头
-
-**挂载文件**：Talk/loop4/opening_l4_hospital.json
-
-**挂载对白**：
-- 201004002 Emma：“Margaret 阿姨的药单被人减免了一大笔费用。”
-- 201004009 Mickey：“这就是 Frank 原本要来找我检举的银行犯罪。”
-- 201004015 Mickey：“把房产证交给银行……是他的亲侄子 Danny。”
-- 201004018 Zack：摸出旧钥匙。
-- 201004023 Zack：“我猜这把钥匙，很可能就是鞋坊地下室的钥匙。”
-- 201004026 Mickey：“先去 Margaret 鞋坊的地下室……”
-- 201004029 Emma：“医院这边我来查。”
-- 201004032 Zack：“好。走吧。”
-
-**叙事作用**：
-- 汇总 L3 银行战线成果，明确下一步调查方向。
-- Emma 留医院调查 Foster 减免费用与 Margaret 状况，避免所有角色都挤进外勤。
-- Zack/Mickey 的路线分成地下室和 Danny 两条可继续推进的线。
-
-**人物进出场**：
-- 在场：Zack、Emma、Mickey、昏迷 Margaret。
-- Emma 留在医院，Zack/Mickey 离场。
-- Margaret 仍昏迷，不参与对白。
-
----
-
-## §6 · L5 Frank 家铁盒与律师/侦探分歧
-
-**挂载文件**：Talk/loop5/opening_l5_frankhome.json
-
-**挂载对白**：
-- 201005001 Zack：“检举材料连 Danny 都不知道？”
-- 201005004 Lula：出现在门口，“抱歉。”
-- 201005007 Lula：“不过，他给了我一个铁盒。”
-- 201005025 Mickey：“这批检举材料的事比较重要。”
-- 201005038 Mickey：“这才是我们目前最重要的反击。”
-- 201005041 Mickey：“难道你不想重回法庭吗？”
-- 201005049 Zack：“法院那边交给你了，Mickey。”
-- 201005057 Mickey：“你去把那个凶手找出来，Zack。祝你好运。”
-- 201005058 Zack：“Emma。我母亲怎么样了？”
-- 201005077 Emma：“Zack，我们去把那个放火杀人的混蛋抓出来！”
-
-**叙事作用**：
-- Frank 的检举材料被打开，银行案线获得法庭推进可能。
-- Mickey 与 Zack 的价值选择分歧第一次正面化：法庭正义优先，还是先追出直接凶手。
-- 场景后半切到医院，Emma 回归行动队伍，Zack/Emma 转向废墟和 Vinnie 线。
-
-**人物进出场**：
-- 开场在 Frank 家：Zack、Mickey。
-- Lula 于 201005004 入场，带来铁盒。
-- Mickey 于分歧后带材料离队去法院。
-- 后半段地点切到医院：Emma 入场汇报 Margaret/Foster 情况；Zack/Emma 离场去废墟。
-
----
-
-## §7 · L5 Vinnie 认罪后赌场离场
-
-**挂载文件**：Talk/loop5/vinnie_l5_postexpose_bar.json
-
-**挂载对白**：
-- 210006001 Vinnie：“你们要凶手，我给你们凶手。”
-- 210006003 Vinnie：“我，打晕了 Margaret！因为她看见是我放的火！Frank 是我杀的！”
-- 210006005 Vinnie：“Tony！帮我报警！”
-- 210006010 Vinnie：“不是你们这俩三流侦探把我抓出来的！”
-- 210006015 Zack：“这一切发生得太快了。”
-- 210006021 Zack：“……希望如此。”
-- 210006023 Emma：“那就走吧，去街角的电话亭。”
-
-**叙事作用**：
-- 让玩家短暂以为案件收束：凶手认罪、现场证物对上、Tony 报警。
-- Zack 的怀疑保留下一步反转空间。
-- 自然转场到电话亭，给 Foster 的尸检反转创造“报喜变噩耗”的前置。
-
-**人物进出场**：
-- 在场：Zack、Emma、Vinnie、Tony。
-- Vinnie 主动公开认罪并离开去警局自首。
-- Tony 留在吧台打电话。
-- Zack/Emma 离开赌场去电话亭。
-
----
-
-## §8 · L5 电话亭 Foster 死因反转
-
-**挂载文件**：Talk/loop5/vinnie_l5_postexpose_phone.json
-
-**挂载对白**：
-- 215005002 Emma：“就算没有你的尸检报告，我和 Zack 也已经抓到真凶了哦！”
-- 215005009 Foster：“……那事情可就糟糕了。”
-- 215005010 Foster：“Frank 并不是因为火灾被烧死的。”
-- 215005011 Foster：“他很可能是和某人博弈后，被钝器打击致死。”
-- 215005013 Foster：“还有，Margaret 醒了。”
-- 215005015 Zack：“走，去医院。”
-
-**叙事作用**：
-- 撕开 Vinnie 认罪的表面结案。
-- 同时给 L6 两个入口：Frank 真死因和 Margaret 目击证词。
-
-**人物进出场**：
-- 在场：Zack、Emma。
-- Foster 只通过电话出现，不需要实体入场。
-- 结尾 Zack/Emma 立刻离开电话亭前往医院。
-
----
-
-## §9 · L6 Margaret 苏醒、Foster 留证、Margaret 目击
-
-**挂载文件**：Talk/loop6/opening_l6_hospital.json；Talk/loop6/margaret_l6_hospital.json
-
-**挂载对白**：
-- 201006001 Zack：“看来，医生把你从鬼门关拉回来了。”
-- 201006006 Foster：靠在门框上调侃。
-- 201006017 Foster：把棕色公文包扔在床头柜上。
-- 201006021 Foster：“现在必须去睡一觉。”
-- 201006023 Margaret：“关于那天晚上我看到的事，我有很多话要说。”
-- 213006032 Margaret：“我大概七点四十五出门……”
-- 213006036 Margaret：“八点十六分左右。从鞋坊那边过来。”
-- 213006041 Margaret：“后来我往鞋坊方向走了几步，背后就挨了一下。”
-- 213006063 Zack：“这里面有张案发前拍的内景照片。”
-
-**叙事作用**：
-- Margaret 从“被害者身体”变成可提供关键证词的行动者。
-- Foster 将法医报告和实物证据交到玩家手里，并退出休息，不抢后续调查戏份。
-- Margaret 的目击把“戴眼镜西装男”与 Leonard 线锁定。
-
-**人物进出场**：
-- 开场在场：Zack、Emma、Margaret、Foster。
-- Foster 于 201006021 离场睡觉。
-- 后续 Margaret 与 Zack/Emma 进行病房问话。
-
----
-
-## §10 · L6 Morrison 签发搜查令
-
-**挂载文件**：Talk/loop6/morrison_l6_warrant.json
-
-**挂载对白**：
-- 203006001 Morrison：“几天前我就把话说得很清楚了。”
-- 203006004 Zack：把法医鉴定报告拍在桌上。
-- 203006008 Morrison：“……行。算你赢了，Brennan。”
-- 203006012 Morrison：“总不能让我开一张空白的让你去大街上随便抓人吧。”
-- 203006022 Zack：“湖滨信托银行的副行长，Leonard Ross。”
-- 203006026 Morrison：写下 Leonard 的名字并签搜查令。
-- 203006030 Zack：“不用你操心。”
-
-**叙事作用**：
-- 让 Morrison 从阻碍者变成被硬证据迫使配合的人。
-- 搜查令把 L6 从推理怀疑推进到合法搜查 Leonard 家。
-
-**人物进出场**：
-- 在场：Zack、Emma、Morrison。
-- 无新增角色入场；重点是 Zack 夺回主动权。
-- 结尾 Zack/Emma 带搜查令离场。
-
----
-
-## §11 · Leonard 家搜查、Edith 入场拆穿、Leonard 自首
-
-**挂载文件**：Talk/loop6/edith_l6_home.json；Expose/Loop6_leonard.json；Talk/loop6/leonard_l6_postexpose.json
-
-**挂载对白**：
-- 214006001 Edith：“这里是 Ross 家，我是银行家 Leonard Ross 的太太。”
-- 214006011 Emma：“我们怀疑您丈夫 Leonard Ross 是涉嫌杀死 Frank Kowalski 的嫌疑人。”
-- 214006017 Edith：“既然你们有搜查令，那就请便吧。”
-- 260078 Edith：“够了！”
-- 260085 Edith：“你以为你偷偷把沾了血的西服扔掉我就不知道了吗？”
-- 260095 Leonard：“别走……Edith……别走……”
-- 207007003 Edith：拿着手提箱离开。
-- 207007028 Leonard：“我去自首。我会把真相全说出来。”
-
-**叙事作用**：
-- Edith 先用社交面具接待搜查，再在指证高潮以自私和厌恶击碎 Leonard 的体面外壳。
-- Leonard 的崩溃不是单纯被证据击倒，还被妻子的抛弃压垮。
-- 结尾完成表面上的“真凶自首”，为墓地结尾里 Moore 银行保下 Leonard 做反转空间。
-
-**人物进出场**：
-- 搜查开场在场：Zack、Emma、Edith。
-- Leonard 在指证场中作为核心 NPC 在场。
-- Edith 在指证高潮 260078 从楼梯/上层重新入场，携带箱子。
-- Post-expose 中 Edith 带箱离场；Leonard 被带去警局。
-
----
-
-## §12 · Frank 墓地结尾
-
-**挂载文件**：Talk/loop6/ending_l6_cemetery.json
-
-**挂载对白**：
-- 201106001 Lula：“Frank……”
-- 201106006 Lula：“我终于可以把那句话说全了——我爱你。”
-- 201106009 Emma：“我们抓出了动手的人，却没能扳倒真正的幕后黑手。”
-- 201106020 Mickey：“Frank Kowalski 先生。”
-- 201106025 Mickey：“有个坏消息要告诉两位。Leonard 没法入狱了。”
-- 201106029 Mickey：“Vinnie——他在拘留室里上吊自杀了。”
-- 201106044 Mickey：“不过，我今天来找你们，更主要的是为了另一件事。”
-- 201106046 Mickey：“我想来想去，只能拜托两位了。”
-
-**叙事作用**：
-- 给 Frank 与 Lula 的爱情线一个体面收束。
-- 明确 Unit2 的胜利是不完整的：Leonard 被保下，Vinnie 以死亡顶罪，Moore 银行仍运转。
-- 用 Mickey 的新案子把 Unit2 尾声接向后续章节。
-
-**人物进出场**：
-- 开场在场：Lula、Zack、Emma。
-- Mickey 中途入场，带来诉讼继续、Leonard 脱身、Vinnie 自杀和新案子的消息。
-- 结尾聚焦 Zack/Emma 接下下一案。
-
----
-
-## 变更记录
-
-- 2026-06-06 v3.0：按当前 AVG/EPI02 Talk 重新整理特殊场景；补全挂载对白与人物进出场；删除具体美术资产命名与分镜/格数要求。
+| L1 | 火灾后的鞋坊现场 | `opening_l1_crimescene` 开篇 | 开场 AVG 场景 | 建立纵火案现场、Morrison 介入、Emma 与玩家合作起点 |
+| L1 | 鞋坊外电话亭 | Loop1 鞋坊外电话亭，Emma 联系 Foster | 过场 AVG 场景 | 把调查方向从现场推进到 Foster 线索 |
+| L1 | 警局 Morrison 办公区 | `morrison_l1_postexpose` | 指证后 AVG 场景 | 让 Morrison 的态度从阻拦转为有限配合 |
+| L1 | Zack 侦探事务所 | L1 结尾 Mickey 电报 | 章节收束 AVG 场景 | 用电报把下一循环目标抛给玩家 |
+| L2 | 圣心医院 Margaret 病房 | `opening_l2_hospital` / Mickey 追问 | 开篇 AVG 场景 | 让 Mickey 回归，确认 Margaret 仍是关键证人 |
+| L2 | 银行大厅玻璃旁 | L2 Leonard 指证后 | 指证后 AVG 场景 | Moore 旁观 Leonard 甩锅，为 L3 银行线埋钩子 |
+| L3 | 市政厅 / 银行门口 | `opening_l3_cityhall` | 开篇 AVG 场景 | Mickey 以律师身份登场，把调查推进到法律与房产证明 |
+| L3 | 银行贵宾室 | Moore 指证后 | 指证后 AVG 场景 | Moore 交出地下室钥匙，完成第一重反转 |
+| L4 | 圣心医院 Margaret 病房 | `opening_l4_hospital` | 开篇 AVG 场景 | 汇总前面线索，转向 Frank 家与 Lula |
+| L4 | 鞋坊店铺区 | `lula_l4_storefront` | 人物公开登场 AVG 场景 | Lula 首次进入主线，说明鞋坊账目与家庭压力 |
+| L4 | Frank 家厕所 / 主屋 | Danny 指证与指证后 | 指证 AVG 场景 | 从 Danny 的逃避转向“真爱正名”，把嫌疑推向更大的幕后 |
+| L5 | Frank 家主屋 | `opening_l5_frankhome` | 开篇 AVG 场景 | 小铁盒造成误导性结局开篇，推动玩家继续翻案 |
+| L5 | 圣心医院病房外 | L5 医院汇合 | 过场 AVG 场景 | 把 Frank 家线索和 Margaret 状态接回主线 |
+| L5 | Silver Moon 赌场 | Vinnie 指证后 | 指证后 AVG 场景 | Vinnie 离场，说明黑帮线并非终点 |
+| L5 | 公用电话亭 | `vinnie_l5_postexpose_phone` | 过场 AVG 场景 | Emma 联系 Foster，引向 L6 最终搜查 |
+| L6 | 圣心医院 Margaret 病房 | `opening_l6_hospital` / `margaret_l6_hospital` | 开篇 AVG 场景 | 最终循环前整合 Margaret 证词 |
+| L6 | 警局 Morrison 办公区 | `morrison_l6_warrant` | 搜查令过场 | 让警方权限进入主线，合法进入 Leonard 住所 |
+| L6 | Leonard 住所 | `edith_l6_home` / Leonard 指证 | 最终指证 AVG 场景 | Edith 试图离开，Leonard 线进入最终摊牌 |
+| L6 | Frank 墓地 | `ending_l6_cemetery` | 结局尾声 AVG 场景 | 收束 Frank、Margaret、玩家调查线 |
+
+## L1 火灾后的鞋坊现场
+
+挂载对白：`opening_l1_crimescene`
+
+场景重点：
+
+- 火灾刚结束，鞋坊现场仍有烧焦、封锁、混乱感。
+- Morrison 站在调查权威位置，阻止玩家靠近核心现场。
+- Emma 作为玩家同行者出现，承担引导和质疑功能。
+
+叙事作用：
+
+- 玩家第一次进入 Unit2 案件。
+- 建立“官方调查未必可靠”的基调。
+- 让 Morrison 成为第一个需要突破的阻力。
+
+角色调度：
+
+- Morrison 在场，态度强硬。
+- Emma 在场，和玩家一起进入案件。
+- 其他角色不需要作为可点击 NPC 单独处理。
+
+## L1 鞋坊外电话亭
+
+挂载对白：Loop1 鞋坊外电话亭，Emma 联系 Foster
+
+场景重点：
+
+- 这是离开火灾现场后的电话过场。
+- Emma 主动联系 Foster，推动案件进入更大的旧案/人物关系范围。
+
+叙事作用：
+
+- 把玩家从单纯火灾现场调查，推进到“有人隐瞒旧关系”的方向。
+- 为后续 Foster、医院、警局线铺路。
+
+角色调度：
+
+- Emma 是电话发起人。
+- Foster 可以只通过电话/文本参与，不需要在画面里实体登场。
+
+## L1 警局 Morrison 办公区
+
+挂载对白：`morrison_l1_postexpose`
+
+场景重点：
+
+- Morrison 被玩家逼到必须回应，但仍保持警察的控制姿态。
+- 场景应有办公室、警局、卷宗、疲惫夜间调查的氛围。
+
+叙事作用：
+
+- 指证后给玩家一个阶段性反馈。
+- Morrison 的态度不是完全服软，而是开始承认案情有漏洞。
+
+角色调度：
+
+- Morrison 在场。
+- 玩家/Zack 用对白推进，不需要额外可点击配置。
+
+## L1 Zack 侦探事务所
+
+挂载对白：L1 结尾 Mickey 电报
+
+场景重点：
+
+- 侦探事务所作为循环收束点。
+- 电报/消息带来新的调查方向。
+
+叙事作用：
+
+- 让 L1 的“现场阻力”结束，转入 L2 的医院与 Mickey 线。
+- 给玩家明确的下一循环目标。
+
+角色调度：
+
+- Emma 或 Zack 可以作为对白承接者。
+- Mickey 不需要实体出现，可通过电报/远端消息进入叙事。
+
+## L2 圣心医院 Margaret 病房
+
+挂载对白：`opening_l2_hospital`，以及 Mickey 追问段
+
+场景重点：
+
+- Margaret 病房是 L2 的信息入口。
+- Mickey 回归，和玩家形成新的证词压力。
+
+叙事作用：
+
+- 让 Margaret 的状态、Mickey 的保护欲、鞋坊纵火背后的旧关系同时进入玩家视野。
+- 从“现场”切到“证人和家庭关系”。
+
+角色调度：
+
+- Margaret 作为病房核心人物。
+- Mickey 在场，负责追问与情绪推动。
+- 医护环境只做背景氛围，不配置为独立角色。
+
+## L2 银行大厅玻璃旁
+
+挂载对白：L2 Leonard 指证后，Moore 隔玻璃旁观
+
+场景重点：
+
+- Leonard 的推责刚结束。
+- Moore 通过旁观或短暂插入，制造下一循环的目标感。
+
+叙事作用：
+
+- 告诉玩家 Leonard 不是终点。
+- 把调查重心自然推到银行、房产证明和 Moore 身上。
+
+角色调度：
+
+- Leonard 是刚被指证的对象。
+- Moore 可以作为旁观/压迫感来源出现，但不作为自由探索 NPC 挂载重复写。
+
+## L3 市政厅 / 银行门口
+
+挂载对白：`opening_l3_cityhall`
+
+场景重点：
+
+- Mickey 以律师身份登场，场景从个人恩怨转到法律文件、产权与银行。
+- 市政厅或银行门口需要有“公共机构”“法律程序”的质感。
+
+叙事作用：
+
+- 把玩家从病房证词推进到正式文件调查。
+- 引出 Frank 房产证明、地下室钥匙、银行存档这些核心线索。
+
+角色调度：
+
+- Mickey 在场，承担解释法律关系的功能。
+- 其他角色不需要作为可点击 NPC 单独列出。
+
+## L3 银行贵宾室
+
+挂载对白：Moore 指证后
+
+场景重点：
+
+- Moore 被玩家击穿后，交代文件与钥匙相关信息。
+- 贵宾室需要体现银行内部权力感和私密交易氛围。
+
+叙事作用：
+
+- 完成 Moore 这一层反转。
+- 把“房产证明被锁在档案柜里”与后续地下室钥匙联系起来。
+
+角色调度：
+
+- Moore 在场。
+- 钥匙/文件信息通过对白或道具获取完成，不在这里写成探索道具。
+
+## L4 圣心医院 Margaret 病房
+
+挂载对白：`opening_l4_hospital`
+
+场景重点：
+
+- 医院作为战术碰头点出现。
+- 玩家需要把 L3 的银行信息和 Margaret 线重新串起来。
+
+叙事作用：
+
+- 从银行线转入 Frank 家线。
+- 为 Lula 首次公开登场和 Danny 线做铺垫。
+
+角色调度：
+
+- Margaret 可以保持病房核心存在。
+- Mickey / Emma / Zack 根据对白在场即可，不单独配置进出场资源。
+
+## L4 鞋坊店铺区 Lula 登场
+
+挂载对白：`lula_l4_storefront`
+
+场景重点：
+
+- Lula 首次公开进入主线。
+- 她的出现要带出鞋坊账目、家庭压力、Frank 与 Margaret 的复杂关系。
+
+叙事作用：
+
+- 扩展嫌疑人与证词来源。
+- 让玩家意识到纵火案不是单一家庭争吵，而牵扯更多旁支利益。
+
+角色调度：
+
+- Lula 在场。
+- 店铺区背景作为普通探索/对话环境使用，不把 Lula 的出现写成额外进出场资产。
+
+## L4 Frank 家厕所 / 主屋
+
+挂载对白：Danny 指证段，以及 `danny_l4_postexpose`
+
+场景重点：
+
+- Danny 从隔墙嘶喊、厕所对峙，到指证后会合，情绪变化很大。
+- 指证后的场面重点不是“逃跑”，而是让 Danny 的关系与动机被重新理解。
+
+叙事作用：
+
+- 让玩家推翻“Danny 是单纯纵火凶手”的判断。
+- 把案件继续推向 Vinnie、黑帮和更深的幕后压力。
+
+角色调度：
+
+- Danny 在场，状态从防御、崩溃到被迫说出真相。
+- 其他角色只按对白在场，不额外写独立进出场资源。
+
+## L5 Frank 家主屋
+
+挂载对白：`opening_l5_frankhome`
+
+场景重点：
+
+- 小铁盒带来一个误导性结论。
+- 场景应该有“看似接近真相，但其实仍有缺口”的感觉。
+
+叙事作用：
+
+- 让玩家意识到前一层推理仍不完整。
+- 把调查从 Frank 家继续引向医院和 Vinnie。
+
+角色调度：
+
+- 现场以证物和环境压力为主。
+- 不需要额外 NPC 进出场配置。
+
+## L5 圣心医院病房外
+
+挂载对白：L5 医院汇合段
+
+场景重点：
+
+- 这是从 Frank 家转向 Vinnie 线之前的短过场。
+- 角色在这里交换判断，而不是展开完整调查。
+
+叙事作用：
+
+- 连接 Frank 家证据和后续黑帮/赌场线。
+- 让玩家目标从“家庭内部”转向“外部势力”。
+
+角色调度：
+
+- Emma / Zack / 相关同伴按对白在场即可。
+- Margaret 若出现，仍是病房线背景，不配置为独立事件。
+
+## L5 Silver Moon 赌场
+
+挂载对白：`vinnie_l5_postexpose_bar`
+
+场景重点：
+
+- 指证后 Vinnie 退出舞台。
+- 赌场场景要强调黑帮、交易、危险和“这不是终点”的感觉。
+
+叙事作用：
+
+- 让 Vinnie 的嫌疑被处理掉。
+- 把真正的压力导向 Foster / Leonard / 最终搜查。
+
+角色调度：
+
+- Vinnie 在场并离开，但这只是 AVG 表演调度，不单独配置成资源字段。
+- Emma / Zack 作为追问者按对白出现。
+
+## L5 公用电话亭
+
+挂载对白：`vinnie_l5_postexpose_phone`
+
+场景重点：
+
+- 指证后用电话把线索交给 Foster。
+- 氛围应偏夜间、紧张、秘密联络。
+
+叙事作用：
+
+- 让 L5 的黑帮线收束。
+- 明确 L6 的最终行动方向。
+
+角色调度：
+
+- Emma 或 Zack 作为打电话的人。
+- Foster 通过电话参与，不需要画面实体出现。
+
+## L6 圣心医院 Margaret 病房
+
+挂载对白：`opening_l6_hospital`，`margaret_l6_hospital`
+
+场景重点：
+
+- 最终循环前，医院再次成为证词整合点。
+- Margaret 的证词要更接近核心真相。
+
+叙事作用：
+
+- 让玩家带着前五轮的信息重新理解 Margaret。
+- 给最终搜查和 Leonard 住所行动建立正当性。
+
+角色调度：
+
+- Margaret 在场。
+- Foster / Mickey 等角色如对白需要可出现，但不作为独立进出场资源写。
+
+## L6 警局 Morrison 办公区
+
+挂载对白：`morrison_l6_warrant`
+
+场景重点：
+
+- Morrison 签搜查令或交付正式权限。
+- 警局场景要体现最终行动前的正式转折。
+
+叙事作用：
+
+- 让玩家从推理进入执法行动。
+- 合法打开 Leonard 住所这条最终路径。
+
+角色调度：
+
+- Morrison 在场。
+- 玩家/Zack 推动搜查理由。
+
+## L6 Leonard 住所
+
+挂载对白：`edith_l6_home`，Leonard 最终指证与指证后
+
+场景重点：
+
+- Edith 从房间出来，推着箱子准备离开，这是指证阶段的普通突发事件。
+- Leonard 住所是最终摊牌空间，不应写成普通自由探索 NPC 挂载需求。
+
+叙事作用：
+
+- Edith 的离开动作说明 Leonard 家中正在发生撤离/销毁/转移痕迹。
+- Leonard 最终指证完成 Unit2 的核心真相揭露。
+
+角色调度：
+
+- Edith 出现在事件中，作为“准备离开”的视觉焦点。
+- Leonard 是最终被指证对象。
+- Edith 事件的具体动态漫画需求见《Unit2_AVG突发事件动态漫画.md》。
+
+## L6 Frank 墓地
+
+挂载对白：`ending_l6_cemetery`
+
+场景重点：
+
+- 墓地是结局尾声，不是探索场景。
+- 氛围应收束、安静、带一点迟来的公正感。
+
+叙事作用：
+
+- 回到 Frank，完成本章情绪闭环。
+- 让案件真相和人物代价落地。
+
+角色调度：
+
+- 结局对白所需角色按场面出现即可。
+- 不配置可点击 NPC，也不配置自由探索入口。
+
+## 暂不写入本文件的内容
+
+- 自由探索阶段 NPC 可点击立绘。
+- 证据、道具、容器、门、装饰物的详细美术需求。
+- 每个突发事件的具体镜头格数、品质、画面分镜。
+- ArtAssetConfig 中的具体资源命名。
+
+这些内容分别由 NPC/Scene/Item 配置表、证据美术需求文档、突发事件动态漫画文档和资产表负责。

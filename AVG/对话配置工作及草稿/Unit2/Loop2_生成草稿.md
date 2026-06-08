@@ -1384,20 +1384,7 @@ Zack 走近了几步，隐约听到片段。 -->
 
 @evidence "O'Hara 贷款钞票（901B/905B，一头一尾）" -> r2_break #correct
 @evidence "Vinnie 的钞票（902B/903B/904B，恰好补中间缺口）" -> r2_break #correct
-@evidence "湖滨信托银行催款单" -> r2_trap #trap "催款单只证明银行作为机构在追 Frank 的债——这是合规行政流程，无法证明 Leonard 个人与 Vinnie 之间有资金往来；'银行在追债'和'Leonard 把钱给 Vinnie'是两个独立命题，前者不蕴含后者，Leonard 会说这是银行的正式催收和他个人无关"
 
-@label r2_trap
-
-**伦纳德** [接过催款单，扫一眼，推回来，姿态稳——他见过太多这种文件，这对他来说是例行公事]
-> 这是银行正式出具的催收通知。
-> Frank Kowalski 欠我们的钱，银行有权追偿，这是程序。
->
-> 这和我个人、以及和您说的那个人，没有关系。
->
-> 您拿银行的信纸证明银行在催债。
-> 这个证明是对的，但我们的催收也是正当的。
-
-@goto r2_present
 
 @label r2_break
 
@@ -1454,18 +1441,7 @@ Zack 走近了几步，隐约听到片段。 -->
 
 @evidence "Tony 证词（Vinnie 说'赚了一笔'，不是'还了债'）" -> r3_break #correct
 @evidence "Vinnie 催债小本子（标注 L.R. + 银行地址，工作记录格式）" -> r3_break #correct
-@evidence "Tony 证词（Vinnie 用新钞并说'今天又赚了一笔'）" -> r3_trap #trap "Tony 这条证词只能证明 Vinnie 花新钞并说过'赚了一笔'，但'赚了一笔'来源可以是任何地方——Leonard 可以辩称'那是他别的收入，不是我借的钱还回来'；'Vinnie 说赚了'无法单独锁定来源是 Leonard 委托的催债报酬，必须与小本子的 L.R. 工作记录格式结合，才能把'赚'锁定为对 Leonard 的催债工作"
 
-@label r3_trap
-
-**伦纳德** [扫一眼 Tony 证词，把它推回去，用框架]
-> 他说"赚了一笔"——赚的来路可以是任何东西。
->
-> 您不能因为他说了这四个字，就断定那笔钱和我有关系。
->
-> 拿错了，布伦南先生。
-
-@goto r3_present
 
 @label r3_break
 

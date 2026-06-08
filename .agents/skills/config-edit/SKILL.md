@@ -12,7 +12,7 @@ allowed-tools: Read, Glob, Grep, Edit, Bash, AskUserQuestion
 
 **开工前必读**：
 - [config-rules.md](config-rules.md)（数据源、外键关系图、ID 编码、可改字段白名单、设计期新表、语义规则）
-- [pitfalls.md](pitfalls.md)（实战踩坑：comic 坐标换算、全屏图vs叠图、证据获得时机、地图状态链、旧残留引用，以及下游 Talk/Unity 交接提醒）
+- [pitfalls.md](pitfalls.md)（实战踩坑：comic 坐标原样写入、全屏图vs叠图、证据获得时机、地图状态链、旧残留引用，以及下游 Talk/Unity 交接提醒）
 
 ## 边界
 - 只改 `avg_editor_v2/data/table`。绝不碰 Unity(`D:\NDC\Assets\table`)、`res/xls`、`preview_new2`。
