@@ -30,7 +30,7 @@ if os.path.basename(file_path) == 'ItemStaticData.json':
 project_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 读取已有的证据 ID 库
-item_json = os.path.join(project_dir, 'preview_new2', 'data', 'table', 'ItemStaticData.json')
+item_json = os.path.join(project_dir, 'avg_editor_v2', 'data', 'table', 'ItemStaticData.json')
 if not os.path.exists(item_json):
     sys.exit(0)
 

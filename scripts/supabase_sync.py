@@ -23,7 +23,7 @@ SUPABASE_KEY = (
     "qa_EqkXHkq5ki8CYt0cJk-Se2vfj8PTVHci239YblfM"
 )
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "preview_new2" / "data" / "table"
+DATA_DIR = Path(__file__).resolve().parent.parent / "avg_editor_v2" / "data" / "table"
 
 # 需要同步的配置表（与 editor.html 保持一致）
 TABLES = [
@@ -33,7 +33,6 @@ TABLES = [
     "TestimonyItem",
     "DoubtConfig",
     "ExposeData",
-    "ExposeConfig",
     "Testimony",
     "ChapterConfig",
 ]

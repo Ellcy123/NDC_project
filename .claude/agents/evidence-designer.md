@@ -20,7 +20,7 @@ disallowedTools: Bash
 ### 必读文件
 
 1. `docs/游戏系统/核心玩法/搜证与物品系统.md`（系统机制）
-2. `story/ItemStaticData.yaml` 或 `preview_new2/data/table/ItemStaticData.json`（已有证据）
+2. `story/ItemStaticData.yaml` 或 `avg_editor_v2/data/table/ItemStaticData.json`（已有证据）
 3. 对应章节的证据设计文档
 4. 前序 Loop 的证据（规划跨 Loop 复用）
 

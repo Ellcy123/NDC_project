@@ -109,7 +109,7 @@ Phase 1 的 5 张事实表抽取提示词。主 orchestrator 启动 general-purp
 读取以下文件：
 1. 剧情设计/{Unit}/Unit{N}_证据美术需求分类.md
 2. 剧情设计/{Unit}/state/loop*_state.yaml（evidence 段）
-3. preview_new2/data/table/ItemStaticData.json（按 ID 索引的官方描述）
+3. avg_editor_v2/data/table/ItemStaticData.json（按 ID 索引的官方描述）
 4. 剧情设计/{Unit}/{Unit}_大纲.md
 
 输出结构：

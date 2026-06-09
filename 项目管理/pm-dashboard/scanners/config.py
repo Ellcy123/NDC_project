@@ -19,7 +19,7 @@ NDC_UNITY = r"D:\NDC"
 # 设计文档
 DESIGN_DIR = os.path.join(NDC_PROJECT, "剧情设计")
 AVG_DIR = os.path.join(NDC_PROJECT, "AVG")
-PREVIEW_DIR = os.path.join(NDC_PROJECT, "preview_new2", "data")
+TABLE_DIR = os.path.join(NDC_PROJECT, "avg_editor_v2", "data", "table")   # 配置表落地处（avg_editor_v2）
 
 # Unity 工程
 UNITY_XLS = os.path.join(NDC_UNITY, "res", "xls")           # XLSX 配置表源文件

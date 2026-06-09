@@ -32,7 +32,7 @@ ROOT = Path(r"d:\NDC_project")
 MD_DIR = ROOT / "AVG/对话配置工作及草稿/生成草稿"
 TALK_DIR = ROOT / "AVG/EPI08/Talk"
 EXPOSE_DIR = ROOT / "AVG/EPI08/Expose"
-TABLE_DIR = ROOT / "preview_new2/data/table"
+TABLE_DIR = ROOT / "avg_editor_v2/data/table"
 
 # 方括号模式：半角 [] + 全角 ［］
 # 非贪婪匹配避免跨越多个 [...]

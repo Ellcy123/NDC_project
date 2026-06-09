@@ -139,7 +139,11 @@
       "Bash(awk 'NR>=1316 && NR<=1340' \"AVG/对话配置工作及草稿/Unit2/编号稿/Loop3_编号稿.md\")",
       "Bash(awk 'NR>=1465 && NR<=1500' \"AVG/对话配置工作及草稿/Unit2/编号稿/Loop3_编号稿.md\")",
       "Bash(rm \"avg_editor/data/table/NPCStaticData.json.bak.20260528_151925\" \"avg_editor/data/table/SceneConfig.json.bak.20260528_150947\")",
-      "Bash(rmdir avg_editor/data/table avg_editor/data avg_editor)"
+      "Bash(rmdir avg_editor/data/table avg_editor/data avg_editor)",
+      "Edit(/.claude/skills/playthrough-audit/**)",
+      "Edit(/.claude/skills/dialogue-md-to-json/**)",
+      "Edit(/.claude/skills/episode-consistency-audit/**)",
+      "Bash(PYTHONIOENCODING=utf-8 python -c \"from scanners import design_scanner as d; r=d.scan_preview_data\\(\\); print\\('scan_preview_data OK, keys:', list\\(r.keys\\(\\)\\)\\); c=d.scan_config_tables\\(\\); print\\('scan_config_tables OK, 表数:', len\\(c\\)\\)\")"
     ],
     "deny": [
       "Bash(rm -rf *)",

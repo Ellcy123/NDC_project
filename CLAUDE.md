@@ -42,9 +42,9 @@
 ### 预览工具与配置表落地
 | 目录 | 内容 |
 |------|------|
-| `preview_new2/` | 预览网页（流程图 + 证据表） |
-| `preview_new2/data/Unit{N}/` | 按 Unit 组织的中间 YAML（loop1-6, locations, story_overview, talk_summary），喂前端流程图 |
-| `preview_new2/data/table/` | **当前配置表落地处**——全局合并的 JSON（DoubtConfig / ItemStaticData / SceneConfig / TestimonyItem 等 16 张活跃表），由 state 经 `/state-to-table` skill 增量合并；Talk / Expose 由 `sync_to_json.py` 维护 |
+| `avg_editor_v2/` | 当前预览 + 网页配置编辑器（vercel 根路由），配置表的可视化与编辑入口 |
+| `avg_editor_v2/data/table/` | 当前配置表落地处（编辑器副本，真相源）——全局 JSON（DoubtConfig / ItemStaticData / SceneConfig / TestimonyItem 等活跃表）；用 `/config-edit` skill 维护；Talk / Expose 由 `sync_to_json.py` 维护 |
+| `avg_editor_v2/build_unit_flow.py` | 从配置表生成流程图数据（取代旧 preview_new2 的 per-Unit YAML，该文件夹已删除） |
 
 ### 脚本工具
 | 目录 | 内容 |
@@ -116,9 +116,9 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 | 格式 | 用途 |
 |------|------|
-| **YAML** | state 文件 (`剧情设计/Unit{N}/state/loop{1-6}_state.yaml`)、Preview 中间数据 (`preview_new2/data/Unit{N}/`) |
-| **JSON** | AVG 对话文件 (Talk/Expose)、`preview_new2/data/table/` 下的全局配置表 |
-| **XLSX** | `preview_new2/data/table/_all_tables.xlsx`（合并视图，给人看，手动同步） |
+| **YAML** | state 文件 (`剧情设计/Unit{N}/state/loop{1-6}_state.yaml`) |
+| **JSON** | AVG 对话文件 (Talk/Expose)、`avg_editor_v2/data/table/` 下的全局配置表 |
+| **XLSX** | `avg_editor_v2/data/table/_all_tables.xlsx`（合并视图，给人看，手动同步） |
 | **MD** | 设计文档、对话草稿（Phase 1 工作格式） |
 
 ---
@@ -145,7 +145,7 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 2. 证据与谜题设计
 
-设计文档 → state YAML（`剧情设计/Unit{N}/state/`）→ `/state-to-table` skill 写入 `preview_new2/data/table/*.json` → 预览验证 → 同步到 D:\NDC
+设计文档 → state YAML（`剧情设计/Unit{N}/state/`，设计层）→ 配置表 JSON 在 `avg_editor_v2/data/table/` 维护（初始从 Unity seed，之后用 `/config-edit` skill 精改 / 网页编辑器）→ v2 网页验证 → 手动 copy 到 D:\NDC
 
 关键约束：
 - 每个场景/NPC 承载 1-3 个核心信息点，不超过 3 个
@@ -154,10 +154,10 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 3. 配置表
 
-- 落地处：`preview_new2/data/table/*.json`（全局合并，16 张活跃表）
+- 落地处：`avg_editor_v2/data/table/*.json`（编辑器副本，配置表真相源）
 - 字段规范：[docs/配置表详解.md](docs/配置表详解.md)
 - 数据流：
-  - **非 Talk / Expose 的配置表**：state YAML → `/state-to-table` skill → JSON（增量按 ID 段合并）
+  - **非 Talk / Expose 的配置表**：维护在 `avg_editor_v2/data/table`，用 `/config-edit` skill 精改（单条 / 字段级）；初始由 seed 从 Unity 表导入。state YAML 是设计层源，不再自动生成配置表（旧 `/state-to-table` 已退役）
   - **Talk**：MD 草稿 → `sync_to_json.py` → JSON
   - **Expose 系列**：暂由专用流程或手动维护
 - `_all_tables.xlsx` 是合并视图，仅供查看，由用户手动同步
@@ -233,7 +233,7 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 4. 预览网站部署
 
-部署规则见 `preview_new2/DEPLOY.md`。涉及部署操作时必须先阅读该文件。
+部署到 Vercel（`vercel.json` 根路由 → `avg_editor_v2/index.html`）。
 
 ---
 
@@ -248,14 +248,13 @@ python sync_to_json.py --all                            # 全量
 # JSON 提取回 MD（验证往返一致性）
 python extract_to_md.py
 
-# State → 配置表 JSON（非 Talk/Expose）：使用 /state-to-table skill，无独立 py 脚本
+# 配置表（非 Talk/Expose）：在 avg_editor_v2 上用 /config-edit skill 维护，无 state→table 批量脚本
 
-# 预览系统启动（从 D:\ 根目录启动，路径配置见 index.html 中 Config.paths）
-python -m http.server 8080 --directory "D:\\"
-# 访问 http://localhost:8080/NDC_project/preview_new2/index.html
+# 预览 / 网页编辑器启动（avg_editor_v2 自带后端；线上见 vercel.json）
+cd avg_editor_v2 && python server.py
 
-# 同步到 Unity 工程（手动 copy table JSON）
-copy /Y "D:\NDC_project\preview_new2\data\table\*.json" "D:\NDC\Assets\table\"
+# 同步到 Unity 工程（手动 copy table JSON；avg_editor_v2 含设计期字段，正式同步需剥离，见 avg-editor skill §1.3）
+copy /Y "D:\NDC_project\avg_editor_v2\data\table\*.json" "D:\NDC\Assets\table\"
 ```
 
 ---
@@ -271,7 +270,7 @@ copy /Y "D:\NDC_project\preview_new2\data\table\*.json" "D:\NDC\Assets\table\"
 | 完整指证设计 | `/team-expose` |
 | 整个 Loop 规划（证据→指证→state→对话→审查） | `/team-loop` |
 | Unit 大纲 → 6 个 state 文件 | `/unit-state-generator` |
-| State YAML → 配置表 JSON（非 Talk/Expose） | `/state-to-table` |
+| 改配置表（单条 / 字段级，非 Talk/Expose） | `/config-edit` |
 | 全流程体验审计 | `/playthrough-audit Unit1`（~15 分钟，输出交互式 HTML 报告） |
 | 简单改文案/小修 | 不开 team，直接做 |
 
@@ -283,5 +282,5 @@ Agent 定义见 `.claude/agents/`（14 个角色），编排逻辑见对应 skil
 
 - **NDC_project** = 内容设计、预配置、预览验证
 - **D:\NDC** = Unity 游戏工程，包含运行时代码和最终资源
-- 数据流向：state YAML → `/state-to-table` 写入 `preview_new2/data/table/*.json` → 手动 copy 到 `D:\NDC\Assets\table\`；对话走 `sync_to_json.py`
+- 数据流向：配置表在 `avg_editor_v2/data/table/*.json` 维护（`/config-edit` skill）→ 手动 copy 到 `D:\NDC\Assets\table\`；对话走 `sync_to_json.py`
 - 美术资源位于 `D:\NDC\Assets\Resources/`

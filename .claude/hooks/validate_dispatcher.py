@@ -232,7 +232,7 @@ def main():
     if is_evidence and os.path.basename(file_path) != 'ItemStaticData.json':
         try:
             project_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            item_json = os.path.join(project_dir, 'preview_new2', 'data', 'table', 'ItemStaticData.json')
+            item_json = os.path.join(project_dir, 'avg_editor_v2', 'data', 'table', 'ItemStaticData.json')
 
             if os.path.exists(item_json):
                 with open(item_json, encoding='utf-8') as f:

@@ -27,7 +27,7 @@
 - 阶段 2-5 不是严格瀑布，是螺旋——写对白时回头改 state 是常态。
 - 小玩法**必须**等证据 ID 稳定后再做，否则反复重写。
 - 美术对接清单是**最末**才整合的，不要早做。
-- 预览不是最后一步——`preview_new2` 可以边写边同步，只是最终配置表整合落在阶段 6。
+- 预览不是最后一步——配置表在 `avg_editor_v2` 上边写边验证，只是最终整合落在阶段 6。
 
 ---
 
@@ -185,7 +185,7 @@ ba02a57  对白与 state 整合 + 美术对接清单
 
 ## 阶段 6：JSON 落地 + 预览部署
 
-**目标**：把 MD/YAML 转成 Unity 工程可读的 JSON，并在 `preview_new2/` 网页验证。
+**目标**：把 MD/YAML 转成 Unity 工程可读的 JSON，并在 `avg_editor_v2/` 网页验证。
 
 **两条独立数据流**：
 
@@ -210,30 +210,31 @@ python sync_to_json.py --all                          # 全量
 python extract_to_md.py                               # 反向验证往返一致性
 ```
 
-### 6.2 配置表：state YAML → JSON（16 张表）
+### 6.2 配置表：在 avg_editor_v2 上维护
 
 ```
-剧情设计/Unit{N}/state/loop{X}_state.yaml
-  → preview_new2/data/table/{表名}.json（增量按 ID 段合并）
+avg_editor_v2/data/table/{表名}.json（编辑器副本，真相源；初始从 Unity seed）
+  → 用 /config-edit skill 精改（单条 / 字段级）
   → 手动 copy 到 D:\NDC\Assets\table\
 ```
 
+配置表不再从 state YAML 批量生成（旧 `state-to-table` 已退役）。state YAML 是设计层源，配置表改动直接在 avg_editor_v2 上做。
+
 **可用 skill**：
-- `state-to-table` — 三段式：LLM 写临时 MD → py dry-run → py 写入。覆盖 6 张活跃表（DoubtConfig / ItemStaticData / NPCStaticData / SceneConfig / Testimony / TestimonyItem）+ ChapterConfig 部分写入。
+- `config-edit` — 改 avg_editor_v2/data/table 的配置表：定位表/字段、连带改关联表、改前阐述、改后基线自校验。
 
 ### 6.3 预览部署
 
 ```bash
-python -m http.server 8080 --directory "D:\\"
-# 访问 http://localhost:8080/NDC_project/preview_new2/index.html
+cd avg_editor_v2 && python server.py   # 本地预览 / 编辑器
 ```
 
-部署到 GitHub Pages 见 `preview_new2/DEPLOY.md`。
+线上部署到 Vercel（`vercel.json` 根路由 → `avg_editor_v2/index.html`）。
 
 **注意事项**：
 - **ID 重编排在生成 JSON 前做**（Unit9 `b6e1ad7` "全章对话 ID 重编排 + JSON 生成 + 预览部署"是一次完成的）。
 - JSON 落地后发现的问题，**修改 MD 后重新 sync**，不要直接改 JSON。
-- 同步到 D:\NDC：`copy /Y "D:\NDC_project\preview_new2\data\table\*.json" "D:\NDC\Assets\table\"`
+- 同步到 D:\NDC：`copy /Y "D:\NDC_project\avg_editor_v2\data\table\*.json" "D:\NDC\Assets\table\"`
 
 **举例**：
 ```
@@ -274,7 +275,7 @@ b6e1ad7  全章对话 ID 重编排 + JSON 生成 + 预览系统部署
 | 完整指证设计 | `team-expose` |
 | 整个 Loop 从零规划（证据→指证→state→对话→审查） | `team-loop` |
 | Unit 大纲 → 6 个 state 文件 | `unit-state-generator` |
-| State YAML → 配置表 JSON | `state-to-table` |
+| 改配置表（非 Talk/Expose） | `config-edit` |
 | 对白 MD → JSON | `dialogue-md-to-json` |
 | 全流程体验审计 | `playthrough-audit Unit{N}` |
 | 简单改文案/小修 | 不开 team，直接做 |

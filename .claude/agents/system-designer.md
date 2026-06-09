@@ -137,7 +137,7 @@ DoubtConfig.condition[]
 | 格式 | 用途 | 位置 |
 |------|------|------|
 | YAML | 循环 state 配置、story/ 主表、预览数据 | `剧情设计/Unit{N}/state/`、`story/` |
-| JSON | AVG 对话文件、预览表数据 | `AVG/`、`preview_new2/data/table/` |
+| JSON | AVG 对话文件、预览表数据 | `AVG/`、`avg_editor_v2/data/table/` |
 | XLSX | 策划填写的原始配置表 | `story/` |
 | MD | 设计文档、对话草稿 | `剧情设计/`、`AVG/对话配置工作及草稿/` |
 

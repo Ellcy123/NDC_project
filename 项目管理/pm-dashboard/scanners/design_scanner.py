@@ -4,7 +4,7 @@
 import os
 import glob
 from datetime import datetime
-from .config import DESIGN_DIR, AVG_DIR, PREVIEW_DIR, UNITS, UNIT_TO_EPI, LOOPS
+from .config import DESIGN_DIR, AVG_DIR, TABLE_DIR, UNITS, UNIT_TO_EPI, LOOPS
 
 
 def count_files(directory, pattern="*", recursive=False):
@@ -130,24 +130,14 @@ def scan_dialogue_drafts():
 
 
 def scan_preview_data():
-    """扫描预览系统数据完整性"""
+    """preview_new2 已退役——Unit 流程 YAML 不再扫描；保留返回结构兼容仪表盘。"""
     result = {}
     for unit in UNITS:
-        unit_dir = os.path.join(PREVIEW_DIR, unit)
-        if not os.path.isdir(unit_dir):
-            result[unit] = {"exists": False, "loops": 0, "extras": []}
-            continue
+        result[unit] = {"exists": False, "loops": 0, "extras": []}
 
-        loops = sum(1 for i in range(1, 7)
-                    if os.path.isfile(os.path.join(unit_dir, f"loop{i}.yaml")))
-        extras = [f for f in os.listdir(unit_dir)
-                  if not f.startswith("loop") and os.path.isfile(os.path.join(unit_dir, f))]
-        result[unit] = {"exists": True, "loops": loops, "extras": extras}
-
-    # Table JSON
-    table_dir = os.path.join(PREVIEW_DIR, "table")
-    if os.path.isdir(table_dir):
-        result["table_files"] = count_json(table_dir)
+    # 配置表已迁到 avg_editor_v2/data/table
+    if os.path.isdir(TABLE_DIR):
+        result["table_files"] = count_json(TABLE_DIR)
     else:
         result["table_files"] = 0
 
@@ -155,8 +145,8 @@ def scan_preview_data():
 
 
 def scan_config_tables():
-    """扫描 preview_new2/data/table 下的配置表"""
-    table_dir = os.path.join(PREVIEW_DIR, "table")
+    """扫描 avg_editor_v2/data/table 下的配置表"""
+    table_dir = TABLE_DIR
     result = {}
     if not os.path.isdir(table_dir):
         return result

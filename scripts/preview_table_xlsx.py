@@ -1,6 +1,6 @@
 """Preview table JSON <-> Excel round-trip tool.
 
-Converts all *.json tables under `preview_new2/data/table/` into a single
+Converts all *.json tables under `avg_editor_v2/data/table/` into a single
 workbook that策划 can edit directly in Excel, then writes the edited
 workbook back into the JSON files.
 
@@ -53,7 +53,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_TABLE_DIR = REPO_ROOT / "preview_new2" / "data" / "table"
+DEFAULT_TABLE_DIR = REPO_ROOT / "avg_editor_v2" / "data" / "table"
 DEFAULT_XLSX = DEFAULT_TABLE_DIR / "_all_tables.xlsx"
 
 HEADER_FONT = Font(bold=True, color="FFFFFF")

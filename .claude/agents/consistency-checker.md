@@ -12,8 +12,8 @@ disallowedTools: Write, Edit, Bash
 ### 必读文件
 
 按需读取以下文件：
-- `story/ItemStaticData.yaml` 或 `preview_new2/data/table/ItemStaticData.json`
-- `story/Testimony.yaml` 或 `preview_new2/data/table/TestimonyItem.json`
+- `story/ItemStaticData.yaml` 或 `avg_editor_v2/data/table/ItemStaticData.json`
+- `story/Testimony.yaml` 或 `avg_editor_v2/data/table/TestimonyItem.json`
 - 对话草稿 / JSON
 - `story/NPCStaticData.yaml`
 - `story/SceneConfig.yaml`

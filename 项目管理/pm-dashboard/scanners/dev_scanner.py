@@ -4,7 +4,7 @@
 import os
 import glob
 from datetime import datetime
-from .config import UNITY_XLS, UNITY_TABLE_JSON, UNITY_SCRIPTS, PREVIEW_DIR
+from .config import UNITY_XLS, UNITY_TABLE_JSON, UNITY_SCRIPTS, TABLE_DIR
 
 
 def scan_config_xlsx():
@@ -45,7 +45,7 @@ def scan_table_json():
 
 def scan_config_sync():
     """对比 NDC_project preview JSON vs NDC XLSX，检查同步状态"""
-    preview_table_dir = os.path.join(PREVIEW_DIR, "table")
+    preview_table_dir = TABLE_DIR
     result = {"in_sync": 0, "out_of_sync": 0, "details": []}
 
     if not os.path.isdir(preview_table_dir) or not os.path.isdir(UNITY_XLS):

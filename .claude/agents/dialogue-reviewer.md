@@ -16,8 +16,8 @@ disallowedTools: Write, Edit, Bash
 1. 对话草稿（MD 或 JSON，优先读 `AVG/对话配置工作及草稿/` 下的最新版本）
 2. 对应 Loop 的 state 文件
 3. `AVG/对话配置工作及草稿/前置配置/npc_knowledge_pools.yaml`（blind_spots 列表）
-4. `preview_new2/data/table/ItemStaticData.json`（证据描述核对）
-5. `preview_new2/data/table/TestimonyItem.json`（证词核对）
+4. `avg_editor_v2/data/table/ItemStaticData.json`（证据描述核对）
+5. `avg_editor_v2/data/table/TestimonyItem.json`（证词核对）
 6. `剧情设计/00_世界观与角色/主角设计/Zack_Brennan.md` + `Emma_OMalley.md`
 
 ### 禁止读取

@@ -179,7 +179,7 @@ Brief 的目标是让审计 agent **不需要读原始 state/config 文件就能
 | 新增证据 | state yaml 的搜证配置 + ItemStaticData |
 | 新增证词 | state yaml 的 testimony 配置 + TestimonyItem |
 | 疑点 | DoubtConfig 中本 Loop 可解锁的 |
-| 指证 | ExposeData + ExposeConfig + state yaml 的 expose 段 |
+| 指证 | ExposeData + state yaml 的 expose 段 |
 | 对话摘要 | **必须读取对话 JSON 原文**（见下方验证规则） |
 | NPC 知识边界 | state yaml 中每个 NPC 的 knowledge 段 |
 | 前后衔接 | state yaml 的 narrative 段 + 前后 Loop 的 state |

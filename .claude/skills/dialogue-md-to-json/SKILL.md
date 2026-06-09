@@ -55,10 +55,10 @@ allowed-tools: Read, Glob, Grep, Bash, AskUserQuestion
 
 | 表 | 路径 | 用途 |
 |---|---|---|
-| NPCStaticData.json | `preview_new2/data/table/NPCStaticData.json` | NPC 中文名 → ID 映射，校验 speaker |
-| TestimonyItem.json | `preview_new2/data/table/TestimonyItem.json` | 校验 `get → {ID}` 引用的 testimony 存在 |
-| ItemStaticData.json | `preview_new2/data/table/ItemStaticData.json` | 校验 `Lie` 行可用证据 ID 存在 |
-| SceneConfig.json | `preview_new2/data/table/SceneConfig.json` | （可选）校验场景 ID |
+| NPCStaticData.json | `avg_editor_v2/data/table/NPCStaticData.json` | NPC 中文名 → ID 映射，校验 speaker |
+| TestimonyItem.json | `avg_editor_v2/data/table/TestimonyItem.json` | 校验 `get → {ID}` 引用的 testimony 存在 |
+| ItemStaticData.json | `avg_editor_v2/data/table/ItemStaticData.json` | 校验 `Lie` 行可用证据 ID 存在 |
+| SceneConfig.json | `avg_editor_v2/data/table/SceneConfig.json` | （可选）校验场景 ID |
 
 > **跨 Loop 引用合法**：Loop3 的 `get → 9011002`（引用 Loop1 的证词）合规。预检要把 Loop1-N 的 testimony 全部加载，不限制只校验本 Loop。
 
@@ -223,7 +223,7 @@ for loop_n in range(1, 7):
 
 - `sync_to_json.py`：本 skill 调用的底层工具，已加 `EPI09` 分支（沿用 8XX NPC 编码）
 - `extract_to_md.py`：反向 JSON → MD，本 skill 不调用，但用户可手动跑做往返一致性验证
-- `state-to-table` skill：处理非 Talk/Expose 的配置表（DoubtConfig / ItemStaticData / SceneConfig 等）
+- `config-edit` skill：改 avg_editor_v2 上非 Talk/Expose 的配置表（DoubtConfig / ItemStaticData / SceneConfig 等）
 - `team-dialogue` skill：写 MD 草稿（本 skill 的上游）
 - `team-expose` skill：写 Expose MD 草稿（本 skill 的上游）
 

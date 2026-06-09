@@ -1,412 +1,74 @@
 # Unit2 AVG 特殊场景需求
 
-版本：v3.2 / 2026-06-08
-
-说明：本文件只记录 Unit2 AVG 对话过程中需要额外说明的特殊场景、过场场面和角色画面调度。它不是 NPC 立绘资源清单，也不是自由探索场景的 NPC 挂载表。
-
-## 配置边界
-
-- 普通自由探索阶段的可点击 NPC，不在这里写；它们应该走 SceneConfig 的 NPC 挂载。
-- 普通探索底图、证据道具、容器道具，不在这里展开；它们应该走 ArtAssetConfig / Item / SceneConfig。
-- 突发事件动态漫画只在这里点到叙事位置，具体需求以《Unit2_AVG突发事件动态漫画.md》为准。
-- 这里写的“角色调度”只表示 AVG 画面中谁在场、谁离开、谁通过电话/门外/画面外参与，不代表要在 ArtAssetConfig 里新增任何角色资源字段。
-- AVG 场景可以有独立于自由探索场景的底图命名；如果只是同一探索底图复用，则由配置表引用同一个背景资产，不在本文强行拆成新图。
-
-## 总览
-
-| Loop | 场景 | 挂载对白 / 触发点 | 需求类型 | 叙事作用 |
-|---|---|---|---|---|
-| L1 | 火灾后的鞋坊现场 | `opening_l1_crimescene` 开篇 | 开场 AVG 场景 | 建立纵火案现场、Morrison 介入、Emma 与玩家合作起点 |
-| L1 | 鞋坊外电话亭 | Loop1 鞋坊外电话亭，Emma 联系 Foster | 过场 AVG 场景 | 把调查方向从现场推进到 Foster 线索 |
-| L1 | 警局 Morrison 办公区 | `morrison_l1_postexpose` | 指证后 AVG 场景 | 让 Morrison 的态度从阻拦转为有限配合 |
-| L1 | Zack 侦探事务所 | L1 结尾 Mickey 电报 | 章节收束 AVG 场景 | 用电报把下一循环目标抛给玩家 |
-| L2 | 圣心医院 Margaret 病房 | `opening_l2_hospital` / Mickey 追问 | 开篇 AVG 场景 | 让 Mickey 回归，确认 Margaret 仍是关键证人 |
-| L2 | 银行大厅玻璃旁 | L2 Leonard 指证后 | 指证后 AVG 场景 | Moore 旁观 Leonard 甩锅，为 L3 银行线埋钩子 |
-| L3 | 市政厅 / 银行门口 | `opening_l3_cityhall` | 开篇 AVG 场景 | Mickey 以律师身份登场，把调查推进到法律与房产证明 |
-| L3 | 银行贵宾室 | Moore 指证后 | 指证后 AVG 场景 | Moore 交出地下室钥匙，完成第一重反转 |
-| L4 | 圣心医院 Margaret 病房 | `opening_l4_hospital` | 开篇 AVG 场景 | 汇总前面线索，转向 Frank 家与 Lula |
-| L4 | 鞋坊店铺区 | `lula_l4_storefront` | 人物公开登场 AVG 场景 | Lula 首次进入主线，说明鞋坊账目与家庭压力 |
-| L4 | Frank 家厕所 / 主屋 | Danny 指证与指证后 | 指证 AVG 场景 | 从 Danny 的逃避转向“真爱正名”，把嫌疑推向更大的幕后 |
-| L5 | Frank 家主屋 | `opening_l5_frankhome` | 开篇 AVG 场景 | 小铁盒造成误导性结局开篇，推动玩家继续翻案 |
-| L5 | 圣心医院病房外 | L5 医院汇合 | 过场 AVG 场景 | 把 Frank 家线索和 Margaret 状态接回主线 |
-| L5 | Silver Moon 赌场 | Vinnie 指证后 | 指证后 AVG 场景 | Vinnie 离场，说明黑帮线并非终点 |
-| L5 | 公用电话亭 | `vinnie_l5_postexpose_phone` | 过场 AVG 场景 | Emma 联系 Foster，引向 L6 最终搜查 |
-| L6 | 圣心医院 Margaret 病房 | `opening_l6_hospital` / `margaret_l6_hospital` | 开篇 AVG 场景 | 最终循环前整合 Margaret 证词 |
-| L6 | 警局 Morrison 办公区 | `morrison_l6_warrant` | 搜查令过场 | 让警方权限进入主线，合法进入 Leonard 住所 |
-| L6 | Leonard 住所 | `edith_l6_home` / Leonard 指证 | 最终指证 AVG 场景 | Edith 试图离开，Leonard 线进入最终摊牌 |
-| L6 | Frank 墓地 | `ending_l6_cemetery` | 结局尾声 AVG 场景 | 收束 Frank、Margaret、玩家调查线 |
-
-## L1 火灾后的鞋坊现场
-
-挂载对白：`opening_l1_crimescene`
-
-场景重点：
-
-- 火灾刚结束，鞋坊现场仍有烧焦、封锁、混乱感。
-- Morrison 站在调查权威位置，阻止玩家靠近核心现场。
-- Emma 作为玩家同行者出现，承担引导和质疑功能。
-
-叙事作用：
-
-- 玩家第一次进入 Unit2 案件。
-- 建立“官方调查未必可靠”的基调。
-- 让 Morrison 成为第一个需要突破的阻力。
-
-角色调度：
-
-- Morrison 在场，态度强硬。
-- Emma 在场，和玩家一起进入案件。
-- 其他角色不需要作为可点击 NPC 单独处理。
-
-## L1 鞋坊外电话亭
-
-挂载对白：Loop1 鞋坊外电话亭，Emma 联系 Foster
-
-场景重点：
-
-- 这是离开火灾现场后的电话过场。
-- Emma 主动联系 Foster，推动案件进入更大的旧案/人物关系范围。
-
-叙事作用：
-
-- 把玩家从单纯火灾现场调查，推进到“有人隐瞒旧关系”的方向。
-- 为后续 Foster、医院、警局线铺路。
-
-角色调度：
-
-- Emma 是电话发起人。
-- Foster 可以只通过电话/文本参与，不需要在画面里实体登场。
-
-## L1 警局 Morrison 办公区
-
-挂载对白：`morrison_l1_postexpose`
-
-场景重点：
-
-- Morrison 被玩家逼到必须回应，但仍保持警察的控制姿态。
-- 场景应有办公室、警局、卷宗、疲惫夜间调查的氛围。
-
-叙事作用：
-
-- 指证后给玩家一个阶段性反馈。
-- Morrison 的态度不是完全服软，而是开始承认案情有漏洞。
-
-角色调度：
-
-- Morrison 在场。
-- 玩家/Zack 用对白推进，不需要额外可点击配置。
-
-## L1 Zack 侦探事务所
-
-挂载对白：L1 结尾 Mickey 电报
-
-场景重点：
-
-- 侦探事务所作为循环收束点。
-- 电报/消息带来新的调查方向。
-
-叙事作用：
-
-- 让 L1 的“现场阻力”结束，转入 L2 的医院与 Mickey 线。
-- 给玩家明确的下一循环目标。
-
-角色调度：
-
-- Emma 或 Zack 可以作为对白承接者。
-- Mickey 不需要实体出现，可通过电报/远端消息进入叙事。
-
-## L2 圣心医院 Margaret 病房
-
-挂载对白：`opening_l2_hospital`，以及 Mickey 追问段
-
-场景重点：
-
-- Margaret 病房是 L2 的信息入口。
-- Mickey 回归，和玩家形成新的证词压力。
-
-叙事作用：
-
-- 让 Margaret 的状态、Mickey 的保护欲、鞋坊纵火背后的旧关系同时进入玩家视野。
-- 从“现场”切到“证人和家庭关系”。
-
-角色调度：
-
-- Margaret 作为病房核心人物。
-- Mickey 在场，负责追问与情绪推动。
-- 医护环境只做背景氛围，不配置为独立角色。
-
-## L2 银行大厅玻璃旁
-
-挂载对白：L2 Leonard 指证后，Moore 隔玻璃旁观
-
-场景重点：
-
-- Leonard 的推责刚结束。
-- Moore 通过旁观或短暂插入，制造下一循环的目标感。
-
-叙事作用：
-
-- 告诉玩家 Leonard 不是终点。
-- 把调查重心自然推到银行、房产证明和 Moore 身上。
-
-角色调度：
-
-- Leonard 是刚被指证的对象。
-- Moore 可以作为旁观/压迫感来源出现，但不作为自由探索 NPC 挂载重复写。
-
-## L3 市政厅 / 银行门口
-
-挂载对白：`opening_l3_cityhall`
-
-场景重点：
-
-- Mickey 以律师身份登场，场景从个人恩怨转到法律文件、产权与银行。
-- 市政厅或银行门口需要有“公共机构”“法律程序”的质感。
-
-叙事作用：
-
-- 把玩家从病房证词推进到正式文件调查。
-- 引出 Frank 房产证明、地下室钥匙、银行存档这些核心线索。
-
-角色调度：
-
-- Mickey 在场，承担解释法律关系的功能。
-- 其他角色不需要作为可点击 NPC 单独列出。
-
-## L3 银行贵宾室
-
-挂载对白：Moore 指证后
-
-场景重点：
-
-- Moore 被玩家击穿后，交代文件与钥匙相关信息。
-- 贵宾室需要体现银行内部权力感和私密交易氛围。
-
-叙事作用：
-
-- 完成 Moore 这一层反转。
-- 把“房产证明被锁在档案柜里”与后续地下室钥匙联系起来。
-
-角色调度：
-
-- Moore 在场。
-- 钥匙/文件信息通过对白或道具获取完成，不在这里写成探索道具。
-
-## L4 圣心医院 Margaret 病房
-
-挂载对白：`opening_l4_hospital`
-
-场景重点：
-
-- 医院作为战术碰头点出现。
-- 玩家需要把 L3 的银行信息和 Margaret 线重新串起来。
-
-叙事作用：
-
-- 从银行线转入 Frank 家线。
-- 为 Lula 首次公开登场和 Danny 线做铺垫。
-
-角色调度：
-
-- Margaret 可以保持病房核心存在。
-- Mickey / Emma / Zack 根据对白在场即可，不单独配置进出场资源。
-
-## L4 鞋坊店铺区 Lula 登场
-
-挂载对白：`lula_l4_storefront`
-
-场景重点：
-
-- Lula 首次公开进入主线。
-- 她的出现要带出鞋坊账目、家庭压力、Frank 与 Margaret 的复杂关系。
-
-叙事作用：
-
-- 扩展嫌疑人与证词来源。
-- 让玩家意识到纵火案不是单一家庭争吵，而牵扯更多旁支利益。
-
-角色调度：
-
-- Lula 在场。
-- 店铺区背景作为普通探索/对话环境使用，不把 Lula 的出现写成额外进出场资产。
-
-## L4 Frank 家厕所 / 主屋
-
-挂载对白：Danny 指证段，以及 `danny_l4_postexpose`
-
-场景重点：
-
-- Danny 从隔墙嘶喊、厕所对峙，到指证后会合，情绪变化很大。
-- 指证后的场面重点不是“逃跑”，而是让 Danny 的关系与动机被重新理解。
-
-叙事作用：
-
-- 让玩家推翻“Danny 是单纯纵火凶手”的判断。
-- 把案件继续推向 Vinnie、黑帮和更深的幕后压力。
-
-角色调度：
-
-- Danny 在场，状态从防御、崩溃到被迫说出真相。
-- 其他角色只按对白在场，不额外写独立进出场资源。
-
-## L5 Frank 家主屋
-
-挂载对白：`opening_l5_frankhome`
-
-场景重点：
-
-- 小铁盒带来一个误导性结论。
-- 场景应该有“看似接近真相，但其实仍有缺口”的感觉。
-
-叙事作用：
-
-- 让玩家意识到前一层推理仍不完整。
-- 把调查从 Frank 家继续引向医院和 Vinnie。
-
-角色调度：
-
-- 现场以证物和环境压力为主。
-- 不需要额外 NPC 进出场配置。
-
-## L5 圣心医院病房外
-
-挂载对白：L5 医院汇合段
-
-场景重点：
-
-- 这是从 Frank 家转向 Vinnie 线之前的短过场。
-- 角色在这里交换判断，而不是展开完整调查。
-
-叙事作用：
-
-- 连接 Frank 家证据和后续黑帮/赌场线。
-- 让玩家目标从“家庭内部”转向“外部势力”。
-
-角色调度：
-
-- Emma / Zack / 相关同伴按对白在场即可。
-- Margaret 若出现，仍是病房线背景，不配置为独立事件。
-
-## L5 Silver Moon 赌场
-
-挂载对白：`vinnie_l5_postexpose_bar`
-
-场景重点：
-
-- 指证后 Vinnie 退出舞台。
-- 赌场场景要强调黑帮、交易、危险和“这不是终点”的感觉。
-
-叙事作用：
-
-- 让 Vinnie 的嫌疑被处理掉。
-- 把真正的压力导向 Foster / Leonard / 最终搜查。
-
-角色调度：
-
-- Vinnie 在场并离开，但这只是 AVG 表演调度，不单独配置成资源字段。
-- Emma / Zack 作为追问者按对白出现。
-
-## L5 公用电话亭
-
-挂载对白：`vinnie_l5_postexpose_phone`
-
-场景重点：
-
-- 指证后用电话把线索交给 Foster。
-- 氛围应偏夜间、紧张、秘密联络。
-
-叙事作用：
-
-- 让 L5 的黑帮线收束。
-- 明确 L6 的最终行动方向。
-
-角色调度：
-
-- Emma 或 Zack 作为打电话的人。
-- Foster 通过电话参与，不需要画面实体出现。
-
-## L6 圣心医院 Margaret 病房
-
-挂载对白：`opening_l6_hospital`，`margaret_l6_hospital`
-
-场景重点：
-
-- 最终循环前，医院再次成为证词整合点。
-- Margaret 的证词要更接近核心真相。
-
-叙事作用：
-
-- 让玩家带着前五轮的信息重新理解 Margaret。
-- 给最终搜查和 Leonard 住所行动建立正当性。
-
-角色调度：
-
-- Margaret 在场。
-- Foster / Mickey 等角色如对白需要可出现，但不作为独立进出场资源写。
-
-## L6 警局 Morrison 办公区
-
-挂载对白：`morrison_l6_warrant`
-
-场景重点：
-
-- Morrison 签搜查令或交付正式权限。
-- 警局场景要体现最终行动前的正式转折。
-
-叙事作用：
-
-- 让玩家从推理进入执法行动。
-- 合法打开 Leonard 住所这条最终路径。
-
-角色调度：
-
-- Morrison 在场。
-- 玩家/Zack 推动搜查理由。
-
-## L6 Leonard 住所
-
-挂载对白：`edith_l6_home`，Leonard 最终指证与指证后
-
-场景重点：
-
-- Edith 从房间出来，推着箱子准备离开，这是指证阶段的普通突发事件。
-- Leonard 住所是最终摊牌空间，不应写成普通自由探索 NPC 挂载需求。
-
-叙事作用：
-
-- Edith 的离开动作说明 Leonard 家中正在发生撤离/销毁/转移痕迹。
-- Leonard 最终指证完成 Unit2 的核心真相揭露。
-
-角色调度：
-
-- Edith 出现在事件中，作为“准备离开”的视觉焦点。
-- Leonard 是最终被指证对象。
-- Edith 事件的具体动态漫画需求见《Unit2_AVG突发事件动态漫画.md》。
-
-## L6 Frank 墓地
-
-挂载对白：`ending_l6_cemetery`
-
-场景重点：
-
-- 墓地是结局尾声，不是探索场景。
-- 氛围应收束、安静、带一点迟来的公正感。
-
-叙事作用：
-
-- 回到 Frank，完成本章情绪闭环。
-- 让案件真相和人物代价落地。
-
-角色调度：
-
-- 结局对白所需角色按场面出现即可。
-- 不配置可点击 NPC，也不配置自由探索入口。
-
-## 暂不写入本文件的内容
-
-- 自由探索阶段 NPC 可点击立绘。
-- 证据、道具、容器、门、装饰物的详细美术需求。
-- 每个突发事件的具体镜头格数、品质、画面分镜。
-- ArtAssetConfig 中的具体资源命名。
-
-这些内容分别由 NPC/Scene/Item 配置表、证据美术需求文档、突发事件动态漫画文档和资产表负责。
+说明：本文件只记录 Unit2 里“纯 AVG 对话/过场场景”和“指证场景背景”的美术语义。它不是自由探索场景清单，也不是 NPC 可点击立绘、证据道具、动态漫画分镜清单。
+
+## 核心规则
+
+- 纯 AVG 场景是一张完整的对话/过场图：人物和场景画在同一张图里，不是空底图加立绘挂载。
+- 因此同一个地点，只要在场人物、人物状态、戏剧关系或构图不同，就应该是不同的 AVG 美术需求和不同资产命名。
+- 纯 AVG 图可以参考探索底图的地点结构、光线和时代氛围，但不能把探索道具、可点击 NPC、证据挂载写进 AVG 图。
+- 自由探索场景才是“底图 + Item / NPC 覆盖”；开篇自动对白、指证后对白一般都应该走纯 AVG 场景。
+- ChapterConfig.openingScene 专门给开篇 AVG 使用；initScene 仍然是进入自由探索后的场景。
+- 指证阶段目前只使用 topBg；bottomBg 已废弃。topBg 也应当指向对应的指证画面资产，而不是随便借探索场景。
+- 突发事件动态漫画另见《Unit2_AVG突发事件动态漫画.md》，这里最多说明事件发生在哪个剧情节点，不展开格数。
+
+## 纯 AVG 场景清单
+
+| Loop | 类型 | SceneId | 资产命名 | 画面人物 | 画面重点 |
+|---|---|---:|---|---|---|
+| L1 | 开篇纯 AVG | `2191` | `SC2191_avg_Opening_MorrisonBlocksZack` | Morrison、Zack、Emma | Morrison 拦住 Zack，不让他靠近火场和尸体；Zack 急于确认死者身份；Emma 介入，为 Zack 争取进入现场的机会。 |
+| L2 | 开篇纯 AVG | `2206` | `SC2206_bg_SacredHeartHospital_MargaretRoom` | Zack、Emma、Mickey、病床上的 Margaret | Margaret 昏迷在病房中，Mickey 带来新的调查方向，Zack/Emma 接上银行与威胁链条。 |
+| L2 | 指证后纯 AVG | `2292` | `SC2292_avg_LeonardEnvelope` | Leonard、Zack、Emma；Moore 可按对白远处/侧面暗示 | Leonard 表面配合，递出信封或继续引导 Zack，态度礼貌但带操控感。 |
+| L3 | 开篇纯 AVG | `2316` | `SC2316_bg_CityHall_Courthouse` | Mickey、Zack、Emma；市政厅警卫可作为场面人物 | Mickey 以律师身份介入，市政厅门口的程序阻力把调查推向正式文件、房产证明和银行搜查。 |
+| L3 | 指证后纯 AVG | `2392` | `SC2392_avg_MooreOldKey` | Moore、Zack、Emma | Moore 被逼到交代房产证交易，旧铁钥匙作为剧情焦点进入玩家视线。 |
+| L4 | 开篇纯 AVG | `2491` | `SC2491_avg_NightHospitalMeeting` | Zack、Emma、Mickey；Margaret 可作为病床背景人物 | 夜间医院的紧张感，几人根据对白汇总地下室、Lula、Danny 方向。 |
+| L4 | 指证纯 AVG | `2492` | `SC2492_avg_DannyBathroomConfrontation` | Danny、Zack、Emma | 厕所隔门、狭窄、封闭、回避感；Danny 的压力来自躲在里面不肯面对。 |
+| L5 | 开篇纯 AVG | `2591` | `SC2591_avg_FrankHomeMislead` | Zack、Emma；线索物可作为画面焦点 | 小铁盒、举报材料、情书作为剧情焦点出现，但不是可点击拾取物。 |
+| L5 | 指证后纯 AVG | `2592` | `SC2592_avg_VinnieConfession` | Vinnie、Zack、Emma；Tony 如对白需要可在场 | Vinnie 抢话认罪，试图把案件收束到自己身上，场面要有突然打断和强行揽罪的压迫感。 |
+| L6 | 开篇纯 AVG | `2691` | `SC2691_avg_FinalHospitalBeforeSearch` | Zack、Emma、Margaret、Foster | 最终循环前的证词整合，Margaret 苏醒后的虚弱与 Foster 的严肃说明都要能看出来。 |
+| L6 | 指证后纯 AVG | `2692` | `SC2692_avg_LeonardConfession` | Leonard、Zack、Emma；Vinnie 可作为替罪被揭穿后的关系暗示 | Leonard 招供，Vinnie 替罪被揭穿，空间要有终局摊牌后的冷硬感。 |
+
+## 需要单独明确人物动作资产的纯 AVG 场景
+
+这里记录的是“额外人物动作/进出场资产”，命名应当是人物资产命名，不是整张 AVG 场景图命名。
+
+- L1 开篇 `2191`：
+  - 整图里需要表现 Morrison 拦路、Zack 被拦、Emma 介入。
+  - 但额外人物资产只需要 Emma 入场/介入这一条。
+  - 中途入场角色：Emma（命名：`emma_intervene_morrison_001` · 对话节点 201001014）
+  - 情境：Emma 一步挡在 Morrison 面前，拦住他要去抓 Zack 的手，为 Zack 争取进入现场的机会。
+
+- L3 开篇 `2316`：
+  - 整图里需要表现市政厅门口被程序挡住，以及 Mickey 以律师身份介入。
+  - 额外人物动作资产：
+    - Guard（命名：`guard_cityhall_block_file_001` · 对话节点 201003004 起）：警卫伸手挡门/退回文件。
+    - Mickey（命名：`mickey_cityhall_intervene_001` · 对话节点 201003028 起）：Mickey 从东翼方向走上台阶，扬起文件出面介入。
+
+其他纯 AVG 场景暂不单独增加人物进出/动作资产需求，只按各自整图场面需求处理。
+## 指证背景 topBg
+
+| Loop | 当前配置 | 语义 |
+|---|---|---|
+| L1 | `SC2104_bg_PoliceStation_MorrisonOffice_Night` | Morrison 指证用警局办公室画面。 |
+| L2 | `SC2211_bg_LakeshoreTrust_Lobby` | Leonard 指证用银行大厅画面。 |
+| L3 | `SC2312_bg_LakeshoreTrust_VIPParlor` | Moore 指证用银行贵宾室画面。 |
+| L4 | `SC2492_avg_DannyBathroomConfrontation` | Danny 指证用厕所隔门对峙完整 AVG 图。 |
+| L5 | `SC2515_bg_SilverMoon_Casino_Night` | Vinnie 指证用赌场夜景画面。 |
+| L6 | `SC2617_bg_LeonardResidence` | Leonard 指证用住所画面。 |
+
+## 和自由探索分开的点
+
+- L1 开篇 `2191` 不能再显示成 `2101` 的探索证据场景；它是 Morrison 拦住 Zack 的完整 AVG 图。
+- L2 开篇 `2206` 不能显示成 Mickey 可点击 NPC 病房；Mickey 是画面人物，和对白一起构图。
+- L2 指证后 `2292` 不能写成 Leonard NPC 挂载；Leonard 递信封/假善意是完整过场图。
+- L3 指证后 `2392` 不能写成 Moore NPC 或旧钥匙拾取点；旧钥匙是剧情焦点。
+- L4 `2492` 是厕所隔门对峙图，Danny 的空间关系要画在同一张图里。
+- L5 开篇 `2591` 可以出现小铁盒、举报材料、情书等视觉焦点，但这些不是可点击拾取物。
+- L6 开篇 `2691` 中 Margaret / Foster 是对白场面人物，不是自由探索 NPC。
+
+## 配置落点
+
+- SceneConfig.json：纯 AVG scene 使用独立 sceneId，并把 location.backgroundImage 指向独立 AVG 资产命名。
+- ArtAssetConfig.json：每张纯 AVG 图单独一条资产记录，sceneKind=dialogue，ArtRequirement 写清楚在场人物和叙事作用。
+- ChapterConfig.json：openingScene 指向开篇纯 AVG scene；initScene 指向自由探索入口；topBg 指向指证画面。
+- unit_flow.json：流程预览引用 openingScene / postExposeSegments.sceneId，不再把开篇和探索混在同一个卡片里。
