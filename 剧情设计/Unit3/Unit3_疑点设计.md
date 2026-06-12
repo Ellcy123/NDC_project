@@ -445,7 +445,7 @@
 
 ## 五、循环5 — Bernard Wells指证
 
-**指证目标**：Bernard Wells（Continental银行保险代理）
+**指证目标**：Bernard Wells（湖滨信托银行保险代理）
 **指证轮数**：2轮
 **本循环证据**：9件新增 + 跨循环引用3304（首现L3）
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 config-edit 自校验闸门（基线对比模式）。
@@ -135,7 +135,7 @@ def main():
             v = ti.get(f)
             txt = v[0] if isinstance(v, list) and v else (v if isinstance(v, str) else '')
             if re.search(r'\[\d{1,2}[:：]\d{2}', str(txt)):
-                warn(f'[TestimonyItem {ti.get("id")}] {f} 含时间前缀 "{txt[:20]}"——时间应由 triggerParam/TimeLineEvent 渲染')
+                warn(f'[TestimonyItem {ti.get("id")}] {f} 含时间前缀 "{txt[:20]}"——时间应由 TestimonyItem.triggerParam 渲染；TimeLineEvent 仅兼容旧数据')
 
     # ---- 模式分发 ----
     args = sys.argv[1:]
@@ -190,3 +190,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

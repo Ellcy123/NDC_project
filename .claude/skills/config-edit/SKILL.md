@@ -1,4 +1,4 @@
----
+﻿---
 name: config-edit
 description: "改 NDC 编辑器配置表（avg_editor_v2/data/table）。用自然语言说要改什么，skill 负责：定位到对的表/字段、连带处理互相影响的关联表、改前阐述理解给用户确认、改后基线对比自校验。触发：用户说'改配置/改表/把X改成Y/这个证据(场景/NPC/疑点/指证/底图/美术需求/突发事件)改一下'等。即使改动很小也走完整流程。不改 Unity / 不改对白(Talk 走 AVG 管线)。"
 argument-hint: "[自然语言描述要改什么，如：把 2204 威胁便条英文改成文档版]"
@@ -16,7 +16,7 @@ allowed-tools: Read, Glob, Grep, Edit, Bash, AskUserQuestion
 
 ## 边界
 - 只改 `avg_editor_v2/data/table`。绝不碰 Unity(`D:\NDC\Assets\table`)、`res/xls`、`preview_new2`。
-- 不改对白：`Talk` 由 AVG 管线（sync_to_json）维护，本 skill 不动 Talk 文本；只在关联检查里提示"这句被某 Talk 引用"。
+- 不改对白文本、不重构 Talk 链：`Talk` 文本由 AVG 管线（sync_to_json）维护；本 skill 可读取/校验 Talk 的 script 挂点和参数。若用户明确要求改 script 参数，先说明风险并确认，再作为配置改动处理。
 - 改动无论多小，五段流程一段不少。
 
 ## 流程（5 段）
@@ -70,3 +70,4 @@ python validate.py --compare .ce_baseline.json
 - 改 id / 外键字段 = 高风险，Phase 1 必须显式列出所有被引用处。
 - 校验是闸门不是建议：不过（新增 ERROR）就回滚。
 - 拿不准就问，别猜（呼应项目"修改前先举例确认"原则）。
+

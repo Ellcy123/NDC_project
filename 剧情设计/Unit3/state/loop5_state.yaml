@@ -26,7 +26,7 @@ player_context:
     - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
     - "'失足'可能性未排除——开放性结论"
     - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
-    - "Morrison暗示Continental银行打过招呼，案件比想象的复杂"
+    - "Morrison暗示湖滨信托银行打过招呼，案件比想象的复杂"
     # ── L2 ──
     - "Mary伪造了教堂不在场证明——蜡烛仅烧15分钟，提前背了第23章内容，走前挪书签留蜡烛"
     - "Mary早就知道Thomas和Helen的关系——三个月前发现衬衫口红印，藏在衣柜深处不洗"
@@ -41,7 +41,7 @@ player_context:
     - "Helen参与准备工作：准备期Thomas把全楼唯一一把天台钥匙交给Helen去'布置陷阱'（Thomas以为），案发当晚Helen用此钥匙带Thomas上楼，事后将钥匙藏入猫窝沾油——在地面涂轮椅维护油"
     - "Helen声称被Thomas胁迫参与——'他威胁毁掉我的名声'"
     - "Thomas的计划：约Mary到楼顶 → 推Mary → 地面有油Mary会打滑站不稳 → 伪装意外骗保还$12,000债务"
-    - "Thomas欠Continental银行$12,000高利贷"
+    - "Thomas欠湖滨信托银行$12,000高利贷"
     - "Helen始终坚持'那晚在家'——成功守住'不在场'防线"
     - "第二组女性脚印仍未解释——Helen否认在场但脚印证据暗示另有隐情"
     - "Bernard Wells（银行保险代理人）见证了Thomas咨询'如何让意外看起来合理'，Helen在场"
@@ -62,7 +62,7 @@ player_context:
     - direction: "Bernard不只是见证者"
       trigger: "Mickey在开篇指出：Thomas只有小学文化程度，不可能独自设计出如此精密的保险计划——有人教过他"
     - direction: "报纸批注笔迹存疑"
-      trigger: "Thomas家厨房旧报纸堆中发现有大量专业批注的保险版面，使用了Continental银行内部缩写术语（ACC.D, BEN.CHG等），与Thomas的粗犷笔迹完全不同"
+      trigger: "Thomas家厨房旧报纸堆中发现有大量专业批注的保险版面，使用了湖滨信托银行内部缩写术语（ACC.D, BEN.CHG等），与Thomas的粗犷笔迹完全不同"
   post_expose_knowledge:
     - "Bernard亲手在报纸上标注了保险条款关键段落，教Thomas理解'意外死亡'的赔付条件"
     - "批注是在Bernard办公桌上完成的——垫板压痕与报纸批注笔迹轨迹完全吻合，是面对面教学"
@@ -84,7 +84,7 @@ player_context:
 opening:
   scene_id: 3004
   characters: [Zack, Emma, Mickey]
-  purpose: "Mickey阐述核心质疑——Thomas只有小学文化却设计了精密骗保计划，引导Zack去Thomas家找线索、去Continental银行找Bernard"
+  purpose: "Mickey阐述核心质疑——Thomas只有小学文化却设计了精密骗保计划，引导Zack去Thomas家找线索、去湖滨信托银行找Bernard"
   talk: emma_008
 
   emma_008:
@@ -95,7 +95,7 @@ opening:
     knows:
       - "Helen当晚在楼顶，给Thomas灌酒，最终Helen和Mary联手反抗Thomas（L4确认）"
       - "正当防卫结论已确认"
-      - "Thomas欠Continental银行$12,000"
+      - "Thomas欠湖滨信托银行$12,000"
       - "Bernard Wells见证过Thomas咨询'如何让意外看起来合理'，Helen在场（L3）"
       - "Mickey质疑Thomas的智力水平不足以独自设计骗保计划"
 
@@ -123,7 +123,7 @@ opening:
       - "Thomas的保险方案细节（作为辩护律师研究过案件材料）"
       - "Thomas只有小学文化程度，家里连书都没几本"
       - "Thomas问的问题很专业——'意外赔付流程''受益人变更条件'——与其教育水平不符"
-      - "Bernard Wells是Continental银行保险代理人，经手了Thomas的保单"
+      - "Bernard Wells是湖滨信托银行保险代理人，经手了Thomas的保单"
 
     does_not_know:
       - "Bernard的具体操作方式（报纸批注、面对面教学）"
@@ -143,7 +143,7 @@ opening:
 #   SC3006 公寓二楼走廊          → ⏸️无新线索
 #   SC3007 教堂                  → 🔒无新证据
 #   SC3008 Helen家               → 🔓对话(Helen)——新增
-#   SC3009 Continental银行公共区域 → ⏸️无新线索（Bernard在办公室）
+#   SC3009 湖滨信托银行公共区域 → ⏸️无新线索（Bernard在办公室）
 #   SC3010 Margaret鞋坊          → ⏸️无新线索
 #   SC3011 街角                  → 🔒尚未出现在调查方向中
 #   SC3012 Sullivan家卧室        → ⏸️无新线索
@@ -152,14 +152,14 @@ opening:
 #   SC3015 三楼走廊              → ⏸️无新线索
 
 scenes:
-  # ── SC3014 Continental银行Bernard办公室 L5（新解锁——Bernard Talk+垫板搜证） ──
+  # ── SC3014 湖滨信托银行Bernard办公室 L5（新解锁——Bernard Talk+垫板搜证） ──
   # 解锁契机: 笔迹比对确认报纸批注非Thomas所写，专业缩写指向银行内部人员；
   #           已知Bernard曾见证Thomas咨询（L3 Helen供述+L3 Bernard证词3305001）
   # 解锁原因: L3银行场景(SC3009)只开放了公共区域（贷款记录、保险单副本），
   #           Bernard的私人办公室此前没有搜查理由——现在笔迹证据直接指向银行从业者
   - id: 3014
-    name: "Continental银行Bernard办公室"
-    unlock_trigger: "笔迹比对报告(3502)确认批注非Thomas所写+银行内部缩写术语→指向Continental银行从业者→Bernard最可疑"
+    name: "湖滨信托银行Bernard办公室"
+    unlock_trigger: "笔迹比对报告(3502)确认批注非Thomas所写+银行内部缩写术语→指向湖滨信托银行从业者→Bernard最可疑"
     unlock_reason: "L3只接触了Bernard在公共区域的证词，未进入其私人办公室搜证；现在有了搜查特定物证的方向（书写工具/办公用品）"
     evidence:
       - id: 3504
@@ -173,7 +173,7 @@ scenes:
         note: "环境叙事——铜质相框，Bernard与妻子和两个穿校服的孩子，桌角放了好几年"
       - id: 3511
         name: "墙上银行年度表彰状"
-        note: "环境叙事——Continental Bank 1927年度服务之星，Bernard Wells"
+        note: "环境叙事——Lakeshore Trust & Banking Co. 1927年度服务之星，Bernard Wells"
       - id: 3512
         name: "客户名片盒"
         note: "非指证Item——抽屉里的皮质名片盒，十几张各行各业名片，无案件相关人名"
@@ -190,7 +190,7 @@ scenes:
           - content: "Thomas Sullivan已坠楼死亡，案件被判正当防卫"
             trigger: "L4结案消息传到银行"
           - content: "Zack Brennan是负责此案的侦探，之前来过银行询问"
-            trigger: "L3 Zack来过Continental银行"
+            trigger: "L3 Zack来过湖滨信托银行"
         active_topics:
           - "保险业务流程（标准话术）"
           - "Thomas的保单基本信息（保额、受益人、生效日期）"
@@ -205,7 +205,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3505001  # ⚠谎言: "Thomas来Continental银行咨询保险，我按照标准流程给他办理了保单。我没有做任何多余的事情。正常的业务往来"
+          - 3505001  # ⚠谎言: "Thomas来湖滨信托银行咨询保险，我按照标准流程给他办理了保单。我没有做任何多余的事情。正常的业务往来"
           # 3305002(身份证词)和3305003(保单信息)已前移至L3 bernard_001
 
         # ── 4.  ──
@@ -287,7 +287,7 @@ scenes:
 # PART 3: 指证（Expose）
 # ═══════════════════════════════════════
 #
-# 场景: Continental银行Bernard办公室(SC3014) → ⚔️指证(Bernard)
+# 场景: 湖滨信托银行Bernard办公室(SC3014) → ⚔️指证(Bernard)
 # 指证设计: 2轮（R1：报纸上的"课程"+垫板压痕内部深化 → R2：垫板花形压痕→有女人来访）
 # V1三轮重排：原R1(笔迹)+原R2(垫板压痕)合并为V2 R1；原R3(花形压痕)变为V2 R2
 # Bernard的Talk/证词见上方 scenes → SC3014 → bernard_002
@@ -363,7 +363,7 @@ expose:
 events:
   - type: closing
     scene_id: 3014
-    name: "Continental银行门外——释然到不安"
+    name: "湖滨信托银行门外——释然到不安"
     trigger: "Expose结束后"
     characters: [Zack, Emma]
     purpose: |
@@ -397,7 +397,7 @@ events:
     trigger: "Emma对话后"
     characters: [Zack, Mickey]
     purpose: |
-      Mickey在警局出现，询问Zack在Continental银行的发现：
+      Mickey在警局出现，询问Zack在湖滨信托银行的发现：
       - Zack汇报Bernard系统性诱导+有女人来问"投保人死后"的问题
       - Mickey确认案件已被Morrison判正当防卫
       - Mickey意味深长："跟我来。我需要跟你谈谈"
