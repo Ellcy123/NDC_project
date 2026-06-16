@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emma O'Malley - Unit1 Loop3 Case Discussion</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #1a1a2e;
+    color: #e0d5c1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: #16213e;
+    border-bottom: 1px solid #c9a96e44;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: #c9a96e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: #1a1a2e; font-weight: bold;
+  }
+
+  .header-info h1 { font-size: 16px; color: #c9a96e; }
+  .header-info p  { font-size: 12px; color: #8888aa; }
+
+  .api-bar {
+    background: #0f3460;
+    padding: 8px 20px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .api-bar input {
+    flex: 1; padding: 6px 10px;
+    background: #1a1a2e; border: 1px solid #c9a96e44;
+    color: #e0d5c1; border-radius: 4px; font-size: 13px;
+    font-family: monospace;
+  }
+  .api-bar button {
+    padding: 6px 14px; background: #c9a96e; color: #1a1a2e;
+    border: none; border-radius: 4px; cursor: pointer;
+    font-weight: bold; font-size: 13px;
+  }
+  .api-bar button:hover { background: #d4b87a; }
+  .api-bar .status { font-size: 12px; color: #8888aa; min-width: 60px; }
+
+  #chat {
+    flex: 1; overflow-y: auto; padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  .msg {
+    max-width: 75%; padding: 10px 14px;
+    border-radius: 12px; line-height: 1.6;
+    font-size: 14px; white-space: pre-wrap;
+  }
+  .msg.emma {
+    align-self: flex-start;
+    background: #16213e;
+    border: 1px solid #c9a96e33;
+    border-top-left-radius: 2px;
+  }
+  .msg.emma .name { font-size: 11px; color: #c9a96e; margin-bottom: 4px; }
+  .msg.user {
+    align-self: flex-end;
+    background: #0f3460;
+    border-top-right-radius: 2px;
+  }
+  .msg.system {
+    align-self: center; max-width: 90%;
+    background: none; color: #666;
+    font-size: 12px; text-align: center;
+    font-style: italic;
+  }
+
+  .typing { color: #c9a96e88; font-style: italic; font-size: 13px; padding: 4px 14px; }
+
+  #input-bar {
+    background: #16213e;
+    border-top: 1px solid #c9a96e44;
+    padding: 12px 20px;
+    display: flex; gap: 10px;
+  }
+  #input-bar textarea {
+    flex: 1; padding: 10px 14px;
+    background: #1a1a2e; border: 1px solid #c9a96e44;
+    color: #e0d5c1; border-radius: 8px; font-size: 14px;
+    font-family: 'Georgia', serif; resize: none;
+    min-height: 42px; max-height: 120px;
+  }
+  #input-bar textarea::placeholder { color: #555; }
+  #input-bar textarea:focus { outline: none; border-color: #c9a96e88; }
+  #input-bar button {
+    padding: 10px 20px; background: #c9a96e; color: #1a1a2e;
+    border: none; border-radius: 8px; cursor: pointer;
+    font-weight: bold; font-size: 14px; font-family: 'Georgia', serif;
+    align-self: flex-end;
+  }
+  #input-bar button:hover { background: #d4b87a; }
+  #input-bar button:disabled { background: #555; cursor: not-allowed; }
+
+  .settings-toggle {
+    font-size: 12px; color: #c9a96e88; cursor: pointer;
+    text-decoration: underline; margin-top: 4px;
+  }
+  .settings-toggle:hover { color: #c9a96e; }
+
+  #settings-panel {
+    display: none; background: #0f3460; padding: 12px 20px;
+    font-size: 13px;
+  }
+  #settings-panel.open { display: block; }
+  #settings-panel label { color: #8888aa; margin-right: 8px; }
+  #settings-panel select, #settings-panel input[type="number"] {
+    background: #1a1a2e; border: 1px solid #c9a96e44;
+    color: #e0d5c1; padding: 4px 8px; border-radius: 4px;
+    font-size: 13px; margin-right: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="avatar">E</div>
+  <div class="header-info">
+    <h1>Emma O'Malley</h1>
+    <p>Ashford Herald Reporter &mdash; Unit1 Loop3 &middot; 自由探索结束，对质 Rosa 前</p>
+  </div>
+</header>
+
+<div class="api-bar">
+  <input type="password" id="apikey" placeholder="Paste your DeepSeek API Key here (sk-...)" />
+  <button onclick="saveKey()">Save</button>
+  <span class="status" id="key-status"></span>
+  <span class="settings-toggle" onclick="toggleSettings()">Settings</span>
+</div>
+
+<div id="settings-panel">
+  <label>Model:</label>
+  <select id="model-select">
+    <option value="deepseek-chat" selected>deepseek-chat (V3)</option>
+    <option value="deepseek-reasoner">deepseek-reasoner (R1)</option>
+  </select>
+  <label>Temperature:</label>
+  <input type="number" id="temp" value="0.9" min="0" max="2" step="0.1" style="width:60px" />
+  <label>Max tokens:</label>
+  <input type="number" id="max-tokens" value="512" min="64" max="4096" step="64" style="width:80px" />
+</div>
+
+<div id="chat">
+  <div class="msg system">Enter your DeepSeek API Key above, then start chatting.</div>
+</div>
+
+<div id="input-bar">
+  <textarea id="user-input" placeholder="Say something to Emma..." rows="1"
+    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+  <button id="send-btn" onclick="send()">Send</button>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `你是 Emma O'Malley，25 岁，爱尔兰裔美国人，《艾斯弗德先驱报》调查记者。现在是 1926 年，禁酒令时代的芝加哥（这个世界叫"艾斯弗德城"）。
+
+你正和私家侦探 Zack Brennan 合作调查蓝月亮酒吧老板 Webb 的死亡案。你叫他"Brennan"或"布伦南先生"。现在是案发当晚，你们刚完成了第三轮调查的自由探索，即将去储藏室对质 Rosa。你们在走廊里有几分钟可以交换想法。
+
+## 你的性格
+- 说话直接利落，不绕弯子。承认冒险，承认想要好故事。
+- 天生追细节——调查对你来说像呼吸。
+- 行动派，经常比别人先提出方案。
+- 幽默是干的、快的、观察型的，不表演。
+- 感情深但判断不被感情绑架。勇敢但不鲁莽。
+- 1920s 美式说话风格（用中文时保持这个调性——干脆、有锋芒、偶尔口语化，但不刻意卖弄）。
+
+## 你的背景
+- 9 岁成孤儿。父亲 Sean O'Malley 1912 年在一场据说是港口事故中去世。你由姑姑抚养长大。
+- 米勒家族的奖学金资助了你的全部教育。你对此心怀感激。
+- 你一直在调查艾斯弗德城的腐败，尤其是蓝月亮酒吧周边的势力。
+- 随身带记者证、笔记本、笔、蓝月亮会员卡。
+
+## 案情背景——你和 Zack 目前共同掌握的事实
+
+【第一轮调查（Loop1）已知】
+- Webb 已死，死亡地点：蓝月亮酒吧一楼 Webb 会客室。
+- Vivian 手持手枪在现场被发现，但该枪无硝烟反应——她不是刚刚开枪的人。
+- 23:30 众人听到枪响，你和 Zack 从歌舞厅赶到会客室。
+- Webb 生前雇佣了 Zack 作为遗嘱执行人：合同内容是确保 Vivian 顺利继承 Webb 的遗产。按 slayer rule，Vivian 若被定罪杀人则遗嘱链断裂，所以 Zack 必须为她洗清嫌疑才能履职。Morrison 探长同意了 72 小时调查期。
+- Rosa 声称亲眼看见 Vivian 在 23:30 开枪杀了 Webb——但 Vivian 的枪没有硝烟，这个证词存疑。
+
+【第二轮调查（Loop2）已知】
+- Webb 的酒吧除了私酒生意，还在做敲诈勒索（仙人跳变体）。
+- Tommy 曾是勒索执行人，但 11 月中旬后被换掉了——新执行人身份不明。
+- Tommy 暗示 Webb 惹上了一个"大人物"，但没说名字。
+- Webb 11 月中旬停了勒索，想转移财产跑路——似乎在害怕什么人。
+- Vivian 曾被 Webb 强迫参与勒索中产人士，她对此深恶痛绝。
+- James 是兼职厨师，随口提过"很缺钱"。
+
+【第三轮调查（Loop3）——你们刚刚完成的自由探索中发现的】
+- Morrison 勘验报告：现场子弹弹壳缺失，没有找到其他枪支；子弹是射穿 Webb 后击中了窗户（弹道描述）。会客室现在对你们开放了。
+- Webb 会客室搜证发现：
+  · 窗户玻璃已破——从窗口向外看，侧巷地面的碎玻璃压在垃圾袋下方，碎片上有硝烟痕迹。
+  · 保险箱字条：Webb 笔迹，写着"密码是我们相遇的那一天"——说明 Webb 心里还记着 Vivian。
+  · Webb 和 Vivian 的合影：两人神态亲密，保存多年——和"Webb 沉迷 Rita 抛弃 Vivian"的表象形成反差。
+  · Webb 的勒索日记：扉页亲笔写着"Whale — Danger"——这是那个"大人物"名字的第一次物证出现，Webb 生前已经对 Whale 高度警觉。
+  · Rita 的照片摆在桌上（环境道具）。
+- 侧巷搜证：拾取了玻璃碎片。碎片压在垃圾袋下 + 有硝烟 = 枪击发生在垃圾袋放下之前。
+- Vivian 化妆室对话：她仍然咬定"我杀了 Webb"，但透露了两个信息——她恨 Webb 是因为 Webb 逼她去勒索别人；她每晚 23:30 固定给 Webb 送酒。对话结束后化妆室反锁了。
+- James 厨房突发事件：James 在销毁一份《艾斯弗德狂想曲》节目单。Zack 只抢到碎片——上面有曲目名但演奏时间已被毁。James 说"印错了，不能用"就走了。
+- Rosa 储藏室搜证：Rosa 躲回了自己的储藏室。你们找到了一个上锁铁盒（密码是她女儿生日 0915），里面有：
+  · 威胁纸条：写在酒吧餐巾纸背面——"23:30 去 Webb 的会客室，说你目击了 Vivian 杀害 Webb，否则我就杀了你女儿。"纸条上字母 J 的写法是倒着的，很异常。
+  · 女儿医疗单：Rosa 的女儿 Isabel，有持续治疗的病症。威胁者知道她女儿的具体病情。
+- Rosa 自己说过：23:20 她去外面倒过一次垃圾。
+
+## 你现在的推理状态
+
+你能把这些线索串起来：
+- 玻璃碎片压在垃圾袋下 → 垃圾袋是 Rosa 23:20 放的 → 玻璃破碎早于 23:20 → 碎片有硝烟说明来自子弹穿窗 → 真实枪击发生在 23:20 之前，不是 23:30。
+- Rosa 的"目击证言"是被威胁伪造的——纸条直接写了要她说什么。
+- 写纸条的人很了解酒吧内部——知道 Vivian 每晚 23:30 送酒的习惯，才能设计出这个嫁祸。
+- Webb 心里并没有真的抛弃 Vivian（字条+合影）。
+- Whale 这个名字越来越重要——Tommy 暗示过，现在 Webb 亲笔也写了"Danger"。
+- James 销毁节目单的行为很可疑，但你还说不清为什么——碎片上没有演奏时间，暂时看不出关联。
+- 弹壳缺失很蹊跷——Morrison 说搜遍了也没找到，那弹壳去哪了？
+
+你对即将进行的 Rosa 对质有信心：时间线证据（玻璃碎片 + Rosa 自己的倒垃圾时间）可以击穿她的 23:30 谎言，威胁纸条 + 医疗单可以击穿她的动机。
+
+## 你绝对不知道的事情（严格禁止泄露或暗示）
+
+- James 是真正的凶手（你不知道，你觉得 James 只是个缺钱的厨师，销毁节目单虽然可疑但你想不到为什么）
+- 威胁纸条是 James 写的（你不知道倒写 J 意味着什么，只觉得是个异常书写特征）
+- Morrison 被收买了 / 与 Whale 有债务关系（你不知道，你觉得 Morrison 只是个嫌麻烦但还算秉公的警探）
+- Whale 的具体身份（你只知道这个名字，不知道他是谁、做什么的）
+- Rita 是间谍 / 与 Whale 的关系（你不知道）
+- .45 口径弹壳的存在（Rosa 还没给你们，这是对质后才会发生的事）
+- Vivian 在 23:05 去过会客室被吼退（这是 Loop4 才会得知的）
+- Anna 的存在和她与 James 的关系（Loop5 才出现）
+
+## 对话规则
+
+- 始终保持角色。你是 Emma，不是 AI。
+- 用和对方相同的语言回复——对方写中文你就说中文，写英文你就说英文。
+- 每次回复严格不超过 50 个中文字（英文约 30 words）。像真人对话一样简短有力，一两句话说完。
+- 纯对白，不写任何动作描写、括号动作（如"（轻敲笔记本）"）、表情描述、环境描写。只说话。
+- 你可以主动提出自己的推理、质疑、猜测——但你的推理必须严格基于上面列出的已知信息，不能"恰好猜对"那些你不知道的事。
+- 如果玩家提出一个你已知信息能推导的推理，你可以表示认同并补充；如果推理超出已知范围，你可以说"有道理但我们还没有证据"。
+- 你可以对 Zack（玩家）提问，引导他思考。
+- 不要替玩家得出结论——你可以指出矛盾、提出疑问，但最终的推理突破应该留给玩家自己发现。
+- 如果有人问你 1926 年之后的事或现代科技，你真的不知道那是什么。
+- 绝不打破第四面墙，绝不提 AI、游戏、语言模型等概念。`;
+
+let messages = [];
+let apiKey = localStorage.getItem('ds_apikey') || '';
+
+if (apiKey) {
+  document.getElementById('apikey').value = apiKey;
+  document.getElementById('key-status').textContent = '✓ Saved';
+  document.getElementById('key-status').style.color = '#6a6';
+  addEmmaGreeting();
+}
+
+function saveKey() {
+  apiKey = document.getElementById('apikey').value.trim();
+  if (!apiKey) return;
+  localStorage.setItem('ds_apikey', apiKey);
+  document.getElementById('key-status').textContent = '✓ Saved';
+  document.getElementById('key-status').style.color = '#6a6';
+  if (messages.length === 0) addEmmaGreeting();
+}
+
+function addEmmaGreeting() {
+  messages = [{ role: 'system', content: SYSTEM_PROMPT }];
+  const chat = document.getElementById('chat');
+  chat.innerHTML = '';
+  const greeting = "布伦南，搜完了？我整理了一下——威胁纸条、玻璃碎片、还有 Webb 那本日记……线索不少，但我脑子里还有几个结没解开。\n\n去找 Rosa 对质之前，要不要先理理思路？";
+  appendMsg('emma', greeting);
+  messages.push({ role: 'assistant', content: greeting });
+}
+
+function appendMsg(type, text) {
+  const chat = document.getElementById('chat');
+  const div = document.createElement('div');
+  div.className = `msg ${type}`;
+  if (type === 'emma') {
+    div.innerHTML = `<div class="name">Emma O'Malley</div>${escapeHtml(text)}`;
+  } else {
+    div.textContent = text;
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleSettings() {
+  document.getElementById('settings-panel').classList.toggle('open');
+}
+
+async function send() {
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text || !apiKey) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  appendMsg('user', text);
+  messages.push({ role: 'user', content: text });
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+
+  const chat = document.getElementById('chat');
+  const typing = document.createElement('div');
+  typing.className = 'typing';
+  typing.textContent = 'Emma is typing...';
+  chat.appendChild(typing);
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const model = document.getElementById('model-select').value;
+    const temperature = parseFloat(document.getElementById('temp').value);
+    const max_tokens = parseInt(document.getElementById('max-tokens').value);
+
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({ model, messages, temperature, max_tokens, stream: false })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`API ${res.status}: ${err}`);
+    }
+
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+    messages.push({ role: 'assistant', content: reply });
+
+    typing.remove();
+    appendMsg('emma', reply);
+  } catch (e) {
+    typing.remove();
+    appendMsg('system', `Error: ${e.message}`);
+    messages.pop();
+  } finally {
+    btn.disabled = false;
+    input.focus();
+  }
+}
+
+// auto-resize textarea
+document.getElementById('user-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+</script>
+</body>
+</html>
