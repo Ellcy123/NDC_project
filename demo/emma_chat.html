@@ -86,29 +86,29 @@
 
   .typing { color: #c9a96e88; font-style: italic; font-size: 13px; padding: 4px 14px; }
 
-  #input-bar {
+  #choices-bar {
     background: #16213e;
     border-top: 1px solid #c9a96e44;
     padding: 12px 20px;
-    display: flex; gap: 10px;
+    display: flex; flex-direction: column; gap: 8px;
   }
-  #input-bar textarea {
-    flex: 1; padding: 10px 14px;
+  .choice-btn {
+    width: 100%; padding: 10px 16px;
     background: #1a1a2e; border: 1px solid #c9a96e44;
-    color: #e0d5c1; border-radius: 8px; font-size: 14px;
-    font-family: 'Georgia', serif; resize: none;
-    min-height: 42px; max-height: 120px;
+    color: #e0d5c1; border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-family: 'Georgia', serif;
+    text-align: left; transition: all 0.15s;
+    line-height: 1.5;
   }
-  #input-bar textarea::placeholder { color: #555; }
-  #input-bar textarea:focus { outline: none; border-color: #c9a96e88; }
-  #input-bar button {
-    padding: 10px 20px; background: #c9a96e; color: #1a1a2e;
-    border: none; border-radius: 8px; cursor: pointer;
-    font-weight: bold; font-size: 14px; font-family: 'Georgia', serif;
-    align-self: flex-end;
+  .choice-btn:hover {
+    background: #0f3460; border-color: #c9a96e88;
   }
-  #input-bar button:hover { background: #d4b87a; }
-  #input-bar button:disabled { background: #555; cursor: not-allowed; }
+  .choice-btn:disabled {
+    opacity: 0.4; cursor: not-allowed;
+  }
+  .choice-btn .choice-label {
+    font-size: 11px; color: #c9a96e88; margin-right: 6px;
+  }
 
   .settings-toggle {
     font-size: 12px; color: #c9a96e88; cursor: pointer;
@@ -162,10 +162,10 @@
   <div class="msg system">Enter your DeepSeek API Key above, then start chatting.</div>
 </div>
 
-<div id="input-bar">
-  <textarea id="user-input" placeholder="Say something to Emma..." rows="1"
-    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
-  <button id="send-btn" onclick="send()">Send</button>
+<div id="choices-bar">
+  <button class="choice-btn" disabled><span class="choice-label">A</span>等待 API Key...</button>
+  <button class="choice-btn" disabled><span class="choice-label">B</span>等待 API Key...</button>
+  <button class="choice-btn" disabled><span class="choice-label">C</span>等待 API Key...</button>
 </div>
 
 <script>
@@ -248,14 +248,29 @@ const SYSTEM_PROMPT = `你是 Emma O'Malley，25 岁，爱尔兰裔美国人，�
 
 - 始终保持角色。你是 Emma，不是 AI。
 - 用和对方相同的语言回复——对方写中文你就说中文，写英文你就说英文。
-- 每次回复严格不超过 50 个中文字（英文约 30 words）。像真人对话一样简短有力，一两句话说完。
-- 纯对白，不写任何动作描写、括号动作（如"（轻敲笔记本）"）、表情描述、环境描写。只说话。
+- 每次回复严格不超过 50 个中文字。简短有力，一两句话说完。
+- 纯对白，不写任何动作描写、括号动作、表情描述、环境描写。只说话。
+- 你的每句回复必须以一个开放式的问题、判断请求或话头收尾——为 Zack 的下一句回应留出空间。比如"你觉得呢？""先查哪边？""这说明什么？"这种。不要用封闭式陈述结尾。
 - 你可以主动提出自己的推理、质疑、猜测——但你的推理必须严格基于上面列出的已知信息，不能"恰好猜对"那些你不知道的事。
 - 如果玩家提出一个你已知信息能推导的推理，你可以表示认同并补充；如果推理超出已知范围，你可以说"有道理但我们还没有证据"。
 - 你可以对 Zack（玩家）提问，引导他思考。
 - 不要替玩家得出结论——你可以指出矛盾、提出疑问，但最终的推理突破应该留给玩家自己发现。
 - 如果有人问你 1926 年之后的事或现代科技，你真的不知道那是什么。
 - 绝不打破第四面墙，绝不提 AI、游戏、语言模型等概念。`;
+
+const CHOICES_PROMPT = `基于 Emma 刚才说的最后一句话（尤其是她的提问/话头），为 Zack 生成 3 个回复选项。
+
+核心要求：三个选项必须是对 Emma 最后那句话的直接回应，像影视互动游戏里的对话选项。
+
+风格：
+- A：偏正面/顺着她的思路往前推
+- B：偏质疑/不太同意、或指出问题
+- C：搞笑/跳脱——彻底跳出案情，说一句完全不相干的话。比如突然说肚子饿了、评价酒吧装修难看、吐槽天气、想回家睡觉、夸 Emma 今天发型不错、说自己鞋带松了——越跟当前严肃气氛格格不入越好。就是那种"大哥我们在查命案你在说什么"的效果。
+
+每个选项不超过 15 个中文字。Zack 的口吻：干练、冷静、不废话。不要加引号。
+
+严格按以下 JSON 格式输出，不要输出任何其他内容：
+{"a":"选项A","b":"选项B","c":"选项C"}`;
 
 let messages = [];
 let apiKey = localStorage.getItem('ds_apikey') || '';
@@ -283,6 +298,7 @@ function addEmmaGreeting() {
   const greeting = "布伦南，搜完了？我整理了一下——威胁纸条、玻璃碎片、还有 Webb 那本日记……线索不少，但我脑子里还有几个结没解开。\n\n去找 Rosa 对质之前，要不要先理理思路？";
   appendMsg('emma', greeting);
   messages.push({ role: 'assistant', content: greeting });
+  generateChoices();
 }
 
 function appendMsg(type, text) {
@@ -306,23 +322,40 @@ function toggleSettings() {
   document.getElementById('settings-panel').classList.toggle('open');
 }
 
-async function send() {
-  const input = document.getElementById('user-input');
-  const text = input.value.trim();
-  if (!text || !apiKey) return;
+function setChoicesLoading() {
+  const bar = document.getElementById('choices-bar');
+  const btns = bar.querySelectorAll('.choice-btn');
+  btns.forEach(btn => {
+    btn.disabled = true;
+    btn.style.opacity = '0.4';
+  });
+  btns[0].innerHTML = '<span class="choice-label">A</span>思考中...';
+  btns[1].innerHTML = '<span class="choice-label">B</span>思考中...';
+  btns[2].innerHTML = '<span class="choice-label">C</span>思考中...';
+}
 
-  input.value = '';
-  input.style.height = 'auto';
+function setChoices(a, b, c) {
+  const bar = document.getElementById('choices-bar');
+  const btns = bar.querySelectorAll('.choice-btn');
+  const texts = [a, b, c];
+  const labels = ['A', 'B', 'C'];
+  btns.forEach((btn, i) => {
+    btn.innerHTML = `<span class="choice-label">${labels[i]}</span>${escapeHtml(texts[i])}`;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.onclick = () => pickChoice(texts[i]);
+  });
+}
+
+async function pickChoice(text) {
+  setChoicesLoading();
   appendMsg('user', text);
   messages.push({ role: 'user', content: text });
-
-  const btn = document.getElementById('send-btn');
-  btn.disabled = true;
 
   const chat = document.getElementById('chat');
   const typing = document.createElement('div');
   typing.className = 'typing';
-  typing.textContent = 'Emma is typing...';
+  typing.textContent = 'Emma is thinking...';
   chat.appendChild(typing);
   chat.scrollTop = chat.scrollHeight;
 
@@ -351,21 +384,56 @@ async function send() {
 
     typing.remove();
     appendMsg('emma', reply);
+    generateChoices();
   } catch (e) {
     typing.remove();
     appendMsg('system', `Error: ${e.message}`);
     messages.pop();
-  } finally {
-    btn.disabled = false;
-    input.focus();
+    setChoices('(重试) 再说一次', '(重试) 换个话题', '(重试) 继续');
   }
 }
 
-// auto-resize textarea
-document.getElementById('user-input').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-});
+async function generateChoices() {
+  setChoicesLoading();
+
+  try {
+    const choiceMessages = [
+      ...messages,
+      { role: 'user', content: CHOICES_PROMPT }
+    ];
+
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: document.getElementById('model-select').value,
+        messages: choiceMessages,
+        temperature: 1.0,
+        max_tokens: 256,
+        stream: false
+      })
+    });
+
+    if (!res.ok) throw new Error(`API ${res.status}`);
+
+    const data = await res.json();
+    const raw = data.choices[0].message.content.trim();
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('No JSON found');
+
+    const choices = JSON.parse(jsonMatch[0]);
+    setChoices(choices.a, choices.b, choices.c);
+  } catch (e) {
+    setChoices(
+      '先聊聊玻璃碎片的时间线吧。',
+      '这些线索够用吗？我不太确定。',
+      'Webb 那本日记的扉页……Whale 这个名字你怎么看？'
+    );
+  }
+}
 </script>
 </body>
 </html>
