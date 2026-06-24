@@ -38,7 +38,9 @@
 
 **对应台词**：
 - 镜头1：「你缺的不是一笔小钱。Anna 刚拿到身份，孩子快出生了。可你的名字还卡在移民局的纸堆里。Whale 给了你一条路：杀 Webb，拿钱，拿身份。」
+  > **EN:** "It wasn't just about the money. Anna had just gotten her papers. The baby was coming. But your name was still buried in immigration paperwork. Whale offered you a way out — kill Webb, get the cash, get the papers."
 - 镜头2：「办法，是那张节目单给你的。23点整，《艾斯弗德狂想曲》鼓点最响。只要在那几分钟开枪，没人会听见。所以你后来才拼命烧掉节目单。你怕的不是曲名，是上面的时间。」
+  > **EN:** "The idea came from that playbill. Eleven o'clock sharp — the Ashford Rhapsody hits its loudest drum break. Fire a gun during those few minutes, nobody hears a thing. That's why you burned the playbill later. It wasn't the song you were afraid of. It was the timestamp."
 
 ---
 
@@ -54,8 +56,11 @@
 
 **对应台词**：
 - 镜头3：「23点，鼓点盖过整间酒吧。」
+  > **EN:** "Eleven o'clock. The drums drowned out the entire bar."
 - 镜头4：「你从厨房下楼，走进会客室，从背后对 Webb 开枪。」
+  > **EN:** "You came down from the kitchen, walked into the parlor, and shot Webb from behind."
 - 镜头5：「子弹穿过他，打碎窗户。碎玻璃落进侧巷。你没注意到它。可它比任何证人都诚实。」
+  > **EN:** "The bullet went through him and shattered the window. Glass fell into the side alley. You didn't notice it. But it was more honest than any witness."
 
 ---
 
@@ -70,7 +75,9 @@
 
 **对应台词**：
 - 镜头6：「五分钟后，Vivian 来了。她也带着枪，也想在今晚结束这一切。可门后已经不是 Webb。你锁着门，学他的声音吼了一句：'Don't be bothering me!'」
+  > **EN:** "Five minutes later, Vivian showed up. She had a gun too — she wanted to end it all tonight. But the man behind the door wasn't Webb anymore. You held the lock and growled in his voice: 'Don't be bothering me!'"
 - 镜头7：「她信了，转身离开。你回到厨房，继续切菜、备餐，让别人以为你一直都在楼上。」
+  > **EN:** "She believed it. Turned around and left. You went back to the kitchen — kept chopping, kept cooking — so everyone would think you'd been upstairs the whole time."
 
 ---
 
@@ -85,7 +92,9 @@
 
 **对应台词**：
 - 镜头8：「23点20分，Rosa 去倒垃圾。她只是把袋子放下，却正好压住了那片玻璃。从这一刻起，真正的枪击只能发生在 23点20分之前。」
+  > **EN:** "At 11:20, Rosa went out to dump the trash. She just set the bag down — right on top of that piece of glass. From that moment on, the real gunshot could only have happened before 11:20."
 - 镜头9：「23点30分，你在二楼厨房朝窗外开了一枪。这一枪不是杀人，是报时。你要所有人都相信，Webb 是那一刻才死的。」
+  > **EN:** "At 11:30, you fired a shot out the kitchen window on the second floor. That shot wasn't meant to kill. It was meant to set the clock. You needed everyone to believe Webb died right then."
 
 ---
 
@@ -100,7 +109,9 @@
 
 **对应台词**：
 - 镜头10：「Vivian 推门进去时，Webb 已经死了。她的枪从头到尾没开过。Rosa 也不是目击者，她是被你逼来的。你拿她女儿的命威胁她，让她在假枪声之后指认 Vivian。那张纸条上写成T的J，就是你留下的手印。」
+  > **EN:** "When Vivian pushed that door open, Webb was already dead. Her gun was never fired — not once. Rosa wasn't a witness either. She was your puppet. You threatened her daughter's life and made her point the finger at Vivian after the fake gunshot. That J written like a T on the note — that was your tell."
 - 镜头11：「James，Webb 不是 23点30分死的。23点开枪的人，是你。模仿 Webb 骗走 Vivian 的人，是你。威胁 Rosa 作伪证的人，也是你。」
+  > **EN:** "James. Webb didn't die at 11:30. The one who pulled the trigger at eleven — that was you. The one who impersonated Webb and sent Vivian away — that was you. The one who forced Rosa to lie — that was you."
 
 ---
 
