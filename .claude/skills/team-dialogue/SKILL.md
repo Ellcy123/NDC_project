@@ -114,10 +114,21 @@ state 信息点是骨架，不是全部。每个单元必须有服务 ① 人物
 | Opening | `opening.talk` 值 → `## Talk: {值}.json` |
 | Talk | `scenes[].npcs.<key>.talk` 值 → `## Talk: {值}.json` |
 | Expose | `expose.target_talk` 值 → `## Expose: {值}.json` |
-| post_expose | `post_expose.talk` 值 → `## Talk: {值}.json` |
+| post_expose（仅当 state 显式定义） | `post_expose_scene.<key>.talk` 值 → `## Talk: {值}.json` |
+
+**Talk ID 命名约定（Unit3+ 一律启用）**：state 里 `talk` / `target_talk` 字段值采用 `L{Loop号}_{阶段}_{npc 英文小写}` 格式：
+- 阶段枚举：`opening` / `scene{场景ID}` / `expose` / `postexpose`
+- 例：`L1_opening_mickey` / `L1_scene3005_foster` / `L1_scene3004_morrison` / `L1_expose_morrison`
+- 同 Loop 同 NPC 多次出场按场景区分（`L2_scene3013_mary` + `L2_scene3003_mary`）
+- Unit1/Unit2 历史命名沿用旧规则不动；Unit3+ 一律新规则
+- 因此 MD section 头与 JSON 文件名自动跟着变成 `L1_opening_mickey.json` 等
+
+**MD 草稿与产物路径**：
+- 单 Loop 草稿主文件沿用 `AVG/对话配置工作及草稿/{Unit}/Loop{N}_生成草稿.md`（`sync_to_json.py` 的入口）
+- 主文件内各段以 `## Talk: L{N}_{阶段}_{npc}.json` 头分割，由 sync 脚本切到 `AVG/EPI0{N}/Talk/loop{N}/` 下的 JSON
 
 - 场景分组头（人类可读）：`## §N. Scene {scene_id} — {描述}`，与文件名解耦。
-- **不存在"没有对话名字的内容"**：每段对白必属于 state 某个 `talk` / `target_talk` 字段。纯过场（如结尾电报）并入语义上最贴近的、state 已命名的相邻对话段（通常是其前一段 post_expose / Talk 的 talk 文件），**不另起无名 cutscene 文件**。
+- **不存在"没有对话名字的内容"**：每段对白必属于 state 某个 `talk` / `target_talk` 字段。纯过场（如结尾电报）并入语义上最贴近的、state 已命名的相邻对话段，**不另起无名 cutscene 文件**。
 - 若遇到 state 某段确实查无对应 `talk` 字段且无法判断归入哪段 → 视为 state 缺陷，lead 用 AskUserQuestion 停下来问用户归属，**绝不自创文件名**。
 
 ---

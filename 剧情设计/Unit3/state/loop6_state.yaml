@@ -1,581 +1,462 @@
 # ============================================================
-# Loop 6 — 辩论
-# 本循环形式: 控辩辩论（Zack控方 vs Mickey辩方，非传统指证）
-# 核心揭示: Mary和Helen是预谋合谋，但每个知情者都基于自己的理解选择了同情Mary
-# 前序事件: Loop 5确认Bernard系统性诱导Thomas骗保，Mary曾拜访Bernard询问"投保人死了怎么赔"
-# 时间: 1928年11月23日 约18:00（案发后+67.5小时，循环5结束后+8小时）
+# loop6_state.yaml — Unit3 Loop 6: 好友推理对决（指证 Mickey · 5 轮）
+# ============================================================
+#
+# 叙事功能：第三重反转完成——Mary 受害者 → 冷静策划者；玩家最终二选项
+# 核心揭示：Mary 与 Helen 是预谋合谋；Mary 早识破并反过来设局
+# 时间：1928 年 11 月 24 日 上午-夜
+#
+# 自检（A-G）
+# A. 结构完整性  PASS — 含 expose（5 轮 + R4 玩家三选项）+ ending_sequence（明示结局多场景）
+# B. 证据覆盖    PASS — L6 全部证据（3601-3602 + 派生 3670）
+# C. NPC 条目    PASS — Foster / Seamus / Mickey / Mary / Helen / Leonard / Emma
+# D. 目标对齐    PASS — 大纲"Mary 是否参与了蓄意谋杀 Thomas"
+# E. 信息节奏    PASS — Unit 收束，大部分伏笔揭破；保留 Mickey = Whale（Unit4 才揭）
+# G. Expose 逻辑 PASS — 5 轮控辩对决，相同证据不同解读，Zack 逐轮赢；R4 含玩家三选项
+#
+# validation_status: PASS
 # ============================================================
 
-# ═══════════════════════════════════════
-# 玩家视角（本循环）
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 一、玩家视角（本循环）
+# ─────────────────────────────
 
 player_context:
-  chapter_goal: "收集最后的证词，拼出完整真相"
+  chapter_goal: "调查 Thomas Smith 坠楼事件——揭示真相 + 完成对湖滨信托银行的调查"
   goals:
-    primary: "Mary和Helen是正当防卫，还是预谋杀人？"
+    primary: "Mary 是否参与了蓄意谋杀 Thomas？"
     secondary:
-      - "Thomas在0.25%酒精浓度下真的有攻击能力吗？"
-      - "Helen当晚到底是'心软'还是从头到尾在合谋？"
-      - "Mary的45分钟空白到底在做什么？"
-      - "Margaret的目击证词可靠吗？"
-  known_facts:
-    # ── L1 ──
-    - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
-    - "楼顶有约37码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
-    - "脚印深浅不一（实为两个体重不同的女人，Loop 4已揭晓）"
-    - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
-    - "'失足'可能性未排除——开放性结论"
-    - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
-    - "Morrison暗示湖滨信托银行打过招呼，案件比想象的复杂"
-    # ── L2 ──
-    - "Mary伪造了教堂不在场证明——蜡烛仅烧15分钟，提前背了第23章内容，走前挪书签留蜡烛"
-    - "Mary早就知道Thomas和Helen的关系——三个月前发现衬衫口红印，藏在衣柜深处不洗"
-    - "Mary在楼顶护栏边与Thomas争吵并有肢体接触——祈祷披肩织物在Thomas袖扣上"
-    - "Mary坚持Thomas'失足'掉下去，坚称'只有Thomas和我'"
-    - "Mary被追问Helen是否在楼顶时明显心虚——快速否认，眼神闪烁"
-    - "Mary报警三次家暴无人管"
-    - "Thomas和Helen有'不清不楚的关系'（Mary供出Helen名字）"
-    - "脚印深浅不一仍未解释——Mary辩称'地面不平整'"
-    # ── L3 ──
-    - "Helen和Thomas有完整的杀妻骗保计划——$10,000人寿保险，受益人Thomas，计划推Mary坠楼伪装意外"
-    - "Helen参与准备工作：准备期Thomas把全楼唯一天台钥匙交给Helen布置陷阱，Helen在地面涂轮椅维护油"
-    - "Helen声称被Thomas胁迫参与——'他威胁毁掉我的名声'"
-    - "Thomas的计划：约Mary到楼顶 → 推Mary → 地面有油Mary会打滑站不稳 → 伪装意外骗保还$12,000债务"
-    - "Thomas欠湖滨信托银行$12,000高利贷"
-    - "Helen始终坚持'那晚在家'——成功守住'不在场'防线"
-    - "第二组女性脚印仍未解释——Helen否认在场但脚印证据暗示另有隐情"
-    - "Bernard Wells（银行保险代理人）见证了Thomas咨询'如何让意外看起来合理'，Helen在场"
-    - "Helen童年目睹父亲家暴母亲（为后续动机铺垫）"
-    # ── L4 ──
-    - "Helen当晚在楼顶——门把手油迹+油迹二方比对(系统层)证明Helen独自从楼梯间侧（外侧）上楼顶"
-    - "两双相似鞋子+脚印深浅不一的真相：Mary和Helen穿着相似的鞋（同码数37码、同类型），Loop 1的脚印是两个体重不同的女人的混合脚印"
-    - "Jameson威士忌是Helen从家里带上楼顶的——母亲去世后留着的'药酒'"
-    - "Helen持续给Thomas灌酒——0.25%需要持续补充至少一小时，不是'看一眼就走了'"
-    - "Helen解释'心软'：以为Thomas只是想吓唬Mary，直到那晚确认要动手才决定灌醉他阻止"
-    - "Thomas扑向Mary时Helen从身后拉住Thomas，Mary推开Thomas，Thomas失去平衡翻过护栏"
-    - "Helen和Mary事后商量好隐瞒Helen在场——'两个女人把一个男人弄死了，谁会信是防卫？'"
-    - "Helen选择带Jameson（40%ABV）而非Thomas平时喝的廉价酒——度数更高，Thomas上头更快更容易被灌醉。Helen解释为'手边只有母亲的酒'"
-    - "Helen手伤真相：布置陷阱时被护栏锋利处割伤（非'修轮椅'），当天下午Thomas帮她开门/递油壶（手伤握不住），Thomas手上因此沾油"
-    - "结论：正当防卫——Thomas要杀Mary，Helen和Mary联手反抗"
-    # ── L5 ──
-    - "Bernard亲手在报纸上标注了保险条款关键段落，教Thomas理解'意外死亡'的赔付条件"
-    - "批注是在Bernard办公桌上完成的——垫板压痕与报纸批注笔迹轨迹完全吻合，是面对面教学"
-    - "Bernard以'专业咨询'为名，实质引导Thomas将模糊的念头具体化为可执行的骗保方案"
-    - "银行对高风险贷款客户有系统性'处理方案'——保险理赔回收贷款+代理人提成，或客户出事没收房产，银行都不亏"
-    - "垫板边缘发现雏菊花形压痕，与Mary手链上的雏菊吊坠完全吻合——Mary来过Bernard办公室"
-    - "Mary在Thomas死前曾独自拜访Bernard，询问的是'投保人死了怎么赔'——不是'被保险人死了怎么赔'"
-    - "Bernard拒绝确认来访女人身份，以'银行规定不能透露客户隐私'为由搪塞"
-  new_directions:
-    - direction: "Thomas可能根本没有攻击能力"
-      trigger: "L5结束后Zack回顾：0.25%酒精浓度+指甲下组织量极少——Foster原报告用词'相当高的浓度'是否保守了？"
-    - direction: "正当防卫判决可能需要推翻"
-      trigger: "Mary去银行问'投保人死了怎么赔'——不是防御，是研究Thomas死后的利益"
-  post_expose_knowledge:
-    - "Thomas在0.25%血液酒精浓度下已无攻击能力——连挣扎都做不到，更不可能主动攻击（Foster补充分析）"
-    - "Helen没有'心软'——地面油在Thomas一侧是给Thomas准备的陷阱，Helen'检查油'而非擦油，从头到尾是合谋"
-    - "Mary的45分钟空白（20:00-20:45）与Helen在楼顶的时间线精确配合——不是恐惧冻结，而是合谋者的时间协调"
-    - "Mary事先研究过保险条款（Bernard供述+雏菊压痕），有明确的经济动机"
-    - "Margaret的目击证词源于认知偏差——物理条件（65度仰角+护栏遮挡+深夜无光）决定她不可能看清楼顶细节，10年目睹家暴的记忆让她自动将模糊观察解读为'Thomas在攻击Mary'"
-    - "Foster在原报告中用词保守（'相当高的浓度'而非'无攻击能力'），承认'不想让一个受害者因为技术细节被起诉'"
-    - "每个知情者（Foster、Margaret、Helen）都基于自己的理解选择了同情/保护Mary"
-    - "Zack最终选择销毁证据——基于自己对Mary处境的理解，而非被Mickey说服"
+      - "找到能从根本上颠覆'正当防卫'结论的证据"
+      - "完成对银行诱导链条的调查（为 Mickey 起诉湖滨信托银行收尾）"
 
-# ═══════════════════════════════════════
-# PART 1: 开篇
-# ═══════════════════════════════════════
-#
-# 场景状态表: 警局(SC3004) → 🎬开篇
-# Zack独白整理L5发现（Mary去银行+雏菊压痕），表达深深的不安。
-# Mickey来访说"跟我来谈谈"，触发进入自由探索。
+  known_facts:
+    # 沿用 L1-L5 累积（客观事实层）
+    - "Thomas 不是主动跳下；Mary 22:00 上过天台；Helen 当晚也去过天台"
+    - "门外侧把手有 Helen 家轮椅油、内侧把手干净（油痕检测仪结果）"
+    - "天台门钥匙只有一把，在 Helen 处"
+    - "Mickey 已为 Mary 争取到无罪、Helen 正在争取无罪辩护"
+    - "Mary 人寿保险单受益人是 Thomas；Thomas 计划骗保杀 Mary（小纸条）"
+    - "Bernard 主动诱导 Thomas 接受'用妻子做受益人'的保险方案"
+    - "Bernard 承认曾有戴手工花形手链（一片花瓣有缺口）的女人来咨询"
+    - "她咨询的是'欠贷款 + 买保险的人意外死后，债务房子保单怎么处理'"
+    - "Thomas 死前手部有油痕（指尖掌心有/手背无）"
+    - "天台角落有 Jameson 空酒瓶；Helen 家有同款 Jameson；Thomas 家中只有廉价酒"
+    - "Mary 母亲遗物花形手链（一片花瓣有缺口，L2 已观察到）"
+
+  current_assumptions:
+    # L4 假结局推论——L6 控辩对决会逐条颠覆
+    - "L4 推定：Helen 当晚为保护 Mary 推下 Thomas（正当防卫假结局）"
+    - "L4 推定：门内侧干净是因为 Mary 当晚帮 Helen 从内侧开门"
+    - "L4 推定：陷阱是 Helen 一个人 19/20 号布置的"
+
+  new_directions:
+    - direction: "重审 Foster 的法医结论"
+      trigger: "Foster 主动联系：精密检测结果出来——血液酒精浓度 0.25%"
+    - direction: "Seamus 关于润滑油的新陈述"
+      trigger: "Zack 经过二楼走廊时撞见 Seamus 正用一瓶熟悉的润滑油润轮椅"
+
+  post_expose_knowledge:
+    - "**第三重反转**：Mary 是冷静的策划者，不是单纯受害者"
+    - "Mary + Helen 19 号一起预先上天台布置陷阱"
+    - "Mary 早识破 Thomas 的杀妻骗保计划，与 Helen 联手反杀"
+    - "Mary 即'戴花瓣缺口手链去 Bernard 桌上咨询的女人'"
+    - "玩家做出二选项决定：销毁证据保护 Mary / 拿起证据继续"
+    - "（若拿起）案件后续走向待续；（若销毁）Zack 选择不告诉 Emma 真相"
+    - "Mary 卖房给 TideWater 获 $8000，银行未刁难——TideWater 是 Lawson Vanderbilt 的手下"
+    - "南区援助计划：房产清退最终流入 TideWater，世博会选址附近"
+
+# ─────────────────────────────
+# 二、开篇（🎬 硬切剧情）
+# ─────────────────────────────
 
 opening:
-  scene_id: 3004
+  type: cutscene
+  location: "Mickey 律师事务所"
   characters: [Zack, Emma, Mickey]
-  purpose: "Zack整理L5发现表达不安 → Mickey来访触发自由探索 → 为辩论做铺垫"
-  talk: emma_010
+  description: |
+    Bernard 坦白完毕：有一个戴手工花形手链（花瓣缺口）的女人曾来咨询
+    '欠银行贷款的人买保险后意外死了，债务房子保单怎么处理'。
+    Zack 怀疑那个人是 Mary——母亲遗物花形手链，一片花瓣有缺口。
+    Zack 前往 Mickey 办公室和他商议。
+    Mickey 提醒：法庭上仅有怀疑和推测不够，要拿出事实证据才能上诉。
+    Zack 决定再去调查一下——如果 Mary 和 Helen 合谋且提前杀人，
+    两人将分别被判为蓄意杀人的主犯和从犯，会面临死刑。
+  talk: null
 
-  emma_010:
-    is_liar: false
-    motive: "陪伴Zack整理思路——L5发现Mary可能是主谋后，Emma也在消化这个信息"
-    mindset: "沉重但清醒——不急着下结论，但意识到正当防卫判决可能有问题"
-
-    knows:
-      - "Bernard系统性诱导Thomas骗保（L5 Expose全过程）"
-      - "垫板雏菊花形压痕与Mary手链吻合——Mary来过Bernard办公室"
-      - "Mary询问的是'投保人死了怎么赔'"
-      - "正当防卫判决已下"
-
-    does_not_know:
-      - "Thomas在0.25%下是否真有攻击能力（Foster补充分析尚未出）"
-      - "Margaret的目击证词是否可靠"
-      - "Mary和Helen到底是正当防卫还是预谋"
-      - "推翻正当防卫的法律后果"
-
-    lie: null
-
-    # ── 4.  ──
-  # Mickey在开篇短暂出现（来警局找Zack），正式Talk在SC3011
-  # Mickey台词仅限："Zack。""我听说你去了湖滨信托银行？""跟我来。我需要跟你谈谈。"
-
-# ═══════════════════════════════════════
-# PART 2: 自由探索
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 三、场景（🔓 自由探索）
+# ─────────────────────────────
 #
-# L6 场景状态（全14场景）:
-#   SC3001 楼下现场              → ⏸️无新线索
-#   SC3002 楼顶                  → ⏸️无新线索
-#   SC3003 Smith家客厅        → 🔒Mary在楼下，无新证据
-#   SC3004 警局                  → 🎬开篇→⏸️
-#   SC3005 法医办公室            → 🔓搜证(Foster场景复用，3601)
-#   SC3006 公寓二楼走廊          → 🔓对话(Seamus)+出证3606/3606001（V2新增）
-#   SC3007 教堂                  → 🔒无新证据
-#   SC3008 Helen家               → 🔓对话(Helen)
-#   SC3009 湖滨信托银行公共区域 → ⏸️无新线索
-#   SC3010 Margaret鞋坊          → 🔓对话(Margaret)
-#   SC3011 Mickey办公室           → 🔓对话(Mickey)→⚔️辩论
-#   SC3012 Smith家卧室        → 🔒Mary在楼下，无新证据
-#   SC3013 公寓楼门口            → 🔓对话(Mary)
-#   SC3014 Bernard办公室         → ⏸️无新线索（L5已搜证）
-#   SC3015 三楼走廊              → 🔓环境叙事（回访Helen过渡）
-#
-# L6自由探索的核心功能（原设计文档无此阶段，用户确认增加）:
-#   A. 情感铺垫——Margaret/Mary/Helen让玩家亲眼看到Mary的惨状
-#   B. 逻辑松动——Mickey以律师视角分析推翻正当防卫的现实后果
-#   C. 证据获取——Foster实验室获取3601（不再是开篇硬塞）
+# 本 Loop 场景状态:
+#   SC3005 法医办公室    → 🔓（Foster 精确报告 + 关键证词）
+#   SC3006 二楼走廊      → 🔓（Seamus 润滑油新陈述）
+#   SC3011 Mickey 办公室 → 🔓 → ⚔️ 控辩对决
 
 scenes:
-  # ── SC3010 Margaret鞋坊（新NPC Margaret） ──
-  - id: 3010
-    name: "Margaret鞋坊"
-    # 解锁契机: L5发现Mary可能是主谋后，Zack想了解Mary的真实生活状况
-    # Thomas公寓楼区域在L1起可进入，L6增加Margaret鞋坊作为新可对话位置
-    npcs:
-      margaret_002:
-        # ── 基本信息 ──
-        talk: margaret_002
-        is_liar: false
-        motive: "儿子来看她，她很高兴——但Zack问起Mary的事，她的情绪被牵动，开始回忆这些年的片段"
-        mindset: "糊涂但情感真实——记忆碎片化，时间线混乱，把不同年份的事混在一起说，但情绪清晰、关心真切"
-
-        # ── 1. NPC 已知信息 ──（模式B：再次出场）
-        awareness:  # 以下为L6新获知信息，基础知识见 loop4_state → margaret_001
-          - content: "正当防卫判决已下，案子结了"
-            trigger: "社区消息/Zack告知"
-
-        active_topics:
-          - "Mary被Thomas打的碎片记忆——说不清哪年哪次，但记得'那孩子抱着Emily在走廊里哭'"
-          - "三次报警无人管——细节记不全，但'没人来'记得很牢"
-          - "Emily——'那么小的孩子，什么都看到了'"
-          - "Thomas酗酒——'喝了酒就不是人了'"
-
-        withheld_topics: []  # L6最终循环，无需保留
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "Mary这些年过得怎么样？（Zack想了解Mary的处境）"  # 9
-          - "Thomas打Mary的事你知道多少？（Margaret作为邻居的目击）"  # 8
-
-        # ── 3. 可提取证词 ──
-        testimony_ids: []  # 无新增，L4的3406001保持不变
-
-        # ── 4.  ──
-  # ── SC3013 公寓楼门口（Mary回访对话，新解锁） ──
-  # 解锁契机: L5发现Mary可能是主谋，但正当防卫已判——Zack需要去看看Mary的状态
-  # 解锁原因: 此前案子方向是'谁在楼顶''保险计划是谁策划的'，Mary家方向不涉及
-  - id: 3013
-    name: "公寓楼门口"
-    npcs:
-      mary_002:
-        # ── 基本信息 ──
-        talk: mary_002
-        is_liar: false
-        motive: "正当防卫判决后松了口气但不轻松——面对Zack来访保持克制，不会主动透露任何事"
-        mindset: "安静、疲惫、警觉——案子结了但Zack又来，不确定他想做什么"
-
-        # ── 1. NPC 已知信息 ──（模式B：再次出场）
-        awareness:  # 基础知识见 loop2_state → mary_001
-          - content: "正当防卫判决已下"
-            trigger: "法庭判决"
-          - content: "Helen的情况也已明确"
-            trigger: "判决过程"
-
-        active_topics:
-          - "正当防卫判决后的生活——安静、疲惫"
-          - "Emily——Mary一切行动的核心理由"
-
-        withheld_topics: []  # L6最终循环
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "正当防卫判决后，你现在怎么样？"  # 7
-
-        # ── 3. 可提取证词 ──
-        testimony_ids: []  # 无新增
-
-        # ── 4.  ──
-  # ── SC3003 Smith家客厅（环境叙事，无NPC） ──
-  # 场景价值在于视觉/情感叙事：补过的墙洞、Emily的画、生活拮据的迹象
-  # 玩家可选择进去观察，作为辩论前的情感铺垫
-
-  # ── SC3008 Helen家（复用场景，新对话） ──
-  - id: 3008
-    name: "Helen家"
-    # Helen家在L3起可进入，L6增加新对话内容（判决后态度变化）
-    npcs:
-      helen_003:
-        # ── 基本信息 ──
-        talk: helen_003
-        is_liar: false
-        motive: "判决后不再那么紧绷——愿意说说Mary的苦和自己的经历，但不会主动承认合谋"
-        mindset: "释然中带着疲惫——十年的秘密终于有了结局，但不是轻松的那种"
-
-        # ── 1. NPC 已知信息 ──（模式B：再次出场）
-        awareness:  # 基础知识见 loop3_state → helen_001, loop4_state → helen_002
-          - content: "正当防卫判决已下"
-            trigger: "法庭判决"
-
-        active_topics:
-          - "Mary这些年过得很苦（Helen视角的叙述）"
-          - "自己的童年经历——父亲家暴母亲，母亲后来精神失常（L3已有伏笔）"
-
-        withheld_topics:
-          - "油涂在Thomas一侧是事先设计的陷阱（非Helen声称的'防滑'）"
-          - "她和Mary事前排练过口供——隐瞒Helen在场的方案是提前商量好的"
-          - "Mary去银行问'投保人死了怎么赔'——两人都知道Thomas会死"
-        # ⚠️ 正当防卫已判，Helen没理由自证预谋——以上内容不会主动说出
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "Mary这些年……（Helen视角的Mary）"  # 8
-          - "你自己当年……（Helen的童年家暴经历）"  # 7
-
-        # ── 3. 可提取证词 ──
-        testimony_ids: []  # 无新增
-
-        # ── 4.  ──
-  # ── SC3005 Foster实验室（复用场景，新内容） ──
+  # ── SC3005 法医办公室（精密检测出炉） ──
   - id: 3005
-    name: "法医办公室"
-    # L5已建立Foster与Zack的合作关系，L6 Zack申请补充分析0.25%酒精浓度的完整生理影响
+    name: "法医办公室（精密检测出炉）"
+    type: free_exploration
+    description: |
+      Foster 把一份盖了红章的鉴定报告推到桌上。
+      "精密检测结果出来了——血液酒精浓度 0.25%。"
+      她不需要再用'严重醉酒'这种委婉的措辞。
+
     evidence:
       - id: 3601
-        name: "Foster血液酒精浓度补充分析报告"
-        note: "关键——R1击破证据。补充L1原报告（3111 Foster坠楼分析），揭示0.25%下无攻击能力"
-    npcs:
-      foster_006:
-        # ── 基本信息 ──
-        talk: foster_006
-        is_liar: false
-        motive: "Zack追问0.25%的完整含义——Foster这次选择说出完整真相，不再用保守措辞"
-        mindset: "释然但沉重——承认原报告用词保守是有意为之"
+        name: "法医鉴定报告"
+        type: item
+        pickup: true
+        note: "关键——血液酒精浓度 0.25%（Expose R1 主力）"
+        description: "Foster 出具的正式法医鉴定报告：死者 Thomas Smith 血液酒精浓度（BAC）0.25%"
 
-        # ── 1. NPC 已知信息 ──（模式B：再次出场）
-        # 知识池见 loop1→foster_001, loop4→开篇对话（L2/L3/L5 Foster不出场）
-        awareness:
-          - content: "Bernard被拆穿——系统性诱导Thomas骗保"
-            trigger: "L5 Expose结果"
-          - content: "正当防卫判决已下"
-            trigger: "法庭判决"
+    npcs:
+      L6_scene3005_foster:
+        talk: L6_scene3005_foster
+        is_liar: false
+        motive: "在确切的精密检测结果出来之后，可以给出 L1 时不能下的结论"
+        mindset: "依然克制——只把精确数值和职业判断推到桌面上"
 
         active_topics:
-          - "0.25%血液酒精浓度的完整生理影响（补充分析的核心内容）"
-          - "原报告用词保守的原因（'不想让受害者因技术细节被起诉'）"
+          - "死者血液酒精浓度 0.25%"
+          - "0.25% 已无有效攻击能力（医学判断）"
+        withheld_topics: []  # L6 收束，Foster 不再保留
 
-        withheld_topics: []  # L6最终循环
-
-        # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - "0.25%酒精浓度到底意味着什么？Foster原报告为什么用词保守？"  # 10
+          - "0.25% 意味着什么——能否进行有效行动 / 攻击"  # 9
+          - "L1 给出的'严重醉酒'与 0.25% 的关系"          # 7
 
-        # ── 3. 可提取证词 ──
-        testimony_ids: []  # 信息通过3601报告呈现，不额外提取证词
-
-        # ── 4.  ──
-  # ── SC3011 Mickey办公室 — Mickey Talk + 辩论（新场景） ──
-  - id: 3011
-    name: "Mickey办公室"
-    # 解锁契机: 开篇中Mickey来警局找Zack说"跟我来谈谈"
-    # 解锁原因: Mickey带Zack回自己办公室，壁炉、桌上散落证据——私密空间适合深谈
-    unlock_trigger: "开篇中Mickey来访，带Zack回办公室"
-    unlock_reason: "Mickey需要一个私密空间和Zack讨论案件——办公室有壁炉、桌椅，承载结尾演出"
-    npcs:
-      mickey_002:
-        # ── 基本信息 ──
-        talk: mickey_002
-        is_liar: false
-        motive: "以律师视角冷静分析——帮Zack理解推翻正当防卫的法律和人性后果"
-        mindset: "沉稳、关心弟弟——不是替Mary说话，而是让Zack在做决定前看清全貌"
-
-        # ── 1. NPC 已知信息 ──（模式B：再次出场）
-        # 基础知识见 loop5_state → mickey_001
-        awareness:
-          - content: "L5 Bernard指证全过程——Bernard系统性诱导Thomas骗保"
-            trigger: "Mickey在L5开篇就参与了"
-          - content: "L5花形压痕强烈指向Mary来过Bernard办公室询问保险"
-            trigger: "L5 Expose R2结果"
-
-        active_topics:
-          - "推翻正当防卫的法律后果（绞刑、Emily失去母亲）"
-          - "间接证据在法庭上的效力（全是推理，没有直接证据）"
-          - "辩论邀约——'你如果还要继续，我们辩一场'"
-
-        withheld_topics:
-          - "Mickey已私下做了楼顶目击条件勘查（3610）——R5才揭示"
-          - "Margaret证词的物理可行性问题——R5才提出"
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "推翻正当防卫的法律后果是什么？"  # 9
-
-        # ── 3. 可提取证词 ──
-        testimony_ids: []  # Talk阶段，不提取证词
-
-        # ── 4.  ──
-  # ── SC3006 公寓二楼走廊（V2新增：Seamus对话+出证） ──
-  - id: 3006
-    name: "公寓二楼走廊"
-    # L6 V2改动：从⏸️无新线索 → 🔓对话(Seamus)+出证3606/3606001
-    evidence:
-      - id: 3606
-        name: "Seamus持有的最后一瓶轮椅润滑油"
-        note: "关键——R3击破主证据。案发前一天Helen把家里最后一瓶油送给Seamus，说'以后也不需要了'"
-      - id: 3606001
-        name: "Seamus L6证词（最后一瓶油）"
-        note: "关键——R3配合3606。案发前一天Helen送油并说'以后也不需要了'"
-    npcs:
-      seamus_002:
-        # ── 基本信息 ──
-        talk: seamus_002
-        is_liar: false
-        motive: "Seamus拿着Helen送的那瓶油正在润轮椅——被Zack问起，回忆起案发前一天的事"
-        mindset: "疑惑但坦诚——Helen送油时说'以后不需要了'，当时没多想，现在想来意味深长"
-
-        # ── 1. NPC 已知信息 ──
-        active_topics:
-          - "案发前一天Helen把家里最后一瓶轮椅润滑油送给我，说'以后也不需要了'"
-          - "Thomas是天台管理者，全楼只有一把钥匙（重申L3证词3310001）"
-
-        withheld_topics: []  # L6终轮，无withheld
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "\"Helen案发前一天送了最后一瓶油\" # 9"
-
-        # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3606001  # Seamus L6证词（最后一瓶油）
+          - 3046001  # Foster：死者血液酒精浓度超标，已无有效攻击能力（Expose R1 主力）
 
-        # ── 4. ──
+  # ── SC3006 公寓二楼走廊（Seamus 润滑油新陈述） ──
+  - id: 3006
+    name: "公寓二楼走廊（Seamus 润滑油新陈述）"
+    type: free_exploration
+    description: |
+      Zack 再次走过二楼。Seamus 正坐在自己门口，
+      用一瓶熟悉的轮椅润滑油给自己破旧的轮椅上油——
+      那瓶子的样式 Zack 在 Helen 家见过。
 
-  # ── ⏸️ 无新线索场景 ──
-  - id: 3001
-    name: "Thomas公寓楼下现场"
-    # L6无新证据
-  - id: 3002
-    name: "Thomas公寓楼顶"
-    # L6无新证据
-  - id: 3009
-    name: "湖滨信托银行公共区域"
-    # L6无新证据
+    npcs:
+      L6_scene3006_seamus:
+        talk: L6_scene3006_seamus
+        is_liar: false
+        motive: "想用自己的'被照顾'体现存在感，并不知道这件事的真正含义"
+        mindset: "话痨自然地透露——'她家最后一瓶'"
 
-# ═══════════════════════════════════════
-# PART 3: 辩论（Expose — 特殊形式）
-# ═══════════════════════════════════════
-#
-# 场景: Mickey办公室(SC3011) → ⚔️辩论(Mickey)
-# 辩论设计: 5轮控辩对决
-# 形式: Mickey设定议题（辩护论点），Zack用证据反驳
-# Mickey的Talk见上方 scenes → SC3011 → mickey_002
-#
-# ⚠️ 特殊：这不是传统指证。Mickey不是在说谎，而是用相同证据做不同解读。
-# Mickey的"辩护论点"替代传统的"谎言"。
+        active_topics:
+          - "案发前一天 Helen 把这瓶润滑油送给了 Seamus，说那是她家最后一瓶，以后也不需要了"
+        withheld_topics: []
+
+        player_inquiry:
+          - "Seamus 手里的润滑油来自哪里——什么时候到他这"  # 9
+
+        testimony_ids:
+          - 3086001  # Seamus：案发前一天 Helen 把她家最后一瓶润滑油送给我，说以后也不需要了（关键——Expose R3 主力，颠覆"门把手油是当晚蹭的"）
+
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Mickey · 5 轮控辩对决）
+# ─────────────────────────────
+# 特殊形式：相同证据不同解读，Zack 逐轮赢
+# 注：Mickey 在本 Expose 中是辩方（不是真说谎者）——他用辩护推理形式
+#     逼 Zack 把案件链条逐环说清楚。最终 Mickey 投降认输。
 
 expose:
-  target: "Mickey (04) — 辩护律师角色"
-  format: "控辩辩论（非传统指证）"
-  location: "Mickey办公室"
+  target: mickey
+  target_talk: L6_expose_mickey
+  location: "SC3011 Mickey 办公室"
   total_rounds: 5
+  is_liar: true   # 形式上 Mickey 是 Expose 对象，但他是友方辩护人
+  player_inquiry: null
 
-  # ── 第一轮：Thomas没有攻击能力 ──
-  # 3601（L6新证据）证明0.25%下无攻击能力，含L1尸检数据的补充解读（配合3111 Foster坠楼分析）
+  context: |
+    Mickey 与 Zack 进入正式控辩——五轮辩论。
+    Mickey 的开场底线：'如果真的是 Mary 蓄意杀人，那么即使牺牲我的名誉，
+    我也会重新提起上诉。'
+    控辩对决里 Mickey 每轮提出一个反诉假设，Zack 用既有证据 + 新发现逐条击破。
+    R4 含玩家三选项（涂油的人是谁），引导玩家做出"Helen + Mary 合谋"的认知。
+
   round_1:
-    mickey_argument: "Thomas打了Mary多少年？酗酒者的暴力是肌肉记忆，不需要清醒。0.25%对这种人不算什么。Margaret亲眼看到他在推Mary。正当防卫，没问题"
+    lie: "Thomas 计划杀害 Mary，案发当晚准备将 Mary 推下天台"
+    lie_source: 3014001  # Mickey 自己 L4 市政厅证词，被本 Loop 引为辩护立场（沿用其'Mary 合法杀人'的辩护主张）
     usable_evidence:
       - id: 3601
-        name: "Foster血液酒精浓度补充分析报告"
-        用途: "0.25%浓度下肌肉协调性严重受损，无法完成推人/抓人等复杂动作。附带指甲组织补充分析：组织量极少（<0.1mg），不像剧烈挣扎，更像被推时本能反应"
-        来源: "L6新证据（含L1尸检数据的补充解读）"
+        name: "法医鉴定报告（0.25% BAC）"
+        用途: "Thomas 血液酒精浓度 0.25%——已无有效攻击能力，不可能完成'把人推下天台'的动作"
+      - id: 3046001
+        name: "Foster 证词（已无有效攻击能力）"
+        用途: "Foster 的医学判断锚定 0.25% 的实际意义"
     result: |
-      Zack用Foster补充分析击破"酗酒者肌肉记忆"论：
-      - 0.25%下连走直线都做不到，更不可能主动攻击
-      - 指甲下组织量极少=被推时本能反应，不是剧烈挣扎
-      - Mickey退守："Helen那边我说不过你——但Mary不是策划者"
+      Zack 推理：
+      - Thomas 0.25% 已无有效攻击能力 → 不可能由 Thomas 推 Mary 下楼
+      - 只能是 Mary + Helen 合力推下了 Thomas
 
-  # ── 第二轮：Helen没有反悔（V2：Jameson三件套证明从头合谋，非临时心软） ──
-  # §B6.1 R2：3107+3408+3217 Jameson三件套击破"Helen可能最后心软没执行计划"
   round_2:
-    mickey_argument: "Helen可能最后心软了，没执行计划。地面油是准备阶段的残留，不代表她当晚还在执行计划"
+    lie: "Thomas 不会在要杀人的时刻喝多，按照你的意思是有人给他灌酒？"
+    lie_source: 3014001
     usable_evidence:
-      - id: 3107
-        name: "Jameson空瓶"
-        用途: "楼顶Jameson空瓶（L1发现）——Thomas欠债买不起$3好酒，这瓶酒不是Thomas自带的"
-        来源: "L1证据"
-      - id: 3408
-        name: "Helen家Jameson威士忌"
-        用途: "Helen家同品牌Jameson——楼顶空瓶与Helen家同款，Helen特意带高度数Jameson灌Thomas"
-        来源: "L3证据"
-      - id: 3217
-        name: "Thomas家廉价酒照片"
-        用途: "Thomas平时只喝廉价酒——$3 Jameson根本不是Thomas自带，是Helen从家里带来的"
-        来源: "L2证据"
+      - id: 3106
+        name: "Jameson 空酒瓶（L1，天台）"
+        用途: "天台角落的空瓶是 Jameson 品牌"
+      - id: 3307
+        name: "Helen 家的 Jameson 酒（L3）"
+        用途: "Helen 家有同款 Jameson 威士忌"
+      - id: 3205
+        name: "Thomas 家的廉价酒照片（L2）"
+        用途: "Thomas 家中只有廉价自酿私酒——他不可能自带 Jameson 上天台"
     result: |
-      Zack用Jameson三件套证明Helen从头合谋，非临时心软：
-      - Helen特意带高度数Jameson（40%ABV）=有意让Thomas快速醉倒
-      - Thomas欠债根本买不起Jameson=酒是Helen带来的
-      - 从头合谋，而非临时心软
-      - Mickey退守："进入R3"
+      Zack 推理（形成假设）：
+      - 天台 Jameson 不可能是 Thomas 自己的——来源指向 Helen
+      - 当晚是 Helen 在灌 Thomas 酒，Thomas 在不知情下被灌醉
 
-  # ── 第三轮：油迹时间线（V2：Seamus最后一瓶油+门内侧干净，推翻"听到吵架才去"） ──
-  # §B6.1 R3：3606 Seamus最后一瓶油 + 3402门内侧干净 + 时间线还原
   round_3:
-    mickey_argument: "Helen是听到吵架后才去，不然门把手油迹怎么解释——临时上楼不是合谋"
+    lie: "假设不成立——当天 Helen 应该是在听到吵架声后才去现场的；不然如果油迹是之前粘上去的，为什么门把手内侧没有呢？"
+    lie_source: 3014001
     usable_evidence:
-      - id: 3606
-        name: "Seamus持有的最后一瓶轮椅润滑油"
-        用途: "案发前一天Helen已把家里最后一瓶油送给Seamus，说'以后也不需要了'——提前处理好了所有油，说明是事先计划好的行动，不是临时起意"
-        来源: "L6新证据（SC3006 Seamus）"
-      - id: 3402
-        name: "楼顶门内侧把手照片（干净）"
-        用途: "门内侧（天台侧）干净——若Helen临时听到吵架才上去，从楼梯间侧进入，油迹分布与门内侧干净吻合；但送油/提前计划说明Helen早就准备好了，不是临时决定"
-        来源: "L4证据"
-      # 时间线还原：完整链——案发前一天送油（预谋）→ 案发当晚带Jameson上楼（执行）→ 时间线精确配合
+      - id: 3086001
+        name: "Seamus 证词（Helen 案发前一天把家里最后一瓶润滑油送给 Seamus）"
+        用途: "Helen 家'最后一瓶'润滑油在案发前一天就送出了——案发当晚 Helen 家根本没有油源，手上不可能临时蹭到"
     result: |
-      Seamus最后一瓶油+门内侧干净→时间线还原完整链：
-      - 案发前一天Helen已送出最后一瓶油"以后不需要了"=事先就打算不再需要油
-      - 门内侧（天台侧）干净="听到吵架临时去"油迹说法不成立
-      - 完整时间线：提前处理油→带Jameson上楼→Helen从头执行合谋计划
-      - **进入A/B/C推理选项**：当天涂油/留下油迹的人只能是——
-        A: Helen自己 → 短反馈后汇合
-        B: Mary和Thomas → 短反馈后汇合
-        C: Helen和Mary（正确）→ 推理演出继续
-      - Mickey退守："就算有预谋，那也是求生不是谋杀"
+      Zack 推理：
+      - 案发前一天 Helen 家里就没有放油了
+      - 所以门把手上的油迹不一定是当晚弄到的——这个'油的时间链'颠覆了 Mickey 的反诉
+      - 油迹的来源时间往前推：陷阱布置那天（19 号）
 
-  # ── 第四轮：经济动机（情感高潮） ──
-  # L5雏菊压痕+Bernard供述证明Mary有经济动机
-  # §0.5决策：3509不作为独立usable_evidence，通过3507出示+推理演出完成；3207通过对白关联演出
   round_4:
-    mickey_argument: "就算有预谋，那也是被家暴者的求生。Mary去银行不是为了钱——是为了确认如果Thomas死了，她和Emily能不能活下去"
+    lie: "按我的理解，应该是 Helen 几天前在家里打翻了润滑油后、当晚不小心手上蹭到了；猫尾巴上也有油就是这个原因。听到 Mary 呼救后她去案发现场时急着开门蹭到门外侧把手上，内侧没有油是因为回来时 Mary 帮忙开的门。所以事实就是 Thomas 先进入现场，Helen 进入时不小心蹭到了，之后跟着 Mary 一起返回"
+    lie_source: 3014001
     usable_evidence:
-      - id: 3507
-        name: "垫板花形压痕照片"
-        用途: "雏菊五瓣花形压痕（1.2cm）=有戴花饰女人长时间坐在对面；通过推理演出关联3207 Mary手链（不单独出示3207/3509），确认来访者就是Mary，主动研究保险条款"
-        来源: "L5证据"
-      # 3207 Mary手链照片（L2获得）通过Zack/Emma对白指出"垫板花形——和Mary那条雏菊手链"关联，不作为独立usable_evidence出示
-      # 3509花形压痕比对报告：按§0.5决策不作为独立可出示证据，通过系统层推理演出完成
-      # Bernard供述引用：Mary询问的是"投保人死了怎么赔"
+      - id: 3108
+        name: "尸体手部油迹（L1）"
+        用途: "尸体指尖与掌心有油（手背干净）——Thomas 自己接触过外侧把手油迹；这意味着 Thomas 比 Helen 早到天台 + 开门时蹭到外侧油"
     result: |
-      雏菊压痕+Bernard供述=Mary有明确的经济动机：
-      - 3507垫板花形压痕=有女人来过Bernard桌前；Emma/Zack对白：花形与Mary雏菊手链吻合
-      - Mary主动研究了Thomas死后的保险赔付
-      - 询问角度是"投保人死了"而非"被保险人死了"
-      - **Mickey反击**："一个母亲在确认生存手段。Emily八岁"
-      - 没有赢家——Zack辩论获胜但道德撕裂
-      - Mickey退守："别再查了。让案子结了吧"
+      Zack 推理：
+      - Thomas 手部油痕分布（指尖掌心有/手背无）= 他自己开了天台门（外侧把手），不是 Helen 替他开
+      - 若 22:00 真是 Thomas 给 Mary 开门，内侧也应该留下油——内侧干净，说明给 Mary 开门的另有其人（手上没有油的 Helen）
+      - 这意味着 Thomas 早早进了天台 + 当时已醉倒或无力行动
+      - **玩家三选项**：那么涂油的人只能是——
 
-  # ── 第五轮：Margaret的认知偏差（最终高潮） ──
-  # ⚠️ R5特殊：Mickey不再辩护，而是主动请求停止 + 主动出示证据
-  # 3610由Mickey自己现场勘查制作（不经Foster），R5中Mickey主动出示
+    player_choice:
+      prompt: "涂油的人只能是——"
+      options:
+        - id: A
+          label: "Helen 自己"
+          zack_reasoning: "Helen 一个人在让门把手沾上油的布置陷阱阶段，出门离开的时候必定也会让内侧门把手沾上油……应该有人在她身边帮忙才对"
+          outcome: incorrect
+        - id: B
+          label: "Helen 和 Thomas"
+          zack_reasoning: "Thomas 之前说让 Helen 一个人去布置陷阱，希望栽赃给她；他不可能和 Helen 一起上天台布置"
+          outcome: incorrect
+        - id: C
+          label: "Helen 和 Mary"
+          zack_reasoning: "……Mary 要是提前知道了这个计划呢？她会不会和 Helen 一起上天台、帮她布置现场？"
+          outcome: correct
+
   round_5:
-    mickey_action: "请求停止辩论 + 主动出示3610"
+    lie: "即使成立也有可能是其他人和 Helen 一起制造了这次的计划，没有证据能够说明是 Mary"
+    lie_source: 3014001
+    usable_evidence:
+      - id: 3502
+        name: "垫板上的手链压痕（L5）"
+        用途: "Bernard 垫板上压痕呈手工花形、一片花瓣有明显缺口——这种独有特征只对应 Mary 母亲遗物的手链"
+    auxiliary_evidence:
+      - id: 3202
+        name: "Mary 的花形手链（L2）"
+        用途: "辅助——比对 Mary 手链与垫板压痕的花瓣缺口形状一致"
+    result: |
+      Zack 推理：
+      - Bernard 垫板上的手链压痕特征对应 Mary 母亲遗物手链上的独有花瓣缺口
+      - 那个去 Bernard 桌上主动咨询"欠贷款 + 买保险的人意外死后处理方式"的女人就是 Mary
+      - **第三重反转完成**：Mary 不是受害者，是冷静的策划者
+
+  post_expose:
+    description: |
+      Zack 辩论成功。
+      Mickey 准备投降认输——让 Zack 拿上他整理好的材料，两人一起去找法官。
+      Zack 将证据拿了起来——
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Mary 是冷静策划者：识破 Thomas 杀妻骗保计划后，与 Helen 联手反杀"
+      - "Mary 即'戴花瓣缺口手链去 Bernard 桌上主动咨询'的女人"
+      - "Mary + Helen 19 号一起上天台预先布置陷阱"
+      - "当晚 Helen 21:00 带 Thomas 上天台灌酒；Mary 22:00 到达，Helen 从内侧开门；22:30 两人合力推下"
+
+    # ── 玩家二选项（结局分叉） ──
+    # 两条 outcome 都会进入下方共用的 ending_sequence（大纲第 587-589 明示：
+    # 无论销毁/拿起，Mickey 都问 Zack 要不要告诉 Emma；Zack 都表明不告诉的理由）。
+    # 选项差异仅在于 Zack 此刻持有/不持有证据，以及后续追诉可能性——影响 Unit4+。
+    player_choice:
+      prompt: "证据就在手中——"
+      options:
+        - id: destroy
+          label: "销毁证据 · 放过 Mary"
+          outcome: "Zack 销毁了证据。Mickey 问 Zack 要不要告诉 Emma 这一切；Zack 表示如果说了 Emma 肯定执着于真相——还是算了。"
+        - id: take
+          label: "拿起证据"
+          outcome: "Zack 拿走了证据。Mickey 同样问 Zack 要不要告诉 Emma；Zack 表示如果说了 Emma 肯定执着于真相——还是算了。证据被保留，案件后续追诉可能性留待 Unit4+。"
+
+# ─────────────────────────────
+# 五、结局序列（🎭 大纲明示的多场景收尾）
+# ─────────────────────────────
+# 注：以下为大纲第 591-631 行明确写明的结局序列，
+#     无论玩家在 player_choice 选哪条，本结局序列都会发生（只是 Zack 心境不同）。
+
+ending_sequence:
+  - id: ending_office_emma_return
+    type: story_dialogue
+    location: "Zack 侦探事务所"
+    characters: [Zack, Emma]
+    description: |
+      Zack 刚回到侦探事务所，发现 Emma 从报社回来。
+      Emma 询问 Zack 银行的调查结果如何——Zack 说银行教唆了 Thomas 杀妻骗保。
+      Emma 觉得 Zack 脸色不太好，问是不是发生了什么。
+      Zack 思考了一下，还是没有把 Mary 蓄意谋杀 Thomas 的事告诉 Emma。
+
+    L6_ending_emma:
+      talk: L6_ending_emma
+      is_liar: false
+      motive: "刚结束报社工作回事务所碰头；对 Zack 的状态有所察觉"
+      mindset: "敏锐而克制——能感觉 Zack 有事，不强逼"
+
+      active_topics:
+        - "银行调查结果——Bernard 主动诱导"
+        - "察觉 Zack 脸色不好"
+      withheld_topics: []
+
+      player_inquiry:
+        - "Zack 银行的调查结果"  # 8
+
+      testimony_ids:
+        - 3106001  # Emma：询问 Zack 银行调查结果 + 觉得 Zack 脸色不好
+
+  - id: ending_mary_helen_visit
+    type: story_dialogue
+    location: "Zack 侦探事务所"
+    characters: [Mary, Helen, Zack, Emma]
+    description: |
+      两人聊着 Emma 在报社的见闻时，有人敲门——
+      Mary 带着 Helen 上门道谢。
+      Mary 阐述目前状态：Thomas 死了，债务不会利滚利了；
+      她及时将房子转出给 TideWater 房地产公司，获得 $8000，能还上银行一部分钱；
+      她现在住在 Helen 那里，准备和 Helen 一起打工还剩下的钱。
+      向 Zack 和 Emma 道谢之后离开。
+      Emma 略疑惑：银行不是在执行南区救援计划、一直想要当地居民的房产吗？
+      怎么会这么轻易地就让 Mary 把房子卖给 TideWater 了？
+
+    L6_ending_mary:
+      talk: L6_ending_mary
+      is_liar: false   # 本场不是 Expose；Mary 的陈述事实层面真实，但 Zack 已知她是策划者
+      motive: "对 Zack/Emma 道谢；同时把自己塑造成走出阴影的样子"
+      mindset: "比 L4 的报社采访更克制——压低声音、带感激"
+
+      active_topics:
+        - "Thomas 死后债务不会利滚利"
+        - "房子卖给 TideWater 房地产公司换 $8000，能还上银行一部分"
+        - "现在住在 Helen 那里、一起打工还剩下的钱"
+      withheld_topics:
+        - "Mary 与 Helen 是预谋合谋"  # Zack 已知，但 Mary 不会向 Zack 承认
+
+      player_inquiry:
+        - "Mary 现在的具体生活安排"  # 6
+
+      testimony_ids:
+        - 3026001  # Mary：Thomas 死后状态自述（债务 + 卖房 + 与 Helen 同住）
+
+  - id: ending_leonard_visit
+    type: story_dialogue
+    location: "Zack 侦探事务所"
+    characters: [Leonard, Emma, Zack]
+    description: |
+      Mary 与 Helen 离开后，Leonard（Leo）上门为 Emma 与 Zack 的疑惑作解。
+      他带来了湖滨信托银行内部消息：
+      关于南区援助计划，那些被清退的房产本来最终目的——
+      全部通过 LakeShore Investment Co. 流入 TideWater 集团（Lawson Vanderbilt 的手下）。
+      Mary 把房子直接卖给 TideWater，反而方便了他们，自然不会为难 Mary。
+      至于 TideWater 为什么想要这些房子，Leo 也不太明白。
+      他交出手头保存的南区清退计划文件给 Emma 和 Zack。
+
     evidence:
-      - id: 3610
-        name: "楼顶目击条件实地勘查记录"
-        用途: "仰角65度+护栏遮挡+深夜无光=Margaret从地面不可能看清楼顶具体动作"
-        来源: "L6新证据——Mickey自己做的现场勘查"
-        出示方式: "Mickey主动出示（非Zack选择）"
-      - id: 3406001
-        name: "Margaret目击证词"
-        用途: "L4获取的证词——用'好像''应该是'等模糊词，与物理验证结果呼应"
-        来源: "L4证词"
-    result: |
-      Mickey揭示Margaret证词的认知偏差：
-      - 65度仰角+1.1米护栏=只能看到肩部以上模糊剪影
-      - 深夜22:30+最近煤气灯15米外=几乎完全看不见
-      - 推搡vs拉扯vs搀扶——从地面完全无法区分
-      - Margaret不是在说谎——10年目睹Thomas家暴Mary，
-        大脑自动将模糊观察解读为"Thomas在攻击Mary"
-      - "每个人都基于自己的理解选择了同情Mary"：
-        Margaret（认知偏差）+ Foster（专业沉默）+ Helen（共谋保护）
-      - 进入玩家选择
+      - id: 3602
+        name: "南区援助计划内部文件"
+        type: item
+        pickup: true
+        note: "🔵 跨 Unit——其他文件 Zack/Emma 目前看不太懂；地图上南区清退计划地区靠近世博会选址（最近新闻热点），为 Unit4+ 起势"
+        description: "Leonard 交出的湖滨信托银行内部南区清退计划文件：地图标注清退区域 + 资金流向 LakeShore Investment Co. → TideWater 集团"
 
-# ═══════════════════════════════════════
-# PART 3.5: 结尾事件
-# ═══════════════════════════════════════
+    L6_ending_leonard:
+      talk: L6_ending_leonard
+      is_liar: false
+      motive: "把内部消息交给 Zack 和 Emma，为他们的银行起诉案与后续调查铺路"
+      mindset: "审慎——只交出能交的、不主动延伸"
 
-events:
-  # ── Event 1: Emma引导 + 玩家选择 ──
-  - type: sudden
-    scene_id: 3011
-    name: "Emma引导与玩家最终选择"
-    trigger: "R5辩论结束后，Mickey说出'你理解了吗？'"
-    characters: [Zack, Emma, Mickey]
-    purpose: "Emma用一个问题将选择权交给Zack/玩家：'你看到的是什么？'"
-    result: |
-      假选择弹出——两个选项最终都导向销毁证据：
-      - 选项A「放过Mary」：直接进入闪回序列 → Mary模拟指证Thomas交互 → 销毁证据
-      - 选项B「拿起证据」：Zack走向法院 → 闪回序列 → Mary模拟指证Thomas交互 → 销毁证据
-      详细演出节拍见 Unit3_结尾交互设计.md
+      active_topics:
+        - "南区援助计划清退房产最终通过 LakeShore Investment Co. 流入 TideWater"
+        - "TideWater 是 Lawson Vanderbilt 的手下"
+        - "Mary 把房子直接卖给 TideWater 反而方便了他们"
+        - "Leo 自己也不清楚 TideWater 为什么想要这些房子"
+      withheld_topics: []
 
-  # ── Event 2: 共同结局 ──
-  - type: ending
-    scene_id: 3011
-    name: "证据燃烧"
-    trigger: "玩家选择后，两条路径汇合"
-    characters: [Zack, Mickey, Emma]
-    purpose: "Unit3终章——Zack基于自己的理解选择销毁证据"
-    result: |
-      - 壁炉前，纸张燃烧，证据化为灰烬
-      - Mickey沉默的侧影
-      - Emma眼眶泛红
-      - Zack离开
+      player_inquiry:
+        - "南区清退计划的资金流向"     # 9
+        - "TideWater 与 Vanderbilt 的关系"  # 8
 
-# ═══════════════════════════════════════
-# PART 4: 疑点
-# ═══════════════════════════════════════
+      testimony_ids:
+        - 3096001  # Leonard：南区清退计划资金流向 LakeShore Investment Co. → TideWater
+        - 3096002  # Leonard：TideWater 是 Lawson Vanderbilt 的手下
+
+# ─────────────────────────────
+# 六、疑点（Doubts）
+# ─────────────────────────────
 
 doubts:
   - id: 3601
-    text: "Thomas在0.25%酒精浓度下真的能攻击Mary吗？"
-    unlock_condition: "item:3601"
-    # item:3601 = Foster补充分析（0.25%下无攻击能力） + testimony:3406001 = Margaret目击证词（称看到Thomas攻击Mary）→ 矛盾
+    text: "Thomas 当晚是否有能力推 Mary？——血液酒精浓度 0.25%"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3601"     # 法医鉴定报告
+      - type: 1
+        param: "3046001"  # Foster 证词
+
   - id: 3602
-    text: "Helen的'心软'和地面油的矛盾？"
-    unlock_condition: "testimony:3404001"
-    # item:3308 = 地面涂油示意图（油在Thomas一侧=给Thomas的陷阱，非防滑） + testimony:3404001 = Helen谎言证词（声称心软/油是下午蹭的）→ 矛盾
+    text: "门把手油迹的时间链——是当晚还是案发前几天蹭的？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3086001"  # Seamus 证词（案发前一天送出最后一瓶）
+
   - id: 3603
-    text: "Mary的45分钟空白到底在做什么？"
-    unlock_condition: "testimony:3206001"
-    # item:3201 = L2蜡烛残骸（Mary在教堂停留极短即离开） + item:3309 = L3第二组脚印特写（楼顶有两个女人）→ Mary提前离开+两人在楼顶=45分钟在做什么？
+    text: "Mary 是否就是去 Bernard 桌上咨询保险的女人？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3202"     # Mary 的花形手链
+      - type: 1
+        param: "3502"     # 垫板上的手链压痕（L5）
+
   - id: 3604
-    text: "Margaret从地面真的能看清楼顶吗？"
-    unlock_condition: "item:3610"
-    # item:3610 = 楼顶目击条件勘查记录（仰角65°+护栏遮挡+无光） + testimony:3406001 = Margaret目击证词（模糊词"好像""应该是"）→ 证词可信度存疑
-  - id: 3605
-    text: "Thomas被持续灌酒至少一小时——Jameson从哪来的？"
-    unlock_condition: "item:3408"
-    # item:3408 = Helen家Jameson威士忌（L3获得） + item:3217 = Thomas家廉价酒照片（L2获得，Thomas只喝廉价酒）→ 楼顶$3 Jameson不是Thomas自带，是Helen带来的；灌酒是事先安排
-    # 注：此疑点从L4灌酒疑点(3012)迁入L6，L4已删除3012；L6 R2配套疑点
+    text: "南区援助计划的真正目的——为什么 TideWater 想要这些房子？"
+    isFragment: true       # 跨 Unit 碎片，Unit4+ 才合并
+    unlock_condition:
+      - type: 1
+        param: "3602"     # 南区援助计划内部文件
 
-# ═══════════════════════════════════════
-# 验证状态
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 七、证据 ID 汇总
+# ─────────────────────────────
 
-validation_status:
-  cross_check: "PENDING"
-  structure_completeness: "2026-03-14 PASS"
-  evidence_coverage: "2026-03-14 PASS"
-  npc_entries: "2026-03-14 PASS"
-  goal_alignment: "2026-03-14 PASS"
-  info_pacing: "2026-03-14 PASS"
-  expose: "2026-03-14 PASS"
+evidence_registry:
+  - id: 3601
+    name: "法医鉴定报告"
+    type: item
+    pickup: true
+    first_scene: 3005
+    note: "关键——Expose R1 主力（0.25% BAC）"
+
+  - id: 3602
+    name: "南区援助计划内部文件"
+    type: item
+    pickup: true
+    first_scene: ending_leonard_visit
+    note: "🔵 跨 Unit——Unit4+ 起势线索（清退资金流向 TideWater）"

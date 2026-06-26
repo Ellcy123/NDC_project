@@ -1,447 +1,554 @@
 # ============================================================
-# Loop 3 — 杀妻骗保计划
-# 本循环说谎者: Helen
-# 核心揭示: Helen和Thomas有完整的杀妻骗保计划（唯一钥匙布置陷阱、涂油、$10,000保单），Helen声称被胁迫，始终否认那晚在场
-# 前序事件: 循环2结束，Mary供出Helen名字但被追问Helen是否在楼顶时明显心虚
-# 时间: 1928年11月22日 约10:00（案发后约+35.5小时）
-# V2迁移: 2026-06-05（唯一钥匙决策；删3102；Seamus证词重写；Expose R1/R2/R3换血；疑点3006重写）
+# loop3_state.yaml — Unit3 Loop 3: 杀妻骗保计划（指证 Helen · 3 轮）
+# ============================================================
+#
+# 叙事功能：第一重反转——Thomas 酗酒受害者 → 杀妻骗保恶魔
+# 核心揭示：Helen 是出轨对象 + 帮 Thomas 做陷阱（毁栏杆 + 涂油）
+# 时间：1928 年 11 月 22 日 上午-下午
+#
+# 自检（A-G）
+# A. 结构完整性  PASS
+# B. 证据覆盖    PASS — L3 全部证据（3301-3315）
+# C. NPC 条目    PASS — Helen / Bernard / Seamus
+# D. 目标对齐    PASS — 大纲"Helen 和 Thomas 的关系导致了悲剧"
+# E. 信息节奏    PASS — 隐藏：油痕检测能力（L4）、Mary+Helen 19 号预先布置陷阱（L4/L6）、Bernard 诱导购买（L5）、Mary 主动咨询（L5/L6）、润滑油"Helen 案发前一天送 Seamus"（L6）
+# G. Expose 逻辑 PASS — R1（出轨谎言）= Bernard 证词；R2（保险动机谎言）= 保险单副本；R3（旁听+没去天台谎言）= Helen 右手伤+护栏血迹
+#
+# validation_status: PASS
 # ============================================================
 
-# ═══════════════════════════════════════
-# 玩家视角（本循环）
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 一、玩家视角（本循环）
+# ─────────────────────────────
 
 player_context:
-  chapter_goal: "调查Helen——她与Thomas到底是什么关系？"
+  chapter_goal: "调查 Thomas Smith 坠楼事件——为 Mickey 起诉湖滨信托银行寻找新案例"
   goals:
-    primary: "Helen和Thomas到底是什么关系？"
+    primary: "Helen 和 Thomas 的关系是什么——是不是导致悲剧的关键？"
     secondary:
-      - "第二组女性脚印是Helen的吗？"
-      - "全楼唯一一把天台钥匙为什么在Helen家猫窝？"
-      - "Helen那晚在不在楼顶？"
-  known_facts:
-    # ── L1 ──
-    - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
-    - "楼顶有约37码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
-    - "脚印深浅不一（🔒藏梗：实为两个体重不同的女人，Loop 4揭晓）"
-    - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
-    - "'失足'可能性未排除——开放性结论"
-    - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
-    - "Morrison暗示湖滨信托银行打过招呼，案件比想象的复杂"
-    # ── L2 ──
-    - "Mary伪造了教堂不在场证明——蜡烛仅烧15分钟，提前背了第23章内容，走前挪书签留蜡烛"
-    - "Mary早就知道Thomas和Helen的关系——三个月前发现衬衫口红印，藏在衣柜深处不洗"
-    - "Mary在楼顶护栏边与Thomas争吵并有肢体接触——祈祷披肩织物在Thomas袖扣上"
-    - "Mary坚持Thomas'失足'掉下去，坚称'只有Thomas和我'"
-    - "Mary被追问Helen是否在楼顶时明显心虚——快速否认，眼神闪烁"
-    - "Mary报警三次家暴无人管"
-    - "Thomas和Helen有'不清不楚的关系'（Mary供出Helen名字）"
-    - "脚印深浅不一仍未解释——Mary辩称'地面不平整'"
-  new_directions:
-    - direction: "Helen与Thomas的真正关系"
-      trigger: "Mary供出Helen名字称Thomas和Helen'不清不楚'，但被追问Helen是否在楼顶时明显心虚——Mary在保护Helen还是隐瞒什么？"
-    - direction: "楼顶唯一钥匙在Helen家猫窝"
-      trigger: "全楼只有一把天台安全门钥匙，原属Thomas管理，却在Helen家猫窝被找到，且沾有轮椅维护油——她如何得到这把钥匙？"
-    - direction: "地面油迹"
-      trigger: "搜证中发现Thomas坠落处护栏有人为涂抹的润滑剂——只涂了约1.5米"
-  post_expose_knowledge:
-    - "Helen和Thomas有完整的杀妻骗保计划——$10,000人寿保险，受益人Thomas，计划推Mary坠楼伪装意外"
-    - "Helen参与准备工作：Thomas把全楼唯一天台钥匙交给Helen去布置陷阱、Helen在地面涂轮椅维护油"
-    - "Helen声称被Thomas胁迫参与——'他威胁毁掉我的名声'"
-    - "Thomas的计划：约Mary到楼顶 → 推Mary → 地面有油Mary会打滑站不稳 → 伪装意外骗保还$12,000债务"
-    - "Thomas欠湖滨信托银行$12,000高利贷"
-    - "Helen始终坚持'那晚在家'——成功守住'不在场'防线"
-    - "第二组女性脚印仍未解释——Helen否认在场但脚印证据暗示另有隐情"
-    - "Bernard Wells（银行保险代理人）见证了Thomas咨询'如何让意外看起来合理'，Helen在场"
-    - "Helen童年目睹父亲家暴母亲（为后续动机铺垫）"
+      - "Thomas 为什么要约 Mary 上天台、还要推她下楼？"
+      - "Thomas 的出轨对象是谁？她知道些什么？"
 
-# ═══════════════════════════════════════
-# PART 1: 开篇
-# ═══════════════════════════════════════
-#
-# 场景状态表: Helen家门外(SC3008) → 🎬开篇
-# Zack和Emma来到三楼Helen家门外，Emma指出Mary被追问Helen时
-# 明显心虚的反应——"'不在'说得太快了"。Zack结合Thomas出轨线
-# 和保险咨询线，决定敲Helen的门开始调查。
+  known_facts:
+    # L1 累积
+    - "Thomas 不是主动跳下的"
+    - "案发现场有 6 码女鞋印"
+    - "Morrison 想以自杀结案——案子内部牵扯太多"
+    - "Mickey 委托：Thomas 死前欠贷款 + 巨额保险，与 Frank 案高度相似；保单来自湖滨信托银行"
+    - "Thomas 死前手部有油痕（指尖掌心有/手背无），无法分析油来源"
+    - "天台角落发现 Jameson 空酒瓶"
+    - "11 月 20 日 22:00 港口阵风约 40mph"
+    # L2 累积
+    - "Mary 22:00 左右上过天台——Mary 自己承认"
+    - "Mary 自称是 Thomas 主动约她去 Emily 坠落地祈祷，并谎称是 Thomas 给她开的门"
+    - "Mary 给出新版本：Thomas 突然想推她下楼，她推回去时 Thomas 失力撞栏杆坠落"
+    - "Mary 早就知道 Thomas 有出轨对象（衣柜底层口红印衬衫）——出轨对象是谁未知"
+    - "Mary 外出鞋是 6 码，与楼顶女鞋印同款同码"
+    - "Thomas 欠银行 $12000"
+    - "Thomas 家中只有廉价酒；Thomas 桌上标注报纸（银行术语圈注）"
+
+  new_directions:
+    - direction: "在 Smith 家所在的公寓楼扩大搜查"
+      trigger: "Mary 给出 Thomas 主动约她上天台的退守版本——Thomas 的动机与他身边的人需进一步核查"
+    - direction: "邻居 Helen 行为可疑"
+      trigger: "Helen 在事发后右手有包扎伤、口红颜色与衣柜口红印吻合"
+    - direction: "二楼住客 Seamus 的目击"
+      trigger: "公寓二楼的红鲱鱼住客自述当晚听到争吵、看天台门关着"
+
+  post_expose_knowledge:
+    - "**第一重反转**：Thomas 是杀妻骗保恶魔（不是单纯酗酒丈夫）"
+    - "Helen 是 Thomas 的出轨对象（Emma 在 Helen 家点明）"
+    - "Helen 承认做了用于杀害 Mary 的陷阱：毁坏栏杆 + 涂油"
+    - "Helen 自称是被 Thomas 命令、独自一人去布置陷阱的（'两只手都沾到了油，当时 Thomas 不在场'）"
+    - "Helen 否认参与杀 Thomas——Thomas ' 肯定是意外坠楼' "
+    - "Mary 人寿保险单受益人是 Thomas（保额 $10000）"
+
+# ─────────────────────────────
+# 二、开篇（🎬 硬切剧情）
+# ─────────────────────────────
 
 opening:
-  scene_id: 3008
+  type: cutscene
+  location: "Thomas 公寓楼内"
   characters: [Zack, Emma]
-  purpose: "Emma指出Mary提到Helen时的心虚反应 → Zack提出调查Helen关系的必要性 → 敲Helen的门开始调查"
-  talk: emma_004
+  description: |
+    L2 指证后，Mary 给出"Thomas 要推我"的退守版本。Zack 和 Emma 走回楼里，
+    Emma 看着楼道里贴的住户名牌：「Thomas 为什么要推自己的妻子？他的出轨对象会不会知道些什么？」
+    两人决定扩大搜索范围，从这栋公寓楼里其他住户开始。
+  talk: null
 
-  emma_004:
-    is_liar: false
-    motive: "引导Zack注意L2指证中的关键细节——Mary否认Helen在场时的反应不正常，那不是单纯的否认"
-    mindset: "直觉敏锐且坚持——Mary说'不在'时的眼神闪烁让Emma耿耿于怀，她认为Mary在保护某人或隐瞒关键信息"
-
-    knows:
-      - "Mary伪造了不在场证明（L2确认）"
-      - "Mary承认在楼顶与Thomas争吵（L2确认）"
-      - "Mary被追问Helen是否在楼顶时明显心虚——'不在'说得太快了，眼神闪烁了一下才变得坚定"
-      - "Mary供出Helen名字但坚称'只有Thomas和我'"
-      - "脚印深浅不一仍未解释"
-      - "Thomas和Helen有'不清不楚的关系'（Mary说的）"
-
-    does_not_know:
-      - "Helen和Thomas有杀妻骗保计划"
-      - "Thomas把全楼唯一天台钥匙交给Helen布置陷阱"
-      - "Helen在地面涂了轮椅维护油"
-      - "Helen那晚是否在楼顶"
-      - "$10,000保险单的存在"
-      - "Bernard Wells的角色"
-
-    lie: null
-
-    # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 2: 自由探索
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 三、场景（🔓 自由探索）
+# ─────────────────────────────
 #
-# L3 场景状态（全14场景）:
-#   SC3001 楼下现场              → ⏸️无新线索
-#   SC3002 楼顶                  → 🔓搜证（地面油迹+脚印+护栏锋利处+人为破坏痕迹；L3开场即解封，护栏核心区正式开放）
-#   SC3003 Smith家客厅        → 🔒Mary不在家，无新证据
-#   SC3004 警局                  → 🔒无法进入
-#   SC3005 法医办公室            → 🔒Foster不在
-#   SC3006 公寓二楼走廊          → 🔓对话(Seamus Byrne——替代锁匠+楼管)
-#   SC3007 教堂                  → 🔒无新证据
-#   SC3008 Helen家               → 🎬开篇→🔓搜证→⚔️指证(Helen)
-#   SC3009 湖滨信托银行公共区域 → 🔓搜证/对话(Bernard Wells)
-#   SC3010 Margaret鞋坊          → 🔒尚未发现Margaret线索
-#   SC3011 街角                  → 🔒尚未出现在调查方向中
-#   SC3012 Smith家卧室        → 🔒Mary不在家，无新证据
-#   SC3013 公寓楼门口            → ⏸️无新线索（公共区域，可通行）
-#   SC3014 Bernard办公室         → 🔒办公区域不对外开放
-#   SC3015 三楼走廊              → 🔓开篇过渡（Helen家门↔楼顶安全门联通）
+# 本 Loop 场景状态:
+#   SC3001/3003/3007/3012/3013   → 🔓 沿用（可复检 L1/L2 证据）
+#   SC3002 楼顶                  → 🔓 二次搜证（拿到楼顶钥匙后偷偷打开警戒线）
+#   SC3006 公寓二楼走廊          → 🔓 解锁（Seamus）
+#   SC3008 Helen 家              → 🔓 解锁 → ⚔️ 指证（Helen）
+#   SC3009 湖滨信托银行公共区 → 🔓 解锁（Bernard，公共区）
+#   SC3010 Margaret 鞋坊         → 🔒（L4 解锁）
+#   SC3014 Bernard 办公室        → 🔒（L5 解锁）
+
 scenes:
-  # ── SC3008 Helen家（开篇 → 搜证 → 指证） ──
+  # ── SC3008 Helen 家 ──
   - id: 3008
-    name: "Helen家"
+    name: "Helen 家"
+    type: free_exploration
+    description: |
+      Helen 一个人住的小公寓。客厅靠墙贴满女性权益相关的剪报，
+      角落有一张轮椅靠在墙边，地上有油渍痕迹。
+      旁边一个猫窝，里面除了猫毛还塞着皱成一团的东西。
+      Helen 嘴上涂着深红色口红，右手缠着一圈纱布。
+
     evidence:
       - id: 3301
-        name: "轮椅维护油"
-        note: "关键——石油基润滑剂Standard Oil，液位仅剩1/3，与地面油迹化学成分一致（Expose R2派生链起点）"
+        name: "Helen 右手包扎伤"
+        type: clue
+        pickup: true
+        note: "关键——Helen 自称'修轮椅导致'；用于 Expose R3，与护栏血迹形成证据链"
+        description: "Helen 右手手背缠着一圈白纱布，渗出过血迹；Helen 自述是修轮椅时刮伤"
+
       - id: 3302
-        name: "Helen珊瑚红口红"
-        note: "场景道具——Maybelline Coral Flame，与L2衬衫口红颜色一致，印证Helen和Thomas的关系"
-      - id: 3303
-        name: "楼顶钥匙（全楼唯一）"
-        note: "关键——猫窝内发现，沾有轮椅维护油，全楼唯一一把天台安全门钥匙，原属Thomas（L4 R3击破主证据；L3作参与准备物证）"
-      - id: 3315
-        name: "猫尾巴/猫窝油渍"
-        note: "关键——猫蹭到沾油的钥匙，猫尾巴/猫窝有轮椅维护油油渍（疑点3006 condition件）"
-      - id: 3305
-        name: "轮椅工具箱照片"
-        note: "场景道具——母亲轮椅旁工具箱，油壶品牌Standard Oil清晰可见"
-      - id: 3306
-        name: "母亲照片"
-        note: "🔒伏笔——墙上唯一装饰，母亲手上有淡淡淤青（循环6用），增加Helen童年创伤背景"
-      - id: 3307
-        name: "日记本照片"
-        note: "🔒伏笔——'母亲，请原谅我'+'我的手一直在抖'（循环6用）"
-      - id: 3313
         name: "女性权益剪报墙"
-        note: "🔒伏笔——客厅整面墙贴满报纸剪报：妇女参政权、家暴案判决、女工权益运动，最早的泛黄追溯到1910年代，最新的是1928年10月。不是装饰，是信仰。循环5-6揭示这是Helen帮助Mary的深层动机线索"
-      - id: 3314
-        name: "母亲床头药瓶与医疗账单"
-        note: "🔒伏笔——空房间（母亲上个月刚去世）床头还摆着成排药瓶，抽屉里叠着厚厚的医疗账单，最早1910年最晚1928年9月。18年不间断照顾痴呆母亲的生活痕迹——Helen的人生被困在这间房里"
-      - id: 3318
-        name: "Helen右手伤特写照片"
-        note: "关键——右手掌侧包扎的伤口，伤口位置/形状与护栏锐边吻合（L3 R3主证据，配合3404护栏血迹）；Helen自称'修轮椅划的'"
-      - id: 3403
-        name: "Helen外出鞋"
-        note: "🔒伏笔——门口鞋架，37码平底鞋，与L2 Mary的鞋外观极为相似（同码数同类型）。Helen已清洗干净无油迹。循环4揭晓：L1楼顶脚印'深浅不一'=两个体重不同女人穿着相似鞋子的混合脚印"
-      - id: 3408
-        name: "Helen家Jameson威士忌"
-        note: "🔒伏笔——厨房橱柜，已开封剩约1/3，母亲的'药酒'。循环4揭晓：与楼顶空瓶(3107)同品牌，酒是Helen带上楼顶灌Thomas的"
-    npcs:
-      helen_001:
-        # ── 基本信息 ──
-        talk: helen_001
-        is_liar: true
-        motive: "维持'被Thomas威胁的可怜女人'形象——每次被逼退都恰好退到安全边界，层层剥离但始终守住'那晚不在场'"
-        mindset: "警惕但有计划——预判到会被调查，准备了'被胁迫'的完整叙事。对Zack表面配合，内心精确控制信息流"
+        type: clue
+        pickup: false
+        note: "🟣 环境叙事——Helen 的内心世界，女性权益剪报；童年创伤的潜在投射"
+        description: "客厅靠墙一整面剪报：女性权益运动、家庭暴力报道、Margaret Sanger 演讲剪辑等"
 
-        # ── 1. NPC 已知信息 ──
-        knows:
-          - "自己和Mary是合谋者，共同策划杀Thomas（本循环不揭示）"
-          - "杀妻骗保计划全部细节：Thomas把全楼唯一天台钥匙交给我布置陷阱、涂油、$10,000保单、Thomas约Mary楼顶见面"
-          - "准备期Thomas把全楼唯一天台钥匙交给自己；案发后把钥匙藏进猫窝"
-          - "自己当晚在楼顶（坚决隐瞒）"
-          - "自己是自愿参与不是被胁迫（但表演被胁迫）"
-          - "Thomas欠$12,000高利贷"
-          - "Bernard Wells知道Helen和Thomas一起去过银行"
-          - "母亲1928年10月去世，童年目睹父亲家暴母亲"
+      - id: 3303
+        name: "Mary 人寿保险单原件"
+        type: item
+        pickup: true
+        note: "关键——保额 $10000，受益人字迹模糊；藏在猫窝里被揉皱（解锁银行公共区地址）"
+        description: "猫窝里被揉皱的保险单原件，保额 $10000；受益人栏被揉得字迹难辨"
 
-        does_not_know:
-          - "Morrison封锁区L3解锁后，Foster在楼顶发现地面润滑剂"
-          - "Seamus近期目击了Helen上天台及Thomas当晚上门的行为"
-          - "Zack发现猫窝里沾油的钥匙（3303）及猫身上的油渍（3315）"
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry: null  # Expose对象
-
-        # ── 3. 可提取证词 ──
-        testimony_ids:
-          - 3304001  # ⚠谎言: "Thomas来找我诉苦聊天，那晚他自己上去楼顶喝酒掉了，跟我没关系"
-
-        # ── 4.  ──
-        # ── 5. 场景细节（非证据） ──
-        scene_observation:
-          - detail: "Helen右手有包扎的伤口"
-            zack_asks: true
-            helen_explanation: "修轮椅时刮到的"
-            zack_reaction: "暂时接受（Helen确实长期维护轮椅）"
-            note: "🔒伏笔——实际是涂油时被护栏锋利处割伤。本循环楼顶搜证已获得护栏锋利处血迹照片(3404)，L4 Expose揭穿两者关联。手伤同时解释下午涂油时Thomas帮Helen开门（手受伤无法用力握门把手）"
-
-  # ── SC3002 楼顶（L3开场即解封，护栏核心区正式开放） ──
-  # 触发条件：L3开场即可搜（不再依赖R1后触发）；护栏核心区L3正式开放
-  - id: 3002
-    name: "Thomas公寓楼顶"
-    evidence:
-      - id: 3308
-        name: "地面涂油示意图"
-        note: "场景道具——Foster现场绘制，涂油仅1.5米精确对应Thomas坠落点（搜证获得；L6 R3时间线引用）。🔒伏笔：油涂在Thomas那侧（循环6）"
-      - id: 3309
-        name: "第二组脚印特写"
-        note: "🔒伏笔——约37码平底鞋，停留约5分钟，距坠落点不到2米（循环4揭晓是Helen的）"
-      - id: 3317
-        name: "护栏栏杆人为破坏痕迹"
-        note: "场景道具——护栏栏杆有明显人为锉削/破坏痕迹，边缘被人工制造出锋利切口（L3楼顶护栏核心区解封后搜证获得）"
-      - id: 3404
-        name: "护栏锋利处陈旧血迹照片"
-        note: "关键——锈蚀金属锐边+干涸血迹，血迹位置与人为破坏切口吻合（L3 R3主证据，配合Helen右手伤3318）"
-
-    # 📌 设计备注：楼顶门把手此时未检查（Zack关注点在地面油迹和脚印）。
-    # L3中需埋设暗示——例如油比对报告(3312)描述中提及"油膜转移到接触面是很常见的"，
-    # 或Emma在开篇/搜证中提到"既然地面有油，门把手呢？"但Zack当时没跟进。
-    # → L4开篇Zack想起这句话，回去检查门把手。
-
-  # ── SC3005 法医办公室（⏸️无新线索） ──
-  # 油样本比对改为系统层证据分析操作，不需要去法医办公室
-  # 详见下方「派生证据说明」→ 3312
-
-  # ── SC3009 湖滨信托银行 ──
-  - id: 3009
-    name: "湖滨信托银行公共区域"
-    evidence:
       - id: 3304
-        name: "Mary人寿保险单副本"
-        note: "关键——$10,000，受益人Thomas，意外死亡双倍赔付，Bernard Wells签名（Expose R2用）"
+        name: "楼顶钥匙"
+        type: item
+        pickup: true
+        note: "关键——曾经是 Thomas 的钥匙，钥匙上有不明油迹；Helen 刻意藏在猫窝里（解锁 SC3002 二次搜证）"
+        description: "猫窝里塞着一把铜制钥匙，柄部刻着'ROOF'；钥匙齿与柄部有可见油迹"
+
+      - id: 3305
+        name: "Helen 的猫"
+        type: clue
+        pickup: false
+        note: "关键——猫尾巴上蹭到油渍（与 3304 楼顶钥匙油迹形成证据链）"
+        description: "Helen 家的橘猫，在猫窝旁打转；尾巴中段毛色被油渍粘成一束"
+
+      - id: 3306
+        name: "Helen 外出鞋"
+        type: item
+        pickup: true
+        note: "🔵 跨 Loop——6 码女鞋，鞋底有油迹（与楼顶女鞋印同款同码；L6 用于深化'两人脚印'的认知）"
+        description: "鞋架上 Helen 的外出鞋：6 码黑色小皮鞋，与 Mary 同款同码；鞋底沟槽有油迹"
+
+      - id: 3307
+        name: "Helen 家的 Jameson 酒"
+        type: item
+        pickup: true
+        note: "🔵 跨 Loop——瓶身品牌与天台空瓶（3106）一致（L6 用于推断当晚是 Helen 灌酒）"
+        description: "Helen 家酒柜里有一瓶 Jameson 威士忌，瓶身品牌、产地与天台发现的空瓶一致"
+
+      - id: 3308
+        name: "Helen 嘴上深红色口红"
+        type: clue
+        pickup: false
+        note: "🟣 环境叙事——颜色与 L2 衬衫口红印吻合（玩家自悟 Helen 即出轨对象）"
+        description: "Helen 嘴唇上的深红色口红，色泽与 L2 衬衫上的口红印明显同款"
+
     npcs:
-      bernard_001:
-        # ── 基本信息 ──
-        talk: bernard_001
-        is_liar: false
-        motive: "被动配合调查——不想惹麻烦，但也不会主动提供超出询问范围的信息。用'客户权利''标准服务'作为防御"
-        mindset: "冷漠防御——职业性地保持距离，面无表情处理一切询问，如同处理另一份文件"
+      L3_scene3008_helen:
+        talk: L3_scene3008_helen
+        is_liar: true  # 本 Loop Expose 对象
+        motive: "维护自己与 Thomas 的关系真相不被识破、否认参与杀人"
+        mindset: "外冷内紧——眼神闪烁、回答简短；被逼问时迅速给出'修轮椅刮伤'式自我合理化"
 
-        # ── 1. NPC 已知信息 ──
-        knows:
-          - "Thomas Smith来办过保险，问了意外赔付流程"
-          - "Helen当时在场旁听了全过程"
-          - "银行对高风险贷款客户有系统性'处理方案'（本循环不主动透露——循环5用）"
-          - "案发后有女人来咨询'投保人死后'保险问题（本循环不透露——循环5用）"
-          - "Thomas欠银行$12,000"
+        active_topics:
+          - "身份：Thomas 的邻居"
+          - "与 Thomas 关系：只是有一次聊天诉苦，再也没有其他联系（谎言）"
+          - "对坠楼的判断：Thomas 是自己上楼顶掉的（谎言）"
+          - "右手包扎伤：修轮椅刮的（谎言）"
+          - "可搜身观察：Helen 右手包扎伤"
+        withheld_topics:
+          - "Helen 与 Mary 19 号一起上天台预先布置陷阱"   # L6 才揭
+          - "案发当晚 Helen 21:00 带 Thomas 上天台、灌酒"  # L6 才揭
+          - "Helen 案发前一天把最后一瓶润滑油送给 Seamus"  # L6 才揭
+          - "Helen 当晚从内侧给 Mary 开天台门（真相方向）"  # L6 才揭（L4 仅给出方向反了的推定）
+          - "Mary 主动去银行咨询保险（戴花瓣缺口手链）"     # L5/L6 才揭
 
-        does_not_know:
-          - "Thomas已经死了（直到Zack告知）"
-          - "Helen和Thomas的杀妻骗保计划细节"
-          - "Mary和Helen的合谋关系"
+        player_inquiry: null
 
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - '"Thomas的保险咨询内容——他问了什么？谁在场？" # 9'
-          - '"保险单的具体条款——受益人、赔付条件" # 7'
-
-        # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3305001  # "Thomas来咨询保单条款和意外赔付流程，有个高个子女人在场旁听——Thomas说她是朋友"
-          - 3305002  # 身份证词: "我是湖滨信托银行保险部代理人，Wells。在这个岗位二十年了"
-          - 3305003  # 保单信息: "Thomas Smith的保单——人寿保险，保额$10,000，受益人Thomas Smith本人，生效日期1928年10月1日"
+          - 3053001  # Helen：邻居身份（中性事实）
+          - 3053002  # ⚠谎言: Helen：只是有一次聊天诉苦，再也没有其他联系（Expose R1 lie source）
+          - 3053003  # ⚠谎言: Helen：Thomas 是自己上楼顶掉的（中性表述但呼应狡辩）
+          - 3053004  # ⚠谎言: Helen：右手伤是修轮椅刮的（Expose R3 配套谎言）
 
-        # ── 4.  ──
-  # ── SC3006 公寓二楼走廊（Seamus Byrne——替代锁匠SC3304+楼管SC3305） ──
-  # 设计说明：Seamus是退休码头工人，右膝旧伤行动不便，常年在楼梯间抽烟观察邻居。
-  # 一个长期住户的日常观察自然覆盖锁匠+楼管两个独立NPC的信息。
-  # 红鲱鱼效果：对Helen的动向了如指掌，初看可疑，实为孤独老人的唯一消遣。
+    # 突发事件：Emma 点明 Helen 即出轨对象
+    interrupts:
+      - id: helen_lover_reveal
+        trigger: "玩家在 Helen 家拾取/查看 3308（嘴上口红）或 3306（外出鞋）后"
+        description: "Emma 拉住 Zack：'你看她的口红——衣柜里那件衬衫上的颜色，就是这种。'  Thomas 的出轨对象是 Helen。"
+
+  # ── SC3002 楼顶 二次搜证（凭楼顶钥匙偷偷打开警戒线） ──
+  - id: 3002
+    name: "Thomas 公寓楼顶（二次搜证）"
+    type: free_exploration
+    description: |
+      Zack 和 Emma 凭从 Helen 家拿到的楼顶钥匙，趁警局没人时打开了被警戒线封锁的护栏区。
+      白天的天台风有点大，被警戒线封起的栏杆比想象中更糟糕——人为破坏的痕迹很明显。
+      地面油迹集中在坠落点附近 1.5 米范围内。
+      解锁条件：玩家先拾取 3304 楼顶钥匙
+
+    evidence:
+      - id: 3309
+        name: "被破坏的护栏"
+        type: clue
+        pickup: true
+        note: "关键——栏杆有疑似人为破坏痕迹（撬动 + 锯锋）"
+        description: "坠落侧栏杆中段：撬动痕迹清晰，断口处有锯齿般的金属毛刺，明显非自然损耗"
+
+      - id: 3310
+        name: "护栏上的干涸血迹"
+        type: clue
+        pickup: true
+        note: "关键——血迹留在锋利断口附近，与 Helen 右手包扎伤形成 Expose R3 证据链"
+        description: "栏杆锋利断口附近有干涸的褐色血迹，位置高度与单手扶栏一致"
+
+      - id: 3311
+        name: "地面油迹示意图"
+        type: clue
+        pickup: true
+        note: "关键——油迹集中在坠落点对应的约 1.5m 范围内；地面只有一组脚印和划痕"
+        description: "天台地面拍照绘图：油迹分布在坠落点正下方 1.5m 范围内；可见一组脚印和拖拽划痕"
+
+  # ── SC3009 湖滨信托银行公共区（Bernard 公共区） ──
+  - id: 3009
+    name: "湖滨信托银行公共区"
+    type: free_exploration
+    description: |
+      银行公共业务大厅。Bernard 站在一张矮一些的咨询桌后做接待，
+      看到 Zack 和 Emma 时露出"职业性微笑"。
+      他只在公共区简短回答了几个事实问题，不让 Zack 和 Emma 进自己的办公室。
+
+    evidence:
+      - id: 3312
+        name: "Mary 人寿保险单副本"
+        type: item
+        pickup: true
+        note: "关键——保额 $10000，受益人是 Thomas（Expose R2 主力）"
+        description: "Bernard 提供的副本：投保人 Mary Smith，保额 $10000，受益人栏明确印着 Thomas Smith"
+
+    npcs:
+      L3_scene3009_bernard:
+        talk: L3_scene3009_bernard
+        is_liar: false  # L3 不是 Expose 对象，但有事实陈述能击破 Helen R1
+        motive: "保护公司流程、保护自己的奖金——只回答事实，不主动延伸"
+        mindset: "职业性礼貌——'按制度办事'式的距离感；不主动卷入命案"
+
+        active_topics:
+          - "身份：湖滨信托银行的保险负责专员"
+          - "Helen 曾在场旁听过意外赔付咨询"
+          - "Mary 人寿保险保额 $10000，受益人是 Thomas"
+        withheld_topics:
+          - "Bernard 主动诱导 Thomas 买保险（平庸之恶）"           # L5 才揭
+          - "戴花瓣缺口手链的女人来咨询过（Mary）"                 # L5 才揭
+          - "Bernard 皮质垫板上的标注报纸压痕 + 手链压痕"           # L5 才揭
+
+        player_inquiry:
+          - "Mary 人寿保险的具体条款——受益人是谁、保额多少"  # 9
+          - "除 Thomas 外有谁旁听过保险咨询"                  # 8
+
+        testimony_ids:
+          - 3063001  # Bernard：Helen 在场旁听过意外赔付咨询（Expose R1 主力）
+          - 3063002  # Bernard：Mary 人寿保单金额 $10000、受益人是 Thomas（Expose R2 主力）
+
+  # ── SC3006 公寓二楼走廊（Seamus） ──
   - id: 3006
     name: "公寓二楼走廊"
+    type: free_exploration
+    description: |
+      公寓二楼走廊。Seamus 坐在他公寓门口的一把破椅子上，
+      一边抽烟一边盯着楼梯口。他对楼里发生的事似乎都有自己的话要说。
+
     npcs:
-      seamus_001:
-        # ── 基本信息 ──
-        talk: seamus_001
-        is_liar: false
-        motive: "终于有人听他说话——Zack是几个月来第一个主动找他聊天的人，Seamus配合过度甚至热情"
-        mindset: "孤独中的兴奋——Thomas死后连牌搭子都没了，对侦探身份有点崇拜，有问必答但废话多需要引导"
+      L3_scene3006_seamus:
+        talk: L3_scene3006_seamus
+        is_liar: false  # 红鲱鱼，本身不撒谎但带偏见
+        motive: "想表达自己对邻居命运的看法——对 Mary 有偏见，认为'母亲应该和孩子一起死'；对 Thomas 有共情，认为'男人辛苦养家'"
+        mindset: "话痨型刻薄——对女人有刻板偏见、用'你不知道里面的事'式自我重要感支撑日常"
 
-        # ── 1. NPC 已知信息 ──
-        knows:
-          - "在这栋楼住了15年，比任何人都熟悉每个住户的作息"
-          - "右膝旧伤行动不便，大部分时间坐在窗边或楼梯间抽烟"
-          - "和Thomas偶尔喝酒打牌——'他赢了吹半天，输了就耍赖'"
-          - "Thomas是全楼天台的管理者，全楼只有一把天台安全门钥匙，归Thomas保管"
-          - "最近看到Helen上过天台——反差太大（以前她几乎不出门）"
-          - "那晚案发前争吵声后，Seamus在楼梯间看过天台门，门是关着的，随后Thomas就坠楼了"
-          - "Thomas每周至少上三楼两三次，有时很晚才下楼——整栋楼都在猜"
-          - "Thomas和Mary经常吵架（不知道家暴严重程度）"
-          - "Helen对所有人都冷淡——'三楼那个女的，长得不差但总板着个脸'"
-          - "🔒伏笔：Helen对Mary的小女儿Emily态度完全不同——'有一次我看到她跟那小丫头说话，笑了。我住这十五年头回见她笑'"
-          - "Helen的母亲上个月刚去世——'她妈死了以后更不爱搭理人了，但对那小丫头反而比以前还好'"
+        active_topics:
+          - "身份：公寓二楼住客"
+          - "Thomas 负责天台管理，只有他有钥匙，且只有一把；他每周上三楼两三次"
+          - "最近曾经看到过 Helen 去过天台"
+          - "Emily 坠楼后楼里议论：Mary 没照顾好女儿、Thomas 在外打工没办法"
+          - "Thomas 坠楼当晚发生过争吵；他去看了一下天台门是关着的，之后 Thomas 就掉下去了"
+        withheld_topics:
+          - "Helen 案发前一天把最后一瓶润滑油送给 Seamus"   # L6 才揭（关键击破 Mickey R3）
 
-        does_not_know:
-          - "Helen和Thomas有杀妻骗保计划"
-          - "Thomas家暴Mary的严重程度（只知道'吵架'）"
-          - "Helen当晚在楼顶（只知道争吵后门是关着的）"
-          - "地面涂油的事及其含义"
-
-        # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - '"Helen最近的反常行为——Mary说Helen和Thomas不清不楚，邻居怎么看？" # 9'
-          - '"Thomas在这栋楼的社交——Thomas和谁走得近？上三楼多频繁？" # 6'
+          - "天台钥匙的归属——谁有钥匙、有几把"  # 9
+          - "Seamus 对 Helen 上天台的目击"      # 8
+          - "Seamus 对当晚的现场感受"            # 7
 
-        # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3310001  # （新）"Thomas是天台管理者，全楼只有一把钥匙"（替代旧借钥匙串证词）
-          - 3310002  # （新）"最近看到Helen去过天台"（替代旧配钥匙证词）
-          - 3310003  # （新）"那晚争吵后，我看过天台门，当时门是关着的，随后Thomas坠楼"
-          - 3310004  # （氛围）"Thomas每周至少上三楼两三次，有时很晚才下楼"
+          - 3083001  # Seamus：身份（二楼住客）
+          - 3083002  # Seamus：Thomas 是天台管理人，只有他有钥匙、只有一把；每周上三楼两三次（关键——Expose R3 推断"钥匙在 Helen 处"的间接事实）
+          - 3083003  # Seamus：最近曾经看到 Helen 上过天台
+          - 3083004  # Seamus：对 Mary 的偏见性陈述（认知偏差，红鲱鱼层）
+          - 3083005  # Seamus：当晚听到争吵 + 看了天台门关着、随后 Thomas 掉下（中性目击）
 
-        # ── 4.  ──
-  # ── SC3001 楼下现场（⏸️无新线索） ──
-  - id: 3001
-    name: "Thomas公寓楼下现场"
-    # L3无新证据，L1证据继承可查看
-
-# ═══════════════════════════════════════
-# 派生证据说明
-# ═══════════════════════════════════════
-# 以下证据通过系统层证据分析操作生成，不绑定特定场景：
-#
-# 3311 地面油迹采样（33-E-01）— 中间产物
-#   获取方式：楼顶(SC3002)搜证时直接采集
-#   中间产物，被3312替代
-#
-# 3312 油样本化学比对报告（33-E-02）— 最终产物
-#   获取方式：系统层分析——玩家选择轮椅维护油(3301) + 地面油迹采样(3311) → 化学比对 → 生成3312
-#   结论：地面油迹与轮椅维护油成分完全一致（品牌Standard Oil、化学指纹、添加剂比例14.2%）
-#   道具描述应包含以下分析结论（原Foster对话内容）：
-#     - 地面油迹为石油基润滑剂，人为涂抹（非自然滴落），范围仅1.5米，精确对应坠落点
-#     - 油膜氧化程度显示涂抹时间为案发前1-2天
-#     - 油来自Helen家，但无法确定是谁涂的
-#   用途：Expose R2，玩家背包只保留3312
-
-# ═══════════════════════════════════════
-# PART 3: 指证（Expose）
-# ═══════════════════════════════════════
-#
-# 场景状态表: Helen家(SC3008) → ⚔️指证(Helen)
-# 指证设计: 3轮（钥匙开的不是门 → 地面上的油 → 一万美元的保单）
-# Helen的Talk/证词见上方 scenes → SC3008 → helen_001
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Helen · 3 轮）
+# ─────────────────────────────
 
 expose:
-  target: "Helen (04)"
+  target: helen
+  target_talk: L3_expose_helen
+  location: "SC3008 Helen 家"
   total_rounds: 3
+  is_liar: true
+  player_inquiry: null
 
-  # ── 第一轮：你和Thomas不只是普通邻居 ──
-  # Bernard旁听证词证明Helen在场参与保单咨询，反驳"只是聊天诉苦"
+  context: |
+    Helen 否认与 Thomas 有深度关系、否认与保单有关、否认在天台。Zack 依次击破：
+    R1 出轨关系 → R2 保险动机 → R3 现场存在。
+    指证后 Helen 承认布置陷阱（毁栏杆 + 涂油），新一层"我没在场杀 Thomas"
+    的退守谎言为 L4 揭破。
+
   round_1:
-    lie: "Thomas只是来找我聊天诉苦。那晚他自己上楼顶喝酒，掉了。跟我没关系"
-    lie_source: "证词 3304001"
+    lie: "只是有一次聊天诉苦，再也没有其他联系"
+    lie_source: 3053002
     usable_evidence:
-      - id: 3305001
-        name: "Bernard旁听证词"
-        用途: "Bernard证词：Helen在场旁听Thomas咨询意外赔付流程——关系不是普通邻里聊天"
+      - id: 3063001
+        name: "Bernard 证词（Helen 旁听过意外赔付咨询）"
+        用途: "Helen 与 Thomas 一起去银行听过赔付咨询——不是'一次诉苦'那么简单"
+    auxiliary_evidence:
+      - id: 3308
+        name: "Helen 嘴上深红色口红（环境叙事）"
+        用途: "辅助——颜色与衬衫口红印吻合，玩家可在内心补完出轨链"
     result: |
-      Helen承认曾随Thomas去银行：
-      - 辩称"那也只是Thomas拉我去陪，我没参与"
-      - 退守新防线："Thomas的事情我不清楚，我只是一个旁观者"
-      - ⚠️仍坚持"那晚在家"
+      Helen 沉默后承认与 Thomas 是出轨关系：
+      - 银行咨询的细节，不是普通邻居会去旁听的
+      - Helen 退守：'就算我和 Thomas 有关系，又不能说明我和他的死有关'
 
-  # ── 第二轮：Thomas良心发现给Mary买保险？ ──
-  # 保险单受益人是Thomas不是Mary，指向杀妻骗保
   round_2:
-    lie: "那也只是Thomas拉我去陪，我没参与。Thomas良心发现想给Mary买份保险而已"
-    lie_source: "Helen R1后的退守"
+    lie: "是 Thomas 良心发现给 Mary 买的保险"
+    # 本 R2 谎言在 Expose 现场临时说出，无独立 testimony，沿用 R1 lie 系列
+    lie_source: 3053002
     usable_evidence:
-      - id: 3304
-        name: "Mary人寿保险单副本"
-        用途: "$10,000保额，受益人是Thomas本人不是Mary，意外死亡双倍赔付——'良心发现'的说法不成立，指向杀妻骗保"
+      - id: 3312
+        name: "Mary 人寿保险单副本"
+        用途: "Mary 人寿保险单受益人是 Thomas——这笔钱只有 Thomas 拿得到，根本不是'良心发现'给 Mary 的"
+    auxiliary_evidence:
+      - id: 3303
+        name: "Mary 人寿保险单原件"
+        用途: "辅助——原件在 Helen 家被揉皱藏在猫窝里，证明 Helen 看过、关心过这份保单"
     result: |
-      Helen承认Thomas有骗保计划：
-      - 崩溃哭泣："是Thomas逼我的……他威胁毁掉我的名声"
-      - 承认Thomas想骗保还$12,000高利贷
-      - 退守新防线："我承认Thomas想骗保，但我从没去过楼顶"
-      - ⚠️仍坚持"那晚在家"
+      Helen 被迫承认 Thomas 是为骗保给 Mary 买的保险：
+      - 受益人 = Thomas 直接拆穿"良心发现"
+      - Helen 退守：'我只是旁听了一次，我从没去过天台'
 
-  # ── 第三轮：从没去过楼顶——那血是谁的？ ──
-  # Helen右手伤（3318）+ 护栏锋利处血迹（3404）：伤口形状对上护栏锐边，说明Helen上过楼顶布置陷阱
   round_3:
-    lie: "我承认Thomas想骗保，但我从没去过楼顶。我真的以为只是被胁迫旁听——楼顶的事跟我没关系"
-    lie_source: "Helen R2后的退守"
+    lie: "承认 Thomas 想杀 Mary 骗保，但自己只是旁听，从来没有去过天台，也不知道为什么 Thomas 死了"
+    lie_source: 3053002
     usable_evidence:
-      - id: 3318
-        name: "Helen右手伤特写照片"
-        用途: "Helen右手掌侧的伤口位置、形状——与护栏人为制造的锐边高度吻合"
-      - id: 3404
-        name: "护栏锋利处陈旧血迹照片"
-        用途: "护栏人为破坏处有陈旧血迹，血迹提取物与Helen伤口特征吻合——Helen上过楼顶参与布置陷阱"
+      - id: 3301
+        name: "Helen 右手包扎伤"
+        用途: "Helen 自称是修轮椅刮的，但伤口位置与护栏血迹形成对应"
+      - id: 3310
+        name: "护栏上的干涸血迹"
+        用途: "护栏锋利断口附近的干涸血迹，与 Helen 右手伤的位置高度吻合"
+    auxiliary_evidence:
+      - id: 3083003
+        name: "Seamus 证词（最近看到 Helen 上过天台）"
+        用途: "辅助——Helen 不是'从没去过天台'"
     result: |
-      Helen承认参与布置陷阱：
-      - 承认布置陷阱（毁护栏+涂油），涂油时被护栏锐边划伤右手
-      - 仍表演被胁迫："他威胁毁掉我的名声，我没有选择"
-      - 死守"案发当晚不在场"防线
-      - Helen解释Thomas怎么死的："Thomas约了Mary在楼顶，他要推Mary，但他喝多了加上地面有油脚底打滑，自己翻了下去"
-      - ⚠️Helen仍坚持"那晚在家"——成功守住不在场防线
-      - 第二组女性脚印仍未解释
-      - 🔒开放性结论：Helen真的只是被胁迫？布置陷阱如此精确，真能只是'被迫旁听'？
+      Helen 被迫承认上过天台、做过陷阱：
+      - 护栏血迹 + 右手伤 → Helen 接触过被破坏的护栏
+      - Helen 退守：承认布置陷阱（毁栏杆 + 涂油），但坚称是'被 Thomas 命令独自去做的'
 
-# ═══════════════════════════════════════
-# PART 4: 疑点
-# ═══════════════════════════════════════
+  post_expose:
+    description: |
+      **第一重反转**：Thomas 是杀妻骗保恶魔（不是单纯酗酒丈夫）。
+      Helen 承认自己帮 Thomas 做了用于杀 Mary 的陷阱（毁栏杆 + 涂油），
+      但坚称"其他事情没做过、Thomas 肯定是意外坠楼"，
+      并给出新谎言："今晚 Thomas 在的时候我并没有去过楼顶，我是被他命令在这之前一个人去做了陷阱"
+      ——Helen 强调：'一个人做陷阱时两只手都沾到了油，当时 Thomas 不在场'。
+      Zack 与 Emma 意识到：Thomas 是计划用这个陷阱栽赃 Helen，万一东窗事发让 Helen 顶罪。
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Thomas 是杀妻骗保恶魔——他原本计划用 Mary 的保险骗钱"
+      - "Helen 承认布置陷阱（毁栏杆 + 涂油）"
+      - "Helen 自称是'被 Thomas 命令、独自'去做的陷阱（'两只手都沾到了油'）"
+      - "Helen 否认杀 Thomas——'Thomas 肯定是意外坠楼'"
+      - "Thomas 计划：陷阱原本是用来栽赃 Helen 的（若东窗事发让 Helen 顶罪）"
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
 
 doubts:
-  - id: 3006
-    text: "全楼唯一的天台钥匙案发后在Helen家猫窝——原属Thomas管理，为什么会在她这里？"
-    unlock_condition: "item:3303 + clue:3315"
-    # 3303=楼顶唯一钥匙(L3 SC3008猫窝获得，沾油) + 3315=猫窝油渍(L3 SC3008获得)
-    # V2重写：删除原"配钥匙"疑点condition（3310001+3310002+3303），改为唯一钥匙+猫窝油渍双来源
-  - id: 3007
-    text: "地面油来自Helen家——化学成分完全一致，Helen说'从来没上去过'是谎言"
-    unlock_condition: "item:3312 + item:3308"
-  - id: 3008
-    text: "Helen知道完整的杀妻骗保计划——Bernard证实Helen在场旁听意外赔付咨询"
-    unlock_condition: "testimony:3305001 + item:3304"
-  - id: 3010
-    text: "Helen和Mary的外出鞋几乎一模一样——同码数(37码)、同类型平底鞋，楼顶脚印'深浅不一'是否与此有关？"
-    unlock_condition: "item:3403 + item:3309"
-    # 3403=Helen外出鞋(L3 SC3008获得，37码) + 3309=第二组脚印特写(L3 SC3002获得)
-  - id: 3011
-    text: "楼顶Jameson空瓶和Helen家厨房的Jameson同品牌——这瓶酒的来源指向Helen"
-    unlock_condition: "item:3107"
-    # 3408=Helen家Jameson(L3 SC3008获得) + 3107=楼顶Jameson空瓶(L1 SC3002获得)
-    # 注：3217(原3407)已由L2 Doubt 3014保障收集，此处不重复要求
+  - id: 3301
+    text: "Helen 与 Thomas 是什么关系？——口红颜色与银行旁听"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3308"     # Helen 嘴上深红色口红
+      - type: 1
+        param: "3063001"  # Bernard 证词：Helen 旁听过意外赔付
 
-# ═══════════════════════════════════════
-# 验证状态
-# ═══════════════════════════════════════
+  - id: 3302
+    text: "Mary 人寿保险的真正用途？——受益人是 Thomas"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3312"     # 保险单副本
+      - type: 1
+        param: "3303"     # 保险单原件
 
-validation_status:
-  cross_check: "PENDING"
-  structure_completeness: "2026-06-05 V2-MIGRATED"
-  evidence_coverage: "2026-06-05 V2-MIGRATED"
-  npc_entries: "2026-06-05 V2-MIGRATED"
-  goal_alignment: "2026-06-05 V2-MIGRATED"
-  info_pacing: "2026-06-05 V2-MIGRATED"
-  expose: "2026-06-05 V2-MIGRATED"
-  v2_migration_notes: |
-    2026-06-05 changes:
-    - 3102 完全删除 (唯一钥匙决策)
-    - 3303 语义重写：猫窝/唯一钥匙/沾油
-    - 新增3315猫窝油渍/3318右手伤/3317护栏破坏痕迹
-    - Seamus证词3310001-003全部重写（删配钥匙，改唯一钥匙/近期上台/当晚门关）
-    - Expose R1→Bernard旁听; R2→保单受益人; R3→右手伤+护栏血迹
-    - 疑点3006 condition重写（删配钥匙链，改唯一钥匙+猫窝油渍）
-    - 3403鞋码38→37; 3309脚印38→37
-    - SC3002楼顶L3开场即解封（删R1后触发）
+  - id: 3303
+    text: "Helen 是否到过天台？——右手伤与护栏血迹"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3301"     # Helen 右手包扎伤
+      - type: 1
+        param: "3310"     # 护栏上的干涸血迹
+
+  - id: 3304
+    text: "天台陷阱是谁布置的？——破坏栏杆与油迹"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3309"     # 被破坏的护栏
+      - type: 1
+        param: "3311"     # 地面油迹示意图
+
+  # ── 碎片（isFragment=true） ──
+  - id: 3305
+    text: "Seamus 是否见过 Helen 上天台？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3083003"  # Seamus 证词：最近曾经看到 Helen 上过天台（Expose R3 辅助）
+
+  - id: 3306
+    text: "Helen 猫窝里藏了什么——一把楼顶钥匙"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3304"     # 楼顶钥匙（🔵 L4 R2 主力）
+
+  - id: 3307
+    text: "天台钥匙的数量——是否只有一把？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3083002"  # Seamus 证词：Thomas 是天台管理人、钥匙只有一把（🔵 L4 R2 辅助）
+
+  - id: 3308
+    text: "Helen 外出鞋的鞋码——6 码女鞋（与楼顶女鞋印吻合）"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3306"     # Helen 外出鞋（🔵 L6 用）
+
+  - id: 3309
+    text: "Helen 家酒柜里的 Jameson——与天台空瓶同款"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3307"     # Helen 家的 Jameson 酒（🔵 L6 R2 用）
+
+# ─────────────────────────────
+# 六、证据 ID 汇总
+# ─────────────────────────────
+
+evidence_registry:
+  - id: 3301
+    name: "Helen 右手包扎伤"
+    type: clue
+    pickup: true
+    first_scene: 3008
+    note: "关键——Expose R3 主力（与护栏血迹形成证据链）"
+
+  - id: 3302
+    name: "女性权益剪报墙"
+    type: clue
+    pickup: false
+    first_scene: 3008
+    note: "🟣 环境叙事"
+
+  - id: 3303
+    name: "Mary 人寿保险单原件"
+    type: item
+    pickup: true
+    first_scene: 3008
+    note: "关键——藏在猫窝；解锁银行公共区地址"
+
+  - id: 3304
+    name: "楼顶钥匙"
+    type: item
+    pickup: true
+    first_scene: 3008
+    note: "关键——解锁 SC3002 二次搜证；🔵 L4 用于 R2"
+
+  - id: 3305
+    name: "Helen 的猫"
+    type: clue
+    pickup: false
+    first_scene: 3008
+    note: "关键——猫尾蹭油（佐证楼顶钥匙油迹来源在 Helen 家）"
+
+  - id: 3306
+    name: "Helen 外出鞋"
+    type: item
+    pickup: true
+    first_scene: 3008
+    note: "🔵 跨 Loop——6 码女鞋（与楼顶女鞋印吻合）"
+
+  - id: 3307
+    name: "Helen 家的 Jameson 酒"
+    type: item
+    pickup: true
+    first_scene: 3008
+    note: "🔵 跨 Loop——L6 用于推断当晚是 Helen 灌酒"
+
+  - id: 3308
+    name: "Helen 嘴上深红色口红"
+    type: clue
+    pickup: false
+    first_scene: 3008
+    note: "🟣 环境叙事——Expose R1 辅助"
+
+  - id: 3309
+    name: "被破坏的护栏"
+    type: clue
+    pickup: true
+    first_scene: 3002
+    note: "关键——人为破坏痕迹"
+
+  - id: 3310
+    name: "护栏上的干涸血迹"
+    type: clue
+    pickup: true
+    first_scene: 3002
+    note: "关键——Expose R3 主力"
+
+  - id: 3311
+    name: "地面油迹示意图"
+    type: clue
+    pickup: true
+    first_scene: 3002
+    note: "关键——本 Loop 仅记录'集中在 1.5m'，不深挖油的来源（L4/L6 才用'油的归属'）"
+
+  - id: 3312
+    name: "Mary 人寿保险单副本"
+    type: item
+    pickup: true
+    first_scene: 3009
+    note: "关键——Expose R2 主力"

@@ -1,367 +1,519 @@
 # ============================================================
-# Loop 2 — Mary的嫌疑
-# 本循环说谎者: Mary Smith
-# 核心揭示: Mary伪造教堂不在场证明，在楼顶与Thomas争吵并有肢体接触，坚持Thomas"失足"
-# 前序事件: 循环1 Morrison甩手结案，供出Mary的名字"十有八九是他老婆"
-# 时间: 1928年11月21日 约14:00（案发后+15.5小时）
+# loop2_state.yaml — Unit3 Loop 2: Mary 的嫌疑（指证 Mary · 3 轮）
+# ============================================================
+#
+# 叙事功能：Mary 进入视野 → 揭穿 Mary 在现场 + 编造"Thomas 想推她"的退守谎言
+# 核心揭示：Mary 案发前夜不在教堂 / Mary 在天台 / Mary 早知 Thomas 出轨
+# 时间：1928 年 11 月 21 日 中午-下午
+#
+# 事实源：剧情设计/Unit3/大纲0626.md
+# 生成日期：2026-06-26（重写）
+#
+# 自检（A-G）
+# A. 结构完整性  PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
+# B. 证据覆盖    PASS — 大纲 L2 所有证据（3201-3210 + 派生 3270x）已分配
+# C. NPC 条目    PASS — Mary / 神父 各含 4 必填块
+# D. 目标对齐    PASS — primary 与大纲"Mary 与 Thomas 的死有什么关系"一致
+# E. 信息节奏    PASS — 严格隐藏：Mary 花形手链花瓣缺口（L5/L6 才用）只描述为"母亲遗物"不强调缺口、衬衫口红不暗示 Helen、Thomas 廉价酒只描述不解读、标注报纸不暗示银行（L5 才用）、二楼走廊/Helen 家 L3 才解锁
+# G. Expose 逻辑 PASS — R1（教堂谎言）= 蜡烛+晚报；R2（未到现场谎言）= 祈祷披肩+神父证词+袖扣纤维；R3（无动机谎言）= 衬衫
+#
+# validation_status: PASS
 # ============================================================
 
-# ═══════════════════════════════════════
-# 玩家视角（本循环）
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 一、玩家视角（本循环）
+# ─────────────────────────────
 
 player_context:
-  chapter_goal: "找到Mary Smith，确认她案发当晚的行踪"
+  chapter_goal: "调查 Thomas Smith 坠楼事件——为 Mickey 起诉湖滨信托银行寻找新案例"
   goals:
-    primary: "Mary与Thomas的死有什么关系？"
+    primary: "Mary 与 Thomas 的死有什么关系？"
     secondary:
-      - "Mary那晚真的在教堂吗？"
-      - "楼顶脚印深浅不一是怎么回事？"
-      - "Thomas和Helen是什么关系？"
-  known_facts:
-    - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
-    - "楼顶有约37码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
-    - "脚印深浅不一（🔒藏梗：实为两个体重不同的女人，Loop 4揭晓）"
-    - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
-    - "'失足'可能性未排除——开放性结论"
-    - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
-    - "Morrison暗示湖滨信托银行打过招呼，案件比想象的复杂"
-  new_directions:
-    - direction: "Mary教堂不在场证明"
-      trigger: "Morrison指名Mary Smith，需要确认Mary那晚是否真的在教堂祈祷到很晚"
-    - direction: "衬衫口红颜色矛盾"
-      trigger: "Mary家衣柜深处藏着有珊瑚红口红的Thomas衬衫，与Mary的玫瑰红口红颜色不同"
-    - direction: "袖扣织物与披肩一致"
-      trigger: "Thomas袖扣上的黑色蕾丝织物与Mary祈祷披肩材质、纹理完全一致"
-  post_expose_knowledge:
-    - "Mary伪造了教堂不在场证明——蜡烛仅烧15分钟，提前背了第23章内容，走前挪书签留蜡烛"
-    - "Mary早就知道Thomas和Helen的关系——三个月前发现衬衫口红印，藏在衣柜深处不洗"
-    - "Mary在楼顶护栏边与Thomas争吵并有肢体接触——祈祷披肩织物在Thomas袖扣上"
-    - "Mary坚持Thomas'失足'掉下去，坚称'只有Thomas和我'"
-    - "Mary被追问Helen是否在楼顶时明显心虚——快速否认，眼神闪烁"
-    - "Mary报警三次家暴无人管"
-    - "Thomas和Helen有'不清不楚的关系'（Mary供出Helen名字）"
-    - "脚印深浅不一仍未解释——Mary辩称'地面不平整'"
+      - "警方为什么掩盖案件——这背后牵扯什么？"
+      - "Mary 为什么会出现在案发现场？"
 
-# ═══════════════════════════════════════
-# PART 1: 开篇
-# ═══════════════════════════════════════
-#
-# 场景状态表: 公寓楼门口(SC3013) → 🎬开篇
-# Zack和Emma来到Smith公寓楼门口，Emma回顾L1发现——
-# Morrison的暗示和脚印线索，引导调查Mary。敲门后Mary在门口应答。
+  known_facts:
+    - "Thomas 不是主动跳下的（L1 揭示：外墙抓挠 + Foster 法医分析）"
+    - "案发现场不止 Thomas 一人——楼顶有 6 码女鞋印"
+    - "Morrison 推测脚印可能属于 Mary（Thomas 的妻子，住楼下）"
+    - "Morrison 不愿深查，想以自杀结案——'内部牵扯太多'"
+    - "Mickey 委托：Thomas 案与 Frank 案的相似性——贷款 + 保险 + 意外死亡"
+    - "Thomas 死前手部有油痕（指尖掌心有/手背无），本 Loop 无法分析油的来源"
+    - "Thomas 袖扣处发现异源黑色织物纤维"
+    - "天台角落发现 Jameson 空酒瓶"
+    - "11 月 20 日 22:00 港口阵风约 40mph（晚报天气栏）"
+
+  new_directions:
+    - direction: "Mary 自称在教堂祈祷"
+      trigger: "Mary 主动给出 19:00-23:00 教堂不在场——为何主动说时间段？"
+    - direction: "Thomas 有出轨迹象"
+      trigger: "卧室衣柜底层藏有沾深红色口红印的衬衫，Mary 自己用浅玫瑰红"
+    - direction: "Mary 鞋码与天台脚印吻合"
+      trigger: "Mary 外出鞋是 6 码，与楼顶女鞋印同款同码"
+
+  post_expose_knowledge:
+    - "Mary 22:00 左右上过天台——这一点 Mary 自己承认"
+    - "Mary 自称是 Thomas 主动约她去 Emily 坠落地为孩子祈祷"
+    - "Mary 自称是 Thomas 从天台门里面给她开的门"
+    - "Mary 给出新版本：Thomas 突然想推她下楼，她推回去时 Thomas 失力撞栏杆坠落"
+    - "Mary 早就知道 Thomas 另有女人——衣柜底层藏的衬衫上有非她口红色"
+    - "Mary 慌张反应：'我会被当成凶手吗''我对他为什么喊我来天台、为什么要推我下楼真的不了解'"
+
+# ─────────────────────────────
+# 二、开篇（🎬 硬切剧情）
+# ─────────────────────────────
 
 opening:
-  scene_id: 3013
+  type: cutscene
+  location: "Thomas 公寓楼下（街口外）"
   characters: [Zack, Emma]
-  purpose: "Morrison指名Mary Smith → Emma回顾L1脚印证据和Morrison暗示 → 公寓楼门口敲门，Mary应门开始调查"
-  talk: emma_002
+  description: |
+    Zack 和 Emma 在事务所碰过头之后，带着 L1 结案前 Morrison 留下的"脚印可能属于 Mary"
+    这条线索，回到 Smith 一家所在的公寓楼。Emma 走在前面，仰头看了眼这栋老楼的天台
+    护栏：「一个普通人明明可能是被谋杀，警方却试图掩盖真相——为什么？」
+    Zack 没立刻回答，他把外套拉紧——他打算先从那个出现在案发现场的妻子开始问起。
+  # 本段无独立 talk 节点（无对白载体），玩家在公寓楼外短暂叙事过场即进入 Mary 拦截
+  talk: null
 
-  emma_002:
-    is_liar: false
-    motive: "帮Zack整理L1的发现，明确调查Mary的方向——脚印是不是她的？她那晚在哪？Morrison为什么急着结案？"
-    mindset: "警觉而有准备——经历L1对Morrison的指证后，Emma学会了用证据说话，对Mary持开放但审慎的态度"
-
-    knows:
-      - "Thomas不是自杀，有女性在场"
-      - "楼顶有约37码女性脚印，深浅不一"
-      - "Morrison说Thomas打老婆，脚印十有八九是Mary的"
-      - "Morrison提到Mary Smith住楼下"
-      - "湖滨信托银行打过招呼"
-      - "Thomas不是主动跳下的——着地点仅0.8米"
-
-    does_not_know:
-      - "Mary那晚是否真的在教堂"
-      - "Thomas和Helen的关系"
-      - "衣柜深处的衬衫和口红印"
-      - "蜡烛只烧了15分钟"
-      - "脚印深浅不一的真正含义"
-
-    lie: null
-
-    # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 2: 自由探索
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 三、场景（🔓 自由探索）
+# ─────────────────────────────
 #
-# L2 场景状态（全14场景）:
-#   SC3001 楼下现场              → ⏸️无新线索（报纸已移至L1获取）
-#   SC3002 楼顶                  → ⏸️无新线索
-#   SC3003 Smith家客厅        → 🔓搜证（Mary对话后解锁，纯搜证无NPC）
-#   SC3004 警局                  → 🔒Morrison不配合，无法进入
-#   SC3005 法医办公室            → 🔒Foster不在
-#   SC3006 公寓二楼走廊          → 🔒尚未发现二楼线索
-#   SC3007 教堂                  → 🔓搜证
-#   SC3008 Helen家               → 🔒尚未发现Helen线索
-#   SC3009 湖滨信托银行公共区域 → 🔒银行尚未出现在调查方向中
-#   SC3010 Margaret鞋坊          → 🔒尚未发现Margaret线索
-#   SC3011 街角                  → 🔒尚未出现在调查方向中
-#   SC3012 Smith家卧室        → 🔓搜证
-#   SC3013 公寓楼门口            → 🎬开篇→🔓对话(Mary)→⚔️指证(Mary)
-#   SC3014 Bernard办公室         → 🔒银行尚未出现在调查方向中
-#   SC3015 三楼走廊              → 🔒尚未发现三楼线索
-#
+# 本 Loop 场景状态:
+#   SC3001 楼下现场              → 🔓 自由探索（保留，可复检 L1 证据）
+#   SC3002 楼顶                  → 🔓（护栏区警戒线封锁，L3 才解锁）
+#   SC3003 Smith 客厅            → 🔓 解锁
+#   SC3004 警局                  → 🔒
+#   SC3005 法医办公室            → 🔓（沿用 L1，无新对话节点）
+#   SC3007 教堂                  → 🔓 解锁（Mary 提及"在教堂祈祷"触发）
+#   SC3012 Smith 卧室            → 🔓 解锁
+#   SC3013 公寓楼门口            → 🔓 → ⚔️（Mary）
+#   SC3006/3008/3009/3010/3014   → 🔒
+
 scenes:
-  # ── SC3013 公寓楼门口（开篇 → 对话Mary → 指证Mary） ──
-  # Mary在门口应答，对话和指证都在此完成。Mary暂离后Zack进屋搜证(SC3003)。
+  # ── SC3013 公寓楼门口（Mary 拦截） ──
   - id: 3013
-    name: "公寓楼门口"
-    npcs:
-      mary_001:
-        # ── 基本信息 ──
-        talk: mary_001
-        is_liar: true
-        motive: "在Zack面前维持'悲伤无辜妻子'形象——精确控制信息披露，交出无害信息引导方向，坚决隐瞒危险信息"
-        mindset: "紧张但有计划——提前准备好了教堂不在场证明，知道可能会被调查，但没想到证据会这么细致"
+    name: "Thomas 公寓楼门口"
+    type: free_exploration
+    description: |
+      公寓楼正门外的人行道。Mary 抱着一只布袋从楼里出来，看见 Zack 和 Emma 时
+      明显停顿了一下，眼眶发红、双手有点抖。她没躲，反而很快开始解释自己昨晚不在场。
 
-        # ── 1. NPC 已知信息 ──（首次出场）
-        knows:
-          - "Thomas从楼顶坠楼死亡"
-          - "自己伪造了教堂不在场证明——提前背第23章、挪书签、留蜡烛"
-          - "自己那晚在楼顶与Thomas争吵——Thomas抓了她的披肩"
-          - "Helen也在楼顶（坚决隐瞒）"
-          - "三个月前就发现Thomas和Helen的关系——衬衫口红印"
-          - "Thomas长期家暴，报警三次无果"
-          - "Thomas和Helen有杀妻骗保计划（Mary知道但本循环不揭示）"
-
-        does_not_know:
-          - "蜡烛被风吹倒、书页被风吹回的事实（以为自己的伪装完美）"
-          - "Foster发现了Thomas袖扣上的织物纤维"
-          - "报纸上有大风警报（没想到天气会成为证据）"
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry: null  # Expose对象
-
-        # ── 3. 可提取证词 ──
-        testimony_ids:
-          - 3203001  # ⚠谎言: "那晚在教堂祈祷到很晚，读到第23章'正义的审判'，蜡烛烧了很久才走"
-
-        # ── 4.  ──
-    # ── 搜身观察（Mary应门时，Zack在门口近距离观察，触发条件：mary_present） ──
-    # 不依赖室内搜证，直接在门口交谈中产出。
-    body_search:
-      trigger: "item:3105 AND scene:mary_present"
-      evidence:
-        - id: 3205
-          name: "祈祷披肩"
-          note: "关键——Zack在门口近距离观察Mary时注意到，黑色蕾丝，右下角约1cm勾丝破损（R4用）"
-        - id: 3207
-          name: "Mary手链照片"
-          note: "Zack在门口近距离观察Mary时注意到——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作（L5垫板花形压痕联想、L6身份确认的铺垫）"
-
-  # ── SC3003 Smith家客厅（纯搜证，无NPC） ──
-  # Mary对话后解锁，Zack进屋自由搜证。
-  - id: 3003
-    name: "Smith家客厅"
     evidence:
-      - id: 3214
-        name: "家暴痕迹"
-        note: "场景道具——客厅墙上拳头大小的凹陷、靠墙角的断裂椅子腿、一张被烟头烫过的Mary照片从柜子顶上滑下来。Thomas暴行的视觉证据，为Mary'报警三次无人管'建立情感基础"
-      - id: 3215
-        name: "Emily蜡笔画"
-        note: "🔒伏笔——冰箱上贴着8岁女儿的蜡笔画：一个女人牵着小女孩的手在阳光下走，旁边一个男人被黑色蜡笔用力涂黑，几乎看不出轮廓。孩子眼中的家庭。循环5-6揭示Helen帮Mary的深层动机——Helen看到Emily想起8岁的自己目睹父亲打母亲"
-      - id: 3216
-        name: "Emily房间门栓"
-        note: "场景道具——女儿房间门外侧新安装的铁质滑栓，高度约180cm只有成人才能够到。Mary保护Emily的痕迹——从外面锁上，Thomas喝醉时进不去女儿房间"
-      - id: 3218
-        name: "Thomas欠债记录"
-        note: "🔒伏笔——客厅抽屉湖滨信托银行催款单，欠款$12,000。L3杀妻骗保动机与L6经济动机辩论辅助"
-      - id: 3217
-        name: "Thomas家廉价酒照片"
-        note: "🔒伏笔——厨房约30-40个空瓶，全是$0.10-$0.15品脱装，无一瓶超过$0.50。L2疑点3014与L6 R2使用（与Helen家Jameson $3形成对比）"
-      - id: 3501
-        name: "标注报纸"
-        note: "🔒伏笔——《艾斯弗德论坛报》1928年10月保险版面，有大量专业批注+银行内部缩写术语（ACC.D, BEN.CHG, EXC.CLSE, CLM.48HR）。L2获取时不理解含义；L5笔迹比对+垫板压痕分析的核心物证"
+      - id: 3201
+        name: "祈祷披肩"
+        type: item
+        pickup: true
+        note: "关键——肩头有新破洞（Expose R2 主力，配合神父证词与袖扣纤维 3107）"
+        description: "Mary 身披的祈祷披肩，深色织物；右肩有一处约 3 厘米的撕裂破洞，边缘新鲜"
 
-  # ── SC3012 Smith家卧室（搜证） ──
-  - id: 3012
-    name: "Smith家卧室"
+      - id: 3202
+        name: "Mary 的花形手链"
+        type: item
+        pickup: true
+        note: "Mary 母亲遗物，手工雕刻；本 Loop 客观记录花瓣缺口物理特征，但不点破其含义（L5/L6 才用作压痕指认）"
+        description: "Mary 左手腕上的金属花形手链，手工雕刻、款式独特；细看可发现其中一片花瓣边缘有明显缺口——是这只手链的独有特征，是 Mary 母亲留下的遗物"
+
+    npcs:
+      L2_scene3013_mary:
+        talk: L2_scene3013_mary
+        is_liar: true  # 本 Loop Expose 对象
+        motive: "维持'整晚在教堂'的不在场谎言以洗清自己；同时把怀疑往'Thomas 主动约她去天台'方向引"
+        mindset: "克制下的紧绷——Mary 习惯了压抑情绪，但谎言被拆穿时会用'恳求'与'示弱'退守；不会主动咆哮"
+
+        active_topics:
+          - "身份：Thomas 的妻子，女儿 Emily 几年前在这栋楼天台意外坠落，今天是她忌日"
+          - "昨晚行踪：19:00-23:00 在 St.Patrick 教堂为 Emily 守夜祈祷（谎言版本：神父走后我也一直留在教堂、祈祷了很久、等蜡烛快烧完才离开）"
+          - "祈祷披肩：19 号下午和 Thomas 一起去买的，专门为昨晚守夜用"
+          - "Thomas 欠银行 $12000"
+          - "搜身可观察：祈祷披肩、花形手链（母亲遗物）"
+        withheld_topics:
+          - "Mary 与 Helen 19 号上天台预先布置陷阱"          # L6 才揭
+          - "Mary 提前撤离教堂、留未烧完的蜡烛伪造不在场"     # 本 Loop Expose R1 揭破
+          - "Mary 22:00 后到过天台"                            # 本 Loop Expose 后 Mary 自己承认（退守版本）
+          - "Mary 与 Helen 合谋推下 Thomas（真相）"            # L6 才揭
+          - "Mary 主动去银行咨询保险（戴花瓣缺口手链）"        # L5/L6 才揭
+          - "Mary 早就识破 Thomas 想骗保杀她"                  # L6 才揭
+
+        player_inquiry: null  # Expose 对象
+
+        testimony_ids:
+          - 3022001  # Mary：身份与昨晚教堂祈祷的口径（含蜡烛烧完才离开）—— ⚠谎言（Expose R1 lie source）
+          - 3022002  # Mary：祈祷披肩是 19 号下午和 Thomas 一起买的（中性事实，为披肩破洞做伏笔）
+          - 3022003  # Mary：Thomas 欠银行 $12000（中性事实，与 Mickey 委托证词呼应）
+          - 3022004  # Mary：女儿 Emily 几年前在这栋楼天台意外坠落，今天是忌日
+
+  # ── SC3003 Smith 家客厅 ──
+  - id: 3003
+    name: "Smith 家客厅"
+    type: free_exploration
+    description: |
+      Smith 家客厅简陋、阴沉。女儿房间门口墙纸有撕裂痕迹。桌上、地上散着 Thomas 的随身物品。
+      角落矮柜里塞着几瓶廉价瓶装酒。桌上压着一张被划得密密麻麻的旧报纸。
+
     evidence:
       - id: 3203
-        name: "衬衫"
-        note: "关键——卧室衣柜深处纸盒，领口珊瑚红口红印，发黄积灰藏了很久（R3用）"
+        name: "家暴痕迹（墙纸撕裂）"
+        type: clue
+        pickup: false
+        note: "环境叙事——女儿房间门口墙纸撕裂，暗示家暴；不直接证据，作为 Mary 动机的潜在铺垫"
+        description: "女儿房间门口旁边的墙纸有大片撕裂痕迹，下方墙皮可见旧的拳头印"
+
       - id: 3204
-        name: "Mary的玫瑰红口红"
-        note: "关键——卧室梳妆台，Elizabeth Arden Rose Blush，与衬衫口红颜色完全不同（R3用）"
-      - id: 3209
-        name: "Mary的外出鞋"
-        note: "🔒藏梗——37码小皮鞋，鞋底有楼顶灰尘。与L4 Helen的鞋外观相似同码数，脚印'深浅不一'的伏笔"
+        name: "Emily 的蜡笔画"
+        type: clue
+        pickup: false
+        note: "🔒 动机相关——女儿 Emily 的遗物（仅环境叙事）"
+        description: "贴在女儿房间门口的蜡笔画：歪歪斜斜的'妈妈'两字，旁边画着一个戴花形项链的女人"
 
-  # ── SC3007 St. Patrick教堂 ──
-  - id: 3007
-    name: "St. Patrick教堂"
+      - id: 3205
+        name: "Thomas 家的廉价酒照片"
+        type: clue
+        pickup: true
+        note: "🔵 跨 Loop——Thomas 家中只有廉价自酿私酒（L6 用于与天台 Jameson 形成对比，证'酒不是 Thomas 自带的'）"
+        description: "矮柜深处的几瓶廉价瓶装酒照片，标签褪色，明显是自酿私酒，与 Jameson 这种品牌威士忌不同档次"
+
+      - id: 3206
+        name: "标注报纸"
+        type: item
+        pickup: true
+        note: "🔵 跨 Loop——表面是 Thomas 在研究银行术语，本 Loop 不暗示用途；L5 与 Bernard 皮质垫板压痕比对"
+        description: "桌上压着的一份报纸，金融版上大量银行专业术语被红笔圈出、批注，笔迹是 Thomas 的"
+
+  # ── SC3012 Smith 家卧室 ──
+  - id: 3012
+    name: "Smith 家卧室"
+    type: free_exploration
+    description: |
+      Smith 家卧室，床整齐但空气压抑。
+      Mary 的梳妆台上放着一只用了大半的口红，包装陈旧。
+      Thomas 那侧的衣柜底层，藏着一件折得很整齐的衬衫——上面有口红痕迹。
+      梳妆台旁的鞋架上整齐摆着 Mary 的小皮鞋。
+
     evidence:
-      - id: 3201
-        name: "蜡烛残骸"
-        note: "关键——Mary'M.S.'祈祷位置，被风吹倒折断，仅燃烧约15分钟（R1用）"
-      - id: 3202
-        name: "祈祷册"
-        note: "关键——Mary'M.S.'位置，书签在第23章但蜡油粘住第5章页面，蜡油颜色与祈祷蜡烛一致（R1用）"
+      - id: 3207
+        name: "沾有口红印的衬衫"
+        type: item
+        pickup: true
+        note: "关键——藏在衣柜底层，深红色口红印；与 Mary 浅玫瑰红不符；约一周前痕迹（Expose R3 主力）"
+        description: "Thomas 衣柜底层折叠的白色衬衫；衣领与右胸前可见深红色口红印，颜色偏暗红、明显不同于 Mary 的浅玫瑰红，痕迹有约一周自然褪色"
+
       - id: 3208
-        name: "教堂祈祷台照片"
-        note: "场景道具——蜡油沿祈祷台横向流淌凝固，非正常燃尽的圆形蜡池"
+        name: "Mary 的浅玫瑰红口红"
+        type: item
+        pickup: true
+        note: "梳妆台上仅此一只口红，色号 Light Rose；对比锚点（与衬衫口红印的颜色比对）"
+        description: "梳妆台上放着的 Mary 唯一一只口红，包装陈旧，色号标注 Light Rose 浅玫瑰红"
+
+      - id: 3209
+        name: "Mary 外出鞋"
+        type: item
+        pickup: true
+        note: "关键——6 码女鞋，与楼顶女鞋印同款同码（与 L1 证据 3104 形成关联）"
+        description: "鞋架上整齐摆放的 Mary 外出鞋：6 码黑色小皮鞋，鞋底花纹与楼顶照片中女鞋印一致"
+
+      - id: 3270
+        name: "口红颜色比对报告"
+        type: clue
+        pickup: false
+        analysis: true
+        note: "🧪 派生证据——由 3207 + 3208 + 'Mary 家只有一只口红'综合派生；颜色不一致，且 Mary 口红放在很深位置不像日用第二支"
+        description: "系统分析报告：衬衫口红印颜色为 Deep Crimson，Mary 口红为 Light Rose；Mary 家中无第二只口红——衬衫上的口红不可能是 Mary 留下"
+
+  # ── SC3007 St.Patrick 教堂 ──
+  - id: 3007
+    name: "St.Patrick 教堂"
+    type: free_exploration
+    description: |
+      St.Patrick 教堂内部。前排长椅旁的烛台上立着一根被吹倒的蜡烛——只烧了一小段，
+      旁边的祈祷册翻开停在某一页。神父正在祭坛旁整理蜡烛。
+
+    evidence:
+      - id: 3210
+        name: "倒下的蜡烛残骸"
+        type: item
+        pickup: true
+        note: "关键——蜡烛只燃烧约 30 分钟（蜡液冷凝形态判断），未自然烧尽（Expose R1 主力）"
+        description: "前排长椅旁烛台上倒落的蜡烛残骸：蜡液冷凝痕迹显示仅燃烧约 30 分钟，蜡身倒向被风吹的方向"
+
+      - id: 3211
+        name: "教堂祈祷册"
+        type: clue
+        pickup: false
+        note: "🟣 环境叙事——翻开停在一页：'愿主使受苦者脱离恶人的手，愿审判临到施暴之人'。本 Loop 仅环境记录，不指认 Mary 预谋（玩家自悟）"
+        description: "前排长椅上摊开的祈祷册，停在《诗篇》某一页：'愿主使受苦者脱离恶人的手，愿审判临到施暴之人'"
+
     npcs:
-      priest_001:
-        # ── 基本信息 ──
-        talk: priest_001
+      L2_scene3007_priest:
+        talk: L2_scene3007_priest
         is_liar: false
-        motive: "无意中提供Mary案发当晚行迹的旁证，承担氛围与主题功能"
-        mindset: "平静虔诚——对夜晚来访的信众印象深刻，对尘世困苦抱同情"
+        motive: "如实记录看到的事——神父对 Mary 守夜有同情但不为她遮掩；他说话克制，避免直接断言"
+        mindset: "温和审慎——用语带有教会人的克制；对'守夜'与'家暴'的暗示有共情底色"
 
-        # ── 1. NPC 已知信息 ──
         active_topics:
-          - "当晚看到Mary在教堂祈祷，但停留时间极短就离开了"
-          - "人们做某些事之前，会先到教堂寻求神的允许"
-          - "Thomas以前也来祈祷过"
+          - "Mary 19:00-21:00 在教堂念经祈祷（神父 21:00 离开教堂）"
+          - "21:00 之后 Mary 是否还留在教堂，神父没有亲眼看见"
+          - "Mary 来教堂时祈祷披肩是完好的"
+          - "教堂蜡烛是神父自制的，结实——昨晚港口大风才可能把蜡烛吹倒"
+          - "Thomas 是一个很少来祈祷的人，但他最近居然来祈祷过"
+          - "人们做一些事情的时候通常会前往教堂得到神的允许（隐喻式陈述）"
+        withheld_topics:
+          - "Thomas 来教堂祈祷的具体内容是什么"  # 神父不知道——但本 Loop 也不能暗示"杀妻计划"
 
-        withheld_topics: []
+        player_inquiry:
+          - "Mary 昨晚在教堂的时段——神父亲眼所见的时间窗"  # 9
+          - "Mary 来教堂时披肩的状态——完好还是有破洞"     # 8
+          - "教堂蜡烛的耐烧性——会不会自然燃尽"             # 7
+          - "Thomas 是不是来过教堂"                          # 6
 
-        # ── 2. 玩家询问意图 ──
-        player_inquiry: '"Morrison指名Mary Smith，教堂神父是唯一第三方证人" # 6'
-
-        # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3206001  # 神父证词：当晚看到Mary祈祷，停留极短；Thomas以前也来过（氛围/主题）
-        # 注：神父证词仅作疑点/氛围支撑，不进Mary指证的usable_evidence
-  # ── SC3005 法医办公室（⏸️无新线索） ──
-  # 纤维(3105)已合并到L1 Foster首次尸检时移交，L2不再需要去法医办公室
+          - 3092001  # 神父：21:00 前 Mary 一直在教堂念经，21:00 离开教堂后是否还留不知道
+          - 3092002  # 神父：Mary 来教堂时祈祷披肩完好（Expose R2 主力之一）
+          - 3092003  # 神父：教堂蜡烛是自制的、很结实，昨晚港口大风才可能吹倒（Expose R1 辅助）
+          - 3092004  # 神父：Thomas 是很少来祈祷的人，最近居然来祈祷过
+          - 3092005  # 神父：人们做某些事时会先到教堂寻求神的允许（隐喻式）
 
-  # ── SC3001 楼下现场 ──
-  # 📌 报纸天气版(3108)已移至L1 SC3001搜证获取，L2 Expose R2跨循环引用
-
-  # ── SC3002 楼顶（⏸️无新线索） ──
-  - id: 3002
-    name: "Thomas公寓楼顶"
-    # L2无新证据，L1证据（脚印3103/3104、Jameson空瓶3107）继承可查看；护栏核心区仍被警戒线封锁，L3才开放
-
-# ═══════════════════════════════════════
-# 派生证据说明
-# ═══════════════════════════════════════
-# 以下证据通过系统层证据分析操作生成，不绑定特定场景：
-#
-# 3213 口红颜色比对报告（32-E-03）
-#   获取方式：系统层分析——玩家选择衬衫口红样本 + Mary口红 → 颜色比对 → 生成报告
-#   结论：衬衫口红=珊瑚红Maybelline Coral Flame，Mary口红=玫瑰红Elizabeth Arden Rose Blush
-#   用途：R3指证，证明衬衫口红非Mary所有
-
-# ═══════════════════════════════════════
-# PART 3: 指证（Expose）
-# ═══════════════════════════════════════
-#
-# 场景状态表: 公寓楼门口(SC3013) → ⚔️指证(Mary)
-# 指证设计: 4轮（教堂蜡烛 → 大风因果 → 早知奸情 → 见到Thomas）
-# Mary的Talk/证词见上方 scenes → SC3013 → mary_001
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Mary · 3 轮）
+# ─────────────────────────────
 
 expose:
-  target: "Mary Smith (03)"
-  total_rounds: 4
+  target: mary
+  target_talk: L2_expose_mary
+  location: "SC3013 公寓楼门口"
+  total_rounds: 3
+  is_liar: true
+  player_inquiry: null
 
-  # ── 第一轮：蜡油封住了第5章 ──
-  # 出示祈祷册+蜡烛残骸，Mary合理反驳"那是我离开之后的事"
+  context: |
+    Mary 自称整晚在教堂祈祷不在现场。Zack 需依次击破：
+    R1 教堂时间谎言 → R2"出了教堂但没去案发现场"谎言 → R3"没动机"谎言。
+    每轮 Mary 退守，最终被迫给出"Thomas 主动约她、Thomas 想推她、她推 Thomas 失手"
+    的新版本——为 L3 反转 Thomas 是杀妻骗保恶魔做铺垫。
+
   round_1:
-    lie: "那晚我在教堂祈祷了很久，读到第23章'正义的审判'，蜡烛烧了很久才走"
-    lie_source: "证词 3203001"
+    lie: "昨晚 19 点-23 点的时候我在教堂，神父走后我也一直留在教堂——祈祷了很久，等蜡烛快烧完才离开"
+    lie_source: 3022001
     usable_evidence:
-      - id: 3202
-        name: "祈祷册"
-        用途: "书签在第23章，但蜡油粘住的是第5章页面——蜡油颜色与祈祷蜡烛一致"
-      - id: 3201
-        name: "蜡烛残骸"
-        用途: "被风吹倒折断，残余长度显示仅燃烧约15分钟——不是Mary说的'烧了很久'"
+      - id: 3210
+        name: "倒下的蜡烛残骸"
+        用途: "蜡烛只烧了约 30 分钟，未自然燃尽——与'蜡烛快烧完才离开'矛盾"
+      - id: 3103
+        name: "11 月 20 日晚报（L1 来）"
+        用途: "天气栏：当晚 22:00 港口阵风 40mph——蜡烛是被风吹倒的，证明 Mary 21:00 后不在教堂照看蜡烛"
     result: |
-      Mary合理反驳，拒绝承认：
-      - 否认因果关系："我走的时候蜡烛好好地立在那里。不管后来发生了什么，那是我离开之后的事"
-      - 否认蜡油来源："祈祷册是母亲遗物，用了很多年，上面有蜡油不奇怪"
-      - 坚守内容防线："我读到了第23章，'义人必因信而生'，要不要我从头背给你听？"
-      - Zack暂时无法反驳——需要证明蜡烛倒塌和蜡油是当晚发生的
+      Mary 被迫承认 22 点后不在教堂：
+      - 蜡烛形态 + 当晚阵风 → Mary 高估了蜡烛自然燃尽时间
+      - Mary 退守：'我没待那么晚——心里乱，出去走了很久；但你不能因此说我去了案发现场'
 
-  # ── 第二轮：大风暴露了真相 ──
-  # 出示报纸天气版，完成因果闭合
   round_2:
-    lie: "蜡烛断了、蜡油在第5章——那是我离开之后的事，跟我没关系"
-    lie_source: "Mary的R1反驳"
+    lie: "我没待到那么晚——我只是心里乱出去走了很久；即使如此也只能说明我离开了教堂，不能说明我去了哪里"
+    lie_source: 3022001  # R1 退守变体，沿用同一证词条目
     usable_evidence:
-      - id: 3108
-        name: "报纸天气版"
-        用途: "11月20日艾斯弗德大风警报40mph——教堂在山上风力更强，大风从窗缝灌入→吹回书页到第5章→吹倒蜡烛→蜡油封住第5章"
-    result: |
-      Mary崩溃承认提前离开教堂：
-      - Zack完成因果链：大风→吹回书页到实际阅读的第5章→吹倒蜡烛→蜡油封住第5章
-      - 反驳核心："你确实知道第23章的内容，但不是当晚读的"——揭露预谋
-      - 蜡烛15分钟 = Mary在教堂待了不到20分钟
-      - Timeline系统标注修正："Mary声称: 20:00-23:00" → "实际约20分钟" ✖已击穿
-      - Mary承认去了楼顶找Thomas
-      - Mary被迫提到Helen名字："听说Thomas和三楼的Helen有不清不楚的关系"
-      - Mary止损声称"上去没找到Thomas"（R4谎言预埋）
-      - Mary止损声称"最近才听说"Helen的事（R3谎言预埋）
-
-  # ── 第三轮：证明Mary早就知道奸情 ──
-  # 出示口红分析报告+Mary口红
-  round_3:
-    lie: "我也是最近才听说Thomas和Helen的事……大概一周前吧"
-    lie_source: "Mary在R2末尾的止损回答"
-    usable_evidence:
-      - id: 3213
-        name: "口红颜色比对报告"
-        用途: "衬衫口红=珊瑚红Maybelline Coral Flame（铅丹+胭脂虫红），Mary=玫瑰红Elizabeth Arden Rose Blush（氧化铁）——颜色、质地、成分完全不同"
-      - id: 3204
-        name: "Mary的玫瑰红口红"
-        用途: "与衬衫口红现场比对——不是Mary的口红，衬衫藏了至少三个月"
-    result: |
-      Mary承认早就知道奸情：
-      - 承认三个月前发现便条和衬衫口红印
-      - 情绪爆发："我报警三次！没人管！"
-      - 承认留衬衫是为了当离婚证据
-      - 仍坚持"没找到Thomas"（R4谎言预埋）
-      - 情绪从"被动辩解"转为"压抑的愤怒"
-
-  # ── 第四轮：证明Mary见到了Thomas ──
-  # 出示祈祷披肩（搜身观察获得）——黑色蕾丝右下角勾丝破损与Thomas袖扣异源纤维特征吻合
-  round_4:
-    lie: "我上去看了一圈，没找到他，就回来了。我那天晚上根本没见到Thomas"
-    lie_source: "Mary在R3末尾的止损回答"
-    usable_evidence:
-      - id: 3205
+      - id: 3201
         name: "祈祷披肩"
-        用途: "黑色蕾丝，右下角约1cm勾丝破损——与袖扣纤维样本(3105)上的黑色蕾丝异源纤维材质、颜色、编织纹理完全一致，证明Thomas抓过Mary的披肩，两人有近距离肢体接触"
+        用途: "现在 Mary 身披的披肩肩头有破洞——19:00 神父见到时披肩完好"
+      - id: 3092002
+        name: "神父证词（Mary 来教堂披肩完好）"
+        用途: "时间锚点——披肩破洞发生在 19:00 之后"
+      - id: 3107
+        name: "袖扣纤维样本（L1 来）"
+        用途: "Thomas 右袖扣勾下的黑色织物纤维——与 Mary 祈祷披肩破洞处材质同源"
     result: |
-      Mary承认在楼顶见到Thomas并有肢体接触：
-      - 承认在护栏边与Thomas争吵
-      - 称Thomas"喝醉了想动手打我，抓住了我的披肩"
-      - 坚持Thomas"失足"掉下去："他喝多了站不稳，失足掉了下去"
-      - 被追问Helen是否在楼顶时明显心虚——快速否认"不在"、眼神闪烁
-      - 坚称"只有Thomas和我"——隐瞒Helen在场
-      - 脚印深浅不一被提及但未解释——Mary辩称"地面不平整"
-      - 🔒开放性结论：Mary见到Thomas ✓ | Thomas怎么掉的？| Helen到底在不在？
+      Mary 被迫承认到过案发现场：
+      - 披肩破洞 + 袖扣纤维同源 → Mary 在 Thomas 跌落前接触过 Thomas
+      - Mary 沉默良久，没有立刻退守
 
-# ═══════════════════════════════════════
-# PART 4: 疑点
-# ═══════════════════════════════════════
+  round_3:
+    lie: "我没有理由害 Thomas——我只是按他说的，上天台为 Emily 祈祷"
+    lie_source: 3022001  # R1 系列退守延续；本轮主谎言无独立 testimony，Mary 在 Expose 现场临时说出
+    usable_evidence:
+      - id: 3207
+        name: "沾有口红印的衬衫"
+        用途: "Thomas 衣柜底层藏着一件沾深红色口红印的衬衫，与 Mary 浅玫瑰红不符——Mary 早就知道 Thomas 另有女人"
+    auxiliary_evidence:
+      - id: 3270
+        name: "口红颜色比对报告（派生）"
+        用途: "辅助——派生分析报告确认颜色完全不一致，Mary 家无第二只口红"
+    result: |
+      Mary 神色崩了一拍但很快收住，承认知道丈夫有别的女人：
+      - 衬衫指认 Mary 不是'无动机'
+      - 那个女人是谁——成为下一轮（L3）的调查方向
+
+  post_expose:
+    description: |
+      Mary 在三轮被逼后给出新版本：22:00 左右上过天台，称是 Thomas 主动约她为 Emily 祈祷；
+      她到天台门外敲门，是 Thomas 从里面给她开的门；Thomas 突然想推她下楼，她推回去时
+      Thomas 用力过猛靠上栏杆掉下去。Mary 反复说自己会不会被当成凶手、对 Thomas 为何
+      要约她去天台、为何要推她下楼真的不了解。
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Mary 自己承认 22:00 左右上过天台"
+      - "Mary 自称是 Thomas 从天台门里面给她开的门"
+      - "Mary 给出新版本：Thomas 突然想推她，她推回去时 Thomas 失力撞栏杆坠落"
+      - "Mary 早就知道 Thomas 另有女人——那个女人是谁，成为下一轮调查方向"
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
 
 doubts:
-  - id: 3003
-    text: "Mary的教堂不在场证明有问题——蜡烛仅烧15分钟，蜡油粘住的是第5章不是第23章"
-    unlock_condition: "item:3201 + item:3202"
-  - id: 3004
-    text: "Mary可能早就知道Thomas出轨——衣柜深处藏着有别人口红的衬衫，藏了至少三个月"
-    unlock_condition: "item:3203 + item:3204"
-  - id: 3005
-    text: "Mary可能与Thomas有肢体接触——Thomas袖扣织物与祈祷披肩一致"
-    unlock_condition: "item:3105 + item:3205"
-  - id: 3014
-    text: "Thomas只喝$0.10廉价酒——楼顶那瓶$3的Jameson不可能是Thomas自己带上去的"
-    unlock_condition: "item:3217"
-    # 3217=Thomas家廉价酒(L2 SC3003获得) + 3107=楼顶Jameson空瓶(L1 SC3002获得)
+  - id: 3201
+    text: "Mary 真的整晚在教堂吗？——蜡烛只烧了 30 分钟"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3210"        # 倒下的蜡烛残骸
+      - type: 1
+        param: "3103"        # 11 月 20 日晚报（L1）
 
-# ═══════════════════════════════════════
-# 验证状态
-# ═══════════════════════════════════════
+  - id: 3202
+    text: "Mary 是否到过案发现场？——披肩破洞与 Thomas 袖扣纤维"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3201"        # 祈祷披肩（破洞）
+      - type: 1
+        param: "3107"        # 袖扣纤维样本（L1）
 
-validation_status:
-  cross_check: "PENDING"
-  structure_completeness: "2026-03-30 PASS（3205/3207移至SC3013 body_search，3212删除）/ 2026-06-05 V2迁移（删post_expose钥匙条目；3209改37码；新增神父NPC；护栏注释更新）"
-  evidence_coverage: "2026-03-30 PASS"
-  npc_entries: "2026-06-05 PASS（新增SC3007神父NPC priest_001，含3206001证词）"
-  goal_alignment: "2026-03-30 PASS"
-  info_pacing: "2026-03-30 PASS"
-  expose: "2026-03-30 PASS（R4改用3205直接指证，3212已删除）"
+  - id: 3203
+    text: "Thomas 是否有出轨对象？——衣柜底层的口红印衬衫"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3207"        # 沾有口红印的衬衫
+      - type: 1
+        param: "3208"        # Mary 的浅玫瑰红口红（颜色对比锚点）
+
+  - id: 3204
+    text: "Thomas 死前为何要给自己买保险？（深化）"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3022003"     # Mary 证词：Thomas 欠银行 $12000
+
+  # ── 碎片（isFragment=true） ──
+  - id: 3205
+    text: "神父亲眼所见的时段——Mary 是 19-21 点在教堂吗？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3092002"     # 神父证词：Mary 来教堂时披肩完好（Expose R2 主力）
+
+  - id: 3206
+    text: "Mary 唯一的口红——颜色与衬衫不符"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3270"        # 口红颜色比对报告（Expose R3 辅助）
+
+  - id: 3207
+    text: "Mary 外出鞋的鞋码——与楼顶女鞋印同款同码"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3209"        # Mary 外出鞋
+
+  - id: 3208
+    text: "Thomas 家中的酒——只有廉价自酿私酒"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3205"        # Thomas 家的廉价酒照片（🔵 L6 R2 用）
+
+  - id: 3209
+    text: "Thomas 桌上的标注报纸——为何圈出大量银行术语？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3206"        # 标注报纸（🔵 L5 R1 用）
+
+# ─────────────────────────────
+# 六、证据 ID 汇总（Loop2 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  - id: 3201
+    name: "祈祷披肩"
+    type: item
+    pickup: true
+    first_scene: 3013
+    note: "关键——Expose R2 主力（破洞 + 袖扣纤维同源）"
+
+  - id: 3202
+    name: "Mary 的花形手链"
+    type: item
+    pickup: true
+    first_scene: 3013
+    note: "🔵 跨 Loop——本 Loop 客观记录花瓣缺口物理特征但不点破其含义（L5 用于联想压痕 / L6 R5 完成指认）"
+
+  - id: 3203
+    name: "家暴痕迹（墙纸撕裂）"
+    type: clue
+    pickup: false
+    first_scene: 3003
+    note: "🟣 环境叙事——Mary 动机潜在铺垫"
+
+  - id: 3204
+    name: "Emily 的蜡笔画"
+    type: clue
+    pickup: false
+    first_scene: 3003
+    note: "🔒 动机——女儿遗物，环境叙事"
+
+  - id: 3205
+    name: "Thomas 家的廉价酒照片"
+    type: clue
+    pickup: true
+    first_scene: 3003
+    note: "🔵 跨 Loop——本 Loop 仅作环境描述，L6 与天台 Jameson 形成对比"
+
+  - id: 3206
+    name: "标注报纸"
+    type: item
+    pickup: true
+    first_scene: 3003
+    note: "🔵 跨 Loop——本 Loop 不暗示用途，L5 与 Bernard 垫板压痕比对"
+
+  - id: 3207
+    name: "沾有口红印的衬衫"
+    type: item
+    pickup: true
+    first_scene: 3012
+    note: "关键——Expose R3 主力（Mary 早知 Thomas 出轨）"
+
+  - id: 3208
+    name: "Mary 的浅玫瑰红口红"
+    type: item
+    pickup: true
+    first_scene: 3012
+    note: "对比锚点——Light Rose 色号"
+
+  - id: 3209
+    name: "Mary 外出鞋"
+    type: item
+    pickup: true
+    first_scene: 3012
+    note: "关键——6 码与楼顶女鞋印吻合（强化 Mary 在场）"
+
+  - id: 3210
+    name: "倒下的蜡烛残骸"
+    type: item
+    pickup: true
+    first_scene: 3007
+    note: "关键——Expose R1 主力（只燃烧 30 分钟）"
+
+  - id: 3211
+    name: "教堂祈祷册"
+    type: clue
+    pickup: false
+    first_scene: 3007
+    note: "🟣 环境叙事——本 Loop 玩家自悟，不指认"
+
+  - id: 3270
+    name: "口红颜色比对报告"
+    type: clue
+    pickup: false
+    analysis: true
+    first_scene: 3012
+    note: "🧪 派生证据——R3 辅助（衬衫口红印 vs Mary 口红颜色不一致 + 家无第二只口红）"

@@ -1,282 +1,471 @@
 # ============================================================
-# Loop 1 — 不是自杀
-# 本循环说谎者: Morrison
-# 核心揭示: Thomas不是自杀，楼顶有女性在场，不是主动跳下的
-# 前序事件: Unit 2结束后，Zack接到报案赶到Thomas公寓楼
-# 时间: 1928年11月21日 约08:00 早晨（案发后+9.5小时）
+# loop1_state.yaml — Unit3 Loop 1: 不是自杀（指证 Morrison · 2 轮）
+# ============================================================
+#
+# 叙事功能：玩家入场 + 揭示 Thomas 不是自杀 + 现场有女性 → 锁定 Mary
+# 核心揭示：Thomas 不是主动跳下；楼顶有女性脚印
+# 前序事件：Unit2 结束后，Mickey 在起诉湖滨信托银行的过程中调查到 Thomas 案，委托 Zack/Emma
+# 时间：1928 年 11 月 21 日 早晨（案发后约 10 小时）
+#
+# 事实源：剧情设计/Unit3/大纲0626.md
+# 生成日期：2026-06-26（重写）
+#
+# ──────────────────────────────────────────────────────────
+# 自检清单（A-G）
+# A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
+# B. 证据覆盖     PASS — 大纲 Loop1 所有证据（3101-3109）已分配到场景
+# C. NPC 条目     PASS — Mickey / Foster / Morrison 各含 4 必填块
+# D. 目标对齐     PASS — primary goal 与大纲"Thomas 真的是自杀吗"一致
+# E. 信息节奏     PASS — 严格隐藏：脚印不说"两人"、Thomas 手油不解读、Jameson 不暗示来源、护栏区警戒线封锁
+# G. Expose 逻辑  PASS — R1（自杀谎言）= 外墙抓挠 + Foster 证词；R2（独处谎言）= 女性脚印
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
 # ============================================================
 
-# ═══════════════════════════════════════
-# 玩家视角（本循环）
-# ═══════════════════════════════════════
+# ─────────────────────────────
+# 一、玩家视角（本循环）
+# ─────────────────────────────
 
 player_context:
-  chapter_goal: "调查Thomas Smith坠楼事件"
+  chapter_goal: "调查 Thomas Smith 坠楼事件——为 Mickey 起诉湖滨信托银行寻找新案例"
   goals:
-    primary: "Thomas Smith真的是自杀吗？"
+    primary: "Thomas 真的是自杀吗？"
     secondary:
-      - "Morrison为什么急着按自杀结案？"
-      - "楼顶到底发生了什么？"
-  known_facts: []  # L1，玩家对本章案件一无所知
-  new_directions:
-    - direction: "女性脚印矛盾"
-      trigger: "楼顶护栏边有约37码女性脚印，与Thomas靴印面对面分布，不是Morrison说的'只有死者一个人'"
-    - direction: "坠落方式矛盾"
-      trigger: "外墙有抓挠痕迹（本能抓握）+ Foster分析指甲手部痕迹不支持主动跳下 + 着地点仅0.8米（辅助印证）"
-  post_expose_knowledge:
-    - "Thomas不是自杀——现场有女性在场，且Thomas不是主动跳下的"
-    - "楼顶有约37码女性脚印，与Thomas面对面站在护栏边（深夜22:30）"
-    - "脚印深浅不一（🔒藏梗：实为两个体重不同的女人，Loop 4揭晓）"
-    - "外墙抓挠痕迹+Foster分析：指甲手部痕迹更像坠落瞬间本能反应，姿态不支持主动跳下"
-    - "Thomas手上有油痕，来源不明（🔒伏笔：L5 Emma疑点）"
-    - "Morrison佛系甩手：Thomas打老婆，整栋楼都知道，脚印十有八九是Mary的"
-    - "'失足'可能性未排除——开放性结论"
-    - "Jameson空瓶：穷酒鬼买不起$3好酒，来源存疑"
-    - "Morrison暗示湖滨信托银行打过招呼，案件比想象的复杂"
+      - "为什么 Thomas 死前会和 Frank 一样欠下巨额贷款 + 购买巨额保险？"
+      - "湖滨信托银行的保单和 Thomas 之死有没有关系？"
 
-# ═══════════════════════════════════════
-# PART 1: 开篇
-# ═══════════════════════════════════════
-#
-# 场景状态表: 楼下现场(SC3001) → 🎬案发现场
-# Zack和Emma接报赶到Thomas公寓楼下，Morrison宣布"自杀结案"，
-# Emma冷静引导Zack质疑Morrison判断，开始搜证。
+  known_facts: []  # Loop1，玩家对本章案件一无所知
+
+  new_directions:
+    - direction: "Mickey 的银行案线索"
+      trigger: "Mickey 在起诉湖滨信托银行的过程中调查到 Thomas 案——死者死前欠贷款 + 巨额保险，疑似与 Frank 案同一模式"
+    - direction: "坠楼方式可疑"
+      trigger: "外墙有抓挠痕迹（本能抓握）+ 着地点距楼体仅 0.8 米（自跳应远于此）"
+    - direction: "现场可能不止一人"
+      trigger: "楼顶发现 6 码女性脚印（凌乱、暂时不能判断人数），死者是男性"
+
+  post_expose_knowledge:
+    - "Thomas 不是主动跳下的——外墙抓挠痕迹 + Foster 法医分析（手部本能抓痕）共同指向坠落瞬间本能反应"
+    - "案发现场不止 Thomas 一人——楼顶有 6 码女性脚印"
+    - "脚印的主人 Morrison 推测可能是 Thomas 的妻子 Mary Smith（住楼下）"
+    - "Morrison 不愿深查，想处理成自杀结案——'这案子内部牵扯太多'"
+    - "Morrison 默许 Zack 和 Emma 继续调查（'大不了我这个月又没钱喝酒'）"
+    - "保留疑点：是意外坠楼还是谋杀？暂时无法判断"
+
+# ─────────────────────────────
+# 二、开篇（🎬 硬切剧情）
+# ─────────────────────────────
 
 opening:
-  scene_id: 3001
-  characters: [Zack, Emma, Morrison]
-  purpose: "Morrison宣布自杀结案 → Emma引导Zack冷静质疑 → 开始搜证"
-  talk: emma_001
+  type: cutscene  # 🎬 硬切，无玩家操作
+  location: "Zack 侦探事务所"
+  characters: [Zack, Emma, Mickey]
+  description: |
+    Mickey 登门到 Zack 侦探事务所，委托 Zack 和 Emma 调查 Thomas Smith 坠楼案。
+    Mickey 在起诉湖滨信托银行的过程中调查到这又一起被警方掩盖的"意外坠楼"——
+    死者 Thomas 死前和 Frank 一样欠下巨额贷款，还购买了巨额保险，保单来自湖滨信托银行。
+    Mickey 怀疑案件背后有隐情，说不定能帮助他推进起诉银行的案子。
+    他不参与调查，请 Zack 和 Emma 务必先去看看情况，之后再到他办公室汇报。
 
-  emma_001:
+  L1_opening_mickey:
+    talk: L1_opening_mickey
     is_liar: false
-    motive: "引导Zack从Morrison的草率判断中抽离——用观察事实替代情绪反应，启动独立搜证"
-    mindset: "冷静警觉——经历Unit1/2后对Morrison的判断本能不信任，但不急于下结论，先看现场"
-
-    knows:
-      - "Thomas Smith从公寓楼顶坠楼死亡"
-      - "Morrison声称自杀，想赶在Zack到来前结案"
-      - "Morrison拖延了9.5小时才通知Zack——想处理完再说"
-      - "Morrison在Unit1/2中都有过误导和阻碍的前科"
-      - "艾斯弗德验尸官是选举产生的政治职位——自己挑陪审团、自己选证人，死因裁定几乎无人监督（Unit1/2经验中积累的常识）"
-
-    does_not_know:
-      - "楼顶有女性脚印"
-      - "Thomas不是主动跳下的"
-      - "Thomas打老婆的事"
-      - "湖滨信托银行打过招呼"
-      - "脚印深浅不一的含义"
-      - "Thomas手上油的来源"
-
-    lie: null
-
-    # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 2: 自由探索
-# ═══════════════════════════════════════
-#
-# L1 场景状态（全14场景）:
-#   SC3001 楼下现场              → 🎬开篇→🔓搜证
-#   SC3002 楼顶                  → 🔓搜证
-#   SC3003 Smith家客厅        → 🔒尚未发现Smith家线索
-#   SC3004 警局                  → ⚔️指证(Morrison)
-#   SC3005 法医办公室            → 🔓对话(Foster：尸检结论+随身物品移交)
-#   SC3006 公寓二楼走廊          → 🔒尚未发现二楼线索
-#   SC3007 教堂                  → 🔒尚未发现教堂线索
-#   SC3008 Helen家               → 🔒尚未发现Helen线索
-#   SC3009 湖滨信托银行公共区域 → 🔒银行尚未出现在调查方向中
-#   SC3010 Margaret鞋坊          → 🔒尚未发现Margaret线索
-#   SC3011 街角                  → 🔒尚未出现在调查方向中
-#   SC3012 Smith家卧室        → 🔒尚未发现Smith家线索
-#   SC3013 公寓楼门口            → 🔒尚未出现在调查方向中
-#   SC3014 Bernard办公室         → 🔒银行尚未出现在调查方向中
-#   SC3015 三楼走廊              → 🔒尚未发现三楼线索
-
-scenes:
-  # ── SC3001 楼下现场（开篇 → 搜证） ──
-  - id: 3001
-    name: "Thomas公寓楼下现场"
-    evidence:
-      - id: 3109
-        name: "外墙抓挠照片"
-        note: "关键——坠落瞬间本能抓握留下的指甲刮挠痕迹，分布在外墙面（Expose R2主力）"
-      - id: 3101
-        name: "着地点照片"
-        note: "关键——尸体距墙仅0.8米，主动跳跃应≥1.5米（Expose R2辅助印证）"
-      - id: 3108
-        name: "报纸天气版"
-        note: "关键——Chicago Tribune 1928年11月21日，头版天气栏：'昨夜大风警报，湖区及山区阵风达40英里/小时'（L2 Expose R2用）"
-
-  # ── SC3002 楼顶 ──
-  # 注：护栏核心区被警戒线封锁，栏杆/破坏痕迹/血迹/灰尘L3才开放
-  - id: 3002
-    name: "Thomas公寓楼顶"
-    evidence:
-      - id: 3103
-        name: "男性脚印照片"
-        note: "陷阱——42码Thomas靴印。R1中选此无效（'死者的痕迹'不反驳'只有死者一个人'）"
-      - id: 3104
-        name: "女性脚印照片"
-        note: "关键——约37码，深浅不一、方向杂乱，与Thomas靴印面对面（Expose R1用）。🔒藏梗：实为Mary+Helen两人脚印"
-      - id: 3107
-        name: "Jameson威士忌空瓶"
-        note: "伏笔——$3好酒，Thomas这种穷酒鬼买不起。循环4揭晓酒是Helen带的"
-
-  # ── SC3005 法医办公室（Foster对话 + 搜证） ──
-  # 位置：County Hospital（库克县医院）院区内，Coroner's Office
-  - id: 3005
-    name: "法医办公室"
-    evidence:
-      - id: 3105
-        name: "袖扣纤维样本"
-        note: "Thomas右袖扣处发现异源织物纤维——黑色蕾丝，高档编织物，纹理特殊（关键——L2搜身观察触发条件）"
-      - id: 3110
-        name: "Thomas手上有油（线索）"
-        note: "伏笔——Foster检查时发现Thomas手上有油痕，来源不明；仅陈述事实，不推断来源（L5 Emma疑点条件）"
-      - id: 3111
-        name: "Foster坠楼分析证词"
-        note: "关键——指甲/手部痕迹更像坠落瞬间本能反应，姿态不支持主动跳下（Expose R2配合3109用）"
-      - id: 3611
-        name: "Foster的旧烟斗和医学院毕业照"
-        note: "环境叙事——石楠木烟斗+1898年毕业合影，Primum non nocere"
-    npcs:
-      foster_001:
-        # ── 基本信息 ──
-        talk: foster_001
-        is_liar: false
-        motive: "提供专业法医分析——察觉到某些异常，但选择只陈述事实不做推测"
-        mindset: "职业严谨但意味深长——用语克制，'顿了顿'暗示他比表面知道得多"
-
-        # ── 1. NPC 已知信息 ──（模式 D：一次性 NPC）
-        knows:
-          - "血液酒精浓度0.25%，明显醉酒状态（相当高，但不下结论'无攻击能力'）"
-          - "颈椎断裂，符合高处坠落"
-          - "指甲下有少量皮肤组织，经检查为死者本人的——指尖反向剐蹭护栏边缘"
-          - "组织量太少，不是剧烈挣扎，更像坠落瞬间的本能反应"
-          - "指甲/手部痕迹更像坠落瞬间本能反应，姿态不支持主动跳下"
-          - "Thomas手上有油痕（仅陈述事实，不推断来源）"
-        does_not_know:
-          - "Thomas被灌醉到0.25%（只知道检测结果，不知道原因）"
-          - "楼顶有两个女人"
-          - "油从哪来/是谁涂的"
-
-        # ── 2. 玩家询问意图 ──
-        player_inquiry:
-          - "法医对Thomas坠楼的专业分析——确认死因和身体状态"  # 8
-          - "指甲下的组织意味着什么——挣扎还是本能反应？"  # 7
-
-        # ── 3. 可提取证词 ──
-        testimony_ids: [3111]  # 3111 Foster坠楼分析证词：指甲/手部痕迹像本能反应，姿态不支持主动跳（Expose R2用）
-
-        # ── 4.  ──
-# ═══════════════════════════════════════
-# PART 3: 指证（Expose）
-# ═══════════════════════════════════════
-#
-# 场景状态表: 警局(SC3004) → ⚔️指证(Morrison)
-# 指证设计: 2轮（女性在场 → 不是主动跳下）
-
-expose:
-  target: "Morrison (01)"
-  total_rounds: 2
-
-  morrison:
-    # ── 基本信息 ──
-    talk: loop1_morrison
-    is_liar: true
-    motive: "省事结案 + 银行利益 + 佛系不想管"
-    mindset: "不耐烦的敷衍——被逼问时恼怒，但最终佛系甩手'你想查就去查'"
+    motive: "委托动机——为起诉湖滨信托银行寻找新案例。Thomas 案与 Frank 案的高度相似让他敏锐察觉到一致的犯罪模式"
+    mindset: "克制而审慎——Mickey 习惯先收集事实再下结论，不在 Zack 面前过早渲染'银行就是凶手'"
 
     # ── 1. NPC 已知信息 ──
-    knows:
-      - "Thomas Smith坠楼死亡"
-      - "Thomas打老婆，整栋楼都知道"
-      - "Thomas的妻子叫Mary Smith，住楼下"
-      - "湖滨信托银行打过招呼——谋杀案一立，房产变犯罪现场；自杀则今天结案明天查封"
-      - "案发后故意拖延9.5小时"
-
-    does_not_know:
-      - "脚印深浅不一是两个女人"
-      - "Helen的存在和参与"
-      - "Thomas被灌醉"
+    active_topics:
+      - "委托事由：Thomas 死前与 Frank 一样欠贷款 + 购买巨额保险，疑似同一犯罪模式"
+      - "起诉湖滨信托银行的案件需要新证据——Thomas 案可能是突破口"
+      - "汇报机制：Zack/Emma 调查后到 Mickey 办公室碰头"
+    withheld_topics:
+      - "Mickey 的真实身份（Whale，Unit4 才揭示）"
+      - "Mickey 与本案三方（Mary/Helen/Bernard）的私下关系"
+      - "Loop6 控辩对决的最终立场"
 
     # ── 2. 玩家询问意图 ──
-    player_inquiry: null  # Expose对象
+    player_inquiry:
+      - "Mickey 怎么注意到 Thomas 案的——他与起诉银行案的关联"  # 9
+      - "Mickey 为什么不亲自参与调查"  # 6
 
     # ── 3. 可提取证词 ──
     testimony_ids:
-      - 3101001  # ⚠谎言: "自杀，很明显。这种烂酒鬼，喝多了自己跳下去了"
+      - 3011001  # Mickey 委托：Thomas 案与 Frank 案的相似性
+      - 3011002  # Mickey 委托：保单来自湖滨信托银行
 
-    # ── 4.  ──
-  # ── 第一轮：楼顶不只Thomas一个人 ──
-  # C-04（女性脚印）证明有女性在场，C-03（Thomas脚印）是陷阱
-  round_1:
-    lie: "现场干干净净，只有死者一个人的痕迹"
-    lie_source: "证词 3101001"
-    usable_evidence:
+# ─────────────────────────────
+# 三、场景（🔓 自由探索）
+# ─────────────────────────────
+#
+# 本 Loop 场景状态:
+#   SC3001 楼下现场              → 🔓 自由探索
+#   SC3002 楼顶                  → 🔓 自由探索（护栏区被警戒线封锁，L3 才解锁）
+#   SC3004 警局                  → 🔓 → ⚔️ 指证（Morrison）
+#   SC3005 法医办公室            → 🔓 对话 + 搜证（Foster）
+#   其他场景                     → 🔒 尚未触发
+
+scenes:
+  # ── SC3001 楼下现场（坠落点 + 外墙） ──
+  - id: 3001
+    name: "Thomas 公寓楼下现场"
+    type: free_exploration
+    description: |
+      Thomas Smith 坠落着地点。
+      警戒线围出一片小范围，地面上还留着粉笔标记的尸体轮廓。
+      抬头可见公寓外墙——窗户与窗户之间的墙面上有几道新鲜的刮痕。
+      Chicago Tribune 11 月 21 日的早报散落在警戒线外，被风掀着边角。
+
+    evidence:
+      - id: 3101
+        name: "着地点照片"
+        type: clue
+        pickup: true
+        note: "关键——尸体距楼体仅 0.8 米，距离异常偏近，配合外墙抓挠痕迹、不符合主动跳下姿态（Expose R1 辅助）"
+        description: "粉笔轮廓与楼体垂直距离测量照片：约 0.8 米"
+
+      - id: 3102
+        name: "外墙照片"
+        type: clue
+        pickup: true
+        note: "关键——外墙面有新鲜抓挠痕迹，符合坠落瞬间本能抓握（Expose R1 主力，配合 Foster 证词）"
+        description: "三楼至着地点之间的外墙特写：几道指甲刮挠痕迹横向分布"
+
+      - id: 3103
+        name: "11 月 20 日晚报"
+        type: item
+        pickup: true
+        note: "🔵 跨 Loop——天气栏记录当晚 22:00 左右港口强风约 40mph（L2 用于击破 Mary 的教堂蜡烛谎言）"
+        description: "Chicago Tribune 1928.11.20 晚报，头版财经；翻到天气栏：'今夜港口及湖区阵风 40mph，需注意露天物品'"
+
+  # ── SC3002 楼顶 ──
+  # 注：栏杆/护栏破坏痕迹/血迹被警戒线封锁，L3 才解锁
+  - id: 3002
+    name: "Thomas 公寓楼顶"
+    type: free_exploration
+    description: |
+      老旧公寓楼顶。北侧栏杆（坠落侧）被警戒线封锁，无法靠近。
+      Zack 和 Emma 只能在栏杆外的开阔区域查看脚印和零散物件。
+      东南角避风处地面有几个零散物件。
+
+    evidence:
       - id: 3104
         name: "女性脚印照片"
-        用途: "约37码女鞋印与Thomas靴印面对面，深夜22:30有女性在场不是偶然"
-    trap_evidence:
-      - id: 3103
-        name: "男性脚印照片"
-        用途: "陷阱——Thomas的42码靴印是'死者的痕迹'，选了不构成反驳"
-    result: |
-      Morrison被迫承认有女性在场：
-      - 先狡辩"公共区域白天有人晒衣服"
-      - Zack用脚印朝向（面对面）和时间点（深夜22:30）反驳
-      - Morrison恼怒"你非要搞出个谋杀案？"
-      - 退守新防线："有人在场不代表有人推他"
+        type: clue
+        pickup: true
+        note: "关键——6 码女鞋印，凌乱、暂时不能判断人数；与男性脚印（Thomas）不同（Expose R2 用）"
+        description: "栏杆封锁线外侧地面：6 码女鞋印，朝向杂乱，鞋底花纹清晰；脚印新鲜——边缘未被风蚀，与昨夜降露形成的薄层覆盖关系一致（推断留下时间在昨夜降露前后，即 22:00 左右）"
 
-  # ── 第二轮：不是主动跳下的 ──
-  # 外墙抓挠（本能反应）+ Foster分析（姿态不支持主动跳）；着地点0.8米作辅助印证
-  round_2:
-    lie: "这人明显是自己跳下去的。护栏那么矮，喝多了站不稳，一脚踩空就掉了"
-    lie_source: "Morrison对Round 1的退守"
-    usable_evidence:
+      - id: 3105
+        name: "男性脚印照片"
+        type: clue
+        pickup: true
+        note: "陷阱——Thomas 自己的脚印。R2 中选此无效（'死者的痕迹'不反驳'只有死者一人'）"
+        description: "栏杆封锁线附近：Thomas 的男性脚印，与尸体脚部尺码吻合"
+
+      - id: 3106
+        name: "Jameson 空酒瓶"
+        type: item
+        pickup: true
+        note: "🔵 跨 Loop——伏笔，本 Loop 仅作'角落零散物'对待，不暗示来源（L3 揭示与 Helen 家 Jameson 一致）"
+        description: "天台东南角避风处：一只 Jameson 威士忌空酒瓶，瓶身完好"
+
+  # ── SC3005 法医办公室（Foster 对话 + 搜证） ──
+  - id: 3005
+    name: "法医办公室"
+    type: free_exploration
+    description: |
+      库克县医院院区内的法医办公室。
+      Foster 站在解剖台前，台上覆着白布，旁边的小桌上摆着 Thomas 的随身物品。
+      墙上挂着一幅老旧的医学院毕业合影，旁边搁着一只石楠木烟斗。
+      Foster 用语极其克制——他只陈述事实，不主动推断。
+
+    evidence:
+      - id: 3107
+        name: "袖扣纤维样本"
+        type: item
+        pickup: true
+        note: "🔵 跨 Loop——Thomas 右袖扣处发现异源黑色织物纤维（L2 用于击破 Mary 的'离开教堂未到现场'）"
+        description: "解剖台旁证物袋：Thomas 右袖扣勾下的一缕黑色织物纤维，质地特殊"
+
+      - id: 3108
+        name: "尸体手部油迹（线索）"
+        type: clue
+        pickup: true
+        note: "🔵 跨 Loop——伏笔，本 Loop 仅记录现象：'指尖与掌心有油，手背无油'，不解读来源（L4 才有油痕检测仪可分析）"
+        description: "尸体手部特写：指尖与掌心可见油痕，手背干净；油的成分本 Loop 无法分析"
+
       - id: 3109
-        name: "外墙抓挠照片"
+        name: "Foster 烟斗与医学院毕业照"
+        type: clue
+        pickup: false
+        note: "环境叙事——石楠木烟斗 + 1898 年医学院毕业合影；提示 Foster 的资历与职业克制底色"
+        description: "1898 年 Rush 医学院毕业合影，年轻的 Foster 在第二排；旁边的石楠木烟斗有长年摩挲的光泽"
+
+    npcs:
+      L1_scene3005_foster:
+        talk: L1_scene3005_foster
+        is_liar: false
+        motive: "提供专业法医分析——察觉到酒精浓度异常和手部油痕这两个反常细节，但选择'用精确制造模糊'：只陈述粗略结论，把精确数值留到本 Loop 之外"
+        mindset: "职业严谨而克制——用语经过斟酌，'严重醉酒'代替'0.25%'，'本能抓痕'是事实陈述而非动机推论"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "死亡时间：11 月 20 日 22:00-23:00 之间"
+          - "坠楼分析：死者严重醉酒；手部有本能抓痕（指甲下有死者本人皮肤组织）"
+          - "随身物品移交：袖扣处发现异源纤维，已分装证物袋"
+        withheld_topics:
+          - "精确酒精浓度 0.25%"                      # L6 法医鉴定报告才给出
+          - "0.25% 意味着无有效攻击能力"               # L6 推理用
+          - "Thomas 手部油痕的成分分析"                # L4 才有油痕检测仪
+          - "对凶手身份的任何推测"                     # 职业克制，全程不越线
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry:
+          - "Foster 对 Thomas 坠楼方式的专业判断——是不是自跳"  # 9
+          - "死者随身物品中有没有反常发现"  # 7
+          - "死者的醉酒程度——是不是喝到无法自理"  # 6
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3041001  # Foster：坠楼分析显示死者严重醉酒，手部有本能抓痕；具体酒精浓度待精密检测
+          - 3041002  # Foster：死亡时间是昨晚 22:00-23:00 之间
+
+  # ── SC3004 警局（Morrison 对话 + 指证场地） ──
+  - id: 3004
+    name: "警局"
+    type: free_exploration
+    description: |
+      艾斯弗德警局二楼 Morrison 办公室。
+      桌上放着 Thomas 案的薄薄一份卷宗，Morrison 正翻着没几页就合上了，
+      一副"今天就能结案"的姿态。Zack 和 Emma 走进来时他甚至没抬头。
+
+    npcs:
+      L1_scene3004_morrison:
+        talk: L1_scene3004_morrison
+        is_liar: true  # 本 Loop Expose 对象
+        motive: "省事结案——'这案子内部牵扯太多'，他不想继续调查；想处理成自杀避免后续审查；同时也熟悉了 Zack/Emma 这对'搅屎棍'的脾气"
+        mindset: "敷衍而懒散——'又是你俩'式的不耐烦；被逼问时恼怒，但最终佛系甩手'随便你们查'"
+
+        # ── 1. NPC 已知信息 ──
+        active_topics:
+          - "案件初判：自杀，烂酒鬼喝多了自己跳的"
+          - "现场描述：只有死者一人；尸体由警察巡逻发现"
+          - "Thomas 是死者，Mary 是 Thomas 的妻子（指证后追加披露）"
+        withheld_topics:
+          - "Morrison 与本案相关的腐败动机详情"
+          - "对 Mary 是否真在现场的具体了解"
+
+        # ── 2. 玩家询问意图 ──
+        player_inquiry: null  # is_liar: true，Expose 对象
+
+        # ── 3. 可提取证词 ──
+        testimony_ids:
+          - 3031001  # ⚠谎言: Morrison：他自己跳下去的（Expose R1 lie source）
+          - 3031002  # ⚠谎言: Morrison：现场只有死者一人（Expose R2 lie source）
+          - 3031003  # Morrison：尸体由警察巡逻发现（中性事实）
+
+# ─────────────────────────────
+# 四、指证（⚔️ Expose：Morrison · 2 轮）
+# ─────────────────────────────
+
+expose:
+  target: morrison
+  target_talk: L1_expose_morrison
+  location: "SC3004 警局"
+  total_rounds: 2
+  is_liar: true
+  player_inquiry: null
+
+  context: |
+    Morrison 想以"自杀"快速结案，懒得继续调查。
+    Zack 必须依次击破"自杀"和"只有死者一人"两个谎言，
+    把案件性质从"自杀"扳回"可能的他杀或意外"，并把 Mary 拽入调查视野。
+
+  # ── 第一轮：不是自杀 ──
+  round_1:
+    lie: "他自己跳下去的"
+    lie_source: 3031001
+    usable_evidence:
+      - id: 3102
+        name: "外墙照片"
         用途: "外墙有指甲刮挠痕迹——坠落瞬间本能抓握，主动跳下不会有此反应"
-      - id: 3111
-        name: "Foster坠楼分析证词"
-        用途: "Foster：指甲/手部痕迹更像本能反应，姿态不支持主动跳下"
+      - id: 3041001
+        name: "Foster 坠楼分析证词"
+        用途: "Foster：死者手部有本能抓痕——姿态与'自跳'不符"
     auxiliary_evidence:
       - id: 3101
         name: "着地点照片"
-        用途: "辅助印证——尸体距墙仅0.8米，主动跳跃应≥1.5米"
+        用途: "辅助印证——尸体距楼体仅 0.8 米，距离异常偏近，配合外墙抓痕、不符合主动跳下姿态"
     result: |
-      排除"主动跳下"，但"失足"未排除：
-      - Morrison被迫承认外墙抓挠+Foster分析指向本能反应，非主动跳
-      - 退让"也许不是自己跳的，但喝成那样靠在护栏边，重心不稳就能掉"
-      - 佛系交代Thomas/Mary家事："打老婆，整栋楼都知道"
-      - 透露脚印"大概率是Mary的"，暗示内部牵扯太多不想深查
-      - 甩手："前两回你也见识过了——我这人就这样，能省事就省事。跟我没关系了"
-      - 随口提供Mary信息："Thomas的老婆叫Mary Smith，就住楼下"
-      - 暗示银行利益："湖滨信托银行打过招呼"
-      - 警告："这案子比你想的复杂。真相不一定是你想要的"
-      - 🔒开放性结论：失足 vs 被推？脚印深浅不一？Jameson哪来的？
+      Morrison 被迫承认 Thomas 不是主动跳下：
+      - 外墙抓挠 + 手部本能抓痕共同指向本能反应而非自跳
+      - Morrison 退守："那也可能是意外坠楼——喝多了站不稳就掉下去了"
+      - Zack 推理：不可能是自杀，但有可能是意外坠楼或谋杀
 
-# ═══════════════════════════════════════
-# PART 4: 疑点
-# ═══════════════════════════════════════
+  # ── 第二轮：现场不只 Thomas 一个人 ──
+  round_2:
+    lie: "现场只有死者一人"
+    lie_source: 3031002
+    usable_evidence:
+      - id: 3104
+        name: "女性脚印照片"
+        用途: "楼顶有 6 码女鞋印——死者是男性，现场不只 Thomas 一人"
+    trap_evidence:
+      - id: 3105
+        name: "男性脚印照片"
+        用途: "陷阱——Thomas 自己的脚印，是'死者的痕迹'不构成反驳"
+    result: |
+      Morrison 被迫承认现场有女性：
+      - Zack 推理：现场还有其他的女性在
+      - Morrison 退守："脚印可能是大白天有人晒衣服踩的"
+      - 时间反驳：脚印新鲜——边缘未被风蚀、与昨夜降露形成的覆盖关系一致，推断留下时间就在昨夜 22:00 前后；白天晒衣服场景不成立
+      - Morrison 恼怒甩手："你非要搞出个谋杀案？"
+
+  # ── 指证后剧情 ──
+  post_expose:
+    description: |
+      Morrison 在两轮被逼后摆烂——主动抛出新信息把 Mary 拽进视野，
+      然后表示自己不想管，让 Zack 自己查。
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Morrison 推测脚印可能属于 Thomas 的妻子 Mary（住楼下）"
+      - "Morrison 表示这案子'内部牵扯太多'，想以自杀结案"
+      - "Morrison 默许 Zack/Emma 继续调查（'大不了我这个月又没钱喝酒'）"
+
+# ─────────────────────────────
+# 五、疑点（Doubts）
+# ─────────────────────────────
+# ID 编码：{unit}{loop}{seq} — Unit3=3, Loop1=1
+# condition type: 1=Item / 2=RelationNetwork / 3=Timeline
 
 doubts:
-  - id: 3001
-    text: "楼顶不只Thomas一个人——女性脚印与Thomas面对面站在护栏边"
-    unlock_condition: "item:3104 + testimony:3101001"
-  - id: 3002
-    text: "Thomas不是主动跳下的——外墙抓挠痕迹显示本能反应，Foster分析姿态不支持主动跳"
-    unlock_condition: "item:3109 + testimony:3111"
+  - id: 3101
+    text: "Thomas 真的是自杀吗？——外墙有抓挠痕迹，且距楼体仅 0.8 米"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3102"        # 外墙照片
+      - type: 1
+        param: "3041001"     # Foster 坠楼分析证词
 
-# ═══════════════════════════════════════
-# 验证状态
-# ═══════════════════════════════════════
+  - id: 3102
+    text: "案发现场的女性是谁？——楼顶有 6 码女鞋印"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3104"        # 女性脚印照片
+      - type: 3
+        param: "3031002"     # Morrison 独处现场谎言（时间线维度）
 
-validation_status:
-  cross_check: "PENDING"
-  structure_completeness: "2026-03-11 PASS"
-  evidence_coverage: "2026-03-11 PASS"
-  npc_entries: "2026-03-11 PASS"
-  goal_alignment: "2026-03-11 PASS"
-  info_pacing: "2026-03-11 PASS"
-  expose: "2026-03-11 PASS"
+  - id: 3103
+    text: "Thomas 死前为什么会购买巨额保险？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "3011001"     # Mickey 委托证词
+
+  # ── 碎片（isFragment=true）：单件挂载，承担"指证辅助/陷阱/跨 Loop 主力"证据的挂载义务 ──
+  - id: 3104
+    text: "Thomas 着地点距楼体仅 0.8 米——是否符合自跳距离？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3101"        # 着地点照片（Expose R1 辅助）
+
+  - id: 3105
+    text: "天台男性脚印的归属——属于 Thomas 自己？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3105"        # 男性脚印照片（Expose R2 陷阱）
+
+  - id: 3106
+    text: "天台角落的 Jameson 空酒瓶从哪来？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3106"        # Jameson 空酒瓶（🔵 L6 R2 用）
+
+  - id: 3107
+    text: "Thomas 手部为何会有油痕？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3108"        # 尸体手部油迹（🔵 L6 R4 主力）
+
+  - id: 3108
+    text: "11 月 20 日晚报天气栏的港口阵风——案发当晚的天气如何？"
+    isFragment: true
+    unlock_condition:
+      - type: 1
+        param: "3103"        # 11 月 20 日晚报（🔵 L2 R1 主力，配合 3210 蜡烛击破 Mary 教堂谎言）
+
+# ─────────────────────────────
+# 六、证据 ID 汇总（Loop1 全部证据）
+# ─────────────────────────────
+
+evidence_registry:
+  # Loop1 = 31xx 系列
+  - id: 3101
+    name: "着地点照片"
+    type: clue
+    pickup: true
+    first_scene: 3001
+    note: "关键——尸体距楼体 0.8 米（Expose R1 辅助）"
+
+  - id: 3102
+    name: "外墙照片"
+    type: clue
+    pickup: true
+    first_scene: 3001
+    note: "关键——外墙抓挠痕迹（Expose R1 主力）"
+
+  - id: 3103
+    name: "11 月 20 日晚报"
+    type: item
+    pickup: true
+    first_scene: 3001
+    note: "🔵 跨 Loop——天气栏港口强风 40mph（L2 用）"
+
+  - id: 3104
+    name: "女性脚印照片"
+    type: clue
+    pickup: true
+    first_scene: 3002
+    note: "关键——6 码女鞋印，凌乱（Expose R2 用；🔒藏梗：实为 Mary+Helen 两人脚印，L4 揭示）"
+
+  - id: 3105
+    name: "男性脚印照片"
+    type: clue
+    pickup: true
+    first_scene: 3002
+    note: "陷阱——Thomas 自己的脚印（Expose R2 陷阱）"
+
+  - id: 3106
+    name: "Jameson 空酒瓶"
+    type: item
+    pickup: true
+    first_scene: 3002
+    note: "🔵 跨 Loop——本 Loop 仅作角落零散物（L3 揭示与 Helen 家同款）"
+
+  - id: 3107
+    name: "袖扣纤维样本"
+    type: item
+    pickup: true
+    first_scene: 3005
+    note: "🔵 跨 Loop——异源黑色织物纤维（L2 用于击破 Mary）"
+
+  - id: 3108
+    name: "尸体手部油迹（线索）"
+    type: clue
+    pickup: true
+    first_scene: 3005
+    note: "🔵 跨 Loop——本 Loop 仅记录现象，不解读来源（L4 才能用油痕检测仪分析）"
+
+  - id: 3109
+    name: "Foster 烟斗与医学院毕业照"
+    type: clue
+    pickup: false
+    first_scene: 3005
+    note: "环境叙事——Foster 资历与职业克制底色"

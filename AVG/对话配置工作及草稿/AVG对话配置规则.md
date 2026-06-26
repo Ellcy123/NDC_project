@@ -229,7 +229,47 @@ Expose Round 2: Lie = 嫌疑人的新狡辩（非预先收集）
 ### 17. 视频资源路径一致性
 
 每句对话的 `videoEpisode/videoLoop/videoScene/videoId` 必须与其所属的对话文件保持一致：
-- `videoEpisode` = 章节标识（EPI01/EPI02）
+- `videoEpisode` = 章节标识（EPI01/EPI02/EPI03）
 - `videoLoop` = 循环标识（loop1-loop6）
 - `videoScene` = 对话文件名（不含.json）
 - `videoId` = 对话ID（与 `id` 字段一致）
+
+---
+
+## 六、对话文件 / Talk ID 命名规则（Unit3+ 一律启用）
+
+### 18. Talk ID 命名格式
+
+state 里 `talk` / `target_talk` 字段值采用 `L{Loop号}_{阶段}_{npc 英文小写}` 格式。
+
+**阶段枚举**：
+- `opening` — 硬切开篇剧情
+- `scene{场景ID}` — 自由探索场景内对话
+- `expose` — 指证
+- `postexpose` — 指证后剧情（仅当大纲明确写时存在）
+
+**示例**：
+- `L1_opening_mickey` — Loop1 开篇，Mickey 委托
+- `L1_scene3005_foster` — Loop1 SC3005 法医办公室，Foster
+- `L1_scene3004_morrison` — Loop1 SC3004 警局，Morrison（Talk 阶段）
+- `L1_expose_morrison` — Loop1 指证 Morrison
+
+### 19. 同 Loop 同 NPC 多次出场按场景区分
+
+例如 Mary 在 Loop2 同时出现在公寓门口、客厅、卧室三个场景：
+- `L2_scene3013_mary` — 公寓门口
+- `L2_scene3003_mary` — 客厅
+- `L2_scene3012_mary` — 卧室
+
+各自独立，对应 state 里不同 scene 的 NPC 条目。
+
+### 20. 对应 JSON 文件名与 MD section 头
+
+- JSON 文件名（落地于 `AVG/EPI0{N}/Talk/loop{N}/{talk值}.json`）= talk 字段值 + `.json`
+- MD 草稿 section 头：`## Talk: L1_opening_mickey.json` / `## Expose: L1_expose_morrison.json`
+- `videoScene` 字段值 = talk 字段值（不含 `.json`）
+
+### 21. 适用范围
+
+- Unit3 及之后的新 Unit：一律新规则
+- Unit1 / Unit2 历史命名：沿用旧规则，不主动回溯改

@@ -37,11 +37,13 @@ disallowedTools: Bash
    - 可提取证词（testimony_ids，标注 ⚠谎言 / ⚠偏见）
 4. **生成 expose 结构**：rounds（每轮 lie + evidence_set + result）、is_liar 标记
 5. **生成 doubts**（遵守 `docs/游戏系统/核心玩法/疑点系统.md`）：
+   - **只写配置表真字段**：`id` / `text` / `isFragment` / `unlock_condition`，不写 `posed_loop`/`resolved_loop`/`status` 等辅助注释（不入配置表、易过期、跨 Loop 渐进揭示也表达不出）
    - 每条目含 `isFragment` 字段：false 为疑点 / true 为碎片
    - 疑点 condition 优先 2 件（双来源交叉），允许 1 件，禁止 ≥ 3 件
    - 碎片 condition 必须单件
-   - **一对一挂载**：每件证据/证言 ID 在整个 6-Loop state 里只能被一个疑点/碎片的 condition 引用——引用同件证据时必须拆分
+   - **一证多挂无限制**：同一证据/证言 ID 可以同时挂在多条疑点/碎片 condition 里（同 Loop 内或跨 Loop 都行），不需要拆分
    - **时序检查**：每件在 expose 里使用的证据，它所属疑点/碎片的 Loop ≤ 使用它的最早 expose Loop
+   - **挂载范围（明确豁免 lie_source）**：需要挂在某条疑点/碎片 condition 的对象 =  `evidence_set` 里的 `usable_evidence` + `auxiliary_evidence` + `trap_evidence`；**`lie_source`（NPC 在 expose 阶段抛出的 lie testimony）是写作引用，不要求挂在 DoubtConfig.condition**——它属于 ExposeData.testimony 字段，与 DoubtConfig 是不同表的字段。语义上玩家不需要主动"发现"lie，它由 NPC 自动呈现。
    - 文本采用观察式提问，避免结论式
 6. **执行自检清单**（A-G 七段）
 
@@ -54,10 +56,14 @@ disallowedTools: Bash
 - **Expose 对象**：`is_liar: true`, `player_inquiry: null`
 - **Transparency 规则**：NPC 可说个人经历，不可说 Expose 结论、不可泄露 blind_spot 信息
 - **validation_status**：必须为 PASS 才可进入对话生成阶段
-- **双格式兼容**（详见 `.claude/rules/state.md` 历史格式兼容节）：
-  - 新建 Unit（Unit8+）一律用新格式：`active_topics`/`withheld_topics`、`unlock_condition` 结构化数组 `[{type, param}]`、evidence 含 `type`/`pickup`/`analysis`/`description`、按需补 `evidence_registry`/`post_expose_scene`/`turn_cutscene`/`ending_sequence`
-  - 读 Unit2 旧文件时按旧字段解析：`knows`/`does_not_know`/`lie`、`unlock_condition: "item:xxx + testimony:yyy"` 字符串按 `+` 分隔
-  - 不主动回溯改 Unit2 已有 state 文件
+- **Talk ID / NPC key 命名（Unit3+ 一律启用）**：格式 `L{Loop号}_{阶段}_{npc 英文小写}`
+  - 阶段枚举：`opening` / `scene{场景ID}` / `expose` / `postexpose`
+  - 例：`L1_opening_mickey` / `L1_scene3005_foster` / `L1_scene3004_morrison` / `L1_expose_morrison`
+  - 同 Loop 同 NPC 多次出场按场景区分（`L2_scene3013_mary` + `L2_scene3003_mary`）
+  - state 里 NPC 在 `npcs:` 下的 key、对应的 `talk:` 字段、expose 的 `target_talk` 都用此格式
+  - Unit1/Unit2 历史命名不动；Unit3+ 一律新规则
+- **新格式一律启用（Unit3+）**：`active_topics`/`withheld_topics`、`unlock_condition` 结构化数组 `[{type, param}]`、evidence 含 `type`/`pickup`/`analysis`/`description`、按需补 `evidence_registry`/`turn_cutscene`/`ending_sequence`。读 Unit1/Unit2 旧文件时按旧字段解析（`knows`/`does_not_know`/`lie`），不主动回溯改旧 Unit。
+- **不脑补衔接场景**：大纲没明确写"指证后去哪/去找谁"就不要自加 `post_expose_scene`、不要凭空让 NPC 现身。state 只写大纲明示的场景。
 
 ### 自检清单
 
