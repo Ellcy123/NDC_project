@@ -662,7 +662,7 @@ Zack作为侦探，有权限获取这些证据：
 
 **场景**：警局，Zack回来后
 
-**Mickey**（走过来）："Zack，听说你查出了Thomas Sullivan案的真相？"
+**Mickey**（走过来）："Zack，听说你查出了Thomas Smith案的真相？"
 
 **Zack**："正当防卫。Thomas要杀Mary，Helen和Mary联手反抗了他。"
 
@@ -754,8 +754,8 @@ Zack作为侦探，有权限获取这些证据：
 **【案情记录更新】**
 
 ```
-案件编号: 19281120-Sullivan
-死者: Thomas Sullivan, 42岁
+案件编号: 19281120-Smith
+死者: Thomas Smith, 42岁
 死因: 高处坠落，颈椎断裂
 案发地点: Thomas公寓楼顶
 案发时间: 1928年11月20日 22:30
@@ -785,7 +785,7 @@ Zack作为侦探，有权限获取这些证据：
 - 合计玩家选择: 4件
 
 【法律建议】
-建议Morrison按正当防卫处理，不起诉Mary Sullivan和Helen。
+建议Morrison按正当防卫处理，不起诉Mary Smith和Helen。
 
 【未解问题】
 - Thomas的保险单是谁的主意？（循环5）

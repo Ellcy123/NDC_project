@@ -1,9 +1,9 @@
-# Mary Sullivan - Unit3《漫长的坠落》
+# Mary Smith - Unit3《漫长的坠落》
 
 ## 一、外形设定（美术参考）
 
 ### 基本信息
-- 姓名：Mary Sullivan
+- 姓名：Mary Smith
 - 年龄：38岁
 - 职业：家庭主妇
 - 种族/族裔：爱尔兰裔（白人）

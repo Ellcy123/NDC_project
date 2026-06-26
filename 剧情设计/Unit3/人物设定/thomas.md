@@ -1,9 +1,9 @@
-# Thomas Sullivan - Unit3《漫长的坠落》
+# Thomas Smith - Unit3《漫长的坠落》
 
 ## 一、外形设定（美术参考）
 
 ### 基本信息
-- 姓名：Thomas Sullivan
+- 姓名：Thomas Smith
 - 年龄：42岁
 - 职业：失业工厂工人
 - 种族/族裔：爱尔兰裔（白人）

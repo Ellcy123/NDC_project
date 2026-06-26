@@ -1,6 +1,6 @@
 # ============================================================
 # Loop 2 — Mary的嫌疑
-# 本循环说谎者: Mary Sullivan
+# 本循环说谎者: Mary Smith
 # 核心揭示: Mary伪造教堂不在场证明，在楼顶与Thomas争吵并有肢体接触，坚持Thomas"失足"
 # 前序事件: 循环1 Morrison甩手结案，供出Mary的名字"十有八九是他老婆"
 # 时间: 1928年11月21日 约14:00（案发后+15.5小时）
@@ -11,7 +11,7 @@
 # ═══════════════════════════════════════
 
 player_context:
-  chapter_goal: "找到Mary Sullivan，确认她案发当晚的行踪"
+  chapter_goal: "找到Mary Smith，确认她案发当晚的行踪"
   goals:
     primary: "Mary与Thomas的死有什么关系？"
     secondary:
@@ -28,7 +28,7 @@ player_context:
     - "Morrison暗示湖滨信托银行打过招呼，案件比想象的复杂"
   new_directions:
     - direction: "Mary教堂不在场证明"
-      trigger: "Morrison指名Mary Sullivan，需要确认Mary那晚是否真的在教堂祈祷到很晚"
+      trigger: "Morrison指名Mary Smith，需要确认Mary那晚是否真的在教堂祈祷到很晚"
     - direction: "衬衫口红颜色矛盾"
       trigger: "Mary家衣柜深处藏着有珊瑚红口红的Thomas衬衫，与Mary的玫瑰红口红颜色不同"
     - direction: "袖扣织物与披肩一致"
@@ -48,13 +48,13 @@ player_context:
 # ═══════════════════════════════════════
 #
 # 场景状态表: 公寓楼门口(SC3013) → 🎬开篇
-# Zack和Emma来到Sullivan公寓楼门口，Emma回顾L1发现——
+# Zack和Emma来到Smith公寓楼门口，Emma回顾L1发现——
 # Morrison的暗示和脚印线索，引导调查Mary。敲门后Mary在门口应答。
 
 opening:
   scene_id: 3013
   characters: [Zack, Emma]
-  purpose: "Morrison指名Mary Sullivan → Emma回顾L1脚印证据和Morrison暗示 → 公寓楼门口敲门，Mary应门开始调查"
+  purpose: "Morrison指名Mary Smith → Emma回顾L1脚印证据和Morrison暗示 → 公寓楼门口敲门，Mary应门开始调查"
   talk: emma_002
 
   emma_002:
@@ -66,7 +66,7 @@ opening:
       - "Thomas不是自杀，有女性在场"
       - "楼顶有约37码女性脚印，深浅不一"
       - "Morrison说Thomas打老婆，脚印十有八九是Mary的"
-      - "Morrison提到Mary Sullivan住楼下"
+      - "Morrison提到Mary Smith住楼下"
       - "湖滨信托银行打过招呼"
       - "Thomas不是主动跳下的——着地点仅0.8米"
 
@@ -87,7 +87,7 @@ opening:
 # L2 场景状态（全14场景）:
 #   SC3001 楼下现场              → ⏸️无新线索（报纸已移至L1获取）
 #   SC3002 楼顶                  → ⏸️无新线索
-#   SC3003 Sullivan家客厅        → 🔓搜证（Mary对话后解锁，纯搜证无NPC）
+#   SC3003 Smith家客厅        → 🔓搜证（Mary对话后解锁，纯搜证无NPC）
 #   SC3004 警局                  → 🔒Morrison不配合，无法进入
 #   SC3005 法医办公室            → 🔒Foster不在
 #   SC3006 公寓二楼走廊          → 🔒尚未发现二楼线索
@@ -96,7 +96,7 @@ opening:
 #   SC3009 湖滨信托银行公共区域 → 🔒银行尚未出现在调查方向中
 #   SC3010 Margaret鞋坊          → 🔒尚未发现Margaret线索
 #   SC3011 街角                  → 🔒尚未出现在调查方向中
-#   SC3012 Sullivan家卧室        → 🔓搜证
+#   SC3012 Smith家卧室        → 🔓搜证
 #   SC3013 公寓楼门口            → 🎬开篇→🔓对话(Mary)→⚔️指证(Mary)
 #   SC3014 Bernard办公室         → 🔒银行尚未出现在调查方向中
 #   SC3015 三楼走廊              → 🔒尚未发现三楼线索
@@ -149,10 +149,10 @@ scenes:
           name: "Mary手链照片"
           note: "Zack在门口近距离观察Mary时注意到——银质雏菊手链，母亲遗物，Mary下意识摸手链的习惯动作（L5垫板花形压痕联想、L6身份确认的铺垫）"
 
-  # ── SC3003 Sullivan家客厅（纯搜证，无NPC） ──
+  # ── SC3003 Smith家客厅（纯搜证，无NPC） ──
   # Mary对话后解锁，Zack进屋自由搜证。
   - id: 3003
-    name: "Sullivan家客厅"
+    name: "Smith家客厅"
     evidence:
       - id: 3214
         name: "家暴痕迹"
@@ -173,9 +173,9 @@ scenes:
         name: "标注报纸"
         note: "🔒伏笔——《艾斯弗德论坛报》1928年10月保险版面，有大量专业批注+银行内部缩写术语（ACC.D, BEN.CHG, EXC.CLSE, CLM.48HR）。L2获取时不理解含义；L5笔迹比对+垫板压痕分析的核心物证"
 
-  # ── SC3012 Sullivan家卧室（搜证） ──
+  # ── SC3012 Smith家卧室（搜证） ──
   - id: 3012
-    name: "Sullivan家卧室"
+    name: "Smith家卧室"
     evidence:
       - id: 3203
         name: "衬衫"
@@ -217,7 +217,7 @@ scenes:
         withheld_topics: []
 
         # ── 2. 玩家询问意图 ──
-        player_inquiry: '"Morrison指名Mary Sullivan，教堂神父是唯一第三方证人" # 6'
+        player_inquiry: '"Morrison指名Mary Smith，教堂神父是唯一第三方证人" # 6'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
@@ -253,7 +253,7 @@ scenes:
 # Mary的Talk/证词见上方 scenes → SC3013 → mary_001
 
 expose:
-  target: "Mary Sullivan (03)"
+  target: "Mary Smith (03)"
   total_rounds: 4
 
   # ── 第一轮：蜡油封住了第5章 ──

@@ -67,7 +67,7 @@ def fetch_all_mindmap_nodes():
     """Paginate through all mindmap nodes on the board."""
     all_nodes = []
     cursor = None
-    for page in range(50):
+    for page in range(200):
         u = MINDMAP_BASE + (f'?limit=50&cursor={cursor}' if cursor else '?limit=50')
         status, data = api('GET', u)
         if status != 200:

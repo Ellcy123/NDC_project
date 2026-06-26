@@ -51,7 +51,7 @@
 │  "笔迹比对分析报告                                          │
 │                                                              │
 │   检测对象A：报纸批注笔迹（Zack Brennan提交）               │
-│   检测对象B：Thomas Sullivan笔迹样本（日记、遗书）          │
+│   检测对象B：Thomas Smith笔迹样本（日记、遗书）          │
 │                                                              │
 │   【样本A特征】                                             │
 │   - 字迹工整，笔画流畅                                      │
@@ -66,13 +66,13 @@
 │   - 日记样本：'I owe mony to bank. Cant pay.'              │
 │                                                              │
 │   【比对结论】                                              │
-│   报纸批注笔迹与Thomas Sullivan笔迹完全不同                 │
+│   报纸批注笔迹与Thomas Smith笔迹完全不同                 │
 │   • 字体风格差异显著                                        │
 │   • 书写习惯完全不同                                        │
 │   • 专业术语使用差异巨大                                    │
 │                                                              │
 │   【结论】                                                  │
-│   报纸批注非Thomas Sullivan所写                             │
+│   报纸批注非Thomas Smith所写                             │
 │   写作者具有专业保险知识背景                                │
 │                                                              │
 │   Dr. Foster"                                               │
