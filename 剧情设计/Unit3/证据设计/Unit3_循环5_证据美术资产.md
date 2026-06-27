@@ -13,7 +13,7 @@
 | 3501 | Bernard 的皮质垫板 | Bernard's Leather Desk Pad | Item · Analysis | ✓ | SC3014 | — |
 | 3502 | 垫板上的手链压痕 | Bracelet Imprint on Pad | Clue · Analysis | ✓ | SC3014 | 🔵 L6 |
 | 3503 | 办公桌全家福 / 年度表彰状 | Family Photo & Annual Award | Clue | ✗ | SC3014 | — |
-| 3570 | 标注报纸压痕比对报告（派生）| Newspaper Imprint Comparison | Clue · Analysis | ✗ | SC3014 | — |
+| 3570 | 标注报纸压痕比对报告（派生）| Newspaper Imprint Comparison | Clue · Analysis | ✗ | SC3014 | Expose R1 主力 |
 
 ---
 
@@ -56,7 +56,7 @@
 
 ### 3570 标注报纸压痕比对报告（派生）/ Newspaper Imprint Comparison Report
 
-- **类型**：Clue · Analysis（🧪 派生——3501 皮质垫板 + 3206 Thomas 家标注报纸）
+- **类型**：Clue · Analysis（🧪 派生——3501 皮质垫板 + 3206 Thomas 家标注报纸；Expose R1 主力）
 - **位置**：SC3014（执行"分析"动作触发）
 - **物品描述**：
   - 系统生成对比报告，A4

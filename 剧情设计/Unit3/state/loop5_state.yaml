@@ -13,7 +13,7 @@
 # C. NPC 条目    PASS — Bernard / Helen（判决后补充）
 # D. 目标对齐    PASS — 大纲"银行是否诱导 Thomas 杀妻骗保"
 # E. 信息节奏    PASS — 隐藏：Mary 即"戴花瓣缺口手链的女人"（玩家可以从 L2 花形手链伏笔推一半，但 L5 仅披露'有这样一个女人来过'，不直接指认 Mary，留给 L6 击穿）；Seamus 润滑油线索（L6）；法医鉴定报告精确数值（L6）
-# G. Expose 逻辑 PASS — R1（"按标准流程"谎言）= 皮质垫板 + 标注报纸；R2（"没人来过"谎言）= 垫板上的手链压痕
+# G. Expose 逻辑 PASS — R1（"按标准流程"谎言）= 标注报纸压痕比对报告；R2（"没人来过"谎言）= 垫板上的手链压痕
 #
 # validation_status: PASS
 # ============================================================
@@ -109,7 +109,7 @@ scenes:
         type: item
         pickup: true
         analysis: true
-        note: "关键——表面有多层压痕（侧光观察）；可与 Thomas 家标注报纸 3206 做压痕比对（Expose R1 主力）"
+        note: "关键——表面有多层压痕（侧光观察）；与 Thomas 家标注报纸 3206 做压痕比对生成 3570（压痕比对玩法输入；R1 出示的是产出的 3570 报告）"
         description: "Bernard 办公桌上的棕色皮质书写垫板；侧光下可见多层压痕，痕迹累积时间不一"
 
       - id: 3502
@@ -132,7 +132,7 @@ scenes:
         type: clue
         pickup: false
         analysis: true
-        note: "🧪 派生证据——皮质垫板压痕 vs Thomas 家标注报纸 3206 → 完全吻合（Expose R1 配套）"
+        note: "🧪 派生证据——皮质垫板压痕 vs Thomas 家标注报纸 3206 → 完全吻合（Expose R1 主力）"
         description: "系统分析：皮质垫板压痕中的一份与 Thomas 家标注报纸 3206 的字迹和压力分布完全吻合——Thomas 那份'银行术语标注报纸'是在 Bernard 桌上写的"
 
     npcs:
@@ -216,16 +216,9 @@ expose:
     lie: "按标准流程办保单 · 没做多余的事"
     lie_source: 3065001
     usable_evidence:
-      - id: 3501
-        name: "Bernard 的皮质垫板"
-        用途: "侧光观察垫板上有多层压痕——他桌上写过的不止保单"
-      - id: 3206
-        name: "标注报纸（L2 来）"
-        用途: "Thomas 家标注报纸压痕与垫板压痕完全吻合——那份银行术语注释报纸是在 Bernard 桌上写的，证明 Bernard 在主动'教'Thomas 怎么用保险"
-    auxiliary_evidence:
       - id: 3570
         name: "标注报纸压痕比对报告（派生）"
-        用途: "辅助——系统分析报告确认压痕吻合"
+        用途: "系统分析：皮质垫板压痕中的一份与 Thomas 家标注报纸 3206 的字迹和压力分布完全吻合——Thomas 那份'银行术语标注报纸'是在 Bernard 桌上写的，证明 Bernard 在主动'教'Thomas 怎么用保险"
     result: |
       Bernard 被迫承认主动向 Thomas 解释了'用妻子做受益人'的方案：
       - Zack 追问：'那除了 Thomas，还有其他人来过吗？'
@@ -290,7 +283,7 @@ doubts:
     isFragment: true
     unlock_condition:
       - type: 1
-        param: "3570"     # 标注报纸压痕比对报告（Expose R1 辅助）
+        param: "3570"     # 标注报纸压痕比对报告（Expose R1 主力）
 
 # ─────────────────────────────
 # 六、证据 ID 汇总
@@ -303,7 +296,7 @@ evidence_registry:
     pickup: true
     analysis: true
     first_scene: 3014
-    note: "关键——Expose R1 主力"
+    note: "关键——压痕比对玩法输入（与 3206 比对生成 3570；R1 出示 3570）"
 
   - id: 3502
     name: "垫板上的手链压痕"
@@ -326,4 +319,4 @@ evidence_registry:
     pickup: false
     analysis: true
     first_scene: 3014
-    note: "🧪 派生证据——R1 辅助"
+    note: "🧪 派生证据——R1 主力"
