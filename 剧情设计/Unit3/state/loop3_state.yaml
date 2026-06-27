@@ -12,7 +12,7 @@
 # C. NPC 条目    PASS — Helen / Bernard / Seamus
 # D. 目标对齐    PASS — 大纲"Helen 和 Thomas 的关系导致了悲剧"
 # E. 信息节奏    PASS — 隐藏：油痕检测能力（L4）、Mary+Helen 19 号预先布置陷阱（L4/L6）、Bernard 诱导购买（L5）、Mary 主动咨询（L5/L6）、润滑油"Helen 案发前一天送 Seamus"（L6）
-# G. Expose 逻辑 PASS — R1（出轨谎言）= Bernard 证词；R2（保险动机谎言）= 保险单副本；R3（旁听+没去天台谎言）= Helen 家带白漆螺丝帽 + 护栏断口缺件
+# G. Expose 逻辑 PASS — R1（情人无瓜葛谎言，需先口红突发事件解锁）= Bernard 旁听证词；R2（保险动机谎言）= 保险单副本；R3（旁听+没去天台谎言）= Helen 家带白漆螺丝帽 + 护栏断口缺件
 #
 # validation_status: PASS
 # ============================================================
@@ -167,8 +167,7 @@ scenes:
 
         active_topics:
           - "身份：Thomas 的邻居"
-          - "与 Thomas 关系：只是有一次聊天诉苦，再也没有其他联系（谎言）"
-          - "对坠楼的判断：Thomas 是自己上楼顶掉的（谎言）"
+          - "与 Thomas 关系：（口红突发事件、Emma 点明出轨后才解锁）承认是情人——和 Thomas 只是有几次聊天诉苦，但没有更深联系、与他的死无关（谎言）"
           - "可搜身观察：Helen 嘴上深红色口红、神色闪躲"
         withheld_topics:
           - "Helen 与 Mary 19 号一起上天台预先布置陷阱"   # L6 才揭
@@ -181,14 +180,13 @@ scenes:
 
         testimony_ids:
           - 3053001  # Helen：邻居身份（中性事实）
-          - 3053002  # ⚠谎言: Helen：只是有一次聊天诉苦，再也没有其他联系（Expose R1 lie source）
-          - 3053003  # ⚠谎言: Helen：Thomas 是自己上楼顶掉的（中性表述但呼应狡辩）
+          - 3053002  # ⚠谎言: Helen（口红突发事件后解锁）：和 Thomas 只是有几次聊天诉苦，是情人但没有更深联系、与他的死无关（Expose R1 lie source）
 
     # 突发事件：Emma 点明 Helen 即出轨对象
     interrupts:
       - id: helen_lover_reveal
-        trigger: "玩家在 Helen 家拾取/查看 3308（嘴上口红）或 3306（外出鞋）后"
-        description: "Emma 拉住 Zack：'你看她的口红——衣柜里那件衬衫上的颜色，就是这种。'  Thomas 的出轨对象是 Helen。"
+        trigger: "玩家在 Helen 家拾取/查看 3308（嘴上口红）后"
+        description: "Emma 拉住 Zack：'你看她的口红——衣柜里那件衬衫上的颜色，就是这种。'  Thomas 的出轨对象是 Helen。触发后才解锁对 Helen 的追问——她这时才回应 R1 谎言：承认是情人、只是诉苦、与他的死无关。"
 
   # ── SC3002 楼顶 二次搜证（凭楼顶钥匙偷偷打开警戒线） ──
   - id: 3002
@@ -326,20 +324,17 @@ expose:
     的退守谎言为 L4 揭破。
 
   round_1:
-    lie: "只是有一次聊天诉苦，再也没有其他联系"
+    lie: "我和 Thomas 只是有几次聊天诉苦，是情人没错，但没有更深的联系，跟他的死没有瓜葛"
     lie_source: 3053002
+    pre_condition: "需先触发口红突发事件（helen_lover_reveal）——Emma 点明 Helen 是出轨对象后，此 R1 谎言选项才出现"
     usable_evidence:
       - id: 3063001
         name: "Bernard 证词（Helen 旁听过意外赔付咨询）"
-        用途: "Helen 与 Thomas 一起去银行听过赔付咨询——不是'一次诉苦'那么简单"
-    auxiliary_evidence:
-      - id: 3308
-        name: "Helen 嘴上深红色口红（环境叙事）"
-        用途: "辅助——颜色与衬衫口红印吻合，玩家可在内心补完出轨链"
+        用途: "Helen 和 Thomas 一起去银行旁听'意外赔付'咨询——情人不会一起研究意外赔付，她卷入的是保险计划，绝非'与死无关'"
     result: |
-      Helen 沉默后承认与 Thomas 是出轨关系：
-      - 银行咨询的细节，不是普通邻居会去旁听的
-      - Helen 退守：'就算我和 Thomas 有关系，又不能说明我和他的死有关'
+      Helen 被驳——情人不会陪着去研究意外赔付：
+      - 一起旁听意外赔付咨询，说明她卷入的是 Thomas 的保险计划，不是单纯私情
+      - Helen 退守：进入 R2，辩称'保险是 Thomas 良心发现给 Mary 买的'
 
   round_2:
     lie: "是 Thomas 良心发现给 Mary 买的保险"
