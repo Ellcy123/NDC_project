@@ -196,15 +196,16 @@ scenes:
         name: "沾有口红印的衬衫"
         type: item
         pickup: true
-        note: "关键——藏在衣柜底层，深红色口红印；与 Mary 藏起的五支浅色口红均不符；约一周前痕迹（Expose R3 主力）"
-        description: "Thomas 衣柜底层折叠的白色衬衫；衣领与右胸前可见深红色口红印，颜色偏暗红、明显不同于 Mary 的浅色口红系，痕迹有约一周自然褪色"
+        note: "关键——藏在衣柜底层，深红色口红印；与口红盒 3208 比对后描述更新为'口红非 Mary 所有'（Expose R3 主力）"
+        description: "Thomas 衣柜底层折叠的白色衬衫；衣领与右胸前可见一抹深红色口红印，颜色偏暗红、饱和显眼，痕迹有约一周自然褪色"
+        description_analyzed: "（与 Mary 口红盒比对后）衬衫上的 Deep Crimson 与 Mary 的五支浅色口红逐一比对均不符——这口红不是 Mary 留的"
 
       - id: 3208
         name: "Mary 的浅色口红盒"
         type: item
         pickup: true
         note: "梳妆台深处藏着五支偏浅色口红；Mary 平时几乎不化妆；对比锚点（五色均与衬衫深红口红印不一致）"
-        description: "梳妆台深处的小盒子，里面收着五支低饱和口红：Light Rose、Pale Peach、Dusty Pink、Soft Coral、Nude Beige；都偏浅，与衬衫上的 Deep Crimson 不符"
+        description: "梳妆台深处的小盒子，里面收着五支低饱和口红：Light Rose、Pale Peach、Dusty Pink、Soft Coral、Nude Beige；色调都偏浅、低饱和，看得出 Mary 平时几乎不化浓妆"
 
       - id: 3209
         name: "Mary 外出鞋"
@@ -218,7 +219,7 @@ scenes:
         type: clue
         pickup: false
         analysis: true
-        note: "🧪 派生证据——由 3207 + 3208 综合派生；Mary 藏起的五支浅色口红全部不匹配 Deep Crimson"
+        note: "🧪 派生证据——由 3207 + 3208 比对玩法产出；比对完成后回写更新衬衫 3207 的描述（R3 出示更新后的衬衫，本报告不在 R3 直接出示）"
         description: "系统分析报告：衬衫口红印颜色为 Deep Crimson；Mary 口红盒内五支口红均为浅色系，逐一比对后没有任何一支匹配——衬衫上的口红不可能是 Mary 留下"
 
   # ── SC3007 St.Patrick 教堂 ──
@@ -330,15 +331,11 @@ expose:
     lie_source: 3022001  # R1 系列退守延续；本轮主谎言无独立 testimony，Mary 在 Expose 现场临时说出
     usable_evidence:
       - id: 3207
-        name: "沾有口红印的衬衫"
-        用途: "Thomas 衣柜底层藏着一件沾深红色口红印的衬衫，与 Mary 藏起的五支浅色口红均不符——Mary 早就知道 Thomas 另有女人"
-    auxiliary_evidence:
-      - id: 3270
-        name: "口红颜色比对报告（派生）"
-        用途: "辅助——派生分析报告确认 Mary 藏起的五支浅色口红均与衬衫深红口红印不一致"
+        name: "沾有口红印的衬衫（已比对）"
+        用途: "经与 Mary 口红盒比对后更新的衬衫——衬衫上的 Deep Crimson 与 Mary 的五支浅色口红均不符，口红不是 Mary 留的；Mary 早就知道 Thomas 另有女人，并非毫无动机"
     result: |
-      Zack 推理：这件衬衫说明 Mary 早就知道 Thomas 另有女人，她并不是毫无动机；
-      而这个女人是谁，会成为下一轮调查方向。
+      Zack 推理：这件衬衫上的口红不是 Mary 的——说明 Mary 早就知道 Thomas 另有女人，
+      她并不是毫无动机；而这个女人是谁，会成为下一轮调查方向。
 
   post_expose:
     description: |
@@ -405,7 +402,7 @@ doubts:
     isFragment: true
     unlock_condition:
       - type: 1
-        param: "3270"        # 口红颜色比对报告（Expose R3 辅助）
+        param: "3270"        # 口红颜色比对报告（口红比对玩法产物）
 
   - id: 3207
     text: "Mary 外出鞋的鞋码——6 码，与楼顶女鞋印鞋码吻合"
@@ -480,7 +477,7 @@ evidence_registry:
     type: item
     pickup: true
     first_scene: 3012
-    note: "关键——Expose R3 主力（Mary 早知 Thomas 出轨）"
+    note: "关键——Expose R3 主力（与口红盒 3208 比对后描述更新为'口红非 Mary 所有'）"
 
   - id: 3208
     name: "Mary 的浅色口红盒"
@@ -516,4 +513,4 @@ evidence_registry:
     pickup: false
     analysis: true
     first_scene: 3012
-    note: "🧪 派生证据——R3 辅助（衬衫深红口红印 vs Mary 五支浅色口红全部不一致）"
+    note: "🧪 派生证据——口红比对玩法产物（衬衫深红口红印 vs Mary 五支浅色口红全部不一致）；比对后回写更新衬衫 3207 描述，R3 不直接出示本报告"
