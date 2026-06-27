@@ -13,11 +13,11 @@
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
-# B. 证据覆盖     PASS — 大纲 Loop1 所有证据（3101-3109）已分配到场景
+# B. 证据覆盖     PASS — 大纲 Loop1 所有证据（3102-3110）已分配到场景
 # C. NPC 条目     PASS — Mickey / Foster / Morrison 各含 4 必填块
 # D. 目标对齐     PASS — primary goal 与大纲"Thomas 真的是自杀吗"一致
 # E. 信息节奏     PASS — 严格隐藏：脚印不说"两人"、Thomas 手油不解读、Jameson 不暗示来源、护栏区警戒线封锁
-# G. Expose 逻辑  PASS — R1（自杀谎言）= 外墙抓挠 + Foster 证词；R2（独处谎言）= 女性脚印
+# G. Expose 逻辑  PASS — R1（自杀谎言）= 外墙照片 + 尸体手部伤痕以及墙皮灰；R2（独处谎言）= 女性脚印
 # ──────────────────────────────────────────────────────────
 #
 # validation_status: PASS
@@ -41,12 +41,12 @@ player_context:
     - direction: "Mickey 的银行案线索"
       trigger: "Mickey 在起诉湖滨信托银行的过程中调查到 Thomas 案——死者死前欠贷款 + 巨额保险，疑似与 Frank 案同一模式"
     - direction: "坠楼方式可疑"
-      trigger: "外墙有抓挠痕迹（本能抓握）+ 着地点距楼体仅 0.8 米（自跳应远于此）"
+      trigger: "外墙有抓挠痕迹 + 尸体手部有抓挠伤和墙皮灰（本能抓墙求生）"
     - direction: "现场可能不止一人"
       trigger: "楼顶发现 6 码女性脚印（凌乱、暂时不能判断人数），死者是男性"
 
   post_expose_knowledge:
-    - "Thomas 不是主动跳下的——外墙抓挠痕迹 + Foster 法医分析（手部本能抓痕）共同指向坠落瞬间本能反应"
+    - "Thomas 不是主动跳下的——外墙抓挠痕迹与尸体手部伤痕、墙皮灰对应，说明坠落时曾本能抓墙求生"
     - "案发现场不止 Thomas 一人——楼顶有 6 码女性脚印"
     - "脚印的主人 Morrison 推测可能是 Thomas 的妻子 Mary Smith（住楼下）"
     - "Morrison 不愿深查，想处理成自杀结案——'这案子内部牵扯太多'"
@@ -117,18 +117,11 @@ scenes:
       Chicago Tribune 11 月 21 日的早报散落在警戒线外，被风掀着边角。
 
     evidence:
-      - id: 3101
-        name: "着地点照片"
-        type: clue
-        pickup: true
-        note: "关键——尸体距楼体仅 0.8 米，距离异常偏近，配合外墙抓挠痕迹、不符合主动跳下姿态（Expose R1 辅助）"
-        description: "粉笔轮廓与楼体垂直距离测量照片：约 0.8 米"
-
       - id: 3102
         name: "外墙照片"
         type: clue
         pickup: true
-        note: "关键——外墙面有新鲜抓挠痕迹，符合坠落瞬间本能抓握（Expose R1 主力，配合 Foster 证词）"
+        note: "关键——外墙面有新鲜抓挠痕迹，符合坠落瞬间本能抓握（Expose R1 主力，配合尸体手部伤痕以及墙皮灰 3110）"
         description: "三楼至着地点之间的外墙特写：几道指甲刮挠痕迹横向分布"
 
       - id: 3103
@@ -188,8 +181,15 @@ scenes:
         note: "🔵 跨 Loop——Thomas 右袖扣处发现异源黑色织物纤维（L2 用于击破 Mary 的'离开教堂未到现场'）"
         description: "解剖台旁证物袋：Thomas 右袖扣勾下的一缕黑色织物纤维，质地特殊"
 
+      - id: 3110
+        name: "尸体手部伤痕以及墙皮灰"
+        type: clue
+        pickup: true
+        note: "关键——死者手部有抓挠伤，指甲与伤口处残留墙皮灰（Expose R1 主力，配合外墙照片 3102）"
+        description: "死者手部有抓挠伤，指甲与伤口处残留墙皮灰"
+
       - id: 3108
-        name: "尸体手部油迹（线索）"
+        name: "尸体手部油迹"
         type: clue
         pickup: true
         note: "🔵 跨 Loop——伏笔，本 Loop 仅记录现象：'指尖与掌心有油，手背无油'，不解读来源（L4 才有油痕检测仪可分析）"
@@ -207,12 +207,12 @@ scenes:
         talk: L1_scene3005_foster
         is_liar: false
         motive: "提供专业法医分析——察觉到酒精浓度异常和手部油痕这两个反常细节，但选择'用精确制造模糊'：只陈述粗略结论，把精确数值留到本 Loop 之外"
-        mindset: "职业严谨而克制——用语经过斟酌，'严重醉酒'代替'0.25%'，'本能抓痕'是事实陈述而非动机推论"
+        mindset: "职业严谨而克制——用语经过斟酌，'严重醉酒'代替'0.25%'，不主动推断动机"
 
         # ── 1. NPC 已知信息 ──
         active_topics:
           - "死亡时间：11 月 20 日 22:00-23:00 之间"
-          - "坠楼分析：死者严重醉酒；手部有本能抓痕（指甲下有死者本人皮肤组织）"
+          - "坠楼分析：死者严重醉酒（具体浓度待精密检测）"
           - "随身物品移交：袖扣处发现异源纤维，已分装证物袋"
         withheld_topics:
           - "精确酒精浓度 0.25%"                      # L6 法医鉴定报告才给出
@@ -228,7 +228,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 3041001  # Foster：坠楼分析显示死者严重醉酒，手部有本能抓痕；具体酒精浓度待精密检测
+          - 3041001  # Foster：坠楼分析显示死者严重醉酒（具体浓度待精密检测）
           - 3041002  # Foster：死亡时间是昨晚 22:00-23:00 之间
 
   # ── SC3004 警局（Morrison 对话 + 指证场地） ──
@@ -250,7 +250,7 @@ scenes:
         # ── 1. NPC 已知信息 ──
         active_topics:
           - "案件初判：自杀，烂酒鬼喝多了自己跳的"
-          - "现场描述：只有死者一人；尸体由警察巡逻发现"
+          - "现场描述：案发现场没有其他人在场痕迹；尸体由警察巡逻发现"
           - "Thomas 是死者，Mary 是 Thomas 的妻子（指证后追加披露）"
         withheld_topics:
           - "Morrison 与本案相关的腐败动机详情"
@@ -262,7 +262,7 @@ scenes:
         # ── 3. 可提取证词 ──
         testimony_ids:
           - 3031001  # ⚠谎言: Morrison：他自己跳下去的（Expose R1 lie source）
-          - 3031002  # ⚠谎言: Morrison：现场只有死者一人（Expose R2 lie source）
+          - 3031002  # ⚠谎言: Morrison：案发现场没有其他人在场痕迹（Expose R2 lie source）
           - 3031003  # Morrison：尸体由警察巡逻发现（中性事实）
 
 # ─────────────────────────────
@@ -279,7 +279,7 @@ expose:
 
   context: |
     Morrison 想以"自杀"快速结案，懒得继续调查。
-    Zack 必须依次击破"自杀"和"只有死者一人"两个谎言，
+    Zack 必须依次击破"自杀"和"没有其他人在场痕迹"两个谎言，
     把案件性质从"自杀"扳回"可能的他杀或意外"，并把 Mary 拽入调查视野。
 
   # ── 第一轮：不是自杀 ──
@@ -289,23 +289,18 @@ expose:
     usable_evidence:
       - id: 3102
         name: "外墙照片"
-        用途: "外墙有指甲刮挠痕迹——坠落瞬间本能抓握，主动跳下不会有此反应"
-      - id: 3041001
-        name: "Foster 坠楼分析证词"
-        用途: "Foster：死者手部有本能抓痕——姿态与'自跳'不符"
-    auxiliary_evidence:
-      - id: 3101
-        name: "着地点照片"
-        用途: "辅助印证——尸体距楼体仅 0.8 米，距离异常偏近，配合外墙抓痕、不符合主动跳下姿态"
+        用途: "外墙有抓挠痕迹——坠落瞬间本能抓握，主动跳下不会有此反应"
+      - id: 3110
+        name: "尸体手部伤痕以及墙皮灰"
+        用途: "死者手部有抓挠伤，指甲与伤口处残留墙皮灰——与外墙抓挠痕迹对应，说明坠落时本能抓墙求生"
     result: |
       Morrison 被迫承认 Thomas 不是主动跳下：
-      - 外墙抓挠 + 手部本能抓痕共同指向本能反应而非自跳
+      - Zack 推理：墙面抓挠痕迹与尸体手部伤痕、墙皮灰对应，说明 Thomas 坠落时曾本能抓墙求生，不像主动跳楼；但仍不能区分意外坠楼和谋杀
       - Morrison 退守："那也可能是意外坠楼——喝多了站不稳就掉下去了"
-      - Zack 推理：不可能是自杀，但有可能是意外坠楼或谋杀
 
   # ── 第二轮：现场不只 Thomas 一个人 ──
   round_2:
-    lie: "现场只有死者一人"
+    lie: "案发现场没有其他人在场痕迹"
     lie_source: 3031002
     usable_evidence:
       - id: 3104
@@ -314,10 +309,10 @@ expose:
     trap_evidence:
       - id: 3105
         name: "男性脚印照片"
-        用途: "陷阱——Thomas 自己的脚印，是'死者的痕迹'不构成反驳"
+        用途: "陷阱——Thomas 自己的脚印，是'死者的痕迹'不构成反驳'没有其他人在场痕迹'"
     result: |
       Morrison 被迫承认现场有女性：
-      - Zack 推理：现场还有其他的女性在
+      - Zack 推理：女性脚印说明现场还有其他女性到过
       - Morrison 退守："脚印可能是大白天有人晒衣服踩的"
       - 时间反驳：脚印新鲜——边缘未被风蚀、与昨夜降露形成的覆盖关系一致，推断留下时间就在昨夜 22:00 前后；白天晒衣服场景不成立
       - Morrison 恼怒甩手："你非要搞出个谋杀案？"
@@ -341,13 +336,13 @@ expose:
 
 doubts:
   - id: 3101
-    text: "Thomas 真的是自杀吗？——外墙有抓挠痕迹，且距楼体仅 0.8 米"
+    text: "Thomas 真的是自杀吗？——外墙有抓挠痕迹，尸体手部有伤痕和墙皮灰"
     isFragment: false
     unlock_condition:
       - type: 1
         param: "3102"        # 外墙照片
       - type: 1
-        param: "3041001"     # Foster 坠楼分析证词
+        param: "3110"        # 尸体手部伤痕以及墙皮灰
 
   - id: 3102
     text: "案发现场的女性是谁？——楼顶有 6 码女鞋印"
@@ -367,11 +362,11 @@ doubts:
 
   # ── 碎片（isFragment=true）：单件挂载，承担"指证辅助/陷阱/跨 Loop 主力"证据的挂载义务 ──
   - id: 3104
-    text: "Thomas 着地点距楼体仅 0.8 米——是否符合自跳距离？"
+    text: "尸体手部的抓挠伤和墙皮灰——坠落时曾本能抓墙？"
     isFragment: true
     unlock_condition:
       - type: 1
-        param: "3101"        # 着地点照片（Expose R1 辅助）
+        param: "3110"        # 尸体手部伤痕以及墙皮灰（Expose R1 主力）
 
   - id: 3105
     text: "天台男性脚印的归属——属于 Thomas 自己？"
@@ -407,13 +402,6 @@ doubts:
 
 evidence_registry:
   # Loop1 = 31xx 系列
-  - id: 3101
-    name: "着地点照片"
-    type: clue
-    pickup: true
-    first_scene: 3001
-    note: "关键——尸体距楼体 0.8 米（Expose R1 辅助）"
-
   - id: 3102
     name: "外墙照片"
     type: clue
@@ -456,8 +444,15 @@ evidence_registry:
     first_scene: 3005
     note: "🔵 跨 Loop——异源黑色织物纤维（L2 用于击破 Mary）"
 
+  - id: 3110
+    name: "尸体手部伤痕以及墙皮灰"
+    type: clue
+    pickup: true
+    first_scene: 3005
+    note: "关键——Expose R1 主力（抓挠伤 + 墙皮灰，配合外墙照片）"
+
   - id: 3108
-    name: "尸体手部油迹（线索）"
+    name: "尸体手部油迹"
     type: clue
     pickup: true
     first_scene: 3005
