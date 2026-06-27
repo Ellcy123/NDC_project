@@ -15,7 +15,7 @@
 | 3303 | Mary 人寿保险单原件 | Mary's Life Insurance (Original) | Item | ✓ | SC3008 | — |
 | 3304 | 楼顶钥匙 | Rooftop Key | Item | ✓ | SC3008 | 🔵 L4 |
 | 3305 | Helen 的猫 | Helen's Cat | Clue | ✗ | SC3008 | — |
-| 3306 | Helen 外出鞋 | Helen's Outdoor Shoes | Item | ✓ | SC3008 | 🔵 L6 |
+| 3306 | Helen 外出鞋 | Helen's Outdoor Shoes | Clue | ✗ | SC3008 | 🟣 环境叙事 |
 | 3307 | Helen 家的 Jameson 酒 | Helen's Jameson Whiskey | Item | ✓ | SC3008 | 🔵 L6 |
 | 3308 | Helen 嘴上深红色口红 | Helen's Deep Crimson Lipstick | Clue | ✗ | SC3008 | — |
 | 3309 | 被破坏的护栏 | Damaged Railing | Clue | ✓ | SC3002 | — |
@@ -86,16 +86,16 @@
   - 尾巴中段毛色被油渍粘成一束（与钥匙油迹同源）
 - **美术参考**：1920s 家养橘猫；尾巴油渍可放大特写
 
-### 3306 Helen 外出鞋 / Helen's Outdoor Shoes · 🔵 L6
+### 3306 Helen 外出鞋 / Helen's Outdoor Shoes
 
-- **类型**：Item（🔵 L6 用——6 码女鞋与楼顶女鞋印同款同码）
+- **类型**：Clue（🟣 环境叙事，不可拾取——6 码女鞋与楼顶女鞋印同款同码）
 - **位置**：SC3008 鞋架
 - **物品描述**：
   - 黑色小皮鞋，6 码（女装）
   - 与 Mary 外出鞋 3209 同款同码
-  - 鞋底沟槽有油迹（轮椅维护油）
+  - 鞋底沟槽肉眼可见油迹
   - 鞋头略磨损
-- **美术参考**：与 3209 同款同码——为后续比对留下伏笔；本 Loop 不解释含义
+- **美术参考**：与 3209 同款；鞋底油迹肉眼可见——环境暗示（玩家自悟 Helen 上过涂油天台），本 Loop 不解释含义
 
 ### 3307 Helen 家的 Jameson 酒 / Helen's Jameson Whiskey · 🔵 L6
 
@@ -168,6 +168,7 @@
 
 本 Loop 严守隐藏：
 - **3304 楼顶钥匙油迹**：本 Loop 已观察到油迹存在，但本 Loop 没有油痕检测仪——不能分析油的成分（L4 油痕检测仪到位后才可与门把手油 3402、Helen 家油 3404 比对）
-- **3306/3307**：本 Loop 仅作"鞋码巧合 / 同款酒"记录；L6 才结合"Mary+Helen 19 号一起布陷阱 + Helen 灌酒"的真相揭破
+- **3306**：鞋码巧合 + 鞋底油迹，仅作环境叙事（玩家自悟 Helen 上过涂油天台，不强制指认；非跨 Loop 证物）
+- **3307**：本 Loop 仅作"同款酒"记录；L6 才结合"Helen 灌酒"的真相揭破
 - **3311 地面油迹示意图**：本 Loop 仅作"陷阱已布"层面，"油的归属"L6 才用（Seamus 关于润滑油的新陈述）
 - **3308 Helen 口红颜色**：环境叙事，不替玩家说出"Helen=出轨对象"——由 Emma 在 Helen 家点明（state 突发事件 helen_lover_reveal）

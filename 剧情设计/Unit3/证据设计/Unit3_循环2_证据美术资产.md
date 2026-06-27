@@ -18,7 +18,7 @@
 | 3206 | 标注报纸 | Annotated Newspaper | Item | ✓ | SC3003 | 🔵 L5 |
 | 3207 | 沾有口红印的衬衫 | Lipstick-Stained Shirt | Item | ✓ | SC3012 | — |
 | 3208 | Mary 的浅色口红盒 | Mary's Pale Lipstick Case | Item | ✓ | SC3012 | — |
-| 3209 | Mary 外出鞋 | Mary's Outdoor Shoes | Item | ✓ | SC3012 | — |
+| 3209 | Mary 外出鞋 | Mary's Outdoor Shoes | Clue | ✗ | SC3012 | 🟣 环境叙事 |
 | 3210 | 倒下的蜡烛残骸 | Toppled Candle Remains | Item | ✓ | SC3007 | — |
 | 3211 | 教堂祈祷册 | Church Prayer Book | Clue | ✗ | SC3007 | — |
 | 3270 | 口红颜色比对报告（派生） | Lipstick Color Comparison Report | Clue | ✗ | SC3012 | — |
@@ -122,7 +122,7 @@
 
 ### 3209 Mary 外出鞋 / Mary's Outdoor Shoes
 
-- **类型**：Item（关键——6 码女鞋与楼顶女鞋印鞋码吻合）
+- **类型**：Clue（🟣 环境叙事，不可拾取——6 码女鞋与楼顶女鞋印鞋码吻合）
 - **位置**：SC3012 鞋架
 - **物品描述**：
   - 一对黑色小皮鞋
