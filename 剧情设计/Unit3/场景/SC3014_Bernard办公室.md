@@ -45,9 +45,9 @@ Bernard 的私人办公室。
 
 ## 突发事件
 
-### L5：小 Charles 登门拜访
+### L5：Charles Miller 登门拜访
 - **触发**：玩家刚进入 SC3014 即触发
-- **内容**：一个穿小礼服的少年（Charles，报社关系）登门找 Emma，说有头版报道的事要立刻聊。Emma 给 Zack 一个'你独自处理'的眼神后离开。Bernard 神情松了一拍——这场审问只剩 Zack 一个人对他
+- **内容**：Charles Miller（40 岁出头，Emma 的慈善投资人）登门找 Emma，说慈善事务上有要紧事要立刻谈。Emma 给 Zack 一个'你独自处理'的眼神后离开。Bernard 神情松了一拍——这场审问只剩 Zack 一个人对他
 
 ## 指证流程
 
