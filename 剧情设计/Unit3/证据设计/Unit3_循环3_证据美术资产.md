@@ -10,7 +10,7 @@
 
 | ID | 中文名 | 英文名 | 类型 | 拾取 | 首现场景 | 跨 Loop |
 |----|--------|--------|------|------|---------|--------|
-| 3301 | Helen 右手包扎伤 | Helen's Right Hand Bandage | Clue | ✓ | SC3008 | — |
+| 3301 | 有白漆的螺丝帽 | White-Painted Screw Cap | Item | ✓ | SC3008 | — |
 | 3302 | 女性权益剪报墙 | Women's Rights Clippings Wall | Clue | ✗ | SC3008 | — |
 | 3303 | Mary 人寿保险单原件 | Mary's Life Insurance (Original) | Item | ✓ | SC3008 | — |
 | 3304 | 楼顶钥匙 | Rooftop Key | Item | ✓ | SC3008 | 🔵 L4 |
@@ -19,7 +19,7 @@
 | 3307 | Helen 家的 Jameson 酒 | Helen's Jameson Whiskey | Item | ✓ | SC3008 | 🔵 L6 |
 | 3308 | Helen 嘴上深红色口红 | Helen's Deep Crimson Lipstick | Clue | ✗ | SC3008 | — |
 | 3309 | 被破坏的护栏 | Damaged Railing | Clue | ✓ | SC3002 | — |
-| 3310 | 护栏上的干涸血迹 | Dried Blood on Railing | Clue | ✓ | SC3002 | — |
+| 3310 | 护栏断口的缺件（白漆） | Missing Screw Cap on Railing | Clue | ✓ | SC3002 | — |
 | 3311 | 地面油迹示意图 | Floor Oil Trace Diagram | Clue | ✓ | SC3002 | — |
 | 3312 | Mary 人寿保险单副本 | Mary's Life Insurance (Copy) | Item | ✓ | SC3009 | — |
 
@@ -27,16 +27,15 @@
 
 ## 证据详细卡片
 
-### 3301 Helen 右手包扎伤 / Helen's Right Hand Bandage
+### 3301 有白漆的螺丝帽 / White-Painted Screw Cap
 
-- **类型**：Clue（关键，Expose R3 主力）
-- **位置**：SC3008 Helen 家（搜身观察）
+- **类型**：Item（关键，Expose R3 主力）
+- **位置**：SC3008 Helen 家（轮椅旁工具堆）
 - **物品描述**：
-  - 右手手背缠白纱布，约 5×8 cm
-  - 纱布上渗出过血迹（已干涸为褐色）
-  - Helen 自述："修轮椅时刮的"（谎言）
-  - 实际伤口与护栏断口位置吻合
-- **美术参考**：1920s 家庭用白棉纱布
+  - 一颗固定栏杆用的螺丝帽
+  - 表面沾着白漆，漆色与剥落程度与户外涂漆栏杆一致
+  - 规格与天台护栏断口缺的那颗吻合（缺件复位）
+- **美术参考**：1920s 铁艺栏杆螺丝帽；白漆斑驳可放大特写
 
 ### 3302 女性权益剪报墙 / Women's Rights Clippings Wall
 
@@ -115,7 +114,7 @@
 - **物品描述**：
   - Helen 嘴唇上的深红色口红
   - 色号：Deep Crimson（与衬衫 3207 上的口红印明显同款）
-  - 玩家可在内心补完 Helen = 出轨对象的链
+  - Helen = 出轨对象由 Emma 在突发事件中点明（非玩家自悟）
 - **美术参考**：1920s flapper 风格深红唇妆
 
 ### 3309 被破坏的护栏 / Damaged Railing
@@ -123,21 +122,21 @@
 - **类型**：Clue（关键——人为破坏证据）
 - **位置**：SC3002 楼顶北侧栏杆中段（凭楼顶钥匙打开警戒线后可达）
 - **物品描述**：
-  - 黑色铁艺栏杆
+  - 铁艺栏杆，通体涂白漆
   - 中段可见明显撬动痕迹
   - 断口处有锯齿般金属毛刺（非自然损耗）
   - 撬痕方向显示破坏者在天台一侧操作（自内向外）
-- **美术参考**：1920s 公寓铁艺栏杆；锯齿状断口可放大特写
+- **美术参考**：1920s 公寓白漆铁艺栏杆；锯齿状断口可放大特写
 
-### 3310 护栏上的干涸血迹 / Dried Blood on Railing
+### 3310 护栏断口的缺件（白漆）/ Missing Screw Cap on Railing
 
-- **类型**：Clue（关键，Expose R3 主力——与 Helen 右手伤吻合）
-- **位置**：SC3002 栏杆锋利断口附近
+- **类型**：Clue（关键，Expose R3 主力——与 Helen 家螺丝帽 3301 缺件复位）
+- **位置**：SC3002 栏杆锋利断口处
 - **物品描述**：
-  - 干涸的褐色血迹斑块
-  - 位置高度：约 1.2 米（与单手扶栏一致）
-  - 血迹形态：擦蹭式（不是滴落式，暗示手部接触）
-- **美术参考**：暗褐色血斑；可与 Helen 右手伤 3301 做空间对照
+  - 断口处明显缺了一颗固定栏杆的螺丝帽
+  - 螺孔裸露，周围白漆是新近剥落的
+  - 缺口规格与 Helen 家那颗带白漆螺丝帽吻合
+- **美术参考**：裸露螺孔 + 新剥落白漆边缘；可与 Helen 家螺丝帽 3301 做复位对照
 
 ### 3311 地面油迹示意图 / Floor Oil Trace Diagram
 

@@ -12,7 +12,7 @@
 # C. NPC 条目    PASS — Helen / Bernard / Seamus
 # D. 目标对齐    PASS — 大纲"Helen 和 Thomas 的关系导致了悲剧"
 # E. 信息节奏    PASS — 隐藏：油痕检测能力（L4）、Mary+Helen 19 号预先布置陷阱（L4/L6）、Bernard 诱导购买（L5）、Mary 主动咨询（L5/L6）、润滑油"Helen 案发前一天送 Seamus"（L6）
-# G. Expose 逻辑 PASS — R1（出轨谎言）= Bernard 证词；R2（保险动机谎言）= 保险单副本；R3（旁听+没去天台谎言）= Helen 右手伤+护栏血迹
+# G. Expose 逻辑 PASS — R1（出轨谎言）= Bernard 证词；R2（保险动机谎言）= 保险单副本；R3（旁听+没去天台谎言）= Helen 家带白漆螺丝帽 + 护栏断口缺件
 #
 # validation_status: PASS
 # ============================================================
@@ -51,7 +51,7 @@ player_context:
     - direction: "在 Smith 家所在的公寓楼扩大搜查"
       trigger: "Mary 给出 Thomas 主动约她上天台的退守版本——Thomas 的动机与他身边的人需进一步核查"
     - direction: "邻居 Helen 行为可疑"
-      trigger: "Helen 在事发后右手有包扎伤、口红颜色与衣柜口红印吻合"
+      trigger: "Helen 口红颜色与衣柜口红印吻合，且对坠楼一事神色闪躲"
     - direction: "二楼住客 Seamus 的目击"
       trigger: "公寓二楼的红鲱鱼住客自述当晚听到争吵、看天台门关着"
 
@@ -97,17 +97,17 @@ scenes:
     type: free_exploration
     description: |
       Helen 一个人住的小公寓。客厅靠墙贴满女性权益相关的剪报，
-      角落有一张轮椅靠在墙边，地上有油渍痕迹。
+      角落有一张轮椅靠在墙边，地上有油渍痕迹，旁边的工具堆里散着几个零件。
       旁边一个猫窝，里面除了猫毛还塞着皱成一团的东西。
-      Helen 嘴上涂着深红色口红，右手缠着一圈纱布。
+      Helen 嘴上涂着深红色口红，神色有些闪躲。
 
     evidence:
       - id: 3301
-        name: "Helen 右手包扎伤"
-        type: clue
+        name: "有白漆的螺丝帽"
+        type: item
         pickup: true
-        note: "关键——Helen 自称'修轮椅导致'；用于 Expose R3，与护栏血迹形成证据链"
-        description: "Helen 右手手背缠着一圈白纱布，渗出过血迹；Helen 自述是修轮椅时刮伤"
+        note: "关键——Expose R3 主力；规格/白漆与天台护栏断口缺的那颗吻合（缺件复位）"
+        description: "Helen 家轮椅旁工具堆里的一颗螺丝帽，沾着白漆，漆色与剥落程度和普通家用件不同——像是从户外涂漆栏杆上拆下来的"
 
       - id: 3302
         name: "女性权益剪报墙"
@@ -155,7 +155,7 @@ scenes:
         name: "Helen 嘴上深红色口红"
         type: clue
         pickup: false
-        note: "🟣 环境叙事——颜色与 L2 衬衫口红印吻合（玩家自悟 Helen 即出轨对象）"
+        note: "🟣 环境叙事——颜色与 L2 衬衫口红印吻合（Helen 即出轨对象由 Emma 在突发事件 helen_lover_reveal 中点明，非玩家自悟）"
         description: "Helen 嘴唇上的深红色口红，色泽与 L2 衬衫上的口红印明显同款"
 
     npcs:
@@ -163,14 +163,13 @@ scenes:
         talk: L3_scene3008_helen
         is_liar: true  # 本 Loop Expose 对象
         motive: "维护自己与 Thomas 的关系真相不被识破、否认参与杀人"
-        mindset: "外冷内紧——眼神闪烁、回答简短；被逼问时迅速给出'修轮椅刮伤'式自我合理化"
+        mindset: "外冷内紧——眼神闪烁、回答简短；被逼问时迅速给出'我只是旁听、没去过天台'式自我合理化"
 
         active_topics:
           - "身份：Thomas 的邻居"
           - "与 Thomas 关系：只是有一次聊天诉苦，再也没有其他联系（谎言）"
           - "对坠楼的判断：Thomas 是自己上楼顶掉的（谎言）"
-          - "右手包扎伤：修轮椅刮的（谎言）"
-          - "可搜身观察：Helen 右手包扎伤"
+          - "可搜身观察：Helen 嘴上深红色口红、神色闪躲"
         withheld_topics:
           - "Helen 与 Mary 19 号一起上天台预先布置陷阱"   # L6 才揭
           - "案发当晚 Helen 21:00 带 Thomas 上天台、灌酒"  # L6 才揭
@@ -184,7 +183,6 @@ scenes:
           - 3053001  # Helen：邻居身份（中性事实）
           - 3053002  # ⚠谎言: Helen：只是有一次聊天诉苦，再也没有其他联系（Expose R1 lie source）
           - 3053003  # ⚠谎言: Helen：Thomas 是自己上楼顶掉的（中性表述但呼应狡辩）
-          - 3053004  # ⚠谎言: Helen：右手伤是修轮椅刮的（Expose R3 配套谎言）
 
     # 突发事件：Emma 点明 Helen 即出轨对象
     interrupts:
@@ -208,14 +206,14 @@ scenes:
         type: clue
         pickup: true
         note: "关键——栏杆有疑似人为破坏痕迹（撬动 + 锯锋）"
-        description: "坠落侧栏杆中段：撬动痕迹清晰，断口处有锯齿般的金属毛刺，明显非自然损耗"
+        description: "坠落侧栏杆中段：通体涂白漆，撬动痕迹清晰，断口处有锯齿般的金属毛刺，明显非自然损耗"
 
       - id: 3310
-        name: "护栏上的干涸血迹"
+        name: "护栏断口的缺件（白漆）"
         type: clue
         pickup: true
-        note: "关键——血迹留在锋利断口附近，与 Helen 右手包扎伤形成 Expose R3 证据链"
-        description: "栏杆锋利断口附近有干涸的褐色血迹，位置高度与单手扶栏一致"
+        note: "关键——断口处缺一颗螺丝帽，缺口漆面新剥落；与 Helen 家螺丝帽 3301 形成缺件复位（Expose R3 主力）"
+        description: "栏杆锋利断口处明显缺了一颗固定栏杆的螺丝帽，螺孔裸露、周围白漆是新近剥落的"
 
       - id: 3311
         name: "地面油迹示意图"
@@ -357,18 +355,18 @@ expose:
     lie_source: 3053002
     usable_evidence:
       - id: 3301
-        name: "Helen 右手包扎伤"
-        用途: "Helen 自称是修轮椅刮的，但伤口位置与护栏血迹形成对应"
+        name: "有白漆的螺丝帽"
+        用途: "Helen 家工具堆里的带白漆螺丝帽，规格与漆色正是天台护栏断口缺的那一颗"
       - id: 3310
-        name: "护栏上的干涸血迹"
-        用途: "护栏锋利断口附近的干涸血迹，与 Helen 右手伤的位置高度吻合"
+        name: "护栏断口的缺件（白漆）"
+        用途: "护栏断口缺了一颗螺丝帽——Helen 家那颗正好补上：这颗螺丝帽就是从这段护栏上拆下来的"
     auxiliary_evidence:
       - id: 3083003
         name: "Seamus 证词（最近看到 Helen 上过天台）"
         用途: "辅助——Helen 不是'从没去过天台'"
     result: |
       Helen 被迫承认上过天台、做过陷阱：
-      - 护栏血迹 + 右手伤 → Helen 接触过被破坏的护栏
+      - 护栏断口缺的螺丝帽出现在 Helen 家 → 她亲手拆过护栏、上过天台
       - Helen 退守：承认布置陷阱（毁栏杆 + 涂油），但坚称是'被 Thomas 命令独自去做的'
 
   post_expose:
@@ -411,13 +409,13 @@ doubts:
         param: "3303"     # 保险单原件
 
   - id: 3303
-    text: "Helen 是否到过天台？——右手伤与护栏血迹"
+    text: "Helen 是否到过天台？——Helen 家的螺丝帽与护栏缺件"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "3301"     # Helen 右手包扎伤
+        param: "3301"     # 有白漆的螺丝帽
       - type: 1
-        param: "3310"     # 护栏上的干涸血迹
+        param: "3310"     # 护栏断口的缺件
 
   - id: 3304
     text: "天台陷阱是谁布置的？——破坏栏杆与油迹"
@@ -470,11 +468,11 @@ doubts:
 
 evidence_registry:
   - id: 3301
-    name: "Helen 右手包扎伤"
-    type: clue
+    name: "有白漆的螺丝帽"
+    type: item
     pickup: true
     first_scene: 3008
-    note: "关键——Expose R3 主力（与护栏血迹形成证据链）"
+    note: "关键——Expose R3 主力（与护栏断口缺件 3310 缺件复位）"
 
   - id: 3302
     name: "女性权益剪报墙"
@@ -530,14 +528,14 @@ evidence_registry:
     type: clue
     pickup: true
     first_scene: 3002
-    note: "关键——人为破坏痕迹"
+    note: "关键——人为破坏痕迹（撬动+锯锋，通体白漆）"
 
   - id: 3310
-    name: "护栏上的干涸血迹"
+    name: "护栏断口的缺件（白漆）"
     type: clue
     pickup: true
     first_scene: 3002
-    note: "关键——Expose R3 主力"
+    note: "关键——Expose R3 主力（断口缺一颗螺丝帽，与 Helen 家螺丝帽 3301 复位）"
 
   - id: 3311
     name: "地面油迹示意图"
