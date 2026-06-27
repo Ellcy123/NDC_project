@@ -49,7 +49,7 @@ player_context:
     - direction: "Thomas 有出轨迹象"
       trigger: "卧室衣柜底层藏有沾深红色口红印的衬衫；Mary 藏起的五支口红都偏浅，全部不匹配"
     - direction: "Mary 鞋码与天台脚印吻合"
-      trigger: "Mary 外出鞋是 6 码，与楼顶女鞋印同款同码"
+      trigger: "Mary 外出鞋是 6 码，与楼顶女鞋印鞋码吻合"
 
   post_expose_knowledge:
     - "Mary 22:00 左右上过天台——这一点 Mary 自己承认"
@@ -95,8 +95,10 @@ scenes:
     name: "Thomas 公寓楼门口"
     type: free_exploration
     description: |
-      公寓楼正门外的人行道。Mary 抱着一只布袋从楼里出来，看见 Zack 和 Emma 时
-      明显停顿了一下，眼眶发红、双手有点抖。她没躲，反而很快开始解释自己昨晚不在场。
+      公寓楼正门外的人行道。Mary 提着一个旧布袋正从楼里走出来，似乎准备出门采买。
+      她虽然神色憔悴，但推开大门正巧与 Zack 和 Emma 迎面碰上时，
+      只当他们是来访的陌生人。她礼貌而疏离地侧了侧身让开台阶，
+      并没有表现出任何惊慌或防备，自然地维持着一个普通遗孀的生活状态。
 
     evidence:
       - id: 3201
@@ -208,8 +210,8 @@ scenes:
         name: "Mary 外出鞋"
         type: item
         pickup: true
-        note: "关键——6 码女鞋，与楼顶女鞋印同款同码（与 L1 证据 3104 形成关联）"
-        description: "鞋架上整齐摆放的 Mary 外出鞋：6 码黑色小皮鞋，鞋底花纹与楼顶照片中女鞋印一致"
+        note: "关键——6 码女鞋（与 L1 证据 3104 鞋码吻合，形成怀疑方向）"
+        description: "鞋架上整齐摆放的 Mary 外出鞋：6 码黑色小皮鞋，皮质陈旧，鞋跟有磨损痕迹"
 
       - id: 3270
         name: "口红颜色比对报告"
@@ -406,7 +408,7 @@ doubts:
         param: "3270"        # 口红颜色比对报告（Expose R3 辅助）
 
   - id: 3207
-    text: "Mary 外出鞋的鞋码——与楼顶女鞋印同款同码"
+    text: "Mary 外出鞋的鞋码——6 码，与楼顶女鞋印鞋码吻合"
     isFragment: true
     unlock_condition:
       - type: 1
