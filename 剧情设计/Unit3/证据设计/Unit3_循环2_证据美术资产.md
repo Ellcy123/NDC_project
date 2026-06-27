@@ -17,7 +17,7 @@
 | 3205 | Thomas 家的廉价酒照片 | Thomas Home Cheap Liquor | Clue | ✓ | SC3003 | 🔵 L6 |
 | 3206 | 标注报纸 | Annotated Newspaper | Item | ✓ | SC3003 | 🔵 L5 |
 | 3207 | 沾有口红印的衬衫 | Lipstick-Stained Shirt | Item | ✓ | SC3012 | — |
-| 3208 | Mary 的浅玫瑰红口红 | Mary's Light Rose Lipstick | Item | ✓ | SC3012 | — |
+| 3208 | Mary 的浅色口红盒 | Mary's Pale Lipstick Case | Item | ✓ | SC3012 | — |
 | 3209 | Mary 外出鞋 | Mary's Outdoor Shoes | Item | ✓ | SC3012 | — |
 | 3210 | 倒下的蜡烛残骸 | Toppled Candle Remains | Item | ✓ | SC3007 | — |
 | 3211 | 教堂祈祷册 | Church Prayer Book | Clue | ✗ | SC3007 | — |
@@ -104,21 +104,21 @@
 - **物品描述**：
   - 白色棉布衬衫，折叠整齐
   - 衣领与右胸前可见深红色口红印
-  - 色号：Deep Crimson（与 Mary 浅玫瑰红 Light Rose 明显不符）
+  - 色号：Deep Crimson（与 Mary 口红盒内五支浅色口红均明显不符）
   - 痕迹有约一周自然褪色
   - 折叠方式工整——Thomas 故意藏起来
 - **美术参考**：1920s 男士礼服衬衫；口红印呈唇形或抹擦状
 
-### 3208 Mary 的浅玫瑰红口红 / Mary's Light Rose Lipstick
+### 3208 Mary 的浅色口红盒 / Mary's Pale Lipstick Case
 
 - **类型**：Item（对比锚点）
 - **位置**：SC3012 Mary 梳妆台
 - **物品描述**：
-  - 黄铜口红管，长 8 cm
-  - 用了大半（说明日常使用）
-  - 色号标注 Light Rose 浅玫瑰红
-  - 包装陈旧，是 Mary 唯一一只口红
-- **美术参考**：1920s Coty 或 Helena Rubinstein 风格口红管
+  - 藏在梳妆台深处的小盒子，内有五支黄铜口红管
+  - 色号均偏浅：Light Rose、Pale Peach、Dusty Pink、Soft Coral、Nude Beige
+  - 多数使用痕迹很轻，符合 Mary 平时几乎不化妆的外在形象
+  - 盒子被藏得很深，像是她私下保留的一点自我
+- **美术参考**：1920s Coty 或 Helena Rubinstein 风格口红管；整体色盘低饱和、浅色系
 
 ### 3209 Mary 外出鞋 / Mary's Outdoor Shoes
 
@@ -162,8 +162,8 @@
   - 系统生成分析报告，A4 大小
   - 内容：
     - 衬衫口红印颜色：Deep Crimson
-    - Mary 口红：Light Rose
-    - Mary 家中无第二只口红
+    - Mary 口红盒：五支浅色口红
+    - 五支口红逐一比对均不匹配
     - 结论：衬衫上的口红不可能是 Mary 留下
 - **美术参考**：1920s 现代实验室报告——打字机字体 + 表格化数据
 
@@ -175,5 +175,5 @@
 - **3202 花形手链缺口**：物理客观描述，不点破其含义（L5/L6 才用于压痕指认）
 - **3205 廉价酒**：本 Loop 仅作"Thomas 家穷"环境描述（L6 才与天台 Jameson 形成对比）
 - **3206 标注报纸**：本 Loop 不暗示用途（L5 与 Bernard 垫板压痕比对）
-- **3207 衬衫口红印**：颜色明显非 Mary，但不暗示"Helen"（L3 才在 Helen 嘴上看到同色口红）
+- **3207 衬衫口红印**：颜色明显非 Mary 的浅色口红系，但不暗示"Helen"（L3 才在 Helen 嘴上看到同色口红）
 - **3211 祈祷册**：环境叙事不替玩家说"Mary 预谋"——由玩家自悟

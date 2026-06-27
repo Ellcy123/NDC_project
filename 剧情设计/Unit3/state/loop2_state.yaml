@@ -47,7 +47,7 @@ player_context:
     - direction: "Mary 自称在教堂祈祷"
       trigger: "Mary 主动给出 19:00-23:00 教堂不在场——为何主动说时间段？"
     - direction: "Thomas 有出轨迹象"
-      trigger: "卧室衣柜底层藏有沾深红色口红印的衬衫，Mary 自己用浅玫瑰红"
+      trigger: "卧室衣柜底层藏有沾深红色口红印的衬衫；Mary 藏起的五支口红都偏浅，全部不匹配"
     - direction: "Mary 鞋码与天台脚印吻合"
       trigger: "Mary 外出鞋是 6 码，与楼顶女鞋印同款同码"
 
@@ -186,7 +186,7 @@ scenes:
     type: free_exploration
     description: |
       Smith 家卧室，床整齐但空气压抑。
-      Mary 的梳妆台上放着一只用了大半的口红，包装陈旧。
+      Mary 的梳妆台深处藏着一个小口红盒，里面是五支偏浅色口红。
       Thomas 那侧的衣柜底层，藏着一件折得很整齐的衬衫——上面有口红痕迹。
       梳妆台旁的鞋架上整齐摆着 Mary 的小皮鞋。
 
@@ -195,15 +195,15 @@ scenes:
         name: "沾有口红印的衬衫"
         type: item
         pickup: true
-        note: "关键——藏在衣柜底层，深红色口红印；与 Mary 浅玫瑰红不符；约一周前痕迹（Expose R3 主力）"
-        description: "Thomas 衣柜底层折叠的白色衬衫；衣领与右胸前可见深红色口红印，颜色偏暗红、明显不同于 Mary 的浅玫瑰红，痕迹有约一周自然褪色"
+        note: "关键——藏在衣柜底层，深红色口红印；与 Mary 藏起的五支浅色口红均不符；约一周前痕迹（Expose R3 主力）"
+        description: "Thomas 衣柜底层折叠的白色衬衫；衣领与右胸前可见深红色口红印，颜色偏暗红、明显不同于 Mary 的浅色口红系，痕迹有约一周自然褪色"
 
       - id: 3208
-        name: "Mary 的浅玫瑰红口红"
+        name: "Mary 的浅色口红盒"
         type: item
         pickup: true
-        note: "梳妆台上仅此一只口红，色号 Light Rose；对比锚点（与衬衫口红印的颜色比对）"
-        description: "梳妆台上放着的 Mary 唯一一只口红，包装陈旧，色号标注 Light Rose 浅玫瑰红"
+        note: "梳妆台深处藏着五支偏浅色口红；Mary 平时几乎不化妆；对比锚点（五色均与衬衫深红口红印不一致）"
+        description: "梳妆台深处的小盒子，里面收着五支低饱和口红：Light Rose、Pale Peach、Dusty Pink、Soft Coral、Nude Beige；都偏浅，与衬衫上的 Deep Crimson 不符"
 
       - id: 3209
         name: "Mary 外出鞋"
@@ -217,8 +217,8 @@ scenes:
         type: clue
         pickup: false
         analysis: true
-        note: "🧪 派生证据——由 3207 + 3208 + 'Mary 家只有一只口红'综合派生；颜色不一致，且 Mary 口红放在很深位置不像日用第二支"
-        description: "系统分析报告：衬衫口红印颜色为 Deep Crimson，Mary 口红为 Light Rose；Mary 家中无第二只口红——衬衫上的口红不可能是 Mary 留下"
+        note: "🧪 派生证据——由 3207 + 3208 综合派生；Mary 藏起的五支浅色口红全部不匹配 Deep Crimson"
+        description: "系统分析报告：衬衫口红印颜色为 Deep Crimson；Mary 口红盒内五支口红均为浅色系，逐一比对后没有任何一支匹配——衬衫上的口红不可能是 Mary 留下"
 
   # ── SC3007 St.Patrick 教堂 ──
   - id: 3007
@@ -330,11 +330,11 @@ expose:
     usable_evidence:
       - id: 3207
         name: "沾有口红印的衬衫"
-        用途: "Thomas 衣柜底层藏着一件沾深红色口红印的衬衫，与 Mary 浅玫瑰红不符——Mary 早就知道 Thomas 另有女人"
+        用途: "Thomas 衣柜底层藏着一件沾深红色口红印的衬衫，与 Mary 藏起的五支浅色口红均不符——Mary 早就知道 Thomas 另有女人"
     auxiliary_evidence:
       - id: 3270
         name: "口红颜色比对报告（派生）"
-        用途: "辅助——派生分析报告确认颜色完全不一致，Mary 家无第二只口红"
+        用途: "辅助——派生分析报告确认 Mary 藏起的五支浅色口红均与衬衫深红口红印不一致"
     result: |
       Zack 推理：这件衬衫说明 Mary 早就知道 Thomas 另有女人，她并不是毫无动机；
       而这个女人是谁，会成为下一轮调查方向。
@@ -382,7 +382,7 @@ doubts:
       - type: 1
         param: "3207"        # 沾有口红印的衬衫
       - type: 1
-        param: "3208"        # Mary 的浅玫瑰红口红（颜色对比锚点）
+        param: "3208"        # Mary 的浅色口红盒（五色对比锚点）
 
   - id: 3204
     text: "Thomas 死前为何要给自己买保险？（深化）"
@@ -400,7 +400,7 @@ doubts:
         param: "3092002"     # 神父证词：Mary 来教堂时披肩完好（Expose R2 主力）
 
   - id: 3206
-    text: "Mary 唯一的口红——颜色与衬衫不符"
+    text: "Mary 藏起的浅色口红盒——五色均与衬衫不符"
     isFragment: true
     unlock_condition:
       - type: 1
@@ -482,11 +482,11 @@ evidence_registry:
     note: "关键——Expose R3 主力（Mary 早知 Thomas 出轨）"
 
   - id: 3208
-    name: "Mary 的浅玫瑰红口红"
+    name: "Mary 的浅色口红盒"
     type: item
     pickup: true
     first_scene: 3012
-    note: "对比锚点——Light Rose 色号"
+    note: "对比锚点——五支偏浅色口红，均不匹配 Deep Crimson"
 
   - id: 3209
     name: "Mary 外出鞋"
@@ -515,4 +515,4 @@ evidence_registry:
     pickup: false
     analysis: true
     first_scene: 3012
-    note: "🧪 派生证据——R3 辅助（衬衫口红印 vs Mary 口红颜色不一致 + 家无第二只口红）"
+    note: "🧪 派生证据——R3 辅助（衬衫深红口红印 vs Mary 五支浅色口红全部不一致）"
