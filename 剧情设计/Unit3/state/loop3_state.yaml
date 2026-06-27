@@ -197,7 +197,8 @@ scenes:
     description: |
       Zack 和 Emma 凭从 Helen 家拿到的楼顶钥匙，趁警局没人时打开了被警戒线封锁的护栏区。
       白天的天台风有点大，被警戒线封起的栏杆比想象中更糟糕——人为破坏的痕迹很明显。
-      地面油迹集中在坠落点附近 1.5 米范围内。
+      坠落侧是一处折角凹角，转角两侧合成一个小角落，中间摆着 Emily 的纪念角；
+      折角左半侧地面有一摊油迹。
       解锁条件：玩家先拾取 3304 楼顶钥匙
 
     evidence:
@@ -216,11 +217,18 @@ scenes:
         description: "栏杆锋利断口处明显缺了一颗固定栏杆的螺丝帽，螺孔裸露、周围白漆是新近剥落的"
 
       - id: 3311
-        name: "地面油迹示意图"
+        name: "地面涂油示意图"
         type: clue
         pickup: true
-        note: "关键——油迹集中在坠落点对应的约 1.5m 范围内；地面只有一组脚印和划痕"
-        description: "天台地面拍照绘图：油迹分布在坠落点正下方 1.5m 范围内；可见一组脚印和拖拽划痕"
+        note: "关键——折角左半侧地面一摊油迹 + 一组脚印和拖拽划痕（油偏左半侧即 Thomas 常站位，L6 反转伏笔，本 Loop 不点破谁站哪侧）"
+        description: "天台折角处的拍照绘图：折角左半侧地面有一摊油迹；附近可见一组脚印和拖拽划痕。"
+
+      - id: 3313
+        name: "Emily 的纪念角"
+        type: clue
+        pickup: false
+        note: "🟣 环境叙事——女儿 Emily 在此坠落的纪念角；情感铺垫，不承担推理"
+        description: "折角凹角中间的纪念角：一尊风化的圣母石膏小像缠着褪色念珠，前面摆着烧残的许愿蜡烛和一只褪色的布偶娃娃。"
 
   # ── SC3009 湖滨信托银行公共区（Bernard 公共区） ──
   - id: 3009
@@ -424,7 +432,7 @@ doubts:
       - type: 1
         param: "3309"     # 被破坏的护栏
       - type: 1
-        param: "3311"     # 地面油迹示意图
+        param: "3311"     # 地面涂油示意图
 
   # ── 碎片（isFragment=true） ──
   - id: 3305
@@ -538,11 +546,11 @@ evidence_registry:
     note: "关键——Expose R3 主力（断口缺一颗螺丝帽，与 Helen 家螺丝帽 3301 复位）"
 
   - id: 3311
-    name: "地面油迹示意图"
+    name: "地面涂油示意图"
     type: clue
     pickup: true
     first_scene: 3002
-    note: "关键——本 Loop 仅记录'集中在 1.5m'，不深挖油的来源（L4/L6 才用'油的归属'）"
+    note: "关键——本 Loop 仅记录'折角左半侧一摊油迹'，不深挖油的来源（L4/L6 才用'油的归属'）"
 
   - id: 3312
     name: "Mary 人寿保险单副本"
@@ -550,3 +558,10 @@ evidence_registry:
     pickup: true
     first_scene: 3009
     note: "关键——Expose R2 主力"
+
+  - id: 3313
+    name: "Emily 的纪念角"
+    type: clue
+    pickup: false
+    first_scene: 3002
+    note: "🟣 环境叙事——女儿坠落处的纪念角，情感铺垫"
