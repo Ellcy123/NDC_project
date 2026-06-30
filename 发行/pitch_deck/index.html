@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>摩登迷城 / Gaze in shadows - Pitch Deck</title>
+  <style>
+    :root {
+      --charcoal: #10100f;
+      --ink: #f4efe6;
+      --muted: #b9afa2;
+      --paper: #e6dcc6;
+      --red: #9f2f35;
+      --brass: #c79a4b;
+      --green: #637a62;
+      --line: rgba(244, 239, 230, 0.22);
+      --veil: rgba(10, 10, 10, 0.66);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--charcoal);
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Source Han Serif SC", "Microsoft YaHei", system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      background: #0d0d0c;
+    }
+
+    .deck::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .deck::-webkit-scrollbar-track {
+      background: #171615;
+    }
+
+    .deck::-webkit-scrollbar-thumb {
+      background: #6d4c3c;
+    }
+
+    .slide {
+      position: relative;
+      flex: 0 0 100vw;
+      height: 100vh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(420px, 0.92fr);
+      background: var(--charcoal);
+    }
+
+    .slide::after {
+      content: attr(data-number);
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      color: rgba(244, 239, 230, 0.54);
+      font-size: 0.82rem;
+      z-index: 4;
+    }
+
+    .cover {
+      display: block;
+    }
+
+    .cover .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover .scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 7, 8, 0.52);
+    }
+
+    .cover-copy {
+      position: relative;
+      z-index: 2;
+      min-height: 100%;
+      width: min(760px, calc(100vw - 112px));
+      padding: 92px 56px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--brass);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 4.6rem;
+      line-height: 1.04;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin-bottom: 28px;
+      color: var(--paper);
+      font-size: 2rem;
+      line-height: 1.12;
+      font-weight: 500;
+    }
+
+    h3 {
+      margin-bottom: 24px;
+      font-size: 2.75rem;
+      line-height: 1.12;
+      font-weight: 700;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1.18rem;
+      line-height: 1.82;
+    }
+
+    strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .copy {
+      position: relative;
+      z-index: 2;
+      padding: 82px 72px 74px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .copy.compact {
+      padding-top: 60px;
+      padding-bottom: 54px;
+    }
+
+    .media {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      background: #161412;
+      overflow: hidden;
+    }
+
+    .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media.contain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 42px;
+      background: #171513;
+    }
+
+    .media.contain img {
+      height: auto;
+      max-height: 78vh;
+      object-fit: contain;
+      border: 1px solid rgba(244, 239, 230, 0.16);
+    }
+
+    .interface-slide {
+      grid-template-columns: minmax(340px, 0.52fr) minmax(0, 1.48fr);
+    }
+
+    .interface-slide .copy {
+      padding: 72px 48px 64px;
+    }
+
+    .interface-slide h3 {
+      font-size: 2.65rem;
+    }
+
+    .interface-points {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .interface-points p {
+      margin: 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.62;
+    }
+
+    .interface-points b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 1.04rem;
+    }
+
+    .media.ui-shot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: #11100f;
+    }
+
+    .media.ui-shot img {
+      width: 100%;
+      height: auto;
+      max-height: calc(100vh - 56px);
+      object-fit: contain;
+      border: 1px solid rgba(244, 239, 230, 0.18);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+    }
+
+    .media.ui-shot::after {
+      background: none;
+    }
+
+    .thesis-slide {
+      display: block;
+      background: #0d0d0c;
+    }
+
+    .thesis-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .thesis-shade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(10, 10, 10, 0.94) 0%, rgba(10, 10, 10, 0.82) 34%, rgba(10, 10, 10, 0.22) 66%, rgba(10, 10, 10, 0.1) 100%),
+        linear-gradient(0deg, rgba(10, 10, 10, 0.38), rgba(10, 10, 10, 0.08));
+    }
+
+    .thesis-copy {
+      position: relative;
+      z-index: 2;
+      width: min(780px, 58vw);
+      min-height: 100%;
+      padding: 92px 64px 86px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .thesis-copy h3 {
+      font-size: 4rem;
+      line-height: 1.08;
+    }
+
+    .thesis-copy .lede {
+      max-width: 720px;
+    }
+
+    .thesis-copy p:not(.eyebrow) {
+      max-width: 720px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      line-height: 1.75;
+    }
+
+    .media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.18);
+      pointer-events: none;
+    }
+
+    .accent {
+      display: block;
+      width: 64px;
+      height: 3px;
+      margin-bottom: 24px;
+      background: var(--red);
+    }
+
+    .lede {
+      max-width: 820px;
+      color: var(--ink);
+      font-size: 1.45rem;
+      line-height: 1.7;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.68;
+    }
+
+    .tagline {
+      max-width: 720px;
+      color: var(--paper);
+      font-size: 1.28rem;
+      line-height: 1.7;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .note {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .note h4 {
+      margin: 0 0 10px;
+      color: var(--paper);
+      font-size: 1.08rem;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .note p {
+      margin-bottom: 0;
+      font-size: 0.98rem;
+      line-height: 1.66;
+    }
+
+    .process {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      padding: 0;
+      margin: 30px 0 0;
+    }
+
+    .process li {
+      min-height: 132px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(230, 220, 198, 0.055);
+    }
+
+    .process b {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--brass);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .process span {
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .quote {
+      border-left: 4px solid var(--red);
+      padding-left: 24px;
+      max-width: 760px;
+    }
+
+    .quote p {
+      color: var(--ink);
+      font-size: 1.48rem;
+      line-height: 1.72;
+    }
+
+    .business-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .business-point {
+      min-height: 142px;
+      border-top: 1px solid var(--line);
+      padding: 18px 18px 0 0;
+    }
+
+    .business-point h4 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 1.08rem;
+      line-height: 1.42;
+      font-weight: 700;
+    }
+
+    .business-point p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.66;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 24px;
+      margin-top: 28px;
+    }
+
+    .history-point {
+      border-left: 3px solid rgba(199, 154, 75, 0.72);
+      padding-left: 16px;
+    }
+
+    .history-point h4 {
+      margin: 0 0 9px;
+      color: var(--paper);
+      font-size: 1.04rem;
+      line-height: 1.38;
+    }
+
+    .history-point p {
+      margin: 0;
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+
+    .mosaic {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      height: 100%;
+      padding: 42px;
+      background: #131210;
+    }
+
+    .mosaic img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      border: 1px solid rgba(244, 239, 230, 0.14);
+    }
+
+    .mosaic img:first-child {
+      grid-row: span 2;
+    }
+
+    .art-wall {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr 0.85fr;
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      height: 100%;
+      padding: 34px;
+      background: #11100f;
+    }
+
+    .art-wall img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      display: block;
+      border: 1px solid rgba(244, 239, 230, 0.14);
+    }
+
+    .art-wall img:first-child {
+      grid-row: span 2;
+    }
+
+    .art-wall img:nth-child(4) {
+      grid-column: span 2;
+    }
+
+    .closing {
+      display: block;
+      background: #0d0d0c;
+    }
+
+    .closing img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.46;
+    }
+
+    .closing::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: rgba(9, 8, 8, 0.62);
+    }
+
+    .closing-copy {
+      position: relative;
+      z-index: 2;
+      width: min(850px, calc(100vw - 112px));
+      min-height: 100%;
+      padding: 86px 56px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .controls {
+      position: fixed;
+      right: 28px;
+      bottom: 24px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .controls button {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(244, 239, 230, 0.38);
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(12, 12, 12, 0.72);
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      border-color: var(--brass);
+      color: var(--brass);
+    }
+
+    .counter {
+      min-width: 64px;
+      color: rgba(244, 239, 230, 0.72);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .deck {
+        height: auto;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: visible;
+        display: block;
+      }
+
+      .slide {
+        width: 100vw;
+        min-height: 100vh;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .slide::after {
+        top: 18px;
+        right: 20px;
+      }
+
+      .media {
+        min-height: 42vh;
+      }
+
+      .media.contain {
+        min-height: 48vh;
+        padding: 22px;
+      }
+
+      .media.ui-shot {
+        min-height: 48vh;
+        padding: 16px;
+      }
+
+      .interface-slide h3 {
+        font-size: 2.1rem;
+      }
+
+      .thesis-copy {
+        width: auto;
+        min-height: 100vh;
+        padding: 64px 26px 70px;
+      }
+
+      .thesis-copy h3 {
+        font-size: 2.5rem;
+      }
+
+      .thesis-copy p:not(.eyebrow) {
+        font-size: 1.08rem;
+      }
+
+      .copy,
+      .copy.compact {
+        padding: 50px 26px 62px;
+      }
+
+      .cover-copy,
+      .closing-copy {
+        width: auto;
+        min-height: 100vh;
+        padding: 64px 26px 70px;
+      }
+
+      h1 {
+        font-size: 3.05rem;
+      }
+
+      h2 {
+        font-size: 1.45rem;
+      }
+
+      h3 {
+        font-size: 2.05rem;
+      }
+
+      p,
+      .lede,
+      .tagline,
+      .quote p {
+        font-size: 1.06rem;
+      }
+
+      .two-column,
+      .process,
+      .business-grid,
+      .history-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mosaic {
+        min-height: 72vh;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+        padding: 20px;
+      }
+
+      .mosaic img:first-child {
+        grid-row: span 1;
+      }
+
+      .art-wall {
+        min-height: 92vh;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(7, minmax(132px, 1fr));
+        padding: 20px;
+      }
+
+      .art-wall img:first-child,
+      .art-wall img:nth-child(4) {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+
+      .controls {
+        display: none;
+      }
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck {
+        display: block;
+        height: auto;
+        overflow: visible;
+      }
+
+      .slide {
+        width: 100vw;
+        height: 100vh;
+        page-break-after: always;
+      }
+
+      .controls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="摩登迷城 pitch deck">
+    <section class="slide cover" data-number="01 / 11">
+      <img class="hero-image" src="assets/city_overlook.png" alt="Ashford 城市远景">
+      <div class="scrim"></div>
+      <div class="cover-copy">
+        <p class="eyebrow">1928 · Ashford</p>
+        <h1>摩登迷城</h1>
+        <h2>Gaze in shadows</h2>
+        <p class="tagline">剧情 · 推理 · 悬疑</p>
+      </div>
+    </section>
+
+    <section class="slide" data-number="02 / 11">
+      <div class="copy">
+        <span class="accent"></span>
+        <p class="eyebrow">Positioning</p>
+        <h3>不是看答案，是拆答案</h3>
+        <p class="lede">《摩登迷城》是一款章节式叙事推理游戏。玩家扮演侦探 Zack Brennan，通过现场搜证、证词交叉、时间线还原、关系链分析与当面指证，逐层揭开案件背后的城市系统性罪恶。</p>
+        <div class="two-column">
+          <div class="note">
+            <h4>类型气质</h4>
+            <p>侦探推理、叙事悬疑、1920s noir、证据链、指证对决。</p>
+          </div>
+          <div class="note">
+            <h4>核心承诺</h4>
+            <p>玩家不是旁观破案，而是亲手组织证据，亲手击穿谎言。</p>
+          </div>
+        </div>
+      </div>
+      <div class="media">
+        <img src="assets/bank_outside.png" alt="Lakeshore Trust Bank 外景">
+      </div>
+    </section>
+
+    <section class="slide" data-number="03 / 11">
+      <div class="media">
+        <img src="assets/webb_reception_room.png" alt="Webb 接待室案发现场">
+      </div>
+      <div class="copy">
+        <span class="accent"></span>
+        <p class="eyebrow">Player Fantasy</p>
+        <h3>让玩家自己看见矛盾</h3>
+        <p class="lede">每一个结论都来自玩家找到的线索：一张照片、一枚弹壳、一句前后矛盾的证词、一个被刻意遮住的时间点。</p>
+        <div class="quote">
+          <p>“我看见了矛盾。现在，我知道该用哪一件证据让他说出真话。”</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-number="04 / 11">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Gameplay Flow</p>
+        <h3>调查阶段驱动的推理闭环</h3>
+        <p>每个章节是一桩完整案件，内部由多个调查阶段 / 子章节组成，用来分层推进真相。</p>
+        <ol class="process">
+          <li><b>01</b><span>进入新的调查阶段，明确本段要追问的问题。</span></li>
+          <li><b>02</b><span>探索场景，收集物证、环境线索与关键物品。</span></li>
+          <li><b>03</b><span>与 NPC 对话，取得证词，同时观察回避、狡辩和沉默。</span></li>
+          <li><b>04</b><span>在 Case Board 中分析证据，组合物品，整理疑点。</span></li>
+          <li><b>05</b><span>还原时间线与人物关系，找到谎言的准确破口。</span></li>
+          <li><b>06</b><span>进入 Expose 指证，用证据正面击穿 NPC 的说法。</span></li>
+        </ol>
+      </div>
+      <div class="media contain">
+        <img src="assets/ashford_map.png" alt="Ashford 城市地图">
+      </div>
+    </section>
+
+    <section class="slide interface-slide" data-number="05 / 11">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Playable Interface</p>
+        <h3>把推理做成玩家真的能操作的界面</h3>
+        <p class="lede">案情分析界面把人物、证词、物证与时间线放在同一张桌面上，让玩家不是“听故事”，而是在亲手整理矛盾。</p>
+        <div class="interface-points">
+          <p><b>时间线可视化</b>不同人物的行动记录被并置，玩家可以直接发现空白、冲突和伪证。</p>
+          <p><b>证据整理感</b>照片、物证、嫌疑人和完成状态共同构成侦探桌面的操作反馈。</p>
+          <p><b>商业展示直观</b>一眼能看出游戏不是纯文字 AVG，而是有明确推理 UI 和玩法承载。</p>
+        </div>
+      </div>
+      <div class="media ui-shot">
+        <img src="assets/game_interface.png" alt="案情分析游戏界面">
+      </div>
+    </section>
+
+    <section class="slide thesis-slide" data-number="06 / 11">
+      <img class="thesis-bg" src="assets/blue_moon_latenight.png" alt="Blue Moon 深夜案发氛围">
+      <div class="thesis-shade"></div>
+      <div class="thesis-copy">
+        <span class="accent"></span>
+        <p class="eyebrow">Core Thesis</p>
+        <h3>带血的正义</h3>
+        <p class="lede">在这座城市，光亮照不到真相，信任只会换来背叛。</p>
+        <p>当无人可以依靠，你唯有自己定义正义—— 那是属于你一个人的，带血的正义。</p>
+      </div>
+    </section>
+
+    <section class="slide" data-number="07 / 11">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Business Case</p>
+        <h3>适合叙事推理赛道的内容型产品</h3>
+        <p class="lede">《摩登迷城》面向喜欢悬疑、剧情选择、证据推理和 noir 风格的玩家，核心卖点不是单次谜题，而是可持续扩展的章节案件结构。</p>
+        <div class="business-grid">
+          <div class="business-point">
+            <h4>清晰受众</h4>
+            <p>服务愿意阅读、推理、复盘的剧情玩家，强调“我自己发现了真相”的成就感。</p>
+          </div>
+          <div class="business-point">
+            <h4>可扩展内容</h4>
+            <p>新地点、新证人、新案件可以沿同一套玩法骨架扩展。</p>
+          </div>
+          <div class="business-point">
+            <h4>强展示素材</h4>
+            <p>案发现场、城市阴谋和关键证据都适合做商店页、预告片和短视频钩子。</p>
+          </div>
+          <div class="business-point">
+            <h4>生产路径明确</h4>
+            <p>已有内容、对话、证据、疑点和美术资源基础，便于从 pitch 推进到可玩验证。</p>
+          </div>
+        </div>
+      </div>
+      <div class="media">
+        <img src="assets/bank_lobby.png" alt="Lakeshore Trust 银行大厅">
+      </div>
+    </section>
+
+    <section class="slide" data-number="08 / 11">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Cultural Hooks</p>
+        <h3>复古外壳下，是今天仍然刺痛的议题</h3>
+        <div class="history-grid">
+          <div class="history-point">
+            <h4>女性不是受害者符号</h4>
+            <p>Emma、Vivian、Margaret、Rosa 都不是被拯救的装饰；她们分别代表新闻发声、被消费的身体、近处照护与被迫作伪证的母亲。</p>
+          </div>
+          <div class="history-point">
+            <h4>慈善也是控制</h4>
+            <p>Miller 的资助不是单纯善意，而是把有潜力的记者、律师、教师培养成欠债的公共人物。</p>
+          </div>
+          <div class="history-point">
+            <h4>阶级与城市清退</h4>
+            <p>南区居民、鞋坊、码头工人与移民街区，被包装成“城市发展”的代价。</p>
+          </div>
+          <div class="history-point">
+            <h4>司法与资本同谋</h4>
+            <p>银行、法院、地产商和警察不是背景机构，而是让暴力看起来合法的机器部件。</p>
+          </div>
+          <div class="history-point">
+            <h4>系统性恶</h4>
+            <p>最可怕的不是一个坏人，而是每个人都在自己的岗位上做一点“合理”的坏事。</p>
+          </div>
+          <div class="history-point">
+            <h4>新闻伦理与发声代价</h4>
+            <p>Emma 的报道不是旁观记录，而是在恩情、创伤和公共真相之间做选择。</p>
+          </div>
+        </div>
+      </div>
+      <div class="media">
+        <img src="assets/shoeshop_ruins.png" alt="南区鞋坊废墟">
+      </div>
+    </section>
+
+    <section class="slide" data-number="09 / 11">
+      <div class="media">
+        <img src="assets/lakeshore_archive.png" alt="Lakeshore Trust 档案室">
+      </div>
+      <div class="copy">
+        <span class="accent"></span>
+        <p class="eyebrow">Worldbuilding</p>
+        <h3>一座城市级的犯罪网络</h3>
+        <p class="lede">《摩登迷城》的世界观不是围绕单一凶案搭建，而是一套横跨 1912 到 1928 的城市权力结构：慈善家族、银行、法院、地产公司、黑帮、新闻业与南区社区彼此咬合。</p>
+        <p>每个章节只揭开一层：酒吧案让玩家看见“有网”，银行案揭开债务清退，司法线暴露保护机制，Tidewater 与 Silver Moon 指向地产暴力，最终回到 Miller 家族与 1912 年旧罪。</p>
+      </div>
+    </section>
+
+    <section class="slide" data-number="10 / 11">
+      <div class="art-wall">
+        <img src="assets/bar_lobby.png" alt="Blue Moon 酒吧大厅">
+        <img src="assets/silvermoon_casino.png" alt="Silver Moon 赌场夜场">
+        <img src="assets/detective_office_night.png" alt="Zack 侦探办公室">
+        <img src="assets/police_office_night.png" alt="警局办公室">
+        <img src="assets/shoeshop_fire.png" alt="Margaret 鞋店火场">
+        <img src="assets/side_alley.png" alt="雨夜后巷调查">
+        <img src="assets/cemetery_ending.png" alt="城市墓园">
+      </div>
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Art Direction</p>
+        <h3>高辨识度的 Art Deco Noir</h3>
+        <p class="lede">美术方向服务商业展示：强光影、高对比、霓虹招牌、爵士舞台、银行立柱与潮湿街道，能在商店页、预告片和社媒缩略图里快速形成“1920s noir 推理”的第一眼识别。</p>
+        <p>Art Deco 的几何秩序对应上流社会与现代建筑，noir 的暗部和局部红光对应犯罪、欲望与危险。风格既贴合 1928 城市背景，也能形成稳定、可延展的章节视觉资产体系。</p>
+      </div>
+    </section>
+
+    <section class="slide closing" data-number="11 / 11">
+      <img src="assets/city_overlook.png" alt="Ashford 城市夜景">
+      <div class="closing-copy">
+        <p class="eyebrow">Closing</p>
+        <h1>摩登迷城</h1>
+        <h2>Gaze in shadows</h2>
+        <p class="lede">一座漂亮城市里，没有一个人干净。</p>
+        <p>你越想洗清一个人，越发现所有人都在撒谎。《摩登迷城》最终留下的不是“凶手是谁”的答案，而是一个更刺痛的问题：当法律、金钱、亲情和善意都可以被用来伤人，玩家还愿意为什么样的正义付出代价？</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls" aria-hidden="false">
+    <button type="button" id="prevSlide" aria-label="上一页" title="上一页">‹</button>
+    <span class="counter" id="counter">01 / 11</span>
+    <button type="button" id="nextSlide" aria-label="下一页" title="下一页">›</button>
+  </div>
+
+  <script>
+    const deck = document.querySelector(".deck");
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const prevButton = document.getElementById("prevSlide");
+    const nextButton = document.getElementById("nextSlide");
+    const counter = document.getElementById("counter");
+
+    function activeIndex() {
+      if (window.matchMedia("(max-width: 980px)").matches) {
+        const midpoint = window.scrollY + window.innerHeight / 2;
+        return Math.max(0, slides.findIndex((slide) => {
+          const top = slide.offsetTop;
+          return midpoint >= top && midpoint < top + slide.offsetHeight;
+        }));
+      }
+      return Math.round(deck.scrollLeft / window.innerWidth);
+    }
+
+    function updateCounter() {
+      const index = Math.min(slides.length - 1, Math.max(0, activeIndex()));
+      counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(slides.length).padStart(2, "0");
+    }
+
+    function goToSlide(index) {
+      const target = Math.min(slides.length - 1, Math.max(0, index));
+      if (window.matchMedia("(max-width: 980px)").matches) {
+        slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        slides[target].scrollIntoView({ behavior: "smooth", inline: "start" });
+      }
+    }
+
+    prevButton.addEventListener("click", () => goToSlide(activeIndex() - 1));
+    nextButton.addEventListener("click", () => goToSlide(activeIndex() + 1));
+    deck.addEventListener("scroll", updateCounter, { passive: true });
+    window.addEventListener("scroll", updateCounter, { passive: true });
+    window.addEventListener("resize", updateCounter);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+        event.preventDefault();
+        goToSlide(activeIndex() + 1);
+      }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        goToSlide(activeIndex() - 1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        goToSlide(0);
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        goToSlide(slides.length - 1);
+      }
+    });
+    updateCounter();
+  </script>
+</body>
+</html>

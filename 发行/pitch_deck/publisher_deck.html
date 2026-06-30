@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>摩登迷城 / Gaze in shadows - 发行商版 Pitch Deck</title>
+  <style>
+    :root {
+      --bg: #0e0e0d;
+      --panel: #151311;
+      --ink: #f5efe4;
+      --muted: #b9afa2;
+      --dim: #83796d;
+      --line: rgba(245, 239, 228, 0.18);
+      --brass: #c79a4b;
+      --red: #9f2f35;
+      --green: #647a64;
+      --blue: #4d6d83;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Source Han Serif SC", "Microsoft YaHei", system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      background: #0b0b0a;
+    }
+
+    .deck::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .deck::-webkit-scrollbar-track {
+      background: #171615;
+    }
+
+    .deck::-webkit-scrollbar-thumb {
+      background: #65483a;
+    }
+
+    .slide {
+      position: relative;
+      flex: 0 0 100vw;
+      height: 100vh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(440px, 1.05fr);
+      background: var(--bg);
+    }
+
+    .slide::after {
+      content: attr(data-number);
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      z-index: 5;
+      color: rgba(245, 239, 228, 0.55);
+      font-size: 0.82rem;
+    }
+
+    .cover,
+    .full-visual,
+    .contact {
+      display: block;
+    }
+
+    .cover-bg,
+    .full-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover::before,
+    .full-visual::before,
+    .contact::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(8, 8, 8, 0.88) 0%, rgba(8, 8, 8, 0.68) 42%, rgba(8, 8, 8, 0.18) 100%),
+        linear-gradient(0deg, rgba(8, 8, 8, 0.58), rgba(8, 8, 8, 0.1));
+    }
+
+    .cover-copy,
+    .full-copy,
+    .contact-copy {
+      position: relative;
+      z-index: 2;
+      width: min(900px, 62vw);
+      min-height: 100%;
+      padding: 86px 64px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .full-copy {
+      justify-content: center;
+    }
+
+    .copy {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      padding: 68px 64px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .copy.compact {
+      padding-top: 56px;
+      padding-bottom: 48px;
+    }
+
+    .media {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: #141211;
+    }
+
+    .media img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .media.contain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 26px;
+      background: #11100f;
+    }
+
+    .media.contain img {
+      height: auto;
+      max-height: calc(100vh - 52px);
+      object-fit: contain;
+      border: 1px solid rgba(245, 239, 228, 0.15);
+      box-shadow: 0 20px 64px rgba(0, 0, 0, 0.42);
+    }
+
+    .accent {
+      width: 76px;
+      height: 3px;
+      margin-bottom: 28px;
+      background: var(--red);
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--brass);
+      font-size: 0.86rem;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: 4.7rem;
+      line-height: 1.02;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      color: var(--paper, #e6dcc6);
+      font-size: 2rem;
+      line-height: 1.15;
+    }
+
+    h3 {
+      margin-bottom: 24px;
+      font-size: 3.1rem;
+      line-height: 1.12;
+    }
+
+    h4 {
+      margin-bottom: 9px;
+      color: var(--ink);
+      font-size: 1.08rem;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.72;
+    }
+
+    .lede {
+      max-width: 860px;
+      color: var(--ink);
+      font-size: 1.38rem;
+      line-height: 1.68;
+    }
+
+    .tagline {
+      max-width: 900px;
+      color: var(--ink);
+      font-size: 1.72rem;
+      line-height: 1.55;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border: 1px solid rgba(199, 154, 75, 0.45);
+      color: var(--brass);
+      background: rgba(199, 154, 75, 0.08);
+      font-size: 0.92rem;
+    }
+
+    .bullets {
+      display: grid;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .bullet {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 16px;
+      padding: 18px;
+      border-top: 1px solid var(--line);
+      background: rgba(245, 239, 228, 0.035);
+    }
+
+    .bullet b {
+      color: var(--brass);
+      font-size: 1.08rem;
+    }
+
+    .bullet p {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr 0.95fr;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      height: 100%;
+      padding: 34px;
+    }
+
+    .showcase-grid img,
+    .ui-grid img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      border: 1px solid rgba(245, 239, 228, 0.13);
+      background: #111;
+    }
+
+    .showcase-grid img:first-child {
+      grid-row: span 2;
+    }
+
+    .ui-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      grid-template-rows: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 12px;
+      height: 100%;
+      padding: 34px;
+    }
+
+    .ui-grid img:first-child {
+      grid-row: span 2;
+      object-fit: contain;
+      padding: 10px;
+    }
+
+    .process {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0 0;
+      padding: 0;
+    }
+
+    .process li {
+      min-height: 124px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 228, 0.045);
+    }
+
+    .process b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--brass);
+    }
+
+    .process span {
+      color: var(--ink);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .audience-grid,
+    .data-grid,
+    .asks-grid,
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .card,
+    .metric {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 228, 0.05);
+    }
+
+    .card p,
+    .metric p {
+      margin: 0;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1.55rem;
+      line-height: 1.2;
+    }
+
+    .table {
+      margin-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.7fr 0.85fr 1.1fr;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+
+    .row.header {
+      color: var(--brass);
+      font-size: 0.88rem;
+      text-transform: uppercase;
+    }
+
+    .row div {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .row div:first-child {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .source {
+      margin-top: 18px;
+      color: var(--dim);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .timeline {
+      margin-top: 22px;
+      border-left: 3px solid var(--red);
+      padding-left: 22px;
+    }
+
+    .timeline p {
+      margin-bottom: 14px;
+      color: var(--ink);
+    }
+
+    .tbd {
+      color: #d2a95a;
+    }
+
+    .controls {
+      position: fixed;
+      right: 28px;
+      bottom: 24px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .controls button {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(245, 239, 228, 0.38);
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(12, 12, 12, 0.72);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      border-color: var(--brass);
+      color: var(--brass);
+    }
+
+    .counter {
+      min-width: 64px;
+      color: rgba(245, 239, 228, 0.72);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .deck {
+        height: auto;
+        display: block;
+        overflow-x: hidden;
+        overflow-y: visible;
+      }
+
+      .slide {
+        width: 100vw;
+        min-height: 100vh;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .copy,
+      .copy.compact,
+      .cover-copy,
+      .full-copy,
+      .contact-copy {
+        width: auto;
+        min-height: 100vh;
+        padding: 54px 26px 64px;
+      }
+
+      .media {
+        min-height: 46vh;
+      }
+
+      h1 {
+        font-size: 3.1rem;
+      }
+
+      h2 {
+        font-size: 1.45rem;
+      }
+
+      h3 {
+        font-size: 2.05rem;
+      }
+
+      .tagline,
+      .lede {
+        font-size: 1.08rem;
+      }
+
+      .showcase-grid,
+      .ui-grid,
+      .process,
+      .audience-grid,
+      .data-grid,
+      .asks-grid,
+      .team-grid,
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase-grid,
+      .ui-grid {
+        min-height: 92vh;
+        grid-template-rows: repeat(6, minmax(132px, 1fr));
+        padding: 18px;
+      }
+
+      .showcase-grid img:first-child,
+      .ui-grid img:first-child {
+        grid-row: span 1;
+      }
+
+      .controls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="摩登迷城发行商版 pitch deck">
+    <section class="slide cover" data-number="01 / 14">
+      <img class="cover-bg" src="assets/blue_moon_latenight.png" alt="Blue Moon 深夜案发氛围">
+      <div class="cover-copy">
+        <p class="eyebrow">Publisher Pitch Deck</p>
+        <h1>摩登迷城</h1>
+        <h2>Gaze in shadows</h2>
+        <p class="tagline">1920年代芝加哥黑色电影风侦探 AVG：搜证、质询、推理、指证。</p>
+        <div class="pill-row">
+          <span class="pill">剧情</span>
+          <span class="pill">推理</span>
+          <span class="pill">悬疑</span>
+          <span class="pill">Noir Detective AVG</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-number="02 / 14">
+      <div class="copy">
+        <span class="accent"></span>
+        <p class="eyebrow">Core Selling Points</p>
+        <h3>和其他推理游戏不一样的地方</h3>
+        <div class="bullets">
+          <div class="bullet"><b>01</b><p>原汁原味的 1920s 美国城市背景：禁酒令、爵士乐、银行、法院、黑帮和地产清退共同构成案件土壤。</p></div>
+          <div class="bullet"><b>02</b><p>证据优先的侦探体验：玩家通过物证、证词、时间线和关系链自己发现矛盾，而不是被剧情直接告知答案。</p></div>
+          <div class="bullet"><b>03</b><p>Noir 美学的商业辨识度：霓虹、强光影、Art Deco 建筑和脏旧街巷能快速形成商店页与预告片记忆点。</p></div>
+          <div class="bullet"><b>04</b><p>章节制内容结构：每一章是一桩案件，同时推进更大的城市阴谋，适合分阶段 Demo、愿望单和后续发售节奏。</p></div>
+        </div>
+      </div>
+      <div class="media">
+        <img src="assets/lakeshore_archive.png" alt="Lakeshore Trust 档案室">
+      </div>
+    </section>
+
+    <section class="slide full-visual" data-number="03 / 14">
+      <img class="full-bg" src="assets/city_overlook.png" alt="Ashford 城市夜景">
+      <div class="full-copy">
+        <span class="accent"></span>
+        <p class="eyebrow">Core Hook</p>
+        <h1>带血的正义</h1>
+        <p class="tagline">在这座城市，光亮照不到真相，信任只会换来背叛。</p>
+        <p class="tagline">当无人可以依靠，你唯有自己定义正义——那是属于你一个人的，带血的正义。</p>
+        <p>《摩登迷城》不是只追问“谁杀了谁”，而是让玩家逐步看见一整座城市如何把罪恶包装成秩序、体面和现代化。</p>
+        <p>一座漂亮城市里，没有一个人干净。你越想洗清一个人，越发现所有人都在撒谎。</p>
+      </div>
+    </section>
+
+    <section class="slide" data-number="04 / 14">
+      <div class="showcase-grid">
+        <img src="assets/bank_outside.png" alt="Art Deco 银行外立面">
+        <img src="assets/city_hall.png" alt="市政厅">
+        <img src="assets/bar_cabaret.png" alt="爵士舞台">
+        <img src="assets/silvermoon_casino.png" alt="Silver Moon 赌场">
+        <img src="assets/police_office_night.png" alt="夜间警局办公室">
+      </div>
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Art Direction</p>
+        <h3>高辨识度的 Art Deco Noir</h3>
+        <div class="bullets">
+          <div class="bullet"><b>01</b><p>商业化优势：霓虹招牌、强光影、装饰艺术建筑和犯罪现场能在商店页截图里快速建立记忆点。</p></div>
+          <div class="bullet"><b>02</b><p>背景契合：1920s 的银行、法院、爵士舞台、赌场和摩登街区天然带有现代化表面与腐败底层的反差。</p></div>
+          <div class="bullet"><b>03</b><p>玩法契合：场景不是气氛壁纸，而是承载搜证、证词、行动轨迹和隐藏关系的调查空间。</p></div>
+          <div class="bullet"><b>04</b><p>宣发延展：人物特写、城市夜景、证物桌面和案发现场可拆成 trailer、Steam 胶囊图、KOL 素材与社媒短内容。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-number="05 / 14">
+      <div class="showcase-grid">
+        <img src="assets/bar_lobby.png" alt="Blue Moon 酒吧大厅">
+        <img src="assets/bank_lobby.png" alt="Lakeshore Trust 银行大厅">
+        <img src="assets/side_alley.png" alt="雨夜后巷调查">
+        <img src="assets/shoeshop_fire.png" alt="Margaret 鞋店火场">
+        <img src="assets/silvermoon_casino.png" alt="Silver Moon 赌场夜场">
+      </div>
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Game Visuals I</p>
+        <h3>第一眼先卖美术气质</h3>
+        <p class="lede">酒吧、银行、后巷、赌场、烧毁的鞋店共同建立一座漂亮但腐烂的城市。</p>
+        <p>这些画面不是单纯氛围图，而是游戏中的调查空间：每个地点都有证据、证词和隐藏关系，能直接转化为商店页截图、预告片镜头和社媒素材。</p>
+      </div>
+    </section>
+
+    <section class="slide" data-number="06 / 14">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Game Visuals II</p>
+        <h3>不是纯文字 AVG，而是可操作的推理界面</h3>
+        <p class="lede">玩家在案情分析界面整理人物行动、时间线、证据节点和疑点提醒。</p>
+        <p>界面目标是让玩家产生“我自己看出了矛盾”的体验：证词不是剧情文本，证据不是收藏物，而是推进指证的工具。</p>
+      </div>
+      <div class="ui-grid">
+        <img src="assets/game_interface.png" alt="案情分析游戏界面">
+        <img src="assets/ashford_map.png" alt="Ashford 城市地图">
+        <img src="assets/webb_reception_room.png" alt="Webb 接待室案发现场">
+      </div>
+    </section>
+
+    <section class="slide" data-number="07 / 14">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Core Gameplay</p>
+        <h3>玩家在游戏里做什么</h3>
+        <p class="lede">核心循环非常清晰：探索场景、收集证据、质询证人、整理时间线，最后用证据指证谎言。</p>
+        <ol class="process">
+          <li><b>探索</b><span>进入案发现场和相关地点，观察环境，找到物证与可疑细节。</span></li>
+          <li><b>对话</b><span>与 NPC 交谈，获取证词，同时观察回避、沉默和前后矛盾。</span></li>
+          <li><b>整理</b><span>在案情分析界面把证据、时间线、人物关系放到同一张桌面上。</span></li>
+          <li><b>推理</b><span>组合不同来源的信息，找出只有某件证据能击穿的破口。</span></li>
+          <li><b>指证</b><span>当面出示证据，打破 NPC 的说法，推动案件进入下一层。</span></li>
+          <li><b>推进</b><span>每一章解决一桩案件，同时揭开更大的城市系统性犯罪。</span></li>
+        </ol>
+      </div>
+      <div class="media">
+        <img src="assets/webb_reception_room.png" alt="Webb 接待室案发现场">
+      </div>
+    </section>
+
+    <section class="slide" data-number="08 / 14">
+      <div class="media">
+        <img src="assets/detective_office_night.png" alt="Zack 侦探办公室">
+      </div>
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Target Audience</p>
+        <h3>目标受众</h3>
+        <div class="audience-grid">
+          <div class="card"><h4>推理 AVG 玩家</h4><p>愿意阅读、复盘、寻找矛盾，重视剧情与逻辑闭环。</p></div>
+          <div class="card"><h4>逆转裁判 / 指证类玩家</h4><p>期待“找到破绽并当面击穿”的爽感，但希望题材和美术更成人化。</p></div>
+          <div class="card"><h4>Noir / 侦探文化爱好者</h4><p>对禁酒令、爵士乐、黑帮、腐败城市和硬汉侦探气质有天然兴趣。</p></div>
+          <div class="card"><h4>英语市场叙事玩家</h4><p>Steam 上长期消费剧情冒险、点触、推理和独立叙事游戏的用户。</p></div>
+        </div>
+        <p class="source">Steam 用户画像、标签热度与愿望单转化数据：TBD。建议后续结合 Steam 标签页、竞品用户评测关键词和广告测试补充。</p>
+      </div>
+    </section>
+
+    <section class="slide" data-number="09 / 14">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Competitive Positioning</p>
+        <h3>竞品对标：《摩登迷城》（Gaze in shadows）的市场位置</h3>
+        <div class="table">
+          <div class="row header"><div>参照游戏</div><div>公开商业数据</div><div>市场参照意义</div><div>销量口径</div></div>
+          <div class="row"><div>旧日天空（Old Skies）</div><div>2025-04-23 / Steam US $14.99 / Wadjet Eye Games</div><div>英语市场 point-and-click 叙事冒险参照。</div><div>官方销量未公开；评论量 / Boxleiter 估算待补。</div></div>
+          <div class="row"><div>山河旅探（Murders on the Yangtze River）</div><div>2024-01-30 / Steam US $8.99 / OMEGAMES + NPC Entertainment</div><div>中文推理 AVG 在 Steam 的商业可行性参照。</div><div>官方销量未公开；评论量 / Boxleiter 估算待补。</div></div>
+          <div class="row"><div>逆转裁判123：成步堂精选集（Phoenix Wright: Ace Attorney Trilogy）</div><div>2019-04-09 / Steam US $9.89（抓取日折扣）/ CAPCOM / MC 80</div><div>指证、证词矛盾、角色驱动反转的头部范式。</div><div>官方资料多为系列 / 合辑口径；Steam 单平台销量不在此硬写。</div></div>
+          <div class="row"><div>金偶像谜案（The Case of the Golden Idol）</div><div>2022-10-13 / Steam US $8.09（抓取日折扣）/ Playstack</div><div>线索组织、真相还原与独立推理口碑参照。</div><div>官方销量未公开；评论量 / Boxleiter 估算待补。</div></div>
+        </div>
+        <p class="source">公开数据来源：Steam Store appdetails API，US 区价格，抓取日期 2026-06-30。价格可能包含 Steam 当前折扣，不等同标准原价。</p>
+      </div>
+      <div class="media">
+        <img src="assets/police_office_night.png" alt="警局办公室">
+      </div>
+    </section>
+
+    <section class="slide" data-number="10 / 14">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Commercial Model</p>
+        <h3>商业数据与定价判断</h3>
+        <div class="data-grid">
+          <div class="metric"><strong>$8.99 - $19.99</strong><p>竞品当前 Steam US 价格带覆盖区间。《摩登迷城》可在内容体量和首发折扣策略确定后选择位置。</p></div>
+          <div class="metric"><strong>$12.99 - $16.99</strong><p>初步建议的标准定价观察区间；需结合 Demo 转化、愿望单体量和章节时长再校准。</p></div>
+          <div class="metric"><strong>销量口径</strong><p>多数参照游戏未公开 Steam 单平台销量；后续用评论量 proxy 与 Boxleiter 模型补保守 / 中性 / 乐观区间。</p></div>
+          <div class="metric"><strong>章节制</strong><p>第一章可作为 Demo / Prologue 承担愿望单和玩法教学，后续章节作为完整付费内容承接。</p></div>
+        </div>
+        <p class="source">公开价格数据来自 Steam Store appdetails API，抓取日期 2026-06-30。销量不使用未经核验的公开猜测，后续用 Boxleiter 模型补充。</p>
+      </div>
+      <div class="media">
+        <img src="assets/bank_lobby.png" alt="Lakeshore Trust 银行大厅">
+      </div>
+    </section>
+
+    <section class="slide" data-number="11 / 14">
+      <div class="media">
+        <img src="assets/ashford_map.png" alt="Ashford 城市地图">
+      </div>
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Development Status</p>
+        <h3>开发状态与风险控制</h3>
+        <div class="timeline">
+          <p><b>系统基础：</b>核心设计文档、搜证、证词、疑点、指证、案情分析界面与配置表工作流已形成。</p>
+          <p><b>内容基础：</b>第一章 / 第二章相关场景、美术和推理结构已有较完整资源积累。</p>
+          <p><b>Demo 目标：</b>项目管理文档中以 Demo 体验完整作为阶段性里程碑，第一章可承担玩法教学和 Steam 预约转化。</p>
+          <p><b>后续计划：</b><span class="tbd">TBD</span>：第一集完成度、第二集规划、整体发售时间线需由团队确认。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-number="12 / 14">
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">Team</p>
+        <h3>团队背景</h3>
+        <div class="team-grid">
+          <div class="card"><h4>主创 / 制作人</h4><p class="tbd">TBD：点触科技经历、CS 硕士、第二意志独立出版经验等待团队确认。</p></div>
+          <div class="card"><h4>商业与发行经验</h4><p class="tbd">TBD：iOS 前五项目名称、年份、职责和可公开数据等待确认。</p></div>
+          <div class="card"><h4>内容团队</h4><p>项目已有成熟的文档、配置、审查和预览工作流，适合持续生产章节化内容。</p></div>
+          <div class="card"><h4>美术资产</h4><p>已有大量 1920s noir 场景、UI、人物和证据美术，可直接支撑 Demo 和商务展示。</p></div>
+        </div>
+      </div>
+      <div class="media">
+        <img src="assets/city_overlook.png" alt="Ashford 城市远景">
+      </div>
+    </section>
+
+    <section class="slide" data-number="13 / 14">
+      <div class="media">
+        <img src="assets/side_alley.png" alt="雨夜后巷调查">
+      </div>
+      <div class="copy compact">
+        <span class="accent"></span>
+        <p class="eyebrow">What We Are Looking For</p>
+        <h3>我们希望发行商提供什么</h3>
+        <div class="asks-grid">
+          <div class="card"><h4>海外市场推广</h4><p>Steam 商店页优化、愿望单增长、节日档期和新品节节奏建议。</p></div>
+          <div class="card"><h4>KOL / 媒体触达</h4><p>侦探、推理、AVG、noir 相关创作者和海外媒体触达。</p></div>
+          <div class="card"><h4>本地化协调</h4><p>英文文本润色、配音协调、商店页和宣传物料本地化。</p></div>
+          <div class="card"><h4>不需要什么</h4><p class="tbd">TBD：是否不需要开发资金、IP 合作或全流程制作支持，由团队确认。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide contact" data-number="14 / 14">
+      <img class="full-bg" src="assets/cemetery_ending.png" alt="城市墓园">
+      <div class="contact-copy">
+        <p class="eyebrow">Contact</p>
+        <h1>摩登迷城</h1>
+        <h2>Gaze in shadows</h2>
+        <div class="data-grid">
+          <div class="metric"><strong class="tbd">TBD</strong><p>联系邮箱</p></div>
+          <div class="metric"><strong class="tbd">TBD</strong><p>Steam 商店页链接</p></div>
+          <div class="metric"><strong class="tbd">TBD</strong><p>Demo 下载链接</p></div>
+          <div class="metric"><strong class="tbd">TBD</strong><p>Trailer / Press Kit 链接</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls" aria-hidden="false">
+    <button type="button" id="prevSlide" aria-label="上一页" title="上一页">‹</button>
+    <span class="counter" id="counter">01 / 12</span>
+    <button type="button" id="nextSlide" aria-label="下一页" title="下一页">›</button>
+  </div>
+
+  <script>
+    const deck = document.querySelector(".deck");
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const prevButton = document.getElementById("prevSlide");
+    const nextButton = document.getElementById("nextSlide");
+    const counter = document.getElementById("counter");
+
+    function activeIndex() {
+      if (window.matchMedia("(max-width: 980px)").matches) {
+        const midpoint = window.scrollY + window.innerHeight / 2;
+        return Math.max(0, slides.findIndex((slide) => {
+          const top = slide.offsetTop;
+          return midpoint >= top && midpoint < top + slide.offsetHeight;
+        }));
+      }
+      return Math.round(deck.scrollLeft / window.innerWidth);
+    }
+
+    function updateCounter() {
+      const index = Math.min(slides.length - 1, Math.max(0, activeIndex()));
+      counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(slides.length).padStart(2, "0");
+    }
+
+    function goToSlide(index) {
+      const target = Math.min(slides.length - 1, Math.max(0, index));
+      if (window.matchMedia("(max-width: 980px)").matches) {
+        slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        slides[target].scrollIntoView({ behavior: "smooth", inline: "start" });
+      }
+    }
+
+    prevButton.addEventListener("click", () => goToSlide(activeIndex() - 1));
+    nextButton.addEventListener("click", () => goToSlide(activeIndex() + 1));
+    deck.addEventListener("scroll", updateCounter, { passive: true });
+    window.addEventListener("scroll", updateCounter, { passive: true });
+    window.addEventListener("resize", updateCounter);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+        event.preventDefault();
+        goToSlide(activeIndex() + 1);
+      }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        goToSlide(activeIndex() - 1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        goToSlide(0);
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        goToSlide(slides.length - 1);
+      }
+    });
+    updateCounter();
+  </script>
+</body>
+</html>
