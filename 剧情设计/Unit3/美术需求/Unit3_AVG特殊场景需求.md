@@ -20,7 +20,7 @@
 |---|---|---:|---|---|---|
 | L1 | 开篇纯 AVG | `3191` | `SC3191_avg_Opening_MickeyCommission` | Mickey、Zack、Emma | Mickey 登门事务所委托调查 Thomas 坠楼案；点出"欠贷款 + 巨额保险 + 湖滨信托银行"与 Frank 案同模式，自己不参与、请两人查后到他办公室汇报。 |
 | L1 | 指证后纯 AVG | `3192` | `SC3192_avg_MorrisonPointsToMary` | Morrison、Zack、Emma | Morrison 摆烂放任调查，抛出"楼顶脚印可能属于死者妻子 Mary"；态度是"内部牵扯太多、不想管"。 |
-| L2 | 开篇纯 AVG | `3291` | `SC3291_avg_Opening_BackToApartment` | Zack、Emma | 带着"脚印属于 Mary"的线索回到 Thomas 公寓楼下；Emma 仰看天台护栏，感慨普通人被谋杀却被警方掩盖。 |
+| L2 | 开篇纯 AVG | `3291` | `SC3291_avg_Opening_BackToApartment` | Zack、Emma | 带着"脚印属于 Mary"的线索回到 Thomas 公寓楼下（楼体为 6 层住宅 + 楼顶天台，画面可从街面仰看至楼顶护栏）；Emma 仰看天台护栏，感慨普通人被谋杀却被警方掩盖。 |
 | L2 | 指证后纯 AVG | `3292` | `SC3292_avg_MaryRooftopVersion` | Mary、Zack、Emma | Mary 三轮被逼后退守：承认 22:00 上过天台，称与 Thomas 约好为 Emily 祈福、Thomas 突然想推她、她推回去时 Thomas 失力撞栏坠落；反复说自己会不会被当凶手。 |
 | L3 | 开篇纯 AVG | `3391` | `SC3391_avg_Opening_ExpandSearch` | Zack、Emma | 走回公寓楼内，Emma 盯着住户名牌思考"Thomas 为何要推妻子、他的出轨对象会不会知情"，决定扩大搜查。 |
 | L3 | 指证后纯 AVG | `3392` | `SC3392_avg_ThomasKillerRevealed` | Helen、Zack、Emma | 第一重反转：Thomas 是杀妻骗保恶魔（非单纯酗酒丈夫）。Helen 承认布置陷阱（毁栏 + 涂油）、否认杀人，坚称"被 Thomas 命令独自去做、Thomas 肯定是意外坠楼"。 |
