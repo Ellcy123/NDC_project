@@ -127,7 +127,7 @@ scenes:
 
       - id: 3302
         name: "女性权益剪报墙"
-        type: clue
+        type: envir
         pickup: false
         note: "🟣 环境叙事——Helen 的内心世界，女性权益剪报；童年创伤的潜在投射"
         description: "客厅靠墙一整面剪报：女性权益运动、家庭暴力报道、Margaret Sanger 演讲剪辑等"
@@ -155,7 +155,7 @@ scenes:
 
       - id: 3306
         name: "Helen 外出鞋"
-        type: clue
+        type: envir
         pickup: false
         note: "🟣 环境叙事——6 码女鞋，鞋底肉眼可见油迹（与楼顶女鞋印同款同码，暗示曾上过涂油的天台）；现场查看、不可带走/不可检测"
         description: "鞋架上 Helen 的外出鞋：6 码黑色小皮鞋，与 Mary 同款同码；鞋底沟槽肉眼可见油迹"
@@ -169,7 +169,7 @@ scenes:
 
       - id: 3308
         name: "Helen 嘴上深红色口红"
-        type: clue
+        type: envir
         pickup: false
         note: "🟣 环境叙事——颜色与 L2 衬衫口红印吻合（Helen 即出轨对象由 Emma 在突发事件 helen_lover_reveal 中点明，非玩家自悟）"
         description: "Helen 嘴唇上的深红色口红，色泽与 L2 衬衫上的口红印明显同款"
@@ -239,7 +239,7 @@ scenes:
 
       - id: 3313
         name: "Emily 的纪念角"
-        type: clue
+        type: envir
         pickup: false
         note: "🟣 环境叙事——女儿 Emily 在此坠落的纪念角；情感铺垫，不承担推理"
         description: "折角凹角中间的纪念角：一尊风化的圣母石膏小像缠着褪色念珠，前面摆着烧残的许愿蜡烛和一只褪色的布偶娃娃。"
@@ -413,9 +413,7 @@ doubts:
     text: "Helen 与 Thomas 是什么关系？——口红颜色与银行旁听"
     isFragment: false
     unlock_condition:
-      - type: 1
-        param: "3308"     # Helen 嘴上深红色口红
-      - type: 1
+      - type: 4
         param: "3063001"  # Bernard 证词：Helen 旁听过意外赔付
 
   - id: 3302
@@ -467,13 +465,6 @@ doubts:
       - type: 1
         param: "3083002"  # Seamus 证词：Thomas 是天台管理人、钥匙只有一把（🔵 L4 R2 辅助）
 
-  - id: 3308
-    text: "Helen 外出鞋的鞋码——6 码女鞋（与楼顶女鞋印吻合）"
-    isFragment: true
-    unlock_condition:
-      - type: 1
-        param: "3306"     # Helen 外出鞋（环境证物）
-
   - id: 3309
     text: "Helen 家酒柜里的 Jameson——与天台空瓶同款"
     isFragment: true
@@ -495,7 +486,7 @@ evidence_registry:
 
   - id: 3302
     name: "女性权益剪报墙"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3008
     note: "🟣 环境叙事"
@@ -523,7 +514,7 @@ evidence_registry:
 
   - id: 3306
     name: "Helen 外出鞋"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3008
     note: "🟣 环境叙事——6 码女鞋（与楼顶女鞋印吻合）；现场查看、不可带走/不可检测"
@@ -537,7 +528,7 @@ evidence_registry:
 
   - id: 3308
     name: "Helen 嘴上深红色口红"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3008
     note: "🟣 环境叙事——Expose R1 辅助"
@@ -572,7 +563,7 @@ evidence_registry:
 
   - id: 3313
     name: "Emily 的纪念角"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3002
     note: "🟣 环境叙事——女儿坠落处的纪念角，情感铺垫"

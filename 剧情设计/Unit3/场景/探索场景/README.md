@@ -12,7 +12,7 @@ EXP_SC{sceneId}_{地点名}.md
 
 | 文件 | 内部英文名 | 场景用途 |
 |---|---|---|
-| EXP_SC3001_楼下现场.md | `u3_exp_ground` | 公寓楼下案发外部区域，L1 起保留至全 Unit |
+| EXP_SC3001_楼下现场.md | `u3_exp_ground` / `u3_l2_ground_entrance` | 公寓楼下案发外部区域 + L2 Mary 拦截 / 指证入口 |
 | EXP_SC3002_楼顶.md | `u3_exp_rooftop` | 楼顶案发现场，承载护栏、油痕、脚印等跨 Loop 搜证 |
 | EXP_SC3003_Smith家_客厅.md | `u3_exp_smith_living` | Smith 家客厅，L2 起进入 |
 | EXP_SC3004_警局.md | `u3_exp_police` | L1 Morrison 指证地点，可作为指证背景复用 |
@@ -24,7 +24,7 @@ EXP_SC{sceneId}_{地点名}.md
 | EXP_SC3010_Margaret鞋坊.md | `u3_exp_shoe_shop` | Margaret 鞋坊 |
 | EXP_SC3011_Mickey办公室.md | `u3_exp_mickey_office` | Mickey 办公室，L5 / L6 使用，可作为控辩背景复用 |
 | EXP_SC3012_Smith家_卧室.md | `u3_exp_smith_bedroom` | Smith 家卧室 |
-| EXP_SC3013_公寓楼门口.md | `u3_exp_entrance` | 公寓楼门口，L2 Mary 指证地点 |
+| EXP_SC3013_已并入SC3001_公寓楼门口.md | `u3_exp_entrance` | 历史占位；已并入 SC3001，不独立开放 / 出图 |
 | EXP_SC3014_Bernard办公室.md | `u3_exp_bernard_office` | Bernard 办公室，L5 指证与 Charles 突发事件地点 |
 | EXP_SC3015_三楼走廊.md | `u3_exp_3f_hall` | Helen 家门口与上行楼梯过渡 |
 | EXP_SC3016_公寓一楼走廊.md | `u3_exp_1f_hall` | Smith 家一楼入口过渡 |

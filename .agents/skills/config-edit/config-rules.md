@@ -149,6 +149,7 @@ Talk 脚本参数规则：
 ## 6. 语义判断要点（来自语言规则，最常踩）
 
 - 信息是"看到的物" → Item；"听到的话" → Testimony+TestimonyItem。
+- 改 `ItemStaticData` 的 `itemType`、英文内部名、资源名或 `ArtRequirement` 时，必须同时读 `evidence-rules.md`：`clue` / `item` / `envir` 分类、`envir` 不进背包且不配 icon、英文名带类型前缀均以该文件为准。
 - 疑点归属 = 道具/证词**被发现**的 Loop，不是被指证使用的 Loop。
 - NPC 对话 `get` 给的普通物品**默认不进疑点 condition**；但指证要用的证词谎言 / 关键证词材料必须进入对应 Loop 的疑点或碎片条件。自由探索点到的证据通常进疑点；指证后才获得、或纯展示的内容不进前置疑点。
 - 时间线证词：`shortDesc`/`shortTruth` **不写时间前缀**（如 `[22:00]`），时间由 `TestimonyItem.triggerParam = NPCID,日期代码,开始时间,结束时间` 渲染；`TimeLineEvent` 若存在只做兼容校验，不作为必配表。

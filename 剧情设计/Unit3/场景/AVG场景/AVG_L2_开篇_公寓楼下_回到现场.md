@@ -6,7 +6,7 @@
 - 内部英文名：`u3_l2_open_apartment`
 - 所属 Loop：L2
 - 对应 state 节点：loop2_state.yaml / opening
-- 对应地点参考：SC3001 Thomas 公寓楼下现场
+- 对应地点参考：SC3001 Thomas 公寓楼下入口
 - 配置场景ID：3291（暂定）
 - 配置用途：ChapterConfig.openingScene
 - 资源形态：人物和街面 / 公寓楼外景合成整图，不开放自由探索
@@ -32,5 +32,5 @@ Emma 的视线落在楼顶护栏上，核心情绪是：一个普通人明明可
 ## 配置理解
 
 - 这是 L2 开篇 AVG，不是 `EXP_SC3001_楼下现场.md` 的 Loop 版本。
-- `EXP_SC3001_楼下现场.md` 继续负责可复检的楼下现场探索底图与证据。
+- `EXP_SC3001_楼下现场.md` 继续负责楼下现场探索底图、L2 公寓入口、Mary 拦截 / 指证挂载与证据。
 - 本文件只描述开篇剧情整图，用于后续 openingScene / ArtAssetConfig 配置。

@@ -4619,7 +4619,7 @@
 
         scenesForLoop(unit, loop) {
             // v2: 用显式 loop 字段归属 + isOpen 决定是否开放
-            // （loop 由原 openInLoops 派生：一个场景=一个 Loop；isOpen 控制是否展示给玩家）
+            // （一个场景=一个 Loop；isOpen 控制是否展示给玩家）
             const loopNum = parseInt(String(loop).replace(/[^\d]/g, '')) || 0;
             const unitPrefix = String(unit).replace(/[^\d]/g, '');
             return AppState.allScenes.filter(s => {
