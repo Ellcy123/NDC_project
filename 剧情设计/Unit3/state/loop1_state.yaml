@@ -59,14 +59,28 @@ player_context:
 
 opening:
   type: cutscene  # 🎬 硬切，无玩家操作
-  location: "Zack 侦探事务所"
+  scene_name: "L1 开篇 · Mickey车内 → Zack侦探事务所 · 早报引案与正式委托"
+  location: "SC3017 Mickey 的车内 → SC3018 Zack 侦探事务所"
   characters: [Zack, Emma, Mickey]
+  scene_sequence:
+    - scene_id: 3017
+      scene_name: "L1 开篇 · Mickey车内 · 早报引案"
+      name: "Mickey 的车内"
+      function: "行车闲聊 / Emma 用早报引出 Thomas 坠楼案"
+      transition: "Mickey 开车带 Zack 和 Emma 从墓地返回 Zack 侦探事务所；车内完成早报引子后，切到事务所室内"
+    - scene_id: 3018
+      scene_name: "L1 开篇 · Zack侦探事务所 · 正式委托"
+      name: "Zack 侦探事务所"
+      function: "抵达事务所后，Mickey 正式委托"
+      transition: "三人进入 Zack 侦探事务所；Mickey 点出 Thomas Smith、湖滨信托银行债务和保单，再把调查交给 Zack 与 Emma"
   description: |
-    Mickey 登门到 Zack 侦探事务所，委托 Zack 和 Emma 调查 Thomas Smith 坠楼案。
-    Mickey 在起诉湖滨信托银行的过程中调查到这又一起被警方掩盖的"意外坠楼"——
-    死者 Thomas 死前和 Frank 一样欠下巨额贷款，还购买了巨额保险，保单来自湖滨信托银行。
-    Mickey 怀疑案件背后有隐情，说不定能帮助他推进起诉银行的案子。
-    他不参与调查，请 Zack 和 Emma 务必先去看看情况，之后再到他办公室汇报。
+    开篇第一段在 Mickey 的车内。Mickey 开车带 Zack 和 Emma 从墓地返回 Zack 的侦探事务所；
+    Emma 在后排翻看路上买来的《艾斯福德早报》，注意到一则被刻意省略姓名的"醉汉坠楼"新闻。
+
+    开篇第二段切到 Zack 侦探事务所室内。Mickey 揭示：报纸上那个"醉汉"
+    叫 Thomas Smith。Thomas 死前和 Frank 一样欠下巨额贷款，还购买了巨额保险，
+    保单指向湖滨信托银行 / 南区援助计划。Mickey 不参与现场调查，只提供方向；
+    他请 Zack 和 Emma 去 Thomas 坠楼现场查事实，之后再带结果回报。
 
   L1_opening_mickey:
     talk: L1_opening_mickey
@@ -76,9 +90,11 @@ opening:
 
     # ── 1. NPC 已知信息 ──
     active_topics:
+      - "车内早报引子：Emma 注意到'醉汉坠楼'新闻没有写死者姓名，怀疑有人刻意压低此事"
       - "委托事由：Thomas 死前与 Frank 一样欠贷款 + 购买巨额保险，疑似同一犯罪模式"
       - "起诉湖滨信托银行的案件需要新证据——Thomas 案可能是突破口"
-      - "汇报机制：Zack/Emma 调查后到 Mickey 办公室碰头"
+      - "委托地点：SC3018 Zack 侦探事务所，Mickey 抵达后完成委托"
+      - "汇报机制：Zack/Emma 调查后再找 Mickey 碰头"
     withheld_topics:
       - "Mickey 的真实身份（Whale，Unit4 才揭示）"
       - "Mickey 与本案三方（Mary/Helen/Bernard）的私下关系"
@@ -92,13 +108,14 @@ opening:
     # ── 3. 可提取证词 ──
     testimony_ids:
       - 3011001  # Mickey 委托：Thomas 案与 Frank 案的相似性
-      - 3011002  # Mickey 委托：保单来自湖滨信托银行
 
 # ─────────────────────────────
 # 三、场景（🔓 自由探索）
 # ─────────────────────────────
 #
 # 本 Loop 场景状态:
+#   SC3017 Mickey 的车内            → 🎬 开篇第一段（硬切）
+#   SC3018 Zack 侦探事务所          → 🎬 开篇第二段（硬切 / 委托）
 #   SC3001 楼下现场              → 🔓 自由探索
 #   SC3002 楼顶                  → 🔓 自由探索（护栏区被警戒线封锁，L3 才解锁）
 #   SC3004 警局                  → 🔓 → ⚔️ 指证（Morrison）
