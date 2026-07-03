@@ -43,7 +43,7 @@ Mickey 的律师事务所，二层小楼，门口挂着 "Donnelly & Associates" 
 
 ### Expose Mickey · 5 轮（控辩对决）
 - **R1**：Thomas 计划杀 Mary → 法医鉴定报告 + Foster 证词击破
-- **R2**：Thomas 不会喝醉 → Jameson 三件套击破
+- **R2**：Thomas 不会喝醉 → Old Crow 药用威士忌三件套击破
 - **R3**：油迹是当晚弄的 → Seamus 润滑油证词击破
 - **R4**：Helen 几天前蹭到油 → 尸体手部油迹击破 + 玩家三选项
 - **R5**：可能其他人 → 垫板上手链压痕击破（Mary 即那个女人）

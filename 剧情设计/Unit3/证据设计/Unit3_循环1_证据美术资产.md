@@ -15,7 +15,7 @@
 | 3103 | 11 月 20 日晚报 | item_nov20_evening_paper | Item | ✓ | SC3001 | L2 |
 | 3104 | 女性脚印照片 | clue_female_footprints | Clue | ✓ | SC3002 | — |
 | 3105 | 男性脚印照片 | clue_male_bootprints | Clue | ✓ | SC3002 | — |
-| 3106 | Jameson 空酒瓶 | item_jameson_empty_bottle | Item | ✓ | SC3002 | L6 |
+| 3106 | Old Crow 药用威士忌空瓶 | item_old_crow_medicinal_whiskey_empty | Item | ✓ | SC3002 | L6 |
 | 3107 | 袖扣纤维样本 | item_cufflink_fiber_sample | Item | ✓ | SC3005 | L2 |
 | 3108 | 尸体手部油迹 | clue_hand_oil_traces | Clue | ✓ | SC3005 | L6 |
 | 3110 | 尸体手部伤痕以及墙皮灰 | clue_hand_wounds_wall_dust | Clue | ✓ | SC3005 | — |
@@ -65,15 +65,15 @@
   - 它应像误导项：可信、普通、没有额外戏剧暗示。
 - **美术参考**：1920s 工人靴鞋底，和女鞋印同一地面材质。
 
-### 3106 Jameson 空酒瓶 / item_jameson_empty_bottle · L6
+### 3106 Old Crow 药用威士忌空瓶 / item_old_crow_medicinal_whiskey_empty · L6
 
 - **类型**：Item（跨 Loop，L6 R2 用）
 - **位置**：SC3002 天台东南角避风处
 - **美术需求**：
-  - Jameson 酒瓶躺在天台避风角，品牌标签清楚。
+  - Old Crow 药用威士忌空瓶躺在天台避风角，品牌和处方酒标签清楚。
   - 瓶口残酒很少，瓶身比 Thomas 家环境显得“过于体面”。
   - 本 Loop 只当零散物，不暗示 Helen 来源。
-- **美术参考**：棕褐玻璃、完整标签、轻微指印但不做身份判断。
+- **美术参考**：棕褐玻璃、Old Crow 复古标签、处方酒小标识、轻微指印但不做身份判断。
 
 ### 3107 袖扣纤维样本 / item_cufflink_fiber_sample · L2
 
@@ -121,7 +121,7 @@
 
 本 Loop 严守隐藏：
 - **3104 女性脚印**：仅说“6 码、凌乱、暂不能判断人数”，不暗示“两人”。
-- **3106 Jameson 空瓶**：只作角落零散物，不暗示来源。
+- **3106 Old Crow 药用威士忌空瓶**：只作角落零散物，不暗示来源。
 - **3107 袖扣纤维**：只标“异源黑色织物”，不暗示祈祷披肩。
 - **3108 尸体手部油迹**：仅记现象，不解读来源。
 - **3102 + 3110**：让玩家组合外墙抓痕与手部伤痕，自己推出“不是自杀”。

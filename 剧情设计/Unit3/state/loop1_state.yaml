@@ -16,7 +16,7 @@
 # B. 证据覆盖     PASS — 大纲 Loop1 所有证据（3102-3110）已分配到场景
 # C. NPC 条目     PASS — Mickey / Foster / Morrison 各含 4 必填块
 # D. 目标对齐     PASS — primary goal 与大纲"Thomas 真的是自杀吗"一致
-# E. 信息节奏     PASS — 严格隐藏：脚印不说"两人"、Thomas 手油不解读、Jameson 不暗示来源、护栏区警戒线封锁
+# E. 信息节奏     PASS — 严格隐藏：脚印不说"两人"、Thomas 手油不解读、Old Crow 药用威士忌 不暗示来源、护栏区警戒线封锁
 # G. Expose 逻辑  PASS — R1（自杀谎言）= 外墙照片 + 尸体手部伤痕以及墙皮灰；R2（独处谎言）= 女性脚印
 # ──────────────────────────────────────────────────────────
 #
@@ -174,11 +174,11 @@ scenes:
         description: "栏杆封锁线附近：Thomas 的男性脚印，与尸体脚部尺码吻合"
 
       - id: 3106
-        name: "Jameson 空酒瓶"
+        name: "Old Crow 药用威士忌空瓶"
         type: item
         pickup: true
-        note: "🔵 跨 Loop——伏笔，本 Loop 仅作'角落零散物'对待，不暗示来源（L3 揭示与 Helen 家 Jameson 一致）"
-        description: "天台东南角避风处：一只 Jameson 威士忌空酒瓶，瓶身完好"
+        note: "🔵 跨 Loop——伏笔，本 Loop 仅作'角落零散物'对待，不暗示来源（L3 揭示与 Helen 家 Old Crow 药用威士忌 一致）"
+        description: "天台东南角避风处：一只 Old Crow 药用威士忌空瓶，瓶身完好，处方酒标签仍清楚"
 
   # ── SC3005 法医办公室（Foster 对话 + 搜证） ──
   - id: 3005
@@ -394,11 +394,11 @@ doubts:
         param: "3105"        # 男性脚印照片（Expose R2 陷阱）
 
   - id: 3106
-    text: "天台角落的 Jameson 空酒瓶从哪来？"
+    text: "天台角落的 Old Crow 药用威士忌空瓶从哪来？"
     isFragment: true
     unlock_condition:
       - type: 1
-        param: "3106"        # Jameson 空酒瓶（🔵 L6 R2 用）
+        param: "3106"        # Old Crow 药用威士忌空瓶（🔵 L6 R2 用）
 
   - id: 3107
     text: "Thomas 手部为何会有油痕？"
@@ -449,7 +449,7 @@ evidence_registry:
     note: "陷阱——Thomas 自己的脚印（Expose R2 陷阱）"
 
   - id: 3106
-    name: "Jameson 空酒瓶"
+    name: "Old Crow 药用威士忌空瓶"
     type: item
     pickup: true
     first_scene: 3002

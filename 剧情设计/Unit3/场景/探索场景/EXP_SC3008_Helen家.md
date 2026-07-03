@@ -39,7 +39,7 @@ Helen 一个人住的小公寓。
 | 3304 | 楼顶钥匙 | Item | 🔵 L4 R2 主力 |
 | 3305 | Helen 的猫 | Clue | 猫尾蹭油 |
 | 3306 | Helen 外出鞋 | Clue | 🟣 环境叙事 |
-| 3307 | Helen 家的 Jameson 酒 | Item | 🔵 L6 R2 用 |
+| 3307 | Helen 家的 Old Crow 药用威士忌 | Item | 🔵 L6 R2 用 |
 | 3308 | Helen 嘴上深红色口红 | Clue | 🟣 环境叙事 |
 
 ### L4

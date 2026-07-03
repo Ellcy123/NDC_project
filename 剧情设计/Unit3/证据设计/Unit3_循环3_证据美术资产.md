@@ -16,7 +16,7 @@
 | 3304 | 楼顶钥匙 | item_rooftop_key | Item | ✓ | SC3008 | L4 |
 | 3305 | Helen 的猫 | clue_helen_cat_oil_tail | Clue | ✗ | SC3008 | — |
 | 3306 | Helen 外出鞋 | envir_helen_outdoor_shoes | Envir | ✗ | SC3008 | — |
-| 3307 | Helen 家的 Jameson 酒 | item_helen_jameson_bottle | Item | ✓ | SC3008 | L6 |
+| 3307 | Helen 家的 Old Crow 药用威士忌 | item_helen_old_crow_medicinal_whiskey | Item | ✓ | SC3008 | L6 |
 | 3308 | Helen 嘴上深红色口红 | envir_helen_deep_crimson_lipstick | Envir | ✗ | SC3008 | — |
 | 3309 | 被破坏的护栏 | clue_damaged_rooftop_railing | Clue | ✓ | SC3002 | — |
 | 3310 | 护栏断口的缺件（白漆） | clue_railing_missing_screw_cap | Clue | ✓ | SC3002 | — |
@@ -88,15 +88,15 @@
   - 它只做环境暗示：另一个女人也可能上过涂油天台。
 - **美术参考**：鞋架阴影、低跟扣带、鞋底局部可看。
 
-### 3307 Helen 家的 Jameson 酒 / item_helen_jameson_bottle · L6
+### 3307 Helen 家的 Old Crow 药用威士忌 / item_helen_old_crow_medicinal_whiskey · L6
 
 - **类型**：Item（跨 Loop，L6 R2 用）
 - **位置**：SC3008 酒柜
 - **美术需求**：
-  - Helen 酒柜里有一瓶 Jameson，标签与天台空瓶同款。
+  - Helen 酒柜里有一瓶 Old Crow 药用威士忌，标签与天台空瓶同款，带有合法药用处方酒的识别感。
   - 瓶中约剩 1/3，摆放得比 Thomas 家廉价酒体面。
   - 本 Loop 只让玩家记住“同款酒”，不解释灌酒。
-- **美术参考**：棕玻璃、爱尔兰威士忌标签、柜内暖光。
+- **美术参考**：棕玻璃、Old Crow 复古标签、柜内暖光。
 
 ### 3308 Helen 嘴上深红色口红 / envir_helen_deep_crimson_lipstick
 
@@ -165,6 +165,6 @@
 本 Loop 严守隐藏：
 - **3304 楼顶钥匙油迹**：只观察到油迹，不能分析成分。
 - **3306 Helen 外出鞋**：只做环境暗示，不强制指认。
-- **3307 Jameson 酒**：只记同款酒，L6 才揭灌酒。
+- **3307 Old Crow 药用威士忌**：只记同款酒，L6 才揭灌酒。
 - **3311 油迹分布**：只表达陷阱已布，不点破 Thomas 常站位。
 - **3308 Helen 口红**：由 Emma 在突发事件中点明出轨对象，不让证据文案替玩家说结论。
