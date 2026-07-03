@@ -170,14 +170,14 @@ scenes:
     evidence:
       - id: 3203
         name: "家暴痕迹（墙纸撕裂）"
-        type: clue
+        type: envir
         pickup: false
         note: "环境叙事——女儿房间门口墙纸撕裂，暗示家暴；不直接证据，作为 Mary 动机的潜在铺垫"
         description: "女儿房间门口旁边的墙纸有大片撕裂痕迹，下方墙皮可见旧的拳头印"
 
       - id: 3204
         name: "Emily 的蜡笔画"
-        type: clue
+        type: envir
         pickup: false
         note: "🔒 动机相关——女儿 Emily 的遗物（仅环境叙事）"
         description: "贴在女儿房间门口的蜡笔画：歪歪斜斜的'妈妈'两字，旁边画着一个戴花形项链的女人"
@@ -224,7 +224,7 @@ scenes:
 
       - id: 3209
         name: "Mary 外出鞋"
-        type: clue
+        type: envir
         pickup: false
         note: "🟣 环境叙事——6 码女鞋（与 L1 证据 3104 鞋码吻合，形成怀疑方向）；现场查看、不可带走"
         description: "鞋架上整齐摆放的 Mary 外出鞋：6 码黑色小皮鞋，皮质陈旧，鞋跟有磨损痕迹"
@@ -255,7 +255,7 @@ scenes:
 
       - id: 3211
         name: "教堂祈祷册"
-        type: clue
+        type: envir
         pickup: false
         note: "🟣 环境叙事——翻开停在一页：'愿主使受苦者脱离恶人的手，愿审判临到施暴之人'。本 Loop 仅环境记录，不指认 Mary 预谋（玩家自悟）"
         description: "前排长椅上摊开的祈祷册，停在《诗篇》某一页：'愿主使受苦者脱离恶人的手，愿审判临到施暴之人'"
@@ -419,13 +419,6 @@ doubts:
       - type: 1
         param: "3270"        # 口红颜色比对报告（口红比对玩法产物）
 
-  - id: 3207
-    text: "Mary 外出鞋的鞋码——6 码，与楼顶女鞋印鞋码吻合"
-    isFragment: true
-    unlock_condition:
-      - type: 1
-        param: "3209"        # Mary 外出鞋
-
   - id: 3208
     text: "Thomas 家中的酒——只有廉价自酿私酒"
     isFragment: true
@@ -461,14 +454,14 @@ evidence_registry:
 
   - id: 3203
     name: "家暴痕迹（墙纸撕裂）"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3003
     note: "🟣 环境叙事——Mary 动机潜在铺垫"
 
   - id: 3204
     name: "Emily 的蜡笔画"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3003
     note: "🔒 动机——女儿遗物，环境叙事"
@@ -503,7 +496,7 @@ evidence_registry:
 
   - id: 3209
     name: "Mary 外出鞋"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3012
     note: "🟣 环境叙事——6 码与楼顶女鞋印吻合（强化 Mary 在场）；现场查看、不可带走"
@@ -517,7 +510,7 @@ evidence_registry:
 
   - id: 3211
     name: "教堂祈祷册"
-    type: clue
+    type: envir
     pickup: false
     first_scene: 3007
     note: "🟣 环境叙事——本 Loop 玩家自悟，不指认"

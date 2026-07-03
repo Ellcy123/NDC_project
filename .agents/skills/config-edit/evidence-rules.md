@@ -1,12 +1,6 @@
----
-paths:
-  - "剧情设计/**"
-  - "**/证据*"
-  - "**/ItemStaticData*"
-  - "avg_editor_v2/data/table/ItemStaticData.json"
----
-
 # 证据 / 道具 / 环境叙事规则
+
+改 `ItemStaticData` 前必须读本文件。这里是编辑器配置的证据分类规则，尤其用于判断 `itemType`、英文内部名、资源名和美术需求写法。
 
 ## ItemStaticData.itemType
 

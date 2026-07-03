@@ -4619,7 +4619,7 @@
 
         scenesForLoop(unit, loop) {
             // v2: 用显式 loop 字段归属 + isOpen 决定是否开放
-            // （loop 由原 openInLoops 派生：一个场景=一个 Loop；isOpen 控制是否展示给玩家）
+            // （一个场景=一个 Loop；isOpen 控制是否展示给玩家）
             const loopNum = parseInt(String(loop).replace(/[^\d]/g, '')) || 0;
             const unitPrefix = String(unit).replace(/[^\d]/g, '');
             return AppState.allScenes.filter(s => {
@@ -5060,6 +5060,9 @@
             const resPath = sceneInfo?.ResPath || '';
             const resUrl  = resPath ? Config.getAssetUrl(resPath) : '';
             const hasRes  = !!resPath;
+            const npcArtRequirement = String(npc.ArtRequirement || '').trim();
+            const iconSmall = npc.IconSmall || '';
+            const iconLarge = npc.IconLarge || '';
 
             // Talk / LoopTalk 入口(仅场景上下文)
             const talkResolved = sceneInfo
@@ -5095,7 +5098,19 @@
             }
             html += `</div>`;
             html += `<div class="npc-portrait-meta">`;
-            if (!resPath) {
+            if (npcArtRequirement) {
+                html += `<div class="art-highlight"><strong style="color:var(--highlight);">[ART] 人物美术需求：</strong><br>${escapeHtmlWithBr(npcArtRequirement)}</div>`;
+            } else {
+                html += `<div class="art-missing"><strong>[!] 未填写人物美术需求</strong></div>`;
+            }
+            const iconMeta = [
+                iconSmall ? `头像小图: ${iconSmall}` : '',
+                iconLarge ? `头像大图: ${iconLarge}` : ''
+            ].filter(Boolean).join(' / ');
+            if (iconMeta) {
+                html += `<div class="avg-ctx mono" style="margin-top:8px;">${escapeHtml(iconMeta)}</div>`;
+            }
+            if (sceneNpcIdx != null && !resPath) {
                 html += `<div class="art-missing">[!] NPCInfo.ResPath 未填,场景里没有指定立绘</div>`;
             }
             html += `</div></section>`;

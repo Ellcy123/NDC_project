@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T07:30:21.860781+00:00",
-  "source": "avg_editor_v2/data/table",
+  "generatedAt": "2026-07-02T07:43:10.756Z",
+  "source": "avg_editor_v2/data/table + 剧情设计/Unit3",
   "purpose": "planning-level flow overview for editor UI",
   "units": {
     "Unit1": {
@@ -4963,6 +4963,1746 @@
                   "1601"
                 ]
               }
+            }
+          ]
+        }
+      ]
+    },
+    "Unit3": {
+      "unit": "Unit3",
+      "formalUnit": "Unit3",
+      "chapter": "EPI03",
+      "title": "Thomas坠楼案",
+      "loops": [
+        {
+          "id": "loop1",
+          "loop": 1,
+          "chapterId": "301",
+          "title": "自杀假象",
+          "brief": "Mickey 委托 Zack 调查 Thomas 坠楼案；外墙抓痕、手部伤痕和女性脚印把案件从自杀扳回可疑死亡。",
+          "openingBrief": "Mickey 车内早报引案后切到 Zack 事务所正式委托。",
+          "goal": "Thomas 真的是自杀吗？",
+          "initTalk": "TODO_L1_opening",
+          "initScene": "3101",
+          "openingScene": "3017",
+          "opening": [
+            {
+              "id": "3017",
+              "title": "Mickey车内早报引案",
+              "purpose": "Emma 用早报引出 Thomas 坠楼案。",
+              "firstId": "TODO_L1_opening_car",
+              "talk": "TODO_L1_opening_car"
+            },
+            {
+              "id": "3018",
+              "title": "Zack侦探事务所正式委托",
+              "purpose": "Mickey 正式委托 Zack 与 Emma 调查。",
+              "firstId": "TODO_L1_opening_office",
+              "talk": "TODO_L1_opening_office"
+            }
+          ],
+          "scenes": [
+            {
+              "id": "3101",
+              "name": "Thomas 公寓楼下现场 (L1)",
+              "kind": "explore",
+              "isInit": true,
+              "npcCount": 0,
+              "itemCount": 2,
+              "itemIds": [
+                "3102",
+                "3103"
+              ]
+            },
+            {
+              "id": "3102",
+              "name": "Thomas 公寓楼顶 (L1)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 3,
+              "itemIds": [
+                "3104",
+                "3105",
+                "3106"
+              ]
+            },
+            {
+              "id": "3104",
+              "name": "警局 (L1)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3105",
+              "name": "法医办公室 (L1)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 4,
+              "itemIds": [
+                "3107",
+                "3108",
+                "3109",
+                "3110"
+              ]
+            }
+          ],
+          "doubts": [
+            {
+              "id": "3101",
+              "text": "Thomas 真的是自杀吗？——外墙有抓挠痕迹，尸体手部有伤痕和墙皮灰",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3102",
+                  "label": "道具 3102 · 外墙照片",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3110",
+                  "label": "道具 3110 · 尸体手部伤痕以及墙皮灰",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3102",
+              "text": "案发现场的女性是谁？——楼顶有 6 码女鞋印",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3104",
+                  "label": "道具 3104 · 女性脚印照片",
+                  "exists": true
+                },
+                {
+                  "type": "4",
+                  "param": "3031002",
+                  "label": "证词 3031002 · 案发现场没有其他人在场痕迹（Expose R2 lie source）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3103",
+              "text": "Thomas 死前为什么会购买巨额保险？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3011001",
+                  "label": "证词 3011001 · Thomas 案与 Frank 案的相似性",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3104",
+              "text": "尸体手部的抓挠伤和墙皮灰——坠落时曾本能抓墙？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3110",
+                  "label": "道具 3110 · 尸体手部伤痕以及墙皮灰",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3105",
+              "text": "天台男性脚印的归属——属于 Thomas 自己？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3105",
+                  "label": "道具 3105 · 男性脚印照片",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3106",
+              "text": "天台角落的 Jameson 空酒瓶从哪来？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3106",
+                  "label": "道具 3106 · Jameson 空酒瓶",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3107",
+              "text": "Thomas 手部为何会有油痕？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3108",
+                  "label": "道具 3108 · 尸体手部油迹",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3108",
+              "text": "11 月 20 日晚报天气栏的港口阵风——案发当晚的天气如何？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3103",
+                  "label": "道具 3103 · 11 月 20 日晚报",
+                  "exists": true
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "1",
+              "talkId": "TODO_L1_expose_morrison_r1",
+              "testimony": "3031001",
+              "testimonyLabel": "证词 3031001 · 他自己跳下去的（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3102",
+                  "name": "道具 3102 · 外墙照片"
+                },
+                {
+                  "id": "3110",
+                  "name": "道具 3110 · 尸体手部伤痕以及墙皮灰"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "talkId": "TODO_L1_expose_morrison_r2",
+              "testimony": "3031002",
+              "testimonyLabel": "证词 3031002 · 案发现场没有其他人在场痕迹（Expose R2 lie source）",
+              "items": [
+                {
+                  "id": "3104",
+                  "name": "道具 3104 · 女性脚印照片"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": []
+        },
+        {
+          "id": "loop2",
+          "loop": 2,
+          "chapterId": "302",
+          "title": "Mary 的天台版本",
+          "brief": "Mary 的教堂不在场被蜡烛、披肩和纤维击穿，她被迫承认 22:00 上过天台。",
+          "openingBrief": "带着 Mary 脚印线索回到公寓楼下。",
+          "goal": "Mary 与 Thomas 的死有什么关系？",
+          "initTalk": "TODO_L2_opening",
+          "initScene": "3213",
+          "openingScene": "3291",
+          "opening": [
+            {
+              "id": "3291",
+              "title": "L2 开篇：公寓楼下回到现场",
+              "purpose": "带着 Mary 脚印线索回到公寓楼下。",
+              "firstId": "TODO_L2_opening",
+              "talk": "TODO_L2_opening"
+            }
+          ],
+          "scenes": [
+            {
+              "id": "3213",
+              "name": "Smith 公寓楼门口 (L2)",
+              "kind": "explore",
+              "isInit": true,
+              "npcCount": 1,
+              "itemCount": 2,
+              "itemIds": [
+                "3201",
+                "3202"
+              ]
+            },
+            {
+              "id": "3201",
+              "name": "Thomas 公寓楼下现场 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3202",
+              "name": "Thomas 公寓楼顶 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3203",
+              "name": "Smith 家客厅 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 4,
+              "itemIds": [
+                "3203",
+                "3204",
+                "3205",
+                "3206"
+              ]
+            },
+            {
+              "id": "3205",
+              "name": "法医办公室 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3207",
+              "name": "St.Patrick 教堂 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 2,
+              "itemIds": [
+                "3210",
+                "3211"
+              ]
+            },
+            {
+              "id": "3212",
+              "name": "Smith 家卧室 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 4,
+              "itemIds": [
+                "3207",
+                "3208",
+                "3209",
+                "3270"
+              ]
+            },
+            {
+              "id": "3216",
+              "name": "公寓一楼走廊 (L2)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            }
+          ],
+          "doubts": [
+            {
+              "id": "3201",
+              "text": "Mary 真的整晚在教堂吗？——蜡烛只烧了 30 分钟",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3210",
+                  "label": "道具 3210 · 倒下的蜡烛残骸",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3103",
+                  "label": "道具 3103 · 11 月 20 日晚报",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3202",
+              "text": "Mary 是否到过案发现场？——披肩破洞与 Thomas 袖扣纤维",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3201",
+                  "label": "道具 3201 · 祈祷披肩",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3107",
+                  "label": "道具 3107 · 袖扣纤维样本",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3203",
+              "text": "Thomas 是否有出轨对象？——衣柜底层的口红印衬衫",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3207",
+                  "label": "道具 3207 · 沾有口红印的衬衫",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3208",
+                  "label": "道具 3208 · Mary 的浅色口红盒",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3204",
+              "text": "Thomas 死前为何要给自己买保险？（深化）",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3022003",
+                  "label": "证词 3022003 · Thomas 欠银行 $12000（中性事实，与 Mickey 委托证词呼应）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3205",
+              "text": "神父亲眼所见的时段——Mary 是 19-21 点在教堂吗？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3092002",
+                  "label": "证词 3092002 · Mary 来教堂时祈祷披肩完好（Expose R2 主力之一）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3206",
+              "text": "Mary 藏起的浅色口红盒——五色均与衬衫不符",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3270",
+                  "label": "道具 3270 · 口红颜色比对报告",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3207",
+              "text": "Mary 外出鞋的鞋码——6 码，与楼顶女鞋印鞋码吻合",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3209",
+                  "label": "道具 3209 · Mary 外出鞋",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3208",
+              "text": "Thomas 家中的酒——只有廉价自酿私酒",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3205",
+                  "label": "道具 3205 · Thomas 家的廉价酒照片",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3209",
+              "text": "Thomas 桌上的标注报纸——为何圈出大量银行术语？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3206",
+                  "label": "道具 3206 · 标注报纸",
+                  "exists": true
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "1",
+              "talkId": "TODO_L2_expose_mary_r1",
+              "testimony": "3022001",
+              "testimonyLabel": "证词 3022001 · 身份与昨晚教堂祈祷的口径（含蜡烛烧完才离开）—— ⚠谎言（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3210",
+                  "name": "道具 3210 · 倒下的蜡烛残骸"
+                },
+                {
+                  "id": "3103",
+                  "name": "道具 3103 · 11 月 20 日晚报"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "talkId": "TODO_L2_expose_mary_r2",
+              "testimony": "3022001",
+              "testimonyLabel": "证词 3022001 · 身份与昨晚教堂祈祷的口径（含蜡烛烧完才离开）—— ⚠谎言（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3201",
+                  "name": "道具 3201 · 祈祷披肩"
+                },
+                {
+                  "id": "3092002",
+                  "name": "证词 3092002 · Mary 来教堂时祈祷披肩完好（Expose R2 主力之一）"
+                },
+                {
+                  "id": "3107",
+                  "name": "道具 3107 · 袖扣纤维样本"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "talkId": "TODO_L2_expose_mary_r3",
+              "testimony": "3022001",
+              "testimonyLabel": "证词 3022001 · 身份与昨晚教堂祈祷的口径（含蜡烛烧完才离开）—— ⚠谎言（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3207",
+                  "name": "道具 3207 · 沾有口红印的衬衫"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": []
+        },
+        {
+          "id": "loop3",
+          "loop": 3,
+          "chapterId": "303",
+          "title": "Helen 与骗保陷阱",
+          "brief": "Helen 被点破为 Thomas 情人；银行保单、螺丝帽和护栏缺件揭示 Thomas 原本计划杀妻骗保。",
+          "openingBrief": "扩大搜查公寓楼其他住户。",
+          "goal": "Helen 和 Thomas 的关系是什么？",
+          "initTalk": "TODO_L3_opening",
+          "initScene": "3308",
+          "openingScene": "3391",
+          "opening": [
+            {
+              "id": "3391",
+              "title": "L3 开篇：公寓楼内扩大搜查",
+              "purpose": "扩大搜查公寓楼其他住户。",
+              "firstId": "TODO_L3_opening",
+              "talk": "TODO_L3_opening"
+            }
+          ],
+          "scenes": [
+            {
+              "id": "3308",
+              "name": "Helen 家 (L3)",
+              "kind": "explore",
+              "isInit": true,
+              "npcCount": 1,
+              "itemCount": 8,
+              "itemIds": [
+                "3301",
+                "3302",
+                "3303",
+                "3304",
+                "3305",
+                "3306",
+                "3307",
+                "3308"
+              ]
+            },
+            {
+              "id": "3301",
+              "name": "Thomas 公寓楼下现场 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3302",
+              "name": "Thomas 公寓楼顶 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 4,
+              "itemIds": [
+                "3309",
+                "3310",
+                "3311",
+                "3313"
+              ]
+            },
+            {
+              "id": "3303",
+              "name": "Smith 家客厅 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3305",
+              "name": "法医办公室 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3306",
+              "name": "公寓二楼走廊 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3307",
+              "name": "St.Patrick 教堂 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3309",
+              "name": "湖滨信托银行公共区 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 1,
+              "itemIds": [
+                "3312"
+              ]
+            },
+            {
+              "id": "3312",
+              "name": "Smith 家卧室 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3313",
+              "name": "Smith 公寓楼门口 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3315",
+              "name": "公寓三楼走廊 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3316",
+              "name": "公寓一楼走廊 (L3)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            }
+          ],
+          "doubts": [
+            {
+              "id": "3301",
+              "text": "Helen 与 Thomas 是什么关系？——口红颜色与银行旁听",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3308",
+                  "label": "道具 3308 · Helen 嘴上深红色口红",
+                  "exists": true
+                },
+                {
+                  "type": "4",
+                  "param": "3063001",
+                  "label": "证词 3063001 · Helen 在场旁听过意外赔付咨询（Expose R1 主力）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3302",
+              "text": "Mary 人寿保险的真正用途？——受益人是 Thomas",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3312",
+                  "label": "道具 3312 · Mary 人寿保险单副本",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3303",
+                  "label": "道具 3303 · Mary 人寿保险单原件",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3303",
+              "text": "Helen 是否到过天台？——Helen 家的螺丝帽与护栏缺件",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3301",
+                  "label": "道具 3301 · 有白漆的螺丝帽",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3310",
+                  "label": "道具 3310 · 护栏断口的缺件（白漆）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3304",
+              "text": "天台陷阱是谁布置的？——破坏栏杆与油迹",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3309",
+                  "label": "道具 3309 · 被破坏的护栏",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3311",
+                  "label": "道具 3311 · 地面涂油示意图",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3305",
+              "text": "Seamus 是否见过 Helen 上天台？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3083003",
+                  "label": "证词 3083003 · 最近曾经看到 Helen 上过天台",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3306",
+              "text": "Helen 猫窝里藏了什么——一把楼顶钥匙",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3304",
+                  "label": "道具 3304 · 楼顶钥匙",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3307",
+              "text": "天台钥匙的数量——是否只有一把？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3083002",
+                  "label": "证词 3083002 · Thomas 是天台管理人，只有他有钥匙、只有一把；每周上三楼两三次（关键——Expose R3 推断\"钥匙在 Helen 处\"的间接事实）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3308",
+              "text": "Helen 外出鞋的鞋码——6 码女鞋（与楼顶女鞋印吻合）",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3306",
+                  "label": "道具 3306 · Helen 外出鞋",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3309",
+              "text": "Helen 家酒柜里的 Jameson——与天台空瓶同款",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3307",
+                  "label": "道具 3307 · Helen 家的 Jameson 酒",
+                  "exists": true
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "1",
+              "talkId": "TODO_L3_expose_helen_r1",
+              "testimony": "3053002",
+              "testimonyLabel": "证词 3053002 · 和 Thomas 只是有几次聊天诉苦，是情人但没有更深联系、与他的死无关（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3063001",
+                  "name": "证词 3063001 · Helen 在场旁听过意外赔付咨询（Expose R1 主力）"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "talkId": "TODO_L3_expose_helen_r2",
+              "testimony": "3053002",
+              "testimonyLabel": "证词 3053002 · 和 Thomas 只是有几次聊天诉苦，是情人但没有更深联系、与他的死无关（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3312",
+                  "name": "道具 3312 · Mary 人寿保险单副本"
+                },
+                {
+                  "id": "3303",
+                  "name": "道具 3303 · Mary 人寿保险单原件"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "talkId": "TODO_L3_expose_helen_r3",
+              "testimony": "3053002",
+              "testimonyLabel": "证词 3053002 · 和 Thomas 只是有几次聊天诉苦，是情人但没有更深联系、与他的死无关（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3301",
+                  "name": "道具 3301 · 有白漆的螺丝帽"
+                },
+                {
+                  "id": "3310",
+                  "name": "道具 3310 · 护栏断口的缺件（白漆）"
+                },
+                {
+                  "id": "3083003",
+                  "name": "证词 3083003 · 最近曾经看到 Helen 上过天台"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": []
+        },
+        {
+          "id": "loop4",
+          "loop": 4,
+          "chapterId": "304",
+          "title": "正当防卫假结局",
+          "brief": "油痕检测仪、钥匙和 Margaret 目击证词坐实 Helen 当晚在场；Mary 登场给出正当防卫版本。",
+          "openingBrief": "Foster 来电通知油痕检测仪到位。",
+          "goal": "那晚楼顶到底发生什么？",
+          "initTalk": "TODO_L4_opening",
+          "initScene": "3405",
+          "openingScene": "3491",
+          "opening": [
+            {
+              "id": "3491",
+              "title": "L4 开篇：Helen家门外Foster来电",
+              "purpose": "Foster 来电通知油痕检测仪到位。",
+              "firstId": "TODO_L4_opening",
+              "talk": "TODO_L4_opening"
+            }
+          ],
+          "scenes": [
+            {
+              "id": "3405",
+              "name": "法医办公室 (L4)",
+              "kind": "explore",
+              "isInit": true,
+              "npcCount": 1,
+              "itemCount": 1,
+              "itemIds": [
+                "3401"
+              ]
+            },
+            {
+              "id": "3401",
+              "name": "Thomas 公寓楼下现场 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3402",
+              "name": "Thomas 公寓楼顶 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 2,
+              "itemIds": [
+                "3402",
+                "3403"
+              ]
+            },
+            {
+              "id": "3403",
+              "name": "Smith 家客厅 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3406",
+              "name": "公寓二楼走廊 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3407",
+              "name": "St.Patrick 教堂 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3408",
+              "name": "Helen 家 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 2,
+              "itemIds": [
+                "3404",
+                "3405"
+              ]
+            },
+            {
+              "id": "3409",
+              "name": "湖滨信托银行公共区 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3410",
+              "name": "Margaret 鞋坊 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3412",
+              "name": "Smith 家卧室 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3413",
+              "name": "Smith 公寓楼门口 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3415",
+              "name": "公寓三楼走廊 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3416",
+              "name": "公寓一楼走廊 (L4)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            }
+          ],
+          "doubts": [
+            {
+              "id": "3401",
+              "text": "Helen 当晚是否在场？——门把手两侧油迹差异",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3402",
+                  "label": "道具 3402 · 门外侧把手油迹",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3403",
+                  "label": "道具 3403 · 门内侧把手",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3402",
+              "text": "天台门是谁开的？——若 Helen 蹭油进门，内侧本应也沾油",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3403",
+                  "label": "道具 3403 · 门内侧把手",
+                  "exists": true
+                },
+                {
+                  "type": "4",
+                  "param": "3083002",
+                  "label": "证词 3083002 · Thomas 是天台管理人，只有他有钥匙、只有一把；每周上三楼两三次（关键——Expose R3 推断\"钥匙在 Helen 处\"的间接事实）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3403",
+              "text": "Helen 离场时间——是否真在 Thomas 坠落前就走了？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3074001",
+                  "label": "证词 3074001 · 楼顶有三个人影挣扎，随后有人坠落（关键——Expose R3 主力）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3404",
+              "text": "Thomas 的小纸条揭示了什么？——杀妻骗保 + 指挥 Helen 布置陷阱的完整计划",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3405",
+                  "label": "道具 3405 · Thomas 的小纸条",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3405",
+              "text": "Helen 家地面油迹的来源——与天台门外侧油同源",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3404",
+                  "label": "道具 3404 · Helen 家地面油迹",
+                  "exists": true
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "1",
+              "talkId": "TODO_L4_expose_helen_r1",
+              "testimony": "3053002",
+              "testimonyLabel": "证词 3053002 · 和 Thomas 只是有几次聊天诉苦，是情人但没有更深联系、与他的死无关（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3402",
+                  "name": "道具 3402 · 门外侧把手油迹"
+                },
+                {
+                  "id": "3403",
+                  "name": "道具 3403 · 门内侧把手"
+                },
+                {
+                  "id": "3404",
+                  "name": "道具 3404 · Helen 家地面油迹"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "talkId": "TODO_L4_expose_helen_r2",
+              "testimony": "3054002",
+              "testimonyLabel": "证词 3054002 · Thomas 没有安排我当晚去；我没有钥匙，钥匙在 Thomas 那（R2 lie source）",
+              "items": [
+                {
+                  "id": "3304",
+                  "name": "道具 3304 · 楼顶钥匙"
+                },
+                {
+                  "id": "3083002",
+                  "name": "证词 3083002 · Thomas 是天台管理人，只有他有钥匙、只有一把；每周上三楼两三次（关键——Expose R3 推断\"钥匙在 Helen 处\"的间接事实）"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "talkId": "TODO_L4_expose_helen_r3",
+              "testimony": "3054003",
+              "testimonyLabel": "证词 3054003 · 好吧我当天确实去过——不过 Thomas 还没掉下去的时候我就走了（R3 lie source）",
+              "items": [
+                {
+                  "id": "3074001",
+                  "name": "证词 3074001 · 楼顶有三个人影挣扎，随后有人坠落（关键——Expose R3 主力）"
+                },
+                {
+                  "id": "3405",
+                  "name": "道具 3405 · Thomas 的小纸条"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "avg_scene",
+              "title": "市政厅门口判决方案",
+              "brief": "Mickey 与 Harrison 说明 Mary 合法杀人、Helen 无罪辩护方向。",
+              "sceneId": "3492",
+              "videoEpisode": "EPI03",
+              "videoLoop": "loop4",
+              "videoScene": "TODO_L4_bridge_cityhall",
+              "entryTalkId": "TODO_L4_bridge_cityhall",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            },
+            {
+              "order": 2,
+              "type": "avg_scene",
+              "title": "报社采访 Mary/Helen",
+              "brief": "Emma 采访 Mary 与 Helen，Mary 陈述家暴遭遇，Helen 补充银行诱导。",
+              "sceneId": "3493",
+              "videoEpisode": "EPI03",
+              "videoLoop": "loop4",
+              "videoScene": "TODO_L4_bridge_newsroom",
+              "entryTalkId": "TODO_L4_bridge_newsroom",
+              "transitionFrom": "3492",
+              "transitionLabel": "随后"
+            }
+          ]
+        },
+        {
+          "id": "loop5",
+          "loop": 5,
+          "chapterId": "305",
+          "title": "银行诱导链",
+          "brief": "Bernard 的皮质垫板压痕证明银行主动诱导 Thomas；花形手链压痕暗示另一个咨询者。",
+          "openingBrief": "Mickey 派 Zack/Emma 继续查 Bernard。",
+          "goal": "银行是否诱导 Thomas 杀妻骗保？",
+          "initTalk": "TODO_L5_opening",
+          "initScene": "3514",
+          "openingScene": "3591",
+          "opening": [
+            {
+              "id": "3591",
+              "title": "L5 开篇：Mickey办公室Bernard线起点",
+              "purpose": "Mickey 派 Zack/Emma 继续查 Bernard。",
+              "firstId": "TODO_L5_opening",
+              "talk": "TODO_L5_opening"
+            }
+          ],
+          "scenes": [
+            {
+              "id": "3514",
+              "name": "Bernard 办公室 (L5)",
+              "kind": "explore",
+              "isInit": true,
+              "npcCount": 1,
+              "itemCount": 4,
+              "itemIds": [
+                "3501",
+                "3502",
+                "3503",
+                "3570"
+              ]
+            },
+            {
+              "id": "3501",
+              "name": "Thomas 公寓楼下现场 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3502",
+              "name": "Thomas 公寓楼顶 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3503",
+              "name": "Smith 家客厅 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3505",
+              "name": "法医办公室 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3506",
+              "name": "公寓二楼走廊 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3507",
+              "name": "St.Patrick 教堂 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3508",
+              "name": "Helen 家 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3509",
+              "name": "湖滨信托银行公共区 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3510",
+              "name": "Margaret 鞋坊 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3511",
+              "name": "Mickey 办公室 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3512",
+              "name": "Smith 家卧室 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3513",
+              "name": "Smith 公寓楼门口 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3515",
+              "name": "公寓三楼走廊 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3516",
+              "name": "公寓一楼走廊 (L5)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            }
+          ],
+          "doubts": [
+            {
+              "id": "3501",
+              "text": "Bernard 是否主动诱导 Thomas 买保险？——皮质垫板压痕与 Thomas 标注报纸",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3501",
+                  "label": "道具 3501 · Bernard 的皮质垫板",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3206",
+                  "label": "道具 3206 · 标注报纸",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3502",
+              "text": "Bernard 桌上的压痕形状特殊——是否还有第三方来过咨询？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3502",
+                  "label": "道具 3502 · 垫板上的手链压痕",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3503",
+              "text": "银行诱导是否就是这场悲剧的源头？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3055001",
+                  "label": "证词 3055001 · Bernard 主动展开'用妻子做受益人'的话题（Expose R1 辅助）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3504",
+              "text": "标注报纸压痕比对报告——Thomas 桌上报纸是在 Bernard 桌上写的",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3570",
+                  "label": "道具 3570 · 标注报纸压痕比对报告",
+                  "exists": true
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "1",
+              "talkId": "TODO_L5_expose_bernard_r1",
+              "testimony": "3065001",
+              "testimonyLabel": "证词 3065001 · 按标准流程办保单、没做多余的事（Expose R1 lie source）",
+              "items": [
+                {
+                  "id": "3570",
+                  "name": "道具 3570 · 标注报纸压痕比对报告"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "talkId": "TODO_L5_expose_bernard_r2",
+              "testimony": "3065002",
+              "testimonyLabel": "证词 3065002 · 没人来过（Expose R2 lie source）",
+              "items": [
+                {
+                  "id": "3502",
+                  "name": "道具 3502 · 垫板上的手链压痕"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": []
+        },
+        {
+          "id": "loop6",
+          "loop": 6,
+          "chapterId": "306",
+          "title": "Mary 的真实策划",
+          "brief": "法医报告、Jameson、润滑油时间链和花形手链压痕共同揭示 Mary 与 Helen 预谋反杀。",
+          "openingBrief": "Mickey 提醒怀疑不等于事实证据。",
+          "goal": "Mary 是否参与了蓄意谋杀 Thomas？",
+          "initTalk": "TODO_L6_opening",
+          "initScene": "3605",
+          "openingScene": "3691",
+          "opening": [
+            {
+              "id": "3691",
+              "title": "L6 开篇：Mickey办公室控辩前",
+              "purpose": "Mickey 提醒怀疑不等于事实证据。",
+              "firstId": "TODO_L6_opening",
+              "talk": "TODO_L6_opening"
+            }
+          ],
+          "scenes": [
+            {
+              "id": "3605",
+              "name": "法医办公室 (L6)",
+              "kind": "explore",
+              "isInit": true,
+              "npcCount": 1,
+              "itemCount": 1,
+              "itemIds": [
+                "3601"
+              ]
+            },
+            {
+              "id": "3601",
+              "name": "Thomas 公寓楼下现场 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3602",
+              "name": "Thomas 公寓楼顶 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3603",
+              "name": "Smith 家客厅 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3606",
+              "name": "公寓二楼走廊 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3607",
+              "name": "St.Patrick 教堂 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3608",
+              "name": "Helen 家 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3609",
+              "name": "湖滨信托银行公共区 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3610",
+              "name": "Margaret 鞋坊 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3611",
+              "name": "Mickey 办公室 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3612",
+              "name": "Smith 家卧室 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3613",
+              "name": "Smith 公寓楼门口 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3614",
+              "name": "Bernard 办公室 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3615",
+              "name": "公寓三楼走廊 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "3616",
+              "name": "公寓一楼走廊 (L6)",
+              "kind": "explore",
+              "isInit": false,
+              "npcCount": 0,
+              "itemCount": 0,
+              "itemIds": []
+            }
+          ],
+          "doubts": [
+            {
+              "id": "3601",
+              "text": "Thomas 当晚是否有能力推 Mary？——血液酒精浓度 0.25%",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3601",
+                  "label": "道具 3601 · 法医鉴定报告",
+                  "exists": true
+                },
+                {
+                  "type": "4",
+                  "param": "3046001",
+                  "label": "证词 3046001 · 死者血液酒精浓度超标，已无有效攻击能力（Expose R1 主力）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3602",
+              "text": "门把手油迹的时间链——是当晚还是案发前几天蹭的？",
+              "conditions": [
+                {
+                  "type": "4",
+                  "param": "3086001",
+                  "label": "证词 3086001 · 19 号晚上 Helen 把她家最后一瓶润滑油送给我，说以后也不需要了（关键——Expose R3 主力，颠覆\"门把手油是当晚蹭的\"）",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3603",
+              "text": "Mary 是否就是去 Bernard 桌上咨询保险的女人？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3202",
+                  "label": "道具 3202 · Mary 的花形手链",
+                  "exists": true
+                },
+                {
+                  "type": "1",
+                  "param": "3502",
+                  "label": "道具 3502 · 垫板上的手链压痕",
+                  "exists": true
+                }
+              ]
+            },
+            {
+              "id": "3604",
+              "text": "南区援助计划的真正目的——为什么 TideWater 想要这些房子？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "3602",
+                  "label": "道具 3602 · 南区援助计划内部文件",
+                  "exists": true
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "1",
+              "talkId": "TODO_L6_expose_mickey_r1",
+              "testimony": "3014001",
+              "testimonyLabel": "证词 3014001 · 辩护方向（Mary 合法杀人 / Helen 无罪）",
+              "items": [
+                {
+                  "id": "3601",
+                  "name": "道具 3601 · 法医鉴定报告"
+                },
+                {
+                  "id": "3046001",
+                  "name": "证词 3046001 · 死者血液酒精浓度超标，已无有效攻击能力（Expose R1 主力）"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "talkId": "TODO_L6_expose_mickey_r2",
+              "testimony": "3014001",
+              "testimonyLabel": "证词 3014001 · 辩护方向（Mary 合法杀人 / Helen 无罪）",
+              "items": [
+                {
+                  "id": "3106",
+                  "name": "道具 3106 · Jameson 空酒瓶"
+                },
+                {
+                  "id": "3307",
+                  "name": "道具 3307 · Helen 家的 Jameson 酒"
+                },
+                {
+                  "id": "3205",
+                  "name": "道具 3205 · Thomas 家的廉价酒照片"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "talkId": "TODO_L6_expose_mickey_r3",
+              "testimony": "3014001",
+              "testimonyLabel": "证词 3014001 · 辩护方向（Mary 合法杀人 / Helen 无罪）",
+              "items": [
+                {
+                  "id": "3086001",
+                  "name": "证词 3086001 · 19 号晚上 Helen 把她家最后一瓶润滑油送给我，说以后也不需要了（关键——Expose R3 主力，颠覆\"门把手油是当晚蹭的\"）"
+                }
+              ]
+            },
+            {
+              "id": "4",
+              "talkId": "TODO_L6_expose_mickey_r4",
+              "testimony": "3014001",
+              "testimonyLabel": "证词 3014001 · 辩护方向（Mary 合法杀人 / Helen 无罪）",
+              "items": [
+                {
+                  "id": "3108",
+                  "name": "道具 3108 · 尸体手部油迹"
+                }
+              ]
+            },
+            {
+              "id": "5",
+              "talkId": "TODO_L6_expose_mickey_r5",
+              "testimony": "3014001",
+              "testimonyLabel": "证词 3014001 · 辩护方向（Mary 合法杀人 / Helen 无罪）",
+              "items": [
+                {
+                  "id": "3502",
+                  "name": "道具 3502 · 垫板上的手链压痕"
+                },
+                {
+                  "id": "3202",
+                  "name": "道具 3202 · Mary 的花形手链"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "avg_scene",
+              "title": "Emma 回报社后回到事务所",
+              "brief": "Zack 隐瞒 Mary 蓄意谋杀，Emma 察觉他状态异常。",
+              "sceneId": "3692",
+              "videoEpisode": "EPI03",
+              "videoLoop": "loop6",
+              "videoScene": "TODO_L6_end_emma",
+              "entryTalkId": "TODO_L6_end_emma",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            },
+            {
+              "order": 2,
+              "type": "avg_scene",
+              "title": "Mary 与 Helen 上门道谢",
+              "brief": "Mary 与 Helen 道谢并提到卖房给 TideWater。",
+              "sceneId": "3693",
+              "videoEpisode": "EPI03",
+              "videoLoop": "loop6",
+              "videoScene": "TODO_L6_end_mary_helen",
+              "entryTalkId": "TODO_L6_end_mary_helen",
+              "transitionFrom": "3692",
+              "transitionLabel": "随后"
+            },
+            {
+              "order": 3,
+              "type": "avg_scene",
+              "title": "Leonard 送来内部文件",
+              "brief": "Leonard 带来南区清退房产最终流入 TideWater 的内部消息。",
+              "sceneId": "3694",
+              "videoEpisode": "EPI03",
+              "videoLoop": "loop6",
+              "videoScene": "TODO_L6_end_leonard",
+              "entryTalkId": "TODO_L6_end_leonard",
+              "transitionFrom": "3693",
+              "transitionLabel": "最后"
             }
           ]
         }
