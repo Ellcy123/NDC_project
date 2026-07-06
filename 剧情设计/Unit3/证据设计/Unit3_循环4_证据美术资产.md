@@ -11,7 +11,7 @@
 | ID | 中文名 | 英文名 | 类型 | 拾取 | 首现场景 | 跨 Loop |
 |----|--------|--------|------|------|---------|--------|
 | 3401 | 油痕检测仪器 | clue_oil_trace_detector | Clue · Analysis | ✗ | SC3005 | 🎮 能力 |
-| 3402 | 门外侧把手油迹 | clue_outer_door_handle_oil | Clue · Analysis | ✓ | SC3002 | — |
+| 3402 | 门外侧把手油迹 | clue_outer_door_handle_oil | Clue · Analysis | ✓ | SC3019 | — |
 | 3403 | 门内侧把手 | clue_inner_door_handle_clean | Clue · Analysis | ✓ | SC3002 | — |
 | 3404 | Helen 家地面油迹 | clue_helen_floor_oil_residue | Clue · Analysis | ✗ | SC3008 | — |
 | 3405 | Thomas 的小纸条 | item_thomas_note_plan | Item | ✓ | SC3008 | — |
@@ -33,12 +33,12 @@
 ### 3402 门外侧把手油迹 / clue_outer_door_handle_oil
 
 - **类型**：Clue · Analysis（关键，Expose R1 主力）
-- **位置**：SC3002 楼顶天台门外侧把手
+- **位置**：SC3019 公寓六楼走廊，天台门外侧把手
 - **美术需求**：
   - 天台门外侧黄铜把手中段有浅黄褐油痕。
   - 油痕集中在握持处，像有人开门时蹭上。
   - 分析层可标出与轮椅维护油同源，但不替玩家说谁开的门。
-- **美术参考**：冷风天台、旧黄铜、薄油反光。
+- **美术参考**：顶层走廊、旧黄铜、门缝冷光、薄油反光。
 
 ### 3403 门内侧把手 / clue_inner_door_handle_clean
 
