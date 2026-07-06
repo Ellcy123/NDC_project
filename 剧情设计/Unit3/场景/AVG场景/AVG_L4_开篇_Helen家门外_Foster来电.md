@@ -7,6 +7,7 @@
 - 所属 Loop：L4
 - 对应 state 节点：loop4_state.yaml / opening
 - 对应地点参考：SC3008 Helen 家门外
+- 时间版本：夜晚版
 - 配置场景ID：3491（暂定）
 - 配置用途：ChapterConfig.openingScene
 - 资源形态：人物和场景合成整图，Foster 通过电话出现，不作为现场实体人物
@@ -23,6 +24,8 @@
 L3 指证后，Helen 给出“独自一人布陷阱、当晚没去过楼顶”的退守版本。Zack 和 Emma 走出 Helen 家，街角电话亭响起，Foster 通知油痕检测仪到了。
 
 画面重点是“突破口突然出现”：电话、楼道 / 街角、Zack 与 Emma 的注意力从 Helen 转向法医办公室。
+
+光线按夜晚版处理，走廊 / 街角以廊灯和电话亭灯光为主，压住环境亮度，突出 Foster 来电带来的新突破。
 
 ## 剧情作用
 
