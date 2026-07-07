@@ -23,6 +23,7 @@
 | L3 | 指证后纯 AVG | `2392` | `SC2392_avg_MooreOldKey` | Moore、Zack、Emma | Moore 被逼到交代房产证交易，旧铁钥匙作为剧情焦点进入玩家视线。 |
 | L4 | 开篇纯 AVG | `2491` | `SC2491_avg_NightHospitalMeeting` | Zack、Emma、Mickey；Margaret 可作为病床背景人物 | 夜间医院的紧张感，几人根据对白汇总地下室、Lula、Danny 方向。 |
 | L4 | 指证纯 AVG | `2492` | `SC2492_avg_DannyBathroomConfrontation` | Danny、Zack、Emma | 厕所隔门、狭窄、封闭、回避感；Danny 的压力来自躲在里面不肯面对。 |
+| L4 | 指证后纯 AVG | `2493` | `SC2493_avg_DannyBathroomWindowWaiver` | Danny、Zack、Mickey、Lula（小窗外） | Lula 在厕所小窗外平静签下放弃继承声明，Danny 仰头看着小窗彻底崩溃；之后才转入主屋会合。 |
 | L5 | 开篇纯 AVG | `2591` | `SC2591_avg_FrankHomeMislead` | Zack、Emma；线索物可作为画面焦点 | 小铁盒、举报材料、情书作为剧情焦点出现，但不是可点击拾取物。 |
 | L5 | 指证后纯 AVG | `2592` | `SC2592_avg_VinnieConfession` | Vinnie、Zack、Emma；Tony 如对白需要可在场 | Vinnie 抢话认罪，试图把案件收束到自己身上，场面要有突然打断和强行揽罪的压迫感。 |
 | L6 | 开篇纯 AVG | `2691` | `SC2691_avg_FinalHospitalBeforeSearch` | Zack、Emma、Margaret、Foster | 最终循环前的证词整合，Margaret 苏醒后的虚弱与 Foster 的严肃说明都要能看出来。 |
@@ -63,6 +64,7 @@
 - L2 指证后 `2292` 不能写成 Leonard NPC 挂载；Leonard 递信封/假善意是完整过场图。
 - L3 指证后 `2392` 不能写成 Moore NPC 或旧钥匙拾取点；旧钥匙是剧情焦点。
 - L4 `2492` 是厕所隔门对峙图，Danny 的空间关系要画在同一张图里。
+- L4 指证后 `2493` 是同一厕所地点的另一张完整 AVG 图：Lula 小窗签字、Danny 崩溃、Zack/Mickey 收束；它不是 `2420` 探索厕所底图，也不是 `2418` 主屋会合。
 - L5 开篇 `2591` 可以出现小铁盒、举报材料、情书等视觉焦点，但这些不是可点击拾取物。
 - L6 开篇 `2691` 中 Margaret / Foster 是对白场面人物，不是自由探索 NPC。
 
@@ -71,4 +73,5 @@
 - SceneConfig.json：纯 AVG scene 使用独立 sceneId，并把 location.backgroundImage 指向独立 AVG 资产命名。
 - ArtAssetConfig.json：每张纯 AVG 图单独一条资产记录，sceneKind=dialogue，ArtRequirement 写清楚在场人物和叙事作用。
 - ChapterConfig.json：openingScene 指向开篇纯 AVG scene；initScene 指向自由探索入口；topBg 指向指证画面。
+- ChapterConfig.json：指证后如果先在指证地点收束、再转到其他地点，需要拆成多个 postExposeSegments，并显式填写 videoScene + entryTalkId。例如 L4 先挂 `Loop4_danny #240080` 的厕所小窗签字，再转 `danny_l4_postexpose #211006001` 的主屋会合。
 - unit_flow.json：流程预览引用 openingScene / postExposeSegments.sceneId，不再把开篇和探索混在同一个卡片里。

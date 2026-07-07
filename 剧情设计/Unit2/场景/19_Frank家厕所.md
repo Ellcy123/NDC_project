@@ -81,6 +81,7 @@
 
 ### post_expose
 
+- 指证后厕所收束先走 `2493 / SC2493_avg_DannyBathroomWindowWaiver`：挂 `Expose/Loop4_danny.json #240080-#240109`，Lula 隔小窗签署放弃继承声明，Danny 崩溃，Zack 让他整理好自己后再去主屋。
 - 进入主屋会合（不在厕所继续）；Danny 的目击证词 2114004 进入玩家背包
 - Lula 补充证词 2124001（Frank 不会做饭）和 2124002（工资给 Danny 还债）
 - Lula 提到 Frank 主屋床后藏有密码锁小铁盒（L5 开篇带 Zack 去取）

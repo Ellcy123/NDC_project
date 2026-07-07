@@ -8628,6 +8628,7 @@
         currentTab: 'scene',
         filterText: '',
         showOnlyNoArt: false,
+        sceneSpecialFilter: 'all',
         expandedAssets: new Set(),
 
         render() {
@@ -8667,6 +8668,7 @@
             this.currentTab = tab === 'evidence' ? 'scene' : tab;
             this.filterText = '';
             this.showOnlyNoArt = false;
+            this.sceneSpecialFilter = 'all';
             this.render();
         },
 
@@ -8992,6 +8994,35 @@
                 || row.evidenceItems.some(item => this.itemMatchesArtFilter(item, q));
         },
 
+        assetCharacterActions(asset) {
+            return Array.isArray(asset?.characterActionRequirements) ? asset.characterActionRequirements : [];
+        },
+
+        assetEvents(asset) {
+            return Array.isArray(asset?.events) ? asset.events : [];
+        },
+
+        assetRowMatchesSpecialFilter(row) {
+            const mode = this.sceneSpecialFilter || 'all';
+            if (mode === 'all') return true;
+            const hasCharacterActions = this.assetCharacterActions(row.asset).length > 0;
+            const hasEvents = this.assetEvents(row.asset).length > 0;
+            if (mode === 'character') return hasCharacterActions;
+            if (mode === 'event') return hasEvents;
+            if (mode === 'either') return hasCharacterActions || hasEvents;
+            return true;
+        },
+
+        sceneSpecialFilterButton(mode, label, count) {
+            const active = this.sceneSpecialFilter === mode;
+            return `
+                <button class="btn ${active ? 'active' : ''}"
+                        onclick="ArtOverviewView.setSceneSpecialFilter('${escapeHtml(mode)}')">
+                    ${escapeHtml(label)}${Number.isFinite(count) ? ` ${count}` : ''}
+                </button>
+            `;
+        },
+
         renderArtRequirementBox(text, emptyText = '未填写') {
             const hasText = String(text || '').trim();
             return `<div class="art-req-box ${hasText ? '' : 'empty'}">${hasText ? escapeHtmlWithBr(text) : escapeHtml(emptyText)}</div>`;
@@ -9208,13 +9239,22 @@
                 .filter(item => !boundIds.has(String(item.id)))
                 .sort((a, b) => Number(a.id || 0) - Number(b.id || 0));
 
+            const specialCounts = {
+                character: assetRowsAll.filter(row => this.assetCharacterActions(row.asset).length > 0).length,
+                event: assetRowsAll.filter(row => this.assetEvents(row.asset).length > 0).length,
+            };
+            specialCounts.either = assetRowsAll.filter(row =>
+                this.assetCharacterActions(row.asset).length > 0 || this.assetEvents(row.asset).length > 0
+            ).length;
+            const hasSpecialFilter = this.sceneSpecialFilter && this.sceneSpecialFilter !== 'all';
+
             const assetRows = assetRowsAll.filter(row => {
                 if (!this.assetRowMatchesArtFilter(row, q)) return false;
-                if (!this.showOnlyNoArt) return true;
-                return !row.asset?.ArtRequirement || row.evidenceItems.some(item => !item.ArtRequirement);
+                if (this.showOnlyNoArt && row.asset?.ArtRequirement && !row.evidenceItems.some(item => !item.ArtRequirement)) return false;
+                return this.assetRowMatchesSpecialFilter(row);
             });
 
-            let unboundItems = unboundAll.filter(item => this.itemMatchesArtFilter(item, q));
+            let unboundItems = hasSpecialFilter ? [] : unboundAll.filter(item => this.itemMatchesArtFilter(item, q));
             if (this.showOnlyNoArt) unboundItems = unboundItems.filter(item => !item.ArtRequirement);
 
             const shownEvidenceCount = assetRows.reduce((sum, row) => sum + row.evidenceItems.length, 0) + unboundItems.length;
@@ -9232,7 +9272,10 @@
                             onclick="ArtOverviewView.toggleNoArt()">
                         仅未填美术需求
                     </button>
-                    ${this.filterText ? `<button class="btn" onclick="ArtOverviewView.clearFilter()">清除筛选</button>` : ''}
+                    ${this.sceneSpecialFilterButton('character', '人物进出场', specialCounts.character)}
+                    ${this.sceneSpecialFilterButton('event', '突发事件', specialCounts.event)}
+                    ${this.sceneSpecialFilterButton('either', '人物/事件任一', specialCounts.either)}
+                    ${this.filterText || this.showOnlyNoArt || hasSpecialFilter ? `<button class="btn" onclick="ArtOverviewView.clearFilter()">清除筛选</button>` : ''}
                     <span class="stats">
                         显示 ${assetRows.length} 张底图 · ${shownEvidenceCount} 条证据/道具 |
                         <span class="no-art">未填 ${missingCount}</span>
@@ -9269,6 +9312,7 @@
         clearFilter() {
             this.filterText = '';
             this.showOnlyNoArt = false;
+            this.sceneSpecialFilter = 'all';
             this.render();
         },
 
@@ -9277,8 +9321,15 @@
             this.render();
         },
 
+        setSceneSpecialFilter(mode) {
+            const next = String(mode || 'all');
+            this.sceneSpecialFilter = this.sceneSpecialFilter === next ? 'all' : next;
+            this.render();
+        },
+
         filterByLocation(loc) {
             this.filterText = loc;
+            this.sceneSpecialFilter = 'all';
             this.render();
             const input = document.getElementById('filterInput');
             if (input) input.value = loc;

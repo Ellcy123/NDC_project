@@ -363,6 +363,19 @@
         "loop": 5,
         "req": "品质：【高级多格表现】\n挂载：Talk/loop5/opening_l5_frankhome.json，201005004-201005020。\n触发位置：L5 开篇 Frank 家主屋，Zack 与 Mickey 因检举材料线索断裂而陷入僵局时，Lula 入场。\n叙事作用：让 Frank 通过亲手留下的铁盒重新“出场”；把 L4 的“F & L 1923”转化为玩家可理解的密码线索；促成 L5 的核心分歧：Mickey 要把材料送上法庭，Lula 和 Zack 仍要求查清 Frank 怎么死。\n调度注意：Lula 入场不是提供普通物品，而是把 Frank 的私密托付带入场；事件服务于“法庭正义 vs 死因真相”的分叉。"
       }
+    ],
+    "characterActionRequirements": [
+      {
+        "name": "Mickey 带材料去法院",
+        "stage": "L5 - Mickey 带材料去法院",
+        "character": "Mickey",
+        "characters": [
+          "Mickey"
+        ],
+        "assetName": "evt_l5_mickey_court_exit_01",
+        "requirement": "L5 Frank 家主屋 · Talk 201005060 · Zack 选择继续当侦探后，Mickey 拎起公文包，单独前往法院处理材料。",
+        "loop": 5
+      }
     ]
   },
   {
@@ -482,7 +495,20 @@
     "category": "scene_bg",
     "sceneKind": "explore",
     "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2515 同址（state 2015 Silver Moon 赌场跨 Loop 复用），需 2 种底图：\n  ① L2 白天（本 2215）——Tony 调酒考验 + 骰子小玩法；外窗白光透入，客流疏散；后墙爵士舞台空置无人，只有乐器静静摆着\n  ② L5 黑夜（2515）——Vinnie 指证场；外窗黑色 + 室内昏黄爵士灯光，客流密集；舞台无乐队演奏，Vinnie 独自坐在钢琴凳上，什么都没做；聚光灯不开，只有室内散射暖光落在台上——静场感与背后嘈杂的牌桌客流形成反差\n室内主光本就昏暗，差异主要在外窗光线 + 客流密度 + 舞台人物状态\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：禁酒令时代 speakeasy 风格独栋赌场兼酒吧——门面低调（外面看不出是赌场），进门才看到扑克桌、常客、昏暗的吊灯、背景里若隐若现的爵士乐；后墙正对入口处有一处小型爵士演奏台（木制矮台，高出地面约 20 cm，台上一架旧立式钢琴 + 一个架子鼓，台前一盏定点聚光灯，平时无人演奏时台上只有乐器静静摆着）；Tony 站在吧台后面手边一块湿抹布；Vinnie 坐在他惯常的角落\n- 建筑结构（场景连通）：本建筑独栋；街道入口进出；内部为单一开间布局（吧台+扑克桌+角落卡座+后墙演奏台）\n- 时间状态：1925 年 11/7 晚上，L2——Zack 持 Frank 债务背景调查方向来到 Silver Moon\n- 环境痕迹：吊灯昏暗、空气里有烟雾和威士忌的味道；扑克桌旁几个常客；Tony 在永远擦不干净的杯子；Vinnie 角落桌前有酒杯和一些新钞痕迹；后墙演奏台上的旧立式钢琴琴键泛黄，架子鼓蒙着一层薄灰\n- 关键道具锚点（按位）：\n  · 2205 Vinnie 催债小本子（Vinnie 随身携带，对话中无奈翻给 Zack，Zack 拍下关键页）\n  · 2206 Vinnie 的钞票 905B/906B/908B（Vinnie 离开后 Tony 悄悄塞给 Zack）\n  · 后墙爵士演奏台（L2 空置；L5 Vinnie 独坐钢琴凳——指证场视觉中心；台前定点聚光灯不亮，只有散射暖光）\n- NPC 在场：Vinnie Moretti（角落卡座，被试探时脱口而出\"我不记得什么 Russo！\"的口误——破绽不是谎言链）；Tony（吧台后，诚实信息来源，悄悄塞钞票给 Zack）\n- 画面情绪：禁酒令地下酒吧的暧昧气氛——表面散漫，Vinnie 的过度防御反而是破绽\n\n【美术参考】\n- 时代风格：1920s 芝加哥南区禁酒令时代 speakeasy——红色丝绒卡座 + 深色木质吧台 + 镀金边框镜子 + 低悬的彩色玻璃吊灯 + 后墙矮台演奏区\n- 色调：深红 + 暖黄（吊灯）+ 烟雾灰，整体饱和度低但局部红色点缀强烈\n- 光源：低悬吊灯作主光（光斑投在卡座上）；吧台后的镜面反射作辅助；Vinnie 角落较暗；后墙演奏台聚光灯不开，乐器在散射暖光下半明半暗\n- 氛围：烟雾缭绕（视觉化为光柱中悬浮颗粒）、爵士乐看不见但能感受、酒杯反光、Tony 抹布的湿润感\n- 跨 Loop 注：本图与 L5（2515）共用底图基础——L5 差异是 Vinnie 从角落移到了后墙演奏台的钢琴凳上，店内客流更密但整体更安静，像是风暴前的寂静",
-    "events": []
+    "events": [],
+    "characterActionRequirements": [
+      {
+        "name": "Vinnie 起身离场",
+        "stage": "L2 - Vinnie 起身离场",
+        "character": "Vinnie",
+        "characters": [
+          "Vinnie"
+        ],
+        "assetName": "evt_l2_vinnie_exit_01",
+        "requirement": "L2 Silver Moon 赌场 · Talk 210002039 · Vinnie 把酒杯搁到吧台，起身拍外套后离场。台词：“行了，我还有事。”",
+        "loop": 2
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2515_bg_SilverMoon_Casino_Night",
@@ -571,8 +597,20 @@
         ],
         "assetName": "mickey_cityhall_intervene_001",
         "requirement": "Mickey 从东翼方向走上台阶，扬起手里的文件出面介入，把市政厅门口的阻拦转为法律线推进。"
+      },
+      {
+        "name": "Emma 去医院留守退场",
+        "stage": "L3 - Emma 去医院留守退场",
+        "character": "Emma",
+        "characters": [
+          "Emma"
+        ],
+        "assetName": "evt_l3_emma_hospital_exit_01",
+        "requirement": "L3 银行门口分工 · Talk 201003064 · Emma 被 Mickey 说服留守医院，接受任务后转身前往圣心医院。",
+        "loop": 3
       }
-    ]
+    ],
+    "events": []
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2314_bg_LakeshoreTrust_LeonardOffice",
@@ -687,7 +725,20 @@
     "category": "scene_bg",
     "sceneKind": "dialogue",
     "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：L6 Leonard 指证后的 ending segment；不是自由探索墓地，也不承担搜证功能。\n- 场景结构：Frank 墓地清晨薄雾，墓碑与野菊为视觉中心，人物围绕墓碑形成收束构图。\n- 时间状态：1925 年 11/12 清晨，Leonard 招供后，案件表层结案但真正的金融势力仍未倒下。\n- NPC 在场：Lula、Zack、Emma；Mickey 后半段从雾中出现并摘帽致敬。\n- 剧情功能：Lula 在 Frank 墓前告别；Mickey 带来 Vinnie 自杀揽罪、Moore 银行保下 Leonard 的坏消息；Zack 接过新案文件。\n- 画面情绪：悼念、无力感与下一案钩子并存，结尾需要保留冷静的讽刺感。\n\n【美术参考】\n- 1920s 城郊墓地，清晨低雾、湿冷草地、灰白墓碑、少量野菊。\n- 色调：冷灰、淡青、雾白，人物可用深色剪影压住情绪。\n- 需要配套人物表现：Lula 墓前站姿；Mickey 摘帽致敬；Zack 接过新案文件的侧身/沉默姿态。",
-    "events": []
+    "events": [],
+    "characterActionRequirements": [
+      {
+        "name": "Mickey 墓地尾声递出新案件",
+        "stage": "L6 - Mickey 墓地尾声递出新案件",
+        "character": "Mickey",
+        "characters": [
+          "Mickey"
+        ],
+        "assetName": "evt_l6_mickey_cemetery_file_01",
+        "requirement": "L6 Frank 墓地尾声 · Talk 201106013 / 201106060 · Mickey 从晨雾中走来，在墓碑前致意，最后从公文包递出新案件文件。",
+        "loop": 6
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_day",
@@ -763,6 +814,22 @@
     "events": []
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2493_avg_DannyBathroomWindowWaiver",
+    "Name": "L4 指证后：Danny 厕所小窗签字（完整 AVG 图）",
+    "displayName": "SC2493_avg_DannyBathroomWindowWaiver",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】指证后：Danny 厕所小窗签字\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 对白入口：Expose/Loop4_danny.json，#240080 起，至 #240109 转入主屋前。\n- 场景参考：参考 2420 Frank 家厕所和 2492 Danny 指证背景；但本图是指证后的收束状态，不是三轮指证对峙图。\n- 画面人物：Danny、Zack、Mickey、Lula（在厕所侧墙小窗外）。\n- 画面重点：Lula 在小窗外平静签下放弃继承声明，Danny 仰头看着小窗彻底崩溃；Zack/Mickey 收束压力。\n- 叙事作用：击碎 Danny “Lula 为钱骗 Frank”的最后反咬，并把剧情过渡到主屋会合。\n- 排除内容：不要表现为探索厕所底图或 Danny 可点击 NPC。",
+    "events": [
+      {
+        "name": "Lula 小窗签字后收束",
+        "resName": "evt_l4_lula_window_waiver_postexpose_01",
+        "loop": 4,
+        "req": "L4 指证后厕所完整 AVG · Expose/Loop4_danny.json #240080-#240109 · Lula 在厕所小窗外签下放弃继承声明，Danny 崩溃，Zack 最后要求他整理好自己去主屋继续说。"
+      }
+    ]
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2591_avg_FrankHomeMislead",
     "Name": "L5 开篇：Frank 家误导性线索（完整 AVG 图）",
     "displayName": "SC2591_avg_FrankHomeMislead",
@@ -778,7 +845,31 @@
     "category": "scene_bg",
     "sceneKind": "dialogue",
     "ArtRequirement": "【完整 AVG 场景图】指证后：Vinnie 抢话认罪\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2515 Silver Moon 赌场夜景；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Vinnie、Zack、Emma；Tony 如对白需要可在场。\n- 画面重点：Vinnie 抢话认罪，试图把案件收束到自己身上，场面要有突然打断和强行揽罪的压迫感。\n- 叙事作用：形成“看似结案”的错觉。\n- 排除内容：不要写成赌场探索 NPC 场景。",
-    "events": []
+    "events": [],
+    "characterActionRequirements": [
+      {
+        "name": "L5 Vinnie 抢话认罪",
+        "stage": "L5 - L5 Vinnie 抢话认罪",
+        "character": "Vinnie",
+        "characters": [
+          "Vinnie"
+        ],
+        "assetName": "evt_l5_vinnie_confession",
+        "requirement": "人物进出场/演出调度命名：Vinnie 抢话认罪",
+        "loop": 5
+      },
+      {
+        "name": "Vinnie 宣告自首退场",
+        "stage": "L5 - Vinnie 宣告自首退场",
+        "character": "Vinnie",
+        "characters": [
+          "Vinnie"
+        ],
+        "assetName": "evt_l5_vinnie_surrender_exit_01",
+        "requirement": "L5 指证后完整 AVG · Talk 210006012 · Vinnie 高声宣告自首，大步走向出口。台词：“今天是我自己想通了要去自首，不是你们这俩三流侦探把我抓出来的！”",
+        "loop": 5
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2691_avg_FinalHospitalBeforeSearch",
@@ -787,7 +878,20 @@
     "category": "scene_bg",
     "sceneKind": "dialogue",
     "ArtRequirement": "【完整 AVG 场景图】开篇：最终搜查前的病房\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2606 圣心医院 Margaret 病房；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Zack、Emma、Margaret、Foster。\n- 画面重点：最终循环前的证词整合，Margaret 苏醒后的虚弱与 Foster 的严肃说明都要能看出来。\n- 叙事作用：把线索收束到 Leonard。\n- 排除内容：不要表现为 Margaret/Foster 可点击 NPC。",
-    "events": []
+    "events": [],
+    "characterActionRequirements": [
+      {
+        "name": "Foster 丢下公文包离场",
+        "stage": "L6 - Foster 丢下公文包离场",
+        "character": "Foster",
+        "characters": [
+          "Foster"
+        ],
+        "assetName": "evt_l6_foster_sleep_exit_01",
+        "requirement": "L6 医院开篇完整 AVG · Talk 201006034 · Foster 丢下公文包，宣布困得要死，要去睡觉，挥手离场。",
+        "loop": 6
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2692_avg_LeonardConfession",
