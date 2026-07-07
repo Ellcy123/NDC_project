@@ -1,12 +1,12 @@
 # AVG_L5_开篇 Mickey办公室 · Bernard线起点
 
 ## 场景信息
-- 位置：Mickey 律师事务所
+- 位置：Mickey 律师事务所（市中心 42 层写字楼高层）
 - 类型：开篇纯 AVG 场景
 - 内部英文名：`u3_l5_open_mickey_bernard`
 - 所属 Loop：L5
 - 对应 state 节点：loop5_state.yaml / opening
-- 对应地点参考：SC3011 Mickey 办公室
+- 对应地点参考：SC3011 Mickey 办公室（42 层写字楼高层）
 - 配置场景ID：3591（暂定）
 - 配置用途：ChapterConfig.openingScene
 - 资源形态：人物和律所场景合成整图，不开放自由探索
@@ -22,7 +22,7 @@
 
 Mickey 告诉 Zack 和 Emma：Mary 已经被争取到无罪，Helen 的辩护仍在推进。为了起诉湖滨信托银行，需要继续调查 Bernard。
 
-画面重点是 Mickey 写介绍函或把调查方向交给 Zack / Emma，氛围是审慎乐观，但仍有未完成的法律压力。
+画面重点是 Mickey 写介绍函或把调查方向交给 Zack / Emma；背景应明确是 42 层高层律师办公室，窗外可见芝加哥市中心高空视角。氛围是审慎乐观，但仍有未完成的法律压力。
 
 ## 剧情作用
 

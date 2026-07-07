@@ -60,7 +60,7 @@
 | L3 | Helen | SC3008 Helen 家 | Helen 指证用 Helen 家画面。 |
 | L4 | Helen（补充） | SC3008 Helen 家 | Helen 补充指证用 Helen 家画面（可与 L3 区分光线/时段）。 |
 | L5 | Bernard | SC3014 Bernard 办公室 | Bernard 指证用银行办公室画面。 |
-| L6 | Mickey（控辩对决） | SC3011 Mickey 办公室 | Mickey 5 轮控辩对决用律所办公室画面；是友方辩护人之间的推理对决，不是敌对审讯，氛围区别于前几轮指证。 |
+| L6 | Mickey（控辩对决） | SC3011 Mickey 办公室 | Mickey 5 轮控辩对决用 42 层写字楼高层律所办公室画面；是友方辩护人之间的推理对决，不是敌对审讯，氛围区别于前几轮指证。 |
 
 ## 和自由探索分开的点
 
