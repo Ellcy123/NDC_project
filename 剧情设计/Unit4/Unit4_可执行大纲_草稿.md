@@ -455,7 +455,7 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 🏠 Zack 公寓桌前
 - 🟢 古巴雪茄烟蒂 → 记忆 1：1903 南区码头，Mickey 被警棍打掉牙角。
 - 🟢 1908 年警局合影 → 记忆 2：少年 Mickey 记录警局人物关系。
-- 🟢 Donnelly & Associates 早期法人文件副本 → 记忆 3：1919 Patrick 葬礼后，Mickey 说“我会接着做”。
+- 🟢 1919 年律师行中间账户材料（账户名 Donnelly & Associates） → 记忆 3：1919 Patrick 葬礼后，Mickey 说“我会接着做”。
 - 🟢 Unit3 越线签字文件 → 记忆 4：Mickey 说服 Zack 越线的重看。
 - 🟢 Mrs. Morrison 第二张纸条 → 不触发记忆，但描述更新为“古巴雪茄 + 右下侧叼 + 说话像 Patrick = Mickey”。
 
@@ -488,7 +488,7 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 - 回到现实：
   - 🧪 合影描述更新：17 岁 Mickey 已经开始练习观察和记录人际网络。
 
-### 🔮 记忆 3：1919 年法人文件
+### 🔮 记忆 3：1919 年账户线索
 
 - 操控年龄：26 岁 Zack。
 - 场景人物：Mickey、Margaret、Bridget。
@@ -498,7 +498,7 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
   - Zack 相信他。
   - Margaret 远远看着，说：“你的朋友是个聪明人，比你聪明。”
 - 回到现实：
-  - 🧪 法人文件描述更新：Donnelly & Associates 成立于 Patrick 去世后不久，Mickey 的“接着做”开始变味。
+  - 🧪 账户材料描述更新：Donnelly & Associates 这个名字出现在 1919 年，正是 Patrick 去世后不久；Mickey 的“接着做”开始变味。
 
 ### 🔮 记忆 4：Unit3 越线重看
 
@@ -512,6 +512,22 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 - 回到现实：
   - 🧪 文件描述更新：Mickey 从一开始就要让 Zack 越过那条线。
 
+### 🎬 记忆 4 后：Emma 发现 Mary 真相
+
+- 记忆结束后，Zack 本能地把 Unit3 结尾补充卷压回旧案袋。Emma 看见这个动作，打开案袋。
+- 她发现 L6 后才形成的最终时间线：Mary 与 Helen 19 号已经预先布置天台；Mary 负责教堂不在场与最终说辞；Helen 负责涂油、破坏护栏与灌酒配合。
+- Emma 第一反应不是追问日期，而是事实震惊：Mary 不是临时自卫，而是蓄意合谋。
+- 随后她看见整理日期，确认这份最终时间线是在她 L4 报道之后、U3 结尾之前形成的。
+- 冲突核心：不是“Zack 让 Emma 写错报道”，而是“Zack 后来确认真相后，选择让 Emma 继续停留在更容易承受的版本里”。
+- 对话抓手：
+  - Emma：“Mary 是蓄意的？”
+  - Zack：“Thomas 也是真的要杀她。”
+  - Emma：“我现在问的不是 Thomas。”
+  - Emma：“所以不是我发稿前你就知道。是我发稿之后，你知道了，然后你选择不告诉我。”
+  - Zack：“那篇报道已经救了她。”
+  - Emma：“不。你救了她之后，决定我不需要知道我救下的到底是谁。”
+- 本段功能：提前打出 U4→U5 的信任裂缝。Emma 不是责怪 Zack 救 Mary，而是第一次明确指出 Zack 正在学会“替别人判断什么时候可以知道真相”。
+
 ### 🔍 白天自由探索
 
 🏠 Margaret 家
@@ -520,16 +536,17 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
   - 🟡 Margaret：他爱我们，只是不顾家而已。
   - 🟡 Margaret：那只是特殊夜晚，他不会真的把这种思想用到我们身上。
 
-🏠 姨妈家
-- ⚪ 姨妈：Margaret 25 年前把一封信交给她保管，让她等 Zack 长大后再给。
-- 🟢 Margaret 写给姨妈的信，信段一：“他不会为我停，不会为孩子停。我必须停。”
+🏠 O'Hara 太太家
+- ⚪ O'Hara 太太：Brennan 家旧邻居，Zack 小时候关系很近的邻居阿姨，不是血亲，但 Zack 习惯叫她 Aunt O'Hara。
+- ⚪ O'Hara 太太：Margaret 25 年前把一封信交给她保管，让她等 Zack 长大后再给。
+- 🟢 Margaret 写给 O'Hara 太太的信，信段一：“他不会为我停，不会为孩子停。我必须停。”
 - 🟢 信段二：“Liam 死的当晚，我看着他在客厅算了一笔账。”
 - 🟢 信段三：“如果有一天我们也站到这条算式里，他也会用同样的方式算我们。”
 - 🔒 功能：Margaret 的证词不是事后美化，而是 25 年前就形成的判断。
 
-🏠 商业登记处
-- 🟢 Donnelly & Associates 早期法人文件副本：法人 Michael F. Donnelly，1919 年成立。
-- 🔵 功能：L5 获取完整法人文件的前哨证据。
+🏠 法院 / Harrison 遗留档案
+- 🟢 1919 账户对应材料：Harrison 资金流向图上的中间账户，账户名指向 Donnelly & Associates。
+- 🔵 功能：L4 只能知道“钱流向 Donnelly & Associates”；L5 到 Mickey 办公室拿到完整法人归属后，才形成法律层面的铁证。
 
 ### ⚔️ 指证 @Margaret 家
 
@@ -537,15 +554,15 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 
 - 谎言：我们性格不合，他工作太忙，所以分开。
 - 击穿证据：
-  - 🟢 Margaret 给姨妈的信段一
+  - 🟢 Margaret 给 O'Hara 太太的信段一
 - Zack 推理：25 年前的信已经说明，她离开不是普通婚姻疲惫，而是知道 Patrick 永远不会为家庭停下。
-- 陷阱证据：Donnelly 法人文件。它是 Mickey 的线索，不是 Margaret 离婚原因。
+- 陷阱证据：1919 账户材料。它是 Mickey 的线索，不是 Margaret 离婚原因。
 
 #### R2
 
 - 谎言：他爱我们，只是不顾家而已。
 - 击穿证据：
-  - 🟢 Margaret 给姨妈的信段二
+  - 🟢 Margaret 给 O'Hara 太太的信段二
 - Zack 推理：Liam 死的当晚，Patrick 不是单纯投身事业，而是在朋友尸体未凉时计算这条命换来多少工人福利。这是思想层面的算账。
 - 陷阱证据：1908 年警局合影。它说明 Mickey 与 Patrick 的关系，不说明 Patrick 当晚说了什么。
 
@@ -553,7 +570,7 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 
 - 谎言：那只是特殊夜晚，他不会真的把这种思想用到我们身上。
 - 击穿证据：
-  - 🟢 Margaret 给姨妈的信段三
+  - 🟢 Margaret 给 O'Hara 太太的信段三
 - Zack 推理：Margaret 当年真正害怕的是，一个开始算账的人会一直算下去。她带 Zack 离开，是为了不让 Zack 在“值得”的家庭里长大。
 - 陷阱证据：烟蒂。它指向 Mickey 的牙伤，与 Patrick 会不会把家人也算进去无关。
 
@@ -581,6 +598,7 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 - 🔵 Margaret 的“一个会算账的人会一直算下去”成为 Zack 驳倒 Mickey 的核心弹药。
 - 🔵 Patrick 临终那一眼的真相，让 L5 最后“他会为我骄傲吗”不能被简单回答。
 - 🔵 Unit3 越线重看为 L5 Mickey 把 Zack 拉入同一算式做铺垫。
+- 🔵 Emma 已知 Zack 在 U3 结尾确认 Mary 蓄意后仍选择隐瞒，成为 U4→U5 “保护是否变成控制”冲突的提前裂缝。
 
 ---
 
@@ -592,21 +610,21 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 
 ### 开篇情节
 
-- 12/5 早晨，Zack 已经拿到 Margaret 的密码线索与 Donnelly 早期文件副本。
-- Zack 去商业登记处调取完整法人记录。
+- 12/5 早晨，Zack 已经拿到 Margaret 的密码线索与 1919 账户材料。
 - Emma 在咖啡馆把自己的笔记交给 Zack。她其实也在记录 Mickey，但选择等 Zack 自己走到。
 - Zack 经过 Patrick 墓地，短暂停留，不说话。
 - Zack 到达 Mickey 事务所 42 楼。
 
 ### 🔍 自由探索：进入 42 楼
 
-🏠 商业登记处
-- 🟢 Donnelly & Associates 完整法人文件：法人代表 Michael F. Donnelly，1919 年起持续至今。
-- 🟢 1919 账户对应材料：Harrison 资金流向图上的中间账户，最终指向 Mickey。
-- 功能：Mickey = Whale 的法律层面铁证。
+🏠 法院 / Harrison 遗留档案（已持有）
+- 🟢 1919 账户对应材料：Harrison 资金流向图上的中间账户，账户名指向 Donnelly & Associates。
+- 功能：证明 Harrison 受贿链条中存在 Donnelly & Associates 这个法律壳，但还不能证明 Mickey 本人就是受益人。
 
 🏠 Mickey 办公室
 - 🟣 空办公室：Mickey 此时在律师协会接受合规审查，是真实不在场事项。
+- 🟢 Donnelly & Associates 完整法人文件：法人代表 Michael F. Donnelly，1919 年起持续至今。
+- 🧪 法律层面派生结论：Mickey 长期拥有一条可接收医院 / 银行 / 地产资金的法律壳。
 - 🟢 Mickey 工作笔记本扉页：“For The Many We Pay The Few”。
 - 🎮 保险柜字母锁：7 位字母。
 - 🧪 密码推理：FTMWPTF。
@@ -694,7 +712,7 @@ Unit4 是 Mickey = Whale 揭露章，也是 Zack 信任体系崩塌章。
 - 击穿证据 / 证词：
   - ⚪ Margaret 关于 1903 当晚的证词
   - ⚪ Margaret 核心命题：“一个开始算账的人会一直算下去”
-  - 🟢 Margaret 给姨妈的信段三
+  - 🟢 Margaret 给 O'Hara 太太的信段三
 - Zack 推理：问题不在于某一笔账算得对不对，而在于 Mickey 已经无法停止算账。每一次“必要”都会制造下一次“必要”。
 - Mickey 第一次张口说不出话。
 - 本阶段功能：Zack 找到真正区别。不是“我从没越线”，而是“我还知道有人不该被算进去”。
@@ -813,7 +831,7 @@ Margaret 的答案：
 - L3 Emma 爆炸前救人的触发细节仍需重写，避免“血缘直觉”显得机械。
 - L3 Mrs. Morrison 第二张纸条的“律师特征”需要控制力度，不能让玩家在 L3 直接锁死 Mickey。
 - L4 记忆系统需要决定是 AVG 纯叙事，还是可短距离自由探索。
-- L4 姨妈需要补姓名、职业、与 Margaret / Zack 的 25 年关系。
+- L4 O'Hara 太太需要补职业、住址细节，以及她与 Margaret / Zack 的 25 年关系。
 - L5 保险柜四件物品需要进一步拆成可交互检查项，尤其是功业簿的样张格式。
 - L5 控辩如果要落 Expose，需要把“阶段 0 / R1-R4”再拆成可出示证据的明确轮次。
 - L5 Sean 档案信息边界必须严格控制：只到谋杀疑云，不坐实 Miller 杀父。
