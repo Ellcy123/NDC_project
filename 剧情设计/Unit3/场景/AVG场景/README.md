@@ -20,7 +20,7 @@ AVG_L{loop}_{剧情位置}_{地点名}_{剧情用途}.md
 | AVG_L1_开篇_Zack侦探事务所_正式委托.md | 3018（暂定） | `u3_l1_open_office_case` | L1 开篇第二段，Mickey 正式委托 Zack / Emma 调查 |
 | AVG_L2_开篇_公寓楼下_回到现场.md | 3291（暂定） | `u3_l2_open_apartment` | L2 开篇，带着 Mary 脚印线索回到公寓楼 |
 | AVG_L3_开篇_公寓楼内_扩大搜查.md | 3391（暂定） | `u3_l3_open_hall_search` | L3 开篇，决定扩大搜查公寓楼其他住户 |
-| AVG_L4_开篇_Helen家门外_Foster来电.md | 3491（暂定） | `u3_l4_open_helen_call` | L4 开篇，Foster 电话通知油痕检测仪到位 |
+| AVG_L4_开篇_Zack侦探事务所_Foster来电.md | 3491（暂定） | `u3_l4_open_office_call` | L4 开篇，Zack/Emma 回事务所复盘时 Foster 来电通知油痕检测仪到位 |
 | AVG_L4_衔接_市政厅门口_判决方案.md | 3492（暂定） | `u3_l4_bridge_cityhall` | L4 指证后衔接，Mickey 与 Harrison 说明判决方案 |
 | AVG_L4_衔接_报社_采访MaryHelen.md | 3493（暂定） | `u3_l4_bridge_newsroom` | L4 指证后衔接，Emma 采访 Mary 与 Helen |
 | AVG_L5_开篇_Mickey办公室_Bernard线起点.md | 3591（暂定） | `u3_l5_open_mickey_bernard` | L5 开篇，Mickey 派 Zack / Emma 继续查 Bernard |

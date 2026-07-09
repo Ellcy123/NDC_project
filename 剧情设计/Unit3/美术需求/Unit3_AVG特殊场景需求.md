@@ -24,12 +24,12 @@
 | L2 | 指证后纯 AVG | `3292` | `SC3292_avg_MaryRooftopVersion` | Mary、Zack、Emma | Mary 三轮被逼后退守：承认 22:00 上过天台，称与 Thomas 约好为 Emily 祈福、Thomas 突然想推她、她推回去时 Thomas 失力撞栏坠落；反复说自己会不会被当凶手。 |
 | L3 | 开篇纯 AVG | `3391` | `SC3391_avg_Opening_ExpandSearch` | Zack、Emma | 走回公寓楼内，Emma 盯着住户名牌思考"Thomas 为何要推妻子、他的出轨对象会不会知情"，决定扩大搜查。 |
 | L3 | 指证后纯 AVG | `3392` | `SC3392_avg_ThomasKillerRevealed` | Helen、Zack、Emma | 第一重反转：Thomas 是杀妻骗保恶魔（非单纯酗酒丈夫）。Helen 承认布置陷阱（毁栏 + 涂油）、否认杀人，坚称"被 Thomas 命令独自去做、Thomas 肯定是意外坠楼"。 |
-| L4 | 开篇纯 AVG | `3491` | `SC3491_avg_Opening_FosterCall` | Zack、Emma（Foster 电话，不出实体立绘） | Helen 家门外，琢磨突破口时 Foster 来电：组里申请的油痕检测仪到了；两人决定去法医办公室取仪器并扩大调查。 |
+| L4 | 开篇纯 AVG | `3491` | `SC3491_avg_u3_l4_open_office_call_night` | Zack、Emma（Foster 电话，不出实体立绘） | Zack 侦探事务所，复盘 Helen 退守版本时 Foster 来电：组里申请的油痕检测仪到了；两人决定去法医办公室取仪器并扩大调查。 |
 | L4 | 指证后衔接 1 | `3492` | `SC3492_avg_CityHallVerdict` | Harrison（法官）、Mickey、Zack、Emma | 市政厅，Mickey 以辩护律师身份交代案情，为 Mary 争取合法杀人判决、为 Helen 争取无罪。 |
 | L4 | 指证后衔接 2 | `3493` | `SC3493_avg_NewspaperInterview` | Emma、Mary、Helen | 报社，Emma 采访 Mary 与 Helen；Mary 陈述多年家暴遭遇，Helen 补充"银行存在诱导"（为 L5 起势）。 |
 | L5 | 开篇纯 AVG | `3591` | `SC3591_avg_Opening_MickeyOffice` | Mickey、Zack、Emma | Mickey 律所，告知"Mary 已无罪、Helen 还在争取"；为起诉湖滨信托银行取证，派两人继续查 Bernard，写介绍函。 |
 | L5 | 指证后纯 AVG | `3592` | `SC3592_avg_BernardConfession` | Bernard、Zack | Bernard 软化，承认主动诱导 Thomas、承认有戴花瓣缺口手链的女人来咨询；请 Zack 别再打探，"我也是打工人"。 |
-| L6 | 开篇纯 AVG | `3691` | `SC3691_avg_Opening_NeedEvidence` | Mickey、Zack、Emma | Mickey 律所，Zack 怀疑去咨询的女人是 Mary；Mickey 提醒法庭只认事实证据；Zack 决定再查（若合谋且预谋，两人将面临死刑）。 |
+| L6 | 开篇纯 AVG | `3691` | `SC3691_avg_Opening_NeedEvidence` | Mickey、Zack | Mickey 律所，Zack 怀疑去咨询的女人是 Mary；Mickey 提醒法庭只认事实证据；Zack 决定再查（若合谋且预谋，两人将面临死刑）。 |
 | L6 | 关键剧情 AVG（法医室） | `3695` | `SC3695_avg_FosterFinalReport` | Foster、Zack、Emma | 法医办公室，Foster 推出盖红章的精密检测报告：血液酒精浓度 0.25%、Thomas 无有效攻击能力 → 颠覆"正当防卫"。L6 死因反转的关键剧情对话节点（不做突发事件动态漫画，按纯 AVG 关键场处理）。 |
 | L6 | 结局衔接 1 | `3692` | `SC3692_avg_OfficeEmmaReturn` | Zack、Emma | 事务所，Emma 从报社回来；Zack 说银行教唆 Thomas 杀妻骗保，但隐瞒 Mary 蓄意谋杀。Emma 察觉 Zack 脸色不对。 |
 | L6 | 结局衔接 2 | `3693` | `SC3693_avg_MaryHelenThanks` | Mary、Helen、Zack、Emma | 事务所，Mary 携 Helen 上门道谢；提房子卖给 TideWater 换 $8000、与 Helen 同住打工还债。Emma 疑惑银行为何轻易让 Mary 卖给 TideWater。 |
