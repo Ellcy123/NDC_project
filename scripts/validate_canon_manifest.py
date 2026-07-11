@@ -11,6 +11,7 @@ from typing import Any
 
 
 SUPPORTED_SCHEMA_VERSION = 1
+EXPECTED_CANONICAL_UNITS = {f"Unit{unit}" for unit in range(1, 6)}
 FORBIDDEN_CANONICAL_UNITS = {"Unit9", "Unit10"}
 FORBIDDEN_MAPPING_KEYS = {"idMap", "idMappings", "idRewrite", "idTranslationRules"}
 SOURCE_PATH_KEYS = ("outline", "avgCurrent", "tableDrafts", "runtimeTables")
@@ -34,6 +35,8 @@ def _valid_date(value: Any) -> bool:
     if value is None:
         return True
     if not isinstance(value, str):
+        return False
+    if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value):
         return False
     try:
         date.fromisoformat(value)
@@ -70,12 +73,14 @@ def _validate_loop_component(
     status = component.get("status")
     expected = component.get("expectedLoops")
     present = component.get("presentLoops")
-    if status not in LOOP_STATUSES_WITH_FILES | LOOP_STATUSES_WITHOUT_FILES:
+    if not isinstance(status, str) or status not in (
+        LOOP_STATUSES_WITH_FILES | LOOP_STATUSES_WITHOUT_FILES
+    ):
         errors.append(f"{field_path}.status is invalid")
-    if not isinstance(expected, int) or expected < 0:
+    if type(expected) is not int or expected < 0:
         errors.append(f"{field_path}.expectedLoops must be a non-negative integer")
         return
-    if not isinstance(present, list) or any(not isinstance(loop, int) for loop in present):
+    if not isinstance(present, list) or any(type(loop) is not int for loop in present):
         errors.append(f"{field_path}.presentLoops must be an integer array")
         return
     if len(present) != len(set(present)):
@@ -83,7 +88,7 @@ def _validate_loop_component(
     if any(loop < 1 or loop > expected for loop in present):
         errors.append(f"{field_path}.presentLoops contains an out-of-range loop")
 
-    if status in LOOP_STATUSES_WITHOUT_FILES:
+    if isinstance(status, str) and status in LOOP_STATUSES_WITHOUT_FILES:
         if source_value is not None:
             errors.append(f"{chapter_path}.sources for {component_name} must be null when {status}")
         return
@@ -140,16 +145,17 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
         canonical = chapter.get("canonicalUnit")
         player_chapter = chapter.get("playerChapter")
         episode = chapter.get("unityEpisode")
-        if canonical in canonical_units:
-            errors.append(f"{chapter_path}: duplicate canonicalUnit {canonical}")
-        if canonical in FORBIDDEN_CANONICAL_UNITS:
-            errors.append(f"{chapter_path}: {canonical} cannot be canonical")
         if not isinstance(canonical, str) or not re.fullmatch(r"Unit[1-9][0-9]*", canonical):
             errors.append(f"{chapter_path}.canonicalUnit is invalid")
-        elif canonical not in FORBIDDEN_CANONICAL_UNITS:
-            canonical_units.add(canonical)
+        else:
+            if canonical in canonical_units:
+                errors.append(f"{chapter_path}: duplicate canonicalUnit {canonical}")
+            if canonical in FORBIDDEN_CANONICAL_UNITS:
+                errors.append(f"{chapter_path}: {canonical} cannot be canonical")
+            else:
+                canonical_units.add(canonical)
 
-        if not isinstance(player_chapter, int) or player_chapter < 1:
+        if type(player_chapter) is not int or player_chapter < 1:
             errors.append(f"{chapter_path}.playerChapter must be a positive integer")
         elif player_chapter in player_chapters:
             errors.append(f"{chapter_path}: duplicate playerChapter {player_chapter}")
@@ -229,7 +235,11 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
             errors,
         )
 
-        for history_index, history in enumerate(chapter.get("history") or []):
+        history_entries = chapter.get("history")
+        if not isinstance(history_entries, list):
+            errors.append(f"{chapter_path}.history must be an array")
+            history_entries = []
+        for history_index, history in enumerate(history_entries):
             history_path = f"{chapter_path}.history[{history_index}]"
             if not isinstance(history, dict):
                 errors.append(f"{history_path} must be an object")
@@ -246,9 +256,20 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
                 if date_key in history and not _valid_date(history.get(date_key)):
                     errors.append(f"{history_path}.{date_key} must be YYYY-MM-DD or null")
 
+    if canonical_units != EXPECTED_CANONICAL_UNITS:
+        errors.append("chapters[].canonicalUnit must be exactly Unit1-Unit5")
+
     declared_units = policy.get("canonicalUnits")
-    if not isinstance(declared_units, list) or set(declared_units) != canonical_units:
-        errors.append("policy.canonicalUnits must exactly match chapters[].canonicalUnit")
+    if not isinstance(declared_units, list):
+        errors.append("policy.canonicalUnits must be an array")
+    else:
+        declared_units_are_strings = True
+        for unit_index, unit in enumerate(declared_units):
+            if not isinstance(unit, str):
+                errors.append(f"policy.canonicalUnits[{unit_index}] must be a string")
+                declared_units_are_strings = False
+        if declared_units_are_strings and set(declared_units) != canonical_units:
+            errors.append("policy.canonicalUnits must exactly match chapters[].canonicalUnit")
 
     aliases = data.get("flowAliases")
     if not isinstance(aliases, list):
@@ -262,13 +283,18 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
             continue
         name = alias.get("name")
         target = alias.get("target")
-        if name in alias_names:
-            errors.append(f"{alias_path}: duplicate alias {name}")
-        elif isinstance(name, str):
-            alias_names.add(name)
-        if name in canonical_units:
-            errors.append(f"{alias_path}.name cannot shadow canonical unit {name}")
-        if target not in canonical_units:
+        if not isinstance(name, str):
+            errors.append(f"{alias_path}.name must be a string")
+        else:
+            if name in alias_names:
+                errors.append(f"{alias_path}: duplicate alias {name}")
+            else:
+                alias_names.add(name)
+            if name in canonical_units:
+                errors.append(f"{alias_path}.name cannot shadow canonical unit {name}")
+        if not isinstance(target, str):
+            errors.append(f"{alias_path}.target must be a string")
+        elif target not in canonical_units:
             errors.append(f"{alias_path} has unknown target {target}")
         if not isinstance(alias.get("enabled"), bool):
             errors.append(f"{alias_path}.enabled must be boolean")
