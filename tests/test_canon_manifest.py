@@ -228,6 +228,7 @@ class CanonManifestValidationTests(unittest.TestCase):
                 self.assertEqual("reserved", chapter["maturity"]["tables"])
                 self.assertIsNone(chapter["sources"]["statePattern"])
                 self.assertIsNone(chapter["sources"]["avgCurrent"])
+                self.assertIsNone(chapter["sources"]["tableDrafts"])
                 self.assertIsNone(chapter["sources"]["runtimeTables"])
 
     def test_canonical_unit_json_values_return_field_errors(self) -> None:
