@@ -143,6 +143,19 @@ class CanonManifestValidationTests(unittest.TestCase):
     def test_valid_manifest_has_no_errors(self) -> None:
         self.assertEqual([], self.errors_for(self.manifest))
 
+    def test_repository_manifest_is_valid_and_has_expected_identity(self) -> None:
+        manifest_path = REPO_ROOT / "canon_manifest.json"
+        data = load_and_validate_manifest(manifest_path, REPO_ROOT)
+        chapters = {chapter["canonicalUnit"]: chapter for chapter in data["chapters"]}
+        self.assertEqual(["Unit1", "Unit2", "Unit3", "Unit4", "Unit5"], data["policy"]["canonicalUnits"])
+        self.assertEqual("EPI01", chapters["Unit1"]["unityEpisode"])
+        self.assertEqual("EPI09", chapters["Unit1"]["idSpaces"][0]["episode"])
+        self.assertEqual("2xxx", chapters["Unit2"]["idSpaces"][0]["range"])
+        self.assertEqual("reserved", chapters["Unit4"]["idSpaces"][0]["status"])
+        self.assertEqual("reserved", chapters["Unit5"]["idSpaces"][0]["status"])
+        self.assertEqual("none", data["policy"]["idMigration"])
+        self.assertFalse(data["policy"]["automaticIdTranslation"])
+
     def test_canonical_unit_json_values_return_field_errors(self) -> None:
         for value in [None, False, 0, 1.5, "UnitX", [], {}]:
             with self.subTest(value=value):
