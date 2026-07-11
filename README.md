@@ -20,6 +20,10 @@
 - 仅供游戏娱乐和创意展示目的
 - 如与现实人物或事件有任何相似，纯属巧合
 
+## Canon 章节映射
+
+项目当前以 Unit1–Unit5 为正式章节身份；Unit9 是 Unit1 的现行策划别名，Unit10 是 Unit2 的策划标题别名。完整的 Episode、ID 命名空间、内容来源、完成度及历史版本以 [`canon_manifest.json`](canon_manifest.json) 为准。现有 ID 不迁移、不自动转换。
+
 ## Preview 预览工具
 
 `avg_editor_v2/` 文件夹包含剧情预览 + 配置编辑网页工具，用于：
