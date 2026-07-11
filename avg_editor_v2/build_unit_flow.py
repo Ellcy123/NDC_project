@@ -9,23 +9,27 @@ from __future__ import annotations
 
 import json
 import os
+import sys
+from copy import deepcopy
 from datetime import datetime, timezone
+from pathlib import Path
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(HERE)
 TABLE_DIR = os.path.join(HERE, "data", "table")
 OUT_DIR = os.path.join(HERE, "data", "formal")
 OUT_PATH = os.path.join(OUT_DIR, "unit_flow.json")
+CANON_MANIFEST_PATH = os.path.join(REPO_ROOT, "canon_manifest.json")
+SCRIPTS_DIR = os.path.join(REPO_ROOT, "scripts")
+if SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, SCRIPTS_DIR)
+
+from validate_canon_manifest import load_and_validate_manifest  # noqa: E402
 
 
-UNIT_LABELS = {
-    "1": {"key": "Unit1", "title": "Webb谋杀案", "chapter": "EPI01"},
-    "2": {"key": "Unit2", "title": "鞋坊纵火案", "chapter": "EPI02"},
-}
-
-
-def load_table(name: str):
-    path = os.path.join(TABLE_DIR, f"{name}.json")
+def load_table(name: str, table_dir: str = TABLE_DIR):
+    path = os.path.join(table_dir, f"{name}.json")
     if not os.path.exists(path):
         return []
     with open(path, "r", encoding="utf-8") as f:
@@ -153,12 +157,49 @@ def condition_dependency(condition: dict, current_loop: int, items_by_id: dict,
     }
 
 
-def build():
-    chapters = load_table("ChapterConfig")
-    scenes = load_table("SceneConfig")
-    items = load_table("ItemStaticData")
-    testimonies = load_table("TestimonyItem")
-    art_assets = load_table("ArtAssetConfig")
+def unit_labels_from_manifest(manifest: dict) -> dict[str, dict]:
+    labels: dict[str, dict] = {}
+    for chapter in manifest["chapters"]:
+        if not chapter["tooling"]["buildUnitFlow"]:
+            continue
+        canonical_unit = chapter["canonicalUnit"]
+        unit_number = canonical_unit.removeprefix("Unit")
+        labels[unit_number] = {
+            "key": canonical_unit,
+            "title": chapter["playerTitle"],
+            "chapter": chapter["unityEpisode"],
+        }
+    return labels
+
+
+def apply_flow_aliases(units: dict[str, dict], manifest: dict) -> dict[str, dict]:
+    for alias_config in manifest["flowAliases"]:
+        if not alias_config["enabled"]:
+            continue
+        alias_name = alias_config["name"]
+        target_name = alias_config["target"]
+        if target_name not in units:
+            raise ValueError(f"flow alias {alias_name} target {target_name} was not built")
+        alias = deepcopy(units[target_name])
+        alias["unit"] = alias_name
+        alias["formalUnit"] = target_name
+        alias["title"] = alias_config["title"]
+        units[alias_name] = alias
+    return units
+
+
+def build(
+    table_dir: str = TABLE_DIR,
+    out_path: str = OUT_PATH,
+    manifest_path: str = CANON_MANIFEST_PATH,
+):
+    manifest = load_and_validate_manifest(Path(manifest_path), Path(REPO_ROOT))
+    unit_labels = unit_labels_from_manifest(manifest)
+    chapters = load_table("ChapterConfig", table_dir)
+    scenes = load_table("SceneConfig", table_dir)
+    items = load_table("ItemStaticData", table_dir)
+    testimonies = load_table("TestimonyItem", table_dir)
+    art_assets = load_table("ArtAssetConfig", table_dir)
 
     items_by_id = {normalize_id(i.get("id")): i for i in items}
     testimony_by_id = {normalize_id(t.get("id")): t for t in testimonies}
@@ -171,7 +212,7 @@ def build():
     }
 
     units: dict[str, dict] = {}
-    for unit_num, meta in UNIT_LABELS.items():
+    for unit_num, meta in unit_labels.items():
         units[meta["key"]] = {
             "unit": meta["key"],
             "formalUnit": meta["key"],
@@ -182,9 +223,9 @@ def build():
 
     for ch in sorted(chapters, key=lambda c: first_number(c.get("id"))):
         unit_num, loop_num = unit_loop_from_chapter(ch.get("id"))
-        if not unit_num or unit_num not in UNIT_LABELS:
+        if not unit_num or unit_num not in unit_labels:
             continue
-        unit_key = UNIT_LABELS[unit_num]["key"]
+        unit_key = unit_labels[unit_num]["key"]
         chapter_id = normalize_id(ch.get("id"))
         init_scene_id = normalize_id(ch.get("initScene"))
 
@@ -333,15 +374,7 @@ def build():
             "flow": flow,
         })
 
-    # Design alias: the currently formalized Unit9 story lives in Unit1 tables.
-    # Keep this explicit so the editor can explain what it is showing.
-    if units.get("Unit1"):
-        alias = json.loads(json.dumps(units["Unit1"]))
-        alias["unit"] = "Unit9"
-        alias["formalUnit"] = "Unit1"
-        alias["title"] = "黑哨之夜（正式配置映射 Unit1）"
-        alias["chapter"] = "EPI01"
-        units["Unit9"] = alias
+    apply_flow_aliases(units, manifest)
 
     payload = {
         "schemaVersion": 1,
@@ -351,8 +384,10 @@ def build():
         "units": units,
     }
 
-    os.makedirs(OUT_DIR, exist_ok=True)
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
+    output_dir = os.path.dirname(out_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
     return payload
 
