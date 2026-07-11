@@ -149,12 +149,86 @@ class CanonManifestValidationTests(unittest.TestCase):
         chapters = {chapter["canonicalUnit"]: chapter for chapter in data["chapters"]}
         self.assertEqual(["Unit1", "Unit2", "Unit3", "Unit4", "Unit5"], data["policy"]["canonicalUnits"])
         self.assertEqual("EPI01", chapters["Unit1"]["unityEpisode"])
-        self.assertEqual("EPI09", chapters["Unit1"]["idSpaces"][0]["episode"])
-        self.assertEqual("2xxx", chapters["Unit2"]["idSpaces"][0]["range"])
-        self.assertEqual("reserved", chapters["Unit4"]["idSpaces"][0]["status"])
-        self.assertEqual("reserved", chapters["Unit5"]["idSpaces"][0]["status"])
         self.assertEqual("none", data["policy"]["idMigration"])
         self.assertFalse(data["policy"]["automaticIdTranslation"])
+
+    def test_repository_manifest_has_only_enabled_unit9_flow_alias(self) -> None:
+        manifest_path = REPO_ROOT / "canon_manifest.json"
+        data = load_and_validate_manifest(manifest_path, REPO_ROOT)
+
+        self.assertEqual(1, len(data["flowAliases"]))
+        flow_alias = data["flowAliases"][0]
+        self.assertEqual("Unit9", flow_alias["name"])
+        self.assertEqual("Unit1", flow_alias["target"])
+        self.assertIs(True, flow_alias["enabled"])
+        self.assertNotIn("Unit10", [alias["name"] for alias in data["flowAliases"]])
+
+    def test_repository_manifest_locks_current_unit1_and_unit2_id_spaces(self) -> None:
+        manifest_path = REPO_ROOT / "canon_manifest.json"
+        data = load_and_validate_manifest(manifest_path, REPO_ROOT)
+        chapters = {chapter["canonicalUnit"]: chapter for chapter in data["chapters"]}
+
+        self.assertEqual(
+            [
+                {
+                    "scope": "authoring_state_and_avg",
+                    "range": "9xxx",
+                    "episode": "EPI09",
+                    "status": "current",
+                    "migration": "preserve",
+                },
+                {
+                    "scope": "runtime_tables",
+                    "range": "1xxx",
+                    "episode": "EPI01",
+                    "status": "current",
+                    "migration": "preserve",
+                },
+            ],
+            chapters["Unit1"]["idSpaces"],
+        )
+        self.assertEqual(
+            [
+                {
+                    "scope": "current_authoring_and_runtime",
+                    "range": "2xxx",
+                    "episode": "EPI02",
+                    "status": "current",
+                    "migration": "preserve",
+                }
+            ],
+            chapters["Unit2"]["idSpaces"],
+        )
+        self.assertNotIn(
+            "10xxx", [id_space["range"] for id_space in chapters["Unit2"]["idSpaces"]]
+        )
+        self.assertEqual(
+            ["10xxx"],
+            [
+                entry["formerIdRange"]
+                for entry in chapters["Unit2"]["history"]
+                if "formerIdRange" in entry
+            ],
+        )
+
+    def test_repository_manifest_keeps_unit4_and_unit5_reserved(self) -> None:
+        manifest_path = REPO_ROOT / "canon_manifest.json"
+        data = load_and_validate_manifest(manifest_path, REPO_ROOT)
+        chapters = {chapter["canonicalUnit"]: chapter for chapter in data["chapters"]}
+
+        for canonical_unit in ("Unit4", "Unit5"):
+            with self.subTest(canonical_unit=canonical_unit):
+                chapter = chapters[canonical_unit]
+                self.assertEqual(
+                    ["reserved"],
+                    [id_space["status"] for id_space in chapter["idSpaces"]],
+                )
+                self.assertEqual("reserved", chapter["maturity"]["state"]["status"])
+                self.assertEqual("reserved", chapter["maturity"]["avg"]["status"])
+                self.assertEqual("reserved", chapter["maturity"]["tables"])
+                self.assertIsNone(chapter["sources"]["statePattern"])
+                self.assertIsNone(chapter["sources"]["avgCurrent"])
+                self.assertIsNone(chapter["sources"]["runtimeTables"])
 
     def test_canonical_unit_json_values_return_field_errors(self) -> None:
         for value in [None, False, 0, 1.5, "UnitX", [], {}]:
