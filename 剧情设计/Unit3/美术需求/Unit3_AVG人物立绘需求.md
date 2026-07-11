@@ -201,10 +201,10 @@
 
 ### Charles Miller
 
-**剧情依据**：interrupts `charles_visit`（见《突发事件》文档）
+**剧情依据**：L5 剧情衔接纯 AVG `3592`（湖滨信托银行大厅）
 
 **状态需求**：
-- Charles Miller（40 岁出头，Emma 的慈善投资人）：成熟稳重，礼貌但带着要紧事的急切，登门找 Emma 说慈善事务上有要紧事要谈。轻量出场（Miller 家族线，Unit4+ 引子）。
+- Charles Miller（40 岁出头，Emma 的慈善投资人）：成熟稳重，礼貌但不容拖延；在银行大厅以基金会事务和 Seamus 资助问题为由带走 Emma。轻量出场（Miller 家族线，Unit4+ 引子）。
 
 ---
 

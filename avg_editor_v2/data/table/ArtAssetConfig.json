@@ -990,14 +990,7 @@
     "category": "scene_bg",
     "sceneKind": "explore",
     "ArtRequirement": "【探索场景底图】Bernard 办公室\n- 时间版本：白天版（资源条目）；资源 ID：SC3014_bg_u3_exp_bernard_office_day\n- 资产性质：对话场景 + 搜证场景 + 指证场地底图，人物与场景分离，不合成人物。\n- 场景参考：湖滨信托银行 Bernard 的私人办公室\n- 画面重点：Bernard 的私人办公室。；墙上挂着一张 1928 年度优秀业绩表彰状；桌上摆着全家福（Bernard + 妻子 + 两个孩子）；桌上一块皮质垫板；普通视角只看出它是常用办公物，压痕在侧光观察 / 分析特写中显现；椅子靠背高，皮面\n- Loop/状态：首次解锁：L5（凭 Mickey 介绍函）\n- 关键道具锚点（复用底图汇总）：3501 Bernard 的皮质垫板；3502 垫板上的手链压痕；3503 办公桌全家福 / 年度表彰状；3570 标注报纸压痕比对报告\n- 美术参考：1920s 银行高级职员办公室——红木 + 皮质装饰 + 黄铜；办公桌：大型，桌面铺皮质垫板（关键道具）；表彰状：黑框 + 红章 + 烫金字体；全家福：10×15 cm 装裱在桌上；Bernard 形象（详见人物设定文档）：40 多岁，秃顶或后梳头 + 体面西装；灯光：自然光（窗大）+ 绿色台灯",
-    "events": [
-      {
-        "name": "L5 Charles Miller 登门带走 Emma",
-        "resName": "u3_l5_charles_visit_01",
-        "loop": 5,
-        "req": "事件 3 · L5 Charles Miller 登门带走 Emma\n\n**品质**：普通\n\n**触发位置**：L5 自由探索阶段，玩家刚进入 Bernard 办公室（SC3014）即触发（state interrupts: `charles_visit`）。\n\n**挂载节点**：\n- Charles Miller（40 岁出头，Emma 的慈善投资人）登门找 Emma，说慈善事务上有要紧事要立刻谈\n- Emma 给 Zack 一个\"你独自处理\"的眼神后离开\n- Bernard 神情松了一拍——这场审问只剩 Zack 一个人对他\n\n**叙事作用**：\n- 功能上把 Emma 支开，让 Bernard 这场审问变成 Zack 单独完成（影响后续对白调度——Bernard 办公室内的压痕比对小玩法与指证都由 Zack 独自推进）。\n- 节奏上是一段轻插曲，给 Bernard 一个\"对手少了一个\"的短暂松弛，反衬 Zack 接下来单独施压。\n- 为 Unit4+ 的 Charles Miller / Miller 家族线留一个轻引子（不在本 Loop 展开）。\n\n**调度注意**：\n- 事件轻量，重点是\"Charles Miller 登门 + Emma 离场 + Bernard 表情松一拍\"三个信息点。\n- Charles Miller 是 40 岁出头、成熟稳重的投资人形象，礼貌但带要紧事的急切；Emma 离场是\"放心交给 Zack\"的默契，不是被迫。\n- 不要做成大场面；它是一段过渡性突发，不承载证据信息。\n\n---"
-      }
-    ]
+    "events": []
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3017_avg_u3_l1_open_car_news_day",
@@ -1045,6 +1038,22 @@
     "events": []
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3592_avg_BankLobbyCharlesTakesEmma",
+    "Name": "L5 衔接：银行大厅Charles带走Emma（白天完整 AVG 图）",
+    "displayName": "SC3592_avg_BankLobbyCharlesTakesEmma",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】L5 衔接：湖滨信托银行大厅Charles带走Emma\n- 时间版本：白天版（资源条目）；资源 ID：SC3592_avg_BankLobbyCharlesTakesEmma\n- 资产性质：人物和银行大厅场景合成整图，不开放自由探索\n- 场景参考：1920s 湖滨信托银行大厅；AVG 专用地点\n- 画面人物：Charles（突然出现，礼貌但不容拖延）；Emma（意外但迅速判断轻重）；Zack（准备独自继续调查）\n- 画面重点：Zack 与 Emma 准备去见 Bernard 时，Charles 以基金会事务和 Seamus 资助问题需要立即处理为由带走 Emma。Emma 离开前示意 Zack 独自继续，Zack 随后进入 Bernard 办公室。\n- 叙事作用：自然支开 Emma，让 Bernard 办公室的搜证与指证由 Zack 独自完成；轻量引出 Charles / Miller 家族线。\n- 排除内容：不是突发事件动态漫画；不画 Bernard；不承载证据挂载。",
+    "events": [
+      {
+        "name": "Charles 出现并带 Emma 离场",
+        "resName": "charles_take_emma_001",
+        "loop": 5,
+        "req": "Charles 从银行大厅一侧出现，以基金会事务和 Seamus 资助问题叫走 Emma；Emma 离开前向 Zack 示意继续调查。仅配置人物进出场，不作为突发事件。"
+      }
+    ]
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3691_avg_u3_l6_open_mickey_trial_day",
     "Name": "L6 开篇：Mickey办公室控辩前（白天完整 AVG 图）",
     "displayName": "SC3691_avg_u3_l6_open_mickey_trial_day",
@@ -1054,31 +1063,42 @@
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3692_avg_u3_l6_end_emma_night",
-    "Name": "L6 结局：Zack侦探事务所Emma回报社（夜晚完整 AVG 图）",
-    "displayName": "SC3692_avg_u3_l6_end_emma_night",
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3692_avg_OfficeEmmaMaryHelen",
+    "Name": "L6 结尾：事务所Emma/Mary/Helen（夜晚完整 AVG 图）",
+    "displayName": "SC3692_avg_OfficeEmmaMaryHelen",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】L6 结局：Zack侦探事务所Emma回报社\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3692_avg_u3_l6_end_emma_night\n- 资产性质：人物和事务所场景合成整图，不开放自由探索\n- 场景参考：Zack 侦探事务所；SC3018 Zack 侦探事务所\n- 画面人物：Zack（刚经历控辩选择，隐瞒 Mary 蓄意谋杀真相）；Emma（从报社回来，察觉 Zack 脸色不对）\n- 画面重点：Zack 回到事务所，Emma 从报社回来询问银行调查结果。Zack 只说银行教唆 Thomas 杀妻骗保，没有告诉 Emma Mary 的真实角色。；画面重点是 Zack 的压抑和 Emma 的敏锐：Emma 感觉有事，但没有强逼。\n- 叙事作用：承接 L6 控辩后的玩家选择。；表现 Zack 对 Emma 隐瞒真相的决定。；为后续 Mary / Helen 登门道谢制造情绪反差。",
-    "events": []
+    "ArtRequirement": "【完整 AVG 场景图】L6 结尾：Zack侦探事务所Emma/Mary/Helen\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3692_avg_OfficeEmmaMaryHelen\n- 资产性质：人物和事务所场景合成整图，不开放自由探索\n- 场景参考：Zack 侦探事务所；SC3018 Zack 侦探事务所\n- 画面人物：Zack（已知真相但克制隐瞒）；Emma（从报社回来）；Mary（准备卖房还债）；Helen（提出两人同住打工还债）\n- 画面重点：Emma 与 Zack 谈到 Bernard 已招供银行违规；随后 Mary 携 Helen 登门道谢，说明准备把房子卖给 TideWater 和共同还债的安排。\n- 叙事作用：合并原 Emma 回来与 Mary/Helen 道谢两段事务所剧情；收束银行违规与二人生活安排；引出 TideWater 房产流向。",
+    "events": [
+      {
+        "name": "Mary 与 Helen 登门道谢",
+        "resName": "mary_helen_visit_enter_001",
+        "loop": 6,
+        "req": "Emma 与 Zack 谈完 Bernard 招供后，Mary 与 Helen 一同进入事务所；Mary 在前，Helen 在侧，状态克制平静。"
+      }
+    ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3693_avg_u3_l6_end_mary_helen_night",
-    "Name": "L6 结局：Zack侦探事务所Mary/Helen道谢（夜晚完整 AVG 图）",
-    "displayName": "SC3693_avg_u3_l6_end_mary_helen_night",
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3693_avg_StreetLeonardDelivers",
+    "Name": "L6 结尾：事务所门口街道Leonard送文件（夜晚完整 AVG 图）",
+    "displayName": "SC3693_avg_StreetLeonardDelivers",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】L6 结局：Zack侦探事务所Mary/Helen道谢\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3693_avg_u3_l6_end_mary_helen_night\n- 资产性质：人物和事务所场景合成整图，不开放自由探索\n- 场景参考：Zack 侦探事务所；SC3018 Zack 侦探事务所\n- 画面人物：Mary（带 Helen 上门道谢，克制、体面，重新塑造自己）；Helen（与 Mary 同来，状态比前几轮更平静）；Zack（已知真相，压住不说）；Emma（不知道 Mary 的真实角色，对 TideWater 转房产生疑惑）\n- 画面重点：Mary 带着 Helen 上门道谢。Mary 少见地化了浅色口红，提到 Thomas 死后债务不会继续利滚利，房子卖给 TideWater 换到 8000 美元，之后和 Helen 一起打工还债。；画面需要同时成立两层：表面是受害者重新开始，底层是 Zack 已经知道她是策划者。\n- 叙事作用：让 Mary / Helen 以“被拯救后重新生活”的姿态完成表层收束。；强化 Zack 隐瞒真相后的复杂观感。；由 Emma 对 TideWater 收房的疑惑，引出 Leonard 的内部消息。",
-    "events": []
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3694_avg_u3_l6_end_leonard_night",
-    "Name": "L6 结局：Zack侦探事务所Leonard送文件（夜晚完整 AVG 图）",
-    "displayName": "SC3694_avg_u3_l6_end_leonard_night",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】L6 结局：Zack侦探事务所Leonard送文件\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3694_avg_u3_l6_end_leonard_night\n- 资产性质：人物和事务所场景合成整图，不开放自由探索\n- 场景参考：Zack 侦探事务所；SC3018 Zack 侦探事务所\n- 画面人物：Leonard（带来湖滨信托银行内部消息和文件）；Emma（接收信息，继续追问 TideWater 的动机）；Zack（与 Emma 一起意识到南区房产流向更大的集团）\n- 画面重点：Mary 与 Helen 离开后，Leonard 上门解释 TideWater 相关疑点。他带来内部消息：南区援助计划中被清退的房产，最终通过 LakeShore Investment Co. 流入 TideWater 集团。；画面重点是 Leonard 递交文件，以及 Zack / Emma 从 Unit3 案件收束进入更大阴谋线的瞬间。\n- 叙事作用：回答 Mary 为什么能顺利把房子卖给 TideWater。；将湖滨信托银行、LakeShore Investment Co.、TideWater 集团串起来。；为 Unit4+ 的南区清退 / TideWater 线起势。",
-    "events": []
+    "ArtRequirement": "【完整 AVG 场景图】L6 结尾：事务所门口街道Leonard送文件\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3693_avg_StreetLeonardDelivers\n- 资产性质：人物和街道场景合成整图，不开放自由探索\n- 场景参考：Zack 侦探事务所门口街道；夜间路灯下\n- 画面人物：Leonard（先在路灯下徘徊，待二人离开后交文件）；Mary、Helen（正向 Zack / Emma 告别离开）；Zack、Emma（送客并接收文件）\n- 画面重点：Zack 和 Emma 送 Mary、Helen 出门时遇到 Leonard；待两人走远后，Leonard 上前交出南区援助计划内部文件，揭示清退房产最终流入 TideWater。\n- 叙事作用：自然完成 Mary/Helen 送别；回答银行为何不阻拦卖房；把 Unit3 收束接向更大的 TideWater 线。",
+    "events": [
+      {
+        "name": "Mary 与 Helen 离开事务所",
+        "resName": "mary_helen_leave_office_001",
+        "loop": 6,
+        "req": "Mary 与 Helen 向 Zack、Emma 告别后沿街离开；两人走远后再衔接 Leonard 上前。"
+      },
+      {
+        "name": "Leonard 从路灯下上前交文件",
+        "resName": "leonard_street_deliver_001",
+        "loop": 6,
+        "req": "Leonard 原本在路灯下徘徊，确认 Mary 与 Helen 离开后才走近 Zack、Emma，并交出南区援助计划内部文件。"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3001_bg_u3_exp_ground_day",

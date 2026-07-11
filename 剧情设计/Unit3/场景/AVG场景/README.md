@@ -24,10 +24,10 @@ AVG_L{loop}_{剧情位置}_{地点名}_{剧情用途}.md
 | AVG_L4_衔接_市政厅门口_判决方案.md | 3492（暂定） | `u3_l4_bridge_cityhall` | L4 指证后衔接，Mickey 与 Harrison 说明判决方案 |
 | AVG_L4_衔接_报社_采访MaryHelen.md | 3493（暂定） | `u3_l4_bridge_newsroom` | L4 指证后衔接，Emma 采访 Mary 与 Helen |
 | AVG_L5_开篇_Mickey办公室_Bernard线起点.md | 3591（暂定） | `u3_l5_open_mickey_bernard` | L5 开篇，Mickey 派 Zack / Emma 继续查 Bernard |
+| AVG_L5_衔接_湖滨信托银行大厅_Charles带走Emma.md | 3592（暂定） | `u3_l5_bank_charles_emma` | L5 剧情衔接，Charles 在银行大厅带走 Emma，Zack 独自进入 Bernard 办公室 |
 | AVG_L6_开篇_Mickey办公室_控辩前.md | 3691（暂定） | `u3_l6_open_mickey_trial` | L6 开篇，Mickey 提醒必须拿出事实证据 |
-| AVG_L6_结局_Zack侦探事务所_Emma回报社.md | 3692（暂定） | `u3_l6_end_emma` | L6 结局衔接，Emma 回到事务所并察觉 Zack 状态异常 |
-| AVG_L6_结局_Zack侦探事务所_MaryHelen道谢.md | 3693（暂定） | `u3_l6_end_mary_helen` | L6 结局衔接，Mary 与 Helen 上门道谢 |
-| AVG_L6_结局_Zack侦探事务所_Leonard送文件.md | 3694（暂定） | `u3_l6_end_leonard` | L6 结局衔接，Leonard 送来南区清退内部文件 |
+| AVG_L6_结局_Zack侦探事务所_EmmaMaryHelen.md | 3692（暂定） | `u3_l6_end_office_group` | L6 结尾衔接，Emma 回来后与 Zack 交谈，Mary 与 Helen 随后登门道谢 |
+| AVG_L6_结局_事务所门口街道_Leonard送文件.md | 3693（暂定） | `u3_l6_end_street_leonard` | L6 结尾衔接，送别 Mary / Helen 后，Leonard 在街边交出内部文件 |
 
 ## 使用边界
 

@@ -62,7 +62,7 @@ player_context:
     - "Mary 即'戴花瓣缺口手链去 Bernard 桌上咨询的女人'"
     - "玩家做出二选项决定：销毁证据保护 Mary / 拿起证据继续"
     - "（若拿起）案件后续走向待续；（若销毁）Zack 选择不告诉 Emma 真相"
-    - "Mary 卖房给 TideWater 获 $8000，银行未刁难——TideWater 是 Lawson Vanderbilt 的手下"
+    - "Mary 准备把房子卖给 TideWater 还债；银行不会阻拦，因为清退房产最终正流向 TideWater"
     - "南区援助计划：房产清退最终流入 TideWater，世博会选址附近"
 
 # ─────────────────────────────
@@ -326,81 +326,57 @@ expose:
 #     无论玩家在 player_choice 选哪条，本结局序列都会发生（只是 Zack 心境不同）。
 
 ending_sequence:
-  - id: ending_office_emma_return
+  - id: ending_office_group
     type: story_dialogue
-    scene_name: "L6 结局 · Zack侦探事务所 · Emma回报社"
+    scene_name: "L6 结局 · Zack侦探事务所 · Emma/Mary/Helen"
     location: "Zack 侦探事务所"
-    characters: [Zack, Emma]
+    characters: [Zack, Emma, Mary, Helen]
     description: |
-      Zack 刚回到侦探事务所，发现 Emma 从报社回来。
-      Emma 询问 Zack 银行的调查结果如何——Zack 说银行教唆了 Thomas 杀妻骗保。
-      Emma 觉得 Zack 脸色不太好，问是不是发生了什么。
-      Zack 思考了一下，还是没有把 Mary 蓄意谋杀 Thomas 的事告诉 Emma。
+      Emma 从报社回到事务所，与 Zack 谈到 Bernard 已招供银行违规。
+      Zack 没有把 Mary 蓄意谋杀 Thomas 的真实角色告诉 Emma。
+      随后 Mary 携 Helen 登门道谢：Mary 准备将房子卖给 TideWater 还债，
+      Helen 提出让 Mary 与自己同住，两人一起打工偿还余债。
 
     L6_ending_emma:
       talk: L6_ending_emma
       is_liar: false
-      motive: "刚结束报社工作回事务所碰头；对 Zack 的状态有所察觉"
-      mindset: "敏锐而克制——能感觉 Zack 有事，不强逼"
-
+      motive: "从报社回事务所碰头，确认 Bernard 招供后的银行调查结果"
+      mindset: "敏锐但不逼问——感觉 Zack 有所隐瞒"
       active_topics:
-        - "银行调查结果——Bernard 主动诱导"
-        - "察觉 Zack 脸色不好"
+        - "Bernard 已招供银行违规与主动诱导"
+        - "Zack 状态异常"
       withheld_topics: []
-
       player_inquiry:
-        - "Zack 银行的调查结果"  # 8
-
+        - "Bernard 招供后的银行调查结果"  # 8
       testimony_ids:
-        - 3106001  # Emma：询问 Zack 银行调查结果 + 觉得 Zack 脸色不好
-
-  - id: ending_mary_helen_visit
-    type: story_dialogue
-    scene_name: "L6 结局 · Zack侦探事务所 · Mary/Helen道谢"
-    location: "Zack 侦探事务所"
-    characters: [Mary, Helen, Zack, Emma]
-    description: |
-      两人聊着 Emma 在报社的见闻时，有人敲门——
-      Mary 带着 Helen 上门道谢。她少见地化了浅色口红，看起来像是终于开始整理自己，也像是在重新塑造一个更体面的形象。
-      Mary 阐述目前状态：Thomas 死了，债务不会利滚利了；
-      她及时将房子转出给 TideWater 房地产公司，获得 $8000，能还上银行一部分钱；
-      她现在住在 Helen 那里，准备和 Helen 一起打工还剩下的钱。
-      向 Zack 和 Emma 道谢之后离开。
-      Emma 略疑惑：银行不是在执行南区救援计划、一直想要当地居民的房产吗？
-      怎么会这么轻易地就让 Mary 把房子卖给 TideWater 了？
+        - 3106001
 
     L6_ending_mary:
       talk: L6_ending_mary
-      is_liar: false   # 本场不是 Expose；Mary 的陈述事实层面真实，但 Zack 已知她是策划者
-      motive: "对 Zack/Emma 道谢；同时把自己塑造成走出阴影的样子"
-      mindset: "比 L4 的报社采访更克制——压低声音、带感激"
-
+      is_liar: false
+      motive: "携 Helen 登门道谢，并说明两人的后续生活安排"
+      mindset: "克制、体面，像是在重新整理生活"
       active_topics:
-        - "Thomas 死后债务不会利滚利"
-        - "房子卖给 TideWater 房地产公司换 $8000，能还上银行一部分"
-        - "现在住在 Helen 那里、一起打工还剩下的钱"
+        - "准备把房子卖给 TideWater 还债"
+        - "Helen 提出两人同住、一起打工还余债"
       withheld_topics:
-        - "Mary 与 Helen 是预谋合谋"  # Zack 已知，但 Mary 不会向 Zack 承认
-
+        - "Mary 与 Helen 是预谋合谋"
       player_inquiry:
-        - "Mary 现在的具体生活安排"  # 6
-
+        - "Mary 与 Helen 接下来的生活安排"  # 6
       testimony_ids:
-        - 3026001  # Mary：Thomas 死后状态自述（债务 + 卖房 + 与 Helen 同住）
+        - 3026001
 
-  - id: ending_leonard_visit
+  - id: ending_street_leonard
     type: story_dialogue
-    scene_name: "L6 结局 · Zack侦探事务所 · Leonard送文件"
-    location: "Zack 侦探事务所"
-    characters: [Leonard, Emma, Zack]
+    scene_name: "L6 结局 · 事务所门口街道 · Leonard送文件"
+    location: "Zack 侦探事务所门口街道"
+    characters: [Leonard, Mary, Helen, Zack, Emma]
     description: |
-      Mary 与 Helen 离开后，Leonard（Leo）上门为 Emma 与 Zack 的疑惑作解。
-      他带来了湖滨信托银行内部消息：
-      关于南区援助计划，那些被清退的房产本来最终目的——
-      全部通过 LakeShore Investment Co. 流入 TideWater 集团（Lawson Vanderbilt 的手下）。
-      Mary 把房子直接卖给 TideWater，反而方便了他们，自然不会为难 Mary。
-      至于 TideWater 为什么想要这些房子，Leo 也不太明白。
-      他交出手头保存的南区清退计划文件给 Emma 和 Zack。
+      Emma 和 Zack 送 Mary、Helen 出门时，遇到已在路灯下徘徊的 Leonard。
+      Mary 与 Helen 离开后，Leonard 才上前交出南区援助计划内部文件：
+      被清退的房产最终通过 LakeShore Investment Co. 流入 TideWater 集团。
+      Mary 准备把房子直接卖给 TideWater，这正合他们的意，银行自然不会阻拦。
+      至于 TideWater 为什么想要这些房子，Leonard 也不清楚。
 
     evidence:
       - id: 3602
@@ -419,7 +395,7 @@ ending_sequence:
       active_topics:
         - "南区援助计划清退房产最终通过 LakeShore Investment Co. 流入 TideWater"
         - "TideWater 是 Lawson Vanderbilt 的手下"
-        - "Mary 把房子直接卖给 TideWater 反而方便了他们"
+        - "Mary 准备把房子直接卖给 TideWater，这正合他们的意"
         - "Leo 自己也不清楚 TideWater 为什么想要这些房子"
       withheld_topics: []
 

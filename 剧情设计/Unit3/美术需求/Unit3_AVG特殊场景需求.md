@@ -28,12 +28,11 @@
 | L4 | 指证后衔接 1 | `3492` | `SC3492_avg_CityHallVerdict` | Harrison（法官）、Mickey、Zack、Emma | 市政厅，Mickey 以辩护律师身份交代案情，为 Mary 争取合法杀人判决、为 Helen 争取无罪。 |
 | L4 | 指证后衔接 2 | `3493` | `SC3493_avg_NewspaperInterview` | Emma、Mary、Helen | 报社，Emma 采访 Mary 与 Helen；Mary 陈述多年家暴遭遇，Helen 补充"银行存在诱导"（为 L5 起势）。 |
 | L5 | 开篇纯 AVG | `3591` | `SC3591_avg_Opening_MickeyOffice` | Mickey、Zack、Emma | Mickey 律所，告知"Mary 已无罪、Helen 还在争取"；为起诉湖滨信托银行取证，派两人继续查 Bernard，写介绍函。 |
-| L5 | 指证后纯 AVG | `3592` | `SC3592_avg_BernardConfession` | Bernard、Zack | Bernard 软化，承认主动诱导 Thomas、承认有戴花瓣缺口手链的女人来咨询；请 Zack 别再打探，"我也是打工人"。 |
+| L5 | 剧情衔接纯 AVG | `3592` | `SC3592_avg_BankLobbyCharlesTakesEmma` | Charles、Emma、Zack | 湖滨信托银行大厅，Charles Miller 突然出现，以基金会事务和 Seamus 资助问题为由带走 Emma；Zack 被迫独自进入 Bernard 办公室。 |
 | L6 | 开篇纯 AVG | `3691` | `SC3691_avg_Opening_NeedEvidence` | Mickey、Zack | Mickey 律所，Zack 怀疑去咨询的女人是 Mary；Mickey 提醒法庭只认事实证据；Zack 决定再查（若合谋且预谋，两人将面临死刑）。 |
 | L6 | 关键剧情 AVG（法医室） | `3695` | `SC3695_avg_FosterFinalReport` | Foster、Zack、Emma | 法医办公室，Foster 推出盖红章的精密检测报告：血液酒精浓度 0.25%、Thomas 无有效攻击能力 → 颠覆"正当防卫"。L6 死因反转的关键剧情对话节点（不做突发事件动态漫画，按纯 AVG 关键场处理）。 |
-| L6 | 结局衔接 1 | `3692` | `SC3692_avg_OfficeEmmaReturn` | Zack、Emma | 事务所，Emma 从报社回来；Zack 说银行教唆 Thomas 杀妻骗保，但隐瞒 Mary 蓄意谋杀。Emma 察觉 Zack 脸色不对。 |
-| L6 | 结局衔接 2 | `3693` | `SC3693_avg_MaryHelenThanks` | Mary、Helen、Zack、Emma | 事务所，Mary 携 Helen 上门道谢；提房子卖给 TideWater 换 $8000、与 Helen 同住打工还债。Emma 疑惑银行为何轻易让 Mary 卖给 TideWater。 |
-| L6 | 结局衔接 3 | `3694` | `SC3694_avg_LeonardDelivers` | Leonard、Emma、Zack | 事务所，Leonard 送来湖滨信托银行内部消息：南区清退房产最终流入 TideWater；不知 TideWater 为何想要这些房子（为 Unit4+ 起势）。 |
+| L6 | 结尾衔接 1 | `3692` | `SC3692_avg_OfficeEmmaMaryHelen` | Zack、Emma、Mary、Helen | Zack 侦探事务所，Emma 从报社回来，与 Zack 谈到 Bernard 已招供银行违规；随后 Mary 携 Helen 登门道谢，提到准备卖房给 TideWater 还债，Helen 提出两人同住打工还债。 |
+| L6 | 结尾衔接 2 | `3693` | `SC3693_avg_StreetLeonardDelivers` | Leonard、Mary、Helen、Zack、Emma | 侦探事务所门口街道，Emma 和 Zack 送 Mary、Helen 出门时遇到已在路灯下徘徊的 Leonard；Mary、Helen 离开后，Leonard 交出南区援助计划内部文件，揭示房产最终流入 TideWater。 |
 
 > **结局二选项**（Zack 销毁证据 / 拿起证据）发生在 L6 指证后、上述事务所衔接之前，属于剧情分叉点；两个 outcome 都进入共用的事务所衔接序列，画面上无需为两个分支单独出整图，差异由 Zack 是否持证及表情体现。
 
@@ -44,10 +43,11 @@
 - L4 衔接 2 报社 `3493`：
   - 整图表现 Emma 采访 Mary 与 Helen。
   - Mary：从压抑到陈述家暴遭遇的舒缓（命名建议 `mary_interview_speak_001`）。
-- L6 结局衔接 2 `3693`：
+- L6 结尾衔接 1 `3692`：
   - Mary + Helen 上门道谢的入场（命名建议 `mary_helen_visit_enter_001`）：两人一同登门，Mary 在前、Helen 在侧，状态克制平静。
-- L6 结局衔接 3 `3694`：
-  - Leonard 登门送文件的入场（命名建议 `leonard_deliver_enter_001`）：审慎、点到为止。
+- L6 结尾衔接 2 `3693`：
+  - Mary + Helen 离开事务所（命名建议 `mary_helen_leave_office_001`）：两人向 Zack / Emma 告别后沿街离开。
+  - Leonard 从路灯下上前交文件（命名建议 `leonard_street_deliver_001`）：先在路灯下徘徊，确认 Mary / Helen 走远后再靠近。
 
 其他纯 AVG 场景暂不单独增加人物进出/动作资产需求，只按各自整图场面需求处理。
 
@@ -70,7 +70,8 @@
 - L4 开篇 `3491` 中 Foster 仅电话出现，不画实体立绘；油痕检测仪是 L4 自由探索/小玩法的功能道具，不在本过场图。
 - L4 Mary 登场求情是突发事件动态漫画（见《突发事件》文档），不在本表纯 AVG 场景内。
 - L6 法医室 `3695` 中 Foster 推红章报告是关键剧情对话；报告本身是证据道具（法医鉴定 3601），AVG 图只表现 Foster 出报告的场面，不画成可点击拾取。
-- L6 结局衔接的三张事务所图（`3692`/`3693`/`3694`）人物各不同，应分别成图。
+- L5 `3592` 是从 Mickey 开篇到 Bernard 办公室探索之间的剧情衔接图；Charles 带走 Emma 后，Zack 独自进入 SC3014。
+- L6 结尾衔接合并为两张图：`3692` 表现事务所内完整谈话，`3693` 表现事务所门口送别与 Leonard 交文件。
 
 ## 配置落点
 

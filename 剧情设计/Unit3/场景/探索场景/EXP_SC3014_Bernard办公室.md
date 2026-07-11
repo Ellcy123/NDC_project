@@ -44,11 +44,10 @@ Bernard 的私人办公室。
 | 3065001 | Bernard：按标准流程办保单、没做多余的事（⚠ 谎言，Expose R1 lie source） |
 | 3065002 | Bernard：没人来过（⚠ 谎言，Expose R2 lie source） |
 
-## 突发事件
+## 进入状态
 
-### L5：Charles Miller 登门拜访
-- **触发**：玩家刚进入 SC3014 即触发
-- **内容**：Charles Miller（40 岁出头，Emma 的慈善投资人）登门找 Emma，说慈善事务上有要紧事要立刻谈。Emma 给 Zack 一个'你独自处理'的眼神后离开。Bernard 神情松了一拍——这场审问只剩 Zack 一个人对他
+- Charles 已在银行大厅纯 AVG 场景 `3592` 中带走 Emma。
+- 玩家进入 SC3014 时只有 Zack 与 Bernard，后续搜证和指证均由 Zack 独自推进。
 
 ## 指证流程
 
