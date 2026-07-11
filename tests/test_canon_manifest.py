@@ -45,7 +45,7 @@ def make_valid_manifest(repo_root: Path) -> dict:
         if unit == 1:
             aliases.append({"name": "Unit9", "role": "active_authoring_alias"})
         elif unit == 2:
-            aliases.append({"name": "Unit10", "role": "active_authoring_alias"})
+            aliases.append({"name": "Unit10", "role": "source_title_alias"})
 
         chapters.append(
             {
@@ -163,6 +163,23 @@ class CanonManifestValidationTests(unittest.TestCase):
         self.assertIs(True, flow_alias["enabled"])
         self.assertNotIn("Unit10", [alias["name"] for alias in data["flowAliases"]])
 
+    def test_repository_manifest_has_exact_chapter_aliases(self) -> None:
+        data = load_and_validate_manifest(REPO_ROOT / "canon_manifest.json", REPO_ROOT)
+
+        self.assertEqual(
+            {
+                "Unit1": [{"name": "Unit9", "role": "active_authoring_alias"}],
+                "Unit2": [{"name": "Unit10", "role": "source_title_alias"}],
+                "Unit3": [],
+                "Unit4": [],
+                "Unit5": [],
+            },
+            {
+                chapter["canonicalUnit"]: chapter["aliases"]
+                for chapter in data["chapters"]
+            },
+        )
+
     def test_repository_manifest_locks_current_unit1_and_unit2_id_spaces(self) -> None:
         manifest_path = REPO_ROOT / "canon_manifest.json"
         data = load_and_validate_manifest(manifest_path, REPO_ROOT)
@@ -238,6 +255,26 @@ class CanonManifestValidationTests(unittest.TestCase):
                 manifest["chapters"][0]["canonicalUnit"] = value
                 self.assert_field_error(manifest, "chapters[0].canonicalUnit is invalid")
 
+    def test_player_chapter_must_match_canonical_unit_number(self) -> None:
+        self.manifest["chapters"][0]["playerChapter"] = 99
+
+        errors = self.errors_for(self.manifest)
+
+        self.assertIn(
+            "chapters[0].playerChapter must equal 1 for canonicalUnit Unit1",
+            errors,
+        )
+
+    def test_unity_episode_must_match_canonical_unit_number(self) -> None:
+        self.manifest["chapters"][0]["unityEpisode"] = "EPI99"
+
+        errors = self.errors_for(self.manifest)
+
+        self.assertIn(
+            "chapters[0].unityEpisode must equal EPI01 for canonicalUnit Unit1",
+            errors,
+        )
+
     def test_canonical_units_must_be_a_string_array(self) -> None:
         for value in [None, False, 0, 1.5, "Unit1", {}]:
             with self.subTest(field_value=value):
@@ -273,6 +310,58 @@ class CanonManifestValidationTests(unittest.TestCase):
                     self.assert_field_error(
                         manifest, f"flowAliases[0].{field_name} must be a string"
                     )
+
+    def test_chapter_alias_items_must_be_objects(self) -> None:
+        self.manifest["chapters"][0]["aliases"][0] = "Unit9"
+
+        self.assert_field_error(
+            self.manifest, "chapters[0].aliases[0] must be an object"
+        )
+
+    def test_chapter_alias_fields_must_be_non_empty_strings(self) -> None:
+        for field_name in ("name", "role"):
+            for value in (None, False, 0, 1.5, [], {}, "", "   "):
+                with self.subTest(field=field_name, value=value):
+                    manifest = deepcopy(self.manifest)
+                    manifest["chapters"][0]["aliases"][0][field_name] = value
+                    self.assert_field_error(
+                        manifest,
+                        f"chapters[0].aliases[0].{field_name} must be a non-empty string",
+                    )
+
+    def test_chapter_alias_names_must_be_unique_within_chapter(self) -> None:
+        self.manifest["chapters"][0]["aliases"].append(
+            {"name": "Unit9", "role": "second_role"}
+        )
+
+        self.assert_field_error(
+            self.manifest,
+            "chapters[0].aliases[1].name duplicates alias Unit9",
+        )
+
+    def test_chapter_alias_names_must_be_unique_across_chapters(self) -> None:
+        self.manifest["chapters"][1]["aliases"][0]["name"] = "Unit9"
+
+        self.assert_field_error(
+            self.manifest,
+            "chapters[1].aliases[0].name duplicates alias Unit9",
+        )
+
+    def test_chapter_alias_names_cannot_shadow_canonical_units(self) -> None:
+        self.manifest["chapters"][0]["aliases"][0]["name"] = "Unit3"
+
+        self.assert_field_error(
+            self.manifest,
+            "chapters[0].aliases[0].name cannot shadow canonical unit Unit3",
+        )
+
+    def test_flow_alias_name_must_be_declared_by_target_chapter(self) -> None:
+        self.manifest["flowAliases"][0]["target"] = "Unit2"
+
+        self.assert_field_error(
+            self.manifest,
+            "flowAliases[0].name Unit9 is not declared in aliases for target Unit2",
+        )
 
     def test_history_must_be_an_array(self) -> None:
         for value in [None, False, 0, 1.5, "history", {}]:
@@ -401,6 +490,42 @@ class CanonManifestValidationTests(unittest.TestCase):
             "presentLoops": [],
         }
         self.assertEqual([], self.errors_for(self.manifest))
+
+    def test_reserved_loop_components_require_empty_present_loops(self) -> None:
+        for component_name, source_name in (
+            ("state", "statePattern"),
+            ("avg", "avgCurrent"),
+        ):
+            with self.subTest(component=component_name):
+                manifest = deepcopy(self.manifest)
+                chapter = manifest["chapters"][0]
+                chapter["sources"][source_name] = None
+                chapter["maturity"][component_name]["status"] = "reserved"
+                chapter["maturity"][component_name]["presentLoops"] = [1]
+
+                self.assert_field_error(
+                    manifest,
+                    f"chapters[0].maturity.{component_name}.presentLoops "
+                    "must be empty when reserved",
+                )
+
+    def test_absent_loop_components_require_empty_present_loops(self) -> None:
+        for component_name, source_name in (
+            ("state", "statePattern"),
+            ("avg", "avgCurrent"),
+        ):
+            with self.subTest(component=component_name):
+                manifest = deepcopy(self.manifest)
+                chapter = manifest["chapters"][0]
+                chapter["sources"][source_name] = None
+                chapter["maturity"][component_name]["status"] = "absent"
+                chapter["maturity"][component_name]["presentLoops"] = [1]
+
+                self.assert_field_error(
+                    manifest,
+                    f"chapters[0].maturity.{component_name}.presentLoops "
+                    "must be empty when absent",
+                )
 
     def test_load_and_validate_raises_with_field_path(self) -> None:
         self.manifest["policy"]["idMigration"] = "rewrite"

@@ -89,6 +89,8 @@ def _validate_loop_component(
         errors.append(f"{field_path}.presentLoops contains an out-of-range loop")
 
     if isinstance(status, str) and status in LOOP_STATUSES_WITHOUT_FILES:
+        if present:
+            errors.append(f"{field_path}.presentLoops must be empty when {status}")
         if source_value is not None:
             errors.append(f"{chapter_path}.sources for {component_name} must be null when {status}")
         return
@@ -135,6 +137,9 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
     canonical_units: set[str] = set()
     player_chapters: set[int] = set()
     unity_episodes: set[str] = set()
+    chapter_alias_locations: dict[str, str] = {}
+    chapter_alias_names: dict[str, set[str]] = {}
+    chapter_alias_entries: list[tuple[str, str]] = []
 
     for index, chapter in enumerate(chapters):
         chapter_path = f"chapters[{index}]"
@@ -145,9 +150,11 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
         canonical = chapter.get("canonicalUnit")
         player_chapter = chapter.get("playerChapter")
         episode = chapter.get("unityEpisode")
+        canonical_number: int | None = None
         if not isinstance(canonical, str) or not re.fullmatch(r"Unit[1-9][0-9]*", canonical):
             errors.append(f"{chapter_path}.canonicalUnit is invalid")
         else:
+            canonical_number = int(canonical.removeprefix("Unit"))
             if canonical in canonical_units:
                 errors.append(f"{chapter_path}: duplicate canonicalUnit {canonical}")
             if canonical in FORBIDDEN_CANONICAL_UNITS:
@@ -169,6 +176,27 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
         else:
             unity_episodes.add(episode)
 
+        if canonical_number is not None:
+            if (
+                type(player_chapter) is int
+                and player_chapter >= 1
+                and player_chapter != canonical_number
+            ):
+                errors.append(
+                    f"{chapter_path}.playerChapter must equal {canonical_number} "
+                    f"for canonicalUnit {canonical}"
+                )
+            expected_episode = f"EPI{canonical_number:02d}"
+            if (
+                isinstance(episode, str)
+                and re.fullmatch(r"EPI[0-9]{2}", episode)
+                and episode != expected_episode
+            ):
+                errors.append(
+                    f"{chapter_path}.unityEpisode must equal {expected_episode} "
+                    f"for canonicalUnit {canonical}"
+                )
+
         planning_directory = chapter.get("planningDirectory")
         if not isinstance(planning_directory, str) or not planning_directory:
             errors.append(f"{chapter_path}.planningDirectory must be a path")
@@ -180,6 +208,28 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
         aliases_for_chapter = chapter.get("aliases")
         if not isinstance(aliases_for_chapter, list):
             errors.append(f"{chapter_path}.aliases must be an array")
+            aliases_for_chapter = []
+        alias_names_for_chapter: set[str] = set()
+        for alias_index, alias in enumerate(aliases_for_chapter):
+            alias_path = f"{chapter_path}.aliases[{alias_index}]"
+            if not isinstance(alias, dict):
+                errors.append(f"{alias_path} must be an object")
+                continue
+            name = alias.get("name")
+            role = alias.get("role")
+            if not isinstance(name, str) or not name.strip():
+                errors.append(f"{alias_path}.name must be a non-empty string")
+            else:
+                if name in chapter_alias_locations:
+                    errors.append(f"{alias_path}.name duplicates alias {name}")
+                else:
+                    chapter_alias_locations[name] = alias_path
+                alias_names_for_chapter.add(name)
+                chapter_alias_entries.append((alias_path, name))
+            if not isinstance(role, str) or not role.strip():
+                errors.append(f"{alias_path}.role must be a non-empty string")
+        if isinstance(canonical, str):
+            chapter_alias_names[canonical] = alias_names_for_chapter
 
         id_spaces = chapter.get("idSpaces")
         if not isinstance(id_spaces, list) or not id_spaces:
@@ -259,6 +309,12 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
     if canonical_units != EXPECTED_CANONICAL_UNITS:
         errors.append("chapters[].canonicalUnit must be exactly Unit1-Unit5")
 
+    for alias_path, alias_name in chapter_alias_entries:
+        if alias_name in canonical_units:
+            errors.append(
+                f"{alias_path}.name cannot shadow canonical unit {alias_name}"
+            )
+
     declared_units = policy.get("canonicalUnits")
     if not isinstance(declared_units, list):
         errors.append("policy.canonicalUnits must be an array")
@@ -296,6 +352,10 @@ def validate_manifest(data: dict[str, Any], repo_root: Path) -> list[str]:
             errors.append(f"{alias_path}.target must be a string")
         elif target not in canonical_units:
             errors.append(f"{alias_path} has unknown target {target}")
+        elif isinstance(name, str) and name not in chapter_alias_names.get(target, set()):
+            errors.append(
+                f"{alias_path}.name {name} is not declared in aliases for target {target}"
+            )
         if not isinstance(alias.get("enabled"), bool):
             errors.append(f"{alias_path}.enabled must be boolean")
 
