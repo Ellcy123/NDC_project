@@ -29,7 +29,7 @@ The special city-overlook category takes precedence over the generic indoor/outd
 
 Entering a scene already calls `AudioMgr.PlayBGMBySceneId`, which gives `SceneConfig.backgroundMusic` first priority. However, after a loop-ending transition, `ChapterMgr.PlaySummaryTalkBGMIfRequested` currently starts `Gen_BGM_SummaryTalk` again immediately before the next loop's initial dialogue.
 
-Change the summary-talk request handling so it uses the current opening scene's configured `backgroundMusic`. If the scene has no configured BGM or the resource cannot be loaded, fall back to `Gen_BGM_SummaryTalk`.
+Change the summary-talk request handling so it uses the current opening scene's configured `backgroundMusic`. Summary-talk variants resolve under `Audio/buttonSFX/UI625audio/bgm`; existing scene BGM names continue to resolve under the legacy `Audio/BGM` root. If the scene has no configured BGM, fall back to `Gen_BGM_SummaryTalk`.
 
 This preserves existing behavior for unconfigured future scenes while allowing the Room and Outdoor variants to work. Replaying the same configured track is harmless because `AudioMgr.PlayBGMByPath` already deduplicates identical BGM requests.
 
@@ -44,4 +44,4 @@ This preserves existing behavior for unconfigured future scenes while allowing t
 - Confirm all six Scene IDs contain the expected filename in Excel and generated JSON.
 - Confirm the two Room scenes, three Outdoor scenes, and one city-overlook scene load the intended resource.
 - Confirm loop transitions no longer overwrite Room/Outdoor with the default track.
-- Confirm a scene without `backgroundMusic` still falls back safely.
+- Confirm a scene without `backgroundMusic` still falls back safely, and all configured summary-talk resources exist.

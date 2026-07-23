@@ -4396,6 +4396,12 @@
         },
 
         _buildParameters(entry) {
+            if (Array.isArray(entry.Parameters) && entry.Parameters.length > 0) {
+                return entry.Parameters.map(param => ({
+                    ParameterStr: param?.ParameterStr || '',
+                    ParameterInt: String(param?.ParameterInt || 0)
+                }));
+            }
             const params = [];
             for (let i = 0; i < 3; i++) {
                 const str = entry[`ParameterStr${i}`] || '';
