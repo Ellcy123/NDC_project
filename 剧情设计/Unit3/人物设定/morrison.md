@@ -1,9 +1,9 @@
-# Morrison - Unit3《漫长的坠落》
+# Harold Morrison - Unit3《漫长的坠落》
 
 ## 一、外形设定（美术参考）
 
 ### 基本信息
-- 姓名：Morrison（名字不详）
+- 姓名：Harold Morrison
 - 年龄：不详（中年，外貌约50-55岁）
 - 职业：警探
 - 种族/族裔：白人

@@ -82,7 +82,7 @@
 
 ### 关键协助者（伪盟友）
 
-**Mickey Donnelly（30 岁）**
+**Mickey Donnelly（年龄未锁定）**
 - 表面：成功律师，Zack 童年好友（12 年没联系），Frank 的代理律师
 - L1 末尾：路边发现昏迷的 Margaret，送医后发电报告知 Zack 病房地址
 - L2：在医院与 Zack 重逢，告知 Frank 是他的客户、本约定今天来检举但没来；邀 Zack 加入律所

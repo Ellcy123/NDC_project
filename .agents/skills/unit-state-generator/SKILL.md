@@ -1,11 +1,26 @@
 ---
 name: unit-state-generator
-description: "Unit State 文件生成流水线：从大纲出发，4 agent team 讨论 → 讨论结论 → 6 个 state 文件 + 风险点清单。"
+description: "Use when generating a complete Unit State file set from an active outline registered in canon_manifest.json."
 ---
 
 # Unit State 文件生成流水线
 
-从大纲文档出发，经 agent team 讨论式协作，输出讨论结论 + 6 个 loop state 文件 + 风险点清单。
+从 `canon_manifest.json` 登记的 active outline 出发，经 agent team 讨论式协作，输出讨论结论、Manifest 声明数量的 Loop State 文件、风险点清单和时间线。
+
+## Step 0：Canon 预检（必须）
+
+开始讨论前先读取仓库根目录的 `canon_manifest.json`，按 `canonicalUnit` 找到目标章节，并锁定：
+
+- `planningDirectory`：所有讨论结论、State、风险点和时间线的输出根目录。
+- `sources.outline`：唯一允许作为本轮 State 输入的 active outline。
+- `sources.statePattern`：已有 State 时使用的登记路径；`state.status=reserved` 时允许为 `null`，此时输出目录按 `{planningDirectory}/state/` 推导，State 真正生成后再更新 Manifest。
+- `maturity.state.expectedLoops`：本章应生成的 Loop 数量，记为 `{L}`。
+- `maturity.structure`：是否存在 non-Loop finale 等特殊结构。
+- `idSpaces[]`：本章实际使用的 Episode 与 ID 命名空间；不得仅凭 Unit 号推导。
+
+如果用户传入的大纲路径与 `sources.outline` 不一致，停止生成并显式报告 Canon 冲突；不能自行选择较新的文件。
+
+Loop 范围始终是 `loop1` 至 `loop{L}`，不得默认补足到 6。若 `maturity.structure` 包含 non-Loop finale，该终幕写入最后一份 `loop{L}_state.yaml` 的 `ending_sequence`，不得虚构额外 Loop。
 
 ---
 
@@ -28,16 +43,16 @@ description: "Unit State 文件生成流水线：从大纲出发，4 agent team 
 - 所有 teammates 完成后再给我最终结果，不要中途自己抢着做。
 
 任务：
-基于 `{大纲文件路径}` 这份大纲，生成 Unit{N} 的完整 state 文件体系。
+基于 `canon_manifest.json` 中 Unit{N} 的 active outline，生成 Unit{N} 的完整 state 文件体系。先完成 Canon 预检，并在讨论结论顶部记录实际使用的 `planningDirectory`、`sources.outline`、`expectedLoops` 和 `structure`。
 
 ## 期望产出
 
 | 文件 | 路径 | 说明 |
 |------|------|------|
-| 讨论结论 | `剧情设计/unit{N} 重构版/讨论结论.md` | team 讨论的权威结论，state 文件的设计依据 |
-| State × 6 | `剧情设计/unit{N} 重构版/state/loop{1-6}_state.yaml` | 每个 Loop 的完整蓝图 |
-| 风险点清单 | `剧情设计/unit{N} 重构版/风险点清单.md` | P0/P1/P2 分级 |
-| 时间线与动线 | `剧情设计/unit{N} 重构版/案发时间线与动线.md` | 完整时间线 + 人物动线 |
+| 讨论结论 | `{planningDirectory}/讨论结论.md` | team 讨论的权威结论，state 文件的设计依据 |
+| State × `{L}` | `{planningDirectory}/state/loop{1-L}_state.yaml` | 每个 Loop 的完整蓝图；实际逐个展开为 loop1 至 loop{L} |
+| 风险点清单 | `{planningDirectory}/风险点清单.md` | P0/P1/P2 分级 |
+| 时间线与动线 | `{planningDirectory}/案发时间线与动线.md` | 完整时间线 + 人物动线 |
 
 ## Team 角色建议（你可根据情况调整）
 
@@ -50,9 +65,9 @@ description: "Unit State 文件生成流水线：从大纲出发，4 agent team 
 | 系统策划 | system-designer | 配置表、ID 编码、系统可行性 | ID 冲突、非标准机制支持、配置表结构 |
 | 内容总监 | content-director | 三大原则守护、分歧仲裁、跨 Loop 节奏 | 只在分歧或违背原则时介入，裁决是最终的 |
 
-### Phase 2：State 生成（→ 6 × state.yaml）
+### Phase 2：State 生成（→ `{L}` × state.yaml）
 
-基于讨论结论，由 state-architect 类型的 teammate 生成。可以 6 个并行，但**生成后必须互相交叉验证**（特别是跨 Loop 证据 ID 和 known_facts 链式传递）。
+基于讨论结论，由 state-architect 类型的 teammate 生成。可以按实际 `{L}` 个 Loop 分工，但**生成后必须互相交叉验证**（特别是跨 Loop 证据 ID 和 known_facts 链式传递）。如存在 non-Loop finale，由最后一轮负责人将其写入 `ending_sequence`。
 
 ### Phase 3：收尾（→ 风险点 + 时间线）
 
@@ -99,7 +114,7 @@ description: "Unit State 文件生成流水线：从大纲出发，4 agent team 
 |------|------|
 | `docs/游戏系统/核心玩法/疑点系统.md` | **疑点一对一 + 时序硬约束**——内容总监审核时必须交叉验证 |
 | `参考资料/叙事结构参考/06_NDC项目具体应用.md` | Unit 验证清单——用于最终审核 |
-| `参考资料/叙事结构参考/01_叙事结构理论.md` | 起承转合框架——验证 6 Loop 弧线完整性 |
+| `参考资料/叙事结构参考/01_叙事结构理论.md` | 起承转合框架——验证 Manifest 声明的 `{L}` 个 Loop 弧线完整性 |
 | `参考资料/05_1920年代芝加哥警察系统与腐败.md` | 角色冲突根源、腐败机制——验证 Morrison 等角色设计 |
 
 **所有角色 共读（世界观框架）：**
@@ -124,16 +139,16 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 
 1. **整体概述**：故事核心、新旧变更（如适用）、保留的设计
 2. **权威时间线**：统一所有时间点，裁决大纲中的矛盾
-3. **Loop 映射总表**：6 个 Loop 的标题、指证对象、情绪弧、节奏功能
-4. **各 Loop 详细设计**（L1-L6 逐个讨论）：
+3. **Loop 映射总表**：`{L}` 个 Loop 的标题、指证对象、情绪弧、节奏功能
+4. **各 Loop 详细设计**（L1-L{L} 逐个讨论）：
    - 场景列表（类型 + NPC + 内容）
    - 关键证据及 ID 分配
-   - **疑点 / 碎片设计**（ID + 观察式文本 + condition 两件 + Loop 归属）
+   - **疑点 / 碎片设计**（ID + 观察式文本 + condition 两件 + Loop 归属）；若 active outline 明确批准某 Loop 使用独立门控玩法替代常规疑点，则改为完整记录该门控的输入、输出、完成条件与 Expose 解锁关系
      - 本 Loop 新增疑点清单
      - 本 Loop 新增碎片清单（独立 / 立即合并）
      - 跨 Loop 碎片的首现 Loop、合并 Loop、父疑点 ID
      - 进度条分母 = 本 Loop 新增疑点数 + 本 Loop 独立碎片数（合并到旧碎片的新碎片不计）
-   - 指证设计（谎言层级 + 证据需求 + 击穿逻辑；每件指证证据都必须映射回某个疑点/碎片 ID）
+   - 指证设计（谎言层级 + 证据需求 + 击穿逻辑；每件指证证据都必须映射回某个疑点/碎片 ID，或 active outline 明确批准的独立门控链）
    - 本 Loop 揭示的真相层
    - 设计要点与风险
 5. **关键设计问题与裁决**：大纲中的歧义、矛盾、[?] 标注逐一裁决
@@ -149,7 +164,8 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 
 > 讨论日期：{date}
 > 参与者：内容总监、叙事策划、推理策划、系统策划
-> 数据来源：`{大纲路径}`
+> 数据来源：`{sources.outline}`
+> Canon：`planningDirectory={planningDirectory}` / `expectedLoops={L}` / `structure={structure}`
 > 状态：定稿——可作为 state 文件生成的权威依据
 
 ---
@@ -160,7 +176,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 ## 四、各 Loop 详细设计
 ### Loop 1：{标题}
 ...
-### Loop 6：{标题}
+### Loop {L}：{标题}
 ## 五、关键设计问题与裁决
 ## 六、原则二风险清单
 ## 七、遗留待确认事项
@@ -170,7 +186,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 
 ## Team 讨论的关键约束
 
-1. **证据 ID 全局分配**：在讨论阶段就锁定所有 Loop 的 ID 范围（EPI0{N}: L1={N}1xx, L2={N}2xx...），避免后续 state 各自为政
+1. **证据 ID 全局分配**：先读取 Manifest 的 `idSpaces[]`，在讨论阶段锁定实际 Episode、ID 范围与各 Loop 分段，避免后续 state 各自为政。Unit 号不能替代 Manifest；例如 Unit1 同时存在策划 9xxx 与 Unity 1xxx 命名空间。
 2. **跨 Loop 证据追踪**：明确标注每件跨 Loop 证据的完整流转路径
 3. **每个 Loop 只揭示一层真相**：严格遵守原则一
 4. **疑点一对一挂载**：每件证据/证言**只能**挂在唯一一个疑点或碎片的 condition 里。如果某件证据"好像哪个疑点都能挂"，必须在证言/物证层面拆成多条独立条目。设计时 team 内部交叉验证，一旦发现一证多挂立刻拆
@@ -181,33 +197,70 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 
 ## State 文件生成规则
 
-- schema 定义：`AVG/对话配置工作及草稿/前置配置/STATE_FIELDS.md`
-- 格式参考：已有的 state 文件（如 `剧情设计/Unit3/state/` 或前一次生成的文件）
+- 当前仓库没有独立 `STATE_FIELDS.md`；不得引用或等待一个不存在的 schema 文件。
+- 结构基准：已有的完整 state 文件（优先 `剧情设计/Unit3/state/`）以及 `docs/游戏推理机制完整规则.md`、`docs/游戏系统/核心玩法/疑点系统.md`、`docs/游戏系统/核心玩法/指证系统.md`。
 - player_context.known_facts = 前序 Loop 的 post_expose_knowledge 累积
 - NPC 条目 4 必填区块：已知信息、玩家询问意图、可提取证词
 - Expose 对象：is_liar: true, player_inquiry: null
 - 每轮指证用不同维度的证据
 - 不泄露后续 Loop 的信息
+- **独立门控例外**：只有 active outline 明确写明“该 Loop 可不配置常规疑点”时，才能省略该 Loop 的 DoubtConfig。State 必须新增 `special_mechanics` 设计区块，逐条登记门控链输入材料、产出结论、完成条件、失败反馈待定项和 Expose 解锁条件；所有指证材料仍必须能反查到某条门控链，不能成为游离证据。
+- **独立门控字段模板**：
+
+  ```yaml
+  special_mechanics:
+    identity_lock:
+      status: provisional
+      replaces_standard_doubts: true
+      open_questions:
+        - ui_layout
+        - submission_method
+        - failure_feedback
+      chains:
+        - id: chain_1
+          name: "证明链名称"
+          inputs:
+            - {type: item, id: 4501, name: "正式证据名"}
+          output:
+            type: derived_conclusion
+            id: 4571
+            name: "派生结论名"
+          proof_boundary: "本链能证明什么、不能证明什么"
+      completion_condition: all_chains_completed
+      unlocks: expose
+  ```
+
+  `status: provisional` 表示交互表现仍可讨论，不表示输入、输出和剧情结论可以由 State 生成者自行改写。
 - **DoubtConfig 规则**：
   - 每条目必填 `isFragment`（`false` 为疑点 / `true` 为碎片）
   - 疑点 condition 优先 2 件，允许 1 件；禁止 ≥ 3 件
   - 碎片 condition 必须单件
   - 跨 Loop 碎片：condition 里引用的证据 ID 必须来自首现 Loop；父疑点的 condition 是所有子碎片 condition 的并集（子集匹配触发合并）
   - 疑点/碎片文本采用**观察式提问**（如"这些照片上的人似乎在哪里见过一样？"），避免结论式（如"酒吧在做勒索"）
-- 生成完成后执行 A-G 七段自检
+- 生成完成后执行 A-G 七段自检：
+  - A 结构完整性：player_context / opening / scenes / expose / doubts 或获批 special_mechanics / evidence_registry 齐全
+  - B 证据覆盖：大纲正式证据均有获取位置、流转与用途
+  - C NPC 完整性：已知信息、玩家询问意图、可提取证词等必填区块齐全
+  - D 目标对齐：本轮 primary goal、核心揭示与大纲一致
+  - E 信息节奏：后续 Loop 信息与 NPC 未知事实没有提前泄露
+  - F 特殊结构：独立门控与 `ending_sequence` 等非标准结构完整、边界清楚
+  - G Expose 逻辑：每轮谎言、材料、击穿维度与前置门控闭环
+- 若本章存在 non-Loop finale：最后一份 State 必须含 `ending_sequence`，其中只写终幕事件，不把它登记为新的 Loop。
 
 ## 跨 Loop 一致性校验清单（Phase 2 完成后）
 
 ### 基础一致性
-- [ ] 证据 ID 无冲突（6 个文件间不重复）
+- [ ] 证据 ID 无冲突（实际 `{L}` 个文件间不重复）
 - [ ] known_facts 链式传递正确
 - [ ] 跨 Loop 证据流转一致
 - [ ] NPC 知识边界在其认知范围内自洽
 - [ ] 指证证据在对应 Loop 的 scenes 中可获取
 - [ ] 疑点解锁条件中引用的 ID 存在
+- [ ] 使用独立门控替代疑点的 Loop 已在 `special_mechanics` 中覆盖全部指证材料，并明确完成门控后才解锁 Expose
 
 ### 疑点系统专项（对照 `docs/游戏系统/核心玩法/疑点系统.md`）
-- [ ] **一对一挂载**：跨 6 个 state 文件扫描所有 DoubtConfig.condition，同一证据/证言 ID **只能**在一处被引用——发现多处立即拆
+- 以下项目只检查使用常规疑点的 Loop；active outline 明确批准的独立门控 Loop 改查 `special_mechanics` 材料覆盖与解锁关系。
+- [ ] **一对一挂载**：跨实际 `{L}` 个 state 文件扫描所有 DoubtConfig.condition，同一证据/证言 ID **只能**在一处被引用——发现多处立即拆
 - [ ] **时序硬约束**：对每件在指证 ExposeData 里被使用的证据，定位它所属的疑点/碎片——该疑点/碎片的 Loop ≤ 该证据最早指证的 Loop
 - [ ] **condition 件数**：疑点 1–2 件，碎片严格 1 件，禁止 ≥ 3 件
 - [ ] **进度条分母**：每个 Loop 新增疑点 + 新增独立碎片（合并到旧碎片的新碎片不计）；总表与各 Loop 分母对得上
@@ -229,7 +282,10 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 | 变量 | 说明 | 示例 |
 |------|------|------|
 | `{N}` | Unit 编号 | 1 |
-| `{大纲文件路径}` | 大纲 MD 文件的完整路径 | `剧情设计/unit1 重构版/Unit1_大纲-人工定义.md` |
+| `{planningDirectory}` | 从 Manifest 读取的当前策划目录 | `剧情设计/Unit4` |
+| `{sources.outline}` | 从 Manifest 读取的 active outline | `剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md` |
+| `{L}` | 从 `maturity.state.expectedLoops` 读取的 Loop 数 | `5` |
+| `{structure}` | 从 `maturity.structure` 读取的章节结构 | `5_loops_plus_non_loop_finale` |
 | `{date}` | 讨论日期 | 2026-04-15 |
 
 ---
@@ -247,7 +303,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 - 所有 teammates 完成后再给我最终结果
 
 任务：
-基于 `剧情设计/unit1 重构版 0415/Unit1_大纲-人工定义.md` 这份大纲，生成 Unit1 的完整 state 文件体系。
+读取 `canon_manifest.json`，基于 Unit1 的 active outline 生成完整 state 文件体系。Loop 数量、输出目录和特殊终幕结构全部以 Manifest 为准。
 
 [此处粘贴上方"期望产出"到"全程自主"之间的全部内容]
 ```
