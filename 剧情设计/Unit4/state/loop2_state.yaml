@@ -1,0 +1,519 @@
+# ============================================================
+# loop2_state.yaml — Unit4 Loop 2: Rosa 与圣心医院之争（指证 Whitfield · 3 轮）
+# ============================================================
+#
+# 叙事功能：排除 Rosa 擅自加量，坐实问题批次进入医院正式项目
+# 核心揭示：Rosa 没有害死 Isabel；Mickey 的法律帮助真实，但调查被压在执行层
+# 时间：L1 次日，Whitfield 庭审前至散庭后
+#
+# 设计合同：剧情设计/Unit4/讨论结论.md
+# 事实源：剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md
+#
+# ──────────────────────────────────────────────────────────
+# 自检（A-G）
+# A. 结构完整性  PASS — player_context / opening / scenes / expose / doubts / evidence_registry 齐全
+# B. 证据覆盖    PASS — 4211-4216、4702、4703 均登记取得、分析、流转与用途
+# C. NPC 完整性  PASS — Rosa / Mickey / Foster / Whitfield / Harold 均含四个必填区块
+# D. 目标对齐    PASS — 只证明无加量、非单例、正式项目责任
+# E. 信息节奏    PASS — 不泄露第十九页上层、Mickey=Whale、Foster/Sean、Harold后续死亡
+# F. 特殊结构    PASS — 本 Loop 无特殊门控或 ending_sequence
+# G. Expose 逻辑 PASS — R1剂量、R2批次模式、R3正式采购链三维闭环
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
+# ============================================================
+
+player_context:
+  chapter_goal: "追查 Harrison、圣心医院、南区地产与 1919-A 背后的共同控制结构"
+  goals:
+    primary: "Rosa 是否在规定剂量之外擅自加量？"
+    secondary:
+      - "Isabel 的死亡是否只是单一家庭事故？"
+      - "问题批次是否进入圣心医院正式慈善项目？"
+      - "Mickey 的帮助把调查带到了哪里，又停在了哪里？"
+
+  known_facts:
+    - "Harrison 长期收受 1919-A 资金，并替圣心医院赔偿、南区地产安排提供法院便利"
+    - "Harrison 最近连续十七晚在闭庭后调阅医院、地产与旧判决材料"
+    - "Harrison 重查了自己亲手签过的赔偿裁定，不再只把问题归给别人"
+    - "Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任"
+    - "Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱"
+    - "Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责"
+    - "保险柜材料显示 Rosa 的庭审迫近，并留下圣心医院儿童死亡对照与问题批次药剂"
+
+  current_assumptions:
+    - "缺失的第十九页使最终采购批准者仍无法核验"
+    - "Mickey 的帮助真实，但他为何坚持把公开责任集中在 Whitfield 仍不明确"
+    - "Harold 留下私下接触口子，不等于已经决定完整坦白"
+
+  new_directions:
+    - direction: "Rosa 的每日用药动作"
+      trigger: "红线注射器、十三日独立撕签与药瓶剩余量可以共同核对是否存在额外注射"
+    - direction: "同批次儿童死亡"
+      trigger: "Harrison 的死亡对照表与 Foster 调取的同批次封签组相互对应"
+    - direction: "医院正式采购发放链"
+      trigger: "加急效价对照排除单支保存问题，法院会客室卷宗确认采购、入库和发放"
+    - direction: "Harold 开始对 Pierce 保留"
+      trigger: "散庭后 Harold 表示没有把 Harrison 材料告知 Pierce，并留下私下接触口子"
+
+  post_expose_knowledge:
+    - "Rosa 没有在规定剂量之外额外注射；止动结构、日期撕签和实际消耗量不存在额外用量缺口"
+    - "Isabel 的死亡不是单例；另外两名死亡儿童的药瓶与 Isabel 属于同一批次"
+    - "问题批次正式进入圣心医院采购、入库与慈善发放链"
+    - "加急效价对照只能证明同批样本效力明显不一致，且不能用单支家庭保存不当解释"
+    - "Whitfield 是正式项目执行层，不能以家属误用、单例或非正式来源推卸责任"
+    - "执行层副本缺失第十九页，更高层特别采购批准暂时没有可核验的签字原件"
+    - "Mickey 为 Rosa 争取窗口、担任辩护并帮助取得暂停追究的结果，这份帮助真实"
+    - "Mickey 同时主动把公开压力集中在 Whitfield，使调查暂时停在可牺牲的执行层"
+    - "Harold 没有把 Harrison 材料告知 Pierce，并警告 Zack 不要太相信法院里的胜利"
+    - "截至 L2 散庭，Harold 只留下以后私下谈的口子，没有决定或承诺完整坦白"
+
+  inherited_evidence:
+    - id: 4117
+      name: "圣心医院儿童死亡对照表"
+      from_loop: 1
+      use_in_loop: "Doubt 4202 / Whitfield R2"
+    - id: 4118
+      name: "问题批次药剂"
+      from_loop: 1
+      use_in_loop: "在 Foster 实验室更新为 4703"
+
+opening:
+  type: cutscene
+  scene_name: "L2 开篇 · Zack 侦探事务所 · Rosa 带着十三天来求证"
+  location: "SC4011 Zack 侦探事务所"
+  characters: [Zack, Emma, Rosa, Mickey]
+  description: |
+    Rosa 抱着 Isabel 的照片、医院配发药盒、红线注射器和回收药瓶来到事务所。
+    医院要求她在庭审前签署“家属误用说明”，以承认擅自加量换取不被追究。
+    Rosa 不能确信自己的记忆比医院文件可靠；她只反复说每天抽到红线、一格一天、
+    手里从来只有这一瓶。Mickey 真实地争取到短暂调查窗口并成为辩护律师，
+    让 Zack、Emma 可以在庭审开始前核对剂量、批次与正式采购链。
+
+  L2_opening_rosa:
+    talk: L2_opening_rosa
+    is_liar: false
+    motive: "确认 Isabel 的死亡不是自己每天那双手造成的，并拒绝让女儿被写成家属误用"
+    mindset: "在权威面前先怀疑自己；只敢抓住红线、撕签和单瓶这些生活动作，不假装懂专业术语"
+    active_topics:
+      - "每天用红线注射器抽到医院规定位置"
+      - "十三日药盒按一格一天使用，每格有独立日期撕签"
+      - "医院只给过一瓶药，Rosa 从未取得第二瓶"
+      - "Whitfield 要求她签署家属误用说明"
+      - "Rosa 害怕自己漏掉了某个会害死 Isabel 的步骤"
+    withheld_topics:
+      - "无；Rosa 没有组织层秘密，也不能提供批准链结论"
+      - "Rosa 不知道问题批次由谁批准"
+      - "Rosa 不知道 Mickey 的隐藏身份"
+    player_inquiry:
+      - "Rosa 每天实际如何使用注射器、药盒和药瓶"
+      - "医院是否提供过第二瓶或允许额外剂量"
+      - "Whitfield 要求她签署什么、以什么后果施压"
+    testimony_ids:
+      - 4072001
+      - 4072002
+
+  L2_opening_mickey:
+    talk: L2_opening_mickey
+    is_liar: false
+    motive: "真实帮助 Rosa 延迟庭审、获得辩护与正式调查窗口，同时把风险控制在医院执行层"
+    mindset: "对 Rosa 温和且有效；面对 Zack 时先界定当前可证明的问题，不显露反派相"
+    active_topics:
+      - "已为 Rosa 争取到庭审前的短暂调查窗口"
+      - "愿意担任 Rosa 的辩护律师"
+      - "Harrison 留下的死亡对照与药剂样本可以启动正式复核"
+      - "当前首先必须排除家属加量并证明药剂进入正式项目"
+    withheld_topics:
+      - "Mickey 是 W / Whale"
+      - "Donnelly & Associates 与 1919-A 的实际控制关系"
+      - "Mickey 主动希望调查止于 Whitfield 的完整原因"
+    player_inquiry:
+      - "Mickey 争取到多少调查时间"
+      - "法院当前允许提交哪些材料"
+      - "如果 Rosa 拒签，程序上将面对什么"
+    testimony_ids:
+      - 4032001
+
+scenes:
+  - id: 4011
+    name: "Zack 侦探事务所"
+    type: free_exploration
+    description: |
+      事务所桌面被 Rosa 带来的生活物件占满：照片、十三格药盒、玻璃注射器与回收药瓶。
+      这一场不把 Rosa 当报道素材；Emma 在关键私人时刻放下笔记本，
+      Zack 先核对物件，Mickey 只说明法律窗口与签字后果。
+
+    evidence:
+      - id: 4211
+        name: "医院配发红线注射器与十三日封签药盒"
+        type: item
+        pickup: true
+        note: "Expose R1；日期由独立撕签/护士登记证明，指纹只证明接触，不证明日期"
+        description: "医院标记玻璃注射器带固定止动结构；药盒十三格分别印有日期并保留逐日撕签痕迹"
+
+      - id: 4212
+        name: "Isabel使用后的封签药瓶"
+        type: item
+        pickup: true
+        note: "分析前原物；在 Foster 实验室更新为 4702"
+        description: "保留医院封签、批次标记与剩余液量的回收药瓶；Rosa 只有这一瓶"
+
+  - id: 4012
+    name: "圣心医院 / Miller 事故基金病房"
+    type: free_exploration
+    description: |
+      病房整洁、秩序严密，康复名册与感谢信真实存在。项目确实救过人，
+      不能被写成从一开始就是骗局。与此同时，贫困家属面对医生、护士和项目文件时
+      几乎没有质疑空间；慈善成果与责任转移在同一空间并存。
+
+    evidence:
+      - id: 4216
+        name: "Miller事故基金病房铭牌与康复名册"
+        type: envir
+        pickup: false
+        note: "环境材料；证明项目确有真实成果，不参与本轮 Expose"
+        description: "病房铭牌、历年康复儿童名册与家属感谢卡；其中没有本轮责任判断"
+
+  - id: 4013
+    name: "Foster 法医实验室"
+    type: analysis
+    description: |
+      Foster 接续 Harrison 生前已经启动的封存与调取手续，对回收药瓶的容量、
+      同批药瓶封签和问题批次样本进行目标明确的加急对照。她先说测量结果，
+      再说结论边界；不使用现代浓度曲线，也不把技术异常直接写成故意投毒。
+
+    analysis_operations:
+      - output_id: 4702
+        name: "经容量分析的回收药瓶"
+        inputs: [4212, 4211]
+        boundary: "只能核对实际消耗量是否存在额外注射缺口"
+      - output_id: 4703
+        name: "经对照试验的问题批次药剂"
+        inputs: [4118, 4213]
+        boundary: "只证明同批样本效力明显不一致，且不能用单支家庭保存不当解释"
+
+    evidence:
+      - id: 4213
+        name: "同批次药瓶封签组"
+        type: item
+        pickup: true
+        note: "Expose R2；Foster 接续 Harrison 生前已启动的封存/调取手续"
+        description: "另外两名死亡儿童的空药瓶封签，与 Rosa 药瓶和 Harrison 样本批次标记一致"
+
+      - id: 4702
+        name: "经容量分析的回收药瓶"
+        type: clue
+        pickup: false
+        analysis: true
+        note: "Expose R1；与 4211 共同排除额外注射"
+        description: "按瓶体标定与剩余量核对，十三日实际消耗不存在规定剂量之外的一次额外注射缺口"
+
+      - id: 4703
+        name: "经对照试验的问题批次药剂"
+        type: clue
+        pickup: false
+        analysis: true
+        note: "Expose R3；不越过 1928 年技术能力宣称完整毒理定案"
+        description: "目标明确的加急效价对照显示，同批样本效力明显不一致；单支家庭保存不当不足以解释多支同批异常"
+
+    npcs:
+      L2_scene4013_foster:
+        talk: L2_scene4013_foster
+        is_liar: false
+        motive: "把本次样本真正能够证明的专业判断说完整，不再替错误结论留下方便的模糊退路"
+        mindset: "专业、精确、克制；先给测量结果，再限定这份材料能证明什么，绝不追加动机判断"
+        active_topics:
+          - "容量核对可以判断是否存在额外用量缺口"
+          - "另外两名死亡儿童的药瓶封签与本案属于同批"
+          - "加急效价对照显示同批样本效力明显不一致"
+          - "单支家庭保存不当不足以解释多支同批异常"
+        withheld_topics:
+          - "1912 年 Sean O'Malley 尸检签字经历"
+          - "Miller 资助与 Foster 职业道路的完整关系"
+          - "谁批准问题批次进入医院"
+          - "对 Whitfield 主观知情或 Mickey 身份的推测"
+        player_inquiry:
+          - "回收药瓶的实际消耗量是否支持额外注射"
+          - "其他死亡儿童药瓶是否属于同一批次"
+          - "现有加急试验可以排除什么、不能证明什么"
+        testimony_ids:
+          - 4082001
+          - 4082002
+
+  - id: 4014
+    name: "法院预审走廊"
+    type: free_exploration
+    description: |
+      走廊里挤着 Whitfield 叫来的记者、医院人员与书记员。
+      Whitfield 把预留签名位置的“家属误用说明”递给 Rosa，
+      以撤销追究与可能入狱包装成一项理性选择。记者使用速记本、摄影底片和电讯稿；
+      不出现未经铺垫的便携录音或现场直播。
+
+    npcs:
+      L2_scene4014_whitfield:
+        talk: L2_scene4014_whitfield
+        is_liar: true
+        motive: "让 Rosa 签字，使 Isabel 的死亡继续成为家属误用个案，并保住自己只是慈善执行者的自我理解"
+        mindset: "制度化的平静；每次只承认最小部分，再建立新的责任出口，不靠咆哮施压"
+        active_topics:
+          - "Rosa 在规定剂量之外擅自增加药量"
+          - "即使没有加量，Isabel 也只是单一药物事故"
+          - "问题批次没有进入正式项目，可能来自护士私领或家庭转手"
+          - "现在签署家属误用说明，医院可以撤销进一步追究"
+        withheld_topics:
+          - "问题批次确实进入正式慈善项目"
+          - "第十九页涉及更高层特别采购批准"
+          - "Whitfield 不知道 Miller 项目委员会完整命令链"
+          - "Whitfield 不知道 Mickey 是 Whale"
+        player_inquiry: null
+        testimony_ids:
+          - 4092001
+          - 4092002
+          - 4092003
+
+      L2_scene4014_harold_followup:
+        talk: L2_scene4014_harold_followup
+        is_liar: false
+        availability: post_expose
+        motive: "在 Whitfield 被交出后给自己保留一条警局外的退路，但尚未准备无条件或完整坦白"
+        mindset: "比 L1 更安静、更疲惫；警告与保留多于解释，仍使用交换和试探语言"
+        active_topics:
+          - "Harold 没有把 Harrison 材料的事告知 Pierce"
+          - "法院里的胜利不等于危险结束"
+          - "Harold 有些事以后想私下告诉 Zack"
+        withheld_topics:
+          - "Harold 长期替 Pierce 与 Whale 压过哪些旧案"
+          - "档案移交与配枪登记通知的完整含义"
+          - "Harold 尚未决定完整坦白，也未确认自己必然被清理"
+        player_inquiry:
+          - "Harold 为什么开始把 Pierce 排除在部分信息之外"
+          - "Harold 所说的私下接触口子是否等于完整坦白"
+        testimony_ids:
+          - 4052001
+
+  - id: 4015
+    name: "法院会客室"
+    type: free_exploration
+    description: |
+      Mickey 利用辩护律师身份调取医院提交法院的项目卷宗。
+      正式采购单、入库号与慈善发放清单可以互相核对；批准副本却缺少第十九页。
+      Mickey 提醒当前材料足以追究执行层，但不主动把方向继续推向 Miller。
+
+    evidence:
+      - id: 4214
+        name: "圣心医院采购与发放记录"
+        type: item
+        pickup: true
+        note: "Expose R3；证明问题批次进入正式采购、入库与发放链"
+        description: "问题批次编号同时出现在正式采购单、医院入库号和慈善项目发放清单"
+
+      - id: 4215
+        name: "缺失的第十九页（副本）"
+        type: item
+        pickup: true
+        note: "锁定伏笔；本轮不进 Expose，只证明批准副本存在缺页"
+        description: "项目批准副本从第十八页直接跳到第二十页；目录注明第十九页为特别采购批准"
+
+    npcs:
+      L2_scene4015_mickey:
+        talk: L2_scene4015_mickey
+        is_liar: false
+        motive: "取得足以保护 Rosa 的正式项目材料，同时把公开责任稳定压向可牺牲的 Whitfield"
+        mindset: "律师式限定；真实指出现有证据能赢什么，也主动定义暂时不要追什么"
+        active_topics:
+          - "采购单、入库号和发放清单构成正式项目链"
+          - "缺失第十九页使更高层批准暂时无法证明"
+          - "现有材料足以阻止医院继续把责任推给 Rosa"
+        withheld_topics:
+          - "Mickey 知道的 Miller 体系内部结构"
+          - "Donnelly 法律壳与 1919-A 的关系"
+          - "Mickey 主动把 Whitfield 作为止损边界"
+        player_inquiry:
+          - "哪些法院卷宗能证明药剂进入正式项目"
+          - "缺失第十九页能证明什么、不能证明什么"
+          - "为什么 Mickey 主张先集中处理 Whitfield"
+        testimony_ids:
+          - 4032002
+
+expose:
+  target: whitfield
+  target_talk: L2_expose_whitfield
+  location: "SC4014 法院预审走廊"
+  total_rounds: 3
+  is_liar: true
+  player_inquiry: null
+
+  context: |
+    Whitfield 需要 Rosa 在预留位置签名，把正式项目的死亡写成家属误用。
+    Zack 依次排除额外加量、单一事故与非正式来源。Rosa 的拒签发生在证据
+    暂时托住她之后，但她仍不知道自己一定会赢。Mickey 的法律帮助与结果都真实。
+
+  round_1:
+    lie: "Rosa 在每日规定剂量之外又擅自增加药量"
+    lie_source: 4092001
+    usable_evidence:
+      - id: 4211
+        name: "医院配发红线注射器与十三日封签药盒"
+        用途: "固定止动结构与逐日撕签限定每日操作"
+      - id: 4702
+        name: "经容量分析的回收药瓶"
+        用途: "实际消耗量不存在规定剂量之外的一次额外注射缺口"
+    trap_evidence:
+      - id: 4117
+        name: "圣心医院儿童死亡对照表"
+        用途: "只能证明死亡模式，不能证明 Rosa 自己是否加量"
+    result: "Whitfield 被迫放弃家属加量，退守为 Isabel 可能只是单一事故。"
+
+  round_2:
+    lie: "即使 Rosa 没有加量，也只是 Isabel 一例药物事故"
+    lie_source: 4092002
+    usable_evidence:
+      - id: 4117
+        name: "圣心医院儿童死亡对照表"
+        用途: "显示相似死亡并非只发生在 Isabel 一人"
+      - id: 4213
+        name: "同批次药瓶封签组"
+        用途: "把另外两名死亡儿童与 Isabel 锁在同一批次"
+    trap_evidence:
+      - id: 4702
+        name: "经容量分析的回收药瓶"
+        用途: "只排除 Rosa 加量，不能证明其他儿童属于同批"
+    result: "Whitfield 承认不是单例，转而声称药剂没有进入医院正式项目。"
+
+  round_3:
+    lie: "这批药从未进入医院正式项目，只是护士私领或家庭转手"
+    lie_source: 4092003
+    usable_evidence:
+      - id: 4703
+        name: "经对照试验的问题批次药剂"
+        用途: "证明同批样本存在一致的批次异常方向，不能由单支家庭保存解释"
+      - id: 4214
+        name: "圣心医院采购与发放记录"
+        用途: "问题批次编号贯穿正式采购、入库与慈善发放"
+    trap_evidence:
+      - id: 4215
+        name: "缺失的第十九页（副本）"
+        用途: "只有缺页，不能证明问题批次实际进入正式采购链"
+    result: "Whitfield 被迫承认正式项目执行责任，但把最终批准责任推向缺失的第十九页。"
+
+  post_expose:
+    description: |
+      Rosa 在 Zack 与 Mickey 的支持下拒绝签署家属误用说明。Emma 的记者网络已把
+      电讯稿、速记稿副本和摄影底片送出；Whitfield 无法再通过走廊控制版本。
+      书记员交付暂停追究 Rosa、重审 Isabel 死因的回执。Rosa 不欢呼，
+      只确认名字与结果。照片滑落时 Mickey 本能托住相框，这份关心必须是真的。
+      散庭后 Harold 告诉 Zack 自己没有把 Harrison 材料告知 Pierce，
+      并留下以后私下接触的口子；这不等于完整坦白。
+    new_evidence_gained: null
+    player_knowledge_gained:
+      - "Rosa 没有额外加量"
+      - "问题不是单例"
+      - "问题批次进入医院正式项目"
+      - "Whitfield 只承认执行层责任"
+      - "Harold 开始对 Pierce 有所保留"
+
+doubts:
+  - id: 4201
+    text: "Rosa 是否可能在规定剂量之外多注射过一次？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "4211"
+      - type: 1
+        param: "4702"
+
+  - id: 4202
+    text: "其他死亡儿童的药瓶是否与 Isabel 属于同一批次？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "4117"
+      - type: 1
+        param: "4213"
+
+  - id: 4203
+    text: "这批有问题的药剂是否进入了医院正式项目？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "4703"
+      - type: 1
+        param: "4214"
+
+doubt_progress:
+  denominator: 3
+  count_rule: "本 Loop 新增 3 个普通疑点，无独立碎片"
+
+cross_loop_evidence:
+  incoming:
+    - id: 4117
+      from_loop: 1
+      purpose: "Doubt 4202 / Whitfield R2"
+    - id: 4118
+      from_loop: 1
+      purpose: "分析更新为 4703"
+  locked_for_later:
+    - id: 4215
+      earliest_resolution_loop: 5
+      purpose: "更高层特别采购批准方向；本轮只作为缺页伏笔"
+
+evidence_registry:
+  - id: 4211
+    name: "医院配发红线注射器与十三日封签药盒"
+    type: item
+    pickup: true
+    first_scene: 4011
+    note: "Expose R1；Doubt 4201"
+
+  - id: 4212
+    name: "Isabel使用后的封签药瓶"
+    type: item
+    pickup: true
+    first_scene: 4011
+    note: "分析输入，更新为 4702"
+
+  - id: 4702
+    name: "经容量分析的回收药瓶"
+    type: clue
+    pickup: false
+    analysis: true
+    first_scene: 4013
+    source: [4212, 4211]
+    note: "Expose R1；Doubt 4201"
+
+  - id: 4213
+    name: "同批次药瓶封签组"
+    type: item
+    pickup: true
+    first_scene: 4013
+    note: "Expose R2；Doubt 4202"
+
+  - id: 4703
+    name: "经对照试验的问题批次药剂"
+    type: clue
+    pickup: false
+    analysis: true
+    first_scene: 4013
+    source: [4118, 4213]
+    note: "Expose R3；Doubt 4203；严格限定 1928 技术能力"
+
+  - id: 4214
+    name: "圣心医院采购与发放记录"
+    type: item
+    pickup: true
+    first_scene: 4015
+    note: "Expose R3；Doubt 4203"
+
+  - id: 4215
+    name: "缺失的第十九页（副本）"
+    type: item
+    pickup: true
+    first_scene: 4015
+    note: "R3 陷阱；锁定伏笔，不在本轮证明上层"
+
+  - id: 4216
+    name: "Miller事故基金病房铭牌与康复名册"
+    type: envir
+    pickup: false
+    first_scene: 4012
+    note: "环境材料；证明慈善项目有真实成果"

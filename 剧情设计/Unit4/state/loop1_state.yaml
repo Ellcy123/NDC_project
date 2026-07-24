@@ -1,0 +1,459 @@
+# ============================================================
+# loop1_state.yaml — Unit4 Loop 1: Harrison 的死亡疑云（指证 Watts · 3 轮）
+# ============================================================
+#
+# 叙事功能：从 Harrison 的腐败事实进入，确认他死前正在重查自身责任并准备公开
+# 核心揭示：Harrison 有罪，但确实开始回头；其自首尚未完成
+# 时间：1928 年，Harrison 遇害后的白天
+#
+# 设计合同：剧情设计/Unit4/讨论结论.md
+# 事实源：剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md
+#
+# ──────────────────────────────────────────────────────────
+# 自检（A-G）
+# A. 结构完整性  PASS — player_context / opening / scenes / expose / doubts / evidence_registry 齐全
+# B. 证据覆盖    PASS — 4111-4121、4701 均登记取得位置、流转与用途
+# C. NPC 完整性  PASS — Mickey / Pierce / Watts / Harold / 档案管理员均含四个必填区块
+# D. 目标对齐    PASS — 只确认 Harrison 正在回头，不证明灭口命令源
+# E. 信息节奏    PASS — 不泄露 Mickey=Whale、Pierce执行灭口、Miller上层命令
+# F. 特殊结构    PASS — 本 Loop 无特殊门控或 ending_sequence
+# G. Expose 逻辑 PASS — R1时间/调阅方向、R2调阅对象、R3行动/公开意图三维闭环
+# ──────────────────────────────────────────────────────────
+#
+# validation_status: PASS
+# ============================================================
+
+player_context:
+  chapter_goal: "追查 Harrison、圣心医院、南区地产与 1919-A 背后的共同控制结构"
+  goals:
+    primary: "Harrison 死前究竟在调查什么？"
+    secondary:
+      - "Harrison 的腐败与最近连续推动 Mary 无罪改判是否同时成立？"
+      - "Watts 为什么不肯交出钥匙与卷宗？"
+      - "Harrison 是否准备让自己的责任进入公开记录？"
+
+  known_facts: []
+
+  new_directions:
+    - direction: "Harrison 的公开日程与夜间行动"
+      trigger: "外间办公室的公开日程与法院夜间出入登记互相矛盾"
+    - direction: "Harrison 是否重查本人裁定"
+      trigger: "原始调阅索引经案号交叉整理后，出现 Harrison 自己签过的赔偿裁定"
+    - direction: "未完成的公开承担"
+      trigger: "连续改判往来信与未完成辞职信共同显示 Harrison 已准备违抗法院并公开"
+
+  post_expose_knowledge:
+    - "Harrison 长期收受 1919-A 资金，并替圣心医院赔偿、南区地产安排提供法院便利"
+    - "Harrison 最近连续十七晚在闭庭后调阅医院、地产与旧判决材料"
+    - "Harrison 重查了自己亲手签过的赔偿裁定，不再只把问题归给别人"
+    - "Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任"
+    - "Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱"
+    - "Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责"
+    - "保险柜材料显示 Rosa 的庭审迫近，并留下圣心医院儿童死亡对照与问题批次药剂"
+
+  current_assumptions:
+    - "现有材料尚不足以确认 Harrison 灭口的命令源与执行者"
+    - "现有材料尚不足以判断 Mickey 是否存在隐藏身份"
+
+opening:
+  type: cutscene
+  scene_name: "L1 开篇 · 法院门口 / 东翼 · 改判与死亡同时抵达"
+  location: "SC4001 法院门口 / 东翼"
+  characters: [Zack, Emma, Pierce, Mickey]
+  description: |
+    Zack 与 Emma 因法院再次强行推动 Mary 案改判过失杀人而赶到东翼，
+    却发现 Harrison 已在前夜死于办公室，现场被 Pierce 以程序名义封锁。
+    Pierce 不争辩，只重复封锁、移交与无权进入。Mickey 此时的帮助完全真实：
+    他确认 Harrison 最近在翻圣心医院旧案，并主动拖住 Pierce，
+    让 Zack 与 Emma 抢先进入 Harrison 外间办公室保护尚未被接管的材料。
+
+  L1_opening_pierce:
+    talk: L1_opening_pierce
+    is_liar: false
+    motive: "以封锁、移交与权限控制 Harrison 现场，不让外部调查者抢先接触材料"
+    mindset: "体面而冷硬；不解释道德，只决定谁能进入、什么能进入正式记录"
+    active_topics:
+      - "Harrison 东翼办公室属于封锁现场"
+      - "法院与警务人员正在进行档案移交"
+      - "Zack 与 Emma 没有进入现场的正式权限"
+    withheld_topics:
+      - "Pierce 执行了 Harrison 清理"
+      - "清理由 Miller 上层绕过 Whale 决定"
+      - "Harrison 现场与档案接管的完整命令链"
+    player_inquiry:
+      - "Harrison 为什么死亡后立刻进入警务与法院联合封锁"
+      - "哪些档案正在被移交、由谁接管"
+    testimony_ids:
+      - 4121001
+
+  L1_opening_mickey:
+    talk: L1_opening_mickey
+    is_liar: false
+    motive: "保护 Harrison 可能留下的材料，并帮助 Zack 抢在正式接管前进入；他不知道上层已经绕过自己清理 Harrison"
+    mindset: "及时、可靠且真诚；律师式地抓程序空隙，但不提前露出可疑表演感"
+    active_topics:
+      - "Harrison 最近持续推动 Mary 案无罪改判"
+      - "档案室人员说 Harrison 最近反复调阅圣心医院旧案"
+      - "Mickey 可以暂时拖住 Pierce，为 Zack 与 Emma 留出进入外间办公室的时间"
+    withheld_topics:
+      - "Mickey 于 1925 年接管 W / Whale"
+      - "Donnelly & Associates 与 1919-A 的实际控制关系"
+      - "Mickey 对 Pierce 警务网络的协调关系"
+    player_inquiry:
+      - "Mickey 为什么判断 Harrison 的材料必须先被保护"
+      - "Mickey 对 Harrison 最近改判行动知道多少"
+    testimony_ids:
+      - 4031001
+
+scenes:
+  - id: 4001
+    name: "法院门口 / 东翼"
+    type: cutscene
+    description: |
+      法院东翼被警员和书记处人员分层封锁。平日公开、喧闹的法院此时异常安静，
+      门内不断有卷宗箱被推出。Pierce 以权限守门；Mickey 则利用律师身份和旧关系
+      要求核对改判程序，为 Zack 与 Emma 制造进入外间办公室的短暂空档。
+
+  - id: 4002
+    name: "Harrison 外间办公室"
+    type: free_exploration
+    description: |
+      Harrison 办公室外间仍保留法官日常工作的体面秩序，但公开日程、夜间登记、
+      匿名入账存根与未完成辞职稿彼此抵牾。Watts 抱着钥匙链与旧卷宗箱，
+      不肯交给 Harold Morrison，也不肯让 Zack 直接打开保险柜。
+
+    evidence:
+      - id: 4111
+        name: "Harrison公开日程与夜间出入对照"
+        type: clue
+        pickup: true
+        note: "Expose R1；公开日程与连续十七晚闭庭后出入形成时间矛盾"
+        description: "公开日程显示 Harrison 多晚没有公务；法院出入登记却显示他连续十七晚闭庭后进入档案室或办公室"
+
+      - id: 4112
+        name: "1919-A入账存根"
+        type: item
+        pickup: true
+        note: "R1 陷阱；只能证明收钱。跨 Loop 至 L5 法律壳身份链"
+        description: "付款方只有匿名代号 1919-A，备注连续引用圣心医院赔偿案号，款项进入 Harrison 私人账户"
+
+      - id: 4113
+        name: "未完成的辞职信草稿"
+        type: item
+        pickup: true
+        note: "Expose R3；与 4116 共同证明公开意图，但不等于已完成自首"
+        description: "未签署、未递交的辞职信草稿；正文开始清点 Harrison 自己参与过的裁定与收款"
+
+    npcs:
+      L1_scene4002_watts:
+        talk: L1_scene4002_watts
+        is_liar: true
+        motive: "继续替 Harrison 守门；他既怕材料落入官方接管链，也怕保险柜打开后 Harrison 的罪与回头同时公开"
+        mindset: "紧张时依赖钥匙、卷宗和职责称谓；不擅长编新故事，只会不断缩小承认范围"
+        active_topics:
+          - "Harrison 最近只是工作繁忙，没有秘密重查旧案"
+          - "即使调阅旧案，也是在查别人的问题"
+          - "Harrison 不会真正违抗法院，更不会公开材料"
+          - "Watts 负责 Harrison 日常钥匙、卷宗与来访管理"
+        withheld_topics:
+          - "Harrison 留下条件性交接安排"
+          - "保险柜内是包含自身责任的未完成自首材料"
+          - "Harrison 要求 Watts 不要再替他挡住后果"
+        player_inquiry: null
+        testimony_ids:
+          - 4041001
+          - 4041002
+          - 4041003
+
+      L1_scene4002_harold:
+        talk: L1_scene4002_harold
+        is_liar: false
+        motive: "夺取 Harrison 的钥匙与卷宗，使危险材料重新回到警务控制链"
+        mindset: "表面仍是疲惫老警探的牢骚与拖延；材料失控使他明显焦躁，但尚未准备向 Zack 坦白"
+        active_topics:
+          - "Harrison 的办公室属于死亡调查现场"
+          - "警方要求 Watts 交出钥匙与卷宗"
+          - "Harold 试图从 Watts 手中取得材料但未成功"
+        withheld_topics:
+          - "Harold 长期替 Pierce 与 Whale 压过旧案"
+          - "Harold 对 Harrison 被清理已有私人恐惧"
+          - "Harold 后续将对 Pierce 有所保留"
+        player_inquiry:
+          - "Harold 为什么比普通死亡调查更急于拿到 Harrison 材料"
+          - "Harold 打算把钥匙与卷宗交给谁"
+        testimony_ids:
+          - 4051001
+
+  - id: 4003
+    name: "法院档案室"
+    type: free_exploration
+    description: |
+      调阅台账、资助卷宗和改判往来信分属不同柜架。档案管理员只确认登记、
+      档号与移交程序，不替 Harrison 推断动机。原始调阅索引只显示档号和次数；
+      Zack 需要用旧裁定案号交叉整理，才能确认 Harrison 查到了自己。
+
+    evidence:
+      - id: 4114
+        name: "圣心医院资助档案卷宗"
+        type: item
+        pickup: true
+        note: "R2 陷阱；证明医院与 Miller 资助关系，不证明 Harrison 正在查自己的裁定"
+        description: "圣心医院资助机构排名中 Miller 位列第一，医院对接负责人为 Whitfield"
+
+      - id: 4115
+        name: "Harrison两个月调阅索引"
+        type: item
+        pickup: true
+        note: "Expose R1；原始形态只显示档号、次数和方向，不提前泄露 R2"
+        description: "两个月调阅台账：医院儿童死亡、南区地产与旧赔偿档号被反复调取；原表不解释签署者"
+
+      - id: 4701
+        name: "调阅索引中的本人赔偿裁定"
+        type: clue
+        pickup: false
+        analysis: true
+        inputs: [4115]
+        note: "Expose R2；由 4115 与法院旧案号目录交叉整理所得"
+        description: "整理后的案号对照显示，Harrison 重查的旧赔偿案中包含多份由他本人签署的裁定"
+
+      - id: 4116
+        name: "Mary / Helen案改判往来信"
+        type: item
+        pickup: true
+        note: "Expose R3；证明 Harrison 连续违抗法院意见"
+        description: "Harrison 连续三次要求 Mary 案作无罪改判，均遭法院内部驳回或退回"
+
+    npcs:
+      L1_scene4003_archivist:
+        talk: L1_scene4003_archivist
+        is_liar: false
+        motive: "只提供可登记的调档程序事实，避免在封锁期替任何一方解释 Harrison 的意图"
+        mindset: "书记处式谨慎；先报档号、日期、签收人，再强调自己不能推断内容"
+        active_topics:
+          - "Harrison 连续两个月反复调阅医院、地产与旧赔偿档案"
+          - "调阅索引只记录档号、日期和签收手续"
+          - "Mary / Helen 改判往来信属于正式法院记录"
+        withheld_topics:
+          - "Harrison 死亡的命令来源"
+          - "Pierce 对现场清理的具体责任"
+          - "保险柜中的私人调查内容"
+        player_inquiry:
+          - "Harrison 最近调阅了哪些类别的卷宗"
+          - "如何用旧案号目录确认裁定签署者"
+        testimony_ids:
+          - 4161001
+
+expose:
+  target: watts
+  target_talk: L1_expose_watts
+  location: "SC4002 Harrison 外间办公室"
+  total_rounds: 3
+  is_liar: true
+  player_inquiry: null
+
+  context: |
+    Watts 不是替 Miller 守密，而是继续替死去的 Harrison 守门。
+    Zack 依次证明 Harrison 的夜间工作不是日常事务、调查对象包含本人裁定、
+    并且已经以连续改判和辞职稿准备公开承担。三轮击穿后，
+    Watts 才执行 Harrison 的条件性交接安排，打开保险柜。
+
+  round_1:
+    lie: "Harrison 只是处理日常工作，没有秘密重查旧案"
+    lie_source: 4041001
+    usable_evidence:
+      - id: 4111
+        name: "Harrison公开日程与夜间出入对照"
+        用途: "公开日程与连续十七晚夜间出入不一致"
+      - id: 4115
+        name: "Harrison两个月调阅索引"
+        用途: "调阅方向持续集中于医院、地产与旧判决，不是普通日常工作"
+    trap_evidence:
+      - id: 4112
+        name: "1919-A入账存根"
+        用途: "只能证明 Harrison 收钱，不能证明最近夜间在查什么"
+    result: "Watts 退守：Harrison 即使重查旧案，也只是在核对别人留下的问题。"
+
+  round_2:
+    lie: "即使查了旧案，他查的也是别人，不是在查自己"
+    lie_source: 4041002
+    usable_evidence:
+      - id: 4701
+        name: "调阅索引中的本人赔偿裁定"
+        用途: "整理后的案号显示 Harrison 重查了本人签署的赔偿裁定"
+    trap_evidence:
+      - id: 4114
+        name: "圣心医院资助档案卷宗"
+        用途: "只能证明医院关系，不能证明 Harrison 把自己列入调查"
+    result: "Watts 承认 Harrison 最后几晚不让书记员接触材料，但仍坚持他不会真正公开。"
+
+  round_3:
+    lie: "Harrison 不会真的违抗法院，更不会把事情公开"
+    lie_source: 4041003
+    usable_evidence:
+      - id: 4116
+        name: "Mary / Helen案改判往来信"
+        用途: "连续三次无罪改判要求证明他已经采取公开的制度行动"
+      - id: 4113
+        name: "未完成的辞职信草稿"
+        用途: "辞职稿开始清点本人责任，证明他准备让后果抵达自己"
+    trap_evidence:
+      - id: 4112
+        name: "1919-A入账存根"
+        用途: "只能证明 Harrison 有罪和收过钱，不能证明他准备公开承担"
+    result: "Watts 终于承认 Harrison 留下条件性交接：次日未出现便公开保险柜材料，并设法帮助 Rosa。"
+
+  post_expose:
+    description: |
+      Watts 交出钥匙。保险柜打开后，Harrison 的腐败与回头同时成为事实：
+      里面不是英雄遗言，而是一箱仍在整理、尚未完成正式自首的材料。
+      Watts 读到私人便签“不要替我挡住后果”，不崩溃也不求宽恕，
+      只确认材料将由谁保管、如何留下副本。
+    new_evidence_gained:
+      - id: 4117
+        name: "圣心医院儿童死亡对照表"
+      - id: 4118
+        name: "问题批次药剂"
+      - id: 4119
+        name: "Harrison亲笔资金流向图"
+      - id: 4120
+        name: "南区综合商业开发计划摘要"
+      - id: 4121
+        name: "1912事故家庭索引"
+    player_knowledge_gained:
+      - "Harrison 的回头真实，但没有完成自首或承担"
+      - "Rosa 将在次日面对圣心医院以家属误用为由的追责"
+      - "圣心医院多名儿童死亡存在重复模式"
+
+doubts:
+  - id: 4101
+    text: "Harrison 的公开日程与连续夜间出入为什么对不上？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "4111"
+      - type: 1
+        param: "4115"
+
+  - id: 4102
+    text: "这些调阅记录里，是否有 Harrison 自己签过的裁定？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "4701"
+
+  - id: 4103
+    text: "Harrison 是否已经准备违抗法院，并让自己的责任公开？"
+    isFragment: false
+    unlock_condition:
+      - type: 1
+        param: "4116"
+      - type: 1
+        param: "4113"
+
+doubt_progress:
+  denominator: 3
+  count_rule: "本 Loop 新增 3 个普通疑点，无独立碎片"
+
+cross_loop_evidence:
+  outgoing:
+    - id: 4112
+      to_loop: 5
+      purpose: "法律壳与身份演变证明链"
+    - id: 4117
+      to_loop: 2
+      purpose: "Whitfield R2：多名儿童死亡模式"
+    - id: 4118
+      to_loop: 2
+      purpose: "在 Foster 实验室更新为 4703"
+
+evidence_registry:
+  - id: 4111
+    name: "Harrison公开日程与夜间出入对照"
+    type: clue
+    pickup: true
+    first_scene: 4002
+    note: "Expose R1；Doubt 4101"
+
+  - id: 4112
+    name: "1919-A入账存根"
+    type: item
+    pickup: true
+    first_scene: 4002
+    note: "R1 陷阱；跨至 L5 身份链"
+
+  - id: 4113
+    name: "未完成的辞职信草稿"
+    type: item
+    pickup: true
+    first_scene: 4002
+    note: "Expose R3；Doubt 4103"
+
+  - id: 4114
+    name: "圣心医院资助档案卷宗"
+    type: item
+    pickup: true
+    first_scene: 4003
+    note: "R2 陷阱；提供 Whitfield 方向"
+
+  - id: 4115
+    name: "Harrison两个月调阅索引"
+    type: item
+    pickup: true
+    first_scene: 4003
+    note: "Expose R1；Doubt 4101；原始形态不泄露 R2"
+
+  - id: 4701
+    name: "调阅索引中的本人赔偿裁定"
+    type: clue
+    pickup: false
+    analysis: true
+    first_scene: 4003
+    source: [4115]
+    note: "Expose R2；Doubt 4102"
+
+  - id: 4116
+    name: "Mary / Helen案改判往来信"
+    type: item
+    pickup: true
+    first_scene: 4003
+    note: "Expose R3；Doubt 4103"
+
+  - id: 4117
+    name: "圣心医院儿童死亡对照表"
+    type: item
+    pickup: true
+    first_scene: 4002
+    acquisition: post_expose
+    note: "跨至 L2 R2"
+
+  - id: 4118
+    name: "问题批次药剂"
+    type: item
+    pickup: true
+    first_scene: 4002
+    acquisition: post_expose
+    note: "跨至 L2，由 Foster 更新为 4703"
+
+  - id: 4119
+    name: "Harrison亲笔资金流向图"
+    type: item
+    pickup: true
+    first_scene: 4002
+    acquisition: post_expose
+    note: "只提供资金方向，不证明灭口命令源"
+
+  - id: 4120
+    name: "南区综合商业开发计划摘要"
+    type: item
+    pickup: true
+    first_scene: 4002
+    acquisition: post_expose
+    note: "建立南区地产方向，不提前指定 O'Hara"
+
+  - id: 4121
+    name: "1912事故家庭索引"
+    type: item
+    pickup: true
+    first_scene: 4002
+    acquisition: post_expose
+    note: "只建立编号复用与受害家庭方向，不出现 Sean 页"

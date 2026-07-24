@@ -1,0 +1,1153 @@
+# ============================================================
+# loop5_state.yaml — Unit4 Loop 5：四十二层（指证 Mickey · 3 轮）
+# ============================================================
+#
+# Canon:
+#   planningDirectory: 剧情设计/Unit4
+#   active_outline: 剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md
+#   design_contract: 剧情设计/Unit4/讨论结论.md
+#   episode: EPI04
+#   id_space: 4xxx
+#   structure: 5_loops_plus_non_loop_finale
+#
+# 叙事功能：
+#   玩家先用三条独立证明链坐实 Mickey = Whale，再进入只处理事实防线的
+#   三轮 Expose。身份承认后的价值对话固定线性，不再增加事实谜题。
+#   Mickey 坠落后，非 Loop 终幕写入 ending_sequence，并硬截在 O'Hara
+#   家门外。
+#
+# 核心揭示：
+#   1. Mickey 先控制 Donnelly 法律资金接口，1925 年后接管 W / Whale。
+#   2. Mickey 是 Harold Morrison 死前访客，并对枪杀与自杀现场伪装负责。
+#   3. Miller 上层另线清场；Harrison 也由 Miller 上层决定、Pierce 执行。
+#   4. Mickey 做过的真实好事不能替被牺牲者签署同意。
+#
+# 自检（A-G）：
+#   A. 结构完整性  PASS — player_context / opening / scenes / expose /
+#                           special_mechanics / evidence_registry /
+#                           ending_sequence 齐全；本轮获批不写普通 doubts
+#   B. 证据覆盖    PASS — L5 4511-4519、4705-4708 均有取得、流转与用途；
+#                           跨 Loop 输入 4112、4153001、4315、4416、4418 已登记
+#   C. NPC 完整性  PASS — 夜班门房、Mickey、Emma、Watts、街区居民均含
+#                           known_information / player_inquiry / testimony_ids
+#   D. 目标对齐    PASS — 玩家在 Mickey 承认前亲手证明 Mickey = Whale
+#   E. 信息节奏    PASS — 身份承认前只出现 W / Whale；不揭 Sean 完整执行链、
+#                           小 Charles 越权、U5 嫁祸或 O'Hara 屋内结果
+#   F. 特殊结构    PASS — identity_lock.status=provisional；三链全完成才解锁
+#                           Expose；ending_sequence 不计为新 Loop
+#   G. Expose 逻辑 PASS — R1 实际控制、R2 到访、R3 身份三种不同维度；
+#                           全部材料均可反查 identity_lock 链
+#
+# validation_status: PASS
+# ============================================================
+
+meta:
+  unit: 4
+  loop: 5
+  title: "四十二层"
+  episode: "EPI04"
+  scene_ids: [4041, 4042]
+  ending_scene_ids: [4043, 4044, 4045]
+  expose_target_npc_id: 403
+  standard_doubts_enabled: false
+  non_loop_finale_embedded: true
+
+# ─────────────────────────────
+# 一、玩家视角（本循环）
+# ─────────────────────────────
+
+player_context:
+  chapter_goal: "查清 Whale 的身份与 Miller 系统如何借法律、金融和警务接口运作"
+  goals:
+    primary: "在 Mickey 主动承认前，用三条完整证明链坐实 Mickey = Whale"
+    secondary:
+      - "确认 Donnelly & Associates、1919-A 与 W / Whale 接口的连续关系"
+      - "确认 Harold Morrison 死前的近期访客及其对现场收尾的参与"
+      - "区分 Mickey 的责任、Pierce 的责任与 Miller 上层另线清场"
+      - "身份坐实后，拒绝用真实成果替被牺牲者补签同意"
+
+  known_facts:
+    # L1 post_expose_knowledge 完整继承（7 条稳定事实；临时未知项留在 L1 current_assumptions）
+    - "Harrison 长期收受 1919-A 资金，并替圣心医院赔偿、南区地产安排提供法院便利"
+    - "Harrison 最近连续十七晚在闭庭后调阅医院、地产与旧判决材料"
+    - "Harrison 重查了自己亲手签过的赔偿裁定，不再只把问题归给别人"
+    - "Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任"
+    - "Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱"
+    - "Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责"
+    - "保险柜材料显示 Rosa 的庭审迫近，并留下圣心医院儿童死亡对照与问题批次药剂"
+
+    # L2 post_expose_knowledge 完整继承（10 条）
+    - "Rosa 没有在规定剂量之外额外注射；止动结构、日期撕签和实际消耗量不存在额外用量缺口"
+    - "Isabel 的死亡不是单例；另外两名死亡儿童的药瓶与 Isabel 属于同一批次"
+    - "问题批次正式进入圣心医院采购、入库与慈善发放链"
+    - "加急效价对照只能证明同批样本效力明显不一致，且不能用单支家庭保存不当解释"
+    - "Whitfield 是正式项目执行层，不能以家属误用、单例或非正式来源推卸责任"
+    - "执行层副本缺失第十九页，更高层特别采购批准暂时没有可核验的签字原件"
+    - "Mickey 为 Rosa 争取窗口、担任辩护并帮助取得暂停追究的结果，这份帮助真实"
+    - "Mickey 同时主动把公开压力集中在 Whitfield，使调查暂时停在可牺牲的执行层"
+    - "Harold 没有把 Harrison 材料告知 Pierce，并警告 Zack 不要太相信法院里的胜利"
+    - "截至 L2 散庭，Harold 只留下以后私下谈的口子，没有决定或承诺完整坦白"
+
+    # L3 post_expose_knowledge 完整继承（9 条）
+    - "Harold 原本准备去找 Zack，不是在家等待自杀"
+    - "Harold 死前不久接待过一名近期访客"
+    - "Harold 确实在车站寄存柜留下了准备交给 Zack 的材料"
+    - "Doris 知道 Harold 留有站外材料，但不知道口供全文，也不知道访客和枪手身份"
+    - "Harold 长期惯用左手；Zack 在爆炸前看见手枪被放在尸体右手"
+    - "Mickey 向 Pierce 正式回答自己初见尸体时枪在左手，与 Zack 的私人观察冲突"
+    - "原始现场被爆炸摧毁后，Pierce 以相反证词为由拒绝启动他杀调查，警方仍按自杀结案"
+    - "煤气与时钟装置在 Harold 最后求助前已进入宅邸"
+    - "4318 只提高 Pierce 当时在法院的可能，不能作为绝对不在场证明"
+
+    # L4 post_expose_knowledge 完整继承（10 条）
+    - "O'Hara 从未同意出售，Margaret 明知这一点仍替她安排离开"
+    - "Margaret 明确要求 O'Hara 不找 Zack，主动切断了求助路径"
+    - "Patrick 折返前唯一收到的即时转运信息只有“还有一人”，没有姓名"
+    - "Patrick 在看见被困者以前已折返，不知道那个人是 Mickey"
+    - "Patrick 救出 Mickey 后未恢复可交流意识，不存在临终交接或使命继承"
+    - "Margaret 真正害怕的是 Zack 重复 Patrick 把自己放入风险的道路；她仍不赞成 Zack 继续追查"
+    - "Mickey右下牙长期缺损只提供现场烟蒂的比较方向，单独不具备定人能力"
+    - "Donnelly & Associates 在 Patrick 葬礼后不久开始持续出现；L4 材料只建立法律壳方向"
+    - "Patrick遗物匣的信条提供四十二层保险柜密码方向"
+    - "临时停止执行真实挡住了警务清退并让 Sarah 获得安全转移；O'Hara 仍自主选择留在屋内"
+
+  current_assumptions:
+    - "Donnelly & Associates 很可能与 1919-A 属于同一资金网络，但尚未取得授权关系"
+    - "Mickey 很可能是 Harold 死前的近期访客，但仅有电话去向与现场烟蒂还不能锁定他"
+    - "Whale 与 Mickey 的活动边界高度重合，但身份尚未由玩家完成证明"
+    - "Miller 系统可能位于 Whale 之上，但上层与接口的责任必须由内部材料分开"
+
+  new_directions:
+    - direction: "前往四十二层 Donnelly & Associates"
+      trigger: "Patrick 葬礼册与 1919 旧信封提供了办公室地址；Zack 不等待 Mickey 安排对质"
+    - direction: "用 Patrick 遗物匣刻句打开 Mickey 的字母锁保险柜"
+      trigger: "遗物匣上的七词刻句可转化为首字母 FTMWPTF"
+    - direction: "完成三条独立身份锁证明链"
+      trigger: "保险柜内材料与既有跨 Loop 证据形成法律壳、作者视角、近期访客三种不同维度"
+
+  post_expose_knowledge:
+    - "Mickey 就是 Whale；这个身份是在其承认前由玩家完成证明"
+    - "Mickey 是 1919-A 的唯一授权签字人并实际控制资金操作，但材料不证明其拥有账户法律所有权"
+    - "Mickey 先经营 Donnelly 法律资金接口，1925 年正式接管 W / Whale 职责"
+    - "Mickey 是 Harold Morrison 死前访客，并对枪杀、伪造遗书和右手枪位现场收尾负责"
+    - "Miller 上层另线安排煤气清场；Mickey 不知道装置形式与启动时间"
+    - "Harrison 的死亡由 Miller 上层决定，Pierce 执行并接管现场与档案；Mickey 未下令、未参与"
+    - "Mickey 为 Rosa、Mary 与部分工人争取过的结果真实存在，但不能替 Harrison、Harold 或其他人决定代价"
+    - "Miller 给过 Mickey 交档案上车的现实生路；Mickey 拒绝交档案，最后主动松开 Zack 的手"
+    - "Emma 自主赶到四十二层并救回 Zack；两人带走尚未拆封的 Miller 保险档案"
+
+# ─────────────────────────────
+# 二、开篇（🎬 一拍交代现实入口）
+# ─────────────────────────────
+
+opening:
+  type: cutscene
+  scene_id: 4041
+  scene_name: "L5 开篇 · 四十二层前厅 / 夜班入口"
+  location: "Donnelly & Associates 四十二层公共前厅"
+  time: "午夜前"
+  characters: [Zack, 夜班门房]
+  description: |
+    Zack 根据 Patrick 葬礼册与 1919 旧信封上的地址独自来到四十二层。
+    Donnelly & Associates 仍在处理夜间客户事务，公共前厅没有关闭。
+    Mickey 临时下楼处理一通来电，私人办公室门没有落锁。
+    熟识 Zack 的夜班门房依照夜间客户惯例，明确示意他去未锁的私人办公室内等候。
+    Zack 按门房指引进入；这不是 Mickey 的邀请，也不是趁门房离开偷偷潜入。
+    本段只交代现实入口，不设置破门、潜入、撬锁、门禁或说服谜题。
+
+  npcs:
+    L5_opening_night_doorman:
+      npc_id: null
+      name: "夜班门房"
+      talk: L5_opening_night_doorman
+      is_liar: false
+      motive: "维持律师事务所夜间客户秩序；按熟客惯例明确指引 Zack 去未锁办公室等候"
+      mindset: "忙碌、职业化，不参与案件判断，也不知道保险柜与 W / Whale 文件"
+      known_information:
+        - "Donnelly & Associates 今夜仍有客户事务"
+        - "Mickey 临时下楼处理来电"
+        - "按夜间熟客惯例，Zack 可以去未锁的私人办公室内等候"
+        - "Mickey 的私人办公室门暂时没有落锁"
+      withheld_information:
+        - "无；他不知道 Mickey 的真实身份、保险柜内容和楼下车辆用途"
+      player_inquiry:
+        - "Mickey 是否在办公室"
+        - "为什么前厅午夜前仍开放"
+      testimony_ids: []
+
+  transition:
+    next_scene: 4042
+    condition: "入口交代完成"
+    player_control: "进入 4042 后恢复"
+
+# ─────────────────────────────
+# 三、场景（🔓 自由探索 / 身份锁 / Expose）
+# ─────────────────────────────
+
+scenes:
+  - id: 4041
+    name: "四十二层前厅 / 夜班入口"
+    type: transition
+    description: |
+      公共前厅仍亮着灯，登记簿、电话线和夜间客户座椅维持正常营业感。
+      夜班门房明确指引熟客 Zack 去未锁办公室等候。该场景只提供 Zack 合理
+      进入 4042 的现实条件，不承载证据或额外玩法，也不构成 Mickey 的邀请。
+    evidence: []
+    npcs:
+      L5_scene4041_night_doorman:
+        npc_id: null
+        name: "夜班门房"
+        talk: L5_scene4041_night_doorman
+        is_liar: false
+        motive: "完成夜间登记并照看公共前厅"
+        mindset: "把 Zack 当作熟识的来访侦探，不主动介入私人办公室事务"
+        known_information:
+          - "Mickey 下楼处理来电"
+          - "私人办公室门暂未落锁"
+        withheld_information:
+          - "无；不掌握案件核心事实"
+        player_inquiry:
+          - "Mickey 何时回来"
+        testimony_ids: []
+
+  - id: 4042
+    name: "Mickey 私人办公室"
+    type: free_exploration_identity_lock_expose_story
+    description: |
+      四十二层唯一缺少社区感的高处空间。书桌、刻有 M.F.D. 的私人烟灰缸、
+      市政厅专线和字母锁保险柜都井然有序。Mickey 返回前，Zack 可以检查书桌，
+      取得钢笔与半支雪茄，并用 Patrick 遗物匣刻句打开保险柜。
+      玩家必须完成三条身份锁证明链，Mickey 才返回并进入正式 Expose。
+
+    access:
+      from_scene: 4041
+      door_state: "临时未锁"
+      prohibited_interactions:
+        - "破门"
+        - "撬锁"
+        - "潜入判定"
+        - "门禁谜题"
+
+    interactions:
+      - id: interaction_mickey_desk
+        name: "检查 Mickey 的书桌"
+        outputs: [4511, 4512]
+      - id: interaction_letter_safe
+        name: "输入字母锁密码"
+        input_source: 4418
+        input_logic: "FOR THE MANY WE PAY THE FEW 的七词首字母"
+        accepted_input: "FTMWPTF"
+        outputs: [4513, 4514, 4515, 4516]
+        design_boundary: |
+          这不是 Mickey 留给 Zack 的邀请或普通谜语，而是 Mickey 长期使用的私人信条。
+          玩家亲手输入这句话，才能看见它实际保护的文件。
+
+    evidence:
+      - id: 4511
+        name: "Mickey定制钢笔"
+        type: item
+        pickup: true
+        analysis: true
+        source: "Mickey 私人书桌"
+        description: |
+          笔帽刻有 M.F.D.；笔尖右侧有长期缺口，在特定转折处留下稳定断墨。
+          只能辅助确认同一书写工具与作者，不能单独证明文字内容真实。
+        uses:
+          - "identity_lock.chain_4502"
+
+      - id: 4512
+        name: "Mickey的半支古巴雪茄"
+        type: item
+        pickup: true
+        analysis: true
+        source: "刻有 M.F.D. 的私人烟灰缸"
+        ownership_basis:
+          - "烟蒂位于 Mickey 私人办公室、刻有 M.F.D. 的私人烟灰缸内"
+          - "Zack 曾亲眼见 Mickey 使用同品牌雪茄，并在同一侧含咬"
+        description: |
+          半支古巴雪茄。与 L3 现场烟蒂比较时，必须同时核对品牌、直径、
+          含咬位置，以及“前段向内塌陷、后段缺少一枚完整压痕、整体约三十度
+          斜向受力”的复合齿痕。任一单项相似都不足以锁定所有者。
+        forensic_boundary: |
+          这是电话到访窗口、可靠物件所有权与多项复合特征的交叉证明，
+          不是把齿痕当作指纹式唯一鉴定；也不能单独证明开枪或 Whale 身份。
+        uses:
+          - "identity_lock.chain_4503"
+          - "expose.round_2"
+
+      - id: 4513
+        name: "1925年内部接口接管记录"
+        type: item
+        pickup: true
+        source: "字母锁保险柜"
+        pre_acknowledgment_display: |
+          Donnelly & Associates 自 1919 年起承担 Tidewater 的合同、产权、
+          银行重组与诉讼拖延。1925 年接管页只写内部代号 W，
+          代号说明栏写 W / Whale；不出现实名对照。
+        description: |
+          职责栏为“警务协调 / 银月会联络 / 非合同障碍处理”。
+          它证明法律壳经营在前、W / Whale 接管在后，不能把 Mickey 写成
+          从 1903 年起就是 Whale。
+        uses:
+          - "identity_lock.chain_4501"
+          - "expose.round_3"
+
+      - id: 4514
+        name: "1919年的银行授权附页-Donnelly & Associates"
+        type: item
+        pickup: true
+        analysis: true
+        source: "字母锁保险柜"
+        description: |
+          1919-A 被记为 Donnelly & Associates 受托结算子账户；
+          唯一授权签字人为 Michael F. Donnelly，账户用途栏引用 Harrison
+          存根上的圣心医院赔偿案号。
+        proof_boundary: |
+          证明 Mickey 是唯一授权签字人并实际控制资金操作；
+          不等于账户法律所有人，不得写成“1919-A 是 Mickey 的私人账户”。
+        uses:
+          - "identity_lock.chain_4501"
+          - "identity_lock.chain_4502"
+          - "expose.round_1"
+
+      - id: 4515
+        name: "Mickey功业簿"
+        type: item
+        pickup: true
+        analysis: true
+        source: "字母锁保险柜"
+        pre_acknowledgment_display: |
+          同一名书写者长期记录的内部行动簿。作者身份尚未由系统确认；
+          页面使用 W / Whale 接口语言，不提前显示实名对照。
+        entries:
+          - "O'Brien：退出；罢工网络保留"
+          - "Webb：双重材料失控；接口收束；银月会关系维持"
+          - "Moore：银行执行层可让步；Frank 线可暴露；Lakeshore 不进入法庭记录"
+          - "Harrison：Miller 上层独立清理；Pierce 接管现场与档案；圣心医院执行层可让出；不得继续向上追查"
+          - "Morrison：会面失控；现场按自杀口径收尾；惯用手留有偏差；清场由上层另线完成"
+          - "Rosa：免于定罪；医院项目终止"
+          - "Mary：脱离死刑风险；Brennan 完成越线测试"
+        proof_boundary: |
+          Morrison 页提供会面、枪杀与现场处理参与者视角，并把枪杀与
+          上层另线清场分开。它不把 Mickey 写成 Miller 最终命令源，
+          也不把煤气安装责任归给 Mickey。
+        uses:
+          - "identity_lock.chain_4502"
+          - "expose.round_3"
+
+      - id: 4516
+        name: "Miller保险外卷与内封套"
+        type: container
+        pickup: true
+        source: "字母锁保险柜"
+        loop5_state: "外卷可查看；内封套保持未拆"
+        pre_acknowledgment_display: |
+          外卷只显示 W / Whale 负责法律障碍、Pierce 警察网络与银月会协调。
+          身份承认前禁止出现实名对照。
+        outer_volume_visible_information:
+          - "O'Hara 是南区第一批核心拒售户，标注优先处理"
+          - "湖滨信托银行 / Moore 制造债务与违约"
+          - "Lakeshore 负责资金、估价和项目审批"
+          - "Tidewater / Lawson 团队接收房产并推进工程"
+          - "W / Whale 负责法律障碍及 Pierce 警察网络、银月会协调"
+          - "项目收益摘要只含预期地价、开发资格与 Miller 项目委员会最终审批权"
+        inner_envelope_visible_information:
+          - "防拆线与 Miller 事故基金压印"
+          - "目录：1912 / 特殊处置与事故材料"
+          - "目录：1928 / 后插入执行附件"
+        prohibited_in_loop5:
+          - "拆开内封套"
+          - "读取 Sean 页"
+          - "读取水源维护页"
+          - "把内封内容用于身份锁或 Expose"
+        next_flow: "ending_sequence.ending_4044"
+
+    npcs:
+      L5_scene4042_mickey:
+        npc_id: 403
+        name: "Mickey Donnelly"
+        talk: L5_scene4042_mickey
+        is_liar: true
+        motive: |
+          先把授权、到访与行动簿重新拆回互不相干的客户账务、代管记录和
+          现场传闻；身份坐实后，仍试图用真实救援成果证明自己有权继续
+          独占判断与代价分配。
+        mindset: |
+          返回时先恢复律师式控制；事实防线逐轮收缩。身份承认后不彻底忏悔，
+          也不否定自己的真实帮助。Miller 给出生路时，他第一次允许档案脱离
+          自己控制，但这个选择不能抵消此前死亡。
+        known_information:
+          - "自己是 1919-A 唯一授权签字人并实际控制资金操作"
+          - "自己于 1925 年接管 W / Whale 接口"
+          - "自己长期书写功业簿"
+          - "自己在 22:58 到达 Harold 宅邸，23:16 开枪并伪装自杀现场"
+          - "煤气清场由 Miller 上层另线安排，自己不知道装置形式与启动时间"
+          - "Harrison 由 Miller 上层决定清理，Pierce 执行并接管现场与档案"
+          - "Rosa 获救、医院项目终止等真实成果"
+          - "Miller 会要求交回档案并提供车辆撤离"
+        withheld_information:
+          - "R1 前否认自己能决定 1919-A 的资金用途"
+          - "R2 前否认爆炸前进入过 Harold 家"
+          - "R3 前把 Whale 说成匿名客户"
+          - "身份承认前不主动说“我是 Whale”"
+          - "不主动拆解 Sean 完整执行链、小 Charles 越权或 U5 嫁祸"
+        player_inquiry: null
+        testimony_ids:
+          - 4035001
+          - 4035002
+          - 4035003
+
+    event_triggers:
+      - id: mickey_returns
+        condition: "special_mechanics.identity_lock.completion_condition 达成"
+        effect: "Mickey 返回办公室；封闭自由探索并进入 Expose"
+      - id: emma_changes_course
+        condition: "Zack 长时间未回电话，且四十二层楼下突然增加 Miller 车辆与人员"
+        effect: |
+          Emma 自主改变“你自己去”的决定，完成现实路程后赶往四十二层。
+          她不参与身份锁与三轮 Expose，只在坠落时抵达并抓住 Zack。
+      - id: archive_stays
+        condition: "Mickey 拒绝 Miller 的交档案上车条件"
+        effect: "4516 留在办公室，坠落后由 Zack 与 Emma 带走"
+
+# ─────────────────────────────
+# 四、特殊机制（无普通 doubts）
+# ─────────────────────────────
+
+special_mechanics:
+  identity_lock:
+    status: provisional
+    replaces_standard_doubts: true
+    design_contract: "方案 B；输入、输出、证明边界与剧情结论锁定，交互表现仍可讨论"
+    open_questions:
+      - ui_layout
+      - submission_method
+      - failure_feedback
+      - chain_open_order
+
+    entry_condition:
+      - "已取得 4513、4514、4515"
+      - "仍持有所有跨 Loop 输入材料"
+
+    chains:
+      - id: 4501
+        name: "法律壳与身份演变"
+        inputs:
+          - type: item
+            id: 4112
+            name: "1919-A入账存根"
+            source_loop: 1
+          - type: item
+            id: 4514
+            name: "1919年的银行授权附页-Donnelly & Associates"
+            source_loop: 5
+          - type: item
+            id: 4416
+            name: "Patrick葬礼册与1919旧信封"
+            source_loop: 4
+          - type: item
+            id: 4513
+            name: "1925年内部接口接管记录"
+            source_loop: 5
+        output:
+          type: derived_conclusion
+          id: 4705
+          name: "1919-A与Donnelly法律资金接口及1925接管连续性"
+        proof_boundary: |
+          坐实 Mickey 先实际控制 Donnelly 法律资金接口，后在 1925 年接管
+          W / Whale 职责。不能仅靠年份相同完成推理；账户关系由授权附页承担。
+          证明实际控制，不证明账户法律所有权。
+
+      - id: 4502
+        name: "功业簿作者与行动视角"
+        inputs:
+          - type: item
+            id: 4515
+            name: "Mickey功业簿"
+            source_loop: 5
+          - type: item
+            id: 4514
+            name: "1919年的银行授权附页-Donnelly & Associates"
+            source_loop: 5
+          - type: item
+            id: 4511
+            name: "Mickey定制钢笔"
+            source_loop: 5
+        outputs:
+          - type: derived_conclusion
+            id: 4706
+            name: "Morrison页结论"
+            derivation: |
+              功业簿书写者知道“会面失控、现场按自杀口径收尾、惯用手偏差、
+              清场由上层另线完成”，属于枪杀与现场伪装参与者视角。
+          - type: derived_conclusion
+            id: 4707
+            name: "书写者一致性"
+            derivation: |
+              功业簿与 4514 上正式归属于 Mickey 的签名笔迹一致；
+              关键转折处还出现 4511 缺口笔尖造成的稳定断墨。
+        proof_boundary: |
+          证明功业簿由 Mickey 长期书写，并掌握 Morrison 会面、死亡与
+          自杀现场收尾的参与者内部事实。不得把煤气线归给 Mickey，
+          不得把他写成 Miller 最终命令源。
+
+      - id: 4503
+        name: "Morrison近期访客"
+        inputs:
+          - type: testimony
+            id: 4153001
+            name: "Morrison最后通话记录"
+            source_loop: 3
+            role: "把近期访客窗口锁在 22:43 Donnelly 来电之后"
+          - type: item
+            id: 4315
+            name: "古巴雪茄烟蒂"
+            source_loop: 3
+            role: "现场访客遗留物"
+          - type: item
+            id: 4512
+            name: "Mickey的半支古巴雪茄"
+            source_loop: 5
+            role: "有可靠私人物件来源的对照样本"
+        output:
+          type: derived_conclusion
+          id: 4708
+          name: "Mickey是Donnelly来电后的近期访客"
+        cross_proof:
+          telephone_window: |
+            4153001 只证明 22:43 电话打入 Donnelly & Associates 并留下
+            立刻到场口信，不证明谁接听；它负责限定到访时间窗口。
+          ownership_source: |
+            4512 来自 Mickey 私人办公室、刻有 M.F.D. 的私人烟灰缸，
+            且 Zack 曾亲眼见 Mickey 使用同品牌、在同一侧含咬。
+          physical_comparison:
+            required_matches:
+              - "品牌一致"
+              - "直径一致"
+              - "含咬位置一致"
+              - "前段向内塌陷"
+              - "后段缺少一枚完整压痕"
+              - "整体约三十度斜向受力"
+            disallowed_shortcut: "不得只凭右下牙旧伤或单项齿痕相似锁定身份"
+        proof_boundary: |
+          电话窗口、所有权来源和多项复合特征共同证明 Mickey 是 Harold
+          死前近期访客。该链不把齿痕当作指纹式唯一鉴定；不单独证明开枪，
+          也不单独证明 Whale 身份。
+
+    completion_condition: "all_chains_completed"
+    completion_outputs: [4705, 4706, 4707, 4708]
+    unlocks: "expose"
+    expose_material_coverage:
+      round_1:
+        materials: [4514]
+        covered_by: [4501, 4502]
+      round_2:
+        materials: [4315, 4512]
+        prerequisite_context: [4153001]
+        covered_by: [4503]
+      round_3:
+        materials: [4513, 4515]
+        covered_by: [4501, 4502]
+
+# ─────────────────────────────
+# 五、指证（⚔️ Expose：Mickey · 3 轮）
+# ─────────────────────────────
+
+expose:
+  target: mickey
+  target_npc_id: 403
+  target_talk: L5_expose_mickey
+  location: "4042 Mickey 私人办公室"
+  total_rounds: 3
+  is_liar: true
+  player_inquiry: null
+  unlock_condition: "special_mechanics.identity_lock.completion_condition == all_chains_completed"
+
+  context: |
+    Mickey 返回后看见保险柜已打开，以及 Zack 手中的接管记录、授权附页与功业簿。
+    他不承认这是自己安排的会面，也不承认 Zack 有权进入办公室。
+    他主动把材料拆回客户账务、现场传闻和匿名客户三种防线。
+    Expose 只处理可由证据反驳的事实；价值判断留到身份承认后的固定对白。
+
+  rounds:
+    - id: round_1
+      lie: "Donnelly 只是代客户处理账务；1919-A 不是我的账户，我不能决定资金用途"
+      lie_source: 4035001
+      dimension: "唯一授权签字与实际控制"
+      usable_evidence:
+        - id: 4514
+          name: "1919年的银行授权附页-Donnelly & Associates"
+          purpose: |
+            授权附页确认 Michael F. Donnelly 是 1919-A 唯一授权签字人，
+            实际控制资金操作；不把账户法律所有权写成 Mickey 私有。
+      result: |
+        Mickey 被迫承认自己能决定 1919-A 的资金操作，但退守到：
+        他只是知道 Harold 现场发生过什么，是 Pierce 事后告诉他的；
+        爆炸前他从未进入 Harold 家。
+
+    - id: round_2
+      lie: "我知道 Harold 现场的事，是 Pierce 事后告诉我的；爆炸前我从未进过 Harold 家"
+      lie_source: 4035002
+      dimension: "到访时间窗口 × 私人物件来源 × 复合物理特征"
+      prerequisite_context:
+        - id: 4153001
+          name: "Morrison最后通话记录"
+          purpose: "限定 22:43 Donnelly 来电之后的近期到访窗口，不确认接听者"
+      usable_evidence:
+        - id: 4315
+          name: "古巴雪茄烟蒂"
+          purpose: "近期访客在 Harold 现场留下的对照物"
+        - id: 4512
+          name: "Mickey的半支古巴雪茄"
+          purpose: |
+            来自刻有 M.F.D. 的私人烟灰缸，并有 Zack 既往目击作为所有权来源；
+            两支雪茄需同时匹配品牌、直径、含咬位置、前段内陷、后段缺一枚
+            完整压痕及约三十度斜向受力。
+      invalid_shortcuts:
+        - "只出示 4704 右下牙长期缺损"
+        - "只比较单项牙印"
+        - "把齿痕说成法医学唯一鉴定"
+      result: |
+        Mickey 被迫承认自己在 Harold 死前到过宅邸，却继续把身份拆开：
+        他替 Whale 管过账户、保存过记录，但 Whale 是匿名客户，
+        自己只负责把客户决定变成合法文件。
+
+    - id: round_3
+      lie: "Whale 是我的匿名客户；我只是替他保存记录、把他的决定变成合法文件"
+      lie_source: 4035003
+      dimension: "正式接管身份 × 长期参与者行动视角"
+      usable_evidence:
+        - id: 4513
+          name: "1925年内部接口接管记录"
+          purpose: "记录明确标注 W / Whale 的正式接管与职责"
+        - id: 4515
+          name: "Mickey功业簿"
+          purpose: |
+            长期记录包含普通律师无法从公开材料取得的会面、现场收尾与
+            上层另线清场边界，并已由 4502 证明为 Mickey 长期书写。
+      result: |
+        匿名客户防线失效。玩家已经证明 1925 接管者、功业簿书写者、
+        1919-A 实际控制者和 Harold 死前访客是同一人。
+
+  post_expose:
+    identity_acknowledgment:
+      first_explicit_mapping: "Mickey：是。我是 Whale。"
+      boundary: |
+        这是玩家完成证明后的情感落锤，不是 Mickey 替玩家揭晓反转。
+        从这一刻起，文本才允许明确写 Mickey / Whale 对照。
+      responsibility_statement:
+        - "Moore 让人欠债，Lakeshore 给债务和估价披投资外衣"
+        - "Lawson 团队接走房子"
+        - "文件能解决的交给律师，文件解决不了的交给 Pierce 和银月会"
+        - "Mickey 负责让两种方法之间没有缝"
+
+    linear_value_dialogue:
+      interaction_type: "fixed_dialogue"
+      evidence_selection: false
+      response_branches: false
+      relationship_values: false
+      achievements: false
+      new_case_facts_allowed: false
+      topics:
+        - order: 1
+          name: "身份不是全部"
+          mickey_position: "证明我是 Whale，只证明我做过这些事，不证明这些事没有救人"
+          zack_position: |
+            不否认 Rosa、Mary、医院项目终止与工人援助的真实成果；
+            只追问 Harrison 与 Harold 是否有机会自己决定愿不愿意付代价。
+          prohibited_line: "你的帮助都是假的"
+
+        - order: 2
+          name: "你和我一样"
+          mickey_position: "你也签过不该签的文件，知道真相后没有告诉 Emma"
+          zack_position: |
+            承认自己做过、也差点把救到人当成继续隐瞒的许可证；
+            拒绝用“我的动机更好”免责。
+
+        - order: 3
+          name: "Patrick也算过"
+          mickey_position: "Patrick 最后选的是我；他知道谁能接下没做完的事"
+          zack_position: |
+            Patrick 在知道被困者姓名前已经折返，也没有留下使命交接。
+            他救的是一个尚未确认身份的工友，不是事先选中的继承人。
+            不得借此羞辱 Mickey 不值得被救。
+          supporting_known_fact:
+            testimony_id: 4104001
+            name: "Margaret关于Patrick折返的正式摘要"
+          closing_question: "Mickey，你会觉得 Harrison 和 Harold 的生命，比你自己的更重要吗？"
+
+        - order: 4
+          name: "系统还需要我"
+          mickey_position: "我停下以后，谁从内部带档案出来、替下一个 Rosa 留路"
+          zack_position: |
+            不否定内部位置曾经救人；击穿的是 Mickey 对救援渠道和判断权的垄断。
+            把档案留下，让不止一个人知道，下一次就不必等 Whale 决定谁值得被救。
+
+    miller_final_condition:
+      trigger: "市政厅专线响起"
+      offer:
+        - "取回 4516 Miller保险外卷与内封套"
+        - "把档案交给楼下司机"
+        - "Mickey 独自上车"
+        - "Miller 暂时保留其律师身份"
+        - "Zack 可以离开，但不能带走档案"
+      truth_status: "现实可执行的生路，不是空头诱骗"
+      mickey_choice:
+        line: "档案不归你们了。"
+        action: "拔掉电话线，不再索回档案"
+      moral_boundary: |
+        这次选择只说明 Mickey 第一次允许真相脱离自己控制；
+        不能抵消此前死亡，也不改变司法责任。
+
+    fall_sequence:
+      fixed_outcome: true
+      beats:
+        - "楼下黑色轿车鸣笛，Mickey 走向窗口"
+        - "Mickey 询问 Liam 与 Patrick 是否会觉得自己至少做对过一点"
+        - "Zack 回答：我不知道；你也不知道"
+        - "Zack 察觉不对，抓住 Mickey 袖口；布料在窗框边缘撕裂"
+        - "Mickey 坠出窗外，Zack 抓住他的手"
+        - "Mickey 主动松开 Zack 的手，不写意外滑落"
+        - "Zack 被带向窗外；Emma 从后方抓住 Zack 并把他拉回室内"
+      retained_images:
+        - "Mickey 向下坠落的身影"
+        - "Zack 抓空的手"
+        - "Zack 掌心一小片被撕下的袖料"
+      emma_line: "该走了。走楼梯，他们的人已经来了。"
+      archive_state: "4516 仍在室内，内封未拆；由 Zack 与 Emma 带走"
+      loop_end_condition: "Emma 留出一段呼吸后，进入非 Loop ending_sequence"
+
+    player_knowledge_gained:
+      - "Mickey = Whale"
+      - "Mickey 对 Harold 枪杀与自杀现场伪装负责；煤气由 Miller 上层另线安排"
+      - "Miller 位于 Whale 接口之上"
+      - "Mickey 的真实帮助与其替别人决定代价同时成立"
+      - "Mickey 拒绝交档案并主动松手坠落"
+
+# ─────────────────────────────
+# 六、证据 ID 汇总（含跨 Loop 输入）
+# ─────────────────────────────
+
+evidence_registry:
+  # ── 跨 Loop 输入 ──
+  - id: 4112
+    name: "1919-A入账存根"
+    type: item
+    source_loop: 1
+    inherited: true
+    first_scene: 4002
+    l5_use: "identity_lock.chain_4501"
+
+  - id: 4153001
+    name: "Morrison最后通话记录"
+    type: testimony
+    source_loop: 3
+    inherited: true
+    first_scene: 4024
+    l5_use: "identity_lock.chain_4503 的电话到访窗口；Expose R2 prerequisite_context"
+    boundary: "只确认线路时间、去向与原话，不确认接听者"
+
+  - id: 4315
+    name: "古巴雪茄烟蒂"
+    type: item
+    source_loop: 3
+    inherited: true
+    first_scene: 4022
+    l5_use: "identity_lock.chain_4503；Expose R2"
+
+  - id: 4416
+    name: "Patrick葬礼册与1919旧信封"
+    type: item
+    source_loop: 4
+    inherited: true
+    first_scene: 4034
+    l5_use: "identity_lock.chain_4501；提供四十二层地址"
+
+  - id: 4104001
+    name: "Margaret关于Patrick折返的正式摘要"
+    type: testimony
+    source_loop: 4
+    inherited: true
+    first_scene: 4034
+    l5_use: "身份承认后的线性价值对话；不作为身份锁或 Expose 输入"
+    boundary: "只证明 Patrick 折返时不知道被困者姓名且无临终交接，不评价 Mickey 是否值得被救"
+
+  - id: 4418
+    name: "Patrick遗物匣"
+    type: item
+    source_loop: 4
+    inherited: true
+    first_scene: 4034
+    l5_use: "字母锁密码 FTMWPTF；不参加 Expose"
+
+  - id: 4704
+    name: "右下牙长期缺损"
+    type: derived_observation
+    source_loop: 4
+    inherited: true
+    first_scene: 4034
+    l5_use: "只提供比较方向，不占身份锁提交位，不参加 Expose"
+
+  # ── L5 现场与保险柜材料 ──
+  - id: 4511
+    name: "Mickey定制钢笔"
+    type: item
+    pickup: true
+    analysis: true
+    first_scene: 4042
+    uses: ["identity_lock.chain_4502"]
+
+  - id: 4512
+    name: "Mickey的半支古巴雪茄"
+    type: item
+    pickup: true
+    analysis: true
+    first_scene: 4042
+    ownership_source: "M.F.D.私人烟灰缸 + Zack既往亲眼见其同品牌同侧含咬"
+    uses: ["identity_lock.chain_4503", "expose.round_2"]
+
+  - id: 4513
+    name: "1925年内部接口接管记录"
+    type: item
+    pickup: true
+    first_scene: 4042
+    pre_acknowledgment_label: "W / Whale"
+    uses: ["identity_lock.chain_4501", "expose.round_3"]
+
+  - id: 4514
+    name: "1919年的银行授权附页-Donnelly & Associates"
+    type: item
+    pickup: true
+    analysis: true
+    first_scene: 4042
+    uses: ["identity_lock.chain_4501", "identity_lock.chain_4502", "expose.round_1"]
+    boundary: "实际控制，不等于法律所有权"
+
+  - id: 4515
+    name: "Mickey功业簿"
+    type: item
+    pickup: true
+    analysis: true
+    first_scene: 4042
+    uses: ["identity_lock.chain_4502", "expose.round_3", "linear_value_dialogue"]
+
+  - id: 4516
+    name: "Miller保险外卷与内封套"
+    type: container
+    pickup: true
+    first_scene: 4042
+    loop5_use: "外卷可见；内封套不拆；不参加身份锁或 Expose"
+    ending_use: "ending_sequence.ending_4044"
+
+  # ── 独立身份锁派生结论 ──
+  - id: 4705
+    name: "1919-A与Donnelly法律资金接口及1925接管连续性"
+    type: derived_conclusion
+    generated_by: "identity_lock.chain_4501"
+    boundary: "实际控制与身份演变，不证明账户法律所有权"
+
+  - id: 4706
+    name: "Morrison页结论"
+    type: derived_conclusion
+    generated_by: "identity_lock.chain_4502"
+    boundary: "参与者视角；枪杀与上层另线清场严格分开"
+
+  - id: 4707
+    name: "书写者一致性"
+    type: derived_conclusion
+    generated_by: "identity_lock.chain_4502"
+    boundary: "功业簿由 Mickey 长期书写；不自动证明每条记录法律效力"
+
+  - id: 4708
+    name: "Mickey是Donnelly来电后的近期访客"
+    type: derived_conclusion
+    generated_by: "identity_lock.chain_4503"
+    boundary: "交叉证明到访，不单独证明开枪或 Whale 身份"
+
+  # ── 非 Loop 终幕材料 ──
+  - id: 4517
+    name: "Tidewater地基材料替换单"
+    type: item
+    pickup: true
+    first_scene: 4044
+    source_container: 4516
+    visibility: "Zack 独自拆内封后可见"
+    boundary: "证明承重材料在事故前被主动降级"
+
+  - id: 4518
+    name: "Sean O'Malley特殊处置页"
+    type: item
+    pickup: true
+    first_scene: 4044
+    source_container: 4516
+    visibility: "仅 Zack 看见并扣下；Emma 与 Watts 在 U4 不知情"
+    boundary: |
+      将 Sean 的死亡从普通工伤推进为高度明确的谋杀疑云；
+      不揭谁亲手执行、如何弃尸或如何伪造事故。
+
+  - id: 4519
+    name: "后插入的水源维护页"
+    type: item
+    pickup: true
+    first_scene: 4044
+    source_container: 4516
+    flow: "Zack 先扣下；4045 发现街区症状后交给 Watts"
+    boundary: |
+      文件表面安排在四天后，只能证明水源层面出现危险追加动作；
+      不能让 Zack 准确预知行动会提前到当夜。
+
+# ─────────────────────────────
+# 七、非 Loop 终幕（🎭 ending_sequence）
+# ─────────────────────────────
+#
+# 本区块属于 Unit4 结尾，不登记为 Loop6。
+# 硬边界：4045 只到 O'Hara 家门外，不进入、不确认屋内结果。
+
+ending_sequence:
+  structure: "non_loop_finale"
+  counted_as_loop: false
+  begins_after: "4042 fall_sequence 留出呼吸"
+
+  scenes:
+    - id: ending_4043
+      scene_id: 4043
+      type: story_transition
+      scene_name: "离开四十二层 / 法院档案车"
+      location: "四十二层楼梯与楼层中间停车区"
+      time: "Mickey 坠落后"
+      characters: [Zack, Emma, Watts]
+      description: |
+        Zack 与 Emma 带着从 Mickey 办公室取得的全部文件走楼梯离开。
+        Watts 驾驶法院档案车，在楼层中间的停车区接应两人并将他们带离大楼。
+        4516 仍整袋封存，内封套不在车上拆开。
+      story_beats:
+        - "Emma 说明：Zack 长时间未回电话，她自主改变决定赶往四十二层"
+        - "Emma 抵达楼下时发现 Miller 车辆与人员突然增加，因此改走楼梯"
+        - "Zack 告诉 Emma：Mickey 就是 Whale"
+        - "Zack 告诉 Emma：自己取得了 Tidewater 秘密档案"
+        - "Zack 告诉 Emma：Mickey 主动松手，自己没能救回他"
+        - "Emma 先确认 Zack 是否受伤，不追问价值对话输赢"
+      prohibited_reveals:
+        - "不拆 4516 内封套"
+        - "不出现 4517、4518、4519 内容"
+
+      npcs:
+        L5_ending4043_emma:
+          npc_id: 402
+          name: "Emma O'Malley"
+          talk: L5_ending4043_emma
+          is_liar: false
+          motive: "先把 Zack 与档案带离 Miller 人员正在涌入的大楼"
+          mindset: "行动优先；救回 Zack 后仍保留 L4 裂缝，但不在此刻清算关系"
+          known_information:
+            - "Zack 去四十二层找 Mickey 后长时间未回电话"
+            - "楼下突然出现更多 Miller 车辆与人员"
+            - "Mickey 是 Whale（由 Zack 在车上告知）"
+            - "Mickey 主动松手坠落"
+            - "档案仍未拆封"
+          withheld_information:
+            - "无；她尚不知道 4518、4519 存在，更不知道 Zack 稍后会扣页"
+          player_inquiry:
+            - "Emma 为什么改变决定赶到四十二层"
+            - "楼下 Miller 人员何时增加"
+          testimony_ids: []
+
+        L5_ending4043_watts:
+          npc_id: 404
+          name: "Watts"
+          talk: L5_ending4043_watts
+          is_liar: false
+          motive: "使用法院档案车接应并转移人员与文件"
+          mindset: "书记员式务实；只处理路线、档案安全与联络，不冒充警察或法官"
+          known_information:
+            - "约定的接应位置与安全地点"
+            - "Miller 人员正在进入大楼"
+            - "档案需要保持整袋封存至安全地点"
+          withheld_information:
+            - "无；尚未读取内封，也不知道 Sean 页与水源页"
+          player_inquiry:
+            - "安全地点路线"
+            - "档案是否保持封存"
+          testimony_ids: []
+
+    - id: ending_4044
+      scene_id: 4044
+      type: story_investigation
+      scene_name: "凌晨四点二十分 · 安全地点拆阅档案"
+      location: "安全地点"
+      time: "04:20"
+      characters: [Zack, Emma, Watts]
+      description: |
+        三人共同检查 4516 的外卷。Zack 把外卷内容交给 Emma 与 Watts，
+        自己留在主档案桌前整理，并发现底部暗部封夹。
+        他剪断防拆线，独自拆开内封套，取得 4517、4518、4519。
+      inner_envelope_visible_to_zack:
+        directory:
+          - "Miller 项目委员会控制 Tidewater、Lakeshore Trust Co.、Donnelly & Associates 的投资方向、期限与可接受损耗"
+          - "1912 / 特殊处置与事故材料"
+          - "1928 / 后插入执行附件"
+          - "Miller 事故基金压印与 L2 病房、Emma 奖学金、Foster 研究资助同属一个体系"
+          - "W / Whale 接管签批来自 Tidewater 上层项目办公室，抄送 Miller 项目委员会"
+        acquired_evidence: [4517, 4518, 4519]
+      zack_second_concealment:
+        action:
+          - "Zack 独自看见 4518 与 4519"
+          - "Zack 把 4518、4519 扣下，不交给 Emma 与 Watts"
+          - "Zack 只从外卷抽出 O'Hara 位于第一批优先处理名单的部分"
+        stated_information: "O'Hara 仍可能遭遇暴力清退"
+        motive: |
+          Zack 想到 Webb、Harrison、Harold 与 Mickey 都在接近真相后死亡，
+          又担心与 Miller 关系过深的 Emma 成为下一个目标。
+        error_boundary: |
+          Zack 的错误不是准确预知当夜投毒却故意不救，而是没有邀请 Emma
+          与 Watts 一起判断水源页。他剥夺了 Watts 提前联系公共卫生值班人员、
+          共同核查标记水点的机会。
+        knowledge_boundary:
+          - "Emma 在 U4 结束前不知道 Zack 扣过 4518、4519"
+          - "Watts 在 4045 前不知道 4519"
+          - "4519 表面日期在四天后，不能让 Zack预知行动当夜提前"
+      decision:
+        action: "三人立刻前往 O'Hara 所在街区，劝她暂时离开"
+        rationale: "先处理外卷已明确的优先清退风险，房屋争议之后再处理"
+
+      npcs:
+        L5_ending4044_emma:
+          npc_id: 402
+          name: "Emma O'Malley"
+          talk: L5_ending4044_emma
+          is_liar: false
+          motive: "整理外卷，确认南区清退风险并参与紧急行动"
+          mindset: "疲惫但保持记者式分类与交叉核对；不知道 Zack 独自拆出的两页"
+          known_information:
+            - "Mickey 是 Whale"
+            - "O'Hara 在第一批优先处理名单"
+            - "需要立刻赶往南区"
+          withheld_information:
+            - "无；她不知道 4518、4519 的存在"
+          player_inquiry:
+            - "外卷中 O'Hara 的风险标记"
+          testimony_ids: []
+
+        L5_ending4044_watts:
+          npc_id: 404
+          name: "Watts"
+          talk: L5_ending4044_watts
+          is_liar: false
+          motive: "按书记员能力整理外卷、联络可用公共系统并提供交通"
+          mindset: "以登记、联络和送达权限行事，不越权充当法官或警察"
+          known_information:
+            - "O'Hara 是第一批优先处理户"
+            - "外卷显示 Miller 项目委员会在多个机构之上"
+            - "需要立刻赶往南区"
+          withheld_information:
+            - "无；此时不知道 4518、4519"
+          player_inquiry:
+            - "可用的夜间公共联络渠道"
+          testimony_ids: []
+
+    - id: ending_4045
+      scene_id: 4045
+      type: story_crisis_boundary
+      scene_name: "南区街道 / O'Hara 家门外"
+      location: "O'Hara 所在街区"
+      time: "清晨"
+      characters: [Zack, Emma, Watts, 街区居民]
+      description: |
+        车辆抵达 O'Hara 家附近。Emma 先看见街上已有多人呕吐、眩晕。
+        Zack 意识到 4519 所写的水源行动没有等到表面日期的四天后。
+        他立即交出 4519。Watts 联系公共卫生值班系统，要求封闭文件标记的
+        私人井与两个公共水点，并组织街区救援。
+        Zack 与 Emma 奔向 O'Hara 家，在门外截止。
+      actions:
+        - actor: "Emma"
+          action: "发现街区多人出现呕吐、眩晕等异常症状"
+        - actor: "Zack"
+          action: "交出 4519 后插入的水源维护页"
+        - actor: "Watts"
+          action: "联系公共卫生值班系统，封闭标记水点并组织救援"
+        - actor: "Zack 与 Emma"
+          action: "奔向 O'Hara 家"
+      final_frame: "Zack 与 Emma 到达 O'Hara 家门外，尚未进入房屋"
+      hard_stop: true
+      prohibited_content:
+        - "进入 O'Hara 家"
+        - "确认 O'Hara 是否中毒、死亡、送医或获救"
+        - "医院走廊质问"
+        - "Emma 得知 Zack 扣过 4518、4519"
+        - "向 Emma 完整揭露 Sean 真相"
+        - "Emma 与 Zack 的关系结算"
+        - "Emma 前往 Miller 庄园"
+        - "任何 U5 指证、救援或嫁祸内容"
+
+      npcs:
+        L5_ending4045_emma:
+          npc_id: 402
+          name: "Emma O'Malley"
+          talk: L5_ending4045_emma
+          is_liar: false
+          motive: "先确认街区异常并与 Zack 赶到 O'Hara 门外"
+          mindset: "迅速从观察者转为行动者；尚未获得足够信息质问 Zack"
+          known_information:
+            - "街区已经出现多人呕吐、眩晕"
+            - "Zack 此刻拿出一页水源维护文件"
+            - "Watts 正联系公共卫生系统"
+          withheld_information:
+            - "无；她尚不知道 Zack 何时看见并扣下这页，也不知道 Sean 页"
+          player_inquiry:
+            - "街区症状出现在哪些水点附近"
+          testimony_ids: []
+
+        L5_ending4045_watts:
+          npc_id: 404
+          name: "Watts"
+          talk: L5_ending4045_watts
+          is_liar: false
+          motive: "把 4519 转化为公共卫生封闭与救援联络"
+          mindset: "依赖书记员熟悉的登记和联络网络行动，不穿警服、不发布警务命令"
+          known_information:
+            - "4519 标记 O'Hara 私人井与两个公共水点"
+            - "文件表面日期在四天后，但街区症状说明行动已经提前"
+            - "公共卫生值班系统可立即封闭水点并组织救援"
+          withheld_information:
+            - "无；不知道 Sean 页，也不知道 O'Hara 屋内结果"
+          player_inquiry:
+            - "哪些水点必须立即封闭"
+            - "公共卫生人员预计从何处进入街区"
+          testimony_ids: []
+
+        L5_ending4045_residents:
+          npc_id: null
+          name: "街区居民"
+          talk: L5_ending4045_residents
+          is_liar: false
+          motive: "在突发不适中求助并提醒其他住户停用水源"
+          mindset: "惊慌、身体不适；只能提供眼前症状与取水位置，不知道幕后责任"
+          known_information:
+            - "街上已有多人呕吐、眩晕"
+            - "异常与清晨取水后的时间接近"
+          withheld_information:
+            - "无；不知道执行者、毒物种类、Miller 命令链或 O'Hara 屋内情况"
+          player_inquiry:
+            - "症状何时开始"
+            - "居民最近使用了哪个水点"
+          testimony_ids: []
+
+  final_player_knowledge:
+    - "内封套证明 Miller 项目委员会位于多个机构接口之上"
+    - "4517 证明 1912 事故前承重材料被主动降级"
+    - "4518 只把 Sean 死亡推进为高度明确的谋杀疑云；完整执行链留给 U5"
+    - "4519 表面日期在四天后，但水源行动已经提前"
+    - "Zack 曾扣下 4518、4519；街区症状出现后才交出 4519"
+    - "Emma 与 Watts 在 U4 结束时仍不知道 Zack 曾扣页"
+    - "公共卫生救援已经启动"
+    - "Zack 与 Emma 已到 O'Hara 家门外；屋内结果未知"
+
+  unit4_to_unit5_boundary:
+    unit4_last_action: "Zack 与 Emma 奔到 O'Hara 家门外"
+    unit5_first_allowed_action: "进入 O'Hara 家并开始屋内救援"
+    locked_unknowns_at_unit4_end:
+      - "O'Hara 的最终状态"
+      - "Sean 被谁亲手执行、如何弃尸、如何伪造事故"
+      - "Emma 对 Zack 扣页的质问"
+      - "Emma 与 Zack 的关系破裂或修复"
+      - "Emma 是否前往 Miller 庄园"
