@@ -145,7 +145,8 @@ opening:
 scenes:
   - id: 4031
     name: "Zack 侦探事务所"
-    type: opening_cutscene
+    type: cutscene
+    design_tags: [opening]
     description: "完成 Mickey 反咬、Emma 后置质问与 Doris 送达清退通知三拍，随后立即前往 O'Hara 家。"
     evidence:
       - id: 4411
@@ -157,7 +158,8 @@ scenes:
 
   - id: 4032
     name: "O'Hara 家门口"
-    type: reality_crisis
+    type: free_exploration
+    design_tags: [crisis, action_result]
     description: |
       Lakeshore 找来的警员已经与 O'Hara 对峙。折叠搬家纸箱仍未使用。
       Zack 不把 O'Hara 写成等待营救的人；她明确拒售，并允许 Zack 借电话联系 Watts。
@@ -186,7 +188,8 @@ scenes:
 
   - id: 4033
     name: "O'Hara 家"
-    type: free_exploration_and_action_result
+    type: free_exploration
+    design_tags: [action_result]
     description: |
       桌上压着未签的收购协议与 Margaret 的短便条；厨房手压泵连接私人井，
       带锁检修盖位于院墙外的后巷。本轮只记录住宅结构，不得推出污染结论。
@@ -217,7 +220,8 @@ scenes:
 
   - id: 4034
     name: "Margaret 家"
-    type: free_exploration_and_expose
+    type: free_exploration
+    design_tags: [expose_location]
     description: |
       Patrick 遗物不是一桌主题展览。Margaret 先收拾、再阻止 Zack 触碰，
       最后在指证推进中主动交出遗物匣。照片、旧信封、外套粉笔牌与未寄短笺
@@ -404,10 +408,30 @@ evidence_registry:
   - {id: 4414, name: "临时停止执行回执", type: item, pickup: true, first_scene: 4033, note: "真实保护结果；R2 陷阱"}
   - {id: 4415, name: "1903南区码头旧照片", type: item, pickup: true, first_scene: 4034, note: "触发 4704"}
   - {id: 4704, name: "右下牙长期缺损", type: derived_memory, pickup: false, first_scene: 4034, note: "只作访客比较方向"}
-  - {id: 4416, name: "Patrick葬礼册与1919旧信封", type: item, pickup: true, first_scene: 4034, note: "L5 法律壳链复用"}
+  - id: 4416
+    name: "Patrick葬礼册与1919旧信封"
+    type: item
+    pickup: true
+    first_scene: 4034
+    note: "L5 法律壳链复用"
+    persistence:
+      scope: chapter
+      reset_policy: retain_across_loops
+      required_by:
+        - identity_lock.chain_4501
   - {id: 4709, name: "1919同时出现的两项可观察事实", type: derived_memory, pickup: false, first_scene: 4034, note: "不证明账户控制"}
   - {id: 4417, name: "Patrick外套口袋里的粉笔转运牌", type: clue, pickup: true, first_scene: 4034, note: "Margaret R3 单件强证据例外"}
-  - {id: 4418, name: "Patrick遗物匣", type: key_item, pickup: true, first_scene: 4034, note: "L5 密码；R3 陷阱，不参与本轮指证"}
+  - id: 4418
+    name: "Patrick遗物匣"
+    type: key_item
+    pickup: true
+    first_scene: 4034
+    note: "L5 密码；R3 陷阱，不参与本轮指证"
+    persistence:
+      scope: chapter
+      reset_policy: retain_across_loops
+      required_by:
+        - interaction_letter_safe
   - {id: 4419, name: "Margaret写给Mickey但未寄出的短笺", type: item, pickup: true, first_scene: 4034, note: "动机材料"}
 
 testimony_registry:

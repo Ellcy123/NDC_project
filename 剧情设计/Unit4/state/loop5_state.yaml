@@ -33,7 +33,7 @@
 #   D. 目标对齐    PASS — 玩家在 Mickey 承认前亲手证明 Mickey = Whale
 #   E. 信息节奏    PASS — 身份承认前只出现 W / Whale；不揭 Sean 完整执行链、
 #                           小 Charles 越权、U5 嫁祸或 O'Hara 屋内结果
-#   F. 特殊结构    PASS — identity_lock.status=provisional；三链全完成才解锁
+#   F. 特殊结构    PASS — identity_lock 采用 B 版交互合同；三链全完成才解锁
 #                           Expose；ending_sequence 不计为新 Loop
 #   G. Expose 逻辑 PASS — R1 实际控制、R2 到访、R3 身份三种不同维度；
 #                           全部材料均可反查 identity_lock 链
@@ -187,7 +187,8 @@ opening:
 scenes:
   - id: 4041
     name: "四十二层前厅 / 夜班入口"
-    type: transition
+    type: cutscene
+    design_tags: [transition]
     description: |
       公共前厅仍亮着灯，登记簿、电话线和夜间客户座椅维持正常营业感。
       夜班门房明确指引熟客 Zack 去未锁办公室等候。该场景只提供 Zack 合理
@@ -212,7 +213,8 @@ scenes:
 
   - id: 4042
     name: "Mickey 私人办公室"
-    type: free_exploration_identity_lock_expose_story
+    type: free_exploration
+    design_tags: [identity_lock, expose_location, story_climax]
     description: |
       四十二层唯一缺少社区感的高处空间。书桌、刻有 M.F.D. 的私人烟灰缸、
       市政厅专线和字母锁保险柜都井然有序。Mickey 返回前，Zack 可以检查书桌，
@@ -416,14 +418,24 @@ scenes:
 
 special_mechanics:
   identity_lock:
-    status: provisional
+    status: approved_provisional_ui
     replaces_standard_doubts: true
-    design_contract: "方案 B；输入、输出、证明边界与剧情结论锁定，交互表现仍可讨论"
-    open_questions:
-      - ui_layout
-      - submission_method
-      - failure_feedback
-      - chain_open_order
+    design_contract: "暂采用方案 B；玩法规则与门控已锁定，视觉布局和动效仍有讨论空间"
+    interaction_contract:
+      lanes: parallel
+      slots: fixed_per_chain
+      chain_open_order: simultaneous
+      submission: player_confirm
+      wrong_submission:
+        consumes_evidence: false
+        resets_completed_chains: false
+        first_feedback: logic_dimension_only
+        repeated_feedback: missing_dimension_only
+        reveal_correct_id: false
+    gate_contract:
+      standard_doubt_progress_required: false
+      completion_condition: all_chains_completed
+      unlocks: expose
 
     entry_condition:
       - "已取得 4513、4514、4515"
@@ -907,11 +919,17 @@ ending_sequence:
   structure: "non_loop_finale"
   counted_as_loop: false
   begins_after: "4042 fall_sequence 留出呼吸"
+  runtime_contract:
+    counts_as_loop: false
+    inherit_loop: 5
+    chapter_end_after: ending_4045
+    next_unit_entry: enter_ohara_house
 
   scenes:
     - id: ending_4043
       scene_id: 4043
-      type: story_transition
+      type: cutscene
+      design_tags: [transition, aftermath]
       scene_name: "离开四十二层 / 法院档案车"
       location: "四十二层楼梯与楼层中间停车区"
       time: "Mickey 坠落后"
@@ -972,7 +990,8 @@ ending_sequence:
 
     - id: ending_4044
       scene_id: 4044
-      type: story_investigation
+      type: cutscene
+      design_tags: [analysis]
       scene_name: "凌晨四点二十分 · 安全地点拆阅档案"
       location: "安全地点"
       time: "04:20"
@@ -1047,7 +1066,8 @@ ending_sequence:
 
     - id: ending_4045
       scene_id: 4045
-      type: story_crisis_boundary
+      type: cutscene
+      design_tags: [crisis, story_climax]
       scene_name: "南区街道 / O'Hara 家门外"
       location: "O'Hara 所在街区"
       time: "清晨"

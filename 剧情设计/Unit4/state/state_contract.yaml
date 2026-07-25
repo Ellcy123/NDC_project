@@ -1,0 +1,104 @@
+version: 1
+unit: Unit4
+manifest:
+  expected_loops: 5
+  structure: 5_loops_plus_non_loop_finale
+
+scene_types:
+  - cutscene
+  - free_exploration
+
+design_tags:
+  - opening
+  - transition
+  - analysis
+  - crisis
+  - aftermath
+  - action_result
+  - expose_location
+  - locked
+  - identity_lock
+  - story_climax
+
+field_policy:
+  meta: design_only
+  player_context: design_only
+  opening: structural
+  scenes: runtime_source
+  expose: runtime_source
+  doubts: runtime_source
+  doubt_progress: design_only
+  cross_loop_evidence: design_only
+  evidence_registry: runtime_source
+  testimony_registry: runtime_source
+  non_progress_investigation_records: design_only
+  special_mechanics: special_adapter
+  ending_sequence: special_adapter
+
+persistent_inputs:
+  - id: 4112
+    source_loop: 1
+    registry: evidence_registry
+    required_by:
+      - identity_lock.chain_4501
+  - id: 4153001
+    source_loop: 3
+    registry: testimony_registry
+    required_by:
+      - identity_lock.chain_4503
+  - id: 4315
+    source_loop: 3
+    registry: evidence_registry
+    required_by:
+      - identity_lock.chain_4503
+  - id: 4416
+    source_loop: 4
+    registry: evidence_registry
+    required_by:
+      - identity_lock.chain_4501
+  - id: 4418
+    source_loop: 4
+    registry: evidence_registry
+    required_by:
+      - interaction_letter_safe
+
+identity_lock:
+  loop: 5
+  status: approved_provisional_ui
+  chain_ids: [4501, 4502, 4503]
+  lanes: parallel
+  slots: fixed_per_chain
+  chain_open_order: simultaneous
+  submission: player_confirm
+  completion_condition: all_chains_completed
+  unlocks: expose
+  standard_doubt_progress_required: false
+  mickey_returns_condition: "special_mechanics.identity_lock.completion_condition 达成"
+  expose_unlock_condition: "special_mechanics.identity_lock.completion_condition == all_chains_completed"
+  wrong_submission:
+    consumes_evidence: false
+    resets_completed_chains: false
+    first_feedback: logic_dimension_only
+    repeated_feedback: missing_dimension_only
+    reveal_correct_id: false
+
+non_progress_records:
+  loop: 3
+  ids:
+    - record_suicide_scene
+    - record_forged_note
+    - record_gas_timing
+    - record_pierce_schedule
+  presentation:
+    channel: investigation_log
+    blocking: false
+    auto_unlock: true
+    show_completion_toast: false
+
+ending_sequence:
+  owner_loop: 5
+  counts_as_loop: false
+  chapter_end_after: ending_4045
+  next_unit_entry: enter_ohara_house
+  unit5_first_allowed_action: "进入 O'Hara 家并开始屋内救援"
+  unit5_outline_first_action_prefix: "Zack 与 Emma 进入屋内"

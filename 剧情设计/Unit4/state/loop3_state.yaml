@@ -104,7 +104,8 @@ opening:
 scenes:
   - id: 4022
     name: "Harold Morrison 宅邸"
-    type: free_exploration_crisis
+    type: free_exploration
+    design_tags: [crisis]
     description: |
       Zack 与 Emma 于 23:30 左右抵达。Doris 已返家，Mickey 从前门方向出现，
       表现得像刚刚赶到。Harold 倒在书房，磨号手枪被放在右手；客厅留有两只酒杯
@@ -194,7 +195,8 @@ scenes:
 
   - id: 4023
     name: "宅邸门外 / 爆炸后回收区"
-    type: event_aftermath_and_expose
+    type: free_exploration
+    design_tags: [aftermath, expose_location]
     description: |
       玩家完成必需检查后，Emma 依据煤气味、铅封、接线、阀门和窗缝组织撤离。
       23:50 左右装置启动，宅邸爆炸。原始右手枪位未形成可供官方复核的现场照片。
@@ -228,7 +230,7 @@ scenes:
 
   - id: 4024
     name: "夜班电话交换台"
-    type: dialogue_investigation
+    type: free_exploration
     description: "人工接线台保留当夜线路时间、去向与接线员记下的口信；只证明电话事实，不确认接听人。"
     npcs:
       L3_scene4024_operator:
@@ -270,7 +272,8 @@ scenes:
 
   - id: 4026
     name: "车站 214 号寄存区"
-    type: locked_exploration
+    type: free_exploration
+    design_tags: [locked]
     unlock_item: 4317
     description: "使用黄铜钥匙打开 214 号柜；柜中只有 Harold 准备交给 Zack 的未寄出口供。"
     evidence:
@@ -360,18 +363,38 @@ non_progress_investigation_records:
     text: "右手枪位与 Harold 左手生活习惯冲突"
     inputs: [4311, 4063002]
     boundary: "支持伪装现场判断；不进入本轮疑点进度，也不能单独确定枪手"
+    presentation:
+      channel: investigation_log
+      blocking: false
+      auto_unlock: true
+      show_completion_toast: false
   - id: record_forged_note
     text: "遗书无法解释尚未发生的爆炸"
     inputs: [4312]
     boundary: "辅助否定统一自杀口径；不单独证明作者"
+    presentation:
+      channel: investigation_log
+      blocking: false
+      auto_unlock: true
+      show_completion_toast: false
   - id: record_gas_timing
     text: "煤气装置早于最后求助电话进入宅邸"
     inputs: [4316, 4063001, 4153001]
     boundary: "证明预装时序；不确认安装者或命令源"
+    presentation:
+      channel: investigation_log
+      blocking: false
+      auto_unlock: true
+      show_completion_toast: false
   - id: record_pierce_schedule
     text: "Pierce 在主要案发窗口被安排承担法院交接"
     inputs: [4318]
     boundary: "只提高其在法院的可能，不构成绝对不在场"
+    presentation:
+      channel: investigation_log
+      blocking: false
+      auto_unlock: true
+      show_completion_toast: false
 
 doubts:
   - id: 4301
@@ -402,7 +425,17 @@ evidence_registry:
   - {id: 4312, name: "伪造遗书", type: item, pickup: true, first_scene: 4022, note: "非进度型辅助判断"}
   - {id: 4313, name: "Pierce档案移交通知（档案袋装）", type: item, pickup: true, first_scene: 4022, note: "Expose R1 陷阱"}
   - {id: 4314, name: "两只酒杯", type: clue, pickup: true, first_scene: 4022, note: "Doris R2 主力"}
-  - {id: 4315, name: "古巴雪茄烟蒂", type: clue, pickup: true, first_scene: 4022, note: "Doris R2 主力；L5 访客链复用"}
+  - id: 4315
+    name: "古巴雪茄烟蒂"
+    type: clue
+    pickup: true
+    first_scene: 4022
+    note: "Doris R2 主力；L5 访客链复用"
+    persistence:
+      scope: chapter
+      reset_policy: retain_across_loops
+      required_by:
+        - identity_lock.chain_4503
   - {id: 4316, name: "伪造市政煤气铅封与异常时钟接线", type: clue, pickup: true, first_scene: 4022, note: "爆炸前后更新同一记录"}
   - {id: 4317, name: "214号黄铜寄存柜钥匙", type: key_item, pickup: true, first_scene: 4023, note: "解锁 4026；R3 陷阱"}
   - {id: 4318, name: "Harrison案证物转运调度材料", type: item, pickup: true, first_scene: 4025, note: "不得描述为 Pierce 绝对不在场"}
@@ -410,7 +443,16 @@ evidence_registry:
   - {id: 4320, name: "Morrison写给Zack的未寄出口供", type: item, pickup: true, first_scene: 4026, note: "Doris R3 主力"}
 
 testimony_registry:
-  - {id: 4153001, name: "Morrison最后通话记录", speaker: 415, first_scene: 4024, note: "R1 主力；L5 访客链复用，只确认线路去向与口信"}
+  - id: 4153001
+    name: "Morrison最后通话记录"
+    speaker: 415
+    first_scene: 4024
+    note: "R1 主力；L5 访客链复用，只确认线路去向与口信"
+    persistence:
+      scope: chapter
+      reset_policy: retain_across_loops
+      required_by:
+        - identity_lock.chain_4503
   - {id: 4063001, name: "Doris关于18:12假市政工入宅的证词", speaker: 406, first_scene: 4022, note: "煤气时序非进度记录"}
   - {id: 4063002, name: "Morrison惯用左手的生活证词", speaker: 406, first_scene: 4023, note: "指证后取得"}
   - {id: 4063003, name: "Harold当晚准备留家的说法", speaker: 406, first_scene: 4022, note: "Expose R1 lie source"}

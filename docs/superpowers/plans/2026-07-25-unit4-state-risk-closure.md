@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the five State YAML files as the narrative blueprints, add one machine-readable Unit4 contract, and validate both through a Ruby/Psych command with no external dependencies. Rich scene behavior moves from custom `type` strings to `design_tags`; unsupported structures are classified as design-only or special-adapter inputs instead of being silently treated as runtime tables.
 
-**Tech Stack:** YAML, Markdown, Ruby standard library (`Psych`, `JSON`, `OptionParser`, `Minitest`), Git.
+**Tech Stack:** YAML, Markdown, Ruby standard library (`Psych`, `JSON`, `Minitest`), Git.
 
 ## Global Constraints
 

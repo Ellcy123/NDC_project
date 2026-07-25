@@ -109,6 +109,7 @@ scenes:
   - id: 4001
     name: "法院门口 / 东翼"
     type: cutscene
+    design_tags: [opening, transition]
     description: |
       法院东翼被警员和书记处人员分层封锁。平日公开、喧闹的法院此时异常安静，
       门内不断有卷宗箱被推出。Pierce 以权限守门；Mickey 则利用律师身份和旧关系
@@ -117,6 +118,7 @@ scenes:
   - id: 4002
     name: "Harrison 外间办公室"
     type: free_exploration
+    design_tags: [expose_location]
     description: |
       Harrison 办公室外间仍保留法官日常工作的体面秩序，但公开日程、夜间登记、
       匿名入账存根与未完成辞职稿彼此抵牾。Watts 抱着钥匙链与旧卷宗箱，
@@ -187,6 +189,7 @@ scenes:
   - id: 4003
     name: "法院档案室"
     type: free_exploration
+    design_tags: [analysis]
     description: |
       调阅台账、资助卷宗和改判往来信分属不同柜架。档案管理员只确认登记、
       档号与移交程序，不替 Harrison 推断动机。原始调阅索引只显示档号和次数；
@@ -380,6 +383,11 @@ evidence_registry:
     pickup: true
     first_scene: 4002
     note: "R1 陷阱；跨至 L5 身份链"
+    persistence:
+      scope: chapter
+      reset_policy: retain_across_loops
+      required_by:
+        - identity_lock.chain_4501
 
   - id: 4113
     name: "未完成的辞职信草稿"

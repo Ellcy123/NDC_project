@@ -44,7 +44,7 @@ Unit4 `scenes[].type` 只允许：
 
 ### 3.2 设计标签
 
-复杂功能保留在 `design_tags`：
+复杂功能保留在 `design_tags`。以下十项是 Unit4 当前契约词表，不是示例枚举：
 
 - `opening`
 - `transition`
