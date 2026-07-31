@@ -198,7 +198,7 @@ AVG/对话配置工作及草稿/Loop{X}_对话草稿.md
 ```
 
 **可用 skill**：
-- `dialogue-id-reorder` — 对话 ID 连续化、拆长句、修分支/陷阱段。
+- `dialogue-id-reorder` — 对话 ID 连续化、拆长句、修分支与指证段。
 - `dialogue-md-to-json` — 三段式：LLM 跨表预检 → py dry-run → 用户确认后写入。
 
 **命令**：

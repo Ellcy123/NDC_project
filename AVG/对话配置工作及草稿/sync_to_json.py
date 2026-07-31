@@ -305,7 +305,7 @@ def _parse_tag_line(tag_str):
       `get` → 2001001
       `branches`
       `end`
-      `Lie` → 正确证据：2011002 / 陷阱证据：1202 或 1203
+      `Lie` → 正确证据：2011002
     返回 (tag_name, target_str, lie_info_dict)
     """
     tag_str = tag_str.strip()

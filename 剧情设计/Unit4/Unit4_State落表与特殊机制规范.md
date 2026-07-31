@@ -1,15 +1,16 @@
 # Unit4 State 落表与特殊机制规范
 
 > 日期：2026-07-25
-> 适用范围：`剧情设计/Unit4/state/loop1_state.yaml` 至 `loop5_state.yaml`
-> 机器契约：`剧情设计/Unit4/state/state_contract.yaml`
-> 自动校验：`ruby 剧情设计/Unit4/state/validate_state_contract.rb`
+> 当前审查范围：`剧情设计/Unit4/state_candidate_v3/loop1_state.yaml` 至 `loop5_state.yaml`
+> 候选机器契约：`剧情设计/Unit4/state_candidate_v3/state_contract.yaml`
+> 自动校验：`python 剧情设计/Unit4/state/validate_state_contract_v2.py`
+> 现行 `state/` 目录保留为替换前基线，候选通过审查前不覆盖。
 
 ## 1. 规范目的
 
 本文件只规定 Unit4 State 进入配置阶段时各类字段的去向，以及两个特殊结构的运行合同。它不直接修改 Unity 代码，也不直接写入配置表 JSON。
 
-Unit4 的剧情事实仍以现行大纲和五个 State 为准；本规范解决的是“哪些字段能直接落表、哪些只供策划阅读、哪些必须由特殊适配器承接”。
+Unit4 的剧情事实以 `canon_manifest.json` 登记的现行 v3 大纲为最高准则；候选 State 是对大纲的执行映射，不能反过来覆盖大纲。本规范解决的是“哪些字段能直接落表、哪些只供策划阅读、哪些必须由特殊适配器承接”。
 
 ## 2. 顶层字段去向
 
@@ -21,6 +22,8 @@ Unit4 的剧情事实仍以现行大纲和五个 State 为准；本规范解决�
 | `evidence_registry` | runtime_source | 作为物品与派生结论登记来源，并校验跨 Loop 继承 |
 | `testimony_registry` | runtime_source | 作为正式证词登记来源，并校验跨 Loop 继承 |
 | `opening` | structural | 用于开场结构与对白规划，不作为独立配置表整块写入 |
+| `outline_coverage` | design_only | 逐条记录大纲必拍与 State 主落点，禁止漏拍、重复落地和无来源新增 |
+| `narrative_continuity` | design_only | 记录场景包入口、消费信息、出口状态和下一个交接目标 |
 | `player_context` | design_only | 供对白、知识边界与连续性审查，不直接落表 |
 | `meta` | design_only | 供 Unit/Loop 识别和自检，不直接落表 |
 | `doubt_progress` | design_only | 供策划核对普通疑点数量，不直接替代正式疑点条件 |
@@ -30,6 +33,8 @@ Unit4 的剧情事实仍以现行大纲和五个 State 为准；本规范解决�
 | `ending_sequence` | special_adapter | 由非 Loop 终幕适配器读取，继承 Loop5，不生成 Loop6 |
 
 凡是五个 State 新增了未在 `state_contract.yaml.field_policy` 登记的顶层字段，自动校验必须失败。先补充去向裁决，再允许新增字段。
+
+Expose 中的 `lie_source` 是 NPC 在指证过程中主动生成的动态谎言锚点，不是玩家预先收集的证词，因此不挂入疑点 `condition`。硬约束检查的是每轮 `usable_evidence`：所有可用于击穿谎言的道具或证词，必须已由本 Loop 的疑点或 L5 身份链装载。这样既避免把 R2/R3 动态退守提前发给玩家，也不放行游离指证证据。
 
 ## 3. 场景类型与表现标签
 

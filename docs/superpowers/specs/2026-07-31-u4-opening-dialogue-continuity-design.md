@@ -2,7 +2,7 @@
 
 > 日期：2026-07-31  
 > 范围：`unit-state-generator`、`team-dialogue`、AVG 对话命名规则、Unit4 State 合同与校验  
-> 状态：待用户审查
+> 状态：用户已确认，Skill 修改已执行
 
 ## 一、问题与目标
 
@@ -55,7 +55,7 @@ opening:
         - "线路被人为切断，Zack 与 Emma 立即出发"
       transition_to: mansion_arrival
     - event_id: mansion_arrival
-      talk: L3_opening_morrison_mansion_arrival
+      talk: L3_opening_mansion_arrival
       scene_id: 4022
       location: "Morrison 宅邸门口"
       cast: [Zack, Emma, Mickey]
@@ -87,7 +87,7 @@ L1_opening_east_wing_entry
 L2_opening_thirteen_days
 L2_opening_hearing_window
 L3_opening_broken_call
-L3_opening_morrison_mansion_arrival
+L3_opening_mansion_arrival
 L4_opening_fracture
 L4_opening_eviction_notice
 L5_opening_forty_second_floor

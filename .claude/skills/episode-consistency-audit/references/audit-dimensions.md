@@ -78,7 +78,6 @@
 | `conv_conflict` | P0 | 跨 Loop 的 conv 编号冲突（如 L3 和 L4 都用了 904003xxx） |
 | `branch_start` | P1 | 分支路径未从 x01 起编（如从 x00 开始） |
 | `merge_range` | P1 | 汇合点未使用 4xx 段（如用了 019/020 或 030） |
-| `trap_return` | P1 | Expose 陷阱路径末尾缺少 `→ 回到` 指向正确 Lie/branches 节点 |
 | `branch_ref` | P0 | branches/Lie 节点中的跳转目标 ID 不存在 |
 | `char_over_35` | P1 | 台词行中文字符数（含中文标点）超过 35 |
 | `section_mismatch` | P1 | `## Talk:` / `## Expose:` 后的文件名与 ID 段前缀不匹配 |
@@ -104,7 +103,7 @@
 - 分支路径 ❶/❷/❸：`1xx`/`2xx`/`3xx`（从 x01 起）
 - 汇合点：`4xx`（从 401 起）
 - 双分支文件：第二组分支 `5xx`/`6xx`，第二组汇合 `8xx`
-- Expose 陷阱：R1 陷阱 `1xx`/`2xx`/`3xx`，R2 陷阱 `4xx`
+- Expose：按主线顺序编号，正确证据击破后进入下一轮或合法结束
 
 **字数规则**：每句台词 ≤ 35 个中文字符（含中文标点；不含英文/数字/空格/[...]动作/<!-- -->注释/📋系统行）
 

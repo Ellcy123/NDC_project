@@ -101,13 +101,11 @@ section 头与对话 ID 无关，照旧书写。
 | `@round <N>` | 第 N 轮指证开始 |
 | `@lie anchor=<testimony_id>` | 本轮谎言锚；anchor 引用 Talk 中已可收集的证词 ID。其后发言块是谎言台词 |
 | `@evidence "<证据名>" -> <标签> #correct` | 能击穿本轮谎言的正确证据 |
-| `@evidence "<证据名>" -> <标签> #trap "<陷阱理由>"` | 陷阱证据，必须写明"看似相关但不构成反驳"的理由 |
 | `@label` / `@goto` | 同分支语法，用于退守对白与轮次衔接 |
 
 - 每轮至少一个 `#correct` 证据
 - 第 1 轮 `@lie anchor` 必须对应 Talk 中已收集的证词（Expose 第一谎言规则）
 - 后续轮谎言是嫌疑人被逼出的新谎言（止损式），由嫌疑人主动说出，不是 Zack 喂话
-- `#trap` 必须带理由（落实三大原则"陷阱有逻辑"）
 
 样例：
 
@@ -120,7 +118,6 @@ section 头与对话 ID 无关，照旧书写。
 > 死者……应该就是 Margaret 本人。
 @evidence "死者无婚戒"     -> r1_break #correct
 @evidence "首饰盒空置"     -> r1_break #correct
-@evidence "现场无金属残留" -> r1_break #trap "只证未焚烧，不证伪身份"
 
 @label r1_break
 **莫里森** [脸色变了]
@@ -159,7 +156,6 @@ section 头与对话 ID 无关，照旧书写。
 ### 警告（WARNING，不拦截）
 
 - `@opt` 缺 `# 信息维度` 注释
-- `@evidence #trap` 缺陷阱理由
 - 两次 `@get` 间隔 < 3 节点
 
 ## 7. 速查
@@ -169,7 +165,7 @@ section 头与对话 ID 无关，照旧书写。
 画面      <!-- 注释 -->（不成节点）
 分支      @branch 名 / @opt "文本" -> 标签 #维度 / @path 标签 / @goto 标签 / @label 标签
 提取      @get 证词|证据 ID "摘要" #keyInfoType
-指证      @round N / @lie anchor=ID / @evidence "名" -> 标签 #correct|#trap "理由"
+指证      @round N / @lie anchor=ID / @evidence "名" -> 标签 #correct
 不写      任何 9 位对话 ID（后置预处理器补）
 保留      ## §N. Scene / ## Talk: / ## Expose: section 头
 ```

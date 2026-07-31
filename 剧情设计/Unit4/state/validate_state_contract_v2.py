@@ -1,0 +1,1040 @@
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from collections import Counter
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+
+DEFAULT_STATE_DIR = Path("剧情设计/Unit4/state_candidate_v3")
+PERSON_TOKENS = {
+    "zack",
+    "emma",
+    "mickey",
+    "pierce",
+    "rosa",
+    "doris",
+    "margaret",
+    "watts",
+    "morrison",
+    "harold",
+    "whitfield",
+    "foster",
+    "ohara",
+}
+
+
+class UniqueKeyLoader(yaml.SafeLoader):
+    pass
+
+
+def construct_unique_mapping(loader: UniqueKeyLoader, node: yaml.MappingNode, deep: bool = False):
+    mapping: dict[Any, Any] = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in mapping:
+            raise yaml.constructor.ConstructorError(
+                "while constructing a mapping",
+                node.start_mark,
+                f"found duplicate key {key!r}",
+                key_node.start_mark,
+            )
+        mapping[key] = loader.construct_object(value_node, deep=deep)
+    return mapping
+
+
+UniqueKeyLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+    construct_unique_mapping,
+)
+
+
+def scalar_values(value: Any):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            yield key
+            yield from scalar_values(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from scalar_values(child)
+    elif value is not None:
+        yield value
+
+
+class Unit4StateV2Validator:
+    def __init__(self, root: str | Path, state_dir: str | Path = DEFAULT_STATE_DIR):
+        self.root = Path(root).resolve()
+        self.state_dir = self.root / Path(state_dir)
+        self.errors: list[str] = []
+        self.contract: dict = {}
+        self.states: dict[int, dict] = {}
+        self.manifest: dict = {}
+
+    def validate(self) -> list[str]:
+        self.errors = []
+        self._load()
+        if not self.contract or len(self.states) != 5 or not self.manifest:
+            return self.errors
+
+        self._validate_contract_and_manifest()
+        self._validate_deprecated_fields()
+        self._validate_field_policy()
+        self._validate_known_facts()
+        self._validate_scene_vocab()
+        self._validate_openings()
+        self._validate_outline_coverage()
+        self._validate_outline_npc_markers()
+        self._validate_inline_testimonies()
+        self._validate_outline_testimony_markers()
+        self._validate_dialogue_evidence_acquisition()
+        self._validate_continuity()
+        self._validate_identity_lock()
+        self._validate_persistence()
+        self._validate_non_progress_records()
+        self._validate_ending()
+        self._validate_evidence_types()
+        self._validate_expose_evidence_coverage()
+        self._validate_unit4_specific_content()
+        return self.errors
+
+    def _validate_deprecated_fields(self) -> None:
+        def walk(value: Any, path: str) -> None:
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    child_path = f"{path}.{key}" if path else str(key)
+                    if key == "trap_evidence":
+                        self.errors.append(
+                            f"deprecated State field is forbidden: {child_path}"
+                        )
+                    walk(child, child_path)
+            elif isinstance(value, list):
+                for index, child in enumerate(value):
+                    walk(child, f"{path}[{index}]")
+
+        for loop_number, state in self.states.items():
+            walk(state, f"loop{loop_number}")
+
+    def _load_yaml(self, path: Path) -> dict:
+        with path.open("r", encoding="utf-8") as stream:
+            return yaml.load(stream, Loader=UniqueKeyLoader)
+
+    def _load(self) -> None:
+        contract_path = self.state_dir / "state_contract.yaml"
+        if not contract_path.exists():
+            self.errors.append(f"missing state contract: {contract_path}")
+            return
+        try:
+            self.contract = self._load_yaml(contract_path)
+        except (yaml.YAMLError, OSError) as exc:
+            self.errors.append(f"invalid state contract YAML: {exc}")
+            return
+
+        for loop_number in range(1, 6):
+            path = self.state_dir / f"loop{loop_number}_state.yaml"
+            if not path.exists():
+                self.errors.append(f"missing loop state: {path}")
+                continue
+            try:
+                self.states[loop_number] = self._load_yaml(path)
+            except (yaml.YAMLError, OSError) as exc:
+                self.errors.append(f"invalid YAML in loop{loop_number}: {exc}")
+
+        manifest_path = self.root / "canon_manifest.json"
+        try:
+            self.manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            self.errors.append(f"invalid or missing canon_manifest.json: {exc}")
+
+        if (self.state_dir / "loop6_state.yaml").exists():
+            self.errors.append("loop6_state.yaml must not exist for Unit4")
+
+    def _unit4_manifest(self) -> dict | None:
+        return next(
+            (
+                chapter
+                for chapter in self.manifest.get("chapters", [])
+                if chapter.get("canonicalUnit") == "Unit4"
+            ),
+            None,
+        )
+
+    def _validate_contract_and_manifest(self) -> None:
+        if self.contract.get("version") != 2 or self.contract.get("unit") != "Unit4":
+            self.errors.append("contract must be Unit4 version 2")
+
+        chapter = self._unit4_manifest()
+        if not chapter:
+            self.errors.append("canon manifest has no Unit4 chapter")
+            return
+
+        canon = self.contract.get("canon_source", {})
+        expected = {
+            "planning_directory": chapter.get("planningDirectory"),
+            "active_outline": chapter.get("sources", {}).get("outline"),
+            "episode": chapter.get("unityEpisode"),
+            "id_space": "4xxx",
+            "expected_loops": chapter.get("maturity", {}).get("state", {}).get("expectedLoops"),
+            "structure": chapter.get("maturity", {}).get("structure"),
+        }
+        for key, value in expected.items():
+            if canon.get(key) != value:
+                self.errors.append(
+                    f"canon source mismatch for {key}: expected {value!r}, got {canon.get(key)!r}"
+                )
+
+        id_spaces = chapter.get("idSpaces", [])
+        if not any(
+            entry.get("range") == canon.get("id_space")
+            and entry.get("episode") == canon.get("episode")
+            and entry.get("status") == "current"
+            for entry in id_spaces
+        ):
+            self.errors.append("canon source ID space is not the active Unit4 namespace")
+
+        outline_path = self.root / str(canon.get("active_outline", ""))
+        if not outline_path.exists():
+            self.errors.append("active Unit4 outline is missing")
+
+        required_contracts = (
+            "opening_contract",
+            "outline_coverage_contract",
+            "narrative_continuity_contract",
+            "expose_evidence_contract",
+            "testimony_contract",
+        )
+        for key in required_contracts:
+            if not isinstance(self.contract.get(key), dict):
+                self.errors.append(f"missing {key}")
+
+    def _validate_field_policy(self) -> None:
+        policy = self.contract.get("field_policy", {})
+        required = {
+            "opening": "structural",
+            "outline_coverage": "design_only",
+            "narrative_continuity": "design_only",
+            "scenes": "runtime_source",
+            "expose": "runtime_source",
+        }
+        for key, category in required.items():
+            if policy.get(key) != category:
+                self.errors.append(f"field policy mismatch: {key} must be {category}")
+
+        allowed = {"runtime_source", "design_only", "special_adapter", "structural"}
+        invalid = set(policy.values()) - allowed
+        if invalid:
+            self.errors.append(f"field policy contains unsupported categories: {sorted(invalid)!r}")
+
+        for loop_number, state in self.states.items():
+            for key in state:
+                if key not in policy:
+                    self.errors.append(
+                        f"loop{loop_number} has unclassified top-level field: {key}"
+                    )
+
+    def _validate_known_facts(self) -> None:
+        inherited: list[Any] = []
+        for loop_number, state in self.states.items():
+            actual = list(state.get("player_context", {}).get("known_facts") or [])
+            if actual != inherited:
+                self.errors.append(
+                    f"loop{loop_number} known facts inheritance does not match prior post-expose knowledge"
+                )
+            inherited += list(
+                state.get("player_context", {}).get("post_expose_knowledge") or []
+            )
+
+    def _validate_scene_vocab(self) -> None:
+        allowed_types = set(self.contract.get("scene_types", []))
+        allowed_tags = set(self.contract.get("design_tags", []))
+        for loop_number, state in self.states.items():
+            groups = [("scene", state.get("scenes", []))]
+            if loop_number == 5:
+                groups.append(
+                    ("ending scene", state.get("ending_sequence", {}).get("scenes", []))
+                )
+            for label, scenes in groups:
+                for scene in scenes or []:
+                    if scene.get("type") not in allowed_types:
+                        self.errors.append(
+                            f"loop{loop_number} {label} {scene.get('id')} has unsupported scene type"
+                        )
+                    for tag in scene.get("design_tags", []) or []:
+                        if tag not in allowed_tags:
+                            self.errors.append(
+                                f"loop{loop_number} {label} {scene.get('id')} has unsupported design tag"
+                            )
+
+    def _validate_openings(self) -> None:
+        for loop_number, state in self.states.items():
+            opening = state.get("opening")
+            if not isinstance(opening, dict):
+                self.errors.append(f"loop{loop_number} opening is missing")
+                continue
+            if opening.get("type") != "cutscene_sequence":
+                self.errors.append(f"loop{loop_number} opening must be cutscene_sequence")
+
+            runtime_root = opening.get("runtime_root", {})
+            sequence = opening.get("sequence")
+            if not isinstance(sequence, list) or not sequence:
+                self.errors.append(f"loop{loop_number} opening sequence is empty")
+                continue
+
+            first = sequence[0]
+            if (
+                runtime_root.get("table") != "ChapterConfig"
+                or runtime_root.get("init_scene") != first.get("scene_id")
+                or runtime_root.get("init_talk") != first.get("talk")
+            ):
+                self.errors.append(f"loop{loop_number} opening runtime root does not match first event")
+
+            event_ids = [event.get("event_id") for event in sequence]
+            if None in event_ids or len(event_ids) != len(set(event_ids)):
+                self.errors.append(f"loop{loop_number} opening event IDs must be unique")
+
+            if opening.get("player_control_restored_after") != event_ids[-1]:
+                self.errors.append(
+                    f"loop{loop_number} player control must be restored after the last opening event"
+                )
+
+            scene_ids = {scene.get("id") for scene in state.get("scenes", [])}
+            opening_talks: set[str] = set()
+            for index, event in enumerate(sequence):
+                talk = str(event.get("talk", ""))
+                opening_talks.add(talk)
+                suffix = talk.lower().split("_opening_", 1)[-1]
+                suffix_tokens = set(suffix.replace("-", "_").split("_"))
+                if "_opening_" not in talk.lower() or suffix_tokens & PERSON_TOKENS:
+                    self.errors.append(
+                        f"loop{loop_number} person-named opening talk is forbidden: {talk}"
+                    )
+                if not event.get("source_anchor") or not event.get("required_beats"):
+                    self.errors.append(
+                        f"loop{loop_number} opening event {event.get('event_id')} lacks outline anchors"
+                    )
+                if event.get("scene_id") not in scene_ids:
+                    self.errors.append(
+                        f"loop{loop_number} opening scene {event.get('scene_id')} is missing from scenes"
+                    )
+
+                runtime_exit = event.get("runtime_exit", {})
+                if index < len(sequence) - 1:
+                    next_event = sequence[index + 1]
+                    if (
+                        runtime_exit.get("action") != "change_scene"
+                        or runtime_exit.get("target_scene_id") != next_event.get("scene_id")
+                        or runtime_exit.get("continuation") != "next_talk"
+                        or runtime_exit.get("next_talk") != next_event.get("talk")
+                    ):
+                        self.errors.append(
+                            f"loop{loop_number} cross-scene opening continuation is incomplete"
+                        )
+                elif runtime_exit.get("continuation") == "next_talk":
+                    self.errors.append(
+                        f"loop{loop_number} final opening event must release player control"
+                    )
+
+            for scene in state.get("scenes", []):
+                if scene.get("first_enter_talk") in opening_talks:
+                    self.errors.append(
+                        f"loop{loop_number} opening talk duplicated as scene first-enter talk"
+                    )
+                for npc in (scene.get("npcs") or {}).values():
+                    if npc.get("talk") in opening_talks or npc.get("loop_talk") in opening_talks:
+                        self.errors.append(
+                            f"loop{loop_number} opening talk duplicated as free NPC talk"
+                        )
+
+    def _validate_outline_coverage(self) -> None:
+        contract = self.contract.get("outline_coverage_contract", {})
+        allowed = set(contract.get("allowed_mappings", []))
+        approval_required = set(contract.get("require_approval_for", []))
+        beat_ids: list[str] = []
+        landings: list[str] = []
+
+        for loop_number, state in self.states.items():
+            rows = state.get("outline_coverage")
+            if not isinstance(rows, list) or not rows:
+                self.errors.append(f"loop{loop_number} outline coverage is missing")
+                continue
+            for row in rows:
+                beat_id = row.get("beat_id")
+                landing = row.get("primary_landing")
+                mapping = row.get("mapping")
+                source_anchor = str(row.get("source_anchor", "")).strip()
+                if not beat_id or not landing:
+                    self.errors.append(f"loop{loop_number} outline coverage row is incomplete")
+                beat_ids.append(beat_id)
+                if not (
+                    row.get("testimony_required") is True
+                    and mapping == "merged"
+                ):
+                    landings.append(landing)
+                if mapping not in allowed:
+                    self.errors.append(
+                        f"loop{loop_number} outline mapping is invalid: {mapping!r}"
+                    )
+                if not source_anchor or source_anchor.lower() in {"none", "n/a"}:
+                    self.errors.append(
+                        f"loop{loop_number} outline coverage has an unsourced addition"
+                    )
+                if mapping == "deferred" and not row.get("deferred_target"):
+                    self.errors.append(
+                        f"loop{loop_number} deferred outline beat lacks target"
+                    )
+                if mapping in approval_required and not row.get("approval_id"):
+                    self.errors.append(
+                        f"loop{loop_number} outline mapping {mapping!r} requires approval"
+                    )
+
+        if len(beat_ids) != len(set(beat_ids)):
+            self.errors.append("outline beat IDs must be globally unique")
+        if len(landings) != len(set(landings)):
+            self.errors.append("outline primary landings must be globally unique")
+
+    def _validate_outline_npc_markers(self) -> None:
+        outline_relative = self.contract.get("canon_source", {}).get("active_outline")
+        outline_path = self.root / str(outline_relative or "")
+        if not outline_path.exists():
+            return
+
+        expected: list[tuple[int, str]] = []
+        current_loop: int | None = None
+        for line in outline_path.read_text(encoding="utf-8").splitlines():
+            loop_match = re.match(r"^# Loop (\d+)", line)
+            if loop_match:
+                current_loop = int(loop_match.group(1))
+                continue
+            marker_match = re.search(r"👤 NPC[：:]\s*(.+?)\s*$", line)
+            if current_loop is not None and marker_match:
+                expected.append((current_loop, marker_match.group(1).strip()))
+
+        actual: list[tuple[int, str]] = []
+        marker_rows: list[tuple[int, dict]] = []
+        for loop_number, state in self.states.items():
+            for row in state.get("outline_coverage", []):
+                if row.get("dialogue_required") is True:
+                    actual.append((loop_number, str(row.get("npc_name", "")).strip()))
+                    marker_rows.append((loop_number, row))
+
+        if Counter(actual) != Counter(expected):
+            missing = list((Counter(expected) - Counter(actual)).elements())
+            extra = list((Counter(actual) - Counter(expected)).elements())
+            self.errors.append(
+                f"outline NPC marker coverage mismatch; missing={missing!r}, extra={extra!r}"
+            )
+
+        for loop_number, row in marker_rows:
+            state = self.states[loop_number]
+            scene = next(
+                (
+                    entry
+                    for entry in state.get("scenes", [])
+                    if entry.get("id") == row.get("scene_id")
+                ),
+                None,
+            )
+            npc = (scene or {}).get("npcs", {}).get(row.get("npc_key"))
+            if (
+                not npc
+                or not row.get("talk")
+                or npc.get("talk") != row.get("talk")
+            ):
+                self.errors.append(
+                    f"loop{loop_number} NPC marker Talk binding is missing or mismatched: {row.get('marker_id')}"
+                )
+
+    def _validate_inline_testimonies(self) -> None:
+        contract = self.contract.get("testimony_contract", {})
+        required_fields = tuple(contract.get("required_inline_fields", []))
+        forbidden_fields = tuple(contract.get("forbidden_inline_fields", []))
+        for loop_number, state in self.states.items():
+            if (
+                contract.get("centralized_registry_forbidden") is True
+                and "testimony_registry" in state
+            ):
+                self.errors.append(
+                    f"loop{loop_number} centralized testimony registry is forbidden"
+                )
+
+            inline_entries: list[dict] = []
+            expose_lie_ids: set[int] = set()
+
+            def collect_inline(value: Any) -> None:
+                if isinstance(value, dict):
+                    for key, child in value.items():
+                        if key == "testimony_ids":
+                            if not isinstance(child, list):
+                                self.errors.append(
+                                    f"loop{loop_number} testimony_ids must be a list"
+                                )
+                                continue
+                            for entry in child:
+                                if not isinstance(entry, dict):
+                                    self.errors.append(
+                                        f"loop{loop_number} testimony_ids must contain "
+                                        f"inline objects, not {entry!r}"
+                                    )
+                                    continue
+                                inline_entries.append(entry)
+                        elif key == "expose_lie_ids":
+                            if isinstance(child, list):
+                                expose_lie_ids.update(
+                                    testimony_id
+                                    for testimony_id in child
+                                    if isinstance(testimony_id, int)
+                                )
+                        else:
+                            collect_inline(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        collect_inline(child)
+
+            collect_inline(state)
+
+            inline_by_id: dict[int, dict] = {}
+            for entry in inline_entries:
+                testimony_id = entry.get("id")
+                if not isinstance(testimony_id, int):
+                    self.errors.append(
+                        f"loop{loop_number} inline testimony ID is invalid: "
+                        f"{testimony_id!r}"
+                    )
+                    continue
+                if testimony_id in inline_by_id:
+                    self.errors.append(
+                        f"loop{loop_number} duplicate inline testimony ID: "
+                        f"{testimony_id}"
+                    )
+                inline_by_id[testimony_id] = entry
+                missing_fields = [
+                    field for field in required_fields if field not in entry
+                ]
+                if missing_fields:
+                    self.errors.append(
+                        f"loop{loop_number} inline testimony fields missing for "
+                        f"{testimony_id}: {missing_fields!r}"
+                    )
+                present_forbidden = [
+                    field for field in forbidden_fields if field in entry
+                ]
+                if present_forbidden:
+                    self.errors.append(
+                        f"loop{loop_number} inline testimony fields are forbidden for "
+                        f"{testimony_id}: {present_forbidden!r}"
+                    )
+                if not str(entry.get("content", "")).strip():
+                    self.errors.append(
+                        f"loop{loop_number} inline testimony content is missing: "
+                        f"{testimony_id}"
+                    )
+                if (
+                    contract.get("collectible_requires_acquisition_talk") is True
+                    and not entry.get("acquisition_talk")
+                ):
+                    self.errors.append(
+                        f"loop{loop_number} inline testimony lacks acquisition Talk: "
+                        f"{testimony_id}"
+                    )
+                if entry.get("kind") == "expose_dynamic_lie":
+                    self.errors.append(
+                        f"loop{loop_number} dynamic Expose lie was pre-collected "
+                        f"inside testimony_ids: {testimony_id}"
+                    )
+
+            expose = state.get("expose", {})
+            rounds = expose.get("rounds")
+            if isinstance(rounds, list):
+                round_entries = rounds
+            else:
+                round_entries = [
+                    round_entry
+                    for key, round_entry in expose.items()
+                    if key.startswith("round_")
+                    and isinstance(round_entry, dict)
+                ]
+
+            for round_index, round_entry in enumerate(round_entries):
+                testimony_id = round_entry.get("lie_source")
+                if not isinstance(testimony_id, int):
+                    continue
+                if round_index == 0:
+                    testimony = inline_by_id.get(testimony_id)
+                    if not testimony:
+                        self.errors.append(
+                            f"loop{loop_number} round 1 lie_source has no inline "
+                            f"testimony: {testimony_id}"
+                        )
+                    elif testimony.get("kind") != "collectible_lie_anchor":
+                        self.errors.append(
+                            f"loop{loop_number} round 1 lie_source is not a "
+                            f"collectible lie anchor: {testimony_id}"
+                        )
+                else:
+                    if testimony_id in inline_by_id:
+                        self.errors.append(
+                            f"loop{loop_number} later Expose lie was pre-collected: "
+                            f"{testimony_id}"
+                        )
+                    if testimony_id not in expose_lie_ids:
+                        self.errors.append(
+                            f"loop{loop_number} later Expose lie_source is missing "
+                            f"from expose_lie_ids: {testimony_id}"
+                        )
+                    if not str(round_entry.get("lie", "")).strip():
+                        self.errors.append(
+                            f"loop{loop_number} later Expose lie has no inline "
+                            f"round text: {testimony_id}"
+                        )
+
+            later_lie_sources = {
+                round_entry.get("lie_source")
+                for round_entry in round_entries[1:]
+                if isinstance(round_entry.get("lie_source"), int)
+            }
+            for testimony_id in sorted(expose_lie_ids - later_lie_sources):
+                self.errors.append(
+                    f"loop{loop_number} expose_lie_ids contains an unbound "
+                    f"dynamic lie: {testimony_id}"
+                )
+
+    def _validate_outline_testimony_markers(self) -> None:
+        outline_relative = self.contract.get("canon_source", {}).get("active_outline")
+        outline_path = self.root / str(outline_relative or "")
+        if not outline_path.exists():
+            return
+
+        expected: list[tuple[int, str]] = []
+        current_loop: int | None = None
+        for line in outline_path.read_text(encoding="utf-8").splitlines():
+            loop_match = re.match(r"^# Loop (\d+)", line)
+            if loop_match:
+                current_loop = int(loop_match.group(1))
+                continue
+            marker_match = re.match(r"^\s*-\s*⚪\s*(.+?)\s*$", line)
+            if (
+                current_loop is not None
+                and marker_match
+                and not marker_match.group(1).startswith("证词：")
+            ):
+                expected.append((current_loop, marker_match.group(1)))
+
+        actual: list[tuple[int, str]] = []
+        marker_rows: list[tuple[int, dict]] = []
+        for loop_number, state in self.states.items():
+            for row in state.get("outline_coverage", []):
+                if row.get("testimony_required") is True:
+                    source_text = str(row.get("source_text", "")).strip()
+                    actual.append((loop_number, source_text))
+                    marker_rows.append((loop_number, row))
+
+        if Counter(actual) != Counter(expected):
+            missing = list((Counter(expected) - Counter(actual)).elements())
+            extra = list((Counter(actual) - Counter(expected)).elements())
+            self.errors.append(
+                "outline testimony marker coverage mismatch; "
+                f"missing={missing!r}, extra={extra!r}"
+            )
+
+        for loop_number, row in marker_rows:
+            inline_by_id: dict[int, dict] = {}
+
+            def collect_inline(value: Any) -> None:
+                if isinstance(value, dict):
+                    for key, child in value.items():
+                        if key == "testimony_ids" and isinstance(child, list):
+                            for entry in child:
+                                if (
+                                    isinstance(entry, dict)
+                                    and isinstance(entry.get("id"), int)
+                                ):
+                                    inline_by_id[entry["id"]] = entry
+                        else:
+                            collect_inline(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        collect_inline(child)
+
+            collect_inline(self.states[loop_number])
+            testimony = inline_by_id.get(row.get("testimony_id"))
+            if not testimony:
+                self.errors.append(
+                    f"loop{loop_number} outline testimony marker is not bound to "
+                    f"an inline testimony: {row.get('marker_id')}"
+                )
+                continue
+            if (
+                row.get("verbatim_required") is True
+                and str(testimony.get("content", "")).strip()
+                != str(row.get("source_text", "")).strip()
+            ):
+                self.errors.append(
+                    f"loop{loop_number} outline testimony content is not verbatim: "
+                    f"{row.get('marker_id')}"
+                )
+            if (
+                row.get("mapping") != "merged"
+                and str(testimony.get("source_anchor", "")).strip()
+                != str(row.get("source_anchor", "")).strip()
+            ):
+                self.errors.append(
+                    f"loop{loop_number} outline testimony source anchor is missing "
+                    f"or mismatched: {row.get('marker_id')}"
+                )
+
+    def _validate_dialogue_evidence_acquisition(self) -> None:
+        for loop_number, state in self.states.items():
+            registry = {
+                entry.get("id"): entry
+                for entry in state.get("evidence_registry", [])
+            }
+            for scene in state.get("scenes", []):
+                npcs = scene.get("npcs", {}) or {}
+                talk_to_npc = {
+                    npc.get("talk"): npc
+                    for npc in npcs.values()
+                    if npc.get("talk")
+                }
+                for evidence in scene.get("evidence", []) or []:
+                    acquisition = evidence.get("acquisition", {})
+                    if acquisition.get("kind") != "dialogue":
+                        continue
+                    talk = acquisition.get("talk")
+                    npc = talk_to_npc.get(talk)
+                    evidence_id = evidence.get("id")
+                    registry_acquisition = registry.get(evidence_id, {}).get(
+                        "acquisition"
+                    )
+                    if (
+                        not npc
+                        or evidence_id not in (npc.get("grants_evidence") or [])
+                        or registry_acquisition != acquisition
+                    ):
+                        self.errors.append(
+                            f"loop{loop_number} dialogue evidence acquisition is invalid: {evidence_id}"
+                        )
+
+    def _validate_continuity(self) -> None:
+        contract = self.contract.get("narrative_continuity_contract", {})
+        required_fields = set(contract.get("required_fields", []))
+        approved_external = set(contract.get("approved_external_handoffs", []))
+        units: list[tuple[int, dict]] = []
+        for loop_number, state in self.states.items():
+            entries = state.get("narrative_continuity")
+            if not isinstance(entries, list) or not entries:
+                self.errors.append(f"loop{loop_number} narrative continuity is missing")
+                continue
+            units.extend((loop_number, unit) for unit in entries)
+
+        ids = [unit.get("id") for _, unit in units]
+        if None in ids or len(ids) != len(set(ids)):
+            self.errors.append("narrative continuity IDs must be globally unique")
+        known_targets = set(ids) | approved_external
+
+        covered_by_loop: dict[int, set[str]] = {loop_number: set() for loop_number in self.states}
+        for loop_number, unit in units:
+            missing = sorted(field for field in required_fields if field not in unit)
+            if missing:
+                self.errors.append(
+                    f"loop{loop_number} continuity unit {unit.get('id')} lacks fields: {missing!r}"
+                )
+            handoff = unit.get("hands_off_to")
+            if handoff not in known_targets:
+                self.errors.append(
+                    f"loop{loop_number} dangling handoff from {unit.get('id')} to {handoff}"
+                )
+            covered_by_loop[loop_number].update(unit.get("covers", []) or [])
+
+        for loop_number, state in self.states.items():
+            required = {
+                f"opening.sequence.{event.get('event_id')}"
+                for event in state.get("opening", {}).get("sequence", [])
+            }
+            required.update({"expose", "expose.post_expose"})
+            if loop_number == 5:
+                required.update(
+                    f"ending_sequence.{scene.get('id')}"
+                    for scene in state.get("ending_sequence", {}).get("scenes", [])
+                )
+            missing = sorted(required - covered_by_loop[loop_number])
+            if missing:
+                self.errors.append(
+                    f"loop{loop_number} continuity coverage is missing: {missing!r}"
+                )
+
+    def _validate_identity_lock(self) -> None:
+        expected = self.contract.get("identity_lock", {})
+        state = self.states.get(expected.get("loop"), {})
+        identity = state.get("special_mechanics", {}).get("identity_lock")
+        if not identity:
+            self.errors.append("loop5 identity_lock is missing")
+            return
+        if identity.get("replaces_standard_doubts") is not True or "doubts" in state:
+            self.errors.append("loop5 identity_lock must replace ordinary doubts")
+        if identity.get("status") != expected.get("status"):
+            self.errors.append("identity_lock status mismatch")
+        chains = identity.get("chains", [])
+        if [chain.get("id") for chain in chains] != expected.get("chain_ids"):
+            self.errors.append("identity_lock chain IDs mismatch")
+        gate = identity.get("gate_contract", {})
+        if (
+            gate.get("completion_condition") != expected.get("completion_condition")
+            or gate.get("unlocks") != expected.get("unlocks")
+            or gate.get("standard_doubt_progress_required")
+            != expected.get("standard_doubt_progress_required")
+        ):
+            self.errors.append("identity_lock gate contract mismatch")
+        office = next(
+            (scene for scene in state.get("scenes", []) if scene.get("id") == 4042),
+            {},
+        )
+        returns = next(
+            (
+                trigger
+                for trigger in office.get("event_triggers", [])
+                if trigger.get("id") == "mickey_returns"
+            ),
+            {},
+        )
+        if returns.get("condition") != expected.get("mickey_returns_condition"):
+            self.errors.append("mickey_returns condition mismatch")
+        if state.get("expose", {}).get("unlock_condition") != expected.get(
+            "expose_unlock_condition"
+        ):
+            self.errors.append("loop5 expose unlock condition mismatch")
+
+    def _validate_persistence(self) -> None:
+        loop5 = self.states.get(5, {})
+        for rule in self.contract.get("persistent_inputs", []):
+            source = self.states.get(rule.get("source_loop"), {})
+            if rule.get("registry") == "inline_testimony":
+                inline_entries: list[dict] = []
+
+                def collect_inline(value: Any) -> None:
+                    if isinstance(value, dict):
+                        for key, child in value.items():
+                            if key == "testimony_ids" and isinstance(child, list):
+                                inline_entries.extend(
+                                    candidate
+                                    for candidate in child
+                                    if isinstance(candidate, dict)
+                                )
+                            else:
+                                collect_inline(child)
+                    elif isinstance(value, list):
+                        for child in value:
+                            collect_inline(child)
+
+                collect_inline(source)
+                entry = next(
+                    (
+                        candidate
+                        for candidate in inline_entries
+                        if candidate.get("id") == rule.get("id")
+                    ),
+                    None,
+                )
+            else:
+                entry = next(
+                    (
+                        candidate
+                        for candidate in source.get(rule.get("registry"), [])
+                        if candidate.get("id") == rule.get("id")
+                    ),
+                    None,
+                )
+            if not entry:
+                self.errors.append(f"persistence source missing: {rule.get('id')}")
+                continue
+            persistence = entry.get("persistence", {})
+            if (
+                persistence.get("scope") != "chapter"
+                or persistence.get("reset_policy") != "retain_across_loops"
+                or persistence.get("required_by") != rule.get("required_by")
+            ):
+                self.errors.append(f"persistence contract mismatch: {rule.get('id')}")
+
+            inherited = next(
+                (
+                    candidate
+                    for candidate in loop5.get("evidence_registry", [])
+                    if candidate.get("id") == rule.get("id")
+                ),
+                None,
+            )
+            if not inherited or inherited.get("inherited") is not True:
+                self.errors.append(f"loop5 inherited persistence missing: {rule.get('id')}")
+
+    def _validate_non_progress_records(self) -> None:
+        rule = self.contract.get("non_progress_records", {})
+        loop_number = rule.get("loop")
+        state = self.states.get(loop_number, {})
+        records = state.get("non_progress_investigation_records", [])
+        if [record.get("id") for record in records] != rule.get("ids"):
+            self.errors.append("non-progress record IDs mismatch")
+        for record in records:
+            if record.get("presentation") != rule.get("presentation"):
+                self.errors.append(
+                    f"non-progress record presentation mismatch: {record.get('id')}"
+                )
+        if "doubt_progress" in state:
+            self.errors.append("non-progress records must not enter ordinary doubt progress")
+        prohibited = list(scalar_values([state.get("doubts"), state.get("expose", {}).get("unlock_condition")]))
+        for record_id in rule.get("ids", []):
+            if record_id in prohibited:
+                self.errors.append(
+                    f"non-progress record enters ordinary progress: {record_id}"
+                )
+
+    def _validate_ending(self) -> None:
+        expected = self.contract.get("ending_sequence", {})
+        state = self.states.get(expected.get("owner_loop"), {})
+        ending = state.get("ending_sequence", {})
+        runtime = ending.get("runtime_contract", {})
+        checks = {
+            "counts_as_loop": expected.get("counts_as_loop"),
+            "inherit_loop": expected.get("owner_loop"),
+            "chapter_end_after": expected.get("chapter_end_after"),
+            "next_unit_entry": expected.get("next_unit_entry"),
+        }
+        for key, value in checks.items():
+            if runtime.get(key) != value:
+                self.errors.append(f"ending runtime contract mismatch: {key}")
+
+        scenes = ending.get("scenes", [])
+        if [scene.get("id") for scene in scenes] != [
+            "ending_4043",
+            "ending_4044",
+            "ending_4045",
+        ]:
+            self.errors.append("ending sequence scene order mismatch")
+        if len(scenes) == 3:
+            if scenes[0].get("runtime_exit", {}).get("next_talk") != scenes[1].get("talk"):
+                self.errors.append("ending_4043 handoff mismatch")
+            if scenes[1].get("runtime_exit", {}).get("next_talk") != scenes[2].get("talk"):
+                self.errors.append("ending_4044 handoff mismatch")
+            final = scenes[2]
+            if (
+                final.get("hard_stop") is not True
+                or "门外" not in str(final.get("final_frame", ""))
+                or final.get("runtime_exit", {}).get("next_unit_entry")
+                != expected.get("next_unit_entry")
+            ):
+                self.errors.append("ending_4045 must hard-stop outside O'Hara's house")
+
+        if (
+            ending.get("unit4_to_unit5_boundary", {}).get("unit5_first_allowed_action")
+            != expected.get("unit5_first_allowed_action")
+        ):
+            self.errors.append("unit5 first allowed action mismatch")
+
+    def _validate_evidence_types(self) -> None:
+        for loop_number, state in self.states.items():
+            for evidence in state.get("evidence_registry", []):
+                if evidence.get("type") == "clue" and evidence.get("analysis") is True:
+                    self.errors.append(
+                        f"loop{loop_number} clue cannot be analyzed: {evidence.get('id')}"
+                    )
+
+    def _validate_expose_evidence_coverage(self) -> None:
+        expected = self.contract.get("expose_evidence_contract", {})
+        expected_policy = expected.get("lie_source_policy", {})
+        for loop_number, state in self.states.items():
+            expose = state.get("expose", {})
+            semantics = expose.get("lie_source_semantics", {})
+            actual_round_1 = semantics.get("round_1", {})
+            actual_later = semantics.get("later_rounds", {})
+            expected_round_1 = expected_policy.get("round_1", {})
+            expected_later = expected_policy.get("later_rounds", {})
+            if (
+                actual_round_1.get("kind") != expected_round_1.get("kind")
+                or actual_round_1.get("collectible_testimony")
+                != expected_round_1.get("collectible_testimony")
+                or actual_later.get("kind") != expected_later.get("kind")
+                or actual_later.get("collectible_testimony")
+                != expected_later.get("collectible_testimony")
+                or semantics.get("requires_doubt_condition")
+                != expected.get("lie_source_requires_doubt_condition")
+            ):
+                self.errors.append(
+                    f"loop{loop_number} Expose lie_source semantics mismatch"
+                )
+
+            covered: set[int] = set()
+            for doubt in state.get("doubts", []):
+                for condition in doubt.get("unlock_condition", []) or []:
+                    param = condition.get("param")
+                    if str(param).isdigit():
+                        covered.add(int(param))
+            if loop_number == 5:
+                for chain in (
+                    state.get("special_mechanics", {})
+                    .get("identity_lock", {})
+                    .get("chains", [])
+                ):
+                    covered.update(
+                        int(item["id"])
+                        for item in chain.get("inputs", [])
+                        if str(item.get("id", "")).isdigit()
+                    )
+
+            rounds = expose.get("rounds")
+            if rounds is None:
+                rounds = [expose.get(f"round_{index}") for index in range(1, 4)]
+            used = {
+                int(item["id"])
+                for round_data in rounds
+                if round_data
+                for item in round_data.get("usable_evidence", [])
+                if str(item.get("id", "")).isdigit()
+            }
+            missing = sorted(used - covered)
+            if missing:
+                self.errors.append(
+                    f"loop{loop_number} Expose usable evidence is not loaded by a doubt or identity chain: {missing!r}"
+                )
+
+    def _validate_unit4_specific_content(self) -> None:
+        loop5_text = "\n".join(str(value) for value in scalar_values(self.states.get(5, {})))
+        if "夜班门房" in loop5_text:
+            self.errors.append("loop5 night doorman is forbidden by the active outline")
+
+        loop5 = self.states.get(5, {})
+        if any(scene.get("id") == 4041 for scene in loop5.get("scenes", [])):
+            self.errors.append("loop5 scene 4041 entry gate must be removed")
+
+        registry = {
+            entry.get("id"): entry for entry in loop5.get("evidence_registry", [])
+        }
+        if "共享" not in str(registry.get(4517, {}).get("visibility", "")):
+            self.errors.append("4517 must be shared with Emma and Watts in ending_4044")
+        for evidence_id in (4518, 4519):
+            if "扣下" not in str(registry.get(evidence_id, {}).get("visibility", "")):
+                self.errors.append(f"{evidence_id} concealment boundary is missing")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Validate Unit4 State v2 candidates")
+    parser.add_argument(
+        "--state-dir",
+        default=str(DEFAULT_STATE_DIR),
+        help="state directory relative to repository root",
+    )
+    args = parser.parse_args()
+
+    root = Path(__file__).resolve().parents[3]
+    errors = Unit4StateV2Validator(root=root, state_dir=args.state_dir).validate()
+    if errors:
+        print("Unit4 State v2 contract: FAIL")
+        for error in errors:
+            print(f"- {error}")
+        return 1
+    print("PASS Unit4 State v2 contract validation")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

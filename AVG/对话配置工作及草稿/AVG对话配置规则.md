@@ -9,7 +9,7 @@
 
 ### 1. 分支必须指向不同的信息维度
 
-每组分支选项（通常2-3个）必须分别指向不同类别的信息点，不能让两个分支揭示同一维度的内容。
+只有一个有效信息方向时，使用线性 Talk，不要为了形式制造单选项分支。确实存在多个独立信息方向时才使用分支，每组必须有 2-3 个有效选项，并分别指向不同类别的信息点，不能让两个分支揭示同一维度的内容。
 
 常见信息维度：
 
@@ -143,6 +143,18 @@
 
 Testimony.words（证词原文）和 TestimonyItem.testimony（提取的证词道具摘要）之间的信息密度应当对等，不膨胀也不缩水。
 
+上游事实真源固定为 State 获取位置的内联 `testimony_ids[].content`：
+
+- active outline 中每一处 `⚪` 是证言正文来源。完整句式的 `⚪` 必须逐字进入
+  `content`；标题式 `⚪` 的正文由其直属明细 bullet 组成。
+- 对白 `Testimony.words` 可以按角色声纹自然展开，但不能改变
+  `testimony_ids[].content` 的事实边界。
+- `@get` 摘要与最终 `TestimonyItem.testimony` 必须保留时间、地点、人物、
+  人数、否定词、不确定性和条件等限定。
+- State 的 `testimony_ids` 只有裸 ID、名称或 `active_topics`，却没有同位置的
+  非空 `content` 时，属于上游配置缺陷，停止写作，不得临时猜测。根级
+  `testimony_registry` 不作为新 State 格式。
+
 **反面示例 — 缩水：**
 - 原文："我从晚上<special=2>九点半开始就在地下室走廊打扫</special>，Webb先生月底要求彻底清洁"
 - 提取道具写成："Rosa在打扫"
@@ -240,19 +252,30 @@ Expose Round 2: Lie = 嫌疑人的新狡辩（非预先收集）
 
 ### 18. Talk ID 命名格式
 
-state 里 `talk` / `target_talk` 字段值采用 `L{Loop号}_{阶段}_{npc 英文小写}` 格式。
+state 里 `talk` / `target_talk` 字段按入口类型命名：
 
-**阶段枚举**：
-- `opening` — 硬切开篇剧情
-- `scene{场景ID}` — 自由探索场景内对话
-- `expose` — 指证
-- `postexpose` — 指证后剧情（仅当大纲明确写时存在）
+| 入口类型 | 格式 | 命名主体 |
+|---|---|---|
+| Opening 强制剧情 | `L{Loop}_opening_{scene_or_event}` | 场景或事件，不是人物 |
+| 自由探索 NPC Talk | `L{Loop}_scene{场景ID}_{npc}` | 场景 ID + NPC |
+| Expose | `L{Loop}_expose_{npc_or_event}` | 指证对象或事件 |
+| post_expose | `L{Loop}_postexpose_{scene_or_event}` | 指证后的场景或事件 |
+
+每个 Loop 只有一个根级 `opening`，但 `opening.sequence[]` 可以有多个连续的
+场景/事件段；每段都必须有自己的 `talk`，并按 sequence 顺序串接。Opening
+文件名描述“玩家正在经历什么”，不能描述“玩家正在跟谁聊天”。
 
 **示例**：
-- `L1_opening_mickey` — Loop1 开篇，Mickey 委托
+- `L1_opening_office_commission` — Loop1 侦探事务所委托事件
+- `L3_opening_broken_call` — Loop3 开篇断线电话事件
+- `L3_opening_mansion_arrival` — Loop3 抵达宅邸事件（即使 Mickey 在场，也不命名为 `opening_mickey`）
 - `L1_scene3005_foster` — Loop1 SC3005 法医办公室，Foster
 - `L1_scene3004_morrison` — Loop1 SC3004 警局，Morrison（Talk 阶段）
 - `L1_expose_morrison` — Loop1 指证 Morrison
+
+反例：
+- `L3_opening_mickey` — 错：把强制场景对白误命名成人物入口
+- `L3_opening_emma` — 错：同一根 Opening 又按人物拆成另一条入口
 
 ### 19. 同 Loop 同 NPC 多次出场按场景区分
 
@@ -266,7 +289,7 @@ state 里 `talk` / `target_talk` 字段值采用 `L{Loop号}_{阶段}_{npc 英�
 ### 20. 对应 JSON 文件名与 MD section 头
 
 - JSON 文件名（落地于 `AVG/EPI0{N}/Talk/loop{N}/{talk值}.json`）= talk 字段值 + `.json`
-- MD 草稿 section 头：`## Talk: L1_opening_mickey.json` / `## Expose: L1_expose_morrison.json`
+- MD 草稿 section 头：`## Talk: L3_opening_mansion_arrival.json` / `## Expose: L1_expose_morrison.json`
 - `videoScene` 字段值 = talk 字段值（不含 `.json`）
 
 ### 21. 适用范围

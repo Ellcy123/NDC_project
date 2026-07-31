@@ -172,10 +172,7 @@ scenes:
     type: item
     pickup: true
     note: R2 陷阱；证明医院与 Miller 资助关系，不证明 Harrison 正在查自己的裁定
-    description: 圣心医院资助机构排名中 Miller 位列第一，医院对接负责人为 Whitfield；文件封套右上角盖有 Miller 印章
-    acquisition:
-      kind: dialogue
-      talk: L1_scene4003_archivist
+    description: 圣心医院资助机构排名中 Miller 位列第一，医院对接负责人为 Whitfield
   - id: 4115
     name: Harrison两个月调阅索引
     type: item
@@ -206,8 +203,6 @@ scenes:
       active_topics:
       - Harrison 连续两个月反复调阅医院、地产与旧赔偿档案
       - 调阅索引只记录档号、日期和签收手续
-      - Harrison 每次亲自抄写，不让书记员代办
-      - Harrison 提过有一套准备交给 Mickey 的卷宗
       - Mary / Helen 改判往来信属于正式法院记录
       withheld_topics:
       - Harrison 死亡的命令来源
@@ -223,8 +218,6 @@ scenes:
         speaker: 416
         source_anchor: active outline / Loop1 / 自由探索 / 法院档案室 / 档案管理员
         acquisition_talk: L1_scene4003_archivist
-      grants_evidence:
-      - 4114
 expose:
   target: watts
   target_talk: L1_expose_watts
@@ -319,8 +312,6 @@ doubts:
   text: Harrison 的公开日程与连续夜间出入为什么对不上？
   isFragment: false
   unlock_condition:
-  - type: 3
-    param: '4041001'
   - type: 1
     param: '4111'
   - type: 1
@@ -383,9 +374,6 @@ evidence_registry:
   pickup: true
   first_scene: 4003
   note: R2 陷阱；提供 Whitfield 方向
-  acquisition:
-    kind: dialogue
-    talk: L1_scene4003_archivist
 - id: 4115
   name: Harrison两个月调阅索引
   type: item

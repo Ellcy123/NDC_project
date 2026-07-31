@@ -42,7 +42,7 @@ user-invocable: false
 
 ### 1.1 架构（2026-05-28 v0.2 修订）
 
-**编辑器持有独立副本**，不直接读写 Unity 表。理由：Unity 表的 schema 由 `res/xml/*.xml` 锁死，加设计期字段（如 ArtRequirement、openInLoops、循环目标、陷阱原因）需要改 XML + 重新生成 C# + 改运行时。我们的副本可自由加任意设计期字段。
+**编辑器持有独立副本**，不直接读写 Unity 表。理由：Unity 表的 schema 由 `res/xml/*.xml` 锁死，加设计期字段（如 ArtRequirement、openInLoops、循环目标）需要改 XML + 重新生成 C# + 改运行时。我们的副本可自由加任意设计期字段。
 
 ```
 avg_editor web UI（设计入口）
@@ -281,7 +281,7 @@ Unit
 
 ### Phase 4 —— 高级可视化
 - 疑点触发链关系图
-- Expose 证据池图（可击穿 vs 陷阱）
+- Expose 轮次—谎言—正确证据闭环图
 - 跨 Loop 伏笔图
 - 全局搜索 / 多条件过滤
 
@@ -314,10 +314,7 @@ preview_new2 暂不删除，直到 Phase 1 跑稳。
 ### 11.2 循环目标（player_context.goals）是否加入 ChapterConfig？
 目前只在 state.yaml，配表里没有。
 
-### 11.3 Expose 陷阱原因是否加入 ExposeData？
-目前 trap_reasons 只在 state.yaml。
-
-### 11.4 突发事件小图字段
+### 11.3 突发事件小图字段
 最近 git 提到新增"突发事件（小图）"机制，但未确认对应 Talk.script 值或新字段。实施 Phase 1 前需要 grep 一遍最近 Talk.json / SceneConfig.json diff 确认。
 
 ---

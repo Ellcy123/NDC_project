@@ -43,7 +43,7 @@ disallowedTools: Bash
    - 碎片 condition 必须单件
    - **一证多挂无限制**：同一证据/证言 ID 可以同时挂在多条疑点/碎片 condition 里（同 Loop 内或跨 Loop 都行），不需要拆分
    - **时序检查**：每件在 expose 里使用的证据，它所属疑点/碎片的 Loop ≤ 使用它的最早 expose Loop
-   - **挂载范围（明确豁免 lie_source）**：需要挂在某条疑点/碎片 condition 的对象 =  `evidence_set` 里的 `usable_evidence` + `auxiliary_evidence` + `trap_evidence`；**`lie_source`（NPC 在 expose 阶段抛出的 lie testimony）是写作引用，不要求挂在 DoubtConfig.condition**——它属于 ExposeData.testimony 字段，与 DoubtConfig 是不同表的字段。语义上玩家不需要主动"发现"lie，它由 NPC 自动呈现。
+   - **挂载范围（明确豁免 lie_source）**：需要挂在某条疑点/碎片 condition 的对象 = `evidence_set` 里的 `usable_evidence` + `auxiliary_evidence`；**`lie_source`（NPC 在 expose 阶段抛出的 lie testimony）是写作引用，不要求挂在 DoubtConfig.condition**——它属于 ExposeData.testimony 字段，与 DoubtConfig 是不同表的字段。语义上玩家不需要主动"发现"lie，它由 NPC 自动呈现。
    - 文本采用观察式提问，避免结论式
 6. **执行自检清单**（A-G 七段）
 

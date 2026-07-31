@@ -83,7 +83,7 @@ allowed-tools: Read, Glob, Grep, Bash, AskUserQuestion
 - [ ] 分支路径 `1xx`/`2xx`/`3xx` 各段内部连续，从 x01 起
 - [ ] 汇合段 `4xx` 内部连续，从 401 起
 - [ ] 双分支文件：第二组分支 `5xx`/`6xx`，第二组汇合 `8xx`
-- [ ] Expose 主线 `001` 递增，陷阱路径 `1xx`/`2xx`/`3xx`/`4xx`
+- [ ] Expose 主线 `001` 递增，正确证据击破段与后续轮次跳转完整
 
 **ID 唯一性**：
 - [ ] 同一文件内无重复 ID
@@ -121,7 +121,7 @@ allowed-tools: Read, Glob, Grep, Bash, AskUserQuestion
 - [ ] `Lie` 行的可用证据 ID **存在于 ItemStaticData.json**
 - [ ] 分支 `→ {id}` 跳转目标 **存在于本 MD 文件内**
 - [ ] `→ 汇合至 {id}` 目标存在于本 MD 文件内
-- [ ] Expose 陷阱 `→ 回到 {id}` 目标存在于本 MD 文件内（指向 Lie/branches 节点）
+- [ ] Expose 正确证据路径的跳转目标存在于本 MD 文件内
 
 #### C. NPC 警告（不拦截，列出由用户决定）
 

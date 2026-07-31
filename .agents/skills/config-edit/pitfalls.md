@@ -39,8 +39,21 @@
 → 普通入场：检查 NPCLoopData + Talk 参数即可；不要为了“有人进来”强行新建 event。
 → 需要表演：event.req 里必须写清 Talk 挂点、入场 NPC、提示文本、是否同步补 SceneConfig.NPCInfos。
 
-### 8. change_scene 不能硬 next 到下一句
-切场景后直接 `next` 接对白 → 旧面板/旧背景/黑底残留。稳妥：切到新 Scene → 用新 Scene 的 firstEnterTalk 接后续 AVG。
+### 8. change_scene 跨场续接必须明确选择一种入口
+Unity 当前运行时支持 `change_scene + next`：目标场景取
+`Parameters[0].ParameterInt`，后续强制对白取当前 Talk 的 `next`。当 `next > 0`
+时，场景加载会使用 `skipFirstEnter: true`，因此目标场景的 `firstEnterTalk`
+不会再触发。
+
+→ 同一条强制 Opening / cutscene 跨场继续：优先 `change_scene + next`，把目标
+Talk 作为同一事件链的下一拍。
+
+→ 希望对白在目标场景“首次进入”语义下独立触发：令跨场句 `next = 0`，再使用
+目标 Scene 的 `firstEnterTalk`。
+
+→ 两种入口不能同时承载同一剧情拍，否则会因重复触发或被
+`skipFirstEnter` 跳过而产生丢段/重复风险。提交前必须同时核对 Talk `next`、
+`change_scene` 参数、目标 Scene `firstEnterTalk` 与实际控制权恢复点。
 
 ### 9. finalexpose / loop_end / end 别混
 `finalexpose`=开指证结算/黑底面板；`loop_end`=循环结束结算；`end`=单纯对话结束。配错 → 突然黑 / 结算提前 / 场景断。

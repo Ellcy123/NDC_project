@@ -202,7 +202,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
   - 碎片 condition 必须单件
   - 跨 Loop 碎片：condition 里引用的证据 ID 必须来自首现 Loop；父疑点的 condition 是所有子碎片 condition 的并集（子集匹配触发合并）
   - 疑点/碎片文本采用**观察式提问**（如"这些照片上的人似乎在哪里见过一样？"），避免结论式（如"酒吧在做勒索"）
-  - **挂载范围（明确豁免 lie_source）**：每件 expose `evidence_set` 里的 `usable_evidence` / `auxiliary_evidence` / `trap_evidence` 都要挂在某条疑点/碎片 condition；**`lie_source` 是写作引用，不要求挂载**——它属于 ExposeData.testimony 字段（与 DoubtConfig 不同表）。Phase 2 与跨 Loop 校验都按此豁免来检查，不要把 lie_source 当成"漏挂"
+  - **挂载范围（明确豁免 lie_source）**：每件 expose `evidence_set` 里的 `usable_evidence` / `auxiliary_evidence` 都要挂在某条疑点/碎片 condition；**`lie_source` 是写作引用，不要求挂载**——它属于 ExposeData.testimony 字段（与 DoubtConfig 不同表）。Phase 2 与跨 Loop 校验都按此豁免来检查，不要把 lie_source 当成"漏挂"
 - 生成完成后执行 A-G 七段自检
 
 ## 跨 Loop 一致性校验清单（Phase 2 完成后）
@@ -217,7 +217,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 
 ### 疑点系统专项（对照 `docs/游戏系统/核心玩法/疑点系统.md`）
 - [ ] **时序硬约束**：对每件在指证 ExposeData 里被使用的证据，定位它所属的疑点/碎片——该疑点/碎片的 Loop ≤ 该证据最早指证的 Loop
-- [ ] **全证据挂载**：每个 Loop expose 里出现的 `usable_evidence` / `auxiliary_evidence` / `trap_evidence` 都必须挂在某条疑点/碎片 condition（**lie_source 豁免**——它是 ExposeData.testimony 字段，不属于 DoubtConfig 范围）
+- [ ] **全证据挂载**：每个 Loop expose 里出现的 `usable_evidence` / `auxiliary_evidence` 都必须挂在某条疑点/碎片 condition（**lie_source 豁免**——它是 ExposeData.testimony 字段，不属于 DoubtConfig 范围）
 - [ ] **condition 件数**：疑点 1–2 件，碎片严格 1 件，禁止 ≥ 3 件
 - [ ] **进度条分母**：每个 Loop 新增疑点 + 新增独立碎片（合并到旧碎片的新碎片不计）；总表与各 Loop 分母对得上
 - [ ] **碎片合并正确性**：父疑点 condition 是子碎片 condition 并集；合并 Loop ≥ 所有子碎片首现 Loop

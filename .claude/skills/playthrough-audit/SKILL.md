@@ -111,7 +111,7 @@ per_loop:
     evidence_available: [本 Loop 可获取的证据 ID + 名称 + 描述摘要]
     testimonies_available: [证词 ID + 说话人 + 摘要]
     doubts_unlockable: [疑点 + 解锁条件]
-    expose_target: {指证目标 NPC + 谎言层级 + 正确/陷阱证据}
+    expose_target: {指证目标 NPC + 谎言层级 + 每轮正确证据与反驳逻辑}
     dialogue_files: [所有 Talk/Expose JSON 路径列表]
     known_facts_entering: [进入本 Loop 时玩家已知事实]
     known_facts_exiting: [离开本 Loop 时玩家应知事实]
@@ -154,7 +154,7 @@ audit-reports/{Unit}_{date}/briefs/L{N}_brief.md
 1. **玩家进入状态**：已知事实、已持有证据、已解锁疑点
 2. **本 Loop 信息分配**：每个场景/NPC 承载的信息点
 3. **对话摘要**：逐 NPC 的关键对话节点、证词获取点、分支结构
-4. **指证设计**：目标、谎言层级、正确/陷阱证据
+4. **指证设计**：目标、谎言层级、每轮正确证据与反驳逻辑
 5. **前后衔接**：前序悬念、本 Loop 解答、新埋悬念
 6. **对话文件路径**：供需要逐句审查的 agent 按需读取
 
@@ -297,7 +297,7 @@ graph LR
 
 ### 证据使用效率
 - 总证据数 / 被指证使用的证据数 / 使用率
-- 陷阱证据的"看起来相关"说服力评分
+- 每轮正确证据是否已获取、进入疑点或身份链，并精确匹配该轮谎言维度
 ```
 
 ### Agent 3: character-consistency（人物一致性审计）

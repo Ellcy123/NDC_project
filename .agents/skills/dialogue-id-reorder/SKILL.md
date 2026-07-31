@@ -1,6 +1,6 @@
 ---
 name: dialogue-id-reorder
-description: "对话 ID 重编排：逐 Loop 逐文件清理对话 ID——连续化、拆长句、修分支/陷阱段、审查。适用于 MD 草稿 ID 混乱时的系统性整理。"
+description: "对话 ID 重编排：逐 Loop 逐文件清理对话 ID——连续化、拆长句、修分支与审查。适用于 MD 草稿 ID 混乱时的系统性整理。"
 argument-hint: "[Unit 编号] [Loop 编号，可选；不填则逐 Loop 处理]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion, Bash
@@ -14,7 +14,7 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion, Bash
 
 - MD 草稿已存在但 ID 混乱（跳号 / 重复 / 乱序）
 - 需要拆分超长句子（>35 中文字）后重新分配 ID
-- Expose 内陷阱路径 ID 需要规范化
+- Expose 主线与正确证据路径 ID 需要规范化
 - 新增或删除了对话节点，需要重编后续 ID
 
 ## 不适用
@@ -113,9 +113,8 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion, Bash
 ...（按 Round 顺序继续分配 xx 段）
 ```
 
-- **主线（`001` 递增）= 玩家走正确路径时看到的完整流程**
-- 陷阱路径用 `1xx`/`2xx`/`3xx`... 与 Talk 分支规则统一
-- 每个陷阱路径末尾标注 `→ 回到 {Lie 节点 ID}`（重选）
+- **主线（`001` 递增）= 玩家按轮次出示正确证据时看到的完整流程**
+- 正确证据路径直接进入本轮击破段，再由主线推进下一轮
 - Lie 节点和 branches 节点一样，本身占一个主线 ID
 
 ---
@@ -265,7 +264,7 @@ AskUserQuestion 确认后进入 Phase 1。
 - 主线 `001`–`0xx` 无跳号、无重复
 - 分支 `1xx`/`2xx`/`3xx` 各段内部连续
 - 汇合 `4xx` 段内部连续
-- Expose 陷阱 `1xx`–`Nxx` 各段内部连续
+- Expose 主线与正确证据击破段连续
 
 #### 审查 B：ID 唯一性
 
@@ -279,18 +278,18 @@ AskUserQuestion 确认后进入 Phase 1。
 - 确认无超 35 字的台词
 - 确认拆分后语义通顺
 
-#### 审查 D：分支/陷阱结构完整
+#### 审查 D：分支与指证结构完整
 
 - 每个 `branches` 节点的选项都指向正确的分支 ID
 - 每个分支路径末尾有 `→ 汇合至 {4xx ID}`
-- 每个 Expose 陷阱路径末尾有 `→ 回到 {Lie 节点 ID}`
-- Lie 节点的证据选项都指向正确的陷阱/正确路径 ID
+- Lie 节点的正确证据选项都指向对应击破段
+- 每轮击破段都能进入下一轮或合法结束
 
 #### 审查 E：get/证词 ID 一致性
 
 - `get` 标记引用的证词 ID 与 state 文件一致
 - `Lie` 标记引用的 lie_source 与 state 文件一致
-- 证据 ID（正确/陷阱）与 state 文件一致
+- 正确证据 ID 与 state 文件一致
 
 #### 审查 F：section 头 & 文件名
 
@@ -312,7 +311,7 @@ AskUserQuestion 确认后进入 Phase 1。
 ## Loop{X} ID 重编审查报告
 
 ### 文件清单
-| # | 文件 | ID 范围 | 主线句数 | 分支/陷阱句数 | 总句数 |
+| # | 文件 | ID 范围 | 主线句数 | 分支句数 | 总句数 |
 |---|------|---------|---------|-------------|--------|
 | 1 | emma_001.json | 901001001–901001038 | 38 | 0 | 38 |
 | ... | | | | | |
