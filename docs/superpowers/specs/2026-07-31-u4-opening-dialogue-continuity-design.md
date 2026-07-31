@@ -36,39 +36,60 @@ Unit4 当前存在两个相互关联的系统性问题：
 
 ## 三、Opening 合同
 
-每个 Loop 只能有一个根级场景对白入口：
+每个 Loop 只有一个根级 Opening 流程。Opening 内可因地点切换、时间跳转或独立事件节拍拆成一个或多个有序 Talk，但 Talk 必须按场景或事件命名，不能按人物命名。
+
+以 L3 的跨地点开篇为例：
 
 ```yaml
 opening:
-  type: cutscene
-  talk: L1_opening_courthouse
-  cast: [Zack, Emma, Pierce, Mickey]
-  scene_sequence:
-    - scene_id: 4001
-      location: "法院门口 / 法院东翼"
+  type: cutscene_sequence
+  sequence:
+    - event_id: broken_call
+      talk: L3_opening_broken_call
+      scene_id: 4021
+      location: "Zack 侦探事务所"
+      cast: [Zack, Emma, Harold]
       required_beats:
-        - "Pierce 以程序封锁入口"
-        - "Mickey 当场提供 Harrison 死亡与调档信息"
-        - "Mickey 拖住 Pierce，Zack 与 Emma 进入外间办公室"
-  player_control_restored_after: opening
+        - "人工接线员接通 Morrison 宅邸来电"
+        - "Harold 只来得及说出 Brennan"
+        - "线路被人为切断，Zack 与 Emma 立即出发"
+      transition_to: mansion_arrival
+    - event_id: mansion_arrival
+      talk: L3_opening_morrison_mansion_arrival
+      scene_id: 4022
+      location: "Morrison 宅邸门口"
+      cast: [Zack, Emma, Mickey]
+      required_beats:
+        - "23:30，Zack 与 Emma 抵达宅邸"
+        - "两人在门口撞见 Mickey"
+        - "Mickey 强制说出自己也刚到、是 Morrison 叫他来的"
+      transition_to: free_exploration_4022
+  player_control_restored_after: mansion_arrival
 ```
 
 规则：
 
-- `opening.talk` 是整段 Opening 的唯一 Talk 文件入口，不按说话人拆分。
-- `cast` 只表示强制演出中的出场者，不等于可点击 NPC。
-- Opening 可以跨多个地点；跨地点时使用有序 `scene_sequence`，仍保持一个 `opening.talk`。
+- `opening` 是一个有序强制流程；`opening.sequence[]` 含一个或多个场景级/事件级 Talk。
+- `sequence[].talk` 按场景或事件命名，不按某一名说话者命名。
+- `sequence[].cast` 只表示该段强制演出中的出场者，不等于可点击 NPC。
+- 地点、时间或事件切换可以拆 Talk，但不能因为说话人变化而拆 Talk。
+- 同一物理场景内的连续群像对话默认保持为一个 Talk；只有发生明确转场或独立事件切点时才拆分。
 - `scenes[].npcs` 只登记玩家恢复控制后可以主动交谈的 NPC。
 - 同一角色若既参加 Opening，又在之后可自由交谈，必须明确分成“强制演出角色”与“自由交互 NPC”两种职责，不得默认复制 Talk。
+- `player_control_restored_after` 指向 sequence 中最后一个强制节拍；在此之前不得进入普通自由 Talk。
 - Opening 结束前不得出现普通 Talk 分支；需要玩家选择的特殊开篇玩法必须由大纲明确批准。
 
-Talk 名称使用场景或叙事功能，不使用单一说话人作为归属：
+Talk 名称示例：
 
 ```text
-L1_opening_courthouse
+L1_opening_courthouse_blockade
+L1_opening_east_wing_entry
 L2_opening_thirteen_days
+L2_opening_hearing_window
 L3_opening_broken_call
-L4_opening_fracture_and_eviction
+L3_opening_morrison_mansion_arrival
+L4_opening_fracture
+L4_opening_eviction_notice
 L5_opening_forty_second_floor
 ```
 
@@ -125,7 +146,7 @@ narrative_continuity:
 - 默认一个连续场景由同一个 narrative-designer、puzzle-designer 和 dialogue-writer 负责。
 - JSON 文件必须拆分时，先写完整场景 treatment，再按明确切点拆文件。
 - 禁止按 NPC 名单直接把同一强制场景拆成多个独立写作单元。
-- 同一 `scene_id` 同时出现在 Opening 与自由探索、同一 NPC 在两处重复挂 Talk、或 State 缺少根级 `opening.talk` 时，必须停止并回报上游缺陷。
+- 同一 `scene_id` 同时出现在 Opening 与自由探索却没有明确的控制权交接、同一 NPC 在两处重复挂 Talk、State 缺少 `opening.sequence[]`、或 Opening Talk 以人物命名时，必须停止并回报上游缺陷。
 
 ### Phase 2：写作输入
 
@@ -166,12 +187,14 @@ Writer 除现有材料外，必须收到：
 
 先编写失败测试，证明当前结构会被接受：
 
-1. 缺少根级 `opening.talk`。
-2. Opening 下存在多个后代 Talk。
-3. 跨地点 Opening 的后半段被放入 `scenes[].npcs`。
-4. 同一 scene/NPC 在 Opening 与自由探索重复挂 Talk。
-5. `narrative_continuity.units` 缺少 `hands_off_to` 目标或形成断链。
-6. 《讨论结论》新增 active outline 不存在的 Opening NPC/地点。
+1. 缺少 `opening.sequence[]`，或 sequence 为空。
+2. `sequence[].talk` 缺失、重复，或使用人物名而非场景/事件名。
+3. Opening 下的 Talk 出现在 `sequence[]` 以外的按人物分组中。
+4. 跨地点 Opening 的后半段被放入 `scenes[].npcs`。
+5. 同一 scene/NPC 在 Opening 与自由探索重复挂 Talk，且没有明确控制权交接。
+6. `player_control_restored_after` 未指向 sequence 中的最后一个强制节拍。
+7. `narrative_continuity.units` 缺少 `hands_off_to` 目标或形成断链。
+8. 《讨论结论》新增 active outline 不存在的 Opening NPC/地点。
 
 实现后要求全部测试通过，并重新运行现有 Unit4 State 合同测试与跨 Loop 校验。
 
@@ -200,8 +223,9 @@ State 修正后，从 `team-dialogue` Phase 0 重跑 Loop1–Loop5：
 
 ## 九、验收标准
 
-- 五个 Loop 都只有一个根级 `opening.talk`。
+- 五个 Loop 都只有一个根级 Opening 流程；每个流程包含一个或多个按场景/事件命名的有序 Talk。
 - Opening 的事件、地点、人物和顺序可逐项追溯到 active outline 或用户批准记录。
+- Opening Talk 不以人物命名，且人物变化本身不能构成拆分理由。
 - 强制 Opening 与自由探索 NPC 边界明确。
 - 所有 continuity unit 形成有序交接链。
 - 每个对白单元都能说明消费了什么既有压力、改变了什么状态、向下一场留下了什么。
