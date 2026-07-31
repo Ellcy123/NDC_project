@@ -4,7 +4,7 @@
 > 判断依据：loop1-loop6_state.yaml（evidence/expose/doubt/testimony 全部条目）+ TestimonyItem.json + Unit2 小玩法（L2 骰子 / L3 贷款计算器 / L4 玫瑰花蕊 / L6 鞋楦找茬）。
 > "重点"=被推理链引用、不可缺失的物理属性；"美术参考"=不影响推理的氛围/构图/材质描述。
 > 凡是呈现在美术上的文字（抬头、条款、签名、手写内容、印章、标签等）一律以英文呈现，中文仅用于描述不出现在画面上的属性。
-> **Unit2 全部美术资产为新建，无 Unit1/2/9 可复用项**——每一条证据均完整列出"重点 + 美术参考"两部分。
+> 本文最初按新建资产编写；目前已有部分 Unit2 资产完成初版。需要改既有图时，以对应的“已产出证据美术返修需求”锁定原文件名并覆盖返修。
 
 ---
 
@@ -636,7 +636,7 @@
 
 ## 2503 - Frank 留给 Lula 的情书
 
-> **【纯情感叙事载体，非推理证据】** state 标记 `isUsable=false`，不进任何疑点/指证 condition——这不是"赴险前的遗言"，是 Frank 在长年累月里某些孤独夜晚反复写下的私人情书：八年的爱、五年的等待、求婚的承诺、对 Lula 在他暮年照亮一切的感激。所有属性按"重点"列出是为了让 Lula L5 捧读这封信的瞬间能击中玩家。
+> **【以情感为主的叙事载体，非可出示推理证据】** state 标记 `isUsable=false`，不进任何疑点/指证 condition。信中保留一条明确的时间锚：Frank 写明自己将在第二天（11 月 7 日）去见律师。除此之外仍以八年的爱、五年的等待、求婚承诺为主体，不展开举报材料细节。
 
 **重点（信息表达必不可少）**：
 1. 手写信件形式，Frank 笔迹——**老年颤抖手**，与 2301/2407/2502 内手写陈述书同一笔迹（笔画粗细不均、偶有停顿墨点，但情感力度厚重——"用尽力气把最重要的话写下来"）
@@ -652,9 +652,11 @@
 
    > When I am ready — and it will be soon — I will come to you in plain daylight, and I will ask you the question I have been carrying since the courtyard with the roses.
 
+   > Tomorrow, November 7, I am to meet with the lawyer about the bank. Wish me luck, Lula. When I return, I will ask you in the plain light of day.
+
    > Should you find this before I have spoken those words, know that I had no greater wish in this world than to speak them to you, and to hear what you would answer.
 
-5. 内容性质明确：**纯情书**——通篇没有任何关于检举、银行、危险、案情的字句；只有八年情感的总结与求婚的承诺
+5. 内容性质明确：仍是情书而非举报文件；只允许出现“11 月 7 日去见律师商谈银行问题”这一条时间信息，不写材料藏处、不列银行罪证、不预告自己会被杀
 6. 信纸状态：**纸张被反复展开折叠的痕迹**——边缘起毛、几处墨水晕开痕迹（Frank 几年里反复读过自己写的话，又每次小心折好放回小铁盒），与 2502 检举材料的"一次性整理装订"形成视觉对比
 
 **美术参考（不影响推理）**：
@@ -674,7 +676,7 @@
 **重点（信息表达必不可少）**：
 1. 抬头可读：`COOK COUNTY CORONER'S OFFICE — FORENSIC EXAMINATION REPORT`
 2. 死者栏可读：`Decedent: Frank Kowalski / Age 73 / M`
-3. 关键结论段可读（致命伤性质 = 钝器，非火灾致死，仅给尺寸/重量不点名工具）：`Cause of death — blunt force trauma to the skull. Curved rounded impact surface, approx. 5–7 cm in diameter; estimated implement weight 1.5–3 kg. Multiple tools at scene may match this profile; specific instrument not identified. Hemorrhaging ceased prior to onset of fire; victim was deceased before fire ignition.`
+3. 关键结论段可读（后脑仅一处单次致命钝器伤，无第二次补击；仅给尺寸/重量不点名工具）：`Cause of death — single blunt force impact to the posterior skull. No secondary cranial impact was observed. Curved rounded impact surface, approx. 5–7 cm in diameter; estimated implement weight 1.5–3 kg. Multiple tools at scene may match this profile; specific instrument not identified. Hemorrhaging ceased prior to onset of fire; victim was deceased before fire ignition.`
 4. 时间栏可读：`Date of examination: November 7, 1928`（案发次日，整整一天的调查）
 5. 法医签名可读：`Dr. E. Foster, M.D.`（钢笔签名）
 6. 盖有 `COOK COUNTY CORONER · OFFICIAL` 红色圆形钢印（边缘略晕染，体现实物盖戳质感）
@@ -752,8 +754,8 @@
 ## 2605 - 眼镜碎片（烟熏黄色旧镜片）
 
 **重点（信息表达必不可少）**：
-1. 镜片碎片形状可辨为右眼镜片的一部分（弧度与右眼眶吻合，左右镜片几何不对称）——R2 与 2610 维修单"右眼旧镜片未换"精确匹配的镜位锚
-2. 烟熏黄色着色清晰可见——非新换的透明镜片，且与 2610 维修单备注"轻微烟熏色"颜色完全吻合（玩法将 2605 拖到 2610 旁做对比时，颜色与磨损纹路必须能视觉对上）
+1. 镜片碎片形状可辨为左眼原镜片的一部分（弧度与左眼眶吻合，左右镜片几何不对称）——R2 与 2610 维修单"左眼原片破失、案发次日更换"精确匹配
+2. 清理表面火灾烟尘后，镜片本身的烟熏黄色清晰可见——这是旧光学玻璃原始色，不是火灾染色；与 Leonard 右眼保留的同副旧片在材质、颜色和磨损纹路上吻合
 3. 碎片边缘有打斗造成的不规则崩裂（非自然摔落的整齐裂纹）——撞击破碎而非滑落破碎
 4. **位置：柜面缝隙里**（柜子/工作台与墙之间、或柜面后沿的窄缝）——铸铁鞋楦 2604 原位（柜面/工作台上）足跟移开后才能看见碎片反光；这个"被鞋楦足跟遮住"的物理关系是关键时序证据：碎片必然在鞋楦被放下之前掉进缝隙，即案发那一刻
 5. 可作为 combine 目标，与 2603 镊子嵌套交互（碎片小到必须被镊子夹起的尺寸感）
@@ -763,7 +765,7 @@
 - 老旧光学玻璃的微微泛黄 + 表面细微划痕
 - 嵌入柜面缝隙的状态——缝隙暗（被鞋楦原位足跟遮挡一段时间），碎片只露出一道反光；鞋楦移开后玩家从俯视/斜俯视角度能看到反光
 - 取出后特写：放在白布 / 镊尖上的孤立特写，强调颜色
-- 旁置参照：可在画面一角附 Leonard 当前所配新右眼旧镜片的剪影，便于对比（也可不附，留给 R2 玩法呈现）
+- 不在 2605 单体证据图内叠加右眼旧片；同副右眼旧片由 R2 玩法单独呈现
 
 ---
 
@@ -840,14 +842,14 @@
 ## 2610 - 眼镜维修单据
 
 **重点（信息表达必不可少）**：
-1. 抬头可读店名：`Halsted Optical — Eyeglass Repair Receipt`（艾斯弗德当地眼镜店；店名为待定建议，如已有既定店名应替换）
+1. 抬头可读并锁定为：`Halsted Optical — Eyeglass Repair Receipt`（沿用已产出资源，不再作为待定店名）
 2. 日期可读：`November 7, 1928`（案发次日——这个日期与 Leonard"整晚在家、与 Frank 无关"的说辞构成直接矛盾的时间锚）
 3. 客户姓名可读：`Customer: Leonard Ross`
 4. 项目栏分两行清晰可读：
-   - `Left Lens — REPLACED (clear, new prescription)`
-   - `Right Lens — NOT REPLACED ("slight smoke discoloration; customer declined replacement")`
+   - `Left Lens — REPLACED (original smoke-tinted lens shattered/missing; clear new prescription installed)`
+   - `Right Lens — NOT REPLACED (original matching smoke-tinted lens retained)`
 5. 客户签名可读：`Leonard Ross`（钢笔签名，笔锋偏紧——与 Leonard 二十年银行职员的规范签名风格一致）
-6. 单据需便于"被拖拽到 2605 碎片旁做镜片对比"的玩法 UI 视觉——右眼镜片备注那一行必须独立可见，便于高亮
+6. 单据需便于"被拖拽到 2605 碎片旁做镜片对比"的玩法 UI 视觉——左眼"原片破失"与右眼"保留同副旧片"两行都必须独立可见，便于依次高亮
 
 **美术参考（不影响推理）**：
 - 1920s 眼镜店收据格式，小尺寸纸条约 10×15 cm
@@ -922,7 +924,7 @@
 
 - **2107 - Patrick 遗物匣**：envir 类型，`P.B.` 首字母刻痕仅作 Zack 识别父亲遗物的视觉锚，无推理 condition 引用
 - **2402 - 地下室旧沙发**：state 标记 `isUsable=false`，建立"地下室=长期共同生活空间"的玩家心理认知，不进 condition
-- **2503 - Frank 留给 Lula 的情书**：state 标记 `isUsable=false`，Frank 长年累月写给 Lula 的私人情书（八年情感+求婚承诺，无任何案情内容），纯情感叙事载体；笔迹与 2502 一致是为玩家心理确认这是同一个 Frank 在不同维度的真实
+- **2503 - Frank 留给 Lula 的情书**：state 标记 `isUsable=false`，以八年情感和求婚承诺为主，只补一条“11 月 7 日去见律师”的时间锚；不进疑点 / 指证，笔迹与 2502 一致是为玩家心理确认这是同一个 Frank 在不同维度的真实
 - **2609 - 1900 南区双家纵火剪报**：envir，Russo + Moretti 双家创伤背景跨章伏笔（与 2310 童年合照同年 1900 对位），不进本 Loop 推理
 
 5 件孤儿证据均为有意设计的氛围/情感/伏笔道具，不是设计漏洞。
@@ -945,8 +947,8 @@
 
 ## 字样说明
 
-- Unit2 全部美术资产为新建，无 Unit1/2/9 可复用项——任何条目均不出现 `美术资源 / 文件夹: EPIxx / 详情大图: SC###_item_###` 引用块
-- 上画文字一律英文；建议样例（如 `217 N. State St.` / `Halsted Optical` / `MURPHY & SONS` / `Donnelly Law Office`）若与项目命名表冲突，按命名表为准
+- 本文保留全量需求说明；已产出条目的返修必须另查同目录“已产出证据美术返修需求”，沿用现有资源名与 `.meta`
+- 上画文字一律英文；`Halsted Optical` 已锁定，其余建议样例（如 `217 N. State St.` / `MURPHY & SONS` / `Donnelly Law Office`）若与项目命名表冲突，按命名表为准
 - L6 玩法相关大件（穿孔机 / 制表机 / IBM 穿孔卡片）参见 `小玩法/L3_银行_贷款计算器.md` §4——本表只列产物 2701，过程物件由场景美术统筹
 
 ## 待策划/审核员确认的设计点
@@ -967,9 +969,9 @@
 - ~~**L3**：2307 抵押权人~~ **已裁决**：Frank 借的是信用贷款（无抵押），2307 是干净房产证——画面无 MORTGAGED/PLEDGED/LIEN 印章；房产证在银行档案柜是 Danny 私下交付的结果，不构成合法抵押
 - ~~**L4**：2406 商铺名 `MURPHY & SONS`~~ **已裁决**：保留为建议样例（已备注到对应场景需求文档）
 - ~~**L4**：2407 律所章 `Donnelly Law Office`~~ **已裁决**：已与 [mickey.md](剧情设计/Unit2/Characters/mickey.md) Mickey Donnelly 事务所名对齐
-- ~~**L5**：2503 重点 vs 美术参考归类~~ **已裁决**：2503 已重写为纯情书（无案情内容），5 段英文情感正文按"重点"列出
+- ~~**L5**：2503 重点 vs 美术参考归类~~ **2026-07-29 修订**：2503 仍以情书为主体，但补入“Tomorrow, November 7, I am to meet with the lawyer...”时间锚，与 L5 捧读对白及 L6 动机一致；仍不可出示、不进疑点
 - ~~**L6**：2606 凹陷纤维颜色~~ **已裁决（后续推翻）**：纤维元素已整体删除（2026-05-18），凹陷+成人背部高度+Margaret 证词三件足以锁定凶手，无需纤维比对
-- ~~**L6**：2610 眼镜店店名 `Halsted Optical`~~ **已裁决**：保留为建议样例（已备注到对应场景需求文档）
+- ~~**L6**：2610 眼镜店店名 `Halsted Optical`~~ **2026-07-29 修订**：沿用已产出资源抬头并锁定，不再作为建议样例
 - ~~**跨 Loop**：Frank 笔迹定性~~ **已裁决**：Frank 73 岁亲笔件全部归"老年颤抖手"（2301/2407/2502/2503），2302 才是 Leonard 伪造的工整成熟笔迹
 
 ### 全局规则裁决
