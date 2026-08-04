@@ -30,7 +30,7 @@ player_context:
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
   - 保险柜材料显示 Rosa 的庭审迫近，并留下圣心医院儿童死亡对照与问题批次药剂
-  - Rosa 没有在规定剂量之外额外注射；止动结构、日期撕签和实际消耗量不存在额外用量缺口
+  - Rosa 没有在规定剂量之外额外注射；不可移动金属止动环、十三格按日开启留下的指纹确认和实际消耗量不存在额外用量缺口
   - Isabel 的死亡不是单例；另外两名死亡儿童的药瓶与 Isabel 属于同一批次
   - 问题批次正式进入圣心医院采购、入库与慈善发放链
   - 加急效价对照只能证明同批样本效力明显不一致，且不能用单支家庭保存不当解释
@@ -286,11 +286,10 @@ scenes:
     - 读取水源维护页
     - 把内封内容用于身份锁或 Expose
     next_flow: ending_sequence.ending_4044
-  npcs:
-    L5_scene4042_mickey:
+  character_states:
+    mickey_after_forced_return:
       npc_id: 403
       name: Mickey Donnelly
-      talk: L5_scene4042_mickey
       is_liar: true
       motive: '先把授权、到访与行动簿重新拆回互不相干的客户账务、代管记录和
 
@@ -328,20 +327,28 @@ scenes:
         kind: collectible_lie_anchor
         speaker: 403
         source_anchor: active outline / Loop5 / 指证 Mickey / R1
-        acquisition_talk: L5_scene4042_mickey
+        acquisition_talk: L5_event_mickey_returns
       expose_lie_ids:
       - 4035002
       - 4035003
   event_triggers:
   - id: mickey_returns
     condition: special_mechanics.identity_lock.completion_condition 达成
-    effect: Mickey 返回办公室；封闭自由探索并进入 Expose
-  - id: emma_changes_course
-    condition: Zack 长时间未回电话，Emma基于持续不安自主改变决定
-    effect: Emma先决定前往四十二层；抵达楼下后才发现Miller车辆与人员增加，因此改走楼梯。她不参与身份锁与三轮Expose，只在坠落时抵达并抓住Zack。
-  - id: archive_stays
-    condition: Mickey 拒绝 Miller 的交档案上车条件
-    effect: 4516 留在办公室，坠落后由 Zack 与 Emma 带走
+    talk: L5_event_mickey_returns
+    forced: true
+    locks_player_control: true
+    runtime_binding:
+      adapter: identity_lock
+      callback: on_all_chains_completed
+    required_beats:
+    - Mickey返回办公室，先看见被打开的保险柜，再看见Zack手中的接管记录、银行授权附页和功业簿。
+    - Mickey不承认这是自己安排的会面，也不承认Zack有权进入办公室。
+    - Mickey主动声称Donnelly只替客户处理账务、1919-A不是自己的账户且自己不能决定资金用途，取得4035001。
+    grants_testimony:
+    - 4035001
+    runtime_exit:
+      continuation: next_talk
+      next_talk: L5_expose_mickey
 special_mechanics:
   identity_lock:
     status: approved_provisional_ui
@@ -521,7 +528,11 @@ expose:
   total_rounds: 3
   is_liar: true
   player_inquiry: null
-  unlock_condition: special_mechanics.identity_lock.completion_condition == all_chains_completed
+  unlock_condition:
+    identity_lock_completion: all_chains_completed
+    required_entry_event: mickey_returns
+    required_testimony_ids:
+    - 4035001
   context: 'Mickey 返回后看见保险柜已打开，以及 Zack 手中的接管记录、授权附页与功业簿。
 
     他不承认这是自己安排的会面，也不承认 Zack 有权进入办公室。
@@ -604,6 +615,9 @@ expose:
 
       '
   post_expose:
+    offscreen_state_changes:
+    - Emma因Zack长时间未回电话自主决定前往四十二层；抵达楼下后发现Miller车辆与人员增加，改走楼梯。她不参与身份锁与三轮Expose，只在坠落时抵达并抓住Zack。
+    - Mickey拒绝Miller“交档案并独自上车”的条件后，4516留在办公室，坠落后由Zack与Emma带走。
     identity_acknowledgment:
       first_explicit_mapping: Mickey：是。我是 Whale。
       boundary: '这是玩家完成证明后的情感落锤，不是 Mickey 替玩家揭晓反转。
@@ -705,7 +719,11 @@ expose:
     - Mickey 拒绝交档案并主动松手坠落
     event_id: identity_value_dialogue_and_fall
     talk: L5_post_expose_identity_and_fall
-    player_control_restored_after: identity_value_dialogue_and_fall
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 4043
+      continuation: next_talk
+      next_talk: L5_ending_departure
   lie_source_semantics:
     round_1:
       kind: collectible_lie_anchor
@@ -917,11 +935,10 @@ ending_sequence:
     prohibited_reveals:
     - 不拆 4516 内封套
     - 不出现 4517、4518、4519 内容
-    npcs:
+    character_states:
       L5_ending4043_emma:
         npc_id: 402
         name: Emma O'Malley
-        talk: L5_ending4043_emma
         is_liar: false
         motive: 先把 Zack 与档案带离 Miller 人员正在涌入的大楼
         mindset: 行动优先；救回 Zack 后仍保留 L4 裂缝，但不在此刻清算关系
@@ -940,7 +957,6 @@ ending_sequence:
       L5_ending4043_watts:
         npc_id: 404
         name: Watts
-        talk: L5_ending4043_watts
         is_liar: false
         motive: 使用法院档案车接应并转移人员与文件
         mindset: 书记员式务实；只处理路线、档案安全与联络，不冒充警察或法官
@@ -998,11 +1014,10 @@ ending_sequence:
     decision:
       action: 三人立刻前往 O'Hara 所在街区，劝她暂时离开
       rationale: 先处理外卷已明确的优先清退风险，房屋争议之后再处理
-    npcs:
+    character_states:
       L5_ending4044_emma:
         npc_id: 402
         name: Emma O'Malley
-        talk: L5_ending4044_emma
         is_liar: false
         motive: 整理外卷，确认南区清退风险并参与紧急行动
         mindset: 疲惫但保持记者式分类与交叉核对；不知道 Zack 独自拆出的两页
@@ -1019,7 +1034,6 @@ ending_sequence:
       L5_ending4044_watts:
         npc_id: 404
         name: Watts
-        talk: L5_ending4044_watts
         is_liar: false
         motive: 按书记员能力整理外卷、联络可用公共系统并提供交通
         mindset: 以登记、联络和送达权限行事，不越权充当法官或警察
@@ -1100,11 +1114,10 @@ ending_sequence:
     - Emma 与 Zack 的关系结算
     - Emma 前往 Miller 庄园
     - 任何 U5 指证、救援或嫁祸内容
-    npcs:
+    character_states:
       L5_ending4045_emma:
         npc_id: 402
         name: Emma O'Malley
-        talk: L5_ending4045_emma
         is_liar: false
         motive: 先确认街区异常并与 Zack 赶到 O'Hara 门外
         mindset: 迅速从观察者转为行动者；尚未获得足够信息质问 Zack
@@ -1120,7 +1133,6 @@ ending_sequence:
       L5_ending4045_watts:
         npc_id: 404
         name: Watts
-        talk: L5_ending4045_watts
         is_liar: false
         motive: 把 4519 转化为公共卫生封闭与救援联络
         mindset: 依赖书记员熟悉的登记和联络网络行动，不穿警服、不发布警务命令
@@ -1137,7 +1149,6 @@ ending_sequence:
       L5_ending4045_residents:
         npc_id: null
         name: 街区居民
-        talk: L5_ending4045_residents
         is_liar: false
         motive: 在突发不适中求助并提醒其他住户停用水源
         mindset: 惊慌、身体不适；只能提供眼前症状与取水位置，不知道幕后责任
@@ -1152,7 +1163,8 @@ ending_sequence:
         testimony_ids: []
     talk: L5_ending_ohara_door
     runtime_exit:
-      action: chapter_end
+      action: loop_end
+      chapter_boundary: true
       next_unit_entry: enter_ohara_house
   final_player_knowledge:
   - 内封套证明 Miller 项目委员会位于多个机构接口之上
@@ -1182,7 +1194,11 @@ outline_coverage:
   mapping: exact
   primary_landing: special_mechanics.identity_lock
 - beat_id: L5_B03
-  source_anchor: active outline / Loop5 / Mickey返回与逻辑指证
+  source_anchor: active outline / Loop5 / Mickey返回
+  mapping: exact
+  primary_landing: scenes.4042.event_triggers.mickey_returns
+- beat_id: L5_B03_EXPOSE
+  source_anchor: active outline / Loop5 / 逻辑指证
   mapping: exact
   primary_landing: expose.mickey
 - beat_id: L5_B04
@@ -1224,13 +1240,26 @@ narrative_continuity:
   - u4_l5_opening
   required_beats:
   - 完成4501、4502、4503
-  exit_state: Mickey返回并锁定探索
-  hands_off_to: u4_l5_expose
+  exit_state: 三条身份链全部完成，特殊适配器锁定自由探索并触发Mickey回场
+  hands_off_to: u4_l5_mickey_return
   covers:
   - special_mechanics.identity_lock
+- id: u4_l5_mickey_return
+  source_anchor: Loop5 / Mickey返回
+  entry_state: 办公室调查已锁定，Mickey尚未进入事实指证
+  consumes:
+  - u4_l5_identity_lock
+  required_beats:
+  - Mickey看见保险柜与Zack手中的三组身份材料
+  - Mickey主动提出1919-A账户防线并取得4035001
+  - 回场Talk结束后强制续接Expose，不恢复自由探索
+  exit_state: R1谎言锚4035001已取得
+  hands_off_to: u4_l5_expose
+  covers:
+  - scenes.4042.event_triggers.mickey_returns
 - id: u4_l5_expose
   source_anchor: Loop5 / 指证 Mickey
-  entry_state: 三条身份链全部完成
+  entry_state: 三条身份链全部完成，Mickey回场且4035001已经取得
   consumes:
   - u4_l5_identity_lock
   required_beats:

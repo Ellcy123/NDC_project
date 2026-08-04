@@ -303,9 +303,16 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
   `👤 NPC：` 必须生成对应场景的自由 NPC Talk。若同一角色在 Opening 后继续
   留场，Opening 只承担强制事件，恢复控制后仍须另有 `scenes[].npcs` Talk
   承担询问、证词或对话交付；两者内容不得重复。
-- **对话取得必须双向绑定**：大纲写明“对话获取｜NPC”的证据，State 必须同时
-  在证据 `acquisition.talk` 和 NPC `grants_evidence` 中登记，并指向同一个
-  `scenes[].npcs.*.talk`。只把证据列在 scene 中视为漏配。
+- **对话取得必须有大纲明示，禁止按邻近关系推断**：只有 active outline 明确
+  写出“获取方式：对话获取｜NPC”、或明确写出某角色“交出 / 返还 / 递交”该
+  证据时，State 才能把它登记为对白获取。自由探索场景内列出的普通证据默认由
+  玩家搜证取得；不能因为证据与 NPC 位于同一场景，就擅自改成 NPC 发放。
+- **明示的对话取得必须双向绑定**：普通自由 Talk 交付时，证据
+  `acquisition.talk` 与 NPC `grants_evidence` 必须指向同一个
+  `scenes[].npcs.*.talk`；Opening、强制 Event 或 post-expose 中交付时，证据
+  必须额外写 `acquisition.carrier`，并由对应场景级事件的 `grants_evidence`
+  承担交付。每一项还必须进入 `outline_coverage`，标记
+  `evidence_delivery_required: true`。只把证据列在 scene 中视为漏配。
 - **证言正文必须在获取位置内联**：NPC 普通 Talk 可取得的证言必须直接写在该
   NPC 的 `testimony_ids` 下，每项至少包含 `id / kind / content /
   acquisition_talk / source_anchor`。指证后取得的证言写在对应
@@ -395,6 +402,28 @@ Opening 约束：
 - 运行时细节以
   `references/unity-opening-runtime-contract.md` 为准。
 
+### 强制事件与固定链路合同
+
+- 自由探索期间发生的撤离、回执送达、NPC 回场、强制转场等剧情，不得伪装成
+  `scenes[].npcs` 自由 Talk；必须写入 `scenes[].event_triggers[]`，并使用按
+  场景或事件命名的 `talk`。
+- 每个强制事件必须声明 `runtime_binding`。使用现有
+  `SceneEnterTalkTriggerConfig` 时必须直接列出完整 `required_item_ids`；不得只
+  写“调查完成”“收到回执”等不可落表的自然语言条件。
+- 若大纲要求固定顺序，例如“Sarah Talk → 申请并取得回执 → 安置 Sarah →
+  转场”，State 必须逐段写出 `required_talks / required_item_ids /
+  previous_event_completed / next_talk`。当前 Unity 不支持其中某类条件时，明确
+  标记 `special_adapter` 与缺失能力，不能省略顺序，也不能让配置人员自行猜测。
+- 同一 Talk 只能有一个运行入口。已由 `change_scene + next_talk` 或前一事件
+  `next_talk` 续接的 Talk，不得再挂入目标场景 `event_triggers`、
+  `firstEnterTalk` 或自由 NPC Talk。
+- `cutscene` 与 non-Loop `ending_sequence` 每个连续场景只保留一个场景级
+  `talk`。人物知识和情绪状态写入 `character_states`，不得再为每名在场角色
+  生成自由 NPC Talk。
+- non-Loop 终幕必须有来自最后一个 post-expose Talk 的唯一运行入边；终幕开始
+  后不得恢复玩家控制。最终动作必须映射现有 Unity `DialogueAction`，章节最后
+  一轮使用 `loop_end` 并另标章节边界，不自创 `chapter_end`。
+
 ### 叙事连续性合同
 
 新增顶层设计字段 `narrative_continuity`。它不进入 Unity 正式表：
@@ -472,6 +501,8 @@ continuity unit。相邻单元必须形成 `hands_off_to` 链；每个单元都�
     出现次数逐一覆盖；对话取得证据与 Talk 双向绑定；每一处 `⚪` 均有
     `testimony_required` 覆盖行和唯一内联 ID 落点；所有普通
     `testimony_ids` 均有非空 `content`，所有 R2+ `lie_source` 均有同轮 `lie`
+    ；只有大纲明示的对白交付才可登记 `acquisition.kind: dialogue`，且证据、
+    registry、交付 Talk 与 coverage 四向一致
   - D 目标对齐：本轮 primary goal、核心揭示与大纲一致
   - E 信息节奏：后续 Loop 信息与 NPC 未知事实没有提前泄露
   - F 特殊结构：独立门控与 `ending_sequence` 等非标准结构完整、边界清楚
@@ -479,6 +510,8 @@ continuity unit。相邻单元必须形成 `hands_off_to` 链；每个单元都�
   - H 大纲覆盖：逐事件覆盖矩阵漏项 0、无来源新增 0、重复映射 0；所有偏差有用户批准记录
   - I Opening：一个根流程、场景/事件命名、强制段顺序正确、玩家控制恢复点明确、未与自由 NPC Talk 重复
   - J 连续性与运行时：continuity handoff 无断链；`initTalk / change_scene + next / firstEnterTalk / NPC TalkInfo` 职责无冲突
+    ；所有强制 Event Talk 和 ending Talk 有唯一入口；固定顺序链可执行；终幕有
+    唯一入边且不会中途释放控制
 - 若本章存在 non-Loop finale：最后一份 State 必须含 `ending_sequence`，其中只写终幕事件，不把它登记为新的 Loop。
 
 ## 跨 Loop 一致性校验清单（Phase 2 完成后）
@@ -492,6 +525,8 @@ continuity unit。相邻单元必须形成 `hands_off_to` 链；每个单元都�
   `scenes[].npcs.*.talk`；同名多次出现未被错误合并
 - [ ] 所有“对话获取”证据的 `acquisition.talk` 与 NPC
   `grants_evidence` 双向一致
+- [ ] 所有 `acquisition.kind: dialogue` 都能反查 active outline 的明确
+  “对话获取 / 交出 / 返还”原文；自由搜证没有被误改成 NPC 发放
 - [ ] active outline 每一处 `⚪` 均进入覆盖矩阵，`source_text` 与原文逐字一致
 - [ ] 所有普通 `testimony_ids` 都是 `id + content` 内联对象，不存在裸 ID，
   不含冗余 `name`，根级不存在 `testimony_registry`
@@ -512,6 +547,9 @@ continuity unit。相邻单元必须形成 `hands_off_to` 链；每个单元都�
 - [ ] `narrative_continuity.units[].hands_off_to` 目标存在且全链无断点
 - [ ] 每个大纲 mandatory beat 有唯一 State 落点，所有新增/省略/改序均有用户批准
 - [ ] Unity 映射遵守一个 `ChapterConfig.initTalk` 根入口；跨场续接未与目标 `firstEnterTalk` 重复
+- [ ] `event_triggers[].talk` 与 `ending_sequence.scenes[].talk` 均有唯一运行入口
+- [ ] 强制事件的 `runtime_binding` 可落地；固定链路没有用抽象自然语言代替条件
+- [ ] cutscene / ending scene 没有 `npcs.*.talk`；最后 post-expose 唯一续接终幕第一段
 
 ### 疑点系统专项（对照 `docs/游戏系统/核心玩法/疑点系统.md`）
 - 以下项目只检查使用常规疑点的 Loop；active outline 明确批准的独立门控 Loop 改查 `special_mechanics` 材料覆盖与解锁关系。

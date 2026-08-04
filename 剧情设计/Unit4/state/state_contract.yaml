@@ -80,6 +80,32 @@ outline_coverage_contract:
     free_exploration_requires_scene_npc_talk: true
     opening_or_event_talk_does_not_satisfy: true
     dialogue_evidence_requires_matching_talk: true
+  evidence_delivery_policy:
+    coverage_flag: evidence_delivery_required
+    required_fields:
+      - evidence_id
+      - acquisition_kind
+      - acquisition_talk
+    evidence_and_registry_must_match: true
+    carrier_must_grant_evidence: true
+
+runtime_event_contract:
+  event_talk_locations:
+    - scenes[].event_triggers[].talk
+    - ending_sequence.scenes[].talk
+  forced_event_requires_runtime_binding: true
+  scene_enter_adapter: SceneEnterTalkTriggerConfig
+  scene_enter_required_field: required_item_ids
+  special_adapters:
+    - ordered_story_event
+    - chained_talk
+    - identity_lock
+  duplicate_talk_entry_forbidden: true
+  cutscene_free_npc_talk_forbidden: true
+  allowed_runtime_actions:
+    - change_scene
+    - release_to_exploration
+    - loop_end
 
 testimony_contract:
   outline_marker: "⚪"
@@ -169,7 +195,12 @@ identity_lock:
   unlocks: expose
   standard_doubt_progress_required: false
   mickey_returns_condition: "special_mechanics.identity_lock.completion_condition 达成"
-  expose_unlock_condition: "special_mechanics.identity_lock.completion_condition == all_chains_completed"
+  mickey_returns_talk: L5_event_mickey_returns
+  mickey_returns_testimony: 4035001
+  expose_unlock_condition:
+    identity_lock_completion: all_chains_completed
+    required_entry_event: mickey_returns
+    required_testimony_ids: [4035001]
   wrong_submission:
     consumes_evidence: false
     resets_completed_chains: false
@@ -194,6 +225,8 @@ ending_sequence:
   owner_loop: 5
   counts_as_loop: false
   chapter_end_after: ending_4045
+  entry_talk: L5_ending_departure
+  final_runtime_action: loop_end
   next_unit_entry: enter_ohara_house
   unit5_first_allowed_action: "进入 O'Hara 家并开始屋内救援"
   unit5_outline_first_action_prefix: "Zack 与 Emma 进入屋内"

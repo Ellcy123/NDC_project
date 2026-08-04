@@ -14,7 +14,7 @@ player_context:
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
   - 保险柜材料显示 Rosa 的庭审迫近，并留下圣心医院儿童死亡对照与问题批次药剂
-  - Rosa 没有在规定剂量之外额外注射；止动结构、日期撕签和实际消耗量不存在额外用量缺口
+  - Rosa 没有在规定剂量之外额外注射；不可移动金属止动环、十三格按日开启留下的指纹确认和实际消耗量不存在额外用量缺口
   - Isabel 的死亡不是单例；另外两名死亡儿童的药瓶与 Isabel 属于同一批次
   - 问题批次正式进入圣心医院采购、入库与慈善发放链
   - 加急效价对照只能证明同批样本效力明显不一致，且不能用单支家庭保存不当解释
@@ -79,6 +79,8 @@ opening:
     - Patrick 冲突升级；Mickey 坚称 Patrick 最后选择了自己。
     - Mickey 反击 Zack 曾隐瞒 Emma，离开后 Emma 正面对质 Zack。
     - Doris 到场交出 O'Hara 清退通知，众人立即转向现实危险。
+    grants_evidence:
+    - 4411
     runtime_exit:
       action: change_scene
       target_scene_id: 4032
@@ -96,8 +98,12 @@ scenes:
     name: Lakeshore清退协警通知
     type: item
     pickup: true
-    note: 现实行动钥匙；Margaret R1 陷阱，只证明施压，不证明 O'Hara 是否同意
+    note: 现实行动钥匙；不参与 Margaret R1 击穿，只证明施压，不证明 O'Hara 是否同意
     description: O'Hara 家被列为第一批核心拒售户，第三次接触要求辖区警员到场维持所谓民事秩序
+    acquisition:
+      kind: dialogue
+      talk: L4_opening_office_confrontation
+      carrier: opening
 - id: 4032
   name: O'Hara 家门口
   type: free_exploration
@@ -170,9 +176,13 @@ scenes:
   - id: 4414
     name: 临时停止执行回执
     type: item
-    pickup: true
-    note: 真实行动结果；R2 陷阱。只挡警务协助和强制搬离，不挡卫生检查
+    pickup: false
+    note: 真实行动结果；不参与 R2 击穿。只挡警务协助和强制搬离，不挡卫生检查
     description: 值班法官签发，有效至次日傍晚；Watts 跟进登记并送达
+    acquisition:
+      kind: scripted_event
+      talk: L4_event_stop_order_delivery
+      carrier: event_trigger
   environment:
   - name: 后巷井检口
     note: 只建立私人井、院墙外检修盖与公共接近路径；不得提前得出污染结论
@@ -194,10 +204,38 @@ scenes:
       - 她是否曾在Rosa家留宿
       testimony_ids: []
   event_triggers:
+  - id: stop_order_application_and_delivery
+    condition:
+      all_of:
+        required_talks:
+        - L4_scene4033_sarah
+        required_item_ids:
+        - 4411
+        - 4412
+    talk: L4_event_stop_order_delivery
+    forced: true
+    locks_player_control: true
+    runtime_binding:
+      adapter: ordered_story_event
+      reason: Unity现有SceneEnterTalkTriggerConfig不支持requiredTalkIds，配置实现必须保证Sarah Talk先完成
+    grants_evidence:
+    - 4414
+    required_beats:
+    - Sarah已在自由Talk中确认自己熟悉Rosa家、曾在那里留宿。
+    - Zack使用O'Hara写下的“不出售”、清退协警通知与限时协议联系Watts。
+    - 值班法官签发临时停止执行，Watts完成登记并送达4414，警员离开。
+    runtime_exit:
+      continuation: next_talk
+      next_talk: L4_event_sarah_relocation
   - id: sarah_relocation_before_margaret
-    condition: stop_order_received
+    condition:
+      previous_event_completed: stop_order_application_and_delivery
     talk: L4_event_sarah_relocation
     forced: true
+    locks_player_control: true
+    runtime_binding:
+      adapter: chained_talk
+      previous_talk: L4_event_stop_order_delivery
     required_beats:
     - O'Hara选择留下，Sarah同意暂时离开。
     - Emma先把Sarah送到熟悉的Rosa家住一晚。
@@ -237,7 +275,7 @@ scenes:
     type: item
     pickup: true
     note: L5 法律壳与身份演变链输入
-    description: 葬礼后 Mickey 说会接着做；Donnelly & Associates 旧信封始于1919年，法人代表 Michael F. Donnelly
+    description: 葬礼后 Mickey 说会接着做；Donnelly & Associates 旧信封始于1919年，法人代表 Michael F. Donnelly，并印有四十二层办公室地址
   - id: 4709
     name: 1919同时出现的两项可观察事实
     type: derived_memory
@@ -254,9 +292,13 @@ scenes:
   - id: 4418
     name: Patrick遗物匣
     type: key_item
-    pickup: true
-    note: R3 陷阱；不参与 Margaret 指证，只承担返程安排、信条与 L5 密码
+    pickup: false
+    note: 不参与 Margaret 指证，只承担返程安排、信条与 L5 密码
     description: 橡木匣刻有 FOR THE MANY WE PAY THE FEW，并保存未使用返程票
+    acquisition:
+      kind: dialogue
+      talk: L4_post_expose_patrick_truth
+      carrier: post_expose
   - id: 4419
     name: Margaret写给Mickey但未寄出的短笺
     type: item
@@ -365,6 +407,8 @@ expose:
     - Margaret交出4418遗物匣且只取得一次。
     - Zack主动决定前往四十二层，Emma因现实安置工作不同行。
     player_control_restored_after: patrick_truth_and_42nd_floor_handoff
+    grants_evidence:
+    - 4418
     testimony_ids:
     - id: 4104001
       content: 你父亲当时并不知道那个人是Mickey……他只是为了工人，觉得那是他的工友，就牺牲了自己的生命
@@ -414,7 +458,11 @@ evidence_registry:
   type: item
   pickup: true
   first_scene: 4031
-  note: 现实行动钥匙；R1 陷阱
+  note: 现实行动钥匙；不参与 R1 击穿
+  acquisition:
+    kind: dialogue
+    talk: L4_opening_office_confrontation
+    carrier: opening
 - id: 4412
   name: Lakeshore最终收购协议
   type: item
@@ -430,9 +478,13 @@ evidence_registry:
 - id: 4414
   name: 临时停止执行回执
   type: item
-  pickup: true
+  pickup: false
   first_scene: 4033
-  note: 真实保护结果；R2 陷阱
+  note: 真实保护结果；不参与 R2 击穿
+  acquisition:
+    kind: scripted_event
+    talk: L4_event_stop_order_delivery
+    carrier: event_trigger
 - id: 4415
   name: 1903南区码头旧照片
   type: item
@@ -451,6 +503,7 @@ evidence_registry:
   pickup: true
   first_scene: 4034
   note: L5 法律壳链复用
+  description: Donnelly & Associates 旧信封始于1919年，印有法人代表 Michael F. Donnelly 与四十二层办公室地址
   persistence:
     scope: chapter
     reset_policy: retain_across_loops
@@ -471,9 +524,13 @@ evidence_registry:
 - id: 4418
   name: Patrick遗物匣
   type: key_item
-  pickup: true
+  pickup: false
   first_scene: 4034
-  note: L5 密码；R3 陷阱，不参与本轮指证
+  note: L5 密码；不参与本轮指证
+  acquisition:
+    kind: dialogue
+    talk: L4_post_expose_patrick_truth
+    carrier: post_expose
   persistence:
     scope: chapter
     reset_policy: retain_across_loops
@@ -497,7 +554,7 @@ outline_coverage:
 - beat_id: L4_B03
   source_anchor: active outline / Loop4 / Sarah转移至Rosa家
   mapping: exact
-  primary_landing: scenes.4033.sarah_relocation
+  primary_landing: scenes.4033.event_triggers.sarah_relocation_before_margaret
 - beat_id: L4_B04
   source_anchor: active outline / Loop4 / Margaret调查与指证
   mapping: exact
@@ -540,6 +597,33 @@ outline_coverage:
   scene_id: 4034
   npc_key: L4_scene4034_margaret
   talk: L4_scene4034_margaret
+- beat_id: L4_E_DORIS_CLEARANCE_NOTICE
+  source_anchor: active outline / Loop4 / 开篇剧情 / Doris送来幸存材料 / Lakeshore清退协警通知 / 对话获取 Doris
+  mapping: exact
+  primary_landing: opening.sequence.office_confrontation.grants_evidence.4411
+  evidence_delivery_required: true
+  evidence_id: 4411
+  acquisition_kind: dialogue
+  acquisition_talk: L4_opening_office_confrontation
+  acquisition_carrier: opening
+- beat_id: L4_E_STOP_ORDER_DELIVERY
+  source_anchor: active outline / Loop4 / 临时停止执行 / 值班法官签发后由Watts登记并送达
+  mapping: exact
+  primary_landing: scenes.4033.event_triggers.stop_order_application_and_delivery.grants_evidence.4414
+  evidence_delivery_required: true
+  evidence_id: 4414
+  acquisition_kind: scripted_event
+  acquisition_talk: L4_event_stop_order_delivery
+  acquisition_carrier: event_trigger
+- beat_id: L4_E_MARGARET_PATRICK_BOX
+  source_anchor: active outline / Loop4 / Margaret家 / Patrick遗物匣 / 对话获取 Margaret主动交出
+  mapping: exact
+  primary_landing: expose.post_expose.grants_evidence.4418
+  evidence_delivery_required: true
+  evidence_id: 4418
+  acquisition_kind: dialogue
+  acquisition_talk: L4_post_expose_patrick_truth
+  acquisition_carrier: post_expose
 - beat_id: L4_T_OHARA_REFUSAL
   marker_id: L4_T_OHARA_REFUSAL
   source_anchor: active outline / Loop4 / 自由探索 / O'Hara家门口 / O'Hara / ⚪

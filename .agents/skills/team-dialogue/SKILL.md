@@ -238,14 +238,24 @@ Phase 1 前必须输出并传给后续所有 agent：
 |---|---|
 | Opening | 按 `opening.sequence[]` 顺序逐段读取 `sequence[].talk` → `## Talk: {值}.json` |
 | Talk | `scenes[].npcs.<key>.talk` 值 → `## Talk: {值}.json` |
+| 强制 Event | 按场景顺序读取 `scenes[].event_triggers[].talk` → `## Talk: {值}.json` |
 | Expose | `expose.target_talk` 值 → `## Expose: {值}.json` |
 | post_expose | `post_expose.talk` 值 → `## Talk: {值}.json` |
+| non-Loop 终幕 | 按 `ending_sequence.scenes[]` 顺序读取 `scenes[].talk` → `## Talk: {值}.json` |
 
 - 场景分组头（人类可读）：`## §N. Scene {scene_id} — {描述}`，与文件名解耦。
 - Opening 可以有多个强制段，但只有一个根流程；`opening.sequence[]` 中每个
   scene/event 段都必须有独立 `talk`，并按数组顺序串接。缺 `sequence[]`、
   段缺 `talk`、Talk 以人物命名，或同一剧情拍又挂进自由 NPC Talk，均视为
   上游 State 缺陷，停止写作并回报，不得在对白阶段自行补结构。
+- `event_triggers[].talk` 是满足条件后自动起播的场景级强制对白，不套自由 NPC
+  Talk 的点击入口和分支要求。若其 `runtime_binding` 缺失、条件只有“调查完成”
+  等不可执行自然语言、或同一 Talk 同时被 `next_talk` 与另一入口调用，视为上游
+  State FAIL。
+- `ending_sequence.scenes[].talk` 是连续强制终幕。每个 ending scene 只能生成
+  一个场景级 Talk；`character_states` 只作为角色知识卡，不生成额外文件。若
+  ending scene 仍含 `npcs.*.talk`、post-expose 没有唯一续接第一段 ending Talk，
+  或终幕中途恢复玩家控制，视为上游 State FAIL。
 - **不存在"没有对话名字的内容"**：每段对白必属于 state 某个 `talk` / `target_talk` 字段。纯过场（如结尾电报）并入语义上最贴近的、state 已命名的相邻对话段（通常是其前一段 post_expose / Talk 的 talk 文件），**不另起无名 cutscene 文件**。
 - 若遇到 state 某段确实查无对应 `talk` 字段且无法判断归入哪段 → 视为 state 缺陷，lead 用 AskUserQuestion 停下来问用户归属，**绝不自创文件名**。
 
@@ -310,6 +320,13 @@ Phase 0 结束前，lead 必须在主线程明示产出并保存到后续 prompt
 - 章节认知—情绪弧、剧情因果—人物选择卡、动态角色状态表、伏笔—回响账本、既有成稿尾部摘要
 - State 结构闸门结果：Opening 是否为一个根流程、`sequence[].talk` 是否完整且
   以场景/事件命名、强制剧情是否误挂自由 NPC、玩家控制权交接是否明确。
+- 强制 Event / 终幕闸门结果：逐一列出 `event_triggers[].talk` 与
+  `ending_sequence.scenes[].talk`，检查入口唯一、固定链顺序、runtime binding、
+  post-expose→终幕入边和最终退出动作；任一缺失即停止写作。
+- 证据获取来源闸门：只有 active outline 明确标注“对话获取”或明确写出角色
+  交出/返还的证据才允许在对白里生成 `@get 证据`。普通场景调查证据不得因为与
+  NPC 同场就改成 NPC 交付；每个对白获取证据必须同时匹配 State 的
+  `acquisition.talk`、交付段 `grants_evidence` 与 coverage 原文锚点。
 - NPC marker 闸门结果：active outline 自由探索段落中每一处 `👤 NPC` 是否都
   出现在 State 的 `outline_coverage[dialogue_required=true]`，并精确绑定同场
   `scenes[].npcs.*.talk`；同名 NPC 在不同场景/事件阶段必须逐处覆盖。缺一处即
@@ -389,6 +406,8 @@ lead 负责：
 8. **整稿通读**：按实际播放顺序完整通读，不抽样；按文笔校准卡、R1/R4/R9-R14 逐场检查成稿感、角色声纹、
    推理严密性与情绪曲线；Opening/cutscene 不套普通 NPC Talk 的分支规则，
    R13 只检查 `scenes[].npcs` 的自由探索 Talk。
+   强制 Event 与 ending_sequence 按运行链插入实际播放顺序，不得放到 Loop 末尾
+   批量补写或按在场角色拆散。
 9. 主文件路径呈给用户
 
 ### Phase 4 · 并行审查
@@ -421,6 +440,13 @@ outline 路径、章节认知—情绪弧、剧情因果—人物选择卡、场
     `opening.sequence[].talk`；Talk 是否以场景/事件命名；是否把强制多人剧情
     误拆成自由 NPC Talk；控制权交接是否明确。任一违反 → 上游 State FAIL，
     不得靠改对白放行。
+  - **【强制 Event / 终幕结构测试】** `event_triggers[].talk` 与
+    `ending_sequence.scenes[].talk` 是否全部生成且按 State 运行链衔接；同一 Talk
+    是否仅有一个入口；终幕是否从 post-expose 唯一进入、每场只有一个场景级
+    Talk、过程中不恢复玩家控制。任一违反 → 上游 State FAIL。
+  - **【证据来源测试】** 每个 `@get 证据` 是否有 active outline 的明确对话交付
+    原文，以及 State 的 acquisition/grants/coverage 三向绑定；把自由搜证改成
+    NPC 发放或把明确交付漏掉，均为 FAIL。
   - **【Zack 知识边界测试】** 逐个 Talk 选项和追问核对 Zack 知识账本：每个问题是否有当前已知来源；若直接问出未获得的人名、地点、时间、物件或结论 → FAIL（R13/R14）。
   - **【全局连续性测试】** 检查角色关系是否符合全局文档和旧出场 NPC 核对表：不能把第一次见面写成老熟人，不能把电话联系过的人写成完全陌生，不能漏掉上次案件/电话/当面合作留下的自然余波，不能引用后续 Unit / Loop 真相；违反 → FAIL（R14）。
   - 另查 AGENTS.md 原则一（是否替玩家下结论/破梗/Talk 戳穿）、R2（是否贴合大纲叙事功能）、R3（人设巧思/禁忌是否兑现）、R4（删信息点后是否认得出人物/关系/世界）、R7（空发言块/大段独白）、R8（命名是否取自 state）、R9（段间衔接是否打通）、R10（上风曲线是否有翻折）、R11（指证是否有情绪高点与击破感）、R12（角色不可互换）、R13（Talk 结构）、R14（全局上下文）。

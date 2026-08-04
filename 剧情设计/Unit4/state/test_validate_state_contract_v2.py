@@ -10,7 +10,7 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 VALIDATOR_PATH = Path(__file__).with_name("validate_state_contract_v2.py")
-CANDIDATE_RELATIVE = Path("剧情设计/Unit4/state_candidate_v3")
+STATE_RELATIVE = Path("剧情设计/Unit4/state")
 
 
 def load_validator():
@@ -35,11 +35,11 @@ class Unit4StateContractV2Test(unittest.TestCase):
         outline_target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO_ROOT / outline_relative, outline_target)
 
-        source = REPO_ROOT / CANDIDATE_RELATIVE
-        target = self.tmpdir / CANDIDATE_RELATIVE
+        source = REPO_ROOT / STATE_RELATIVE
+        target = self.tmpdir / STATE_RELATIVE
         target.parent.mkdir(parents=True, exist_ok=True)
         if not source.exists():
-            self.fail("Unit4 v3 candidate State set is missing")
+            self.fail("Unit4 formal State set is missing")
         shutil.copytree(source, target)
 
     def tearDown(self) -> None:
@@ -49,15 +49,15 @@ class Unit4StateContractV2Test(unittest.TestCase):
         validator_module = load_validator()
         return validator_module.Unit4StateV2Validator(
             root=self.tmpdir,
-            state_dir=CANDIDATE_RELATIVE,
+            state_dir=STATE_RELATIVE,
         ).validate()
 
     def load_state(self, loop_number: int) -> dict:
-        path = self.tmpdir / CANDIDATE_RELATIVE / f"loop{loop_number}_state.yaml"
+        path = self.tmpdir / STATE_RELATIVE / f"loop{loop_number}_state.yaml"
         return yaml.safe_load(path.read_text(encoding="utf-8"))
 
     def save_state(self, loop_number: int, state: dict) -> None:
-        path = self.tmpdir / CANDIDATE_RELATIVE / f"loop{loop_number}_state.yaml"
+        path = self.tmpdir / STATE_RELATIVE / f"loop{loop_number}_state.yaml"
         path.write_text(
             yaml.safe_dump(state, allow_unicode=True, sort_keys=False, width=120),
             encoding="utf-8",
@@ -350,6 +350,116 @@ class Unit4StateContractV2Test(unittest.TestCase):
         self.save_state(2, state)
 
         self.assert_error_contains("dialogue evidence acquisition")
+
+    def test_rejects_outline_dialogue_evidence_without_binding(self) -> None:
+        state = self.load_state(2)
+        scene = next(entry for entry in state["scenes"] if entry["id"] == 4013)
+        evidence = next(entry for entry in scene["evidence"] if entry["id"] == 4213)
+        evidence.pop("acquisition", None)
+        registry = next(
+            entry for entry in state["evidence_registry"] if entry["id"] == 4213
+        )
+        registry.pop("acquisition", None)
+        self.save_state(2, state)
+
+        self.assert_error_contains("outline dialogue evidence lacks dialogue acquisition")
+
+    def test_rejects_acquired_evidence_without_outline_coverage(self) -> None:
+        state = self.load_state(2)
+        state["outline_coverage"] = [
+            row
+            for row in state["outline_coverage"]
+            if row.get("evidence_id") != 4215
+        ]
+        self.save_state(2, state)
+
+        self.assert_error_contains("acquired evidence lacks delivery coverage")
+
+    def test_rejects_invented_dialogue_evidence_source(self) -> None:
+        state = self.load_state(2)
+        scene = next(entry for entry in state["scenes"] if entry["id"] == 4015)
+        evidence = next(entry for entry in scene["evidence"] if entry["id"] == 4214)
+        evidence["acquisition"] = {
+            "kind": "dialogue",
+            "talk": "L2_scene4015_mickey",
+        }
+        registry = next(
+            entry for entry in state["evidence_registry"] if entry["id"] == 4214
+        )
+        registry["acquisition"] = evidence["acquisition"].copy()
+        scene["npcs"]["L2_scene4015_mickey"].setdefault(
+            "grants_evidence", []
+        ).append(4214)
+        state["outline_coverage"].append(
+            {
+                "beat_id": "L2_INVENTED_DIALOGUE_4214",
+                "source_anchor": "active outline / Loop2 / 法院会客室",
+                "mapping": "exact",
+                "primary_landing": "scenes.4015.evidence.4214.acquisition",
+                "evidence_delivery_required": True,
+                "evidence_id": 4214,
+                "acquisition_kind": "dialogue",
+                "acquisition_talk": "L2_scene4015_mickey",
+            }
+        )
+        self.save_state(2, state)
+
+        self.assert_error_contains("dialogue acquisition lacks explicit outline source")
+
+    def test_rejects_event_talk_with_duplicate_runtime_entry(self) -> None:
+        state = self.load_state(3)
+        scene = next(entry for entry in state["scenes"] if entry["id"] == 4023)
+        scene.setdefault("event_triggers", []).append(
+            {
+                "id": "duplicate_evacuation",
+                "condition": "first_enter",
+                "talk": "L3_opening_mansion_arrival",
+                "forced": True,
+                "runtime_binding": {
+                    "adapter": "ordered_story_event",
+                },
+            }
+        )
+        self.save_state(3, state)
+
+        self.assert_error_contains("both chained and independently triggered")
+
+    def test_rejects_ordered_story_event_without_required_talk(self) -> None:
+        state = self.load_state(4)
+        scene = next(entry for entry in state["scenes"] if entry["id"] == 4033)
+        event = next(
+            entry
+            for entry in scene["event_triggers"]
+            if entry["id"] == "stop_order_application_and_delivery"
+        )
+        event["condition"]["all_of"]["required_talks"] = []
+        self.save_state(4, state)
+
+        self.assert_error_contains("ordered story event lacks fixed prerequisites")
+
+    def test_rejects_mickey_as_free_npc_before_forced_return(self) -> None:
+        state = self.load_state(5)
+        office = next(entry for entry in state["scenes"] if entry["id"] == 4042)
+        office["npcs"] = {"mickey": {"talk": "L5_scene4042_mickey"}}
+        self.save_state(5, state)
+
+        self.assert_error_contains("Mickey return must not be a free NPC Talk")
+
+    def test_rejects_ending_without_post_expose_entry(self) -> None:
+        state = self.load_state(5)
+        state["expose"]["post_expose"].pop("runtime_exit", None)
+        self.save_state(5, state)
+
+        self.assert_error_contains("ending sequence has no unique post-expose entry")
+
+    def test_rejects_ending_scene_with_free_npc_talk(self) -> None:
+        state = self.load_state(5)
+        state["ending_sequence"]["scenes"][0]["npcs"] = {
+            "emma": {"talk": "L5_ending4043_emma"}
+        }
+        self.save_state(5, state)
+
+        self.assert_error_contains("ending scene ending_4043 has free NPC Talk data")
 
 
 if __name__ == "__main__":

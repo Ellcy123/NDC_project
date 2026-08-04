@@ -1331,6 +1331,11 @@ def remove_deprecated_fields(value) -> None:
 
 
 def generate() -> None:
+    raise RuntimeError(
+        "DEPRECATED: this one-off candidate generator encodes superseded Unit4 event, "
+        "evidence-acquisition, and ending contracts. Use the unit-state-generator skill "
+        "against the Manifest active outline and validate 剧情设计/Unit4/state directly."
+    )
     TARGET_DIR.mkdir(parents=True, exist_ok=True)
     for loop_number in range(1, 6):
         state = load_state(loop_number)

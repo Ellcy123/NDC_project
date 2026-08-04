@@ -90,7 +90,7 @@ scenes:
     name: 1919-A入账存根
     type: item
     pickup: true
-    note: R1 陷阱；只能证明收钱。跨 Loop 至 L5 法律壳身份链
+    note: 不参与 R1 击穿；只能证明收钱。跨 Loop 至 L5 法律壳身份链
     description: 付款方只有匿名代号 1919-A，备注连续引用圣心医院赔偿案号，款项进入 Harrison 私人账户
   - id: 4113
     name: 未完成的辞职信草稿
@@ -171,7 +171,7 @@ scenes:
     name: 圣心医院资助档案卷宗
     type: item
     pickup: true
-    note: R2 陷阱；证明医院与 Miller 资助关系，不证明 Harrison 正在查自己的裁定
+    note: 不参与 R2 击穿；证明医院与 Miller 资助关系，不证明 Harrison 正在查自己的裁定
     description: 圣心医院资助机构排名中 Miller 位列第一，医院对接负责人为 Whitfield；文件封套右上角盖有 Miller 印章
     acquisition:
       kind: dialogue
@@ -365,7 +365,7 @@ evidence_registry:
   type: item
   pickup: true
   first_scene: 4002
-  note: R1 陷阱；跨至 L5 身份链
+  note: 不参与 R1 击穿；跨至 L5 身份链
   persistence:
     scope: chapter
     reset_policy: retain_across_loops
@@ -382,7 +382,7 @@ evidence_registry:
   type: item
   pickup: true
   first_scene: 4003
-  note: R2 陷阱；提供 Whitfield 方向
+  note: 不参与 R2 击穿；提供 Whitfield 方向
   acquisition:
     kind: dialogue
     talk: L1_scene4003_archivist
@@ -497,6 +497,14 @@ outline_coverage:
   scene_id: 4003
   npc_key: L1_scene4003_archivist
   talk: L1_scene4003_archivist
+- beat_id: L1_E_ARCHIVIST_HOSPITAL_FUNDING
+  source_anchor: active outline / Loop1 / 自由探索 / 法院档案室 / 档案管理员 / 对话获取圣心医院资助档案卷宗
+  mapping: exact
+  primary_landing: scenes.4003.evidence.4114.acquisition
+  evidence_delivery_required: true
+  evidence_id: 4114
+  acquisition_kind: dialogue
+  acquisition_talk: L1_scene4003_archivist
 - beat_id: L1_T_WATTS_CLERK
   marker_id: L1_T_WATTS_CLERK
   source_anchor: active outline / Loop1 / 自由探索 / Harrison外间办公室 / NPC Watts / ⚪

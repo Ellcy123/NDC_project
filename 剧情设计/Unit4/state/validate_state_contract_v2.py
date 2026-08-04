@@ -10,7 +10,7 @@ from typing import Any
 import yaml
 
 
-DEFAULT_STATE_DIR = Path("剧情设计/Unit4/state_candidate_v3")
+DEFAULT_STATE_DIR = Path("剧情设计/Unit4/state")
 PERSON_TOKENS = {
     "zack",
     "emma",
@@ -91,6 +91,8 @@ class Unit4StateV2Validator:
         self._validate_inline_testimonies()
         self._validate_outline_testimony_markers()
         self._validate_dialogue_evidence_acquisition()
+        self._validate_evidence_delivery_coverage()
+        self._validate_runtime_events()
         self._validate_continuity()
         self._validate_identity_lock()
         self._validate_persistence()
@@ -205,6 +207,7 @@ class Unit4StateV2Validator:
             "narrative_continuity_contract",
             "expose_evidence_contract",
             "testimony_contract",
+            "runtime_event_contract",
         )
         for key in required_contracts:
             if not isinstance(self.contract.get(key), dict):
@@ -691,31 +694,347 @@ class Unit4StateV2Validator:
                 entry.get("id"): entry
                 for entry in state.get("evidence_registry", [])
             }
+            carriers: dict[str, list[tuple[str, dict]]] = {}
+
+            def add_carrier(talk: Any, carrier: str, data: dict) -> None:
+                if talk:
+                    carriers.setdefault(str(talk), []).append((carrier, data))
+
+            for event in state.get("opening", {}).get("sequence", []) or []:
+                add_carrier(event.get("talk"), "opening", event)
             for scene in state.get("scenes", []):
                 npcs = scene.get("npcs", {}) or {}
-                talk_to_npc = {
-                    npc.get("talk"): npc
-                    for npc in npcs.values()
-                    if npc.get("talk")
-                }
+                for npc in npcs.values():
+                    add_carrier(npc.get("talk"), "npc", npc)
+                for event in scene.get("event_triggers", []) or []:
+                    add_carrier(event.get("talk"), "event_trigger", event)
+
+            post_expose = state.get("expose", {}).get("post_expose", {})
+            add_carrier(post_expose.get("talk"), "post_expose", post_expose)
+
+            scene_evidence: dict[int, dict] = {}
+            for scene in state.get("scenes", []):
                 for evidence in scene.get("evidence", []) or []:
+                    evidence_id = evidence.get("id")
+                    if isinstance(evidence_id, int):
+                        scene_evidence[evidence_id] = evidence
                     acquisition = evidence.get("acquisition", {})
-                    if acquisition.get("kind") != "dialogue":
+                    if not acquisition:
                         continue
                     talk = acquisition.get("talk")
-                    npc = talk_to_npc.get(talk)
-                    evidence_id = evidence.get("id")
                     registry_acquisition = registry.get(evidence_id, {}).get(
                         "acquisition"
                     )
-                    if (
-                        not npc
-                        or evidence_id not in (npc.get("grants_evidence") or [])
-                        or registry_acquisition != acquisition
-                    ):
+                    matching_carriers = carriers.get(str(talk), [])
+                    expected_carrier = acquisition.get("carrier")
+                    if expected_carrier:
+                        matching_carriers = [
+                            pair
+                            for pair in matching_carriers
+                            if pair[0] == expected_carrier
+                        ]
+                    if not matching_carriers or not any(
+                        evidence_id in (data.get("grants_evidence") or [])
+                        for _, data in matching_carriers
+                    ) or registry_acquisition != acquisition:
                         self.errors.append(
                             f"loop{loop_number} dialogue evidence acquisition is invalid: {evidence_id}"
                         )
+
+            for evidence_id, entry in registry.items():
+                if (
+                    isinstance(entry.get("acquisition"), dict)
+                    and evidence_id not in scene_evidence
+                ):
+                    self.errors.append(
+                        f"loop{loop_number} registry acquisition has no scene evidence: {evidence_id}"
+                    )
+
+    @staticmethod
+    def _normalize_evidence_name(value: Any) -> str:
+        return re.sub(r"\s+", "", str(value or "")).strip()
+
+    def _outline_dialogue_evidence(self) -> list[tuple[int, str, str]]:
+        outline_relative = self.contract.get("canon_source", {}).get("active_outline")
+        outline_path = self.root / str(outline_relative or "")
+        if not outline_path.exists():
+            return []
+
+        results: list[tuple[int, str, str]] = []
+        current_loop: int | None = None
+        current_evidence: str | None = None
+        current_npc: str | None = None
+        dialogue_block_actor: str | None = None
+        dialogue_block_indent: int | None = None
+        evidence_pattern = re.compile(
+            r"^\s*(?:#{1,6}\s+|-\s+)(?:[🟢🔵🟣🧪🔒]+\s*)+(.+?)\s*$"
+        )
+        for line in outline_path.read_text(encoding="utf-8").splitlines():
+            indent = len(line) - len(line.lstrip())
+            loop_match = re.match(r"^# Loop (\d+)", line)
+            if loop_match:
+                current_loop = int(loop_match.group(1))
+                current_evidence = None
+                current_npc = None
+                dialogue_block_actor = None
+                dialogue_block_indent = None
+                continue
+            npc_match = re.search(r"👤 NPC[：:]\s*(.+?)\s*$", line)
+            if npc_match:
+                current_npc = npc_match.group(1).strip()
+                current_evidence = None
+                dialogue_block_actor = None
+                dialogue_block_indent = None
+                continue
+            if re.search(r"对话获取[：:]\s*$", line):
+                dialogue_block_actor = current_npc
+                dialogue_block_indent = indent
+                current_evidence = None
+                continue
+            if (
+                dialogue_block_indent is not None
+                and line.strip()
+                and indent <= dialogue_block_indent
+            ):
+                dialogue_block_actor = None
+                dialogue_block_indent = None
+            evidence_match = evidence_pattern.match(line)
+            if evidence_match:
+                current_evidence = evidence_match.group(1).strip()
+                if current_loop and dialogue_block_actor:
+                    results.append(
+                        (current_loop, current_evidence, dialogue_block_actor)
+                    )
+                continue
+            if re.match(r"^\s*(?:#{1,6}\s+|-\s+)(?:⚪|👤|🟡|💡)", line):
+                current_evidence = None
+                continue
+            acquisition_match = re.search(r"获取方式：对话获取｜(.+?)\s*$", line)
+            if current_loop and current_evidence and acquisition_match:
+                actor = re.split(r"[（(]", acquisition_match.group(1).strip(), 1)[0]
+                results.append((current_loop, current_evidence, actor.strip()))
+        return results
+
+    def _validate_evidence_delivery_coverage(self) -> None:
+        policy = (
+            self.contract.get("outline_coverage_contract", {})
+            .get("evidence_delivery_policy", {})
+        )
+        required_fields = set(policy.get("required_fields", []))
+        coverage_by_loop: dict[int, dict[int, dict]] = {}
+
+        for loop_number, state in self.states.items():
+            rows: dict[int, dict] = {}
+            for row in state.get("outline_coverage", []) or []:
+                if row.get("evidence_delivery_required") is not True:
+                    continue
+                missing = sorted(field for field in required_fields if field not in row)
+                if missing:
+                    self.errors.append(
+                        f"loop{loop_number} evidence delivery coverage lacks fields: {missing!r}"
+                    )
+                evidence_id = row.get("evidence_id")
+                if not isinstance(evidence_id, int):
+                    self.errors.append(
+                        f"loop{loop_number} evidence delivery coverage has invalid ID: {evidence_id!r}"
+                    )
+                    continue
+                if evidence_id in rows:
+                    self.errors.append(
+                        f"loop{loop_number} duplicate evidence delivery coverage: {evidence_id}"
+                    )
+                rows[evidence_id] = row
+            coverage_by_loop[loop_number] = rows
+
+            registry = {
+                entry.get("id"): entry
+                for entry in state.get("evidence_registry", [])
+            }
+            scene_evidence = {
+                evidence.get("id"): evidence
+                for scene in state.get("scenes", [])
+                for evidence in (scene.get("evidence", []) or [])
+            }
+            for evidence_id, row in rows.items():
+                expected = {
+                    "kind": row.get("acquisition_kind"),
+                    "talk": row.get("acquisition_talk"),
+                }
+                if row.get("acquisition_carrier"):
+                    expected["carrier"] = row.get("acquisition_carrier")
+                if (
+                    registry.get(evidence_id, {}).get("acquisition") != expected
+                    or scene_evidence.get(evidence_id, {}).get("acquisition") != expected
+                ):
+                    self.errors.append(
+                        f"loop{loop_number} evidence delivery coverage does not match acquisition: {evidence_id}"
+                    )
+
+            declared_acquisitions = {
+                evidence_id
+                for evidence_id, evidence in scene_evidence.items()
+                if evidence.get("acquisition")
+            }
+            missing_coverage = sorted(declared_acquisitions - set(rows))
+            if missing_coverage:
+                self.errors.append(
+                    f"loop{loop_number} acquired evidence lacks delivery coverage: {missing_coverage!r}"
+                )
+
+        for loop_number, evidence_name, actor in self._outline_dialogue_evidence():
+            state = self.states.get(loop_number, {})
+            registry = state.get("evidence_registry", []) or []
+            normalized = self._normalize_evidence_name(evidence_name)
+            entry = next(
+                (
+                    candidate
+                    for candidate in registry
+                    if self._normalize_evidence_name(candidate.get("name")) == normalized
+                ),
+                None,
+            )
+            if not entry:
+                self.errors.append(
+                    f"loop{loop_number} outline dialogue evidence is missing from registry: {evidence_name}"
+                )
+                continue
+            evidence_id = entry.get("id")
+            acquisition = entry.get("acquisition", {})
+            if acquisition.get("kind") != "dialogue" or not acquisition.get("talk"):
+                self.errors.append(
+                    f"loop{loop_number} outline dialogue evidence lacks dialogue acquisition: {evidence_id} ({actor})"
+                )
+            if evidence_id not in coverage_by_loop.get(loop_number, {}):
+                self.errors.append(
+                    f"loop{loop_number} outline dialogue evidence lacks coverage: {evidence_id}"
+                )
+
+        expected_names: dict[int, set[str]] = {}
+        for loop_number, evidence_name, _ in self._outline_dialogue_evidence():
+            expected_names.setdefault(loop_number, set()).add(
+                self._normalize_evidence_name(evidence_name)
+            )
+        for loop_number, state in self.states.items():
+            for entry in state.get("evidence_registry", []) or []:
+                acquisition = entry.get("acquisition")
+                if not isinstance(acquisition, dict) or acquisition.get("kind") != "dialogue":
+                    continue
+                if self._normalize_evidence_name(entry.get("name")) not in expected_names.get(
+                    loop_number, set()
+                ):
+                    self.errors.append(
+                        f"loop{loop_number} dialogue acquisition lacks explicit outline source: {entry.get('id')}"
+                    )
+
+    def _validate_runtime_events(self) -> None:
+        contract = self.contract.get("runtime_event_contract", {})
+        allowed_adapters = set(contract.get("special_adapters", []))
+        allowed_actions = set(contract.get("allowed_runtime_actions", []))
+
+        for loop_number, state in self.states.items():
+            registry_ids = {
+                entry.get("id") for entry in state.get("evidence_registry", [])
+            }
+            next_talk_sources: dict[str, list[str]] = {}
+
+            def collect_runtime_exits(value: Any, path: str) -> None:
+                if isinstance(value, dict):
+                    for key, child in value.items():
+                        child_path = f"{path}.{key}" if path else str(key)
+                        if key == "runtime_exit" and isinstance(child, dict):
+                            action = child.get("action")
+                            if action and action not in allowed_actions:
+                                self.errors.append(
+                                    f"loop{loop_number} unsupported runtime action at {child_path}: {action}"
+                                )
+                            next_talk = child.get("next_talk")
+                            if next_talk:
+                                next_talk_sources.setdefault(str(next_talk), []).append(
+                                    child_path
+                                )
+                        collect_runtime_exits(child, child_path)
+                elif isinstance(value, list):
+                    for index, child in enumerate(value):
+                        collect_runtime_exits(child, f"{path}[{index}]")
+
+            collect_runtime_exits(state, f"loop{loop_number}")
+
+            event_talks: dict[str, list[dict]] = {}
+            for scene in state.get("scenes", []) or []:
+                if scene.get("type") == "cutscene":
+                    for npc in (scene.get("npcs") or {}).values():
+                        if npc.get("talk"):
+                            self.errors.append(
+                                f"loop{loop_number} cutscene {scene.get('id')} has free NPC Talk"
+                            )
+                for event in scene.get("event_triggers", []) or []:
+                    talk = event.get("talk")
+                    if talk:
+                        event_talks.setdefault(str(talk), []).append(event)
+                    if event.get("forced") is True:
+                        binding = event.get("runtime_binding", {})
+                        adapter = binding.get("adapter")
+                        if not adapter:
+                            self.errors.append(
+                                f"loop{loop_number} forced event lacks runtime binding: {event.get('id')}"
+                            )
+                        elif adapter == contract.get("scene_enter_adapter"):
+                            required_ids = binding.get(
+                                contract.get("scene_enter_required_field"), []
+                            )
+                            if not required_ids or any(
+                                evidence_id not in registry_ids
+                                for evidence_id in required_ids
+                            ):
+                                self.errors.append(
+                                    f"loop{loop_number} scene-enter event has invalid required item IDs: {event.get('id')}"
+                                )
+                        elif adapter not in allowed_adapters:
+                            self.errors.append(
+                                f"loop{loop_number} forced event uses unsupported adapter: {event.get('id')}"
+                            )
+                        elif adapter == "ordered_story_event":
+                            condition = event.get("condition", {})
+                            all_of = (
+                                condition.get("all_of", {})
+                                if isinstance(condition, dict)
+                                else {}
+                            )
+                            if (
+                                not all_of.get("required_talks")
+                                or not all_of.get("required_item_ids")
+                            ):
+                                self.errors.append(
+                                    f"loop{loop_number} ordered story event lacks fixed prerequisites: {event.get('id')}"
+                                )
+                        elif adapter == "chained_talk" and not binding.get(
+                            "previous_talk"
+                        ):
+                            self.errors.append(
+                                f"loop{loop_number} chained event lacks previous Talk: {event.get('id')}"
+                            )
+
+            for talk, events in event_talks.items():
+                if len(events) > 1:
+                    self.errors.append(
+                        f"loop{loop_number} event Talk has multiple trigger entries: {talk}"
+                    )
+                if talk in next_talk_sources:
+                    event = events[0]
+                    binding = event.get("runtime_binding", {})
+                    if binding.get("adapter") != "chained_talk":
+                        self.errors.append(
+                            f"loop{loop_number} event Talk is both chained and independently triggered: {talk}"
+                        )
+
+            for ending_scene in (
+                state.get("ending_sequence", {}).get("scenes", []) or []
+            ):
+                if ending_scene.get("npcs"):
+                    self.errors.append(
+                        f"loop{loop_number} ending scene {ending_scene.get('id')} has free NPC Talk data"
+                    )
+
 
     def _validate_continuity(self) -> None:
         contract = self.contract.get("narrative_continuity_contract", {})
@@ -801,6 +1120,15 @@ class Unit4StateV2Validator:
         )
         if returns.get("condition") != expected.get("mickey_returns_condition"):
             self.errors.append("mickey_returns condition mismatch")
+        if (
+            returns.get("talk") != expected.get("mickey_returns_talk")
+            or expected.get("mickey_returns_testimony")
+            not in (returns.get("grants_testimony") or [])
+            or returns.get("runtime_binding", {}).get("adapter") != "identity_lock"
+        ):
+            self.errors.append("mickey_returns forced Talk contract mismatch")
+        if (office.get("npcs") or {}):
+            self.errors.append("loop5 Mickey return must not be a free NPC Talk")
         if state.get("expose", {}).get("unlock_condition") != expected.get(
             "expose_unlock_condition"
         ):
@@ -912,6 +1240,16 @@ class Unit4StateV2Validator:
         ]:
             self.errors.append("ending sequence scene order mismatch")
         if len(scenes) == 3:
+            post_expose = state.get("expose", {}).get("post_expose", {})
+            post_exit = post_expose.get("runtime_exit", {})
+            if (
+                post_exit.get("action") != "change_scene"
+                or post_exit.get("target_scene_id") != scenes[0].get("scene_id")
+                or post_exit.get("continuation") != "next_talk"
+                or post_exit.get("next_talk") != expected.get("entry_talk")
+                or "player_control_restored_after" in post_expose
+            ):
+                self.errors.append("ending sequence has no unique post-expose entry")
             if scenes[0].get("runtime_exit", {}).get("next_talk") != scenes[1].get("talk"):
                 self.errors.append("ending_4043 handoff mismatch")
             if scenes[1].get("runtime_exit", {}).get("next_talk") != scenes[2].get("talk"):
@@ -920,6 +1258,8 @@ class Unit4StateV2Validator:
             if (
                 final.get("hard_stop") is not True
                 or "门外" not in str(final.get("final_frame", ""))
+                or final.get("runtime_exit", {}).get("action")
+                != expected.get("final_runtime_action")
                 or final.get("runtime_exit", {}).get("next_unit_entry")
                 != expected.get("next_unit_entry")
             ):
@@ -1017,7 +1357,7 @@ class Unit4StateV2Validator:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate Unit4 State v2 candidates")
+    parser = argparse.ArgumentParser(description="Validate the formal Unit4 State v2 set")
     parser.add_argument(
         "--state-dir",
         default=str(DEFAULT_STATE_DIR),

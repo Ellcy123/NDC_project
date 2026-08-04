@@ -31,6 +31,19 @@
 或显式优先级。只有 active outline 明确需要“进入已开放场景后、满足道具条件自动
 触发”且系统策划批准时才能使用；不得把它当作默认 Opening 入口。
 
+### 自由探索中的强制事件
+
+- State 的 `scenes[].event_triggers[].talk` 是场景级强制事件入口，不是 NPC
+  `TalkInfo`。`team-dialogue` 必须生成它，但配置时不得把它挂成可点击 NPC。
+- 使用 `SceneEnterTalkTriggerConfig` 时，State 必须直接写出全部
+  `runtime_binding.required_item_ids`。当前运行时只支持这些道具条件的全 AND；
+  “调查完成”“某段 Talk 已完成”“前一事件已发生”等自然语言条件不能直接落地。
+- 大纲要求固定顺序且包含 Talk 完成条件时，State 仍须完整写出
+  `required_talks → grants_evidence → previous_event_completed → next_talk`，并标记
+  `special_adapter`。运行时缺能力是待实现项，不得反向删掉剧情顺序。
+- 被前一 Talk 的 `next` 续接的 Event Talk，目标事件必须标记为 `chained_talk`；
+  不得再作为独立条件事件重新触发。
+
 ## 根级 Opening 映射
 
 每个 Loop 只有一个 `ChapterConfig.initTalk`，因此 State 也只有一个根级
@@ -123,6 +136,13 @@ L4_opening_doris
 - `Talk.next`、`ChapterConfig.initTalk`、`SceneConfig.firstEnterTalk`、
   `NPCLoopData.TalkInfo/LoopTalkInfo` 引用的 Talk ID 必须存在。
 - `change_scene.Parameters[0]` 指向的 SceneConfig 必须存在。
+- non-Loop `ending_sequence` 必须由最后一个 post-expose Talk 通过
+  `change_scene + next` 唯一进入；4043–4045 之类的连续终幕场景不得再生成
+  `NPCLoopData.TalkInfo`。
+- 当前 `DialogueAction` 使用 `loop_end` 结束最后一轮。State 若要表达章节边界，
+  使用 `loop_end + chapter_boundary: true`，不能写运行时不存在的 `chapter_end`。
+- 强制终幕开始后不得恢复玩家控制；中途存档恢复仍需 Unity 侧优先消费续播状态，
+  不能重新执行 `ChapterConfig.initTalk`。
 - State 生成阶段只能登记逻辑 Talk 名；正式 Talk ID 在对白与落表阶段分配后回填。
 - Unity 代码或表结构若与本参考不一致，停止落表并以当前
   `D:\NDC\res\xls`、`res\xml` 和运行时代码重新核对，不沿用历史 State 猜测。
