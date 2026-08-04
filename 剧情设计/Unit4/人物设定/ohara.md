@@ -1,10 +1,10 @@
 # Mrs. O'Hara｜Unit4《四十二层之前》
 
-> 本档延续 Unit2 的 Margaret O'Hara 设定。为避免与 Margaret Brennan 混淆，正文及对白统一称 Mrs. O'Hara / O'Hara 太太。她在 Unit4 的最终状态停在房门之外。
+> 本档延续 Unit2 的 Honora "Nora" O'Hara 设定。正文及对白统一称 Mrs. O'Hara / O'Hara 太太。她在 Unit4 的最终状态停在房门之外。
 
 ## 一、定位
 
-- 姓名：Margaret O'Hara，街坊只称 O'Hara 太太。
+- 姓名：Honora "Nora" O'Hara，街坊只称 O'Hara 太太。
 - 身份：62 岁，南区清洁工，Sarah 的母亲，Brennan 家多年旧邻。
 - 章节功能：L4 清退危机的当事人；成年人的选择权标尺；证明保护可以生效但不能替人作主。
 - 一句话：一个被银行、催债人和开发商安排了半辈子的女人，用一句“不出售”守住自己仍有权决定。
