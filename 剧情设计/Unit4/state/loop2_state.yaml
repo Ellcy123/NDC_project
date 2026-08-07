@@ -158,13 +158,17 @@ scenes:
     name: 经容量分析的回收药瓶
     inputs:
     - 4212
+    prerequisite_context:
     - 4211
+    input_boundary: 正式分析对象只有4212；4211只提供医院规定剂量与红线止动环背景，不作为第二提交物
     boundary: 只能核对实际消耗量是否存在额外注射缺口
   - output_id: 4703
     name: 经化验的问题批次药剂
     inputs:
     - 4118
+    supporting_comparison:
     - 4213
+    input_boundary: 正式更新对象只有4118；4213是Foster另行交付的同批封签比较组，不作为更新输入
     boundary: 证明同批样本有效成分浓度波动并含异常降解杂质，且不能用单支家庭保存不当解释；不判断故意投毒或批准者主观知情
   evidence:
   - id: 4213
@@ -463,6 +467,7 @@ evidence_registry:
   first_scene: 4013
   source:
   - 4212
+  prerequisite_context:
   - 4211
   note: Expose R1；Doubt 4201
 - id: 4213
@@ -482,6 +487,7 @@ evidence_registry:
   first_scene: 4013
   source:
   - 4118
+  supporting_comparison:
   - 4213
   note: Expose R3；Doubt 4203；严格限定 1928 技术能力
   acquisition:

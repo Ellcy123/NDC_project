@@ -24,13 +24,18 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 | state 路径 | 单个 `loop{N}_state.yaml` 或含多个 state 的目录 |
 | Canon Manifest | 仓库根目录 `canon_manifest.json`，用于解析正式 Unit 身份、active outline 与历史边界 |
 | Unit 大纲 | `canon_manifest.json` 中目标 Unit 的 `sources.outline`（**写手必读，见 R2**） |
-| 人物设计目录 | `剧情设计/Unit{N}/Characters/` 下涉及 NPC 的 `{npc}.md`（**角色声音的唯一依据，见 R3**） |
+| 人物设计目录 | 从 Unit 根目录依次解析 `人物设定/`、`Characters/` 下涉及 NPC 的 `{npc}.md`（**角色声音的唯一依据，见 R3**） |
 | 全局剧情目录 | `剧情设计/` 下全局主线、世界观、主角设计、各 Unit 大纲/主线推进/state（**全局关系与知识账本依据，见 R14**） |
 
 解析顺序：argument 给 state 路径 → 从路径识别 Unit → 读取 `canon_manifest.json` →
 只采用该 Unit 的 `sources.outline` 作为 active outline → 再解析人物与全局文档。
 用户给出的大纲路径若与 Manifest 不一致，必须报告 Canon 冲突；不能按文件名猜
 “最新版”，也不能把 `history[]` 归档当作当前事实。
+
+人物目录解析规则：优先读取 `剧情设计/Unit{N}/人物设定/`，不存在时兼容
+`剧情设计/Unit{N}/Characters/`。若两个目录同时存在，则按 speaking character
+逐文件查找；同名档案只存在一处时使用该文件，同名档案两处都存在且内容冲突时
+停止写作并报告，不能静默选择。涉及角色找不到人物档案同样视为 Phase 0 FAIL。
 
 **本 skill 不引用任何外部"对白语言风格资料"**；但必须读取项目内已手改成稿做"文笔校准"。默认参考：
 - `AVG/对话配置工作及草稿/Unit2/Loop*_生成草稿.md`：项目成稿口感基准
@@ -272,7 +277,7 @@ Phase 1 前必须输出并传给后续所有 agent：
 - **Manifest 的 `sources.outline` 全文**——lead 提炼出"本 Loop / 每个连续场景包
   在整章里的叙事功能"，作为 R2 的依据传给后续所有 agent
 - **全局上下文包**——按上文读取当前 Unit 全部 state/大纲/主线推进/场景/人物、`剧情设计/00_世界观与角色/`、以及 Unit1-Unit5 的大纲/主线推进/state/人物摘要，输出"全局人物状态卡 / Zack 知识账本 / 全局补笔清单"（R14）
-- 涉及 NPC 的全部 `{npc}.md`（声音 / 禁忌 / 设计备注）
+- 按“人物目录解析规则”取得涉及 NPC 的全部 `{npc}.md`（声音 / 禁忌 / 设计备注 / 知识边界）
 - `AVG/对话配置工作及草稿/AVG对话配置规则.md` + `.claude/rules/dialogue.md` + `AVG/对话配置工作及草稿/无ID对话语法规范.md`
 - 文笔校准样本：按"项目文笔校准"读取 Unit9 / Unit2 手改稿片段，输出"文笔校准卡"。若目标 Unit 不是 Unit9，也仍可用 Unit2 作项目成稿基准，但不得继承 Unit2 事实
 

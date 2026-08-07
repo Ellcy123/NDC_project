@@ -1338,13 +1338,132 @@ class Unit4StateV2Validator:
                 )
 
     def _validate_unit4_specific_content(self) -> None:
+        loop3 = self.states.get(3, {})
+        loop3_scenes = {scene.get("id"): scene for scene in loop3.get("scenes", [])}
+        required_loop3_scenes = {4021, 4029, 4027, 4022, 4028, 4023, 4024, 4025, 4026}
+        missing_loop3_scenes = sorted(required_loop3_scenes - set(loop3_scenes))
+        if missing_loop3_scenes:
+            self.errors.append(
+                f"loop3 split mansion scene mapping is incomplete: {missing_loop3_scenes!r}"
+            )
+
+        kitchen = loop3_scenes.get(4028, {})
+        kitchen_gate = set((kitchen.get("access", {}) or {}).get("required_item_ids", []) or [])
+        if kitchen_gate != {4311, 4312, 4313, 4314, 4315}:
+            self.errors.append("loop3 scene 4028 must be gated by evidence 4311-4315")
+
+        kitchen_events = {
+            event.get("id"): event for event in kitchen.get("event_triggers", []) or []
+        }
+        explosion = kitchen_events.get("mansion_evacuation_and_explosion", {})
+        explosion_items = set(
+            (explosion.get("runtime_binding", {}) or {}).get("required_item_ids", []) or []
+        )
+        if explosion_items != {4316, 4321, 4322}:
+            self.errors.append("loop3 explosion runtime gate must require 4316, 4321, 4322")
+        if "pierce_arrives_outer_perimeter" not in str(explosion.get("condition", {})):
+            self.errors.append("loop3 explosion must preserve Pierce's pre-blast arrival state")
+
+        loop3_registry = {
+            entry.get("id"): entry for entry in loop3.get("evidence_registry", [])
+        }
+        expected_first_scenes = {
+            4314: 4027,
+            4315: 4027,
+            4316: 4028,
+            4321: 4028,
+            4322: 4028,
+        }
+        for evidence_id, scene_id in expected_first_scenes.items():
+            if loop3_registry.get(evidence_id, {}).get("first_scene") != scene_id:
+                self.errors.append(
+                    f"loop3 evidence {evidence_id} must first appear in scene {scene_id}"
+                )
+
+        loop4 = self.states.get(4, {})
+        loop4_scenes = {scene.get("id"): scene for scene in loop4.get("scenes", [])}
+        ohara_home = loop4_scenes.get(4033, {})
+        stop_event = next(
+            (
+                event
+                for event in ohara_home.get("event_triggers", []) or []
+                if event.get("id") == "stop_order_application_and_delivery"
+            ),
+            {},
+        )
+        stop_all_of = (stop_event.get("condition", {}) or {}).get("all_of", {}) or {}
+        if set(stop_all_of.get("required_talks", []) or []) != {
+            "L4_scene4032_ohara",
+            "L4_scene4033_sarah",
+        }:
+            self.errors.append("loop4 stop order must require O'Hara Talk and Sarah Talk")
+        if set(stop_all_of.get("required_item_ids", []) or []) != {4411, 4412, 4413}:
+            self.errors.append("loop4 stop order must require 4411, 4412, 4413")
+
         loop5_text = "\n".join(str(value) for value in scalar_values(self.states.get(5, {})))
         if "夜班门房" in loop5_text:
             self.errors.append("loop5 night doorman is forbidden by the active outline")
 
         loop5 = self.states.get(5, {})
-        if any(scene.get("id") == 4041 for scene in loop5.get("scenes", [])):
-            self.errors.append("loop5 scene 4041 entry gate must be removed")
+        scene_4041 = next(
+            (scene for scene in loop5.get("scenes", []) if scene.get("id") == 4041),
+            None,
+        )
+        if scene_4041 is None:
+            self.errors.append("loop5 scene 4041 noninteractive establishing shot is required")
+        else:
+            if scene_4041.get("type") != "cutscene":
+                self.errors.append("loop5 scene 4041 must be a cutscene")
+            if scene_4041.get("evidence"):
+                self.errors.append("loop5 scene 4041 must not grant evidence")
+            if scene_4041.get("npcs"):
+                self.errors.append("loop5 scene 4041 must not expose NPC interactions")
+
+        opening = loop5.get("opening", {})
+        sequence = opening.get("sequence", []) or []
+        first_event = sequence[0] if sequence else {}
+        runtime_exit = first_event.get("runtime_exit", {}) or {}
+        if opening.get("runtime_root", {}).get("init_scene") != 4041:
+            self.errors.append("loop5 opening init_scene must be 4041")
+        if first_event.get("scene_id") != 4041:
+            self.errors.append("loop5 opening first event must be bound to scene 4041")
+        if runtime_exit.get("action") != "change_scene" or runtime_exit.get("target_scene_id") != 4042:
+            self.errors.append("loop5 scene 4041 must transition directly to scene 4042")
+        if runtime_exit.get("continuation") != "release_to_exploration":
+            self.errors.append("loop5 player control must be restored only after entering scene 4042")
+
+        office_4042 = next(
+            (scene for scene in loop5.get("scenes", []) if scene.get("id") == 4042),
+            {},
+        )
+        letter_safe = next(
+            (
+                interaction
+                for interaction in office_4042.get("interactions", []) or []
+                if interaction.get("id") == "interaction_letter_safe"
+            ),
+            {},
+        )
+        if set(letter_safe.get("outputs", []) or []) != {4513, 4514, 4515, 4516}:
+            self.errors.append("loop5 letter safe must grant 4513-4516 together")
+        if letter_safe.get("atomic_outputs") is not True:
+            self.errors.append("loop5 letter safe outputs must be atomic")
+
+        identity_chains = (
+            loop5.get("special_mechanics", {}).get("identity_lock", {}).get("chains", [])
+        )
+        visitor_chain = next(
+            (chain for chain in identity_chains if chain.get("id") == 4503),
+            {},
+        )
+        visitor_inputs = {entry.get("id") for entry in visitor_chain.get("inputs", []) or []}
+        visitor_context = {
+            entry.get("id") for entry in visitor_chain.get("prerequisite_context", []) or []
+        }
+        if visitor_inputs != {4315, 4512}:
+            self.errors.append("loop5 visitor chain submission must contain only 4315 and 4512")
+        if 4153001 not in visitor_context:
+            self.errors.append("loop5 visitor chain must retain 4153001 as prerequisite context")
 
         registry = {
             entry.get("id"): entry for entry in loop5.get("evidence_registry", [])

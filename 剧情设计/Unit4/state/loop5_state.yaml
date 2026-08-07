@@ -85,23 +85,35 @@ opening:
   type: cutscene_sequence
   runtime_root:
     table: ChapterConfig
-    init_scene: 4042
+    init_scene: 4041
     init_talk: L5_opening_42nd_floor_arrival
   sequence:
   - event_id: forty_second_floor_arrival
     talk: L5_opening_42nd_floor_arrival
-    scene_id: 4042
+    scene_id: 4041
     source_anchor: active outline / Loop5 / 开篇剧情 / 四十二层
     cast:
     - Zack
     required_beats:
     - Zack 根据 Donnelly & Associates 旧信封地址独自来到四十二层。
     - Mickey 没有邀请 Zack，办公室暂时无人。
-    - Zack 进入后直接开始自由探索，不设置破门、潜入、撬锁或其他前置交互。
+    - 4041只承担地址抵达、外厅与楼梯动线的建立镜头，不提供玩家操作。
+    - 镜头结束后直接进入4042自由探索，不设置破门、潜入、撬锁或其他前置交互。
     runtime_exit:
-      action: release_to_exploration
+      action: change_scene
+      target_scene_id: 4042
+      continuation: release_to_exploration
   player_control_restored_after: forty_second_floor_arrival
 scenes:
+- id: 4041
+  name: 四十二层外厅 / 抵达
+  type: cutscene
+  design_tags:
+  - opening
+  - transition
+  description: 只承载Donnelly & Associates地址、空置外厅与楼梯动线的建立镜头；结束后自动进入4042，过程中不恢复玩家控制。
+  evidence: []
+  npcs: {}
 - id: 4042
   name: Mickey 私人办公室
   type: free_exploration
@@ -142,6 +154,8 @@ scenes:
     - 4514
     - 4515
     - 4516
+    atomic_outputs: true
+    runtime_requirement: 密码正确后一次性交付4513—4516；不得让身份锁在4516尚未进入持有状态时完成
     design_boundary: '这不是 Mickey 留给 Zack 的邀请或普通谜语，而是 Mickey 长期使用的私人信条。
 
       玩家亲手输入这句话，才能看见它实际保护的文件。
@@ -208,7 +222,7 @@ scenes:
     - identity_lock.chain_4501
     - expose.round_3
   - id: 4514
-    name: 1919年的银行授权附页-Donnelly & Associates
+    name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
     type: item
     pickup: true
     analysis: true
@@ -230,7 +244,7 @@ scenes:
     - identity_lock.chain_4502
     - expose.round_1
   - id: 4515
-    name: Mickey功业簿
+    name: Mickey功业簿（手写）
     type: item
     pickup: true
     analysis: true
@@ -370,7 +384,7 @@ special_mechanics:
       completion_condition: all_chains_completed
       unlocks: expose
     entry_condition:
-    - 已取得 4513、4514、4515
+    - 已通过字母锁保险柜的一次原子交互取得 4513、4514、4515、4516
     - 仍持有所有跨 Loop 输入材料
     chains:
     - id: 4501
@@ -382,7 +396,7 @@ special_mechanics:
         source_loop: 1
       - type: item
         id: 4514
-        name: 1919年的银行授权附页-Donnelly & Associates
+        name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
         source_loop: 5
       - type: item
         id: 4416
@@ -395,7 +409,7 @@ special_mechanics:
       output:
         type: derived_conclusion
         id: 4705
-        name: 1919-A与Donnelly法律资金接口及1925接管连续性
+        name: 1919-A 与 Donnelly & Associates 属于同一法律资金网络
       proof_boundary: '坐实 Mickey 先实际控制 Donnelly 法律资金接口，后在 1925 年接管
 
         W / Whale 职责。不能仅靠年份相同完成推理；账户关系由授权附页承担。
@@ -408,11 +422,11 @@ special_mechanics:
       inputs:
       - type: item
         id: 4515
-        name: Mickey功业簿
+        name: Mickey功业簿（手写）
         source_loop: 5
       - type: item
         id: 4514
-        name: 1919年的银行授权附页-Donnelly & Associates
+        name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
         source_loop: 5
       - type: item
         id: 4511
@@ -444,12 +458,13 @@ special_mechanics:
         '
     - id: 4503
       name: Morrison近期访客
-      inputs:
+      prerequisite_context:
       - type: testimony
         id: 4153001
         name: Morrison最后通话记录
         source_loop: 3
-        role: 把近期访客窗口锁在 22:43 Donnelly 来电之后
+        role: 只提供22:43 Donnelly来电后的近期访客时间窗口，不占用本次组合提交位
+      inputs:
       - type: item
         id: 4315
         name: 古巴雪茄烟蒂
@@ -463,7 +478,7 @@ special_mechanics:
       output:
         type: derived_conclusion
         id: 4708
-        name: Mickey是Donnelly来电后的近期访客
+        name: Mickey就是Morrison死亡当晚的陌生访客
       cross_proof:
         telephone_window: '4153001 只证明 22:43 电话打入 Donnelly & Associates 并留下
 
@@ -549,7 +564,7 @@ expose:
     dimension: 唯一授权签字与实际控制
     usable_evidence:
     - id: 4514
-      name: 1919年的银行授权附页-Donnelly & Associates
+      name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
       purpose: '授权附页确认 Michael F. Donnelly 是 1919-A 唯一授权签字人，
 
         实际控制资金操作；不把账户法律所有权写成 Mickey 私有。
@@ -603,7 +618,7 @@ expose:
       name: 1925年内部接口接管记录
       purpose: 记录明确标注 W / Whale 的正式接管与职责
     - id: 4515
-      name: Mickey功业簿
+      name: Mickey功业簿（手写）
       purpose: '长期记录包含普通律师无法从公开材料取得的会面、现场收尾与
 
         上层另线清场边界，并已由 4502 证明为 Mickey 长期书写。
@@ -616,7 +631,7 @@ expose:
       '
   post_expose:
     offscreen_state_changes:
-    - Emma因Zack长时间未回电话自主决定前往四十二层；抵达楼下后发现Miller车辆与人员增加，改走楼梯。她不参与身份锁与三轮Expose，只在坠落时抵达并抓住Zack。
+    - Emma因Zack长时间未回电话自主决定前往四十二层；抵达楼下后发现Miller车辆与人员增加，先向Watts留下地址、车辆异常与楼梯撤离方向，再独自改走楼梯。她不参与身份锁与三轮Expose，只在坠落时抵达并抓住Zack。
     - Mickey拒绝Miller“交档案并独自上车”的条件后，4516留在办公室，坠落后由Zack与Emma带走。
     identity_acknowledgment:
       first_explicit_mapping: Mickey：是。我是 Whale。
@@ -815,7 +830,7 @@ evidence_registry:
   - identity_lock.chain_4501
   - expose.round_3
 - id: 4514
-  name: 1919年的银行授权附页-Donnelly & Associates
+  name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
   type: item
   pickup: true
   analysis: true
@@ -826,7 +841,7 @@ evidence_registry:
   - expose.round_1
   boundary: 实际控制，不等于法律所有权
 - id: 4515
-  name: Mickey功业簿
+  name: Mickey功业簿（手写）
   type: item
   pickup: true
   analysis: true
@@ -843,7 +858,7 @@ evidence_registry:
   loop5_use: 外卷可见；内封套不拆；不参加身份锁或 Expose
   ending_use: ending_sequence.ending_4044
 - id: 4705
-  name: 1919-A与Donnelly法律资金接口及1925接管连续性
+  name: 1919-A 与 Donnelly & Associates 属于同一法律资金网络
   type: derived_conclusion
   generated_by: identity_lock.chain_4501
   boundary: 实际控制与身份演变，不证明账户法律所有权
@@ -858,7 +873,7 @@ evidence_registry:
   generated_by: identity_lock.chain_4502
   boundary: 功业簿由 Mickey 长期书写；不自动证明每条记录法律效力
 - id: 4708
-  name: Mickey是Donnelly来电后的近期访客
+  name: Mickey就是Morrison死亡当晚的陌生访客
   type: derived_conclusion
   generated_by: identity_lock.chain_4503
   boundary: 交叉证明到访，不单独证明开枪或 Whale 身份
@@ -925,6 +940,14 @@ ending_sequence:
       4516 仍整袋封存，内封套不在车上拆开。
 
       '
+    visual_compositions:
+    - id: A
+      location: 四十二层楼梯与楼层中间停车区
+      purpose: Emma带Zack撤离，Watts按她留下的地址与撤离方向驾法院档案车接应
+    - id: B
+      location: 法院档案车内
+      purpose: 车辆驶离后的连续对白；不恢复玩家控制
+    runtime_requirement: 4043是同一连续事件的A/B两段构图；若运行时不能在同一sceneId切换背景，再拆内部演出子段，不新增自由探索节点
     story_beats:
     - Emma 说明：Zack 长时间未回电话，她自主改变决定赶往四十二层
     - Emma 抵达楼下时发现 Miller 车辆与人员突然增加，因此改走楼梯
@@ -1228,7 +1251,7 @@ narrative_continuity:
   consumes:
   - u4_l4_post_expose
   required_beats:
-  - 直接进入4042自由探索
+  - 先播放4041非交互建立镜头，再进入4042自由探索
   exit_state: 三条身份链开放
   hands_off_to: u4_l5_identity_lock
   covers:
@@ -1261,7 +1284,7 @@ narrative_continuity:
   source_anchor: Loop5 / 指证 Mickey
   entry_state: 三条身份链全部完成，Mickey回场且4035001已经取得
   consumes:
-  - u4_l5_identity_lock
+  - u4_l5_mickey_return
   required_beats:
   - 玩家先证明Mickey等于Whale
   exit_state: Mickey承认身份

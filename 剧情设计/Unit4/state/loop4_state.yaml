@@ -153,6 +153,11 @@ scenes:
   type: free_exploration
   design_tags:
   - action_result
+  access:
+    from_scene: 4032
+    required_talks:
+    - L4_scene4032_ohara
+    runtime_requirement: 完成O'Hara门口Talk后才进入室内；不得绕过其本人意愿直接入屋
   description: '桌上压着未签的收购协议与 Margaret 的短便条；厨房手压泵连接私人井，
 
     带锁检修盖位于院墙外的后巷。本轮只记录住宅结构，不得推出污染结论。
@@ -186,6 +191,15 @@ scenes:
   environment:
   - name: 后巷井检口
     note: 只建立私人井、院墙外检修盖与公共接近路径；不得提前得出污染结论
+  visual_events:
+  - id: 4035
+    name: O'Hara家后巷井检口建立镜头
+    trigger_interaction: kitchen_hand_pump_first_view
+    type: forced_cutaway
+    player_control: false
+    duration_seconds: 5-8
+    return_scene_id: 4033
+    boundary: 只显示私人井与院墙外公共接近路径，不生成证据，不提前得出污染结论
   npcs:
     L4_scene4033_sarah:
       name: Sarah O'Hara
@@ -208,21 +222,25 @@ scenes:
     condition:
       all_of:
         required_talks:
+        - L4_scene4032_ohara
         - L4_scene4033_sarah
         required_item_ids:
         - 4411
         - 4412
+        - 4413
     talk: L4_event_stop_order_delivery
     forced: true
     locks_player_control: true
     runtime_binding:
       adapter: ordered_story_event
-      reason: Unity现有SceneEnterTalkTriggerConfig不支持requiredTalkIds，配置实现必须保证Sarah Talk先完成
+      interaction_source: 4033.phone_stop_order_application
+      reason: Unity现有SceneEnterTalkTriggerConfig不支持requiredTalkIds；必须把墙边电话做成受O'Hara Talk、Sarah Talk与4411—4413共同门控的申请交互，交互开始后再锁定玩家控制
     grants_evidence:
     - 4414
     required_beats:
+    - O'Hara已在门口明确拒售并允许Zack进入处理现实危机。
     - Sarah已在自由Talk中确认自己熟悉Rosa家、曾在那里留宿。
-    - Zack使用O'Hara写下的“不出售”、清退协警通知与限时协议联系Watts。
+    - Zack取得O'Hara写下的“不出售”、Margaret短便条、清退协警通知与限时协议后联系Watts。
     - 值班法官签发临时停止执行，Watts完成登记并送达4414，警员离开。
     runtime_exit:
       continuation: next_talk
@@ -244,6 +262,14 @@ scenes:
       action: change_scene
       target_scene_id: 4034
       continuation: release_to_exploration
+- id: 4035
+  name: O'Hara 家后巷井检口 / 建立镜头
+  type: cutscene
+  design_tags:
+  - transition
+  description: 由4033厨房手压泵首次查看触发，5—8秒显示私人井、院墙与后巷检修盖，随后自动返回4033；不是可自由进入的探索地点。
+  evidence: []
+  npcs: {}
 - id: 4034
   name: Margaret 家
   type: free_exploration

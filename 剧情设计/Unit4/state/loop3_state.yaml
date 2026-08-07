@@ -69,12 +69,12 @@ opening:
     - Zack 认出声音，和 Emma 立即前往宅邸；不提前断言线路被人为切断。
     runtime_exit:
       action: change_scene
-      target_scene_id: 4022
+      target_scene_id: 4029
       continuation: next_talk
       next_talk: L3_opening_mansion_arrival
   - event_id: mansion_arrival
     talk: L3_opening_mansion_arrival
-    scene_id: 4022
+    scene_id: 4029
     source_anchor: active outline / Loop3 / 开篇剧情 / 宅邸门口
     cast:
     - Zack
@@ -91,7 +91,9 @@ opening:
       player_can_disprove_now: false
       withheld_fact: Mickey在22:58已经进入宅邸，并于23:16枪杀Harold、伪造现场。
     runtime_exit:
-      action: release_to_exploration
+      action: change_scene
+      target_scene_id: 4027
+      continuation: release_to_exploration
   player_control_restored_after: mansion_arrival
 scenes:
 - id: 4021
@@ -102,18 +104,97 @@ scenes:
   - transition
   description: 仅承载接线员转入Morrison来电、Brennan一词与立即出发，不提供自由调查。
   npcs: {}
-- id: 4022
-  name: Harold Morrison 宅邸
+- id: 4029
+  name: Morrison 宅邸门外 / 抵达
+  type: cutscene
+  design_tags:
+  - opening
+  - transition
+  description: 23:30，Zack与Emma在宅邸门外撞见Mickey；只承载Mickey“刚到”谎言，结束后切入4027并恢复探索。
+  npcs: {}
+- id: 4027
+  name: Morrison 宅邸门厅客厅
   type: free_exploration
   design_tags:
   - crisis
-  description: 'Zack 与 Emma 于 23:30 左右抵达。Doris 已返家，Mickey 从前门方向出现，
+  description: '宅邸探索枢纽。Doris守在门厅附近，客厅矮桌留有两只近期使用的酒杯和一支古巴雪茄烟蒂。
 
-    表现得像刚刚赶到。Harold 倒在书房，磨号手枪被放在右手；客厅留有两只酒杯
+    玩家可往返4022书房；4311—4315全部处理前，通往4028厨房检修区的危机检查保持关闭。
 
-    和一支陌生古巴雪茄烟蒂。厨房煤气表与壁炉时钟附近有新近改动。
+    '
+  connections:
+  - target_scene_id: 4022
+    direction: bidirectional
+  - target_scene_id: 4028
+    direction: bidirectional
+    unlock_condition:
+      required_item_ids:
+      - 4311
+      - 4312
+      - 4313
+      - 4314
+      - 4315
+    locked_feedback: 先把书房和客厅现场完整记录下来；煤气味正在变重，进入检修区后不会再有时间回头。
+  evidence:
+  - id: 4314
+    name: 两只酒杯
+    type: clue
+    pickup: true
+    note: Expose R2 主力；第二杯的碎冰和湿水痕只证明近期使用，不用唇印作个体鉴定
+    description: 一只放在 Harold 日常使用位置；第二只仍有残酒、碎冰未尽融、杯垫水痕仍湿
+  - id: 4315
+    name: 古巴雪茄烟蒂
+    type: clue
+    pickup: true
+    note: 先拍摄现场关系，再将原物装袋；Expose R2 主力，L5 访客链复用
+    description: 烟蒂按灭在第二只酒杯旁的湿杯垫边缘，烟灰粘在水痕上；右侧留有复合含咬特征
+  npcs:
+    L3_scene4027_doris:
+      talk: L3_scene4027_doris
+      is_liar: true
+      motive: 尽快让死亡按自杀结案，保住丈夫最后一点家庭体面，并阻止警察、记者和法院继续公开拆解他
+      mindset: 惊魂未定却紧紧守住措辞；她遮掩材料和访客痕迹，但不替任何组织守密
+      active_topics:
+      - 自己 23:18 左右返家后发现 Harold 死亡
+      - 自己没有看见访客离开
+      - Harold 当晚准备留在家中休息
+      - Doris是Morrison的妻子
+      withheld_topics:
+      - 她返家后看见右手枪位与第二只酒杯
+      - 她知道 Harold 在站外留有材料，但不知道口供全文
+      - Harold 长期惯用左手
+      - 她不知道近期访客、枪手、Whale或煤气命令源
+      player_inquiry: null
+      testimony_ids:
+      - id: 4063003
+        content: Harold当晚没有打算离开，准备一直在家里休息。
+        kind: collectible_lie_anchor
+        speaker: 406
+        source_anchor: active outline / Loop3 / 门厅、电话桌与客厅 / Doris谎言
+        acquisition_talk: L3_scene4027_doris
+      - id: 4063006
+        content: 23:18 前一直在外，返家后才发现丈夫死亡；她没有看见访客离开。
+        kind: collectible
+        speaker: 406
+        source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / Doris / ⚪
+        acquisition_talk: L3_scene4027_doris
+      - id: 4063007
+        content: Morrison 的妻子。
+        kind: collectible
+        speaker: 406
+        source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / Doris / ⚪
+        acquisition_talk: L3_scene4027_doris
+      expose_lie_ids:
+      - 4063004
+      - 4063005
+- id: 4022
+  name: Morrison 宅邸书房
+  type: free_exploration
+  design_tags:
+  - crisis
+  description: 'Harold 倒在书房，磨号手枪被放在右手；书桌留有伪造遗书与Pierce档案移交通知。
 
-    玩家必须先检查铅封、接线、煤气阀和窗缝，Emma 才会在最后几秒组织撤离。
+    本场只承载尸体与书桌调查，可返回4027门厅客厅；厨房危机不在本场触发。
 
     '
   evidence:
@@ -135,18 +216,27 @@ scenes:
     pickup: true
     note: 不参与本轮击穿；只证明提前接管压力，不证明 Harold 的外出意图
     description: 要求 Harold 次日上午交出旧案文件与配枪登记；签发早于 Whitfield 被带走补充笔录
-  - id: 4314
-    name: 两只酒杯
-    type: clue
-    pickup: true
-    note: Expose R2 主力；第二杯的碎冰和湿水痕只证明近期使用，不用唇印作个体鉴定
-    description: 一只放在 Harold 日常使用位置；第二只仍有残酒、碎冰未尽融、杯垫水痕仍湿
-  - id: 4315
-    name: 古巴雪茄烟蒂
-    type: clue
-    pickup: true
-    note: Expose R2 主力；L5 访客链复用。本轮只证明近期访客，不作指纹式齿痕定人
-    description: 烟蒂按灭在第二只酒杯旁的湿杯垫边缘，烟灰粘在水痕上；右侧留有复合含咬特征
+  npcs: {}
+- id: 4028
+  name: Morrison 宅邸厨房检修区
+  type: free_exploration
+  design_tags:
+  - crisis
+  access:
+    from_scene: 4027
+    required_item_ids:
+    - 4311
+    - 4312
+    - 4313
+    - 4314
+    - 4315
+    runtime_requirement: 进入本场前必须已完成书房与客厅调查；不能只依赖自然语言提示
+  description: '煤气表、壁炉时钟接线、主阀与背风窗缝构成四个检查反馈。
+
+    铅封与接线两处都完成后产出4316；再完成阀门和窗缝检查即强制撤离，不设真实倒计时。
+
+    '
+  evidence:
   - id: 4316
     name: 伪造市政煤气铅封与异常时钟接线
     type: clue
@@ -167,49 +257,20 @@ scenes:
     interaction_required: true
     note: 爆炸事件门控之一；只支持室内气体积聚与撤离判断
     description: 背风侧窗缝被人为塞紧，靠近时能闻到积聚的煤气味，正常通风被削弱
-  npcs:
-    L3_scene4022_doris:
-      talk: L3_scene4022_doris
-      is_liar: true
-      motive: 尽快让死亡按自杀结案，保住丈夫最后一点家庭体面，并阻止警察、记者和法院继续公开拆解他
-      mindset: 惊魂未定却紧紧守住措辞；她遮掩材料和访客痕迹，但不替任何组织守密
-      active_topics:
-      - 自己 23:18 左右返家后发现 Harold 死亡
-      - 自己没有看见访客离开
-      - Harold 当晚准备留在家中休息
-      - Doris是Morrison的妻子
-      withheld_topics:
-      - 她返家后看见右手枪位与第二只酒杯
-      - 她知道 Harold 在站外留有材料，但不知道口供全文
-      - Harold 长期惯用左手
-      - 她不知道近期访客、枪手、Whale或煤气命令源
-      player_inquiry: null
-      testimony_ids:
-      - id: 4063003
-        content: Harold当晚没有打算离开，准备一直在家里休息。
-        kind: collectible_lie_anchor
-        speaker: 406
-        source_anchor: active outline / Loop3 / 门厅、电话桌与客厅 / Doris谎言
-        acquisition_talk: L3_scene4022_doris
-      - id: 4063006
-        content: 23:18 前一直在外，返家后才发现丈夫死亡；她没有看见访客离开。
-        kind: collectible
-        speaker: 406
-        source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / Doris / ⚪
-        acquisition_talk: L3_scene4022_doris
-      - id: 4063007
-        content: Morrison 的妻子。
-        kind: collectible
-        speaker: 406
-        source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / Doris / ⚪
-        acquisition_talk: L3_scene4022_doris
-      expose_lie_ids:
-      - 4063004
-      - 4063005
+  npcs: {}
   event_triggers:
+  - id: pierce_arrives_outer_perimeter
+    condition:
+      scene_entered: 4028
+    forced: false
+    locks_player_control: false
+    required_beats:
+    - 23:40左右，Pierce已经抵达宅邸外围安全边界，开始布置警员与程序记录，但不进入煤气正在积聚的室内。
+    - 本拍只建立其爆炸前已到场的状态，不让Pierce打断玩家最后的危机检查。
   - id: mansion_evacuation_and_explosion
     condition:
       all_required_investigation_items_collected: true
+      previous_event_state: pierce_arrives_outer_perimeter 已建立
     talk: L3_event_mansion_evacuation
     forced: true
     locks_player_control: true
@@ -222,6 +283,7 @@ scenes:
     required_beats:
     - Emma依据已检查的接线、阀门与窗缝异常组织撤离。
     - Zack、Emma、Mickey与Doris撤到安全边界后爆炸发生。
+    - Pierce已经位于外围安全边界；爆炸后接管程序直接承接该状态，不作突然赶到处理。
     runtime_exit:
       action: change_scene
       target_scene_id: 4023
@@ -540,13 +602,13 @@ evidence_registry:
   name: 两只酒杯
   type: clue
   pickup: true
-  first_scene: 4022
+  first_scene: 4027
   note: Doris R2 主力
 - id: 4315
   name: 古巴雪茄烟蒂
   type: clue
   pickup: true
-  first_scene: 4022
+  first_scene: 4027
   note: Doris R2 主力；L5 访客链复用
   persistence:
     scope: chapter
@@ -557,20 +619,20 @@ evidence_registry:
   name: 伪造市政煤气铅封与异常时钟接线
   type: clue
   pickup: true
-  first_scene: 4022
+  first_scene: 4028
   note: 爆炸前后更新同一记录
 - id: 4321
   name: 煤气阀门异常开启痕迹
   type: envir
   pickup: false
-  first_scene: 4022
+  first_scene: 4028
   interaction_required: true
   note: 爆炸事件门控；不判断操作人
 - id: 4322
   name: 窗缝逆风与煤气味
   type: envir
   pickup: false
-  first_scene: 4022
+  first_scene: 4028
   interaction_required: true
   note: 爆炸事件门控；只支持撤离判断
 - id: 4317
@@ -609,11 +671,14 @@ outline_coverage:
 - beat_id: L3_B03
   source_anchor: active outline / Loop3 / 宅邸调查
   mapping: exact
-  primary_landing: scenes.4022
+  primary_landing: scenes.4027
+  supporting_landings:
+  - scenes.4022
+  - scenes.4028
 - beat_id: L3_B04
   source_anchor: active outline / Loop3 / 强制撤离与爆炸
   mapping: exact
-  primary_landing: scenes.4022.event_triggers.mansion_evacuation_and_explosion
+  primary_landing: scenes.4028.event_triggers.mansion_evacuation_and_explosion
 - beat_id: L3_B05
   source_anchor: active outline / Loop3 / 爆炸后调查
   mapping: exact
@@ -628,14 +693,14 @@ outline_coverage:
   primary_landing: expose.post_expose.official_close
 - beat_id: L3_NPC_DORIS_PRE
   marker_id: L3_NPC_DORIS_PRE
-  source_anchor: active outline / Loop3 / 自由探索 / Morrison书房 / NPC Doris
+  source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / NPC Doris
   mapping: exact
-  primary_landing: scenes.4022.npcs.L3_scene4022_doris
+  primary_landing: scenes.4027.npcs.L3_scene4027_doris
   dialogue_required: true
   npc_name: Doris
-  scene_id: 4022
-  npc_key: L3_scene4022_doris
-  talk: L3_scene4022_doris
+  scene_id: 4027
+  npc_key: L3_scene4027_doris
+  talk: L3_scene4027_doris
 - beat_id: L3_NPC_MICKEY_POST
   marker_id: L3_NPC_MICKEY_POST
   source_anchor: active outline / Loop3 / 爆炸后回收区 / NPC Mickey
