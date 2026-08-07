@@ -37,6 +37,12 @@ section 头与对话 ID 无关，照旧书写。
 
 ## 3. 分支指令
 
+适用边界：普通 `@branch` / `@opt` 只用于 `scenes[].npcs` 自由探索 Talk。
+自由探索证词可在线性主干或任一 `@path` 内 `@get`，全部路径在完整探索/回访中
+均可到达，不属于内容层面的永久互斥。Opening、场景级强制 Event、post-expose、
+`ending_sequence` 禁止普通 `@branch` / `@opt`；其中证词必须沿固定链线性 `@get`。
+Expose 的 `@evidence` 选择不受此限制。
+
 | 指令 | 语义 |
 |------|------|
 | `@branch <分支名>` | 分支组开始。其紧邻上一个发言块即"选项触发句" |
