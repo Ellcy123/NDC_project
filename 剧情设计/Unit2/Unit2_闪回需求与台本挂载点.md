@@ -486,7 +486,7 @@ Loop：Loop6
 
 ---
 
-## C09 Loop6：Lula、Emma、Zack 给 Frank 的纪念物
+## C09 Loop6：Lula 留给 Frank 的纪念物
 
 编号：C09  
 Loop：Loop6  
