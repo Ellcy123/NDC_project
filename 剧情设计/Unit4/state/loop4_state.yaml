@@ -228,13 +228,16 @@ scenes:
         - 4411
         - 4412
         - 4413
+        required_testimony_ids:
+        - 4114001
+        - 4114002
     talk: L4_event_stop_order_delivery
     forced: true
     locks_player_control: true
     runtime_binding:
       adapter: ordered_story_event
       interaction_source: 4033.phone_stop_order_application
-      reason: Unity现有SceneEnterTalkTriggerConfig不支持requiredTalkIds；必须把墙边电话做成受O'Hara Talk、Sarah Talk与4411—4413共同门控的申请交互，交互开始后再锁定玩家控制
+      reason: Unity现有SceneEnterTalkTriggerConfig不支持requiredTalkIds；必须把墙边电话做成受O'Hara Talk、Sarah Talk、4114001、4114002与4411—4413共同门控的申请交互，交互开始后再锁定玩家控制
     grants_evidence:
     - 4414
     required_beats:
@@ -376,6 +379,8 @@ expose:
     - 4401
     - 4402
     - 4403
+    required_item_ids:
+    - 4416
   context: '指证从 O''Hara 的现实选择逐步转向 Patrick 往事。
 
     Margaret 的错误不是害怕危险，而是先替 O''Hara 决定放弃房屋，
