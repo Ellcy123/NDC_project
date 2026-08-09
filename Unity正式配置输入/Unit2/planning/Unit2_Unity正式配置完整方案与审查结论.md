@@ -254,14 +254,22 @@ NPC 和 Item 只通过 `SceneConfig.NPCInfos[]` 与 `SceneConfig.ItemIDs[]` 出�
    - L4：240012 → 240026 → 240049 → final240095 → loop_end211204029。
    - L5：250008 → 250021 → final250030 → loop_end215005015。
    - L6：260008 → 260021 → 260037 → 260162 → final260202 → loop_end201106053。
+8. U2 运行入口已移除三处硬阻断：
+   - `GameBuildSettings.channel` 已由 Demo 改为 Release，`NdcBuildRules` 允许 Chapter1 → Chapter2。
+   - Overview 只锁定尚未到达的章节；当前 U2 可显示 6 个循环，配置存在时显示正式章节名。
+   - Chapter1 片尾视频结束后不再无条件进入 `GameEndPanel`；存在 Chapter2 且构建规则允许时，复用 `ChapterMgr.MoveNextLoop()` 进入 U2。
+9. 使用 Unity 2022.3.62f2c1 自带 Roslyn 与项目现有完整引用清单，`Assembly-CSharp` 和 `Assembly-CSharp-Editor` 均已零错误编译。验证器也会检查 Release 通道、Overview 门禁、片尾续章逻辑及 GameFlow2 的 Excel/runtime bytes 一致性。
 
 Translator 在 JSON/bytes 生成完成后，其附带的 C# 独立集成步骤会报 `netstandard.dll not found`。这是当前 macOS/Mono 下的已知工具链警告，不影响本次 JSON/bytes 输出，且表 C# schema 文件未产生 Git 差异。
+
+曾用 APFS 写时复制建立临时 Unity 项目做隔离启动：正常模式被 Package Manager 访问 `download-packages.unity.cn` 阻塞；`-noUpm` 模式会主动移除 UI/TMP/URP 包引用，因此第三方程序集报缺包，不能作为完整启动验收。临时项目已删除，正式工程未受影响。
 
 待现有 Unity Editor 可用时，最后验收应按以下顺序：
 
 1. 让 Editor 刷新 `Assets/Resources/table/*.bytes.txt`，确认 Console 无新的表加载错误。
-2. 用 GM Loop Jumper 分别进入 ChapterConfig 201–206，确认初始 Talk/Scene。
-3. 每轮至少走一次场景门、NPC 主对话、重复对话、容器和道具获取。
-4. 逐轮确认 Doubt 解锁、Expose 正确证据数量、错误证据返回、正确证据推进和 finalexpose。
-5. 确认 L5 Scene2519 电话段、L6 Scene2693 墓地段以及六轮 `loop_end`。
-6. 记录只能在实机中复现的阻断，再做范围最小的定向修复。
+2. 从 Chapter1 最后一轮播放片尾，确认 Release 路径进入 Chapter2 Loop1，而不是打开 `GameEndPanel`。
+3. 用 GM Loop Jumper 分别进入 ChapterConfig 201–206，确认初始 Talk/Scene。
+4. 每轮至少走一次场景门、NPC 主对话、重复对话、容器和道具获取。
+5. 逐轮确认 Doubt 解锁、Expose 正确证据数量、错误证据返回、正确证据推进和 finalexpose。
+6. 确认 L5 Scene2519 电话段、L6 Scene2693 墓地段以及六轮 `loop_end`。
+7. 记录只能在实机中复现的阻断，再做范围最小的定向修复。
