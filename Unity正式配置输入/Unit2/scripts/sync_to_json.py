@@ -341,7 +341,7 @@ class MDEntry:
         self.script_tag_target = ""  # 如 `get` → 2001001 中的 2001001
         self.branch_options = []    # [(text, target_id_str), ...]
         self.lie_correct_evidence = []  # Expose Lie 的正确证据列表（EV 前缀）
-        self.lie_correct_next = ""      # Expose Lie 正确路径 next
+        self.lie_correct_next = ""      # Expose Lie 正确路径（输出为 correctNext 元数据）
         self.lie_round = 0              # Expose Lie 轮次
         self.source_file = ""       # 对应的 JSON 文件名
         self.location = ""          # 从段落 > 场景：xxx 注释提取
@@ -769,6 +769,34 @@ def _infer_speak_type(cn_speaker):
     return 2
 
 
+def _lie_zack_talk_count(md_entry, entries):
+    """Return the leading Zack-line count on a Lie's successful path.
+
+    Unity interprets Lie/``expose`` ParameterInt0 as this presentation count,
+    not as a Talk id.  The successful Talk id is kept separately in the
+    generated-only ``correctNext`` metadata consumed by the formal builder.
+    """
+    try:
+        target_id = int(md_entry.lie_correct_next)
+    except (TypeError, ValueError):
+        return 1
+
+    start_index = next((index for index, entry in enumerate(entries) if entry.id == target_id), -1)
+    if start_index < 0:
+        return 1
+
+    zack_id = NPC_SPEAKER_MAP.get("扎克·布伦南", ("", ""))[0]
+    count = 0
+    for entry in entries[start_index:]:
+        speaker = _lookup_speaker(entry.cn_speaker or "")
+        if speaker is None or speaker[0] != zack_id:
+            break
+        count += 1
+        if (entry.script_tag or "").lower() in {"branches", "lie", "end"}:
+            break
+    return max(1, count)
+
+
 def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expose=False, warnings=None):
     """根据 MDEntry 生成 JSON 条目 dict。"""
     if warnings is None:
@@ -845,12 +873,9 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
                 f"EV{ev}" if len(ev) == 4 and ev.isdigit() else ev
                 for ev in md_entry.lie_correct_evidence
             )
-        # ParameterInt0 = 正确路径 next（整数）
-        if md_entry.lie_correct_next:
-            try:
-                p_int[0] = int(md_entry.lie_correct_next)
-            except (ValueError, TypeError):
-                pass
+        # Unity Talk.expose 的 ParameterInt0 = 成功后 Zack 连续台词数。
+        # 正确路径 Talk id 另存 correctNext，不塞进运行时参数。
+        p_int[0] = _lie_zack_talk_count(md_entry, entries)
         # ParameterInt1 = 轮次（从文件内 Lie 计数推断）
         if md_entry.lie_round:
             p_int[1] = md_entry.lie_round
@@ -902,6 +927,8 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
         "videoId": entry_id_str,
         "videoScene": scene_name,
     })
+    if is_expose and tag == "lie":
+        entry["correctNext"] = int(md_entry.lie_correct_next) if md_entry.lie_correct_next else 0
 
     return entry
 
@@ -936,7 +963,7 @@ def new_json(json_path, md_entries, episode, loop_num, is_expose=False, dry_run=
         if entry["script"] == "branches":
             entry["next"] = ""
         if entry["script"] == "Lie":
-            # Lie 的 next 留给 ParameterInt0（正确路径）；主 next 字段保留为下一条 id 以供默认流转
+            # 主 next 保留默认流转；成功路径由 correctNext 供正式配表器使用。
             pass
 
     if not dry_run:
@@ -963,6 +990,7 @@ def sync_entries(json_path, md_entries, dry_run=False, force_clear=False):
 
     changes = []
     modified = False
+    lie_round = 0
 
     for md_entry in md_entries:
         idx = id_to_idx.get(md_entry.id)
@@ -972,6 +1000,9 @@ def sync_entries(json_path, md_entries, dry_run=False, force_clear=False):
 
         je = json_data[idx]
         entry_changes = []
+        tag = (md_entry.script_tag or "").lower()
+        if tag == "lie":
+            lie_round += 1
 
         cn_words_diff = md_entry.cn_words != je.get("cnWords", "")
         if cn_words_diff and (md_entry.cn_words or force_clear):
@@ -1004,6 +1035,24 @@ def sync_entries(json_path, md_entries, dry_run=False, force_clear=False):
                     entry_changes.append(f"    {key}: {old} → {opt_text}")
                     if not dry_run:
                         je[key] = opt_text
+
+        if tag == "lie":
+            correct_materials = ",".join(
+                f"EV{evidence}" if len(evidence) == 4 and evidence.isdigit() else evidence
+                for evidence in md_entry.lie_correct_evidence
+            )
+            lie_values = {
+                "ParameterStr0": correct_materials,
+                "ParameterInt0": _lie_zack_talk_count(md_entry, md_entries),
+                "ParameterInt1": lie_round,
+                "correctNext": int(md_entry.lie_correct_next) if md_entry.lie_correct_next else 0,
+            }
+            for key, expected in lie_values.items():
+                if je.get(key) == expected:
+                    continue
+                entry_changes.append(f"    {key}: {je.get(key, '')} → {expected}")
+                if not dry_run:
+                    je[key] = expected
 
         if entry_changes:
             changes.append(f"  [{md_entry.id}]")
@@ -1103,11 +1152,7 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
                 f"EV{ev}" if len(ev) == 4 and ev.isdigit() else ev
                 for ev in md_e.lie_correct_evidence
             )
-        if md_e.lie_correct_next:
-            try:
-                p_int[0] = int(md_e.lie_correct_next)
-            except (ValueError, TypeError):
-                pass
+        p_int[0] = _lie_zack_talk_count(md_e, all_entries_in_bucket)
         if md_e.lie_round:
             p_int[1] = md_e.lie_round
 
@@ -1121,6 +1166,11 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
     ent["ParameterStr4"] = p_str[4]
     ent["ParameterInt3"] = p_int[3]
     ent["ParameterInt4"] = p_int[4]
+
+    if is_expose and tag == "lie":
+        ent["correctNext"] = int(md_e.lie_correct_next) if md_e.lie_correct_next else 0
+    else:
+        ent.pop("correctNext", None)
 
     return ent
 

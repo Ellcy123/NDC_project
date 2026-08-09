@@ -47,6 +47,24 @@
 - `planning/Unit2_正式配置覆盖说明.md` 记录了新旧文档冲突的最终裁定；它只补充派生快照，不回写原策划文档。
 - 六个 `state/*.yaml` 底部的 `formal_config` 是正式配表覆盖层，共列出 44 个当前对白段。
 - 当 state/planning 旧描述与正式对白冲突时，以 `dialogue/LoopN_正式配置稿.md` 和 `formal_config` 为准。
+- `planning/Unit2_Unity正式配置完整方案与审查结论.md` 记录实际落表数量、六轮逐点流程、证据/疑点/指证映射和当前验收状态。
+
+## 生成和验证
+
+```bash
+# 由已编号 MD 重建 44 个中间 JSON 段
+python3 Unity正式配置输入/Unit2/scripts/sync_to_json.py --all --reconcile --purge --episode EPI02
+
+# 由独立输入副本重建 U2 正式 Excel
+python3 /Users/tisrashi/NDC/res/build_u2_formal_config.py --all
+
+# 读取 Excel 和 runtime bytes 做跨表/六轮流程验证
+python3 /Users/tisrashi/NDC/res/validate_u2_formal_config.py
+```
+
+当前中间输出为 44 个 JSON 文件、2038 个唯一 Talk ID。正式 Talk 另增加 24 条无副作用 repeat Talk，因此 U2 正式 Talk 总数是 2062。
+
+Expose 中间 JSON 的 `correctNext` 是配表用的正确对白路径元数据；`ParameterInt0` 按当前 Unity 运行时语义保存成功后 Zack 连续台词数，不再保存 Talk ID。
 
 ## 来源完整性
 
