@@ -259,10 +259,11 @@ NPC 和 Item 只通过 `SceneConfig.NPCInfos[]` 与 `SceneConfig.ItemIDs[]` 出�
    - Overview 只锁定尚未到达的章节；当前 U2 可显示 6 个循环，配置存在时显示正式章节名。
    - Chapter1 片尾视频结束后不再无条件进入 `GameEndPanel`；存在 Chapter2 且构建规则允许时，复用 `ChapterMgr.MoveNextLoop()` 进入 U2。
 9. 使用 Unity 2022.3.62f2c1 自带 Roslyn 与项目现有完整引用清单，`Assembly-CSharp` 和 `Assembly-CSharp-Editor` 均已零错误编译。验证器也会检查 Release 通道、Overview 门禁、片尾续章逻辑及 GameFlow2 的 Excel/runtime bytes 一致性。
+10. 使用 APFS 写时复制建立临时 Unity 工程完成了真实 AssetDatabase Initial Refresh：`CompileScripts` 用时 13.3 秒，C# 错误、编译中止和缺失配置日志均为 0，随后 Unity 主动执行 batch quit。正式仓库、现有 Editor 和原始策划文件未被修改。
 
 Translator 在 JSON/bytes 生成完成后，其附带的 C# 独立集成步骤会报 `netstandard.dll not found`。这是当前 macOS/Mono 下的已知工具链警告，不影响本次 JSON/bytes 输出，且表 C# schema 文件未产生 Git 差异。
 
-曾用 APFS 写时复制建立临时 Unity 项目做隔离启动：正常模式被 Package Manager 访问 `download-packages.unity.cn` 阻塞；`-noUpm` 模式会主动移除 UI/TMP/URP 包引用，因此第三方程序集报缺包，不能作为完整启动验收。临时项目已删除，正式工程未受影响。
+隔离启动时发现本机缺少可选编辑器包 `com.unity.performance.profile-analyzer@1.2.4` 的完整缓存，外网下载又超时。仅在临时克隆中移除此包后，其余正式包成功解析并完成全量刷新；正式仓库的 `Packages` 未改。Unity 2022 在打印 `Batchmode quit successfully invoked` 后卡在 JobSystem 等后台导入线程，等待后只终止了临时进程。该结果可证明全包导入和脚本编译通过，但不替代 Play Mode 的 GM/流程实测；临时项目已删除。
 
 待现有 Unity Editor 可用时，最后验收应按以下顺序：
 
