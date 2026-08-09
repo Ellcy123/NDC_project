@@ -40,6 +40,13 @@
 - 215 Foster
 - 216 Earl Hirsch
 - 217 TideWater Liaison
+- 218 City Hall Doorman
+
+## 正式配置覆盖
+
+- `planning/Unit2_正式配置覆盖说明.md` 记录了新旧文档冲突的最终裁定；它只补充派生快照，不回写原策划文档。
+- 六个 `state/*.yaml` 底部的 `formal_config` 是正式配表覆盖层，共列出 44 个当前对白段。
+- 当 state/planning 旧描述与正式对白冲突时，以 `dialogue/LoopN_正式配置稿.md` 和 `formal_config` 为准。
 
 ## 来源完整性
 
@@ -50,4 +57,3 @@ python3 Unity正式配置输入/Unit2/scripts/source_manifest.py --verify-origin
 ```
 
 修正版配置稿允许与初始副本哈希不同；验收只要求原始文件哈希保持不变。
-

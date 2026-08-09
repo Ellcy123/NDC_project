@@ -44,21 +44,21 @@
 # F. quiz 配对    PASS — 无 quiz 设计，本 Loop 无此需求
 # G. Expose 逻辑  PASS — R1:2102001+2208 击穿"不认识 Russo"谎言（陷阱:2201 Leonard 名片）；
 #                        R2:2202+2206 连号拼图击穿"只是认识没来往"（陷阱:2203）；
-#                        R3:2092002+2205 击穿"那是借给 Vinnie 的钱"（陷阱:2092001）；
+#                        R3:2162002+2205 击穿"那是借给 Vinnie 的钱"（陷阱:2162001）；
 #                        三轮维度互不重叠；每件击穿件唯一挂载对应疑点/碎片
 # ──────────────────────────────────────────────────────────
 #
 # 一对一挂载检查（证据 ↔ 疑点/碎片 唯一性）：
 #   2202 → 疑点 2202 only  |  2206 → 疑点 2202 only
 #   2102001 → 疑点 2201 only  |  2208 → 疑点 2201 only
-#   2092002 → 疑点 2203 only  |  2205 → 疑点 2203 only
+#   2162002 → 疑点 2203 only  |  2205 → 疑点 2203 only
 #   2112001 → 碎片 2204 only
-#   2201 / 2203 / 2204 / 2092001 未进任何 condition（背景信息/陷阱选项；2201 同时承担场景解锁功能）
+#   2201 / 2203 / 2204 / 2162001 未进任何 condition（背景信息/陷阱选项；2201 同时承担场景解锁功能）
 #
 # 时序检查（L_doubt ≤ min(L_use)）：
 #   疑点 2201（posed_loop=2）→ 击穿件 2102001/2208 用于 L2 R1：2 ≤ 2  PASS
 #   疑点 2202（posed_loop=2）→ 击穿件 2202/2206 用于 L2 R2：2 ≤ 2  PASS
-#   疑点 2203（posed_loop=2）→ 击穿件 2092002/2205 用于 L2 R3：2 ≤ 2  PASS
+#   疑点 2203（posed_loop=2）→ 击穿件 2162002/2205 用于 L2 R3：2 ≤ 2  PASS
 #   碎片 2204（posed_loop=2）→ 仅进 L4 父疑点 2401 condition，L4 使用：2 ≤ 4  PASS
 #
 # validation_status: PASS
@@ -373,8 +373,8 @@ scenes:
       玩家可选直接答 或 选"我再想想"回到自由探索看环境线索（墙上海报"Bee's Knees-$0.50"/
       吧台尽头 Tony 手写小单 Gin+Lemon+Honey / 酒架蜂蜜罐 Bee's 标签——三处任 1-2 处即可推出）。
       答对 → Tony 视为自己人，给：
-        - testimony 2092002（Vinnie "赚了一笔"）
-        - testimony 2092003（Frank 经常喝酒，Tony 不知动机；L4 callback 钩子）
+        - testimony 2162002（Earl：Vinnie 用的词是"赚了"而不是"还了"）
+        - testimony 2162003（Earl 对 Frank 经常来此的误读；L4 callback 钩子）
       答错 → Tony"再想想"，对话返回，可无限重试无惩罚。
       【骰子赌博（可选）】：调酒答对后 Tony 在对话里递骰子——"要不要来一场紧张刺激的赌博？打发打发时间"
       玩家在对话选 "玩 / 不玩"：
@@ -394,7 +394,7 @@ scenes:
         pickup: true
         description: "Vinnie 随身携带的小记账本，记录催债对象名单、地址和金额；其中有一栏标注'L.R.'（首字母缩写，不是全名），旁边写着一个街区地址——正是湖滨信托银行的地址。"
         analysis: false
-        note: "关键——疑点 2203 condition；L2 R3 击穿件（配合 Tony 证词 2092002，证明 Vinnie 是受 L.R. 指使的催债人）"
+        note: "关键——疑点 2203 condition；L2 R3 击穿件（配合 Earl 证词 2162002，证明 Vinnie 是受 L.R. 指使的催债人）"
 
       - id: 2206
         name: "Tony 找零的连号钞票（902B / 903B / 904B） / Tony's Change Banknotes"
@@ -445,7 +445,7 @@ scenes:
           - "Vinnie 花钱时说的是'赚了一笔'，不是'还了债'——这个区别 Tony 当时就觉得奇怪"
           - "Tony 留意过 Vinnie 手中新钞的号码——他收的时候扫了一眼，是连号一串（为 2206 提供真实性支撑）"
           - "Frank 也常在这一带喝酒——一杯啤酒能坐一晚上；Tony 以为他是丧偶老头打发夜晚（误读：Tony 不知 Frank 真实动机是暗中监管侄子 Danny 赌博——L4 callback 钩子）"
-          - "出 1920s 调酒题考客人——Zack 假装熟客时 Tony 反诘"那你知道我们这边的招牌酒用什么吗"；玩家可在场景里观察墙上海报/吧台手写小单/酒架蜂蜜罐三处任一线索推出 Bee's Knees 答案（禁酒令圈内人验证仪式）"
+          - '出 1920s 调酒题考客人——Zack 假装熟客时 Tony 反诘"那你知道我们这边的招牌酒用什么吗"；玩家可在场景里观察墙上海报/吧台手写小单/酒架蜂蜜罐三处任一线索推出 Bee''s Knees 答案（禁酒令圈内人验证仪式）'
           - "玩家骰子赢 30$ 后用 Vinnie 留下的零钱结账（2206：902B/903B/904B 连号三张），顺手交代来源'上礼拜 Vinnie 来喝酒结账留下的'——Tony 自己不知是线索，只是随口一说；号码连号是 Zack 自己看出来的"
         withheld_topics:
           - "Tony 知道的 Vinnie 过去更多劣迹（不主动说，被问到时会含糊）"
@@ -460,9 +460,9 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 2092001  # Tony：Vinnie 用崭新钞票消费，说"今天又赚了一笔"（L2 R3 陷阱选项——"赚了一笔"单独使用无法反驳"借来的钱花掉"）
-          - 2092002  # Tony：Vinnie 说钱是赚来的，不是还来的（L2 R3 击破件 + 疑点 2203 condition）；获取条件：调酒考验答对 2 题
-          - 2092003  # Tony：Frank 常在这一带喝酒，孤单老头（L4 callback 钩子；Tony 不知真实动机——监管侄子 Danny）；获取条件：调酒考验答对 2 题
+          - 2162001  # Earl：Vinnie 用崭新钞票消费，说"今天又赚了一笔"（L2 R3 陷阱选项）
+          - 2162002  # Earl：Vinnie 说钱是赚来的，不是还来的（L2 R3 击破件 + 疑点 2203 condition）
+          - 2162003  # Earl：对 Frank 常在这一带的误读（L4 callback 钩子）
 
 # ─────────────────────────────
 # 四、指证（⚔️ Expose：Leonard）
@@ -479,7 +479,7 @@ expose:
   context: |
     Zack 完成自由探索后，持有 O'Hara 贿赂钞票（2202：901B+905B）、Vinnie 催债小本子（2205）、
     Tony 找零钞票（2206：902B/903B/904B），加上证词 Vinnie 口误（2102001）、Leon 嘉奖奖杯（2208）、
-    Tony 钱是赚来的（2092002），对 Leonard 在银行大厅发起指证。
+    Earl 证实钱是赚来的（2162002），对 Leonard 在银行大厅发起指证。
     Leonard 将从"不认识催债的人"→"只是认识没来往"→"那是借给 Vinnie 的钱"三层退守，
     最终在连号钞票（901–905 完整序列）+催债小本子面前防线崩溃。
 
@@ -524,13 +524,13 @@ expose:
     lie_source: null  # R3 谎言为 Expose 内部退守对白，无 testimony ID（R2 被破后 Leonard 当场说出）
     evidence_set:
       usable:
-        - id: 2092002
-          purpose: "Tony 明确说 Vinnie 花钱时说的是'赚了一笔'，不是'还了债'——Vinnie 自己都没说是还款"
+        - id: 2162002
+          purpose: "Earl 明确说 Vinnie 花钱时说的是'赚了一笔'，不是'还了债'——Vinnie 自己都没说是还款"
         - id: 2205
           purpose: "Vinnie 的催债小本子里标注'L.R.'（Leonard Ross 首字母）+ 银行地址——这是 Vinnie 的工作记录，不是个人债务记录"
       trap:
-        - id: 2092001
-          reason: "Tony 说的'今天又赚了一笔'是疑点 condition 之外的同源证词，但单独使用无法反驳'借来的钱花掉'——Vinnie 说赚了一笔可以是别的来源，需要与小本子结合才能构成反驳"
+        - id: 2162001
+          reason: "Earl 说的'今天又赚了一笔'是疑点 condition 之外的同源证词，但单独使用无法反驳'借来的钱花掉'——Vinnie 说赚了一笔可以是别的来源，需要与小本子结合才能构成反驳"
     result: |
       Leonard 的三层防线全面崩溃。
       他假装叹气，改换策略——"好吧，Frank 的确欠银行的钱，我用了一些……非正规的方式催收，
@@ -628,7 +628,7 @@ doubts:
     isFragment: false
     unlock_condition:
       - type: 3
-        param: "2092002"  # Tony 证词：Vinnie 说钱是赚来的，不是还来的
+        param: "2162002"  # Earl 证词：Vinnie 说钱是赚来的，不是还来的
       - type: 1
         param: "2205"   # Vinnie 催债小本子（标注 L.R. + 银行地址）
     posed_loop: 2
@@ -736,7 +736,7 @@ evidence_registry:
     first_scene: 2015
     pickup: true
     analysis: false
-    note: "关键——疑点 2203 condition；L2 R3 击穿件（配合 2092002）"
+    note: "关键——疑点 2203 condition；L2 R3 击穿件（配合 2162002）"
 
   - id: 2206
     name: "Tony 找零的连号钞票（902B / 903B / 904B） / Tony's Change Banknotes"
@@ -747,3 +747,30 @@ evidence_registry:
     pickup: true
     analysis: false
     note: "关键——疑点 2202 condition；L2 R2 击穿件（配合 2202 拼出连号 901–905 完整序列）"
+
+formal_config:
+  source_dialogue: "../dialogue/Loop2_正式配置稿.md"
+  source_precedence: dialogue_over_state
+  dialogue_sections:
+    - opening_l2_hospital
+    - mickey_l2_hospital
+    - ohara_l2_street
+    - leonard_l2_lobby
+    - vinnie_l2_casino
+    - tony_l2_casino
+    - bookie_l2_casino
+    - Loop2_leonard
+    - leonard_l2_postexpose
+  npc_overrides:
+    earl_hirsch: 216
+  id_overrides:
+    old_tony_testimony: [2092001, 2092002, 2092003]
+    current_earl_testimony: [2162001, 2162002, 2162003]
+    ohara_banknotes: 2202
+  evidence_overrides:
+    correct_expose_materials:
+      round_1: [2102001, 2208]
+      round_2: [2202, 2206]
+      round_3: [2162002, 2205]
+  gameplay_fallbacks:
+    earl_dice: deterministic_branch_grants_2206

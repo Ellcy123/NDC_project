@@ -2,8 +2,8 @@
 """
 Assign Unit2 dialogue IDs.
 
-Reads Unit2 no-ID MD drafts and writes derived numbered drafts under
-Unit2/编号稿/. Original drafts are not modified.
+Reads the isolated Unit2 formal-config drafts and writes numbered drafts under
+generated/numbered/. Existing Unit2 source drafts are never modified.
 """
 
 from __future__ import annotations
@@ -15,8 +15,9 @@ from pathlib import Path
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-UNIT_DIR = SCRIPT_DIR / "Unit2"
-OUT_DIR = UNIT_DIR / "编号稿"
+UNIT_ROOT = SCRIPT_DIR.parent
+UNIT_DIR = UNIT_ROOT / "dialogue"
+OUT_DIR = UNIT_ROOT / "generated" / "numbered"
 
 NPC_CODES = {
     "zack": 201,
@@ -37,6 +38,10 @@ NPC_CODES = {
     "margaret": 213,
     "edith": 214,
     "foster": 215,
+    "bookie": 216,
+    "earl": 216,
+    "tidewater": 217,
+    "doorman": 218,
 }
 
 SPECIAL_BASE = {
@@ -47,11 +52,13 @@ SPECIAL_BASE = {
 
 SECTION_RE = re.compile(r"^##\s+(Talk|Expose):\s*(\S+)\.json\s*$")
 SPEAKER_RE = re.compile(r"^\*\*(.+?)\*\*\s*(?:\[(.*?)\])?\s*$")
-GET_RE = re.compile(r"^@get\s+(证词|证据)\s+([0-9A-Za-z]+)\s+[\"“](.*?)[\"”]\s*#?(\w+)?")
+ACTION_RE = re.compile(
+    r"^@(get|del)\s+(证词|证据)\s+([0-9A-Za-z]+)\s+[\"“](.*?)[\"”]\s*#?(\w+)?"
+)
 OPT_RE = re.compile(r"^@opt\s+[\"“](.*?)[\"”]\s*->\s*([A-Za-z0-9_]+)")
 EVIDENCE_RE = re.compile(
     r"^@evidence\s+[\"“](.*?)[\"”]\s*"
-    r"(?:[（(]([0-9A-Za-z]+)[）)])?\s*->\s*([A-Za-z0-9_]+)\s*#(correct|trap)"
+    r"(?:[（(\[]([0-9A-Za-z,\s]+)[）)\]])?\s*->\s*([A-Za-z0-9_]+)\s*#(correct|trap)"
     r"(?:\s+[\"“](.*?)[\"”])?"
 )
 LIE_RE = re.compile(r"^@lie\s+anchor=([0-9A-Za-z]+|null)")
@@ -59,6 +66,7 @@ LIE_RE = re.compile(r"^@lie\s+anchor=([0-9A-Za-z]+|null)")
 
 @dataclass
 class GetTag:
+    action: str
     kind: str
     target: str
     summary: str
@@ -72,6 +80,7 @@ class Option:
     kind: str = ""
     reason: str = ""
     target_id: int | None = None
+    evidence_ids: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -132,7 +141,14 @@ def base_for_section(section: Section, used_conv: dict[int, set[int]]) -> tuple[
         npc, conv = 201, section.loop
     used = used_conv.setdefault(npc, set())
     if conv in used:
-        conv = max(max(used) + 1, section.loop + 1)
+        # A Loop file is numbered independently, so using ``loop + 1`` for a
+        # second conversation can collide with that NPC's first conversation
+        # in the next Loop (for example Leonard L2 post-expose vs. L3 lobby).
+        # Keep 1..6 for the first conversation in each Loop and reserve
+        # 101..106, 201..206, ... for additional conversations in that Loop.
+        conv = section.loop + 100
+        while conv in used:
+            conv += 100
     used.add(conv)
     return npc, conv
 
@@ -257,13 +273,21 @@ def parse_sections(path: Path) -> list[Section]:
             node.branch_options.append(Option(clean_option_text(opt_match.group(1)), opt_match.group(2)))
             continue
 
-        get_match = GET_RE.match(stripped)
-        if get_match:
+        action_match = ACTION_RE.match(stripped)
+        if action_match:
             if node is None and current.nodes:
                 node = current.nodes.pop()
             if node is None:
                 node = Node(source_line=lineno)
-            node.tags.append(GetTag(get_match.group(1), get_match.group(2), get_match.group(3), get_match.group(4) or ""))
+            node.tags.append(
+                GetTag(
+                    action_match.group(1),
+                    action_match.group(2),
+                    action_match.group(3),
+                    action_match.group(4),
+                    action_match.group(5) or "",
+                )
+            )
             continue
 
         evidence_match = EVIDENCE_RE.match(stripped)
@@ -274,9 +298,16 @@ def parse_sections(path: Path) -> list[Section]:
                 continue
             text, inline_id, target, kind, reason = evidence_match.groups()
             ev_text = clean_option_text(text)
-            if inline_id and inline_id not in ev_text:
-                ev_text = f"{ev_text}（{inline_id}）"
-            active_lie.evidence_options.append(Option(ev_text, target, kind, reason or ""))
+            explicit_ids = re.findall(r"[0-9A-Za-z]+", inline_id or "")
+            active_lie.evidence_options.append(
+                Option(
+                    ev_text,
+                    target,
+                    kind,
+                    reason or "",
+                    evidence_ids=explicit_ids,
+                )
+            )
             continue
 
         speaker_match = SPEAKER_RE.match(stripped)
@@ -348,9 +379,8 @@ def build_label_map(section: Section) -> dict[str, int]:
     return labels
 
 
-def evidence_id_from_text(text: str) -> str:
-    ids = re.findall(r"\b(?:\d{4}|\d{7}[A-Za-z]?)\b", text)
-    return ids[-1] if ids else ""
+def evidence_ids_from_text(text: str) -> list[str]:
+    return re.findall(r"\b(?:\d{4}|\d{7}[A-Za-z]?)\b", text)
 
 
 def split_line_nodes(sections: list[Section]) -> None:
@@ -427,16 +457,17 @@ def render_node(node: Node, section: Section, label_map: dict[str, int], is_last
         correct = []
         for opt in node.evidence_options:
             if opt.kind == "correct":
-                ev_id = evidence_id_from_text(opt.text)
-                if ev_id:
-                    correct.append(ev_id)
+                # Explicit ``[id1,id2]`` annotations are authoritative.  Only
+                # legacy lines without an explicit array fall back to scanning
+                # descriptive text, which may legitimately contain years.
+                correct.extend(opt.evidence_ids or evidence_ids_from_text(opt.text))
         tag_tail = " `Lie`"
         if correct:
             tag_tail += " 正确证据：" + ",".join(dict.fromkeys(correct))
     elif node.branch_options:
         tag_tail = " `branches`"
     elif node.tags:
-        tag_tail = f" `get` → {node.tags[0].target}"
+        tag_tail = f" `{node.tags[0].action}` → {node.tags[0].target}"
     elif is_last:
         tag_tail = " `end`"
 
@@ -493,7 +524,7 @@ def render(sections: list[Section], source: Path) -> str:
 
 
 def process_loop(loop: int, write: bool) -> tuple[Path, str]:
-    src = UNIT_DIR / f"Loop{loop}_生成草稿.md"
+    src = UNIT_DIR / f"Loop{loop}_正式配置稿.md"
     if not src.exists():
         raise FileNotFoundError(src)
     sections = parse_sections(src)

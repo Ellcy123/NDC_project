@@ -937,3 +937,33 @@ evidence_registry:
     source_scene: 2006
     source_loop: 6
     note: "关键——L6 R1 + R3 击破件；疑点 2601 condition"
+
+formal_config:
+  source_dialogue: "../dialogue/Loop6_正式配置稿.md"
+  source_precedence: dialogue_over_state
+  dialogue_sections:
+    - opening_l6_hospital
+    - margaret_l6_hospital
+    - tony_l6_casino_handover
+    - morrison_l6_warrant
+    - leonard_l6_lobby
+    - edith_l6_home
+    - Loop6_leonard
+    - leonard_l6_postexpose
+    - ending_l6_cemetery
+  npc_overrides:
+    tidewater_liaison: 217
+  scene_overrides:
+    tidewater_exchange: 2615
+  inventory_transitions:
+    - {action: get, id: 2602, at: margaret_l6_hospital}
+    - {action: get, id: 2607, at: morrison_l6_warrant}
+  evidence_overrides:
+    correct_expose_materials:
+      round_1: [2605, 2136001]
+      round_2: [2610]
+      round_3: [2136001, 2606]
+      round_4: [2105002, 2601]
+  gameplay_fallbacks:
+    workbench_reveal: 2611
+    lens_combine: "2611+2603->2605"

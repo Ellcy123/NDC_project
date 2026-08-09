@@ -590,7 +590,7 @@ doubts:
     isFragment: false
     unlock_condition:
       - type: 3
-        param: "2092002"  # Tony 证词
+        param: "2162002"  # Earl 证词
       - type: 1
         param: "2205"  # Vinnie 催债小本子
     posed_loop: 2
@@ -794,3 +794,24 @@ evidence_registry:
     inherited_from: "loop3_post_expose"
     first_available_loop: 4
     usage: "L4 R2 指证击穿件；父疑点 2401 condition"
+
+formal_config:
+  source_dialogue: "../dialogue/Loop4_正式配置稿.md"
+  source_precedence: dialogue_over_state
+  dialogue_sections:
+    - opening_l4_hospital
+    - lula_l4_storefront
+    - ohara_l4_street
+    - danny_l4_bathroom
+    - danny_l4_toilet
+    - Loop4_danny
+    - danny_l4_postexpose
+  id_overrides:
+    earl_testimony_for_doubt: 2162002
+  evidence_overrides:
+    correct_expose_materials:
+      round_1: [2064001, 2405]
+      round_2: [2083004, 2404]
+      round_3: [2064002, 2403]
+  gameplay_fallbacks:
+    proposal_ring_combine: "2409+2410->2403"

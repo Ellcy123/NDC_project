@@ -64,12 +64,15 @@ if sys.platform == "win32":
 # 路径配置
 # ============================================================
 
-BASE = Path(__file__).parent.parent           # NDC_project/AVG/
-MD_DIR = Path(__file__).parent                # 对话配置工作及草稿/
-GEN_MD_DIR = MD_DIR / "生成草稿"              # 生成草稿/
+SCRIPT_DIR = Path(__file__).resolve().parent
+UNIT_ROOT = SCRIPT_DIR.parent
+BASE = UNIT_ROOT / "generated" / "json"
+MD_DIR = UNIT_ROOT / "generated" / "numbered"
+GEN_MD_DIR = UNIT_ROOT / "dialogue"
 
 # 默认 episode（可用 --episode 覆盖）
-DEFAULT_EPISODE = "EPI01"
+DEFAULT_EPISODE = "EPI02"
+MAX_PARAMETERS = 5
 
 # ============================================================
 # NPC 中文名 → IdSpeaker / enSpeaker 映射
@@ -125,6 +128,52 @@ NPC_SPEAKER_MAP_EPI01 = {
     "Whale":             ("NPC111", "Whale"),
     "鲸鱼":              ("NPC111", "Whale"),
 }
+
+NPC_SPEAKER_MAP_EPI02 = {
+    "扎克·布伦南": ("NPC201", "Zack"),
+    "扎克": ("NPC201", "Zack"),
+    "Zack": ("NPC201", "Zack"),
+    "艾玛·奥马利": ("NPC202", "Emma"),
+    "艾玛": ("NPC202", "Emma"),
+    "Emma": ("NPC202", "Emma"),
+    "莫里森": ("NPC203", "Morrison"),
+    "Morrison": ("NPC203", "Morrison"),
+    "Frank": ("NPC204", "Frank"),
+    "米奇": ("NPC205", "Mickey"),
+    "米奇·唐纳利": ("NPC205", "Mickey"),
+    "Mickey": ("NPC205", "Mickey"),
+    "奥哈拉太太": ("NPC206", "O'Hara"),
+    "O'Hara": ("NPC206", "O'Hara"),
+    "伦纳德": ("NPC207", "Leonard"),
+    "Leonard": ("NPC207", "Leonard"),
+    "摩尔": ("NPC208", "Moore"),
+    "Moore": ("NPC208", "Moore"),
+    "托尼": ("NPC209", "Tony"),
+    "Tony": ("NPC209", "Tony"),
+    "维尼": ("NPC210", "Vinnie"),
+    "文森特": ("NPC210", "Vinnie"),
+    "Vinnie": ("NPC210", "Vinnie"),
+    "丹尼": ("NPC211", "Danny"),
+    "丹尼·科瓦尔斯基": ("NPC211", "Danny"),
+    "Danny": ("NPC211", "Danny"),
+    "露拉": ("NPC212", "Lula"),
+    "Lula": ("NPC212", "Lula"),
+    "玛格丽特": ("NPC213", "Margaret"),
+    "Margaret": ("NPC213", "Margaret"),
+    "伊迪丝": ("NPC214", "Edith"),
+    "Edith": ("NPC214", "Edith"),
+    "福斯特": ("NPC215", "Foster"),
+    "福斯特（电话中）": ("NPC215", "Foster"),
+    "Foster": ("NPC215", "Foster"),
+    "厄尔·赫希": ("NPC216", "Earl Hirsch"),
+    "Earl Hirsch": ("NPC216", "Earl Hirsch"),
+    "TideWater 中间人": ("NPC217", "TideWater Liaison"),
+    "TideWater Liaison": ("NPC217", "TideWater Liaison"),
+    "门卫": ("NPC218", "City Hall Doorman"),
+    "City Hall Doorman": ("NPC218", "City Hall Doorman"),
+}
+
+SYSTEM_SPEAKERS = {"举报信", "Frank写给Lula的情书", "系统", "旁白"}
 
 # Unit8 = Unit1 0417 重构版，NPC 编码 801-811（与 Unit1 旧数据 101-111 隔离）
 NPC_SPEAKER_MAP_EPI08 = {
@@ -589,7 +638,7 @@ def parse_md_file(md_path):
 
             # 检测分支选项: - ❶ 文本 → `target`
             branch_match = re.match(
-                r"^-\s*[❶❷❸❹❺❻❼❽❾➊➋➌➍➎➏➐➑➒①②③④⑤⑥⑦⑧⑨\d()()\[\]]+\s*(.+?)\s*→\s*`?(\d+)`?",
+                r"^-\s*[❶❷❸❹❺❻❼❽❾➊➋➌➍➎➏➐➑➒①②③④⑤⑥⑦⑧⑨\d().\[\]]+\s*(.+?)\s*→\s*`?(\d+)`?",
                 content,
             )
             if branch_match:
@@ -691,6 +740,8 @@ def _lookup_speaker(cn_name):
     """查 NPC 映射。返回 (IdSpeaker, enSpeaker) 或 None。"""
     if not cn_name:
         return None
+    if cn_name in SYSTEM_SPEAKERS:
+        return ("", "")
     # 原名
     if cn_name in NPC_SPEAKER_MAP:
         return NPC_SPEAKER_MAP[cn_name]
@@ -708,6 +759,8 @@ def _lookup_speaker(cn_name):
 def _infer_speak_type(cn_speaker):
     """speakType: 1=NPC独白 / 2=NPC对Zack / 3=Zack对NPC / 4=旁白"""
     if not cn_speaker:
+        return 4
+    if cn_speaker in SYSTEM_SPEAKERS:
         return 4
     # Zack 说话 → 3
     if _lookup_speaker(cn_speaker) == NPC_SPEAKER_MAP.get("扎克·布伦南"):
@@ -761,10 +814,10 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
         script = tag
 
     # ParameterStr / ParameterInt 默认
-    p_str = ["", "", ""]
-    p_int = [0, 0, 0]
+    p_str = [""] * MAX_PARAMETERS
+    p_int = [0] * MAX_PARAMETERS
 
-    if tag == "get":
+    if tag in ("get", "del"):
         # 证据 ID：放 ParameterStr0（带 EV 前缀用于证据；证词直接数字）
         target = md_entry.script_tag_target
         if target:
@@ -777,7 +830,7 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
 
     elif tag == "branches":
         # 分支选项文本 → ParameterStr；目标 id → ParameterInt
-        for i, (opt_text, opt_target) in enumerate(md_entry.branch_options[:3]):
+        for i, (opt_text, opt_target) in enumerate(md_entry.branch_options[:MAX_PARAMETERS]):
             p_str[i] = opt_text
             try:
                 p_int[i] = int(opt_target)
@@ -818,7 +871,8 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
 
     # Expose 特有：talkDisplayIndex (1=Zack/左 / 2=NPC/右)
     if is_expose:
-        if id_speaker == "NPC101":
+        zack_speaker_id = NPC_SPEAKER_MAP.get("扎克·布伦南", ("", ""))[0]
+        if id_speaker == zack_speaker_id:
             entry["talkDisplayIndex"] = 1
         elif id_speaker:
             entry["talkDisplayIndex"] = 2
@@ -839,6 +893,10 @@ def _build_entry(md_entry, entries, idx, episode, loop_num, scene_name, is_expos
         "ParameterInt0": p_int[0],
         "ParameterInt1": p_int[1],
         "ParameterInt2": p_int[2],
+        "ParameterStr3": p_str[3],
+        "ParameterStr4": p_str[4],
+        "ParameterInt3": p_int[3],
+        "ParameterInt4": p_int[4],
         "videoEpisode": episode,
         "videoLoop": f"loop{loop_num}",
         "videoId": entry_id_str,
@@ -938,7 +996,7 @@ def sync_entries(json_path, md_entries, dry_run=False, force_clear=False):
         # 不应被 branch_options 的 opt_text 覆盖（sync 一致性 bug 修复）
         if md_entry.branch_options and (md_entry.script_tag or "").lower() != "lie":
             for i, (opt_text, _) in enumerate(md_entry.branch_options):
-                if i > 2:
+                if i >= MAX_PARAMETERS:
                     break
                 key = f"ParameterStr{i}"
                 if opt_text != je.get(key, ""):
@@ -1020,10 +1078,10 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
         ent["Location"] = md_e.location
 
     # 重置 Parameter 字段（避免老的 branches 数据残留），再按 tag 填新值
-    p_str = ["", "", ""]
-    p_int = [0, 0, 0]
+    p_str = [""] * MAX_PARAMETERS
+    p_int = [0] * MAX_PARAMETERS
 
-    if tag == "get":
+    if tag in ("get", "del"):
         target = md_e.script_tag_target
         if target:
             if len(target) == 4 and target.isdigit():
@@ -1031,7 +1089,7 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
             else:
                 p_str[0] = target
     elif tag == "branches":
-        for i, (opt_text, opt_target) in enumerate(md_e.branch_options[:3]):
+        for i, (opt_text, opt_target) in enumerate(md_e.branch_options[:MAX_PARAMETERS]):
             p_str[i] = opt_text
             try:
                 p_int[i] = int(opt_target)
@@ -1059,6 +1117,10 @@ def _merge_md_into_json_entry(existing, md_entry, all_entries_in_bucket, idx_in_
     ent["ParameterInt0"] = p_int[0]
     ent["ParameterInt1"] = p_int[1]
     ent["ParameterInt2"] = p_int[2]
+    ent["ParameterStr3"] = p_str[3]
+    ent["ParameterStr4"] = p_str[4]
+    ent["ParameterInt3"] = p_int[3]
+    ent["ParameterInt4"] = p_int[4]
 
     return ent
 
@@ -1473,7 +1535,10 @@ def main():
     # EPI09 = Unit9 正式输出目录（沿用 8XX 编码，复用 EPI08 映射）
     global NPC_SPEAKER_MAP
     ep_upper = episode.upper()
-    if ep_upper == "EPI08":
+    if ep_upper == "EPI02":
+        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI02
+        print(f"[INFO] 使用 EPI02 NPC 映射表（2XX 编码）")
+    elif ep_upper == "EPI08":
         NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI08
         print(f"[INFO] 使用 EPI08 NPC 映射表（8XX 编码）")
     elif ep_upper == "EPI09":
@@ -1483,19 +1548,16 @@ def main():
         NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 
     if "--all" in args:
-        # 依次处理两个目录下的 Loop{1-6}_*.md
+        # 只处理隔离目录中已编号的正式配置稿。
         any_found = False
         for loop_num in range(1, 7):
-            for candidates in [
-                MD_DIR / f"Loop{loop_num}_对话草稿.md",
-                GEN_MD_DIR / f"Loop{loop_num}_生成草稿.md",
-            ]:
-                if candidates.exists():
-                    if reconcile:
-                        reconcile_md_to_loop_dir(candidates, episode, dry_run=dry_run, purge=purge)
-                    else:
-                        process_single_md(candidates, episode, dry_run, mode, force_clear=force_clear)
-                    any_found = True
+            candidate = MD_DIR / f"Loop{loop_num}_编号稿.md"
+            if candidate.exists():
+                if reconcile:
+                    reconcile_md_to_loop_dir(candidate, episode, dry_run=dry_run, purge=purge)
+                else:
+                    process_single_md(candidate, episode, dry_run, mode, force_clear=force_clear)
+                any_found = True
         if not any_found:
             print("[WARN]未找到任何 Loop{1-6}_*.md 文件")
         return

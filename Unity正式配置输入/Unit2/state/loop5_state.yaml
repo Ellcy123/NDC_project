@@ -483,3 +483,23 @@ evidence_registry:
       type: testimony
       note: "L4 post_expose 取得；L5 R1 击穿件；疑点 2501 condition"
       from_loop: 4
+
+formal_config:
+  source_dialogue: "../dialogue/Loop5_正式配置稿.md"
+  source_precedence: dialogue_over_state
+  dialogue_sections:
+    - opening_l5_frankhome
+    - tony_l5_casino
+    - bookie_l5_casino
+    - vinnie_l5_casino
+    - Loop5_vinnie
+    - vinnie_l5_postexpose_bar
+    - vinnie_l5_postexpose_phone
+  inventory_transitions:
+    - {action: get, id: 2502, at: opening_l5_frankhome}
+    - {action: get, id: 2503, at: opening_l5_frankhome}
+    - {action: del, id: 2502, at: opening_l5_frankhome}
+  evidence_overrides:
+    correct_expose_materials:
+      round_1: [2501, 2095001]
+      round_2: [2114004]

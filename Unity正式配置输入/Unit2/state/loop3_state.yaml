@@ -674,3 +674,26 @@ evidence_registry:
     pickup: true
     note: "关键——疑点 2302 condition；L3 R2 击破件；贷款计算玩法产出"
     description: "将贷款协议三条款（第 5/7/12 条）综合计算的分析报告。本金 600$，年单利 12%×5 年 = 360$，月管理费 50$×60 月 = 3,000$，5 年合计约 3,960$。折合年化（含管理费）约 112%，远超伊利诺伊州法 7% 上限（约 16 倍——这不只是违规，是赤裸裸的高利贷）。"
+
+formal_config:
+  source_dialogue: "../dialogue/Loop3_正式配置稿.md"
+  source_precedence: dialogue_over_state
+  dialogue_sections:
+    - opening_l3_cityhall
+    - leonard_l3_lobby
+    - danny_l3_bedroom
+    - moore_l3_parlor
+    - Loop3_moore
+    - moore_l3_postexpose
+  npc_overrides:
+    city_hall_doorman: 218
+  acquisition_overrides:
+    grant: [2308]
+    do_not_grant: [2307]
+  evidence_overrides:
+    correct_expose_materials:
+      round_1: [2301, 2302]
+      round_2: [2701]
+      round_3: [2306]
+  gameplay_fallbacks:
+    punch_card_analysis: standard_analysis_result_2701

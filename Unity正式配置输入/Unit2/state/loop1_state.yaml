@@ -54,7 +54,7 @@
 loop_id: 1
 loop_title: "残酷的身份确认"
 loop_time: "11月6日 晚 9:00"
-loop_summary: "Zack 赶到 Margaret 鞋坊火灾现场，Morrison 告知死者"应该就是"Margaret。限时搜证后，证据显示死者没有婚戒、首饰盒空置、现场无金属残留——Margaret 不可能不戴戒指。Emma 联系 Foster 戳破 Morrison 声称有尸检结果的谎言。警局指证 Morrison 三轮，确认死者为 Frank Kowalski。事务所收 Mickey 电报，母亲在圣心医院。"
+loop_summary: 'Zack 赶到 Margaret 鞋坊火灾现场，Morrison 告知死者"应该就是"Margaret。限时搜证后，证据显示死者没有婚戒、首饰盒空置、现场无金属残留——Margaret 不可能不戴戒指。Emma 联系 Foster 戳破 Morrison 声称有尸检结果的谎言。警局指证 Morrison 三轮，确认死者为 Frank Kowalski。事务所收 Mickey 电报，母亲在圣心医院。'
 
 # ─────────────────────────────
 # 一、玩家视角
@@ -601,24 +601,40 @@ evidence_registry:
 
   # ── 证词（不在 ItemStaticData，记录供 TestimonyItem 配置表用）──
   # 规则：只有 R1 谎言锚作为可收集 testimony；R2/R3 谎言为 Expose 内部退守对白，无 testimony ID
-  testimony_registry:
-    - id: 2031001
-      npc: morrison
-      loop: 1
-      text: "死者应该就是 Margaret，基于现场情况判断"
-      is_lie: true
-      collected_at: "scene_2003 (Morrison 搜证后对话)"
-      use: "L1 R1 谎言锚"
+testimony_registry:
+  - id: 2031001
+    npc: morrison
+    loop: 1
+    text: "死者应该就是 Margaret，基于现场情况判断"
+    is_lie: true
+    collected_at: "scene_2003 (Morrison 搜证后对话)"
+    use: "L1 R1 谎言锚"
 
-    - id: 2151001
-      npc: foster
-      source: "Emma 转述"
-      loop: 1
-      text: "Foster 说至少明天才有初步结果，现在连性别都没法确认"
-      is_lie: false
-      collected_at: "phone_booth_cutscene"
-      use: "L1 R3 击穿件（Expose 当场击穿 Morrison 的 R3 退守谎言）"
+  - id: 2151001
+    npc: foster
+    source: "Emma 转述"
+    loop: 1
+    text: "Foster 说至少明天才有初步结果，现在连性别都没法确认"
+    is_lie: false
+    collected_at: "phone_booth_cutscene"
+    use: "L1 R3 击穿件（Expose 当场击穿 Morrison 的 R3 退守谎言）"
 
 # ============================================================
 # validation_status: PASS
 # ============================================================
+
+formal_config:
+  source_dialogue: "../dialogue/Loop1_正式配置稿.md"
+  source_precedence: dialogue_over_state
+  dialogue_sections:
+    - opening_l1_crimescene
+    - morrison_l1_lobby
+    - emma_l1_phonebooth
+    - Loop1_morrison
+    - morrison_l1_postexpose
+    - office_l1_telegram
+  evidence_overrides:
+    correct_expose_materials:
+      round_1: [2101, 2102, 2103]
+      round_2: [2104]
+      round_3: [2151001]
