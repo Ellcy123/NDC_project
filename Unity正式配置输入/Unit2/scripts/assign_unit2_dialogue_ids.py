@@ -257,10 +257,21 @@ def parse_sections(path: Path) -> list[Section]:
             continue
 
         if stripped.startswith("@branch"):
-            if node is None and current.nodes:
-                node = current.nodes.pop()
+            # A Talk row can execute only one script.  When ``@get``/``@del``
+            # immediately precedes a branch, keep the inventory action on the
+            # preceding spoken row and emit a separate silent branch row.
+            # Reusing the same node would render ``branches`` and silently drop
+            # the evidence action because branch rendering has higher priority.
+            if node is not None and node.tags:
+                flush_node()
+                node = Node(source_line=lineno, section_kind=current.kind)
+            elif node is None and current.nodes:
+                if current.nodes[-1].tags:
+                    node = Node(source_line=lineno, section_kind=current.kind)
+                else:
+                    node = current.nodes.pop()
             if node is None:
-                node = Node(source_line=lineno)
+                node = Node(source_line=lineno, section_kind=current.kind)
             current.prelude.append(f"<!-- {stripped} -->")
             continue
 
