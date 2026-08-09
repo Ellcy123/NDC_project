@@ -82,7 +82,7 @@ U2 在“不包含音频、视频和尚未交付的专用美术”的范围内�
 
 - 当 `@get/@del` 紧贴 `@branch` 时，现在会先生成独立无台词动作节点，再进入分支，避免动作被 `branches` 覆盖。
 - 章节最后一条如果是 `get/del`，会自动追加无台词 `end`，确保获取动作可执行且对话能关闭。
-- 当前正式草稿共 47 个 `get/del` 动作，动作多集与 MD 标注完全一致。
+- 当前正式草稿共 48 个 `get/del` 动作，动作多集与 MD 标注完全一致。
 - L2 新增派生动作 `@get 2112001`，以满足 L2/L4 对 Danny—Leonard 交谈的引用。
 
 ### 3.5 Lie / Expose 参数语义
@@ -205,6 +205,7 @@ NPC 和 Item 只通过 `SceneConfig.NPCInfos[]` 与 `SceneConfig.ItemIDs[]` 出�
 - ChapterConfig：206；初始 Talk `201006001`；初始 Scene `2691`。
 - 可玩主链：医院开场 → Scene2606 Margaret/Foster → Scene2604 Morrison 签搜查令 → Scene2615 TideWater 交接 → Scene2611 Leonard 银行大厅 → Scene2617 Leonard 住所/Edith → Scene2692 指证 → Leonard post-expose → Scene2693 墓地结尾 → `201106053 loop_end`。
 - 新增场景：2615 Silver Moon 赌场·TideWater 交接；NPC217 暂用 Tony 已有资源。
+- 医院开场 `201006027` 挂 `get 2601`，表示 Zack 从 Foster 的公文包取走法医鉴定报告；原草稿只描述了交付，没有运行时获取动作，现已补齐。
 - 工作台：Scene2601 的 2803/2804 产出 2611；2611+2603 医用镊子 → 2605 眼镜碎片。
 - 医院取证区：2960/2961 连接 Scene2606 与 Scene2621，Scene2621 提供 2603。
 - 核心证据：2605 眼镜碎片、2610 维修单、2136001 20:16 目击、2606 凹陷货箱、2105002 Vinnie 认罪细节、2601 法医报告。
@@ -241,7 +242,7 @@ NPC 和 Item 只通过 `SceneConfig.NPCInfos[]` 与 `SceneConfig.ItemIDs[]` 出�
 已完成：
 
 1. 原始文件哈希：81/81 未变。
-2. 派生对白：2038 个唯一 ID，47 个 get/del，0 个缺失 next/分支目标。
+2. 派生对白：2038 个唯一 ID，48 个 get/del，0 个缺失 next/分支目标。
 3. 非 U2 Excel 行：GameFlow、Chapter、Map、NPC、Scene、Item、Talk、Testimony、Doubt、Expose 全部与分支基线逐单元格值一致。
 4. Excel → JSON/bytes：`Translate.exe` 退出码 0，所有目标表 runtime bytes 已重建。
 5. 跨表：Chapter/Scene/NPC/Item/Talk/Testimony/Doubt/Expose 引用均存在。
