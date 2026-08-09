@@ -457,6 +457,12 @@ def split_line_nodes(sections: list[Section]) -> None:
                 )
                 expanded.append(clone)
 
+        # ``get``/``del`` occupies the Talk row's only script slot.  If such a
+        # row is also the final source node, append a silent terminal so the
+        # runtime still receives DialogueAction.end after applying the action.
+        if expanded and expanded[-1].tags and not expanded[-1].goto:
+            expanded.append(Node(source_line=expanded[-1].source_line, section_kind=section.kind))
+
         section.nodes = expanded
 
 
