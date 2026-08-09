@@ -1,9 +1,12 @@
 # Unit2 Unity 正式配置完整方案与审查结论
 
-> 日期：2026-08-10  
-> Unity 分支：`u2-unity-formal-config`  
-> 正式配置输入：`/Users/tisrashi/NDC_project/Unity正式配置输入/Unit2/`  
-> 旧配置蓝图：`/Users/tisrashi/NDC_project/avg_editor_v2/data/table/`  
+> 日期：2026-08-10
+>
+> Unity 分支：`u2-unity-formal-config`
+>
+> 正式配置输入：`/Users/tisrashi/NDC_project/Unity正式配置输入/Unit2/`
+>
+> 旧配置蓝图：`/Users/tisrashi/NDC_project/avg_editor_v2/data/table/`
 > `preview_new2` 明确不作为内容依据。
 
 ## 一、当前结论
