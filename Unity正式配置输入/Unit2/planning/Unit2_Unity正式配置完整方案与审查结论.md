@@ -13,7 +13,7 @@
 
 U2 在“不包含音频、视频和尚未交付的专用美术”的范围内，已经具备完整正式配表数据：六个 Loop 的章节、场景、NPC、道具、对白、分支、证言、疑点、指证和结算链均已落到 Unity 正式 Excel，并已生成 JSON 和 runtime bytes。
 
-当前的表级验收结果是通过：
+按“逻辑测试即可”的验收标准，当前 U2 配置已经完成并通过：
 
 - 6 个 ChapterConfig，24 个 ChapterStep。
 - 10 个 MapConfig，46 个 LocationConfig，46 个 SceneConfig。
@@ -23,8 +23,10 @@ U2 在“不包含音频、视频和尚未交付的专用美术”的范围内�
 - 36 条 Testimony，35 个归一化 TestimonyItem，19 个 Doubt，18 轮 ExposeData。
 - 6 条 `finalexpose` 和 6 条 `loop_end`，六轮指证后流程均能到达各自结束点。
 - 原始对白、state 和策划文档 81/81 份 SHA-256 未变。
+- Release 章节推进逻辑为 `1-6 → 2-1`，U2 内部为 `2-1 → … → 2-6`，由于不存在 ChapterConfig 301，`2-6` 安全进入 `GameEnd`。
+- U2 `ChapterConfig.bytes` 已完整解码，章节文字、步骤、初始 Talk/Scene、Doubt、Expose、NPC、坐标和地图场景映射均与 Excel 一致。
 
-尚未完成的是 Unity Editor 内的最终导入/GM 跳转实机验收。当前 `/Users/tisrashi/NDC` 已被一个正在运行的 Unity 2022.3.62f2c1 实例打开，Unity 拒绝第二实例的 batchmode。这不是配表错误，但在现有 Editor 刷新/重启并完成 GM Loop 201–206 跳转前，不应把“实机可玩”标记为最终完成。
+Play Mode/GM 跳转不再作为本次完成条件。现有 Unity Editor 无需关闭；后续若有空闲窗口，可做一次体验性烟测，但它不阻塞本次正式配置交付。
 
 ## 二、内容依据与冲突裁定
 
@@ -237,7 +239,7 @@ NPC 和 Item 只通过 `SceneConfig.NPCInfos[]` 与 `SceneConfig.ItemIDs[]` 出�
 
 上述三项美术问题已被验证器作为 warning 明示记录，不会以缺失路径的方式静默失败。
 
-## 八、验收结果与最后运行步骤
+## 八、验收结果与逻辑测试结论
 
 已完成：
 
@@ -260,17 +262,21 @@ NPC 和 Item 只通过 `SceneConfig.NPCInfos[]` 与 `SceneConfig.ItemIDs[]` 出�
    - Chapter1 片尾视频结束后不再无条件进入 `GameEndPanel`；存在 Chapter2 且构建规则允许时，复用 `ChapterMgr.MoveNextLoop()` 进入 U2。
 9. 使用 Unity 2022.3.62f2c1 自带 Roslyn 与项目现有完整引用清单，`Assembly-CSharp` 和 `Assembly-CSharp-Editor` 均已零错误编译。验证器也会检查 Release 通道、Overview 门禁、片尾续章逻辑及 GameFlow2 的 Excel/runtime bytes 一致性。
 10. 使用 APFS 写时复制建立临时 Unity 工程完成了真实 AssetDatabase Initial Refresh：`CompileScripts` 用时 13.3 秒，C# 错误、编译中止和缺失配置日志均为 0，随后 Unity 主动执行 batch quit。正式仓库、现有 Editor 和原始策划文件未被修改。
+11. 章节推进矩阵通过：
+    - Release：`1-6 → 2-1`，结果 `Continue`。
+    - Release：`2-1 → 2-2 → 2-3 → 2-4 → 2-5 → 2-6`，每一步下一章循环配置均存在，结果 `Continue`。
+    - Release：`2-6 → 3-1`，ChapterConfig 301 不存在，结果 `GameEnd`，不会落入空配置。
+    - Demo：即使 ChapterConfig 201 存在，`1-6 → 2-1` 仍按渠道规则返回 `GameEnd`。
+12. 验证器不仅检查 runtime bytes 条数，还逐条解码并比对 U2 的 2062 条 Talk、46 条 Scene、18 条 Expose、GameFlow2 和 6 条 ChapterConfig 关键运行字段。
 
 Translator 在 JSON/bytes 生成完成后，其附带的 C# 独立集成步骤会报 `netstandard.dll not found`。这是当前 macOS/Mono 下的已知工具链警告，不影响本次 JSON/bytes 输出，且表 C# schema 文件未产生 Git 差异。
 
-隔离启动时发现本机缺少可选编辑器包 `com.unity.performance.profile-analyzer@1.2.4` 的完整缓存，外网下载又超时。仅在临时克隆中移除此包后，其余正式包成功解析并完成全量刷新；正式仓库的 `Packages` 未改。Unity 2022 在打印 `Batchmode quit successfully invoked` 后卡在 JobSystem 等后台导入线程，等待后只终止了临时进程。该结果可证明全包导入和脚本编译通过，但不替代 Play Mode 的 GM/流程实测；临时项目已删除。
+隔离启动时发现本机缺少可选编辑器包 `com.unity.performance.profile-analyzer@1.2.4` 的完整缓存，外网下载又超时。仅在临时克隆中移除此包后，其余正式包成功解析并完成全量刷新；正式仓库的 `Packages` 未改。Unity 2022 在打印 `Batchmode quit successfully invoked` 后卡在 JobSystem 等后台导入线程，等待后只终止了临时进程。该退出阶段现象不影响已经完成的 AssetDatabase 刷新和零错误脚本编译；临时项目已删除。
 
-待现有 Unity Editor 可用时，最后验收应按以下顺序：
+最终自动逻辑验证命令：
 
-1. 让 Editor 刷新 `Assets/Resources/table/*.bytes.txt`，确认 Console 无新的表加载错误。
-2. 从 Chapter1 最后一轮播放片尾，确认 Release 路径进入 Chapter2 Loop1，而不是打开 `GameEndPanel`。
-3. 用 GM Loop Jumper 分别进入 ChapterConfig 201–206，确认初始 Talk/Scene。
-4. 每轮至少走一次场景门、NPC 主对话、重复对话、容器和道具获取。
-5. 逐轮确认 Doubt 解锁、Expose 正确证据数量、错误证据返回、正确证据推进和 finalexpose。
-6. 确认 L5 Scene2519 电话段、L6 Scene2693 墓地段以及六轮 `loop_end`。
-7. 记录只能在实机中复现的阻断，再做范围最小的定向修复。
+```bash
+python3 res/validate_u2_formal_config.py
+```
+
+结果为 0 个 error、3 个已知非阻塞美术 warning。Play Mode 仅保留为后续可选烟测，不再是本次交付的待办或阻塞项。
