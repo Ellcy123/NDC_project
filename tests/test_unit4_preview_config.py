@@ -180,6 +180,21 @@ class Unit4PreviewBootstrapTests(unittest.TestCase):
                     chapter["topBg"],
                 )
 
+    def test_art_asset_name_is_human_label_and_display_name_is_resource_name(self) -> None:
+        assets = self.rows["ArtAssetConfig"]
+        by_resource = {str(row["displayName"]): row for row in assets}
+        for asset in assets:
+            with self.subTest(asset_id=asset["id"]):
+                resource_name = str(asset["id"]).rsplit("\\", 1)[-1]
+                self.assertEqual(resource_name, asset["displayName"])
+                self.assertNotEqual(asset["Name"], asset["displayName"])
+
+        self.assertEqual("车站 214 号寄存区", by_resource["u4_exp_station_locker_night"]["Name"])
+        self.assertEqual(
+            "离开四十二层 / 法院档案车 · 构图 A",
+            by_resource["u4_l5_end_stairs_pickup_night"]["Name"],
+        )
+
     def test_npc_art_resources_are_preconfigured(self) -> None:
         for npc in self.rows["NPCStaticData"]:
             with self.subTest(npc=npc["id"]):

@@ -729,12 +729,12 @@ def build_scene_rows(
                 art_assets.append(
                     {
                         "id": resource_path,
-                        "Name": resource_name,
-                        "displayName": (
+                        "Name": (
                             name
                             if len(resource_names) == 1
                             else f"{name} · 构图 {chr(64 + resource_index)}"
                         ),
+                        "displayName": resource_name,
                         "category": "scene",
                         "sceneKind": "dialogue" if is_cutscene or is_ending else "explore",
                         "ArtRequirement": art_requirement,
