@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::106002104",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "三、四、五年的源文档冲突真实存在，但原 P0 过重。玩家实际看到的正式台本与带日期物证全部稳定采用“四年”：1924 合影、Vivian 的四年分手信、Webb 的‘四年前初见’未拆信，以及 L3/L4 多轮对白互相闭合。三年只来自 Vivian 人物档案，五年只来自 Webb 人物档案，属于当前人物真源未统一。L4 指证需要证明两人并非单纯雇佣关系、关系长期延续，准确是三年还是四年或五年不会改变证据选择、凶器判断、案发时间或凶手闭环，因此不构成核心推理 P0；但人物档案会继续供 AI 写作使用，若不统一会重新污染台本，故保留为 P1。",
+  "evidence_checked": [
+    {
+      "source": "AVG/EPI01/Talk/loop3/vivian_002.json",
+      "finding": "106002103 问 Vivian 替 Webb 做勒索诱饵多久；106002104 回答‘四年，整整四年’，106002906 与 106002914 又重复‘当工具四年’，同一对话链口径一致。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/vivian_003.json",
+      "finding": "106003201-106003203 以照片题字‘Ashford, 1924’和当前 1928 年交叉确认四年；Vivian 明说四年前在台上认识 Webb。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop4_vivian.json",
+      "finding": "106904006、106904009、106904042-106904043、106904010、106904017、106904020 均采用四年，且同时引用照片、分手信和 Webb 未拆信，正式指证内部没有三/五年口径。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1409/#1406/#1410",
+      "finding": "1409 合影明确题写 1924；1406 分手信正文与摘要均写四年；1410 Webb 未拆信写‘四年前第一次听你唱歌’。三件玩家可见物证共同锁定正式运行时的四年版本。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/vivian.md",
+      "finding": "人物档案写 Webb 三年前赠枪，并多次把 Vivian 被利用/忍受的历程写成三年；其中‘三年被利用’与正式台词‘替他做了四年’直接不一致，不能全用赠枪时间差解释。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/webb.md",
+      "finding": "Webb 档案写 Vivian 在 VIP 包厢成为勒索工具五年；这与 1924 初见、1928 案发及双方正式四年台词无法同时成立。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ExposeData.json#8/#9 + 剧情设计/Unit1/state/loop4_state.yaml",
+      "finding": "L4 指证用 1409+1406 证明关系不只是工具/雇主，再用 1103+1410证明 Webb 死前仍有情感安排；推理依赖关系性质与持续性，不依赖年数本身形成唯一结论。"
+    }
+  ]
+}

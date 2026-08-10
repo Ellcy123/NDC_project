@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::103903033",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "年龄冲突真实，但原 P0 过重，而且源头比原 issue 记录的更复杂：正式台词 103903033 与正式物品 1309 都采用‘约十岁’，Rosa 人物档案写约八岁，loop3 State 的医疗单又写出生于 1916-09-15；按 1928-11-03 案发日计算应为十二岁。玩家侧目前只会接触到彼此一致的十岁台词/照片，医疗单正式表没有出生年份。胁迫谜题依赖 Isabel 是 Rosa 重病女儿、威胁者掌握医院信息，以及密码 0915；不依赖年龄或出生年份完成条件，所以不破坏指证闭环。人物档案与 State 仍是 AI 写作真源，三套年龄会继续造成角色连续性污染，故从 P0 降为 P1。",
+  "evidence_checked": [
+    {
+      "source": "AVG/EPI01/Expose/Loop3_rosa.json",
+      "finding": "103903033 在 Rosa 崩溃供述中明确说 Isabel‘才十岁，还在生病’；上下文没有年龄撒谎动机，Rosa 正在解释自己为何受胁迫。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1309",
+      "finding": "正式 1309‘Rosa Martinez 女儿的照片’描述为约十岁女孩，并刻有‘我的天使 · 0915’，与正式台词的十岁口径一致。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json",
+      "finding": "1309 在 L3 的 Scene 1318 及后续对应场景持续挂载，玩家能够看到该约十岁的照片；这不是仅存在于未落地策划稿的描述。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/rosa.md",
+      "finding": "Rosa 基础信息把 Isabel 写成约八岁、重病；与正式台词和正式 1309 的约十岁直接冲突。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml",
+      "finding": "1309 照片描述同样写约十岁，但 1303 医疗单描述又写 Isabel 出生于 1916-09-15；以案发日 1928-11-03 计算已满十二岁，State 内部也不自洽。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1303",
+      "finding": "正式医疗单只记录病人 Isabel、监护人 Rosa 和 1925-11-28 的账单日期，没有出生年份或年龄；因此玩家不会从正式 1303 推导出十二岁。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/DoubtConfig.json#1302 + 剧情设计/Unit1/state/loop3_state.yaml round_2",
+      "finding": "谜题成立条件是威胁纸条与女儿医疗信息；铁盒密码只使用生日月日 0915。八、十或十二岁都不改变材料选择、威胁真实性或 Rosa 被迫作伪证的结论。"
+    }
+  ]
+}

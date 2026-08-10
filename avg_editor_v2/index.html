@@ -3868,8 +3868,7 @@
                         <option value="Unit1">Unit 1 - Webb谋杀案</option>
                         <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
                         <option value="Unit3">Unit 3 - Thomas坠楼案</option>
-                        <option value="Unit8">Unit 8 - Webb谋杀案（重构版）</option>
-                        <option value="Unit9">Unit 9 - 黑哨之夜</option>
+                        <option value="Unit4">Unit 4 - 四十二层之前</option>
                     </select>
                 </div>
                 <!-- LOOP select is hidden; loop chips in sidebar are the visible control. Kept in DOM so JS can read/write #loopSelect.value -->
@@ -3993,6 +3992,8 @@
     <script>
     // ===== Sidebar chip helpers =====
     function pickLoop(loopId) {
+        const unit = document.getElementById('unitSelect')?.value || 'Unit1';
+        if (unit === 'Unit4' && loopId === 'loop6') return;
         const sel = document.getElementById('loopSelect');
         if (sel) sel.value = loopId;
         if (typeof GameController !== 'undefined' && GameController.load) {
@@ -4002,9 +4003,15 @@
 
     function syncLoopChips() {
         const current = (typeof AppState !== 'undefined' && AppState.currentLoop) || 'loop1';
+        const unit = document.getElementById('unitSelect')?.value || 'Unit1';
         document.querySelectorAll('.loop-chip').forEach(chip => {
+            const unavailable = unit === 'Unit4' && chip.dataset.loop === 'loop6';
+            chip.hidden = unavailable;
+            chip.disabled = unavailable;
             chip.classList.toggle('active', chip.dataset.loop === current);
         });
+        const loop6Option = document.querySelector('#loopSelect option[value="loop6"]');
+        if (loop6Option) loop6Option.disabled = unit === 'Unit4';
     }
 
     function syncLoopHeader() {
@@ -4301,6 +4308,12 @@
                     initTalk: chapter.initTalk || '',
                     initScene: chapter.initScene || '',
                     openingScene: chapter.openingScene || '',
+                    explorationEntryScene: chapter.explorationEntryScene || chapter.initScene || '',
+                    pendingInitTalkKey: chapter.pendingInitTalkKey || '',
+                    openingSequence: chapter.openingSequence || [],
+                    specialMechanics: chapter.specialMechanics || {},
+                    endingSequence: chapter.endingSequence || {},
+                    previewStatus: chapter.previewStatus || '',
                     time: '',
                     _derived: true,
                 };
@@ -4596,9 +4609,8 @@
         },
 
         chapter(unit) {
+            if (unit === 'Unit4') return 'EPI04';
             if (unit === 'Unit3') return 'EPI03';
-            if (unit === 'Unit8') return 'EPI08';
-            if (unit === 'Unit9') return 'EPI09';
             return unit === 'Unit2' ? 'EPI02' : 'EPI01';
         },
 
@@ -4612,13 +4624,12 @@
             return AppState.allItems.find(i => Array.isArray(i.combineParameter) && i.combineParameter.includes(id));
         },
 
-        // Scene ID prefix for a given unit+loop: Unit1/loop1 -> "11", Unit8/loop3 -> "83"
+        // Scene ID prefix for a given unit+loop: Unit1/loop1 -> "11"
         loopPrefix(unit, loop) {
             let u = '1';
-            if (unit === 'Unit3') u = '3';
+            if (unit === 'Unit4') u = '4';
+            else if (unit === 'Unit3') u = '3';
             else if (unit === 'Unit2') u = '2';
-            else if (unit === 'Unit8') u = '8';
-            else if (unit === 'Unit9') u = '9';
             const l = loop.replace('loop', '');
             return `${u}${l}`;
         },
@@ -4636,11 +4647,21 @@
             });
         },
 
+        sceneBackgrounds(scene) {
+            if (!scene) return [];
+            const explicit = Array.isArray(scene.previewBackgroundImages)
+                ? scene.previewBackgroundImages.filter(Boolean).map(String)
+                : [];
+            if (explicit.length) return explicit;
+            const primary = scene.backgroundImage || (scene.location && scene.location.backgroundImage) || '';
+            return primary ? [String(primary)] : [];
+        },
+
         // 场景类型：顺着 location.backgroundImage 反查 ArtAssetConfig.sceneKind
         // 返回 'explore'（AVG/探索）/ 'dialogue'（对话）/ '' （底图未登记）
         sceneKind(scene) {
             if (!scene) return '';
-            const bg = scene.backgroundImage || (scene.location && scene.location.backgroundImage) || '';
+            const bg = this.sceneBackgrounds(scene)[0] || '';
             const a = AppState.artAssetMap.get(String(bg));
             return a ? (a.sceneKind || '') : '';
         },
@@ -4659,8 +4680,7 @@
         npcMountsForBg(bgPath) {
             const byKey = new Map();
             AppState.allScenes.forEach(s => {
-                const bg = s.backgroundImage || (s.location && s.location.backgroundImage) || '';
-                if (String(bg) !== String(bgPath)) return;
+                if (!this.sceneBackgrounds(s).includes(String(bgPath))) return;
                 const loop = s.loop;
                 (s.NPCInfos || []).forEach(info => {
                     const npcObj = info.NPC || {};
@@ -4773,6 +4793,11 @@
             const allowFallback = opts.allowFallback !== false;
             const id = String(entry?.id || '').trim();
             const videoScene = String(entry?.videoScene || '').trim();
+            const pendingTalkKey = String(entry?.pendingTalkKey || '').trim();
+
+            if (!id && !videoScene && pendingTalkKey) {
+                return { ok: false, pending: true, id: '', videoScene: '', pendingTalkKey, message: `AVG 待制作：${pendingTalkKey}` };
+            }
 
             if (videoScene && id) {
                 const talk = this.getTalk(id);
@@ -4817,20 +4842,11 @@
         findTalkForNPC(npcId) {
             if (!npcId) return '';
             const sid = String(npcId);
-            // convertAVGTalk stores Speaker.id as raw number (e.g. "807"), no "NPC" prefix
-            // Try direct match (design ID 907)
+            // convertAVGTalk stores Speaker.id as a raw number, without the "NPC" prefix.
+            // Current formal Unit1 IDs match directly.
             for (const talk of AppState.allTalks) {
                 if (talk.Speaker?.id === sid && talk.videoScene) {
                     return this.firstTalkIdByScene(talk.videoScene) || talk.id;
-                }
-            }
-            // Fallback: 9XX → 8XX (EPI09 uses 8XX NPC codes)
-            if (sid.startsWith('9')) {
-                const epiId = '8' + sid.slice(1);
-                for (const talk of AppState.allTalks) {
-                    if (talk.Speaker?.id === epiId && talk.videoScene) {
-                        return this.firstTalkIdByScene(talk.videoScene) || talk.id;
-                    }
                 }
             }
             // Fallback: match by NPC chinese name
@@ -4853,8 +4869,8 @@
             const key = String(id);
             const direct = AppState.talksMap.get(key);
             if (direct) return direct;
-            // Unit8 uses videoScene names (e.g. "jimmy_001") as TalkInfo.id —
-            // resolve to the AVG Talk entry with smallest step whose videoScene matches.
+            // Legacy rows may use a videoScene name as TalkInfo.id; resolve them
+            // without introducing a chapter-specific alias.
             if (!/^\d+$/.test(key)) {
                 let first = null;
                 for (const talk of AppState.talksMap.values()) {
@@ -4870,10 +4886,9 @@
 
         getChapterConfig(unit, loop) {
             let unitNum = 1;
-            if (unit === 'Unit3') unitNum = 3;
+            if (unit === 'Unit4') unitNum = 4;
+            else if (unit === 'Unit3') unitNum = 3;
             else if (unit === 'Unit2') unitNum = 2;
-            else if (unit === 'Unit8') unitNum = 8;
-            else if (unit === 'Unit9') unitNum = 9;
             const loopNum = parseInt(loop.replace('loop', ''));
             const id = String(unitNum * 100 + loopNum);
             return AppState.chapterConfigMap.get(id) || null;
@@ -4892,6 +4907,7 @@
                 videoLoop: String(seg?.videoLoop || AppState.currentLoop || ''),
                 videoScene,
                 entryTalkId: String(seg?.entryTalkId || seg?.id || '').trim(),
+                pendingTalkKey: String(seg?.pendingTalkKey || '').trim(),
                 transitionFrom: String(seg?.transitionFrom || ''),
                 transitionLabel: String(seg?.transitionLabel || ''),
                 characters: Array.isArray(seg?.characters) ? seg.characters : []
@@ -5081,7 +5097,7 @@
             const loopTalkId = loopTalkResolved.ok ? loopTalkResolved.id : '';
 
             // 角色身份
-            const roleMap = {'1':'主角','2':'搭档','3':'关键NPC','4':'受害者','5':'NPC','6':'嫌疑人'};
+            const roleMap = {'1':'死者','2':'嫌疑人 / 指证对象','3':'其他关键人物','4':'主角 / 搭档','5':'NPC','6':'嫌疑人'};
             const roleName = roleMap[npc.role] || npc.role || '未知';
 
             const titleEl = document.getElementById('modalTitle');
@@ -5271,7 +5287,7 @@
             const kindLabel = a.sceneKind === 'dialogue' ? '🎬 对话场景'
                 : a.sceneKind === 'explore' ? '🔍 探索场景' : (a.sceneKind || '未分类');
             const scenes = AppState.allScenes
-                .filter(s => String(s.backgroundImage || (s.location && s.location.backgroundImage) || '') === String(a.id))
+                .filter(s => DataManager.sceneBackgrounds(s).includes(String(a.id)))
                 .sort((x, y) => (Number(x.loop) || 0) - (Number(y.loop) || 0) || String(x.sceneId).localeCompare(String(y.sceneId)));
             const mounts = DataManager.npcMountsForBg(a.id);
                         const characterActions = Array.isArray(a.characterActionRequirements) ? a.characterActionRequirements : [];
@@ -5426,6 +5442,18 @@
 
             const om = item.obtainMethod || 'manual';
             const omLabels = { manual: '🎯 手动拾取', dialog: '💬 对话获得', auto: '⚡ 自动获得' };
+            const assetModeLabels = {
+                minigame: '小玩法专用',
+                narrative_discovery: '剧情发现'
+            };
+            const assetDisposition = item.previewAssetMode
+                ? `${assetModeLabels[item.previewAssetMode] || item.previewAssetMode}：${item.previewAssetNote || '普通道具图片不适用'}`
+                : '';
+            const assetField = (label, value) => value
+                ? `<p><strong>${label}：</strong><span class="copy-tag" onclick="copyText('${escapeHtml(value)}', this)">${escapeHtml(value)}</span></p>`
+                : assetDisposition
+                    ? `<p><strong>${label}：</strong><span style="color:var(--text-muted)">不适用（${escapeHtml(assetDisposition)}）</span></p>`
+                    : `<p><strong>${label}：</strong><span style="color:var(--warning)">未配置</span></p>`;
             let html = `
                 <p><strong>类型：</strong>${escapeHtml(typeName)}</p>
                 <p><strong>获取方式：</strong>${omLabels[om] || om}
@@ -5435,6 +5463,18 @@
                 <p><strong>章节：</strong>${escapeHtml(item.Chapter)}</p>
                 <p><strong>详情描述：</strong>${escapeHtml(desc)}</p>
                 ${shortDesc ? `<p><strong>简述：</strong>${escapeHtml(shortDesc)}</p>` : ''}
+                ${Array.isArray(item.previewEvidenceStates) && item.previewEvidenceStates.length > 1 ? `
+                    <div style="margin:0.9rem 0;padding:0.75rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);">
+                        <strong style="color:var(--highlight);">证据阶段状态（预览增强）</strong>
+                        ${item.previewEvidenceStates.map(state => `
+                            <div style="margin-top:0.65rem;padding-top:0.65rem;border-top:1px solid var(--border);">
+                                <strong>${escapeHtml(state.label || state.key || '状态')}</strong>
+                                <div style="margin-top:0.3rem;color:var(--text-muted);">${escapeHtml(cn(state.Describe))}</div>
+                                ${cn(state.ShortDescribe) ? `<div style="margin-top:0.25rem;color:var(--text-dim);font-size:0.9em;">简述：${escapeHtml(cn(state.ShortDescribe))}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
                 ${item.canAnalyzed === 'true' ? (() => {
                     const target = DataManager.getItem(item.analysedEvidence);
                     const tName = target ? DataManager.itemName(target) : '?';
@@ -5456,9 +5496,9 @@
                     return `<p class="derive-link"><strong>🧩 合成原料：</strong>${parts.join(' + ')}</p>`;
                 })() : ''}
                 ${item.folderPath ? `<p><strong>文件夹：</strong>${escapeHtml(item.folderPath)}</p>` : ''}
-                ${item.desSpritePath ? `<p><strong>详情图：</strong><span class="copy-tag" onclick="copyText('${escapeHtml(item.desSpritePath)}', this)">${escapeHtml(item.desSpritePath)}</span></p>` : '<p><strong>详情图：</strong><span style="color:var(--warning)">未配置</span></p>'}
-                ${item.mapSpritePath ? `<p><strong>地图图：</strong><span class="copy-tag" onclick="copyText('${escapeHtml(item.mapSpritePath)}', this)">${escapeHtml(item.mapSpritePath)}</span></p>` : '<p><strong>地图图：</strong><span style="color:var(--warning)">未配置</span></p>'}
-                ${item.iconPath ? `<p><strong>Icon：</strong><span class="copy-tag" onclick="copyText('${escapeHtml(item.iconPath)}', this)">${escapeHtml(item.iconPath)}</span></p>` : '<p><strong>Icon：</strong><span style="color:var(--warning)">未配置</span></p>'}
+                ${assetField('详情图', item.desSpritePath)}
+                ${assetField('地图图', item.mapSpritePath)}
+                ${assetField('Icon', item.iconPath)}
             `;
 
             if (item.ArtRequirement) {
@@ -5756,7 +5796,7 @@
             }
 
             // Scene list: support both old free_phase and new scenes{unlocked,locked,closed}
-            // Unit9 yaml uses nested form { unlocked: { 地点A: [id...], 地点B: [id...] } }
+            // Unit1 YAML can use nested form { unlocked: { 地点A: [id...], 地点B: [id...] } }.
             // Other units use flat form { unlocked: [id, id, ...] }; flatten if object.
             const flattenScenes = (raw) => {
                 const extractId = (x) => (x && typeof x === 'object' && x.id != null) ? x.id : x;
@@ -5998,8 +6038,9 @@
 
         unitPrefix(unit) {
             if (unit === 'Unit1') return '1';
+            if (unit === 'Unit2') return '2';
             if (unit === 'Unit3') return '3';
-            if (unit === 'Unit9') return '9';
+            if (unit === 'Unit4') return '4';
             return null;
         },
 
@@ -6280,9 +6321,9 @@
                         <div class="flow-panel-sub">${escapeHtml(selected.brief || '')}</div>
                         <div class="flow-chip-row">
                             <span class="flow-chip">目标：${escapeHtml(selected.goal || '未配置')}</span>
-                            <span class="flow-chip">开篇 Talk：${escapeHtml(selected.initTalk || '未配置')}</span>
+                            <span class="flow-chip">开篇 Talk：${escapeHtml(selected.initTalk || selected.pendingInitTalkKey || '未配置')}</span>
                             <span class="flow-chip clickable" onclick="FlowView.showScene('${escapeHtml(selected.openingScene || selected.initScene || '')}')">开篇 AVG 场景：${escapeHtml(AppState.scenesMap.get(String(selected.openingScene || selected.initScene || ''))?.sceneName || selected.openingScene || '未配置')}</span>
-                            <span class="flow-chip clickable" onclick="FlowView.showScene('${escapeHtml(selected.initScene || '')}')">探索入口：${escapeHtml(AppState.scenesMap.get(String(selected.initScene || ''))?.sceneName || selected.initScene || '未配置')}</span>
+                            <span class="flow-chip clickable" onclick="FlowView.showScene('${escapeHtml(selected.explorationEntryScene || selected.initScene || '')}')">探索入口：${escapeHtml(AppState.scenesMap.get(String(selected.explorationEntryScene || selected.initScene || ''))?.sceneName || selected.explorationEntryScene || selected.initScene || '未配置')}</span>
                         </div>
                         ${isEditing ? this.renderModuleEditor(selected) : this.renderLoopOverview(selected)}
                     </div>
@@ -6401,11 +6442,12 @@
 
         renderEntrySummary(loop) {
             const openingScene = AppState.scenesMap.get(String(loop.openingScene || ''));
-            const initScene = AppState.scenesMap.get(String(loop.initScene || ''));
+            const explorationSceneId = loop.explorationEntryScene || loop.initScene || '';
+            const initScene = AppState.scenesMap.get(String(explorationSceneId));
             return `<div class="flow-module-list">
-                <div class="flow-module-line"><span>开篇 Talk</span><strong>${escapeHtml(loop.initTalk || '未配置')}</strong></div>
+                <div class="flow-module-line"><span>开篇 Talk</span><strong>${escapeHtml(loop.initTalk || loop.pendingInitTalkKey || '未配置')}</strong></div>
                 <div class="flow-module-line"><span>开篇 AVG 场景</span><strong>${openingScene ? escapeHtml(this.sceneName(openingScene)) : escapeHtml(loop.openingScene || '未配置')}</strong></div>
-                <div class="flow-module-line"><span>探索入口</span><strong>${initScene ? escapeHtml(this.sceneName(initScene)) : escapeHtml(loop.initScene || '未配置')}</strong></div>
+                <div class="flow-module-line"><span>探索入口</span><strong>${initScene ? escapeHtml(this.sceneName(initScene)) : escapeHtml(explorationSceneId || '未配置')}</strong></div>
             </div>`;
         },
 
@@ -6414,7 +6456,7 @@
             if (!scenes.length) return `<div class="flow-list-sub">本 Loop 暂无开放场景。</div>`;
             return `<div class="flow-module-list compact">${scenes.slice(0, 8).map(s => `
                 <div class="flow-module-line">
-                    <span>${String(loop.initScene || '') === String(s.id) ? '入口' : '场景'}</span>
+                    <span>${String(loop.explorationEntryScene || loop.initScene || '') === String(s.id) ? '探索入口' : String(loop.openingScene || loop.initScene || '') === String(s.id) ? '开篇' : '场景'}</span>
                     <strong>${escapeHtml(s.id)} · ${escapeHtml(s.name || `Scene ${s.id}`)}</strong>
                 </div>
             `).join('')}${scenes.length > 8 ? `<div class="flow-list-sub">还有 ${scenes.length - 8} 个场景，进入编辑页查看。</div>` : ''}</div>`;
@@ -6434,6 +6476,9 @@
 
         renderDoubtsSummary(loop) {
             const doubts = loop.doubts || [];
+            if (!doubts.length && loop.specialMechanics?.identityLock?.replacesStandardDoubts) {
+                return `<div class="flow-list-sub">本 Loop 由三链身份锁替代普通疑点；三链全部完成后解锁指证。</div>`;
+            }
             if (!doubts.length) return `<div class="flow-list-sub">本 Loop 暂无疑点。</div>`;
             return `<div class="flow-module-list compact">${doubts.map(d => `
                 <div class="flow-module-line vertical">
@@ -6734,6 +6779,7 @@
                 : [];
             const item = items[0] || {};
             const firstId = String(item.firstId || stage?.refs?.talkId || loop.initTalk || '').trim();
+            const pendingTalkKey = String(stage?.refs?.pendingTalkKey || loop.pendingInitTalkKey || '').trim();
             const sceneId = String(item.id || stage?.refs?.sceneId || loop.openingScene || loop.initScene || '').trim();
             const talk = firstId ? DataManager.getTalk(firstId) : null;
             const talkFile = item.talk || talk?.videoScene || '';
@@ -6755,7 +6801,7 @@
                     <div class="flow-opening-row">
                         <span>${escapeHtml(sceneName)}${sceneId ? ` · ${escapeHtml(sceneId)}` : ''}</span>
                         ${talkFile ? `<span>${escapeHtml(talkFile)}.json</span>` : ''}
-                        ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : '<span>未配置首句</span>'}
+                        ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : pendingTalkKey ? `<span>AVG 待制作：${escapeHtml(pendingTalkKey)}</span>` : '<span>未配置首句</span>'}
                         ${loaded ? `<span>${entries.length || 1} 句</span>` : '<span style="color:var(--warning);">未加载</span>'}
                     </div>
                     ${firstId && loaded ? `
@@ -6808,7 +6854,7 @@
                             <span>${escapeHtml(sceneName)}${seg.sceneId ? ` · ${escapeHtml(seg.sceneId)}` : ''}</span>
                             ${seg.transitionLabel ? `<span>${escapeHtml(seg.transitionLabel)}</span>` : ''}
                             ${seg.videoScene ? `<span>${escapeHtml(seg.videoScene)}.json</span>` : ''}
-                            ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : '<span>未配置首句</span>'}
+                            ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : seg.pendingTalkKey ? `<span>AVG 待制作：${escapeHtml(seg.pendingTalkKey)}</span>` : '<span>未配置首句</span>'}
                             ${loaded ? `<span>${count} 句</span>` : '<span style="color:var(--warning);">未加载</span>'}
                         </div>
                         ${firstId && loaded ? `
@@ -6826,6 +6872,24 @@
             return `<div class="flow-opening-preview">${cards}</div>`;
         },
 
+        renderIdentityLockStage(loop) {
+            const lock = loop.specialMechanics?.identityLock;
+            if (!lock) return '';
+            const chains = (lock.chains || []).map(chain => {
+                const inputs = (chain.inputs || []).map(item => `${item.id} ${item.name || ''}`).join(' + ');
+                const outputs = (chain.outputs || []).map(item => `${item.id} ${item.name || ''}`).join(' / ');
+                return `<div class="flow-module-line vertical"><span>身份链 #${escapeHtml(chain.id)}</span><strong>${escapeHtml(chain.name || '')}</strong><em>${escapeHtml(inputs)} → ${escapeHtml(outputs)}</em></div>`;
+            }).join('');
+            return `<div class="flow-opening-preview"><div class="flow-module-list compact">${chains}</div><div class="flow-warning">完成条件：${escapeHtml(lock.completionCondition || 'all_chains_completed')}；完成后解锁 ${escapeHtml(lock.unlocks || 'expose')}。</div></div>`;
+        },
+
+        renderFinaleStage(loop) {
+            const ending = loop.endingSequence || {};
+            const scenes = (ending.scenes || []).map(scene => `<div class="flow-module-line"><span>${escapeHtml(scene.sceneId || '')}</span><strong>${escapeHtml(scene.name || scene.id || '')}${scene.pendingTalkKey ? ` · AVG 待制作：${escapeHtml(scene.pendingTalkKey)}` : ''}</strong></div>`).join('');
+            if (!scenes) return '';
+            return `<div class="flow-opening-preview"><div class="flow-module-list compact">${scenes}</div><div class="flow-warning">不计作新 Loop；继承 L${escapeHtml(ending.inheritLoop || 5)}，结束后进入 ${escapeHtml(ending.nextUnitEntry || '下一章入口')}。</div></div>`;
+        },
+
         renderStages(loop) {
             const stages = loop.flow || [];
             if (!stages.length) {
@@ -6835,6 +6899,8 @@
             stages.forEach((stage, idx) => {
                 const openingExtra = stage.type === 'opening' ? this.renderOpeningStage(loop, stage) : '';
                 const postExposeExtra = stage.type === 'postExpose' ? this.renderPostExposeStage(loop, stage) : '';
+                const identityLockExtra = stage.type === 'identityLock' ? this.renderIdentityLockStage(loop) : '';
+                const finaleExtra = stage.type === 'nonLoopFinale' ? this.renderFinaleStage(loop) : '';
                 html += `
                     <div class="flow-stage">
                         <div class="flow-stage-title">
@@ -6844,6 +6910,8 @@
                         <div class="flow-stage-summary">${escapeHtml(stage.summary || '')}</div>
                         ${openingExtra}
                         ${postExposeExtra}
+                        ${identityLockExtra}
+                        ${finaleExtra}
                     </div>
                 `;
             });
@@ -6870,6 +6938,10 @@
                     <div class="flow-list-sub">${(loop.scenes || []).slice(0, 4).map(s => `${escapeHtml(s.id)} ${escapeHtml(s.name || '')}`).join('<br>') || '暂无开放场景'}</div>
                 </div>
             `;
+            const identityChains = loop.specialMechanics?.identityLock?.chains || [];
+            const finaleScenes = loop.endingSequence?.scenes || [];
+            if (identityChains.length) html += `<div class="flow-list-item"><div class="flow-list-title">身份锁 · ${identityChains.length} 条链</div><div class="flow-list-sub">全部完成后解锁指证</div></div>`;
+            if (finaleScenes.length) html += `<div class="flow-list-item"><div class="flow-list-title">非 Loop 终幕 · ${finaleScenes.length} 场</div><div class="flow-list-sub">不计作 Loop 6</div></div>`;
 
             html += `
                 <div class="flow-list-item">
@@ -7523,7 +7595,7 @@
         currentFormalChapter() {
             if (AppState.unitFlow?.chapter) return AppState.unitFlow.chapter;
             const formal = AppState.unitFlow?.formalUnit || AppState.currentUnit;
-            if (formal === 'Unit1' || AppState.currentUnit === 'Unit9') return 'EPI01';
+            if (formal === 'Unit1') return 'EPI01';
             return DataManager.chapter(formal);
         },
 
@@ -8115,10 +8187,10 @@
         validate(loop) {
             const issues = [];
             if (!loop.goal) issues.push('缺少循环目标');
-            if (!loop.initTalk) issues.push('缺少开篇 Talk');
+            if (!loop.initTalk && !loop.pendingInitTalkKey) issues.push('缺少开篇 Talk');
             if (!loop.initScene) issues.push('缺少开篇场景');
             if (!loop.scenes || loop.scenes.length === 0) issues.push('没有开放场景');
-            if ((loop.exposes || []).length > 0 && (loop.doubts || []).length === 0) issues.push('有指证但没有疑点门槛');
+            if ((loop.exposes || []).length > 0 && (loop.doubts || []).length === 0 && !loop.specialMechanics?.identityLock?.replacesStandardDoubts) issues.push('有指证但没有疑点门槛');
             (loop.exposes || []).forEach(e => {
                 if (e.testimony && String(e.testimony) !== '0') {
                     const target = this.resolveExposeMaterial(e.testimony, loop.loop);
@@ -8477,7 +8549,11 @@
 
         checkEntry(loop, issues) {
             if (!loop.initTalk) {
-                this.addIssue(issues, loop, 'entry', 'error', '开篇 Talk 未配置', 'ChapterConfig.initTalk 为空，Loop 开头没有入口对白。', 'ChapterConfig', loop.chapterId, 'initTalk');
+                if (loop.pendingInitTalkKey) {
+                    this.addIssue(issues, loop, 'entry', 'warn', `开篇 AVG 待制作：${loop.pendingInitTalkKey}`, '结构入口已登记，AVG 正式 ID 生成后再回填 initTalk。', 'ChapterConfig', loop.chapterId, 'pendingInitTalkKey');
+                } else {
+                    this.addIssue(issues, loop, 'entry', 'error', '开篇 Talk 未配置', 'ChapterConfig.initTalk 为空，Loop 开头没有入口对白。', 'ChapterConfig', loop.chapterId, 'initTalk');
+                }
             }
             if (!loop.initScene) {
                 this.addIssue(issues, loop, 'entry', 'error', '初始场景未配置', 'ChapterConfig.initScene 为空，进入 Loop 后无法定位主场景。', 'ChapterConfig', loop.chapterId, 'initScene');
@@ -8882,7 +8958,7 @@
             const scenes = this.artScenesForChapter(chapter);
             const rows = sceneAssets.map(asset => {
                 const assetId = String(asset.id || '');
-                const usedScenes = scenes.filter(scene => String(scene.backgroundImage || scene.location?.backgroundImage || '') === assetId);
+                const usedScenes = scenes.filter(scene => DataManager.sceneBackgrounds(scene).includes(assetId));
                 return {
                     asset,
                     scenes: usedScenes,
@@ -8893,23 +8969,24 @@
             const missingAssetRows = [];
             const missingMap = new Map();
             scenes.forEach(scene => {
-                const bg = String(scene.backgroundImage || scene.location?.backgroundImage || '');
-                if (!bg || registered.has(bg)) return;
-                if (!missingMap.has(bg)) {
-                    missingMap.set(bg, {
-                        asset: {
-                            id: bg,
-                            displayName: bg.split('\\').pop(),
-                            Name: '未登记底图',
-                            sceneKind: DataManager.sceneKind(scene) || '',
-                            ArtRequirement: '',
-                            _missingAsset: true,
-                        },
-                        scenes: [],
-                        evidenceItems: [],
-                    });
-                }
-                missingMap.get(bg).scenes.push(scene);
+                DataManager.sceneBackgrounds(scene).forEach(bg => {
+                    if (!bg || registered.has(bg)) return;
+                    if (!missingMap.has(bg)) {
+                        missingMap.set(bg, {
+                            asset: {
+                                id: bg,
+                                displayName: bg.split('\\').pop(),
+                                Name: '未登记底图',
+                                sceneKind: DataManager.sceneKind(scene) || '',
+                                ArtRequirement: '',
+                                _missingAsset: true,
+                            },
+                            scenes: [],
+                            evidenceItems: [],
+                        });
+                    }
+                    missingMap.get(bg).scenes.push(scene);
+                });
             });
             missingMap.forEach(row => {
                 row.evidenceItems = this.isExploreAsset(row.asset) ? this.uniqueItemsFromScenes(row.scenes) : [];
@@ -10817,10 +10894,15 @@
     const GameController = {
         async load() {
             const unit = document.getElementById('unitSelect').value;
-            const loop = document.getElementById('loopSelect').value;
+            let loop = document.getElementById('loopSelect').value;
+            if (unit === 'Unit4' && loop === 'loop6') {
+                loop = 'loop1';
+                document.getElementById('loopSelect').value = loop;
+            }
 
             AppState.currentUnit = unit;
             AppState.currentLoop = loop;
+            syncLoopChips();
             AppState.reset();
 
             UI.updateStatus('加载中...');
@@ -10929,6 +11011,12 @@
         // initial loop chip sync (shows loop1 active by default)
         if (typeof syncLoopChips === 'function') syncLoopChips();
         if (typeof syncLoopHeader === 'function') syncLoopHeader();
+        document.getElementById('unitSelect')?.addEventListener('change', () => {
+            const unit = document.getElementById('unitSelect').value;
+            const loopSelect = document.getElementById('loopSelect');
+            if (unit === 'Unit4' && loopSelect?.value === 'loop6') loopSelect.value = 'loop1';
+            syncLoopChips();
+        });
     });
     </script>
 </body>

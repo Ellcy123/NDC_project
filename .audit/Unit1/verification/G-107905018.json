@@ -1,0 +1,36 @@
+{
+  "issue_key": "G|AVG/EPI01/Expose/Loop5_james.json|107905018-107905020",
+  "verdict": "dismissed",
+  "final_severity": "P2",
+  "verdict_reason": "不构成已确认的多视角能动性冲突，原 P1 撤销；最多保留为 P2 措辞精度风险。连续上下文先明确写出‘Vivian 亲笔签名的节目修改申请’，随后才让 Zack 对 James 说‘你精心设计的消音器’，紧接着又说明 James 是‘借着’23:00-23:10 的惯常送餐窗口下楼杀人。结合 James 的既定知识——他事先知道节目安排并把现成鼓点纳入杀人计划——‘精心设计’可以自然理解为他精心设计了作案时机与利用方式，而不是他操纵 Vivian 换曲。单独截取 107905020 时确有近因指代歧义，可能让少数玩家误读安排权，但完整句链已经提供正确主语，因此不足以作为 P1 事实/视角冲突。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/G-perspective.jsonl",
+      "finding": "原 issue 将‘你精心设计的消音器’判为可能把换曲与演出时段安排权错归 James 的 P1 主语歧义。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop5_james.json 107905012-107905023",
+      "finding": "完整指证链为：James 否认其他枪声可隐藏→节目单碎片证明强鼓点→James 质疑没有时间→Vivian 亲笔申请锁定 23:00→Zack 称其为 James 的‘消音器’→立即说 James 借着惯常送餐时间下楼作案。"
+    },
+    {
+      "source": "AVG/对话配置工作及草稿/Unit1/Loop5_完整台本.md",
+      "finding": "完整台本与正式 JSON 的中文句序和主语提示一致，没有另一个版本把申请行为直接写成 James 所为。"
+    },
+    {
+      "source": ".audit/Unit1/facts/event_perspectives.json E001_Vivian申请换曲",
+      "finding": "Vivian 独立申请换曲并不知道 James 会借此杀人；James 从节目安排得知鼓点时间，并把这个既有窗口纳入杀人及假时间线计划。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/vivian.md",
+      "finding": "11月3日曲目变更由 Vivian 一个月前主动申请，情感动机是让 Webb 听见并完成最后一舞；鼓点恰好掩盖 James 枪声，她不知情。"
+    },
+    {
+      "source": "剧情设计/Unit1/Unit1_大纲.md; 剧情设计/Unit1/案发时间线与动线.md",
+      "finding": "两份时间线均把 Vivian 的换曲决定与 James 在 23:00 利用鼓点作案拆为先后独立行为，没有 James 安排换曲的事实。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml expose R1 / doubt 1503",
+      "finding": "机制逻辑要求完整节目单与 Vivian 修改申请共同证明现成的 23:00 鼓点窗口，击穿 James 的时间谎言；不要求证明 James 制造了换曲。"
+    }
+  ]
+}

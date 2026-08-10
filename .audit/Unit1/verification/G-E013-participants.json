@@ -1,0 +1,36 @@
+{
+  "issue_key": "G|.audit/Unit1/facts/events.json|E013.participants",
+  "verdict": "dismissed",
+  "final_severity": "P2",
+  "verdict_reason": "Anna 缺席 James 自杀现场这一事实没有源内容冲突；错误只存在于 Phase 1 生成的 events.json。现行 L5 State、正式 James Expose、正式自杀 Talk 和 event_perspectives 均一致显示现场发言者/亲历者为 James、Zack、Emma，另有暗处未露面的 Whale 手下；Anna 位于别处，只被 James 反复提及并作为临终托付、保护对象。events.json 抽取时把‘James 为保护 Anna 自杀’中的受益/动机对象误并入 participants。故原 G issue 不应作为 Unit1 正式台本或设计源的 P1 冲突进入 verified，应 dismissed；残余 P2 仅标记审计中间事实表需要重抽或校正，且修正时应保留 Anna=缺席/事后听说。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/G-perspective.jsonl",
+      "finding": "原 issue 指出 events.json 把 Anna 列为 E013 参与者，但 State/AVG 表明她缺席，severity=P1。"
+    },
+    {
+      "source": ".audit/Unit1/facts/events.json E013_James自杀",
+      "finding": "participants 唯一异常地写为 James、Zack、Emma、Anna；core_facts 只说 James 为保护 Anna 自杀，没有任何 Anna 在场行为。"
+    },
+    {
+      "source": ".audit/Unit1/facts/event_perspectives.json E013_James自杀",
+      "finding": "Anna presence 明确为‘缺席’，并已用 _conflict 记录 events.json 误列；Zack/Emma/James 为在场，其他 NPC 为缺席或事后听说。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml arrest_cutscene / expose / suspect_suicide_sequence",
+      "finding": "后门现场链只安排 James、Zack、Emma 与暗处 Whale 手下；Anna 在 James 家相关场景，临终阶段仅作为 James 请求保护的对象。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop5_james.json",
+      "finding": "整份正式指证的发言者集合只有 James、Zack、Emma；对 Anna 的所有引用均是家庭动机、所在地和保护请求，不是现场发言。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop5/james_suicide_001.json",
+      "finding": "正式自杀链发言者仍只有 James、Zack、Emma。107905069/107905957/107905068 分别说 Anna 无辜、别让她知道、请保护她，语义直接证明她不在当前对话现场。"
+    },
+    {
+      "source": "AVG/对话配置工作及草稿/Unit1/Loop5_完整台本.md",
+      "finding": "完整台本与正式 JSON 一致；Anna 的独立 Talk 留在 James 家，后门指证/自杀段没有 Anna 发言或出场标记。"
+    }
+  ]
+}

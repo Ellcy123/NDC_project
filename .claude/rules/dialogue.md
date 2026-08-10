@@ -8,7 +8,7 @@ paths:
 
 ## 两阶段流程
 - **Phase 1**：只修改 MD 草稿，不碰 JSON
-- **Phase 2**：用户明确指示后才执行 sync_to_json.py 同步到 JSON
+- **Phase 2**：Unit1 仅在用户明确指示后执行 `AVG/Tools/sync_unit1_script_to_json.py --write`，且只回写本地 EPI01 的 Words；其他 Unit 使用各自专用同步器
 - 绝不凭记忆编写剧情细节——先读设计文档
 
 ## 分支规则

@@ -721,6 +721,15 @@ class Unit4StateV2Validator:
                     acquisition = evidence.get("acquisition", {})
                     if not acquisition:
                         continue
+                    # Minigame outputs are created by a gameplay flow rather than
+                    # granted by a Talk carrier. Their source contract is checked
+                    # separately in the Unit4-specific validation below.
+                    if acquisition.get("kind") == "minigame_output":
+                        if registry.get(evidence_id, {}).get("acquisition") != acquisition:
+                            self.errors.append(
+                                f"loop{loop_number} minigame evidence acquisition is mismatched: {evidence_id}"
+                            )
+                        continue
                     talk = acquisition.get("talk")
                     registry_acquisition = registry.get(evidence_id, {}).get(
                         "acquisition"
@@ -874,6 +883,7 @@ class Unit4StateV2Validator:
                 evidence_id
                 for evidence_id, evidence in scene_evidence.items()
                 if evidence.get("acquisition")
+                and evidence.get("acquisition", {}).get("kind") != "minigame_output"
             }
             missing_coverage = sorted(declared_acquisitions - set(rows))
             if missing_coverage:
@@ -1338,6 +1348,32 @@ class Unit4StateV2Validator:
                 )
 
     def _validate_unit4_specific_content(self) -> None:
+        loop1 = self.states.get(1, {})
+        loop1_scenes = {scene.get("id"): scene for scene in loop1.get("scenes", [])}
+        loop1_registry = {
+            entry.get("id"): entry for entry in loop1.get("evidence_registry", [])
+        }
+        evidence_4111 = loop1_registry.get(4111, {})
+        acquisition_4111 = evidence_4111.get("acquisition", {}) or {}
+        if evidence_4111.get("first_scene") != 4003 or evidence_4111.get("pickup") is not False:
+            self.errors.append("4111 must be a non-pickup minigame result first generated in scene 4003")
+        if acquisition_4111.get("kind") != "minigame_output":
+            self.errors.append("4111 acquisition must be minigame_output")
+        if set(acquisition_4111.get("formal_input_ids", []) or []) != {4115}:
+            self.errors.append("4111 minigame must use 4115 as its only formal Item input")
+        if set(acquisition_4111.get("auxiliary_page_ids", []) or []) != {4122, 4123}:
+            self.errors.append("4111 minigame must keep 4122/4123 as auxiliary pages")
+        scene_4002_ids = {
+            item.get("id") for item in loop1_scenes.get(4002, {}).get("evidence", []) or []
+        }
+        scene_4003_ids = {
+            item.get("id") for item in loop1_scenes.get(4003, {}).get("evidence", []) or []
+        }
+        if 4111 in scene_4002_ids or 4111 not in scene_4003_ids:
+            self.errors.append("4111 must be generated at the scene 4003 archive table, not scene 4002")
+        if {4122, 4123} & set(loop1_registry):
+            self.errors.append("4122/4123 must remain minigame-only pages outside evidence_registry")
+
         loop3 = self.states.get(3, {})
         loop3_scenes = {scene.get("id"): scene for scene in loop3.get("scenes", [])}
         required_loop3_scenes = {4021, 4029, 4027, 4022, 4028, 4023, 4024, 4025, 4026}
@@ -1379,6 +1415,8 @@ class Unit4StateV2Validator:
                 self.errors.append(
                     f"loop3 evidence {evidence_id} must first appear in scene {scene_id}"
                 )
+        if "静态现场记录" not in str(loop3_registry.get(4316, {}).get("note", "")):
+            self.errors.append("4316 must remain a single static pre-blast evidence record")
 
         loop4 = self.states.get(4, {})
         loop4_scenes = {scene.get("id"): scene for scene in loop4.get("scenes", [])}
@@ -1468,6 +1506,27 @@ class Unit4StateV2Validator:
         registry = {
             entry.get("id"): entry for entry in loop5.get("evidence_registry", [])
         }
+        expected_inherited_types = {
+            4315: ("clue", 4027),
+            4418: ("key_item", 4034),
+            4704: ("derived_memory", 4034),
+        }
+        for evidence_id, (evidence_type, first_scene) in expected_inherited_types.items():
+            entry = registry.get(evidence_id, {})
+            if entry.get("type") != evidence_type or entry.get("first_scene") != first_scene:
+                self.errors.append(
+                    f"loop5 inherited evidence {evidence_id} must remain {evidence_type}/{first_scene}"
+                )
+
+        office_evidence = {
+            entry.get("id"): entry for entry in office_4042.get("evidence", []) or []
+        }
+        for evidence_id in (4511, 4512, 4514, 4515):
+            if office_evidence.get(evidence_id, {}).get("analysis") is True:
+                self.errors.append(f"{evidence_id} must use identity-lock detail views, not standard analysis")
+            if registry.get(evidence_id, {}).get("analysis") is True:
+                self.errors.append(f"{evidence_id} registry entry must not enable standard analysis")
+
         if "共享" not in str(registry.get(4517, {}).get("visibility", "")):
             self.errors.append("4517 must be shared with Emma and Watts in ending_4044")
         for evidence_id in (4518, 4519):

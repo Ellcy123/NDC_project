@@ -1,0 +1,36 @@
+{
+  "issue_key": "C|D:/NDC/Assets/table/ItemStaticData.json|1407",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "确认。1407 不是只存在于道具表中的未使用记录：正式 SceneConfig 的 L4 场景 1404 将它列入 ItemIDs，正式 ItemStaticData 将其配置为 HiddenStuff=false 的 itemType=2 环境查看物，描述和美术日期均明确为 1928-11-09。L4 正式对话把当天锚定为 1928-11-05 12:00，而本章正式结尾仍是 11 月 6 日，因此玩家会在 11 月 5 日看到四天后的报纸，并且该报纸日期晚于整个 Unit1 的结束日期。原 issue 中“拿到”应精确表述为“可查看”，但不影响时间矛盾成立；保留 P1，因为它会明显破坏世界时间线可信度，但不直接阻断流程或揭露核心凶案答案。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl",
+      "finding": "原 issue 将 1407 判定为 L4 出现的 1928-11-09 未来报纸，严重度 P1。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json",
+      "finding": "正式道具 1407 名为《艾斯弗德先驱报》，Describe 明示 1928-11-09，itemType=2，HiddenStuff=false，地点为酒吧大堂；ArtRequirement 也要求 L4 出现并印 1928-11-09 日期线。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json",
+      "finding": "正式 L4 酒吧大堂场景 1404 的 ItemIDs 实际包含 1407，证明它不是未挂载的孤立表项。"
+    },
+    {
+      "source": "剧情设计/Unit1/美术需求/Unit1_美术需求补充调整.md",
+      "finding": "报纸设计要求放置于酒吧大堂 SC9004、Morrison 附近，L4 出现，日期线为 ASHFORD, FRIDAY, NOVEMBER 9, 1928。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/vivian_005.json",
+      "finding": "L4 正式场景位置文本明确标注为化妆间 - 11月5日 12:00。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop6/ending_006.json; 剧情设计/Unit1/state/loop6_state.yaml; 剧情设计/Unit1/Unit1_大纲.md",
+      "finding": "正式结尾台词与 state/大纲共同锚定本章结束于 11 月 6 日，因此 11 月 9 日报纸不仅晚于 L4，也晚于 Unit1 全部现行剧情。"
+    },
+    {
+      "source": ".audit/Unit1/facts/items.json",
+      "finding": "事实表记录 I1407 在 L4 首次出现，位置为酒吧大堂 Morrison 附近，日期标记为 1928-11-09，与正式表和美术文档一致。"
+    }
+  ]
+}

@@ -228,6 +228,8 @@ def build(
         unit_key = unit_labels[unit_num]["key"]
         chapter_id = normalize_id(ch.get("id"))
         init_scene_id = normalize_id(ch.get("initScene"))
+        opening_scene_id = normalize_id(ch.get("openingScene")) or init_scene_id
+        exploration_scene_id = normalize_id(ch.get("explorationEntryScene")) or init_scene_id
 
         open_scenes = [
             s for s in scenes
@@ -248,6 +250,8 @@ def build(
                 "name": scene_name(s),
                 "kind": scene_kind(s, art_by_id) or "unknown",
                 "isInit": sid == init_scene_id,
+                "isOpening": sid == opening_scene_id,
+                "isExplorationEntry": sid == exploration_scene_id,
                 "npcCount": npc_count,
                 "itemCount": evidence_count,
                 "itemIds": item_ids,
@@ -273,18 +277,25 @@ def build(
         for e in ch.get("exposes") or []:
             testimony_id = normalize_id(e.get("testimony"))
             evidence_ids = [normalize_id(x) for x in (e.get("item") or [])]
+            resolved_materials = []
+            for material_id in evidence_ids:
+                item = items_by_id.get(material_id)
+                testimony = testimony_by_id.get(material_id)
+                resolved_materials.append({
+                    "id": material_id,
+                    "kind": "item" if item else "testimony" if testimony else "missing",
+                    "name": cn(
+                        item.get("Name") if item else testimony.get("shortDesc") or testimony.get("testimony") if testimony else None,
+                        "未找到",
+                    ),
+                })
             exposes.append({
                 "id": normalize_id(e.get("id")),
                 "talkId": normalize_id(e.get("talkId")),
+                "pendingTalkKey": normalize_id(e.get("pendingTalkKey")),
                 "testimony": testimony_id,
                 "testimonyLabel": condition_label({"type": "4", "param": testimony_id}, items_by_id, testimony_by_id) if testimony_id and testimony_id != "0" else "",
-                "items": [
-                    {
-                        "id": item_id,
-                        "name": cn(items_by_id.get(item_id, {}).get("Name"), "未找到"),
-                    }
-                    for item_id in evidence_ids
-                ],
+                "items": resolved_materials,
             })
 
         post_expose_segments = []
@@ -303,6 +314,7 @@ def build(
                 "videoLoop": normalize_id(seg.get("videoLoop")),
                 "videoScene": normalize_id(seg.get("videoScene")),
                 "entryTalkId": normalize_id(seg.get("entryTalkId")),
+                "pendingTalkKey": normalize_id(seg.get("pendingTalkKey")),
                 "transitionFrom": normalize_id(seg.get("transitionFrom")),
                 "transitionLabel": normalize_id(seg.get("transitionLabel")),
             })
@@ -312,8 +324,12 @@ def build(
         flow.append({
             "type": "opening",
             "title": "开篇",
-            "summary": f"从 Talk {normalize_id(ch.get('initTalk')) or '未配置'} 进入本 Loop。",
-            "refs": {"talkId": normalize_id(ch.get("initTalk")), "sceneId": init_scene_id},
+            "summary": f"从 {normalize_id(ch.get('initTalk')) or normalize_id(ch.get('pendingInitTalkKey')) or '未配置'} 进入本 Loop。",
+            "refs": {
+                "talkId": normalize_id(ch.get("initTalk")),
+                "pendingTalkKey": normalize_id(ch.get("pendingInitTalkKey")),
+                "sceneId": opening_scene_id,
+            },
         })
         flow.append({
             "type": "exploration",
@@ -327,6 +343,15 @@ def build(
                 "title": "疑点推进",
                 "summary": f"{len(doubts)} 个疑点需要在本 Loop 内满足。",
                 "refs": {"doubtIds": [d["id"] for d in doubts]},
+            })
+        identity_lock = (ch.get("specialMechanics") or {}).get("identityLock") or {}
+        if identity_lock:
+            chains = identity_lock.get("chains") or []
+            flow.append({
+                "type": "identityLock",
+                "title": "身份锁",
+                "summary": f"{len(chains)} 条并行身份链，全部完成后解锁指证。",
+                "refs": {"chainIds": [normalize_id(chain.get("id")) for chain in chains]},
             })
         if exposes:
             flow.append({
@@ -346,6 +371,18 @@ def build(
                     "sceneIds": [s["sceneId"] for s in post_expose_segments if s["sceneId"]],
                 },
             })
+        ending_sequence = ch.get("endingSequence") or {}
+        finale_scenes = ending_sequence.get("scenes") or []
+        if finale_scenes:
+            flow.append({
+                "type": "nonLoopFinale",
+                "title": "非 Loop 终幕",
+                "summary": f"{len(finale_scenes)} 个终幕场景，不计作第六个 Loop。",
+                "refs": {
+                    "sceneIds": [normalize_id(scene.get("sceneId")) for scene in finale_scenes],
+                    "nextUnitEntry": normalize_id(ending_sequence.get("nextUnitEntry")),
+                },
+            })
         flow.append({
             "type": "summary",
             "title": "Loop 收束",
@@ -363,6 +400,13 @@ def build(
             "goal": cn(ch.get("chapterGoal")),
             "initTalk": normalize_id(ch.get("initTalk")),
             "initScene": init_scene_id,
+            "openingScene": opening_scene_id,
+            "explorationEntryScene": exploration_scene_id,
+            "pendingInitTalkKey": normalize_id(ch.get("pendingInitTalkKey")),
+            "openingSequence": ch.get("openingSequence") or [],
+            "specialMechanics": ch.get("specialMechanics") or {},
+            "endingSequence": ending_sequence,
+            "previewStatus": normalize_id(ch.get("previewStatus")),
             "newDoubtTitle": cn(ch.get("newDoubtTitle")),
             "newDoubtContent": cn(ch.get("newDoubtContent")),
             "summaryTitle": cn(ch.get("summaryTitle")),

@@ -273,7 +273,7 @@ Phase 1 的 team 讨论必须逐一讨论并达成结论：
 
 ## Team 讨论的关键约束
 
-1. **证据 ID 全局分配**：先读取 Manifest 的 `idSpaces[]`，在讨论阶段锁定实际 Episode、ID 范围与各 Loop 分段，避免后续 state 各自为政。Unit 号不能替代 Manifest；例如 Unit1 同时存在策划 9xxx 与 Unity 1xxx 命名空间。
+1. **证据 ID 全局分配**：先读取 Manifest 的 `idSpaces[]`，在讨论阶段锁定实际 Episode、ID 范围与各 Loop 分段，避免后续 state 各自为政。Unit 号不能替代 Manifest；Unit1 当前已统一为 EPI01 / 1xxx，不再维护第二套命名空间。
 2. **跨 Loop 证据追踪**：明确标注每件跨 Loop 证据的完整流转路径
 3. **每个 Loop 只揭示一层真相**：严格遵守原则一
 4. **疑点一对一挂载**：每件证据/证言**只能**挂在唯一一个疑点或碎片的 condition 里。如果某件证据"好像哪个疑点都能挂"，必须在证言/物证层面拆成多条独立条目。设计时 team 内部交叉验证，一旦发现一证多挂立刻拆

@@ -1,0 +1,20 @@
+{
+  "issue_key": "D-items.jsonl::103003009 / 1605",
+  "verdict": "dismissed",
+  "final_severity": null,
+  "verdict_reason": "正常可达流程中，玩家不会同时持有 1401 与 1605 两枚重复实物。L3 的 103003009 先以 script=3 授予 1401；L4 的正式疑点与 ExposeData#10 强制使用其分析产物 1702，运行时代码 AnalyzeItemInternal 会先 RemoveItem(1401)，再 AddItem(1702)。1702 的正式定义是弹底铅笔拓印/分析结果，不是第二枚弹壳。L4 Morrison 拿走的是仍存在于叙事中的原弹壳，而玩家保留的是 1702 的分析记录；L6 SceneConfig#1616 通过 1836→1837→1605 的交互链重新授予原弹壳，正式 L6 对白也明确这是 Morrison 从现场拿走后被找回的同一枚。1605 因而是‘找回态’运行时新 ID，不是另一实体；且 BagMgr.HasItem(1401) 会在持有 1702 时把 1401 视为已存在，直接重新授予 1401 反而会被 AddItem 拒绝，使用 1605 有实现必要。State 沿用 1401 作为同一物证的叙事身份、正式表使用 1605 作为找回态，最好补一条 runtime_id/alias 说明，但这只是文档映射清晰度问题，不支持原 P1 duplicate_physical_identity 判定。",
+  "evidence_checked": [
+    ".audit/Unit1/issues/D-items.jsonl：103003009 / 1605 原 P1",
+    "AVG/EPI01/Talk/loop3/rosa_003.json:103003009：script=3 获取 1401",
+    "D:/NDC/Assets/table/ItemStaticData.json:1401：canAnalyzed=true，analysedEvidence=1702",
+    "D:/NDC/Assets/table/ItemStaticData.json:1702：beforeAnalysedEvidence=1401，内容为弹壳拓印/分析结果",
+    "D:/NDC/Assets/_Project/Scripts/UI/ItemDetail/ItemDetailPanel.cs:AnalyzeItemInternal：分析时先移除 1401，再加入 1702",
+    "D:/NDC/Assets/_Project/Scripts/Item/ItemMgr/BagMgr.cs:AddItem/HasItem：持有 1702 时 1401 被视为已存在，不能再次直接加入 1401",
+    "D:/NDC/Assets/table/ChapterConfig.json 与 ExposeData.json:ExposeData#10：L4 必须取得并使用 1702+1711，正常通关不能跳过 1401→1702",
+    "剧情设计/Unit1/state/loop4_state.yaml：1401 在 L4 末被 Morrison 没收，1702 为其拓印派生证据",
+    "D:/NDC/Assets/table/SceneConfig.json:Scene#1616 与 ItemStaticData#1836/#1837/#1605：抽屉交互链产出找回态 1605",
+    "D:/NDC/Assets/table/ExposeData.json:ExposeData#14：L6 使用 1605+1601",
+    "AVG/EPI01/Talk/loop6/emma_lobby_006.json 与 AVG/EPI01/Expose/Loop6_morrison.json：明确 1605 是 Morrison 从现场拿走并藏在家中的同一枚弹壳",
+    "剧情设计/Unit1/state/loop6_state.yaml：同一枚 1401 的 confiscated_by_morrison→retrieved_from_confiscation 叙事轨迹"
+  ]
+}

@@ -35,12 +35,12 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion, Bash
 
 | 字段 | 位数 | 说明 |
 |------|------|------|
-| 9 | 1 | Unit9 固定前缀 |
+| 9 | 1 | Unit1 固定前缀 |
 | npc | 2 | NPC 编码（见下方编码表） |
 | conv | 3 | NPC 在全 Unit 的第几次对话（001 起） |
 | seq | 3 | 该次对话内句子序号 |
 
-例：`901001011` = Unit9 / Emma(01) / 第 1 次对话 / 第 011 句
+例：`101001011` = Unit1 / Emma(01) / 第 1 次对话 / 第 011 句
 
 #### Expose 对话 ID（9 位）
 
@@ -48,15 +48,15 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion, Bash
 
 | 字段 | 位数 | 说明 |
 |------|------|------|
-| 9 | 1 | Unit9 固定前缀 |
+| 9 | 1 | Unit1 固定前缀 |
 | npc | 2 | 被指证 NPC 编码 |
 | 9 | 1 | Expose 标记位（固定 9，区别 Talk） |
 | loop | 2 | Loop 编号（01-06） |
 | seq | 3 | 句子序号 |
 
-例：`903901004` = Rosa / Expose / Loop1 / 第 004 句
+例：`103901004` = Rosa / Expose / Loop1 / 第 004 句
 
-#### NPC 编码表（Unit9）
+#### NPC 编码表（Unit1）
 
 | 代码 | NPC | 代码 | NPC |
 |------|-----|------|-----|
@@ -134,18 +134,18 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion, Bash
 
 改前（1 个 ID，超 35 字）：
 ```markdown
-### 903001003
+### 103001003
 **罗莎·马丁内斯** [把拖把把儿攥得更紧]
 > 我...月底了，Webb 先生要求彻底清洁。我一直在走廊那边打扫...然后...然后听到了枪声。
 ```
 
 改后（2 个 ID）：
 ```markdown
-### 903001003
+### 103001003
 **罗莎·马丁内斯** [把拖把把儿攥得更紧]
 > 我...月底了，Webb 先生要求彻底清洁。
 
-### 903001004
+### 103001004
 **罗莎·马丁内斯**
 > 我一直在走廊那边打扫...然后...然后听到了枪声。
 ```
@@ -166,7 +166,7 @@ State 中的 `post_expose` / `interlude` 必须从 Expose 文件中拆出，作�
 
 - 文件名按主要对话对象命名：`{npc}_{conv}.json`
 - ID 段按该 NPC 的下一个 conv 编号分配
-- 例：Loop1 的 post_expose 主要对象是 Morrison → `morrison_002.json` → ID 段 `904002xxx`
+- 例：Loop1 的 post_expose 主要对象是 Morrison → `morrison_002.json` → ID 段 `104002xxx`
 
 ---
 
@@ -174,7 +174,7 @@ State 中的 `post_expose` / `interlude` 必须从 Expose 文件中拆出，作�
 
 - 禁止跳号（如 017 → 019）
 - 禁止重复 ID（同一文件内任何 ID 只能出现一次）
-- 禁止跨文件使用同一 ID（如 morrison_001 中不能出现 `901001028`）
+- 禁止跨文件使用同一 ID（如 morrison_001 中不能出现 `101001028`）
 - 禁止分支路径 ID 与主线 ID 重叠
 - Lie 节点 / branches 节点本身必须占主线 ID，不能没有 ID
 
@@ -198,12 +198,12 @@ State 中的 `post_expose` / `interlude` 必须从 Expose 文件中拆出，作�
 
 ```
 Loop{X} 对话文件清单：
-1. emma_001.json — Opening 插入剧情 — 901001xxx
-2. vivian_001.json — Talk — 906001xxx
-3. rosa_001.json — Talk — 903001xxx
-4. morrison_001.json — Talk — 904001xxx
-5. Loop1_rosa.json — Expose — 903901xxx
-6. morrison_002.json — Talk (post_expose 拆出) — 904002xxx
+1. emma_entrance_001.json — Opening 插入剧情 — 101001xxx
+2. vivian_001.json — Talk — 106001xxx
+3. rosa_001.json — Talk — 103001xxx
+4. morrison_001.json — Talk — 104001xxx
+5. Loop1_rosa.json — Expose — 103901xxx
+6. morrison_002.json — Talk (post_expose 拆出) — 104002xxx
 ```
 
 AskUserQuestion 确认后进入 Phase 1。
@@ -229,14 +229,14 @@ AskUserQuestion 确认后进入 Phase 1。
 文件：emma_001.json
 ─────────────────────────────────
 旧 ID        → 新 ID        备注
-901001001    → 901001001    不变
-901001002    → 901001002    不变
+101001001    → 101001001    不变
+101001002    → 101001002    不变
 ...
-901001017    → 901001017    不变
+101001017    → 101001017    不变
 （缺 018）   →              跳号修复
-901001019    → 901001018    重编
-901001020    → 901001019    重编 + 拆分（原文 42 字）
-             → 901001020    拆分出的第 2 句
+101001019    → 101001018    重编
+101001020    → 101001019    重编 + 拆分（原文 42 字）
+             → 101001020    拆分出的第 2 句
 ...
 ```
 
@@ -313,7 +313,7 @@ AskUserQuestion 确认后进入 Phase 1。
 ### 文件清单
 | # | 文件 | ID 范围 | 主线句数 | 分支句数 | 总句数 |
 |---|------|---------|---------|-------------|--------|
-| 1 | emma_001.json | 901001001–901001038 | 38 | 0 | 38 |
+| 1 | emma_001.json | 101001001–101001038 | 38 | 0 | 38 |
 | ... | | | | | |
 
 ### 审查结果

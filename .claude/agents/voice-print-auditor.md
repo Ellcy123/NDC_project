@@ -57,7 +57,7 @@ disallowedTools: Write, Edit, Bash
 {
   "_dim": "F",
   "npc": "Vivian",
-  "file": "AVG/EPI09/Talk/loop3/3050.json",
+  "file": "AVG/EPI01/Talk/loop3/rosa_002.json",
   "line_id": "305001023",
   "scene": "scene3 后台化妆间",
   "loop": "L3",

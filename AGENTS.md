@@ -10,9 +10,9 @@
 
 章节身份、来源路径、完成度和历史版本的机器可读真源是仓库根目录的 `canon_manifest.json`。涉及 Unit / Episode / ID 段判断时，先读取该文件，不凭目录名猜测。
 
-- 玩家第 1 章的正式身份是 Unit1，现行策划别名是 Unit9；玩家第 2 章的正式身份是 Unit2，现行策划标题别名是 Unit10。
-- Unit9、Unit10 不计作额外章节。现行策划内容直接位于 `剧情设计/Unit1`、`剧情设计/Unit2`。
-- Unit1 的策划 state 与 AVG/EPI09 保留 9xxx，Unity／正式表保留 EPI01 与 1xxx；两套 ID 不迁移、不自动转换。
+- 玩家第 1 章的唯一当前身份是 Unit1 / EPI01 / 1xxx；旧 Unit9 / EPI09 / 9xxx 已于 2026-08-10 完成迁移，仅存在于 Manifest 指向的历史归档。
+- 玩家第 2 章的正式身份是 Unit2；Unit10 仅为策划标题来源别名，不计作额外章节。现行策划内容位于 `剧情设计/Unit1`、`剧情设计/Unit2`。
+- Unit1 的策划 state、AVG、预览配置和 Unity 正式表统一使用 EPI01 与 1xxx，不再自动翻译或维护双 ID 空间。
 - Unit2 当前保留 EPI02 与 2xxx；10xxx 只作为 Manifest 中的历史命名空间记录。
 - 旧版内容只从 Manifest 的 `history[]` 所列归档路径读取，不能把归档内容当作当前既定事实。
 
@@ -35,19 +35,20 @@
 | 目录 | 内容 |
 |------|------|
 | `AVG/` | 对话系统：按章节(EPI01/EPI02) → 类型(Talk/Expose) → 循环(loop1-6) 组织的 JSON 对话文件 |
-| `AVG/对话配置工作及草稿/` | 对话 MD 草稿 + 同步脚本 (sync_to_json.py, extract_to_md.py) |
+| `AVG/对话配置工作及草稿/Unit1/` | EPI01 六个 Loop 的 AI 完整台本、索引、审查与迁移报告 |
+| `AVG/Tools/` | Unit1 正式表重建、台本安全回写与对话验证工具 |
 
 ### 预览工具与配置表落地
 | 目录 | 内容 |
 |------|------|
-| `preview_new2/` | 预览网页（流程图 + 证据表） |
-| `preview_new2/data/Unit{N}/` | 按 Unit 组织的中间 YAML（loop1-6, locations, story_overview, talk_summary），喂前端流程图 |
-| `preview_new2/data/table/` | **当前配置表落地处**——全局合并的 JSON（DoubtConfig / ItemStaticData / SceneConfig / TestimonyItem 等 16 张活跃表），由 state 经 `/state-to-table` skill 增量合并；Talk / Expose 由 `sync_to_json.py` 维护 |
+| `avg_editor_v2/` | 当前预览网页 / 配置编辑器（流程图 + 证据表） |
+| `avg_editor_v2/data/_table_drafts/Unit{N}/` | 按 Unit 组织的配置草稿中间层 |
+| `avg_editor_v2/data/table/` | **当前预览配置表落地处**——全局合并 JSON；Unit1 使用 EPI01 / 1xxx |
 
 ### 脚本工具
 | 目录 | 内容 |
 |------|------|
-| `AVG/Tools/` | 对话数据验证 (check_orphaned_ids.py) |
+| `AVG/Tools/` | 对话数据验证、Unity 正式表重建、Unit1 台本安全回写与引用审计 |
 
 ### 其他
 | 目录 | 内容 |
@@ -114,9 +115,8 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 | 格式 | 用途 |
 |------|------|
-| **YAML** | state 文件 (`剧情设计/Unit{N}/state/loop{1-6}_state.yaml`)、Preview 中间数据 (`preview_new2/data/Unit{N}/`) |
-| **JSON** | AVG 对话文件 (Talk/Expose)、`preview_new2/data/table/` 下的全局配置表 |
-| **XLSX** | `preview_new2/data/table/_all_tables.xlsx`（合并视图，给人看，手动同步） |
+| **YAML** | state 文件 (`剧情设计/Unit{N}/state/loop{1-6}_state.yaml`) |
+| **JSON** | AVG 对话文件 (Talk/Expose)、`avg_editor_v2/data/table/` 下的全局配置表 |
 | **MD** | 设计文档、对话草稿（Phase 1 工作格式） |
 
 ---
@@ -127,8 +127,9 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 **严格遵守两阶段流程：**
 
-- **Phase 1**: 只修改 MD 草稿（`AVG/对话配置工作及草稿/Loop{1-6}_对话草稿.md`），不碰 JSON
-- **Phase 2**: 用户明确指示后才执行 `sync_to_json.py` 同步到 JSON
+- **Phase 1**: Unit1 只修改 `AVG/对话配置工作及草稿/Unit1/Loop{1-6}_完整台本.md`，不碰 JSON
+- **Phase 2**: 用户明确指示后才执行 `AVG/Tools/sync_unit1_script_to_json.py --write`；它只回写本地 EPI01 的 Words，不改 ID / 路由 / 脚本 / 参数，也不写 Unity
+- 需要从 Unity 正式表重新覆盖时，使用 `AVG/Tools/rebuild_unit1_runtime_script.py`，先 `--check-only`，再写临时目录验证
 
 详细的 MD 格式规范和审查清单见 `AVG/对话配置工作及草稿/AVG对话配置规则.md`。
 
@@ -143,7 +144,7 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 2. 证据与谜题设计
 
-设计文档 → state YAML（`剧情设计/Unit{N}/state/`）→ `/state-to-table` skill 写入 `preview_new2/data/table/*.json` → 预览验证 → 同步到 D:\NDC
+设计文档 → state YAML（`剧情设计/Unit{N}/state/`）→ 配置草稿 / 配置编辑流程写入 `avg_editor_v2/data/table/*.json` → 预览验证 → 同步到 D:\NDC
 
 关键约束：
 - 每个场景/NPC 承载 1-3 个核心信息点，不超过 3 个
@@ -155,11 +156,11 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 3. 配置表
 
-- 落地处：`preview_new2/data/table/*.json`（全局合并，16 张活跃表）
+- 落地处：`avg_editor_v2/data/table/*.json`（全局合并，16 张活跃表）
 - 字段规范：[docs/配置表详解.md](docs/配置表详解.md)
 - 数据流：
   - **非 Talk / Expose 的配置表**：state YAML → `/state-to-table` skill → JSON（增量按 ID 段合并）
-  - **Talk**：MD 草稿 → `sync_to_json.py` → JSON
+  - **Unit1 Talk / Expose**：Unity 正式表 → `rebuild_unit1_runtime_script.py` → `AVG/EPI01` + AI 完整台本；台词文本回写使用 `sync_unit1_script_to_json.py`
   - **Expose 系列**：暂由专用流程或手动维护
 - `_all_tables.xlsx` 是合并视图，仅供查看，由用户手动同步
 
@@ -177,7 +178,7 @@ Chapter (章节: EPI01/EPI02/EPI03)
 |------|------|------|------|------|
 | SceneConfig | 每条 SceneConfig 行 | NPCInfos[].TalkInfo.id | Unity 可用入口字段 | 普通 NPC 对话第一句 Talk ID |
 | SceneConfig | 每条 SceneConfig 行 | NPCInfos[].TalkInfo.videoScene | 预览增强字段 | AVG JSON 文件名，不带 .json，用于精准定位文件 |
-| SceneConfig | 每条 SceneConfig 行 | NPCInfos[].TalkInfo.videoEpisode | 预览增强字段 | 标明章节，如 EPI01 / EPI09 |
+| SceneConfig | 每条 SceneConfig 行 | NPCInfos[].TalkInfo.videoEpisode | 预览增强字段 | 标明章节，如 EPI01 / EPI02 |
 | SceneConfig | 每条 SceneConfig 行 | NPCInfos[].TalkInfo.videoLoop | 预览增强字段 | 标明 loop，如 loop1 |
 | SceneConfig | 每条 SceneConfig 行 | NPCInfos[].LoopTalkInfo.id | Unity 可用入口字段 | 重复点击 NPC 对话第一句 Talk ID |
 | SceneConfig | 每条 SceneConfig 行 | NPCInfos[].LoopTalkInfo.videoScene | 预览增强字段 | 重复点击 AVG JSON 文件名，不带 .json |
@@ -281,29 +282,29 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 ### 4. 预览网站部署
 
-部署规则见 `preview_new2/DEPLOY.md`。涉及部署操作时必须先阅读该文件。
+本地预览使用 `avg_editor_v2/server.py` 或 `avg_editor_v2/start.bat`；当前仓库没有独立线上部署流程。
 
 ---
 
 ## 常用命令
 
 ```bash
-# 对话草稿同步到 JSON（需用户确认后才执行）
-cd AVG/对话配置工作及草稿 && python sync_to_json.py Loop{X}_对话草稿.md
-python sync_to_json.py Loop{X}_对话草稿.md --dry-run   # 预览
-python sync_to_json.py --all                            # 全量
+# Unit1：从 Unity 正式表重建 / 校验 AI 台本与 EPI01
+python AVG/Tools/rebuild_unit1_runtime_script.py --check-only
+python AVG/Tools/rebuild_unit1_runtime_script.py --avg-output-dir .tmp/unit1_epi01_rebuild
 
-# JSON 提取回 MD（验证往返一致性）
-python extract_to_md.py
+# Unit1：完整台本文本回写本地 EPI01（写入前必须用户确认）
+python AVG/Tools/sync_unit1_script_to_json.py             # 只读差异与结构检查
+python AVG/Tools/sync_unit1_script_to_json.py --write     # 只写 Words，不写 Unity
 
 # State → 配置表 JSON（非 Talk/Expose）：使用 /state-to-table skill，无独立 py 脚本
 
 # 预览系统启动（从 D:\ 根目录启动，路径配置见 index.html 中 Config.paths）
 python -m http.server 8080 --directory "D:\\"
-# 访问 http://localhost:8080/NDC_project/preview_new2/index.html
+# 访问 http://localhost:8080/NDC_project/avg_editor_v2/index.html
 
 # 同步到 Unity 工程（手动 copy table JSON）
-copy /Y "D:\NDC_project\preview_new2\data\table\*.json" "D:\NDC\Assets\table\"
+copy /Y "D:\NDC_project\avg_editor_v2\data\table\*.json" "D:\NDC\Assets\table\"
 ```
 
 ---
@@ -331,5 +332,5 @@ Agent 定义见 `.Codex/agents/`（14 个角色），编排逻辑见对应 skill
 
 - **NDC_project** = 内容设计、预配置、预览验证
 - **D:\NDC** = Unity 游戏工程，包含运行时代码和最终资源
-- 数据流向：state YAML → `/state-to-table` 写入 `preview_new2/data/table/*.json` → 手动 copy 到 `D:\NDC\Assets\table\`；对话走 `sync_to_json.py`
+- 数据流向：state YAML → `/state-to-table` 写入 `avg_editor_v2/data/table/*.json` → 人工校验后同步到 `D:\NDC\Assets\table\`；Unit1 对话当前以 Unity 正式表反向重建的 EPI01 和完整台本为准
 - 美术资源位于 `D:\NDC\Assets\Resources/`

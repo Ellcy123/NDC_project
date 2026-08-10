@@ -145,8 +145,9 @@ DoubtConfig.condition[]
 
 | 脚本 | 功能 | 位置 |
 |------|------|------|
-| sync_to_json.py | MD 对话草稿 → JSON | `AVG/对话配置工作及草稿/` |
-| extract_to_md.py | JSON → MD（验证往返一致性） | `AVG/对话配置工作及草稿/` |
+| rebuild_unit1_runtime_script.py | Unity 正式表 → Unit1 AI 台本 / EPI01 | `AVG/Tools/` |
+| sync_unit1_script_to_json.py | Unit1 台本既有节点 Words → 本地 EPI01 | `AVG/Tools/` |
+| sync_unit2_to_json.py | Unit2 MD → EPI02 JSON | `AVG/对话配置工作及草稿/` |
 | excel_yaml_converter.py | XLSX ↔ YAML 互转 | `story/` |
 | config_table_converter.py | 专项转换（证据/NPC/场景/证词） | `scripts/` |
 

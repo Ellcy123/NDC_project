@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-08-10",
   "policy": {
     "idMigration": "none",
     "automaticIdTranslation": false,
@@ -17,24 +17,12 @@
       "canonicalUnit": "Unit1",
       "playerChapter": 1,
       "playerTitle": "黑哨之夜",
-      "aliases": [
-        {
-          "name": "Unit9",
-          "role": "active_authoring_alias"
-        }
-      ],
+      "aliases": [],
       "planningDirectory": "剧情设计/Unit1",
       "unityEpisode": "EPI01",
       "idSpaces": [
         {
-          "scope": "authoring_state_and_avg",
-          "range": "9xxx",
-          "episode": "EPI09",
-          "status": "current",
-          "migration": "preserve"
-        },
-        {
-          "scope": "runtime_tables",
+          "scope": "current_authoring_and_runtime",
           "range": "1xxx",
           "episode": "EPI01",
           "status": "current",
@@ -44,12 +32,13 @@
       "sources": {
         "outline": "剧情设计/Unit1/Unit1_大纲.md",
         "statePattern": "剧情设计/Unit1/state/loop{1-6}_state.yaml",
-        "avgCurrent": "AVG/EPI09",
-        "tableDrafts": "avg_editor_v2/data/_table_drafts/Unit9",
-        "runtimeTables": "avg_editor_v2/data/table"
+        "avgCurrent": "AVG/EPI01",
+        "tableDrafts": "avg_editor_v2/data/_table_drafts/Unit1",
+        "runtimeTables": "D:/NDC/Assets/table",
+        "previewTables": "avg_editor_v2/data/table"
       },
       "maturity": {
-        "phase": "active_iteration",
+        "phase": "active_iteration_formalized",
         "outline": "present_active",
         "state": {
           "status": "present",
@@ -61,20 +50,21 @@
           "expectedLoops": 6,
           "presentLoops": [1, 2, 3, 4, 5, 6]
         },
-        "tables": "draft_and_runtime_mapping_present",
+        "tables": "formal_runtime_and_preview_present",
         "finality": "not_declared",
-        "verifiedAt": "2026-07-11"
+        "verifiedAt": "2026-08-10"
       },
       "tooling": {
         "buildUnitFlow": true
       },
       "history": [
         {
-          "path": "AVG/EPI08",
-          "status": "deprecated_retained",
-          "deprecatedDate": null,
-          "declarationCommit": "1abe679",
-          "declarationCommitDate": "2026-04-23"
+          "path": "旧文档/Unit1_EPI命名迁移前_20260810",
+          "status": "archived_pre_migration_snapshot",
+          "archivedSnapshotDate": "2026-08-10",
+          "formerAlias": "Unit9",
+          "formerEpisode": "EPI09",
+          "formerIdRange": "9xxx"
         },
         {
           "path": "旧文档/剧情设计废弃_20260612/Unit1",
@@ -217,7 +207,7 @@
         "statePattern": "剧情设计/Unit4/state/loop{1-5}_state.yaml",
         "avgCurrent": null,
         "tableDrafts": null,
-        "runtimeTables": null
+        "runtimeTables": "avg_editor_v2/data/table"
       },
       "maturity": {
         "phase": "active_iteration",
@@ -233,12 +223,12 @@
           "expectedLoops": 5,
           "presentLoops": []
         },
-        "tables": "reserved",
+        "tables": "present_preview",
         "finality": "not_declared",
-        "verifiedAt": "2026-07-24"
+        "verifiedAt": "2026-08-10"
       },
       "tooling": {
-        "buildUnitFlow": false
+        "buildUnitFlow": true
       },
       "history": []
     },
@@ -288,13 +278,5 @@
       "history": []
     }
   ],
-  "flowAliases": [
-    {
-      "name": "Unit9",
-      "target": "Unit1",
-      "enabled": true,
-      "title": "黑哨之夜（正式配置映射 Unit1）",
-      "reason": "Preserve current avg_editor flow lookup without changing IDs"
-    }
-  ]
+  "flowAliases": []
 }

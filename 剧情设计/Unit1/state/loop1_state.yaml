@@ -12,11 +12,11 @@
 # ──────────────────────────────────────────────────────────
 # 自检清单（A-G）
 # A. 结构完整性   PASS — player_context / opening / scenes / expose / doubts / evidence_registry 全部存在
-# B. 证据覆盖     PASS — 讨论结论 loop1 所有证据（9101 小手枪/9711 无硝烟派生/9103 委托协议书）已分配到场景
+# B. 证据覆盖     PASS — 讨论结论 loop1 所有证据（1101 小手枪/1711 无硝烟派生/1103 委托协议书）已分配到场景
 # C. NPC 条目     PASS — Rosa/Vivian/Morrison/Emma 各含 active_topics/withheld_topics/player_inquiry/testimony_ids 3 必填块
 # D. 目标对齐     PASS — goals 与讨论结论"指证 Rosa 教学失败"目标一致
 # E. 信息节奏     PASS — 未泄露 loop2+ 内容（勒索生意/James/Whale/Morrison腐败/Rosa被胁迫均未出现）
-# G. Expose 逻辑  PASS — round_1 谎言有 9711 可反驳；round_2 usable_evidence: [] 教学失败设计符合讨论结论
+# G. Expose 逻辑  PASS — round_1 谎言有 1711 可反驳；round_2 usable_evidence: [] 教学失败设计符合讨论结论
 # ──────────────────────────────────────────────────────────
 #
 # validation_status: PASS
@@ -38,7 +38,7 @@ player_context:
     - "Webb 已经死亡（Morrison 宣告），死亡地点：蓝月亮酒吧一楼会客室（1F 南侧）"
     - "Vivian 手持手枪在现场，Zack 和 Emma 到达时 Rosa 也在场"
     - "23:30，众人听到枪响，Zack 和 Emma 冲进会客室"
-    - "Webb 提前雇佣 Zack 作为遗嘱执行人——合同内容为确保 Vivian 顺利继承 Webb 遗产（Webb 委托协议书 9103 = 遗嘱执行人身份凭证）"
+    - "Webb 提前雇佣 Zack 作为遗嘱执行人——合同内容为确保 Vivian 顺利继承 Webb 遗产（Webb 委托协议书 1103 = 遗嘱执行人身份凭证）"
     - "Zack 被酒保拒于门外过，Webb 的邀请让 Emma 认为今晚会有新闻"
     - "Morrison 今晚在酒吧喝酒，听到枪响后醉醺醺地赶到现场，一嫌麻烦一边还是姑且秉公接案"
 
@@ -55,7 +55,7 @@ player_context:
     - "Rosa 的谎言1（Vivian 刚刚开枪）被推翻，Morrison 指出硝烟可能消散，Rosa 的话已打折扣"
     - "谎言2（23:30 枪响 + 只有 Vivian 在场）在本 Loop 无法反驳——时间线谜题留待后续"
     - "Webb 委托协议书证明 Webb 早知道自己有被害风险，Morrison 认可了 72 小时调查期"
-    - "Slayer Rule（杀人者不得继承被害人遗产的普通法原则）：Vivian 若被定罪谋杀 Webb，则遗嘱链断、Zack 作为遗嘱执行人无从履职——这是 Zack 在 post_expose（903901072）首次说出，由此获得 72h 调查期的法律对价"
+    - "Slayer Rule（杀人者不得继承被害人遗产的普通法原则）：Vivian 若被定罪谋杀 Webb，则遗嘱链断、Zack 作为遗嘱执行人无从履职——这是 Zack 在 post_expose（104002009）首次说出，由此获得 72h 调查期的法律对价"
     - "Webb 紧急雇佣存在'保险倾向'——他提前规划了 Vivian 的继承权，意味着他预感到自己会死"
     - "Emma 提出核心疑点：Webb 自己真正怀疑的凶手到底是谁？"
     - "Vivian 被 Morrison 带到酒吧一角配合笔录问话（仍在酒吧内，玩家无法接触）"
@@ -66,12 +66,12 @@ player_context:
 
 opening:
   type: cutscene  # 🎬 硬切，无玩家操作
-  scene_id: 9004
-  emma_talk_scene_id: 9021  # Emma 对话 AVG 专用场景：蓝月亮酒吧大门口（复用 EPI01\AVG\bluemoon_outside）
+  scene_id: 1004
+  emma_talk_scene_id: 1021  # Emma 对话 AVG 专用场景：蓝月亮酒吧大门口（复用 EPI01\AVG\bluemoon_outside）
   description: |
     Zack 和 Emma 站在蓝月亮酒吧大门口聊天——酒保刚刚拒绝让 Zack 进入，
     Emma 凭新闻嗅觉感觉今晚会有大事，以"King Oliver sent us."接头暗语引路入场。
-    两人进入大堂（场景 9004 酒吧大堂），边聊边观看舞台表演。
+    两人进入大堂（场景 1004 酒吧大堂），边聊边观看舞台表演。
     23:30，会客室方向传来枪响。Zack 和 Emma 从歌舞厅赶到会客室——到达时，
     Vivian 手持一把小手枪怔愣在原地（半醉失神，眼神涣散），Rosa 也在场。
     随后，同样听到枪响的 Morrison 醉醺醺地赶到查看尸体——他平时就常来蓝月亮喝酒，
@@ -79,7 +79,7 @@ opening:
     宣布 Webb 已经死亡，并表示要逮捕 Vivian。
 
   emma_l1_open:
-    talk: emma_l1_open  # 逻辑 NPC 名；对应 3 个实际 Talk 文件：emma_entrance_001 / emma_lobby_001 / emma_parlor_001（按场景 9021/9004/9003 切分）
+    talk: emma_l1_open  # 逻辑 NPC 名；对应 3 个实际 Talk 文件：emma_entrance_001 / emma_lobby_001 / emma_parlor_001（按场景 1021/1004/1003 切分）
     is_liar: false
     motive: "新闻嗅觉驱动，对今晚的舞会抱有期待；同时是 Zack 进入上流俱乐部的引路人"
     mindset: "职业兴奋感，边聊边观察，即将切换到记者状态"
@@ -112,8 +112,8 @@ opening:
 # ─────────────────────────────
 
 scenes:
-  # ── 场景 9003：Webb 会客室（现场搜证）──
-  - id: 9003
+  # ── 场景 1003：Webb 会客室（现场搜证）──
+  - id: 1003
     name: "Webb 会客室"
     type: limited_exploration  # ⏸️ 有限自由探索（Morrison 管控现场）
     description: |
@@ -129,22 +129,22 @@ scenes:
       - Morrison：管控现场，姑且秉公，绝无被收买暗示
 
     evidence:
-      - id: 9101
+      - id: 1101
         name: "Vivian 的小手枪"
         type: item
         pickup: true
         note: "关键——L1 R1 击穿前置；可分析硝烟反应"
         description: "Colt Vest Pocket Model 1908（.25 ACP 口径），枪柄象牙贴片，女士随身护身枪"
-        analysis: "枪管内无硝烟残留、无黑化痕迹——该枪近期未被击发（派生 ID: 9711）"
+        analysis: "枪管内无硝烟残留、无黑化痕迹——该枪近期未被击发（派生 ID: 1711）"
 
-      - id: 9711
+      - id: 1711
         name: "无硝烟的手枪（分析派生）"
         type: item
-        pickup: false  # 分析 9101 后自动获得
-        note: "关键——L1 R1 击穿件；疑点 9101 condition"
+        pickup: false  # 分析 1101 后自动获得
+        note: "关键——L1 R1 击穿件；疑点 1101 condition"
         description: "枪管内无硝烟残留、无黑化痕迹——该枪近期未被击发"
 
-      - id: 9103
+      - id: 1103
         name: "Webb 委托协议书"
         type: item
         pickup: true
@@ -162,7 +162,7 @@ scenes:
         # ── 1. NPC 已知信息 ──
         active_topics:
           - "酒后迷糊的失语状态（她有酒气、眼神涣散、偶尔喃喃自语却没说完整）——她自己也不确定是否杀了 Webb"
-          - "歌女身份（被动追问下吐露，对应草稿分支❸ 906001304 → 触发 9061001）"
+          - "歌女身份（被动追问下吐露，对应草稿分支❸ 106001304 → 触发 1061001）"
         withheld_topics:
           - "她带着自己的枪前来的真相（loop4 才承认）"
           - "23:05 她第一次来会客室被吼退的经过（loop4 才揭示）"
@@ -179,7 +179,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9061001  # Vivian 身份：蓝月亮酒吧的歌女
+          - 1061001  # Vivian 身份：蓝月亮酒吧的歌女
 
 
       # ── Rosa（当庭指控 / Expose 对象）──
@@ -206,9 +206,9 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9031003  # Rosa 身份：蓝月亮酒吧的清洁工
-          - 9031001  # ⚠谎言: Rosa 谎言1——Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
-          - 9031002  # ⚠谎言: Rosa 谎言2——23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
+          - 1031003  # Rosa 身份：蓝月亮酒吧的清洁工
+          - 1031001  # ⚠谎言: Rosa 谎言1——Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb
+          - 1031002  # ⚠谎言: Rosa 谎言2——23:30 枪响，当晚无其他枪响，当时只有 Vivian 在里面，所以只能是她杀的
 
 
       # ── Morrison（宣告死亡 / 接案警官）──
@@ -224,7 +224,7 @@ scenes:
           - "接案程序：表示将逮捕嫌疑人 Vivian"
           - "暂时承认 Zack 的调查委托（若 Zack 出示协议书）"
           - "R1 击穿后的反驳：硝烟可能消散，不能完全证明枪没被打过"
-          - "和 Webb 是熟人——欠他半个月酒钱（被动追问时承认，对应草稿 904001104-105）"
+          - "和 Webb 是熟人——欠他半个月酒钱（被动追问时承认，对应草稿 104001104-105）"
         withheld_topics:
           - "与 Whale / 米勒集团的债务关系（预先存在的旧账；loop5-6 才揭示）"
           - "他急于结案的懒惰动机背后还有腐败因素（loop5-6 才揭示）"
@@ -238,7 +238,7 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9041004  # Morrison 身份：警察侦探
+          - 1041004  # Morrison 身份：警察侦探
 
 
 # ─────────────────────────────
@@ -259,9 +259,9 @@ expose:
   # ── 轮次一：击破硝烟谎言（有局限） ──
   round_1:
     lie: "Vivian 此刻手里正拿着一把手枪，她一定是刚刚杀了 Webb"
-    lie_source: 9031001  # Rosa 的谎言1证词
+    lie_source: 1031001  # Rosa 的谎言1证词
     usable_evidence:
-      - id: 9711
+      - id: 1711
         name: "无硝烟的手枪（分析派生）"
         用途: "枪管无硝烟残留，证明该枪近期未被击发，Rosa 所谓'刚刚开枪'不成立"
     result: |
@@ -273,7 +273,7 @@ expose:
   # ── 轮次二：时间线谜题（新手教程失败点）──
   round_2:
     lie: "大家都听到了 23:30 的枪响，当晚并没有其他枪响，当时只有 Vivian 在里面，所以只能是她杀的"
-    lie_source: 9031002  # Rosa 的谎言2证词
+    lie_source: 1031002  # Rosa 的谎言2证词
     usable_evidence: []  # 刻意为空——loop1 无证据可反驳
     result: tutorial_failure
     # tutorial_failure 说明：
@@ -283,15 +283,15 @@ expose:
     # 为后续 loop3 的时间线谜题（玻璃碎片 + Rosa 倒垃圾时间）埋下悬念。
     # 游戏继续：挫败不等于结束——Zack 转而出示 Webb 委托协议书换取 72 小时调查期。
 
-  # ── 🔵 [U9-L1-INT-01] 插入剧情：指证结束剧情（72h 调查期换取）──
+  # ── 🔵 [U1-L1-INT-01] 插入剧情：指证结束剧情（72h 调查期换取）──
   post_expose:
     interlude:
-      id: "U9-L1-INT-01"
+      id: "U1-L1-INT-01"
       title: "指证结束剧情——72h 调查期换取"
       outline_anchor: "§L1 指证结束剧情"
     description: |
       尽管谎言2无法被击穿，Zack 揭穿谎言1已使 Rosa 的可信度大打折扣。
-      Zack 出示 Webb 委托协议书（9103）——证明 Webb 预感被害并提前指定 Zack 为遗嘱执行人。
+      Zack 出示 Webb 委托协议书（1103）——证明 Webb 预感被害并提前指定 Zack 为遗嘱执行人。
       Zack 向 Morrison 说明法律对价：按 slayer rule（杀人者不得继承被害人遗产的普通法原则），
       Vivian 若被定罪谋杀 Webb，则遗嘱链断裂、执行人无从履职——他作为生前合法委托的执行人，
       请求 72 小时排除嫌疑。Morrison 看在"Zack 揭穿了 Rosa 部分谎言 + Webb 生前合法委托 + slayer rule 法律对价"的份上，
@@ -312,50 +312,50 @@ doubts:
   # 疑点 ID 编码：9{loop}{seq} — Unit1=9, Loop1=1
   # condition type: 1=Item / 2=RelationNetwork / 3=Timeline
   # isFragment: false = 疑点 / true = 碎片
-  # 一对一挂载检查：9711 和 9031001 在 6-Loop 全局中只被本疑点引用
+  # 一对一挂载检查：1711 和 1031001 在 6-Loop 全局中只被本疑点引用
 
-  - id: 9101
+  - id: 1101
     text: "23:30 的枪响真的是在 Webb 会客室发生的吗？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9711"       # 无硝烟的手枪（分析派生）——物证
+        param: "1711"       # 无硝烟的手枪（分析派生）——物证
       - type: 3
-        param: "9031001"    # Rosa 谎言1证词"Vivian 刚刚开枪"——时间线维度
+        param: "1031001"    # Rosa 谎言1证词"Vivian 刚刚开枪"——时间线维度
     posed_loop: 1
     resolved_loop: 3
     status: "unlocked_after_expose_round1"
-    # 时序检查：9711 和 9031001 均在 Loop1 获得/触发，posed_loop=1 ≤ 使用它们的最早 expose Loop（L1 R1）—— PASS
+    # 时序检查：1711 和 1031001 均在 Loop1 获得/触发，posed_loop=1 ≤ 使用它们的最早 expose Loop（L1 R1）—— PASS
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop1 全部证据）
 # ─────────────────────────────
 
 evidence_registry:
-  # Loop1 = 91xx 系列
-  - id: 9101
+  # Loop1 = 11xx 系列
+  - id: 1101
     name: "Vivian 的小手枪"
     type: item
     pickup: true
-    first_scene: 9003
-    note: "关键——L1 R1 前置；可分析硝烟反应，分析后派生 9711"
+    first_scene: 1003
+    note: "关键——L1 R1 前置；可分析硝烟反应，分析后派生 1711"
 
-  - id: 9711
+  - id: 1711
     name: "无硝烟的手枪（分析派生）"
     type: item
     pickup: false
-    first_scene: 9003
-    note: "关键——L1 R1 击穿件；疑点 9101 condition（type=1）"
+    first_scene: 1003
+    note: "关键——L1 R1 击穿件；疑点 1101 condition（type=1）"
 
-  - id: 9103
+  - id: 1103
     name: "Webb 委托协议书"
     type: item
     pickup: true
-    first_scene: 9003
+    first_scene: 1003
     note: "关键——Webb 和 Zack 签字的遗嘱执行委托协议；确立 Zack 合法调查身份（按 slayer rule 必须排除 Vivian 嫌疑才能履职）+ 换取 72h 调查期；体现 Webb 保险倾向；非指证击穿件"
 
   # ── 以下为 Loop1 结束时自动确认的信息（非证据道具，记录供后续引用）──
-  # 9711_source: 通过分析 9101 获得
+  # 1711_source: 通过分析 1101 获得
 
 # ============================================================
 # validation_status: PASS

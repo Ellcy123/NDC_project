@@ -80,12 +80,6 @@ scenes:
 
     '
   evidence:
-  - id: 4111
-    name: Harrison公开日程与夜间出入对照
-    type: clue
-    pickup: true
-    note: Expose R1；公开日程与连续十七晚闭庭后出入形成时间矛盾
-    description: 公开日程显示 Harrison 多晚没有公务；法院出入登记却显示他连续十七晚闭庭后进入档案室或办公室
   - id: 4112
     name: 1919-A入账存根
     type: item
@@ -180,8 +174,22 @@ scenes:
     name: Harrison两个月调阅索引
     type: item
     pickup: true
-    note: Expose R1；原始形态只显示档号、次数和方向，不提前泄露 R2
+    note: 夜间调阅检索玩法输入；原始形态只显示档号、次数和方向，不提前泄露 R2
     description: 两个月调阅台账：医院儿童死亡、南区地产与旧赔偿档号被反复调取；原表不解释签署者
+  - id: 4111
+    name: Harrison公开日程与夜间出入对照
+    type: clue
+    pickup: false
+    note: Expose R1；完成夜间调阅检索三轮匹配后生成
+    description: 公开日程显示 Harrison 多晚没有公务；法院出入登记与调阅流水却确认他连续十七次在闭馆后调阅旧案
+    acquisition:
+      kind: minigame_output
+      mechanic: L1_法院档案室_Harrison夜间调阅检索
+      formal_input_ids:
+      - 4115
+      auxiliary_page_ids:
+      - 4122
+      - 4123
   - id: 4701
     name: 调阅索引中的本人赔偿裁定
     type: clue
@@ -248,9 +256,6 @@ expose:
     - id: 4111
       name: Harrison公开日程与夜间出入对照
       用途: 公开日程与连续十七晚夜间出入不一致
-    - id: 4115
-      name: Harrison两个月调阅索引
-      用途: 调阅方向持续集中于医院、地产与旧判决，不是普通日常工作
     result: Watts 退守：Harrison 即使重查旧案，也只是在核对别人留下的问题。
   round_2:
     lie: 即使查了旧案，他查的也是别人，不是在查自己
@@ -323,8 +328,6 @@ doubts:
     param: '4041001'
   - type: 1
     param: '4111'
-  - type: 1
-    param: '4115'
 - id: 4102
   text: 这些调阅记录里，是否有 Harrison 自己签过的裁定？
   isFragment: false
@@ -357,9 +360,17 @@ evidence_registry:
 - id: 4111
   name: Harrison公开日程与夜间出入对照
   type: clue
-  pickup: true
-  first_scene: 4002
-  note: Expose R1；Doubt 4101
+  pickup: false
+  first_scene: 4003
+  note: Expose R1；Doubt 4101；由夜间调阅检索玩法生成
+  acquisition:
+    kind: minigame_output
+    mechanic: L1_法院档案室_Harrison夜间调阅检索
+    formal_input_ids:
+    - 4115
+    auxiliary_page_ids:
+    - 4122
+    - 4123
 - id: 4112
   name: 1919-A入账存根
   type: item
@@ -391,7 +402,7 @@ evidence_registry:
   type: item
   pickup: true
   first_scene: 4003
-  note: Expose R1；Doubt 4101；原始形态不泄露 R2
+  note: 4111 玩法输入；原始形态不泄露 R2；之后单独整理生成 4701
 - id: 4701
   name: 调阅索引中的本人赔偿裁定
   type: item

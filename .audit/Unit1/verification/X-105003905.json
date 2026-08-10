@@ -1,0 +1,48 @@
+{
+  "issue_key": "X-dialogue12.jsonl::105003905,105003307-105003312,105003401-105003402,105003501-105003506",
+  "verdict": "verified",
+  "final_severity": "P2",
+  "verdict_reason": "不可达事实成立，但原 P1 对“证据叙事受阻”的判断过重，应降为 P2。正式 SceneConfig 只从 105003001/105804001 进入；按 next 与分支 Parameters 遍历，tommy_003 的 58 个节点只有 42 个可达，加入 repeat 后所报 16 个节点仍全部不可达。弹壳段 105003501-105003506 链内连续，却没有入口、物品 Action 或 get 指令，只播放漫画并以 end 收束。更关键的是，L4 State 明确把 Tommy 自藏弹壳列为 L5 才交付的 withheld topic；1506 虽在 L5 State/人物档案中被设计为纯情感信物，但当前 Unity/预览 ItemStaticData、DoubtConfig、ExposeData 和正式 L5 Talk 均未落地它。因此这条 L4 死链确实污染完整台本、会误导 AI 认为玩家再次看过弹壳，却没有阻断现行证据、疑点或指证；1506 的 L5 策划未落地是另一个数据缺口，不能据此把本条死链定为 P1。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/X-dialogue12.jsonl#105003905",
+      "finding": "原 issue 报告 16 个无入边节点，并以 105003501-105003506 的抽屉弹壳场景影响证据叙事可执行性为 P1 主要依据。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json#Tommy loop4 scene",
+      "finding": "Unity 正式 Tommy L4 场景仅挂 TalkInfo=105003001、LoopTalkInfo=105804001，ItemIDs 为 140025/1208；没有 105003501 的对话入口或指向该段的场景物品 Action。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/tommy_003.json + tommy_003_repeat.json",
+      "finding": "从 105003001/105804001 以 next 和 Parameters[].ParameterInt 建图遍历：主文件 58 节点可达 42；所报 105003905、307-312、401-402、501-506（含插入节点 105003908）共 16 个全部不可达，repeat 入口也未增加入边。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/tommy_003.json#105003005",
+      "finding": "现行主菜单只有 105003101（Whale 账）、105003301（案发现场 1401 弹壳）与 105003900（结束）三项；没有“搜抽屉”或 105003501 选项。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/tommy_003.json#105003501-105003506",
+      "finding": "孤立链让 Zack 指出抽屉旧弹壳、比对 .45 规格，Tommy 拒绝交出后直接 end；唯一脚本是 105003501 的 comic 展示，整段没有 get、物品 ID 参数、背包写入或返回菜单动作，不能构成正式 1506 获取。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json + DoubtConfig.json + ExposeData.json; avg_editor_v2/data/table 对应三表",
+      "finding": "当前 Unity 正式表与设计期副本均不存在 item id=1506，也没有疑点或指证引用 1506。SceneConfig 中的 1506 是“歌舞厅小包厢”场景 ID，ItemStaticData 的 ActionParam=1506 是场景跳转，不是弹壳物品。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml#Tommy scene",
+      "finding": "L4 State 明确将“自己藏的那枚弹壳和节目修改申请”列为 L5 才交付的 withheld topic；本轮正式任务只要求用 1401 追问 Whale、Rita 与前/现勒索人范围。因此把 501 段接回 L4 反而会破坏既定信息节奏。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml#1506 + Characters/tommy.md",
+      "finding": "1506 在策划层被保留为 L5 Tommy 信任后主动交出的生锈 .45 弹壳，明确“纯情感信物、不挂疑点、不作击穿件”；它是叙事需求而非现行玩法必需材料。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop5/*.json + AVG/对话配置工作及草稿/Unit1/Loop5_完整台本.md",
+      "finding": "当前正式 L5 对话及完整台本没有 1506、旧弹壳交付或 get 段；因此 L5 State 的情感交付尚未进入运行台本，不能由这条 L4 无入口旧链替代。"
+    },
+    {
+      "source": "AVG/对话配置工作及草稿/Unit1/Loop4_完整台本.md#Talk:tommy_003",
+      "finding": "完整台本把上述 16 个节点与可达节点同样列作正式正文，未标注 dead/unreachable；AI 据此确会误判 L4 玩家听过这些补充并看过抽屉弹壳，台本准确性问题真实。"
+    }
+  ]
+}

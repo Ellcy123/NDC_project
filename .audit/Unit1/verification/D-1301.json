@@ -1,0 +1,36 @@
+{
+  "issue_key": "D-items.jsonl::Item 1301 / ExposeData#6",
+  "verdict": "dismissed",
+  "final_severity": null,
+  "verdict_reason": "原 P0 漏掉了正式运行时的两级交互产出链。L3 可从 Scene 1304 经门进入 1307，再由门 130012 进入 Scene 1303；1303 挂载的破窗 1827（itemType 6）生成内嵌物 1828（itemType 7），1828 的 ActionParam 明确包含 1301。运行时代码会把该参数拆成子物品并生成可拾取的 1301，因此无需 Talk 的 get 脚本，玩家能够在 ExposeData#6 前取得玻璃碎片。Scene 1330 的门 130007→Scene 1301 是另一条场景跳转，不能当作取物链，但也不否定上述破窗链。",
+  "evidence_checked": [
+    {
+      "source": "D:/NDC/Assets/table/ChapterConfig.json",
+      "finding": "ChapterConfig#103 的 initScene 为 1023，map2Scenes 将地图入口落到 Scene 1304；L3 步骤 131-132 明确先重回会客室并取得玻璃碎片，再进入指证。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json",
+      "finding": "Scene 1304 挂载 130004，门的 ActionParam=1307；Scene 1307 挂载 130012，门的 ActionParam=1303；Scene 1303 挂载交互物 1827。对应表行约为 SceneConfig 1547/1633、1659/1666、1536/1543。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json",
+      "finding": "130012 是通往 Scene 1303 的门；1827=Arthur Webb 会客室破窗，itemType=6、ActionParam=1828；1828=破窗外侧，itemType=7、ActionParam=1301,1402；1301 本体为 itemType=1 的玻璃碎片。"
+    },
+    {
+      "source": "D:/NDC/Assets/_Project/Scripts/Item/ItemOpen/IOInteractiveItem.cs + D:/NDC/Assets/_Project/Scripts/Item/MapItemCtrl.cs",
+      "finding": "运行时将 itemType 6 映射到 IOInteractiveItem、itemType 7 映射到 IOEmbeddedItem；点击 1827 会生成 1828，随后 MapItemCtrl.SpawnChildItems 按逗号拆分 1828.ActionParam 并 SpawnChildItem，因此会实际生成 1301。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#130007",
+      "finding": "130007 的 itemType=5、ActionParam=1301 仅表示从 Scene 1330 进入 Scene 1301（Rosa 储藏间）；它确实不是物品获取，但不是唯一包含 1301 的交互参数。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ExposeData.json#6 + D:/NDC/Assets/table/DoubtConfig.json#1301 + D:/NDC/Assets/table/Talk.json",
+      "finding": "ExposeData#6 要求 1301 与 1033001，DoubtConfig#1301 也引用 1301；Talk 没有 get 1301，但场景交互链本身承担获取，因此 Talk 无 get 不能证明断链。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml + AVG/EPI01/Expose/Loop3_rosa.json",
+      "finding": "State 明确规定在指证前点击会客室破窗、从外侧搜证视角拾取 1301；正式 Expose 台词 103903006 随后引用玻璃上的硝烟，叙事顺序与运行时交互链一致。"
+    }
+  ]
+}

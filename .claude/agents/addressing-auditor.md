@@ -47,7 +47,7 @@ disallowedTools: Write, Edit, Bash
 ```json
 {
   "_dim": "B",
-  "file": "AVG/EPI09/Talk/loop2/2050.json",
+  "file": "AVG/EPI01/Talk/loop2/tommy_001.json",
   "line_id": "205001008",
   "speaker": "Vivian",
   "target": "Tommy",

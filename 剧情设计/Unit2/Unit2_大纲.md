@@ -1,8 +1,8 @@
-# Unit 10：黄昏悲歌
+# Unit2：黄昏悲歌
 
 ## 📋 文档说明
 
-- **章节位置**：紧接 Unit 9 之后（玩家体验顺序）
+- **章节位置**：紧接 Unit1 之后（玩家体验顺序）
 - **核心叙事**：Frank Kowalski 案——掠夺性贷款 / 银行-黑手党勾结 / 三重叙事反转 / 两种爱的镜像悲剧
 - **指证对象**：Morrison → Leonard → Moore → Danny → Vinnie → Leonard（终极）
 - **创作基准**：基于 Miro 板"Unit2 大纲0511"v5（截至 2026-05-13）
@@ -88,7 +88,7 @@
 - L2：在医院与 Zack 重逢，告知 Frank 是他的客户、本约定今天来检举但没来；邀 Zack 加入律所
 - L3：以律师身份递交传票，获得银行搜查令；Emma-Mickey 互换分工（Emma 跟 Foster 法医鉴定，Mickey 帮银行）
 - L5：拿走 Frank 检举材料回去打官司，邀 Zack 当二辩律师
-- 真身：**Whale**（即 Unit9 已登场的 Whale，血色酒吧幕后黑手）🔵 跨章伏笔，Unit2 内不暴雷
+- 真身：**Whale**（即 Unit1 已登场的 Whale，血色酒吧幕后黑手）🔵 跨章伏笔，Unit2 内不暴雷
 - L1 黑手党匿名电话警告 Morrison 别深究——是 Whale 系派的人 🔵 伏笔
 
 ### 真爱见证者
@@ -880,16 +880,16 @@ Vinnie 坐上警车离去，Zack 和 Emma 觉得事情似乎告一段落了，�
 
 ---
 
-## 🔗 Whale 伏笔（跨章对接 Unit 9 / Unit 11+）
+## 🔗 Whale 伏笔（跨章对接 Unit1 / Unit 11+）
 
-### Mickey = Whale（Unit 9 同一个 Whale）
+### Mickey = Whale（Unit1 同一个 Whale）
 
-- Unit 9 已介绍 Whale 这个名字和反派形象，**但 Whale 在 Unit 9 内未正面露脸**——玩家只闻其名
-- Unit 10 内 Mickey 以"律师 + Zack 童年好友"身份**首次正面登场**，玩家完全陌生，不会有"似曾相识"的违和
-- Unit 10 内不暴雷，Mickey 表面始终是助攻 Zack 的盟友
+- Unit1 已介绍 Whale 这个名字和反派形象，**但 Whale 在 Unit1 内未正面露脸**——玩家只闻其名
+- Unit2 内 Mickey 以"律师 + Zack 童年好友"身份**首次正面登场**，玩家完全陌生，不会有"似曾相识"的违和
+- Unit2 内不暴雷，Mickey 表面始终是助攻 Zack 的盟友
 - Unit 11+ 揭示真身时使用"摘下律师面具"的反差呈现
 
-### Unit 10 内 Whale 系的伏笔节点（不回收）
+### Unit2 内 Whale 系的伏笔节点（不回收）
 
 - **L1**：Morrison 收到匿名黑手党电话"别深究"——电话来源是 Whale 派系
 - **L1 末尾**：Mickey 路边发现昏迷的 Margaret 送医——表面"碰巧"
@@ -927,7 +927,7 @@ Vinnie 坐上警车离去，Zack 和 Emma 觉得事情似乎告一段落了，�
 ## 📌 实现注意事项（阶段 2 起承担）
 
 ### 证据 ID 体系
-- EPI02 = 10xxx 系列（按工作流程规范的 ID 编码规则，loop1=101xx，loop2=102xx……派生证据 107xx）
+- EPI02 = 2xxx 系列（loop1=21xx，loop2=22xx……派生证据 27xx）
 - 大纲已删除全部历史 ID 编号，证据名称为唯一标识
 - 阶段 2 落 state 时按 EPI02 标准重新分配编号
 
@@ -941,9 +941,9 @@ Vinnie 坐上警车离去，Zack 和 Emma 觉得事情似乎告一段落了，�
 - L6 Margaret 苏醒提供证词；血迹被大火烧毁，只剩物理证据
 
 ### 跨 Unit 一致性
-- Mickey = Unit 9 的 Whale（同一人）——但 **Whale 在 Unit 9 内未正面露脸**，玩家 L1 见 Mickey 时完全陌生，Mickey 立绘 / 口音可独立设计；Unit 11+ 揭示真身时用"卸下伪装"反差呈现
-- **Emma 在 Unit 9 已登场，是 Zack 的朋友**（不是助手），Unit 10 内以"朋友介入帮忙"姿态加入调查
-- **Foster 在 Unit 9 未登场**，Unit 10 是首次出场，由 Emma 引荐
+- Mickey = Unit1 的 Whale（同一人）——但 **Whale 在 Unit1 内未正面露脸**，玩家 L1 见 Mickey 时完全陌生，Mickey 立绘 / 口音可独立设计；后续章节揭示真身时用"卸下伪装"反差呈现
+- **Emma 在 Unit1 已登场，是 Zack 的朋友**（不是助手），Unit2 内以"朋友介入帮忙"姿态加入调查
+- **Foster 在 Unit1 未登场**，Unit2 是首次出场，由 Emma 引荐
 - **Zack 事务所位置**：南区与北区交界——贴近 Margaret 鞋坊（步行 10 分钟）、远离 湖滨信托银行总部（电车 20 分钟），合理化 L1 末尾 Mickey 发电报、L5 末尾打电话给 Foster 的物理距离
 
 ---

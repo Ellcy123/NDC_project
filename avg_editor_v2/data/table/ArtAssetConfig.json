@@ -1,5 +1,21 @@
 [
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\C9004_bg_MainHall_daytime",
+    "Name": "蓝月亮酒吧大厅（L6 结尾 AVG 专用）",
+    "displayName": "C9004_bg_MainHall_daytime",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\MorrisonHome",
+    "Name": "Morrison 家门口",
+    "displayName": "MorrisonHome",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC001_bg_RosaStorageRoom",
     "Name": "Rosa 储藏室",
     "displayName": "SC001_bg_RosaStorageRoom",
@@ -8,98 +24,12 @@
     "ArtRequirement": ""
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC007_bg_VivianDressingRoom",
-    "Name": "Vivian 化妆室",
-    "displayName": "SC007_bg_VivianDressingRoom",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC004_bg_WebbReceptionRoom",
-    "Name": "Webb 会客室",
-    "displayName": "SC004_bg_WebbReceptionRoom",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC010_bg_BarLobby",
-    "Name": "酒吧大堂",
-    "displayName": "SC010_bg_BarLobby",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC009_bg_BarCabaret",
-    "Name": "歌舞厅",
-    "displayName": "SC009_bg_BarCabaret",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9006_bg_SmallBox",
-    "Name": "歌舞厅小包厢",
-    "displayName": "SC9006_bg_SmallBox",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "",
-    "events": [
-      {
-        "name": "L2 Emma 接相机失手 → 柜底翻出勒索照片",
-        "resName": "l2_camera_drop_01",
-        "loop": 2,
-        "req": "**美术资产**：`l2_camera_drop_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L2 / 9006 歌舞厅小包厢\n类型：⚡ 突发事件（自由探索期玩家动作触发）\n触发条件：玩家点击矮木柜 → 看到柜中便携相机（高亮可点击但未入背包/未显示详情）→ 玩家点击相机道具触发突发事件\n\n叙事作用：\n- 双产出节点——同时获得 9209 便携相机（拍摄工具）+ 9201 勒索照片（仙人跳产物）\n- 相机打碎是引出柜底信封的\"桥梁动作\"，让\"找到勒索照片\"不显得过于直白——玩家是因为\"蹲下捡碎片\"才偶然摸到柜底信封\n- 揭示蓝月亮 VIP 小包厢的真实用途（勒索拍摄角落）\n\n在场角色：Zack、Emma\n\n音效：\n- 木柜拉开吱呀声\n- 玻璃碎裂 + 相机金属砸地脆响（同步）\n- 信封从木柜底缝抽出的纸张摩擦声"
-      }
-    ]
-  },
-  {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC002_bg_CabaretFirstFloorCorridor",
     "Name": "酒吧一楼走廊",
     "displayName": "SC002_bg_CabaretFirstFloorCorridor",
     "category": "scene_bg",
     "sceneKind": "explore",
     "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9008_bg_SideAlley",
-    "Name": "一楼侧巷",
-    "displayName": "SC9008_bg_SideAlley",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "",
-    "events": [
-      {
-        "name": "L5 后门巷道 — 车灯骤亮（James 自杀）",
-        "resName": "l5_alley_headlights_01",
-        "loop": 5,
-        "req": "**美术资产**：`l5_alley_headlights_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L5 / 后门巷道（嵌在 Loop5_james.json，narrative_closure 完成后、james_suicide_001.json 开始前）\n类型：🎬 强制剧情（嵌在 narrative_closure 末尾，无玩家操作）\n触发条件：907905062（Zack \"停下！Emma O'Malley！\"）台词播放完成后强制触发\n\n叙事作用：\n- 刚才鸣笛的车骤然打开前灯——全场曝光，制造光线冲突\n- Emma 被车灯直射：逼迫她从最激烈的愤怒状态骤然回归现实（情绪强制刹车）\n- James 背对车灯，脸色在光影对比下更加惨白——\"已经做完决定的人\"的最后姿态\n- James 望向暗处（哨声消失的方向）= 确认 Whale 的人已撤退、自己无路可退 → 心理转折\n\n在场角色：Zack、Emma、James、黑色车辆\n\nSTORY\n詹姆斯·奥沙利文（慢慢转向 Zack 和 Emma。眼底的惊恐已经变成了一片死寂，他凄惨地笑了一下）\n\"小姐……你说得对……全被你们猜中了。但我没办法和你们去警局作证了。\"\n扎克·布伦南（察觉到了那死气沉沉的眼神，猛地往前半步）\n\"James——别做傻事！\"\n詹姆斯·奥沙利文（慢慢转向 Zack 和 Emma。眼底的惊恐已经变成了一片死寂，他凄惨地笑了一下）\n\"那辆车，那辆车，是 Whale 派来的……只有我死，这笔账才会清。\"\n艾玛·奥马利（惊呼出声，向前冲去）\n\"别拿枪！\"\n詹姆斯·奥沙利文（绝望地看了最后一眼这片黑暗的夜空，眼泪混着冷汗砸下）\n\"他们会拿 Anna 和孩子的命来逼我……我只能这么选。但是她什么都不知道……\"\n詹姆斯·奥沙利文（用尽最后的力气，带着卑微的祈求看向 Zack）\n\"……求求你们……别让她知道我是个杀人犯……照顾好她……\"\n艾玛·奥马利（停在原地。看着地面，笔记本滑落）\n\"\"\n扎克·布伦南（站在那里。嘴里的糖停止了转动）\n\"\"\n扎克·布伦南（过了很久，低声说）\n\"该死……\"\n\n音效：\n- 布料摩擦声（拉住肩膀，0.2 秒）\n- 车灯启动低频电气哼鸣（0.3 秒）\n- 后门深处寂静风声（可选）"
-      }
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC011_bg_JimmyKitchen",
-    "Name": "James 厨房",
-    "displayName": "SC011_bg_JimmyKitchen",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "",
-    "events": [
-      {
-        "name": "L3 James 销毁《艾斯弗德狂想曲》节目单",
-        "resName": "l3_james_burn_program_01",
-        "loop": 3,
-        "req": "**美术资产**：`l3_james_burn_program_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L3 / 9009 James 厨房（2F）\n类型：🔵 插入剧情（id: U9-L3-INT-01）\n触发条件：Zack 推开 2F James 厨房门即触发（无需玩家其他操作）\n\n叙事作用：\n- 玩家撞见 James 主动销毁《艾斯弗德狂想曲》节目单——抢到的碎片只剩曲目名（\"艾斯弗德狂想\"\"爵士风暴\"），无演奏时间\n- 表面\"印错了不能用\"是借口，真实意图是销毁鼓点高潮时段证据（L5 R1 鼓点诡计的反向设计）\n- 9306 节目单碎片是 L5 R1 的陷阱证据——如玩家在指证时直接用碎片，因无演奏时间会失败；为后续 L5 完整节目单 9501 的对比铺设\n- James 动作短促，说完就走，不留追问空间——保持\"普通厨师\"伪装\n\n在场角色：Zack、James\n\n音效：\n- 火焰呼啸 + 纸页焦化爆裂\n- 木门推开吱呀声\n- James 鞋底转身脚步声\n\n台词：\n- James（不回头，平淡）：\"印错了，不能用。\"\n- Zack（捡起碎片）：\"……艾斯弗德狂想，爵士风暴，这是今晚的演出节目单。\""
-      },
-      {
-        "name": "L5 炉锅沸溢 → James 口音暴露",
-        "resName": "l5_pot_overflow_01",
-        "loop": 5,
-        "req": "**美术资产**：`l5_pot_overflow_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L5 / 9009 James 厨房\n类型：⚡ 突发事件（无人引起的厨房事故，James 反射性脱口）\n触发条件：三条问询分支汇合后强制触发——对话进行到一半，炉子上的锅突然剧烈沸溢（高汤漫出、蒸汽冲起，或壁炉旁堆放的木柴/托盘因火势窜高而倾倒），无人引起的厨房事故\n\n叙事作用：\n- 揭示 James 是爱尔兰裔移民——\"Don't be bothering me!\"是 Hiberno-English 特有句法\n- 与 Vivian 在 23:05 门口听到的那句话完全一致（证词 9064001）→ 锁定\"23:05 隔门吼 Vivian 的人是 James，不是 Webb\"\n- 口音特征以证词 9075001 记录，供 L5 Expose R2（口音身份）使用——非物证形态，靠\"亲耳听见\"完成\n- 关键设计：James 不是对 Zack 说，而是对失控的炉火/沸溢的反射性咒骂——是他忙乱中压不住的本能反应（如果是对 Zack 说，玩家会怀疑是表演；对锅说=真实下意识）\n\n在场角色：Zack、James\n\n音效：\n- 高汤溢出咕嘟声 + 蒸汽喷射\"嘶——\"声 + 金属托盘掀翻砸地\"哐\"声（三层叠加）\n\n台词：\n- James（对锅，反射性）：\"Don't be bothering me!\"（字幕标注：Hiberno-English / 爱尔兰口音）\n- James（用\"做菜烦躁\"遮掩）：\"……抱歉，这锅不能洒。\"\n- Zack（心理旁白）：[Vivian 在门口听到的那句话……是这个声音。]"
-      }
-    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC003_bg_TommyOffice",
@@ -113,22 +43,14 @@
         "name": "L2 Tommy 抽屉弹壳惊鸿一瞥",
         "resName": "l2_tommy_drawer_01",
         "loop": 2,
-        "req": "**美术资产**：`l2_tommy_drawer_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L2 / 9010 Tommy 办公室\n类型：⚡ 突发事件 + 证据预曝光（道具不入背包，留待 L5）\n触发条件：玩家点击 Tommy 办公桌半掩的抽屉（抽屉里有金属物件微微反光作为视觉提示）\n\n叙事作用：\n- L2 仅以\"视觉惊鸿一瞥\"形式预曝光 .45 警用弹壳（item 9506），玩家此时不获得任何道具\n- 留待 L5 Tommy 交付信任后才从抽屉取出——是 Tommy 角色弧线\"从拒绝到信任\"的物理凭据\n- 弹底印记 \"MILLER ARMS\" 与本案 9401 同批次——为 L4-L5 米勒集团线埋伏笔\n\n在场角色：Zack、Tommy\n\n音效：\n- 抽屉拉开木头摩擦声\n- 抽屉砸进桌体\"啪\"脆响\n\n台词：\n- Zack（看到弹壳）：\"带着底印的警用弹壳？你留着这玩意儿当护身符？\"\n- Tommy（推抽屉锁死）：\"这是我自己的事。跟今晚的案子没半点关系。\"\n- Zack（退后）：\"行。你的地盘。\""
+        "req": "**美术资产**：`l2_tommy_drawer_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L2 / 1010 Tommy 办公室\n类型：⚡ 突发事件 + 证据预曝光（道具不入背包，留待 L5）\n触发条件：玩家点击 Tommy 办公桌半掩的抽屉（抽屉里有金属物件微微反光作为视觉提示）\n\n叙事作用：\n- L2 仅以\"视觉惊鸿一瞥\"形式预曝光 .45 警用弹壳（item 1506），玩家此时不获得任何道具\n- 留待 L5 Tommy 交付信任后才从抽屉取出——是 Tommy 角色弧线\"从拒绝到信任\"的物理凭据\n- 弹底印记 \"MILLER ARMS\" 与本案 1401 同批次——为 L4-L5 米勒集团线埋伏笔\n\n在场角色：Zack、Tommy\n\n音效：\n- 抽屉拉开木头摩擦声\n- 抽屉砸进桌体\"啪\"脆响\n\n台词：\n- Zack（看到弹壳）：\"带着底印的警用弹壳？你留着这玩意儿当护身符？\"\n- Tommy（推抽屉锁死）：\"这是我自己的事。跟今晚的案子没半点关系。\"\n- Zack（退后）：\"行。你的地盘。\""
       }
     ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC008_bg_WebbOffice",
-    "Name": "Webb 办公室",
-    "displayName": "SC008_bg_WebbOffice",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC012_bg_JimmyHomeBedroom",
-    "Name": "James 家卧室",
-    "displayName": "SC012_bg_JimmyHomeBedroom",
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC004_bg_WebbReceptionRoom",
+    "Name": "Webb 会客室",
+    "displayName": "SC004_bg_WebbReceptionRoom",
     "category": "scene_bg",
     "sceneKind": "explore",
     "ArtRequirement": ""
@@ -137,22 +59,6 @@
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC005_bg_MorrisonHomeLivingRoom",
     "Name": "Morrison 家客厅",
     "displayName": "SC005_bg_MorrisonHomeLivingRoom",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC018_bg_MorrisonOffice",
-    "Name": "警局 Morrison 办公室",
-    "displayName": "SC018_bg_MorrisonOffice",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC013_bg_JimmyHomeLivingRoom",
-    "Name": "James 家客厅",
-    "displayName": "SC013_bg_JimmyHomeLivingRoom",
     "category": "scene_bg",
     "sceneKind": "explore",
     "ArtRequirement": ""
@@ -169,9 +75,79 @@
         "name": "L6 Whale 调查电话",
         "resName": "l6_whale_call_01",
         "loop": 6,
-        "req": "**美术资产**：`l6_whale_call_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L6 / 9016 Morrison 家书房\n类型：🔵 插入剧情（id: U9-L6-INT-01）\n触发条件：玩家在 9016 书房疑点 9601 condition 满足后（9603 + 9604 均已获取），书房电话铃骤响 → 玩家点击书房电话才触发该突发事件（铃响是状态展示，不强制 cutscene；玩家要主动接电话）。全程不切场景：Zack 始终在 9016 书房；Emma 始终在 9013 客厅放风见证；Mrs. Morrison 始终在厨房未察觉\n\n叙事作用：\n- Whale 首次以声音形式直接登场——此前他只是\"影子\"，现在有了声音\n- 叫 Zack 的姓 = 全知凝视的第一个具体物证（他知道你的名字，他从一开始就在看）\n- 把 James 的死轻巧带过为\"差一点上岸的孩子\"——犬儒到底，James 在他眼里只是用过的工具\n- 挂断不等 Zack 回答——Whale 不与 Zack 平等对话，他只是\"宣告\"\n- Unit9 结束后 Whale 的形象依然是\"空头像\"——玩家知道有这个人，但不知道他是谁\n\n在场角色：Zack、Emma、Whale（声音）、Mrs. Morrison（不出场）\n\n音效：\n- 电话铃声（持续作环境音）\n- 听筒被按起的卡哒声 + 铃声戛然而止\n- 电话另一端约两秒呼吸声\n- 电话挂断\"咔哒\"脆响\n\n台词参考（最终以草稿 909001005 为准）：\n- Whale：\"Brennan。\"\n- \"你比我想的有耐心。\"\n- \"James 那个孩子可惜了——他差一点就上岸。\"\n- [压轴宣告]"
+        "req": "**美术资产**：`l6_whale_call_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L6 / 1016 Morrison 家书房\n类型：🔵 插入剧情（id: U9-L6-INT-01）\n触发条件：玩家在 1016 书房疑点 1601 condition 满足后（1603 + 1604 均已获取），书房电话铃骤响 → 玩家点击书房电话才触发该突发事件（铃响是状态展示，不强制 cutscene；玩家要主动接电话）。全程不切场景：Zack 始终在 1016 书房；Emma 始终在 1013 客厅放风见证；Mrs. Morrison 始终在厨房未察觉\n\n叙事作用：\n- Whale 首次以声音形式直接登场——此前他只是\"影子\"，现在有了声音\n- 叫 Zack 的姓 = 全知凝视的第一个具体物证（他知道你的名字，他从一开始就在看）\n- 把 James 的死轻巧带过为\"差一点上岸的孩子\"——犬儒到底，James 在他眼里只是用过的工具\n- 挂断不等 Zack 回答——Whale 不与 Zack 平等对话，他只是\"宣告\"\n- Unit1 结束后 Whale 的形象依然是\"空头像\"——玩家知道有这个人，但不知道他是谁\n\n在场角色：Zack、Emma、Whale（声音）、Mrs. Morrison（不出场）\n\n音效：\n- 电话铃声（持续作环境音）\n- 听筒被按起的卡哒声 + 铃声戛然而止\n- 电话另一端约两秒呼吸声\n- 电话挂断\"咔哒\"脆响\n\n台词参考（最终以草稿 109001005 为准）：\n- Whale：\"Brennan。\"\n- \"你比我想的有耐心。\"\n- \"James 那个孩子可惜了——他差一点就上岸。\"\n- [压轴宣告]"
       }
     ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC007_bg_VivianDressingRoom",
+    "Name": "Vivian 化妆室",
+    "displayName": "SC007_bg_VivianDressingRoom",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC008_bg_WebbOffice",
+    "Name": "Webb 办公室",
+    "displayName": "SC008_bg_WebbOffice",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC009_bg_BarCabaret",
+    "Name": "歌舞厅",
+    "displayName": "SC009_bg_BarCabaret",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC010_bg_BarLobby",
+    "Name": "酒吧大堂",
+    "displayName": "SC010_bg_BarLobby",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC011_bg_JimmyKitchen",
+    "Name": "James 厨房",
+    "displayName": "SC011_bg_JimmyKitchen",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L3 James 销毁《艾斯弗德狂想曲》节目单",
+        "resName": "l3_james_burn_program_01",
+        "loop": 3,
+        "req": "**美术资产**：`l3_james_burn_program_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L3 / 1009 James 厨房（2F）\n类型：🔵 插入剧情（id: U9-L3-INT-01）\n触发条件：Zack 推开 2F James 厨房门即触发（无需玩家其他操作）\n\n叙事作用：\n- 玩家撞见 James 主动销毁《艾斯弗德狂想曲》节目单——抢到的碎片只剩曲目名（\"艾斯弗德狂想\"\"爵士风暴\"），无演奏时间\n- 表面\"印错了不能用\"是借口，真实意图是销毁鼓点高潮时段证据（L5 R1 鼓点诡计的反向设计）\n- 1306 节目单碎片是 L5 R1 的陷阱证据——如玩家在指证时直接用碎片，因无演奏时间会失败；为后续 L5 完整节目单 1501 的对比铺设\n- James 动作短促，说完就走，不留追问空间——保持\"普通厨师\"伪装\n\n在场角色：Zack、James\n\n音效：\n- 火焰呼啸 + 纸页焦化爆裂\n- 木门推开吱呀声\n- James 鞋底转身脚步声\n\n台词：\n- James（不回头，平淡）：\"印错了，不能用。\"\n- Zack（捡起碎片）：\"……艾斯弗德狂想，爵士风暴，这是今晚的演出节目单。\""
+      },
+      {
+        "name": "L5 炉锅沸溢 → James 口音暴露",
+        "resName": "l5_pot_overflow_01",
+        "loop": 5,
+        "req": "**美术资产**：`l5_pot_overflow_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L5 / 1009 James 厨房\n类型：⚡ 突发事件（无人引起的厨房事故，James 反射性脱口）\n触发条件：三条问询分支汇合后强制触发——对话进行到一半，炉子上的锅突然剧烈沸溢（高汤漫出、蒸汽冲起，或壁炉旁堆放的木柴/托盘因火势窜高而倾倒），无人引起的厨房事故\n\n叙事作用：\n- 揭示 James 是爱尔兰裔移民——\"Don't be bothering me!\"是 Hiberno-English 特有句法\n- 与 Vivian 在 23:05 门口听到的那句话完全一致（证词 1064001）→ 锁定\"23:05 隔门吼 Vivian 的人是 James，不是 Webb\"\n- 口音特征以证词 1075001 记录，供 L5 Expose R2（口音身份）使用——非物证形态，靠\"亲耳听见\"完成\n- 关键设计：James 不是对 Zack 说，而是对失控的炉火/沸溢的反射性咒骂——是他忙乱中压不住的本能反应（如果是对 Zack 说，玩家会怀疑是表演；对锅说=真实下意识）\n\n在场角色：Zack、James\n\n音效：\n- 高汤溢出咕嘟声 + 蒸汽喷射\"嘶——\"声 + 金属托盘掀翻砸地\"哐\"声（三层叠加）\n\n台词：\n- James（对锅，反射性）：\"Don't be bothering me!\"（字幕标注：Hiberno-English / 爱尔兰口音）\n- James（用\"做菜烦躁\"遮掩）：\"……抱歉，这锅不能洒。\"\n- Zack（心理旁白）：[Vivian 在门口听到的那句话……是这个声音。]"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC012_bg_JimmyHomeBedroom",
+    "Name": "James 家卧室",
+    "displayName": "SC012_bg_JimmyHomeBedroom",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC013_bg_JimmyHomeLivingRoom",
+    "Name": "James 家客厅",
+    "displayName": "SC013_bg_JimmyHomeLivingRoom",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC014_bg_CabaretSecondFloorCorridor",
@@ -182,11 +158,75 @@
     "ArtRequirement": ""
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC015_bg_CabaretBasementCorridor",
+    "Name": "蓝月亮酒吧地下走廊",
+    "displayName": "SC015_bg_CabaretBasementCorridor",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC016_bg_kitchenCorridor",
     "Name": "厨房走廊",
     "displayName": "SC016_bg_kitchenCorridor",
     "category": "scene_bg",
     "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC018_bg_MorrisonOffice",
+    "Name": "警局 Morrison 办公室",
+    "displayName": "SC018_bg_MorrisonOffice",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9004_bg_MainHall",
+    "Name": "酒吧大堂（L1 开篇 Emma AVG 专用）",
+    "displayName": "SC9004_bg_MainHall",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9006_bg_SmallBox",
+    "Name": "歌舞厅小包厢",
+    "displayName": "SC9006_bg_SmallBox",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L2 Emma 接相机失手 → 柜底翻出勒索照片",
+        "resName": "l2_camera_drop_01",
+        "loop": 2,
+        "req": "**美术资产**：`l2_camera_drop_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L2 / 1006 歌舞厅小包厢\n类型：⚡ 突发事件（自由探索期玩家动作触发）\n触发条件：玩家点击矮木柜 → 看到柜中便携相机（高亮可点击但未入背包/未显示详情）→ 玩家点击相机道具触发突发事件\n\n叙事作用：\n- 双产出节点——同时获得 1209 便携相机（拍摄工具）+ 1201 勒索照片（仙人跳产物）\n- 相机打碎是引出柜底信封的\"桥梁动作\"，让\"找到勒索照片\"不显得过于直白——玩家是因为\"蹲下捡碎片\"才偶然摸到柜底信封\n- 揭示蓝月亮 VIP 小包厢的真实用途（勒索拍摄角落）\n\n在场角色：Zack、Emma\n\n音效：\n- 木柜拉开吱呀声\n- 玻璃碎裂 + 相机金属砸地脆响（同步）\n- 信封从木柜底缝抽出的纸张摩擦声"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9008_bg_SideAlley",
+    "Name": "一楼侧巷",
+    "displayName": "SC9008_bg_SideAlley",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "",
+    "events": [
+      {
+        "name": "L5 后门巷道 — 车灯骤亮（James 自杀）",
+        "resName": "l5_alley_headlights_01",
+        "loop": 5,
+        "req": "**美术资产**：`l5_alley_headlights_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L5 / 后门巷道（嵌在 Loop5_james.json，narrative_closure 完成后、james_suicide_001.json 开始前）\n类型：🎬 强制剧情（嵌在 narrative_closure 末尾，无玩家操作）\n触发条件：107905062（Zack \"停下！Emma O'Malley！\"）台词播放完成后强制触发\n\n叙事作用：\n- 刚才鸣笛的车骤然打开前灯——全场曝光，制造光线冲突\n- Emma 被车灯直射：逼迫她从最激烈的愤怒状态骤然回归现实（情绪强制刹车）\n- James 背对车灯，脸色在光影对比下更加惨白——\"已经做完决定的人\"的最后姿态\n- James 望向暗处（哨声消失的方向）= 确认 Whale 的人已撤退、自己无路可退 → 心理转折\n\n在场角色：Zack、Emma、James、黑色车辆\n\nSTORY\n詹姆斯·奥沙利文（慢慢转向 Zack 和 Emma。眼底的惊恐已经变成了一片死寂，他凄惨地笑了一下）\n\"小姐……你说得对……全被你们猜中了。但我没办法和你们去警局作证了。\"\n扎克·布伦南（察觉到了那死气沉沉的眼神，猛地往前半步）\n\"James——别做傻事！\"\n詹姆斯·奥沙利文（慢慢转向 Zack 和 Emma。眼底的惊恐已经变成了一片死寂，他凄惨地笑了一下）\n\"那辆车，那辆车，是 Whale 派来的……只有我死，这笔账才会清。\"\n艾玛·奥马利（惊呼出声，向前冲去）\n\"别拿枪！\"\n詹姆斯·奥沙利文（绝望地看了最后一眼这片黑暗的夜空，眼泪混着冷汗砸下）\n\"他们会拿 Anna 和孩子的命来逼我……我只能这么选。但是她什么都不知道……\"\n詹姆斯·奥沙利文（用尽最后的力气，带着卑微的祈求看向 Zack）\n\"……求求你们……别让她知道我是个杀人犯……照顾好她……\"\n艾玛·奥马利（停在原地。看着地面，笔记本滑落）\n\"\"\n扎克·布伦南（站在那里。嘴里的糖停止了转动）\n\"\"\n扎克·布伦南（过了很久，低声说）\n\"该死……\"\n\n音效：\n- 布料摩擦声（拉住肩膀，0.2 秒）\n- 车灯启动低频电气哼鸣（0.3 秒）\n- 后门深处寂静风声（可选）"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9011_bg_WebbOffice_daytime",
+    "Name": "Webb 办公室（日间结尾 AVG 专用）",
+    "displayName": "SC9011_bg_WebbOffice_daytime",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
     "ArtRequirement": ""
   },
   {
@@ -209,7 +249,7 @@
         "name": "L1 酒保拒绝 → Emma 暗语引路",
         "resName": "l1_barkeeper_passcode_01",
         "loop": 1,
-        "req": "**美术资产**：`l1_barkeeper_passcode_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L1 / 9004 蓝月亮酒吧大门口\n类型：嵌在 L1 Opening cutscene 起始瞬间（无玩家操作）\n触发条件：游戏开场自动进入 L1 Opening；该方格漫画位于 Opening 最起始，先于 Zack/Emma 进入大堂、先于 23:30 枪响\n\n叙事作用：\n- 开篇第一组角色基调——确立 Zack\"褪色风衣的私家侦探\"与 Emma\"已经混进上流圈的女记者\"的反差关系\n- 通过\"King Oliver sent us.\"暗号点明蓝月亮的地下俱乐部属性（禁酒令背景）\n- Emma 报暗号的从容感为后续她\"主动引路\"的角色定位埋伏笔\n\n在场角色：酒保、Emma、Zack\n\n音效：\n- 关门声脆响\n- 三道插销依次拉开（\"咔哒——咔哒——咔哒\"，由内向外）\n- Emma 入场前奏（脚步声 / 衣料摩擦声，可选）"
+        "req": "**美术资产**：`l1_barkeeper_passcode_01.png` ... `_NN.png`（格数 TBD，可扩展）\n\nLoop / 场景：L1 / 1004 蓝月亮酒吧大门口\n类型：嵌在 L1 Opening cutscene 起始瞬间（无玩家操作）\n触发条件：游戏开场自动进入 L1 Opening；该方格漫画位于 Opening 最起始，先于 Zack/Emma 进入大堂、先于 23:30 枪响\n\n叙事作用：\n- 开篇第一组角色基调——确立 Zack\"褪色风衣的私家侦探\"与 Emma\"已经混进上流圈的女记者\"的反差关系\n- 通过\"King Oliver sent us.\"暗号点明蓝月亮的地下俱乐部属性（禁酒令背景）\n- Emma 报暗号的从容感为后续她\"主动引路\"的角色定位埋伏笔\n\n在场角色：酒保、Emma、Zack\n\n音效：\n- 关门声脆响\n- 三道插销依次拉开（\"咔哒——咔哒——咔哒\"，由内向外）\n- Emma 入场前奏（脚步声 / 衣料摩擦声，可选）"
       }
     ]
   },
@@ -230,9 +270,25 @@
     "ArtRequirement": ""
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9024_bg_MainHall_l4",
+    "Name": "酒吧大堂（L5 开篇 AVG 专用）",
+    "displayName": "SC9024_bg_MainHall_l4",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": ""
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9024_bg_MainHall_open",
     "Name": "酒吧大堂（L4 Emma 对话 AVG 专用）",
     "displayName": "SC9024_bg_MainHall_open",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": ""
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9025_bg_BarCabaret_l4",
+    "Name": "歌舞厅（L5 强押 Vivian AVG 专用）",
+    "displayName": "SC9025_bg_BarCabaret_l4",
     "category": "scene_bg",
     "sceneKind": "dialogue",
     "ArtRequirement": ""
@@ -262,46 +318,6 @@
     "ArtRequirement": ""
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\MorrisonHome",
-    "Name": "Morrison 家门口",
-    "displayName": "MorrisonHome",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC015_bg_CabaretBasementCorridor",
-    "Name": "蓝月亮酒吧地下走廊",
-    "displayName": "SC015_bg_CabaretBasementCorridor",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9025_bg_BarCabaret_l4",
-    "Name": "歌舞厅（L5 强押 Vivian AVG 专用）",
-    "displayName": "SC9025_bg_BarCabaret_l4",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9011_bg_WebbOffice_daytime",
-    "Name": "Webb 办公室（日间结尾 AVG 专用）",
-    "displayName": "SC9011_bg_WebbOffice_daytime",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9004_bg_MainHall",
-    "Name": "酒吧大堂（L1 开篇 Emma AVG 专用）",
-    "displayName": "SC9004_bg_MainHall",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": ""
-  },
-  {
     "id": "Art\\Scene\\Backgrounds\\EPI01\\morrison_parlor_opening_001",
     "Name": "Webb 会客室（L1 开篇案发 AVG 专用）",
     "displayName": "morrison_parlor_opening_001",
@@ -310,135 +326,28 @@
     "ArtRequirement": ""
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\SC9024_bg_MainHall_l4",
-    "Name": "酒吧大堂（L5 开篇 AVG 专用）",
-    "displayName": "SC9024_bg_MainHall_l4",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI01\\C9004_bg_MainHall_daytime",
-    "Name": "蓝月亮酒吧大厅（L6 结尾 AVG 专用）",
-    "displayName": "C9004_bg_MainHall_daytime",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": ""
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2207_bg_FrankOHaraStreetCorner_Day",
-    "Name": "Frank 家与O'Hara家街角-白天",
-    "displayName": "SC2207_bg_FrankOHaraStreetCorner_Day",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_Fire",
+    "Name": "Margaret 鞋坊店铺区·火灾后即时-夜晚",
+    "displayName": "SC2101_bg_Margaret_ShoeShop_StoreFront_Fire",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2407 同址（state 2007 Frank/O'Hara 街角跨 Loop 复用），需 2 种底图：\n  ① L2 白天（本 2207）——敲门 + O'Hara 街角对话，南区清晨街景\n  ② L4 黄昏（2407）——约 17:30，Zack 回街角追问 O'Hara 当晚时间线，光线偏暖\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：南区某街区，Frank Kowalski 家和 Mrs. O'Hara 家相邻——两户共用一个街角外观，前门相距不过 5 米；玩家不进入两户的内部，仅在街角和门廊互动\n- 建筑结构（场景连通）：街角入口连接两户：Frank 家门（木门紧闭，L2 锁死）→ L3 post_expose 后剧情开放主屋（2318/2518）和次卧（2309/2409）；O'Hara 家门（玩家不进入内部，仅门缝/门廊对话）；街道延伸至城市其他位置\n- 时间状态：1925 年 11/7，L2 开篇 Mickey 重逢后自动解锁\n- 环境痕迹：Frank 家门木门紧闭，门缝里塞着两件东西（催款单在上、便条在下，叠在一起）；O'Hara 家门漆斑驳，门边花盆里有几株勉强活着的常青藤；门廊挡风\n- 关键道具锚点（按位）：\n  · 2202 O'Hara 贷款钞票（O'Hara 取出给 Zack 看，\"我觉得奇怪\")\n  · 2203 湖滨信托银行催款单（Frank 家门缝取出，上层）\n  · 2204 威胁便条（Frank 家门缝取出，下层粗笔字）\n· 备注：2201 Leonard 名片在 Frank 家门口点击获取（与催款单一起塞门缝，催债流程标准做法）\n- NPC 在场：Mrs. O'Hara（站在门后开缝两指宽，必须 Zack 报\"我是 Margaret 的儿子\"才肯开门）\n- 画面情绪：街角并置的两扇门——一扇紧闭沉默（Frank 已死）、一扇半开有戒备（O'Hara 自己也有债务）；街区破败感\n\n【美术参考】\n- 时代风格：1920s 芝加哥南区移民社区联排住宅街角，外墙是熏黑红砖 + 木质门廊 + 锈蚀铸铁栏杆\n- 色调：低饱和棕灰 + 常青藤的暗绿点缀\n- 光源：上午斜射自然光（侧光强调街角立体感）\n- 氛围：街区贫困感（剥落漆面/破窗户）、门缝纸张特写（催款单铅印 + 威胁便条粗笔字反差）、O'Hara 门廊里花盆勉强活着的常青藤\n- 跨 Loop 注：本图与 L4（2407）共用底图基础——L4 差异是 O'Hara 门开得更宽、她在窗台上浇花的动作；Frank 家门廊本身视觉变化不大"
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2401 / 2501 / 2601 同址（state 2001 Margaret 鞋坊店铺区跨 Loop 复用），需制作 3 种底图状态：\n  ① L1 火灾即时夜景 = 本 2101——焦黑/烟尘/水渍/尸体白布盖下/Morrison 夹烟，浓烟未散\n  ② L4/L5 夜废墟 = 2401 / 2501——尸体已撤、烟散，夜色 + 蛛网灰尘累积\n  ③ L6 白天废墟 = 2601——白天自然光，鞋楦找茬玩法可叠加 2602 抵押证明照片对比\n命名建议（不强制改 backgroundImage 字段）：bg 文件名按需加 _night_fire / _night_ruins / _day_ruins 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：单层小店铺，临街木门玻璃推入店铺区；展示台、鞋架、收银台沿墙分布，木地板；**店铺区一角设有鞋匠工作区**——长条木质工作台 + 锥子/锤子/线轴等鞋匠工具排列，工作台一角放着铸铁鞋楦，旁边靠墙处堆放着印有 `Brennan Shoe Repair` 字样的木制货物箱；店铺区角落另有一扇向下通往地下室的木门，新换的铸铁锁\n- 建筑结构（场景连通）：临街木门 → 店铺区主入口；店铺区里侧半墙/门 → 卧室区（2102）；店铺区角落木门向下 → 地下室（L1 锁死推不开）；门外街边 → 鞋坊外电话亭（2119）\n- 时间状态：1925 年 11/6 深夜 9 点前后，火灾刚扑灭约 30 分钟，消防刚撤离\n- 环境痕迹：焦味浓烈未散，玻璃碎片散落在门口路边，展示台/鞋架/收银台均有烟尘熏黑痕迹但结构完整（火势主要集中在卧室区）；地面有消防水渍未干；**工作台上的铸铁鞋楦** 位置看似自然但实际被人移动过（L6 通过 2602 抵押证明照片对比才会发现异常，L1 阶段不点破，玩家此时只视为普通鞋匠工具）；**靠墙的货物箱中部有明显的 3 cm 内凹** 高度约 1.2 m，正好在成人背部位置（L1 阶段不点破，作为环境细节默默存在，L6 鞋楦找茬玩法揭示其作为打斗痕迹的意义）\n- 关键道具锚点（按位）：\n  · 2101 尸体手指照片（卧室方向白布盖下露出的左手指，无戒指无压痕）\n  · 2104 现场地面照片（卧室区地面，消防细筛痕迹处，无金属残留）\n  · 2105 鞋坊营业记录（收银台桌面台账）\n  · 2108 地下室的门（店铺区角落木门，新铸铁锁，推不开——L3 后用 2308 钥匙解锁）\n- NPC 在场：Morrison 在场（限时搜证阶段不可对话，夹烟站在卧室门口附近，偶尔看表催人）；3-4 名警员背景哑角\n- 画面情绪：火场刚撤、计时压迫、Morrison 冷淡催人——焦躁、压抑、时间紧迫\n\n【美术参考】\n- 时代风格：1920s 芝加哥南区独栋小店铺，临街木门玻璃 + 木地板 + 雕花柜台\n- 色调：低饱和暖灰（焦黑 + 烟黄 + 警员制服深蓝），整体压抑\n- 光源：街灯从玻璃门外斜射进入主光；消防车散光蓝白色作辅助光；卧室方向余烟透出微弱橙光\n- 氛围：焦味（视觉化为悬浮烟尘颗粒）、湿冷消防水渍反光、玻璃碎片高光点\n- 跨 Loop 注：本图为底图 A（仅 L1 限时段使用）——尸体在场、浓烟未散、水渍刚干；与 2401/2501/2601 的底图 B（无尸体、烟散、现场清空 + 时间推移废墟）截然不同"
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2407_bg_FrankOHaraStreetCorner_Night",
-    "Name": "Frank 家与O'Hara家街角-夜晚",
-    "displayName": "SC2407_bg_FrankOHaraStreetCorner_Night",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_day",
+    "Name": "Margaret 鞋坊店铺区-白天",
+    "displayName": "SC2101_bg_Margaret_ShoeShop_StoreFront_day",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2207 同址（state 2007 Frank/O'Hara 街角跨 Loop 复用），需 2 种底图：\n  ① L2 白天（2207）——敲门 + O'Hara 街角对话\n  ② L4 黄昏（本 2407）——约 17:30，Zack 追问 O'Hara 当晚时间线，光线偏暖橙\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2207——Frank 家和 O'Hara 家共用的街角，两户前门相距不过 5 米\n- 建筑结构（场景连通）：同 2207；本 Loop O'Hara 把门开得更宽\n- 时间状态：1925 年 11/9 下午，L4——继承 L2 已访问状态，O'Hara 对 Zack 的信任度因 L2 略有提升\n- 环境痕迹：同一扇门，同一条常青藤；但这次 O'Hara 把门开得更宽一些；O'Hara 一直在浇窗台上的花的动作（她看到了 Frank 和 Danny 当晚出门时间线）；Frank 家门口本 Loop 不作为独立停留节点\n- 关键道具锚点（按位）：\n  · 无可拾取物证（O'Hara 家门口本 Loop 仅作为证词来源，L4 证词通过对话进入证词池）\n- NPC 在场：Mrs. O'Hara（信任度提升，回答更直接——讲到 Frank 7 点出门、前后脚 Danny 也出门、走同一条路时语气放慢；讲到 Lula 至少四五年前就来这条街时是事实陈述无评价）\n- 画面情绪：邻居的客观证词——她不评价 Frank 和 Lula 这段关系对不对，她只是说她亲眼看到的；街道时间线在她口中被锁定\n\n【美术参考】\n- 时代风格：与 2207 同\n- 色调：与 2207 同 + 下午光线（更暖）\n- 光源：下午斜射自然光\n- 氛围：与 2207 同 + O'Hara 浇花动作的水珠高光、她说\"四五年了我看着的\"时低头看自己手的微妙停顿\n- 跨 Loop 注：本图复用 2207 底图基础 + L4 时态差异——门开得更宽、O'Hara 浇花的动作、Frank 家门廊本身视觉变化不大"
+    "ArtRequirement": "【场景状态】\nMargaret 鞋坊店铺区普通白天状态。用于非火灾、非废墟的白天鞋坊门面/店铺区展示；道具、NPC 与事件通过场景挂载覆盖，不画死在底图里。"
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2318_bg_FrankHome_MainRoom_Day",
-    "Name": "Frank 家主屋开间-白天",
-    "displayName": "SC2318_bg_FrankHome_MainRoom_Day",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_night",
+    "Name": "Margaret 鞋坊店铺区-夜晚",
+    "displayName": "SC2101_bg_Margaret_ShoeShop_StoreFront_night",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2518 同址（state 2018 Frank 家主屋开间跨 Loop 复用），需 2 种底图：\n  ① L3 白天（本 2318）——Danny 应门，Zack 在厨房台面拾取 2301 牛奶签收单\n  ② L5 黑夜（2518）——开篇 Lula 取床后密码锁铁盒，Zack 答密码 + 律师/侦探分支\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Frank 家主屋——1920 年代南区常见的开间布局，客厅 + Frank 的床 + 开放式厨房一体相连，没有隔墙；一张旧沙发对着窗户，床靠墙摆放，床和墙之间有一道窄缝隙\n- 建筑结构（场景连通）：从街角（2207/2307）入 Frank 家正门 → 主屋开间（2318）；主屋角落有木门通向次卧（2309）；次卧内部连厕所（2420）\n- 时间状态：1925 年 11/8，L3 post_expose Moore 后剧情进入\n- 环境痕迹：陈旧但整洁、台面上的东西摆放有规律、窗台上有一盆半死不活的花；老年独居者的气息（针线篓、折叠整齐的毯子）；厨房台面上放着牛奶订购的签收单（Frank 日常的最后痕迹）；床和墙之间的窄缝隙可以看到，但角度不对暂时看不出有什么藏在里面（L5 才回来发现）\n- 关键道具锚点（按位）：\n  · 2301 牛奶订购签收单 Frank 真迹颤抖歪斜（厨房台面拾取，与贷款档案 2302 直接对比签名笔迹）\n- NPC 在场：无（主屋无 NPC，次卧 Danny 初见见场景 2309）\n- 画面情绪：老年独居者的生活痕迹与他的死亡形成静默对比——这是一个被夺走的、平静的、有秩序的生活\n\n【美术参考】\n- 时代风格：1920s 美国南区下层独居老人住宅，开间布局——旧沙发 + 简陋木床 + 开放式厨房（火炉/水池/简单调料架）\n- 色调：低饱和暖棕（木家具）+ 浅米（墙面）+ 窗外阳光的暖黄\n- 光源：窗外白天斜射光作主光；屋内无电灯开启（节俭老人的生活习惯）\n- 氛围：地板的轻微嘎吱（视觉化为深浅木纹差异）、针线篓里整齐的丝线高光、牛奶签收单纸张特写（颤抖歪斜的签名字迹清晰可读）\n- 跨 Loop 注：本图与 L5（2518）共用底图基础——L5 差异是床和墙之间的窄缝隙被仔细搜查、小铁盒被取出特写（特殊场景需求 §6）"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2518_bg_FrankHome_MainRoom_Night",
-    "Name": "Frank 家主屋开间-夜晚",
-    "displayName": "SC2518_bg_FrankHome_MainRoom_Night",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2318 同址（state 2018 Frank 家主屋开间跨 Loop 复用），需 2 种底图：\n  ① L3 白天（2318）——Danny 应门 + 厨房台面取牛奶签收单\n  ② L5 黑夜（本 2518）——开篇 Lula 取床后密码锁铁盒 + 律师/侦探分支\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2318——Frank 家主屋开间，客厅 + 床 + 开放式厨房一体；床和墙之间的窄缝隙（藏着 Frank 的小铁盒）\n- 建筑结构（场景连通）：同 2318\n- 时间状态：1925 年 11/11 下午，L5 开篇——L4 指证 Danny 完成后；持 Lula 在 L4 post_expose 交出的 2408 小铁盒备用钥匙\n- 环境痕迹：主屋下午光线；房间带着老年独居者的气息（针线篓、折叠整齐的毯子、一个没有开的窗帘让阳光只照进来一半）；床和墙之间的窄缝隙现在可以仔细搜（蹲下能看到不显眼的小铁盒）\n- 关键道具锚点（按位）：\n  · 2502 Frank 的举报材料（开小铁盒后剧情自动产出，Mickey 离场前拿走 removed_from_inventory）\n  · 2503 Frank 留给 Lula 的情书（开小铁盒后剧情呈现，由 Lula 持有，isUsable=false）\n- NPC 在场：Mickey Donnelly（西装坐姿，双手捧起举报材料表情沉重\"这些材料我拿回去打官司\"；公文包打开 → 材料放入 → 两个铜扣合上的特写——跨 Unit 视觉回收点）；Lula Washington（第一次捧读 Frank 八年的告白——L4 隔窗举证那种克制气质转为情感主动的表达层；恳求查清 Frank 死亡的真相）\n- 画面情绪：八年积攒的告白终于打开 + 律师/侦探分支选择即将出现——温情与压力的交叉点；画面冻结浮现二选一界面\n\n【美术参考】\n- 时代风格：与 2318 同\n- 色调：与 2318 同 + 下午斜光更暖（情感场基调）\n- 光源：与 2318 同 + 床缝隙处局部点亮（取出小铁盒时的视觉聚焦）\n- 氛围：与 2318 同 + 小铁盒道具特写（铁皮 + 挂锁 + 内含纸张）、Mickey 棕色皮制公文包合扣特写（两个铜扣，跨 Unit 视觉回收点）、Lula 捧读情书 + 恳求的姿态新立绘、律师/侦探分支选择 UI（系统级界面）\n- 跨 Loop 注：本图复用 2318 底图基础 + L5 时态差异——小铁盒开启场景 + Mickey 公文包合扣 + Lula 情感转变新立绘 + 分支 UI（特殊场景需求 §6）",
-    "events": [
-      {
-        "name": "Lula 带来铁盒，打开 Frank 的检举材料与情书",
-        "resName": "evt_l5_lula_strongbox_01",
-        "loop": 5,
-        "req": "品质：【高级多格表现】\n挂载：Talk/loop5/opening_l5_frankhome.json，201005004-201005020。\n触发位置：L5 开篇 Frank 家主屋，Zack 与 Mickey 因检举材料线索断裂而陷入僵局时，Lula 入场。\n叙事作用：让 Frank 通过亲手留下的铁盒重新“出场”；把 L4 的“F & L 1923”转化为玩家可理解的密码线索；促成 L5 的核心分歧：Mickey 要把材料送上法庭，Lula 和 Zack 仍要求查清 Frank 怎么死。\n调度注意：Lula 入场不是提供普通物品，而是把 Frank 的私密托付带入场；事件服务于“法庭正义 vs 死因真相”的分叉。"
-      }
-    ],
-    "characterActionRequirements": [
-      {
-        "name": "Mickey 带材料去法院",
-        "stage": "L5 - Mickey 带材料去法院",
-        "character": "Mickey",
-        "characters": [
-          "Mickey"
-        ],
-        "assetName": "evt_l5_mickey_court_exit_01",
-        "requirement": "L5 Frank 家主屋 · Talk 201005060 · Zack 选择继续当侦探后，Mickey 拎起公文包，单独前往法院处理材料。",
-        "loop": 5
-      }
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2420_bg_FrankHome_Bathroom",
-    "Name": "Frank 家厕所-夜晚",
-    "displayName": "SC2420_bg_FrankHome_Bathroom",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Frank 家厕所——逼仄的木门半敞，地板潮湿墙上斑驳；侧墙有一扇约 30cm × 40cm 的小窗朝向后巷平时用作通风采光；马桶 + 简单洗手池\n- 建筑结构（场景连通）：厕所小间在次卧（2409）内部（结构上属于次卧的一部分，但作为独立交互节点 sceneId 2420）；与主屋（2518）通过次卧相连；本 Loop 与 Frank 家其他区域连通\n- 时间状态：1925 年 11/9 下午，L4——Danny 在次卧搜证时听到隔壁马桶冲水声；Zack 完成 2409 搜证后走到厕所门口发起指证\n- 环境痕迹：木门半敞地板潮湿；Danny 蹲在马桶上拉肚子狼狈出汗面如土色——一只手按肚子一只手抓裤腰；侧墙小窗朝后巷（Lula 站在小窗外，玩家从厕所内看出去能看到 Lula 的轮廓）\n- 关键道具锚点（按位）：\n  · R3 时 Lula 隔小窗递入\"放弃继承协议\"作为演出道具不进 ItemStaticData\n  · post_expose 阶段 Lula 仅口头提到 Frank 主屋床后藏有密码锁铁盒（钩子，L5 开篇取盒）\n- NPC 在场：Danny Kowalski（L4 Expose 对象，蹲在马桶上无处可逃；R1 谎言锚 2114001\"11月6日当晚我在家\"）；Lula 演出（隔小窗签字，R3 演出 lula_window_signature，post_expose 才在主屋正式说话）\n- 画面情绪：本应严肃的法庭式对峙发生在最不体面的环境里——Danny 的所有狡辩都伴随着马桶冲水的声响和肠胃叫声；R3 收尾 Lula 隔小窗签字时 Danny 仰头看着小窗的反应是 Unit2 最具构图冲击的瞬间之一（最庄严的正名发生在最不堪的场景）\n\n【美术参考】\n- 时代风格：1920s 美国南区下层公寓厕所——简陋瓷砖墙 + 老式抽水马桶 + 木质洗手台 + 后巷小窗\n- 色调：浅蓝灰（瓷砖）+ 木褐（门框）+ Lula 在窗外的逆光剪影\n- 光源：小窗自然光作侧光（强调 Lula 出现时的逆光神圣感）；厕所内一盏白炽灯作主光（突出 Danny 狼狈的细节）\n- 氛围：异味（视觉化为光线浑浊感）、瓷砖反光、Lula 隔窗签字的纸张特写、Danny 仰头时下颌线条的颤抖\n- 跨 Loop 注：本场景仅 L4 出现，无跨 Loop 复用（详见特殊场景需求关于厕所指证 R1/R2 节拍 + 突发事件 #5 Lula 隔窗举证）",
-    "events": [
-      {
-        "name": "Lula 隔小窗放弃继承，击穿 Danny 的“她为钱”谎言",
-        "resName": "evt_l4_lula_window_waiver_01",
-        "loop": 4,
-        "req": "品质：普通\n挂载：Expose/Loop4_danny.json，240078-240088。\n触发位置：Danny 指证第三轮，Danny 把矛头转向 Lula，说她为了 Frank 的遗产和房子。\n叙事作用：彻底击穿 Danny 最后一层“Lula 为钱骗 Frank”的反咬；Lula 用放弃继承的事实把自己从钱和房子的争夺中抽离；让 Danny 失去最后的替罪对象。\n调度注意：这是价值观翻面，从“谁会继承钱”转成“Frank 真正在乎什么”；Lula 应平静笃定，越平越难反驳。"
-      }
-    ],
-    "exposeReuseLoops": [
-      4
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2309_bg_FrankHome_DannyGuestRoom_Day",
-    "Name": "Frank 家次卧 Danny 住处-白天",
-    "displayName": "SC2309_bg_FrankHome_DannyGuestRoom_Day",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2409 同址（state 2009 Frank 家次卧 Danny 住处跨 Loop 复用），需 2 种底图：\n  ① L3 白天（本 2309）——Danny 应门后 Zack 首次进次卧，Danny 在场\n  ② L4 黄昏（2409）——Danny 蹲厕所，玩家可独自在次卧搜证（2404 + 2405 + 2407）\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Frank 家小公寓单层内部，次卧（Danny 临时栖居）——床铺叠得很随意、桌上空烟盒、窗台搭着旧外套；房间整体显示出失业青年临时借宿的状态\n- 建筑结构（场景连通）：从街角（2207）入 Frank 家正门 → 主屋（2318）→ 次卧（2309）；次卧内部含一扇通往独立厕所小间（2420）的门\n- 时间状态：1925 年 11/8 白天，L3 post_expose Moore 后 Zack 从主屋走进次卧\n- 环境痕迹：床铺乱、桌上空烟盒、窗台旧外套——和 Frank 主屋的整洁相比，更像过路借宿而不是真正的家；Danny 刚回来靠在门框上神情不太欢迎\n- 关键道具锚点（按位）：\n  · 无可拾取物证（L3 Danny 在场，物证 2404/2405/2407 要等 L4 Danny 不在时才能搜）\n- NPC 在场：Danny Kowalski（L3 不是指证对象仅背景信息，靠在门框上语气轻蔑声称 Lula\"在勾引叔叔\"）\n- 画面情绪：年轻人的敌意 + 失业青年的窘迫——Danny 不知道 Zack 已经拿到房产证的信息，这次对话会成为 L4 指证他的动机拼图\n\n【美术参考】\n- 时代风格：1920s 美国南区下层公寓房间——窄床 + 简陋木桌 + 单衣柜 + 没装饰的墙面\n- 色调：浅木色 + 灰蓝（床单）+ 桌上零散物件的杂色——整体显得寒酸\n- 光源：窗外白天斜射光作主光；房间无电灯开启\n- 氛围：烟味 + 旧衣物味（视觉化为光柱中漂浮的尘埃）、Danny 靠门框的姿势（一个肩膀压门框）\n- 跨 Loop 注：本图与 L4（2409）共用底图基础——L4 差异是 Danny 不在（在隔壁厕所 2420），房间可以仔细搜，桌上多了空怀表盒和 Tony 便条等物件细节"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2409_bg_FrankHome_DannyGuestRoom_Night",
-    "Name": "Frank 家次卧 Danny 住处-夜晚",
-    "displayName": "SC2409_bg_FrankHome_DannyGuestRoom_Night",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2309 同址（state 2009 Frank 家次卧 Danny 住处跨 Loop 复用），需 2 种底图：\n  ① L3 白天（2309）——Danny 在场，首次对话场景\n  ② L4 黄昏（本 2409）——Danny 不在（在隔壁厕所），玩家独自搜证；约 17:30 偏暖光\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2309——Frank 家次卧 Danny 住处；房间和 L3 初见时差不多但现在可以仔细看；床垫下面有一个布包（不仔细翻不会发现）；桌上空怀表盒盖子开着内衬压着一张便条；角落书架上有 Frank 遗嘱的副本\n- 建筑结构（场景连通）：同 2309——主屋（2318/2518）→ 次卧（2409）；次卧内部含一扇通往独立厕所小间（2420，Danny 此时在厕所拉肚子）\n- 时间状态：1925 年 11/9 下午，L4——继承 L3 post_expose 后已开放状态，Danny 在家但人在隔壁厕所拉肚子（次卧里没人）\n- 环境痕迹：次卧里只有沉默（隔壁厕所传来 Danny 的呻吟、肚子叫和马桶冲水声，短期内他出不来）；房间可以仔细搜\n- 关键道具锚点（按位）：\n  · 2404 空怀表盒（桌上拾取，含 Tony 便条\"100 块，怀表抵押。——Tony\"）\n  · 2405 Margaret 的婚戒（床垫下小布包取出，内圈刻\"P & M 1901\"）\n  · 2407 Frank 遗嘱副本（角落书架取出，末尾多了一条 Frank 亲笔加写的条款）\n- NPC 在场：Danny 不在次卧（在隔壁厕所 2420 拉肚子；指证场见 2420）\n- 画面情绪：搜证的安静专注——三件东西拼出 Danny 的全貌（经济拮据、顺手占便宜、对遗嘱动过心思），他是个机会主义者不是凶手\n\n【美术参考】\n- 时代风格：与 2309 同\n- 色调：与 2309 同 + 下午光线\n- 光源：与 2309 同\n- 氛围：与 2309 同 + 床垫被掀起一角的真实感（布包露出金属戒指的微弱反光）、空怀表盒内衬的丝绒压痕、Tony 便条的字迹特写\n- 跨 Loop 注：本图复用 2309 底图基础 + L4 时态差异——Danny 不在、可仔细搜证、三件物件细节特写",
-    "events": [
-      {
-        "name": "Danny 困厕所，Zack 已从次卧拿到婚戒",
-        "resName": "evt_l4_danny_bathroom_ring_01",
-        "loop": 4,
-        "req": "品质：普通\n挂载：Talk/loop4/danny_l4_bathroom.json，211004001-211004017。\n触发位置：L4 Frank 家，Zack 已在 Danny 房间/次卧搜到 Margaret 的婚戒后，Danny 从厕所里喊话。\n叙事作用：把“Zack 找到关键物证”和“Danny 被困在最狼狈的位置”合成同一个突发瞬间；婚戒证明 Danny 与 Margaret 被袭击现场有关；为后续 Danny 指证第一轮“我没出门”铺证据基础。\n调度注意：核心不是喜剧，而是权力倒置：Danny 声音很凶，但身体被困，Zack 已经握住能击穿他的物证。"
-      }
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2617_bg_LeonardResidence",
-    "Name": "Leonard 住所-白天",
-    "displayName": "SC2617_bg_LeonardResidence",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：北区湖滨大道 88 号带内部楼梯的复式公寓；中产公寓客厅整洁像样板间——刻板得没有任何真实生活过的痕迹；铸铁栏杆、门童制服笔挺、走廊铺着厚毯子\n- 建筑结构（场景连通）：复式公寓；客厅 → 通往茶水间的过道 / 通往上层卧室的内部楼梯；正门外走廊\n- 时间状态：1928 年 11/8 上午，L6——Zack / Emma 持 2607 搜查令进入；Edith 开门，Leonard 尚在银行，搜证后才回家\n- 环境痕迹：客厅陈设整洁像样板间——刻板得没有任何真实生活过的痕迹；Edith 开门接待 Zack / Emma，端着茶盘站在通往楼梯的过道，简短对话后上楼；Leonard 此时仍在银行，玩家搜得 2609 / 2610 后他才回家\n- 关键道具锚点（按位）：\n  · 2609 旧报纸剪报 1900 南区双家纵火（点击书桌底层查看；1900 年《艾斯弗德论坛报》——南区 Russo + Moretti 两户意大利裔家庭被黑手党协同纵火；两家父母全部遇难；10 岁 Leo 从火里救 6 岁 Vinnie；环境叙事不可拾取）\n  · 2610 眼镜维修单据（点击书桌或外套口袋区域拾取；11/7 案发次日，左眼原烟熏色镜片破失并换成透明新片，右眼保留同副烟熏色旧片，Leonard 签名在单据上）\n- NPC 在场：Edith Ross（自由探索阶段开门接待，端茶盘对话后上楼，2146001/002/003 旁证 Leonard 反常行为）；Leonard Ross（搜证后从银行回家，作为 L6 Expose 对象，四轮指证+诱导招供+R4）\n- 画面情绪：刻板整齐的中产公寓 vs 内里凶手的崩塌——Edith 的冷漠在场是 R4 诱导招供的视觉触发点（失去她比坐牢更让他承认事实）\n\n【美术参考】\n- 时代风格：1920s 芝加哥北区湖滨大道复式中产公寓——米色石灰岩外墙 + 铸铁栏杆 + 内部木楼梯 + 装饰艺术初期室内（深木 + 黄铜 + 厚毯）\n- 色调：米色 + 深木 + 厚毯的暖灰——刻板的\"上层中产\"感\n- 光源：白天自然光从落地窗进入（与南区破败感的明亮对比）；客厅顶灯作辅助\n- 氛围：刻板感（家具摆放对称到不真实）、Edith 端茶盘走进客厅放下后安静站立的演出、墙上无个人照片只有商业风景画、Leonard 新眼镜与 1900 旧报纸剪报的对位（童年合照 2310 在 Leonard 银行办公室 + 1900 双家纵火剪报在 Leonard 家书桌底层——Leonard 角色弧根本伤口）\n- 跨 Loop 注：本场景仅 L6 出现，无跨 Loop 复用",
-    "events": [
-      {
-        "name": "Edith 推着箱子准备离开，压垮 Leonard 的体面防线",
-        "resName": "evt_l6_edith_suitcase_leave_01",
-        "loop": 6,
-        "req": "品质：普通\n挂载：Expose/Loop6_leonard.json，260080-260118。\n触发位置：L6 Leonard 指证过程中，Zack 已经逐步撕开 Leonard 的防线，Edith 从房间里出来，带着箱子准备离开。\n叙事作用：让 Leonard 的崩溃不只来自 Zack 的逻辑指证，也来自 Edith 现场撤离带来的情感打击；Edith 成为压垮 Leonard 体面防线的关键人物；推动 Leonard 从否认转向解释自己如何被逼迫。\n调度注意：重点是“Edith 要走”这个动作本身，不需要高规格连续大场面；Leonard 从克制体面瞬间滑向恐慌失控；Edith 平静、失望、清醒地准备抽身。"
-      }
-    ],
-    "exposeReuseLoops": [
-      6
-    ]
+    "ArtRequirement": "【场景状态】\nMargaret 鞋坊店铺区普通夜晚状态。用于火灾前/非火灾即时的夜间鞋坊门面/店铺区展示；与 Fire、Ruins 状态分开。"
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2102_bg_Margaret_ShoeShop_Bedroom",
@@ -457,14 +366,6 @@
     "ArtRequirement": "【⚠ 场景状态】\n本图为 L1 火灾后即时的卧室区底图，与普通夜晚卧室区分开：焦黑床头、开放式厨房失火点、消防后烟尘和灰烬仍在。\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：单层小店铺的卧室区，含 Margaret 的床、梳妆台、相框台、针线篓；旁边连一个开放式小厨房（铁锅、调料架、炉灶）\n- 建筑结构（场景连通）：与店铺区（2101）通过半墙/门相连；本场景内部不通地下室（地下室门已挪至店铺区 2101 内部）\n- 时间状态：1925 年 11/6 深夜，火灾核心区刚扑灭约 30 分钟，仍是限时搜证窗口\n- 环境痕迹：床头板焦黑被褥烧化；开放式厨房铁锅/调料架烟熏黄黑，炉灶旁有蜡烛灰和碎蜡迹（Morrison 编造\"做饭失火\"的依据）；角落倒着 30cm 黄铜烛台（卧室区装饰品，火灾中从床头柜倒下，烛盘内蜡烛已熔化——与案件凶器无关，真凶器是店铺区工作台上的铸铁鞋楦 2604，L6 才揭示）；整间屋子带着安静老年独居者气息\n- 关键道具锚点（按位）：\n  · 2102 Margaret 相册（卧室角落相框旁，30 年照片无一例外佩戴婚戒）\n  · 2103 空的首饰盒（梳妆台，凹槽有今日临时取出划痕）\n  · 2106 卧室开放式厨房失火点照片（炉灶区，Zack 自动拍照）\n  · 2107 Patrick 遗物匣（橡木小匣刻\"P.B.\"首字母，可观察不可拾取，环境叙事）\n- NPC 在场：Emma 陪 Zack 搜证（看到 2106 厨房失火点时皱眉沉默两秒——藏梗伏笔，L4 Lula 证词回收）\n- 画面情绪：失去之家的静默、烧焦的私人物件——悲伤压抑 + Emma 短暂的\"察觉到不对\"\n\n【美术参考】\n- 时代风格：1920s 南区独居老人卧室 + 小型开放式厨房组合，黄铜灯具 + 木质家具\n- 色调：低饱和暖黄（残余灯光）+ 焦黑（床头板/被褥）+ 烟熏黄（厨房铁器）\n- 光源：床头一盏未坏的台灯作主光（柔黄）；炉灶上方失火点残光作环境辅助\n- 氛围：焦味与皮革味混合、灰烬颗粒漂浮、相框玻璃裂痕反光、黄铜烛台装饰品的金属高光\n- 跨 Loop 注：本场景仅 L1 出现，无跨 Loop 复用。地下室门不在本场景（已挪至 2101 店铺区）"
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2410_bg_Margaret_ShoeShop_Basement",
-    "Name": "Margaret 鞋坊地下室-夜晚",
-    "displayName": "SC2410_bg_Margaret_ShoeShop_Basement",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Margaret 鞋坊地下室——通过 2101/2401 店铺区角落楼梯门下行（L1 锁死，L4 用 2308 钥匙解锁）；地下室独立入口在鞋坊后院平时上锁；空间昏暗但有人精心布置过——旧沙发、空花瓶、干枯玫瑰残枝、当年维修时留下的灯泡现在仍亮着\n- 建筑结构（场景连通）：从店铺区（2101/2401/2501/2601）角落木门向下楼梯进入；地下室独立入口在后院（玩家不使用该入口）\n- 时间状态：1925 年 11/9 下午，L4——持 2308 钥匙开门后进入；火灾烧毁了鞋坊前部的店铺区和卧室区但地下室门当时是关着的仅受烟熏，所有物证完好保留\n- 环境痕迹：昏暗但温馨——这里是 Frank 和 Lula 秘密约会五年的场所（Margaret 知道并支持，把这里借给他们）；旧沙发扶手和坐垫磨损均匀至少三到五年规律使用；空花瓶里有干枯玫瑰残枝；工具箱旁有旧收据纸\n- 关键道具锚点（按位）：\n  · 2402 地下室旧沙发（环境叙事，可观察不可拾取）\n  · 2403 求婚戒指（玫瑰花蕊找戒指小玩法产出——点击干枯玫瑰残枝触发交互；戒圈内侧刻\"F & L 1923\"）\n  · 2406 维修收据 MURPHY & SONS（工具箱旁旧收据纸，600$ 全用于地下室——Frank 把积蓄用于布置约会场所佐证真爱）\n  · 2409 枯萎的玫瑰花束（在 SceneConfig ItemIDs 中，环境叙事）\n  · 2410 水杯（在 SceneConfig ItemIDs 中，环境叙事）\n- NPC 在场：无 NPC（地下室无人驻场，Lula 在 2401 店铺区等候）\n- 画面情绪：秘密爱情的温馨与悲伤——Frank 用积蓄认真布置过的约会窝；F & L 1923 戒指是真爱物证；和 Margaret 的支持一起构成 Unit2 内最温柔的角落\n\n【美术参考】\n- 时代风格：1920s 美国南区小店铺地下室改造成的私人空间——粗糙石墙 + 木梁顶 + 旧沙发 + 简单灯具\n- 色调：暖橙黄（仍亮着的灯泡光）+ 深棕（沙发/木梁）+ 一抹枯红（玫瑰）\n- 光源：当年维修时留下的灯泡作主光（昏黄但温暖）；楼梯口外漏进来的微弱白光作辅助\n- 氛围：旧但精心维护的温馨感（与楼上焦黑的废墟形成温柔对比）、玫瑰花蕊深处金属反光的找戒指视觉提示、维修收据的纸张细节\n- 跨 Loop 注：本场景仅 L4 出现，无跨 Loop 复用；底图与楼上店铺区完全不同——楼上是焦黑废墟、楼下是被火避开的温暖空间"
-  },
-  {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2103_bg_Margaret_ShoeShop_Ruins_Night",
     "Name": "Margaret 鞋坊店铺区·废墟-夜晚",
     "displayName": "SC2103_bg_Margaret_ShoeShop_Ruins_Night",
@@ -473,20 +374,103 @@
     "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2101 物理空间——单层小店铺店铺区，展示台/鞋架/收银台/木地板/地下室门\n- 建筑结构（场景连通）：与 2101 相同——临街木门 → 店铺区；半墙连卧室区（2102 已不再开放）；角落木门下通地下室（仍锁）；门外 → 电话亭（2119）\n- 时间状态：1925 年 11/6 深夜约 9:30，限时计时刚耗尽，尸体被抬走、现场清空、消防水渍开始干涸\n- 环境痕迹：尸体已抬走（白布消失）；烟尘明显散去但鞋架仍有熏黑痕迹；玻璃碎片仍在；Morrison 的烟抽了大半（烟灰缸或地上有烟蒂）；现场只剩一个人——Morrison\n- 关键道具锚点（按位）：\n  · 无可拾取证据（纯对话场景）\n- NPC 在场：Morrison（转可对话，态度冷淡）——抽完最后一口烟，等程序走完；提及 EPI01 旧仇；说\"有人不希望我查\"但不点名\n- 画面情绪：限时压迫感解除转为\"权力疲惫\"的对峙——Morrison 摆烂底色，Zack 必须在他回警局前问完该问的\n\n【美术参考】\n- 时代风格：与 2101 同——1920s 芝加哥南区独栋小店铺\n- 色调：与 2101 同一冷暖比但烟散后整体更\"清晰\"（焦黑保留、烟雾减少）\n- 光源：街灯主光仍从玻璃门外斜射；消防车散光已撤；Morrison 烟头红光作小局部点亮\n- 氛围：焦味淡化、水渍干涸（不再反光）、玻璃碎片仍散——一个\"事件刚过、现场荒废\"的过渡时刻\n- 跨 Loop 注：本图是底图 B（无尸体清空版）的原型——L4/L5/L6 的 2401/2501/2601 都在此底图上叠加各自的\"时间推移废墟\"细节差异，本场景对应 L1 当晚的\"刚清空\"状态"
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2601_bg_Margaret_ShoeShop_Ruins_Day",
-    "Name": "Margaret 鞋坊店铺区·废墟-白天",
-    "displayName": "SC2601_bg_Margaret_ShoeShop_Ruins_Day",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2104_bg_PoliceStation_MorrisonOffice_Night",
+    "Name": "警局 Morrison 办公区-夜晚",
+    "displayName": "SC2104_bg_PoliceStation_MorrisonOffice_Night",
     "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景为 state 2001 跨 Loop 复用之一（参考 2101 / 2401 / 2501）。本帧定位 = L6 白天废墟 + 鞋楦找茬玩法叠加：\n  - 与 2101 / 2401 / 2501 三套夜/黄昏版的关键差异：白天自然光，玩家手持 2602 抵押证明照片叠加到现实废墟上做找不同交互\n  - 灰尘/蛛网层最厚（时间推移最久）\n命名建议：bg 文件名加 _day_ruins 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2101——单层小店铺店铺区（含鞋匠工作台、铸铁鞋楦、货物箱）\n- 建筑结构（场景连通）：同 2101——临街门 → 店铺区；店铺区角落木门下通地下室（不重访）；外接街道\n- 时间状态：1928 年 11/8 上午，L6——Foster 电话后次日；Zack 持 2602 房屋抵押证明 + 2603 医用镊子从医院回来\n- 环境痕迹：L5 已搜过一轮，但地板缝隙里还有东西——一丁点反光几乎不可能注意到除非蹲下来仔细看；蛛网累积、灰尘累积比 L5 又多一天；废墟的沉默和偶尔路过的邻居脚步声；工作台上的铸铁鞋楦不在原位（与 2602 照片对比异常）；柜面有刮擦痕；货物箱中部凹陷 3cm 正好在成人背部的高度\n- 关键道具锚点（按位）：\n  · 2604 铸铁鞋楦（鞋楦找茬玩法揭示移位位置后直接拾取；足跟和铁杆侧面有暗红色污渍；与法医报告 2601 钝器尺寸（5–7 cm、1.5–3 公斤）吻合）\n  · 2605 眼镜碎片（鞋楦找茬玩法揭示位置后，持 2603 镊子嵌套取出柜面后沿窄缝；左眼原镜片碎片，镜片本身呈烟熏色，并非火灾染黄）\n  · 2606 凹陷的货物箱（鞋楦找茬玩法揭示位置后取证；3cm 凹陷成人背部高度）\n- NPC 在场：无 NPC（只有废墟的沉默）\n- 画面情绪：终局前的最深一次回访——把\"过去\"压在\"现在\"上找不同；这不是简单看图，是真实场景与照片叠加的取证；废墟中的最后线索将所有人指向 Leonard\n\n【美术参考】\n- 时代风格：与 2401 同\n- 色调：与 2401 同的底图 B + L6 多累积两天的灰尘和蛛网层（比 L5 又多一天的风化）\n- 光源：白天自然光\n- 氛围：灰尘比 L5 更厚、蛛网更密、工作台上的铸铁鞋楦不在原位（玩家持 2602 照片叠加场景能看出三处异常）、柜面缝隙中眼镜碎片的微弱反光（必须蹲下才能看到）、货物箱凹陷的 3D 体积感\n- 跨 Loop 注：本图基于 2103 底图 B + L6 时间推移废墟感（最厚的灰尘+蛛网层）；与 L4（2401 Lula 在场）+ L5（2501 打火机搜证）的差异是 L6 含鞋楦找茬玩法、三处异常细节叠加、2602 照片对比交互"
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2604 同址（state 2004 警局 Morrison 办公区跨 Loop 复用），需 2 种底图：\n  ① L1 黑夜（本 2104）——案发当晚 Zack 指证 Morrison 误判死因\n  ② L6 白天（2604）——Morrison 兑现承诺签搜查令过场，气氛缓和\n命名建议：bg 文件名加 _night / _day 后缀区分\n\n**美术资源**：复用 EPI01（已有）\n- sceneName: 警局 Morrison 办公区 / Police Station Morrison's Office\n- backgroundImage: `Art\\Scene\\Backgrounds\\EPI01\\SC018_bg_MorrisonOffice`",
+    "exposeReuseLoops": [
+      1
+    ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_Fire",
-    "Name": "Margaret 鞋坊店铺区·火灾后即时-夜晚",
-    "displayName": "SC2101_bg_Margaret_ShoeShop_StoreFront_Fire",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2105_bg_ZackDetectiveOffice",
+    "Name": "Zack 侦探事务所-夜晚",
+    "displayName": "SC2105_bg_ZackDetectiveOffice",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：南区与北区交界处独栋小型私家侦探事务所——一进门是接待 + 工作区合一的开间，桌上一盏台灯、几把硬背椅、墙上贴着旧案剪报和地图\n- 建筑结构（场景连通）：本建筑独栋（步行至 Margaret 鞋坊约 10 分钟，电车至 湖滨信托银行约 20 分钟）；本场景与 Unit2 其他场景通过城市街道连通\n- 时间状态：1925 年 11/6 深夜，L1 末指证 Morrison 完成后自动硬切——Zack 和 Emma 回到事务所\n- 环境痕迹：室内昏暗，只有桌上一盏台灯的光；桌面整齐但有一封刚到达的电报突兀放在正中（叙事道具）；窗外是深夜南区街景\n- 关键道具锚点（按位）：\n  · 无可拾取证据（Mickey 电报为叙事演出道具，不入玩家背包）\n- NPC 在场：无 NPC（纯过场——Zack 和 Emma 对视）\n- 画面情绪：从 L1 末\"母亲失踪，不知去向\"的绝望中被一封电报翻转——困惑、震惊、调查重启的引擎点火\n\n【美术参考】\n- 时代风格：1920s 美国私家侦探事务所，硬汉派经典布景——磨砂玻璃门、文件柜、皮转椅\n- 色调：深棕 + 暖黄台灯光（chiaroscuro 经典反差）\n- 光源：桌面台灯作唯一主光（电报被这盏灯精确照亮）；窗外街灯作环境辅助\n- 氛围：烟、墨、纸——硬汉派侦探办公室的味道；电报纸张高光（白色矩形在黑色木桌面上特别醒目）\n- 跨 Loop 注：本场景仅 L1 出现一次，无跨 Loop 复用",
+    "events": [
+      {
+        "name": "事务所电报：Margaret 还活着",
+        "resName": "evt_l1_office_telegram_01",
+        "loop": 1,
+        "req": "品质：普通\n挂载：Talk/loop1/office_l1_telegram.json，201101006-201101010；延展到 201101013。\n触发位置：L1 Morrison 指证结束后，Zack 和 Emma 回到事务所。\n叙事作用：把 L1 的“认尸/误认尸”立刻翻成“Margaret 还活着”；第一次抛出 Mickey 的名字但不解释，悬念留到 L2 医院；让玩家从火灾现场的失败感里被强行拉向圣心医院。\n调度注意：重点是桌上突然多出的电报，以及 Zack 情绪从疲惫到狂喜的瞬间；Emma 必须同步看到电报。"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2119_bg_ShoeShopExterior_PhoneBooth",
+    "Name": "鞋坊外电话亭-夜晚",
+    "displayName": "SC2119_bg_ShoeShopExterior_PhoneBooth",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2401 / 2501 / 2601 同址（state 2001 Margaret 鞋坊店铺区跨 Loop 复用），需制作 3 种底图状态：\n  ① L1 火灾即时夜景 = 本 2101——焦黑/烟尘/水渍/尸体白布盖下/Morrison 夹烟，浓烟未散\n  ② L4/L5 夜废墟 = 2401 / 2501——尸体已撤、烟散，夜色 + 蛛网灰尘累积\n  ③ L6 白天废墟 = 2601——白天自然光，鞋楦找茬玩法可叠加 2602 抵押证明照片对比\n命名建议（不强制改 backgroundImage 字段）：bg 文件名按需加 _night_fire / _night_ruins / _day_ruins 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：单层小店铺，临街木门玻璃推入店铺区；展示台、鞋架、收银台沿墙分布，木地板；**店铺区一角设有鞋匠工作区**——长条木质工作台 + 锥子/锤子/线轴等鞋匠工具排列，工作台一角放着铸铁鞋楦，旁边靠墙处堆放着印有 `Brennan Shoe Repair` 字样的木制货物箱；店铺区角落另有一扇向下通往地下室的木门，新换的铸铁锁\n- 建筑结构（场景连通）：临街木门 → 店铺区主入口；店铺区里侧半墙/门 → 卧室区（2102）；店铺区角落木门向下 → 地下室（L1 锁死推不开）；门外街边 → 鞋坊外电话亭（2119）\n- 时间状态：1925 年 11/6 深夜 9 点前后，火灾刚扑灭约 30 分钟，消防刚撤离\n- 环境痕迹：焦味浓烈未散，玻璃碎片散落在门口路边，展示台/鞋架/收银台均有烟尘熏黑痕迹但结构完整（火势主要集中在卧室区）；地面有消防水渍未干；**工作台上的铸铁鞋楦** 位置看似自然但实际被人移动过（L6 通过 2602 抵押证明照片对比才会发现异常，L1 阶段不点破，玩家此时只视为普通鞋匠工具）；**靠墙的货物箱中部有明显的 3 cm 内凹** 高度约 1.2 m，正好在成人背部位置（L1 阶段不点破，作为环境细节默默存在，L6 鞋楦找茬玩法揭示其作为打斗痕迹的意义）\n- 关键道具锚点（按位）：\n  · 2101 尸体手指照片（卧室方向白布盖下露出的左手指，无戒指无压痕）\n  · 2104 现场地面照片（卧室区地面，消防细筛痕迹处，无金属残留）\n  · 2105 鞋坊营业记录（收银台桌面台账）\n  · 2108 地下室的门（店铺区角落木门，新铸铁锁，推不开——L3 后用 2308 钥匙解锁）\n- NPC 在场：Morrison 在场（限时搜证阶段不可对话，夹烟站在卧室门口附近，偶尔看表催人）；3-4 名警员背景哑角\n- 画面情绪：火场刚撤、计时压迫、Morrison 冷淡催人——焦躁、压抑、时间紧迫\n\n【美术参考】\n- 时代风格：1920s 芝加哥南区独栋小店铺，临街木门玻璃 + 木地板 + 雕花柜台\n- 色调：低饱和暖灰（焦黑 + 烟黄 + 警员制服深蓝），整体压抑\n- 光源：街灯从玻璃门外斜射进入主光；消防车散光蓝白色作辅助光；卧室方向余烟透出微弱橙光\n- 氛围：焦味（视觉化为悬浮烟尘颗粒）、湿冷消防水渍反光、玻璃碎片高光点\n- 跨 Loop 注：本图为底图 A（仅 L1 限时段使用）——尸体在场、浓烟未散、水渍刚干；与 2401/2501/2601 的底图 B（无尸体、烟散、现场清空 + 时间推移废墟）截然不同"
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：街边公用电话亭——铸铁框架 + 玻璃门 + 内置黑色摇柄电话机；电话亭紧邻鞋坊门外街道\n- 建筑结构（场景连通）：紧邻 Margaret 鞋坊外（2101/2103 街边步行 10 秒可达）；本场景为户外街景节点，不进入任何建筑\n- 时间状态：1925 年 11/6 深夜偏晚，为自由探索场景\n- 环境痕迹：电话亭玻璃有点起雾（夜冷）；外面能看到 Emma 说话的口型但听不清内容；不到两分钟通话；Emma 出来时神情平静带确认的意味\n- 关键道具锚点（按位）：\n  · 无可拾取物证（本场景仅触发 2151001 Foster 转述证词进入证词池）\n- NPC 在场：Emma（电话亭内打电话给 Foster；出来后小声补\"Foster 受 Miller 集团资助\"伏笔轻描淡写）；Morrison（街边远处等候/观察，L1 夜晚同场挂载）\n- 画面情绪：街边孤立感、深夜冷意——一通电话改变 Morrison 谎言的形状\n\n【美术参考】\n- 时代风格：1920s 芝加哥街角公用电话亭，黑色铸铁 + 玻璃 + 内置壁挂式黑色电话机\n- 色调：深蓝夜景 + 电话亭内黄色暖灯（玻璃起雾的反差感）\n- 光源：电话亭内顶灯作主光（透过雾气晕染）；街灯作辅助\n- 氛围：玻璃雾气、Emma 口型隐约、街道湿冷、远处偶尔传来汽车喇叭声\n- 跨 Loop 注：本场景仅 L1 出现一次，无跨 Loop 复用"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2191_avg_Opening_MorrisonBlocksZack",
+    "Name": "L1 开篇：Morrison 拦住 Zack（完整 AVG 图）",
+    "displayName": "SC2191_avg_Opening_MorrisonBlocksZack",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】开篇：Morrison 拦住 Zack\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2101 火灾后的 Margaret 鞋坊门口；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Morrison、Zack、Emma。\n- 画面重点：Morrison 拦住 Zack，不让他靠近火场和尸体；Zack 急于确认死者身份；Emma 介入，为 Zack 争取进入现场的机会。\n- 额外人物资产：只单独列 Emma 入场/介入（emma_intervene_morrison_001）；Morrison 拦路姿态和 Zack 被拦属于整图基础构图，不另拆人物资产。\n- 叙事作用：建立 Morrison 是第一层阻力，也建立 Emma 与 Zack 的临时同盟。\n- 排除内容：不要画成自由探索搜证图，不强调尸体手指照片、现场地面照片、营业记录、地下室门等可点击证据。",
+    "events": [],
+    "characterActionRequirements": [
+      {
+        "name": "Emma 入场介入",
+        "stage": "L1 开篇后段 · Talk 201001014",
+        "character": "Emma",
+        "characters": [
+          "Emma"
+        ],
+        "assetName": "emma_intervene_morrison_001",
+        "requirement": "Emma 一步挡在 Morrison 面前，拦住他要去抓 Zack 的手。这里单独需要 Emma 的入场/介入人物资产；Morrison 拦路与 Zack 被拦属于整张 AVG 图的基础构图，不单独列人物资产。"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2206_bg_SacredHeartHospital_MargaretRoom",
+    "Name": "圣心医院 Margaret 病房-白天",
+    "displayName": "SC2206_bg_SacredHeartHospital_MargaretRoom",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】开篇：医院里的新线索\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：圣心医院 Margaret 病房白天状态；这是开篇自动对白画面，不是自由探索场景。\n- 画面人物：Zack、Emma、Mickey、病床上的 Margaret。\n- 画面重点：Margaret 昏迷在病房中，Mickey 带来新的调查方向，Zack/Emma 接上银行与威胁链条。\n- 叙事作用：让 Mickey 回归，并把玩家从火灾现场推向银行线。\n- 排除内容：不要配置 Mickey 可点击 NPC；不要画成可探索病房。"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2207_bg_FrankOHaraStreetCorner_Day",
+    "Name": "Frank 家与O'Hara家街角-白天",
+    "displayName": "SC2207_bg_FrankOHaraStreetCorner_Day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2407 同址（state 2007 Frank/O'Hara 街角跨 Loop 复用），需 2 种底图：\n  ① L2 白天（本 2207）——敲门 + O'Hara 街角对话，南区清晨街景\n  ② L4 黄昏（2407）——约 17:30，Zack 回街角追问 O'Hara 当晚时间线，光线偏暖\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：南区某街区，Frank Kowalski 家和 Mrs. O'Hara 家相邻——两户共用一个街角外观，前门相距不过 5 米；玩家不进入两户的内部，仅在街角和门廊互动\n- 建筑结构（场景连通）：街角入口连接两户：Frank 家门（木门紧闭，L2 锁死）→ L3 post_expose 后剧情开放主屋（2318/2518）和次卧（2309/2409）；O'Hara 家门（玩家不进入内部，仅门缝/门廊对话）；街道延伸至城市其他位置\n- 时间状态：1925 年 11/7，L2 开篇 Mickey 重逢后自动解锁\n- 环境痕迹：Frank 家门木门紧闭，门缝里塞着两件东西（催款单在上、便条在下，叠在一起）；O'Hara 家门漆斑驳，门边花盆里有几株勉强活着的常青藤；门廊挡风\n- 关键道具锚点（按位）：\n  · 2202 O'Hara 贷款钞票（O'Hara 取出给 Zack 看，\"我觉得奇怪\")\n  · 2203 湖滨信托银行催款单（Frank 家门缝取出，上层）\n  · 2204 威胁便条（Frank 家门缝取出，下层粗笔字）\n· 备注：2201 Leonard 名片在 Frank 家门口点击获取（与催款单一起塞门缝，催债流程标准做法）\n- NPC 在场：Mrs. O'Hara（站在门后开缝两指宽，必须 Zack 报\"我是 Margaret 的儿子\"才肯开门）\n- 画面情绪：街角并置的两扇门——一扇紧闭沉默（Frank 已死）、一扇半开有戒备（O'Hara 自己也有债务）；街区破败感\n\n【美术参考】\n- 时代风格：1920s 芝加哥南区移民社区联排住宅街角，外墙是熏黑红砖 + 木质门廊 + 锈蚀铸铁栏杆\n- 色调：低饱和棕灰 + 常青藤的暗绿点缀\n- 光源：上午斜射自然光（侧光强调街角立体感）\n- 氛围：街区贫困感（剥落漆面/破窗户）、门缝纸张特写（催款单铅印 + 威胁便条粗笔字反差）、O'Hara 门廊里花盆勉强活着的常青藤\n- 跨 Loop 注：本图与 L4（2407）共用底图基础——L4 差异是 O'Hara 门开得更宽、她在窗台上浇花的动作；Frank 家门廊本身视觉变化不大"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2211_bg_LakeshoreTrust_Lobby",
+    "Name": "湖滨信托银行大厅-白天",
+    "displayName": "SC2211_bg_LakeshoreTrust_Lobby",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行（Lakeshore Trust Bank）一楼大厅——气派的大理石地板、雕花天花板、出纳台后面一排黄铜栅栏窗口、客户等待区；Leonard Ross 坐在开放式工位上（位于大厅一侧）\n- 建筑结构（场景连通）：大厅是中型公共建筑入口；含通往贵宾室（2212）的门 + 通往 Leonard 办公室（2314）的门；档案室（2313）从 Leonard 办公室内进入（不是从大厅直通）；街道入口进出\n- 时间状态：1925 年 11/7 白天，L2——Zack 持 Leonard 名片地址（2201）来到银行后自动解锁\n- 环境痕迹：大厅人流稀疏，体面客户排队；Leonard 工位整洁；大厅角落有 Danny 在低声和 Leonard 谈 Frank 房产证（Danny 看到陌生人进来神情警觉很快中断离开——演出性质）\n- 关键道具锚点（按位）：\n  · 无可拾取物证（指证场，证据从玩家背包出示）\n- NPC 在场：Leonard Ross（L2 Expose 对象，西装笔挺、配合回答层层退守，职业性微笑）；Danny Kowalski（演出哑角，与 Leonard 低声谈话后警觉离开——构成碎片 2204 证词来源 2112001）\n- 画面情绪：气派的公共建筑掩盖暴利体系——Leonard 的\"专业冷静\" vs 角落 Danny 异常反应\n\n【美术参考】\n- 时代风格：1920s 芝加哥商业大道中型银行大厅，新古典主义元素（雕花天花板/大理石/黄铜栅栏）\n- 色调：明亮浅米色（大理石+灯光）+ 黄铜栅栏的深金色 + Leonard 工位深木色\n- 光源：天花板吊灯主光（明亮均匀）+ 自然光从高窗斜射作辅助\n- 氛围：脚步在大理石上回声、纸张沙沙、Leonard 钢笔尖反光、客户低声讨论\n- 跨 Loop 注：本图与 L3（2311）+ L6（2611）共用底图基础——L3 差异是 Mickey 在场气氛凝重；L6 差异是 Leonard 换了新眼镜（左眼透明新片+右眼旧片烟熏黄），暗示 L5 案发当晚他在鞋坊弄碎了眼镜",
+    "events": [
+      {
+        "name": "银行大厅偷听 Danny 与 Leonard 谈房产证",
+        "resName": "evt_l2_overhear_danny_leonard_01",
+        "loop": 2,
+        "req": "品质：普通\n挂载：Talk/loop2/leonard_l2_lobby.json，207002001-207002008。\n触发位置：L2 进入湖滨信托银行大厅，正式询问 Leonard 前。\n叙事作用：提前埋下 Danny 与 Leonard 的私下交易关系；“房产证”和“其他重要东西”先只让玩家听见碎片，等 L3 Moore 和 L5 铁盒线回收；Leonard 的职业面具第一次出现裂缝。\n调度注意：这是旁听，不是正式问话；Zack 只是走近时撞上不该听到的内容；Danny 被撞见后撤退，Leonard 立刻切回银行接待口吻。"
+      }
+    ],
+    "exposeReuseLoops": [
+      2
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2212_bg_LakeshoreTrust_VIPParlor",
+    "Name": "湖滨信托银行贵宾室-白天",
+    "displayName": "SC2212_bg_LakeshoreTrust_VIPParlor",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行贵宾室（行长 Harold Moore 私人会客室）——巨大的桃木桌、深色皮椅、一整面落地窗、墙上挂着 Moore 与名流合影\n- 建筑结构（场景连通）：贵宾室通过大厅（2211）旁的一扇门进入；属于 Moore 私人空间；与档案室/Leonard 办公室不直接相连\n- 时间状态：1925 年 11/7 白天，L2 中段——Zack 离开 Leonard 工位，经过虚掩的贵宾室门口，发现壁炉架上的 Leon 嘉奖奖杯\n- 环境痕迹：豪华、压迫感强；贵宾室门虚掩，里面有威士忌气味和 Moore 的人影，但本 Loop 不触发 Moore Talk；壁炉架上的银质奖杯是玩家视线焦点\n- 关键道具锚点（按位）：\n  · 2208 Leon嘉奖奖杯（壁炉架上可点击获得；底座原刻 `L. Russo`，末尾字母 `o` 被刮掉）\n- NPC 在场：Harold Moore（仅作为贵宾室内的人影/环境存在；L2 不配置 Talk、不产出 2082001，Moore 正式对抗留到 L3）\n- 画面情绪：体面空间里的遮掩——玩家不是从 Moore 口中听到旧名，而是从被刮掉的奖杯铭牌上自己看出 Leonard/Russo 的身份裂缝\n\n【美术参考】\n- 时代风格：1920s 芝加哥金融家私人会客室，符合 Moore 人设——贵宾室里有一张手工皮革沙发、一套水晶杯架、和一瓶永远不缺的苏格兰威士忌\n- 色调：深棕 + 深绿（皮椅）+ 落地窗外的冷白色（人物剪影背光）\n- 光源：背光（落地窗）作主——形成\"行长黑脸 Zack 受光\"的权力构图；桌上一盏黄铜台灯作辅助\n- 氛围：雪茄烟味（视觉化为悬浮烟雾）、皮椅光泽、桃木桌反光、Moore 西装翻领的精致细节\n- 跨 Loop 注：本图与 L3（2312）共用底图基础——L2 重点是虚掩门口与 2208 奖杯近景；L3 差异是 Mickey 在场形成法律威胁，Moore 正式进入指证场，指证后出示 2307 房产证 + 2308 旧铁钥匙特写帧"
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2215_bg_SilverMoon_Casino_Day",
@@ -511,64 +495,48 @@
     ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2515_bg_SilverMoon_Casino_Night",
-    "Name": "Silver Moon 赌场-夜晚",
-    "displayName": "SC2515_bg_SilverMoon_Casino_Night",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2215 同址（state 2015 Silver Moon 赌场跨 Loop 复用），需 2 种底图：\n  ① L2 白天（2215）——Tony 对话 + 骰子小玩法；后墙爵士演奏台空置，乐器静静摆着\n  ② L5 黑夜（本 2515）——Vinnie 指证场；外窗黑色 + 室内昏黄爵士灯光；舞台无乐队演奏，Vinnie 独自坐在钢琴凳上，什么都没做；聚光灯不开，只有室内散射暖光落在台上——静场感与背后嘈杂牌桌客流形成反差\n室内主光本就昏暗，差异主要在外窗光线 + 客流密度 + 舞台人物状态\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2215——禁酒令 speakeasy 风格独栋赌场兼酒吧；吧台 + 扑克桌 + 角落卡座 + 后墙小型爵士演奏台（木制矮台高出地面约 20 cm，台上一架旧立式钢琴 + 一个架子鼓，台前一盏定点聚光灯）\n- 建筑结构（场景连通）：同 2215；本 Loop 增加街道侧出口的演出（Vinnie 戴铐上警车的特写）\n- 时间状态：1925 年 11/10 晚上，L5——Vinnie 一轮指证主场\n- 环境痕迹：Tony 在吧台；Vinnie 不在他惯常的角落卡座，而是坐在后墙演奏台的钢琴凳上——背对嘈杂牌桌，面无表情，一副什么都没发生的样子，直到 Zack 走近；指证开始时酒馆其他客人不知不觉散开（环境演出）；舞台聚光灯不开，只有两侧吊灯散射暖光从侧面落上去，Vinnie 轮廓半明半暗\n- 关键道具锚点（按位）：\n  · 无可拾取物证（指证场，证据从玩家背包出示——2501 打火机已在 2501 拾取）\n  · 后墙爵士演奏台（指证场视觉中心，Vinnie 独坐钢琴凳——像是在等什么，也像是在告别什么）\n- NPC 在场：Vinnie Moretti（L5 Expose 对象，坐在后墙演奏台的钢琴凳上；假认罪——语速反常、Zack 还没把话说完他就开口；认罪细节\"透过窗户看到 Frank 在床上睡觉\"像是排练过的不是被逼出来的）；Tony（辨认打火机\"这 V 字 Vinnie 的！每天在这用它点烟\"，2095001 证词）\n- 画面情绪：指证后的诡异——Vinnie 抢话认罪、表演型供述、Tony 在背景眉头紧锁；舞台静场 vs 背后嘈杂牌桌的反差强化\"风暴前的寂静\"；案件似乎告一段落但哪里不对\n\n【美术参考】\n- 时代风格：与 2215 同\n- 色调：与 2215 同 + 指证场紧绷感（吊灯光斑收紧、其他客人模糊化）\n- 光源：与 2215 同；后墙演奏台聚光灯不开，散射暖光从两侧吊灯漫射过来，Vinnie 在钢琴凳上轮廓半明半暗——画面焦点从角落卡座移到演奏台\n- 氛围：与 2215 同 + Vinnie 涣散眼神望向桌上空酒杯的特写（呼应特殊场景需求 §7 Vinnie 上警车前的延续）、Tony 抹布动作停下来的细节\n- 跨 Loop 注：本图复用 2215 底图基础 + L5 时态差异——Vinnie 从角落移到了后墙演奏台的钢琴凳上（位置变化是画面的核心差异）、店内客流更密但整体更安静；并衔接特殊场景需求 §7 Vinnie 上警车 → 电话亭 Foster 双消息的转场",
-    "exposeReuseLoops": [
-      5
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2105_bg_ZackDetectiveOffice",
-    "Name": "Zack 侦探事务所-夜晚",
-    "displayName": "SC2105_bg_ZackDetectiveOffice",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2292_avg_LeonardEnvelope",
+    "Name": "L2 指证后：Leonard 假善意给信封（完整 AVG 图）",
+    "displayName": "SC2292_avg_LeonardEnvelope",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：南区与北区交界处独栋小型私家侦探事务所——一进门是接待 + 工作区合一的开间，桌上一盏台灯、几把硬背椅、墙上贴着旧案剪报和地图\n- 建筑结构（场景连通）：本建筑独栋（步行至 Margaret 鞋坊约 10 分钟，电车至 湖滨信托银行约 20 分钟）；本场景与 Unit2 其他场景通过城市街道连通\n- 时间状态：1925 年 11/6 深夜，L1 末指证 Morrison 完成后自动硬切——Zack 和 Emma 回到事务所\n- 环境痕迹：室内昏暗，只有桌上一盏台灯的光；桌面整齐但有一封刚到达的电报突兀放在正中（叙事道具）；窗外是深夜南区街景\n- 关键道具锚点（按位）：\n  · 无可拾取证据（Mickey 电报为叙事演出道具，不入玩家背包）\n- NPC 在场：无 NPC（纯过场——Zack 和 Emma 对视）\n- 画面情绪：从 L1 末\"母亲失踪，不知去向\"的绝望中被一封电报翻转——困惑、震惊、调查重启的引擎点火\n\n【美术参考】\n- 时代风格：1920s 美国私家侦探事务所，硬汉派经典布景——磨砂玻璃门、文件柜、皮转椅\n- 色调：深棕 + 暖黄台灯光（chiaroscuro 经典反差）\n- 光源：桌面台灯作唯一主光（电报被这盏灯精确照亮）；窗外街灯作环境辅助\n- 氛围：烟、墨、纸——硬汉派侦探办公室的味道；电报纸张高光（白色矩形在黑色木桌面上特别醒目）\n- 跨 Loop 注：本场景仅 L1 出现一次，无跨 Loop 复用",
-    "events": [
-      {
-        "name": "事务所电报：Margaret 还活着",
-        "resName": "evt_l1_office_telegram_01",
-        "loop": 1,
-        "req": "品质：普通\n挂载：Talk/loop1/office_l1_telegram.json，201101006-201101010；延展到 201101013。\n触发位置：L1 Morrison 指证结束后，Zack 和 Emma 回到事务所。\n叙事作用：把 L1 的“认尸/误认尸”立刻翻成“Margaret 还活着”；第一次抛出 Mickey 的名字但不解释，悬念留到 L2 医院；让玩家从火灾现场的失败感里被强行拉向圣心医院。\n调度注意：重点是桌上突然多出的电报，以及 Zack 情绪从疲惫到狂喜的瞬间；Emma 必须同步看到电报。"
-      }
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2206_bg_SacredHeartHospital_MargaretRoom",
-    "Name": "圣心医院 Margaret 病房-白天",
-    "displayName": "SC2206_bg_SacredHeartHospital_MargaretRoom",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】开篇：医院里的新线索\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：圣心医院 Margaret 病房白天状态；这是开篇自动对白画面，不是自由探索场景。\n- 画面人物：Zack、Emma、Mickey、病床上的 Margaret。\n- 画面重点：Margaret 昏迷在病房中，Mickey 带来新的调查方向，Zack/Emma 接上银行与威胁链条。\n- 叙事作用：让 Mickey 回归，并把玩家从火灾现场推向银行线。\n- 排除内容：不要配置 Mickey 可点击 NPC；不要画成可探索病房。"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2406_bg_SacredHeartHospital_MargaretRoom_night",
-    "Name": "圣心医院 Margaret 病房-夜晚",
-    "displayName": "SC2406_bg_SacredHeartHospital_MargaretRoom_night",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2206——圣心医院三楼靠窗单人病房\n- 建筑结构（场景连通）：同 2206\n- 时间状态：1925 年 11/9 下午，L4 开篇——L3 Moore 指证完成后三人在病房集合战术碰头（衔接特殊场景需求 §5）\n- 环境痕迹：阳光斜切进病房（与 L2 早上 vs L4 下午的光线方向差异）；Margaret 仍昏迷生命体征平稳；床头花瓶里换了新鲜花\n- 关键道具锚点（按位）：\n  · 无可拾取证据（本 Loop 此场景为纯过场节点，情报通过对话获得）\n- NPC 在场：Mickey Donnelly（在椅子上坐着翻文件，简短点拨调查路线\"地下室→Lula→Danny\"，建议\"Danny 卖房产证换沉默\"是 L4 R2 最有力的动机线索）；Emma（端两杯咖啡进门——L2 §2 是关切站姿，本场是端咖啡进门动作不同，单独压低声对 Zack 说医院是 Miller 集团资助的伏笔轻描淡写）；Margaret（昏迷不参与对话）\n- 画面情绪：战术碰头的从容感——L3 反转刚过，三人对局势有把握；Emma 那句 Miller 伏笔像是无意中说出的，Unit11+ 才回收\n\n【美术参考】\n- 时代风格：与 2206 同\n- 色调：与 2206 同 + 下午斜光（更暖更黄）\n- 光源：下午斜射自然光（与 L2 早上光线方向相反，从西斜射）\n- 氛围：与 2206 同 + Emma 手中两杯咖啡的热气特写、Mickey 翻文件的指尖动作\n- 跨 Loop 注：本图复用 2206 底图基础 + L4 时态差异——花瓶换新花、下午光线、Emma 端咖啡进门姿态新立绘（特殊场景需求 §5）；与 L6（2606）的差异是 L6 Margaret 苏醒坐起 + Foster 在场",
+    "ArtRequirement": "【完整 AVG 场景图】指证后：Leonard 假善意给信封\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2211 湖滨信托银行大厅；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Leonard、Zack、Emma；Moore 可按对白远处/侧面暗示。\n- 画面重点：Leonard 表面配合，递出信封或继续引导 Zack，态度礼貌但带操控感。\n- 叙事作用：在 Leonard 被突破后继续扩大银行线，不把他做成可点击 NPC。\n- 排除内容：不要混入自由探索阶段的 Leonard 站桩或可点交互。",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2606_bg_SacredHeartHospital_MargaretRoom",
-    "Name": "圣心医院 Margaret 病房-白天",
-    "displayName": "SC2606_bg_SacredHeartHospital_MargaretRoom",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2309_bg_FrankHome_DannyGuestRoom_Day",
+    "Name": "Frank 家次卧 Danny 住处-白天",
+    "displayName": "SC2309_bg_FrankHome_DannyGuestRoom_Day",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：圣心医院三楼靠窗单人病房——一张床、床头柜、窗边座椅、基础监护设备。\n- 建筑结构（场景连通）：这是 Margaret 病房的对话/AVG 场景，不承担探索场景功能。\n- 时间状态：1928 年 11/8 上午，L6 开篇后段——Margaret 苏醒，Foster 在场，Zack/Emma 到达病房。\n- 关键道具锚点：无可拾取证据/道具。2601 法医鉴定报告、2602 房屋抵押证明、2603 医用镊子统一归入“圣心医院”探索场景需求；病房中只作为剧情交付/对白提及，不作为场景内可搜证物。\n- NPC 在场：Margaret Brennan（苏醒坐姿，纱布缠头，身体虚弱但眼神清醒）；Foster（白大褂，严肃说明）；Emma（陪伴）。\n- 画面情绪：母亲苏醒后的克制重逢，以及关键线索即将被交付的安静压力。\n\n【美术参考】\n- 时代风格：1920s 芝加哥私立教会医院单人病房，白色墙面、木地板、黄铜床栏。\n- 色调：白、浅木色、浅蓝监护设备，上午自然光柔和。\n- 光源：窗户自然光为主，床头灯弱补光。\n- 跨 Loop 注：病房对白底图与 2206/2406 同体系，但本场表现 Margaret 苏醒与 Foster 在场；探索证据需求不要挂在本图下。"
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2409 同址（state 2009 Frank 家次卧 Danny 住处跨 Loop 复用），需 2 种底图：\n  ① L3 白天（本 2309）——Danny 应门后 Zack 首次进次卧，Danny 在场\n  ② L4 黄昏（2409）——Danny 蹲厕所，玩家可独自在次卧搜证（2404 + 2405 + 2407）\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Frank 家小公寓单层内部，次卧（Danny 临时栖居）——床铺叠得很随意、桌上空烟盒、窗台搭着旧外套；房间整体显示出失业青年临时借宿的状态\n- 建筑结构（场景连通）：从街角（2207）入 Frank 家正门 → 主屋（2318）→ 次卧（2309）；次卧内部含一扇通往独立厕所小间（2420）的门\n- 时间状态：1925 年 11/8 白天，L3 post_expose Moore 后 Zack 从主屋走进次卧\n- 环境痕迹：床铺乱、桌上空烟盒、窗台旧外套——和 Frank 主屋的整洁相比，更像过路借宿而不是真正的家；Danny 刚回来靠在门框上神情不太欢迎\n- 关键道具锚点（按位）：\n  · 无可拾取物证（L3 Danny 在场，物证 2404/2405/2407 要等 L4 Danny 不在时才能搜）\n- NPC 在场：Danny Kowalski（L3 不是指证对象仅背景信息，靠在门框上语气轻蔑声称 Lula\"在勾引叔叔\"）\n- 画面情绪：年轻人的敌意 + 失业青年的窘迫——Danny 不知道 Zack 已经拿到房产证的信息，这次对话会成为 L4 指证他的动机拼图\n\n【美术参考】\n- 时代风格：1920s 美国南区下层公寓房间——窄床 + 简陋木桌 + 单衣柜 + 没装饰的墙面\n- 色调：浅木色 + 灰蓝（床单）+ 桌上零散物件的杂色——整体显得寒酸\n- 光源：窗外白天斜射光作主光；房间无电灯开启\n- 氛围：烟味 + 旧衣物味（视觉化为光柱中漂浮的尘埃）、Danny 靠门框的姿势（一个肩膀压门框）\n- 跨 Loop 注：本图与 L4（2409）共用底图基础——L4 差异是 Danny 不在（在隔壁厕所 2420），房间可以仔细搜，桌上多了空怀表盒和 Tony 便条等物件细节"
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2621_bg_SacredHeartHospital",
-    "Name": "圣心医院",
-    "displayName": "SC2621_bg_SacredHeartHospital",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2312_bg_LakeshoreTrust_VIPParlor",
+    "Name": "湖滨信托银行贵宾室-白天",
+    "displayName": "SC2312_bg_LakeshoreTrust_VIPParlor",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：圣心医院的独立探索场景，必须与“圣心医院 Margaret 病房”对话/AVG 场景区分。\n- 场景用途：承载医院线索相关证据/道具，不挂 NPC 对话。\n- 证据/道具：2601 法医鉴定报告、2602 房屋抵押证明、2603 医用镊子。\n- 表现重点：医院公共探索区域或取证台面，让玩家理解这些物品来自医院线索链，而不是病房里的可点击搜证物。\n- 命名说明：当前 2601/2602/2603 的道具图仍沿用 SC2606_item_* 资源名；资源命名暂不强制改，只需要归属到圣心医院探索场景。\n\n【美术参考】\n- 时代风格：1920s 私立医院公共空间或档案/取证台面。\n- 色调：白、浅木色、黄铜、浅蓝医疗器械色。\n- 光源：干净冷静的自然光或走廊灯光。\n- 氛围：消毒水、病历夹、医疗纸张、整齐但压抑的医院秩序感。"
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2212——湖滨信托银行贵宾室，巨大的桃木桌、深色皮椅、落地窗\n- 建筑结构（场景连通）：同 2212——通过大厅旁的一扇门进入\n- 时间状态：1925 年 11/8 白天，L3——Mickey 递交传票后搜查令生效，玩家持令进入贵宾室发起 Moore 三轮指证\n- 环境痕迹：Moore 在桃木桌后；这次有 Mickey 在场，\"合法合规\"台词没有 L2 那么好用；R3 被击穿时 Moore 表情第一次出现真实的裂缝\n- 关键道具锚点（按位）：\n  · 无可拾取证据（指证场，证据从玩家背包出示；post_expose 钥匙通过演出给予）\n  · post_expose 演出帧：Moore 出示 2307 Frank 房产证明（可看不可交付）；房产证夹页里一把不知是哪里的旧铁钥匙（2308 Margaret 鞋坊地下室钥匙，Danny 自己说不上是哪里的），从房产证文件夹层里掉出\n- NPC 在场：Harold Moore（L3 Expose 对象，三轮退守过程中表情从傲慢→停顿→裂缝）；Mickey 在旁（不主导指证，偶尔补一句\"这涉及欺诈罪款项\"给 Zack 出证增加分量）\n- 画面情绪：从 L2 的傲慢到 L3 的崩塌——Moore\"失态\"新立绘表情（傲慢褪去 + 一种\"被自己也吓到了\"的疲惫）；Unit2 第一重叙事反转的视觉锚点\n\n【美术参考】\n- 时代风格：与 2212 同\n- 色调：与 2212 同但 Moore 表情转变带来情绪色温变化——从 L2 的\"被光衬暗\"到 L3 R3 后\"光直接打在脸上\"\n- 光源：与 2212 同，但 Moore 的脸在 R3 击穿后正面受光更多（崩塌的视觉化）\n- 氛围：与 2212 同；post_expose 钥匙特写帧（一把铁制粗齿旧钥匙从房产证夹页里掉出）\n- 跨 Loop 注：本图复用 2212 底图基础 + L3 时态差异——Mickey 在场、Moore 表情崩塌、post_expose 钥匙交付特写（特殊场景需求 §4）",
+    "exposeReuseLoops": [
+      3
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2313_bg_LakeshoreTrust_ArchiveRoom",
+    "Name": "湖滨信托银行档案室-白天",
+    "displayName": "SC2313_bg_LakeshoreTrust_ArchiveRoom",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行档案室——银行内部最安静的地方，高大的木制文件柜一排排延伸进去，柜子上的标签用工整手写体注明客户姓名首字母和账户编号；后方有一个标注\"湖滨信托银行私人档案柜\"的柜子\n- 建筑结构（场景连通）：档案室从 Leonard 办公室（2314）进入，不是从大厅直通；档案管理员陪同 Zack 进入（哑角，Mickey 全程在场确保程序合法）\n- 时间状态：1925 年 11/8 白天，L3——Mickey 递交传票后搜查令生效；档案室和 Leonard 办公室同时解锁\n- 环境痕迹：档案室高大幽深的木柜墙；空气有旧纸张的霉味；档案管理员小心翼翼地翻找 Frank 账户\n- 关键道具锚点（按位）：\n  · 2303 LAKESHORE TRUST BANK 贷款协议（含第 5/7/12 条三页合订）（档案柜 Frank Kowalski 账户取出；分析后产出 2701）\n  · 2321 玻璃柜中的 Frank 房产证明（私人档案柜内可见，不可取出——档案管理员说不在搜查令有效范围内；L3 post_expose Moore 主动交付的可获得版本为 2307）\n  · 2321 在 ItemIDs 中展示玻璃柜中的房产证明；2308 实际为 post_expose 通过 Moore 演出附带；2701 由分析 2303 产出\n- NPC 在场：无（档案管理员为哑角演出无对话条目）\n- 画面情绪：合法搜证的冷峻——档案的整齐与背后掠夺性贷款数字（年化 112%）的反差\n\n【美术参考】\n- 时代风格：1920s 美国大型金融机构档案室——深棕色高大文件柜（约 2.5m 高）+ 滑动梯 + 玻璃罩台灯\n- 色调：深棕 + 浅黄（旧纸张），近乎单色\n- 光源：天花板悬挂的吊灯阵列作主光（柔和均匀）；档案桌台灯作局部\n- 氛围：旧纸张霉味（视觉化为光线中漂浮的尘埃）、文件柜门金属把手反光、Frank Kowalski 账户夹手写标签特写\n- 跨 Loop 注：本场景仅 L3 出现，无跨 Loop 复用"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2314_bg_LakeshoreTrust_LeonardOffice",
+    "Name": "湖滨信托银行 Leonard 办公室-白天",
+    "displayName": "SC2314_bg_LakeshoreTrust_LeonardOffice",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行后台开间办公区（**4-6 张员工书桌排列，非个人办公室**）；木地板 + 黄铜台灯 + 文件柜墙；Leonard 的桌在角落（窗边）\n- 建筑结构（场景连通）：从大厅(2311)的后台门进入；本办公区内有**通往档案室(2313)的内门**\n- 时间状态：1925 年 11/8 白天，L3——搜查令生效后玩家可进入；Leonard 此时在大厅工位，本办公区空无一人\n- 环境痕迹：每张书桌摆设各异，但 Leonard 的桌格外整齐（文件叠得方方正正、角落小书架、窗台无装饰——洁癖感）\n- 关键道具锚点（都在 Leonard 桌区域）：\n  · 2302 LAKESHORE TRUST BANK 客户贷款档案（Leonard 书桌文件中取出；签名\"Frank Kowalski\"工整流畅）\n  · 2306 客户账户对账单内部存档版（Leonard 客户文件夹\"管理疏失误归入\"中取出；页眉\"Lakeshore Investment Co. No.4872\" + 正文\"Lakeshore Trust Bank\"——同一份文件两个机构名称）\n  · 2310 Leonard 与 Vinnie 童年合照 1900（Leonard 书桌文件下取出；背面工整蓝色钢笔字\"To Leo, Best Friends Forever - 1900\"）\n  · 2311 伊利诺伊州法律公告（开间公共墙上取下或拍照记录；1879 年 Illinois Usury Act 商业贷款年利率上限 7%）\n- NPC 在场：无\n- 画面情绪：开间办公区的日常感与 Leonard 桌格外整齐的对比——这个人的洁癖比其他员工显眼\n\n【美术参考】\n- 时代风格：1920s 银行后台内勤开间办公室——胡桃木桌（4-6 张）+ 皮椅 + 文件柜墙 + 黄铜台灯\n- 色调：深棕 + 米白（墙面）+ 黄铜，整洁但冷淡\n- 光源：窗外白天斜射光作主光；各桌台灯作辅助；档案柜内嵌灯（拉开门时打亮文件）\n- 氛围：纸张油墨味（空办公区的安静感）、Leonard 桌的童年合照 2310 怀旧色 + Illinois Usury Act 公告字体醒目\n- 跨 Loop 注：本场景仅 L3 出现，无跨 Loop 复用"
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2316_bg_CityHall_Courthouse",
@@ -613,85 +581,62 @@
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2314_bg_LakeshoreTrust_LeonardOffice",
-    "Name": "湖滨信托银行 Leonard 办公室-白天",
-    "displayName": "SC2314_bg_LakeshoreTrust_LeonardOffice",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2318_bg_FrankHome_MainRoom_Day",
+    "Name": "Frank 家主屋开间-白天",
+    "displayName": "SC2318_bg_FrankHome_MainRoom_Day",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行后台开间办公区（**4-6 张员工书桌排列，非个人办公室**）；木地板 + 黄铜台灯 + 文件柜墙；Leonard 的桌在角落（窗边）\n- 建筑结构（场景连通）：从大厅(2311)的后台门进入；本办公区内有**通往档案室(2313)的内门**\n- 时间状态：1925 年 11/8 白天，L3——搜查令生效后玩家可进入；Leonard 此时在大厅工位，本办公区空无一人\n- 环境痕迹：每张书桌摆设各异，但 Leonard 的桌格外整齐（文件叠得方方正正、角落小书架、窗台无装饰——洁癖感）\n- 关键道具锚点（都在 Leonard 桌区域）：\n  · 2302 LAKESHORE TRUST BANK 客户贷款档案（Leonard 书桌文件中取出；签名\"Frank Kowalski\"工整流畅）\n  · 2306 客户账户对账单内部存档版（Leonard 客户文件夹\"管理疏失误归入\"中取出；页眉\"Lakeshore Investment Co. No.4872\" + 正文\"Lakeshore Trust Bank\"——同一份文件两个机构名称）\n  · 2310 Leonard 与 Vinnie 童年合照 1900（Leonard 书桌文件下取出；背面工整蓝色钢笔字\"To Leo, Best Friends Forever - 1900\"）\n  · 2311 伊利诺伊州法律公告（开间公共墙上取下或拍照记录；1879 年 Illinois Usury Act 商业贷款年利率上限 7%）\n- NPC 在场：无\n- 画面情绪：开间办公区的日常感与 Leonard 桌格外整齐的对比——这个人的洁癖比其他员工显眼\n\n【美术参考】\n- 时代风格：1920s 银行后台内勤开间办公室——胡桃木桌（4-6 张）+ 皮椅 + 文件柜墙 + 黄铜台灯\n- 色调：深棕 + 米白（墙面）+ 黄铜，整洁但冷淡\n- 光源：窗外白天斜射光作主光；各桌台灯作辅助；档案柜内嵌灯（拉开门时打亮文件）\n- 氛围：纸张油墨味（空办公区的安静感）、Leonard 桌的童年合照 2310 怀旧色 + Illinois Usury Act 公告字体醒目\n- 跨 Loop 注：本场景仅 L3 出现，无跨 Loop 复用"
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2518 同址（state 2018 Frank 家主屋开间跨 Loop 复用），需 2 种底图：\n  ① L3 白天（本 2318）——Danny 应门，Zack 在厨房台面拾取 2301 牛奶签收单\n  ② L5 黑夜（2518）——开篇 Lula 取床后密码锁铁盒，Zack 答密码 + 律师/侦探分支\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Frank 家主屋——1920 年代南区常见的开间布局，客厅 + Frank 的床 + 开放式厨房一体相连，没有隔墙；一张旧沙发对着窗户，床靠墙摆放，床和墙之间有一道窄缝隙\n- 建筑结构（场景连通）：从街角（2207/2307）入 Frank 家正门 → 主屋开间（2318）；主屋角落有木门通向次卧（2309）；次卧内部连厕所（2420）\n- 时间状态：1925 年 11/8，L3 post_expose Moore 后剧情进入\n- 环境痕迹：陈旧但整洁、台面上的东西摆放有规律、窗台上有一盆半死不活的花；老年独居者的气息（针线篓、折叠整齐的毯子）；厨房台面上放着牛奶订购的签收单（Frank 日常的最后痕迹）；床和墙之间的窄缝隙可以看到，但角度不对暂时看不出有什么藏在里面（L5 才回来发现）\n- 关键道具锚点（按位）：\n  · 2301 牛奶订购签收单 Frank 真迹颤抖歪斜（厨房台面拾取，与贷款档案 2302 直接对比签名笔迹）\n- NPC 在场：无（主屋无 NPC，次卧 Danny 初见见场景 2309）\n- 画面情绪：老年独居者的生活痕迹与他的死亡形成静默对比——这是一个被夺走的、平静的、有秩序的生活\n\n【美术参考】\n- 时代风格：1920s 美国南区下层独居老人住宅，开间布局——旧沙发 + 简陋木床 + 开放式厨房（火炉/水池/简单调料架）\n- 色调：低饱和暖棕（木家具）+ 浅米（墙面）+ 窗外阳光的暖黄\n- 光源：窗外白天斜射光作主光；屋内无电灯开启（节俭老人的生活习惯）\n- 氛围：地板的轻微嘎吱（视觉化为深浅木纹差异）、针线篓里整齐的丝线高光、牛奶签收单纸张特写（颤抖歪斜的签名字迹清晰可读）\n- 跨 Loop 注：本图与 L5（2518）共用底图基础——L5 差异是床和墙之间的窄缝隙被仔细搜查、小铁盒被取出特写（特殊场景需求 §6）"
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2211_bg_LakeshoreTrust_Lobby",
-    "Name": "湖滨信托银行大厅-白天",
-    "displayName": "SC2211_bg_LakeshoreTrust_Lobby",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行（Lakeshore Trust Bank）一楼大厅——气派的大理石地板、雕花天花板、出纳台后面一排黄铜栅栏窗口、客户等待区；Leonard Ross 坐在开放式工位上（位于大厅一侧）\n- 建筑结构（场景连通）：大厅是中型公共建筑入口；含通往贵宾室（2212）的门 + 通往 Leonard 办公室（2314）的门；档案室（2313）从 Leonard 办公室内进入（不是从大厅直通）；街道入口进出\n- 时间状态：1925 年 11/7 白天，L2——Zack 持 Leonard 名片地址（2201）来到银行后自动解锁\n- 环境痕迹：大厅人流稀疏，体面客户排队；Leonard 工位整洁；大厅角落有 Danny 在低声和 Leonard 谈 Frank 房产证（Danny 看到陌生人进来神情警觉很快中断离开——演出性质）\n- 关键道具锚点（按位）：\n  · 无可拾取物证（指证场，证据从玩家背包出示）\n- NPC 在场：Leonard Ross（L2 Expose 对象，西装笔挺、配合回答层层退守，职业性微笑）；Danny Kowalski（演出哑角，与 Leonard 低声谈话后警觉离开——构成碎片 2204 证词来源 2112001）\n- 画面情绪：气派的公共建筑掩盖暴利体系——Leonard 的\"专业冷静\" vs 角落 Danny 异常反应\n\n【美术参考】\n- 时代风格：1920s 芝加哥商业大道中型银行大厅，新古典主义元素（雕花天花板/大理石/黄铜栅栏）\n- 色调：明亮浅米色（大理石+灯光）+ 黄铜栅栏的深金色 + Leonard 工位深木色\n- 光源：天花板吊灯主光（明亮均匀）+ 自然光从高窗斜射作辅助\n- 氛围：脚步在大理石上回声、纸张沙沙、Leonard 钢笔尖反光、客户低声讨论\n- 跨 Loop 注：本图与 L3（2311）+ L6（2611）共用底图基础——L3 差异是 Mickey 在场气氛凝重；L6 差异是 Leonard 换了新眼镜（左眼透明新片+右眼旧片烟熏黄），暗示 L5 案发当晚他在鞋坊弄碎了眼镜",
-    "events": [
-      {
-        "name": "银行大厅偷听 Danny 与 Leonard 谈房产证",
-        "resName": "evt_l2_overhear_danny_leonard_01",
-        "loop": 2,
-        "req": "品质：普通\n挂载：Talk/loop2/leonard_l2_lobby.json，207002001-207002008。\n触发位置：L2 进入湖滨信托银行大厅，正式询问 Leonard 前。\n叙事作用：提前埋下 Danny 与 Leonard 的私下交易关系；“房产证”和“其他重要东西”先只让玩家听见碎片，等 L3 Moore 和 L5 铁盒线回收；Leonard 的职业面具第一次出现裂缝。\n调度注意：这是旁听，不是正式问话；Zack 只是走近时撞上不该听到的内容；Danny 被撞见后撤退，Leonard 立刻切回银行接待口吻。"
-      }
-    ],
-    "exposeReuseLoops": [
-      2
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2313_bg_LakeshoreTrust_ArchiveRoom",
-    "Name": "湖滨信托银行档案室-白天",
-    "displayName": "SC2313_bg_LakeshoreTrust_ArchiveRoom",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行档案室——银行内部最安静的地方，高大的木制文件柜一排排延伸进去，柜子上的标签用工整手写体注明客户姓名首字母和账户编号；后方有一个标注\"湖滨信托银行私人档案柜\"的柜子\n- 建筑结构（场景连通）：档案室从 Leonard 办公室（2314）进入，不是从大厅直通；档案管理员陪同 Zack 进入（哑角，Mickey 全程在场确保程序合法）\n- 时间状态：1925 年 11/8 白天，L3——Mickey 递交传票后搜查令生效；档案室和 Leonard 办公室同时解锁\n- 环境痕迹：档案室高大幽深的木柜墙；空气有旧纸张的霉味；档案管理员小心翼翼地翻找 Frank 账户\n- 关键道具锚点（按位）：\n  · 2303 LAKESHORE TRUST BANK 贷款协议（含第 5/7/12 条三页合订）（档案柜 Frank Kowalski 账户取出；分析后产出 2701）\n  · 2321 玻璃柜中的 Frank 房产证明（私人档案柜内可见，不可取出——档案管理员说不在搜查令有效范围内；L3 post_expose Moore 主动交付的可获得版本为 2307）\n  · 2321 在 ItemIDs 中展示玻璃柜中的房产证明；2308 实际为 post_expose 通过 Moore 演出附带；2701 由分析 2303 产出\n- NPC 在场：无（档案管理员为哑角演出无对话条目）\n- 画面情绪：合法搜证的冷峻——档案的整齐与背后掠夺性贷款数字（年化 112%）的反差\n\n【美术参考】\n- 时代风格：1920s 美国大型金融机构档案室——深棕色高大文件柜（约 2.5m 高）+ 滑动梯 + 玻璃罩台灯\n- 色调：深棕 + 浅黄（旧纸张），近乎单色\n- 光源：天花板悬挂的吊灯阵列作主光（柔和均匀）；档案桌台灯作局部\n- 氛围：旧纸张霉味（视觉化为光线中漂浮的尘埃）、文件柜门金属把手反光、Frank Kowalski 账户夹手写标签特写\n- 跨 Loop 注：本场景仅 L3 出现，无跨 Loop 复用"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2212_bg_LakeshoreTrust_VIPParlor",
-    "Name": "湖滨信托银行贵宾室-白天",
-    "displayName": "SC2212_bg_LakeshoreTrust_VIPParlor",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：湖滨信托银行贵宾室（行长 Harold Moore 私人会客室）——巨大的桃木桌、深色皮椅、一整面落地窗、墙上挂着 Moore 与名流合影\n- 建筑结构（场景连通）：贵宾室通过大厅（2211）旁的一扇门进入；属于 Moore 私人空间；与档案室/Leonard 办公室不直接相连\n- 时间状态：1925 年 11/7 白天，L2 中段——Zack 离开 Leonard 工位，经过虚掩的贵宾室门口，发现壁炉架上的 Leon 嘉奖奖杯\n- 环境痕迹：豪华、压迫感强；贵宾室门虚掩，里面有威士忌气味和 Moore 的人影，但本 Loop 不触发 Moore Talk；壁炉架上的银质奖杯是玩家视线焦点\n- 关键道具锚点（按位）：\n  · 2208 Leon嘉奖奖杯（壁炉架上可点击获得；底座原刻 `L. Russo`，末尾字母 `o` 被刮掉）\n- NPC 在场：Harold Moore（仅作为贵宾室内的人影/环境存在；L2 不配置 Talk、不产出 2082001，Moore 正式对抗留到 L3）\n- 画面情绪：体面空间里的遮掩——玩家不是从 Moore 口中听到旧名，而是从被刮掉的奖杯铭牌上自己看出 Leonard/Russo 的身份裂缝\n\n【美术参考】\n- 时代风格：1920s 芝加哥金融家私人会客室，符合 Moore 人设——贵宾室里有一张手工皮革沙发、一套水晶杯架、和一瓶永远不缺的苏格兰威士忌\n- 色调：深棕 + 深绿（皮椅）+ 落地窗外的冷白色（人物剪影背光）\n- 光源：背光（落地窗）作主——形成\"行长黑脸 Zack 受光\"的权力构图；桌上一盏黄铜台灯作辅助\n- 氛围：雪茄烟味（视觉化为悬浮烟雾）、皮椅光泽、桃木桌反光、Moore 西装翻领的精致细节\n- 跨 Loop 注：本图与 L3（2312）共用底图基础——L2 重点是虚掩门口与 2208 奖杯近景；L3 差异是 Mickey 在场形成法律威胁，Moore 正式进入指证场，指证后出示 2307 房产证 + 2308 旧铁钥匙特写帧"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2312_bg_LakeshoreTrust_VIPParlor",
-    "Name": "湖滨信托银行贵宾室-白天",
-    "displayName": "SC2312_bg_LakeshoreTrust_VIPParlor",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2212——湖滨信托银行贵宾室，巨大的桃木桌、深色皮椅、落地窗\n- 建筑结构（场景连通）：同 2212——通过大厅旁的一扇门进入\n- 时间状态：1925 年 11/8 白天，L3——Mickey 递交传票后搜查令生效，玩家持令进入贵宾室发起 Moore 三轮指证\n- 环境痕迹：Moore 在桃木桌后；这次有 Mickey 在场，\"合法合规\"台词没有 L2 那么好用；R3 被击穿时 Moore 表情第一次出现真实的裂缝\n- 关键道具锚点（按位）：\n  · 无可拾取证据（指证场，证据从玩家背包出示；post_expose 钥匙通过演出给予）\n  · post_expose 演出帧：Moore 出示 2307 Frank 房产证明（可看不可交付）；房产证夹页里一把不知是哪里的旧铁钥匙（2308 Margaret 鞋坊地下室钥匙，Danny 自己说不上是哪里的），从房产证文件夹层里掉出\n- NPC 在场：Harold Moore（L3 Expose 对象，三轮退守过程中表情从傲慢→停顿→裂缝）；Mickey 在旁（不主导指证，偶尔补一句\"这涉及欺诈罪款项\"给 Zack 出证增加分量）\n- 画面情绪：从 L2 的傲慢到 L3 的崩塌——Moore\"失态\"新立绘表情（傲慢褪去 + 一种\"被自己也吓到了\"的疲惫）；Unit2 第一重叙事反转的视觉锚点\n\n【美术参考】\n- 时代风格：与 2212 同\n- 色调：与 2212 同但 Moore 表情转变带来情绪色温变化——从 L2 的\"被光衬暗\"到 L3 R3 后\"光直接打在脸上\"\n- 光源：与 2212 同，但 Moore 的脸在 R3 击穿后正面受光更多（崩塌的视觉化）\n- 氛围：与 2212 同；post_expose 钥匙特写帧（一把铁制粗齿旧钥匙从房产证夹页里掉出）\n- 跨 Loop 注：本图复用 2212 底图基础 + L3 时态差异——Mickey 在场、Moore 表情崩塌、post_expose 钥匙交付特写（特殊场景需求 §4）",
-    "exposeReuseLoops": [
-      3
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2104_bg_PoliceStation_MorrisonOffice_Night",
-    "Name": "警局 Morrison 办公区-夜晚",
-    "displayName": "SC2104_bg_PoliceStation_MorrisonOffice_Night",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2392_avg_MooreOldKey",
+    "Name": "L3 指证后：Moore 交出旧铁钥匙（完整 AVG 图）",
+    "displayName": "SC2392_avg_MooreOldKey",
     "category": "scene_bg",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2604 同址（state 2004 警局 Morrison 办公区跨 Loop 复用），需 2 种底图：\n  ① L1 黑夜（本 2104）——案发当晚 Zack 指证 Morrison 误判死因\n  ② L6 白天（2604）——Morrison 兑现承诺签搜查令过场，气氛缓和\n命名建议：bg 文件名加 _night / _day 后缀区分\n\n**美术资源**：复用 EPI01（已有）\n- sceneName: 警局 Morrison 办公区 / Police Station Morrison's Office\n- backgroundImage: `Art\\Scene\\Backgrounds\\EPI01\\SC018_bg_MorrisonOffice`",
-    "exposeReuseLoops": [
-      1
+    "ArtRequirement": "【完整 AVG 场景图】指证后：Moore 交出旧铁钥匙\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2312 湖滨信托银行贵宾室；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Moore、Zack、Emma。\n- 画面重点：Moore 被逼到交代房产证交易，旧铁钥匙作为剧情焦点进入玩家视线。\n- 叙事作用：把玩家引向 Frank 家和旧钥匙线索。\n- 排除内容：不要写成探索拾取点。",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2406_bg_SacredHeartHospital_MargaretRoom_night",
+    "Name": "圣心医院 Margaret 病房-夜晚",
+    "displayName": "SC2406_bg_SacredHeartHospital_MargaretRoom_night",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2206——圣心医院三楼靠窗单人病房\n- 建筑结构（场景连通）：同 2206\n- 时间状态：1925 年 11/9 下午，L4 开篇——L3 Moore 指证完成后三人在病房集合战术碰头（衔接特殊场景需求 §5）\n- 环境痕迹：阳光斜切进病房（与 L2 早上 vs L4 下午的光线方向差异）；Margaret 仍昏迷生命体征平稳；床头花瓶里换了新鲜花\n- 关键道具锚点（按位）：\n  · 无可拾取证据（本 Loop 此场景为纯过场节点，情报通过对话获得）\n- NPC 在场：Mickey Donnelly（在椅子上坐着翻文件，简短点拨调查路线\"地下室→Lula→Danny\"，建议\"Danny 卖房产证换沉默\"是 L4 R2 最有力的动机线索）；Emma（端两杯咖啡进门——L2 §2 是关切站姿，本场是端咖啡进门动作不同，单独压低声对 Zack 说医院是 Miller 集团资助的伏笔轻描淡写）；Margaret（昏迷不参与对话）\n- 画面情绪：战术碰头的从容感——L3 反转刚过，三人对局势有把握；Emma 那句 Miller 伏笔像是无意中说出的，Unit11+ 才回收\n\n【美术参考】\n- 时代风格：与 2206 同\n- 色调：与 2206 同 + 下午斜光（更暖更黄）\n- 光源：下午斜射自然光（与 L2 早上光线方向相反，从西斜射）\n- 氛围：与 2206 同 + Emma 手中两杯咖啡的热气特写、Mickey 翻文件的指尖动作\n- 跨 Loop 注：本图复用 2206 底图基础 + L4 时态差异——花瓶换新花、下午光线、Emma 端咖啡进门姿态新立绘（特殊场景需求 §5）；与 L6（2606）的差异是 L6 Margaret 苏醒坐起 + Foster 在场",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2407_bg_FrankOHaraStreetCorner_Night",
+    "Name": "Frank 家与O'Hara家街角-夜晚",
+    "displayName": "SC2407_bg_FrankOHaraStreetCorner_Night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2207 同址（state 2007 Frank/O'Hara 街角跨 Loop 复用），需 2 种底图：\n  ① L2 白天（2207）——敲门 + O'Hara 街角对话\n  ② L4 黄昏（本 2407）——约 17:30，Zack 追问 O'Hara 当晚时间线，光线偏暖橙\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2207——Frank 家和 O'Hara 家共用的街角，两户前门相距不过 5 米\n- 建筑结构（场景连通）：同 2207；本 Loop O'Hara 把门开得更宽\n- 时间状态：1925 年 11/9 下午，L4——继承 L2 已访问状态，O'Hara 对 Zack 的信任度因 L2 略有提升\n- 环境痕迹：同一扇门，同一条常青藤；但这次 O'Hara 把门开得更宽一些；O'Hara 一直在浇窗台上的花的动作（她看到了 Frank 和 Danny 当晚出门时间线）；Frank 家门口本 Loop 不作为独立停留节点\n- 关键道具锚点（按位）：\n  · 无可拾取物证（O'Hara 家门口本 Loop 仅作为证词来源，L4 证词通过对话进入证词池）\n- NPC 在场：Mrs. O'Hara（信任度提升，回答更直接——讲到 Frank 7 点出门、前后脚 Danny 也出门、走同一条路时语气放慢；讲到 Lula 至少四五年前就来这条街时是事实陈述无评价）\n- 画面情绪：邻居的客观证词——她不评价 Frank 和 Lula 这段关系对不对，她只是说她亲眼看到的；街道时间线在她口中被锁定\n\n【美术参考】\n- 时代风格：与 2207 同\n- 色调：与 2207 同 + 下午光线（更暖）\n- 光源：下午斜射自然光\n- 氛围：与 2207 同 + O'Hara 浇花动作的水珠高光、她说\"四五年了我看着的\"时低头看自己手的微妙停顿\n- 跨 Loop 注：本图复用 2207 底图基础 + L4 时态差异——门开得更宽、O'Hara 浇花的动作、Frank 家门廊本身视觉变化不大"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2409_bg_FrankHome_DannyGuestRoom_Night",
+    "Name": "Frank 家次卧 Danny 住处-夜晚",
+    "displayName": "SC2409_bg_FrankHome_DannyGuestRoom_Night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2309 同址（state 2009 Frank 家次卧 Danny 住处跨 Loop 复用），需 2 种底图：\n  ① L3 白天（2309）——Danny 在场，首次对话场景\n  ② L4 黄昏（本 2409）——Danny 不在（在隔壁厕所），玩家独自搜证；约 17:30 偏暖光\n命名建议：bg 文件名加 _day / _dusk 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2309——Frank 家次卧 Danny 住处；房间和 L3 初见时差不多但现在可以仔细看；床垫下面有一个布包（不仔细翻不会发现）；桌上空怀表盒盖子开着内衬压着一张便条；角落书架上有 Frank 遗嘱的副本\n- 建筑结构（场景连通）：同 2309——主屋（2318/2518）→ 次卧（2409）；次卧内部含一扇通往独立厕所小间（2420，Danny 此时在厕所拉肚子）\n- 时间状态：1925 年 11/9 下午，L4——继承 L3 post_expose 后已开放状态，Danny 在家但人在隔壁厕所拉肚子（次卧里没人）\n- 环境痕迹：次卧里只有沉默（隔壁厕所传来 Danny 的呻吟、肚子叫和马桶冲水声，短期内他出不来）；房间可以仔细搜\n- 关键道具锚点（按位）：\n  · 2404 空怀表盒（桌上拾取，含 Tony 便条\"100 块，怀表抵押。——Tony\"）\n  · 2405 Margaret 的婚戒（床垫下小布包取出，内圈刻\"P & M 1901\"）\n  · 2407 Frank 遗嘱副本（角落书架取出，末尾多了一条 Frank 亲笔加写的条款）\n- NPC 在场：Danny 不在次卧（在隔壁厕所 2420 拉肚子；指证场见 2420）\n- 画面情绪：搜证的安静专注——三件东西拼出 Danny 的全貌（经济拮据、顺手占便宜、对遗嘱动过心思），他是个机会主义者不是凶手\n\n【美术参考】\n- 时代风格：与 2309 同\n- 色调：与 2309 同 + 下午光线\n- 光源：与 2309 同\n- 氛围：与 2309 同 + 床垫被掀起一角的真实感（布包露出金属戒指的微弱反光）、空怀表盒内衬的丝绒压痕、Tony 便条的字迹特写\n- 跨 Loop 注：本图复用 2309 底图基础 + L4 时态差异——Danny 不在、可仔细搜证、三件物件细节特写",
+    "events": [
+      {
+        "name": "Danny 困厕所，Zack 已从次卧拿到婚戒",
+        "resName": "evt_l4_danny_bathroom_ring_01",
+        "loop": 4,
+        "req": "品质：普通\n挂载：Talk/loop4/danny_l4_bathroom.json，211004001-211004017。\n触发位置：L4 Frank 家，Zack 已在 Danny 房间/次卧搜到 Margaret 的婚戒后，Danny 从厕所里喊话。\n叙事作用：把“Zack 找到关键物证”和“Danny 被困在最狼狈的位置”合成同一个突发瞬间；婚戒证明 Danny 与 Margaret 被袭击现场有关；为后续 Danny 指证第一轮“我没出门”铺证据基础。\n调度注意：核心不是喜剧，而是权力倒置：Danny 声音很凶，但身体被困，Zack 已经握住能击穿他的物证。"
+      }
     ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2604_bg_PoliceStation_MorrisonOffice_Day",
-    "Name": "警局 Morrison 办公区-白天",
-    "displayName": "SC2604_bg_PoliceStation_MorrisonOffice_Day",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2410_bg_Margaret_ShoeShop_Basement",
+    "Name": "Margaret 鞋坊地下室-夜晚",
+    "displayName": "SC2410_bg_Margaret_ShoeShop_Basement",
     "category": "scene_bg",
     "sceneKind": "explore",
-    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2104 同址（state 2004 警局 Morrison 办公区跨 Loop 复用），需 2 种底图：\n  ① L1 黑夜（2104）——指证场，对峙气氛紧张\n  ② L6 白天（本 2604）——Morrison 主动配合签搜查令的缓和过场\n命名建议：bg 文件名加 _night / _day 后缀区分\n\n**美术资源**：复用 EPI01（已有）\n- sceneName: 警局 Morrison 办公区 / Police Station Morrison's Office\n- backgroundImage: `Art\\Scene\\Backgrounds\\EPI01\\SC018_bg_MorrisonOffice`"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2119_bg_ShoeShopExterior_PhoneBooth",
-    "Name": "鞋坊外电话亭-夜晚",
-    "displayName": "SC2119_bg_ShoeShopExterior_PhoneBooth",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：街边公用电话亭——铸铁框架 + 玻璃门 + 内置黑色摇柄电话机；电话亭紧邻鞋坊门外街道\n- 建筑结构（场景连通）：紧邻 Margaret 鞋坊外（2101/2103 街边步行 10 秒可达）；本场景为户外街景节点，不进入任何建筑\n- 时间状态：1925 年 11/6 深夜偏晚，为自由探索场景\n- 环境痕迹：电话亭玻璃有点起雾（夜冷）；外面能看到 Emma 说话的口型但听不清内容；不到两分钟通话；Emma 出来时神情平静带确认的意味\n- 关键道具锚点（按位）：\n  · 无可拾取物证（本场景仅触发 2151001 Foster 转述证词进入证词池）\n- NPC 在场：Emma（电话亭内打电话给 Foster；出来后小声补\"Foster 受 Miller 集团资助\"伏笔轻描淡写）；Morrison（街边远处等候/观察，L1 夜晚同场挂载）\n- 画面情绪：街边孤立感、深夜冷意——一通电话改变 Morrison 谎言的形状\n\n【美术参考】\n- 时代风格：1920s 芝加哥街角公用电话亭，黑色铸铁 + 玻璃 + 内置壁挂式黑色电话机\n- 色调：深蓝夜景 + 电话亭内黄色暖灯（玻璃起雾的反差感）\n- 光源：电话亭内顶灯作主光（透过雾气晕染）；街灯作辅助\n- 氛围：玻璃雾气、Emma 口型隐约、街道湿冷、远处偶尔传来汽车喇叭声\n- 跨 Loop 注：本场景仅 L1 出现一次，无跨 Loop 复用"
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Margaret 鞋坊地下室——通过 2101/2401 店铺区角落楼梯门下行（L1 锁死，L4 用 2308 钥匙解锁）；地下室独立入口在鞋坊后院平时上锁；空间昏暗但有人精心布置过——旧沙发、空花瓶、干枯玫瑰残枝、当年维修时留下的灯泡现在仍亮着\n- 建筑结构（场景连通）：从店铺区（2101/2401/2501/2601）角落木门向下楼梯进入；地下室独立入口在后院（玩家不使用该入口）\n- 时间状态：1925 年 11/9 下午，L4——持 2308 钥匙开门后进入；火灾烧毁了鞋坊前部的店铺区和卧室区但地下室门当时是关着的仅受烟熏，所有物证完好保留\n- 环境痕迹：昏暗但温馨——这里是 Frank 和 Lula 秘密约会五年的场所（Margaret 知道并支持，把这里借给他们）；旧沙发扶手和坐垫磨损均匀至少三到五年规律使用；空花瓶里有干枯玫瑰残枝；工具箱旁有旧收据纸\n- 关键道具锚点（按位）：\n  · 2402 地下室旧沙发（环境叙事，可观察不可拾取）\n  · 2403 求婚戒指（玫瑰花蕊找戒指小玩法产出——点击干枯玫瑰残枝触发交互；戒圈内侧刻\"F & L 1923\"）\n  · 2406 维修收据 MURPHY & SONS（工具箱旁旧收据纸，600$ 全用于地下室——Frank 把积蓄用于布置约会场所佐证真爱）\n  · 2409 枯萎的玫瑰花束（在 SceneConfig ItemIDs 中，环境叙事）\n  · 2410 水杯（在 SceneConfig ItemIDs 中，环境叙事）\n- NPC 在场：无 NPC（地下室无人驻场，Lula 在 2401 店铺区等候）\n- 画面情绪：秘密爱情的温馨与悲伤——Frank 用积蓄认真布置过的约会窝；F & L 1923 戒指是真爱物证；和 Margaret 的支持一起构成 Unit2 内最温柔的角落\n\n【美术参考】\n- 时代风格：1920s 美国南区小店铺地下室改造成的私人空间——粗糙石墙 + 木梁顶 + 旧沙发 + 简单灯具\n- 色调：暖橙黄（仍亮着的灯泡光）+ 深棕（沙发/木梁）+ 一抹枯红（玫瑰）\n- 光源：当年维修时留下的灯泡作主光（昏黄但温暖）；楼梯口外漏进来的微弱白光作辅助\n- 氛围：旧但精心维护的温馨感（与楼上焦黑的废墟形成温柔对比）、玫瑰花蕊深处金属反光的找戒指视觉提示、维修收据的纸张细节\n- 跨 Loop 注：本场景仅 L4 出现，无跨 Loop 复用；底图与楼上店铺区完全不同——楼上是焦黑废墟、楼下是被火避开的温暖空间"
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2418_bg_FrankHome_MainRoom_Dusk",
@@ -703,97 +648,23 @@
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2519_bg_MargaretShoeShopExterior_PhoneBooth",
-    "Name": "Margaret 鞋坊门口电话亭-夜晚",
-    "displayName": "SC2519_bg_MargaretShoeShopExterior_PhoneBooth",
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2420_bg_FrankHome_Bathroom",
+    "Name": "Frank 家厕所-夜晚",
+    "displayName": "SC2420_bg_FrankHome_Bathroom",
     "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：L5 Vinnie 指证后的第二段 post-expose 电话过场；电话亭位于 Margaret 鞋坊门口，是鞋坊外街道的夜间版本。\n- 建筑结构：Margaret 鞋坊门口，公用电话亭靠近街灯；鞋坊门面、橱窗和街道夜色作为背景。\n- 时间状态：1925 年 11/10 夜晚，Vinnie 被警察押上车后，Zack 和 Emma 来到 Margaret 鞋坊门口电话亭联系 Foster。\n- NPC 在场：Zack、Emma；Foster 只以电话中声音出现。\n- 剧情功能：Foster 给出双消息——Margaret 苏醒，以及 Frank 很可能不是火灾烧死而是钝器击打致死，推动 L6 去医院。\n- 表现重点：赌场的误导性结案刚结束，镜头转到鞋坊门口电话亭，冷光与空街把案件重新拉回 Margaret 和 Frank 这条线。\n\n【美术参考】\n- 1920s 街角公用电话亭，玻璃门、铸铁框架、黑色电话机；外部夜色、街灯、鞋坊门面/橱窗/招牌可作为氛围；不需要赌场门面和警车。",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：Frank 家厕所——逼仄的木门半敞，地板潮湿墙上斑驳；侧墙有一扇约 30cm × 40cm 的小窗朝向后巷平时用作通风采光；马桶 + 简单洗手池\n- 建筑结构（场景连通）：厕所小间在次卧（2409）内部（结构上属于次卧的一部分，但作为独立交互节点 sceneId 2420）；与主屋（2518）通过次卧相连；本 Loop 与 Frank 家其他区域连通\n- 时间状态：1925 年 11/9 下午，L4——Danny 在次卧搜证时听到隔壁马桶冲水声；Zack 完成 2409 搜证后走到厕所门口发起指证\n- 环境痕迹：木门半敞地板潮湿；Danny 蹲在马桶上拉肚子狼狈出汗面如土色——一只手按肚子一只手抓裤腰；侧墙小窗朝后巷（Lula 站在小窗外，玩家从厕所内看出去能看到 Lula 的轮廓）\n- 关键道具锚点（按位）：\n  · R3 时 Lula 隔小窗递入\"放弃继承协议\"作为演出道具不进 ItemStaticData\n  · post_expose 阶段 Lula 仅口头提到 Frank 主屋床后藏有密码锁铁盒（钩子，L5 开篇取盒）\n- NPC 在场：Danny Kowalski（L4 Expose 对象，蹲在马桶上无处可逃；R1 谎言锚 2114001\"11月6日当晚我在家\"）；Lula 演出（隔小窗签字，R3 演出 lula_window_signature，post_expose 才在主屋正式说话）\n- 画面情绪：本应严肃的法庭式对峙发生在最不体面的环境里——Danny 的所有狡辩都伴随着马桶冲水的声响和肠胃叫声；R3 收尾 Lula 隔小窗签字时 Danny 仰头看着小窗的反应是 Unit2 最具构图冲击的瞬间之一（最庄严的正名发生在最不堪的场景）\n\n【美术参考】\n- 时代风格：1920s 美国南区下层公寓厕所——简陋瓷砖墙 + 老式抽水马桶 + 木质洗手台 + 后巷小窗\n- 色调：浅蓝灰（瓷砖）+ 木褐（门框）+ Lula 在窗外的逆光剪影\n- 光源：小窗自然光作侧光（强调 Lula 出现时的逆光神圣感）；厕所内一盏白炽灯作主光（突出 Danny 狼狈的细节）\n- 氛围：异味（视觉化为光线浑浊感）、瓷砖反光、Lula 隔窗签字的纸张特写、Danny 仰头时下颌线条的颤抖\n- 跨 Loop 注：本场景仅 L4 出现，无跨 Loop 复用（详见特殊场景需求关于厕所指证 R1/R2 节拍 + 突发事件 #5 Lula 隔窗举证）",
     "events": [
       {
-        "name": "Foster 电话反转：Frank 不是烧死，是钝器致死",
-        "resName": "evt_l5_foster_call_01",
-        "loop": 5,
-        "req": "品质：普通\n挂载：Talk/loop5/vinnie_l5_postexpose_phone.json，215005009-215005015。\n触发位置：L5 Vinnie 指证结束后，Vinnie 已公开自首，Emma 在电话亭向 Foster 报喜。\n叙事作用：直接推翻 L5 的“Vinnie 认罪=案件结束”；把玩家从“火灾/纵火”重新拉回“Frank 在火灾前已经遭受钝器打击”的真正死因；同时推动去医院见醒来的 Margaret，并进入 L6 追查 Leonard。\n调度注意：前半段必须有“案子似乎已经结束”的松弛；Foster 只通过电话出现，重点是 Emma 和 Zack 的反应。"
+        "name": "Lula 隔小窗放弃继承，击穿 Danny 的“她为钱”谎言",
+        "resName": "evt_l4_lula_window_waiver_01",
+        "loop": 4,
+        "req": "品质：普通\n挂载：Expose/Loop4_danny.json，240078-240088。\n触发位置：Danny 指证第三轮，Danny 把矛头转向 Lula，说她为了 Frank 的遗产和房子。\n叙事作用：彻底击穿 Danny 最后一层“Lula 为钱骗 Frank”的反咬；Lula 用放弃继承的事实把自己从钱和房子的争夺中抽离；让 Danny 失去最后的替罪对象。\n调度注意：这是价值观翻面，从“谁会继承钱”转成“Frank 真正在乎什么”；Lula 应平静笃定，越平越难反驳。"
       }
+    ],
+    "exposeReuseLoops": [
+      4
     ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2693_bg_FrankCemetery_Ending",
-    "Name": "Frank 墓地·结局尾声",
-    "displayName": "SC2693_bg_FrankCemetery_Ending",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：L6 Leonard 指证后的 ending segment；不是自由探索墓地，也不承担搜证功能。\n- 场景结构：Frank 墓地清晨薄雾，墓碑与野菊为视觉中心，人物围绕墓碑形成收束构图。\n- 时间状态：1928 年 11/8 上午，Leonard 招供后，案件表层结案但真正的金融势力仍未倒下。\n- NPC 在场：Lula、Zack、Emma；Mickey 后半段从雾中出现并摘帽致敬。\n- 剧情功能：Lula 在 Frank 墓前告别；Mickey 带来 Vinnie 自杀揽罪、Moore 银行保下 Leonard 的坏消息；Zack 接过新案文件。\n- 画面情绪：悼念、无力感与下一案钩子并存，结尾需要保留冷静的讽刺感。\n\n【美术参考】\n- 1920s 城郊墓地，清晨低雾、湿冷草地、灰白墓碑、少量野菊。\n- 色调：冷灰、淡青、雾白，人物可用深色剪影压住情绪。\n- 需要配套人物表现：Lula 墓前站姿；Mickey 摘帽致敬；Zack 接过新案文件的侧身/沉默姿态。",
-    "events": [],
-    "characterActionRequirements": [
-      {
-        "name": "Mickey 墓地尾声递出新案件",
-        "stage": "L6 - Mickey 墓地尾声递出新案件",
-        "character": "Mickey",
-        "characters": [
-          "Mickey"
-        ],
-        "assetName": "evt_l6_mickey_cemetery_file_01",
-        "requirement": "L6 Frank 墓地尾声 · Talk 201106013 / 201106060 · Mickey 从晨雾中走来，在墓碑前致意，最后从公文包递出新案件文件。",
-        "loop": 6
-      }
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_day",
-    "Name": "Margaret 鞋坊店铺区-白天",
-    "displayName": "SC2101_bg_Margaret_ShoeShop_StoreFront_day",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【场景状态】\nMargaret 鞋坊店铺区普通白天状态。用于非火灾、非废墟的白天鞋坊门面/店铺区展示；道具、NPC 与事件通过场景挂载覆盖，不画死在底图里。"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2101_bg_Margaret_ShoeShop_StoreFront_night",
-    "Name": "Margaret 鞋坊店铺区-夜晚",
-    "displayName": "SC2101_bg_Margaret_ShoeShop_StoreFront_night",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【场景状态】\nMargaret 鞋坊店铺区普通夜晚状态。用于火灾前/非火灾即时的夜间鞋坊门面/店铺区展示；与 Fire、Ruins 状态分开。"
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2191_avg_Opening_MorrisonBlocksZack",
-    "Name": "L1 开篇：Morrison 拦住 Zack（完整 AVG 图）",
-    "displayName": "SC2191_avg_Opening_MorrisonBlocksZack",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】开篇：Morrison 拦住 Zack\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2101 火灾后的 Margaret 鞋坊门口；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Morrison、Zack、Emma。\n- 画面重点：Morrison 拦住 Zack，不让他靠近火场和尸体；Zack 急于确认死者身份；Emma 介入，为 Zack 争取进入现场的机会。\n- 额外人物资产：只单独列 Emma 入场/介入（emma_intervene_morrison_001）；Morrison 拦路姿态和 Zack 被拦属于整图基础构图，不另拆人物资产。\n- 叙事作用：建立 Morrison 是第一层阻力，也建立 Emma 与 Zack 的临时同盟。\n- 排除内容：不要画成自由探索搜证图，不强调尸体手指照片、现场地面照片、营业记录、地下室门等可点击证据。",
-    "events": [],
-    "characterActionRequirements": [
-      {
-        "name": "Emma 入场介入",
-        "stage": "L1 开篇后段 · Talk 201001014",
-        "character": "Emma",
-        "characters": [
-          "Emma"
-        ],
-        "assetName": "emma_intervene_morrison_001",
-        "requirement": "Emma 一步挡在 Morrison 面前，拦住他要去抓 Zack 的手。这里单独需要 Emma 的入场/介入人物资产；Morrison 拦路与 Zack 被拦属于整张 AVG 图的基础构图，不单独列人物资产。"
-      }
-    ]
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2292_avg_LeonardEnvelope",
-    "Name": "L2 指证后：Leonard 假善意给信封（完整 AVG 图）",
-    "displayName": "SC2292_avg_LeonardEnvelope",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】指证后：Leonard 假善意给信封\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2211 湖滨信托银行大厅；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Leonard、Zack、Emma；Moore 可按对白远处/侧面暗示。\n- 画面重点：Leonard 表面配合，递出信封或继续引导 Zack，态度礼貌但带操控感。\n- 叙事作用：在 Leonard 被突破后继续扩大银行线，不把他做成可点击 NPC。\n- 排除内容：不要混入自由探索阶段的 Leonard 站桩或可点交互。",
-    "events": []
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2392_avg_MooreOldKey",
-    "Name": "L3 指证后：Moore 交出旧铁钥匙（完整 AVG 图）",
-    "displayName": "SC2392_avg_MooreOldKey",
-    "category": "scene_bg",
-    "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】指证后：Moore 交出旧铁钥匙\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2312 湖滨信托银行贵宾室；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Moore、Zack、Emma。\n- 画面重点：Moore 被逼到交代房产证交易，旧铁钥匙作为剧情焦点进入玩家视线。\n- 叙事作用：把玩家引向 Frank 家和旧钥匙线索。\n- 排除内容：不要写成探索拾取点。",
-    "events": []
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2491_avg_NightHospitalMeeting",
@@ -826,6 +697,62 @@
         "resName": "evt_l4_lula_window_waiver_postexpose_01",
         "loop": 4,
         "req": "L4 指证后厕所完整 AVG · Expose/Loop4_danny.json #240080-#240109 · Lula 在厕所小窗外签下放弃继承声明，Danny 崩溃，Zack 最后要求他整理好自己去主屋继续说。"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2515_bg_SilverMoon_Casino_Night",
+    "Name": "Silver Moon 赌场-夜晚",
+    "displayName": "SC2515_bg_SilverMoon_Casino_Night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2215 同址（state 2015 Silver Moon 赌场跨 Loop 复用），需 2 种底图：\n  ① L2 白天（2215）——Tony 对话 + 骰子小玩法；后墙爵士演奏台空置，乐器静静摆着\n  ② L5 黑夜（本 2515）——Vinnie 指证场；外窗黑色 + 室内昏黄爵士灯光；舞台无乐队演奏，Vinnie 独自坐在钢琴凳上，什么都没做；聚光灯不开，只有室内散射暖光落在台上——静场感与背后嘈杂牌桌客流形成反差\n室内主光本就昏暗，差异主要在外窗光线 + 客流密度 + 舞台人物状态\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2215——禁酒令 speakeasy 风格独栋赌场兼酒吧；吧台 + 扑克桌 + 角落卡座 + 后墙小型爵士演奏台（木制矮台高出地面约 20 cm，台上一架旧立式钢琴 + 一个架子鼓，台前一盏定点聚光灯）\n- 建筑结构（场景连通）：同 2215；本 Loop 增加街道侧出口的演出（Vinnie 戴铐上警车的特写）\n- 时间状态：1925 年 11/10 晚上，L5——Vinnie 一轮指证主场\n- 环境痕迹：Tony 在吧台；Vinnie 不在他惯常的角落卡座，而是坐在后墙演奏台的钢琴凳上——背对嘈杂牌桌，面无表情，一副什么都没发生的样子，直到 Zack 走近；指证开始时酒馆其他客人不知不觉散开（环境演出）；舞台聚光灯不开，只有两侧吊灯散射暖光从侧面落上去，Vinnie 轮廓半明半暗\n- 关键道具锚点（按位）：\n  · 无可拾取物证（指证场，证据从玩家背包出示——2501 打火机已在 2501 拾取）\n  · 后墙爵士演奏台（指证场视觉中心，Vinnie 独坐钢琴凳——像是在等什么，也像是在告别什么）\n- NPC 在场：Vinnie Moretti（L5 Expose 对象，坐在后墙演奏台的钢琴凳上；假认罪——语速反常、Zack 还没把话说完他就开口；认罪细节\"透过窗户看到 Frank 在床上睡觉\"像是排练过的不是被逼出来的）；Tony（辨认打火机\"这 V 字 Vinnie 的！每天在这用它点烟\"，2095001 证词）\n- 画面情绪：指证后的诡异——Vinnie 抢话认罪、表演型供述、Tony 在背景眉头紧锁；舞台静场 vs 背后嘈杂牌桌的反差强化\"风暴前的寂静\"；案件似乎告一段落但哪里不对\n\n【美术参考】\n- 时代风格：与 2215 同\n- 色调：与 2215 同 + 指证场紧绷感（吊灯光斑收紧、其他客人模糊化）\n- 光源：与 2215 同；后墙演奏台聚光灯不开，散射暖光从两侧吊灯漫射过来，Vinnie 在钢琴凳上轮廓半明半暗——画面焦点从角落卡座移到演奏台\n- 氛围：与 2215 同 + Vinnie 涣散眼神望向桌上空酒杯的特写（呼应特殊场景需求 §7 Vinnie 上警车前的延续）、Tony 抹布动作停下来的细节\n- 跨 Loop 注：本图复用 2215 底图基础 + L5 时态差异——Vinnie 从角落移到了后墙演奏台的钢琴凳上（位置变化是画面的核心差异）、店内客流更密但整体更安静；并衔接特殊场景需求 §7 Vinnie 上警车 → 电话亭 Foster 双消息的转场",
+    "exposeReuseLoops": [
+      5
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2518_bg_FrankHome_MainRoom_Night",
+    "Name": "Frank 家主屋开间-夜晚",
+    "displayName": "SC2518_bg_FrankHome_MainRoom_Night",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2318 同址（state 2018 Frank 家主屋开间跨 Loop 复用），需 2 种底图：\n  ① L3 白天（2318）——Danny 应门 + 厨房台面取牛奶签收单\n  ② L5 黑夜（本 2518）——开篇 Lula 取床后密码锁铁盒 + 律师/侦探分支\n命名建议：bg 文件名加 _day / _night 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2318——Frank 家主屋开间，客厅 + 床 + 开放式厨房一体；床和墙之间的窄缝隙（藏着 Frank 的小铁盒）\n- 建筑结构（场景连通）：同 2318\n- 时间状态：1925 年 11/11 下午，L5 开篇——L4 指证 Danny 完成后；持 Lula 在 L4 post_expose 交出的 2408 小铁盒备用钥匙\n- 环境痕迹：主屋下午光线；房间带着老年独居者的气息（针线篓、折叠整齐的毯子、一个没有开的窗帘让阳光只照进来一半）；床和墙之间的窄缝隙现在可以仔细搜（蹲下能看到不显眼的小铁盒）\n- 关键道具锚点（按位）：\n  · 2502 Frank 的举报材料（开小铁盒后剧情自动产出，Mickey 离场前拿走 removed_from_inventory）\n  · 2503 Frank 留给 Lula 的情书（开小铁盒后剧情呈现，由 Lula 持有，isUsable=false）\n- NPC 在场：Mickey Donnelly（西装坐姿，双手捧起举报材料表情沉重\"这些材料我拿回去打官司\"；公文包打开 → 材料放入 → 两个铜扣合上的特写——跨 Unit 视觉回收点）；Lula Washington（第一次捧读 Frank 八年的告白——L4 隔窗举证那种克制气质转为情感主动的表达层；恳求查清 Frank 死亡的真相）\n- 画面情绪：八年积攒的告白终于打开 + 律师/侦探分支选择即将出现——温情与压力的交叉点；画面冻结浮现二选一界面\n\n【美术参考】\n- 时代风格：与 2318 同\n- 色调：与 2318 同 + 下午斜光更暖（情感场基调）\n- 光源：与 2318 同 + 床缝隙处局部点亮（取出小铁盒时的视觉聚焦）\n- 氛围：与 2318 同 + 小铁盒道具特写（铁皮 + 挂锁 + 内含纸张）、Mickey 棕色皮制公文包合扣特写（两个铜扣，跨 Unit 视觉回收点）、Lula 捧读情书 + 恳求的姿态新立绘、律师/侦探分支选择 UI（系统级界面）\n- 跨 Loop 注：本图复用 2318 底图基础 + L5 时态差异——小铁盒开启场景 + Mickey 公文包合扣 + Lula 情感转变新立绘 + 分支 UI（特殊场景需求 §6）",
+    "events": [
+      {
+        "name": "Lula 带来铁盒，打开 Frank 的检举材料与情书",
+        "resName": "evt_l5_lula_strongbox_01",
+        "loop": 5,
+        "req": "品质：【高级多格表现】\n挂载：Talk/loop5/opening_l5_frankhome.json，201005004-201005020。\n触发位置：L5 开篇 Frank 家主屋，Zack 与 Mickey 因检举材料线索断裂而陷入僵局时，Lula 入场。\n叙事作用：让 Frank 通过亲手留下的铁盒重新“出场”；把 L4 的“F & L 1923”转化为玩家可理解的密码线索；促成 L5 的核心分歧：Mickey 要把材料送上法庭，Lula 和 Zack 仍要求查清 Frank 怎么死。\n调度注意：Lula 入场不是提供普通物品，而是把 Frank 的私密托付带入场；事件服务于“法庭正义 vs 死因真相”的分叉。"
+      }
+    ],
+    "characterActionRequirements": [
+      {
+        "name": "Mickey 带材料去法院",
+        "stage": "L5 - Mickey 带材料去法院",
+        "character": "Mickey",
+        "characters": [
+          "Mickey"
+        ],
+        "assetName": "evt_l5_mickey_court_exit_01",
+        "requirement": "L5 Frank 家主屋 · Talk 201005060 · Zack 选择继续当侦探后，Mickey 拎起公文包，单独前往法院处理材料。",
+        "loop": 5
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2519_bg_MargaretShoeShopExterior_PhoneBooth",
+    "Name": "Margaret 鞋坊门口电话亭-夜晚",
+    "displayName": "SC2519_bg_MargaretShoeShopExterior_PhoneBooth",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：L5 Vinnie 指证后的第二段 post-expose 电话过场；电话亭位于 Margaret 鞋坊门口，是鞋坊外街道的夜间版本。\n- 建筑结构：Margaret 鞋坊门口，公用电话亭靠近街灯；鞋坊门面、橱窗和街道夜色作为背景。\n- 时间状态：1925 年 11/10 夜晚，Vinnie 被警察押上车后，Zack 和 Emma 来到 Margaret 鞋坊门口电话亭联系 Foster。\n- NPC 在场：Zack、Emma；Foster 只以电话中声音出现。\n- 剧情功能：Foster 给出双消息——Margaret 苏醒，以及 Frank 很可能不是火灾烧死而是钝器击打致死，推动 L6 去医院。\n- 表现重点：赌场的误导性结案刚结束，镜头转到鞋坊门口电话亭，冷光与空街把案件重新拉回 Margaret 和 Frank 这条线。\n\n【美术参考】\n- 1920s 街角公用电话亭，玻璃门、铸铁框架、黑色电话机；外部夜色、街灯、鞋坊门面/橱窗/招牌可作为氛围；不需要赌场门面和警车。",
+    "events": [
+      {
+        "name": "Foster 电话反转：Frank 不是烧死，是钝器致死",
+        "resName": "evt_l5_foster_call_01",
+        "loop": 5,
+        "req": "品质：普通\n挂载：Talk/loop5/vinnie_l5_postexpose_phone.json，215005009-215005015。\n触发位置：L5 Vinnie 指证结束后，Vinnie 已公开自首，Emma 在电话亭向 Foster 报喜。\n叙事作用：直接推翻 L5 的“Vinnie 认罪=案件结束”；把玩家从“火灾/纵火”重新拉回“Frank 在火灾前已经遭受钝器打击”的真正死因；同时推动去医院见醒来的 Margaret，并进入 L6 追查 Leonard。\n调度注意：前半段必须有“案子似乎已经结束”的松弛；Foster 只通过电话出现，重点是 Emma 和 Zack 的反应。"
       }
     ]
   },
@@ -863,6 +790,57 @@
     ]
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2601_bg_Margaret_ShoeShop_Ruins_Day",
+    "Name": "Margaret 鞋坊店铺区·废墟-白天",
+    "displayName": "SC2601_bg_Margaret_ShoeShop_Ruins_Day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景为 state 2001 跨 Loop 复用之一（参考 2101 / 2401 / 2501）。本帧定位 = L6 白天废墟 + 鞋楦找茬玩法叠加：\n  - 与 2101 / 2401 / 2501 三套夜/黄昏版的关键差异：白天自然光，玩家手持 2602 抵押证明照片叠加到现实废墟上做找不同交互\n  - 灰尘/蛛网层最厚（时间推移最久）\n命名建议：bg 文件名加 _day_ruins 后缀区分\n\n【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：同 2101——单层小店铺店铺区（含鞋匠工作台、铸铁鞋楦、货物箱）\n- 建筑结构（场景连通）：同 2101——临街门 → 店铺区；店铺区角落木门下通地下室（不重访）；外接街道\n- 时间状态：1928 年 11/8 上午，L6——Foster 电话后次日；Zack 持 2602 房屋抵押证明 + 2603 医用镊子从医院回来\n- 环境痕迹：L5 已搜过一轮，但地板缝隙里还有东西——一丁点反光几乎不可能注意到除非蹲下来仔细看；蛛网累积、灰尘累积比 L5 又多一天；废墟的沉默和偶尔路过的邻居脚步声；工作台上的铸铁鞋楦不在原位（与 2602 照片对比异常）；柜面有刮擦痕；货物箱中部凹陷 3cm 正好在成人背部的高度\n- 关键道具锚点（按位）：\n  · 2604 铸铁鞋楦（鞋楦找茬玩法揭示移位位置后直接拾取；足跟和铁杆侧面有暗红色污渍；与法医报告 2601 钝器尺寸（5–7 cm、1.5–3 公斤）吻合）\n  · 2605 眼镜碎片（鞋楦找茬玩法揭示位置后，持 2603 镊子嵌套取出柜面后沿窄缝；左眼原镜片碎片，镜片本身呈烟熏色，并非火灾染黄）\n  · 2606 凹陷的货物箱（鞋楦找茬玩法揭示位置后取证；3cm 凹陷成人背部高度）\n- NPC 在场：无 NPC（只有废墟的沉默）\n- 画面情绪：终局前的最深一次回访——把\"过去\"压在\"现在\"上找不同；这不是简单看图，是真实场景与照片叠加的取证；废墟中的最后线索将所有人指向 Leonard\n\n【美术参考】\n- 时代风格：与 2401 同\n- 色调：与 2401 同的底图 B + L6 多累积两天的灰尘和蛛网层（比 L5 又多一天的风化）\n- 光源：白天自然光\n- 氛围：灰尘比 L5 更厚、蛛网更密、工作台上的铸铁鞋楦不在原位（玩家持 2602 照片叠加场景能看出三处异常）、柜面缝隙中眼镜碎片的微弱反光（必须蹲下才能看到）、货物箱凹陷的 3D 体积感\n- 跨 Loop 注：本图基于 2103 底图 B + L6 时间推移废墟感（最厚的灰尘+蛛网层）；与 L4（2401 Lula 在场）+ L5（2501 打火机搜证）的差异是 L6 含鞋楦找茬玩法、三处异常细节叠加、2602 照片对比交互"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2604_bg_PoliceStation_MorrisonOffice_Day",
+    "Name": "警局 Morrison 办公区-白天",
+    "displayName": "SC2604_bg_PoliceStation_MorrisonOffice_Day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【⚠ 多时段制作注意】\n本场景与 2104 同址（state 2004 警局 Morrison 办公区跨 Loop 复用），需 2 种底图：\n  ① L1 黑夜（2104）——指证场，对峙气氛紧张\n  ② L6 白天（本 2604）——Morrison 主动配合签搜查令的缓和过场\n命名建议：bg 文件名加 _night / _day 后缀区分\n\n**美术资源**：复用 EPI01（已有）\n- sceneName: 警局 Morrison 办公区 / Police Station Morrison's Office\n- backgroundImage: `Art\\Scene\\Backgrounds\\EPI01\\SC018_bg_MorrisonOffice`"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2606_bg_SacredHeartHospital_MargaretRoom",
+    "Name": "圣心医院 Margaret 病房-白天",
+    "displayName": "SC2606_bg_SacredHeartHospital_MargaretRoom",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：圣心医院三楼靠窗单人病房——一张床、床头柜、窗边座椅、基础监护设备。\n- 建筑结构（场景连通）：这是 Margaret 病房的对话/AVG 场景，不承担探索场景功能。\n- 时间状态：1928 年 11/8 上午，L6 开篇后段——Margaret 苏醒，Foster 在场，Zack/Emma 到达病房。\n- 关键道具锚点：无可拾取证据/道具。2601 法医鉴定报告、2602 房屋抵押证明、2603 医用镊子统一归入“圣心医院”探索场景需求；病房中只作为剧情交付/对白提及，不作为场景内可搜证物。\n- NPC 在场：Margaret Brennan（苏醒坐姿，纱布缠头，身体虚弱但眼神清醒）；Foster（白大褂，严肃说明）；Emma（陪伴）。\n- 画面情绪：母亲苏醒后的克制重逢，以及关键线索即将被交付的安静压力。\n\n【美术参考】\n- 时代风格：1920s 芝加哥私立教会医院单人病房，白色墙面、木地板、黄铜床栏。\n- 色调：白、浅木色、浅蓝监护设备，上午自然光柔和。\n- 光源：窗户自然光为主，床头灯弱补光。\n- 跨 Loop 注：病房对白底图与 2206/2406 同体系，但本场表现 Margaret 苏醒与 Foster 在场；探索证据需求不要挂在本图下。"
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2617_bg_LeonardResidence",
+    "Name": "Leonard 住所-白天",
+    "displayName": "SC2617_bg_LeonardResidence",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 建筑结构（内部）：北区湖滨大道 88 号带内部楼梯的复式公寓；中产公寓客厅整洁像样板间——刻板得没有任何真实生活过的痕迹；铸铁栏杆、门童制服笔挺、走廊铺着厚毯子\n- 建筑结构（场景连通）：复式公寓；客厅 → 通往茶水间的过道 / 通往上层卧室的内部楼梯；正门外走廊\n- 时间状态：1928 年 11/8 上午，L6——Zack / Emma 持 2607 搜查令进入；Edith 开门，Leonard 尚在银行，搜证后才回家\n- 环境痕迹：客厅陈设整洁像样板间——刻板得没有任何真实生活过的痕迹；Edith 开门接待 Zack / Emma，端着茶盘站在通往楼梯的过道，简短对话后上楼；Leonard 此时仍在银行，玩家搜得 2609 / 2610 后他才回家\n- 关键道具锚点（按位）：\n  · 2609 旧报纸剪报 1900 南区双家纵火（点击书桌底层查看；1900 年《艾斯弗德论坛报》——南区 Russo + Moretti 两户意大利裔家庭被黑手党协同纵火；两家父母全部遇难；10 岁 Leo 从火里救 6 岁 Vinnie；环境叙事不可拾取）\n  · 2610 眼镜维修单据（点击书桌或外套口袋区域拾取；11/7 案发次日，左眼原烟熏色镜片破失并换成透明新片，右眼保留同副烟熏色旧片，Leonard 签名在单据上）\n- NPC 在场：Edith Ross（自由探索阶段开门接待，端茶盘对话后上楼，2146001/002/003 旁证 Leonard 反常行为）；Leonard Ross（搜证后从银行回家，作为 L6 Expose 对象，四轮指证+诱导招供+R4）\n- 画面情绪：刻板整齐的中产公寓 vs 内里凶手的崩塌——Edith 的冷漠在场是 R4 诱导招供的视觉触发点（失去她比坐牢更让他承认事实）\n\n【美术参考】\n- 时代风格：1920s 芝加哥北区湖滨大道复式中产公寓——米色石灰岩外墙 + 铸铁栏杆 + 内部木楼梯 + 装饰艺术初期室内（深木 + 黄铜 + 厚毯）\n- 色调：米色 + 深木 + 厚毯的暖灰——刻板的\"上层中产\"感\n- 光源：白天自然光从落地窗进入（与南区破败感的明亮对比）；客厅顶灯作辅助\n- 氛围：刻板感（家具摆放对称到不真实）、Edith 端茶盘走进客厅放下后安静站立的演出、墙上无个人照片只有商业风景画、Leonard 新眼镜与 1900 旧报纸剪报的对位（童年合照 2310 在 Leonard 银行办公室 + 1900 双家纵火剪报在 Leonard 家书桌底层——Leonard 角色弧根本伤口）\n- 跨 Loop 注：本场景仅 L6 出现，无跨 Loop 复用",
+    "events": [
+      {
+        "name": "Edith 推着箱子准备离开，压垮 Leonard 的体面防线",
+        "resName": "evt_l6_edith_suitcase_leave_01",
+        "loop": 6,
+        "req": "品质：普通\n挂载：Expose/Loop6_leonard.json，260080-260118。\n触发位置：L6 Leonard 指证过程中，Zack 已经逐步撕开 Leonard 的防线，Edith 从房间里出来，带着箱子准备离开。\n叙事作用：让 Leonard 的崩溃不只来自 Zack 的逻辑指证，也来自 Edith 现场撤离带来的情感打击；Edith 成为压垮 Leonard 体面防线的关键人物；推动 Leonard 从否认转向解释自己如何被逼迫。\n调度注意：重点是“Edith 要走”这个动作本身，不需要高规格连续大场面；Leonard 从克制体面瞬间滑向恐慌失控；Edith 平静、失望、清醒地准备抽身。"
+      }
+    ],
+    "exposeReuseLoops": [
+      6
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2621_bg_SacredHeartHospital",
+    "Name": "圣心医院",
+    "displayName": "SC2621_bg_SacredHeartHospital",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：圣心医院的独立探索场景，必须与“圣心医院 Margaret 病房”对话/AVG 场景区分。\n- 场景用途：承载医院线索相关证据/道具，不挂 NPC 对话。\n- 证据/道具：2601 法医鉴定报告、2602 房屋抵押证明、2603 医用镊子。\n- 表现重点：医院公共探索区域或取证台面，让玩家理解这些物品来自医院线索链，而不是病房里的可点击搜证物。\n- 命名说明：当前 2601/2602/2603 的道具图仍沿用 SC2606_item_* 资源名；资源命名暂不强制改，只需要归属到圣心医院探索场景。\n\n【美术参考】\n- 时代风格：1920s 私立医院公共空间或档案/取证台面。\n- 色调：白、浅木色、黄铜、浅蓝医疗器械色。\n- 光源：干净冷静的自然光或走廊灯光。\n- 氛围：消毒水、病历夹、医疗纸张、整齐但压抑的医院秩序感。"
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2691_avg_FinalHospitalBeforeSearch",
     "Name": "L6 开篇：最终搜查前的病房（完整 AVG 图）",
     "displayName": "SC2691_avg_FinalHospitalBeforeSearch",
@@ -891,6 +869,64 @@
     "category": "scene_bg",
     "sceneKind": "dialogue",
     "ArtRequirement": "【完整 AVG 场景图】指证后：Leonard 招供\n- 资产性质：人物与场景画在同一张图中，不是空底图 + 立绘挂载。\n- 场景参考：参考 2617 Leonard 住所；可以参考地点空间、光线、时代氛围，但需要按本段对白重新构图。\n- 画面人物：Leonard、Zack、Emma；Vinnie 可作为替罪被揭穿后的关系暗示。\n- 画面重点：Leonard 招供，Vinnie 替罪被揭穿，空间要有终局摊牌后的冷硬感。\n- 叙事作用：收束 Leonard 真相，同时为 Edith 推箱离开事件留出口。\n- 排除内容：不要混入旧报纸、维修单据、Edith 可点击 NPC；Edith 推箱离开另走突发事件动态漫画需求。",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI02\\SC2693_bg_FrankCemetery_Ending",
+    "Name": "Frank 墓地·结局尾声",
+    "displayName": "SC2693_bg_FrankCemetery_Ending",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【关键要点（信息表达必不可少）】\n- 场景定位：L6 Leonard 指证后的 ending segment；不是自由探索墓地，也不承担搜证功能。\n- 场景结构：Frank 墓地清晨薄雾，墓碑与野菊为视觉中心，人物围绕墓碑形成收束构图。\n- 时间状态：1928 年 11/8 上午，Leonard 招供后，案件表层结案但真正的金融势力仍未倒下。\n- NPC 在场：Lula、Zack、Emma；Mickey 后半段从雾中出现并摘帽致敬。\n- 剧情功能：Lula 在 Frank 墓前告别；Mickey 带来 Vinnie 自杀揽罪、Moore 银行保下 Leonard 的坏消息；Zack 接过新案文件。\n- 画面情绪：悼念、无力感与下一案钩子并存，结尾需要保留冷静的讽刺感。\n\n【美术参考】\n- 1920s 城郊墓地，清晨低雾、湿冷草地、灰白墓碑、少量野菊。\n- 色调：冷灰、淡青、雾白，人物可用深色剪影压住情绪。\n- 需要配套人物表现：Lula 墓前站姿；Mickey 摘帽致敬；Zack 接过新案文件的侧身/沉默姿态。",
+    "events": [],
+    "characterActionRequirements": [
+      {
+        "name": "Mickey 墓地尾声递出新案件",
+        "stage": "L6 - Mickey 墓地尾声递出新案件",
+        "character": "Mickey",
+        "characters": [
+          "Mickey"
+        ],
+        "assetName": "evt_l6_mickey_cemetery_file_01",
+        "requirement": "L6 Frank 墓地尾声 · Talk 201106013 / 201106060 · Mickey 从晨雾中走来，在墓碑前致意，最后从公文包递出新案件文件。",
+        "loop": 6
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3001_bg_u3_exp_ground_day",
+    "Name": "Thomas 公寓楼下现场（白天探索底图）",
+    "displayName": "SC3001_bg_u3_exp_ground_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Thomas 公寓楼下现场\n- 时间版本：白天版（资源条目）；资源 ID：SC3001_bg_u3_exp_ground_day\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼下街道，尸体着地点\n- 画面重点：清晨的艾斯弗德街道，Thomas 公寓楼下。尸体着地点距楼墙仅 0.8 米，周围已被 Morrison 草草拉上警戒线。地面是潮湿的砖石路面，抬头可见外墙靠近楼顶处有几道新鲜的指甲抓挠痕迹。\n- Loop/状态：首次解锁：L1 开篇；状态：全 Unit 保留可访问\n- 关键道具锚点（复用底图汇总）：3102 外墙照片；3103 11 月 20 日晚报\n- 联通关系：街面一侧的公寓入口铁艺门通往 SC3016 公寓一楼走廊；该门需要作为明确入口画出，而不是普通背景装饰。\n- 美术参考：1920s 芝加哥街道——石板路 + 煤气路灯（白天熄灭）；公寓外墙：红砖 + 涂料剥落；楼体为 6 层住宅 + 楼顶天台（案发坠落点），画面可从街面仰看至楼顶护栏；警戒线：白色棉绳，木桩固定；时间版本：白天版；街面自然光清楚，楼门、一楼走廊入口和楼顶坠落方向关系可读；街景：偶尔有路人远景，无对话交互",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3001_bg_u3_exp_ground_night",
+    "Name": "Thomas 公寓楼下现场（夜晚探索底图）",
+    "displayName": "SC3001_bg_u3_exp_ground_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Thomas 公寓楼下现场\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3001_bg_u3_exp_ground_night\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼下街道，尸体着地点\n- 画面重点：清晨的艾斯弗德街道，Thomas 公寓楼下。尸体着地点距楼墙仅 0.8 米，周围已被 Morrison 草草拉上警戒线。地面是潮湿的砖石路面，抬头可见外墙靠近楼顶处有几道新鲜的指甲抓挠痕迹。\n- Loop/状态：首次解锁：L1 开篇；状态：全 Unit 保留可访问\n- 关键道具锚点（复用底图汇总）：3102 外墙照片；3103 11 月 20 日晚报\n- 联通关系：街面一侧的公寓入口铁艺门通往 SC3016 公寓一楼走廊；该门需要作为明确入口画出，而不是普通背景装饰。\n- 美术参考：1920s 芝加哥街道——石板路 + 煤气路灯（白天熄灭）；公寓外墙：红砖 + 涂料剥落；楼体为 6 层住宅 + 楼顶天台（案发坠落点），画面可从街面仰看至楼顶护栏；警戒线：白色棉绳，木桩固定；时间版本：夜晚版；街灯/门灯/手电为主，楼门与一楼走廊入口保留清楚轮廓；街景：偶尔有路人远景，无对话交互",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3002_bg_u3_exp_rooftop_day",
+    "Name": "Thomas 公寓楼顶（白天探索底图）",
+    "displayName": "SC3002_bg_u3_exp_rooftop_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Thomas 公寓楼顶\n- 时间版本：白天版（资源条目）；资源 ID：SC3002_bg_u3_exp_rooftop_day\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼顶（坠落侧 + 避风角落 + 天台门内侧）\n- 画面重点：老旧公寓楼顶。北侧栏杆（坠落侧）被警戒线封锁。；白天风大，水泥地面，少量碎石；坠落侧是一处折角凹角：转角两侧合成一个小角落，中间是 Emily（Thomas 与 Mary 的女儿，数年前在此坠落）的纪念角；Thomas 生前习惯站折角左侧、Mary 站右侧（空间设定，美术只需保证左右站位关系成立，不需要在底图中解释反转）；东南角有避风处（堆放旧家具的角落）；天台门是一扇老式铁门，本场景表现门内侧；门外侧归属 SC3019 六楼走廊\n- Loop/状态：首次解锁：L1（部分封锁）；多 Loop 解锁层级：；L1：警戒线封锁北侧栏杆区，只能查脚印 + 避风角落；L3：凭 Helen 家拿到的楼顶钥匙偷偷打开封锁，通过搜证热点 / 特写查看破坏栏杆 + 断口缺件 + 折角地面涂油 + Emily 纪念角；L4：从 SC3019 六楼走廊检查门外侧油痕后进入，重点检查天台门内侧把手（油痕检测，扫描层显示）；L5/L6：默认不开放，除非后续流程重新回到天台线\n- 关键道具锚点（复用底图汇总）：3104 女性脚印照片；3105 男性脚印照片；3106 Old Crow 药用威士忌空瓶；3309 被破坏的护栏；3310 护栏断口的缺件（白漆）；3311 地面涂油示意图；3313 Emily 的纪念角；3403 门内侧把手\n- 联通关系：天台门对应 SC3019 六楼走廊；画面中需要保留门内侧，作为楼内到天台的唯一出入口。\n- 美术参考：老旧公寓楼顶——破旧水泥 + 锈迹斑斑铁艺栏杆；警戒线：白色棉绳，木桩固定；天台门：铁艺，双面把手是黄铜；分层说明：默认底图保留老旧天台、警戒线、天台门；栏杆破坏、断口、地面涂油、门内侧把手按对应 Loop 的搜证特写 / 扫描叠层处理；时间版本：白天版；冷自然光，栏杆断口、纪念角和门把手位置清楚可读；风：明显，偶尔吹起警戒线\n- 排除内容：不需要在底图中解释反转；不要求在 L1 通用楼顶底图中可见",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3002_bg_u3_exp_rooftop_night",
+    "Name": "Thomas 公寓楼顶（夜晚探索底图）",
+    "displayName": "SC3002_bg_u3_exp_rooftop_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Thomas 公寓楼顶\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3002_bg_u3_exp_rooftop_night\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼顶（坠落侧 + 避风角落 + 天台门内侧）\n- 画面重点：老旧公寓楼顶。北侧栏杆（坠落侧）被警戒线封锁。；白天风大，水泥地面，少量碎石；坠落侧是一处折角凹角：转角两侧合成一个小角落，中间是 Emily（Thomas 与 Mary 的女儿，数年前在此坠落）的纪念角；Thomas 生前习惯站折角左侧、Mary 站右侧（空间设定，美术只需保证左右站位关系成立，不需要在底图中解释反转）；东南角有避风处（堆放旧家具的角落）；天台门是一扇老式铁门，本场景表现门内侧；门外侧归属 SC3019 六楼走廊\n- Loop/状态：首次解锁：L1（部分封锁）；多 Loop 解锁层级：；L1：警戒线封锁北侧栏杆区，只能查脚印 + 避风角落；L3：凭 Helen 家拿到的楼顶钥匙偷偷打开封锁，通过搜证热点 / 特写查看破坏栏杆 + 断口缺件 + 折角地面涂油 + Emily 纪念角；L4：从 SC3019 六楼走廊检查门外侧油痕后进入，重点检查天台门内侧把手（油痕检测，扫描层显示）；L5/L6：默认不开放，除非后续流程重新回到天台线\n- 关键道具锚点（复用底图汇总）：3104 女性脚印照片；3105 男性脚印照片；3106 Old Crow 药用威士忌空瓶；3309 被破坏的护栏；3310 护栏断口的缺件（白漆）；3311 地面涂油示意图；3313 Emily 的纪念角；3403 门内侧把手\n- 联通关系：天台门对应 SC3019 六楼走廊；画面中需要保留门内侧，作为楼内到天台的唯一出入口。\n- 美术参考：老旧公寓楼顶——破旧水泥 + 锈迹斑斑铁艺栏杆；警戒线：白色棉绳，木桩固定；天台门：铁艺，双面把手是黄铜；分层说明：默认底图保留老旧天台、警戒线、天台门；栏杆破坏、断口、地面涂油、门内侧把手按对应 Loop 的搜证特写 / 扫描叠层处理；时间版本：夜晚版；楼顶以月光/城市反光/手电为主，断裂护栏和油痕位置更醒目；风：明显，偶尔吹起警戒线\n- 排除内容：不需要在底图中解释反转；不要求在 L1 通用楼顶底图中可见",
     "events": []
   },
   {
@@ -930,6 +966,38 @@
     "events": []
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3006_bg_u3_exp_2f_hall_day",
+    "Name": "公寓二楼走廊（白天探索底图）",
+    "displayName": "SC3006_bg_u3_exp_2f_hall_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓二楼走廊\n- 时间版本：白天版（资源条目）；资源 ID：SC3006_bg_u3_exp_2f_hall_day\n- 资产性质：对话场景（空走廊，由 Seamus 撑起）底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓二楼走廊（楼梯口处，二楼唯一住户 Seamus 门前）\n- 画面重点：公寓二楼走廊。二楼只有 Seamus 一户。；廊灯昏暗（单只白炽灯），楼梯口处可见旋转扶手；Seamus 坐在自己公寓门口的一把破椅子上；一边抽烟一边盯着楼梯口；整体感觉：颓废 + 话痨 + 对楼里所有事都有自己的话要说。\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：Seamus 提供身份 / 钥匙数量 / 看到 Helen 上天台等证词；L6：Seamus 用一瓶熟悉的轮椅润滑油润轮椅——19号晚上 Helen 送他（L6 角色 / 道具变体）\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3016 一楼走廊的上行楼梯到达；继续上楼通往 SC3015 公寓三楼走廊。\n- 美术参考：1928 年廉价公寓二楼走廊——黄色花纹墙纸 + 木地板（中段已磨损）；廊灯：白天版以走廊窗光 + 单只白炽吊灯为主，色温偏暖；Seamus 椅子：旧木椅 + 草编坐垫；Seamus 形象（详见人物设定文档）：50 多岁，瘦削，常年烟雾里；L6 变体：Seamus 手里多一瓶轮椅润滑油（小玻璃瓶），旁边出现一辆破旧轮椅；该内容为 L6 角色 / 道具叠加，不进入默认走廊底图",
+    "events": [
+      {
+        "name": "L6 Zack 撞见 Seamus 用 Helen 的润滑油上油",
+        "resName": "u3_l6_seamus_oil_wheelchair_01",
+        "loop": 6,
+        "req": "事件 4 · L6 撞见 Seamus 上油\n\n**品质**：普通\n\n**触发位置**：L6，Zack 经过公寓二楼走廊（SC3006）时，撞见 Seamus 正用一瓶熟悉的轮椅润滑油给轮椅上油（state loop6 new_direction：Seamus 关于润滑油的新陈述）。\n\n**挂载节点**：\n- Zack 撞见 Seamus 用一瓶熟悉的润滑油润轮椅\n- Seamus 话痨式自然透露：19 号晚上 Helen 把她家\"最后一瓶\"润滑油送给了他，说\"以后也不需要了\"\n- 由此推断：Helen 在 19 号布置完陷阱后就把油送出，案发当晚（20 号）家里已没有油源\n\n**叙事作用**：\n- 这是 L6 油痕时间链的关键一环：油在 19 号就送走了 → 案发当晚 Helen 家没有油源 → 门把手上的油不可能是当晚临时蹭的，来源时间往前推到 19 号布陷阱时。\n- 它在 L6 控辩对决里被用来反驳\"油是当晚蹭的\"这条狡辩，是把\"正当防卫\"彻底推翻的支点之一。\n- 信息是\"撞见\"得来的——Seamus 不知道这句话的分量，浑然不觉地说出关键，对标 Unit2 的\"银行大厅偷听\"那种无意中翻面的质感。\n\n**调度注意**：\n- 核心视觉是\"那瓶油\"——它要让玩家/Zack 认出是和案子有关的同一种轮椅润滑油（与天台门把手、Helen 家地面同源）。\n- Seamus 的状态是话痨、自鸣得意、毫无戒心；他说\"以后也不需要了\"这句时不该有任何暗示性表演，越随意，回头越后怕。\n- 重点是 Zack 听到\"19 号晚 / 最后一瓶 / 以后不需要了\"时的心里一沉，而不是 Seamus 的表演。\n\n---"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3006_bg_u3_exp_2f_hall_night",
+    "Name": "公寓二楼走廊（夜晚探索底图）",
+    "displayName": "SC3006_bg_u3_exp_2f_hall_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓二楼走廊\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3006_bg_u3_exp_2f_hall_night\n- 资产性质：对话场景（空走廊，由 Seamus 撑起）底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓二楼走廊（楼梯口处，二楼唯一住户 Seamus 门前）\n- 画面重点：公寓二楼走廊。二楼只有 Seamus 一户。；廊灯昏暗（单只白炽灯），楼梯口处可见旋转扶手；Seamus 坐在自己公寓门口的一把破椅子上；一边抽烟一边盯着楼梯口；整体感觉：颓废 + 话痨 + 对楼里所有事都有自己的话要说。\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：Seamus 提供身份 / 钥匙数量 / 看到 Helen 上天台等证词；L6：Seamus 用一瓶熟悉的轮椅润滑油润轮椅——19号晚上 Helen 送他（L6 角色 / 道具变体）\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3016 一楼走廊的上行楼梯到达；继续上楼通往 SC3015 公寓三楼走廊。\n- 美术参考：1928 年廉价公寓二楼走廊——黄色花纹墙纸 + 木地板（中段已磨损）；廊灯：夜晚版以单只白炽吊灯为主，楼梯口和门缝处更暗；Seamus 椅子：旧木椅 + 草编坐垫；Seamus 形象（详见人物设定文档）：50 多岁，瘦削，常年烟雾里；L6 变体：Seamus 手里多一瓶轮椅润滑油（小玻璃瓶），旁边出现一辆破旧轮椅；该内容为 L6 角色 / 道具叠加，不进入默认走廊底图",
+    "events": [
+      {
+        "name": "L6 Zack 撞见 Seamus 用 Helen 的润滑油上油",
+        "resName": "u3_l6_seamus_oil_wheelchair_01",
+        "loop": 6,
+        "req": "事件 4 · L6 撞见 Seamus 上油\n\n**品质**：普通\n\n**触发位置**：L6，Zack 经过公寓二楼走廊（SC3006）时，撞见 Seamus 正用一瓶熟悉的轮椅润滑油给轮椅上油（state loop6 new_direction：Seamus 关于润滑油的新陈述）。\n\n**挂载节点**：\n- Zack 撞见 Seamus 用一瓶熟悉的润滑油润轮椅\n- Seamus 话痨式自然透露：19 号晚上 Helen 把她家\"最后一瓶\"润滑油送给了他，说\"以后也不需要了\"\n- 由此推断：Helen 在 19 号布置完陷阱后就把油送出，案发当晚（20 号）家里已没有油源\n\n**叙事作用**：\n- 这是 L6 油痕时间链的关键一环：油在 19 号就送走了 → 案发当晚 Helen 家没有油源 → 门把手上的油不可能是当晚临时蹭的，来源时间往前推到 19 号布陷阱时。\n- 它在 L6 控辩对决里被用来反驳\"油是当晚蹭的\"这条狡辩，是把\"正当防卫\"彻底推翻的支点之一。\n- 信息是\"撞见\"得来的——Seamus 不知道这句话的分量，浑然不觉地说出关键，对标 Unit2 的\"银行大厅偷听\"那种无意中翻面的质感。\n\n**调度注意**：\n- 核心视觉是\"那瓶油\"——它要让玩家/Zack 认出是和案子有关的同一种轮椅润滑油（与天台门把手、Helen 家地面同源）。\n- Seamus 的状态是话痨、自鸣得意、毫无戒心；他说\"以后也不需要了\"这句时不该有任何暗示性表演，越随意，回头越后怕。\n- 重点是 Zack 听到\"19 号晚 / 最后一瓶 / 以后不需要了\"时的心里一沉，而不是 Seamus 的表演。\n\n---"
+      }
+    ]
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3007_bg_u3_exp_church_day",
     "Name": "St.Patrick 教堂（白天探索底图）",
     "displayName": "SC3007_bg_u3_exp_church_day",
@@ -937,6 +1005,50 @@
     "sceneKind": "explore",
     "ArtRequirement": "【探索场景底图】St.Patrick 教堂\n- 时间版本：白天版（资源条目）；资源 ID：SC3007_bg_u3_exp_church_day\n- 资产性质：对话场景 + 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：St.Patrick 教堂（艾斯弗德爱尔兰社区的天主教堂）\n- 画面重点：St.Patrick 教堂内部。；前排长椅旁的烛台上立着一根被吹倒的蜡烛——只烧了一小段；旁边的祈祷册翻开停在某一页；神父正在祭坛旁整理蜡烛；后排的彩色玻璃窗投下光斑\n- Loop/状态：首次解锁：L2（Mary 提及\"在教堂祈祷\"触发）\n- 关键道具锚点（复用底图汇总）：3210 倒下的蜡烛残骸；3211 教堂祈祷册\n- 美术参考：1920s 爱尔兰天主教堂——彩色玻璃 + 木质长椅；烛台：黄铜 + 倒落蜡烛 + 蜡液冷凝痕迹；祈祷册：旧版《诗篇》皮面装帧；神父：黑色教士袍 + 白色十字架（神父详细外形参考人物设定文档）；灯光：白天，主要靠彩色玻璃 + 蜡烛；内殿氛围：清冷 + 宁静",
     "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3008_bg_u3_exp_helen_home_day",
+    "Name": "Helen 家（白天探索底图）",
+    "displayName": "SC3008_bg_u3_exp_helen_home_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Helen 家\n- 时间版本：白天版（资源条目）；资源 ID：SC3008_bg_u3_exp_helen_home_day\n- 资产性质：对话场景 + 搜证场景 + 指证场地底图，人物与场景分离，不合成人物。\n- 场景参考：Helen 一个人住的小公寓（公寓三楼内，三楼唯一住户，与 Smith 家同楼）\n- 画面重点：Helen 一个人住的小公寓。；客厅靠墙贴满女性权益相关的剪报（Margaret Sanger / 19 修正案 / 家暴报道）；角落有一张轮椅靠在墙边；地板整体像被擦拭过，肉眼不直接显示油迹；旁边一个猫窝，里面除了猫毛还塞着皱成一团的东西；Helen 嘴上涂着深红色口红，神色有些闪躲\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次进入，搜证 + 指证 Helen（3 轮）；L4：补充指证 Helen（3 轮）+ 新发现 Thomas 小纸条；L5：判决后访问——Helen 心理松动，补充目击 Bernard 主动诱导\n- 关键道具锚点（复用底图汇总）：3301 有白漆的螺丝帽；3302 女性权益剪报墙；3303 Mary 人寿保险单原件；3304 楼顶钥匙；3305 Helen 的猫；3306 Helen 外出鞋；3307 Helen 家的 Old Crow 药用威士忌；3308 Helen 嘴上深红色口红；3404 Helen 家地面油迹；3405 Thomas 的小纸条\n- 联通关系：从 SC3015 公寓三楼走廊的 Helen 家门进入；门外同层走廊与上行天台楼梯距离很近。\n- 美术参考：1920s 单身女性公寓——小客厅 + 卧室 + 角落轮椅；剪报墙：黄铜图钉固定，部分剪报泛黄；Helen 形象（详见人物设定文档）：30 多岁，瘦削，深红口红 + 苍白脸庞；猫：橘色短毛；油痕表现：不画进默认底图；L4 使用油痕检测仪后，以扫描高亮 / 叠层显示轮椅周边地面残留；灯光：白天版柔和自然光 + 室内弱灯，剪报墙和轮椅位置清楚",
+    "events": [
+      {
+        "name": "L3 Emma 点破 Helen 口红与衬衫口红印一致",
+        "resName": "u3_l3_helen_lipstick_reveal_01",
+        "loop": 3,
+        "req": "事件 1 · L3 Emma 点破 Helen 出轨\n\n**品质**：普通\n\n**触发位置**：L3 自由探索阶段，玩家在 Helen 家（SC3008）拾取/查看 Helen 嘴上的深红色口红（3308）后触发（state interrupts: `helen_lover_reveal`）。\n\n**挂载节点**：\n- Helen 嘴上深红色口红（证物 3308）被查看的瞬间\n- Emma 拉住 Zack 点破：\"你看她的口红——衣柜里那件衬衫上的颜色，就是这种。\" → Thomas 的出轨对象是 Helen\n\n**叙事作用**：\n- 把 L2 留下的\"衬衫深红口红印不是 Mary 的\"这条线，在 L3 当场收口——出轨对象浮出水面就是邻居 Helen。\n- 这是由 Emma 主动点破，不是玩家自悟（state 已明确标注）；动态漫画要让\"口红颜色一致\"这个视觉对应一目了然。\n- 触发后才解锁对 Helen 的追问——她这时才回应 R1 谎言（承认是情人、只是诉苦、与他的死无关），所以本事件是 L3 指证链的开关。\n\n**调度注意**：\n- 核心是\"两处深红口红的颜色比对\"在画面上成立：Helen 嘴上的口红 ↔ L2 衬衫上的口红印。\n- Emma 是点破者，Zack 在旁；Helen 本人此刻的神色（被看穿的一瞬）可带微表情，但不要让她当场崩溃——她随即转入\"情人但无瓜葛\"的退守。\n\n---"
+      },
+      {
+        "name": "L4 Mary 登场为 Helen 求情",
+        "resName": "u3_l4_mary_intervenes_helen_01",
+        "loop": 4,
+        "req": "事件 2 · L4 Mary 登场为 Helen 求情\n\n**品质**：【高级多格表现】\n\n**触发位置**：L4 补充指证 Helen 结束——R3\"Thomas 掉前我就走了\"被 Margaret 目击证词（三人影挣扎 + 随即坠落）击破、Helen 一时语塞之后（state loop4 post_expose）。\n\n**挂载节点**：\n- Helen 被点破当晚在场、语塞无法辩解\n- Mary 突然出现，主动作证：是 Helen 为了保护自己、才把 Thomas 推下楼的\n- Helen 顺着 Mary 的话接下去——她当晚听到 Mary 的呼救声，于心不忍，才……\n- Mary 恳请 Zack 按自己过失杀人告知警官，不要连累 Helen\n- Mary 补充：当晚是 Thomas 先约 Mary 说话，争吵之后 Helen 才出现的\n\n**叙事作用**：\n- 这是 Unit3 的\"第二重反转（假结局）\"落点：把案件从\"Helen 杀人\"导向\"正当防卫\"，玩家（和 Zack）此刻会接受这个版本。\n- 主导者是 Mary 不是 Helen——Mary 主动登场、主动揽罪、反过来安排说法，这正是她\"冷静策划者\"身份的伏笔（L6 才揭）。Helen 是被动顺话。\n- 之所以定【高级多格表现】：它是连续的情绪递进——Helen 语塞 → Mary 登场 → Helen 顺话 → Mary 揽罪，需要把\"谁在主导\"这个微妙关系画出来。\n\n**调度注意**：\n- 表演重心给 Mary：她的登场是\"救场\"而非\"求情者的慌乱\"，沉稳、克制、有掌控感——但这层\"掌控感\"要藏在\"为朋友顶罪的悲情\"表象之下，不能让玩家这一刻就看穿她是主谋。\n- Helen 顺话时说得不利索（\"于心不忍，才……\"含糊收尾），暗示这是临时圆的谎。\n- 现场还有 Zack / Emma 在，他们的反应是\"被这个版本说服\"的方向。\n\n---"
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3008_bg_u3_exp_helen_home_night",
+    "Name": "Helen 家（夜晚探索底图）",
+    "displayName": "SC3008_bg_u3_exp_helen_home_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Helen 家\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3008_bg_u3_exp_helen_home_night\n- 资产性质：对话场景 + 搜证场景 + 指证场地底图，人物与场景分离，不合成人物。\n- 场景参考：Helen 一个人住的小公寓（公寓三楼内，三楼唯一住户，与 Smith 家同楼）\n- 画面重点：Helen 一个人住的小公寓。；客厅靠墙贴满女性权益相关的剪报（Margaret Sanger / 19 修正案 / 家暴报道）；角落有一张轮椅靠在墙边；地板整体像被擦拭过，肉眼不直接显示油迹；旁边一个猫窝，里面除了猫毛还塞着皱成一团的东西；Helen 嘴上涂着深红色口红，神色有些闪躲\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次进入，搜证 + 指证 Helen（3 轮）；L4：补充指证 Helen（3 轮）+ 新发现 Thomas 小纸条；L5：判决后访问——Helen 心理松动，补充目击 Bernard 主动诱导\n- 关键道具锚点（复用底图汇总）：3301 有白漆的螺丝帽；3302 女性权益剪报墙；3303 Mary 人寿保险单原件；3304 楼顶钥匙；3305 Helen 的猫；3306 Helen 外出鞋；3307 Helen 家的 Old Crow 药用威士忌；3308 Helen 嘴上深红色口红；3404 Helen 家地面油迹；3405 Thomas 的小纸条\n- 联通关系：从 SC3015 公寓三楼走廊的 Helen 家门进入；门外同层走廊与上行天台楼梯距离很近。\n- 美术参考：1920s 单身女性公寓——小客厅 + 卧室 + 角落轮椅；剪报墙：黄铜图钉固定，部分剪报泛黄；Helen 形象（详见人物设定文档）：30 多岁，瘦削，深红口红 + 苍白脸庞；猫：橘色短毛；油痕表现：不画进默认底图；L4 使用油痕检测仪后，以扫描高亮 / 叠层显示轮椅周边地面残留；灯光：夜晚版以单只台灯/壁灯为主，轮椅油痕检测叠层需要有暗部对比",
+    "events": [
+      {
+        "name": "L3 Emma 点破 Helen 口红与衬衫口红印一致",
+        "resName": "u3_l3_helen_lipstick_reveal_01",
+        "loop": 3,
+        "req": "事件 1 · L3 Emma 点破 Helen 出轨\n\n**品质**：普通\n\n**触发位置**：L3 自由探索阶段，玩家在 Helen 家（SC3008）拾取/查看 Helen 嘴上的深红色口红（3308）后触发（state interrupts: `helen_lover_reveal`）。\n\n**挂载节点**：\n- Helen 嘴上深红色口红（证物 3308）被查看的瞬间\n- Emma 拉住 Zack 点破：\"你看她的口红——衣柜里那件衬衫上的颜色，就是这种。\" → Thomas 的出轨对象是 Helen\n\n**叙事作用**：\n- 把 L2 留下的\"衬衫深红口红印不是 Mary 的\"这条线，在 L3 当场收口——出轨对象浮出水面就是邻居 Helen。\n- 这是由 Emma 主动点破，不是玩家自悟（state 已明确标注）；动态漫画要让\"口红颜色一致\"这个视觉对应一目了然。\n- 触发后才解锁对 Helen 的追问——她这时才回应 R1 谎言（承认是情人、只是诉苦、与他的死无关），所以本事件是 L3 指证链的开关。\n\n**调度注意**：\n- 核心是\"两处深红口红的颜色比对\"在画面上成立：Helen 嘴上的口红 ↔ L2 衬衫上的口红印。\n- Emma 是点破者，Zack 在旁；Helen 本人此刻的神色（被看穿的一瞬）可带微表情，但不要让她当场崩溃——她随即转入\"情人但无瓜葛\"的退守。\n\n---"
+      },
+      {
+        "name": "L4 Mary 登场为 Helen 求情",
+        "resName": "u3_l4_mary_intervenes_helen_01",
+        "loop": 4,
+        "req": "事件 2 · L4 Mary 登场为 Helen 求情\n\n**品质**：【高级多格表现】\n\n**触发位置**：L4 补充指证 Helen 结束——R3\"Thomas 掉前我就走了\"被 Margaret 目击证词（三人影挣扎 + 随即坠落）击破、Helen 一时语塞之后（state loop4 post_expose）。\n\n**挂载节点**：\n- Helen 被点破当晚在场、语塞无法辩解\n- Mary 突然出现，主动作证：是 Helen 为了保护自己、才把 Thomas 推下楼的\n- Helen 顺着 Mary 的话接下去——她当晚听到 Mary 的呼救声，于心不忍，才……\n- Mary 恳请 Zack 按自己过失杀人告知警官，不要连累 Helen\n- Mary 补充：当晚是 Thomas 先约 Mary 说话，争吵之后 Helen 才出现的\n\n**叙事作用**：\n- 这是 Unit3 的\"第二重反转（假结局）\"落点：把案件从\"Helen 杀人\"导向\"正当防卫\"，玩家（和 Zack）此刻会接受这个版本。\n- 主导者是 Mary 不是 Helen——Mary 主动登场、主动揽罪、反过来安排说法，这正是她\"冷静策划者\"身份的伏笔（L6 才揭）。Helen 是被动顺话。\n- 之所以定【高级多格表现】：它是连续的情绪递进——Helen 语塞 → Mary 登场 → Helen 顺话 → Mary 揽罪，需要把\"谁在主导\"这个微妙关系画出来。\n\n**调度注意**：\n- 表演重心给 Mary：她的登场是\"救场\"而非\"求情者的慌乱\"，沉稳、克制、有掌控感——但这层\"掌控感\"要藏在\"为朋友顶罪的悲情\"表象之下，不能让玩家这一刻就看穿她是主谋。\n- Helen 顺话时说得不利索（\"于心不忍，才……\"含糊收尾），暗示这是临时圆的谎。\n- 现场还有 Zack / Emma 在，他们的反应是\"被这个版本说服\"的方向。\n\n---"
+      }
+    ]
   },
   {
     "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3009_bg_u3_exp_bank_lobby_day",
@@ -984,6 +1096,42 @@
     "events": []
   },
   {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3015_bg_u3_exp_3f_hall_day",
+    "Name": "公寓三楼走廊（白天探索底图）",
+    "displayName": "SC3015_bg_u3_exp_3f_hall_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓三楼走廊\n- 时间版本：白天版（资源条目）；资源 ID：SC3015_bg_u3_exp_3f_hall_day\n- 资产性质：过渡场景 / 环境叙事 / 上行楼梯过渡底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓三楼，Helen 家门口与上行楼梯之间（三楼唯一住户）\n- 画面重点：公寓三楼走廊。三楼只有 Helen 一户，走廊狭窄、昏暗，墙纸剥落，楼梯间小窗透进一束灰白的光。；一侧是 Helen 的公寓门：旧木门、门牌、门口小鞋架；另一侧是继续向上的楼梯，通往 SC3019 六楼天台入口走廊；玩家点击楼梯后抵达 SC3019 公寓六楼走廊，再点击天台门进入 SC3002 楼顶，不进入 4–5 楼中间住户层；走廊地面保持普通老旧状态，不放置独立油迹证据\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次来到 Helen 家前，建立 Helen 家与天台入口的物理距离；L4：通往六楼走廊的空间锚点，油痕本体在 SC3019 天台门外侧；L6：回访 Helen 家时保留过渡，氛围更安静\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3006 二楼走廊继续上楼到达；一侧进入 SC3008 Helen 家，另一侧上行楼梯通往 SC3019 公寓六楼走廊，再由天台门进入 SC3002 楼顶。\n- 美术参考：1928 年廉价公寓三楼走廊——窄、旧、墙壁剥落；色调偏冷，白天也不明亮；Helen 家门比其他元素更醒目，但不要出现其他住户门；楼梯向上延伸，可用构图暗示纵深；交互上跳转到 SC3019 六楼天台入口走廊\n- 排除内容：避免 4–6 楼中间层干扰：楼梯点击后跳到 SC3019 六楼天台入口",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3015_bg_u3_exp_3f_hall_night",
+    "Name": "公寓三楼走廊（夜晚探索底图）",
+    "displayName": "SC3015_bg_u3_exp_3f_hall_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓三楼走廊\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3015_bg_u3_exp_3f_hall_night\n- 资产性质：过渡场景 / 环境叙事 / 上行楼梯过渡底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓三楼，Helen 家门口与上行楼梯之间（三楼唯一住户）\n- 画面重点：公寓三楼走廊。三楼只有 Helen 一户，走廊狭窄、昏暗，墙纸剥落，楼梯间小窗透进一束灰白的光。；一侧是 Helen 的公寓门：旧木门、门牌、门口小鞋架；另一侧是继续向上的楼梯，通往 SC3019 六楼天台入口走廊；玩家点击楼梯后抵达 SC3019 公寓六楼走廊，再点击天台门进入 SC3002 楼顶，不进入 4–5 楼中间住户层；走廊地面保持普通老旧状态，不放置独立油迹证据\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次来到 Helen 家前，建立 Helen 家与天台入口的物理距离；L4：通往六楼走廊的空间锚点，油痕本体在 SC3019 天台门外侧；L6：回访 Helen 家时保留过渡，氛围更安静\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3006 二楼走廊继续上楼到达；一侧进入 SC3008 Helen 家，另一侧上行楼梯通往 SC3019 公寓六楼走廊，再由天台门进入 SC3002 楼顶。\n- 美术参考：1928 年廉价公寓三楼走廊——窄、旧、墙壁剥落；色调偏冷，白天也不明亮；Helen 家门比其他元素更醒目，但不要出现其他住户门；楼梯向上延伸，可用构图暗示纵深；交互上跳转到 SC3019 六楼天台入口走廊\n- 排除内容：避免 4–6 楼中间层干扰：楼梯点击后跳到 SC3019 六楼天台入口",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3016_bg_u3_exp_1f_hall_day",
+    "Name": "公寓一楼走廊（白天探索底图）",
+    "displayName": "SC3016_bg_u3_exp_1f_hall_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓一楼走廊\n- 时间版本：白天版（资源条目）；资源 ID：SC3016_bg_u3_exp_1f_hall_day\n- 资产性质：过渡场景 / 环境叙事底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓一楼，Smith 家门前与楼梯口之间（一楼唯一住户）\n- 画面重点：公寓一楼走廊。玩家从楼外门口进入后，首先来到这里。；一楼只有 Smith 家一户，走廊里只出现 Smith 家门；楼梯向上通往二楼 Seamus 走廊，再继续通往三楼 Helen 家；Smith 家门口光线很暗，门板旧而沉，能感到这个家庭长期压抑的气息；走廊不放置独立证据，避免分散 L2 对 Smith 家室内搜证的注意力\n- Loop/状态：首次解锁：L2；多 Loop 解锁层级：；L2：第一次进入 Smith 家前的室内过渡；L3–L6：保留可访问，作为 Smith 家与楼内楼梯的连接点\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：本场景连接 SC3001 楼下入口、SC3003 Smith 家客厅 / SC3012 Smith 家卧室，以及通往 SC3006 二楼走廊的上行楼梯。\n- 美术参考：1928 年廉价公寓一楼走廊——门厅窄、灯光低、墙纸泛黄；Smith 家门偏旧，门锁和门牌可以做近景；楼梯口可见向上延伸的木质扶手，连接二楼 / 三楼动线\n- 排除内容：避免分散 L2 对 Smith 家室内搜证的注意力；避免玩家误以为 Smith 家与 Seamus 同在二楼",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3016_bg_u3_exp_1f_hall_night",
+    "Name": "公寓一楼走廊（夜晚探索底图）",
+    "displayName": "SC3016_bg_u3_exp_1f_hall_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓一楼走廊\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3016_bg_u3_exp_1f_hall_night\n- 资产性质：过渡场景 / 环境叙事底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓一楼，Smith 家门前与楼梯口之间（一楼唯一住户）\n- 画面重点：公寓一楼走廊。玩家从楼外门口进入后，首先来到这里。；一楼只有 Smith 家一户，走廊里只出现 Smith 家门；楼梯向上通往二楼 Seamus 走廊，再继续通往三楼 Helen 家；Smith 家门口光线很暗，门板旧而沉，能感到这个家庭长期压抑的气息；走廊不放置独立证据，避免分散 L2 对 Smith 家室内搜证的注意力\n- Loop/状态：首次解锁：L2；多 Loop 解锁层级：；L2：第一次进入 Smith 家前的室内过渡；L3–L6：保留可访问，作为 Smith 家与楼内楼梯的连接点\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：本场景连接 SC3001 楼下入口、SC3003 Smith 家客厅 / SC3012 Smith 家卧室，以及通往 SC3006 二楼走廊的上行楼梯。\n- 美术参考：1928 年廉价公寓一楼走廊——门厅窄、灯光低、墙纸泛黄；Smith 家门偏旧，门锁和门牌可以做近景；楼梯口可见向上延伸的木质扶手，连接二楼 / 三楼动线\n- 排除内容：避免分散 L2 对 Smith 家室内搜证的注意力；避免玩家误以为 Smith 家与 Seamus 同在二楼",
+    "events": []
+  },
+  {
     "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3017_avg_u3_l1_open_car_news_day",
     "Name": "L1 开篇：Mickey车内早报引案（白天完整 AVG 图）",
     "displayName": "SC3017_avg_u3_l1_open_car_news_day",
@@ -999,6 +1147,51 @@
     "category": "scene_bg",
     "sceneKind": "dialogue",
     "ArtRequirement": "【完整 AVG 场景图】L1 开篇：Zack侦探事务所正式委托\n- 时间版本：白天版（资源条目）；资源 ID：SC3018_avg_u3_l1_open_office_case_day\n- 资产性质：人物和事务所场景合成整图，不开放自由探索\n- 场景参考：Zack 侦探事务所室内，南北交界带三层砖石建筑三楼；SC3018 Zack 侦探事务所\n- 画面人物：Mickey（委托人 / 银行案线索提供者）；Zack（接案侦探）；Emma（调查搭档 / 早报线索提出者）\n- 画面重点：三人抵达 Zack 的侦探事务所。事务所是一个约 20 平方米的小型单间，空间逼仄但有明确的职业痕迹。；门上是磨砂玻璃，写着已经有些掉漆的 \"Brennan Detective Agency\"；室内有办公桌、两三把硬背椅、文件柜、旧案剪报和城市地图；窗外能看见街对面的当铺招牌和有轨电车轨道；Mickey 在这里正式说出 Thomas Smith 的名字，以及 Thomas 与湖滨信托银行债务 / 保单的关联\n- 叙事作用：承接 SC3017 车内早报引子，正式点出死者姓名 Thomas Smith；交代案件与湖滨信托银行、南区援助计划、巨额保单的关系；明确 Mickey 不参与现场调查，只提供方向并等待 Zack / Emma 回报事实\n- 排除内容：避免误读为\"Mickey 办公室委托\"或\"楼下路边聊天\"；无可拾取物品\n- 美术参考：1920s 私家侦探事务所：磨砂玻璃门、旧木桌、地图、剪报、文件柜；空间小而拥挤，桌面有烟灰缸、钢笔、便笺、旧电话；光线以窗外清晨冷光为主，桌面台灯可作为暖色补光；窗外可带到街道元素：当铺招牌、有轨电车轨道、楼下意大利小餐厅",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3019_bg_u3_exp_6f_hall_day",
+    "Name": "公寓六楼走廊（白天探索底图）",
+    "displayName": "SC3019_bg_u3_exp_6f_hall_day",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓六楼走廊\n- 时间版本：白天版（当前网页配置）；背景资源：SC3019_bg_u3_exp_6f_hall_day\n- 资产性质：过渡场景 / 搜证场景 / 天台门外侧底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓六楼，通往天台的门外侧。\n- 画面重点：窄小的六楼天台门前平台；画面尽头是一扇通往天台的老式铁门，门外侧黄铜把手位于玩家这一侧；墙面老旧、灯泡昏暗，不出现可进入的其他房间。\n- Loop/状态：首次解锁：L3；L3 作为从三楼上楼到天台前的过渡；L4 用油痕检测仪检查门外侧把手；L5/L6 默认不开放。\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品；L4 夜晚版承载 3402 门外侧把手油迹\n- 联通关系：从 SC3015 公寓三楼走廊点击上楼到达；点击天台门进入 SC3002 楼顶；返回则下楼回到 SC3015。\n- 美术参考：1928 年廉价公寓顶层走廊 / 楼梯平台，窄、旧、低瓦数灯光；天台门缝可透出冷光；L4 扫描层显示门外侧把手握持处的浅黄褐油痕。\n- 排除内容：不要出现可进入的住户门；不要把门内侧把手或楼顶护栏画成本场景重点。",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3019_bg_u3_exp_6f_hall_night",
+    "Name": "公寓六楼走廊（夜晚探索底图）",
+    "displayName": "SC3019_bg_u3_exp_6f_hall_night",
+    "category": "scene_bg",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】公寓六楼走廊\n- 时间版本：夜晚版（当前网页配置）；背景资源：SC3019_bg_u3_exp_6f_hall_night\n- 资产性质：过渡场景 / 搜证场景 / 天台门外侧底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓六楼，通往天台的门外侧。\n- 画面重点：窄小的六楼天台门前平台；画面尽头是一扇通往天台的老式铁门，门外侧黄铜把手位于玩家这一侧；墙面老旧、灯泡昏暗，不出现可进入的其他房间。\n- Loop/状态：首次解锁：L3；L3 作为从三楼上楼到天台前的过渡；L4 用油痕检测仪检查门外侧把手；L5/L6 默认不开放。\n- 关键道具锚点（复用底图汇总）：3402 门外侧把手油迹\n- 联通关系：从 SC3015 公寓三楼走廊点击上楼到达；点击天台门进入 SC3002 楼顶；返回则下楼回到 SC3015。\n- 美术参考：1928 年廉价公寓顶层走廊 / 楼梯平台，窄、旧、低瓦数灯光；天台门缝可透出冷光；L4 扫描层显示门外侧把手握持处的浅黄褐油痕。\n- 排除内容：不要出现可进入的住户门；不要把门内侧把手或楼顶护栏画成本场景重点。",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3291_avg_u3_l2_open_apartment_day",
+    "Name": "L2 开篇：公寓楼下回到现场（白天完整 AVG 图）",
+    "displayName": "SC3291_avg_u3_l2_open_apartment_day",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】L2 开篇：公寓楼下回到现场\n- 时间版本：白天版（资源条目）；资源 ID：SC3291_avg_u3_l2_open_apartment_day\n- 资产性质：人物和街面 / 公寓楼外景合成整图，不开放自由探索\n- 场景参考：Thomas 公寓楼下街口外；SC3001 Thomas 公寓楼下现场\n- 画面人物：Zack（带着 Morrison 留下的线索回到现场，准备从 Mary 查起）；Emma（走在前面，仰头看天台护栏，对警方掩盖真相产生疑问）\n- 画面重点：Zack 和 Emma 回到 Smith 一家所在的公寓楼。画面可以从街面仰看六层住宅与楼顶天台护栏，保留“普通公寓楼里发生了不该被压下去的命案”的感觉。；Emma 的视线落在楼顶护栏上，核心情绪是：一个普通人明明可能被谋杀，警方却试图掩盖真相。\n- 叙事作用：承接 L1 指证后 Morrison 抛出的“脚印可能属于 Mary”。；把玩家目标转向 Thomas 的妻子 Mary。；让 L2 从“案件是否自杀”进入“Mary 当晚是否在场”的调查层。\n- 时间版本：白天版；街面和公寓入口清楚可读，承接 L2 回到现场。",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3391_avg_u3_l3_open_hall_search_day",
+    "Name": "L3 开篇：公寓楼内扩大搜查（白天完整 AVG 图）",
+    "displayName": "SC3391_avg_u3_l3_open_hall_search_day",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】L3 开篇：公寓楼内扩大搜查\n- 时间版本：白天版（资源条目）；资源 ID：SC3391_avg_u3_l3_open_hall_search_day\n- 资产性质：人物和楼道场景合成整图，不开放自由探索\n- 场景参考：Thomas 公寓楼内；SC3015 公寓三楼走廊 / 公寓楼内动线\n- 画面人物：Zack（正在消化 Mary 的“Thomas 要推我”退守版本）；Emma（看着住户名牌，提出出轨对象可能知道内情）\n- 画面重点：Zack 和 Emma 走回公寓楼内。画面重点是楼道、住户名牌、向上延伸的楼梯和压抑的住宅氛围。；Emma 看着楼道里的住户名牌，提出关键问题：Thomas 为什么要推自己的妻子？他的出轨对象会不会知道些什么？\n- 叙事作用：承接 L2 Mary 的天台版本。；把调查范围从 Mary 扩展到公寓楼其他住户。；引出 L3 的核心目标：找到 Thomas 的出轨对象，并追查 Thomas 的真实计划。\n- 时间版本：白天版；楼道阴暗但住户名牌、楼梯和 Helen 家方向清楚可读。",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3491_avg_u3_l4_open_office_call_night",
+    "Name": "L4 开篇：Zack侦探事务所Foster来电（夜晚完整 AVG 图）",
+    "displayName": "SC3491_avg_u3_l4_open_office_call_night",
+    "category": "scene_bg",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】L4 开篇：Zack侦探事务所Foster来电\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3491_avg_u3_l4_open_office_call_night\n- 资产性质：人物和场景合成整图，Foster 通过电话出现，不作为现场实体人物\n- 场景参考：Zack 侦探事务所；SC3018 Zack 侦探事务所\n- 画面人物：Zack（回到事务所后复盘 Helen 的退守版本，正在寻找破口）；Emma（与 Zack 一起复盘 Helen 的退守版本）；Foster（电话中出现，不画实体立绘）\n- 画面重点：L3 指证后，Helen 给出“独自一人布陷阱、当晚没去过楼顶”的退守版本。Zack 和 Emma 回到 Zack 侦探事务所复盘，桌上电话响起，Foster 通知油痕检测仪到了；画面重点是“突破口突然出现”：电话、案卷、事务所桌灯，Zack 与 Emma 的注意力从 Helen 转向法医办公室。\n- 叙事作用：承接 L3 Helen 的退守谎言。；引出 L4 新能力：油痕检测仪。；把 L4 调查目标导向法医办公室、天台门把手、Helen 家地面油迹。\n- 排除内容：不需要现场实体人物组合图。\n- 时间版本：夜晚版；以事务所台灯、桌上电话与窗外街灯为主，承接 Foster 来电的突发感。",
     "events": []
   },
   {
@@ -1131,196 +1324,375 @@
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3001_bg_u3_exp_ground_day",
-    "Name": "Thomas 公寓楼下现场（白天探索底图）",
-    "displayName": "SC3001_bg_u3_exp_ground_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_court_archive_day",
+    "Name": "u4_exp_court_archive_day",
+    "displayName": "法院档案室",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】Thomas 公寓楼下现场\n- 时间版本：白天版（资源条目）；资源 ID：SC3001_bg_u3_exp_ground_day\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼下街道，尸体着地点\n- 画面重点：清晨的艾斯弗德街道，Thomas 公寓楼下。尸体着地点距楼墙仅 0.8 米，周围已被 Morrison 草草拉上警戒线。地面是潮湿的砖石路面，抬头可见外墙靠近楼顶处有几道新鲜的指甲抓挠痕迹。\n- Loop/状态：首次解锁：L1 开篇；状态：全 Unit 保留可访问\n- 关键道具锚点（复用底图汇总）：3102 外墙照片；3103 11 月 20 日晚报\n- 联通关系：街面一侧的公寓入口铁艺门通往 SC3016 公寓一楼走廊；该门需要作为明确入口画出，而不是普通背景装饰。\n- 美术参考：1920s 芝加哥街道——石板路 + 煤气路灯（白天熄灭）；公寓外墙：红砖 + 涂料剥落；楼体为 6 层住宅 + 楼顶天台（案发坠落点），画面可从街面仰看至楼顶护栏；警戒线：白色棉绳，木桩固定；时间版本：白天版；街面自然光清楚，楼门、一楼走廊入口和楼顶坠落方向关系可读；街景：偶尔有路人远景，无对话交互",
+    "ArtRequirement": "【探索场景底图】法院档案室\n- 时间版本：白天版；背景资源：u4_exp_court_archive_day\n- 资产性质：探索 + 档案整理场景底图，人物与场景分离，不合成人物\n- 场景参考：高柜档案区与中央调阅台。柜架按案号分区，文件不得散放成“线索展台”。\n- 画面重点：高柜档案区与中央调阅台。柜架按案号分区，文件不得散放成“线索展台”。；管理员服务台 / 资助卷宗柜：对话调出 4114「圣心医院资助档案卷宗」；中央调阅台账架：取得 4115「Harrison两个月调阅索引」；原始形态只显示档号、次数和调查方向；档案核对台：调用玩法附属页 4122、4123 与正式输入 4115；完成三轮核对后生成 4111「Harrison公开日程与夜间出入对照」；Harrison 专用调阅格：取得 4116「Mary / Helen案改判往来信」；旧案号目录抽屉：对 4115 交叉整理，派生 4701「调阅索引中的本人赔偿裁定」\n- Loop/状态：L1；档案管理员只在服务台活动，负责登记、档号和移交程序。；白天仍有书记处工作声；Harrison 的夜间行动只通过记录呈现，不把档案室画成夜景。\n- 关键道具锚点（复用底图汇总）：4114 圣心医院资助档案卷宗；4115 Harrison两个月调阅索引；4111 Harrison公开日程与夜间出入对照；4701 调阅索引中的本人赔偿裁定；4116 Mary / Helen案改判往来信\n- 交互与分层说明：从管理员处调出 4114，并在中央台账架取得 4115。；玩家在档案核对台完成三轮时间窗与调阅流水匹配后生成 4111；4122、4123 只在玩法界面显示，不进入背包。；玩家单独查看 4115 时只能读到档号、次数和调查方向，不直接显示旧裁定签署人。；使用旧案号目录交叉整理 4115 后派生 4701；Harrison 专用调阅格承担 4116。\n- 美术参考：落地高柜、滑梯或窄梯、案号标签、签入簿、厚重调阅台账。；调阅索引与旧案号目录使用桌面特写；普通底图不提前显示 4701 的本人裁定结论。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3001_bg_u3_exp_ground_night",
-    "Name": "Thomas 公寓楼下现场（夜晚探索底图）",
-    "displayName": "SC3001_bg_u3_exp_ground_night",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_court_consult_room_day",
+    "Name": "u4_exp_court_consult_room_day",
+    "displayName": "法院会客室",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】Thomas 公寓楼下现场\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3001_bg_u3_exp_ground_night\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼下街道，尸体着地点\n- 画面重点：清晨的艾斯弗德街道，Thomas 公寓楼下。尸体着地点距楼墙仅 0.8 米，周围已被 Morrison 草草拉上警戒线。地面是潮湿的砖石路面，抬头可见外墙靠近楼顶处有几道新鲜的指甲抓挠痕迹。\n- Loop/状态：首次解锁：L1 开篇；状态：全 Unit 保留可访问\n- 关键道具锚点（复用底图汇总）：3102 外墙照片；3103 11 月 20 日晚报\n- 联通关系：街面一侧的公寓入口铁艺门通往 SC3016 公寓一楼走廊；该门需要作为明确入口画出，而不是普通背景装饰。\n- 美术参考：1920s 芝加哥街道——石板路 + 煤气路灯（白天熄灭）；公寓外墙：红砖 + 涂料剥落；楼体为 6 层住宅 + 楼顶天台（案发坠落点），画面可从街面仰看至楼顶护栏；警戒线：白色棉绳，木桩固定；时间版本：夜晚版；街灯/门灯/手电为主，楼门与一楼走廊入口保留清楚轮廓；街景：偶尔有路人远景，无对话交互",
+    "ArtRequirement": "【探索场景底图】法院会客室\n- 时间版本：白天版；背景资源：u4_exp_court_consult_room_day\n- 资产性质：卷宗调查场景底图，人物与场景分离，不合成人物\n- 场景参考：临时用于律师阅卷的小会客室。核心不是豪华陈设，而是可逐页核对的医院项目卷宗。\n- 画面重点：临时用于律师阅卷的小会客室。核心不是豪华陈设，而是可逐页核对的医院项目卷宗。；中央阅卷桌：取得 4214「圣心医院采购与发放记录」；装订卷目录页：显示第十九页题名；第十八至二十页缺口：Mickey 交付 4215「缺失的第十九页（副本）」；律师公文包：Mickey 的程序性取卷载体，不作为证据\n- Loop/状态：L2；Mickey 在阅卷桌侧说明材料能证明什么、不能证明什么。；时间为上午 / 中午分查阶段，必须先于 SC4014 下午指证；与预审走廊使用不同底图。\n- 关键道具锚点（复用底图汇总）：4214 圣心医院采购与发放记录；4215 缺失的第十九页（副本）\n- 美术参考：厚卷宗、棉线装订、目录页、连续页码和明显缺页。；桌面只放本案卷宗，避免做成材料堆砌展览。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3002_bg_u3_exp_rooftop_day",
-    "Name": "Thomas 公寓楼顶（白天探索底图）",
-    "displayName": "SC3002_bg_u3_exp_rooftop_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_court_dispatch_night",
+    "Name": "u4_exp_court_dispatch_night",
+    "displayName": "法院外圈 / 调度台",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】Thomas 公寓楼顶\n- 时间版本：白天版（资源条目）；资源 ID：SC3002_bg_u3_exp_rooftop_day\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼顶（坠落侧 + 避风角落 + 天台门内侧）\n- 画面重点：老旧公寓楼顶。北侧栏杆（坠落侧）被警戒线封锁。；白天风大，水泥地面，少量碎石；坠落侧是一处折角凹角：转角两侧合成一个小角落，中间是 Emily（Thomas 与 Mary 的女儿，数年前在此坠落）的纪念角；Thomas 生前习惯站折角左侧、Mary 站右侧（空间设定，美术只需保证左右站位关系成立，不需要在底图中解释反转）；东南角有避风处（堆放旧家具的角落）；天台门是一扇老式铁门，本场景表现门内侧；门外侧归属 SC3019 六楼走廊\n- Loop/状态：首次解锁：L1（部分封锁）；多 Loop 解锁层级：；L1：警戒线封锁北侧栏杆区，只能查脚印 + 避风角落；L3：凭 Helen 家拿到的楼顶钥匙偷偷打开封锁，通过搜证热点 / 特写查看破坏栏杆 + 断口缺件 + 折角地面涂油 + Emily 纪念角；L4：从 SC3019 六楼走廊检查门外侧油痕后进入，重点检查天台门内侧把手（油痕检测，扫描层显示）；L5/L6：默认不开放，除非后续流程重新回到天台线\n- 关键道具锚点（复用底图汇总）：3104 女性脚印照片；3105 男性脚印照片；3106 Old Crow 药用威士忌空瓶；3309 被破坏的护栏；3310 护栏断口的缺件（白漆）；3311 地面涂油示意图；3313 Emily 的纪念角；3403 门内侧把手\n- 联通关系：天台门对应 SC3019 六楼走廊；画面中需要保留门内侧，作为楼内到天台的唯一出入口。\n- 美术参考：老旧公寓楼顶——破旧水泥 + 锈迹斑斑铁艺栏杆；警戒线：白色棉绳，木桩固定；天台门：铁艺，双面把手是黄铜；分层说明：默认底图保留老旧天台、警戒线、天台门；栏杆破坏、断口、地面涂油、门内侧把手按对应 Loop 的搜证特写 / 扫描叠层处理；时间版本：白天版；冷自然光，栏杆断口、纪念角和门把手位置清楚可读；风：明显，偶尔吹起警戒线\n- 排除内容：不需要在底图中解释反转；不要求在 L1 通用楼顶底图中可见",
+    "ArtRequirement": "【探索场景底图】法院外圈 / 调度台\n- 时间版本：夜晚版；背景资源：u4_exp_court_dispatch_night\n- 资产性质：探索场景底图，人物与场景分离，不合成人物\n- 场景参考：法院东门外的夜间交接点。小型调度台、卷宗推车和报纸架构成调查区。\n- 画面重点：法院东门外的夜间交接点。小型调度台、卷宗推车和报纸架构成调查区。；调度台合订夹：取得 4318「Harrison案证物转运调度单」；交接签字栏：显示记录不连续，不能形成 Pierce 绝对不在场；晚报架 / 长椅：取得 4319「晚间报纸号外」\n- Loop/状态：L3；夜班人员稀少，法院主体关闭。；调度单只能提高 Pierce 在法院的可能，不画出全程监视或连续见证。\n- 关键道具锚点（复用底图汇总）：4318 Harrison案证物转运调度单；4319 晚间报纸号外\n- 美术参考：暗色法院外墙、煤气路灯、木质调度棚、卷宗箱和报纸号外。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3002_bg_u3_exp_rooftop_night",
-    "Name": "Thomas 公寓楼顶（夜晚探索底图）",
-    "displayName": "SC3002_bg_u3_exp_rooftop_night",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_forensic_lab_day",
+    "Name": "u4_exp_forensic_lab_day",
+    "displayName": "Foster 法医实验室",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】Thomas 公寓楼顶\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3002_bg_u3_exp_rooftop_night\n- 资产性质：案发现场 / 搜证场景底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓楼顶（坠落侧 + 避风角落 + 天台门内侧）\n- 画面重点：老旧公寓楼顶。北侧栏杆（坠落侧）被警戒线封锁。；白天风大，水泥地面，少量碎石；坠落侧是一处折角凹角：转角两侧合成一个小角落，中间是 Emily（Thomas 与 Mary 的女儿，数年前在此坠落）的纪念角；Thomas 生前习惯站折角左侧、Mary 站右侧（空间设定，美术只需保证左右站位关系成立，不需要在底图中解释反转）；东南角有避风处（堆放旧家具的角落）；天台门是一扇老式铁门，本场景表现门内侧；门外侧归属 SC3019 六楼走廊\n- Loop/状态：首次解锁：L1（部分封锁）；多 Loop 解锁层级：；L1：警戒线封锁北侧栏杆区，只能查脚印 + 避风角落；L3：凭 Helen 家拿到的楼顶钥匙偷偷打开封锁，通过搜证热点 / 特写查看破坏栏杆 + 断口缺件 + 折角地面涂油 + Emily 纪念角；L4：从 SC3019 六楼走廊检查门外侧油痕后进入，重点检查天台门内侧把手（油痕检测，扫描层显示）；L5/L6：默认不开放，除非后续流程重新回到天台线\n- 关键道具锚点（复用底图汇总）：3104 女性脚印照片；3105 男性脚印照片；3106 Old Crow 药用威士忌空瓶；3309 被破坏的护栏；3310 护栏断口的缺件（白漆）；3311 地面涂油示意图；3313 Emily 的纪念角；3403 门内侧把手\n- 联通关系：天台门对应 SC3019 六楼走廊；画面中需要保留门内侧，作为楼内到天台的唯一出入口。\n- 美术参考：老旧公寓楼顶——破旧水泥 + 锈迹斑斑铁艺栏杆；警戒线：白色棉绳，木桩固定；天台门：铁艺，双面把手是黄铜；分层说明：默认底图保留老旧天台、警戒线、天台门；栏杆破坏、断口、地面涂油、门内侧把手按对应 Loop 的搜证特写 / 扫描叠层处理；时间版本：夜晚版；楼顶以月光/城市反光/手电为主，断裂护栏和油痕位置更醒目；风：明显，偶尔吹起警戒线\n- 排除内容：不需要在底图中解释反转；不要求在 L1 通用楼顶底图中可见",
+    "ArtRequirement": "【探索场景底图】Foster 法医实验室\n- 时间版本：白天版；背景资源：u4_exp_forensic_lab_day\n- 资产性质：对话 + 分析场景底图，人物与场景分离，不合成人物\n- 场景参考：1928 年可成立的法医实验室：容量量具、封签比对桌、试剂与显微观察区分开布置。\n- 画面重点：1928 年可成立的法医实验室：容量量具、封签比对桌、试剂与显微观察区分开布置。；容量分析台：对 4212「Isabel使用后的封签药瓶」做容量分析，更新为 4702「经容量分析的回收药瓶」；4211只提供规定剂量背景，不占分析输入位；编号留存瓶架：Foster 交付 4213「同批次药瓶封签组」；加急效价对照台：Foster 对 4118「问题批次药剂」完成加急化验，更新为 4703「经化验的问题批次药剂」；4213作为另行交付的同批封签比较组；证物交接托盘：清楚区分原始样本、回收瓶与分析结果\n- Loop/状态：L2；Foster 在检验台工作，只陈述测量结果与证明边界。；白天窗光为辅，检验灯为主；不使用现代电子仪器或浓度曲线屏幕。\n- 关键道具锚点（复用底图汇总）：4213 同批次药瓶封签组；4702 经容量分析的回收药瓶；4703 经化验的问题批次药剂\n- 美术参考：玻璃量筒、滴管、封签夹具、纸质编号卡与锁柜。；分析特写强调剩余液量和封签批次，不画成精确现代毒理定案。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3006_bg_u3_exp_2f_hall_day",
-    "Name": "公寓二楼走廊（白天探索底图）",
-    "displayName": "SC3006_bg_u3_exp_2f_hall_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_harrison_outer_office_day",
+    "Name": "u4_exp_harrison_outer_office_day",
+    "displayName": "Harrison 外间办公室",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓二楼走廊\n- 时间版本：白天版（资源条目）；资源 ID：SC3006_bg_u3_exp_2f_hall_day\n- 资产性质：对话场景（空走廊，由 Seamus 撑起）底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓二楼走廊（楼梯口处，二楼唯一住户 Seamus 门前）\n- 画面重点：公寓二楼走廊。二楼只有 Seamus 一户。；廊灯昏暗（单只白炽灯），楼梯口处可见旋转扶手；Seamus 坐在自己公寓门口的一把破椅子上；一边抽烟一边盯着楼梯口；整体感觉：颓废 + 话痨 + 对楼里所有事都有自己的话要说。\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：Seamus 提供身份 / 钥匙数量 / 看到 Helen 上天台等证词；L6：Seamus 用一瓶熟悉的轮椅润滑油润轮椅——19号晚上 Helen 送他（L6 角色 / 道具变体）\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3016 一楼走廊的上行楼梯到达；继续上楼通往 SC3015 公寓三楼走廊。\n- 美术参考：1928 年廉价公寓二楼走廊——黄色花纹墙纸 + 木地板（中段已磨损）；廊灯：白天版以走廊窗光 + 单只白炽吊灯为主，色温偏暖；Seamus 椅子：旧木椅 + 草编坐垫；Seamus 形象（详见人物设定文档）：50 多岁，瘦削，常年烟雾里；L6 变体：Seamus 手里多一瓶轮椅润滑油（小玻璃瓶），旁边出现一辆破旧轮椅；该内容为 L6 角色 / 道具叠加，不进入默认走廊底图",
+    "ArtRequirement": "【探索场景底图】Harrison 外间办公室\n- 时间版本：白天版；背景资源：u4_exp_harrison_outer_office_day\n- 资产性质：探索 + Watts 指证场景底图，人物与场景分离，不合成人物\n- 场景参考：法院办公室外间，整洁但处于封锁前的短暂空档。中央办公桌、文件柜和墙边保险柜形成三块调查区。\n- 画面重点：法院办公室外间，整洁但处于封锁前的短暂空档。中央办公桌、文件柜和墙边保险柜形成三块调查区。；桌面公开日程簿：作为档案室检索玩法的 4122 附属页面来源；只记录公开安排，不生成背包物品或 4111；普通费用抽屉：取得 4112「1919-A入账存根」；存根混在正常收入凭据中；打字机旁废纸篮：取得 4113「未完成的辞职信草稿」；墙边保险柜：指证前不可打开；Watts 交钥匙后开启未完成的自首证物箱；Watts 怀中钥匙链与旧卷宗箱：视觉锚点，不作为独立证据\n- Loop/状态：L1；Watts 守在保险柜附近；Harold Morrison 在文件柜侧施压并不断抽烟。；白天自然光仍在，室内未被警方彻底翻动；不能表现成已完成搜查的案发现场。\n- 关键道具锚点（复用底图汇总）：4112 1919-A入账存根；4113 未完成的辞职信草稿\n- 交互与分层说明：上层：4117「圣心医院儿童死亡对照表」与 4118「问题批次药剂」。；中层：4119「Harrison亲笔资金流向图」与 4120「南区综合商业开发计划摘要」。；末页夹：4121「1912事故家庭索引」。；五项在指证后一次取得；不得在保险柜开启前露出标题。\n- 美术参考：深色木桌、打字机、普通费用凭据、独立铁制保险柜。；保险柜开启前后使用同一底图加门体与内部文件叠层。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_margaret_home_day",
+    "Name": "u4_exp_margaret_home_day",
+    "displayName": "Margaret 家",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Margaret 家\n- 时间版本：白天版；背景资源：u4_exp_margaret_home_day\n- 资产性质：探索 + Margaret 指证场景底图，人物与场景分离，不合成人物\n- 场景参考：有人持续生活的家，不是 Patrick 纪念展。旧物分散在相册、抽屉、衣柜与收纳柜中。\n- 画面重点：有人持续生活的家，不是 Patrick 纪念展。旧物分散在相册、抽屉、衣柜与收纳柜中。；生活柜旧物包：一次调查依次取得 4415「1903南区码头旧照片」与 4416「Patrick葬礼册与1919旧信封」，触发 4704「右下牙长期缺损」与 4709「1919同时出现的两项可观察事实」；衣柜中的 Patrick 外套：从口袋取得 4417「Patrick外套口袋里的粉笔转运牌」；写字台未寄信格：对话推进后才开放，取得 4419「Margaret写给Mickey但未寄出的短笺」；带门收纳柜：指证后由 Margaret 主动取出并交付 4418「Patrick遗物匣」\n- Loop/状态：L4；Margaret 会先收拾、遮挡或阻止 Zack 触碰，交互点随对话推进开放。；本轮只锁定白天 / 傍晚前，具体时刻未定；室内偏暗，旧物不集中摆在一张桌上。；缝补篮、购物账、茶具与教会传单承担普通生活层，避免每个角落都是 Patrick 主线材料。\n- 关键道具锚点（复用底图汇总）：4415 1903南区码头旧照片；4704 右下牙长期缺损；4416 Patrick葬礼册与1919旧信封；4709 1919同时出现的两项可观察事实；4417 Patrick外套口袋里的粉笔转运牌；4418 Patrick遗物匣；4419 Margaret写给Mickey但未寄出的短笺\n- 美术参考：照片需看清 Patrick、Liam、少年 Mickey 与工人群像。；粉笔牌只写 WEST SIDE / ONE LEFT；遗物匣刻句为 FOR THE MANY WE PAY THE FEW。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_mickey_office_night",
+    "Name": "u4_exp_mickey_office_night",
+    "displayName": "Mickey 私人办公室",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Mickey 私人办公室\n- 时间版本：夜晚版；背景资源：u4_exp_mickey_office_night\n- 资产性质：探索 + 字母锁 + 身份锁 + Mickey 指证场景底图，人物与场景分离，不合成人物\n- 场景参考：四十二层高处办公室，秩序严密、缺少私人温度。书桌、烟灰缸、保险柜、专线电话和高窗构成五个叙事锚点。\n- 画面重点：四十二层高处办公室，秩序严密、缺少私人温度。书桌、烟灰缸、保险柜、专线电话和高窗构成五个叙事锚点。；Mickey 私人书桌：取得 4511「Mickey定制钢笔」；刻有 M.F.D. 的私人烟灰缸：取得 4512「Mickey的半支古巴雪茄」；七位字母锁保险柜：输入 FTMWPTF；取得内部记录与整袋保险档案；市政厅专线电话：身份承认后接入 Miller 的撤离条件；临街高窗：只在结尾演出启用，承担 Mickey 坠落与 Emma 救回 Zack\n- Loop/状态：L5；Mickey 返回前为空房；完成三条身份锁后强制返回并进入指证。；夜景持续到坠落；高潮另用 AVG 构图，不把人物动作画死在探索底图。\n- 关键道具锚点（复用底图汇总）：4511 Mickey定制钢笔；4512 Mickey的半支古巴雪茄；4513 1925年内部接口接管记录；4514 1919 年的银行授权附页-Donnelly & Associates（手写签名）；4515 手写功业簿；4516 Miller保险外卷与内封套\n- 交互与分层说明：分层文件架分别放置 4513「1925年内部接口接管记录」、4514「1919 年的银行授权附页-Donnelly & Associates（手写签名）」、4515「Mickey功业簿（手写）」。；4516「Miller保险外卷与内封套」整袋封存；L5 不拆内封套。；密码正确后4513—4516必须作为一次原子交互全部进入持有状态，不能让身份锁先于4516完成。；保险柜不是给 Zack 留的邀请，密码来自 Mickey 长期使用的私人信条。；4501 法律壳链产出 4705「1919-A 与 Donnelly & Associates 属于同一法律资金网络」。；4502 作者视角链产出 4706「Morrison页结论」与 4707「书写者一致性」。；4503 近期访客链只提交 4315「古巴雪茄烟蒂」与 4512「Mickey的半支古巴雪茄」，产出 4708「Mickey就是Morrison死亡当晚的陌生访客」；4153001「Morrison最后通话记录」只作时间窗口背景，不占提交位。；四项是玩家在推理界面形成的结论，不作为办公室内可点击物件。；空房探索：只开放书桌、烟灰缸、保险柜和身份锁；专线电话与高窗不承担主动交互。；Mickey回场：三条身份链全部完成后锁定自由探索，Mickey从办公室入口出现，先看见已开的保险柜和Zack手中的材料。；事实指证：回场Talk取得R1谎言锚后立即续接三轮Expose，中间不恢复探索。；身份承认：玩家已经证明身份后，Mickey才明确承认自己是Whale，随后进入四段固定价值对话。；生路与坠落：市政厅专线响起，Miller提出交档案上车；Mickey拒绝后走向高窗，Emma在坠落动作中抵达并救回Zack。；离场：4516保持整袋封存，强制续接SC4043的楼梯/停车区与档案车内两段构图。\n- 美术参考：绿色台灯、深色木书桌、M.F.D. 私人物件、机械字母锁、可开启高窗。；书写比对和雪茄复合齿痕使用独立特写叠层。\n- AVG 高潮演出补充：画面重点：Miller 专线来电：Mickey 在电话旁拒绝交还档案并拔掉电话线。；高窗对峙：Mickey 走向窗口，Zack 伸手抓住袖口。；坠落瞬间：袖料撕裂、Zack 抓住 Mickey 的手，Mickey 主动松手。；Emma 救援：Emma 从后方抓住 Zack，将他拉回室内。；排除内容与演出边界：不表现成 Zack 推落 Mickey，也不让 Emma 瞬移进场。；只保留 Mickey 下坠身影、Zack 抓空的手和掌心袖料，不展示落地尸体。；4516 仍在办公室内并保持未拆封。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": [
       {
-        "name": "L6 Zack 撞见 Seamus 用 Helen 的润滑油上油",
-        "resName": "u3_l6_seamus_oil_wheelchair_01",
-        "loop": 6,
-        "req": "事件 4 · L6 撞见 Seamus 上油\n\n**品质**：普通\n\n**触发位置**：L6，Zack 经过公寓二楼走廊（SC3006）时，撞见 Seamus 正用一瓶熟悉的轮椅润滑油给轮椅上油（state loop6 new_direction：Seamus 关于润滑油的新陈述）。\n\n**挂载节点**：\n- Zack 撞见 Seamus 用一瓶熟悉的润滑油润轮椅\n- Seamus 话痨式自然透露：19 号晚上 Helen 把她家\"最后一瓶\"润滑油送给了他，说\"以后也不需要了\"\n- 由此推断：Helen 在 19 号布置完陷阱后就把油送出，案发当晚（20 号）家里已没有油源\n\n**叙事作用**：\n- 这是 L6 油痕时间链的关键一环：油在 19 号就送走了 → 案发当晚 Helen 家没有油源 → 门把手上的油不可能是当晚临时蹭的，来源时间往前推到 19 号布陷阱时。\n- 它在 L6 控辩对决里被用来反驳\"油是当晚蹭的\"这条狡辩，是把\"正当防卫\"彻底推翻的支点之一。\n- 信息是\"撞见\"得来的——Seamus 不知道这句话的分量，浑然不觉地说出关键，对标 Unit2 的\"银行大厅偷听\"那种无意中翻面的质感。\n\n**调度注意**：\n- 核心视觉是\"那瓶油\"——它要让玩家/Zack 认出是和案子有关的同一种轮椅润滑油（与天台门把手、Helen 家地面同源）。\n- Seamus 的状态是话痨、自鸣得意、毫无戒心；他说\"以后也不需要了\"这句时不该有任何暗示性表演，越随意，回头越后怕。\n- 重点是 Zack 听到\"19 号晚 / 最后一瓶 / 以后不需要了\"时的心里一沉，而不是 Seamus 的表演。\n\n---"
+        "id": "mickey_returns",
+        "pendingTalkKey": "L5_event_mickey_returns",
+        "forced": true
       }
     ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3006_bg_u3_exp_2f_hall_night",
-    "Name": "公寓二楼走廊（夜晚探索底图）",
-    "displayName": "SC3006_bg_u3_exp_2f_hall_night",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_miller_ward_day",
+    "Name": "u4_exp_miller_ward_day",
+    "displayName": "圣心医院 / Miller 事故基金病房",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓二楼走廊\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3006_bg_u3_exp_2f_hall_night\n- 资产性质：对话场景（空走廊，由 Seamus 撑起）底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓二楼走廊（楼梯口处，二楼唯一住户 Seamus 门前）\n- 画面重点：公寓二楼走廊。二楼只有 Seamus 一户。；廊灯昏暗（单只白炽灯），楼梯口处可见旋转扶手；Seamus 坐在自己公寓门口的一把破椅子上；一边抽烟一边盯着楼梯口；整体感觉：颓废 + 话痨 + 对楼里所有事都有自己的话要说。\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：Seamus 提供身份 / 钥匙数量 / 看到 Helen 上天台等证词；L6：Seamus 用一瓶熟悉的轮椅润滑油润轮椅——19号晚上 Helen 送他（L6 角色 / 道具变体）\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3016 一楼走廊的上行楼梯到达；继续上楼通往 SC3015 公寓三楼走廊。\n- 美术参考：1928 年廉价公寓二楼走廊——黄色花纹墙纸 + 木地板（中段已磨损）；廊灯：夜晚版以单只白炽吊灯为主，楼梯口和门缝处更暗；Seamus 椅子：旧木椅 + 草编坐垫；Seamus 形象（详见人物设定文档）：50 多岁，瘦削，常年烟雾里；L6 变体：Seamus 手里多一瓶轮椅润滑油（小玻璃瓶），旁边出现一辆破旧轮椅；该内容为 L6 角色 / 道具叠加，不进入默认走廊底图",
-    "events": [
-      {
-        "name": "L6 Zack 撞见 Seamus 用 Helen 的润滑油上油",
-        "resName": "u3_l6_seamus_oil_wheelchair_01",
-        "loop": 6,
-        "req": "事件 4 · L6 撞见 Seamus 上油\n\n**品质**：普通\n\n**触发位置**：L6，Zack 经过公寓二楼走廊（SC3006）时，撞见 Seamus 正用一瓶熟悉的轮椅润滑油给轮椅上油（state loop6 new_direction：Seamus 关于润滑油的新陈述）。\n\n**挂载节点**：\n- Zack 撞见 Seamus 用一瓶熟悉的润滑油润轮椅\n- Seamus 话痨式自然透露：19 号晚上 Helen 把她家\"最后一瓶\"润滑油送给了他，说\"以后也不需要了\"\n- 由此推断：Helen 在 19 号布置完陷阱后就把油送出，案发当晚（20 号）家里已没有油源\n\n**叙事作用**：\n- 这是 L6 油痕时间链的关键一环：油在 19 号就送走了 → 案发当晚 Helen 家没有油源 → 门把手上的油不可能是当晚临时蹭的，来源时间往前推到 19 号布陷阱时。\n- 它在 L6 控辩对决里被用来反驳\"油是当晚蹭的\"这条狡辩，是把\"正当防卫\"彻底推翻的支点之一。\n- 信息是\"撞见\"得来的——Seamus 不知道这句话的分量，浑然不觉地说出关键，对标 Unit2 的\"银行大厅偷听\"那种无意中翻面的质感。\n\n**调度注意**：\n- 核心视觉是\"那瓶油\"——它要让玩家/Zack 认出是和案子有关的同一种轮椅润滑油（与天台门把手、Helen 家地面同源）。\n- Seamus 的状态是话痨、自鸣得意、毫无戒心；他说\"以后也不需要了\"这句时不该有任何暗示性表演，越随意，回头越后怕。\n- 重点是 Zack 听到\"19 号晚 / 最后一瓶 / 以后不需要了\"时的心里一沉，而不是 Seamus 的表演。\n\n---"
-      }
-    ]
+    "ArtRequirement": "【探索场景底图】圣心医院 / Miller 事故基金病房\n- 时间版本：白天版；背景资源：u4_exp_miller_ward_day\n- 资产性质：环境调查场景底图，人物与场景分离，不合成人物\n- 场景参考：整洁的儿童病房，项目确实在运作。空间应同时有受助痕迹与机构秩序感。\n- 画面重点：整洁的儿童病房，项目确实在运作。空间应同时有受助痕迹与机构秩序感。；病房入口铭牌：查看 Miller 事故基金印章；护士站康复名册：与入口铭牌共同构成 4216「Miller事故基金病房铭牌与康复名册」；墙面感谢卡与照片：补足真实受助成果，不单独收集\n- Loop/状态：L2；白天开放，护士和家属正常活动。；不放问题药瓶、秘密账本或反派化装饰；本场只证明慈善项目真实救过人。\n- 关键道具锚点（复用底图汇总）：4216 Miller事故基金病房铭牌与康复名册\n- 美术参考：铁架病床、白瓷洗手台、木质护士站、统一基金铭牌。；气氛克制明亮，不做恐怖医院处理。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3008_bg_u3_exp_helen_home_day",
-    "Name": "Helen 家（白天探索底图）",
-    "displayName": "SC3008_bg_u3_exp_helen_home_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_morrison_aftermath_night",
+    "Name": "u4_exp_morrison_aftermath_night",
+    "displayName": "宅邸门外 / 爆炸后回收区",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】Helen 家\n- 时间版本：白天版（资源条目）；资源 ID：SC3008_bg_u3_exp_helen_home_day\n- 资产性质：对话场景 + 搜证场景 + 指证场地底图，人物与场景分离，不合成人物。\n- 场景参考：Helen 一个人住的小公寓（公寓三楼内，三楼唯一住户，与 Smith 家同楼）\n- 画面重点：Helen 一个人住的小公寓。；客厅靠墙贴满女性权益相关的剪报（Margaret Sanger / 19 修正案 / 家暴报道）；角落有一张轮椅靠在墙边；地板整体像被擦拭过，肉眼不直接显示油迹；旁边一个猫窝，里面除了猫毛还塞着皱成一团的东西；Helen 嘴上涂着深红色口红，神色有些闪躲\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次进入，搜证 + 指证 Helen（3 轮）；L4：补充指证 Helen（3 轮）+ 新发现 Thomas 小纸条；L5：判决后访问——Helen 心理松动，补充目击 Bernard 主动诱导\n- 关键道具锚点（复用底图汇总）：3301 有白漆的螺丝帽；3302 女性权益剪报墙；3303 Mary 人寿保险单原件；3304 楼顶钥匙；3305 Helen 的猫；3306 Helen 外出鞋；3307 Helen 家的 Old Crow 药用威士忌；3308 Helen 嘴上深红色口红；3404 Helen 家地面油迹；3405 Thomas 的小纸条\n- 联通关系：从 SC3015 公寓三楼走廊的 Helen 家门进入；门外同层走廊与上行天台楼梯距离很近。\n- 美术参考：1920s 单身女性公寓——小客厅 + 卧室 + 角落轮椅；剪报墙：黄铜图钉固定，部分剪报泛黄；Helen 形象（详见人物设定文档）：30 多岁，瘦削，深红口红 + 苍白脸庞；猫：橘色短毛；油痕表现：不画进默认底图；L4 使用油痕检测仪后，以扫描高亮 / 叠层显示轮椅周边地面残留；灯光：白天版柔和自然光 + 室内弱灯，剪报墙和轮椅位置清楚",
+    "ArtRequirement": "【探索场景底图】宅邸门外 / 爆炸后回收区\n- 时间版本：夜晚版；背景资源：u4_exp_morrison_aftermath_night\n- 资产性质：余波探索 + Doris 指证场景底图，人物与场景分离，不合成人物\n- 场景参考：宅邸外已拉出安全边界，燃烧残骸与回收帆布取代原室内调查空间。\n- 画面重点：宅邸外已拉出安全边界，燃烧残骸与回收帆布取代原室内调查空间。；衣物回收帆布：取得 4317「214号黄铜寄存柜钥匙」；已记录的装置残件：反馈“与爆炸前照片一致”；不更新 4316，也不生成第二件证据；临时询问区：Doris 指证与 Pierce 程序压制\n- Loop/状态：L3；Doris 在安全边界内；Mickey 留下照看她。Pierce 已于 23:40 左右、爆炸前到场，爆炸后在外侧接管程序。；Zack 与 Emma 可从此分流至交换台、法院外圈和车站寄存区。；现行 state 的强制撤离名单未写 Pierce；场景设计按权威分钟表保留其爆炸前已到场事实，后续运行映射需补其安全边界位置。\n- 关键道具锚点（复用底图汇总）：4317 214号黄铜寄存柜钥匙\n- 美术参考：夜间火光只作局部反光，主体仍是冷暗街面、帆布与警戒线。；装置残件只需作为场景内核验点，不制作 4316 的第二套详情图。；不残留可验证右手枪位的完整现场画面。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_morrison_foyer_night_preblast",
+    "Name": "u4_exp_morrison_foyer_night_preblast",
+    "displayName": "Morrison 宅邸门厅客厅",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Morrison 宅邸门厅客厅\n- 时间版本：夜晚版；背景资源：u4_exp_morrison_foyer_night_preblast\n- 资产性质：探索枢纽 + Doris 对话；state 已登记的正式运行场景场景底图，人物与场景分离，不合成人物\n- 场景参考：门厅、电话桌与客厅连成一张横向底图。第二位访客的痕迹集中在会客区。\n- 画面重点：门厅、电话桌与客厅连成一张横向底图。第二位访客的痕迹集中在会客区。；电话桌：支撑 23:15 断线事实；无独立物证；会客矮桌两只酒杯：拍照取得 4314「两只酒杯」；第二只酒杯旁湿杯垫：先拍现场关系照和比例尺微距，再将原烟蒂装入证物袋，取得 4315「古巴雪茄烟蒂」；前门：Zack、Emma 与 Mickey 的到达方向；后门视线：暗示另一条离开路线，不直接形成证据；书房门 / 厨房内廊：分别通往 SC4022 与 SC4028；本场是宅邸探索枢纽\n- Loop/状态：L3；Doris 靠近门厅，尽量挡住会客区；Mickey 从前门方向出现。；夜间只有壁灯与桌灯，碎冰、湿水痕和粘住的烟灰必须可读。；书房与客厅调查完成前，厨房只可看见但危险检查不激活；进入检修区后才进入危机阶段。\n- 关键道具锚点（复用底图汇总）：4314 两只酒杯；4315 古巴雪茄烟蒂\n- 美术参考：两杯不能并排成刻意展示：一杯在日常位置，第二杯靠近访客座。；4315 烟蒂需保留可比对的品牌、直径、含咬位置，以及前段内陷、后段缺一枚完整压痕、约三十度斜向受力的复合齿痕。；4315 证据卡包含“湿杯垫位置关系照”“带比例尺微距照”和装袋原物三层；爆炸后仍由 Zack 持有，L5 使用原物与 4512 比较。；影像只在电话时间窗与 Mickey 私人物件来源共同成立时证明近期访客，不能单靠齿痕证明开枪或 Whale 身份。；本场与书房、厨房分图，但门向关系必须连续。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_morrison_service_night_preblast",
+    "Name": "u4_exp_morrison_service_night_preblast",
+    "displayName": "Morrison 宅邸厨房检修区",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】Morrison 宅邸厨房检修区\n- 时间版本：夜晚版；背景资源：u4_exp_morrison_service_night_preblast\n- 资产性质：危机搜证；state 已登记的正式运行场景场景底图，人物与场景分离，不合成人物\n- 场景参考：厨房与壁炉背侧检修区相连。四个检查反馈共同支持撤离，不允许玩家拆弹。\n- 画面重点：厨房与壁炉背侧检修区相连。四个检查反馈共同支持撤离，不允许玩家拆弹。；煤气表与伪造市政铅封：完成 4316 的第一段记录；壁炉时钟背板新铜线：完成 4316 的第二段记录；两段齐全后取得「伪造市政煤气铅封与异常时钟接线」；主煤气阀：查看 4321「煤气阀门异常开启痕迹」；背风侧窗缝：查看 4322「窗缝逆风与煤气味」；撤离门：四个检查反馈完成后由 Emma 组织撤离\n- Loop/状态：L3；玩家只能辨认预装异常和危险积聚，没有时间、结构知识或工具拆除装置。；不显示安装者身份，也不把煤气线归给 Mickey 或 Pierce。；本场启用时才进入危机阶段；无真实倒计时、无失败惩罚，第四项完成后强制撤离。；4311—4315 全部处理前不得进入本场；该限制必须做成运行门控，不能只靠 Emma 的提示台词。；Pierce 于约 23:40 已到外围安全边界，但不进入煤气积聚区；爆炸后接管程序直接承接此状态。\n- 关键道具锚点（复用底图汇总）：4316 伪造市政煤气铅封与异常时钟接线；4321 煤气阀门异常开启痕迹；4322 窗缝逆风与煤气味\n- 美术参考：伪造铅封序号、时钟背板铜线、阀门新刮痕均需特写叠层。；普通画面可用轻微雾感和声效提示危险，不用可见“绿色毒气”。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": [
       {
-        "name": "L3 Emma 点破 Helen 口红与衬衫口红印一致",
-        "resName": "u3_l3_helen_lipstick_reveal_01",
-        "loop": 3,
-        "req": "事件 1 · L3 Emma 点破 Helen 出轨\n\n**品质**：普通\n\n**触发位置**：L3 自由探索阶段，玩家在 Helen 家（SC3008）拾取/查看 Helen 嘴上的深红色口红（3308）后触发（state interrupts: `helen_lover_reveal`）。\n\n**挂载节点**：\n- Helen 嘴上深红色口红（证物 3308）被查看的瞬间\n- Emma 拉住 Zack 点破：\"你看她的口红——衣柜里那件衬衫上的颜色，就是这种。\" → Thomas 的出轨对象是 Helen\n\n**叙事作用**：\n- 把 L2 留下的\"衬衫深红口红印不是 Mary 的\"这条线，在 L3 当场收口——出轨对象浮出水面就是邻居 Helen。\n- 这是由 Emma 主动点破，不是玩家自悟（state 已明确标注）；动态漫画要让\"口红颜色一致\"这个视觉对应一目了然。\n- 触发后才解锁对 Helen 的追问——她这时才回应 R1 谎言（承认是情人、只是诉苦、与他的死无关），所以本事件是 L3 指证链的开关。\n\n**调度注意**：\n- 核心是\"两处深红口红的颜色比对\"在画面上成立：Helen 嘴上的口红 ↔ L2 衬衫上的口红印。\n- Emma 是点破者，Zack 在旁；Helen 本人此刻的神色（被看穿的一瞬）可带微表情，但不要让她当场崩溃——她随即转入\"情人但无瓜葛\"的退守。\n\n---"
+        "id": "pierce_arrives_outer_perimeter",
+        "pendingTalkKey": "",
+        "forced": false
       },
       {
-        "name": "L4 Mary 登场为 Helen 求情",
-        "resName": "u3_l4_mary_intervenes_helen_01",
-        "loop": 4,
-        "req": "事件 2 · L4 Mary 登场为 Helen 求情\n\n**品质**：【高级多格表现】\n\n**触发位置**：L4 补充指证 Helen 结束——R3\"Thomas 掉前我就走了\"被 Margaret 目击证词（三人影挣扎 + 随即坠落）击破、Helen 一时语塞之后（state loop4 post_expose）。\n\n**挂载节点**：\n- Helen 被点破当晚在场、语塞无法辩解\n- Mary 突然出现，主动作证：是 Helen 为了保护自己、才把 Thomas 推下楼的\n- Helen 顺着 Mary 的话接下去——她当晚听到 Mary 的呼救声，于心不忍，才……\n- Mary 恳请 Zack 按自己过失杀人告知警官，不要连累 Helen\n- Mary 补充：当晚是 Thomas 先约 Mary 说话，争吵之后 Helen 才出现的\n\n**叙事作用**：\n- 这是 Unit3 的\"第二重反转（假结局）\"落点：把案件从\"Helen 杀人\"导向\"正当防卫\"，玩家（和 Zack）此刻会接受这个版本。\n- 主导者是 Mary 不是 Helen——Mary 主动登场、主动揽罪、反过来安排说法，这正是她\"冷静策划者\"身份的伏笔（L6 才揭）。Helen 是被动顺话。\n- 之所以定【高级多格表现】：它是连续的情绪递进——Helen 语塞 → Mary 登场 → Helen 顺话 → Mary 揽罪，需要把\"谁在主导\"这个微妙关系画出来。\n\n**调度注意**：\n- 表演重心给 Mary：她的登场是\"救场\"而非\"求情者的慌乱\"，沉稳、克制、有掌控感——但这层\"掌控感\"要藏在\"为朋友顶罪的悲情\"表象之下，不能让玩家这一刻就看穿她是主谋。\n- Helen 顺话时说得不利索（\"于心不忍，才……\"含糊收尾），暗示这是临时圆的谎。\n- 现场还有 Zack / Emma 在，他们的反应是\"被这个版本说服\"的方向。\n\n---"
+        "id": "mansion_evacuation_and_explosion",
+        "pendingTalkKey": "L3_event_mansion_evacuation",
+        "forced": true
       }
     ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3008_bg_u3_exp_helen_home_night",
-    "Name": "Helen 家（夜晚探索底图）",
-    "displayName": "SC3008_bg_u3_exp_helen_home_night",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_morrison_study_night_preblast",
+    "Name": "u4_exp_morrison_study_night_preblast",
+    "displayName": "Morrison 宅邸书房",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】Helen 家\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3008_bg_u3_exp_helen_home_night\n- 资产性质：对话场景 + 搜证场景 + 指证场地底图，人物与场景分离，不合成人物。\n- 场景参考：Helen 一个人住的小公寓（公寓三楼内，三楼唯一住户，与 Smith 家同楼）\n- 画面重点：Helen 一个人住的小公寓。；客厅靠墙贴满女性权益相关的剪报（Margaret Sanger / 19 修正案 / 家暴报道）；角落有一张轮椅靠在墙边；地板整体像被擦拭过，肉眼不直接显示油迹；旁边一个猫窝，里面除了猫毛还塞着皱成一团的东西；Helen 嘴上涂着深红色口红，神色有些闪躲\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次进入，搜证 + 指证 Helen（3 轮）；L4：补充指证 Helen（3 轮）+ 新发现 Thomas 小纸条；L5：判决后访问——Helen 心理松动，补充目击 Bernard 主动诱导\n- 关键道具锚点（复用底图汇总）：3301 有白漆的螺丝帽；3302 女性权益剪报墙；3303 Mary 人寿保险单原件；3304 楼顶钥匙；3305 Helen 的猫；3306 Helen 外出鞋；3307 Helen 家的 Old Crow 药用威士忌；3308 Helen 嘴上深红色口红；3404 Helen 家地面油迹；3405 Thomas 的小纸条\n- 联通关系：从 SC3015 公寓三楼走廊的 Helen 家门进入；门外同层走廊与上行天台楼梯距离很近。\n- 美术参考：1920s 单身女性公寓——小客厅 + 卧室 + 角落轮椅；剪报墙：黄铜图钉固定，部分剪报泛黄；Helen 形象（详见人物设定文档）：30 多岁，瘦削，深红口红 + 苍白脸庞；猫：橘色短毛；油痕表现：不画进默认底图；L4 使用油痕检测仪后，以扫描高亮 / 叠层显示轮椅周边地面残留；灯光：夜晚版以单只台灯/壁灯为主，轮椅油痕检测叠层需要有暗部对比",
+    "ArtRequirement": "【探索场景底图】Morrison 宅邸书房\n- 时间版本：夜晚版；背景资源：u4_exp_morrison_study_night_preblast\n- 资产性质：危机探索；state 中 4022 的主场景场景底图，人物与场景分离，不合成人物\n- 场景参考：低瓦数台灯照亮书桌与尸体，房间仍保留被伪装成自杀的秩序。\n- 画面重点：低瓦数台灯照亮书桌与尸体，房间仍保留被伪装成自杀的秩序。；Harold 尸体右手：检查手枪与摆位，记入 Zack 私人调查记录 4311「磨号手枪与枪内未击发余弹」；书桌中央：取得 4312「伪造遗书」；书桌侧档案袋：取得 4313「Pierce档案移交通知（档案袋装）」；通往门厅的门：前往 SC4027；通往门厅的内廊：返回 SC4027；厨房检修区统一从门厅枢纽进入\n- Loop/状态：L3；枪必须明确位于右手，但不能提供可供官方复核的正式现场照片。；画面保持紧迫感但不设真实倒计时；完成书房 / 客厅调查后进入检修危机，四个检查反馈完成即强制撤离。\n- 关键道具锚点（复用底图汇总）：4311 磨号手枪与枪内未击发余弹；4312 伪造遗书；4313 Pierce档案移交通知（档案袋装）\n- 美术参考：磨号手枪、右手摆位、未击发余弹特写可独立查看。；不把书房画成爆炸后废墟；毁坏状态由 SC4023 承担。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_night_switchboard",
+    "Name": "u4_exp_night_switchboard",
+    "displayName": "夜班电话交换台",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】夜班电话交换台\n- 时间版本：夜晚版；背景资源：u4_exp_night_switchboard\n- 资产性质：对话调查场景底图，人物与场景分离，不合成人物\n- 场景参考：人工接线台在深夜只保留少量值班席位。插线板与纸质接线簿是信息来源。\n- 画面重点：人工接线台在深夜只保留少量值班席位。插线板与纸质接线簿是信息来源。；主接线板：显示人工转接方式，不可自行读取通话内容；当夜接线簿：接线员据此给出 4153001 三次通话时间与去向；口信便笺夹：支撑“体面收尾”原话；不确认 Donnelly 端接听人\n- Loop/状态：L3；夜班接线员疲惫、谨慎，只确认线路、时间和听见的原话。；场景不得出现自动录音、号码追踪屏幕或现代总机设备。\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 美术参考：插孔、布线、耳麦、计时钟和手写接线簿清晰可辨。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_ohara_front_day",
+    "Name": "u4_exp_ohara_front_day",
+    "displayName": "O'Hara 家门口",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】O'Hara 家门口\n- 时间版本：白天版；背景资源：u4_exp_ohara_front_day\n- 资产性质：危机对话 + 现实行动入口场景底图，人物与场景分离，不合成人物\n- 场景参考：南区窄街住宅门前，Lakeshore 人员与辖区警员已形成压力，但尚未合法入屋。\n- 画面重点：南区窄街住宅门前，Lakeshore 人员与辖区警员已形成压力，但尚未合法入屋。；门阶上的 O'Hara：取得拒售与 Margaret 阻断求助的证词；未使用的折叠纸箱：证明尚未开始自愿搬家；环境信息；警员与清退人员边界：表现“协助维持民事秩序”的现实威胁；房门：完成 O'Hara Talk、由她允许后进入 SC4033；不得绕过她直接入屋，也不得被清退人员强行搬开\n- Loop/状态：L4；白天，邻居可远距离围观；O'Hara 清醒、明确拒售，不表现为等待营救。；与终幕清晨中毒状态 SC4045 分开，不复用同一场景文件。\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 美术参考：老砖房、窄门阶、未展开纸箱、警员和地产人员分组站位。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_ohara_home_day",
+    "Name": "u4_exp_ohara_home_day",
+    "displayName": "O'Hara 家",
+    "category": "scene",
+    "sceneKind": "explore",
+    "ArtRequirement": "【探索场景底图】O'Hara 家\n- 时间版本：白天版；背景资源：u4_exp_ohara_home_day\n- 资产性质：探索 + 停止执行事件场景底图，人物与场景分离，不合成人物\n- 场景参考：朴素但长期居住的南区住宅。餐桌承担文件调查，电话承担现实行动。\n- 画面重点：朴素但长期居住的南区住宅。餐桌承担文件调查，电话承担现实行动。；餐桌文件组：先取得 4412「Lakeshore最终收购协议」，再查看旁边 4413「Margaret写给O'Hara的短便条」；关闭特写后才结算事件条件；墙边电话：完成 O'Hara Talk、Sarah Talk并取得4411—4413后才可使用；联系 Watts 递交停止执行申请；门边送达夹：事件后取得 4414「临时停止执行回执」；厨房手压泵：首次查看时播放 SC4035 后巷井检口短建立镜头，随后自动返回\n- Loop/状态：L4；Sarah 在屋内说明自己熟悉 Rosa 家；O'Hara 选择留下，并允许 Sarah 暂离。；白天自然光；警员撤离前后用门外人物层变化表现，不换底图。；固定链路：O'Hara Talk → Sarah Talk → 取得4412与4413 → 使用电话申请并取得4414 → Sarah转移 → 自动前往SC4034。；State 已显式要求4413；即便桌面特写未做到原子交付，也不得提前触发停止执行事件。\n- 关键道具锚点（复用底图汇总）：4412 Lakeshore最终收购协议；4413 Margaret写给O'Hara的短便条；4414 临时停止执行回执\n- 美术参考：协议、签名页与 Margaret 便条必须能分别点击。；家中有使用痕迹，避免把住户空间做成空置待拆房。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": [
       {
-        "name": "L3 Emma 点破 Helen 口红与衬衫口红印一致",
-        "resName": "u3_l3_helen_lipstick_reveal_01",
-        "loop": 3,
-        "req": "事件 1 · L3 Emma 点破 Helen 出轨\n\n**品质**：普通\n\n**触发位置**：L3 自由探索阶段，玩家在 Helen 家（SC3008）拾取/查看 Helen 嘴上的深红色口红（3308）后触发（state interrupts: `helen_lover_reveal`）。\n\n**挂载节点**：\n- Helen 嘴上深红色口红（证物 3308）被查看的瞬间\n- Emma 拉住 Zack 点破：\"你看她的口红——衣柜里那件衬衫上的颜色，就是这种。\" → Thomas 的出轨对象是 Helen\n\n**叙事作用**：\n- 把 L2 留下的\"衬衫深红口红印不是 Mary 的\"这条线，在 L3 当场收口——出轨对象浮出水面就是邻居 Helen。\n- 这是由 Emma 主动点破，不是玩家自悟（state 已明确标注）；动态漫画要让\"口红颜色一致\"这个视觉对应一目了然。\n- 触发后才解锁对 Helen 的追问——她这时才回应 R1 谎言（承认是情人、只是诉苦、与他的死无关），所以本事件是 L3 指证链的开关。\n\n**调度注意**：\n- 核心是\"两处深红口红的颜色比对\"在画面上成立：Helen 嘴上的口红 ↔ L2 衬衫上的口红印。\n- Emma 是点破者，Zack 在旁；Helen 本人此刻的神色（被看穿的一瞬）可带微表情，但不要让她当场崩溃——她随即转入\"情人但无瓜葛\"的退守。\n\n---"
+        "id": "stop_order_application_and_delivery",
+        "pendingTalkKey": "L4_event_stop_order_delivery",
+        "forced": true
       },
       {
-        "name": "L4 Mary 登场为 Helen 求情",
-        "resName": "u3_l4_mary_intervenes_helen_01",
-        "loop": 4,
-        "req": "事件 2 · L4 Mary 登场为 Helen 求情\n\n**品质**：【高级多格表现】\n\n**触发位置**：L4 补充指证 Helen 结束——R3\"Thomas 掉前我就走了\"被 Margaret 目击证词（三人影挣扎 + 随即坠落）击破、Helen 一时语塞之后（state loop4 post_expose）。\n\n**挂载节点**：\n- Helen 被点破当晚在场、语塞无法辩解\n- Mary 突然出现，主动作证：是 Helen 为了保护自己、才把 Thomas 推下楼的\n- Helen 顺着 Mary 的话接下去——她当晚听到 Mary 的呼救声，于心不忍，才……\n- Mary 恳请 Zack 按自己过失杀人告知警官，不要连累 Helen\n- Mary 补充：当晚是 Thomas 先约 Mary 说话，争吵之后 Helen 才出现的\n\n**叙事作用**：\n- 这是 Unit3 的\"第二重反转（假结局）\"落点：把案件从\"Helen 杀人\"导向\"正当防卫\"，玩家（和 Zack）此刻会接受这个版本。\n- 主导者是 Mary 不是 Helen——Mary 主动登场、主动揽罪、反过来安排说法，这正是她\"冷静策划者\"身份的伏笔（L6 才揭）。Helen 是被动顺话。\n- 之所以定【高级多格表现】：它是连续的情绪递进——Helen 语塞 → Mary 登场 → Helen 顺话 → Mary 揽罪，需要把\"谁在主导\"这个微妙关系画出来。\n\n**调度注意**：\n- 表演重心给 Mary：她的登场是\"救场\"而非\"求情者的慌乱\"，沉稳、克制、有掌控感——但这层\"掌控感\"要藏在\"为朋友顶罪的悲情\"表象之下，不能让玩家这一刻就看穿她是主谋。\n- Helen 顺话时说得不利索（\"于心不忍，才……\"含糊收尾），暗示这是临时圆的谎。\n- 现场还有 Zack / Emma 在，他们的反应是\"被这个版本说服\"的方向。\n\n---"
+        "id": "sarah_relocation_before_margaret",
+        "pendingTalkKey": "L4_event_sarah_relocation",
+        "forced": true
       }
     ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3015_bg_u3_exp_3f_hall_day",
-    "Name": "公寓三楼走廊（白天探索底图）",
-    "displayName": "SC3015_bg_u3_exp_3f_hall_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_pretrial_hall_afternoon",
+    "Name": "u4_exp_pretrial_hall_afternoon",
+    "displayName": "法院预审走廊",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓三楼走廊\n- 时间版本：白天版（资源条目）；资源 ID：SC3015_bg_u3_exp_3f_hall_day\n- 资产性质：过渡场景 / 环境叙事 / 上行楼梯过渡底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓三楼，Helen 家门口与上行楼梯之间（三楼唯一住户）\n- 画面重点：公寓三楼走廊。三楼只有 Helen 一户，走廊狭窄、昏暗，墙纸剥落，楼梯间小窗透进一束灰白的光。；一侧是 Helen 的公寓门：旧木门、门牌、门口小鞋架；另一侧是继续向上的楼梯，通往 SC3019 六楼天台入口走廊；玩家点击楼梯后抵达 SC3019 公寓六楼走廊，再点击天台门进入 SC3002 楼顶，不进入 4–5 楼中间住户层；走廊地面保持普通老旧状态，不放置独立油迹证据\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次来到 Helen 家前，建立 Helen 家与天台入口的物理距离；L4：通往六楼走廊的空间锚点，油痕本体在 SC3019 天台门外侧；L6：回访 Helen 家时保留过渡，氛围更安静\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3006 二楼走廊继续上楼到达；一侧进入 SC3008 Helen 家，另一侧上行楼梯通往 SC3019 公寓六楼走廊，再由天台门进入 SC3002 楼顶。\n- 美术参考：1928 年廉价公寓三楼走廊——窄、旧、墙壁剥落；色调偏冷，白天也不明亮；Helen 家门比其他元素更醒目，但不要出现其他住户门；楼梯向上延伸，可用构图暗示纵深；交互上跳转到 SC3019 六楼天台入口走廊\n- 排除内容：避免 4–6 楼中间层干扰：楼梯点击后跳到 SC3019 六楼天台入口",
+    "ArtRequirement": "【探索场景底图】法院预审走廊\n- 时间版本：下午版；背景资源：u4_exp_pretrial_hall_afternoon\n- 资产性质：对话 + Whitfield 指证场景底图，人物与场景分离，不合成人物\n- 场景参考：庭审前的拥挤走廊。法庭门、记者区和医院人员区形成公开压力。\n- 画面重点：庭审前的拥挤走廊。法庭门、记者区和医院人员区形成公开压力。；Whitfield 手中的签字夹板：预留 Rosa 签名位的「家属误用说明」；演出物，不进入背包；法庭固定线路区：有线麦克风、录音设备与电讯接线；支撑记者传播；法庭门口：指证入口与书记员送达回执位置\n- Loop/状态：L2；Whitfield 在签字夹板旁保持制度化平静；Rosa 面向法庭门。；记者、医院人员和书记员分层站位，Emma 能联系并调动其中一部分记者。\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 交互与分层说明：指证前：Whitfield持签字夹板施压，Rosa仍在法庭门外等待。；三轮指证：场面保持公开，记者与书记员在场，防止Whitfield把结果改写成私下误会。；指证后：书记员送达暂停追究结果，Mickey托住Rosa递来的Isabel相框；这份帮助必须真实落地。；散庭转弯：人群逐渐散去，Morrison带着密封通知袋在走廊拐角出现，留下“以后私下谈”的口子；此时才把L2交给L3。；玩家控制只在指证及结果演出完成后恢复；不得把Morrison提前放入指证画面。\n- 美术参考：下午斜光、木质长椅、固定线缆与速记本。；不出现便携广播机或未经铺垫的现代录音设备。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3015_bg_u3_exp_3f_hall_night",
-    "Name": "公寓三楼走廊（夜晚探索底图）",
-    "displayName": "SC3015_bg_u3_exp_3f_hall_night",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_station_locker_night",
+    "Name": "u4_exp_station_locker_night",
+    "displayName": "车站 214 号寄存区",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓三楼走廊\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3015_bg_u3_exp_3f_hall_night\n- 资产性质：过渡场景 / 环境叙事 / 上行楼梯过渡底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓三楼，Helen 家门口与上行楼梯之间（三楼唯一住户）\n- 画面重点：公寓三楼走廊。三楼只有 Helen 一户，走廊狭窄、昏暗，墙纸剥落，楼梯间小窗透进一束灰白的光。；一侧是 Helen 的公寓门：旧木门、门牌、门口小鞋架；另一侧是继续向上的楼梯，通往 SC3019 六楼天台入口走廊；玩家点击楼梯后抵达 SC3019 公寓六楼走廊，再点击天台门进入 SC3002 楼顶，不进入 4–5 楼中间住户层；走廊地面保持普通老旧状态，不放置独立油迹证据\n- Loop/状态：首次解锁：L3；多 Loop 解锁层级：；L3：第一次来到 Helen 家前，建立 Helen 家与天台入口的物理距离；L4：通往六楼走廊的空间锚点，油痕本体在 SC3019 天台门外侧；L6：回访 Helen 家时保留过渡，氛围更安静\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：从 SC3006 二楼走廊继续上楼到达；一侧进入 SC3008 Helen 家，另一侧上行楼梯通往 SC3019 公寓六楼走廊，再由天台门进入 SC3002 楼顶。\n- 美术参考：1928 年廉价公寓三楼走廊——窄、旧、墙壁剥落；色调偏冷，白天也不明亮；Helen 家门比其他元素更醒目，但不要出现其他住户门；楼梯向上延伸，可用构图暗示纵深；交互上跳转到 SC3019 六楼天台入口走廊\n- 排除内容：避免 4–6 楼中间层干扰：楼梯点击后跳到 SC3019 六楼天台入口",
+    "ArtRequirement": "【探索场景底图】车站 214 号寄存区\n- 时间版本：夜晚版；背景资源：u4_exp_station_locker_night\n- 资产性质：上锁探索场景底图，人物与场景分离，不合成人物\n- 场景参考：夜间车站侧厅，一整排黄铜号码寄存柜延伸至画面深处。\n- 画面重点：夜间车站侧厅，一整排黄铜号码寄存柜延伸至画面深处。；214 号寄存柜：使用 4317 打开；柜内旧档案封套：取得 4320「Morrison写给Zack的未寄出口供」；其他寄存柜：不可打开，不放干扰证据\n- Loop/状态：L3；钥匙只证明寄存柜存在；口供内容由柜内封套承担。；不通过物件反推 Doris 读过全文，也不在场景中揭示访客身份。\n- 关键道具锚点（复用底图汇总）：4320 Morrison写给Zack的未寄出口供\n- 美术参考：214 号与钥匙铭牌清楚对应；柜门、锁孔和封套支持近景。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3016_bg_u3_exp_1f_hall_day",
-    "Name": "公寓一楼走廊（白天探索底图）",
-    "displayName": "SC3016_bg_u3_exp_1f_hall_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_zack_office_day",
+    "Name": "u4_exp_zack_office_day",
+    "displayName": "Zack 侦探事务所",
+    "category": "scene",
     "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓一楼走廊\n- 时间版本：白天版（资源条目）；资源 ID：SC3016_bg_u3_exp_1f_hall_day\n- 资产性质：过渡场景 / 环境叙事底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓一楼，Smith 家门前与楼梯口之间（一楼唯一住户）\n- 画面重点：公寓一楼走廊。玩家从楼外门口进入后，首先来到这里。；一楼只有 Smith 家一户，走廊里只出现 Smith 家门；楼梯向上通往二楼 Seamus 走廊，再继续通往三楼 Helen 家；Smith 家门口光线很暗，门板旧而沉，能感到这个家庭长期压抑的气息；走廊不放置独立证据，避免分散 L2 对 Smith 家室内搜证的注意力\n- Loop/状态：首次解锁：L2；多 Loop 解锁层级：；L2：第一次进入 Smith 家前的室内过渡；L3–L6：保留可访问，作为 Smith 家与楼内楼梯的连接点\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：本场景连接 SC3001 楼下入口、SC3003 Smith 家客厅 / SC3012 Smith 家卧室，以及通往 SC3006 二楼走廊的上行楼梯。\n- 美术参考：1928 年廉价公寓一楼走廊——门厅窄、灯光低、墙纸泛黄；Smith 家门偏旧，门锁和门牌可以做近景；楼梯口可见向上延伸的木质扶手，连接二楼 / 三楼动线\n- 排除内容：避免分散 L2 对 Smith 家室内搜证的注意力；避免玩家误以为 Smith 家与 Seamus 同在二楼",
-    "events": []
+    "ArtRequirement": "【探索场景底图】Zack 侦探事务所\n- 时间版本：白天版；背景资源：u4_exp_zack_office_day\n- 资产性质：开篇后直接探索场景底图，人物与场景分离，不合成人物\n- 场景参考：上午自然光。会客桌被 Rosa 带来的生活物件占据，仍能看出这是日常办公空间。\n- 画面重点：上午自然光。会客桌被 Rosa 带来的生活物件占据，仍能看出这是日常办公空间。；会客桌药盒托盘：Rosa 对话交付 4211「医院配发红线注射器与十三日封签药盒」；回收物证垫：Rosa 对话交付 4212「Isabel使用后的封签药瓶」；Isabel 相框：情感视觉锚点，不进入证据池；桌边电话：Mickey 处理拖延听证与辩护手续；非调查物\n- Loop/状态：L2；Rosa 靠近会客桌；Emma 在私人叙述时放下笔记本；Mickey 只占电话和法律文件一侧。；与 L3 深夜来电状态分开，不复用夜景构图。\n- 关键道具锚点（复用底图汇总）：4211 医院配发红线注射器与十三日封签药盒；4212 Isabel使用后的封签药瓶\n- 美术参考：注射器红线与固定金属止动环需支持物件特写。；十三格药盒、指纹确认条、单只回收药瓶要在桌面上清楚分组。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": [
+      {
+        "id": "thirteen_day_hearing",
+        "pendingTalkKey": "L2_opening_thirteen_day_hearing",
+        "forced": true
+      }
+    ]
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3016_bg_u3_exp_1f_hall_night",
-    "Name": "公寓一楼走廊（夜晚探索底图）",
-    "displayName": "SC3016_bg_u3_exp_1f_hall_night",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓一楼走廊\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3016_bg_u3_exp_1f_hall_night\n- 资产性质：过渡场景 / 环境叙事底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓一楼，Smith 家门前与楼梯口之间（一楼唯一住户）\n- 画面重点：公寓一楼走廊。玩家从楼外门口进入后，首先来到这里。；一楼只有 Smith 家一户，走廊里只出现 Smith 家门；楼梯向上通往二楼 Seamus 走廊，再继续通往三楼 Helen 家；Smith 家门口光线很暗，门板旧而沉，能感到这个家庭长期压抑的气息；走廊不放置独立证据，避免分散 L2 对 Smith 家室内搜证的注意力\n- Loop/状态：首次解锁：L2；多 Loop 解锁层级：；L2：第一次进入 Smith 家前的室内过渡；L3–L6：保留可访问，作为 Smith 家与楼内楼梯的连接点\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品\n- 联通关系：本场景连接 SC3001 楼下入口、SC3003 Smith 家客厅 / SC3012 Smith 家卧室，以及通往 SC3006 二楼走廊的上行楼梯。\n- 美术参考：1928 年廉价公寓一楼走廊——门厅窄、灯光低、墙纸泛黄；Smith 家门偏旧，门锁和门牌可以做近景；楼梯口可见向上延伸的木质扶手，连接二楼 / 三楼动线\n- 排除内容：避免分散 L2 对 Smith 家室内搜证的注意力；避免玩家误以为 Smith 家与 Seamus 同在二楼",
-    "events": []
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3019_bg_u3_exp_6f_hall_day",
-    "Name": "公寓六楼走廊（白天探索底图）",
-    "displayName": "SC3019_bg_u3_exp_6f_hall_day",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓六楼走廊\n- 时间版本：白天版（当前网页配置）；背景资源：SC3019_bg_u3_exp_6f_hall_day\n- 资产性质：过渡场景 / 搜证场景 / 天台门外侧底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓六楼，通往天台的门外侧。\n- 画面重点：窄小的六楼天台门前平台；画面尽头是一扇通往天台的老式铁门，门外侧黄铜把手位于玩家这一侧；墙面老旧、灯泡昏暗，不出现可进入的其他房间。\n- Loop/状态：首次解锁：L3；L3 作为从三楼上楼到天台前的过渡；L4 用油痕检测仪检查门外侧把手；L5/L6 默认不开放。\n- 关键道具锚点（复用底图汇总）：无独立可拾取物品；L4 夜晚版承载 3402 门外侧把手油迹\n- 联通关系：从 SC3015 公寓三楼走廊点击上楼到达；点击天台门进入 SC3002 楼顶；返回则下楼回到 SC3015。\n- 美术参考：1928 年廉价公寓顶层走廊 / 楼梯平台，窄、旧、低瓦数灯光；天台门缝可透出冷光；L4 扫描层显示门外侧把手握持处的浅黄褐油痕。\n- 排除内容：不要出现可进入的住户门；不要把门内侧把手或楼顶护栏画成本场景重点。",
-    "events": []
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3019_bg_u3_exp_6f_hall_night",
-    "Name": "公寓六楼走廊（夜晚探索底图）",
-    "displayName": "SC3019_bg_u3_exp_6f_hall_night",
-    "category": "scene_bg",
-    "sceneKind": "explore",
-    "ArtRequirement": "【探索场景底图】公寓六楼走廊\n- 时间版本：夜晚版（当前网页配置）；背景资源：SC3019_bg_u3_exp_6f_hall_night\n- 资产性质：过渡场景 / 搜证场景 / 天台门外侧底图，人物与场景分离，不合成人物。\n- 场景参考：Thomas 公寓六楼，通往天台的门外侧。\n- 画面重点：窄小的六楼天台门前平台；画面尽头是一扇通往天台的老式铁门，门外侧黄铜把手位于玩家这一侧；墙面老旧、灯泡昏暗，不出现可进入的其他房间。\n- Loop/状态：首次解锁：L3；L3 作为从三楼上楼到天台前的过渡；L4 用油痕检测仪检查门外侧把手；L5/L6 默认不开放。\n- 关键道具锚点（复用底图汇总）：3402 门外侧把手油迹\n- 联通关系：从 SC3015 公寓三楼走廊点击上楼到达；点击天台门进入 SC3002 楼顶；返回则下楼回到 SC3015。\n- 美术参考：1928 年廉价公寓顶层走廊 / 楼梯平台，窄、旧、低瓦数灯光；天台门缝可透出冷光；L4 扫描层显示门外侧把手握持处的浅黄褐油痕。\n- 排除内容：不要出现可进入的住户门；不要把门内侧把手或楼顶护栏画成本场景重点。",
-    "events": []
-  },
-  {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3291_avg_u3_l2_open_apartment_day",
-    "Name": "L2 开篇：公寓楼下回到现场（白天完整 AVG 图）",
-    "displayName": "SC3291_avg_u3_l2_open_apartment_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l1_open_court_blockade_day",
+    "Name": "u4_l1_open_court_blockade_day",
+    "displayName": "法院门口 / 东翼",
+    "category": "scene",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】L2 开篇：公寓楼下回到现场\n- 时间版本：白天版（资源条目）；资源 ID：SC3291_avg_u3_l2_open_apartment_day\n- 资产性质：人物和街面 / 公寓楼外景合成整图，不开放自由探索\n- 场景参考：Thomas 公寓楼下街口外；SC3001 Thomas 公寓楼下现场\n- 画面人物：Zack（带着 Morrison 留下的线索回到现场，准备从 Mary 查起）；Emma（走在前面，仰头看天台护栏，对警方掩盖真相产生疑问）\n- 画面重点：Zack 和 Emma 回到 Smith 一家所在的公寓楼。画面可以从街面仰看六层住宅与楼顶天台护栏，保留“普通公寓楼里发生了不该被压下去的命案”的感觉。；Emma 的视线落在楼顶护栏上，核心情绪是：一个普通人明明可能被谋杀，警方却试图掩盖真相。\n- 叙事作用：承接 L1 指证后 Morrison 抛出的“脚印可能属于 Mary”。；把玩家目标转向 Thomas 的妻子 Mary。；让 L2 从“案件是否自杀”进入“Mary 当晚是否在场”的调查层。\n- 时间版本：白天版；街面和公寓入口清楚可读，承接 L2 回到现场。",
+    "ArtRequirement": "【完整 AVG 场景图】法院门口 / 东翼\n- 时间版本：白天版；背景资源：u4_l1_open_court_blockade_day\n- 资产性质：完整 AVG 画面，不开放探索；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4001 法院门口 / 东翼\n- 画面重点：法院东翼入口被警员与书记处人员分层封锁，卷宗箱不断从门内推出。；Pierce 占住正门权限位置；Mickey 在外侧与他交涉。；Zack、Emma 靠近侧门，等待进入外间办公室的空档。\n- 叙事作用：交代 Harrison 前夜枪伤死亡、Mary 案被强制改判、档案室旧案线索。；Mickey 主动拖住 Pierce，随后切入 SC4002。；不展示尸体、凶手或已经完成的警方搜查。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": [
+      {
+        "id": "courthouse_blockade",
+        "pendingTalkKey": "L1_opening_courthouse_blockade",
+        "forced": true
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l3_open_morrison_front_night_preblast",
+    "Name": "u4_l3_open_morrison_front_night_preblast",
+    "displayName": "Morrison 宅邸门外 / 抵达",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】Morrison 宅邸门外 / 抵达\n- 时间版本：23:30，爆炸前版；背景资源：u4_l3_open_morrison_front_night_preblast\n- 资产性质：独立 AVG 画面；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4029 Morrison 宅邸门外 / 抵达\n- 画面重点：宅邸外观完整、窗内仍有灯，尚未出现爆炸损坏。；Zack 与 Emma 从街道方向赶到；Mickey 从前门方向出现，表现得像刚到。；前门与绕向后门的小路同时入画，为后续动线保留空间依据。\n- 叙事作用：承载 Mickey“自己也刚到”的掩护谎言。；演出后进入 SC4027 门厅客厅，再由玩家进入 SC4022 书房。；不与爆炸后的 SC4023 回收区共用画面状态。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": [
+      {
+        "id": "mansion_arrival",
+        "pendingTalkKey": "L3_opening_mansion_arrival",
+        "forced": true
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l3_open_zack_office_night_call",
+    "Name": "u4_l3_open_zack_office_night_call",
+    "displayName": "Zack 侦探事务所 / 深夜来电",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】Zack 侦探事务所 / 深夜来电\n- 时间版本：深夜版；背景资源：u4_l3_open_zack_office_night_call\n- 资产性质：完整 AVG 画面，不开放探索；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4021 Zack 侦探事务所 / 深夜来电\n- 画面重点：窗外全黑，只亮桌灯；电话机位于画面中心。；Zack 接听，Emma 已在室内；Morrison 只以电话声音出现。；电话中先有咳嗽和沉默，只说出“Brennan”便断线。\n- 叙事作用：与 SC4011/SC4031 的白天事务所状态分开。；Zack 只能判断声音来自 Morrison，不能提前断言线路被人为切断。；断线后立即转到宅邸门外抵达画面。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": [
+      {
+        "id": "broken_call",
+        "pendingTalkKey": "L3_opening_broken_call",
+        "forced": true
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l4_bridge_ohara_well_alley_day",
+    "Name": "u4_l4_bridge_ohara_well_alley_day",
+    "displayName": "O'Hara 家后巷井检口 / 建立镜头",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】O'Hara 家后巷井检口 / 建立镜头\n- 时间版本：白天版；背景资源：u4_l4_bridge_ohara_well_alley_day\n- 资产性质：5—8 秒强制建立镜头，播放后返回 SC4033；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4035 O'Hara 家后巷井检口 / 建立镜头\n- 画面重点：镜头从室内手压泵沿穿墙管线移向院墙外后巷。；带锁检修盖位于公共可接近路径旁，外人无需进入 O'Hara 家即可接近。\n- 排除内容与演出边界：不开放自由探索，不产出证据，不形成无奖励死胡同。；不显示污染、异味、工具痕或可疑人员；只建立私人井与外部检修路径。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3391_avg_u3_l3_open_hall_search_day",
-    "Name": "L3 开篇：公寓楼内扩大搜查（白天完整 AVG 图）",
-    "displayName": "SC3391_avg_u3_l3_open_hall_search_day",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l4_open_zack_office_confrontation_day",
+    "Name": "u4_l4_open_zack_office_confrontation_day",
+    "displayName": "Zack 侦探事务所",
+    "category": "scene",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】L3 开篇：公寓楼内扩大搜查\n- 时间版本：白天版（资源条目）；资源 ID：SC3391_avg_u3_l3_open_hall_search_day\n- 资产性质：人物和楼道场景合成整图，不开放自由探索\n- 场景参考：Thomas 公寓楼内；SC3015 公寓三楼走廊 / 公寓楼内动线\n- 画面人物：Zack（正在消化 Mary 的“Thomas 要推我”退守版本）；Emma（看着住户名牌，提出出轨对象可能知道内情）\n- 画面重点：Zack 和 Emma 走回公寓楼内。画面重点是楼道、住户名牌、向上延伸的楼梯和压抑的住宅氛围。；Emma 看着楼道里的住户名牌，提出关键问题：Thomas 为什么要推自己的妻子？他的出轨对象会不会知道些什么？\n- 叙事作用：承接 L2 Mary 的天台版本。；把调查范围从 Mary 扩展到公寓楼其他住户。；引出 L3 的核心目标：找到 Thomas 的出轨对象，并追查 Thomas 的真实计划。\n- 时间版本：白天版；楼道阴暗但住户名牌、楼梯和 Helen 家方向清楚可读。",
+    "ArtRequirement": "【完整 AVG 场景图】Zack 侦探事务所\n- 时间版本：白天版；背景资源：u4_l4_open_zack_office_confrontation_day\n- 资产性质：完整 AVG 场景；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4031 Zack 侦探事务所\n- 画面重点：Mickey 与 Zack 隔桌对质枪位、Morrison 来电和 Patrick。；Mickey 离开后，Emma 留在原位正面追问 Zack 的隐瞒。；Doris 推门送来 4411「Lakeshore清退协警通知」，将私人冲突切回现实危机。\n- 排除内容与演出边界：白天事务所底色可复用 SC4011，但人物组合、站位和情绪构图独立。；清退通知用档案袋或折叠公文呈现，不提前显示 O'Hara 已同意出售。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": [
+      {
+        "id": "office_confrontation",
+        "pendingTalkKey": "L4_opening_office_confrontation",
+        "forced": true
+      }
+    ]
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l5_end_archive_van_night",
+    "Name": "u4_l5_end_archive_van_night",
+    "displayName": "离开四十二层 / 法院档案车 · 构图 B",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】离开四十二层 / 法院档案车\n- 时间版本：深夜版；背景资源：u4_l5_end_stairs_pickup_night / u4_l5_end_archive_van_night\n- 资产性质：过渡 AVG 画面；车内完整 AVG 画面；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4043 离开四十二层 / 法院档案车\n- 构图 A：Zack 与 Emma 带着整袋 4516 走消防楼梯下行，避开电梯与 Miller 人员。；Emma上楼前已经向Watts留下四十二层地址、Miller车辆异常与楼梯撤离方向；Watts据此驾驶法院档案车在楼层中间停车区接应。；三人迅速上车，档案袋始终封存。\n- 排除内容与演出边界：不在停车区拆档案。；Watts 只负责接应、路线和档案安全，不表现为警察或法官。；这是SC4043连续事件的构图A；上车后切构图B，不恢复玩家控制。\n- 构图 B：Watts 驾车；Zack 与 Emma 坐在后排，4516 放在两人之间并保持封存。；Emma 说明自己因 Zack 久未回电而改变决定；发现Miller车辆增加后，她先把地址与楼梯撤离方向留给Watts，再独自从楼梯赶到四十二层。；Zack 告知 Mickey 就是 Whale、档案已取得、Mickey 主动松手。\n- 排除内容与演出边界：Emma 先确认 Zack 是否受伤，不在车内完成关系清算。；不展示 4517—4519，也不让任何人拆开内封套。；这是SC4043连续事件的构图B；与停车区构图之间不插入自由探索或额外Talk入口。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
   },
   {
-    "id": "Art\\Scene\\Backgrounds\\EPI03\\SC3491_avg_u3_l4_open_office_call_night",
-    "Name": "L4 开篇：Zack侦探事务所Foster来电（夜晚完整 AVG 图）",
-    "displayName": "SC3491_avg_u3_l4_open_office_call_night",
-    "category": "scene_bg",
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l5_end_safehouse_archive_0420",
+    "Name": "u4_l5_end_safehouse_archive_0420",
+    "displayName": "凌晨四点二十分 · 安全地点拆阅档案",
+    "category": "scene",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】L4 开篇：Zack侦探事务所Foster来电\n- 时间版本：夜晚版（资源条目）；资源 ID：SC3491_avg_u3_l4_open_office_call_night\n- 资产性质：人物和场景合成整图，Foster 通过电话出现，不作为现场实体人物\n- 场景参考：Zack 侦探事务所；SC3018 Zack 侦探事务所\n- 画面人物：Zack（回到事务所后复盘 Helen 的退守版本，正在寻找破口）；Emma（与 Zack 一起复盘 Helen 的退守版本）；Foster（电话中出现，不画实体立绘）\n- 画面重点：L3 指证后，Helen 给出“独自一人布陷阱、当晚没去过楼顶”的退守版本。Zack 和 Emma 回到 Zack 侦探事务所复盘，桌上电话响起，Foster 通知油痕检测仪到了；画面重点是“突破口突然出现”：电话、案卷、事务所桌灯，Zack 与 Emma 的注意力从 Helen 转向法医办公室。\n- 叙事作用：承接 L3 Helen 的退守谎言。；引出 L4 新能力：油痕检测仪。；把 L4 调查目标导向法医办公室、天台门把手、Helen 家地面油迹。\n- 排除内容：不需要现场实体人物组合图。\n- 时间版本：夜晚版；以事务所台灯、桌上电话与窗外街灯为主，承接 Foster 来电的突发感。",
+    "ArtRequirement": "【完整 AVG 场景图】凌晨四点二十分 · 安全地点拆阅档案\n- 时间版本：04:20版；背景资源：u4_l5_end_safehouse_archive_0420\n- 资产性质：完整 AVG 场景；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4044 凌晨四点二十分 · 安全地点拆阅档案\n- 画面重点：主档案桌：Zack 整理 4516，并发现暗部封夹。；侧桌：Emma 与 Watts 核对外卷，视线被卷宗箱和灯光分区遮挡。；联络电话：Watts 可联系夜间公共系统，为后续行动保留现实能力。\n- 叙事作用：Zack 独自拆开内封套，取得 4517「Tidewater地基材料替换单」、4518「Sean O'Malley特殊处置页」、4519「后插入的水源维护页」。；他共享 4517，扣下 4518、4519，只公开 O'Hara 的优先清退危险。；三人决定立刻前往南区。\n- 排除内容与演出边界：“安全地点”保持匿名，不擅自指定新机构或所有人。；Emma、Watts 此时不知道 Zack 扣页；4519 表面日期仍在四天后。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
     "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l5_end_southside_crisis_dawn",
+    "Name": "u4_l5_end_southside_crisis_dawn",
+    "displayName": "南区街道 / O'Hara 家门外",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】南区街道 / O'Hara 家门外\n- 时间版本：清晨版；背景资源：u4_l5_end_southside_crisis_dawn\n- 资产性质：完整 AVG 终幕画面；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4045 南区街道 / O'Hara 家门外\n- 画面重点：法院档案车停在 O'Hara 家附近，街上已有居民呕吐、眩晕并相互搀扶。；Zack 交出 4519；Watts 在车旁联系公共卫生值班系统。；Emma 与 Zack 穿过街道奔向 O'Hara 家门。\n- 排除内容与演出边界：这是清晨危机状态，不复用 SC4032 的白天清退画面。；只表现多人出现异常症状，不指定毒物或执行者。；最后一帧停在门外；进入 O'Hara 家、发现其状态与送医均属于 Unit5。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l5_end_stairs_pickup_night",
+    "Name": "u4_l5_end_stairs_pickup_night",
+    "displayName": "离开四十二层 / 法院档案车 · 构图 A",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】离开四十二层 / 法院档案车\n- 时间版本：深夜版；背景资源：u4_l5_end_stairs_pickup_night / u4_l5_end_archive_van_night\n- 资产性质：过渡 AVG 画面；车内完整 AVG 画面；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4043 离开四十二层 / 法院档案车\n- 构图 A：Zack 与 Emma 带着整袋 4516 走消防楼梯下行，避开电梯与 Miller 人员。；Emma上楼前已经向Watts留下四十二层地址、Miller车辆异常与楼梯撤离方向；Watts据此驾驶法院档案车在楼层中间停车区接应。；三人迅速上车，档案袋始终封存。\n- 排除内容与演出边界：不在停车区拆档案。；Watts 只负责接应、路线和档案安全，不表现为警察或法官。；这是SC4043连续事件的构图A；上车后切构图B，不恢复玩家控制。\n- 构图 B：Watts 驾车；Zack 与 Emma 坐在后排，4516 放在两人之间并保持封存。；Emma 说明自己因 Zack 久未回电而改变决定；发现Miller车辆增加后，她先把地址与楼梯撤离方向留给Watts，再独自从楼梯赶到四十二层。；Zack 告知 Mickey 就是 Whale、档案已取得、Mickey 主动松手。\n- 排除内容与演出边界：Emma 先确认 Zack 是否受伤，不在车内完成关系清算。；不展示 4517—4519，也不让任何人拆开内封套。；这是SC4043连续事件的构图B；与停车区构图之间不插入自由探索或额外Talk入口。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": []
+  },
+  {
+    "id": "Art\\Scene\\Backgrounds\\EPI04\\u4_l5_open_42f_lobby_night",
+    "Name": "u4_l5_open_42f_lobby_night",
+    "displayName": "四十二层外厅 / 抵达",
+    "category": "scene",
+    "sceneKind": "dialogue",
+    "ArtRequirement": "【完整 AVG 场景图】四十二层外厅 / 抵达\n- 时间版本：午夜前版；背景资源：u4_l5_open_42f_lobby_night\n- 资产性质：非交互建立镜头；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4041 四十二层外厅 / 抵达\n- 画面重点：电梯指针停在 42 层；黄铜目录牌显示 Donnelly & Associates，与 1919 旧信封地址吻合。；外廊冷清，Mickey 办公室门临时未锁；消防楼梯门同时入画，为 Emma 后续上楼保留动线。；Zack 直接进入办公室，画面切至 SC4042。\n- 排除内容与演出边界：现行 state 的 init_scene 已改为 4041；本镜头播放后自动切入 4042，并只在 4042 恢复玩家控制。；4041 不是可导航地点，也没有必经点击步骤；不得新增门房、放行、破门、撬锁、潜入或门禁谜题。",
+    "assetStatus": "pending",
+    "Chapter": "EPI04",
+    "events": [
+      {
+        "id": "forty_second_floor_arrival",
+        "pendingTalkKey": "L5_opening_42nd_floor_arrival",
+        "forced": true
+      }
+    ]
   }
 ]

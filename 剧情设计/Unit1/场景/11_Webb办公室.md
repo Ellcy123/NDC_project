@@ -1,6 +1,6 @@
 # 11 Webb 办公室
 
-**state ID**：`9011`（90xx = 场景命名空间；全 6 Loop 共用此 ID）
+**state ID**：`1011`（90xx = 场景命名空间；全 6 Loop 共用此 ID）
 
 **位置**：2F（老板账目 / VIP 应酬处）
 **戏剧作用**：L2 证据所在——VIP 合影 + $15,000 收入账本（勒索生意浮出水面）
@@ -29,8 +29,8 @@ Webb 的个人办公室，藏着他真实财务状况的核心证据。无 NPC �
 ### 可获取证据
 | ID | 名称 | 类型 | 可拾取 | note |
 |---|---|---|:---:|---|
-| 9202 | Webb 办公室 VIP 合影 / VIP Group Photo | item | ✅ | 关键——疑点 9201 condition；配合勒索照片 9201 建立"照片上的人就是被勒索 VIP"推理 |
-| 9203 | Webb 收入记录 / Webb's Income Ledger | item | ✅ | 关键——疑点 9202 condition；L2 R2 击穿件（月净 $15,000，配合 Tommy 账本 $4,000 显差额） |
+| 1202 | Webb 办公室 VIP 合影 / VIP Group Photo | item | ✅ | 关键——疑点 1201 condition；配合勒索照片 1201 建立"照片上的人就是被勒索 VIP"推理 |
+| 1203 | Webb 收入记录 / Webb's Income Ledger | item | ✅ | 关键——疑点 1202 condition；L2 R2 击穿件（月净 $15,000，配合 Tommy 账本 $4,000 显差额） |
 
 ---
 

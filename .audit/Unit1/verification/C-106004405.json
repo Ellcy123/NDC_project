@@ -1,0 +1,44 @@
+{
+  "issue_key": "C|AVG/EPI01/Talk/loop4/vivian_004.json|106004405",
+  "verdict": "dismissed",
+  "final_severity": "P2",
+  "verdict_reason": "原 P1“提前泄露 L5 完整假枪声诡计”不成立。到 106004405 时，玩家已在 L3 由带硝烟玻璃压在 23:20 垃圾袋下确认真实枪击早于 23:20，现行 state 和时间线文档也已把 23:30 归档为非致命的假枪声。紧邻台词 106004411 又新增了直接观察：Vivian 推门时 Webb 已倒地，随后闷响从她头顶传来；会客室位于一楼，因此 Zack 判断声源在二楼有当场证据。Rosa 的威胁纸条还要求她恰在 23:30 到场嫁祸 Vivian，使“故意误导案发时间”成为对已知证据的合理合并，而不是无依据预知。该句没有说出 James、二楼厨房窗口、空射者身份、真实枪击的 23:00–23:05 时刻或鼓点消音方法；这些仍由 L5 的节目单、修改申请、厨房动线与口音证据闭合。故不构成 C 维度的未来 Loop 解答泄露，原 P1 应 dismissed。最多保留 P2：Zack 一句包办了“二楼+故意误导”的玩家推断，且 L5 开场又近似复述，存在轻度抢答和重复感，但属于表达/推理体验问题而非时间线越界。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl",
+      "finding": "原 issue 认为 106004405 在 L4 直接断言二楼假枪声和误导意图，提前说破应留到 L5 的完整诡计，severity=P1。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#106004400-106004412",
+      "finding": "Unity 正式链为 Zack 询问 23:30 后所见→Vivian 说进门时 Webb 已倒地、闷响随后从头顶传来→Zack 判断二楼假枪声→仍明确表示不知道真正枪声为何无人听见。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/vivian_004.json#106004400-106004412; AVG/对话配置工作及草稿/Unit1/Loop4_完整台本.md#106004405",
+      "finding": "现行 AVG 与完整台本均与 Unity 正式链一致；106004405 没有点名 James、厨房窗口、空射方式或鼓点掩声。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml; 剧情设计/Unit1/Unit1_大纲.md#疑点1301; 剧情设计/Unit1/案发时间线与动线.md#时序锚点",
+      "finding": "L3 已用玻璃碎片与 Rosa 23:20 倒垃圾的证言证明真实枪击早于 23:20；大纲明确写疑点 1101 在 L3 回填为 23:30 不是案发时刻，时间线文档也标注“假枪声”在 L3 揭示。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml#player_context.known_facts/post_expose_knowledge",
+      "finding": "L4 开始时 known_facts 已写疑点1101在L3回填为“23:30是假枪声”；L4 新增的有效伏笔是 Vivian 从一楼会客室听见声音来自头顶。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml#player_context.known_facts",
+      "finding": "玩家同时已知威胁者要求 Rosa 在 23:30 准时进入会客室并嫁祸 Vivian；假枪声与该精确时点重合，足以支持“故意误导案发时间”的推断。"
+    },
+    {
+      "source": ".audit/Unit1/facts/events.json#E008_James制造假枪声",
+      "finding": "L5 才完整还原的 E008 包含 James 身份、二楼厨房窗口和朝外空射；106004405 只得到匿名二楼声源与造假目的，没有闭合这些关键执行事实。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#101005403,101005910,101005404",
+      "finding": "L5 正式开场把 Vivian 的头顶证言复盘为“二楼、放空枪、故意引开注意”，用作继续锁定楼上执行人的调查方向；这说明二楼假枪声在 L4-L5 接缝处是前置线索，而非 L5 指证完成后才允许知道的终局答案。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop5_james.json#107905012-107905021; 剧情设计/Unit1/state/loop5_state.yaml",
+      "finding": "L5 的真正新增闭合是节目鼓点解释为何真实枪声无人听见、锁定 23:00–23:05、结合口音和动线指认 James，并把 23:30 障眼法归到 James；这些核心推理仍未在 L4 泄露。"
+    }
+  ]
+}

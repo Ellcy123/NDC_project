@@ -1,0 +1,52 @@
+{
+  "issue_key": "C|剧情设计/Unit1/案发时间线与动线.md|23:30弹壳流转",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "真实冲突，原 P1 合理。现行 events、大纲与 L3-L6 state 建立的是一枚持续追踪的案发现场弹壳 1401：Rosa 在 23:30 趁乱拾得，L3 交给 Zack，L4 被 Morrison 当场夺走，L6 从 Morrison 家书房找回同一实体；loop6_state 还明确声明 1605 已废弃、不存在独立第二枚弹壳。Unity 正式运行表却仍保留另一套实现：L3 Talk 以 get 取得 1401，之后全表没有 del 1401；L6 SceneConfig 通过 1836→1837 容器链另行产出 1605，ItemStaticData 把 1605 定义为 Morrison 家藏弹壳，ExposeData R1 又要求 1605+1601，而不是 state 要求的 1401+1601。正式 L6 对白同时说‘这枚弹壳起初是 Rosa 从 Webb 会客室捡到的’，说明 1605 在对白语义上又被当成 1401 本体，形成同一实体双 ID、可能同时在库。时间线文档本身也不自洽：23:30 段称 Morrison 私藏了 Rosa 所取之外的另一枚案发弹壳，但物理属性锚点却把‘两枚’列成 1401 加 Tommy 多年前留下的生锈 1506；1506 并非本案现场弹壳，且 Unity 正式 ItemStaticData 没有该 ID。P1 而非 P0：正式运行时的 1605 有可达的抽屉获取链，最终 Expose 也接受 1605，故没有证据表明 L6 必然卡死；但弹壳数量、Morrison 首次取得时间、证据身份和玩家库存状态均不唯一，会直接污染完整台本、推理事实与跨 Loop 物证闭环。建议采用 state 已裁定的一枚 1401 方案：L4 显式 del 1401，L6 抽屉重新授予 1401，ExposeData 改为 1401+1601，删除/停用 1605；同时把时间线的第二枚案发弹壳叙述和 1506 混算清除。本条与 D 维度 `D|D:/NDC/Assets/table/Talk.json|103003009 / 1605` 是同一底层缺陷，最终报告应合并为一个 P1，不重复计数；C 仅额外揭示了时间线对实体数量和首次取得时点的矛盾。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl#line_id=23:30弹壳流转",
+      "finding": "原 C issue 指出时间线的两枚/私藏版本、events/state 的 L4 夺走 1401 版本与 Unity L6 使用 1605 版本互斥，severity=P1。"
+    },
+    {
+      "source": "剧情设计/Unit1/案发时间线与动线.md#23:30/物理属性锚点",
+      "finding": "23:30 段称 Rosa 捡一枚且 Morrison 私藏另一枚；物理属性表却把‘.45 警用弹壳（2枚）’定义为 1401 与 Tommy 的旧 1506，既未登记 1605，也把非本案现场旧物计入同一数量口径。"
+    },
+    {
+      "source": ".audit/Unit1/facts/events.json#E009_Rosa作伪证/E012_Morrison夺证押走Vivian/E015_Morrison被击穿并处分",
+      "finding": "事件事实链只追踪 1401：Rosa 现场拾取，L4 Morrison 从 Zack 手中夺走并藏入书房，L6 Zack 用 1401 与 1601 闭合凶器；未建立独立 1605 事件。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop1_state.yaml#Morrison.withheld_topics; 剧情设计/Unit1/state/loop3_state.yaml#1401",
+      "finding": "L1 state 明确 Morrison 尚未细勘、没有自己的弹壳；L3 state 明确现场缺失的弹壳就是 Rosa 拾走并在 103003009 交给 Zack 的 1401。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml#turn_cutscene/evidence_status_changes",
+      "finding": "L4 state 将同一 1401 从 Zack 手中夺走，状态更新为 confiscated_by_morrison，并规定 L5 起不在玩家手中、L6 才从 Morrison 家找回。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop6_state.yaml#Scene1016/round_1/evidence_registry",
+      "finding": "L6 state 要求找回 1401 并以 [1401,1601] 完成 R1；文件明确注释 1605 已废弃，原第二枚弹壳设定取消，不存在独立第二枚。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#103003003,103003009; AVG/EPI01/Talk/loop4/morrison_005.json",
+      "finding": "正式 L3 先 exhibit 1401 后 script=3 get 1401；Unity Talk 全表没有针对 1401 的 script=4 del，L4 虽用对白演出夺走弹壳，却没有运行时移除动作。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1605,1836,1837; D:/NDC/Assets/table/SceneConfig.json#1616",
+      "finding": "正式表仍定义独立 1605‘Harold Morrison 藏起的 .45 弹壳’，并由 Scene 1616 挂载的抽屉 1836→1837→1605 形成可达获取链。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ExposeData.json#id=14; AVG/EPI01/Expose/Loop6_morrison.json#104906102-104906107",
+      "finding": "正式 L6 R1 接受/要求 [1605,1601]；同一路线对白却称这枚弹壳原本由 Rosa 从 Webb 会客室捡到、后来出现在 Morrison 书房，语义上将 1605 当作 1401 同一实体。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1401; 剧情设计/Unit1/state/loop2_state.yaml#1506",
+      "finding": "1401 是 Rosa 交出的本案现场弹壳；1506 是 Tommy 多年前受枪击留下的生锈旧弹壳，且 Unity 正式 ItemStaticData 不存在 1506，因此不能用 1506 支撑本案现场‘两枚’口径。"
+    },
+    {
+      "source": ".audit/Unit1/issues/D-items.jsonl#line_id=103003009 / 1605",
+      "finding": "D 维度已把正式运行时未删除 1401、L6 另产出 1605、最终 Expose 使用 1605 记录为 duplicate_physical_identity P1；与本 C issue 底层缺陷相同，应汇总去重。"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "issue_key": "X-dialogue12.jsonl::106002102,106002906-106002907,106002908,106002208-106002209,106002301-106002310",
+  "verdict": "verified",
+  "final_severity": "P2",
+  "verdict_reason": "不可达事实成立，但应从 P1 降为 P2。从正式 SceneConfig 的首次入口 106002001 与重复入口 106803001，按 next 和分支 Parameters 遍历后，vivian_002 的 67 个节点仅 46 个可达；即使合并重复对话入口，所报 21 个节点仍全部不可达。Rosa/女儿照片链 106002301-106002310 内部连续，却没有任何入边，主菜单与重复菜单都只有勒索经历、昨晚排班、遗产及结束四项。它确实会使“完整台本正文”与运行时不一致，但没有截断 L3 必要知识：Vivian 的勒索经历、22:00-23:00 舞台排班和 23:30 送酒惯例均有可达版本；Rosa 女儿与 0915 密码由储藏室环境物 1309 直接提供，1302/1303 的获取和指证不依赖 Vivian 支线。故这是应清理或标记的死代码/AI 台本污染，而非玩家推进或核心知识缺失，最终定为 P2。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/X-dialogue12.jsonl#106002102",
+      "finding": "原 issue 将 21 个无入边节点定为 P1，主要理由是 Rosa/女儿照片支线可能让 AI 误以为玩家已从 Vivian 获得女儿线索。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json#sceneId=1302",
+      "finding": "Unity 正式场景只挂 TalkInfo=106002001 与 LoopTalkInfo=106803001；没有给 106002301 或其他所报节点设置额外入口。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop3/vivian_002.json + vivian_002_repeat.json",
+      "finding": "以 106002001/106803001 为起点，把 next 与 Parameters[].ParameterInt 中指向现存 Talk ID 的值作为边遍历：主文件 67 节点可达 46，所报 21 节点全部不可达；加入 repeat 后仍无新增通向这 21 节点的边。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop3/vivian_002.json#106002021 + vivian_002_repeat.json#106803003",
+      "finding": "首次与重复菜单都只有四个去向：106002101（勒索经历）、106002201（排班）、106002401（遗产）和各自结束节点；不存在 Rosa/照片选项，也不存在通往 106002301 的隐藏 Parameters。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop3/vivian_002.json#106002301-106002310",
+      "finding": "照片支线从询问 Rosa 是否与 Vivian 有过节，连续走到 Rosa 偷看女孩照片，再接 106002401；链内 next 完整但 106002301 无入边，因此是完整的孤立旧话题，而不是中途断链。"
+    },
+    {
+      "source": "AVG/对话配置工作及草稿/Unit1/Loop3_完整台本.md#Talk:vivian_002",
+      "finding": "完整台本把 67 个节点全部作为普通正式正文列出，并标 SceneConfig 正式入口 106002001；没有标注 21 个节点不可达，所以后续 AI 阅读时确有把死内容当作已播放内容的风险。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml#Vivian active_topics/player_inquiry + scene 1001 evidence",
+      "finding": "Vivian 本轮要求的信息是勒索经历、23:30 送酒惯例与情绪状态，未要求 Rosa 女儿话题；Rosa 储藏室的 1309 照片直接给出“我的天使·0915”并作为铁盒密码提示，玩家仍能取得 1302 威胁纸条和 1303 医疗单，指证链不依赖孤立支线。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Testimony.json#106002202 + TestimonyItem.json#1063004",
+      "finding": "22:00-23:00 舞台表演证词挂在可达节点 106002202；不可达的 106002208-106002209 不是 Unity 正式证词的唯一触发路径。其余不可达经历/排班句也都有可达链表达同类事实。"
+    }
+  ]
+}

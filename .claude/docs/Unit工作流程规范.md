@@ -1,7 +1,7 @@
 # Unit 内容设计工作流程规范
 
 适用于 NDC 项目单个 Unit（章节）从大纲到预览落地的全流程。
-基于 Unit9 实战路径整理，作为后续 Unit 的标准操作流程。
+基于 Unit1 实战路径整理，作为后续 Unit 的标准操作流程。
 
 ---
 
@@ -46,11 +46,11 @@
 - `episode-story-extractor` — 故事提取器（已有材料时反向整理）
 
 **注意事项**：
-- 大纲数次迭代是正常的（Unit9 经历 5 轮）。
-- **疑点不写独立文档**——直接合并进后续 state（Unit9 早期有独立 `疑点设计.md`，后来 `3c27db3` 整体删除）。
+- 大纲数次迭代是正常的（Unit1 经历 5 轮）。
+- **疑点不写独立文档**——直接合并进后续 state（Unit1 早期有独立 `疑点设计.md`，后来 `3c27db3` 整体删除）。
 - 大纲写作风格（用户反馈）：**结构第一**，对白只写关键的（指证击穿/反转锚点/情感爆点），普通过场用一两句概括。
 
-**举例**（Unit9 实际路径）：
+**举例**（Unit1 实际路径）：
 ```
 fe2d3bd  大纲更新
 c013a9f  1920s 时代细节补充
@@ -69,8 +69,8 @@ bada565  时代质感细节落地
 | 轨道 | 路径 | 文件 |
 |------|------|------|
 | state | `剧情设计/Unit{N}/state/` | `loop1_state.yaml` ~ `loop6_state.yaml` |
-| 角色 | `剧情设计/Unit{N}/Characters/` | 每个 NPC 一个 `.md`（Unit9 共 10 个） |
-| 场景 | `剧情设计/Unit{N}/场景/` | 每个调查场景一个 `.md`（Unit9 共 18 个） |
+| 角色 | `剧情设计/Unit{N}/Characters/` | 每个 NPC 一个 `.md`（Unit1 共 10 个） |
+| 场景 | `剧情设计/Unit{N}/场景/` | 每个调查场景一个 `.md`（Unit1 共 18 个） |
 
 **可用 skill**：
 - `unit-state-generator` — **首选**。大纲 → 4-agent 团队讨论 → 6 个 state 文件 + 风险点清单。
@@ -81,8 +81,8 @@ bada565  时代质感细节落地
 **注意事项**：
 - **角色档案聚焦人设**（用户反馈）：只写弧光/立场/作用，不复述剧情事件。
 - **疑点解决是二元的**（用户反馈）：描述疑点状态只用"已解决/未解决"，不写"部分解决"。
-- 空间布局可能要重构（Unit9 `ae84903` 整体重构过一次）。
-- 证据 ID 编码：EPI09 = 9xxx，loop1=91xx，loop2=92xx……派生证据 97xx。
+- 空间布局可能要重构（Unit1 `ae84903` 整体重构过一次）。
+- 证据 ID 编码：EPI01 = 1xxx，loop1=11xx，loop2=12xx……派生证据 17xx。
 
 **举例**：
 ```
@@ -90,7 +90,7 @@ adc0de3  state-to-table skill 引入
 06d20f3  大纲疑点逻辑修正 + state-to-table 三段式重构
 ae84903  空间布局重构
 6db6c46  角色文档初版
-f2a1a09  角色文档重写 + 9506 生锈弹壳 + 基础设计文件入库
+f2a1a09  角色文档重写 + 1506 生锈弹壳 + 基础设计文件入库
 ```
 
 ---
@@ -101,7 +101,7 @@ f2a1a09  角色文档重写 + 9506 生锈弹壳 + 基础设计文件入库
 
 **产出**：
 - `AVG/对话配置工作及草稿/Loop{1-6}_对话草稿.md`
-- 或新格式：直接在 `AVG/EPI{NN}/Talk/loop{X}/` 下分文件起草（Unit9 后期改用此结构）
+- 或新格式：直接在 `AVG/EPI{NN}/Talk/loop{X}/` 下分文件起草（Unit1 后期改用此结构）
 
 **可用 skill**：
 - `team-dialogue` — **首选**。State 已定稿，整 Loop 补对白：两策划讨论 → dialogue-writer 执笔 → 审查 → 内容总监拍板。
@@ -112,7 +112,7 @@ f2a1a09  角色文档重写 + 9506 生锈弹壳 + 基础设计文件入库
 - **Phase 1（MD）和 Phase 2（JSON）严格分开**。本阶段只产 MD，绝不动 JSON。
 - 修改对白前必读对应章节设计文档，绝不凭记忆编。
 - 17 条对话设计规则见 `.claude/rules/dialogue.md`（编辑对应路径文件时自动加载）。
-- 一开始可能只做 1 个 Loop 试水（Unit9 从 `778dfb0` Loop1 草稿起步）。
+- 一开始可能只做 1 个 Loop 试水（Unit1 从 `778dfb0` Loop1 草稿起步）。
 
 **举例**：
 ```
@@ -128,10 +128,10 @@ fdf3255  state 证词清理（13 处）+ Loop1 对话草稿
 **目标**：写对白时发现的人设/逻辑问题，反推回 state 和角色档案做同步修正。**这一阶段是螺旋的，不要试图一次性写完阶段 3 再开始**。
 
 **典型反向修正**：
-- 大设定转向（Unit9 `2f015e7`：Webb 从"保镖+继承"改为"遗嘱执行人+slayer rule"）
-- 全局重命名（Unit9 `a5b46ac`：Jimmy → James）
-- 配角加回/加戏（Unit9 `f28c386`：Mrs.Morrison 加回 + Whale 多句台词）
-- 单 Loop 重构（Unit9 `7817171`：Loop3 加 Vivian 共情 + Loop5 §1 重构为纯情绪戏）
+- 大设定转向（Unit1 `2f015e7`：Webb 从"保镖+继承"改为"遗嘱执行人+slayer rule"）
+- 全局重命名（Unit1 `a5b46ac`：Jimmy → James）
+- 配角加回/加戏（Unit1 `f28c386`：Mrs.Morrison 加回 + Whale 多句台词）
+- 单 Loop 重构（Unit1 `7817171`：Loop3 加 Vivian 共情 + Loop5 §1 重构为纯情绪戏）
 
 **可用 skill**：
 - `episode-consistency-audit` — 全集一致性审计，事实抽取 → 7 维并行审计 → HTML 报告。
@@ -139,7 +139,7 @@ fdf3255  state 证词清理（13 处）+ Loop1 对话草稿
 
 **注意事项**：
 - 修改 state 后，**相关 Loop 的对白要回头扫一遍**（用 grep 搜旧设定关键词）。
-- 人设细节调整后，已落地的 NPC 文档要同步（Unit9 `7462fa0` "对话润色版落地 + state/证据/角色文档同步更新"是一次性整理的典范）。
+- 人设细节调整后，已落地的 NPC 文档要同步（Unit1 `7462fa0` "对话润色版落地 + state/证据/角色文档同步更新"是一次性整理的典范）。
 
 **举例**：
 ```
@@ -158,7 +158,7 @@ a5b46ac  全局重命名：Jimmy → James / 吉米 → 詹姆斯
 
 | 内容 | 路径 | 说明 |
 |------|------|------|
-| 小玩法 | `剧情设计/Unit{N}/小玩法/` | 每个分析/合成证据一个 MD（Unit9 L1-L4 各 1 个） |
+| 小玩法 | `剧情设计/Unit{N}/小玩法/` | 每个分析/合成证据一个 MD（Unit1 L1-L4 各 1 个） |
 | 证据美术分类 | `剧情设计/Unit{N}/Unit{N}_证据美术需求分类.md` | 按类型分组 |
 | 场景美术分类 | `剧情设计/Unit{N}/Unit{N}_场景美术需求分类.md` | 按场景分组 |
 | 动态漫画需求 | `剧情设计/Unit{N}/Unit{N}_证物出示动态漫画美术需求.md` | 指证回放/关键镜头 |
@@ -171,9 +171,9 @@ a5b46ac  全局重命名：Jimmy → James / 吉米 → 詹姆斯
 - 可调用 `narrative-designer` agent 辅助构图描述。
 
 **注意事项**：
-- **小玩法必须等证据 ID 稳定**——Unit9 L1-L4 有小玩法文件（`6e2f566` 落地），L5-L6 没做（需要确认是否补）。
+- **小玩法必须等证据 ID 稳定**——Unit1 L1-L4 有小玩法文件（`6e2f566` 落地），L5-L6 没做（需要确认是否补）。
 - **动态漫画构图建议**（用户反馈）：必须写明构图机位/画面内/画面外/视觉重点，**不能用全景对比描述**——动态漫画只展示一个局部。
-- 美术对接清单是**最末整合**，不要在阶段 3 就做——Unit9 `ba02a57`（最近一次 commit）才整合。
+- 美术对接清单是**最末整合**，不要在阶段 3 就做——Unit1 `ba02a57`（最近一次 commit）才整合。
 
 **举例**：
 ```
@@ -192,9 +192,9 @@ ba02a57  对白与 state 整合 + 美术对接清单
 ### 6.1 对白：MD → JSON
 
 ```
-AVG/对话配置工作及草稿/Loop{X}_对话草稿.md
-  → AVG/EPI{NN}/Talk/loop{X}/*.json
-  → AVG/EPI{NN}/Expose/Loop{X}_{npc}.json
+Unit1: Unity 正式 Talk 表
+  → AVG/对话配置工作及草稿/Unit1/Loop{X}_完整台本.md
+  → AVG/EPI01/{Talk,Expose}/loop{X}/*.json
 ```
 
 **可用 skill**：
@@ -203,11 +203,10 @@ AVG/对话配置工作及草稿/Loop{X}_对话草稿.md
 
 **命令**：
 ```bash
-cd AVG/对话配置工作及草稿
-python sync_to_json.py Loop{X}_对话草稿.md --dry-run  # 预览
-python sync_to_json.py Loop{X}_对话草稿.md            # 执行
-python sync_to_json.py --all                          # 全量
-python extract_to_md.py                               # 反向验证往返一致性
+python AVG/Tools/rebuild_unit1_runtime_script.py --check-only
+python AVG/Tools/sync_unit1_script_to_json.py          # 只读预检
+python AVG/Tools/sync_unit1_script_to_json.py --write  # 仅回写既有节点 Words
+# Unit2 使用 AVG/对话配置工作及草稿/sync_unit2_to_json.py
 ```
 
 ### 6.2 配置表：在 avg_editor_v2 上维护
@@ -232,13 +231,13 @@ cd avg_editor_v2 && python server.py   # 本地预览 / 编辑器
 线上部署到 Vercel（`vercel.json` 根路由 → `avg_editor_v2/index.html`）。
 
 **注意事项**：
-- **ID 重编排在生成 JSON 前做**（Unit9 `b6e1ad7` "全章对话 ID 重编排 + JSON 生成 + 预览部署"是一次完成的）。
+- **ID 重编排在生成 JSON 前做**（Unit1 `b6e1ad7` "全章对话 ID 重编排 + JSON 生成 + 预览部署"是一次完成的）。
 - JSON 落地后发现的问题，**修改 MD 后重新 sync**，不要直接改 JSON。
 - 同步到 D:\NDC：`copy /Y "D:\NDC_project\avg_editor_v2\data\table\*.json" "D:\NDC\Assets\table\"`
 
 **举例**：
 ```
-1abe679  EPI09 起步（开始写 JSON）
+1abe679  EPI01 起步（开始写 JSON）
 b6e1ad7  全章对话 ID 重编排 + JSON 生成 + 预览系统部署
 89b3e02  L1-L4 分析派生证据落地 + 配置表/对话同步
 4fa02ab  全章对白同步

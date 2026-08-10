@@ -1,6 +1,6 @@
 # 02 Vivian 化妆室
 
-**state ID**：`9002`（90xx = 场景命名空间；全 6 Loop 共用此 ID）
+**state ID**：`1002`（90xx = 场景命名空间；全 6 Loop 共用此 ID）
 
 **位置**：B1 地下室
 **戏剧作用**：L2 不出现（Vivian 被 Morrison 带到酒吧一角做笔录问话，仍在酒吧内但玩家无法接触）；L3 Vivian 对话；L4 痛苦记录 + 船票 + 绝笔信 + Colt 广告卡搜证
@@ -34,10 +34,10 @@ Vivian 独自在化妆室。她仍然咬定自己是凶手。Zack 可以进入�
 ### NPC 列表
 | NPC | is_liar | 关键证词 |
 |---|:---:|---|
-| Vivian | false（自毁式认罪，非指证） | 9063001（恨 Webb 因被迫勒索）/ 9063002（23:30 送酒惯例） |
+| Vivian | false（自毁式认罪，非指证） | 1063001（恨 Webb 因被迫勒索）/ 1063002（23:30 送酒惯例） |
 
 ### 可获取证据
-无（化妆室本身无物证；保险箱字条等在 9003 Webb 会客室）
+无（化妆室本身无物证；保险箱字条等在 1003 Webb 会客室）
 
 ---
 
@@ -56,10 +56,10 @@ Vivian 化妆室，L4 再次开放。无 NPC 驻场，玩家独立搜证。四�
 ### 可获取证据
 | ID | 名称 | 类型 | 可拾取 | note |
 |---|---|---|:---:|---|
-| 9406 | Vivian 的痛苦记录 / Vivian's Anguish Journal | envir | ❌ | 场景道具——心理轨迹；不入疑点 condition |
-| 9405 | 枪盒内衬的 Colt 广告卡 / Colt Advertising Card | envir | ❌ | 场景道具——环境叙事 |
-| 9404 | 被撕毁的船票 / Torn Boat Ticket | item | ✅ | 场景道具——Vivian 曾计划离开又断念；情感素材 |
-| 9403 | Vivian 的绝笔信 / Vivian's Suicide Letter | item | ✅ | L4 R2 陷阱证据——只证死志，不反驳 Whale 行动维度 |
+| 1406 | Vivian 的痛苦记录 / Vivian's Anguish Journal | envir | ❌ | 场景道具——心理轨迹；不入疑点 condition |
+| 1405 | 枪盒内衬的 Colt 广告卡 / Colt Advertising Card | envir | ❌ | 场景道具——环境叙事 |
+| 1404 | 被撕毁的船票 / Torn Boat Ticket | item | ✅ | 场景道具——Vivian 曾计划离开又断念；情感素材 |
+| 1403 | Vivian 的绝笔信 / Vivian's Suicide Letter | item | ✅ | L4 R2 陷阱证据——只证死志，不反驳 Whale 行动维度 |
 
 ---
 

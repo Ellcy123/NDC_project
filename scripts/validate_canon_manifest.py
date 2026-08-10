@@ -14,7 +14,13 @@ SUPPORTED_SCHEMA_VERSION = 1
 EXPECTED_CANONICAL_UNITS = {f"Unit{unit}" for unit in range(1, 6)}
 FORBIDDEN_CANONICAL_UNITS = {"Unit9", "Unit10"}
 FORBIDDEN_MAPPING_KEYS = {"idMap", "idMappings", "idRewrite", "idTranslationRules"}
-SOURCE_PATH_KEYS = ("outline", "avgCurrent", "tableDrafts", "runtimeTables")
+SOURCE_PATH_KEYS = (
+    "outline",
+    "avgCurrent",
+    "tableDrafts",
+    "runtimeTables",
+    "previewTables",
+)
 LOOP_STATUSES_WITH_FILES = {"present"}
 LOOP_STATUSES_WITHOUT_FILES = {"absent", "reserved"}
 
@@ -100,11 +106,14 @@ def _validate_loop_component(
         return
 
     if component_name == "state":
-        if "{1-6}" not in source_value:
-            errors.append(f"{chapter_path}.sources.statePattern must contain {{1-6}}")
+        expected_token = f"{{1-{expected}}}"
+        if expected_token not in source_value:
+            errors.append(
+                f"{chapter_path}.sources.statePattern must contain {expected_token}"
+            )
             return
         for loop in present:
-            state_path = repo_root / source_value.replace("{1-6}", str(loop))
+            state_path = repo_root / source_value.replace(expected_token, str(loop))
             if not state_path.exists():
                 errors.append(
                     f"{chapter_path}.sources.statePattern loop {loop} does not exist: {state_path}"

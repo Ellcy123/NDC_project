@@ -1,0 +1,40 @@
+{
+  "issue_key": "C|剧情设计/Unit1/state/loop2_state.yaml|player_context.post_expose_knowledge",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "确认，但需精确界定：当前正式运行台词本身没有时间矛盾，105002008 的中英文都明确说“去年十一月中旬”，在 1928-11-03 的案发锚点下即 1927 年 11 月中旬。问题出在低一优先级的策划真源反复省略“去年/1927 年”：loop2 的 post_expose_knowledge、L3-L6 继承认知、大纲以及 Tommy、Webb、James 人物档案均只写“11 月中旬”。这些文字没有明确断言是 1928 年，因此不能表述为已经发生的运行时硬冲突；但在以 1928 年为默认叙事年份的独立文档中，它们会自然产生“11 月 3 日死亡后才于 11 月中旬停业/换人”的错误解析，并已沿玩家认知继承链扩散。P1 保留：正式台词无需修改，但作为供 AI 与后续配置生成使用的多份现行设计真源，这一关键年份缺失会持续诱发人物动机和时序错误，已超过单纯文案雕琢。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl",
+      "finding": "原 issue 类型为 calendar_year_omitted，指向 loop2_state.yaml 的 player_context.post_expose_knowledge，并列出 L3-L6、大纲和人物档案的继承性遗漏。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#105002008",
+      "finding": "Unity 正式 Talk 的中文为“去年十一月中旬”，英文为“Mid-November last year”，两个语言版本均明确是前一年。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/tommy_002.json#105002008; AVG/对话配置工作及草稿/Unit1/Loop2_完整台本.md#105002008",
+      "finding": "现行 AVG JSON 与完整台本和 Unity 正式 Talk 一致，均保留“去年/last year”，因此玩家实际听到的内容没有年份错误。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop2_state.yaml#player_context.post_expose_knowledge; loop3_state.yaml; loop4_state.yaml; loop5_state.yaml; loop6_state.yaml",
+      "finding": "L2 指证后认知及 L3-L6 继承认知反复写“11 月中旬”或“11 月中旬之后”，均未保留“去年”或 1927 年。"
+    },
+    {
+      "source": "剧情设计/Unit1/Unit1_大纲.md",
+      "finding": "人物总览、六循环认知和 L2 指证后剧情多处只写“11 月中旬”，同样缺失年份。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/tommy.md; 剧情设计/Unit1/Characters/webb.md; 剧情设计/Unit1/Characters/james.md",
+      "finding": "三份人物档案分别把 Tommy 被替换、Webb 停业换人、James 业务中断写成“11 月中旬”，没有注明 1927 年。"
+    },
+    {
+      "source": ".audit/Unit1/facts/canon_rules.json; .audit/Unit1/facts/events.json; 剧情设计/Unit1/Characters/webb.md",
+      "finding": "现行日期锚点为 1928-11-03，Webb 死亡时间为当晚 23:00；因此正式台词中的“去年”只能解析为 1927 年，而不能省略后仍默认成 1928 年 11 月中旬。"
+    },
+    {
+      "source": ".audit/Unit1/scope.json",
+      "finding": "正式 Unity Talk 与 AVG/完整台本的优先级高于剧情设计目录；据此应以“去年十一月中旬”为既定事实，并把策划文档判为年份信息丢失，而不是反过来修改正式台词。"
+    }
+  ]
+}

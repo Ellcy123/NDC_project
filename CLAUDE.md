@@ -6,17 +6,11 @@
 
 ---
 
-## Unit 重构关系（重要）
+## Canon 章节关系（重要）
 
-**Unit9 是 Unit1 的重构版，Unit10 是 Unit2 的重构版。** 旧版（Unit1/Unit2）的所有配置、对话、设计文档**都未删除**，保留在原目录作为历史参考。
+**Unit1 / EPI01 / 1xxx 是玩家第一章唯一的当前身份。** Unit9 / EPI09 / 9xxx 已于 2026-08-10 完成迁移，仅能从 `canon_manifest.json` 的 `history[]` 所列归档中作为历史参考读取，不能当作当前既定事实。
 
-**默认行为**：把 Unit9 / Unit10 当作**独立的新章节**处理。不主动去 Unit1 / Unit2 目录翻旧内容，不假设新版沿用旧版的设定、证据、对话。
-
-**例外情况**（可以查旧版作参考）：
-- 用户明确提到"之前做过的"、"旧版"、"参考 Unit1/Unit2"等表述
-- 遇到 Unit9 / Unit10 当前文档里没解释清楚、又像是延续自旧设定的信息点，且无法通过现有 state / 大纲推断时——可以去旧 Unit 翻一下作参考，但要在回复里说明"参考了旧版 UnitX 的 XXX"
-
-**不要**：把旧版的剧情/证据/对话当作 Unit9 / Unit10 的既定事实搬过来，除非新版文档明确继承。
+Unit10 仍只是 Unit2 的策划标题来源别名，不是独立章节。任何章节身份、ID 空间和当前来源判断都先读取 `canon_manifest.json`。
 
 ---
 
@@ -37,19 +31,19 @@
 | 目录 | 内容 |
 |------|------|
 | `AVG/` | 对话系统：按章节(EPI01/EPI02) → 类型(Talk/Expose) → 循环(loop1-6) 组织的 JSON 对话文件 |
-| `AVG/对话配置工作及草稿/` | 对话 MD 草稿 + 同步脚本 (sync_to_json.py, extract_to_md.py) |
+| `AVG/对话配置工作及草稿/Unit1/` | EPI01 六个 Loop 的 AI 完整台本、索引、审查与迁移报告 |
 
 ### 预览工具与配置表落地
 | 目录 | 内容 |
 |------|------|
 | `avg_editor_v2/` | 当前预览 + 网页配置编辑器（vercel 根路由），配置表的可视化与编辑入口 |
-| `avg_editor_v2/data/table/` | 当前配置表落地处（编辑器副本，真相源）——全局 JSON（DoubtConfig / ItemStaticData / SceneConfig / TestimonyItem 等活跃表）；用 `/config-edit` skill 维护；Talk / Expose 由 `sync_to_json.py` 维护 |
+| `avg_editor_v2/data/table/` | 当前预览配置表落地处——全局 JSON（DoubtConfig / ItemStaticData / SceneConfig / TestimonyItem 等活跃表）；Unit1 Talk 由 Unity 正式表重建后同步到这里 |
 | `avg_editor_v2/build_unit_flow.py` | 从配置表生成流程图数据（取代旧 preview_new2 的 per-Unit YAML，该文件夹已删除） |
 
 ### 脚本工具
 | 目录 | 内容 |
 |------|------|
-| `AVG/Tools/` | 对话数据验证 (check_orphaned_ids.py) |
+| `AVG/Tools/` | Unit1 正式表重建、台本安全回写与对话验证工具 |
 
 ### 其他
 | 目录 | 内容 |
@@ -118,7 +112,6 @@ Chapter (章节: EPI01/EPI02/EPI03)
 |------|------|
 | **YAML** | state 文件 (`剧情设计/Unit{N}/state/loop{1-6}_state.yaml`) |
 | **JSON** | AVG 对话文件 (Talk/Expose)、`avg_editor_v2/data/table/` 下的全局配置表 |
-| **XLSX** | `avg_editor_v2/data/table/_all_tables.xlsx`（合并视图，给人看，手动同步） |
 | **MD** | 设计文档、对话草稿（Phase 1 工作格式） |
 
 ---
@@ -129,8 +122,9 @@ Chapter (章节: EPI01/EPI02/EPI03)
 
 **严格遵守两阶段流程：**
 
-- **Phase 1**: 只修改 MD 草稿（`AVG/对话配置工作及草稿/Loop{1-6}_对话草稿.md`），不碰 JSON
-- **Phase 2**: 用户明确指示后才执行 `sync_to_json.py` 同步到 JSON
+- **Phase 1**: Unit1 只修改 `AVG/对话配置工作及草稿/Unit1/Loop{1-6}_完整台本.md`，不碰 JSON
+- **Phase 2**: 用户明确指示后才执行 `AVG/Tools/sync_unit1_script_to_json.py --write`；它只回写本地 EPI01 的 `Words`，不改 ID / 路由 / 脚本 / 参数，也不写 Unity
+- 需要从 Unity 正式表重新覆盖时，使用 `AVG/Tools/rebuild_unit1_runtime_script.py`，先 `--check-only`，再写临时目录验证
 
 详细的 MD 格式规范和审查清单见 `AVG/对话配置工作及草稿/AVG对话配置规则.md`。
 
@@ -158,9 +152,8 @@ Chapter (章节: EPI01/EPI02/EPI03)
 - 字段规范：[docs/配置表详解.md](docs/配置表详解.md)
 - 数据流：
   - **非 Talk / Expose 的配置表**：维护在 `avg_editor_v2/data/table`，用 `/config-edit` skill 精改（单条 / 字段级）；初始由 seed 从 Unity 表导入。state YAML 是设计层源，不再自动生成配置表（旧 `/state-to-table` 已退役）
-  - **Talk**：MD 草稿 → `sync_to_json.py` → JSON
+  - **Unit1 Talk / Expose**：Unity 正式表 → `rebuild_unit1_runtime_script.py` → `AVG/EPI01` + AI 完整台本；台词文本回写使用 `sync_unit1_script_to_json.py`
   - **Expose 系列**：暂由专用流程或手动维护
-- `_all_tables.xlsx` 是合并视图，仅供查看，由用户手动同步
 
 ---
 
@@ -240,13 +233,13 @@ Chapter (章节: EPI01/EPI02/EPI03)
 ## 常用命令
 
 ```bash
-# 对话草稿同步到 JSON（需用户确认后才执行）
-cd AVG/对话配置工作及草稿 && python sync_to_json.py Loop{X}_对话草稿.md
-python sync_to_json.py Loop{X}_对话草稿.md --dry-run   # 预览
-python sync_to_json.py --all                            # 全量
+# Unit1：从 Unity 正式表重建 / 校验 AI 台本与 EPI01
+python AVG/Tools/rebuild_unit1_runtime_script.py --check-only
+python AVG/Tools/rebuild_unit1_runtime_script.py --avg-output-dir .tmp/unit1_epi01_rebuild
 
-# JSON 提取回 MD（验证往返一致性）
-python extract_to_md.py
+# Unit1：完整台本文本回写本地 EPI01（写入前必须用户确认）
+python AVG/Tools/sync_unit1_script_to_json.py             # 只读差异与结构检查
+python AVG/Tools/sync_unit1_script_to_json.py --write     # 只写 Words，不写 Unity
 
 # 配置表（非 Talk/Expose）：在 avg_editor_v2 上用 /config-edit skill 维护，无 state→table 批量脚本
 
@@ -282,5 +275,5 @@ Agent 定义见 `.claude/agents/`（14 个角色），编排逻辑见对应 skil
 
 - **NDC_project** = 内容设计、预配置、预览验证
 - **D:\NDC** = Unity 游戏工程，包含运行时代码和最终资源
-- 数据流向：配置表在 `avg_editor_v2/data/table/*.json` 维护（`/config-edit` skill）→ 手动 copy 到 `D:\NDC\Assets\table\`；对话走 `sync_to_json.py`
+- 数据流向：配置表在 `avg_editor_v2/data/table/*.json` 维护（`/config-edit` skill）→ 手动 copy 到 `D:\NDC\Assets\table\`；Unit1 对话以 Unity 正式 Talk 表为运行时真源，经专用重建 / 安全回写工具维护
 - 美术资源位于 `D:\NDC\Assets\Resources/`

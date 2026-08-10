@@ -1,0 +1,40 @@
+{
+  "issue_key": "A-character.jsonl::Unit1_大纲.md:599",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "L6 开场持有人冲突真实，但原 P0 可降为 P1。大纲第 599 行明确写 Rosa 给的 .45 弹壳在 Zack 手中，同一大纲第 617 行却又写它在 L4 被 Morrison 夺走、藏在其家中并须在 L6 找回；loop4/loop6 State 全程支持后者。正式运行数据进一步表明，第 599 行并不符合实际背包表现：L3 获取 1401 后，分析系统会把原始 1401 从背包移除并替换为 1702 拓印；L6 在 Morrison 家抽屉实际取得的是独立运行物品 1605‘Harold Morrison 藏起的 .45 弹壳’，正式 Expose R1 也要求 1605+1601，而不是 1401+1601。因此玩家侧仍有完整的‘被夺走→家中找回→用于指证’路径，不会因第 599 行产生死锁或错误选项。问题在于大纲、State 与正式表分别用‘开场持有 1401’、‘同一 1401 找回’、‘1605 作为找回态’三种数据表达，会污染 AI 台本真源和后续配置重建，属于中度一致性问题。",
+  "evidence_checked": [
+    {
+      "source": "剧情设计/Unit1/Unit1_大纲.md:596-625",
+      "finding": "第 599 行在‘循环开始时玩家认知’下写 1401 在 Zack 手中；第 617 行又写该枚 1401 在 L4 被 Morrison 夺走并藏于其家中、本 Loop 找回，两处直接互斥。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml",
+      "finding": "State 多处写 L4 末 Morrison 当场夺走 1401，状态改为 confiscated_by_morrison，L5 起 Zack 不再持有，直到 L6 Morrison 家找回。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop6_state.yaml",
+      "finding": "L6 State 将 1401 的轨迹明确列为 L4/L5 confiscated_by_morrison、L6 retrieved_from_confiscation，并要求先在 Morrison 家书房找回，再用于 Expose R1。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#103003009 + D:/NDC/Assets/table/ItemStaticData.json#1401/#1702",
+      "finding": "正式 L3 台词 103003009 使用 script=3(get) 与 ParameterInt=1401 把弹壳加入背包；1401 配置为可分析且 analysedEvidence=1702，1702 的 beforeAnalysedEvidence=1401。"
+    },
+    {
+      "source": "D:/NDC/Assets/_Project/Scripts/UI/ItemDetail/ItemDetailPanel.cs:1378 + D:/NDC/Assets/table/ChapterConfig.json#104",
+      "finding": "运行代码在分析物品时先 RemoveItem(原 ID)，再加入 analysedEvidence；L4 正式 Expose 要求 1702+1711，故玩家完成 L4 必须把 1401 转换为 1702，L6 开场背包不会仍保留原始 1401。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#104005012",
+      "finding": "正式 L4 台词让 Morrison 要求 Zack 把弹壳交给他、收进证物袋，叙事明确发生没收；该句没有额外 del 动作，因为运行时原 1401 已在分析时转换为 1702。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json#1616 + D:/NDC/Assets/table/ItemStaticData.json#1836/#1837/#1605",
+      "finding": "正式 L6 Morrison 家书房挂载抽屉 1836；打开态 1837 的 ActionParam=1605，产出独立物品 1605‘Harold Morrison 藏起的 .45 弹壳’。这是真正的运行时找回节点。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ExposeData.json#14 + AVG/EPI01/Talk/loop6/emma_lobby_006.json",
+      "finding": "正式 L6 首轮指证使用 1605+1601；101008001/004/009/012 等台词明确把该物描述为 Morrison 从现场拿走、藏在家中、刚被 Zack 取回。正式玩家路径自洽且可完成。"
+    }
+  ]
+}

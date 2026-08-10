@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::105003503",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "物理保管位置冲突真实，但原 P0 过重。Tommy 人物档案的基础表把 1506 放在‘随身物’栏并写‘始终带着’，后文又称它是带在身上的提醒；同一档案的大部分正文、正式 L2/L4 台词以及 L2/L5 State 都明确采用‘长期藏在 Tommy 办公室抽屉，L5 再从抽屉交出’。这两种位置不能同时成立。不过 1506 已不在 Unity 正式 ItemStaticData，也不在设计期 ItemStaticData；正式 DoubtConfig、ExposeData 均未引用它，正式 L5 Talk 也没有交付段。SceneConfig 中的 1506 是歌舞厅小包厢的场景 ID，不是该弹壳。因此当前玩家不会获得一个位置矛盾的 1506，也不会因它无法完成疑点或指证。冲突仍会污染 Tommy 的人物事实、L2/L4 台词续写及尚未落地的 L5 情感交付，属于应修复的中度设计一致性问题，故由 P0 降为 P1。",
+  "evidence_checked": [
+    {
+      "source": "D:/NDC/Assets/table/Talk.json + AVG/EPI01/Talk/loop2/tommy_001.json",
+      "finding": "正式 L2 台词 105001501—105001505 明确由 Zack 在 Tommy 的抽屉里看见旧弹壳，Tommy 称其为私人物品并阻止追问；运行台词采用抽屉保管口径。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json + AVG/EPI01/Talk/loop4/tommy_003.json",
+      "finding": "105003501—105003505 再次明确弹壳藏在 Tommy 抽屉，105003503 要 Zack 关上抽屉；这是正式运行台词，不是未落地草稿。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/tommy.md",
+      "finding": "基础信息把 1506 列作‘随身物’并同时写‘办公桌抽屉深处’和‘始终带着’，档案后段又写它是带在身上的提醒；但弧光、关系和设计备注多次写抽屉保存及从抽屉交付，人物档案自身已出现互斥口径。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop2_state.yaml + 剧情设计/Unit1/state/loop5_state.yaml",
+      "finding": "L2 State 写玩家在办公桌抽屉惊鸿一瞥后 Tommy 将其锁回，L5 State 写 Tommy 从抽屉深处取出 1506 主动交给 Zack，并明确它是纯情感信物、不挂疑点、不作 Expose 击穿件。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json + avg_editor_v2/data/table/ItemStaticData.json",
+      "finding": "两份当前 ItemStaticData 均不存在 id=1506 的物品行；Unity 正式 DoubtConfig 与 ExposeData 也没有 1506。正式 L5 Tommy Talk 没有从抽屉交付该物品的段落，因此 State 的 L5 获取链尚未进入正式运行数据。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json#1506 + D:/NDC/Assets/table/ItemStaticData.json#150002",
+      "finding": "正式 SceneConfig 的 1506 是‘歌舞厅小包厢’场景；门 150002 的 ActionParam 中出现 1506 是场景跳转目标。它不能证明 1506 弹壳存在于正式物品表。"
+    },
+    {
+      "source": ".audit/Unit1/facts/items.json#I1506_生锈45警用弹壳",
+      "finding": "物品事实表同样记录其策划位置为 L2 抽屉预曝光、L5 Tommy→Zack，并已标注 1506 仅存在于 State/大纲/相关文档、缺失于 Unity 正式与设计期 ItemStaticData。"
+    }
+  ]
+}

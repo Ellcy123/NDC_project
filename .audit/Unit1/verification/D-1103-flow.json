@@ -1,0 +1,18 @@
+{
+  "issue_key": "D-items.jsonl::evidence_flow#1103",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "1103 的现行有效链路是：L1 取得并仅向 Morrison 出示以证明身份、换取 72 小时，之后仍由 Zack 持有；L4 ExposeData#9 再要求 1103+1410，104005019 明说出示的是‘原本’，随后 Morrison 才索要并在剧情中撕毁。流转文档却写成 L1 post_expose 已交给 Morrison且‘完成使命’，与正式 L1/L4 对话和 State 互斥。该错误不会阻断当前 L4 指证，因为运行时事实上未在 L1 删除 1103，因此维持 P1 而非 P0。它与 C-timeline 的‘证据跨Loop流转路径:1103’是同一根因，汇总报告应合并去重，但 D 维度对实物持有史的判定仍成立。另需注意：L4 正式对白演出撕毁，却未发现 script=4/del 1103，故叙事销毁后背包状态仍可能残留，这是同一生命周期下的运行时落地缺口。",
+  "evidence_checked": [
+    ".audit/Unit1/issues/D-items.jsonl：evidence_flow#1103 原问题",
+    ".audit/Unit1/issues/C-timeline.jsonl：证据跨Loop流转路径:1103，确认同根因重复项",
+    "剧情设计/Unit1/案发时间线与动线.md:185：写为 L1 post_expose 交给 Morrison并完成使命",
+    "剧情设计/Unit1/state/loop1_state.yaml:147-152,284,294,350-355：L1 获取 1103，结尾仅‘出示’以建立遗嘱执行人身份，无交付或销毁状态变化",
+    "AVG/EPI01/Expose/Loop1_rosa.json:103901022：script=5 exhibit 1103，仅为出示",
+    "AVG/EPI01/Talk/loop1/morrison_002.json:104002005,104002012,104002018：协议用于证明身份并换取七十二小时，未演出交付",
+    "D:/NDC/Assets/table/ExposeData.json:ExposeData#9：L4 item=[1103,1410]，talkId=106904006",
+    "AVG/EPI01/Talk/loop4/morrison_005.json:104005018-104005025：L4 索要原件，104005019 以 script=5 出示 1103，随后对白演出销毁",
+    "剧情设计/Unit1/state/loop4_state.yaml:556-560,779,856-865：1103 继承自 L1，并在 L4 turn_cutscene 才 destroyed_by_morrison",
+    "AVG/EPI01 全量正式分文件检查：未发现 script=4/del 1103"
+  ]
+}

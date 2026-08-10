@@ -1,0 +1,44 @@
+{
+  "issue_key": "C|AVG/EPI01/Talk/loop2/emma_streetcorner_002.json|101002006",
+  "verdict": "dismissed",
+  "final_severity": "P2",
+  "verdict_reason": "原 P1 不成立：这段没有提前揭露 Morrison 与 Whale 的债务、受贿压案、夺证或故意栽赃，也没有让 Zack/Emma 得出任何可验证的腐败结论。L1 中 Morrison 曾在证据不足时准备快速带走 Vivian，Rosa 的第一层说法又已被击破；记者 Emma 因此怀疑他在回避异常，属于基于已见行为的角色判断。紧接着 101002007 还说只要把疑点逐条写下，Morrison 就“不敢随便下定论”，表明 Emma 此时把他理解为会被公开质疑约束的草率警察，而非已经识破其受 Whale 控制。101002011 只是玩家可选的一句“确实不对劲”，同样没有给出腐败答案。L4 正式台本仍首次提供质变行为：Morrison 见到警用弹壳后改口否认、夺证并强押 Vivian；L6 才闭合债务和压案。故应 dismissed；最多保留 P2 措辞风险，因为“装聋作哑”比当时证据支持的“草率、偏信表象”更强，可能过早给敏感玩家加重怀疑，但不足以构成信息泄露。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl",
+      "finding": "原 issue 以 101002006 的“装聋作哑”和 101002011 的“确实不对劲”为依据，判定 L2 提前把 Morrison 设为明确嫌疑，severity=P1。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#101002006,101002008,101002011",
+      "finding": "Unity 正式表确认：Emma 必经台词是“装聋作哑”；Zack 的“Rosa 和 Morrison 确实不对劲”是 101002008 的二选一分支，而非所有玩家必说的固定结论。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/emma_streetcorner_002.json#101002001-101002019",
+      "finding": "±10 句上下文是在复盘 L1 的可见疑点：Rosa 明显撒谎、23:30 枪声过巧、Vivian 状态异常、Webb 遗嘱可疑；没有提 Whale、债务、警用弹壳、夺证或压案。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/emma_streetcorner_002.json#101002007",
+      "finding": "Emma 认为持续记录疑点即可让 Morrison 不敢草率下结论，这更符合对懒散/草率办案的监督性怀疑，而非已经确认其腐败。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop1_rosa.json; AVG/EPI01/Talk/loop1/morrison_001.json",
+      "finding": "L1 玩家已经亲眼看到 Morrison 准备凭表面证词带走 Vivian；在无硝烟证据出现后他转而追问 Rosa，最终给予 72 小时调查期。因此 Emma 对其草率和选择性忽视起疑有现场依据，但尚不能推出收买关系。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop1_state.yaml; 剧情设计/Unit1/state/loop2_state.yaml",
+      "finding": "L1-L2 设计把 Morrison 定位为醉醺醺、嫌麻烦、倾向接受最简单解释但姑且秉公；与 Whale 的债务和腐败动机属于 withheld topic。101002006 没有说出这些 withheld fact。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop3/morrison_003.json",
+      "finding": "L3 正式台本仍让 Morrison 提供弹道、枪支和缺失弹壳信息，表面维持办案合作；L2 怀疑没有变成玩家已确认的腐败知识。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/morrison_005.json; 剧情设计/Unit1/state/loop4_state.yaml",
+      "finding": "L4 才出现警用弹壳触发的实质转向：Morrison 先确认 .45 与 Vivian 的 .25 不符，随后因警用属性变脸、改口否认弹壳关联并强押 Vivian。该戏剧功能未被 L2 的一般怀疑替代。"
+    },
+    {
+      "source": ".audit/Unit1/facts/canon_rules.json#revealCadence",
+      "finding": "现行节奏规定 L3 不得揭 Morrison 腐败，L4 展示变脸夺证押人，L6 才揭债务与压案；101002006 未触及后两层事实，仅存在措辞偏强的预警感。"
+    }
+  ]
+}

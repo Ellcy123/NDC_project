@@ -1,0 +1,36 @@
+{
+  "issue_key": "G|AVG/EPI01/Talk/loop5/tommy_004.json|105004420-105004906",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "确认存在知识边界和推理代理越位，但原 P0 过重。到该节点玩家已经凭被撕毁合同、Rosa 威胁链、Whale/Rita 线索和 Vivian 被嫁祸的结果强烈怀疑 Whale 是主使；Tommy 也能凭旧枪伤、Whale 手下使用的 .45 弹药、酒吧外的监视者和前后勒索人经验形成同样怀疑。然而他的档案与 L5 State 明确限定他只猜到 James 可能接班、主动不越过‘知道发生了什么’这条线，正式台词却用‘是 Whale 的人精心策划／从一开始给 Vivian 设局’宣告确定结论，既没有标明推测，也替玩家把主谋与嫁祸方向提前钉死。由于他没有点名 James，也未泄露鼓点时间、口音身份、家庭动机、回信或完整委托链，L5 核心指证仍可运行，因此由 P0 降为 P1。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/G-perspective.jsonl",
+      "finding": "原 issue 将两句定性为 Tommy 认知越界并提前闭合 E002 主谋/嫁祸结论，severity=P0。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop5/tommy_004.json; AVG/对话配置工作及草稿/Unit1/Loop5_完整台本.md",
+      "finding": "105004420-105004906 位于 Tommy 讲述自己遭 Whale 手下枪击之后，以无保留陈述语气断言谋杀由 Whale 一方策划且从一开始嫁祸 Vivian；随后才交付节目修改申请。正式 JSON 与完整台本一致。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml player_context.known_facts/new_directions",
+      "finding": "L5 开场玩家已强烈怀疑 Whale 是主使，并知道合同指向酒吧内部、James 销毁节目单且经济困难；但执行人仍未知，目标仍是查清 Whale 雇了谁以及真实作案方法。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml scenes[id=1010].npcs.tommy_004",
+      "finding": "Tommy 的 active_topics 只允许节目单/修改申请、23:00 鼓点提示、Vivian 清白、前后勒索人证言和旧弹壳；mindset 写明对 James 只有隐约猜测且不敢点名，withheld_topics 明确锁住接班人是 James。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/tommy.md",
+      "finding": "档案明确区分 Tommy ‘猜到接班人是谁’与‘知道发生了什么’，要求他主动不越线；其关键情报必须由玩家先行动后才给，并强调 L5 台词尽可能少、不会主动揭发任何人。"
+    },
+    {
+      "source": ".audit/Unit1/facts/event_perspectives.json E002_Whale委托James / Tommy",
+      "finding": "Tommy 的合法知识是 Whale 存在、前后勒索人范围和 James 接班猜测；没有亲历委托或完整谋杀方案，主动边界是不把猜测说成确知。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml post_expose_knowledge/doubts 1501-1504; AVG/EPI01/Expose/Loop5_james.json",
+      "finding": "James 身份、23:00 鼓点作案、爱尔兰口音、家庭动机与 Whale 回信均安排在后续搜证和 James 指证闭合；两句未直接泄露这些机制级答案，因此不至于构成 P0 级整轮失效。"
+    }
+  ]
+}

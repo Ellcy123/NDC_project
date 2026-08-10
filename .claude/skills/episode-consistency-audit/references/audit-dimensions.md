@@ -75,7 +75,7 @@
 | `id_gap` | P1 | 同一段内 ID 不连续（跳号） |
 | `id_duplicate` | P0 | 同一文件内同一 ID 出现 2 次以上 |
 | `id_cross_file` | P0 | 跨文件使用了错误前缀（如 morrison_001 中出现 901xxxxxx） |
-| `conv_conflict` | P0 | 跨 Loop 的 conv 编号冲突（如 L3 和 L4 都用了 904003xxx） |
+| `conv_conflict` | P0 | 跨 Loop 的 conv 编号冲突（如 L3 和 L4 都用了 104003xxx） |
 | `branch_start` | P1 | 分支路径未从 x01 起编（如从 x00 开始） |
 | `merge_range` | P1 | 汇合点未使用 4xx 段（如用了 019/020 或 030） |
 | `branch_ref` | P0 | branches/Lie 节点中的跳转目标 ID 不存在 |
@@ -89,7 +89,7 @@
 ### ID 编码规则（检查依据）
 
 **Talk ID**：`9{npc=2}{conv=3}{seq=3}` — 9 位
-- 9 = Unit9 固定前缀
+- 9 = Unit1 固定前缀
 - npc = NPC 编码（01=Emma, 02=Zack, 03=Rosa, 04=Morrison, 05=Tommy, 06=Vivian, 07=Jimmy/James, 08=Anna, 09=Whale）
 - conv = NPC 在全 Unit 的第几次对话（001 起，跨 Loop 递增）
 - seq = 句子序号
@@ -107,7 +107,7 @@
 
 **字数规则**：每句台词 ≤ 35 个中文字符（含中文标点；不含英文/数字/空格/[...]动作/<!-- -->注释/📋系统行）
 
-### 跨 Loop conv 编号追踪表（Unit9）
+### 跨 Loop conv 编号追踪表（Unit1）
 
 审计时需构建此表，确认无冲突：
 

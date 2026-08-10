@@ -1,0 +1,44 @@
+{
+  "issue_key": "C|AVG/EPI01/Expose/Loop6_morrison.json|104906604",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "确认。正式运行链明确跨夜：James 在 L5 蓝月亮后门 20:00 的指证后自杀；紧接的公园余波仍发生在当晚，101007020 说 Morrison“明天白天”值班，101007026 定案“明早按这个来”；下一正式场景 104013002 又以“早上好”进入 Morrison 家。玩家随后从 Morrison 家去警局指证，因此 104906604 所在的 L6 Expose 已是次日上午或更晚，不可能距 James 自杀仅“半小时前”。同一轮 104906919 还把已经在前一晚 20:00 发生的会面称作“今晚八点”，中英文都使用当前时点的 tonight，也无法解释为单纯引用信件原话。Unit 结尾进一步锚定当天为 11 月 6 日，与 L5 11 月 5 日晚到 L6 11 月 6 日的跨夜链一致。该问题不阻断配置运行，也不改变凶手或证据逻辑，但会让玩家直接察觉一天被压缩成半小时，并误判信中会面尚未发生，属于明显时序一致性损失，P1 保留。loop6_state 中“值夜班、半小时内到岗”是与正式次日上午方案相冲突的旧版残留，不能用来消解正式 Talk 内部矛盾。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl",
+      "finding": "原 issue 指出正式链先约定次日上午搜家，后在 L6 Expose 又说 James 半小时前自杀、约 Whale 今晚八点见，判为 relative_time_contradiction，severity=P1。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#107905086; AVG/EPI01/Talk/loop5/james_suicide_001.json",
+      "finding": "L5 James 指证与自杀场景的正式 Location 均为蓝月亮酒吧后门 20:00；自杀 Talk 直接承接该场景，没有另一个后续日期锚点。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#101007020,101007026; AVG/EPI01/Talk/loop6/emma_park_006.json",
+      "finding": "James 自杀后的公园余波中，Emma 说 Morrison 明天白天值班、上午家里只有太太，Zack 明确回应“明早按这个来”，中英文都要求跨夜。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#104013002; AVG/EPI01/Talk/loop6/morrison_house_006.json",
+      "finding": "下一正式场景进入 Morrison 家时 Emma 说“早上好/Good morning”，兑现公园约定的次日上午行动。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ChapterConfig.json#106; D:/NDC/Assets/table/SceneConfig.json#1613,1614",
+      "finding": "L6 运行配置先把地图入口挂到 Morrison 家场景 1613（首入 Talk 104013001），再到警局 Morrison 办公室 1614 承载 104906001 起的指证，证明 104906604 位于次日上午搜家之后。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#104906919,104906604; AVG/EPI01/Expose/Loop6_morrison.json",
+      "finding": "正式 L6 Expose 中英文分别写“今晚八点/eight tonight”和“半小时前/Just half an hour ago”；两种相对时间都以当前警局对质时点为中心，与已跨夜的正式场景链冲突。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#102007903; AVG/EPI01/Talk/loop6/ending_006.json; 剧情设计/Unit1/state/loop6_state.yaml#act_4_epilogue",
+      "finding": "L6 正式结尾和 state 共同确认当天为 11 月 6 日傍晚；结合 L5 20:00 自杀及“明早”搜家，现行主时间线是 11 月 5 日晚跨至 11 月 6 日。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop6_state.yaml#scenes[1013]",
+      "finding": "State 的 Morrison 家描述仍写 Morrison 去值夜班、半小时内到岗，和正式公园“明天白天值班”、家访“早上好”相反，显示设计源保留了旧同夜方案；按 scope 的 sourcePriority 应以正式 Talk 为基线修正该残留，而不能反向否定跨夜。"
+    },
+    {
+      "source": ".audit/Unit1/scope.json",
+      "finding": "审计源优先级将 Unity 正式表和 AVG/完整台本置于剧情设计目录之前，因此正式“明早→早上好”的连续链是裁决基线。"
+    }
+  ]
+}

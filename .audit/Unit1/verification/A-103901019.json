@@ -1,0 +1,32 @@
+{
+  "issue_key": "A-character.jsonl::103901019",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "源冲突真实，原 P1 合理。正式台词 103901019 明确说 Morrison 整晚在吧台；loop1 State 也写他当晚在蓝月亮喝酒、听见枪响后从酒吧内赶往会客室，并将其标为 is_liar: false。当前《案发时间线与动线》的人物知识表却明确写他 23:00—23:30 不在酒吧，23:30+ 从外部进入会客室。由于 State 明确排除了 L1 主动撒谎，不能把这句解释为腐败警察的有意伪证。该矛盾不破坏核心推理：无论 Morrison 在吧台还是酒吧外，他都只 corroborate 23:30 听到一次声响；L3—L5 推理依赖该声响是假枪声、真实枪声被鼓点掩盖，而不依赖 Morrison 的精确位置。不过它会污染案发空间真源、角色证词可信度和后续台本生成，属于应修复的中度一致性问题，保留 P1。",
+  "evidence_checked": [
+    {
+      "source": "AVG/EPI01/Expose/Loop1_rosa.json",
+      "finding": "103901017—103901019 中 Rosa 先声称 23:30 只有一次枪声并要求 Morrison 作证，Morrison 随即说‘今晚我一直在吧台那边。23:30，枪声只响了那一次’；103901020/903 继续确认 Zack 到场时 Vivian 持枪的现场表象。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop1_state.yaml",
+      "finding": "循环已知事实写 Morrison 今晚在酒吧喝酒，听见枪响后醉醺醺赶到现场；场景开场同样写他听见枪响后赶来。NPC 条目明确标记 is_liar: false，动机是姑且秉公、懒惰地接受最简单解释，并未授权他虚构自己的位置。"
+    },
+    {
+      "source": "剧情设计/Unit1/案发时间线与动线.md",
+      "finding": "23:30+ 叙事段写 Morrison 随后赶到且平时常来酒吧，但角色知识表进一步明确为 23:00—23:30‘不在酒吧’，动线总表写‘外部 → 1F Webb 会客室’；这与正式台词及 State 的吧台在场口径直接冲突。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/morrison.md",
+      "finding": "人物档案只写 L1 他散漫地赶到现场，没有给出酒吧内或外部的起点，也没有把吧台不在场谎言设计为其秘密；档案无法消解两套动线。"
+    },
+    {
+      "source": ".audit/Unit1/facts/characters.json#Harold Morrison",
+      "finding": "角色事实表已保留同一 _conflict：L1 大纲/State 支持他本就在蓝月亮喝酒，案发时间线知识表支持 23:00—23:30 不在酒吧、从外部赶来；不存在稳定的单一真源。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop1_state.yaml + 剧情设计/Unit1/案发时间线与动线.md",
+      "finding": "两套来源都把 23:30 声响当作当时众人听到的表面案发信号，后续再揭示其为 James 制造的假枪声；Morrison 的精确起点不参与证据条件、指证材料选择或真实死亡时间的证明。"
+    }
+  ]
+}

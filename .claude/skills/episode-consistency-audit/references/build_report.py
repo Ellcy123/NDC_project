@@ -6,7 +6,7 @@ build_report.py — 把 .audit/{Unit}/ 下的审计结果聚合成 HTML 报告�
     python build_report.py <Unit号>
 
 例如:
-    python build_report.py Unit9
+    python build_report.py Unit1
 
 读取:
     .audit/{Unit}/verified.jsonl

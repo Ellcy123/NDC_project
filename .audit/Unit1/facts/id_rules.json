@@ -1,0 +1,42 @@
+{
+  "authority": "D:/NDC/Assets/table/Talk.json + AVG/EPI01 strict mirror",
+  "episode": "EPI01",
+  "rowCount": 1690,
+  "uniqueIdCount": 1690,
+  "idLength": 9,
+  "npcPrefixes": {
+    "101": "Emma",
+    "102": "Zack",
+    "103": "Rosa",
+    "104": "Morrison",
+    "105": "Tommy",
+    "106": "Vivian",
+    "107": "James",
+    "108": "Anna",
+    "109": "Whale"
+  },
+  "normalTalkPattern": "{ownerNpcId:3}{dialogueGroup:3}{sequence:3}",
+  "exposePattern": "{ownerNpcId:3}{900+loop:3}{sequence:3}",
+  "examples": {
+    "normalTalk": "105001001 = Tommy dialogue group 001 sequence 001",
+    "expose": "103901001 = Rosa Loop1 Expose sequence 001",
+    "repeat": "104801001 = Morrison repeat group in Loop1",
+    "ending": "104906901 is a valid formal ending/cutscene ID"
+  },
+  "auditRules": [
+    "All IDs must be exactly nine decimal digits and globally unique.",
+    "Every next and branch target must exist unless the runtime script intentionally terminates the row.",
+    "SceneConfig and ExposeData entry IDs must resolve to a row in their declared AVG file.",
+    "The first three digits identify the owning dialogue character/file namespace, not necessarily the current speaker of every row.",
+    "Formal runtime contains intentional sequence gaps and reserved 4xx/8xx/9xx ranges; a numeric gap alone is not an issue.",
+    "Do not apply the archived Unit9 fixed-leading-9 rule or EPI09 path rules."
+  ],
+  "preflight": {
+    "duplicateIds": 0,
+    "missingNextTargets": 0,
+    "missingBranchTargets": 0,
+    "missingSceneEntries": 0,
+    "missingExposeEntries": 0,
+    "missingExposeMaterials": 0
+  }
+}

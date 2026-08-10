@@ -1,7 +1,7 @@
 ---
 name: episode-consistency-audit
 description: "全集一致性审计：事实抽取 → 7 维并行扇出 → 复核 → HTML 报告。一次扫一个 Unit 的全部 Loop，对话/state/角色档案三向对账。token 重投入换准确率。"
-argument-hint: "[Unit 号，如 'Unit9'；可选 '--skip-verify' 跳过 Phase 3 复核]"
+argument-hint: "[Unit 号，如 'Unit1'；可选 '--skip-verify' 跳过 Phase 3 复核]"
 user-invocable: true
 ---
 
@@ -16,10 +16,10 @@ user-invocable: true
 ## 参数解析
 
 接收：
-- `Unit{N}`（必填）—— 如 `Unit9`
+- `Unit{N}`（必填）—— 如 `Unit1`
 - `--skip-verify`（可选）—— 跳过 Phase 3 复核（更快、但假阳性多）
 
-推断 EPI 号：`Unit9 → EPI09`，`Unit3 → EPI03`，依次类推。
+推断 EPI 号：`Unit1 → EPI01`，`Unit3 → EPI03`，依次类推。
 
 ---
 
@@ -217,8 +217,8 @@ python .Codex/skills/episode-consistency-audit/references/build_report.py {Unit}
 ## 调用示例
 
 ```
-/episode-consistency-audit Unit9
-/episode-consistency-audit Unit9 --skip-verify
+/episode-consistency-audit Unit1
+/episode-consistency-audit Unit1 --skip-verify
 ```
 
 ---

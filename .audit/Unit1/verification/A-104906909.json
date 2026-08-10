@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::104906909",
+  "verdict": "dismissed",
+  "final_severity": null,
+  "verdict_reason": "原 issue 把一句混合陈述整体当成 unsupported，但拆开后不成立。‘在这一行干了二十年’有 Morrison 人物档案的直接旁证：基础信息写从警约二十年，弧光、声纹和自我认知也反复以二十年职业经验为锚；人物事实表未提取 career_tenure 是事实表漏项，不是台词无依据。‘档案里一张投诉都没有’确实没有独立事实源，但它位于 L6 明确标记 is_liar=true/deceptive 的 R2 退守中，紧接‘只是一次搜查失误’，功能是用所谓清白生涯替自己开脱。它可以是真实但无关的履历，也可以是 Morrison 的吹嘘；剧情不要求玩家相信或单独验证，Emma 随即用藏证、陷害无辜的当前行为击穿其免责逻辑。对 deceptive 角色的授权辩解不应强制写入 complaint_record canon，因此撤销该 P1。",
+  "evidence_checked": [
+    {
+      "source": "AVG/EPI01/Expose/Loop6_morrison.json",
+      "finding": "104906302 先称藏壳只是搜查失误，104906909 再用二十年零投诉自保；104906308/910 立即指出藏证和钉死无辜者是故意包庇。零投诉没有被当作待验证谜题事实，而是退守修辞。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/morrison.md",
+      "finding": "基础信息明确‘从警约二十年’，正文多次以二十年办案经验、程序语言和街面经验塑造他；104906909 的年限部分已有充分旁证。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/morrison.md",
+      "finding": "档案规定 Morrison 不会直接承认、会用程序性语言退守，L6 被击穿时仍习惯性撑住；以零投诉包装自己符合既定对抗方式，不需要等同于客观履历。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop6_state.yaml",
+      "finding": "Expose 总体与 Morrison 条目均明确 is_liar=true；R2 的正式 lie 是‘只是临时接警、搜查失误，不是故意’，104906909 正处于这层谎言的辩解段。"
+    },
+    {
+      "source": ".audit/Unit1/facts/event_perspectives.json#E015_Morrison被击穿并处分",
+      "finding": "多视角事实将 Morrison 的 L6 presented_version 定义为三轮谎言，stance=deceptive，并概括其以搜查失误、清白生涯和私人借贷退守；零投诉属于允许的欺骗性姿态，而非必须为真的事实。"
+    },
+    {
+      "source": ".audit/Unit1/facts/characters.json#Harold Morrison",
+      "finding": "事实表虽未设置 career_tenure/complaint_record 字段，但已将其 L6 事件姿态标为 deceptive，并记录他用搜查失误等说辞退守；不能仅以字段为空反推台词违规。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop6_state.yaml round_2",
+      "finding": "R2 所需证据是赌债欠条和 Whale 借款记录，用来证明藏证不是失误而是偿债；解谜不要求找到警局投诉档案，也不以‘零投诉真假’作为证据选择维度。"
+    }
+  ]
+}

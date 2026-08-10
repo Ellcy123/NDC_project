@@ -1,0 +1,32 @@
+{
+  "issue_key": "X-dialogue12.jsonl::103903016-103903905",
+  "verdict": "dismissed",
+  "final_severity": null,
+  "verdict_reason": "不构成越过下一层“受胁作伪证”维度。第一轮物证已经证明 Rosa 把 23:30 枪声说成真实枪击并据此指认 Vivian 的整套叙述不可靠；Zack 这里只说“亲眼目睹经不起推敲”并追问为何说谎，既未指出威胁者、女儿或纸条，也未宣布 Rosa 是被迫作证。紧接着是 Rosa 主动追加“没人逼我、我是自愿作证”的新防线，随后才开放威胁纸条的第二轮击穿。该桥接台词语气强硬，但仍保留了“受胁原因”给玩家用下一轮证据证明，因此原 P1 属于假阳性。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/X-dialogue12.jsonl#103903016-103903905",
+      "finding": "原 issue 认为 Zack 从时间矛盾直接扩大到整段目击无效，并提前完成下一轮受胁结论。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop3_rosa.json#103903006-103903906",
+      "finding": "第一轮用玻璃硝烟与 23:20 垃圾袋时点证明真实枪击早于 23:20；Rosa 随即退守“时间记错但亲眼看见 Vivian 持枪”。103903016-103903905 只质疑该目击并问说谎原因，下一句由 Rosa 主动提出“没人逼我、我是自愿作证”，形成第二轮的新谎言。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop3_rosa.json#103903017-103903037",
+      "finding": "威胁纸条在 103903017 才首次由 Zack 出示；之后经过 Rosa 否认、恐惧升级及女儿信息追问，她才承认纸条要求自己作伪证。受胁事实没有在被复核台词中提前揭晓。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ExposeData.json#6-7",
+      "finding": "Unity 正式配置将第一轮材料设为 1301+1033001，第二轮材料设为 1302；两轮证据选择仍然独立，复核台词没有绕过第二轮交互。"
+    },
+    {
+      "source": "avg_editor_v2/data/table/ExposeData.json#6-7",
+      "finding": "设计期副本同样把第一轮设为 1301+1033001，第二轮设为 1302+1303；第二轮仍需威胁纸条与医疗单完成受胁维度。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml#expose.round_1-round_2",
+      "finding": "State 明确要求第一轮 partial_victory 后 Rosa 退守持枪论点，第二轮才用 1302+1303 full_breakthrough。正式对白依次呈现退守、自愿作证的新谎言、出示纸条与崩溃供述，符合该两轮结构。"
+    }
+  ]
+}

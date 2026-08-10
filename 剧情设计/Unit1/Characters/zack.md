@@ -1,4 +1,4 @@
-# Unit 9：黑哨之夜 — Zack Brennan
+# Unit1：黑哨之夜 — Zack Brennan
 
 ---
 
@@ -59,11 +59,11 @@ L6 的他更安静。清算 Harold Morrison 时没有快感，Vivian Gray 被释
 
 2. L1 门槛动作——用 Arthur Webb 委托协议书换 72 小时调查期，是把玩家从被动旁观拉进主动调查的机制锚点。没有这一步，案子第一秒就结束了。
 
-3. 硬汉外壳 + 钝感真诚——可靠但不冷血。他不擅长说软话，情感线靠动作体现：L5 后不再开口让 Emma O'Malley 退出、接过 Vivian Gray 托付的黑胶碎片。
+3. 硬汉外壳 + 钝感真诚——可靠但不冷血。他不擅长说软话，情感线靠动作体现：L5 后不再开口让 Emma O'Malley 退出、接受 Vivian Gray 对黑胶碎片的托付。
 
 4. L5 创伤节点——James O'Sullivan 自杀是他的心理转折，也是 Zack Brennan 与 Emma O'Malley 关系质变的催化。
 
-5. Unit1 → Unit2 的桥——L6 把黑胶碎片带走，叩响 Unit2 的门。
+5. Unit1 → Unit2 的桥——L6 从碎片中听见母亲正面临期限已过的危险，叩响 Unit2 的门。正式 Talk 没有 `get 1602`，不要把它写成已入背包道具。
 
 ---
 

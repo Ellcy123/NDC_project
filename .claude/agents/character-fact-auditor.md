@@ -52,7 +52,7 @@ disallowedTools: Write, Edit, Bash
 ```json
 {
   "_dim": "A",
-  "file": "AVG/EPI09/Talk/loop3/3050.json",
+  "file": "AVG/EPI01/Talk/loop3/rosa_002.json",
   "line_id": "305001012",
   "speaker": "Vivian",
   "type": "character_fact_conflict | character_fact_unsupported | self_contradiction | stance_violation",

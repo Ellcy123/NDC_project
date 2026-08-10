@@ -13,7 +13,7 @@
 #   - Loop4 结尾：确立 loop5-6 目标（真凶是谁 + 击破 Morrison）
 #
 # 权威来源：剧情设计/Unit1/讨论结论.md（Loop4 章节）
-# 格式参考：剧情设计/Unit8/state/loop4_state.yaml
+# 格式：Unit1 当前 state schema
 # 前序文件：loop1/2/3_state.yaml（Unit1 版，待生成）
 # 生成日期：2026-04-22
 #
@@ -28,10 +28,10 @@
 #                        turn_cutscene / doubts / evidence_registry 全部存在；
 #                        不设 post_expose_scene——L4 结尾对话归 L5 opening（灵魂黑夜）承载；
 #                        S405 Morrison 大厅场景含 pre_turn_trigger（两阶段：指证前/指证后）
-# B. 证据覆盖     PASS — 讨论结论 L4 所有证据（9401-9406 共 6 件）已分配；
-#                        9401 开场背包持有（L3 post_expose 继承），不设 pickup 节点；
-#                        9405/9406 为 envir 场景道具，pickup: false；
-#                        9103（Webb 委托协议书）在 turn_cutscene 末被没收并登记状态变化
+# B. 证据覆盖     PASS — 讨论结论 L4 所有证据（1401-1406 共 6 件）已分配；
+#                        1401 开场背包持有（L3 post_expose 继承），不设 pickup 节点；
+#                        1405/1406 为 envir 场景道具，pickup: false；
+#                        1103（Webb 委托协议书）在 turn_cutscene 末被没收并登记状态变化
 # C. NPC 条目     PASS — Emma（opening）/ Tommy（S402）/ Vivian（S404）/ Morrison（S405）/
 #                        Morrison_turn（turn_cutscene）各含 3 必填块；
 #                        Vivian 为 Expose 对象（is_liar:true, player_inquiry:null）
@@ -40,12 +40,12 @@
 # E. 信息节奏     PASS — 解锁：.45 口径 ≠ .25 口径 / Whale 雇人已行动 / 死亡锁定 23:05–23:20 /
 #                        Vivian 11:05 被吼退 / Morrison 脸色变化（动作层）；
 #                        锁定：James 真凶身份 / 鼓点诡计 / 米勒集团具体名 / Morrison 腐败细节；
-#                        9401 弹底铭文需经铅笔拓印小玩法派生 9702 才可读——L4 玩家识别出"MILLER ARMS"字样但不解其义（L6 揭示）
+#                        1401 弹底铭文需经铅笔拓印小玩法派生 1702 才可读——L4 玩家识别出"MILLER ARMS"字样但不解其义（L6 揭示）
 #                        morrison_L4_001(source) / morrison_turn_L4(source)，source/quiz 配对完整
-# G. Expose 逻辑  PASS — R1 弹壳口径 vs 手枪口径不符（9702 拓印 + 9101/9711）；
-#                        R2 Whale 雇人合同 + Rita 间谍证言（9402+9054001）；
-#                        R3 Webb 密码=相遇日（9304）；
-#                        R2 陷阱：9403 绝笔信只证 Vivian 有杀意，不反驳"Whale 已准备"；
+# G. Expose 逻辑  PASS — R1 弹壳口径 vs 手枪口径不符（1702 拓印 + 1101/1711）；
+#                        R2 Whale 雇人合同 + Rita 间谍证言（1402+1054001）；
+#                        R3 Webb 密码=相遇日（1304）；
+#                        R2 陷阱：1403 绝笔信只证 Vivian 有杀意，不反驳"Whale 已准备"；
 #                        每轮 lie 对应唯一维度证据
 # ──────────────────────────────────────────────────────────
 #
@@ -68,11 +68,11 @@ player_context:
 
   known_facts:
     # L1-L3 post_expose_knowledge 全部累积 + L3 指证 Rosa 后的新事实
-    # 注：9401 .45 警用弹壳为 L3 post_expose Rosa 交出 → L4 开场玩家背包已持有
+    # 注：1401 .45 警用弹壳为 L3 post_expose Rosa 交出 → L4 开场玩家背包已持有
     - "Webb 已经死亡（Morrison 宣告），死亡地点：蓝月亮酒吧一楼会客室"
-    - "Vivian 手持手枪在现场，但该枪（9101，.25 ACP）无硝烟反应——她不是刚刚开枪的那个人"
+    - "Vivian 手持手枪在现场，但该枪（1101，.25 ACP）无硝烟反应——她不是刚刚开枪的那个人"
     - "23:30 众人听到枪响，Zack 和 Emma 从歌舞厅赶到会客室"
-    - "Webb 提前雇佣 Zack 作为遗嘱执行人：9103 委托协议书内容为确保 Vivian 顺利继承 Webb 遗产；按 slayer rule，Vivian 若被定罪谋杀则遗嘱链断，Zack 必须排除嫌疑才能履职"
+    - "Webb 提前雇佣 Zack 作为遗嘱执行人：1103 委托协议书内容为确保 Vivian 顺利继承 Webb 遗产；按 slayer rule，Vivian 若被定罪谋杀则遗嘱链断，Zack 必须排除嫌疑才能履职"
     - "Rosa 的谎言1（Vivian 刚刚开枪）在 L1 R1 被推翻，但 L1 R2 无证据反驳时间线——时间线悬而未决"
     - "Morrison 同意给 Zack 72 小时调查期，暂缓逮捕 Vivian"
     - "Webb 的酒吧除私酒之外在做敲诈勒索生意（L2 揭示）"
@@ -82,40 +82,40 @@ player_context:
     - "Vivian 平时在 23:30 给 Webb 送酒（时间节点确认）"
     - "James 是兼职厨师，经济困难，对 Webb 的死有隐藏的愧疚；L3 被抓到销毁《艾斯弗德狂想曲》节目单（原因未知）"
     - "玻璃碎片压在垃圾袋下（有硝烟痕迹）——玻璃破碎早于 23:20（Rosa 倒垃圾时间）"
-    - "Rosa 23:20 去外面丢过垃圾——真实枪击时间早于 23:30（疑点 9301 解锁）"
+    - "Rosa 23:20 去外面丢过垃圾——真实枪击时间早于 23:30（疑点 1301 解锁）"
     - "Rosa 是被威胁的——纸条：'23:30 去 Webb 会客室，说你目击了 Vivian 杀害 Webb，否则杀你女儿'（倒写 J 字迹）"
     - "威胁者刻意嫁祸 Vivian，且此人熟悉酒吧内部（知道 Vivian 23:30 送酒的习惯）"
-    - ".45 警用弹壳（9401）已在玩家背包——L3 post_expose Rosa 交出；弹底印记**模糊不可见**，L4 玩家在道具栏触发铅笔拓印小玩法识别出外圈'WCC - .45 ACP'与内圈'MILLER ARMS'铭文——产出派生证据 9702（MILLER ARMS 含义 L4 时仍不明，L6 才揭示）"
-    - "保险箱字条（9304）：密码与 Webb 和 Vivian 相遇那天有关"
-    - "Webb 和 Vivian 合影（9305）——Webb 一直保留，感情仍在"
-    - "Webb 勒索记录日记（9308）扉页亲笔写着 'Whale — Danger'——Webb 生前已经把 Whale 认定为威胁；L3 玩家已经知道 Whale 这个名字，但身份、在酒吧内的具体动作、与 Morrison 的关系都还未知"
-    - "疑点 9101（23:30 枪响可疑）已在 L3 回填为'已解决'——23:30 是假枪声"
+    - ".45 警用弹壳（1401）已在玩家背包——L3 post_expose Rosa 交出；弹底印记**模糊不可见**，L4 玩家在道具栏触发铅笔拓印小玩法识别出外圈'WCC - .45 ACP'与内圈'MILLER ARMS'铭文——产出派生证据 1702（MILLER ARMS 含义 L4 时仍不明，L6 才揭示）"
+    - "保险箱字条（1304）：密码与 Webb 和 Vivian 相遇那天有关"
+    - "Webb 和 Vivian 合影（1305）——Webb 一直保留，感情仍在"
+    - "Webb 勒索记录日记（1308）扉页亲笔写着 'Whale — Danger'——Webb 生前已经把 Whale 认定为威胁；L3 玩家已经知道 Whale 这个名字，但身份、在酒吧内的具体动作、与 Morrison 的关系都还未知"
+    - "疑点 1101（23:30 枪响可疑）已在 L3 回填为'已解决'——23:30 是假枪声"
 
   new_directions:
     - direction: "前往一楼走廊垃圾桶——嫁祸者熟悉酒吧，可能留有合谋痕迹；新线索或在此处"
       trigger: "Rosa 供述'嫁祸者很熟悉酒吧'；L4 开场 Emma 提示走廊垃圾桶附近有新线索"
     - direction: "前往 Tommy 办公室——Webb 的黑账扉页写着 'Whale — Danger'，带上 .45 弹壳和这本日记去追问 Tommy：Whale 到底是谁，Webb 生前怕的是什么"
-      trigger: "L3 post_expose 获得 .45 弹壳（9401）+ L3 会客室搜得 Webb 勒索日记（9308）；Tommy 在 L2 曾暗示 Webb 惹上大人物，对方心中有猜测"
+      trigger: "L3 post_expose 获得 .45 弹壳（1401）+ L3 会客室搜得 Webb 勒索日记（1308）；Tommy 在 L2 曾暗示 Webb 惹上大人物，对方心中有猜测"
     - direction: "进入 Vivian 化妆室——L3 指证 Rosa 完成后化妆室可再次进入，取得说服 Vivian 的物证"
-      trigger: "L3 post_expose 后 Vivian 化妆室（9002）再次开放"
+      trigger: "L3 post_expose 后 Vivian 化妆室（1002）再次开放"
     - direction: "在歌舞厅找 Vivian 进行深度对话——她终于愿意正面沟通"
       trigger: "Vivian 化妆室开放后，Vivian 的状态从'求死认罪'出现松动，可以在歌舞厅与她对话"
 
   post_expose_knowledge:
     # L4 指证 Vivian 完整击穿后玩家获得的新知识
-    - ".45 警用弹壳（9401）经铅笔拓印小玩法派生 9702，外圈铭文'WCC - .45 ACP'确认凶器口径为 .45 ACP；Vivian 的手枪（9101）为 .25 ACP——口径不符，凶器不可能是 Vivian 的枪（拓印内圈'MILLER ARMS'L4 暂记不解）"
+    - ".45 警用弹壳（1401）经铅笔拓印小玩法派生 1702，外圈铭文'WCC - .45 ACP'确认凶器口径为 .45 ACP；Vivian 的手枪（1101）为 .25 ACP——口径不符，凶器不可能是 Vivian 的枪（拓印内圈'MILLER ARMS'L4 暂记不解）"
     - "Tommy 正式指认：Rita 是 Whale 派来渗透酒吧的人（基于他长期观察的明确指认）"
     - "Tommy：酒吧里能知道 Whale 存在的，除了 Webb，只有前勒索人和现勒索人"
     - "Vivian 承认自己不是凶手，但她曾有过杀人计划（23:05 准备去杀 Webb）"
     - "Vivian：Webb 利用她勒索的都是孤立的银行家、工程师等中产阶级，帮 Webb 勒索 Whale 的人不是她"
     - "Vivian：她在 23:05 去敲门，听到有人在 Webb 房间里说话就退走了；23:30 回去时发现 Webb 已死（Vivian 主观以为说话者是 Webb——偏见，L5 才揭示是 James）"
     - "关键伏笔：23:05 门内说话声的真实身份——L5 James 爱尔兰口音谜题核心"
-    - "Whale 雇人已在酒吧内行动（被撕毁合同 9402 + Tommy Rita 间谍证言 9054001）"
-    - "死亡区间初步锁定 23:05–23:20（Vivian 23:05 被吼退 + Morrison 弹道证言 9043002）"
+    - "Whale 雇人已在酒吧内行动（被撕毁合同 1402 + Tommy Rita 间谍证言 1054001）"
+    - "死亡区间初步锁定 23:05–23:20（Vivian 23:05 被吼退 + Morrison 弹道证言 1043002）"
     - "枪声在 Vivian 被押走时从'头顶方向'传来——为 L5 揭露假枪声诡计埋伏笔"
-    - "【情节转折】Morrison 看到 .45 弹壳（9401）脸色大变（手停、眼神定、沉默）→ 无条件强押 Vivian 回警局"
-    - "9103（Webb 委托协议书）被 Morrison 当场撕毁——内容玩家已知，但实物永久销毁，无法再作为证物出示"
-    - "9401（.45 警用弹壳）被 Morrison 当场夺走——L5 起 Zack 手中不再持有，弹壳实物直到 L6 进 Morrison 家才能找回"
+    - "【情节转折】Morrison 看到 .45 弹壳（1401）脸色大变（手停、眼神定、沉默）→ 无条件强押 Vivian 回警局"
+    - "1103（Webb 委托协议书）被 Morrison 当场撕毁——内容玩家已知，但实物永久销毁，无法再作为证物出示"
+    - "1401（.45 警用弹壳）被 Morrison 当场夺走——L5 起 Zack 手中不再持有，弹壳实物直到 L6 进 Morrison 家才能找回"
     - "Morrison 撤销了 L1 承诺的 72 小时调查权——L5/L6 调查阻力的来源"
 
 # ─────────────────────────────
@@ -125,7 +125,7 @@ player_context:
 opening:
   type: story_dialogue
   location: "酒吧大堂（Zack 和 Emma 对话）"
-  emma_talk_scene_id: 9024  # Emma 对话 AVG 专用场景：酒吧大堂（复用 EPI01\SC010_bg_BarLobby）
+  emma_talk_scene_id: 1024  # Emma 对话 AVG 专用场景：酒吧大堂（复用 EPI01\SC010_bg_BarLobby）
   description: |
     L3 指证 Rosa 完成后，Emma 协助 Zack 梳理 L4 调查方向。
     核心基调确认：L4 的目标是"救 Vivian"——说服她不再供述自己是凶手。
@@ -142,11 +142,11 @@ opening:
       # ── 1. 已知信息 ──
       active_topics:
         - "Rosa 是被威胁的，她的目击证言是被迫伪造的（L3 指证结果）"
-        - "真实枪击时间早于 23:20——9301 玻璃碎片 + 9033001 Rosa 证言交叉确认"
+        - "真实枪击时间早于 23:20——1301 玻璃碎片 + 1033001 Rosa 证言交叉确认"
         - "幕后嫁祸者熟悉酒吧内部，刻意针对 Vivian 的送酒习惯"
-        - "Rosa 给了 Zack 一枚 .45 警用弹壳（9401）——弹底印记模糊不可见，需在道具栏内通过铅笔拓印小玩法显影（含义暂不明）"
-        - "Webb 勒索日记（9308）扉页写着 'Whale — Danger'——Webb 生前怕一个叫 Whale 的人；这个名字 Tommy 在 L2 暗示的'大人物'大概率就是他，要去 Tommy 办公室对质确认"
-        - "Vivian 化妆室（9002）在 L4 再次开放"
+        - "Rosa 给了 Zack 一枚 .45 警用弹壳（1401）——弹底印记模糊不可见，需在道具栏内通过铅笔拓印小玩法显影（含义暂不明）"
+        - "Webb 勒索日记（1308）扉页写着 'Whale — Danger'——Webb 生前怕一个叫 Whale 的人；这个名字 Tommy 在 L2 暗示的'大人物'大概率就是他，要去 Tommy 办公室对质确认"
+        - "Vivian 化妆室（1002）在 L4 再次开放"
         - "L4 的核心目标：说服 Vivian 不再认罪，这是'救'她，不是审她"
         - "一楼走廊垃圾桶附近有新线索值得搜查"
       withheld_topics:
@@ -171,8 +171,8 @@ opening:
 # ─────────────────────────────
 
 scenes:
-  # ── 场景 9007：一楼走廊（垃圾桶，L4 新场景）──
-  - id: 9007
+  # ── 场景 1007：一楼走廊（垃圾桶，L4 新场景）──
+  - id: 1007
     name: "一楼走廊（垃圾桶附近）"
     type: free_exploration
     description: |
@@ -182,22 +182,22 @@ scenes:
       这是 L4 中"Whale 是主使者"怀疑的核心物证。
 
     evidence:
-      - id: 9402
+      - id: 1402
         name: "被撕毁的合同 / Torn Contract"
         type: item
         pickup: true
         analysis: false
         description: "从走廊垃圾桶中找到的被撕成碎片的合同残页，拼合后可读出：有一方与'Whale'签订合同，Whale 愿意出一大笔钱委托对方做一件未明言的事。字迹特征待后续识别（L5 才明确是倒写 J）。"
-        note: "关键——疑点 9401 condition；L4 R2 击穿件；L5 R3 再用"
+        note: "关键——疑点 1401 condition；L4 R2 击穿件；L5 R3 再用"
 
     npcs: {}
 
-  # ── 场景 9010：Tommy 办公室（Whale 确认 + Rita 间谍证言）──
-  - id: 9010
+  # ── 场景 1010：Tommy 办公室（Whale 确认 + Rita 间谍证言）──
+  - id: 1010
     name: "Tommy 办公室"
     type: free_exploration
     description: |
-      Tommy 在自己的办公室。Zack 带着 .45 弹壳（9401）和 Webb 的勒索日记（9308）前来追问。
+      Tommy 在自己的办公室。Zack 带着 .45 弹壳（1401）和 Webb 的勒索日记（1308）前来追问。
 
       核心叙事（主线）：Zack 直接把日记扉页翻给 Tommy 看——"Whale — Danger"——
       再出示 .45 弹壳，追问 Whale 到底是谁。Zack 强调"这对 Vivian 脱罪十分关键"后，
@@ -205,7 +205,7 @@ scenes:
       Tommy 进一步指认：Whale 甚至在酒吧里派了人渗透（Rita）；
       "这个酒吧里知道 Whale 的，除了 Webb，只有前勒索人和现勒索人。"
 
-      弹壳背景（次线）：Tommy 认出 9401 弹壳，给出他见过这类枪的亲身经历（被枪击大腿）；
+      弹壳背景（次线）：Tommy 认出 1401 弹壳，给出他见过这类枪的亲身经历（被枪击大腿）；
       之后那份工作由另一个人接手（不点名，L5 才揭示是 James）。
 
       信息节奏：Whale 的名字在 L3 已浮出（Webb 日记），L4 Tommy 不再是"首次命名"，
@@ -214,11 +214,11 @@ scenes:
     evidence: []
 
     carried_evidence:
-      - id: 9401
+      - id: 1401
         name: ".45 警用弹壳（L3 post_expose 继承）"
         source_loop: 3
         usage: "出示给 Tommy，触发 Rita 间谍指认 + Whale 行动范围确认对话链"
-      - id: 9308
+      - id: 1308
         name: "Webb 勒索日记（L3 会客室继承，扉页写 Whale — Danger）"
         source_loop: 3
         usage: "出示给 Tommy 作为追问起点——Webb 生前已警觉 Whale，Tommy 必须正面回答而不能再含糊其辞"
@@ -233,8 +233,8 @@ scenes:
         # ── 1. 已知信息 ──
         active_topics:
           - "Zack 翻开 Webb 日记扉页问 'Whale — Danger' 是谁——Tommy 在'对 Vivian 脱罪关键'的前提下松口确认：就是 Whale，Webb 生前怕的那个人"
-          - "Rita 也是 Whale 派来的间谍——Tommy 多年在 Webb 身边观察，她问的问题太精准、来的时机太巧（证词 9054001）"
-          - "酒吧里知道 Whale 的，除了 Webb，就只有前勒索人和现勒索人（证词 9054002）"
+          - "Rita 也是 Whale 派来的间谍——Tommy 多年在 Webb 身边观察，她问的问题太精准、来的时机太巧（证词 1054001）"
+          - "酒吧里知道 Whale 的，除了 Webb，就只有前勒索人和现勒索人（证词 1054002）"
           - "那次之后就由别人接手了相关工作（不点名）"
         withheld_topics:
           - "接手的新执行人是 James（L5 才揭示）"
@@ -244,19 +244,19 @@ scenes:
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
-          - '"翻开 Webb 日记（9308）扉页 + 出示 .45 弹壳（9401），追问 Whale 到底是谁" # 10'
+          - '"翻开 Webb 日记（1308）扉页 + 出示 .45 弹壳（1401），追问 Whale 到底是谁" # 10'
           - '"强调这对 Vivian 脱罪关键——逼 Tommy 松口正式指认 Rita 是间谍" # 9'
-          - '"酒吧里知道 Whale 的人范围有多小——追问前勒索人和现勒索人（证词 9054002）" # 8'
+          - '"酒吧里知道 Whale 的人范围有多小——追问前勒索人和现勒索人（证词 1054002）" # 8'
           - '"被枪击的经历——那之后是谁接手了（Tommy 不会点名）" # 6'
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9054001  # Tommy：Rita 也是 Whale 派来的间谍（正式指认；疑点 9401 condition）
-          - 9054002  # Tommy：这个酒吧里知道 Whale 的，除了 Webb，就只有前勒索人和现勒索人（L5 疑点 9504 condition）
+          - 1054001  # Tommy：Rita 也是 Whale 派来的间谍（正式指认；疑点 1401 condition）
+          - 1054002  # Tommy：这个酒吧里知道 Whale 的，除了 Webb，就只有前勒索人和现勒索人（L5 疑点 1504 condition）
 
 
-  # ── 场景 9002：Vivian 化妆室（L4 再次开放）──
-  - id: 9002
+  # ── 场景 1002：Vivian 化妆室（L4 再次开放）──
+  - id: 1002
     name: "Vivian 化妆室"
     type: free_exploration
     description: |
@@ -266,7 +266,7 @@ scenes:
       这些物证构建 Vivian 的内心世界——她不是恶意的凶手，而是被逼到绝境的人。
 
     evidence:
-      - id: 9406
+      - id: 1406
         name: "Vivian 的痛苦记录 / Vivian's Anguish Journal"
         type: envir
         pickup: false
@@ -274,7 +274,7 @@ scenes:
         description: "化妆台上散落的几张纸，写满 Vivian 的内心挣扎——对 Webb 的愤怒、对被迫勒索别人的羞耻、对 Rita 出现后的绝望。笔迹凌乱，后半段字迹变成了杀意的涂鸦。可查看但不可拾取。"
         note: "场景道具——验证 Vivian 曾有杀人计划的心理轨迹；不作为任何疑点 condition"
 
-      - id: 9405
+      - id: 1405
         name: "枪盒内衬的 Colt 广告卡 / Colt Advertising Card in Pistol Case"
         type: envir
         pickup: false
@@ -282,7 +282,7 @@ scenes:
         description: "枪盒内衬印有 1920s Colt Vest Pocket 广告文案：'A Lady's Silent Protection'。暗示 Webb 当年送枪是一种保护的姿态。"
         note: "场景道具——环境叙事；不进任何疑点 condition"
 
-      - id: 9404
+      - id: 1404
         name: "被撕毁的船票 / Torn Boat Ticket"
         type: item
         pickup: true
@@ -290,7 +290,7 @@ scenes:
         description: "一张被撕成两半的轮船客票，目的地巴黎，持票人姓名栏有'Vivian'字样。撕口整齐，像是经过深思熟虑后的决定。"
         note: "场景道具——Vivian 曾计划离开但撕毁船票，象征她断绝了逃离的念头；情感素材"
 
-      - id: 9403
+      - id: 1403
         name: "Vivian 的绝笔信 / Vivian's Suicide Letter"
         type: item
         pickup: true
@@ -300,14 +300,14 @@ scenes:
 
     npcs: {}
 
-  # ── 场景 9005：歌舞厅（Vivian 自由对话）──
-  - id: 9005
+  # ── 场景 1005：歌舞厅（Vivian 自由对话）──
+  - id: 1005
     name: "歌舞厅"
     type: free_exploration
     description: |
       Vivian 在歌舞厅。L3 指证 Rosa 完成后，Vivian 终于愿意与 Zack 正面交流。
       本场景 Vivian 首次透露三条关键证言：
-      - 11:05 敲门被吼退（疑点 9402 关键条件之一）
+      - 11:05 敲门被吼退（疑点 1402 关键条件之一）
       - 《艾斯弗德狂想曲》鼓点（感情戏信息，L5 伏笔）
       - 她对 Whale 的认知（她不认识 Whale）
       注：L4 只作为信息收集，不作为指证推理依据——L5 才与其他证据配合击破 James。
@@ -325,9 +325,9 @@ scenes:
 
         # ── 1. 已知信息 ──
         active_topics:
-          - "23:05 去敲 Webb 房门，听到有人在房间里说话就退走了（Vivian 主观以为是 Webb——⚠偏见）；23:30 按送酒时间回去时发现 Webb 已死（证词 9064001；疑点 9402 关键条件）"
-          - "《艾斯弗德狂想曲》的鼓点很强，是 Webb 最喜欢的一首曲子；当晚她希望 Webb 能听到她的舞，但他没开门（证词 9064002；L5 时间线伏笔）"
-          - "Webb 利用她勒索的都是孤立银行家、工程师等中产阶级；她之前并不知道 Whale 是谁（证词 9064003）"
+          - "23:05 去敲 Webb 房门，听到有人在房间里说话就退走了（Vivian 主观以为是 Webb——⚠偏见）；23:30 按送酒时间回去时发现 Webb 已死（证词 1064001；疑点 1402 关键条件）"
+          - "《艾斯弗德狂想曲》的鼓点很强，是 Webb 最喜欢的一首曲子；当晚她希望 Webb 能听到她的舞，但他没开门（证词 1064002；L5 时间线伏笔）"
+          - "Webb 利用她勒索的都是孤立银行家、工程师等中产阶级；她之前并不知道 Whale 是谁（证词 1064003）"
           - "她仍然坚持认罪，但态度开始有裂缝"
         withheld_topics:
           - "11:05 被吼退完整经过中的口音细节（Expose 后才完整给出）"
@@ -337,13 +337,13 @@ scenes:
 
         # ── 3. 可提取证词 ──
         testimony_ids:
-          - 9064001  # Vivian：23:05 去敲门，听到有人在 Webb 房间里说话就退走了；23:30 回去时发现 Webb 已死（⚠偏见：她主观以为说话者是 Webb；疑点 9402 condition）
-          - 9064002  # Vivian：《艾斯弗德狂想曲》的鼓点很强，是 Webb 最喜欢的一首曲子；我当时希望他能听到和我最后共舞一曲（⭐ L5 时间线伏笔）
-          - 9064003  # Vivian：Webb 利用她勒索的都是孤立银行家/工程师等中产，她之前并不知道 Whale 是谁
+          - 1064001  # Vivian：23:05 去敲门，听到有人在 Webb 房间里说话就退走了；23:30 回去时发现 Webb 已死（⚠偏见：她主观以为说话者是 Webb；疑点 1402 condition）
+          - 1064002  # Vivian：《艾斯弗德狂想曲》的鼓点很强，是 Webb 最喜欢的一首曲子；我当时希望他能听到和我最后共舞一曲（⭐ L5 时间线伏笔）
+          - 1064003  # Vivian：Webb 利用她勒索的都是孤立银行家/工程师等中产，她之前并不知道 Whale 是谁
 
 
-  # ── 场景 9004：酒吧大厅（Morrison 等待区 / 转折剧情触发入口）──
-  - id: 9004
+  # ── 场景 1004：酒吧大厅（Morrison 等待区 / 转折剧情触发入口）──
+  - id: 1004
     name: "酒吧大厅（Morrison 等待区）"
     type: free_exploration
     description: |
@@ -368,7 +368,7 @@ scenes:
       auto_jump: true
       dialogue_option: "向 Morrison 总结调查结果（弹出专属选项）"
       progression: "玩家重复点击该对话选项，推进剧情至 turn_cutscene 触发"
-      note: "Morrison 看到 .45 弹壳（9401）后脸色骤变，是 turn_cutscene 的起点"
+      note: "Morrison 看到 .45 弹壳（1401）后脸色骤变，是 turn_cutscene 的起点"
 
     npcs:
       morrison_L4_001:
@@ -387,11 +387,11 @@ scenes:
           - "随口询问 Zack 的调查进展——'你查到什么了？'"
           - "Morrison 对 Vivian 案件的官方立场（Vivian 有罪）"
           # 阶段 B（指证完成后解锁）
-          - "Zack 出示 .45 弹壳（9401）并总结推理：弹壳型号是 .45 ACP，Vivian 的枪是 .25 ACP——口径不符"
+          - "Zack 出示 .45 弹壳（1401）并总结推理：弹壳型号是 .45 ACP，Vivian 的枪是 .25 ACP——口径不符"
           - "Morrison 看到 .45 弹壳后脸色骤变（手停、眼神定在弹壳上、沉默）——turn_cutscene 触发点"
         withheld_topics:
           - "他看到 .45 弹壳脸色一变的真实原因（与米勒集团的关联，L6 揭示）"
-          - "他拿走 9103 之后的计划（turn_cutscene 中执行，L6 揭示）"
+          - "他拿走 1103 之后的计划（turn_cutscene 中执行，L6 揭示）"
 
         # ── 2. 玩家询问意图 ──
         player_inquiry:
@@ -410,7 +410,7 @@ scenes:
 expose:
   target: vivian
   target_talk: vivian_expose_L4
-  scene_id: 9003
+  scene_id: 1003
   is_liar: true
   player_inquiry: null
   exposeNpcId: 106
@@ -418,32 +418,32 @@ expose:
 
   context: |
     Zack 完成自由探索后，手握：
-    - 9401 .45 警用弹壳（L3 post_expose 继承；弹底印记模糊，已经道具栏铅笔拓印小玩法派生 9702）
-    - 9702 .45 警用弹壳（弹底 MILLER ARMS 印记）（9401 拓印派生；外圈'WCC - .45 ACP'清晰，内圈'MILLER ARMS'L4 暂不解其义）
-    - 9101 Vivian 的小手枪（.25 ACP，可分析派生 9711 无硝烟手枪）
-    - 9402 被撕毁的合同（Whale 花大钱委托酒吧里的人做某件事）
-    - 9054001 Tommy 证言（Rita 是 Whale 派来的间谍）
-    - 9304 保险箱字条（密码 = 相遇日）
-    - 9103 Webb 委托协议书（Webb 指定 Zack 为遗嘱执行人，确保 Vivian 顺利继承遗产）
+    - 1401 .45 警用弹壳（L3 post_expose 继承；弹底印记模糊，已经道具栏铅笔拓印小玩法派生 1702）
+    - 1702 .45 警用弹壳（弹底 MILLER ARMS 印记）（1401 拓印派生；外圈'WCC - .45 ACP'清晰，内圈'MILLER ARMS'L4 暂不解其义）
+    - 1101 Vivian 的小手枪（.25 ACP，可分析派生 1711 无硝烟手枪）
+    - 1402 被撕毁的合同（Whale 花大钱委托酒吧里的人做某件事）
+    - 1054001 Tommy 证言（Rita 是 Whale 派来的间谍）
+    - 1304 保险箱字条（密码 = 相遇日）
+    - 1103 Webb 委托协议书（Webb 指定 Zack 为遗嘱执行人，确保 Vivian 顺利继承遗产）
     Vivian 仍然坚持认罪："我杀了 Webb。"
     这场指证的基调是"救"——不是在审问凶手，而是在拯救一个想用死来解脱的人。
 
   # ── 轮次一：弹壳口径 vs 手枪口径不符 ──
   round_1:
     lie: "我真的杀了 Webb！"
-    lie_source: 9063003  # Vivian 在 L3 Talk 阶段的认罪证词（跨 Loop 引用，仍然坚持认罪）
+    lie_source: 1063003  # Vivian 在 L3 Talk 阶段的认罪证词（跨 Loop 引用，仍然坚持认罪）
     usable_evidence:
-      - id: 9702
+      - id: 1702
         name: ".45 警用弹壳（弹底 MILLER ARMS 印记）"
-        note: "关键——9401 经铅笔拓印小玩法派生；外圈'WCC - .45 ACP'清晰可读，凶器口径锁定为 .45 ACP"
+        note: "关键——1401 经铅笔拓印小玩法派生；外圈'WCC - .45 ACP'清晰可读，凶器口径锁定为 .45 ACP"
         usage: "拓印图样上外圈'WCC - .45 ACP'清晰呈现凶器口径——内圈'MILLER ARMS'L4 暂记，L6 才解谜"
-      - id: 9101
-        name: "Vivian 的小手枪（含分析派生 9711）"
-        note: "关键——Vivian 的枪是 .25 ACP 口径；分析派生 9711 无硝烟手枪"
+      - id: 1101
+        name: "Vivian 的小手枪（含分析派生 1711）"
+        note: "关键——Vivian 的枪是 .25 ACP 口径；分析派生 1711 无硝烟手枪"
         usage: "Vivian 的枪是 .25 ACP，无硝烟反应——与弹壳口径不符，她的枪根本无法射出 .45 弹壳"
     requiredItems:
-      - 9702
-      - 9101
+      - 1702
+      - 1101
     result: partial_victory
     result_description: |
       Zack 指出：弹壳是 .45 ACP，你的枪是 .25 ACP——口径不对，凶器不可能是你的枪。
@@ -456,19 +456,19 @@ expose:
     lie: "但除了我是凶手，没有其他人能够杀害 Webb！"
     lie_source: "NPC 退守谎言（round_1 结果 Vivian 主动提出）"
     usable_evidence:
-      - id: 9054001
+      - id: 1054001
         name: "Tommy 证言：Rita 也是 Whale 派来的间谍"
         note: "关键——Whale 不仅有动机，还在酒吧内部安排了渗透者"
         usage: "Whale 身份由 Tommy 正式指认 + Rita 是 Whale 的内线——Whale 有动机、有渠道"
-      - id: 9402
+      - id: 1402
         name: "被撕毁的合同"
         note: "关键——Whale 花大笔钱委托了酒吧里的某人做某件事"
         usage: "实物证据：Whale 与酒吧里的某人签了合同，委托做某件事——直接指向 Whale 是幕后主使"
     requiredItems:
-      - 9054001
-      - 9402
+      - 1054001
+      - 1402
     trap_evidence:
-      - id: 9403
+      - id: 1403
         name: "Vivian 的绝笔信"
         trap_reason: "绝笔信只证明 Vivian 有死志和绝望心态，不能反驳'Whale 已渗透酒吧并有准备行动'的维度——误用于 R2 会失败"
     result: partial_victory
@@ -483,12 +483,12 @@ expose:
     lie: "可是就算如此，也是因为他沉迷于 Rita……他早就把我忘了，我对他来说什么都不是了。"
     lie_source: "NPC 最后防线（Vivian 情感层面的退守——即使凶手不是她，Webb 也已经不爱她了）"
     usable_evidence:
-      - id: 9304
+      - id: 1304
         name: "保险箱字条（密码 = 相遇日）"
         note: "关键——Webb 将保险箱密码留给 Vivian，密码是他们相遇那天的日期"
         usage: "Webb 的保险箱密码是两人的相遇日——他在用保险箱保存重要的东西，密码是纪念日，说明他心里从未忘记 Vivian"
     requiredItems:
-      - 9304
+      - 1304
     result: full_breakthrough
     result_description: |
       保险箱字条戳破了 Vivian 最后的防线——
@@ -509,7 +509,7 @@ expose:
     new_evidence_gained: null
 
     new_testimony_gained:
-      - id: 9064006
+      - id: 1064001
         content: "Vivian 在 23:05 准备去杀 Webb，在门口听到'Don't be bothering me!'就退走了；她越来越觉得不对劲，23:30 才回去推开了门"
         significance: "23:05 时间节点确认；'Don't be bothering me!'是 L5 爱尔兰口音谜题的关键伏笔"
 
@@ -527,7 +527,7 @@ expose:
 turn_cutscene:
   type: turn_cutscene
   interlude:
-    id: "U9-L4-INT-01"
+    id: "U1-L4-INT-01"
     title: "Part1 情节转折——Morrison 变脸强押 Vivian"
     outline_anchor: "§L4 🔵 插入剧情：Loop1-4 结束的情节转折"
   location: "蓝月亮酒吧大厅（Morrison 出现的地方）"
@@ -535,7 +535,7 @@ turn_cutscene:
     【Part1 情节转折——Morrison 逆转】
 
     1. Zack 先指出：已得到 Vivian 不认罪的证词，Morrison 可以去向 Vivian 亲自求证。
-    2. 接着 Zack 出示 .45 弹壳（9401）并提出推理：
+    2. 接着 Zack 出示 .45 弹壳（1401）并提出推理：
        凶器型号是 .45 ACP，与 Vivian 的 .25 手枪不符——Vivian 无罪。
 
     Morrison 看到 .45 弹壳后——手停住、眼神定在弹壳上、沉默很久。
@@ -544,8 +544,8 @@ turn_cutscene:
     随后 Morrison 的态度急转直下：
     1. 不再客气，对 Emma 和 Zack 的态度变得强硬
     2. 程序性地宣布：Vivian 拥有杀人动机和计划，她的手枪就是真正的凶器
-    3. 当场撕毁 Webb 委托协议书（9103）→ 状态更新为 destroyed_by_morrison（实物销毁）
-    4. 当场从 Zack 手中夺走 .45 弹壳（9401）→ 状态更新为 confiscated_by_morrison（L6 从 Morrison 家找回）
+    3. 当场撕毁 Webb 委托协议书（1103）→ 状态更新为 destroyed_by_morrison（实物销毁）
+    4. 当场从 Zack 手中夺走 .45 弹壳（1401）→ 状态更新为 confiscated_by_morrison（L6 从 Morrison 家找回）
     5. 下令将 Vivian 逮捕，押回警局
     Morrison 的台词是程序性的，不愤怒、不解释——越平静越可怕。
 
@@ -553,17 +553,17 @@ turn_cutscene:
     Vivian 被带走时回头看了 Zack 一眼（情感戏收尾）。
 
   evidence_status_changes:
-    - id: 9103
+    - id: 1103
       name: "Webb 委托协议书"
       change_type: "destroyed_by_morrison"
       agent: "Morrison（turn_cutscene 中当场撕毁）"
-      player_impact: "玩家手中不再持有 9103 实物；实物永久销毁（非没收，无法找回）；L5 起无法以此证物对抗 Morrison；内容仍在 known_facts 中"
+      player_impact: "玩家手中不再持有 1103 实物；实物永久销毁（非没收，无法找回）；L5 起无法以此证物对抗 Morrison；内容仍在 known_facts 中"
       reveal_loop: null
-    - id: 9401
+    - id: 1401
       name: ".45 警用弹壳"
       change_type: "confiscated_by_morrison"
       agent: "Morrison（turn_cutscene 中当场从 Zack 手里夺走）"
-      player_impact: "玩家 L5 手中不再持有 9401 实物；Morrison 将弹壳带回自己家中藏匿；L6 Morrison 家搜证可找回"
+      player_impact: "玩家 L5 手中不再持有 1401 实物；Morrison 将弹壳带回自己家中藏匿；L6 Morrison 家搜证可找回"
       reveal_loop: 6
 
   npcs:
@@ -579,17 +579,17 @@ turn_cutscene:
       # ── 1. 已知信息 ──
       active_topics:
         - "强制宣布：Vivian 有动机有计划，手枪是凶器（强制剧情宣告，不在本 Loop 被反驳）"
-        - "当场撕毁委托协议书（9103）的行动（强制剧情动作）"
-        - "当场夺走 .45 弹壳（9401）的行动（强制剧情动作）"
+        - "当场撕毁委托协议书（1103）的行动（强制剧情动作）"
+        - "当场夺走 .45 弹壳（1401）的行动（强制剧情动作）"
         - "宣布逮捕 Vivian——程序性执法"
         - "当场撤回 L1 承诺的 72 小时调查权（'七十二小时。用完了。'）——L5/L6 调查阻力的来源"
       withheld_topics:
         - "他看到 .45 弹壳脸色一变的真实原因（L6 揭示）"
-        - "撕毁 9103 委托协议书 + 夺走 9401 弹壳背后的动机（L6 揭示）"
+        - "撕毁 1103 委托协议书 + 夺走 1401 弹壳背后的动机（L6 揭示）"
 
       # ── 2. 玩家询问意图 ──
       player_inquiry:
-        - '"Morrison 为什么看到 .45 弹壳会脸色骤变（疑点 9402 推进驱动）" # 9'
+        - '"Morrison 为什么看到 .45 弹壳会脸色骤变（疑点 1402 推进驱动）" # 9'
         - '"Morrison 为什么要撕毁委托协议书 + 夺走弹壳——他在阻止什么" # 9'
 
       # ── 3. 可提取证词 ──
@@ -609,7 +609,7 @@ turn_cutscene:
         - "收尾告诉 Zack：'我们还有牌'——为 L5 反扑留下情绪锚点，符合 Emma'情绪节拍器而非安慰者'的人设"
       withheld_topics:
         - "Morrison 变脸的真实原因（与米勒集团的关联，L6 揭示）"
-        - "9103/9401 被处理后 L5-L6 的具体反扑路径（L5 opening 才规划）"
+        - "1103/1401 被处理后 L5-L6 的具体反扑路径（L5 opening 才规划）"
         - "对 Morrison 撤销 72h 后的具体应对预案（L5 才展开）"
 
       # ── 2. 玩家询问意图 ──
@@ -640,212 +640,212 @@ doubts:
 
   # ── 继承自 L1-L3（状态更新）──
 
-  - id: 9101
+  - id: 1101
     text: "23:30 的枪响真的是在 Webb 会客室发生的吗？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9711"  # 无硝烟手枪（分析派生）
+        param: "1711"  # 无硝烟手枪（分析派生）
       - type: 3
-        param: "9031001"  # Rosa 目击证词（⚠谎言：L1 R1 指证件）
+        param: "1031001"  # Rosa 目击证词（⚠谎言：L1 R1 指证件）
     posed_loop: 1
     resolved_loop: 3
     status: "resolved_loop3"
     resolution_note: "L3 已完整解决：玻璃碎片+垃圾袋时序证明枪击早于 23:20；23:30 是假枪声。历史面板回填。"
 
-  - id: 9201
+  - id: 1201
     text: "这些照片上的人，似乎在哪里见过一样？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9201"  # 勒索用的照片
+        param: "1201"  # 勒索用的照片
       - type: 1
-        param: "9202"  # Webb 办公室 VIP 合影
+        param: "1202"  # Webb 办公室 VIP 合影
     posed_loop: 2
     resolved_loop: 2
     status: "resolved_loop2"
 
-  - id: 9202
+  - id: 1202
     text: "两本账为何对不上？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9203"  # Webb 收入记录
+        param: "1203"  # Webb 收入记录
       - type: 1
-        param: "9204"  # Tommy 酒吧账本
+        param: "1204"  # Tommy 酒吧账本
     posed_loop: 2
     resolved_loop: 2
     status: "resolved_loop2"
 
-  - id: 9203
+  - id: 1203
     text: "这些东西摆在这里是做什么呢？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9205"  # 假油画
+        param: "1205"  # 假油画
       - type: 1
-        param: "9206"  # 花瓶现场照
+        param: "1206"  # 花瓶现场照
     posed_loop: 2
     resolved_loop: 2
     status: "resolved_loop2"
 
-  - id: 9204
+  - id: 1204
     text: "James 很缺钱……（碎片）"
     isFragment: true
     unlock_condition:
       - type: 3
-        param: "9072001"  # James "很缺钱"证言
+        param: "1072001"  # James "很缺钱"证言
     posed_loop: 2
     status: "fragment_F1_pending_loop5"
-    fragment_note: "F1 碎片；L5 与 Anna 证言（9085001）合并为父疑点 9502"
+    fragment_note: "F1 碎片；L5 与 Anna 证言（1085001）合并为父疑点 1502"
 
-  - id: 9301
+  - id: 1301
     text: "Webb 的死亡时间比 23:30 的枪响更早？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9301"  # 玻璃碎片（压垃圾袋下有硝烟）
+        param: "1301"  # 玻璃碎片（压垃圾袋下有硝烟）
       - type: 3
-        param: "9033001"  # Rosa：23:20 自己去外面丢过垃圾
+        param: "1033001"  # Rosa：23:20 自己去外面丢过垃圾
     posed_loop: 3
     resolved_loop: 3
     status: "resolved_loop3"
 
-  - id: 9302
+  - id: 1302
     text: "Rosa 是被胁迫作伪证的？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9302"  # 威胁纸条（倒写 J）
+        param: "1302"  # 威胁纸条（倒写 J）
       - type: 1
-        param: "9303"  # 女儿医疗单
+        param: "1303"  # 女儿医疗单
     posed_loop: 3
     resolved_loop: 3
     status: "resolved_loop3"
 
-  - id: 9303
+  - id: 1303
     text: "Webb 是否真的抛弃了 Vivian 沉迷 Rita？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9304"  # 保险箱字条
+        param: "1304"  # 保险箱字条
       - type: 1
-        param: "9305"  # Webb 和 Vivian 的合影
+        param: "1305"  # Webb 和 Vivian 的合影
     posed_loop: 3
     resolved_loop: 4
     status: "resolved_loop4"
-    resolution_note: "L4 R3 指证 Vivian 时，9304 保险箱字条击穿 Vivian 的情感辩解——Webb 密码是相遇日，心里从未忘记 Vivian。"
+    resolution_note: "L4 R3 指证 Vivian 时，1304 保险箱字条击穿 Vivian 的情感辩解——Webb 密码是相遇日，心里从未忘记 Vivian。"
 
   # ── L4 新建疑点/碎片 ──
 
-  - id: 9401
+  - id: 1401
     text: "Whale 雇的人就在酒吧里？"
     isFragment: false
     unlock_condition:
       - type: 1
-        param: "9402"  # 被撕毁的合同（唯一归属 9401）
+        param: "1402"  # 被撕毁的合同（唯一归属 1401）
       - type: 3
-        param: "9054001"  # Tommy：Rita 也是 Whale 派来的间谍（唯一归属 9401）
+        param: "1054001"  # Tommy：Rita 也是 Whale 派来的间谍（唯一归属 1401）
     posed_loop: 4
     status: "unlocked_loop4"
 
-  - id: 9402
+  - id: 1402
     text: "Webb 的死亡时间是 23:05 到 23:20 之间吗？"
     isFragment: false
     unlock_condition:
       - type: 3
-        param: "9064001"  # Vivian：23:05 被吼退（唯一归属 9402）
+        param: "1064001"  # Vivian：23:05 被吼退（唯一归属 1402）
       - type: 3
-        param: "9043002"  # Morrison 弹道证言（唯一归属 9402；L3 已给，L4 使用）
+        param: "1043002"  # Morrison 弹道证言（唯一归属 1402；L3 已给，L4 使用）
     posed_loop: 4
     status: "unlocked_loop4"
 
-  - id: 9403
+  - id: 1403
     text: "这枚 .45 警用弹壳是从哪里来的？（碎片）"
     isFragment: true
     unlock_condition:
       - type: 1
-        param: "9401"  # .45 警用弹壳（唯一归属 9403）
+        param: "1401"  # .45 警用弹壳（唯一归属 1403）
     posed_loop: 4
     status: "fragment_F2_pending_loop6"
-    fragment_note: "F2 碎片；L6 与米勒手枪相关碎片（9607）合并为父疑点 9602"
+    fragment_note: "F2 碎片；L6 与米勒手枪相关碎片（1607）合并为父疑点 1602"
 
 # ─────────────────────────────
 # 七、证据 ID 汇总（Loop4 全部证据）
 # ─────────────────────────────
 
 evidence_registry:
-  # L4 = 94xx 系列（L4 新引入证据）
-  # 继承 L1：9101（Vivian 手枪）/ 9103（Webb 委托协议书，本 Loop 末被 Morrison 当场撕毁）/ 9711（派生）
-  # 继承 L2：9201-9207
-  # 继承 L3：9301-9308（9304 保险箱字条在 L4 R3 使用；9308 Webb 勒索日记在 L4 Tommy 办公室对话引用作为追问起点）
-  # 特别说明：9401 为 L3 post_expose 继承，L4 开场玩家背包已持有——不设 pickup 节点
+  # L4 = 14xx 系列（L4 新引入证据）
+  # 继承 L1：1101（Vivian 手枪）/ 1103（Webb 委托协议书，本 Loop 末被 Morrison 当场撕毁）/ 1711（派生）
+  # 继承 L2：1201-1207
+  # 继承 L3：1301-1308（1304 保险箱字条在 L4 R3 使用；1308 Webb 勒索日记在 L4 Tommy 办公室对话引用作为追问起点）
+  # 特别说明：1401 为 L3 post_expose 继承，L4 开场玩家背包已持有——不设 pickup 节点
 
-  - id: 9401
+  - id: 1401
     name: ".45 警用弹壳 / .45 ACP Police-Issue Casing"
     type: item
     inherited_from: "loop3_post_expose"
     first_available_loop: 4
     pickup: false
-    description: ".45 ACP 弹壳；Rosa 23:30 指认时从 Webb 会客室地上捡走后交给 Zack（L3 post_expose）；弹底印记**模糊不可见**，需经铅笔拓印小玩法（参见 剧情设计/Unit1/小玩法/L4_弹壳铅笔拓印.md）才能识别外圈'WCC - .45 ACP'与内圈'MILLER ARMS'铭文——产出派生证据 9702。"
-    analysis: "弹壳弹底铅笔拓印——外圈 'WCC - .45 ACP' 确认 .45 警用口径；内圈 'MILLER ARMS' L4 暂不解其义（派生 ID: 9702）"
-    note: "关键——F2 碎片 9403 condition；L4 R1 击穿件（与派生 9702 配对）；L6 R1 击穿件（与 9601 配对）"
+    description: ".45 ACP 弹壳；Rosa 23:30 指认时从 Webb 会客室地上捡走后交给 Zack（L3 post_expose）；弹底印记**模糊不可见**，需经铅笔拓印小玩法（参见 剧情设计/Unit1/小玩法/L4_弹壳铅笔拓印.md）才能识别外圈'WCC - .45 ACP'与内圈'MILLER ARMS'铭文——产出派生证据 1702。"
+    analysis: "弹壳弹底铅笔拓印——外圈 'WCC - .45 ACP' 确认 .45 警用口径；内圈 'MILLER ARMS' L4 暂不解其义（派生 ID: 1702）"
+    note: "关键——F2 碎片 1403 condition；L4 R1 击穿件（与派生 1702 配对）；L6 R1 击穿件（与 1601 配对）"
     status_change:
       loop: 4
       change: "confiscated_by_morrison"
       agent: "Morrison（turn_cutscene 末当场从 Zack 手中夺走）"
-      note: "L5 起玩家手中不再持有 9401 实物；Morrison 将其藏于自家书房抽屉深处；L6 Scene 9016 Morrison 家书房搜证可找回（状态→retrieved_from_confiscation）"
+      note: "L5 起玩家手中不再持有 1401 实物；Morrison 将其藏于自家书房抽屉深处；L6 Scene 1016 Morrison 家书房搜证可找回（状态→retrieved_from_confiscation）"
 
-  - id: 9702
+  - id: 1702
     name: ".45 警用弹壳（弹底 MILLER ARMS 印记） / .45 ACP Casing with MILLER ARMS Stamp"
     type: derived
-    source_item: 9401
+    source_item: 1401
     first_available_loop: 4
     pickup: false
     analysis: false
-    description: "对 9401 弹壳弹底做铅笔拓印后取得的拓印图样。外圈清晰印有'WCC - .45 ACP'，确认为温彻斯特出厂警用标准口径弹；内圈小字'MILLER ARMS'，为枪弹的专属销售方批号。L4 时含义不明，留作线索（L6 与 9601 米勒手枪铭文交叉印证）。"
-    note: "关键——派生自 9401 铅笔拓印（参见 小玩法/L4_弹壳铅笔拓印.md）；L4 R1 击穿件（与 9101 配对）；L6 R1 复用（与 9601 交叉）"
+    description: "对 1401 弹壳弹底做铅笔拓印后取得的拓印图样。外圈清晰印有'WCC - .45 ACP'，确认为温彻斯特出厂警用标准口径弹；内圈小字'MILLER ARMS'，为枪弹的专属销售方批号。L4 时含义不明，留作线索（L6 与 1601 米勒手枪铭文交叉印证）。"
+    note: "关键——派生自 1401 铅笔拓印（参见 小玩法/L4_弹壳铅笔拓印.md）；L4 R1 击穿件（与 1101 配对）；L6 R1 复用（与 1601 交叉）"
 
-  - id: 9402
+  - id: 1402
     name: "被撕毁的合同 / Torn Contract"
     type: item
-    first_scene: 9007
+    first_scene: 1007
     pickup: true
     analysis: false
     description: "从一楼走廊垃圾桶中找到的被撕成碎片的合同残页，拼合后可读出：有一方与'Whale'签订合同，Whale 愿意出一大笔钱委托对方做一件未明言的事。字迹特征（L5 才识别出是倒写 J 习惯）。"
-    note: "关键——疑点 9401 condition；L4 R2 击穿件；L5 R3 再用"
+    note: "关键——疑点 1401 condition；L4 R2 击穿件；L5 R3 再用"
 
-  - id: 9403
+  - id: 1403
     name: "Vivian 的绝笔信 / Vivian's Suicide Letter"
     type: item
-    first_scene: 9002
+    first_scene: 1002
     pickup: true
     analysis: false
     description: "一封未寄出的信，写给不知名的收件人。字里行间是 Vivian 对自己处境的绝望——她认为自己既然被 Webb 当工具，死了也好。信里没有提到杀人，更像是'活不下去'的哀叹。"
     note: "L4 R2 陷阱证据——绝笔信只证 Vivian 有死志，不能反驳'Whale 已有准备行动'维度；误用会失败"
 
-  - id: 9404
+  - id: 1404
     name: "被撕毁的船票 / Torn Boat Ticket"
     type: item
-    first_scene: 9002
+    first_scene: 1002
     pickup: true
     analysis: false
     description: "一张被撕成两半的轮船客票，目的地巴黎，持票人姓名栏有'Vivian'字样。撕口整齐，像是经过深思熟虑后的决定。"
     note: "场景道具——Vivian 曾计划离开但撕毁船票；情感素材"
 
-  - id: 9405
+  - id: 1405
     name: "枪盒内衬的 Colt 广告卡 / Colt Advertising Card in Pistol Case"
     type: envir
-    first_scene: 9002
+    first_scene: 1002
     pickup: false
     analysis: false
     description: "枪盒内衬印有 1920s Colt Vest Pocket 广告文案：'A Lady's Silent Protection'。暗示 Webb 当年送枪是一种保护的姿态。"
     note: "场景道具——环境叙事；不进任何疑点 condition"
 
-  - id: 9406
+  - id: 1406
     name: "Vivian 的痛苦记录 / Vivian's Anguish Journal"
     type: envir
-    first_scene: 9002
+    first_scene: 1002
     pickup: false
     analysis: false
     description: "化妆台上散落的几张纸，写满 Vivian 的内心挣扎——对 Webb 的愤怒、对被迫勒索别人的羞耻、对 Rita 出现后的绝望。笔迹凌乱，后半段字迹变成了杀意的涂鸦。可查看但不可拾取。"
@@ -853,13 +853,13 @@ evidence_registry:
 
   # ── 本 Loop 末状态变化记录（继承证据）──
 
-  - id: 9103
+  - id: 1103
     name: "Webb 委托协议书 / Webb's Commission Contract"
     type: item
     inherited_from: loop1
-    first_scene: 9003
+    first_scene: 1003
     status_change:
       loop: 4
       change: "destroyed_by_morrison"
       agent: "Morrison（turn_cutscene 中当场撕毁）"
-      note: "玩家 L5 起无法再以 9103 实物作为证物；实物被永久销毁（非没收、无法找回）；内容已在 known_facts 中记录"
+      note: "玩家 L5 起无法再以 1103 实物作为证物；实物被永久销毁（非没收、无法找回）；内容已在 known_facts 中记录"

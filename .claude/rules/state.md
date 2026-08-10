@@ -21,7 +21,7 @@ State 文件中的内容严格分为三个阶段，不可混合：
 
 ## 格式规范
 - Testimony ID：`{NPC_ID:3位}{loop:1位}{seq:3位}`，7 位
-  - 例：Unit9 `9031002` = NPC 903 / Loop1 / 002
+  - 例：Unit1 `1031002` = NPC 103 Rosa / Loop1 / 002
   - 例：Unit2 `2031001` = NPC 203 Morrison / Loop1 / 001
   - 完整字段规范见 [docs/配置表详解.md](../../docs/配置表详解.md)
 - Player inquiry：`"{驱动信息来源}" # {分数 0-10}`
@@ -35,11 +35,11 @@ State 文件中的内容严格分为三个阶段，不可混合：
 - withheld_topics 覆盖后续 Loop 才揭示的内容
 - validation_status 必须为 PASS 才可进入对话生成
 
-## 历史格式兼容（EPI01 / Unit2）
+## 历史格式兼容（EPI02 / Unit2）
 
-EPI01 Unit2 state 文件是早于本规则定稿的历史产物，允许保留以下旧格式，**不强制回溯修改**：
+部分 EPI02 Unit2 state 文件是早于本规则定稿的历史产物，允许保留以下旧格式，**不强制回溯修改**：
 
-| 字段 | EPI01(Unit2) 旧格式 | EPI02+ / Unit8+ 新格式（当前规则） |
+| 字段 | EPI02(Unit2) 旧格式 | 当前新格式 |
 |------|--------------------|----------------------------------|
 | NPC 知识块 | `knows` / `does_not_know` / `lie` | `active_topics` / `withheld_topics` |
 | `doubts.unlock_condition` | 字符串 `"item:xxx + testimony:yyy"` | 结构化数组 `[{type: 1/2/3, param: "xxx"}, ...]` |
@@ -49,6 +49,6 @@ EPI01 Unit2 state 文件是早于本规则定稿的历史产物，允许保留�
 
 **处理原则**：
 - **读 Unit2 旧格式**：agent 解析时自动识别——如果 NPC 块含 `knows`/`does_not_know`/`lie` 则按旧格式走；如果 `unlock_condition` 是字符串则按 `+` 分隔解析 `type:param` 对
-- **写新 Unit（Unit8+）**：一律用新格式
+- **写新 Unit / 新 Loop**：一律用新格式
 - **Unit2 未来若新增 loop**：建议用新格式，但与旧 loop 混存可接受
-- **配置表生成**：DoubtConfig 运行时就是结构化数组，Unit2 字符串格式需经转换脚本；Unit8+ 新格式零转换直接映射
+- **配置表生成**：DoubtConfig 运行时就是结构化数组，Unit2 字符串格式需经转换脚本；新格式零转换直接映射

@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::105002008",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "问题成立，但正式台词不是错误源，且原 P0 过重。案发日固定为 1928-11-03，105002008 的‘去年十一月中旬’明确指向 1927 年，时间上早于 Webb 死亡；Tommy 在该段供述中没有被设计为故意篡改年份。当前 Webb、Tommy、James 人物档案、大纲及 L2-L6 State 却普遍只写‘11 月中旬’，没有继承‘去年/1927’限定；在 1928 案件文档中会自然被读成尚未发生的 1928-11 中旬，并把 Webb 停业、替换执行人、James 身份协议落空与杀人动机排到 Webb 死后。该根因与 C-timeline 的 calendar_year_omitted 是同一问题，最终报告应合并展示而非计作两次独立修复；但 A 维度仍有效，因为漏年已经进入三名角色的事实档案和动机因果链。玩家正式台词侧获得的是可成立的 1927 口径，L2/L5 的谜题材料选择也不依赖具体年份，因此不会造成当前推理死锁或错误答案，最终定为 P1。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/facts/canon_rules.json",
+      "finding": "现行案件日期为 1928-11-03，结局日期为 1928-11-06；因此正式台词中的‘去年十一月中旬’只能落在 1927 年。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/tommy_002.json",
+      "finding": "105002006—105002014 的供述链中，Tommy 先说自己一年半前参与勒索、受枪伤，105002008 再明确说‘去年十一月中旬’Webb 停掉买卖；上下文没有把年份设计成谎言。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/webb.md",
+      "finding": "档案固定 Webb 死亡时间为 11 月 3 日 23:00，却只写他‘11 月中旬’停掉勒索、把执行人换成 James，没有年份；缺少 1927 限定后，角色生前行为与死亡日无法稳定排序。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/tommy.md",
+      "finding": "档案只写 Tommy 在‘11 月中旬被替换’，未写去年或 1927；该日期属于 Tommy 从前执行人转为酒吧经理的核心过往，不是无关日历细节。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/james.md",
+      "finding": "档案把‘11 月中旬 Webb 中止勒索、身份协议落空’直接写成 James 杀 Webb 的因果前提，并称 James 已做了大半年；漏年会改变该动机究竟发生在案发前多久，污染核心人物因果。"
+    },
+    {
+      "source": "剧情设计/Unit1/Unit1_大纲.md + 剧情设计/Unit1/state/loop2_state.yaml—loop6_state.yaml",
+      "finding": "大纲和五份继承 State 重复使用无年份的‘11 月中旬’描述 Webb 停业、Tommy 被换及现执行人易主，说明这不是单一文案疏漏，而是已扩散的策划真源问题。"
+    },
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl::player_context.post_expose_knowledge",
+      "finding": "C 维度已将同一根因登记为 calendar_year_omitted/P1，并指向相同正式台词与受影响源；A 条目不应与其重复计数，但从角色事实污染角度仍是成立的问题。"
+    }
+  ]
+}

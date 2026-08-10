@@ -1,0 +1,40 @@
+{
+  "issue_key": "C|剧情设计/Unit1/案发时间线与动线.md|NPC知识状态:Morrison",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "真实的时序/空间冲突，原 P1 合理。Unity 正式台词 103901019 明确由 Morrison 本人说‘今晚我一直在吧台那边’，L1 state 也写他当晚在蓝月亮喝酒、听见 23:30 枪声后醉醺醺地从酒吧内赶到 Webb 会客室，并把该阶段的 Morrison 标为 is_liar:false。相反，《案发时间线与动线》的关键人物知识表明确写他在 23:00–23:20‘不在酒吧’，23:30 才听到枪声赶来；移动路径表又写‘外部 → 1F Webb 会客室’。这不能解释成‘同在酒吧、只是从会客室外赶入’，也没有任何现行设计把 103901019 定义为 Morrison 的主动伪证。P1 而非 P0：冲突会污染 Morrison 是否有资格佐证‘整晚只听到一次枪声’、案发现场人物动线和后续 AI 台本真源，但核心推理仍由 23:30 假枪声、鼓点掩盖真实枪声及 Rosa/Vivian 的证据链闭合，不依赖 Morrison 的精确起点。现行 source_priority 下应以正式 Talk + L1 state 的吧台在场版本为准，并把时间线表改成‘23:00–23:30 在 1F 大堂吧台饮酒；23:30 听到假枪声后从吧台/大堂赶往 Webb 会客室’。本条与 A 维度 `A|AVG/EPI01/Expose/Loop1_rosa.json|103901019` 是同一根因的语义重复：A 从角色事实陈述审计，C 从时空动线审计；最终报告应合并为一个 P1，不应重复计数。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl#line_id=NPC知识状态:Morrison",
+      "finding": "原 C issue 以时间线表的场外动线对照正式台词与 L1 state 的吧台在场口径，判为 character_location_contradiction，severity=P1。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#103901017-103901020",
+      "finding": "Unity 正式链中 Rosa 请求 Morrison 为 23:30 枪声作证，Morrison 回答‘今晚我一直在吧台那边。23:30，枪声只响了那一次’，这是明确的整晚酒吧内位置声明。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop1_rosa.json#103901019",
+      "finding": "现行 EPI01 与 Unity 正式 Talk 一致，未把该句标记为谎言节点，也没有后续台词修正其位置。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop1_state.yaml#player_context/opening/scenes.morrison_001",
+      "finding": "known_facts 写 Morrison 今晚在酒吧喝酒；opening 写他同样听见枪声后醉醺醺赶到会客室；NPC 条目标记 is_liar:false，L1 动机是散漫、懒惰但姑且秉公，没有授权位置伪证。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop1/emma_parlor_001.json#101001032-101001044",
+      "finding": "Morrison 以 new_npc_in 进入 Webb 会客室并说‘让一让’，节点地点仍是 Webb 会客室；该演出只说明他从房间外进入，无法支持其此前在酒吧建筑外，更不推翻吧台在场。"
+    },
+    {
+      "source": "剧情设计/Unit1/案发时间线与动线.md#人物移动路径/NPC在关键时间点的知识状态",
+      "finding": "知识状态表明确把 Morrison 的 23:00–23:20 三格写成‘不在酒吧’，23:30 写成听枪赶来；移动路径表进一步写‘外部 → 1F Webb 会客室’，与正式口径直接冲突。"
+    },
+    {
+      "source": "剧情设计/Unit1/Unit1_大纲.md#循环1开篇剧情; 剧情设计/Unit1/Characters/morrison.md#弧光",
+      "finding": "大纲把 Morrison 定位为蓝月亮熟客、醉醺醺随后赶到，人物档案只说 L1 散漫地赶到现场，没有场外起点或伪造吧台不在场的设计；这些来源不能替时间线表的‘不在酒吧’辩护。"
+    },
+    {
+      "source": ".audit/Unit1/issues/A-character.jsonl#line_id=103901019",
+      "finding": "A 维度已针对同一句正式台词记录相同的吧台在场 vs 时间线场外冲突，severity 同为 P1；两条仅审计视角不同，底层缺陷相同，应在汇总中去重合并。"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "issue_key": "E-era.jsonl::103901010",
+  "verdict": "dismissed",
+  "final_severity": null,
+  "verdict_reason": "不构成 1928 年技术越界。NIST 所记载的 1933 年 Gonzalez Test（后称 Dermal Nitrate/Paraffin Test）是对嫌疑人手部取样并以试剂检测硝酸盐/亚硝酸盐的化学检验；本场没有手部取样、试剂、显色、实验室或仪器动作。103901005 已把判断依据限定为枪管内可见的硝烟残留与黑化/烟垢，103901009-103901010 又以“看不出来吗”和 Morrison 低头看枪的动作承接，英文对应词也是 powder residue，而非 chemical reaction。枪管内因射击形成残留或 fouling 是可直接观察的物理现象，且 1920 年代已有成熟的枪械/弹道目视与显微比较实践。因此这里可合理解释为肉眼查看枪膛烟垢，不是调用 1933 年后的化学 GSR 技术。中文“硝烟反应”确有现代法化学联想，改成“枪膛很干净/没有刚开过火的烟垢”会更清楚，但这属于可选措辞优化，不足以维持原 forensic_tech_anachronism 问题。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/E-era.jsonl#103901010",
+      "finding": "原 P1 issue 将“硝烟反应”理解为化学枪击残留检验，并以 1933 年 Gonzalez/石蜡试验晚于 1928 年为依据。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop1_rosa.json#103901005-103901013",
+      "finding": "前句明确说“枪管里没有硝烟残留，没有黑化痕迹”，随后 Zack 问“你难道看不出来吗”；被复核句英文为“There really is no powder residue”，上下文没有化学检验步骤。"
+    },
+    {
+      "source": "AVG/对话配置工作及草稿/Unit1/Loop1_完整台本.md#103901010",
+      "finding": "Morrison 的唯一检查动作是“走近两步，低头看了一眼那把枪”；没有采样、试剂、显色、手部检查、实验室或仪器表现，符合肉眼查看枪膛烟垢。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop1_state.yaml#1101,1711",
+      "finding": "策划证据描述将 1711 定义为“枪管内无硝烟残留、无黑化痕迹/近期击发污痕”，指向枪械内部可见状态，而不是从射手手上检出 GSR。"
+    },
+    {
+      "source": "avg_editor_v2/data/table/ItemStaticData.json#1711",
+      "finding": "正式设计期道具描述同样写“检查 Vivian 的小手枪”“枪管内没有硝烟残留，枪膛和弹匣也没有近期击发留下的污痕”，未设置化学试验。"
+    },
+    {
+      "source": "NIST/SWGGSR Guide for Primer GSR Analysis by SEM/EDS, pp. 75-76",
+      "url": "https://www.nist.gov/document/swggsr-guide-primer-gsr-analysis",
+      "finding": "NIST 指南记载 Teodoro Gonzalez 于 1933 年向 Milwaukee Police Department 引入 Gonzalez Test；该法用 diphenylamine/diphenylbenzidine 试剂检测嫌疑人手部硝酸盐和亚硝酸盐。这个年代限制适用于化学手部 GSR 检验，不等于 1928 年不能观察枪管烟垢。"
+    },
+    {
+      "source": "National Institute of Justice, Firearms Examiner Training: Effects of Firing",
+      "url": "https://nij.ojp.gov/nij-hosted-online-training-courses/firearms-examiner-training/module-10/effects-firing",
+      "finding": "NIJ 将 barrel leading/metal fouling 定义为子弹通过枪管后在膛内累积的铅或弹被甲材料，证明射击会在枪械内部留下可观察的 fouling；这与手部化学 GSR 检验是不同概念。"
+    },
+    {
+      "source": "NIST, Divide and Conquer: New Algorithm Examines Crime-Scene Bullets Segment by Segment",
+      "url": "https://www.nist.gov/news-events/news/2020/03/divide-and-conquer-new-algorithm-examines-crime-scene-bullets-segment",
+      "finding": "NIST 的枪械鉴定史回顾指出，1916 年已有肉眼与显微镜比较涉案子弹，比较显微镜在 1920 年代发展并完善；1928 年角色进行基础枪械目视检查不存在时代门槛。"
+    }
+  ]
+}

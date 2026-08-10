@@ -1,0 +1,40 @@
+{
+  "issue_key": "H|AVG/EPI01/Talk/loop2/emma_streetcorner_002.json|101002058",
+  "verdict": "confirmed",
+  "final_severity": "P2",
+  "verdict_reason": "`id=101002058` 与 `videoId=101002020` 的事实成立，也确实违反现行《AVG对话配置规则》要求的 `videoId=id`；但原 P1 对运行影响的描述不准确。Unity 的 TalkPanelCtrl 不会用 videoId 反查另一条 Talk，而是直接拼接 `Art/avg_clip/EPI01/loop2/emma_streetcorner_002/101002020` 作为视频资源路径。当前正式资源目录恰好存在可播放的 `101002020.mp4`，不存在 `101002058.mp4`；正式 Talk 表也不存在 id=101002020 的对话行。因此当前节点不会串到另一句对话，反而能按现配置加载现有视频。若只把 JSON 的 videoId 改为 101002058 而不同时迁移视频和 `.meta`，会立刻造成视频缺失。该问题应保留为已确认的 P2：它是单节点的旧资源名/新 Talk ID 不一致，破坏统一命名、自动校验、资产追踪和以后批量重编号的可靠性，但没有证据表明当前播放、文本路由或切场景逻辑已受损。正确修复必须原子化执行：先确认 101002020.mp4 内容确属本句，再把视频资源及 `.meta` 迁移/重命名为 101002058，并同步 Unity Talk 与本地 AVG；不能只改字段。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/H-dialogue-id.jsonl#line_id=101002058",
+      "finding": "原 issue 正确记录 id/videoId 不相等，但把影响描述为运行时定位到另一条对话的视频资源，并定为 P1。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/emma_streetcorner_002.json#101002017-101002058",
+      "finding": "本地文件末段 101002017、018、019 均满足 videoId=id；终止节点 101002058 唯独写 videoId=101002020，script=8 切换至 Scene 1204。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#101002058",
+      "finding": "Unity 正式行与本地 AVG 完全一致：id=101002058、videoId=101002020、videoScene=emma_streetcorner_002；并非本地镜像单独漂移。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json#all rows",
+      "finding": "正式 Talk 中存在 101002058，但不存在 id=101002020；因此 videoId=101002020 不是当前另一条 Talk 节点的身份。"
+    },
+    {
+      "source": "AVG/对话配置工作及草稿/AVG对话配置规则.md#规则17",
+      "finding": "项目规则明确规定 videoEpisode/videoLoop/videoScene/videoId 必须与所属文件和对话行一致，其中 videoId 应与 id 完全一致；当前行构成真实规则违例。"
+    },
+    {
+      "source": "D:/NDC/Assets/_Project/Scripts/Talk/TalkPanelCtrl.cs#ApplyTalkContent/GetFullPath",
+      "finding": "运行时代码直接用 videoEpisode/videoLoop/videoScene/videoId 拼接视频路径，并不把 videoId 当 Talk 主键查表；预加载下一句视频同样按下一行的 videoId 拼路径。"
+    },
+    {
+      "source": "D:/NDC/Assets/Resources/Art/avg_clip/EPI01/loop2/emma_streetcorner_002",
+      "finding": "目录中存在 101002020.mp4（ffprobe 可读取，时长 6.12 秒），不存在 101002058.mp4；当前 videoId 能命中资源，单改为 058 会命中不存在的路径。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/emma_streetcorner_002.json#all 25 rows",
+      "finding": "该文件 25 行中仅 101002058 一行 id/videoId 不相等，表明它是孤立的资源命名遗留，而不是该场景允许普遍共享任意 videoId 的常规模式。"
+    }
+  ]
+}

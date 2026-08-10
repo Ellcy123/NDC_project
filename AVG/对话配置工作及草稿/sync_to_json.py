@@ -1,49 +1,9 @@
 #!/usr/bin/env python3
-"""
-MD ↔ JSON 同步 / 生成脚本
-========================
+"""Retired shared parser library for chapter-specific dialogue sync tools.
 
-三种模式：
-
-1. **同步模式**（JSON 已存在）
-   将 MD 草稿中修改过的中文对白回写到对应的 JSON 文件。
-   只更新：
-     - cnAction（情绪/表情）
-     - cnWords（对白）
-     - cnSpeaker（说话人，极少改动）
-     - ParameterStr0-2（分支选项文本，仅 branches 类型）
-
-2. **新建模式**（JSON 不存在）
-   根据 MD 条目生成完整 JSON 骨架（含所有必填字段）。
-   推断规则：
-     - id：从 MD 的 ### xxx 标题取
-     - step：按顺序递增
-     - speakType：Zack=3 / 其他NPC=2 / 无说话人=4（旁白）
-     - IdSpeaker：按中文名查 NPC_SPEAKER_MAP
-     - cnSpeaker/cnAction/cnWords：从 MD 取
-     - enSpeaker/enAction/enWords：留空
-     - next：下一条 id；最后一条 ""
-     - script：从 MD 条目的 `get`/`branches`/`expose`/`end` 标注识别
-     - ParameterStr/Int：按 script 类型填写
-     - videoEpisode/Loop/Id/Scene：从 MD 文件名和 ## Talk: 段落提取
-
-3. **协调模式**（--reconcile）
-   适用于 MD 拆分 / 合并 / 重命名场景。处理:
-     - 跨文件 ID 迁移（同一 ID 从 emma_002.json 搬到 emma_smallroom_002.json）
-     - 幽灵条目清理（JSON 里有但 MD 已删除——默认 warn，加 --purge 才删）
-     - 空文件自动删除（迁移后变空的旧文件）
-     - _manifest.json 自动重写
-   保留已翻译字段（enWords / enAction / enSpeaker）不被清空。
-
-用法:
-  python sync_to_json.py Loop2_生成草稿.md              # 默认：自动判断（存在→同步，不存在→新建）
-  python sync_to_json.py Loop2_生成草稿.md --dry-run    # 预览
-  python sync_to_json.py Loop2_生成草稿.md --new-only   # 只新建，已有 JSON 跳过
-  python sync_to_json.py Loop2_生成草稿.md --sync-only  # 只同步，不存在就跳过
-  python sync_to_json.py Loop2_生成草稿.md --reconcile  # 协调模式（推荐用于 MD 拆分后）
-  python sync_to_json.py Loop2_生成草稿.md --reconcile --purge  # 协调 + 删除幽灵条目
-  python sync_to_json.py --all                           # 同步/新建所有 Loop
-  python sync_to_json.py Loop2_生成草稿.md --episode EPI01  # 指定章节（默认 EPI01）
+The direct CLI is intentionally disabled. Unit1 uses
+``AVG/Tools/sync_unit1_script_to_json.py``; later chapters use their dedicated
+wrappers. The functions below remain importable for those wrappers only.
 """
 
 import json
@@ -73,8 +33,7 @@ DEFAULT_EPISODE = "EPI01"
 
 # ============================================================
 # NPC 中文名 → IdSpeaker / enSpeaker 映射
-# EPI01 使用 1XX 系列；Unit8（0417 重构版，EPI08）使用 8XX 系列
-# 根据 --episode 参数选择映射表
+# Unit1 正式映射仅保留 EPI01 / 1xx；其他章节由专用 wrapper 注入。
 # ============================================================
 
 NPC_SPEAKER_MAP_EPI01 = {
@@ -126,134 +85,7 @@ NPC_SPEAKER_MAP_EPI01 = {
     "鲸鱼":              ("NPC111", "Whale"),
 }
 
-# Unit8 = Unit1 0417 重构版，NPC 编码 801-811（与 Unit1 旧数据 101-111 隔离）
-NPC_SPEAKER_MAP_EPI08 = {
-    # Zack 801
-    "扎克·布伦南":      ("NPC801", "Zack Brennan"),
-    "扎克":              ("NPC801", "Zack Brennan"),
-    "Zack":              ("NPC801", "Zack Brennan"),
-    "Zack Brennan":      ("NPC801", "Zack Brennan"),
-
-    # Emma 802
-    "艾玛·奥马利":       ("NPC802", "Emma O'Malley"),
-    "艾玛":              ("NPC802", "Emma O'Malley"),
-    "Emma":              ("NPC802", "Emma O'Malley"),
-    "Emma O'Malley":     ("NPC802", "Emma O'Malley"),
-
-    # Rosa 803
-    "罗莎":              ("NPC803", "Rosa"),
-    "罗莎·马丁内斯":     ("NPC803", "Rosa"),
-    "Rosa":              ("NPC803", "Rosa"),
-    "Rosa Martinez":     ("NPC803", "Rosa"),
-
-    # Morrison 804
-    "莫里森":            ("NPC804", "Morrison"),
-    "Morrison":          ("NPC804", "Morrison"),
-
-    # Tommy 805
-    "汤米":              ("NPC805", "Tommy"),
-    "Tommy":             ("NPC805", "Tommy"),
-
-    # Vivian 806
-    "薇薇安":            ("NPC806", "Vivian"),
-    "薇薇安·罗丝":       ("NPC806", "Vivian"),
-    "薇薇安·罗斯":       ("NPC806", "Vivian"),
-    "维维安":            ("NPC806", "Vivian"),
-    "维维安·罗丝":       ("NPC806", "Vivian"),
-    "维维安·罗斯":       ("NPC806", "Vivian"),
-    "Vivian":            ("NPC806", "Vivian"),
-    "Vivian Rose":       ("NPC806", "Vivian"),
-
-    # James 807（Unit9：昵称 James / 全名 James O'Sullivan，与 EPI01 的 Jimmy 区分）
-    "James":             ("NPC807", "James"),
-    "James O'Sullivan":  ("NPC807", "James"),
-    # MD 草稿中文 speaker 兼容（保留旧的中文称呼，避免 sync 失败）
-    "吉米":              ("NPC807", "James"),
-    "吉米·奥沙利文":    ("NPC807", "James"),
-    "詹姆斯":            ("NPC807", "James"),
-    "詹姆斯·奥沙利文":  ("NPC807", "James"),
-
-    # Anna 808
-    "安娜":              ("NPC808", "Anna"),
-    "Anna":              ("NPC808", "Anna"),
-
-    # Webb 809（死者，偶尔旁白引用）
-    "Webb":              ("NPC809", "Webb"),
-    "韦伯":              ("NPC809", "Webb"),
-
-    # Mrs. Morrison 810
-    "莫里森太太":        ("NPC810", "Mrs. Morrison"),
-    "Mrs. Morrison":     ("NPC810", "Mrs. Morrison"),
-
-    # Whale 811
-    "Whale":             ("NPC811", "Whale"),
-    "鲸鱼":              ("NPC811", "Whale"),
-}
-
-# EPI09 = Unit9 正式输出目录（NPC 编码 9XX，与 NPCStaticData EPI09 entries 一致）
-NPC_SPEAKER_MAP_EPI09 = {
-    # Zack 901
-    "扎克·布伦南":      ("NPC901", "Zack"),
-    "扎克":              ("NPC901", "Zack"),
-    "Zack":              ("NPC901", "Zack"),
-    "Zack Brennan":      ("NPC901", "Zack"),
-
-    # Emma 902
-    "艾玛·奥马利":       ("NPC902", "Emma"),
-    "艾玛":              ("NPC902", "Emma"),
-    "Emma":              ("NPC902", "Emma"),
-    "Emma O'Malley":     ("NPC902", "Emma"),
-
-    # Rosa 903
-    "罗莎":              ("NPC903", "Rosa"),
-    "罗莎·马丁内斯":     ("NPC903", "Rosa"),
-    "Rosa":              ("NPC903", "Rosa"),
-    "Rosa Martinez":     ("NPC903", "Rosa"),
-
-    # Morrison 904
-    "莫里森":            ("NPC904", "Morrison"),
-    "莫里森侦探":        ("NPC904", "Morrison"),
-    "Morrison":          ("NPC904", "Morrison"),
-
-    # Tommy 905
-    "汤米":              ("NPC905", "Tommy"),
-    "汤米·康纳利":       ("NPC905", "Tommy"),
-    "Tommy":             ("NPC905", "Tommy"),
-
-    # Vivian 906
-    "薇薇安":            ("NPC906", "Vivian"),
-    "薇薇安·罗丝":       ("NPC906", "Vivian"),
-    "薇薇安·罗斯":       ("NPC906", "Vivian"),
-    "维维安":            ("NPC906", "Vivian"),
-    "维维安·罗丝":       ("NPC906", "Vivian"),
-    "维维安·罗斯":       ("NPC906", "Vivian"),
-    "Vivian":            ("NPC906", "Vivian"),
-    "Vivian Rose":       ("NPC906", "Vivian"),
-
-    # James 907
-    "James":             ("NPC907", "James"),
-    "James O'Sullivan":  ("NPC907", "James"),
-    "詹姆斯·奥沙利文":   ("NPC907", "James"),
-    "吉米":              ("NPC907", "James"),
-    "吉米·奥沙利文":    ("NPC907", "James"),
-    "詹姆斯":            ("NPC907", "James"),
-
-    # Anna 908
-    "安娜":              ("NPC908", "Anna"),
-    "安娜·奥沙利文":     ("NPC908", "Anna"),
-    "Anna":              ("NPC908", "Anna"),
-
-    # Whale 909
-    "Whale":             ("NPC909", "Whale"),
-    "鲸鱼":              ("NPC909", "Whale"),
-
-    # Mrs. Morrison 910
-    "莫里森太太":        ("NPC910", "Mrs. Morrison"),
-    "Mrs. Morrison":     ("NPC910", "Mrs. Morrison"),
-    "莫里森夫人":        ("NPC910", "Mrs. Morrison"),
-}
-
-# 当前 episode 激活的映射表——入口函数根据 --episode 设置
+# 当前映射表；其他章节 wrapper 会在调用解析器前替换。
 NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 
 # Expose 文件对应关系（loop_num → filename）
@@ -1437,7 +1269,7 @@ def process_single_md(md_path, episode, dry_run=False, mode="auto", force_clear=
     print(f"{verb}完成: 同步 {total_synced} 个文件 · 新建 {total_created} 个文件 · 跳过 {total_skipped} 个文件 · 警告 {total_warnings}")
 
 
-def main():
+def _legacy_main():
     args = sys.argv[1:]
 
     dry_run = "--dry-run" in args
@@ -1468,19 +1300,12 @@ def main():
             episode = args[idx + 1]
             args = args[:idx] + args[idx + 2:]
 
-    # 根据 episode 切换 NPC 映射表
-    # EPI08 = Unit1 0417 重构版（8XX 编码，已废弃但保留）
-    # EPI09 = Unit9 正式输出目录（沿用 8XX 编码，复用 EPI08 映射）
+    # 旧 CLI 已停用；保留函数仅供专用 wrapper 复用。
     global NPC_SPEAKER_MAP
     ep_upper = episode.upper()
-    if ep_upper == "EPI08":
-        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI08
-        print(f"[INFO] 使用 EPI08 NPC 映射表（8XX 编码）")
-    elif ep_upper == "EPI09":
-        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI09
-        print(f"[INFO] 使用 EPI09 NPC 映射表（Unit9，沿用 8XX 编码）")
-    else:
-        NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
+    if ep_upper != "EPI01":
+        raise ValueError(f"retired core CLI has no mapping for {episode}; use a chapter-specific wrapper")
+    NPC_SPEAKER_MAP = NPC_SPEAKER_MAP_EPI01
 
     if "--all" in args:
         # 依次处理两个目录下的 Loop{1-6}_*.md
@@ -1515,5 +1340,15 @@ def main():
             process_single_md(md_path, episode, dry_run, mode, force_clear=force_clear)
 
 
+def main() -> int:
+    """Keep parser helpers importable, but block the retired direct workflow."""
+    print(
+        "[ERR] sync_to_json.py 已退出直接同步流程。\n"
+        "Unit1 请使用 AVG/Tools/sync_unit1_script_to_json.py；\n"
+        "Unit2 请使用 sync_unit2_to_json.py。"
+    )
+    return 2
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -42,7 +42,7 @@ allowed-tools: Read, Glob, Grep, Edit, Write, AskUserQuestion
 
 同时读取角色和世界观参考：
 - `剧情设计/00_世界观与角色/` 下的相关人物设定
-- `剧情设计/Unit1/人物设定/` 下的 NPC 设定
+- `剧情设计/Unit1/Characters/` 下的 NPC 设定
 
 ### Step 3: 确定讨论范围
 

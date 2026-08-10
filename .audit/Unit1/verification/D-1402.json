@@ -1,0 +1,44 @@
+{
+  "issue_key": "D-items.jsonl::Item 1402 / ExposeData#16",
+  "verdict": "dismissed",
+  "final_severity": null,
+  "verdict_reason": "1815 确实没有挂入任何正式 Scene，但原 P0 漏掉了另一条可达容器链。L3 的 Scene 1303 正式挂载破窗 1827；1827（itemType 6）生成内嵌物 1828（itemType 7），而 1828.ActionParam=1301,1402。运行时代码会按逗号拆分并生成两个可拾取子物品，因此玩家在 L3 重回会客室时即可取得 1402，并可持有到 ExposeData#16。穷举正式 Scene 根节点及 type 6/7 链后，唯一可达的 1402 产出路径正是 Scene 1303→1827→1828→1402；Talk、分析和组合均无其它产出。原“1402 完全不可取得”的 P0 不成立。",
+  "evidence_checked": [
+    {
+      "source": "D:/NDC/Assets/table/SceneConfig.json",
+      "finding": "Scene 1303（Webb 会客室）在 ItemIDs 中正式挂载 1827；从 L3 地图入口 Scene 1304 可经门 130004 到 Scene 1307，再经门 130012 到 Scene 1303。1815、1816、1402 本体均未直接挂 Scene。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1827/#1828/#1402",
+      "finding": "1827=破窗，itemType=6、ActionParam=1828；1828=破窗外侧，itemType=7、ActionParam=1301,1402；1402=被撕毁的信纸，itemType=3，可作为子物品生成并拾取。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1815/#1816",
+      "finding": "1815→1816→1402 的垃圾桶定义确实存在，但 1815 未出现在任何 SceneConfig.ItemIDs；这条特定路径不可达，不等于 1402 没有其它入口。"
+    },
+    {
+      "source": "D:/NDC/Assets/_Project/Scripts/Item/ItemOpen/IOInteractiveItem.cs + D:/NDC/Assets/_Project/Scripts/Item/MapItemCtrl.cs",
+      "finding": "itemType 6 由 IOInteractiveItem 生成其 ActionParam 指向的 itemType 7；MapItemCtrl.SpawnChildItems 对 itemType 7 的 ActionParam 按逗号拆分并逐个 SpawnChildItem，所以 1828 会实际生成 1301 与 1402。"
+    },
+    {
+      "source": "全 SceneConfig + ItemStaticData 反向可达链穷举",
+      "finding": "以所有 SceneConfig.ItemIDs 为根、仅按 interactive_item(6)/embedded_item(7) 展开，1402 恰有一条可达路径：Scene 1303→1827→1828→1402；1815 路径无 Scene 根。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/Talk.json + AVG/EPI01",
+      "finding": "没有 script=3 的 get 1402；L6 104906918 对 1402 使用的是 script=5 展示。Talk 不承担获取，但不影响场景交互链产出。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json 全表组合/分析字段",
+      "finding": "未发现 analysedEvidence 或 combineParameter 产出 1402；140008.ActionParam=1402 是门通往 Scene 1402，不是物品获取。除两条容器定义外无其它 1402 产出机制。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/DoubtConfig.json#1304 + D:/NDC/Assets/table/ExposeData.json#16",
+      "finding": "正式 DoubtConfig#1304 在 L3 已要求 1402，ExposeData#16 又在 L6 与 1503 复用；这与正式破窗链在 L3 产出 1402、随后跨 Loop 持有的运行时安排相符。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml + AVG/EPI01/Expose/Loop6_morrison.json",
+      "finding": "当前 State 另行设计为 L4 从一楼走廊垃圾桶取得 1402；正式 AVG 在 L6 用 104906918 展示并引用它。State 的预定地点与 Unity 正式表不同，但该差异不支持‘正式运行时无法取得’这一原 P0。"
+    }
+  ]
+}

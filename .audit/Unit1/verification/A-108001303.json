@@ -1,0 +1,32 @@
+{
+  "issue_key": "A-character.jsonl::108001303",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "冲突真实，但原 P0 过重。当前正式 Talk 与正式 1505 都明确采用‘Anna 的申请收到补件通知、尚未批准，James 的配偶资格也未批准’；Anna 和 James 人物档案、loop5 State 则采用‘Anna 已获批准、仅 James 待审’。这不是 Anna 在说谎，也不能只靠区分 Anna 与 James 的申请来消解，因为 108001208 明说‘我们这样还没拿到合法身份的人’，108001303 又明确把补件通知和‘还没批’指向 Anna 手中的申请。正式指证仍能用 1505 附件里的 James 姓名、科克出生地和配偶资格，结合语言习惯确认其爱尔兰身份；补件截止期也仍能支撑金钱与身份压力，因此不会造成谜题死锁、错误答案或核心推理失效。它会持续污染 Anna 的人物弧光、James 的犯罪动机表述和后续 AI 台本真源，故降为 P1。",
+  "evidence_checked": [
+    {
+      "source": "AVG/EPI01/Talk/loop5/anna_001.json",
+      "finding": "108001208 说‘我们这样还没拿到合法身份的人’，108001303 说手中是补件通知、还没批，截止到 11 月 7 日；上下文还把医院费和补件费并列为 James 急需筹钱的原因，正式台词口径是 Anna 与 James 均未获批。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1505",
+      "finding": "正式物品名为‘Anna O'Sullivan 的移民补件通知’，正文要求 Anna 在 1928-11-07 前补交费用凭证和经济担保，并明确‘这不是一份已经落定的批准书’；附件中 James 的非配额配偶资格同样是已受理、未批准。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop5_james.json",
+      "finding": "107905028 仍误称‘Anna 的合法移民通过通知’，但 107905038 明确纠正为‘它不是批准书，是移民局的补件通知’；107905029、107905921 使用附件的 James 非配额资格和科克原籍完成身份指证。正式指证整体支持未批准版本，但自身残留一处旧名称。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/anna.md",
+      "finding": "档案多处写 Anna 近期刚通过合法移民申请、批准通知已到手，1505 是她本人的通过通知加 James 待审附件；与正式 Talk 和正式物品直接冲突。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/james.md",
+      "finding": "档案把 James 接下委托时的家庭状态写成 Anna 已拿到合法移民通过通知、只有 James 自己的配偶资格仍待审；与正式数据的双双未批口径冲突。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml",
+      "finding": "State 将 1505 命名为 Anna 的合法移民申请通过通知，并把动机概括为 Anna 刚合法化、James 仍非法；但同一指证步骤实际依赖的是附件中的 James 姓名、科克原籍和配偶申请身份，这些信息在正式补件通知版本中仍完整存在。"
+    }
+  ]
+}

@@ -166,7 +166,6 @@ scenes:
     name: Mickey定制钢笔
     type: item
     pickup: true
-    analysis: true
     source: Mickey 私人书桌
     description: '笔帽刻有 M.F.D.；笔尖右侧有长期缺口，在特定转折处留下稳定断墨。
 
@@ -179,7 +178,6 @@ scenes:
     name: Mickey的半支古巴雪茄
     type: item
     pickup: true
-    analysis: true
     source: 刻有 M.F.D. 的私人烟灰缸
     ownership_basis:
     - 烟蒂位于 Mickey 私人办公室、刻有 M.F.D. 的私人烟灰缸内
@@ -225,7 +223,6 @@ scenes:
     name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
     type: item
     pickup: true
-    analysis: true
     source: 字母锁保险柜
     description: '1919-A 被记为 Donnelly & Associates 受托结算子账户；
 
@@ -244,10 +241,9 @@ scenes:
     - identity_lock.chain_4502
     - expose.round_1
   - id: 4515
-    name: Mickey功业簿（手写）
+    name: 手写功业簿
     type: item
     pickup: true
-    analysis: true
     source: 字母锁保险柜
     pre_acknowledgment_display: '同一名书写者长期记录的内部行动簿。作者身份尚未由系统确认；
 
@@ -422,7 +418,7 @@ special_mechanics:
       inputs:
       - type: item
         id: 4515
-        name: Mickey功业簿（手写）
+        name: 手写功业簿
         source_loop: 5
       - type: item
         id: 4514
@@ -768,10 +764,10 @@ evidence_registry:
   boundary: 只确认线路时间、去向与原话，不确认接听者
 - id: 4315
   name: 古巴雪茄烟蒂
-  type: item
+  type: clue
   source_loop: 3
   inherited: true
-  first_scene: 4022
+  first_scene: 4027
   l5_use: identity_lock.chain_4503；Expose R2
 - id: 4416
   name: Patrick葬礼册与1919旧信封
@@ -790,14 +786,14 @@ evidence_registry:
   boundary: 只证明 Patrick 折返时不知道被困者姓名且无临终交接，不评价 Mickey 是否值得被救
 - id: 4418
   name: Patrick遗物匣
-  type: item
+  type: key_item
   source_loop: 4
   inherited: true
   first_scene: 4034
   l5_use: 字母锁密码 FTMWPTF；不参加 Expose
 - id: 4704
   name: 右下牙长期缺损
-  type: derived_observation
+  type: derived_memory
   source_loop: 4
   inherited: true
   first_scene: 4034
@@ -806,7 +802,6 @@ evidence_registry:
   name: Mickey定制钢笔
   type: item
   pickup: true
-  analysis: true
   first_scene: 4042
   uses:
   - identity_lock.chain_4502
@@ -814,7 +809,6 @@ evidence_registry:
   name: Mickey的半支古巴雪茄
   type: item
   pickup: true
-  analysis: true
   first_scene: 4042
   ownership_source: M.F.D.私人烟灰缸 + Zack既往亲眼见其同品牌同侧含咬
   uses:
@@ -833,7 +827,6 @@ evidence_registry:
   name: 1919 年的银行授权附页-Donnelly & Associates（手写签名）
   type: item
   pickup: true
-  analysis: true
   first_scene: 4042
   uses:
   - identity_lock.chain_4501
@@ -841,10 +834,9 @@ evidence_registry:
   - expose.round_1
   boundary: 实际控制，不等于法律所有权
 - id: 4515
-  name: Mickey功业簿（手写）
+  name: 手写功业簿
   type: item
   pickup: true
-  analysis: true
   first_scene: 4042
   uses:
   - identity_lock.chain_4502

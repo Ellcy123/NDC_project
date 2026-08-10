@@ -20,14 +20,18 @@ class UnitFlowManifestTests(unittest.TestCase):
     def test_unit_labels_come_from_manifest(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         labels = build_unit_flow.unit_labels_from_manifest(manifest)
-        self.assertEqual({"1", "2"}, set(labels))
+        self.assertEqual({"1", "2", "3", "4"}, set(labels))
         self.assertEqual("Unit1", labels["1"]["key"])
         self.assertEqual("黑哨之夜", labels["1"]["title"])
         self.assertEqual("EPI01", labels["1"]["chapter"])
         self.assertEqual("Unit2", labels["2"]["key"])
         self.assertEqual("EPI02", labels["2"]["chapter"])
+        self.assertEqual("Unit3", labels["3"]["key"])
+        self.assertEqual("EPI03", labels["3"]["chapter"])
+        self.assertEqual("Unit4", labels["4"]["key"])
+        self.assertEqual("EPI04", labels["4"]["chapter"])
 
-    def test_flow_alias_preserves_every_business_id(self) -> None:
+    def test_no_legacy_unit9_flow_alias_is_emitted(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         units = {
             "Unit1": {
@@ -47,11 +51,8 @@ class UnitFlowManifestTests(unittest.TestCase):
             }
         }
         result = build_unit_flow.apply_flow_aliases(units, manifest)
-        self.assertEqual("Unit1", result["Unit9"]["formalUnit"])
-        self.assertEqual("EPI01", result["Unit9"]["chapter"])
-        self.assertEqual("101001001", result["Unit9"]["loops"][0]["initTalk"])
-        self.assertEqual("1103", result["Unit9"]["loops"][0]["initScene"])
-        self.assertEqual("1101", result["Unit9"]["loops"][0]["doubts"][0]["id"])
+        self.assertEqual("101001001", result["Unit1"]["loops"][0]["initTalk"])
+        self.assertNotIn("Unit9", result)
         self.assertNotIn("Unit10", result)
 
     def test_build_uses_temp_output_and_keeps_ids(self) -> None:
@@ -92,12 +93,7 @@ class UnitFlowManifestTests(unittest.TestCase):
             self.assertEqual(
                 "101001001", payload["units"]["Unit1"]["loops"][0]["initTalk"]
             )
-            self.assertEqual(
-                "101001001", payload["units"]["Unit9"]["loops"][0]["initTalk"]
-            )
-            self.assertEqual(
-                "1103", payload["units"]["Unit9"]["loops"][0]["initScene"]
-            )
+            self.assertNotIn("Unit9", payload["units"])
         after = formal_output.read_bytes() if formal_output.exists() else None
         self.assertEqual(before, after)
 

@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::rosa.md:55",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "Rosa 档案第 55 行确实把两个不同事件混写了：23:20 是她在侧巷倒垃圾、无意把垃圾袋压到带硝烟玻璃碎片上的时刻；23:30 才是她按威胁纸条进入 Webb 会客室、指认 Vivian 并趁乱捡走 1401 弹壳的时刻。正式 post-expose、loop3 State、事件表和总动线对这两个动作均有一致区分，所以不是全局角色事实互相打架，而是人物档案单行误把 23:20 锚点套给了捡壳动作。玩家实际经历的 L3 交付、L4 口径分析及 L6 弹壳链不受影响，没有推理死锁或错误证据来源；但该行位于 Rosa 核心作用说明中，会误导后续 AI 台本、人物事实抽取和事件视角，故由 P0 降为 P1。",
+  "evidence_checked": [
+    {
+      "source": "剧情设计/Unit1/Characters/rosa.md:55",
+      "finding": "档案明确写‘Rosa Martinez 在 23:20 顺手捡起的那枚弹壳’，把捡壳动作绑定到 23:20；同档案其他段落只写同一夜晚捡壳，没有提供第二枚弹壳或另一套时序。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop3/rosa_003.json",
+      "finding": "正式 post-expose 的 103003004 说 Rosa 是在案发之后进入会客室才看见地上的弹壳，103003009 再将其交给 Zack；正式台词不支持她在侧巷倒垃圾时捡壳。"
+    },
+    {
+      "source": ".audit/Unit1/facts/events.json#E007_Rosa倒垃圾",
+      "finding": "E007 固定为 1928-11-03 23:20、1F 侧巷；动作只有从 B1 到侧巷放下垃圾袋，并压住此前落下的玻璃碎片，没有进入会客室或捡弹壳。"
+    },
+    {
+      "source": ".audit/Unit1/facts/events.json#E009_Rosa指认Vivian",
+      "finding": "E009 固定为 23:30、会客室门口及室内，明确包含 Rosa 按纸条到场、指认 Vivian，并趁乱捡走 .45 ACP 弹壳 1401。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml",
+      "finding": "State 将 23:20 只用于垃圾袋/玻璃碎片的真实枪击时序锚点，并在 post_expose 明写 Rosa 于 23:30 进入会客室后在地上捡到弹壳；证据注册与后续获得链一致。"
+    },
+    {
+      "source": "剧情设计/Unit1/案发时间线与动线.md",
+      "finding": "总动线把 23:20 列为 Rosa 从储藏室到侧巷倒垃圾，把 23:30 列为她从侧巷进入会客室、按纸条指认并顺手捡走弹壳；两个动作在空间和时间上均明确分开。"
+    },
+    {
+      "source": ".audit/Unit1/facts/characters.json#Rosa Martinez + .audit/Unit1/facts/event_perspectives.json",
+      "finding": "角色事实与事件视角均采用‘23:20 倒垃圾、23:30 捡壳、L3 交给 Zack’的统一口径，人物档案第 55 行是唯一反向来源。"
+    }
+  ]
+}

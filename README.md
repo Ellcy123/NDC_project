@@ -22,7 +22,11 @@
 
 ## Canon 章节映射
 
-项目当前以 Unit1–Unit5 为正式章节身份；Unit9 是 Unit1 的现行策划别名，Unit10 是 Unit2 的策划标题别名。完整的 Episode、ID 命名空间、内容来源、完成度及历史版本以 [`canon_manifest.json`](canon_manifest.json) 为准。现有 ID 不迁移、不自动转换。
+项目当前以 Unit1–Unit5 为正式章节身份。Unit1 已统一为 EPI01 / 1xxx；Unit9 / EPI09 / 9xxx 仅作为迁移前历史归档。Unit10 是 Unit2 的策划标题来源别名。完整的 Episode、ID 命名空间、内容来源、完成度及历史版本以 [`canon_manifest.json`](canon_manifest.json) 为准，当前数据不做运行时自动 ID 转换。
+
+Unit1 的运行时真源是 `D:\NDC\Assets\table\`；项目内 `AVG/EPI01/` 与
+`AVG/对话配置工作及草稿/Unit1/` 是从正式表验证生成的 JSON 镜像和 AI 可读完整台本。
+`avg_editor_v2/data/table/` 是预览 / 编辑副本，不覆盖 Unity 正式表的真源地位。
 
 ## Preview 预览工具
 

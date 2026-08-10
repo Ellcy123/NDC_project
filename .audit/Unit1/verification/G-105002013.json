@@ -1,0 +1,36 @@
+{
+  "issue_key": "G|AVG/EPI01/Talk/loop2/tommy_002.json|105002013,105002905-105002014",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "确认存在跨 Loop 揭示节奏冲突，但原问题把它同时定性为 Tommy 认知越界并给 P0，结论过重。Tommy 作为前勒索执行人，亲历 Whale 手下枪击、经手多年账目，知道 Whale 姓名及 Webb 与其有危险交易具备合理知识来源；真正成立的是正式 L2 台词直接说出 Silver Moon/Whale、切断交易和私吞资金，与 L2 State 多处‘只说大人物、未点名’的硬边界冲突，并削弱 L3 首次物证与 L4 身份确认的递进。不过台词尚未泄露 James、买凶委托或 Morrison 压案链，后续核心推理仍可运行，因此由 P0 降为 P1。另有少数 L3 State 注释和 Whale 档案写成‘此前已口述 Whale 名字’，显示设计文档内部也未完全统一；修复时应先拍板首次报出姓名究竟在 L2 结尾还是 L3/L4。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/G-perspective.jsonl",
+      "finding": "原 issue 同时主张隐藏话题提前泄露与 Tommy 缺少亲知来源，severity=P0。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop2/tommy_002.json; AVG/对话配置工作及草稿/Unit1/Loop2_完整台本.md",
+      "finding": "105002013、105002905-105002014 在 L2 Expose 崩溃后明确说出 Silver Moon 的 Whale、Webb 切断交易、私吞资金及逃跑判断；正式 JSON 与完整台本一致。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop2_state.yaml",
+      "finding": "信息节奏、post_expose_knowledge、Tommy withheld_topics、Expose result 与 post_expose 均反复限定 L2 只暗示未点名的大人物，Whale 具体身份留 L4-L5。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/tommy.md",
+      "finding": "Tommy 曾是 Webb 的勒索执行人，五年账目经手；Whale 手下曾开枪警告并留下他保存的弹壳，档案明确写他知道 Whale 不是道听途说，因此‘无知识来源’不成立。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/whale.md",
+      "finding": "主弧光写 L1-L2 只有‘大人物’无名字，L3 以口述词和 Webb 的 Whale—Danger 日记加浓，L4 再由合同与 Tommy 确认；但 L3 段也写‘Emma 已从 Tommy 暗示里口述过这个名字’，与 L2 无名规则存在内部歧义。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop3_state.yaml; 剧情设计/Unit1/state/loop4_state.yaml",
+      "finding": "L3 known_facts/active_topics 写 Tommy 未点名，1308 被定义为 Whale 姓名首次物证；同时部分 1308 注释又称此前已口述姓名。L4 明确承担 Whale 确认、Rita 间谍和雇人行动的扩展揭示。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop3/*.json; AVG/EPI01/Talk/loop4/tommy_003.json; AVG/EPI01/Expose/Loop4_vivian.json",
+      "finding": "正式 L3 Talk 没有再次说出 Whale；L4 Talk 已把 Whale 当作玩家知道的名字来追问，并新增 Rita 耳目与网络信息，说明 L2 报名不会直接破坏 L4 全部内容，但会削弱其确认节拍。"
+    }
+  ]
+}

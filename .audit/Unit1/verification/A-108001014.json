@@ -1,0 +1,36 @@
+{
+  "issue_key": "A-character.jsonl::108001014",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "该条属于‘精确事实未收录’，不是事实矛盾，原 P1 合理。108001013 直接询问婚龄，Anna 在 is_liar=false 的初次家访场景回答‘两年了’，语境没有含混指代或撒谎动机；正式台词因此可以作为‘约 1926 年结婚’的现行 canon 候选。现有 1505 配偶资格表、1085002 正式证词、Anna/James 档案和 loop5 State 都只证明两人是夫妻，没有婚姻日期或年限，无法独立核实‘两年’。该年限在 1928 时间线上可成立，也不参与 James 身份、动机、疑点或指证条件，所以不应升级为冲突或核心推理风险；但精确关系年限只存在于一行运行台词、未进入人物事实源，会使后续 AI 台本和关系连续性无法稳定对账，符合 character_fact_unsupported 的 P1 定义。",
+  "evidence_checked": [
+    {
+      "source": "AVG/EPI01/Talk/loop5/anna_001.json",
+      "finding": "108001013 明问‘你们结婚多久了’，108001014 直接答‘两年了’；前后十句均是初次家访、怀孕和 James 近况话题，没有其他‘两年’对象可供指代。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml + 剧情设计/Unit1/场景/15_James家客厅.md",
+      "finding": "Anna 场景明确 is_liar=false，family 只登记与 James 结婚、目前怀孕；关键证词 1085002 也仅登记‘James 的妻子’，没有婚龄。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/anna.md",
+      "finding": "档案明确 Anna 是 James 的妻子、两人共同面对移民与生育困境，但没有结婚年份、日期或持续年限。"
+    },
+    {
+      "source": "剧情设计/Unit1/Characters/james.md",
+      "finding": "档案明确 Anna 是 James 的妻子和其全部行动理由，也没有婚期或婚龄；不存在与‘两年’相冲突的另一数字。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1505",
+      "finding": "正式物品附有 James 的非配额配偶资格表，足以支持夫妻关系；当前描述仅列 James 姓名、科克出生地和未批准状态，没有结婚日期，不能推出两年。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/TestimonyItem.json#1085002",
+      "finding": "正式提取证词为‘Anna 是 James 的妻子’，短描述也是‘James 的妻子’，提取层未保留 108001014 的两年限定。"
+    },
+    {
+      "source": ".audit/Unit1/facts/characters.json#Anna O'Sullivan/#James O'Sullivan",
+      "finding": "人物事实表双向登记夫妻关系，但 relationship_duration 未建立；当前无第二来源核实或反驳两年。"
+    }
+  ]
+}

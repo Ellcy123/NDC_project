@@ -53,7 +53,7 @@ disallowedTools: Write, Edit, Bash
    - **Unit2(EPI01) 旧格式兼容**：旧文件用 `knows`/`does_not_know`/`lie` 三块表达同等语义——知识边界审计时同等对待（active_topics ≈ knows、withheld_topics ≈ does_not_know + lie 保留部分）
 
 7. **疑点解锁条件格式兼容**（详见 `.claude/rules/state.md`）：
-   - Unit8+ 新格式：`unlock_condition: [{type: 1/2/3, param: "xxx"}, ...]`
+   - 当前新格式：`unlock_condition: [{type: 1/2/3, param: "xxx"}, ...]`
    - Unit2 旧格式：`unlock_condition: "item:xxx + testimony:yyy"` 按 `+` 分隔解析 `type:param` 对
    - 审计"解锁所需证据在当前 Loop 及之前可获取"时，两种格式同等处理
 

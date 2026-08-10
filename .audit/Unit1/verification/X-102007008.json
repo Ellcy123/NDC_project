@@ -1,0 +1,36 @@
+{
+  "issue_key": "X-dialogue12.jsonl::102007008-102007012",
+  "verdict": "verified",
+  "final_severity": "P1",
+  "verdict_reason": "问题成立，但越界集中在 102007010-102007012，102007008 的疑问句本身合理。录音直接支持“湖滨信托/南区存在某项行动、Margaret 鞋坊在第一批名单、十一月初存在危险”；结合 Unit1 已知 Whale 主使 Webb 谋杀，也足以让角色怀疑这张唱片与 Whale 有关。但录音没有说话者身份、没有 Whale 名字，也没有直接证明 Webb 生前已听完唱片、用它勒索 Whale，或 Whale 正因这张唱片下令杀他。Emma 从“应该是某种计划”连续升级到“所有挡路者都是钉子”，最后以“这就解释了 Webb 为什么死”封死因果，确实替玩家把可疑线索说成确定结论。它未泄露 Unit2 的银行债务机制、Tidewater 接口或幕后主人，故不是跨章核心破梗/P0；但明显削弱章节结尾悬念和玩家自主推理，保留 P1。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/X-dialogue12.jsonl#102007008-102007012",
+      "finding": "原 issue 指出 Emma 把录音碎片直接总结为 Whale 清理计划，并确认 Webb 因听到计划细节被杀，造成结尾悬念被解释性独白封口。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop6/ending_006.json#102007005-102007025",
+      "finding": "正式录音只有六组碎片：“银月”“湖滨信托/南区”“名单/第一批”“Margaret Brennan 的鞋坊”“钉子/十一月初”“不留后患”；没有 Whale 名字、说话者身份、Webb 如何取得唱片或杀人命令。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop6/ending_006.json#102007008-102007012",
+      "finding": "102007008 以“难道”提出黑材料假说，102007010 仍以“应该”推测某种计划；102007011 把“钉子”解释为所有挡路者，102007012 则用“这就解释了”断言 Webb 因听到计划细节而死，语气从假说升级为定论。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ItemStaticData.json#1602",
+      "finding": "Unity 正式 1602 只描述为边缘烧焦的录音盘碎片，ShortDescribe 也没有记录 Whale、清理计划或 Webb 死因；物品自身不能补足 Emma 的确定性因果。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop6_state.yaml#ending_sequence.act_3_safe_box-act_4_epilogue",
+      "finding": "State 把 1602 定位为 Unit2 开门砖和六段关键词展示物，并明确当前无 get、不可宣称跨章持有；State 同时收录 Emma 的计划/钉子/Webb 死因总结，说明过度解释已进入设计基准，而非 JSON 偶发串行错误。"
+    },
+    {
+      "source": "剧情设计/Unit1/Unit1_大纲.md#Act3-Act4",
+      "finding": "大纲要求结尾情绪落点是录音点名 Margaret、11 月初已逾期所形成的时间危机，并称黑胶碎片需要拼合、需要解读、需要打开另一扇门；即使允许它暗示 Webb 死因，也没有要求 Emma 在母亲名字揭晓前完整讲解计划与杀人因果。"
+    },
+    {
+      "source": "剧情设计/Unit2/Unit2_主线推进.md#一-四 + 剧情设计/Unit2/state/loop1_state.yaml#player_context",
+      "finding": "Unit2 才负责明示湖滨信托的债务清退机制及 Whale 与 Tidewater/银月会的接口，且 L1 从鞋坊火灾、死者身份和匿名黑手党警告重新展开。Unit1 台词尚未泄露这些机制或幕后主人，但先把碎片定义成 Whale 清理计划，压缩了 Unit2 对线索意义的首次显影空间。"
+    }
+  ]
+}

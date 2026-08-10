@@ -1,0 +1,44 @@
+{
+  "issue_key": "C|剧情设计/Unit1/案发时间线与动线.md|证据跨Loop流转路径:1103",
+  "verdict": "confirmed",
+  "final_severity": "P1",
+  "verdict_reason": "原 P1 成立，但应把问题定性为跨源证据生命周期冲突，而不是当前正式运行链已经发生了‘L1 交出后 L4 又使用’。正式 L1 节点 103901022 对 1103 执行的是 script=5（exhibit/展示），不是 script=4（del/删除）；L1 state 也只写 Zack‘出示’协议书，L2、L3、L4 state 均继续继承 1103。因此实际玩家链是 L1 获得并展示、L2-L4 持有、L4 指证可用，当前不会因 L1 提前移除而卡住。相反，《案发时间线与动线》把它写成‘L1 post_expose 交给 Morrison、完成使命’，与正式 L4 ExposeData 仍接受 1103、L4 收尾明确索要原件并当场撕毁、L4 state 登记 destroyed_by_morrison 冲突。P1 维持：这份流转表若继续作为 AI/state-to-table 的事实输入，会诱发真正的提前删除并破坏 L4 路由；且正式 L4 的 104005019 仍只是 exhibit、104005020 只是 comic，没有 script=4 del，按当前运行时代码撕毁后 1103 仍可能留在背包。不是 P0，因为当前 L1 没有删除，L4 路由实际可达，且 ExposeData 同轮还接受 1410 作为另一有效道具。修正方向应为‘L1 获得并保留 → L4 指证可用 → L4 turn_cutscene 被 Morrison 撕毁并执行 del → L5 起只保留内容知识、实物不可用’；L5 中少数 confiscated_by_morrison 注释也应统一为 destroyed_by_morrison。",
+  "evidence_checked": [
+    {
+      "source": ".audit/Unit1/issues/C-timeline.jsonl#line_id=证据跨Loop流转路径:1103",
+      "finding": "原 issue 指出流转表写 L1 交付完成使命，但 L4 ExposeData 和 state 仍使用 1103，并附带 L5 confiscated/destroyed 状态漂移，原 severity=P1。"
+    },
+    {
+      "source": "剧情设计/Unit1/案发时间线与动线.md#证据跨Loop流转路径",
+      "finding": "1103 行明确写‘L1 post_expose 交给 Morrison → 换取 72h｜完成使命’，这是与现行正式链不一致的来源。"
+    },
+    {
+      "source": "AVG/EPI01/Expose/Loop1_rosa.json#103901022; 剧情设计/Unit1/state/loop1_state.yaml#post_expose",
+      "finding": "L1 正式节点用 script=5 展示 1103，state 用词也是‘Zack 出示 Webb 委托协议书’，两者都没有交付或销毁状态变化。"
+    },
+    {
+      "source": "D:/NDC/Assets/Scripts/table/Keywords.cs#DialogueAction; D:/NDC/Assets/_Project/Scripts/Talk/TalkPanelCtrlMoveNextFunc.cs#HandleDel/HandleExhibit",
+      "finding": "运行时枚举明确 del=4、exhibit=5、comic=6；HandleDel 会对物品 MarkUnavailable，HandleExhibit 只生成展示实例，HandleComic 只播放分镜。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop2_state.yaml#evidence_registry:1103; 剧情设计/Unit1/state/loop3_state.yaml#evidence_registry; 剧情设计/Unit1/state/loop4_state.yaml#evidence_registry",
+      "finding": "L2 将 1103 登记为 L1 拾取的继承物品，L3 明列继承 1103，L4 明列继承至本 Loop 末再由 Morrison 撕毁，证明设计主链要求玩家持续持有到 L4。"
+    },
+    {
+      "source": "D:/NDC/Assets/table/ExposeData.json#id=9,talkId=106904006",
+      "finding": "Unity 正式表该轮 item=[1103,1410]，1103 是 L4 指证接受的有效道具之一；1410 的存在说明缺失 1103 未必形成唯一硬卡点，但不能消除生命周期冲突。"
+    },
+    {
+      "source": "AVG/EPI01/Talk/loop4/morrison_005.json#104005018-104005025",
+      "finding": "Morrison 在 L4 索要‘原件’，Zack 以 script=5 展示 1103，随后 script=6 漫画表现撕毁，Zack 明说‘你刚毁了证据’；该场景语义要求原件此前仍由 Zack 持有。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop4_state.yaml#turn_cutscene/evidence_status_changes",
+      "finding": "L4 state 明确在 turn_cutscene 将 1103 更新为 destroyed_by_morrison，玩家从此不再持有且永久无法找回；这是当前设计态的正确销毁节点。"
+    },
+    {
+      "source": "剧情设计/Unit1/state/loop5_state.yaml#known_facts/evidence_registry; 剧情设计/Unit1/state/loop6_state.yaml#关键继承状态",
+      "finding": "L5 主叙事多处写协议书已被撕毁，但第 80 行和 evidence_registry 注释误写 confiscated_by_morrison；L6 已统一写 destroyed_by_morrison，说明 L5 的 confiscated 是次级状态漂移。"
+    }
+  ]
+}
