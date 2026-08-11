@@ -2640,6 +2640,47 @@
             color: var(--parch-mute);
         }
 
+        .phase-scene-art {
+            padding: 9px 11px;
+            background: rgba(232, 198, 120, .055);
+            border-left: 2px solid var(--gold-2);
+            display: grid;
+            gap: 6px;
+        }
+        .phase-scene-art.missing {
+            border-left-color: var(--brick);
+            background: rgba(184, 64, 64, .06);
+        }
+        .phase-scene-art-head {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+        .phase-scene-art-label {
+            font-family: var(--ff-sans);
+            font-weight: 700;
+            font-size: 10px;
+            letter-spacing: .15em;
+            color: var(--gold);
+        }
+        .phase-scene-art-file {
+            font-family: var(--ff-mono);
+            font-size: 10.5px;
+            color: var(--parch-mute);
+        }
+        .phase-scene-art-brief {
+            font-family: var(--ff-serif);
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: var(--text-secondary);
+        }
+        .phase-scene-art .btn {
+            margin-left: auto;
+            padding: 3px 9px;
+            font-size: 10px;
+        }
+
         .phase-scene-trigger {
             display: flex; align-items: baseline; gap: 10px;
             padding: 6px 10px;
@@ -3938,31 +3979,6 @@
     <!-- Noir overlays (pointer-events: none, safe against all JS) -->
     <div class="vignette"></div>
     <div class="grain"></div>
-
-    <!-- 疑点悬浮窗（CURRENT CASE 风格） -->
-    <div id="doubtFloat" class="doubt-float-hidden">
-        <button class="df-collapse-btn" onclick="event.stopPropagation(); DoubtView.toggleCollapsed()" title="收起/展开" aria-label="收起">⌃</button>
-        <!-- 展开态主体，点击打开疑点列表 -->
-        <div class="df-body" onclick="DoubtView.showList()" title="点击查看本 Loop 全部疑点">
-            <div class="df-kicker">
-                <span class="df-label" id="doubtFloatKicker">当前目标</span>
-                <span id="doubtFloatLoop">LOOP —</span>
-            </div>
-            <div class="df-target" id="doubtFloatTarget">—</div>
-            <div class="df-bar"><div class="df-bar-fill" id="doubtFloatBarFill" style="width:0%;"></div></div>
-            <div class="df-progress-row">
-                <span class="df-progress-label">疑点进度</span>
-                <span class="df-progress-pill" id="doubtFloatPill">0 / 0</span>
-            </div>
-            <div class="df-hint">点击展开 ›</div>
-        </div>
-        <!-- 折叠态药丸，点击展开回完整面板 -->
-        <div class="df-mini" onclick="DoubtView.toggleCollapsed()" title="点击展开">
-            <span class="df-mini-icon">◆</span>
-            <span class="df-mini-label">疑点</span>
-            <span class="df-mini-pill" id="doubtFloatMiniPill">0/0</span>
-        </div>
-    </div>
 
     <!-- Evidence Modal -->
     <div class="modal-overlay" id="evidenceModal" onclick="if(event.target===this) UI.closeModal()">
@@ -5276,9 +5292,37 @@
             setTimeout(() => DialogController.startFromTalkId(talkId, 'npcDrawerDialog'), 60);
         },
 
-        // 底图详情弹窗（美术需求总览-场景需求 行点击）
+        artAssetFileName(asset) {
+            if (!asset) return '';
+            return asset.displayName || String(asset.id || '').split('\\').pop();
+        },
+
+        artAssetForScene(sceneId) {
+            const scene = DataManager.getScene(sceneId);
+            if (!scene) return null;
+            const assets = DataManager.sceneBackgrounds(scene)
+                .map(bg => AppState.artAssetMap.get(String(bg)))
+                .filter(Boolean);
+            return assets.find(asset => String(asset.ArtRequirement || '').trim()) || assets[0] || null;
+        },
+
+        showSceneArtRequirement(sceneId) {
+            const asset = this.artAssetForScene(sceneId);
+            if (!asset) {
+                window.alert(`场景 ${sceneId} 没有匹配到 ArtAssetConfig 美术需求。`);
+                return;
+            }
+            this.showArtAssetModal(this.artAssetFileName(asset));
+        },
+
+        // 底图详情弹窗（美术需求总览-场景需求 行点击 / 流程预览跳转）
         showArtAssetModal(fileName) {
-            const a = (UI._artByFile || {})[fileName];
+            let a = (UI._artByFile || {})[fileName];
+            if (!a) {
+                AppState.artAssetMap.forEach(asset => {
+                    if (!a && this.artAssetFileName(asset) === fileName) a = asset;
+                });
+            }
             if (!a) return;
             const titleEl = document.getElementById('modalTitle');
             titleEl.dataset.itemId = '';
@@ -6803,6 +6847,7 @@
                         ${talkFile ? `<span>${escapeHtml(talkFile)}.json</span>` : ''}
                         ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : pendingTalkKey ? `<span>AVG 待制作：${escapeHtml(pendingTalkKey)}</span>` : '<span>未配置首句</span>'}
                         ${loaded ? `<span>${entries.length || 1} 句</span>` : '<span style="color:var(--warning);">未加载</span>'}
+                        ${sceneId ? `<button type="button" class="btn" onclick="UI.showSceneArtRequirement('${escapeHtml(sceneId)}')">美术需求</button>` : ''}
                     </div>
                     ${firstId && loaded ? `
                         <button type="button" class="flow-opening-play-card" onclick="${playAction}">
@@ -6856,6 +6901,7 @@
                             ${seg.videoScene ? `<span>${escapeHtml(seg.videoScene)}.json</span>` : ''}
                             ${firstId ? `<span>首句 #${escapeHtml(firstId)}</span>` : seg.pendingTalkKey ? `<span>AVG 待制作：${escapeHtml(seg.pendingTalkKey)}</span>` : '<span>未配置首句</span>'}
                             ${loaded ? `<span>${count} 句</span>` : '<span style="color:var(--warning);">未加载</span>'}
+                            ${seg.sceneId ? `<button type="button" class="btn" onclick="UI.showSceneArtRequirement('${escapeHtml(seg.sceneId)}')">美术需求</button>` : ''}
                         </div>
                         ${firstId && loaded ? `
                             <button type="button" class="flow-opening-play-card" onclick="${playAction}">
@@ -9421,6 +9467,69 @@
 
     // ===== Flow View =====
     const FlowView = {
+        resolveExposeScene(chapCfg, exp, loop) {
+            const configuredId = String(chapCfg?.exposeScene || exp?.scene || chapCfg?.initScene || loop?.initScene || '').trim();
+            const postExposeIds = new Set((chapCfg?.postExposeSegments || [])
+                .map(segment => String(segment?.sceneId || '').trim())
+                .filter(Boolean));
+
+            if (configuredId && !postExposeIds.has(configuredId)) {
+                return { id: configuredId, scene: DataManager.getScene(configuredId) };
+            }
+
+            const normalizePath = path => String(path || '')
+                .replace(/\\/g, '/')
+                .replace(/^Assets\/Resources\//i, '')
+                .replace(/\.(png|jpg|jpeg)$/i, '')
+                .toLowerCase();
+            const exposeBackground = normalizePath(chapCfg?.topBg);
+            const backgroundScene = exposeBackground
+                ? AppState.allScenes.find(scene => DataManager.sceneBackgrounds(scene)
+                    .some(background => normalizePath(background) === exposeBackground))
+                : null;
+
+            if (backgroundScene) {
+                return { id: String(backgroundScene.sceneId), scene: backgroundScene };
+            }
+
+            return { id: configuredId, scene: configuredId ? DataManager.getScene(configuredId) : null };
+        },
+
+        renderSceneArtRequirement(sceneId) {
+            const sid = String(sceneId || '').trim();
+            if (!sid) return '';
+            const asset = UI.artAssetForScene(sid);
+            if (!asset) {
+                return `
+                    <div class="phase-scene-art missing" onclick="event.stopPropagation()">
+                        <div class="phase-scene-art-head">
+                            <span class="phase-scene-art-label">场景美术需求</span>
+                            <span class="phase-scene-art-file">未匹配 ArtAssetConfig</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const fileName = UI.artAssetFileName(asset);
+            const requirement = String(asset.ArtRequirement || '').trim();
+            const brief = requirement
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line && !line.startsWith('【'))
+                .slice(0, 3)
+                .join(' ');
+            return `
+                <div class="phase-scene-art ${requirement ? '' : 'missing'}" onclick="event.stopPropagation()">
+                    <div class="phase-scene-art-head">
+                        <span class="phase-scene-art-label">场景美术需求</span>
+                        <span class="phase-scene-art-file">${escapeHtml(fileName || '未命名资源')}</span>
+                        <button type="button" class="btn" onclick="UI.showSceneArtRequirement('${escapeHtml(sid)}')">查看完整需求</button>
+                    </div>
+                    <div class="phase-scene-art-brief">${escapeHtml(requirement ? truncate(brief || requirement, 220) : '未填写场景美术需求')}</div>
+                </div>
+            `;
+        },
+
         openingBriefText(value) {
             if (!value) return '';
             if (Array.isArray(value)) return value[0] || '';
@@ -9500,6 +9609,7 @@
                 if (seg.brief) {
                     html += `<div class="phase-scene-purpose">${escapeHtml(seg.brief)}</div>`;
                 }
+                html += this.renderSceneArtRequirement(seg.sceneId);
                 html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
                 if (seg.videoScene) {
                     html += `<span class="copy-asset" onclick="copyText('${escapeHtml(seg.videoScene)}', this)">
@@ -9561,7 +9671,9 @@
                     <span style="color:var(--text-muted); font-size:0.8rem;">背景美术:</span>
                     <span class="copy-tag" onclick="copyText('${escapeHtml(bgName)}', this)" style="font-size:0.8rem;">🎨 ${escapeHtml(bgName)}</span>
                     <span style="color:var(--text-muted); font-size:0.7rem;">${escapeHtml(scene.backgroundImage)}</span>
+                    <button type="button" class="btn" onclick="UI.showSceneArtRequirement('${escapeHtml(scene.sceneId)}')">查看美术需求</button>
                 </div>`;
+                html += this.renderSceneArtRequirement(scene.sceneId);
             }
 
             // Scene container: background + NPC sprites overlay + dialog target
@@ -9851,6 +9963,8 @@
                         html += `<div class="phase-scene-purpose">${escapeHtml(purpose)}</div>`;
                     }
 
+                    html += this.renderSceneArtRequirement(sid);
+
                     // talk file row
                     if (talkFile || firstIdFromItem) {
                         const entries = talkFile ? DataManager.talkEntriesByScene(talkFile) : [];
@@ -9892,8 +10006,9 @@
                 const exp = loop.expose || {};
                 const exposeNpc = chapCfg?.exposeNpcId ? AppState.npcsMap.get(String(chapCfg.exposeNpcId)) : null;
                 const expTargetName = exp.target_name || cn(exposeNpc?.Name) || chapCfg?.exposeNpcId || '';
-                const expSceneId = chapCfg?.exposeScene || exp.scene || chapCfg?.initScene || loop.initScene || '';
-                const expScene = expSceneId ? DataManager.getScene(String(expSceneId)) : null;
+                const resolvedExposeScene = this.resolveExposeScene(chapCfg, exp, loop);
+                const expSceneId = resolvedExposeScene.id;
+                const expScene = resolvedExposeScene.scene;
                 const expSceneName = expScene?.sceneName || (expSceneId ? `场景 ${expSceneId}` : '未配置场景');
                 const exposes = chapCfg?.exposes || [];
                 const exposeRounds = (exp.rounds && exp.rounds.length)
@@ -9971,6 +10086,7 @@
                         ${exposeRounds.length ? ` | 共 ${exposeRounds.length} 轮` : ''}
                     </p>
                 `;
+                html += this.renderSceneArtRequirement(expSceneId);
 
                 // Scene container for dialog overlay
                 const expBgUrl = expScene ? Config.getAssetUrl(expScene.backgroundImage) : '';
@@ -10106,6 +10222,8 @@
                         html += `<div class="phase-scene-purpose">${escapeHtml(purpose)}</div>`;
                     }
 
+                    html += this.renderSceneArtRequirement(sid);
+
                     if (talkFile) {
                         const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
                         const firstId = entries.length > 0 ? entries[0].id : '';
@@ -10162,6 +10280,8 @@
                         <h2 class="phase-scene-title">${escapeHtml(sceneName)}</h2>
                         <span class="phase-scene-id">#${escapeHtml(sid)}</span>
                     </div>`;
+
+                    html += this.renderSceneArtRequirement(sid);
 
                     if (talkFile) {
                         const entries = AppState.allTalks.filter(t => t.videoScene === talkFile);
