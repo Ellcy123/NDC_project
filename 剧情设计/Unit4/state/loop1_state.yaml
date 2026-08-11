@@ -21,7 +21,7 @@ player_context:
   - Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
-  - 保险柜材料显示 Rosa 的庭审迫近，并留下圣心医院儿童死亡对照与问题批次药剂
+  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
   current_assumptions:
   - 现有材料尚不足以确认 Harrison 灭口的命令源与执行者
   - 现有材料尚不足以判断 Mickey 是否存在隐藏身份
@@ -288,9 +288,9 @@ expose:
       '
     new_evidence_gained:
     - id: 4117
-      name: 圣心医院儿童死亡对照表
+      name: Harrison留下的编号纸条
     - id: 4118
-      name: 问题批次药剂
+      name: 医院冷藏库留样试剂
     - id: 4119
       name: Harrison亲笔资金流向图
     - id: 4120
@@ -300,11 +300,13 @@ expose:
     player_knowledge_gained:
     - Harrison 的回头真实，但没有完成自首或承担
     - Rosa 将在次日面对圣心医院以家属误用为由的追责
-    - 圣心医院多名儿童死亡存在重复模式
+    - Harrison 另行记录了七个用途未明的圣心医院编号；它们对应谁、为何被放在一起仍待调查
+    - Harrison 通过正式手续取得了一份医院冷藏库官方留样；样本置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱内，样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不需开启样本格
+    - Harrison 的交接说明提到另有 Isabel 病历材料；L1不取得4217，也不读取其具体给药与发放信息
     event_id: harrison_safe_and_rosa_hook
     talk: L1_post_expose_harrison_safe
     required_beats:
-    - Watts交出钥匙并开启保险柜，4117至4121只取得一次。
+    - Watts交出钥匙并开启保险柜，4117至4121只取得一次；Isabel病历材料只作L2叙事交接，不在L1正式取得4217。
     - Morrison得知Harrison因材料而死后沉默；Zack问是否告知Pierce，他只说需要考虑。
     - Watts说明Harrison另一件急务是Rosa案，次日必须在庭审前行动。
     player_control_restored_after: harrison_safe_and_rosa_hook
@@ -352,10 +354,10 @@ cross_loop_evidence:
     purpose: 法律壳与身份演变证明链
   - id: 4117
     to_loop: 2
-    purpose: Whitfield R2：多名儿童死亡模式
+    purpose: 七个未知医院编号的调档输入；完成七份病例展示后更新为4219
   - id: 4118
     to_loop: 2
-    purpose: 在 Foster 实验室更新为 4703
+    purpose: 医院冷藏库官方留样；以带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱保持冰藏，样本格医院纸封／蜡封及逐次温度交接记录完整，补冰不需开启样本格；在Foster实验室化验后更新为4703
 evidence_registry:
 - id: 4111
   name: Harrison公开日程与夜间出入对照
@@ -419,19 +421,44 @@ evidence_registry:
   first_scene: 4003
   note: Expose R3；Doubt 4103
 - id: 4117
-  name: 圣心医院儿童死亡对照表
+  name: Harrison留下的编号纸条
   type: item
   pickup: true
   first_scene: 4002
   acquisition: post_expose
-  note: 跨至 L2 R2
+  note: 跨至L2调档；纸面只显示七个编号及其年份段，L1没有姓名、死亡或Miller项目含义
+  description: Harrison按年份先后抄下SH-24-071、SH-24-118、SH-25-044、SH-26-093、SH-27-031、SH-27-126、SH-28-052；纸上没有标题、姓名或用途说明
+  death_number_map:
+  - year: 1924
+    code: SH-24-071
+    deceased: Giuseppe Rosselli
+  - year: 1924
+    code: SH-24-118
+    deceased: Bridget O'Shea
+  - year: 1925
+    code: SH-25-044
+    deceased: Michael Donovan
+  - year: 1926
+    code: SH-26-093
+    deceased: Robert Carter
+  - year: 1927
+    code: SH-27-031
+    deceased: Stanley Nowak
+  - year: 1927
+    code: SH-27-126
+    deceased: Concetta Morelli
+  - year: 1928
+    code: SH-28-052
+    deceased: Isabel Martinez
+  player_visible_boundary: 只显示七个代码；24至28可读作年份段，但纸条本身不解释SH、流水号或死亡属性
 - id: 4118
-  name: 问题批次药剂
+  name: 医院冷藏库留样试剂
   type: item
   pickup: true
   first_scene: 4002
   acquisition: post_expose
-  note: 跨至 L2，由 Foster 更新为 4703
+  note: 跨至L2，由Foster化验后更新为4703；调取后始终以带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱保持冰藏，样本格医院纸封／蜡封及逐次温度交接记录完整，补冰不需开启样本格
+  description: Harrison通过正式手续从医院冷藏库调取的官方留样；上锁木质保冷箱带镀锌金属内胆和独立碎冰槽，样本格另贴医院纸封／蜡封。交接单逐次记录装箱时间、箱内温度与经手人，补冰不需开启样本格；保险柜只保管上锁保冷箱与手续，不构成常温存放
 - id: 4119
   name: Harrison亲笔资金流向图
   type: item
@@ -467,7 +494,7 @@ outline_coverage:
   mapping: exact
   primary_landing: expose.watts
 - beat_id: L1_B04
-  source_anchor: active outline / Loop1 / 指证后 / 保险柜材料
+  source_anchor: approved L2 adjustment / L1指证后 / 保险柜材料形态
   mapping: exact
   primary_landing: expose.post_expose.safe
 - beat_id: L1_B05
@@ -525,6 +552,16 @@ outline_coverage:
   testimony_required: true
   testimony_id: 4041004
   verbatim_required: true
+- beat_id: L1_E_HARRISON_NUMBER_NOTE
+  source_anchor: approved L2 adjustment / 4117 Harrison留下的编号纸条
+  mapping: exact
+  primary_landing: expose.post_expose.new_evidence_gained.4117
+  evidence_id: 4117
+- beat_id: L1_E_HOSPITAL_COLD_SAMPLE
+  source_anchor: approved L2 adjustment / 4118 医院冷藏库留样试剂
+  mapping: exact
+  primary_landing: expose.post_expose.new_evidence_gained.4118
+  evidence_id: 4118
 narrative_continuity:
 - id: u4_l1_opening
   source_anchor: Loop1 / 开篇剧情
@@ -566,10 +603,10 @@ narrative_continuity:
   consumes:
   - u4_l1_expose
   required_beats:
-  - 取得4117-4121
+  - 取得4117至4121；4117仅为七个未知编号，4118为医院冷藏库官方留样
   - Morrison犹豫
   - 建立Rosa紧急听证
-  exit_state: 次日Rosa来到事务所
+  exit_state: 次日Rosa来到事务所；七个编号仍未被解释，官方留样与Isabel病历材料等待L2核对，4217尚未正式取得
   hands_off_to: u4_l2_opening
   covers:
   - expose.post_expose

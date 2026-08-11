@@ -19,8 +19,8 @@
 | 4115 | Harrison 两个月调阅索引 | Item；法院档案室调阅台账。 | 输入 + 后续分析输入 |
 | 4701 | 调阅索引中的本人赔偿裁定 | 分析结果；由 4115 在法院档案室整理得到。 | 输出 |
 | 4116 | Mary / Helen 案改判往来信 | Item；法院档案室 Harrison 调阅文件。 | 无 |
-| 4117 | 圣心医院儿童死亡对照表 | Item；Harrison 未完成的自首证物箱。 | 跨 Loop 指证输入 |
-| 4118 | 问题批次药剂 | Item；Harrison 未完成的自首证物箱。 | 分析输入 |
+| 4117 | Harrison 留下的编号纸条 | Item；Harrison 未完成的自首证物箱。 | 跨 Loop 调档输入 |
+| 4118 | 医院冷藏库留样试剂 | Item；Harrison 未完成的自首证物箱。 | 分析输入 |
 | 4119 | Harrison 亲笔资金流向图 | Item；Harrison 未完成的自首证物箱。 | 无 |
 | 4120 | 南区综合商业开发计划摘要 | Item；Harrison 未完成的自首证物箱。 | 无 |
 | 4121 | 1912 事故家庭索引 | Item；附在 4120 末页。 | 无 |
@@ -208,54 +208,54 @@
 
 ---
 
-### 4117 - 圣心医院儿童死亡对照表
+### 4117 - Harrison 留下的编号纸条
 
 - 类型/地点：Item；Harrison 未完成的自首证物箱。
-- `Name`：`圣心医院儿童死亡对照表` / `Sacred Heart Child Death Comparison Chart`
+- `Name`：`Harrison留下的编号纸条` / `Harrison's Numbered Note`
 - `Describe`：  
-  `Harrison 整理的五年七例儿童死亡对照表。七名儿童都来自慈善项目家庭，药剂批次和责任归属模式高度相似；Rosa 与 Isabel 是最近的一户。表格仍是调查材料，不能单独证明这些死亡都由同一种成分造成。`  
-  `Harrison's comparison chart covering seven child deaths over five years. All seven children came from charity-program families, with closely recurring drug-batch and blame-assignment patterns; Rosa and Isabel are the most recent case. The chart is investigative material and cannot by itself prove a single chemical cause for every death.`
+  `Harrison 手写的一张折叠纸条，依次记有 SH-24-071、SH-24-118、SH-25-044、SH-26-093、SH-27-031、SH-27-126、SH-28-052`
+  `A folded handwritten note from Harrison listing SH-24-071, SH-24-118, SH-25-044, SH-26-093, SH-27-031, SH-27-126, and SH-28-052. `
 - `ShortDescribe`：  
-  `五年七例慈善项目儿童死亡呈现相似的批次与责任归属模式。`  
-  `Seven charity-program child deaths over five years show recurring batch and blame patterns.`
-- 小玩法关系：`跨 Loop 指证输入`。L2 Whitfield R2 使用，与 4213 共同排除单例；不进入独立小玩法。
+  `七个用途不明的编号。`
+  `Seven unexplained hospital numbers arranged by year.`
+- 小玩法关系：`跨 Loop 调档输入`。L2 中先由 4213 让其中两个编号获得“死亡编号”意义，再凭 4218 解锁调档演出；七份病例展示完成后由 4117 更新生成 4219「五年七例儿童死亡病例对照表」。4117 本身不参与 Whitfield 指证。
 
 重点（信息表达必不可少）：
 
-1. 表格明确显示 `FIVE YEARS / SEVEN CASES`，七行病例完整可数。
-2. 栏目至少包含家庭、项目、批次、登记死因/责任归属；Rosa / Isabel 行位于最末并被轻微圈出。
-3. 问题批次统一标记为 `SHC-28-B17`，并与 4118、4212、4213、4214、4703 使用完全相同的字符串和排版位置。
-4. 不在表上打印“谋杀”“故意投毒”或 Miller 批准者。
+1. 纸条必须逐字出现 `SH-24-071`、`SH-24-118`、`SH-25-044`、`SH-26-093`、`SH-27-031`、`SH-27-126`、`SH-28-052`，按年份先后纵向排列，不得改成占位符或随机流水号。
+2. 七个编号使用同一医院编号格式，但不能出现姓名、年龄、病种或责任认定。
+3. 不出现 `DEATH`、`CHILD`、`MILLER`、药剂批号、五年七例等提前解释用途的文字。
+4. Harrison 笔迹与 4113、4116、4119 保持一致；纸条有反复折叠和随手核对留下的轻微铅笔勾记。
 
 美术参考（不影响推理）：
 
-- Harrison 亲手整理的大幅横向表格，打字机底表加钢笔批注；折叠后放入证物箱。
+- 小幅法院便笺或裁开的档案纸，蓝黑墨水手写；视觉重点是七个编号，而不是表格结构。
 
 ---
 
-### 4118 - 问题批次药剂
+### 4118 - 医院冷藏库留样试剂
 
 - 类型/地点：Item；Harrison 未完成的自首证物箱。
-- `Name`：`问题批次药剂` / `Suspect-Batch Medicine Sample`
+- `Name`：`医院冷藏库留样试剂` / `Hospital Cold-Storage Retained Sample`
 - `Describe`：  
-  `Harrison 留存的一支圣心医院药剂原始样本。瓶颈封签、医院项目标记和批次编号仍然完整；仅凭外观无法判断药液成分或是否足以致病。`  
-  `An original Sacred Heart medicine sample preserved by Harrison. Its neck seal, charity-program label, and batch number remain intact. Appearance alone cannot establish the drug's composition or whether it could cause illness.`
+  `Harrison 通过正式手续从圣心医院冷藏库调取的一支官方留样。药瓶置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱内，样本格另贴医院纸封；交接单逐次记录装箱时间、箱内温度与经手人，直至 Foster 接收。补冰无需开启样本格，药瓶也没有进入任何受助家庭。仅凭外观无法判断药液成分或是否足以致病。`
+  `An official retained sample obtained by Harrison from Sacred Heart Hospital's cold store through formal procedure. The bottle traveled in a locked wooden cold box with a galvanized lining and separate crushed-ice compartment; the sample compartment carried its own hospital paper seal, while each handoff recorded time, interior temperature, and custodian. Ice could be replenished without opening the sample compartment, and the bottle never entered a recipient household. Appearance alone cannot establish its composition or medical risk.`
 - `ShortDescribe`：  
-  `封签和批次编号完整的圣心医院药剂原始样本。`  
-  `An original Sacred Heart medicine sample with its seal and batch number intact.`
-- 小玩法关系：`分析输入`。由 Foster 完成受控对照试验后更新为 4703；原始批次外观必须能与 4212、4213、4214 对照。当前没有独立操作型小玩法文档，按剧情分析交付处理。
+  `封签、生产批号和冷藏交接记录完整的医院官方留样。`
+  `An official hospital sample with intact seal, production lot, and cold-storage chain.`
+- 小玩法关系：`分析输入`。由 Foster 完成受控化验后更新为 4703；L2 取得 4214 后，才能确认本物与 4212 属于同一采购记录、同一生产批次和同一配方。当前没有独立操作型小玩法文档，按剧情分析交付处理。
 
 重点（信息表达必不可少）：
 
-1. 医院标记、慈善项目标签、瓶颈封签和统一批次码全部可读。
+1. 医院标记、瓶颈封签、生产批号、冷藏登记卡、木质保冷箱纸封和逐次交接签名全部可读。
 2. 药液外观保持普通，不用异常颜色提前宣布有毒。
-3. 与 4212、4213 中同批瓶使用同款瓶型、标签版式与批次码位置。
-4. 问题批次码统一使用 `SHC-28-B17`，不得改写、缩写或另编编号。
+3. 与 4212 使用同款瓶型、标签版式和生产批号 `SHC-28-B17`；4213 两瓶旧样本不得出现该批号或同批封签。
+4. 冷藏与交接记录必须明确本物始终处于医院控制下，但不在图上写“排除家庭保存”这一后续推理结论。
 
 美术参考（不影响推理）：
 
 - 小型棕色或透明药用玻璃瓶，软木/橡胶塞外覆纸质封签，1920 年代医院药房标签。
-- 放在 Harrison 的牛皮纸证物袋中，附简短手写来源卡。
+- 放在带法院调取封签的上锁木质保冷箱中；箱体采用镀锌金属内胆与独立碎冰槽，附医院冷藏库出库卡和逐次签收条，不使用泡沫箱、凝胶冰袋或电子温度记录器。
 
 ---
 

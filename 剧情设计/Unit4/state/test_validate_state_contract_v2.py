@@ -147,11 +147,11 @@ class Unit4StateContractV2Test(unittest.TestCase):
 
         self.assertIsNotNone(foster_testimony)
         self.assertEqual(
-            '这不是"保存不好"能造成的单支异常，同批封签在进入家庭前就有问题。',
+            "两瓶旧样本只能确认死亡编号和相似的稳定特征；完整配方、生产批次和当年的成分状态都无法从现在的样本中确认。",
             foster_testimony.get("content"),
         )
         self.assertEqual(
-            'active outline / Loop2 / 自由探索 / 法医实验室 / ⚪',
+            "approved L2 adjustment / Foster / 两名旧死者样本边界",
             foster_testimony.get("source_anchor"),
         )
 
@@ -377,27 +377,30 @@ class Unit4StateContractV2Test(unittest.TestCase):
 
     def test_rejects_invented_dialogue_evidence_source(self) -> None:
         state = self.load_state(2)
-        scene = next(entry for entry in state["scenes"] if entry["id"] == 4015)
-        evidence = next(entry for entry in scene["evidence"] if entry["id"] == 4214)
+        scene = next(entry for entry in state["scenes"] if entry["id"] == 4012)
+        evidence = next(entry for entry in scene["evidence"] if entry["id"] == 4216)
         evidence["acquisition"] = {
             "kind": "dialogue",
             "talk": "L2_scene4015_mickey",
         }
         registry = next(
-            entry for entry in state["evidence_registry"] if entry["id"] == 4214
+            entry for entry in state["evidence_registry"] if entry["id"] == 4216
         )
         registry["acquisition"] = evidence["acquisition"].copy()
-        scene["npcs"]["L2_scene4015_mickey"].setdefault(
+        mickey_scene = next(
+            entry for entry in state["scenes"] if entry["id"] == 4015
+        )
+        mickey_scene["npcs"]["L2_scene4015_mickey"].setdefault(
             "grants_evidence", []
-        ).append(4214)
+        ).append(4216)
         state["outline_coverage"].append(
             {
-                "beat_id": "L2_INVENTED_DIALOGUE_4214",
+                "beat_id": "L2_INVENTED_DIALOGUE_4216",
                 "source_anchor": "active outline / Loop2 / 法院会客室",
                 "mapping": "exact",
-                "primary_landing": "scenes.4015.evidence.4214.acquisition",
+                "primary_landing": "scenes.4012.evidence.4216.acquisition",
                 "evidence_delivery_required": True,
-                "evidence_id": 4214,
+                "evidence_id": 4216,
                 "acquisition_kind": "dialogue",
                 "acquisition_talk": "L2_scene4015_mickey",
             }
