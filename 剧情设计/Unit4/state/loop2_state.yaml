@@ -79,11 +79,9 @@ opening:
     required_beats:
     - Rosa 带着 Isabel 的照片、药盒和医院条件来到事务所。
     - Rosa 怀疑自己是否误用药物；现有材料尚不能直接证明她无责。
-    - Mickey 带来Harrison遗留的Isabel病历本并正式交给Zack，取得4217；病历只记录给药与发放信息，不解释七个编号。
     - Mickey 成为 Rosa 的辩护律师，并请 Zack 协助收集正式听证可用材料。
     - Mickey 邀请 Zack 担任二辩，Emma 与 Zack 立即调查医院和实验室。
-    grants_evidence:
-    - 4217
+    grants_evidence: []
     runtime_exit:
       action: release_to_exploration
   player_control_restored_after: thirteen_day_hearing
@@ -127,8 +125,7 @@ scenes:
     description: Harrison遗留的Isabel病历本，记录十三日给药要求、药剂发放号与制剂信息；不包含七例死亡对照或Miller上层结论
     acquisition:
       kind: dialogue
-      talk: L2_opening_thirteen_day_hearing
-      carrier: opening
+      talk: L2_scene4011_rosa
   npcs:
     L2_scene4011_rosa:
       name: Rosa Martinez
@@ -140,11 +137,13 @@ scenes:
       - 自己不识剂量单位，只会把药液抽到护士画出的红线
       - 十三格药盒每天按日开启并留下指纹确认
       - 自己从未拿到第二只药瓶
+      - Isabel 病历本中的十三日给药要求、药剂发放号与制剂信息
       withheld_topics:
       - 无；Rosa不知道Isabel本案药剂的采购与批准链，也不知道Whitfield或Miller的上层责任
       player_inquiry:
       - "Rosa亲手执行的十三日用药步骤" # 10
       - "医院配发物与回收药瓶" # 9
+      - "Isabel病历本与药剂发放记录" # 10
       testimony_ids: []
       grants_evidence:
       - 4211
@@ -664,11 +663,10 @@ evidence_registry:
   type: item
   pickup: true
   first_scene: 4011
-  note: L2开篇正式取得；Expose R1剧情辅助，并用于4214精确核对本案发放号
+  note: L2自由探索中由Rosa交付；Expose R1剧情辅助，并用于4214精确核对本案发放号
   acquisition:
     kind: dialogue
-    talk: L2_opening_thirteen_day_hearing
-    carrier: opening
+    talk: L2_scene4011_rosa
 - id: 4219
   name: 五年七例儿童死亡病例对照表
   type: clue
@@ -805,14 +803,13 @@ outline_coverage:
   acquisition_kind: dialogue
   acquisition_talk: L2_scene4013_foster
 - beat_id: L2_E_ISABEL_MEDICAL_RECORD
-  source_anchor: approved L2 adjustment / L2开篇 / Mickey交付Harrison遗留的Isabel病历本
+  source_anchor: approved L2 adjustment / 自由探索 / Rosa交付Harrison遗留的Isabel病历本
   mapping: exact
   primary_landing: scenes.4011.evidence.4217.acquisition
   evidence_delivery_required: true
   evidence_id: 4217
   acquisition_kind: dialogue
-  acquisition_talk: L2_opening_thirteen_day_hearing
-  acquisition_carrier: opening
+  acquisition_talk: L2_scene4011_rosa
 - beat_id: L2_E_SEVEN_CASE_COMPARISON
   source_anchor: approved L2 adjustment / 4012调档员特殊对话 / 七份病例展示后更新4117
   mapping: exact
@@ -863,8 +860,8 @@ narrative_continuity:
   consumes:
   - u4_l1_post_expose
   required_beats:
-  - Mickey交付4217并组建辩护分工
-  exit_state: 4217在4011正式取得，同场释放自由调查
+  - Mickey组建辩护分工；Isabel病历本留待Rosa自由对话时交付
+  exit_state: 4011开篇完成辩护分工并释放自由调查，4217在Rosa对话中取得
   hands_off_to: u4_l2_investigation
   covers:
   - opening.sequence.thirteen_day_hearing
