@@ -295,13 +295,6 @@ TESTIMONY_MARKERS = {
     ],
     2: [
         (
-            "L2_T_FOSTER_BATCH",
-            4082002,
-            "Loop2 / 自由探索 / 法医实验室 / ⚪",
-            '这不是"保存不好"能造成的单支异常，同批封签在进入家庭前就有问题。',
-            "exact",
-        ),
-        (
             "L2_T_WHITFIELD_IDENTITY",
             4092004,
             "Loop2 / 自由探索 / 法院预审走廊 / Whitfield / ⚪",
@@ -474,21 +467,6 @@ TESTIMONY_DEFINITIONS = {
             "按瓶体标定与剩余量核对，十三日实际消耗不存在规定剂量之外的一次额外注射缺口。",
             "active outline / Loop2 / 自由探索 / 法医实验室 / 容量核对",
             acquisition_talk="L2_scene4013_foster",
-        ),
-        testimony(
-            4082002,
-            "Foster关于同批次异常的技术证词",
-            408,
-            4013,
-            '这不是"保存不好"能造成的单支异常，同批封签在进入家庭前就有问题。',
-            "active outline / Loop2 / 自由探索 / 法医实验室 / ⚪",
-            acquisition_talk="L2_scene4013_foster",
-            source_markers=(
-                (
-                    "active outline / Loop2 / 自由探索 / 法医实验室 / ⚪",
-                    '这不是"保存不好"能造成的单支异常，同批封签在进入家庭前就有问题。',
-                ),
-            ),
         ),
         testimony(
             4092001,

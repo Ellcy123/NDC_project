@@ -134,27 +134,6 @@ class Unit4StateContractV2Test(unittest.TestCase):
                     f"loop{loop_number} testimony {testimony.get('id')} has no content",
                 )
 
-    def test_foster_outline_testimony_is_bound_verbatim(self) -> None:
-        state = self.load_state(2)
-        foster_testimony = next(
-            (
-                entry
-                for entry in self.inline_testimonies(state)
-                if entry.get("id") == 4082002
-            ),
-            None,
-        )
-
-        self.assertIsNotNone(foster_testimony)
-        self.assertEqual(
-            "两瓶旧样本只能确认死亡编号和相似的稳定特征；完整配方、生产批次和当年的成分状态都无法从现在的样本中确认。",
-            foster_testimony.get("content"),
-        )
-        self.assertEqual(
-            "approved L2 adjustment / Foster / 两名旧死者样本边界",
-            foster_testimony.get("source_anchor"),
-        )
-
     def test_expose_lie_source_semantics_distinguish_round_one(self) -> None:
         for loop_number in range(1, 6):
             state = self.load_state(loop_number)
@@ -216,7 +195,7 @@ class Unit4StateContractV2Test(unittest.TestCase):
         testimony = next(
             entry
             for entry in self.inline_testimonies(state)
-            if entry["id"] == 4082002
+            if entry["id"] == 4092004
         )
         testimony.pop("source_anchor", None)
         self.save_state(2, state)

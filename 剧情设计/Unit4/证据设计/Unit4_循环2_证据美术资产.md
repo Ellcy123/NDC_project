@@ -158,24 +158,24 @@
 
 ---
 
-### 4213 - 两名死者的旧药样本
+### 4213 - 同配方药瓶封签组
 
 - 类型/地点：Item；4013 Foster 法医实验室，由 Foster 从废弃样本库依法调取。
-- `Name`：`两名死者的旧药样本` / `Old Medicine Samples from Two Deceased Patients`
+- `Name`：`同配方药瓶封签组` / `Matching-Formula Bottle Seal Set`
 - `Describe`：
-  `Giuseppe Rosselli 与 Bridget O'Shea 生前使用过的两瓶旧药。原患者标签保留两人的姓名；使用者死亡后，药瓶被转入废弃样本库，并分别追加 DEATH REG. SH-24-071 与 DEATH REG. SH-24-118 吊签。两个完整编号都出现在 Harrison 纸条上。残留物与 Harrison 留样含有若干相似的稳定特征成分，但因存放年代久远，无法确认完整配方、生产批次或当年的成分状态。`
-  `Two old medicine bottles used by Giuseppe Rosselli and Bridget O'Shea. Their original patient labels retain both names; after the patients died, the bottles were transferred to the discarded-sample archive and given DEATH REG. SH-24-071 and DEATH REG. SH-24-118 tags. Both complete numbers appear on Harrison's note. Their residues share several stable characteristic components with Harrison's retained sample, but their age prevents confirmation of the complete formula, production lot, or original chemical condition.`
+  `Giuseppe Rosselli 与 Bridget O'Shea 生前使用过的两只旧药瓶。原患者标签保留两人的姓名；使用者死亡后，药瓶被转入废弃样本库，并分别追加 DEATH REG. SH-24-071 与 DEATH REG. SH-24-118 吊签。两个完整编号都出现在 Harrison 纸条上。两只药瓶的残留物、封签和编号相互吻合，且与 Harrison 官方留样配方一致；但仅凭这组旧样本，不能确认它们与 Isabel 的药属于同一生产批次，也不能证明七名儿童都使用了同一配方。`
+  `Two old medicine bottles used by Giuseppe Rosselli and Bridget O'Shea. Their original patient labels retain both names; after the patients died, the bottles were transferred to the discarded-sample archive and given DEATH REG. SH-24-071 and DEATH REG. SH-24-118 tags. Both complete numbers appear on Harrison's note. Their residues, seals, and numbers correspond, and their formula matches Harrison's official retained sample; these old samples alone cannot establish that they share Isabel's production batch or that all seven children received the same formula.`
 - `ShortDescribe`：
-  `Giuseppe／SH-24-071 与 Bridget／SH-24-118 均能在 Harrison 纸条上逐项对应。`
-  `Giuseppe/SH-24-071 and Bridget/SH-24-118 both match entries on Harrison's note.`
-- 小玩法关系：`编号验证/剧情辅助`。本物使 4117 中两个编号获得“死亡编号”意义，并促成 4218 调档许可；Whitfield R2 击破后由 Zack 自动展示，不进入玩家选证列表，也不作为 4703 的同批化验对照。
+  `Giuseppe／SH-24-071 与 Bridget／SH-24-118 均能在 Harrison 纸条上逐项对应；残留物、封签和编号与 Harrison 官方留样相互吻合，配方一致。`
+  `Giuseppe/SH-24-071 and Bridget/SH-24-118 both match entries on Harrison's note; their residues, seals, and numbers correspond to Harrison's official retained sample, with a consistent formula.`
+- 小玩法关系：`编号验证/剧情辅助`。本物使 4117 中两个编号获得“死亡编号”意义，并促成 4218 调档许可；Whitfield R2 击破后由 Zack 自动展示，不进入玩家选证列表，也不作为 4703 的生产批次输入。
 
 重点（信息表达必不可少）：
 
 1. Giuseppe 瓶必须同时可辨原患者姓名 `GIUSEPPE ROSSELLI` 与死后追加吊签 `DEATH REG. SH-24-071`；Bridget 瓶必须同时可辨 `BRIDGET O'SHEA` 与 `DEATH REG. SH-24-118`。姓名标签与追加吊签应有不同纸张、墨色或固定方式，表现为两个时期形成的信息层。
-2. 两只瓶均归入 1924 年死亡登记，但流水号分别为 `071` 与 `118`；不得擅自改成不同年份，也不得出现 `SHC-28-B17` 或与 4118、4212 相同的生产批号。
-3. 瓶内只留少量陈旧残迹；视觉上不能暗示 Foster 已复原完整配方或原始浓度。
-4. 相似稳定特征只体现在 Foster 的纸面比对记录中，不在瓶签上写“同配方”“同批次”或死亡原因结论。
+2. 两只瓶均归入 1924 年死亡登记，但流水号分别为 `071` 与 `118`；不得擅自改成不同年份，也不得把它们画成与 4118、4212 共享 `SHC-28-B17` 生产批号。
+3. 瓶内只留少量陈旧残迹；视觉上不能暗示 Foster 已复原完整配方或原始浓度，配方一致性只来自纸面比对结果。
+4. 不在瓶签上写“同配方”“同批次”或死亡原因结论；封签、编号和残留物只作为可比对的物理特征表现。
 
 美术参考（不影响推理）：
 

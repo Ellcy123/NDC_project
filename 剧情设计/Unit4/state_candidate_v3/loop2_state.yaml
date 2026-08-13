@@ -21,8 +21,8 @@ player_context:
   new_directions:
   - direction: Rosa 的每日用药动作
     trigger: 红线注射器、十三日独立撕签与药瓶剩余量可以共同核对是否存在额外注射
-  - direction: 同批次儿童死亡
-    trigger: Harrison 的死亡对照表与 Foster 调取的同批次封签组相互对应
+  - direction: 同配方儿童死亡线索
+    trigger: Harrison 的死亡对照表与 Foster 调取的同配方药瓶封签组相互对应
   - direction: 医院正式采购发放链
     trigger: 加急效价对照排除单支保存问题，法院会客室卷宗确认采购、入库和发放
   - direction: Harold 开始对 Pierce 保留
@@ -168,11 +168,11 @@ scenes:
     boundary: 只证明同批样本效力明显不一致，且不能用单支家庭保存不当解释
   evidence:
   - id: 4213
-    name: 同批次药瓶封签组
+    name: 同配方药瓶封签组
     type: item
     pickup: true
     note: Expose R2；Foster 接续 Harrison 生前已启动的封存/调取手续
-    description: 另外两名死亡儿童的空药瓶封签，与 Rosa 药瓶和 Harrison 样本批次标记一致
+    description: 另外两名死亡儿童的旧药瓶，其残留物、封签和编号与 Harrison 官方留样相互吻合，配方一致；仅凭旧样本不能确认与 Isabel 属于同一生产批次
   - id: 4702
     name: 经容量分析的回收药瓶
     type: clue
@@ -213,12 +213,6 @@ scenes:
         kind: collectible
         speaker: 408
         source_anchor: active outline / Loop2 / 自由探索 / 法医实验室 / 容量核对
-        acquisition_talk: L2_scene4013_foster
-      - id: 4082002
-        content: 这不是"保存不好"能造成的单支异常，同批封签在进入家庭前就有问题。
-        kind: collectible
-        speaker: 408
-        source_anchor: active outline / Loop2 / 自由探索 / 法医实验室 / ⚪
         acquisition_talk: L2_scene4013_foster
 - id: 4014
   name: 法院预审走廊
@@ -352,8 +346,8 @@ expose:
       name: 圣心医院儿童死亡对照表
       用途: 显示相似死亡并非只发生在 Isabel 一人
     - id: 4213
-      name: 同批次药瓶封签组
-      用途: 把另外两名死亡儿童与 Isabel 锁在同一批次
+      name: 同配方药瓶封签组
+      用途: 把另外两名死亡儿童的旧药瓶与 Harrison 官方留样锁定为残留物、封签和编号相互吻合、配方一致；不锁定与 Isabel 的生产批次
     result: Whitfield 承认不是单例，转而声称药剂没有进入医院正式项目。
   round_3:
     lie: 这批药从未进入医院正式项目，只是护士私领或家庭转手
@@ -465,7 +459,7 @@ evidence_registry:
   - 4211
   note: Expose R1；Doubt 4201
 - id: 4213
-  name: 同批次药瓶封签组
+  name: 同配方药瓶封签组
   type: item
   pickup: true
   first_scene: 4013
@@ -559,15 +553,6 @@ outline_coverage:
   scene_id: 4015
   npc_key: L2_scene4015_mickey
   talk: L2_scene4015_mickey
-- beat_id: L2_T_FOSTER_BATCH
-  marker_id: L2_T_FOSTER_BATCH
-  source_anchor: active outline / Loop2 / 自由探索 / 法医实验室 / ⚪
-  source_text: 这不是"保存不好"能造成的单支异常，同批封签在进入家庭前就有问题。
-  mapping: exact
-  primary_landing: testimony_ids.4082002
-  testimony_required: true
-  testimony_id: 4082002
-  verbatim_required: true
 - beat_id: L2_T_WHITFIELD_IDENTITY
   marker_id: L2_T_WHITFIELD_IDENTITY
   source_anchor: active outline / Loop2 / 自由探索 / 法院预审走廊 / Whitfield / ⚪
