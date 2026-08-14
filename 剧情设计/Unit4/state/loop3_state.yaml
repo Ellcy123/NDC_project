@@ -16,7 +16,7 @@ player_context:
   - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
   - Rosa 没有在规定剂量之外使用第十四次完整剂量；回收药瓶实际消耗量与十三次规定剂量吻合
   - Harrison 的七个编号对应五年内七名死亡儿童，七人均由 Whitfield 负责的 Miller 慈善项目经手，并出现相似症状与重复的家属归责方式
-  - Giuseppe与Bridget的两瓶旧药样本只能确认死亡编号和相似稳定特征成分，不能确认完整配方、生产批次或当年成分状态
+  - Giuseppe与Bridget的两瓶旧药样本与Harrison官方留样配方一致，但不能确认同一生产批次，也不能推及七名儿童
   - Isabel病历发放号、Rosa回收药瓶与Harrison医院官方留样属于同一采购记录、同一生产批次和同一配方
   - Harrison医院官方留样从冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱；样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不开启样本格，直至Foster签收；化验后仍显示连续使用风险
   - 现有材料不能证明另外六名儿童使用了与Isabel完全相同的配方或生产批次
@@ -94,7 +94,7 @@ opening:
       withheld_fact: Mickey在22:58已经进入宅邸，并于23:16枪杀Harold、伪造现场。
     runtime_exit:
       action: change_scene
-      target_scene_id: 4027
+      target_scene_id: 4022
       continuation: release_to_exploration
   player_control_restored_after: mansion_arrival
 scenes:
@@ -112,7 +112,7 @@ scenes:
   design_tags:
   - opening
   - transition
-  description: 23:30，Zack与Emma在宅邸门外撞见Mickey；只承载Mickey“刚到”谎言，结束后切入4027并恢复探索。
+  description: 23:30，Zack与Emma在宅邸门外撞见Mickey；建立前门动线及门廊卷收式厚质防风帘、配重下沿与绳扣位置，结束后强制切入4022确认Harold死亡。
   npcs: {}
 - id: 4027
   name: Morrison 宅邸门厅客厅
@@ -122,7 +122,9 @@ scenes:
   - pre_blast
   description: '宅邸探索枢纽。Doris守在门厅附近，客厅矮桌留有两只近期使用的酒杯和一支古巴雪茄烟蒂。
 
-    玩家可往返4022书房；4311—4315全部处理前，通往4028厨房检修区的危机检查保持关闭。
+    玩家可往返4022书房；4311—4315全部处理前，
+
+    通往4028厨房检修区的危机检查保持关闭。
 
     '
   connections:
@@ -188,9 +190,26 @@ scenes:
   - pre_blast
   description: 'Harold 倒在书房，磨号手枪被放在右手；书桌留有伪造遗书与Pierce档案移交通知。
 
-    本场只承载尸体与书桌调查，可返回4027门厅客厅；厨房危机不在本场触发。
+    从4029首次进入时先强制播放死亡确认；确认完成后切入4027并恢复自由探索。后续可返回本场调查尸体与书桌；厨房危机不在本场触发。
 
     '
+  event_triggers:
+  - id: morrison_death_confirmation
+    condition:
+      previous_talk_completed: L3_opening_mansion_arrival
+    talk: L3_scene4022_zack_os
+    forced: true
+    locks_player_control: true
+    runtime_binding:
+      adapter: chained_talk
+      previous_talk: L3_opening_mansion_arrival
+    required_beats:
+    - Zack、Emma与Mickey从4029门外穿过门厅，强制进入书房。
+    - Zack确认Harold已经死亡；本段结束前不开放自由探索。
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 4027
+      continuation: release_to_exploration
   evidence:
   - id: 4311
     name: 磨号手枪与枪内未击发余弹
@@ -388,7 +407,9 @@ scenes:
 
     23:50 左右装置启动，宅邸爆炸。原始右手枪位未形成可供官方复核的现场照片。
 
-    回收区可核对耐火接点与爆炸前照片一致；该反馈不更新4316，也不生成新证据。这里同时成为 Doris Expose 与后续程序争夺的场地。
+    回收区可核对耐火接点与爆炸前照片一致；该反馈不更新4316，也不生成新证据。石质前门廊与防风帘结构仍部分保留，
+
+    这里同时成为 Doris Expose、Pierce开枪QTE与后续程序争夺的场地。
 
     '
   evidence: []
@@ -506,25 +527,28 @@ expose:
 
       '
   post_expose:
-    description: 'Doris 下意识确认 Harold 一直惯用左手，形成 4063002。
+    description: 'Doris 下意识确认 Harold 一直惯用左手，形成 4063002。Zack要求把右手枪位写入记录并拒绝无记录交出材料；
 
-      Zack 指出爆炸前手枪明明被放在右手。Pierce 转而询问 Mickey；
+      Pierce抢夺失败后拔枪。玩家以Zack视角完成门廊防风帘QTE，Emma拉紧布面，Zack控腕、夺枪并卸弹。
 
-      Mickey 正式回答自己初见尸体时枪在左手。原始现场已毁，
+      两人停止冲突后，Pierce转而询问Mickey；Mickey正式回答自己初见尸体时枪在左手。原始现场已毁，
 
-      Pierce 以两份相反证词无法裁定为由拒绝启动他杀调查，并按自杀结案。
-
-      这一高点表现的是事实失去程序资格，不是 Zack 被说服相信自杀。
+      Pierce以两份相反证词无法裁定为由拒绝启动他杀调查，并按自杀结案。玩家赢下身体冲突，却在程序渠道中再次失败。
 
       '
     player_knowledge_gained:
     - 右手枪位与 Harold 长期左手生活习惯冲突
+    - Pierce愿意直接向Zack开枪；Zack与Emma阻止了射击
     - Mickey 主动提供了与 Zack 私人观察相反的正式说法
     - 警方仍将 Harold 的死亡判定为自杀
     event_id: official_suicide_close
     talk: L3_post_expose_official_suicide
     required_beats:
+    - Doris Expose结束后不恢复自由探索，直接接入SC4023宅邸门口的指证后AVG。
     - Doris确认Harold惯用左手。
+    - Pierce试图无记录接管Zack材料，抢夺失败后拔枪并实际击发。
+    - 玩家代入Zack释放门廊防风帘；配重下沿撞偏枪线，Emma拉紧布面，Zack完成控腕、夺枪与卸弹。
+    - Zack与Emma主动后退并亮出空手，让玩家短暂相信事实讨论已经恢复。
     - Mickey正式陈述初见尸体时枪在左手，与Zack的右手记录冲突。
     - Pierce以原始现场已毁、证词冲突为由拒绝启动他杀调查并按自杀结案。
     player_control_restored_after: official_suicide_close
@@ -546,6 +570,29 @@ expose:
       boundary: R2及以后是NPC在Expose中被击穿后主动退守的新谎言，不得在普通Talk预收集。
     requires_doubt_condition: false
     usable_evidence_boundary: lie_source不作为击穿材料；每轮usable_evidence仍必须进入疑点或身份链。
+special_mechanics:
+  pierce_disarm_qte:
+    status: approved
+    scene_id: 4023
+    trigger: Doris指证结束并取得4063002后
+    player_role: Zack
+    setup_sources:
+    - 4029宅邸门口抵达AVG建立卷收式厚质防风帘与外侧门柱绳扣位置
+    - 4023爆炸后继续使用同一宅邸门口与同一外侧门柱绳扣；绳扣不进入4027室内门厅
+    core_input: 短时间持续按住，松开防风帘绳扣
+    success_sequence:
+    - 带配重下沿撞偏Pierce持枪前臂，枪弹击中石阶
+    - Emma拉紧垂落布面，妨碍Pierce伸展手臂
+    - Zack控腕、夺枪、打开转轮并将枪弹分离
+    - Zack与Emma后退并亮出空手
+    retry_policy:
+      first_miss: 时间短暂放缓并扩大提示窗口
+      repeated_miss: 辅助完成，不进入Zack死亡分支
+      accessibility: 支持自动完成动作输入
+    art_boundary:
+    - 布面厚实且可卷收，下沿带木杆或金属配重；材质可参考厚帆布、厚棉布等户外厚质织物
+    - 爆炸后布面未完全撕裂，卷轴、绳索与配重仍可工作
+    formal_evidence_output: []
 non_progress_investigation_records:
 - id: record_suicide_scene
   text: 右手枪位与 Harold 左手生活习惯冲突
@@ -729,6 +776,10 @@ outline_coverage:
   mapping: exact
   primary_landing: expose.doris
 - beat_id: L3_B07
+  source_anchor: active outline / Loop3 / 指证后 / Pierce开枪与防风帘QTE
+  mapping: exact
+  primary_landing: special_mechanics.pierce_disarm_qte
+- beat_id: L3_B08
   source_anchor: active outline / Loop3 / 指证后 / 相反枪位证词与自杀结案
   mapping: exact
   primary_landing: expose.post_expose.official_close
@@ -891,6 +942,8 @@ narrative_continuity:
   consumes:
   - u4_l3_expose
   required_beats:
+  - Pierce拔枪并实际击发；玩家代入Zack完成防风帘QTE，Emma配合后由Zack夺枪卸弹
+  - Zack与Emma主动停止冲突，短暂恢复事实讨论渠道
   - Mickey给出左手正式陈述
   - Pierce按自杀结案
   exit_state: Doris持有爆炸后幸存的清退材料，Zack尚不知道具体对象；L4 Opening由Doris交付后才确认指向O'Hara

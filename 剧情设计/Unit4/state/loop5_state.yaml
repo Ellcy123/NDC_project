@@ -32,7 +32,7 @@ player_context:
   - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
   - Rosa 没有在规定剂量之外使用第十四次完整剂量；回收药瓶实际消耗量与十三次规定剂量吻合
   - Harrison 的七个编号对应五年内七名死亡儿童，七人均由 Whitfield 负责的 Miller 慈善项目经手，并出现相似症状与重复的家属归责方式
-  - Giuseppe与Bridget的两瓶旧药样本只能确认死亡编号和相似稳定特征成分，不能确认完整配方、生产批次或当年成分状态
+  - Giuseppe与Bridget的两瓶旧药样本与Harrison官方留样配方一致，但不能确认同一生产批次，也不能推及七名儿童
   - Isabel病历发放号、Rosa回收药瓶与Harrison医院官方留样属于同一采购记录、同一生产批次和同一配方
   - Harrison医院官方留样从冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱；样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不开启样本格，直至Foster签收；化验后仍显示连续使用风险
   - 现有材料不能证明另外六名儿童使用了与Isabel完全相同的配方或生产批次
@@ -629,7 +629,7 @@ expose:
       '
   post_expose:
     offscreen_state_changes:
-    - Emma因Zack长时间未回电话自主决定前往四十二层；抵达楼下后发现Miller车辆与人员增加，先向Watts留下地址、车辆异常与楼梯撤离方向，再独自改走楼梯。她不参与身份锁与三轮Expose，只在坠落时抵达并抓住Zack。
+    - Emma因Zack长时间未回电话自主决定前往四十二层；抵达楼下后发现Tidewater车辆与人员增加，先向Watts留下地址、车辆异常与楼梯撤离方向，再独自改走楼梯。她不参与身份锁与三轮Expose，只在坠落时抵达并抓住Zack。
     - Mickey拒绝Miller“交档案并独自上车”的条件后，4516留在办公室，坠落后由Zack与Emma带走。
     identity_acknowledgment:
       first_explicit_mapping: Mickey：是。我是 Whale。
@@ -717,6 +717,7 @@ expose:
       - Mickey 坠出窗外，Zack 抓住他的手
       - Mickey 主动松开 Zack 的手，不写意外滑落
       - Zack 被带向窗外；Emma 从后方抓住 Zack 并把他拉回室内
+      - Emma确认Zack还能行动后，两人收起4516与其余文件，从消防楼梯安全离开办公室层
       retained_images:
       - Mickey 向下坠落的身影
       - Zack 抓空的手
@@ -921,30 +922,32 @@ ending_sequence:
     - transition
     - aftermath
     scene_name: 离开四十二层 / 法院档案车
-    location: 四十二层楼梯与楼层中间停车区
+    location: 四十二层消防楼梯、大楼后侧服务出口与停车区
     time: Mickey 坠落后
     characters:
     - Zack
     - Emma
     - Watts
-    description: 'Zack 与 Emma 带着从 Mickey 办公室取得的全部文件走楼梯离开。
+    description: 'Zack 与 Emma 带着从 Mickey 办公室取得的全部文件进入消防楼梯，避开电梯与正在进入大楼的Tidewater人员。
 
-      Watts 驾驶法院档案车，在楼层中间的停车区接应两人并将他们带离大楼。
+      两人从后侧服务出口进入停车区；Watts驾驶法院档案车接应，三人汇合后立即驶离。
 
-      4516 仍整袋封存，内封套不在车上拆开。
+      4516在离开大楼前保持整袋封存；车辆驶离并确认没有被当场截停后，续接4044车内拆阅。
 
       '
     visual_compositions:
     - id: A
-      location: 四十二层楼梯与楼层中间停车区
-      purpose: Emma带Zack撤离，Watts按她留下的地址与撤离方向驾法院档案车接应
+      location: 四十二层消防楼梯、大楼后侧服务出口与停车区
+      purpose: Emma带Zack避开电梯与Tidewater人员，经楼梯离开四十二层并登上法院档案车
     - id: B
       location: 法院档案车内
-      purpose: 车辆驶离后的连续对白；不恢复玩家控制
+      purpose: Emma、Zack与Watts在车内汇合，Watts立即驾车逃离；不恢复玩家控制
     runtime_requirement: 4043是同一连续事件的A/B两段构图；若运行时不能在同一sceneId切换背景，再拆内部演出子段，不新增自由探索节点
     story_beats:
+    - Emma带Zack避开电梯和Tidewater人员，经消防楼梯抵达后侧停车区
+    - Zack与Emma带着4516上车，Watts立即驾驶法院档案车离开大楼
     - Emma 说明：Zack 长时间未回电话，她自主改变决定赶往四十二层
-    - Emma 抵达楼下时发现 Miller 车辆与人员突然增加，因此改走楼梯
+    - Emma 抵达楼下时发现 Tidewater 车辆与人员突然增加，因此改走楼梯
     - Zack 告诉 Emma：Mickey 就是 Whale
     - Zack 告诉 Emma：自己取得了 Tidewater 秘密档案
     - Zack 告诉 Emma：Mickey 主动松手，自己没能救回他
@@ -957,11 +960,11 @@ ending_sequence:
         npc_id: 402
         name: Emma O'Malley
         is_liar: false
-        motive: 先把 Zack 与档案带离 Miller 人员正在涌入的大楼
+        motive: 先把 Zack 与档案带离 Tidewater 人员正在涌入的大楼
         mindset: 行动优先；救回 Zack 后仍保留 L4 裂缝，但不在此刻清算关系
         known_information:
         - Zack 去四十二层找 Mickey 后长时间未回电话
-        - 楼下突然出现更多 Miller 车辆与人员
+        - 楼下突然出现更多 Tidewater 车辆与人员
         - Mickey 是 Whale（由 Zack 在车上告知）
         - Mickey 主动松手坠落
         - 档案仍未拆封
@@ -969,7 +972,7 @@ ending_sequence:
         - 无；她尚不知道 4518、4519 存在，更不知道 Zack 稍后会扣页
         player_inquiry:
         - Emma 为什么改变决定赶到四十二层
-        - 楼下 Miller 人员何时增加
+        - 楼下 Tidewater 人员何时增加
         testimony_ids: []
       L5_ending4043_watts:
         npc_id: 404
@@ -978,13 +981,13 @@ ending_sequence:
         motive: 使用法院档案车接应并转移人员与文件
         mindset: 书记员式务实；只处理路线、档案安全与联络，不冒充警察或法官
         known_information:
-        - 约定的接应位置与安全地点
-        - Miller 人员正在进入大楼
-        - 档案需要保持整袋封存至安全地点
+        - Emma留下的地址、车辆异常与后侧接应方向
+        - Tidewater 人员正在进入大楼
+        - 档案在离开大楼前需要保持整袋封存
         withheld_information:
         - 无；尚未读取内封，也不知道 Sean 页与水源页
         player_inquiry:
-        - 安全地点路线
+        - 离开大楼与甩开Tidewater车辆的路线
         - 档案是否保持封存
         testimony_ids: []
     talk: L5_ending_departure
@@ -998,14 +1001,14 @@ ending_sequence:
     type: cutscene
     design_tags:
     - analysis
-    scene_name: 凌晨四点二十分 · 安全地点拆阅档案
-    location: 安全地点
-    time: 04:20
+    scene_name: 行驶中的法院档案车 · 拆阅档案
+    location: 驶离四十二层后的法院档案车内
+    time: 同一夜 / 驶离大楼后
     characters:
     - Zack
     - Emma
     - Watts
-    description: 三人共同检查4516外卷。Zack留在主档案桌前整理，发现暗部封夹并独自拆开内封套，取得4517、4518、4519。他向Emma与Watts共享4517的地基材料替换事实，但扣下4518与4519；随后只从外卷公开O'Hara的优先清退危险。
+    description: Watts驾驶法院档案车继续逃离，Zack与Emma在后排共同拆阅4516外卷。Emma在自己一侧按姓名和地址整理外卷，Zack在另一侧发现暗部封夹并借身体、肩包与昏暗车内遮挡独自拆开内封套，取得4517、4518、4519。他向Emma与Watts共享4517的地基材料替换事实，但扣下4518与4519；随后只从外卷公开O'Hara的优先清退危险。
     zack_second_concealment:
       action:
       - Zack 独自看见 4518 与 4519
@@ -1017,7 +1020,7 @@ ending_sequence:
         又担心与 Miller 关系过深的 Emma 成为下一个目标。
 
         '
-      error_boundary: 'Zack 的错误不是准确预知当夜投毒却故意不救，而是没有邀请 Emma
+      error_boundary: 'Zack 的错误不是准确预知当夜投毒却故意不救，而是在车内没有邀请 Emma
 
         与 Watts 一起判断水源页。他剥夺了 Watts 提前联系公共卫生值班人员、
 
@@ -1036,7 +1039,7 @@ ending_sequence:
         npc_id: 402
         name: Emma O'Malley
         is_liar: false
-        motive: 整理外卷，确认南区清退风险并参与紧急行动
+        motive: 在后排整理外卷，确认南区清退风险并参与紧急行动
         mindset: 疲惫但保持记者式分类与交叉核对；不知道 Zack 独自拆出的两页
         known_information:
         - Mickey 是 Whale
@@ -1052,8 +1055,8 @@ ending_sequence:
         npc_id: 404
         name: Watts
         is_liar: false
-        motive: 按书记员能力整理外卷、联络可用公共系统并提供交通
-        mindset: 以登记、联络和送达权限行事，不越权充当法官或警察
+        motive: 驾车甩开追踪、维持档案运输并听取后排核出的关键信息
+        mindset: 以路线、转运和联络能力行事，不回头参与翻页，也不越权充当法官或警察
         known_information:
         - O'Hara 是第一批优先处理户
         - 外卷显示 Miller 项目委员会在多个机构之上
@@ -1231,7 +1234,7 @@ outline_coverage:
   mapping: exact
   primary_landing: ending_sequence.ending_4043
 - beat_id: L5_B07
-  source_anchor: active outline / 非Loop终幕 / 安全地点拆档
+  source_anchor: active outline / 非Loop终幕 / 行驶中档案车内拆档
   mapping: exact
   primary_landing: ending_sequence.ending_4044
 - beat_id: L5_B08
@@ -1307,13 +1310,13 @@ narrative_continuity:
   required_beats:
   - Watts接应
   - 车上只交代身份与坠落
-  exit_state: 抵达安全地点
+  exit_state: 三人已乘法院档案车驶离大楼，车辆仍在行驶
   hands_off_to: u4_l5_ending_4044
   covers:
   - ending_sequence.ending_4043
 - id: u4_l5_ending_4044
   source_anchor: 非Loop终幕 / 4044
-  entry_state: 三人共同查看外卷
+  entry_state: Watts驾车逃离，Zack与Emma在后排共同查看外卷
   consumes:
   - u4_l5_ending_4043
   required_beats:

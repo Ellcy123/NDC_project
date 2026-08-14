@@ -251,11 +251,13 @@ scenes:
   type: free_exploration
   design_tags:
   - analysis
-  description: 'Foster 接续 Harrison 生前已经启动的封存与调取手续，对回收药瓶的容量、
+  description: 'Foster 接续 Harrison 生前已经启动的封存与调取手续。Zack 与 Emma 到场前，
 
-    始终以带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱保持冰藏、样本格医院纸封／蜡封未破且逐次交接有据的官方留样，以及两名旧死者样本进行边界明确的检查。她先说测量结果，
+    她已经完成两名旧死者样本与 Harrison 官方留样的配方比对，也完成官方留样的风险检验；
 
-    再说结论边界；旧样本只能建立死亡编号与相似稳定特征，不能追认完整配方、批次或当年状态。
+    玩家在场景中只操作十三次剂量核对，其余结果通过对话与证物交付。4213能确认配方一致，
+
+    但不能确认同一生产批次，也不能推及七名儿童。
 
     '
   analysis_operations:
@@ -271,7 +273,7 @@ scenes:
     name: 经化验的医院冷藏库留样试剂
     inputs:
     - 4118
-    input_boundary: 正式更新对象只有4118；4213两瓶旧样本不作为配方、生产批次或历史成分状态的比较输入
+    input_boundary: 正式更新对象只有4118；4213的配方比对已作为独立结果完成，不进入4703的风险检验，也不作为同批证明
     boundary: 证明从医院冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱、样本格医院纸封／蜡封未破、装箱时间与箱内温度及经手人逐次有据的官方留样本身存在有效成分浓度波动异常、异常降解杂质与连续使用风险；补冰未开启样本格，因此可排除调取后或家庭保存造成异常，不判断故意投毒或批准者主观知情
   evidence:
   - id: 4213
@@ -325,7 +327,7 @@ scenes:
       active_topics:
       - 容量核对可以判断是否存在额外用量缺口
       - Giuseppe Rosselli瓶上的SH-24-071与Bridget O'Shea瓶上的SH-24-118均完整出现在Harrison纸条中
-      - 两名旧样本与医院官方留样只有相似稳定特征，不能确认完整配方、生产批次或当年成分状态
+      - 两名旧样本与Harrison官方留样配方一致，但不能确认同一生产批次，也不能推及七名儿童
       - 医院官方留样从冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱，样本格医院纸封／蜡封未破；装箱时间、箱内温度与经手人逐次有据，补冰不开启样本格，直至Foster签收
       - 医院官方留样在上述保存与交接条件下仍出现有效成分浓度波动异常和异常降解杂质
       - 官方留样连续使用可能造成严重低血糖反应与器官损伤
@@ -348,14 +350,17 @@ scenes:
   name: 法院预审走廊
   type: free_exploration
   design_tags:
+  - dialogue
   - transition
-  description: '自由探索阶段的普通对话只有Zack、Emma与Whitfield在场，Rosa不在场。
+  - action_result
+  description: '开庭前，Zack与Emma在预审走廊自由询问Whitfield，取得院方对Rosa加量和家庭保存条件的公开口径；
 
-    Whitfield向调查者维持“家属加量”与“贫困家庭离院后保存不当”的院方口径，
+    Rosa与Mickey不进入这段普通Talk。正式预审结束后，Mickey与Rosa带着裁决书回到走廊，记者从法庭涌出追问；
 
-    但不会在普通Talk中提前完成要求Rosa签字的正式听证冲突。Rosa与Mickey只在后续Expose听证阶段回到现场。
+    Zack避到粗圆柱后，待人群散去才与持密封通知袋的Morrison交谈。Emma与Whitfield的指证后对话留在4016正式法庭内。
 
     '
+  evidence: []
   npcs:
     L2_scene4014_whitfield:
       talk: L2_scene4014_whitfield
@@ -395,6 +400,33 @@ scenes:
       expose_lie_ids:
       - 4092002
       - 4092003
+  event_triggers:
+  - id: l2_post_expose_corridor_result
+    condition:
+      previous_talk_completed: L2_post_expose_court_result
+    talk: L2_post_expose_verdict
+    forced: true
+    locks_player_control: true
+    runtime_binding:
+      adapter: chained_talk
+      previous_talk: L2_post_expose_court_result
+    runtime_exit:
+      action: release_to_exploration
+- id: 4016
+  name: 法院预审法庭
+  type: cutscene
+  design_tags:
+  - expose_location
+  - formal_hearing
+  description: '固定法官席、书记员席、控辩双方桌和旁听席构成正式预审法庭。
+
+    本场不属于自由探索。Whitfield的普通Talk已在4014预审走廊完成；进入本场后，退休法官、书记员、Whitfield、Mickey、Rosa与Zack就位，直接进入正式预审／指证。
+
+    裁定后其他人先离场，Emma留在法庭内与Whitfield完成对话，随后结果演出转入4014走廊。
+
+    '
+  evidence: []
+  npcs: {}
 - id: 4015
   name: 法院会客室
   type: free_exploration
@@ -452,13 +484,13 @@ scenes:
 expose:
   target: whitfield
   target_talk: L2_expose_whitfield
-  location: SC4014 法院预审走廊
+  location: SC4016 法院预审法庭
   total_rounds: 3
   is_liar: true
   player_inquiry: null
   context: 'Whitfield 需要 Rosa 在预留位置签名，把正式项目的死亡写成家属误用。
 
-    Rosa与Mickey在正式听证／指证阶段回到现场。Zack依次排除额外加量、孤立事故与家庭保存不当。Rosa 的拒签发生在证据
+    Rosa与Mickey在正式预审／指证阶段进入法庭。Zack依次排除额外加量、孤立事故与家庭保存不当。Rosa 的拒签发生在证据
 
     暂时托住她之后，但她仍不知道自己一定会赢。Mickey 的法律帮助与结果都真实。
 
@@ -502,8 +534,8 @@ expose:
       用途: 精确证明Isabel病历发放号、Rosa回收药瓶与官方留样属于同一采购记录、同一生产批次和同一配方
     result: Whitfield 无法再以家庭保存不当解释Isabel同批官方冷藏留样中的风险，被迫承担项目执行责任，但把最终批准责任推向缺失的第十九页。
   post_expose:
-    description: Rosa 在 Zack 与 Mickey 的支持下拒绝签署家属误用说明。Whitfield 要求记者停止广播和录音，Emma 明确告知现场记者并不受他控制，事实已无法被走廊口径收回。书记员交付暂停追究 Rosa、重审
-      Isabel 死因的回执。Mickey 对 Rosa 的关心和这场胜利都必须是真的。散庭后 Morrison 在走廊拐角告诉 Zack，自己没有把 Harrison 材料告知 Pierce，并留下以后私下接触的口子；这不等于完整坦白。
+    description: Rosa 在 Zack 与 Mickey 的支持下拒绝签署家属误用说明。正式法庭裁定后，Emma留在4016法庭内与Whitfield对话；
+      Mickey与Rosa带着回执进入4014走廊，记者随即追出。Zack避开人群后与Morrison在走廊侧门交谈，Morrison留下以后私下接触的口子；这不等于完整坦白。
     new_evidence_gained: null
     player_knowledge_gained:
     - Rosa 没有额外加量
@@ -516,10 +548,15 @@ expose:
     event_id: rosa_result_and_morrison_hook
     talk: L2_post_expose_court_result
     required_beats:
-    - Whitfield要求停止广播和录音，Emma说明已经来不及。
+    - 正式预审在4016固定法庭内完成，Whitfield要求停止传播，Emma在法庭内说明已经来不及。
     - Rosa拒签并取得暂停追究、重审死因的回执。
-    - Mickey真实地松一口气并托住滑落的照片。
-    - Morrison在走廊留下下一次私下接触的口子。
+    - 结果演出转入4014走廊，Mickey真实地松一口气并托住滑落的照片。
+    - 人群散去后Morrison在走廊留下下一次私下接触的口子。
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 4014
+      continuation: next_talk
+      next_talk: L2_post_expose_verdict
     player_control_restored_after: rosa_result_and_morrison_hook
   lie_source_semantics:
     round_1:
@@ -681,7 +718,7 @@ outline_coverage:
 - beat_id: L2_B02
   source_anchor: approved L2 adjustment / 自由调查与开放式调档
   mapping: exact
-  primary_landing: scenes.4011_4015
+  primary_landing: scenes.4011_4016
 - beat_id: L2_B03
   source_anchor: approved L2 adjustment / 三轮指证 Whitfield
   mapping: exact
@@ -871,7 +908,7 @@ narrative_continuity:
   consumes:
   - u4_l2_investigation
   required_beats:
-  - 自由Talk阶段Rosa不在场；正式听证时Rosa与Mickey回场
+  - 4014走廊自由Talk阶段Rosa与Mickey不在场；进入4016正式预审法庭后两人入场
   - R1玩家只选4702，4211与4217自动辅助
   - R2玩家只选4219，击破后自动出示4213
   - R3以4703与4214击穿贫困家庭离院后保存不当的退守
@@ -885,8 +922,9 @@ narrative_continuity:
   consumes:
   - u4_l2_expose
   required_beats:
-  - 确认真实胜利
-  - Morrison私下留下接触口
+  - Emma与Whitfield留在4016法庭内完成指证后对话
+  - Mickey、Rosa与Zack进入4014走廊，确认真实胜利
+  - 人群散去后Morrison私下留下接触口
   exit_state: Morrison 对 Pierce 有所保留，并给 Zack 留下下一次私下接触的可能；尚未发生 L3 的 23:15 来电
   hands_off_to: u4_l3_opening
   covers:
