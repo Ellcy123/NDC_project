@@ -38,7 +38,7 @@ player_context:
   - direction: 预装清场装置
     trigger: 煤气铅封、壁炉时钟铜线、被压住的窗缝与 Doris 的 18:12 来访记忆
   - direction: 站外材料
-    trigger: 爆炸后取得 214 号寄存柜钥匙
+    trigger: 法院外圈取得只刻有 214 的黄铜钥匙，并与已开放车站寄存区的连续柜号建立对应
   post_expose_knowledge:
   - Harold 原本准备去找 Zack，不是在家等待自杀
   - Harold 死前不久接待过一名近期访客
@@ -119,6 +119,7 @@ scenes:
   type: free_exploration
   design_tags:
   - crisis
+  - pre_blast
   description: '宅邸探索枢纽。Doris守在门厅附近，客厅矮桌留有两只近期使用的酒杯和一支古巴雪茄烟蒂。
 
     玩家可往返4022书房；4311—4315全部处理前，通往4028厨房检修区的危机检查保持关闭。
@@ -153,13 +154,12 @@ scenes:
   npcs:
     L3_scene4027_doris:
       talk: L3_scene4027_doris
-      is_liar: true
-      motive: 尽快让死亡按自杀结案，保住丈夫最后一点家庭体面，并阻止警察、记者和法院继续公开拆解他
-      mindset: 惊魂未定却紧紧守住措辞；她遮掩材料和访客痕迹，但不替任何组织守密
+      is_liar: false
+      motive: 先交代自己的返家时间与家庭身份，不在爆炸前主动谈 Harold 是否准备外出
+      mindset: 惊魂未定、谨慎守住家庭边界；此处只给出返家与身份事实，R1 谎言留到爆炸后门口
       active_topics:
       - 自己 23:18 左右返家后发现 Harold 死亡
       - 自己没有看见访客离开
-      - Harold 当晚准备留在家中休息
       - Doris是Morrison的妻子
       withheld_topics:
       - 她返家后看见右手枪位与第二只酒杯
@@ -168,12 +168,6 @@ scenes:
       - 她不知道近期访客、枪手、Whale或煤气命令源
       player_inquiry: null
       testimony_ids:
-      - id: 4063003
-        content: Harold当晚没有打算离开，准备一直在家里休息。
-        kind: collectible_lie_anchor
-        speaker: 406
-        source_anchor: active outline / Loop3 / 门厅、电话桌与客厅 / Doris谎言
-        acquisition_talk: L3_scene4027_doris
       - id: 4063006
         content: 23:18 前一直在外，返家后才发现丈夫死亡；她没有看见访客离开。
         kind: collectible
@@ -186,14 +180,12 @@ scenes:
         speaker: 406
         source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / Doris / ⚪
         acquisition_talk: L3_scene4027_doris
-      expose_lie_ids:
-      - 4063004
-      - 4063005
 - id: 4022
   name: Morrison 宅邸书房
   type: free_exploration
   design_tags:
   - crisis
+  - pre_blast
   description: 'Harold 倒在书房，磨号手枪被放在右手；书桌留有伪造遗书与Pierce档案移交通知。
 
     本场只承载尸体与书桌调查，可返回4027门厅客厅；厨房危机不在本场触发。
@@ -219,11 +211,99 @@ scenes:
     note: 不参与本轮击穿；只证明提前接管压力，不证明 Harold 的外出意图
     description: 要求 Harold 次日上午交出旧案文件与配枪登记；签发早于 Whitfield 被带走补充笔录
   npcs: {}
+- id: 4024
+  name: 夜班电话交换台
+  type: free_exploration
+  design_tags:
+  - pre_blast
+  description: 人工接线台保留当夜线路时间、去向与接线员记下的口信；只证明电话事实，不确认接听人。
+  npcs:
+    L3_scene4024_operator:
+      talk: L3_scene4024_operator
+      is_liar: false
+      motive: 按接线簿和自己听见的原话提供程序事实，不替侦探猜测电话另一端的人
+      mindset: 准确、疲惫、怕惹麻烦；反复限定自己只能确认线路去向
+      active_topics:
+      - 22:36 Harold 打给 Brennan 事务所，无人接听，表示准备自己过去
+      - 22:43 Harold 打给 Donnelly & Associates，留下体面收尾的口信
+      - 23:15 Harold 再次接通 Brennan 事务所，只说出 Zack 的姓
+      withheld_topics:
+      - 谁最终听见 22:43 的口信
+      - 谁在 23:15 切断电话
+      - Donnelly 与 Whale 的关系
+      player_inquiry:
+      - 三次电话的准确时间、去向与原话
+      - 接线员能否确认接听人
+      testimony_ids:
+      - id: 4153001
+        content: 22:36，Morrison致电Brennan事务所，无人接听后称会自行过去；22:43，他改接Donnelly & Associates，称自己准备去找Brennan，并要求对方若仍想体面收尾就现在过来；23:15再次接通Brennan事务所，只说出Zack的姓。线路记录不确认Donnelly端接听人。
+        kind: collectible
+        speaker: 415
+        source_anchor: active outline / Loop3 / 夜班电话交换台 / ⚪
+        acquisition_talk: L3_scene4024_operator
+        note: R1主力；L5访客链复用，只确认线路去向与口信
+        persistence:
+          scope: chapter
+          reset_policy: retain_across_loops
+          required_by:
+          - identity_lock.chain_4503
+- id: 4025
+  name: 法院外圈 / 调度台
+  type: free_exploration
+  design_tags:
+  - pre_blast
+  description: 法院东门与市政档案库交接材料散放在调度台；临时物品盘中另有一把只刻 214 的黄铜钥匙。这里只提供容器钥匙、排班与城市人手方向，不制造绝对不在场。
+  evidence:
+  - id: 4317
+    name: 214号黄铜寄存柜钥匙
+    type: key_item
+    pickup: true
+    source: 调度台旁的临时物品盘
+    note: 只解锁 SC4026 的 214 号柜门，不解锁场景；不参与 R3 击穿，也不证明钥匙属于 Harold
+    description: 旧黄铜钥匙的号码牌上只刻有 214，没有车站、铁路、行李寄存、姓名或用途标记
+  - id: 4318
+    name: Harrison案证物转运调度单
+    type: item
+    pickup: true
+    note: 21:30-23:20 Pierce 被安排负责法院交接；只提高其在法院的可能，不能单件排除离岗
+    description: 调度单、交接栏与人员安排的合订材料，缺少足以证明全程在场的独立连续记录
+  - id: 4319
+    name: 晚间报纸号外
+    type: item
+    pickup: true
+    note: 跨 Loop 城市伏笔；银月会常用打手在西区冲击工会互助站
+    description: 电讯号外报道西区工会互助站遭冲击，只提示城市另一处正在牵制人手
+- id: 4026
+  name: 车站 214 号寄存区
+  type: free_exploration
+  design_tags:
+  - pre_blast
+  access:
+    always_open: true
+  description: 车站寄存区在取得钥匙前已经开放，画面中连续可见 210—220 号柜。214 号柜可提前检查但柜门上锁；4317 只打开该柜门，柜中只有 Harold 准备交给 Zack 的未寄出口供。
+  interactions:
+  - id: interaction_station_locker_214
+    name: 检查214号寄存柜
+    visible_number_range: 210-220
+    locked_feedback: 柜门上锁；号码牌上清楚写着214。
+    required_item_ids:
+    - 4317
+    outputs:
+    - 4320
+    runtime_requirement: 场景始终可进入；只对214号柜交互检查4317，其他柜不可打开
+  evidence:
+  - id: 4320
+    name: Morrison写给Zack的未寄出口供
+    type: item
+    pickup: true
+    note: Expose R3 主力；只证明材料存在，不由物件反推 Doris 读过全文
+    description: Harold 承认自己替 Pierce 与 Whale 压过旧案；收到档案接管通知后决定留下站外材料，不愿最后选择被写成自杀或疯狂
 - id: 4028
   name: Morrison 宅邸厨房检修区
   type: free_exploration
   design_tags:
   - crisis
+  - pre_blast
   access:
     from_scene: 4027
     required_item_ids:
@@ -235,7 +315,7 @@ scenes:
     runtime_requirement: 进入本场前必须已完成书房与客厅调查；不能只依赖自然语言提示
   description: '煤气表、壁炉时钟接线、主阀与背风窗缝构成四个检查反馈。
 
-    铅封与接线两处都完成后产出4316；再完成阀门和窗缝检查即强制撤离，不设真实倒计时。
+    铅封与接线两处都完成后产出4316；再完成阀门和窗缝检查只满足宅邸侧门槛，不设真实倒计时。
 
     '
   evidence:
@@ -271,18 +351,25 @@ scenes:
     - 本拍只建立其爆炸前已到场的状态，不让Pierce打断玩家最后的危机检查。
   - id: mansion_evacuation_and_explosion
     condition:
-      all_required_investigation_items_collected: true
-      previous_event_state: pierce_arrives_outer_perimeter 已建立
+      all_of:
+        required_talks:
+        - L3_scene4024_operator
+        required_item_ids:
+        - 4316
+        - 4321
+        - 4322
+        - 4317
+        - 4318
+        - 4319
+        - 4320
+        previous_event_completed: pierce_arrives_outer_perimeter
     talk: L3_event_mansion_evacuation
     forced: true
     locks_player_control: true
     runtime_binding:
-      adapter: SceneEnterTalkTriggerConfig
-      required_item_ids:
-      - 4316
-      - 4321
-      - 4322
+      adapter: ordered_story_event
     required_beats:
+    - 宅邸与三个爆炸前外部节点的必要调查均已完成后，事件才进入可触发状态；不使用现实倒计时。
     - Emma依据已检查的接线、阀门与窗缝异常组织撤离。
     - Zack、Emma、Mickey与Doris撤到安全边界后爆炸发生。
     - Pierce已经位于外围安全边界；爆炸后接管程序直接承接该状态，不作突然赶到处理。
@@ -296,6 +383,7 @@ scenes:
   design_tags:
   - aftermath
   - expose_location
+  - post_blast
   description: '玩家完成必需检查后，Emma 依据煤气味、铅封、接线、阀门和窗缝组织撤离。
 
     23:50 左右装置启动，宅邸爆炸。原始右手枪位未形成可供官方复核的现场照片。
@@ -303,13 +391,7 @@ scenes:
     回收区可核对耐火接点与爆炸前照片一致；该反馈不更新4316，也不生成新证据。这里同时成为 Doris Expose 与后续程序争夺的场地。
 
     '
-  evidence:
-  - id: 4317
-    name: 214号黄铜寄存柜钥匙
-    type: key_item
-    pickup: true
-    note: 解锁 SC4026；不参与 R3 击穿，只证明寄存柜存在
-    description: 爆炸从 Harold 的衣物中震出，带车站标记和 214 柜号
+  evidence: []
   npcs:
     L3_scene4023_mickey:
       name: Mickey Donnelly
@@ -339,90 +421,40 @@ scenes:
     L3_scene4023_doris:
       name: Doris Morrison
       talk: L3_scene4023_doris
-      is_liar: false
-      motive: 在宅邸被毁后补充当天确实发生过的市政检修，让眼前危险先得到调查
-      mindset: 惊魂未定；这一条陈述真实，但不代表她放弃了让Harold尽快按自杀结案的立场
+      is_liar: true
+      motive: 在宅邸被毁后尽快把死亡收束为自杀，既补充真实的检修来访，也否认 Harold 原本准备离家
+      mindset: 惊魂未定却开始收紧家庭口径；真实检修记忆与“Harold准备留家”的谎言并存
       active_topics:
+      - Harold 当晚没有打算离开，准备一直在家里休息
       - 自己没有申报煤气故障
       - 18:12有两名穿市政工作服的人进入宅邸检查壁炉管线
       withheld_topics:
       - 她仍不愿公开Harold留下材料和访客痕迹
       - 她不知道两名人员身份、装置命令源或Mickey责任
       player_inquiry:
+      - Harold 当晚是否准备外出
       - 是否申报过故障
       - 两名市政人员抵达时间和检查位置
+      truthful_claims:
+      - 4063001
+      false_claims:
+      - 4063003
       testimony_ids:
+      - id: 4063003
+        content: Harold当晚没有打算离开，准备一直在家里休息。
+        kind: collectible_lie_anchor
+        speaker: 406
+        source_anchor: active outline / Loop3 / 爆炸后宅邸门口 / Doris谎言
+        acquisition_talk: L3_scene4023_doris
       - id: 4063001
         content: 自己没有申报故障，但 18:12 有两名穿市政工作服的人来检查壁炉管线。
         kind: collectible
         speaker: 406
         source_anchor: active outline / Loop3 / 爆炸后回收区 / Doris / ⚪
         acquisition_talk: L3_scene4023_doris
-- id: 4024
-  name: 夜班电话交换台
-  type: free_exploration
-  description: 人工接线台保留当夜线路时间、去向与接线员记下的口信；只证明电话事实，不确认接听人。
-  npcs:
-    L3_scene4024_operator:
-      talk: L3_scene4024_operator
-      is_liar: false
-      motive: 按接线簿和自己听见的原话提供程序事实，不替侦探猜测电话另一端的人
-      mindset: 准确、疲惫、怕惹麻烦；反复限定自己只能确认线路去向
-      active_topics:
-      - 22:36 Harold 打给 Brennan 事务所，无人接听，表示准备自己过去
-      - 22:43 Harold 打给 Donnelly & Associates，留下体面收尾的口信
-      - 23:15 Harold 再次接通 Brennan 事务所，只说出 Zack 的姓
-      withheld_topics:
-      - 谁最终听见 22:43 的口信
-      - 谁在 23:15 切断电话
-      - Donnelly 与 Whale 的关系
-      player_inquiry:
-      - 三次电话的准确时间、去向与原话
-      - 接线员能否确认接听人
-      testimony_ids:
-      - id: 4153001
-        content: 22:36，Morrison致电Brennan事务所，无人接听后称会自行过去；22:43，他改接Donnelly & Associates，称自己准备去找Brennan，并要求对方若仍想体面收尾就现在过来；23:15再次接通Brennan事务所，只说出Zack的姓。线路记录不确认Donnelly端接听人。
-        kind: collectible
-        speaker: 415
-        source_anchor: active outline / Loop3 / 夜班电话交换台 / ⚪
-        acquisition_talk: L3_scene4024_operator
-        note: R1主力；L5访客链复用，只确认线路去向与口信
-        persistence:
-          scope: chapter
-          reset_policy: retain_across_loops
-          required_by:
-          - identity_lock.chain_4503
-- id: 4025
-  name: 法院外圈 / 调度台
-  type: free_exploration
-  description: 法院东门与市政档案库交接材料散放在调度台；这里只提供排班与城市人手方向，不制造绝对不在场。
-  evidence:
-  - id: 4318
-    name: Harrison案证物转运调度单
-    type: item
-    pickup: true
-    note: 21:30-23:20 Pierce 被安排负责法院交接；只提高其在法院的可能，不能单件排除离岗
-    description: 调度单、交接栏与人员安排的合订材料，缺少足以证明全程在场的独立连续记录
-  - id: 4319
-    name: 晚间报纸号外
-    type: item
-    pickup: true
-    note: 跨 Loop 城市伏笔；银月会常用打手在西区冲击工会互助站
-    description: 电讯号外报道西区工会互助站遭冲击，只提示城市另一处正在牵制人手
-- id: 4026
-  name: 车站 214 号寄存区
-  type: free_exploration
-  design_tags:
-  - locked
-  unlock_item: 4317
-  description: 使用黄铜钥匙打开 214 号柜；柜中只有 Harold 准备交给 Zack 的未寄出口供。
-  evidence:
-  - id: 4320
-    name: Morrison写给Zack的未寄出口供
-    type: item
-    pickup: true
-    note: Expose R3 主力；只证明材料存在，不由物件反推 Doris 读过全文
-    description: Harold 承认自己替 Pierce 与 Whale 压过旧案；收到档案接管通知后决定留下站外材料，不愿最后选择被写成自杀或疯狂
+      expose_lie_ids:
+      - 4063004
+      - 4063005
 expose:
   target: doris
   target_talk: L3_expose_doris
@@ -566,6 +598,8 @@ doubts:
   isFragment: false
   unlock_condition:
   - type: 3
+    param: '4063003'
+  - type: 3
     param: '4153001'
 - id: 4302
   text: Harold 死前是否接待过近期访客？
@@ -641,8 +675,8 @@ evidence_registry:
   name: 214号黄铜寄存柜钥匙
   type: key_item
   pickup: true
-  first_scene: 4023
-  note: 解锁 4026；不参与 R3 击穿
+  first_scene: 4025
+  note: 只解锁 4026 的 214 号柜门，不解锁 4026 场景；不参与 R3 击穿
 - id: 4318
   name: Harrison案证物转运调度单
   type: item
@@ -678,13 +712,18 @@ outline_coverage:
   - scenes.4022
   - scenes.4028
 - beat_id: L3_B04
-  source_anchor: active outline / Loop3 / 强制撤离与爆炸
+  source_anchor: active outline / Loop3 / 爆炸前外部调查
+  mapping: exact
+  primary_landing: scenes.4024
+  supporting_landings:
+  - scenes.4025
+  - scenes.4026
+- beat_id: L3_B05
+  source_anchor: active outline / Loop3 / 强制撤离、爆炸与门口对话
   mapping: exact
   primary_landing: scenes.4028.event_triggers.mansion_evacuation_and_explosion
-- beat_id: L3_B05
-  source_anchor: active outline / Loop3 / 爆炸后调查
-  mapping: exact
-  primary_landing: scenes.4023_4026
+  supporting_landings:
+  - scenes.4023
 - beat_id: L3_B06
   source_anchor: active outline / Loop3 / 指证 Doris
   mapping: exact
@@ -793,19 +832,48 @@ narrative_continuity:
   - opening.sequence.broken_call
   - opening.sequence.mansion_arrival
 - id: u4_l3_investigation
-  source_anchor: Loop3 / 宅邸调查与爆炸
+  source_anchor: Loop3 / 爆炸前宅邸与外部调查
   entry_state: Mickey口径暂不可证伪
   consumes:
   - u4_l3_opening
   required_beats:
   - 检查尸体与现场
-  - 完成撤离
-  - 爆炸后分别询问Mickey与Doris
+  - 调查夜班电话交换台、法院外圈与提前开放的车站寄存区
+  - 由只刻214的黄铜钥匙打开214号柜并取得未寄出口供
+  exit_state: 宅邸与外部必要调查完成，爆炸事件可触发
+  hands_off_to: u4_l3_explosion
+  covers:
+  - scenes.4022
+  - scenes.4024
+  - scenes.4025
+  - scenes.4026
+  - scenes.4027
+  - scenes.4028
+- id: u4_l3_explosion
+  source_anchor: Loop3 / 强制撤离与爆炸
+  entry_state: 宅邸与外部必要调查均已完成
+  consumes:
+  - u4_l3_investigation
+  required_beats:
+  - Emma组织撤离
+  - 宅邸爆炸
+  exit_state: 4023门口回收区开放
+  hands_off_to: u4_l3_postblast_door_talk
+  covers:
+  - scenes.4028.event_triggers.mansion_evacuation_and_explosion
+- id: u4_l3_postblast_door_talk
+  source_anchor: Loop3 / 爆炸后门口对话
+  entry_state: 原始现场已毁，Doris试图收束家庭口径
+  consumes:
+  - u4_l3_explosion
+  required_beats:
+  - 分别询问Mickey与Doris
+  - Doris首次声称Harold当晚准备一直留家
   - 取得18:12假市政工证词并保存记录
   exit_state: Doris三轮指证条件成立
   hands_off_to: u4_l3_expose
   covers:
-  - scenes
+  - scenes.4023
 - id: u4_l3_expose
   source_anchor: Loop3 / 指证 Doris
   entry_state: 材料显示Morrison准备开口

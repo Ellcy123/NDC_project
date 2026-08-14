@@ -1,10 +1,9 @@
 # Unit4 State 落表与特殊机制规范
 
-> 日期：2026-07-25
-> 当前审查范围：`剧情设计/Unit4/state_candidate_v3/loop1_state.yaml` 至 `loop5_state.yaml`
-> 候选机器契约：`剧情设计/Unit4/state_candidate_v3/state_contract.yaml`
+> 日期：2026-08-14
+> 当前审查范围：`剧情设计/Unit4/state/loop1_state.yaml` 至 `loop5_state.yaml`
+> 机器契约：`剧情设计/Unit4/state/state_contract.yaml`
 > 自动校验：`python 剧情设计/Unit4/state/validate_state_contract_v2.py`
-> 现行 `state/` 目录保留为替换前基线，候选通过审查前不覆盖。
 
 ## 1. 规范目的
 
@@ -34,7 +33,7 @@ Unit4 的剧情事实以 `canon_manifest.json` 登记的现行 v3 大纲为最�
 
 凡是五个 State 新增了未在 `state_contract.yaml.field_policy` 登记的顶层字段，自动校验必须失败。先补充去向裁决，再允许新增字段。
 
-Expose 中的 `lie_source` 是 NPC 在指证过程中主动生成的动态谎言锚点，不是玩家预先收集的证词，因此不挂入疑点 `condition`。硬约束检查的是每轮 `usable_evidence`：所有可用于击穿谎言的道具或证词，必须已由本 Loop 的疑点或 L5 身份链装载。这样既避免把 R2/R3 动态退守提前发给玩家，也不放行游离指证证据。
+Expose R1 的 `lie_source` 可以是普通 Talk 中预先取得的 `collectible_lie_anchor`；当流程需要保证玩家先听见谎言时，它可以同时进入对应疑点 `condition`，L3 的 4063003 即属此例。R2 及以后由 NPC 在 Expose 中主动生成的 `dynamic_expose_lie` 仍不得预收集或挂入疑点。每轮 `usable_evidence` 则必须已由本 Loop 的疑点或 L5 身份链装载，避免游离指证证据。
 
 ## 3. 场景类型与表现标签
 
@@ -52,6 +51,19 @@ Expose 中的 `lie_source` 是 NPC 在指证过程中主动生成的动态谎言
 ```
 
 配置转换只能依据稳定 `type` 决定基础场景模式；`design_tags` 用于后续交互、美术、节奏和特殊脚本定位，不能把任意标签擅自解释成新的运行时场景枚举。
+
+### 3.1 L3 爆炸前外部探索与柜门门控
+
+L3 的阶段合同固定如下：
+
+1. 4024 夜班电话交换台、4025 法院外圈调度台、4026 车站寄存区均属于爆炸前自由探索；4023 宅邸门外回收区属于爆炸后。
+2. 4317 在 4025 取得，实体号码牌只刻 `214`，不得带车站、铁路或行李寄存标记。
+3. 4026 场景在取得 4317 前已经开放，画面必须预先连续展示 210—220 号柜；不得给场景配置 `unlock_item: 4317` 或 `design_tags: [locked]`。
+4. 4317 只挂在 `interaction_station_locker_214.required_item_ids`，用于打开 214 号柜并取得 4320。无钥匙时只返回柜门上锁反馈，不阻止进入场景。
+5. 4063003 只由爆炸后 4023 的 Doris Talk 取得。4301 同时要求 4063003 与 4153001，保证玩家先听到谎言再看见疑点。
+6. 爆炸事件使用 `ordered_story_event`，在宅邸危机材料、4024 Talk、4025 材料和 4026 的 4320 全部完成后才触发；这是一项剧情门槛，不是现实倒计时。
+
+“场景开放”与“场景中的单个容器上锁”必须分别落表。转换器若只能把 `required_item_ids` 解释为场景级门锁，应视为阻塞错误，不能静默退回旧行为。
 
 ## 4. L5 身份锁运行合同
 

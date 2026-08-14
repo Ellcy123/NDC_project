@@ -22,6 +22,8 @@ design_tags:
   - action_result
   - expose_location
   - locked
+  - pre_blast
+  - post_blast
   - identity_lock
   - story_climax
 
@@ -106,6 +108,27 @@ runtime_event_contract:
     - change_scene
     - release_to_exploration
     - loop_end
+
+loop3_flow_contract:
+  pre_blast_scene_ids: [4024, 4025, 4026]
+  post_blast_scene_ids: [4023]
+  key_item_id: 4317
+  key_source_scene_id: 4025
+  station_scene_id: 4026
+  station_scene_always_open: true
+  visible_locker_range: "210-220"
+  locked_container_interaction: interaction_station_locker_214
+  locked_container_number: 214
+  locked_container_output_id: 4320
+  post_blast_lie_id: 4063003
+  post_blast_lie_scene_id: 4023
+  post_blast_lie_talk: L3_scene4023_doris
+  first_doubt_id: 4301
+  first_doubt_conditions: [4063003, 4153001]
+  explosion_event_id: mansion_evacuation_and_explosion
+  explosion_adapter: ordered_story_event
+  explosion_required_talks: [L3_scene4024_operator]
+  explosion_required_item_ids: [4316, 4321, 4322, 4317, 4318, 4319, 4320]
 
 testimony_contract:
   outline_marker: "⚪"

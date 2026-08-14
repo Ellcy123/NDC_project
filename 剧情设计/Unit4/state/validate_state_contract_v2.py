@@ -1392,13 +1392,109 @@ class Unit4StateV2Validator:
             event.get("id"): event for event in kitchen.get("event_triggers", []) or []
         }
         explosion = kitchen_events.get("mansion_evacuation_and_explosion", {})
-        explosion_items = set(
-            (explosion.get("runtime_binding", {}) or {}).get("required_item_ids", []) or []
+        flow_contract = self.contract.get("loop3_flow_contract", {}) or {}
+        explosion_all_of = (explosion.get("condition", {}) or {}).get("all_of", {}) or {}
+        explosion_items = set(explosion_all_of.get("required_item_ids", []) or [])
+        expected_explosion_items = set(
+            flow_contract.get(
+                "explosion_required_item_ids",
+                [4316, 4321, 4322, 4317, 4318, 4319, 4320],
+            )
         )
-        if explosion_items != {4316, 4321, 4322}:
-            self.errors.append("loop3 explosion runtime gate must require 4316, 4321, 4322")
+        if explosion_items != expected_explosion_items:
+            self.errors.append(
+                "loop3 explosion ordered gate must require mansion and all pre-blast external materials"
+            )
+        explosion_talks = set(explosion_all_of.get("required_talks", []) or [])
+        expected_explosion_talks = set(
+            flow_contract.get("explosion_required_talks", ["L3_scene4024_operator"])
+        )
+        if explosion_talks != expected_explosion_talks:
+            self.errors.append("loop3 explosion ordered gate must require the scene 4024 operator Talk")
+        if (explosion.get("runtime_binding", {}) or {}).get("adapter") != flow_contract.get(
+            "explosion_adapter", "ordered_story_event"
+        ):
+            self.errors.append("loop3 explosion must use the ordered_story_event adapter")
         if "pierce_arrives_outer_perimeter" not in str(explosion.get("condition", {})):
             self.errors.append("loop3 explosion must preserve Pierce's pre-blast arrival state")
+
+        for scene_id in set(flow_contract.get("pre_blast_scene_ids", [4024, 4025, 4026])):
+            if "pre_blast" not in set(loop3_scenes.get(scene_id, {}).get("design_tags", []) or []):
+                self.errors.append(f"loop3 scene {scene_id} must be marked pre_blast")
+        for scene_id in set(flow_contract.get("post_blast_scene_ids", [4023])):
+            if "post_blast" not in set(loop3_scenes.get(scene_id, {}).get("design_tags", []) or []):
+                self.errors.append(f"loop3 scene {scene_id} must be marked post_blast")
+
+        scene_4023_ids = {
+            item.get("id") for item in loop3_scenes.get(4023, {}).get("evidence", []) or []
+        }
+        scene_4025_items = {
+            item.get("id"): item
+            for item in loop3_scenes.get(4025, {}).get("evidence", []) or []
+        }
+        key_item = scene_4025_items.get(4317, {})
+        if 4317 in scene_4023_ids or not key_item:
+            self.errors.append("loop3 evidence 4317 must be in scene 4025 and absent from scene 4023")
+        old_key_phrases = ("爆炸从", "带车站标记", "铁路车站标记", "Morrison 的衣物")
+        if any(phrase in str(key_item.get("description", "")) for phrase in old_key_phrases):
+            self.errors.append("loop3 evidence 4317 must only show 214 and must not retain blast/station-mark origin")
+
+        station = loop3_scenes.get(4026, {})
+        if station.get("unlock_item") is not None or "locked" in set(station.get("design_tags", []) or []):
+            self.errors.append("loop3 scene 4026 must stay open; 4317 may lock only the 214 container")
+        if not (station.get("access", {}) or {}).get("always_open"):
+            self.errors.append("loop3 scene 4026 must declare always_open access")
+        locker = next(
+            (
+                interaction
+                for interaction in station.get("interactions", []) or []
+                if interaction.get("id")
+                == flow_contract.get("locked_container_interaction", "interaction_station_locker_214")
+            ),
+            {},
+        )
+        if str(locker.get("visible_number_range", "")) != str(
+            flow_contract.get("visible_locker_range", "210-220")
+        ):
+            self.errors.append("loop3 scene 4026 must preview the continuous 210-220 locker range")
+        if set(locker.get("required_item_ids", []) or []) != {4317} or set(
+            locker.get("outputs", []) or []
+        ) != {4320}:
+            self.errors.append("loop3 scene 4026 locker 214 must require 4317 and output 4320")
+
+        pre_doris = (loop3_scenes.get(4027, {}).get("npcs", {}) or {}).get(
+            "L3_scene4027_doris", {}
+        )
+        post_doris = (loop3_scenes.get(4023, {}).get("npcs", {}) or {}).get(
+            "L3_scene4023_doris", {}
+        )
+        pre_doris_ids = {
+            entry.get("id") for entry in pre_doris.get("testimony_ids", []) or []
+        }
+        post_doris_entries = {
+            entry.get("id"): entry for entry in post_doris.get("testimony_ids", []) or []
+        }
+        lie_entry = post_doris_entries.get(4063003, {})
+        if 4063003 in pre_doris_ids or not lie_entry:
+            self.errors.append("loop3 testimony 4063003 must move from scene 4027 to scene 4023 Doris")
+        if lie_entry.get("acquisition_talk") != flow_contract.get(
+            "post_blast_lie_talk", "L3_scene4023_doris"
+        ):
+            self.errors.append("loop3 testimony 4063003 must be acquired in the scene 4023 Doris Talk")
+
+        doubt_4301 = next(
+            (doubt for doubt in loop3.get("doubts", []) or [] if doubt.get("id") == 4301),
+            {},
+        )
+        doubt_4301_conditions = {
+            int(condition.get("param"))
+            for condition in doubt_4301.get("unlock_condition", []) or []
+            if str(condition.get("param", "")).isdigit()
+        }
+        if doubt_4301_conditions != set(
+            flow_contract.get("first_doubt_conditions", [4063003, 4153001])
+        ):
+            self.errors.append("loop3 doubt 4301 must require 4063003 and 4153001")
 
         loop3_registry = {
             entry.get("id"): entry for entry in loop3.get("evidence_registry", [])
@@ -1407,6 +1503,7 @@ class Unit4StateV2Validator:
             4314: 4027,
             4315: 4027,
             4316: 4028,
+            4317: 4025,
             4321: 4028,
             4322: 4028,
         }

@@ -223,6 +223,57 @@ class Unit4StateContractV2Test(unittest.TestCase):
 
         self.assert_error_contains("player control")
 
+    def test_rejects_loop3_key_moved_back_to_blast_aftermath(self) -> None:
+        state = self.load_state(3)
+        scenes = {scene["id"]: scene for scene in state["scenes"]}
+        key = next(item for item in scenes[4025]["evidence"] if item["id"] == 4317)
+        scenes[4025]["evidence"].remove(key)
+        scenes[4023]["evidence"].append(key)
+        self.save_state(3, state)
+
+        self.assert_error_contains("4317 must be in scene 4025")
+
+    def test_rejects_loop3_station_scene_level_key_lock(self) -> None:
+        state = self.load_state(3)
+        station = next(scene for scene in state["scenes"] if scene["id"] == 4026)
+        station["design_tags"].append("locked")
+        station["unlock_item"] = 4317
+        self.save_state(3, state)
+
+        self.assert_error_contains("4026 must stay open")
+
+    def test_rejects_loop3_doris_lie_before_explosion(self) -> None:
+        state = self.load_state(3)
+        scenes = {scene["id"]: scene for scene in state["scenes"]}
+        post_doris = scenes[4023]["npcs"]["L3_scene4023_doris"]
+        lie = next(item for item in post_doris["testimony_ids"] if item["id"] == 4063003)
+        post_doris["testimony_ids"].remove(lie)
+        scenes[4027]["npcs"]["L3_scene4027_doris"]["testimony_ids"].append(lie)
+        self.save_state(3, state)
+
+        self.assert_error_contains("4063003 must move from scene 4027 to scene 4023")
+
+    def test_rejects_loop3_explosion_that_skips_external_investigation(self) -> None:
+        state = self.load_state(3)
+        kitchen = next(scene for scene in state["scenes"] if scene["id"] == 4028)
+        explosion = next(
+            event
+            for event in kitchen["event_triggers"]
+            if event["id"] == "mansion_evacuation_and_explosion"
+        )
+        explosion["condition"]["all_of"]["required_item_ids"] = [4316, 4321, 4322]
+        self.save_state(3, state)
+
+        self.assert_error_contains("all pre-blast external materials")
+
+    def test_rejects_loop3_first_doubt_without_post_blast_lie(self) -> None:
+        state = self.load_state(3)
+        doubt = next(item for item in state["doubts"] if item["id"] == 4301)
+        doubt["unlock_condition"] = [{"type": 3, "param": "4153001"}]
+        self.save_state(3, state)
+
+        self.assert_error_contains("doubt 4301 must require 4063003 and 4153001")
+
     def test_rejects_opening_talk_duplicated_as_free_npc_talk(self) -> None:
         state = self.load_state(3)
         opening_talk = state["opening"]["sequence"][1]["talk"]

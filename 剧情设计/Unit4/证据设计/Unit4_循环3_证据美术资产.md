@@ -20,7 +20,7 @@
 | 4316 | 伪造市政煤气铅封与异常时钟接线 | Clue；Morrison 宅邸厨房检修区，爆炸前取得。 | 危机门控输入 |
 | 4321 | 煤气阀门异常开启痕迹 | Envir；Morrison 宅邸煤气阀。 | 危机门控输入 |
 | 4322 | 窗缝逆风与煤气味 | Envir；Morrison 宅邸背风侧窗。 | 危机门控输入 |
-| 4317 | 214 号黄铜寄存柜钥匙 | Key Item；Morrison 宅邸爆炸后回收物。 | 容器钥匙输入 |
+| 4317 | 214 号黄铜寄存柜钥匙 | Key Item；法院外圈调度台旁的临时物品盘。 | 容器钥匙输入 |
 | 4318 | Harrison 案证物转运调度单 | Item；法院外圈调度材料。 | 无 |
 | 4319 | 晚间报纸号外 | Item；法院外圈晚间报摊/散落报纸。 | 无 |
 | 4320 | Morrison 写给 Zack 的未寄出口供 | Item；车站 214 号寄存柜。 | 容器输出 |
@@ -230,25 +230,25 @@
 
 ### 4317 - 214 号黄铜寄存柜钥匙
 
-- 类型/地点：Key Item；Morrison 宅邸爆炸后回收物。
+- 类型/地点：Key Item；法院外圈调度台旁的临时物品盘，爆炸前取得。
 - `Name`：`214号黄铜寄存柜钥匙` / `Brass Key to Locker 214`
 - `Describe`：  
-  `爆炸从 Morrison 的衣物中震出的一把黄铜钥匙。钥匙牌带有铁路车站标记和清晰的柜号“214”，可用于打开车站寄存区的对应柜门。钥匙本身不能说明柜内文件内容。`  
-  `A brass key blown from Morrison's clothing during the explosion. Its tag bears the railway-station mark and the locker number “214,” allowing access to the matching station locker. The key itself says nothing about the contents.`
+  `在法院外圈调度台旁的临时物品盘中发现的一把旧黄铜钥匙。号码牌上只刻有“214”，没有车站、铁路、行李寄存、姓名或用途文字。它可以打开对应的 214 号柜门，但钥匙本身不能说明所有者或柜内文件内容。`
+  `An old brass key found in a temporary property tray beside the court-perimeter dispatch desk. Its tag bears only the number “214,” with no station, railway, luggage-storage, name, or purpose marking. It can open the matching locker door but does not establish ownership or reveal the contents.`
 - `ShortDescribe`：  
-  `带车站标记和“214”柜号的黄铜钥匙。`  
-  `A brass key tagged with the station mark and locker number “214.”`
+  `号码牌上只刻有“214”的黄铜钥匙。`
+  `A brass key whose tag bears only the number “214.”`
 - 小玩法关系：`容器钥匙输入`。用于解锁车站 214 号寄存柜并取得 4320；开柜后钥匙可保留或标记已使用，不生成派生 ID。
 
 重点（信息表达必不可少）：
 
-1. 黄铜牌上的 `214` 必须大而清楚，并有铁路车站/行李寄存标识。
-2. 爆炸回收状态可有烟尘和磨痕，但编号不可遮挡。
-3. 不在钥匙牌上写 Brennan、口供或柜内内容。
+1. 黄铜牌上的 `214` 必须是唯一清晰可读的文字；不得出现铁路、车站、行李寄存、法院或其他机构标识。
+2. 保留长期使用形成的黄铜磨耗，但不得出现爆炸烟尘或爆炸损伤。
+3. 不在钥匙牌上写姓名、用途、Brennan、口供或柜内内容。
 
 美术参考（不影响推理）：
 
-- 1920 年代铁路寄存柜扁钥匙，椭圆/八角黄铜号码牌，边缘长期摩擦发亮。
+- 1920 年代扁钥匙，椭圆/八角黄铜号码牌，边缘长期摩擦发亮；外形可与寄存柜锁孔适配，但不以徽记直接暴露用途。
 - 另需 214 柜门、锁孔、开柜动画和扎绳文件包的容器美术。
 
 ---
@@ -322,6 +322,6 @@
 
 美术参考（不影响推理）：
 
-- 多页手写陈述装在扎绳牛皮纸文件包中；车站柜内保存状态干燥整齐，与爆炸废墟形成反差。
+- 多页手写陈述装在扎绳牛皮纸文件包中；车站柜内保存状态干燥整齐，与宅邸内的危机和混乱形成反差。
 
 ---
