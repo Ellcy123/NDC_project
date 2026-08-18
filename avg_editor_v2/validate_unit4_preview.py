@@ -15,13 +15,13 @@ FLOW_PATH = HERE / "data" / "formal" / "unit_flow.json"
 
 EXPECTED_COUNTS = {
     "ChapterConfig": 5,
-    "SceneConfig": 27,
-    "ItemStaticData": 56,
-    "NPCStaticData": 16,
-    "NPCLoopData": 14,
-    "TestimonyItem": 20,
+    "SceneConfig": 28,
+    "ItemStaticData": 59,
+    "NPCStaticData": 19,
+    "NPCLoopData": 15,
+    "TestimonyItem": 19,
     "DoubtConfig": 12,
-    "ArtAssetConfig": 28,
+    "ArtAssetConfig": 29,
 }
 
 
@@ -136,12 +136,80 @@ def validate() -> list[str]:
         if item.get("canAnalyzed") != "false" or item.get("previewAnalysisRequired"):
             errors.append(f"Item {item_id}: identity-lock input must not use standard analysis")
 
-    for item_id in ("4117", "4118", "4212", "4213", "4214", "4703"):
+    for item_id in ("4118", "4212", "4214", "4703"):
         if "SHC-28-B17" not in str((item_map.get(item_id) or {}).get("ArtRequirement") or ""):
             errors.append(f"Item {item_id}: Sacred Heart batch code SHC-28-B17 is missing")
 
+    item_4213_requirement = str((item_map.get("4213") or {}).get("ArtRequirement") or "")
+    if (
+        "不得把它们画成与 4118、4212 共享 SHC-28-B17 生产批号" not in item_4213_requirement
+        or "不在瓶签上写“同配方”“同批次”" not in item_4213_requirement
+    ):
+        errors.append("Item 4213: must explicitly avoid presenting the old samples as SHC-28-B17 / same production batch")
+
+    for item_id in ("4217", "4218", "4219"):
+        if item_id not in item_map:
+            errors.append(f"Item {item_id}: approved Loop2 evidence is missing")
+
     art_asset_ids = {str(row["id"]) for row in unit4["ArtAssetConfig"]}
     scene_map = {str(scene["sceneId"]): scene for scene in unit4["SceneConfig"]}
+    expected_scenes_by_loop = {
+        1: {"4001", "4002", "4003"},
+        2: {"4011", "4012", "4013", "4014", "4015", "4016"},
+        3: {"4021", "4022", "4023", "4024", "4025", "4026", "4027", "4028", "4029"},
+        4: {"4031", "4032", "4033", "4034", "4035"},
+        5: {"4041", "4042", "4043", "4044", "4045"},
+    }
+    for loop, expected_scene_ids in expected_scenes_by_loop.items():
+        actual_scene_ids = {
+            str(scene["sceneId"])
+            for scene in unit4["SceneConfig"]
+            if int(scene.get("loop") or 0) == loop
+        }
+        if actual_scene_ids != expected_scene_ids:
+            errors.append(
+                f"Loop {loop}: expected scenes {sorted(expected_scene_ids)}, found {sorted(actual_scene_ids)}"
+            )
+
+    expected_art_split = {"explore": 18, "dialogue": 11}
+    for kind, expected in expected_art_split.items():
+        actual = sum(1 for row in unit4["ArtAssetConfig"] if row.get("sceneKind") == kind)
+        if actual != expected:
+            errors.append(f"ArtAssetConfig: expected {expected} {kind} rows, found {actual}")
+
+    required_scene_assets = {
+        "4012": "u4_exp_hospital_social_service_day",
+        "4016": "u4_avg_pretrial_courtroom_afternoon",
+        "4043": "u4_l5_end_building_stairs_pickup_night",
+        "4044": "u4_l5_end_moving_archive_van_review",
+    }
+    for scene_id, resource_name in required_scene_assets.items():
+        scene = scene_map.get(scene_id) or {}
+        resources = [
+            str(path).split("\\")[-1]
+            for path in scene.get("previewBackgroundImages")
+            or [(scene.get("location") or {}).get("backgroundImage") or ""]
+        ]
+        if resource_name not in resources:
+            errors.append(f"Scene {scene_id}: expected art resource {resource_name}, found {resources}")
+
+    forbidden_resource_tokens = ("u4_exp_miller_ward_day", "u4_l5_end_safehouse_archive_0420", "u4_l5_end_stairs_pickup_night")
+    if any(token in asset_id for asset_id in art_asset_ids for token in forbidden_resource_tokens):
+        errors.append("ArtAssetConfig: obsolete Unit4 ward/safehouse/stairs resource remains")
+
+    art_asset_map = {str(row["id"]): row for row in unit4["ArtAssetConfig"]}
+    required_action_layers = {
+        "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_harrison_outer_office_day": "u4_avg_harrison_outer_office_post_expose",
+        "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_morrison_aftermath_night": "u4_avg_morrison_door_post_expose",
+        "Art\\Scene\\Backgrounds\\EPI04\\u4_exp_mickey_office_night": "u4_l5_climax_mickey_fall_night",
+    }
+    for asset_id, action_asset_name in required_action_layers.items():
+        action_names = {
+            str(action.get("assetName") or "")
+            for action in (art_asset_map.get(asset_id) or {}).get("characterActionRequirements") or []
+        }
+        if action_asset_name not in action_names:
+            errors.append(f"ArtAsset {asset_id}: missing same-scene AVG action layer {action_asset_name}")
     for scene in unit4["SceneConfig"]:
         sid = str(scene["sceneId"])
         background = str((scene.get("location") or {}).get("backgroundImage") or "")
@@ -205,6 +273,14 @@ def validate() -> list[str]:
     for npc in unit4["NPCStaticData"]:
         if not npc.get("IconSmall") or not npc.get("IconLarge"):
             errors.append(f"NPC {npc.get('id')}: icon resource name is missing")
+    for npc_id in ("417", "418", "419"):
+        if npc_id not in npc_ids:
+            errors.append(f"NPC {npc_id}: approved Unit4 art profile is missing")
+    npc_map = {str(npc["id"]): npc for npc in unit4["NPCStaticData"]}
+    for npc_id in ("417", "418", "419"):
+        requirement = str((npc_map.get(npc_id) or {}).get("ArtRequirement") or "")
+        if not requirement.startswith("【Unit4 人物美术需求】") or "人物事实与美术边界见" in requirement:
+            errors.append(f"NPC {npc_id}: detailed art requirements were not imported")
 
     flow = json.loads(FLOW_PATH.read_text(encoding="utf-8"))["units"].get("Unit4")
     if not flow:
