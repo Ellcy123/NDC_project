@@ -30,17 +30,20 @@ EPISODE = "EPI04"
 
 AVG_SCENE_DOCS: dict[str, list[str]] = {
     "4001": ["AVG_L1_开篇_法院东翼_封锁.md"],
+    "4002": ["AVG_L1_Harrison外间办公室_指证后开柜.md"],
+    "4016": ["AVG_L2_法院预审法庭_下午.md"],
     "4021": ["AVG_L3_开篇_Zack事务所_深夜来电.md"],
+    "4023": ["AVG_L3_Morrison宅邸门口_指证后.md"],
     "4029": ["AVG_L3_开篇_Morrison宅邸门外_抵达.md"],
     "4031": ["AVG_L4_开篇_Zack事务所_对质与清退通知.md"],
     "4035": ["AVG_L4_衔接_OHara家后巷_井检口.md"],
     "4041": ["AVG_L5_开篇_四十二层外厅_抵达.md"],
     "4042": ["AVG_L5_高潮_Mickey办公室_坠落与救援.md"],
     "4043": [
-        "AVG_L5_终幕_四十二层楼梯与停车区_撤离.md",
+        "AVG_L5_终幕_大楼楼梯与停车区_撤离.md",
         "AVG_L5_终幕_法院档案车内_离开.md",
     ],
-    "4044": ["AVG_L5_终幕_安全地点_拆阅档案.md"],
+    "4044": ["AVG_L5_终幕_法院档案车内_拆阅档案.md"],
     "4045": ["AVG_L5_终幕_南区街道_OHara门外.md"],
 }
 
@@ -62,6 +65,51 @@ NPC_DEFS: dict[str, dict[str, str]] = {
     "414": {"name": "Sarah", "role": "3", "file": "sarah.md", "icon": "sarah", "asset": "Sarah"},
     "415": {"name": "夜班电话接线员", "role": "3", "file": "telephone_operator.md", "icon": "telephone_operator", "asset": "Operator"},
     "416": {"name": "法院档案管理员", "role": "3", "file": "court_archivist.md", "icon": "court_archivist", "asset": "Archivist"},
+    "417": {
+        "name": "社会服务部调档员",
+        "role": "3",
+        "file": "social_service_records_clerk.md",
+        "icon": "social_service_records_clerk",
+        "asset": "RecordsClerk",
+        "art": (
+            "【Unit4 人物美术需求】社会服务部调档员\n"
+            "- 中年女性，简单盘发，浅色立领衬衣搭配深色行政工作外套；不得穿医生白大褂、护士服或护士帽。\n"
+            "- 场景立绘三态：柜台办公、离场、扶住木质档案车返回；角色与档案车分层制作。\n"
+            "- 非重要 NPC，不要求完整行走动画；办公姿态与推车姿态配合位移即可。\n"
+            "- 对话头像由头顶裁至衣领，提供日常办公、察觉病历异常两个表情状态。\n"
+            "- 资源：social_service_records_clerk_small / social_service_records_clerk_big。"
+        ),
+    },
+    "418": {
+        "name": "退休法官",
+        "role": "3",
+        "file": "retired_judge.md",
+        "icon": "retired_judge",
+        "asset": "RetiredJudge",
+        "art": (
+            "【Unit4 人物美术需求】退休法官\n"
+            "- 独立角色资产，不与书记员、法警、法院路人或其他法官共用。\n"
+            "- 年长、保守、稳重，熟悉庭审程序；始终单独位于固定法官席。\n"
+            "- 需要独立角色立绘与庭审发言状态。\n"
+            "- 不使用 Harrison 的个人特征，避免被误认为同一人或亲属。\n"
+            "- 资源：retired_judge_small / retired_judge_big。"
+        ),
+    },
+    "419": {
+        "name": "记者群像",
+        "role": "3",
+        "file": "reporter_crowd.md",
+        "icon": "reporter_crowd",
+        "asset": "ReporterCrowd",
+        "art": (
+            "【Unit4 人物美术需求】记者群像（记者 A / B / C）\n"
+            "- 三名发言位共用一套基础单人立绘和一个 NPC 配置，不拆成三套基础角色资产。\n"
+            "- A 使用带 PRESS 卡的窄檐记者帽；B 使用 1928 年式折叠皮腔新闻相机；C 使用衣领高位的垂挂式 PRESS 证章。\n"
+            "- 三种配饰必须在头顶至衣领的头像裁切内可辨；不得出现现代麦克风、监听耳机、塑料证件套或电子闪光灯。\n"
+            "- 场景层始终表现记者群像整体行动；右侧对话框只切换当前发言者及其单一配饰。\n"
+            "- 资源：reporter_crowd_small / reporter_crowd_big，另需 A/B/C 三种配饰层。"
+        ),
+    },
 }
 
 SPECIAL_ASSET_DISPOSITIONS = {
@@ -82,6 +130,7 @@ NPC_TOKEN_TO_ID = {
     "watts": "404",
     "harold": "405",
     "archivist": "416",
+    "clerk": "417",
     "rosa": "407",
     "foster": "408",
     "whitfield": "409",
@@ -101,7 +150,7 @@ LOOP_TITLES = {
     5: "四十二层",
 }
 
-EXPOSE_SCENES = {1: "4002", 2: "4014", 3: "4023", 4: "4034", 5: "4042"}
+EXPOSE_SCENES = {1: "4002", 2: "4016", 3: "4023", 4: "4034", 5: "4042"}
 EXPOSE_NPCS = {1: "404", 2: "409", 3: "406", 4: "410", 5: "403"}
 EXPLORATION_ENTRY_SCENES = {1: "4002", 2: "4011", 3: "4027", 4: "4032", 5: "4042"}
 
@@ -253,7 +302,7 @@ def section_fragments(lines: list[str]) -> list[str]:
             cells = [clean_markdown(cell) for cell in line.strip("|").split("|")]
             if not cells or all(re.fullmatch(r":?-{2,}:?", cell or "-") for cell in cells):
                 continue
-            if cells[:2] in (["交互点", "内容"], ["阶段", "表现"]):
+            if cells[:2] in (["交互点", "内容"], ["阶段", "表现"], ["状态", "内容"]):
                 continue
             text = "：".join(cell for cell in cells if cell)
         else:
@@ -325,7 +374,12 @@ def avg_art_requirement(scene_id: str, name: str, loop: int, raw: dict[str, Any]
     infos = [section_info(sections) for _, sections, _ in documents]
     time_version = next((info.get("时段") for info in infos if info.get("时段")), "")
     if not time_version:
-        combined = " ".join([name] + [title for title, _, _ in documents] + [info.get("内部英文名", "") for info in infos])
+        combined = " ".join(
+            [name]
+            + [title for title, _, _ in documents]
+            + [path.stem for _, _, path in documents]
+            + [info.get("内部英文名", "") for info in infos]
+        )
         time_version = next((token for token in ("凌晨", "清晨", "深夜", "夜晚", "下午", "白天", "dawn") if token in combined), "按剧情时段")
         if time_version == "dawn":
             time_version = "黎明"
@@ -373,6 +427,35 @@ def scene_art_requirement(
         return avg_art_requirement(scene_id, name, loop, raw, avg_paths)
     kind = "非 Loop 终幕" if is_ending else "AVG" if is_cutscene else "探索"
     raise ValueError(f"SC{scene_id} {kind}场景缺少专用美术需求文档")
+
+
+def avg_character_action_requirements(
+    scene_id: str, loop: int, paths: list[Path]
+) -> list[dict[str, Any]]:
+    """Expose same-scene AVG performance requirements without inventing extra scenes."""
+    rows: list[dict[str, Any]] = []
+    for path in paths:
+        title, sections = markdown_sections(path)
+        info = section_info(sections)
+        requirement = section_text(
+            sections,
+            "演出顺序",
+            "画面",
+            "画面节奏",
+            "剧情作用",
+            "美术重点",
+            "边界",
+            "运行边界",
+        )
+        rows.append(
+            {
+                "name": title or path.stem,
+                "stage": f"L{loop} / SC{scene_id} 同场景 AVG 演出层",
+                "assetName": info.get("内部英文名", ""),
+                "requirement": requirement,
+            }
+        )
+    return rows
 
 
 def walk_testimonies(value: Any, loop: int, out: dict[str, dict[str, Any]]) -> None:
@@ -576,7 +659,7 @@ def build_npc_rows() -> list[dict[str, Any]]:
                 "Chapter": EPISODE,
                 "IconSmall": f"{icon}_small",
                 "IconLarge": f"{icon}_big",
-                "ArtRequirement": (
+                "ArtRequirement": info.get("art") or (
                     f"【Unit4 人物预览】{name}\n"
                     f"人物事实与美术边界见 剧情设计/Unit4/人物设定/{info['file']}；"
                     f"预配置头像资源：{icon}_small / {icon}_big。"
@@ -726,8 +809,7 @@ def build_scene_rows(
                 zip(resource_names, background_paths),
                 1,
             ):
-                art_assets.append(
-                    {
+                art_row: dict[str, Any] = {
                         "id": resource_path,
                         "Name": (
                             name
@@ -742,7 +824,13 @@ def build_scene_rows(
                         "Chapter": EPISODE,
                         "events": preview_events,
                     }
-                )
+                if not is_cutscene and not is_ending and AVG_SCENE_DOCS.get(scene_id):
+                    art_row["characterActionRequirements"] = avg_character_action_requirements(
+                        scene_id,
+                        loop,
+                        [AVG_DOC_DIR / filename for filename in AVG_SCENE_DOCS[scene_id]],
+                    )
+                art_assets.append(art_row)
 
     # Runtime NPCLoopData normally uses NPC+Loop as a four-digit row id.  Doris
     # appears in two different L3 scenes with distinct first-click dialogue, so
