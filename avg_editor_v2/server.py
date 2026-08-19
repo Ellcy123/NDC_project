@@ -9,6 +9,7 @@ AVG Editor v2 — fork of preview_new2 with edit capability.
   GET /data/*            → ./data/*
   GET /Assets/*          → D:/NDC/Assets/* （Unity 美术资源）
   GET /AVG/*             → D:/NDC_project/AVG/* （对话文件）
+  GET /ProjectImage/*    → D:/NDC_project/image/* （设计期美术素材，只读）
   GET /api/tables        → 配表列表
   GET /api/table/<name>  → 配表内容
   POST /api/save         → 写回单条配表条目（设计期字段编辑入口）
@@ -26,6 +27,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TABLE_DIR = os.path.join(HERE, 'data', 'table')
 NDC_ASSETS_DIR = r"D:\NDC\Assets"
 AVG_DIR = os.path.join(HERE, '..', 'AVG')
+PROJECT_IMAGE_DIR = os.path.normpath(os.path.join(HERE, '..', 'image'))
 PORT = 9529
 
 TABLES = {}
@@ -92,6 +94,16 @@ def _resolve_mount(path):
         fp = os.path.normpath(os.path.join(AVG_DIR, rel))
         avg_root = os.path.normpath(AVG_DIR)
         if not fp.startswith(avg_root):
+            return None
+        return fp
+    # /ProjectImage/* → ../image/*（道具摆放器的设计期素材）
+    if path.startswith('/ProjectImage/'):
+        rel = path[len('/ProjectImage/'):]
+        fp = os.path.normpath(os.path.join(PROJECT_IMAGE_DIR, rel))
+        try:
+            if os.path.commonpath([fp, PROJECT_IMAGE_DIR]) != PROJECT_IMAGE_DIR:
+                return None
+        except ValueError:
             return None
         return fp
     # 其他：相对 HERE 的静态文件
@@ -220,6 +232,7 @@ def main():
     print(f"[avg_editor_v2] {len(TABLES)} tables loaded")
     print(f"[avg_editor_v2] mount /Assets → {NDC_ASSETS_DIR}")
     print(f"[avg_editor_v2] mount /AVG → {os.path.normpath(AVG_DIR)}")
+    print(f"[avg_editor_v2] mount /ProjectImage → {PROJECT_IMAGE_DIR}")
     print(f"[avg_editor_v2] serving on http://localhost:{PORT}")
     srv = ThreadingHTTPServer(('localhost', PORT), Handler)
     try:
