@@ -68,8 +68,6 @@ Loop 1 其余场景中的 Watts、Harold、档案管理员均在各自对话开�
 
 | 角色 | 离场时机 | 离场动作 / 台词 | 文件 |
 |------|---------|----------------|------|
-| 米奇·唐纳利 | 法官宣布退庭、指证结束后 | [与 Rosa 先离开法庭，前往预审走廊] | L2_expose_whitfield.json |
-| 罗莎·马丁内斯 | 法官宣布退庭、指证结束后 | [与 Mickey 先离开法庭，前往预审走廊] | L2_expose_whitfield.json |
 | 记者群 | Emma 告知 Mickey 已在走廊、可以提供后续法律程序引语后 | [纷纷穿过法庭双开门涌向走廊] | L2_post_expose_court_result.json |
 
 ### 不计入项
@@ -86,12 +84,14 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 |------|---------|----------------|------|
 | 米奇·唐纳利 | 赢下预审后被记者群包围 | [护住 Rosa，被记者裹挟着向走廊尽头的电梯口退去，声音最终消失在人群中] | L2_post_expose_verdict.json |
 | 罗莎·马丁内斯 | 与 Mickey 一同被记者群包围 | [紧抱裁决书与 Isabel 的照片，被迫随人群退向电梯口] | L2_post_expose_verdict.json |
+| 记者群 | 围堵 Mickey 与 Rosa 追问庭审结果时 | [裹挟两人向走廊尽头的电梯口退去，随后一同离开当前画面] | L2_post_expose_verdict.json |
 
 ### 暗处现身
 
 | 角色 | 进场时机 | 登场动作 / 台词 | 文件 |
 |------|---------|----------------|------|
-| 哈罗德·莫里森 | Mickey 与 Rosa 的声音消失后，Zack 独自在走廊点烟时 | [走廊另一端的圆柱后缓缓走出人影；随后显示他靠在办公室门旁] / “……Brennan。” | L2_post_expose_verdict.json |
+| 扎克·布伦南 | Mickey、Rosa 与记者群离开当前画面后 | [从躲避记者的位置出现，靠着柱子松了口气并拿出打火机] / “呼……还好我跑得快……” | L2_post_expose_verdict.json |
+| 哈罗德·莫里森 | Zack 独自在走廊点烟时 | [走廊另一端的圆柱后缓缓走出人影；随后显示他靠在办公室门旁] / “……Brennan。” | L2_post_expose_verdict.json |
 
 ### 第二波离场
 
@@ -117,16 +117,29 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 
 ---
 
-## Loop 3 · Event — Morrison 宅邸紧急撤离
+## Loop 3 · Event — Morrison 宅邸门外爆炸与生还
 
-### 离开宅邸
+### 第一批进场
 
-| 角色 | 离场时机 | 离场动作 / 台词 | 文件 |
+| 角色 | 进场时机 | 登场动作 / 台词 | 文件 |
 |------|---------|----------------|------|
-| 米奇·唐纳利 | Emma 发现炸弹、Zack 朝客厅呼喊撤离后 | [扛起 Doris，从门厅撤出宅邸；越过安全边界后将她放下并护在身下] | L3_event_mansion_evacuation.json |
-| 多丽丝·莫里森 | Mickey 响应 Zack 的撤离警告后 | [被 Mickey 扛出宅邸，越过安全边界] / “什、什么？” | L3_event_mansion_evacuation.json |
+| 扎克·布伦南 | 无人门口发生爆炸、火光稍歇后 | [从宅邸门内跌撞冲出，站稳后立刻回头寻找其他人] / “Mickey！Doris！” | L3_event_mansion_exterior_escape.json |
+| 艾玛·奥马利 | 与 Zack 同时逃出 | [从浓烟中冲出，被呛得咳嗽，随即朝四周呼喊] / “Mickey！你们出来了吗？回一声！” | L3_event_mansion_exterior_escape.json |
 
-备注：Zack 与 Emma 同时从厨房撤出，但两人承担连续主视点，不作为需要额外立绘进退场的角色单列。
+### 第二批进场
+
+| 角色 | 进场时机 | 登场动作 / 台词 | 文件 |
+|------|---------|----------------|------|
+| 米奇·唐纳利 | Zack 准备返回屋内寻找时 | [扶着 Doris，从火光与浓烟中显出身影] | L3_event_mansion_exterior_escape.json |
+| 多丽丝·莫里森 | 与 Mickey 同时出现 | [几乎无法独自行走，由 Mickey 搀扶着走出] | L3_event_mansion_exterior_escape.json |
+
+### 离场角色
+
+无。本段结束后四人留在 SC4023，直接进入幸存者问询。
+
+### 不计入项
+
+Pierce 已在外围安全区域，但始终不进入当前镜头，不计作进场。
 
 ---
 
@@ -164,23 +177,13 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 
 ---
 
-## Loop 4 · Event — O'Hara 家临时停止执行
+## Loop 4 · Scene 4032 — O'Hara 家门口 / 清退对峙
 
-### 同时进场
-
-| 角色 | 进场时机 | 登场动作 / 台词 | 文件 |
-|------|---------|----------------|------|
-| 法院书记员 | Zack 挂断与 Watts 的电话、众人等待一段时间后 | [受 Watts 嘱托赶到门前，带来盖有法庭印章的临时停止执行回执] | L4_event_stop_order_delivery.json |
-| Lakeshore 专员 | 与法院书记员同时抵达 | [赶到 O'Hara 家门前，准备继续推动接收] | L4_event_stop_order_delivery.json |
-
-### 同时离场
+### 离场角色
 
 | 角色 | 离场时机 | 离场动作 / 台词 | 文件 |
 |------|---------|----------------|------|
-| 辖区警员群 | 法院书记员宣读命令、警员签署送达回执后 | [停止协助强行入屋，带队撤离] | L4_event_stop_order_delivery.json |
-| Lakeshore 专员 | 失去警方协助后 | [脸色铁青地跟随警员离开] | L4_event_stop_order_delivery.json |
-
-备注：`L4_scene4032_ohara.json` 中“警官离场”后又说明警察仍作为门口环境存在，因此那一次只按可交互角色或立绘退场理解，不视为物理离开；真正离开现场发生在法院命令送达之后。
+| 辖区警员 | 完成门口交涉，表示会留在外面等候后 | 对话 NPC 立绘离场；两名警员仍作为不可交谈的环境人物留在门外 / “悉听尊便。我们就在外面等着。” | L4_scene4032_ohara.json |
 
 ---
 
@@ -192,11 +195,6 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 |------|---------|----------------|------|
 | 艾玛·奥马利 | O'Hara 同意让 Sarah 暂住 Rosa 家后 | [牵起 Sarah 的手，拉开门，带她前往 Rosa 家] / “今晚你查你的，我带 Sarah 走。” | L4_event_sarah_relocation.json |
 | 莎拉·奥哈拉 | 与姑妈约定抵达后打电话报平安后 | [走到门外又回头告别，随后被 Emma 牵着渐行渐远] / “姑妈，等会我会给你打电话！” | L4_event_sarah_relocation.json |
-| 法院书记员 | 完成临时停止执行回执的送达后 | [拿着文件离开，返回法院完成最后的存档工作] | L4_event_sarah_relocation.json |
-
-### 原稿歧义
-
-本段结尾舞台指示写作“Watts 也拿着文件离开”，但上一段明确写明实际到场者是“受 Watts 嘱托的法院书记员”，Watts 本人只通过电话出现。为避免美术误画，本记录将离场者按法院书记员处理；后续若台本修订，应统一这两个称谓。
 
 ---
 
@@ -231,11 +229,12 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 
 ## Loop 5 · Ending — 楼下一层服务出口
 
-### 进场角色
+### 进场角色 / 载具
 
-| 角色 | 进场时机 | 登场动作 / 台词 | 文件 |
+| 角色 / 载具 | 进场时机 | 登场动作 / 台词 | 文件 |
 |------|---------|----------------|------|
-| 瓦茨 | 追兵因 Mickey 的坠落而转向正门、Zack 与 Emma 暂时脱险后 | [驾驶法院档案车从街角拐入，停在后侧服务出口，并从驾驶座侧面推开后门] / “抱歉来晚了！你们俩赶紧上后座！” | L5_ending_departure.json |
+| 瓦茨的法院档案车 | 追兵因 Mickey 的坠落而转向正门、Zack 与 Emma 暂时脱险后 | [从街角拐入，悄无声息地停在后侧服务出口] | L5_ending_departure.json |
+| 瓦茨 | 法院档案车停稳后 | [从驾驶座侧面推开后门，以车门作为掩护] / “抱歉来晚了！你们俩赶紧上后座！” | L5_ending_departure.json |
 
 ### 离场角色
 
@@ -250,16 +249,16 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 | L1 | 法院门口 / 东翼 | Mickey / Pierce | — | 两人从法院内走到入口处，被 Zack 与 Emma 发现 |
 | L2 | Zack 侦探事务所 | — | Mickey | 接下 Rosa 委托后先去法院 |
 | L2 | 圣心医院社会服务部 | 调档员（返回） | 调档员 | 暂离柜台取档，再推档案车回来 |
-| L2 | 预审法庭 | — | Mickey / Rosa / 记者群 | 退庭后分批进入走廊 |
-| L2 | 预审走廊 | Harold（暗处现身） | Mickey / Rosa / Harold | Harold 在记者群散开后现身，谈话后走楼梯离开 |
+| L2 | 预审法庭 | — | 记者群 | Emma 将记者引向走廊后，当前画面只剩 Emma 与 Whitfield |
+| L2 | 预审走廊 | Zack / Harold（暗处现身） | Mickey / Rosa / 记者群 / Harold | 三方被人群带离画面；Zack 与 Harold 依次现身，Harold 谈话后离开 |
 | L3 | Morrison 宅邸门外 | Doris | — | 突然开门呼救 |
-| L3 | Morrison 宅邸撤离 | — | Mickey / Doris | Mickey 扛 Doris 越过安全边界 |
+| L3 | Morrison 宅邸门外爆炸与生还 | Zack / Emma / Mickey / Doris | — | 初始画面无人；Zack、Emma 先逃出，Mickey 扶着 Doris 随后从烟火中出现 |
 | L3 | 宅邸门外临时询问区 | Pierce | Pierce | 强行接管问话，宣布结案后走向警车 |
 | L4 | Zack 侦探事务所 | Doris | Mickey | Mickey 摔门离开；Doris 随后急促登门 |
-| L4 | O'Hara 家 | 法院书记员 / Lakeshore 专员 | 辖区警员群 / Lakeshore 专员 | 法院命令送达后清退人员撤离 |
-| L4 | O'Hara 家 / Sarah 转移 | — | Emma / Sarah / 法院书记员 | Emma 护送 Sarah；书记员返回法院存档 |
+| L4 | O'Hara 家门口 / 清退对峙 | — | 辖区警员 | 对话 NPC 立绘离场；两名警员继续作为不可交谈的环境人物留在门外 |
+| L4 | O'Hara 家 / Sarah 转移 | — | Emma / Sarah | Emma 护送 Sarah 前往 Rosa 家 |
 | L5 | Donnelly & Associates 办公室 | Mickey / Emma | Mickey / Whale | Emma 冲入救 Zack；Mickey 主动坠落 |
-| L5 | 楼下一层服务出口 | Watts | — | 驾法院档案车从街角出现并接应 |
+| L5 | 楼下一层服务出口 | Watts / 法院档案车 | — | 档案车从街角出现；Watts 推开后门接应 |
 
 ---
 
@@ -277,12 +276,13 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 
 3. L2 预审法庭与走廊
    - 记者群从法庭双开门涌向走廊。
-   - Mickey 护住 Rosa，被人群一路挤向电梯口并逐渐消失。
-   - 人群散去后，Harold 从粗大圆柱或走廊阴影处现身；谈完后从另一侧楼梯离开。
+   - Mickey 护住 Rosa，二人连同记者群一起向电梯口退去并离开当前画面。
+   - 画面清空后，Zack 先从躲避记者的位置出现；随后 Harold 从粗大圆柱或走廊阴影处现身，谈完后从另一侧楼梯离开。
 
 4. L3 Morrison 宅邸
    - 宅邸大门突然从内侧打开，Doris 苍白、惊恐地出现在门口。
-   - 爆炸撤离时，Mickey 扛起 Doris 越过安全边界；落地后将她放下并护住。
+   - 爆炸与生还 AVG 先保持门口无人；爆炸结束后 Zack、Emma 第一批从屋内冲出，Mickey 扶着 Doris 第二批从烟火中出现。
+   - Mickey 只能搀扶 Doris，不得扛起她；第二批正式进场前不能提前露出二人的剪影或所在方向。
    - Pierce 从外围警戒区大步跨入临时询问区；结案后转身走向警车。
 
 5. L4 Zack 侦探事务所
@@ -290,10 +290,8 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
    - 稍后门外急促敲门，Doris 猛然推门出现；需保留棕色大衣袖口的烟熏痕迹和喘息状态。
 
 6. L4 O'Hara 家
-   - 法院书记员与 Lakeshore 专员同时抵达门前，角色立场需要通过站位区分。
-   - 警员群签署回执后撤离，Lakeshore 专员失去依仗、脸色铁青地跟随离开。
+   - 门口交涉结束后，辖区警员的对话 NPC 立绘离场；两名警员继续作为不可交谈的环境人物留在门外。
    - Emma 帮 Sarah 整理围巾后牵手离开；Sarah 走到门外回头呼喊，O'Hara 留在昏暗门厅挥手。
-   - 送达与离场角色应统一画成法院书记员，不要依据尾注误画成 Watts。
 
 7. L5 Donnelly & Associates 办公室
    - Mickey 从 Zack 身后开门走入，先表现疲倦和熟悉的温和姿态。
@@ -302,26 +300,26 @@ Whitfield 在开庭前说“失陪了”并转身走向另一个记者群，但�
 
 8. L5 服务出口
    - 空荡停车区先制造 Watts 爽约的错觉。
-   - 法院档案车从街角拐入并无声停靠；Watts 从驾驶座侧面推开后门，以车门作为掩护接应两人。
+   - 法院档案车从街角拐入并无声停靠。
+   - Watts 从驾驶座侧面推开后门，以车门作为掩护接应两人。
 
 ---
 
 ## 进出场对话文件索引
 
-| Talk / Expose 文件名 | 涉及的进出场 | 角色 |
+| Talk / Expose 文件名 | 涉及的进出场 | 角色 / 载具 |
 |----------------------|-------------|------|
 | L1_opening_courthouse_blockade.json | 进场 | Mickey / Pierce |
 | L2_opening_thirteen_day_hearing.json | 离场 | Mickey |
 | L2_scene4012_records_clerk.json | 离场 + 再进场 | 社会服务部调档员 |
-| L2_expose_whitfield.json | 离场 | Mickey / Rosa |
 | L2_post_expose_court_result.json | 离场 | 记者群 |
-| L2_post_expose_verdict.json | 离场 + 暗处现身 + 离场 | Mickey / Rosa / Harold |
+| L2_post_expose_verdict.json | 第一波离场 + 暗处现身 + 第二波离场 | Mickey / Rosa / 记者群 / Zack / Harold |
 | L3_opening_mansion_arrival.json | 进场 | Doris |
-| L3_event_mansion_evacuation.json | 离开宅邸 | Mickey / Doris |
+| L3_event_mansion_exterior_escape.json | 第一批进场 + 第二批进场 | Zack / Emma / Mickey / Doris |
 | L3_post_expose_official_suicide.json | 进场 + 离场 | Pierce |
 | L4_opening_office_confrontation.json | 离场 + 进场 | Mickey / Doris |
-| L4_event_stop_order_delivery.json | 进场 + 离场 | 法院书记员 / Lakeshore 专员 / 辖区警员群 |
-| L4_event_sarah_relocation.json | 离场 | Emma / Sarah / 法院书记员 |
+| L4_scene4032_ohara.json | 离场（对话 NPC 转为环境人物） | 辖区警员 |
+| L4_event_sarah_relocation.json | 离场 | Emma / Sarah |
 | L5_expose_mickey.json | 进场 | Mickey |
 | L5_post_expose_identity_and_fall.json | 进场 + 离场 | Emma / Mickey（Whale） |
-| L5_ending_departure.json | 进场 | Watts |
+| L5_ending_departure.json | 进场 | Watts / 法院档案车 |

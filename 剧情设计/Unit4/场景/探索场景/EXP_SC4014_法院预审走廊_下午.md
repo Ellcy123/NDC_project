@@ -11,12 +11,13 @@
 
 | 状态 | 内容 |
 |---|---|
-| 自由探索 | 只摆放 Zack、Emma 与 Whitfield；玩家在走廊询问院方口径并取得第一轮谎言，Rosa 与 Mickey 不入场 |
+| 自由探索开场 | Whitfield 在记者等候区接受 Reporter A 与一小群记者围访；Zack、Emma 穿过人群靠近 |
+| 分支问询 | Whitfield 认出 Emma 后遣散其他记者，只保留 Zack、Emma 与 Whitfield 进行普通 Talk；Rosa 与 Mickey 不入场 |
 | 散庭后 AVG | Mickey、Rosa 与 Zack 带着裁决书回到走廊；记者从法庭涌出，随后 Morrison 在侧门阴影处出现 |
 
 ## 运行阶段与衔接
 
-1. 自由探索阶段，Whitfield 在走廊公开维持“家属误用”口径；这里不进行正式开庭或指证。
+1. 自由探索阶段，Whitfield 先在走廊记者等候区公开维持“家属误用”口径；记者围访结束后再进入三人分支问询。这里不进行正式开庭或指证。
 2. 调查完成后转入 SC4016 正式预审法庭。
 3. SC4016 的指证和 Emma／Whitfield 庭后对话结束后，结果演出返回本场。
 4. Mickey 托住 Rosa 滑落的 Isabel 相框；记者围堵二人，Zack避到圆柱后，待人群散去再与 Morrison 交谈。

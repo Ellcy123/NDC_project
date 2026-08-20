@@ -13,7 +13,7 @@
 | 状态 | 内容 |
 |---|---|
 | 正式预审 | 退休法官、书记员、Whitfield、Mickey、Rosa 与 Zack 就位，进行三轮指证 |
-| 裁定后 | 其他人先离场；Emma 留在法庭内与 Whitfield 对话，记者随后转向走廊 |
+| 裁定后 | Mickey、Rosa 与 Zack 先离场；部分记者留在法庭内围住 Whitfield，Emma 将记者引向走廊后，法庭内只剩 Emma、Whitfield 与少数法院职员 |
 
 本场不属于自由探索。Whitfield 的普通 Talk 在 SC4014 预审走廊完成；庭后结果 AVG 在 Emma 与 Whitfield 对话结束后返回 SC4014。
 
