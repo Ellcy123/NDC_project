@@ -13,6 +13,7 @@ Use the image model for appearance only. Use deterministic local code for crop g
 - Treat rectangles as half-open: `[left, right)` and `[top, bottom)`.
 - Record whether coordinates use a top-left or bottom-left origin; never infer silently when the user supplied coordinates.
 - The AI-generated image never determines final size or final placement.
+- Plan the generation crop against the target model's legal canvas constraints before generation. Never send an illegal crop and repair its aspect ratio by stretching or center-cropping the returned image.
 - Paste only through the approved hard mask. Feathering may occur inward, but alpha must be zero outside the hard mask.
 - The final image must match the source dimensions and mode, preserve source alpha when present, and be byte-identical outside the hard mask.
 - Save the composed result as PNG. Lossy JPEG/WebP output cannot satisfy byte-identical outside-mask verification.
@@ -29,9 +30,11 @@ Before running it, call `codex_app__load_workspace_dependencies` and use the ret
 
 1. Read the source with `view_image` before editing.
 2. Identify the smallest edit rectangle that contains every pixel allowed to change.
-3. Add enough unchanged context for the model and registration. Prefer padding over a second localization algorithm.
+3. Add enough unchanged context for the model and registration, then expand the crop outward to the smallest legal generation canvas. For `gpt-image-2`, the crop width and height must both be multiples of 16, neither edge may exceed 3840 px, the long-edge-to-short-edge ratio must not exceed 3:1, and total pixels must be between 655,360 and 8,294,400. Prefer extending the crop into real source pixels; shift the crop within the source bounds when necessary. Use synthetic padding only when the source cannot supply a legal canvas, record the exact padding and target-to-canvas mapping, and never resize the authorized target region.
 4. If the user supplied a screenshot rather than coordinates, visually match it once, export one proposed crop, and verify it. Do not enter open-ended template-matching or FFT design loops.
 5. State the source path, coordinate origin, edit rectangle, context crop, preserved elements, and intended change in the confirmation example.
+
+Example: a `1730x520` target is wider than 3:1 and is not a legal `gpt-image-2` canvas. When source bounds permit, expand it with real surrounding pixels to `1744x592` instead: both edges are multiples of 16, the aspect ratio is about 2.95:1, and the target itself remains unscaled.
 
 Prepare a job:
 
@@ -51,12 +54,14 @@ Inspect `source_crop.png`, `hard_mask.png`, and `manifest.json` before generatio
 ### 2. Generate exactly one confirmed patch
 
 - Use the built-in `image_gen` tool by default and pass `source_crop.png` through `referenced_image_paths`. Do not use `num_last_images_to_include` when the crop has a local path.
+- When the generation surface exposes an output `size`, request the exact legal crop dimensions. If it does not expose `size`, explicitly request the crop's aspect ratio and framing, then validate the returned canvas before composition.
 - State that the input is the exact edit crop, list the requested change, repeat every invariant, and require the same framing and camera.
 - Ask the model to return the full edited crop, not an isolated object.
 - Make one generation call per confirmed iteration.
 - Image generation can take minutes. Announce the call, allow the long-running tool window, and wait for its completion instead of launching competing recovery work.
 - When the tool completes, use only its local `savedPath`. Never print, copy into prose, re-serialize, or inspect its Base64 payload.
 - Immediately copy the selected generated file into the job directory as `generated.png`. Do not leave a project asset only under `$CODEX_HOME/generated_images`.
+- Reject a returned patch whose aspect ratio differs from the prepared crop. Do not stretch it or center-crop it into compliance. A proportionally larger or smaller patch may be uniformly resampled only when its aspect ratio matches the prepared crop and the coordinate mapping remains exact; record that normalization in the manifest.
 - Do not write or redesign post-processing code after generation returns.
 
 Prompt skeleton:
