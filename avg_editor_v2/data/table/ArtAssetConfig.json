@@ -1409,7 +1409,12 @@
     "events": [
       {
         "id": "records_clerk_submit_seven_numbers",
-        "pendingTalkKey": "L2_event_submit_seven_numbers",
+        "carrier": "npc_branch",
+        "sourceTalkKey": "L2_scene4012_records_clerk",
+        "branchPath": "clerk_submit_permit",
+        "grantsItemIds": [
+          "4219"
+        ],
         "forced": false
       }
     ]
@@ -1737,14 +1742,16 @@
     "displayName": "u4_l5_open_42f_lobby_night",
     "category": "scene",
     "sceneKind": "dialogue",
-    "ArtRequirement": "【完整 AVG 场景图】四十二层外厅 / 抵达\n- 时间版本：午夜前版；背景资源：u4_l5_open_42f_lobby_night\n- 资产性质：非交互建立镜头；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4041 四十二层外厅 / 抵达\n- 画面重点：电梯指针停在 42 层；黄铜目录牌显示 Donnelly & Associates，与 1919 旧信封地址吻合。；外廊冷清，Mickey 办公室门临时未锁；消防楼梯门同时入画，为 Emma 后续上楼保留动线。；Zack 直接进入办公室，画面切至 SC4042。\n- 排除内容与演出边界：现行 state 的 init_scene 已改为 4041；本镜头播放后自动切入 4042，并只在 4042 恢复玩家控制。；4041 不是可导航地点，也没有必经点击步骤；不得新增门房、放行、破门、撬锁、潜入或门禁谜题。",
+    "ArtRequirement": "【完整 AVG 场景图】四十二层外厅 / 抵达\n- 时间版本：午夜前版；背景资源：u4_l5_open_42f_lobby_night\n- 资产性质：4034固定开场内的非交互建立镜头；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4041 四十二层外厅 / 抵达\n- 画面重点：电梯指针停在 42 层；黄铜目录牌显示 Donnelly & Associates，与 1919 旧信封地址吻合。；外廊冷清，Mickey 办公室门临时未锁；消防楼梯门同时入画，为 Emma 后续上楼保留动线。；Zack 直接进入办公室，画面切至 SC4042。\n- 排除内容与演出边界：L5的init_scene为4034；4041仅作为同一段开场中的嵌入式视觉转场，播放后自动切入4042，并只在4042恢复玩家控制。；4041不是可导航地点，也没有必经点击步骤；不得新增门房、放行、破门、撬锁、潜入或门禁谜题。",
     "assetStatus": "pending",
     "Chapter": "EPI04",
     "events": [
       {
-        "id": "forty_second_floor_arrival",
-        "pendingTalkKey": "L5_opening_42nd_floor_arrival",
-        "forced": true
+        "id": "unanswered_calls_and_arrival",
+        "hostSceneId": "4034",
+        "pendingTalkKey": "L5_opening_unanswered_calls",
+        "draftSourceTalk": "L5_opening_call_to_emma",
+        "role": "embedded_visual_transition"
       }
     ]
   }

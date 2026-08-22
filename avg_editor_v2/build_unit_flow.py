@@ -76,6 +76,17 @@ def scene_kind(scene: dict, art_by_id: dict) -> str:
     return art.get("sceneKind") if art else ""
 
 
+def scene_open_in_loop(scene: dict, loop_num: int) -> bool:
+    """Return preview membership, allowing a design-only cross-loop scene."""
+    explicit_loops = scene.get("openInLoops")
+    if isinstance(explicit_loops, list):
+        normalized = {first_number(value) for value in explicit_loops}
+        normalized.discard(0)
+        if normalized:
+            return loop_num in normalized
+    return first_number(scene.get("loop")) == loop_num
+
+
 def condition_label(condition: dict, items_by_id: dict, testimony_by_id: dict) -> str:
     typ = normalize_id(condition.get("type"))
     param = normalize_id(condition.get("param"))
@@ -234,7 +245,7 @@ def build(
         open_scenes = [
             s for s in scenes
             if normalize_id(s.get("sceneId")).startswith(unit_num)
-            and first_number(s.get("loop")) == loop_num
+            and scene_open_in_loop(s, loop_num)
             and s.get("isOpen") is not False
         ]
         open_scenes.sort(key=lambda s: first_number(s.get("sceneId")))

@@ -404,7 +404,8 @@ scenes:
     runtime_exit:
       action: change_scene
       target_scene_id: 4023
-      continuation: release_to_exploration
+      continuation: next_talk
+      next_talk: L3_event_mansion_exterior_escape
 - id: 4023
   name: 宅邸门外 / 爆炸后回收区
   type: free_exploration
@@ -429,10 +430,36 @@ scenes:
     interaction_required: false
     note: 爆炸后可选环境观察；不进 CASE BOARD，不挂疑点或指证，Pierce开枪QTE也不以玩家是否查看为门槛
     description: 门廊横梁上的卷轴、带配重下沿、控制绳与外侧门柱铜质绳扣仍保持连接；布面只有烟尘和轻度破损
+  event_triggers:
+  - id: mansion_exterior_escape
+    talk: L3_event_mansion_exterior_escape
+    forced: true
+    locks_player_control: true
+    runtime_binding:
+      adapter: chained_talk
+      previous_talk: L3_event_mansion_evacuation
+    required_beats:
+    - 爆炸发生后，Zack与Emma先冲出宅邸并确认Mickey与Doris尚未出现。
+    - Mickey扶着Doris从火光与浓烟中出现；本段只交代四人逃离火场的即时状态。
+    - Mickey将外套披到Doris肩上、Doris稍作安置后，才允许进入幸存者问询。
+    runtime_exit:
+      action: release_to_exploration
+  shared_dialogues:
+  - id: l3_survivors_debrief
+    talk: L3_scene4023_survivors
+    participant_npc_keys:
+    - L3_scene4023_mickey
+    - L3_scene4023_doris
+    entry_policy: first_npc_click_once_per_loop
+    runtime_binding:
+      adapter: shared_npc_dialogue
+      status: requires_system_implementation
   npcs:
     L3_scene4023_mickey:
       name: Mickey Donnelly
-      talk: L3_scene4023_mickey
+      talk: L3_scene4023_survivors
+      shared_talk_group: l3_survivors_debrief
+      entry_policy: first_npc_click_once_per_loop
       is_liar: false
       motive: 确认爆炸不是自己预期的行动，同时照看Doris并判断上层是否也把自己视为可接受损耗
       mindset: 第一次出现真实裂缝；对爆炸无知与恐惧是真的，但仍不公开Whale身份和枪杀责任
@@ -454,10 +481,12 @@ scenes:
         kind: collectible
         speaker: 403
         source_anchor: active outline / Loop3 / 爆炸后回收区 / Mickey / ⚪
-        acquisition_talk: L3_scene4023_mickey
+        acquisition_talk: L3_scene4023_survivors
     L3_scene4023_doris:
       name: Doris Morrison
-      talk: L3_scene4023_doris
+      talk: L3_scene4023_survivors
+      shared_talk_group: l3_survivors_debrief
+      entry_policy: first_npc_click_once_per_loop
       is_liar: true
       motive: 在宅邸被毁后尽快把死亡收束为自杀，既补充真实的检修来访，也否认 Harold 原本准备离家
       mindset: 惊魂未定却开始收紧家庭口径；真实检修记忆与“Harold准备留家”的谎言并存
@@ -482,13 +511,13 @@ scenes:
         kind: collectible_lie_anchor
         speaker: 406
         source_anchor: active outline / Loop3 / 爆炸后宅邸门口 / Doris谎言
-        acquisition_talk: L3_scene4023_doris
+        acquisition_talk: L3_scene4023_survivors
       - id: 4063001
         content: 自己没有申报故障，但 18:12 有两名穿市政工作服的人来检查壁炉管线。
         kind: collectible
         speaker: 406
         source_anchor: active outline / Loop3 / 爆炸后回收区 / Doris / ⚪
-        acquisition_talk: L3_scene4023_doris
+        acquisition_talk: L3_scene4023_survivors
       expose_lie_ids:
       - 4063004
       - 4063005
@@ -801,7 +830,7 @@ outline_coverage:
   mapping: exact
   primary_landing: scenes.4028.event_triggers.mansion_evacuation_and_explosion
   supporting_landings:
-  - scenes.4023
+  - scenes.4023.event_triggers.mansion_exterior_escape
 - beat_id: L3_B06
   source_anchor: active outline / Loop3 / 指证 Doris
   mapping: exact
@@ -833,7 +862,7 @@ outline_coverage:
   npc_name: Mickey
   scene_id: 4023
   npc_key: L3_scene4023_mickey
-  talk: L3_scene4023_mickey
+  talk: L3_scene4023_survivors
 - beat_id: L3_NPC_DORIS_POST
   marker_id: L3_NPC_DORIS_POST
   source_anchor: active outline / Loop3 / 爆炸后回收区 / NPC Doris
@@ -843,7 +872,7 @@ outline_coverage:
   npc_name: Doris
   scene_id: 4023
   npc_key: L3_scene4023_doris
-  talk: L3_scene4023_doris
+  talk: L3_scene4023_survivors
 - beat_id: L3_T_DORIS_RETURN
   marker_id: L3_T_DORIS_RETURN
   source_anchor: active outline / Loop3 / 自由探索 / 门厅、电话桌与客厅 / Doris / ⚪

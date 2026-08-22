@@ -4,7 +4,7 @@ meta:
   title: 四十二层
   episode: EPI04
   scene_ids:
-  - 4041
+  - 4034
   - 4042
   ending_scene_ids:
   - 4043
@@ -87,33 +87,43 @@ opening:
   type: cutscene_sequence
   runtime_root:
     table: ChapterConfig
-    init_scene: 4041
-    init_talk: L5_opening_42nd_floor_arrival
+    init_scene: 4034
+    init_talk: L5_opening_unanswered_calls
   sequence:
-  - event_id: forty_second_floor_arrival
-    talk: L5_opening_42nd_floor_arrival
-    scene_id: 4041
-    source_anchor: active outline / Loop5 / 开篇剧情 / 四十二层
+  - event_id: unanswered_calls_and_arrival
+    talk: L5_opening_unanswered_calls
+    draft_source_talk: L5_opening_call_to_emma
+    draft_normalization:
+      mode: fixed_linear_opening
+      canonical_path: Mickey办公室电话无人接听 → 致电Emma → 前往四十二层
+      branch_boundary: 草稿中的电话选项不进入固定开场；仅保留合流后的剧情结果与双方已说出的信息。
+    scene_id: 4034
+    source_anchor: active outline / Loop5 / 开篇剧情 / 四十二层；approved dialogue draft / Loop5 §1 / 4034电话桥段
+    approval_id: U4_DRAFT_STATE_SYNC_20260822
     cast:
     - Zack
+    - Emma
     required_beats:
+    - Zack仍在Margaret家，先拨打Mickey办公室电话但无人接听。
+    - Zack致电Emma，说明自己准备前往四十二层与Mickey把话说开；Emma不同行，约定次日再谈。
+    - Zack带着Patrick遗物匣离开；电梯抵达四十二层，空置外厅与虚掩办公室门作为同一段转场画面出现。
     - Zack 根据 Donnelly & Associates 旧信封地址独自来到四十二层。
     - Mickey 没有邀请 Zack，办公室暂时无人。
-    - 4041只承担地址抵达、外厅与楼梯动线的建立镜头，不提供玩家操作。
-    - 镜头结束后直接进入4042自由探索，不设置破门、潜入、撬锁或其他前置交互。
+    - 电话到抵达均为固定开场，不提供玩家操作；画面结束后直接进入4042自由探索，不设置破门、潜入、撬锁或其他前置交互。
     runtime_exit:
       action: change_scene
       target_scene_id: 4042
       continuation: release_to_exploration
-  player_control_restored_after: forty_second_floor_arrival
+  player_control_restored_after: unanswered_calls_and_arrival
 scenes:
-- id: 4041
-  name: 四十二层外厅 / 抵达
+- id: 4034
+  name: Margaret新家 / L5电话桥段
   type: cutscene
   design_tags:
   - opening
   - transition
-  description: 只承载Donnelly & Associates地址、空置外厅与楼梯动线的建立镜头；结束后自动进入4042，过程中不恢复玩家控制。
+  reuse_of: loop4.scene.4034
+  description: 仅承载L4指证后的电话桥段。Zack先确认Mickey办公室电话无人接听，再致电Emma说明会独自前往四十二层；随后以电梯、空置外厅与虚掩办公室门完成转场，自动进入4042，过程中不恢复玩家控制。
   evidence: []
   npcs: {}
 - id: 4042
@@ -133,7 +143,7 @@ scenes:
 
     '
   access:
-    from_scene: 4041
+    from_scene: 4034
     door_state: 临时未锁
     prohibited_interactions:
     - 破门
@@ -1183,9 +1193,10 @@ ending_sequence:
     - Emma 是否前往 Miller 庄园
 outline_coverage:
 - beat_id: L5_B01
-  source_anchor: active outline / Loop5 / 开篇剧情
-  mapping: exact
-  primary_landing: opening.sequence.forty_second_floor_arrival
+  source_anchor: active outline / Loop5 / 开篇剧情；approved dialogue draft / Loop5 §1 / 4034电话桥段
+  mapping: reordered
+  approval_id: U4_DRAFT_STATE_SYNC_20260822
+  primary_landing: opening.sequence.unanswered_calls_and_arrival
 - beat_id: L5_B02
   source_anchor: active outline / Loop5 / 自由探索与三条身份链
   mapping: exact
@@ -1220,16 +1231,16 @@ outline_coverage:
   primary_landing: ending_sequence.ending_4045
 narrative_continuity:
 - id: u4_l5_opening
-  source_anchor: Loop5 / 开篇剧情
-  entry_state: Zack独自抵达且办公室无人
+  source_anchor: Loop5 / 开篇剧情；approved dialogue draft / Loop5 §1
+  entry_state: Zack在Margaret家完成L4指证后，Mickey办公室尚无人接听，Emma在别处忙于采访与安置
   consumes:
   - u4_l4_post_expose
   required_beats:
-  - 先播放4041非交互建立镜头，再进入4042自由探索
+  - 先以固定电话桥段确认Mickey无人接听、Emma不同行，再以电梯与空置外厅转场进入4042自由探索
   exit_state: 三条身份链开放
   hands_off_to: u4_l5_identity_lock
   covers:
-  - opening.sequence.forty_second_floor_arrival
+  - opening.sequence.unanswered_calls_and_arrival
 - id: u4_l5_identity_lock
   source_anchor: Loop5 / 身份锁
   entry_state: Mickey尚未返回

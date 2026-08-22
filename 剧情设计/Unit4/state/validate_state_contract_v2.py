@@ -707,7 +707,10 @@ class Unit4StateV2Validator:
                 for npc in npcs.values():
                     add_carrier(npc.get("talk"), "npc", npc)
                 for event in scene.get("event_triggers", []) or []:
-                    add_carrier(event.get("talk"), "event_trigger", event)
+                    if event.get("carrier") == "npc_branch":
+                        add_carrier(event.get("source_talk"), "npc_branch", event)
+                    else:
+                        add_carrier(event.get("talk"), "event_trigger", event)
 
             post_expose = state.get("expose", {}).get("post_expose", {})
             add_carrier(post_expose.get("talk"), "post_expose", post_expose)
@@ -1468,6 +1471,59 @@ class Unit4StateV2Validator:
         post_doris = (loop3_scenes.get(4023, {}).get("npcs", {}) or {}).get(
             "L3_scene4023_doris", {}
         )
+        post_mickey = (loop3_scenes.get(4023, {}).get("npcs", {}) or {}).get(
+            "L3_scene4023_mickey", {}
+        )
+        post_blast_scene = loop3_scenes.get(4023, {})
+        shared_dialogue = next(
+            (
+                entry
+                for entry in post_blast_scene.get("shared_dialogues", []) or []
+                if entry.get("id") == flow_contract.get("post_blast_shared_talk_group")
+            ),
+            {},
+        )
+        expected_post_blast_talk = flow_contract.get(
+            "post_blast_lie_talk", "L3_scene4023_survivors"
+        )
+        if (
+            post_mickey.get("talk") != expected_post_blast_talk
+            or post_doris.get("talk") != expected_post_blast_talk
+            or post_mickey.get("shared_talk_group")
+            != flow_contract.get("post_blast_shared_talk_group")
+            or post_doris.get("shared_talk_group")
+            != flow_contract.get("post_blast_shared_talk_group")
+        ):
+            self.errors.append("loop3 post-blast NPCs must share the survivors Talk")
+        if (
+            shared_dialogue.get("talk") != expected_post_blast_talk
+            or set(shared_dialogue.get("participant_npc_keys", []) or [])
+            != {"L3_scene4023_mickey", "L3_scene4023_doris"}
+            or shared_dialogue.get("entry_policy") != "first_npc_click_once_per_loop"
+            or (shared_dialogue.get("runtime_binding", {}) or {}).get("adapter")
+            != "shared_npc_dialogue"
+        ):
+            self.errors.append("loop3 survivors shared dialogue contract is invalid")
+
+        exterior_escape = next(
+            (
+                event
+                for event in post_blast_scene.get("event_triggers", []) or []
+                if event.get("id") == flow_contract.get("exterior_escape_event_id")
+            ),
+            {},
+        )
+        if (
+            exterior_escape.get("talk") != "L3_event_mansion_exterior_escape"
+            or exterior_escape.get("forced") is not True
+            or (exterior_escape.get("runtime_binding", {}) or {}).get("adapter")
+            != "chained_talk"
+            or (exterior_escape.get("runtime_binding", {}) or {}).get("previous_talk")
+            != explosion.get("talk")
+            or (exterior_escape.get("runtime_exit", {}) or {}).get("action")
+            != "release_to_exploration"
+        ):
+            self.errors.append("loop3 exterior escape must chain from evacuation before exploration")
         pre_doris_ids = {
             entry.get("id") for entry in pre_doris.get("testimony_ids", []) or []
         }
@@ -1477,10 +1533,8 @@ class Unit4StateV2Validator:
         lie_entry = post_doris_entries.get(4063003, {})
         if 4063003 in pre_doris_ids or not lie_entry:
             self.errors.append("loop3 testimony 4063003 must move from scene 4027 to scene 4023 Doris")
-        if lie_entry.get("acquisition_talk") != flow_contract.get(
-            "post_blast_lie_talk", "L3_scene4023_doris"
-        ):
-            self.errors.append("loop3 testimony 4063003 must be acquired in the scene 4023 Doris Talk")
+        if lie_entry.get("acquisition_talk") != expected_post_blast_talk:
+            self.errors.append("loop3 testimony 4063003 must be acquired in the shared survivors Talk")
 
         doubt_4301 = next(
             (doubt for doubt in loop3.get("doubts", []) or [] if doubt.get("id") == 4301),
@@ -1540,30 +1594,37 @@ class Unit4StateV2Validator:
             self.errors.append("loop5 night doorman is forbidden by the active outline")
 
         loop5 = self.states.get(5, {})
-        scene_4041 = next(
-            (scene for scene in loop5.get("scenes", []) if scene.get("id") == 4041),
+        scene_4034 = next(
+            (scene for scene in loop5.get("scenes", []) if scene.get("id") == 4034),
             None,
         )
-        if scene_4041 is None:
-            self.errors.append("loop5 scene 4041 noninteractive establishing shot is required")
+        if scene_4034 is None:
+            self.errors.append("loop5 scene 4034 phone bridge is required")
         else:
-            if scene_4041.get("type") != "cutscene":
-                self.errors.append("loop5 scene 4041 must be a cutscene")
-            if scene_4041.get("evidence"):
-                self.errors.append("loop5 scene 4041 must not grant evidence")
-            if scene_4041.get("npcs"):
-                self.errors.append("loop5 scene 4041 must not expose NPC interactions")
+            if scene_4034.get("type") != "cutscene":
+                self.errors.append("loop5 scene 4034 phone bridge must be a cutscene")
+            if scene_4034.get("evidence"):
+                self.errors.append("loop5 scene 4034 phone bridge must not grant evidence")
+            if scene_4034.get("npcs"):
+                self.errors.append("loop5 scene 4034 phone bridge must not expose NPC interactions")
 
         opening = loop5.get("opening", {})
         sequence = opening.get("sequence", []) or []
         first_event = sequence[0] if sequence else {}
         runtime_exit = first_event.get("runtime_exit", {}) or {}
-        if opening.get("runtime_root", {}).get("init_scene") != 4041:
-            self.errors.append("loop5 opening init_scene must be 4041")
-        if first_event.get("scene_id") != 4041:
-            self.errors.append("loop5 opening first event must be bound to scene 4041")
+        normalization = first_event.get("draft_normalization", {}) or {}
+        if opening.get("runtime_root", {}).get("init_scene") != 4034:
+            self.errors.append("loop5 opening init_scene must be 4034")
+        if first_event.get("scene_id") != 4034:
+            self.errors.append("loop5 opening first event must be bound to scene 4034")
+        if (
+            first_event.get("talk") != "L5_opening_unanswered_calls"
+            or first_event.get("draft_source_talk") != "L5_opening_call_to_emma"
+            or normalization.get("mode") != "fixed_linear_opening"
+        ):
+            self.errors.append("loop5 opening must normalize the draft phone branch into a fixed sequence")
         if runtime_exit.get("action") != "change_scene" or runtime_exit.get("target_scene_id") != 4042:
-            self.errors.append("loop5 scene 4041 must transition directly to scene 4042")
+            self.errors.append("loop5 phone bridge must transition directly to scene 4042")
         if runtime_exit.get("continuation") != "release_to_exploration":
             self.errors.append("loop5 player control must be restored only after entering scene 4042")
 

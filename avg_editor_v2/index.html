@@ -4635,16 +4635,21 @@
         },
 
         scenesForLoop(unit, loop) {
-            // v2: 用显式 loop 字段归属 + isOpen 决定是否开放
-            // （一个场景=一个 Loop；isOpen 控制是否展示给玩家）
             const loopNum = parseInt(String(loop).replace(/[^\d]/g, '')) || 0;
             const unitPrefix = String(unit).replace(/[^\d]/g, '');
             return AppState.allScenes.filter(s => {
                 if (s.isOpen === false) return false;
-                if (Number(s.loop) !== loopNum) return false;
+                if (!this.sceneBelongsToLoop(s, loopNum)) return false;
                 // 跨 Unit 时 loop 单字段不够区分 Unit1 L1 vs Unit2 L1，用 sceneId 首位约束 unit
                 return String(s.sceneId).startsWith(unitPrefix);
             });
+        },
+
+        sceneBelongsToLoop(scene, loopNum) {
+            const explicit = Array.isArray(scene?.openInLoops)
+                ? scene.openInLoops.map(Number).filter(Number.isFinite)
+                : [];
+            return explicit.length ? explicit.includes(Number(loopNum)) : Number(scene?.loop) === Number(loopNum);
         },
 
         sceneBackgrounds(scene) {
@@ -7040,9 +7045,18 @@
             }
             if (node) node.pendingIsOpen = !!isOpen;
 
-            this.recordSceneFieldChange(loop, scene, 'isOpen', scene.isOpen === false ? false : true, !!isOpen);
-            if (isOpen && Number(scene.loop) !== Number(loop.loop)) {
-                this.recordSceneFieldChange(loop, scene, 'loop', scene.loop ?? '', Number(loop.loop));
+            const targetLoop = Number(loop.loop);
+            const canonicalLoop = Number(scene.loop);
+            const priorMembership = Array.isArray(scene.openInLoops)
+                ? scene.openInLoops.map(Number).filter(Number.isFinite)
+                : [canonicalLoop];
+            if (priorMembership.length === 1 && priorMembership[0] === canonicalLoop && canonicalLoop === targetLoop) {
+                this.recordSceneFieldChange(loop, scene, 'isOpen', scene.isOpen === false ? false : true, !!isOpen);
+            } else {
+                const nextMembership = isOpen
+                    ? [...new Set([...priorMembership, targetLoop])]
+                    : priorMembership.filter(value => value !== targetLoop);
+                this.recordSceneFieldChange(loop, scene, 'openInLoops', priorMembership, nextMembership);
             }
             this.render();
         },
@@ -8564,8 +8578,8 @@
                 this.addIssue(issues, loop, 'entry', 'error', `初始场景不存在：${this.readableScene(loop.initScene)}`, 'SceneConfig 中找不到该 sceneId。', 'ChapterConfig', loop.chapterId, 'initScene');
                 return;
             }
-            if (Number(scene.loop) !== Number(loop.loop)) {
-                this.addIssue(issues, loop, 'entry', 'warn', `初始场景不属于当前 Loop：${this.readableScene(loop.initScene)}`, `SceneConfig.loop=${scene.loop || '空'}，当前是 L${loop.loop}。`, 'SceneConfig', loop.initScene, 'loop');
+            if (!DataManager.sceneBelongsToLoop(scene, loop.loop)) {
+                this.addIssue(issues, loop, 'entry', 'warn', `初始场景不属于当前 Loop：${this.readableScene(loop.initScene)}`, `SceneConfig.loop=${scene.loop || '空'}，且 openInLoops 未包含 L${loop.loop}。`, 'SceneConfig', loop.initScene, 'openInLoops');
             }
             const opened = (loop.scenes || []).some(s => String(s.id) === String(loop.initScene));
             if (!opened) {
@@ -8585,8 +8599,8 @@
                     this.addIssue(issues, loop, 'scenes', 'error', `开放场景不存在：${this.readableScene(s.id)}`, 'UnitFlow 中出现了 SceneConfig 找不到的场景。', 'SceneConfig', s.id, 'sceneId');
                     return;
                 }
-                if (Number(scene.loop) !== Number(loop.loop)) {
-                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 loop 归属不一致：${this.readableScene(s.id)}`, `SceneConfig.loop=${scene.loop || '空'}，当前展示在 L${loop.loop}。`, 'SceneConfig', s.id, 'loop');
+                if (!DataManager.sceneBelongsToLoop(scene, loop.loop)) {
+                    this.addIssue(issues, loop, 'scenes', 'warn', `场景 loop 归属不一致：${this.readableScene(s.id)}`, `SceneConfig.loop=${scene.loop || '空'}，且 openInLoops 未包含 L${loop.loop}。`, 'SceneConfig', s.id, 'openInLoops');
                 }
                 if (!s.kind || s.kind === 'unknown') {
                     this.addIssue(issues, loop, 'scenes', 'warn', `场景缺少底图类型：${this.readableScene(s.id)}`, 'ArtAssetConfig.sceneKind 未识别，流程页无法判断探索/对白底图。', 'ArtAssetConfig', scene.backgroundImage || '', 'sceneKind');

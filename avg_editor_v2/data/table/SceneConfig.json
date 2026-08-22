@@ -7847,6 +7847,24 @@
           "videoLoop": "loop2",
           "videoScene": "",
           "pendingTalkKey": "L2_scene4012_records_clerk",
+          "branchEvents": [
+            {
+              "id": "records_clerk_submit_seven_numbers",
+              "branchPath": "clerk_submit_permit",
+              "unlockCondition": [
+                {
+                  "type": "1",
+                  "param": "4218"
+                }
+              ],
+              "submittedItemIds": [
+                "4117"
+              ],
+              "grantsItemIds": [
+                "4219"
+              ]
+            }
+          ],
           "previewStatus": "avg_pending"
         },
         "LoopTalkInfo": {
@@ -7879,7 +7897,21 @@
     "previewEvents": [
       {
         "id": "records_clerk_submit_seven_numbers",
-        "pendingTalkKey": "L2_event_submit_seven_numbers",
+        "carrier": "npc_branch",
+        "sourceTalkKey": "L2_scene4012_records_clerk",
+        "branchPath": "clerk_submit_permit",
+        "unlockCondition": [
+          {
+            "type": "1",
+            "param": "4218"
+          }
+        ],
+        "submittedItemIds": [
+          "4117"
+        ],
+        "grantsItemIds": [
+          "4219"
+        ],
         "forced": false
       }
     ]
@@ -8226,16 +8258,19 @@
           "videoEpisode": "EPI04",
           "videoLoop": "loop3",
           "videoScene": "",
-          "pendingTalkKey": "L3_scene4023_mickey",
-          "previewStatus": "avg_pending"
+          "pendingTalkKey": "L3_scene4023_survivors",
+          "sharedTalkGroup": "l3_survivors_debrief",
+          "entryPolicy": "first_npc_click_once_per_loop",
+          "previewStatus": "avg_pending_shared_once"
         },
         "LoopTalkInfo": {
           "id": "",
           "videoEpisode": "EPI04",
           "videoLoop": "loop3",
           "videoScene": "",
-          "pendingTalkKey": "L3_scene4023_mickey_repeat",
-          "previewStatus": "avg_pending_repeat_8LL_namespace"
+          "sharedTalkGroup": "l3_survivors_debrief",
+          "repeatPolicy": "disabled_after_shared_first_click",
+          "previewStatus": "not_applicable_until_shared_dialogue_adapter"
         },
         "IsinRight": "false",
         "ResPath": "Art\\Scene\\NPC\\EPI04\\SC4023_npc_Mickey1",
@@ -8266,16 +8301,19 @@
           "videoEpisode": "EPI04",
           "videoLoop": "loop3",
           "videoScene": "",
-          "pendingTalkKey": "L3_scene4023_doris",
-          "previewStatus": "avg_pending"
+          "pendingTalkKey": "L3_scene4023_survivors",
+          "sharedTalkGroup": "l3_survivors_debrief",
+          "entryPolicy": "first_npc_click_once_per_loop",
+          "previewStatus": "avg_pending_shared_once"
         },
         "LoopTalkInfo": {
           "id": "",
           "videoEpisode": "EPI04",
           "videoLoop": "loop3",
           "videoScene": "",
-          "pendingTalkKey": "L3_scene4023_doris_repeat",
-          "previewStatus": "avg_pending_repeat_8LL_namespace"
+          "sharedTalkGroup": "l3_survivors_debrief",
+          "repeatPolicy": "disabled_after_shared_first_click",
+          "previewStatus": "not_applicable_until_shared_dialogue_adapter"
         },
         "IsinRight": "false",
         "ResPath": "Art\\Scene\\NPC\\EPI04\\SC4023_npc_Doris1",
@@ -8300,7 +8338,31 @@
       "post_blast"
     ],
     "previewSceneKind": "explore",
-    "previewStatus": "structure_ready_art_pending"
+    "previewStatus": "structure_ready_art_pending",
+    "previewEvents": [
+      {
+        "id": "mansion_exterior_escape",
+        "pendingTalkKey": "L3_event_mansion_exterior_escape",
+        "previousTalkKey": "L3_event_mansion_evacuation",
+        "forced": true,
+        "runtimeExit": {
+          "action": "release_to_exploration"
+        }
+      }
+    ],
+    "sharedTalkGroups": [
+      {
+        "id": "l3_survivors_debrief",
+        "pendingTalkKey": "L3_scene4023_survivors",
+        "participantNpcLoopIds": [
+          "4033",
+          "40631"
+        ],
+        "entryPolicy": "first_npc_click_once_per_loop",
+        "runtimeAdapter": "shared_npc_dialogue",
+        "runtimeStatus": "requires_system_implementation"
+      }
+    ]
   },
   {
     "sceneId": "4024",
@@ -8529,6 +8591,12 @@
       {
         "id": "mansion_evacuation_and_explosion",
         "pendingTalkKey": "L3_event_mansion_evacuation",
+        "runtimeExit": {
+          "action": "change_scene",
+          "targetSceneId": "4023",
+          "continuation": "next_talk",
+          "nextTalkKey": "L3_event_mansion_exterior_escape"
+        },
         "forced": true
       }
     ]
@@ -8761,6 +8829,10 @@
     "Chapter": "EPI04",
     "loop": 4,
     "isOpen": true,
+    "openInLoops": [
+      4,
+      5
+    ],
     "NPCInfos": [
       {
         "id": "4104",
@@ -8818,7 +8890,24 @@
       "expose_location"
     ],
     "previewSceneKind": "explore",
-    "previewStatus": "structure_ready_art_pending"
+    "previewStatus": "structure_ready_art_pending",
+    "previewEvents": [
+      {
+        "id": "unanswered_calls_and_arrival",
+        "loop": 5,
+        "pendingTalkKey": "L5_opening_unanswered_calls",
+        "draftSourceTalk": "L5_opening_call_to_emma",
+        "embeddedVisualSceneIds": [
+          "4041"
+        ],
+        "forced": true,
+        "runtimeExit": {
+          "action": "change_scene",
+          "targetSceneId": "4042",
+          "continuation": "release_to_exploration"
+        }
+      }
+    ]
   },
   {
     "sceneId": "4035",
@@ -8860,22 +8949,20 @@
     "isOpen": false,
     "NPCInfos": [],
     "ItemIDs": [],
-    "note": "纯 AVG / 过场",
-    "ArtRequirement": "【完整 AVG 场景图】四十二层外厅 / 抵达\n- 时间版本：午夜前版；背景资源：u4_l5_open_42f_lobby_night\n- 资产性质：非交互建立镜头；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4041 四十二层外厅 / 抵达\n- 画面重点：电梯指针停在 42 层；黄铜目录牌显示 Donnelly & Associates，与 1919 旧信封地址吻合。；外廊冷清，Mickey 办公室门临时未锁；消防楼梯门同时入画，为 Emma 后续上楼保留动线。；Zack 直接进入办公室，画面切至 SC4042。\n- 排除内容与演出边界：现行 state 的 init_scene 已改为 4041；本镜头播放后自动切入 4042，并只在 4042 恢复玩家控制。；4041 不是可导航地点，也没有必经点击步骤；不得新增门房、放行、破门、撬锁、潜入或门禁谜题。",
+    "note": "嵌入式 AVG 视觉转场",
+    "ArtRequirement": "【完整 AVG 场景图】四十二层外厅 / 抵达\n- 时间版本：午夜前版；背景资源：u4_l5_open_42f_lobby_night\n- 资产性质：4034固定开场内的非交互建立镜头；人物和场景合成整图，不开放自由探索\n- 场景参考：SC4041 四十二层外厅 / 抵达\n- 画面重点：电梯指针停在 42 层；黄铜目录牌显示 Donnelly & Associates，与 1919 旧信封地址吻合。；外廊冷清，Mickey 办公室门临时未锁；消防楼梯门同时入画，为 Emma 后续上楼保留动线。；Zack 直接进入办公室，画面切至 SC4042。\n- 排除内容与演出边界：L5的init_scene为4034；4041仅作为同一段开场中的嵌入式视觉转场，播放后自动切入4042，并只在4042恢复玩家控制。；4041不是可导航地点，也没有必经点击步骤；不得新增门房、放行、破门、撬锁、潜入或门禁谜题。",
     "designTags": [
       "opening",
       "transition"
     ],
     "previewSceneKind": "dialogue",
-    "previewStatus": "avg_pending",
-    "previewEvents": [
-      {
-        "id": "forty_second_floor_arrival",
-        "pendingTalkKey": "L5_opening_42nd_floor_arrival",
-        "forced": true
-      }
-    ],
-    "isOpeningScene": true
+    "previewStatus": "avg_pending_embedded_visual",
+    "embeddedInOpening": {
+      "hostSceneId": "4034",
+      "hostTalkKey": "L5_opening_unanswered_calls",
+      "purpose": "电梯抵达与四十二层外厅转场"
+    },
+    "isOpeningScene": false
   },
   {
     "sceneId": "4042",

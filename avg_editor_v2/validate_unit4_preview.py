@@ -36,6 +36,15 @@ def is_unit4(name: str, row: dict) -> bool:
     return str(key or "").startswith("4")
 
 
+def scene_open_in_loop(scene: dict, loop: int) -> bool:
+    explicit_loops = scene.get("openInLoops")
+    if isinstance(explicit_loops, list):
+        normalized = {int(value) for value in explicit_loops if str(value).isdigit()}
+        if normalized:
+            return loop in normalized
+    return int(scene.get("loop") or 0) == loop
+
+
 def validate() -> list[str]:
     errors: list[str] = []
     tables = {name: load(name) for name in EXPECTED_COUNTS}
@@ -153,14 +162,14 @@ def validate() -> list[str]:
 
     art_asset_ids = {str(row["id"]) for row in unit4["ArtAssetConfig"]}
     scene_map = {str(scene["sceneId"]): scene for scene in unit4["SceneConfig"]}
-    expected_scenes_by_loop = {
+    expected_canonical_scenes_by_loop = {
         1: {"4001", "4002", "4003"},
         2: {"4011", "4012", "4013", "4014", "4015", "4016"},
         3: {"4021", "4022", "4023", "4024", "4025", "4026", "4027", "4028", "4029"},
         4: {"4031", "4032", "4033", "4034", "4035"},
         5: {"4041", "4042", "4043", "4044", "4045"},
     }
-    for loop, expected_scene_ids in expected_scenes_by_loop.items():
+    for loop, expected_scene_ids in expected_canonical_scenes_by_loop.items():
         actual_scene_ids = {
             str(scene["sceneId"])
             for scene in unit4["SceneConfig"]
@@ -170,6 +179,71 @@ def validate() -> list[str]:
             errors.append(
                 f"Loop {loop}: expected scenes {sorted(expected_scene_ids)}, found {sorted(actual_scene_ids)}"
             )
+
+    expected_open_scene_ids_by_loop = {
+        1: {"4002", "4003"},
+        2: {"4011", "4012", "4013", "4014", "4015"},
+        3: {"4022", "4023", "4024", "4025", "4026", "4027", "4028"},
+        4: {"4032", "4033", "4034"},
+        5: {"4034", "4042"},
+    }
+    for loop, expected_scene_ids in expected_open_scene_ids_by_loop.items():
+        actual_scene_ids = {
+            str(scene["sceneId"])
+            for scene in unit4["SceneConfig"]
+            if scene.get("isOpen") is not False and scene_open_in_loop(scene, loop)
+        }
+        if actual_scene_ids != expected_scene_ids:
+            errors.append(
+                f"Loop {loop}: expected open scenes {sorted(expected_scene_ids)}, found {sorted(actual_scene_ids)}"
+            )
+
+    l5_chapter = next((chapter for chapter in unit4["ChapterConfig"] if str(chapter.get("id")) == "405"), {})
+    l5_opening = (l5_chapter.get("openingSequence") or [{}])[0]
+    if (
+        l5_chapter.get("pendingInitTalkKey") != "L5_opening_unanswered_calls"
+        or str(l5_chapter.get("initScene")) != "4034"
+        or str(l5_chapter.get("openingScene")) != "4034"
+        or l5_opening.get("draftSourceTalk") != "L5_opening_call_to_emma"
+        or l5_opening.get("embeddedVisualSceneIds") != ["4041"]
+    ):
+        errors.append("Loop 5: ChapterConfig must use the 4034 unanswered-calls opening")
+    scene_4034 = scene_map.get("4034") or {}
+    if scene_4034.get("openInLoops") != [4, 5]:
+        errors.append("Scene 4034: must be explicitly open in Loop4 and Loop5")
+    scene_4041 = scene_map.get("4041") or {}
+    embedded_opening = scene_4041.get("embeddedInOpening") or {}
+    if (
+        scene_4041.get("isOpeningScene") is not False
+        or embedded_opening.get("hostSceneId") != "4034"
+        or embedded_opening.get("hostTalkKey") != "L5_opening_unanswered_calls"
+    ):
+        errors.append("Scene 4041: must remain an embedded visual of the 4034 opening")
+
+    clerk = next((npc for npc in unit4["NPCLoopData"] if str(npc.get("id")) == "4172"), {})
+    clerk_branch = ((clerk.get("TalkInfo") or {}).get("branchEvents") or [{}])[0]
+    if (
+        clerk_branch.get("id") != "records_clerk_submit_seven_numbers"
+        or clerk_branch.get("branchPath") != "clerk_submit_permit"
+        or clerk_branch.get("grantsItemIds") != ["4219"]
+    ):
+        errors.append("Records clerk: seven-number submission must remain an NPC branch")
+
+    survivors = [npc for npc in unit4["NPCLoopData"] if str(npc.get("id")) in {"4033", "40631"}]
+    if len(survivors) != 2 or any(
+        (npc.get("TalkInfo") or {}).get("pendingTalkKey") != "L3_scene4023_survivors"
+        or (npc.get("TalkInfo") or {}).get("sharedTalkGroup") != "l3_survivors_debrief"
+        or (npc.get("LoopTalkInfo") or {}).get("repeatPolicy") != "disabled_after_shared_first_click"
+        for npc in survivors
+    ):
+        errors.append("Scene 4023: Mickey and Doris must use one once-per-loop shared dialogue")
+    scene_4023 = scene_map.get("4023") or {}
+    exterior_event = next(
+        (event for event in scene_4023.get("previewEvents") or [] if event.get("id") == "mansion_exterior_escape"),
+        {},
+    )
+    if exterior_event.get("previousTalkKey") != "L3_event_mansion_evacuation":
+        errors.append("Scene 4023: exterior escape must chain from the evacuation event")
 
     expected_art_split = {"explore": 18, "dialogue": 11}
     for kind, expected in expected_art_split.items():
@@ -232,7 +306,17 @@ def validate() -> list[str]:
                 errors.append(f"Scene {sid} NPC {npc_id}: art resource name is missing")
             for field in ("TalkInfo", "LoopTalkInfo"):
                 entry = info.get(field) or {}
-                if not entry.get("id") and not entry.get("videoScene") and not entry.get("pendingTalkKey"):
+                disabled_shared_repeat = (
+                    field == "LoopTalkInfo"
+                    and entry.get("repeatPolicy") == "disabled_after_shared_first_click"
+                    and entry.get("sharedTalkGroup")
+                )
+                if (
+                    not disabled_shared_repeat
+                    and not entry.get("id")
+                    and not entry.get("videoScene")
+                    and not entry.get("pendingTalkKey")
+                ):
                     errors.append(f"Scene {sid} NPC {npc_id}: {field} has no explicit or pending entry")
 
     for chapter in unit4["ChapterConfig"]:

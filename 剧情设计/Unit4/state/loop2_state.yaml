@@ -182,8 +182,8 @@ scenes:
     description: 玩家依据七份正式病历完成的对照结果：五年内七个编号均对应死亡儿童，全部由Whitfield负责的Miller慈善项目经手，并反复出现相似低血糖反应、器官损伤及家属误用、加量或保存不当等归责记录；不证明七人使用同一完整配方或生产批次
     acquisition:
       kind: dialogue
-      talk: L2_event_submit_seven_numbers
-      carrier: event_trigger
+      talk: L2_scene4012_records_clerk
+      carrier: npc_branch
   npcs:
     L2_scene4012_records_clerk:
       name: 中央病案室调档员
@@ -204,7 +204,9 @@ scenes:
       testimony_ids: []
   event_triggers:
   - id: records_clerk_submit_seven_numbers
-    talk: L2_event_submit_seven_numbers
+    source_talk: L2_scene4012_records_clerk
+    branch_path: clerk_submit_permit
+    carrier: npc_branch
     forced: false
     player_initiated: true
     trigger_source: npc_special_dialogue
@@ -709,8 +711,8 @@ evidence_registry:
   note: Expose R2；Doubt 4202；七份正式病历展示后由4117更新生成
   acquisition:
     kind: dialogue
-    talk: L2_event_submit_seven_numbers
-    carrier: event_trigger
+    talk: L2_scene4012_records_clerk
+    carrier: npc_branch
 outline_coverage:
 - beat_id: L2_B01
   source_anchor: active outline / Loop2 / 开篇剧情
@@ -849,8 +851,8 @@ outline_coverage:
   evidence_delivery_required: true
   evidence_id: 4219
   acquisition_kind: dialogue
-  acquisition_talk: L2_event_submit_seven_numbers
-  acquisition_carrier: event_trigger
+  acquisition_talk: L2_scene4012_records_clerk
+  acquisition_carrier: npc_branch
 - beat_id: L2_E_CHARITY_PROCUREMENT_DISTRIBUTION
   source_anchor: approved L2 adjustment / 自由探索 / 法院会客室 / 圣心医院慈善项目采购与发放记录 / 对话获取 Mickey
   mapping: exact
