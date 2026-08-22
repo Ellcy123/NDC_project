@@ -16,12 +16,21 @@ A beautiful image that loses the core layout or key object is a failure. A corre
 
 Classify the scene from gameplay requirements before writing camera language:
 
-- `exploration`: the player must search, inspect, or collect props or evidence. Output exactly one `eye_level` prompt. It must state an eye-level three-point-perspective composition aligned with a standing eye line, camera height `1.7–1.8 meters`, and the horizon at the upper third. Treat all four clauses as hard requirements.
+- `exploration`: the player must search, inspect, or collect props or evidence. Output exactly one `eye_level` prompt. It must state an eye-level three-point-perspective composition, camera optical center `1.7–1.8 meters` above the floor, and the horizon at the upper third. Treat all three clauses as hard requirements.
 - `non_exploration`: no searchable evidence or prop interaction is required. Output exactly three prompts: `frontal`, `oblique`, and `overhead_45`. `overhead_45` means an approximately 45-degree downward camera angle, not a 45-degree horizontal rotation.
 
 Do not output alternative angles for an exploration scene. Do not omit any of the three required non-exploration views. A view set represents independent Midjourney jobs, never a multi-panel image.
 
 Keep scene identity, architecture, core objects, lighting state, exclusions, and rendering language invariant across non-exploration views. Rebuild only the camera-dependent foreground-middle-background and left-center-right relationships.
+
+## Canvas-use rule
+
+Classify `scene.canvas_use` independently from view count:
+
+- `story_progression`: fixed narrative/dialogue use; generate at `2:1`, then crop/reframe to the standard `16:10` delivery after MJ.
+- `primary_exploration`: main in-game exploration use; generate at `2:1`, protect a central safe area, and plan any additional Photoshop Firefly Generative Fill on the left and right after MJ for mouse-panning width.
+
+Midjourney generation ratio is always `2:1`, regardless of scene purpose. Treat `16:10` and every wider exploration ratio as post-MJ delivery decisions. If an exploration final size is absent, mark final width unresolved and hand off the extension plan. Preserve continuous walls, floor, ceiling, street, skyline, and light direction at both edges so Firefly can extend them safely.
 
 ## Character-free scene invariant
 
@@ -34,9 +43,23 @@ Keep character facts verbatim only in `original_requirement`. In the normalized 
 - characters waiting near a side door → a clearly visible secondary entrance and an unobstructed approach;
 - recent activity → displaced furniture, open doors, lighting state, footprints, or other non-human traces supported by the source.
 
-Always add `empty environment with no visible characters` to `hard`. Always list `people, named characters, crowds, human figures, faces, bodies, silhouettes` under `must_not_have` and express the same exclusion concisely in both prompt counterparts.
+Always add `empty environment with no visible characters` to `hard`. Always list `people, named characters, crowds, human figures, faces, bodies, silhouettes` under `must_not_have`. Do not repeat these tokens in positive prompt prose. Put them only once at the end of `prompt_en` as `--no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes`; express the same rule as non-submitted review text in `prompt_zh`.
 
 Do not use portrait or character references for scene content, composition, environment, or identity. A separate operator workflow may apply one only as a style reference when it explicitly guards against subject leakage; this exception never relaxes the empty-environment requirement.
+
+Character-scale validation is separate from generation. Use architectural proxies such as door height, handrails, desks, wainscot, windows, and stair risers. A temporary neutral silhouette may be placed over a generated candidate for scale review, but it must never enter positive prompt text, an uploaded composition reference, or the final background.
+
+## Background and layer contract
+
+Only permanent environmental storytelling may be baked into the scene background.
+
+- `base_environment_narrative`: permanent architecture, wear, fixed furnishings, lasting family/class/profession/incident traces; allowed in the base.
+- `interaction_closeup`: close-up evidence; separate.
+- `scan_overlay`: oil, residue, imprint, analysis highlight; separate.
+- `collectible_layer`: every item that can be picked up; separate.
+- `transient_story_layer`: characters, bodies, temporary or Loop-specific props, and anything that may disappear; separate.
+
+Do not describe separated content positively in `prompt_en` or `prompt_zh`. Reserve a visible, source-supported placement area when later alignment matters.
 
 ## 2. Requirement precision
 
@@ -84,26 +107,27 @@ Select only the clauses supported by the user's approved examples. Shorten the s
 
 Useful camera language includes:
 
-- the exact exploration lock: `eye-level three-point perspective aligned with a standing eye line, camera height 1.7–1.8 meters, horizon at the upper third`;
+- the exact exploration lock: `eye-level three-point perspective, camera optical center 1.7–1.8 meters above the floor, horizon at the upper third`;
 - `eye-level perspective` or a source-supported concrete camera height for non-exploration views;
-- `strict centered one-point perspective` for axial corridors;
 - `two-point perspective` for room corners and oblique exteriors;
 - `predominantly frontal view` for the non-exploration frontal variant;
 - `approximately 45-degree downward view` for the non-exploration overhead variant;
 - `horizon near the upper third` when a slightly elevated game-background view is needed;
 - `deep focus` when gameplay objects across the scene must remain readable.
 
-Use a focal-length feel when lens distortion changes the architecture: around `35–40mm` is a useful starting point for a readable corridor or room, but it is not universal. Choose shallow, medium-deep, or deep focus according to scene readability; do not paste `shallow depth of field` into a game background when it would blur a hard object.
+Use a focal-length feel when lens distortion changes the architecture: around `35–40mm` is a useful starting point for a readable corridor or room, but it is not universal. Choose a focus treatment that keeps all hard objects and gameplay routes readable.
 
 Validate a critical camera height through visible architecture. For example, if the camera must sit above waist-high wainscoting, the image should reveal the expected top surface or edge relationship; if that surface disappears, the camera may be too low even when the prompt says `eye-level`.
 
-Use `--ar 2:1` as the default for an NDC scene background only when no other aspect ratio is specified. Default the handoff to `parameters.model: "8.1"` unless the user explicitly requests another version for the current job. Do not append `--v 8.1` or another model-version parameter to the prompt text; the operator must select the declared version in the live Midjourney settings.
+Use `--ar 2:1` exactly once for every Midjourney scene prompt. Never replace it with `16:10` or a wider delivery ratio. Plan the `16:10` story crop or exploration extension only after MJ generation. Default the handoff to `parameters.model: "latest"` unless the user explicitly requests a specific model for the current job. Do not append a model-version parameter to the prompt text; the operator must use the current latest model in the live Midjourney settings.
+
+For day/night variants, generate one geometry master by default. Keep camera, crop, architecture, furniture, object placement, and routes locked; hand off manual Photoshop relighting and color work instead of asking Midjourney to regenerate the alternate time.
 
 ## 5. Exclusions
 
-Do not paste a universal negative block into every prompt beyond the mandatory character-free exclusion. Select other damaging or recurrent failure modes for the specific scene. The mandatory exclusion is:
+Do not paste a universal negative block into every prompt beyond the mandatory character-free exclusion. Select other damaging or recurrent failure modes for the specific scene. Encode the mandatory exclusion as a dedicated Midjourney parameter, not positive prose:
 
-`no people, named characters, crowds, human figures, faces, bodies, or silhouettes`
+`--no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes`
 
 Additional scene-specific exclusions may include:
 
@@ -133,7 +157,7 @@ hard:
   - horizon at the upper third
   - closed double courtroom door at the far end
   - long red runner leading toward the courtroom
-  - one searchable sealed docket folder on the nearest evidence table
+  - one nearest evidence table with a clear reserved placement area for a separately layered docket folder
   - no people or modern recording equipment
 soft:
   - small high clerestory windows on the right
@@ -146,7 +170,7 @@ flexible:
 Copy-ready `eye_level` prompt:
 
 ```text
-1928 Chicago courthouse evidence-search hallway in daylight, a single eye-level three-point-perspective game-background view aligned with a standing eye line, camera height 1.7–1.8 meters, horizon at the upper third, a closed carved double courtroom door anchoring the far end, a long muted red runner leading from the foreground to that door, one sealed docket folder clearly readable as a searchable object on the nearest evidence table, one waiting-room doorway and framed Neoclassical paintings along the left wall, a row of small high clerestory windows along the right wall, heavy 1920s wooden benches arranged along both sides, deep walnut wainscoting, matte plaster and a coffered ceiling, deep focus, parallel daylight beams crossing the floor, warm amber highlights against deep graphic shadows, Technicolor graphic illustration, expressive black ink contours, clean solid color planes, matte digital texture, stylized realism, no people, microphones, recording equipment, cables, readable text, or modern fixtures --ar 2:1
+1928 Chicago courthouse evidence-search hallway in daylight, a single eye-level three-point-perspective game-background view, camera optical center 1.7–1.8 meters above the floor, horizon at the upper third, a closed carved double courtroom door anchoring the far end, a long muted red runner leading from the foreground to that door, one nearest evidence table with a clear uncluttered placement area for a later interactive layer, one waiting-room doorway and framed Neoclassical paintings along the left wall, a row of small high clerestory windows along the right wall, heavy 1920s wooden benches arranged along both sides, deep walnut wainscoting, matte plaster and a coffered ceiling, deep focus, parallel daylight beams crossing the floor, warm amber highlights against deep graphic shadows, Technicolor graphic illustration, expressive black ink contours, clean solid color planes, matte digital texture, stylized realism, unoccupied environment --ar 2:1 --no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes, microphones, recording equipment, cables, readable text, modern fixtures
 ```
 
 The window type matters; the exact count does not.
@@ -158,11 +182,15 @@ The window type matters; the exact count does not.
 - Non-exploration uses exactly `frontal`, `oblique`, and `overhead_45`; the last clearly means a roughly 45-degree downward camera angle.
 - No `/imagine prompt:` prefix.
 - No model-version parameter.
-- Handoff model defaults to `8.1` unless the current user request explicitly overrides it.
+- Handoff model defaults to `latest` unless the current user request explicitly requests a specific model.
 - No unsupported image URLs in prompt text.
 - No contradiction between positive and exclusion clauses.
 - No character names, human actions, poses, crowds, figures, faces, bodies, or silhouettes as positive content in any prompt counterpart.
-- `hard`, `must_not_have`, and every `prompt_en` and `prompt_zh` enforce an empty environment with no visible characters.
+- `hard`, `must_not_have`, and every prompt counterpart enforce an empty environment with no visible characters; character tokens occur in `prompt_en` only inside the final dedicated `--no` parameter.
+- Positive prompt text contains no character scale, position, action, occupation, body, or silhouette language; scale uses architecture only.
+- Only permanent `base_environment_narrative` content is baked in; collectible, transient, close-up, and scan content remains separate.
+- Every MJ prompt uses `--ar 2:1`; `story_progression` has a post-MJ `16:10` crop-safe plan, and `primary_exploration` has a center-safe and optional post-MJ Photoshop Firefly horizontal-extension plan.
+- Day/night variants share the same geometry master and default to Photoshop manual relighting.
 - No decorative detail has more emphasis than a hard object.
 - Every view's scene description identifies foreground, middle ground, background, and major left-center-right anchors.
 - Architecture-defining masses have explicit connection, separation, overlap, or route relationships.
