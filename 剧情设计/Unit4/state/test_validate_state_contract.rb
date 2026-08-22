@@ -304,7 +304,7 @@ else
     def test_rejects_wrong_unit5_first_action
       mutate(
         "loop5_state.yaml",
-        'unit5_first_allowed_action: "进入 O\'Hara 家并开始屋内救援"',
+        'unit5_first_allowed_action: "进入 O\'Hara 家并发现她已经死亡"',
         'unit5_first_allowed_action: "直接前往医院质问"'
       )
 

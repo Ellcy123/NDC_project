@@ -1,8 +1,8 @@
 # Unit4 循环1 - 证据美术资产清单
 
 > 叙事主题：Harrison 的死亡疑云  
-> 正式证据总数：12 条（含 1 条分析结果）  
-> ID 范围：4111-4121、4701  
+> 正式证据总数：11 条（含 1 条分析结果）  
+> ID 范围：4111-4120、4701  
 > 数据源：`剧情设计/Unit4/state/loop1_state.yaml`、`avg_editor_v2/data/table/ItemStaticData.json`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md`  
 > 全局规范与跨循环复用要求：见 [Unit4 证据美术资产总览](./Unit4_证据美术资产_总览.md)
 
@@ -23,7 +23,6 @@
 | 4118 | 医院冷藏库留样试剂 | Item；Harrison 未完成的自首证物箱。 | 分析输入 |
 | 4119 | Harrison 亲笔资金流向图 | Item；Harrison 未完成的自首证物箱。 | 无 |
 | 4120 | 南区综合商业开发计划摘要 | Item；Harrison 未完成的自首证物箱。 | 无 |
-| 4121 | 1912 事故家庭索引 | Item；附在 4120 末页。 | 无 |
 
 ---
 
@@ -34,24 +33,24 @@
 - 类型/地点：Clue；法院档案室核对台。
 - `Name`：`Harrison公开日程与夜间出入对照` / `Harrison Public Schedule and After-Hours Access Cross-Check`
 - `Describe`：  
-  `公开日程没有安排这些夜间工作。将闭馆后访问记录与调阅流水逐项核对后，可以确认 Harrison 在统计范围内共有十七次闭馆后调阅；人工抽查的三次分别落在 Mary / Helen 改判案、Frank Kowalski 贷款案和圣心医院儿童死亡赔偿案。原始记录没有说明这些旧裁定由谁签署。`  
-  `Harrison's public schedule lists no such night work. Cross-checking the after-hours access log against the file ledger confirms seventeen after-hours reviews in the recorded period. The three manually verified entries concern the Mary/Helen appeal, Frank Kowalski's loan case, and the Sacred Heart child-death compensation cases. The source records do not identify who signed the old rulings.`
+  `公开日程没有安排这些夜间工作。闭馆后访问记录显示 Harrison 在两个月内共有十七次夜间调阅；调阅索引中，七次记录指向圣心医院项目争议案卷，三次指向南区地产裁定卷，七次指向法院旧赔偿裁定卷。原始记录没有说明这些旧裁定由谁签署。`  
+  `Harrison's public schedule lists no such night work. The after-hours access log records seventeen nighttime reviews over two months; in the file ledger, seven entries point to Sacred Heart program-dispute files, three to South Side property rulings, and seven to old court compensation rulings. The source records do not identify who signed the old rulings.`
 - `ShortDescribe`：  
-  `十七次闭馆后调阅集中在医院、贷款和旧赔偿案，公开日程没有对应安排。`  
-  `Seventeen after-hours file reviews focus on hospital, loan, and old compensation cases, with no matching public schedule.`
+  `十七次闭馆后调阅分别指向医院项目争议、南区地产和旧赔偿案，公开日程没有对应安排。`  
+  `Seventeen after-hours reviews point to hospital program disputes, South Side property, and old compensation cases, with no matching public schedule.`
 - 小玩法关系：`输出`。L1「Harrison 夜间调阅检索」以 4115 正式证据和 4122、4123 两张玩法附属页面为输入；玩家完成三轮时间窗匹配后生成 4111。4115 保留，4122、4123 不进入背包或正式 Item 表。
 
 重点（信息表达必不可少）：
 
 1. 详情图是三栏纸面核对结果：`PUBLIC SCHEDULE`、`AFTER-HOURS ACCESS LOG`、`FILE REVIEW LEDGER`。
-2. 三条人工核对线必须分别落到 Mary / Helen、Frank Kowalski、Sacred Heart Children 三类卷宗；最终汇总数字 `17 AFTER-HOURS REVIEWS` 清晰可读。
+2. 闭馆后访问栏保留十七条 Harrison 记录；调阅流水只分别标出 `SACRED HEART PROGRAM DISPUTES — 7`、`SOUTH SIDE PROPERTY RULINGS — 3`、`OLD COMPENSATION RULINGS — 7`，不出现 `CHILD`、`DEATH` 或具体患者信息。
 3. 不出现“由 Harrison 签署”或“自查”字样，避免提前泄露 4701。
-4. 4122、4123、4115 的纸张版式必须与玩法界面使用同一套资源。
+4. 不制作 `TOTAL — 17` 汇总框，也不写出 `7 + 3 + 7`；4122、4123、4115 的纸张版式必须与玩法界面使用同一套资源。
 
 美术参考（不影响推理）：
 
 - 1920 年代法院档案核对台，奶白表格纸、打字机栏头、铅笔圈选和细线连接。
-- 三份纸张可用黄铜夹和页签固定；完成态以克制的连续盖章和最终统计框收束。
+- 三份纸张可用黄铜夹和页签固定；完成态以克制的圈线与盖章收束，不替玩家写出加法结论。
 
 ---
 
@@ -137,19 +136,19 @@
 - 类型/地点：Item；法院档案室调阅台账。
 - `Name`：`Harrison两个月调阅索引` / `Harrison Two-Month File Review Index`
 - `Describe`：  
-  `法院档案室两个月的完整调阅流水，保留档号、调出与归还时间及手续栏。Harrison 的调阅集中在圣心医院儿童死亡、南区地产和旧赔偿案件；原表只记录程序事实，没有解释旧裁定由谁签署。`  
-  `The archive's complete two-month file-review ledger, preserving case numbers, checkout and return times, and procedural entries. Harrison's reviews cluster around Sacred Heart child deaths, South Side property cases, and old compensation claims. The source ledger records procedure only and does not identify who signed the rulings.`
+  `法院档案室两个月的完整调阅流水，保留档号、调出与归还时间及手续栏。其中七次记录指向圣心医院项目争议案卷，三次指向南区地产裁定卷，七次指向法院旧赔偿裁定卷。原表只记录程序事实，没有展开具体案情，也没有解释旧裁定由谁签署。`  
+  `The archive's complete two-month file-review ledger preserves case numbers, checkout and return times, and procedural entries. Seven entries point to Sacred Heart program-dispute files, three to South Side property rulings, and seven to old court compensation rulings. The source ledger records procedure only, without detailing the underlying cases or identifying who signed the old rulings.`
 - `ShortDescribe`：  
-  `两个月调阅流水集中在医院、南区地产和旧赔偿档案。`  
-  `The two-month ledger clusters around hospital, South Side property, and old compensation files.`
+  `调阅流水分为七次医院项目争议、三次南区地产和七次旧赔偿裁定。`  
+  `The ledger divides into seven hospital program disputes, three South Side property rulings, and seven old compensation rulings.`
 - 小玩法关系：`输入 + 后续分析输入`。作为 L1 夜间调阅检索输入之一，与 4122、4123 生成 4111；玩法后原物保留。之后单独整理案号与旧案目录，生成 4701。
 
 重点（信息表达必不可少）：
 
 1. 长表必须包含 `CASE NO.`、`CHECKED OUT`、`RETURNED`、`CLERK` 等程序栏。
-2. 医院、地产、赔偿三类档号通过页签或案名缩写可辨，但签署人栏不存在或未展开。
+2. 三类档号通过页签或案名缩写分组为 `SACRED HEART PROGRAM DISPUTES — 7`、`SOUTH SIDE PROPERTY RULINGS — 3`、`OLD COMPENSATION RULINGS — 7`；不出现儿童、死亡、患者姓名或病种。
 3. 与 4111 小玩法中的第三栏完全复用同一页面资源。
-4. 不能在原图上圈出 Harrison 本人签署的裁定；该信息只出现在 4701。
+4. 不设置总计框，也不能在原图上圈出 Harrison 本人签署的裁定；总数关系由玩家自己计算，签署者只在 4701 中揭示。
 
 美术参考（不影响推理）：
 
@@ -289,19 +288,20 @@
 - 类型/地点：Item；Harrison 未完成的自首证物箱。
 - `Name`：`南区综合商业开发计划摘要` / `South Side Commercial Redevelopment Summary`
 - `Describe`：  
-  `一份南区综合商业开发摘要，写明通过银行债务、司法裁定和地产接收逐步清空目标地块。文件出现 Tidewater 与 Lakeshore，但当前摘要没有把具体清退任务指向 O'Hara，也没有列出 Whale。`  
-  `A summary of the South Side commercial redevelopment plan, outlining the use of bank debt, court rulings, and property transfer to clear target parcels. Tidewater and Lakeshore appear in the document, but this summary neither singles out O'Hara nor names Whale.`
+  `一份南区综合商业开发摘要，写明通过银行债务、司法裁定和地产接收逐步清空目标地块。文件出现 Tidewater 与 Lakeshore；执行协调栏要求警局在当前南区地产接收行动中提供“特别协助”，手写边注注明：如不能提供协助，至少不得介入阻碍地产接收。摘要没有把具体清退任务指向 O'Hara，也没有列出 Whale、Mickey 或任何具体警员。`  
+  `A summary of the South Side commercial redevelopment plan, outlining the use of bank debt, court rulings, and property transfer to clear target parcels. It names Tidewater and Lakeshore. An execution-coordination section requests “special assistance” from the police during the current South Side property acquisitions; a handwritten note adds that, if assistance cannot be provided, police are not to interfere with property transfers. The summary does not single out O'Hara or name Whale, Mickey, or any specific officer.`
 - `ShortDescribe`：  
-  `南区地块将通过债务、裁定和地产接收被逐步清空。`  
-  `South Side parcels are to be cleared through debt, court rulings, and property transfer.`
+  `南区地块将通过债务、裁定、地产接收和警方配合被逐步清空。`  
+  `South Side parcels are to be cleared through debt, court rulings, property transfer, and police cooperation.`
 - 小玩法关系：`无`。为 L4 清退线和 L5 外卷提供前置信息。
 
 重点（信息表达必不可少）：
 
 1. 流程栏清楚显示 `DEBT → JUDGMENT → PROPERTY ACQUISITION`。
 2. `TIDEWATER`、`LAKESHORE` 两个机构名可读。
-3. 地图或地块表只显示南区范围和编号，不突出 O'Hara 地址。
-4. 不出现 Whale、Mickey、Sean 或水源维护。
+3. 执行协调栏显示 `POLICE COORDINATION — SPECIAL ASSISTANCE`；旁边以不同笔迹标注 `IF ASSISTANCE IS UNAVAILABLE — NO INTERFERENCE WITH PROPERTY TRANSFER`。
+4. 地图或地块表只显示南区范围和编号，不突出 O'Hara 地址。
+5. 不出现 Whale、Mickey、Sean、水源维护、具体警局单位或经手警员。
 
 美术参考（不影响推理）：
 
@@ -309,31 +309,7 @@
 
 ---
 
-### 4121 - 1912 事故家庭索引
-
-- 类型/地点：Item；附在 4120 末页。
-- `Name`：`1912事故家庭索引` / `1912 Accident Family Index`
-- `Describe`：  
-  `附在开发计划末页的家庭索引。1912 年事故赔偿编号后来又出现在“南区居民援助计划”的贷款、违约和房产接收记录中。当前索引只建立编号复用与受害家庭方向，不包含 Sean O'Malley 的特殊处置页。`  
-  `A family index attached to the redevelopment summary. Compensation numbers from the 1912 accident later reappear in South Side Resident Aid records for loans, defaults, and property transfers. The index establishes reused identifiers and affected families, but does not contain Sean O'Malley's special-treatment page.`
-- `ShortDescribe`：  
-  `1912事故赔偿编号后来被复用于南区贷款、违约和房产接收记录。`  
-  `1912 accident compensation numbers were later reused in South Side loan, default, and property records.`
-- 小玩法关系：`无`。为终幕 4517、4518 的 1912 材料提供前置编号认知。
-
-重点（信息表达必不可少）：
-
-1. 左栏为 `1912 ACCIDENT COMPENSATION NO.`，右侧能看到同编号在贷款、违约、接收栏重复出现。
-2. 只显示家庭编号与姓氏摘要，不出现 Sean 的单独处置命令。
-3. 编号体系需与 4517、4518 同源，待配置定码后全章统一。
-
-美术参考（不影响推理）：
-
-- 作为 4120 的附页，纸张、装订孔和企业抬头一致；部分编号被 Harrison 用铅笔连线。
-
----
-
-## L1 小玩法附属美术（不计入 56 条证据）
+## L1 小玩法附属美术（不计入 58 条正式证据）
 
 ### 4122 - Harrison 公开日程
 

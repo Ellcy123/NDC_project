@@ -1,8 +1,8 @@
 # Unit4 循环3 - 证据美术资产清单
 
 > 叙事主题：Morrison 之死  
-> 正式证据总数：12 条（均为原始物件、现场或环境证据）  
-> ID 范围：4311-4322  
+> 正式证据总数：14 条（均为原始物件、现场或环境证据）  
+> ID 范围：4311-4324  
 > 数据源：`剧情设计/Unit4/state/loop3_state.yaml`、`avg_editor_v2/data/table/ItemStaticData.json`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md`  
 > 全局规范与跨循环复用要求：见 [Unit4 证据美术资产总览](./Unit4_证据美术资产_总览.md)
 
@@ -16,6 +16,8 @@
 | 4312 | 伪造遗书 | Item；Morrison 书房书桌。 | 无 |
 | 4313 | Pierce 档案移交通知（档案袋装） | Item；Morrison 书房档案袋。 | 无 |
 | 4314 | 两只酒杯 | Clue；Morrison 宅邸门厅/电话桌与客厅。 | 无 |
+| 4323 | 宅邸常用物件的偏左摆放 | Envir；Morrison 宅邸书房，客厅延续同一动线。 | 无 |
+| 4324 | 门廊卷收式厚质防风帘 | Envir；Morrison 宅邸门外/爆炸后回收区。 | QTE环境铺垫，不作门槛 |
 | 4315 | 古巴雪茄烟蒂 | Clue；第二只酒杯旁的湿杯垫。 | 跨玩法输入 |
 | 4316 | 伪造市政煤气铅封与异常时钟接线 | Clue；Morrison 宅邸厨房检修区，爆炸前取得。 | 危机门控输入 |
 | 4321 | 煤气阀门异常开启痕迹 | Envir；Morrison 宅邸煤气阀。 | 危机门控输入 |
@@ -126,6 +128,58 @@
 美术参考（不影响推理）：
 
 - 厚底威士忌杯、木质电话桌/边几、暖色台灯；水珠与湿杯垫在近景中清楚但自然。
+
+---
+
+### 4323 - 宅邸常用物件的偏左摆放
+
+- 类型/地点：Envir；Morrison 宅邸书房，门厅客厅延续同一生活动线。
+- `Name`：`宅邸常用物件的偏左摆放` / `Left-Biased Placement of Everyday Household Objects`
+- `Describe`：  
+  `Morrison 宅邸书房的墨水瓶、警徽盒和常用杯垫长期集中在座位左侧的顺手区域，桌面相应位置留下反复取放形成的磨痕；客厅日常酒杯的位置延续同一偏左动线。这能证明宅邸内存在稳定的左侧使用习惯，但不能单独确认这一习惯由 Harold、Doris 或哪位住户形成，也不能直接判定任何人的惯用手。`  
+  `In the Morrison study, the inkwell, badge case, and everyday coaster have long been kept within easy reach on the left side of the seat, with repeated handling marks on the corresponding part of the desk; the usual glass position in the sitting room continues the same left-biased pattern. This establishes a stable left-side household routine, but does not identify whether Harold, Doris, or another resident formed it, nor directly establish anyone's handedness.`
+- `ShortDescribe`：  
+  `墨水瓶、警徽盒和常用杯垫长期集中在左侧顺手区，磨痕显示并非临时摆放。`  
+  `The inkwell, badge case, and everyday coaster have long occupied the left-hand reach zone; wear marks show the arrangement is not temporary.`
+- 小玩法关系：`无`。作为爆炸前必查的环境观察，不收集、不进 CASE BOARD、不参与指证，也不与 4311 自动合成；Harold 惯用左手仍由 Doris 的 4063002 生活证词确认。
+
+重点（信息表达必不可少）：
+
+1. 书房座位、桌面左侧顺手区、墨水瓶、警徽盒和常用杯垫的空间关系必须能在同一构图中读懂。
+2. 左侧桌面应有长期反复取放留下的磨亮、浅印或纸张避色差，不能像临时把物件挪到左边。
+3. 客厅第一只日常酒杯的位置延续同一偏左动线，但不新增第二个 4323 交互点。
+4. 不出现 `LEFT-HANDED`、Harold 姓名标注或系统自动结论，也不把本观察与右手枪位放进同一张答案式对照图。
+
+美术参考（不影响推理）：
+
+- 低瓦数台灯下的书桌环境局部，材质磨损克制、生活化；物件本身保持普通，不做高亮谜题陈列。
+- 详情图以空间摆放和长期磨损为主，不制作可收集的独立物品图。
+
+---
+
+### 4324 - 门廊卷收式厚质防风帘
+
+- 类型/地点：Envir；Morrison 宅邸门外/爆炸后回收区。
+- `Name`：`门廊卷收式厚质防风帘` / `Roll-Down Heavy Porch Wind Curtain`
+- `Describe`：  
+  `Morrison宅邸外门廊横梁装有卷收式厚质防风帘；带配重的下沿连接控制绳，绳索收束在外侧门柱铜质绳扣上。爆炸后布面仅有烟尘和轻度破损，卷轴、控制绳与配重连接仍完整。`  
+  `A heavy roll-down wind curtain is mounted beneath the outer porch beam of the Morrison residence. Its weighted lower edge is linked to a control rope secured around a brass cleat on the outer porch post. After the explosion, the fabric bears soot and minor damage, while the roller, rope, and weighted connection remain intact.`
+- `ShortDescribe`：  
+  `卷轴、配重下沿和外侧门柱绳扣连接完整，爆炸后仍可活动。`  
+  `The roller, weighted lower edge, and outer-post cleat remain connected and operable after the explosion.`
+- 小玩法关系：`QTE环境铺垫，不作门槛`。4029 抵达镜头不可漏地建立装置位置；4023 爆炸后允许玩家查看其现状。它不收集、不进 CASE BOARD、不挂疑点或指证；Pierce 开枪 QTE 不以玩家是否查看为触发条件。
+
+重点（信息表达必不可少）：
+
+1. 同一构图中清楚表现横梁卷轴、厚质帘体、带配重下沿、控制绳和外侧门柱铜质绳扣的连接关系。
+2. 爆炸后布面只表现烟尘与轻度破损；卷轴、控制绳和配重连接仍完整。
+3. 不出现拉绳撞偏持枪手臂、防弹、制服 Pierce 或其他答案式提示。
+4. SC4029 爆炸前抵达镜头与 SC4023 爆炸后状态必须保持装置位置和结构连续。
+
+美术参考（不影响推理）：
+
+- 1920 年代宅邸门廊的厚帆布或厚棉布防风设施，黄铜绳扣与木质或金属配重杆有日常使用磨损。
+- 详情图以客观结构为主，不制作成武器或机关说明图。
 
 ---
 

@@ -105,7 +105,7 @@ module Unit4StateContract
       "counts_as_loop" => false,
       "chapter_end_after" => "ending_4045",
       "next_unit_entry" => "enter_ohara_house",
-      "unit5_first_allowed_action" => "进入 O'Hara 家并开始屋内救援",
+      "unit5_first_allowed_action" => "进入 O'Hara 家并发现她已经死亡",
       "unit5_outline_first_action_prefix" => "Zack 与 Emma 进入屋内"
     }.freeze
 

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Unit4 结构一致性复验</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>Unit4 结构一致性复验</h1>
+    <p class="meta">2026-08-22｜范围：五份MD台本、loop1–5 state、证据文档、ItemStaticData与现有state validator。</p>
+    <section class="summary">
+      <div><strong>结论</strong><span>未完全通过</span></div>
+      <div><strong>正式证物集合</strong><span>59项一致，无重复/缺失</span></div>
+      <div><strong>确认问题</strong><span>2项</span></div>
+      <div><strong>本轮已解决</strong><span>4217、4213、4012001、4035001、4211语法</span></div>
+      <div><strong>已驳回误报</strong><span>1项</span></div>
+    </section>
+
+    <h2>本轮已解决</h2>
+    <article class="issue"><h3>4217｜Isabel的病历本</h3><p>已统一为Rosa长期保管，并在L2场景4011的自由Talk中从随身旧包交给Zack。L1不再设置Mickey交付伏笔，Rosa的grants_evidence已补4217；复跑校验后不再出现4217错误。</p></article>
+    <article class="issue"><h3>4213｜同配方药瓶封签组</h3><p>大纲、指证表和证据总表已统一使用正式名称；人物姓名与两瓶旧样本的来源、证明边界保留在说明正文。复跑校验后不再出现4213登记错误。</p></article>
+    <article class="issue"><h3>4012001｜Rosa用药陈述</h3><p>已删除没有state登记且不参与疑点或指证的@get标记，Rosa原有对白与信息完整保留。</p></article>
+    <article class="issue"><h3>4035001｜Mickey账户防线</h3><p>Mickey回场段已拆为独立Talk，现有账户防线台词后正式取得4035001，再依照state无缝续接Expose。</p></article>
+    <article class="issue"><h3>4211｜指证指令语法</h3><p>已清除全角引号和零宽字符，证物名称与路由不变。</p></article>
+    <article class="issue"><h3>L3–L5 known_facts</h3><p>已恢复为L2结尾的完整原文，事实边界不变，并满足严格逐字继承规则。</p></article>
+
+    <h2>优先处理</h2>
+
+    <h2>可直接做的结构修正</h2>
+    <article class="issue"><h3>4014/4016：两个设计标签未进入合同词表</h3><p><code>dialogue</code>与<code>formal_hearing</code>未列入state_contract允许标签。</p></article>
+    <article class="issue"><h3>Foster旧样本陈述：缺少marker覆盖</h3><p>大纲把配方比对边界写成可识别的证词标记，但state没有对应testimony coverage。需要统一其“证物说明”或“正式证词”身份。</p></article>
+
+    <h2>通过项</h2>
+    <ul>
+      <li>4213在4013由Foster交付，早于4016指证，取得链合法。</li>
+      <li>其余L1–L5指证证物与跨Loop派生未发现先使用后取得。</li>
+      <li>state、五份证物详细卡与ItemStaticData均有59个Unit4正式证物，无重复或缺失。</li>
+    </ul>
+
+    <h2>驳回的误报</h2>
+    <p>连续两条<code>@evidence</code>按项目语义表示共同出示两个证物，不是任意一件单独正确；L2法庭段不列为问题。</p>
+
+    <h2>校验器原始结果</h2>
+    <p>现有<code>validate_state_contract_v2.py</code>运行结果为FAIL，共9条原始错误；去除重复根因后，对应本报告中的4217、4213命名、known_facts、设计标签和证词marker问题。</p>
+  </main>
+</body>
+</html>

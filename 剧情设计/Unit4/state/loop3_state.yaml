@@ -13,14 +13,14 @@ player_context:
   - Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
-  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
+  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号和医院冷藏库官方留样
   - Rosa 没有在规定剂量之外使用第十四次完整剂量；回收药瓶实际消耗量与十三次规定剂量吻合
   - Harrison 的七个编号对应五年内七名死亡儿童，七人均由 Whitfield 负责的 Miller 慈善项目经手，并出现相似症状与重复的家属归责方式
-  - Giuseppe与Bridget的两瓶旧药样本与Harrison官方留样配方一致，但不能确认同一生产批次，也不能推及七名儿童
+  - Giuseppe与Bridget的两只旧药瓶，其残留物、封签和编号相互吻合，配方一致；但仅凭旧样本不能确认它们与Isabel的药属于同一生产批次，也不能证明七名儿童都使用了同一配方
   - Isabel病历发放号、Rosa回收药瓶与Harrison医院官方留样属于同一采购记录、同一生产批次和同一配方
   - Harrison医院官方留样从冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱；样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不开启样本格，直至Foster签收；化验后仍显示连续使用风险
   - 现有材料不能证明另外六名儿童使用了与Isabel完全相同的配方或生产批次
-  - Whitfield 是正式项目执行层，不能再以家属加量、孤立事故或家庭保存不当推卸本案责任
+  - Whitfield 的姓名出现在项目负责人、采购执行、入库签收与慈善发放责任栏；他不能再以家属加量、孤立事故或家庭保存不当推卸本案责任
   - 执行层副本缺失第十九页，更高层特别采购批准暂时没有可核验的签字原件
   - Mickey 为 Rosa 争取窗口、担任辩护并帮助取得暂停追究的结果，这份帮助真实
   - Mickey 同时主动把公开压力集中在 Whitfield，使调查暂时停在可牺牲的执行层
@@ -86,6 +86,7 @@ opening:
     - 23:30，Zack 与 Emma 在宅邸门口撞见 Mickey。
     - Mickey 强制声称自己也刚到，是 Morrison 把他叫来的。
     - 该说法此时不能立刻证伪，但属于 Mickey 的掩护谎言。
+    - 镜头清楚建立门廊卷收式厚质防风帘的卷轴、配重下沿、控制绳与外侧门柱绳扣；这里只作视觉铺垫，不提供调查交互。
     claims:
     - id: mickey_just_arrived
       speaker: Mickey
@@ -139,6 +140,7 @@ scenes:
       - 4313
       - 4314
       - 4315
+      - 4323
     locked_feedback: 先把书房和客厅现场完整记录下来；煤气味正在变重，进入检修区后不会再有时间回头。
   evidence:
   - id: 4314
@@ -229,6 +231,13 @@ scenes:
     pickup: true
     note: 不参与本轮击穿；只证明提前接管压力，不证明 Harold 的外出意图
     description: 要求 Harold 次日上午交出旧案文件与配枪登记；签发早于 Whitfield 被带走补充笔录
+  - id: 4323
+    name: 宅邸常用物件的偏左摆放
+    type: envir
+    pickup: false
+    interaction_required: true
+    note: 爆炸前必查环境观察；不进 CASE BOARD，不直接确认 Harold 的惯用手
+    description: 书房墨水瓶、警徽盒、常用杯垫及长期磨损位置稳定集中在座位左侧；客厅日常酒杯位置延续同一动线，但现场不能确认由哪位住户形成
   npcs: {}
 - id: 4024
   name: 夜班电话交换台
@@ -412,7 +421,14 @@ scenes:
     这里同时成为 Doris Expose、Pierce开枪QTE与后续程序争夺的场地。
 
     '
-  evidence: []
+  evidence:
+  - id: 4324
+    name: 门廊卷收式厚质防风帘
+    type: envir
+    pickup: false
+    interaction_required: false
+    note: 爆炸后可选环境观察；不进 CASE BOARD，不挂疑点或指证，Pierce开枪QTE也不以玩家是否查看为门槛
+    description: 门廊横梁上的卷轴、带配重下沿、控制绳与外侧门柱铜质绳扣仍保持连接；布面只有烟尘和轻度破损
   npcs:
     L3_scene4023_mickey:
       name: Mickey Donnelly
@@ -579,6 +595,7 @@ special_mechanics:
     setup_sources:
     - 4029宅邸门口抵达AVG建立卷收式厚质防风帘与外侧门柱绳扣位置
     - 4023爆炸后继续使用同一宅邸门口与同一外侧门柱绳扣；绳扣不进入4027室内门厅
+    - 4324在4023记录爆炸后同一装置的卷轴、控制绳与配重连接仍完整；是否查看不影响QTE触发
     core_input: 短时间持续按住，松开防风帘绳扣
     success_sequence:
     - 带配重下沿撞偏Pierce持枪前臂，枪弹击中石阶
@@ -681,6 +698,20 @@ evidence_registry:
   pickup: true
   first_scene: 4022
   note: 不参与本轮击穿；只证明提前接管压力
+- id: 4323
+  name: 宅邸常用物件的偏左摆放
+  type: envir
+  pickup: false
+  first_scene: 4022
+  interaction_required: true
+  note: 爆炸前必查环境观察；不进 CASE BOARD，不直接确认 Harold 的惯用手
+- id: 4324
+  name: 门廊卷收式厚质防风帘
+  type: envir
+  pickup: false
+  first_scene: 4023
+  interaction_required: false
+  note: 4029不可漏视觉建立，4023可选查看爆炸后结构；不进 CASE BOARD，不挂疑点或指证，不作为QTE硬门槛
 - id: 4314
   name: 两只酒杯
   type: clue

@@ -1624,8 +1624,8 @@ class Unit4StateV2Validator:
             if registry.get(evidence_id, {}).get("analysis") is True:
                 self.errors.append(f"{evidence_id} registry entry must not enable standard analysis")
 
-        if "共享" not in str(registry.get(4517, {}).get("visibility", "")):
-            self.errors.append("4517 must be shared with Emma and Watts in ending_4044")
+        if 4517 in registry:
+            self.errors.append("4517 must not remain in the Unit4 evidence registry")
         for evidence_id in (4518, 4519):
             if "扣下" not in str(registry.get(evidence_id, {}).get("visibility", "")):
                 self.errors.append(f"{evidence_id} concealment boundary is missing")

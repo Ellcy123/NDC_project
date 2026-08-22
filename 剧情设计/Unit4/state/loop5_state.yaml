@@ -29,14 +29,14 @@ player_context:
   - Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
-  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
+  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号和医院冷藏库官方留样
   - Rosa 没有在规定剂量之外使用第十四次完整剂量；回收药瓶实际消耗量与十三次规定剂量吻合
   - Harrison 的七个编号对应五年内七名死亡儿童，七人均由 Whitfield 负责的 Miller 慈善项目经手，并出现相似症状与重复的家属归责方式
-  - Giuseppe与Bridget的两瓶旧药样本与Harrison官方留样配方一致，但不能确认同一生产批次，也不能推及七名儿童
+  - Giuseppe与Bridget的两只旧药瓶，其残留物、封签和编号相互吻合，配方一致；但仅凭旧样本不能确认它们与Isabel的药属于同一生产批次，也不能证明七名儿童都使用了同一配方
   - Isabel病历发放号、Rosa回收药瓶与Harrison医院官方留样属于同一采购记录、同一生产批次和同一配方
   - Harrison医院官方留样从冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱；样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不开启样本格，直至Foster签收；化验后仍显示连续使用风险
   - 现有材料不能证明另外六名儿童使用了与Isabel完全相同的配方或生产批次
-  - Whitfield 是正式项目执行层，不能再以家属加量、孤立事故或家庭保存不当推卸本案责任
+  - Whitfield 的姓名出现在项目负责人、采购执行、入库签收与慈善发放责任栏；他不能再以家属加量、孤立事故或家庭保存不当推卸本案责任
   - 执行层副本缺失第十九页，更高层特别采购批准暂时没有可核验的签字原件
   - Mickey 为 Rosa 争取窗口、担任辩护并帮助取得暂停追究的结果，这份帮助真实
   - Mickey 同时主动把公开压力集中在 Whitfield，使调查暂时停在可牺牲的执行层
@@ -271,11 +271,11 @@ scenes:
     - identity_lock.chain_4502
     - expose.round_3
   - id: 4516
-    name: Miller保险外卷与内封套
+    name: Tidewater南区商业开发执行卷
     type: container
     pickup: true
     source: 字母锁保险柜
-    loop5_state: 外卷可查看；内封套保持未拆
+    loop5_state: 公开外卷可查看；底衬内的隐藏附件保持未发现
     pre_acknowledgment_display: '外卷只显示 W / Whale 负责法律障碍、Pierce 警察网络与银月会协调。
 
       身份承认前禁止出现实名对照。
@@ -283,17 +283,15 @@ scenes:
       '
     outer_volume_visible_information:
     - O'Hara 是南区第一批核心拒售户，标注优先处理
+    - 项目要求在世博会规划公开、周边地价上涨前取得相邻的连续地块
     - 湖滨信托银行 / Moore 制造债务与违约
     - Lakeshore 负责资金、估价和项目审批
     - Tidewater / Lawson 团队接收房产并推进工程
     - W / Whale 负责法律障碍及 Pierce 警察网络、银月会协调
-    - 项目收益摘要只含预期地价、开发资格与 Miller 项目委员会最终审批权
-    inner_envelope_visible_information:
-    - 防拆线与 Miller 事故基金压印
-    - 目录：1912 / 特殊处置与事故材料
-    - 目录：1928 / 后插入执行附件
+    hidden_attachment_visible_information:
+    - 无；隐藏附件不列入公开目录，办公室阶段不能发现 Miller 标记
     prohibited_in_loop5:
-    - 拆开内封套
+    - 发现或拆开隐藏附件
     - 读取 Sean 页
     - 读取水源维护页
     - 把内封内容用于身份锁或 Expose
@@ -568,9 +566,9 @@ expose:
         实际控制资金操作；不把账户法律所有权写成 Mickey 私有。
 
         '
-    result: 'Mickey 被迫承认自己能决定 1919-A 的资金操作，但退守到：
+    result: 'Mickey 被迫承认自己是 1919-A 结算的唯一授权人，但退守到：权限不是所有权，也不代表他知道每笔款项的真实用途；随后转向 Morrison 时间线，声称
 
-      他知道的只有自己与 Zack、Emma 共同进场后看到的；
+      自己知道的只有与 Zack、Emma 共同进场后看到的；
 
       在两人赶到以前他没进过 Harold 家，第一次进去时 Harold 已经死了。
 
@@ -693,7 +691,7 @@ expose:
     miller_final_condition:
       trigger: 市政厅专线响起
       offer:
-      - 取回 4516 Miller保险外卷与内封套
+      - 取回 4516 Tidewater南区商业开发执行卷
       - 把档案交给楼下司机
       - Mickey 独自上车
       - Miller 暂时保留其律师身份
@@ -846,11 +844,11 @@ evidence_registry:
   - expose.round_3
   - linear_value_dialogue
 - id: 4516
-  name: Miller保险外卷与内封套
+  name: Tidewater南区商业开发执行卷
   type: container
   pickup: true
   first_scene: 4042
-  loop5_use: 外卷可见；内封套不拆；不参加身份锁或 Expose
+  loop5_use: 公开外卷可见；隐藏附件不发现；不参加身份锁或 Expose
   ending_use: ending_sequence.ending_4044
 - id: 4705
   name: 1919-A 与 Donnelly & Associates 属于同一法律资金网络
@@ -872,26 +870,14 @@ evidence_registry:
   type: derived_conclusion
   generated_by: identity_lock.chain_4503
   boundary: 交叉证明到访，不单独证明开枪或 Whale 身份
-- id: 4517
-  name: Tidewater地基材料替换单
-  type: item
-  pickup: true
-  first_scene: 4044
-  source_container: 4516
-  visibility: Zack独自拆内封后取得，并在4044向Emma与Watts共享
-  boundary: 证明承重材料在事故前被主动降级
 - id: 4518
   name: Sean O'Malley特殊处置页
   type: item
   pickup: true
   first_scene: 4044
   source_container: 4516
-  visibility: 仅 Zack 看见并扣下；Emma 与 Watts 在 U4 不知情
-  boundary: '将 Sean 的死亡从普通工伤推进为高度明确的谋杀疑云；
-
-    不揭谁亲手执行、如何弃尸或如何伪造事故。
-
-    '
+  visibility: 仅 Zack 在4044看见并扣下；Emma 与 Watts 在 U4 不知道本页存在
+  boundary: 只记录将 Sean 与工人队伍分开、在事故记录完成前“处理其异议”，以及 Tidewater 印章、老 Charles Miller 签名和 Miller 内部传阅标记
 - id: 4519
   name: 后插入的水源维护页
   type: item
@@ -899,11 +885,7 @@ evidence_registry:
   first_scene: 4044
   source_container: 4516
   flow: Zack 先扣下；4045 发现街区症状后交给 Watts
-  boundary: '文件表面安排在四天后，只能证明水源层面出现危险追加动作；
-
-    不能让 Zack 准确预知行动会提前到当夜。
-
-    '
+  boundary: 文件表面只记录四天后对 O'Hara 私井和两个公共水点进行“封闭、清洗、重新开放”；执行与签批栏不完整
   visibility: 仅Zack在4044看见并扣下；4045发现街区症状后立即交给Watts
 ending_sequence:
   structure: non_loop_finale
@@ -954,7 +936,7 @@ ending_sequence:
     - Emma 先确认 Zack 是否受伤，不追问价值对话输赢
     prohibited_reveals:
     - 不拆 4516 内封套
-    - 不出现 4517、4518、4519 内容
+    - 不出现隐藏附件、4518或4519内容
     character_states:
       L5_ending4043_emma:
         npc_id: 402
@@ -1008,16 +990,16 @@ ending_sequence:
     - Zack
     - Emma
     - Watts
-    description: Watts驾驶法院档案车继续逃离，Zack与Emma在后排共同拆阅4516外卷。Emma在自己一侧按姓名和地址整理外卷，Zack在另一侧发现暗部封夹并借身体、肩包与昏暗车内遮挡独自拆开内封套，取得4517、4518、4519。他向Emma与Watts共享4517的地基材料替换事实，但扣下4518与4519；随后只从外卷公开O'Hara的优先清退危险。
+    description: Watts驾驶法院档案车继续逃离，Zack与Emma在后排共同拆阅4516公开外卷，确认Tidewater正为世博会周边商业开发抢在地价上涨前取得连续地块，O'Hara是尚未解决的核心拒售户。Zack在另一侧发现未列入目录的暗部封夹，借身体、肩包与昏暗车内遮挡独自拆开隐藏Miller附件，取得并扣下4518、4519。
     zack_second_concealment:
       action:
       - Zack 独自看见 4518 与 4519
       - Zack 把 4518、4519 扣下，不交给 Emma 与 Watts
-      - Zack 只从外卷抽出 O'Hara 位于第一批优先处理名单的部分
-      stated_information: O'Hara 仍可能遭遇暴力清退
-      motive: 'Zack 想到 Webb、Harrison、Harold 与 Mickey 都在接近真相后死亡，
+      - Zack 只公开外卷中的世博会开发目的与 O'Hara 核心拒售标记
+      stated_information: Tidewater正在为世博会周边商业开发拼接连续地块，O'Hara仍可能遭遇暴力清退
+      motive: '隐藏附件同时牵涉 Miller、Emma 的父亲 Sean 与正在推进的 O''Hara 处置，
 
-        又担心与 Miller 关系过深的 Emma 成为下一个目标。
+        但两页没有直接说明用途。Zack决定先自行查清，再告诉 Emma。
 
         '
       error_boundary: 'Zack 的错误不是准确预知当夜投毒却故意不救，而是在车内没有邀请 Emma
@@ -1028,7 +1010,7 @@ ending_sequence:
 
         '
       knowledge_boundary:
-      - Emma 在 U4 结束前不知道 Zack 扣过 4518、4519
+      - Emma 在4044不知道4518、4519；4045只看见Zack交出4519，不知道4518仍在
       - Watts 在 4045 前不知道 4519
       - 4519 表面日期在四天后，不能让 Zack预知行动当夜提前
     decision:
@@ -1044,8 +1026,8 @@ ending_sequence:
         known_information:
         - Mickey 是 Whale
         - O'Hara 在第一批优先处理名单
+        - Tidewater要在世博会规划公开、地价上涨前取得连续开发地块
         - 需要立刻赶往南区
-        - 4517证明1912事故前承重材料被主动降级
         withheld_information:
         - 无；此时不知道4518、4519，且不知道Zack曾在此刻扣下它们
         player_inquiry:
@@ -1059,9 +1041,8 @@ ending_sequence:
         mindset: 以路线、转运和联络能力行事，不回头参与翻页，也不越权充当法官或警察
         known_information:
         - O'Hara 是第一批优先处理户
-        - 外卷显示 Miller 项目委员会在多个机构之上
+        - 外卷显示 Tidewater 正为世博会周边商业开发拼接连续地块
         - 需要立刻赶往南区
-        - 4517证明1912事故前承重材料被主动降级
         withheld_information:
         - 无；此时不知道4518、4519，且不知道Zack曾在此刻扣下它们
         player_inquiry:
@@ -1073,19 +1054,15 @@ ending_sequence:
       target_scene_id: 4045
       continuation: next_talk
       next_talk: L5_ending_ohara_door
-    inner_envelope_opened_by_zack:
-      directory:
-      - Miller 项目委员会控制 Tidewater、Lakeshore Trust Co.、Donnelly & Associates 的投资方向、期限与可接受损耗
-      - 1912 / 特殊处置与事故材料
-      - 1928 / 后插入执行附件
-      - Miller 事故基金压印与 L2 病房、Emma 奖学金、Foster 研究资助同属一个体系
-      - W / Whale 接管签批来自 Tidewater 上层项目办公室，抄送 Miller 项目委员会
+    hidden_attachment_opened_by_zack:
+      visible_marks:
+      - 隐藏附件未列入公开外卷目录
+      - 侧边有 Miller 项目委员会内部传阅标记
+      - 4518 有 Tidewater 工程体系印章与老 Charles Miller 签名
       acquired_evidence:
-      - 4517
       - 4518
       - 4519
-      shared_evidence:
-      - 4517
+      shared_evidence: []
       concealed_evidence:
       - 4518
       - 4519
@@ -1187,19 +1164,19 @@ ending_sequence:
       chapter_boundary: true
       next_unit_entry: enter_ohara_house
   final_player_knowledge:
-  - 内封套证明 Miller 项目委员会位于多个机构接口之上
-  - 4517 证明 1912 事故前承重材料被主动降级
-  - 4518 只把 Sean 死亡推进为高度明确的谋杀疑云；完整执行链留给 U5
+  - 公开外卷证明 Tidewater 正为世博会周边商业开发抢在地价上涨前取得连续地块，O'Hara 是核心拒售户
+  - 隐藏附件带有 Miller 内部传阅标记，但 Miller 与 Tidewater 的具体关系仍不明确
+  - 4518 只记录将 Sean 与工人队伍分开，并在事故记录完成前“处理其异议”
   - 4519 表面日期在四天后，但水源行动已经提前
   - Zack 曾扣下 4518、4519；街区症状出现后才交出 4519
-  - Emma 与 Watts 在 U4 结束时仍不知道 Zack 曾扣页
+  - Emma 与 Watts 已看见 Zack 交出此前未公开的4519，但尚不知道4518仍被扣下
   - 公共卫生救援已经启动
   - Zack 与 Emma 已到 O'Hara 家门外；屋内结果未知
   unit4_to_unit5_boundary:
     unit4_last_action: Zack 与 Emma 奔到 O'Hara 家门外
-    unit5_first_allowed_action: 进入 O'Hara 家并开始屋内救援
+    unit5_first_allowed_action: 进入 O'Hara 家并发现她已经死亡
     locked_unknowns_at_unit4_end:
-    - O'Hara 的最终状态
+    - O'Hara 的屋内状态（U5确认死亡）
     - Sean 被谁亲手执行、如何弃尸、如何伪造事故
     - Emma 对 Zack 扣页的质问
     - Emma 与 Zack 的关系破裂或修复
@@ -1320,8 +1297,8 @@ narrative_continuity:
   consumes:
   - u4_l5_ending_4043
   required_beats:
-  - Zack独拆内封
-  - 共享4517
+  - 公开世博会连续开发目的
+  - Zack独拆隐藏Miller附件
   - 扣下4518与4519
   - 公开O'Hara清退危险
   exit_state: 前往O'Hara街区

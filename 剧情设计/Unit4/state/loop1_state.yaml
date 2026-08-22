@@ -21,7 +21,7 @@ player_context:
   - Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
-  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
+  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号和医院冷藏库官方留样
   current_assumptions:
   - 现有材料尚不足以确认 Harrison 灭口的命令源与执行者
   - 现有材料尚不足以判断 Mickey 是否存在隐藏身份
@@ -175,13 +175,13 @@ scenes:
     type: item
     pickup: true
     note: 夜间调阅检索玩法输入；原始形态只显示档号、次数和方向，不提前泄露 R2
-    description: 两个月调阅台账：医院儿童死亡、南区地产与旧赔偿档号被反复调取；原表不解释签署者
+    description: 两个月调阅台账中，七次记录指向圣心医院项目争议案卷，三次指向南区地产裁定卷，七次指向法院旧赔偿裁定卷；原表不展开具体案情，也不解释签署者
   - id: 4111
     name: Harrison公开日程与夜间出入对照
     type: clue
     pickup: false
     note: Expose R1；完成夜间调阅检索三轮匹配后生成
-    description: 公开日程显示 Harrison 多晚没有公务；法院出入登记与调阅流水却确认他连续十七次在闭馆后调阅旧案
+    description: 公开日程没有对应夜间公务；闭馆后访问记录显示 Harrison 共有十七次夜间调阅，调阅索引则分别留下七次圣心医院项目争议案卷、三次南区地产裁定卷和七次法院旧赔偿裁定卷
     acquisition:
       kind: minigame_output
       mechanic: L1_法院档案室_Harrison夜间调阅检索
@@ -295,19 +295,17 @@ expose:
       name: Harrison亲笔资金流向图
     - id: 4120
       name: 南区综合商业开发计划摘要
-    - id: 4121
-      name: 1912事故家庭索引
     player_knowledge_gained:
     - Harrison 的回头真实，但没有完成自首或承担
     - Rosa 将在次日面对圣心医院以家属误用为由的追责
     - Harrison 另行记录了七个用途未明的圣心医院编号；它们对应谁、为何被放在一起仍待调查
     - Harrison 通过正式手续取得了一份医院冷藏库官方留样；样本置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱内，样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不需开启样本格
-    - Harrison 的交接说明提到另有 Isabel 病历材料；L1不取得4217，也不读取其具体给药与发放信息
+    - Tidewater 与 Lakeshore 的南区计划曾要求警局协助或不阻碍清退，但现有摘要尚未指向具体警员或单次行动
     event_id: harrison_safe_and_rosa_hook
     talk: L1_post_expose_harrison_safe
     required_beats:
     - Watts Expose结束后不恢复自由探索，直接接入SC4002同场景的指证后AVG。
-    - Watts交出钥匙并开启保险柜，4117至4121只取得一次；Isabel病历材料只作L2叙事交接，不在L1正式取得4217。
+    - Watts交出钥匙并开启保险柜，4117至4120只取得一次。
     - Morrison得知Harrison因材料而死后沉默；Zack问是否告知Pierce，他只说需要考虑。
     - Watts说明Harrison另一件急务是Rosa案，次日必须在庭审前行动。
     player_control_restored_after: harrison_safe_and_rosa_hook
@@ -473,14 +471,7 @@ evidence_registry:
   pickup: true
   first_scene: 4002
   acquisition: post_expose
-  note: 建立南区地产方向，不提前指定 O'Hara
-- id: 4121
-  name: 1912事故家庭索引
-  type: item
-  pickup: true
-  first_scene: 4002
-  acquisition: post_expose
-  note: 只建立编号复用与受害家庭方向，不出现 Sean 页
+  note: 建立南区地产与警局协作方向；不提前指定 O'Hara、Pierce 或具体执行人员
 outline_coverage:
 - beat_id: L1_B01
   source_anchor: active outline / Loop1 / 开篇剧情
@@ -604,10 +595,10 @@ narrative_continuity:
   consumes:
   - u4_l1_expose
   required_beats:
-  - 取得4117至4121；4117仅为七个未知编号，4118为医院冷藏库官方留样
+  - 取得4117至4120；4117仅为七个未知编号，4118为医院冷藏库官方留样
   - Morrison犹豫
   - 建立Rosa紧急听证
-  exit_state: 次日Rosa来到事务所；七个编号仍未被解释，官方留样与Isabel病历材料等待L2核对，4217尚未正式取得
+  exit_state: 次日Rosa来到事务所；七个编号仍未被解释，官方留样等待L2核对
   hands_off_to: u4_l2_opening
   covers:
   - expose.post_expose

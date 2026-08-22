@@ -14,7 +14,7 @@ player_context:
   - Harrison 连续三次推动 Mary 案无罪改判，并起草辞职信，准备公开自身责任
   - Harrison 的公开、自首和司法承担尚未完成；保险柜只是未完成的自首证物箱
   - Watts 交出钥匙，是执行 Harrison 的最后要求，而不是替 Harrison 洗清罪责
-  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号、医院冷藏库官方留样；交接说明另提到一份将在L2正式交付的Isabel病历材料
+  - 保险柜材料显示 Rosa 的正式听证迫近，并留下七个用途未明的圣心医院编号和医院冷藏库官方留样
   current_assumptions:
   - 缺失的第十九页使最终采购批准者仍无法核验
   - Mickey 的帮助真实，但他为何坚持把公开责任集中在 Whitfield 仍不明确
@@ -37,7 +37,7 @@ player_context:
   - Isabel病历发放号、Rosa回收药瓶与Harrison医院官方留样属于同一采购记录、同一生产批次和同一配方
   - Harrison医院官方留样从冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱；样本格医院纸封／蜡封未破，交接单逐次记录装箱时间、箱内温度与经手人，补冰不开启样本格，直至Foster签收；化验后仍显示连续使用风险
   - 现有材料不能证明另外六名儿童使用了与Isabel完全相同的配方或生产批次
-  - Whitfield 是正式项目执行层，不能再以家属加量、孤立事故或家庭保存不当推卸本案责任
+  - Whitfield 的姓名出现在项目负责人、采购执行、入库签收与慈善发放责任栏；他不能再以家属加量、孤立事故或家庭保存不当推卸本案责任
   - 执行层副本缺失第十九页，更高层特别采购批准暂时没有可核验的签字原件
   - Mickey 为 Rosa 争取窗口、担任辩护并帮助取得暂停追究的结果，这份帮助真实
   - Mickey 同时主动把公开压力集中在 Whitfield，使调查暂时停在可牺牲的执行层
@@ -122,7 +122,7 @@ scenes:
     type: item
     pickup: true
     note: Expose R1剧情辅助；用于核对十三日医嘱、药剂发放号和4214中的本案正式发放链
-    description: Harrison遗留的Isabel病历本，记录十三日给药要求、药剂发放号与制剂信息；不包含七例死亡对照或Miller上层结论
+    description: Rosa长期保管的Isabel病历本，记录十三日给药要求、药剂发放号与制剂信息；不包含七例死亡对照或Miller上层结论
     acquisition:
       kind: dialogue
       talk: L2_scene4011_rosa
@@ -148,6 +148,7 @@ scenes:
       grants_evidence:
       - 4211
       - 4212
+      - 4217
 - id: 4012
   name: 圣心医院社会服务部 / Miller项目登记区
   type: free_exploration
@@ -274,7 +275,7 @@ scenes:
     inputs:
     - 4118
     input_boundary: 正式更新对象只有4118；4213的配方比对已作为独立结果完成，不进入4703的风险检验，也不作为同批证明
-    boundary: 证明从医院冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱、样本格医院纸封／蜡封未破、装箱时间与箱内温度及经手人逐次有据的官方留样本身存在有效成分浓度波动异常、异常降解杂质与连续使用风险；补冰未开启样本格，因此可排除调取后或家庭保存造成异常，不判断故意投毒或批准者主观知情
+    boundary: 证明从医院冷藏库调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱、样本格医院纸封／蜡封未破、装箱时间与箱内温度及经手人逐次有据的官方留样，在受控化验中出现异常析出、有效成分浓度波动、异常降解杂质与连续使用风险；补冰未开启样本格，因此可排除调取后或家庭保存造成异常，不判断故意投毒或批准者主观知情
   evidence:
   - id: 4213
     name: 同配方药瓶封签组
@@ -314,7 +315,7 @@ scenes:
     pickup: false
     analysis: true
     note: 关键——Expose R3；不越过1928年技术能力宣称完整毒理定案
-    description: 对医院冷藏库官方留样的加急化验显示有效成分浓度波动异常，并含不应出现在成品中的降解杂质；连续使用可能造成严重低血糖反应与器官损伤。该样本调取后始终置于带独立碎冰槽和镀锌金属内胆的上锁木质保冷箱，样本格医院纸封／蜡封未破；交接单逐次记录装箱时间、箱内温度与经手人，补冰不需开启样本格。样本从未进入受助家庭或废弃样本库
+    description: 对医院冷藏库官方留样的受控化验中出现异常析出、有效成分浓度波动异常，并检出不应存在于合格成品中的降解杂质；连续使用可能造成严重低血糖反应与器官损伤。附随交接记录显示，样本自医院冷藏库调出后始终保持冰藏，样本格封签完整，每次交接均有记录
     acquisition:
       kind: dialogue
       talk: L2_scene4013_foster
@@ -446,7 +447,7 @@ scenes:
     type: item
     pickup: true
     note: 关键——Expose R3；只精确连接Isabel本案，不把另外六名儿童锁为同一配方
-    description: Isabel病历发放号与Rosa回收药瓶对应；Rosa回收药瓶与Harrison医院官方留样属于同一采购记录下的同一生产批次，并使用相同配方，且经医院正式采购、入库和Miller慈善项目发放。记录不证明另外六名儿童使用相同完整配方或生产批次
+    description: Isabel病历发放号与Rosa回收药瓶对应；Rosa回收药瓶与Harrison医院官方留样属于同一采购记录下的同一生产批次，并使用相同配方，且经医院正式采购、入库和Miller慈善项目发放。项目负责人、采购执行、入库签收与慈善发放责任栏均登记Whitfield；合订卷目录显示采购委员会相关内容位于第十九页，但装订内容从第十八页直接跳到第二十页
     acquisition:
       kind: dialogue
       talk: L2_scene4015_mickey
@@ -531,8 +532,8 @@ expose:
       用途: 上锁木质保冷箱、独立碎冰槽、镀锌金属内胆、未破样本格封签及逐次温度和经手人记录均可核验的官方留样仍存在连续使用风险；补冰不开启样本格，足以排除调取后或Rosa家庭保存导致异常
     - id: 4214
       name: 圣心医院慈善项目采购与发放记录
-      用途: 精确证明Isabel病历发放号、Rosa回收药瓶与官方留样属于同一采购记录、同一生产批次和同一配方
-    result: Whitfield 无法再以家庭保存不当解释Isabel同批官方冷藏留样中的风险，被迫承担项目执行责任，但把最终批准责任推向缺失的第十九页。
+      用途: 精确证明Isabel病历发放号、Rosa回收药瓶与官方留样属于同一采购记录、同一生产批次和同一配方；项目负责人、采购执行、入库签收与慈善发放责任栏均登记Whitfield
+    result: Whitfield 无法再以家庭保存不当解释Isabel同批官方冷藏留样中的风险，并公开承认项目执行及未合并核查重复病例的失职；Mickey立即要求书记员把认责写入记录，现场没有继续追查采购委员会与缺失的第十九页。
   post_expose:
     description: Rosa 在 Zack 与 Mickey 的支持下拒绝签署家属误用说明。正式法庭裁定后，Emma留在4016法庭内与Whitfield对话；
       Mickey与Rosa带着回执进入4014走廊，记者随即追出。Zack避开人群后与Morrison在走廊侧门交谈，Morrison留下以后私下接触的口子；这不等于完整坦白。
@@ -543,7 +544,7 @@ expose:
     - Isabel回收药瓶与医院官方留样属于同一采购记录、同一生产批次和同一配方
     - 以带独立碎冰槽的上锁木质保冷箱保持冰藏、样本格封签与逐次温度交接记录完整的同批官方留样仍有风险，家庭保存不当不能解释本案
     - 另外六名儿童是否使用相同完整配方或生产批次仍不能确认
-    - Whitfield 只承认执行层责任
+    - Whitfield 公开承认项目执行及未合并核查重复病例的失职，Mickey立即将这份认责固定进法庭记录
     - Harold 开始对 Pierce 有所保留
     event_id: rosa_result_and_morrison_hook
     talk: L2_post_expose_court_result
@@ -670,7 +671,7 @@ evidence_registry:
   type: item
   pickup: true
   first_scene: 4015
-  note: Expose R3；Doubt 4203；只精确连接Isabel本案的发放号、回收瓶与官方留样
+  note: Expose R3；Doubt 4203；精确连接Isabel本案的发放号、回收瓶与官方留样，并显示Whitfield负责项目采购执行、入库签收与慈善发放；采购委员会相关内容所在的第十九页缺失
   acquisition:
     kind: dialogue
     talk: L2_scene4015_mickey
@@ -834,7 +835,7 @@ outline_coverage:
   acquisition_kind: dialogue
   acquisition_talk: L2_scene4013_foster
 - beat_id: L2_E_ISABEL_MEDICAL_RECORD
-  source_anchor: approved L2 adjustment / 自由探索 / Rosa交付Harrison遗留的Isabel病历本
+  source_anchor: active outline / Loop2 / 自由探索 / Zack侦探事务所 / Isabel的病历本 / 对话获取 Rosa
   mapping: exact
   primary_landing: scenes.4011.evidence.4217.acquisition
   evidence_delivery_required: true

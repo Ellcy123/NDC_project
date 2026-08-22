@@ -789,7 +789,7 @@ CONTINUITY = {
         ("u4_l1_opening", "Loop1 / 开篇剧情", "法院东翼封锁，Zack与Emma尚未取得调查控制", [], ["Pierce封锁", "Mickey拖住Pierce", "进入办公室"], "玩家进入4002自由调查", "u4_l1_investigation", ["opening.sequence.courthouse_blockade"]),
         ("u4_l1_investigation", "Loop1 / 调查", "Harrison死亡且材料可能被接管", ["u4_l1_opening"], ["查明夜间出入、资金与辞职材料"], "Watts三轮指证条件成立", "u4_l1_expose", ["scenes"]),
         ("u4_l1_expose", "Loop1 / 指证 Watts", "玩家掌握三组矛盾", ["u4_l1_investigation"], ["击穿Watts三层退守"], "Watts交出钥匙", "u4_l1_post_expose", ["expose"]),
-        ("u4_l1_post_expose", "Loop1 / 指证后", "保险柜可开启", ["u4_l1_expose"], ["取得4117-4121", "Morrison犹豫", "建立Rosa紧急听证"], "次日Rosa来到事务所", "u4_l2_opening", ["expose.post_expose"]),
+        ("u4_l1_post_expose", "Loop1 / 指证后", "保险柜可开启", ["u4_l1_expose"], ["取得4117-4120", "Morrison犹豫", "建立Rosa紧急听证"], "次日Rosa来到事务所", "u4_l2_opening", ["expose.post_expose"]),
     ],
     2: [
         ("u4_l2_opening", "Loop2 / 开篇剧情", "Rosa面临当日下午庭审", ["u4_l1_post_expose"], ["Mickey争取窗口并组建辩护分工"], "同场释放自由调查", "u4_l2_investigation", ["opening.sequence.thirteen_day_hearing"]),
@@ -815,7 +815,7 @@ CONTINUITY = {
         ("u4_l5_expose", "Loop5 / 指证 Mickey", "三条身份链全部完成", ["u4_l5_identity_lock"], ["玩家先证明Mickey等于Whale"], "Mickey承认身份", "u4_l5_post_expose", ["expose"]),
         ("u4_l5_post_expose", "Loop5 / 身份承认至坠落", "身份事实已经由玩家证明", ["u4_l5_expose"], ["价值对话", "拒绝Miller条件", "主动松手", "Emma救回Zack"], "从楼梯撤离", "u4_l5_ending_4043", ["expose.post_expose"]),
         ("u4_l5_ending_4043", "非Loop终幕 / 4043", "Mickey坠落且档案仍封存", ["u4_l5_post_expose"], ["Watts接应", "车上只交代身份与坠落"], "抵达安全地点", "u4_l5_ending_4044", ["ending_sequence.ending_4043"]),
-        ("u4_l5_ending_4044", "非Loop终幕 / 4044", "三人共同查看外卷", ["u4_l5_ending_4043"], ["Zack独拆内封", "共享4517", "扣下4518与4519", "公开O'Hara清退危险"], "前往O'Hara街区", "u4_l5_ending_4045", ["ending_sequence.ending_4044"]),
+        ("u4_l5_ending_4044", "非Loop终幕 / 4044", "三人共同查看公开外卷", ["u4_l5_ending_4043"], ["公开世博会连续开发目的", "Zack独拆隐藏Miller附件", "扣下4518与4519", "公开O'Hara清退危险"], "前往O'Hara街区", "u4_l5_ending_4045", ["ending_sequence.ending_4044"]),
         ("u4_l5_ending_4045", "非Loop终幕 / 4045", "街区已出现中毒症状", ["u4_l5_ending_4044"], ["Zack交出4519", "Watts启动公共卫生联络", "Zack与Emma跑到门外"], "U4在门外硬停", "enter_ohara_house", ["ending_sequence.ending_4045"]),
     ],
 }
@@ -966,7 +966,7 @@ def revise_loop1(state: dict) -> None:
     post["event_id"] = "harrison_safe_and_rosa_hook"
     post["talk"] = "L1_post_expose_harrison_safe"
     post["required_beats"] = [
-        "Watts交出钥匙并开启保险柜，4117至4121只取得一次。",
+        "Watts交出钥匙并开启保险柜，4117至4120只取得一次。",
         "Morrison得知Harrison因材料而死后沉默；Zack问是否告知Pierce，他只说需要考虑。",
         "Watts说明Harrison另一件急务是Rosa案，次日必须在庭审前行动。",
     ]
@@ -1246,10 +1246,21 @@ def revise_loop5(state: dict) -> None:
     post["talk"] = "L5_post_expose_identity_and_fall"
     post["player_control_restored_after"] = "identity_value_dialogue_and_fall"
 
-    registry_4517 = next(entry for entry in state["evidence_registry"] if entry["id"] == 4517)
-    registry_4517["visibility"] = "Zack独自拆内封后取得，并在4044向Emma与Watts共享"
+    state["evidence_registry"] = [
+        entry for entry in state["evidence_registry"] if entry["id"] != 4517
+    ]
+    registry_4518 = next(entry for entry in state["evidence_registry"] if entry["id"] == 4518)
+    registry_4518["visibility"] = "仅Zack在4044看见并扣下；Emma与Watts在U4不知道本页存在"
+    registry_4518["boundary"] = (
+        "只记录将Sean与工人队伍分开、在事故记录完成前‘处理其异议’，以及Tidewater印章、"
+        "老Charles Miller签名和Miller内部传阅标记"
+    )
     registry_4519 = next(entry for entry in state["evidence_registry"] if entry["id"] == 4519)
     registry_4519["visibility"] = "仅Zack在4044看见并扣下；4045发现街区症状后立即交给Watts"
+    registry_4519["boundary"] = (
+        "文件表面只记录四天后对O'Hara私井和两个公共水点进行‘封闭、清洗、重新开放’；"
+        "执行与签批栏不完整"
+    )
 
     ending_4043, ending_4044, ending_4045 = state["ending_sequence"]["scenes"]
     ending_4043["talk"] = "L5_ending_departure"
@@ -1272,18 +1283,32 @@ def revise_loop5(state: dict) -> None:
         "next_unit_entry": "enter_ohara_house",
     }
 
-    inner = ending_4044.pop("inner_envelope_visible_to_zack")
-    inner["shared_evidence"] = [4517]
+    inner = ending_4044.pop("hidden_attachment_opened_by_zack", None)
+    if inner is None:
+        inner = ending_4044.pop("inner_envelope_visible_to_zack")
+    inner.pop("directory", None)
+    inner["visible_marks"] = [
+        "隐藏附件未列入公开外卷目录",
+        "侧边有Miller项目委员会内部传阅标记",
+        "4518有Tidewater工程体系印章与老Charles Miller签名",
+    ]
+    inner["acquired_evidence"] = [4518, 4519]
+    inner["shared_evidence"] = []
     inner["concealed_evidence"] = [4518, 4519]
-    ending_4044["inner_envelope_opened_by_zack"] = inner
+    ending_4044["hidden_attachment_opened_by_zack"] = inner
     ending_4044["description"] = (
-        "三人共同检查4516外卷。Zack留在主档案桌前整理，发现暗部封夹并独自拆开内封套，取得4517、"
-        "4518、4519。他向Emma与Watts共享4517的地基材料替换事实，但扣下4518与4519；随后只从"
-        "外卷公开O'Hara的优先清退危险。"
+        "三人共同检查4516公开外卷，确认Tidewater正为世博会周边商业开发抢在地价上涨前取得连续地块，"
+        "O'Hara是尚未解决的核心拒售户。Zack发现未列入目录的暗部封夹，独自打开隐藏Miller附件，"
+        "取得并扣下4518、4519。"
     )
     for npc_key in ("L5_ending4044_emma", "L5_ending4044_watts"):
         npc = ending_4044["npcs"][npc_key]
-        npc["known_information"].append("4517证明1912事故前承重材料被主动降级")
+        npc["known_information"] = [
+            fact for fact in npc["known_information"] if "4517" not in fact
+        ]
+        expo_fact = "Tidewater要在世博会规划公开、地价上涨前取得连续开发地块"
+        if expo_fact not in npc["known_information"]:
+            npc["known_information"].append(expo_fact)
         npc["withheld_information"] = [
             "无；此时不知道4518、4519，且不知道Zack曾在此刻扣下它们"
         ]

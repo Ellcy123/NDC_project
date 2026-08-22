@@ -1,8 +1,8 @@
 # Unit4 循环5 - 证据美术资产清单
 
 > 叙事主题：四十二层与终幕  
-> 正式证据总数：13 条（含 4 条身份推理结果；收录终幕 4517-4519）  
-> ID 范围：4511-4519、4705-4708  
+> 正式证据总数：12 条（含 4 条身份推理结果；收录终幕 4518-4519）  
+> ID 范围：4511-4516、4518-4519、4705-4708  
 > 数据源：`剧情设计/Unit4/state/loop5_state.yaml`、`avg_editor_v2/data/table/ItemStaticData.json`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md`  
 > 全局规范与跨循环复用要求：见 [Unit4 证据美术资产总览](./Unit4_证据美术资产_总览.md)
 
@@ -17,14 +17,13 @@
 | 4513 | 1925 年内部接口接管记录 | Item；字母锁保险柜。 | 字母锁输出 + 身份锁输入 |
 | 4514 | 1919 年的银行授权附页-Donnelly & Associates（手写签名） | Item；字母锁保险柜。 | 字母锁输出 + 双链输入 |
 | 4515 | 手写功业簿 | Item；字母锁保险柜。 | 字母锁输出 + 身份锁输入 |
-| 4516 | Miller 保险外卷与内封套 | Container/Item；字母锁保险柜。 | 字母锁输出 + 终幕容器 |
+| 4516 | Tidewater 南区商业开发执行卷 | Container/Item；字母锁保险柜。 | 字母锁输出 + 终幕容器 |
 | 4705 | 1919-A 与 Donnelly & Associates 属于同一法律资金网络 | Derived Conclusion；L5 身份锁链 4501。 | 身份锁输出 |
 | 4706 | Morrison 页结论 | Derived Conclusion；L5 身份锁链 4502。 | 身份锁输出 |
 | 4707 | 书写者一致性 | Derived Conclusion；L5 身份锁链 4502。 | 身份锁输出 |
 | 4708 | Mickey 就是 Morrison 死亡当晚的陌生访客 | Derived Conclusion；L5 身份锁链 4503。 | 身份锁输出 |
-| 4517 | Tidewater 地基材料替换单 | Item；4516 内封套的 1912 内页。 | 终幕容器输出 |
-| 4518 | Sean O'Malley 特殊处置页 | Item；4516 内封套的 1912 内页。 | 终幕容器输出 |
-| 4519 | 后插入的水源维护页 | Item；4516 内封套的 1928 后插附件。 | 终幕容器输出/行动输入 |
+| 4518 | Sean O'Malley 特殊处置页 | Item；4516 隐藏 Miller 附件的 1912 内页。 | 终幕容器输出 |
+| 4519 | 后插入的水源维护页 | Item；4516 隐藏 Miller 附件的 1928 后插页。 | 终幕容器输出/行动输入 |
 
 ---
 
@@ -161,29 +160,29 @@
 
 ---
 
-### 4516 - Miller 保险外卷与内封套
+### 4516 - Tidewater 南区商业开发执行卷
 
 - 类型/地点：Container/Item；字母锁保险柜。
-- `Name`：`Miller保险外卷与内封套` / `Miller Insurance Outer File and Sealed Inner Packet`
+- `Name`：`Tidewater南区商业开发执行卷` / `Tidewater South Side Commercial Development Execution File`
 - `Describe`：  
-  `一套由外卷和防拆内封套组成的 Miller 保险档案。外卷列出南区优先处理户与执行职责：银行制造债务，Lakeshore 负责资金、估价和审批，Tidewater 接收房产，W / Whale 协调法律障碍、Pierce 警务网络和银月会。内封套仍未拆，外部目录只指向“1912 / 特殊处置与事故材料”和“1928 / 后插入执行附件”。`  
-  `A Miller insurance file consisting of an outer volume and a tamper-sealed inner packet. The outer file lists priority South Side holdouts and operational roles: the bank creates debt, Lakeshore handles funds, valuation, and approval, Tidewater receives property, and W / Whale coordinates legal obstacles, Pierce's police network, and the Silver Moon Society. The inner packet remains sealed; its exterior index points only to “1912 / Special Treatment and Accident Materials” and “1928 / Later-Inserted Execution Attachments.”`
+  `一套 Tidewater 南区商业开发执行卷。开发摘要写明，需要在世博会规划公开、周边地价上涨前取得相邻的连续地块；执行页列出银行债务、Lakeshore 资金与估价、Tidewater 地产接收，以及 W / Whale 协调法律和警务障碍等分工。O'Hara 被标为尚未解决的核心拒售户。`  
+  `A Tidewater South Side commercial-development execution file. Its development summary calls for acquiring a continuous tract before the World's Fair plan becomes public and surrounding land values rise. The execution pages assign bank debt, Lakeshore funding and valuation, Tidewater property intake, and W / Whale's coordination of legal and police obstacles. O'Hara is marked as an unresolved core holdout.`
 - `ShortDescribe`：  
-  `外卷列出南区执行分工；防拆内封套在四十二层仍保持未拆。`  
-  `The outer file lists South Side operational roles; the tamper-sealed inner packet remains unopened on the forty-second floor.`
-- 小玩法关系：`字母锁输出 + 终幕容器`。开柜时与 4513-4515 同次取得，但不参加 L5 身份锁或 Expose。安全地点剪断防拆线后，1912 内页输出 4517、4518，1928 后插附件输出 4519；不合成新 ID。
+  `外卷记录南区接收分工、世博会周边连续开发目标及 O'Hara 核心拒售标记。`  
+  `The file records South Side acquisition roles, the continuous development goal around the World's Fair area, and O'Hara's core-holdout status.`
+- 小玩法关系：`字母锁输出 + 终幕容器`。开柜时与 4513-4515 同次取得，但不参加 L5 身份锁或 Expose。车辆驶离四十二层后整理外卷，触发未列入公开目录的隐藏 Miller 附件，输出 4518、4519；不合成新 ID。
 
 重点（信息表达必不可少）：
 
-1. 外卷与内封套轮廓、材质和可读层级明确分开；L5 只允许查看外卷与内封外观。
-2. 外卷的职责分工可读，但不出现实际分赃账户。
-3. 内封套使用 Miller 事故基金压印、防拆线和两项目录；与 4114、4216 的 Miller 标识同源。
-4. L5 详情图和开柜动画绝不能露出 4517-4519 的正文、Sean 姓名或水源点。
-5. 终幕需制作剪断防拆线、抽出 1912 内页和发现后插 1928 附件的分阶段容器状态。
+1. 公开外卷使用 Tidewater 抬头，不出现 Miller 名称或 Miller 事故基金压印。
+2. 世博会邻近区位、连续地块需求、规划公开前的时间压力与 O'Hara 核心拒售标记清楚可读。
+3. 外卷的职责分工可读，但不出现实际分赃账户，也不建立 1928 清退对象与 1912 事故家庭之间的名单连续性。
+4. 隐藏附件不列入公开目录；只在车内整理硬衬时发现，其侧边才出现与 4114、4216 同源的 Miller 内部传阅标记。
+5. L5 开柜详情和办公室演出绝不能露出 4518、4519 的正文、Sean 姓名或水源点。
 
 美术参考（不影响推理）：
 
-- 厚重深蓝/炭灰外卷、黄铜夹、蜡/压纹防拆封套和棉线；封套底部暗夹应能在第二次整理时被发现，但 L5 初见不抢眼。
+- 厚重深蓝/炭灰 Tidewater 外卷、黄铜夹与硬质底衬；底衬内的暗部封夹应能在车内第二次整理时被发现，但 L5 初见不抢眼。
 
 ---
 
@@ -285,51 +284,26 @@
 
 ---
 
-## 非 Loop 终幕｜Miller 内封套
-
-### 4517 - Tidewater 地基材料替换单
-
-- 类型/地点：Item；4516 内封套的 1912 内页。
-- `Name`：`Tidewater地基材料替换单` / `Tidewater Foundation Material Substitution Order`
-- `Describe`：  
-  `1912 年工程材料替换单。原定承重材料在事故前被主动替换为更低等级的材料，批准与执行时间都早于事故记录。文件证明材料降级是事前决定，尚不能单独说明谁预见或希望事故发生。`  
-  `A 1912 construction-material substitution order. The specified load-bearing material was deliberately replaced with a lower-grade material before the accident, with approval and execution dates preceding the incident record. It establishes a prior downgrade, not by itself who foresaw or intended the accident.`
-- `ShortDescribe`：  
-  `事故前，Tidewater 主动把原定承重材料替换为更低等级材料。`  
-  `Before the accident, Tidewater deliberately replaced the specified load-bearing material with a lower-grade one.`
-- 小玩法关系：`终幕容器输出`。安全地点剪开 4516 内封套并查看 1912 内页时取得；不参加 L5 身份锁或 Expose，不生成派生 ID。
-
-重点（信息表达必不可少）：
-
-1. 双栏对照 `ORIGINAL SPECIFICATION` / `AUTHORIZED SUBSTITUTE`，承重等级或质量指标明确下降。
-2. 批准/执行日期早于事故日期；具体材料名称、等级和数值须经工程与年代考据后统一，不由美术自行编造。
-3. Tidewater 抬头和项目编号与 4120、4516 外卷同体系。
-4. 不印“制造事故”或谋杀结论。
-
-美术参考（不影响推理）：
-
-- 1912 年工程变更单、蓝图纸边角、铅笔承重批注和企业盖章；纸张明显比 1928 附件更旧。
-
----
+## 非 Loop 终幕｜隐藏 Miller 附件
 
 ### 4518 - Sean O'Malley 特殊处置页
 
-- 类型/地点：Item；4516 内封套的 1912 内页。
+- 类型/地点：Item；4516 隐藏 Miller 附件的 1912 内页。
 - `Name`：`Sean O'Malley特殊处置页` / `Sean O'Malley Special-Treatment Page`
 - `Describe`：  
-  `1912 年的特殊处置页，要求将 Sean O'Malley 与工人队伍分开，并在事故记录完成前“处理其异议”。页面有老 Charles 的签名，但没有直接写出杀人、弃尸或伪造事故命令。它使 Sean 的死亡从普通工伤进入高度明确的谋杀疑云，完整执行链仍需后续调查。`  
-  `A 1912 special-treatment page ordering that Sean O'Malley be separated from the work crew and that his objection be “handled” before the accident record was completed. The page bears the elder Charles's signature but contains no direct order to kill, dispose of a body, or falsify the accident. It turns Sean's death from an ordinary workplace accident into a strong murder suspicion, while leaving the execution chain unresolved.`
+  `一张 1912 年的 Tidewater 特殊处置页，要求将 Sean O'Malley 与工人队伍分开，并在事故记录完成前“处理其异议”。页首盖有 Tidewater 工程体系印章，页尾有老 Charles Miller 的签名，侧边另有 Miller 项目委员会内部传阅标记。`  
+  `A 1912 Tidewater special-treatment page ordering that Sean O'Malley be separated from the work crew and that his objection be “handled” before the accident record was completed. It bears a Tidewater engineering-system stamp, the elder Charles Miller's signature, and a Miller project committee internal-circulation mark along the edge.`
 - `ShortDescribe`：  
   `事故记录完成前，Sean 被要求与工人分开并“处理其异议”。`  
   `Before the accident record was completed, Sean was to be separated from the crew and his objection “handled.”`
-- 小玩法关系：`终幕容器输出`。与 4517 同在 1912 内页；不参加 L5 身份锁，U5 才处理执行人与弃尸链。
+- 小玩法关系：`终幕容器输出`。Zack 在车内独自发现并扣下；不参加 L5 身份锁或 Expose。
 
 重点（信息表达必不可少）：
 
 1. `SEAN O'MALLEY`、`SEPARATE FROM WORK CREW`、`HANDLE HIS OBJECTION BEFORE ACCIDENT RECORD IS COMPLETED` 可读。
-2. 老 Charles 的正式签名可读，但正文不能出现 `KILL`、`BODY`、`DUMP` 等直接命令。
-3. 与 4517 共享 1912 项目编号和旧纸张批次，显示两页属于同一事故档案。
-4. 不提前画出具体杀人方法、执行人或小 Charles 越权。
+2. Tidewater 工程体系印章、老 Charles Miller 的正式签名及 Miller 项目委员会内部传阅标记清楚可读。
+3. 正文不能出现 `KILL`、`BODY`、`DUMP` 等直接命令。
+4. 不提前画出具体杀人方法、执行人或事故真相。
 
 美术参考（不影响推理）：
 
@@ -339,14 +313,14 @@
 
 ### 4519 - 后插入的水源维护页
 
-- 类型/地点：Item；4516 内封套的 1928 后插附件。
+- 类型/地点：Item；4516 隐藏 Miller 附件的 1928 后插页。
 - `Name`：`后插入的水源维护页` / `Later-Inserted Water-System Maintenance Page`
 - `Describe`：  
-  `一张后来插入档案的水源维护页，纸张批次和日期格式与原计划不同。文件表面安排在四天后，对 O'Hara 私人井和两个公共水点进行“封闭、清洗、重新开放”，却没有列出污染物、执行人、小 Charles 签名或老 Charles 的正常审批。它足以提示有人追加了水源层面的危险行动，但不能让人准确预知行动会提前到当夜。`  
-  `A water-system maintenance page inserted later into the file, using a different paper batch and date format from the original plan. On its face, it schedules the O'Hara private well and two public water points for “closure, cleaning, and reopening” four days later, yet names no contaminant, operator, younger Charles signature, or normal approval by the elder Charles. It indicates a dangerous water-related addition but does not allow an accurate prediction that action would be moved forward to that night.`
+  `一张后来插入档案的水源维护页，纸张批次和日期格式与原计划不同。文件表面安排在四天后，对 O'Hara 私人井和两个公共水点进行“封闭、清洗、重新开放”；执行人和签批栏没有填写完整。`  
+  `A water-system maintenance page inserted later into the file, using a different paper batch and date format from the original plan. On its face, it schedules the O'Hara private well and two public water points for “closure, cleaning, and reopening” four days later; the operator and authorization fields are incomplete.`
 - `ShortDescribe`：  
-  `后插页安排四天后处理 O'Hara 私井和两个公共水点，审批与执行信息异常缺失。`  
-  `A later-inserted page schedules the O'Hara well and two public water points four days later, with abnormal gaps in approval and execution.`
+  `后插页安排四天后对 O'Hara 私井和两个公共水点进行“封闭、清洗、重新开放”；执行与签批栏没有填写完整。`  
+  `A later-inserted page schedules the O'Hara well and two public water points for “closure, cleaning, and reopening” four days later; its execution and authorization fields are incomplete.`
 - 小玩法关系：`终幕容器输出/行动输入`。拆开 4516 的 1928 后插附件取得；抵达南区发现中毒症状后，Zack 交给 Watts，用于封闭标记水点和组织救援。无分析或合成产物。
 
 重点（信息表达必不可少）：

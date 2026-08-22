@@ -14,10 +14,10 @@
 |---|---|---|---|
 | 4211 | 医院配发红线注射器与十三日封签药盒 | Item；Zack 事务所，由 Rosa 交付。 | 输入/参照物 |
 | 4212 | Isabel 使用后的封签药瓶 | Item；Zack 事务所，由 Rosa 交付。 | 主触发输入 |
-| 4217 | Isabel 的病历本 | Item；Zack 事务所，从 Harrison 遗留材料中正式接收。 | 分析参照/编号核对 |
+| 4217 | Isabel 的病历本 | Item；Zack 事务所，由 Rosa 从随身旧包中交付。 | 分析参照/编号核对 |
 | 4702 | 经容量分析的回收药瓶 | 分析结果；4013 Foster 法医实验室。 | 输出 |
 | 4216 | Miller 事故基金项目铭牌与康复名册 | Envir；圣心医院社会服务部／Miller 项目登记区。 | 无 |
-| 4213 | 两名死者的旧药样本 | Item；4013 Foster 法医实验室，由 Foster 依法调取。 | 编号验证/剧情辅助 |
+| 4213 | 同配方药瓶封签组 | Item；4013 Foster 法医实验室，由 Foster 依法调取。 | 编号验证/剧情辅助 |
 | 4218 | 验尸官办公室有限调档许可 | Key Item；4013 Foster 法医实验室，由 Foster 交付。 | 特殊对话门控 |
 | 4219 | 五年七例儿童死亡病例对照表 | 调档成果；4012 社会服务部调档演出。 | 4117 更新输出 |
 | 4703 | 经化验的医院冷藏库留样试剂 | 分析结果；4118 经 Foster 受控化验后取得。 | 分析输出 |
@@ -83,7 +83,7 @@
 
 ### 4217 - Isabel 的病历本
 
-- 类型/地点：Item；Zack 事务所，从 Harrison 遗留材料中正式接收。
+- 类型/地点：Item；Zack 事务所，由 Rosa 从随身旧包中交付。
 - `Name`：`Isabel的病历本` / `Isabel's Medical Record Book`
 - `Describe`：
   `Isabel 在圣心医院接受十三日疗程时使用的病历本。逐日给药记录、医嘱剂量、药剂发放号和护士签注均可核对；病历只记录院方发放信息，不判断 Rosa 是否按记录完成每次注射。`
@@ -238,17 +238,17 @@
 - 类型/地点：分析结果；4118 经 Foster 受控化验后取得。
 - `Name`：`经化验的医院冷藏库留样试剂` / `Tested Hospital Cold-Storage Retained Sample`
 - `Describe`：  
-  `Foster 对医院官方冷藏留样的化验显示，有效成分浓度波动异常，并含有不应出现在合格成品中的降解杂质；按疗程连续使用可能造成严重低血糖反应与器官损伤。样本始终处于医院冷藏和封签交接控制下，结果不能由 Rosa 家庭或废弃样本库的保存环境解释。该化验不能单独确认 Isabel 药瓶与留样同批，也不能指出批准者或主观知情。`
-  `Foster's tests of the hospital's official cold-storage retained sample show abnormal fluctuation in active concentration and degradation impurities that should not be present in a sound finished medicine. Repeated use over a course could cause severe hypoglycemic reactions and organ injury. Because the sample remained under hospital refrigeration and sealed chain of custody, its condition cannot be attributed to Rosa's home or the discarded-sample archive. The test alone does not establish that Isabel's bottle came from the same lot, nor identify an approver or prior knowledge.`
+  `Foster 对医院官方冷藏留样进行了受控化验。化验过程中出现异常析出，有效成分浓度波动异常，并检出不应存在于合格成品中的降解杂质；按疗程连续使用可能造成严重低血糖反应与器官损伤。附随交接记录显示，样本自医院冷藏库调出后始终保持冰藏，样本格封签完整，每次交接均有记录。`
+  `Foster conducted controlled tests on the hospital's official cold-storage retained sample. An abnormal precipitate formed during testing; the active concentration fluctuated abnormally, and degradation impurities not expected in a sound finished medicine were detected. Repeated use over a course could cause severe hypoglycemic reactions and organ injury. The accompanying custody record shows that the sample remained iced after leaving the hospital cold store, with its compartment seal intact and every handoff logged.`
 - `ShortDescribe`：  
-  `医院规范冷藏的官方留样仍存在浓度波动、异常降解杂质与连续使用风险。`
-  `The officially refrigerated hospital sample still shows concentration variation, abnormal degradation, and repeated-use risk.`
+  `持续冰藏且封签、交接记录完整的官方留样，在受控化验中出现异常析出、浓度波动与降解杂质。`
+  `The continuously iced official sample, with intact seal and custody record, developed an abnormal precipitate, potency variation, and degradation impurities during controlled testing.`
 - 小玩法关系：`分析输出`。输入仅为 4118；4213 已另行完成与 Harrison 官方留样的配方比对，但不作为同批化验对照。与 4214 共同用于 Whitfield R3：4703证明医院控制下的留样本身有风险，4214再证明它与 Isabel 药瓶属于同一采购记录、同一生产批次和同一配方。
 
 重点（信息表达必不可少）：
 
 1. 保留 4118 原瓶身份、医院冷藏登记与交接记录，新增 Foster 二次封签、样本编号和化验结果卡。
-2. 使用 1928 年可理解的颜色反应、沉淀、显微/效价对照和纸面记录，不出现现代色谱图、质谱、电子屏或精确分子图。
+2. 使用 1928 年可理解的颜色反应、受控化验中形成的异常析出、显微/效价对照和纸面记录；原瓶不得画成开封前肉眼即可看见沉淀，不出现现代色谱图、质谱、电子屏或精确分子图。
 3. 结论用 `IRREGULAR POTENCY`、`ABNORMAL DEGRADATION` 等限度明确的英文，不写“蓄意投毒”。
 4. 与 4118、4212、4214 的生产批号 `SHC-28-B17` 完全一致；4213 两瓶旧样本不得出现该批号。
 
@@ -263,11 +263,11 @@
 - 类型/地点：Item；法院会客室医院项目卷宗。
 - `Name`：`圣心医院慈善项目采购与发放记录` / `Sacred Heart Charity Program Procurement and Distribution Record`
 - `Describe`：  
-  `圣心医院慈善项目的采购、入库与发放合订记录。Isabel 病历中的药剂发放号与 Rosa 回收药瓶对应；该药瓶和 Harrison 官方冷藏留样列在同一采购记录下，生产批号均为 SHC-28-B17，配方相同。记录还显示该批药经过医院正式采购、入库，并由 Miller 慈善项目发给 Isabel。它不证明另外六名儿童使用了完全相同的配方或生产批次。`
-  `A bound set of Sacred Heart charity-program procurement, intake, and distribution records. The dispensing number in Isabel's medical file matches Rosa's returned bottle; that bottle and Harrison's official cold-storage sample appear under the same procurement entry, share production lot SHC-28-B17, and use the same formula. The lot was formally purchased, received into hospital stock, and issued to Isabel through the Miller charity program. The record does not establish that the other six children received the exact same formula or production lot.`
+  `圣心医院慈善项目的采购、入库与发放合订记录。Isabel 病历中的药剂发放号与 Rosa 回收药瓶对应；该药瓶与 Harrison 调取的医院官方留样列在同一采购记录下，生产批号均为 SHC-28-B17，配方相同。该批药经过医院正式采购、入库，并由 Miller 慈善项目发给 Isabel。项目负责人、采购执行、入库签收与慈善发放责任栏均登记 Whitfield 的姓名。合订卷目录显示采购委员会的相关内容位于第十九页，但装订内容不知为何从第十八页直接跳到第二十页。`
+  `A bound set of Sacred Heart charity-program procurement, intake, and distribution records. The dispensing number in Isabel's medical file matches Rosa's returned bottle; that bottle and Harrison's hospital retained sample appear under the same procurement entry, share production lot SHC-28-B17, and use the same formula. The lot was formally purchased, received into hospital stock, and issued to Isabel through the Miller charity program. Whitfield's name appears in the fields for program lead, procurement execution, intake receipt, and charity distribution. The contents list places the procurement committee material on page nineteen, yet the binding inexplicably jumps from page eighteen to page twenty.`
 - `ShortDescribe`：  
-  `Isabel 药瓶与医院冷藏留样同属 SHC-28-B17，并由项目正式采购和发放。`
-  `Isabel's bottle and the hospital retained sample share lot SHC-28-B17, formally purchased and issued by the program.`
+  `Isabel 药瓶与医院冷藏留样同属 SHC-28-B17；项目采购执行、入库与发放责任栏均登记 Whitfield。`
+  `Isabel's bottle and the hospital retained sample share lot SHC-28-B17; Whitfield is named in the procurement-execution, intake, and distribution fields.`
 - 小玩法关系：`正式链条核对`。与 4703 共同用于 Whitfield R3；4217 提供发放号，4212 与 4118／4703 提供同一生产批号。本物不为 4213 两瓶旧样本补写批次。
 
 重点（信息表达必不可少）：
@@ -275,7 +275,8 @@
 1. 四段核对关系清楚：`PURCHASE ORDER → HOSPITAL INTAKE → RETAINED SAMPLE / CHARITY DISPENSING`。
 2. 生产批号 `SHC-28-B17` 同时对应 Harrison 官方留样和 Isabel 发放项；Isabel 发放号与 4217、4212 一致。
 3. 配方栏显示两件药剂配方相同，但不得延伸覆盖另外六份历史病例。
-4. 执行层副本不出现最终理事会签字原件。
+4. 项目负责人、采购执行、入库签收与慈善发放责任栏均清楚显示 `WHITFIELD`。
+5. 目录显示采购委员会相关内容位于第十九页，装订内容从第十八页直接跳到第二十页；不得补写缺页内容或签字人。
 
 美术参考（不影响推理）：
 
