@@ -1,0 +1,42 @@
+
+const { app, core } = require("photoshop");
+
+function withoutExtension(fileName) {
+  return fileName.replace(/\.[^.]+$/, "");
+}
+
+async function runSmokeTest() {
+  if (app.documents.length === 0) {
+    await core.showAlert(
+      "NDC UXP 测试：请先打开一张图片，然后重新运行本脚本。"
+    );
+    return;
+  }
+
+  const sourceDocument = app.activeDocument;
+  const duplicateName = `${withoutExtension(sourceDocument.name)}_UXP_TEST`;
+  let duplicateDocument;
+
+  await core.executeAsModal(
+    async () => {
+      duplicateDocument = await sourceDocument.duplicate(duplicateName, false);
+      const testLayer = await duplicateDocument.createLayer();
+      testLayer.name = "NDC_UXP_CONNECTED";
+      testLayer.opacity = 100;
+    },
+    {
+      commandName: "NDC UXP smoke test",
+      timeOut: 5,
+    }
+  );
+
+  await core.showAlert(
+    `NDC UXP 测试成功。\n\n已创建未保存的文档副本：${duplicateDocument.name}\n已新增空图层：NDC_UXP_CONNECTED\n\n原文档未修改，脚本没有保存或导出任何文件。`
+  );
+}
+
+runSmokeTest().catch(async (error) => {
+  const message = error && error.message ? error.message : String(error);
+  console.error("NDC UXP smoke test failed:", error);
+  await core.showAlert(`NDC UXP 测试失败：\n\n${message}`);
+});

@@ -1,0 +1,58 @@
+const { app, action, core } = require("photoshop");
+
+const TEST_LAYER_NAME = "NDC_BATCHPLAY_TEST";
+
+async function createTestLayer() {
+  if (app.documents.length === 0) {
+    await core.showAlert(
+      "NDC 建层测试：请先打开一张图片，然后重新运行本脚本。"
+    );
+    return;
+  }
+
+  const documentName = app.activeDocument.name;
+
+  const result = await core.executeAsModal(
+    async () => {
+      return await action.batchPlay(
+        [
+          {
+            _obj: "make",
+            _target: [{ _ref: "layer" }],
+            using: {
+              _obj: "layer",
+              name: TEST_LAYER_NAME,
+            },
+          },
+        ],
+        { immediateRedraw: true }
+      );
+    },
+    {
+      commandName: "NDC batchPlay layer test",
+      timeOut: 5,
+    }
+  );
+
+  const commandResult = result && result[0];
+  if (commandResult && commandResult._obj === "error") {
+    throw new Error(
+      `${commandResult.message || "Photoshop 返回未知错误"}（错误码：${commandResult.result}）`
+    );
+  }
+
+  const createdLayer = app.activeDocument.layers.getByName(TEST_LAYER_NAME);
+  if (!createdLayer) {
+    throw new Error("Photoshop 未报告错误，但图层面板中找不到测试图层。");
+  }
+
+  await core.showAlert(
+    `NDC 建层测试成功。\n\n文档：${documentName}\n新增空图层：${TEST_LAYER_NAME}\n\n脚本没有保存或导出文件。测试后请按 Ctrl+Z，或关闭文档并选择“不保存”。`
+  );
+}
+
+createTestLayer().catch(async (error) => {
+  const message = error && error.message ? error.message : String(error);
+  console.error("NDC batchPlay layer test failed:", error);
+  await core.showAlert(`NDC 建层测试失败：\n\n${message}`);
+});

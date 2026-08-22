@@ -1,0 +1,110 @@
+const { app, core } = require("photoshop");
+
+const BASE_LAYER_NAME = "00_原图";
+const WORK_GROUP_NAMES = [
+  "10_结构修复",
+  "20_内容清理",
+  "30_剧情与交互叠层",
+  "40_光色统一",
+  "90_检查标记",
+];
+
+function withoutExtension(fileName) {
+  return fileName.replace(/\.[^.]+$/, "");
+}
+
+function makeUniqueDocumentName(baseName) {
+  const openNames = new Set();
+  app.documents.forEach((document) => openNames.add(document.name));
+  let candidate = `${baseName}_NDC_WORK`;
+  let suffix = 2;
+
+  while (openNames.has(candidate)) {
+    candidate = `${baseName}_NDC_WORK_${suffix}`;
+    suffix += 1;
+  }
+
+  return candidate;
+}
+
+function findTopLevelLayer(document, name) {
+  for (let index = 0; index < document.layers.length; index += 1) {
+    if (document.layers[index].name === name) {
+      return document.layers[index];
+    }
+  }
+  return null;
+}
+
+async function initializeWorkfile() {
+  if (app.documents.length === 0) {
+    await core.showAlert(
+      "NDC 工程初始化：请先打开一张原始场景图，然后重新运行本脚本。"
+    );
+    return;
+  }
+
+  const sourceDocument = app.activeDocument;
+  if (sourceDocument.layers.length !== 1) {
+    await core.showAlert(
+      "NDC 工程初始化已停止。\n\n当前文档不是单层原图。请先按 Ctrl+Z 删除 NDC_BATCHPLAY_TEST 测试层，或重新打开原始 PNG，再运行本脚本。"
+    );
+    return;
+  }
+
+  const workDocumentName = makeUniqueDocumentName(
+    withoutExtension(sourceDocument.name)
+  );
+  let workDocument;
+  let currentStage = "复制工作文档";
+
+  try {
+    await core.executeAsModal(
+      async () => {
+        await sourceDocument.duplicate(workDocumentName, false);
+        workDocument = app.activeDocument;
+
+        currentStage = "重命名并锁定原图层";
+        const baseLayer = workDocument.layers[workDocument.layers.length - 1];
+        baseLayer.name = BASE_LAYER_NAME;
+        baseLayer.allLocked = true;
+
+        for (const groupName of WORK_GROUP_NAMES) {
+          currentStage = `创建工作组：${groupName}`;
+          await workDocument.createLayerGroup({ name: groupName });
+        }
+      },
+      {
+        commandName: "NDC initialize workfile",
+        timeOut: 10,
+      }
+    );
+  } catch (error) {
+    const message = error && error.message ? error.message : String(error);
+    throw new Error(`${currentStage}失败：${message}`);
+  }
+
+  const missingGroups = WORK_GROUP_NAMES.filter(
+    (name) => !findTopLevelLayer(workDocument, name)
+  );
+  if (missingGroups.length > 0) {
+    throw new Error(
+      `工作副本已创建，但以下顶层工作组缺失：${missingGroups.join("、")}`
+    );
+  }
+
+  const baseLayer = findTopLevelLayer(workDocument, BASE_LAYER_NAME);
+  if (!baseLayer || !baseLayer.allLocked) {
+    throw new Error("工作副本已创建，但 00_原图 图层未正确建立或锁定。");
+  }
+
+  await core.showAlert(
+    `NDC 工程初始化成功。\n\n工作副本：${workDocument.name}\n已锁定：${BASE_LAYER_NAME}\n已建立：${WORK_GROUP_NAMES.join("、")}\n\n原文档未修改，脚本没有保存或导出文件。`
+  );
+}
+
+initializeWorkfile().catch(async (error) => {
+  const message = error && error.message ? error.message : String(error);
+  console.error("NDC workfile initialization failed:", error);
+  await core.showAlert(`NDC 工程初始化失败：\n\n${message}`);
+});

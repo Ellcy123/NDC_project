@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NDC 本地 Skill 工作台：按工作板块浏览、搜索、评分和复制项目 Skill。">
+  <meta name="theme-color" content="#111820">
+  <title>NDC Skill 工作台</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#catalog">跳到 Skill 列表</a>
+
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="返回顶部">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span>
+          <span class="brand-name">NDC Skill Index</span>
+          <span class="brand-subtitle">本地工作技能档案</span>
+        </span>
+      </a>
+      <div class="header-meta">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>OFFLINE · LOCAL</span>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">NDC PROJECT / OPERATIONS LIBRARY</p>
+          <h1 id="page-title">把每个 Skill，<br><span>放回它该在的工作板块。</span></h1>
+          <p class="hero-description">统一查看两个项目里的正式 Skill。每张卡片说明它能做什么、需要什么输入、何时更新，以及它目前有多成熟。</p>
+        </div>
+
+        <div class="hero-stats" aria-label="Skill 统计">
+          <div class="stat-card stat-card-primary">
+            <span class="stat-label">正式 Skill</span>
+            <strong id="skillCount">36</strong>
+            <span class="stat-note">已去除镜像与临时副本</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">工作板块</span>
+            <strong id="categoryCount">9</strong>
+            <span class="stat-note">从生产到审计</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">项目来源</span>
+            <strong id="projectCount">2</strong>
+            <span class="stat-note">NDC + NDC_project</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="control-deck" aria-label="搜索与筛选">
+        <div class="search-row">
+          <label class="search-box" for="searchInput">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" autocomplete="off" placeholder="搜索 Skill 名、用途、输入或路径…">
+            <kbd>Ctrl K</kbd>
+          </label>
+          <button class="button button-secondary" id="copyVisibleButton" type="button">
+            <span aria-hidden="true">⧉</span>
+            复制当前名称
+          </button>
+        </div>
+
+        <div class="filter-block">
+          <div class="filter-heading">
+            <span>工作板块</span>
+            <button class="text-button" id="resetButton" type="button">清除筛选</button>
+          </div>
+          <div class="filter-chips" id="categoryFilters" aria-label="按工作板块筛选"></div>
+        </div>
+
+        <div class="sub-filter-row">
+          <div class="segmented-control" id="projectFilters" aria-label="按项目筛选">
+            <button class="segment is-active" type="button" data-project="all">全部项目</button>
+            <button class="segment" type="button" data-project="D:\NDC">D:\NDC</button>
+            <button class="segment" type="button" data-project="D:\NDC_project">D:\NDC_project</button>
+          </div>
+
+          <label class="sort-control" for="sortSelect">
+            <span>排序</span>
+            <select id="sortSelect">
+              <option value="rating-desc">星级最高</option>
+              <option value="modified-desc">最近修改</option>
+              <option value="name-asc">名称 A–Z</option>
+              <option value="category-asc">工作板块</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <details class="catalog-notes">
+        <summary>
+          <span>这份目录如何收录和评分？</span>
+          <span class="summary-hint">查看说明</span>
+        </summary>
+        <div class="notes-grid">
+          <div>
+            <h2>收录规则</h2>
+            <p id="scanRules"></p>
+          </div>
+          <div>
+            <h2>星级规则</h2>
+            <p>综合看输入是否明确、执行流程是否闭环、有没有验证与失败处理、安全边界是否清楚，以及近期是否仍在维护。星级代表“当前生产成熟度”，不是创意价值。</p>
+          </div>
+          <div>
+            <h2>操作提示</h2>
+            <p>点击 Skill 名即可复制；卡片底部还能复制完整路径。搜索会同时匹配名称、用途、输入、板块和来源。</p>
+          </div>
+        </div>
+      </details>
+
+      <section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
+        <div class="catalog-heading">
+          <div>
+            <p class="section-kicker">CATALOG</p>
+            <h2 id="catalog-title">Skill 档案</h2>
+          </div>
+          <p class="result-count" aria-live="polite"><strong id="resultCount">36</strong> 个结果</p>
+        </div>
+
+        <div class="skill-grid" id="skillGrid"></div>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <span class="empty-symbol" aria-hidden="true">∅</span>
+          <h2>没有找到匹配的 Skill</h2>
+          <p>换个关键词，或者清除工作板块与项目筛选。</p>
+          <button class="button button-secondary" id="emptyResetButton" type="button">清除全部筛选</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>NDC Skill Index · 本地离线目录</p>
+      <p>数据整理于 <span id="generatedAt">2026-08-21</span></p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="skills-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
