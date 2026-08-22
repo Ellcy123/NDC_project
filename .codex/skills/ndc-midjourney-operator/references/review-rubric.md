@@ -2,84 +2,72 @@
 
 ## Decision principle
 
-Judge requirement fidelity and aesthetic quality separately. Hard fidelity controls pass/fail; aesthetics choose among otherwise valid candidates.
+Apply background purity and hard requirement fidelity before aesthetic ranking. A beautiful image that contains a character, mutable prop, or wrong spatial structure still fails as a formal base asset.
 
-## Review categories
+## Preflight hard vetoes
 
-### A. Core composition and camera
+Fail the candidate when any of these is true:
 
-Check:
+- a person, character, body, corpse, or figure appears in the scene;
+- a collectible, pickup, plot item that may disappear, Loop-specific change, interaction close-up, or scan overlay is baked into the base;
+- the camera or large spatial structure contradicts the required scene;
+- a forbidden modern or wrong-period dominant subject changes scene identity.
 
-- scene type and major viewpoint;
-- foreground, middle ground, and background relationship;
-- direction and perspective;
-- major doors, paths, walls, counters, stage, or other scene-defining masses;
-- whether the scene remains readable as a game background.
-- camera height and horizon against observable architectural landmarks;
-- focal-length distortion and depth-of-field readability when the handoff specifies them;
-- foreground, middle ground, background and left, center, right anchors;
-- connection, separation, overlap, route, visibility, and relative scale among architecture-defining masses.
+Legacy comparison images containing people or bodies are evidence of past exploration only; they do not override this rule.
 
-Apply the scene-mode rule before aesthetic judgment:
+## Review order
 
-- `exploration`: audit only the required `eye_level` job. Fail a candidate if it does not visibly read as an eye-level three-point-perspective composition aligned with a standing eye line, camera height `1.7–1.8 meters`, and horizon at the upper third.
-- `non_exploration`: audit `frontal`, `oblique`, and `overhead_45` as three independent jobs. The frontal view must remain predominantly straight-on, the oblique view must expose the declared side and spatial relations, and the overhead view must look downward at approximately 45 degrees. One view cannot substitute for another.
+### A. Camera and composition — one-vote veto
 
-Do not accept a textual camera label at face value. Use visible geometry: expected top surfaces or edges of wainscoting, desks, counters, window sills, rails, and stair landings should agree with the intended height. Verify that major doors or routes intended to remain separate are not merged, occluded, or moved onto the wrong wall.
+Check viewpoint, perspective, camera height, horizon, foreground/middle/background, left/center/right anchors, and the relations among scene-defining masses. Do not accept the textual camera label at face value.
 
-Fail when the camera or large layout changes the intended scene. Do not fail for harmless furniture rearrangement.
+- `exploration`: review only `eye_level`. Require a visible eye-level three-point-perspective reading, optical center about `1.7–1.8 m` above the floor, and horizon near the upper third.
+- `non_exploration`: review `frontal`, `oblique`, and `overhead_45` as independent jobs. One view cannot substitute for another.
 
-### B. Core objects
+Judge scale from architecture: an ordinary door near 2 m, handrail about 0.9–1.0 m, desk about 0.72–0.76 m, plus plausible window sills, wainscoting, and stair risers. A temporary neutral silhouette may be placed over the image after generation only to review scale. It must never become a Midjourney reference, prompt subject, or final-layer element.
 
-Check every gameplay-, evidence-, interaction-, or narrative-critical object for:
+Fail when major doors, routes, walls, counters, stages, or other defining masses merge, move to the wrong wall, or lose the intended route. Do not fail for harmless furniture rearrangement.
 
-- presence;
-- recognizable type;
-- usable scale;
-- intended location or relationship;
-- visibility and separation from the background.
+### B. Style consistency
 
-An attractive image missing a core object fails. A deformed but recognizable core object is usually `partial` and may suit a variation.
+Check light direction, contrast, palette, line treatment, material readability, period atmosphere, and consistency with approved examples. Use style to rank candidates only after hard vetoes and camera pass.
 
-### C. Scene identity and period
+### C. Broad spatial structure
 
-Check architecture, furniture, technology, materials, signage, and clothing if present. Flag modern or wrong-period elements that change the scene's identity. Do not demand museum-level precision from minor decoration unless the source requires it.
+Check scene function, navigability, foreground/middle/background separation, architectural hierarchy, and game-background readability. For an exploration scene, the central safe area must stay compositionally stable and the left/right edges must be plausible continuation seams for Photoshop expansion.
 
-### D. Required and forbidden subjects
+### D. Scene-description fidelity
 
-Check whether characters, crowds, bodies, vehicles, text, modern devices, weather, or other explicitly required or forbidden subjects are present. A forbidden dominant subject is a hard failure.
+Check all permanent environment and narrative facts for presence, recognizable type, usable scale, intended relation, and visibility. Exact decorative counts remain flexible unless they affect gameplay or narrative logic.
 
-### E. Reference leakage
+### E. Background and layer compliance
 
-Look for subjects inherited from references rather than requirements:
+Only permanent environmental narrative may remain in the base. Verify that every collectible, temporary clue, changing prop, character, body, interaction asset, and scan element is absent and represented in the removable-layer handoff instead.
 
-- faces or people from portraits;
-- skyline, towers, or exterior windows from city references;
-- unwanted signature props;
-- copied composition that conflicts with the scene.
+### F. Period and reference leakage
 
-Repair the reference plan before piling on negative words.
+Check architecture, furniture, technology, materials, and signage. Look for subjects inherited from references rather than requirements, including faces, people, city silhouettes, signature props, or copied compositions. Repair the reference plan before stacking more negative wording.
 
-### F. Lighting and graphic finish
+### G. Canvas and time-variant readiness
 
-Check light direction, contrast, palette, line treatment, material readability, and consistency with approved examples. Use this category to rank valid images unless lighting obscures a core object or breaks a hard narrative condition.
-
-### G. Soft and flexible details
-
-Allow variation in non-critical counts, ornament, minor prop placement, decorative patterns, and incidental clutter. For example, accept any convincing row of small high clerestory windows when their exact number has no gameplay meaning.
+- First confirm that the submitted MJ job and result use the fixed `2:1` generation ratio.
+- `story_progression`: preview the post-MJ `16:10` crop and confirm it retains all required content.
+- `primary_exploration`: confirm a stable central frame and extendable left/right edges; any wider final ratio is decided after MJ.
+- For day/night, approve one geometry master and report Photoshop manual relighting. Reject structural drift caused by separately generating the same space at another time of day.
 
 ## Candidate status
 
-- `pass`: satisfies the category with no meaningful correction.
-- `partial`: useful foundation with a localized or tolerable defect.
+- `pass`: all hard requirements pass and finish is acceptable.
+- `mj-pass-postprocess`: the character-free geometry master passes; only planned Photoshop extension, relighting, or removable-layer assembly remains.
+- `partial`: useful foundation with a localized, repairable defect.
 - `fail`: violates a hard requirement or requires structural regeneration.
 
 ## Grid action
 
-- One or more candidates in the current view pass A–E: select the strongest using F and stop that view, unless the user requested refinement.
-- A candidate passes A–E but has a local F/G issue: use a subtle variation first; inspect it before escalating to a strong variation on the same base.
-- A candidate is partial in A or B but otherwise strong: consider a strong variation.
-- All candidates fail the same camera, depth-layer, architecture-relation, or other A–E condition: repair the prompt or reference plan and resubmit instead of relying on repeated variations.
-- Results fail for different reasons with no stable base: simplify the prompt to composition and core objects before adding finish back.
+- A candidate passes the hard vetoes and A–G: select the strongest and stop that view unless refinement was requested.
+- A candidate is structurally valid with a localized finish issue: try a subtle variation first.
+- A candidate is partial in A, C, D, or E but otherwise strong: consider a strong variation only if it can preserve the valid base.
+- All candidates repeat the same camera, structure, scale, or layer defect: repair the prompt/reference plan and resubmit.
+- Results fail for unrelated reasons with no stable base: simplify to camera, architecture, permanent environment, and exclusions before restoring finish language.
 
-After reviewing all required jobs, declare the set complete only when every required view has one passing candidate. A non-exploration scene is incomplete until `frontal`, `oblique`, and `overhead_45` each pass.
+Complete a scene only when every required Midjourney view passes and the Photoshop handoff is explicit. A non-exploration scene remains incomplete until all three required views pass.
