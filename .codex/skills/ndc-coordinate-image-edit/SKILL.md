@@ -16,6 +16,7 @@ Use [scripts/coordinate_patch.py](scripts/coordinate_patch.py) for every job. Le
 - Before the first image-file modification or generation, show a real `before -> after` example with the source path, regions to change, and protected elements; wait for explicit confirmation unless that exact edit was already confirmed in the current task.
 - Split disjoint edits into sequential jobs. Each job uses the last accepted full-size result as its source, but final verification always compares the finished image with the original source.
 - Use a small source-sized authorization mask for each object or tightly related structural group. Include the object's cast shadow, glow, loose fragment, and edge residue; exclude preserved frames, table edges, architecture, and unrelated pixels.
+- For a newly inserted freestanding object, reserve a background-integration halo outside every silhouette edge that is not intentionally occluded by an existing protected object. The hard-mask boundary must never substitute for the object's rim, wall, base, or contact edge. Start with at least `max(8 source pixels, 3% of the proposed object's shorter dimension)` of clearance, then enlarge only when its cast shadow or material transition needs more room.
 - Feather only inward. Every pixel outside the hard mask must remain byte-identical to that job's source.
 - Prefer a `1024x1024` real-source crop whenever it contains the edit and sufficient registration context. Never resize the authorized target to make the crop legal.
 - A generation crop must have edges divisible by 16, neither edge above 3840px, aspect ratio at most 3:1, and 655,360–8,294,400 total pixels. Expand into real source context to satisfy these limits.
@@ -72,6 +73,19 @@ Style/medium: preserve the source illustration, line weight, palette, material w
 Hard invariants: preserve all named frames and surroundings; keep exact framing and camera; do not crop, zoom, rotate, shift, resize, add text, or add unrelated objects; return the full edited crop
 ```
 
+When the job inserts an NDC evidence prop into an exploration scene, extend the prompt with a map-view contract. Do not paste the full detail-art requirement into this prompt. Use this structure:
+
+```text
+Use case: NDC in-scene evidence anchor
+Primary request: add a discoverable scene prop that communicates only its object class, silhouette, material, broad color, and current state.
+Map-view information budget: this is not the detail sprite. Do not expose exact titles, dates, numbers, signatures, or body text. At gameplay scale it only needs to read as a folder, ledger, envelope, pen, tool, or other named object class.
+Perspective contract: infer ordinary physical scale, visible face, foreshortening, and orientation from the source camera, nearby furniture, support surface, and vanishing lines. A document may show only its edge, spine, thickness, folded corner, or an unreadable cover fragment.
+Placement contract: keep the entire object, contact shadow, reflection, and required occlusion inside the authorized edit region.
+Hard invariants: do not enlarge, stand up, tilt, rotate, or turn the prop toward the viewer for legibility; do not create a close-up, evidence card, product display, signboard, or readable document; return the full edited crop with unchanged framing and camera.
+```
+
+The matching `*_big` detail asset owns close-reading information. Generate it separately from the scene insertion so exact text requirements cannot force the map prop into an oversized frontal presentation.
+
 After generation:
 
 1. use only the returned local saved path;
@@ -99,6 +113,10 @@ Accept the job only when:
 - outside-mask differing channels and maximum difference are both `0`;
 - `scan-boundary` passes;
 - the full image, close crop, and boundary overlay show no retained silhouette, white/black rim, glow, clipped shadow, or strange generated edge.
+
+For in-scene evidence insertion, also reject the job when the prop is oversized relative to nearby objects, turned toward the viewer for legibility, readable like a detail card, inconsistent with the support-surface perspective, or semantically clipped by the hard mask. Run this review on the full scene at expected gameplay display size. Passing containment and boundary reports alone is not acceptance.
+
+For every newly inserted freestanding object, inspect the authorization overlay together with both the close crop and the gameplay-size full scene. Reject it if an unoccluded silhouette edge touches the hard-mask boundary, if the mask boundary reads as part of the object, or if a required base/contact shadow merges into the background so that the object appears visually incomplete. A zero outside-mask pixel diff does not waive this completeness check.
 
 If a small source-colored fragment remains because the mask was too tight, expand only that object's mask within the already confirmed edit rectangle and recompose from the persisted generated crop. Regenerate only if the crop lacks usable replacement texture.
 
