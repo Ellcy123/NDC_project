@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import subprocess
 import sys
 import tempfile
@@ -26,7 +27,10 @@ class EvidenceDeliveryTests(unittest.TestCase):
         self.final = self.root / "final.png"
         self.bad_final = self.root / "bad_final.png"
         self.mask = self.root / "authorization.png"
+        self.broad_mask = self.root / "broad_authorization.png"
         self.base_report = self.root / "base_verification.json"
+        self.icon = self.root / "approved_icon.png"
+        self.icon_report = self.root / "approved_icon_verification.json"
 
         source = Image.new("RGB", (64, 64), (40, 50, 60))
         source.save(self.source)
@@ -43,14 +47,44 @@ class EvidenceDeliveryTests(unittest.TestCase):
         ImageDraw.Draw(mask).rectangle((20, 22, 31, 29), fill=255)
         mask.save(self.mask)
 
+        broad_mask = Image.new("L", (64, 64), 0)
+        ImageDraw.Draw(broad_mask).rectangle((8, 10, 54, 50), fill=255)
+        broad_mask.save(self.broad_mask)
+
         self.base_report.write_text(
             json.dumps({"passed": True}) + "\n", encoding="utf-8"
+        )
+
+        icon = Image.new("RGBA", (130, 130), (0, 0, 0, 0))
+        ImageDraw.Draw(icon).rounded_rectangle(
+            (24, 18, 106, 111), radius=8, fill=(160, 90, 35, 255)
+        )
+        icon.save(self.icon)
+        icon_hash = hashlib.sha256(self.icon.read_bytes()).hexdigest()
+        self.icon_report.write_text(
+            json.dumps(
+                {
+                    "version": 1,
+                    "kind": "ndc-icon",
+                    "artifact": {
+                        "path": str(self.icon),
+                        "sha256": icon_hash,
+                        "size": [130, 130],
+                        "mode": "RGBA",
+                    },
+                    "passed": True,
+                }
+            )
+            + "\n",
+            encoding="utf-8",
         )
 
     def tearDown(self) -> None:
         self.temp_context.cleanup()
 
-    def command(self, final: Path, output: Path) -> list[str]:
+    def command(
+        self, final: Path, output: Path, authorization_mask: Path | None = None
+    ) -> list[str]:
         return [
             sys.executable,
             "-B",
@@ -61,7 +95,7 @@ class EvidenceDeliveryTests(unittest.TestCase):
             "--final-scene",
             str(final),
             "--authorization-mask",
-            str(self.mask),
+            str(authorization_mask or self.mask),
             "--base-verification",
             str(self.base_report),
             "--map-padding",
@@ -78,6 +112,10 @@ class EvidenceDeliveryTests(unittest.TestCase):
             "SC4025_item_4317_big",
             "--icon-stem",
             "SC4025_item_4317_icon",
+            "--icon-image",
+            str(self.icon),
+            "--icon-verification",
+            str(self.icon_report),
             "--cutout-mask",
             str(self.mask),
             "--z=-3",
@@ -151,6 +189,60 @@ class EvidenceDeliveryTests(unittest.TestCase):
         self.assertIn(
             "Original scene/package verification did not pass", report["failures"]
         )
+
+    def test_broad_authorization_does_not_inflate_map_crop(self) -> None:
+        output = self.root / "broad_delivery"
+        packaged = subprocess.run(
+            self.command(self.final, output, self.broad_mask),
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(packaged.returncode, 0, packaged.stdout + packaged.stderr)
+        manifest = json.loads(
+            (output / "delivery_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(manifest["mapCrop"]["method"], "changed-pixel-bounds")
+        self.assertEqual(manifest["mapCrop"]["rect"], [20, 22, 32, 30])
+        self.assertFalse(manifest["checks"]["authorizationContainedByMapRect"])
+        self.assertTrue(manifest["checks"]["changedPixelsContainedByMapRect"])
+
+    def test_rejects_approved_icon_without_matching_report(self) -> None:
+        output = self.root / "missing_icon_report"
+        command = self.command(self.final, output)
+        report_index = command.index("--icon-verification")
+        del command[report_index : report_index + 2]
+        packaged = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(packaged.returncode, 0)
+        self.assertIn(
+            "require --icon-verification", packaged.stdout + packaged.stderr
+        )
+
+    def test_omit_icon_removes_path_and_artifacts(self) -> None:
+        output = self.root / "iconless_delivery"
+        command = self.command(self.final, output)
+        for option in ("--icon-stem", "--icon-image", "--icon-verification"):
+            index = command.index(option)
+            del command[index : index + 2]
+        command.extend(["--omit-icon"])
+        packaged = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(packaged.returncode, 0, packaged.stdout + packaged.stderr)
+        manifest = json.loads(
+            (output / "delivery_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertNotIn("iconPath", manifest["unityDraft"])
+        self.assertNotIn("iconSprite", manifest["artifacts"])
+        self.assertTrue(manifest["icon"]["omitted"])
 
 
 if __name__ == "__main__":

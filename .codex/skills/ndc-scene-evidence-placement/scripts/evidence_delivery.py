@@ -26,6 +26,8 @@ PATCH_NAME = "ItemStaticData.patch.json"
 OVERLAY_NAME = "position_overlay.png"
 
 Rect = tuple[int, int, int, int]
+ICON_FINAL_SIZE = (130, 130)
+ICON_FINAL_SAFE_RECT: Rect = (7, 7, 122, 122)
 
 
 def save_json(path: Path, value: dict[str, Any]) -> None:
@@ -165,6 +167,21 @@ def alpha_bbox(image: Image.Image) -> tuple[int, int, int, int] | None:
     return image.getchannel("A").getbbox()
 
 
+def normalize_transparent_rgb(image: Image.Image) -> Image.Image:
+    red, green, blue, alpha = image.convert("RGBA").split()
+    transparent = alpha.point(lambda value: 255 if value == 0 else 0)
+    for channel in (red, green, blue):
+        channel.paste(0, mask=transparent)
+    return Image.merge("RGBA", (red, green, blue, alpha))
+
+
+def premultiplied_resize(
+    image: Image.Image, size: tuple[int, int], resample: Image.Resampling
+) -> Image.Image:
+    resized = image.convert("RGBA").convert("RGBa").resize(size, resample)
+    return normalize_transparent_rgb(resized.convert("RGBA"))
+
+
 def extract_detail(
     final: Image.Image,
     rect: Rect,
@@ -186,28 +203,26 @@ def extract_detail(
     return crop.crop((left, top, right, bottom))
 
 
-def derive_icon(detail: Image.Image, size: int, padding: int) -> Image.Image:
-    if size <= 0:
-        raise ValueError("--icon-size must be positive")
-    if padding < 0 or padding * 2 >= size:
-        raise ValueError("--icon-padding must be non-negative and smaller than half the icon")
+def derive_icon(detail: Image.Image, size: int, content_max: int) -> Image.Image:
+    """Legacy-only deterministic derivation for audited old packages."""
+    if size != 130:
+        raise ValueError("Legacy-derived runtime Icons must still be exactly 130x130")
+    if not 1 <= content_max <= 115:
+        raise ValueError("--icon-content-max must be between 1 and 115")
     rgba = detail.convert("RGBA")
     bbox = alpha_bbox(rgba)
     if bbox is None:
         raise ValueError("Detail image is fully transparent")
     subject = rgba.crop(bbox)
-    available = size - padding * 2
-    scale = min(available / subject.width, available / subject.height)
+    scale = min(content_max / subject.width, content_max / subject.height, 1.0)
     new_size = (
         max(1, round(subject.width * scale)),
         max(1, round(subject.height * scale)),
     )
-    subject = subject.resize(new_size, Image.Resampling.LANCZOS)
+    subject = premultiplied_resize(subject, new_size, Image.Resampling.LANCZOS)
     icon = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    icon.paste(
-        subject,
-        ((size - subject.width) // 2, (size - subject.height) // 2),
-        subject,
+    icon.alpha_composite(
+        subject, ((size - subject.width) // 2, (size - subject.height) // 2)
     )
     return icon
 
@@ -257,6 +272,97 @@ def read_base_verification(path: Path | None) -> dict[str, Any] | None:
     }
 
 
+def inspect_runtime_icon(path: Path) -> dict[str, Any]:
+    image = load_preserving_mode(path)
+    rgba = image.convert("RGBA")
+    bbox = alpha_bbox(rgba)
+    transparent = rgba.getchannel("A").point(
+        lambda value: 255 if value == 0 else 0
+    )
+    red, green, blue, _ = rgba.split()
+    rgb_nonzero = ImageChops.lighter(ImageChops.lighter(red, green), blue)
+    transparent_rgb_nonzero = nonzero_pixel_count(
+        ImageChops.multiply(rgb_nonzero, transparent)
+    )
+    inside_safe = bool(
+        bbox
+        and ICON_FINAL_SAFE_RECT[0] <= bbox[0]
+        and ICON_FINAL_SAFE_RECT[1] <= bbox[1]
+        and bbox[2] <= ICON_FINAL_SAFE_RECT[2]
+        and bbox[3] <= ICON_FINAL_SAFE_RECT[3]
+    )
+    checks = {
+        "sizeIs130": image.size == ICON_FINAL_SIZE,
+        "modeIsRGBA": image.mode == "RGBA",
+        "contentExists": bbox is not None,
+        "contentBounds": list(bbox) if bbox else None,
+        "safeRect": list(ICON_FINAL_SAFE_RECT),
+        "contentInside115SafeRect": inside_safe,
+        "transparentRgbNonzeroPixels": transparent_rgb_nonzero,
+    }
+    checks["passed"] = all(
+        (
+            checks["sizeIs130"],
+            checks["modeIsRGBA"],
+            checks["contentExists"],
+            checks["contentInside115SafeRect"],
+            checks["transparentRgbNonzeroPixels"] == 0,
+        )
+    )
+    return checks
+
+
+def make_icon_report(
+    image_path: Path,
+    checks: dict[str, Any],
+    *,
+    method: str,
+    sources: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    return {
+        "version": 1,
+        "kind": "ndc-icon",
+        "method": method,
+        "artifact": {
+            "path": str(image_path.resolve()),
+            "sha256": sha256(image_path),
+            "size": list(ICON_FINAL_SIZE),
+            "mode": "RGBA",
+        },
+        "sources": sources or {},
+        "checks": checks,
+        "passed": bool(checks.get("passed")),
+    }
+
+
+def read_icon_verification(path: Path, icon_path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    report = json.loads(path.read_text(encoding="utf-8"))
+    checks = inspect_runtime_icon(icon_path)
+    artifact = report.get("artifact") or {}
+    artifact_hash_matches = artifact.get("sha256") == sha256(icon_path)
+    passed = bool(
+        report.get("passed")
+        and report.get("kind") == "ndc-icon"
+        and artifact_hash_matches
+        and checks.get("passed")
+    )
+    if not passed:
+        raise ValueError(
+            "Icon verification must be a passing ndc-icon report for the exact "
+            "130x130 RGBA source bytes"
+        )
+    return {
+        "path": str(path.resolve()),
+        "sha256": sha256(path),
+        "kind": report.get("kind"),
+        "artifactSha256Matches": artifact_hash_matches,
+        "checks": checks,
+        "passed": passed,
+    }
+
+
 def scene_checks(
     source: Image.Image | None,
     final: Image.Image,
@@ -280,6 +386,8 @@ def scene_checks(
                 "sourceFinalModeMatches": None,
                 "changedPixelsInsideAuthorization": None,
                 "changedPixelsOutsideAuthorization": None,
+                "changedPixelsOutsideMapRect": None,
+                "changedPixelsContainedByMapRect": None,
                 "outsideAuthorizationByteIdentical": None,
                 "mapCropReconstructsFinalFromSource": None,
             }
@@ -296,6 +404,8 @@ def scene_checks(
             {
                 "changedPixelsInsideAuthorization": None,
                 "changedPixelsOutsideAuthorization": None,
+                "changedPixelsOutsideMapRect": None,
+                "changedPixelsContainedByMapRect": False,
                 "outsideAuthorizationByteIdentical": False,
                 "mapCropReconstructsFinalFromSource": False,
             }
@@ -307,12 +417,17 @@ def scene_checks(
     changed_outside = nonzero_pixel_count(
         ImageChops.multiply(changed, ImageOps.invert(mask))
     )
+    changed_outside_rect = nonzero_pixel_count(
+        ImageChops.multiply(changed, ImageOps.invert(rect_limit))
+    )
     reconstructed = source.copy()
     reconstructed.paste(map_crop, (rect[0], rect[1]))
     checks.update(
         {
             "changedPixelsInsideAuthorization": changed_inside,
             "changedPixelsOutsideAuthorization": changed_outside,
+            "changedPixelsOutsideMapRect": changed_outside_rect,
+            "changedPixelsContainedByMapRect": changed_outside_rect == 0,
             "outsideAuthorizationByteIdentical": changed_outside == 0,
             "mapCropReconstructsFinalFromSource": images_equal(reconstructed, final),
         }
@@ -321,22 +436,21 @@ def scene_checks(
 
 
 def checks_pass(checks: dict[str, Any], base: dict[str, Any] | None) -> bool:
-    required = (
-        checks["mapCropMatchesFinalScenePixels"],
-        checks["authorizationContainedByMapRect"],
-    )
-    if not all(required):
+    if not checks["mapCropMatchesFinalScenePixels"]:
         return False
     if checks["sourceProvided"]:
         if not all(
             (
                 checks["sourceFinalSizeMatches"],
                 checks["sourceFinalModeMatches"],
+                checks["changedPixelsContainedByMapRect"],
                 checks["outsideAuthorizationByteIdentical"],
                 checks["mapCropReconstructsFinalFromSource"],
             )
         ):
             return False
+    elif not checks["authorizationContainedByMapRect"]:
+        return False
     if base is not None and not base["passed"]:
         return False
     return True
@@ -349,29 +463,38 @@ def package(args: argparse.Namespace) -> Path:
     final = load_preserving_mode(final_path)
 
     mask_path = args.authorization_mask.resolve() if args.authorization_mask else None
-    full_authorization_mask: Image.Image | None = None
-    if args.map_rect:
-        rect = as_rect(args.map_rect)
-    else:
-        if mask_path is None:
-            raise ValueError(
-                "Supply a source-sized --authorization-mask for automatic coordinates, "
-                "or an audited --map-rect for a legacy baked prop"
-            )
-        full_authorization_mask = load_source_sized_mask(mask_path, final.size)
-        bbox = full_authorization_mask.getbbox()
-        if bbox is None:
-            raise ValueError("Authorization mask is empty")
-        rect = expand_rect(bbox, args.map_padding, final.width, final.height)
-    validate_rect(rect, final.width, final.height)
-
+    full_authorization_mask = (
+        load_source_sized_mask(mask_path, final.size) if mask_path else None
+    )
     source_path = args.source_scene.resolve() if args.source_scene else None
     source = load_preserving_mode(source_path) if source_path else None
     if source is not None and source.size != final.size:
         raise ValueError("Source and final scene dimensions differ")
-    scene_has_changes = bool(
-        source is not None and nonzero_pixel_count(changed_pixel_mask(source, final))
-    )
+    changed = changed_pixel_mask(source, final) if source is not None else None
+    scene_has_changes = bool(changed is not None and nonzero_pixel_count(changed))
+
+    if args.map_rect:
+        rect = as_rect(args.map_rect)
+        map_rect_method = "audited-manual-override"
+    elif scene_has_changes and changed is not None:
+        bbox = changed.getbbox()
+        if bbox is None:
+            raise AssertionError("Changed-pixel mask unexpectedly has no bounds")
+        rect = expand_rect(bbox, args.map_padding, final.width, final.height)
+        map_rect_method = "changed-pixel-bounds"
+    else:
+        if full_authorization_mask is None:
+            raise ValueError(
+                "Automatic coordinates require changed source/final pixels or a "
+                "source-sized --authorization-mask; otherwise use an audited --map-rect"
+            )
+        bbox = full_authorization_mask.getbbox()
+        if bbox is None:
+            raise ValueError("Authorization mask is empty")
+        rect = expand_rect(bbox, args.map_padding, final.width, final.height)
+        map_rect_method = "authorization-mask-fallback"
+    validate_rect(rect, final.width, final.height)
+
     if scene_has_changes and mask_path is None:
         raise ValueError("Changed scenes require --authorization-mask")
     if scene_has_changes and args.base_verification is None:
@@ -379,9 +502,36 @@ def package(args: argparse.Namespace) -> Path:
 
     map_stem = validate_stem(args.map_stem, "mapSpritePath")
     detail_stem = validate_stem(args.detail_stem, "desSpritePath")
-    icon_stem = validate_stem(args.icon_stem, "iconPath")
-    if len({map_stem, detail_stem, icon_stem}) != 3:
-        raise ValueError("Map, detail, and icon stems must be distinct")
+    if args.omit_icon:
+        if any(
+            (
+                args.icon_stem,
+                args.icon_image,
+                args.icon_verification,
+                args.allow_legacy_derived_icon,
+            )
+        ):
+            raise ValueError(
+                "--omit-icon cannot be combined with Icon paths, stems, or legacy derivation"
+            )
+        icon_stem = None
+    else:
+        if not args.icon_stem:
+            raise ValueError("Production packages with an Icon require --icon-stem")
+        icon_stem = validate_stem(args.icon_stem, "iconPath")
+        if len({map_stem, detail_stem, icon_stem}) != 3:
+            raise ValueError("Map, detail, and icon stems must be distinct")
+        if args.icon_image and args.allow_legacy_derived_icon:
+            raise ValueError(
+                "Use an approved --icon-image or explicit legacy derivation, not both"
+            )
+        if args.icon_verification and not args.icon_image:
+            raise ValueError("--icon-verification requires --icon-image")
+        if not args.icon_image and not args.allow_legacy_derived_icon:
+            raise ValueError(
+                "Production packaging requires --icon-image plus --icon-verification; "
+                "use --omit-icon only when iconPath is intentionally absent"
+            )
     folder_path = normalize_folder_path(args.folder_path)
 
     if bool(args.detail_image) == bool(args.cutout_mask):
@@ -405,21 +555,27 @@ def package(args: argparse.Namespace) -> Path:
     scene_output = output_dir / SCENE_NAME
     map_output = output_dir / f"{map_stem}.png"
     detail_output = output_dir / f"{detail_stem}.png"
-    icon_output = output_dir / f"{icon_stem}.png"
+    icon_output = output_dir / f"{icon_stem}.png" if icon_stem else None
+    icon_verification_output = (
+        output_dir / f"{icon_stem}_verification.json" if icon_stem else None
+    )
     xy_output = output_dir / XY_NAME
     patch_output = output_dir / PATCH_NAME
     overlay_output = output_dir / OVERLAY_NAME
 
-    known_outputs = (
+    known_outputs = [
         scene_output,
         map_output,
         detail_output,
-        icon_output,
         xy_output,
         patch_output,
         overlay_output,
         output_dir / VERIFICATION_NAME,
-    )
+    ]
+    if icon_output:
+        known_outputs.append(icon_output)
+    if icon_verification_output:
+        known_outputs.append(icon_verification_output)
     existing_outputs = [path for path in known_outputs if path.exists()]
     if existing_outputs and not args.force:
         formatted = ", ".join(str(path) for path in existing_outputs)
@@ -469,21 +625,51 @@ def package(args: argparse.Namespace) -> Path:
     if detail.width <= 0 or detail.height <= 0 or alpha_bbox(detail) is None:
         raise ValueError("Standalone detail image is empty or fully transparent")
 
-    if args.icon_image:
-        icon_source = args.icon_image.resolve()
-        copy_png(icon_source, icon_output)
+    if args.omit_icon:
         icon_provenance: dict[str, Any] = {
+            "omitted": True,
+            "method": "runtime-iconPath-intentionally-absent",
+        }
+    elif args.icon_image:
+        if args.icon_verification is None:
+            raise ValueError("Approved Icons require --icon-verification")
+        assert icon_output is not None and icon_verification_output is not None
+        icon_source = args.icon_image.resolve()
+        source_verification = read_icon_verification(
+            args.icon_verification.resolve(), icon_source
+        )
+        copy_png(icon_source, icon_output)
+        shutil.copy2(args.icon_verification.resolve(), icon_verification_output)
+        staged_checks = inspect_runtime_icon(icon_output)
+        if not staged_checks.get("passed"):
+            raise ValueError("Staged Icon failed the fixed 130x130/115px-safe checks")
+        icon_provenance = {
+            "omitted": False,
             "method": "approved-icon-image",
             "source": str(icon_source),
             "sourceSha256": sha256(icon_source),
+            "verification": source_verification,
+            "checks": staged_checks,
         }
     else:
-        icon = derive_icon(detail, args.icon_size, args.icon_padding)
+        assert args.allow_legacy_derived_icon
+        assert icon_output is not None and icon_verification_output is not None
+        icon = derive_icon(detail, args.icon_size, args.icon_content_max)
         icon.save(icon_output)
+        staged_checks = inspect_runtime_icon(icon_output)
+        legacy_report = make_icon_report(
+            icon_output,
+            staged_checks,
+            method="explicit-legacy-detail-derivation",
+            sources={"detail": {"path": str(detail_output), "sha256": sha256(detail_output)}},
+        )
+        save_json(icon_verification_output, legacy_report)
         icon_provenance = {
-            "method": "derived-from-detail",
+            "omitted": False,
+            "method": "explicit-legacy-derived-from-detail",
             "size": args.icon_size,
-            "padding": args.icon_padding,
+            "contentMax": args.icon_content_max,
+            "checks": staged_checks,
         }
 
     x, y = rect[0], rect[1]
@@ -498,9 +684,10 @@ def package(args: argparse.Namespace) -> Path:
         "folderPath": folder_path,
         "desSpritePath": detail_stem,
         "mapSpritePath": map_stem,
-        "iconPath": icon_stem,
         "Position": [str(x), str(y), z],
     }
+    if icon_stem:
+        item_patch["iconPath"] = icon_stem
     save_json(patch_output, item_patch)
     create_overlay(final, rect, str(args.item_id)).save(overlay_output)
 
@@ -509,23 +696,29 @@ def package(args: argparse.Namespace) -> Path:
     )
     checks = scene_checks(source, final, mask, rect, saved_map)
     package_passed = checks_pass(checks, base_verification)
+    if not icon_provenance.get("omitted"):
+        package_passed = package_passed and bool(
+            (icon_provenance.get("checks") or {}).get("passed")
+        )
 
     artifact_paths = {
         "fullScene": scene_output,
         "mapSprite": map_output,
         "detailSprite": detail_output,
-        "iconSprite": icon_output,
         "xyCompatibility": xy_output,
         "itemStaticDataPatch": patch_output,
         "positionOverlay": overlay_output,
     }
+    if icon_output is not None and icon_verification_output is not None:
+        artifact_paths["iconSprite"] = icon_output
+        artifact_paths["iconVerification"] = icon_verification_output
     artifact_records = {
         key: {"path": str(path), "sha256": sha256(path)}
         for key, path in artifact_paths.items()
     }
 
     manifest: dict[str, Any] = {
-        "version": 1,
+        "version": 2,
         "stage": "packaged",
         "passed": package_passed,
         "coordinateSystem": {
@@ -559,6 +752,7 @@ def package(args: argparse.Namespace) -> Path:
             "folderPath": folder_path,
         },
         "mapCrop": {
+            "method": map_rect_method,
             "x": x,
             "y": y,
             "width": rect[2] - rect[0],
@@ -650,6 +844,51 @@ def verify_manifest(manifest_path: Path, write_report: bool) -> dict[str, Any]:
     if not xy_matches:
         failures.append("XYposition compatibility line differs from the manifest")
 
+    icon_record = manifest.get("icon") or {}
+    icon_omitted = bool(icon_record.get("omitted"))
+    icon_checks: dict[str, Any] | None = None
+    icon_verification_matches = False
+    icon_sprite_record = artifacts.get("iconSprite")
+    icon_verification_record = artifacts.get("iconVerification")
+    if icon_omitted:
+        icon_verification_matches = (
+            "iconPath" not in unity
+            and icon_sprite_record is None
+            and icon_verification_record is None
+        )
+        if not icon_verification_matches:
+            failures.append(
+                "Icon is declared omitted but iconPath or Icon artifacts are still present"
+            )
+    else:
+        if not unity.get("iconPath"):
+            failures.append("Icon package is missing iconPath")
+        if not icon_sprite_record or not icon_verification_record:
+            failures.append("Icon package is missing its Sprite or verification artifact")
+        else:
+            icon_path = Path(icon_sprite_record["path"])
+            icon_report_path = Path(icon_verification_record["path"])
+            if icon_path.is_file():
+                icon_checks = inspect_runtime_icon(icon_path)
+                if not icon_checks.get("passed"):
+                    failures.append(
+                        "Icon no longer passes the fixed 130x130 RGBA/115px-safe checks"
+                    )
+            if icon_path.is_file() and icon_report_path.is_file():
+                staged_icon_report = json.loads(
+                    icon_report_path.read_text(encoding="utf-8")
+                )
+                icon_verification_matches = bool(
+                    staged_icon_report.get("passed")
+                    and staged_icon_report.get("kind") == "ndc-icon"
+                    and (staged_icon_report.get("artifact") or {}).get("sha256")
+                    == sha256(icon_path)
+                )
+            if not icon_verification_matches:
+                failures.append(
+                    "Icon verification report does not match the staged Icon bytes"
+                )
+
     original_checks = manifest.get("checks") or {}
     original_passed = checks_pass(original_checks, manifest.get("baseVerification"))
     if not original_passed:
@@ -662,6 +901,9 @@ def verify_manifest(manifest_path: Path, write_report: bool) -> dict[str, Any]:
         "mapSpriteMatchesScenePixels": map_matches_scene,
         "itemStaticDataMatchesManifest": unity_matches,
         "xyPositionMatchesManifest": xy_matches,
+        "iconOmitted": icon_omitted,
+        "iconChecks": icon_checks,
+        "iconVerificationMatchesArtifact": icon_verification_matches,
         "originalSceneChecksPassed": original_passed,
         "failures": failures,
         "passed": not failures,
@@ -704,21 +946,32 @@ def build_parser() -> argparse.ArgumentParser:
     package_parser.add_argument(
         "--map-padding",
         type=int,
-        default=6,
-        help="Stable scene pixels added around the automatic mask bounding box",
+        default=32,
+        help="Stable scene pixels added around changed-pixel bounds (or the mask fallback)",
     )
     package_parser.add_argument("--item-id", required=True)
     package_parser.add_argument("--scene-id", required=True)
     package_parser.add_argument("--folder-path", required=True)
     package_parser.add_argument("--map-stem", required=True)
     package_parser.add_argument("--detail-stem", required=True)
-    package_parser.add_argument("--icon-stem", required=True)
+    package_parser.add_argument("--icon-stem")
     package_parser.add_argument("--detail-image", type=Path)
     package_parser.add_argument("--cutout-mask", type=Path)
     package_parser.add_argument("--detail-padding", type=int, default=4)
     package_parser.add_argument("--icon-image", type=Path)
-    package_parser.add_argument("--icon-size", type=int, default=256)
-    package_parser.add_argument("--icon-padding", type=int, default=24)
+    package_parser.add_argument("--icon-verification", type=Path)
+    package_parser.add_argument(
+        "--omit-icon",
+        action="store_true",
+        help="Omit iconPath and all Icon artifacts for a deliberately iconless record",
+    )
+    package_parser.add_argument(
+        "--allow-legacy-derived-icon",
+        action="store_true",
+        help="Explicit compatibility switch; never use for new production art",
+    )
+    package_parser.add_argument("--icon-size", type=int, default=130)
+    package_parser.add_argument("--icon-content-max", type=int, default=115)
     package_parser.add_argument("--z", default="-3")
     package_parser.add_argument("--output-dir", type=Path, required=True)
     package_parser.add_argument(

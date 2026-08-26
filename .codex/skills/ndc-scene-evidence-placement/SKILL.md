@@ -1,6 +1,6 @@
 ---
 name: ndc-scene-evidence-placement
-description: Place collectible NDC evidence into an approved raster scene without coordinate drift, or prepare a Unity Type 6 to Type 7 secondary-menu container pair. Export exact scene-local crops, independently positioned open-container views, detail and icon assets, top-left pixel coordinates, ItemStaticData drafts, and machine-verifiable delivery reports. Use when adding or replacing clickable evidence props, drawers, lockers, safes, boxes, pockets, or other EVIDENCE runtime assets in NDC exploration scenes.
+description: Place collectible NDC evidence into approved raster scenes, enforce a complete scene anchor for every exploration-acquired item, prepare Unity Type 6 to Type 7 container chains, and deterministically finalize Map, Big, 130px Icon, and 620px clue-Polaroid assets. Use when adding, replacing, auditing, or packaging clickable evidence props and container contents in NDC exploration scenes.
 ---
 
 # NDC Scene Evidence Placement
@@ -12,6 +12,7 @@ Turn an approved scene plus an evidence requirement into a staged, Unity-ready e
 1. Read the relevant Unit evidence-art document and the matching state scene before deciding what appears in the scene.
 2. Read `../ndc-coordinate-image-edit/SKILL.md` completely before any raster insertion or replacement. Its source-preservation, mask, crop, seam, and final-union checks remain mandatory.
 3. Read [references/delivery-contract.md](references/delivery-contract.md) before naming or packaging assets.
+4. When the request includes a Big image, Icon, or clue Polaroid, read [references/detail-icon-production.md](references/detail-icon-production.md) before generating, scaling, rotating, framing, or approving it.
 
 If the request includes Unit/Episode identity or IDs, read `canon_manifest.json` before inferring paths or namespaces.
 
@@ -19,13 +20,33 @@ If the request includes Unit/Episode identity or IDs, read `canon_manifest.json`
 
 Assign every requested evidence record one delivery class:
 
-- `scene-pickup`: a visible, clickable object placed in a scene. Deliver the complete package in this skill.
-- `container-state`: a drawer, safe, locker, case, box, pocket, bin, or similar Unity secondary-menu container. Deliver a scene-exact Type 6 entrance screenshot, a separately authored Type 7 open view, independent coordinates for both, and the complete Type 6 -> Type 7 -> contained-item chain. Do not treat it as one static pickup or a generic before/after edit.
-- `detail-only`: a document, analysis result, memory result, or handed-over evidence that is never present as a world prop. Deliver detail/icon assets only; do not invent a scene coordinate.
-- `environment`: a non-pickup environmental observation. Keep it in the background or state prop; do not create a fake collectible map sprite.
+- `scene-pickup`: a visible, clickable object obtained by investigating the base scene. Deliver Map, `Position`, Big, and every configured Icon.
+- `container-state`: a drawer, safe, locker, case, box, pocket, bin, or similar Unity secondary-menu container. Deliver a scene-exact Type 6 entrance screenshot, a separately authored Type 7 open view, independent coordinates for both, and the complete Type 6 -> Type 7 -> contained-item chain. Every contained exploration pickup also requires its own Map crop and full-scene `Position`, plus Big and every configured Icon. Do not treat the container pair as a substitute for the contained item's Map.
+- `detail-only`: an analysis result, memory result, automatic minigame output, or handed-over evidence that is never visible or clickable as a world prop. Deliver detail/icon assets only; do not invent a scene coordinate. A `post_expose`, dialogue, or minigame label alone does not prove this class; inspect the actual acquisition event.
+- `environment`: a non-pickup environmental observation. It must remain visibly represented in the background or a state prop. If the player clicks it to discover or record information, preserve a real scene hotspot/Map contract even when it does not enter inventory.
 - `minigame-only`: an interaction asset that does not enter ItemStaticData. Route it to the minigame asset workflow.
 
-Do not force all evidence records through `scene-pickup`.
+Classify from the actual player acquisition event in the matching state, SceneConfig, and ItemStaticData chain—not from filenames, an existing empty `mapSpritePath`, or `pickup` alone. Create an acquisition coverage row for every requested evidence item with: `itemId`, acquisition event, delivery class, visible state, parent container IDs when applicable, Map stem, full-scene `Position`, Big stem, Icon stem or explicit omission, and source references.
+
+Apply this hard gate before art production and again before delivery:
+
+- Anything obtained by clicking or searching the exploration scene must have a visible scene anchor. Big and Icon alone never satisfy an exploration pickup.
+- A direct scene pickup requires a non-empty Map and `Position`.
+- A pickup found after opening a Type 7 container requires its own non-empty Map and `Position` inside the displayed Type 7 view. Type 6 and Type 7 images do not replace that child Map.
+- An item granted automatically by dialogue, Expose, minigame completion, or analysis may omit Map only when it is never left for the player to locate or click. If the event visibly presents the item in the scene, deliver the required conditional/handover state as well.
+- A locked or post-Expose cache must be classified by what the player does after it unlocks. If the player opens it and clicks the contents, it is a container exploration chain; if the game grants the contents automatically, document the visible event state and the no-Map reason.
+
+Block the batch when any acquisition coverage row is unresolved. Do not generate Big/Icon-only placeholders to make an incomplete row look finished.
+
+## Art authorship boundary
+
+The evidence's semantic appearance must come from an approved high-resolution raster master: an accepted image-generation result, artist-authored raster, approved source extraction, or an approved deterministic transformation of such a master. The master must already establish the prop silhouette, perspective, material, construction, wear, lighting, and scene context.
+
+Deterministic code may own masks, crop rectangles, coordinate extraction, compositing, perspective transforms, rotation, scale, alpha handling, locked-frame application, exact-text placement, export dimensions, overlays, hashes, and verification reports. It must not originate the evidence or scene artwork.
+
+Production delivery is blocked when Python/Pillow, Canvas, SVG, HTML/CSS, shaders, or similar procedural drawing is used to create the prop body, paper/card surface, container, furniture, background, scene state, texture, wear, lighting, handwritten marks, or illustrative layout. These APIs remain valid for test fixtures, masks, debug overlays, borders, and deterministic transforms of approved art.
+
+Exact titles, dates, numbers, or body text may be composited deterministically only onto an approved illustrated physical master. Code must not fabricate a whole document by drawing a blank page, table, rules, stamps, handwriting, and text. Record the semantic master path/hash and any exact-text layer path/hash in the job manifest. A visual assembled mostly from code is a mockup, not a final asset.
 
 ## Scene-pickup workflow
 
@@ -45,6 +66,7 @@ Before writing any generation prompt, split the evidence art requirement into tw
 
 - `map-scene contract`: only the low-information features needed to discover and identify the object class in the exploration scene—silhouette, material, broad color, approximate state, and natural placement. Its view, foreshortening, occlusion, and visible face must follow the source scene camera and support-surface perspective. A document may show only its spine, edge, thickness, folded corner, or an unreadable portion of its cover.
 - `big-detail contract`: all close-reading information carried by `desSpritePath`, including exact titles, dates, numbers, body text, handwriting, damage, comparison marks, and puzzle-specific details.
+- `icon-presentation contract`: the inventory-scale silhouette, view, lighting, material identity, short left-down shadow, and readability needed at `130 x 130`. It is a separate presentation asset, not a mechanically shrunken Big. A flat front-facing paper or approved Polaroid may be deterministically re-laid out from its approved Big surface; a dimensional prop requires its own high-resolution icon master.
 
 Never copy the detailed text requirements from the `big-detail contract` into the in-scene generation prompt. The map scene is a discovery anchor, not a readable evidence card or product shot. Unless the evidence itself is an environmental sign meant to be read in the scene, body text and exact metadata must remain unreadable at gameplay scale.
 
@@ -52,13 +74,13 @@ Never copy the detailed text requirements from the `big-detail contract` into th
 
 Use `ndc-coordinate-image-edit` to create the source-sized authorization mask, legal generation crop, job manifest, and non-destructive composed scene.
 
-The authorization mask must include only:
+The authorization workspace must include:
 
 - the new object;
 - its physically necessary contact shadow, reflection, or occlusion;
-- the smallest background repair halo needed for natural integration.
+- a generous portion of the legal support surface for natural integration and model freedom.
 
-Do not include unrelated furniture, characters, walls, or broad lighting regions. Never rescale or crop the full scene after placement.
+For a collectible scene pickup, start from a tight intent mask and expand it into the parent authoring workspace under the base skill's evidence rule: at least `3x` the proposed object bounds on both axes, at least `128 source pixels` on every unoccluded side, and preferably the whole usable tray, tabletop, drawer interior, or floor patch. After generation, derive a separate final composition mask from the actual object, shadow, and necessary support-surface patch; keep at least `64 source pixels` around every unoccluded semantic edge. The composition mask must remain inside the parent workspace but must not include unrelated model drift merely because the parent workspace allowed it. Do not include characters or protected architecture. Never rescale or crop the full scene after placement.
 
 For a `scene-pickup`, the base-skill prompt must state the `map-scene contract` and must explicitly require:
 
@@ -80,7 +102,7 @@ Reject the scene candidate even when pixel-containment checks pass if any of the
 - a document's detailed text is readable from the exploration view;
 - the prop is enlarged or turned toward the camera to expose information;
 - its perspective, thickness, contact, or orientation conflicts with the support surface;
-- any semantic part of the prop or its contact shadow is clipped by the authorization mask.
+- any semantic part of the prop or its contact shadow is clipped by the parent workspace or comes within `64 source pixels` of an unoccluded final-composition hard-mask edge.
 - a freestanding container fails the completeness check: its opening or rim, both unoccluded side walls, bottom or base ring, and contact shadow must remain visibly complete and separable at gameplay size. Natural occlusion is allowed only when caused by an existing scene object and recorded in the placement contract; touching a mask boundary, visually dissolving into a same-value background, or merely passing pixel-containment checks is not acceptable.
 
 Inspect this at the full scene's expected gameplay display size, not only in a zoomed crop. Pixel containment is necessary but is not visual approval.
@@ -96,6 +118,8 @@ The detail image may be a clearer view than the in-scene object, but identity, m
 
 The detail image is the only default location for close-reading content. It may face the viewer and present exact text clearly; the matching map object should preserve the same identity and state without duplicating that information density.
 
+Do not send the `2560 x 1600` three-frame guide to Unity. It is a measurement and layout workspace only. Finalize an ordinary transparent Big as exactly one selected frame: portrait `571 x 1000`, square `818 x 818`, or landscape `1000 x 571`. Finalize an Icon as `130 x 130` RGBA with all visible prop and shadow pixels inside the fixed `115 x 115` safe rectangle. A clue Polaroid remains `620 x 620`; its frame is locked and the photo is perspective-composited through the canonical window mask. The exact coordinates, commands, alpha rules, and review sizes are in [references/detail-icon-production.md](references/detail-icon-production.md).
+
 ### 5. Package deterministically
 
 Run:
@@ -106,7 +130,7 @@ python scripts/evidence_delivery.py package `
   --final-scene <approved-scene-with-item.png> `
   --authorization-mask <source-sized-item-mask.png> `
   --base-verification <final_verification.json> `
-  --map-padding <small-pixel-margin> `
+  --map-padding 32 `
   --item-id <item-id> `
   --scene-id <scene-id> `
   --folder-path <EPIxx\scene-folder> `
@@ -114,13 +138,15 @@ python scripts/evidence_delivery.py package `
   --detail-stem <SCxxxx_item_xxxx_big> `
   --icon-stem <SCxxxx_item_xxxx_icon> `
   --detail-image <approved-transparent-detail.png> `
+  --icon-image <approved-130x130-icon.png> `
+  --icon-verification <icon-verification.json> `
   --z <-3> `
   --output-dir <image\edit_jobs\job\delivery>
 ```
 
-Use `--cutout-mask` instead of `--detail-image` only when the standalone image must be extracted from the accepted final scene. Supply `--icon-image` when a separately approved icon exists; otherwise the script derives a transparent square icon from the detail image.
+Use `--cutout-mask` instead of `--detail-image` only when the standalone image must be extracted from the accepted final scene. Production packaging requires an independently approved `130 x 130` RGBA Icon and its passing report from `evidence_art.py verify-icon` or `finalize-icon`. If the current runtime record intentionally has no `iconPath`, use `--omit-icon` and omit all Icon arguments. The package command must never silently shrink a Big or detail image into an Icon. `--allow-legacy-derived-icon` exists only to rebuild an audited old package and must be explicit in its manifest.
 
-By default the script derives the map rectangle and `(x, y)` from the source-sized authorization mask, then adds `--map-padding`. This is the preferred path. `--map-rect left top right bottom` is only an audited compatibility override for pre-existing baked props. The rectangle is top-left based and half-open. It must contain every changed pixel and all clickable visual content. A few pixels of stable local background are allowed; arbitrary large padding is not.
+When both the source and accepted final scene are supplied, the script derives the map rectangle and `(x, y)` from the actual changed-pixel bounds, then adds `--map-padding` (default `32`). This deliberately decouples the runtime Map crop from the much larger authorization workspace. When no source is available, it falls back to the authorization-mask bounds. `--map-rect left top right bottom` is only an audited compatibility override for pre-existing baked props. The rectangle is top-left based and half-open. It must contain every changed pixel and all clickable visual content.
 
 ### 6. Verify the delivery
 
@@ -132,13 +158,17 @@ python scripts/evidence_delivery.py verify --manifest <delivery_manifest.json>
 
 Delivery is blocked unless all applicable checks pass:
 
+- every acquisition coverage row passes and every exploration-acquired item has its required Map/`Position` scene anchor;
+- the job manifest identifies an approved semantic raster master, and no production artwork was procedurally originated by code;
 - source and final scene dimensions/mode match;
 - the base coordinate verification passes;
 - pixels outside the authorization mask are byte-identical;
-- all changed pixels fit inside the exported map rectangle;
+- all changed pixels fit inside the exported map rectangle; the larger unused portion of the authorization workspace does not have to fit inside it;
 - the exported map sprite equals the accepted scene rectangle pixel-for-pixel;
 - pasting the map sprite at `(x, y)` over the source reconstructs the accepted final scene;
 - the standalone detail image exists and is non-empty;
+- when `iconPath` is present, the staged Icon is exactly `130 x 130` RGBA, all visible pixels remain inside `[7,7,122,122)`, transparent pixels carry zero RGB, and the supplied Icon verification report matches the staged bytes;
+- when `--omit-icon` is used, the patch, manifest, and artifact list all omit the Icon rather than writing an empty or invented path;
 - asset stems and ItemStaticData paths agree;
 - staged artifact hashes still match the manifest.
 
@@ -169,7 +199,7 @@ Define all three levels before producing art:
 2. Type 7 is the open secondary view. It is generated by Type 6 and is not directly bound by `SceneConfig`. Its `ActionParam` is the comma-separated list of contained evidence IDs.
 3. Each contained evidence keeps its own map/detail/icon contract. The Type 7 view shows only enough information to locate and identify it; readable text and close-reading detail belong in its `desSpritePath` Big image.
 
-Block delivery if any link in `Type 6 -> Type 7 -> contained evidence` is missing.
+Block delivery if any link in `Type 6 -> Type 7 -> contained evidence Map/Position -> contained evidence Big/Icon` is missing.
 
 ### 2. Export `prop_<container>1.png` as an exact scene screenshot
 
@@ -190,13 +220,33 @@ The Type 7 image is independently authored from the physical identity of the Typ
 - Keep the container complete and make the interior readable, but do not turn the evidence inside it into a detailed product shot. Small writing remains unreadable; exact text and puzzle metadata stay in Big images.
 - Determine the borderless interior image's final pixel size before adding the required border. Do not resize after border application.
 
+The accepted Type 7 view is also the coordinate truth for its contained evidence. Each clickable child must be fully visible and separable at gameplay size. Do not use generic paper piles, generic cards, or an empty container as a stand-in for several distinct contained items.
+
 U1 is the sizing reference, not a rigid global clamp. Across the audited U1 drawer/cabinet pairs:
 
 - Type 6 screenshots range from about `60-296 px` wide and `40-160 px` high, with a median near `148 x 74 px`.
 - Type 7 final images range from about `272-456 px` wide and `252-484 px` high, with a median near `410 x 356 px`.
 - Start an ordinary drawer near `400 x 360 px` final size, then adjust for the container's real aspect ratio, interior contents, available scene space, and gameplay readability. Never enlarge an object merely to expose detailed writing.
 
-### 4. Position Type 7 near Type 6
+### 4. Export every contained evidence Map
+
+For every evidence ID in the Type 7 `ActionParam`:
+
+1. Define the child's exact rectangular crop in the accepted final bordered Type 7 image. Include the whole clickable visual and enough stable local context; do not crop through the object or shadow.
+2. Export that rectangle pixel-for-pixel as the child's `mapSpritePath` PNG. It may repeat pixels already visible in Type 7; this matches the established Unity overlay convention.
+3. Convert the Type 7-local crop origin to the full-scene coordinate system:
+
+```text
+childX = type7X + localCropLeft
+childY = type7Y + localCropTop
+```
+
+4. Write `[childX, childY, childZ]` to the child's `Position`. Never leave `mapSpritePath` or `Position` empty for a contained exploration pickup.
+5. Verify that the child crop lies completely inside Type 7 and that pasting it at `(childX, childY)` aligns pixel-for-pixel with the displayed Type 7 view.
+
+Use the same low-information rule as a base-scene Map: the child sprite identifies the item in the opened container; exact readable evidence content stays in Big.
+
+### 5. Position Type 7 near Type 6
 
 Type 7 remains in the full scene's top-left, Y-down coordinate system. It is not automatically centered on the screen or treated as an unpositioned UI card.
 
@@ -211,7 +261,7 @@ Then make only the smallest justified nudge required by the opening direction, s
 
 For reference, the audited U1 drawer/cabinet pairs have center offsets of roughly `-40 to +33 px` on X and usually `-53 to +92 px` on Y. Values outside that range are allowed only with a written scene-specific reason. Verify that the complete bordered Type 7 rectangle remains within the source scene canvas.
 
-### 5. Add and verify the final 12-pixel white border
+### 6. Add and verify the final 12-pixel white border
 
 The border is a rectangular, fully opaque white frame around the final borderless Type 7 image. It is not a silhouette stroke and not transparent padding.
 
@@ -237,7 +287,7 @@ python scripts/secondary_prop_border.py verify `
 
 Verification must prove the final dimensions, all four exact white strips, full opacity, and pixel identity of the inner image. Repair the source or rerun border generation when it fails; do not paint over the report.
 
-### 6. Verify and package both states
+### 7. Verify and package all states and contained items
 
 The staged container delivery must include:
 
@@ -245,6 +295,7 @@ The staged container delivery must include:
 - the approved borderless Type 7 source retained for recovery;
 - final `prop_<container>2.png`, its independent Type 7 `Position`, center-anchor calculation, and 12-pixel border declaration;
 - the Type 6 and Type 7 ItemStaticData draft rows;
+- every contained evidence Map crop, full-scene `Position`, Big, configured Icon, ItemStaticData draft row, and Map-to-Type-7 alignment verification;
 - the contained evidence IDs and proof that only Type 6 is bound by SceneConfig;
 - reconstruction verification for Type 6 and border/placement verification for Type 7.
 
@@ -260,9 +311,12 @@ After visual approval, present the staged package and ItemStaticData patch. Copy
 
 Every job must retain:
 
+- the acquisition coverage ledger and classification reasons;
+- the approved semantic raster master and its provenance/hash; exact-text layers are retained separately when used;
 - the base coordinate-edit manifests and masks;
 - the accepted full scene;
 - detail source or cutout mask;
+- Big, Icon, or clue-Polaroid masters, masks, selected frame/direction parameters, locked-template hashes, and finalization reports when applicable;
 - `delivery_manifest.json`;
 - `delivery_verification.json`;
 - hashes of all staged runtime artifacts.

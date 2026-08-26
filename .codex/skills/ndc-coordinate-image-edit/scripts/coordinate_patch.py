@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -141,6 +142,133 @@ def build_rect_mask(size: tuple[int, int], rect: Rect) -> Image.Image:
     mask = Image.new("L", size, 0)
     ImageDraw.Draw(mask).rectangle((left, top, right - 1, bottom - 1), fill=255)
     return mask
+
+
+def expand_authorization_mask(args: argparse.Namespace) -> Path:
+    """Expand a tight intent mask into a generous rectangular authoring workspace."""
+    input_path = args.input.resolve()
+    output_path = args.output.resolve()
+    if not input_path.is_file():
+        raise FileNotFoundError(input_path)
+    if input_path == output_path:
+        raise ValueError("--output must differ from --input")
+    if args.scale < 1:
+        raise ValueError("--scale must be at least 1")
+    if args.min_margin < 0:
+        raise ValueError("--min-margin must be non-negative")
+    if output_path.exists() and not args.force:
+        raise FileExistsError(f"Output already exists: {output_path}")
+
+    with Image.open(input_path) as image:
+        intent = image.convert("L")
+    canvas_size = tuple(args.canvas_size) if args.canvas_size else intent.size
+    if canvas_size[0] <= 0 or canvas_size[1] <= 0:
+        raise ValueError("--canvas-size edges must be positive")
+    offset_x, offset_y = args.offset
+    if not (
+        0 <= offset_x
+        and 0 <= offset_y
+        and offset_x + intent.width <= canvas_size[0]
+        and offset_y + intent.height <= canvas_size[1]
+    ):
+        raise ValueError("Input mask plus --offset does not fit inside --canvas-size")
+
+    intent_canvas = Image.new("L", canvas_size, 0)
+    intent_canvas.paste(intent, (offset_x, offset_y))
+    intent_array = np.asarray(intent_canvas, dtype=np.uint8) >= 128
+    intent_canvas = Image.fromarray((intent_array * 255).astype(np.uint8), "L")
+    bbox = intent_canvas.getbbox()
+    if bbox is None:
+        raise ValueError("Input intent mask is empty")
+
+    limit_rect = as_rect(args.limit_rect) if args.limit_rect else (0, 0, *canvas_size)
+    validate_rect(limit_rect, canvas_size[0], canvas_size[1], "Limit rectangle")
+    if not contains(limit_rect, bbox):
+        raise ValueError("Intent mask lies outside --limit-rect")
+
+    intent_width = bbox[2] - bbox[0]
+    intent_height = bbox[3] - bbox[1]
+    target_width = max(
+        math.ceil(intent_width * args.scale), intent_width + 2 * args.min_margin
+    )
+    target_height = max(
+        math.ceil(intent_height * args.scale), intent_height + 2 * args.min_margin
+    )
+    limit_width = limit_rect[2] - limit_rect[0]
+    limit_height = limit_rect[3] - limit_rect[1]
+    if target_width > limit_width or target_height > limit_height:
+        raise ValueError(
+            "Required authorization workspace does not fit inside --limit-rect; "
+            "enlarge the legal region, shrink/relocate the object, or explicitly revise the rule"
+        )
+
+    def choose_start(
+        inner_start: int,
+        inner_end: int,
+        target_size: int,
+        limit_start: int,
+        limit_end: int,
+    ) -> int:
+        lowest = max(limit_start, inner_end + args.min_margin - target_size)
+        highest = min(inner_start - args.min_margin, limit_end - target_size)
+        if lowest > highest:
+            raise ValueError(
+                "Required per-side authorization margin does not fit inside --limit-rect"
+            )
+        centered = round((inner_start + inner_end - target_size) / 2)
+        return max(lowest, min(centered, highest))
+
+    left = choose_start(bbox[0], bbox[2], target_width, limit_rect[0], limit_rect[2])
+    top = choose_start(bbox[1], bbox[3], target_height, limit_rect[1], limit_rect[3])
+    authorization_rect = (left, top, left + target_width, top + target_height)
+    margins = {
+        "left": bbox[0] - authorization_rect[0],
+        "top": bbox[1] - authorization_rect[1],
+        "right": authorization_rect[2] - bbox[2],
+        "bottom": authorization_rect[3] - bbox[3],
+    }
+    if min(margins.values()) < args.min_margin:
+        raise AssertionError("Authorization expansion failed the requested side margin")
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    authorization = build_rect_mask(canvas_size, authorization_rect)
+    authorization.save(output_path)
+
+    report_path = args.report.resolve() if args.report else output_path.with_suffix(".json")
+    if report_path.exists() and not args.force:
+        output_path.unlink(missing_ok=True)
+        raise FileExistsError(f"Report already exists: {report_path}")
+    report = {
+        "version": 1,
+        "input": str(input_path),
+        "inputSha256": sha256(input_path),
+        "inputSize": list(intent.size),
+        "canvasSize": list(canvas_size),
+        "offset": [offset_x, offset_y],
+        "intentBounds": list(bbox),
+        "intentSize": [intent_width, intent_height],
+        "scale": args.scale,
+        "minimumSideMargin": args.min_margin,
+        "limitRect": list(limit_rect),
+        "authorizationRect": list(authorization_rect),
+        "authorizationSize": [target_width, target_height],
+        "actualSideMargins": margins,
+        "output": str(output_path),
+        "outputSha256": sha256(output_path),
+        "passed": True,
+    }
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    save_json(report_path, report)
+    print("Authorization mask expansion: PASS")
+    print(f"Intent bounds: {bbox}; size: {intent_width} x {intent_height}")
+    print(
+        f"Authorization bounds: {authorization_rect}; "
+        f"size: {target_width} x {target_height}"
+    )
+    print(f"Side margins: {margins}")
+    print(f"Mask: {output_path}")
+    print(f"Report: {report_path}")
+    return output_path
 
 
 def load_authorization_mask(
@@ -1580,6 +1708,30 @@ def status(args: argparse.Namespace) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    expand_mask_parser = subparsers.add_parser(
+        "expand-mask",
+        help="Expand a tight intent mask into a broad evidence authoring workspace",
+    )
+    expand_mask_parser.add_argument("--input", type=Path, required=True)
+    expand_mask_parser.add_argument("--output", type=Path, required=True)
+    expand_mask_parser.add_argument("--scale", type=float, default=3.0)
+    expand_mask_parser.add_argument("--min-margin", type=int, default=128)
+    expand_mask_parser.add_argument(
+        "--canvas-size", type=int, nargs=2, metavar=("WIDTH", "HEIGHT")
+    )
+    expand_mask_parser.add_argument(
+        "--offset", type=int, nargs=2, default=(0, 0), metavar=("X", "Y")
+    )
+    expand_mask_parser.add_argument(
+        "--limit-rect",
+        type=int,
+        nargs=4,
+        metavar=("LEFT", "TOP", "RIGHT", "BOTTOM"),
+    )
+    expand_mask_parser.add_argument("--report", type=Path)
+    expand_mask_parser.add_argument("--force", action="store_true")
+    expand_mask_parser.set_defaults(func=expand_authorization_mask)
 
     prepare_parser = subparsers.add_parser("prepare", help="Create crop, masks, and manifest")
     prepare_parser.add_argument("--source", type=Path, required=True)

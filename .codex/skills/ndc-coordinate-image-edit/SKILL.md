@@ -1,6 +1,6 @@
 ---
 name: ndc-coordinate-image-edit
-description: Perform non-destructive, coordinate-locked cleanup and structural repair on NDC raster art through small authorization masks, legal generation crops, per-job residue checks, axis-aware seam scans, narrow deterministic bridges, and a final union-mask zero-drift audit. Use for localized removal, cleanup, replacement, material repair, or grid/line alignment; do not use for whole-image generation or broad restyling.
+description: Perform non-destructive, coordinate-locked cleanup, evidence placement, and structural repair on NDC raster art through bounded authorization regions, legal generation crops, per-job residue checks, axis-aware seam scans, deterministic bridges, and a final union-mask zero-drift audit. Use for localized removal, cleanup, replacement, material repair, evidence insertion, or grid/line alignment; do not use for whole-image generation or broad restyling.
 ---
 
 # NDC Coordinate Image Edit
@@ -15,8 +15,9 @@ Use [scripts/coordinate_patch.py](scripts/coordinate_patch.py) for every job. Le
 - Treat rectangles as half-open `[left, right)` and `[top, bottom)` using a recorded top-left origin unless the user explicitly supplied another origin.
 - Before the first image-file modification or generation, show a real `before -> after` example with the source path, regions to change, and protected elements; wait for explicit confirmation unless that exact edit was already confirmed in the current task.
 - Split disjoint edits into sequential jobs. Each job uses the last accepted full-size result as its source, but final verification always compares the finished image with the original source.
-- Use a small source-sized authorization mask for each object or tightly related structural group. Include the object's cast shadow, glow, loose fragment, and edge residue; exclude preserved frames, table edges, architecture, and unrelated pixels.
-- For a newly inserted freestanding object, reserve a background-integration halo outside every silhouette edge that is not intentionally occluded by an existing protected object. The hard-mask boundary must never substitute for the object's rim, wall, base, or contact edge. Start with at least `max(8 source pixels, 3% of the proposed object's shorter dimension)` of clearance, then enlarge only when its cast shadow or material transition needs more room.
+- For removal and repair, keep the source-sized authorization mask bounded to the affected object or structural group. Include cast shadow, glow, loose fragments, edge residue, and required reconstruction context; exclude protected frames, architecture, and unrelated objects.
+- For a newly inserted collectible evidence prop, do not trace the proposed silhouette with the parent authorization mask. Treat it as a generous authoring workspace on the legal support surface. Prefer the whole usable tray, tabletop, drawer interior, floor patch, or other placement surface. Unless a protected scene boundary prevents it, its bounding box must be at least `3x` the proposed object bounding box on both axes and leave at least `128 source pixels` on every unoccluded side. When those requirements conflict, use the larger region.
+- Keep the parent authorization workspace separate from the final composition mask. After generation, build the composition mask around the actual complete object and the support-surface material that must be recomposed. It must remain a subset of the confirmed parent workspace and leave at least `64 source pixels` between every unoccluded semantic edge/shadow and its hard boundary. It may be smaller than the parent workspace so harmless model drift does not inflate the runtime Map crop, but it must never collapse back to a silhouette trace.
 - Feather only inward. Every pixel outside the hard mask must remain byte-identical to that job's source.
 - Prefer a `1024x1024` real-source crop whenever it contains the edit and sufficient registration context. Never resize the authorized target to make the crop legal.
 - A generation crop must have edges divisible by 16, neither edge above 3840px, aspect ratio at most 3:1, and 655,360–8,294,400 total pixels. Expand into real source context to satisfy these limits.
@@ -39,9 +40,25 @@ Open the original with `view_image`. List every edit region and divide it into i
 
 Do not use an earlier rejected preview as the new original.
 
-### 2. Build the smallest masks and legal crops
+### 2. Build bounded masks and legal crops
 
-Create source-sized masks. One object may use one polygon; overlapping objects that require a single reconstructed surface may share one mask. Preserve a strip of real surrounding material inside the crop so the model can infer texture and registration.
+Create source-sized masks. One object may use one polygon; overlapping objects that require a single reconstructed surface may share one mask. Preserve real surrounding material inside the crop so the model can infer texture and registration.
+
+For collectible evidence placement, first make a tight intent mask that records the proposed object envelope, then expand it deterministically into the broad authorization workspace. The intent mask is a planning artifact, not the final hard mask. Use `expand-mask`; the command fails rather than silently clipping the required `3x` workspace or `128px` side margins:
+
+```powershell
+& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" expand-mask `
+  --input "D:/NDC_project/image/edit_jobs/task/intent_mask.png" `
+  --output "D:/NDC_project/image/edit_jobs/task/authorization_mask.png" `
+  --scale 3 `
+  --min-margin 128 `
+  --limit-rect 1024 384 2048 1408 `
+  --report "D:/NDC_project/image/edit_jobs/task/authorization_mask_report.json"
+```
+
+Inspect both masks over the full scene. A rectangular broad workspace is acceptable when the prompt and protected-element list keep unrelated content unchanged; it is not required to hug the object contour.
+
+After a candidate exists, create the final composition mask from the candidate's actual object, shadow, and necessary support-surface patch. Prepare a second manifest with the same source and crop, use this composition mask, and compose from the already persisted `generated.png`; this deterministic recomposition does not authorize or require another generation. In final verification, pass the parent authorization mask as the legal union and the composition manifest as the executed job.
 
 Prepare an AI job with an explicit legal crop:
 
@@ -116,9 +133,9 @@ Accept the job only when:
 
 For in-scene evidence insertion, also reject the job when the prop is oversized relative to nearby objects, turned toward the viewer for legibility, readable like a detail card, inconsistent with the support-surface perspective, or semantically clipped by the hard mask. Run this review on the full scene at expected gameplay display size. Passing containment and boundary reports alone is not acceptance.
 
-For every newly inserted freestanding object, inspect the authorization overlay together with both the close crop and the gameplay-size full scene. Reject it if an unoccluded silhouette edge touches the hard-mask boundary, if the mask boundary reads as part of the object, or if a required base/contact shadow merges into the background so that the object appears visually incomplete. A zero outside-mask pixel diff does not waive this completeness check.
+For every newly inserted freestanding object, inspect both the parent-authorization overlay and final-composition overlay together with the close crop and gameplay-size full scene. Reject it if any unoccluded semantic edge, tag, loose part, reflection, or shadow comes within `64 source pixels` of the composition hard-mask boundary, if either boundary reads as part of the object, or if a required base/contact shadow merges into the background so that the object appears visually incomplete. A zero outside-mask pixel diff does not waive this completeness check.
 
-If a small source-colored fragment remains because the mask was too tight, expand only that object's mask within the already confirmed edit rectangle and recompose from the persisted generated crop. Regenerate only if the crop lacks usable replacement texture.
+If a source-colored fragment remains because the mask was too tight, rebuild the evidence workspace from the intent mask with larger `--scale` or `--min-margin` values and recompose from the persisted generated crop when it already contains the complete object. Regenerate only if the crop itself lacks the complete object or usable replacement texture.
 
 ### 5. Scan structural lines in the original orientation
 

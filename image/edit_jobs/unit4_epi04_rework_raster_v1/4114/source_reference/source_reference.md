@@ -1,4 +1,0 @@
-# 4114 来源与约束
-
-- 资助卷宗需读出 `SACRED HEART HOSPITAL — CHARITY PROGRAM FUNDING`、第一资助方 `MILLER ACCIDENT FUND`、`PROGRAM LIAISON: WHITFIELD`。
-- 只证明资助与对接关系；不出现第十九页、问题批次或上层批准者。
