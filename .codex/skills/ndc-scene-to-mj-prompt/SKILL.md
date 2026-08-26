@@ -11,7 +11,12 @@ Produce a self-contained `ndc-mj-scene/v3` handoff containing the required view 
 
 1. Read [prompt rules](references/prompt-rules.md) before drafting any prompt.
 2. Read [handoff schema](references/handoff-schema.md) before returning the result.
-3. Inspect every user-supplied reference image before assigning it a role. Treat `assets/approved-courthouse-scene-style.png` as a calibration example only, never as a universal NDC style reference.
+3. Read [style analysis protocol](references/style-analysis-protocol.md) whenever analyzing, comparing, or approving style references or generated scene style.
+4. Inspect every user-supplied reference image before assigning it a role. Treat `assets/approved-courthouse-scene-style.png` as a calibration example only, never as a universal NDC style reference.
+
+Reference inspection has two mandatory levels: review the complete image first, then run `scripts/make_style_review_tiles.py` and inspect every overlap-safe original-resolution tile. Do not infer fine brushwork, texture, line endings, material treatment, or edge behavior from a downscaled 4K/8K overview. A completed style analysis must report `whole_image_checked: true`, `local_tile_coverage_complete: true`, image-entry and deduplicated counts, tile count, stable traits, branch traits, minority traits, and artifacts.
+
+Do not collapse the NDC scene references into a universal “jewel tones plus bold black contour” formula. The stable scene core is compressed large-scale shape design, deep grouped shadow masses, a controlled hard-soft edge hierarchy, restrained charcoal/brown-gray/olive-gray bases, limited warm focal accents, and scale-aware matte grain or directional texture. Treat saturation, thick-paint language, and bold calligraphic contours as conditional branches only when both whole-image and local-tile evidence support them for the current scene. Use the character-graphic static reference for shape compression and edge economy, the city-rain static reference for weather texture and atmospheric depth, and the approved courthouse example for thin architectural line hierarchy, subdued interior color grouping, and hard geometry with soft light shafts.
 
 ## Resolve the source requirement
 
@@ -124,6 +129,8 @@ Assign each candidate reference one role:
 - `reject`: semantically conflicts with the target scene or is likely to leak an unwanted subject.
 
 Reject or downgrade incompatible references before trying to negate their content in text. A portrait used on an empty interior can leak a person; a city exterior can leak skyline or windows. Negative wording is not a reliable cure for strong reference semantics.
+
+Before extracting palette, line, texture, or rendering language from a `style` reference, complete the full-image and local-tile protocol. Separate scene-wide composition from local rendering behavior, and separate stable cross-reference traits from material-specific handling or single-image artifacts.
 
 ## Draft the view prompts
 

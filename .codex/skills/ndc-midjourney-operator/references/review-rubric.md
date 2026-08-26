@@ -32,6 +32,18 @@ Fail when major doors, routes, walls, counters, stages, or other defining masses
 
 Check light direction, contrast, palette, line treatment, material readability, period atmosphere, and consistency with approved examples. Use style to rank candidates only after hard vetoes and camera pass.
 
+Perform this category in two passes. First inspect the complete image. Then follow `style-analysis-protocol.md` and inspect every overlap-safe original-resolution tile, including edges, quiet walls/floors, deepest shadows, brightest lights, sky, and future extension seams. Check line-weight rhythm and endings, brush direction and scale, hard/soft edge hierarchy, material-specific texture, repeated texture stamps, local blur/sharpen mismatch, generated joins, and compression artifacts. Record stable traits separately from material branches, minority traits, and noise. Style cannot be marked `pass` unless both whole-image review and complete local coverage are recorded.
+
+Use this calibrated scene baseline when comparing references and candidates:
+
+- Stable core: compressed large shapes, deep grouped shadows, restrained charcoal/brown-gray/olive-gray bases, limited warm focal accents, controlled hard structural edges plus softer atmospheric transitions, and texture whose direction and density respond to material, distance, weather, and scale.
+- Character-graphic reference branch: hard massing, edge economy, limited warm emphasis; never transfer its person, costume, skin, or composition into the empty environment.
+- City-rain reference branch: rain streaks, matte weather grain, vertical depth, restrained orange illumination; do not demand its skyline, night state, or rain in unrelated scenes.
+- Courthouse/interior branch when supported by the handoff: thin stable architectural lines, subdued olive/charcoal/amber grouping, hard doors/panels/moldings, soft daylight shafts, and restrained surface wear.
+- Conditional only: jewel-tone saturation, broadly applied calligraphic black contours, and thick-paint language. Their absence is not a failure unless the current approved scene reference requires them.
+
+Fail style review when texture is uniformly stamped across depth, rain or brush direction contradicts surfaces and perspective, all architecture receives the same heavy contour, distant edges are sharpened like the foreground, or local seams/duplicated patterns are visible.
+
 ### C. Broad spatial structure
 
 Check scene function, navigability, foreground/middle/background separation, architectural hierarchy, and game-background readability. For an exploration scene, the central safe area must stay compositionally stable and the left/right edges must be plausible continuation seams for Photoshop expansion.

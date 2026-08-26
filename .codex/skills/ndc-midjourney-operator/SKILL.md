@@ -12,7 +12,8 @@ Submit, inspect, and iterate the complete required NDC base-background view set.
 1. Read [handoff contract](references/handoff-contract.md) before accepting a job.
 2. Read [review rubric](references/review-rubric.md) before judging a generated grid.
 3. Read [operation loop](references/operation-loop.md) before opening or controlling Midjourney.
-4. Use the `browser:control-in-app-browser` skill and follow its browser-selection, authentication, upload, and interaction rules exactly.
+4. Read [style analysis protocol](references/style-analysis-protocol.md) before any formal style comparison or final style approval.
+5. Use the `browser:control-in-app-browser` skill and follow its browser-selection, authentication, upload, and interaction rules exactly.
 
 ## Establish authorization and scope
 
@@ -66,6 +67,8 @@ Treat both assets as mandatory `style` references even when the handoff contains
 
 Do not inherit the city skyline, rain, nighttime setting, orange street, male character, facial identity, pose, or costume from these images. If the Midjourney UI cannot assign both files specifically as Style References, stop instead of silently submitting without them or degrading them to image prompts. If repeated figure leakage can be traced to the character-based style asset, stop and request an approved character-free environment style proxy; do not compensate by adding character descriptions to positive prose or by silently dropping a mandatory reference.
 
+Treat the two static references as complementary controls, not proof of one universal surface style. The character-graphic asset controls compressed large shapes, hard massing, edge economy, and limited warm emphasis only. The city-rain asset controls matte weather texture, vertical atmospheric depth, charcoal/brown-gray grouping, and restrained orange light only. Do not require jewel-tone saturation or bold calligraphic contours unless the current handoff's approved scene reference independently supports them. For architectural interiors, expect thinner stable construction lines at doors, panels, and moldings, with hard geometry and softer light/atmosphere transitions.
+
 Add handoff-provided `status: use` references only after these two static style references. Keep the handoff roles unchanged; the static references do not replace scene-specific environment, composition, or identity references.
 
 ## Operate Midjourney
@@ -98,6 +101,8 @@ Review every candidate in every required view against the original and normalize
 7. Soft and flexible details.
 
 Use `pass`, `partial`, or `fail` for each category. Do not reject an image only because a flexible count differs. For example, the presence and type of high clerestory windows can matter while their exact count remains irrelevant.
+
+The initial whole-grid inspection is not sufficient for a formal style pass. After a candidate clears hard camera, structure, and background vetoes and is being considered for selection, inspect its complete image, then use the scene tiling helper to cover every original pixel with overlapping tiles and inspect all tiles. Record `whole_image_checked`, `local_tile_coverage_complete`, tile count, and findings for line, brush direction and scale, hard-soft edge hierarchy, material-specific texture, rain/grain behavior, repeated patterns, local blur/sharpen mismatch, seams, and generation defects. Classify each observation as stable, branch, minority, or artifact before comparing it with the prompt. A candidate with incomplete local coverage cannot receive a final style `pass`.
 
 For composition and camera, explicitly compare the image with that view entry's scene description and camera contract:
 
@@ -145,6 +150,7 @@ Return for each required view:
 - view id, round number, and job identity or URL when visible;
 - exact prompt and references used for that view;
 - candidate-by-candidate audit summary;
+- complete-image and complete-local-tile style coverage status for every selected candidate;
 - selected action and its requirement-based reason;
 - remaining iteration budget for that view;
 - final passing candidate or the unresolved blocker.

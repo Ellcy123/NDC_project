@@ -13,7 +13,9 @@ Default to preparing copy-ready prompts, reference order, parameter constraints,
 
 Read `references/character-rules.md` before planning or judging any character task. Read `references/prompt-library.md` when producing prompts. Read `references/evidence-and-gaps.md` when deriving a new preference, evaluating a borderline case, or explaining the confidence of a recommendation.
 
-Read `references/style-self-check.md` before judging or delivering generated assets. Its file paths and hard gates are mandatory for NDC output QA.
+Read `references/style-self-check.md` before judging or delivering generated assets. Its file paths and hard gates are mandatory for NDC output QA. Read `references/modular-character-card.md` before producing a formal 2K/4K character card or any character card assembled from separately generated views.
+
+Read `references/style-analysis-protocol.md` whenever the task asks for style analysis, style self-check, comparison with style references, or formal style approval. A complete-image review is only the first pass. Use `scripts/make_style_review_tiles.py` to cover every source pixel with overlapping original-resolution tiles, inspect every tile for line, brush, texture, edge, material, and micro-detail behavior, then return those observations to the whole image. Do not call a 4K/8K reference fully analyzed from its downscaled overview alone. A formal style pass requires both `whole_image_checked: true` and `local_tile_coverage_complete: true`.
 
 Use the bundled files in `assets/` in the exact roles stated below. Do not substitute visually similar references without user approval.
 
@@ -100,15 +102,19 @@ Then produce only the assets required by the selected route:
 
 Before accepting any final asset, verify its actual pixel ratio first, then apply the matching style library and structural gates from `references/style-self-check.md`. A wrong ratio is an automatic failure and must not proceed to subjective style review.
 
-For the general-style character card, require three complete and consistently scaled full-body views on the left: front, strict side, and back, with head tops, shoulder lines, waist, knees, and heel baselines aligned. The right side must include both a neutral front head close-up and the required opposite-facing profile close-up. Use the lower detail area only for approved, identity-relevant costume, shoe, accessory, or construction details. Reject missing head angles, misaligned view scale, and meaningless fabric crops used as filler.
+For a formal 2K/4K general-style character card, prefer the modular workflow in `references/modular-character-card.md`: generate and approve each required view as an independent image, preserve every approved module, then use `scripts/compose_character_card.py` for deterministic assembly on an exact 16:9 white canvas. Do not ask an image model to redraw the approved modules during final assembly. A one-pass character-card generation remains acceptable for drafts or when the user explicitly chooses speed over module-level control.
+
+Require three complete and consistently scaled full-body modules: front, strict left side, and back. Normalize their trimmed subjects to one shared height so head tops and heel baselines match exactly, then visually verify shoulder, waist, knee, and coat/garment construction lines. Do not preserve unequal source-pixel sizes or bottom-align them with an unused blank strip above. Every full-body view is a prop-free design reference: both hands must be empty and naturally lowered, and no portable prop may touch, overlap, hang from, or be carried by any character body. Require three neutral head modules: front, strict right side, and back. Require one worn-shoe close-up showing the character's lower trouser legs, ankles, and both feet wearing the approved shoes, plus zero to three approved, identity-relevant accessory, portable-prop, or construction details. Reject missing required angles, inconsistent module identity or design, misaligned view scale, unexplained layout voids, meaningless fabric crops used as filler, any non-empty hand, and any prop attached to or overlapping a full-body view.
+
+Treat clothing-fold language, edge hierarchy, material response, and ink rhythm as formal delivery gates, not optional polish. NDC general-style garments use a small number of decisive angular fold wedges at load points, hard structural turns, broad quiet dark masses, and short controlled tonal bridges inside larger planes. Reject long continuously blended or airbrushed cloth, rounded melted folds, decorative micro-wrinkles, or generic glossy 3D shading. Ink weight is selective rather than uniformly heavy: focal silhouette turns, occlusions, and load-bearing corners may be bold; long garment edges are medium or fine and tapered; internal folds may be finer, broken, or carried by adjacent value blocks. Require visible swell, taper, breaks, and decisive endings, but do not force every edge to the same comic-outline weight. Hair remains grouped into large directional masses with a few broad ribbon-like marks and no individual-strand rendering. Treat finish by material: cloth and most skin planes stay matte, while approved polished leather, metal, jewelry, and badges may use compact sharp highlights. When the user supplies a hue-adjusted approved composite, treat it as the color authority: style repair may change fold edges and ink treatment only, while preserving its hue, palette, identity, design, and all already approved modules.
 
 For an explicitly triggered black-white-red card, keep black, white, and red unmistakably dominant. Do not restore normal or general-style skin color. Skin may carry only a barely perceptible near-grayscale warm gray-brown or muted sepia bias, substantially less saturated than the general-style card. Use that faint hue only within skin planes while retaining the graphic black-white structure. Avoid both extremes: broad pure-white skin highlights and visibly brown/orange natural skin.
 
-Keep red as a small signal accent. Reject large red background blocks, red page borders, broad red floor shapes, or large red garment panels unless the approved source character explicitly requires them.
+Keep red as a small, spatially purposeful signal accent: favor an asymmetric shadow-side rim, local separation light, or an identity-bearing tie, emblem, eye, or accessory. Reject an automatic full red outline around every edge, large red background blocks, red page borders, broad red floor shapes, or large red garment panels unless the approved source character explicitly requires them or the user explicitly selects the minimalist poster branch. Preserve low-contrast internal facets inside near-black garments instead of flattening them into featureless silhouettes.
 
 Use the general-style character card as the identity source for the portrait and black-white-red card. Do not use the raw MJ head as the official portrait identity source.
 
-For portraits, treat the portrait-style reference as style-only. If its subject changes the character's sex, age, face, hairstyle, or costume identity, reject that result immediately and retry with the approved character card as the only image reference while reproducing the portrait style in text.
+For portraits, treat the portrait-style reference as style-only. The portrait branch may use faceted values and short directional dry-brush marks to carry form, so an extremely heavy outer contour is not a universal pass condition. Keep hard structural turns and controlled short tonal bridges, reject smooth airbrushing, and reject horizontal extension bands, duplicated background strips, or cutout seams as generation artifacts. If the reference subject changes the character's sex, age, face, hairstyle, or costume identity, reject that result immediately and retry with the approved character card as the only image reference while reproducing the portrait style in text.
 
 For existing-character state variants, keep the approved general-style character card as the identity source. Change only the requested state, expression, action, damage, prop, costume difference, or scene condition. Preserve unrequested facial, body, costume, palette, and style features.
 
@@ -126,6 +132,8 @@ For MJ full-body candidates, review in this order:
 
 For downstream assets, verify the actual ratio, then the identity locked after MJ refinement, layout, anatomy, and target style. Use the matching self-check library as a group rather than choosing one convenient example. Do not retroactively reject a character because the two raw MJ faces differ.
 
+For every style judgment, follow the full-image plus complete-local-coverage protocol. Sampling only the face, hands, folds, or another preferred region is insufficient; semantic crops may supplement but never replace the overlap-safe grid. Report stable group-wide traits separately from branch traits, minority tendencies, and artifacts.
+
 Never mark an identity-sensitive asset as passed from category resemblance alone. “Same age, same hairstyle, same mustache, same coat” is insufficient if the person-specific eye, nose, mouth, cheek/jaw, ear, or hairline geometry has drifted.
 
 ## Output contract
@@ -140,7 +148,7 @@ When preparing a full workflow, return these sections in order:
 6. `MJ 素材精修任务单`
 7. `MJ 身份锁与同源面部锚点`
 8. `通用风格全身转绘提示词`
-9. `通用风格角色卡提示词`
+9. `通用风格角色卡模块提示词与拼版清单`
 10. `通用风格肖像提示词` only when the portrait branch is required; otherwise mark it as skipped with the route reason
 11. `黑白红风格角色卡提示词` only when animation production explicitly triggers it; otherwise mark it as retained but not generated
 12. `比例、身份、结构与风格自检`

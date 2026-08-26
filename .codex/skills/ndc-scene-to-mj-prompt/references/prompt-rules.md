@@ -99,11 +99,28 @@ For every changed viewpoint, name the horizontal rotation direction and approxim
 
 ## 4. NDC scene rendering language
 
-Use this as a calibration vocabulary, not an unchanging boilerplate:
+The stable cross-reference core is:
 
-`Technicolor graphic style, full color, vibrant jewel tones, rich color saturation, bold calligraphic black ink contours with varied line weight, stylized digital thick painting, deliberate digital brushwork, clean planes of solid color, matte digital texture, high-contrast chiaroscuro, deep graphic shadows, warm practical amber light, stylized realism.`
+`stylized graphic environment illustration, compressed large-scale shape design, deep grouped shadow masses, controlled hard-soft edge hierarchy, clear structural edges on focal architecture, softer atmospheric transitions in distance, restrained charcoal, brown-gray or olive-gray base palette, limited warm amber or muted orange focal accents, matte painterly-digital surface, scale-aware grain and directional texture, stylized realism.`
 
-Select only the clauses supported by the user's approved examples. Shorten the style block when it competes with scene content. Avoid contradictory combinations such as demanding full jewel-tone saturation while also demanding a desaturated monochrome result.
+Treat this as calibration vocabulary, not an unchanging boilerplate. It describes the relationship among shape, value, edge, color, and texture; it does not require every scene to share the same saturation or contour weight.
+
+Add branch clauses only with complete-image and local-tile evidence from the approved references for the current scene:
+
+- `vibrant jewel tones` or `rich color saturation`: only when the approved scene examples actually use broad saturated color families;
+- `bold calligraphic black ink contours`: only for a clearly graphic focal-object or character-derived branch; do not impose it on rain atmosphere, distant buildings, every wall edge, or every interior molding;
+- `deliberate digital brushwork` or `stylized digital thick painting`: only when visible brush direction and scale are supported locally; do not use them as synonyms for generic image texture;
+- `clean planes of solid color`: useful for focal mass compression, but combine with material- and distance-specific texture where the reference shows it.
+
+The three static references have different jobs:
+
+- `ndc-static-style-character-graphic.png` controls graphic compression, hard shape massing, edge economy, and limited warm emphasis only. It must not contribute people, costume shapes, skin treatment, or character composition to a scene.
+- `ndc-static-style-city-rain.jpg` controls rain atmosphere, matte weather texture, vertical depth, charcoal/brown-gray grouping, and restrained orange light. It does not define interior architectural linework.
+- `approved-courthouse-scene-style.png` calibrates readable interior architecture, thin stable construction lines, subdued olive/charcoal/amber color grouping, hard geometry with soft daylight shafts, and restrained material detail.
+
+Select only supported clauses. Shorten the style block when it competes with scene content. Avoid contradictory combinations such as demanding full jewel-tone saturation while also demanding a desaturated monochrome result.
+
+Support must come from both complete-image review and complete local-tile coverage under `style-analysis-protocol.md`. Do not add brushwork, texture, edge, grain, or material claims from a reduced overview alone. Record whether a clause is a stable cross-reference trait, a scene/material branch, a minority option, or an artifact before promoting it into executable prompt language.
 
 Useful camera language includes:
 
@@ -170,7 +187,7 @@ flexible:
 Copy-ready `eye_level` prompt:
 
 ```text
-1928 Chicago courthouse evidence-search hallway in daylight, a single eye-level three-point-perspective game-background view, camera optical center 1.7–1.8 meters above the floor, horizon at the upper third, a closed carved double courtroom door anchoring the far end, a long muted red runner leading from the foreground to that door, one nearest evidence table with a clear uncluttered placement area for a later interactive layer, one waiting-room doorway and framed Neoclassical paintings along the left wall, a row of small high clerestory windows along the right wall, heavy 1920s wooden benches arranged along both sides, deep walnut wainscoting, matte plaster and a coffered ceiling, deep focus, parallel daylight beams crossing the floor, warm amber highlights against deep graphic shadows, Technicolor graphic illustration, expressive black ink contours, clean solid color planes, matte digital texture, stylized realism, unoccupied environment --ar 2:1 --no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes, microphones, recording equipment, cables, readable text, modern fixtures
+1928 Chicago courthouse evidence-search hallway in daylight, a single eye-level three-point-perspective game-background view, camera optical center 1.7–1.8 meters above the floor, horizon at the upper third, a closed carved double courtroom door anchoring the far end, a long muted red runner leading from the foreground to that door, one nearest evidence table with a clear uncluttered placement area for a later interactive layer, one waiting-room doorway and framed Neoclassical paintings along the left wall, a row of small high clerestory windows along the right wall, heavy 1920s wooden benches arranged along both sides, deep walnut wainscoting, matte plaster and a coffered ceiling, deep focus, parallel daylight beams crossing the floor, subdued olive-gray, charcoal and walnut color grouping, limited warm amber highlights against deep grouped shadows, compressed large-scale shape design, thin stable architectural construction lines on focal doors, moldings and panels, hard geometric edges with soft daylight shafts and restrained atmospheric transitions, scale-aware fine grain and matte painterly-digital texture, stylized realism, unoccupied environment --ar 2:1 --no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes, microphones, recording equipment, cables, readable text, modern fixtures
 ```
 
 The window type matters; the exact count does not.
@@ -198,3 +215,4 @@ The window type matters; the exact count does not.
 - Every viewpoint conversion includes direction, approximate rotation, elevation, and a rebuilt spatial graph.
 - Shared scene facts do not drift between the three non-exploration prompts.
 - Chinese counterpart preserves the same priorities instead of expanding the design.
+- Every style-analysis-derived clause has complete-image evidence and complete overlap-safe local coverage; the analysis records image entries, deduplicated images, tile count, stable traits, branch traits, minority traits, and artifacts.
