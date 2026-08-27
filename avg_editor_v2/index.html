@@ -4062,6 +4062,18 @@
         return escapeHtml(str).replace(/\n/g, '<br>');
     }
 
+    // Build a JavaScript string literal that is safe inside a double-quoted
+    // inline HTML attribute. HTML entities such as &apos; are decoded before
+    // the onclick handler is compiled, so apostrophes must remain inside a
+    // double-quoted JS literal instead of being used as the delimiter.
+    function inlineJsString(value) {
+        return JSON.stringify(String(value ?? ''))
+            .replace(/&/g, '\\u0026')
+            .replace(/</g, '\\u003c')
+            .replace(/>/g, '\\u003e')
+            .replace(/\"/g, '&quot;');
+    }
+
     function copyText(text, el) {
         navigator.clipboard.writeText(text).then(() => {
             const orig = el.textContent;
@@ -6796,10 +6808,10 @@
             const brief = item.purpose || loop.openingBrief || '';
             const loaded = entries.length > 0 || !!talk;
             const sub = talkFile ? `${talkFile}.json · 首句 #${firstId}` : `首句 #${firstId}`;
-            const title = escapeHtml(sceneName).replace(/'/g, '&apos;');
-            const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+            const title = inlineJsString(sceneName);
+            const safeSub = inlineJsString(sub);
             const playAction = firstId
-                ? `UI.playTalkInDrawer('${escapeHtml(firstId)}', 'OPENING', '${title}', '${safeSub}')`
+                ? `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString('OPENING')}, ${title}, ${safeSub})`
                 : '';
 
             return `
@@ -6849,10 +6861,10 @@
                 const loaded = entries.length > 0 || !!talk;
                 const count = entries.length || (talk ? 1 : 0);
                 const sub = `${sceneName}${seg.videoScene ? ` · ${seg.videoScene}.json` : ''}${firstId ? ` · 首句 #${firstId}` : ''}`;
-                const title = escapeHtml(seg.title || sceneName).replace(/'/g, '&apos;');
-                const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+                const title = inlineJsString(seg.title || sceneName);
+                const safeSub = inlineJsString(sub);
                 const playAction = firstId
-                    ? `UI.playTalkInDrawer('${escapeHtml(firstId)}', 'POST-EXPOSE', '${title}', '${safeSub}')`
+                    ? `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString('POST-EXPOSE')}, ${title}, ${safeSub})`
                     : '';
                 return `
                     <div class="flow-opening-preview">
@@ -9490,10 +9502,10 @@
                 const loaded = entries.length > 0 || !!talk;
                 const count = entries.length || (talk ? 1 : 0);
                 const sub = `${sceneName}${seg.videoScene ? ` · ${seg.videoScene}.json` : ''}${firstId ? ` · 首句 #${firstId}` : ''}`;
-                const title = escapeHtml(seg.title || sceneName).replace(/'/g, '&apos;');
-                const safeSub = escapeHtml(sub).replace(/'/g, '&apos;');
+                const title = inlineJsString(seg.title || sceneName);
+                const safeSub = inlineJsString(sub);
                 const playAction = firstId
-                    ? `UI.playTalkInDrawer('${escapeHtml(firstId)}', 'POST-EXPOSE', '${title}', '${safeSub}')`
+                    ? `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString('POST-EXPOSE')}, ${title}, ${safeSub})`
                     : '';
                 const cardOpen = firstId && loaded ? ` onclick="${playAction}"` : '';
                 html += firstId && loaded
@@ -9705,7 +9717,7 @@
                         const firstId = entries.length > 0 ? entries[0].id : '';
                         const loaded = entries.length > 0;
                         const sub = `${talkName}.json · ${entries.length} 句`;
-                        const playAction = `UI.playTalkInDrawer('${firstId}', 'TALK', '${escapeHtml(talkName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        const playAction = `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString('TALK')}, ${inlineJsString(talkName)}, ${inlineJsString(sub)})`;
                         html += `<div class="phase-scene-talk" style="margin:0.5rem 0;">`;
                         html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkName)}', this)">
                             <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
@@ -9731,7 +9743,7 @@
                         html += `<div style="margin:0.5rem 0; padding:0.6rem; background:var(--ink); border:1px solid var(--rule); border-radius:6px;">`;
                         html += `<div style="font-weight:600; color:var(--warning);">⚡ ${escapeHtml(se.name || '突发事件')}</div>`;
                         if (seStartId) {
-                            const playAction = `UI.playTalkInDrawer('${seStartId}', 'EVENT', '${escapeHtml(se.name || '').replace(/'/g, '&apos;')}', '从 #${seStartId} 开始')`;
+                            const playAction = `UI.playTalkInDrawer(${inlineJsString(seStartId)}, ${inlineJsString('EVENT')}, ${inlineJsString(se.name || '')}, ${inlineJsString(`从 #${seStartId} 开始`)})`;
                             html += `<button class="btn primary" onclick="${playAction}" style="margin-top:0.4rem;">▶ 播放</button>`;
                         }
                         html += `</div>`;
@@ -9751,7 +9763,7 @@
                         html += `<div style="margin:0.5rem 0; padding:0.6rem; background:var(--ink); border:1px solid var(--rule); border-radius:6px;">`;
                         html += `<div style="font-weight:600; color:var(--warning);">⚡ ${escapeHtml(se.name || '突发事件')}</div>`;
                         if (seStartId) {
-                            const playAction = `UI.playTalkInDrawer('${seStartId}', 'EVENT', '${escapeHtml(se.name || '').replace(/'/g, '&apos;')}', '从 #${seStartId} 开始')`;
+                            const playAction = `UI.playTalkInDrawer(${inlineJsString(seStartId)}, ${inlineJsString('EVENT')}, ${inlineJsString(se.name || '')}, ${inlineJsString(`从 #${seStartId} 开始`)})`;
                             html += `<button class="btn primary" onclick="${playAction}" style="margin-top:0.4rem;">▶ 播放</button>`;
                         }
                         html += `</div>`;
@@ -9875,7 +9887,7 @@
                         // 点"播放"→ 侧边 drawer streaming(无论 cutscene 还是真实场景,都走 drawer)
                         const kicker = scene ? 'OPENING · SCENE' : 'OPENING · CUTSCENE';
                         const sub = talkFile ? `${talkFile}.json · 首句 #${firstId}` : `首句 #${firstId}`;
-                        const playAction = `UI.playTalkInDrawer('${firstId}', '${escapeHtml(kicker)}', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        const playAction = `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString(kicker)}, ${inlineJsString(sceneName)}, ${inlineJsString(sub)})`;
                         html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
                         if (talkFile) {
                             html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
@@ -10127,7 +10139,7 @@
                         const firstId = entries.length > 0 ? entries[0].id : '';
                         const loaded = entries.length > 0;
                         const sub = `${talkFile}.json · 首句 #${firstId}`;
-                        const playAction = `UI.playTalkInDrawer('${firstId}', 'EVENT', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        const playAction = `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString('EVENT')}, ${inlineJsString(sceneName)}, ${inlineJsString(sub)})`;
                         html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
                         html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
                             <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>
@@ -10184,7 +10196,7 @@
                         const firstId = entries.length > 0 ? entries[0].id : '';
                         const loaded = entries.length > 0;
                         const sub = `${talkFile}.json · 首句 #${firstId}`;
-                        const playAction = `UI.playTalkInDrawer('${firstId}', 'ENDING', '${escapeHtml(sceneName).replace(/'/g, '&apos;')}', '${escapeHtml(sub).replace(/'/g, '&apos;')}')`;
+                        const playAction = `UI.playTalkInDrawer(${inlineJsString(firstId)}, ${inlineJsString('ENDING')}, ${inlineJsString(sceneName)}, ${inlineJsString(sub)})`;
                         html += `<div class="phase-scene-talk" onclick="event.stopPropagation()">`;
                         html += `<span class="copy-asset" onclick="copyText('${escapeHtml(talkFile)}', this)" title="点击复制 talk 文件名">
                             <span class="copy-asset-dot ${loaded ? 'ok' : 'miss'}"></span>

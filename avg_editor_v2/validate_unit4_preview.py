@@ -235,7 +235,7 @@ def validate() -> list[str]:
         2: {"4011", "4012", "4013", "4014", "4015"},
         3: {"4022", "4023", "4024", "4025", "4026", "4027", "4028"},
         4: {"4032", "4033", "4034"},
-        5: {"4034", "4042"},
+        5: {"4042"},
     }
     for loop, expected_scene_ids in expected_open_scene_ids_by_loop.items():
         actual_scene_ids = {
@@ -262,8 +262,8 @@ def validate() -> list[str]:
     ):
         errors.append("Loop 5: ChapterConfig must use the 4034 unanswered-calls opening")
     scene_4034 = scene_map.get("4034") or {}
-    if scene_4034.get("openInLoops") != [4, 5]:
-        errors.append("Scene 4034: must be explicitly open in Loop4 and Loop5")
+    if scene_4034.get("openInLoops") != [4]:
+        errors.append("Scene 4034: must remain a Loop4 exploration scene only")
     scene_4041 = scene_map.get("4041") or {}
     embedded_opening = scene_4041.get("embeddedInOpening") or {}
     if (
