@@ -1,8 +1,9 @@
 # NDC Big, Icon, and clue-photo production contract
 
 Use this reference whenever a delivery includes `desSpritePath` Big art, an
-`iconPath` Icon, or a photographed `clue` Big. The scene Map remains governed
-by the coordinate-placement workflow and must never be rescaled.
+`iconPath` Icon, a photographed `clue` Big, or an `envir` Big that deliberately
+omits Icon. The scene Map remains governed by the coordinate-placement workflow
+and must never be rescaled.
 
 ## Governing principle
 
@@ -36,11 +37,13 @@ Record the semantic master path and SHA-256, authoring mode, and every separatel
 | Physical or volumetric prop | Transparent identity master, ordinary Big frame | Dedicated high-resolution Icon pose and top-side lighting |
 | Paper, file, or flat printed object | Preserve approved exact content and lay it into an ordinary Big frame | Reuse the approved front texture, lay it flat, add the standard shadow deterministically |
 | Photographed clue | Locked `620x620` Polaroid template | Treat the accepted Polaroid as a flat object; do not regenerate its photo or frame text |
-| Analysis or derived result | Use the approved result presentation | Produce an Icon only when the delivery contract or user explicitly requires one |
+| Environment observation (`itemType=2`) | Produce the approved observation Big while preserving the Map's physical identity/state | Omit Icon completely; `iconPath` and `*_icon.png` are forbidden |
+| Analysis or derived `item`/`clue` result | Use the approved result presentation | Produce the standard Icon even when no Map is required; omit it only for an explicit user-approved legacy exception |
 
 `iconPath` is optional in the runtime schema. Do not invent an Icon for every
-ItemStaticData row globally. When a batch contract requires an Icon, however,
-the production Icon rules below are mandatory.
+ItemStaticData row globally. ItemStaticData `envir` rows must leave `iconPath`
+empty or omit it and must not stage an Icon. When a batch contract requires an
+Icon for `item` or `clue`, however, the production Icon rules below are mandatory.
 
 ## Ordinary Big production
 

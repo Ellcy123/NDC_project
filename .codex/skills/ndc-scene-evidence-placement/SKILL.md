@@ -1,6 +1,6 @@
 ---
 name: ndc-scene-evidence-placement
-description: Place collectible NDC evidence into approved raster scenes, enforce a complete scene anchor for every exploration-acquired item, prepare Unity Type 6 to Type 7 container chains, and deterministically finalize Map, Big, 130px Icon, and 620px clue-Polaroid assets. Use when adding, replacing, auditing, or packaging clickable evidence props and container contents in NDC exploration scenes.
+description: Place collectible NDC evidence and environmental observations into approved raster scenes, enforce complete Map/Position/Big/Icon contracts by runtime item type and acquisition route, prepare Unity Type 6 to Type 7 container chains, and deterministically finalize Map, Big, 130px Icon, and 620px clue-Polaroid assets. Use when adding, replacing, auditing, or packaging clickable evidence props, clue photos, environment observations, or container contents in NDC exploration scenes.
 ---
 
 # NDC Scene Evidence Placement
@@ -18,12 +18,22 @@ If the request includes Unit/Episode identity or IDs, read `canon_manifest.json`
 
 ## Classify before editing
 
-Assign every requested evidence record one delivery class:
+Resolve two separate axes before assigning a delivery class:
 
-- `scene-pickup`: a visible, clickable object obtained by investigating the base scene. Deliver Map, `Position`, Big, and every configured Icon.
-- `container-state`: a drawer, safe, locker, case, box, pocket, bin, or similar Unity secondary-menu container. Deliver a scene-exact Type 6 entrance screenshot, a separately authored Type 7 open view, independent coordinates for both, and the complete Type 6 -> Type 7 -> contained-item chain. Every contained exploration pickup also requires its own Map crop and full-scene `Position`, plus Big and every configured Icon. Do not treat the container pair as a substitute for the contained item's Map.
-- `detail-only`: an analysis result, memory result, automatic minigame output, or handed-over evidence that is never visible or clickable as a world prop. Deliver detail/icon assets only; do not invent a scene coordinate. A `post_expose`, dialogue, or minigame label alone does not prove this class; inspect the actual acquisition event.
-- `environment`: a non-pickup environmental observation. It must remain visibly represented in the background or a state prop. If the player clicks it to discover or record information, preserve a real scene hotspot/Map contract even when it does not enter inventory.
+| `ItemStaticData.itemType` | Runtime meaning | Standard art behavior |
+|---|---|---|
+| `3` / `item` | A physical object or document that enters inventory. It may optionally support analysis or combination. | A world-space pickup needs Map + `Position` + ordinary Big + Icon. A dialogue, Expose, analysis, or minigame grant that is never left for the player to locate needs Big + Icon and no invented Map. |
+| `1` / `clue` | A photographed or recorded scene condition. The player collects the record, not the original object; clues cannot be analyzed or combined. | A photographed scene clue needs Map + `Position` + locked `620 x 620` clue-Polaroid Big + Icon. An automatic or derived clue result with no world-space locate/click step needs its approved result Big + Icon and no invented Map. |
+| `2` / `envir` | A clickable environmental observation that never enters inventory. | Always deliver a no-suffix Map + full-scene `Position` + Big, and omit Icon completely. Pure non-interactive scene dressing is background art, not an `envir` ItemStaticData row. |
+
+`itemType` defines what the record means after interaction. The actual acquisition event defines whether an `item` or `clue` needs a world-space Map. Never infer the delivery solely from the type name or from prefilled path fields.
+
+Then assign every requested evidence record one delivery class:
+
+- `scene-pickup`: a visible, clickable `item` or photographed `clue` obtained by investigating the base scene. Deliver Map, `Position`, the type-appropriate Big, and Icon.
+- `container-state`: a drawer, safe, locker, case, box, pocket, bin, or similar Unity secondary-menu container. Deliver a scene-exact Type 6 entrance screenshot, a separately authored Type 7 open view, independent coordinates for both, and the complete Type 6 -> Type 7 -> contained-item chain. Every contained interactive record also requires its own Map crop and full-scene `Position`, plus its itemType-appropriate Big/Icon contract. Do not treat the container pair as a substitute for the contained record's Map.
+- `detail-only`: an `item` or `clue` analysis result, memory result, automatic minigame output, or handed-over evidence that is never visible or clickable as a world prop. Deliver the type-appropriate Big and Icon only; do not invent a scene coordinate. An `envir` record can never use this class. A `post_expose`, dialogue, or minigame label alone does not prove this class; inspect the actual acquisition event.
+- `environment`: an ItemStaticData `envir` observation. Deliver a real no-suffix Map, full-scene `Position`, and Big; omit `iconPath` and the `*_icon.png` artifact. The Map may be an exact crop from a baked final scene or an approved conditional/State overlay, but it must be a real scene hotspot that can be placed at its recorded coordinate.
 - `minigame-only`: an interaction asset that does not enter ItemStaticData. Route it to the minigame asset workflow.
 
 Classify from the actual player acquisition event in the matching state, SceneConfig, and ItemStaticData chain—not from filenames, an existing empty `mapSpritePath`, or `pickup` alone. Create an acquisition coverage row for every requested evidence item with: `itemId`, acquisition event, delivery class, visible state, parent container IDs when applicable, Map stem, full-scene `Position`, Big stem, Icon stem or explicit omission, and source references.
@@ -31,9 +41,10 @@ Classify from the actual player acquisition event in the matching state, SceneCo
 Apply this hard gate before art production and again before delivery:
 
 - Anything obtained by clicking or searching the exploration scene must have a visible scene anchor. Big and Icon alone never satisfy an exploration pickup.
-- A direct scene pickup requires a non-empty Map and `Position`.
+- A direct `item` pickup or photographed `clue` requires a non-empty Map and `Position`, plus the type-appropriate Big and Icon.
 - A pickup found after opening a Type 7 container requires its own non-empty Map and `Position` inside the displayed Type 7 view. Type 6 and Type 7 images do not replace that child Map.
-- An item granted automatically by dialogue, Expose, minigame completion, or analysis may omit Map only when it is never left for the player to locate or click. If the event visibly presents the item in the scene, deliver the required conditional/handover state as well.
+- An `item` or `clue` granted automatically by dialogue, Expose, minigame completion, or analysis may omit Map only when it is never left for the player to locate or click. If the event visibly presents the record in the scene, deliver the required conditional/handover state as well.
+- Every `envir` row requires non-empty `mapSpritePath`, full-scene `Position`, and `desSpritePath`. Its `iconPath` must be empty or omitted, and no environment Icon file may be staged. Missing Map/Position/Big or a configured/staged environment Icon blocks delivery.
 - A locked or post-Expose cache must be classified by what the player does after it unlocks. If the player opens it and clicks the contents, it is a container exploration chain; if the game grants the contents automatically, document the visible event state and the no-Map reason.
 
 Block the batch when any acquisition coverage row is unresolved. Do not generate Big/Icon-only placeholders to make an incomplete row look finished.
@@ -67,6 +78,8 @@ Before writing any generation prompt, split the evidence art requirement into tw
 - `map-scene contract`: only the low-information features needed to discover and identify the object class in the exploration scene—silhouette, material, broad color, approximate state, and natural placement. Its view, foreshortening, occlusion, and visible face must follow the source scene camera and support-surface perspective. A document may show only its spine, edge, thickness, folded corner, or an unreadable portion of its cover.
 - `big-detail contract`: all close-reading information carried by `desSpritePath`, including exact titles, dates, numbers, body text, handwriting, damage, comparison marks, and puzzle-specific details.
 - `icon-presentation contract`: the inventory-scale silhouette, view, lighting, material identity, short left-down shadow, and readability needed at `130 x 130`. It is a separate presentation asset, not a mechanically shrunken Big. A flat front-facing paper or approved Polaroid may be deterministically re-laid out from its approved Big surface; a dimensional prop requires its own high-resolution icon master.
+
+For an `envir` record, replace the `icon-presentation contract` with an explicit Icon-omission contract. Do not create an Icon merely because another ItemStaticData row in the same scene has one.
 
 Never copy the detailed text requirements from the `big-detail contract` into the in-scene generation prompt. The map scene is a discovery anchor, not a readable evidence card or product shot. Unless the evidence itself is an environmental sign meant to be read in the scene, body text and exact metadata must remain unreadable at gameplay scale.
 
@@ -144,7 +157,7 @@ python scripts/evidence_delivery.py package `
   --output-dir <image\edit_jobs\job\delivery>
 ```
 
-Use `--cutout-mask` instead of `--detail-image` only when the standalone image must be extracted from the accepted final scene. Production packaging requires an independently approved `130 x 130` RGBA Icon and its passing report from `evidence_art.py verify-icon` or `finalize-icon`. If the current runtime record intentionally has no `iconPath`, use `--omit-icon` and omit all Icon arguments. The package command must never silently shrink a Big or detail image into an Icon. `--allow-legacy-derived-icon` exists only to rebuild an audited old package and must be explicit in its manifest.
+Use `--cutout-mask` instead of `--detail-image` only when the standalone image must be extracted from the accepted final scene. Production packaging for `item` and `clue` requires an independently approved `130 x 130` RGBA Icon and its passing report from `evidence_art.py verify-icon` or `finalize-icon`. Every `envir` package must use `--omit-icon` and omit all Icon arguments, manifest fields, patch fields, and staged Icon files. The package command must never silently shrink a Big or detail image into an Icon. `--allow-legacy-derived-icon` exists only to rebuild an audited old package and must be explicit in its manifest.
 
 When both the source and accepted final scene are supplied, the script derives the map rectangle and `(x, y)` from the actual changed-pixel bounds, then adds `--map-padding` (default `32`). This deliberately decouples the runtime Map crop from the much larger authorization workspace. When no source is available, it falls back to the authorization-mask bounds. `--map-rect left top right bottom` is only an audited compatibility override for pre-existing baked props. The rectangle is top-left based and half-open. It must contain every changed pixel and all clickable visual content.
 
@@ -169,10 +182,23 @@ Delivery is blocked unless all applicable checks pass:
 - the standalone detail image exists and is non-empty;
 - when `iconPath` is present, the staged Icon is exactly `130 x 130` RGBA, all visible pixels remain inside `[7,7,122,122)`, transparent pixels carry zero RGB, and the supplied Icon verification report matches the staged bytes;
 - when `--omit-icon` is used, the patch, manifest, and artifact list all omit the Icon rather than writing an empty or invented path;
+- every `envir` package has Map + `Position` + Big, uses `--omit-icon`, and contains no `iconPath`, Icon stem, Icon verification report, or `*_icon.png` file;
 - asset stems and ItemStaticData paths agree;
 - staged artifact hashes still match the manifest.
 
 If any check fails, repair the job rather than editing coordinates or reports by hand.
+
+## Environment observation workflow
+
+Use the normal scene-coordinate workflow for every ItemStaticData `envir` record, even though it does not enter inventory:
+
+1. Preserve or author the observation in the accepted full-resolution scene or an approved conditional/State layer.
+2. Export the no-suffix Map as an exact scene-local crop and derive its full-scene `Position` from that accepted native-resolution image.
+3. Produce the `desSpritePath` Big for the player's close observation. Keep its physical identity and state consistent with the Map.
+4. Package with `--omit-icon`; leave `iconPath` empty or omit it, and stage no Icon file.
+5. Verify Map reconstruction/alignment, non-empty Big, asset stems, coordinates, hashes, and complete Icon omission.
+
+An object that is only visual dressing and cannot be clicked or recorded belongs in the background art and must not be added as an `envir` ItemStaticData row.
 
 ## Coordinate contract
 
@@ -295,7 +321,7 @@ The staged container delivery must include:
 - the approved borderless Type 7 source retained for recovery;
 - final `prop_<container>2.png`, its independent Type 7 `Position`, center-anchor calculation, and 12-pixel border declaration;
 - the Type 6 and Type 7 ItemStaticData draft rows;
-- every contained evidence Map crop, full-scene `Position`, Big, configured Icon, ItemStaticData draft row, and Map-to-Type-7 alignment verification;
+- every contained interactive record's Map crop, full-scene `Position`, itemType-appropriate Big/Icon deliverables, ItemStaticData draft row, and Map-to-Type-7 alignment verification;
 - the contained evidence IDs and proof that only Type 6 is bound by SceneConfig;
 - reconstruction verification for Type 6 and border/placement verification for Type 7.
 
