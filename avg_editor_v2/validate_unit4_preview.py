@@ -12,6 +12,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 TABLE_DIR = HERE / "data" / "table"
 FLOW_PATH = HERE / "data" / "formal" / "unit_flow.json"
+AVG_ROOT = HERE.parent / "AVG" / "EPI04"
 
 EXPECTED_COUNTS = {
     "ChapterConfig": 5,
@@ -45,6 +46,20 @@ def scene_open_in_loop(scene: dict, loop: int) -> bool:
     return int(scene.get("loop") or 0) == loop
 
 
+def nonempty_pending_keys(value) -> list[str]:
+    pending: list[str] = []
+    if isinstance(value, list):
+        for item in value:
+            pending.extend(nonempty_pending_keys(item))
+    elif isinstance(value, dict):
+        key = value.get("pendingTalkKey") or value.get("pendingInitTalkKey")
+        if key:
+            pending.append(str(key))
+        for nested in value.values():
+            pending.extend(nonempty_pending_keys(nested))
+    return pending
+
+
 def validate() -> list[str]:
     errors: list[str] = []
     tables = {name: load(name) for name in EXPECTED_COUNTS}
@@ -68,6 +83,41 @@ def validate() -> list[str]:
     npc_loop_ids = {str(row["id"]) for row in tables["NPCLoopData"]}
     scene_ids = {str(row["sceneId"]) for row in tables["SceneConfig"]}
     material_ids = item_ids | testimony_ids
+
+    talk_files = sorted((AVG_ROOT / "Talk").glob("loop*/*.json")) if AVG_ROOT.exists() else []
+    talk_files = [path for path in talk_files if path.name != "_manifest.json"]
+    expose_files = sorted((AVG_ROOT / "Expose").glob("*.json")) if AVG_ROOT.exists() else []
+    expose_files = [path for path in expose_files if path.name != "_manifest.json"]
+    if len(talk_files) != 48 or len(expose_files) != 5:
+        errors.append(f"EPI04 AVG: expected 48 Talk and 5 Expose files, found {len(talk_files)} and {len(expose_files)}")
+    avg_rows = []
+    ids_by_scene: dict[str, set[str]] = {}
+    for path in talk_files + expose_files:
+        rows = json.loads(path.read_text(encoding="utf-8"))
+        avg_rows.extend(rows)
+        ids_by_scene[path.stem] = {str(row.get("id") or "") for row in rows}
+    avg_ids = [str(row.get("id") or "") for row in avg_rows]
+    duplicate_avg_ids = sorted({talk_id for talk_id in avg_ids if talk_id and avg_ids.count(talk_id) > 1})
+    if duplicate_avg_ids:
+        errors.append(f"EPI04 AVG: duplicate Talk IDs {duplicate_avg_ids[:10]}")
+    avg_id_set = set(avg_ids)
+    for row in avg_rows:
+        talk_id = str(row.get("id") or "")
+        next_id = str(row.get("next") or "")
+        if next_id and next_id not in avg_id_set:
+            errors.append(f"EPI04 AVG {talk_id}: missing next target {next_id}")
+        if row.get("script") in {"branches", "1"}:
+            for parameter in row.get("Parameters") or []:
+                target = str(parameter.get("ParameterInt") or "")
+                if target and target not in avg_id_set:
+                    errors.append(f"EPI04 AVG {talk_id}: missing branch target {target}")
+        if row.get("script") == "Lie" and str(row.get("ParameterInt0") or "") not in avg_id_set:
+            errors.append(f"EPI04 AVG {talk_id}: missing Lie success target")
+
+    pending = nonempty_pending_keys(unit4["SceneConfig"]) + nonempty_pending_keys(unit4["ChapterConfig"])
+    pending += nonempty_pending_keys(unit4["NPCLoopData"])
+    if pending:
+        errors.append(f"Unit4 AVG: unresolved pending Talk keys {sorted(set(pending))}")
 
     for item in unit4["ItemStaticData"]:
         item_id = str(item["id"])
@@ -201,10 +251,13 @@ def validate() -> list[str]:
     l5_chapter = next((chapter for chapter in unit4["ChapterConfig"] if str(chapter.get("id")) == "405"), {})
     l5_opening = (l5_chapter.get("openingSequence") or [{}])[0]
     if (
-        l5_chapter.get("pendingInitTalkKey") != "L5_opening_unanswered_calls"
+        not str(l5_chapter.get("initTalk") or "")
+        or l5_chapter.get("pendingInitTalkKey")
         or str(l5_chapter.get("initScene")) != "4034"
         or str(l5_chapter.get("openingScene")) != "4034"
-        or l5_opening.get("draftSourceTalk") != "L5_opening_call_to_emma"
+        or l5_opening.get("talkId") != l5_chapter.get("initTalk")
+        or l5_opening.get("videoScene") != "L5_opening_unanswered_calls"
+        or l5_opening.get("draftSourceTalk")
         or l5_opening.get("embeddedVisualSceneIds") != ["4041"]
     ):
         errors.append("Loop 5: ChapterConfig must use the 4034 unanswered-calls opening")
@@ -231,7 +284,8 @@ def validate() -> list[str]:
 
     survivors = [npc for npc in unit4["NPCLoopData"] if str(npc.get("id")) in {"4033", "40631"}]
     if len(survivors) != 2 or any(
-        (npc.get("TalkInfo") or {}).get("pendingTalkKey") != "L3_scene4023_survivors"
+        not (npc.get("TalkInfo") or {}).get("id")
+        or (npc.get("TalkInfo") or {}).get("videoScene") != "L3_scene4023_survivors"
         or (npc.get("TalkInfo") or {}).get("sharedTalkGroup") != "l3_survivors_debrief"
         or (npc.get("LoopTalkInfo") or {}).get("repeatPolicy") != "disabled_after_shared_first_click"
         for npc in survivors
@@ -318,6 +372,12 @@ def validate() -> list[str]:
                     and not entry.get("pendingTalkKey")
                 ):
                     errors.append(f"Scene {sid} NPC {npc_id}: {field} has no explicit or pending entry")
+                talk_id = str(entry.get("id") or "")
+                video_scene = str(entry.get("videoScene") or "")
+                if talk_id and video_scene and talk_id not in ids_by_scene.get(video_scene, set()):
+                    errors.append(
+                        f"Scene {sid} NPC {npc_id}: {field} Talk {talk_id} is not in {video_scene}.json"
+                    )
 
     for chapter in unit4["ChapterConfig"]:
         cid = str(chapter["id"])
@@ -341,6 +401,12 @@ def validate() -> list[str]:
             for material_id in expose.get("item") or []:
                 if str(material_id) not in material_ids:
                     errors.append(f"Expose {expose.get('id')}: missing material {material_id}")
+            expose_talk_id = str(expose.get("talkId") or "")
+            expose_scene = str(expose.get("videoScene") or "")
+            if expose_talk_id and expose_scene and expose_talk_id not in ids_by_scene.get(expose_scene, set()):
+                errors.append(
+                    f"Chapter {cid} expose {expose.get('id')}: Talk {expose_talk_id} is not in {expose_scene}.json"
+                )
 
     testimony_types = {
         str(condition.get("param")): str(condition.get("type"))

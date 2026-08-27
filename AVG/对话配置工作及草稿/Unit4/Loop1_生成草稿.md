@@ -4,7 +4,7 @@
 >
 > 真源：`剧情设计/Unit4/state/loop1_state.yaml`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md` 与人物档案
 >
-> 阶段：Phase 1 无 ID 草稿；尚未同步 JSON
+> 阶段：Phase 1 无 ID 真源草稿；已由 `AVG/Tools/build_unit4_avg.py` 生成 EPI04 网页预览 JSON
 >
 > 覆盖：场景开篇 + Watts / Harold / 档案管理员自由 Talk + Watts 三轮 Expose + 独立 post-expose
 >
@@ -884,6 +884,25 @@
 
 **扎克·布伦南**
 > 至于到底接不接这案子，得等我们弄清楚到底发生了什么再说。
+
+---
+
+## §7. Repeat Talk 补充
+
+## Talk: L1_scene4002_watts_repeat.json
+
+**瓦茨** [仍紧抱着卷宗箱]
+> 箱子还在我手里。你们还想问法官哪件事？
+
+## Talk: L1_scene4002_harold_repeat.json
+
+**哈罗德·莫里森** [不耐烦地弹了弹烟灰]
+> 还没问完？那就快点，别让警局的人抢在前头。
+
+## Talk: L1_scene4003_archivist_repeat.json
+
+**档案管理员** [把索引册重新推到桌边]
+> 索引和旧案卷都在这里。您还要核对哪一项？
 
 
 

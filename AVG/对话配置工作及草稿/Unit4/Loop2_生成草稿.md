@@ -4,7 +4,7 @@
 >
 > 真源：`剧情设计/Unit4/state/loop2_state.yaml`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md` 与人物档案
 >
-> 阶段：Phase 1 无 ID 临时草稿；尚未同步 JSON
+> 阶段：Phase 1 无 ID 真源草稿；已由 `AVG/Tools/build_unit4_avg.py` 生成 EPI04 网页预览 JSON
 >
 > 覆盖：单根 Opening + Rosa / Foster / Whitfield / Mickey 自由 Talk + Whitfield 三轮 Expose + 连续 post-expose
 >
@@ -1242,3 +1242,30 @@
 <!-- Harold 向另一侧楼梯离开。玩家控制权在 rosa_result_and_morrison_hook 结束后恢复；截至此处尚未发生 L3 的来电事件。 -->
 
 ---
+
+## §10. Repeat Talk 补充
+
+## Talk: L2_scene4011_rosa_repeat.json
+
+**罗莎·马丁内斯** [双手仍护着 Isabel 的相片]
+> 你还想问 Isabel 的病情，还是那十三天的用药？
+
+## Talk: L2_scene4013_foster_repeat.json
+
+**福斯特医生** [用笔尖点了点桌上的报告]
+> 化验和剂量核对都在这里。你还想从哪一项开始？
+
+## Talk: L2_scene4012_records_clerk_repeat.json
+
+**社会服务部调档员** [守着面前的登记册]
+> 档案规定没有变。你们还要确认哪一项？
+
+## Talk: L2_scene4014_whitfield_repeat.json
+
+**惠特菲尔德** [仍维持着公式化的神情]
+> 医院的立场已经说清楚了。你还想确认哪一点？
+
+## Talk: L2_scene4015_mickey_repeat.json
+
+**米奇·唐纳利** [压低声音看向法庭方向]
+> 庭审快开始了。法院和卷宗，你还要核对哪一边？

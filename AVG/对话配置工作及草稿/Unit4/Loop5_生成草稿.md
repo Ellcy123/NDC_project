@@ -1,24 +1,16 @@
 # Unit 4 Loop 5 对话生成草稿
 
 ## §1. Scene 4034 — Margaret新家 / 致电Emma
-## Talk: L5_opening_call_to_emma.json
+## Talk: L5_opening_unanswered_calls.json
 
 <!-- L5 紧接 L4 结尾。Margaret 没有再劝，转身继续收拾尚未归位的旧物；Zack 怀着复杂的心情合上遗物匣的盖子，走到一旁，拿起电话。 -->
 
-@branch call_choice
-@opt "拨打 Mickey 的办公室电话" -> call_mickey #情感/态度
-@opt "拨打 Emma 的电话" -> call_emma #情感/态度
-
-@path call_mickey
 <!-- Zack 拨打了 Mickey 的办公室电话。听筒里只有漫长的忙音，没有人接听。 -->
 
 **扎克·布伦南** [内心OS]
 > （还是不接……这家伙到底在干什么？）
 
 <!-- Zack 挂断电话，重新拿起听筒，准备改拨 Emma 的号码。 -->
-@goto call_emma
-
-@path call_emma
 <!-- Zack 拨通了 Emma 的号码。 -->
 
 **扎克·布伦南**
@@ -46,10 +38,6 @@
 
 **扎克·布伦南**
 > 明天见。
-
-@goto merge_call
-
-@label merge_call
 
 <!-- 电话挂断。Zack 将遗物匣收进肩包，独自离开 Margaret 的新公寓。 -->
 

@@ -4519,13 +4519,15 @@
             try {
                 const allFiles = await this.listJsonFiles(dirUrl);
                 // 筛选当前 loop 的 expose 文件 (如 loop1_rosa.json)
-                // Match current loop expose files. New: Expose_L{loop}_npc.json; legacy: loop{loop}_npc.json.
+                // Match current loop expose files, including Unit4's canonical L{loop}_expose_*.json names.
 
                 const loopFiles = allFiles.filter(f => {
 
                     const lower = f.toLowerCase();
 
                     return lower.startsWith(`expose_l${loopNum}_`) ||
+
+                        lower.startsWith(`l${loopNum}_expose_`) ||
 
                         lower.startsWith(`loop${loopNum}_`);
 

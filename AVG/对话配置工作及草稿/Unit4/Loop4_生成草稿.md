@@ -4,7 +4,7 @@
 >
 > 真源：`剧情设计/Unit4/state/loop4_state.yaml`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md` 与人物档案
 >
-> 阶段：Phase 1 无 ID 临时草稿；尚未同步 JSON
+> 阶段：Phase 1 无 ID 真源草稿；已由 `AVG/Tools/build_unit4_avg.py` 生成 EPI04 网页预览 JSON
 >
 > 覆盖：单根 Opening + O'Hara / Sarah 自由 Talk + 临时停止执行与 Sarah 转移强制 Event + Margaret 自由 Talk + 三轮 Expose + 连续 post-expose（共 8 段）
 >
@@ -828,3 +828,22 @@
 > 妈，我从来没有把回家当做一件小事。从来没有。
 
 <!-- L4 到此结束；L5 紧接 Zack 合上遗物匣并拿起墙边电话。 -->
+
+---
+
+## §9. Repeat Talk 补充
+
+## Talk: L4_scene4032_ohara_repeat.json
+
+**奥哈拉太太** [仍挡在门口，没有退让]
+> 我不会卖房。你还想问报价，还是那些被拆过的纸箱？
+
+## Talk: L4_scene4033_sarah_repeat.json
+
+**莎拉·奥哈拉** [把扫帚紧紧抱在胸前]
+> 我知道的都告诉你们了。求你们先想办法拦住清退。
+
+## Talk: L4_scene4034_margaret_repeat.json
+
+**玛格丽特·布伦南** [没有看 Zack]
+> 你还想问 O'Hara，还是你父亲送医后的事？

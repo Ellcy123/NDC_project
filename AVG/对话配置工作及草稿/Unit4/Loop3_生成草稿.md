@@ -4,7 +4,7 @@
 >
 > 真源：`剧情设计/Unit4/state/loop3_state.yaml`、`剧情设计/Unit4/Unit4_大纲0723_逻辑重构版_v3.md` 与人物档案
 >
-> 阶段：Phase 1 无 ID 临时草稿；尚未同步 JSON
+> 阶段：Phase 1 无 ID 真源草稿；已由 `AVG/Tools/build_unit4_avg.py` 生成 EPI04 网页预览 JSON
 >
 > 覆盖：单根 Opening（2 段）+ Doris 爆炸前自由 Talk + 夜班接线员自由 Talk + 强制撤离爆炸 Event + 爆炸与生还转场 + Mickey / Doris 爆炸后自由 Talk + Doris 三轮 Expose + 连续 post-expose（共 10 段）
 >
@@ -810,3 +810,17 @@
 > 我再说一遍，Zack。那把枪在左手。
 
 <!-- 强烈的失真感吞没了 Zack 的意识。两人之间的枪位冲突不在本场解决，直接延续到 L4 开篇的事务所对质。本 Loop 结束。 -->
+
+---
+
+## §11. Repeat Talk 补充
+
+## Talk: L3_scene4024_operator_repeat.json
+
+**夜班电话接线员** [手指停在已经封存的线路登记上]
+> 记录都已经交给你了。我不能补充登记之外的内容。
+
+## Talk: L3_scene4027_doris_repeat.json
+
+**多丽丝·莫里森** [双手攥紧在身前]
+> 你还想问我的身份，还是我返家时看到的情况？
