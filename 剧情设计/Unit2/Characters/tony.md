@@ -9,6 +9,7 @@
 | 姓名 | Tony Caruso（全名，但在 Silver Moon 只叫 Tony） |
 | NPC ID | 209 |
 | 年龄 | 45 岁 |
+| 身高 | 175 cm |
 | 种族 | 意大利裔 |
 | 职业 | Silver Moon 酒吧老板兼调酒师 |
 | 居所 | 住在 Silver Moon 楼上，从不离开这条街 |
