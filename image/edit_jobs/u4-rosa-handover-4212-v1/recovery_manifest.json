@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "itemId": "4212",
+  "sceneId": "4011",
+  "deliveryClass": "detail-only",
+  "sourceDesign": "剧情设计/Unit4/证据设计/Unit4_循环2_证据美术资产.md",
+  "sourceState": "剧情设计/Unit4/state/loop2_state.yaml",
+  "acquisitionEvent": "scene_4011.rosa_handover_4212",
+  "attemptPolicy": {
+    "maximumImageExperimentsPerAsset": 3,
+    "bigAcceptedAttempt": 2,
+    "iconAcceptedAttempt": "deterministic-from-approved-big"
+  },
+  "identityLock": {
+    "hospital": "SACRED HEART HOSPITAL",
+    "program": "MILLER CHARITY PROGRAM",
+    "patient": "ISABEL MARTINEZ",
+    "dispensingNumber": "IS-28-052",
+    "lot": "SHC-28-B17",
+    "fillMarker": "INITIAL FILL",
+    "reuseBy": ["4118", "4214", "4217", "4702"]
+  },
+  "semanticMasters": {
+    "rejectedAttempt1": {
+      "path": "big_master_attempt1.png",
+      "sha256": "d202b211e0e34af6e910d17847a04e59ab841e7068e7ce2a81ce832480e03252",
+      "reason": "Specific mL numbers would prematurely lock the downstream capacity minigame scale."
+    },
+    "acceptedAttempt2": {
+      "path": "big_master_attempt2.png",
+      "sha256": "041bfde38423e4ad4f599f9de95a69c377e87f1ffd1566f18338acd8b047ce67",
+      "authoringMode": "built-in-imagegen-raster-plus-deterministic-alpha-extraction"
+    },
+    "transparentBigMaster": {
+      "path": "big_master_rgba.png",
+      "sha256": "d6a62635e2cd2d88eb04da53e7cdce764cedfcf3af86ade228d37ddc2ca3b553"
+    },
+    "iconMaster": {
+      "path": "icon_master_1040.png",
+      "sha256": "f6afd1b8f7ad3c7c7b4bb230a2bada152ee2cb9c235f7ac801e4a9b69116cddd"
+    }
+  },
+  "deterministicTransforms": [
+    "extract_big_alpha.py",
+    "ndc evidence_art.py finalize-big portrait -10 degrees",
+    "prepare_icon_master.py",
+    "ndc evidence_art.py finalize-icon 1040 to 130",
+    "package_detail_only.py"
+  ],
+  "runtimeArtifacts": {
+    "big": {
+      "path": "SC4011_item_4212_big.png",
+      "sha256": "60d0ef9b0840c76ddf097764ef7b7634e4555da68eeb5fbf44d7346152719931"
+    },
+    "icon": {
+      "path": "SC4011_item_4212_icon.png",
+      "sha256": "5173c717e3636be178a9d2dc07fb2fb04d9cefc9b4a3a078915e113aeb6d78e5"
+    },
+    "deliveryManifest": {
+      "path": "delivery/delivery_manifest.json",
+      "sha256": "4e5e59a97f33d5a805f55ac361e52c4b48d7a237c17801fc6c7e7ddc8b5bfd96"
+    }
+  },
+  "verification": {
+    "big": "SC4011_item_4212_big_verification.json",
+    "icon": "SC4011_item_4212_icon_verification.json",
+    "delivery": "delivery/delivery_verification.json",
+    "passed": true
+  },
+  "officialFilesTouched": false
+}

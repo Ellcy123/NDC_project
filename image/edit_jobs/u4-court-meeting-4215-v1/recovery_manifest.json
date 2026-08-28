@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "itemId": "4215",
+  "sceneId": "4015",
+  "deliveryClass": "detail-only",
+  "sourceDesign": "剧情设计/Unit4/证据设计/Unit4_循环2_证据美术资产.md",
+  "sourceState": "剧情设计/Unit4/state/loop2_state.yaml",
+  "acquisitionEvent": "scene_4015.mickey_handover_4215",
+  "attemptPolicy": {
+    "maximumImageExperimentsPerAsset": 3,
+    "bigAcceptedAttempt": 1,
+    "iconAcceptedAttempt": "deterministic-from-approved-big"
+  },
+  "identityLock": {
+    "contentsEntry": "PAGE 19 — BOARD SPECIAL PROCUREMENT APPROVAL",
+    "visiblePageSequence": [18, 20],
+    "signatureAvailable": false,
+    "approverIdentified": false,
+    "visualContinuitySource": "4214"
+  },
+  "semanticMasters": {
+    "acceptedAttempt1": {
+      "path": "big_master_attempt1.png",
+      "sha256": "0703867fec0789dc44d64dac7fbd39af2fd2a067c1480b5497e7be4b40e30199",
+      "authoringMode": "built-in-imagegen-raster-plus-deterministic-checker-background-removal"
+    },
+    "transparentBigMaster": {
+      "path": "big_master_rgba.png",
+      "sha256": "f68c6eba16e5e7397eb9d79a5f610612aa3a703be20c5dcb04904385f8911980"
+    },
+    "iconMaster": {
+      "path": "icon_master_1040.png",
+      "sha256": "6f36fa6866eb4f5f891613931dd48479b03d4d39b330192300a38b1b7e8d93d0"
+    }
+  },
+  "deterministicTransforms": [
+    "extract_big_alpha.py",
+    "ndc evidence_art.py finalize-big landscape +10 degrees",
+    "prepare_icon_master.py",
+    "ndc evidence_art.py finalize-icon 1040 to 130",
+    "package_detail_only.py"
+  ],
+  "runtimeArtifacts": {
+    "big": {"path": "SC4015_item_4215_big.png", "sha256": "c59b5ffb0b46441f97d2113589b4901743206c4a84d3bf92161595aa7fe5a785"},
+    "icon": {"path": "SC4015_item_4215_icon.png", "sha256": "08548b15e414b20a28cbc53b5dbc9622c36e3a7f3f491ca5a19f62d5e3c03a35"},
+    "deliveryManifest": {"path": "delivery/delivery_manifest.json", "sha256": "3d3a542425b8dfa1110ad9ffe28c752cd1bd660f711e9e329e6ddb1f8586dac7"}
+  },
+  "verification": {
+    "big": "SC4015_item_4215_big_verification.json",
+    "icon": "SC4015_item_4215_icon_verification.json",
+    "delivery": "delivery/delivery_verification.json",
+    "passed": true
+  },
+  "officialFilesTouched": false
+}

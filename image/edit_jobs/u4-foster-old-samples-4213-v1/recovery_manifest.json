@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "itemId": "4213",
+  "sceneId": "4013",
+  "deliveryClass": "detail-only",
+  "sourceDesign": "剧情设计/Unit4/证据设计/Unit4_循环2_证据美术资产.md",
+  "sourceState": "剧情设计/Unit4/state/loop2_state.yaml",
+  "acquisitionEvent": "scene_4013.foster_handover_4213",
+  "attemptPolicy": {
+    "maximumImageExperimentsPerAsset": 3,
+    "bigAcceptedAttempt": 2,
+    "iconAcceptedAttempt": "deterministic-from-approved-big"
+  },
+  "identityLock": {
+    "leftPatient": "GIUSEPPE ROSSELLI",
+    "leftDeathRegistration": "SH-24-071",
+    "rightPatient": "BRIDGET O'SHEA",
+    "rightDeathRegistration": "SH-24-118",
+    "year": "1924",
+    "excludedLot": "SHC-28-B17"
+  },
+  "semanticMasters": {
+    "attempt1": {
+      "path": "big_master_attempt1.png",
+      "sha256": "fb9c93ff2887cf4125a4b44af40e5e908033e7b449fd3d9414a9384f91fd6855",
+      "reasonNotFinal": "Left patient name needed a legibility correction and the raster contained a brown authoring backdrop."
+    },
+    "acceptedAttempt2": {
+      "path": "big_master_attempt2.png",
+      "sha256": "08fc6b31d33147de06008ab86b2ce657b404ab133db523c553137c97844a58d7",
+      "authoringMode": "built-in-imagegen-raster-plus-deterministic-checker-background-removal"
+    },
+    "transparentBigMaster": {
+      "path": "big_master_rgba.png",
+      "sha256": "5c3bc612515c344371cca51e4f063943727902f542be47851204f883da2ea857"
+    },
+    "iconMaster": {
+      "path": "icon_master_1040.png",
+      "sha256": "b6a5adda3e274d513275be88521549b3840c3afd126bea4a691c9ac2e4695aa8"
+    }
+  },
+  "deterministicTransforms": [
+    "extract_big_alpha.py",
+    "ndc evidence_art.py finalize-big landscape -10 degrees",
+    "prepare_icon_master.py",
+    "ndc evidence_art.py finalize-icon 1040 to 130",
+    "package_detail_only.py"
+  ],
+  "runtimeArtifacts": {
+    "big": {
+      "path": "SC4013_item_4213_big.png",
+      "sha256": "e75474a75c267450797a6322c472e91db36991e9882cba5ce008717ff9e9cbd0"
+    },
+    "icon": {
+      "path": "SC4013_item_4213_icon.png",
+      "sha256": "a7ee473b4ce42a872d57a9a9743cb3c27e65574a78f452bc006c5bfca01b88f1"
+    },
+    "deliveryManifest": {
+      "path": "delivery/delivery_manifest.json",
+      "sha256": "0dc5d77b1662c2ef298df1e7bf3c9c073587d3f55144128c971e108ccfb26f1a"
+    }
+  },
+  "verification": {
+    "big": "SC4013_item_4213_big_verification.json",
+    "icon": "SC4013_item_4213_icon_verification.json",
+    "delivery": "delivery/delivery_verification.json",
+    "passed": true
+  },
+  "officialFilesTouched": false
+}

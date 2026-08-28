@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "itemId": "4214",
+  "sceneId": "4015",
+  "deliveryClass": "detail-only",
+  "sourceDesign": "剧情设计/Unit4/证据设计/Unit4_循环2_证据美术资产.md",
+  "sourceState": "剧情设计/Unit4/state/loop2_state.yaml",
+  "acquisitionEvent": "scene_4015.mickey_handover_4214",
+  "attemptPolicy": {
+    "maximumImageExperimentsPerAsset": 3,
+    "bigAcceptedAttempt": 3,
+    "iconAcceptedAttempt": "deterministic-from-approved-big"
+  },
+  "identityLock": {
+    "lot": "SHC-28-B17",
+    "retainedSample": "SHC-28-B17-RS",
+    "dispensingNumber": "IS-28-052",
+    "patient": "ISABEL MARTINEZ",
+    "responsibleFields": [
+      "PROGRAM LEAD: WHITFIELD",
+      "PROCUREMENT EXECUTION: WHITFIELD",
+      "INTAKE RECEIPT: WHITFIELD",
+      "CHARITY DISPENSING: WHITFIELD"
+    ],
+    "visiblePages": [18, 20],
+    "missingPage": 19
+  },
+  "semanticMasters": {
+    "attempt1": {
+      "path": "big_master_attempt1.png",
+      "sha256": "2da6261e9619867fd768f0b0f292e6f7c0ecf39dff144653dcbb87618adddbc8",
+      "reasonNotFinal": "Only three of the four required Whitfield responsibility fields were present."
+    },
+    "attempt2": {
+      "path": "big_master_attempt2.png",
+      "sha256": "761b84abf84a23713c4dcb25cc3c2fb330043990627f75617d2bd938624f4b9a",
+      "reasonNotFinal": "The four responsibility fields passed, but a visible auxiliary PURCHASE ORDER tab was misspelled."
+    },
+    "acceptedAttempt3": {
+      "path": "big_master_attempt3.png",
+      "sha256": "aa46f8537ca2f96042a71e60186fd1b4b595ed1d7540a1297e2b2634ee342112",
+      "authoringMode": "built-in-imagegen-raster-plus-deterministic-checker-background-removal"
+    },
+    "transparentBigMaster": {
+      "path": "big_master_rgba.png",
+      "sha256": "2929c3dae2c6598ec36d29d3560b81c91fa6fc078e20c33edbeceb1463224669"
+    },
+    "iconMaster": {
+      "path": "icon_master_1040.png",
+      "sha256": "9f9f194373e947f8226d2c89c4281ad8e3214780db007b6a26dc5dcc7002f6c7"
+    }
+  },
+  "deterministicTransforms": [
+    "extract_big_alpha.py",
+    "ndc evidence_art.py finalize-big landscape -10 degrees",
+    "prepare_icon_master.py",
+    "ndc evidence_art.py finalize-icon 1040 to 130",
+    "package_detail_only.py"
+  ],
+  "runtimeArtifacts": {
+    "big": {
+      "path": "SC4015_item_4214_big.png",
+      "sha256": "09419c5e8fa6912b5dc6e45e0b7b656ef861a49c5d973c2e804e07930cfd3832"
+    },
+    "icon": {
+      "path": "SC4015_item_4214_icon.png",
+      "sha256": "381f637ad3d4947e73d1b621b4146647b9f75159158a9dd59e674f2f0e15a6a2"
+    },
+    "deliveryManifest": {
+      "path": "delivery/delivery_manifest.json",
+      "sha256": "0f89a46a7be7baf67076298def2c5f7c1aa4b9285d4deb544ee42ff1e5753317"
+    }
+  },
+  "verification": {
+    "big": "SC4015_item_4214_big_verification.json",
+    "icon": "SC4015_item_4214_icon_verification.json",
+    "delivery": "delivery/delivery_verification.json",
+    "passed": true
+  },
+  "officialFilesTouched": false
+}
