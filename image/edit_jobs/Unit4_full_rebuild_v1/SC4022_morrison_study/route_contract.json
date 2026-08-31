@@ -12,7 +12,7 @@
   "sceneId": "4022",
   "sceneName": "Morrison 宅邸书房 · 夜晚 / 爆炸前",
   "baseScene": {
-    "path": "/Users/m4/project/NDC_project/image/定稿/u4_exp_morrison_study_night_preblast.png",
+    "path": "D:/NDC_project/image/定稿/u4_exp_morrison_study_night_preblast.png",
     "sha256": "a42cd59ebdeded06ddf06157fc5bb36c647efd12a1d7e02e6d56bbbbb6075da3",
     "width": 3380,
     "height": 1600,
@@ -24,7 +24,8 @@
       "name": "磨号手枪与枪内未击发余弹",
       "itemType": "1/clue",
       "route": "direct-scene",
-      "anchorMode": "visible-record-dependent-on-character-state",
+      "anchorMode": "visible-record",
+      "hotspotMode": "object-alpha",
       "hotspotTarget": "尸体右手中松散放置的手枪；必须同时读出手指握持关系",
       "blocker": "正式底图为空场，没有 Harold 尸体、右手位置或遮挡关系；禁止把手枪单独放入空场。",
       "status": "BLOCKED_PENDING_HAROLD_BODY_STATE_LAYER"
@@ -34,15 +35,15 @@
       "name": "宅邸常用物件的偏左摆放",
       "itemType": "2/envir",
       "route": "environment",
-      "anchorMode": "visible-environment-condition",
-      "hotspotMode": "object/condition-alpha-multiple-islands",
+      "anchorMode": "observation-anchor",
+      "hotspotMode": "object-alpha",
       "hotspotTarget": "仅座位左侧的墨水瓶、警徽盒、常用杯垫及对应长期磨痕；桌面其余区域不计入热区",
       "intentRect": [930, 700, 1320, 920],
       "mapStem": "SC4022_envir_4323",
       "detailStem": "SC4022_envir_4323_big",
       "iconPolicy": "OMIT: itemType=2/envir",
       "z": "-3",
-      "status": "in-production"
+      "status": "ready"
     },
     {
       "itemId": "4312",
@@ -57,7 +58,7 @@
       "detailStem": "SC4022_item_4312_big",
       "iconStem": "SC4022_item_4312_icon",
       "z": "-3",
-      "status": "pending"
+      "status": "ready"
     },
     {
       "itemId": "4313",
@@ -78,11 +79,11 @@
     }
   ],
   "sources": [
-    "/Users/m4/project/NDC_project/canon_manifest.json",
-    "/Users/m4/project/NDC_project/剧情设计/Unit4/state/loop3_state.yaml",
-    "/Users/m4/project/NDC_project/剧情设计/Unit4/场景/探索场景/EXP_SC4022_Morrison宅邸书房_夜晚爆炸前.md",
-    "/Users/m4/project/NDC_project/剧情设计/Unit4/证据设计/Unit4_循环3_证据美术资产.md",
-    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/ItemStaticData.json",
-    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/SceneConfig.json"
+    "D:/NDC_project/canon_manifest.json",
+    "D:/NDC_project/剧情设计/Unit4/state/loop3_state.yaml",
+    "D:/NDC_project/剧情设计/Unit4/场景/探索场景/EXP_SC4022_Morrison宅邸书房_夜晚爆炸前.md",
+    "D:/NDC_project/剧情设计/Unit4/证据设计/Unit4_循环3_证据美术资产.md",
+    "D:/NDC_project/avg_editor_v2/data/table/ItemStaticData.json",
+    "D:/NDC_project/avg_editor_v2/data/table/SceneConfig.json"
   ]
 }
