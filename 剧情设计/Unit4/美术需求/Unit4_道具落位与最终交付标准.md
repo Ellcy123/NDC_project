@@ -104,7 +104,7 @@ ordinary Big、Icon、clue Big、Type 7 白边、命名、坐标推导和验证�
 |---|---|---|---|---|---|
 | 4311 | 磨号手枪与枪内未击发余弹 / clue | SC4022；记录 Harold 尸体右手枪位 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定 |
 | 4312 | 伪造遗书 / item | SC4022；点击书桌中央遗书 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
-| 4313 | Pierce档案移交通知 / item | SC4022；点击书桌侧档案袋 | `scene-pickup` | Map + Position + ordinary Big + Icon | 路由已定；提前签发时刻阻塞最终上画文本 |
+| 4313 | Pierce档案移交通知 / item | SC4022；点击书桌侧档案袋 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；日期／时刻数字故意模糊不可辨，不填写具体钟点 |
 | 4314 | 两只酒杯 / clue | SC4027；记录会客矮桌上的两只酒杯 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定；不放电话桌 |
 | 4315 | 古巴雪茄烟蒂 / clue | SC4027；记录第二只酒杯旁的湿杯垫与烟蒂 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定 |
 | 4316 | 伪造煤气铅封与异常时钟接线 / clue | SC4028；完成铅封与时钟接线两个热点后自动生成 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定；另做两个现场热点，禁止伪造单一 Map |
@@ -188,7 +188,7 @@ ordinary Big、Icon、clue Big、Type 7 白边、命名、坐标推导和验证�
 | 阻塞项 | 当前问题 | 放行条件 |
 |---|---|---|
 | 4412 精确金额 | 证据总览明确标为 open，最终收购金额尚未锁定 | 结合 O'Hara 房产正常价值拍板美元数，再制作最终可读 Big |
-| 4116 / 4313 / 4319 精确时间 | 第三次提交日期、提前签发时刻、晚报发行时刻尚未与 Unit4 最终时间线校准 | 锁定日期／钟点并同步三件文书的最终英文上画文本 |
+| 4116 / 4319 精确时间 | 第三次提交日期、晚报发行时刻尚未与 Unit4 最终时间线校准 | 锁定日期／钟点并同步两件文书的最终英文上画文本；4313 已按“数字不可辨”口径放行 |
 | 4704—4709 结果卡表现 | Skill 已锁定 Big + Icon，但通用框架、结果卡尺寸选择和来源回溯交互尚未统一 | UI／系统确认统一模板和回溯表现后，再批量制作最终结果卡 |
 | 正式英文上画文本 | 当前证据文档仍是内容设计稿，法律、银行、医院术语未完成统一英文编辑 | 正式进表前完成全量英文校对，并把最终文本同步到资源母版 |
 | 4320 试制包同步 | 当前合规包使用试制 ID `4805 → 4806 → 4320`，manifest 与验证均通过，但正式文件未改 | 审批 4805／4806 的正式占用和整包视觉结果后，再同步 ItemStaticData 与 SceneConfig |
