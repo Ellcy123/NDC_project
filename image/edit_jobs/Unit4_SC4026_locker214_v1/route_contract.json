@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "approvedAt": "2026-08-30",
+  "approvalSource": "User confirmed the proposed 4801 -> 4802 -> 4320 secondary-menu chain in this task.",
+  "unit": "Unit4",
+  "episode": "EPI04",
+  "loop": 3,
+  "scene": {
+    "id": "4026",
+    "name": "车站 214 号寄存区",
+    "sourcePng": "/Users/m4/project/NDC_project/image/定稿/u4_exp_station_locker_night.png",
+    "sourceSha256": "6c3d26e9ce105dbd1111585de6d59cd9a171d5fc037e2375f5bafc6e4ef6fc3e",
+    "width": 2880,
+    "height": 1600,
+    "mode": "RGB"
+  },
+  "acquisition": {
+    "route": "container-click",
+    "anchorMode": "container-entrance",
+    "event": "Before acquiring 4317, clicking locker 214 returns locked feedback. With 4317, clicking the closed locker opens an independent interior view. The player then clicks the tied document packet to acquire 4320.",
+    "visibleAnchor": "The closed locker door naturally numbered 214 in the 205-229 locker row.",
+    "acquiredRecord": "4320 Morrison 写给 Zack 的未寄出口供",
+    "automaticGrant": false
+  },
+  "runtimeChain": {
+    "type6": {
+      "id": "4801",
+      "name": "214号寄存柜",
+      "itemType": "6",
+      "mapSpritePath": "prop_locker214_1",
+      "actionParam": "4802",
+      "sceneConfigBound": true,
+      "cropRect": [1184, 360, 1272, 1300],
+      "position": ["1184", "360", "-1"],
+      "sha256": "f5b0f6f68ce796b702c07a145b0a6f1c0c26ffbd1cf365b8b10857ff543775c7"
+    },
+    "type7": {
+      "id": "4802",
+      "name": "214号寄存柜（打开）",
+      "itemType": "7",
+      "mapSpritePath": "prop_locker214_2",
+      "actionParam": "4320",
+      "sceneConfigBound": false,
+      "position": ["856", "338", "-1"],
+      "size": [744, 984],
+      "z": "-1"
+    },
+    "children": [
+      {
+        "id": "4320",
+        "name": "Morrison写给Zack的未寄出口供",
+        "itemType": "3",
+        "mapSpritePath": "SC4026_item_4320",
+        "desSpritePath": "SC4026_item_4320_big",
+        "iconPath": "SC4026_item_4320_icon",
+        "localCropRect": [285, 705, 480, 835],
+        "position": ["1141", "1043", "-3"],
+        "z": "-3"
+      }
+    ],
+    "sceneConfigBinds": ["4801"]
+  },
+  "informationPolicy": {
+    "type6": "Only the existing locker number 214 and closed state are visible.",
+    "type7": "The tied kraft-paper file packet is identifiable but no body text, names, dates, Pierce, Whale, or conclusions are readable.",
+    "big": "The approved readable phrases and Morrison signature appear only in the Big detail art."
+  },
+  "sources": [
+    "canon_manifest.json#Unit4",
+    "剧情设计/Unit4/state/loop3_state.yaml#scene-4026",
+    "剧情设计/Unit4/证据设计/Unit4_循环3_证据美术资产.md#4320",
+    "avg_editor_v2/data/table/SceneConfig.json#4026",
+    "avg_editor_v2/data/table/ItemStaticData.json#4320"
+  ],
+  "stagingPolicy": {
+    "liveTablesModified": false,
+    "unityModified": false,
+    "sourceSceneOverwritten": false
+  },
+  "status": "ready"
+}

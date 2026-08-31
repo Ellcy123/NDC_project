@@ -6,7 +6,7 @@ Use this contract for scene-local clickable evidence packages. It records the co
 
 | Output | ItemStaticData field | Meaning |
 |---|---|---|
-| `<map-stem>.png` | `mapSpritePath` | Exact scene-local crop placed back over the scene. It may include local background and contact shadow. It is not assumed to be transparent. |
+| `<map-stem>.png` | `mapSpritePath` | Direct record / Type 7 child: tight per-record RGBA scene layer; transparent exterior defines the non-clickable area. Type 6 secondary-menu entrance: an approved coherent region Sprite is allowed. |
 | `<detail-stem>.png` | `desSpritePath` | Standalone evidence/detail view. Ordinary transparent Bigs use one final frame only: `571 x 1000`, `818 x 818`, or `1000 x 571`; clue Polaroids stay `620 x 620`. |
 | `<icon-stem>.png` | `iconPath` | Runtime item/clue selection Icon. When required, it is `130 x 130` RGBA with all prop and shadow pixels inside the fixed `115 x 115` safe rectangle. ItemStaticData `envir` rows must omit it. |
 | `prop_<container>1.png` | Type 6 `mapSpritePath` | Pixel-exact closed/normal-state screenshot from the accepted scene. Only this entrance state is bound by `SceneConfig`. |
@@ -38,7 +38,9 @@ Runtime type and acquisition route are separate decisions:
 
 The ledger must cite the matching state and runtime rows. Empty or placeholder `mapSpritePath`/`Position` values are failures, not evidence that an item is `detail-only`.
 
-Current Sprite import convention is single Sprite, center pivot, 100 pixels per unit. `SceneMgr.ConvertMapPosToWorldPos` reads `Position` as a top-left, Y-down map coordinate and uses the map Sprite rectangle to calculate the center.
+Current Sprite import convention is single Sprite, center pivot, 100 pixels per unit, alpha-is-transparency enabled, fallback physics shape enabled, and alpha test reference `0.5`. `SceneMgr.ConvertMapPosToWorldPos` reads `Position` as a top-left, Y-down map coordinate and uses the map Sprite rectangle to calculate the center. `MapItemCtrl.ChangeSpriteAndUpdateCollider` then rebuilds `PolygonCollider2D` from every Sprite physics shape. Therefore direct-record click coverage follows the Map alpha/physics outline, not a separately configured rectangle.
+
+Only a Type 6 entrance to a real secondary menu may use a coherent region hotspot. Every direct-scene record, environmental observation, and individually clickable Type 7 child uses an object-alpha hotspot containing only that record itself.
 
 ## Required staged files
 
@@ -51,6 +53,7 @@ delivery/
   XYposition.txt
   ItemStaticData.patch.json
   position_overlay.png
+  hotspot_overlay.png
   delivery_manifest.json
   delivery_verification.json
 ```
@@ -68,6 +71,7 @@ delivery/
   <contained-detail-stem>.png
   <contained-icon-stem>.png              # when iconPath is configured
   <contained-icon-verification>.json     # when iconPath is configured
+  <contained-map-stem>_hotspot_overlay.png
   XYposition.txt
   ItemStaticData.patch.json
   container_position_overlay.png
@@ -81,7 +85,7 @@ Repeat the contained-item files for every child ID. `prop_<container>2_inner.png
 
 ```json
 {
-  "version": 2,
+  "version": 3,
   "coordinateSystem": {
     "origin": "top-left",
     "xAxis": "right",
@@ -101,6 +105,12 @@ Repeat the contained-item files for every child ID. `prop_<container>2_inner.png
     "width": 164,
     "height": 96,
     "rect": [1248, 736, 1412, 832]
+  },
+  "hotspot": {
+    "mode": "object-alpha",
+    "alphaThreshold": 128,
+    "target": "item 4317 only",
+    "siblingOverlapPixels": 0
   },
   "unityDraft": {
     "mapSpritePath": "SC4025_item_4317",
@@ -231,9 +241,12 @@ The structured manifest is the source of truth. Do not emit full-width commas or
 - Do not rename an approved runtime asset during packaging merely to improve style.
 - Use one evidence folder per scene or existing scene-folder convention.
 
-## Alpha rules
+## Alpha and hotspot rules
 
-- Map crop: preserve the accepted scene mode and exact pixels. RGB is valid.
+- Direct record / Type 7 child Map: RGBA is mandatory. Alpha outside the owned object/condition is zero. The runtime hotspot proxy is the Map alpha thresholded at `128/255`, matching the current Unity `0.5` physics-shape threshold. Contact shadows and antialiasing may remain below the threshold; visible object structure needed for reliable clicking must survive it.
+- A compound record may have multiple disconnected alpha/physics islands. Do not fill the empty space between two glasses, two footprints, torn fragments, or other separate parts merely to make one rectangular hotspot.
+- A Type 6 secondary-menu entrance may use an RGB or opaque RGBA region Sprite because the intended interaction is the coherent container/opening area itself. Record `hotspot.mode: secondary-menu-region` explicitly.
+- Green-screen generation is optional. Prefer native alpha when clean; otherwise retain the green master and cleaned transparent master. Scene-integrated clues use an audited semantic RGBA extraction rather than forced green-screen generation.
 - Detail: an ordinary physical Big is RGBA and is exported once from a high-resolution semantic master to exactly one final frame. The `2560 x 1600` guide is never a runtime file. A clue Polaroid is exactly `620 x 620`; its locked template is never scaled or rotated.
 - Icon: exactly `130 x 130` RGBA for `item`/`clue`. Every visible prop and shadow pixel must remain inside `[7,7,122,122)`, so the alpha bounding box is no larger than `115 x 115`; this is a ceiling, not a fill target. Fully transparent pixels must have RGB zero. Use a `1040 x 1040` master with content inside `[60,60,980,980)` and perform one premultiplied-alpha LANCZOS downsample. Never silently derive an Icon from Big during production packaging. `envir` rows must omit Icon entirely.
 - Type 6 container screenshot: preserve the exact accepted scene pixels and mode.
@@ -242,15 +255,18 @@ The structured manifest is the source of truth. Do not emit full-width commas or
 
 ## Scene reconstruction invariant
 
-For a normal scene-anchored Map—`item`, photographed `clue`, or `envir`—let `S` be the approved source scene, `F` the accepted scene with the interactive visual, `C` the Map crop, and `(x, y)` its coordinate. Delivery requires:
+For a normal scene-anchored Map—`item`, photographed `clue`, `envir`, or a Type 7 child—let `S` be the matching reconstruction base, `F` the accepted per-record scene state, `L` the RGBA Map layer, and `(x, y)` its coordinate. Delivery requires:
 
 1. `S` and `F` have identical size and mode.
 2. All `S != F` pixels are inside the approved authorization mask.
-3. Every changed pixel is inside `C`'s rectangle. Unchanged portions of the larger authorization workspace may remain outside it.
-4. `C == F.crop(rect)` pixel-for-pixel.
-5. Pasting `C` onto `S` at `(x, y)` produces `F` pixel-for-pixel.
+3. Every changed pixel and every nonzero `L` alpha pixel is inside the approved authorization mask and `L`'s rectangle.
+4. Pixels outside `L`'s alpha are transparent and own no support-surface background.
+5. Alpha-compositing `L` onto `S` at `(x, y)` produces `F` pixel-for-pixel.
+6. Thresholding `L` alpha at `128` produces the reviewed runtime hotspot; it contains only the record itself.
 
-For new placement jobs with both `S` and `F`, derive `rect` from the actual changed-pixel bounding box plus at least `32px` of stable local background. Fall back to the authorization-mask bounding box only when `S` is unavailable. Manual `--map-rect` input is reserved for audited legacy/baked-prop extraction.
+For new placement jobs, derive `rect` from the nonzero-alpha bounds of the approved source-sized Map layer plus small transparent padding (default `4px`). Stable local background padding is forbidden for object-alpha Maps. Manual `--map-rect` and opaque crops are reserved for audited legacy assets or Type 6 secondary-menu regions.
+
+For a multi-record scene, each record owns a separate layer and per-record reconstruction state. The parent package additionally proves that composing all approved sibling layers in order produces the combined final scene and that sibling thresholded hotspot masks have zero intersection unless an explicit runtime priority rule is approved.
 
 This proves that Unity can reconstruct the accepted scene state from the background plus runtime item Sprite.
 
@@ -265,7 +281,7 @@ Type 6 must still satisfy the normal scene reconstruction invariant because it i
 5. All four border strips are exactly 12 pixels of opaque white.
 6. Its interior equals the approved borderless source pixel-for-pixel.
 7. The Type 6 -> Type 7 -> contained-item configuration chain is complete, and only Type 6 is bound by `SceneConfig`.
-8. Every contained exploration item has a non-empty `mapSpritePath` and full-scene `Position`; its local crop lies inside Type 7 and aligns pixel-for-pixel at that position.
+8. Every contained exploration item has a non-empty `mapSpritePath` and full-scene `Position`; its local RGBA layer lies inside Type 7 and alpha-composites pixel-for-pixel at that position.
 
 ## Art authorship and provenance
 

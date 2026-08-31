@@ -1,0 +1,97 @@
+{
+  "batch": "Unit4_full_rebuild_v1",
+  "reusePolicy": {
+    "previousGeneratedAssets": "forbidden",
+    "previousCoordinates": "forbidden",
+    "previousMasksAndPrompts": "forbidden",
+    "approvedBaseSceneAndCurrentCanon": "allowed"
+  },
+  "episode": "EPI04",
+  "unit": "Unit4",
+  "loop": 1,
+  "sceneId": "4003",
+  "sceneName": "法院档案室 · 白天",
+  "baseScene": {
+    "path": "/Users/m4/project/NDC_project/image/定稿/u4_exp_court_archive_day.png",
+    "sha256": "cb2df7531f022dc4479816e0f13bf117b7933be881b8caaa1b706babf92538d9",
+    "width": 3140,
+    "height": 1600,
+    "mode": "RGBA"
+  },
+  "supportJobs": [
+    {
+      "id": "SC4003_support_harrison_file_cart",
+      "purpose": "在中央调阅桌左侧增加一辆符合 1920 年代法院档案室的木质调阅车，作为 4116 的非交互承载物。",
+      "interactive": false,
+      "intentRect": [1210, 760, 1510, 1130],
+      "protected": ["左侧档案柜", "中央调阅桌", "地面透视与纹样", "全部授权区外像素"],
+      "status": "PASS",
+      "acceptedScene": "/Users/m4/project/NDC_project/image/edit_jobs/Unit4_full_rebuild_v1/SC4003_court_archive/00_cart_support/accepted_cart_scene.png"
+    }
+  ],
+  "records": [
+    {
+      "itemId": "4115",
+      "name": "Harrison两个月调阅索引",
+      "itemType": "3/item",
+      "acquisitionEvent": "玩家在基础探索场景直接点击中央调阅桌上的两个月调阅索引并取得物品，不进入二级菜单。",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "visibleAnchor": "中央调阅桌上的大开本法院流水簿",
+      "hotspotMode": "object-alpha",
+      "hotspotTarget": "仅 4115 流水簿纸页和装订本体；桌面、桌垫与周围空白不计入热区",
+      "intentRect": [1660, 800, 2070, 940],
+      "mapInformationBudget": "只看出大开本法院流水簿、灰白纸、淡蓝格线和三组页签；远景不得读出分组名称、次数、案号或签署者。",
+      "folderPath": "EPI04\\u4_exp_court_archive_day",
+      "mapStem": "SC4003_item_4115",
+      "detailStem": "SC4003_item_4115_big",
+      "iconStem": "SC4003_item_4115_icon",
+      "z": "-3",
+      "deliverables": ["Map", "Position", "ordinary Big", "Icon"],
+      "position": ["1656", "772", "-3"],
+      "hotspotBounds": [1659, 775, 1994, 862],
+      "deliveryManifest": "/Users/m4/project/NDC_project/image/edit_jobs/Unit4_full_rebuild_v1/SC4003_court_archive/delivery/4115/delivery_manifest.json",
+      "deliveryVerification": "/Users/m4/project/NDC_project/image/edit_jobs/Unit4_full_rebuild_v1/SC4003_court_archive/delivery/4115/delivery_verification.json",
+      "status": "PASS"
+    },
+    {
+      "itemId": "4116",
+      "name": "Mary / Helen案改判往来信",
+      "itemType": "3/item",
+      "acquisitionEvent": "玩家在基础探索场景直接点击 Harrison 调阅车顶部的三封法院往来信并取得物品，不进入二级菜单。",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "visibleAnchor": "Harrison 调阅车顶部用档案夹收拢的三封法院公函",
+      "hotspotMode": "object-alpha",
+      "hotspotTarget": "仅 4116 三封往来信及其同组档案夹；调阅车、车架和地面不计入热区",
+      "intentRect": [1250, 740, 1470, 900],
+      "mapInformationBudget": "只看出三封同案法院公函叠放；远景不得读出日期、处理章、人物、具体案号或改判结论。",
+      "bigContractStatus": "content-blocked",
+      "bigBlocker": "第三次提交回执的具体月日尚未与 Harrison 死亡日期锁定，禁止自行填写。",
+      "folderPath": "EPI04\\u4_exp_court_archive_day",
+      "mapStem": "SC4003_item_4116",
+      "detailStem": "SC4003_item_4116_big",
+      "iconStem": "SC4003_item_4116_icon",
+      "z": "-3",
+      "deliverables": ["Map", "Position", "ordinary Big", "Icon"],
+      "position": ["1296", "858", "-3"],
+      "hotspotBounds": [1300, 862, 1538, 935],
+      "mapStageManifest": "/Users/m4/project/NDC_project/image/edit_jobs/Unit4_full_rebuild_v1/SC4003_court_archive/map_stage/map_stage_manifest.json",
+      "status": "Map/Position PASS; Big/Icon/full package blocked by exact date"
+    }
+  ],
+  "sceneVerification": {
+    "path": "/Users/m4/project/NDC_project/image/edit_jobs/Unit4_full_rebuild_v1/SC4003_court_archive/SC4003_final_verification.json",
+    "status": "PASS",
+    "outsideUnionDiff": 0,
+    "siblingHotspotOverlap": 0
+  },
+  "sources": [
+    "/Users/m4/project/NDC_project/canon_manifest.json",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/state/loop1_state.yaml",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/场景/探索场景/EXP_SC4003_法院档案室_白天.md",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/证据设计/Unit4_循环1_证据美术资产.md",
+    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/ItemStaticData.json",
+    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/SceneConfig.json"
+  ]
+}

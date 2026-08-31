@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "unit": "Unit4",
+  "episode": "EPI04",
+  "loop": 3,
+  "sceneId": "4027",
+  "sceneName": "Morrison 宅邸门厅客厅",
+  "sourceScene": {
+    "path": "/Users/m4/project/NDC_project/image/定稿/u4_exp_morrison_foyer_night_preblast.png",
+    "width": 3504,
+    "height": 1600,
+    "mode": "RGB",
+    "sha256": "b5d86e36db336c52a620985683abedb9f28c2181cab0a1f6dde91fdc321dd3ff"
+  },
+  "interaction": {
+    "secondaryView": false,
+    "atomic": false,
+    "sharedScenePatch": "central-coffee-table",
+    "sceneConfigBinds": ["4314", "4315"]
+  },
+  "records": [
+    {
+      "itemId": "4314",
+      "name": "两只酒杯",
+      "itemType": "1/clue",
+      "acquisitionEvent": "玩家点击会客矮桌上的两只酒杯并拍照记录现场关系",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "visibleAnchor": "一只处于日常座位一侧的酒杯，以及一只靠访客座、仍有残酒和未融碎冰并留下湿杯垫水环的酒杯",
+      "acquiredRecord": "4314 两只酒杯的现场照片记录",
+      "containerChain": null,
+      "zPolicy": {
+        "value": "-3",
+        "source": "当前 ItemStaticData 中既有场景 clue 行的三段 Position 惯例"
+      },
+      "deliverables": ["Map", "Position", "620x620 clue Polaroid Big", "130x130 Icon"],
+      "mapInformationBudget": "只呈现两杯的位置差异、残酒、碎冰和湿水环的场景锚点；不出现身份标签或结论文字",
+      "status": "ready"
+    },
+    {
+      "itemId": "4315",
+      "name": "古巴雪茄烟蒂",
+      "itemType": "1/clue",
+      "acquisitionEvent": "玩家点击第二只酒杯旁的湿杯垫与雪茄烟蒂，先拍关系照和比例尺微距，再将原物装袋",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "visibleAnchor": "第二只酒杯旁按灭的深棕雪茄烟蒂、湿杯垫水痕和粘湿烟灰",
+      "acquiredRecord": "4315 古巴雪茄烟蒂的现场照片记录与装袋原物",
+      "containerChain": null,
+      "zPolicy": {
+        "value": "-3",
+        "source": "当前 ItemStaticData 中既有场景 clue 行的三段 Position 惯例"
+      },
+      "deliverables": ["Map", "Position", "620x620 clue Polaroid Big", "130x130 Icon"],
+      "mapInformationBudget": "场景尺度只需识别雪茄、第二杯和湿杯垫的关系；复合咬痕细节只在 Big 中展示",
+      "status": "ready"
+    }
+  ],
+  "sources": [
+    "剧情设计/Unit4/证据设计/Unit4_循环3_证据美术资产.md",
+    "剧情设计/Unit4/state/loop3_state.yaml",
+    "剧情设计/Unit4/场景/探索场景/EXP_SC4027_Morrison宅邸门厅客厅_夜晚爆炸前.md",
+    "剧情设计/Unit4/美术需求/Unit4_道具落位与最终交付标准.md",
+    "avg_editor_v2/data/table/SceneConfig.json sceneId=4027",
+    "avg_editor_v2/data/table/ItemStaticData.json id=4314,4315"
+  ]
+}

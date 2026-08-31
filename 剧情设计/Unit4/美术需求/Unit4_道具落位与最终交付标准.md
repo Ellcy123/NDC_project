@@ -1,549 +1,211 @@
-# Unit4 道具落位与最终交付标准
+# Unit4 证据与道具交付清单
 
 > 适用范围：Unit4 / EPI04 / 4xxx。  
 > 章节结构：5 个 Loop + 非 Loop 终幕。  
-> 文档用途：决定每件证据是否进入探索场景、放在哪里、是否需要 Type 6 → Type 7 二级菜单，以及最终需要交付哪些文件。  
-> 当前状态：生产路由定稿；具体像素坐标必须在对应道具完成并通过整图验收后，从最终原生分辨率图像自动推导。  
-> 内容真源：`canon_manifest.json`、`剧情设计/Unit4/state/loop1-5_state.yaml`、`剧情设计/Unit4/证据设计/Unit4_证据美术资产_总览.md`、各 Loop 证据美术文档和探索场景文档。
+> 重建基线：2026-08-27，Git `4a563f6`。
+> 当前用途：生产路由索引，不是第四份证据设计文档，也不是资产完成报告。
+> 本清单覆盖 59 条正式证据；4122、4123 等玩法附属素材另列，不计入正式证据总数。
 
 ---
 
-## 一、当前场景底图基线
+## 一、来源分工与冲突处理
 
-2026-08-25 已将 `C:\Users\Ellcy\Downloads\定稿` 中的 32 张 PNG 同步到 `D:\NDC_project\image\定稿`，同步后逐文件 SHA-256 一致。
+| 决定事项 | 采用的依据 |
+|---|---|
+| 证据是什么、必须表现什么、哪些内容不能提前出现 | [Unit4 证据美术资产总览](../证据设计/Unit4_证据美术资产_总览.md)及 Loop 1—5 证据美术文档 |
+| 首次出现、实际获取事件、场景状态、时序与门控 | [Loop 1 State](../state/loop1_state.yaml)、[Loop 2 State](../state/loop2_state.yaml)、[Loop 3 State](../state/loop3_state.yaml)、[Loop 4 State](../state/loop4_state.yaml)、[Loop 5 State](../state/loop5_state.yaml) |
+| Map、Position、Big、Icon、环境观察与容器链的技术合同 | [NDC Scene Evidence Placement Skill](../../../.codex/skills/ndc-scene-evidence-placement/SKILL.md) |
+| Unit / Episode / ID 身份 | [canon_manifest.json](../../../canon_manifest.json) |
+| 当前字段、既有资源 stem 与实施缺口 | [ItemStaticData.json](../../../avg_editor_v2/data/table/ItemStaticData.json)与 [SceneConfig.json](../../../avg_editor_v2/data/table/SceneConfig.json)；只作实施现状，不反推设计 |
 
-- 29 张原本已一致。
-- 实际覆盖：`Court_outside_night.png`、`u4_l5_open_42f_lobby_night.png`。
-- 实际新增：`u4_avg_pretrial_courtroom_afternoon.png`。
-- 此后制作 Unit4 道具，只能以 `D:\NDC_project\image\定稿` 中对应 PNG 为源图。
-- 不得从旧试做图、缩放预览图、聊天截图、AI 输出画布或旧坐标恢复道具位置。
-- 不得覆盖源图；所有新制作进入新的 `image/edit_jobs/<job>/`。
+冲突处理规则：
 
-旧 Unit4 道具和 rebase 试做已整体移入 Windows 回收站。旧图、旧坐标、旧交付包和旧验证报告均不再作为生产依据。
+1. 证据名称、物理身份、可读信息和剧透边界以证据设计为准。
+2. 实际获取方式以 State 中发生的玩家事件为准；这一步决定是否需要世界 Map 和 Position。
+3. 交付规格以当前 Skill 为准。旧文档或旧试制包与 Skill 冲突时，不得继续沿用旧规格。
+4. 当前配置中预填了路径，不代表对应资产、坐标或获取路由已经成立。
+5. 无法由以上来源唯一裁决的条目必须标为“阻塞”，不能用占位 Map、假坐标或多余 Icon 补齐。
 
----
-
-## 二、先分清地图层与 Big 层
-
-### 1. 地图层只负责“认出是什么”
-
-探索场景里的道具只展示：
-
-- 正常物理尺寸；
-- 符合场景视角的可见面、透视和遮挡；
-- 轮廓、材质、宽泛颜色和当前状态；
-- 必要的接触阴影、反光和与家具的接触关系。
-
-地图层禁止为了可读性把证据放大、立起、转正、朝向镜头或做成展板。文书在地图里通常只看得到侧面、书脊、厚度、折角、文件夹颜色或无法阅读的局部。
-
-### 2. Big 层负责“读出证据”
-
-以下内容只能放在 `desSpritePath` 对应的 Big 图或玩法特写中：
-
-- 标题、日期、姓名、账号、案号；
-- 正文、签名、笔迹、断墨、齿痕；
-- 损伤、批次、条款、对比标记；
-- 玩家必须近看才能获取的谜题信息。
-
-地图层和 Big 层必须是同一物件、同一材料、同一损伤和同一状态，但信息密度不同。
+本清单不重复证据正文、英文上画文本、精确美术细节和跨证据视觉锚；制作时必须回到对应 Loop 的证据美术文档读取。
 
 ---
 
-## 三、交付分类与最终标准
+## 二、交付类别速查
 
-本文用以下分类标记每件资产。
-
-### P — 普通场景拾取／现场线索
-
-适用于直接放在桌面、托盘、报架、尸体旁或其他开放位置的可点击物。
-
-最终交付：
-
-1. 保留原图不动的完整合成场景 `scene_with_item.png`。
-2. 从完整合成场景精确裁出的 Map 图；Map 图允许包含少量稳定背景和接触阴影。
-3. 单独制作的 Big 图。
-4. RGBA Icon。
-5. 从 Map 裁图左上角自动推导的 `x,y,z`。
-6. `XYposition.txt`、`ItemStaticData.patch.json`、坐标叠层图、manifest 和 verification。
-7. 最终场景尺寸、模式必须与源图相同；授权蒙版外变化像素必须为 0。
-
-禁止事项：
-
-- 不得手抄或目测坐标。
-- 不得把 AI 返回图缩放后整块贴回场景。
-- 不得因为底图尺寸是 10 的倍数，就把道具坐标也四舍五入到 10 的倍数。
-- 不得在地图图里展示 Big 图级别的正文。
-
-### C — Type 6 → Type 7 二级菜单容器
-
-适用于抽屉、废纸篮、寄存柜、纸箱、衣袋、信格、保险柜等需要打开后查看内部的容器。
-
-运行链必须完整：
-
-```text
-SceneConfig
-  → Type 6 关闭态入口
-    → Type 7 打开态二级菜单
-      → 内含证据
-```
-
-Type 6 最终标准：
-
-- `prop_<container>1.png` 必须是从验收通过的最终场景原生分辨率中截取的精确矩形。
-- 保留完整关闭态容器，只带最少稳定边缘像素。
-- Position 是该截图左上角的原生像素坐标。
-- 粘回同一场景时必须像素级还原。
-- 只有 Type 6 进入 `SceneConfig.ItemIDs`。
-
-Type 7 最终标准：
-
-- `prop_<container>2_inner.png` 是独立制作的俯视或近俯视内部图，不是放大 Type 6 截图。
-- 材质、结构、磨损、开口方向、把手和铰链必须与 Type 6 一致。
-- 内部只需辨认物件类别；正文和谜题细节仍放在各证据 Big 图。
-- 完成所有生成、修图和缩放后，再添加四边各 12 像素的纯白不透明矩形边框。
-- 最终 `prop_<container>2.png` 添加边框后不得再次缩放或裁切。
-- 默认以 Type 6 中心为锚计算 Type 7 左上角，再做最小必要微调。
-- Type 6 与 Type 7 分别记录 Position，不得共用同一坐标。
-- Type 7 完整矩形必须留在场景画布内。
-
-内含证据标准：
-
-- 单件容器：Type 7 的 `ActionParam` 指向该证据。
-- 多件逐个点击：每件需要 Type 7 局部 Map、Big、Icon 和 Type 7 局部坐标。
-- 多件原子取得：Type 7 的 `ActionParam` 写完整 ID 列表；不虚构逐件点击坐标，但每件仍需独立 Big 和 Icon。
-
-最终容器包至少包含：
-
-```text
-prop_<container>1.png
-prop_<container>2_inner.png
-prop_<container>2.png
-XYposition.txt
-ItemStaticData.patch.json
-SceneConfig.patch.json
-container_position_overlay.png
-container_delivery_manifest.json
-container_delivery_verification.json
-```
-
-### H — 对话交付／人物交付／条件事件交付
-
-物件由 NPC、剧情事件或分析过程交给玩家，不在自由探索中等待点击。
-
-最终交付：
-
-- Big 和 Icon 必做。
-- 只有演出明确需要物件落到桌面或托盘时，才额外制作演出状态叠层；该叠层不作为自由拾取入口。
-- 不配置虚假的场景 Position，不在 `SceneConfig.ItemIDs` 中伪装成常驻拾取物。
-- 如果事件结束后允许玩家从场景点击领取，改按 P 类制作，并增加出现条件和消失条件。
-
-### D — 派生分析／记忆／推理结果
-
-这类内容不是世界里原本摆着的纸张。
-
-最终交付：
-
-- Big／结果卡必做；Icon 是否需要由 UI 规范决定。
-- 保留来源证据缩略图和证明边界。
-- 不制作场景 Map，不配置 Position，不塞进抽屉或桌面。
-- 不伪装成凭空出现的现代鉴定报告。
-
-### E — 环境观察
-
-环境观察依附于墙、阀门、窗缝、展示墙、桌面磨损等场景结构。
-
-最终交付：
-
-- 优先由干净底图本身承载。
-- 如需点击反馈，只制作热点／局部观察图或必要状态叠层。
-- 不制作可被重新贴回场景的假背包道具，不配置伪造的拾取 Map。
-- 气味、声音和温度等非视觉信息由交互文案或音效表达。
-
-### A — AVG 专用状态
-
-用于指证后开柜、人物从口袋交物、终幕拆档案等不恢复自由探索的固定演出。
-
-最终交付：
-
-- 按 AVG 分镜制作关闭、开启、交付或拆阅状态。
-- 不建立 Type 6 → Type 7 链，不配置自由探索 Position。
-- 如果同一容器在另一个探索场景中确实可由玩家自由打开，才为那个探索场景另建 C 类交付。
-
-### M — 小玩法专用附属素材
-
-最终交付跟随玩法界面，不进入 `ItemStaticData`，不配置场景 Position。页面、刻度、锁轮、节点卡和完成态必须与来源证据视觉一致。
-
----
-
-## 四、Unit4 确认需要二级菜单的容器
-
-下列 8 个容器按 C 类制作。容器 Type 6／Type 7 ID 在配置落地阶段统一分配，不复用内含证据 ID。
-
-| Loop | 场景 | 容器 | Type 7 内含证据 | 取得方式 |
-|---|---|---|---|---|
-| L1 | SC4002 | 普通费用抽屉 | 4112 | 单件取得 |
-| L1 | SC4002 | 打字机旁废纸篮 | 4113 | 单件取得 |
-| L3 | SC4026 | 214号寄存柜 | 4320 | 使用4317解锁后单件取得 |
-| L4 | SC4034 | 睡眠区矮柜的旧相册抽屉 | 4415 | 单件取得；查看后生成4704 |
-| L4 | SC4034 | 写字台旁半拆纸箱 | 4416 | 单件取得；查看后生成4709 |
-| L4 | SC4034 | Patrick旧外套口袋 | 4417 | 单件取得 |
-| L4 | SC4034 | 写字台未寄信格 | 4419 | 单件取得 |
-| L5 | SC4042 | 七位字母锁保险柜 | 4513、4514、4515、4516 | 输入FTMWPTF后四件原子取得 |
-
-以下看起来像容器，但明确不走探索二级菜单：
-
-| 场景／段落 | 容器 | 正确处理 |
+| 交付类别 | 实际玩家事件 | 必交资产 |
 |---|---|---|
-| SC4002 指证后 | Watts怀中的便携铁制保险柜 | A类；只在指证后AVG打开并一次交付4117—4120 |
-| SC4034 指证后 | Patrick遗物匣 | H/A类；Margaret主动交付，随后进入物品旋转、刻句和内衬返程票查看 |
-| SC4042 高潮 | Mickey书桌抽屉 | A类；Mickey取枪演出，不是探索入口 |
-| SC4044 终幕 | 4516 Tidewater执行卷硬质底衬 | A类；车内二次整理时才发现4518、4519，不在SC4042的Type 7保险柜中提前显示 |
+| `scene-pickup` / item | 玩家在基础探索场景点击或搜索后取得物品 | Map + Position + ordinary Big + Icon |
+| `scene-pickup` / clue | 玩家在基础探索场景拍摄或记录现场线索 | Map + Position + `620 x 620` clue Big + Icon |
+| `container-state` / 逐件点击 | 玩家打开 Type 6 → Type 7 后继续点击子物 | Type 6 Map/Position + Type 7 Map/Position + 子物 Map/Position/Big/Icon |
+| `container-state` / 原子发放 | 玩家打开容器后由事件一次自动取得全部内容 | Type 6/Type 7 可见状态 + 每件 Big/Icon；明确不制作子物 Map/Position |
+| `detail-only` | 对话、AVG、事件、分析、记忆或推理界面自动交付 | Big + Icon；无 Map/Position；画面中实际展示时另做 handover/条件状态 |
+| `environment` | 玩家点击环境观察，但物件不进入背包 | Map + Position + Big；完全省略 Icon |
+| `minigame-only` | 玩法界面素材，不进入 ItemStaticData | 进入对应玩法资产流程，不计入下方 59 条 |
+
+ordinary Big、Icon、clue Big、Type 7 白边、命名、坐标推导和验证细节全部以当前 Skill 及其 references 为准，本清单不复制尺寸流程。
+
+### 路由数量
+
+| 路由 | 数量 | 说明 |
+|---|---:|---|
+| 基础场景直接拾取／记录 | 20 | 包含点击家具后直接取得；不自动升级为 Type 6/7 |
+| 真实二级容器中的逐件点击 | 1 | 4320，必须有完整子物 Map/Position |
+| 对话、AVG、事件、分析、记忆、推理或容器原子发放 | 33 | 全部 detail-only，无世界 Map/Position |
+| 环境观察 | 5 | 4216、4321、4322、4323、4324；均需 Map/Position/Big 且无 Icon |
+| 合计 | 59 | 与当前 EPI04 ItemStaticData 正式行数一致 |
 
 ---
 
-## 五、逐场景道具落位
+## 三、59 条正式证据交付路由
 
-### Loop 1
+“路由已定”只表示可以按本行开资产任务，不表示资产已经完成或配置已经落表。
 
-#### SC4001 法院门口／东翼
+### Loop 1｜11 条
 
-- 类型：AVG。
-- 无可拾取道具，无二级菜单。
+来源：[循环1证据美术资产](../证据设计/Unit4_循环1_证据美术资产.md) + [loop1_state.yaml](../state/loop1_state.yaml)
 
-#### SC4002 Harrison 外间办公室
-
-底图：`u4_exp_harrison_outer_office_day.png`
-
-| ID／对象 | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4122公开日程附属页 | M/E | 中央桌面的公开日程簿，只作为玩法来源锚点 | 不进背包；不制作可拾取Map |
-| 4112 1919-A入账存根 | C | 普通费用抽屉；存根混在正常收入凭据里 | 抽屉Type6/7；地图层不得读出账户内容；4112另交Big/Icon |
-| 4113 未完成的辞职信草稿 | C | 打字机旁废纸篮；只看出一张废稿夹在普通废纸中 | 废纸篮Type6/7；完整句子只在Big中可读 |
-| Watts便携保险柜 | A | 由Watts抱在怀中或护在膝前，指证前关闭 | 只做探索关闭视觉锚和指证后AVG开启状态 |
-| 4117 编号纸条 | A/H | 指证后打开Watts保险柜取得 | Big/Icon；不做自由探索Map |
-| 4118 医院冷藏库留样试剂 | A/H | 指证后从保险柜内的上锁保冷箱与手续中取得 | Big/Icon；保冷箱结构进入AVG特写 |
-| 4119 Harrison资金流向图 | A/H | 指证后保险柜材料 | Big/Icon；不在探索底图提前露出 |
-| 4120 南区开发计划摘要 | A/H | 指证后保险柜材料 | Big/Icon；不在探索底图提前露出 |
-
-#### SC4003 法院档案室
-
-底图：`u4_exp_court_archive_day.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4114 圣心医院资助档案卷宗 | H | 管理员服务台，由管理员按程序调出并交付 | Big/Icon；如演出需落桌，仅做条件状态叠层 |
-| 4115 Harrison两个月调阅索引 | P | 中央调阅桌，作为文件特写和检索玩法入口 | 普通拾取完整包；地图层只认出台账，不读完整数据 |
-| 4111 日程与夜间出入对照 | D | 中央调阅桌完成三轮匹配后生成 | 结果Big/Icon；无Map/Position |
-| 4701 本人赔偿裁定整理结果 | D | 由4115与旧案目录交叉整理得到 | 结果Big/Icon；无Map/Position |
-| 4116 Mary／Helen案改判往来信 | P | Harrison调阅车上的正式法院材料 | 普通拾取完整包；地图层只看出一组往来信件 |
-| 4122、4123 | M | 只进入检索玩法界面 | 不进入正式Item表 |
-
-### Loop 2
-
-#### SC4011 Zack侦探事务所
-
-底图目标名：`u4_exp_zack_office_day`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4211 红线注射器与十三日封签药盒 | H | Rosa在会客桌药盒托盘上交付 | Big/Icon；可做对话后桌面状态叠层，不作为自由拾取 |
-| 4212 Isabel使用后的封签药瓶 | H | Rosa放到回收物证垫上交付 | Big/Icon；可做对话后状态叠层 |
-| 4217 Isabel病历本 | H | Rosa从随身旧包中交付 | Big/Icon；不在进场底图预摆 |
-
-#### SC4012 圣心医院社会服务部
-
-底图：`u4_exp_hospital_social_service_day.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4216 Miller项目铭牌与康复名册 | E | Miller项目展示墙 | 由背景承载；可交观察局部，不做可拾取Map |
-| 4219 七例儿童死亡病例对照表 | H/D | 持有4218并提交4117后，调档员推回七份病例档案车，按演出生成 | Big/Icon和条件演出状态；基础底图不得常驻七份死亡病例 |
-
-#### SC4013 Foster法医实验室
-
-底图：`u4_exp_forensic_lab_day.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4213 同配方药瓶封签组 | H | 中央检验桌／证物托盘，由Foster依法调取并交付 | Big/Icon；演出状态可落托盘 |
-| 4218 有限调档许可 | H | Foster交付的纸面许可 | Big/Icon；不做常驻拾取物 |
-| 4702 经容量分析的回收药瓶 | D | 十三次剂量核对完成态 | 结果Big/Icon和玩法完成态；无场景Map |
-| 4703 经化验的医院留样试剂 | D | 4118受控化验完成态 | 结果Big/Icon；原瓶身份必须保持一致 |
-
-#### SC4014 法院预审走廊
-
-- 无证据道具，无二级菜单。
-- 只承担对话、走廊环境与进入法庭的空间关系。
-
-#### SC4015 法院会客室
-
-底图：`u4_exp_court_consult_room_day.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4214 医院采购与发放记录 | P | 中央阅卷桌的本案卷宗 | 普通拾取完整包；地图层只认出卷宗和缺页状态 |
-| 4215 缺失的第十九页副本 | H/D | 由同一册卷宗的目录与缺页检查形成，并由剧情交付副本 | Big/Icon；不在桌上再摆第二份独立证据 |
-| 律师公文包 | E/A | Mickey程序性取卷载体 | 不作为证据或二级菜单 |
-
-#### SC4016 法院预审法庭
-
-- 类型：AVG。
-- 无可拾取道具，无二级菜单。
-
-### Loop 3
-
-#### SC4021 Zack事务所／深夜来电
-
-- 类型：AVG。
-- 无可拾取道具。
-
-#### SC4022 Morrison宅邸书房
-
-底图：`u4_exp_morrison_study_night_preblast.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4311 磨号手枪与未击发余弹 | P | Harold尸体右手；枪位和手别关系必须同框 | 现场线索完整包；地图层不展示弹道结论 |
-| 4312 伪造遗书 | P | 书桌中央，摆放得略显刻意端正 | 普通拾取完整包；正文只在Big中读 |
-| 4313 Pierce档案移交通知 | P | 书桌侧档案袋 | 普通拾取完整包；地图层只看出档案袋和文件厚度 |
-| 4323 常用物件偏左摆放 | E | 书桌左侧墨水瓶、警徽盒、杯垫与长期磨损区 | 背景环境观察；不制作独立拾取道具 |
-
-#### SC4023 宅邸门外／爆炸后回收区
-
-底图：`u4_exp_morrison_aftermath_night.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4324 卷收式厚质防风帘 | E | 门廊横梁、配重下沿、控制绳和外侧门柱绳扣 | 由背景承载；爆炸后轻损但结构连续，不做背包Map |
-| 4316残件反馈 | E | 已记录装置的焦黑残件 | 只反馈与爆炸前照片一致，不生成第二件证据 |
-
-#### SC4024 夜班电话交换台
-
-- 无 ItemStaticData 道具。
-- 接线板、当夜接线簿和口信便笺夹只支撑证词，不生成背包证据或二级菜单。
-
-#### SC4025 法院外圈调度台
-
-底图：`u4_exp_court_dispatch_night.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4317 214号黄铜寄存柜钥匙 | P | 调度台旁临时物品盘 | 普通拾取完整包；地图层唯一允许读出的信息是214 |
-| 4318 Harrison案转运调度单 | P | 调度台合订夹 | 普通拾取完整包；完整时段和签字只在Big中读 |
-| 4319 晚间报纸号外 | P | 晚报架／长椅 | 普通拾取完整包；地图层只看出晚报号外，不展示正文 |
-| 交接签字栏 | E | 调度台固定记录区 | 环境反馈记录不连续，不另生成证据 |
-
-#### SC4026 车站214号寄存区
-
-底图：`u4_exp_station_locker_night.png`
-
-| ID／对象 | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 210—220号柜组 | E | 连续柜号必须在基础场景可见 | 不因未取得钥匙隐藏 |
-| 214号寄存柜 | C | 柜组内的214号柜；无钥匙反馈上锁 | Type6关闭态 → Type7打开态；4317是外部解锁输入 |
-| 4320 未寄出口供 | C内含 | 打开214号柜后看到干燥整齐的扎绳牛皮纸文件包 | Big/Icon；完整内容不在Type7小图中阅读 |
-
-#### SC4027 Morrison宅邸门厅客厅
-
-底图：`u4_exp_morrison_foyer_night_preblast.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4314 两只酒杯 | P | 会客矮桌；一只是日常位置，另一只仍有残酒和未融碎冰 | 现场线索完整包；两杯空间关系必须保留 |
-| 4315 古巴雪茄烟蒂 | P | 第二只酒杯旁的湿杯垫 | 现场线索完整包；地图层不展示齿痕比对结论 |
-
-#### SC4028 Morrison宅邸厨房检修区
-
-底图：`u4_exp_morrison_service_night_preblast.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4316 伪造铅封与时钟接线 | E/D | 第一检查点在煤气表铅封，第二检查点在壁炉时钟背板；两段齐全后生成记录 | 两个环境热点 + 一张合并Big/Icon；不制作一件同时贴在两个位置的假Map |
-| 4321 煤气阀异常开启痕迹 | E | 主煤气阀 | 背景／观察局部；不进背包 |
-| 4322 窗缝逆风与煤气味 | E | 背风侧窗缝 | 逆风由窗帘／烟尘反馈，气味由文案和音效表达 |
-
-#### SC4029 Morrison宅邸门外／抵达
-
-- 类型：AVG。
-- 无可拾取道具；必须建立4324防风帘的爆炸前位置和结构。
-
-### Loop 4
-
-#### SC4031 Zack事务所／对质与清退通知
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4411 Lakeshore清退协警通知 | H/A | Doris从大衣口袋交出 | Big/Icon；不作为事务所自由拾取物 |
-
-#### SC4032 O'Hara家门口
-
-- 无可拾取证据。
-- 纸箱、警员和门阶只承担现实压力与空间叙事。
-
-#### SC4033 O'Hara家室内
-
-底图：`u4_exp_ohara_home_day.png`
-
-| ID | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4412 Lakeshore最终收购协议 | P | 餐桌文件组 | 普通拾取完整包；正文和金额只在Big中读 |
-| 4413 Margaret写给O'Hara的短便条 | P | 与协议相邻但保持独立点击 | 普通拾取完整包；地图层只看出短便条 |
-| 4414 临时停止执行回执 | H/P事件态 | 电话事件后出现在门边送达夹 | Big/Icon；若允许事件后点击领取，则交付条件Map和出现状态，不常驻基础底图 |
-
-#### SC4034 Margaret新家
-
-底图：`u4_exp_margaret_home_day.png`
-
-| ID／对象 | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4415 1903码头旧照片 | C | 睡眠区矮柜中没有完全合拢的旧相册抽屉 | 抽屉Type6/7；照片Big/Icon；查看后生成4704 |
-| 4704 右下牙长期缺损 | D | 查看4415后的记忆观察 | 记忆卡Big；无Map/Position |
-| 4416 葬礼册与1919旧信封 | C | 写字台旁半拆纸箱，混在账本、教会传单和家用信件中 | 纸箱Type6/7；Big/Icon；查看后生成4709 |
-| 4709 1919两项可观察事实 | D | 查看4416后的记忆观察 | 记忆卡Big；无Map/Position |
-| 4417 粉笔转运牌 | C | 睡眠区壁钩上Patrick旧外套的口袋 | 口袋Type6/7；地图层只认出口袋内小牌，不读完整意义 |
-| 4419 未寄短笺 | C | 写字台未寄信格，夹在普通日常信件中 | 信格Type6/7；完整三句只在Big中读 |
-| 4418 Patrick遗物匣 | H/A | 不在自由探索出现；Margaret指证后主动取出交付 | Big/Icon + 可旋转外观 + 打开内衬／返程票状态；不做场景Map |
-
-场景必须保留足够多的普通生活物件，不能把四个二级菜单入口做成高亮证据陈列。
-
-#### SC4035 O'Hara家后巷井检口
-
-- 类型：短建立镜头。
-- 无可拾取道具；只承接厨房手压泵的环境连续性。
-
-### Loop 5 与终幕
-
-#### SC4041 四十二层外厅／抵达
-
-- 类型：AVG建立镜头。
-- 无可拾取道具，无二级菜单。
-
-#### SC4042 Mickey私人办公室
-
-底图：`u4_exp_mickey_office_night.png`
-
-| ID／对象 | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4511 Mickey定制钢笔 | P | 私人书桌上，沿桌面透视平放 | 普通拾取完整包；地图层只看出黑金钢笔；M.F.D.、笔尖缺口和断墨只在Big中展示 |
-| 4512 Mickey半支古巴雪茄 | P | 刻有M.F.D.的私人烟灰缸内／旁 | 普通拾取完整包；地图层不展示四维齿痕比对 |
-| 七位字母锁保险柜 | C | 书桌右侧既有机械字母锁保险柜 | Type6精确关闭截图；Type7近俯视打开态；输入FTMWPTF |
-| 4513 接管记录 | C内含 | Type7内的深色文件夹／奶油色记录 | 原子取得；独立Big/Icon；接管者实名不得出现 |
-| 4514 银行授权附页 | C内含 | Type7内的奶油色银行附页 | 原子取得；独立Big/Icon；签名细节只在Big中读 |
-| 4515 手写功业簿 | C内含 | Type7内的深色旧皮面簿册 | 原子取得；独立Big/Icon；不能在小图中读完条目 |
-| 4516 Tidewater执行卷 | C内含／A容器 | Type7内厚重深蓝／炭灰硬质档案卷 | 原子取得；SC4042只见公开外卷；另交终幕三阶段拆阅资产 |
-| 4705—4708 | D | 三条身份锁产生的推理结果 | CASE BOARD结果卡；无场景Map/Position |
-| Mickey书桌抽屉 | A | 高潮中由Mickey拉开取枪 | 不开放自由探索，不做Type6/7 |
-
-SC4042 保险柜的 Type 7 必须一次性获得4513—4516。打开小图只能辨认四组材料，不得出现4518、4519、Sean姓名、水源点或隐藏底衬。
-
-#### SC4043 离开四十二层／法院档案车
-
-- 类型：AVG撤离段。
-- 4516始终整袋封存，不在楼梯、服务出口或停车区拆阅。
-- 无自由拾取和二级菜单。
-
-#### SC4044 行驶中的法院档案车／拆阅档案
-
-| ID／对象 | 分类 | 场景位置与表现 | 最终交付说明 |
-|---|---|---|---|
-| 4516 Tidewater执行卷 | A | Zack与Emma之间的档案卷；车辆驶离后第二次整理 | 三阶段：公开外卷 → 硬质底衬暗夹 → 隐藏页取出 |
-| 4518 Sean O'Malley特殊处置页 | A/H | 4516隐藏Miller附件中的1912内页 | Big/Icon；只能在终幕揭示 |
-| 4519 后插入的水源维护页 | A/H | 同一隐藏附件中的1928后插页 | Big/Icon；只在终幕揭示，并衔接4045行动 |
-
-本段是AVG，不建立Type6/7，不配置场景Position。
-
-#### SC4045 南区街道／O'Hara家门外
-
-- 类型：AVG终幕行动。
-- 4519作为行动输入，不在街道重新生成第二件可拾取道具。
-
----
-
-## 六、59条正式证据的交付路由核对
-
-| Loop | P普通拾取 | C容器内含 | H/A人物或演出交付 | D派生结果 | E环境观察 |
+| ID | 名称 / 运行类型 | 场景与实际获取事件 | 交付类别 | 必交资产 | 路由状态 |
 |---|---|---|---|---|---|
-| L1 | 4115、4116 | 4112、4113 | 4114、4117、4118、4119、4120 | 4111、4701 | — |
-| L2 | 4214 | — | 4211、4212、4213、4215、4217、4218、4219 | 4702、4703 | 4216 |
-| L3 | 4311、4312、4313、4314、4315、4317、4318、4319 | 4320 | — | 4316为双环境点生成的合并记录 | 4321、4322、4323、4324 |
-| L4 | 4412、4413；4414为条件事件态 | 4415、4416、4417、4419 | 4411、4418 | 4704、4709 | — |
-| L5/终幕 | 4511、4512 | 4513、4514、4515、4516 | 4518、4519 | 4705、4706、4707、4708 | — |
+| 4111 | Harrison公开日程与夜间出入对照 / clue | SC4003；完成调阅检索后自动生成 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定；另做 4122、4123 玩法页 |
+| 4112 | 1919-A入账存根 / item | SC4002；点击普通费用抽屉直接取得 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；抽屉是直接热点，不建 Type 6/7 |
+| 4113 | 未完成的辞职信草稿 / item | SC4002；点击打字机旁废纸篮直接取得 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；废纸篮是直接热点，不建 Type 6/7 |
+| 4114 | 圣心医院资助档案卷宗 / item | SC4003；档案管理员对话交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；如落桌，另做交付状态 |
+| 4115 | Harrison两个月调阅索引 / item | SC4003；玩家从中央调阅桌取得 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4701 | 调阅索引中的本人赔偿裁定 / item | SC4003；整理 4115 与旧案目录后生成 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定；按运行 itemType 3，不套 clue 相框 |
+| 4116 | Mary / Helen案改判往来信 / item | SC4003；玩家从 Harrison 调阅车取得 | `scene-pickup` | Map + Position + ordinary Big + Icon | 路由已定；第三次提交日期阻塞最终上画文本 |
+| 4117 | Harrison留下的编号纸条 / item | SC4002 指证后 AVG；Watts 开柜后一次交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；另做保险柜开启状态 |
+| 4118 | 医院冷藏库留样试剂 / item | SC4002 指证后 AVG；从保险柜内保冷箱材料中交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；基础探索不得提前摆保冷箱或药瓶 |
+| 4119 | Harrison亲笔资金流向图 / item | SC4002 指证后 AVG；同批一次交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定 |
+| 4120 | 南区综合商业开发计划摘要 / item | SC4002 指证后 AVG；同批一次交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定 |
 
-说明：
+### Loop 2｜11 条
 
-- 上表覆盖当前59条正式证据。
-- 4122、4123是L1检索玩法附属页面，不计入59条。
-- 4316虽然进入证据记录，但其物理来源是两个环境检查点，不能作为一个普通道具同时贴在两个位置。
-- 4414只有在事件后允许玩家点击领取时才走P类Map；否则按H类交付。
+来源：[循环2证据美术资产](../证据设计/Unit4_循环2_证据美术资产.md) + [loop2_state.yaml](../state/loop2_state.yaml)
+
+| ID | 名称 / 运行类型 | 场景与实际获取事件 | 交付类别 | 必交资产 | 路由状态 |
+|---|---|---|---|---|---|
+| 4211 | 红线注射器与十三日封签药盒 / item | SC4011；Rosa 对话交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；可另做对话后桌面状态 |
+| 4212 | Isabel使用后的封签药瓶 / item | SC4011；Rosa 对话交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；可另做物证垫状态 |
+| 4217 | Isabel的病历本 / item | SC4011；Rosa 从随身旧包取出并交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；旧包只是演出载体 |
+| 4702 | 经容量分析的回收药瓶 / item | SC4013；完成 4212 容量分析后生成 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定 |
+| 4216 | Miller事故基金项目铭牌与康复名册 / envir | SC4012；点击 Miller 项目展示墙观察 | `environment` | Map + Position + Big；无 Icon | 已定；当前表需去 Icon |
+| 4213 | 同配方药瓶封签组 / item | SC4013；Foster 对话交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；托盘只作交付状态 |
+| 4218 | 验尸官办公室有限调档许可 / item | SC4013；Foster 对话交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定 |
+| 4219 | 五年七例儿童死亡病例对照表 / clue | SC4012；提交编号并完成调档演出后自动生成 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定；另做条件档案车／病例演出态 |
+| 4703 | 经化验的医院冷藏库留样试剂 / item | SC4013；受控化验后由 Foster 交付 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定 |
+| 4214 | 圣心医院慈善项目采购与发放记录 / item | SC4015；Mickey 对话交付法院卷宗 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；不再按阅卷桌自由拾取 |
+| 4215 | 缺失的第十九页副本 / item | SC4015；Mickey 在同册卷宗演出中交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；不另摆第二份桌面证据 |
+
+### Loop 3｜14 条
+
+来源：[循环3证据美术资产](../证据设计/Unit4_循环3_证据美术资产.md) + [loop3_state.yaml](../state/loop3_state.yaml)
+
+| ID | 名称 / 运行类型 | 场景与实际获取事件 | 交付类别 | 必交资产 | 路由状态 |
+|---|---|---|---|---|---|
+| 4311 | 磨号手枪与枪内未击发余弹 / clue | SC4022；记录 Harold 尸体右手枪位 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定 |
+| 4312 | 伪造遗书 / item | SC4022；点击书桌中央遗书 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4313 | Pierce档案移交通知 / item | SC4022；点击书桌侧档案袋 | `scene-pickup` | Map + Position + ordinary Big + Icon | 路由已定；提前签发时刻阻塞最终上画文本 |
+| 4314 | 两只酒杯 / clue | SC4027；记录会客矮桌上的两只酒杯 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定；不放电话桌 |
+| 4315 | 古巴雪茄烟蒂 / clue | SC4027；记录第二只酒杯旁的湿杯垫与烟蒂 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定 |
+| 4316 | 伪造煤气铅封与异常时钟接线 / clue | SC4028；完成铅封与时钟接线两个热点后自动生成 | `detail-only` | 结果 Big + Icon；无 Map/Position | 已定；另做两个现场热点，禁止伪造单一 Map |
+| 4317 | 214号黄铜寄存柜钥匙 / item | SC4025；点击调度台旁临时物品盘 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4318 | Harrison案证物转运调度单 / item | SC4025；点击调度台合订夹 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4319 | 晚间报纸号外 / item | SC4025；点击晚报架／长椅 | `scene-pickup` | Map + Position + ordinary Big + Icon | 路由已定；发行时刻阻塞最终上画文本；不按旧版“散落报纸”落位 |
+| 4320 | Morrison写给Zack的未寄出口供 / item | SC4026；使用 4317 开柜后点击柜内封套 | `container-state` / 逐件点击 | Type 6/7 + 子 Map/Position/ordinary Big/Icon | 已有机器验证通过的合规试制包；正式 ID、人工视觉审批与同步仍待确认，见第五节 |
+| 4321 | 煤气阀门异常开启痕迹 / envir | SC4028；点击主煤气阀观察 | `environment` | Map + Position + Big；无 Icon | 已定；当前表需去 Icon |
+| 4322 | 窗缝逆风与煤气味 / envir | SC4028；点击背风窗缝观察 | `environment` | Map + Position + Big；无 Icon | 已定；当前表需去 Icon |
+| 4323 | 宅邸常用物件的偏左摆放 / envir | SC4022；点击书桌左侧常用区观察 | `environment` | Map + Position + Big；无 Icon | 已定；SC4027只延续视觉，不建第二热点 |
+| 4324 | 门廊卷收式厚质防风帘 / envir | SC4029视觉首现；SC4023爆炸后可选观察 | `environment` | Map + Position + Big；无 Icon | 已定；不作为 QTE 门槛，当前表需去 Icon |
+
+### Loop 4｜11 条
+
+来源：[循环4证据美术资产](../证据设计/Unit4_循环4_证据美术资产.md) + [loop4_state.yaml](../state/loop4_state.yaml)
+
+| ID | 名称 / 运行类型 | 场景与实际获取事件 | 交付类别 | 必交资产 | 路由状态 |
+|---|---|---|---|---|---|
+| 4411 | Lakeshore清退协警通知 / item | SC4031；Doris 在开场对话交出 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；如镜头展示，另做 handover 状态 |
+| 4412 | Lakeshore最终收购协议 / item | SC4033；点击餐桌文件组 | `scene-pickup` | Map + Position + ordinary Big + Icon | 阻塞精确上画文本；最终收购金额尚未锁定 |
+| 4413 | Margaret写给O'Hara的短便条 / item | SC4033；点击协议旁独立便条 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4414 | 临时停止执行回执 / item | SC4033；电话事件后由 Watts 送达并自动取得 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；不做条件拾取 Map |
+| 4415 | 1903南区码头旧照片 / item | SC4034；点击半开相册抽屉中的照片 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；直接热点，不建 Type 6/7 |
+| 4704 | 右下牙长期缺损 / item | SC4034；查看 4415 后自动生成记忆 | `detail-only` | 记忆结果 Big + Icon；无 Map/Position | 路由已定；结果卡框架与来源回溯表现待统一 |
+| 4416 | Patrick葬礼册与1919旧信封 / item | SC4034；点击半拆纸箱内材料 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；直接热点，不建 Type 6/7 |
+| 4709 | 1919同时出现的两项可观察事实 / item | SC4034；查看 4416 后自动生成记忆 | `detail-only` | 记忆结果 Big + Icon；无 Map/Position | 路由已定；结果卡框架与来源回溯表现待统一 |
+| 4417 | Patrick外套口袋里的粉笔转运牌 / clue | SC4034；点击外套口袋取得并记录 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定；直接热点，不建 Type 6/7 |
+| 4418 | Patrick遗物匣 / item | SC4034 指证后；Margaret 主动交付 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；另做旋转、刻句、打开与返程票玩法资产 |
+| 4419 | Margaret写给Mickey但未寄出的短笺 / item | SC4034；点击写字台未寄信格 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；直接热点，不建 Type 6/7 |
+
+### Loop 5 与非 Loop 终幕｜12 条
+
+来源：[循环5证据美术资产](../证据设计/Unit4_循环5_证据美术资产.md) + [loop5_state.yaml](../state/loop5_state.yaml)
+
+| ID | 名称 / 运行类型 | 场景与实际获取事件 | 交付类别 | 必交资产 | 路由状态 |
+|---|---|---|---|---|---|
+| 4511 | Mickey定制钢笔 / item | SC4042；点击私人书桌钢笔 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4512 | Mickey的半支古巴雪茄 / item | SC4042；点击 M.F.D. 私人烟灰缸 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
+| 4513 | 1925年内部接口接管记录 / item | SC4042；字母锁密码正确后原子自动发放 | `detail-only` / 容器原子发放 | ordinary Big + Icon；无子 Map/Position | 父容器待落地；开柜态只显示可辨轮廓 |
+| 4514 | 1919年银行授权附页 / item | SC4042；同一次开柜原子自动发放 | `detail-only` / 容器原子发放 | ordinary Big + Icon；无子 Map/Position | 父容器待落地 |
+| 4515 | 手写功业簿 / item | SC4042；同一次开柜原子自动发放 | `detail-only` / 容器原子发放 | ordinary Big + Icon；无子 Map/Position | 父容器待落地；另做翻页／笔迹玩法裁切 |
+| 4516 | Tidewater南区商业开发执行卷 / item | SC4042；同一次开柜原子自动发放并保持整袋封存 | `detail-only` / 容器原子发放 | ordinary Big + Icon；无子 Map/Position | 父容器待落地；另做 SC4044 三阶段拆阅状态 |
+| 4705 | 1919-A与Donnelly属于同一法律资金网络 / item | SC4042 身份锁 4501 完成后生成 | `detail-only` | CASE BOARD 结果 Big + Icon；无 Map/Position | 路由已定；结果卡框架、来源回溯与资源命名待统一 |
+| 4706 | Morrison页结论 / item | SC4042 身份锁 4502 完成后生成 | `detail-only` | CASE BOARD 结果 Big + Icon；无 Map/Position | 路由已定；结果卡框架、来源回溯与资源命名待统一 |
+| 4707 | 书写者一致性 / item | SC4042 身份锁 4502 完成后生成 | `detail-only` | CASE BOARD 结果 Big + Icon；无 Map/Position | 路由已定；结果卡框架、来源回溯与资源命名待统一 |
+| 4708 | Mickey就是Morrison死亡当晚的陌生访客 / item | SC4042 身份锁 4503 完成后生成 | `detail-only` | CASE BOARD 结果 Big + Icon；无 Map/Position | 路由已定；结果卡框架、来源回溯与资源命名待统一 |
+| 4518 | Sean O'Malley特殊处置页 / item | SC4044 AVG；Zack 拆开 4516 隐藏附件后自动取得并扣下 | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；只在终幕三阶段拆阅中出现 |
+| 4519 | 后插入的水源维护页 / item | SC4044 AVG；与 4518 同批取得，SC4045 再交给 Watts | `detail-only` | ordinary Big + Icon；无 Map/Position | 已定；不在 SC4045 生成第二件道具 |
 
 ---
 
-## 七、每个场景开工前必须填写的落位合同
+## 四、真实容器与附属演出资产
 
-```text
-Unit / Episode / Loop：
-Scene ID / 场景名：
-定稿源图绝对路径：
-源图尺寸 / 模式 / SHA-256：
+### 运行容器
 
-Item ID / 名称：
-交付分类：P / C / H / D / E / A / M
-所在家具或容器：
-场景内可见面：
-普通物理尺寸参照：
-透视与朝向：
-允许遮挡：
-必要接触阴影或反光：
-地图层允许识别的信息：
-只能放入Big的信息：
-剧透禁区：
+| 场景 | 容器与输入 | 输出事件 | 正确交付 | 当前状态 |
+|---|---|---|---|---|
+| SC4026 | 214号寄存柜；4317 解锁 | 开柜后玩家继续点击 4320 封套 | 完整 Type 6 → Type 7 → 4320 子 Map/Position/Big/Icon | [试制包](../../../image/edit_jobs/u4-station-locker-4320-v1/delivery/container_delivery_manifest.json)采用 `4805 → 4806 → 4320`，验证已通过；尚未批准或同步正式表 |
+| SC4042 | 七位字母锁保险柜；输入 `FTMWPTF` | 密码正确后一次原子发放 4513—4516 | Type 6/Type 7 可见状态 + 四件独立 Big/Icon；四件无子 Map/Position | Type 6/7 ID 与正式配置待落地 |
 
-若为C类：
-Type 6关闭态完整范围：
-Type 7打开方向与内部结构：
-内含证据ID：
-单件／逐件／原子取得：
-Type 7最终内图尺寸：
-12px白边后的最终尺寸：
-中心锚与必要微调理由：
-```
+只有 Type 6 可以进入 `SceneConfig.ItemIDs`。Type 7 由 Type 6 的 `ActionParam` 生成，逐件点击的子物由 Type 7 指向；原子发放必须在 manifest 中写明无子 Map/Position 的原因。
 
-合同确认后才能开始生成。不同位置的道具必须拆成独立授权蒙版和独立作业。
+旧文档曾把 4112、4113、4415、4416、4417、4419列为 Type 6/7 容器。现行场景文档把它们定义为加载时直接开放的调查热点，State 也没有二级菜单事件，因此本清单统一按 `scene-pickup` 处理。将来若交互设计改为“打开后继续点击”，必须先改 State／场景合同，再把对应行升级为 `container-state`。
+
+### 不计入 59 条的附属资产
+
+| 场景／玩法 | 附属资产 | 路由 |
+|---|---|---|
+| SC4002 / SC4003 | 4122公开日程页、4123夜间访问页 | `minigame-only`；服务 4111，不进 ItemStaticData |
+| SC4002 指证后 | Watts保险柜关闭／开启、保冷箱与4117—4120交付状态 | AVG 演出资产；不建 Type 6/7 |
+| SC4012 | 七份病例档案车与调档完成状态 | 条件演出资产；输出 4219 |
+| SC4028 | 煤气铅封热点、时钟接线热点与两点完成状态 | 场景热点／条件叠层；输出 4316，不生成假 Map |
+| SC4034 | 4418旋转、七词刻句、打开内衬与未使用返程票 | 物品玩法资产；不作为世界 Map |
+| SC4042 | 保险柜字母锁、打开态四组材料轮廓 | 容器／玩法资产；四件原子发放 |
+| SC4044 | 4516公开外卷 → 硬质底衬暗夹 → 4518/4519取出 | AVG三阶段演出；不得在SC4042提前出现隐藏附件 |
 
 ---
 
-## 八、最终验收闸门
+## 五、开工前阻塞项
 
-### 普通拾取
+| 阻塞项 | 当前问题 | 放行条件 |
+|---|---|---|
+| 4412 精确金额 | 证据总览明确标为 open，最终收购金额尚未锁定 | 结合 O'Hara 房产正常价值拍板美元数，再制作最终可读 Big |
+| 4116 / 4313 / 4319 精确时间 | 第三次提交日期、提前签发时刻、晚报发行时刻尚未与 Unit4 最终时间线校准 | 锁定日期／钟点并同步三件文书的最终英文上画文本 |
+| 4704—4709 结果卡表现 | Skill 已锁定 Big + Icon，但通用框架、结果卡尺寸选择和来源回溯交互尚未统一 | UI／系统确认统一模板和回溯表现后，再批量制作最终结果卡 |
+| 正式英文上画文本 | 当前证据文档仍是内容设计稿，法律、银行、医院术语未完成统一英文编辑 | 正式进表前完成全量英文校对，并把最终文本同步到资源母版 |
+| 4320 试制包同步 | 当前合规包使用试制 ID `4805 → 4806 → 4320`，manifest 与验证均通过，但正式文件未改 | 审批 4805／4806 的正式占用和整包视觉结果后，再同步 ItemStaticData 与 SceneConfig |
+| 容器正式配置 | SceneConfig 仍直接列出 4320、4513—4516；正式 Type 6/7 链未建立 | 分配或批准容器 ID，只把 Type 6 绑定到 SceneConfig，并完成 ActionParam 链 |
+| Envir 配置 | 4216、4321、4322、4323、4324 当前都有 Icon 路径且 Position 为空 | 五条 Envir 均制作真实 Map/Position/Big，并删除 Icon 路径和 Icon 文件 |
+| 获取方式配置 | 4316、4411、4414、4418、4704、4709、4513—4516、4518、4519 等仍被当前表或 SceneConfig 当作直接场景物／manual | 按本清单和 State 统一 obtainMethod、SceneConfig 绑定与空 Map/Position |
+| 资源命名缺口 | 4516、4704—4709 当前缺 folderPath、Big、Icon 等正式 stem | 在各自资产任务建立前分配并审查命名；不得用临时文件名直接进 Unity |
+| 全局坐标 | 当前 59 条 EPI04 ItemStaticData 的 Position 全为空 | 仅为 20 条 scene-pickup、4320 子物和 5 条 Envir，从验收通过的原生分辨率图自动推导；detail-only 继续保持为空 |
 
-- [ ] 源图未被覆盖。
-- [ ] 场景尺寸和色彩模式未改变。
-- [ ] 授权蒙版外字节级一致，变化像素为0。
-- [ ] 道具尺寸、透视、支撑关系和光影合理。
-- [ ] 地图层没有Big级别可读正文。
-- [ ] Map裁图等于最终场景对应矩形的像素。
-- [ ] Map按Position贴回源图可还原最终场景。
-- [ ] Big、Icon、XY、配置补丁、manifest和verification齐全。
+这些阻塞项只记录现状。本次重建不修改 State、SceneConfig、ItemStaticData、Unity 表或任何美术资产。
 
-### 二级菜单
+---
 
-- [ ] Type 6是最终场景原生分辨率的精确截图。
-- [ ] Type 6粘回场景可像素级还原。
-- [ ] Type 7是同一容器的合理俯视／近俯视打开态。
-- [ ] Type 7内没有越界剧透或Big级正文。
-- [ ] Type 7内图完成后才添加12px纯白不透明边框。
-- [ ] 四边白边精确为12px，内部与验收内图逐像素一致。
-- [ ] Type 6和Type 7分别有独立Position。
-- [ ] Type 7以Type 6中心为锚，完整矩形位于场景画布内。
-- [ ] Type 6 → Type 7 → 内含证据链完整。
-- [ ] SceneConfig只绑定Type 6。
+## 六、生产与验收顺序
 
-### 对话、派生、环境与AVG资产
-
-- [ ] 未给非自由拾取物伪造场景Position。
-- [ ] 派生卡保留来源和证明边界。
-- [ ] 环境观察没有被制作成漂浮的背包道具。
-- [ ] AVG专用容器没有误建Type 6/7入口。
-- [ ] 终幕4518、4519没有在SC4042提前出现。
-
-任何一项失败，都返回当前道具作业修复；不得通过手改坐标、放宽蒙版或修改验证报告绕过。
+1. 从本清单选定一条未阻塞记录，回读对应证据美术卡与 State 获取事件。
+2. 按最新 Skill 建立 acquisition coverage row；世界交互必须有真实可见锚点，detail-only 必须写明无 Map 原因。
+3. 场景类资产只在批准的原生分辨率底图上非破坏制作；Position 从最终验收图自动推导，不手抄、不目测。
+4. Big、Icon、clue Big、Envir Icon 省略和容器链按 Skill 完整验证；旧试制包不得跳过新闸门。
+5. 先交付到 `image/edit_jobs/<job>/delivery/`。资产进 Unity、正式配置表变更和 SceneConfig 重绑需另行取得用户授权。

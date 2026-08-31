@@ -1,0 +1,96 @@
+{
+  "batch": "Unit4_full_rebuild_v1",
+  "reusePolicy": {
+    "previousGeneratedAssets": "forbidden",
+    "previousCoordinates": "forbidden",
+    "previousMasksAndPrompts": "forbidden",
+    "approvedBaseSceneAndCurrentCanon": "allowed"
+  },
+  "episode": "EPI04",
+  "unit": "Unit4",
+  "loop": 1,
+  "sceneId": "4002",
+  "sceneName": "Harrison 外间办公室 · 白天",
+  "baseScene": {
+    "path": "/Users/m4/project/NDC_project/image/定稿/u4_exp_harrison_outer_office_day.png",
+    "sha256": "12284027ae830549a911b442d144713951bf66326cf7a8817d3ee627c02d3f6c",
+    "width": 3060,
+    "height": 1600,
+    "mode": "RGB"
+  },
+  "supportJobs": [
+    {
+      "id": "SC4002_support_wastebasket",
+      "purpose": "在打字机办公桌右侧地面增加一个符合 1920 年代法院办公室的空废纸篮，作为 4113 的非交互承载物。",
+      "interactive": false,
+      "intentRect": [2160, 730, 2370, 1040],
+      "protected": ["打字机", "办公桌结构", "右侧访客椅", "门框与光影", "全部既有场景像素（授权区外）"]
+    }
+  ],
+  "records": [
+    {
+      "itemId": "4112",
+      "name": "1919-A入账存根",
+      "itemType": "3/item",
+      "acquisitionEvent": "玩家在基础探索场景直接点击普通费用抽屉缝中露出的存根并取得物品，不进入二级菜单。",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "visibleAnchor": "左侧文件柜普通费用抽屉缝中露出的旧银行存根",
+      "hotspotMode": "object-alpha",
+      "hotspotTarget": "仅 4112 存根纸张本身；抽屉、文件柜和周围墙面不计入热区",
+      "intentRect": [525, 590, 675, 710],
+      "mapInformationBudget": "只需看出小型旧银行存根、米黄纸、蓝黑油墨与折痕；远景不得读出付款方、账户或案号。",
+      "bigContractStatus": "content-blocked",
+      "bigBlocker": "4112 与 4514 共用的 Sacred Heart 赔偿案号尚未在当前真源中锁定，禁止自行编造号码。",
+      "iconStatus": "ready-after-master",
+      "folderPath": "EPI04\\u4_exp_harrison_outer_office_day",
+      "mapStem": "SC4002_item_4112",
+      "detailStem": "SC4002_item_4112_big",
+      "iconStem": "SC4002_item_4112_icon",
+      "z": "-3",
+      "zPolicy": "Unit4 direct-scene staging convention; formal ItemStaticData remains untouched pending user authorization.",
+      "deliverables": ["Map", "Position", "ordinary Big", "Icon"],
+      "status": "scene-map-ready; Big exact text blocked"
+    },
+    {
+      "itemId": "4113",
+      "name": "未完成的辞职信草稿",
+      "itemType": "3/item",
+      "acquisitionEvent": "玩家在基础探索场景直接点击废纸篮中露出的草稿纸并取得物品，不进入二级菜单。",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "visibleAnchor": "打字机办公桌右侧废纸篮中明显露出的揉皱草稿纸",
+      "hotspotMode": "object-alpha",
+      "hotspotTarget": "仅 4113 草稿纸张本身；废纸篮、地面、办公桌和阴影不计入热区",
+      "intentRect": [2185, 725, 2340, 925],
+      "mapInformationBudget": "只需看出揉皱后展开的打字稿纸；远景正文、日期和签名栏不可读。",
+      "bigContract": {
+        "date": "November 27, 1928",
+        "requiredText": [
+          "We cannot demand that others confess while continuing to deny our own part.",
+          "I intend to make these records public..."
+        ],
+        "signature": "blank",
+        "ending": "breaks off mid-sentence",
+        "forbidden": ["killer identity", "command source", "completed heroic suicide note"]
+      },
+      "folderPath": "EPI04\\u4_exp_harrison_outer_office_day",
+      "mapStem": "SC4002_item_4113",
+      "detailStem": "SC4002_item_4113_big",
+      "iconStem": "SC4002_item_4113_icon",
+      "z": "-3",
+      "zPolicy": "Unit4 direct-scene staging convention; formal ItemStaticData remains untouched pending user authorization.",
+      "deliverables": ["Map", "Position", "ordinary Big", "Icon"],
+      "status": "ready"
+    }
+  ],
+  "sources": [
+    "/Users/m4/project/NDC_project/canon_manifest.json",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/state/loop1_state.yaml",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/场景/探索场景/EXP_SC4002_Harrison外间办公室_白天.md",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/证据设计/Unit4_循环1_证据美术资产.md",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/美术需求/Unit4_道具落位与最终交付标准.md",
+    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/ItemStaticData.json",
+    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/SceneConfig.json"
+  ]
+}

@@ -24,10 +24,12 @@ SCENE_NAME = "scene_with_item.png"
 XY_NAME = "XYposition.txt"
 PATCH_NAME = "ItemStaticData.patch.json"
 OVERLAY_NAME = "position_overlay.png"
+HOTSPOT_OVERLAY_NAME = "hotspot_overlay.png"
 
 Rect = tuple[int, int, int, int]
 ICON_FINAL_SIZE = (130, 130)
 ICON_FINAL_SAFE_RECT: Rect = (7, 7, 122, 122)
+DEFAULT_HOTSPOT_ALPHA_THRESHOLD = 128
 
 
 def save_json(path: Path, value: dict[str, Any]) -> None:
@@ -146,6 +148,20 @@ def load_source_sized_mask(path: Path, scene_size: tuple[int, int]) -> Image.Ima
     return mask
 
 
+def load_source_sized_map_layer(
+    path: Path, scene_size: tuple[int, int]
+) -> Image.Image:
+    image = load_preserving_mode(path)
+    if image.mode != "RGBA":
+        raise ValueError("--map-layer must be an RGBA PNG")
+    if image.size != scene_size:
+        raise ValueError("--map-layer must match the full native-resolution scene")
+    image = normalize_transparent_rgb(image)
+    if image.getchannel("A").getbbox() is None:
+        raise ValueError(f"Map layer is fully transparent: {path}")
+    return image
+
+
 def rect_mask(size: tuple[int, int], rect: Rect) -> Image.Image:
     mask = Image.new("L", size, 0)
     ImageDraw.Draw(mask).rectangle(
@@ -250,6 +266,55 @@ def create_overlay(scene: Image.Image, rect: Rect, item_id: str) -> Image.Image:
         (rect[0] + 4, label_y + 2),
         f"item {item_id}: {rect[0]},{rect[1]}",
         fill=(255, 255, 255, 255),
+    )
+    return overlay
+
+
+def hotspot_mask_from_map(
+    map_sprite: Image.Image, threshold: int
+) -> Image.Image:
+    if not 1 <= threshold <= 255:
+        raise ValueError("--hotspot-alpha-threshold must be between 1 and 255")
+    if map_sprite.mode != "RGBA":
+        return Image.new("L", map_sprite.size, 255)
+    return map_sprite.getchannel("A").point(
+        lambda value: 255 if value >= threshold else 0
+    )
+
+
+def create_hotspot_overlay(
+    scene: Image.Image,
+    rect: Rect,
+    map_sprite: Image.Image,
+    item_id: str,
+    threshold: int,
+) -> Image.Image:
+    overlay = scene.convert("RGBA")
+    local_hotspot = hotspot_mask_from_map(map_sprite, threshold)
+    full_hotspot = Image.new("L", scene.size, 0)
+    full_hotspot.paste(local_hotspot, (rect[0], rect[1]))
+    tint = Image.new("RGBA", scene.size, (255, 0, 220, 112))
+    tint.putalpha(full_hotspot.point(lambda value: 112 if value else 0))
+    overlay.alpha_composite(tint)
+    draw = ImageDraw.Draw(overlay)
+    hotspot_bbox = full_hotspot.getbbox()
+    if hotspot_bbox:
+        draw.rectangle(
+            (
+                hotspot_bbox[0],
+                hotspot_bbox[1],
+                hotspot_bbox[2] - 1,
+                hotspot_bbox[3] - 1,
+            ),
+            outline=(255, 255, 255, 255),
+            width=max(2, round(max(scene.size) / 1200)),
+        )
+    draw.text(
+        (rect[0] + 4, max(0, rect[1] - 18)),
+        f"item {item_id} hotspot alpha>={threshold}",
+        fill=(255, 255, 255, 255),
+        stroke_width=2,
+        stroke_fill=(20, 0, 25, 255),
     )
     return overlay
 
@@ -369,15 +434,49 @@ def scene_checks(
     mask: Image.Image,
     rect: Rect,
     map_crop: Image.Image,
+    map_layer: Image.Image | None,
+    hotspot_alpha_threshold: int,
 ) -> dict[str, Any]:
     rect_limit = rect_mask(final.size, rect)
     mask_outside = ImageChops.multiply(mask, ImageOps.invert(rect_limit))
     mask_outside_rect = nonzero_pixel_count(mask_outside)
+    object_alpha = map_layer is not None
+    hotspot_mask = hotspot_mask_from_map(map_crop, hotspot_alpha_threshold)
     checks: dict[str, Any] = {
-        "mapCropMatchesFinalScenePixels": images_equal(final.crop(rect), map_crop),
+        "mapDeliveryMode": "object-alpha" if object_alpha else "opaque-region",
+        "mapCropMatchesFinalScenePixels": (
+            None if object_alpha else images_equal(final.crop(rect), map_crop)
+        ),
+        "mapSpriteMatchesApprovedLayer": (
+            images_equal(normalize_transparent_rgb(map_layer.crop(rect)), map_crop)
+            if map_layer is not None
+            else None
+        ),
+        "mapSpriteIsRGBA": map_crop.mode == "RGBA",
+        "mapTransparentPixels": (
+            map_crop.width * map_crop.height
+            - nonzero_pixel_count(map_crop.getchannel("A"))
+            if map_crop.mode == "RGBA"
+            else 0
+        ),
+        "hotspotAlphaThreshold": hotspot_alpha_threshold,
+        "hotspotPixels": nonzero_pixel_count(hotspot_mask),
+        "hotspotBoundsLocal": (
+            list(hotspot_mask.getbbox()) if hotspot_mask.getbbox() else None
+        ),
         "authorizationPixelsOutsideMapRect": mask_outside_rect,
         "authorizationContainedByMapRect": mask_outside_rect == 0,
     }
+    if map_layer is not None:
+        layer_alpha = map_layer.getchannel("A")
+        layer_outside_authorization = ImageChops.multiply(
+            layer_alpha, ImageOps.invert(mask)
+        )
+        checks["mapLayerAlphaOutsideAuthorization"] = nonzero_pixel_count(
+            layer_outside_authorization
+        )
+    else:
+        checks["mapLayerAlphaOutsideAuthorization"] = None
     if source is None:
         checks.update(
             {
@@ -420,8 +519,14 @@ def scene_checks(
     changed_outside_rect = nonzero_pixel_count(
         ImageChops.multiply(changed, ImageOps.invert(rect_limit))
     )
-    reconstructed = source.copy()
-    reconstructed.paste(map_crop, (rect[0], rect[1]))
+    if object_alpha:
+        reconstructed = source.convert("RGBA")
+        reconstructed.alpha_composite(map_crop.convert("RGBA"), (rect[0], rect[1]))
+        reconstructs = images_equal(reconstructed, final.convert("RGBA"))
+    else:
+        reconstructed = source.copy()
+        reconstructed.paste(map_crop, (rect[0], rect[1]))
+        reconstructs = images_equal(reconstructed, final)
     checks.update(
         {
             "changedPixelsInsideAuthorization": changed_inside,
@@ -429,14 +534,24 @@ def scene_checks(
             "changedPixelsOutsideMapRect": changed_outside_rect,
             "changedPixelsContainedByMapRect": changed_outside_rect == 0,
             "outsideAuthorizationByteIdentical": changed_outside == 0,
-            "mapCropReconstructsFinalFromSource": images_equal(reconstructed, final),
+            "mapCropReconstructsFinalFromSource": reconstructs,
         }
     )
     return checks
 
 
 def checks_pass(checks: dict[str, Any], base: dict[str, Any] | None) -> bool:
-    if not checks["mapCropMatchesFinalScenePixels"]:
+    if checks.get("mapDeliveryMode") == "object-alpha":
+        if not all(
+            (
+                checks.get("mapSpriteMatchesApprovedLayer"),
+                checks.get("mapSpriteIsRGBA"),
+                (checks.get("hotspotPixels") or 0) > 0,
+                checks.get("mapLayerAlphaOutsideAuthorization") == 0,
+            )
+        ):
+            return False
+    elif not checks["mapCropMatchesFinalScenePixels"]:
         return False
     if checks["sourceProvided"]:
         if not all(
@@ -473,30 +588,55 @@ def package(args: argparse.Namespace) -> Path:
     changed = changed_pixel_mask(source, final) if source is not None else None
     scene_has_changes = bool(changed is not None and nonzero_pixel_count(changed))
 
-    if args.map_rect:
-        rect = as_rect(args.map_rect)
-        map_rect_method = "audited-manual-override"
-    elif scene_has_changes and changed is not None:
-        bbox = changed.getbbox()
+    map_layer_path = args.map_layer.resolve() if args.map_layer else None
+    map_layer = (
+        load_source_sized_map_layer(map_layer_path, final.size)
+        if map_layer_path
+        else None
+    )
+    if map_layer is not None:
+        if source is None:
+            raise ValueError("Object-alpha --map-layer packaging requires --source-scene")
+        if args.map_rect:
+            raise ValueError("--map-rect cannot be combined with --map-layer")
+        bbox = map_layer.getchannel("A").getbbox()
         if bbox is None:
-            raise AssertionError("Changed-pixel mask unexpectedly has no bounds")
+            raise ValueError("Map layer is fully transparent")
         rect = expand_rect(bbox, args.map_padding, final.width, final.height)
-        map_rect_method = "changed-pixel-bounds"
+        map_rect_method = "map-layer-alpha-bounds"
     else:
-        if full_authorization_mask is None:
+        if not args.allow_opaque_region_map:
             raise ValueError(
-                "Automatic coordinates require changed source/final pixels or a "
-                "source-sized --authorization-mask; otherwise use an audited --map-rect"
+                "New direct-item packages require --map-layer; opaque rectangular "
+                "Maps require the explicit legacy/Type-6 --allow-opaque-region-map switch"
             )
-        bbox = full_authorization_mask.getbbox()
-        if bbox is None:
-            raise ValueError("Authorization mask is empty")
-        rect = expand_rect(bbox, args.map_padding, final.width, final.height)
-        map_rect_method = "authorization-mask-fallback"
+
+        if args.map_rect:
+            rect = as_rect(args.map_rect)
+            map_rect_method = "audited-opaque-region-override"
+        elif scene_has_changes and changed is not None:
+            bbox = changed.getbbox()
+            if bbox is None:
+                raise AssertionError("Changed-pixel mask unexpectedly has no bounds")
+            rect = expand_rect(bbox, args.map_padding, final.width, final.height)
+            map_rect_method = "legacy-changed-pixel-bounds"
+        else:
+            if full_authorization_mask is None:
+                raise ValueError(
+                    "Automatic coordinates require changed source/final pixels or a "
+                    "source-sized --authorization-mask; otherwise use an audited --map-rect"
+                )
+            bbox = full_authorization_mask.getbbox()
+            if bbox is None:
+                raise ValueError("Authorization mask is empty")
+            rect = expand_rect(bbox, args.map_padding, final.width, final.height)
+            map_rect_method = "legacy-authorization-mask-fallback"
     validate_rect(rect, final.width, final.height)
 
     if scene_has_changes and mask_path is None:
         raise ValueError("Changed scenes require --authorization-mask")
+    if map_layer is not None and mask_path is None:
+        raise ValueError("Object-alpha --map-layer packaging requires --authorization-mask")
     if scene_has_changes and args.base_verification is None:
         raise ValueError("Changed scenes require --base-verification from the coordinate edit")
 
@@ -562,6 +702,7 @@ def package(args: argparse.Namespace) -> Path:
     xy_output = output_dir / XY_NAME
     patch_output = output_dir / PATCH_NAME
     overlay_output = output_dir / OVERLAY_NAME
+    hotspot_overlay_output = output_dir / HOTSPOT_OVERLAY_NAME
 
     known_outputs = [
         scene_output,
@@ -570,6 +711,7 @@ def package(args: argparse.Namespace) -> Path:
         xy_output,
         patch_output,
         overlay_output,
+        hotspot_overlay_output,
         output_dir / VERIFICATION_NAME,
     ]
     if icon_output:
@@ -584,7 +726,11 @@ def package(args: argparse.Namespace) -> Path:
         )
 
     copy_png(final_path, scene_output)
-    map_crop = final.crop(rect)
+    map_crop = (
+        normalize_transparent_rgb(map_layer.crop(rect))
+        if map_layer is not None
+        else final.crop(rect)
+    )
     map_crop.save(map_output)
     saved_map = load_preserving_mode(map_output)
 
@@ -690,11 +836,26 @@ def package(args: argparse.Namespace) -> Path:
         item_patch["iconPath"] = icon_stem
     save_json(patch_output, item_patch)
     create_overlay(final, rect, str(args.item_id)).save(overlay_output)
+    create_hotspot_overlay(
+        final,
+        rect,
+        saved_map,
+        str(args.item_id),
+        args.hotspot_alpha_threshold,
+    ).save(hotspot_overlay_output)
 
     base_verification = read_base_verification(
         args.base_verification.resolve() if args.base_verification else None
     )
-    checks = scene_checks(source, final, mask, rect, saved_map)
+    checks = scene_checks(
+        source,
+        final,
+        mask,
+        rect,
+        saved_map,
+        map_layer,
+        args.hotspot_alpha_threshold,
+    )
     package_passed = checks_pass(checks, base_verification)
     if not icon_provenance.get("omitted"):
         package_passed = package_passed and bool(
@@ -708,6 +869,7 @@ def package(args: argparse.Namespace) -> Path:
         "xyCompatibility": xy_output,
         "itemStaticDataPatch": patch_output,
         "positionOverlay": overlay_output,
+        "hotspotOverlay": hotspot_overlay_output,
     }
     if icon_output is not None and icon_verification_output is not None:
         artifact_paths["iconSprite"] = icon_output
@@ -718,7 +880,7 @@ def package(args: argparse.Namespace) -> Path:
     }
 
     manifest: dict[str, Any] = {
-        "version": 2,
+        "version": 3,
         "stage": "packaged",
         "passed": package_passed,
         "coordinateSystem": {
@@ -758,6 +920,28 @@ def package(args: argparse.Namespace) -> Path:
             "width": rect[2] - rect[0],
             "height": rect[3] - rect[1],
             "rect": list(rect),
+        },
+        "mapDelivery": {
+            "mode": "object-alpha" if map_layer is not None else "opaque-region",
+            "source": (
+                {
+                    "path": str(map_layer_path),
+                    "sha256": sha256(map_layer_path),
+                }
+                if map_layer_path
+                else None
+            ),
+        },
+        "hotspot": {
+            "mode": (
+                "object-alpha" if map_layer is not None else "secondary-menu-region"
+            ),
+            "alphaThreshold": args.hotspot_alpha_threshold,
+            "target": args.hotspot_target or f"record {args.item_id}",
+            "pixelCount": checks.get("hotspotPixels"),
+            "boundsLocal": checks.get("hotspotBoundsLocal"),
+            "siblingOverlapPixels": None,
+            "requiresParentSiblingAudit": True,
         },
         "detail": {
             "provenance": detail_provenance,
@@ -814,17 +998,33 @@ def verify_manifest(manifest_path: Path, write_report: bool) -> dict[str, Any]:
     rect = as_rect(crop.get("rect", [])) if len(crop.get("rect", [])) == 4 else None
 
     map_matches_scene = False
+    map_mode = (manifest.get("mapDelivery") or {}).get("mode", "opaque-region")
     if scene_record and map_record and rect:
         scene_path = Path(scene_record["path"])
         map_path = Path(map_record["path"])
         if scene_path.is_file() and map_path.is_file():
             scene = load_preserving_mode(scene_path)
             validate_rect(rect, scene.width, scene.height)
-            map_matches_scene = images_equal(
-                scene.crop(rect), load_preserving_mode(map_path)
-            )
+            map_sprite = load_preserving_mode(map_path)
+            if map_mode == "object-alpha":
+                source_record = manifest.get("sourceScene") or {}
+                source_path = Path(source_record.get("path", ""))
+                if source_path.is_file() and map_sprite.mode == "RGBA":
+                    reconstructed = load_preserving_mode(source_path).convert("RGBA")
+                    reconstructed.alpha_composite(
+                        map_sprite, (rect[0], rect[1])
+                    )
+                    map_matches_scene = images_equal(
+                        reconstructed, scene.convert("RGBA")
+                    )
+            else:
+                map_matches_scene = images_equal(scene.crop(rect), map_sprite)
     if not map_matches_scene:
-        failures.append("Map Sprite no longer matches the accepted scene rectangle")
+        failures.append(
+            "Map Sprite no longer reconstructs its accepted scene state"
+            if map_mode == "object-alpha"
+            else "Map Sprite no longer matches the accepted scene rectangle"
+        )
 
     unity_matches = False
     xy_matches = False
@@ -898,7 +1098,7 @@ def verify_manifest(manifest_path: Path, write_report: bool) -> dict[str, Any]:
         "manifest": str(manifest_path),
         "manifestSha256": sha256(manifest_path),
         "artifactChecks": artifact_checks,
-        "mapSpriteMatchesScenePixels": map_matches_scene,
+        "mapSpriteReconstructsScene": map_matches_scene,
         "itemStaticDataMatchesManifest": unity_matches,
         "xyPositionMatchesManifest": xy_matches,
         "iconOmitted": icon_omitted,
@@ -938,6 +1138,22 @@ def build_parser() -> argparse.ArgumentParser:
     package_parser.add_argument("--authorization-mask", type=Path)
     package_parser.add_argument("--base-verification", type=Path)
     package_parser.add_argument(
+        "--map-layer",
+        type=Path,
+        help=(
+            "Full-scene RGBA layer for one directly clickable record; its alpha "
+            "drives the runtime hotspot"
+        ),
+    )
+    package_parser.add_argument(
+        "--allow-opaque-region-map",
+        action="store_true",
+        help=(
+            "Explicit legacy/Type-6 compatibility switch for an opaque rectangular "
+            "region hotspot; forbidden for new direct-scene records"
+        ),
+    )
+    package_parser.add_argument(
         "--map-rect",
         type=int,
         nargs=4,
@@ -946,8 +1162,21 @@ def build_parser() -> argparse.ArgumentParser:
     package_parser.add_argument(
         "--map-padding",
         type=int,
-        default=32,
-        help="Stable scene pixels added around changed-pixel bounds (or the mask fallback)",
+        default=4,
+        help=(
+            "Transparent pixels around object-alpha bounds; legacy region mode uses "
+            "the same numeric crop padding"
+        ),
+    )
+    package_parser.add_argument(
+        "--hotspot-alpha-threshold",
+        type=int,
+        default=DEFAULT_HOTSPOT_ALPHA_THRESHOLD,
+        help="Unity physics-shape alpha proxy threshold, 1-255 (current import: 128)",
+    )
+    package_parser.add_argument(
+        "--hotspot-target",
+        help="Plain-language identity of the exact clickable object/condition",
     )
     package_parser.add_argument("--item-id", required=True)
     package_parser.add_argument("--scene-id", required=True)

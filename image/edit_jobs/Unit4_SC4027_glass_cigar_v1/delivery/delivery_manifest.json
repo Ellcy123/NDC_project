@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "stage": "packaged",
+  "passed": true,
+  "deliveryClass": "multi-record-direct-scene",
+  "route": "direct-scene",
+  "anchorMode": "visible-record",
+  "scene": {
+    "id": "4027",
+    "name": "Morrison 宅邸门厅客厅",
+    "episode": "EPI04",
+    "loop": 3,
+    "folderPath": "EPI04\\u4_exp_morrison_foyer_night_preblast",
+    "width": 3504,
+    "height": 1600,
+    "mode": "RGB"
+  },
+  "sourceScene": {
+    "path": "/Users/m4/project/NDC_project/image/定稿/u4_exp_morrison_foyer_night_preblast.png",
+    "sha256": "b5d86e36db336c52a620985683abedb9f28c2181cab0a1f6dde91fdc321dd3ff",
+    "leftUntouched": true
+  },
+  "acceptedFinalScene": {
+    "path": "scene_with_items.png",
+    "sha256": "6e43f97abb61a7291e88c129a52b30a6803a4c5e697e1ca8f200663e51415ecb"
+  },
+  "authoringWorkflow": {
+    "mode": "built-in ImageGen isolated-prop generation, green-screen or native-alpha extraction, deterministic placement",
+    "sceneGenerationUsed": false,
+    "coordinateVerification": "../03_visitor_cluster_comp/final_verification.json",
+    "outsideUnionPixelsBitIdentical": true,
+    "registration": [
+      {"job": "4314 glass", "scale": 1.0, "dx": 0, "dy": 0},
+      {"job": "4315 visitor cluster", "scale": 1.0, "dx": 0, "dy": 0}
+    ]
+  },
+  "records": [
+    {
+      "itemId": "4314",
+      "name": "两只酒杯",
+      "itemType": "1/clue",
+      "mapCrop": {"rect": [1146, 664, 1496, 827], "width": 350, "height": 163},
+      "Position": ["1146", "664", "-3"],
+      "artifacts": {
+        "map": {"path": "SC4027_clue_4314.png", "sha256": "75f804a1817a2931f5dfa5e2931322773150dbc20f4e6ba5a5b608e3fa9d60b0"},
+        "big": {"path": "SC4027_clue_4314_big.png", "sha256": "88bea68e2ff1a0d2865985096533881339d3f493ff871e68383fc61f43dd5d2e"},
+        "icon": {"path": "SC4027_clue_4314_icon.png", "sha256": "9385feb5a9b50ef3e67475ee5169d06e12a65b34c1b5a7b9f371e4d6bb515ddd"}
+      },
+      "semanticMasters": [
+        {"path": "../masters/4314_glass_a_greenscreen_master.png", "sha256": "622be29347dde2907ed4092f3f0fb9fc9fd228e94453c32efb068c130d0df62f"},
+        {"path": "../masters/4314_glass_a_transparent_master.png", "sha256": "e984f79dced99ecf9b718cc07bcb19b1558eabbc86ca30c06159f6e63c42bdbd"},
+        {"path": "../masters/SC4027_clue_4314_photo_master.png", "sha256": "2266eefa0bea6b0b1ba9de89c4422e92e96a93f8a93ea73fa49d6c325b6646bd"}
+      ],
+      "packageManifest": {"path": "4314_package/delivery_manifest.json", "sha256": "acec976c08e1a8e085ecee7167137d2e1e6265954077b8b22a2d7260f9b2ebf6"},
+      "packageVerification": {"path": "4314_package/delivery_verification.json", "sha256": "1d4dae84c805293c6f705f60813bb69211d28003407e96768a6eb7ff29b8e1cc", "passed": true}
+    },
+    {
+      "itemId": "4315",
+      "name": "古巴雪茄烟蒂",
+      "itemType": "1/clue",
+      "mapCrop": {"rect": [1336, 664, 1496, 827], "width": 160, "height": 163},
+      "Position": ["1336", "664", "-3"],
+      "artifacts": {
+        "map": {"path": "SC4027_clue_4315.png", "sha256": "4d26df6bb68e61a04b65299790493d4d974b7c8d8bb97d231c2dea75e69a7c0b"},
+        "big": {"path": "SC4027_clue_4315_big.png", "sha256": "8a1ae50a05dd3645b3b4dff02794993d99fde25edf74f5922d36fe3938b4cc2f"},
+        "icon": {"path": "SC4027_clue_4315_icon.png", "sha256": "b93f092e8d2dfd7e688500782c78e53b7c0fa23680008c5cd9dace4d2a5094c6"}
+      },
+      "semanticMasters": [
+        {"path": "../masters/4315_visitor_cluster_generated_master.png", "sha256": "d2f11d53c78a8f06ed6fc48d4636926ee48ba33f49a8806c810d01a62043edd6"},
+        {"path": "../masters/4315_visitor_cluster_transparent_master.png", "sha256": "90c50be0ec75aad6cf239715f99137595d5a4e919d26e908b70a7891136cbfd2"},
+        {"path": "../masters/SC4027_clue_4315_photo_master.png", "sha256": "22143f9be643da022ff446a37714dca8b1d0586aebdd6d84b7b7b12fbae8e9ef"}
+      ],
+      "packageManifest": {"path": "4315_package/delivery_manifest.json", "sha256": "fe51bf950953210c53d2bb22a55de8c30c6602d56b8d4fc44cd92d9fee1b8b03"},
+      "packageVerification": {"path": "4315_package/delivery_verification.json", "sha256": "d925680dc85985c941b4c3a4910b5eef54dbec73241d7782759d6553dbfa1b20", "passed": true}
+    }
+  ],
+  "configuration": {
+    "itemPatch": "ItemStaticData.patch.json",
+    "scenePatch": "SceneConfig.patch.json",
+    "liveTablesChanged": false,
+    "unityChanged": false
+  }
+}

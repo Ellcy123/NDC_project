@@ -26,6 +26,7 @@ class EvidenceDeliveryTests(unittest.TestCase):
         self.source = self.root / "source.png"
         self.final = self.root / "final.png"
         self.bad_final = self.root / "bad_final.png"
+        self.map_layer = self.root / "map_layer.png"
         self.mask = self.root / "authorization.png"
         self.broad_mask = self.root / "broad_authorization.png"
         self.base_report = self.root / "base_verification.json"
@@ -35,8 +36,13 @@ class EvidenceDeliveryTests(unittest.TestCase):
         source = Image.new("RGB", (64, 64), (40, 50, 60))
         source.save(self.source)
 
-        final = source.copy()
-        ImageDraw.Draw(final).rectangle((20, 22, 31, 29), fill=(180, 40, 25))
+        layer = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+        ImageDraw.Draw(layer).rectangle((20, 22, 31, 29), fill=(180, 40, 25, 255))
+        layer.save(self.map_layer)
+
+        final = source.convert("RGBA")
+        final.alpha_composite(layer)
+        final = final.convert("RGB")
         final.save(self.final)
 
         bad_final = final.copy()
@@ -98,8 +104,12 @@ class EvidenceDeliveryTests(unittest.TestCase):
             str(authorization_mask or self.mask),
             "--base-verification",
             str(self.base_report),
+            "--map-layer",
+            str(self.map_layer),
             "--map-padding",
             "0",
+            "--hotspot-target",
+            "red test record only",
             "--item-id",
             "4317",
             "--scene-id",
@@ -141,13 +151,17 @@ class EvidenceDeliveryTests(unittest.TestCase):
             manifest["unityDraft"]["Position"], ["20", "22", "-3"]
         )
 
-        with Image.open(self.final) as final, Image.open(
+        with Image.open(self.map_layer) as layer, Image.open(
             output / "SC4025_item_4317.png"
         ) as map_sprite:
-            expected = final.crop((20, 22, 32, 30)).convert("RGBA")
+            expected = layer.crop((20, 22, 32, 30)).convert("RGBA")
             actual = map_sprite.convert("RGBA")
             self.assertEqual(expected.size, actual.size)
             self.assertEqual(expected.tobytes(), actual.tobytes())
+        self.assertEqual(manifest["mapDelivery"]["mode"], "object-alpha")
+        self.assertEqual(manifest["hotspot"]["mode"], "object-alpha")
+        self.assertEqual(manifest["hotspot"]["pixelCount"], 96)
+        self.assertTrue((output / "hotspot_overlay.png").is_file())
 
         verified = subprocess.run(
             [
@@ -202,7 +216,7 @@ class EvidenceDeliveryTests(unittest.TestCase):
         manifest = json.loads(
             (output / "delivery_manifest.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["mapCrop"]["method"], "changed-pixel-bounds")
+        self.assertEqual(manifest["mapCrop"]["method"], "map-layer-alpha-bounds")
         self.assertEqual(manifest["mapCrop"]["rect"], [20, 22, 32, 30])
         self.assertFalse(manifest["checks"]["authorizationContainedByMapRect"])
         self.assertTrue(manifest["checks"]["changedPixelsContainedByMapRect"])
@@ -221,6 +235,22 @@ class EvidenceDeliveryTests(unittest.TestCase):
         self.assertNotEqual(packaged.returncode, 0)
         self.assertIn(
             "require --icon-verification", packaged.stdout + packaged.stderr
+        )
+
+    def test_rejects_implicit_opaque_region_map(self) -> None:
+        output = self.root / "implicit_region_delivery"
+        command = self.command(self.final, output)
+        layer_index = command.index("--map-layer")
+        del command[layer_index : layer_index + 2]
+        packaged = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(packaged.returncode, 0)
+        self.assertIn(
+            "require --map-layer", packaged.stdout + packaged.stderr
         )
 
     def test_omit_icon_removes_path_and_artifacts(self) -> None:

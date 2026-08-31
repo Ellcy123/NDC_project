@@ -1,0 +1,88 @@
+{
+  "batch": "Unit4_full_rebuild_v1",
+  "reusePolicy": {
+    "previousGeneratedAssets": "forbidden",
+    "previousCoordinates": "forbidden",
+    "previousMasksAndPrompts": "forbidden",
+    "approvedBaseSceneAndCurrentCanon": "allowed"
+  },
+  "episode": "EPI04",
+  "unit": "Unit4",
+  "loop": 3,
+  "sceneId": "4022",
+  "sceneName": "Morrison 宅邸书房 · 夜晚 / 爆炸前",
+  "baseScene": {
+    "path": "/Users/m4/project/NDC_project/image/定稿/u4_exp_morrison_study_night_preblast.png",
+    "sha256": "a42cd59ebdeded06ddf06157fc5bb36c647efd12a1d7e02e6d56bbbbb6075da3",
+    "width": 3380,
+    "height": 1600,
+    "mode": "RGB"
+  },
+  "records": [
+    {
+      "itemId": "4311",
+      "name": "磨号手枪与枪内未击发余弹",
+      "itemType": "1/clue",
+      "route": "direct-scene",
+      "anchorMode": "visible-record-dependent-on-character-state",
+      "hotspotTarget": "尸体右手中松散放置的手枪；必须同时读出手指握持关系",
+      "blocker": "正式底图为空场，没有 Harold 尸体、右手位置或遮挡关系；禁止把手枪单独放入空场。",
+      "status": "BLOCKED_PENDING_HAROLD_BODY_STATE_LAYER"
+    },
+    {
+      "itemId": "4323",
+      "name": "宅邸常用物件的偏左摆放",
+      "itemType": "2/envir",
+      "route": "environment",
+      "anchorMode": "visible-environment-condition",
+      "hotspotMode": "object/condition-alpha-multiple-islands",
+      "hotspotTarget": "仅座位左侧的墨水瓶、警徽盒、常用杯垫及对应长期磨痕；桌面其余区域不计入热区",
+      "intentRect": [930, 700, 1320, 920],
+      "mapStem": "SC4022_envir_4323",
+      "detailStem": "SC4022_envir_4323_big",
+      "iconPolicy": "OMIT: itemType=2/envir",
+      "z": "-3",
+      "status": "in-production"
+    },
+    {
+      "itemId": "4312",
+      "name": "伪造遗书",
+      "itemType": "3/item",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "hotspotMode": "object-alpha",
+      "hotspotTarget": "仅摆放端正的遗书信纸；书桌不计入热区",
+      "intentRect": [1220, 760, 1480, 900],
+      "mapStem": "SC4022_item_4312",
+      "detailStem": "SC4022_item_4312_big",
+      "iconStem": "SC4022_item_4312_icon",
+      "z": "-3",
+      "status": "pending"
+    },
+    {
+      "itemId": "4313",
+      "name": "Pierce档案移交通知（档案袋装）",
+      "itemType": "3/item",
+      "route": "direct-scene",
+      "anchorMode": "visible-record",
+      "hotspotMode": "object-alpha",
+      "hotspotTarget": "仅深棕档案袋、棉线绕扣和露出的通知页；书桌不计入热区",
+      "intentRect": [1480, 760, 1680, 920],
+      "mapStem": "SC4022_item_4313",
+      "detailStem": "SC4022_item_4313_big",
+      "iconStem": "SC4022_item_4313_icon",
+      "bigContractStatus": "content-blocked",
+      "bigBlocker": "正式签发日期/时刻尚未完成时间线校准，禁止自行填写。",
+      "z": "-3",
+      "status": "scene-map-pending; Big/Icon/full package blocked by exact issue time"
+    }
+  ],
+  "sources": [
+    "/Users/m4/project/NDC_project/canon_manifest.json",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/state/loop3_state.yaml",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/场景/探索场景/EXP_SC4022_Morrison宅邸书房_夜晚爆炸前.md",
+    "/Users/m4/project/NDC_project/剧情设计/Unit4/证据设计/Unit4_循环3_证据美术资产.md",
+    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/ItemStaticData.json",
+    "/Users/m4/project/NDC_project/avg_editor_v2/data/table/SceneConfig.json"
+  ]
+}
