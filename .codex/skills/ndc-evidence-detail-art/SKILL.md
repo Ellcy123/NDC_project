@@ -129,4 +129,6 @@ Do not hand an asset back to the parent until all applicable checks pass:
 
 Reject muddy micro-detail, an unreadable silhouette, wrong-direction or overlong shadow, repeated-resize softness, frame contamination, fabricated facts, or identity drift even when machine reports pass.
 
-Return the approved Big and, when applicable, Icon; their masters and masks; selected frame/rotation; verification reports; source hashes; supplied route/itemType; and explicit Icon presence or omission. The parent skill then combines these outputs with Map/Position or container deliverables and performs final packaging.
+Return the approved Big and, when applicable, Icon; their masters and masks; selected frame/rotation; verification reports; source hashes; supplied route/itemType; and explicit Icon presence or omission inside the current system-temporary NDC job. The parent skill then combines these outputs with Map/Position or container deliverables and performs final packaging.
+
+Masters, masks, layout previews, generated inputs, and verification reports are recovery inputs, not project-facing delivery files. On verified terminal publication, only the accepted runtime Big and applicable Icon may enter `image/deliveries/<batch>/<scene>/assets/`; the parent compact report retains their hashes and status before the temporary job is deleted. An interrupted job keeps its temporary inputs for recovery.

@@ -37,9 +37,20 @@ Create one coverage row for every requested record:
 | `zPolicy` | Approved scene-sorting values and their current configuration source, or `not-applicable` |
 | `deliverables` | Required Map, Position, Big, Icon, container states, or explicit omissions |
 | `sources` | Current state, scene design, and table rows supporting the decision |
-| `status` | `ready` or a concrete unresolved dependency |
+| `status` | `ready`, `skipped_after_3_failed_generations`, `blocked_by_skipped_record:<itemId>`, or a concrete unresolved dependency |
 
-Do not invoke a production child while any row is unresolved.
+Do not invoke a production child while any route or acquisition row is unresolved. A production-time `skipped_after_3_failed_generations` status is terminal for that row rather than unresolved, so it does not stop independent ready rows.
+
+## Bounded generation retries and fail-forward
+
+After the user confirms the concrete visual edit, a production child may make up to `3` fresh AI generation calls for the same `itemId` and production stage without asking between attempts.
+
+1. Persist every candidate under a versioned path inside the current system-temporary job. After each rejection, append the attempt number, temporary candidate path, machine/visual reason codes, and a concise reason to `<ndc-temp-work>/generation_attempt_log.json`.
+2. Accept the first candidate that passes the route-specific machine and visual gates. Deterministic recomposition, registration, mask refinement, or repair using an already persisted candidate does not count as a fresh generation attempt.
+3. After the third rejected generation, stop that record. Set its acquisition-contract row to `skipped_after_3_failed_generations`, add `skipReasons`, retain rejected artifacts only until the batch reaches a normal terminal publish, and do not create a delivery package or pretend the record passed.
+4. Continue automatically with the next `ready` record whose production does not depend on the skipped record. If a later row depends on it, mark that row `blocked_by_skipped_record:<itemId>` without spending generation attempts, then continue searching for the next independent ready row.
+5. Do not use this fail-forward rule to bypass unresolved canon, route, ID, synchronization permission, or destructive-action questions. Those remain blockers rather than generation failures.
+6. In the final report, list every skipped/blocked record ID, its three attempt reasons or dependency reason, and which record production resumed with. Do not publish temporary candidate paths that are deleted during cleanup.
 
 ## Route by player action
 
@@ -103,14 +114,14 @@ Use when an `item` or `clue` becomes owned without a world-space locate/click st
 
 Invoke only `$ndc-evidence-detail-art`. Do not invent a Map or Position. If a handover or event visibly presents the record in the scene, record the separate conditional or performance-state requirement without turning it into a collectible Map.
 
-Stage a `detail-only` delivery with:
+Stage a temporary `detail-only` verification package with:
 
 - the approved Big and required Icon plus their verification reports and source hashes;
-- `ItemStaticData.patch.json` containing the approved detail/icon paths while preserving the current table schema for `mapSpritePath` and `Position`; explicitly clear any stale active world path or Position using that schema's accepted empty representation rather than merely omitting the patch field. A non-empty legacy placeholder may remain only when the merged row has no SceneConfig binding or staged Map artifact and the manifest proves it is runtime-inert;
+- an internal `ItemStaticData.patch.json` containing the approved detail/icon paths while preserving the current table schema for `mapSpritePath` and `Position`; explicitly clear any stale active world path or Position using that schema's accepted empty representation rather than merely omitting the patch field. This patch is a verification input and is not copied into the project-facing delivery. A non-empty legacy placeholder may remain only when the merged row has no SceneConfig binding or staged Map artifact and the manifest proves it is runtime-inert;
 - `detail_delivery_manifest.json` recording route, itemType, acquisition event, explicit Map/Position omission reason, artifact hashes, and any separate handover-state dependency;
 - `detail_delivery_verification.json` proving the Big/Icon reports match the staged bytes and that no usable Map, non-empty Position, or scene artifact entered the package; record any preserved legacy placeholder path as inert rather than treating it as delivered art.
 
-The scene packager is not used for this route. Until a dedicated detail-package checker exists, record the verification evidence explicitly and do not describe the package as machine-verified beyond the Big/Icon reports.
+The scene packager is not used for this route. Until a dedicated detail-package checker exists, record the verification evidence explicitly and do not describe the package as machine-verified beyond the Big/Icon reports. At terminal publication, copy only the runtime Big/Icon assets and compact status report; omit `scene_preview.png` and `XYposition.txt` because this route has no world-space anchor.
 
 ### `minigame-only`
 
@@ -160,12 +171,13 @@ Analysis and combination capability do not determine the acquisition route. A to
 - For a newly generated direct-scene anchor, the accepted full-scene placement must exist before the per-record Map is extracted. An independently generated isolated prop may support Big/Icon work, but it is not valid provenance for the scene Map or its coordinates.
 - A scene Map is a low-information discovery anchor. Exact text, dates, numbers, handwriting, damage comparisons, and puzzle-specific detail belong in Big unless the environment itself must be read in scene.
 - Production artwork must originate in an approved high-resolution raster master. Deterministic code may transform and verify approved art but must not procedurally invent the final prop, document, furniture, texture, wear, lighting, or scene artwork.
-- Never overwrite an approved source scene. Stage work under `image/edit_jobs/<job>/delivery/`.
+- Never overwrite an approved source scene. Keep generation, masks, masters, per-record packages, manifests, reports, overlays, and rejected candidates inside the system-temporary job described below.
 - Draft configuration and asset packages may be prepared after route approval. Copying assets into Unity or changing formal tables still requires explicit user authorization.
 
 The existing shared implementation resources remain under this skill for compatibility:
 
 - `scripts/evidence_delivery.py`
+- `scripts/evidence_publish.py`
 - `scripts/evidence_art.py`
 - `scripts/secondary_prop_border.py`
 - `references/delivery-contract.md`
@@ -175,6 +187,42 @@ The existing shared implementation resources remain under this skill for compati
 Child skills load only the resources relevant to their route.
 
 Before running any shared Python script in Codex desktop, load the bundled workspace dependencies and use the returned Python executable. Do not assume that bare `python` or `python3` has Pillow or the required image libraries.
+
+## Temporary work and compact publication
+
+New production must not create `image/edit_jobs/<job>` or leave process artifacts elsewhere in the repository.
+
+1. Resolve the operating system temporary directory and create one unique child under `<system-temp>/ndc_art_jobs/<job>-<uuid>/`. Confirm the resolved job path is a strict child of that namespace before writing or cleaning it.
+2. Put every route contract, crop, mask, prompt, generated candidate, semantic master, overlay, verification report, per-record delivery package, attempt log, and helper-script output in that temporary job. A per-record package may still contain `ItemStaticData.patch.json`, its own `XYposition.txt`, and detailed manifests because those are internal verification inputs, not project deliverables.
+3. When all independent rows have reached a terminal state, publish the accepted scene-anchored records with `scripts/evidence_publish.py`. The project-facing directory is `image/deliveries/<batch>/<scene>/` and contains only:
+
+```text
+scene_preview.png
+XYposition.txt
+production_report.json
+assets/
+  <runtime Map, Big, and applicable Icon PNGs>
+```
+
+`XYposition.txt` is scene-level, contains one ASCII `<map-stem> x,y` line for every successful record with a runtime Position, and excludes skipped/blocked records. Do not publish `ItemStaticData.patch.json`; the configuration workflow consumes this one consolidated XY file. A batch with no world-space Position may omit `XYposition.txt` and `scene_preview.png` rather than inventing them.
+
+Use the publisher for normal direct-scene/environment batches:
+
+```text
+<workspace-python> .codex/skills/ndc-scene-evidence-placement/scripts/evidence_publish.py \
+  --work-dir <system-temp>/ndc_art_jobs/<job>-<uuid> \
+  --output-dir image/deliveries/<batch>/<scene> \
+  --scene-preview <accepted-combined-scene.png> \
+  --manifest <passing-record-delivery-manifest.json> \
+  --manifest <next-passing-record-delivery-manifest.json> \
+  --status-report <terminal-batch-status.json> \
+  --batch <batch> \
+  --scene-id <scene-id> \
+  --scene-name <scene-name> \
+  --cleanup-work-dir
+```
+
+The publisher rechecks manifest/artifact hashes, refuses an existing final directory, writes one combined XY file, strips temporary paths from the compact report, and only then recursively deletes the exact temporary job. A normally completed batch with skipped records is still terminal and must be cleaned after its failure reasons are compacted into `production_report.json`. If production is interrupted, publication fails, or cleanup itself fails, retain the temporary job for recovery and report the condition; never delete first or clean a broader temp/project directory. Legacy `image/edit_jobs` folders are not migrated or deleted automatically.
 
 ## Final orchestration gate
 

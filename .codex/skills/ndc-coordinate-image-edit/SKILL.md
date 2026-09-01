@@ -11,7 +11,7 @@ Use [scripts/coordinate_patch.py](scripts/coordinate_patch.py) for every job. Le
 
 ## Delivery invariants
 
-- Never overwrite the original source. Work in `image/edit_jobs/<task-name>/` and deliver a versioned PNG.
+- Never overwrite the original source. Work in one unique `<system-temp>/ndc_art_jobs/<task-name>-<uuid>/` directory. Return accepted runtime art to the parent evidence workflow; do not publish crops, masks, candidates, or reports directly into the repository.
 - Treat rectangles as half-open `[left, right)` and `[top, bottom)` using a recorded top-left origin unless the user explicitly supplied another origin.
 - Before the first image-file modification or generation, show a real `before -> after` example with the source path, regions to change, and protected elements; wait for explicit confirmation unless that exact edit was already confirmed in the current task.
 - Split disjoint edits into sequential jobs. Each job uses the last accepted full-size result as its source, but final verification always compares the finished image with the original source.
@@ -23,13 +23,23 @@ Use [scripts/coordinate_patch.py](scripts/coordinate_patch.py) for every job. Le
 - A generation crop must have edges divisible by 16, neither edge above 3840px, aspect ratio at most 3:1, and 655,360–8,294,400 total pixels. Expand into real source context to satisfy these limits.
 - The returned AI patch must have exactly the same aspect ratio as the prepared crop. Reject it instead of stretching or center-cropping it.
 - The final file must be PNG, match the original size and mode, and be byte-identical outside the union of all confirmed masks.
-- A failed or visually rejected generation does not authorize another call. Ask before regenerating. Deterministic recomposition or a mask-narrow structural bridge using the already persisted patch does not require regeneration.
+- Once the exact edit has been confirmed, that confirmation authorizes at most `3` fresh AI generation attempts for the same record and production stage without pausing for per-attempt approval. Persist every candidate under a versioned temporary path and append its result immediately to `<ndc-temp-work>/generation_attempt_log.json` with `recordId`, `stage`, `attempt`, `candidatePath`, `result`, `reasonCodes`, and a concise `reasonDetail`. Deterministic recomposition, registration, mask refinement, or a mask-authorized structural bridge using an already persisted candidate does not consume an attempt.
+- Accept the first candidate that passes all machine and visual gates. If attempt `3` is rejected, make no fourth generation call: set the record/stage status to `skipped_after_3_failed_generations`, retain all three candidates until the parent batch reaches a normal terminal publish, record the three rejection reasons, and return control so the next independent record can proceed. At terminal publication the parent compacts those reasons into `production_report.json` and deletes the temporary candidates. A new set of attempts requires fresh explicit user authorization.
 
 ## Canonical workflow
 
 ### 1. Load the runtime and inspect the source
 
 Call `codex_app__load_workspace_dependencies` and use its bundled Python executable. Store it in a task-specific variable such as `$ndcImagePython`.
+
+Resolve the system temporary root and create a unique child before any raster work:
+
+```powershell
+$ndcTempNamespace = Join-Path ([System.IO.Path]::GetTempPath()) "ndc_art_jobs"
+$ndcWorkRoot = Join-Path $ndcTempNamespace "<task-name>-<uuid>"
+```
+
+Verify the resolved `$ndcWorkRoot` is a strict child of `$ndcTempNamespace`. Do not use the namespace root itself as a job or cleanup target.
 
 Open the original with `view_image`. List every edit region and divide it into independent jobs, for example:
 
@@ -48,12 +58,12 @@ For collectible evidence placement, first make a tight intent mask that records 
 
 ```powershell
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" expand-mask `
-  --input "D:/NDC_project/image/edit_jobs/task/intent_mask.png" `
-  --output "D:/NDC_project/image/edit_jobs/task/authorization_mask.png" `
+  --input "$ndcWorkRoot/intent_mask.png" `
+  --output "$ndcWorkRoot/authorization_mask.png" `
   --scale 3 `
   --min-margin 128 `
   --limit-rect 1024 384 2048 1408 `
-  --report "D:/NDC_project/image/edit_jobs/task/authorization_mask_report.json"
+  --report "$ndcWorkRoot/authorization_mask_report.json"
 ```
 
 Inspect both masks over the full scene. A rectangular broad workspace is acceptable when the prompt and protected-element list keep unrelated content unchanged; it is not required to hug the object contour.
@@ -67,10 +77,10 @@ Prepare an AI job with an explicit legal crop:
   --source "D:/NDC_project/image/source.png" `
   --edit-rect 1170 925 1860 1040 `
   --crop-rect 1008 464 2032 1488 `
-  --mask "D:/NDC_project/image/edit_jobs/task/masks/desktop-mask.png" `
+  --mask "$ndcWorkRoot/masks/desktop-mask.png" `
   --feather 5 `
   --canvas-kind generation `
-  --out-dir "D:/NDC_project/image/edit_jobs/task/01-desktop"
+  --out-dir "$ndcWorkRoot/01-desktop"
 ```
 
 Inspect `source_crop.png`, `hard_mask.png`, and `manifest.json` before generation. The white hard-mask area must include all removable residue while excluding every protected boundary.
@@ -114,12 +124,12 @@ After generation:
 
 ```powershell
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" compose `
-  --manifest "D:/NDC_project/image/edit_jobs/task/01-desktop/manifest.json" `
-  --ai-patch "D:/NDC_project/image/edit_jobs/task/01-desktop/generated.png" `
-  --output "D:/NDC_project/image/edit_jobs/task/01-desktop/step1.png"
+  --manifest "$ndcWorkRoot/01-desktop/manifest.json" `
+  --ai-patch "$ndcWorkRoot/01-desktop/generated.png" `
+  --output "$ndcWorkRoot/01-desktop/step1.png"
 
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" scan-boundary `
-  --manifest "D:/NDC_project/image/edit_jobs/task/01-desktop/manifest.json" `
+  --manifest "$ndcWorkRoot/01-desktop/manifest.json" `
   --ring 6
 ```
 
@@ -146,14 +156,14 @@ Run a structure scan wherever a paste boundary crosses a long rail, molding, cab
 
 ```powershell
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" scan-structure `
-  --image "D:/NDC_project/image/edit_jobs/task/final-step.png" `
+  --image "$ndcWorkRoot/final-step.png" `
   --rect 2200 800 2225 900 `
   --seam-axis x `
   --seam 2210 `
   --band 6 `
   --max-drift 1 `
-  --report "D:/NDC_project/image/edit_jobs/task/grid-left-report.json" `
-  --overlay "D:/NDC_project/image/edit_jobs/task/grid-left-overlay.png"
+  --report "$ndcWorkRoot/grid-left-report.json" `
+  --overlay "$ndcWorkRoot/grid-left-overlay.png"
 ```
 
 The scan rectangle must cover only the structure that is supposed to continue through the edited mask. Exclude preserved outer frames, diagonal perspective edges, curves, and neighboring material seams; otherwise their legitimate slope can be misclassified as paste drift.
@@ -169,27 +179,27 @@ Keep the bridge normally 8–12px deep. The helper refuses a deeper bridge and v
 ```powershell
 # Prepare a small deterministic job; this crop is not sent to the image model.
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" prepare `
-  --source "D:/NDC_project/image/edit_jobs/task/02-grid/step2.png" `
+  --source "$ndcWorkRoot/02-grid/step2.png" `
   --edit-rect 2210 800 2222 900 `
   --crop-rect 2180 780 2250 920 `
-  --mask "D:/NDC_project/image/edit_jobs/task/masks/grid-left-bridge-mask.png" `
+  --mask "$ndcWorkRoot/masks/grid-left-bridge-mask.png" `
   --feather 2 `
   --canvas-kind deterministic `
-  --out-dir "D:/NDC_project/image/edit_jobs/task/03-grid-left-bridge"
+  --out-dir "$ndcWorkRoot/03-grid-left-bridge"
 
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" repair-structure `
-  --manifest "D:/NDC_project/image/edit_jobs/task/03-grid-left-bridge/manifest.json" `
+  --manifest "$ndcWorkRoot/03-grid-left-bridge/manifest.json" `
   --seam-axis x `
   --seam 2210 `
   --direction positive `
   --sample-band 16 `
   --anchor-width 4 `
   --max-depth 12 `
-  --authorization-mask "D:/NDC_project/image/edit_jobs/task/masks/grid-mask.png"
+  --authorization-mask "$ndcWorkRoot/masks/grid-mask.png"
 
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" compose `
-  --manifest "D:/NDC_project/image/edit_jobs/task/03-grid-left-bridge/manifest.json" `
-  --ai-patch "D:/NDC_project/image/edit_jobs/task/03-grid-left-bridge/generated.png" `
+  --manifest "$ndcWorkRoot/03-grid-left-bridge/manifest.json" `
+  --ai-patch "$ndcWorkRoot/03-grid-left-bridge/generated.png" `
   --registration off
 ```
 
@@ -209,15 +219,15 @@ After all jobs and bridges, compare the final PNG with the original through the 
 ```powershell
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" verify-final `
   --source "D:/NDC_project/image/source.png" `
-  --output "D:/NDC_project/image/edit_jobs/task/final.png" `
-  --mask "D:/NDC_project/image/edit_jobs/task/masks/desktop-mask.png" `
-  --mask "D:/NDC_project/image/edit_jobs/task/masks/grid-mask.png" `
-  --manifest "D:/NDC_project/image/edit_jobs/task/01-desktop/manifest.json" `
-  --manifest "D:/NDC_project/image/edit_jobs/task/02-grid/manifest.json" `
-  --manifest "D:/NDC_project/image/edit_jobs/task/03-grid-left-bridge/manifest.json" `
-  --scan-report "D:/NDC_project/image/edit_jobs/task/01-desktop/boundary_report.json" `
-  --scan-report "D:/NDC_project/image/edit_jobs/task/02-grid/boundary_report.json" `
-  --scan-report "D:/NDC_project/image/edit_jobs/task/grid-left-report-after.json"
+  --output "$ndcWorkRoot/final.png" `
+  --mask "$ndcWorkRoot/masks/desktop-mask.png" `
+  --mask "$ndcWorkRoot/masks/grid-mask.png" `
+  --manifest "$ndcWorkRoot/01-desktop/manifest.json" `
+  --manifest "$ndcWorkRoot/02-grid/manifest.json" `
+  --manifest "$ndcWorkRoot/03-grid-left-bridge/manifest.json" `
+  --scan-report "$ndcWorkRoot/01-desktop/boundary_report.json" `
+  --scan-report "$ndcWorkRoot/02-grid/boundary_report.json" `
+  --scan-report "$ndcWorkRoot/grid-left-report-after.json"
 ```
 
 Pass every composed AI/deterministic job manifest in execution order and every required passing boundary/structure report. The manifest chain must begin at the original source and end at the final PNG. A report is accepted only when its recorded image hash belongs to that chain; a boundary report must also point to its exact manifest output.
@@ -234,25 +244,27 @@ Final delivery requires:
 - every residue scan and relevant structure scan passes;
 - visual inspection of the full image and close crops finds no semantic damage or odd edges.
 
-### 8. Deliver and recover
+### 8. Hand off and recover
 
-Show the full image and close crops. Report:
+Before parent publication, inspect the full image and close crops. Return internally to the parent:
 
 - original source and final PNG paths;
-- all parent masks and job manifests;
+- the temporary parent masks and job manifests;
 - final prompts and built-in generation mode;
 - registration scale/dx/dy for each AI job;
 - boundary and structure scan results;
-- `final_verification.json` path and four final containment fields;
+- the temporary `final_verification.json` path and four final containment fields;
 - whether the official asset was left untouched.
 
 Recover an interrupted job with:
 
 ```powershell
 & $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" status `
-  --manifest "D:/NDC_project/image/edit_jobs/task/01-object/manifest.json"
+  --manifest "$ndcWorkRoot/01-object/manifest.json"
 ```
 
 - prepared without `generated.png`: generation has not been persisted;
 - prepared with `generated.png`: compose it; do not regenerate;
 - composed: inspect existing output and reports; do not repeat the job.
+
+Do not copy masks, manifests, prompts, generated candidates, close crops, overlays, or verification JSON into the project-facing delivery. The parent evidence router publishes only accepted runtime PNGs, one scene-level `XYposition.txt`, one compact `production_report.json`, and the scene preview, then cleans the exact temporary job after verified publication. An interrupted job remains in the temporary namespace for recovery.

@@ -39,7 +39,7 @@ Before art or configuration work, require:
 - one Type 7 ID, approved asset stem, and an approved or authorable independent interior view;
 - ordered child IDs, each child's confirmed `itemType` (`item` or `clue`), approved stems, intended visible form in Type 7, and `hotspotMode: object-alpha`;
 - approved `z1`, `z2`, and every `childZ`, each cited to the current configuration policy or an approved existing row rather than inferred from pixels;
-- staging destination and source references from State and current configuration.
+- one unique staging destination under `<system-temp>/ndc_art_jobs/<job>-<uuid>/` and source references from State and current configuration.
 
 Never invent IDs, reorder children, infer a missing child from prose, or copy coordinates from a screenshot. If a field is missing, report the missing field to the main router and stop.
 
@@ -143,19 +143,21 @@ Generate `hotspot_overlay.png` from every child Map alpha at the current Unity `
 
 Do not leave a child's Map or `Position` empty, and do not use Type 7's top-left directly as every child's position.
 
-### 6. Draft configuration and stage the package
+### 6. Draft configuration and stage the temporary package
 
-Stage, without synchronizing to Unity:
+Stage inside the current system-temporary NDC job, without writing process files into the repository or synchronizing to Unity:
 
 - `prop_<container>1.png` and its exact crop/Position record;
 - retained `prop_<container>2_inner.png` recovery source;
 - final bordered `prop_<container>2.png` and its independently derived Position;
 - Type 6 and Type 7 ItemStaticData draft rows;
 - every child Map, Position, Big, Icon, ItemStaticData draft row, and verification artifact;
-- `XYposition.txt` with separate ASCII lines for Type 6 and Type 7;
+- a temporary `XYposition.txt` with separate ASCII lines for Type 6, Type 7, and every child with a runtime Position;
 - `container_delivery_manifest.json`, configuration-chain proof, coordinate overlay, and `container_delivery_verification.json`.
 
 The manifest is the source of truth. Keep Type 6, Type 7, and every child as separate records; do not flatten the chain into a single pickup.
+
+After the complete chain passes, return it to the parent router for compact scene publication. The project-facing scene directory contains the runtime Type 6/Type 7/child Map, Big, and Icon PNGs under `assets/`, one consolidated scene-level `XYposition.txt`, one `scene_preview.png`, and one compact `production_report.json`. Do not publish the borderless recovery source, configuration patches, per-record XY files, manifests, overlays, masks, or verification reports. Delete the exact temporary job only after the parent verifies every published hash; retain it when interrupted or when publication fails.
 
 The shared script verifies only the Type 7 border; there is currently no single machine checker for the entire container manifest and runtime chain. `container_delivery_verification.json` must distinguish machine checks from manual structural checks and cite the artifact or configuration evidence for every PASS. Never describe the whole chain as machine-verified solely because the border report passes.
 

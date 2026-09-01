@@ -42,7 +42,9 @@ Current Sprite import convention is single Sprite, center pivot, 100 pixels per 
 
 Only a Type 6 entrance to a real secondary menu may use a coherent region hotspot. Every direct-scene record, environmental observation, and individually clickable Type 7 child uses an object-alpha hotspot containing only that record itself.
 
-## Required staged files
+## Required temporary staged files
+
+The deterministic packager uses the detailed package below inside the current system-temporary NDC job. These files are verification and recovery inputs; they are not the project-facing delivery.
 
 ```text
 delivery/
@@ -58,9 +60,24 @@ delivery/
   delivery_verification.json
 ```
 
-The staged package does not include Unity `.meta` files. Unity creates or preserves those during the approved synchronization step. This skill's standard `item`/`clue` contract requires `<icon-stem>.png` and its matching `iconPath`; any legacy exception must be explicitly supplied by the user and recorded in the manifest. An `envir` package always omits the Icon file, Icon verification report, Icon manifest fields, and `iconPath`; it still requires Map + `Position` + Big. A production Icon package also retains its matching `*_verification.json` report as a recovery input.
+The temporary staged package does not include Unity `.meta` files. Unity creates or preserves those during the approved synchronization step. This skill's standard `item`/`clue` contract requires `<icon-stem>.png` and its matching `iconPath`; any legacy exception must be explicitly supplied by the user and recorded in the manifest. An `envir` package always omits the Icon file, Icon verification report, Icon manifest fields, and `iconPath`; it still requires Map + `Position` + Big. A production Icon package also retains its matching `*_verification.json` report as a temporary recovery input.
 
-For a `container-state`, stage this pair-oriented package instead:
+After every requested record reaches a terminal state, publish one compact scene package:
+
+```text
+image/deliveries/<batch>/<scene>/
+  scene_preview.png
+  XYposition.txt
+  production_report.json
+  assets/
+    <map-stem>.png
+    <detail-stem>.png
+    <icon-stem>.png                       # item/clue only
+```
+
+`XYposition.txt` is shared by the whole scene and contains every successful world-space record. `production_report.json` compacts success, skip/block reasons, asset hashes, validation status, and temporary cleanup status. Do not publish `ItemStaticData.patch.json`, per-record XY files, manifests, verification JSON, overlays, masks, semantic masters, generated candidates, or the individual intermediate `scene_with_item.png` files. The accepted combined scene becomes the single `scene_preview.png`.
+
+For a `container-state`, stage this pair-oriented package inside the temporary job instead:
 
 ```text
 delivery/
@@ -208,20 +225,20 @@ The manifest records the final result and the nudge. `nudgeX` and `nudgeY` are a
 
 ## Compatibility text
 
-Write one ASCII line per staged item:
+Each temporary per-record package may write one ASCII compatibility line:
 
 ```text
 SC4025_item_4317 1248,736
 ```
 
-For a container pair, write both states on separate lines:
+For a container pair, write both states and every positioned child on separate lines:
 
 ```text
 prop_Low cabinet drawer_1 1551,680
 prop_Low cabinet drawer_2 1436,560
 ```
 
-The structured manifest is the source of truth. Do not emit full-width commas or decorative brackets in new output.
+The structured temporary manifest is the verification source of truth. At final publication, merge all successful lines in route order into the scene's single `XYposition.txt`. Do not include skipped/blocked records, duplicate stems, full-width commas, comments, or decorative brackets. The configuration workflow consumes this consolidated file.
 
 ## Naming rules
 

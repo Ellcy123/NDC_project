@@ -183,7 +183,7 @@ From the repository root, use:
   --icon-image <approved-130x130-icon.png> \
   --icon-verification <icon-verification.json> \
   --z <approved-z> \
-  --output-dir <image/edit_jobs/job/delivery>
+  --output-dir <ndc-temp-work>/packages/<item-id>
 ```
 
 For an unchanged existing anchor, `--base-verification` is not required, but the source-sized RGBA overlay and semantic authorization mask remain required. For `envir`, replace all Icon arguments with `--omit-icon`. Do not leave an empty Icon artifact or field. `--allow-opaque-region-map` is legacy/container compatibility only and is forbidden for this direct-scene sub-skill.
@@ -192,7 +192,7 @@ Then run:
 
 ```text
 <workspace-python> .codex/skills/ndc-scene-evidence-placement/scripts/evidence_delivery.py verify \
-  --manifest <image/edit_jobs/job/delivery/delivery_manifest.json>
+  --manifest <ndc-temp-work>/packages/<item-id>/delivery_manifest.json>
 ```
 
 Never use `--allow-legacy-derived-icon` for new production work.
@@ -217,9 +217,9 @@ Delivery passes only when:
 
 Repair the source job or return the row to the parent router when a check fails. Never patch coordinates, manifests, reports, or runtime paths by hand to force a pass.
 
-## Staging and handoff
+## Temporary staging and handoff
 
-Stage under `image/edit_jobs/<job>/delivery/`. Do not overwrite the approved scene or write directly to Unity. Copying assets to Unity or changing live tables requires separate explicit authorization.
+Stage the detailed per-record package under `<system-temp>/ndc_art_jobs/<job>-<uuid>/packages/<item-id>/`. Do not overwrite the approved scene, write process files into the repository, or write directly to Unity. Copying assets to Unity or changing live tables requires separate explicit authorization.
 
 Return to the parent orchestration:
 
@@ -231,3 +231,5 @@ Return to the parent orchestration:
 - Map, Big, and Icon paths, or explicit `envir` Icon omission;
 - delivery manifest and verification report;
 - any blocked row with the precise routing reason.
+
+This handoff is internal and temporary. After all sibling records reach a terminal state, the parent router uses the shared compact publisher to copy only accepted runtime Map/Big/Icon PNGs into `image/deliveries/<batch>/<scene>/assets/`, write one scene-level `XYposition.txt`, one `scene_preview.png`, and one compact `production_report.json`. Per-record manifests, patches, XY files, overlays, masks, reports, masters, and generated candidates remain temporary and are deleted only after the final publication hashes pass.

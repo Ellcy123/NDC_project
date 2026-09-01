@@ -683,7 +683,7 @@ def package(args: argparse.Namespace) -> Path:
     ).resolve()
     if output_dir == unity_evidence_root or output_dir.is_relative_to(unity_evidence_root):
         raise ValueError(
-            "Refusing to stage directly inside Unity EVIDENCE; use image/edit_jobs first"
+            "Refusing to stage directly inside Unity EVIDENCE; use the system-temporary NDC job first"
         )
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / MANIFEST_NAME
