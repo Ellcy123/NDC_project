@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "201",
+  "poseId": "SC2392-zack-three-quarter-back-pressure-v8",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\SC2392_avg_MooreOldKey\\handoff\\zack_v8\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC\\Assets\\Resources\\Art\\Scene\\Backgrounds\\EPI02\\SC2212_bg_LakeshoreTrust_VIPParlor.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\zack.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\SC2392_avg_MooreOldKey\\handoff\\zack_v8\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    977,
+    233,
+    2071,
+    1600
+  ],
+  "basePaddedCropBBox": [
+    1176,
+    233,
+    1872,
+    1600
+  ],
+  "generationAspectRatio": [
+    4.0,
+    5.0
+  ],
+  "actualCropAspectRatio": 0.800293,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    1326,
+    383,
+    1722,
+    1600
+  ],
+  "actorBBoxLocal": [
+    349,
+    150,
+    745,
+    1367
+  ],
+  "photoshopPasteTopLeft": [
+    977,
+    233
+  ],
+  "sourceHashes": {
+    "scene": "54179ed52f61454d3bc24d7580d053ce2f8ec1af7fd2b039c299c12650d5d28b",
+    "whiteboxComposite": "d5c93847330592dfc4c945277c6ed2e11bf164ecce4681ff6eb7f746ac13d20e",
+    "characterCard": "d4a52c8fa38d7744cd24e621ecaf93a9ca7831685b5a32f68a90be4f444fd868"
+  },
+  "generationPrompt": "Base the result on Image 1. Replace only the reviewed cyan anatomical mannequin with Zack Brennan from Image 3. Zack is the dominant foreground investigator holding Moore under controlled suspicion: standing three-quarter-back, shoulders and torso directed screen-right, with only a partial right-side facial profile visible and his gaze fixed on Moore. His body line presses forward without a combat brace. Both hands stay close to his body; the right hand is relaxed and ready but does not reach, and the left hand contains the pressure near his torso. He holds no prop. His unseen feet remain on the documented floor below the bottom crop; keep him upright and never compress the pose into a crouch. Preserve the exact approved whitebox pose, foreground occupied volume, anatomical head size, frame-edge leg exits, depth, and local position. Image 1 is a deterministic crop from Image 2. Keep all scene pixels, camera geometry, sofa and column topology, floor perspective, and local object relationships unchanged. Use Image 2 only to match the room's warm window light, deep green-black shadows, palette, and color grade. Use Image 3 only for Zack's recognizable wavy dark-brown hair mass, short beard, sturdy athletic but non-bodybuilder build, dark navy 1920s suit, open white collar, brown belt, costume structure, palette, brushwork, and line language. Remove the cyan mannequin completely. Preserve the NDC graphic-noir style: extremely bold heavy inked outer silhouette with drastic line-weight variation, layered garment contours, flat readable dark hair mass, simplified planar skin where the profile is visible, hard-edge color blocks, extreme chiaroscuro, solid black shadow masses, matte surfaces, and foreground-appropriate but controlled texture density. Return exactly one foreground half-body person. Do not reveal his feet. Do not turn him toward the camera. No extra character, prop, hat, gun, key, envelope, extra hand, missing finger, reaching, hand-to-hand contact, crouch, combat stance, watermark, text, or redesign of the room.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}

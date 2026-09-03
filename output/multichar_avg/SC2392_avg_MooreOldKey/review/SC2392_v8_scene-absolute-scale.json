@@ -1,0 +1,69 @@
+{
+  "schema": "ndc-scene-absolute-scale/v1",
+  "scene": "D:/NDC/Assets/Resources/Art/Scene/Backgrounds/EPI02/SC2212_bg_LakeshoreTrust_VIPParlor.png",
+  "sceneSize": [2560, 1600],
+  "actors": [
+    {"actorId": "208", "characterHeightCm": 181, "standingEquivalentHeightPx": 932},
+    {"actorId": "205", "characterHeightCm": 183, "standingEquivalentHeightPx": 882},
+    {"actorId": "201", "characterHeightCm": 180, "standingEquivalentHeightPx": 1378}
+  ],
+  "anchors": [
+    {
+      "anchorId": "near-right-floor-module",
+      "actorId": "208",
+      "objectId": "parquet-module-near-right",
+      "independenceGroup": "floor-parquet-near-right",
+      "axis": "horizontal",
+      "depthBand": "actor-local",
+      "realWorldRangeCm": [35, 55],
+      "assumedCm": 45,
+      "measurementLine": [[1860, 1430], [2110, 1430]],
+      "projectionScaleToActorPlane": 0.9268508287,
+      "projectionEvidence": {
+        "perspectiveBasisIds": ["parquet-convergence-right-01"]
+      },
+      "confidence": "medium"
+    },
+    {
+      "anchorId": "central-club-sofa-width",
+      "actorId": "205",
+      "objectId": "central-three-seat-club-sofa",
+      "independenceGroup": "furniture-sofa-central",
+      "axis": "horizontal",
+      "depthBand": "cross-depth",
+      "realWorldRangeCm": [180, 220],
+      "assumedCm": 200,
+      "measurementLine": [[1110, 1005], [1450, 1005]],
+      "projectionScaleToActorPlane": 2.8351012536,
+      "projectionEvidence": {
+        "sourceSupportPoint": [1280, 1090],
+        "targetSupportPoint": [1780, 1390],
+        "perspectiveBasisIds": ["parquet-convergence-center-01", "sofa-base-depth-01"]
+      },
+      "confidence": "medium"
+    },
+    {
+      "anchorId": "right-bookcase-bay-height",
+      "actorId": "208",
+      "objectId": "right-bookcase-architectural-bay",
+      "independenceGroup": "architecture-bookcase-right",
+      "axis": "vertical",
+      "depthBand": "cross-depth",
+      "realWorldRangeCm": [240, 300],
+      "assumedCm": 270,
+      "measurementLine": [[2180, 345], [2180, 1165]],
+      "projectionScaleToActorPlane": 1.6954588330,
+      "projectionEvidence": {
+        "sourceSupportPoint": [2180, 1165],
+        "targetSupportPoint": [2180, 1431],
+        "perspectiveBasisIds": ["right-wall-vertical-01", "parquet-convergence-right-01"]
+      },
+      "confidence": "medium"
+    }
+  ],
+  "limits": {
+    "maxGlobalDeviationRatio": 0.03,
+    "maxAnchorSpreadRatio": 0.08,
+    "minimumIndependentAnchors": 3
+  }
+}

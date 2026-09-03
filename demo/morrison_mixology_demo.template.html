@@ -1,0 +1,1504 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NDC 调酒支线体验 Demo</title>
+  <style>
+    :root {
+      --ink: #181816;
+      --cream: #efe4ca;
+      --paper: #e9dcc1;
+      --gold: #c9a45d;
+      --gold-bright: #e5c77b;
+      --red: #9e362b;
+      --green: #64704d;
+      --panel: rgba(15, 16, 15, .94);
+      --line: rgba(229, 199, 123, .28);
+      --muted: #acaa9e;
+      --shadow: 0 22px 70px rgba(0, 0, 0, .58);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #090a09;
+      color: #f0eadc;
+      font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    button {
+      color: inherit;
+      border: 0;
+    }
+
+    button:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--gold-bright);
+      outline-offset: 3px;
+    }
+
+    .hidden { display: none !important; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(106, 82, 43, .18), transparent 38%),
+        #090a09;
+      overflow: hidden;
+    }
+
+    .topbar {
+      min-height: 66px;
+      padding: 10px 18px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(360px, 1.5fr) minmax(220px, 1fr);
+      align-items: center;
+      gap: 18px;
+      background: rgba(8, 9, 8, .97);
+      border-bottom: 1px solid var(--line);
+      z-index: 20;
+    }
+
+    .brand-kicker {
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .brand-title {
+      margin-top: 2px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .noncanon {
+      display: inline-flex;
+      margin-left: 8px;
+      padding: 2px 7px;
+      border: 1px solid rgba(229, 199, 123, .4);
+      border-radius: 999px;
+      color: #cfc3a7;
+      font-size: 10px;
+      vertical-align: 2px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
+
+    .step {
+      min-width: 0;
+      color: #74766f;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .step::before {
+      content: "";
+      display: block;
+      height: 3px;
+      margin-bottom: 5px;
+      border-radius: 99px;
+      background: #343631;
+      transition: background .25s, box-shadow .25s;
+    }
+
+    .step.active { color: var(--cream); }
+    .step.done { color: #a59c87; }
+    .step.active::before { background: var(--gold-bright); box-shadow: 0 0 14px rgba(229, 199, 123, .4); }
+    .step.done::before { background: #76623b; }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .hud-button {
+      min-height: 38px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #171916;
+      color: #dad3c2;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, transform .18s;
+    }
+
+    .hud-button:hover { background: #23251f; border-color: rgba(229, 199, 123, .55); }
+    .hud-button:active { transform: translateY(1px); }
+    .hud-button:disabled { opacity: .35; cursor: not-allowed; }
+
+    .main {
+      position: relative;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .scene-screen, .dialogue-screen {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+    }
+
+    .scene-frame {
+      --scene-ratio: 2.15;
+      position: relative;
+      width: min(100%, calc((100vh - 100px) * var(--scene-ratio)));
+      aspect-ratio: var(--scene-ratio);
+      max-height: calc(100vh - 96px);
+      background-position: center;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      border: 1px solid rgba(229, 199, 123, .23);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+      transition: opacity .35s ease;
+    }
+
+    .scene-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, .18), transparent 25%, transparent 70%, rgba(0, 0, 0, .55)),
+        radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, .28));
+      z-index: 1;
+    }
+
+    .scene-title {
+      position: absolute;
+      z-index: 4;
+      top: 22px;
+      left: 24px;
+      padding: 9px 13px;
+      border-left: 3px solid var(--gold);
+      background: rgba(7, 8, 7, .72);
+      backdrop-filter: blur(8px);
+    }
+
+    .scene-title strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(15px, 1.4vw, 22px);
+    }
+
+    .scene-title span {
+      color: #b7b5ab;
+      font-size: clamp(10px, .75vw, 12px);
+    }
+
+    .hotspot {
+      position: absolute;
+      z-index: 5;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(229, 199, 123, .42);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(229, 199, 123, .16), transparent 65%);
+      cursor: pointer;
+      animation: hotspotPulse 2.2s ease-in-out infinite;
+    }
+
+    .hotspot::before {
+      content: "";
+      width: 30%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(229, 199, 123, .9);
+      box-shadow: 0 0 0 6px rgba(229, 199, 123, .15), 0 0 28px rgba(229, 199, 123, .55);
+    }
+
+    .hotspot span {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 7px);
+      translate: -50% 0;
+      width: max-content;
+      max-width: 180px;
+      padding: 5px 9px;
+      border-radius: 3px;
+      background: rgba(8, 9, 8, .88);
+      color: var(--cream);
+      font-size: clamp(10px, .8vw, 13px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .3);
+    }
+
+    .hotspot:hover { border-color: var(--gold-bright); }
+
+    @keyframes hotspotPulse {
+      0%, 100% { scale: 1; opacity: .8; }
+      50% { scale: 1.06; opacity: 1; }
+    }
+
+    .bottle-hotspot { left: 9%; top: 46%; width: 8%; aspect-ratio: 1; }
+    .bar-hotspot { left: 55%; top: 27%; width: 10%; aspect-ratio: 1; }
+
+    .scene-footer {
+      position: absolute;
+      z-index: 5;
+      left: 22px;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .objective {
+      max-width: 560px;
+      padding: 10px 13px;
+      border-left: 3px solid var(--red);
+      background: rgba(8, 9, 8, .82);
+      color: #dfd7c5;
+      font-size: clamp(11px, .8vw, 13px);
+      line-height: 1.55;
+    }
+
+    .primary-button, .secondary-button {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: filter .18s, transform .18s, opacity .18s;
+    }
+
+    .primary-button {
+      background: linear-gradient(180deg, #d1ad65, #a27c39);
+      color: #17140d;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(229, 199, 123, .35);
+      background: #20221e;
+      color: #e4dcc8;
+    }
+
+    .primary-button:hover, .secondary-button:hover { filter: brightness(1.1); }
+    .primary-button:active, .secondary-button:active { transform: translateY(1px); }
+    .primary-button:disabled, .secondary-button:disabled { opacity: .35; cursor: not-allowed; filter: none; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(3, 4, 3, .8);
+      backdrop-filter: blur(9px);
+    }
+
+    .modal {
+      position: relative;
+      width: min(960px, 96vw);
+      max-height: 92vh;
+      overflow: auto;
+      border: 1px solid rgba(229, 199, 123, .34);
+      border-radius: 8px;
+      background: #111310;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-close {
+      position: absolute;
+      z-index: 2;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(229, 199, 123, .28);
+      border-radius: 50%;
+      background: rgba(18, 20, 17, .9);
+      color: #d8d1c1;
+      cursor: pointer;
+    }
+
+    .item-modal-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, .8fr) minmax(340px, 1.2fr);
+      min-height: 520px;
+    }
+
+    .item-art {
+      display: grid;
+      place-items: center;
+      padding: 42px;
+      background:
+        radial-gradient(circle at 50% 43%, rgba(195, 142, 57, .2), transparent 48%),
+        #090a09;
+      border-right: 1px solid var(--line);
+    }
+
+    .item-art img {
+      width: min(230px, 80%);
+      max-height: 440px;
+      object-fit: contain;
+      filter: drop-shadow(0 24px 28px rgba(0, 0, 0, .55));
+    }
+
+    .item-copy {
+      padding: 44px 44px 34px;
+      color: #d8d1c1;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .item-copy h2, .case-title, .mix-title {
+      margin: 7px 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #f3ead6;
+    }
+
+    .item-copy h2 { font-size: clamp(26px, 3vw, 42px); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 22px; }
+    .tag {
+      padding: 4px 8px;
+      border: 1px solid rgba(229, 199, 123, .24);
+      border-radius: 999px;
+      color: #c8b995;
+      font-size: 11px;
+    }
+
+    .history-card {
+      padding: 18px;
+      border: 1px solid rgba(98, 75, 37, .3);
+      background: #ded0af;
+      color: #29251d;
+      background-image: var(--paper-image);
+      background-size: cover;
+      box-shadow: inset 0 0 35px rgba(87, 63, 28, .13);
+    }
+
+    .history-card h3 {
+      margin: 0 0 9px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+    }
+
+    .history-card p { margin: 0 0 10px; line-height: 1.72; font-size: 13px; }
+    .history-card p:last-child { margin-bottom: 0; }
+
+    .source-line {
+      margin-top: 14px;
+      color: #898475;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .source-line a { color: #b89b5e; }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 22px;
+    }
+
+    .case-modal { width: min(1080px, 97vw); }
+
+    .case-head {
+      padding: 24px 30px 15px;
+      border-bottom: 1px solid var(--line);
+      background: #171916;
+    }
+
+    .case-title { margin: 2px 0; font-size: 25px; }
+    .case-subtitle { color: var(--muted); font-size: 12px; }
+
+    .case-body {
+      min-height: 460px;
+      padding: 28px;
+      color: #26231d;
+      background: #d9ceb7;
+      background-image: var(--paper-image);
+      background-size: cover;
+    }
+
+    .filter-notice {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(77, 61, 34, .4);
+      background: rgba(255, 250, 234, .52);
+      font-size: 12px;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .case-item {
+      position: relative;
+      min-height: 250px;
+      padding: 15px;
+      border: 1px solid rgba(58, 47, 28, .25);
+      background: rgba(248, 240, 219, .86);
+      box-shadow: 0 8px 20px rgba(64, 48, 24, .12);
+      color: #2f2a20;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .case-item.usable { outline: 2px solid rgba(142, 101, 38, .58); }
+    .case-item.filtered { filter: grayscale(1); opacity: .32; cursor: not-allowed; }
+
+    .case-item img {
+      display: block;
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .case-item strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 15px; }
+    .case-item small { display: block; margin-top: 4px; color: #766e5c; line-height: 1.4; }
+
+    .usable-badge {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      background: #6a734c;
+      color: #fff8e8;
+      font-size: 10px;
+    }
+
+    .station-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 1.2fr) minmax(280px, .8fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .station-slot {
+      display: grid;
+      place-items: center;
+      min-height: 320px;
+      padding: 25px;
+      border: 2px dashed rgba(77, 61, 34, .42);
+      background: rgba(67, 53, 31, .09);
+      text-align: center;
+      transition: background .2s, border-color .2s;
+    }
+
+    .station-slot.drag-over { border-color: #7d6a3f; background: rgba(118, 93, 49, .18); }
+    .slot-ring {
+      width: 160px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(66, 54, 33, .45);
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 12px rgba(91, 72, 39, .08);
+    }
+    .slot-ring img { width: 92px; max-height: 145px; object-fit: contain; }
+    .slot-label { margin-top: 15px; font-weight: 700; }
+    .slot-help { margin-top: 6px; color: #746c5c; font-size: 12px; }
+
+    .mix-screen {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      overflow: auto;
+      background:
+        linear-gradient(rgba(8, 9, 8, .77), rgba(8, 9, 8, .88)),
+        var(--bar-image) center / cover no-repeat;
+    }
+
+    .mix-panel {
+      width: min(1040px, 96vw);
+      border: 1px solid rgba(229, 199, 123, .35);
+      background: rgba(13, 15, 13, .96);
+      box-shadow: var(--shadow);
+    }
+
+    .mix-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mix-title { margin: 3px 0; font-size: 27px; }
+    .mix-head p { margin: 0; color: var(--muted); font-size: 12px; }
+    .base-bottle { display: flex; align-items: center; gap: 10px; color: #d7ccb1; font-size: 12px; }
+    .base-bottle img { width: 36px; height: 60px; object-fit: contain; }
+
+    .mix-content { padding: 26px; }
+
+    .mix-step { min-height: 330px; display: grid; align-content: center; gap: 20px; }
+    .mix-step h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 23px; }
+    .mix-step p { margin: 0; color: #b8b6aa; line-height: 1.65; }
+
+    .meter {
+      position: relative;
+      height: 42px;
+      border: 1px solid rgba(229, 199, 123, .25);
+      background: #252721;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #8e5128, #d18a3d 70%, #edc57a);
+      transition: width .04s linear;
+    }
+
+    .meter-target {
+      position: absolute;
+      left: 46%;
+      top: 0;
+      bottom: 0;
+      width: 20%;
+      border-left: 1px solid rgba(255, 255, 255, .55);
+      border-right: 1px solid rgba(255, 255, 255, .55);
+      background: rgba(255, 255, 255, .08);
+      pointer-events: none;
+    }
+
+    .readout {
+      display: flex;
+      justify-content: space-between;
+      color: #b6ac96;
+      font-size: 12px;
+    }
+
+    .hold-button {
+      min-height: 72px;
+      border: 1px solid rgba(229, 199, 123, .38);
+      border-radius: 5px;
+      background: #2a2116;
+      color: #edddba;
+      cursor: pointer;
+      font-weight: 700;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .hold-button.pouring { background: #523019; box-shadow: inset 0 0 34px rgba(210, 135, 58, .22); }
+
+    .option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .option-card {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid rgba(229, 199, 123, .2);
+      border-radius: 5px;
+      background: #1d1f1b;
+      color: #ded7c7;
+      cursor: pointer;
+      text-align: left;
+    }
+    .option-card:hover { border-color: rgba(229, 199, 123, .5); }
+    .option-card.selected { border-color: var(--gold-bright); background: #332b1d; box-shadow: inset 0 0 0 1px rgba(229, 199, 123, .25); }
+    .option-card strong { display: block; margin-bottom: 6px; color: #f0e2c4; }
+    .option-card small { color: #9f9d94; line-height: 1.4; }
+
+    .mix-divider { height: 1px; background: var(--line); }
+    .mix-nav { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; }
+
+    .stir-track {
+      position: relative;
+      height: 68px;
+      border: 1px solid rgba(229, 199, 123, .26);
+      background: linear-gradient(90deg, #282922 0 34%, #4e482f 34% 67%, #33221d 67%);
+      overflow: hidden;
+    }
+
+    .stir-track::before {
+      content: "顺滑区间";
+      position: absolute;
+      left: 50%;
+      top: 7px;
+      translate: -50% 0;
+      color: rgba(255, 244, 216, .62);
+      font-size: 10px;
+    }
+
+    .stir-marker {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: #f1d58f;
+      box-shadow: 0 0 20px rgba(241, 213, 143, .85);
+    }
+
+    .track-labels { display: flex; justify-content: space-between; color: #99978f; font-size: 11px; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .drink-visual {
+      display: grid;
+      place-items: center;
+      min-height: 300px;
+      border: 1px solid rgba(229, 199, 123, .18);
+      background: radial-gradient(circle, rgba(181, 112, 43, .23), transparent 48%);
+    }
+    .drink-visual img { width: 175px; image-rendering: auto; filter: drop-shadow(0 20px 18px rgba(0,0,0,.45)); }
+
+    .result-copy h3 { margin: 4px 0 9px; font-family: Georgia, "Times New Roman", serif; font-size: 30px; }
+    .result-copy p { color: #bcb8ad; line-height: 1.65; }
+
+    .stat { display: grid; grid-template-columns: 56px 1fr 34px; gap: 10px; align-items: center; margin: 12px 0; font-size: 12px; }
+    .stat-bar { height: 7px; border-radius: 99px; background: #33352f; overflow: hidden; }
+    .stat-bar span { display: block; height: 100%; background: linear-gradient(90deg, #8b6330, #dfbb70); }
+
+    .dialogue-screen {
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      overflow: hidden;
+    }
+
+    .dialogue-screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.05), rgba(0,0,0,.28) 50%, rgba(0,0,0,.12)), linear-gradient(180deg, rgba(0,0,0,.15), transparent 35%, rgba(0,0,0,.7));
+    }
+
+    .portrait {
+      position: absolute;
+      z-index: 2;
+      right: 5%;
+      bottom: 11%;
+      width: min(42vw, 600px);
+      max-height: 78vh;
+      object-fit: contain;
+      object-position: bottom;
+      filter: drop-shadow(0 20px 28px rgba(0,0,0,.55));
+      transition: opacity .18s;
+    }
+
+    .dialogue-box {
+      position: absolute;
+      z-index: 4;
+      left: 5%;
+      right: 5%;
+      bottom: 4%;
+      min-height: 160px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      padding: 26px 28px;
+      border: 1px solid rgba(229, 199, 123, .38);
+      background: rgba(9, 10, 9, .94);
+      box-shadow: var(--shadow);
+    }
+
+    .speaker {
+      margin-bottom: 8px;
+      color: var(--gold-bright);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+    }
+
+    .dialogue-text {
+      max-width: 900px;
+      color: #eee7d7;
+      font-size: clamp(15px, 1.4vw, 21px);
+      line-height: 1.72;
+    }
+
+    .dialogue-text.narrator { color: #bdb8ad; font-style: italic; font-size: clamp(13px, 1.1vw, 17px); }
+
+    .next-button {
+      min-width: 108px;
+      min-height: 44px;
+      border: 1px solid rgba(229, 199, 123, .35);
+      border-radius: 4px;
+      background: #282a25;
+      color: #efe6d3;
+      cursor: pointer;
+    }
+
+    .demo-summary {
+      padding: 34px;
+    }
+
+    .demo-summary h2 { margin: 5px 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: 30px; }
+    .demo-summary > p { color: #b4b2a8; line-height: 1.65; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0; }
+    .summary-card {
+      min-height: 135px;
+      padding: 15px;
+      border: 1px solid rgba(229, 199, 123, .18);
+      background: #191b18;
+    }
+    .summary-card span { display: block; color: var(--gold); font-size: 11px; letter-spacing: .12em; }
+    .summary-card strong { display: block; margin-top: 8px; color: #eee4cf; font-size: 15px; }
+    .summary-card small { display: block; margin-top: 7px; color: #96978f; line-height: 1.5; }
+
+    .boundary-note {
+      padding: 13px 15px;
+      border-left: 3px solid #6c7553;
+      background: rgba(93, 104, 71, .14);
+      color: #c5cab5;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 100;
+      left: 50%;
+      top: 84px;
+      translate: -50% -12px;
+      min-width: 260px;
+      padding: 12px 18px;
+      border: 1px solid rgba(229, 199, 123, .4);
+      border-radius: 4px;
+      background: rgba(14, 16, 13, .96);
+      color: #efe4cc;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, translate .2s;
+      box-shadow: 0 12px 30px rgba(0,0,0,.38);
+    }
+
+    .toast.show { opacity: 1; translate: -50% 0; }
+
+    .transition-card {
+      text-align: center;
+      color: #e5dcc9;
+    }
+    .transition-card span { color: var(--gold); font-size: 11px; letter-spacing: .25em; }
+    .transition-card h2 { margin: 8px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: 34px; }
+
+    @media (max-width: 860px) {
+      .topbar { grid-template-columns: 1fr auto; }
+      .steps { grid-column: 1 / -1; grid-row: 2; }
+      .top-actions { grid-column: 2; grid-row: 1; }
+      .item-modal-grid { grid-template-columns: 1fr; }
+      .item-art { min-height: 280px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .item-art img { max-height: 260px; }
+      .station-layout, .result-grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .scene-frame { width: 100%; max-height: none; }
+      .scene-footer { left: 12px; right: 12px; bottom: 10px; }
+      .portrait { right: -5%; width: 68vw; bottom: 17%; }
+      .dialogue-box { left: 2%; right: 2%; bottom: 2%; grid-template-columns: 1fr; padding: 18px; }
+      .next-button { justify-self: end; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { padding: 8px 10px; }
+      .brand-title { font-size: 15px; }
+      .noncanon { display: none; }
+      .hud-button { padding: 0 10px; }
+      .scene-screen { padding: 0; align-items: start; }
+      .scene-frame { margin-top: 8vh; aspect-ratio: 1.45; background-size: cover; }
+      .scene-title { top: 10px; left: 10px; }
+      .objective { max-width: 75%; }
+      .scene-footer .primary-button { min-height: 40px; padding: 0 12px; font-size: 12px; }
+      .bottle-hotspot { left: 10%; top: 41%; width: 14%; }
+      .bar-hotspot { left: 55%; top: 29%; width: 15%; }
+      .item-copy { padding: 30px 22px 24px; }
+      .option-grid { grid-template-columns: 1fr; }
+      .mix-content { padding: 18px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .portrait { width: 92vw; right: -18%; }
+      .dialogue-text { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <div class="brand-kicker">NDC / Interaction Prototype</div>
+        <div class="brand-title">调酒支线体验 <span class="noncanon">非 Canon 原型</span></div>
+      </div>
+
+      <div class="steps" aria-label="体验进度">
+        <div class="step active" data-step="1">找到酒</div>
+        <div class="step" data-step="2">查看历史</div>
+        <div class="step" data-step="3">放入酒台</div>
+        <div class="step" data-step="4">完成调制</div>
+        <div class="step" data-step="5">人物支线</div>
+      </div>
+
+      <div class="top-actions">
+        <button class="hud-button" id="caseboardButton" disabled>CASE BOARD</button>
+        <button class="hud-button" id="restartButton">重新开始</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="scene-screen" id="sceneScreen">
+        <div class="scene-frame" id="sceneFrame">
+          <div class="scene-title">
+            <strong id="sceneName">蓝月亮·储藏室</strong>
+            <span id="sceneTime">夜间 · 员工区域</span>
+          </div>
+
+          <button class="hotspot bottle-hotspot" id="bottleHotspot" aria-label="查看桌上的酒瓶">
+            <span>查看桌上的酒瓶</span>
+          </button>
+
+          <button class="hotspot bar-hotspot hidden" id="barHotspot" aria-label="使用调酒台">
+            <span>使用调酒台</span>
+          </button>
+
+          <div class="scene-footer">
+            <div class="objective" id="objectiveText">储藏室里有不少普通酒瓶。其中一瓶的药用标签保存得格外完整。</div>
+            <button class="primary-button hidden" id="travelButton">前往蓝月亮吧台 →</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="mix-screen hidden" id="mixScreen">
+        <div class="mix-panel">
+          <div class="mix-head">
+            <div>
+              <div class="eyebrow">Blue Moon Mixing Station</div>
+              <h2 class="mix-title">临时调酒台</h2>
+              <p>没有唯一配方。你的操作会决定 Morrison 喝到什么。</p>
+            </div>
+            <div class="base-bottle"><img id="mixBottleIcon" alt="药用威士忌"><span>Old Crow<br>已放入基酒槽</span></div>
+          </div>
+          <div class="mix-content" id="mixContent"></div>
+        </div>
+      </section>
+
+      <section class="dialogue-screen hidden" id="dialogueScreen">
+        <img class="portrait" id="morrisonPortrait" alt="Harold Morrison">
+        <div class="scene-title">
+          <strong>Harold Morrison</strong>
+          <span>蓝月亮吧台 · 支线对话</span>
+        </div>
+        <div class="dialogue-box">
+          <div>
+            <div class="speaker" id="dialogueSpeaker"></div>
+            <div class="dialogue-text" id="dialogueText"></div>
+          </div>
+          <button class="next-button" id="nextDialogueButton">继续</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay hidden" id="itemOverlay" aria-modal="true" role="dialog">
+    <article class="modal">
+      <button class="modal-close" data-close="itemOverlay" aria-label="关闭">×</button>
+      <div class="item-modal-grid">
+        <div class="item-art"><img id="itemBottleArt" alt="Old Crow 药用威士忌"></div>
+        <div class="item-copy">
+          <div class="eyebrow">Item / 物品</div>
+          <h2>Old Crow 药用威士忌</h2>
+          <div class="tags">
+            <span class="tag">1928</span>
+            <span class="tag">肯塔基威士忌</span>
+            <span class="tag">Prescription Liquor</span>
+          </div>
+          <div class="history-card">
+            <h3>酒瓶上的时代</h3>
+            <p>禁酒令并没有让威士忌彻底消失。药用酒是少数合法例外之一：医生使用政府处方，药房按次配给烈酒。</p>
+            <p>这瓶酒的标签把它包装成“药品”，但在地下酒吧里，同一瓶东西也可能成为饮料、身份暗号，或一笔不愿写进账本的交易。</p>
+            <p>酒本身没有告诉 Zack 案件答案；它先让玩家摸到这个年代如何绕过规则。</p>
+          </div>
+          <div class="source-line">历史依据：Smithsonian National Museum of American History 的<a href="https://www.si.edu/object/national-prohibition-act-prescription-form-medicinal-liquor%3Anmah_1441835" target="_blank" rel="noreferrer">药用酒处方藏品</a>与<a href="https://americanhistory.si.edu/explore/exhibitions/american-enterprise/online/corporate-era/bootlegging" target="_blank" rel="noreferrer">禁酒令专题</a>。酒瓶图像为 NDC 现有美术资产，本文字为体验原型。</div>
+          <div class="modal-actions">
+            <button class="secondary-button" data-close="itemOverlay">关闭</button>
+            <button class="primary-button" id="collectBottleButton">收进 CASE BOARD</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="overlay hidden" id="caseOverlay" aria-modal="true" role="dialog">
+    <article class="modal case-modal">
+      <button class="modal-close" data-close="caseOverlay" aria-label="关闭">×</button>
+      <div class="case-head">
+        <div class="eyebrow">Zack Brennan / Case Board</div>
+        <h2 class="case-title" id="caseTitle">CASE BOARD</h2>
+        <div class="case-subtitle" id="caseSubtitle">当前持有的物品与调查材料</div>
+      </div>
+      <div class="case-body" id="caseBody"></div>
+    </article>
+  </div>
+
+  <div class="overlay hidden" id="transitionOverlay">
+    <div class="transition-card">
+      <span>LOCATION UPDATED</span>
+      <h2>蓝月亮·酒吧大堂</h2>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="summaryOverlay" aria-modal="true" role="dialog">
+    <article class="modal demo-summary">
+      <div class="eyebrow">Prototype Complete</div>
+      <h2>这条支线闭环已经走完</h2>
+      <p>同一件物品先在场景里被发现，进入 CASE BOARD，再由另一个场景的设施筛选使用；玩法结果最后落到人物，而不是换成主线证词。</p>
+      <div class="summary-grid">
+        <div class="summary-card"><span>场景探索</span><strong>找到药用威士忌</strong><small>物件通过普通探索进入玩家视野。</small></div>
+        <div class="summary-card"><span>CASE BOARD</span><strong>保留历史与使用状态</strong><small>调酒台只读取当前槽位允许的物品。</small></div>
+        <div class="summary-card"><span>小玩法结果</span><strong id="summaryDrink">—</strong><small id="summaryMetrics">—</small></div>
+        <div class="summary-card"><span>剧情落点</span><strong>Morrison 家庭往事</strong><small>听见他如何从维持体面走到一次次“十分钟”；不生成证词或主线疑点。</small></div>
+      </div>
+      <div class="boundary-note">本 Demo 为非 Canon 体验原型。对白呈现 Morrison 的家庭压力、赌博动机和逐渐越线的经历，但不点名 Whale、不交代当前案件交易，也不把这段故事转化为定案证词。</div>
+      <div class="modal-actions">
+        <button class="secondary-button" id="mixAgainButton">保留酒瓶，再调一杯</button>
+        <button class="primary-button" id="summaryRestartButton">从头体验</button>
+      </div>
+    </article>
+  </div>
+
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script>
+    const ASSETS = {
+      storage: "__ASSET_STORAGE__",
+      bar: "__ASSET_BAR__",
+      bottle: "__ASSET_BOTTLE__",
+      morrisonSluggish: "__ASSET_MORRISON_SLUGGISH__",
+      morrisonSharp: "__ASSET_MORRISON_SHARP__",
+      morrisonClear: "__ASSET_MORRISON_CLEAR__",
+      paper: "__ASSET_PAPER__",
+      drink: "__ASSET_DRINK__"
+    };
+
+    const state = {
+      scene: "storage",
+      collected: false,
+      bottlePlaced: false,
+      pour: 0,
+      honey: null,
+      ice: null,
+      stir: null,
+      result: null,
+      dialogue: [],
+      dialogueIndex: 0,
+      pourTimer: null,
+      stirAnimation: null,
+      stirStart: 0
+    };
+
+    const el = id => document.getElementById(id);
+
+    function initializeAssets() {
+      document.documentElement.style.setProperty("--paper-image", `url(${ASSETS.paper})`);
+      document.documentElement.style.setProperty("--bar-image", `url(${ASSETS.bar})`);
+      el("itemBottleArt").src = ASSETS.bottle;
+      el("mixBottleIcon").src = ASSETS.bottle;
+      el("sceneFrame").style.backgroundImage = `url(${ASSETS.storage})`;
+      el("dialogueScreen").style.backgroundImage = `url(${ASSETS.bar})`;
+      el("morrisonPortrait").src = ASSETS.morrisonSluggish;
+    }
+
+    function setStep(step) {
+      document.querySelectorAll(".step").forEach(node => {
+        const value = Number(node.dataset.step);
+        node.classList.toggle("active", value === step);
+        node.classList.toggle("done", value < step);
+      });
+    }
+
+    function showOverlay(id) { el(id).classList.remove("hidden"); }
+    function hideOverlay(id) { el(id).classList.add("hidden"); }
+
+    function toast(message) {
+      const node = el("toast");
+      node.textContent = message;
+      node.classList.add("show");
+      clearTimeout(node._timer);
+      node._timer = setTimeout(() => node.classList.remove("show"), 1800);
+    }
+
+      function openItem() {
+        if (!state.collected) setStep(1);
+        else if (state.scene === "storage") setStep(2);
+      el("collectBottleButton").textContent = state.collected ? "已在 CASE BOARD" : "收进 CASE BOARD";
+      el("collectBottleButton").disabled = state.collected;
+      showOverlay("itemOverlay");
+    }
+
+    function collectBottle() {
+      state.collected = true;
+      el("caseboardButton").disabled = false;
+      el("bottleHotspot").classList.add("hidden");
+      el("travelButton").classList.remove("hidden");
+      el("objectiveText").textContent = "药用威士忌已进入 CASE BOARD。你可以随时重新查看它的历史，然后把它带去吧台。";
+      hideOverlay("itemOverlay");
+      setStep(2);
+      toast("获得物品：Old Crow 药用威士忌");
+    }
+
+    function renderGeneralCaseboard() {
+      el("caseTitle").textContent = "CASE BOARD";
+      el("caseSubtitle").textContent = "物品会保留描述、历史和当前使用状态";
+      const status = state.bottlePlaced ? "已开封 · 调酒台使用过" : "未开封 · 可用于调酒";
+      el("caseBody").innerHTML = `
+        <div class="filter-notice"><span>物品栏 · 当前共 4 件</span><span>点击物品查看详情</span></div>
+        <div class="case-grid">
+          <button class="case-item usable" id="caseBottleItem">
+            <span class="usable-badge">可使用</span>
+            <img src="${ASSETS.bottle}" alt="Old Crow 药用威士忌">
+            <strong>Old Crow 药用威士忌</strong>
+            <small>${status}<br>保存着完整的药用酒标签。</small>
+          </button>
+          ${dummyCaseItem("节目单碎片", "一张残缺的演出节目单。")}
+          ${dummyCaseItem("黄铜钥匙", "用途尚未确认的旧钥匙。")}
+          ${dummyCaseItem("玻璃碎片", "从侧巷收集的碎玻璃。")}
+        </div>`;
+      el("caseBottleItem").addEventListener("click", () => {
+        hideOverlay("caseOverlay");
+        openItem();
+      });
+    }
+
+    function dummyCaseItem(name, description) {
+      return `<div class="case-item"><div style="height:150px;display:grid;place-items:center;font-family:Georgia,serif;font-size:44px;color:#8f836b">✦</div><strong>${name}</strong><small>${description}</small></div>`;
+    }
+
+    function openGeneralCaseboard() {
+      if (!state.collected) return;
+      renderGeneralCaseboard();
+      showOverlay("caseOverlay");
+    }
+
+    function travelToBar() {
+      showOverlay("transitionOverlay");
+      setTimeout(() => {
+        state.scene = "bar";
+        el("sceneFrame").style.setProperty("--scene-ratio", "3.1675");
+        el("sceneFrame").style.backgroundImage = `url(${ASSETS.bar})`;
+        el("sceneName").textContent = "蓝月亮·酒吧大堂";
+        el("sceneTime").textContent = "夜间 · 调酒台开放";
+        el("barHotspot").classList.remove("hidden");
+        el("travelButton").classList.add("hidden");
+        el("objectiveText").textContent = "调酒台在吧台中央。使用它时，CASE BOARD 会切换为当前槽位的可用物品。";
+        hideOverlay("transitionOverlay");
+        setStep(3);
+      }, 850);
+    }
+
+    function renderStationCaseboard() {
+      el("caseTitle").textContent = "选择基酒";
+      el("caseSubtitle").textContent = "CASE BOARD 已按调酒台的基酒槽过滤";
+      el("caseBody").innerHTML = `
+        <div class="filter-notice"><span>当前槽位：酒类 × 1</span><span>其他 3 件物品不可用，已过滤</span></div>
+        <div class="station-layout">
+          <div>
+            <button class="case-item usable" id="stationBottleItem" draggable="true" style="width:min(260px,100%)">
+              <span class="usable-badge">唯一可放入</span>
+              <img src="${ASSETS.bottle}" alt="Old Crow 药用威士忌">
+              <strong>Old Crow 药用威士忌</strong>
+              <small>符合：威士忌 / 可开封 / 非关键消耗物</small>
+            </button>
+            <p style="color:#716a5a;font-size:12px;line-height:1.6">可以拖进右侧槽位；触屏设备可直接点击酒瓶。</p>
+          </div>
+          <div class="station-slot" id="stationSlot">
+            <div>
+              <div class="slot-ring"><span style="font-size:48px;color:#76694f">＋</span></div>
+              <div class="slot-label">调酒台 · 基酒槽</div>
+              <div class="slot-help">只接受当前设施允许的 CASE BOARD 物品</div>
+            </div>
+          </div>
+        </div>`;
+
+      const item = el("stationBottleItem");
+      const slot = el("stationSlot");
+      item.addEventListener("click", placeBottle);
+      item.addEventListener("dragstart", event => event.dataTransfer.setData("text/plain", "old-crow"));
+      slot.addEventListener("dragover", event => { event.preventDefault(); slot.classList.add("drag-over"); });
+      slot.addEventListener("dragleave", () => slot.classList.remove("drag-over"));
+      slot.addEventListener("drop", event => {
+        event.preventDefault();
+        slot.classList.remove("drag-over");
+        if (event.dataTransfer.getData("text/plain") === "old-crow") placeBottle();
+      });
+    }
+
+    function openStation() {
+      renderStationCaseboard();
+      showOverlay("caseOverlay");
+    }
+
+    function placeBottle() {
+      state.bottlePlaced = true;
+      hideOverlay("caseOverlay");
+      el("sceneScreen").classList.add("hidden");
+      el("mixScreen").classList.remove("hidden");
+      setStep(4);
+      renderPourStep();
+      toast("已放入基酒：Old Crow 药用威士忌");
+    }
+
+    function renderPourStep() {
+      el("mixContent").innerHTML = `
+        <section class="mix-step">
+          <div><div class="eyebrow">Step 1 / 3</div><h3>控制基酒用量</h3></div>
+          <p>按住按钮倒酒，松开停止。金色区间只是建议，不是唯一正确答案。</p>
+          <div class="meter"><div class="meter-fill" id="pourFill"></div><div class="meter-target"></div></div>
+          <div class="readout"><span>少量</span><strong id="pourReadout">0 ml</strong><span>满量</span></div>
+          <button class="hold-button" id="holdPourButton">按住倒酒</button>
+          <div class="mix-nav"><span></span><button class="primary-button" id="pourNextButton" disabled>确认酒量 →</button></div>
+        </section>`;
+
+      const button = el("holdPourButton");
+        button.addEventListener("pointerdown", event => { event.preventDefault(); startPour(); });
+      button.addEventListener("keydown", event => {
+        if ((event.key === " " || event.key === "Enter") && !state.pourTimer) { event.preventDefault(); startPour(); }
+      });
+      button.addEventListener("keyup", event => {
+        if (event.key === " " || event.key === "Enter") stopPour();
+      });
+      el("pourNextButton").addEventListener("click", renderIngredientStep);
+    }
+
+      function startPour() {
+        if (state.pourTimer) return;
+        window.addEventListener("pointerup", stopPour, { once: true });
+        state.pour = 0;
+      el("holdPourButton").classList.add("pouring");
+      el("holdPourButton").textContent = "正在倒入…松开停止";
+      state.pourTimer = setInterval(() => {
+        state.pour = Math.min(100, state.pour + 1.35);
+        el("pourFill").style.width = `${state.pour}%`;
+        el("pourReadout").textContent = `${Math.round(state.pour * .75)} ml`;
+        if (state.pour >= 100) stopPour();
+      }, 26);
+    }
+
+    function stopPour() {
+      if (!state.pourTimer) return;
+      clearInterval(state.pourTimer);
+      state.pourTimer = null;
+      el("holdPourButton").classList.remove("pouring");
+      el("holdPourButton").textContent = "重新倒一次";
+      el("pourNextButton").disabled = state.pour < 8;
+    }
+
+    function renderIngredientStep() {
+      el("mixContent").innerHTML = `
+        <section class="mix-step">
+          <div><div class="eyebrow">Step 2 / 3</div><h3>决定甜度与冰量</h3></div>
+          <p>这些选择没有标准答案；它们会改变酒的性格，也会改变 Morrison 对你的判断。</p>
+          <div>
+            <div style="margin-bottom:9px;color:#c9bea7;font-size:12px">蜂蜜糖浆</div>
+            <div class="option-grid" id="honeyOptions">
+              ${optionCard("honey", 0, "不加", "酒味最直接")}
+              ${optionCard("honey", 1, "一匙", "压住一点棱角")}
+              ${optionCard("honey", 2, "两匙", "甜味明显")}
+            </div>
+          </div>
+          <div class="mix-divider"></div>
+          <div>
+            <div style="margin-bottom:9px;color:#c9bea7;font-size:12px">冰块</div>
+            <div class="option-grid" id="iceOptions">
+              ${optionCard("ice", 1, "一块", "稀释较少")}
+              ${optionCard("ice", 2, "两块", "中等稀释")}
+              ${optionCard("ice", 3, "三块", "融水更多")}
+            </div>
+          </div>
+          <div class="mix-nav"><button class="secondary-button" id="ingredientBackButton">← 重倒基酒</button><button class="primary-button" id="ingredientNextButton" disabled>开始搅拌 →</button></div>
+        </section>`;
+
+      document.querySelectorAll("[data-option-group]").forEach(button => button.addEventListener("click", () => selectOption(button)));
+      el("ingredientBackButton").addEventListener("click", renderPourStep);
+      el("ingredientNextButton").addEventListener("click", renderStirStep);
+    }
+
+    function optionCard(group, value, title, text) {
+      const selected = state[group] === value ? " selected" : "";
+      return `<button class="option-card${selected}" data-option-group="${group}" data-option-value="${value}"><strong>${title}</strong><small>${text}</small></button>`;
+    }
+
+    function selectOption(button) {
+      const group = button.dataset.optionGroup;
+      state[group] = Number(button.dataset.optionValue);
+      document.querySelectorAll(`[data-option-group="${group}"]`).forEach(node => node.classList.toggle("selected", node === button));
+      el("ingredientNextButton").disabled = state.honey === null || state.ice === null;
+    }
+
+    function renderStirStep() {
+      el("mixContent").innerHTML = `
+        <section class="mix-step">
+          <div><div class="eyebrow">Step 3 / 3</div><h3>决定什么时候停手</h3></div>
+          <p>开始后，指针会随着搅拌时间前进。停得太早，酒还没打开；停得太晚，融水会把它压薄。</p>
+          <div class="stir-track"><div class="stir-marker" id="stirMarker"></div></div>
+          <div class="track-labels"><span>刚开始</span><span>充分融合</span><span>过度稀释</span></div>
+          <button class="hold-button" id="stirButton">开始搅拌</button>
+          <div class="mix-nav"><button class="secondary-button" id="stirBackButton">← 调整配料</button><button class="primary-button" id="finishMixButton" disabled>完成调制</button></div>
+        </section>`;
+      el("stirButton").addEventListener("click", handleStirButton);
+      el("stirBackButton").addEventListener("click", () => { cancelStir(); renderIngredientStep(); });
+      el("finishMixButton").addEventListener("click", finishMix);
+    }
+
+    function handleStirButton() {
+      if (!state.stirAnimation) startStir();
+      else stopStir();
+    }
+
+    function startStir() {
+      state.stir = 0;
+      state.stirStart = performance.now();
+      el("stirButton").textContent = "现在停手";
+      el("stirButton").classList.add("pouring");
+      const animate = now => {
+        const progress = Math.min(100, ((now - state.stirStart) / 3200) * 100);
+        state.stir = progress;
+        el("stirMarker").style.left = `calc(${progress}% - 3px)`;
+        if (progress >= 100) stopStir();
+        else state.stirAnimation = requestAnimationFrame(animate);
+      };
+      state.stirAnimation = requestAnimationFrame(animate);
+    }
+
+    function stopStir() {
+      if (!state.stirAnimation) return;
+      cancelAnimationFrame(state.stirAnimation);
+      state.stirAnimation = null;
+      el("stirButton").textContent = "重新搅拌";
+      el("stirButton").classList.remove("pouring");
+      el("finishMixButton").disabled = false;
+    }
+
+    function cancelStir() {
+      if (state.stirAnimation) cancelAnimationFrame(state.stirAnimation);
+      state.stirAnimation = null;
+    }
+
+    function finishMix() {
+      cancelStir();
+      const dilution = Math.min(100, Math.round(state.ice * 15 + state.stir * .55));
+      const strength = Math.max(0, Math.min(100, Math.round(state.pour * 1.15 - (state.ice - 1) * 7 - state.stir * .1)));
+      const sweetness = state.honey * 38;
+      let type = "balanced";
+      if (strength >= 68 && dilution < 55 && state.honey <= 1) type = "strong";
+      else if (strength <= 38 || dilution >= 72) type = "thin";
+
+      const descriptions = {
+        strong: { name: "烈口威士忌", note: "酒精的棱角没有被藏起来。第一口先让人警觉，再让人暴露自己是否真的失去控制。" },
+        balanced: { name: "平衡调和酒", note: "甜、烈与融水互相压住。没有哪一种味道先替喝酒的人说完全部。" },
+        thin: { name: "过度稀释的威士忌", note: "酒停在冰上太久，原本的味道被一层层兑淡；它仍然能喝，却已经不像刚开始的自己。" }
+      };
+      state.result = { type, strength, sweetness, dilution, ...descriptions[type] };
+      renderResultStep();
+    }
+
+    function renderResultStep() {
+      const result = state.result;
+      el("mixContent").innerHTML = `
+        <section class="mix-step">
+          <div class="result-grid">
+            <div class="drink-visual"><img src="${ASSETS.drink}" alt="完成的威士忌调酒"></div>
+            <div class="result-copy">
+              <div class="eyebrow">Mix Complete / 调制完成</div>
+              <h3>${result.name}</h3>
+              <p>${result.note}</p>
+              ${statRow("烈度", result.strength)}
+              ${statRow("甜度", result.sweetness)}
+              ${statRow("稀释", result.dilution)}
+              <div class="modal-actions"><button class="secondary-button" id="remixButton">重新调制</button><button class="primary-button" id="serveButton">端给 Morrison →</button></div>
+            </div>
+          </div>
+        </section>`;
+      el("remixButton").addEventListener("click", () => {
+        state.pour = 0; state.honey = null; state.ice = null; state.stir = null; state.result = null;
+        renderPourStep();
+      });
+      el("serveButton").addEventListener("click", startDialogue);
+    }
+
+    function statRow(label, value) {
+      return `<div class="stat"><span>${label}</span><div class="stat-bar"><span style="width:${value}%"></span></div><strong>${value}</strong></div>`;
+    }
+
+    const commonOpening = [
+      { speaker: "旁白", text: "Morrison 接过杯子，没有立刻喝。他先看酒面，又扫了一眼 Zack 手边的量杯。", mood: "sluggish", narrator: true },
+      { speaker: "Morrison", text: "给警察送酒？Brennan，你办事比市政厅快——至少杯子不会让我填三份表。", mood: "sluggish" },
+      { speaker: "Zack", text: "Old Crow。储藏室药用酒箱里的。", mood: "sluggish" },
+      { speaker: "Morrison", text: "哦，药用。贴上那两个字，威士忌就学会穿白大褂了。", mood: "clear" },
+      { speaker: "Zack", text: "我调过。", mood: "clear" },
+      { speaker: "Morrison", text: "看得出来。酒面、水线、杯壁——三个证人，没一个商量好口供。", mood: "clear" },
+      { speaker: "Zack", text: "那就尝尝。", mood: "clear" }
+    ];
+
+    const branchDialogue = {
+      strong: [
+        { speaker: "旁白", text: "Morrison 抿了一口，没有皱眉，只把杯子放回原来的水印上。", mood: "sluggish", narrator: true },
+        { speaker: "Morrison", text: "嚯。这杯不懂遮掩——烈得像我第一次赢钱那天。", mood: "sluggish" },
+        { speaker: "Zack", text: "第一次赢钱？", mood: "clear" },
+        { speaker: "Morrison", text: "赛马场。那会儿我还以为，运气偶尔肯替市政府给警察补发薪水。", mood: "clear" },
+        { speaker: "Morrison", text: "我太太比我更明白体面值多少钱。我只是不想让家里看起来，配不上一个做了二十年警察的人。", mood: "clear" }
+      ],
+      balanced: [
+        { speaker: "旁白", text: "Morrison 连喝两小口，第二口时视线已经越过杯沿，落在 Zack 脸上。", mood: "sluggish", narrator: true },
+        { speaker: "Morrison", text: "嗯。先甜，后烈，水把棱角按得刚好。收拾得真体面。", mood: "clear" },
+        { speaker: "Morrison", text: "我太太最喜欢这个词。", mood: "clear" },
+        { speaker: "Zack", text: "听起来，维持体面并不便宜。", mood: "clear" },
+        { speaker: "Morrison", text: "比警察薪水贵。后来我在赛马场找到了补差价的办法——至少第一次看起来是。", mood: "sluggish" }
+      ],
+      thin: [
+        { speaker: "旁白", text: "Morrison 喝了一口，低头看着杯中融化的冰。", mood: "sluggish", narrator: true },
+        { speaker: "Morrison", text: "水多了。可装进一只好杯子，端给客人时照样像回事。", mood: "sluggish" },
+        { speaker: "Morrison", text: "我太太也喜欢这种办法。", mood: "clear" },
+        { speaker: "Zack", text: "把酒兑淡？", mood: "clear" },
+        { speaker: "Morrison", text: "把日子兑薄，把客厅擦亮。她在意别人看见的东西。我去赛马场，也是因为不想让家里有任何东西显得便宜。", mood: "clear" }
+      ]
+    };
+
+    const morrisonStory = [
+      { speaker: "Morrison", text: "我太太想换掉家里那套有缺口的餐盘。不是因为她爱餐盘，是她不能让来做客的太太们看见盘沿的缺口。", mood: "clear" },
+      { speaker: "Morrison", text: "我也一样。我不能让她们看见，一个当了二十年警察的人，连自己的客厅都供不起。", mood: "clear" },
+      { speaker: "Morrison", text: "第一次我只押了两块钱。那匹马最后半圈才从后面冲出来。", mood: "sluggish" },
+      { speaker: "Morrison", text: "警察的薪水每个月都写死了，马在冲过终点前却什么都有可能。看台上的几分钟里，银行家和警察都只能等同一条线。", mood: "clear" },
+      { speaker: "Zack", text: "那次你押对了。", mood: "clear" },
+      { speaker: "Morrison", text: "正好够付客厅的窗帘和那套餐盘。她没问钱从哪儿来，我也没主动说。", mood: "sluggish" },
+      { speaker: "旁白", text: "Morrison 又喝了一口。这一次，他没有再评价酒的味道。", mood: "sluggish", narrator: true },
+      { speaker: "Morrison", text: "后来我再去，不是因为喜欢马。是因为上一次输了，下一次就得负责把它赢回来。", mood: "clear" },
+      { speaker: "Morrison", text: "再后来，有人告诉我，账可以晚几天算。", mood: "clear" },
+      { speaker: "Zack", text: "他要什么？", mood: "sharp" },
+      { speaker: "Morrison", text: "谈不上要。他只希望某天夜里，我巡到码头时，把车开去另一条路。", mood: "clear" },
+      { speaker: "Morrison", text: "十分钟而已。我告诉自己，十分钟不会害死谁。", mood: "clear" },
+      { speaker: "旁白", text: "Zack 没有接话。Morrison 转动杯子的手停了下来。", mood: "sharp", narrator: true },
+      { speaker: "Morrison", text: "后来每件事，都只差十分钟。", mood: "sharp" },
+      { speaker: "Morrison", text: "她继续换桌布、擦餐盘，招待那些值得招待的客人。我继续让那个家看起来像个体面人住的地方。", mood: "clear" },
+      { speaker: "Morrison", text: "我们都很有礼貌。她不问钱从哪儿来，我不问自己什么时候该停。", mood: "clear" },
+      { speaker: "Zack", text: "你是在怪她吗？", mood: "sharp" },
+      { speaker: "Morrison", text: "不。路是我自己走的。", mood: "sharp" },
+      { speaker: "Morrison", text: "只是家里越体面，我就越需要下一次赢钱——或者下一次十分钟。", mood: "clear" }
+    ];
+
+    const commonEnding = [
+      { speaker: "Zack", text: "还要一杯？", mood: "sluggish" },
+      { speaker: "Morrison", text: "不了。第一杯是酒，第二杯就成工作了。", mood: "sluggish" },
+      { speaker: "Zack", text: "你刚才一直在工作？", mood: "sluggish" },
+      { speaker: "Morrison", text: "Brennan，我只是个下班都下不利索的老警察。别把我说得那么勤快。", mood: "clear" },
+      { speaker: "Zack", text: "杯子已经空了。", mood: "clear" },
+      { speaker: "Morrison", text: "眼睛可没有。", mood: "sharp" },
+      { speaker: "旁白", text: "他把空杯推回吧台。", mood: "clear", narrator: true },
+      { speaker: "Morrison", text: "收起来吧。让人看见我喝好酒，会以为这城开始按本事发薪水了。", mood: "sluggish" }
+    ];
+
+    function startDialogue() {
+      state.dialogue = [...commonOpening, ...branchDialogue[state.result.type], ...morrisonStory, ...commonEnding];
+      state.dialogueIndex = 0;
+      el("mixScreen").classList.add("hidden");
+      el("dialogueScreen").classList.remove("hidden");
+      setStep(5);
+      renderDialogueLine();
+    }
+
+    function renderDialogueLine() {
+      if (state.dialogueIndex >= state.dialogue.length) {
+        completeDialogue();
+        return;
+      }
+      const line = state.dialogue[state.dialogueIndex];
+      el("dialogueSpeaker").textContent = line.speaker;
+      el("dialogueText").textContent = line.text;
+      el("dialogueText").classList.toggle("narrator", Boolean(line.narrator));
+      const portraits = { sluggish: ASSETS.morrisonSluggish, sharp: ASSETS.morrisonSharp, clear: ASSETS.morrisonClear };
+      el("morrisonPortrait").src = portraits[line.mood] || ASSETS.morrisonSluggish;
+      el("nextDialogueButton").textContent = state.dialogueIndex === state.dialogue.length - 1 ? "结束支线" : "继续";
+    }
+
+    function nextDialogue() {
+      state.dialogueIndex += 1;
+      renderDialogueLine();
+    }
+
+    function completeDialogue() {
+      el("summaryDrink").textContent = state.result.name;
+      el("summaryMetrics").textContent = `烈度 ${state.result.strength} · 甜度 ${state.result.sweetness} · 稀释 ${state.result.dilution}`;
+      showOverlay("summaryOverlay");
+    }
+
+    function mixAgain() {
+      hideOverlay("summaryOverlay");
+      el("dialogueScreen").classList.add("hidden");
+      el("mixScreen").classList.remove("hidden");
+      state.pour = 0; state.honey = null; state.ice = null; state.stir = null; state.result = null;
+      setStep(4);
+      renderPourStep();
+    }
+
+    function restart() {
+      cancelStir();
+      if (state.pourTimer) clearInterval(state.pourTimer);
+      Object.assign(state, {
+        scene: "storage", collected: false, bottlePlaced: false,
+        pour: 0, honey: null, ice: null, stir: null, result: null,
+        dialogue: [], dialogueIndex: 0, pourTimer: null, stirAnimation: null, stirStart: 0
+      });
+      ["itemOverlay", "caseOverlay", "transitionOverlay", "summaryOverlay"].forEach(hideOverlay);
+      el("mixScreen").classList.add("hidden");
+      el("dialogueScreen").classList.add("hidden");
+      el("sceneScreen").classList.remove("hidden");
+      el("sceneFrame").style.setProperty("--scene-ratio", "2.15");
+      el("sceneFrame").style.backgroundImage = `url(${ASSETS.storage})`;
+      el("sceneName").textContent = "蓝月亮·储藏室";
+      el("sceneTime").textContent = "夜间 · 员工区域";
+      el("objectiveText").textContent = "储藏室里有不少普通酒瓶。其中一瓶的药用标签保存得格外完整。";
+      el("bottleHotspot").classList.remove("hidden");
+      el("barHotspot").classList.add("hidden");
+      el("travelButton").classList.add("hidden");
+      el("caseboardButton").disabled = true;
+      setStep(1);
+    }
+
+    document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => hideOverlay(button.dataset.close)));
+    el("bottleHotspot").addEventListener("click", openItem);
+    el("collectBottleButton").addEventListener("click", collectBottle);
+    el("caseboardButton").addEventListener("click", openGeneralCaseboard);
+    el("travelButton").addEventListener("click", travelToBar);
+    el("barHotspot").addEventListener("click", openStation);
+    el("nextDialogueButton").addEventListener("click", nextDialogue);
+    el("restartButton").addEventListener("click", restart);
+    el("summaryRestartButton").addEventListener("click", restart);
+    el("mixAgainButton").addEventListener("click", mixAgain);
+
+    initializeAssets();
+    restart();
+  </script>
+</body>
+</html>

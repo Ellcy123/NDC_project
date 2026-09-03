@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "205",
+  "poseId": "SC2392-mickey-legal-pressure-v8",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\SC2392_avg_MooreOldKey\\handoff\\mickey_v8\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC\\Assets\\Resources\\Art\\Scene\\Backgrounds\\EPI02\\SC2212_bg_LakeshoreTrust_VIPParlor.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\miky.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\SC2392_avg_MooreOldKey\\handoff\\mickey_v8\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    1306,
+    358,
+    2252,
+    1540
+  ],
+  "basePaddedCropBBox": [
+    1506,
+    358,
+    2053,
+    1540
+  ],
+  "generationAspectRatio": [
+    4.0,
+    5.0
+  ],
+  "actualCropAspectRatio": 0.800338,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    1656,
+    508,
+    1903,
+    1390
+  ],
+  "actorBBoxLocal": [
+    350,
+    150,
+    597,
+    1032
+  ],
+  "photoshopPasteTopLeft": [
+    1306,
+    358
+  ],
+  "sourceHashes": {
+    "scene": "54179ed52f61454d3bc24d7580d053ce2f8ec1af7fd2b039c299c12650d5d28b",
+    "whiteboxComposite": "31dafababc09f001142f1f8a9780454218e1c78301d6168bb8655f2f4a7df52e",
+    "characterCard": "82e48fa190d8391f9e6e3687277a4b2a8633430ec1f2ccb9bedbfe8f296beac0"
+  },
+  "generationPrompt": "Base the result on Image 1. Replace only the reviewed purple anatomical mannequin with Mickey Donnelly from Image 3. Mickey is applying quiet legal pressure: a tall lean lawyer standing in a restrained vertical line with a slight forward bias, composed and watchful, facing screen-right and looking directly at Moore. Both hands remain controlled near his jacket and waist; neither hand reaches for the key and he holds no prop. The pose must feel sustainable for ten seconds. Preserve the exact approved whitebox pose, occupied volume, anatomical scale, head size, foot contacts, depth, and local position. Image 1 is a deterministic crop from Image 2. Keep all scene pixels, camera geometry, bookcase and sofa topology, floor perspective, and local object relationships unchanged. Use Image 2 only to match the room's warm window light, deep green-black shadows, palette, and color grade. Add only Mickey's necessary contact shadow. Use Image 3 only for Mickey's recognizable handsome angular face, dark swept hair, tall lean build, brown pinstripe three-piece suit, white shirt, patterned brown tie, pocket square, brown shoes, costume structure, palette, brushwork, and line language. Keep his waist narrow and shoulders natural; do not inflate his chest or arms. Remove the purple mannequin completely. Preserve the NDC graphic-noir style: extremely bold heavy inked outer silhouette with drastic line-weight variation, layered garment contours, flat dark hair mass, simplified planar face, hard-edge color blocks, extreme chiaroscuro, solid black shadow masses, matte surfaces, and restrained texture density appropriate to this midground depth. Exactly one person. No document, key, cigar, or other prop. No extra character, extra hand, missing finger, hand-to-hand transfer, camera-facing presentation, wide stance, reaching, combat posture, watermark, text, or redesign of the room.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}
