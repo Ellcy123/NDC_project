@@ -7,6 +7,14 @@ description: "Operate Midjourney for character-free NDC scene-background generat
 
 Submit, inspect, and iterate the complete required NDC base-background view set. Audit every result against the source, camera contract, empty-background rule, layer plan, canvas plan, and Photoshop finishing handoff.
 
+## Mandatory stage-end visual self-check gate
+
+Every art-production stage executed by this Skill must end with an actual visual self-check before its output may be accepted, passed to a later formal stage, selected, downloaded for handoff, or released. This includes reference-role acceptance, each initial grid, each variation or resubmission round, candidate selection, local-file acceptance, and final MJ-to-Photoshop handoff. Inspect the current whole image at `100%` and every applicable local region at nearest-neighbor `200%` or through complete original-pixel tiles. Compare against the current handoff, camera/spatial contract, empty-background/layer rules, canvas plan, approved style authority, texture contract, reference-leakage risks, and every other applicable visual requirement.
+
+Write one current `ndc-stage-visual-self-check/v1` JSON record per executed stage. It must bind the stage ID, reviewer/date, input and output paths plus SHA-256 when a local file exists, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, missing required view, stale local hash, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not select, advance, or call the result passed. Browser completion, job status, grid existence, dimensions, URLs, or absence of a detected error cannot write visual `PASS`.
+
+After a block, return to the responsible round or handoff-repair stage, perform the missing inspection and authorized variation/resubmission, then repeat the visual self-check on the new current output. Release only after the current candidate has a passing record. When a local file exists, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. When browser-only evidence has not yet produced a local file, save the same record with page/job identity and review-view evidence, but treat formal file delivery as incomplete until a downloaded current file is hash-bound and validated. Existing per-view generation budgets still apply, and exhausting one leaves an unresolved candidate rather than weakening this gate.
+
 ## Read the relevant references
 
 1. Read [handoff contract](references/handoff-contract.md) before accepting a job.
@@ -32,6 +40,10 @@ Require all of the following:
 3. `original_requirement` plus `normalized_requirement`, the shared audit contract.
 
 Require `visual_brief`, `layer_plan`, `canvas_plan`, `time_variant_plan`, and a `scene_description` plus `camera_contract` inside every view entry. Treat camera, spatial relations, scale landmarks, removable layers, and edge-extension constraints as audit inputs. Do not submit `ndc-mj-scene/v1` or `v2` directly; migrate it through `ndc-scene-to-mj-prompt` to `v3`.
+
+<!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
+Require the v3 `texture_contract`. It must lock the approved style authority, separate focal, secondary, quiet, and distant detail zones, state material-specific texture direction/scale/density/continuity, and prohibit non-semantic micro-detail without using style-changing cleanup language. Repair a missing or contradictory contract through `ndc-scene-to-mj-prompt` before submission.
+<!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 Accept the full `ndc-mj-scene/v3` fields described in [handoff contract](references/handoff-contract.md). If any required view prompt is absent or structurally conflicts with a hard requirement, use `ndc-scene-to-mj-prompt` to repair the handoff before operating Midjourney. Do not infer a missing audit contract from prompts alone.
 
@@ -104,6 +116,12 @@ Use `pass`, `partial`, or `fail` for each category. Do not reject an image only 
 
 The initial whole-grid inspection is not sufficient for a formal style pass. After a candidate clears hard camera, structure, and background vetoes and is being considered for selection, inspect its complete image, then use the scene tiling helper to cover every original pixel with overlapping tiles and inspect all tiles. Record `whole_image_checked`, `local_tile_coverage_complete`, tile count, and findings for line, brush direction and scale, hard-soft edge hierarchy, material-specific texture, rain/grain behavior, repeated patterns, local blur/sharpen mismatch, seams, and generation defects. Classify each observation as stable, branch, minority, or artifact before comparing it with the prompt. A candidate with incomplete local coverage cannot receive a final style `pass`.
 
+<!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
+Judge `STYLE_LOCK_GATE` and `TEXTURE_COHERENCE_GATE` separately. A cleaner image that changes palette, value compression, line hierarchy, grouped shadows, hard-soft edges, native brush language, or material treatment fails style lock. A style-faithful image still fails texture coherence when quiet planes accumulate fragmented marks, material texture loses direction or continuity, texture scale ignores depth, repeated stamps appear, or non-semantic micro-detail competes with gameplay focal areas. Both gates must be `PASS`; `FAIL` or `NOT_CHECKED` blocks selection and formal handoff.
+
+For a selected local asset, save an `ndc-texture-coherence/v1` record and validate it with `D:\Codex\NDC\scripts\validate-ndc-texture-gate.py`. The validator proves evidence completeness only; browser review without a downloaded local asset must still report the same named checks and remains incomplete for formal file delivery until its record is validated.
+<!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
+
 For composition and camera, explicitly compare the image with that view entry's scene description and camera contract:
 
 - perspective type, view direction, camera height, and horizon;
@@ -138,6 +156,9 @@ For `repair-and-resubmit`, preserve every accepted clause in that view and chang
 - Unwanted people: first remove portrait or identity references that do not belong in the scene.
 - Mutable evidence or transient props baked into the base: remove their positive prompt clauses and reserve only an empty alignment area.
 - Poor exploration extension edges: simplify side structures and lighting so Photoshop Firefly has coherent continuation targets without changing the central safe area.
+- Local repeated texture, seam, or fragmented marks: use `vary-subtle` from the closest structurally passing candidate and change only the documented texture delta.
+- Whole-frame micro-detail inflation or uniform texture stamping: discard that candidate branch and `repair-and-resubmit` from the original handoff, approved style references, and texture contract; never vary from the failed texture source.
+- Style drift disguised as cleanup: restore the approved style authority and reject the cleaned/restyled candidate even when its surfaces appear smoother.
 
 Use `ndc-scene-to-mj-prompt` for structural rewrites. Supply it with the previous handoff, the failed view id, and a factual failure report, not a vague request to “make it better.” Preserve already passing views and continue only within the failed view's authorized iteration budget.
 
@@ -154,6 +175,7 @@ Return for each required view:
 - selected action and its requirement-based reason;
 - remaining iteration budget for that view;
 - final passing candidate or the unresolved blocker.
+- separate `STYLE_LOCK_GATE` and `TEXTURE_COHERENCE_GATE` statuses, evidence paths/URLs, and validated texture-record status when a local formal file exists;
 - canvas status: `MJ 2:1 base passed, 16:10 post-crop pending` or `MJ 2:1 base passed, Photoshop Firefly horizontal extension pending`;
 - geometry-locked day/night Photoshop handoff when a time variant is required;
 - separate-layer list for collectibles, transient story content, close-ups, and scan overlays.

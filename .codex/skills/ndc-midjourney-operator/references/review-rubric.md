@@ -44,6 +44,23 @@ Use this calibrated scene baseline when comparing references and candidates:
 
 Fail style review when texture is uniformly stamped across depth, rain or brush direction contradicts surfaces and perspective, all architecture receives the same heavy contour, distant edges are sharpened like the foreground, or local seams/duplicated patterns are visible.
 
+<!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
+### B2. Texture coherence — independent fail-closed gate
+
+Do not merge this gate into a generic style score. First freeze the approved palette/value compression, line-weight hierarchy, grouped shadows, hard-soft edge behavior, native brush language, and material treatment under `STYLE_LOCK_GATE`. Then evaluate only texture frequency, continuity, scale, and distribution under `TEXTURE_COHERENCE_GATE`.
+
+Require all of the following:
+
+- large shapes and grouped shadows remain readable before surface detail;
+- semantic detail concentrates around the declared focal architecture, gameplay route, and permanent narrative focal areas;
+- secondary structures use limited material cues and quiet planes remain quiet without losing reference-supported grain or brush language;
+- material texture follows the surface, perspective, weather, lighting, and depth, with a consistent scale for that plane;
+- distant areas do not acquire foreground-strength hard micro-edges;
+- repeated stamps, random cracks, speckled noise, fragmented short marks, arbitrary micro-ornament, and uniform sharpening are absent.
+
+Fail when either gate is `FAIL` or `NOT_CHECKED`. A texture-coherent image with changed art style is not a pass; a style-faithful image with broken or overfilled texture is not a pass. For a local formal file, validate the fail-closed record with `D:\Codex\NDC\scripts\validate-ndc-texture-gate.py`; automatic image-quality scores may screen candidates but cannot approve either artistic gate.
+<!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
+
 ### C. Broad spatial structure
 
 Check scene function, navigability, foreground/middle/background separation, architectural hierarchy, and game-background readability. For an exploration scene, the central safe area must stay compositionally stable and the left/right edges must be plausible continuation seams for Photoshop expansion.
@@ -76,7 +93,7 @@ Check architecture, furniture, technology, materials, and signage. Look for subj
 
 ## Grid action
 
-- A candidate passes the hard vetoes and A–G: select the strongest and stop that view unless refinement was requested.
+- A candidate passes the hard vetoes, A–G, `STYLE_LOCK_GATE`, and `TEXTURE_COHERENCE_GATE`: select the strongest and stop that view unless refinement was requested.
 - A candidate is structurally valid with a localized finish issue: try a subtle variation first.
 - A candidate is partial in A, C, D, or E but otherwise strong: consider a strong variation only if it can preserve the valid base.
 - All candidates repeat the same camera, structure, scale, or layer defect: repair the prompt/reference plan and resubmit.

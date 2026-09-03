@@ -122,6 +122,27 @@ Select only supported clauses. Shorten the style block when it competes with sce
 
 Support must come from both complete-image review and complete local-tile coverage under `style-analysis-protocol.md`. Do not add brushwork, texture, edge, grain, or material claims from a reduced overview alone. Record whether a clause is a stable cross-reference trait, a scene/material branch, a minority option, or an artifact before promoting it into executable prompt language.
 
+<!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
+### Style-locked texture-coherence control
+
+Texture coherence is a rendering discipline, not a new style. Preserve the approved scene palette, value compression, line hierarchy, grouped shadows, hard-soft edge behavior, native brush language, material treatment, and every supported branch clause. Never use `simplify the art style`, `minimalist illustration`, `flat vector style`, `smooth clean surfaces`, `remove brush texture`, or a similar global cleanup instruction.
+
+Build one `texture_contract` before drafting view prompts:
+
+- `focal_detail_zones`: gameplay-critical architecture, routes, and permanent narrative focal areas where semantic detail must remain readable;
+- `secondary_detail_zones`: supporting structures that need silhouette, major turns, and limited material cues;
+- `quiet_zones`: broad walls, floors, ceilings, shadow masses, sky, or other planes that retain only reference-supported matte grain or directional brush behavior;
+- `distant_zones`: large value groups and atmospheric transitions without newly invented hard micro-edges;
+- `material_texture_rules`: direction, scale, density, and continuity by material, distance, weather, and perspective;
+- `prohibited_artifacts`: non-semantic micro-detail, repeated texture stamps, random cracks, speckled noise, fragmented short brush marks, decorative clutter, and uniformly sharpened edges.
+
+Use this control language after the approved rendering-language clauses and before exclusions:
+
+`preserve the approved NDC rendering language exactly, organize the scene through compressed large-scale shapes and grouped shadow masses, material texture remains directional, continuous, scale-aware and subordinate to object structure, perspective, distance and lighting, concentrate semantic detail around the declared focal architecture and gameplay areas, keep secondary surfaces restrained and quiet planes visually quiet while retaining the approved native brush language, broad distant value groups with no newly invented hard micro-edges`
+
+Do not paste a universal texture-negative parameter into every Midjourney prompt. Add a targeted exclusion only after a real batch shows one recurrent damaging artifact. Texture control must never delete supported weather grain, wear, dry brush, impasto, paper grain, architectural linework, or identity-bearing detail merely because it increases local frequency.
+<!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
+
 Useful camera language includes:
 
 - the exact exploration lock: `eye-level three-point perspective, camera optical center 1.7–1.8 meters above the floor, horizon at the upper third`;
@@ -216,3 +237,5 @@ The window type matters; the exact count does not.
 - Shared scene facts do not drift between the three non-exploration prompts.
 - Chinese counterpart preserves the same priorities instead of expanding the design.
 - Every style-analysis-derived clause has complete-image evidence and complete overlap-safe local coverage; the analysis records image entries, deduplicated images, tile count, stable traits, branch traits, minority traits, and artifacts.
+- `texture_contract` locks approved style authority, identifies focal/secondary/quiet/distant zones, and defines material-specific direction, scale, density, continuity, and prohibited artifacts.
+- Every view implements the same texture contract without changing the approved palette, value structure, line hierarchy, brush language, edge hierarchy, or material treatment.

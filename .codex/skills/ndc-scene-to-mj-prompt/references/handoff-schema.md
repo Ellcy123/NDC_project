@@ -35,6 +35,26 @@ normalized_requirement:
   must_not_have:
     - "shared prohibited subject or damaging failure"
 
+texture_contract:
+  style_authority_locked: true
+  approved_style_authority:
+    - "approved reference or current user instruction"
+  immutable_style_traits:
+    - "palette/value, line hierarchy, grouped shadows, edge behavior, brush language, or material treatment"
+  focal_detail_zones:
+    - "identity, gameplay, or permanent narrative focal area"
+  secondary_detail_zones:
+    - "supporting structure with limited material cues"
+  quiet_zones:
+    - "broad plane that keeps only approved restrained texture"
+  distant_zones:
+    - "large value group without invented hard micro-edges"
+  material_texture_rules:
+    - "material: direction, scale, density, continuity, distance response"
+  prohibited_artifacts:
+    - "non-semantic micro-detail, repeated stamps, random cracks, speckled noise, fragmented short marks, uniform sharpening"
+  style_changing_cleanup_language_forbidden: true
+
 layer_plan:
   base_environment_narrative:
     - "permanent content allowed in the generated background"
@@ -143,6 +163,8 @@ operator_notes:
 - Yellow or neutral character silhouettes are scale-review overlays only. Do not put them in prompt text or references. Populate `camera_contract.scale_calibration` with architectural landmarks instead.
 - Only permanent environmental storytelling belongs in `layer_plan.base_environment_narrative`. Put every collectible, disappearing object, character, body, Loop-specific prop, close-up clue, and scan visualization in its separate layer list and exclude it from the generated base prompt.
 - `normalized_requirement` explains shared priority. Do not promote harmless object counts into `hard`.
+- `texture_contract` is mandatory. It controls spatial detail density and texture coherence only; it cannot alter the approved style authority or promote a reference artifact into a style trait.
+- `style_authority_locked` and `style_changing_cleanup_language_forbidden` must both be true. Every view prompt implements the same focal/secondary/quiet/distant hierarchy and material rules.
 - Each `prompt_en` is the exact submission text for its own view. The operator must not silently rewrite it before that view's first run.
 - Each `prompt_zh` is for review and must not introduce details absent from its paired `prompt_en`.
 - `references` includes rejected candidates so the operator does not accidentally upload them.

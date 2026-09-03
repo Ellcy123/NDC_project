@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NDC 固定镜头表演调度编辑器</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Microsoft YaHei", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #17191d; color: #eef0f3; }
+    header { padding: 12px 16px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #343841; }
+    header strong { margin-right: auto; }
+    button, .file, input, select, textarea { background: #252932; color: #eef0f3; border: 1px solid #454b58; border-radius: 6px; }
+    button, .file { padding: 8px 10px; cursor: pointer; }
+    .file input { display: none; }
+    main { display: grid; grid-template-columns: minmax(520px, 1fr) 340px; height: calc(100vh - 58px); }
+    .stage { padding: 14px; min-width: 0; overflow: auto; }
+    .canvas-wrap { position: relative; width: 100%; aspect-ratio: 16 / 10; background: #0c0d10; border: 1px solid #454b58; }
+    canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+    aside { border-left: 1px solid #343841; padding: 14px; overflow: auto; }
+    label { display: block; margin: 0 0 10px; font-size: 12px; color: #bfc4ce; }
+    input, select, textarea { width: 100%; padding: 7px 8px; margin-top: 4px; }
+    textarea { min-height: 72px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .hint { color: #9aa2b1; font-size: 12px; line-height: 1.55; }
+    .status { color: #8be9a8; font-size: 12px; }
+    hr { border: 0; border-top: 1px solid #343841; margin: 14px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>NDC 固定镜头表演调度编辑器</strong>
+    <label class="file">载入场景<input id="sceneFile" type="file" accept="image/*"></label>
+    <label class="file">叠加 UI 参考<input id="uiFile" type="file" accept="image/*"></label>
+    <label class="file">载入 JSON<input id="jsonFile" type="file" accept="application/json,.json"></label>
+    <button id="exportBtn">导出合同</button>
+  </header>
+  <main>
+    <section class="stage">
+      <div class="canvas-wrap"><canvas id="canvas" width="2560" height="1600"></canvas></div>
+      <p class="hint">拖动红色关节点与头框控制点；拖动黄色动作外框角点；拖动青色视线目标。场景和 UI 只在本机浏览器内读取，不会上传。</p>
+      <div id="status" class="status">等待载入固定镜头。</div>
+    </section>
+    <aside>
+      <div class="row">
+        <label>角色 ID<input id="actorId" value="actor-01"></label>
+        <label>姿势 ID<input id="poseId" value="scene-actor-state-v1"></label>
+      </div>
+      <div class="row">
+        <label>姿态类别<select id="placementClass"><option>standing</option><option>seated</option><option>lying</option><option>walking</option><option>leaning</option></select></label>
+        <label>景深<select id="depthClass"><option>midground</option><option>foreground</option><option>background</option></select></label>
+      </div>
+      <label>可供性区域 ID<input id="zoneId" value="zone-stand-01"></label>
+      <label>动作<textarea id="action">自然地执行当前剧情动作</textarea></label>
+      <label>朝向<input id="facing" value="three-quarter toward action target"></label>
+      <div class="row">
+        <label>视线类型<select id="gazeType"><option>scene-object</option><option>player</option><option>actor</option><option>offscreen</option><option>none</option></select></label>
+        <label>视线目标 ID<input id="gazeId" value="scene-object-01"></label>
+      </div>
+      <label>左手动作<input id="leftHandAction" value="relaxed contextual action"></label>
+      <label>右手动作<input id="rightHandAction" value="relaxed contextual action"></label>
+      <label>支撑物体<input id="supportObject" value="floor-01"></label>
+      <hr>
+      <label><input id="showUi" type="checkbox" checked style="width:auto"> 显示 UI 参考</label>
+      <label><input id="showBoxes" type="checkbox" checked style="width:auto"> 显示头框与动作外框</label>
+      <label>UI 不透明度<input id="uiOpacity" type="range" min="0" max="1" step="0.05" value="0.75"></label>
+      <p class="hint">导出的 JSON 是人物 placement/poseDefinition 片段，仍需时间轴合同、剧情节拍、比例锚点和可供性合同共同通过，不能单独作为生成授权。</p>
+    </aside>
+  </main>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const statusEl = document.getElementById('status');
+    let scene = null, ui = null, dragging = null;
+    let state = {
+      sceneSize: [2560, 1600],
+      headBox: [1160, 365, 1270, 505],
+      actionBBox: [1010, 345, 1430, 1390],
+      gazePoint: [1560, 610],
+      points: {
+        neck:[1215,525], leftShoulder:[1150,555], rightShoulder:[1280,555],
+        leftElbow:[1100,760], rightElbow:[1340,755], leftHand:[1080,925], rightHand:[1390,900],
+        leftHip:[1170,900], rightHip:[1260,900], leftKnee:[1160,1130], rightKnee:[1280,1130],
+        leftFoot:[1140,1370], rightFoot:[1300,1370]
+      }
+    };
+    const bones = [
+      ['neck','leftShoulder'],['neck','rightShoulder'],['leftShoulder','leftElbow'],['leftElbow','leftHand'],
+      ['rightShoulder','rightElbow'],['rightElbow','rightHand'],['leftShoulder','leftHip'],['rightShoulder','rightHip'],
+      ['leftHip','rightHip'],['leftHip','leftKnee'],['leftKnee','leftFoot'],['rightHip','rightKnee'],['rightKnee','rightFoot']
+    ];
+    const inputs = [...document.querySelectorAll('aside input, aside select, aside textarea')];
+    inputs.forEach(input => input.addEventListener('input', draw));
+
+    function loadImage(file, target) {
+      const img = new Image();
+      img.onload = () => {
+        if (target === 'scene') {
+          scene = img; canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+          state.sceneSize = [canvas.width, canvas.height];
+          statusEl.textContent = `场景已载入：${canvas.width} × ${canvas.height}`;
+        } else { ui = img; statusEl.textContent = 'UI 参考已叠加，请检查脸、手、道具和动作方向。'; }
+        draw(); URL.revokeObjectURL(img.src);
+      };
+      img.src = URL.createObjectURL(file);
+    }
+    document.getElementById('sceneFile').addEventListener('change', e => e.target.files[0] && loadImage(e.target.files[0], 'scene'));
+    document.getElementById('uiFile').addEventListener('change', e => e.target.files[0] && loadImage(e.target.files[0], 'ui'));
+    document.getElementById('jsonFile').addEventListener('change', async e => {
+      if (!e.target.files[0]) return;
+      const data = JSON.parse(await e.target.files[0].text());
+      const pose = data.target?.poseDefinition || data.poseDefinition || data;
+      const landmarks = data.target?.standingPose || data.target?.seatedPose || data.target?.lyingPose || data.standingPose || data.seatedPose || data.lyingPose || data.points || {};
+      state.sceneSize = data.sceneSize || state.sceneSize;
+      state.headBox = landmarks.headBox || data.headBox || state.headBox;
+      state.actionBBox = data.target?.outerBBox || data.actionBBox || state.actionBBox;
+      state.gazePoint = data.gazePoint || state.gazePoint;
+      for (const key of Object.keys(state.points)) if (landmarks[key]) state.points[key] = landmarks[key];
+      setValue('poseId', pose.poseId); setValue('action', pose.action); setValue('facing', pose.facing);
+      setValue('leftHandAction', pose.leftHandAction); setValue('rightHandAction', pose.rightHandAction);
+      setValue('placementClass', data.target?.placementClass || data.placementClass);
+      setValue('depthClass', data.target?.depthClass || data.depthClass); setValue('zoneId', data.target?.affordanceZoneId || data.affordanceZoneId);
+      const gaze = pose.gazeTarget || data.gazeTarget || {};
+      if (typeof gaze === 'object') { setValue('gazeType', gaze.type); setValue('gazeId', gaze.id); }
+      statusEl.textContent = '合同已载入；请逐点检查动作线、支撑与视线。'; draw();
+    });
+    function setValue(id, value) { if (value !== undefined && value !== null) document.getElementById(id).value = value; }
+
+    function controlPoints() {
+      const [x1,y1,x2,y2] = state.headBox, [ax1,ay1,ax2,ay2] = state.actionBBox;
+      const values = Object.entries(state.points).map(([id, point]) => ({kind:'joint', id, point}));
+      values.push({kind:'head', id:'headTL', point:[x1,y1]}, {kind:'head', id:'headBR', point:[x2,y2]});
+      values.push({kind:'action', id:'actionTL', point:[ax1,ay1]}, {kind:'action', id:'actionBR', point:[ax2,ay2]});
+      values.push({kind:'gaze', id:'gaze', point:state.gazePoint});
+      return values;
+    }
+    function drawPoint(point, color, radius=11) {
+      ctx.beginPath(); ctx.arc(point[0], point[1], radius, 0, Math.PI*2); ctx.fillStyle=color; ctx.fill();
+      ctx.strokeStyle='#111'; ctx.lineWidth=3; ctx.stroke();
+    }
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      if (scene) ctx.drawImage(scene,0,0,canvas.width,canvas.height); else { ctx.fillStyle='#11141a'; ctx.fillRect(0,0,canvas.width,canvas.height); }
+      if (ui && document.getElementById('showUi').checked) { ctx.save(); ctx.globalAlpha=Number(document.getElementById('uiOpacity').value); ctx.drawImage(ui,0,0,canvas.width,canvas.height); ctx.restore(); }
+      ctx.lineWidth = 9; ctx.strokeStyle = '#ff375f'; ctx.lineCap='round'; ctx.lineJoin='round';
+      bones.forEach(([a,b]) => { ctx.beginPath(); ctx.moveTo(...state.points[a]); ctx.lineTo(...state.points[b]); ctx.stroke(); });
+      const [hx1,hy1,hx2,hy2] = state.headBox; ctx.strokeStyle='#ff375f'; ctx.strokeRect(hx1,hy1,hx2-hx1,hy2-hy1);
+      ctx.beginPath(); ctx.moveTo((hx1+hx2)/2,(hy1+hy2)/2); ctx.lineTo(...state.gazePoint); ctx.strokeStyle='#20d9d2'; ctx.lineWidth=5; ctx.setLineDash([18,12]); ctx.stroke(); ctx.setLineDash([]);
+      if (document.getElementById('showBoxes').checked) { const [x1,y1,x2,y2]=state.actionBBox; ctx.strokeStyle='#ffcc33'; ctx.lineWidth=5; ctx.strokeRect(x1,y1,x2-x1,y2-y1); }
+      controlPoints().forEach(item => drawPoint(item.point, item.kind==='gaze'?'#20d9d2':item.kind==='action'?'#ffcc33':'#ff375f', item.kind==='joint'?10:13));
+    }
+    function canvasPoint(event) {
+      const rect=canvas.getBoundingClientRect(); return [(event.clientX-rect.left)*canvas.width/rect.width,(event.clientY-rect.top)*canvas.height/rect.height];
+    }
+    canvas.addEventListener('pointerdown', event => {
+      const point=canvasPoint(event); const scale=canvas.width/canvas.getBoundingClientRect().width;
+      dragging=controlPoints().map(item=>({...item,d:Math.hypot(item.point[0]-point[0],item.point[1]-point[1])})).sort((a,b)=>a.d-b.d)[0];
+      if (!dragging || dragging.d > 24*scale) dragging=null; else canvas.setPointerCapture(event.pointerId);
+    });
+    canvas.addEventListener('pointermove', event => {
+      if (!dragging) return; const point=canvasPoint(event).map(Math.round);
+      if (dragging.kind==='joint') state.points[dragging.id]=point;
+      else if (dragging.kind==='gaze') state.gazePoint=point;
+      else if (dragging.kind==='head') { if (dragging.id==='headTL') { state.headBox[0]=point[0]; state.headBox[1]=point[1]; } else { state.headBox[2]=point[0]; state.headBox[3]=point[1]; } }
+      else if (dragging.kind==='action') { if (dragging.id==='actionTL') { state.actionBBox[0]=point[0]; state.actionBBox[1]=point[1]; } else { state.actionBBox[2]=point[0]; state.actionBBox[3]=point[1]; } }
+      draw();
+    });
+    canvas.addEventListener('pointerup', () => dragging=null);
+
+    function value(id) { return document.getElementById(id).value.trim(); }
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const placementClass=value('placementClass');
+      const poseKey=placementClass==='seated'?'seatedPose':placementClass==='lying'?'lyingPose':'standingPose';
+      const landmarks={headBox:state.headBox,...state.points,supportObject:value('supportObject')};
+      const data={
+        schema:'ndc-pose-blocking-fragment/v1', sceneSize:state.sceneSize, actorId:value('actorId'), affordanceZoneId:value('zoneId'),
+        target:{placementClass,depthClass:value('depthClass'),affordanceZoneId:value('zoneId'),outerBBox:state.actionBBox,
+          poseDefinition:{poseId:value('poseId'),action:value('action'),facing:value('facing'),gazeTarget:{type:value('gazeType'),id:value('gazeId')},leftHandAction:value('leftHandAction'),rightHandAction:value('rightHandAction'),requiredProps:[]},
+          [poseKey]:landmarks},
+        gazePoint:state.gazePoint
+      };
+      const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}); const link=document.createElement('a');
+      link.href=URL.createObjectURL(blob); link.download=`${value('actorId')}_${value('poseId')}.json`; link.click(); URL.revokeObjectURL(link.href);
+      statusEl.textContent='合同片段已导出；下一步应运行剧情时间轴、可供性、UI 和比例合同校验。';
+    });
+    draw();
+  </script>
+</body>
+</html>

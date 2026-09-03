@@ -23,6 +23,17 @@ normalized_requirement:
   soft: []
   flexible: []
   must_not_have: []
+texture_contract:
+  style_authority_locked: true
+  approved_style_authority: []
+  immutable_style_traits: []
+  focal_detail_zones: []
+  secondary_detail_zones: []
+  quiet_zones: []
+  distant_zones: []
+  material_texture_rules: []
+  prohibited_artifacts: []
+  style_changing_cleanup_language_forbidden: true
 layer_plan:
   base_environment_narrative: []
   interaction_closeup: []
@@ -92,6 +103,8 @@ operator_notes:
 - `scene.mode: non_exploration` requires `frontal`, `oblique`, and `overhead_45` in that order. The overhead view must look downward about 45 degrees.
 - Reject any prompt that requests multiple views, a contact sheet, split panels, or a collage in one image.
 - Require `visual_brief`, `camera_contract`, `scene_description`, `layer_plan`, `canvas_plan`, and `time_variant_plan`.
+- Require `texture_contract` with both lock booleans true, non-empty approved authority and immutable traits, explicit focal/secondary/quiet/distant zones, material texture rules, and prohibited artifacts.
+- Reject texture remedies that globally simplify, flatten, smooth, modernize, photorealize, or otherwise change the approved rendering language.
 - Treat each `prompt_en` as exact for that view's first submission.
 - Do not submit `ndc-mj-scene/v1` or `v2` directly. Migrate it through `ndc-scene-to-mj-prompt`.
 - The generated base must be character-free. Reject positive prompt language for people, characters, bodies, corpses, occupations, poses, silhouettes, or character actions. Allow these tokens only in one dedicated final `--no` parameter.

@@ -7,12 +7,24 @@ description: "Convert NDC game-scene requirements, narrative context, approved a
 
 Produce a self-contained `ndc-mj-scene/v3` handoff containing the required view set, one exact prompt per view, the empty-background and layer contract, canvas/postprocess plan, and shared audit requirements. Keep prompting, Midjourney operation, and Photoshop finishing separate.
 
+## Mandatory stage-end visual self-check gate
+
+Every art-production stage executed by this Skill must end with an explicit visual self-check item before its output may be accepted or passed to Midjourney production. This includes visual-reference intake and role assignment, source-image/viewpoint analysis, style extraction, camera/spatial planning from art, prompt/handoff review against visual inputs, and acceptance of any returned scene image used to revise the handoff. Inspect every current visual input as a whole at `100%` and every applicable local region at nearest-neighbor `200%` or through complete original-pixel tiles. Compare the handoff against the approved visual authority and every applicable camera, spatial, composition, layer, canvas, style, texture, reference-leakage, and character-free requirement.
+
+Write one current `ndc-stage-visual-self-check/v1` record for every executed stage that consumes or accepts a visual artifact. It must bind the stage ID, reviewer/date, visual input paths plus SHA-256, any file output path plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not mark the handoff visually cleared or use it to authorize an image-producing stage. Dimensions, file existence, schema validation, or absence of a detected error cannot write visual `PASS`.
+
+After a block, return to the responsible analysis/handoff stage, perform the missing inspection and correction, then repeat the visual self-check. Release a visually cleared handoff only after the current visual inputs and current handoff have a passing record. When the stage writes files, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-handoff-or-reviewed-output>`; a nonzero result is a hard stop. A truly text-only draft with no visual input may still be returned as `DRAFT_NOT_VISUALLY_CLEARED`, but it cannot be described as a passed visual asset or authorize downstream image production until the first applicable visual stage records and passes the check.
+
 ## Read the relevant references
 
 1. Read [prompt rules](references/prompt-rules.md) before drafting any prompt.
 2. Read [handoff schema](references/handoff-schema.md) before returning the result.
 3. Read [style analysis protocol](references/style-analysis-protocol.md) whenever analyzing, comparing, or approving style references or generated scene style.
 4. Inspect every user-supplied reference image before assigning it a role. Treat `assets/approved-courthouse-scene-style.png` as a calibration example only, never as a universal NDC style reference.
+
+<!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
+For every handoff, also build the mandatory `texture_contract` in [handoff schema](references/handoff-schema.md) from [prompt rules](references/prompt-rules.md). The approved references and current rendering-language clauses remain the style authority. Texture control may distribute and limit non-semantic micro-detail, but it may not flatten, modernize, smooth, photorealize, simplify, or otherwise restyle the scene. Do not promote a reference artifact into executable style language.
+<!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 Reference inspection has two mandatory levels: review the complete image first, then run `scripts/make_style_review_tiles.py` and inspect every overlap-safe original-resolution tile. Do not infer fine brushwork, texture, line endings, material treatment, or edge behavior from a downscaled 4K/8K overview. A completed style analysis must report `whole_image_checked: true`, `local_tile_coverage_complete: true`, image-entry and deduplicated counts, tile count, stable traits, branch traits, minority traits, and artifacts.
 
@@ -138,6 +150,10 @@ Write one copy-ready English paragraph for each required view in this order:
 
 `scene identity and period → core composition and camera → hard objects and spatial relations → soft architecture and props → lighting and palette → graphic treatment → concise exclusions → parameters`
 
+<!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
+Implement the shared `texture_contract` inside the graphic-treatment portion of every view prompt. Use positive structural language—compressed large shapes, grouped shadows, directional and scale-aware material texture, quiet planes, and focal detail hierarchy—rather than a universal negative block. Keep the contract invariant across the view set. Scene-specific exclusions for recurrent texture failures remain optional and concise.
+<!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
+
 Apply these rules:
 
 - Front-load composition and core objects.
@@ -179,6 +195,9 @@ Verify that:
 18. Shared scene facts do not drift between view prompts.
 19. `must_not_have` is concise and scene-specific beyond the mandatory no-character exclusions.
 20. Parameters are separate from requirements, default `model` to `latest`, and keep model-version syntax out of every prompt text.
+21. `texture_contract.style_authority_locked` is true and every immutable style trait is traceable to an approved reference or current user instruction.
+22. Focal, secondary, quiet, and distant detail zones are explicit; material texture is directional, continuous, scale-aware, and subordinate to structure, perspective, distance, and lighting.
+23. No prompt uses style-changing cleanup language such as `simplify the art style`, `minimalist illustration`, `flat vector style`, `smooth clean surfaces`, or `remove brush texture` as a texture remedy.
 
 If a hard ambiguity would materially change the image, ask one focused question. Otherwise state the assumption and continue.
 
