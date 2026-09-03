@@ -48,6 +48,12 @@
 6. L5 开篇，Lula 也被关进同一条走廊，恳求 Zack 查出真相。Pierce 同时没收她随身携带的护士包，并把它留在拘禁区外；包内有一瓶密封、带医院标签的医用乙醚。
 7. 小 Charles 正确路线的终局不让 Lula 与 Moore 离开拘禁区。Lula 只隔门告诉 Foster 护士包与乙醚的位置；二人的强演出仍保留给各自的坏结局。
 
+### 终局枪械前提
+
+1. Miller 庄园禁止宾客携带枪械。宾客进入庄园时必须接受检查并寄存武器，因此 Zack、Emma、Lawson、Foster、Moore 与 Lula 在终局都没有手枪。
+2. Vivian 私下藏着 Unit1 曾经携带的 `Colt Vest Pocket Model 1908`（.25 ACP，象牙贴片枪柄）。她利用枪身小巧的特点把它偷偷带入庄园；这是宾客一侧唯一没有被收走的枪。
+3. 小 Charles 作为 Miller 家族成员、Pierce 作为庄园警务与安保负责人，可以取得庄园内部枪械。
+
 ---
 
 ## 三、圆桌公开失败
@@ -224,15 +230,17 @@
 1. Pierce 在黑暗中杀死 Zack，持枪赶到广播站。
 2. Emma 已经成功放下火灾隔断；她与受伤的 Vivian、Lawson 暂时位于隔断的安全一侧。
 3. 门口的持枪人影显出 Pierce 的脸。Emma 与 Vivian 由此确认 Zack 已经死在旧档案区。
-4. Pierce 持枪站到小 Charles 一方，封住广播站出口并把枪口转向 Vivian。
-5. 隔断后的小 Charles 继续通过射击缝隙控制 Emma 与 Lawson。
-6. Vivian 先看向门口，确认不会再有 Zack；再看向两处枪线，确认自己已经无法同时保住 Lawson、Emma 与自己。
-7. 她吻了 Lawson 面前，随后亲手开枪杀死他。
-8. Vivian 放低枪口，主动提出由自己接管 Tidewater、处理投毒文件并维持官方叙事，以此向小 Charles 与 Pierce 投诚。
-9. Vivian 同时要求留下 Emma 的性命：杀死记者只会制造烈士，摧毁她的信誉、让整座城市拒绝相信她，才是更安全的处理方式。
-10. 小 Charles 接受这套方案，保住 Miller 家族；Pierce 继续控制广播站出口。
-11. Emma 没有母盘，也没有能被城市权力结构采信的决定性证据。她被塑造成煽动枪击、害死 Lawson 的失控记者。
-12. Vivian 与小 Charles 都向 Emma 提供过住所、工作或金钱。Emma 全部拒绝，独自承受整座城市的排斥。
+4. 镜头短暂切回封闭试听室：Foster 带着乙醚赶到，只看见 Zack 的尸体与已经离开的 Pierce。
+5. Foster 判断继续追赶持枪的 Pierce 已经无法救回 Zack，只会让自己以及仍被拘禁的 Lula、Moore 一同陷入危险，因此带着乙醚撤回嫌疑人走廊。
+6. 画面切回广播站。Pierce 持枪站到小 Charles 一方，封住广播站出口并把枪口转向 Vivian。
+7. 隔断后的小 Charles 继续通过射击缝隙控制 Emma 与 Lawson。
+8. Vivian 先看向门口，确认不会再有 Zack；再看向两处枪线，确认自己已经无法同时保住 Lawson、Emma 与自己。
+9. Lawson 此时已经负伤挡在 Vivian 面前。Vivian 从身后拉住他；Lawson 回头后，她吻了他，随后用自己偷偷带入庄园的 `Colt Vest Pocket Model 1908` 开枪杀死他。
+10. Vivian 放低枪口，主动提出由自己接管 Tidewater、处理投毒文件并维持官方叙事，以此向小 Charles 与 Pierce 投诚。
+11. Vivian 同时要求留下 Emma 的性命：杀死记者只会制造烈士，摧毁她的信誉、让整座城市拒绝相信她，才是更安全的处理方式。
+12. 小 Charles 接受这套方案，保住 Miller 家族；Pierce 继续控制广播站出口。
+13. Emma 没有母盘，也没有能被城市权力结构采信的决定性证据。她被塑造成煽动枪击、害死 Lawson 的失控记者。
+14. Vivian 与小 Charles 都向 Emma 提供过住所、工作或金钱。Emma 全部拒绝，独自承受整座城市的排斥。
 
 ---
 
