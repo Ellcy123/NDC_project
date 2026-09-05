@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "201",
+  "poseId": "SC2206-zack-bedrail-guilt-v1",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\SC2206_avg_HospitalOpening\\handoff\\zack_v1\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC\\Assets\\Resources\\Art\\Scene\\Backgrounds\\EPI02\\SC2206_bg_SacredHeartHospital_MargaretRoom.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\zack.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\SC2206_avg_HospitalOpening\\handoff\\zack_v1\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    1136,
+    57,
+    2371,
+    1600
+  ],
+  "basePaddedCropBBox": [
+    1285,
+    57,
+    2221,
+    1600
+  ],
+  "generationAspectRatio": [
+    4.0,
+    5.0
+  ],
+  "actualCropAspectRatio": 0.800389,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    1435,
+    207,
+    2071,
+    1600
+  ],
+  "actorBBoxLocal": [
+    299,
+    150,
+    935,
+    1543
+  ],
+  "photoshopPasteTopLeft": [
+    1136,
+    57
+  ],
+  "sourceHashes": {
+    "scene": "f22bfff61cbaf38bbfaaf6d8b79e8de785b4b098eae6ce6c6ab46f62e415b63a",
+    "whiteboxComposite": "e90dc2588223a14391f311f4356ae96fa1f6c716616d881cdc0b56b3c237c765",
+    "characterCard": "d4a52c8fa38d7744cd24e621ecaf93a9ca7831685b5a32f68a90be4f444fd868"
+  },
+  "generationPrompt": "Base the result on Image 1. Replace only the reviewed cyan pose dummy with Zack Brennan from Image 3. Frozen beat 201002009: Zack has just reached his unconscious mother and asks 'What did she ask?'. He stands upright in the foreground, three-quarter-back to camera, head turned slightly screen-right toward Margaret, grief compressed into a rigid neck and a partially visible profile. His right hand closes firmly around the existing metal footboard rail; his left hand hangs tense close to his own body. No contact with another person. Preserve the approved pose, large but perspective-honest foreground head size, occupied volume, bed-rail hand contact, crop at the lower frame, and screen-right gaze. Image 2 controls the exact hospital light, palette, camera and furniture. Image 3 controls Zack's identity: wavy dark-brown hair mass, short beard, sturdy athletic but not bodybuilder build, dark navy 1920s suit, open white collar, brown belt, bold ink language. Keep the original room pixels reference-only and remove the cyan dummy. NDC graphic-noir style with heavy varied ink contours, planar color blocks, deep solid shadow masses, matte surfaces and controlled texture. Exactly one Zack, no extra person, no hat, no weapon, no prop, no reaching toward Margaret, no crouch, no camera-facing presentation, no added bed or rail, no text or watermark.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}

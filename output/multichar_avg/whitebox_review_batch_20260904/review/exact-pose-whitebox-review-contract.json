@@ -1,0 +1,36 @@
+{
+  "schema": "ndc-stage-visual-review/v1",
+  "stage": "exact-pose-whitebox",
+  "reviewAuthority": "codex-self-check",
+  "artifacts": [
+    {"role": "SC2591 combined whitebox", "path": "../SC2591_combined_whitebox_v1.png"},
+    {"role": "SC2691 combined whitebox v2", "path": "../SC2691_combined_whitebox_v2.png"},
+    {"role": "SC2215 Earl idle", "path": "../SC2215_Earl_idle_whitebox_v1.png"},
+    {"role": "SC2215 Earl clicked", "path": "../SC2215_Earl_clicked_whitebox_v1.png"},
+    {"role": "SC2515 Earl idle", "path": "../SC2515_Earl_idle_whitebox_v1.png"},
+    {"role": "SC2515 Earl clicked", "path": "../SC2515_Earl_clicked_whitebox_v1.png"},
+    {"role": "SC2615 TideWater idle", "path": "../SC2615_TideWater_idle_whitebox_v1.png"},
+    {"role": "SC2615 TideWater clicked", "path": "../SC2615_TideWater_clicked_whitebox_v1.png"}
+  ],
+  "localTiles": [
+    {"id": "SC2591-right-cast", "bbox": [800, 0, 1832, 858]},
+    {"id": "SC2591-box-and-gaze", "bbox": [950, 170, 1500, 690]}
+  ],
+  "checks": {
+    "scalePerspective": "pass",
+    "headScale": "pass",
+    "supportContact": "pass",
+    "environmentResponse": "pass",
+    "posePerformance": "pass",
+    "sceneOcclusion": "pass",
+    "uiSafety": "pass"
+  },
+  "observations": [
+    "SC2591 keeps the left UI zone clear; Zack is a cropped three-quarter-back foreground anchor and Lula retains sole ownership of the closed box.",
+    "SC2691 v2 keeps the right UI zone clear; Zack has moved to the far-left foreground edge, Margaret is visibly supported by the bed, and Foster retains the central report focus.",
+    "Both Earl pairs preserve the same booth support and scale; daytime changes attention and pencil pause, while nighttime changes head attention without leaving the compressed hand-guarding territory.",
+    "Both TideWater states preserve the same floor support and folder ownership; the active state uses a contained head/hand emphasis rather than a handoff gesture.",
+    "Whole-frame, enlarged local crops, and actual mirrored UI overlays were inspected. No face/head, motivated hand, or owned prop is hidden by the selected UI side."
+  ],
+  "decision": "pass"
+}

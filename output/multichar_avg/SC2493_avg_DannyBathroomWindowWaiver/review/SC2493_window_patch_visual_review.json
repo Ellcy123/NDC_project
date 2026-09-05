@@ -1,0 +1,26 @@
+{
+  "schema": "ndc-stage-visual-self-check/v1",
+  "stageId": "SC2493-window-recomposition-v1",
+  "reviewer": "Codex visual inspection",
+  "reviewDate": "2026-09-04T02:57:08+08:00",
+  "input": {
+    "path": "D:/NDC/Assets/Resources/Art/Scene/Backgrounds/EPI02/SC2420_bg_FrankHome_Bathroom.png",
+    "sha256": "bf1f23854e563aeb21328b96b83ceb9cd1f17d72418dd6fc4e293ba28c2e4ae9"
+  },
+  "output": {
+    "path": "D:/NDC_project/output/multichar_avg/SC2493_avg_DannyBathroomWindowWaiver/scene_patch/SC2493_source_with_window_v1.png",
+    "sha256": "ea893c7491add039ceb1b02f5ede56fe4f36c92d8b57f9e53e658e42732bf1a8"
+  },
+  "views": {
+    "whole_100": "D:/NDC_project/output/multichar_avg/SC2493_avg_DannyBathroomWindowWaiver/scene_patch/SC2493_source_with_window_v1.png",
+    "local_200_or_tiles": "D:/NDC_project/output/multichar_avg/SC2493_avg_DannyBathroomWindowWaiver/review/SC2493_window_patch_local_200.png"
+  },
+  "criteria": [
+    {"name": "outside-mask preservation", "status": "PASS", "finding": "Deterministic compose reports zero changed channels outside the hard mask."},
+    {"name": "boundary and residue", "status": "PASS", "finding": "Boundary scan passes; 100% and 200% views show no visible patch rectangle or residual wall silhouette."},
+    {"name": "structure continuity", "status": "PASS", "finding": "Wall courses, corner, toilet tank and floor remain visually continuous around the inserted vent."},
+    {"name": "runtime readability", "status": "PASS", "finding": "The vent reads clearly at the whole-scene scale without becoming implausibly large."}
+  ],
+  "visual_check_status": "PASS",
+  "responsibleReworkStage": null
+}

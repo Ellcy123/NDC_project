@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "213",
+  "poseId": "SC2206-margaret-asleep-v1",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\SC2206_avg_HospitalOpening\\handoff\\margaret_v1\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC\\Assets\\Resources\\Art\\Scene\\Backgrounds\\EPI02\\SC2206_bg_SacredHeartHospital_MargaretRoom.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\Margaret Brennan.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\SC2206_avg_HospitalOpening\\handoff\\margaret_v1\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    1116,
+    488,
+    1892,
+    1070
+  ],
+  "basePaddedCropBBox": [
+    1204,
+    488,
+    1805,
+    1070
+  ],
+  "generationAspectRatio": [
+    4.0,
+    3.0
+  ],
+  "actualCropAspectRatio": 1.333333,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    1384,
+    668,
+    1625,
+    890
+  ],
+  "actorBBoxLocal": [
+    268,
+    180,
+    509,
+    402
+  ],
+  "photoshopPasteTopLeft": [
+    1116,
+    488
+  ],
+  "sourceHashes": {
+    "scene": "f22bfff61cbaf38bbfaaf6d8b79e8de785b4b098eae6ce6c6ab46f62e415b63a",
+    "whiteboxComposite": "75a4e1502d2a2a394f5c767fa291d490f6930e91fbe05e56d53f63849f06bb8c",
+    "characterCard": "025e2bae00d65e1889c74734f732c1422e5dd191a6a4112cbaa9a6ec92b1470e"
+  },
+  "generationPrompt": "Base the result on Image 1. Replace only the reviewed coral-red pose dummy with Margaret Brennan from Image 3. Frozen beat 201002009: Margaret is recovering after being struck unconscious and is asleep with steady breathing in the existing hospital bed. Her head rests on the right pillow, face in a gentle three-quarter angle toward screen-left, eyes closed, expression quiet and strong rather than frail. Only head, neck and a small shoulder area in a plain modest white hospital gown are visible above the existing blanket; the blanket remains the original scene object. Preserve the exact reclining head location, size, pillow contact, body direction and partial occlusion by the blanket. Image 2 controls the exact bed, pillow, blanket, warm lamp/window light, palette and camera. Image 3 controls Margaret's identity: 60-year-old Irish-American woman, distinctive dark hair with a broad white forelock, lined composed face, pearl stud earrings and grounded dignity. Do not include her outdoor coat, handbag or long pearl necklace in the hospital bed. Remove the coral dummy. NDC graphic-noir style with heavy varied ink contours, simplified planar skin, solid shadow masses, matte surfaces and restrained detail. Exactly one sleeping Margaret, no extra person, no open eyes, no sitting or standing, no glamour pose, no injury gore, no added medical equipment, no new blanket or bed, no text or watermark.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}

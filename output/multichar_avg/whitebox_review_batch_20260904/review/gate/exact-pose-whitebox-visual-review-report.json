@@ -1,0 +1,69 @@
+{
+  "schema": "ndc-stage-visual-review-report/v1",
+  "stage": "exact-pose-whitebox",
+  "reviewAuthority": "codex-self-check",
+  "status": "VISUAL_REVIEW_PASS",
+  "artifacts": [
+    {
+      "role": "SC2591 combined whitebox",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2591_combined_whitebox_v1.png",
+      "sha256": "55d324b26ec3a8ac7413d05ab33a7f352e839fead871fc5895d4daa79c36cf6c"
+    },
+    {
+      "role": "SC2691 combined whitebox",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2691_combined_whitebox_v1.png",
+      "sha256": "23960e18063740ad23271cd923c80d3441f1b13ad3a580d75c232d341d94a82d"
+    },
+    {
+      "role": "SC2215 Earl idle",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2215_Earl_idle_whitebox_v1.png",
+      "sha256": "19ca0a2d45772d3a0f70b287c61ebe72081fdff5b5d78fa7c3967d6ead699b03"
+    },
+    {
+      "role": "SC2215 Earl clicked",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2215_Earl_clicked_whitebox_v1.png",
+      "sha256": "b46cdf879c9438cf105d2684432ba028efdb2178b3f93be283a03e02c3e1ec2b"
+    },
+    {
+      "role": "SC2515 Earl idle",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2515_Earl_idle_whitebox_v1.png",
+      "sha256": "10f543ba7686462e8aeb28aa5f188854ef1dd994ffaeccc6439aa2b996274329"
+    },
+    {
+      "role": "SC2515 Earl clicked",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2515_Earl_clicked_whitebox_v1.png",
+      "sha256": "4ed6381900900e9040b0625441f86a2fd7be63780e8eb6820fff16e35c4d7387"
+    },
+    {
+      "role": "SC2615 TideWater idle",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2615_TideWater_idle_whitebox_v1.png",
+      "sha256": "12bbe4460f00e9538df24716074654b69c197f961a59c0af88c79fc6578fffb5"
+    },
+    {
+      "role": "SC2615 TideWater clicked",
+      "path": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\SC2615_TideWater_clicked_whitebox_v1.png",
+      "sha256": "b760589bec3c6a5258da9e331b857b525ebf1626d95a9c1b313581caf4d917ba"
+    }
+  ],
+  "board": "D:\\NDC_project\\output\\multichar_avg\\whitebox_review_batch_20260904\\review\\gate\\exact-pose-whitebox-visual-review-board.png",
+  "boardSha256": "394889b2d12fea910a613292284a10dfd311619d0cbcc7e267bc9dcd6e1a5371",
+  "checks": {
+    "scalePerspective": "pass",
+    "headScale": "pass",
+    "supportContact": "pass",
+    "environmentResponse": "pass",
+    "posePerformance": "pass",
+    "sceneOcclusion": "pass",
+    "uiSafety": "pass"
+  },
+  "failedChecks": [],
+  "observations": [
+    "SC2591 keeps the left UI zone clear; Zack is a cropped three-quarter-back foreground anchor and Lula retains sole ownership of the closed box.",
+    "SC2691 keeps the right UI zone clear; Margaret is visibly supported by the bed, Foster owns the report, and Zack supplies the required back-facing foreground depth.",
+    "Both Earl pairs preserve the same booth support and scale; daytime changes attention and pencil pause, while nighttime changes head attention without leaving the compressed hand-guarding territory.",
+    "Both TideWater states preserve the same floor support and folder ownership; the active state uses a contained head/hand emphasis rather than a handoff gesture.",
+    "Whole-frame, enlarged local crops, and actual mirrored UI overlays were inspected. No face/head, motivated hand, or owned prop is hidden by the selected UI side."
+  ],
+  "nextStageAuthorized": true,
+  "note": "This report records an explicit visual review; no pixel metric or metadata inferred artistic correctness."
+}

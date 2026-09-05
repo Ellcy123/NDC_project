@@ -3866,6 +3866,7 @@
                     <span class="select-label">UNIT</span>
                     <select id="unitSelect">
                         <option value="Unit1">Unit 1 - Webb谋杀案</option>
+                        <option value="Unit1FiveLoopTest">试验 U - U1 五 Loop 版（L2 可玩）</option>
                         <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
                         <option value="Unit3">Unit 3 - Thomas坠楼案</option>
                         <option value="Unit4">Unit 4 - 四十二层之前</option>
@@ -10922,6 +10923,10 @@
     const GameController = {
         async load() {
             const unit = document.getElementById('unitSelect').value;
+            if (unit === 'Unit1FiveLoopTest') {
+                window.location.href = new URL('./experiments/u1-five-loop/index.html', window.location.href).href;
+                return;
+            }
             let loop = document.getElementById('loopSelect').value;
             if (unit === 'Unit4' && loop === 'loop6') {
                 loop = 'loop1';
@@ -11041,6 +11046,10 @@
         if (typeof syncLoopHeader === 'function') syncLoopHeader();
         document.getElementById('unitSelect')?.addEventListener('change', () => {
             const unit = document.getElementById('unitSelect').value;
+            if (unit === 'Unit1FiveLoopTest') {
+                window.location.href = new URL('./experiments/u1-five-loop/index.html', window.location.href).href;
+                return;
+            }
             const loopSelect = document.getElementById('loopSelect');
             if (unit === 'Unit4' && loopSelect?.value === 'loop6') loopSelect.value = 'loop1';
             syncLoopChips();

@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "202",
+  "poseId": "SC2206-emma-withdrawn-comfort-v1",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\SC2206_avg_HospitalOpening\\handoff\\emma_v1\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC\\Assets\\Resources\\Art\\Scene\\Backgrounds\\EPI02\\SC2206_bg_SacredHeartHospital_MargaretRoom.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\emma.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\SC2206_avg_HospitalOpening\\handoff\\emma_v1\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    486,
+    223,
+    1566,
+    1572
+  ],
+  "basePaddedCropBBox": [
+    754,
+    223,
+    1297,
+    1572
+  ],
+  "generationAspectRatio": [
+    4.0,
+    5.0
+  ],
+  "actualCropAspectRatio": 0.800593,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    904,
+    373,
+    1147,
+    1422
+  ],
+  "actorBBoxLocal": [
+    418,
+    150,
+    661,
+    1199
+  ],
+  "photoshopPasteTopLeft": [
+    486,
+    223
+  ],
+  "sourceHashes": {
+    "scene": "f22bfff61cbaf38bbfaaf6d8b79e8de785b4b098eae6ce6c6ab46f62e415b63a",
+    "whiteboxComposite": "1648b731f19c3d07c28db80cbbc2f34b5e5c4fdea1f61f1111c888a7941fdaf7",
+    "characterCard": "2db32c7bbcd7b976dc62c4236b6c9fa09b9d7bec0e5f44d140c0cf3ee4ce1b6b"
+  },
+  "generationPrompt": "Base the result on Image 1. Replace only the reviewed violet pose dummy with Emma O'Malley from Image 3. Frozen beat 201002009: Emma has just comforted Zack and has withdrawn her hand; she stands quietly at the foot-side of the bed, body directed screen-right toward Zack and Margaret, hands close to her own torso and notebook absent from this intimate instant. Her concern is precise and restrained, not sentimental. Preserve the exact full-body standing pose, canonical shorter scale, support on the floor, occupied volume, screen-right facing and no person-to-person contact. Image 2 controls the exact hospital light, palette, perspective and furniture. Image 3 controls Emma's identity: dark brown bob, black rectangular glasses, pearl earrings and necklace, charcoal belted 1920s professional skirt suit, slim composed build, bold ink language. Remove the violet dummy. NDC graphic-noir style with heavy varied ink contours, planar color blocks, deep solid shadow masses, matte surfaces and controlled midground texture. Exactly one Emma, no extra person, no hand on Zack, no reaching, no notebook, no camera-facing pose, no added furniture, no text or watermark.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}
