@@ -132,7 +132,27 @@ class EvidenceArtTests(unittest.TestCase):
         self.assertIsNone(ImageChops.multiply(difference.getchannel("A"), outside).getbbox())
         for channel in difference.split()[:3]:
             self.assertIsNone(ImageChops.multiply(channel, outside).getbbox())
+        inside = mask.point(lambda value: 255 if value > 0 else 0)
+        holes = ImageChops.multiply(ImageChops.invert(result.getchannel("A")), inside)
+        self.assertIsNone(holes.getbbox(), "Opaque photo must cover every window pixel")
+        expected_photo = Image.new("RGBA", result.size, (35, 90, 150, 255))
+        solid_window = mask.point(lambda value: 255 if value == 255 else 0)
+        photo_difference = ImageChops.difference(result, expected_photo)
+        for channel in photo_difference.split():
+            self.assertIsNone(ImageChops.multiply(channel, solid_window).getbbox())
         self.assertTrue(json.loads(report.read_text(encoding="utf-8"))["passed"])
+
+    def test_polaroid_rejects_transparent_photo_instead_of_exporting_holes(self) -> None:
+        photo = self.root / "transparent_photo.png"
+        output = self.root / "invalid.png"
+        image = Image.new("RGBA", (1393, 1129), (80, 70, 40, 255))
+        image.putpixel((600, 500), (0, 0, 0, 0))
+        image.save(photo)
+        completed = self.run_script(
+            "compose-polaroid", "--photo", str(photo), "--output", str(output)
+        )
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertFalse(output.exists())
 
 
 if __name__ == "__main__":

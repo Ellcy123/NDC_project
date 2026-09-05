@@ -592,6 +592,9 @@ def polaroid_checks(
     inside = mask.point(lambda value: 255 if value > 0 else 0)
     outside_count = nonzero_count(ImageChops.multiply(changed, outside))
     inside_count = nonzero_count(ImageChops.multiply(changed, inside))
+    window_holes = nonzero_count(
+        ImageChops.multiply(ImageChops.invert(output.getchannel("A")), inside)
+    )
     checks = {
         "sizeIs620": output.size == POLAROID_SIZE,
         "modeIsRGBA": output.mode == "RGBA",
@@ -601,6 +604,8 @@ def polaroid_checks(
         "changedPixelsInsideWindowMask": inside_count,
         "frameAndTransparentExteriorByteIdentical": outside_count == 0,
         "photoWindowChanged": inside_count > 0,
+        "nonOpaquePixelsInsideWindowMask": window_holes,
+        "photoWindowFullyOpaque": window_holes == 0,
     }
     checks["passed"] = all(
         (
@@ -610,6 +615,7 @@ def polaroid_checks(
             checks["maskSizeMatches"],
             checks["frameAndTransparentExteriorByteIdentical"],
             checks["photoWindowChanged"],
+            checks["photoWindowFullyOpaque"],
         )
     )
     return checks
@@ -643,6 +649,8 @@ def compose_polaroid(args: argparse.Namespace) -> None:
             raise ValueError("Polaroid window-mask hash does not match the locked skill asset")
 
     photo = load_png(photo_path).convert("RGBA")
+    if photo.getchannel("A").getextrema() != (255, 255):
+        raise ValueError("Clue observation photo must be fully opaque before framing")
     template = load_png(template_path, require_rgba=True)
     mask = load_mask(mask_path, POLAROID_SIZE)
     if template.size != POLAROID_SIZE:
@@ -654,16 +662,41 @@ def compose_polaroid(args: argparse.Namespace) -> None:
     right_height = math.dist(POLAROID_QUAD[1], POLAROID_QUAD[2])
     aspect = ((top_width + bottom_width) / 2) / ((left_height + right_height) / 2)
     photo = center_crop_to_aspect(photo, aspect)
+    # The raster mask extends slightly past the ideal quadrilateral. Replicate
+    # edge samples into a guard band while leaving the original mapping intact;
+    # transparent transform fill must never punch seams into an opaque photo.
+    sample_padding = max(4, math.ceil(4 * max(
+        photo.width / min(top_width, bottom_width),
+        photo.height / min(left_height, right_height),
+    )))
+    original_size = photo.size
+    padded = Image.new("RGBA", (photo.width + 2 * sample_padding,
+                                photo.height + 2 * sample_padding))
+    padded.paste(photo, (sample_padding, sample_padding))
+    for box, target in (
+        ((0, 0, photo.width, 1), (sample_padding, 0, sample_padding + photo.width, sample_padding)),
+        ((0, photo.height - 1, photo.width, photo.height),
+         (sample_padding, sample_padding + photo.height, sample_padding + photo.width, padded.height)),
+        ((0, 0, 1, photo.height), (0, sample_padding, sample_padding, sample_padding + photo.height)),
+        ((photo.width - 1, 0, photo.width, photo.height),
+         (sample_padding + photo.width, sample_padding, padded.width, sample_padding + photo.height)),
+    ):
+        padded.paste(photo.crop(box).resize((target[2] - target[0], target[3] - target[1]),
+                                           Image.Resampling.NEAREST), target[:2])
+    for source_x, target_x in ((0, 0), (photo.width - 1, sample_padding + photo.width)):
+        for source_y, target_y in ((0, 0), (photo.height - 1, sample_padding + photo.height)):
+            padded.paste(photo.getpixel((source_x, source_y)),
+                         (target_x, target_y, target_x + sample_padding, target_y + sample_padding))
     source_quad = [
-        (0.0, 0.0),
-        (float(photo.width - 1), 0.0),
-        (float(photo.width - 1), float(photo.height - 1)),
-        (0.0, float(photo.height - 1)),
+        (float(sample_padding), float(sample_padding)),
+        (float(sample_padding + photo.width - 1), float(sample_padding)),
+        (float(sample_padding + photo.width - 1), float(sample_padding + photo.height - 1)),
+        (float(sample_padding), float(sample_padding + photo.height - 1)),
     ]
     coefficients = perspective_coefficients(
         [(float(x), float(y)) for x, y in POLAROID_QUAD], source_quad
     )
-    warped = photo.transform(
+    warped = padded.transform(
         POLAROID_SIZE,
         Image.Transform.PERSPECTIVE,
         coefficients,
@@ -690,6 +723,11 @@ def compose_polaroid(args: argparse.Namespace) -> None:
             },
             "windowMask": {"path": str(mask_path), "sha256": sha256(mask_path)},
             "windowQuad": [list(point) for point in POLAROID_QUAD],
+            "samplingGuard": {
+                "method": "edge_replication_without_geometry_change",
+                "sourcePixels": sample_padding,
+                "centerCropSize": list(original_size),
+            },
         },
         "checks": checks,
         "passed": bool(checks.get("passed")),

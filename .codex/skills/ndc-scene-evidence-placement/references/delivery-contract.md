@@ -6,11 +6,11 @@ Use this contract for scene-local clickable evidence packages. It records the co
 
 | Output | ItemStaticData field | Meaning |
 |---|---|---|
-| `<map-stem>.png` | `mapSpritePath` | Direct record / Type 7 child: tight per-record RGBA scene layer; transparent exterior defines the non-clickable area. Type 6 secondary-menu entrance: an approved coherent region Sprite is allowed. |
+| `<map-stem>.png` | `mapSpritePath` | Preferred: tight RGBA canvas whose Alpha follows the target prop's visible contour and drives its Sprite Physics Shape. Legacy compatibility: exact rectangular scene crop. |
 | `<detail-stem>.png` | `desSpritePath` | Standalone evidence/detail view. Ordinary transparent Bigs use one final frame only: `571 x 1000`, `818 x 818`, or `1000 x 571`; clue Polaroids stay `620 x 620`. |
-| `<icon-stem>.png` | `iconPath` | Runtime item/clue selection Icon. When required, it is `130 x 130` RGBA with all prop and shadow pixels inside the fixed `115 x 115` safe rectangle. ItemStaticData `envir` rows must omit it. |
-| `prop_<container>1.png` | Type 6 `mapSpritePath` | Pixel-exact closed/normal-state screenshot from the accepted scene. Only this entrance state is bound by `SceneConfig`. |
-| `prop_<container>2.png` | Type 7 `mapSpritePath` | Independently authored top-down or near-top-down open-container view, positioned near Type 6 and finished with a 12-pixel opaque white rectangular border. |
+| `<icon-stem>.png` | `iconPath` | Optional runtime item selection/inventory Icon. When present, it is `130 x 130` RGBA with all prop and shadow pixels inside the fixed `115 x 115` safe rectangle. |
+| `prop_<container>1.png` | Type 6 `mapSpritePath` | Preferred: scene-exact irregular RGBA Map following the visible closed/normal container plus attributable shadow. Only this entrance state is bound by `SceneConfig`; rectangular crops are compatibility fallbacks only. |
+| `prop_<container>2.png` | Type 7 `mapSpritePath` | Direct-generated first-person open-container view whose observation angle follows the real container height, positioned near Type 6 and finished with a 12-pixel opaque white rectangular border. |
 | delivery folder | `folderPath` | Path below `Art/Scene/EVIDENCE`, normally `EPIxx\<scene-folder>`. |
 | `x, y, z` | `Position` | Map-crop top-left pixel coordinate plus Unity sorting value. |
 
@@ -18,66 +18,39 @@ Use this contract for scene-local clickable evidence packages. It records the co
 
 Every evidence-art batch starts with a coverage ledger. This is required even when existing ItemStaticData rows already contain Big/Icon paths, because those paths do not prove that an exploration pickup is present in the scene.
 
-Runtime type and acquisition route are separate decisions:
-
-| ItemStaticData type | Meaning | Base-scene interaction | Automatic/no-world interaction |
-|---|---|---|---|
-| `item` / `3` | Physical object or document that enters inventory; analysis/combination are optional. | No-suffix Map + full-scene `Position` + ordinary Big + Icon. | Big + Icon; omit Map/Position only when the player never locates or clicks it in world space. |
-| `clue` / `1` | Photographed/recorded scene condition; the original remains in the world; no analysis or combination. | No-suffix Map + full-scene `Position` + locked `620 x 620` clue-Polaroid Big + Icon. | Approved result Big + Icon; omit Map/Position only when there is no world-space locate/click step. |
-| `envir` / `2` | Clickable environmental observation that never enters inventory. | Always no-suffix Map + full-scene `Position` + Big; omit Icon. | Not allowed as `detail-only`; a true `envir` row still requires its scene Map/Position/Big. Pure non-interactive dressing belongs in the background instead. |
-
 | Actual acquisition event | Required visible/runtime coverage |
 |---|---|
-| Click `item` in base exploration scene | Item Map + full-scene `Position` + ordinary Big + Icon |
-| Photograph `clue` in base exploration scene | Clue Map + full-scene `Position` + locked `620 x 620` clue-Polaroid Big + Icon |
-| Open Type 6/Type 7 container, then click `item` or photograph `clue` | Type 6 Map/Position + Type 7 Map/Position + child Map/full-scene `Position` + type-appropriate Big + Icon |
-| Inspect ItemStaticData `envir` observation | Visible background/State prop + no-suffix Map + full-scene `Position` + Big; omit Icon completely; do not add it to inventory |
-| Automatic dialogue or Expose `item`/`clue` grant | Big + Icon; add a conditional/handover state when the record is visibly presented in the scene |
-| Automatic minigame or analysis `item`/`clue` result | Type-appropriate Big + Icon; no Map only when there is no world-space locate/click step |
+| Click item in base exploration scene | Item Map + full-scene `Position` + Big + configured Icon |
+| Open Type 6/Type 7 container, then click item | Type 6 Map/Position + Type 7 Map/Position + child item Map/full-scene `Position` + child Big + configured Icon |
+| Click environmental observation that does not enter inventory | Visible background/state prop + real scene Map/`Position` + Big; omit Icon |
+| Automatic dialogue or Expose grant | Big + configured Icon; add a conditional/handover state when the item is visibly presented in the scene |
+| Automatic minigame or analysis result | Big + configured Icon when configured; no Map only when there is no world-space locate/click step |
 | Unlock cache, then player searches it | Route by the post-unlock interaction; use the full container chain when contents remain clickable |
 
 The ledger must cite the matching state and runtime rows. Empty or placeholder `mapSpritePath`/`Position` values are failures, not evidence that an item is `detail-only`.
 
-Current Sprite import convention is single Sprite, center pivot, 100 pixels per unit, alpha-is-transparency enabled, fallback physics shape enabled, and alpha test reference `0.5`. `SceneMgr.ConvertMapPosToWorldPos` reads `Position` as a top-left, Y-down map coordinate and uses the map Sprite rectangle to calculate the center. `MapItemCtrl.ChangeSpriteAndUpdateCollider` then rebuilds `PolygonCollider2D` from every Sprite physics shape. Therefore direct-record click coverage follows the Map alpha/physics outline, not a separately configured rectangle.
+Current Sprite import convention is single Sprite, center pivot, 100 pixels per unit. `SceneMgr.ConvertMapPosToWorldPos` reads `Position` as a top-left, Y-down map coordinate and uses the map Sprite rectangle to calculate the center.
 
-Only a Type 6 entrance to a real secondary menu may use a coherent region hotspot. Every direct-scene record, environmental observation, and individually clickable Type 7 child uses an object-alpha hotspot containing only that record itself.
+## Engineering working-stage files
 
-## Required temporary staged files
-
-The deterministic packager uses the detailed package below inside the current system-temporary NDC job. These files are verification and recovery inputs; they are not the project-facing delivery.
+The following is the full verification/recovery package kept under the work-process or engineering staging directory. It is not the user-facing formal image-asset folder.
 
 ```text
 delivery/
   scene_with_item.png
   <map-stem>.png
   <detail-stem>.png
-  <icon-stem>.png                         # required for item/clue; forbidden for envir
+  <icon-stem>.png
   XYposition.txt
   ItemStaticData.patch.json
   position_overlay.png
-  hotspot_overlay.png
   delivery_manifest.json
   delivery_verification.json
 ```
 
-The temporary staged package does not include Unity `.meta` files. Unity creates or preserves those during the approved synchronization step. This skill's standard `item`/`clue` contract requires `<icon-stem>.png` and its matching `iconPath`; any legacy exception must be explicitly supplied by the user and recorded in the manifest. An `envir` package always omits the Icon file, Icon verification report, Icon manifest fields, and `iconPath`; it still requires Map + `Position` + Big. A production Icon package also retains its matching `*_verification.json` report as a temporary recovery input.
+The engineering staged package does not include Unity `.meta` files. Unity creates or preserves those during the approved synchronization step. `<icon-stem>.png` is required when `iconPath` is present; it is omitted completely when the contract deliberately uses no Icon. A production Icon package also retains its matching `*_verification.json` report as a recovery input in this engineering package.
 
-After every requested record reaches a terminal state, publish one compact scene package:
-
-```text
-image/deliveries/<batch>/<scene>/
-  scene_preview.png
-  XYposition.txt
-  production_report.json
-  assets/
-    <map-stem>.png
-    <detail-stem>.png
-    <icon-stem>.png                       # item/clue only
-```
-
-`XYposition.txt` is shared by the whole scene and contains every successful world-space record. `production_report.json` compacts success, skip/block reasons, asset hashes, validation status, and temporary cleanup status. Do not publish `ItemStaticData.patch.json`, per-record XY files, manifests, verification JSON, overlays, masks, semantic masters, generated candidates, or the individual intermediate `scene_with_item.png` files. The accepted combined scene becomes the single `scene_preview.png`.
-
-For a `container-state`, stage this pair-oriented package inside the temporary job instead:
+For a `container-state`, stage this pair-oriented package instead:
 
 ```text
 delivery/
@@ -88,7 +61,6 @@ delivery/
   <contained-detail-stem>.png
   <contained-icon-stem>.png              # when iconPath is configured
   <contained-icon-verification>.json     # when iconPath is configured
-  <contained-map-stem>_hotspot_overlay.png
   XYposition.txt
   ItemStaticData.patch.json
   container_position_overlay.png
@@ -98,11 +70,94 @@ delivery/
 
 Repeat the contained-item files for every child ID. `prop_<container>2_inner.png` is a recovery and verification source. Do not copy it into the Unity EVIDENCE runtime folder.
 
+## Formal image-asset folders
+
+After all applicable gates pass, build the formal image-asset folder containing only accepted/final PNG image assets and one ASCII `XYposition.txt`. For a complete scene-prop or container-chain delivery, its required shape is:
+
+```text
+<scene-id>_道具放入预览图.png
+prop_<container>1.png
+prop_<container>2.png
+<contained-or-direct-map-stem>.png
+<contained-or-direct-detail-stem>.png
+<contained-or-direct-icon-stem>.png        # when iconPath is configured
+<additional-accepted-environment-or-state-image>.png
+XYposition.txt
+```
+
+Repeat container and item rows for every acquisition-coverage entry. Omit a role only when the contract explicitly proves it does not apply. The scene placement preview is the accepted full scene with the delivered props/states represented; it is not a position overlay or checkerboard review image.
+
+Transfer the complete formal image-asset folder directly after all applicable gates pass, including a process-package `final_visual_record_presence_gate.json` that enumerates every executed production stage and every required formal PNG, hash-matches each to a passing per-stage visual-review record, and reports `FINAL_VISUAL_RECORD_PRESENCE_GATE: PASS`. Do not wait for a separate user-review approval. Missing, stale, incomplete, or failed visual-review evidence blocks transfer even when technical verification passes. Keep `ItemStaticData.patch.json`, manifests, verification reports, position/hotspot overlays, masks, scripts, debug previews, rejected versions, superseded versions, and recovery-only sources in the engineering/work-process package. Do not narrow a complete formal package to the images changed in the latest revision. Do not merge a replacement package with a prior formal directory unless every pre-existing file is independently verified for the new package.
+
+Validate a new production folder with `scripts/validate_formal_release.py --folder <formal-folder> --release-contract <process-contract.json>`. The legacy `validate_formal_package.py` manual file-list check cannot establish delivery-class correctness, Map-to-coordinate hash binding, or active-replica consistency and is not a production gate.
+
+### Semantic formal-release contract
+
+Keep this contract in the work-process package, never in the formal image folder:
+
+```json
+{
+  "version": 1,
+  "kind": "ndc-formal-release-contract",
+  "scenePreview": "SC4002_道具放入预览图.png",
+  "additionalStateImages": [],
+  "records": [
+    {
+      "recordId": "4112",
+      "deliveryClass": "scene-pickup",
+      "classificationReason": "Player clicks the item in the base exploration scene",
+      "sourceReferences": [
+        "剧情设计/Unit4/state/loop1_state.yaml",
+        "ItemStaticData:4112"
+      ],
+      "iconPolicy": "required",
+      "assets": {
+        "map": "SC4002_item_4112.png",
+        "big": "SC4002_item_4112_big.png",
+        "icon": "SC4002_item_4112_icon.png"
+      },
+      "positions": [
+        {
+          "role": "map",
+          "stem": "SC4002_item_4112",
+          "x": 604,
+          "y": 550,
+          "assetSha256": "<64-lowercase-hex>",
+          "acceptedParentImage": "<accepted-full-native-parent.png>",
+          "acceptedParentSha256": "<64-lowercase-hex>"
+        }
+      ]
+    }
+  ],
+  "artifactSha256": {
+    "SC4002_道具放入预览图.png": "<64-lowercase-hex>",
+    "SC4002_item_4112.png": "<64-lowercase-hex>",
+    "SC4002_item_4112_big.png": "<64-lowercase-hex>",
+    "SC4002_item_4112_icon.png": "<64-lowercase-hex>",
+    "XYposition.txt": "<64-lowercase-hex>"
+  },
+  "replicaScanRoots": [
+    "<scene-work-process-root>",
+    "<scene-formal-parent-root>"
+  ]
+}
+```
+
+The contract is the executable acquisition coverage ledger for release:
+
+- `scene-pickup`: require `map`, `big`, Map `Position`, and `icon` when `iconPolicy` is `required`.
+- `environment`: require `map`, Map `Position`, and `big`; `iconPolicy` must be `omit`, and an Icon is forbidden.
+- `detail-only`: require `big`, configured Icon, and no Map/Position.
+- `minigame-only`: require empty evidence `assets` and `positions`; route its gameplay art outside this evidence formal folder.
+- `container-state`: require `type6` and `type7`, independent positions for both, explicit `containerGrantMode`, and every child as a nested classified record.
+
+Every record must include `classificationReason` and authoritative `sourceReferences`. `artifactSha256` must cover exactly every formal PNG plus `XYposition.txt`. Every coordinate entry repeats the current Map SHA-256 so a crop/Alpha/canvas revision automatically invalidates its old coordinate. Every `map` and `type6` coordinate also binds `acceptedParentImage` and `acceptedParentSha256`; the production validator must load that exact parent and prove that all Alpha-positive RGB matches it at `x,y`, all Alpha-zero RGB is zero, the sprite is RGBA, and its canvas lies within the parent. Matching Alpha or matching dimensions cannot excuse visible RGB drift, white/black fill blocks, painted repairs, stale review RGB, or another-parent pixels. `replicaScanRoots` must cover the scene's work-process and formal roots. The validator ignores only path segments explicitly marked history, legacy, rejected, or superseded; any other staging, candidate, or formal copy containing the same stem is active and must match both Map hash and `x,y`.
+
 ## Delivery manifest core
 
 ```json
 {
-  "version": 3,
+  "version": 2,
   "coordinateSystem": {
     "origin": "top-left",
     "xAxis": "right",
@@ -122,12 +177,6 @@ Repeat the contained-item files for every child ID. `prop_<container>2_inner.png
     "width": 164,
     "height": 96,
     "rect": [1248, 736, 1412, 832]
-  },
-  "hotspot": {
-    "mode": "object-alpha",
-    "alphaThreshold": 128,
-    "target": "item 4317 only",
-    "siblingOverlapPixels": 0
   },
   "unityDraft": {
     "mapSpritePath": "SC4025_item_4317",
@@ -225,71 +274,73 @@ The manifest records the final result and the nudge. `nudgeX` and `nudgeY` are a
 
 ## Compatibility text
 
-Each temporary per-record package may write one ASCII compatibility line:
+Write one ASCII line per staged item:
 
 ```text
 SC4025_item_4317 1248,736
 ```
 
-For a container pair, write both states and every positioned child on separate lines:
+For a container pair, write both states on separate lines:
 
 ```text
 prop_Low cabinet drawer_1 1551,680
 prop_Low cabinet drawer_2 1436,560
 ```
 
-The structured temporary manifest is the verification source of truth. At final publication, merge all successful lines in route order into the scene's single `XYposition.txt`. Do not include skipped/blocked records, duplicate stems, full-width commas, comments, or decorative brackets. The configuration workflow consumes this consolidated file.
+The structured manifest is the source of truth. Do not emit full-width commas or decorative brackets in new output.
+
+A Map PNG and its coordinate are one atomic record. Any Alpha, crop, padding, exclusion, or canvas change invalidates the old `Position`, release-contract hash binding, formal PNG, and every non-history `XYposition.txt` copy. Recompute the top-left from the new final Alpha canvas and update all active staging/candidate/formal packages together. Before release, scan every declared scene work-process and formal root; a matching stem with an old coordinate, missing sibling Map, or different Map hash is a hard failure. Clearly marked history/rejected/superseded paths remain recoverable and are excluded from active-replica enforcement.
 
 ## Naming rules
 
 - Reuse stems already present in the Unit ItemStaticData draft when available.
 - File extensions remain `.png`; ItemStaticData path fields omit the extension.
-- A Map, Big, and Icon trio for `item`/`clue` must share the same base stem. An `envir` pair shares the same no-suffix Map stem and `_big` detail stem, with no `_icon` sibling.
-
-| Runtime type | Map filename | Big filename | Icon filename |
-|---|---|---|---|
-| `item` | `<approved-stem>.png` | `<approved-stem>_big.png` | `<approved-stem>_icon.png` |
-| `clue` | `<approved-stem>.png` | `<approved-stem>_big.png` | `<approved-stem>_icon.png` |
-| `envir` | `<approved-stem>.png` | `<approved-stem>_big.png` | Omit; do not create an `_icon` sibling |
-
-`<approved-stem>` means the existing ItemStaticData stem when one is already assigned; do not rewrite historical `item`, `environment`, or other approved tokens merely to match the runtime type label. “No-suffix Map” means the Map filename is exactly the approved stem plus `.png`.
-
+- A map, detail, and icon trio for one item must share the same base stem.
 - A secondary-menu pair uses the established `prop_<container>1` and `prop_<container>2` naming convention unless an approved runtime stem already exists.
 - Do not rename an approved runtime asset during packaging merely to improve style.
 - Use one evidence folder per scene or existing scene-folder convention.
 
-## Alpha and hotspot rules
+## Map silhouette and hotspot rules
 
-- Direct record / Type 7 child Map: RGBA is mandatory. Alpha outside the owned object/condition is zero. The runtime hotspot proxy is the Map alpha thresholded at `128/255`, matching the current Unity `0.5` physics-shape threshold. Contact shadows and antialiasing may remain below the threshold; visible object structure needed for reliable clicking must survive it.
-- A compound record may have multiple disconnected alpha/physics islands. Do not fill the empty space between two glasses, two footprints, torn fragments, or other separate parts merely to make one rectangular hotspot.
-- A Type 6 secondary-menu entrance may use an RGB or opaque RGBA region Sprite because the intended interaction is the coherent container/opening area itself. Record `hotspot.mode: secondary-menu-region` explicitly.
-- Green-screen generation is optional. Prefer native alpha when clean; otherwise retain the green master and cleaned transparent master. Scene-integrated clues use an audited semantic RGBA extraction rather than forced green-screen generation.
+- A PNG canvas is rectangular, but the preferred visible and clickable region is not. Trace the target prop's current visible outer contour and let Sprite Physics Shape plus `PolygonCollider2D` carry that outline into runtime interaction.
+- Detect the selected prop together with every visible region of its own contact/cast shadow. Start from the accepted full native parent, not an inherited object crop. Maintain independent `BODY_MUST_COVER`, repeatable `SHADOW_MUST_COVER`, and repeatable `FOREGROUND_MUST_EXCLUDE` masks. For oblique paper, receipts, books, folders, and similar planar objects, the body includes the top face, every visible side/edge-thickness plane, curled or lifted edge, lower edge, and attributable shadow; similarity to supporting paper is not a reason to keep only the high-contrast top face. Before locating any extrema, build a deliberately loose source-resolution working selection around the entire body-plus-shadow union. This is an inspection range, not the final hotspot. Run `PRE_EXTREMA_VISUAL_COVERAGE_GATE` on the accepted parent at whole-image `100%` and local nearest-neighbor `200%` or greater. The complete body, all visible planes, low-contrast edges, and full attributable shadow must remain inside the working selection with visible breathing room and must not touch or cross its boundary. Save the reviewed overlay. `FAIL` or `NOT_CHECKED` blocks extrema registration.
+- The semantic target may consist of multiple disconnected Alpha islands. A foreground occluder removes only the pixels it actually covers; preserve visible target or shadow that reappears beyond it. Never keep only the largest connected component, require artificial connectivity, or discard a far-side shadow continuation because an intervening chair leg, rim, or other object splits it.
+- Only after the pre-extrema gate passes, independently register the visible semantic union's `top`, `bottom`, `left`, and `right` extreme points. Record whether each point belongs to the body, contact shadow, or cast shadow, and build the tight outer rectangle from all islands. A rectangle derived only from an inherited crop, the body, the largest component, or one proposed polygon is not valid evidence of completeness.
+- The undilated body-plus-shadow union and the final post-exclusion Alpha must both select all four registered semantic extreme points. If subtraction removes one, the point was not actually visible and must be corrected before export. Missing any one point fails the Map even if its own Alpha bounds, hashes, and parent-pixel checks pass.
+- Visually review the undilated base-contour overlay and validate the four points against that union, then expand it outward by a visually selected `2` or `3` Photoshop pixels. Use `5px` only as an asset-specific trial with untinted parent/edge evidence, not a global default. The base must already be complete; expansion is a safety margin for antialiasing, low-contrast thickness, and shadow softness, not permission to repair an incomplete contour or retain unrelated background/support pixels.
+- After expansion, subtract every foreground object, container rim, or other layer that visibly sits in front of the target. Foreground exclusion has priority over the chosen margin only on the pixels it covers. Record and verify these negative regions separately, then recompute the final crop from all surviving Alpha islands.
+- Visually review the final post-exclusion contour in an untinted parent-image overlay, Alpha-only image, checkerboard export, and transparent export. Approval requires the complete prop and every attributable shadow island to remain selected while every separable foreground occluder remains excluded. Alpha bounds, hashes, polygon bounds, connected-component counts, and internally consistent masks are technical evidence only and cannot set a visual gate to `PASS`.
+- Include the selected prop plus every visually attributable contact/cast-shadow region, including visible continuation beyond an occluder. Exclude ordinary background, container rims, supporting piles, and unrelated objects above or across the prop whenever they can be separated without inventing hidden pixels.
+- Never reconstruct or paint occluded portions merely to obtain a closed silhouette. Follow the actually visible boundary.
+- Use a full rectangular crop only for an audited legacy asset or a proven runtime/import limitation. A Type 6 entrance follows the same irregular rule unless that exception is explicitly recorded.
+- If a user- or artist-approved same-scale RGBA reference has the correct final Alpha but its visible RGB is not byte-identical to the accepted parent, do not copy its RGB and do not reject its reviewed contour solely for that mismatch. Use `irregular_map.py rebuild-reference` to register the reference uniquely against the accepted full native parent, reuse only its already-expanded/post-exclusion Alpha, rebuild all visible RGB from the parent, zero transparent RGB, and recompute the tight canvas and `Position`. Do not apply any second expansion to an authored final Alpha. An ambiguous or low-confidence translation blocks production, and the command's technical pass cannot substitute for the full visual gates.
+
+## Alpha rules
+
+- Map Sprite: preferred output is RGBA. Alpha-positive RGB must equal the accepted parent image at the registered coordinate; Alpha 0 RGB must be zero. Legacy rectangular Maps preserve the accepted scene mode and exact pixels.
 - Detail: an ordinary physical Big is RGBA and is exported once from a high-resolution semantic master to exactly one final frame. The `2560 x 1600` guide is never a runtime file. A clue Polaroid is exactly `620 x 620`; its locked template is never scaled or rotated.
-- Icon: exactly `130 x 130` RGBA for `item`/`clue`. Every visible prop and shadow pixel must remain inside `[7,7,122,122)`, so the alpha bounding box is no larger than `115 x 115`; this is a ceiling, not a fill target. Fully transparent pixels must have RGB zero. Use a `1040 x 1040` master with content inside `[60,60,980,980)` and perform one premultiplied-alpha LANCZOS downsample. Never silently derive an Icon from Big during production packaging. `envir` rows must omit Icon entirely.
-- Type 6 container screenshot: preserve the exact accepted scene pixels and mode.
+- Icon: exactly `130 x 130` RGBA. Every visible prop and shadow pixel must remain inside `[7,7,122,122)`, so the alpha bounding box is no larger than `115 x 115`; this is a ceiling, not a fill target. Fully transparent pixels must have RGB zero. Use a `1040 x 1040` master with content inside `[60,60,980,980)` and perform one premultiplied-alpha LANCZOS downsample. Never silently derive an Icon from Big during production packaging.
+- Type 6 container entrance: export RGBA; Alpha-positive RGB must equal the accepted scene at its recorded top-left, Alpha 0 RGB must be zero, and the final Alpha must follow the complete visible actionable container unit plus attributable shadow after foreground exclusions.
 - Type 7 borderless source: require an opaque RGB or RGBA image at final inner dimensions.
 - Type 7 runtime image: export RGBA with a fully opaque `RGBA(255,255,255,255)` rectangular border exactly 12 pixels wide on all four sides. The final dimensions are the inner dimensions plus 24 pixels on each axis. Do not resize after adding the border.
 
 ## Scene reconstruction invariant
 
-For a normal scene-anchored Map—`item`, photographed `clue`, `envir`, or a Type 7 child—let `S` be the matching reconstruction base, `F` the accepted per-record scene state, `L` the RGBA Map layer, and `(x, y)` its coordinate. Delivery requires:
+For a normal scene pickup, let `S` be the approved source scene, `F` the accepted scene with item, `C` the map crop, and `(x, y)` its coordinate. Delivery requires:
 
 1. `S` and `F` have identical size and mode.
 2. All `S != F` pixels are inside the approved authorization mask.
-3. Every changed pixel and every nonzero `L` alpha pixel is inside the approved authorization mask and `L`'s rectangle.
-4. Pixels outside `L`'s alpha are transparent and own no support-surface background.
-5. Alpha-compositing `L` onto `S` at `(x, y)` produces `F` pixel-for-pixel.
-6. Thresholding `L` alpha at `128` produces the reviewed runtime hotspot; it contains only the record itself.
+3. Every changed pixel is inside `C`'s rectangle. Unchanged portions of the larger authorization workspace may remain outside it.
+4. For a rectangular Map, `C == F.crop(rect)` pixel-for-pixel. For an irregular Map, every Alpha-positive RGB pixel in `C` equals the corresponding pixel in `F`, Alpha 0 RGB is zero, and the contour includes every changed pixel required by the accepted state.
+5. Pasting the rectangular Map or alpha-compositing the irregular Map onto `S` at `(x, y)` produces `F` pixel-for-pixel.
 
-For new placement jobs, derive `rect` from the nonzero-alpha bounds of the approved source-sized Map layer plus small transparent padding (default `4px`). Stable local background padding is forbidden for object-alpha Maps. Manual `--map-rect` and opaque crops are reserved for audited legacy assets or Type 6 secondary-menu regions.
-
-For a multi-record scene, each record owns a separate layer and per-record reconstruction state. The parent package additionally proves that composing all approved sibling layers in order produces the combined final scene and that sibling thresholded hotspot masks have zero intersection unless an explicit runtime priority rule is approved.
+For new placement jobs with both `S` and `F`, derive `rect` from the actual changed-pixel bounding box plus at least `32px` of stable local background. Fall back to the authorization-mask bounding box only when `S` is unavailable. Manual `--map-rect` input is reserved for audited legacy/baked-prop extraction.
 
 This proves that Unity can reconstruct the accepted scene state from the background plus runtime item Sprite.
 
 ## When reconstruction is intentionally impossible
 
-Type 6 must still satisfy the normal scene reconstruction invariant because it is an exact scene screenshot. Type 7 is an independently authored open view and is not expected to reconstruct the closed scene. Instead, verify that:
+When Type 6 is a newly inserted or changeable scene layer, it must satisfy the normal reconstruction invariant through irregular alpha compositing. When the container is already baked into the background and Type 6 is only its interaction hotspot, verify scene-exact parent-pixel alignment, Alpha rules, four-extrema coverage, expansion/exclusion evidence, and semantic contour completeness; compositing identical pixels over the same background is not a completeness test. Type 7 is an independently authored open view and is not expected to reconstruct the closed scene. Instead, verify that:
 
 1. Its material and structure match Type 6.
 2. Its final bordered rectangle remains inside the source scene canvas at its recorded top-left position.
@@ -298,13 +349,13 @@ Type 6 must still satisfy the normal scene reconstruction invariant because it i
 5. All four border strips are exactly 12 pixels of opaque white.
 6. Its interior equals the approved borderless source pixel-for-pixel.
 7. The Type 6 -> Type 7 -> contained-item configuration chain is complete, and only Type 6 is bound by `SceneConfig`.
-8. Every contained exploration item has a non-empty `mapSpritePath` and full-scene `Position`; its local RGBA layer lies inside Type 7 and alpha-composites pixel-for-pixel at that position.
+8. Every contained exploration item has a non-empty `mapSpritePath` and full-scene `Position`; its local canvas lies inside Type 7, its Alpha-positive pixels align pixel-for-pixel at that position, and its Sprite Physics Shape excludes transparent and unrelated occluding content.
 
 ## Art authorship and provenance
 
-The runtime image's semantic content must originate in an approved raster master, not in procedural drawing code. The delivery manifest records the semantic master path and SHA-256 plus any separately approved exact-text layer path and SHA-256.
+The runtime image's semantic content, including every required readable prop title, date, number, ledger entry, stamp wording, signature wording, and body text, must originate in one approved complete raster master, not in procedural drawing code. The delivery manifest records that complete semantic master path and SHA-256 plus its text-legibility visual proof.
 
-Code may transform and verify approved art. It may crop, mask, composite, rotate, resize, perspective-map, handle alpha, add the locked Polaroid frame or Type 7 border, write debug overlays, and calculate coordinates. It may also place exact approved text over an already illustrated physical master.
+Code may transform and verify approved art. It may crop, mask, composite already-approved non-text art, rotate, resize, perspective-map, handle alpha, add the locked Polaroid frame or Type 7 border, write debug overlays, and calculate coordinates. It must not place, correct, redraw, or composite readable prop text over a master.
 
 Code must not draw the final prop body, blank document, ruled table, card stack, container, furniture, texture, wear, lighting, handwriting, scene background, or condition-state composition. Test fixtures and non-runtime debug graphics are exempt. A code-drawn mockup cannot be promoted to `final_assets` merely because its dimensions and paths pass.
 
