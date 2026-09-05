@@ -58,7 +58,7 @@ Require all of the following:
 - distant areas do not acquire foreground-strength hard micro-edges;
 - repeated stamps, random cracks, speckled noise, fragmented short marks, arbitrary micro-ornament, and uniform sharpening are absent.
 
-Fail when either gate is `FAIL` or `NOT_CHECKED`. A texture-coherent image with changed art style is not a pass; a style-faithful image with broken or overfilled texture is not a pass. For a local formal file, validate the fail-closed record with `D:\Codex\NDC\scripts\validate-ndc-texture-gate.py`; automatic image-quality scores may screen candidates but cannot approve either artistic gate.
+Fail when either gate is `FAIL` or `NOT_CHECKED`. A texture-coherent image with changed art style is not a pass; a style-faithful image with broken or overfilled texture is not a pass. For a local formal file, validate the fail-closed record with `python scripts/art_pipeline/ndc_art.py tool texture`; automatic image-quality scores may screen candidates but cannot approve either artistic gate.
 <!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 ### C. Broad spatial structure

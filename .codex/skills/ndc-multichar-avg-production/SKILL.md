@@ -3,6 +3,17 @@ name: ndc-multichar-avg-production
 description: Design and produce NDC static AVG scenes containing two or more simultaneous characters, from story-grounded left/right blocking and variable-N colored whiteboxes through one-actor contextual generation, Photoshop extraction, coordinate-locked compositing, and final layered PSD/PNG review. Use for 多人AVG、多人过场图、多人静态剧情图、逐人抠图贴回场景；not for character design, expression sheets, dynamic comics, or empty-background generation.
 ---
 
+
+## Production paths and closeout
+
+Run `python scripts/art_pipeline/ndc_art.py paths` from either configured repository root before reading or writing production files. The Git-managed launcher resolves `{PLANNING_ROOT}`, `{ENGINE_ROOT}`, and `{WORK_ROOT}` from this machine's ignored `ndc.local.json` or `NDC_PLANNING_ROOT` / `NDC_ENGINE_ROOT` / `NDC_ART_WORK_ROOT`. These names are logical roots, not literal folders or requirements for a drive letter or repository layout. Read `{PLANNING_ROOT}/docs/美术生产工作区.md` and the dependency setup it links. Never copy another person's machine paths into shared rules.
+
+Create the task with `python scripts/art_pipeline/ndc_art.py workspace create --name NAME --kind KIND`. `{JOB_PAYLOAD}` means the exact returned `payload` path; put candidates, revisions, QA, copied inputs, and prepared delivery there. Use `python scripts/art_pipeline/ndc_art.py run SKILL_NAME SCRIPT_NAME ...` for this skill's versioned scripts. Resolve another skill with `python scripts/art_pipeline/ndc_art.py skill SKILL_NAME`; its `references/`, `scripts/`, and `assets/` are relative to the returned `skill_root`, never a compatibility entry's directory. All project-owned helper scripts and schemas must be present in Git; do not depend on private scripts in a home folder, scratch directory, or an old machine checkout. Install third-party runtimes and libraries as documented, without committing credentials or virtual environments.
+
+Resolve character cards through `{PLANNING_ROOT}/美术资产交付/角色/角色索引.json` and expression pairs through `{PLANNING_ROOT}/美术资产交付/角色表情/表情索引.json`; retain the selected asset hash and approval state. A card does not imply approval of a portrait, expression set, or new generated asset. Other input placeholders in examples must be replaced with the task's explicitly selected, existing inputs before execution.
+
+After the user approves the specific finished candidate, prepare and verify the engine delivery under the shared workflow. Clean closed-job payloads only through its state-aware closeout; preserve pending review and active work. These rules replace historical output-directory defaults in this skill, while all art-quality and user-approval gates still apply. Historical case paths remain provenance, not default output destinations. Missing external references or validators remain unresolved dependencies; never silently substitute another image or claim PASS.
+
 # NDC Multi-character AVG Production
 
 Produce a static multi-character AVG image on an already approved fixed NDC background. Keep the original scene pixels authoritative and deliver a reconstructable layered PSD plus a flattened PNG.

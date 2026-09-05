@@ -12,20 +12,20 @@ Create one receipt per character and profile. Formal delivery is fail-closed.
   "profile": "transparent",
   "profile_spec": {"canvas": [1164, 916], "mode": "RGBA", "background": "alpha_0"},
   "portrait_source": {
-    "path": "D:/path/approved-portrait.png",
+    "path": "{JOB_PAYLOAD}/approved-portrait.png",
     "sha256": "64-lowercase-hex",
     "authority": "USER_CONFIRMED_COMPLETED_PORTRAIT",
     "portrait_completion_used": false,
     "status": "PASS"
   },
-  "expression_manifest": "D:/path/expression-job.json",
-  "approved_asset_census": "D:/path/approved-expression-census.json",
+  "expression_manifest": "{JOB_PAYLOAD}/expression-job.json",
+  "approved_asset_census": "{JOB_PAYLOAD}/approved-expression-census.json",
   "expressions": [
     {
       "expression_id": "calm",
-      "profile_asset": "D:/path/transparent/character_calm.png",
+      "profile_asset": "{JOB_PAYLOAD}/transparent/character_calm.png",
       "profile_asset_sha256": "64-lowercase-hex",
-      "native_rgba": "D:/path/native/character_calm.png",
+      "native_rgba": "{JOB_PAYLOAD}/native/character_calm.png",
       "native_rgba_sha256": "64-lowercase-hex",
       "manual_alpha_return": {
         "method": "USER_RETURNED_MANUAL_BACKGROUND_PROCESSING",
@@ -34,15 +34,15 @@ Create one receipt per character and profile. Formal delivery is fail-closed.
         "codex_background_removal_used": false,
         "user_returned": true,
         "handoff_source": {
-          "path": "D:/path/pre-alpha/character_calm.png",
+          "path": "{JOB_PAYLOAD}/pre-alpha/character_calm.png",
           "sha256": "64-lowercase-hex"
         },
         "returned_native": {
-          "path": "D:/path/native/character_calm.png",
+          "path": "{JOB_PAYLOAD}/native/character_calm.png",
           "sha256": "64-lowercase-hex"
         },
-        "handoff_manifest": "D:/path/pre-alpha/handoff-manifest.json",
-        "edge_review": "D:/path/qa/alpha-edge-review.json",
+        "handoff_manifest": "{JOB_PAYLOAD}/pre-alpha/handoff-manifest.json",
+        "edge_review": "{JOB_PAYLOAD}/qa/alpha-edge-review.json",
         "protected_white_status": "PASS",
         "white_fringe_status": "PASS",
         "formal_status": "PASS"
@@ -55,9 +55,9 @@ Create one receipt per character and profile. Formal delivery is fail-closed.
       "detail_lighting_status": "PASS",
       "expression_status": "PASS",
       "profile_status": "PASS",
-      "cross_profile_source_audit": "D:/path/qa/cross-profile.json",
-      "profile_guide_review": "D:/path/qa/profile-guide.json",
-      "mechanical_audit": "D:/path/qa/mechanical.json"
+      "cross_profile_source_audit": "{JOB_PAYLOAD}/qa/cross-profile.json",
+      "profile_guide_review": "{JOB_PAYLOAD}/qa/profile-guide.json",
+      "mechanical_audit": "{JOB_PAYLOAD}/qa/mechanical.json"
     }
   ],
   "continuity_review": {

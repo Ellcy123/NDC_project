@@ -6,7 +6,7 @@ Record one state receipt with `PASS`, `FAIL`, or `NOT_CHECKED`. A later state ca
 
 Map each requirement to one user-confirmed portrait, inventory existing approved expressions, normalize aliases, and route each requested state as `REUSE_APPROVED_AS_IS`, `GENERATE_NEW`, `REPLACE_ONLY_BY_USER_REQUEST`, or `BLOCKED_NAME_AMBIGUITY`. For Unit3-or-later requests, inspect the designated Unit1 and Unit2 expression libraries before any generation planning; see `approved-reuse-and-delta-production.md`. Calm routes to `DERIVE_CALM_FROM_APPROVED_PORTRAIT` when no exact profile calm exists. Freeze the complete library and true production delta.
 
-For Unit3, census every file in `D:\PMH\工作\人设\003第三章\头像`; do not infer additional portraits from character-card folders. PMH remains read-only.
+For Unit3, census every file in the explicitly resolved `{APPROVED_PORTRAIT_ROOT}` from the main Skill; do not infer additional portraits from character-card folders. Original source identity: `D:\PMH\工作\人设\003第三章\头像` (historical provenance only). The selected source remains read-only.
 
 ## E1_PORTRAIT_SOURCE_LOCK
 

@@ -11,7 +11,7 @@ Codex must not remove backgrounds, create or paint masks, remove white fringe, r
 Create the handoff only after every requested state passes artistic review. Place it under:
 
 ```text
-D:\Codex\NDC\工作过程文件\角色表情\Unit<n>\<character>\手工去底交接_非最终_<date>
+<job>\payload\角色表情\Unit<n>\<character>\手工去底交接_非最终_<date>
 ```
 
 The handoff contains:

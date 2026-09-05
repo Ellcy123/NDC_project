@@ -1,18 +1,18 @@
 # Staging tool contracts and commands
 
-Use the tools in `scripts/scene_staging_tools.py` before the scale/whitebox pipeline. All authored JSON is strict JSON. Runtime reports and previews belong under `D:\Codex\NDC\工作过程文件` until the user approves a final asset.
+Use the tools in `scripts/scene_staging_tools.py` before the scale/whitebox pipeline. All authored JSON is strict JSON. Runtime reports and previews belong under the created job's `payload/` until the user approves a final asset.
 
 ## 1. Extract the engineering timeline
 
 ```powershell
-python scripts/scene_staging_tools.py extract-timeline `
-  --talk-table D:\PMH\ndc\NDC\Assets\table\Talk.json `
-  --npc-loop-table D:\PMH\ndc\NDC\Assets\table\NPCLoopData.json `
-  --scene-config-table D:\PMH\ndc\NDC\Assets\table\SceneConfig.json `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py extract-timeline `
+  --talk-table "{ENGINE_ROOT}/Assets/table/Talk.json" `
+  --npc-loop-table "{ENGINE_ROOT}/Assets/table/NPCLoopData.json" `
+  --scene-config-table "{ENGINE_ROOT}/Assets/table/SceneConfig.json" `
   --scene-id 1003 `
   --start-talk-id 106005001 `
-  --asset-root D:\PMH\ndc\NDC\Assets\Resources `
-  --output D:\Codex\NDC\工作过程文件\scene-name\timeline-engine.json
+  --asset-root "{ENGINE_ROOT}/Assets/Resources" `
+  --output <job>\payload\timeline-engine.json
 ```
 
 Use `--scene-config-table` plus `--scene-id` to derive the initial cast automatically. Add a repeated `--initial-loop-id` only for a verified actor not represented by that scene configuration. The report records source hashes, cast before/after every node, frozen actors, enter/exit events, asset paths, and issues.
@@ -82,7 +82,7 @@ The extractor is tolerant of the current JSON-like Unity exports but never rewri
 Run:
 
 ```powershell
-python scripts/scene_staging_tools.py validate-directing-timeline timeline-directing.json
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-directing-timeline timeline-directing.json
 ```
 
 For later snapshots, an enter event must add exactly its `actorId`; an exit event must remove exactly its `actorId`. During uninterrupted presence, `poseId`, `transformId`, `placementId`, and `affordanceZoneId` are immutable.
@@ -134,14 +134,14 @@ For later snapshots, an enter event must add exactly its `actorId`; an exit even
 ```
 
 ```powershell
-python scripts/scene_staging_tools.py validate-affordance affordance.json
-python scripts/scene_staging_tools.py render-affordance affordance.json affordance-review.png --base scene.png
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-affordance affordance.json
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py render-affordance affordance.json affordance-review.png --base scene.png
 ```
 
 Zone polygons constrain the anchor on a real support region; they do not describe the actor's vertical body envelope. After the exact placement contract exists, calculate independent scene contact evidence:
 
 ```powershell
-python scripts/scene_staging_tools.py validate-support-contact affordance.json placement.json `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-support-contact affordance.json placement.json `
   --report support-contact.json `
   --preview support-contact.png
 ```
@@ -155,7 +155,7 @@ Every support surface requires `occupancy.status: clear|occupied`. An occupied s
 Create `ndc-scene-absolute-scale/v1` with at least three unique `independenceGroup` values. Include both `horizontal` and `vertical` axes plus `actor-local` and `cross-depth` bands. Each anchor stores `measurementLine`, `realWorldRangeCm`, `assumedCm`, `projectionScaleToActorPlane`, confidence, and projection evidence. The command recomputes the line length instead of trusting a typed pixel value.
 
 ```powershell
-python scripts/scene_staging_tools.py validate-scene-absolute-scale scene-scale.json `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-scene-absolute-scale scene-scale.json `
   --report scene-scale-report.json --preview scene-scale-overlay.png
 ```
 
@@ -203,7 +203,7 @@ After every actor has a canonical height and final support point, create one sha
 ```
 
 ```powershell
-python scripts/scene_staging_tools.py validate-cast-scale cast-scale.json `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-cast-scale cast-scale.json `
   --report cast-scale-report.json
 ```
 
@@ -228,7 +228,7 @@ The browser editor is not the main authoring path. Codex creates a blocking requ
   "gazePoint": [1550, 610],
   "actionTarget": [1510, 820],
   "uiSide": "left",
-  "uiReferences": {"left": "D:\\PMH\\工作\\对话构图参考-左.png"},
+  "uiReferences": {"left": "{UI_LEFT_REFERENCE}"},
   "performance": {
     "action": "reads the chart while concealing concern",
     "gazeTarget": {"type": "scene-object", "id": "chart-01"},
@@ -254,7 +254,7 @@ The browser editor is not the main authoring path. Codex creates a blocking requ
 ```
 
 ```powershell
-python scripts/scene_staging_tools.py build-blocking-candidates blocking-request.json blocking-candidates
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py build-blocking-candidates blocking-request.json blocking-candidates
 ```
 
 The builder derives candidate anchors inside the selected affordance polygon, synthesizes repeatable anatomical landmarks from performance presets, overlays the real UI, rejects incompatible inputs, and ranks candidates by face/hand UI safety, action-envelope obstruction, and action-target distance. It writes one JSON and preview per candidate, a contact sheet, and a report.
@@ -284,7 +284,7 @@ After the combined whitebox gate passes, create one handoff per actor presence:
 ```
 
 ```powershell
-python scripts/scene_staging_tools.py prepare-local-generation-handoff local-handoff.json local-handoff
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py prepare-local-generation-handoff local-handoff.json local-handoff
 ```
 
 Before this command, isolate the accepted actor's anatomical 3D mannequin as a process-only RGBA guide and composite it onto the untouched original-color scene at the locked registration. Visually reject any clipped silhouette, fringe, missing prop envelope, moved contact, or altered source pixels. The input called `whiteboxComposite` for new production is this original-scene-plus-isolated-3D-mannequin overlay, not the globally neutralized 3D room and never a stick/joint/programmatic-block image. The command verifies that the full scene and overlay share the original canvas, expands the padded actor region to `generationAspectRatio` using original pixels only, then writes `image-1-local-whitebox.png`, `local-clean-reference.png`, and `local-generation-handoff.json`. The report records Image 1/2/3 roles, hashes, requested/actual crop ratio, crop policy, original/local actor boxes, crop box, and Photoshop paste top-left. Choose the ratio from the action envelope and support/context needs: standing is often portrait, seated interaction may be square/wider, and lying normally needs landscape. Choose padding large enough to include named support, action target, nearby scale sanity object, relevant occluders, and local light context without turning Image 1 back into an unconstrained whole-scene redraw.
@@ -300,7 +300,7 @@ Each snapshot first selects one applicable `uiSide` from the two mutually exclus
 After the contextual RGB and semantic/background-removal result are approved, use `scripts/conservative_matte.py` when the returned file contains a baked light-neutral checker. A manual polygon is only an authorized-region bound and is forbidden as the final alpha.
 
 ```powershell
-python scripts/conservative_matte.py checker-cutout.png actor.rgba.png `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration conservative_matte.py checker-cutout.png actor.rgba.png `
   --report actor-matte-report.json `
   --preview-prefix actor-matte
 ```
@@ -312,7 +312,7 @@ The tool flood-fills only border-connected neutral pixels, retains enclosed ligh
 Every generated or transformed image requires a separate `ndc-stage-visual-review/v1` contract. Run:
 
 ```powershell
-python scripts/visual_review_gate.py visual-review.json visual-review-output
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration visual_review_gate.py visual-review.json visual-review-output
 ```
 
 Stages are `exact-pose-whitebox`, `contextual-local-result`, `matte-extraction`, `pre-composite-registration`, and `final-full-composite`. Put the image being judged first in `artifacts`, then add the untouched scene, accepted local result, whitebox/depth reference, matte previews, or prior stage as comparison artifacts. Add `localTiles` for every actor, action, contact, edge, and overlap region. Codex must open the generated board before completing `checks`, `observations`, and `decision`.
@@ -326,13 +326,13 @@ For `exact-pose-whitebox`, the primary artifact is the character-preview 3D anat
 Run `validate-component-policy` on both the planned and final layer manifests. `structuralSceneObjectIds` may occur only in `source-occluder` layers with `sourcePolicy: exact-source-pixels` and `uniformScale: 1`. Every loose-object relocation must reference an old-location repair layer, a new-location layer, and two existing masks.
 
 ```powershell
-python scripts/scene_staging_tools.py validate-component-policy component-policy.json --report component-policy-report.json
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-component-policy component-policy.json --report component-policy-report.json
 ```
 
 At final composite size, annotate each eye center, visible face-direction point, named target point, pose ID, and angular tolerance. Run:
 
 ```powershell
-python scripts/scene_staging_tools.py validate-gaze-conformance gaze.json --report gaze-report.json
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-gaze-conformance gaze.json --report gaze-report.json
 ```
 
 This geometric report does not infer eye direction automatically; it prevents a visually reviewed landmark annotation from disagreeing with the directing target while a stale text contract still says `pass`.
@@ -343,8 +343,8 @@ This geometric report does not infer eye direction automatically; it prevents a 
   "scene": "scene.png",
   "sceneSize": [2560, 1600],
   "uiReferences": {
-    "left": "D:\\PMH\\工作\\对话构图参考-左.png",
-    "right": "D:\\PMH\\工作\\对话构图参考-右.png"
+    "left": "{UI_LEFT_REFERENCE}",
+    "right": "{UI_RIGHT_REFERENCE}"
   },
   "maskThreshold": {"backgroundRgb": [255, 255, 255], "tolerance": 12},
   "limits": {"maxHeadOcclusionRatio": 0.0, "maxActionOcclusionRatio": 0.20},
@@ -364,7 +364,7 @@ This geometric report does not infer eye direction automatically; it prevents a 
 ```
 
 ```powershell
-python scripts/scene_staging_tools.py validate-ui-safety ui.json --report ui-report.json --preview ui-preview.png
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py validate-ui-safety ui.json --report ui-report.json --preview ui-preview.png
 ```
 
 The preview uses the real reference pixels. A conceptual two-thirds estimate is not a PASS. The obstruction mask counts only visible, non-background UI pixels: fully transparent padding is ignored regardless of its stored RGB. When adapting a 2560 px UI reference to a wider panoramic scene, expand onto a transparent canvas and preserve the source alpha; never fill the extension with opaque white or black. Open the rendered UI preview after every canvas adaptation—an opaque blank region or a preview without the scene is evidence of an invalid UI gate, not a safe layout.
@@ -405,7 +405,7 @@ The preview uses the real reference pixels. A conceptual two-thirds estimate is 
 `assemblyMode` may be `registered-complete-state`, `registered-local-patch`, or `exact-master-canvas`. A registered complete state allows a natural whole-body action change but still requires the same runtime canvas, support contacts, transform, and placement; it never permits a horizontal body splice.
 
 ```powershell
-python scripts/scene_staging_tools.py verify-exploration-states states.json idle.png active.png --output-dir state-review
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py verify-exploration-states states.json idle.png active.png --output-dir state-review
 ```
 
 The output contains a difference image, half-blend overlay, flicker GIF, and machine report. Codex must still visually review identity, support/shadow continuity, state readability, silhouettes, and flicker jumps.
@@ -415,7 +415,7 @@ The output contains a difference image, half-blend overlay, flicker GIF, and mac
 Every batch and every formal single-scene run requires a production ledger. This gate prevents a flat asset manifest, a filename convention, or a weak technical QA script from bypassing the directing and whitebox chain.
 
 ```powershell
-python scripts/production_gate.py production-ledger.json --report production-ledger-report.json
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration production_gate.py production-ledger.json --report production-ledger-report.json
 ```
 
 The ledger schema is `ndc-scene-integration-production-ledger/v2` and its `stage` is `pre-generation` or `post-generation`. Each case records the source-scene hash, runtime branch, engineering/directing evidence, affordance contract, real UI reports, an independent fixed-scene absolute-scale report, cast-relative scale report, one support-contact report per exact pose ID, component-policy reports, reviewed whiteboxes, and local-generation handoffs. Post-generation additionally requires gaze-conformance, matte-v2, and formal conformance reports. Exploration cases also record the idle-master state pair and explicitly set `statesIndependentlyNormalized: false`.
@@ -433,8 +433,8 @@ After each simultaneous-cast whitebox snapshot is rendered, create:
   "schema": "ndc-timeline-board/v1",
   "sceneSize": [2560, 1600],
   "uiReferences": {
-    "left": "D:\\PMH\\工作\\对话构图参考-左.png",
-    "right": "D:\\PMH\\工作\\对话构图参考-右.png"
+    "left": "{UI_LEFT_REFERENCE}",
+    "right": "{UI_RIGHT_REFERENCE}"
   },
   "snapshots": [
     {"id": "beat-01", "image": "whitebox-beat-01.png", "uiSide": "left", "caption": "Nurse holds chart before doctor enters"},
@@ -444,7 +444,7 @@ After each simultaneous-cast whitebox snapshot is rendered, create:
 ```
 
 ```powershell
-python scripts/scene_staging_tools.py render-timeline-board timeline-board.json timeline-board
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py render-timeline-board timeline-board.json timeline-board
 ```
 
 Read the contact sheet in order. Each frame must pass the silent-frame statement, and no pose may anticipate a future entrant.
@@ -460,13 +460,13 @@ The editor is a reproducible inspection/fine-adjustment aid, not the primary wor
 Inventory the current read-only NPC/background assets and actual UI shapes without treating them as blanket artistic approvals:
 
 ```powershell
-python scripts/scene_staging_tools.py audit-project-assets `
-  --npc-loop-table D:\PMH\ndc\NDC\Assets\table\NPCLoopData.json `
-  --asset-root D:\PMH\ndc\NDC\Assets\Resources `
-  --background-root D:\PMH\ndc\NDC\Assets\Resources\Art\Scene\Backgrounds `
-  --ui-left D:\PMH\工作\对话构图参考-左.png `
-  --ui-right D:\PMH\工作\对话构图参考-右.png `
-  --output D:\Codex\NDC\工作过程文件\人物入景回归\project-baseline.json
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py audit-project-assets `
+  --npc-loop-table "{ENGINE_ROOT}/Assets/table/NPCLoopData.json" `
+  --asset-root "{ENGINE_ROOT}/Assets/Resources" `
+  --background-root "{ENGINE_ROOT}/Assets/Resources/Art/Scene/Backgrounds" `
+  --ui-left "{UI_LEFT_REFERENCE}" `
+  --ui-right "{UI_RIGHT_REFERENCE}" `
+  --output <job>\payload\project-baseline.json
 ```
 
 The report records every configured idle/active path, coordinate, existence, canvas, alpha/corner state, hash, background inventory, and UI obstruction extent. Use `--strict` to fail missing state assets or idle/active canvas mismatches.

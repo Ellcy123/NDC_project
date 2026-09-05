@@ -2,6 +2,8 @@
 
 ## 自检库
 
+运行时由本任务显式指定已获授权的 `{STYLE_LIBRARY_ROOT}`，记录源文件和哈希；不得根据旧盘符搜索同名文件并自动认定已批准。下面三个旧地址仅记录原始库身份，不能当成其他电脑的默认地址。需要原库或用户明确选定的替代库；缺失时保留阻塞状态。
+
 - 通用角色卡：`D:\Codex\NDC\NDC风格化角色工作流\通用风格自检库`
 - 通用肖像：`D:\Codex\NDC\NDC风格化角色工作流\通用风格肖像自检库`
 - 黑白红角色卡：`D:\Codex\NDC\NDC风格化角色工作流\黑白红风格自检库`
@@ -38,7 +40,7 @@
 - `repeated_pattern_artifacts_absent`：无重复印章、重复衣料切片、机械噪点和无结构线组；
 - `nonsemantic_microdetail_absent`：无新增装饰性碎褶、随机裂纹、斑点、伪缝线、伪饰品或均匀锐化。
 
-全图和无遗漏原像素局部覆盖都必须完成。任一双门禁项为 `FAIL` 或 `NOT_CHECKED` 时，`formal_status=BLOCKED`。局部纹理失败从冻结源做蒙版修复；全图细节膨胀返回该阶段原始身份/风格源重生，不得从失败候选继续。正式候选还必须通过 `D:\Codex\NDC\scripts\validate-ndc-texture-gate.py`。
+全图和无遗漏原像素局部覆盖都必须完成。任一双门禁项为 `FAIL` 或 `NOT_CHECKED` 时，`formal_status=BLOCKED`。局部纹理失败从冻结源做蒙版修复；全图细节膨胀返回该阶段原始身份/风格源重生，不得从失败候选继续。正式候选还必须通过 `python scripts/art_pipeline/ndc_art.py tool texture`。
 <!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 正式结论同时遵守 `execution-gates.md`：每个必需项只能填写 `PASS`、`FAIL` 或 `NOT_CHECKED`；任一 `FAIL` 或 `NOT_CHECKED` 都使 `formal_status` 为 `BLOCKED`。不得用“基本通过”“待确认但先交付”替代缺失证据。

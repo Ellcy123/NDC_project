@@ -216,7 +216,7 @@ local_tile_coverage_complete: true
 全部人工检查完成后，将回执保存为 JSON，并运行：
 
 ```text
-python scripts/validate_delivery_receipt.py --receipt <delivery-receipt.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters validate_delivery_receipt.py --receipt <delivery-receipt.json>
 ```
 
 回执中的 `gates` 每项使用对象结构：

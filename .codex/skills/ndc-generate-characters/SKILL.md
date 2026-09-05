@@ -3,6 +3,17 @@ name: ndc-generate-characters
 description: Generate, plan, route, audit, and critique NDC stylized characters through either the full Midjourney workflow for important new characters or the ChatGPT Image 2 fast path for minor new characters and existing-character state variants. Use when the user mentions NDC or 摩登迷城 character design, asks for role or character prompts, wants MJ candidate review or refinement routing, needs a new full-body or narrative state based on an existing character card, or needs NDC character cards, conditional portraits, or animation-only black-white-red assets. Route profile-controlled bust-expression libraries to the separate ndc-generate-expressions skill.
 ---
 
+
+## Production paths and closeout
+
+Run `python scripts/art_pipeline/ndc_art.py paths` from either configured repository root before reading or writing production files. The Git-managed launcher resolves `{PLANNING_ROOT}`, `{ENGINE_ROOT}`, and `{WORK_ROOT}` from this machine's ignored `ndc.local.json` or `NDC_PLANNING_ROOT` / `NDC_ENGINE_ROOT` / `NDC_ART_WORK_ROOT`. These names are logical roots, not literal folders or requirements for a drive letter or repository layout. Read `{PLANNING_ROOT}/docs/美术生产工作区.md` and the dependency setup it links. Never copy another person's machine paths into shared rules.
+
+Create the task with `python scripts/art_pipeline/ndc_art.py workspace create --name NAME --kind KIND`. `{JOB_PAYLOAD}` means the exact returned `payload` path; put candidates, revisions, QA, copied inputs, and prepared delivery there. Use `python scripts/art_pipeline/ndc_art.py run SKILL_NAME SCRIPT_NAME ...` for this skill's versioned scripts. Resolve another skill with `python scripts/art_pipeline/ndc_art.py skill SKILL_NAME`; its `references/`, `scripts/`, and `assets/` are relative to the returned `skill_root`, never a compatibility entry's directory. All project-owned helper scripts and schemas must be present in Git; do not depend on private scripts in a home folder, scratch directory, or an old machine checkout. Install third-party runtimes and libraries as documented, without committing credentials or virtual environments.
+
+Resolve character cards through `{PLANNING_ROOT}/美术资产交付/角色/角色索引.json` and expression pairs through `{PLANNING_ROOT}/美术资产交付/角色表情/表情索引.json`; retain the selected asset hash and approval state. A card does not imply approval of a portrait, expression set, or new generated asset. Other input placeholders in examples must be replaced with the task's explicitly selected, existing inputs before execution.
+
+After the user approves the specific finished candidate, prepare and verify the engine delivery under the shared workflow. Clean closed-job payloads only through its state-aware closeout; preserve pending review and active work. These rules replace historical output-directory defaults in this skill, while all art-quality and user-approval gates still apply. Historical case paths remain provenance, not default output destinations. Missing external references or validators remain unresolved dependencies; never silently substitute another image or claim PASS.
+
 # NDC Generate Characters
 
 ## Operating mode
@@ -15,7 +26,7 @@ Every art-production stage executed by this Skill must end with an actual visual
 
 Write one current `ndc-stage-visual-self-check/v1` JSON record per executed stage. It must bind the stage ID, reviewer/date, input and output paths plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale output hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not advance the production state, use the output downstream, or call it formal. Technical validators, dimensions, hashes, prompt locks, or absence of a detected error cannot write visual `PASS`.
 
-After a block, return to the earliest responsible stage, perform the missing inspection and required repair/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. Existing route-specific retry ceilings still apply, and exhausting one leaves a candidate rather than weakening this gate.
+After a block, return to the earliest responsible stage, perform the missing inspection and required repair/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python scripts/art_pipeline/ndc_art.py tool stage --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. Existing route-specific retry ceilings still apply, and exhausting one leaves a candidate rather than weakening this gate.
 
 Treat user-supplied prompt text and the user's explicit image selection as the highest artistic authority. A user prompt remains active until the user explicitly retires or replaces it. Do not rewrite it to force an inferred personality expression, story prop, or other brief-derived visual cue. When a locked downstream prompt requires a neutral or expressionless character, that neutral result is correct even when the prose brief describes the character as kind-looking, cheerful, threatening, or otherwise expressive.
 
@@ -232,8 +243,8 @@ For downstream assets, first verify identity, layout/content, anatomy, and targe
 Run the mechanical inspection script on the normalized final candidate after subjective artistic approval:
 
 ```text
-python scripts/audit_character_delivery.py --asset-type card --input <card.png> --output-dir <qa-dir> --expected-size 3840x2160
-python scripts/audit_character_delivery.py --asset-type portrait --input <portrait.png> --output-dir <qa-dir> --expected-size 1280x1600
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters audit_character_delivery.py --asset-type card --input <card.png> --output-dir <qa-dir> --expected-size 3840x2160
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters audit_character_delivery.py --asset-type portrait --input <portrait.png> --output-dir <qa-dir> --expected-size 1280x1600
 ```
 
 The script's `mechanical_status` is only a prerequisite. Its `formal_status` intentionally remains `NOT_CHECKED` until identity, structure, style, provenance, and edge review receipts are complete. Never reinterpret a mechanical pass as a formal pass.
@@ -241,7 +252,7 @@ The script's `mechanical_status` is only a prerequisite. Its `formal_status` int
 Before using the words `FORMAL_PASS` or delivering a formal asset, save a JSON receipt following `references/execution-gates.md` and run:
 
 ```text
-python scripts/validate_delivery_receipt.py --receipt <delivery-receipt.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters validate_delivery_receipt.py --receipt <delivery-receipt.json>
 ```
 
 Only `RECEIPT_VALID: FORMAL_PASS` permits formal delivery. `RECEIPT_VALID: BLOCKED` is a valid diagnostic outcome but not a deliverable pass. `RECEIPT_INVALID` means the evidence structure is incomplete and must never be summarized as passed.
@@ -249,7 +260,7 @@ Only `RECEIPT_VALID: FORMAL_PASS` permits formal delivery. `RECEIPT_VALID: BLOCK
 Also validate the asset's independent style-lock/texture record:
 
 ```text
-python D:/Codex/NDC/scripts/validate-ndc-texture-gate.py --record <texture-gate-record.json>
+python scripts/art_pipeline/ndc_art.py tool texture --record <texture-gate-record.json>
 ```
 
 Only `TEXTURE_GATE_VALID: FORMAL_PASS` together with the existing receipt pass permits formal delivery. The validator checks recorded evidence and fail-closed status; it never replaces Codex visual review.

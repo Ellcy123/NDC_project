@@ -42,7 +42,7 @@ Record one viewpoint lock per character and one performance plan per expression:
 ```json
 {
   "viewpoint_lock": {
-    "approved_portrait": "D:/path/user-approved-portrait.png",
+    "approved_portrait": "{JOB_PAYLOAD}/user-approved-portrait.png",
     "approved_portrait_sha256": "64-lowercase-hex",
     "view_family": "three_quarter_right",
     "viewing_side": "subject turned toward camera-right",

@@ -3,6 +3,17 @@ name: ndc-coordinate-image-edit
 description: Perform non-destructive, coordinate-locked cleanup, evidence placement, and structural repair on NDC raster art through bounded authorization regions, legal generation crops, per-job residue checks, axis-aware seam scans, deterministic bridges, and a final union-mask zero-drift audit. Use for localized removal, cleanup, replacement, material repair, evidence insertion, or grid/line alignment; do not use for whole-image generation or broad restyling.
 ---
 
+
+## Production paths and closeout
+
+Run `python scripts/art_pipeline/ndc_art.py paths` from either configured repository root before reading or writing production files. The Git-managed launcher resolves `{PLANNING_ROOT}`, `{ENGINE_ROOT}`, and `{WORK_ROOT}` from this machine's ignored `ndc.local.json` or `NDC_PLANNING_ROOT` / `NDC_ENGINE_ROOT` / `NDC_ART_WORK_ROOT`. These names are logical roots, not literal folders or requirements for a drive letter or repository layout. Read `{PLANNING_ROOT}/docs/美术生产工作区.md` and the dependency setup it links. Never copy another person's machine paths into shared rules.
+
+Create the task with `python scripts/art_pipeline/ndc_art.py workspace create --name NAME --kind KIND`. `{JOB_PAYLOAD}` means the exact returned `payload` path; put candidates, revisions, QA, copied inputs, and prepared delivery there. Use `python scripts/art_pipeline/ndc_art.py run SKILL_NAME SCRIPT_NAME ...` for this skill's versioned scripts. Resolve another skill with `python scripts/art_pipeline/ndc_art.py skill SKILL_NAME`; its `references/`, `scripts/`, and `assets/` are relative to the returned `skill_root`, never a compatibility entry's directory. All project-owned helper scripts and schemas must be present in Git; do not depend on private scripts in a home folder, scratch directory, or an old machine checkout. Install third-party runtimes and libraries as documented, without committing credentials or virtual environments.
+
+Resolve character cards through `{PLANNING_ROOT}/美术资产交付/角色/角色索引.json` and expression pairs through `{PLANNING_ROOT}/美术资产交付/角色表情/表情索引.json`; retain the selected asset hash and approval state. A card does not imply approval of a portrait, expression set, or new generated asset. Other input placeholders in examples must be replaced with the task's explicitly selected, existing inputs before execution.
+
+After the user approves the specific finished candidate, prepare and verify the engine delivery under the shared workflow. Clean closed-job payloads only through its state-aware closeout; preserve pending review and active work. These rules replace historical output-directory defaults in this skill, while all art-quality and user-approval gates still apply. Historical case paths remain provenance, not default output destinations. Missing external references or validators remain unresolved dependencies; never silently substitute another image or claim PASS.
+
 # NDC Coordinate Image Edit
 
 This is the only supported NDC local-raster repair workflow. The image model supplies appearance inside a bounded region; deterministic code owns crop legality, masks, registration, placement, seam repair, and verification.
@@ -15,7 +26,7 @@ Every art-production stage executed by this Skill must end with an actual visual
 
 Write one current `ndc-stage-visual-self-check/v1` JSON record per executed stage. It must bind the stage ID, reviewer/date, input and output paths plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale output hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not mark the stage passed, use its output downstream, or call it formal. Technical validators, dimensions, hashes, masks, boundary/seam reports, or absence of a detected error cannot write visual `PASS`.
 
-After a block, return to the responsible stage, perform the missing inspection and required repair/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. The existing per-stage retry ceiling still applies, and exhausting it leaves a candidate rather than weakening this gate. The more detailed `visual_review.json` and terminal presence rules below remain mandatory and may satisfy this gate only when they contain the same required evidence.
+After a block, return to the responsible stage, perform the missing inspection and required repair/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python scripts/art_pipeline/ndc_art.py tool stage --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. The existing per-stage retry ceiling still applies, and exhausting it leaves a candidate rather than weakening this gate. The more detailed `visual_review.json` and terminal presence rules below remain mandatory and may satisfy this gate only when they contain the same required evidence.
 
 ## Delivery invariants
 
@@ -47,7 +58,7 @@ At terminal publication, write `final_visual_record_presence_gate.json` in the p
 
 ### 1. Load the runtime and inspect the source
 
-Call `codex_app__load_workspace_dependencies` and use its bundled Python executable. Store it in a task-specific variable such as `$ndcImagePython`.
+Use a Python environment with the documented dependencies. In Codex, the bundled workspace dependency runtime is also valid; store its executable in a task-specific variable such as `$ndcImagePython`. All invoked project scripts must still resolve from Git through the launcher.
 
 Resolve the system temporary root and create a unique child before any raster work:
 
@@ -74,7 +85,7 @@ Create source-sized masks. One object may use one polygon; overlapping objects t
 For collectible evidence placement, first make a tight intent mask that records the proposed object envelope, then expand it deterministically into the broad authorization workspace. The intent mask is a planning artifact, not the final hard mask. Use `expand-mask`; the command fails rather than silently clipping the required `3x` workspace or `128px` side margins:
 
 ```powershell
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" expand-mask `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py expand-mask `
   --input "$ndcWorkRoot/intent_mask.png" `
   --output "$ndcWorkRoot/authorization_mask.png" `
   --scale 3 `
@@ -90,8 +101,8 @@ After a candidate exists, create the final composition mask from the candidate's
 Prepare an AI job with an explicit legal crop:
 
 ```powershell
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" prepare `
-  --source "D:/NDC_project/image/source.png" `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py prepare `
+  --source "{PLANNING_ROOT}/image/source.png" `
   --edit-rect 1170 925 1860 1040 `
   --crop-rect 1008 464 2032 1488 `
   --mask "$ndcWorkRoot/masks/desktop-mask.png" `
@@ -140,12 +151,12 @@ After generation:
 ### 4. Compose and scan every object-mask boundary
 
 ```powershell
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" compose `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py compose `
   --manifest "$ndcWorkRoot/01-desktop/manifest.json" `
   --ai-patch "$ndcWorkRoot/01-desktop/generated.png" `
   --output "$ndcWorkRoot/01-desktop/step1.png"
 
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" scan-boundary `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py scan-boundary `
   --manifest "$ndcWorkRoot/01-desktop/manifest.json" `
   --ring 6
 ```
@@ -172,7 +183,7 @@ Run a structure scan wherever a paste boundary crosses a long rail, molding, cab
 - `--seam-axis y`: horizontal paste boundary; compares vertical lines above and below it.
 
 ```powershell
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" scan-structure `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py scan-structure `
   --image "$ndcWorkRoot/final-step.png" `
   --rect 2200 800 2225 900 `
   --seam-axis x `
@@ -195,7 +206,7 @@ Keep the bridge normally 8–12px deep. The helper refuses a deeper bridge and v
 
 ```powershell
 # Prepare a small deterministic job; this crop is not sent to the image model.
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" prepare `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py prepare `
   --source "$ndcWorkRoot/02-grid/step2.png" `
   --edit-rect 2210 800 2222 900 `
   --crop-rect 2180 780 2250 920 `
@@ -204,7 +215,7 @@ Keep the bridge normally 8–12px deep. The helper refuses a deeper bridge and v
   --canvas-kind deterministic `
   --out-dir "$ndcWorkRoot/03-grid-left-bridge"
 
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" repair-structure `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py repair-structure `
   --manifest "$ndcWorkRoot/03-grid-left-bridge/manifest.json" `
   --seam-axis x `
   --seam 2210 `
@@ -214,7 +225,7 @@ Keep the bridge normally 8–12px deep. The helper refuses a deeper bridge and v
   --max-depth 12 `
   --authorization-mask "$ndcWorkRoot/masks/grid-mask.png"
 
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" compose `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py compose `
   --manifest "$ndcWorkRoot/03-grid-left-bridge/manifest.json" `
   --ai-patch "$ndcWorkRoot/03-grid-left-bridge/generated.png" `
   --registration off
@@ -234,8 +245,8 @@ Re-run `scan-structure` on the repaired boundary. Keep the failed pre-repair rep
 After all jobs and bridges, compare the final PNG with the original through the union of every confirmed parent mask:
 
 ```powershell
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" verify-final `
-  --source "D:/NDC_project/image/source.png" `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py verify-final `
+  --source "{PLANNING_ROOT}/image/source.png" `
   --output "$ndcWorkRoot/final.png" `
   --mask "$ndcWorkRoot/masks/desktop-mask.png" `
   --mask "$ndcWorkRoot/masks/grid-mask.png" `
@@ -277,7 +288,7 @@ Before parent publication, inspect the full image and close crops. Return intern
 Recover an interrupted job with:
 
 ```powershell
-& $ndcImagePython ".codex/skills/ndc-coordinate-image-edit/scripts/coordinate_patch.py" status `
+& $ndcImagePython scripts/art_pipeline/ndc_art.py run ndc-coordinate-image-edit coordinate_patch.py status `
   --manifest "$ndcWorkRoot/01-object/manifest.json"
 ```
 

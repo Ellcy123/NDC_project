@@ -93,7 +93,7 @@ Review head sizes first, then full height, perspective, support, gaze, action, c
 Use the general integration tool:
 
 ```powershell
-python ../ndc-character-scene-integration/scripts/scene_staging_tools.py `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py `
   prepare-local-generation-handoff <actor-handoff-request.json> <output-dir>
 ```
 

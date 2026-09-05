@@ -41,13 +41,13 @@ prompt_lock:
 
 `exact_text_match: FAIL` 时不得调用生成工具。
 
-使用脚本直接导出并复核，不要手工重写主提示词：
+从任一已配置仓库根目录运行；先以 `ndc_art.py paths` 返回的策划根替换 `{PLANNING_ROOT}`，导出目标使用本任务的项目外 `payload` 路径。使用脚本直接导出并复核，不要手工重写主提示词：
 
 ```text
-python scripts/verify_locked_prompt.py --prompt-library references/prompt-library.md --prompt-id portrait --export <portrait-prompt.txt>
-python scripts/verify_locked_prompt.py --prompt-library references/prompt-library.md --prompt-id portrait --verify <portrait-prompt.txt>
-python scripts/verify_locked_prompt.py --prompt-library references/prompt-library.md --prompt-id character-card-default --export <card-prompt.txt>
-python scripts/verify_locked_prompt.py --prompt-library references/prompt-library.md --prompt-id character-card-default --verify <card-prompt.txt>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters verify_locked_prompt.py --prompt-library "{PLANNING_ROOT}/.codex/skills/ndc-generate-characters/references/prompt-library.md" --prompt-id portrait --export <portrait-prompt.txt>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters verify_locked_prompt.py --prompt-library "{PLANNING_ROOT}/.codex/skills/ndc-generate-characters/references/prompt-library.md" --prompt-id portrait --verify <portrait-prompt.txt>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters verify_locked_prompt.py --prompt-library "{PLANNING_ROOT}/.codex/skills/ndc-generate-characters/references/prompt-library.md" --prompt-id character-card-default --export <card-prompt.txt>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-characters verify_locked_prompt.py --prompt-library "{PLANNING_ROOT}/.codex/skills/ndc-generate-characters/references/prompt-library.md" --prompt-id character-card-default --verify <card-prompt.txt>
 ```
 
 只有输出 `PROMPT_LOCK_PASS` 的快照才允许提交给生成工具；工具调用中的提示词必须直接来自该快照。

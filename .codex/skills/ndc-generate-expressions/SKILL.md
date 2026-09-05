@@ -3,6 +3,17 @@ name: ndc-generate-expressions
 description: Plan, generate, hand off, resume, audit, normalize, and package NDC bust-expression sets from user-confirmed completed portraits. Use for NDC or 摩登迷城 expression requirements, non-final pre-Alpha handoff, ingestion of user-returned manually processed RGBA files, paired transparent and exact-green delivery profiles, and expression-set QA. Do not use to complete missing portrait regions, remove backgrounds for the user, redesign a character, create full-body states, or place characters into scenes.
 ---
 
+
+## Production paths and closeout
+
+Run `python scripts/art_pipeline/ndc_art.py paths` from either configured repository root before reading or writing production files. The Git-managed launcher resolves `{PLANNING_ROOT}`, `{ENGINE_ROOT}`, and `{WORK_ROOT}` from this machine's ignored `ndc.local.json` or `NDC_PLANNING_ROOT` / `NDC_ENGINE_ROOT` / `NDC_ART_WORK_ROOT`. These names are logical roots, not literal folders or requirements for a drive letter or repository layout. Read `{PLANNING_ROOT}/docs/美术生产工作区.md` and the dependency setup it links. Never copy another person's machine paths into shared rules.
+
+Create the task with `python scripts/art_pipeline/ndc_art.py workspace create --name NAME --kind KIND`. `{JOB_PAYLOAD}` means the exact returned `payload` path; put candidates, revisions, QA, copied inputs, and prepared delivery there. Use `python scripts/art_pipeline/ndc_art.py run SKILL_NAME SCRIPT_NAME ...` for this skill's versioned scripts. Resolve another skill with `python scripts/art_pipeline/ndc_art.py skill SKILL_NAME`; its `references/`, `scripts/`, and `assets/` are relative to the returned `skill_root`, never a compatibility entry's directory. All project-owned helper scripts and schemas must be present in Git; do not depend on private scripts in a home folder, scratch directory, or an old machine checkout. Install third-party runtimes and libraries as documented, without committing credentials or virtual environments.
+
+Resolve character cards through `{PLANNING_ROOT}/美术资产交付/角色/角色索引.json` and expression pairs through `{PLANNING_ROOT}/美术资产交付/角色表情/表情索引.json`; retain the selected asset hash and approval state. A card does not imply approval of a portrait, expression set, or new generated asset. Other input placeholders in examples must be replaced with the task's explicitly selected, existing inputs before execution.
+
+After the user approves the specific finished candidate, prepare and verify the engine delivery under the shared workflow. Clean closed-job payloads only through its state-aware closeout; preserve pending review and active work. These rules replace historical output-directory defaults in this skill, while all art-quality and user-approval gates still apply. Historical case paths remain provenance, not default output destinations. Missing external references or validators remain unresolved dependencies; never silently substitute another image or claim PASS.
+
 # NDC Generate Expressions
 
 ## Operating boundary
@@ -15,13 +26,13 @@ Every art-production stage executed by this Skill must end with an actual visual
 
 Write one current `ndc-stage-visual-self-check/v1` JSON record per executed stage. It must bind the stage ID, reviewer/date, input and output paths plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale output hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not advance state, hand off the file, use it downstream, or call it formal. Technical validators, dimensions, hashes, Alpha/profile reports, or absence of a detected error cannot write visual `PASS`.
 
-After a block, return to the responsible stage allowed by this Skill's authorship boundary, perform the missing inspection and authorized rework/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. Existing retry ceilings and the ban on Codex background/Alpha repair remain unchanged; when the responsible repair belongs to the user, stop at the required rework status instead of weakening this gate.
+After a block, return to the responsible stage allowed by this Skill's authorship boundary, perform the missing inspection and authorized rework/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python scripts/art_pipeline/ndc_art.py tool stage --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. Existing retry ceilings and the ban on Codex background/Alpha repair remain unchanged; when the responsible repair belongs to the user, stop at the required rework status instead of weakening this gate.
 
 The user-approved portrait is the identity, viewpoint, costume, lighting, style, texture, and calm-expression authority. Never regenerate calm. Every non-calm expression is generated directly from that portrait, never from another expression or a failed candidate.
 
 Default to prompt and manifest preparation. Execute image generation only after the user explicitly authorizes Codex execution. A request to update this Skill, inspect portraits, or plan requirements is not authorization to start generation.
 
-For Unit3, treat the image files in `D:\PMH\工作\人设\003第三章\头像` as the user-confirmed completed portrait set. This directory is read-only. Copy required inputs into `D:\Codex\NDC\工作过程文件\角色表情\Unit3` before production; never modify PMH files.
+For Unit3, explicitly resolve `{APPROVED_PORTRAIT_ROOT}` to the original user-confirmed completed portrait set at its current location, or to an explicitly selected substitute. Historical source identity: `D:\PMH\工作\人设\003第三章\头像` (provenance only, not a runtime default). The selected source is read-only; character cards alone are not a substitute for approved portraits. Copy required inputs into the current job's `payload/inputs/`; never modify source files.
 
 ## Required reading
 
@@ -84,17 +95,17 @@ Identify:
 Use scripts as evidence and deterministic processors, never as artistic approvers:
 
 ```text
-python scripts/prepare_alpha_edge_review.py --input <native-rgba.png> --output-dir <alpha-edge-qa-dir>
-python scripts/compose_profile_asset.py --input <edge-pass-native-rgba.png> --profile transparent --scale <scale-at-or-below-1> --offset-x <x> --offset-y <y> --output <transparent.png> --audit <transparent-composition.json>
-python scripts/compose_profile_asset.py --input <edge-pass-native-rgba.png> --profile greenscreen --scale <scale-at-or-below-1> --offset-x <x> --offset-y <y> --output <greenscreen.png> --audit <greenscreen-composition.json>
-python scripts/audit_cross_profile_source_consistency.py --greenscreen-audit <greenscreen-composition.json> --transparent-audit <transparent-composition.json> --expression-id <id> --output <cross-profile-source-audit.json>
-python scripts/prepare_profile_guide_review.py --profile transparent --input <transparent.png> --landmarks <reviewed-landmarks.json> --output-dir <guide-qa-dir>
-python scripts/prepare_profile_guide_review.py --profile greenscreen --input <greenscreen.png> --landmarks <reviewed-landmarks.json> --output-dir <guide-qa-dir>
-python scripts/audit_expression_asset.py --profile transparent --input <transparent.png> --anchor <transparent-calm.png> --state-class <class> --output-dir <qa-dir>
-python scripts/audit_expression_asset.py --profile greenscreen --input <greenscreen.png> --anchor <greenscreen-calm.png> --state-class <class> --output-dir <qa-dir>
-python scripts/audit_expression_set.py --manifest <expression-job.json> --profile <profile> --input-dir <profile-dir> --output-dir <set-qa-dir>
-python scripts/validate_expression_receipt.py --receipt <expression-delivery-receipt.json>
-python scripts/audit_expression_delivery_release.py --registry <release-evidence-registry.json> --output <release-audit.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions prepare_alpha_edge_review.py --input <native-rgba.png> --output-dir <alpha-edge-qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions compose_profile_asset.py --input <edge-pass-native-rgba.png> --profile transparent --scale <scale-at-or-below-1> --offset-x <x> --offset-y <y> --output <transparent.png> --audit <transparent-composition.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions compose_profile_asset.py --input <edge-pass-native-rgba.png> --profile greenscreen --scale <scale-at-or-below-1> --offset-x <x> --offset-y <y> --output <greenscreen.png> --audit <greenscreen-composition.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions audit_cross_profile_source_consistency.py --greenscreen-audit <greenscreen-composition.json> --transparent-audit <transparent-composition.json> --expression-id <id> --output <cross-profile-source-audit.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions prepare_profile_guide_review.py --profile transparent --input <transparent.png> --landmarks <reviewed-landmarks.json> --output-dir <guide-qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions prepare_profile_guide_review.py --profile greenscreen --input <greenscreen.png> --landmarks <reviewed-landmarks.json> --output-dir <guide-qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions audit_expression_asset.py --profile transparent --input <transparent.png> --anchor <transparent-calm.png> --state-class <class> --output-dir <qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions audit_expression_asset.py --profile greenscreen --input <greenscreen.png> --anchor <greenscreen-calm.png> --state-class <class> --output-dir <qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions audit_expression_set.py --manifest <expression-job.json> --profile <profile> --input-dir <profile-dir> --output-dir <set-qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions validate_expression_receipt.py --receipt <expression-delivery-receipt.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions audit_expression_delivery_release.py --registry <release-evidence-registry.json> --output <release-audit.json>
 ```
 
 `prepare_alpha_edge_review.py` is review-only in this workflow. It creates white, gray, black, and exact-green previews plus an Alpha visualization from the user-returned RGBA file. Codex must inspect them and write the PASS/FAIL review record; it must not change the user's Alpha or edge RGB.

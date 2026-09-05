@@ -86,7 +86,7 @@ Separate invariant language from expression amplitude.
 Run:
 
 ```text
-python scripts/prepare_expression_readability_review.py --manifest <expression-job.json> --input-dir <same-profile-delivery-dir> --profile transparent --output-dir <qa-dir>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions prepare_expression_readability_review.py --manifest <expression-job.json> --input-dir <same-profile-delivery-dir> --profile transparent --output-dir <qa-dir>
 ```
 
 The tool creates:

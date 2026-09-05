@@ -57,13 +57,13 @@ The script cannot understand semantic materials. A larger dark jacket, completed
 Capture once per approved character portrait:
 
 ```text
-python scripts/calibrate_expression_color.py capture --reference <approved-portrait.png> --mask <E2-reviewed-source-mask.png> --output <character-color-anchor.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions calibrate_expression_color.py capture --reference <approved-portrait.png> --mask <E2-reviewed-source-mask.png> --output <character-color-anchor.json>
 ```
 
 Legacy diagnostic apply, never formal delivery:
 
 ```text
-python scripts/calibrate_expression_color.py apply --anchor <character-color-anchor.json> --input <expression-native-rgba.png> --output <expression-color-calibrated.png> --audit <expression-color-audit.json>
+python scripts/art_pipeline/ndc_art.py run ndc-generate-expressions calibrate_expression_color.py apply --anchor <character-color-anchor.json> --input <expression-native-rgba.png> --output <expression-color-calibrated.png> --audit <expression-color-audit.json>
 ```
 
 Do not overwrite the raw artistic candidate. Legacy decisions remain diagnostic and cannot set formal color `PASS`.
