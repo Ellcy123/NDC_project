@@ -3310,12 +3310,11 @@
         }
         .doubt-cond-row {
             display: grid;
-            grid-template-columns: 18px 56px 88px 1fr 12px;
-            align-items: center;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: start;
             gap: 12px;
             padding: 11px 4px;
             border-bottom: 1px dashed var(--rule);
-            cursor: pointer;
             transition: background .15s;
         }
         .doubt-cond-row:hover { background: rgba(232,198,120,.04); }
@@ -3340,10 +3339,10 @@
         }
         .doubt-cond-row .cond-name {
             color: var(--parch-mute);
-            font-size: 12.5px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-size: 14px;
+            line-height: 1.75;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
         }
         .doubt-cond-row .cond-dot {
             width: 7px; height: 7px;
@@ -3630,6 +3629,33 @@
             margin: 4px 0 8px;
         }
 
+        #doubtModal .modal { width: 780px; max-width: 94vw; }
+        .doubt-cond-main { min-width: 0; }
+        .doubt-cond-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; margin-bottom: 5px; }
+        .doubt-cond-title { color: var(--parchment); font-weight: 600; font-size: 14px; margin: 5px 0; overflow-wrap: anywhere; }
+        .doubt-cond-use { color: var(--gold); font-size: 12px; line-height: 1.6; }
+        .doubt-hint { color: var(--text-muted); font-size: 12px; line-height: 1.7; margin: 10px 0; }
+        .doubt-simulate { display: flex; align-items: center; gap: 7px; font-size: 12px; white-space: nowrap; color: var(--text-muted); cursor: pointer; padding: 5px 0; }
+        .doubt-simulate input { width: 16px; height: 16px; accent-color: var(--gold); color-scheme: dark; }
+        #doubtModal .doubt-list-header { padding-right: 44px; }
+        .doubt-material-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+        .doubt-material-actions .btn { font-size: 12px; }
+        .doubt-material-body { font-size: 14px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; }
+        .doubt-source { margin: 12px 0; padding: 12px; border: 1px solid var(--rule); }
+        .doubt-source summary { cursor: pointer; color: var(--gold); line-height: 1.6; overflow-wrap: anywhere; }
+        .doubt-source-line { margin: 10px 0; padding: 6px 10px; border-left: 2px solid var(--rule); }
+        .doubt-source-line.acquired { border-color: var(--gold); background: rgba(232,198,120,.06); }
+        .doubt-source-speaker { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
+        .doubt-nav-entry { margin-left: auto; }
+        .doubt-nav-entry:disabled { opacity: .45; cursor: default; }
+        #evidenceModal.doubt-source-playing { z-index: 110; }
+        @media (max-width: 640px) {
+            #doubtModal .modal { padding: 24px 16px; }
+            .doubt-cond-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+            .doubt-simulate { justify-self: start; }
+            .doubt-list-header { flex-wrap: wrap; gap: 8px; }
+        }
+
         .sidebar-item.locked,
         .sidebar-item.closed {
             flex-wrap: wrap;
@@ -3866,7 +3892,7 @@
                     <span class="select-label">UNIT</span>
                     <select id="unitSelect">
                         <option value="Unit1">Unit 1 - Webb谋杀案</option>
-                        <option value="Unit1FiveLoopTest">试验 U - U1 五 Loop 版（L2 可玩）</option>
+                        <option value="Unit6">试验 U - U1 五 Loop 版（L1、L2）</option>
                         <option value="Unit2">Unit 2 - 鞋坊纵火案</option>
                         <option value="Unit3">Unit 3 - Thomas坠楼案</option>
                         <option value="Unit4">Unit 4 - 四十二层之前</option>
@@ -3902,6 +3928,7 @@
                 <span class="tab-idx">03</span>配置校验
             </button>
             <span class="tab-meta" id="tabMeta"></span>
+            <button class="main-tab doubt-nav-entry" id="btnDoubts" onclick="DoubtView.showList()" disabled>疑点与材料</button>
         </div>
 
         <!-- Main -->
@@ -3952,7 +3979,7 @@
             <div class="df-target" id="doubtFloatTarget">—</div>
             <div class="df-bar"><div class="df-bar-fill" id="doubtFloatBarFill" style="width:0%;"></div></div>
             <div class="df-progress-row">
-                <span class="df-progress-label">疑点进度</span>
+                <span class="df-progress-label">疑点模拟进度</span>
                 <span class="df-progress-pill" id="doubtFloatPill">0 / 0</span>
             </div>
             <div class="df-hint">点击展开 ›</div>
@@ -3976,8 +4003,8 @@
 
     <!-- Doubt Drawer -->
     <div class="modal-overlay" id="doubtModal" onclick="if(event.target===this) DoubtView.close()">
-        <div class="modal">
-            <button class="modal-close" onclick="DoubtView.close()">&times;</button>
+        <div class="modal" role="dialog" aria-modal="true" aria-label="疑点与材料">
+            <button class="modal-close" onclick="DoubtView.close()" aria-label="关闭疑点与材料">&times;</button>
             <div id="doubtDrawerContent"></div>
         </div>
     </div>
@@ -3992,9 +4019,10 @@
 
     <script>
     // ===== Sidebar chip helpers =====
+    const trialPreviewLoops = ['loop1', 'loop2'];
     function pickLoop(loopId) {
         const unit = document.getElementById('unitSelect')?.value || 'Unit1';
-        if (unit === 'Unit4' && loopId === 'loop6') return;
+        if (unit === 'Unit4' && loopId === 'loop6' || unit === 'Unit6' && !trialPreviewLoops.includes(loopId)) return;
         const sel = document.getElementById('loopSelect');
         if (sel) sel.value = loopId;
         if (typeof GameController !== 'undefined' && GameController.load) {
@@ -4006,13 +4034,13 @@
         const current = (typeof AppState !== 'undefined' && AppState.currentLoop) || 'loop1';
         const unit = document.getElementById('unitSelect')?.value || 'Unit1';
         document.querySelectorAll('.loop-chip').forEach(chip => {
-            const unavailable = unit === 'Unit4' && chip.dataset.loop === 'loop6';
+            const unavailable = unit === 'Unit4' && chip.dataset.loop === 'loop6' || unit === 'Unit6' && !trialPreviewLoops.includes(chip.dataset.loop);
             chip.hidden = unavailable;
             chip.disabled = unavailable;
             chip.classList.toggle('active', chip.dataset.loop === current);
         });
         const loop6Option = document.querySelector('#loopSelect option[value="loop6"]');
-        if (loop6Option) loop6Option.disabled = unit === 'Unit4';
+        document.querySelectorAll('#loopSelect option').forEach(option => { option.disabled = unit === 'Unit4' && option.value === 'loop6' || unit === 'Unit6' && !trialPreviewLoops.includes(option.value); });
     }
 
     function syncLoopHeader() {
@@ -4128,6 +4156,7 @@
         allTalks: [],
         tableTalks: [],
         allTestimonies: [],
+        testimonyRecords: [],
         allDoubts: [],
         allTimelineEvents: [],
 
@@ -4250,6 +4279,10 @@
             const timelineEvents = Array.isArray(timelineEventsRaw)
                 ? timelineEventsRaw
                 : (Array.isArray(timelineEventsRaw?.value) ? timelineEventsRaw.value : []);
+
+            const branchConfig = await this.loadJSON(`${base}/TalkBranchUnlockConfig.json${t}`).catch(() => ({rules: []}));
+            AppState.branchUnlockRules = branchConfig.rules || [];
+            AppState.testimonyRecords = await this.loadJSON(`${base}/Testimony.json${t}`).catch(() => []);
 
             AppState.allItems = items;
             AppState.allScenes = scenes;
@@ -4455,7 +4488,8 @@
             (AppState.tableTalks || []).forEach(raw => {
                 const talk = this.normalizeTableTalk(raw);
                 if (!talk.id) return;
-                if (talk.videoEpisode && talk.videoEpisode !== episode) return;
+                const talkEpisode = talk.videoEpisode || talk.Speaker?.Chapter;
+                if (talkEpisode && talkEpisode !== episode) return;
                 if (talk.videoLoop && talk.videoLoop !== loop) return;
                 if (AppState.talksMap.has(talk.id)) return;
                 AppState.talksMap.set(talk.id, talk);
@@ -4624,9 +4658,8 @@
         },
 
         chapter(unit) {
-            if (unit === 'Unit4') return 'EPI04';
-            if (unit === 'Unit3') return 'EPI03';
-            return unit === 'Unit2' ? 'EPI02' : 'EPI01';
+            // Canon identities, including the reserved Unit5 and the Unit6 trial.
+            return { Unit1: 'EPI01', Unit2: 'EPI02', Unit3: 'EPI03', Unit4: 'EPI04', Unit5: 'EPI05', Unit6: 'EPI06' }[unit] || '';
         },
 
         itemsByChapter(chapter) {
@@ -4641,12 +4674,9 @@
 
         // Scene ID prefix for a given unit+loop: Unit1/loop1 -> "11"
         loopPrefix(unit, loop) {
-            let u = '1';
-            if (unit === 'Unit4') u = '4';
-            else if (unit === 'Unit3') u = '3';
-            else if (unit === 'Unit2') u = '2';
-            const l = loop.replace('loop', '');
-            return `${u}${l}`;
+            const episode = this.chapter(unit);
+            const match = /^loop([1-9]\d*)$/.exec(String(loop));
+            return episode && match ? `${Number(episode.slice(3))}${match[1]}` : '';
         },
 
         scenesForLoop(unit, loop) {
@@ -4905,13 +4935,11 @@
         },
 
         getChapterConfig(unit, loop) {
-            let unitNum = 1;
-            if (unit === 'Unit4') unitNum = 4;
-            else if (unit === 'Unit3') unitNum = 3;
-            else if (unit === 'Unit2') unitNum = 2;
-            const loopNum = parseInt(loop.replace('loop', ''));
-            const id = String(unitNum * 100 + loopNum);
-            return AppState.chapterConfigMap.get(id) || null;
+            const episode = this.chapter(unit);
+            const loopMatch = /^loop([1-9]\d*)$/.exec(String(loop));
+            if (!episode || !loopMatch) return null;
+            const id = String(Number(episode.slice(3)) * 100 + Number(loopMatch[1]));
+            return AppState.chapterConfigMap?.get(id) || null;
         },
 
         normalizePostExposeSegment(seg, index = 0) {
@@ -4995,6 +5023,19 @@
             return startId;
         },
 
+        branchConditionLabel(talkId) {
+            const rules = (AppState.branchUnlockRules || []).filter(r => String(r.talkId) === String(talkId));
+            if (!rules.length) return '';
+            const labels = rules.map(r => {
+                const entries = [
+                    ...(r.requiredItemIds || []).map(id => this.itemName(this.getItem(id)) || String(id)),
+                    ...(r.requiredTestimonyIds || []).map(id => cn(AppState.allTestimonies.find(t => String(t.id) === String(id))?.shortDesc) || String(id))
+                ];
+                return entries.join(' / ') + (Number(r.matchMode) === 0 ? '，任一' : '，全部');
+            });
+            return '［解锁条件：' + labels.join('；或 ') + '］';
+        },
+
         // 从起始 Talk ID 遍历对话链，返回节点数组
         // 每个节点: { talk, branches: null | [{text, targetId}] }
         // 分支检测: script === "1" 且 Parameters 含 ParameterStr/ParameterInt
@@ -5015,7 +5056,7 @@
                     const branchParams = talk.Parameters.filter(p => p.ParameterStr && p.ParameterInt);
                     if (branchParams.length > 0) {
                         node.branches = branchParams.map(p => ({
-                            text: p.ParameterStr,
+                            text: p.ParameterStr + this.branchConditionLabel(p.ParameterInt),
                             targetId: String(p.ParameterInt)
                         }));
                         chain.push(node);
@@ -5066,7 +5107,9 @@
         _modalHistory: [],
 
         closeModal() {
+            const returnToDoubt = document.getElementById('evidenceModal').classList.contains('doubt-source-playing');
             document.getElementById('evidenceModal').classList.remove('active');
+            document.getElementById('evidenceModal').classList.remove('doubt-source-playing');
             document.querySelector('#evidenceModal .modal').style.maxWidth = '';
             this._modalHistory = [];
             const titleEl = document.getElementById('modalTitle');
@@ -5078,6 +5121,7 @@
                 DialogController.close();
                 DialogController._state.containerId = null;
             }
+            if (returnToDoubt && DoubtView.sourceReturnFocus?.isConnected) DoubtView.sourceReturnFocus.focus({ preventScroll: true });
         },
 
         modalBack() {
@@ -5551,6 +5595,7 @@
             // sync static sidebar shell (loop chips + current loop title)
             if (typeof syncLoopChips === 'function') syncLoopChips();
             if (typeof syncLoopHeader === 'function') syncLoopHeader();
+
         },
 
         renderArtSidebar(sidebar) {
@@ -6048,37 +6093,16 @@
 
     // ===== Doubt View (疑点详情浮层) =====
     const DoubtView = {
-        // Unit3 30xx 系列 ID 未在 ID 中编码 loop, 需要静态映射
-        _u3loopMap: {
-            '3001': 'loop1', '3002': 'loop1',
-            '3003': 'loop2', '3004': 'loop2', '3005': 'loop2', '3014': 'loop2',
-            '3006': 'loop3', '3007': 'loop3', '3008': 'loop3', '3010': 'loop3', '3011': 'loop3',
-            '3009': 'loop4', '3012': 'loop4', '3013': 'loop4'
-        },
-
-        unitPrefix(unit) {
-            if (unit === 'Unit1') return '1';
-            if (unit === 'Unit2') return '2';
-            if (unit === 'Unit3') return '3';
-            if (unit === 'Unit4') return '4';
-            return null;
-        },
-
-        doubtLoop(id) {
-            const s = String(id);
-            if (this._u3loopMap[s]) return this._u3loopMap[s];
-            const d = s[1];
-            if (d >= '1' && d <= '6') return 'loop' + d;
-            return null;
-        },
+        material: null,
+        history: [],
+        returnFocus: null,
 
         doubtsInLoop(unit, loop) {
-            const prefix = this.unitPrefix(unit);
-            if (!prefix) return [];
-            return AppState.allDoubts.filter(d => {
-                const s = String(d.id);
-                return s[0] === prefix && this.doubtLoop(s) === loop;
-            });
+            // Match the runtime: chapter membership is explicit, not inferred from IDs.
+            const chapter = DataManager.getChapterConfig(unit, loop);
+            return (Array.isArray(chapter?.doubts) ? chapter.doubts : []).map(d =>
+                typeof d === 'object' && d !== null ? d :
+                    AppState.doubtsMap.get(String(d)) || { id: d, text: '未找到此疑点的配置', condition: [] });
         },
 
         condKey(c) { return `${c.type}:${c.param}`; },
@@ -6099,38 +6123,163 @@
                 return {
                     cls: 'item',
                     typeLabel: '道具',
-                    name: item ? (cn(item.Name) || '(未命名)') : '(未找到)'
+                    name: item ? (cn(item.Name) || '(未命名)') : '未找到道具',
+                    text: item ? DataManager.itemDesc(item) : '',
+                    exists: !!item,
+                    item,
                 };
             }
-            // type 3 = Timeline / type 4 = 证词条目（数据中两种都出现过）
-            // 都映射到 TestimonyItem.testimony 文本
-            if (type === '3' || type === '4') {
+            if (type === '2' || type === '3' || type === '4') {
                 const t = AppState.allTestimonies.find(x => String(x.id) === pid);
-                let textZh = '(未找到)';
-                let npcName = '';
-                if (t && t.testimony) textZh = cn(t.testimony) || '(无文本)';
-                const npcId = pid.length >= 3 ? pid.slice(0, 3) : '';
-                const npc = AppState.npcsMap.get(npcId);
-                if (npc) npcName = cn(npc.Name) || '';
-                const label = type === '3' ? '时间线' : '证词';
+                const label = type === '2' ? '关系网' : type === '3' ? '时间线' : '证词';
+                const relation = type === '2' && !t
+                    ? FlowOverviewView.resolveDependency(type, pid, Number(AppState.currentLoop.replace('loop', '')))
+                    : null;
                 return {
-                    cls: 'testi',
+                    cls: type === '2' ? 'rel' : 'testi',
                     typeLabel: label,
-                    name: npcName ? `${npcName}·${textZh}` : textZh
+                    name: t ? (cn(t.shortDesc) || '证词条目') : (relation?.name || '未找到证词'),
+                    text: t ? this.plainText(cn(t.testimony)) : '',
+                    exists: !!t || !!relation?.exists,
+                    testimony: t,
                 };
             }
-            if (type === '2') {
-                return { cls: 'rel', typeLabel: '关系网', name: `关系连接 ${pid}` };
+            return { cls: '', typeLabel: '未知条件', name: pid, text: '', exists: false };
+        },
+
+        plainText(text) {
+            return String(text || '').replace(/<\/?special(?:=[^>]*)?>/gi, '');
+        },
+
+        materialUse(c) {
+            const id = String(c.param);
+            const exposes = DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop)?.exposes || [];
+            const labels = [];
+            if (exposes.some(e => (e.item || []).some(x => String(x) === id))) labels.push('指证出示');
+            if (exposes.some(e => String(e.testimony) === id)) labels.push('被反驳的证词');
+            if (labels.length) return labels.join(' · ');
+            const required = this.doubtsInLoop(AppState.currentUnit, AppState.currentLoop)
+                .some(d => (d.condition || []).some(condition => String(condition.type) === String(c.type) && String(condition.param) === id));
+            return required ? '本轮仅触发疑点' : '本轮未挂入疑点';
+        },
+
+        sourceTalks(c) {
+            const id = String(c.param);
+            const episode = DataManager.chapter(AppState.currentUnit);
+            const records = Array.isArray(AppState.testimonyRecords) ? AppState.testimonyRecords : [];
+            const recordIds = new Set(records.filter(r => (r.evidenceItem || []).some(e => String(e.id) === id)).map(r => String(r.id)));
+            // The loaded AVG overrides the shared-table copy for the current Loop.
+            const key = t => `${t.videoEpisode}|${t.videoLoop}|${t.id}`;
+            const all = new Map((AppState.tableTalks || []).filter(t => t.videoEpisode === episode).map(t => [key(t), t]));
+            AppState.talksMap.forEach(t => { if (t.videoEpisode === episode) all.set(key(t), t); });
+            return [...all.values()].filter(t => {
+                if (recordIds.has(String(t.id))) return true;
+                return ['3', 'get'].includes(String(t.script).toLowerCase()) && (t.Parameters || []).some(p =>
+                    String(p.ParameterInt) === id || [id, 'EV' + id, 'TIM' + id].includes(String(p.ParameterStr)));
+            }).sort((a, b) => String(a.videoLoop).localeCompare(String(b.videoLoop), undefined, { numeric: true }) || String(a.id).localeCompare(String(b.id)));
+        },
+
+        sourceContext(source) {
+            if (!source.videoScene) return [source];
+            const sameGroup = t => t.videoEpisode === source.videoEpisode && t.videoLoop === source.videoLoop && t.videoScene === source.videoScene;
+            const rows = new Map((AppState.tableTalks || []).filter(sameGroup).map(t => [String(t.id), t]));
+            AppState.talksMap.forEach(t => { if (sameGroup(t)) rows.set(String(t.id), t); });
+            const ordered = [...rows.values()].sort((a, b) => (Number(a.step) || 0) - (Number(b.step) || 0));
+            const index = ordered.findIndex(t => String(t.id) === String(source.id));
+            return index < 0 ? [source] : ordered.slice(Math.max(0, index - 3), index + 4);
+        },
+
+        showMaterial(type, param, focusSource = false) {
+            const drawer = document.querySelector('#doubtModal .modal');
+            this.history.push({ material: this.material, scroll: drawer.scrollTop, focus: document.activeElement });
+            this.material = { type: String(type), param: String(param), focusSource };
+            this.render();
+            drawer.scrollTop = 0;
+            document.getElementById('doubtBack')?.focus({ preventScroll: true });
+            if (focusSource) document.getElementById('doubtMaterialSources')?.scrollIntoView({ block: 'start' });
+        },
+
+        openMaterial(type, param) {
+            if (!document.getElementById('doubtModal').classList.contains('active')) this.showList();
+            this.showMaterial(type, param);
+        },
+
+        back() {
+            const previous = this.history.pop();
+            if (!previous) { this.close(); return; }
+            this.material = previous.material;
+            this.render();
+            const drawer = document.querySelector('#doubtModal .modal');
+            drawer.scrollTop = previous.scroll;
+            // The list is re-rendered; restore focus using its stable material key.
+            const target = previous.focus?.dataset?.material;
+            if (target) [...drawer.querySelectorAll('[data-material]')].find(e => e.dataset.material === target)?.focus({ preventScroll: true });
+        },
+
+        playSource(id) {
+            const talk = DataManager.getTalk(id);
+            if (!talk) return;
+            this.sourceReturnFocus = document.activeElement;
+            document.getElementById('evidenceModal').classList.add('doubt-source-playing');
+            UI.playTalkInDrawer(id, '来源对白', '从取证句播放', `${talk.videoLoop} · ${talk.videoScene}`);
+        },
+
+        renderMaterial() {
+            const c = this.material;
+            const info = this.resolveCondition(c);
+            const sources = this.sourceTalks(c);
+            let html = `<button class="btn" id="doubtBack" onclick="DoubtView.back()">← 返回</button>
+                <div class="doubt-hint">${escapeHtml(info.typeLabel)} · #${escapeHtml(c.param)} · ${escapeHtml(AppState.currentUnit)}</div>
+                <h2 class="doubt-cond-title">${escapeHtml(info.name)}</h2>
+                <div class="doubt-cond-use">${escapeHtml(this.materialUse(c))}</div>
+                <p class="doubt-material-body">${escapeHtml(info.text || (info.exists ? '此条件未配置文字说明。' : '未找到对应配置，请核对材料引用。'))}</p>`;
+            if (info.item) {
+                const item = info.item;
+                const location = DataManager.itemLocation(item);
+                if (location) html += `<div class="doubt-hint">位置：${escapeHtml(location)}</div>`;
+                for (const [field, label] of [['beforeAnalysedEvidence', '分析前物品'], ['analysedEvidence', '分析结果']]) {
+                    const linked = String(item[field] || '');
+                    if (linked && linked !== '0') {
+                        const related = DataManager.getItem(linked);
+                        html += `<div class="doubt-material-actions"><button class="btn" onclick="DoubtView.showMaterial('1','${escapeHtml(linked)}')">${label}：${escapeHtml(related ? DataManager.itemName(related) : linked + '（未找到）')}</button></div>`;
+                    }
+                }
             }
-            return { cls: '', typeLabel: '未知', name: pid };
+            html += `<h3 id="doubtMaterialSources">来源对白</h3><p class="doubt-hint">以下读取实际对白节点，显示取证句及前后各至多三句；上方为证词条目或道具说明。</p>`;
+            if (!sources.length) html += `<p class="doubt-hint">当前已加载的配置中未找到关联取证对白。场景直接拾取的物品不一定有对白；未找到来源不代表无法取得。</p>`;
+            sources.forEach((source, index) => {
+                const hasWords = !!cn(source.Words);
+                const location = cn(source.Location);
+                html += `<details class="doubt-source" ${index === 0 ? 'open' : ''}><summary>${escapeHtml(String(source.videoLoop || '').replace('loop', 'L'))} · ${escapeHtml(location || source.videoScene || '位置未配置')}${hasWords ? '' : ' · 无台词的取证节点'}</summary>`;
+                this.sourceContext(source).forEach(t => {
+                    const text = this.plainText(cn(t.Words));
+                    if (!text) return;
+                    const acquired = String(t.id) === String(source.id);
+                    const npc = AppState.npcsMap.get(String(t.Speaker?.id));
+                    const speaker = cn(npc?.Name) || cn(t.Speaker?.Name) || '未配置发言人';
+                    html += `<div class="doubt-source-line ${acquired ? 'acquired' : ''}"><div class="doubt-source-speaker">${escapeHtml(speaker)}${acquired ? ' · 取得此材料' : ''}</div><div class="doubt-material-body">${escapeHtml(text)}</div></div>`;
+                });
+                const loaded = DataManager.getTalk(source.id);
+                if (loaded && loaded.videoEpisode === source.videoEpisode && loaded.videoLoop === source.videoLoop) {
+                    html += `<button class="btn" onclick="DoubtView.playSource('${escapeHtml(String(source.id))}')">从取证句播放</button>`;
+                }
+                html += `</details>`;
+            });
+            document.getElementById('doubtDrawerContent').innerHTML = html;
         },
 
         showList() {
+            this.returnFocus = document.activeElement;
+            this.material = null;
+            this.history = [];
             this.render();
             document.getElementById('doubtModal').classList.add('active');
+            document.querySelector('#doubtModal .modal').scrollTop = 0;
+            document.querySelector('#doubtModal .modal-close').focus({ preventScroll: true });
         },
 
         render() {
+            if (this.material) { this.renderMaterial(); return; }
             const doubts = this.doubtsInLoop(AppState.currentUnit, AppState.currentLoop);
             const loopLabel = (AppState.currentLoop || '').replace('loop', 'Loop ');
             const doneCount = doubts.filter(d => {
@@ -6140,20 +6289,21 @@
 
             let html = `
                 <div class="doubt-list-header">
-                    <span class="dl-title">疑点面板</span>
+                    <span class="dl-title">疑点与材料</span>
                     <span class="dl-sub">${escapeHtml(AppState.currentUnit)} · ${escapeHtml(loopLabel)} · ${doneCount}/${doubts.length}</span>
                 </div>
             `;
 
             if (doubts.length === 0) {
-                html += `<div class="doubt-list-empty">当前 Loop 暂无疑点配置</div>`;
+                html += `<div class="doubt-list-empty">${DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop) ? '当前 Loop 暂无疑点配置' : '当前章节 / Loop 尚未接入配置'}</div>`;
                 document.getElementById('doubtDrawerContent').innerHTML = html;
                 return;
             }
 
-            html += `<div class="doubt-cond-toolbar" style="margin-top:0;border-top:0;padding-top:0;">
-                <button onclick="DoubtView.setAllLoop(true)">全部已满足</button>
-                <button onclick="DoubtView.setAllLoop(false)">全部清除</button>
+            html += `<p class="doubt-hint">可直接阅读完整材料，查看详情与来源对白。勾选仅模拟网页中的条件满足，不代表实机进度，也不会修改配置。</p>
+            <div class="doubt-cond-toolbar" style="margin-top:0;border-top:0;padding-top:0;">
+                <button onclick="DoubtView.setAllLoop(true)">模拟全部满足</button>
+                <button onclick="DoubtView.setAllLoop(false)">清除本轮模拟</button>
             </div>`;
 
             doubts.forEach(doubt => {
@@ -6163,7 +6313,7 @@
                 html += `
                     <div class="doubt-card ${isDone ? 'done' : ''}">
                         <div class="doubt-card-meta">
-                            <span class="doubt-label">疑点 · #${escapeHtml(String(doubt.id))}</span>
+                            <span class="doubt-label">${doubt.isFragment === true || doubt.isFragment === 'true' ? '疑点碎片' : '疑点'} · #${escapeHtml(String(doubt.id))}</span>
                             <span class="doubt-progress">${done} / ${total}</span>
                         </div>
                         <div class="doubt-card-title">${escapeHtml(doubt.text || '(无文本)')}</div>
@@ -6176,13 +6326,17 @@
                     const type = String(c.type);
                     const param = String(c.param);
                     html += `
-                        <div class="doubt-cond-row ${info.cls} ${sat ? 'sat' : ''}"
-                             onclick="DoubtView.toggleCondition('${type}','${param}')">
-                            <span class="cond-icon"></span>
-                            <span class="cond-type">${escapeHtml(info.typeLabel)}</span>
-                            <span class="cond-pid">#${escapeHtml(param)}</span>
-                            <span class="cond-name" title="${escapeHtml(info.name)}">${escapeHtml(info.name)}</span>
-                            <span class="cond-dot"></span>
+                        <div class="doubt-cond-row ${info.cls} ${sat ? 'sat' : ''}">
+                            <div class="doubt-cond-main">
+                                <div class="doubt-cond-meta"><span class="cond-type">${escapeHtml(info.typeLabel)}</span><span class="cond-pid">#${escapeHtml(param)}</span><span class="doubt-cond-use">${escapeHtml(this.materialUse(c))}</span></div>
+                                <div class="doubt-cond-title">${escapeHtml(info.name)}</div>
+                                ${info.text ? `<div class="cond-name">${escapeHtml(info.text)}</div>` : ''}
+                                <div class="doubt-material-actions">
+                                    <button class="btn" data-material="${type}:${param}" onclick="DoubtView.showMaterial('${type}','${param}')">查看详情</button>
+                                    <button class="btn" data-material="source:${type}:${param}" onclick="DoubtView.showMaterial('${type}','${param}',true)">查看来源对白</button>
+                                </div>
+                            </div>
+                            <label class="doubt-simulate"><input type="checkbox" ${sat ? 'checked' : ''} aria-label="模拟满足：${escapeHtml(info.name)}" onchange="DoubtView.toggleCondition('${type}','${param}')">模拟满足</label>
                         </div>
                     `;
                 });
@@ -6198,6 +6352,8 @@
 
         // 同步右上角入口按钮的徽章文字和样式
         refreshEntry() {
+            const entry = document.getElementById('btnDoubts');
+            if (entry) entry.disabled = !AppState.chapterConfigMap?.size;
             const el = document.getElementById('doubtFloat');
             if (!el) return;
             // 隐藏条件：美术视图 / 未加载 Loop / 仍在开篇对白阶段 / 尚未选中任何阶段
@@ -6252,7 +6408,12 @@
             const key = `${type}:${param}`;
             if (AppState.satisfiedConditions.has(key)) AppState.satisfiedConditions.delete(key);
             else AppState.satisfiedConditions.add(key);
+            const drawer = document.querySelector('#doubtModal .modal');
+            const scroll = drawer.scrollTop;
             this.render();
+            drawer.scrollTop = scroll;
+            const rows = [...drawer.querySelectorAll('.doubt-cond-row')];
+            rows.find(row => row.querySelector(`[data-material="${type}:${param}"]`))?.querySelector('input')?.focus({ preventScroll: true });
             this.refreshEntry();
         },
 
@@ -6271,6 +6432,9 @@
 
         close() {
             document.getElementById('doubtModal').classList.remove('active');
+            this.material = null;
+            this.history = [];
+            if (this.returnFocus?.isConnected) this.returnFocus.focus({ preventScroll: true });
         }
     };
 
@@ -9461,6 +9625,16 @@
             if (Array.isArray(loop?.opening) && loop.opening.length > 0) return loop.opening;
 
             const chapter = DataManager.getChapterConfig(AppState.currentUnit, AppState.currentLoop);
+            const openingSequence = loop?.openingSequence || chapter?.openingSequence;
+            if (AppState.currentUnit === 'Unit6' && Array.isArray(openingSequence) && openingSequence.length) {
+                return openingSequence.map(segment => ({
+                    id: String(segment.sceneId || ''),
+                    talk: segment.videoScene || '',
+                    firstId: String(segment.entryTalkId || ''),
+                    purpose: this.openingBriefText(segment.title),
+                    _source: 'ChapterConfig.openingSequence'
+                }));
+            }
             const initTalk = String(loop?.initTalk || chapter?.initTalk || '').trim();
             const openingScene = String(loop?.openingScene || chapter?.openingScene || loop?.initScene || chapter?.initScene || '').trim();
             if (!initTalk && !openingScene) return [];
@@ -9646,6 +9820,20 @@
 
             html += `</div>`;
 
+
+            // Shared-table preview references for arrivals, object inspection and analysis.
+            // These entries reuse the normal Talk player; no inventory or alternate game engine.
+            if (Array.isArray(scene.previewTalks) && scene.previewTalks.length) {
+                html += '<div class="section-title">场景对白 · 配置预览</div>';
+                scene.previewTalks.forEach(entry => {
+                    const resolved = DataManager.resolveNpcTalkEntry(entry, '', { label: 'SceneConfig.previewTalks', allowFallback: false });
+                    html += `<div class="phase-scene-talk"><span>${escapeHtml(entry.title || entry.videoScene)}</span>`;
+                    if (resolved.ok) {
+                        html += `<button class="btn primary" onclick="UI.playTalkInDrawer(${inlineJsString(resolved.id)}, 'TALK', ${inlineJsString(entry.title)}, ${inlineJsString(entry.videoScene)})">▶ 播放</button>`;
+                    } else html += `<span class="flow-warning">${escapeHtml(resolved.message)}</span>`;
+                    html += '</div>';
+                });
+            }
 
             // NPC info (click NPC on scene or buttons below to start dialogue)
             if (npcInfos.length > 0) {
@@ -10032,7 +10220,7 @@
                             html += `<div class="spec-summary">${escapeHtml(truncate(round.lieDetail, 120))}</div>`;
                         }
                         if (round.targetTestimony && String(round.targetTestimony) !== '0') {
-                            html += `<div class="spec-row"><span class="spec-label">证词：</span><span class="copy-tag" onclick="copyText('${escapeHtml(round.targetTestimony)}', this)">${escapeHtml(round.targetTestimony)}</span></div>`;
+                            html += `<div class="spec-row"><span class="spec-label">证词：</span><button class="btn" onclick="DoubtView.openMaterial('4','${escapeHtml(round.targetTestimony)}')">查看证词与来源</button><span class="copy-tag" onclick="copyText('${escapeHtml(round.targetTestimony)}', this)">${escapeHtml(round.targetTestimony)}</span></div>`;
                         }
                         if (exposeTalkId) {
                             html += `<div class="prod-spec" style="margin:0.3rem 0;">`;
@@ -10054,7 +10242,9 @@
                                 : null;
                             const name = material?.name || (item ? DataManager.itemName(item) : evId);
                             const kind = material?.kind ? ` · ${material.kind}` : '';
-                            html += `<span class="evidence-tag" ${item ? `onclick="UI.showEvidenceModal('${evId}')" style="cursor:pointer"` : ''}>${escapeHtml(name)}${kind} (${escapeHtml(evId)})</span>`;
+                            const testimony = AppState.allTestimonies.find(t => String(t.id) === evId);
+                            const inspectAction = item ? `UI.showEvidenceModal('${evId}')` : testimony ? `DoubtView.openMaterial('4','${evId}')` : '';
+                            html += `<span class="evidence-tag" ${inspectAction ? `onclick="${inspectAction}" style="cursor:pointer"` : ''}>${escapeHtml(name)}${kind} (${escapeHtml(evId)})</span>`;
                         });
                         if (!round.evidences || round.evidences.length === 0) {
                             html += `<span style="color:var(--text-muted); font-size:0.85rem;">未配置指证材料</span>`;
@@ -10923,11 +11113,8 @@
     const GameController = {
         async load() {
             const unit = document.getElementById('unitSelect').value;
-            if (unit === 'Unit1FiveLoopTest') {
-                window.location.href = new URL('./experiments/u1-five-loop/index.html', window.location.href).href;
-                return;
-            }
             let loop = document.getElementById('loopSelect').value;
+            if (unit === 'Unit6' && !trialPreviewLoops.includes(loop)) { loop = trialPreviewLoops[0]; document.getElementById('loopSelect').value = loop; }
             if (unit === 'Unit4' && loop === 'loop6') {
                 loop = 'loop1';
                 document.getElementById('loopSelect').value = loop;
@@ -10976,12 +11163,15 @@
                 const chapterItems = DataManager.itemsByChapter(chapter);
                 const loopScenes = DataManager.scenesForLoop(unit, loop);
                 const hasArt = chapterItems.filter(i => i.ArtRequirement).length;
+                const dialogueStatus = unit === 'Unit6'
+                    ? `对话: ${talkCount}（含指证对白） | 指证: ${DataManager.getChapterConfig(unit, loop)?.exposes?.length || 0} 题`
+                    : `对话: ${talkCount} + 指证: ${exposeCount}`;
 
                 UI.updateStatus(
                     `${unit} ${loop} | ` +
                     `证据: ${chapterItems.length} (美术需求: ${hasArt}/${chapterItems.length}) | ` +
                     `场景: ${loopScenes.length} | ` +
-                    `对话: ${talkCount} + 指证: ${exposeCount}`
+                    dialogueStatus
                 );
 
                 this.switchView(AppState.currentView);
@@ -11040,17 +11230,35 @@
 
     // ===== Init =====
     document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('keydown', event => {
+            if (event.key !== 'Escape') return;
+            const active = id => document.getElementById(id)?.classList.contains('active');
+            if (active('depPickerModal')) FlowOverviewView.closeDependencyPicker();
+            else if (active('evidenceModal') && document.getElementById('evidenceModal').classList.contains('doubt-source-playing')) UI.closeModal();
+            else if (active('doubtModal')) {
+                if (DoubtView.material) DoubtView.back();
+                else DoubtView.close();
+            } else if (active('evidenceModal')) UI.closeModal();
+            else return;
+            event.preventDefault();
+            event.stopPropagation();
+        });
         document.getElementById('btnFlow').classList.add('active');
         // initial loop chip sync (shows loop1 active by default)
         if (typeof syncLoopChips === 'function') syncLoopChips();
         if (typeof syncLoopHeader === 'function') syncLoopHeader();
+        const params = new URLSearchParams(location.search);
+        const requestedUnit = params.get('unit');
+        if (requestedUnit && [...document.querySelectorAll('#unitSelect option')].some(o => o.value === requestedUnit)) {
+            document.getElementById('unitSelect').value = requestedUnit;
+            const requestedLoop = params.get('loop');
+            if ([...document.querySelectorAll('#loopSelect option')].some(o => o.value === requestedLoop)) document.getElementById('loopSelect').value = requestedLoop;
+            GameController.load();
+        }
         document.getElementById('unitSelect')?.addEventListener('change', () => {
             const unit = document.getElementById('unitSelect').value;
-            if (unit === 'Unit1FiveLoopTest') {
-                window.location.href = new URL('./experiments/u1-five-loop/index.html', window.location.href).href;
-                return;
-            }
             const loopSelect = document.getElementById('loopSelect');
+            if (unit === 'Unit6' && loopSelect) loopSelect.value = trialPreviewLoops[0];
             if (unit === 'Unit4' && loopSelect?.value === 'loop6') loopSelect.value = 'loop1';
             syncLoopChips();
         });

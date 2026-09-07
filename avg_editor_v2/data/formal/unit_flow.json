@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T10:46:41.077643+00:00",
+  "generatedAt": "2026-09-07T03:45:24.517051+00:00",
   "source": "avg_editor_v2/data/table",
   "purpose": "planning-level flow overview for editor UI",
   "units": {
@@ -7586,6 +7586,512 @@
               "summary": "Mickey 就是 Whale；这个身份是在其承认前由玩家完成证明；Mickey 是 1919-A 的唯一授权签字人并实际控制资金操作，但材料不证明其拥有账户法律所有权；Mickey 先经营 Donnelly 法律资金接口，1925 年正式接管 W / Whale 职责；Mickey 是 Harold Morrison 死前访客，并对枪杀、伪造遗书和右手枪位现场收尾负责；Miller 上层另线安排煤气清场；Mickey 不知道装置形式与启动时间；Harrison 的死亡由 Miller 上层决定，Pierce 执行并接管现场与档案；Mickey 未下令、未参与；Mickey 为 Rosa、Mary 与部分工人争取过的结果真实存在，但不能替 Harrison、Harold 或其他人决定代价；Miller 给过 Mickey 交档案上车的现实生路；Mickey 拒绝交档案，最后主动松开 Zack 的手；Emma 自主赶到四十二层并救回 Zack；两人带走尚未拆封的 Miller 保险档案",
               "refs": {
                 "clearDoubts": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "Unit6": {
+      "unit": "Unit6",
+      "formalUnit": "Unit6",
+      "chapter": "EPI06",
+      "title": "U1 五 Loop 试验版",
+      "loops": [
+        {
+          "id": "loop1",
+          "loop": 1,
+          "chapterId": "601",
+          "title": "枪声之后",
+          "brief": "查清会客室里发生了什么。",
+          "openingBrief": "",
+          "goal": "核查 Rosa 对 Vivian 手中小枪的指认。",
+          "initTalk": "601100001",
+          "initScene": "6103",
+          "openingScene": "6100",
+          "explorationEntryScene": "6103",
+          "pendingInitTalkKey": "",
+          "openingSequence": [
+            {
+              "sceneId": "6100",
+              "entryTalkId": "601100001",
+              "title": "门外接头",
+              "videoEpisode": "EPI06",
+              "videoLoop": "loop1",
+              "videoScene": "l1_entrance"
+            },
+            {
+              "sceneId": "6101",
+              "entryTalkId": "601101001",
+              "title": "大堂前置合作交谈",
+              "videoEpisode": "EPI06",
+              "videoLoop": "loop1",
+              "videoScene": "l1_lobby_intro"
+            },
+            {
+              "sceneId": "6101",
+              "entryTalkId": "601105001",
+              "title": "大堂枪响",
+              "videoEpisode": "EPI06",
+              "videoLoop": "loop1",
+              "videoScene": "l1_gunshot"
+            },
+            {
+              "sceneId": "6102",
+              "entryTalkId": "601106001",
+              "title": "枪响后发现现场",
+              "videoEpisode": "EPI06",
+              "videoLoop": "loop1",
+              "videoScene": "l1_discovery"
+            }
+          ],
+          "specialMechanics": {},
+          "endingSequence": {},
+          "previewStatus": "experimental_table_preview",
+          "newDoubtTitle": "Webb 的生意",
+          "newDoubtContent": "真正的枪击仍需调查。",
+          "summaryTitle": "这把枪近期没有开火",
+          "summaryContent": "检查排除了 Vivian 当时持有的小手枪近期击发。Morrison 仍要问话，并允许 Zack 继续调查 72 小时。",
+          "scenes": [
+            {
+              "id": "6103",
+              "name": "Webb 会客室",
+              "kind": "explore",
+              "isInit": true,
+              "isOpening": false,
+              "isExplorationEntry": true,
+              "npcCount": 3,
+              "itemCount": 2,
+              "itemIds": [
+                "6101",
+                "6103"
+              ]
+            }
+          ],
+          "doubts": [
+            {
+              "id": "6101",
+              "text": "Rosa 对这把枪的指认可信吗？",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "6208",
+                  "kind": "道具",
+                  "name": "小手枪检查结果",
+                  "label": "道具 6208 · 小手枪检查结果",
+                  "exists": true,
+                  "sourceLoop": "loop1",
+                  "sourceLoopNum": 1,
+                  "status": "current",
+                  "statusText": "当前 Loop L1"
+                },
+                {
+                  "type": "4",
+                  "param": "6031001",
+                  "kind": "证词",
+                  "name": "Rosa 对小手枪的指认",
+                  "label": "证词 6031001 · Rosa 对小手枪的指认",
+                  "exists": true,
+                  "sourceLoop": "loop1",
+                  "sourceLoopNum": 1,
+                  "status": "current",
+                  "statusText": "当前 Loop L1"
+                },
+                {
+                  "type": "1",
+                  "param": "6103",
+                  "kind": "道具",
+                  "name": "Webb 签署的委托协议",
+                  "label": "道具 6103 · Webb 签署的委托协议",
+                  "exists": true,
+                  "sourceLoop": "loop1",
+                  "sourceLoopNum": 1,
+                  "status": "current",
+                  "statusText": "当前 Loop L1"
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "6101",
+              "talkId": "601124001",
+              "pendingTalkKey": "",
+              "testimony": "6031001",
+              "testimonyLabel": "证词 6031001 · Rosa 对小手枪的指认",
+              "items": [
+                {
+                  "id": "6208",
+                  "kind": "item",
+                  "name": "小手枪检查结果"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "争取调查时间与 L1 收束",
+              "brief": "",
+              "sceneId": "6103",
+              "sceneName": "Webb 会客室",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI06",
+              "videoLoop": "loop1",
+              "videoScene": "l1_negotiation",
+              "entryTalkId": "601126001",
+              "pendingTalkKey": "",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            }
+          ],
+          "flow": [
+            {
+              "type": "opening",
+              "title": "开篇",
+              "summary": "从 601100001 进入本 Loop。",
+              "refs": {
+                "talkId": "601100001",
+                "pendingTalkKey": "",
+                "sceneId": "6100"
+              }
+            },
+            {
+              "type": "exploration",
+              "title": "自由探索",
+              "summary": "1 个开放场景，其中 1 个探索底图、0 个对话底图。",
+              "refs": {
+                "sceneCount": 1
+              }
+            },
+            {
+              "type": "doubts",
+              "title": "疑点推进",
+              "summary": "1 个疑点需要在本 Loop 内满足。",
+              "refs": {
+                "doubtIds": [
+                  "6101"
+                ]
+              }
+            },
+            {
+              "type": "expose",
+              "title": "指证",
+              "summary": "1 轮指证，目标 NPC 603。",
+              "refs": {
+                "npcId": "603",
+                "roundCount": 1
+              }
+            },
+            {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：争取调查时间与 L1 收束",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "6103"
+                ]
+              }
+            },
+            {
+              "type": "summary",
+              "title": "Loop 收束",
+              "summary": "检查排除了 Vivian 当时持有的小手枪近期击发。Morrison 仍要问话，并允许 Zack 继续调查 72 小时。",
+              "refs": {
+                "clearDoubts": [
+                  "6101"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "loop2",
+          "loop": 2,
+          "chapterId": "602",
+          "title": "体面人的账本",
+          "brief": "五 Loop 试验版 L2：查清 Webb 的生意及 Tommy 经手的事务。",
+          "openingBrief": "",
+          "goal": "查清 Webb 的生意。",
+          "initTalk": "601000001",
+          "initScene": "6201",
+          "openingScene": "6200",
+          "explorationEntryScene": "6201",
+          "pendingInitTalkKey": "",
+          "openingSequence": [],
+          "specialMechanics": {},
+          "endingSequence": {},
+          "previewStatus": "experimental_table_preview",
+          "newDoubtTitle": "案发现场",
+          "newDoubtContent": "现场仍有问题没有回答。",
+          "summaryTitle": "账上的名字",
+          "summaryContent": "Tommy 承认签发过以客人私生活为条件的催款函；是否寄达及实际收款仍未确认。",
+          "scenes": [
+            {
+              "id": "6201",
+              "name": "酒吧大堂",
+              "kind": "explore",
+              "isInit": true,
+              "isOpening": false,
+              "isExplorationEntry": true,
+              "npcCount": 2,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "6202",
+              "name": "Tommy 办公室",
+              "kind": "explore",
+              "isInit": false,
+              "isOpening": false,
+              "isExplorationEntry": false,
+              "npcCount": 1,
+              "itemCount": 2,
+              "itemIds": [
+                "6202",
+                "6203"
+              ]
+            },
+            {
+              "id": "6203",
+              "name": "厨房",
+              "kind": "explore",
+              "isInit": false,
+              "isOpening": false,
+              "isExplorationEntry": false,
+              "npcCount": 1,
+              "itemCount": 1,
+              "itemIds": [
+                "6206"
+              ]
+            },
+            {
+              "id": "6204",
+              "name": "歌舞厅",
+              "kind": "explore",
+              "isInit": false,
+              "isOpening": false,
+              "isExplorationEntry": false,
+              "npcCount": 1,
+              "itemCount": 0,
+              "itemIds": []
+            },
+            {
+              "id": "6205",
+              "name": "私人小包厢",
+              "kind": "explore",
+              "isInit": false,
+              "isOpening": false,
+              "isExplorationEntry": false,
+              "npcCount": 1,
+              "itemCount": 1,
+              "itemIds": [
+                "6204"
+              ]
+            },
+            {
+              "id": "6206",
+              "name": "Webb 办公室",
+              "kind": "explore",
+              "isInit": false,
+              "isOpening": false,
+              "isExplorationEntry": false,
+              "npcCount": 0,
+              "itemCount": 2,
+              "itemIds": [
+                "6201",
+                "6205"
+              ]
+            }
+          ],
+          "doubts": [
+            {
+              "id": "6201",
+              "text": "两本账的说法",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "6201",
+                  "kind": "道具",
+                  "name": "Webb 留存的收款账",
+                  "label": "道具 6201 · Webb 留存的收款账",
+                  "exists": true,
+                  "sourceLoop": "loop2",
+                  "sourceLoopNum": 2,
+                  "status": "current",
+                  "statusText": "当前 Loop L2"
+                },
+                {
+                  "type": "1",
+                  "param": "6202",
+                  "kind": "道具",
+                  "name": "Tommy 交出的公账",
+                  "label": "道具 6202 · Tommy 交出的公账",
+                  "exists": true,
+                  "sourceLoop": "loop2",
+                  "sourceLoopNum": 2,
+                  "status": "current",
+                  "statusText": "当前 Loop L2"
+                },
+                {
+                  "type": "4",
+                  "param": "6052002",
+                  "kind": "证词",
+                  "name": "Tommy 对两本账的说法",
+                  "label": "证词 6052002 · Tommy 对两本账的说法",
+                  "exists": true,
+                  "sourceLoop": "loop2",
+                  "sourceLoopNum": 2,
+                  "status": "current",
+                  "statusText": "当前 Loop L2"
+                }
+              ]
+            },
+            {
+              "id": "6202",
+              "text": "经手的催款事务",
+              "conditions": [
+                {
+                  "type": "1",
+                  "param": "6203",
+                  "kind": "道具",
+                  "name": "八月催款函存根",
+                  "label": "道具 6203 · 八月催款函存根",
+                  "exists": true,
+                  "sourceLoop": "loop2",
+                  "sourceLoopNum": 2,
+                  "status": "current",
+                  "statusText": "当前 Loop L2"
+                },
+                {
+                  "type": "4",
+                  "param": "6052001",
+                  "kind": "证词",
+                  "name": "Tommy 的签发职责",
+                  "label": "证词 6052001 · Tommy 的签发职责",
+                  "exists": true,
+                  "sourceLoop": "loop2",
+                  "sourceLoopNum": 2,
+                  "status": "current",
+                  "statusText": "当前 Loop L2"
+                }
+              ]
+            }
+          ],
+          "exposes": [
+            {
+              "id": "6201",
+              "talkId": "601038001",
+              "pendingTalkKey": "",
+              "testimony": "6052002",
+              "testimonyLabel": "证词 6052002 · Tommy 对两本账的说法",
+              "items": [
+                {
+                  "id": "6201",
+                  "kind": "item",
+                  "name": "Webb 留存的收款账"
+                },
+                {
+                  "id": "6202",
+                  "kind": "item",
+                  "name": "Tommy 交出的公账"
+                }
+              ]
+            },
+            {
+              "id": "6202",
+              "talkId": "601041001",
+              "pendingTalkKey": "",
+              "testimony": "0",
+              "testimonyLabel": "",
+              "items": [
+                {
+                  "id": "6203",
+                  "kind": "item",
+                  "name": "八月催款函存根"
+                }
+              ]
+            }
+          ],
+          "postExposeSegments": [
+            {
+              "order": 1,
+              "type": "talk",
+              "title": "L2 收束",
+              "brief": "",
+              "sceneId": "6202",
+              "sceneName": "Tommy 办公室",
+              "sceneKind": "explore",
+              "videoEpisode": "EPI06",
+              "videoLoop": "loop2",
+              "videoScene": "ending",
+              "entryTalkId": "601043001",
+              "pendingTalkKey": "",
+              "transitionFrom": "",
+              "transitionLabel": ""
+            }
+          ],
+          "flow": [
+            {
+              "type": "opening",
+              "title": "开篇",
+              "summary": "从 601000001 进入本 Loop。",
+              "refs": {
+                "talkId": "601000001",
+                "pendingTalkKey": "",
+                "sceneId": "6200"
+              }
+            },
+            {
+              "type": "exploration",
+              "title": "自由探索",
+              "summary": "6 个开放场景，其中 6 个探索底图、0 个对话底图。",
+              "refs": {
+                "sceneCount": 6
+              }
+            },
+            {
+              "type": "doubts",
+              "title": "疑点推进",
+              "summary": "2 个疑点需要在本 Loop 内满足。",
+              "refs": {
+                "doubtIds": [
+                  "6201",
+                  "6202"
+                ]
+              }
+            },
+            {
+              "type": "expose",
+              "title": "指证",
+              "summary": "2 轮指证，目标 NPC 605。",
+              "refs": {
+                "npcId": "605",
+                "roundCount": 2
+              }
+            },
+            {
+              "type": "postExpose",
+              "title": "指证后剧情",
+              "summary": "1 段指证后剧情：L2 收束",
+              "refs": {
+                "segmentCount": 1,
+                "sceneIds": [
+                  "6202"
+                ]
+              }
+            },
+            {
+              "type": "summary",
+              "title": "Loop 收束",
+              "summary": "Tommy 承认签发过以客人私生活为条件的催款函；是否寄达及实际收款仍未确认。",
+              "refs": {
+                "clearDoubts": [
+                  "6201",
+                  "6202"
+                ]
               }
             }
           ]
