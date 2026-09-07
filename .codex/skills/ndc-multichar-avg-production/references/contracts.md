@@ -9,7 +9,7 @@ Use one JSON plan per frozen simultaneous-cast snapshot. New work must use:
 Validate after every stage change:
 
 ```powershell
-python scripts/validate_avg_cast_plan.py <plan.json>
+python scripts/art_pipeline/ndc_art.py run ndc-multichar-avg-production validate_avg_cast_plan.py <plan.json>
 ```
 
 The validator is a hard gate, not a visual judge. A user must still approve the combined whitebox, and the operator must still inspect generated actors and Photoshop mattes.
@@ -28,9 +28,9 @@ Every review object uses auditable paths rather than a bare status string:
 
 ```json
 {
-  "report": "D:/path/review.json",
+  "report": "{JOB_PAYLOAD}/review.json",
   "reportSha256": "64-lowercase-hex-characters",
-  "preview": "D:/path/review-overlay.png",
+  "preview": "{JOB_PAYLOAD}/review-overlay.png",
   "status": "PASS"
 }
 ```
@@ -47,12 +47,12 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
   "stage": "whitebox-approved",
   "sceneId": "SCxxxx",
   "sceneKind": "static-multichar-avg",
-  "sourceScene": "D:/path/fixed-background.png",
+  "sourceScene": "{JOB_PAYLOAD}/fixed-background.png",
   "sourceSceneSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "sceneSize": [2560, 1600],
   "castClusterSide": "right",
   "uiSide": "left",
-  "uiReference": "D:/path/left_BG.png",
+  "uiReference": "{JOB_PAYLOAD}/left_BG.png",
   "uiReferenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   "uiPlacement": {
     "canvasSize": [2560, 1600],
@@ -61,28 +61,28 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
   },
   "timelineReview": {
     "snapshotId": "loop3-node-205009006",
-    "report": "D:/path/timeline-report.json",
+    "report": "{JOB_PAYLOAD}/timeline-report.json",
     "reportSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
     "status": "PASS"
   },
   "uiSafetyReview": {
-    "report": "D:/path/ui-safety-report.json",
+    "report": "{JOB_PAYLOAD}/ui-safety-report.json",
     "reportSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-    "preview": "D:/path/ui-safety-overlay.png",
+    "preview": "{JOB_PAYLOAD}/ui-safety-overlay.png",
     "status": "PASS",
     "protectedRegions": ["headBox", "leftHand", "rightHand", "ownedProp", "actionFocus"],
     "maxHeadOverlapRatio": 0.0,
     "maxCriticalOverlapRatio": 0.0
   },
   "silentFrameStatement": "One investigator controls the foreground while his partner closes the suspect's legal escape.",
-  "combinedWhitebox": "D:/path/combined-whitebox.png",
+  "combinedWhitebox": "{JOB_PAYLOAD}/combined-whitebox.png",
   "combinedWhiteboxSha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
   "actorContacts": [],
   "sceneAbsoluteScaleReview": {
-    "contract": "D:/path/scene-absolute-scale.json",
-    "report": "D:/path/scene-absolute-scale-report.json",
+    "contract": "{JOB_PAYLOAD}/scene-absolute-scale.json",
+    "report": "{JOB_PAYLOAD}/scene-absolute-scale-report.json",
     "reportSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "preview": "D:/path/scene-absolute-scale-overlay.png",
+    "preview": "{JOB_PAYLOAD}/scene-absolute-scale-overlay.png",
     "status": "PASS",
     "projectionModel": "single-horizon floor-plane projection",
     "horizonY": 515,
@@ -122,8 +122,8 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
     ]
   },
   "castScaleReview": {
-    "contract": "D:/path/cast-scale.json",
-    "report": "D:/path/cast-scale-report.json",
+    "contract": "{JOB_PAYLOAD}/cast-scale.json",
+    "report": "{JOB_PAYLOAD}/cast-scale-report.json",
     "reportSha256": "1111111111111111111111111111111111111111111111111111111111111111",
     "status": "PASS",
     "headScalePriority": true,
@@ -131,9 +131,9 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
     "maxHeadDeviationRatio": 0.05
   },
   "whiteboxVisualReview": {
-    "report": "D:/path/whitebox-visual-review.json",
+    "report": "{JOB_PAYLOAD}/whitebox-visual-review.json",
     "reportSha256": "2222222222222222222222222222222222222222222222222222222222222222",
-    "preview": "D:/path/whitebox-review-board.png",
+    "preview": "{JOB_PAYLOAD}/whitebox-review-board.png",
     "status": "PASS",
     "wholeFrameZoomPercent": 100,
     "localZoomPercent": 200
@@ -148,17 +148,17 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
       {"id": "foreground-table-edge", "source": "sourceScene", "aboveActors": ["player"]}
     ]
   },
-  "outputPsd": "D:/path/final.psd",
-  "outputPng": "D:/path/final.png",
+  "outputPsd": "{JOB_PAYLOAD}/final.psd",
+  "outputPng": "{JOB_PAYLOAD}/final.png",
   "actors": [
     {
       "actorId": "205",
       "name": "Mickey Donnelly",
       "presenceAtSnapshot": "already-present",
-      "characterCard": "D:/path/mickey-card.png",
+      "characterCard": "{JOB_PAYLOAD}/mickey-card.png",
       "characterCardSha256": "3333333333333333333333333333333333333333333333333333333333333333",
       "canonicalHeightCm": 183,
-      "canonicalHeightSource": "D:/path/mickey.md",
+      "canonicalHeightSource": "{JOB_PAYLOAD}/mickey.md",
       "canonicalHeightSourceSha256": "4444444444444444444444444444444444444444444444444444444444444444",
       "identityScaleReference": {
         "referenceFullBodyHeightPx": 1420,
@@ -167,7 +167,7 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
         "headToBodyNotes": "Preserve the approved card's narrow shoulder-to-head relationship."
       },
       "whiteboxColor": "#8F55C7",
-      "isolatedWhitebox": "D:/path/mickey-isolated.png",
+      "isolatedWhitebox": "{JOB_PAYLOAD}/mickey-isolated.png",
       "isolatedWhiteboxSha256": "5555555555555555555555555555555555555555555555555555555555555555",
       "whiteboxCanvasSize": [2560, 1600],
       "depthClass": "midground",
@@ -220,9 +220,9 @@ Coordinates use the untouched source-scene canvas. The actor array below shows o
         "tenSecondHold": true
       },
       "supportContactReview": {
-        "report": "D:/path/mickey-support-report.json",
+        "report": "{JOB_PAYLOAD}/mickey-support-report.json",
         "reportSha256": "6666666666666666666666666666666666666666666666666666666666666666",
-        "preview": "D:/path/mickey-support-overlay.png",
+        "preview": "{JOB_PAYLOAD}/mickey-support-overlay.png",
         "status": "PASS"
       },
       "prop": null
@@ -248,7 +248,7 @@ Repeat the complete actor object for every simultaneous actor. Within one snapsh
 Use the parent deterministic tool rather than judging only by eye:
 
 ```powershell
-python ../ndc-character-scene-integration/scripts/scene_staging_tools.py `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py `
   validate-scene-absolute-scale <contract.json> --report <report.json> --preview <overlay.png>
 ```
 
@@ -257,7 +257,7 @@ python ../ndc-character-scene-integration/scripts/scene_staging_tools.py `
 Every actor requires a canonical integer height, source file, approved-card measurements, support point, standing-equivalent pixel height, and exact head box. Run:
 
 ```powershell
-python ../ndc-character-scene-integration/scripts/scene_staging_tools.py `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py `
   validate-cast-scale <contract.json> --report <report.json>
 ```
 
@@ -268,7 +268,7 @@ python ../ndc-character-scene-integration/scripts/scene_staging_tools.py `
 `uiReference` must be the real UI image or an engine-derived mask source, not a remembered percentage of the screen. `uiPlacement` records the target canvas, top-left placement, and whether the engine mirrors the asset. `uiSafetyReview` must protect `headBox`, both motivated hands, owned props, and the action focus with zero critical overlap. Run:
 
 ```powershell
-python ../ndc-character-scene-integration/scripts/scene_staging_tools.py `
+python scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py `
   validate-ui-safety <contract.json> --report <report.json> --preview <overlay.png>
 ```
 
@@ -280,8 +280,8 @@ At `final`, every actor also requires:
 
 ```json
 {
-  "contextualCandidate": "D:/path/actor-context.png",
-  "rawCutout": "D:/path/actor-cutout.png",
+  "contextualCandidate": "{JOB_PAYLOAD}/actor-context.png",
+  "rawCutout": "{JOB_PAYLOAD}/actor-cutout.png",
   "finalLayerName": "30_Mickey_EdgeClean",
   "registration": {
     "uniformScalePercent": 98.5,

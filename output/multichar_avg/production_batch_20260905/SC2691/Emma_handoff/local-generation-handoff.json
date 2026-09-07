@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "Emma",
+  "poseId": "SC2691-Emma-v1",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\production_batch_20260905\\SC2691\\Emma_handoff\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC_project\\output\\multichar_avg\\production_batch_20260905\\SC2691\\Hospital_clean_plate.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\emma.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\production_batch_20260905\\SC2691\\Emma_handoff\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    133,
+    525,
+    812,
+    1430
+  ],
+  "basePaddedCropBBox": [
+    290,
+    525,
+    655,
+    1430
+  ],
+  "generationAspectRatio": [
+    3.0,
+    4.0
+  ],
+  "actualCropAspectRatio": 0.750276,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    330,
+    565,
+    615,
+    1390
+  ],
+  "actorBBoxLocal": [
+    197,
+    40,
+    482,
+    865
+  ],
+  "photoshopPasteTopLeft": [
+    133,
+    525
+  ],
+  "sourceHashes": {
+    "scene": "126144931c3687c79927687a53c26b46312e01514eb81b27febd7ea8cb198bd6",
+    "whiteboxComposite": "808148764ca3d96def0e67ad59fd5dc6af2acd7bd530086ea8b7d156a48aceb1",
+    "characterCard": "2db32c7bbcd7b976dc62c4236b6c9fa09b9d7bec0e5f44d140c0cf3ee4ce1b6b"
+  },
+  "generationPrompt": "Exact reviewed hospital pose; identity reference card; subdued source hospital lighting.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}

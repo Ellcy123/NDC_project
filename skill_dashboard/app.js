@@ -11,6 +11,8 @@
   const colors = {
     "数字人与语音": "#e6a373",
     "场景出图": "#83b7d0",
+    "角色与表情": "#c49ad4",
+    "道具出图": "#a4ba80",
     "视频与分镜": "#aa98dc",
     "剧情与推理": "#d7a95a",
     "对白与台本": "#cf8790",
@@ -123,8 +125,11 @@
     article.style.setProperty("--category-color", colors[skill.category] || "#d8a84e");
 
     const inputs = skill.inputs.map((input) => `<li>${escapeHtml(input)}</li>`).join("");
-    const ratingWidth = `${Math.min(100, Math.max(0, skill.rating / 5 * 100))}%`;
-    const shortProject = skill.project === "D:\\NDC_project" ? "NDC_project" : "NDC";
+    const hasRating = Number.isFinite(skill.rating);
+    const ratingWidth = `${hasRating ? Math.min(100, Math.max(0, skill.rating / 5 * 100)) : 0}%`;
+    const ratingLabel = hasRating ? skill.rating.toFixed(1) : "未评分";
+    const shortProject = skill.project === "planning" ? "策划仓库" : "工程仓库";
+    const locator = `${skill.project}:${skill.path}`;
 
     article.innerHTML = `
       <div class="card-meta">
@@ -142,14 +147,14 @@
       </div>
       <div class="card-spacer"></div>
       <div class="rating-row" title="${escapeAttribute(skill.ratingNote)}">
-        <span class="rating-stars" style="--rating-width:${ratingWidth}" aria-label="评分 ${skill.rating} / 5"></span>
-        <span class="rating-number">${skill.rating.toFixed(1)}</span>
+        <span class="rating-stars" style="--rating-width:${ratingWidth}" aria-label="${hasRating ? `评分 ${skill.rating} / 5` : "未评分"}"></span>
+        <span class="rating-number">${ratingLabel}</span>
       </div>
       <p class="rating-note">${escapeHtml(skill.ratingNote)}</p>
       <div class="card-footer">
-        <button class="source-button" type="button" data-copy-path="${escapeAttribute(skill.path)}" title="复制完整路径：${escapeAttribute(skill.path)}">
+        <button class="source-button" type="button" data-copy-path="${escapeAttribute(locator)}" title="复制仓库与相对路径：${escapeAttribute(locator)}">
           <span aria-hidden="true">⌘</span>
-          <span>${escapeHtml(shortProject)} · 复制路径</span>
+          <span>${escapeHtml(shortProject)} · 复制定位</span>
         </button>
         <span class="modified">更新 ${escapeHtml(skill.modified)}</span>
       </div>`;
@@ -255,7 +260,7 @@
       return;
     }
     const pathButton = event.target.closest("[data-copy-path]");
-    if (pathButton) copyText(pathButton.dataset.copyPath, "已复制 Skill 完整路径");
+    if (pathButton) copyText(pathButton.dataset.copyPath, "已复制仓库与相对路径");
   });
 
   elements.copyVisibleButton.addEventListener("click", () => {

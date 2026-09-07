@@ -1,15 +1,15 @@
 ---
 name: ndc-scene-to-mj-prompt
-description: "Convert NDC game-scene requirements, narrative context, approved art examples, and local references into character-free Midjourney background prompts plus a structured production handoff. Use when the user asks to整理场景美术需求、写或修改 MJ 场景提示词、生成主要探索场景、生成剧情推进场景、规划 16:10 或横向探索画幅、分析人物比例或参考图、拆分底图与证据图层、规划昼夜版本，或为后续 Midjourney 与 Photoshop/Firefly 制作准备 Prompt＋需求。 This skill is prompt-only: do not open Midjourney, upload files, submit jobs, or edit images."
+description: "Prepare character-free NDC scene requirements, camera layouts and Midjourney prompts for native MJ image delivery. Use for 场景需求拆解、MJ场景提示词、探索或剧情场景构图、空间布局、便于后续人工修图的底图规划. Defer gameplay props; allow sparse period ambient dressing. Prompt-only: do not open Midjourney, submit jobs or edit images."
 ---
 
 # NDC Scene to MJ Prompt
 
-Produce a self-contained `ndc-mj-scene/v3` handoff containing the required view set, one exact prompt per view, the empty-background and layer contract, canvas/postprocess plan, and shared audit requirements. Keep prompting, Midjourney operation, and Photoshop finishing separate.
+Produce a self-contained `ndc-mj-scene/v4` handoff containing the required view set, exact prompts, camera/spatial contracts, deferred-prop boundary and MJ delivery checks. This chain ends at native MJ image delivery. Retouching, expansion, relighting and prop production are outside this workflow.
 
 ## Mandatory stage-end visual self-check gate
 
-Every art-production stage executed by this Skill must end with an explicit visual self-check item before its output may be accepted or passed to Midjourney production. This includes visual-reference intake and role assignment, source-image/viewpoint analysis, style extraction, camera/spatial planning from art, prompt/handoff review against visual inputs, and acceptance of any returned scene image used to revise the handoff. Inspect every current visual input as a whole at `100%` and every applicable local region at nearest-neighbor `200%` or through complete original-pixel tiles. Compare the handoff against the approved visual authority and every applicable camera, spatial, composition, layer, canvas, style, texture, reference-leakage, and character-free requirement.
+Every art-production stage executed by this Skill must end with an explicit visual self-check item before its output may be accepted or passed to Midjourney production. This includes visual-reference intake and role assignment, source-image/viewpoint analysis, style extraction, camera/spatial planning from art, prompt/handoff review against visual inputs, and acceptance of any returned scene image used to revise the handoff. Inspect every current visual input as a whole at `100%` and every applicable local region at nearest-neighbor `200%` or through complete original-pixel tiles. Compare the handoff against the approved visual authority and every applicable camera, spatial, composition, deferred-prop, framing, style, texture, reference-leakage, and character-free requirement.
 
 Write one current `ndc-stage-visual-self-check/v1` record for every executed stage that consumes or accepts a visual artifact. It must bind the stage ID, reviewer/date, visual input paths plus SHA-256, any file output path plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not mark the handoff visually cleared or use it to authorize an image-producing stage. Dimensions, file existence, schema validation, or absence of a detected error cannot write visual `PASS`.
 
@@ -39,7 +39,7 @@ Use this source order:
 3. Approved art references and previously accepted prompts.
 4. General period knowledge and reasonable visual inference.
 
-Do not let historical examples override current scene facts. Preserve unresolved ambiguity instead of inventing gameplay-critical geometry or objects.
+Do not let historical examples override current scene facts. Preserve unresolved ambiguity instead of inventing gameplay-critical geometry or objects. Keep individual scene constraints in that task's requirement, handoff and review records; do not promote a test case's camera placement, architecture, furnishings or state into shared Skill defaults.
 
 ## Classify the scene and select the view set
 
@@ -50,12 +50,10 @@ Classify the scene before designing any camera:
 
 Also classify delivery use:
 
-- `primary_exploration`: a main in-game exploration background that must support horizontal mouse panning and therefore needs additional width.
-- `story_progression`: a background used only to advance dialogue, exposition, or a fixed narrative beat; generate in MJ at `2:1`, then finish at `16:10` after generation.
+- `primary_exploration`: a main in-game exploration background. Record any known horizontal mouse-panning constraint as framing context; generate and deliver the native MJ frame at `2:1`.
+- `story_progression`: a background used for dialogue or a fixed narrative beat. Generate in MJ at `2:1`; any known later display crop is composition context only.
 
-Do not assume these classifications from filenames. If gameplay use is unclear and changes the canvas plan, ask one focused question.
-
-If the source is ambiguous and the classification would change the number of Midjourney jobs, ask one focused question. Do not infer `exploration` merely because ordinary furniture or decoration is visible.
+Do not assume these classifications from filenames or visible ordinary furniture/decoration. If source ambiguity would change the number of Midjourney jobs, ask one focused question; an unknown later display width alone does not require clarification.
 
 Use exactly this view set:
 
@@ -64,19 +62,19 @@ Use exactly this view set:
 
 All prompts in a view set must describe the same scene facts, architecture, core objects, time, lighting state, exclusions, and rendering language. Change only the camera position and the depth/lateral relationships that genuinely change with that camera. Never combine multiple views into one image or ask Midjourney for a contact sheet.
 
-## Plan canvas and Photoshop finishing
+## Plan the MJ frame
 
-- For every scene and every view, fix Midjourney generation at `2:1`. Scene purpose never changes the MJ generation ratio.
-- For `story_progression`, set `canvas_plan.post_mj_operation: crop_or_reframe_to_16_10` and plan a post-MJ crop/reframe from the `2:1` base to the standard `16:10` delivery frame. Protect all required content inside `canvas_plan.crop_safe_area`.
-- For `primary_exploration`, keep the MJ base at `2:1`, protect the central gameplay-safe area, and plan any additional left/right continuation with Photoshop Firefly Generative Fill after generation. Record the final delivery width as unresolved until the game UI or delivery specification supplies it.
-- Do not use Midjourney to create separate day/night geometry by default. Lock composition and space, then hand the accepted master background to Photoshop for manual relighting and color changes.
+- Every view generates at `2:1`; the deliverable is the original MJ image at its actual downloaded resolution.
+- Protect the current scene's required focal elements, routes and main masses from accidental edge cuts. Keep broad surfaces and depth transitions readable for later manual editing.
+- If a later display crop or horizontal pan is already specified, record its safe composition region in `framing_context`. An unknown final game width does not block MJ generation or delivery.
+- Do not require a crop, extension, Photoshop plan, relighting plan, evidence placement map or Unity import. Do not generate separate day/night geometries unless explicitly requested; produce the requested master state only.
 
 ## Reduce the brief and describe the scene
 
 Before drafting the Midjourney paragraphs, produce these intermediate artifacts in the handoff:
 
-1. `visual_brief`: retain only visually actionable facts such as time, interior or exterior, architectural function, empty-environment state, required objects, prohibited subjects, and source-supported atmosphere. Remove dialogue, character blocking, narrative explanation, and facts that cannot be shown; convert relevant character activity into environmental traces under the character-free rules below.
-2. One `scene_description` inside each `view_prompts[]` entry: describe that view from highest to lowest importance. Separate camera, foreground, middle ground, background, left-center-right distribution, architecture relationships, lighting, and optional decoration.
+1. `visual_brief`: retain only visually actionable facts such as time, interior or exterior, architectural function, empty-environment state, architecture and room-defining major furniture, prohibited subjects, and source-supported atmosphere. Remove dialogue, character blocking, narrative explanation, and facts that cannot be shown; retain only source-supported architectural or broad surface states; do not replace omitted character actions with invented props.
+2. One `scene_description` inside each `view_prompts[]` entry: describe that view from highest to lowest importance. Separate camera, foreground, middle ground, background, left-center-right distribution, architecture relationships, lighting, and quiet supporting planes. A short low-priority ambient dressing cue is allowed; avoid exhaustive inventories.
 
 For a new scene, construct each required view from the requirement contract. For a redraw or viewpoint conversion, first analyze the source image's composition, geometry, palette, and lighting; then state the requested horizontal rotation direction and approximate degrees, elevation change or eye-level/bird's-eye/low-angle view, and reconstruct foreground-middle-background relationships separately for every required view. Do not pretend that geometry hidden by the source image is known; mark unsupported reconstruction as an assumption.
 
@@ -89,7 +87,7 @@ Create an explicit camera and spatial plan for every required view:
 - focal-length feel and focus/readability target when they materially affect distortion or object readability;
 - foreground, middle ground, and background anchors;
 - left, center, and right placement of major masses;
-- connection, separation, overlap, occlusion, route, and relative scale among doors, windows, walls, counters, stairs, corridors, and core objects;
+- connection, separation, overlap, occlusion, route, and relative scale among doors, windows, walls, counters, stairs, corridors, and room-defining masses;
 - architectural calibration landmarks such as wainscot tops, tabletops, window sills, rails, or stair landings that make the intended camera height visually testable.
 
 Validate scene scale without character language in the prompt. Use architecture such as a roughly 2-meter door, 0.9–1.0-meter handrail, 0.72–0.76-meter desk, wainscot, window sill, or stair riser as scale proxies. A temporary neutral silhouette may be overlaid after generation for review only; never upload it as an MJ reference, mention it in positive prompt text, or retain it in the final background.
@@ -100,31 +98,27 @@ Do not force arbitrary camera numbers except for the exploration-scene project l
 
 Treat every NDC scene image as an empty environment background. Never include people, named characters, crowds, bodies, faces, human figures, or silhouettes as positive scene content in `prompt_en` or `prompt_zh`.
 
-When a source document describes character positions or actions, retain that wording only in `original_requirement`. Translate it into environmental traces and spatial readability for the normalized requirements and prompts. For example, turn a guarded doorway into physical barricades and rope stanchions, a clerk moving files into unattended archive carts and stacked document boxes, and characters waiting by a side door into a clearly visible secondary entrance and an unobstructed route. Never copy character names, occupations, poses, blocking, or actions into the generated prompt.
+Keep character names, blocking and actions only in `original_requirement`. Omit them from submitted descriptions. Existing broad architectural or surface states may remain when they define the requested scene state; do not translate actions into extra props, footprints or evidence.
 
 For every scene handoff, add `empty environment with no visible characters` under `normalized_requirement.hard` and list `people, named characters, crowds, human figures, faces, bodies, silhouettes` under `normalized_requirement.must_not_have`. Keep those tokens out of the positive description. Encode the English submission constraint only once in a dedicated final `--no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes` parameter; record the same constraint as review text in `prompt_zh`.
 
 Reject portrait and character references for scene content, composition, environment, or identity. The only exception is a separately controlled Style Reference workflow; record leakage risk and keep the no-character requirement hard. Remove temporary scale silhouettes before upload.
 
-## Separate the background from mutable layers
+## Defer props before drafting
 
-Only permanent environmental storytelling may be baked into the base background. Classify every requested object into:
+Default `prop_policy.mode: defer_gameplay_props`. Exclude collectible evidence **and all specified gameplay, interaction or environmental-narrative evidence objects** from positive MJ prompts. Permanent/non-collectible status does not exempt a game-defined environmental-narrative object from deferral. Small ordinary non-interactive set dressing may be added freely when period-appropriate, sparse and subordinate to the room layout. It must not reproduce a deferred clue or imply a gameplay hotspot.
 
-- `base_environment_narrative`: permanent architecture, wear, fixed furnishings, and lasting environmental storytelling allowed in the background;
-- `interaction_closeup`: evidence revealed in a close-up;
-- `scan_overlay`: oil, imprint, residue, or analysis visualization;
-- `collectible_layer`: any item the player can pick up;
-- `transient_story_layer`: characters, bodies, temporary props, Loop-specific objects, fire/state effects that may disappear, and other removable content.
+Retain architecture, openings, structural fixtures and the minimum major masses needed to recognize and lay out the current scene. Classify by spatial function, not merely size or permanence. If a large object only carries a clue, defer it too. Allow a few period-appropriate ambient details without prescribing individual locations; stop before they obscure routes or force the spatial layout to change. Keep only source-supported broad material and surface conditions for the requested master state; do not invent story-specific marks or objects.
 
-Never place the last four categories in the generated base prompt. Preserve their required location and scale in the handoff so later layers can align with the background.
+Record source-mentioned deferred items briefly under `prop_policy.deferred_from_source`; this is provenance, not a placement task. Do not require per-prop positions, scale, empty sockets, evidence tables, container chains or specially cleared prop patches. Missing deferred items never fails an MJ candidate. Review and reject invented clutter only when it obstructs the route, dominates composition or makes later editing substantially harder. A user-explicit current MJ inclusion is a scoped exception, recorded with its reason.
 
 ## Build the requirement contract
 
 Retain the original requirement in the handoff, then normalize it into three levels:
 
-- `hard`: core composition, scene identity, camera orientation when specified, gameplay-critical architecture, narrative-critical spatial relationships, canvas use, the universal empty-background requirement, and facts whose change would break the scene.
-- `soft`: important period cues, object types, approximate distribution, lighting direction, material family, environmental readability, and secondary objects that should appear but may vary in count or exact shape.
-- `flexible`: ornament, exact count of non-gameplay props, minor palette shifts, decorative placement, and incidental clutter.
+- `hard`: core composition, scene identity, camera orientation when specified, gameplay-critical architecture, narrative-critical spatial relationships, requested MJ frame, the universal empty-background requirement, and facts whose change would break the scene.
+- `soft`: important period cues, major furniture types, approximate mass distribution, lighting direction, material family and environmental readability.
+- `flexible`: minor palette shifts and harmless architectural detail. Game-defined props are outside the MJ requirement; sparse non-interactive ambient dressing is flexible and may be generated freely.
 
 Never make a number hard merely because it appears in source prose. Upgrade an exact count only when the count itself affects a route, interaction, clue, evidence, or narrative logic. For example, require `high clerestory windows` as soft; do not require exactly four to six unless their number matters to gameplay.
 
@@ -137,7 +131,7 @@ Assign each candidate reference one role:
 - `style`: palette, line, texture, and rendering language only.
 - `environment`: architecture, period objects, and material vocabulary.
 - `composition`: camera, framing, depth, and large-mass placement.
-- `identity`: a uniquely identifiable non-character object intended to appear.
+- `identity`: a uniquely identifiable architectural or room-defining element explicitly intended to appear; do not attach deferred prop identity references.
 - `reject`: semantically conflicts with the target scene or is likely to leak an unwanted subject.
 
 Reject or downgrade incompatible references before trying to negate their content in text. A portrait used on an empty interior can leak a person; a city exterior can leak skyline or windows. Negative wording is not a reliable cure for strong reference semantics.
@@ -148,7 +142,7 @@ Before extracting palette, line, texture, or rendering language from a `style` r
 
 Write one copy-ready English paragraph for each required view in this order:
 
-`scene identity and period → core composition and camera → hard objects and spatial relations → soft architecture and props → lighting and palette → graphic treatment → concise exclusions → parameters`
+`camera position and view direction → scene identity and period → architecture and major mass relationships → lighting and palette → rendering language and controlled texture → parameters`
 
 <!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
 Implement the shared `texture_contract` inside the graphic-treatment portion of every view prompt. Use positive structural language—compressed large shapes, grouped shadows, directional and scale-aware material texture, quiet planes, and focal detail hierarchy—rather than a universal negative block. Keep the contract invariant across the view set. Scene-specific exclusions for recurrent texture failures remain optional and concise.
@@ -156,57 +150,23 @@ Implement the shared `texture_contract` inside the graphic-treatment portion of 
 
 Apply these rules:
 
-- Front-load composition and core objects.
+- Front-load the controlling camera and large spatial masses. Prefer a compact prompt to a detailed inventory.
 - Encode that view's camera and spatial plan concretely enough to audit: specify the perspective, important camera-height or horizon constraint, depth order, major left-center-right placement, and the relationships that must remain visible.
 - Describe where a core object is, how large it reads, and what it relates to.
-- Use concrete period construction and props instead of the vague word `vintage`.
+- Use concrete period construction and material vocabulary instead of the vague word `vintage`.
 - Keep one coherent visual language. Remove duplicated adjectives and contradictory style clauses.
 - Use exclusions only for recurrent or damaging failures.
 - Do not include character names, people, crowds, human actions, poses, faces, bodies, or silhouettes as positive prompt content.
 - Keep character tokens out of positive prose and include them only once in the dedicated final `--no people, person, humans, characters, crowds, figures, faces, bodies, silhouettes` parameter.
 - Do not include `/imagine prompt:`.
 - Do not append a model-version parameter to any prompt text. Set `parameters.model: "latest"` for NDC scenes by default, unless the user explicitly requests a specific model for the current job.
-- Append `--ar 2:1` exactly once to every Midjourney scene prompt. Never change the MJ ratio for story or exploration use. Record post-MJ `16:10` cropping or Photoshop Firefly horizontal extension only in `canvas_plan`.
+- Append `--ar 2:1` exactly once to every Midjourney scene prompt. Never change the MJ ratio for story or exploration use. Record a known downstream framing constraint only in `framing_context`; do not turn it into a post-MJ task.
 - Treat exact counts as approximate unless the requirement contract marks them hard.
 
 Also provide a faithful Chinese counterpart for every view. Each view's English paragraph is the submission source of truth for its own Midjourney job.
 
-## Self-review before handoff
+## Final prompt and handoff check
 
-Verify that:
+Use the [handoff schema](references/handoff-schema.md). Confirm exact view count; camera and large-mass relationships; `--ar 2:1` once; no model flag; no positive character content; no deferred props, prop locations or postproduction steps. Every style clause needs inspected reference evidence. Keep `texture_contract` invariant across views and never flatten the approved rendering language to make editing easier.
 
-1. `scene.mode` is explicit and the view count is exactly one for `exploration` or exactly three for `non_exploration`.
-2. Every hard requirement has a corresponding clause in every view prompt where it remains visible.
-3. No prompt clause contradicts the original requirement.
-4. Core objects are earlier and more concrete than decorative details.
-5. Every exploration prompt states eye-level three-point perspective, camera optical center `1.7–1.8 meters` above the floor, and a horizon at the upper third; no alternative view is present.
-6. Every non-exploration handoff contains `frontal`, `oblique`, and `overhead_45`, and the overhead prompt clearly describes an approximately 45-degree downward view.
-7. Camera height, horizon, perspective, focal-length feel, and focus/readability choices are source-supported, project-locked, or recorded as assumptions.
-8. Foreground-middle-background and left-center-right relations are rebuilt for every view and explicit for every architecture-defining mass.
-9. Architectural calibration landmarks make any critical camera-height requirement visually testable.
-10. Soft and flexible details are not phrased with unnecessary exactness.
-11. The reference plan does not introduce unwanted subjects.
-12. Every `prompt_en` and `prompt_zh` contains no character name, human action, pose, crowd, figure, face, body, or silhouette as positive content.
-13. `normalized_requirement.hard`, `must_not_have`, and every prompt counterpart enforce an empty environment with no visible characters; `prompt_en` carries character tokens only in its final dedicated `--no` parameter.
-14. Only `base_environment_narrative` content is baked into the background; collectible, transient, close-up, and scan content is kept in separate layers.
-15. Scale is validated through architecture or a non-submitted review overlay, never through positive character language or an uploaded silhouette.
-16. Every prompt uses fixed `--ar 2:1`; `story_progression` includes a post-MJ `16:10` crop-safe plan, while `primary_exploration` includes a central safe area and any post-MJ Photoshop Firefly left/right extension plan.
-17. Day/night variants share one geometry-locked master and default to Photoshop manual relighting.
-18. Shared scene facts do not drift between view prompts.
-19. `must_not_have` is concise and scene-specific beyond the mandatory no-character exclusions.
-20. Parameters are separate from requirements, default `model` to `latest`, and keep model-version syntax out of every prompt text.
-21. `texture_contract.style_authority_locked` is true and every immutable style trait is traceable to an approved reference or current user instruction.
-22. Focal, secondary, quiet, and distant detail zones are explicit; material texture is directional, continuous, scale-aware, and subordinate to structure, perspective, distance, and lighting.
-23. No prompt uses style-changing cleanup language such as `simplify the art style`, `minimalist illustration`, `flat vector style`, `smooth clean surfaces`, or `remove brush texture` as a texture remedy.
-
-If a hard ambiguity would materially change the image, ask one focused question. Otherwise state the assumption and continue.
-
-## Return the handoff
-
-Return the exact field structure in [handoff schema](references/handoff-schema.md). The primary payloads are:
-
-1. `scene.mode` plus `view_prompts[]`: how many independent Midjourney jobs are required and what each must generate.
-2. `original_requirement` plus `normalized_requirement`: what the operator must audit.
-3. `visual_brief` plus each view's `scene_description` and `camera_contract`: how the visual facts, camera, depth layers, and architecture relationships were derived and how they must be reviewed.
-
-Reference roles, parameters, and review priorities are supporting execution data. Do not operate a browser or claim that an image was generated.
+Return the exact English prompt, faithful Chinese review counterpart, original requirement, camera/spatial contract, deferred-prop boundary, reference roles and native MJ delivery contract. If no actual images were generated, say so. Do not operate the browser from this prompt-only Skill.

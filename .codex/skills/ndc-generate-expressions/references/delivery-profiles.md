@@ -33,4 +33,6 @@ The green version is flattened from the same RGBA foreground after placement. It
 
 Create one calm transform per `character + profile` from the approved portrait's edge-passing RGBA. Reuse that exact scale and offsets for every expression in the corresponding profile set. Same-profile role-specific anchors outrank cross-character averages.
 
+When native sources differ only in raster resolution, first verify identical normalized canvas framing (aspect ratio within rounding error, stable head/shoulder anchors). Record one resolution-only coordinate conversion into the calm frame, then apply the same profile transform. Combine both scale factors into the single final LANCZOS resize; do not render an intermediate. The conversion must derive solely from native canvas dimensions, never from independently fitting each expression's face. Record native scale, common frame, rounding and one shared offset; reject unrelated framing or pose changes instead of normalizing them away.
+
 Run `audit_cross_profile_source_consistency.py` for every expression. Different profile canvases and transforms are expected; different native foreground hashes are `FAIL`.

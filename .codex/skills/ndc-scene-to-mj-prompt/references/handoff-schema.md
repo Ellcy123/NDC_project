@@ -1,178 +1,100 @@
-# `ndc-mj-scene/v3` handoff schema
+# `ndc-mj-scene/v4` handoff contract
 
-Return a human-readable summary followed by one YAML block using this field order. Preserve the shared requirements and every required view prompt; neither can replace the other.
+Use the following shared contract. Values are descriptive examples, not ready-to-submit scene facts. Version 4 replaces v3's mandatory postproduction and per-prop layer planning with an MJ endpoint and default prop deferral.
 
 ```yaml
-handoff_version: ndc-mj-scene/v3
-
+handoff_version: ndc-mj-scene/v4
+workflow_end_stage: mj_image_delivery
 scene:
-  id: "optional NDC scene or asset id"
-  name: "short scene name"
-  purpose: "background, key art, evidence close-up, or other use"
+  id: "scene or asset id"
+  name: "scene name"
   mode: "exploration | non_exploration"
   canvas_use: "primary_exploration | story_progression"
-
 original_requirement: |
-  Faithfully retain the user's or source document's requirement.
-  Keep wording that may matter to later review.
-
+  Relevant source text and current user corrections, with source paths.
 visual_brief:
-  time: "time of day or lighting condition"
+  time: "requested master time/state"
   interior_exterior: "interior | exterior | mixed"
-  architectural_function: "what the space is for"
-  visual_facts:
-    - "drawable, source-supported fact shared by every view"
-  removed_nonvisual_facts:
-    - "dialogue, explanation, or character action omitted or converted"
-
+  architectural_function: "room or place function"
+  visual_facts: ["source-supported architecture, main furniture, broad surface state"]
+  removed_nonvisual_facts: ["character actions or nonvisual story"]
+prop_policy:
+  mode: defer_gameplay_props
+  ambient_dressing: sparse_period_appropriate_noninteractive
+  retained_spatial_masses: ["architecture, structural fixture or room-defining major furniture"]
+  deferred_from_source: ["source-defined gameplay or environmental-narrative props omitted from MJ; no location planning required"]
+  explicit_mj_exceptions: []
 normalized_requirement:
-  hard:
-    - "shared core object, scene identity, or gameplay-critical fact"
-  soft:
-    - "shared important type, distribution, lighting, material, or period cue"
-  flexible:
-    - "shared harmless count, ornament, or incidental variation"
-  must_not_have:
-    - "shared prohibited subject or damaging failure"
-
+  hard: ["empty environment with no visible characters", "scene and camera obligations"]
+  soft: ["period material and lighting"]
+  flexible: ["harmless architectural detail", "sparse ordinary period ambient dressing"]
+  must_not_have: ["people, named characters, crowds, human figures, faces, bodies, silhouettes", "scene-specific structural failures"]
 texture_contract:
   style_authority_locked: true
-  approved_style_authority:
-    - "approved reference or current user instruction"
-  immutable_style_traits:
-    - "palette/value, line hierarchy, grouped shadows, edge behavior, brush language, or material treatment"
-  focal_detail_zones:
-    - "identity, gameplay, or permanent narrative focal area"
-  secondary_detail_zones:
-    - "supporting structure with limited material cues"
-  quiet_zones:
-    - "broad plane that keeps only approved restrained texture"
-  distant_zones:
-    - "large value group without invented hard micro-edges"
-  material_texture_rules:
-    - "material: direction, scale, density, continuity, distance response"
-  prohibited_artifacts:
-    - "non-semantic micro-detail, repeated stamps, random cracks, speckled noise, fragmented short marks, uniform sharpening"
+  approved_style_authority: ["inspected reference or current user instruction"]
+  immutable_style_traits: ["palette, line hierarchy, grouped shadows, brush and edge language"]
+  focal_detail_zones: ["current scene's required focal structures"]
+  secondary_detail_zones: ["supporting structure"]
+  quiet_zones: ["source-appropriate broad supporting planes"]
+  distant_zones: ["receding value groups"]
+  material_texture_rules: ["material direction, scale, density, continuity and depth response"]
+  prohibited_artifacts: ["nonsemantic microdetail, repeated stamps and fragmented noise"]
   style_changing_cleanup_language_forbidden: true
-
-layer_plan:
-  base_environment_narrative:
-    - "permanent content allowed in the generated background"
-  interaction_closeup:
-    - "evidence reserved for a separate close-up"
-  scan_overlay:
-    - "residue, imprint, or analysis visualization kept separate"
-  collectible_layer:
-    - "pick-up item kept separate"
-  transient_story_layer:
-    - "character, body, temporary prop, or Loop-specific object kept separate"
-
 view_prompts:
-  - id: "eye_level | frontal | oblique | overhead_45"
-    label_zh: "平视搜证视角 | 正方位视角 | 侧方位/斜侧视角 | 45度俯视角"
+  - id: eye_level
+    label_zh: "平视搜证视角"
     camera_contract:
-      view_direction: "where the camera faces"
-      perspective: "perspective type"
-      camera_height: "exact range, source value, or justified description"
-      horizon: "horizon placement"
-      pitch: "eye-level, level, or approximately 45 degrees downward"
-      scale_calibration:
-        - "door, handrail, desk, wainscot, window sill, or stair landmark"
+      position: "camera location derived from the current scene requirement"
+      view_direction: "viewing direction and visible spatial relationships for this view"
+      perspective: "three-point perspective for exploration"
+      camera_height: "1.7–1.8 meters for exploration"
+      horizon: "upper third for exploration"
+      pitch: "eye-level; approximately 45-degree downward only for overhead_45"
+      scale_calibration: ["visible architectural landmarks"]
     scene_description:
-      viewpoint_change: "none, or rotation direction/degrees plus elevation change"
-      foreground: "foreground anchors in this view"
-      middle_ground: "middle-ground anchors in this view"
-      background: "background anchors in this view"
-      lateral_layout: "left, center, and right major masses in this view"
-      architecture_relations:
-        - "connection, separation, overlap, route, and relative-scale rule"
-      camera_calibration:
-        - "observable landmark used to verify this view's camera"
-    prompt_en: |
-      One exact copy-ready English Midjourney paragraph for this view.
-    prompt_zh: |
-      A faithful Chinese counterpart for human review.
-
+      viewpoint_change: "none or source-view rotation/elevation"
+      foreground: "source-appropriate near elements for this view"
+      middle_ground: "main masses and spatial relationships for this view"
+      background: "source-appropriate distant elements for this view"
+      lateral_layout: "left, center and right main masses"
+      architecture_relations: ["connection, route, occlusion and relative scale"]
+      camera_calibration: ["observable camera evidence"]
+    prompt_en: "Exact English submission, --ar 2:1 once and final character --no parameter"
+    prompt_zh: "Faithful Chinese review counterpart, including exclusions"
 references:
-  - file: "absolute local path or user-provided image label"
+  - file: "absolute local file"
     role: "style | environment | composition | identity | reject"
     status: "use | reject"
-    reason: "what it contributes or why it risks semantic leakage"
-
+    reason: "role and semantic leakage boundary"
 parameters:
   generation_aspect_ratio: "2:1"
-  model: "latest"
+  model: latest
+  quality: hd_if_available
   other: []
-
-canvas_plan:
-  final_delivery: "16:10 | horizontally_extended_exploration"
-  final_size: "exact pixels if supplied; otherwise unresolved"
-  post_mj_operation: "crop_or_reframe_to_16_10 | extend_horizontally | none"
-  crop_safe_area: "required content that must survive a 16:10 crop, or not_applicable"
-  central_safe_area: "composition that must remain intact"
-  left_extension: "continuity constraints for Photoshop Firefly, or none"
-  right_extension: "continuity constraints for Photoshop Firefly, or none"
-  pan_readability: "how entrance, route, anchors, and interaction zones read while panning"
-
-time_variant_plan:
-  geometry_lock: true
-  master_time: "day | night | other"
-  requested_variants: []
-  method: "Photoshop manual relighting; no MJ regeneration by default"
-
-postprocess_handoff:
-  photoshop_firefly_extension: "required | not_required"
-  manual_relighting: "required | not_required"
-  removable_layers: []
-
-review_priority:
-  - "core composition and per-view camera contract"
-  - "core objects"
-  - "scene identity and period"
-  - "reference leakage"
-  - "lighting and finish"
-
-assumptions:
-  - "non-blocking inference made while drafting"
-
+framing_context:
+  central_readability: "the current scene's required focal elements and spatial relationships remain readable"
+  known_later_display_constraint: null
+  edge_continuity: "coherent broad planes, without forced prop zones"
+master_state: "the one requested time/state; no automatic alternate MJ geometry"
+delivery_contract:
+  artifact: native_mj_image
+  preserve_original_pixels: true
+  record_actual_dimensions: true
+  include: ["selected native file", "exact prompt and settings", "job identity", "candidate review", "visual and texture records"]
+review_priority: [camera_and_layout, architecture_and_routes, empty_background, style_and_texture, editing_convenience]
+assumptions: []
 operator_notes:
   iteration_budget_per_view: 3
-  preferred_action: "submit-base-view-set-review-and-handoff-to-photoshop"
+  preferred_action: submit_review_iterate_deliver_native_mj
 ```
 
-## View-set rules
+## Required interpretation
 
-- `scene.mode: exploration` requires exactly one `view_prompts` entry with `id: eye_level`.
-- The exploration `camera_contract` must state an eye-level three-point-perspective composition, camera optical center `1.7–1.8 meters` above the floor, horizon at the upper third, and eye-level pitch.
-- `scene.mode: non_exploration` requires exactly three entries in this order: `frontal`, `oblique`, and `overhead_45`.
-- `overhead_45` means the camera looks downward at approximately 45 degrees. It does not mean a 45-degree horizontal rotation.
-- Each entry is one independent Midjourney job. Never combine multiple required views into one prompt or one multi-panel image.
-- Shared scene identity, architecture, core objects, lighting state, exclusions, and rendering language must not drift between non-exploration views. Only camera-dependent spatial descriptions may change.
-- `scene.canvas_use: story_progression` requires `final_delivery: 16:10`, `post_mj_operation: crop_or_reframe_to_16_10`, and a post-MJ crop-safe plan.
-- `scene.canvas_use: primary_exploration` requires a central safe area plus any post-MJ left/right Photoshop Firefly extension and pan-readability plans.
-
-## Field rules
-
-- `original_requirement` is the audit source, not decorative provenance. Do not replace it with only the prompts.
-- `visual_brief` retains only shared drawable facts and records what nonvisual material was removed or translated.
-- `scene.mode` comes from gameplay: use `exploration` only when the player must search, inspect, or collect props or evidence. Ordinary furniture or decoration is insufficient.
-- Every `scene_description` is a per-view camera and spatial contract. Use `viewpoint_change: none` only when that entry does not convert an existing source view.
-- Do not invent exact camera values except for the project-mandated exploration lock. Record other inferred ranges under `assumptions` and make them hard only when composition or readability depends on them.
-- Every NDC scene handoff must add `empty environment with no visible characters` to `normalized_requirement.hard` and list `people, named characters, crowds, human figures, faces, bodies, silhouettes` under `must_not_have`. Keep those tokens out of positive `prompt_en` prose and place them only in one final dedicated `--no` parameter.
-- Character names, blocking, poses, and actions may remain verbatim in `original_requirement` for provenance, but must be translated into environmental traces and must not appear as positive content in any `prompt_en` or `prompt_zh`.
-- Yellow or neutral character silhouettes are scale-review overlays only. Do not put them in prompt text or references. Populate `camera_contract.scale_calibration` with architectural landmarks instead.
-- Only permanent environmental storytelling belongs in `layer_plan.base_environment_narrative`. Put every collectible, disappearing object, character, body, Loop-specific prop, close-up clue, and scan visualization in its separate layer list and exclude it from the generated base prompt.
-- `normalized_requirement` explains shared priority. Do not promote harmless object counts into `hard`.
-- `texture_contract` is mandatory. It controls spatial detail density and texture coherence only; it cannot alter the approved style authority or promote a reference artifact into a style trait.
-- `style_authority_locked` and `style_changing_cleanup_language_forbidden` must both be true. Every view prompt implements the same focal/secondary/quiet/distant hierarchy and material rules.
-- Each `prompt_en` is the exact submission text for its own view. The operator must not silently rewrite it before that view's first run.
-- Each `prompt_zh` is for review and must not introduce details absent from its paired `prompt_en`.
-- `references` includes rejected candidates so the operator does not accidentally upload them.
-- `parameters.model` defaults to `latest` for every NDC scene. Override it only when the user explicitly requests a specific model for the current job set.
-- Keep model selection out of every `prompt_en`; when `model` is `latest`, the operator uses the current latest model shown in the live Midjourney settings.
-- `parameters.generation_aspect_ratio` is fixed at `2:1` for every Midjourney scene job. `16:10` and every wider exploration ratio belong only to the post-MJ canvas plan.
-- Day/night variants share one geometry master by default. Use `time_variant_plan.method: Photoshop manual relighting`; do not request separate MJ generations unless the user explicitly overrides this production rule.
-- `review_priority` may be reordered for a special scene.
-- `iteration_budget_per_view` counts the initial generation for each view and defaults to three unless the user sets another limit.
-
-If no reference image is supplied, use `references: []`. If the original requirement is stored in a file, include the relevant text and optionally identify the source path under `scene`; do not hand the operator only a path it may not be able to interpret.
+- `exploration` is based on gameplay and requires only `eye_level`. `non_exploration` requires `frontal`, `oblique`, `overhead_45` in that order, each an independent job. The YAML above shows only the exploration example.
+- First-round English text is exact; Chinese text must not introduce extra objects. Keep people only in the final single `--no` parameter. Keep model selection out of prompt text; always `--ar 2:1` once.
+- `deferred_from_source` preserves omitted facts only; it is not a to-do list, prompt content, negative inventory or required placement map. Missing deferred objects cannot fail the grid. The original requirement may mention them without granting MJ inclusion.
+- Both mandatory saved static references remain Style References. Additional references preserve their declared roles. Do not add deferred-prop identity images.
+- Final game width, 16:10 crop, horizontal extension, alternate lighting and prop implementation do not block this MJ delivery. `framing_context` carries only already-known composition constraints, without requesting follow-up operations.
+- No required `layer_plan`, `canvas_plan`, `time_variant_plan` or `postprocess_handoff` in v4. For older handoffs, preserve sources and valid camera/style clauses, defer game-defined props except current user-explicit MJ inclusions, retain optional sparse ordinary ambient dressing, replace those fields, and record migration before submission. Do not silently reinterpret an old exact prompt.
+- Actual native dimensions and file checksums must be measured after download. HD selected in the UI is not proof of delivered dimensions or readable detail.
+- Delivery means MJ source output available for user editing; it does not claim a finished Unity background. Unresolved hard failures remain work-process candidates after the finite budget.

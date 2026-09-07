@@ -35,6 +35,14 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def place_rgba(image: Image.Image, size: tuple[int, int], offset: tuple[int, int],
+               background: tuple[int, int, int, int]) -> Image.Image:
+    """Source-over once; a masked RGBA paste would multiply Alpha twice."""
+    canvas = Image.new("RGBA", size, background)
+    canvas.alpha_composite(image, dest=offset)
+    return canvas
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compose an NDC expression profile asset.")
     parser.add_argument("--input", required=True, type=Path)
@@ -84,13 +92,11 @@ def main() -> int:
         raise SystemExit(f"REFUSED_TOP_OR_SIDE_CLIP: transformed bbox {transformed_bbox}, canvas {(width, height)}")
 
     resized = image.resize(new_size, Image.Resampling.LANCZOS)
-    canvas = Image.new("RGBA", (width, height), SPECS[args.profile]["background"])
-    canvas.paste(resized, (offset_x, offset_y), resized)
+    canvas = place_rgba(resized, (width, height), (offset_x, offset_y), SPECS[args.profile]["background"])
     if args.profile == "transparent":
         result = canvas
     else:
-        background = Image.new("RGBA", (width, height), SPECS[args.profile]["background"])
-        result = Image.alpha_composite(background, canvas).convert("RGB")
+        result = canvas.convert("RGB")
 
     output.parent.mkdir(parents=True, exist_ok=True)
     audit.parent.mkdir(parents=True, exist_ok=True)
@@ -107,6 +113,7 @@ def main() -> int:
             "upscale_used": False,
             "resample_count": 1,
             "resampling_filter": "LANCZOS",
+            "alpha_composition": "SOURCE_OVER_ONCE",
         },
         "transformed_foreground_bbox_xyxy": transformed_bbox,
         "top_or_side_subject_clipping": False,

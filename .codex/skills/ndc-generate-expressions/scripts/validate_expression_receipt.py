@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate an NDC expression profile receipt against schema 12."""
+"""Validate manual schema 12 and explicit Photoshop provenance schema 13."""
 
 from __future__ import annotations
 
@@ -208,6 +208,81 @@ def check_review_file(receipt: Path, value: Any, field: str, invalid: list[str],
     return record
 
 
+def check_photoshop_alpha_evidence(receipt: Path, item: dict[str, Any], index: int,
+                                   native_path: Path | None, native_hash: Any,
+                                   invalid: list[str], blocked: list[str]) -> None:
+    field = f"expressions[{index}].photoshop_alpha_processing"
+    record = item.get("photoshop_alpha_processing")
+    if not isinstance(record, dict):
+        invalid.append(f"{field}: expected object")
+        return
+    for key, expected in {"method": "USER_AUTHORIZED_PHOTOSHOP_MCP",
+                          "processor_authority": "USER_AUTHORIZED_PHOTOSHOP_MCP",
+                          "codex_background_removal_used": True, "user_returned": False,
+                          "source_preserved": True}.items():
+        if record.get(key) != expected or (isinstance(expected, bool) and record.get(key) is not expected):
+            invalid.append(f"{field}.{key}: expected {expected!r}")
+    if item.get("manual_alpha_return") is not None or item.get("background_removal") is not None:
+        invalid.append(f"{field}: ambiguous manual/Photoshop processing claims")
+    contraction = record.get("cumulative_native_pixel_contraction")
+    if type(contraction) is not int or contraction not in (0, 1, 2):
+        invalid.append(f"{field}.cumulative_native_pixel_contraction: expected 0, 1 or 2")
+    for status in ("protected_white_status", "white_fringe_status", "formal_status"):
+        require_pass(record.get(status), f"{field}.{status}", blocked)
+    for key in ("input_source", "output_native", "recovery_psd"):
+        link = record.get(key, {})
+        if not isinstance(link, dict):
+            invalid.append(f"{field}.{key}: expected object")
+            continue
+        path = resolve(receipt, link.get("path"), f"{field}.{key}.path", invalid)
+        check_hash(path, link.get("sha256"), f"{field}.{key}.sha256", invalid)
+        if key == "output_native" and (path != native_path or link.get("sha256") != native_hash):
+            invalid.append(f"{field}.output_native: must match current native RGBA")
+        if key == "input_source" and path is not None and native_path is not None:
+            if path == native_path:
+                invalid.append(f"{field}.input_source: must preserve a separate pre-PS source")
+            if Image.open(path).size != Image.open(native_path).size:
+                invalid.append(f"{field}: PS repair must preserve native canvas")
+        if key == "recovery_psd" and path is not None:
+            with path.open("rb") as handle:
+                if handle.read(4) != b"8BPS":
+                    invalid.append(f"{field}.recovery_psd: invalid Photoshop file signature")
+    for key in ("authorization_evidence", "operation_evidence"):
+        resolve(receipt, record.get(key), f"{field}.{key}", invalid)
+    commands = record.get("command_ids")
+    if not isinstance(commands, list) or not commands or not all(isinstance(c, str) and c for c in commands):
+        invalid.append(f"{field}.command_ids: expected actual nonempty command IDs")
+    stage_path = resolve(receipt, record.get("stage_review"), f"{field}.stage_review", invalid)
+    if stage_path:
+        stage = load_json(stage_path, f"{field}.stage_review", invalid)
+        require_pass(stage.get("visual_check_status"), f"{field}.stage_review.visual_check_status", blocked)
+        if stage.get("schema") != "ndc-stage-visual-self-check/v1":
+            invalid.append(f"{field}.stage_review: unsupported schema")
+        outputs = stage.get("outputs", [])
+        if not any(isinstance(o, dict) and str(o.get("sha256", "")).lower() == native_hash for o in outputs):
+            invalid.append(f"{field}.stage_review: output hash does not bind native RGBA")
+        criteria = stage.get("criteria", [])
+        if not criteria or any(c.get("applicable", True) and c.get("status") != PASS for c in criteria):
+            blocked.append(f"{field}.stage_review: incomplete or failed criteria")
+        views = stage.get("views", [])
+        if not {"whole_100", "local_200_or_tiles"}.issubset({v.get("kind") for v in views}):
+            invalid.append(f"{field}.stage_review: required visual views missing")
+        for view in views:
+            resolve(stage_path, view.get("path"), f"{field}.stage_review.view", invalid)
+    edge_path = resolve(receipt, record.get("edge_review"), f"{field}.edge_review", invalid)
+    if edge_path:
+        edge = load_json(edge_path, f"{field}.edge_review", invalid)
+        if edge.get("processor_authority") != "USER_AUTHORIZED_PHOTOSHOP_MCP" or edge.get("codex_background_removal_used") is not True or edge.get("user_returned") is not False:
+            invalid.append(f"{field}.edge_review: Photoshop provenance mismatch")
+        if edge.get("source", {}).get("sha256") != native_hash:
+            invalid.append(f"{field}.edge_review: native hash mismatch")
+        for key in ("protected_white_status", "white_fringe_status", "silhouette_status", "formal_status"):
+            require_pass(edge.get(key), f"{field}.edge_review.{key}", blocked)
+        for key in ("white", "mid_gray", "dark_gray", "black", "exact_green"):
+            resolve(edge_path, edge.get("previews", {}).get(key), f"{field}.edge_review.{key}", invalid)
+        resolve(edge_path, edge.get("alpha_visualization"), f"{field}.edge_review.alpha_visualization", invalid)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--receipt", required=True, type=Path)
@@ -218,8 +293,8 @@ def main() -> int:
     blocked: list[str] = []
     receipt = load_json(receipt_path, "receipt", invalid)
 
-    if receipt.get("schema_version") != 12:
-        invalid.append("schema_version: expected 12")
+    if receipt.get("schema_version") not in (12, 13):
+        invalid.append("schema_version: expected 12 or 13")
     if receipt.get("artifact_class") != "PROFILE_DELIVERY_RECEIPT":
         invalid.append("artifact_class: expected PROFILE_DELIVERY_RECEIPT")
     if not isinstance(receipt.get("character_id"), str) or not receipt.get("character_id"):
@@ -278,13 +353,18 @@ def main() -> int:
         asset = resolve(receipt_path, value.get("profile_asset"), f"{field}.profile_asset", invalid)
         check_hash(asset, value.get("profile_asset_sha256"), f"{field}.profile_asset_sha256", invalid)
         check_profile_asset(asset, profile, spec, f"{field}.profile_asset", invalid)
-        check_manual_alpha_evidence(receipt_path, value, index, native, native_hash, invalid, blocked)
+        if "photoshop_alpha_processing" in value:
+            if receipt.get("schema_version") != 13:
+                invalid.append(f"{field}: Photoshop provenance requires schema 13")
+            check_photoshop_alpha_evidence(receipt_path, value, index, native, native_hash, invalid, blocked)
+        else:
+            check_manual_alpha_evidence(receipt_path, value, index, native, native_hash, invalid, blocked)
         for gate in PASS_FIELDS:
             require_pass(value.get(gate), f"{field}.{gate}", blocked)
 
         cross = check_review_file(receipt_path, value.get("cross_profile_source_audit"),
                                   f"{field}.cross_profile_source_audit", invalid, blocked)
-        shared_hash = cross.get("native_rgba_sha256", cross.get("shared_native_rgba_sha256"))
+        shared_hash = cross.get("native_source_sha256", cross.get("native_rgba_sha256", cross.get("shared_native_rgba_sha256")))
         if shared_hash != native_hash:
             invalid.append(f"{field}.cross_profile_source_audit: shared native hash mismatch")
         check_review_file(receipt_path, value.get("profile_guide_review"),

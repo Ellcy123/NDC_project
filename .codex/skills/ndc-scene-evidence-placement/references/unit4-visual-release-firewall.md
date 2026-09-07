@@ -4,7 +4,7 @@ Use this protocol for Unit 4 full delivery, a visual-defect repair, or any candi
 
 ## 1. Classify before touching a formal file
 
-Inventory the exact item across current formal delivery, active process folders, clearly marked history/rejected folders, and declared read-only sources. For each candidate, set exactly one disposition before transforming or generating anything:
+Inventory the exact item across permitted current formal delivery, active process folders, clearly marked history/rejected folders, and declared read-only sources. Follow the current project's source-search precedence and stop conditions; this list is not permission to search later roots for a preferred replacement after an authoritative hit. Keep approval/history evidence separate from authority to substitute source pixels. For each candidate, set exactly one disposition before transforming or generating anything:
 
 - `reuse current formal PASS` only when its actual current bytes pass the checks below;
 - `promote revalidated candidate` when the existing candidate passes current visual and technical gates;
@@ -13,6 +13,8 @@ Inventory the exact item across current formal delivery, active process folders,
 - `blocked awaiting source/manual work` when the required world fact, source, or allowed operation is absent.
 
 Existing files are evidence to inspect, not approval. A candidate's file name, dimensions, manifest, old PASS, Alpha arithmetic, or formal location never selects it automatically. Do not regenerate merely because a candidate lives in history; do not promote merely because it is the newest file.
+
+Keep four distinct progress facts in the existing coverage ledger: source located, individual role reviewed, complete required item/scene package passed, and exact package published. Identify the scope each time. A Big PASS is not an Icon/Map PASS; a published detail group is not a completed scene chain; a subset of published items is not complete Unit delivery. On resume, current per-asset hash-bound checkpoints supersede earlier aggregate snapshots for those assets only. Retain the dated snapshots as history instead of resetting newly completed work to their old pending state.
 
 ## 2. Use a visual decision, not a technical proxy
 
@@ -47,6 +49,7 @@ Write a current hash-bound `visual_review.json` for each exact final PNG and run
 - An ordinary Big must be reviewed against the selected portrait, square, or landscape guide using the final Alpha footprint after rotation. Safe rectangles are maximum envelopes, not a requirement to make every asset large.
 - A visually correct semantic master with a frame/scale/rotation/margin defect uses recoverable Photoshop MCP repair first. Use re-generation only for a documented semantic/text/style/construction failure. If the required Photoshop operation is unavailable, record the capability result and use only the explicitly authorized deterministic fallback for that asset class; never claim the fallback was a Photoshop edit.
 - Required readable text must already be correct in the approved raster master. Photoshop and deterministic tooling may not add, complete, replace, or repaint readable text. Missing or wrong required wording returns to re-generation.
+- First apply the role-specific text contract: a non-photo paper Map may be blank/reversed, and a multipart Big may intentionally overlap previously verified wording. Check the retained complete master before declaring that final-layout occlusion is missing text; undocumented completeness stays `NOT_CHECKED` until provenance is recovered.
 - An environment Big has two modes only: a hard silhouette assembly for a separable object/group, or a soft contextual window when immediate environment is itself narrative evidence. It keeps real scene orientation, uses content-led irregular Alpha, and never receives decorative card rotation, a generic opaque rectangle, or a four-sided vignette.
 - A physical-prop Icon is the transparent object or approved component group at icon scale, not a clue-photo/Polaroid frame. Review its actual 130px bytes for readable silhouette, safe margin, shadow, and clean Alpha.
 
@@ -58,8 +61,12 @@ Never remove, relocate, or overwrite a current formal asset merely because a rep
 
 ## 5. Terminal package gate
 
-Before calling an item final, verify that the final folder contains exactly the contract-required PNGs plus `XYposition.txt`, that all final hashes match the release contract, and that `FINAL_VISUAL_RECORD_PRESENCE_GATE: PASS` covers every delivered PNG. This is an all-or-nothing boundary: an incomplete scene package cannot be called a complete scene delivery, and a detail-only item must explicitly omit Map/scene preview rather than silently appearing incomplete.
+Before calling an item final, verify that the final folder contains exactly the contract-required PNGs plus `XYposition.txt`, that all final hashes match the release contract, and that `FINAL_VISUAL_RECORD_PRESENCE_GATE: PASS` covers every delivered PNG. This is an all-or-nothing boundary for the declared scope: an incomplete scene package cannot be called a complete scene delivery. A genuine detail-only group omits an inapplicable Map with a recorded acquisition reason; omission of scene preview follows the pure-detail-only exception and explicit reason in the delivery contract. Do not omit a separately required visible handover/event state merely because acquisition is through dialogue, and do not invent a world Map to satisfy a generic checklist.
 
 Also require the linked-role identity review for current bytes and no unresolved user rejection for any included role. The existing technical validators do not inspect physical identity or read rejection messages: these are separate visual/status release conditions, not capabilities to attribute to a successful validator run.
 
 Retain the candidate inventory, original formal provenance, semantic-master hash, failure classification, Photoshop capability result when applicable, review images, and release reports in `工作过程文件`. They are recovery evidence, not formal assets.
+
+## 6. Continue without concealing blockers
+
+A failed or unavailable operation blocks only the affected role and its dependents. Record the exact blocker, last intact input, completed inspections and next valid action; continue independent items before revisiting it. Never count a skipped role as passed or claim the complete Unit from the subset of files present. On resume, use the current coverage/rejection index and latest checkpoint to avoid both repeating passed work and reviving superseded approvals. Publishing an independently complete item still requires all of that item's applicable gates; a partial scene remains explicitly partial.

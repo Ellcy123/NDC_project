@@ -13,6 +13,8 @@ Inventory reusable approved expressions before generation. Calm is the approved 
 
 Default basic emotions and narrative states to `2_readable`. Never lower intensity to rescue a weak candidate.
 
+Calibrate against the actual calm using `identity-and-expression-calibration.md`: record baseline cues already present, the new visible delta, fixed facial geometry, and the literal gaze target. Do not plan a new expression by repeating calm's existing frown or direct gaze.
+
 ## Reference order
 
 1. Image 1: user-confirmed completed portrait; sole identity, viewpoint, calm, and generation source.
@@ -33,6 +35,8 @@ Mouth signal: 【mouth_signal】.
 Intensity target: 【intensity_target】.
 Required signature cues: 【numbered_signature_cues】.
 Contrast against calm: 【contrast_against_calm】.
+Already-present calm cues that are insufficient alone: 【baseline_cues】.
+Fixed facial geometry and gaze target: 【identity_geometry_and_target】.
 Forbidden confusions: 【forbidden_confusions】.
 Thumbnail readability: 【thumbnail_readability_target】.
 Allowed small performance delta: 【performance_delta】.

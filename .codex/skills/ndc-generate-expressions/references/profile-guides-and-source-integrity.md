@@ -34,4 +34,6 @@ If the portrait cannot support the requested expression/profile framing, return 
 
 Use one calm-locked transform for the complete same-character, same-profile set. If an expression crosses a guide, revise one shared transform for the whole set or regenerate the expression from the portrait when its pose is wrong. Never fit each expression independently.
 
+For differing raster resolutions with the same verified framing, use the resolution-only coordinate conversion in `delivery-profiles.md`; this is not an expression-specific artistic fit or an extra resample.
+
 `prepare_profile_guide_review.py` creates evidence only. Codex must inspect the whole output and set `visual_status` and `formal_status`; automatic landmarks cannot approve a profile.

@@ -1,11 +1,13 @@
 ---
 name: ndc-generate-expressions
-description: Plan, generate, hand off, resume, audit, normalize, and package NDC bust-expression sets from user-confirmed completed portraits. Use for NDC or 摩登迷城 expression requirements, non-final pre-Alpha handoff, ingestion of user-returned manually processed RGBA files, paired transparent and exact-green delivery profiles, and expression-set QA. Do not use to complete missing portrait regions, remove backgrounds for the user, redesign a character, create full-body states, or place characters into scenes.
+description: Plan, generate, audit, and package NDC bust-expression sets from user-confirmed completed portraits. Use for expression requirements, manual RGBA handoff and return, explicitly authorized Photoshop MCP cutout trials, paired transparent and exact-green delivery profiles, and expression-set QA. Do not use to complete portraits, redesign characters, create full-body states, or place characters into scenes.
 ---
 
 # NDC Generate Expressions
 
 ## Operating boundary
+
+Background processing has two modes. Default `USER_MANUAL` follows the E5 handoff / E6 user-return path below. When the user explicitly authorizes Photoshop MCP cutout or fringe work, use `USER_AUTHORIZED_PHOTOSHOP_MCP` and read [references/photoshop-background-processing.md](references/photoshop-background-processing.md) first. That mode replaces the manual-only stop and no-Codex-Alpha-repair clauses throughout this Skill and its references, but does not waive source integrity, serial per-image review, artistic rejection, Alpha gates, or truthful provenance. Existing manual-only receipt tooling must not be fed fabricated manual-processing fields; PS trials stay non-final until the actual processor is supported end to end.
 
 This Skill begins from a user-confirmed, already completed portrait. It never outpaints, extends, reconstructs, or generates missing hair, hat, shoulder, chest, costume, or body regions. If an input portrait is missing, unapproved, identity-ambiguous, or not ready for the requested delivery crop, return `UPSTREAM_PORTRAIT_REQUIRED`; do not repair it inside this Skill.
 
@@ -35,18 +37,19 @@ Read only the references needed for the current stage:
 6. [references/self-check-and-rework.md](references/self-check-and-rework.md) before review, retry, or delivery.
 7. [references/receipt-schema.md](references/receipt-schema.md) before formal packaging.
 8. Read the remaining focused references only when their named concern applies: reuse, viewpoint, style fallback, readability, source detail/lighting, or semantic color.
+9. Read [references/identity-and-expression-calibration.md](references/identity-and-expression-calibration.md) before planning or reviewing new/replacement expressions, and when processing a user rejection. It defines facial-geometry checks, actual calm contrast, and rejection supersession without reopening unrelated approved assets.
 
 ## Non-negotiable invariants
 
 - `PORTRAIT_COMPLETION_USED=false` for every job. There is no completion stage, completion prompt, completion mask, outpaint retry, or anatomical repair route in this Skill.
 - Calm is the approved portrait. It is copied unchanged into the non-final handoff and is never regenerated.
 - Generate each non-calm expression directly from the same approved portrait on a plain, uniform light background suitable for the user's manual background processing.
-- Codex never removes the background, creates a cutout, removes white fringe, paints an Alpha mask, or uses Photoshop for this stage. Do not run `remove_expression_background.py` or any other automatic, deterministic, generative, or Photoshop background-removal route.
+- In default `USER_MANUAL` mode, Codex does not process the background or Alpha. Explicitly authorized PS work uses only the bounded MCP route above; `remove_expression_background.py`, global light-pixel removal, and generative Alpha repair remain prohibited.
 - After every requested expression passes artistic review, stop and deliver a `PRE_ALPHA_HANDOFF` package under `工作过程文件`. It is explicitly non-final and must not be copied to `最终交付`. The user edits those exact handoff PNG files in place; do not create or require a separate return folder.
 - Resume only after the user confirms that the in-place handoff files have been manually background-processed as native RGBA. If their Alpha or edge RGB fails review, return `USER_ALPHA_REWORK_REQUIRED`; do not repair the background or white fringe inside this Skill.
 - Never remove light pixels globally. White shirts, collars, eye whites, hair highlights, jewelry, pale linework, and other intentional light design are protected subject content.
 - A transparent cutout is not approved until `ALPHA_EDGE_GATE=PASS`: inspect the whole silhouette and critical hair/shoulder/costume edges on white, mid-gray, dark gray, black, and exact `#00FF2B` at native 100% and nearest 200%. Any white halo, matte contamination, remote island, hole, erosion, jagged edge, or missing subject region is `FAIL`.
-- Do not hide a failed edge with inward erosion. Repair only the Alpha/matte calculation or use a reviewed manual non-generative mask from the unchanged generated candidate.
+- In authorized PS mode, first test 1px selection contraction in native pixels. If white fringe remains without subject-detail loss, increase contraction by 1px to a maximum total of 2px relative to the original selection. If fringe remains at 2px, use localized selection and deletion; never continue global shrinking. Reject lost hair, costume edges, or protected light details at either step.
 - Freeze exactly one edge-passing native RGBA foreground per `character + expression`. Both delivery profiles must use that exact file and SHA-256.
 - Transparent and greenscreen are separate delivery profiles with separate canvases, transforms, guides, audits, and pass results. They share artistic foreground pixels, not geometry.
 - Transparent delivery is `1164x916 RGBA/Alpha 0`, except an explicitly requested Unit1 legacy `1152x900` branch. Greenscreen delivery is `1536x1024 RGB` with exact `#00FF2B` background.
@@ -77,7 +80,7 @@ Identify:
 8. `E7_DUAL_PROFILE_COMPOSITION`: use the same frozen user-returned RGBA foreground to compose transparent and exact-green outputs independently.
 9. `E8_PROFILE_AUDIT`: validate canvas, mode, background/Alpha, guide placement, no-upscale/single-resample history, and cross-profile source identity.
 10. `E9_SET_CONTINUITY`: review each same-profile set for identity, geometry, detail, lighting, expression readability, and pairwise separability.
-11. `E10_FORMAL_RECEIPT_AND_RELEASE`: validate schema-12 receipts and publish only a complete `RELEASE_STATUS: PASS` package.
+11. `E10_FORMAL_RECEIPT_AND_RELEASE`: validate schema-12 manual receipts or schema-13 explicit Photoshop receipts and publish only a complete `RELEASE_STATUS: PASS` package.
 
 ## Mechanical tools
 

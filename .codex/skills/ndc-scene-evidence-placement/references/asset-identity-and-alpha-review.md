@@ -10,9 +10,23 @@ Create a process-only side-by-side view of the exact proposed Big, Icon and Map,
 
 Different viewing angle, scene lighting, reverse/folded document face, information density, and an explicitly required open/closed or before/after state may differ. Explain the visible change from the same physical object. Do not demand front-facing readable text in a paper Map to prove identity. Do not excuse a different material, missing component, different fastener or invented damage as low-information presentation.
 
+For multipart evidence, match components individually across roles, not only by total count or object class. Compare each component's distinguishing state (for example liquid level, ice, breakage, attached seal, wear, or orientation-dependent marks) against the master and narrative requirement. Duplicating one component to supply two visibly different required components fails identity even when the group silhouette and count look correct. Record which source component produced each derivative; treat details genuinely invisible at runtime as not observable, not as permission to substitute a conflicting visible state.
+
 For example, a pale torn cardboard luggage tag with an off-centre hole and short broken cord is not a dark rigid rectangular plaque with a centre hole and long rope merely because both say the same words (Unit4 4417). A clue Big's UI photograph frame does not turn the depicted physical object into a photograph inventory item. Only a clue whose actual collectible identity is a photograph may use a photographic object as its Icon.
 
 ## Separate what must survive from what must disappear
+
+### Inspect native transparency before extracting it again
+
+Inspect the actual source file's mode and transparency channel before any RGB conversion, flattening, colour-keying, or background removal. A viewer's white or black backdrop is not proof of an opaque source. Record the source hash and whether Alpha is absent, fully opaque, binary, or contains partial coverage; inspect the native Alpha and black/white/checkerboard composites before choosing a cutout method.
+
+When a supplied raster already has usable transparency, retain it as the starting authority rather than discarding it and reconstructing Alpha from displayed RGB. In particular, do not send an RGBA glass asset through an unconditional `convert("RGB")` followed by white-background removal. Hidden RGB under Alpha 0 may be cleared without changing visible pixels; this sanitation does not authorize changing partial Alpha or prove visual acceptance. Preserve straight/premultiplied Alpha semantics during the permitted finalizer transforms.
+
+Native Alpha is evidence, not automatic approval. If it is locally defective, identify the affected material and authorized repair region: opaque metal/wood/cardboard interiors, continuous translucent glass, physical gaps, and antialiased outer edges require different judgments. Do not raise every faint edge pixel to opaque to restore an interior; that can expose hidden matte as a fringe. Retain the intact source, record the changed Alpha region, and verify that unchanged regions and protected material remain unchanged. Source inspection does not broaden the Photoshop or deterministic-edit permissions defined by the selected workflow.
+
+For Unit4 4211, the user-selected replacement already contains partial glass Alpha and a transparent external plunger gap. Reusing that native information must be evaluated before attempting another extraction; an older RGB-only threshold export is not the recovery master.
+
+### Define semantic ownership
 
 Before Alpha editing, identify and record source-native regions for:
 

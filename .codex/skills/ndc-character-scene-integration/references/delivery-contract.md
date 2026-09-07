@@ -2,7 +2,7 @@
 
 ## Required outputs per character
 
-The user-facing delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing delivery root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside `D:\Codex\NDC`, and formal delivery roots inside `工作过程文件`.
+The user-facing delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing delivery root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside the configured work root's `<job>/payload/`, and prepared-delivery roots inside `工作过程文件` or `candidates`.
 
 1. source scene identity, original dimensions, and hash;
 2. Codex-reviewed exact-pose proxy evidence;

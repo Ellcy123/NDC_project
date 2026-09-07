@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark"><title>摩登迷城 · 五 Loop 试验版</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead"><a class="brand" href="../../index.html" title="返回配置编辑器">摩登迷城<span>MODERN MYSTERY</span></a><div class="edition">U1 · 五 LOOP 试验版 <span>独立单元 / L2</span></div><div class="tools"><button id="journalButton">随身记录 <span id="itemCount">0</span></button><button id="moreButton" aria-label="试玩选项">选项</button></div></header>
+  <main id="app" aria-busy="true"><div class="loading">正在打开案卷……</div></main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="journal" aria-labelledby="journalTitle"><div class="dialog-head"><div><small>CASE NOTES</small><h2 id="journalTitle">随身记录</h2></div><button data-close="journal" aria-label="关闭随身记录">关闭 ×</button></div><div id="journalBody"></div></dialog>
+  <dialog id="options" aria-labelledby="optionsTitle"><div class="dialog-head"><h2 id="optionsTitle">试玩选项</h2><button data-close="options">关闭 ×</button></div><p>进度保存在这台浏览器里，与原 U1 分开。</p><button id="exportButton" class="wide">导出本次试玩记录</button><button id="restartButton" class="wide danger">重新开始本试验</button><p class="muted">当前开放 L2。台词与规则用于验证；未接正式配音、动画或 Unity 存档。</p><p id="saveNotice" class="muted"></p><a href="../../index.html">返回原配置编辑器</a></dialog>
+  <dialog id="resetConfirm" aria-labelledby="resetTitle"><h2 id="resetTitle">重新开始这一段？</h2><p>会清除本试验的进度与记录。原 U1 不受影响。</p><div class="row"><button data-close="resetConfirm">继续当前进度</button><button id="confirmReset" class="danger">清除并重新开始</button></div></dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

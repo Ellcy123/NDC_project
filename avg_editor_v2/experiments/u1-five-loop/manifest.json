@@ -1,0 +1,370 @@
+{
+  "unitKey": "u1-five-loop-test",
+  "version": "l2-v1",
+  "title": "U1·五 Loop 试验版",
+  "loop": 2,
+  "loopTitle": "体面人的账本",
+  "opening": "opening",
+  "openingScene": {
+    "name": "酒吧外的街角",
+    "image": "assets/street.png",
+    "description": "艾玛在街角等着。酒吧的门还没重新开张。"
+  },
+  "initialItems": [
+    "gun_check",
+    "rosa_claim"
+  ],
+  "items": {
+    "gun_check": {
+      "name": "小手枪检查结果",
+      "kind": "检查记录",
+      "source": "L1 · 会客室",
+      "text": "Vivian 当时持有的小手枪没有近期击发的痕迹。这项检查只针对这把枪。"
+    },
+    "rosa_claim": {
+      "name": "Rosa 的现场指认",
+      "kind": "证词",
+      "source": "L1 · Rosa",
+      "text": "Rosa 指称 Vivian 用手里的枪杀了 Webb，并称 23:30 听到枪声。小手枪检查已经动摇了她对这把枪的断言。"
+    },
+    "private_ledger": {
+      "name": "Webb 留存的收款账",
+      "kind": "物证",
+      "source": "Webb 办公室 · 桌内账册",
+      "text": "蓝月亮 · 实收款记录 · 留存本\n统计范围：本店全部业务实收款；美元；1928 年 9—10 月。\n9 月：常规收款 4,000；花瓶 4,000；月合计 8,000。\n10 月：常规收款 4,500；油画 7,000；月合计 11,500。"
+    },
+    "public_ledger": {
+      "name": "Tommy 交出的公账",
+      "kind": "物证",
+      "source": "Tommy 办公室 · 桌面账本",
+      "text": "蓝月亮 · 实收款记录 · 报送本\n统计范围：本店全部业务实收款；美元；1928 年 9—10 月。\n9 月：酒水 2,800；餐食 700；演出 500；月合计 4,000。\n10 月：酒水 3,200；餐食 800；演出 500；月合计 4,500。"
+    },
+    "demand_letter": {
+      "name": "八月催款函存根",
+      "kind": "物证",
+      "source": "Tommy 办公室 · 寄件簿",
+      "text": "1928 年 8 月 24 日\nColeman 先生：\n如未支付约定款项，我们将把您在包厢中的底片寄给您的妻子。支付后，取消寄送。\nTommy Connelly\n页侧盖有“存根”印记，未见收件回执。"
+    },
+    "signature_statement": {
+      "name": "Tommy 的签发职责",
+      "kind": "证词",
+      "source": "Tommy · 管理话题",
+      "text": "Tommy 确认，这本寄件簿中的催款函存根由他本人经手签发，上面的 Tommy Connelly 是他的签名。"
+    },
+    "accounts_claim": {
+      "name": "Tommy 对两本账的说法",
+      "kind": "证词",
+      "source": "Tommy · 收入话题",
+      "text": "Tommy 声称 Webb 留存本与他交出的公账，记录的是同一范围的实收款，九月、十月的合计完全对得上，没有钱落在公账之外。"
+    },
+    "tommy_night_statement": {
+      "name": "Tommy 的枪声时刻自述",
+      "kind": "证词",
+      "source": "Tommy · 当晚工作",
+      "text": "Tommy 声称 23:30 时在办公室清点库存，听见南边传来枪声，没看见具体是哪间房；他另称 Vivian 按惯例在 23:30 给 Webb 送酒，没有声称亲眼看见当晚送酒。"
+    },
+    "james_pay_statement": {
+      "name": "James 的工钱说法",
+      "kind": "证词",
+      "source": "James · 工钱话题",
+      "text": "James 说自己每周领 20 美元，四周共 80 美元；这份工资不够开销，他另找零工。没有说出零工的具体内容。"
+    },
+    "james_night_statement": {
+      "name": "James 的当晚行踪自述",
+      "kind": "证词",
+      "source": "James · 枪声位置",
+      "text": "James 说当晚曾去 Webb 会客室办事，之后返回二楼厨房；23:30 枪响时在厨房。没有给出进出会客室的具体钟点。"
+    },
+    "photo_raw": {
+      "name": "包厢合影",
+      "kind": "物证",
+      "source": "小包厢 · 相机旁的信封",
+      "text": "Vivian 与一名衣着体面的成年客人在包厢内合影，姿态亲密。背面只有几处淡黄褐色污渍，看不出文字。",
+      "analyzeTo": "photo_amounts"
+    },
+    "photo_amounts": {
+      "name": "显出金额的照片",
+      "kind": "分析结果",
+      "source": "包厢合影 · 加热显字",
+      "text": "正面仍是 Vivian 与成年客人的合影。背面的淡痕经温热后出现两行字：\n花瓶 — $4,000\n油画 — $7,000\n照片没有记录收款日期、款项是否收到或两个月总额。"
+    },
+    "vip_photo": {
+      "name": "Webb 的贵宾合影",
+      "kind": "物证",
+      "source": "Webb 办公室 · 相框",
+      "text": "照片中 Webb 与 Thompson、Coleman 站在一起。相框背面按站位写着三人的名字。"
+    },
+    "pay_stub": {
+      "name": "James 的工资单",
+      "kind": "物证",
+      "source": "厨房 · 工资夹",
+      "text": "蓝月亮歌舞厅\n雇员：James O'Sullivan；兼职厨师。\n每周 $20，4 周，基础工资 $80；奖金 $0，扣款 $0，实发 $80。\n签发日期：1928 年 10 月 31 日。批准：Tommy Connelly。"
+    }
+  },
+  "scenes": [
+    {
+      "id": "lobby",
+      "name": "酒吧大堂",
+      "floor": "1F · 入场与交接",
+      "image": "assets/lobby.png",
+      "description": "封门以后，柜台上还压着一摞等人签字的工资单。",
+      "entry": "lobby_arrival",
+      "npcs": [
+        "rita",
+        "waitress"
+      ],
+      "objects": []
+    },
+    {
+      "id": "tommy",
+      "name": "Tommy 办公室",
+      "floor": "2F · 管理与账务",
+      "image": "assets/tommy.png",
+      "description": "账本摊在桌上。经理把笔横在纸边，没有收起来。",
+      "npcs": [
+        "tommy"
+      ],
+      "objects": [
+        {
+          "id": "public",
+          "name": "桌面账本",
+          "dialogue": "inspect_public",
+          "item": "public_ledger"
+        },
+        {
+          "id": "letter",
+          "name": "寄件簿",
+          "dialogue": "inspect_letter",
+          "item": "demand_letter"
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "厨房",
+      "floor": "2F · 员工与工钱",
+      "image": "assets/kitchen.png",
+      "description": "前厅停了生意，灶上还有给员工留的热水。",
+      "npcs": [
+        "james"
+      ],
+      "objects": [
+        {
+          "id": "pay",
+          "name": "工资夹",
+          "dialogue": "inspect_wage",
+          "item": "pay_stub"
+        }
+      ]
+    },
+    {
+      "id": "hall",
+      "name": "歌舞厅",
+      "floor": "1F · 停演后的舞台",
+      "image": "assets/hall.png",
+      "description": "乐器还没搬走。台边有人慢慢收起鼓槌。",
+      "npcs": [
+        "drummer"
+      ],
+      "objects": []
+    },
+    {
+      "id": "booth",
+      "name": "私人小包厢",
+      "floor": "1F · 艾玛在查看",
+      "image": "assets/booth.png",
+      "description": "沙发正对着一处狭窄的缝隙。艾玛站在柜子旁。",
+      "entry": "booth_arrival",
+      "npcs": [
+        "emma"
+      ],
+      "objects": [
+        {
+          "id": "camera",
+          "name": "检查柜底的相机",
+          "dialogue": "camera_find",
+          "item": "photo_raw",
+          "replacement": "photo_amounts"
+        }
+      ]
+    },
+    {
+      "id": "webb",
+      "name": "Webb 办公室",
+      "floor": "2F · 留存的业务文件",
+      "image": "assets/webb.png",
+      "description": "桌内留着业务账册。另一边的私人柜还锁着。",
+      "npcs": [],
+      "objects": [
+        {
+          "id": "private",
+          "name": "桌内账册",
+          "dialogue": "inspect_private",
+          "item": "private_ledger"
+        },
+        {
+          "id": "vip",
+          "name": "桌上的合影",
+          "dialogue": "inspect_vip",
+          "item": "vip_photo"
+        }
+      ]
+    }
+  ],
+  "npcs": {
+    "rita": {
+      "name": "丽塔",
+      "en": "Rita",
+      "role": "交接人",
+      "intro": "rita_intro",
+      "repeat": "rita_repeat",
+      "topics": [
+        {
+          "id": "rita_wages",
+          "title": "你垫这笔工资，要员工答应什么？"
+        },
+        {
+          "id": "rita_files",
+          "title": "你要接收 Webb 的哪些东西？"
+        }
+      ]
+    },
+    "waitress": {
+      "name": "服务员",
+      "en": "Waitress",
+      "role": "正在核对工资",
+      "intro": "waitress_intro",
+      "repeat": "waitress_repeat",
+      "topics": [
+        {
+          "id": "waitress_pay",
+          "title": "这次工资，你实际能拿多少？"
+        }
+      ]
+    },
+    "tommy": {
+      "name": "汤米·康纳利",
+      "en": "Tommy Connelly",
+      "role": "酒吧经理",
+      "intro": "tommy_intro",
+      "repeat": "tommy_repeat",
+      "topics": [
+        {
+          "id": "tommy_management",
+          "title": "Webb 不在，谁管这家店？"
+        },
+        {
+          "id": "tommy_income",
+          "title": "酒吧的钱都从哪里来？"
+        },
+        {
+          "id": "tommy_night",
+          "title": "枪响时你在做什么？"
+        }
+      ]
+    },
+    "james": {
+      "name": "詹姆斯·奥沙利文",
+      "en": "James O'Sullivan",
+      "role": "兼职厨师",
+      "intro": "james_intro",
+      "repeat": "james_repeat",
+      "topics": [
+        {
+          "id": "james_employer",
+          "title": "Webb 对后厨和员工怎么样？"
+        },
+        {
+          "id": "james_wages",
+          "title": "这份工钱够生活吗？"
+        },
+        {
+          "id": "james_night",
+          "title": "枪声响起时你在哪里？"
+        }
+      ]
+    },
+    "drummer": {
+      "name": "老鼓手",
+      "en": "Drummer",
+      "role": "驻场乐手",
+      "intro": "drummer_intro",
+      "repeat": "drummer_repeat",
+      "topics": [
+        {
+          "id": "drummer_pay",
+          "title": "停演以后，你们的钱怎么结？"
+        }
+      ]
+    },
+    "emma": {
+      "name": "艾玛·奥马利",
+      "en": "Emma O'Malley",
+      "role": "《先驱报》记者",
+      "intro": "emma_intro",
+      "repeat": "emma_repeat",
+      "topics": [
+        {
+          "id": "emma_investigation",
+          "title": "你以前查 Webb，查到了什么？"
+        },
+        {
+          "id": "emma_room",
+          "title": "这个包厢的布置哪里不对？"
+        },
+        {
+          "id": "emma_camera",
+          "title": "相机为什么一直留在这里？",
+          "requiresAny": [
+            "photo_raw",
+            "photo_amounts"
+          ]
+        }
+      ]
+    }
+  },
+  "doubts": [
+    {
+      "id": "accounts",
+      "title": "两本账的说法",
+      "requires": [
+        "private_ledger",
+        "public_ledger"
+      ]
+    },
+    {
+      "id": "letters",
+      "title": "经手的催款事务",
+      "requires": [
+        "demand_letter",
+        "signature_statement"
+      ]
+    }
+  ],
+  "expose": {
+    "required": [
+      "accounts_claim"
+    ],
+    "opening": "expose_open",
+    "rounds": [
+      {
+        "lie": "expose_r1_lie",
+        "answer": [
+          "private_ledger",
+          "public_ledger"
+        ],
+        "success": "expose_r1_success",
+        "wrong": "expose_r1_wrong"
+      },
+      {
+        "lie": "expose_r2_lie",
+        "answer": [
+          "demand_letter"
+        ],
+        "success": "expose_r2_success",
+        "wrong": "expose_r2_wrong"
+      }
+    ],
+    "ending": "ending"
+  }
+}

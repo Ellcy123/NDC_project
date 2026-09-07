@@ -1,0 +1,50 @@
+{
+  "schema": "ndc-art-compatibility/v1",
+  "reviewedCommit": "51ca823",
+  "owner": "art-team",
+  "editPolicy": "Do not edit the four evidence skill directories during concurrent optimization. Apply only the workspace/path overlay documented in docs/美术生产工作区.md.",
+  "newJobsEntry": ".codex/skills/ndc-scene-evidence-placement/SKILL.md",
+  "legacyChildrenStatus": "not-compatible-with-current-parent; do-not-execute-old-packaging",
+  "issues": [
+    {
+      "id": "old-layer-arguments",
+      "status": "pending-owner-update",
+      "detail": "Old child commands use --map-layer, --hotspot-target, --hotspot-alpha-threshold and --allow-opaque-region-map. Current packager accepts --map-shape-mask. An RGBA source layer is not a mask; conversion requires the current parent-image/Alpha contract."
+    },
+    {
+      "id": "manifest-contract",
+      "status": "pending-owner-update",
+      "detail": "Old version 3/mapDelivery/hotspot/overlay contracts differ from the current version 2/crop.shape/shapeMask producer. Do not invent version translation from the number alone."
+    },
+    {
+      "id": "text-authorship",
+      "status": "pending-owner-update",
+      "detail": "Old detail child allows separate text layers; current parent forbids post-generation readable text editing. Current parent rule governs new production."
+    },
+    {
+      "id": "delivery-layout",
+      "status": "pending-owner-update",
+      "detail": "Old compact publisher and assets/production_report.json assumptions are obsolete. Current formal PNG/XY package and preserved process records apply, with user confirmation before engineering transfer."
+    },
+    {
+      "id": "route-names",
+      "status": "pending-owner-update",
+      "detail": "direct-scene/container-click and scene-pickup/container-state must not be silently interchanged without resolving the actual acquisition event."
+    },
+    {
+      "id": "machine-roots",
+      "status": "workspace-overlay",
+      "detail": "Use current managed job payload. D:/PMH assets remain missing/unverified until exact approved sources are identified."
+    },
+    {
+      "id": "external-validators",
+      "status": "local-contract-rebuild",
+      "detail": "Use scripts/art_pipeline validators with documented schema; unknown/incomplete old records remain blocked."
+    },
+    {
+      "id": "portable-output-guard",
+      "status": "shared-launcher-overlay",
+      "detail": "The protected evidence_delivery.py package command has a hardcoded old Unity deny-path, not an overridable --unity-root. Run it through scripts/art_pipeline/ndc_art.py run ndc-scene-evidence-placement evidence_delivery.py package; the shared entry validates the effective --output-dir inside an existing managed payload. Do not use abbreviated output arguments or bypass the shared entry. Built-in templates remain in the protected skill assets directory in Git."
+    }
+  ]
+}

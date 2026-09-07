@@ -2,7 +2,17 @@
 
 1920 年代芝加哥背景的侦探推理游戏 **内容设计与预配置工作区**。玩家扮演侦探 Zack Brennan，通过对话、证据收集、时间循环机制解谜。
 
-本仓库产出（对话、证据、配置表等）最终同步到 `D:\NDC`（Unity 工程）。
+本仓库产出（对话、证据、配置表等）最终同步到独立的 Unity 工程。文中 `D:\NDC` 等旧机器地址仅是历史示例；美术工具按以下配置解析实际位置，不要求固定盘符或目录名。
+
+## 美术生产与收尾（2026-09-05 用户确认）
+
+美术生产前读取 `docs/美术生产工作区.md`。静态美术 Skill 主实现维护在本仓库 `.codex/skills/`；H3 视频生成、双音频调用、交付处理三个主实现维护在工程仓库 `.codex/skills/`，本仓库对应目录仅作兼容入口。角色卡唯一索引为 `美术资产交付/角色/角色索引.json`，表情配对索引为 `美术资产交付/角色表情/表情索引.json`。
+
+从任一仓库根运行 `python -B scripts/art_pipeline/ndc_art.py configure --help` 配置本机三处路径；实际值保存在两库各自被 Git 忽略的 `ndc.local.json`，`paths` 查询，`skill NAME` 定位主实现。`production/art_pipeline/paths.json` 只维护团队预算和相对路径。Skill 必需的自有脚本、规则、模板和依赖清单必须随 Git 管理，不能只留在个人目录；第三方安装包、密钥、虚拟环境不进 Git。
+
+新任务使用 `python -B scripts/art_pipeline/ndc_art.py workspace create`，图像/视频过程文件、候选和待确认成品全部放返回的项目外 `payload`。自检后展示具体成品，用户确认该版本后才交付工程。成功交付并校验副本，或用户明确取消后，关闭任务并清理临时大文件；等待确认、仍在返工、旧任务、角色卡和未安全保存的母版不可清理。兼容入口必须从 `skill NAME` 返回的唯一主目录解析支持文件。
+
+道具 Skill 正由美术同学优化；本次整理不修改 `ndc-scene-evidence-placement` 及三个 `ndc-evidence-*` 子流程目录。道具打包经公共 `run` 入口检查受管输出，不能依赖旧脚本固定盘符的 Unity 禁写检查。旧子流程当前不兼容的命令不执行。公共路径、用户确认和三个本库校验器的映射以 `docs/美术生产工作区.md` 为准；艺术要求和原始审查门禁不因此放宽。并行兼容清单见 `production/art_pipeline/evidence_compatibility.json`。
 
 ---
 

@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "202",
+  "poseId": "SC2316-emma-cityhall-observer-v1",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\SC2316_avg_CityHallIntervention\\handoff\\emma_v1\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC\\Assets\\Resources\\Art\\Scene\\Backgrounds\\EPI02\\SC2316_bg_CityHall_Courthouse.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\emma.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\SC2316_avg_CityHallIntervention\\handoff\\emma_v1\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    828,
+    701,
+    1548,
+    1600
+  ],
+  "basePaddedCropBBox": [
+    948,
+    701,
+    1427,
+    1600
+  ],
+  "generationAspectRatio": [
+    4.0,
+    5.0
+  ],
+  "actualCropAspectRatio": 0.80089,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    1118,
+    871,
+    1257,
+    1483
+  ],
+  "actorBBoxLocal": [
+    290,
+    170,
+    429,
+    782
+  ],
+  "photoshopPasteTopLeft": [
+    828,
+    701
+  ],
+  "sourceHashes": {
+    "scene": "1f12935e6632cdec7dec3365bd4d1a96b617eed4482131c9b23ef038336cce8a",
+    "whiteboxComposite": "d7255e3e6f69d918a691650620845c4e3c61fc73af36c3f6c67053fa3b9f93bd",
+    "characterCard": "2db32c7bbcd7b976dc62c4236b6c9fa09b9d7bec0e5f44d140c0cf3ee4ce1b6b"
+  },
+  "generationPrompt": "Base the result on Image 1. Replace only the reviewed violet pose dummy with Emma O'Malley from Image 3. Frozen beat 201003028: she is midway up the steps, alert to Mickey's intervention while still oriented toward the guarded doorway. Preserve the approved smaller midground scale, upright three-quarter side/back pose, feet planted on the step, and hands held close to her own body. No contact and no reaching. Image 2 controls the exact daylight, stairs, camera, and palette. Image 3 controls Emma's identity: short dark bob, round glasses, intelligent reserved expression, charcoal 1920s skirt suit, white blouse, slim build, bold ink language. Exactly one Emma, no extra person, no hat, no weapon, no added architecture, no text or watermark.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}

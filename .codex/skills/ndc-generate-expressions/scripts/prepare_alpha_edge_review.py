@@ -34,6 +34,7 @@ def main() -> int:
     )
     parser.add_argument("--input", required=True, type=Path, help="RGBA foreground candidate")
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--processor-authority", choices=("USER_MANUAL_BACKGROUND_PROCESSING", "USER_AUTHORIZED_PHOTOSHOP_MCP"), default="USER_MANUAL_BACKGROUND_PROCESSING")
     args = parser.parse_args()
 
     input_path = args.input.resolve()
@@ -65,13 +66,14 @@ def main() -> int:
         "source": {"path": str(input_path), "sha256": sha256(input_path)},
         "previews": previews,
         "alpha_visualization": str(alpha_path),
-        "processor_authority": "USER_MANUAL_BACKGROUND_PROCESSING",
-        "codex_background_removal_used": False,
+        "processor_authority": args.processor_authority,
+        "codex_background_removal_used": args.processor_authority == "USER_AUTHORIZED_PHOTOSHOP_MCP",
+        "user_returned": args.processor_authority == "USER_MANUAL_BACKGROUND_PROCESSING",
         "protected_white_status": "NOT_CHECKED",
         "white_fringe_status": "NOT_CHECKED",
         "silhouette_status": "NOT_CHECKED",
         "formal_status": "NOT_CHECKED",
-        "required_next_action": "Codex visual review at native 100% and nearest 200%; return failures to the user without Alpha repair.",
+        "required_next_action": "Actual native 100% and local 200% visual review; use only the authorized processor branch for any repair. This preview tool never assigns PASS.",
     }
     manifest_path = output_dir / "alpha-edge-review-evidence.json"
     manifest_path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

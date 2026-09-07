@@ -1,0 +1,65 @@
+{
+  "schema": "ndc-local-generation-handoff-report/v1",
+  "actorId": "Zack",
+  "poseId": "SC2691-Zack-v1",
+  "roles": {
+    "image1": "D:\\NDC_project\\output\\multichar_avg\\production_batch_20260905\\SC2691\\Zack_handoff\\image-1-local-whitebox.png",
+    "image2": "D:\\NDC_project\\output\\multichar_avg\\production_batch_20260905\\SC2691\\Hospital_clean_plate.png",
+    "image3": "D:\\NDC_project\\image\\角色卡666\\zack.png"
+  },
+  "localCleanReference": "D:\\NDC_project\\output\\multichar_avg\\production_batch_20260905\\SC2691\\Zack_handoff\\local-clean-reference.png",
+  "originalSceneSize": [
+    2560,
+    1600
+  ],
+  "cropBBox": [
+    478,
+    780,
+    1093,
+    1600
+  ],
+  "basePaddedCropBBox": [
+    530,
+    780,
+    1040,
+    1600
+  ],
+  "generationAspectRatio": [
+    3.0,
+    4.0
+  ],
+  "actualCropAspectRatio": 0.75,
+  "cropPolicy": "expand-original-pixels-no-resize",
+  "outputMode": "contextual-local-replacement",
+  "actorBBoxOriginal": [
+    570,
+    820,
+    1000,
+    1600
+  ],
+  "actorBBoxLocal": [
+    92,
+    40,
+    522,
+    820
+  ],
+  "photoshopPasteTopLeft": [
+    478,
+    780
+  ],
+  "sourceHashes": {
+    "scene": "126144931c3687c79927687a53c26b46312e01514eb81b27febd7ea8cb198bd6",
+    "whiteboxComposite": "1b141eb5bb5ffd549b736202033a61de81791e838c73a1dc670841d69e73a121",
+    "characterCard": "d4a52c8fa38d7744cd24e621ecaf93a9ca7831685b5a32f68a90be4f444fd868"
+  },
+  "generationPrompt": "Exact reviewed hospital pose; identity reference card; subdued source hospital lighting.",
+  "status": "READY_FOR_CONTEXTUAL_LOCAL_GENERATION",
+  "postGenerationRequired": [
+    "approve the in-place contextual local replacement before any extraction",
+    "identity-style comparison against image3",
+    "pose-contact comparison against image1",
+    "uniform-only registration after pose and contact pass",
+    "exact source occluder masks including holes",
+    "untouched full-scene reconstruction"
+  ]
+}

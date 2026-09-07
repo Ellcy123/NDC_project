@@ -45,6 +45,8 @@ Photoshop MCP must never create, insert, replace, delete, typeset, restyle, pain
 
 When any required title, date, number, ledger entry, signature, stamp wording, or body text is missing, wrong, garbled, incomplete, or insufficiently readable, classify it as a semantic failure and return to the image-generation stage. Retain the failed source and review record, then generate a new complete raster candidate with its final required text authored in that result; do not repair the candidate by overlaying text. Runtime sizing, alpha cleanup, masks, locked frames, coordinate crops, and Icon derivatives may transform only that accepted complete raster.
 
+Apply that text test to the role's information contract and the complete pre-composition semantic master. It does not reject a non-photo document's permitted reverse/unreadable scene view, or intentional overlap in a multipart Big after the complete master has passed. When an existing final layout hides wording, inspect its retained pre-composition master before deciding that text is missing. If that evidence is unavailable, mark it `NOT_CHECKED` and search its provenance; do not invent approval or immediately regenerate an otherwise recoverable asset.
+
 ### Multi-part prop hierarchy after semantic lock
 
 When an accepted evidence master contains two or more distinct physical components (for example papers, cards, photographs, folders, tags, or a document plus its clipboard), do not default to an evenly aligned, upright row. After all required content and readable text have passed, assess whether a restrained staggered composition would better establish physical hierarchy: a rear component may sit slightly offset, components may have distinct small rotations, and a foreground component may partially overlap another.
@@ -82,7 +84,7 @@ Treat `D:\PMH\工作` and `D:\PMH\ndc` as read/copy-only inputs. Copy required m
 
 ### Candidate-first routing
 
-Before selecting a scene source, repairing, or generating any item, inventory all four recoverable scopes for the scene ID, configured runtime stem, item ID, and clear Chinese/English aliases:
+Before repairing or generating any item, inventory the recoverable scopes below for the scene ID, configured runtime stem, item ID, and clear Chinese/English aliases. These are evidence categories, not a source-search order: first obey the current project's source-search precedence and stop conditions. Do not search a prohibited later source root to replace a hit in an earlier authoritative root. Process/history records may still be inspected to recover approval, rejection, and derivation evidence; finding them does not change the selected source authority.
 
 1. current formal delivery under `D:\Codex\NDC\最终交付\道具`;
 2. accepted semantic masters, staged candidates, and prior technical/visual records under `D:\Codex\NDC\工作过程文件\道具`;
@@ -119,7 +121,7 @@ Apply this hard gate before art production and again before delivery:
 - An item granted automatically by dialogue, Expose, minigame completion, or analysis may omit Map only when it is never left for the player to locate or click. If the event visibly presents the item in the scene, deliver the required conditional/handover state as well.
 - A locked or post-Expose cache must be classified by what the player does after it unlocks. If the player opens it and clicks the contents, it is a container exploration chain; if the game grants the contents automatically, document the visible event state and the no-Map reason.
 
-Block the batch when any acquisition coverage row is unresolved. Do not generate Big/Icon-only placeholders to make an incomplete row look finished.
+An unresolved acquisition coverage row blocks that item's dependent production/release and the claim of complete batch delivery, not unrelated resolved items. Record the missing fact and affected dependencies, continue all independently executable work, then revisit blocked rows. Preserve independently approved roles without labeling an incomplete item complete. Do not generate Big/Icon-only placeholders to make an unresolved row look finished.
 
 ## Container visibility and physical placement gate
 
@@ -258,7 +260,9 @@ Do not send the `2560 x 1600` three-frame guide to Unity. It is a measurement an
 
 ### 5. Package deterministically
 
-Run:
+First resolve the scene reconstruction mode in [references/delivery-contract.md](references/delivery-contract.md#scene-reconstruction-invariant). The command below is for a new/changeable Sprite whose target-plus-shadow Map alone reconstructs the accepted state. It is not the route for hiding old-object removal or unrelated background repairs inside a clickable mask. An in-place replacement that changes background outside the semantic Map must retain the accepted scene/state as its parent dependency and use parent-exact hotspot extraction instead; unresolved runtime state dependencies block that package.
+
+For the Map-alone reconstruction mode, run:
 
 ```powershell
 python scripts/evidence_delivery.py package `
@@ -278,14 +282,14 @@ python scripts/evidence_delivery.py package `
   --icon-image <approved-130x130-icon.png> `
   --icon-verification <icon-verification.json> `
   --z <-3> `
-  --output-dir <image\edit_jobs\job\delivery>
+  --output-dir <work-process-scene-job\delivery>
 ```
 
 Use `--cutout-mask` instead of `--detail-image` only when the standalone image must be extracted from the accepted final scene. Production packaging requires an independently approved `130 x 130` RGBA Icon and its passing report from `evidence_art.py verify-icon` or `finalize-icon`. If the current runtime record intentionally has no `iconPath`, use `--omit-icon` and omit all Icon arguments. The package command must never silently shrink a Big or detail image into an Icon. `--allow-legacy-derived-icon` exists only to rebuild an audited old package and must be explicit in its manifest.
 
 When both the source and accepted final scene are supplied, the script derives the map rectangle and `(x, y)` from the actual changed-pixel bounds, then adds `--map-padding` (default `32`). This deliberately decouples the runtime Map crop from the much larger authorization workspace. When no source is available, it falls back to the authorization-mask bounds. `--map-rect left top right bottom` is only an audited compatibility override for pre-existing baked props. The rectangle is top-left based and half-open. It must contain every changed pixel and all clickable visual content.
 
-For a preferred irregular Map, provide `--map-shape-mask` as a full-parent-size silhouette mask. The packager preserves exact accepted pixels only inside that mask and exports RGBA with zero RGB under Alpha 0. The mask must cover every changed pixel needed to reconstruct the accepted state and may contain multiple disconnected target islands. For Type 7 child Maps, or when only one accepted parent image exists, first save and visually approve a loose working-selection overlay under `PRE_EXTREMA_VISUAL_COVERAGE_GATE`; only then record the four visible extreme points of the verified prop-plus-shadow union and use `scripts/irregular_map.py build --parent <type7-or-scene.png> --polygon "x,y;x,y;..." --shadow-polygon "x,y;x,y;..." --extreme-points "top:x,y;bottom:x,y;left:x,y;right:x,y" --expand 3 --exclude-polygon "x,y;x,y;..." --output <map.png> --report <verification.json> --overlay <review.png>`. Repeat `--shadow-polygon` for every disconnected visible shadow region and `--exclude-polygon` for each foreground occluder. The command validates extrema against the undilated body-plus-shadow union, applies the explicitly chosen expansion (the example uses 3px, not a universal value), subtracts only the declared foreground regions, validates the declared semantic extrema again on the final post-exclusion Alpha, and reports every surviving connected component without rejecting multi-island masks. These are technical checks; review the base-contour overlay, Alpha-only/checkerboard exports, and the final post-exclusion overlay visually before approval. Convert the final parent-local top-left to full-scene `Position` before registration. In the semantic release contract, bind each `map`/`type6` position to `acceptedParentImage` and `acceptedParentSha256`; the production validator must then prove parent bounds, RGBA mode, exact Alpha-positive parent RGB, and zero RGB under Alpha 0. Equal Alpha, canvas, or position alone is never sufficient: any visible white/black block, stale review RGB, painted repair, or another-parent pixel is a release failure.
+For a preferred irregular Map in Map-alone reconstruction mode, provide `--map-shape-mask` as a full-parent-size silhouette mask. The packager preserves exact accepted pixels only inside that mask and exports RGBA with zero RGB under Alpha 0. The mask must cover every changed pixel needed to reconstruct the accepted state and may contain multiple disconnected target islands; if this requires unrelated background, this mode is invalid rather than permission to enlarge the hotspot. For accepted-parent hotspots (including in-place replacements with a separately retained scene/state dependency), Type 7 child Maps, or when only one accepted parent image exists, first save and visually approve a loose working-selection overlay under `PRE_EXTREMA_VISUAL_COVERAGE_GATE`; only then record the four visible extreme points of the verified prop-plus-shadow union and use `scripts/irregular_map.py build --parent <type7-or-scene.png> --polygon "x,y;x,y;..." --shadow-polygon "x,y;x,y;..." --extreme-points "top:x,y;bottom:x,y;left:x,y;right:x,y" --expand 3 --exclude-polygon "x,y;x,y;..." --output <map.png> --report <verification.json> --overlay <review.png>`. Repeat `--shadow-polygon` for every disconnected visible shadow region and `--exclude-polygon` for each foreground occluder. The command validates extrema against the undilated body-plus-shadow union, applies the explicitly chosen expansion (the example uses 3px, not a universal value), subtracts only the declared foreground regions, validates the declared semantic extrema again on the final post-exclusion Alpha, and reports every surviving connected component without rejecting multi-island masks. These are technical checks; review the base-contour overlay, Alpha-only/checkerboard exports, and the final post-exclusion overlay visually before approval. Convert the final parent-local top-left to full-scene `Position` before registration. In the semantic release contract, bind each `map`/`type6` position to `acceptedParentImage` and `acceptedParentSha256`; the production validator must then prove parent bounds, RGBA mode, exact Alpha-positive parent RGB, and zero RGB under Alpha 0. Equal Alpha, canvas, or position alone is never sufficient: any visible white/black block, stale review RGB, painted repair, or another-parent pixel is a release failure.
 
 ### 6. Verify the delivery
 
@@ -302,7 +306,7 @@ Delivery is blocked unless all applicable checks pass:
 - source and final scene dimensions/mode match;
 - the base coordinate verification passes;
 - pixels outside the authorization mask are byte-identical;
-- all changed pixels fit inside the exported map rectangle; the larger unused portion of the authorization workspace does not have to fit inside it;
+- in Map-alone reconstruction mode, all changed pixels fit inside the exported map rectangle; the larger unused portion of the authorization workspace does not have to fit inside it. Accepted-parent hotspots instead bind the complete reviewed scene/state dependency; background repairs outside their semantic contour must not enter the Map;
 - for a rectangular compatibility Map, the sprite equals the accepted scene rectangle pixel-for-pixel; for an irregular Map, every Alpha-positive RGB pixel equals the accepted parent and Alpha 0 RGB is zero;
 - when the Map is a newly inserted or changeable scene layer, compositing it at `(x, y)` over the source reconstructs the accepted final scene; for a baked-in interaction hotspot, parent-pixel alignment passes and reconstruction is not misused as semantic-completeness evidence;
 - the standalone detail image exists and is non-empty;
@@ -455,7 +459,7 @@ See [references/delivery-contract.md](references/delivery-contract.md) for the c
 
 ## Staging and synchronization
 
-Default engineering staging to `image/edit_jobs/<job>/delivery/`. This working package may contain manifests, verification JSON, overlays, patches, and recovery inputs. Never overwrite the approved scene or write directly into `D:\NDC\Assets\Resources\Art\Scene\EVIDENCE` during generation.
+Stage new work under the current project's designated work-process scene/job directory, in a `delivery/` subfolder. On this workstation that parent is under `D:\Codex\NDC\工作过程文件\道具\<Unit>\...`. Existing `image/edit_jobs` packages are recoverable history, not the default destination for new work. This working package may contain manifests, verification JSON, overlays, patches, and recovery inputs. Never overwrite the approved scene or write directly into a Unity runtime asset directory during generation.
 
 Keep the eventual formal image-asset folder separate from engineering staging. Each asset-facing folder contains only accepted/final PNG image assets plus one ASCII `XYposition.txt`. A complete scene-prop package must include the accepted full-scene placement preview as a formal PNG, every required Type 6 and Type 7 image, every contained or direct-pickup Map, every required Big and configured Icon, and every requested environment/state image. The coverage ledger defines the required image roles; "only PNG plus XY" is a file-type boundary and must never be interpreted as permission to publish only the assets changed in the latest revision. An explicitly requested single-asset delivery may be incremental, but it must not be labeled a complete formal scene delivery.
 

@@ -1,0 +1,36 @@
+# User-authorized Photoshop MCP background processing
+
+## Scope and authority
+
+Use only when the user authorizes Codex to operate Photoshop for cutout or white-fringe work. This is a narrow alternative to the manual-only E5/E6 boundary, not authorization to alter expression, identity, clothing, lighting, or source dimensions. For a user-designated rejected test image, preserve its rejection: successful extraction cannot make it approved expression art. Already-returned RGBA assets are inspected first and are not recut without a demonstrated issue.
+
+Keep original assets and the current handoff read-only during trials. Copy the designated image into a uniquely named test job under `工作过程文件/角色表情/Unit<n>/<character>`. Retain the source hash, native dimensions, PSD recovery file and candidate PNG; never overwrite PMH or accepted siblings. All Photoshop operations use MCP, not UI automation or shell-hosted Photoshop scripting.
+
+## Capability preflight
+
+Read `photoshop_host_describe` and `photoshop_capability_list`; search and describe each intended command before executing. Check selection creation, contraction, selection-to-layer or selection-to-mask, localized deletion, undo and export separately. Supported contraction alone is not a complete extraction pipeline.
+
+If a direct Select Subject command is missing, inspect `action.list`. A supported `action.play` may execute an actually listed, narrowly relevant installed action on the isolated test document. Record its exact set/action names and actual result; do not invent names or treat an unavailable direct command as supported. An action that reselects the subject may discard an earlier contracted selection: never label its output “contracted 1px” without verifying that the contracted mask is the one applied.
+
+On 2026-09-05, Lawson A1 confirmed the installed `主体和背景 / 选择主体` action, `selection.contract` and `主体和背景 / 移除背景` action work on PS 27.11 through MCP 2.0.1. Direct subject/object selection was unavailable; selection-to-layer and localized pixel deletion were not exposed in the inspected catalog. This is historical test evidence, not a permanent capability promise: rediscover capabilities on each resumed host/session.
+
+## Proposed extraction sequence
+
+1. Open only the work copy and verify the active document, dimensions and source preview. Preserve the original outside the working document so deleting its working background layer remains recoverable.
+2. Select Subject or Object Selection through the verified route. Inspect the entire contour before shrinking, especially isolated hair, silver temples, ear edges, shoulder tips, and real gaps between hair strands. A bounding box alone cannot prove correct selection.
+3. First trial 1px contraction in native pixels, with `apply_at_canvas_bounds=false` for a bust that touches the bottom. Apply that selection using step 4 and inspect the resulting cutout using step 5. If white fringe remains and subject detail is intact, add exactly 1px contraction: the maximum is **2px total relative to the original subject selection**, not 1px plus another 2px. Derive both trials from the unchanged source; do not repeatedly extract or resample an already extracted foreground. Compare each applied result against the original contour; do not automatically feather. If fine subject detail is lost at either amount, undo and refine the local selection instead.
+4. Copy the selection to a new foreground layer or apply a verified equivalent mask. Verify foreground completeness before deleting/hiding the working source. If this operation is unavailable, stop that branch; a bare contracted selection is not a cutout. An installed action containing these steps must have its behavior confirmed on the work copy before wider use.
+5. Inspect on white, mid-gray, dark gray, black and exact green at native 100% plus nearest 200% or complete original-pixel tiles. Pay special attention to pale background enclosed by hair: removing the exterior alone can leave opaque pockets. Distinguish those pockets from intentional silver/white hair highlights using the unchanged original, not color threshold alone.
+6. If white fringe remains after the total 2px trial, stop whole-contour contraction and select/delete only the remaining local background or fringe through supported MCP operations. The 2px ceiling does not override protection of hair, silver temples, shirts or costume details. Do not use global white deletion, smoothing, recoloring, or blur. If native commands are missing, preserve the rejected trial and name the missing operation; ask for a narrow recorded action or updated MCP support, not broad access.
+7. Export uniquely named PNG and PSD through the controlled export route, copy returned outputs into the test job and verify hashes. Technical review checks native canvas, genuine nonempty Alpha, unchanged opaque interior RGB and protected details. Visual review decides edge quality; a successfully exported RGBA is not automatically acceptable.
+8. Finish the current image's saved-output review and hash-bound record before processing another Photoshop image. A failed candidate remains non-final; stop or repair the same image without advancing to siblings.
+
+The user-directed global retry budget is 1px, then total 2px only when needed, then local selection/deletion. A failed or unapplied 1px selection probe does not count as an evaluated 1px cutout. Do not spend retries replaying the same action or exceed 2px by resetting the cumulative counter after reselecting the subject.
+
+## Evidence and release
+
+Record `processor_authority=USER_AUTHORIZED_PHOTOSHOP_MCP`, `codex_background_removal_used=true`, source/output SHA-256, action/command IDs, cumulative native-pixel contraction (0, 1 or 2), whether it was actually applied to the exported Alpha, residual fringe locations and subject-detail review at each applied trial. Do not claim `user_returned=true` for a Codex-made cutout.
+
+`prepare_alpha_edge_review.py` is preview-only. For PS outputs pass `--processor-authority USER_AUTHORIZED_PHOTOSHOP_MCP`; preview preparation keeps formal status `NOT_CHECKED` and never writes visual PASS. Attach the current stage review and actual repair evidence. Formal PS delivery uses the tested schema-13 extension in `receipt-schema.md`; never label PS output as manual. Do not change source pixels through the preview script.
+
+The Lawson A1 direct Remove Background trial preserved all 637499 opaque RGB pixels but failed visual review: pale pockets remained between top hair strands and fine pale lines remained around parts of the hair/ear contour. The tested 1px contraction was undone before that separate action trial, so its final edge effect was **not evaluated**. The proposed full contraction/copy/local-correction sequence remains unverified until the missing operations are supplied.

@@ -1,5 +1,20 @@
 # Expression delivery receipt schema 12
 
+## Explicit Photoshop extension: schema 13
+
+Schema 12 remains manual-only. Schema 13 permits a mix of unchanged manual rows and explicitly authorized PS rows. Each PS row replaces (never accompanies) `manual_alpha_return` with `photoshop_alpha_processing`, containing:
+
+- `method` and `processor_authority`: `USER_AUTHORIZED_PHOTOSHOP_MCP`;
+- `codex_background_removal_used=true`, `user_returned=false`, `source_preserved=true`;
+- `input_source`, `output_native`, `recovery_psd`: existing path/current lowercase SHA-256 objects; output matches the frozen native RGBA and the input remains a separate preserved file at the same canvas size;
+- `authorization_evidence`, `operation_evidence`, nonempty actual `command_ids`;
+- `cumulative_native_pixel_contraction`: 0, 1 or 2 only;
+- `stage_review`: current native-hash-bound passing visual stage with whole and local views;
+- `edge_review`: five-background/Alpha evidence with matching PS provenance and native hash;
+- `protected_white_status`, `white_fringe_status`, `formal_status`: PASS only after actual review.
+
+All original artistic, guide, composition, cross-profile and set gates remain unchanged. PS file signatures and operation logs provide provenance checks, not visual approval. Run the existing stage validator independently for each actual art stage before the receipt validator. Cross-profile hash uses the producer's `native_source_sha256` key (older `native_rgba_sha256` and `shared_native_rgba_sha256` remain accepted).
+
 Create one receipt per character and profile. Formal delivery is fail-closed.
 
 ## Required shape
