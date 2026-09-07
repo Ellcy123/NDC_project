@@ -1,15 +1,17 @@
 # Self-check and bounded rework
 
+The manual-only repair ownership and retry rules below apply to default `USER_MANUAL` mode. For explicit PS MCP authorization, use `photoshop-background-processing.md` for the alternate ownership, trial budget and missing-capability stop. The artistic, source-preservation and Alpha gates are unchanged.
+
 ## Gate order
 
 1. `APPROVED_ASSET_CENSUS_AND_DELTA_GATE`
 2. `PORTRAIT_SOURCE_LOCK_GATE`
 3. `PORTRAIT_COMPLETION_USED_FALSE_GATE`
-4. `EXPRESSION_SEMANTIC_GATE`
-5. `EXPRESSION_SIGNAL_COMPLETENESS_GATE`
-6. `CALM_SEPARATION_GATE`
-7. `IDENTITY_CONTINUITY_GATE`
-8. `VIEWPOINT_CONTINUITY_GATE`
+4. `IDENTITY_CONTINUITY_GATE`
+5. `VIEWPOINT_CONTINUITY_GATE`
+6. `EXPRESSION_SEMANTIC_GATE`
+7. `EXPRESSION_SIGNAL_COMPLETENESS_GATE`
+8. `CALM_SEPARATION_GATE`
 9. `STYLE_LOCK_GATE`
 10. `TEXTURE_COHERENCE_GATE`
 11. `SOURCE_DETAIL_PRESERVATION_GATE`
@@ -28,6 +30,8 @@
 24. `RECEIPT_GATE`
 
 Stop at the first failure and return to its owner state.
+
+For new/replacement art, use `identity-and-expression-calibration.md` for the concrete face, calm-contrast, gaze and anonymous-thumbnail checks. User rejection supersedes the affected prior PASS; keep accepted siblings and bind every subsequent step to the current manifest revision.
 
 ## Key decisions
 

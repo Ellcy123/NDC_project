@@ -168,6 +168,59 @@ class FormalReleaseTests(unittest.TestCase):
         self.assertEqual(2, result.returncode)
         self.assertIn("forbidden asset roles", result.stdout)
 
+    def make_detail_only_package(self):
+        for role in ("preview", "map"):
+            name = self.names[role]
+            (self.formal / name).unlink()
+            del self.contract["artifactSha256"][name]
+        xy = self.formal / "XYposition.txt"
+        xy.write_text("\n", encoding="ascii")
+        self.contract["artifactSha256"][xy.name] = digest(xy)
+        record = self.contract["records"][0]
+        record["deliveryClass"] = "detail-only"
+        record["classificationReason"] = "Automatically granted in dialogue; no visible world pickup"
+        del record["assets"]["map"]
+        record["positions"] = []
+        self.contract["scenePreview"] = ""
+        self.contract["scenePreviewOmissionReason"] = "Dialogue details only; no scene or handover state required by the cited event"
+
+    def test_detail_only_package_can_explicitly_omit_scene_preview(self):
+        self.make_detail_only_package()
+        self.write_contract()
+        result = self.run_validator()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(sorted([self.names["big"], self.names["icon"]]), report["requiredPng"])
+        self.assertEqual({}, report["expectedXy"])
+
+    def test_detail_only_preview_omission_requires_reason(self):
+        self.make_detail_only_package()
+        self.contract["scenePreviewOmissionReason"] = " "
+        self.write_contract()
+        result = self.run_validator()
+        self.assertEqual(2, result.returncode)
+        self.assertIn("scenePreviewOmissionReason", result.stdout)
+
+    def test_scene_classes_cannot_use_detail_preview_omission(self):
+        self.contract["scenePreview"] = ""
+        self.contract["scenePreviewOmissionReason"] = "This reason cannot override world roles"
+        for kind in ("scene-pickup", "container-state", "environment", "minigame-only"):
+            with self.subTest(delivery_class=kind):
+                self.contract["records"][0]["deliveryClass"] = kind
+                self.write_contract()
+                result = self.run_validator()
+                self.assertEqual(2, result.returncode)
+                self.assertIn("scenePreview must name", result.stdout)
+
+    def test_empty_records_cannot_claim_preview_omission(self):
+        self.make_detail_only_package()
+        self.contract["records"] = []
+        self.write_contract()
+        result = self.run_validator()
+        self.assertEqual(2, result.returncode)
+        self.assertIn("records must be a non-empty list", result.stdout)
+        self.assertIn("scenePreview must name", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

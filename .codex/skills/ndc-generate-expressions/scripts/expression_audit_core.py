@@ -17,7 +17,6 @@ from typing import Any, Iterable
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
-from review_font import load_review_font
 
 
 GREEN = (0, 255, 43)
@@ -685,7 +684,17 @@ def save_mask(mask: np.ndarray, path: Path) -> None:
 
 
 def _font(size: int = 18) -> ImageFont.ImageFont:
-    return load_review_font(size)
+    candidates = [
+        Path("C:/Windows/Fonts/msyh.ttc"),
+        Path("C:/Windows/Fonts/arial.ttf"),
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            try:
+                return ImageFont.truetype(str(candidate), size=size)
+            except OSError:
+                pass
+    return ImageFont.load_default()
 
 
 def composite_for_review(image: Image.Image, profile: str, background: tuple[int, int, int] = (228, 228, 228)) -> Image.Image:

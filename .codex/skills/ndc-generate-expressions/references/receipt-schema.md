@@ -1,5 +1,20 @@
 # Expression delivery receipt schema 12
 
+## Explicit Photoshop extension: schema 13
+
+Schema 12 remains manual-only. Schema 13 permits a mix of unchanged manual rows and explicitly authorized PS rows. Each PS row replaces (never accompanies) `manual_alpha_return` with `photoshop_alpha_processing`, containing:
+
+- `method` and `processor_authority`: `USER_AUTHORIZED_PHOTOSHOP_MCP`;
+- `codex_background_removal_used=true`, `user_returned=false`, `source_preserved=true`;
+- `input_source`, `output_native`, `recovery_psd`: existing path/current lowercase SHA-256 objects; output matches the frozen native RGBA and the input remains a separate preserved file at the same canvas size;
+- `authorization_evidence`, `operation_evidence`, nonempty actual `command_ids`;
+- `cumulative_native_pixel_contraction`: 0, 1 or 2 only;
+- `stage_review`: current native-hash-bound passing visual stage with whole and local views;
+- `edge_review`: five-background/Alpha evidence with matching PS provenance and native hash;
+- `protected_white_status`, `white_fringe_status`, `formal_status`: PASS only after actual review.
+
+All original artistic, guide, composition, cross-profile and set gates remain unchanged. PS file signatures and operation logs provide provenance checks, not visual approval. Run the existing stage validator independently for each actual art stage before the receipt validator. Cross-profile hash uses the producer's `native_source_sha256` key (older `native_rgba_sha256` and `shared_native_rgba_sha256` remain accepted).
+
 Create one receipt per character and profile. Formal delivery is fail-closed.
 
 ## Required shape
@@ -12,20 +27,20 @@ Create one receipt per character and profile. Formal delivery is fail-closed.
   "profile": "transparent",
   "profile_spec": {"canvas": [1164, 916], "mode": "RGBA", "background": "alpha_0"},
   "portrait_source": {
-    "path": "{JOB_PAYLOAD}/approved-portrait.png",
+    "path": "D:/path/approved-portrait.png",
     "sha256": "64-lowercase-hex",
     "authority": "USER_CONFIRMED_COMPLETED_PORTRAIT",
     "portrait_completion_used": false,
     "status": "PASS"
   },
-  "expression_manifest": "{JOB_PAYLOAD}/expression-job.json",
-  "approved_asset_census": "{JOB_PAYLOAD}/approved-expression-census.json",
+  "expression_manifest": "D:/path/expression-job.json",
+  "approved_asset_census": "D:/path/approved-expression-census.json",
   "expressions": [
     {
       "expression_id": "calm",
-      "profile_asset": "{JOB_PAYLOAD}/transparent/character_calm.png",
+      "profile_asset": "D:/path/transparent/character_calm.png",
       "profile_asset_sha256": "64-lowercase-hex",
-      "native_rgba": "{JOB_PAYLOAD}/native/character_calm.png",
+      "native_rgba": "D:/path/native/character_calm.png",
       "native_rgba_sha256": "64-lowercase-hex",
       "manual_alpha_return": {
         "method": "USER_RETURNED_MANUAL_BACKGROUND_PROCESSING",
@@ -34,15 +49,15 @@ Create one receipt per character and profile. Formal delivery is fail-closed.
         "codex_background_removal_used": false,
         "user_returned": true,
         "handoff_source": {
-          "path": "{JOB_PAYLOAD}/pre-alpha/character_calm.png",
+          "path": "D:/path/pre-alpha/character_calm.png",
           "sha256": "64-lowercase-hex"
         },
         "returned_native": {
-          "path": "{JOB_PAYLOAD}/native/character_calm.png",
+          "path": "D:/path/native/character_calm.png",
           "sha256": "64-lowercase-hex"
         },
-        "handoff_manifest": "{JOB_PAYLOAD}/pre-alpha/handoff-manifest.json",
-        "edge_review": "{JOB_PAYLOAD}/qa/alpha-edge-review.json",
+        "handoff_manifest": "D:/path/pre-alpha/handoff-manifest.json",
+        "edge_review": "D:/path/qa/alpha-edge-review.json",
         "protected_white_status": "PASS",
         "white_fringe_status": "PASS",
         "formal_status": "PASS"
@@ -55,9 +70,9 @@ Create one receipt per character and profile. Formal delivery is fail-closed.
       "detail_lighting_status": "PASS",
       "expression_status": "PASS",
       "profile_status": "PASS",
-      "cross_profile_source_audit": "{JOB_PAYLOAD}/qa/cross-profile.json",
-      "profile_guide_review": "{JOB_PAYLOAD}/qa/profile-guide.json",
-      "mechanical_audit": "{JOB_PAYLOAD}/qa/mechanical.json"
+      "cross_profile_source_audit": "D:/path/qa/cross-profile.json",
+      "profile_guide_review": "D:/path/qa/profile-guide.json",
+      "mechanical_audit": "D:/path/qa/mechanical.json"
     }
   ],
   "continuity_review": {

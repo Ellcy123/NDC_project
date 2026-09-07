@@ -145,6 +145,13 @@ Keep this contract in the work-process package, never in the formal image folder
 
 The contract is the executable acquisition coverage ledger for release:
 
+For a non-empty package containing only `detail-only` records, `scenePreview`
+may be the empty string only with a non-empty `scenePreviewOmissionReason`
+explaining the cited no-world-pickup/no-required-visible-state decision. Required
+handover/state art must still be supplied when applicable. This exception never
+applies to a mixed package, scene pickup, environment, or container chain; it
+does not waive source citations, role checks, current hashes, or visual review.
+
 - `scene-pickup`: require `map`, `big`, Map `Position`, and `icon` when `iconPolicy` is `required`.
 - `environment`: require `map`, Map `Position`, and `big`; `iconPolicy` must be `omit`, and an Icon is forbidden.
 - `detail-only`: require `big`, configured Icon, and no Map/Position.
@@ -326,7 +333,12 @@ A Map PNG and its coordinate are one atomic record. Any Alpha, crop, padding, ex
 
 ## Scene reconstruction invariant
 
-For a normal scene pickup, let `S` be the approved source scene, `F` the accepted scene with item, `C` the map crop, and `(x, y)` its coordinate. Delivery requires:
+Choose the reconstruction mode before using the packaging command; record the choice, reason, and parent/state paths and hashes in the process manifest. These are production decisions, not new CLI flags or a claim that the existing validator can infer runtime state behavior.
+
+- **Map-alone reconstruction:** the runtime Sprite carries the entire authorized change, and all changed pixels belong to the target and its attributable shadow. Use the invariant below.
+- **Accepted-parent hotspot:** the target is baked into the accepted scene/state. This includes an Image in-place replacement whose old-object removal repairs background outside the new target. Retain and review that complete parent/state, derive only the semantic target-plus-shadow Map from its current pixels, and validate parent alignment rather than claiming the Map reconstructs the pre-replacement source. Record how the runtime obtains the accepted parent and any pickup/after-state that the design requires. A scene preview alone does not prove that dependency is installed. If the required state is missing or outside the authorized engineering scope, block that dependent release/synchronization rather than padding the Map with repaired background or silently changing configuration.
+
+For Map-alone reconstruction, let `S` be the approved source scene, `F` the accepted scene with item, `C` the map crop, and `(x, y)` its coordinate. Delivery requires:
 
 1. `S` and `F` have identical size and mode.
 2. All `S != F` pixels are inside the approved authorization mask.
@@ -334,7 +346,7 @@ For a normal scene pickup, let `S` be the approved source scene, `F` the accepte
 4. For a rectangular Map, `C == F.crop(rect)` pixel-for-pixel. For an irregular Map, every Alpha-positive RGB pixel in `C` equals the corresponding pixel in `F`, Alpha 0 RGB is zero, and the contour includes every changed pixel required by the accepted state.
 5. Pasting the rectangular Map or alpha-compositing the irregular Map onto `S` at `(x, y)` produces `F` pixel-for-pixel.
 
-For new placement jobs with both `S` and `F`, derive `rect` from the actual changed-pixel bounding box plus at least `32px` of stable local background. Fall back to the authorization-mask bounding box only when `S` is unavailable. Manual `--map-rect` input is reserved for audited legacy/baked-prop extraction.
+For Map-alone placement jobs with both `S` and `F`, derive `rect` from the actual changed-pixel bounding box plus at least `32px` of stable local background. That padding is transparent canvas outside the semantic contour, not clickable background. Fall back to the authorization-mask bounding box only when `S` is unavailable. Manual `--map-rect` input is reserved for audited legacy/baked-prop extraction. Accepted-parent hotspots use the reviewed semantic union's tight canvas and parent-exact extraction instead.
 
 This proves that Unity can reconstruct the accepted scene state from the background plus runtime item Sprite.
 

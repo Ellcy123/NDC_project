@@ -16,7 +16,6 @@ from typing import Any
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from review_font import load_review_font
 
 
 PASS = "PASS"
@@ -38,7 +37,13 @@ def sha256(path: Path) -> str:
 
 
 def font(size: int) -> ImageFont.ImageFont:
-    return load_review_font(size)
+    for candidate in (Path("C:/Windows/Fonts/msyh.ttc"), Path("C:/Windows/Fonts/arial.ttf")):
+        if candidate.is_file():
+            try:
+                return ImageFont.truetype(str(candidate), size)
+            except OSError:
+                pass
+    return ImageFont.load_default()
 
 
 def composite(path: Path, profile: str) -> Image.Image:

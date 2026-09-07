@@ -117,7 +117,18 @@ def validate_contract(contract_path: Path) -> dict[str, Any]:
 
     required_png: set[str] = set()
     scene_preview = contract.get("scenePreview")
-    if not isinstance(scene_preview, str) or not scene_preview.endswith(".png"):
+    preview_records = contract.get("records")
+    pure_detail_package = (
+        isinstance(preview_records, list)
+        and bool(preview_records)
+        and all(isinstance(record, dict) and record.get("deliveryClass") == "detail-only"
+                for record in preview_records)
+    )
+    omission_reason = contract.get("scenePreviewOmissionReason")
+    if scene_preview == "" and pure_detail_package:
+        if not isinstance(omission_reason, str) or not omission_reason.strip():
+            failures.append("scenePreviewOmissionReason is required for a detail-only package without preview")
+    elif not isinstance(scene_preview, str) or not scene_preview.endswith(".png"):
         failures.append("scenePreview must name one formal PNG")
     else:
         required_png.add(scene_preview)

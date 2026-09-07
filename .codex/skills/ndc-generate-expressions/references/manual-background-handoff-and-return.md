@@ -2,6 +2,8 @@
 
 ## Scope
 
+This document describes default `USER_MANUAL` mode. Explicitly authorized Photoshop MCP trials instead follow `photoshop-background-processing.md`; its scoped route supersedes the manual-only prohibitions here, without changing the rules for genuinely user-returned files.
+
 This workflow deliberately separates artistic expression production from background processing. Codex completes and reviews the expression artwork, hands off native images as a non-final package, and stops. The user manually removes the backgrounds by editing those exact PNG files in place. Once the user confirms completion, Codex reviews the edited Alpha and continues to delivery-profile composition only when every file passes. No second return folder or duplicate image set is created.
 
 Codex must not remove backgrounds, create or paint masks, remove white fringe, run `remove_expression_background.py`, use another extraction script, control Photoshop for this stage, or invoke an Image model for Alpha work.
@@ -11,7 +13,7 @@ Codex must not remove backgrounds, create or paint masks, remove white fringe, r
 Create the handoff only after every requested state passes artistic review. Place it under:
 
 ```text
-<job>\payload\角色表情\Unit<n>\<character>\手工去底交接_非最终_<date>
+D:\Codex\NDC\工作过程文件\角色表情\Unit<n>\<character>\手工去底交接_非最终_<date>
 ```
 
 The handoff contains:
@@ -37,6 +39,8 @@ Map each in-place edited file to its pre-edit handoff-manifest row and record:
 - `codex_background_removal_used=false`.
 
 Missing, ambiguous, renamed, resized, cropped, or artistically changed in-place edits are `USER_ALPHA_RETURN_INVALID` and cannot enter profile composition.
+
+An already-RGBA approved calm may remain byte-identical when the user confirms it is ready; do not demand a token edit merely to change its hash. It still needs the full Alpha-edge review. For replaced expressions, use the manifest revision explicitly designated current by the replacement record; retain older manifests as provenance and never match a current file to a rejected old row. Once the user has confirmed processing, proceed with inspection without asking for the same confirmation again.
 
 ## `ALPHA_EDGE_GATE`
 

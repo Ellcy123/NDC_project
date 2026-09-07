@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 from PIL import Image, ImageDraw, ImageFont
-from review_font import load_review_font
 
 from expression_audit_core import (
     AUDIT_REVISION,
@@ -50,7 +49,13 @@ def resolve_from_manifest(manifest_path: Path, value: str) -> Path:
 
 
 def load_font(size: int) -> ImageFont.ImageFont:
-    return load_review_font(size)
+    for path in (Path("C:/Windows/Fonts/msyh.ttc"), Path("C:/Windows/Fonts/arial.ttf")):
+        if path.is_file():
+            try:
+                return ImageFont.truetype(str(path), size=size)
+            except OSError:
+                pass
+    return ImageFont.load_default()
 
 
 def make_review_sheet(items: list[dict[str, Any]], destination: Path) -> None:
