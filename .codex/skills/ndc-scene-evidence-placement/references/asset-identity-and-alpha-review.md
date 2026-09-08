@@ -1,5 +1,7 @@
 # Linked asset identity and two-sided Alpha review
 
+新五阶段批次遵从[共用协议](../../ndc-prop-requirements/references/batch-contract.md)与[审核复用](../../ndc-prop-delivery-review/references/review-contract.md)。本参考提供专业判据；不要求无变化产物重复审阅，不另开重试预算。Unit4具体案例只用于相关历史资产，不扩大为所有章节的额外工序。
+
 Read before approving any linked Big, Icon, Map or Type 7 child, and before accepting cutouts. These are visual decisions; the existence of a JSON record does not establish them.
 
 ## One physical identity, different presentation roles

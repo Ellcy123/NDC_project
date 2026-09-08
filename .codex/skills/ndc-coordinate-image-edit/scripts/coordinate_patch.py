@@ -1200,15 +1200,87 @@ def scan_boundary(args: argparse.Namespace) -> None:
     retained_risk_fraction = retained_risk_count / max(informative_count, 1)
     hard_edge_fraction = hard_edge_count / max(ring_count, 1)
     combined_risk_fraction = combined_count / max(ring_count, 1)
-    passed = (
+    sampled_boundary_passed = (
         informative_sufficient
         and retained_risk_fraction <= args.max_retained_fraction
         and hard_edge_fraction <= args.max_hard_edge_fraction
         and edge_ratio <= args.max_edge_ratio
     )
 
+    # A source-locked insert can legitimately change no boundary samples.
+    # Prove this case exactly; never lower the sampled-delta thresholds.
+    # Two intact rings also preserve the neighborhood used by edge gradients.
+    source_full = load_source(source_path)
+    final_full = load_source(output_path)
+    raw_registered = load_source(registered_path)
+    rgb_shape_matches = (
+        source_full.mode == final_full.mode
+        and source_full.mode in ("RGB", "RGBA")
+        and raw_registered.mode in ("RGB", "RGBA")
+        and source_full.size == final_full.size
+        and raw_registered.size == source_crop.size
+    )
+    # An RGB patch has no authored Alpha. On an RGBA source it may use this
+    # exact-context route only if the entire original Alpha plane is unchanged.
+    # If the patch carries Alpha, its whole plane must also match the result.
+    # Keep this stricter than a visual RGB comparison, including hidden pixels.
+    alpha_preserved = bool(
+        rgb_shape_matches
+        and np.array_equal(
+            np.asarray(source_full.convert("RGBA"))[:, :, 3],
+            np.asarray(final_full.convert("RGBA"))[:, :, 3],
+        )
+    )
+    registered_alpha_matches = bool(
+        rgb_shape_matches
+        and (
+            raw_registered.mode == "RGB"
+            or np.array_equal(
+                np.asarray(raw_registered)[:, :, 3],
+                np.asarray(final_full.crop(crop_rect).convert("RGBA"))[:, :, 3],
+            )
+        )
+    )
+    changed_outside_crop = None
+    if rgb_shape_matches:
+        full_changed = np.any(np.asarray(source_full) != np.asarray(final_full), axis=2)
+        left, top, right, bottom = crop_rect
+        full_changed[top:bottom, left:right] = False
+        changed_outside_crop = int(np.count_nonzero(full_changed))
+    interior_changed_pixels = int(np.count_nonzero(eroded_twice & (final_delta > 0)))
+    exact_context_proof = {
+        "rgb_shape_matches": rgb_shape_matches,
+        "alpha_preserved_full_scene": alpha_preserved,
+        "registered_alpha_matches_when_present": registered_alpha_matches,
+        "source_hash_matches": sha256(source_path) == manifest.get("source_sha256"),
+        "output_hash_matches": sha256(output_path) == manifest.get("output_sha256"),
+        "mask_hash_matches": sha256(Path(manifest["files"]["hard_mask"]))
+        == manifest.get("artifact_sha256", {}).get("hard_mask"),
+        "registered_and_final_identical": bool(np.array_equal(registered_array, final_array)),
+        "context_outside_inner_two_rings_identical": bool(
+            np.array_equal(registered_array[~eroded_twice], source_array[~eroded_twice])
+            and np.array_equal(final_array[~eroded_twice], source_array[~eroded_twice])
+        ),
+        "changed_pixels_outside_crop": changed_outside_crop,
+        "interior_changed_pixels": interior_changed_pixels,
+    }
+    exact_context_passed = (
+        all(exact_context_proof[key] is True for key in (
+            "rgb_shape_matches", "source_hash_matches", "output_hash_matches",
+            "alpha_preserved_full_scene", "registered_alpha_matches_when_present",
+            "mask_hash_matches", "registered_and_final_identical",
+            "context_outside_inner_two_rings_identical",
+        ))
+        and changed_outside_crop == 0
+        and interior_changed_pixels > 0
+    )
+    exact_context_proof["passed"] = exact_context_passed
+    passed = sampled_boundary_passed or exact_context_passed
+
     report = {
         "scan_type": "boundary",
+        "acceptance_method": "exact_unchanged_context" if exact_context_passed else "sampled_boundary",
+        "exact_context_proof": exact_context_proof,
         "manifest": str(manifest_path),
         "image": str(output_path),
         "image_sha256": sha256(output_path),
@@ -1255,6 +1327,7 @@ def scan_boundary(args: argparse.Namespace) -> None:
     Image.fromarray(overlay_array, "RGB").save(overlay_path)
 
     print(f"Boundary scan: {'PASS' if passed else 'FAIL'}")
+    print(f"Acceptance method: {report['acceptance_method']}")
     print(
         "Informative boundary pixels: "
         f"{informative_count}/{minimum_informative} minimum"

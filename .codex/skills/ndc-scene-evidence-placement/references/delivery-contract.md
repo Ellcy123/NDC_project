@@ -1,5 +1,7 @@
 # NDC evidence delivery contract
 
+新五阶段批次遵从[共用协议](../../ndc-prop-requirements/references/batch-contract.md)与[审核复用](../../ndc-prop-delivery-review/references/review-contract.md)。本参考提供专业判据；不要求无变化产物重复审阅，不另开重试预算。Unit4具体案例只用于相关历史资产，不扩大为所有章节的额外工序。
+
 Use this contract for scene-local clickable evidence packages. It records the conventions observed in `D:\NDC\Assets\Resources\Art\Scene\EVIDENCE` and the current Unity loading code.
 
 ## Runtime asset roles
@@ -23,7 +25,7 @@ Every evidence-art batch starts with a coverage ledger. This is required even wh
 | Click item in base exploration scene | Item Map + full-scene `Position` + Big + configured Icon |
 | Open Type 6/Type 7 container, then click item | Type 6 Map/Position + Type 7 Map/Position + child item Map/full-scene `Position` + child Big + configured Icon |
 | Click environmental observation that does not enter inventory | Visible background/state prop + real scene Map/`Position` + Big; omit Icon |
-| Automatic dialogue or Expose grant | Big + configured Icon; add a conditional/handover state when the item is visibly presented in the scene |
+| Automatic dialogue or Expose grant | Big + configured Icon; add a conditional/handover state when the item is visibly presented. Every container-open state uses the secondary menu / Type 7 presentation, including AVG-triggered opening; never substitute a full-scene open state. Preserve the actual grant trigger and order. |
 | Automatic minigame or analysis result | Big + configured Icon when configured; no Map only when there is no world-space locate/click step |
 | Unlock cache, then player searches it | Route by the post-unlock interaction; use the full container chain when contents remain clickable |
 
@@ -87,7 +89,7 @@ XYposition.txt
 
 Repeat container and item rows for every acquisition-coverage entry. Omit a role only when the contract explicitly proves it does not apply. The scene placement preview is the accepted full scene with the delivered props/states represented; it is not a position overlay or checkerboard review image.
 
-Transfer the complete formal image-asset folder directly after all applicable gates pass, including a process-package `final_visual_record_presence_gate.json` that enumerates every executed production stage and every required formal PNG, hash-matches each to a passing per-stage visual-review record, and reports `FINAL_VISUAL_RECORD_PRESENCE_GATE: PASS`. Do not wait for a separate user-review approval. Missing, stale, incomplete, or failed visual-review evidence blocks transfer even when technical verification passes. Keep `ItemStaticData.patch.json`, manifests, verification reports, position/hotspot overlays, masks, scripts, debug previews, rejected versions, superseded versions, and recovery-only sources in the engineering/work-process package. Do not narrow a complete formal package to the images changed in the latest revision. Do not merge a replacement package with a prior formal directory unless every pre-existing file is independently verified for the new package.
+For new five-stage batches validate workflow_state.py with stage 5 and the exact published-path bindings; transfer the complete formal image-asset folder directly after all applicable gates pass, including a process-package `final_visual_record_presence_gate.json` that enumerates every accepted dependency stage and every required formal PNG (failed, unselected history remains history), hash-matches each to a passing per-stage visual-review record, and reports `FINAL_VISUAL_RECORD_PRESENCE_GATE: PASS`. Do not wait for a separate user-review approval. Missing, stale, incomplete, or failed visual-review evidence blocks transfer even when technical verification passes. Keep `ItemStaticData.patch.json`, manifests, verification reports, position/hotspot overlays, masks, scripts, debug previews, rejected versions, superseded versions, and recovery-only sources in the engineering/work-process package. Do not narrow a complete formal package to the images changed in the latest revision. Do not merge a replacement package with a prior formal directory unless every pre-existing file is independently verified for the new package.
 
 Validate a new production folder with `scripts/validate_formal_release.py --folder <formal-folder> --release-contract <process-contract.json>`. The legacy `validate_formal_package.py` manual file-list check cannot establish delivery-class correctness, Map-to-coordinate hash binding, or active-replica consistency and is not a production gate.
 

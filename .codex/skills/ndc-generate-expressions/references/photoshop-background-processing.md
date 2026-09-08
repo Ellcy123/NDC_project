@@ -1,5 +1,9 @@
 # User-authorized Photoshop MCP background processing
 
+Actual Photoshop MCP use follows the [global queue](../../ndc-photoshop-queue/SKILL.md). Queue access does not authorize cutout, fringe repair or shoulder completion. Safe saved checkpoints can release PS for other independent tasks while this image awaits offline review or authorized repair; its acceptance and budget remain unchanged.
+
+This authorization covers the specified expression cutout/edge operation only. It never replaces the deliberate upstream manual shoulder/chest completion described in `manual-portrait-source.md`, and it cannot authorize Codex to create missing source anatomy.
+
 ## Scope and authority
 
 Use only when the user authorizes Codex to operate Photoshop for cutout or white-fringe work. This is a narrow alternative to the manual-only E5/E6 boundary, not authorization to alter expression, identity, clothing, lighting, or source dimensions. For a user-designated rejected test image, preserve its rejection: successful extraction cannot make it approved expression art. Already-returned RGBA assets are inspected first and are not recut without a demonstrated issue.
@@ -23,7 +27,7 @@ On 2026-09-05, Lawson A1 confirmed the installed `主体和背景 / 选择主体
 5. Inspect on white, mid-gray, dark gray, black and exact green at native 100% plus nearest 200% or complete original-pixel tiles. Pay special attention to pale background enclosed by hair: removing the exterior alone can leave opaque pockets. Distinguish those pockets from intentional silver/white hair highlights using the unchanged original, not color threshold alone.
 6. If white fringe remains after the total 2px trial, stop whole-contour contraction and select/delete only the remaining local background or fringe through supported MCP operations. The 2px ceiling does not override protection of hair, silver temples, shirts or costume details. Do not use global white deletion, smoothing, recoloring, or blur. If native commands are missing, preserve the rejected trial and name the missing operation; ask for a narrow recorded action or updated MCP support, not broad access.
 7. Export uniquely named PNG and PSD through the controlled export route, copy returned outputs into the test job and verify hashes. Technical review checks native canvas, genuine nonempty Alpha, unchanged opaque interior RGB and protected details. Visual review decides edge quality; a successfully exported RGBA is not automatically acceptable.
-8. Finish the current image's saved-output review and hash-bound record before processing another Photoshop image. A failed candidate remains non-final; stop or repair the same image without advancing to siblings.
+8. In this task, finish and pass the current image's saved-output technical/visual review and hash-bound record before advancing to another image. A failed candidate remains non-final; stop or repair the same image without advancing to siblings. After saving a recoverable file and frozen review snapshots with no in-flight or unknown command, suspend through the global queue so another independent task can use PS. Reacquire and recheck document/source hashes before resuming; suspension is not artistic PASS, a reset of contraction totals, or an extra repair round.
 
 The user-directed global retry budget is 1px, then total 2px only when needed, then local selection/deletion. A failed or unapplied 1px selection probe does not count as an evaluated 1px cutout. Do not spend retries replaying the same action or exceed 2px by resetting the cumulative counter after reselecting the subject.
 

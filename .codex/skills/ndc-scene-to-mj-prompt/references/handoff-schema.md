@@ -1,6 +1,6 @@
 # `ndc-mj-scene/v4` handoff contract
 
-Use the following shared contract. Values are descriptive examples, not ready-to-submit scene facts. Version 4 replaces v3's mandatory postproduction and per-prop layer planning with an MJ endpoint and default prop deferral.
+This file is the canonical v4 contract. The operator reference links here; edit this file only for shared contract changes. Use the following shared contract. Values are descriptive examples, not ready-to-submit scene facts. Version 4 replaces v3's mandatory postproduction and per-prop layer planning with an MJ endpoint and default prop deferral.
 
 ```yaml
 handoff_version: ndc-mj-scene/v4
@@ -98,3 +98,12 @@ operator_notes:
 - No required `layer_plan`, `canvas_plan`, `time_variant_plan` or `postprocess_handoff` in v4. For older handoffs, preserve sources and valid camera/style clauses, defer game-defined props except current user-explicit MJ inclusions, retain optional sparse ordinary ambient dressing, replace those fields, and record migration before submission. Do not silently reinterpret an old exact prompt.
 - Actual native dimensions and file checksums must be measured after download. HD selected in the UI is not proof of delivered dimensions or readable detail.
 - Delivery means MJ source output available for user editing; it does not claim a finished Unity background. Unresolved hard failures remain work-process candidates after the finite budget.
+
+
+## Associated production record (v4-compatible)
+
+Keep reuse lookup, stable scene/view/state job identity, generation reservations and uncertain submissions, current accepted candidates, approval/rejection bindings and review reuse in [production-record.md](production-record.md). This is an associated process record; it does not add mandatory fields to existing v4 handoffs or rewrite exact first-round prompts. A task with approved reused views keeps the complete required view set in scope while submitting only missing views. A fully reused task bypasses MJ handoff/submission.
+
+For multi-view scenes, derive one invariant landmark/connection list from the source and share it through the current handoff's existing normalized requirements and view descriptions. Each later shortlist is checked against both this authority and current accepted views. A view may hide a landmark; it may not silently move a known doorway to a different wall. Do not turn unsupported hidden geometry into a hard requirement. Changes to shared room facts invalidate only dependent view plans/acceptances, and never reset their generation budget.
+
+For cross-task overlap, attach this same complete v4 handoff as JSON in the optional [scene stage packet](../../ndc-art-stage-pipeline/references/scene-pipeline.md); do not duplicate this schema or add pipeline fields inside every v4 handoff. Its textual prompt lock is not an artistic PASS. Per-view journal requirements bind shared-contract and individual-view digests separately, so changing only an oblique prompt does not invalidate an unchanged frontal view. Original attempts and unknown-submission history remain in the same journal.

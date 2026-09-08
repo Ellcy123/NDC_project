@@ -10,20 +10,20 @@
 
 ### 肖像
 
-- 唯一主提示词为 `prompt-library.md` 的“7. 通用风格肖像”代码块。
-- 图 1 固定为同角色当前批准的通用风格角色卡；图 2 固定为 `assets/general-portrait-style-reference.png`，且只控制画风。
+- 默认主提示词为 `prompt-library.md` 第7节的 `portrait`；已记录图2身份污染的回退只能使用第7.1节独立锁定的 `portrait-single-reference`，两者分别验证，不临时改词。
+- 默认版本图1固定为同角色当前批准的通用风格角色卡；图2为 `assets/general-portrait-style-reference.png`，只控制画风。单参考回退只有图1；验证实际有序参考manifest及hash。
 - 调用生图工具时逐字提交主提示词。禁止改写、摘要、翻译、扩写、补充透明背景、肩部范围、负面词、尺寸修复词或角色专属描述。
 - 角色的具体脸、发型、发色、服装与配色只由图 1 提供，不在主提示词中二次描述。
 
 ### 普通角色卡
 
-- 用户没有明确写出 `4K` 时，唯一主提示词为 `prompt-library.md` 的“6.2 默认整卡生成”代码块。
+- 用户未明确要求 `4K` 或独立模块生成／拼版时，主提示词为 `prompt-library.md` 的“6.2 默认整卡生成”代码块。
 - 默认一次生成整张角色卡，以身份和画风稳定为优先；不得自动拆模块，不得把“正式交付”理解为默认 4K。
 - 调用生图工具时逐字提交主提示词，只替换提示词明确保留的角色变量；禁止追加分辨率、透明、抠图、包围框、扩图、补全或技术验收文字。
 
 ### 明确 4K 角色卡
 
-- 只有用户明确要求 `4K` 时才读取 `modular-character-card.md`，生成高像素模块并确定性拼成 3840×2160。
+- 用户明确要求 `4K` 或独立模块生成／拼版时读取 `modular-character-card.md`。4K固定3840×2160；仅模块化而未指定尺寸时采用既有2K 1920×1080。
 - “高清”“正式”“最终”“可用”不能自动解释成 4K；不确定时仍走普通整卡生成。
 
 每次生成前保存以下提示词锁记录：
@@ -37,6 +37,9 @@ prompt_lock:
   reference_1: <approved same-character identity path>
   reference_2: <style-only path>
   explicit_4k_requested: true|false
+  explicit_modular_requested: true|false
+  prompt_id: portrait|portrait-single-reference|character-card-default
+  reference_manifest: <ordered paths, roles and current hashes>
 ```
 
 `exact_text_match: FAIL` 时不得调用生成工具。

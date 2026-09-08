@@ -59,8 +59,8 @@ Every visible actor must define:
 - exact physical action rather than a generic standing label;
 - emotional state and energy level;
 - body line and weight distribution;
-- facial expression, including eye and mouth tension;
-- hand business plus a separate motivated reason for each hand's position;
+- facial expression only where the approved camera makes it visible; otherwise use readable head, shoulder, and body orientation;
+- each hand's visible action or relaxed resting state; an unoccupied hand needs no invented task, prop, grip, or gesture;
 - a `namedSupport`, including the floor plane when no furniture bears weight;
 - a `socialTerritory` describing the actor's believable work, rest, family, or transit zone in the room;
 - gaze target type and target ID;
@@ -68,7 +68,9 @@ Every visible actor must define:
 - `tenSecondHold=pass`: the pose remains physically and psychologically credible when held on screen;
 - `depthHonesty=pass`: the actor was not enlarged or pushed toward camera merely to improve readability.
 
-Avoid symmetrical shoulders, evenly planted feet, straight hanging arms, camera-facing heads, and neutral expressions unless the beat explicitly needs rigidity. Naturalism normally uses asymmetry, contrapposto or support-driven weight, small head/torso opposition, specific hand activity, and an expression matched to the beat's intensity.
+Review **story fit and bodily naturalness separately** in the existing performance review. A pose may convey the correct action yet remain stiff. Trace support through feet or furniture, pelvis, torso, shoulders, and arms; joints should form a coherent resting or acting body rather than independently satisfy coordinates. Check whether shoulders, elbows, wrists, and fingers are needlessly tense at the same time. Quiet poses, straight hanging arms, and neutral expressions can be natural. Do not prescribe asymmetry, staggered feet, tilted shoulders, contrapposto, or a large gesture to every actor as a universal cure.
+
+Read the simultaneous cast as a whole before detailed rendering. Different roles such as explaining, listening, observing, and resting should have distinct visible attention and activity when the story calls for them; repeating lowered heads, clasped hands, and tightly held arms can create unintended ceremonial or mourning behavior. Translate the selected intent into camera-visible actions; keep narrative context in the directing contract rather than copying its labels into the image prompt. Record this judgment in the same whole-scene review, without a new report or approval step.
 
 ### Choose the performance family before choosing a pose
 
@@ -79,7 +81,7 @@ Use scene affordances and the current beat to enumerate plausible families, then
 - `transition`: entering, exiting, crossing, turning, or reaching a destination, only when the current node contains that transition;
 - `confrontational-action`: stopping, intervening, recoiling, threatening, or urgent reaching, only when conflict and beat energy require it.
 
-Still and low-energy beats default to ongoing occupation or supported hold. A wide stance, open-hand reach, or defensive silhouette fails unless the current node supplies a concrete target, physical cause, and sufficiently high energy. Do not add motion merely to avoid stiffness: a quiet seated lean, downward gaze, compressed shoulders, or occupied hands can carry more narrative information than a large gesture.
+Still and low-energy beats normally use ongoing occupation, attentive rest, or supported hold. Judge gesture size against its visible purpose: a small open-hand explanation can fit a quiet conversation, while a defensive wide stance needs a physical or narrative cause. Do not add motion merely to avoid stiffness, or systematically replace motion with lowered heads, compressed shoulders, or clasped hands. Relaxed unoccupied hands and credible weight distribution may be sufficient.
 
 ### Existing actors and state deltas
 
@@ -99,7 +101,7 @@ Use one of these gaze targets:
 
 If `reciprocityRequired` is true, both actors must be present and the other actor must return the authored interaction. Incidental shared direction should not be mislabeled as reciprocal acting.
 
-The written target is not final evidence. At the final composite size, record the eye center, a second point on the visible face/eye direction, the named target point, and the pose ID, then run `validate-gaze-conformance`. A result looking toward an unnamed empty side, UI panel, closed entrance, or future actor fails even when its JSON still names the intended target. A later entrant may look toward a frozen existing actor without forcing that existing actor to reciprocate.
+The written target is not final evidence. At the final composite size, use `validate-gaze-conformance` with eye/face geometry only where it is actually visible; for back views or closed eyes use the supported non-numeric review and readable head/body orientation, never invented eye points. Whitebox fine eye direction and expression remain deferred to formal character art under [layered-character-batches.md](layered-character-batches.md). A clearly contradictory visible direction fails even when its JSON names the intended target. A later entrant may look toward a frozen existing actor without forcing that existing actor to reciprocate.
 
 ## 5. Scene affordances are acting constraints
 
@@ -113,13 +115,13 @@ The depth image and model image are not only scale references. They describe whe
 - be partially hidden by a valid occluder;
 - enter or exit the fixed frame.
 
-Create polygonal zones with capabilities `walk`, `stand`, `sit`, `lie`, `lean`, `occluder`, or `no-go`. A placement anchor must fall inside a zone supporting its placement class. Seated, lying, and leaning poses require a named support object.
+Create polygonal zones with capabilities `walk`, `stand`, `sit`, `lie`, `lean`, `occluder`, or `no-go`. A placement anchor must fall inside a zone supporting its placement class, but polygon membership alone cannot prove physical support. Establish usable space and support depth from the empty scene before deriving actor scale. Seated, lying, and leaning poses require a named support object; soft surfaces must respond to the load rather than remain frozen merely because they came from the original scene.
 
 Choose among physically valid zones by story value: objective access, tension, readable silhouette, depth separation, entrance path, UI safety, and hold-pose credibility. Do not choose a location merely because it has empty pixels.
 
 ## 6. Actual UI references replace the two-thirds shortcut
 
-Use `{UI_LEFT_REFERENCE}` and `{UI_RIGHT_REFERENCE}` as pixel references when available. Derive obstruction from their non-background pixels and check each snapshot's actual UI side.
+Use `D:\PMH\工作\对话构图参考-左.png` and `D:\PMH\工作\对话构图参考-右.png` as pixel references when available. Derive obstruction from their non-background pixels and check each snapshot's actual UI side.
 
 The two references are mutually exclusive candidates, not simultaneous requirements. After the current cast, story focus, entrances, action envelope, and composition balance are known, Codex selects the lower-cost side, records one `uiSide` for that snapshot, and validates that side only. A later snapshot may select the opposite side when its cast distribution changes. Do not shrink a correctly scaled actor merely to make both UI candidates pass.
 
@@ -135,13 +137,13 @@ The former "opposite two-thirds" rule is only a rough early guess and cannot pas
 For a narrative timeline:
 
 1. block the earliest snapshot with all initially present actors;
-2. validate story beat, affordance, UI, gaze, pose, and support;
+2. read the whole low-cost scene preview for story fit, naturalness, affordance, applicable UI, coarse direction, pose, and support before polishing individual actors;
 3. freeze accepted actors' pose, transform, placement, and zone IDs;
 4. add the next entrant without changing frozen actors;
 5. remove exiting actors at their authored nodes;
 6. render all meaningful snapshots into a contact sheet;
 7. read the sequence silently and reject anticipatory or accidental interactions;
-8. only then build scale, depth, exact-pose proxy, and whitebox assets per presence.
+8. use that blocking decision to complete reliable support/depth calibration and structural assets per presence; a provisional preview is not a final scale or support approval.
 
 Do not merge snapshot whiteboxes into one all-cast image when those actors never coexist. A combined whitebox is required for each simultaneous cast snapshot, not for the union of the entire scene timeline.
 
@@ -158,9 +160,9 @@ Do not proceed to character generation when any of these is true:
 - the actual UI reference blocks a face or critical action landmark;
 - an exploration idle/active pair lacks a clear interaction-state distinction;
 - a pose reads as a neutral mannequin, generic stage line, or theatrical front-facing lineup.
-- a low-energy beat uses an unmotivated wide stance or open-hand action;
-- either hand lacks a concrete reason, the support is unnamed, or the pose fails a ten-second hold;
+- a gesture's size, direction, or tension contradicts the beat or has no readable purpose;
+- the body is stiff despite a semantically correct action, the support is unnamed, or the pose fails a ten-second hold; naturally resting hands are valid;
 - the actor was moved toward camera or enlarged merely to make the character easier to read.
-- final-size gaze geometry does not agree with the named current-snapshot target.
+- the visible final-size gaze or head/body direction contradicts the named current-snapshot target; do not invent measurements for invisible eyes.
 
 Technical correctness cannot override these semantic failures.

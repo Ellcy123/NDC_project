@@ -1,5 +1,7 @@
 # Coordinate-bearing hotspot semantic review
 
+新五阶段批次遵从[共用协议](../../ndc-prop-requirements/references/batch-contract.md)与[审核复用](../../ndc-prop-delivery-review/references/review-contract.md)。本参考提供专业判据；不要求无变化产物重复审阅，不另开重试预算。Unit4具体案例只用于相关历史资产，不扩大为所有章节的额外工序。
+
 Read this before creating or accepting any exploration Map, Type 6 container entrance, or clickable child inside Type 7. This gate decides what the player is being told can be clicked; pixel provenance alone cannot answer that question.
 
 ## One target, one record

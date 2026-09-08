@@ -18,6 +18,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from PIL import Image, ImageChops, ImageDraw, ImageFont
+from head_measurement import anatomical_head_height
+from floor_support_review import validate_surface as validate_floor_surface, validate_contacts as validate_floor_contacts
 
 
 ENTER_SCRIPT = 13
@@ -631,6 +633,9 @@ def validate_affordance(data: dict[str, Any]) -> None:
             raise ValueError(f"{label}.evidence cannot be empty.")
         if not surface["contacts"]:
             raise ValueError(f"{label}.contacts cannot be empty.")
+        reference_kind = surface.get("referenceKind", "fixed-support-line")
+        if reference_kind not in {"fixed-support-line", "continuous-floor-region"}:
+            raise ValueError(f"{label}.referenceKind is unsupported.")
         occupancy = surface["occupancy"]
         require_fields(occupancy, ("status", "evidence"), f"{label}.occupancy")
         if occupancy["status"] not in {"clear", "occupied"}:
@@ -652,6 +657,10 @@ def validate_affordance(data: dict[str, Any]) -> None:
             if len(bbox) != 4 or not (0 <= bbox[0] < bbox[2] <= width and 0 <= bbox[1] < bbox[3] <= height):
                 raise ValueError(f"{label}.occupancy.clearancePlan.authorizedComponentBBox is invalid.")
         covered_regions: set[str] = set()
+        if reference_kind == "continuous-floor-region":
+            validate_floor_surface(surface, (width, height))
+            support_surfaces[surface_id] = surface
+            continue
         for contact_index, contact in enumerate(surface["contacts"]):
             contact_label = f"{label}.contacts[{contact_index}]"
             require_fields(contact, ("regions", "polyline", "tolerancePx"), contact_label)
@@ -773,6 +782,9 @@ def validate_support_contact(
                 f"target.sceneRelations[{relation_index}] names an unknown support surface: {surface_id}"
             )
         surface = surfaces[surface_id]
+        if surface.get("referenceKind") == "continuous-floor-region":
+            results.extend(validate_floor_contacts(surface, placement, pose, relation.get("regions", []), placement_path, _point_in_polygon))
+            continue
         contact_by_region: dict[str, dict[str, Any]] = {}
         for contact in surface["contacts"]:
             for region in contact["regions"]:
@@ -895,6 +907,9 @@ def validate_support_contact(
         font = _font(max(14, round(scene_size[1] / 65)))
         used_surfaces = {result["supportObjectId"] for result in results}
         for surface_id in used_surfaces:
+            if surfaces[surface_id].get("referenceKind") == "continuous-floor-region":
+                draw.polygon([tuple(p) for p in surfaces[surface_id]["supportPolygon"]], outline=(0, 220, 255, 235), width=line_width)
+                continue
             for contact in surfaces[surface_id]["contacts"]:
                 draw.line(
                     [tuple(point) for point in contact["polyline"]],
@@ -907,6 +922,9 @@ def validate_support_contact(
             color = (30, 220, 90, 255) if result["status"] == "pass" else (255, 45, 45, 255)
             radius = line_width * 2
             draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color)
+            if support_y is None:
+                draw.text((x + radius + 4, y), f"{result['region']} {result['condition']} + visual review", fill=color, font=font)
+                continue
             draw.line((x, y, x, support_y), fill=color, width=line_width)
             label = f"{result['region']} {result['condition']} {result['verticalDeltaPx']:+.1f}px"
             draw.text((x + radius + 4, min(y, support_y)), label, fill=color, font=font)
@@ -914,7 +932,7 @@ def validate_support_contact(
         Image.alpha_composite(base, overlay).save(preview_path)
     if report["status"] != "pass":
         failures = ", ".join(
-            f"{item['region']}={item['condition']}({item['verticalDeltaPx']:+.1f}px)"
+            (f"{item['region']}={item['condition']}({item['verticalDeltaPx']:+.1f}px)" if item['verticalDeltaPx'] is not None else f"{item['region']}={item['condition']}")
             for item in results
             if item["status"] != "pass"
         )
@@ -1019,7 +1037,7 @@ def validate_cast_scale(
             measured_head_box = entry.get("measuredHeadBox", target[pose_key]["headBox"])
             if not isinstance(measured_head_box, list) or len(measured_head_box) != 4:
                 raise ValueError(f"{label}.measuredHeadBox must be [x1,y1,x2,y2].")
-            measured_head_height = float(measured_head_box[3]) - float(measured_head_box[1])
+            measured_head_height = anatomical_head_height(target[pose_key], measured_head_box)
             if measured_head_height <= 0:
                 raise ValueError(f"{label}.measuredHeadBox must have positive height.")
             actor_record.update(
@@ -1031,6 +1049,9 @@ def validate_cast_scale(
                     },
                     "measuredHeadBox": list(measured_head_box),
                     "measuredHeadHeightPx": measured_head_height,
+                    "screenVerticalHeadExtentPx": float(measured_head_box[3]) - float(measured_head_box[1]),
+                    "headMeasurementMethod": "crown-to-chin-axis" if target[pose_key].get("headAxis") is not None else "screen-vertical-legacy",
+                    "headAxis": target[pose_key].get("headAxis"),
                 }
             )
         loaded[actor_id] = actor_record
@@ -1043,8 +1064,11 @@ def validate_cast_scale(
         reference["characterHeightCm"]
     )
     head_tolerance = float(data.get("maxHeadDeviationRatio", tolerance))
-    if head_scale_required and (head_tolerance <= 0 or head_tolerance > 0.15):
-        raise ValueError("castScale.maxHeadDeviationRatio must be in (0, 0.15].")
+    if head_scale_required and (not math.isfinite(head_tolerance) or head_tolerance <= 0 or head_tolerance > 0.20):
+        raise ValueError("castScale.maxHeadDeviationRatio must be in (0, 0.20].")
+    pairwise_head_tolerance = float(data.get("maxPairwiseHeadDeviationRatio", min(head_tolerance * 2, 0.20)))
+    if head_scale_required and (not math.isfinite(pairwise_head_tolerance) or not 0 < pairwise_head_tolerance <= 0.20):
+        raise ValueError("castScale.maxPairwiseHeadDeviationRatio must be in (0, 0.20].")
     actor_results: list[dict[str, Any]] = []
     for actor in loaded.values():
         depth_ratio = (float(actor["supportPoint"][1]) - horizon_y) / reference_depth
@@ -1125,7 +1149,7 @@ def validate_cast_scale(
                         "actualHeadRatio": actual_head_ratio,
                         "headDeviationRatio": head_ratio_deviation,
                         "headStatus": "pass"
-                        if abs(head_ratio_deviation) <= head_tolerance * 2
+                        if abs(head_ratio_deviation) <= pairwise_head_tolerance
                         else "fail",
                     }
                 )
@@ -1151,6 +1175,7 @@ def validate_cast_scale(
         "maxDeviationRatio": tolerance,
         "headScalePriority": head_scale_required,
         "maxHeadDeviationRatio": head_tolerance if head_scale_required else None,
+        "maxPairwiseHeadDeviationRatio": pairwise_head_tolerance if head_scale_required else None,
         "actors": actor_results,
         "pairwise": pairwise,
     }
@@ -1291,7 +1316,7 @@ def validate_scene_absolute_scale(
         if measured_px <= 0:
             raise ValueError(f"{label}.measurementLine has zero length.")
         projection_scale = float(anchor["projectionScaleToActorPlane"])
-        if projection_scale <= 0:
+        if not math.isfinite(projection_scale) or projection_scale <= 0:
             raise ValueError(f"{label}.projectionScaleToActorPlane must be positive.")
         evidence = anchor["projectionEvidence"]
         if not isinstance(evidence, dict) or not evidence.get("perspectiveBasisIds"):
@@ -1302,6 +1327,32 @@ def validate_scene_absolute_scale(
             raise ValueError(
                 f"{label} cross-depth anchor requires sourceSupportPoint and targetSupportPoint."
             )
+        # Moving a measurement to the actor's depth does not rotate its world
+        # direction into a vertical ruler. Require a separately justified metric
+        # conversion; its artifact binds provenance, not artistic correctness.
+        direction_factor = 1.0
+        direction_artifact = None
+        if axis == "horizontal":
+            transfer = evidence.get("directionTransfer")
+            if not isinstance(transfer, dict):
+                raise ValueError(f"{label} horizontal height anchor requires directionTransfer; depth alone is insufficient.")
+            require_fields(transfer, ("method", "sourceAxisPxPerCm", "verticalPxPerCm", "artifact"), f"{label}.directionTransfer")
+            if not isinstance(transfer["method"], str) or not transfer["method"].strip():
+                raise ValueError(f"{label}.directionTransfer.method must explain the metric conversion.")
+            source_rate = float(transfer["sourceAxisPxPerCm"])
+            vertical_rate = float(transfer["verticalPxPerCm"])
+            if not all(math.isfinite(value) and value > 0 for value in (source_rate, vertical_rate)):
+                raise ValueError(f"{label}.directionTransfer rates must be finite and positive.")
+            direction_factor = vertical_rate / source_rate
+            if not math.isfinite(direction_factor) or direction_factor <= 0:
+                raise ValueError(f"{label}.directionTransfer ratio must be finite and positive.")
+            ref = transfer["artifact"]
+            if not isinstance(ref, dict) or not ref.get("path") or not ref.get("sha256"):
+                raise ValueError(f"{label}.directionTransfer.artifact requires path and sha256.")
+            artifact_path = resolve_path(ref["path"], contract_path)
+            if not artifact_path.is_file() or sha256(artifact_path) != ref["sha256"]:
+                raise ValueError(f"{label}.directionTransfer artifact is missing or stale.")
+            direction_artifact = {"path": str(artifact_path.resolve()), "sha256": ref["sha256"]}
         real_range = anchor["realWorldRangeCm"]
         if not isinstance(real_range, list) or len(real_range) != 2:
             raise ValueError(f"{label}.realWorldRangeCm must be [minimum, maximum].")
@@ -1310,7 +1361,9 @@ def validate_scene_absolute_scale(
         if not 0 < real_min <= assumed_cm <= real_max:
             raise ValueError(f"{label}.assumedCm must lie inside realWorldRangeCm.")
         actor = actors[actor_id]
-        projected_px = measured_px * projection_scale
+        projected_px = measured_px * projection_scale * direction_factor
+        if not math.isfinite(projected_px) or projected_px <= 0:
+            raise ValueError(f"{label} projected measurement must be finite and positive.")
         expected_px = projected_px * actor["characterHeightCm"] / assumed_cm
         expected_min_px = projected_px * actor["characterHeightCm"] / real_max
         expected_max_px = projected_px * actor["characterHeightCm"] / real_min
@@ -1330,6 +1383,8 @@ def validate_scene_absolute_scale(
                 "measurementLine": line,
                 "measuredObjectPx": measured_px,
                 "projectionScaleToActorPlane": projection_scale,
+                "directionScaleToVertical": direction_factor,
+                "directionEvidenceArtifact": direction_artifact,
                 "projectedObjectPx": projected_px,
                 "expectedActorHeightPx": expected_px,
                 "expectedActorHeightRangePx": [expected_min_px, expected_max_px],
@@ -1354,6 +1409,7 @@ def validate_scene_absolute_scale(
     global_status = "pass" if abs(global_factor - 1.0) <= global_tolerance else "fail"
     report = {
         "schema": "ndc-scene-absolute-scale-report/v1",
+        "axisAwareProjection": True,
         "contract": str(contract_path.resolve()),
         "contractSha256": sha256(contract_path),
         "status": "pass" if spread_status == global_status == "pass" else "fail",
@@ -1364,7 +1420,7 @@ def validate_scene_absolute_scale(
         "anchorSpreadStatus": spread_status,
         "limits": limits,
         "anchors": results,
-        "note": "This gate is independent from actor-to-actor cast scale.",
+        "note": "Axis-aware arithmetic and evidence binding, independent from cast scale; camera assumptions and physical plausibility still require visual review.",
     }
     if report_path:
         write_json(report_path, report)
@@ -1574,6 +1630,9 @@ def render_affordance(contract_path: Path, output: Path, base_path: Path | None)
         draw.text((cx, cy), label, fill=(15, 15, 15, 255), font=font, anchor="mm")
     support_width = max(4, round(size[1] / 260))
     for surface in data.get("supportSurfaces", []):
+        if surface.get("referenceKind") == "continuous-floor-region":
+            draw.polygon([tuple(p) for p in surface["supportPolygon"]], outline=(0, 220, 255, 255), width=support_width)
+            continue
         for contact in surface["contacts"]:
             points = [tuple(point) for point in contact["polyline"]]
             draw.line(points, fill=(0, 220, 255, 255), width=support_width)

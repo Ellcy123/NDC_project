@@ -5,62 +5,13 @@ import hashlib
 import json
 import math
 import statistics
-import sys
-from dataclasses import replace
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw
+from head_measurement import anatomical_head_height
 
 
-def _shared_art_paths():
-    for ancestor in Path(__file__).resolve().parents:
-        module_root = ancestor / "scripts" / "art_pipeline"
-        if (module_root / "art_paths.py").is_file() and (ancestor / "production" / "art_pipeline").is_dir():
-            sys.path.insert(0, str(module_root))
-            from art_paths import load_art_paths
-            return load_art_paths()
-    raise RuntimeError("Cannot locate the maintained NDC art path configuration")
-
-
-# Optional test/integration override; resolve machine paths only for actual work,
-# so --help and importing pure validation helpers need no local configuration.
-NDC_ROOT: Path | None = None
-
-
-def validate_task_payload(path: Path, label: str) -> Path:
-    """Resolve only an open job created by the shared workspace CLI."""
-    from art_workspace import CLOSED, load_job, reparse
-
-    paths = _shared_art_paths()
-    if NDC_ROOT is not None:
-        paths = replace(paths, work_root=NDC_ROOT.resolve())
-    raw = Path(path).absolute()
-    try:
-        relative = raw.relative_to(paths.work_root)
-    except ValueError as error:
-        raise ValueError(f"{label} must stay under the configured art work root: {paths.work_root}") from error
-    if len(relative.parts) < 4 or relative.parts[0] != "jobs" or relative.parts[2] != "payload":
-        raise ValueError(f"{label} must stay inside <work_root>/jobs/<job>/payload/")
-    job = paths.work_root / "jobs" / relative.parts[1]
-    try:
-        job, record = load_job(job, paths)
-    except (OSError, ValueError, KeyError, json.JSONDecodeError) as error:
-        raise ValueError(f"{label} does not identify a managed art job: {error}") from error
-    if record.get("state") in CLOSED or record.get("cleanup"):
-        raise ValueError(f"{label} belongs to a closed job; create a new job to resume")
-    payload = job / "payload"
-    if not payload.is_dir() or reparse(payload):
-        raise ValueError(f"{label} requires an existing, unlinked managed payload")
-    resolved = raw.resolve()
-    if not resolved.is_relative_to(payload) or resolved == payload:
-        raise ValueError(f"{label} escapes its managed payload")
-    for component in [raw, *raw.parents]:
-        if component == job:
-            break
-        if component.exists() and reparse(component):
-            raise ValueError(f"{label} contains a linked payload path")
-    return payload
-
+NDC_ROOT = Path(r"D:\Codex\NDC")
 
 
 def load_contract(path: Path) -> dict:
@@ -179,7 +130,7 @@ def validate_exact_pose(
     for name in POSE_POINT_FIELDS:
         if not point_inside_bbox(pose[name], outer_bbox):
             raise ValueError(f"Exact-pose landmark {name} must stay inside target.outerBBox.")
-    head_height = head_box[3] - head_box[1]
+    head_height = anatomical_head_height(pose, head_box)
     head_ratio = head_height / standing_equivalent_height
     if not 0.09 <= head_ratio <= 0.18:
         raise ValueError(
@@ -234,9 +185,12 @@ def validate_delivery_root(data: dict) -> None:
             "deliveryRoot folder name must exactly match the source scene basename: "
             f"expected={scene.stem}, actual={delivery_root.name}"
         )
-    validate_task_payload(delivery_root, "deliveryRoot")
-    if "工作过程文件" in delivery_root.parts or "candidates" in delivery_root.parts:
-        raise ValueError("Prepared deliveryRoot cannot be inside 工作过程文件 or candidates.")
+    try:
+        delivery_root.resolve().relative_to(NDC_ROOT.resolve())
+    except ValueError as error:
+        raise ValueError("deliveryRoot must stay under D:\\Codex\\NDC.") from error
+    if "工作过程文件" in delivery_root.parts:
+        raise ValueError("Formal deliveryRoot cannot be inside 工作过程文件.")
 
 
 def validate_scale_anchors(
@@ -475,9 +429,9 @@ def validate_contract(data: dict) -> tuple[float, float]:
         if not str(pose["supportObject"]).strip():
             raise ValueError("target.seatedPose.supportObject cannot be empty.")
         head_box = validate_bbox(pose["headBox"], "target.seatedPose.headBox")
-        if abs((head_box[3] - head_box[1]) - seated_head) > 2:
+        if abs(anatomical_head_height(pose, head_box) - seated_head) > 2:
             raise ValueError(
-                "seatedPose.headBox must be the anatomical head box and match "
+                "seatedPose anatomical head measurement must match "
                 "scaleAudit.seatedHeadHeightPx within two pixels."
             )
         if abs(head_box[1] - anatomical_top) > 2:
@@ -652,9 +606,9 @@ def validate_contract(data: dict) -> tuple[float, float]:
         if not str(pose["supportObject"]).strip():
             raise ValueError("target.lyingPose.supportObject cannot be empty.")
         head_box = validate_bbox(pose["headBox"], "target.lyingPose.headBox")
-        if abs((head_box[3] - head_box[1]) - lying_head) > 2:
+        if abs(anatomical_head_height(pose, head_box) - lying_head) > 2:
             raise ValueError(
-                "lyingPose.headBox must be the anatomical head box and match "
+                "lyingPose anatomical head measurement must match "
                 "scaleAudit.lyingHeadHeightPx within two pixels."
             )
         if not (
@@ -1213,11 +1167,10 @@ def validate_candidate_handoff(data: dict) -> None:
     comparison_report = Path(review["comparisonReport"])
     if not comparison_report.is_file():
         raise ValueError(f"Candidate comparison report is missing: {comparison_report}")
-    candidate_root = Path(review["candidateRoot"]).absolute()
-    payload = validate_task_payload(candidate_root, "candidateRoot")
-    relative = candidate_root.resolve().relative_to(payload)
-    if not relative.parts or relative.parts[0] != "candidates":
-        raise ValueError("Candidate handoff must stay under <job>/payload/candidates/.")
+    candidate_root = Path(review["candidateRoot"]).resolve()
+    process_root = (NDC_ROOT / "工作过程文件").resolve()
+    if process_root not in candidate_root.parents:
+        raise ValueError("Candidate handoff must stay under D:\\Codex\\NDC\\工作过程文件.")
 
 
 def apply_occluders(image: Image.Image, base: Image.Image, polygons: list) -> Image.Image:

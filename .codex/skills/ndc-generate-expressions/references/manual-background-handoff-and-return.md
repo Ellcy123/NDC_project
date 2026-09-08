@@ -1,5 +1,7 @@
 # Manual background handoff and user-returned Alpha gate
 
+This E5/E6 operation applies to already accepted expression artwork. Upstream manual shoulder/chest completion follows `manual-portrait-source.md` before E0/E1 acceptance and has a separate source-return record. A source completion confirmation is not confirmation that these E5 PNGs were background-processed, and an Alpha return does not authorize source anatomy completion. Resume accepted E5 files at E6; do not regenerate them because a human wait occurred.
+
 ## Scope
 
 This document describes default `USER_MANUAL` mode. Explicitly authorized Photoshop MCP trials instead follow `photoshop-background-processing.md`; its scoped route supersedes the manual-only prohibitions here, without changing the rules for genuinely user-returned files.
@@ -24,6 +26,10 @@ The handoff contains:
 - the package markers `handoff_status=PRE_ALPHA_HANDOFF`, `final_delivery=false`, and `background_processing_status=PENDING_USER_MANUAL_PROCESSING`.
 
 Do not resize, crop, sharpen, mask, recolor, or convert the artistic images for this handoff. Exact binary copies are preferred. The folder is a working handoff and must not be placed in `最终交付`. The user edits each handoff PNG directly in this directory; preserve its filename and canvas, and do not edit the manifest.
+
+## Immutable source and recoverable job mapping
+
+Preserve the accepted E4 native artwork at an immutable source path. The E5 PNG in this manual-processing directory is a byte-identical working copy, with its pre-edit hash in the unchanged handoff manifest; it is not the immutable output of a parent job that must keep its old hash after manual editing. Model E6 as a `manual_input` job depending on the unchanged E4 artwork and handoff manifest. Its new inputs are the user's in-place RGBA files. After the return checks pass, bind their current hashes and continue to the profile jobs. Do not make E6 depend on an obsolete E5 approval of the mutable copy, and do not rewrite the pre-edit hash to make it pass. This preserves the existing in-place return directory and requires no second return folder. A returned-file completion message is the required handoff evidence; do not ask the user to confirm the same completed operation again.
 
 ## In-place manual processing requirements
 

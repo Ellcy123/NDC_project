@@ -1,5 +1,9 @@
 # Placement and scale decision chain
 
+Whitebox position/proportion repair follows [whitebox-photoshop-fallback.md](whitebox-photoshop-fallback.md): use actual anatomical mannequin components in Photoshop MCP as soon as a bounded repair is feasible, for up to three repair/review rounds; do not wait to exhaust three generated attempts. Recalibrate and reaccept the repaired whitebox before using it. For whitebox or formal art, Photoshop MCP may correct a separable actor's uniform scale or translation around a confirmed support point when anatomy, orientation, and action are already valid. Update the existing transform, scale, contact, interaction, and composite checks together; never deform anatomy or conceal an incorrect pose by resizing it to an outer rectangle.
+
+Keep user-explicit coordinate, scale, and pose locks unless their change is authorized; distinguish them from provisional coordinates authored by Codex. The checks below are compatibility scopes inside the milestones in [production-cadence.md](production-cadence.md), not separate full reviews after every micro-operation.
+
 ## Position order
 
 Run this decision only after runtime branch, engineering lifecycle, story beat, performance contract, scene-affordance map, and actual UI mask exist. For a scene with one visible character, evaluate depth class inside the position decision:
@@ -13,9 +17,9 @@ Use a lower-priority depth only when higher-priority positions fail physical spa
 Within each depth class, evaluate in this order:
 
 1. derive the current timeline snapshot and silent-frame statement;
-2. select only affordance zones capable of the required standing, sitting, lying, walking, or leaning action;
+2. establish the actual usable support space and actor depth from the empty scene, then select affordance zones capable of the required standing, sitting, lying, walking, or leaning action;
 3. find a location that expresses objective, conflict, emotion, subtext, and action focus;
-4. confirm the performance can be held naturally and does not depend on a future entrant;
+4. confirm story fit and bodily naturalness independently, and that the performance does not depend on a future entrant;
 5. if unavailable, choose a narratively equivalent action within a physically valid zone;
 6. keep total character occlusion at or below 60%, with face and required hands/props readable;
 7. obey furniture, architecture, support, reach, and entrance/exit orientation;
@@ -26,15 +30,20 @@ Record rejected candidates, automatic score components, and reasons. Generate de
 
 The former opposite-two-thirds rule is a rough ideation heuristic only. It cannot pass UI safety because the real UI references have shaped silhouettes and local intrusions. Use `validate-ui-safety` with the actual left/right assets for every meaningful snapshot.
 
+## Measured perspective before numerical scale
+
+Before assigning hidden foot points or a scalar horizon, follow the evidence and sensitivity procedure in [continuous-floor-support.md](continuous-floor-support.md). Group visible scene lines by world direction; many lines in one direction improve one vanishing-point estimate but do not supply a whole horizon. Keep inferred support ranges separate from measured contacts.
+
 ## Multi-anchor scale calibration
 
 The 170cm proxy is a ruler, not an identity, pose, or composition reference. Never place a large generic human in the requested scene as a visual subject, never send the proxy as the character reference for image generation, and never infer scale from the proxy image itself. The scene anchors create the ruler scale; the ruler only visualizes that result. For multi-character blocking, prefer a named outer rectangle with `target.proxyStyle: skeleton`; keep any solid silhouette preview as a separate technical artifact.
 
 - Use at least three independent fixed-object groups across two depth bands: `actor-local` for a same/adjacent support-plane object and `cross-depth` for a materially nearer or farther object. The set must contain both horizontal and vertical measurements. Each band needs at least one medium/high-confidence anchor. Two dimensions of the same sofa remain one independence group, not two independent anchors.
 - Useful anchors include full doors, door handles, counter tops, desk tops, chair seats/backs, beds, stair risers, and people already approved in the same camera.
+- Several estimates derived from the same provisional vanishing point, ground plane, or assumed furniture dimensions are correlated evidence, even if they use different object IDs. Agreement between them establishes arithmetic consistency, not reliable physical scale. State the shared assumptions and uncertainty in the existing calibration evidence; compare against actual scene topology, local support depth, and the whole composition. A visibly implausible actor does not pass because those estimates agree. Revisit the uncertain basis rather than tune numbers to make the validator pass.
 - Record each object's stable `objectId`, `independenceGroup`, `depthBand`, measured dimension, plausible real-world range, chosen real-world value, raw image measurement, measurement projected to the actor plane, plane/depth relation, projection method, projected standing-height estimate, and confidence. A cross-depth anchor also records source/target support points and the perspective-basis IDs used for projection. A prose source label alone is insufficient evidence. The validator recomputes `projectedMeasurementPxAtTarget × characterHeightCm ÷ assumedCm`; the recorded `value` must agree within the declared tolerance.
 - Run `validate-scene-absolute-scale` before multi-character comparison. It recomputes exact object measurement lines and returns a robust shared correction factor plus an overlay. A non-unit factor means all whiteboxes must be rebuilt around their contacts. Then measure each approved character card's front-view anatomical head/full-body ratio and run cast-scale v2 with `headScalePriority: true`. A relative cast pass cannot override failed absolute scale.
-- Project anchors to the target foot point through the scene ground plane or whitebox; do not compare raw pixel height across unrelated depths.
+- Project anchors to the target foot point through justified scene geometry; do not compare raw pixel height across unrelated depths. Depth transfer and direction transfer are separate: a horizontal cabinet width cannot become a vertical human-height ruler by a depth ratio alone. Use a calibrated camera or an independently established metric reference for the direction conversion; otherwise keep that width as a footprint check outside the height estimator. The absolute-scale contract requires explicit evidence-bound direction conversion for horizontal anchors that contribute to height; see staging-tool-contracts.md. A ground-plane homography alone does not establish off-plane standing height.
 - Use `median-after-depth-projection`, never a raw-pixel average. Check global spread and the delta between actor-local and cross-depth band medians. If either exceeds its declared tolerance, the scale gate fails and requires better geometry, anchor assumptions, or placement. A stylized scene with inconsistent furniture proportions is evidence to reject an anchor, not permission to force a visual midpoint.
 - Validate both height and action outer width. Hair, hands, elbows, garments, props, and shoes must stay inside the approved action envelope with safety margin.
 
@@ -42,17 +51,19 @@ For a seated character, do not paste the standing proxy over a chair and do not 
 
 Record an anatomical head box that excludes hats and hair extensions, shoulders, hip/seat contact, knees, both feet, support surface, and action outer rectangle. The bare-head anatomical seated span from crown to the lowest body contact must be lower than `standingEquivalentHeightPx` at the same depth. Hats, raised hands, props, or forward-projected feet are recorded as outer extensions; they may enlarge `visibleHeightPx`, but they never authorize scaling up the body. `outerBBox` and `visibleHeightPx` are results of the locked pose, not targets that the generated actor is resized to fill.
 
-The seated contract must include a `scaleAudit` containing `anatomicalTopY`, `anatomicalBottomY`, `standingHeadHeightPx`, `seatedHeadHeightPx`, `bodyScaleDriver: standingEquivalentHeightPx`, and structured `outerExtensions` with labels, boxes, and reasons. The two head heights must agree within the declared tolerance, normally 5%. The anatomical head and all seated joints must stay inside the approved outer box; the target foot anchor must equal the midpoint/lowest contact derived from both feet. The seat contact and both feet must agree with the furniture and ground plane before depth/whitebox generation. Record any foreground furniture in `target.occluderPolygons`; the deterministic preview restores those source pixels after drawing the proxy so the visible occlusion is evaluated instead of guessed.
+The seated contract must include a `scaleAudit` containing `anatomicalTopY`, `anatomicalBottomY`, `standingHeadHeightPx`, `seatedHeadHeightPx`, `bodyScaleDriver: standingEquivalentHeightPx`, and structured `outerExtensions` with labels, boxes, and reasons. The two head heights must agree within the declared tolerance, 20% for new NDC tasks under the user rule of 2026-09-08. The anatomical head and all seated joints must stay inside the approved outer box; the target foot anchor must equal the midpoint/lowest contact derived from both feet. The seat contact and both feet must agree with the furniture and ground plane before depth/whitebox generation. Record any foreground furniture in `target.occluderPolygons`; the deterministic preview restores those source pixels after drawing the proxy so the visible occlusion is evaluated instead of guessed.
 
 The script contract stores the independent projected estimates. It must reject a single-anchor calibration.
 
-For a lying character, use the same principle with `placementClass: lying`. Calibrate `standingEquivalentHeightPx` at the bed/support depth, lock the anatomical head height, then rotate and bend the same body along the bed perspective. A lying outer box is normally much shorter and wider than a standing box. Its height can never be used to rescale the person. Record the anatomical head box, shoulders, elbows, hands, hip, knees, both feet, body axis, support object, and a support `contactPoint`. The head height in the lying pose must match the same-depth standing master within the declared tolerance, normally 5%. The affordance support surface must also define its full support polygon, a head/pillow region, and a foot-end region. A single contact point or several torso contacts cannot prove that the feet are on the bed or that the body is oriented head-to-foot correctly.
+For a lying character, use the same principle with `placementClass: lying`. Calibrate `standingEquivalentHeightPx` at the bed/support depth, lock the anatomical head height, then rotate and bend the same body along the bed perspective. A lying outer box is normally much shorter and wider than a standing box. Its height can never be used to rescale the person. Record the anatomical head box, shoulders, elbows, hands, hip, knees, both feet, body axis, support object, and a support `contactPoint`. The head height in the lying pose must match the same-depth standing master within the declared tolerance, 20% for new NDC tasks under the user rule of 2026-09-08. The affordance support surface must also define its full support polygon, a head/pillow region, and a foot-end region. A single contact point or several torso contacts cannot prove that the feet are on the bed or that the body is oriented head-to-foot correctly.
+
+Treat the back of the head, neck, shoulders, pillow, and adjacent bedding as one contact relationship. Establish where the head is carried and how the neck and shoulders rest before generating or repairing the minimum interaction region. The pillow should compress or wrap where the load calls for it, with coherent contact darkening and bedding response; a shadow alone cannot repair an unsupported neck. Preserve an independent complete actor master and a separate soft-surface response component, but review them together after any relevant transform. Fixed bed frames and rails stay at source pixels, scale, and coordinates. Original pillow pixels may be reused only if they already express the required load; source origin is not a reason to freeze an unloaded pillow.
 
 For every pose, compare the head box against the approved identity-scale reference and the other actors at their projected depths before reviewing the whole outer rectangle. For non-standing poses, also compare it against the same-depth standing ruler. If the head shrinks because the character sits or lies down, or a nearer actor's head becomes smaller than a farther comparable adult without identity evidence, reject the placement even when the outer box looks tidy.
 
 ## Exact pose requirement for every placement class
 
-Every placement class must contain an explicit pose definition before depth or whitebox creation. Record a stable `poseId`, action, facing, gaze target, both hand actions, required props, support object, and the complete anatomical landmark set: head box, neck, both shoulders, elbows, hands, hips, knees, and feet. Standing is not exempt.
+Every placement class must contain an explicit pose definition before actor depth alignment or whitebox creation. Record a stable `poseId`, action, facing, gaze target, both hand actions or resting states, required props, support object, and the complete anatomical landmark set: head box, neck, both shoulders, elbows, hands, hips, knees, and feet. Standing is not exempt. Empty-scene support/depth evidence is established first and must not be reverse-fitted to these joints.
 
 The renderer must use those landmarks. It may not synthesize a default symmetrical upright pose from only `foot` and `visibleHeightPx`. If the intended action is leaning, reaching, holding, turning, sitting, or lying, the proxy and whitebox must already show that exact action.
 
@@ -62,13 +73,14 @@ Depth and whitebox are mandatory after exact-pose proxy approval, but their role
 
 - Infer empty-scene ground/support geometry independently from the actor.
 - Encode stand/sit affordance polygons as anchor/support regions rather than full-body rectangles. Encode support contact polylines from the empty scene/depth/model before the actor joints exist.
-- Run `validate-support-contact` after pose authoring. The report must cover every `supported-by` region and calculate signed vertical delta; negative beyond tolerance is floating, positive beyond tolerance is sinking. For lying poses, require `lyingSupportEnvelope.status: pass` in addition to the line contacts. Inspect the overlay because a mathematically consistent but visually misplaced authored support line or polygon is still invalid.
+- Run `validate-support-contact` after pose authoring. Fixed support lines calculate signed vertical delta; negative beyond tolerance is floating, positive beyond tolerance is sinking. Continuous ground follows [continuous-floor-support.md](continuous-floor-support.md): region coverage has no unique expected support Y and cannot measure floating. For lying poses, require `lyingSupportEnvelope.status: pass` plus visible anatomical and soft-surface contact. Inspect the overlay because a mathematically consistent but visually misplaced support line or polygon is still invalid.
 - A seated actor normally has at least two support objects: pelvis-to-seat and feet-to-floor. Do not attach hip and feet to one generic chair ID merely to pass a support check.
-- Before assigning a seated support, audit whether the seat is physically occupied. Loose objects require a bounded clearance plan and logical destination. Use one minimum old-location repair patch and one minimum destination layer for the moved item. Never include the fixed chair/bed itself in a generated or scalable actor component; exact source occluders remain at scale 1.
+- Before assigning a seated support, audit whether the seat is physically occupied. Loose objects require a bounded clearance plan and logical destination. Use one minimum old-location repair patch and one minimum destination layer for the moved item. Never include the fixed chair/bed structure itself in a generated or scalable actor component; exact fixed source occluders remain at scale 1. A cushion or bedding response uses its separate bounded interaction layer.
 - Validate seated kinematics from pelvis through knees to feet. Record primary support foot, signed foot stagger, stance-width/shoulder-width range, torso facing, and orientation rationale. Reject a declared three-quarter turn whose feet remain implausibly wide and symmetrical.
 - Overlay the approved exact-pose proxy on the aligned depth reference without changing landmarks, anchor, or outer box.
 - Render a solid neutral volumetric human whitebox from the same pose contract. It deliberately repeats the locked pose/scale to embody final occupied volume and contacts; it is not a new scale estimate.
 - Produce an isolated whitebox per actor presence plus one combined-cast whitebox for each simultaneous-cast snapshot with declared actor order and scene occluders.
+- Inspect the same complete actor layer with and without the final occluders, using exactly the same transform. First verify feet, legs, pelvis, and support; then verify the visible upper body against furniture and the whole scene. Hidden lower anatomy is not permission to guess a larger scale or accept a floating silhouette. Reuse these views within the existing review rather than creating a separate evidence workflow.
 - Reject changes to camera, topology, support orientation, pose ID, head size, landmarks, contacts, layer order, or occlusion.
 - A stick skeleton, generic upright mannequin, empty room blockout, outer rectangle, or file merely named `whitebox` is not a human whitebox.
 - Codex reviews the rendered depth and whitebox artifacts at full-frame and complete local-tile scale. Store artifact hashes, pose IDs, the comparison report, and all required check results; no generated character may use a pending or failed structural review. Do not stop for per-character user approval.
@@ -283,7 +295,7 @@ After formal character generation and combined composition, add:
 }
 ```
 
-If attempt 6 still fails, do not fabricate PASS. Add a `candidateHandoff` record with `attemptCount: 6`, the selected artifact/hash, comparison report, unresolved `failedChecks`, selection reason, and a `candidateRoot` under the same job's `payload/candidates/`. The best-available candidate is shown only in the final batch review and never enters `最终交付`.
+If attempt 6 still fails, do not fabricate PASS. Add a `candidateHandoff` record with `attemptCount: 6`, the selected artifact/hash, comparison report, unresolved `failedChecks`, selection reason, and a `candidateRoot` under `D:\Codex\NDC\工作过程文件`. The best-available candidate is shown only in the final batch review and never enters `最终交付`.
 
 For `placementClass: seated`, also provide:
 
@@ -311,7 +323,7 @@ For `placementClass: seated`, also provide:
   "anatomicalBottomY": 0,
   "standingHeadHeightPx": 0,
   "seatedHeadHeightPx": 0,
-  "headToleranceRatio": 0.05,
+  "headToleranceRatio": 0.20,
   "bodyScaleDriver": "standingEquivalentHeightPx",
   "outerExtensions": [
     {

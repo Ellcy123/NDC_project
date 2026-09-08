@@ -6,6 +6,8 @@ User-confirmed expression files are immutable approved assets. They outrank a ne
 
 Historical approval proves provenance, not current delivery compliance. Preserve the original bytes and SHA-256, but run the complete current-task delivery gates before formal reuse. A legacy file with any current gate `FAIL` or `NOT_CHECKED` cannot enter the formal package. If the active task explicitly requires final delivery under the current standard, route that failed requirement to `REPLACE_REQUIRED_CURRENT_SPEC_FAILURE`; keep the historical file untouched as evidence and produce the replacement in the working directory.
 
+Complete coverage does not require repeating an unchanged inspection. Under `production-record.md`, reuse current evidence only when the exact source/output hashes, requirements, inspected scope and applicable approval/rejection history match; inspect missing or changed coverage only. A later rejection supersedes the affected PASS. Do not fabricate historic measurements or use a new hash to attach an old judgment to changed pixels.
+
 One user-controlled exception exists for old same-character, same-name, previously approved expressions: when the user explicitly says their expression amplitude does not require remake, record `LEGACY_APPROVED_EXPRESSION_AMPLITUDE`. Only `expression_signal`, `calm_separation`, `pairwise_separability`, and `thumbnail_readability` may then use `WAIVED_BY_USER_LEGACY_AMPLITUDE`. Keep the actual review evidence and never rewrite the waiver as `PASS`. Identity, viewpoint, style, profile geometry, bust completeness, detail, lighting, texture, color, background/Alpha, cross-profile version continuity, and every other gate still require current `PASS`. New or replaced assets can never use this waiver.
 
 When an old approved pair must be recomposed or technically repaired for current canvas, Alpha, mode, or exact-green requirements, route it as `NORMALIZED_CURRENT_PAIR`, not byte-identical reuse and not new generation. Preserve and hash each profile's normalization source, bind both rows to one current cross-profile pair-version evidence file and hash, require `normalization_provenance=PASS`, and rerun every current delivery gate. The legacy amplitude waiver remains available only when `legacy_approved_source=true`; all non-amplitude defects still require repair or replacement.
@@ -20,7 +22,7 @@ Each requirement receives exactly one production action:
 
 - `REUSE_APPROVED_AS_IS`: all requested profile files already exist and are user-confirmed;
 - `GENERATE_NEW`: no approved file exists in any requested profile;
-- `PARTIAL_PROFILE_GAP`: only some requested profiles exist; stop for a profile-specific decision rather than regenerating all profiles;
+- `PARTIAL_PROFILE_GAP`: only some requested profiles exist; preserve the accepted profile, find its compatible frozen native foreground or exact paired source, then compose only the gap. If that source is unavailable, record the missing source and stop the affected item; do not infer permission to regenerate the accepted pair;
 - `REPLACE_ONLY_BY_USER_REQUEST`: an approved file exists but the user explicitly requested replacement;
 - `BLOCKED_NAME_AMBIGUITY`: multiple files or aliases cannot be resolved safely.
 - `REPLACE_REQUIRED_CURRENT_SPEC_FAILURE`: a same-character historical asset exists but fails at least one current delivery gate and the current task authorizes current-standard finalization.

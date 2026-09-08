@@ -1,6 +1,6 @@
 # Morrison explosion aftermath: reference-locked state conversion
 
-Read this reference only for Mode B: an established scene keeps its camera and spatial identity while a connected event changes a large portion of its visible state.
+Historical evidence for the former Mode B: an established scene keeps its camera and spatial identity while a connected event changes a large portion of its visible state. The active workflow is [ndc-scene-state-variation](../../ndc-scene-state-variation/SKILL.md); its current authorization, cumulative budget and production-record gates take precedence over this case. Former Mode A means [ndc-coordinate-image-edit](../SKILL.md). Read the case only when that distinction is useful; do not promote its scene facts into defaults.
 
 ## Evidence and limits
 

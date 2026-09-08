@@ -471,12 +471,24 @@ def main() -> int:
     parser.add_argument("--folder", type=Path, required=True)
     parser.add_argument("--release-contract", type=Path, required=True)
     parser.add_argument("--report", type=Path)
+    parser.add_argument("--batch", type=Path, help="Validate new five-stage prop batch and exact published copies.")
     args = parser.parse_args()
 
     folder = args.folder.resolve()
     contract_path = args.release_contract.resolve()
     contract = validate_contract(contract_path)
     failures = list(contract.get("failures", []))
+    raw_contract = json.loads(contract_path.read_text(encoding='utf-8-sig'))
+    batch_value = args.batch or raw_contract.get('workflowBatch')
+    if batch_value:
+        import sys
+        support = Path(__file__).resolve().parents[2] / 'ndc-prop-delivery-review' / 'scripts'
+        sys.path.insert(0, str(support))
+        from workflow_state import formal_errors
+        bp = Path(batch_value)
+        if not bp.is_absolute():
+            bp = contract_path.parent / bp
+        failures.extend(formal_errors(bp.resolve(), folder))
     required_png = contract.get("requiredPng", [])
     expected_xy = contract.get("expectedXy", {})
     artifact_hashes = contract.get("artifactSha256", {})

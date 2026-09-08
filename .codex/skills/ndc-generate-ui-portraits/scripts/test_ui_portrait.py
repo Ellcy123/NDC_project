@@ -103,6 +103,55 @@ class CropTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Both"):
             ui.audit(self.output / "composition.json")
 
+    def test_single_profile_exports_only_gap_and_preserves_existing_pair(self):
+        pair = self.compose()
+        prior = {key: ui.sha(self.output / entry["path"]) for key, entry in pair["profiles"].items()}
+        for profile in ("big", "small"):
+            with self.subTest(profile=profile):
+                single_output = self.root / ("补缺_" + profile)
+                receipt = ui.compose(self.source, self.landmarks, "Anna 测试", single_output, profile)
+                self.assertEqual(receipt["requested_profiles"], [profile])
+                self.assertEqual(set(receipt["profiles"]), {profile})
+                sibling = "small" if profile == "big" else "big"
+                self.assertFalse((single_output / sibling).exists())
+                checked = ui.audit(single_output / "composition.json")
+                self.assertEqual(checked["profiles_checked"], [profile])
+                self.assertEqual(checked["visual_status"], "NOT_CHECKED")
+                self.assertEqual(ui.sha(single_output / receipt["profiles"][profile]["path"]), prior[profile])
+                self.assertEqual(ui.sha(self.output / pair["profiles"][sibling]["path"]), prior[sibling])
+
+    def test_single_profile_does_not_preflight_unrequested_geometry(self):
+        # This edge location fits small, while the wider big crop is outside the master.
+        self.marks["face_center_x"] = 300
+        self.save_marks()
+        with self.assertRaisesRegex(ValueError, "outside"):
+            self.compose()
+        self.assertFalse(self.output.exists())
+        receipt = ui.compose(self.source, self.landmarks, "Anna 测试", self.output, "small")
+        self.assertEqual(set(receipt["profiles"]), {"small"})
+        ui.audit(self.output / "composition.json")
+
+    def test_legacy_pair_scope_remains_required(self):
+        receipt = self.compose()
+        receipt.pop("requested_profiles")
+        receipt_path = self.output / "composition.json"
+        receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+        self.assertEqual(set(ui.audit(receipt_path)["profiles_checked"]), {"big", "small"})
+        del receipt["profiles"]["small"]
+        receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Both"):
+            ui.audit(receipt_path)
+
+    def test_invalid_requested_profiles_fail(self):
+        receipt = self.compose()
+        receipt_path = self.output / "composition.json"
+        for requested in ([], ["big", "big"], ["unknown"], "small", [False]):
+            with self.subTest(requested=requested):
+                receipt["requested_profiles"] = requested
+                receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "requested_profiles"):
+                    ui.audit(receipt_path)
+
     def test_reject_path_escape(self):
         with self.assertRaisesRegex(ValueError, "Unsafe"):
             ui.compose(self.source, self.landmarks, "../escape", self.output)

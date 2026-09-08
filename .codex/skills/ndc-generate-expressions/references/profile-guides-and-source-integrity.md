@@ -13,7 +13,7 @@ At `E1_PORTRAIT_SOURCE_LOCK`, record:
 - protected light regions;
 - viewpoint family and source dimensions.
 
-If the portrait cannot support the requested expression/profile framing, return `UPSTREAM_PORTRAIT_REQUIRED`. Do not outpaint, extend, patch, or relax the guide.
+If the identified portrait lacks subject regions required by the expression/profile framing, enter `WAITING_FOR_MANUAL_PORTRAIT_COMPLETION` using `manual-portrait-source.md`; missing or unapproved sources remain `UPSTREAM_PORTRAIT_REQUIRED`. Accept a human return through E0/E1 before continuing. Do not outpaint, extend, patch, or relax the guide.
 
 ## Greenscreen guide, 1536 x 1024
 

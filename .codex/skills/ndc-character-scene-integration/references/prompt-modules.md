@@ -1,5 +1,7 @@
 # Prompt modules
 
+For new layered production, apply [layered-character-batches.md](layered-character-batches.md) before the templates below: name the current batch, generate only its actors with complete separable silhouettes, preserve the registered canvas/camera, and keep foreground furniture/actors out of the complete master layers. Earlier layers are contextual references, not subjects to redraw. Do not copy facial-expression or precise-eye-gaze fields into a whitebox prompt when they cannot be assessed at that stage; retain coarse head/body direction and carry fine targets into the formal-character handoff.
+
 ## Reference roles
 
 State each role explicitly:
@@ -13,7 +15,9 @@ State each role explicitly:
 
 ## Before-state generation
 
-Require the narrative action, character identity, complete outer rectangle, safe margins, and correct support contacts. Identify the reviewed whitebox and pose ID explicitly. Require the same joint arrangement and occupied volume; scale and placement remain locked by code. Do not ask the model to redraw the entire scene merely to place an actor.
+Require the camera-visible action, character identity, complete outer rectangle, safe margins, and correct support contacts. Identify the reviewed whitebox and pose ID explicitly. Require the same joint arrangement and occupied volume; generation uses the current registered scale and placement. If a valid actor later needs only uniform scale or translation correction, use the authorized Photoshop MCP route and update registration and contacts together; do not deform it to rescue wrong anatomy or acting. Do not ask the model to redraw the entire scene merely to place an actor.
+
+Preserve explicit user locks and literal approved prompts; any permitted correction operates within that authorization. Use the review cadence in [production-cadence.md](production-cadence.md) rather than adding checks for every prompt field or technical operation.
 
 ## Three-reference local-scene generation
 
@@ -23,12 +27,12 @@ Run `prepare-local-generation-handoff` first and attach references in this exact
 - Image 2: untouched full scene;
 - Image 3: approved character card.
 
-Use this prompt skeleton and replace every bracketed field from the directing and placement contracts:
+Use this prompt skeleton with the applicable camera-visible fields from the directing and placement contracts. Omit invisible facial/eye fields and unnecessary hand tasks rather than filling every slot:
 
 ```text
-Base the result on Image 1. Replace only the reviewed whitebox with [CHARACTER] from Image 3. The character is [EXACT STORY PERFORMANCE], with [FACIAL EXPRESSION], [GAZE], [LEFT-HAND MOTIVATION], [RIGHT-HAND MOTIVATION], and weight supported by [NAMED SUPPORT]. Preserve the approved whitebox pose, occupied volume, support contacts, depth, and local position.
+Base the result on Image 1. Replace only the reviewed whitebox with [CHARACTER] from Image 3. Show [CAMERA-RELATIVE BODY AND HEAD ORIENTATION], [VISIBLE ACTION OR RESTING STATE], and [VISIBLE SUPPORT/CONTACT RELATION]. [OPTIONAL VISIBLE FACE OR HAND DETAIL]. Preserve the approved whitebox pose, occupied volume, support contacts, depth, and local position. Let non-acting limbs rest with credible weight and joint relaxation rather than assigning them extra gestures.
 
-Image 1 is a deterministic crop from Image 2. Keep all scene pixels, camera geometry, furniture topology, perspective, and local object relationships unchanged. Use Image 2 only to match full-scene lighting, palette, and color grade. Add only the light and contact response necessary for the character.
+Image 1 is a deterministic crop from Image 2. Keep camera geometry, fixed furniture topology, perspective, and all pixels outside [MINIMUM INTERACTION REGION, IF ANY] unchanged. Within that region, show [REQUIRED SOFT-SURFACE LOAD RESPONSE, IF ANY] together with the character's contact; preserve the underlying fixed structure. Use Image 2 to match scene geometry, full-scene lighting, palette, and color grade. Add only the necessary contact and lighting response.
 
 Use Image 3 only for identity, face, body type, costume, fixed accessories, palette, brushwork, and line language. Do not invent material, costume, texture, or accessory detail. Nearby object height is only a sanity check against absurd character scale; the approved whitebox is the scale authority. Remove the whitebox/mannequin in the result.
 
@@ -37,9 +41,11 @@ Preserve the approved NDC character and scene style authorities exactly. Control
 Style: highly stylized graphic illustration, extremely bold heavy inked outer silhouette contour::1.5, exaggerated drastic line weight variation, distinct heavy layered ink contours for each garment layer, bolder heavier internal ink lines, flat graphic monolithic hair mass, zero internal texture or detail in hair, single solid block of black or color for hair, simplified geometric planar shape blocking, distinct hard-edge color blocks, geometric face rendering with clean features, extreme high contrast chiaroscuro lighting, heavy use of solid black shadows (spot blacks), intense deep shadow areas, minimal specular highlights, matte surfaces, film noir aesthetic, American 1928s era context, straight perspective.
 ```
 
-The `[EXACT STORY PERFORMANCE]` field must come from the approved performance contract, including silent-frame verb, beat energy, ongoing occupation, performance family, social territory, and ten-second hold. Do not replace it with a generic pose adjective. For still/low-energy beats, explicitly prohibit wide stance, open-hand reaching, braced combat posture, and camera-facing presentation unless the beat authorizes them.
+Translate the performance contract into visible orientation, action, support, and appropriate gesture size through `ndc-visual-description`; keep story objective, subtext, performance-family labels, and ten-second-hold reasoning out of the image prompt unless they add necessary context. A quiet explanatory hand motion can be valid, and an unoccupied hand may rest. Do not make every actor clasp hands, lower their head, or hold rigid arms; likewise do not prescribe staggered feet and tilted shoulders to everyone. Check the complete cast for both story fit and naturalness before extraction or polish.
 
-Reject an output before extraction if the face/identity, costume structure, ink language, joint logic, support, gaze, hand motivation, or occupied volume differs materially. A prompt result is not approved merely because it resembles the general style.
+For a lying actor, describe the actual back-of-head contact, neck/shoulder rest, pillow compression or wrapping, and nearby bedding response as one visible relationship. Keep the actor's complete master separate from the soft-surface response layer during extraction. Never freeze an unloaded original pillow merely to preserve source pixels; only the authorized soft-contact region may change, and fixed bed structure remains exact. Whitebox prompts carry only the support volume and coarse pose that can be judged at that stage.
+
+Reject an output before extraction if applicable identity, costume structure, ink language, joint logic, support, visible direction, action/rest state, or occupied volume differs materially, or if the semantically correct action is still visibly rigid. Judge only details visible in this camera and stage. A prompt result is not approved merely because it resembles the general style.
 
 <!-- NDC_TEXTURE_COHERENCE_MODULE:BEGIN -->
 Also reject it when either `STYLE_LOCK_GATE` or `TEXTURE_COHERENCE_GATE` is not `PASS`. Do not use `simplify the art style`, global smoothing, global denoising, sharpening, texture overlays, or AI upscaling as a repair. A local texture defect returns to the frozen three-reference handoff with only that failure delta changed. Whole-character detail inflation restarts from the approved whitebox crop, untouched scene, and approved card; it never chains from the failed contextual result.
@@ -59,9 +65,9 @@ Ask the model only to analyze or propose light direction and silhouette. The fin
 
 ## Scene protection
 
-Prompts must say that the original scene is reference-only and cannot become delivery pixels. Preserve camera, architecture, furniture, and lighting outside the authorized interaction region. Enforce zero outside changes with code, not wording alone.
+Prompts must distinguish the original scene's reference role during generation from its exact-pixel role in final composition: never deliver the model's redrawn full scene. Preserve camera, architecture, fixed furniture, and lighting outside the authorized interaction region. Enforce zero outside changes against the untouched original with code, not wording alone.
 
-The generated local scene is also reference-only. Only the approved extracted character or minimum interaction component may enter delivery. Fixed structural furniture such as chairs, beds, desks, rails, and cabinets must never be bundled into a scalable actor component. If a loose object must be moved before an actor uses the furniture, extract only the old-location repair patch and the relocated-object patch; keep the furniture at source scale and coordinates. Reapply exact occluder pixels from the untouched full scene, including openings between rails, chair backs, bed frames, leaves, or other perforated shapes.
+The generated local scene is also reference-only. Only the approved extracted character or minimum interaction component may enter delivery. Fixed structural furniture such as chair frames, bed frames, desks, rails, and cabinets must never be bundled into a scalable actor component. Pillows, cushions, and bedding are soft interaction surfaces when their load response changes; retain them as bounded separate response layers and recheck their contact whenever the actor moves or scales. If a loose object must be moved before an actor uses the furniture, extract only the old-location repair patch and the relocated-object patch; keep the fixed furniture at source scale and coordinates. Reapply exact fixed occluder pixels from the untouched full scene, including openings between rails, chair backs, bed frames, leaves, or other perforated shapes; do not restore an obsolete unloaded soft surface over its approved response layer.
 
 ## Fixed-canvas model handoff
 

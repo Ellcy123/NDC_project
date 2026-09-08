@@ -42,13 +42,16 @@
 
 ```text
 python -B scripts/ui_portrait.py compose --input <master.png> --landmarks <landmarks.json> --stem <角色正式stem> --output-dir <新的过程目录>
+python -B scripts/ui_portrait.py compose --input <master.png> --landmarks <landmarks.json> --stem <角色正式stem> --profile small --output-dir <仅补small的新过程目录>
 python -B scripts/ui_portrait.py audit --receipt <过程目录/composition.json>
 ```
 
-生成两个尺寸、两张辅助线叠图和每版最近邻200%图；整图100%直接看输出本身。两个候选和各自的裁切参数、母图/标注/输出hash写入 `composition.json`。若第二版计算失败，预检阶段即停止，不先留下一份看似完整的big。技术审计重读原图和标注，重算两版像素并比对，不产生任何艺术批准。
+默认生成 big/small 两版；`--profile big` 或 `--profile small` 仅生成所选一版。每个所选规格附辅助线叠图和最近邻200%图，整图100%直接看输出本身。回执 `requested_profiles` 明示本次范围，各候选裁切参数及母图/标注/输出hash写入 `composition.json`。全部所选规格先预检再写文件；默认双版中任一计算失败都不先落盘另一版。技术审计重读原图和标注，仅重算回执声明的规格，不产生艺术批准，也不把单版技术通过当成双版交付完整。没有 `requested_profiles` 的旧 v1 回执仍要求 big/small 两版。
 
-工具拒绝：非3:4母图、透明/无效输入、过期标注hash、非法点位、下巴不在眼下、上采样、越界裁切、危险文件名、覆盖已有输出、输出嵌套在Skill/已识别工程/只读源目录。工具不会改Alpha、修脸、自动判断表情或无白边；若需要Photoshop操作，仅走项目当前允许的MCP通道并逐张闭环。
+工具拒绝：非3:4母图、透明/无效输入、过期标注hash、非法点位、下巴不在眼下、上采样、越界裁切、危险文件名、覆盖已有输出、输出嵌套在Skill/已识别工程/只读源目录。工具不会改Alpha、修脸、自动判断表情或无白边；若需要Photoshop操作，仅走当前允许的MCP通道并读 [全局队列](../../ndc-photoshop-queue/SKILL.md)。同任务逐张保存并完成真实审核；PASS才推进相应依赖，FAIL按全局队列有据封存后仅继续独立资产；可恢复保存及固定审阅快照后的跨任务挂起释放不改变本图状态或配套big/small依赖，离线裁切工具本身不占PS。
 
 失败路由：标注错误重新人工标注；几何越界或有效脸部像素不足回到母图输入重生；艺术通过但最后技术裁切错位，只从同一冻结母图重裁两版中的受影响版本。若只是做单版返修，保留另一版当前通过记录，不把失败候选覆盖旧成品。
 
-审核完才能归档。当前脚本总是同时生成两版候选；单版返修时从这次输出选择所需一版，另一版不得未经审阅替换既有成品。
+审核完才能归档。单版回执与已通过的另一版回执共同进入完整交付清单，并核对身份与共享母图来源。对纯历史复用不得虚构母图关系。单版技术通过不允许覆盖另一版；完整任务的 big/small 覆盖仍由最终交付清单逐项检查。
+
+跨任务 U1→U2/U3 交接只按 [UI 交接契约](../../ndc-art-stage-pipeline/references/ui-pipeline.md) 执行。领取、工作前和回收重验同一母图的当前接收绑定；新标注、回执和候选放入领取分配的独占工作目录，`compose` 使用其中尚不存在的子目录。实际母图继续引用原路径；既有另一版及旧回执不复制成新作、不覆盖、不补造其历史。回收的技术审核调用本脚本 `audit`，生产 PASS 还必须取得原 journal 中实际下游 job 的当前有效接收。

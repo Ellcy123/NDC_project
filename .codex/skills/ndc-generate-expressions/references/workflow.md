@@ -2,6 +2,8 @@
 
 Record one state receipt with `PASS`, `FAIL`, or `NOT_CHECKED`. A later state cannot erase an earlier failure.
 
+Maintain the persistent job and evidence dependencies from `production-record.md`. E0–E4, E5/E6 and E7–E10 are resumable segments, not new generation jobs. Continue from the first affected state; a wait, renamed directory or resumed conversation never resets consumed attempts or invalidates accepted siblings by itself.
+
 E5/E6 below describe default manual processing. When the user explicitly authorizes PS MCP work, use `photoshop-background-processing.md` in place of the manual-only stop/repair clauses. Trials and already-rejected source art remain non-final; downstream evidence must truthfully identify the actual processor.
 
 ## E0_INTAKE_AND_CENSUS
@@ -14,7 +16,7 @@ For Unit3, census every file in `D:\PMH\工作\人设\003第三章\头像`; do n
 
 Verify approval, identity, costume, style, viewpoint, detail budget, source dimensions, protected light regions, and intended crop. Record `PORTRAIT_COMPLETION_USED=false`.
 
-This Skill has no completion or anatomical-repair route. If the portrait is missing, unapproved, identity-ambiguous, or unsuitable for the requested profiles, return `UPSTREAM_PORTRAIT_REQUIRED` and stop that role.
+This Skill has no automatic completion or anatomical-repair route. Missing, unapproved or identity-ambiguous portraits return `UPSTREAM_PORTRAIT_REQUIRED`. An identified portrait needing more subject coverage for the requested profiles enters `WAITING_FOR_MANUAL_PORTRAIT_COMPLETION`; follow `manual-portrait-source.md`, then accept the human return through the affected E0/E1 checks. Preserve the original general portrait, which may legitimately crop shoulders. This source handoff is separate from E5/E6 and spends no artistic attempt.
 
 Freeze calm as the approved portrait. Calm is copied unchanged into the non-final pre-Alpha handoff and is never regenerated.
 
@@ -56,6 +58,8 @@ Run `prepare_alpha_edge_review.py` for review evidence only. Inspect white, mid-
 
 Freeze one current user-returned native RGBA file and SHA-256 per expression. Any later change to Alpha or RGB invalidates downstream profile evidence.
 
+Resume here after the applicable user confirmation, not at E3. An Alpha failure blocks the affected expression; preserve accepted sibling returns and their profile work. The complete requested package still needs every required row to pass before E10.
+
 ## E7_DUAL_PROFILE_COMPOSITION
 
 From the same frozen RGBA foreground, compose:
@@ -64,6 +68,8 @@ From the same frozen RGBA foreground, compose:
 - greenscreen `1536x1024 RGB/#00FF2B`.
 
 Each profile uses its own calm transform, guide, geometry, and audit. Require `0 < scale <= 1`, one resample, no protected-pixel clipping, and a cross-profile audit proving the same native RGBA SHA-256.
+
+Compose only missing or invalidated profiles. With the native source, requirements and scope unchanged and no applicable rejection, reuse the passing sibling profile and refresh only the necessary cross-profile/set comparison. Do not consume an artistic attempt for a profile correction.
 
 ## E8_PROFILE_AUDIT
 

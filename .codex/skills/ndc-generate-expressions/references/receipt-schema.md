@@ -17,6 +17,8 @@ All original artistic, guide, composition, cross-profile and set gates remain un
 
 Create one receipt per character and profile. Formal delivery is fail-closed.
 
+The `portrait_source.portrait_completion_used=false` invariant describes this Skill's operations. An accepted manually completed upstream source is allowed; preserve its source-before/source-return hashes, human confirmation and E1 acceptance in the separate production record. Do not label that source operation as `manual_alpha_return` or claim Codex completed it. Existing schema 12/13 receipt fields and Alpha provenance remain unchanged.
+
 ## Required shape
 
 ```json

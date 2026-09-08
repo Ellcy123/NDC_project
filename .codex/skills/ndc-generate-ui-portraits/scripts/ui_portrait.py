@@ -117,7 +117,7 @@ def safe_output(output, source, landmarks):
     return output
 
 
-def compose(source, landmarks, stem, output):
+def compose(source, landmarks, stem, output, profile="both"):
     if (not stem or stem in (".", "..") or stem.endswith((" ", "."))
             or re.search(r'[<>:"/\\|?*\x00-\x1f]', stem)
             or re.match(r"^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)", stem, re.I)):
@@ -126,8 +126,12 @@ def compose(source, landmarks, stem, output):
     output = safe_output(output, source, landmarks)
     im, marks = load_master(source, landmarks)
     configs = profiles()
+    if profile != "both":
+        if not isinstance(profile, str) or profile not in configs:
+            raise ValueError("Profile must be both, big or small")
+        configs = {profile: configs[profile]}
     transforms = {key: geometry(im.size, marks, p) for key, p in configs.items()}
-    # Preflight both profiles and bundled guides before producing any files.
+    # Preflight every requested profile and guide before producing any files.
     guides = {}
     for key, p in configs.items():
         with Image.open(ROOT / "assets" / p["guide"]) as g:
@@ -137,6 +141,7 @@ def compose(source, landmarks, stem, output):
     receipt = {"schema": "ndc-ui-portrait-composition/v1", "source": {"path": str(source), "sha256": sha(source)},
                "landmarks": {"path": str(landmarks), "sha256": sha(landmarks)},
                "profile_config_sha256": sha(ROOT / "assets/profiles.json"),
+               "requested_profiles": list(configs),
                "technical_status": "TECHNICAL_PASS", "visual_status": "NOT_CHECKED", "profiles": {}}
     output.mkdir(parents=True)
     for key, transform in transforms.items():
@@ -165,8 +170,15 @@ def audit(receipt_path):
         raise ValueError("Profile configuration changed")
     im, marks = load_master(receipt["source"]["path"], receipt["landmarks"]["path"])
     configs = profiles()
-    if set(receipt["profiles"]) != set(configs):
-        raise ValueError("Both big and small are required")
+    # Legacy v1 receipts without an explicit scope still represent a full pair.
+    requested = receipt.get("requested_profiles", list(configs))
+    if (not isinstance(requested, list) or not requested
+            or any(not isinstance(key, str) or key not in configs for key in requested)
+            or len(set(requested)) != len(requested)):
+        raise ValueError("Invalid requested_profiles")
+    if set(receipt["profiles"]) != set(requested):
+        raise ValueError("Both big and small are required for a pair; profile entries must match requested_profiles")
+    configs = {key: configs[key] for key in requested}
     for key, profile in configs.items():
         entry = receipt["profiles"][key]
         expected = geometry(im.size, marks, profile)
@@ -193,11 +205,13 @@ def main():
     create = sub.add_parser("compose")
     for flag in ("input", "landmarks", "stem", "output-dir"):
         create.add_argument("--" + flag, required=True)
+    create.add_argument("--profile", choices=("both", "big", "small"), default="both",
+                        help="Export only the requested profile; default: both")
     check = sub.add_parser("audit")
     check.add_argument("--receipt", required=True)
     args = parser.parse_args()
     try:
-        result = compose(args.input, args.landmarks, args.stem, args.output_dir) if args.command == "compose" else audit(args.receipt)
+        result = compose(args.input, args.landmarks, args.stem, args.output_dir, args.profile) if args.command == "compose" else audit(args.receipt)
     except (ValueError, KeyError, TypeError, OSError) as exc:
         parser.exit(1, f"BLOCKED: {exc}\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))

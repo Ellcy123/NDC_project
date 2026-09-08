@@ -1,5 +1,7 @@
 # NDC Big, Icon, and clue-photo production contract
 
+新五阶段批次遵从[共用协议](../../ndc-prop-requirements/references/batch-contract.md)与[审核复用](../../ndc-prop-delivery-review/references/review-contract.md)。本参考提供专业判据；不要求无变化产物重复审阅，不另开重试预算。Unit4具体案例只用于相关历史资产，不扩大为所有章节的额外工序。
+
 Use this reference whenever a delivery includes `desSpritePath` Big art, an
 `iconPath` Icon, or a photographed `clue` Big. The scene Map remains governed
 by the coordinate-placement workflow and must never be rescaled.
@@ -7,6 +9,8 @@ by the coordinate-placement workflow and must never be rescaled.
 ## Governing principle
 
 Target size is an export contract, not an AI generation size.
+
+For art whose physical setting depends on a scene carrier, first satisfy [Carrier before dependent evidence art](../SKILL.md#carrier-before-dependent-evidence-art): establish and visually approve the actual carrier in the scene, then generate the dependent near view. Do not invent a trolley, desk, shelf, or container in a Big and defer its scene existence/location until afterward. An already accepted or user-retained Big remains eligible for reuse; late carrier production calls for a separate cross-view check, not automatic Big regeneration.
 
 1. Establish one approved high-resolution identity master for the evidence.
 2. Author the Big and Icon for their different presentation roles.
@@ -25,7 +29,7 @@ An approved semantic raster master must exist before deterministic finalization.
 
 Production scripts may crop, mask, composite already-approved non-text art, rotate, resize, perspective-map, manage alpha, apply locked templates, and generate verification data. They must not use Pillow/ImageDraw, Canvas, SVG, HTML/CSS, shaders, Photoshop text, or equivalent code/tools to originate or correct readable prop typography. They must not originate the final evidence body, paper/card surface, tables and rules, container, furniture, texture, wear, lighting, handwriting, background, or scene-state artwork. Those APIs remain valid for test fixtures, masks, guides, borders, and debug overlays.
 
-For a document whose readable wording matters, approve only a high-resolution complete raster master in which the final title/body/stamp/signature wording is already authored. If any required wording is missing, wrong, garbled, incomplete, or not readable at the relevant review scale, reject that candidate and return to image generation; do not add a separate text layer in Photoshop or code. Drawing a blank page and constructing or completing the document with code is a layout mockup, not final art.
+For a document whose readable wording matters, approve only a high-resolution complete raster master in which the final title/body/stamp/signature wording is already authored. If any A wording or B wording outside its explicitly allowed variation is missing, wrong, garbled, incomplete, or not readable at the required scale, reject that candidate and return to image generation; do not add a separate text layer in Photoshop or code. Drawing a blank page and constructing or completing the document with code is a layout mockup, not final art.
 
 This is the complete-master test, not a demand to expose every word in every derivative. The approved multipart overlap described below may hide previously verified text, and a non-photo document Map/Type 7 may use its permitted low-information face. Missing pre-composition review evidence is `NOT_CHECKED`, not proof that the text is absent; recover the master before choosing a semantic rebuild.
 
@@ -212,6 +216,8 @@ The optional preview is a review artifact only. Do not copy it into runtime.
 
 ## Icon production
 
+In the split workflow, all required Icons and dedicated Icon masters are produced at the end of stage 3, after required scene/menu and Big presentations have passed, before stage 4 hotspot extraction. This includes flat-paper deterministic Icons and clue/result Icons. Bind accepted semantic/Big/carrier sources as applicable; never depend on a future Map or start from provisional clue art. Preserve an already accepted Icon without regenerating it solely because this phase assignment changed.
+
 ### Visual contract
 
 - Final PNG: exactly `130x130`, RGBA.
@@ -237,8 +243,10 @@ text at the Icon stage.
 
 For an evidence group made of multiple distinct physical pieces, first validate
 all required wording on the complete pre-composition master, then establish the
-approved Big composition. Prefer a restrained staggered hierarchy over a
-perfectly upright, evenly spaced row when physically plausible: a rear sheet
+approved Big composition. Player-facing descriptions/dialogue carry the main
+information; follow the [art-led visibility rule](../SKILL.md#art-led-information-visibility).
+Do not arrange every piece into an evenly spaced row or grid simply to show all
+content. Prefer a restrained staggered hierarchy when physically plausible: a rear sheet
 may be offset and a foreground sheet may overlap it. The final Big is allowed
 to hide parts of previously reviewed text or a rear component; it does not need
 to preserve full close-reading access after the composition step. It must still

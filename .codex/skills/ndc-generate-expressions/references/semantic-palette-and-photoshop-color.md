@@ -43,11 +43,13 @@ Use numeric Lab differences as screening and same-display side-by-side review as
 
 ## Photoshop routes
 
+Codex-operated Photoshop work uses the [global queue](../../ndc-photoshop-queue/SKILL.md) and currently verified MCP capabilities only. The method names below describe provenance, not permission to launch a separate `.psjs`, shell script, mouse/keyboard route or unverified action. If the MCP cannot execute the proposed correction, retain the candidate and use the explicitly human handoff; do not silently substitute tools. A safely saved checkpoint permits releasing PS to other independent tasks while this image waits for offline review or human input, without passing this image or changing its budget.
+
 Preferred route when automation passes a one-file dry run:
 
 `PHOTOSHOP_UXP_SEMANTIC_MASKED`
 
-- use a standalone `.psjs` UXP script or a narrowly scoped action;
+- use a narrowly scoped, verified MCP-exposed action or UXP capability; a `.psjs` recipe is usable only through that authorized MCP route, not as standalone execution;
 - create non-destructive adjustment layers grouped and masked by semantic material;
 - use Curves/Levels for tone bands and Color Balance, Hue/Saturation, or Selective Color only inside the relevant mask;
 - keep the raw candidate as a locked layer;
@@ -80,4 +82,3 @@ Formal color `PASS` requires:
 - any human Photoshop handoff is explicitly marked incomplete until the adjusted file returns.
 
 If correction would require repainting form, changing lighting direction, or moving material boundaries, return to expression generation. Photoshop color work cannot repair a structurally wrong candidate.
-

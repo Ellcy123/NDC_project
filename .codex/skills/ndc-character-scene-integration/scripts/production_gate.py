@@ -6,8 +6,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any, Iterable
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from visual_review_gate import STAGE_CHECKS, validate_local_tiles, validate_inspection_provenance
 
 
 ALLOWED_TECHNICAL_STATUS = {
@@ -101,6 +105,136 @@ def require_nonempty_refs(
         _, data = validate_file_ref(reference, f"{label}[{index}]", ledger_path, schemas)
         loaded.append(data)
     return loaded
+
+
+def validate_visual_report(reference: dict[str, Any], label: str, ledger_path: Path) -> dict[str, Any]:
+    """Recheck the images behind a report, not merely the report's own bytes."""
+    report_path, data = validate_file_ref(
+        reference, label, ledger_path, {"ndc-stage-visual-review-report/v1"}
+    )
+    assert data is not None
+    validate_inspection_provenance(data, report_path)
+    stage = data.get("stage")
+    if stage not in STAGE_CHECKS:
+        raise ValueError(f"{label} has an unsupported visual stage.")
+    require_nonempty_refs(data.get("artifacts"), f"{label}.artifacts", report_path)
+    validate_file_ref(
+        {"path": data.get("board", ""), "sha256": data.get("boardSha256", "")},
+        f"{label}.board", report_path,
+    )
+    checks = data.get("checks", {})
+    if (
+        data.get("reviewAuthority") != "codex-self-check"
+        or data.get("status") != "VISUAL_REVIEW_PASS"
+        or data.get("nextStageAuthorized") is not True
+        or not isinstance(checks, dict)
+        or any(checks.get(check) != "pass" for check in STAGE_CHECKS[stage])
+        or not isinstance(data.get("observations"), list)
+        or not data["observations"]
+        or not all(isinstance(value, str) and value.strip() for value in data["observations"])
+    ):
+        raise ValueError(f"{label} contains a failed or incomplete visual review.")
+    validate_local_tiles(data.get("localTiles"), resolve_path(data["artifacts"][0]["path"], report_path), report_path)
+    for item in data["artifacts"]:
+        for field in ("poseIds", "snapshotIds"):
+            values = item.get(field, [])
+            if not isinstance(values, list) or not all(isinstance(v, str) and v.strip() for v in values):
+                raise ValueError(f"{label}.artifacts.{field} must be a list of nonempty IDs.")
+    return data
+
+
+def validate_visual_coverage(
+    reports: list[dict[str, Any]], stage: str,
+    placements: list[dict[str, Any]], stagings: list[dict[str, Any]], label: str,
+) -> None:
+    """Bind coverage to the already planned poses and snapshot membership."""
+    expected_poses = {str(p["target"]["poseDefinition"]["poseId"]) for p in placements}
+    poses_by_name: dict[str, set[str]] = {}
+    for placement in placements:
+        poses_by_name.setdefault(str(placement.get("characterName", "")), set()).add(
+            str(placement["target"]["poseDefinition"]["poseId"])
+        )
+    expected_pairs: set[tuple[str, str]] = set()
+    for staging in stagings:
+        snapshot = str(staging.get("timelineSnapshotId", "")).strip()
+        pose_ids = staging.get("combinedWhiteboxReview", {}).get("poseIds")
+        names = {str(actor.get("name", "")) for actor in staging.get("characters", [])}
+        if not snapshot or not names or not isinstance(pose_ids, dict) or set(pose_ids) != names:
+            raise ValueError(f"{label} staging needs exact character-to-poseIds snapshot bindings.")
+        for name, pose in pose_ids.items():
+            if pose not in poses_by_name.get(name, set()):
+                raise ValueError(f"{label} snapshot pose is not bound to its planned character: {name}/{pose}")
+            expected_pairs.add((snapshot, pose))
+    for required_stage in REQUIRED_VISUAL_STAGES[stage]:
+        covered_poses: set[str] = set()
+        covered_pairs: set[tuple[str, str]] = set()
+        for report in reports:
+            if report.get("stage") != required_stage:
+                continue
+            for item in report["artifacts"]:
+                covered_poses.update(item.get("poseIds", []))
+                covered_pairs.update(
+                    (snapshot, pose) for snapshot in item.get("snapshotIds", [])
+                    for pose in item.get("poseIds", [])
+                )
+        missing = expected_poses - covered_poses
+        if missing:
+            raise ValueError(f"{label} {required_stage} lacks reviewed pose coverage: {', '.join(sorted(missing))}")
+        if required_stage in {"exact-pose-whitebox", "final-full-composite"}:
+            missing_pairs = expected_pairs - covered_pairs
+            if missing_pairs:
+                raise ValueError(f"{label} {required_stage} lacks reviewed snapshot/pose coverage: {sorted(missing_pairs)}")
+
+
+def require_reviewed_artifacts(
+    reports: list[dict[str, Any]], stage: str, references: list[dict[str, Any]],
+    record_path: Path, label: str,
+) -> None:
+    """Match this run's actual outputs, allowing only byte-identical path aliases."""
+    reviewed_hashes = {
+        str(item["sha256"]).lower()
+        for report in reports if report.get("stage") == stage
+        for item in report["artifacts"]
+    }
+    for index, reference in enumerate(references):
+        path, _ = validate_file_ref(reference, f"{label}[{index}]", record_path)
+        if str(reference["sha256"]).lower() not in reviewed_hashes:
+            raise ValueError(f"{label} current artifact lacks {stage} review coverage: {path}")
+
+
+def validate_matte_readiness(reference: dict[str, Any], label: str, ledger_path: Path) -> None:
+    """Audit an existing RGBA without repeating its extraction algorithm."""
+    from PIL import Image
+
+    audit_path, audit = validate_file_ref(reference, label, ledger_path, {"ndc-matte-readiness-audit/v1"})
+    assert audit is not None
+    validate_file_ref(audit.get("source", {}), f"{label}.source", audit_path)
+    validate_file_ref(audit.get("extractionReport", {}), f"{label}.extractionReport", audit_path)
+    output_path, _ = validate_file_ref(audit.get("output", {}), f"{label}.output", audit_path)
+    with Image.open(output_path) as output:
+        if output.mode != "RGBA" or list(output.size) != audit.get("expectedCanvas"):
+            raise ValueError(f"{label} output must be RGBA at the declared canvas size.")
+        alpha = output.getchannel("A")
+        corners = ((0, 0), (output.width - 1, 0), (0, output.height - 1), (output.width - 1, output.height - 1))
+        if alpha.getbbox() is None or any(alpha.getpixel(point) != 0 for point in corners):
+            raise ValueError(f"{label} output must have nonempty foreground and transparent exterior.")
+    review = validate_visual_report(audit.get("visualReviewReport", {}), f"{label}.visualReviewReport", audit_path)
+    if review["stage"] != "matte-extraction" or not any(
+        resolve_path(item["path"], resolve_path(audit["visualReviewReport"]["path"], audit_path)) == output_path
+        and str(item["sha256"]).lower() == sha256(output_path)
+        for item in review["artifacts"]
+    ):
+        raise ValueError(f"{label} requires the actual RGBA output in its passing matte visual review.")
+
+
+def validate_handoff_source_bindings(reference: dict[str, Any], label: str, ledger_path: Path) -> None:
+    report_path, report = validate_file_ref(reference, label, ledger_path, {"ndc-local-generation-handoff-report/v1"})
+    assert report is not None
+    for role, source_hash in (("image2", "scene"), ("image3", "characterCard")):
+        validate_file_ref(
+            {"path": report.get("roles", {}).get(role, ""), "sha256": report.get("sourceHashes", {}).get(source_hash, "")},
+            f"{label}.sourceHashes.{source_hash}", report_path,
+        )
 
 
 def validate_placement_contract(data: dict[str, Any], label: str) -> None:
@@ -203,7 +337,7 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
 
     if "sceneAbsoluteScaleReport" not in case:
         raise ValueError(f"{label} lacks an independent fixed-scene absolute-scale report.")
-    _, absolute_scale_report = validate_file_ref(
+    absolute_report_path, absolute_scale_report = validate_file_ref(
         case["sceneAbsoluteScaleReport"],
         f"{label}.sceneAbsoluteScaleReport",
         ledger_path,
@@ -211,6 +345,16 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
     )
     if not absolute_scale_report or absolute_scale_report.get("status") != "pass":
         raise ValueError(f"{label} contains a failed fixed-scene absolute-scale report.")
+    if absolute_scale_report.get("axisAwareProjection") is not True:
+        raise ValueError(f"{label} requires a current axis-aware absolute-scale report; rerun the original contract without inventing missing geometry.")
+    absolute_contract_path, _ = validate_file_ref(
+        {"path": absolute_scale_report.get("contract"), "sha256": absolute_scale_report.get("contractSha256")},
+        f"{label}.sceneAbsoluteScaleReport.contract",
+        absolute_report_path,
+        {"ndc-scene-absolute-scale/v1"},
+    )
+    from scene_staging_tools import validate_scene_absolute_scale
+    validate_scene_absolute_scale(absolute_contract_path)
 
     component_reports = require_nonempty_refs(
         case.get("componentPolicyReports"),
@@ -327,13 +471,15 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
         for report in handoffs
     ):
         raise ValueError(f"{label} contains a local-generation handoff that is not ready.")
+    for handoff_index, reference in enumerate(case["localGenerationHandoffs"]):
+        validate_handoff_source_bindings(reference, f"{label}.localGenerationHandoffs[{handoff_index}]", ledger_path)
 
-    visual_reports = require_nonempty_refs(
-        case["visualReviewReports"],
-        f"{label}.visualReviewReports",
-        ledger_path,
-        {"ndc-stage-visual-review-report/v1"},
-    )
+    if not isinstance(case["visualReviewReports"], list) or not case["visualReviewReports"]:
+        raise ValueError(f"{label}.visualReviewReports must contain reviewed artifacts.")
+    visual_reports = [
+        validate_visual_report(ref, f"{label}.visualReviewReports[{i}]", ledger_path)
+        for i, ref in enumerate(case["visualReviewReports"])
+    ]
     visual_stages = {str(report.get("stage")) for report in visual_reports if report}
     missing_visual_stages = REQUIRED_VISUAL_STAGES[stage] - visual_stages
     if missing_visual_stages:
@@ -351,6 +497,12 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
         if report and report.get("stage") in REQUIRED_VISUAL_STAGES[stage]
     ):
         raise ValueError(f"{label} contains a failed or incomplete mandatory visual review.")
+    validate_visual_coverage(visual_reports, stage, placement_data, staging_data, label)
+    for field in ("isolatedActors", "combinedSnapshots"):
+        require_reviewed_artifacts(
+            visual_reports, "exact-pose-whitebox", whitebox[field], ledger_path,
+            f"{label}.whiteboxEvidence.{field}",
+        )
 
     if branch == "pure-narrative":
         for field, schemas in (
@@ -413,13 +565,17 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
             case.get("matteReports"),
             f"{label}.matteReports",
             ledger_path,
-            {"ndc-conservative-matte-report/v2"},
+            {"ndc-conservative-matte-report/v2", "ndc-matte-readiness-audit/v1"},
         )
         if any(
-            report and report.get("status") != "TECHNICAL_FILE_PASS"
+            report and report.get("schema") == "ndc-conservative-matte-report/v2"
+            and report.get("status") != "TECHNICAL_FILE_PASS"
             for report in matte_reports
         ):
             raise ValueError(f"{label} contains a failed or legacy matte report.")
+        for matte_index, report in enumerate(matte_reports):
+            if report and report.get("schema") == "ndc-matte-readiness-audit/v1":
+                validate_matte_readiness(case["matteReports"][matte_index], f"{label}.matteReports[{matte_index}]", ledger_path)
         finals = require_nonempty_refs(
             case.get("finalConformanceContracts"),
             f"{label}.finalConformanceContracts",
@@ -432,6 +588,15 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
                 raise ValueError(
                     f"{label}.finalConformanceContracts[{final_index}] lacks passed Codex formal review."
                 )
+            final_path = resolve_path(case["finalConformanceContracts"][final_index]["path"], ledger_path)
+            for binding in (data, review):
+                if "finalComposite" in binding or "finalCompositeSha256" in binding:
+                    require_fields(binding, ("finalComposite", "finalCompositeSha256"), "final composite binding")
+                    require_reviewed_artifacts(
+                        visual_reports, "final-full-composite",
+                        [{"path": binding["finalComposite"], "sha256": binding["finalCompositeSha256"]}],
+                        final_path, f"{label}.finalConformanceContracts[{final_index}].finalComposite",
+                    )
 
     return {
         "caseId": case["caseId"],

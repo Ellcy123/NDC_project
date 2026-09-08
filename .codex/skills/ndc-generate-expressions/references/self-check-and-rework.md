@@ -35,7 +35,7 @@ For new/replacement art, use `identity-and-expression-calibration.md` for the co
 
 ## Key decisions
 
-- An incomplete or unusable portrait returns `UPSTREAM_PORTRAIT_REQUIRED`. This Skill never repairs it.
+- A known portrait needing missing subject regions for the requested crop enters `WAITING_FOR_MANUAL_PORTRAIT_COMPLETION`; use `manual-portrait-source.md`. Missing, unapproved or identity-ambiguous sources return `UPSTREAM_PORTRAIT_REQUIRED`. This Skill never completes either source.
 - Wrong expression, identity, viewpoint, costume, lighting, style, texture, or detail returns to generation from the approved portrait.
 - Color-only drift may use reviewed semantic Photoshop masks; never use an Image model for color correction.
 - After artistic review, Codex makes an unchanged non-final pre-Alpha handoff and stops. It never removes the background or white fringe.
@@ -52,6 +52,8 @@ For new/replacement art, use `identity-and-expression-calibration.md` for the co
 - pre-Alpha handoff: H1 complete package, H2 inventory-only correction when a file or manifest row is missing;
 - user-edited Alpha: no Codex repair retry; each user-confirmed in-place revision starts a new review attempt;
 - profile composition: P1 initial, P2 measured correction.
+
+Persist these counters per stable character/expression and, for P1/P2, per profile in `production-record.md`. A1/A2/A3 includes the initial generation; changing prompts, filenames, handoff segments or conversations does not restart it. Manual portrait completion and waiting for a source/Alpha return spend no generation attempt. A user Alpha revision is a new inspection of returned bytes, not a Codex artistic retry. Exhaustion leaves the affected item pending with its defects; continue unrelated work without replacing accepted siblings.
 
 No retry may introduce portrait completion, generative background removal, or profile-specific artistic generation.
 

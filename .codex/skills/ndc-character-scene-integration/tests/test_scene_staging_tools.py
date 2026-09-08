@@ -2,9 +2,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import os
-import subprocess
-import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -44,32 +41,6 @@ def write_json(path: Path, value: dict) -> None:
 
 
 class SceneStagingToolTests(unittest.TestCase):
-    def _create_managed_job(self, root: Path) -> tuple[Path, Path]:
-        config = root / "art-paths.json"
-        work = root / "work"
-        write_json(config, {
-            "schema": "ndc-art-workspace/v1",
-            "engine_root": str(root / "engine"),
-            "work_root": str(work),
-            "character_registry": str(root / "characters.json"),
-            "quota_gib": 1,
-            "minimum_free_gib": 0,
-        })
-        environment = dict(os.environ)
-        environment["NDC_ART_PATHS_CONFIG"] = str(config)
-        environment.pop("NDC_ART_WORK_ROOT", None)
-        environment.pop("NDC_ENGINE_ROOT", None)
-        workspace_cli = PIPELINE._shared_art_paths().planning_root / "scripts/art_pipeline/art_workspace.py"
-        result = subprocess.run(
-            [sys.executable, "-B", "-X", "utf8", str(workspace_cli),
-             "create", "--name", "scene-contract-check", "--kind", "integration-check"],
-            check=True, capture_output=True, text=True, encoding="utf-8", env=environment,
-        )
-        created = json.loads(result.stdout)
-        payload = Path(created["output"])
-        self.assertEqual(payload, Path(created["job"]) / "payload")
-        return work, payload
-
     def _placement_contract(self, root: Path, scene: Path) -> dict:
         pose = {
             "headBox": [96, 15, 114, 32],
@@ -118,13 +89,12 @@ class SceneStagingToolTests(unittest.TestCase):
     def test_pipeline_requires_affordance_and_snapshot_ui_report(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)
-            work_root, payload = self._create_managed_job(root)
             old_root = PIPELINE.NDC_ROOT
-            PIPELINE.NDC_ROOT = work_root
+            PIPELINE.NDC_ROOT = root
             try:
                 scene = root / "scene.png"
                 Image.new("RGBA", (240, 200), (0, 0, 0, 255)).save(scene)
-                placement = self._placement_contract(payload, scene)
+                placement = self._placement_contract(root, scene)
                 placement_path = root / "placement.json"
                 write_json(placement_path, placement)
                 PIPELINE.validate_contract(placement)
@@ -157,53 +127,6 @@ class SceneStagingToolTests(unittest.TestCase):
                 }
                 loaded = PIPELINE.validate_staging(staging)
                 self.assertEqual(len(loaded), 1)
-            finally:
-                PIPELINE.NDC_ROOT = old_root
-
-    def test_shared_workspace_create_accepts_delivery_and_candidate_paths(self) -> None:
-        with tempfile.TemporaryDirectory() as raw:
-            root = Path(raw)
-            work, payload = self._create_managed_job(root)
-            old_root = PIPELINE.NDC_ROOT
-            PIPELINE.NDC_ROOT = work
-            try:
-                scene = payload / "source-scene.png"
-                PIPELINE.validate_delivery_root({
-                    "scene": str(scene), "deliveryRoot": str(payload / scene.stem),
-                })
-                artifact = payload / "candidate.png"
-                artifact.write_bytes(b"candidate identity for path contract")
-                comparison = payload / "comparison.json"
-                write_json(comparison, {"status": "needs-rework"})
-                handoff = {
-                    "candidateHandoff": {
-                        "status": "best-available", "reviewAuthority": "codex-self-check",
-                        "attemptCount": 6, "artifact": str(artifact),
-                        "artifactSha256": PIPELINE.sha256_file(artifact),
-                        "comparisonReport": str(comparison), "failedChecks": ["texture"],
-                        "selectionReason": "path-contract fixture",
-                        "candidateRoot": str(payload / "candidates" / "selected"),
-                    },
-                }
-                PIPELINE.validate_candidate_handoff(handoff)
-                for rejected in (
-                    PIPELINE._shared_art_paths().planning_root / "image" / "result.png",
-                    PIPELINE._shared_art_paths().engine_root / "Assets" / "result.png",
-                    work / "_migration_backups" / "payload" / "result.png",
-                    work / "unmanaged" / "payload" / "result.png",
-                    work / "jobs" / "unregistered" / "payload" / "result.png",
-                ):
-                    with self.subTest(path=str(rejected)), self.assertRaises(ValueError):
-                        PIPELINE.validate_task_payload(rejected, "output")
-                handoff["candidateHandoff"]["candidateRoot"] = str(payload / "prepared" / "wrong")
-                with self.assertRaisesRegex(ValueError, "payload/candidates"):
-                    PIPELINE.validate_candidate_handoff(handoff)
-                marker = payload.parent / "job.json"
-                record = json.loads(marker.read_text(encoding="utf-8"))
-                record["state"] = "closed-cancelled"
-                write_json(marker, record)
-                with self.assertRaisesRegex(ValueError, "closed job"):
-                    PIPELINE.validate_task_payload(payload / "result.png", "output")
             finally:
                 PIPELINE.NDC_ROOT = old_root
 
@@ -243,16 +166,19 @@ class SceneStagingToolTests(unittest.TestCase):
             reference = root / "reference.png"
             Image.new("RGB", (320, 200), (30, 40, 50)).save(primary)
             Image.new("RGB", (320, 200), (50, 40, 30)).save(reference)
+            tile_path = root / "actor-a-200.png"
+            with Image.open(primary) as image:
+                image.crop((80, 20, 220, 195)).resize((280, 350), Image.Resampling.NEAREST).save(tile_path)
             checks = {name: "pass" for name in VISUAL_GATE.STAGE_CHECKS["pre-composite-registration"]}
             contract = {
                 "schema": "ndc-stage-visual-review/v1",
                 "stage": "pre-composite-registration",
                 "reviewAuthority": "codex-self-check",
                 "artifacts": [
-                    {"role": "registration-preview", "path": str(primary)},
-                    {"role": "accepted-local", "path": str(reference)},
+                    {"role": "registration-preview", "path": str(primary), "sha256": VISUAL_GATE.sha256(primary)},
+                    {"role": "accepted-local", "path": str(reference), "sha256": VISUAL_GATE.sha256(reference)},
                 ],
-                "localTiles": [{"id": "actor-a", "bbox": [80, 20, 220, 195]}],
+                "localTiles": [{"id": "actor-a", "bbox": [80, 20, 220, 195], "path": str(tile_path), "sha256": VISUAL_GATE.sha256(tile_path)}],
                 "checks": checks,
                 "observations": ["Actor scale remains consistent with the accepted contextual crop."],
                 "decision": "pass",
@@ -556,6 +482,14 @@ class SceneStagingToolTests(unittest.TestCase):
                 "perspectiveBasisIds": ["floor-grid"],
                 "sourceSupportPoint": [180, 150],
                 "targetSupportPoint": [110, 185],
+            }
+            metric_path = root / "metric-reference.json"
+            write_json(metric_path, {"fixture": "orthographic equal directional rates"})
+            projection["directionTransfer"] = {
+                "method": "Synthetic orthographic fixture with equal horizontal/vertical unit projections",
+                "sourceAxisPxPerCm": 1,
+                "verticalPxPerCm": 1,
+                "artifact": {"path": metric_path.name, "sha256": TOOLS.sha256(metric_path)},
             }
             contract = {
                 "schema": "ndc-scene-absolute-scale/v1",

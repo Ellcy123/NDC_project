@@ -1,5 +1,7 @@
 # Unit 4 visual-release firewall
 
+新五阶段批次遵从[共用协议](../../ndc-prop-requirements/references/batch-contract.md)与[审核复用](../../ndc-prop-delivery-review/references/review-contract.md)。本参考提供专业判据；不要求无变化产物重复审阅，不另开重试预算。Unit4具体案例只用于相关历史资产，不扩大为所有章节的额外工序。
+
 Use this protocol for Unit 4 full delivery, a visual-defect repair, or any candidate promotion. It addresses recurrent delivery failures without redefining the evidence's approved semantic content.
 
 ## 1. Classify before touching a formal file
@@ -18,7 +20,7 @@ Keep four distinct progress facts in the existing coverage ledger: source locate
 
 ## 2. Use a visual decision, not a technical proxy
 
-Before an item may be copied to `最终交付`, inspect the exact output bytes that will be delivered:
+Before formal copying, require the exact output bytes to be covered by these checks. An existing review may cover them only through the five-stage batch binding; otherwise perform the missing visual inspection:
 
 1. Whole output at native 100% and expected gameplay scale.
 2. Every material/semantic edge at nearest-neighbour 200% or complete original-pixel tiles.

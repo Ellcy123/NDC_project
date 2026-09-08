@@ -93,7 +93,7 @@ Keep identity-critical facial landmarks and approved costume details fully reada
 Do not distribute folds, highlights, grain, scratches, seams, ornaments, repeated marks, or accessory-like micro-detail uniformly across the body. Do not invent non-semantic micro-detail, fragmented short marks, decorative micro-wrinkles, random speckle, or unsupported surface construction.
 ```
 
-不得将此模块追加到 `LOCKED_PROMPT:character-card-default` 或 `LOCKED_PROMPT:portrait` 的实际提交文本。这两条分支先按 `style-self-check.md` 执行双门禁；只有用户明确批准新的锁定版本后才能改变它们的哈希。
+不得将此模块追加到 `LOCKED_PROMPT:character-card-default`、`LOCKED_PROMPT:portrait` 或 `LOCKED_PROMPT:portrait-single-reference` 的实际提交文本。锁定分支先按 `style-self-check.md` 执行双门禁；只有用户明确批准新的锁定版本后才能改变对应哈希。
 <!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 ## 2. 角色视觉设定
@@ -163,9 +163,9 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 1. 图 1：已通过身份比对的通用风格全身定稿；
 2. 图 2：从图 1 裁出的同源正面面部锚点（建议用于重要角色，帮助复杂版式继续锁脸）。
 
-### 6.1 明确要求 4K 时的模块化角色卡
+### 6.1 明确要求4K或独立模块／拼版时的角色卡
 
-仅当用户明确写出 `4K` 时读取 `modular-character-card.md` 并执行本节。分别生成全身正面、严格左侧面、背面，并在每一张的原始像素中保留能核对脸型、发型、发际线和耳位的头部细节；全身模块通过后先裁出同源头部身份锚点。头部正面、严格右侧面、背面优先直接采用对应锚点，或仅以该锚点做清晰度补充；不得借此重画身份。再生成角色实际穿着批准鞋型的双脚/小腿特写，以及零至三张批准装饰/道具/构造特写。每次只生成一个模块并单独保存；已通过模块冻结，失败只返工当前模块。用户只说“正式”“高清”“最终”或“可用”时不得自动进入本节。
+仅当用户明确要求 `4K` 或独立模块生成／拼版时读取 `modular-character-card.md` 并执行本节，目标尺寸与DAG见 `production-budgets-and-dependencies.md`。分别取得全身正面、画面向左的严格侧面、背面，并保留各自视角可核对的原生头部细节锚点。头部正面、角色右脸严格侧面、背面优先复用已批准且实际可见面匹配的锚点；无右脸同角度锚点时从身份源做独立角度派生，不能裁用相反面或镜像。补充清晰度不得改变身份或视角。鞋和批准细节依真实依赖排队；每个模块单独保存／验收，失败只阻断其真实后代，其他通过模块冻结。“正式”“高清”“最终”或“可用”不自动触发模块化。
 
 统一提示词骨架：
 
@@ -174,7 +174,7 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 
 严格保留同一个人的脸型、眉眼间距、鼻形、嘴部、颧颌轮廓、耳形、发际线和年龄；保留同一体型、头身比、发型轮廓、服装层级、配色、固定徽章/配饰位置与鞋型。保持选择性的线宽层级、成组几何头发、硬边结构转折、受控高反差明暗与服装大面积深色安静区。头发允许少量顺发流的宽带状亮暗笔触，不画逐根发丝。衣褶只在肩、肘、袖口、腰、膝和衣摆等受力点形成少量明确的角状硬转折与硬边明暗块，躯干与长衣大面保持安静，并允许大平面内部短距离、受控的色阶桥接；禁止长距离柔滑渐变、空气刷过渡、圆融融化式折痕和把普通布料画成亮面 3D 材质。轮廓与内部墨线必须有可见粗细节奏：剪影焦点、受力角和深遮挡处加重，长直服装边界中等或偏细且收尖，内部折线更细并选择性断开；线条需有鼓胀、收尖、断续和明确收笔，不得让所有边同样粗重或同样机械。普通布料与皮肤偏哑光，漆皮鞋、金属、珠宝和徽章可保留紧凑尖锐高光。纯白背景，一个孤立主体，最大有效尺寸，四周保留干净边距，不裁切，不添加文字、边框、水印、地面、投影、道具或新设计。
 
-若为全身模块：完整展示头顶到鞋底，双臂自然下垂，双手空置并可见，不得背手、插兜、持物或让便携道具接触身体；头部必须以原生清晰度读出脸型、眉眼关系、发型大轮廓、发际线与耳位，以便裁出同源身份锚点。若为头部模块：只展示头部、颈部和极少量衣领，严格正投影，不得用四分之三视角代替；只使用对应全身身份锚点的直接裁片，或该裁片的单目的清晰度补充，不得改变脸、发型、发色、年龄、衣领和视角。若为鞋部模块：展示角色从小腿中段到鞋底的双腿，正常站立并实际穿着批准鞋型，同时看见裤脚、脚踝衔接与两只鞋。若为其他细节模块：只展示批准物件本身，不与人物接触。
+若为全身模块：完整展示头顶到鞋底，双臂自然下垂，双手空置并可见，不得背手、插兜、持物或让便携道具接触身体；头部必须以原生清晰度读出该视角可见的脸型、发型大轮廓、发际线与耳位，以便裁出同源身份锚点。若为头部模块：只展示头部、颈部和极少量衣领，严格正投影，不得用四分之三视角代替；有同角度批准锚点时直接裁用或仅做清晰度补充，不改变脸、发型、发色、年龄、衣领和视角；缺少所需右脸角度时仅做已记录的新角度派生，保持同一身份，不镜像或冒称同源裁片。若为鞋部模块：展示角色从小腿中段到鞋底的双腿，正常站立并实际穿着批准鞋型，同时看见裤脚、脚踝衔接与两只鞋。若为其他细节模块：只展示批准物件本身，不与人物接触。
 
 【模块名称与唯一视角】
 ```
@@ -202,7 +202,7 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 
 ### 6.2 默认整卡生成（稳定优先）
 
-用户未明确要求 `4K` 时默认使用本节。以下代码块以项目最初整卡提示词为基底，只保留用户后来明确确认的三头部视图、空手、穿鞋结构与版式要求；它是锁定的整卡主提示词。调用生成工具时逐字提交，不得改写、摘要、翻译、扩写或追加分辨率、透明、人物占比、抠图、扩图、补全和负面词。生成结果先检查身份、结构与画风；尺寸、比例和人物位置在通过后按 `post-generation-normalization.md` 技术整备。不得把普通整卡直接插值放大后作为 4K 交付。
+用户未明确要求 `4K` 或独立模块生成／拼版时默认使用本节。以下代码块以项目最初整卡提示词为基底，只保留用户后来明确确认的三头部视图、空手、穿鞋结构与版式要求；它是锁定的整卡主提示词。调用生成工具时逐字提交，不得改写、摘要、翻译、扩写或追加分辨率、透明、人物占比、抠图、扩图、补全和负面词。生成结果先检查身份、结构与画风；尺寸、比例和人物位置在通过后按 `post-generation-normalization.md` 技术整备。不得把普通整卡直接插值放大后作为 4K 交付。
 
 <!-- LOCKED_PROMPT:character-card-default:BEGIN -->
 ```text
@@ -237,7 +237,21 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 
 通用肖像从角色卡派生。不要把 MJ 头部素材当作图 1，也不要从 MJ 头部样本推断肖像精修规则。
 
-若图 2 的参考人物导致角色身份漂移（性别、年龄、五官、发型或服装被替换），该结果直接拒收。重试时去掉图 2，仅保留批准的通用角色卡作为图片参考，并把本节“美术风格提示词”完整写入文字提示词。
+若图 2 的参考人物导致角色身份漂移（性别、年龄、五官、发型或服装被替换），该结果直接拒收。重试时进入7.1的独立锁定版本 `portrait-single-reference`，以批准角色卡作为唯一图片参考；不得临时删改默认锁定文本。
+
+## 7.1 已记录身份污染后的单参考锁定回退
+
+只有默认双图肖像已发生参考人物污染，且失败已记录时才使用本版本。它消费同一肖像任务的剩余预算，不额外重置。参考数组只有当前批准角色卡，角色为 `identity`；没有图2。
+
+<!-- LOCKED_PROMPT:portrait-single-reference:BEGIN -->
+```text
+参考图1的角色相貌和设定（不包括视角和动作），美术风格仅使用下方锁定的文字风格段，【动作为纯正面视角，面无表情目视前方】。结合以下给出的美术风格提示词，生成图片比例4：5的图1的人物肖像图；
+
+美术风格提示词：classic Film Noir aesthetic, 1930s vintage illustration style, No brushstrokes on the face, Smooth brushstrokes, Dry parchment-like skin（face only）, The outermost layer of skin is covered with what appear to be granular dots, American Comic Inking, variable line weight, bold dark outer contour, graphic geometry, hard-planed facial features, sculptural face planes, planar color blocking, faceted shading, Digital Impasto, visible directional brushstrokes, thick oil paint texture, matte dry skin finish, controlled rough brushwork, The hairstyle brushstrokes are simplified, hair simplified into large graphic masses, simplified/blocky hair, hair treated as a single solid mass, zero fine strand rendering, minimal internal hair texture, broad grouped hair shapes, clean large hair clumps, summarized hair volume, low-saturation earth tones, warm sepia browns, charcoal blacks,no highlights， subtle vintage paper grain, high-contrast chiaroscuro, dramatic side lighting, deep dramatic shadows, compressed values, off-white blank background, clean negative space
+```
+<!-- LOCKED_PROMPT:portrait-single-reference:END -->
+
+逐字导出 `portrait-single-reference`，保存提示hash并以对应单参考manifest核验。默认 `portrait` 与 `character-card-default` 原始文本保持不变。
 
 ## 8. 黑白红风格角色卡
 

@@ -5,11 +5,17 @@ description: Plan, generate, audit, and package NDC bust-expression sets from us
 
 # NDC Generate Expressions
 
+实际使用 Photoshop MCP 前按需读取 [全局 PS 队列](../ndc-photoshop-queue/SKILL.md)。同任务当前图须保存、完成技术及真实视觉检查并核对当前hash；未审完不得推进下一张。PASS可推进相应依赖；FAIL缺陷已记录且预算耗尽或用户要求封存时，保留候选和累计次数，仅继续独立资产；安全保存可恢复文件和固定审阅快照后，可按队列协议挂起释放给其他独立任务。释放不是PASS，不解除原图及依赖的阻断、不重置预算；命令在途或结果未知时不得自行交棒。纯准备、生图等待和离线审阅不长期占用桥接，未授权的PS操作不会因排队而获得授权。
+
 ## Operating boundary
 
 Background processing has two modes. Default `USER_MANUAL` follows the E5 handoff / E6 user-return path below. When the user explicitly authorizes Photoshop MCP cutout or fringe work, use `USER_AUTHORIZED_PHOTOSHOP_MCP` and read [references/photoshop-background-processing.md](references/photoshop-background-processing.md) first. That mode replaces the manual-only stop and no-Codex-Alpha-repair clauses throughout this Skill and its references, but does not waive source integrity, serial per-image review, artistic rejection, Alpha gates, or truthful provenance. Existing manual-only receipt tooling must not be fed fabricated manual-processing fields; PS trials stay non-final until the actual processor is supported end to end.
 
-This Skill begins from a user-confirmed, already completed portrait. It never outpaints, extends, reconstructs, or generates missing hair, hat, shoulder, chest, costume, or body regions. If an input portrait is missing, unapproved, identity-ambiguous, or not ready for the requested delivery crop, return `UPSTREAM_PORTRAIT_REQUIRED`; do not repair it inside this Skill.
+This Skill begins from a user-confirmed portrait suitable for the requested expression/profile crop. General portraits may legitimately crop the shoulders. If the requested use needs missing shoulder/chest or other subject regions, enter `WAITING_FOR_MANUAL_PORTRAIT_COMPLETION` and follow [references/manual-portrait-source.md](references/manual-portrait-source.md). This is a deliberate human handoff before E0/E1, separate from E5/E6 background processing; it consumes no image-generation attempt. Missing, unapproved or identity-ambiguous sources remain `UPSTREAM_PORTRAIT_REQUIRED`. This Skill never outpaints or reconstructs missing anatomy, and PS cutout authorization does not authorize portrait completion.
+
+## Production record and resume point
+
+Use [references/production-record.md](references/production-record.md) and `scripts/art_workflow_state.py` for persistent jobs, actual attempts and current evidence. Keep E0–E4 artistic production, E5/E6 manual handoff/return, and E7–E10 profile export as resumable parts of this Skill; resume at the first affected state. Reuse a review only when source and output hashes, requirements, inspection scope and approval/rejection history still match. Copying unchanged accepted bytes carries that evidence forward with a copy record. A changed portrait invalidates its dependent expressions; a changed native RGBA invalidates both derived profiles; one profile transform change invalidates only that profile and affected pair/set comparisons. Preserve passed siblings and historical records.
 
 ## Mandatory stage-end visual self-check gate
 
@@ -27,6 +33,10 @@ For Unit3, treat the image files in `D:\PMH\工作\人设\003第三章\头像` a
 
 ## Required reading
 
+<!-- ART_DETAIL_CONTROL_V2:BEGIN -->
+For new or explicitly replaced expressions, also apply [art-detail-control](../art-detail-control/SKILL.md) during expression planning, actual prompt/reference assembly, and artistic review. Use its character/expression branch: preserve the approved portrait's identity, expression signals, lighting topology, native brush language and stable texture; reject added random pores, repeated marks, decorative folds or fragmented small highlights. Do not impose outdoor haze, universal smoothing or a new rendering style. Calm/reuse bypasses creative redesign; missing portrait regions remain upstream work. Integrate region-specific findings into the existing artistic/style/texture evidence without changing receipt schemas or treating text review as visual PASS. Existing prompt locks, generation authorization, retry limits and manual/PS processing boundaries continue to apply.
+<!-- ART_DETAIL_CONTROL_V2:END -->
+
 Read only the references needed for the current stage:
 
 1. [references/workflow.md](references/workflow.md) for the complete state machine.
@@ -41,7 +51,7 @@ Read only the references needed for the current stage:
 
 ## Non-negotiable invariants
 
-- `PORTRAIT_COMPLETION_USED=false` for every job. There is no completion stage, completion prompt, completion mask, outpaint retry, or anatomical repair route in this Skill.
+- `PORTRAIT_COMPLETION_USED=false` means this Skill performed no completion. A manually completed source may enter after acceptance; preserve its truthful upstream manual provenance separately. There is no automatic completion stage, completion prompt, completion mask, outpaint retry, or anatomical repair route in this Skill.
 - Calm is the approved portrait. It is copied unchanged into the non-final handoff and is never regenerated.
 - Generate each non-calm expression directly from the same approved portrait on a plain, uniform light background suitable for the user's manual background processing.
 - In default `USER_MANUAL` mode, Codex does not process the background or Alpha. Explicitly authorized PS work uses only the bounded MCP route above; `remove_expression_background.py`, global light-pixel removal, and generative Alpha repair remain prohibited.
@@ -71,7 +81,7 @@ Identify:
 ## State-machine summary
 
 1. `E0_INTAKE_AND_CENSUS`: map portraits to roles, normalize requirements, inventory reusable assets, and freeze the true production delta.
-2. `E1_PORTRAIT_SOURCE_LOCK`: verify approval, identity, source integrity, viewpoint, detail budget, and `PORTRAIT_COMPLETION_USED=false`. Incomplete inputs block; they are never repaired here.
+2. `E1_PORTRAIT_SOURCE_LOCK`: verify approval, identity, source integrity, viewpoint, detail budget, requested crop and `PORTRAIT_COMPLETION_USED=false`. A pending manual portrait return resumes through the affected E0 mapping and E1 source acceptance; it never skips directly to expression generation.
 3. `E2_EXPRESSION_PLANNING`: freeze expression signals, intensity, performance bounds, prompts, and retry budgets.
 4. `E3_EXPRESSION_GENERATION`: generate each non-calm state independently from the approved portrait. Calm bypasses generation.
 5. `E4_ARTISTIC_REVIEW_AND_COLOR`: pass expression, identity, style, texture, detail, lighting, viewpoint, and semantic-color gates before technical extraction.

@@ -1,8 +1,12 @@
 # Delivery contract and QA
 
-## Required outputs per character
+Use [production-cadence.md](production-cadence.md) for milestone boundaries, shared budgets and valid review reuse. Whiteboxes allow [up to three generations and three Photoshop MCP repairs](whitebox-photoshop-fallback.md), with PS available from the first useful candidate under [PS-first repair](ps-first-repair.md). Formal context, revision and model extraction share the actor/interaction model budget. Do not create a fresh budget at packaging or manufacture attempts to fit an old checker.
 
-The user-facing delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing delivery root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside the configured work root's `<job>/payload/`, and prepared-delivery roots inside `工作过程文件` or `candidates`.
+## Required asset and evidence coverage
+
+The list below is coverage, not 23 separate production or review stages per actor. Shared scene evidence is created once and referenced by the relevant actors. Formal folders contain passed image/layer assets; reports, prompts, manifests and rejected history stay in the work folder. Consolidate final source/hash/XY data once after pixel freeze.
+
+The user-facing delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing delivery root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside `D:\Codex\NDC`, and formal delivery roots inside `工作过程文件`.
 
 1. source scene identity, original dimensions, and hash;
 2. Codex-reviewed exact-pose proxy evidence;
@@ -19,10 +23,10 @@ The user-facing delivery root must be named with the source scene basename, with
 13. final-vs-timeline-vs-depth-vs-whitebox comparison report, prompts, reference-role manifest, rejected attempts, and QA report;
 14. local-generation handoff report containing Image 1/2/3 roles, crop/original boxes, source hashes, and clean local reference;
 15. identity/style comparison against the approved card and pose/contact comparison against the approved whitebox;
-16. extraction and registration record, including the single uniform scale and translation if used, plus proof that pose/contact passed before registration;
+16. actual extraction and registration provenance, composed uniform transform if used, and current revalidated pose/scale/contact evidence; permitted PS correction follows the cadence reference and explicit user locks;
 17. exact source-scene occluder masks with internal holes preserved, and any minimum changed actor-object interaction component;
 18. `xyposition-Unit<chapter>.md` entry;
-19. when six attempts fail, a separately marked best-available candidate package under `工作过程文件`, never in the formal delivery root.
+19. when the actual model/repair budget is exhausted or a specific capability/time stop remains, a marked work candidate with unresolved failures and true counts, never in the formal root;
 20. a pre-generation and post-generation `ndc-scene-integration-production-ledger/v2`, plus their `production_gate.py` reports. The ledger must hash every referenced artifact and use only `NOT_RUN`, `TECHNICAL_FILE_PASS`, or `TECHNICAL_FILE_FAIL` for file-check status.
 21. a fixed-scene absolute-scale report and overlay, independent from cast-relative head/body scale;
 22. planned/final component-policy reports, with paired masks for every relocated loose prop and fixed structures excluded from scalable layers;
@@ -49,21 +53,22 @@ The user-facing delivery root must be named with the source scene basename, with
 - In multi-character scenes, composite all actors who coexist in each timeline snapshot and test opaque overlap; do not build a union cast from different times.
 - Require a declared pairwise relation for every overlapping character pair and exact scene-occluder masks where a character passes behind furniture. Independent checks cannot substitute for combined-cast review.
 - After character generation, run the same full-frame plus complete local-tile comparison against both the aligned depth reference and combined whitebox. `validate-final-conformance` must pass before formal packaging.
-- Permit at most one uniform scale plus translation after pose/contact approval. Reject nonuniform scale, warp, limb/joint edits, or registration that conceals the wrong performance.
+- Preserve the high-resolution source, compose any permitted support-anchored uniform transforms, update affected pose/scale/contact evidence, then apply final resampling once. Reject alpha-box fitting, nonuniform scale, warp, limb/joint edits, or registration concealing wrong performance.
 - Reapply occluders from exact untouched-scene pixels and preserve openings; rectangular or straight-line concealment cannot substitute for the source mask.
 - Never place a fixed chair, bed, door, railing, or other structural object in a generated/scalable actor component. Loose-object relocation uses a minimum source-repair mask plus a minimum destination layer; unchanged structural occluders remain exact source pixels at scale 1.
-- Before any image-generation call, run `production_gate.py` on the pre-generation ledger. After extraction and final conformance, run it again on the post-generation ledger. `EVIDENCE_GATE_PASS` means required evidence exists and agrees structurally; it is not an artistic, narrative, or delivery approval.
+- Before identity generation require a current passing pre-generation ledger; rerun when its inputs change. Run post-generation validation on the finished current layers. Reuse unchanged valid reports instead of regenerating them for every command. `EVIDENCE_GATE_PASS` proves structural coverage only, not artistic or delivery approval.
 - A visibly closed portal cannot be used as an on-screen entrance. Either document an opening transition and choose a post-entry hold after it closes, use a genuinely off-screen route, or select another snapshot. The final still must not falsely depict entry through a closed door.
 
 ## Visual gates
 
 - apparent scale and depth read naturally beside at least two scene objects;
 - the silent frame communicates the authored beat, and performance is natural rather than a front-facing stage pose;
-- silent-frame verb, beat energy, ongoing occupation, named support, social territory, both hand motivations, and ten-second hold all agree with the current lifecycle node;
+- silent-frame verb, energy, activity, support, social territory and sustainable posture agree with the beat; hands may naturally rest, and low energy does not excuse stiff shoulders, arms or ritual-like cast similarity;
 - every actor placement is compatible with the declared affordance and lifecycle snapshot;
 - complete outer rectangle contains hair, hands, props, garments, and shoes;
 - feet/seat/support contacts are plausible;
-- final pose and volume match the Codex-reviewed whitebox: head height within 5%, support contacts within 4px, and major joints within 3% of standing-equivalent height;
+- final pose and volume match the current reviewed placement/whitebox: head-ratio individual/pairwise deviation within 20%; valid fixed-line support contacts retain 4px tolerance and major joints 3% of standing-equivalent height. Continuous floors use their region-plus-physical-review branch and cannot claim a measured floating gap from region coverage;
+- hidden feet/body are verified using the same complete layer/transform as final occlusion; head-neck-shoulder support and loaded pillow/bedding response are visibly continuous, not just within a support polygon;
 - character-character and character-scene occlusion match the approved combined whitebox and graph;
 - identity and style match the approved card and scene;
 - final eye/face direction agrees geometrically with the named current-snapshot target;
@@ -73,6 +78,6 @@ The user-facing delivery root must be named with the source scene basename, with
 
 Do not erase a character with a straight horizontal alpha cut to simulate foreground furniture. Deliver the complete actor plus a separate pixel-accurate foreground occluder when layering permits; otherwise use an irregular mask traced from the exact source object and document the hidden region.
 
-Do not report formal completion when technical gates pass but visual gates fail. Retry the failed branch up to six times without interrupting the user. After six failures, select the closest result, list every unresolved gate, keep it under `工作过程文件`, and include it only as a candidate in the final batch review.
+Do not report formal completion when visual gates fail. Follow the shared counts and time/repair routing in the cadence reference. Preserve unresolved candidates under `工作过程文件`; do not force a legacy exact-six handoff schema to describe a different actual stop. Copy-bound reviews retain original observation provenance plus destination hash checks; packaging cannot revive a user-rejected asset. Archive passed assets within the authorized task without another routine approval hold.
 
 Never write a bare `PASS` or `hardGatePass` from canvas, alpha, hash, bbox, or reconstruction checks. Report `TECHNICAL_FILE_PASS` for those checks and record the separate Codex semantic reviews for performance, scale, support, occlusion, UI, identity, light, and edge quality.

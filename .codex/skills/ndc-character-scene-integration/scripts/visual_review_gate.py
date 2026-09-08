@@ -116,6 +116,53 @@ def fit_panel(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     return panel
 
 
+def validate_local_tiles(tiles: Any, primary_path: Path, record_path: Path) -> list[dict[str, Any]]:
+    """Bind actual enlarged views; the fitted navigation board is not evidence."""
+    if not isinstance(tiles, list) or not tiles:
+        raise ValueError("A passing visual review requires actual localTiles with fixed reviewed SHA-256.")
+    with Image.open(primary_path) as primary:
+        width, height = primary.size
+    bound = []
+    for index, tile in enumerate(tiles):
+        if not isinstance(tile, dict) or not tile.get("id") or not tile.get("path") or not tile.get("sha256"):
+            raise ValueError(f"localTiles[{index}] requires id, bbox, path and reviewed SHA-256.")
+        bbox = tile.get("bbox")
+        if not isinstance(bbox, list) or len(bbox) != 4 or not all(isinstance(v, int) for v in bbox):
+            raise ValueError(f"localTiles[{index}].bbox must contain four pixel integers.")
+        x0, y0, x1, y1 = bbox
+        if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):
+            raise ValueError(f"localTiles[{index}].bbox is outside the reviewed primary image.")
+        path = resolve(str(tile["path"]), record_path)
+        actual_hash = sha256(path)
+        if actual_hash.lower() != str(tile["sha256"]).lower():
+            raise ValueError(f"localTiles[{index}] reviewed SHA-256 is stale: {path}")
+        with Image.open(path) as image:
+            if image.width < 2 * (x1 - x0) or image.height < 2 * (y1 - y0):
+                raise ValueError(f"localTiles[{index}] must provide an actual view at least 200 percent.")
+        bound.append({"id": tile["id"], "bbox": bbox, "path": str(path), "sha256": actual_hash})
+    return bound
+
+
+def validate_inspection_provenance(data: dict[str, Any], record_path: Path) -> dict[str, Any]:
+    """Preserve supplied observation provenance without creating a new review time."""
+    provenance: dict[str, Any] = {}
+    for field in ("inspectionId", "reviewedAt"):
+        if field in data:
+            if not isinstance(data[field], str) or not data[field].strip():
+                raise ValueError(f"{field} must be nonempty text when provided.")
+            provenance[field] = data[field]
+    if "sourceReviewRecord" in data:
+        ref = data["sourceReviewRecord"]
+        if not isinstance(ref, dict) or not ref.get("path") or not ref.get("sha256"):
+            raise ValueError("sourceReviewRecord requires path and fixed SHA-256.")
+        path = resolve(str(ref["path"]), record_path)
+        actual_hash = sha256(path)
+        if actual_hash.lower() != str(ref["sha256"]).lower():
+            raise ValueError("sourceReviewRecord SHA-256 is stale.")
+        provenance["sourceReviewRecord"] = {"path": str(path), "sha256": actual_hash}
+    return provenance
+
+
 def validate_contract(data: dict[str, Any], contract_path: Path) -> tuple[list[dict[str, Any]], str]:
     if data.get("schema") != "ndc-stage-visual-review/v1":
         raise ValueError("schema must be ndc-stage-visual-review/v1.")
@@ -124,15 +171,25 @@ def validate_contract(data: dict[str, Any], contract_path: Path) -> tuple[list[d
         raise ValueError(f"Unsupported visual review stage: {stage!r}")
     if data.get("reviewAuthority") != "codex-self-check":
         raise ValueError("reviewAuthority must be codex-self-check.")
+    validate_inspection_provenance(data, contract_path)
     artifacts = data.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
         raise ValueError("artifacts must contain at least one reviewed image.")
     loaded: list[dict[str, Any]] = []
     for index, item in enumerate(artifacts):
-        if not isinstance(item, dict) or not item.get("role") or not item.get("path"):
-            raise ValueError(f"artifacts[{index}] requires role and path.")
+        if not isinstance(item, dict) or not item.get("role") or not item.get("path") or not item.get("sha256"):
+            raise ValueError(f"artifacts[{index}] requires role, path and the SHA-256 actually reviewed.")
         path = resolve(str(item["path"]), contract_path)
-        loaded.append({"role": str(item["role"]), "path": str(path), "sha256": sha256(path)})
+        actual_hash = sha256(path)
+        if actual_hash.lower() != str(item["sha256"]).lower():
+            raise ValueError(f"artifacts[{index}] reviewed SHA-256 is stale: {path}")
+        bound = {"role": str(item["role"]), "path": str(path), "sha256": actual_hash}
+        for field in ("poseIds", "snapshotIds"):
+            values = item.get(field, [])
+            if not isinstance(values, list) or not all(isinstance(v, str) and v.strip() for v in values):
+                raise ValueError(f"artifacts[{index}].{field} must be a list of nonempty IDs.")
+            bound[field] = values
+        loaded.append(bound)
     checks = data.get("checks")
     if not isinstance(checks, dict):
         raise ValueError("checks must be an object authored after visual inspection.")
@@ -151,6 +208,8 @@ def validate_contract(data: dict[str, Any], contract_path: Path) -> tuple[list[d
     failed = [name for name in STAGE_CHECKS[stage] if checks.get(name) == "fail"]
     if decision == "pass" and failed:
         raise ValueError(f"decision cannot pass failed visual checks: {', '.join(sorted(failed))}")
+    if decision == "pass":
+        validate_local_tiles(data.get("localTiles"), Path(loaded[0]["path"]), contract_path)
     return loaded, stage
 
 
@@ -196,9 +255,11 @@ def build_review(contract_path: Path, output_dir: Path) -> dict[str, Any]:
         "checks": data["checks"],
         "failedChecks": failed,
         "observations": data["observations"],
+        "localTiles": validate_local_tiles(data["localTiles"], Path(artifacts[0]["path"]), contract_path) if data["decision"] == "pass" else [],
         "nextStageAuthorized": data["decision"] == "pass" and not failed,
         "note": "This report records an explicit visual review; no pixel metric or metadata inferred artistic correctness.",
     }
+    report.update(validate_inspection_provenance(data, contract_path))
     report_path = output_dir / f"{stage}-visual-review-report.json"
     write_json(report_path, report)
     return report
@@ -212,6 +273,8 @@ def main() -> None:
     try:
         report = build_review(args.contract, args.output_dir)
         print(f"{report['status']} stage={report['stage']} board={report['board']}")
+        if report["status"] != "VISUAL_REVIEW_PASS":
+            raise SystemExit(1)
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f"ERROR: {error}", file=__import__("sys").stderr)
         raise SystemExit(1) from error
