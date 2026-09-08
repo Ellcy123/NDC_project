@@ -74,9 +74,13 @@ def load_prompt(args: argparse.Namespace) -> str:
 
 
 def extract_text(payload: dict) -> str:
+    if not isinstance(payload, dict):
+        raise ValueError("NovAI returned a non-object response.")
     choices = payload.get("choices") or []
     if not choices:
         raise ValueError("NovAI returned no choices.")
+    if choices[0].get("finish_reason") == "length":
+        raise ValueError("NovAI truncated the response (finish_reason=length).")
 
     content = (choices[0].get("message") or {}).get("content")
     if isinstance(content, str) and content.strip():
@@ -89,6 +93,28 @@ def extract_text(payload: dict) -> str:
             return text
 
     raise ValueError("NovAI returned an empty or unsupported message payload.")
+
+
+def request_completion(
+    prompt: str, *, model: str, base_url: str, api_key: str, timeout: int
+) -> dict:
+    """One HTTP request, with no printing, persistence, or automatic retry."""
+    body = json.dumps(
+        {"model": model, "messages": [{"role": "user", "content": prompt}], "stream": False},
+        ensure_ascii=False,
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        f"{base_url.rstrip('/')}/chat/completions",
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": "ndc-codex-novai-gemini/1.0",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.loads(response.read().decode("utf-8"))
 
 
 def main() -> int:
@@ -115,34 +141,16 @@ def main() -> int:
 
     base_url = (read_setting("NOVAI_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
     model = args.model or read_setting("NOVAI_GEMINI_MODEL") or DEFAULT_MODEL
-    body = json.dumps(
-        {
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "stream": False,
-        },
-        ensure_ascii=False,
-    ).encode("utf-8")
-
-    request = urllib.request.Request(
-        f"{base_url}/chat/completions",
-        data=body,
-        method="POST",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "User-Agent": "ndc-codex-novai-gemini/1.0",
-        },
-    )
 
     try:
-        with urllib.request.urlopen(request, timeout=args.timeout) as response:
-            payload = json.loads(response.read().decode("utf-8"))
+        payload = request_completion(
+            prompt, model=model, base_url=base_url, api_key=api_key, timeout=args.timeout
+        )
         print(extract_text(payload))
         return 0
     except urllib.error.HTTPError as error:
-        detail = error.read().decode("utf-8", errors="replace")[:2000]
-        print(f"NovAI HTTP {error.code}: {detail}", file=sys.stderr)
+        # A provider error body may echo request headers; do not print it.
+        print(f"NovAI HTTP {error.code}.", file=sys.stderr)
         return 1
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as error:
         print(f"NovAI request failed: {error}", file=sys.stderr)

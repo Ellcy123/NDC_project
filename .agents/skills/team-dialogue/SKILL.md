@@ -1,10 +1,19 @@
 ---
 name: team-dialogue
-description: "对白撰写 skill：从 Manifest 指定的大纲、定稿 State 与既有成稿建立剧情因果和连续性合同，按连续场景包设计和撰写 Talk、Opening、Expose 与过场，再逐场、逐接缝审查并经内容总监闸门。产出进游戏的中文对白 MD 草稿（非预览）。"
+description: "NDC 对白兼容入口：默认转 ndc-dialogue，由当前模型控信息写初稿与提示词，Gemini 3.8 润色。用户明确要求团队审查时才启用本文保留的整 Loop / Unit 多代理流程。"
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 ---
 
 # 对白撰写 Skill
+
+## 默认入口（2026-09-07 用户确认）
+
+普通对白创作、优化与多轮返修，包括用户直接调用 `/team-dialogue`，先读取并执行
+[ndc-dialogue](../../../.codex/skills/ndc-dialogue/SKILL.md)：当前窗口模型负责信息控制、完整初稿和每轮提示词，NovAI `[次]gemini-3.8-flash` 附 Nyra 全文做重写级润色，再由主模型核对事实与结构。用户指定的情感效果是每轮核心目标。
+
+**默认流程到此转交，不继续执行下文旧 Phase 0–6、多代理审查与内容总监闸门。** 下文仅在用户明确要求团队审查时启用；单纯点名 `/team-dialogue` 不等同于要求旧团队模式。旧流程的项目事实与结构资料可以按需查阅，不向新流程整套复制。
+
+## 可选：旧团队全流程
 
 产出经章节专用同步流程进入 AVG / Unity 的**正式中文对白**。Unit1 使用
 `AVG/Tools/sync_unit1_script_to_json.py`，不再直接调用旧 `sync_to_json.py`。目标只有一句：
@@ -38,7 +47,7 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Agent, AskUserQuestion
 逐文件查找；同名档案只存在一处时使用该文件，同名档案两处都存在且内容冲突时
 停止写作并报告，不能静默选择。涉及角色找不到人物档案同样视为 Phase 0 FAIL。
 
-**本 skill 不引用任何外部"对白语言风格资料"**；但必须读取项目内已手改成稿做"文笔校准"。默认参考：
+用户已指定的 Nyra 风格指令按 `ndc-dialogue` 使用；旧 `参考资料/对白语言风格资料/` 仍弃用。下述可选团队模式读取项目内已手改成稿做"文笔校准"。默认参考：
 - `AVG/对话配置工作及草稿/Unit2/Loop*_生成草稿.md`：项目成稿口感基准
 - `AVG/对话配置工作及草稿/Unit1/Loop*_生成草稿.md`：当前重构章节的手改校准
 
@@ -500,7 +509,7 @@ AskUserQuestion：采纳全部→Phase 6；采纳部分→用户指定；保持�
 
 ## 本 skill 不做的事
 
-- 不引用任何外部"对白语言风格资料"（文本规则内置 R1–R14；项目内 Unit2 / Unit1 手改稿仅作文笔校准，不作事实来源）
+- 不把风格资料当作剧情事实来源；用户已指定的 Nyra 全文由 `ndc-dialogue` 管理，项目内 Unit2 / Unit1 手改稿仅作文笔校准
 - 不自创 JSON 文件名（一律取自 state 字段；缺则问用户）
 - 不写 9 位对话 ID（后置 `assign_ids.py` 补）
 - 不生成 Repeat 对话（另开 skill）

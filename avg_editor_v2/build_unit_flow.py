@@ -180,6 +180,12 @@ def unit_labels_from_manifest(manifest: dict) -> dict[str, dict]:
             "title": chapter["playerTitle"],
             "chapter": chapter["unityEpisode"],
         }
+    for experiment in manifest.get("experimentalUnits", []):
+        key = experiment["unit"]
+        number = key.removeprefix("Unit")
+        if number in labels:
+            raise ValueError(f"Experimental unit collides with canonical unit: {key}")
+        labels[number] = {"key": key, "title": experiment["title"], "chapter": experiment["unityEpisode"]}
     return labels
 
 
