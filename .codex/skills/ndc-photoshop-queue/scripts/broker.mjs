@@ -36,8 +36,10 @@ export function queueDefinitions() {
   return Object.entries(definitions).map(([name, [description, properties]]) => ({ name: `photoshop_queue_${name}`, description, inputSchema: { ...objectSchema(properties), ...(required[name] ? { required: required[name] } : {}) } }));
 }
 const diagnostic = new Set(['photoshop_command_search', 'photoshop_command_describe']);
+const liveReadOnly = new Set(['photoshop_state_get', 'photoshop_preview_get']);
 const nativeAliases = { photoshop_document_create: 'document.create', photoshop_document_open: 'document.open_allowed', photoshop_document_export: 'document.export', photoshop_layer_create: 'layer.create', photoshop_layer_rename: 'layer.rename', photoshop_selection_select_all: 'selection.select_all', photoshop_selection_deselect: 'selection.deselect', photoshop_history_undo: 'history.undo', photoshop_image_resize: 'image.resize' };
 const definitelyNotApplied = new Set(['APPROVAL_REQUIRED', 'ENTITLEMENT_UNAVAILABLE', 'MODAL_BUSY', 'NO_DOCUMENT', 'PRECONDITION_FAILED', 'REQUIRES_USER', 'UNSUPPORTED', 'UNVERIFIED']);
+const productionCapabilityRequired = new Set(['document.open_allowed', 'document.export', 'document.close']);
 const dataOf = r => r.structuredContent ?? JSON.parse(r.content.find(x => x.type === 'text').text);
 const stableJson = value => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item) ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item);
 export class QueueService {
@@ -103,6 +105,9 @@ export class QueueService {
         runtime.checked_files++;
         if (digest(readFileSync(join(binding.runtime, rel))) !== sha) throw new QueueError('RUNTIME_CHANGED', `Runtime file changed: ${rel}`);
       }
+      runtime.production_commands = [...productionCapabilityRequired].map(id => ({ id, status: this.native.catalog.get(id)?.status ?? 'missing' }));
+      const unavailable = runtime.production_commands.filter(item => item.status !== 'supported');
+      if (unavailable.length) throw new QueueError('CAPABILITY_NOT_PRODUCTION_READY', `Required Photoshop capabilities are not supported: ${unavailable.map(item => `${item.id}=${item.status}`).join(', ')}`);
       if (!existsSync(binding.visual_validator)) throw new QueueError('VALIDATOR_NOT_FOUND', `Visual validator is missing: ${binding.visual_validator}`);
     } catch (error) {
       runtime.ok = false; runtime.error = error.code || 'RUNTIME_UNAVAILABLE'; runtime.message = error.message;
@@ -152,7 +157,10 @@ export class QueueService {
     const tool = this.native.tools.get(name); if (!tool) throw new QueueError('UNKNOWN_TOOL', name);
     // Metadata can be queried without taking the document. Do not dispatch runtime probes here.
     if (diagnostic.has(name)) return tool.handler(args);
-    if (name === 'photoshop_host_describe') return envelope({ queue: this.queue.diagnose(), bridge: this.native.bridge.status(), runtime_binding: binding.version, note: 'Acquire a lease for live Photoshop state. Queue count alone does not prove idleness.' });
+    if (name === 'photoshop_host_describe') {
+      const nativeHost = dataOf(await tool.handler(args));
+      return envelope({ ...nativeHost, queue: this.queue.diagnose(), bridge: this.native.bridge.status(), runtime_binding: binding.version, note: 'Acquire a lease for live Photoshop state. Queue count alone does not prove idleness.' });
+    }
     if (name === 'photoshop_capability_list') return envelope({ commands: this.native.catalog.list(args), bridge: this.native.bridge.status() });
     if (name === 'photoshop_pairing_begin') throw new QueueError('PAIRING_NOT_A_QUEUE_OPERATION', 'Existing pairing is preserved. Diagnose the bridge before any explicit re-pairing.');
     if (name.startsWith('photoshop_job_') || name === 'photoshop_approval_request') throw new QueueError('USER_ASSISTED_NOT_QUEUED', 'This queue supports completed silent commands. Keep user-assisted jobs in an explicit manual reservation.');
@@ -162,12 +170,22 @@ export class QueueService {
       this.queue.requireBridgeBarrier(context, bridgeInstance);
       throw new QueueError('BRIDGE_SESSION_CHANGED', 'The Photoshop plugin instance changed. Run photoshop_queue_probe; production resumes automatically only if the live document still matches.');
     }
+    if (liveReadOnly.has(name)) {
+      if (this.busy && !insideSegment) throw new QueueError('COMMAND_STILL_RUNNING', 'A native tool handler is still running.');
+      if (name === 'photoshop_preview_get') {
+        if (owner.document_id === null) throw new QueueError('NO_LEASE_DOCUMENT', 'Open and bind the queue-owned document before requesting its preview.');
+        const stateResponse = await this.native.tools.get('photoshop_state_get').handler({}), state = dataOf(stateResponse);
+        if (stateResponse.isError || state.documentCount !== 1 || state.activeDocument?.id !== owner.document_id) throw new QueueError('ACTIVE_DOCUMENT_CHANGED', 'Preview is blocked because the active Photoshop document no longer matches this lease.');
+      }
+      return tool.handler(args);
+    }
     const commandId = name === 'photoshop_command_execute' ? args.command_id : nativeAliases[name];
     const command = commandId ? this.native.catalog.get(commandId) : null;
     if (!command && !['photoshop_state_get', 'photoshop_preview_get'].includes(name)) throw new QueueError('UNADAPTED_NATIVE_TOOL', 'This native tool has no verified queue effect classification; use the catalog command entrypoint.');
     if (command) {
       this.native.catalog.validate(commandId, name === 'photoshop_command_execute' ? args.args ?? {} : args);
       if (command.engine === 'user_assisted' || args.dialog_mode === 'display') throw new QueueError('MANUAL_RESERVATION_REQUIRED', 'Do not leave the automatic queue occupied by a native dialog.');
+      if (command.status !== 'supported') throw new QueueError('CAPABILITY_NOT_PRODUCTION_READY', `${commandId} is ${command.status || 'unclassified'} in the authenticated runtime catalog. Complete live capability promotion before production use.`);
     }
     if (commandId === 'document.open_default') throw new QueueError('OPEN_ALLOWED_REQUIRED', 'Use document.open_allowed with the real absolute source path. The default export-folder route is not a production import path.');
     const identity = this.requestIdentity(name, args, owner);

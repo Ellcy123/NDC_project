@@ -70,7 +70,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 
 获得使用权后先读取实际状态，核对目标文档及输入。使用已暴露工具或 `photoshop_command_search`／`photoshop_command_describe` 核实的原生命令，所有权限与前后置检查继续有效。CLI 原生调用仍写同样的请求结构，例如导出当前文档：
 
-打开 NDC 已允许根内的现有源图时，直接使用 `document.open_allowed` 与真实绝对路径；broker 在原生命令入账前验证文件真实存在、非空、可读且规范路径仍在本机 `ndc.local.json`／`NDC_PS_ALLOWED_ROOTS` 定义的现存根内，再映射为请求绑定的一次性认证导入。`document.open_default` 在生产队列内直接返回 `OPEN_ALLOWED_REQUIRED`，不要把源图预复制到队列导出目录。打开本身只绑定当前租约、源文件证据与文档，不算图像修改；若尚未执行任何实际修改且宿主仍报告文档已保存，可以 `document.close`（`save:false`）后以 `NO_IMAGE_CHANGE` 释放，不制造 PSD/PNG 检查点。若文档变为未保存，返回 `UNTRACKED_DOCUMENT_CHANGES`，必须救存。一个租约只能绑定一个打开的文档，且文档总数必须始终为一；换图必须先关闭并释放后重新入队。
+打开 NDC 已允许根内的现有源图时，先确认 `photoshop_queue_health.runtime.production_commands` 中 `document.open_allowed` 为 `supported`；然后使用 `document.open_allowed` 与真实绝对路径。broker 在原生命令入账前验证能力状态以及文件真实存在、非空、可读且规范路径仍在本机 `ndc.local.json`／`NDC_PS_ALLOWED_ROOTS` 定义的现存根内，再映射为请求绑定的一次性认证导入。能力仍为 `experimental`／`unverified`／`requires_user` 时返回 `CAPABILITY_NOT_PRODUCTION_READY`；不得用一次成功调用代替正式能力晋级。`document.open_default` 在生产队列内直接返回 `OPEN_ALLOWED_REQUIRED`，不要把源图预复制到队列导出目录。打开本身只绑定当前租约、源文件证据与文档，不算图像修改；若尚未执行任何实际修改且宿主仍报告文档已保存，可以 `document.close`（`save:false`）后以 `NO_IMAGE_CHANGE` 释放，不制造 PSD/PNG 检查点。若文档变为未保存，返回 `UNTRACKED_DOCUMENT_CHANGES`，必须救存。一个租约只能绑定一个打开的文档，且文档总数必须始终为一；换图必须先关闭并释放后重新入队。
 
 ```json
 {
@@ -252,6 +252,6 @@ probe 通过同一个桥接串行请求实际 PS 状态，成功只证明执行�
 
 ## 运行时边界
 
-`scripts/runtime-binding.json` 当前适配原生 Photoshop MCP `2.0.1-ndc1`，只保存可移植的相对约定与受审哈希；当前机器的运行时、Python、允许目录、验证器和 `state_dir` 由 `runtime-config.mjs` 解析。原生 server/config/bridge/policy/catalog 的指定哈希均须匹配；变化返回 `RUNTIME_CHANGED`，先复核适配及门禁，不能只更新哈希跳过检查。CLI 会连接本机已有 broker 或以隐藏方式启动，不能重复直接启动原生 server。
+`scripts/runtime-binding.json` 当前适配原生 Photoshop MCP `2.0.1-ndc2`，其中 `document.open_allowed` 仅在真实 NDC 允许根导入、状态核验和无修改关闭均通过后晋级为 `supported`。绑定文件只保存可移植的相对约定与受审哈希；当前机器的运行时、Python、允许目录、验证器和 `state_dir` 由 `runtime-config.mjs` 解析。原生 server/config/bridge/policy/catalog 的指定哈希均须匹配，并且 `document.open_allowed`、`document.export`、`document.close` 三项生产必需能力都必须为 `supported`；变化返回 `RUNTIME_CHANGED` 或 `CAPABILITY_NOT_PRODUCTION_READY`，先安装/复核完整运行时及门禁，不能只更新哈希或复制 catalog 跳过检查。CLI 会连接本机已有 broker 或以隐藏方式启动，不能重复直接启动原生 server。
 
-原有已配对关系、允许目录、用户选定导出位置及原生权限保持原意。`PAIRING_NOT_A_QUEUE_OPERATION`、`MANUAL_RESERVATION_REQUIRED`、`UNADAPTED_NATIVE_TOOL` 等错误要求停止对应操作、说明实际能力边界；不得通过重新配对、改目录、原始脚本注入、界面自动化或关闭用户文档来使队列“成功”。本说明不宣称已做真实图像或 PS 写入验证；部署验证情况以本次实际报告为准。
+原有已配对关系、允许目录、用户选定导出位置及原生权限保持原意。`PAIRING_NOT_A_QUEUE_OPERATION`、`MANUAL_RESERVATION_REQUIRED`、`UNADAPTED_NATIVE_TOOL`、`CAPABILITY_NOT_PRODUCTION_READY` 等错误要求停止对应操作、说明实际能力边界；不得通过重新配对、改目录、原始脚本注入、界面自动化或关闭用户文档来使队列“成功”。真实验证只证明记录中的运行时、宿主和命令契约；切换电脑仍需安装相同受审运行时并重新通过 health。

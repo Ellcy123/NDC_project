@@ -13,10 +13,10 @@ description: 统一协调 NDC 多任务对同一 Photoshop MCP 的排队、单�
 
 实际调用前读取 [队列操作与恢复](references/queue-operations.md) 的“客户端与入口”和“正常交棒”。人工需要使用 PS 时读“人工占用”；发生失联、超时、活动文档变化时读“异常恢复”。
 
-每次准备取得 PS 前先调用 `photoshop_queue_health`；按其 `next_action` 排除运行时漂移、允许根缺失、数据库／导出目录不可写、磁盘不足、Bridge、命令或人工占用，再 `enqueue → acquire`。健康检查不接触文档，也不代替取得租约时的实时零文档探测；PS 已有任何未登记文档时保持等待票，不发放自动租约。
+每次准备取得 PS 前先调用 `photoshop_queue_health`；按其 `next_action` 排除运行时漂移、正式生产必需命令未达到 `supported`、允许根缺失、数据库／导出目录不可写、磁盘不足、Bridge、命令或人工占用，再 `enqueue → acquire`。`experimental`、`unverified`、`requires_user` 或缺失能力均返回 `CAPABILITY_NOT_PRODUCTION_READY`，不得因为一次可调用就当作正式生产支持。健康检查不接触文档，也不代替取得租约时的实时零文档探测；PS 已有任何未登记文档时保持等待票，不发放自动租约。
 
 1. `enqueue → acquire` 获得使用权后，通过共用 stdio 代理或 `queue-client.mjs` 调用原生 Photoshop MCP 工具。旧会话缓存的直连工具不会自动受此队列拦截，须改用 CLI 或重新连接到共用代理。
-2. 对同一张图连续完成本轮操作。既有源图只用 `photoshop_command_execute` 的 `document.open_allowed` 与真实绝对路径打开；`document.open_default` 和无稳定幂等键的快捷命令不进入生产队列。最后一次像素／文档修改后，经原生 MCP 实际导出可恢复 PSD 和唯一命名的审阅 PNG，再 `checkpoint → release`。队列验证导出路径、当前唯一文档及文件哈希；预先存在的文件或口头“已保存”不能替代导出证据。
+2. 对同一张图连续完成本轮操作。既有源图只在本机受审目录把 `document.open_allowed` 报为 `supported` 且 health 通过后，使用 `photoshop_command_execute` 与真实绝对路径打开；`document.open_default`、仍为 `experimental` 的命令和无稳定幂等键的快捷命令不进入生产队列。最后一次像素／文档修改后，经原生 MCP 实际导出可恢复 PSD 和唯一命名的审阅 PNG，再 `checkpoint → release`。队列验证导出路径、当前唯一文档及文件哈希；预先存在的文件或口头“已保存”不能替代导出证据。
 3. 释放后对固定快照完成技术检查与整图／局部真实视觉审核，用 `review` 登记已有真实记录。释放及记录结构通过都不是艺术 PASS。当前图未审完时，同任务不得推进下一图；PASS 才能进入相应后续依赖。FAIL 已明确缺陷且预算耗尽或用户指示封存时，保存候选、失败结论、当前哈希与累计次数，阻断其后代后可继续其他独立资产；不强迫无限修到PASS，也不重开预算。其他独立任务可在离线审核期间按队列使用 PS。
 4. 未改图且无在途／未知命令时可以直接释放；已由队列打开的源图须仍为宿主确认的已保存状态，关闭后才释放。发现队列外未保存变化时必须救存而非丢弃。纯准备、生图等待、人工返回等待、离线审阅和报告不长期占用 PS。需要再次修图时重新排队，恢复前核对来源、文档和当前哈希。
 5. 最后一次修改完成后优先调用 `photoshop_queue_handoff`，由 broker 连续执行 PSD/PNG 导出、checkpoint、安全关闭及 release；任何仍打开的队列文档都禁止释放。其中任一步失败都保留唯一所有权和已取得的证据，不开启第二写入者。

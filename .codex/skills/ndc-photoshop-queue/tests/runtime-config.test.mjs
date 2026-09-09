@@ -21,7 +21,7 @@ test('runtime binding follows a relocated Skill tree with spaces and Chinese cha
   mkdirSync(scripts, { recursive: true });
   copyFileSync(join(here, '..', 'scripts', 'runtime-binding.json'), join(scripts, 'runtime-binding.json'));
   mkdirSync(dirname(validator), { recursive: true }); writeFileSync(validator, '# fixture');
-  const runtime = join(local, 'PS_MCP', 'app', 'versions', '2.0.1-ndc1', 'runtime'); mkdirSync(runtime, { recursive: true });
+  const runtime = join(local, 'PS_MCP', 'app', 'versions', '2.0.1-ndc2', 'runtime'); mkdirSync(runtime, { recursive: true });
   for (const path of [engine, work]) mkdirSync(path, { recursive: true });
   const binding = loadRuntimeBinding({ LOCALAPPDATA: local, USERPROFILE: root, NDC_PLANNING_ROOT: planning, NDC_ENGINE_ROOT: engine, NDC_ART_WORK_ROOT: work }, { scriptDir: scripts });
   assert.equal(binding.runtime, runtime);

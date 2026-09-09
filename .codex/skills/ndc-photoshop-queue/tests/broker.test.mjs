@@ -14,8 +14,9 @@ const result = (data, isError = false) => ({ content: [{ type: 'text', text: JSO
 const stateFor = (doc, saved = false) => ({ hasDocument: doc !== null, documentCount: doc === null ? 0 : 1, activeDocument: doc === null ? null : { id: doc, title: `Synthetic ${doc}`, saved } });
 function fakeNative() {
   const fake = { tools: new Map(), calls: [], state: stateFor(101), command: null, probe: null, bridge: { status: () => ({ connected: true }), stop: async () => {} } };
-  fake.catalog = { get: id => ({ id, risk: id === 'document.export' ? 'external' : id === 'document.inspect' ? 'read' : 'edit', engine: 'dom' }), validate: (_id, args) => args, list: () => [] };
+  fake.catalog = { get: id => ({ id, status: 'supported', risk: id === 'document.export' ? 'external' : id === 'document.inspect' ? 'read' : 'edit', engine: 'dom' }), validate: (_id, args) => args, list: () => [] };
   const register = (name, handler) => fake.tools.set(name, { definition: { name, inputSchema: { type: 'object' } }, handler });
+  register('photoshop_host_describe', async () => result({ serverVersion: 'synthetic', runtime: { app: 'Photoshop' }, bridge: fake.bridge.status() }));
   register('photoshop_state_get', async () => { fake.calls.push({ kind: 'state' }); return fake.probe ? await fake.probe() : result(fake.state); });
   register('photoshop_preview_get', async () => result({ preview: 'synthetic' }));
   register('photoshop_command_execute', async args => {
@@ -315,6 +316,14 @@ test('allowed-root source open binds one clean document and can close without fa
   assert.equal(q.release(owner).status, 'NO_IMAGE_CHANGE');
 });
 
+test('state and preview reads never create an unknown queue command', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q); bind(q, owner, 101); native.state = stateFor(101, true);
+  const state = await api.call('photoshop_state_get', {}, owner);
+  const preview = await api.call('photoshop_preview_get', { max_edge: 64 }, owner);
+  assert.equal(state.isError, undefined); assert.equal(preview.isError, undefined);
+  assert.equal(q.read().owner.in_flight, null); assert.equal(q.read().owner.unknown, null);
+});
+
 test('serialized recovery probe must resolve before a recovered lease can release', async t => {
   const { api, q, native, advance } = fixture(t); acquire(q); advance(101);
   const recovery = q.recoverClaim({ task_id: 'recovery' }), wait = deferred(); native.probe = () => wait.promise;
@@ -461,6 +470,14 @@ test('ambiguous default-folder import and unkeyed or typed commands are rejected
   assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
 });
 
+test('experimental catalog commands are blocked before production dispatch', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  const get = native.catalog.get;
+  native.catalog.get = id => ({ ...get(id), status: id === 'document.open_allowed' ? 'experimental' : 'supported' });
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: 'C:\\missing.png' }, idempotency_key: 'experimental-open' }, owner), 'CAPABILITY_NOT_PRODUCTION_READY');
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
+});
+
 test('missing and outside-root source paths fail before a durable request or queue operation begins', async t => {
   const { api, q, native, root } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
   await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: join(root, 'missing.png') }, idempotency_key: 'missing-source' }, owner), 'SOURCE_FILE_NOT_FOUND');
@@ -545,4 +562,14 @@ test('health reports the first actionable bridge blocker and device scope', t =>
   const health = api.health();
   assert.equal(health.ok, false); assert.equal(health.blockers[0].code, 'BRIDGE_DISCONNECTED');
   assert.equal(health.device_id, q.deviceId); assert.ok(health.next_action.includes('Photoshop'));
+});
+
+test('health blocks lease acquisition when a required catalog capability is not supported', t => {
+  const { api, native } = fixture(t);
+  const get = native.catalog.get;
+  native.catalog.get = id => ({ ...get(id), status: id === 'document.open_allowed' ? 'experimental' : 'supported' });
+  const health = api.health();
+  assert.equal(health.ok, false);
+  assert.ok(health.blockers.some(item => item.code === 'CAPABILITY_NOT_PRODUCTION_READY'));
+  assert.equal(health.runtime.production_commands.find(item => item.id === 'document.open_allowed').status, 'experimental');
 });
