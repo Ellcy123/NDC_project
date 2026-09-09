@@ -15,7 +15,9 @@ import uuid
 
 SCHEMA = 'ndc-art-stage-packet/v1'
 PLAN = 'ndc-art-stage-pipeline/v1'
-KINDS = {'ui_portrait': 'ndc-generate-ui-portraits', 'scene_mj': 'ndc-midjourney-operator'}
+KINDS = {'ui_portrait': 'ndc-generate-ui-portraits', 'scene_mj': 'ndc-midjourney-operator', 'character_scene': 'ndc-character-scene-production'}
+ADAPTERS = {'ui_portrait': 'ui_adapter', 'scene_mj': 'scene_adapter', 'character_scene': 'integration_adapter'}
+INTEGRATION_MODELS = {'reference': {'model': 'gpt-6-astra', 'thinking': 'medium'}, 'production': {'model': 'gpt-5.6-terra', 'thinking': 'xhigh'}}
 ACTIVE_DISPATCH = ('RESERVED', 'SUBMITTING', 'UNKNOWN', 'SETUP_PENDING', 'BOUND', 'CLAIMED')
 
 class PipelineBusy(RuntimeError):
@@ -105,13 +107,17 @@ def _validate_packet(packet):
     api, jobs = workflow(packet)
     for key in packet['authority']['upstream_jobs']:
         api['current_acceptance'](jobs, key)
-    module = importlib.import_module('ui_adapter' if packet['pipeline_kind'] == 'ui_portrait' else 'scene_adapter')
+    module = importlib.import_module(ADAPTERS[packet['pipeline_kind']])
     return module.validate_release(packet, Path(packet['packet_base']))
 
 def validate_packet(packet):
     return consistent_read(packet, lambda: _validate_packet(packet))
 
 def accepted_downstream(packet):
+    if packet['pipeline_kind'] == 'character_scene':
+        # Native pre/post-generation ledger is checked by the domain adapter.
+        # The original job journal carries attempts, not duplicate visual approvals.
+        return
     def verify():
         api, jobs = workflow(packet)
         for job in packet['authority']['downstream_jobs']:
@@ -134,6 +140,8 @@ class Pipeline:
         need(plan.get('schema') == PLAN and plan.get('pipeline_kind') in KINDS, 'Invalid pipeline plan')
         need(text_id(plan.get('pipeline_id')) and text_id(plan.get('controller_task_id')), 'Pipeline/controller IDs required')
         need(plan.get('execution_mode') in ('production', 'validation'), 'Explicit execution_mode required')
+        if plan['pipeline_kind'] == 'character_scene':
+            need(plan.get('model_policy') == INTEGRATION_MODELS, 'Character scene requires Astra medium and Terra xhigh')
         root = Path(plan['work_root']).resolve()
         project = Path(plan['project_root']).resolve()
         need(root.is_relative_to(project / '工作过程文件') and root != project / '工作过程文件', 'Use an isolated work-process directory')
@@ -152,6 +160,8 @@ class Pipeline:
                 values = authority.get(field)
                 need(isinstance(values, list) and len(values) == len(set(values)) and all(text_id(v) for v in values), 'Invalid job scope')
             need(authority['downstream_jobs'], 'Downstream jobs required')
+            if plan['pipeline_kind'] == 'character_scene':
+                need(isinstance(unit.get('scope'), dict) and unit['scope'].get('cases'), 'Freeze complete scene/cast/snapshot scope before publishing')
         need(not database.exists(), 'Pipeline already exists; resume it, never reset its scope or history')
         root.mkdir(parents=True, exist_ok=True)
         # Exclusive creation avoids two initializers replacing one authority.
@@ -220,6 +230,10 @@ class Pipeline:
             need(packet.get(name, self.plan[name]) == self.plan[name], 'Packet changes frozen plan ' + name)
             packet[name] = self.plan[name]
         packet['packet_base'] = str(Path(base).resolve())
+        if self.plan['pipeline_kind'] == 'character_scene':
+            for field, expected in (('unit_scope', unit['scope']), ('model_policy', self.plan['model_policy'])):
+                need(packet.get(field, expected) == expected, 'Packet changes frozen ' + field)
+                packet[field] = expected
         packet['work_directory'] = str(self.root / 'outputs' / packet['unit_id'] / str(packet['revision']))
         check = validate_packet(packet)
         body_hash = digest(packet)
@@ -232,6 +246,10 @@ class Pipeline:
                 prior = self.db.execute('SELECT sha256 FROM packets WHERE unit_id=? AND revision=?', (packet['unit_id'], packet['revision'])).fetchone()
                 need(prior and prior['sha256'] == body_hash, 'Same revision cannot change; publish an explicit new revision')
                 return {'status': 'ALREADY_PUBLISHED', 'unit_id': packet['unit_id'], 'revision': packet['revision']}
+            if self.plan['pipeline_kind'] == 'character_scene':
+                lease = read_json_row(self.db.execute('SELECT body FROM lease WHERE id=1').fetchone())
+                need(not lease or lease['unit_id'] != packet['unit_id'],
+                     'Return or recover this scene\'s active production lease before publishing revised references')
             need(packet['revision'] == current['revision'] + 1, 'Revisions must append without gaps')
             self.db.execute('INSERT INTO packets VALUES(?,?,?,?,?)', (packet['unit_id'], packet['revision'], stable(packet), body_hash, str(frozen)))
             status = 'WAITING_MANUAL' if check.get('can_execute') is False and not check.get('validation_only') else 'READY'
@@ -260,6 +278,8 @@ class Pipeline:
                     continue
                 worker = self.db.execute('SELECT task_id FROM worker WHERE id=1').fetchone()
                 value = {'dispatch_id': str(uuid.uuid4()), 'pipeline_id': self.plan['pipeline_id'], 'action': 'send' if worker else 'create', 'status': 'RESERVED', 'target_thread_id': worker['task_id'] if worker else None, 'packet_path': row['path'], 'packet_sha256': row['sha256'], 'unit_id': item['unit_id'], 'revision': item['revision'], 'execution_mode': self.plan['execution_mode'], 'database_path': str(self.path), 'downstream_skill': KINDS[self.plan['pipeline_kind']], 'work_directory': packet['work_directory']}
+                if self.plan['pipeline_kind'] == 'character_scene':
+                    value['model_policy'] = self.plan['model_policy']
                 self.db.execute('INSERT INTO dispatches VALUES(?,?,?,?,?)', (value['dispatch_id'], item['unit_id'], item['revision'], stable(value), 'RESERVED'))
                 self.db.execute("UPDATE units SET status='DISPATCH_RESERVED',reason=NULL WHERE unit_id=?", (item['unit_id'],))
                 self.event('dispatch_reserved', value)
@@ -433,7 +453,7 @@ class Pipeline:
                     need(packet['execution_mode'] == 'validation', 'Validation must never complete a production unit')
                 if status == 'PASS':
                     need(packet['execution_mode'] == 'production', 'Synthetic validation does not create production PASS')
-                adapter = importlib.import_module('ui_adapter' if packet['pipeline_kind'] == 'ui_portrait' else 'scene_adapter')
+                adapter = importlib.import_module(ADAPTERS[packet['pipeline_kind']])
                 consistent_read(packet, lambda: adapter.validate_result(packet, result, Path(packet['packet_base'])))
                 if status == 'PASS':
                     accepted_downstream(packet)
@@ -494,7 +514,7 @@ class Pipeline:
                 result = read(result_path)
                 need(result.get('effective_status') == result.get('status') == unit['status'] == result_binding.get('result_status'), 'Result no longer matches its completed outcome')
                 files_current(result['files'], packet['work_directory'])
-                adapter = importlib.import_module('ui_adapter' if packet['pipeline_kind'] == 'ui_portrait' else 'scene_adapter')
+                adapter = importlib.import_module(ADAPTERS[packet['pipeline_kind']])
                 consistent_read(packet, lambda: adapter.validate_result(packet, result, Path(packet['packet_base'])))
                 if unit['status'] == 'PASS':
                     accepted_downstream(packet)

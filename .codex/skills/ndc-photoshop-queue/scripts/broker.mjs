@@ -1,14 +1,15 @@
 import { createServer } from 'node:http';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join, resolve, extname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { PhotoshopQueue, QueueError, fileEvidence, digest } from './queue-core.mjs';
+import { binding } from './runtime-config.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-export const binding = JSON.parse(readFileSync(join(here, 'runtime-binding.json'), 'utf8'));
+export { binding };
 const executeFile = promisify(execFile);
 const envelope = (value, isError = false) => ({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value, ...(isError ? { isError: true } : {}) });
 const objectSchema = properties => ({ type: 'object', additionalProperties: false, properties });
@@ -160,9 +161,14 @@ export class QueueService {
   async control(action, args, context) {
     const q = this.queue;
     switch (action) {
-      case 'status': return { ...q.diagnose(), bridge: this.native.bridge.status(), handler_running: this.busy };
+      case 'status': return { ...q.diagnose(), automatic_recovery: { version: 1, abandoned_ms: q.abandonedMs, driver: 'waiting-head-acquire' }, bridge: this.native.bridge.status(), handler_running: this.busy };
       case 'enqueue': return q.enqueue(args);
-      case 'acquire': return q.acquire(args);
+      case 'acquire': {
+        const result = q.acquire(args);
+        if (result.reason !== 'BUSY' && result.reason !== 'ALREADY_HELD') return result;
+        const recovered = await this.recoverForWaiter(args);
+        return recovered?.released ? { ...q.acquire(args), recovery: recovered } : { ...result, ...(recovered ? { recovery: recovered } : {}) };
+      }
       case 'cancel': return q.cancel(args);
       case 'heartbeat': return q.heartbeat(context);
       case 'checkpoint': if (this.busy) throw new QueueError('COMMAND_STILL_RUNNING', 'Wait for the live state probe or native operation before checkpointing.'); return q.checkpoint(context, args);
@@ -200,9 +206,59 @@ export class QueueService {
       default: throw new QueueError('UNKNOWN_QUEUE_ACTION', action);
     }
   }
+
+  async recoverForWaiter(args) {
+    const q = this.queue, s = q.read(), o = s.owner;
+    if (!o || s.external || this.busy || this.autoRecovering || o.in_flight ||
+        s.waiting[0]?.task_id !== args.task_id || s.waiting[0]?.ticket !== args.ticket) return null;
+    const resuming = o.recovering && o.task_id === args.task_id;
+    if (!resuming && q.now() - o.heartbeat_at <= q.staleMs && q.now() - o.progress_at <= q.abandonedMs) return null;
+    this.autoRecovering = true;
+    try {
+      const lease = resuming ? o : q.recoverClaim(args, true);
+      const ctx = { task_id: lease.task_id, epoch: lease.epoch, token: lease.token };
+      const { state } = await this.control('probe', {}, ctx);
+      if (state.hasDocument === false && state.documentCount === 0 && lease.dirty) {
+        if (lease.checkpoint?.mutation === lease.mutation) q.release(ctx);
+        else await this.control('lost_document', {}, ctx);
+      } else {
+        if (lease.dirty) {
+          if (state.activeDocument?.id !== lease.document_id) throw new QueueError('RECOVERY_DOCUMENT_MISMATCH', 'Keep the saved lease; do not export or close another document.');
+          // Re-export even an old checkpoint: the live document may contain the
+          // result of a previously unknown operation. No image edit is replayed.
+          for (const format of ['psd', 'png']) {
+            const response = await this.call('photoshop_command_execute', {
+              command_id: 'document.export', args: { format, file_name: `queue_rescue_${lease.epoch}.${format}` },
+              idempotency_key: `queue-rescue-${lease.epoch}-${format}`,
+            }, ctx);
+            if (response.isError || dataOf(response).ok === false) throw new QueueError('RECOVERY_EXPORT_FAILED', 'Rescue export failed; retry diagnosis without an approval dialog.');
+          }
+          const current = q.read().owner;
+          const files = ['psd', 'png'].map(ext => {
+            const f = current.exports.filter(x => x.mutation === current.mutation && extname(x.path).toLowerCase() === `.${ext}`).at(-1);
+            if (!f) throw new QueueError('RECOVERY_EXPORT_MISSING', 'No current rescue export.');
+            return { path: f.path, role: ext === 'psd' ? 'working' : 'review' };
+          });
+          q.checkpoint(ctx, { document_id: current.document_id, files, resume: 'Reopen rescue PSD, verify original source and cumulative counts, inspect current image before continuing. Automatic recovery is not visual approval.' });
+          const closed = await this.call('photoshop_command_execute', { command_id: 'document.close', args: {}, idempotency_key: `queue-rescue-${lease.epoch}-close` }, ctx);
+          if (closed.isError || dataOf(closed).ok === false) throw new QueueError('RECOVERY_CLOSE_FAILED', 'Keep rescue checkpoint; reconcile close result.');
+        }
+        q.release(ctx);
+      }
+      q.tx('recovery_waiter_renewed', current => {
+        const waiter = current.waiting.find(x => x.task_id === args.task_id && x.ticket === args.ticket);
+        if (waiter) waiter.waiting_last_seen_at = q.now();
+        return { task_id: args.task_id, ticket: args.ticket };
+      });
+      return { released: true, original_task_id: lease.original_task_id, asset_id: lease.asset_id, epoch: lease.epoch };
+    } catch (e) {
+      return { released: false, code: e.code || 'RECOVERY_ERROR', message: e.message, next: 'Retry acquire to continue the same recovery; do not request routine approval or replay image edits.' };
+    } finally { this.autoRecovering = false; }
+  }
 }
 
 export async function createNative() {
+  if (!binding.runtime || !existsSync(binding.runtime)) throw new QueueError('RUNTIME_NOT_FOUND', 'Photoshop MCP runtime was not found. Install the approved runtime or set NDC_PS_MCP_RUNTIME.');
   for (const [rel, sha] of Object.entries(binding.hashes)) {
     if (digest(readFileSync(join(binding.runtime, rel))) !== sha) throw new QueueError('RUNTIME_CHANGED', `Revalidate the native adapter before using changed runtime file: ${rel}`);
   }

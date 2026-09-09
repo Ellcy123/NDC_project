@@ -1,8 +1,12 @@
 # Production cadence and evidence reuse
 
+白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+
+白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：位置、比例、头身比、动作和演绎可准确判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
+
 Use whole-scene rehearsal, layered production, whole-scene acceptance and one final package. Technical schemas are evidence interfaces inside these milestones, not a demand for a new picture or report for every command.
 
-One task owns each scene's combined direction, whitebox relationships, layered production and final acceptance. Do not split actors into separate tasks that advance different production stages of the same scene. Independent scenes may overlap non-PS preparation, generation waits and offline review only when their sources, working documents, outputs and scene records are isolated and shared masters are read-only. All actual PS use joins the [global queue](../../ndc-photoshop-queue/SKILL.md).
+The Astra/medium reference coordinator owns complete scene direction and whiteboxes until a whole-scene handoff; the Terra/xhigh worker then owns all actors, interactions and final acceptance in that scene. See [phase handoff](../../ndc-art-stage-pipeline/references/integration-pipeline.md). Only different complete scenes overlap across these phases; reference defects return ownership after the old production claim ends. Do not split actors into separate tasks that advance different production stages of the same scene. Independent scenes may overlap non-PS preparation, generation waits and offline review only when their sources, working documents, outputs and scene records are isolated and shared masters are read-only. All actual PS use joins the [global queue](../../ndc-photoshop-queue/SKILL.md).
 
 ## Start and resume
 
@@ -44,7 +48,7 @@ Neutral-edge detectors are diagnostic. When flags indicate intentional white hai
 
 - Keep counts per planned batch/actor and for the whole scene. Whiteboxes retain three generated attempts plus up to three coherent PS repair/review rounds per batch.
 - For each formal actor or planned interaction unit, the six-attempt model ceiling includes initial context, revisions and generative background removal. A multi-actor call counts once globally and against each affected unit. Folders and stage labels do not grant new budgets. Additional PS correction has a finite declared allowance, normally up to three coherent rounds, and remains subject to the time checkpoint.
-- For continuation of the same production/test, carry forward its actual counts; a failed unit at its ceiling receives no extra model calls through renaming, reopening or this Skill revision. A user-explicit independent new production/test instead receives a separate production ID and fresh counters, including any new work on reused candidates. Record the user instruction and provenance relation once; retain old files and old counts as history, but do not deduct them from or synchronize them into the new test. A new folder/date or an agent-authored reset is not such an instruction. Still-valid approved components may be reused; old failures do not become approved.
+- For continuation within the same Codex conversation, carry forward its actual counts; a failed unit at its ceiling receives no extra model calls through renaming, reopening or this Skill revision. Every actual new Codex conversation automatically receives fresh counters, including work on reused candidates; no additional declaration or answer is required. Record the real conversation ID and provenance relation once; retain old files and old counts as history, but do not deduct them from or synchronize them into the new test. A folder/date/model change inside the same conversation does not create a new budget. Still-valid approved components may be reused; old failures do not become approved.
 - Wrong intent/stiff silhouette returns to action/whitebox design; invalid support/scale to geometry; soft-contact failure to the coupled interaction; extraction drift to the accepted parent; packaging mistakes to packaging only.
 - Validate pre-generation readiness when inputs change and post-generation readiness when finished layers change. Do not rerun an identical ledger merely because another command or metadata write occurred.
 - At exhaustion preserve the candidate and exact unresolved failures. Do not manufacture six attempts to satisfy a legacy handoff checker; if its exact-six schema cannot represent a time/capability stop, keep a clearly marked work candidate with actual counts and do not claim that checker passed.
@@ -52,3 +56,9 @@ Neutral-edge detectors are diagnostic. When flags indicate intentional white hai
 ## Package once
 
 Freeze pixels after scene acceptance. Produce source paths/hashes, layer/XY mapping and reconstruction from those outputs once, referencing valid existing reports. Formal folders contain passed assets; prompts, candidates and evidence remain in the work directory. Copy/reconstruction success cannot override withdrawn or failed visual acceptance.
+
+## Repair rounds and scoped reuse
+
+A PS repair round begins with an actual candidate pixel/layer-combination change. Opening, read-only measuring, queueing, preparing a selection plan, or exporting an unchanged source does not consume a repair round. One coherent same-document repair/save/review sequence is one round. A changed but unfinished sequence remains in-progress and reserves that round; a failed or discarded actual repair remains used, rather than disappearing because review was not completed. Keep model, PS and technical operations separate in the original counters.
+
+Use the same scene-scale register as geometry authority. Review dependencies distinguish geometry, actor:<id>, interaction:<id> and composite:<snapshot>. An occlusion/soft-layer repair invalidates related actors/interactions and composite snapshots, not unrelated unchanged complete masters or source measurements. Existing native report hashes and actual artifact scopes remain authoritative; reuse their valid observations. Every changed composite still gets current whole-frame and relevant local inspection. Do not clone all reports or add a parallel ledger just to describe the dependency graph.

@@ -1,5 +1,9 @@
 # Prompt modules
 
+白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+
+白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：位置、比例、头身比、动作和演绎可准确判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
+
 For new layered production, apply [layered-character-batches.md](layered-character-batches.md) before the templates below: name the current batch, generate only its actors with complete separable silhouettes, preserve the registered canvas/camera, and keep foreground furniture/actors out of the complete master layers. Earlier layers are contextual references, not subjects to redraw. Do not copy facial-expression or precise-eye-gaze fields into a whitebox prompt when they cannot be assessed at that stage; retain coarse head/body direction and carry fine targets into the formal-character handoff.
 
 ## Reference roles
@@ -14,6 +18,8 @@ State each role explicitly:
 - action reference: secondary pose nuance only; it may not override the reviewed whitebox.
 
 ## Before-state generation
+
+正式生图必须写明：保持白模已通过的位置、比例、头身比、动作和演绎，生成头至脚完整角色；白模局部缺失/遮挡仅是参考简化，须补全，不能复制为断肢或裁切。前景遮挡在组合时恢复，独立角色母层仍完整。列出本次具体待补部位并在输出审核核对。
 
 Require the camera-visible action, character identity, complete outer rectangle, safe margins, and correct support contacts. Identify the reviewed whitebox and pose ID explicitly. Require the same joint arrangement and occupied volume; generation uses the current registered scale and placement. If a valid actor later needs only uniform scale or translation correction, use the authorized Photoshop MCP route and update registration and contacts together; do not deform it to rescue wrong anatomy or acting. Do not ask the model to redraw the entire scene merely to place an actor.
 

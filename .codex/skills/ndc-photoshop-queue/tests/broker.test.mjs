@@ -60,6 +60,80 @@ function saved(q, owner, root, doc = 101) {
 }
 function deferred() { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; }
 
+test('waiting acquire automatically fences stale unchanged owner and preserves FIFO', async t => {
+  const { api, q, native, advance } = fixture(t);
+  const old = acquire(q);
+  const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
+  const c = q.enqueue({ task_id: 'task-C', asset_id: 'image-C', description: 'waiting test', ready: true });
+  advance(101);
+  assert.equal((await api.control('acquire', { task_id: 'task-C', ticket: c.ticket }, {})).acquired, false);
+  const next = await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {});
+  assert.equal(next.acquired, true);
+  assert.equal(next.recovery.released, true);
+  assert.throws(() => q.heartbeat(old), e => e.code === 'STALE_LEASE');
+  assert.ok(native.calls.some(x => x.kind === 'state'));
+});
+
+test('heartbeat cannot perpetuate five-minute idle occupation; live command is preserved', async t => {
+  const { api, q, advance } = fixture(t);
+  const old = acquire(q);
+  const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
+  q.abandonedMs = 200;
+  advance(201); q.heartbeat(old);
+  const op = q.begin(old, { mutates: false, expected_until: 2000 });
+  assert.equal((await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {})).acquired, false);
+  q.end(old, op.id, {});
+  advance(201); q.heartbeat(old);
+  assert.equal((await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {})).acquired, true);
+});
+
+test('failed live probe keeps one recovery owner and same waiter retries without approval', async t => {
+  const { api, q, native, advance } = fixture(t);
+  acquire(q); const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
+  advance(101); native.probe = async () => { throw new Error('offline'); };
+  const pending = await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {});
+  assert.equal(pending.acquired, false); assert.equal(pending.recovery.released, false);
+  assert.equal(q.read().owner.recovering, true);
+  native.probe = null;
+  assert.equal((await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {})).acquired, true);
+});
+
+test('automatic recovery saves dirty original work before closing and grants waiter', async t => {
+  const { api, q, native, advance, root } = fixture(t);
+  const old = acquire(q); bind(q, old);
+  const edit = q.begin(old, { mutates: true, expected_until: 2000 }); q.end(old, edit.id, { documentId: 101 });
+  native.state = { hasDocument: true, documentCount: 1, activeDocument: { id: 101 } };
+  native.command = async a => {
+    if (a.command_id === 'document.close') {
+      assert.ok(q.read().owner.checkpoint);
+      native.state = { hasDocument: false, documentCount: 0 };
+      return result({ ok: true, after: native.state });
+    }
+    assert.equal(a.command_id, 'document.export');
+    const path = join(root, a.args.file_name); writeFileSync(path, 'rescue fixture');
+    return result({ ok: true, result: { result: { path } }, after: native.state });
+  };
+  const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting', ready: true });
+  advance(101);
+  const next = await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {});
+  assert.equal(next.acquired, true);
+  assert.equal(q.read().reviews['task-A'].status, 'WAITING_REVIEW');
+  assert.equal(q.read().reviews['task-A'].checkpoint.files.length, 2);
+  assert.deepEqual(native.calls.filter(x => x.kind === 'command').map(x => x.args.command_id), ['document.export', 'document.export', 'document.close']);
+});
+
+test('automatic recovery never exports a different active document', async t => {
+  const { api, q, native, advance } = fixture(t);
+  const old = acquire(q); bind(q, old);
+  const op = q.begin(old, { mutates: true, expected_until: 2000 }); q.end(old, op.id, { documentId: 101 });
+  native.state = { hasDocument: true, documentCount: 1, activeDocument: { id: 999 } };
+  const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting', ready: true });
+  advance(101);
+  const r = await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {});
+  assert.equal(r.recovery.code, 'RECOVERY_DOCUMENT_MISMATCH');
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
+});
+
 test('completed same-key replay returns original result without native execution or new queue evidence', async t => {
   const { api, q, native } = fixture(t); const owner = acquire(q);
   const first = await api.call('photoshop_command_execute', args(), owner);

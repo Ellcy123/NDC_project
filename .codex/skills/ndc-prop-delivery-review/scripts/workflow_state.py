@@ -1,6 +1,6 @@
 """NDC prop batch checks. Validates evidence; never produces artistic PASS.
 
-Init/attempt/history-resolution/scene-index commands append to the same log.
+Init/job-addendum/attempt/history-resolution/scene-index commands append to the same log.
 Validation, binding and prerequisite discovery are read-only.
 Paths in batch.json are relative to that file; review paths to their record.
 """
@@ -35,6 +35,16 @@ def read(path):
 def resolve(base, path):
     p = Path(path)
     return p.resolve() if p.is_absolute() else (base / p).resolve()
+
+def validate_job_definition(job_id, job, scope):
+    if not isinstance(job, dict) or job.get('kind') not in LIMITS or job.get('item_id') not in scope['item_ids']:
+        raise ValueError('invalid job ' + job_id)
+    expected = '|'.join([job['item_id'], job['kind'], job.get('scene_id', ''), job.get('state', '')])
+    if job_id != expected or not job.get('state'):
+        raise ValueError('job ID must be stable item|kind|scene|state: ' + job_id)
+    old = job.get('legacy_attempts', 0)
+    if type(old) is not int or old < 0 or (old and not job.get('legacy_evidence')):
+        raise ValueError('legacy attempts require a nonnegative count and provenance')
 
 def write_json(path, value):
     temp = path.with_name(path.name + '.writing')
@@ -71,24 +81,21 @@ def load_batch(path):
     if not set(scope['required_artifacts']) <= set(b['artifacts']):
         raise ValueError('required artifacts missing from inventory')
     for job_id, j in b['jobs'].items():
-        if j.get('kind') not in LIMITS or j.get('item_id') not in scope['item_ids']:
-            raise ValueError('invalid job ' + job_id)
-        expected = '|'.join([j['item_id'], j['kind'], j.get('scene_id', ''), j.get('state', '')])
-        if job_id != expected or not j.get('state'):
-            raise ValueError('job ID must be stable item|kind|scene|state: ' + job_id)
-        old = j.get('legacy_attempts', 0)
-        if type(old) is not int or old < 0 or (old and not j.get('legacy_evidence')):
-            raise ValueError('legacy attempts require a nonnegative count and provenance')
+        validate_job_definition(job_id, j, scope)
     return b
 
-def log_events(path, b):
+def log_events(path, b, *, _pending_revalidation=None):
     log = resolve(path.parent, b['attempt_log'])
     events = [json.loads(s) for s in log.read_text(encoding='utf-8').splitlines() if s.strip()]
     if not events or events[0].get('type') != 'init':
         raise ValueError('missing initialization event')
     first = events[0]
-    if first.get('batch_id') != b['batch_id'] or first.get('scope') != b['scope'] or first.get('jobs') != b['jobs']:
+    initial_jobs = first.get('jobs')
+    if (first.get('batch_id') != b['batch_id'] or first.get('scope') != b['scope']
+            or not isinstance(initial_jobs, dict) or not set(initial_jobs) <= set(b['jobs'])
+            or any(b['jobs'][key] != value for key, value in initial_jobs.items())):
         raise ValueError('scope/jobs changed: do not reset or rename a production budget')
+    registered_jobs = dict(initial_jobs)
     prev = ''
     for e in events:
         body = {k: v for k, v in e.items() if k != 'hash'}
@@ -99,10 +106,49 @@ def log_events(path, b):
         raise ValueError('attempt head mismatch: log truncated or interrupted append; inspect before recovery')
     counts = {key: j.get('legacy_attempts', 0) for key, j in b['jobs'].items()}
     resolved = set()
+    history = {}
     attempted = set()
     active_scene_index = None
     for e in events[1:]:
         key = e.get('job_id')
+        if e.get('type') == 'task_attribution':
+            if not e.get('task_id') or not e.get('reason') or first.get('task_id'):
+                raise ValueError('invalid legacy task attribution')
+            if sum(v.get('type') == 'task_attribution' for v in events) != 1:
+                raise ValueError('legacy task attribution is immutable')
+            continue
+        if e.get('type') == 'job_addendum':
+            job = e.get('job')
+            artifact_id = e.get('artifact_id')
+            if (not isinstance(key, str) or key in registered_jobs or key not in b['jobs']
+                    or b['jobs'][key] != job or not isinstance(artifact_id, str)
+                    or artifact_id not in b['scope']['required_artifacts']
+                    or artifact_id not in b['artifacts']):
+                raise ValueError('invalid job addendum')
+            validate_job_definition(key, job, b['scope'])
+            artifact = b['artifacts'][artifact_id]
+            binding = {'artifact_id': artifact_id, 'stage': artifact.get('stage'),
+                       'role': artifact.get('role'), 'scene_id': artifact.get('scene_id', ''),
+                       'item_ids': artifact.get('item_ids'), 'job_id': artifact.get('job_id')}
+            if (e.get('artifact_binding') != binding or artifact.get('job_id') != key
+                    or artifact.get('status') != 'PENDING' or artifact.get('rejected') is not False
+                    or job['item_id'] not in artifact.get('item_ids', [])
+                    or job['kind'] != 'scene' or artifact.get('stage') != 3
+                    or job.get('scene_id') != artifact.get('scene_id')):
+                raise ValueError('job addendum must bind one pending stage-3 scene artifact')
+            evidence_path = Path(e.get('evidence_path', ''))
+            if not evidence_path.is_file() or sha(evidence_path) != e.get('evidence_sha256'):
+                raise ValueError('job-addendum evidence changed')
+            evidence = read(evidence_path)
+            validate_job_addendum_evidence(evidence_path, b, key, artifact_id, evidence, check_sources=False)
+            if e.get('confirmed_count') != evidence['confirmed_count'] or job.get('legacy_attempts') != evidence['confirmed_count']:
+                raise ValueError('job-addendum historical count mismatch')
+            sources = history_source_map(evidence_path, evidence['sources'])
+            registered_jobs[key] = job
+            history[key] = dict(resolution_hash=e['hash'], evidence_sha256=e['evidence_sha256'],
+                                confirmed_count=evidence['confirmed_count'], determination=evidence['determination'],
+                                sources=sources)
+            continue
         if e.get('type') == 'scene_release_index':
             if e.get('previous_index_sha256') != (active_scene_index or {}).get('sha256'):
                 raise ValueError('scene index revision chain changed')
@@ -115,7 +161,7 @@ def log_events(path, b):
             active_scene_index = pointer
             continue
         if e.get('type') == 'legacy_resolution':
-            if key not in b['jobs'] or key in resolved or key in attempted:
+            if key not in registered_jobs or key in resolved or key in attempted:
                 raise ValueError('invalid or repeated history resolution')
             j = b['jobs'][key]
             if not unknown_hold(j):
@@ -124,22 +170,47 @@ def log_events(path, b):
             if sha(evidence_path) != e.get('evidence_sha256'):
                 raise ValueError('history resolution evidence changed')
             evidence = read(evidence_path)
-            validate_history_evidence(evidence_path, b, key, evidence)
+            # The immutable record remains checked even after its live sources
+            # are explicitly revalidated by a later append-only event.
+            validate_history_evidence(evidence_path, b, key, evidence, check_sources=False)
             if e.get('confirmed_count') != evidence['confirmed_count']:
                 raise ValueError('history resolution count mismatch')
             counts[key] = evidence['confirmed_count']
             resolved.add(key)
+            history[key] = dict(resolution_hash=e['hash'], evidence_sha256=e['evidence_sha256'],
+                                confirmed_count=evidence['confirmed_count'],
+                                determination=evidence['determination'],
+                                sources=history_source_map(evidence_path, evidence['sources']))
             continue
-        if e.get('type') != 'attempt' or key not in b['jobs']:
+        if e.get('type') == 'history_source_revalidation':
+            evidence_path = Path(e['evidence_path'])
+            if sha(evidence_path) != e.get('evidence_sha256'):
+                raise ValueError('history source revalidation evidence changed')
+            apply_history_revalidation(b, history, evidence_path, read(evidence_path), e['evidence_sha256'])
+            continue
+        if e.get('type') != 'attempt' or key not in registered_jobs:
             raise ValueError('invalid attempt event')
         attempted.add(key)
         counts[key] = counts.get(key, 0) + 1
-        if e.get('number') != counts[key] or counts[key] > LIMITS[b['jobs'][key]['kind']]:
+        if e.get('number') != counts[key] or (not e.get('task_id') and counts[key] > LIMITS[b['jobs'][key]['kind']]):
             raise ValueError('attempt budget exceeded or reset for ' + key)
+        if e.get('task_id'):
+            expected = task_count(b, events[:events.index(e)], key, e['task_id']) + 1
+            if e.get('task_number') != expected or expected > LIMITS[b['jobs'][key]['kind']]:
+                raise ValueError('conversation task budget exceeded or reset for ' + key)
         if sha(Path(e['prompt_path'])) != e.get('prompt_sha256'):
             raise ValueError('attempt prompt snapshot changed')
+    if b['jobs'] != registered_jobs:
+        raise ValueError('scope/jobs changed: job changes require a hash-linked job_addendum event')
     if b.get('scene_release_index') != active_scene_index:
         raise ValueError('scene index pointer changed outside append-only migration/revision')
+    if _pending_revalidation is not None:
+        # Only the recovery command supplies a complete proposed event. This
+        # still validates the full chain, snapshots, counts and all live sources.
+        evidence_path, evidence, evidence_sha256 = _pending_revalidation
+        apply_history_revalidation(b, history, evidence_path, evidence, evidence_sha256)
+    for entry in history.values():
+        check_history_sources(entry['sources'])
     return events
 
 def unknown_hold(job):
@@ -149,7 +220,28 @@ def unknown_hold(job):
             and evidence.get('actual_count') is None
             and job.get('legacy_attempts') == LIMITS[job['kind']])
 
-def validate_history_evidence(path, batch, job_id, evidence):
+def history_source_map(path, sources):
+    if not isinstance(sources, list) or not sources:
+        raise ValueError('history sources must be nonempty')
+    result = {}
+    for source in sources:
+        if (not isinstance(source, dict) or not isinstance(source.get('path'), str)
+                or not source['path'].strip() or not isinstance(source.get('sha256'), str)
+                or len(source['sha256']) != 64
+                or any(c not in '0123456789abcdefABCDEF' for c in source['sha256'])):
+            raise ValueError('invalid history source path/hash')
+        key = os.path.normcase(str(resolve(path.parent, source['path'])))
+        if key in result:
+            raise ValueError('duplicate history source path')
+        result[key] = source['sha256'].lower()
+    return result
+
+def check_history_sources(sources):
+    for path, expected in sources.items():
+        if sha(path).lower() != expected:
+            raise ValueError('history source bytes changed: ' + path)
+
+def validate_history_evidence(path, batch, job_id, evidence, *, check_sources=True):
     count = evidence.get('confirmed_count')
     if (evidence.get('schema') != 'ndc-prop-history-resolution/v1'
             or evidence.get('batch_id') != batch['batch_id']
@@ -160,9 +252,92 @@ def validate_history_evidence(path, batch, job_id, evidence):
             or not evidence.get('reviewer') or not evidence.get('reason')
             or not isinstance(evidence.get('sources'), list) or not evidence['sources']):
         raise ValueError('incomplete history resolution evidence')
-    for source in evidence['sources']:
-        if sha(resolve(path.parent, source['path'])).lower() != source['sha256'].lower():
-            raise ValueError('history source bytes changed')
+    sources = history_source_map(path, evidence['sources'])
+    if check_sources:
+        check_history_sources(sources)
+
+def validate_job_addendum_evidence(path, batch, job_id, artifact_id, evidence, *, check_sources=True):
+    count = evidence.get('confirmed_count')
+    if (evidence.get('schema') != 'ndc-prop-job-addendum-history/v1'
+            or evidence.get('batch_id') != batch['batch_id']
+            or evidence.get('job_id') != job_id or evidence.get('artifact_id') != artifact_id
+            or type(count) is not int or not 0 <= count <= LIMITS[batch['jobs'][job_id]['kind']]
+            or evidence.get('determination') != 'known_historical'
+            or not evidence.get('reviewer') or not evidence.get('reason')
+            or not isinstance(evidence.get('sources'), list) or not evidence['sources']):
+        raise ValueError('incomplete job-addendum history evidence')
+    sources = history_source_map(path, evidence['sources'])
+    if check_sources:
+        check_history_sources(sources)
+
+def apply_history_revalidation(batch, history, path, evidence, evidence_sha256):
+    """Apply reviewed source versions, never the original determination/count."""
+    if (not isinstance(evidence, dict)
+            or evidence.get('schema') != 'ndc-prop-history-source-revalidation/v1'
+            or evidence.get('batch_id') != batch['batch_id']
+            or not isinstance(evidence.get('reviewer'), str) or not evidence['reviewer'].strip()
+            or not isinstance(evidence.get('reason'), str) or not evidence['reason'].strip()
+            or not isinstance(evidence.get('reviews'), list) or not evidence['reviews']):
+        raise ValueError('incomplete history source revalidation evidence')
+    seen = set()
+    for review in evidence['reviews']:
+        if not isinstance(review, dict):
+            raise ValueError('invalid history source review')
+        key = review.get('job_id')
+        if key not in history or key in seen:
+            raise ValueError('revalidation requires a unique existing history resolution')
+        seen.add(key)
+        old = history[key]
+        if (review.get('resolution_hash') != old['resolution_hash']
+                or review.get('previous_evidence_sha256') != old['evidence_sha256']):
+            raise ValueError('history source revalidation predecessor mismatch')
+        if (type(review.get('confirmed_count')) is not int
+                or review['confirmed_count'] != old['confirmed_count']
+                or review.get('determination') != old['determination']):
+            raise ValueError('history source revalidation cannot change count/determination')
+        if not isinstance(review.get('reason'), str) or not review['reason'].strip():
+            raise ValueError('each history source revalidation requires actual review findings')
+        sources = history_source_map(path, review.get('sources'))
+        if sources.keys() != old['sources'].keys():
+            raise ValueError('history source revalidation cannot replace or omit source paths')
+        for source in review['sources']:
+            source_key = os.path.normcase(str(resolve(path.parent, source['path'])))
+            if source.get('previous_sha256') != old['sources'][source_key]:
+                raise ValueError('history source revalidation previous source hash mismatch')
+        if sources == old['sources']:
+            raise ValueError('history source revalidation requires changed source bytes')
+        history[key] = dict(old, sources=sources, evidence_sha256=evidence_sha256)
+
+def revalidate_history_source(path, evidence_path):
+    """Append a complete same-count review of all currently stale history sources."""
+    with lock(path):
+        b = load_batch(path)
+        evidence = read(evidence_path)
+        if not isinstance(evidence, dict) or not isinstance(evidence.get('reviews'), list):
+            raise ValueError('incomplete history source revalidation evidence')
+        for review in evidence.get('reviews', []):
+            if not isinstance(review, dict) or not isinstance(review.get('sources'), list):
+                raise ValueError('invalid history source review')
+            history_source_map(evidence_path, review['sources'])
+            for source in review.get('sources', []):
+                source['path'] = str(resolve(evidence_path.parent, source['path']))
+        payload = (json.dumps(evidence, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
+        evidence_sha256 = hashlib.sha256(payload).hexdigest()
+        proposal = (evidence_path, evidence, evidence_sha256)
+        events = log_events(path, b, _pending_revalidation=proposal)
+        snapshot = path.parent / 'history_source_revalidations' / (str(len(events)) + '_' + evidence_sha256[:16] + '.json')
+        snapshot.parent.mkdir(parents=True, exist_ok=True)
+        # Exclusive create also protects snapshots left by an interrupted append.
+        with snapshot.open('xb') as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        log_events(path, b, _pending_revalidation=(snapshot, read(snapshot), sha(snapshot)))
+        append(path, b, dict(type='history_source_revalidation',
+                            evidence_path=str(snapshot.resolve()), evidence_sha256=evidence_sha256))
+        current = log_events(path, b)
+        return {'history_source_revalidation': str(snapshot.resolve()),
+                'counts_preserved': {key: effective_count(b, current, key) for key in b['jobs']}}
 
 def effective_count(batch, events, job_id):
     count = batch['jobs'][job_id].get('legacy_attempts', 0)
@@ -170,6 +345,46 @@ def effective_count(batch, events, job_id):
         if event.get('job_id') == job_id and event.get('type') in {'legacy_resolution', 'attempt'}:
             count = event['confirmed_count'] if event['type'] == 'legacy_resolution' else count + 1
     return count
+
+def current_task_id(explicit=None):
+    actual = os.environ.get('CODEX_THREAD_ID', '').strip()
+    if explicit and actual and explicit != actual:
+        raise ValueError('task ID must match the executing conversation')
+    value = actual or explicit
+    if not value:
+        raise ValueError('supply the actual conversation --task-id when CODEX_THREAD_ID is unavailable')
+    return value
+
+def task_count(batch, events, job_id, task_id):
+    owner = events[0].get('task_id') if events else None
+    for event in events:
+        if event.get('type') == 'task_attribution':
+            owner = event['task_id']
+    job = batch['jobs'][job_id]
+    count = job.get('legacy_attempts', 0) if job.get('legacy_task_id') == task_id and not unknown_hold(job) else 0
+    for event in events:
+        if event.get('job_id') != job_id:
+            continue
+        if event.get('type') == 'legacy_resolution' and job.get('legacy_task_id') == task_id:
+            count = event['confirmed_count']
+        if event.get('type') == 'attempt' and (event.get('task_id') or owner) == task_id:
+            count += 1
+    return count
+
+def attribute_legacy_task(path, task_id, reason):
+    """Bind old untagged calls to their verified originating conversation, once."""
+    if not task_id or not reason.strip():
+        raise ValueError('legacy attribution requires actual origin task ID and evidence reason')
+    with lock(path):
+        b = load_batch(path)
+        events = log_events(path, b)
+        prior = events[0].get('task_id') or next((e['task_id'] for e in events if e.get('type') == 'task_attribution'), None)
+        if prior:
+            if prior != task_id:
+                raise ValueError('legacy task attribution is immutable')
+            return {'legacy_task_id': prior, 'already_recorded': True}
+        append(path, b, dict(type='task_attribution', task_id=task_id, reason=reason))
+        return {'legacy_task_id': task_id}
 
 def is_icon(artifact):
     role = artifact.get('role', '').lower()
@@ -217,7 +432,65 @@ def initialize(path):
             raise ValueError('already initialized; preserve history')
         if b.get('scene_release_index'):
             raise ValueError('initialize first, then migrate-scene-release without replacing history')
-        append(path, b, dict(type='init', batch_id=b['batch_id'], scope=b['scope'], jobs=b['jobs']))
+        append(path, b, dict(type='init', batch_id=b['batch_id'], scope=b['scope'], jobs=b['jobs'],
+                            task_id=os.environ.get('CODEX_THREAD_ID') or b.get('task_id')))
+
+def register_job_addendum(path, job_id, artifact_id, evidence_path, reason):
+    """Append a narrowly-scoped missing scene job without resetting the journal.
+
+    The only allowed addendum is a pending required stage-3 scene artifact with
+    source-backed, exact historical count evidence.  The event snapshots both
+    the new job definition and its history evidence before the next attempt.
+    """
+    with lock(path):
+        b = load_batch(path)
+        events = log_events(path, b)
+        if not reason.strip() or job_id in b['jobs']:
+            raise ValueError('require a unique job ID and concrete addendum reason')
+        if artifact_id not in b['scope']['required_artifacts'] or artifact_id not in b['artifacts']:
+            raise ValueError('job addendum must target one required artifact')
+        artifact = b['artifacts'][artifact_id]
+        if artifact.get('job_id') or artifact.get('status') != 'PENDING' or artifact.get('rejected') is not False:
+            raise ValueError('job addendum target must be an unbound pending artifact')
+        parts = job_id.split('|')
+        if len(parts) != 4:
+            raise ValueError('job addendum ID must be item|kind|scene|state')
+        item_id, kind, scene_id, state = parts
+        job = {'item_id': item_id, 'kind': kind, 'scene_id': scene_id, 'state': state}
+        validate_job_definition(job_id, job, b['scope'])
+        if (kind != 'scene' or artifact.get('stage') != 3 or artifact.get('scene_id') != scene_id
+                or item_id not in artifact.get('item_ids', [])):
+            raise ValueError('job addendum must be a matching stage-3 scene job for its artifact')
+        proposal = dict(b)
+        proposal['jobs'] = dict(b['jobs'], **{job_id: job})
+        evidence = read(evidence_path)
+        validate_job_addendum_evidence(evidence_path, proposal, job_id, artifact_id, evidence)
+        job['legacy_attempts'] = evidence['confirmed_count']
+        job['legacy_evidence'] = {
+            'status': 'EXPLICIT_JOB_ADDENDUM_HISTORY', 'actual_count': evidence['confirmed_count'],
+            'reason': evidence['reason'],
+        }
+        for source in evidence['sources']:
+            source['path'] = str(resolve(evidence_path.parent, source['path']))
+        snapshot = path.parent / 'job_addenda' / (str(len(events)) + '_' + digest(job_id)[:16] + '.json')
+        snapshot.parent.mkdir(parents=True, exist_ok=True)
+        if snapshot.exists():
+            raise ValueError('job-addendum snapshot exists; inspect interrupted registration')
+        write_json(snapshot, evidence)
+        b['jobs'][job_id] = job
+        artifact['job_id'] = job_id
+        artifact_binding = {'artifact_id': artifact_id, 'stage': artifact.get('stage'),
+                            'role': artifact.get('role'), 'scene_id': artifact.get('scene_id', ''),
+                            'item_ids': artifact.get('item_ids'), 'job_id': job_id}
+        append(path, b, dict(type='job_addendum', job_id=job_id, job=job,
+                            artifact_id=artifact_id, artifact_binding=artifact_binding,
+                            confirmed_count=evidence['confirmed_count'], evidence_path=str(snapshot.resolve()),
+                            evidence_sha256=sha(snapshot), reason=reason))
+        current = log_events(path, load_batch(path))
+        return {'job_id': job_id, 'artifact_id': artifact_id,
+                'historical_attempts': evidence['confirmed_count'],
+                'job_addendum_evidence': str(snapshot.resolve()),
+                'counts_preserved': {key: effective_count(load_batch(path), current, key) for key in b['jobs']}}
 
 def install_scene_index(path, index_path, reason, revise=False):
     """Migrate/revise scope evidence in the existing journal; never reset jobs/counts."""
@@ -264,15 +537,21 @@ def scene_readiness(path, scene_id):
     result.update(mode='scene_dependency_closure', ready=not result['failures'])
     return result
 
-def reserve_attempt(path, job_id, prompt, reason):
+def reserve_attempt(path, job_id, prompt, reason, task_id=None):
+    task_id = current_task_id(task_id)
     with lock(path):
         b = load_batch(path)
         events = log_events(path, b)
         if job_id not in b['jobs']:
             raise ValueError('job was not in locked scope')
         j = b['jobs'][job_id]
-        prior = [e for e in events if e.get('type') == 'attempt' and e.get('job_id') == job_id]
-        n = effective_count(b, events, job_id) + 1
+        owner = events[0].get('task_id') or next((e['task_id'] for e in events if e.get('type') == 'task_attribution'), None)
+        if not owner and any(e.get('type') == 'attempt' and not e.get('task_id') for e in events):
+            raise ValueError('attribute untagged calls to their actual originating task with bind-task and local evidence')
+        prior = [e for e in events if e.get('type') == 'attempt' and e.get('job_id') == job_id
+                 and (e.get('task_id') or owner) == task_id]
+        n = task_count(b, events, job_id, task_id) + 1
+        lifetime_number = effective_count(b, events, job_id) + 1
         if n > LIMITS[j['kind']]:
             raise ValueError('generation limit exhausted; no new call permitted')
         if b.get('requirements_locked') is not True:
@@ -323,12 +602,13 @@ def reserve_attempt(path, job_id, prompt, reason):
         new_round = j['kind'] != 'master' or n % 2 == 1
         if prior and new_round and prompt_hash == prior[-1]['prompt_sha256']:
             raise ValueError('retry requires revised actual prompt, not an identical rerun')
-        saved_prompt = path.parent / 'attempt_prompts' / (digest(job_id)[:16] + '_' + str(n) + '.txt')
+        saved_prompt = path.parent / 'attempt_prompts' / (digest(job_id)[:16] + '_' + str(lifetime_number) + '.txt')
         saved_prompt.parent.mkdir(parents=True, exist_ok=True)
         if saved_prompt.exists():
             raise ValueError('prompt snapshot already exists; inspect interrupted attempt before retrying')
         saved_prompt.write_bytes(prompt.read_bytes())
-        append(path, b, dict(type='attempt', job_id=job_id, number=n,
+        append(path, b, dict(type='attempt', job_id=job_id, number=lifetime_number,
+                            task_id=task_id, task_number=n,
                             round=(n + 1) // 2 if j['kind'] == 'master' else n,
                             prompt_path=str(saved_prompt.resolve()), prompt_sha256=prompt_hash, reason=reason))
         return n
@@ -606,8 +886,9 @@ def progress(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['init', 'attempt', 'validate', 'affected', 'binding', 'progress', 'resolve-history',
-                                          'migrate-scene-release', 'revise-scene-release', 'scene-readiness'])
+    parser.add_argument('command', choices=['init', 'append-job', 'attempt', 'validate', 'affected', 'binding', 'progress', 'resolve-history',
+                                          'migrate-scene-release', 'revise-scene-release', 'scene-readiness',
+                                          'revalidate-history-source', 'bind-task', 'budget'])
     parser.add_argument('--batch', required=True, type=Path)
     parser.add_argument('--stage', type=int, choices=range(1, 6), default=1)
     parser.add_argument('--job')
@@ -617,16 +898,30 @@ def main():
     parser.add_argument('--evidence', type=Path)
     parser.add_argument('--scene')
     parser.add_argument('--index', type=Path)
+    parser.add_argument('--task-id', help='Actual Codex conversation ID; bind-task uses the legacy origin ID')
     args = parser.parse_args()
     path = args.batch.resolve()
     try:
         if args.command == 'init':
             initialize(path)
             result = {'initialized': True}
+        elif args.command == 'append-job':
+            if not args.job or not args.artifact or not args.evidence or not args.reason:
+                raise ValueError('append-job requires --job, --artifact, --evidence and --reason')
+            result = register_job_addendum(path, args.job, args.artifact, args.evidence.resolve(), args.reason)
         elif args.command == 'attempt':
             if not args.prompt or not args.job:
                 raise ValueError('attempt requires --job and --prompt')
-            result = {'reserved_attempt': reserve_attempt(path, args.job, args.prompt, args.reason)}
+            result = {'reserved_attempt': reserve_attempt(path, args.job, args.prompt, args.reason, args.task_id)}
+        elif args.command == 'bind-task':
+            result = attribute_legacy_task(path, args.task_id, args.reason)
+        elif args.command == 'budget':
+            b = load_batch(path)
+            events = log_events(path, b)
+            task_id = current_task_id(args.task_id)
+            result = {'task_id': task_id, 'scope': 'conversation', 'jobs': {
+                key: {'used': task_count(b, events, key, task_id), 'limit': LIMITS[job['kind']],
+                      'historical_total': effective_count(b, events, key)} for key, job in b['jobs'].items()}}
         elif args.command == 'validate':
             errors = validate(path, args.stage, scene_id=args.scene)
             result = {'technical_workflow_valid': not errors, 'failures': errors}
@@ -648,6 +943,10 @@ def main():
             if not args.job or not args.evidence:
                 raise ValueError('resolve-history requires --job and --evidence')
             result = {'confirmed_legacy_count': resolve_history(path, args.job, args.evidence.resolve())}
+        elif args.command == 'revalidate-history-source':
+            if not args.evidence:
+                raise ValueError('revalidate-history-source requires --evidence')
+            result = revalidate_history_source(path, args.evidence.resolve())
         else:
             b = load_batch(path)
             if args.artifact not in b['artifacts']:

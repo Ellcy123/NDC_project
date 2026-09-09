@@ -1218,6 +1218,9 @@ def validate_scene_absolute_scale(
     reports the shared correction factor before any whitebox is approved.
     """
     data = load_json(contract_path)
+    if data.get("schema") == "ndc-scene-absolute-scale/v2":
+        from scene_scale_v2 import validate
+        return validate(contract_path, report_path, preview_path)
     require_fields(
         data,
         ("schema", "scene", "sceneSize", "actors", "anchors", "limits"),
@@ -2894,10 +2897,11 @@ def main() -> None:
             )
         elif args.command == "validate-scene-absolute-scale":
             result = validate_scene_absolute_scale(args.contract, args.report, args.preview)
-            print(
-                "SCENE_ABSOLUTE_SCALE_OK "
-                f"anchors={len(result['anchors'])} factor={result['recommendedGlobalScaleFactor']:.4f}"
-            )
+            if result.get("mode") == "bounded":
+                print(f"SCENE_GEOMETRY_BOUNDED_OK actors={len(result['actors'])}; no metric scale factor")
+            else:
+                print("SCENE_ABSOLUTE_SCALE_OK "
+                      f"anchors={len(result['anchors'])} factor={result['recommendedGlobalScaleFactor']:.4f}")
         elif args.command == "validate-gaze-conformance":
             result = validate_gaze_conformance(args.contract, args.report)
             print(f"GAZE_CONFORMANCE_OK actors={len(result['actors'])}")

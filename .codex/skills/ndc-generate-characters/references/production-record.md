@@ -1,4 +1,6 @@
-# 生产接续、累计预算和有效审核引用
+# 生产接续、对话任务预算和有效审核引用
+
+先读[对话任务独立额度](task-budget.md)，2026-09-09新规则优先。
 
 版本：ndc-art-production/v1，2026-09-08。适用于本 Skill 实际生产、人工交接和多阶段派生；简单提示词讨论不创建台账。道具已有 `ndc-prop-batch/v1` 时继续使用原道具日志，不再建立第二套计数。角色入景也继续使用自身台账。
 
@@ -31,7 +33,7 @@
 }
 ```
 
-`source_decision.mode` 为 `reuse/derive/generate/manual_input/repair`；`limits` 可含 `model/ps/technical`，零表示该种操作不可执行。人工来源接收使用manual_input，不能启动自动补画。初始化前已发生的尝试填入 `history`，非零时提供带path/sha256的 `history_evidence` 数组；历史多于现行上限也原样保留，不能用迁移消去已用次数。已有任务继续其原日志，不复制出新日志来重置额度。
+`source_decision.mode` 为 `reuse/derive/generate/manual_input/repair`；`limits` 可含 `model/ps/technical`，零表示该种操作不可执行。人工来源接收使用manual_input，不能启动自动补画。初始化前的资产历史填入 `history`，非零时提供带path/sha256的 `history_evidence`；默认只追溯，不扣减当前对话。只有 `history_task_id` 明确等于当前真实对话 ID 的次数才计入当前额度。共享原日志按对话分别计数，新对话完整新额度，无须额外询问。
 
 ```text
 python -B scripts/art_workflow_state.py init --plan <production-plan.json> --journal <production-journal.jsonl>
@@ -51,7 +53,7 @@ python -B scripts/art_workflow_state.py resolve --journal <journal> --job <id> -
 
 `produced` 只表示产生了候选/完成了这一处理轮次，不表示视觉通过。`unknown` 表示提交可能成功但结果不明，仍占额度并阻断重复提交；先查服务端job和已保存文件，再用同ID补记结果。只有确证没有生成/没有执行时才能填 `no_output`，释放该次艺术额度并累计工具错误。不得将差图标成no_output。连续无结果错误默认两次后先修复能力连接；实际恢复并有证据时用 `recover-tool --reason ...`，历史事件和总次数仍保留。主Skill已有更严格断联规则时继续遵守。
 
-达到额度后保留候选和失败原因，继续可独立执行的其他项。不要为凑满数字追加无意义操作，也不把候选标成正式。新增生成预算需明确扩围授权并记录与旧任务的关系，不能通过 `revise` 修改额度。
+达到额度后保留候选和失败原因，继续可独立执行的其他项。不要为凑满数字追加无意义操作，也不把候选标成正式。新对话自动拥有完整新额度，保留旧任务来源关系即可，不要求用户答复；同一对话不通过 `revise` 修改额度。
 
 ## 人工交接与接续
 
@@ -92,4 +94,4 @@ python -B scripts/art_workflow_state.py accept --journal <journal> --job <id> --
 - `check --journal ...` 要求本计划每个声明输出具有当前有效的审核绑定，缺项/拒收/源变更返回非零。发布明确子集时可重复传 `--job <id>` 只核对该范围及其依赖；返回仍列出其他未完成项和 `whole_plan_current:false`，不能把子集通过说成全批次完成。
 - 废弃尝试保留失败记录，不进入当前接受依赖链的“全部PASS”条件。旧图、人工作业、候选和正式图分开说明，不删除失败历史来让检查通过。
 
-生产时只维护这份短记录和实际必要证据；稳定后一次整理交付清单。时间记录把工具等待、PS处理、真实审阅、报告整理与人工等待分开，不承诺统一提速百分比。仅在用户已启用重叠推进且具体生产范围已有授权时，按 [阶段交接](../../ndc-art-stage-pipeline/SKILL.md) 将单角色UI母图→裁切整备、完整独立场景提示→MJ交给一个可复用下游任务；首个合格单位即可派发，上游继续独立单位。新建任务仍须已有明确授权，传递原journal/job及剩余次数，不拆同场角色或绕过人工节点；没有READY时结束下游当前轮，之后由活动协调任务唤醒，不后台生图或新增人工审批。其他流程不因此自动开生产任务；已授权的共用PS broker及其watchdog仍为共享操作入口。
+生产时只维护这份短记录和实际必要证据；稳定后一次整理交付清单。时间记录把工具等待、PS处理、真实审阅、报告整理与人工等待分开，不承诺统一提速百分比。仅在用户已启用重叠推进且具体生产范围已有授权时，按 [阶段交接](../../ndc-art-stage-pipeline/SKILL.md) 将单角色UI母图→裁切整备、完整独立场景提示→MJ交给一个可复用下游目标任务；首个合格单位即可派发，上游继续独立单位。创建或复用承载对话后，下游必须先真实调用 `get_goal`，无未完成目标时调用 `create_goal` 建立覆盖完整已授权阶段批次的持续目标；已有同批目标则接续，不能只把“目标”写进提示词或把 `create_thread` 成功当作目标已启用。新建承载任务仍须已有明确授权，传递原journal/job及剩余次数，不拆同场角色或绕过人工节点；没有READY时结束当前回合，之后由活动协调任务唤醒同一目标任务，不后台生图或新增人工审批。其他流程不因此自动开生产任务；已授权的共用PS broker及其watchdog仍为共享操作入口。

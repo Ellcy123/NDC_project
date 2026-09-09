@@ -5,6 +5,8 @@ description: Plan, generate, audit, and package NDC bust-expression sets from us
 
 # NDC Generate Expressions
 
+执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，其他对话的资产历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于旧预算说明。
+
 实际使用 Photoshop MCP 前按需读取 [全局 PS 队列](../ndc-photoshop-queue/SKILL.md)。同任务当前图须保存、完成技术及真实视觉检查并核对当前hash；未审完不得推进下一张。PASS可推进相应依赖；FAIL缺陷已记录且预算耗尽或用户要求封存时，保留候选和累计次数，仅继续独立资产；安全保存可恢复文件和固定审阅快照后，可按队列协议挂起释放给其他独立任务。释放不是PASS，不解除原图及依赖的阻断、不重置预算；命令在途或结果未知时不得自行交棒。纯准备、生图等待和离线审阅不长期占用桥接，未授权的PS操作不会因排队而获得授权。
 
 ## Operating boundary
@@ -23,7 +25,7 @@ Every art-production stage executed by this Skill must end with an actual visual
 
 Write one current `ndc-stage-visual-self-check/v1` JSON record per executed stage. It must bind the stage ID, reviewer/date, input and output paths plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale output hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not advance state, hand off the file, use it downstream, or call it formal. Technical validators, dimensions, hashes, Alpha/profile reports, or absence of a detected error cannot write visual `PASS`.
 
-After a block, return to the responsible stage allowed by this Skill's authorship boundary, perform the missing inspection and authorized rework/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-output>`; a nonzero result is a hard stop. Existing retry ceilings and the ban on Codex background/Alpha repair remain unchanged; when the responsible repair belongs to the user, stop at the required rework status instead of weakening this gate.
+After a block, return to the responsible stage allowed by this Skill's authorship boundary, perform the missing inspection and authorized rework/regeneration, then repeat the visual self-check on the new current output. Release only after the current hash has a passing record. For every file-producing stage, run `python -B scripts/art_pipeline/ndc_art.py tool stage -- --record <visual-review.json> --artifact <current-output>` from the planning repository root; a nonzero result is a hard stop. Existing retry ceilings and the ban on Codex background/Alpha repair remain unchanged; when the responsible repair belongs to the user, stop at the required rework status instead of weakening this gate.
 
 The user-approved portrait is the identity, viewpoint, costume, lighting, style, texture, and calm-expression authority. Never regenerate calm. Every non-calm expression is generated directly from that portrait, never from another expression or a failed candidate.
 

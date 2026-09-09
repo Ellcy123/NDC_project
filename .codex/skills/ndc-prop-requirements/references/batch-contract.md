@@ -8,7 +8,7 @@
 2. 一份content_archive.json维护事实，一份batch.json维护范围／依赖／进度。记录精确来源，不把档案当作覆盖剧情事实的权威。
 3. A必须准确；B在生成前列明允许差异；C仅在画风范围内自由。技术、身份、结构、像素保护和用户拒收不参加百分比容错。可读文字仍禁止PS／代码后补。
 4. 第二阶段到第三阶段按场景及完整关联前置放行：某场景的全部道具、同物状态、容器内容及物理关联所需母版／普通Big、真实外部父图均有效通过，照片内容和跨物品引用事实及来源已锁定，且没有未解决关联，即可制作该场景。只引用已确认身份／日期等事实时，不附加生产该引用对象其余母版的要求。无关场景的未完成图不阻塞它。只放松这一个交接门槛；第三阶段全部非Icon必需图完成后统一制作Icon，全部场景／菜单定稿冻结后统一提取热区。Icon包括其专用高分辨率来源，不在第二阶段抢先生产。环境痕迹不强行生成独立物件。具体索引和迁移见[场景放行合同](scene-release-contract.md)；无索引的旧批次保持全批次阶段2门槛。
-5. 同一母版状态最多3批×2张，首批计入；每个入景／菜单作业最多3张，首张计入。必要独立Icon或场景相关Big生成沿用原三次上限，记为derived作业。合格即停止。换阶段、位置、文件名或最终复查不能清零。
+5. 每个真实对话任务内，同一母版状态最多3批×2张，首批计入；每个入景／菜单作业最多3张，首张计入。必要独立Icon或场景相关Big生成沿用原三次上限，记为derived作业。合格即停止。换阶段、位置、文件名或最终复查不能清零。
 6. 语义正确的轻微框幅／变换先进行一次可用PS修正。该分支不赠送新生成额度；同一缺陷不能无限PS微调，未能修正则使用剩余额度或记录人工阻塞。
 7. 达上限后的最佳版本仍按实际质量分为通过或候选。关键失败下游继承候选，只可用于不受影响的布局试验；不进入正式热区／归档。已允许的B/C差异不反复报风险。
 8. 每阶段只审核新增或改变的风险；每个当前产物有一份包含相关内容、风格、边缘等结论的真实视觉记录。旧审核可严格复用；禁止技术检查自动给艺术PASS。
@@ -27,9 +27,9 @@ batch可记录execution_priority（active_pass、缺失清单、依赖例外及�
 
 ## 进度报告
 
-锁定required_artifacts为图像总进度分母，只计当前依赖和审核有效的PASS；原始source_reference、提示、候选、过程遮罩和重复副本不计完成。报告“有效PASS数／必需角色总数＝百分比”，同时报各场景实际阶段、场景放行阻塞、阶段分子／分母及执行轮次。新索引下progress返回stage_dispatch=per_scene；兼容字段current_stage是最早尚未完成的实际阶段，declared_current_stage仅保留批次原声明值，均不能代替scene-readiness或attempt门槛。母版通过不等于整项或正式交付完成。
+锁定required_artifacts为分母：制作覆盖计入已有对应候选图并去重，未复核与已检查未通过另列；有效PASS另算交付就绪。提示、重复副本和未绑定必需角色的过程材料单列，不虚增图像覆盖。报告“有效PASS数／必需角色总数＝百分比”，同时报各场景实际阶段、场景放行阻塞、阶段分子／分母及执行轮次。新索引下progress返回stage_dispatch=per_scene；兼容字段current_stage是最早尚未完成的实际阶段，declared_current_stage仅保留批次原声明值，均不能代替scene-readiness或attempt门槛。母版通过不等于整项或正式交付完成。
 
-首次补缺前按角色记录缺失基线；补缺完成数只统计该基线里新增且通过的角色，旧图复用和返修不得混算。用户要求阶段进度时，在开始、每批完成、阶段切换、阻塞变化时主动报告总百分比与阶段百分比；无新增PASS就如实说明进度未增加。变更分母须有真实需求变更依据并保留前后数值，不能为提高百分比缩小范围。
+首次补缺前按角色记录缺失基线；补缺完成数只统计该基线里新增且通过的角色，旧图复用和返修不得混算。用户要求阶段进度时，在开始、每批完成、阶段切换、阻塞变化时主动报告总百分比与阶段百分比；无新增PASS时只说明交付就绪未提高，候选新增仍提高制作覆盖，复核进展另报。变更分母须有真实需求变更依据并保留前后数值，不能为提高百分比缩小范围。
 
 ## 数据字段
 
@@ -95,6 +95,7 @@ published_path仅在发布时填正式PNG绝对路径。acceptance_contract是�
 python workflow_state.py init --batch <batch.json>
 python workflow_state.py validate --batch <batch.json> --stage 2
 python workflow_state.py attempt --batch <batch.json> --job "item1|master||closed" --prompt <actual_prompt.txt> --reason "首批或本次具体修正"
+python workflow_state.py append-job --batch <batch.json> --job "item1|scene|scene1|rebuild" --artifact scene1.final --evidence <verified_job_history.json> --reason "已锁批次遗漏该必需场景产物的job绑定，追加可核查历史"
 python workflow_state.py binding --batch <batch.json> --artifact item1.master
 python workflow_state.py affected --batch <batch.json> --artifact item1.master
 python workflow_state.py progress --batch <batch.json>
@@ -106,9 +107,11 @@ python workflow_state.py validate --batch <batch.json> --stage 3 --scene scene1
 
 init锁定scope/jobs并创建只追加、哈希串联的尝试日志。attempt在每次真实生图前预留一个名额；下一批／下一次重试须修改实际提示内容，失败没有输出的预留也保守计入，不自动退额度。补写结果可以记录在各候选审核中，不修改已写的attempt事件。日志与batch头不一致时先检查崩溃写入或截断；禁止删除日志再init。
 
+`append-job`只处理已锁批次的结构性遗漏：目标必须是 scope 内一个尚未绑定、PENDING、未拒收的第三阶段场景产物；新 job 必须以该产物所属 scene 和其中一个 item 组成稳定 ID。先实际查阅同一输出角色的历史证据，写入 `ndc-prop-job-addendum-history/v1`（batch、job、artifact、确切 confirmed_count、known_historical、审核者、理由、当前来源路径和 SHA-256）；命令把证据快照和 job 定义写进同一哈希链。它只追加一个 job，不可替换既有 job、改 scope、重写任何次数，历史序号从 `confirmed_count + 1` 接续；实际可用额度按当前对话task_number独立计算。没有确切历史次数或目标已通过／已绑定／被拒收时，不允许使用本命令。
+
 derived作业按绑定产物的生产阶段执行门槛：无场景依赖的普通派生图在阶段2，场景相关Big与所有Icon在阶段3。同一job不混绑不同生产阶段；其实际父图必须通过。第三阶段非Icon必需图先完成，再制作Icon（含专用Icon母版和确定性导出），不能从未定的线索或候选Big提前衍生。Icon不依赖第四阶段热区PNG，避免循环。已合格Icon保留字节和有效审核，仅更新生产阶段归属；不重置job/次数。progress为只读核验，不写PASS；可在batch.initial_missing_artifacts保存首次补缺基线。
 
-resolve-history只适用于init中明确标记UNKNOWN_CONSERVATIVE_EXHAUSTION、actual_count=null且按上限占用、尚未追加真实attempt的job，只能更正一次。证据JSON须含schema=ndc-prop-history-resolution/v1、batch_id、job_id、confirmed_count（0至该job上限）、determination（new或known_historical）、reviewer、reason和sources（非空的path／sha256数组）。执行者先实际查阅这些来源，证明同一job未开始或确切历史次数，不能用文件缺失或自写结论代替来源。命令保存不可覆盖的证据快照并追加日志事件，后续按已确认次数累计；技术校验不代替历史事实判断。
+resolve-history只适用于init中明确标记UNKNOWN_CONSERVATIVE_EXHAUSTION、actual_count=null且按上限占用、尚未追加真实attempt的job，只能更正一次。证据JSON须含schema=ndc-prop-history-resolution/v1、batch_id、job_id、confirmed_count（0至该job上限）、determination（new或known_historical）、reviewer、reason和sources（非空的path／sha256数组）。执行者先实际查阅这些来源，证明同一job未开始或确切历史次数，不能用文件缺失或自写结论代替来源。命令保存不可覆盖的证据快照并追加日志事件，后续保留已确认历史次数，但只按明确属于当前对话的次数扣减当前额度；技术校验不代替历史事实判断。
 
 stage 2校验需求已锁；有场景索引时stage 3加--scene核验完整关联前置，attempt按job和产物归属自动执行同一门槛；stage 3不加--scene仍保留全局核验。stage 4检查整批结果及全部场景／菜单已冻结；stage 5检查所有必需结果及其依赖。--scene不能用于stage 4或5放宽范围。不得缩小batch.scope/jobs来获得场景放行，不把原场景中尚待制作的菜单误列为入景前置。仅修复单一热区的任务可以在第一阶段明确限定为单资产批次，并纳入其既有场景父图；不能把一个已锁定全量任务偷换为该范围。
 

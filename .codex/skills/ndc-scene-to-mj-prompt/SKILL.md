@@ -5,6 +5,8 @@ description: "Prepare character-free NDC scene requirements, camera layouts and 
 
 # NDC Scene to MJ Prompt
 
+执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，其他对话的资产历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于旧预算说明。
+
 ## 画面描述辅助检查
 
 编写或修改生图/编辑输入时，协作使用 [ndc-visual-description](../ndc-visual-description/SKILL.md)：需求与参考明确后，在布局/姿态方案定稿前确定本帧可见意图；最终提示、参考及裁切组装后检查实际提交内容，防止下游重新引入剧情/视角冲突。沿用已有检查，实质变化只复核受影响项；候选偏差复用本 Skill 的视觉审阅进行原因诊断。
@@ -28,7 +30,7 @@ Actual visual-reference intake, source-image/viewpoint analysis, style extractio
 
 Write a current `ndc-stage-visual-self-check/v1` record for each new visual artifact or materially changed visual acceptance contract. A stage may reference an existing passing record when the production-record protocol proves unchanged bytes, source/parent bindings, role, requirements and no superseding rejection; do not repeat whole-image/tile inspection merely because the same reference or handoff is passed to another stage. It must bind the stage ID, reviewer/date, visual input paths plus SHA-256, any file output path plus SHA-256, the inspected `whole_100` and `local_200_or_tiles` views, every applicable criterion with an explicit finding and `PASS`/`FAIL`/`NOT_CHECKED`, the overall `visual_check_status`, and the responsible rework stage when blocked. Missing record, missing visual-detection item, stale hash, missing required view, `FAIL`, or `NOT_CHECKED` is `STAGE_VISUAL_SELF_CHECK_GATE: BLOCKED`: do not mark the handoff visually cleared or use it to authorize an image-producing stage. Dimensions, file existence, schema validation, or absence of a detected error cannot write visual `PASS`.
 
-After a visual block, return to the responsible visual analysis and correct the missing inspection or failure. Validate current visual artifacts using `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <reviewed-visual-output>`; nonzero blocks that artifact. Pure prompt/handoff text is not a new image: lock its exact bytes, source lookup, shared facts, reference roles and complete view set in the pipeline's `ndc-scene-prompt-lock/v1` textual record. Do not create image outputs, pixel-view evidence or artistic `PASS` merely to release prompt text. This lock preserves the actual visual-source checks above and cannot authorize MJ submission by itself; production still requires the user's existing image-generation authorization. Unresolved text or visual-source obligations remain explicitly blocked/draft.
+After a visual block, return to the responsible visual analysis and correct the missing inspection or failure. From the planning repository root validate current visual artifacts using `python -B scripts/art_pipeline/ndc_art.py tool stage -- --record <visual-review.json> --artifact <reviewed-visual-output>`; nonzero blocks that artifact. Pure prompt/handoff text is not a new image: lock its exact bytes, source lookup, shared facts, reference roles and complete view set in the pipeline's `ndc-scene-prompt-lock/v1` textual record. Do not create image outputs, pixel-view evidence or artistic `PASS` merely to release prompt text. This lock preserves the actual visual-source checks above and cannot authorize MJ submission by itself; production still requires the user's existing image-generation authorization. Unresolved text or visual-source obligations remain explicitly blocked/draft.
 
 ## Read the relevant references
 

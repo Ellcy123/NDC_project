@@ -4,6 +4,8 @@ description: 从已定稿的 NDC 场景及二级菜单，通过 Photoshop MCP �
 ---
 # NDC 热区与坐标导出
 
+执行前读[对话任务独立额度](../ndc-prop-requirements/references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
+
 这是第四阶段。输入是第三阶段冻结的全尺寸场景／菜单及批次记录；先读[批次协议](../ndc-prop-requirements/references/batch-contract.md)。调用全批次工作流校验 stage 4 通过后才开始；第二阶段到第三阶段的单场景放行不能代替该整批门槛。
 
 读[热区专业细则](references/production-details.md)、[语义轮廓检查](../ndc-scene-evidence-placement/references/hotspot-semantic-review.md)及[PS操作](../ndc-scene-evidence-placement/references/photoshop-mcp-repair-and-framing.md)。

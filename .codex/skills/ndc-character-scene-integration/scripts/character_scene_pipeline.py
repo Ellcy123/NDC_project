@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import statistics
 from pathlib import Path
 
@@ -11,7 +12,25 @@ from PIL import Image, ImageChops, ImageDraw
 from head_measurement import anatomical_head_height
 
 
-NDC_ROOT = Path(r"D:\Codex\NDC")
+def resolve_ndc_root() -> Path:
+    """Resolve this machine's authorized NDC output root without a fixed drive."""
+    configured = os.environ.get("NDC_CHARACTER_SCENE_ROOT") or os.environ.get("NDC_ART_WORK_ROOT")
+    if configured:
+        root = Path(configured).expanduser().resolve()
+        if not root.is_absolute():
+            raise ValueError("NDC_CHARACTER_SCENE_ROOT must be an absolute path.")
+        return root
+    for parent in Path(__file__).resolve().parents:
+        if (parent / "NDC项目底层规则.md").is_file():
+            return parent
+    raise RuntimeError(
+        "Cannot resolve the NDC character-scene output root. "
+        "Set NDC_CHARACTER_SCENE_ROOT to this machine's authorized NDC workspace."
+    )
+
+
+NDC_ROOT = resolve_ndc_root()
+PROCESS_ROOT = Path(os.environ.get("NDC_ART_WORK_ROOT", NDC_ROOT / "工作过程文件")).resolve()
 
 
 def load_contract(path: Path) -> dict:
@@ -188,7 +207,7 @@ def validate_delivery_root(data: dict) -> None:
     try:
         delivery_root.resolve().relative_to(NDC_ROOT.resolve())
     except ValueError as error:
-        raise ValueError("deliveryRoot must stay under D:\\Codex\\NDC.") from error
+        raise ValueError(f"deliveryRoot must stay under the configured NDC root: {NDC_ROOT}") from error
     if "工作过程文件" in delivery_root.parts:
         raise ValueError("Formal deliveryRoot cannot be inside 工作过程文件.")
 
@@ -303,42 +322,35 @@ def validate_scale_anchors(
     return values
 
 
-def validate_contract(data: dict) -> tuple[float, float]:
+def validate_contract(data: dict, shared_scale_report: dict | None = None) -> tuple[float, float]:
     validate_delivery_root(data)
     character_height_cm = float(data["characterHeightCm"])
     if character_height_cm <= 0:
         raise ValueError("characterHeightCm must be positive.")
-    estimates = data["calibration"]["projectedHeightEstimatesPx"]
-    if data["calibration"].get("aggregationMethod") != "median-after-depth-projection":
-        raise ValueError(
-            "calibration.aggregationMethod must be median-after-depth-projection."
-        )
-    derived_tolerance = float(data["calibration"].get("derivedValueToleranceRatio", 0.03))
-    values = validate_scale_anchors(estimates, character_height_cm, derived_tolerance)
-    median = statistics.median(values)
-    spread = (max(values) - min(values)) / median
-    allowed = float(data["calibration"].get("maxSpreadRatio", 0.08))
-    if spread > allowed:
-        raise ValueError(f"Scale estimates disagree: spread={spread:.4f}, allowed={allowed:.4f}")
-    band_values = {
-        band: [
-            value
-            for estimate, value in zip(estimates, values)
-            if estimate["depthBand"] == band
-        ]
-        for band in ("actor-local", "cross-depth")
-    }
-    local_median = statistics.median(band_values["actor-local"])
-    cross_depth_median = statistics.median(band_values["cross-depth"])
-    cross_depth_delta = abs(local_median - cross_depth_median) / median
-    cross_depth_allowed = float(
-        data["calibration"].get("maxCrossDepthMedianDeltaRatio", allowed)
-    )
-    if cross_depth_delta > cross_depth_allowed:
-        raise ValueError(
-            "Actor-local and cross-depth scale estimates disagree after projection: "
-            f"delta={cross_depth_delta:.4f}, allowed={cross_depth_allowed:.4f}"
-        )
+    if data["calibration"].get("sceneScaleEvidence"):
+        from scene_scale_v2 import placement_scale
+        shared = placement_scale(data, expected_report=shared_scale_report)
+        median, spread, allowed = shared["heightPx"], shared["spread"], 0.08
+    else:
+        estimates = data["calibration"]["projectedHeightEstimatesPx"]
+        if data["calibration"].get("aggregationMethod") != "median-after-depth-projection":
+            raise ValueError("calibration.aggregationMethod must be median-after-depth-projection.")
+        derived_tolerance = float(data["calibration"].get("derivedValueToleranceRatio", 0.03))
+        values = validate_scale_anchors(estimates, character_height_cm, derived_tolerance)
+        median = statistics.median(values)
+        spread = (max(values) - min(values)) / median
+        allowed = float(data["calibration"].get("maxSpreadRatio", 0.08))
+        if spread > allowed:
+            raise ValueError(f"Scale estimates disagree: spread={spread:.4f}, allowed={allowed:.4f}")
+        band_values = {band: [value for estimate, value in zip(estimates, values)
+                              if estimate["depthBand"] == band] for band in ("actor-local", "cross-depth")}
+        local_median = statistics.median(band_values["actor-local"])
+        cross_depth_median = statistics.median(band_values["cross-depth"])
+        cross_depth_delta = abs(local_median - cross_depth_median) / median
+        cross_depth_allowed = float(data["calibration"].get("maxCrossDepthMedianDeltaRatio", allowed))
+        if cross_depth_delta > cross_depth_allowed:
+            raise ValueError("Actor-local and cross-depth scale estimates disagree after projection: "
+                             f"delta={cross_depth_delta:.4f}, allowed={cross_depth_allowed:.4f}")
 
     target = data["target"]
     scene_size = tuple(data["sceneSize"])
@@ -898,6 +910,7 @@ def validate_staging(data: dict, require_reviewed_whitebox: bool = False) -> lis
     orders: set[int] = set()
     scene_path = Path(data["scene"]).resolve()
     scene_size = tuple(data["sceneSize"])
+    shared_scale_reports: dict[tuple[str, str], dict] = {}
     for index, entry in enumerate(entries):
         label = f"characters[{index}]"
         require_fields(entry, ("name", "contract", "layerOrder"), label)
@@ -913,7 +926,15 @@ def validate_staging(data: dict, require_reviewed_whitebox: bool = False) -> lis
         if not contract_path.is_file():
             raise ValueError(f"Missing character contract: {contract_path}")
         contract = load_contract(contract_path)
-        validate_contract(contract)
+        shared_ref = contract.get("calibration", {}).get("sceneScaleEvidence")
+        shared_report = None
+        if shared_ref:
+            from scene_scale_v2 import current_report
+            identity = (str(Path(shared_ref["path"]).resolve()), str(shared_ref["sha256"]).lower())
+            if identity not in shared_scale_reports:
+                shared_scale_reports[identity] = current_report(shared_ref, contract_path.parent)
+            shared_report = shared_scale_reports[identity]
+        validate_contract(contract, shared_report)
         if str(contract.get("characterName", "")).strip() != name:
             raise ValueError(f"{label}.name differs from the placement contract characterName.")
         if Path(contract["scene"]).resolve() != scene_path:
@@ -1168,9 +1189,9 @@ def validate_candidate_handoff(data: dict) -> None:
     if not comparison_report.is_file():
         raise ValueError(f"Candidate comparison report is missing: {comparison_report}")
     candidate_root = Path(review["candidateRoot"]).resolve()
-    process_root = (NDC_ROOT / "工作过程文件").resolve()
+    process_root = PROCESS_ROOT
     if process_root not in candidate_root.parents:
-        raise ValueError("Candidate handoff must stay under D:\\Codex\\NDC\\工作过程文件.")
+        raise ValueError(f"Candidate handoff must stay under {PROCESS_ROOT}.")
 
 
 def apply_occluders(image: Image.Image, base: Image.Image, polygons: list) -> Image.Image:
@@ -1367,8 +1388,12 @@ def main() -> None:
     states.add_argument("after", type=Path)
     args = parser.parse_args()
     if args.command == "validate-contract":
-        median, spread = validate_contract(load_contract(args.contract))
-        print(f"CONTRACT_OK median={median:.2f}px spread={spread:.4f}")
+        data = load_contract(args.contract)
+        median, spread = validate_contract(data)
+        if data.get("calibration", {}).get("sceneScaleEvidence"):
+            print(f"CONTRACT_OK shared geometry; reviewed image height={median:.2f}px (not a camera calibration claim)")
+        else:
+            print(f"CONTRACT_OK median={median:.2f}px spread={spread:.4f}")
     elif args.command == "place-proxy":
         place_proxy(args.contract, args.output, args.base)
     elif args.command == "validate-staging":

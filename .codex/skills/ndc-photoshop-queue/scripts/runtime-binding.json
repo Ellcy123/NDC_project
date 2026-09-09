@@ -1,12 +1,19 @@
 {
-  "runtime": "C:\\Users\\EDY\\AppData\\Local\\PS_MCP\\app\\versions\\2.0.1-ndc1\\runtime",
-  "python": "C:\\Users\\EDY\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+  "schema": "ndc-photoshop-runtime-binding/v2",
   "version": "2.0.1-ndc1",
-  "visual_validator": "D:\\Codex\\NDC\\.agents\\skills\\ndc-prop-delivery-review\\scripts\\stage_visual_check.py",
-  "allowed_roots": [
-    "D:\\Codex\\NDC"
-  ],
-  "state_dir": "D:\\Codex\\NDC\\工作过程文件\\非章节项目维护\\PS共用队列",
+  "runtime": {
+    "local_app_data_relative": "PS_MCP/app/versions/2.0.1-ndc1/runtime",
+    "override_env": "NDC_PS_MCP_RUNTIME"
+  },
+  "visual_validator": {
+    "skill": "ndc-prop-delivery-review",
+    "script": "scripts/stage_visual_check.py",
+    "override_env": "NDC_STAGE_VISUAL_VALIDATOR"
+  },
+  "state": {
+    "local_app_data_relative": "NDC/photoshop-queue",
+    "override_env": "NDC_PS_QUEUE_STATE_DIR"
+  },
   "port": 38472,
   "hashes": {
     "dist/src/server.js": "fdb990e0cea575fb7d06de5431cd048f180b6954f6f49774fea2c8867c8bb3ff",

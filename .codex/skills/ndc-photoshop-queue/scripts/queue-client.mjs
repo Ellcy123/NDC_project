@@ -5,7 +5,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 
 const here = dirname(fileURLToPath(import.meta.url));
-export const settings = JSON.parse(readFileSync(join(here, 'runtime-binding.json'), 'utf8'));
+export { binding as settings } from './runtime-config.mjs';
+import { binding as settings } from './runtime-config.mjs';
 const delay = ms => new Promise(r => setTimeout(r, ms));
 export async function rpc(method, params = {}, timeout = 240000) {
   const key = readFileSync(join(settings.state_dir, 'client-key'), 'utf8').trim();

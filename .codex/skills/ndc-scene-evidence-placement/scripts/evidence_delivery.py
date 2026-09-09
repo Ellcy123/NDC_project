@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 from pathlib import Path
 from typing import Any, Iterable
@@ -600,10 +601,16 @@ def package(args: argparse.Namespace) -> Path:
         raise ValueError("Supply exactly one of --detail-image or --cutout-mask")
 
     output_dir = args.output_dir.resolve()
-    unity_evidence_root = Path(
-        r"D:\NDC\Assets\Resources\Art\Scene\EVIDENCE"
-    ).resolve()
-    if output_dir == unity_evidence_root or output_dir.is_relative_to(unity_evidence_root):
+    configured_unity_root = os.environ.get("NDC_UNITY_EVIDENCE_ROOT")
+    configured_engine_root = os.environ.get("NDC_ENGINE_ROOT")
+    unity_evidence_root = Path(configured_unity_root).resolve() if configured_unity_root else (
+        Path(configured_engine_root).resolve()
+        / "Assets" / "Resources" / "Art" / "Scene" / "EVIDENCE"
+        if configured_engine_root else None
+    )
+    if unity_evidence_root and (
+        output_dir == unity_evidence_root or output_dir.is_relative_to(unity_evidence_root)
+    ):
         raise ValueError(
             "Refusing to stage directly inside Unity EVIDENCE; use image/edit_jobs first"
         )

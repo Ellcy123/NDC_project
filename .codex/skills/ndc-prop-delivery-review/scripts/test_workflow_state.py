@@ -190,7 +190,7 @@ class WorkflowTests(unittest.TestCase):
     def test_legacy_budget_import_cannot_be_reset(self):
         new=self.root/'legacy.json'; b=copy.deepcopy(self.b)
         b.pop('attempt_head'); b['attempt_log']='legacy.jsonl'
-        b['jobs'][self.job].update(legacy_attempts=6,legacy_evidence='old job log reference')
+        b['jobs'][self.job].update(legacy_attempts=6,legacy_evidence='same conversation log reference', legacy_task_id=w.current_task_id())
         w.write_json(new,b); w.initialize(new)
         prompt=self.root/'prompt.txt'; prompt.write_text('new')
         with self.assertRaisesRegex(ValueError,'exhausted'):
@@ -236,7 +236,7 @@ class WorkflowTests(unittest.TestCase):
     def history_fixture(self):
         path=self.root/'unknown.json'; b=copy.deepcopy(self.b)
         b.pop('attempt_head'); b['attempt_log']='unknown.jsonl'
-        b['jobs'][self.job].update(legacy_attempts=6,legacy_evidence={
+        b['jobs'][self.job].update(legacy_attempts=6,legacy_task_id=w.current_task_id(),legacy_evidence={
             'status':'UNKNOWN_CONSERVATIVE_EXHAUSTION','actual_count':None})
         w.write_json(path,b); w.initialize(path)
         source=self.root/'prior-task.txt'; source.write_text('Synthetic prior-task count: two.')

@@ -38,7 +38,7 @@
 - `repeated_pattern_artifacts_absent`：无重复印章、重复衣料切片、机械噪点和无结构线组；
 - `nonsemantic_microdetail_absent`：无新增装饰性碎褶、随机裂纹、斑点、伪缝线、伪饰品或均匀锐化。
 
-全图和无遗漏原像素局部覆盖都必须完成。任一双门禁项为 `FAIL` 或 `NOT_CHECKED` 时，`formal_status=BLOCKED`。局部纹理失败从冻结源做蒙版修复；全图细节膨胀返回该阶段原始身份/风格源重生，不得从失败候选继续。正式候选还必须通过 `D:\Codex\NDC\scripts\validate-ndc-texture-gate.py`。
+全图和无遗漏原像素局部覆盖都必须完成。任一双门禁项为 `FAIL` 或 `NOT_CHECKED` 时，`formal_status=BLOCKED`。局部纹理失败从冻结源做蒙版修复；全图细节膨胀返回该阶段原始身份/风格源重生，不得从失败候选继续。正式候选还必须从策划仓库根通过 `python -B scripts/art_pipeline/ndc_art.py tool texture -- <arguments>`。
 <!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 正式结论同时遵守 `execution-gates.md`：每个必需项只能填写 `PASS`、`FAIL` 或 `NOT_CHECKED`；任一 `FAIL` 或 `NOT_CHECKED` 都使 `formal_status` 为 `BLOCKED`。不得用“基本通过”“待确认但先交付”替代缺失证据。

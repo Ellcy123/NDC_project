@@ -31,14 +31,12 @@
 }
 ```
 
-把示例替换为完整实际范围。`unit_id`使用稳定ASCII身份或场景编号，允许字母、数字、点、下划线和连字符。场景kind为 `scene_mj`，其上游是经核对的提示合同而非图片审核，`upstream_jobs`可空；下游job覆盖全部必需视角。两种kind分别建流水，不能把不同流程塞进同一工作者而重新判断职责。
+把示例替换为完整实际范围。`unit_id`使用稳定ASCII身份或场景编号，允许字母、数字、点、下划线和连字符。场景kind为 `scene_mj`，其上游是经核对的提示合同而非图片审核，`upstream_jobs`可空；下游job覆盖全部必需视角。各kind分别建流水；人物入景使用character_scene，字段和native门禁按 [入景协议](integration-pipeline.md)。不能把不同流程塞进同一工作者而重新判断职责。
 
 执行模式固定：`production`用于已有实际生产授权；`validation`只做合成夹具、合同接收与技术机制测试，不提交艺术生成，不产生生产PASS。切换模式不能重开同一库洗掉历史。
 
 ```powershell
-$pipelinePython = 'C:\Users\EDY\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
-$pipelineCli = 'D:\Codex\NDC\.agents\skills\ndc-art-stage-pipeline\scripts\pipeline.py'
-& $pipelinePython -X utf8 -B $pipelineCli --db $pipelineDb init --plan $pipelinePlan
+python -B scripts/art_pipeline/ndc_art.py run ndc-art-stage-pipeline pipeline.py -- --db $pipelineDb init --plan $pipelinePlan
 ```
 
 后续所有调用保留同一个 `--db`。JSON和真实输出都放过程目录；不向正式交付目录写临时包或夹具。

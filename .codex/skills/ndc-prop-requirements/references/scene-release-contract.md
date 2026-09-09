@@ -60,6 +60,7 @@ fact_reference与depicted_content只扩展所列事实和来源，不自动要�
 python workflow_state.py migrate-scene-release --batch <原batch.json> --index <实际核对的完整索引.json> --reason "全范围成员与关联来源已核对，保留原作业与次数"
 python workflow_state.py scene-readiness --batch <原batch.json> --scene <scene_id>
 python workflow_state.py validate --batch <原batch.json> --stage 3 --scene <scene_id>
+python workflow_state.py append-job --batch <原batch.json> --job "item|scene|scene_id|state" --artifact <遗漏绑定的PENDING场景产物> --evidence <已核对历史.json> --reason "已锁批次遗漏该输出角色的job，保留确切历史次数"
 python workflow_state.py attempt --batch <原batch.json> --job "item|scene|scene_id|state" --prompt <实际提示.txt> --reason "具体首次制作或剩余额度内修正"
 python workflow_state.py progress --batch <原batch.json>
 ```
@@ -70,7 +71,7 @@ python workflow_state.py progress --batch <原batch.json>
 python workflow_state.py revise-scene-release --batch <原batch.json> --index <核对后的完整新版索引.json> --reason "明确哪些关联变化及依据"
 ```
 
-每次保留旧索引快照和原日志。改scope/jobs、移除指针、篡改快照或截断原日志均会阻止接续；迁移／修订不能重置3次入景或6次母版额度。未知历史仍按原resolve-history规则处理。无索引旧批继续全局第二阶段门槛；stage 3不加--scene也保持全局核验。attempt自动从已锁job及产物所属场景计算门槛，不读取手工current_stage作为许可。
+每次保留旧索引快照和原日志。改scope/jobs、移除指针、篡改快照或截断原日志均会阻止接续；迁移／修订不能重置3次入景或6次母版额度。已锁批次只有在必需、PENDING 的第三阶段场景产物确实漏绑 job，且同一输出角色的历史次数能够由现存来源精确证实时，才可用 `append-job` 追加一个哈希链 job_addendum 事件；它不适用于未知次数、已绑定／已通过／被拒收产物或任何既有 job。未知历史仍按原resolve-history规则处理。无索引旧批继续全局第二阶段门槛；stage 3不加--scene也保持全局核验。attempt自动从已锁job及产物所属场景计算门槛，不读取手工current_stage作为许可。
 
 ## 已产图失效与后续总闸
 

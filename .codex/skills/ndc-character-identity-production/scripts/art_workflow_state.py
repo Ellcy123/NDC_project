@@ -26,6 +26,13 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def conversation_id(explicit=None, fallback=None):
+    actual = os.environ.get('CODEX_THREAD_ID', '').strip()
+    require(not (explicit and actual and explicit != actual), 'task ID must match the executing conversation')
+    require(actual or explicit or fallback, 'actual conversation ID required; use CODEX_THREAD_ID or --task-id')
+    return actual or explicit or fallback
+
+
 def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
                                      separators=(",", ":"), allow_nan=False).encode()).hexdigest()
@@ -118,6 +125,7 @@ def normalize_plan(data, base):
 def initialize(plan_path, journal_path):
     plan_path, journal_path = Path(plan_path), Path(journal_path)
     plan = normalize_plan(read(plan_path), plan_path.parent)
+    plan['conversation_task_id'] = conversation_id(plan.get('conversation_task_id'))
     header = {"schema": JOURNAL, "plan": plan, "plan_sha256": digest(plan)}
     journal_path.parent.mkdir(parents=True, exist_ok=True)
     if journal_path.exists():
@@ -162,6 +170,7 @@ def state(header, events):
     jobs = {j["job_id"]: copy.deepcopy(j) for j in header["plan"]["jobs"]}
     for job in jobs.values():
         job.update(attempts={}, accepted=None, waiting=None, tool_failures=0, revision=0)
+        job['_origin_task_id'] = header['plan'].get('conversation_task_id', header['plan']['task_id'])
     def invalidate(key):
         jobs[key]["accepted"] = None
         jobs[key]["revision"] += 1
@@ -174,6 +183,10 @@ def state(header, events):
         if action == "attempt":
             invalidate(key)
             j["attempts"][data["submission_id"]] = dict(data, result="pending")
+        elif action == 'bind_task':
+            require(not j.get('_task_attribution'), 'legacy task attribution is immutable')
+            j['_origin_task_id'] = data['task_id']
+            j['_task_attribution'] = True
         elif action == "resolve":
             j["attempts"][data["submission_id"]].update(data)
             if data["result"] == "no_output":
@@ -195,8 +208,12 @@ def state(header, events):
     return jobs
 
 
-def used(job, kind):
-    return job["history"].get(kind, 0) + sum(a["kind"] == kind and a["result"] != "no_output" for a in job["attempts"].values())
+def used(job, kind, task_id=None):
+    task_id = conversation_id(task_id, job.get('_origin_task_id'))
+    history = job['history'].get(kind, 0) if job.get('history_task_id') == task_id else 0
+    return history + sum(a['kind'] == kind and a['result'] != 'no_output'
+                         and (a.get('task_id') or job['_origin_task_id']) == task_id
+                         for a in job['attempts'].values())
 
 
 def live_context(jobs, key, stack=None):
@@ -318,16 +335,24 @@ def mutate(journal_path, key, action, data, expected_previous=None):
         require(key in jobs, "unknown job")
         j = jobs[key]
         if action == "attempt":
+            data = dict(data, task_id=conversation_id(data.get('task_id')))
+            if not header['plan'].get('conversation_task_id') and not j.get('_task_attribution'):
+                require(not any(not a.get('task_id') for a in j['attempts'].values()),
+                        'bind untagged calls to their verified originating conversation before new submissions')
             require(not j["waiting"], "job is waiting: " + str(j["waiting"]))
             live_context(jobs, key)
             require(j["source_decision"]["mode"] not in {"manual_input", "reuse"}, "manual or exact-reuse job cannot start automatic production")
-            require(data["kind"] in j["limits"] and used(j, data["kind"]) < j["limits"][data["kind"]], "budget exhausted or kind not enabled")
+            require(data["kind"] in j["limits"] and used(j, data["kind"], data['task_id']) < j["limits"][data["kind"]], "conversation budget exhausted or kind not enabled")
             require(data["submission_id"] and data["submission_id"] not in j["attempts"], "duplicate submission_id")
             require(not any(a["result"] in {"pending", "unknown"} for a in j["attempts"].values()), "unresolved submission: inspect existing job, do not resubmit")
             require(j["tool_failures"] < j["tool_failure_limit"], "repeated tool failure: recover the capability first")
             submission = data.get("submission")
             require(isinstance(submission, dict) and submission.get("tool") and submission.get("operation")
                     and isinstance(submission.get("arguments"), dict), "actual submission snapshot requires tool, operation and arguments")
+        elif action == 'bind_task':
+            require(data.get('task_id') and str(data.get('reason', '')).strip(), 'origin task ID and local evidence reason required')
+            require(not header['plan'].get('conversation_task_id') and not j.get('_task_attribution'), 'legacy task attribution is immutable')
+            require(not any(a.get('task_id') for a in j['attempts'].values()), 'bind legacy origin before new submissions')
         elif action == "resolve":
             prior = j["attempts"].get(data["submission_id"])
             require(prior and prior["result"] in {"pending", "unknown"}, "submission not pending")
@@ -383,7 +408,7 @@ def status(journal_path, require_all=False, selected=None):
         keys = selected or list(result)
         require(set(keys) <= set(result), "unknown requested job")
         require(all(result[key]["status"] == "CURRENT_REVIEW_BOUND" for key in keys), json.dumps(result, ensure_ascii=False))
-    return {"task_id": header["plan"]["task_id"], "jobs": result,
+    return {"task_id": header["plan"]["task_id"], 'budget_task_id': conversation_id(fallback=header['plan'].get('conversation_task_id', header['plan']['task_id'])), 'budget_scope': 'conversation', "jobs": result,
             "checked_scope": selected or list(result),
             "whole_plan_current": all(j["status"] == "CURRENT_REVIEW_BOUND" for j in result.values()),
             "meaning": "Evidence currency only; retain specialized technical, visual and delivery gates."}
@@ -395,7 +420,7 @@ def main():
     init = sub.add_parser("init")
     init.add_argument("--plan", required=True)
     init.add_argument("--journal", required=True)
-    for name in ("status", "check", "attempt", "resolve", "revise", "reject", "wait", "resume", "recover-tool", "prepare-review", "accept", "verify-copy"):
+    for name in ("status", "check", "attempt", "resolve", "revise", "reject", "wait", "resume", "recover-tool", "prepare-review", "accept", "verify-copy", 'bind-task'):
         c = sub.add_parser(name)
         c.add_argument("--journal", required=True)
         if name == "check":
@@ -403,6 +428,7 @@ def main():
         if name not in {"status", "check"}:
             c.add_argument("--job", required=True)
         if name == "attempt":
+            c.add_argument('--task-id')
             c.add_argument("--kind", choices=["model", "ps", "technical"], required=True)
             c.add_argument("--submission-id", required=True)
             c.add_argument("--submission", required=True, help="JSON with actual tool, operation and arguments; journal embeds it")
@@ -412,7 +438,9 @@ def main():
             c.add_argument("--evidence", required=True)
         if name == "revise":
             c.add_argument("--changes", required=True)
-        if name in {"reject", "wait", "resume", "recover-tool"}:
+        if name == 'bind-task':
+            c.add_argument('--task-id', required=True)
+        if name in {"reject", "wait", "resume", "recover-tool", 'bind-task'}:
             c.add_argument("--reason", required=True)
         if name == "prepare-review":
             c.add_argument("--outputs", required=True)
@@ -437,7 +465,9 @@ def main():
         else:
             data = {}
             if args.command == "attempt":
-                data = {"kind": args.kind, "submission_id": args.submission_id, "submission": read(args.submission)}
+                data = {"kind": args.kind, "submission_id": args.submission_id, "submission": read(args.submission), 'task_id': args.task_id}
+            elif args.command == 'bind-task':
+                data = {'task_id': args.task_id, 'reason': args.reason}
             elif args.command == "resolve":
                 data = {"submission_id": args.submission_id, "result": args.result, "evidence": args.evidence}
             elif args.command == "revise":

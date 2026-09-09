@@ -151,6 +151,35 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(self.pipe.reserve_dispatch('controller')['revision'], 2)
         self.assertEqual(self.pipe.status()['total_units'], 2)
 
+    def test_character_scene_references_wait_for_own_lease_but_other_scene_can_publish(self):
+        # Synthetic core wiring only; native geometry and artistic gates are mocked.
+        plan = copy.deepcopy(self.plan)
+        root = self.project / '工作过程文件' / 'integration-lease-test'
+        plan.update(pipeline_kind='character_scene', model_policy=p.INTEGRATION_MODELS, work_root=str(root))
+        for unit in plan['units']:
+            unit['scope'] = {'cases': [{'case_id': unit['unit_id'] + '-day', 'snapshots': [
+                {'snapshot_id': 'whole', 'actor_pose_ids': {'actor': 'pose'}}]}]}
+        db = root / 'pipeline.sqlite'
+        p.Pipeline.initialize(db, plan)
+        pipe = p.Pipeline(db)
+        try:
+            pipe.publish(self.packet(), 'upstream', self.root)
+            d = pipe.reserve_dispatch('controller')
+            pipe.dispatch_sent('controller', d['dispatch_id'])
+            pipe.bind_dispatch('controller', d['dispatch_id'], {'threadId': 'worker'})
+            lease = pipe.claim('worker', d['dispatch_id'])
+            self.assertEqual(pipe.publish(self.packet(), 'upstream', self.root)['status'], 'ALREADY_PUBLISHED')
+            with self.assertRaisesRegex(ValueError, 'active production lease'):
+                pipe.publish(self.packet('A', 2), 'upstream', self.root)
+            self.assertEqual(pipe.packet('A')[0]['revision'], 1)
+            self.assertEqual(pipe.publish(self.packet('B'), 'upstream', self.root)['status'], 'READY')
+            self.assertEqual(pipe.guard(lease)['status'], 'CURRENT')
+            pipe.result(lease, {'unit_id': 'A', 'revision': 1, 'status': 'FAIL', 'files': [],
+                               'reason': 'Synthetic reference defect; no actual art review'})
+            self.assertEqual(pipe.publish(self.packet('A', 2), 'upstream', self.root)['status'], 'READY')
+        finally:
+            pipe.close()
+
     def test_same_revision_changed_payload_is_rejected(self):
         self.publish()
         changed = self.packet(); changed['payload']['value'] = 'changed'

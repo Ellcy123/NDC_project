@@ -237,28 +237,30 @@ def validate_handoff_source_bindings(reference: dict[str, Any], label: str, ledg
         )
 
 
-def validate_placement_contract(data: dict[str, Any], label: str) -> None:
+def validate_placement_contract(data: dict[str, Any], label: str, placement_path: Path | None = None,
+                                scene_report: dict[str, Any] | None = None) -> None:
     require_fields(data, ("calibration", "target"), label)
-    estimates = data["calibration"].get("projectedHeightEstimatesPx", [])
-    groups = {
-        str(item.get("independenceGroup", "")).strip()
-        for item in estimates
-        if str(item.get("independenceGroup", "")).strip()
-    }
-    if len(estimates) < 2 or len(groups) < 2:
-        raise ValueError(f"{label} requires at least two independent scale anchors.")
-    if data["calibration"].get("aggregationMethod") != "median-after-depth-projection":
-        raise ValueError(f"{label} lacks median-after-depth-projection aggregation.")
-    bands = {str(item.get("depthBand", "")).strip() for item in estimates}
-    if bands != {"actor-local", "cross-depth"}:
-        raise ValueError(f"{label} requires actor-local and cross-depth scale anchors.")
-    for index, item in enumerate(estimates):
-        if item.get("depthBand") == "cross-depth":
-            evidence = item.get("projectionEvidence")
-            if not isinstance(evidence, dict) or not evidence.get("perspectiveBasisIds"):
-                raise ValueError(
-                    f"{label}.calibration.projectedHeightEstimatesPx[{index}] lacks cross-depth projection evidence."
-                )
+    if data["calibration"].get("sceneScaleEvidence"):
+        from scene_scale_v2 import placement_scale
+        placement_scale(data, placement_path.parent if placement_path else None, scene_report)
+    else:
+        if scene_report is not None:
+            raise ValueError(f"{label} must reference this shared v2 scene scale evidence.")
+        estimates = data["calibration"].get("projectedHeightEstimatesPx", [])
+        groups = {str(item.get("independenceGroup", "")).strip() for item in estimates
+                  if str(item.get("independenceGroup", "")).strip()}
+        if len(estimates) < 2 or len(groups) < 2:
+            raise ValueError(f"{label} requires at least two independent scale anchors.")
+        if data["calibration"].get("aggregationMethod") != "median-after-depth-projection":
+            raise ValueError(f"{label} lacks median-after-depth-projection aggregation.")
+        bands = {str(item.get("depthBand", "")).strip() for item in estimates}
+        if bands != {"actor-local", "cross-depth"}:
+            raise ValueError(f"{label} requires actor-local and cross-depth scale anchors.")
+        for index, item in enumerate(estimates):
+            if item.get("depthBand") == "cross-depth":
+                evidence = item.get("projectionEvidence")
+                if not isinstance(evidence, dict) or not evidence.get("perspectiveBasisIds"):
+                    raise ValueError(f"{label}.calibration.projectedHeightEstimatesPx[{index}] lacks cross-depth projection evidence.")
     target = data["target"]
     if "poseDefinition" not in target:
         raise ValueError(f"{label} lacks target.poseDefinition.")
@@ -341,20 +343,25 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
         case["sceneAbsoluteScaleReport"],
         f"{label}.sceneAbsoluteScaleReport",
         ledger_path,
-        {"ndc-scene-absolute-scale-report/v1"},
+        {"ndc-scene-absolute-scale-report/v1", "ndc-scene-absolute-scale-report/v2"},
     )
-    if not absolute_scale_report or absolute_scale_report.get("status") != "pass":
-        raise ValueError(f"{label} contains a failed fixed-scene absolute-scale report.")
-    if absolute_scale_report.get("axisAwareProjection") is not True:
-        raise ValueError(f"{label} requires a current axis-aware absolute-scale report; rerun the original contract without inventing missing geometry.")
-    absolute_contract_path, _ = validate_file_ref(
-        {"path": absolute_scale_report.get("contract"), "sha256": absolute_scale_report.get("contractSha256")},
-        f"{label}.sceneAbsoluteScaleReport.contract",
-        absolute_report_path,
-        {"ndc-scene-absolute-scale/v1"},
-    )
-    from scene_staging_tools import validate_scene_absolute_scale
-    validate_scene_absolute_scale(absolute_contract_path)
+    shared_scene_report = None
+    if absolute_scale_report and absolute_scale_report.get("schema") == "ndc-scene-absolute-scale-report/v2":
+        from scene_scale_v2 import current_report
+        shared_scene_report = current_report(case["sceneAbsoluteScaleReport"], ledger_path.parent)
+        if (Path(shared_scene_report["scene"]).resolve() != scene.resolve()
+                or shared_scene_report["sceneSha256"].lower() != str(case["sourceSceneSha256"]).lower()):
+            raise ValueError(f"{label} shared scale report belongs to another source scene.")
+    else:
+        if not absolute_scale_report or absolute_scale_report.get("status") != "pass":
+            raise ValueError(f"{label} contains a failed fixed-scene absolute-scale report.")
+        if absolute_scale_report.get("axisAwareProjection") is not True:
+            raise ValueError(f"{label} requires a current axis-aware absolute-scale report; rerun the original contract without inventing missing geometry.")
+        absolute_contract_path, _ = validate_file_ref(
+            {"path": absolute_scale_report.get("contract"), "sha256": absolute_scale_report.get("contractSha256")},
+            f"{label}.sceneAbsoluteScaleReport.contract", absolute_report_path, {"ndc-scene-absolute-scale/v1"})
+        from scene_staging_tools import validate_scene_absolute_scale
+        validate_scene_absolute_scale(absolute_contract_path)
 
     component_reports = require_nonempty_refs(
         case.get("componentPolicyReports"),
@@ -386,7 +393,12 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
     )
     for placement_index, data in enumerate(placement_data):
         assert data is not None
-        validate_placement_contract(data, f"{label}.placementContracts[{placement_index}]")
+        validate_placement_contract(data, f"{label}.placementContracts[{placement_index}]",
+                                    resolve_path(case["placementContracts"][placement_index]["path"], ledger_path), shared_scene_report)
+    if shared_scene_report is not None:
+        declared = [p["calibration"].get("actorId") for p in placement_data]
+        if len(declared) != len(set(declared)) or set(declared) != {a["actorId"] for a in shared_scene_report["actors"]}:
+            raise ValueError(f"{label} placement scope differs from the full shared scene registry.")
 
     support_reports = require_nonempty_refs(
         case["supportContactReports"],

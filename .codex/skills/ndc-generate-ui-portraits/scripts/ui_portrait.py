@@ -105,8 +105,7 @@ def safe_output(output, source, landmarks):
             raise ValueError("Output overlaps an input")
     # Respect explicitly configured repositories and the known read-only local sources.
     import os
-    blocked = [Path(r"D:/PMH/工作"), Path(r"D:/PMH/ndc")]
-    blocked += [Path(os.environ[key]) for key in ("NDC_PLANNING_ROOT", "NDC_ENGINE_ROOT") if os.environ.get(key)]
+    blocked = [Path(os.environ[key]) for key in ("NDC_PLANNING_ROOT", "NDC_ENGINE_ROOT") if os.environ.get(key)]
     for ancestor in [output, *output.parents]:
         if (ancestor / ".git").exists() or (ancestor / "canon_manifest.json").exists():
             raise ValueError("Output must be outside project repositories")

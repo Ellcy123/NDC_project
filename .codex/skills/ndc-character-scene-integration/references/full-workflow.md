@@ -1,8 +1,12 @@
 # Full workflow
 
+白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+
+白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：位置、比例、头身比、动作和演绎可准确判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
+
 Execution cadence and reuse are defined in [production-cadence.md](production-cadence.md). The sections below are decisions within four milestones, not separate rounds of tool discovery, image generation or duplicate review.
 
-Keep one task responsible for the whole scene. Layered actor batches do not authorize cross-task or cross-stage actor pipelines within that scene. For actual PS operations read the [global queue](../../ndc-photoshop-queue/SKILL.md); independent-scene non-PS overlap follows the cadence reference.
+Keep one owner for each complete scene at each phase: Astra/medium owns references, then Terra/xhigh owns formal production after the full scene packet passes. Read [phase handoff](../../ndc-art-stage-pipeline/references/integration-pipeline.md); different released scenes may overlap. Layered actor batches do not authorize cross-task or cross-stage actor pipelines within that scene. For actual PS operations read the [global queue](../../ndc-photoshop-queue/SKILL.md); independent-scene non-PS overlap follows the cadence reference.
 
 ## 1. Whole-scene rehearsal
 
@@ -18,7 +22,7 @@ Use available candidates for the first full-shot preview; otherwise use the firs
 
 ### Support, scale and natural pose
 
-Read [placement-decision-chain.md](placement-decision-chain.md). Establish source-authoritative floor/support locations, then target depth, then scale. Run absolute scale with three independent fixed-object groups across horizontal/vertical and actor-local/cross-depth evidence. Record assumed physical ranges, measurement lines, projection method/confidence and source/target support points. Two dimensions of one object are not independent; several objects sharing a provisional horizon do not independently verify that horizon. If plausible assumptions produce materially different placements, resolve geometry before detailed head measurements.
+Read [placement-decision-chain.md](placement-decision-chain.md). Establish source-authoritative floor/support locations, then target depth, then scale. Create/reuse the shared scene-scale v2 register. Height calibration uses independent vertical evidence across local and cross-depth bands; horizontal furniture normally checks footprint and clearance, without contributing to the height factor. Horizontal-to-height conversion still needs real direction-transfer evidence. Where camera metric information is insufficient, bounded mode must retain measured versus assumed ranges, support/hidden-foot intervals and sensitivity evidence with current whitebox/head/support/UI reviews. If plausible assumptions materially change placement or readability, block geometry instead of manufacturing precision. Placements reference this same source/hash and their support-plane projection; do not re-enter the same furniture estimates per actor.
 
 Run cast-scale v2 head-first against approved-card anatomical head/body references. Use 20% individual and 20% pairwise head-ratio deviation under the user's 80% consistency requirement. Retain canonical height and fixed-scene body-scale checks. For a tilted/lying head, use the reviewed crown-to-chin anatomical axis; do not enlarge it to compensate for screen rotation or pretend the axis solves unseen foreshortening.
 
@@ -28,7 +32,7 @@ Author a viable complete pose with head, neck, shoulders, elbows, hands, hips, k
 
 Follow [layered-character-batches.md](layered-character-batches.md): far-to-near batches may contain several separable complete actors. Generate/reuse an independently reviewed empty-scene depth image and anatomical 3D whiteboxes with stable distinct matte colors. No stick/joint/block figures or technical ruler as generation authority. Produce each complete master and the combined snapshot from those same layers/transforms; do not extract the only actor copy from an already occluded cast.
 
-Inspect hidden anatomy and support with foreground occluders temporarily hidden or bedding ghosted/cut away, then restore the final source-pixel occluders. The entire lying head-to-feet body remains inspectable. Whitebox hard review covers structure, body scale, support and visible action silhouette; tiny eye/expression details transfer to formal review.
+Inspect hidden anatomy and support with foreground occluders temporarily hidden or bedding ghosted/cut away, then restore the final source-pixel occluders. At whitebox stage, inspect enough of the lying body axis and support to judge position, scale and performance; minor hidden or missing regions follow whitebox-acceptance.md. Formal masters still require the entire head-to-feet body. Whitebox hard review covers structure, body scale, support and visible action silhouette; tiny eye/expression details transfer to formal review.
 
 Run support validation. Fixed bed/seat/step lines keep their numeric tolerance; continuous floors use independent region plus actual physical review. Lying support additionally requires bed polygon, head/pillow region, foot-end region and a valid complete body axis. Coordinate coverage alone cannot approve contact. Head, neck and shoulders must be comfortably borne by the pillow; bedding/cushions need corresponding load, indentation, rise/wrap and contact shadows.
 

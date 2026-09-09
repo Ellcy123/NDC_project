@@ -4,6 +4,8 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 ---
 # NDC 道具最终复查与交付
 
+执行前读[对话任务独立额度](../ndc-prop-requirements/references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
+
 这是第五阶段。读[批次协议](../ndc-prop-requirements/references/batch-contract.md)、[审核与复用](references/review-contract.md)及[交付细则](references/production-details.md)。命名、角色和目录仍遵从[交付合同](../ndc-scene-evidence-placement/references/delivery-contract.md)。
 
 ## 完整复查
@@ -14,7 +16,7 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 2. A类事实全部通过；B类按原先明确允许的差异判断；C类不追求像素一致。风险表列尚未核实或超出允许范围的差异。关键错误与技术错误不能被平均分数抵消。
 3. 同组比较Big/Icon/Map/菜单及必要状态，判断身份、组件和状态关系；真实角度、光线与合理遮挡可变。读取当前拒收，用户否定立即使相关复用失效。
 4. 核对实际待交付字节及完整链。已有审核满足图像／父图／内容／要求／范围均未变化且无拒收时复用记录；同哈希不足以放行。最终整包联组复查仍执行。
-5. 关键问题返回责任阶段，保留原job和累计次数。额度用尽只能保留候选并汇总人工待处理；不得因最终审核再次启动三轮生成。
+5. 关键问题返回责任阶段，保留原job和累计次数。先区分道具本体的身份、结构、必要信息、状态和可读文字，与人物/手部、背景、承托、场景残留、构图边界和Alpha等外部问题；后者先做一次 Photoshop MCP 抠取或修复并复查。若该次隔离结果视觉失败，它只是 `PROCESS_SOURCE_NOT_CANDIDATE`，不计候选/进度，不可下游或发布；立即回到生成阶段产出空背景/原生透明背景的独立道具图，不在同一失败源上重复调 Alpha。道具本体语义门禁失败同样回到生成。额度用尽只能保留真正候选并汇总人工待处理；不得因最终审核再次启动三轮生成。
 6. 每个正式PNG必须绑定通过的真实视觉记录。复用记录只证明旧观察仍适用，脚本不得生成新的艺术PASS。详情图通过不代表热区通过。
 7. 图片范围和程序接入分开：交付图片及可供接入的坐标／说明，不擅自修改Unity，不将程序未绑定错误计为缺PNG。用户明确要求运行时完成时仍需单独验证。
 
@@ -30,6 +32,7 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 
 ## 可复用工具
 
-scripts/workflow_state.py 管理批次门槛、追加尝试日志和审核复用判定；scripts/scene_release.py计算有证据的场景关联前置闭包。可选索引、无重置迁移与续作命令见[场景放行合同](../ndc-prop-requirements/references/scene-release-contract.md)。
+scripts/workflow_state.py 管理批次门槛、追加尝试日志、缺失 job 的受证据增补和审核复用判定；scripts/scene_release.py计算有证据的场景关联前置闭包。若已锁定批次确有一个必需、PENDING 的第三阶段场景产物漏绑 job，先核对确切历史次数与来源，再按[场景放行合同](../ndc-prop-requirements/references/scene-release-contract.md#接入与续跑)追加一次 `append-job`；不得借此重置、替换或补写其他 job。
+历史次数已确认后，其引用的来源文件发生变化并触发`history source bytes changed`时，读[历史来源复核](references/history-source-revalidation.md)。只有重新查明历史次数未变后才能追加来源复核；它不重开次数，也不恢复图像审核。
 scripts/stage_visual_check.py、scripts/final_visual_check.py 是移入本Skill的共用审核实现；项目根旧命令保留兼容入口。
 旧evidence_art、evidence_delivery、irregular_map、secondary_prop_border和validate_formal_release仍保留在原Skill脚本地址。不要搬动脚本破坏历史作业。

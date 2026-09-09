@@ -2,15 +2,23 @@
 
 `scripts/dispatch_plan.py` 只生成工具参数和核心命令，不发送消息、不创建任务、不操作应用私有接口，也不替代 SQLite 核心。任务工具必须由当前活动的 Codex 控制任务调用。任务结束后本适配器不会常驻或定时触发。
 
-每个 pipeline 复用一个下游任务，默认总并发为上游 1 + 下游 1。同一场景的完整 views 由该任务统筹，不按 view 创建任务。发布是单元边界：一个已通过的单元 READY 后即可推进下游；控制任务无需等待全部上游完成，再继续处理后面的独立单元。
+每个 pipeline 复用一个下游目标任务，默认总并发为上游 1 + 下游 1；Codex 对话只是承载目标的任务容器，不能用“已创建对话”代替目标已建立。同一场景的完整 views 由该目标任务统筹，不按 view 创建任务。发布是单元边界：一个已通过的单元 READY 后即可推进下游；控制任务无需等待全部上游完成，再继续处理后面的独立单元。
 
 ## 当前工具能力依据
+
+### 持续目标启动（2026-09-09 用户明确要求）
+
+所有重叠阶段任务以目标模式运行，包括复用的旧普通任务。当前 `create_thread` 契约没有 goal/mode 字段，不伪造参数，也不把 `/goal` 当作一定会被执行的消息指令。派发脚本在 create/send prompt 中明确要求目标任务调用 `get_goal`，不存在未完成目标时实际 `create_goal`；用户已明确授权此行为，不再申请例行审批。目标覆盖已授权完整阶段批次，不能缩成当前包；验证任务只覆盖验证，不扩大为美术生产。
+
+已有同批未完成目标保留接续，禁止重建或清零次数；已有不同目标或目标工具不可用时如实回传，不覆盖目标。目标任务以真实 `get_goal` 结果一次性回传状态与 objective，控制任务检查该启动回执后继续自己的工作，不持续监管下游。未收到回执只能写“目标启动待核实”。只有全阶段完成才能标记 complete，暂无 READY、等待上游及人工节点不能假报完成；阻塞状态按实际目标工具条件处理。
+
+实现依据：本机公开目标工具契约及 [OpenAI Codex 目标工具定义](https://github.com/openai/codex/blob/main/codex-rs/ext/goal/src/spec.rs)。应用任务建立与目标启动是两份独立证据。
 
 本机已提供的工具契约包含 `mcp__codex_app__create_thread`、`send_message_to_thread`、`read_thread`、`wait_threads`、`list_threads`、`list_projects`。具体参数以当前工具声明为准，不调用未经公开提供的内部 app/API。
 
 - `create_thread` 仅在已有明确新任务授权时调用。先用 `list_projects` 取得真实 `projectId` 和 `isGitRepository`；Git 项目默认 worktree，非 Git 项目使用 local。只有用户明确要求直接使用保存项目时才覆盖为 local。
 - 创建非阻塞：实际返回 `threadId` 才能绑定；只有 `clientThreadId` 时是 `SETUP_PENDING`，不得把它填入 send/read/wait 的 `threadId`。
-- 复用任务使用 `send_message_to_thread`；保留原模型设置，不自行填入 model/thinking。
+- 复用任务使用 `send_message_to_thread`；UI与MJ保留原模型设置，不自行填入model/thinking；用户明确指定的character_scene派发固定填写Terra/xhigh，新建与send一致。参考启动固定Astra/medium，详见 [入景协议](integration-pipeline.md)。
 - 已知真实任务的简短检查用 `wait_threads` 的 `timeoutMs: 0`，后续传原工具返回的 cursor。需要具体回执时再 `read_thread`；不反复轮询相同状态。
 
 官方说明确认 worktree 用于隔离同一 Git 项目的并行文件工作；它不替本协议证明外部应用操作或美术生产速度。[OpenAI：Git worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)

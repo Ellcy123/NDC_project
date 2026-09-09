@@ -4,6 +4,10 @@ description: 将已锁定 NDC 道具放入既定场景，确定承载体、原�
 ---
 # NDC 场景放入与二级菜单
 
+本 Skill 的 `scripts/`、`references/`、`assets/` 必须作为同一个完整目录随 Skill 提交，运行时从当前实际 `SKILL.md` 根相对解析。跨设备脚本入口为策划仓库的 `python -B scripts/art_pipeline/ndc_art.py run ndc-scene-evidence-placement <脚本名> -- <参数>`；不得引用维护机 `.agents`、用户名或固定盘符。Unity 根由 `NDC_ENGINE_ROOT` 推导，特殊布局用 `NDC_UNITY_EVIDENCE_ROOT`，这些本机路径不得写回 Skill。
+
+执行前读[对话任务独立额度](../ndc-prop-requirements/references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
+
 这是五阶段的第三阶段。批次未建立时先调用[需求整理](../ndc-prop-requirements/SKILL.md)；母版缺失时交给[母版制作](../ndc-prop-master-production/SKILL.md)。旧名称和 scripts/ 地址保持兼容，但不能再把所有阶段在本入口内重复执行。
 
 读[共用批次协议](../ndc-prop-requirements/references/batch-contract.md)与[场景专业细则](references/production-details.md)。实际改动场景前加载[坐标修图](../ndc-coordinate-image-edit/SKILL.md)；制作Big/Icon时读[规格](references/detail-icon-production.md)；PS修正或菜单框幅调整时读[PS操作参考](references/photoshop-mcp-repair-and-framing.md)。本阶段不加载热区描边全文。

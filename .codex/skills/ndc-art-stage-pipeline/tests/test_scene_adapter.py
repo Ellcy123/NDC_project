@@ -235,7 +235,8 @@ class SceneAdapterTests(unittest.TestCase):
     def test_history_budget_is_preserved_and_validator_is_read_only(self):
         packet = make_fixture(self.base/'old', history_model=3)
         journal = Path(packet['authority']['journal']); before = journal.read_bytes()
-        self.assertEqual(adapter.validate_release(packet,self.base)['view_budgets']['eye_level']['used'],3)
+        self.assertEqual(adapter.validate_release(packet,self.base)['view_budgets']['eye_level']['used'],0)
+        self.assertEqual(adapter.workflow().load(journal)[0]['plan']['jobs'][0]['history']['model'],3)
         self.assertEqual(before, journal.read_bytes())
 
     def test_unknown_submission_is_preserved(self):

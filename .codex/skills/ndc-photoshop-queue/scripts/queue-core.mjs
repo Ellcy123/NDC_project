@@ -18,10 +18,11 @@ export function fileEvidence(path, roots) {
 
 // One durable authority per physical Photoshop bridge. Time never grants a second owner.
 export class PhotoshopQueue {
-  constructor(path, { roots, now = Date.now, idleMs = 120000, staleMs = 180000, waitingMs = 300000 } = {}) {
+  constructor(path, { roots, now = Date.now, idleMs = 120000, staleMs = 180000, waitingMs = 300000, abandonedMs = 300000 } = {}) {
     mkdirSync(dirname(resolve(path)), { recursive: true });
     this.db = new DatabaseSync(path); this.roots = roots.map(root => resolve(root)); this.now = now;
     this.idleMs = idleMs; this.staleMs = staleMs; this.waitingMs = waitingMs;
+    this.abandonedMs = abandonedMs;
     this.db.exec('PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS state(id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL); CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, kind TEXT NOT NULL, body TEXT NOT NULL)');
     this.db.prepare('INSERT OR IGNORE INTO state VALUES(1,?)').run(JSON.stringify({ version: 1, epoch: 0, next: 1, waiting: [], owner: null, reviews: {}, external: null }));
   }
@@ -48,7 +49,7 @@ export class PhotoshopQueue {
     return !hasWork && Number.isFinite(seen) && this.now() - seen >= this.waitingMs;
   }
   pruneWaiting(state, record = true) {
-    const expired = state.waiting.filter(x => this.waitingExpired(x));
+    const expired = state.waiting.filter(x => this.waitingExpired(x) && !(state.owner?.recovering && state.owner.task_id === x.task_id));
     if (!expired.length) return [];
     const tickets = new Set(expired.map(x => x.ticket));
     state.waiting = state.waiting.filter(x => !tickets.has(x.ticket));
@@ -179,15 +180,16 @@ export class PhotoshopQueue {
     const owner = o && { ...o }; if (owner) delete owner.token;
     return { diagnosis, owner_diagnosis: ownerDiagnosis, owner, waiting: s.waiting, external: s.external, thresholds: { idle_ms: this.idleMs, stale_ms: this.staleMs, waiting_ms: this.waitingMs }, note: 'Only unused waiting tickets expire. Elapsed time never reassigns in-flight/unknown work or ends manual use.' };
   }
-  recoverClaim(a) {
+  recoverClaim(a, automatic = false) {
     if (!id(a?.task_id)) fail('INVALID_REQUEST', 'A non-empty recovery task_id is required.');
     return this.tx('recovery_claim', s => {
       const o = s.owner;
       if (!o) fail('NO_OWNER', 'No occupied slot to recover.');
-      if (s.waiting.some(x => x.task_id === a.task_id)) fail('RECOVERY_TASK_QUEUED', 'Cancel this recovery task\'s waiting production ticket before claiming another task\'s occupied slot.');
+      if (s.waiting.some(x => x.task_id === a.task_id) && !automatic) fail('RECOVERY_TASK_QUEUED', 'Cancel this recovery task\'s waiting production ticket before claiming another task\'s occupied slot.');
+      if (automatic && (s.external || s.waiting[0]?.task_id !== a.task_id)) fail('AUTO_RECOVERY_NOT_ELIGIBLE', 'Only the waiting head may recover an automatic slot.');
       if (o.in_flight) fail('COMMAND_STILL_RUNNING', 'Wait for the running request or its recorded timeout; do not start a second writer.');
       if (o.recovering && this.now() - o.heartbeat_at <= this.staleMs) fail('RECOVERY_OWNED', 'Only one live recovery operator is allowed.');
-      if (o.task_id !== a.task_id && this.now() - o.heartbeat_at <= this.staleMs) fail('OWNER_ALIVE', 'Current owner is still responsive. Ask it to finish and release.');
+      if (o.task_id !== a.task_id && this.now() - o.heartbeat_at <= this.staleMs && !(automatic && this.now() - o.progress_at > this.abandonedMs)) fail('OWNER_ALIVE', 'Current owner is making recent progress; wait for its safe boundary.');
       o.original_task_id = o.original_task_id || o.task_id;
       o.task_id = a.task_id; o.epoch = ++s.epoch; o.token = randomUUID(); o.recovering = true; o.barrier = null; o.heartbeat_at = this.now();
       return { ...o, note: 'The previous lease is fenced. Probe Photoshop before saving or releasing.' };

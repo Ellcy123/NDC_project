@@ -5,6 +5,8 @@ description: "Generate and deliver native character-free NDC scene images in Mid
 
 # NDC Midjourney Operator
 
+执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，其他对话的资产历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于旧预算说明。
+
 ## 画面描述辅助检查
 
 编写或修改生图/编辑输入时，协作使用 [ndc-visual-description](../ndc-visual-description/SKILL.md)：需求与参考明确后，在布局/姿态方案定稿前确定本帧可见意图；最终提示、参考及裁切组装后检查实际提交内容，防止下游重新引入剧情/视角冲突。沿用已有检查，实质变化只复核受影响项；候选偏差复用本 Skill 的视觉审阅进行原因诊断。
@@ -22,7 +24,7 @@ Read [production record and continuation](references/production-record.md) befor
 
 - Inspect all four grid candidates for hard camera/layout, architecture/routes and figure leakage first. A clear veto ends that candidate's review with a concrete reason; uninspected fine style/texture stays `NOT_CHECKED`, not `PASS`. Rejected candidates need no complete tile inspection, and their historical failures do not block a different current accepted candidate.
 - A shortlisted original file must pass whole-image `100%`, complete original-pixel local coverage (or the required `200%` views), and all applicable camera, spatial, state, framing, style, texture and reference-leakage criteria. Browser completion, thumbnails, dimensions and hashes do not prove artistic success.
-- Write a current `ndc-stage-visual-self-check/v1` record binding the reviewer/date, input/output identity and hashes, actual inspected views, each applicable criterion/finding, status and rework owner. Missing evidence, stale bindings, `FAIL` or applicable `NOT_CHECKED` blocks formal selection/delivery. When a local file exists, run `python D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <visual-review.json> --artifact <current-output>`; a nonzero result blocks that artifact.
+- Write a current `ndc-stage-visual-self-check/v1` record binding the reviewer/date, input/output identity and hashes, actual inspected views, each applicable criterion/finding, status and rework owner. Missing evidence, stale bindings, `FAIL` or applicable `NOT_CHECKED` blocks formal selection/delivery. When a local file exists, run `python -B scripts/art_pipeline/ndc_art.py tool stage -- --record <visual-review.json> --artifact <current-output>` from the planning repository root; a nonzero result blocks that artifact.
 - Selection, byte-preserving copy and publication may reference the same passing review after the production-record protocol checks current bytes, sources/parents, role, requirements and rejection status. New pixels or a changed requirement/role trigger only the affected review plus required whole-image/context checks. Style and texture retain distinct conclusions but share the actual inspection evidence.
 
 Every attempt remains recorded, including rejected and uncertain results. Final delivery requires the current accepted dependency chain to pass; it never requires rejected grids to become passing stages. Budget exhaustion leaves an unresolved candidate and does not relax any formal gate.
@@ -70,7 +72,7 @@ Follow [operation loop](references/operation-loop.md). Use `https://alpha.midjou
 
 Review all four candidates against the current handoff's camera and spatial contract first. Derive scene-specific checks from that contract; do not inherit another task's camera placement, architecture, furnishings or state. Use visible scale and perspective cues, not prompt labels, to judge camera height. Preserve passing views and iterate only failed ones within budget. For every later shortlisted view, compare source-supported landmark identities, wall/opening connections and master state with the shared contract and current accepted views. Visibility may change with camera; room facts may not. If a shared source fact changes, invalidate only affected view plans/reviews; never silently replace the authority with generated geometry or reset budgets.
 
-After a candidate clears the hard composition/architecture/empty-background vetoes, download its native file to the work-process directory. Inspect the whole image and complete overlapping original-resolution tiles. Review style and texture separately; `FAIL` or `NOT_CHECKED` blocks formal selection. Use the existing tile helper and record coverage, original dimensions, current hashes, stage visual checks and `ndc-texture-coherence/v1`; validate using `D:/Codex/NDC/scripts/validate-ndc-texture-gate.py` and the shared stage validator.
+After a candidate clears the hard composition/architecture/empty-background vetoes, download its native file to the work-process directory. Inspect the whole image and complete overlapping original-resolution tiles. Review style and texture separately; `FAIL` or `NOT_CHECKED` blocks formal selection. Use the existing tile helper and record coverage, original dimensions, current hashes, stage visual checks and `ndc-texture-coherence/v1`; from the planning repository root validate using `python -B scripts/art_pipeline/ndc_art.py tool texture -- <arguments>` and the shared `tool stage` entry.
 
 Choose among hard-passing images by later editing convenience: legible depth, separated silhouettes, unobstructed routes, continuous supporting surfaces, coherent light and restrained incidental clutter. Do not smooth away the approved painterly style. Do not reject a sound MJ base because later props or final game-canvas operations remain absent.
 

@@ -7,13 +7,15 @@ metadata:
 
 # NDC 角色身份母版生产
 
+执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，其他对话的资产历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于旧预算说明。
+
 实际使用 Photoshop MCP 前按需读取 [全局 PS 队列](../ndc-photoshop-queue/SKILL.md)。同任务当前图须保存、完成技术及真实视觉检查并核对当前hash；未审完不得推进下一张。PASS可推进相应依赖；FAIL缺陷已记录且预算耗尽或用户要求封存时，保留候选和累计次数，仅继续独立资产；安全保存可恢复文件和固定审阅快照后，可按队列协议挂起释放给其他独立任务。释放不是PASS，不解除原图及依赖的阻断、不重置预算；命令在途或结果未知时不得自行交棒。纯准备、生图等待和离线审阅不长期占用桥接，未授权的PS操作不会因排队而获得授权。
 
 输入是已核实的新角色需求与历史资产盘点，输出是可复用的通用风格身份母版及同源面部锚点。已有批准同角色身份时返回需求入口并交派生，不重新设计。
 
 ## 开始与续作
 
-- 先读 [持久生产记录](references/production-record.md) 及共享 [角色合同](../ndc-generate-characters/references/character-contract.md)、[预算与依赖](../ndc-generate-characters/references/production-budgets-and-dependencies.md)，沿用同一job及历史消耗；缺少盘点先由 [角色入口](../ndc-generate-characters/SKILL.md) 补齐。
+- 先读 [持久生产记录](references/production-record.md) 及共享 [角色合同](../ndc-generate-characters/references/character-contract.md)、[预算与依赖](../ndc-generate-characters/references/production-budgets-and-dependencies.md)，沿用同一job及分对话计数的历史记录；缺少盘点先由 [角色入口](../ndc-generate-characters/SKILL.md) 补齐。
 - 用户仅要提示词时只输出提示、顺序和判断；已授权Codex批量或实际生产则继续执行。重要新角色使用MJ，次要新角色使用Image 2，不因浏览器故障擅自换重要角色身份路线。
 - 构思与实际提交前使用 [画面描述](../ndc-visual-description/SKILL.md)，仅复核变化项；用户原始提示与明确选图优先，候选不自动变成身份锁。
 

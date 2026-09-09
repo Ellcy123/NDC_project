@@ -70,6 +70,27 @@ def configured_environment(paths) -> dict:
     return environment
 
 
+def resolve_node() -> str:
+    """Resolve Node without recording another user's absolute installation path."""
+    explicit = os.environ.get("NDC_NODE_EXE")
+    if explicit:
+        executable = Path(explicit).expanduser()
+        if not executable.is_absolute() or not executable.is_file():
+            raise ValueError("NDC_NODE_EXE must name an existing absolute Node executable")
+        return str(executable.resolve())
+    command = shutil.which("node")
+    if command:
+        return command
+    profile = os.environ.get("USERPROFILE")
+    if profile:
+        bundled = (Path(profile) / ".cache" / "codex-runtimes" /
+                   "codex-primary-runtime" / "dependencies" / "node" /
+                   "bin" / "node.exe")
+        if bundled.is_file():
+            return str(bundled.resolve())
+    raise ValueError("Node.js is required; install it or set NDC_NODE_EXE")
+
+
 def managed_output(value: str, paths) -> Path:
     """Keep protected legacy packagers within an existing managed job payload."""
     from art_workspace import CLOSED, load_job, reparse
@@ -122,10 +143,7 @@ def run_script(script: Path, arguments: list[str], paths) -> int:
             raise ValueError("PowerShell is required to run this script")
         command = [shell, "-NoLogo", "-NoProfile", "-File", str(script)]
     elif extension in {".js", ".cjs", ".mjs"}:
-        node = shutil.which("node")
-        if not node:
-            raise ValueError("Node.js is required to run this script")
-        command = [node, str(script)]
+        command = [resolve_node(), str(script)]
     else:
         raise ValueError(f"Unsupported script type: {extension}; use py, ps1, js, cjs, or mjs")
     if arguments[:1] == ["--"]:

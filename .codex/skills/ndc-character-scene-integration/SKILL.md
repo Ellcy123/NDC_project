@@ -5,13 +5,23 @@ description: Direct and place approved NDC characters in fixed scenes using narr
 
 # NDC Character Scene Integration
 
+本 Skill 自带的脚本、参考和测试一律从当前 `SKILL.md` 目录相对解析并随 Skill 提交；不得依赖维护机的 `.agents/skills`、用户名或固定盘符。跨设备运行脚本使用策划仓库 `scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration <脚本名> -- <参数>`。过程根使用公共配置的 `NDC_ART_WORK_ROOT`；正式输出根需另行限定时设置本机 `NDC_CHARACTER_SCENE_ROOT`。这些路径不得写回 Skill。
+
+阶段责任以整场白模交接为界：参考阶段确定整个场景及所有必需角色/状态的白模后冻结交接；正式角色生成、与白模的位置和比例对齐、技术/视觉自检、返修及最终交付由下一阶段全权负责。参考任务交棒后继续其他场景，全部交接后结束参考轮次，不持续监控或代做正式生产。仅白模本身核心错误由下游主动回传参考；生成结果偏离正确白模时由下游自行修正。此责任边界优先于后文通用全流程描述，具体见[入景专属协议](../ndc-art-stage-pipeline/references/integration-pipeline.md)。
+
+白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+
+执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，其他对话的资产历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于旧预算说明。
+
 实际使用 Photoshop MCP 前按需读取 [全局 PS 队列](../ndc-photoshop-queue/SKILL.md)。同任务当前图须保存、完成技术及真实视觉检查并核对当前hash；未审完不得推进下一张。PASS可推进相应依赖；FAIL缺陷已记录且预算耗尽或用户要求封存时，保留候选和累计次数，仅继续独立资产；安全保存可恢复文件和固定审阅快照后，可按队列协议挂起释放给其他独立任务。释放不是PASS，不解除原图及依赖的阻断、不重置预算；命令在途或结果未知时不得自行交棒。纯准备、生图等待和离线审阅不长期占用桥接，未授权的PS操作不会因排队而获得授权。
+
+本项目入景默认采用用户指定的两阶段模型分工：[整场参考与协调](../ndc-character-scene-reference/SKILL.md) 使用 Astra / medium；[正式生产与交付](../ndc-character-scene-production/SKILL.md) 使用 Terra / xhigh。本文保留共享艺术约束与工具入口，按所处阶段只读对应内容。通过 [入景阶段流水](../ndc-art-stage-pipeline/references/integration-pipeline.md) 自动交接完整场景；Astra准备场景B时，Terra可生产已完整放行的场景A。
 
 Use approved scenes and character cards as authority. Establish a believable complete shot early, then produce separable layers and verify the finished shot. Technical agreement never overrides visible floating, stiff acting, broken contact, incorrect identity or a user's rejection.
 
 ## Scope and authorization
 
-- Read/copy only from `D:/PMH/工作` and `D:/PMH/ndc`; outputs belong under `D:/Codex/NDC`. Keep evidence under `工作过程文件/角色融入场景/Unit<n>` and passed assets under the corresponding `最终交付` category, inside the source scene basename.
+- 本机 `D:/PMH/工作` 与 `D:/PMH/ndc` 仅可读/复制；换电脑时按当前项目配置定位对应只读来源。输出位于当前机器授权的 NDC 根（必要时由 `NDC_CHARACTER_SCENE_ROOT` 指定）。证据放在其 `工作过程文件/角色融入场景/Unit<n>`，通过资产放在对应 `最终交付` 分类并使用源场景 basename。
 - If the user plans to generate manually in ChatGPT, provide prompts only. Execute generation/file management only within the authorized task. Do not edit Unity code/configuration or original production assets without separate authorization.
 - Photoshop uses verified MCP capabilities and the shared queue only. Within this task, save, technically check, visually inspect and validate the current image before advancing to the next image. A recoverable checkpoint and frozen review snapshots permit suspension for another independent task under the queue protocol; an unfinished or failed image remains blocked. Consecutive operations on the same image may form one coherent repair.
 - Task continuation and formal Skill installation are separate. Do not block already-authorized work merely to request a workflow update; record proposals and continue under applicable approved rules. An instruction to update the discussed revision authorizes that update. Real missing permission/capability blocks dependent work only; disclose the exact reason.
@@ -37,7 +47,7 @@ Collaborate with [ndc-visual-description](../ndc-visual-description/SKILL.md) be
 
 ## Four production milestones
 
-同一场景由一个任务统筹整场预演、白模联动、分层生产与全场验收；不能把角色A的正式合成与角色B尚未稳定的白模／站位拆到不同任务跨阶段推进。分层批次仍是同一场景内的制作顺序，不是拆角色并行的授权。不同场景仅在来源、工作PSD、输出和场景记录互相独立，共享角色母版只读且无未冻结共同依赖时，允许准备、生图等待或离线审核重叠；实际PS始终使用同一全局队列。
+同一场景在每个阶段均有唯一负责者：Astra统筹整场预演和全部白模，通过完整场景交接后Terra统一负责分层生产与全场验收；不能把角色A的正式合成与角色B尚未稳定的白模／站位拆到不同任务跨阶段推进。分层批次仍是同一场景内的制作顺序，不是拆角色并行的授权。不同场景仅在来源、工作PSD、输出和场景记录互相独立，共享角色母版只读且无未冻结共同依赖时，允许准备、生图等待或离线审核重叠；实际PS始终使用同一全局队列。
 
 1. **Whole-scene rehearsal.** Resolve authority, runtime branch and actual cast; translate the beat into visible relationships; establish support/depth and rough scale. Use available candidates for a clearly provisional whole-scene preview before polishing anyone. Read it without dialogue: intended activity, natural support, distinct body language and credible interaction must be visible. Until Codex's own pre-generation checks pass, the preview is diagnostic only; this is not a user approval checkpoint.
 2. **Layered production.** Plan far-to-near batches with complete independent actors. Review empty-scene depth and anatomical 3D whiteboxes, including isolated masters and the same-layer combined view, then pass the pre-generation ledger. Generate identities in original-scene context. Preserve approved actor pixels during extraction where verified tools permit; register layers and solve minimal soft-response regions together with human contacts. Return each changed actor to the whole shot before fine polish.
@@ -46,10 +56,12 @@ Collaborate with [ndc-visual-description](../ndc-visual-description/SKILL.md) be
 
 ## Invariants
 
+白模阶段先读[白模放行与正式完整性](references/whitebox-acceptance.md)。其最新阶段边界优先于下文及旧参考中的“完整白模/检查全部隐藏身体”要求：核心位置、比例、头身比、动作和演绎成立时，小型遮挡、局部缺失和小细节可放行；正式生成仍须得到完整角色并实查。
+
 - Resolve `exploration-click-pair` versus `pure-narrative` from configuration, dialogue and approved requirements. Use chronological simultaneous-cast snapshots. Preserve uninterrupted presences across entrances; do not anticipate a future actor or claim entry through a visibly closed door.
 - Select the actual left or right dialogue UI after blocking and test that mask only. Faces and critical hands/props remain readable; genuine transparent padding is not obstruction.
 - A ground-region hit proves coverage only. Author support/depth from the scene independently of actors. Shared provisional perspective assumptions cannot certify each other. Review local furniture and a different depth band; resolve uncertainty that changes placement before fine measurements.
-- Before whitebox approval use `validate-scene-absolute-scale` with three independent fixed-object groups spanning horizontal/vertical and local/cross-depth evidence, then `validate-cast-scale` v2 with `headScalePriority: true`. Approximately 80% head/body consistency means both `maxHeadDeviationRatio` and `maxPairwiseHeadDeviationRatio` are `0.20`, not 0.40. It does not relax scene scale, anatomy or contact. Measure tilted/lying heads along the reviewed anatomical axis rather than a rotated vertical box.
+- Before whitebox approval use `validate-scene-absolute-scale` with the shared scene-scale v2 contract: separate vertical height calibration from horizontal footprint checks, spanning local/cross-depth evidence. Metric mode needs independent height anchors; bounded mode needs explicit ranges, sensitivity and current reviewed whitebox/support/head/UI evidence, without claiming camera calibration. Block uncertainty that changes the selected placement. Each placement references this shared register rather than remeasuring the same furniture. Then run `validate-cast-scale` v2 with `headScalePriority: true`. Approximately 80% head/body consistency means both `maxHeadDeviationRatio` and `maxPairwiseHeadDeviationRatio` are `0.20`, not 0.40. It does not relax scene scale, anatomy or contact. Measure tilted/lying heads along the reviewed anatomical axis rather than a rotated vertical box.
 - Pair the depth image with complete anatomical 3D whiteboxes using stable distinct matte colors. Never use stick/joint/block figures or the 170cm technical ruler as pose-generation authority. Review visible body structure, support and action silhouette; tiny unresolved gaze/expression differences transfer to the formal character stage.
 - Complete masters and occluded snapshots use the same layers/transforms. Inspect hidden feet and anatomy in the complete master, then restore exact-source occlusion and judge final support. Never relocate hidden feet just to pass a calculation.
 - Treat head/neck/shoulders plus pillow, pelvis plus cushion, or body plus bedding as coupled contact. Retain the full actor master and a separate minimum soft-response layer; recheck both when their relation changes. An unchanged empty pillow is not evidence of a newly loaded pillow. Fixed furniture/architecture remains exact source at scale 1.
@@ -57,11 +69,11 @@ Collaborate with [ndc-visual-description](../ndc-visual-description/SKILL.md) be
 
 ## Review and retry control
 
-Follow the operation boundaries in [production-cadence.md](references/production-cadence.md). Each accepted image state needs actual whole-`100%` and applicable local-`200%`/original-pixel inspection bound to paths and SHA-256. Record `ndc-stage-visual-self-check/v1` with explicit findings and `PASS`, `FAIL` or `NOT_CHECKED`. Missing coverage, stale hashes or failed/unchecked applicable criteria block downstream acceptance. Validate with `D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <record> --artifact <output>` at accepted image milestones. Internal commands and manifest writes are not separate art stages.
+Follow the operation boundaries in [production-cadence.md](references/production-cadence.md). Each accepted image state needs actual whole-`100%` and applicable local-`200%`/original-pixel inspection bound to paths and SHA-256. Record `ndc-stage-visual-self-check/v1` with explicit findings and `PASS`, `FAIL` or `NOT_CHECKED`. Missing coverage, stale hashes or failed/unchecked applicable criteria block downstream acceptance. From the planning repository root validate with `python -B scripts/art_pipeline/ndc_art.py tool stage -- --record <record> --artifact <output>` at accepted image milestones. Internal commands and manifest writes are not separate art stages.
 
 Retain ledger coverage for `exact-pose-whitebox`, `contextual-local-result`, `matte-extraction`, `pre-composite-registration` and `final-full-composite`. They identify genuinely reviewed outputs/scopes inside the milestones. Share real inspection evidence where applicable; never invent an unexecuted stage or write PASS over a new hash. Changed pixels, context, requirements or user rejection invalidate affected evidence.
 
-Before another generation, use [ps-first-repair.md](references/ps-first-repair.md) to select a bounded repair from existing pixels when feasible. Whiteboxes have at most three generated attempts and three MCP repair/review rounds per declared batch; PS may start after the first useful candidate, without consuming all model attempts. Formal production follows the shared model-call ceiling in the cadence reference, including generative extraction. Track whole-scene cost/time and separate model/PS counts. Folders, stage names and resumptions never reset budgets; a user-explicit independent production test has its own counts under the cadence reference. Exhaustion leaves a candidate and does not lower quality requirements.
+Before another generation, use [ps-first-repair.md](references/ps-first-repair.md) to select a bounded repair from existing pixels when feasible. Whiteboxes have at most three generated attempts and three MCP repair/review rounds per declared batch; PS may start after the first useful candidate, without consuming all model attempts. Formal production follows the shared model-call ceiling in the cadence reference, including generative extraction. Track whole-scene cost/time and separate model/PS counts. Folders, stage names and resumptions never reset budgets; every real new conversation automatically has fresh counts under the cadence reference, with no extra user answer. Exhaustion leaves a candidate and does not lower quality requirements.
 
 ## Completion
 

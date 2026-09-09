@@ -71,6 +71,16 @@ class DispatchPlanTests(unittest.TestCase):
         self.assertIn("--reason", plan["on_unknown_result"]["argv"])
         self.assertNotIn("reserve-dispatch", " ".join(before))
 
+    def test_create_and_reuse_bootstrap_real_goal_without_unsupported_tool_fields(self):
+        for action in ("create", "send"):
+            reservation = copy.deepcopy(self.reservation)
+            reservation.update(action=action, target_thread_id="existing-worker" if action == "send" else None)
+            args = self.plan(reservation)["tool_call"]["arguments"]
+            for instruction in ("get_goal", "create_goal", "不设置 token_budget", "不同目标", "一次性回传"):
+                self.assertIn(instruction, args["prompt"])
+            self.assertNotIn("goal", args)
+            self.assertNotIn("mode", args)
+
     def test_existing_worker_uses_send_without_creating_one_worker_per_view(self):
         reservation = copy.deepcopy(self.reservation)
         reservation.update(action="send", target_thread_id="actual-worker-fixture")

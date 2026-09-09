@@ -6,21 +6,19 @@
 
 共用 stdio 代理提供 `photoshop_queue_*` 和原生 `photoshop_*` 工具，底层统一经过同一 broker。已迁移客户端使用这些工具；旧任务仍缓存旧直连时，使用以下 CLI 调用同一个 MCP 接口，或重新连接到共用代理。仅更新 Skill 文档不能拦截旧直连客户端；不要同时保留两条生产执行通道。
 
-正式安装后的 CLI 路径为：
+从策划仓库根运行公共入口；它依据当前机器的 `ndc.local.json` / `NDC_*` 环境变量找到 Skill，不依赖固定用户名、盘符或 `.agents` 维护目录：
 
 ```powershell
-$psQueueNode = 'C:\Users\EDY\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe'
-$psQueueCli = 'D:\Codex\NDC\.agents\skills\ndc-photoshop-queue\scripts\queue-client.mjs'
 $psTaskId = '当前真实任务ID'
-& $psQueueNode $psQueueCli --task $psTaskId --action status
+python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action status
 ```
 
-把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；上面是本机已配置运行时路径，迁移机器时先核对实际 Node 及 `scripts/runtime-binding.json`。本机绑定文件记录原生 PS MCP、Python、校验器、允许目录和共享状态路径。
+把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。允许目录来自当前机器配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
 
 CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每次只调用一个接口。请求、日志及审核证据放入本任务的 `工作过程文件` 目录。执行方式：
 
 ```powershell
-& $psQueueNode $psQueueCli --task $psTaskId --request $psRequestPath
+python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --request $psRequestPath
 ```
 
 `$psRequestPath` 必须指向已写好的本次 JSON 文件。CLI 自动填写支持接口所需的 `task_id`、`acquire/cancel` 的 ticket，并在共享状态目录下保存该任务的私有租约上下文；不要手写 token、读取并打印 client-key，或复用其他任务的会话文件。每次检查返回内容及退出码，退出码 2 表示调用失败。
@@ -30,6 +28,12 @@ CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每
 `status`、命令检索／说明和能力目录属于不接触当前文档的元数据；`photoshop_state_get`、`photoshop_preview_get` 等实际宿主读取也要先 acquire。`status` 的队列空闲、bridge 计数及已配对信息都不等于完成一次实时宿主核对。
 
 ## 正常交棒
+
+### 异常占位自动接续（2026-09-09）
+
+本节覆盖后文旧“活跃心跳绝不回收”和“等待者必须取消票再恢复”的人工恢复步骤，仅针对自动acquire路径。用户已授权等待任务自行处理异常占位，不再请求例行确认。队首acquire会在owner失联180秒或无有效进展300秒后自动回收；原生handler/in_flight仍运行时先等待，不以耗时关闭。恢复保持原等待票、原资产及次数，旧epoch立即失效。随后执行实时probe，未改图直接释放；脏文档必须匹配原document_id，实际导出唯一PSD/PNG并checkpoint后关闭释放，原任务记录WAITING_REVIEW。实证文档已经丢失则按原lost_document流程记录FAIL，不能当已保存。
+
+返回acquired:true表示恢复完成且已领取自己的生产资产；acquired:false且有recovery表示自动恢复未结束，约30秒后用同一task和ticket继续acquire，不另开任务、不删除队列数据库、不调用审批窗口。已配置路径不可用、救存失败等先检查并采用已有授权的静默能力修复；不能声称此机制可绕过宿主权限或任意销毁未保存文档。明确人工占用保持其原协议。后文recover/probe仍用于已有手动恢复租约的诊断，不是自动接续的额外审批关卡。
 
 ### 1. 输入准备后排队
 
@@ -49,7 +53,7 @@ CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每
 CLI 自动填任务 ID；stdio 直接调用时需填写 `task_id`。一个任务最多有一个待处理请求，同资产重复 enqueue 返回原 ticket，不获得额外排队位置。当前资产尚未完成审核时不能换资产；已完成真实检查的 FAIL 按下文“离线审核及重新进入”决定有限返修或有据封存，不借新 ID 绕过未审门禁。
 
 ```powershell
-& $psQueueNode $psQueueCli --task $psTaskId --action acquire
+python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action acquire
 ```
 
 仅返回 `acquired: true` 才可开始原生操作。`WAIT_TURN`、`BUSY`、`MANUAL_PENDING`、`EXTERNAL_USE` 均表示等待；`ALREADY_HELD` 不重新给出租约，沿用本客户端已保存上下文。仍准备好立即接手的在线任务约每30秒再次调用 `acquire`，等待期间可做短时独立工作，不高频轮询或重复 enqueue。尚在等待且已不需要 PS 时，用 `photoshop_queue_cancel` 的空 arguments 请求取消自己的 ticket，持有者不能用 cancel 代替安全 release。
@@ -100,7 +104,7 @@ CLI 自动填任务 ID；stdio 直接调用时需填写 `task_id`。一个任务
 示例路径、文档 ID 和恢复步骤必须替换为本轮真实值。checkpoint 会重新计算文件哈希，要求文件匹配当前文档在最后修改之后的实际 MCP export 记录；手工写哈希、仅复制旧文件或传入其他文档 PSD 均不能证明本轮已保存。`view` 可作为附加文件角色，但修改后的检查点内每一个文件都必须满足同一导出证据条件；离线制作的局部审阅图放在后续审核记录里，不伪称为 MCP export。
 
 ```powershell
-& $psQueueNode $psQueueCli --task $psTaskId --action release
+python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action release
 ```
 
 release 成功后，该图进入 `WAITING_REVIEW`，下一个独立任务可以取得 PS。文件被改动、缺少当前检查点、命令在途或结果未知都会阻断释放；先解决所报问题，不删除队列文件。未改图且无未解决命令可直接释放，返回 `NO_IMAGE_CHANGE`，不生成艺术通过记录。客户端退出仅会尝试同样的安全释放，不能保证脏文档已经交棒。

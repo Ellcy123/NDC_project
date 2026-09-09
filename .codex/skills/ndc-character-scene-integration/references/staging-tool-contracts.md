@@ -154,14 +154,42 @@ Every support surface requires `occupancy.status: clear|occupied`. An occupied s
 
 ## 3.1 Validate fixed-scene absolute scale
 
-Create `ndc-scene-absolute-scale/v1` with at least three unique `independenceGroup` values. Include both `horizontal` and `vertical` axes plus `actor-local` and `cross-depth` bands. Each anchor stores `measurementLine`, `realWorldRangeCm`, `assumedCm`, `projectionScaleToActorPlane`, confidence, and projection evidence. The command recomputes the line length instead of trusting a typed pixel value.
+New work uses `ndc-scene-absolute-scale/v2` as one shared scene register. Height calibration and horizontal footprint checks are separate. Existing v1 contracts remain readable through their original validator; an old report is never relabelled as a v2 PASS. A v1 report missing current axis-aware evidence remains blocked on rerun.
 
 ```powershell
 python scripts/scene_staging_tools.py validate-scene-absolute-scale scene-scale.json `
   --report scene-scale-report.json --preview scene-scale-overlay.png
 ```
 
-Depth projection does not convert a horizontal world direction into a vertical height ruler. A horizontal anchor contributing to height must additionally provide `projectionEvidence.directionTransfer`:
+The same command selects the validator from `schema`; the v2 implementation is [scene_scale_v2.py](../scripts/scene_scale_v2.py). It returns `ndc-scene-absolute-scale-report/v2`, with `metric-pass` or `bounded-pass`. Invalid evidence raises `SCENE_GEOMETRY_BLOCKED`; it does not write a passing report.
+
+### Shared v2 fields
+
+All file references are `{path, sha256}` and must resolve to current files. Prefer absolute paths. Required fields are:
+
+| Field | Content |
+|---|---|
+| `schema`, `mode` | `ndc-scene-absolute-scale/v2`; `metric` or `bounded` |
+| `scene`, `sceneSha256`, `sceneSize` | Actual source path, current hash and original canvas size |
+| `depthReference` | Current scene-authored depth/support evidence image; not inferred from current actor joints |
+| `referencePlaneId` | The named common plane used by the shared height anchors |
+| `supportPlanes` | Unique `supportPlaneId`, current geometry `evidence` reference and `footprintAnchorIds`; metric additionally has `projectionScaleFromReference`, with the reference plane exactly 1 |
+| `actors` | Full planned actor/pose units: unique `actorId`, `supportPlaneId`, `placementSnapshot` reference; bounded also supplies `boundedRanges` |
+| `anchors` | Unique `anchorId`, distinct `objectId` and `independenceGroup`, `axis`, explicit `role`, actual `measurementLine` endpoints and current `evidence` reference |
+
+An immutable `placementSnapshot` contains the actual scene, sceneSize, characterHeightCm and complete target/pose/foot/head/action envelope, including `target.supportPlaneId`. It has no `calibration.sceneScaleEvidence` reference: native support and head checks use this independent snapshot, avoiding a registry↔placement hash cycle. Final placement adds `calibration: {sceneScaleEvidence: <current report ref>, actorId: <registered unit>}` and retains exactly that geometry. A changed pose, foot, support, height or source invalidates the binding. Metadata-only delivery fields remain separate.
+
+For one character with several poses, keep one full-scene case and shared report. Use distinct registered pose-unit IDs such as `Emma__sit_v1` and `Emma__stand_v2`, each bound to its own `placementSnapshot` and native `poseId`; keep `placement.characterName` as the original character name. Each snapshot's `actorPoseIds` lists only the units actually present at that time. Do not split these units into fresh scene cases or budgets: map them back to the original character/interaction cost unit and retain its cumulative attempts. Bounded sensitivity covers every registered pose unit; mutually exclusive poses may use an inspected multi-frame timeline comparison and must never be described as simultaneous characters. A changed snapshot requires new current evidence, not a renamed historical PASS.
+
+### Metric mode: height-calibration and footprint-check
+
+Use at least **two independent vertical** `role: height-calibration` anchors, one `actor-local` and one `cross-depth`, each of medium/high confidence, plus at least one independent horizontal `role: footprint-check`. Heights store `realWorldRangeCm`, `assumedCm`, `projectionScaleToReferencePlane`, `projectionEvidence.perspectiveBasisIds`, and source/target support points for cross-depth transfer. Furniture facts are recorded once; additional actors reuse the shared plane rate. A new support plane adds a justified projection and local footprint, not another copy of the furniture measurements.
+
+The validator recomputes line lengths and takes the confidence-weighted median of **height-only** `lineLength × projectionScaleToReferencePlane × directionScaleToVertical / assumedCm`. Each actor's expected image height is that rate × its support-plane projection × canonical height. `limits.maxAnchorSpreadRatio` and `maxGlobalDeviationRatio` default to 0.08; the prior ceilings 0.35/0.25 remain. Head/cast and support checks remain separate.
+
+Footprint anchors have `axis: horizontal`, `role: footprint-check`, and `usableXRange: [left,right]` contained within the measured horizontal span. Every actor action envelope must stay inside its plane's referenced footprint. This checks projected occupation width; it does not measure vertical human height or prove foot contact. The original support/UI/occlusion checks still apply.
+
+Depth projection does not convert a horizontal world direction into a vertical height ruler. An **additional** horizontal `height-calibration` anchor still requires `projectionEvidence.directionTransfer`; it cannot replace either of the two vertical anchors:
 
 ```json
 {
@@ -172,11 +200,30 @@ Depth projection does not convert a horizontal world direction into a vertical h
 }
 ```
 
-The rates refer to the same target support depth and the declared measurement extent; numbers above illustrate a synthetic 2:1 conversion, not a default scene value. Document the camera/reference calculation and inspect its source-bound overlay in that artifact. A ground-plane homography by itself does not establish vertical standing height. If direction cannot be established, keep the width only as an external footprint check and obtain valid height-calibration anchors; do not insert an arbitrary factor or tune physical dimensions.
+The rates refer to the same support depth and measurement extent; the numbers illustrate a synthetic conversion, not a scene default. Document the actual camera/reference calculation and inspect its source-bound overlay. A ground-plane homography alone does not establish vertical height. Without direction evidence use a footprint anchor; if metric prerequisites are unavailable, evaluate the bounded branch without inventing a conversion.
 
-The command computes `lineLength × projectionScaleToActorPlane × (verticalPxPerCm / sourceAxisPxPerCm) × characterHeightCm / assumedCm`; vertical anchors use direction factor 1. Rates must be finite and positive, and the metric artifact must exist at its current hash. Reports record `axisAwareProjection: true`, each direction factor and evidence reference. This verifies arithmetic and provenance, not camera accuracy or artistic support. Legacy horizontal anchors lacking this evidence are rejected on rerun; preserve their reports as history and reassess the geometry rather than inventing metadata. The production ledger requires the current axis-aware report, validates its original contract hash and reruns that contract, including metric evidence hashes, without creating another image or inspection.
+Historical v1 retains its original per-actor formula `lineLength × projectionScaleToActorPlane × directionScaleToVertical × characterHeightCm / assumedCm`, including the direction-evidence requirement. It is not automatically converted into the new shared register. Both branches recheck current evidence; hashing proves provenance, not the truth of authored camera assumptions.
 
-The report's `recommendedGlobalScaleFactor` is a diagnosis. A value outside the declared unit tolerance fails and returns affected actors to geometry/whitebox review. Once the support basis is sound, apply permitted corrections from the original complete layers under the PS-first policy and regenerate affected evidence; do not automatically rescale to satisfy the report. The overlay is mandatory because a mathematically consistent report built from the wrong door base, window span, bed edge, or support point is still invalid evidence.
+The metric report's `recommendedGlobalScaleFactor` is diagnostic. A value outside tolerance fails; once the support basis is sound, correct affected actors from original complete layers under PS-first and update affected evidence. Inspect the source overlay: a consistent calculation from the wrong door base or support point is still invalid geometry.
+
+### Bounded mode: real evidence before continuation
+
+Bounded mode keeps the source/depth/plane/actor/footprint fields above but does not require imaginary metric height anchors or exact projection factors. First inspect provisional complete whiteboxes; then freeze the chosen pose snapshot and complete the following `boundedEvidence`. These are references to existing checks and actual sensitivity inspection, not additional model attempts or a second artistic approval system:
+
+- `assumptions`: nonempty unique `{id, statement, evidence}` records identifying observed facts, inferred regions and remaining assumptions.
+- Each actor's `boundedRanges`: `heightPx: [low,high]`, `footX: [low,high]`, `footY: [low,high]`. The current reviewed snapshot must lie inside. A height range wider than 20% of that reviewed height is unresolved and blocked.
+- Top-level `snapshots`: all `{snapshotId, actorPoseIds: {actorId: poseId}}`. `boundedEvidence.isolatedActors` maps every actor to its complete whitebox reference; `combinedSnapshots` maps every snapshot to its actual whole-scene image. `visualReviewReports` use current native `exact-pose-whitebox` reports with full pose/snapshot coverage, source-scene binding and whole/local inspection.
+- `supportChecks`: every actor maps to `{affordance, report}` references. The validator reruns native support against its immutable pose snapshot and requires the saved report to match the current result.
+- `castScaleCheck: {contract, report, dependencies}`: rerun the native full-cast v2 head-priority check on those snapshots; hash all actual identity-card dependency images. Head and pairwise tolerances remain at most 0.20. Its horizon/depth model remains a declared bounded assumption, not evidence of exact camera recovery.
+- `uiCheck: {contract, report, dependencies}`: rerun the actual UI-mask check, bind the current action and anatomical head boxes and hash the referenced real UI images. The saved report must match the current result.
+- `sensitivityCases`: at least two actual `{id, assumption, artifact, review, actors}` outcomes. Each actors map contains the full cast with `standingEquivalentHeightPx`, `foot`, `supportPlaneId`, `affordanceZoneId`. Their minima/maxima must cover every declared bound. Distinct outcomes need distinct inspected images; do not make duplicate screenshots or re-author an old PASS to represent a second test.
+- Sensitivity reviews use the same native full/local whitebox schema with additional actual judgments `boundedRangeJustified`, `boundedPlacementInvariant`, `boundedSupport`, `boundedHeadScale`, `boundedUIReadability`. Every applicable check must be `pass`; the full current cast and scene must be bound to the reviewed images. A changed support plane/usable zone is rejected mechanically; uncertainty that changes placement, contact, head relationships or UI must be rejected by the actual inspection too.
+
+`bounded-pass` outputs only ranges and the chosen reviewed pixel geometry. It contains no recommended metric scale factor and cannot claim an exact hidden foot or calibrated horizon. A boolean, explanatory text alone, a missing report or a stale underlying image cannot pass. This mode does not replace final whole-scene visual acceptance or increase any model/PS budget.
+
+### Production consumption
+
+`production_gate.validate_ledger` keeps its original outer `EVIDENCE_GATE_PASS` result. For v2 it reruns the source-bound register once, compares the stored report to the recomputed result, verifies every placement references that same register and exact actor scope, and continues all original support, cast, whitebox, visual, timeline and post-generation gates. It does not return early on `metric-pass` or `bounded-pass`. One staging command likewise reuses a validated shared register within that command, while a later invocation checks current sources again.
 
 ## 3.2 Validate same-scene cast scale
 
