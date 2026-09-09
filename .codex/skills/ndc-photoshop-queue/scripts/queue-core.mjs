@@ -18,11 +18,13 @@ export function fileEvidence(path, roots) {
 
 // One durable authority per physical Photoshop bridge. Time never grants a second owner.
 export class PhotoshopQueue {
-  constructor(path, { roots, now = Date.now, idleMs = 120000, staleMs = 180000, waitingMs = 300000, abandonedMs = 300000 } = {}) {
+  constructor(path, { roots, now = Date.now, idleMs = 120000, staleMs = 180000, waitingMs = 300000, abandonedMs = 300000, deviceId = 'local-device', brokerInstanceId = 'local-broker' } = {}) {
     mkdirSync(dirname(resolve(path)), { recursive: true });
+    this.stateDir = dirname(resolve(path));
     this.db = new DatabaseSync(path); this.roots = roots.map(root => resolve(root)); this.now = now;
     this.idleMs = idleMs; this.staleMs = staleMs; this.waitingMs = waitingMs;
     this.abandonedMs = abandonedMs;
+    this.deviceId = deviceId; this.brokerInstanceId = brokerInstanceId;
     this.db.exec('PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS state(id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL); CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, kind TEXT NOT NULL, body TEXT NOT NULL)');
     this.db.prepare('INSERT OR IGNORE INTO state VALUES(1,?)').run(JSON.stringify({ version: 1, epoch: 0, next: 1, waiting: [], owner: null, reviews: {}, external: null }));
   }
@@ -39,7 +41,10 @@ export class PhotoshopQueue {
   }
   auth(state, a) {
     const o = state.owner;
+    if (o?.device_id && o.device_id !== this.deviceId) fail('FOREIGN_DEVICE_LEASE', 'This lease belongs to another computer. Resume from a verified file checkpoint; never reuse its token or Photoshop document id.');
+    if (o?.broker_instance_id && o.broker_instance_id !== this.brokerInstanceId) fail('BROKER_INSTANCE_CHANGED', 'The broker process changed. Re-acquire or rebind this task before sending Photoshop commands.');
     if (!o || o.task_id !== a.task_id || o.token !== a.token || o.epoch !== a.epoch) fail('STALE_LEASE', 'Acquire the current queue ticket; an expired owner cannot send commands.');
+    if (a.device_id && a.device_id !== o.device_id) fail('FOREIGN_DEVICE_LEASE', 'Client and owner device identities differ. Use a checkpoint handoff.');
     return o;
   }
   waitingExpired(item) {
@@ -62,8 +67,19 @@ export class PhotoshopQueue {
     if (!this.read().waiting.some(x => this.waitingExpired(x))) return { expired: [], waiting_timeout_ms: this.waitingMs };
     return this.tx('waiting_expired', s => ({ expired: this.pruneWaiting(s, false), waiting_timeout_ms: this.waitingMs }));
   }
+  renewWaiting(a, reason, details = {}) {
+    return this.tx('waiting_renewed', s => {
+      this.pruneWaiting(s);
+      const item = s.waiting.find(x => x.task_id === a.task_id && x.ticket === a.ticket);
+      if (!item) return { acquired: false, reason: 'TICKET_NOT_WAITING', reenqueue_required: true };
+      item.waiting_last_seen_at = this.now();
+      return { acquired: false, reason, ticket: item.ticket, waiting_expires_at: item.waiting_last_seen_at + this.waitingMs, renew_after_ms: Math.min(30000, Math.max(1, Math.floor(this.waitingMs / 3))), ...details };
+    });
+  }
   enqueue(a) {
-    if (![a.task_id, a.asset_id, a.description].every(id)) fail('INVALID_REQUEST', 'task_id, asset_id and description are required.');
+    if (![a.task_id, a.asset_id, a.description].every(value => typeof value === 'string' && value.trim())) fail('INVALID_REQUEST', 'task_id, asset_id and description are required.');
+    if (!id(a.task_id) || !id(a.asset_id)) fail('IDENTIFIER_TOO_LONG', 'task_id and asset_id must each be at most 250 characters.');
+    if (!id(a.description)) fail('DESCRIPTION_TOO_LONG', 'description must be at most 250 characters.');
     if (a.ready !== true) fail('INPUT_NOT_READY', 'Prepare inputs before joining the Photoshop queue.');
     return this.tx('enqueue', s => {
       this.pruneWaiting(s);
@@ -78,7 +94,7 @@ export class PhotoshopQueue {
       s.waiting.push(item); return { ...item, position: s.waiting.length, waiting_timeout_ms: this.waitingMs, waiting_expires_at: item.waiting_last_seen_at + this.waitingMs };
     });
   }
-  acquire(a) {
+  acquire(a, scope = {}) {
     if (!id(a?.task_id) || !Number.isInteger(a.ticket) || a.ticket < 1) fail('INVALID_REQUEST', 'A waiting task_id and positive integer ticket are required.');
     return this.tx('acquire', s => {
       this.pruneWaiting(s);
@@ -91,8 +107,29 @@ export class PhotoshopQueue {
       const first = s.waiting[0];
       if (!first || first.task_id !== a.task_id || first.ticket !== a.ticket) return { acquired: false, reason: 'WAIT_TURN', next: first?.ticket, ...renewal };
       s.waiting.shift(); const t = this.now();
-      s.owner = { ...first, epoch: ++s.epoch, token: randomUUID(), acquired_at: t, heartbeat_at: t, progress_at: t, in_flight: null, unknown: null, dirty: false, mutation: 0, exports: [], checkpoint: null, document_id: null, recovering: false };
+      s.owner = { ...first, epoch: ++s.epoch, token: randomUUID(), device_id: this.deviceId, broker_instance_id: this.brokerInstanceId, bridge_instance_id: scope.bridge_instance_id ?? null, acquired_at: t, heartbeat_at: t, progress_at: t, in_flight: null, unknown: null, dirty: false, mutation: 0, exports: [], checkpoint: null, document_id: null, recovering: false, recovery_mode: null, restart_required: false };
       return { acquired: true, ...s.owner };
+    });
+  }
+  rebind(a, scope = {}) {
+    if (!id(a?.task_id) || !Number.isInteger(a.ticket) || a.ticket < 1) fail('INVALID_REQUEST', 'A current task_id and ticket are required to rebind a lost client context.');
+    return this.tx('client_rebind', s => {
+      const o = s.owner;
+      if (!o || o.task_id !== a.task_id || o.ticket !== a.ticket) fail('NO_OWNER', 'This task no longer owns the requested ticket. Enqueue again.');
+      if (o.device_id && o.device_id !== this.deviceId) fail('DEVICE_HANDOFF_REQUIRED', 'Another computer owns this work. Continue only from its verified PSD/PNG checkpoint.');
+      if (o.in_flight || o.unknown) fail('UNRESOLVED_COMMAND', 'A lost client context cannot be rebound while a command is running or its result is unknown.');
+      o.epoch = ++s.epoch; o.token = randomUUID(); o.device_id = this.deviceId; o.broker_instance_id = this.brokerInstanceId;
+      o.bridge_instance_id = scope.bridge_instance_id ?? o.bridge_instance_id ?? null;
+      o.recovering = true; o.recovery_mode = 'CLIENT_REBIND'; o.restart_required = false; o.barrier = null; o.heartbeat_at = this.now();
+      return { ...o, note: 'The lost client lease was fenced. A serialized live probe is required before production resumes.' };
+    });
+  }
+  requireBridgeBarrier(a, bridgeInstanceId) {
+    return this.tx('bridge_rebind_required', s => {
+      const o = this.auth(s, a);
+      o.recovering = true; o.recovery_mode = 'BRIDGE_RECONNECT'; o.barrier = null;
+      o.bridge_instance_id = bridgeInstanceId ?? null; o.heartbeat_at = this.now();
+      return { required: true, recovery_mode: o.recovery_mode, bridge_instance_id: o.bridge_instance_id };
     });
   }
   cancel(a) {
@@ -142,7 +179,7 @@ export class PhotoshopQueue {
         }
         if (spec.document_id !== o.document_id) fail('DOCUMENT_MISMATCH', 'Checkpoint belongs to a different Photoshop document.');
       }
-      o.checkpoint = { files, resume: spec.resume, document_id: o.document_id, mutation: o.mutation, at: this.now() }; o.progress_at = this.now();
+      o.checkpoint = { files, resume: spec.resume, document_id: o.document_id, mutation: o.mutation, device_id: o.device_id || this.deviceId, broker_instance_id: o.broker_instance_id || this.brokerInstanceId, at: this.now() }; o.progress_at = this.now();
       return o.checkpoint;
     });
   }
@@ -175,23 +212,25 @@ export class PhotoshopQueue {
     const s = this.read(), o = s.owner; let ownerDiagnosis = 'IDLE';
     if (o?.unknown) ownerDiagnosis = 'UNKNOWN_COMMAND';
     else if (o?.in_flight) ownerDiagnosis = this.now() > o.in_flight.expected_until ? 'COMMAND_OVERDUE' : 'COMMAND_RUNNING';
+    else if (o?.restart_required) ownerDiagnosis = 'RECOVERY_REQUIRED';
     else if (o) ownerDiagnosis = this.now() - o.heartbeat_at > this.staleMs ? (o.dirty && !o.checkpoint ? 'STALE_UNSAVED' : 'STALE_SAFE') : this.now() - o.progress_at > this.idleMs ? 'IDLE_HELD' : 'ACTIVE';
     const diagnosis = s.external ? (s.external.status === 'REQUESTED' ? 'MANUAL_PENDING' : 'EXTERNAL_USE') : ownerDiagnosis;
     const owner = o && { ...o }; if (owner) delete owner.token;
-    return { diagnosis, owner_diagnosis: ownerDiagnosis, owner, waiting: s.waiting, external: s.external, thresholds: { idle_ms: this.idleMs, stale_ms: this.staleMs, waiting_ms: this.waitingMs }, note: 'Only unused waiting tickets expire. Elapsed time never reassigns in-flight/unknown work or ends manual use.' };
+    return { diagnosis, owner_diagnosis: ownerDiagnosis, device_id: this.deviceId, broker_instance_id: this.brokerInstanceId, owner, waiting: s.waiting, external: s.external, thresholds: { idle_ms: this.idleMs, stale_ms: this.staleMs, waiting_ms: this.waitingMs }, note: 'Only unused waiting tickets expire. Elapsed time never reassigns in-flight/unknown work, crosses devices, or ends manual use.' };
   }
   recoverClaim(a, automatic = false) {
     if (!id(a?.task_id)) fail('INVALID_REQUEST', 'A non-empty recovery task_id is required.');
     return this.tx('recovery_claim', s => {
       const o = s.owner;
       if (!o) fail('NO_OWNER', 'No occupied slot to recover.');
+      if (o.device_id && o.device_id !== this.deviceId) fail('DEVICE_HANDOFF_REQUIRED', 'Automatic recovery cannot operate a Photoshop document held on another computer. Use its verified checkpoint handoff.');
       if (s.waiting.some(x => x.task_id === a.task_id) && !automatic) fail('RECOVERY_TASK_QUEUED', 'Cancel this recovery task\'s waiting production ticket before claiming another task\'s occupied slot.');
       if (automatic && (s.external || s.waiting[0]?.task_id !== a.task_id)) fail('AUTO_RECOVERY_NOT_ELIGIBLE', 'Only the waiting head may recover an automatic slot.');
       if (o.in_flight) fail('COMMAND_STILL_RUNNING', 'Wait for the running request or its recorded timeout; do not start a second writer.');
       if (o.recovering && this.now() - o.heartbeat_at <= this.staleMs) fail('RECOVERY_OWNED', 'Only one live recovery operator is allowed.');
-      if (o.task_id !== a.task_id && this.now() - o.heartbeat_at <= this.staleMs && !(automatic && this.now() - o.progress_at > this.abandonedMs)) fail('OWNER_ALIVE', 'Current owner is making recent progress; wait for its safe boundary.');
+      if (!o.restart_required && o.task_id !== a.task_id && this.now() - o.heartbeat_at <= this.staleMs && !(automatic && this.now() - o.progress_at > this.abandonedMs)) fail('OWNER_ALIVE', 'Current owner is making recent progress; wait for its safe boundary.');
       o.original_task_id = o.original_task_id || o.task_id;
-      o.task_id = a.task_id; o.epoch = ++s.epoch; o.token = randomUUID(); o.recovering = true; o.barrier = null; o.heartbeat_at = this.now();
+      o.task_id = a.task_id; o.epoch = ++s.epoch; o.token = randomUUID(); o.device_id = this.deviceId; o.broker_instance_id = this.brokerInstanceId; o.recovering = true; o.recovery_mode = 'OWNER_RECOVERY'; o.restart_required = false; o.barrier = null; o.heartbeat_at = this.now();
       return { ...o, note: 'The previous lease is fenced. Probe Photoshop before saving or releasing.' };
     });
   }
@@ -200,7 +239,10 @@ export class PhotoshopQueue {
       const o = this.auth(s, a);
       if (!o.recovering || o.in_flight || evidence?.ok !== true) fail('BARRIER_REQUIRED', 'A successful serialized live state probe is required.');
       o.unknown = null; o.barrier = { at: this.now(), ...evidence }; o.heartbeat_at = this.now();
-      return { reconciled: true, original_result: 'May still require output inspection; no operation was replayed.', barrier: o.barrier };
+      const liveDocumentId = evidence?.state?.activeDocument?.id ?? null;
+      const productionResumed = ['CLIENT_REBIND', 'BRIDGE_RECONNECT'].includes(o.recovery_mode) && (o.document_id === null || liveDocumentId === o.document_id);
+      if (productionResumed) { o.recovering = false; o.recovery_mode = null; o.restart_required = false; o.progress_at = this.now(); }
+      return { reconciled: true, production_resumed: productionResumed, original_result: 'May still require output inspection; no operation was replayed.', barrier: o.barrier };
     });
   }
   recoverLostDocument(a, evidence) {
@@ -230,6 +272,6 @@ export class PhotoshopQueue {
       return { external: s.external, ...(manualRelease ? { manual_release: manualRelease } : {}) };
     });
   }
-  recoverAfterRestart() { return this.tx('broker_restart', s => { const o = s.owner; if (o?.in_flight) { o.unknown = { ...o.in_flight, error: 'Broker restarted while a command was running' }; o.in_flight = null; } if (o?.recovering) o.barrier = null; return { requires_recovery: !!o }; }); }
+  recoverAfterRestart() { return this.tx('broker_restart', s => { const o = s.owner; if (o?.in_flight) { o.unknown = { ...o.in_flight, error: 'Broker restarted while a command was running' }; o.in_flight = null; } if (o) { o.restart_required = true; o.broker_instance_id = o.broker_instance_id || 'legacy-broker'; if (o.recovering) o.barrier = null; } return { requires_recovery: !!o }; }); }
   close() { this.db.close(); }
 }

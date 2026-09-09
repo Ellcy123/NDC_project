@@ -431,3 +431,33 @@ test('acquire polling renews waiting during manual use without ending the manual
   assert.equal(pending.reason, 'EXTERNAL_USE'); advance(200000);
   assert.equal(q.expireWaiting().expired.length, 0); assert.equal(q.read().external.status, 'ACTIVE');
 });
+
+test('enqueue distinguishes missing, overlong identifier, and overlong description errors', t => {
+  const { q } = fixture(t);
+  code('INVALID_REQUEST', () => q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: '', ready: true }));
+  code('IDENTIFIER_TOO_LONG', () => q.enqueue({ task_id: 'x'.repeat(251), asset_id: 'image-A', description: 'Ready.', ready: true }));
+  code('DESCRIPTION_TOO_LONG', () => q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'x'.repeat(251), ready: true }));
+});
+
+test('a copied queue cannot authenticate or auto-recover a lease owned by another computer', t => {
+  const root = mkdtempSync(join(scratch, 'device-')), path = join(root, 'queue.sqlite');
+  const a = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-A', brokerInstanceId: 'broker-A' });
+  const item = ticket(a), owner = a.acquire({ task_id: 'task-A', ticket: item.ticket });
+  const b = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-B', brokerInstanceId: 'broker-B' });
+  t.after(() => { a.close(); b.close(); rmSync(root, { recursive: true, force: true }); });
+  code('FOREIGN_DEVICE_LEASE', () => b.heartbeat(owner));
+  code('DEVICE_HANDOFF_REQUIRED', () => b.recoverClaim({ task_id: 'task-B' }));
+  assert.equal(b.read().owner.device_id, 'device-A');
+});
+
+test('a broker restart fences the old process but permits immediate same-device client rebind', t => {
+  const root = mkdtempSync(join(scratch, 'broker-instance-')), path = join(root, 'queue.sqlite');
+  const first = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-A', brokerInstanceId: 'broker-A' });
+  const item = ticket(first), owner = first.acquire({ task_id: 'task-A', ticket: item.ticket });
+  const restarted = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-A', brokerInstanceId: 'broker-B' }); restarted.recoverAfterRestart();
+  t.after(() => { first.close(); restarted.close(); rmSync(root, { recursive: true, force: true }); });
+  code('BROKER_INSTANCE_CHANGED', () => restarted.heartbeat(owner));
+  const rebound = restarted.rebind({ task_id: owner.task_id, ticket: owner.ticket });
+  assert.ok(rebound.epoch > owner.epoch); assert.equal(rebound.broker_instance_id, 'broker-B');
+  barrier(restarted, rebound); assert.equal(restarted.read().owner.recovering, false);
+});

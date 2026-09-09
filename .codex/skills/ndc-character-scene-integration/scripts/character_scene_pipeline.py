@@ -4,7 +4,6 @@ import argparse
 import hashlib
 import json
 import math
-import os
 import statistics
 from pathlib import Path
 
@@ -12,25 +11,7 @@ from PIL import Image, ImageChops, ImageDraw
 from head_measurement import anatomical_head_height
 
 
-def resolve_ndc_root() -> Path:
-    """Resolve this machine's authorized NDC output root without a fixed drive."""
-    configured = os.environ.get("NDC_CHARACTER_SCENE_ROOT") or os.environ.get("NDC_ART_WORK_ROOT")
-    if configured:
-        root = Path(configured).expanduser().resolve()
-        if not root.is_absolute():
-            raise ValueError("NDC_CHARACTER_SCENE_ROOT must be an absolute path.")
-        return root
-    for parent in Path(__file__).resolve().parents:
-        if (parent / "NDC项目底层规则.md").is_file():
-            return parent
-    raise RuntimeError(
-        "Cannot resolve the NDC character-scene output root. "
-        "Set NDC_CHARACTER_SCENE_ROOT to this machine's authorized NDC workspace."
-    )
-
-
-NDC_ROOT = resolve_ndc_root()
-PROCESS_ROOT = Path(os.environ.get("NDC_ART_WORK_ROOT", NDC_ROOT / "工作过程文件")).resolve()
+NDC_ROOT = Path(r"D:\Codex\NDC")
 
 
 def load_contract(path: Path) -> dict:
@@ -207,7 +188,7 @@ def validate_delivery_root(data: dict) -> None:
     try:
         delivery_root.resolve().relative_to(NDC_ROOT.resolve())
     except ValueError as error:
-        raise ValueError(f"deliveryRoot must stay under the configured NDC root: {NDC_ROOT}") from error
+        raise ValueError("deliveryRoot must stay under D:\\Codex\\NDC.") from error
     if "工作过程文件" in delivery_root.parts:
         raise ValueError("Formal deliveryRoot cannot be inside 工作过程文件.")
 
@@ -1189,9 +1170,9 @@ def validate_candidate_handoff(data: dict) -> None:
     if not comparison_report.is_file():
         raise ValueError(f"Candidate comparison report is missing: {comparison_report}")
     candidate_root = Path(review["candidateRoot"]).resolve()
-    process_root = PROCESS_ROOT
+    process_root = (NDC_ROOT / "工作过程文件").resolve()
     if process_root not in candidate_root.parents:
-        raise ValueError(f"Candidate handoff must stay under {PROCESS_ROOT}.")
+        raise ValueError("Candidate handoff must stay under D:\\Codex\\NDC\\工作过程文件.")
 
 
 def apply_occluders(image: Image.Image, base: Image.Image, polygons: list) -> Image.Image:

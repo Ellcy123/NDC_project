@@ -6,7 +6,7 @@ Use [production-cadence.md](production-cadence.md) for milestone boundaries, sha
 
 The list below is coverage, not 23 separate production or review stages per actor. Shared scene evidence is created once and referenced by the relevant actors. Formal folders contain passed image/layer assets; reports, prompts, manifests and rejected history stay in the work folder. Consolidate final source/hash/XY data once after pixel freeze.
 
-The user-facing delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing delivery root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside the current machine's configured NDC root (`NDC_CHARACTER_SCENE_ROOT` when required), and formal delivery roots inside `工作过程文件`.
+The user-facing delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing delivery root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside `D:\Codex\NDC`, and formal delivery roots inside `工作过程文件`.
 
 1. source scene identity, original dimensions, and hash;
 2. Codex-reviewed exact-pose proxy evidence;

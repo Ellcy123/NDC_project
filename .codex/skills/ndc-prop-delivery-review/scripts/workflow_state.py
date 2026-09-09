@@ -130,12 +130,16 @@ def log_events(path, b, *, _pending_revalidation=None):
             binding = {'artifact_id': artifact_id, 'stage': artifact.get('stage'),
                        'role': artifact.get('role'), 'scene_id': artifact.get('scene_id', ''),
                        'item_ids': artifact.get('item_ids'), 'job_id': artifact.get('job_id')}
+            # An addendum may only be registered against a PENDING artifact, but the
+            # immutable addendum must remain valid after its real scene output passes
+            # review.  Requiring PENDING here made a correct PASS transition corrupt
+            # the batch on every subsequent validation.
             if (e.get('artifact_binding') != binding or artifact.get('job_id') != key
-                    or artifact.get('status') != 'PENDING' or artifact.get('rejected') is not False
+                    or artifact.get('status') not in {'PENDING', 'PASS'} or artifact.get('rejected') is not False
                     or job['item_id'] not in artifact.get('item_ids', [])
                     or job['kind'] != 'scene' or artifact.get('stage') != 3
                     or job.get('scene_id') != artifact.get('scene_id')):
-                raise ValueError('job addendum must bind one pending stage-3 scene artifact')
+                raise ValueError('job addendum must bind one non-rejected stage-3 scene artifact')
             evidence_path = Path(e.get('evidence_path', ''))
             if not evidence_path.is_file() or sha(evidence_path) != e.get('evidence_sha256'):
                 raise ValueError('job-addendum evidence changed')

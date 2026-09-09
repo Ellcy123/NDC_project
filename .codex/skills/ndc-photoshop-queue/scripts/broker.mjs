@@ -1,8 +1,9 @@
 import { createServer } from 'node:http';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, statfsSync } from 'node:fs';
 import { dirname, join, resolve, extname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
+import { hostname } from 'node:os';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { PhotoshopQueue, QueueError, fileEvidence, digest } from './queue-core.mjs';
@@ -18,9 +19,11 @@ const definitions = {
   enqueue: ['Join the shared Photoshop FIFO when inputs are ready. One pending request per task.', { task_id: string, asset_id: string, description: string, ready: { type: 'boolean' } }],
   acquire: ['Acquire only the head ticket; polling renews this unacquired ticket even while busy. Poll about every 30 seconds while actively waiting; unused tickets expire after 5 minutes by default. Expired tickets must enqueue again. Owner/manual reservations never expire through this mechanism.', { task_id: string, ticket: { type: 'integer' } }],
   status: ['Inspect queue, owner, progress and suspected abnormal occupation without touching Photoshop.', {}],
+  health: ['Inspect broker, device, bridge, queue and export storage readiness, with one explicit next action.', {}],
   heartbeat: ['Report the current owner is alive. Does not count as useful progress or extend a running command deadline.', {}],
   checkpoint: ['Verify actual MCP-exported PSD and PNG and recovery instructions before release.', { files: { type: 'array', items: objectSchema({ path: string, role: { enum: ['working', 'review', 'view'] } }) }, document_id: { type: ['number', 'string'] }, resume: string }],
   release: ['Release a saved or unchanged slot. Does not approve the image. Running/unknown commands block release.', {}],
+  handoff: ['Atomically export current PSD/PNG, checkpoint, optionally close, and release this lease.', { file_prefix: string, resume: string, close: { type: 'boolean' } }],
   cancel: ['Cancel this task\'s waiting ticket, never cancel an active Photoshop operation.', { task_id: string, ticket: { type: 'integer' } }],
   review: ['Register an existing real NDC visual record for the released snapshot. Never generates artistic PASS.', { task_id: string, asset_id: string, record: string }],
   recover: ['Fence a stale owner and appoint one recovery operator. A running request cannot be stolen.', { task_id: string }],
@@ -29,7 +32,7 @@ const definitions = {
   external: ['Reserve manual Photoshop use. Its declarer may release it; another task must record an explicit current user completion instruction with user_confirmed_finished and confirmation_note. No timeout or automatic manual release.', { task_id: string, active: { type: 'boolean' }, note: string, user_confirmed_finished: { type: 'boolean' }, confirmation_note: string }],
 };
 export function queueDefinitions() {
-  const required = { external: ['task_id', 'active'], recover: ['task_id'], acquire: ['task_id', 'ticket'] };
+  const required = { external: ['task_id', 'active'], recover: ['task_id'], acquire: ['task_id', 'ticket'], handoff: ['resume'] };
   return Object.entries(definitions).map(([name, [description, properties]]) => ({ name: `photoshop_queue_${name}`, description, inputSchema: { ...objectSchema(properties), ...(required[name] ? { required: required[name] } : {}) } }));
 }
 const diagnostic = new Set(['photoshop_command_search', 'photoshop_command_describe']);
@@ -75,6 +78,29 @@ export class QueueService {
     this.queue.db.prepare('UPDATE native_requests SET status=?,result_json=?,error_json=?,updated_at=? WHERE scoped_key=? AND request_hash=?')
       .run(status, result === undefined ? null : JSON.stringify(result), error === undefined ? null : JSON.stringify(error), this.queue.now(), identity.scoped_key, identity.request_hash);
   }
+  deleteUnsubmittedRequest(identity) {
+    if (identity) this.queue.db.prepare('DELETE FROM native_requests WHERE scoped_key=? AND request_hash=? AND status=?').run(identity.scoped_key, identity.request_hash, 'running');
+  }
+  bridgeInstance() {
+    const bridge = this.native.bridge.status();
+    return bridge.pluginInstanceId || bridge.serverId || null;
+  }
+  health() {
+    const queue = this.queue.diagnose(), bridge = this.native.bridge.status(), blockers = [];
+    if (bridge.paired === false) blockers.push({ code: 'BRIDGE_NOT_PAIRED', next: 'Open the installed Photoshop MCP panel and use its existing pairing flow.' });
+    if (bridge.connected !== true) blockers.push({ code: 'BRIDGE_DISCONNECTED', next: 'Restore the Photoshop panel connection; do not restart the queue while work is owned.' });
+    if (this.busy || queue.owner_diagnosis === 'COMMAND_RUNNING' || queue.owner_diagnosis === 'COMMAND_OVERDUE') blockers.push({ code: 'COMMAND_ACTIVE', next: 'Wait for the recorded native handler result; do not replay or release.' });
+    if (queue.owner_diagnosis === 'UNKNOWN_COMMAND') blockers.push({ code: 'UNKNOWN_COMMAND', next: 'Use the single serialized recovery probe; never change the idempotency key to replay.' });
+    if (queue.owner_diagnosis === 'RECOVERY_REQUIRED') blockers.push({ code: 'RECOVERY_REQUIRED', next: 'The owner should re-acquire to rebind, or the waiting head should continue acquire for immediate fenced recovery.' });
+    if (['STALE_SAFE', 'STALE_UNSAVED', 'IDLE_HELD'].includes(queue.owner_diagnosis)) blockers.push({ code: queue.owner_diagnosis, next: 'The waiting head should continue acquire so automatic recovery can save and hand off.' });
+    if (queue.external) blockers.push({ code: queue.external.status === 'REQUESTED' ? 'MANUAL_PENDING' : 'EXTERNAL_USE', next: 'Wait for the recorded manual handoff or explicit manual completion.' });
+    let storage;
+    try {
+      const stats = statfsSync(this.queue.stateDir); storage = { ok: true, free_bytes: Number(stats.bavail) * Number(stats.bsize) };
+      if (storage.free_bytes < 1024 * 1024 * 1024) blockers.push({ code: 'LOW_DISK_SPACE', next: 'Free at least 1 GiB in the queue/export volume before starting a new Photoshop edit.' });
+    } catch (error) { storage = { ok: false, error: error.code || error.message }; blockers.push({ code: 'STATE_STORAGE_UNAVAILABLE', next: 'Restore queue state/export storage access before acquiring Photoshop.' }); }
+    return { ok: blockers.length === 0, ready_for_new_lease: blockers.length === 0 && !queue.owner, device_id: this.queue.deviceId, broker_instance_id: this.queue.brokerInstanceId, bridge, storage, queue, blockers, next_action: blockers[0]?.next || 'Enqueue prepared work and acquire; use queue_handoff immediately after the final mutation.' };
+  }
   closeCheckpoint(owner) {
     const cp = owner.checkpoint;
     if (!cp || owner.document_id === null || cp.document_id !== owner.document_id || cp.mutation !== owner.mutation ||
@@ -86,7 +112,7 @@ export class QueueService {
     }
   }
   list() { return [...this.native.tools.values()].map(x => x.definition).concat(queueDefinitions()); }
-  async call(name, args = {}, context = {}) {
+  async call(name, args = {}, context = {}, { insideSegment = false } = {}) {
     if (name.startsWith('photoshop_queue_')) return envelope(await this.control(name.slice(16), args, context));
     const tool = this.native.tools.get(name); if (!tool) throw new QueueError('UNKNOWN_TOOL', name);
     // Metadata can be queried without taking the document. Do not dispatch runtime probes here.
@@ -96,6 +122,11 @@ export class QueueService {
     if (name === 'photoshop_pairing_begin') throw new QueueError('PAIRING_NOT_A_QUEUE_OPERATION', 'Existing pairing is preserved. Diagnose the bridge before any explicit re-pairing.');
     if (name.startsWith('photoshop_job_') || name === 'photoshop_approval_request') throw new QueueError('USER_ASSISTED_NOT_QUEUED', 'This queue supports completed silent commands. Keep user-assisted jobs in an explicit manual reservation.');
     const owner = this.queue.auth(this.queue.read(), context);
+    const bridgeInstance = this.bridgeInstance();
+    if (owner.bridge_instance_id && bridgeInstance && owner.bridge_instance_id !== bridgeInstance) {
+      this.queue.requireBridgeBarrier(context, bridgeInstance);
+      throw new QueueError('BRIDGE_SESSION_CHANGED', 'The Photoshop plugin instance changed. Run photoshop_queue_probe; production resumes automatically only if the live document still matches.');
+    }
     const commandId = name === 'photoshop_command_execute' ? args.command_id : nativeAliases[name];
     const command = commandId ? this.native.catalog.get(commandId) : null;
     if (!command && !['photoshop_state_get', 'photoshop_preview_get'].includes(name)) throw new QueueError('UNADAPTED_NATIVE_TOOL', 'This native tool has no verified queue effect classification; use the catalog command entrypoint.');
@@ -105,11 +136,13 @@ export class QueueService {
     }
     const identity = this.requestIdentity(name, args, owner);
     if (identity?.prior) return JSON.parse(identity.prior.result_json);
-    if (this.busy) throw new QueueError('COMMAND_STILL_RUNNING', 'A native tool handler is still running.');
+    if (this.busy && !insideSegment) throw new QueueError('COMMAND_STILL_RUNNING', 'A native tool handler is still running.');
     if (owner.recovering && !['photoshop_state_get', 'photoshop_preview_get'].includes(name) && !['document.export', 'document.close'].includes(commandId)) throw new QueueError('RECOVERY_SAVE_ONLY', 'Recovery may inspect, save, and safely close the owned document; resume production in a fresh ticket.');
     const resourceCleanup = commandId === 'document.close';
     const mutates = !!command && command.risk !== 'read' && commandId !== 'document.export' && !resourceCleanup;
-    this.busy = true; let op, ended = false, requestStarted = false;
+    const ownsBusy = !insideSegment;
+    if (ownsBusy) this.busy = true;
+    let op, ended = false, requestStarted = false;
     try {
       this.startRequest(identity, name, owner); requestStarted = !!identity;
       // Preserve the installed catalog, policy/permission gates, import/export protections,
@@ -152,27 +185,61 @@ export class QueueService {
         } catch (settlementError) { e.queue_settlement_error = { code: settlementError.code || 'ERROR', message: settlementError.message }; }
       }
       if (requestStarted) {
-        try { this.settleRequest(identity, 'unknown', undefined, { code: e.code || 'ERROR', message: e.message }); }
+        try {
+          if (!op) this.deleteUnsubmittedRequest(identity);
+          else this.settleRequest(identity, 'unknown', undefined, { code: e.code || 'ERROR', message: e.message });
+        }
         catch (recordError) { e.request_record_error = { code: recordError.code || 'ERROR', message: recordError.message }; }
       }
       throw e;
-    } finally { this.busy = false; }
+    } finally { if (ownsBusy) this.busy = false; }
   }
   async control(action, args, context) {
     const q = this.queue;
     switch (action) {
-      case 'status': return { ...q.diagnose(), automatic_recovery: { version: 1, abandoned_ms: q.abandonedMs, driver: 'waiting-head-acquire' }, bridge: this.native.bridge.status(), handler_running: this.busy };
+      case 'status': {
+        const health = this.health();
+        return { ...q.diagnose(), automatic_recovery: { version: 2, abandoned_ms: q.abandonedMs, driver: 'waiting-head-acquire' }, bridge: this.native.bridge.status(), handler_running: this.busy, health: { ok: health.ok, ready_for_new_lease: health.ready_for_new_lease, blockers: health.blockers, next_action: health.next_action } };
+      }
+      case 'health': return this.health();
       case 'enqueue': return q.enqueue(args);
       case 'acquire': {
-        const result = q.acquire(args);
-        if (result.reason !== 'BUSY' && result.reason !== 'ALREADY_HELD') return result;
+        const state = q.read(), bridge = this.native.bridge.status(), scope = { bridge_instance_id: this.bridgeInstance() };
+        const isIdleHead = !state.owner && !state.external && state.waiting[0]?.task_id === args.task_id && state.waiting[0]?.ticket === args.ticket;
+        if (isIdleHead && (bridge.paired === false || bridge.connected !== true)) return q.renewWaiting(args, 'HOST_PREFLIGHT_FAILED', { code: bridge.paired === false ? 'BRIDGE_NOT_PAIRED' : 'BRIDGE_DISCONNECTED', next: 'Restore the existing Photoshop panel connection, then retry acquire with the same ticket.' });
+        if (isIdleHead && this.busy) return q.renewWaiting(args, 'HOST_PREFLIGHT_FAILED', { code: 'COMMAND_STILL_RUNNING', next: 'Wait for the current broker handler to settle, then retry acquire.' });
+        if (isIdleHead) {
+          this.busy = true;
+          try {
+            const response = await this.native.tools.get('photoshop_state_get').handler({}), live = dataOf(response);
+            if (response.isError || typeof live.hasDocument !== 'boolean') return q.renewWaiting(args, 'HOST_PREFLIGHT_FAILED', { code: 'STATE_PROBE_FAILED', next: 'Keep the same waiting ticket and retry after Photoshop responds.' });
+          } catch (error) {
+            return q.renewWaiting(args, 'HOST_PREFLIGHT_FAILED', { code: error.code || 'HOST_UNREACHABLE', next: 'Keep the same waiting ticket and retry after Photoshop responds.' });
+          } finally { this.busy = false; }
+        }
+        const result = q.acquire(args, scope);
+        if (result.reason === 'ALREADY_HELD') {
+          try { q.auth(q.read(), context); return result; }
+          catch (error) {
+            if (!['STALE_LEASE', 'BROKER_INSTANCE_CHANGED'].includes(error.code)) throw error;
+            const lease = q.rebind(args, scope), reboundContext = { task_id: lease.task_id, ticket: lease.ticket, epoch: lease.epoch, token: lease.token, device_id: lease.device_id, broker_instance_id: lease.broker_instance_id };
+            try {
+              const probe = await this.control('probe', {}, reboundContext);
+              return { acquired: true, rebound: true, ...q.read().owner, probe };
+            } catch (probeError) {
+              return { acquired: true, rebound: true, ...lease, production_resumed: false, reason: 'HOST_PREFLIGHT_FAILED', code: probeError.code || 'BARRIER_FAILED', next: 'Retain this rebound lease and retry photoshop_queue_probe; do not enqueue or replay edits.' };
+            }
+          }
+        }
+        if (result.reason !== 'BUSY') return result;
         const recovered = await this.recoverForWaiter(args);
-        return recovered?.released ? { ...q.acquire(args), recovery: recovered } : { ...result, ...(recovered ? { recovery: recovered } : {}) };
+        return recovered?.released ? { ...q.acquire(args, scope), recovery: recovered } : { ...result, ...(recovered ? { recovery: recovered } : {}) };
       }
       case 'cancel': return q.cancel(args);
       case 'heartbeat': return q.heartbeat(context);
       case 'checkpoint': if (this.busy) throw new QueueError('COMMAND_STILL_RUNNING', 'Wait for the live state probe or native operation before checkpointing.'); return q.checkpoint(context, args);
       case 'release': if (this.busy) throw new QueueError('COMMAND_STILL_RUNNING', 'Wait for the live state probe or native operation before releasing.'); return q.release(context);
+      case 'handoff': return this.safeHandoff(args, context);
       case 'external': return q.external(args);
       case 'recover': if (this.busy) throw new QueueError('COMMAND_STILL_RUNNING', 'No takeover while native handler is running.'); return q.recoverClaim(args);
       case 'probe':
@@ -186,9 +253,9 @@ export class QueueService {
           const response = await this.native.tools.get('photoshop_state_get').handler({});
           const state = dataOf(response);
           if (response.isError || typeof state.hasDocument !== 'boolean') throw new QueueError('BARRIER_FAILED', 'No trustworthy live state response.');
-          q.recoveryBarrier(context, { ok: true, state });
+          const barrier = q.recoveryBarrier(context, { ok: true, state });
           if (action === 'lost_document') return q.recoverLostDocument(context, { no_documents: state.hasDocument === false && state.documentCount === 0 });
-          return { reconciled: true, state, next: 'Inspect and save existing work, then checkpoint/release; never replay the timed-out command blindly.' };
+          return { ...barrier, state, next: barrier.production_resumed ? 'The same fenced lease may resume production.' : 'Inspect and save existing work, then checkpoint/release; never replay the timed-out command blindly.' };
         } finally { this.busy = false; }
       }
       case 'review': {
@@ -207,12 +274,39 @@ export class QueueService {
     }
   }
 
+  async safeHandoff(args, context) {
+    const q = this.queue, owner = q.auth(q.read(), context);
+    if (this.busy) throw new QueueError('COMMAND_STILL_RUNNING', 'Wait for the current native command before starting the atomic handoff.');
+    if (!owner.dirty) return { handoff: true, closed: false, release: q.release(context), note: 'No image mutation required an export checkpoint.' };
+    if (typeof args.resume !== 'string' || !args.resume.trim() || args.resume.length > 250) throw new QueueError('RESUME_REQUIRED', 'Provide a precise recovery step of at most 250 characters.');
+    const rawPrefix = args.file_prefix || `${owner.asset_id}_${owner.epoch}_${owner.mutation}`;
+    const prefix = String(rawPrefix).replace(/[^a-zA-Z0-9._-]+/g, '_').replace(/^\.+/, '').slice(0, 120) || `queue_handoff_${owner.epoch}`;
+    this.busy = true;
+    try {
+      for (const format of ['psd', 'png']) await this.call('photoshop_command_execute', { command_id: 'document.export', args: { format, file_name: `${prefix}.${format}` }, idempotency_key: `queue-handoff-${owner.epoch}-${owner.mutation}-${format}` }, context, { insideSegment: true });
+      const current = q.read().owner;
+      const files = ['psd', 'png'].map(extension => {
+        const exported = current.exports.filter(item => item.mutation === current.mutation && extname(item.path).toLowerCase() === `.${extension}`).at(-1);
+        if (!exported) throw new QueueError('EXPORT_EVIDENCE_MISSING', `No current ${extension.toUpperCase()} export exists for this handoff.`);
+        return { path: exported.path, role: extension === 'psd' ? 'working' : 'review' };
+      });
+      const checkpoint = q.checkpoint(context, { document_id: current.document_id, files, resume: args.resume.trim() });
+      let closed = false;
+      if (args.close !== false) {
+        const close = await this.call('photoshop_command_execute', { command_id: 'document.close', args: {}, idempotency_key: `queue-handoff-${owner.epoch}-${owner.mutation}-close` }, context, { insideSegment: true });
+        if (close.isError || dataOf(close).ok === false) throw new QueueError('HANDOFF_CLOSE_FAILED', 'The checkpoint is safe, but document close did not complete. Reconcile before release.');
+        closed = true;
+      }
+      return { handoff: true, closed, checkpoint, release: q.release(context) };
+    } finally { this.busy = false; }
+  }
+
   async recoverForWaiter(args) {
     const q = this.queue, s = q.read(), o = s.owner;
     if (!o || s.external || this.busy || this.autoRecovering || o.in_flight ||
         s.waiting[0]?.task_id !== args.task_id || s.waiting[0]?.ticket !== args.ticket) return null;
     const resuming = o.recovering && o.task_id === args.task_id;
-    if (!resuming && q.now() - o.heartbeat_at <= q.staleMs && q.now() - o.progress_at <= q.abandonedMs) return null;
+    if (!resuming && !o.restart_required && q.now() - o.heartbeat_at <= q.staleMs && q.now() - o.progress_at <= q.abandonedMs) return null;
     this.autoRecovering = true;
     try {
       const lease = resuming ? o : q.recoverClaim(args, true);
@@ -272,6 +366,8 @@ export async function createNative() {
 }
 export async function startBroker({ native, stateDir = binding.state_dir, port = binding.port } = {}) {
   let key, q, api;
+  const deviceId = `device:${digest(hostname().trim().toLowerCase())}`;
+  const brokerInstanceId = randomBytes(16).toString('hex');
   const server = createServer(async (req, res) => {
     if (!api) { res.writeHead(503); res.end(); return; }
     const supplied = Buffer.from(String(req.headers.authorization || '').replace(/^Bearer /, '')), expected = Buffer.from(key);
@@ -300,10 +396,10 @@ export async function startBroker({ native, stateDir = binding.state_dir, port =
     const keyPath = join(stateDir, 'client-key');
     try { key = readFileSync(keyPath, 'utf8').trim(); }
     catch (e) { if (e.code !== 'ENOENT') throw e; key = randomBytes(32).toString('hex'); writeFileSync(keyPath, key, { flag: 'wx', mode: 0o600 }); }
-    q = new PhotoshopQueue(join(stateDir, 'queue.sqlite'), { roots: binding.allowed_roots }); q.recoverAfterRestart();
+    q = new PhotoshopQueue(join(stateDir, 'queue.sqlite'), { roots: binding.allowed_roots, deviceId, brokerInstanceId }); q.recoverAfterRestart();
     api = new QueueService(q, native || await createNative());
   } catch (e) { await new Promise(r => server.close(r)); q?.close(); throw e; }
-  writeFileSync(join(stateDir, 'broker.json'), JSON.stringify({ pid: process.pid, port, started_at: new Date().toISOString(), script: fileURLToPath(import.meta.url) }, null, 2));
+  writeFileSync(join(stateDir, 'broker.json'), JSON.stringify({ pid: process.pid, port, device_id: deviceId, broker_instance_id: brokerInstanceId, started_at: new Date().toISOString(), script: fileURLToPath(import.meta.url) }, null, 2));
   // Suspicion is observable even with no client polling. Recovery never replays work.
   let recovering = false;
   const monitor = setInterval(async () => {

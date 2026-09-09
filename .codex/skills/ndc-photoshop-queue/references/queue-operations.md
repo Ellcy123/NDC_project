@@ -10,10 +10,14 @@
 
 ```powershell
 $psTaskId = '当前真实任务ID'
-python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action status
+python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action health
 ```
 
-把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。允许目录来自当前机器配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
+正式入队前先运行 `--action health`。`ok:true` 表示 broker、Bridge 和状态存储健康；`ready_for_new_lease:true` 才表示当前可立即取得新租约。出现阻断时执行返回的唯一 `next_action`，不得用重启 broker 代替文档、人工或未知命令恢复。
+
+把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。Python 可用 `NDC_PYTHON_EXE` 指定，允许目录来自 `NDC_PS_ALLOWED_ROOTS` 或当前机器 NDC 配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
+
+state dir、client session、client-key 和 Bridge secret 必须设备隔离；另一台电脑不得复制这些状态或并发打开同一个 `queue.sqlite`。端口仅在设备本地通过 `NDC_PS_QUEUE_PORT` 覆盖。
 
 CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每次只调用一个接口。请求、日志及审核证据放入本任务的 `工作过程文件` 目录。执行方式：
 
@@ -24,6 +28,8 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 `$psRequestPath` 必须指向已写好的本次 JSON 文件。CLI 自动填写支持接口所需的 `task_id`、`acquire/cancel` 的 ticket，并在共享状态目录下保存该任务的私有租约上下文；不要手写 token、读取并打印 client-key，或复用其他任务的会话文件。每次检查返回内容及退出码，退出码 2 表示调用失败。
 
 同一轮 `enqueue` 到 `release` 使用同一客户端类型。stdio 代理的上下文与 CLI 的本地会话文件不自动互通，不要在 stdio 取得租约后直接改用 CLI 操作。stdio 重连或 CLI 上下文丢失不表示 PS 已释放，按异常恢复处理。
+
+同一任务上下文丢失但 broker 仍记录其所有权时，再次 `acquire` 会隔离旧 token、重新发放租约并自动执行串行 probe；只有返回 `acquired:true` 且 `production_resumed` 不为 false 才继续修改。probe 暂时失败时保留返回的新租约，仅重试 `photoshop_queue_probe`，不重新入队。
 
 `status`、命令检索／说明和能力目录属于不接触当前文档的元数据；`photoshop_state_get`、`photoshop_preview_get` 等实际宿主读取也要先 acquire。`status` 的队列空闲、bridge 计数及已配对信息都不等于完成一次实时宿主核对。
 
@@ -84,6 +90,21 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 原生 `photoshop_job_*`、用户辅助作业、显示式对话框和重新配对不属于自动队列生产路径；这些接口不能通过换名字绕过限制。只有用户已有明确授权的人工步骤才进入人工交接。所有 Photoshop 内操作仍走已批准 MCP 通道，不调用原始宿主执行后门。
 
 ### 3. 检查点与释放
+
+正常生产优先使用原子交棒请求，避免任务在两次导出、checkpoint、关闭和 release 之间停顿：
+
+```json
+{
+  "name": "photoshop_queue_handoff",
+  "arguments": {
+    "file_prefix": "当前资产_本轮唯一安全交棒名",
+    "resume": "目标设备或下次租约从该PSD恢复并先核对审阅PNG与来源哈希",
+    "close": true
+  }
+}
+```
+
+`file_prefix` 只作为文件名，broker 会移除路径和非法字符。修改过的文档必须连续生成本轮 PSD/PNG；任一步失败时不得另开任务或重启 broker，使用同一租约和幂等记录继续核对。未修改文档直接释放，不为了关闭而制造假导出。
 
 使用 MCP 返回的实际 PSD／PNG 路径和文档 ID 构造检查点；`document_id` 必须保持实际返回类型，不能把数字 ID 擅自转成字符串。
 
@@ -177,6 +198,10 @@ CLI 自动填 `task_id`，无需占有 PS。队列调用绑定的 `validate-queu
 | `COMMAND_RUNNING`／`COMMAND_OVERDUE` 或 handler_running | 仍有执行中请求，等待明确结果；最长占用或请求预算到期不等于宿主已停。 |
 | `UNKNOWN_COMMAND`、网络／客户端超时、重启后的未知提交 | 不重放命令、不释放、不直接重新 acquire；执行唯一恢复流程。 |
 | `ACTIVE_DOCUMENT_CHANGED` | 原资产与活动文档关系不可信，停止修改，核对人工或旧直连是否改变状态；不得导出另一文档冒充原资产。 |
+| `BRIDGE_SESSION_CHANGED` | 插件实例已更换；用当前租约执行 `probe`。文档 ID 匹配时自动恢复生产，否则进入保存型恢复。 |
+| `BROKER_INSTANCE_CHANGED`／客户端上下文丢失 | 同任务重新 `acquire` 触发 fencing 与重绑；有在途／未知命令时仍进入唯一恢复流程。 |
+| `HOST_PREFLIGHT_FAILED` | 尚未授予 owner，原等待票已续期；恢复 Bridge／PS 响应后用同一票重试 acquire。 |
+| `DEVICE_HANDOFF_REQUIRED`／`FOREIGN_DEVICE_LEASE` | 停止使用旧 token；只能从源设备原子交棒形成的 PSD/PNG 检查点在目标设备重新入队。 |
 
 恢复请求：
 
@@ -187,7 +212,7 @@ CLI 自动填 `task_id`，无需占有 PS。队列调用绑定的 `validate-queu
 CLI 自动填当前真实任务 ID，并保存成功返回的新租约。若本恢复任务还有排队中的生产 ticket，先取消自己的等待票；`RECOVERY_TASK_QUEUED` 不能通过换假任务 ID 绕开。broker 只允许一个恢复操作者；仍有原生命令 handler 或记录中的 in_flight 时拒绝接管，其他持有者仍响应时也不能夺取。恢复成功会隔离旧租约，**尚未证明宿主空闲或原图合格**。接着执行：
 
 ```powershell
-& $psQueueNode $psQueueCli --task $psTaskId --action probe
+python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action probe
 ```
 
 probe 通过同一个桥接串行请求实际 PS 状态，成功只证明执行顺序已核对，不证明超时操作没执行、图像已保存或视觉合格。观察真实结果，不盲目重放原命令。恢复租约只用于允许的状态查看、救存导出及检查点验证后的本租约文档安全关闭；仍有正确文档时核对并导出 PSD／PNG、checkpoint、按需安全关闭、release，再重新排队进入正常制作。若文档身份不符或无法救存，保留恢复阻断，不擅自关闭文档或覆盖已有资产。
@@ -202,8 +227,16 @@ probe 通过同一个桥接串行请求实际 PS 状态，成功只证明执行�
 
 后台监测可对已保存／未变的 `STALE_SAFE` 分支取得唯一恢复租约，在实时 probe 成功且检查点仍有效后释放；不会依据超时盲抢未保存或未知结果。自动恢复失败查看 `recovery-needed.json` 并按上述单一恢复流程处理，不能启动第二个 broker 来绕过。
 
+不得由普通生产任务调用 `Stop-Process`、删除 `broker.json`、删除 WAL/SQLite 或直接启动第二个 broker。broker 进程变化会立刻进入 `RECOVERY_REQUIRED`；原任务重绑或队首任务驱动恢复，不再等待普通陈旧计时。维护重启仅在 health/status 同时证明无 owner、无 waiting、无 external、无 handler 时进行一次，并在重启后重新 health。
+
+## 设备切换
+
+只支持可证明的冷切换：源设备完成 `photoshop_queue_handoff`，保存检查点中的 `device_id`、文件路径和 SHA-256；目标设备取得全新的本地租约，核对文件哈希后打开 PSD，并接受新的 Photoshop 文档 ID。旧 ticket、epoch、token、broker/Bridge 实例和文档 ID 全部失效。
+
+源设备突然掉线且最后修改没有有效 checkpoint 时，目标设备不得自动接管、关闭或重放。将状态记为 `SOURCE_DEVICE_UNREACHABLE`，从最后一个有效 checkpoint 恢复；checkpoint 之后的结果保持未知。若未来需要两台电脑同时在线调度，必须另建中央协调服务，不能把 SQLite 放到同步盘或网络共享目录冒充分布式锁。
+
 ## 运行时边界
 
-`scripts/runtime-binding.json` 当前适配本机原生 Photoshop MCP `2.0.1-ndc1`，原生 server/config/bridge/policy/catalog 的指定哈希均须匹配；变化返回 `RUNTIME_CHANGED`，先复核适配及门禁，不能只更新哈希跳过检查。共用 broker 的持久状态、审计和诊断放在绑定的 `state_dir`；CLI 会连接已有 broker 或以隐藏方式启动，不能重复直接启动原生 server。
+`scripts/runtime-binding.json` 当前适配原生 Photoshop MCP `2.0.1-ndc1`，只保存可移植的相对约定与受审哈希；当前机器的运行时、Python、允许目录、验证器和 `state_dir` 由 `runtime-config.mjs` 解析。原生 server/config/bridge/policy/catalog 的指定哈希均须匹配；变化返回 `RUNTIME_CHANGED`，先复核适配及门禁，不能只更新哈希跳过检查。CLI 会连接本机已有 broker 或以隐藏方式启动，不能重复直接启动原生 server。
 
 原有已配对关系、允许目录、用户选定导出位置及原生权限保持原意。`PAIRING_NOT_A_QUEUE_OPERATION`、`MANUAL_RESERVATION_REQUIRED`、`UNADAPTED_NATIVE_TOOL` 等错误要求停止对应操作、说明实际能力边界；不得通过重新配对、改目录、原始脚本注入、界面自动化或关闭用户文档来使队列“成功”。本说明不宣称已做真实图像或 PS 写入验证；部署验证情况以本次实际报告为准。

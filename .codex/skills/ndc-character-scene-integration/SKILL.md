@@ -5,8 +5,6 @@ description: Direct and place approved NDC characters in fixed scenes using narr
 
 # NDC Character Scene Integration
 
-本 Skill 自带的脚本、参考和测试一律从当前 `SKILL.md` 目录相对解析并随 Skill 提交；不得依赖维护机的 `.agents/skills`、用户名或固定盘符。跨设备运行脚本使用策划仓库 `scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration <脚本名> -- <参数>`。过程根使用公共配置的 `NDC_ART_WORK_ROOT`；正式输出根需另行限定时设置本机 `NDC_CHARACTER_SCENE_ROOT`。这些路径不得写回 Skill。
-
 阶段责任以整场白模交接为界：参考阶段确定整个场景及所有必需角色/状态的白模后冻结交接；正式角色生成、与白模的位置和比例对齐、技术/视觉自检、返修及最终交付由下一阶段全权负责。参考任务交棒后继续其他场景，全部交接后结束参考轮次，不持续监控或代做正式生产。仅白模本身核心错误由下游主动回传参考；生成结果偏离正确白模时由下游自行修正。此责任边界优先于后文通用全流程描述，具体见[入景专属协议](../ndc-art-stage-pipeline/references/integration-pipeline.md)。
 
 白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
@@ -21,7 +19,7 @@ Use approved scenes and character cards as authority. Establish a believable com
 
 ## Scope and authorization
 
-- 本机 `D:/PMH/工作` 与 `D:/PMH/ndc` 仅可读/复制；换电脑时按当前项目配置定位对应只读来源。输出位于当前机器授权的 NDC 根（必要时由 `NDC_CHARACTER_SCENE_ROOT` 指定）。证据放在其 `工作过程文件/角色融入场景/Unit<n>`，通过资产放在对应 `最终交付` 分类并使用源场景 basename。
+- Read/copy only from `D:/PMH/工作` and `D:/PMH/ndc`; outputs belong under `D:/Codex/NDC`. Keep evidence under `工作过程文件/角色融入场景/Unit<n>` and passed assets under the corresponding `最终交付` category, inside the source scene basename.
 - If the user plans to generate manually in ChatGPT, provide prompts only. Execute generation/file management only within the authorized task. Do not edit Unity code/configuration or original production assets without separate authorization.
 - Photoshop uses verified MCP capabilities and the shared queue only. Within this task, save, technically check, visually inspect and validate the current image before advancing to the next image. A recoverable checkpoint and frozen review snapshots permit suspension for another independent task under the queue protocol; an unfinished or failed image remains blocked. Consecutive operations on the same image may form one coherent repair.
 - Task continuation and formal Skill installation are separate. Do not block already-authorized work merely to request a workflow update; record proposals and continue under applicable approved rules. An instruction to update the discussed revision authorizes that update. Real missing permission/capability blocks dependent work only; disclose the exact reason.
@@ -56,6 +54,8 @@ Collaborate with [ndc-visual-description](../ndc-visual-description/SKILL.md) be
 
 ## Invariants
 
+点击后交互视线：`exploration-click-pair` 的 active / ClickResPath 状态必须朝向镜头，双眼视线直接回应玩家；仅抬头、看向画外人物或用角色名字指定视线都不满足要求。提示词明确写“头部自然转向镜头，双眼直视镜头”，保留合理的躯干方向、工作位、支撑及手部道具动作。参考与正式结果均实际检查头部朝向及眼神，不能只凭 active 标签放行；未点击 idle 和纯剧情人物间交流按各自剧情执行。
+
 白模阶段先读[白模放行与正式完整性](references/whitebox-acceptance.md)。其最新阶段边界优先于下文及旧参考中的“完整白模/检查全部隐藏身体”要求：核心位置、比例、头身比、动作和演绎成立时，小型遮挡、局部缺失和小细节可放行；正式生成仍须得到完整角色并实查。
 
 - Resolve `exploration-click-pair` versus `pure-narrative` from configuration, dialogue and approved requirements. Use chronological simultaneous-cast snapshots. Preserve uninterrupted presences across entrances; do not anticipate a future actor or claim entry through a visibly closed door.
@@ -69,7 +69,7 @@ Collaborate with [ndc-visual-description](../ndc-visual-description/SKILL.md) be
 
 ## Review and retry control
 
-Follow the operation boundaries in [production-cadence.md](references/production-cadence.md). Each accepted image state needs actual whole-`100%` and applicable local-`200%`/original-pixel inspection bound to paths and SHA-256. Record `ndc-stage-visual-self-check/v1` with explicit findings and `PASS`, `FAIL` or `NOT_CHECKED`. Missing coverage, stale hashes or failed/unchecked applicable criteria block downstream acceptance. From the planning repository root validate with `python -B scripts/art_pipeline/ndc_art.py tool stage -- --record <record> --artifact <output>` at accepted image milestones. Internal commands and manifest writes are not separate art stages.
+Follow the operation boundaries in [production-cadence.md](references/production-cadence.md). Each accepted image state needs actual whole-`100%` and applicable local-`200%`/original-pixel inspection bound to paths and SHA-256. Record `ndc-stage-visual-self-check/v1` with explicit findings and `PASS`, `FAIL` or `NOT_CHECKED`. Missing coverage, stale hashes or failed/unchecked applicable criteria block downstream acceptance. Validate with `D:/Codex/NDC/scripts/validate-ndc-stage-visual-self-check.py --record <record> --artifact <output>` at accepted image milestones. Internal commands and manifest writes are not separate art stages.
 
 Retain ledger coverage for `exact-pose-whitebox`, `contextual-local-result`, `matte-extraction`, `pre-composite-registration` and `final-full-composite`. They identify genuinely reviewed outputs/scopes inside the milestones. Share real inspection evidence where applicable; never invent an unexecuted stage or write PASS over a new hash. Changed pixels, context, requirements or user rejection invalidate affected evidence.
 

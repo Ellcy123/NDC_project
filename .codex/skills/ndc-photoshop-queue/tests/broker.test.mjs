@@ -5,6 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PhotoshopQueue, QueueError, fileEvidence } from '../scripts/queue-core.mjs';
 import { QueueService, startBroker, queueDefinitions } from '../scripts/broker.mjs';
+import { retainLease } from '../scripts/queue-client.mjs';
 
 // All native handlers and PSD/PNG bytes here are synthetic. No Photoshop calls.
 const scratch = resolve(dirname(fileURLToPath(import.meta.url)), '.test-data');
@@ -205,15 +206,15 @@ test('restart turns durable running requests into UNKNOWN and keeps completed re
   assert.ok(q2.read().owner.unknown);
 });
 
-test('a mismatching live document fails before command_begin without dirtying or losing the saved checkpoint', async t => {
+test('a mismatching live document fails before command_begin without dirtying, losing the checkpoint, or leaving an unknown request', async t => {
   const { api, q, native, root } = fixture(t); const owner = acquire(q); bind(q, owner); saved(q, owner, root);
   native.state = stateFor(202); const before = q.read();
   await rejectCode(api.call('photoshop_command_execute', args(), owner), 'ACTIVE_DOCUMENT_CHANGED');
   assert.deepEqual(q.read(), before); assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
-  assert.equal(rows(q)[0].status, 'unknown'); assert.equal(api.busy, false);
+  assert.equal(rows(q).length, 0); assert.equal(api.busy, false);
 });
 
-test('preflight state awaits hold the broker mutex and block release without creating a mutation', async t => {
+test('preflight state awaits hold the broker mutex and block release without creating an unknown request', async t => {
   const { api, q, native } = fixture(t); const owner = acquire(q); bind(q, owner);
   const wait = deferred(); native.probe = () => wait.promise;
   const first = api.call('photoshop_command_execute', args(), owner);
@@ -223,7 +224,7 @@ test('preflight state awaits hold the broker mutex and block release without cre
   wait.reject(new QueueError('TIMEOUT', 'Synthetic preflight timeout.'));
   await rejectCode(first, 'TIMEOUT');
   assert.equal(q.read().owner.dirty, false); assert.equal(q.read().owner.unknown, null);
-  assert.equal(rows(q)[0].status, 'unknown');
+  assert.equal(rows(q).length, 0);
 });
 
 test('native exceptions preserve their original cause when queue settlement also fails', async t => {
@@ -334,4 +335,79 @@ test('broker watchdog expires unused waiting tickets without touching Photoshop 
     assert.equal(native.calls.length, 0);
     assert.equal(q.db.prepare("SELECT COUNT(*) AS n FROM events WHERE kind='waiting_expired'").get().n, 1);
   } finally { await broker.close(); }
+});
+
+test('client discards fenced leases and a new enqueue never inherits stale credentials', () => {
+  const stale = { task_id: 'task-A', ticket: 7, epoch: 9, token: 'secret', device_id: 'old-device', broker_instance_id: 'old-broker' };
+  const fenced = retainLease(stale, 'photoshop_queue_release', result({ ok: false, code: 'STALE_LEASE' }, true));
+  assert.deepEqual(fenced, { task_id: 'task-A' });
+  const expired = retainLease(stale, 'photoshop_queue_acquire', result({ acquired: false, reason: 'TICKET_NOT_WAITING' }));
+  assert.deepEqual(expired, { task_id: 'task-A' });
+  const enqueued = retainLease(stale, 'photoshop_queue_enqueue', result({ task_id: 'task-A', ticket: 12 }));
+  assert.deepEqual(enqueued, { task_id: 'task-A', ticket: 12 });
+});
+
+test('a lost same-task client context is rebound, probed, and resumed without waiting for stale timeout', async t => {
+  const { api, q } = fixture(t); const owner = acquire(q);
+  const rebound = await api.control('acquire', { task_id: owner.task_id, ticket: owner.ticket }, {});
+  assert.equal(rebound.acquired, true); assert.equal(rebound.rebound, true);
+  assert.equal(rebound.probe.production_resumed, true); assert.ok(rebound.epoch > owner.epoch);
+  assert.equal(q.read().owner.recovering, false);
+  assert.throws(() => q.heartbeat(owner), e => ['STALE_LEASE', 'BROKER_INSTANCE_CHANGED'].includes(e.code));
+});
+
+test('a waiting head recovers an idle owner immediately after broker restart', async t => {
+  const { q, native } = fixture(t); const old = acquire(q);
+  const waiting = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'Ready input.', ready: true });
+  q.recoverAfterRestart(); const api = new QueueService(q, native);
+  const next = await api.control('acquire', { task_id: 'task-B', ticket: waiting.ticket }, {});
+  assert.equal(next.acquired, true); assert.equal(next.recovery.released, true);
+  assert.equal(q.read().owner.task_id, 'task-B');
+  assert.throws(() => q.heartbeat(old), e => ['STALE_LEASE', 'BROKER_INSTANCE_CHANGED'].includes(e.code));
+});
+
+test('a disconnected bridge keeps the head ticket alive instead of creating a stranded owner', async t => {
+  const { api, q, native } = fixture(t);
+  const waiting = q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'Ready input.', ready: true });
+  native.bridge.status = () => ({ paired: true, connected: false, pluginInstanceId: 'bridge-1' });
+  const blocked = await api.control('acquire', { task_id: 'task-A', ticket: waiting.ticket }, {});
+  assert.equal(blocked.reason, 'HOST_PREFLIGHT_FAILED'); assert.equal(blocked.code, 'BRIDGE_DISCONNECTED');
+  assert.equal(q.read().owner, null); assert.equal(q.read().waiting[0].ticket, waiting.ticket);
+  native.bridge.status = () => ({ paired: true, connected: true, pluginInstanceId: 'bridge-1' });
+  assert.equal((await api.control('acquire', { task_id: 'task-A', ticket: waiting.ticket }, {})).acquired, true);
+});
+
+test('a changed bridge instance requires a live document barrier and then resumes the same lease', async t => {
+  const { api, q, native } = fixture(t);
+  native.bridge.status = () => ({ paired: true, connected: true, pluginInstanceId: 'bridge-1' });
+  const ticket = q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'Ready input.', ready: true });
+  const owner = q.acquire({ task_id: 'task-A', ticket: ticket.ticket }, { bridge_instance_id: 'bridge-1' }); bind(q, owner);
+  native.bridge.status = () => ({ paired: true, connected: true, pluginInstanceId: 'bridge-2' });
+  await rejectCode(api.call('photoshop_command_execute', args('after-reconnect'), owner), 'BRIDGE_SESSION_CHANGED');
+  assert.equal(q.read().owner.recovery_mode, 'BRIDGE_RECONNECT');
+  const probe = await api.control('probe', {}, owner); assert.equal(probe.production_resumed, true);
+  assert.equal((await api.call('photoshop_command_execute', args('after-reconnect'), owner)).structuredContent.ok, true);
+});
+
+test('atomic handoff exports both formats, checkpoints, closes, and releases without interleaving', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); bind(q, owner);
+  const edit = q.begin(owner, { command_id: 'synthetic.edit', mutates: true, expected_until: 2000 }); q.end(owner, edit.id, { documentId: 101 });
+  native.command = async input => {
+    if (input.command_id === 'document.close') { native.state = stateFor(null); return result({ ok: true, status: 'completed', result: { result: { closed: true } }, after: native.state }); }
+    const path = join(root, input.args.file_name); writeFileSync(path, `synthetic ${input.args.format}`);
+    return result({ ok: true, status: 'completed', result: { result: { path } }, after: native.state });
+  };
+  const handed = await api.control('handoff', { file_prefix: 'asset-A-safe', resume: 'Open the verified PSD and inspect the PNG before further edits.', close: true }, owner);
+  assert.equal(handed.handoff, true); assert.equal(handed.closed, true); assert.equal(handed.release.status, 'WAITING_REVIEW');
+  assert.equal(q.read().owner, null); assert.equal(handed.checkpoint.files.length, 2);
+  assert.equal(handed.checkpoint.device_id, q.deviceId);
+  assert.deepEqual(native.calls.filter(x => x.kind === 'command').map(x => x.args.command_id), ['document.export', 'document.export', 'document.close']);
+});
+
+test('health reports the first actionable bridge blocker and device scope', t => {
+  const { api, q, native } = fixture(t);
+  native.bridge.status = () => ({ paired: true, connected: false, pluginInstanceId: 'bridge-offline' });
+  const health = api.health();
+  assert.equal(health.ok, false); assert.equal(health.blockers[0].code, 'BRIDGE_DISCONNECTED');
+  assert.equal(health.device_id, q.deviceId); assert.ok(health.next_action.includes('Photoshop'));
 });

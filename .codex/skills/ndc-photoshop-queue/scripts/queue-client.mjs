@@ -3,10 +3,10 @@ import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
+import { binding as settings } from './runtime-config.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-export { binding as settings } from './runtime-config.mjs';
-import { binding as settings } from './runtime-config.mjs';
+export { settings };
 const delay = ms => new Promise(r => setTimeout(r, ms));
 export async function rpc(method, params = {}, timeout = 240000) {
   const key = readFileSync(join(settings.state_dir, 'client-key'), 'utf8').trim();
@@ -39,10 +39,15 @@ export async function ensureBroker() {
 }
 export const resultData = result => result.structuredContent ?? {};
 export function retainLease(context, name, result) {
-  if (result.isError) return context;
   const d = resultData(result);
-  if (name === 'photoshop_queue_enqueue') return { ...context, task_id: d.task_id || context.task_id, ticket: d.ticket };
-  if (name === 'photoshop_queue_acquire' && d.acquired || name === 'photoshop_queue_recover' && d.token) return { task_id: d.task_id, ticket: d.ticket, epoch: d.epoch, token: d.token };
+  const empty = { task_id: d.task_id || context.task_id };
+  if (result.isError) {
+    if (['STALE_LEASE', 'TICKET_NOT_WAITING', 'NO_OWNER', 'FOREIGN_DEVICE_LEASE', 'BROKER_INSTANCE_CHANGED', 'DEVICE_HANDOFF_REQUIRED'].includes(d.code)) return empty;
+    return context;
+  }
+  if (name === 'photoshop_queue_enqueue') return { ...empty, ticket: d.ticket };
+  if (name === 'photoshop_queue_acquire' && d.reason === 'TICKET_NOT_WAITING') return empty;
+  if (name === 'photoshop_queue_acquire' && d.acquired || name === 'photoshop_queue_recover' && d.token) return { task_id: d.task_id, ticket: d.ticket, epoch: d.epoch, token: d.token, device_id: d.device_id, broker_instance_id: d.broker_instance_id };
   if (['photoshop_queue_release', 'photoshop_queue_lost_document'].includes(name)) return { task_id: context.task_id };
   return context;
 }
