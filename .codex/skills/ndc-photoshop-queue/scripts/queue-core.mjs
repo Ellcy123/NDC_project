@@ -9,11 +9,30 @@ export class QueueError extends Error {
 const fail = (code, message) => { throw new QueueError(code, message); };
 const id = value => typeof value === 'string' && value.trim().length > 0 && value.length <= 250;
 export const digest = value => createHash('sha256').update(value).digest('hex');
+export function resolveAllowedFile(path, roots) {
+  if (typeof path !== 'string' || !path.trim() || !isAbsolute(path)) fail('ABSOLUTE_FILE_PATH_REQUIRED', 'Use the real absolute file path under an allowed root.');
+  let p;
+  try { p = realpathSync(path); }
+  catch (error) {
+    if (error.code === 'ENOENT') fail('SOURCE_FILE_NOT_FOUND', resolve(path));
+    fail('SOURCE_FILE_UNREADABLE', `${resolve(path)}: ${error.code || error.message}`);
+  }
+  const existingRoots = [];
+  for (const root of roots) {
+    try { existingRoots.push(realpathSync(root)); }
+    catch (error) { if (error.code !== 'ENOENT') fail('ALLOWED_ROOT_UNREADABLE', `${resolve(root)}: ${error.code || error.message}`); }
+  }
+  if (!existingRoots.some(root => { const rel = relative(root, p); return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel)); })) fail('PATH_OUTSIDE_ROOT', p);
+  let stats;
+  try { stats = statSync(p); }
+  catch (error) { fail('SOURCE_FILE_UNREADABLE', `${p}: ${error.code || error.message}`); }
+  if (!stats.isFile()) fail('FILE_REQUIRED', p);
+  if (stats.size < 1) fail('EMPTY_FILE_NOT_ALLOWED', p);
+  return { path: p, bytes: stats.size };
+}
 export function fileEvidence(path, roots) {
-  const p = realpathSync(path);
-  if (!roots.some(root => { const rel = relative(realpathSync(root), p); return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel)); })) fail('PATH_OUTSIDE_ROOT', p);
-  if (!statSync(p).isFile()) fail('FILE_REQUIRED', p);
-  return { path: p, sha256: digest(readFileSync(p)), bytes: statSync(p).size };
+  const file = resolveAllowedFile(path, roots);
+  return { ...file, sha256: digest(readFileSync(file.path)) };
 }
 
 // One durable authority per physical Photoshop bridge. Time never grants a second owner.
@@ -107,7 +126,7 @@ export class PhotoshopQueue {
       const first = s.waiting[0];
       if (!first || first.task_id !== a.task_id || first.ticket !== a.ticket) return { acquired: false, reason: 'WAIT_TURN', next: first?.ticket, ...renewal };
       s.waiting.shift(); const t = this.now();
-      s.owner = { ...first, epoch: ++s.epoch, token: randomUUID(), device_id: this.deviceId, broker_instance_id: this.brokerInstanceId, bridge_instance_id: scope.bridge_instance_id ?? null, acquired_at: t, heartbeat_at: t, progress_at: t, in_flight: null, unknown: null, dirty: false, mutation: 0, exports: [], checkpoint: null, document_id: null, recovering: false, recovery_mode: null, restart_required: false };
+      s.owner = { ...first, epoch: ++s.epoch, token: randomUUID(), device_id: this.deviceId, broker_instance_id: this.brokerInstanceId, bridge_instance_id: scope.bridge_instance_id ?? null, acquired_at: t, heartbeat_at: t, progress_at: t, in_flight: null, unknown: null, dirty: false, mutation: 0, exports: [], checkpoint: null, document_id: null, document_closed: false, opened_by_queue: false, recovering: false, recovery_mode: null, restart_required: false };
       return { acquired: true, ...s.owner };
     });
   }
@@ -146,23 +165,42 @@ export class PhotoshopQueue {
       if (o.recovering && !o.barrier) fail('BARRIER_REQUIRED', 'Probe Photoshop through the recovery barrier before resuming operations.');
       if (s.external && s.external.status !== 'REQUESTED') fail('EXTERNAL_USE', 'Photoshop is in manual use.');
       if (s.external?.status === 'REQUESTED' && operation.mutates) fail('MANUAL_PENDING', 'Manual use has been requested. Inspect/export the current document, checkpoint it, and release before making further changes.');
-      o.in_flight = { ...operation, id: randomUUID(), started_at: this.now() };
+      const prior = operation.mutates ? { dirty: o.dirty, mutation: o.mutation, checkpoint: o.checkpoint, exports: o.exports } : null;
+      o.in_flight = { ...operation, id: randomUUID(), started_at: this.now(), ...(prior ? { prior } : {}) };
       o.heartbeat_at = this.now();
       // Invalidate the previous save BEFORE submission. A crash may happen at any later point.
       if (operation.mutates) { o.dirty = true; o.mutation++; o.checkpoint = null; o.exports = []; }
       return o.in_flight;
     });
   }
-  end(a, commandId, { uncertain = false, result, documentId, exported, error } = {}) {
+  end(a, commandId, { uncertain = false, applied = true, result, documentId, documentOpened = false, openedSource, exported, error } = {}) {
     return this.tx('command_end', s => {
       const o = this.auth(s, a);
       if (o.in_flight?.id !== commandId) fail('COMMAND_MISMATCH', 'Completion does not match the running command.');
       const operation = o.in_flight; o.in_flight = null;
       o.heartbeat_at = o.progress_at = this.now();
       if (uncertain) o.unknown = { ...operation, error: error || 'Outcome is unknown' };
+      if (!uncertain && !applied && operation.mutates && operation.prior) {
+        o.dirty = operation.prior.dirty; o.mutation = operation.prior.mutation;
+        o.checkpoint = operation.prior.checkpoint; o.exports = operation.prior.exports;
+      }
       if (documentId !== undefined && documentId !== null) o.document_id = documentId;
+      if (documentId !== undefined && documentId !== null && !operation.resource_cleanup) o.document_closed = false;
+      if (!uncertain && applied && operation.resource_cleanup) o.document_closed = true;
+      if (documentOpened && !uncertain) o.opened_by_queue = true;
+      if (openedSource && !uncertain) o.opened_source = openedSource;
       if (exported && !uncertain) o.exports.push({ ...exported, document_id: documentId ?? o.document_id, mutation: o.mutation, at: this.now() });
       return { command_id: commandId, uncertain, result, error };
+    });
+  }
+  markUntrackedDirty(a, reason = 'Live Photoshop state reports changes outside the queue command journal.') {
+    return this.tx('untracked_change_detected', s => {
+      const o = this.auth(s, a);
+      if (o.in_flight || o.unknown) fail('UNRESOLVED_COMMAND', 'Reconcile the previous command before recording untracked changes.');
+      if (!o.dirty) { o.dirty = true; o.mutation++; o.checkpoint = null; o.exports = []; }
+      o.untracked_change = { at: this.now(), reason };
+      o.progress_at = this.now();
+      return { dirty: o.dirty, mutation: o.mutation, untracked_change: o.untracked_change };
     });
   }
   checkpoint(a, spec) {
@@ -190,6 +228,7 @@ export class PhotoshopQueue {
       if (o.recovering && !o.barrier) fail('BARRIER_REQUIRED', 'Probe Photoshop through the recovery barrier before releasing its recovered owner.');
       if (o.dirty && (!o.checkpoint || o.checkpoint.mutation !== o.mutation)) fail('CHECKPOINT_REQUIRED', 'Save a current recoverable checkpoint before releasing Photoshop.');
       for (const f of o.checkpoint?.files || []) if (fileEvidence(f.path, this.roots).sha256 !== f.sha256) fail('CHECKPOINT_CHANGED', f.path);
+      if (o.document_id !== null && o.document_closed !== true) fail('DOCUMENT_STILL_OPEN', 'Close the queue-owned Photoshop document before releasing the lease.');
       const taskId = o.original_task_id || o.task_id;
       const evidence = { task_id: taskId, ...(taskId !== o.task_id ? { recovered_by: o.task_id } : {}), asset_id: o.asset_id, checkpoint: o.checkpoint, status: o.dirty ? 'WAITING_REVIEW' : 'NO_IMAGE_CHANGE', epoch: o.epoch, released_at: this.now() };
       if (o.dirty) s.reviews[taskId] = evidence;
@@ -238,8 +277,16 @@ export class PhotoshopQueue {
     return this.tx('recovery_barrier', s => {
       const o = this.auth(s, a);
       if (!o.recovering || o.in_flight || evidence?.ok !== true) fail('BARRIER_REQUIRED', 'A successful serialized live state probe is required.');
+      const unknown = o.unknown;
       o.unknown = null; o.barrier = { at: this.now(), ...evidence }; o.heartbeat_at = this.now();
       const liveDocumentId = evidence?.state?.activeDocument?.id ?? null;
+      if (o.document_id !== null && evidence?.state?.hasDocument === false && evidence?.state?.documentCount === 0) o.document_closed = true;
+      if (o.document_id === null && unknown && ['document.open_allowed', 'document.create'].includes(unknown.command_id) && evidence?.state?.documentCount === 1 && liveDocumentId !== null) {
+        o.document_id = liveDocumentId;
+        o.opened_by_queue = true;
+        if (unknown.opened_source) o.opened_source = unknown.opened_source;
+        o.reconciled_unknown_open = { command_id: unknown.command_id, document_id: liveDocumentId, at: this.now() };
+      }
       const productionResumed = ['CLIENT_REBIND', 'BRIDGE_RECONNECT'].includes(o.recovery_mode) && (o.document_id === null || liveDocumentId === o.document_id);
       if (productionResumed) { o.recovering = false; o.recovery_mode = null; o.restart_required = false; o.progress_at = this.now(); }
       return { reconciled: true, production_resumed: productionResumed, original_result: 'May still require output inspection; no operation was replayed.', barrier: o.barrier };

@@ -13,7 +13,7 @@ $psTaskId = '当前真实任务ID'
 python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action health
 ```
 
-正式入队前先运行 `--action health`。`ok:true` 表示 broker、Bridge 和状态存储健康；`ready_for_new_lease:true` 才表示当前可立即取得新租约。出现阻断时执行返回的唯一 `next_action`，不得用重启 broker 代替文档、人工或未知命令恢复。
+正式入队前先运行 `--action health`。`ok:true` 表示受审运行时哈希、允许根、队列数据库、导出目录、磁盘及 Bridge 的静态检查通过；`ready_for_new_lease:true` 才表示当前可尝试取得新租约。acquire 还会实时确认 Photoshop 响应且当前为零文档；已有文档返回 `UNMANAGED_DOCUMENT_OPEN` 并续期原等待票。出现阻断时执行返回的唯一 `next_action`，不得用重启 broker 代替文档、人工或未知命令恢复。
 
 把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。Python 可用 `NDC_PYTHON_EXE` 指定，允许目录来自 `NDC_PS_ALLOWED_ROOTS` 或当前机器 NDC 配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
 
@@ -25,7 +25,7 @@ CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每
 python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --request $psRequestPath
 ```
 
-`$psRequestPath` 必须指向已写好的本次 JSON 文件。CLI 自动填写支持接口所需的 `task_id`、`acquire/cancel` 的 ticket，并在共享状态目录下保存该任务的私有租约上下文；不要手写 token、读取并打印 client-key，或复用其他任务的会话文件。每次检查返回内容及退出码，退出码 2 表示调用失败。
+`$psRequestPath` 必须指向已写好的本次 JSON 文件。CLI 以命令行 `--task` 为权威身份，覆盖 enqueue/acquire/recover/cancel/review/external 请求中残留的旧 `task_id`，并自动填写 `acquire/cancel` 的 ticket；这避免 handoff 后审核查到另一个任务键。私有租约上下文采用临时文件原子替换，损坏文件会隔离为 `.corrupt-*` 后走同任务 rebind。不要手写 token、读取并打印 client-key，或复用其他任务的会话文件。每次检查返回内容及退出码，退出码 2 表示调用失败。
 
 同一轮 `enqueue` 到 `release` 使用同一客户端类型。stdio 代理的上下文与 CLI 的本地会话文件不自动互通，不要在 stdio 取得租约后直接改用 CLI 操作。stdio 重连或 CLI 上下文丢失不表示 PS 已释放，按异常恢复处理。
 
@@ -37,7 +37,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 
 ### 异常占位自动接续（2026-09-09）
 
-本节覆盖后文旧“活跃心跳绝不回收”和“等待者必须取消票再恢复”的人工恢复步骤，仅针对自动acquire路径。用户已授权等待任务自行处理异常占位，不再请求例行确认。队首acquire会在owner失联180秒或无有效进展300秒后自动回收；原生handler/in_flight仍运行时先等待，不以耗时关闭。恢复保持原等待票、原资产及次数，旧epoch立即失效。随后执行实时probe，未改图直接释放；脏文档必须匹配原document_id，实际导出唯一PSD/PNG并checkpoint后关闭释放，原任务记录WAITING_REVIEW。实证文档已经丢失则按原lost_document流程记录FAIL，不能当已保存。
+本节覆盖后文旧“活跃心跳绝不回收”和“等待者必须取消票再恢复”的人工恢复步骤，仅针对自动acquire路径。用户已授权等待任务自行处理异常占位，不再请求例行确认。队首acquire会在owner失联180秒或无有效进展300秒后自动回收；原生handler/in_flight仍运行时先等待，不以耗时关闭。恢复保持原等待票、原资产及次数，旧epoch立即失效。随后执行实时probe：未绑定文档才可直接释放；队列打开且仍干净的源图须先关闭再释放；出现未保存变化时先转为脏状态并救存。脏文档必须匹配原document_id，实际导出唯一PSD/PNG并checkpoint后关闭释放，原任务记录WAITING_REVIEW。实证文档已经丢失则按原lost_document流程记录FAIL，不能当已保存。
 
 返回acquired:true表示恢复完成且已领取自己的生产资产；acquired:false且有recovery表示自动恢复未结束，约30秒后用同一task和ticket继续acquire，不另开任务、不删除队列数据库、不调用审批窗口。已配置路径不可用、救存失败等先检查并采用已有授权的静默能力修复；不能声称此机制可绕过宿主权限或任意销毁未保存文档。明确人工占用保持其原协议。后文recover/probe仍用于已有手动恢复租约的诊断，不是自动接续的额外审批关卡。
 
@@ -70,6 +70,21 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 
 获得使用权后先读取实际状态，核对目标文档及输入。使用已暴露工具或 `photoshop_command_search`／`photoshop_command_describe` 核实的原生命令，所有权限与前后置检查继续有效。CLI 原生调用仍写同样的请求结构，例如导出当前文档：
 
+打开 NDC 已允许根内的现有源图时，直接使用 `document.open_allowed` 与真实绝对路径；broker 在原生命令入账前验证文件真实存在、非空、可读且规范路径仍在本机 `ndc.local.json`／`NDC_PS_ALLOWED_ROOTS` 定义的现存根内，再映射为请求绑定的一次性认证导入。`document.open_default` 在生产队列内直接返回 `OPEN_ALLOWED_REQUIRED`，不要把源图预复制到队列导出目录。打开本身只绑定当前租约、源文件证据与文档，不算图像修改；若尚未执行任何实际修改且宿主仍报告文档已保存，可以 `document.close`（`save:false`）后以 `NO_IMAGE_CHANGE` 释放，不制造 PSD/PNG 检查点。若文档变为未保存，返回 `UNTRACKED_DOCUMENT_CHANGES`，必须救存。一个租约只能绑定一个打开的文档，且文档总数必须始终为一；换图必须先关闭并释放后重新入队。
+
+```json
+{
+  "name": "photoshop_command_execute",
+  "arguments": {
+    "command_id": "document.open_allowed",
+    "idempotency_key": "本资产本轮打开源图的唯一操作ID",
+    "args": { "path": "当前设备允许根内的真实绝对源图路径" }
+  }
+}
+```
+
+`exportFolderConfigured:false` 仅表示 UXP 中没有用户持久选择的外部导出文件夹；队列经认证 Bridge 导入／导出的能力与此状态分开判断。不得仅凭该字段推断一次性导入必然不可用。`document.open_allowed` 的失败必须保留底层错误：本地路径或允许根验证失败应在提交 Photoshop 前返回；提交后的 `HOST_ERROR`／超时仍按唯一恢复流程处理，不能换幂等键重放。
+
 ```json
 {
   "name": "photoshop_command_execute",
@@ -83,7 +98,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 
 本机 `document.export` 使用 `format`、`file_name`，没有任意目标路径参数；实际文件落在已有受控导出位置，以返回的真实绝对路径为准。导出 PNG 时改成 `format: png` 和另一唯一文件名。不要传入猜测的 `path` 参数或自动修改用户选中的 UXP 导出目录。若既有导出位置不能形成允许目录内的可验证文件，记录保存能力阻断，不凭空填写导出证据。
 
-对实际提交使用 `photoshop_command_execute` 的稳定 `idempotency_key`，按本资产本轮具体操作记录。同一次提交的查询／重试沿用原 key，新的操作使用新 key；PSD 与 PNG 两次导出也分别使用各自 key。broker 将 key 按真实任务及资产隔离：已完成的相同请求返回原结果，`running/unknown` 拒绝重放，同 key 改参数返回 `IDEMPOTENCY_PAYLOAD_MISMATCH`。缓存结果不是当前图再次验收或再次执行的证据；结果未知时不能改 key 来强行重做。
+每个 `photoshop_command_execute` 都必须提供稳定 `idempotency_key`，按本资产本轮具体操作记录；无键请求返回 `IDEMPOTENCY_KEY_REQUIRED`，无键的 typed convenience 工具不再暴露并返回 `DURABLE_COMMAND_REQUIRED`。同一次提交的查询／重试沿用原 key，新的操作使用新 key；PSD 与 PNG 两次导出也分别使用各自 key。broker 将 key 按真实任务及资产隔离：已完成的相同请求返回原结果，`running/unknown` 拒绝重放，同 key 改参数返回 `IDEMPOTENCY_PAYLOAD_MISMATCH`。缓存结果不是当前图再次验收或再次执行的证据；结果未知时不能改 key 来强行重做。
 
 同一张图中已授权、相互连续的操作可以组成一个安全段；不把每个小命令当作一次新艺术尝试。最后一次修改后依次经 MCP 导出 PSD 与审阅 PNG，之后不要再改像素／文档；后续实际修改会使旧导出证据和检查点失效。输出使用新路径，保留以前接受的快照和真实审核记录。
 
@@ -91,7 +106,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 
 ### 3. 检查点与释放
 
-正常生产优先使用原子交棒请求，避免任务在两次导出、checkpoint、关闭和 release 之间停顿：
+正常生产优先使用原子交棒请求，避免任务在两次导出、checkpoint、关闭和 release 之间停顿。handoff 必须关闭队列文档；`close:false` 返回 `HANDOFF_CLOSE_REQUIRED`，不能留下孤儿文档再释放：
 
 ```json
 {
@@ -130,7 +145,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 
 release 成功后，该图进入 `WAITING_REVIEW`，下一个独立任务可以取得 PS。文件被改动、缺少当前检查点、命令在途或结果未知都会阻断释放；先解决所报问题，不删除队列文件。未改图且无未解决命令可直接释放，返回 `NO_IMAGE_CHANGE`，不生成艺术通过记录。客户端退出仅会尝试同样的安全释放，不能保证脏文档已经交棒。
 
-如需关闭本轮文档，只有在实际导出的 PSD／PNG 已建立当前有效 checkpoint、实时活动文档确为本租约文档时，才可通过原生 `document.close` 执行，再 release。安全关闭用于释放本任务文档资源，不关闭用户或其他任务的文档；不得先关闭再补保存证明，也不把关闭作为图像PASS。未需要关闭时不增加此操作。
+只要本租约绑定过文档，release 前就必须关闭。修改过的文档只有在实际导出的 PSD／PNG 已建立当前有效 checkpoint、实时活动文档确为本租约文档时，才可通过原生 `document.close` 执行，再 release；只打开且未改动的已保存源图也须关闭。安全关闭用于释放本任务文档资源，不关闭用户或其他任务的文档；不得先关闭再补保存证明，也不把关闭作为图像PASS。未绑定过文档的纯检查租约才可直接 release。
 
 ## 离线审核及重新进入
 
@@ -148,7 +163,7 @@ release 成功后，该图进入 `WAITING_REVIEW`，下一个独立任务可以�
 }
 ```
 
-CLI 自动填 `task_id`，无需占有 PS。队列调用绑定的 `validate-queue-review.py` 与现有 NDC 校验器，只核验记录及当前快照关系，不生成视觉判定。登记被拒绝时检查记录结构、实际文件和当前快照关系，保留真实失败结论；不能把子项或总状态改成 PASS 来换取登记成功。
+CLI 强制使用当前 `--task` 绑定 `task_id`，无需占有 PS；请求文件中的旧任务 ID 不再影响快照查找。队列调用绑定的 `validate-queue-review.py` 与现有 NDC 校验器，只核验记录及当前快照关系，不生成视觉判定。登记被拒绝时检查记录结构、实际文件和当前快照关系，保留真实失败结论；不能把子项或总状态改成 PASS 来换取登记成功。
 
 当前图技术和真实视觉检查完成、当前哈希核对一致后，PASS 可进入相应后续依赖。FAIL 须记录明确缺陷：仍有原预算且需修复时继续原资产责任阶段；预算已耗尽或用户明确指示封存时，保留候选、失败审核、原始次数及停止依据，封存该分支后可 enqueue 其他独立资产。FAIL／NOT_CHECKED 都不能成为后代的通过输入，不能把失败候选写入正式交付；同场人物入景的联合前置仍未通过时，也不能把同场其他角色伪称为无依赖资产。
 
@@ -215,7 +230,7 @@ CLI 自动填当前真实任务 ID，并保存成功返回的新租约。若本�
 python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action probe
 ```
 
-probe 通过同一个桥接串行请求实际 PS 状态，成功只证明执行顺序已核对，不证明超时操作没执行、图像已保存或视觉合格。观察真实结果，不盲目重放原命令。恢复租约只用于允许的状态查看、救存导出及检查点验证后的本租约文档安全关闭；仍有正确文档时核对并导出 PSD／PNG、checkpoint、按需安全关闭、release，再重新排队进入正常制作。若文档身份不符或无法救存，保留恢复阻断，不擅自关闭文档或覆盖已有资产。
+probe 通过同一个桥接串行请求实际 PS 状态，成功只证明执行顺序已核对，不证明超时操作没执行、图像已保存或视觉合格。观察真实结果，不盲目重放原命令。恢复租约只用于允许的状态查看、救存导出及检查点验证后的本租约文档安全关闭；仍有正确文档时核对并导出 PSD／PNG、checkpoint、安全关闭、release，再重新排队进入正常制作。若文档身份不符或无法救存，保留恢复阻断，不擅自关闭文档或覆盖已有资产。
 
 只有确实没有打开文档、未保存结果已经丢失时，才请求：
 

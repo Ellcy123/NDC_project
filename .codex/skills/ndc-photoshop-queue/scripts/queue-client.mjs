@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, openSync, closeSync, unlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, openSync, closeSync, unlinkSync, renameSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
@@ -8,6 +8,49 @@ import { binding as settings } from './runtime-config.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 export { settings };
 const delay = ms => new Promise(r => setTimeout(r, ms));
+export function reclaimStartLock(path, now = Date.now()) {
+  let owner, age = Infinity;
+  try { owner = JSON.parse(readFileSync(path, 'utf8')); age = Math.max(0, now - statSync(path).mtimeMs); }
+  catch (error) { if (error.code === 'ENOENT') return false; try { age = Math.max(0, now - statSync(path).mtimeMs); } catch {} }
+  let alive = false;
+  if (Number.isInteger(owner?.pid) && owner.pid > 0) {
+    try { process.kill(owner.pid, 0); alive = true; } catch (error) { if (!['ESRCH', 'EPERM'].includes(error.code)) throw error; alive = error.code === 'EPERM'; }
+  }
+  // The TCP endpoint remains the real singleton fence. An invalid/dead lock, or
+  // a startup process that has not produced a broker after 30 seconds, must not
+  // permanently disable all future clients.
+  if ((!alive && age >= 1000) || age >= 30000) { try { unlinkSync(path); return true; } catch (error) { if (error.code !== 'ENOENT') throw error; } }
+  return false;
+}
+export function loadLeaseSession(path, task) {
+  try {
+    const value = JSON.parse(readFileSync(path, 'utf8'));
+    if (!value || typeof value !== 'object' || Array.isArray(value) || (value.task_id && value.task_id !== task)) throw new Error('Invalid or mismatched client lease session.');
+    return { ...value, task_id: task };
+  } catch (error) {
+    if (error.code === 'ENOENT') return { task_id: task };
+    const quarantine = `${path}.corrupt-${Date.now()}`;
+    try { renameSync(path, quarantine); }
+    catch (renameError) { throw new Error(`CLIENT_SESSION_CORRUPT: ${renameError.code || renameError.message}`); }
+    return { task_id: task };
+  }
+}
+export function saveLeaseSession(path, context) {
+  const temporary = `${path}.tmp-${process.pid}-${randomUUID()}`;
+  try {
+    writeFileSync(temporary, JSON.stringify(context), { mode: 0o600, flag: 'wx' });
+    renameSync(temporary, path);
+  } finally { if (existsSync(temporary)) try { unlinkSync(temporary); } catch {} }
+}
+export function bindTaskRequest(request, task, context = {}) {
+  if (!request || typeof request !== 'object' || Array.isArray(request) || typeof request.name !== 'string' || !request.name.trim()) throw new Error('INVALID_REQUEST_FILE: top-level name and object arguments are required.');
+  if (request.arguments === undefined) request.arguments = {};
+  if (!request.arguments || typeof request.arguments !== 'object' || Array.isArray(request.arguments)) throw new Error('INVALID_REQUEST_FILE: arguments must be a JSON object.');
+  const action = request.name.startsWith('photoshop_queue_') ? request.name.slice(16) : null;
+  if (task && ['enqueue', 'acquire', 'recover', 'cancel', 'review', 'external'].includes(action)) request.arguments.task_id = task;
+  if (action === 'acquire' || action === 'cancel') request.arguments.ticket ||= context.ticket;
+  return request;
+}
 export async function rpc(method, params = {}, timeout = 240000) {
   const key = readFileSync(join(settings.state_dir, 'client-key'), 'utf8').trim();
   const response = await fetch(`http://127.0.0.1:${settings.port}/mcp`, { method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: randomUUID(), method, params }), signal: AbortSignal.timeout(timeout) });
@@ -22,9 +65,7 @@ export async function ensureBroker() {
     try { handle = openSync(lock, 'wx'); }
     catch (e) {
       if (e.code !== 'EEXIST') throw e;
-      // Only clear a lock with a recorded, provably dead creator process.
-      let owner; try { owner = JSON.parse(readFileSync(lock, 'utf8')); } catch {}
-      if (owner?.pid) { try { process.kill(owner.pid, 0); } catch (p) { if (p.code === 'ESRCH') { unlinkSync(lock); handle = openSync(lock, 'wx'); } } }
+      if (reclaimStartLock(lock)) handle = openSync(lock, 'wx');
     }
     if (handle !== undefined) {
       writeFileSync(handle, JSON.stringify({ pid: process.pid, at: Date.now() }));
@@ -65,14 +106,12 @@ async function cli() {
   if (task) {
     mkdirSync(join(settings.state_dir, 'clients'), { recursive: true });
     session = join(settings.state_dir, 'clients', `${createHash('sha256').update(task).digest('hex')}.json`);
-    try { context = JSON.parse(readFileSync(session, 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
+    context = loadLeaseSession(session, task);
   }
-  request.arguments ||= {};
-  if (task && ['enqueue', 'acquire', 'recover', 'cancel', 'review', 'external'].some(x => request.name === `photoshop_queue_${x}`)) request.arguments.task_id ||= task;
-  if (request.name === 'photoshop_queue_acquire' || request.name === 'photoshop_queue_cancel') request.arguments.ticket ||= context.ticket;
+  bindTaskRequest(request, task, context);
   const result = await call(request.name, request.arguments, context);
   context = retainLease(context, request.name, result);
-  if (session) writeFileSync(session, JSON.stringify(context), { mode: 0o600 });
+  if (session) saveLeaseSession(session, context);
   // Do not echo bearer credentials or private lease tokens into conversation logs.
   const output = resultData(result);
   console.log(JSON.stringify(output, (k, v) => k === 'token' ? '[stored in local task session]' : v, 2));
