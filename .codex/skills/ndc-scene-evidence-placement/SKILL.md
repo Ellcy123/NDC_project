@@ -14,11 +14,13 @@ description: 将已锁定 NDC 道具放入既定场景，确定承载体、原�
 
 这是五阶段的第三阶段。批次未建立时先调用[需求整理](../ndc-prop-requirements/SKILL.md)；母版缺失时交给[母版制作](../ndc-prop-master-production/SKILL.md)。旧名称和 scripts/ 地址保持兼容，但不能再把所有阶段在本入口内重复执行。
 
+若上游已由 Photoshop MCP 实际产出可打开但不完整或低置信度的 RGBA，并提供提取前原图、SHA-256、尝试 RGBA、可恢复 PSD／蒙版／路径／动作证据及缺陷记录，则不得把对应场景角色留空。以 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 继续场景落点、承托、状态预览、Big/Icon、直接拾取四件套、Map／XY 准备和联组检查；所有新增文件继承该状态与源哈希。结果只能进入 `工作过程文件` 下独立“待用户审核交付包”，不能标记冻结 PASS、不能进入 `最终交付`，也不能覆盖原图、旧 provisional 或已批准资产。用户审核／修正后建立新修订并重跑受影响的场景、Alpha、阴影、热区、XY、重建和发布门禁。语义、身份、内容、文字、承托或取得逻辑失败不适用本例外。
+
 读[共用批次协议](../ndc-prop-requirements/references/batch-contract.md)与[场景专业细则](references/production-details.md)。实际改动场景前加载[坐标修图](../ndc-coordinate-image-edit/SKILL.md)；制作Big/Icon时读[规格](references/detail-icon-production.md)；PS修正或菜单框幅调整时读[PS操作参考](references/photoshop-mcp-repair-and-framing.md)。本阶段不加载热区描边全文。
 
 ## 场景批次
 
-开始某场景前运行workflow_state.py scene-readiness --batch <batch.json> --scene <scene_id>，按[场景放行合同](../ndc-prop-requirements/references/scene-release-contract.md)读取完整关联前置及阻塞。它只放行第二阶段到第三阶段；单个道具通过或scene_id筛选后的子集不足以放行。attempt按job和产物所属场景再次校验，不能靠改current_stage跳过；该场景制作期间前置变更会撤销相关审核。无索引旧批保持全局门槛，先追加迁移索引再按场景续跑。
+开始某场景前运行workflow_state.py scene-readiness --batch <batch.json> --scene <scene_id>，按[场景放行合同](../ndc-prop-requirements/references/scene-release-contract.md)读取完整关联前置及阻塞。它只放行第二阶段到第三阶段的正式分支；单个道具通过或scene_id筛选后的子集不足以正式放行。attempt按job和产物所属场景再次校验，不能靠改current_stage伪造 PASS；该场景制作期间前置变更会撤销相关审核。无索引旧批保持全局门槛，先追加迁移索引再按场景续跑。只有上文证据齐全的 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 可在不改写该验证结果的情况下进入独立 provisional 分支，并在每个派生件继续声明阻塞来源。
 
 1. 按锁定范围先补本阶段可执行缺失角色，再复检和修复旧问题。先看原场景是否已满足该状态；已有合格遮阳帘、窗缝或环境痕迹直接保留，只补缺失Big／热区等角色。确需替换才检查原物归属，不能因清单列了一项就生成式更换。每个场景统一规划落点、比例、支撑、动线和容器。
 2. 新承载体优先依附墙边、家具端部和工作区域，不为展示信息孤立放在通道中央。先完成真实场景中的承载体，再制作依赖它的近景与菜单。保留独立合格Big，只有实际跨视图冲突才重做。
@@ -41,9 +43,9 @@ description: 将已锁定 NDC 道具放入既定场景，确定承载体、原�
 
 ## 冻结和交接
 
-输出完整场景道具预览、逐菜单场景预览、菜单交付图、必要Big/Icon及当前审核。所有入景道具交接本体＋归属阴影审核；对地图直接拾取且拾取后消失的道具，还要交接原场景、无道具承载物状态、道具＋归属阴影独立 RGBA 层、拾取前合成结果、XY、四者哈希及 `DIRECT_PICKUP_LAYER_GATE` 记录。冻结父图路径、尺寸、哈希、菜单位置、状态和依赖图。候选图可继续独立布局试验，但不得标记冻结PASS。
+输出完整场景道具预览、逐菜单场景预览、菜单交付图、必要Big/Icon及当前审核。所有入景道具交接本体＋归属阴影审核；对地图直接拾取且拾取后消失的道具，还要交接原场景、无道具承载物状态、道具＋归属阴影独立 RGBA 层、拾取前合成结果、XY、四者哈希及 `DIRECT_PICKUP_LAYER_GATE` 记录。冻结父图路径、尺寸、哈希、菜单位置、状态和依赖图。PASS 结果按正式合同交接；provisional 结果必须把提取前原图、尝试件、恢复证据、缺陷和全部继承状态的派生文件一起交给独立待审核包。候选或 provisional 可继续后续审核生产，但不得标记冻结 PASS。
 
-按已锁定批次门槛，本场景第三阶段非 Icon 产物、场景预览与菜单均审核并冻结后，运行 `workflow_state.py validate --stage 4 --scene <scene_id>`；通过即交给[热区导出](../ndc-prop-hotspot-export/SKILL.md)，不等待无关场景或全批 Icon。全批 Icon、全部热区与正式发布仍在第五阶段汇合。阻塞时按共用协议的补缺及必要依赖例外推进，不静默缩小批次。已有完成热区可保留，父图变动仅使受影响依赖失效。
+按已锁定批次门槛，本场景第三阶段非 Icon 产物、场景预览与菜单均审核并冻结后，运行 `workflow_state.py validate --stage 4 --scene <scene_id>`；通过即交给[热区导出](../ndc-prop-hotspot-export/SKILL.md)，不等待无关场景或全批 Icon。若仅因已登记的 provisional 提取而未通过，则不修改验证器结果，携带完整原图／尝试件／缺陷／哈希绑定进入热区 Skill 的 provisional 分支；其 Map、XY 和预览同样不能转正。全批 Icon、全部热区与正式发布仍在第五阶段汇合。阻塞时按共用协议的补缺及必要依赖例外推进，不静默缩小批次。已有完成热区可保留，父图变动仅使受影响依赖失效。
 
 ## Carrier before dependent evidence art
 

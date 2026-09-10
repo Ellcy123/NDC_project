@@ -10,6 +10,8 @@
 
 任何实际 Photoshop MCP 操作还必须先完整读取 `production/art_pipeline/PS_MCP_操作参考手册.md`，并在当前作业记录手册版本、SHA-256 和当前会话能力快照。该文件与维护工作区根目录的 `PS_MCP_操作参考手册.md` 必须字节一致；不允许使用旧缓存替代。手册约束通用效率、抠图、Alpha、路径、单引擎、超时回退和视觉/技术验收，具体 Skill 的授权、内容和专用门禁仍优先，实时目录只执行 `supported` 能力。
 
+Photoshop MCP 已实际导出可打开的非生成 RGBA 后，即使提取不完整或低置信度，也要保留提取前原图与 SHA-256、尝试 RGBA、恢复 PSD／蒙版／路径／动作证据、多底预览和缺陷记录，标记 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW`，继续清晰标记的 provisional 合成、规格派生、Map／XY、重建及整包检查。原图和全部继承状态的派生件进入项目外 `工作过程文件` 的独立待用户审核交付包；不得进入正式美术目录、冒充 PASS 或覆盖历史。用户审核／修正后建立新修订并重跑受影响门禁；完全没有合规 RGBA 输出以及语义、身份、结构、文字、承托等非提取问题仍按原规则阻断。
+
 从任一仓库根运行 `python -B scripts/art_pipeline/ndc_art.py configure --help` 配置本机三处路径；实际值保存在两库各自被 Git 忽略的 `ndc.local.json`，`paths` 查询，`skill NAME` 定位主实现。`production/art_pipeline/paths.json` 只维护团队预算和相对路径。Skill 必需的自有脚本、规则、模板和依赖清单必须随 Git 管理，不能只留在个人目录；第三方安装包、密钥、虚拟环境不进 Git。
 
 新任务使用 `python -B scripts/art_pipeline/ndc_art.py workspace create`，图像/视频过程文件、候选和待确认成品全部放返回的项目外 `payload`。自检后展示具体成品，用户确认该版本后才交付工程。成功交付并校验副本，或用户明确取消后，关闭任务并清理临时大文件；等待确认、仍在返工、旧任务、角色卡和未安全保存的母版不可清理。兼容入口必须从 `skill NAME` 返回的唯一主目录解析支持文件。

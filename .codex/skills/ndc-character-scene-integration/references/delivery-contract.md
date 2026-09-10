@@ -26,7 +26,7 @@ The user-facing delivery root must be named with the source scene basename, with
 16. actual extraction and registration provenance, composed uniform transform if used, and current revalidated pose/scale/contact evidence; permitted PS correction follows the cadence reference and explicit user locks;
 17. exact source-scene occluder masks with internal holes preserved, and any minimum changed actor-object interaction component;
 18. `xyposition-Unit<chapter>.md` entry;
-19. when the actual model/repair budget is exhausted or a specific capability/time stop remains, a marked work candidate with unresolved failures and true counts, never in the formal root;
+19. when the actual model/repair budget is exhausted or a specific capability/time stop remains, a marked work candidate with unresolved failures and true counts, never in the formal root; if Photoshop MCP actually produced an incomplete or low-confidence RGBA, also retain the exact pre-extraction original, attempted RGBA, PSD/mask/path evidence, multi-background previews and inherited provisional composites in a dedicated user-review package under the work root with `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW`;
 20. a pre-generation and post-generation `ndc-scene-integration-production-ledger/v2`, plus their `production_gate.py` reports. The ledger must hash every referenced artifact and use only `NOT_RUN`, `TECHNICAL_FILE_PASS`, or `TECHNICAL_FILE_FAIL` for file-check status.
 21. a fixed-scene absolute-scale report and overlay, independent from cast-relative head/body scale;
 22. planned/final component-policy reports, with paired masks for every relocated loose prop and fixed structures excluded from scalable layers;
