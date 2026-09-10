@@ -62,6 +62,14 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
     ? absolute(environment.NDC_PS_QUEUE_STATE_DIR, 'NDC_PS_QUEUE_STATE_DIR')
     : localAppData && join(localAppData, ...manifest.state.local_app_data_relative.split('/'));
   if (!stateDir) throw new Error('Cannot resolve the per-user queue state directory. Set NDC_PS_QUEUE_STATE_DIR.');
+  const tempRoot = environment.TEMP
+    ? absolute(environment.TEMP, 'TEMP')
+    : environment.TMP && absolute(environment.TMP, 'TMP');
+  const clientSessionDir = environment.NDC_PS_QUEUE_CLIENT_STATE_DIR
+    ? absolute(environment.NDC_PS_QUEUE_CLIENT_STATE_DIR, 'NDC_PS_QUEUE_CLIENT_STATE_DIR')
+    : tempRoot
+      ? join(tempRoot, ...(manifest.state.client_temp_relative || 'NDC/photoshop-queue/clients').split('/'))
+      : join(stateDir, 'clients');
   const port = Number(environment.NDC_PS_QUEUE_PORT || manifest.port);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('NDC_PS_QUEUE_PORT must be an integer from 1 to 65535.');
 
@@ -79,6 +87,7 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
     // that also contains client keys, sessions, and the queue database.
     allowed_roots: [...new Set([...configuredRoots, exportRoot])],
     state_dir: resolve(stateDir),
+    client_session_dir: resolve(clientSessionDir),
     port,
     hashes: manifest.hashes,
   };

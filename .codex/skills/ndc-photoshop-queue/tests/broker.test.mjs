@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PhotoshopQueue, QueueError, fileEvidence } from '../scripts/queue-core.mjs';
 import { QueueService, startBroker, queueDefinitions } from '../scripts/broker.mjs';
-import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock, buildResumeCheck } from '../scripts/queue-client.mjs';
+import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock, buildResumeCheck, leaseContextChanged } from '../scripts/queue-client.mjs';
 
 // All native handlers and PSD/PNG bytes here are synthetic. No Photoshop calls.
 const scratch = resolve(dirname(fileURLToPath(import.meta.url)), '.test-data');
@@ -552,6 +552,8 @@ test('CLI task binding overrides stale review identity and lease sessions recove
   assert.equal(loadLeaseSession(session, 'real-task').ticket, 2);
   writeFileSync(session, '{broken'); assert.deepEqual(loadLeaseSession(session, 'real-task'), { task_id: 'real-task' });
   assert.equal(readdirSync(root).some(name => name.startsWith('session.json.corrupt-')), true);
+  assert.equal(leaseContextChanged({ task_id: 'real-task' }, { task_id: 'real-task' }), false);
+  assert.equal(leaseContextChanged({ task_id: 'real-task' }, { task_id: 'real-task', ticket: 3 }), true);
   const lock = join(root, 'start.lock'); writeFileSync(lock, '{broken'); const mtime = statSync(lock).mtimeMs;
   assert.equal(reclaimStartLock(lock, mtime + 2000), true); assert.equal(readdirSync(root).includes('start.lock'), false);
 });

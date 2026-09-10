@@ -13,7 +13,7 @@ test('runtime binding follows a relocated Skill tree with spaces and Chinese cha
   const root = mkdtempSync(join(scratch, '跨设备 Skill '));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const planning = join(root, '策划仓库'), engine = join(root, '工程仓库');
-  const work = join(root, '美术 工作区'), local = join(root, 'Local App Data');
+  const work = join(root, '美术 工作区'), local = join(root, 'Local App Data'), temp = join(root, 'Temp');
   const scripts = join(planning, '.codex', 'skills', 'ndc-photoshop-queue', 'scripts');
   const validator = join(planning, '.codex', 'skills', 'ndc-prop-delivery-review', 'scripts', 'stage_visual_check.py');
   mkdirSync(join(planning, 'production', 'art_pipeline'), { recursive: true });
@@ -22,12 +22,13 @@ test('runtime binding follows a relocated Skill tree with spaces and Chinese cha
   copyFileSync(join(here, '..', 'scripts', 'runtime-binding.json'), join(scripts, 'runtime-binding.json'));
   mkdirSync(dirname(validator), { recursive: true }); writeFileSync(validator, '# fixture');
   const runtime = join(local, 'PS_MCP', 'app', 'versions', '2.0.1-ndc2', 'runtime'); mkdirSync(runtime, { recursive: true });
-  for (const path of [engine, work]) mkdirSync(path, { recursive: true });
-  const binding = loadRuntimeBinding({ LOCALAPPDATA: local, USERPROFILE: root, NDC_PLANNING_ROOT: planning, NDC_ENGINE_ROOT: engine, NDC_ART_WORK_ROOT: work }, { scriptDir: scripts });
+  for (const path of [engine, work, temp]) mkdirSync(path, { recursive: true });
+  const binding = loadRuntimeBinding({ LOCALAPPDATA: local, USERPROFILE: root, TEMP: temp, NDC_PLANNING_ROOT: planning, NDC_ENGINE_ROOT: engine, NDC_ART_WORK_ROOT: work }, { scriptDir: scripts });
   assert.equal(binding.runtime, runtime);
   assert.equal(binding.visual_validator, validator);
   assert.deepEqual(binding.allowed_roots, [work, engine, planning, join(local, 'NDC', 'photoshop-queue', 'exports')]);
   assert.equal(binding.state_dir, join(local, 'NDC', 'photoshop-queue'));
+  assert.equal(binding.client_session_dir, join(temp, 'NDC', 'photoshop-queue', 'clients'));
 });
 
 test('explicit runtime and queue paths override per-user defaults', t => {
@@ -36,11 +37,12 @@ test('explicit runtime and queue paths override per-user defaults', t => {
   const scripts = join(root, 'skills', 'ndc-photoshop-queue', 'scripts');
   mkdirSync(scripts, { recursive: true });
   copyFileSync(join(here, '..', 'scripts', 'runtime-binding.json'), join(scripts, 'runtime-binding.json'));
-  const runtime = join(root, 'custom runtime'), state = join(root, 'custom state'), allowed = join(root, 'allowed');
+  const runtime = join(root, 'custom runtime'), state = join(root, 'custom state'), clientState = join(root, 'custom clients'), allowed = join(root, 'allowed');
   const validator = join(root, 'validator.py');
-  for (const path of [runtime, state, allowed]) mkdirSync(path, { recursive: true }); writeFileSync(validator, '# fixture');
-  const binding = loadRuntimeBinding({ NDC_PS_MCP_RUNTIME: runtime, NDC_PS_QUEUE_STATE_DIR: state, NDC_PS_ALLOWED_ROOTS: allowed, NDC_STAGE_VISUAL_VALIDATOR: validator }, { scriptDir: scripts });
+  for (const path of [runtime, state, clientState, allowed]) mkdirSync(path, { recursive: true }); writeFileSync(validator, '# fixture');
+  const binding = loadRuntimeBinding({ NDC_PS_MCP_RUNTIME: runtime, NDC_PS_QUEUE_STATE_DIR: state, NDC_PS_QUEUE_CLIENT_STATE_DIR: clientState, NDC_PS_ALLOWED_ROOTS: allowed, NDC_STAGE_VISUAL_VALIDATOR: validator }, { scriptDir: scripts });
   assert.equal(binding.runtime, runtime); assert.equal(binding.state_dir, state);
+  assert.equal(binding.client_session_dir, clientState);
   assert.deepEqual(binding.allowed_roots, [allowed, join(state, 'exports')]); assert.equal(binding.visual_validator, validator);
 });
 

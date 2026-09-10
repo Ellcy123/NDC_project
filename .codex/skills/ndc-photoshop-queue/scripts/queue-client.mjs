@@ -42,6 +42,9 @@ export function saveLeaseSession(path, context) {
     renameSync(temporary, path);
   } finally { if (existsSync(temporary)) try { unlinkSync(temporary); } catch {} }
 }
+export function leaseContextChanged(previous, current) {
+  return JSON.stringify(previous) !== JSON.stringify(current);
+}
 export function bindTaskRequest(request, task, context = {}) {
   if (!request || typeof request !== 'object' || Array.isArray(request) || typeof request.name !== 'string' || !request.name.trim()) throw new Error('INVALID_REQUEST_FILE: top-level name and object arguments are required.');
   if (request.arguments === undefined) request.arguments = {};
@@ -141,8 +144,8 @@ async function cli() {
   let context = task ? { task_id: task } : {};
   let session;
   if (task) {
-    mkdirSync(join(settings.state_dir, 'clients'), { recursive: true });
-    session = join(settings.state_dir, 'clients', `${createHash('sha256').update(task).digest('hex')}.json`);
+    mkdirSync(settings.client_session_dir, { recursive: true });
+    session = join(settings.client_session_dir, `${createHash('sha256').update(task).digest('hex')}.json`);
     context = loadLeaseSession(session, task);
   }
   if (!request) {
@@ -153,9 +156,13 @@ async function cli() {
     return;
   }
   bindTaskRequest(request, task, context);
+  const priorContext = { ...context };
   const result = await call(request.name, request.arguments, context);
   context = retainLease(context, request.name, result);
-  if (session) saveLeaseSession(session, context);
+  // Read-only observations do not change the private lease context. Avoid an
+  // unnecessary session rewrite so health/status remain usable when the
+  // sandbox can read shared broker state but cannot write beneath LocalAppData.
+  if (session && leaseContextChanged(priorContext, context)) saveLeaseSession(session, context);
   // Do not echo bearer credentials or private lease tokens into conversation logs.
   const output = resultData(result);
   console.log(JSON.stringify(output, (k, v) => k === 'token' ? '[stored in local task session]' : v, 2));

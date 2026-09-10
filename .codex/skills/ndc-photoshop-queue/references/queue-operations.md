@@ -26,7 +26,9 @@ $psSkillRoot = Split-Path -Parent '<当前实际 ndc-photoshop-queue/SKILL.md �
 
 把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。不得把 Windows Store `python.exe` 的无输出或退出码 9009 记成 PS MCP 故障；需要 `ndc_art.py` 时必须先解析到真实 Python，或直接使用上述不依赖 Python 的队列入口。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。允许目录来自 `NDC_PS_ALLOWED_ROOTS` 或当前机器 NDC 配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
 
-state dir、client session、client-key 和 Bridge secret 必须设备隔离；另一台电脑不得复制这些状态或并发打开同一个 `queue.sqlite`。端口仅在设备本地通过 `NDC_PS_QUEUE_PORT` 覆盖。
+state dir、client session、client-key 和 Bridge secret 必须设备隔离；另一台电脑不得复制这些状态或并发打开同一个 `queue.sqlite`。共享 broker 的 state dir 默认位于 `%LOCALAPPDATA%/NDC/photoshop-queue`；每任务 client session 默认位于当前用户临时目录的 `NDC/photoshop-queue/clients`，只保存本机租约上下文。若沙箱的临时目录不可写，可用 `NDC_PS_QUEUE_CLIENT_STATE_DIR` 指向本机可写的非工程提交目录；这不会改变 broker、队列数据库、导出目录或端口。health/status 等不改变租约的只读调用不得重写 client session。端口仅在设备本地通过 `NDC_PS_QUEUE_PORT` 覆盖。
+
+若向监测任务发送消息时得到 `MCP tool call requires approval, but approval policy is never`，这是 Codex 跨任务通信策略阻断，不是 Photoshop 或 Bridge 错误。保留原始返回，写入当前任务的异常交接目录并继续独立工作；监测任务负责主动读取任务状态、队列状态和这些交接文件。恢复回执至少包含监测时间、使用的 Skill 根、health/status 结论、当前 blocker、可执行的下一动作以及仍未同步的源目录，不得仅写“已修复”。生产任务不把“通知未送达”当作阻止 `resume-check` 或后续 acquire 的门禁。
 
 CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每次只调用一个接口。请求、日志及审核证据放入本任务的 `工作过程文件` 目录。执行方式：
 
