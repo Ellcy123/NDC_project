@@ -30,6 +30,12 @@ function discoverPlanningRoot(scriptDir, environment) {
   }
 }
 
+function readMachineConfig(planningRoot) {
+  if (!planningRoot) return {};
+  const path = join(planningRoot, 'ndc.local.json');
+  return existsSync(path) ? readJson(path) : {};
+}
+
 function siblingSkillScript(scriptDir, skillName, relativeScript) {
   const currentSkill = dirname(scriptDir);
   const skillsRoot = dirname(currentSkill);
@@ -42,6 +48,7 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
   if (manifest.schema !== 'ndc-photoshop-runtime-binding/v2') throw new Error('runtime-binding.json must use ndc-photoshop-runtime-binding/v2.');
 
   const planningRoot = discoverPlanningRoot(scriptDir, environment);
+  const machineConfig = readMachineConfig(planningRoot);
   const localAppData = environment.LOCALAPPDATA ? absolute(environment.LOCALAPPDATA, 'LOCALAPPDATA') : null;
   const userProfile = environment.USERPROFILE ? absolute(environment.USERPROFILE, 'USERPROFILE') : null;
   const runtimeCandidates = [
@@ -56,7 +63,11 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
   ];
   const configuredRoots = environment.NDC_PS_ALLOWED_ROOTS
     ? environment.NDC_PS_ALLOWED_ROOTS.split(';').filter(Boolean).map(value => absolute(value, 'NDC_PS_ALLOWED_ROOTS'))
-    : [environment.NDC_ART_WORK_ROOT, environment.NDC_ENGINE_ROOT, planningRoot].filter(Boolean).map(value => absolute(value, 'NDC root'));
+    : [
+        environment.NDC_ART_WORK_ROOT || machineConfig.work_root,
+        environment.NDC_ENGINE_ROOT || machineConfig.engine_root,
+        planningRoot || machineConfig.planning_root,
+      ].filter(Boolean).map(value => absolute(value, 'NDC root'));
   if (!configuredRoots.length) throw new Error('Cannot resolve an allowed NDC root. Run through ndc_art.py or set NDC_PLANNING_ROOT/NDC_PS_ALLOWED_ROOTS.');
   const stateDir = environment.NDC_PS_QUEUE_STATE_DIR
     ? absolute(environment.NDC_PS_QUEUE_STATE_DIR, 'NDC_PS_QUEUE_STATE_DIR')
