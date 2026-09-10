@@ -43,7 +43,7 @@ Use numeric Lab differences as screening and same-display side-by-side review as
 
 ## Photoshop routes
 
-Codex-operated Photoshop work uses the [global queue](../../ndc-photoshop-queue/SKILL.md) and currently verified MCP capabilities only. The method names below describe provenance, not permission to launch a separate `.psjs`, shell script, mouse/keyboard route or unverified action. If the MCP cannot execute the proposed correction, retain the candidate and use the explicitly human handoff; do not silently substitute tools. A safely saved checkpoint permits releasing PS to other independent tasks while this image waits for offline review or human input, without passing this image or changing its budget.
+Codex-operated Photoshop work uses native MCP and currently verified capabilities only, with one active operator per host. The method names below describe provenance, not permission to launch a separate `.psjs`, shell script, mouse/keyboard route or unverified action. If the MCP cannot execute the proposed correction, retain the candidate and use the explicitly human handoff; do not silently substitute tools. A safely saved checkpoint permits releasing PS to other independent tasks while this image waits for offline review or human input, without passing this image or changing its budget.
 
 Preferred route when automation passes a one-file dry run:
 

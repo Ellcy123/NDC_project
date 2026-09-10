@@ -4,7 +4,7 @@
 
 白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：位置、比例、头身比、动作和演绎可准确判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
 
-Before using Photoshop MCP, follow the [global queue](../../ndc-photoshop-queue/SKILL.md). This permits safe suspension for another independent task, not a whitebox PASS, a new repair budget or another task taking over actors inside the same scene.
+Use native Photoshop MCP with one active operator per host; verify the bridge and required capabilities, then save recoverable checkpoints before handing over. This permits safe suspension for another independent task, not a whitebox PASS, a new repair budget or another task taking over actors inside the same scene.
 
 Use as soon as a useful whitebox has a position, proportion, extraction or local assembly defect that verified Photoshop MCP operations can repair. Read [ps-first-repair.md](ps-first-repair.md); three generated attempts are a ceiling, not a prerequisite for PS. Choose the closest useful candidate by defect severity and completeness of separable actor components. A whitebox need not be produced correctly in one generative pass: PS-repaired anatomical mannequin imagery is a valid structural authority after the same complete acceptance gates.
 

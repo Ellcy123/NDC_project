@@ -6,7 +6,7 @@
 
 Execution cadence and reuse are defined in [production-cadence.md](production-cadence.md). The sections below are decisions within four milestones, not separate rounds of tool discovery, image generation or duplicate review.
 
-Keep one owner for each complete scene at each phase: Astra/medium owns references, then Terra/xhigh owns formal production after the full scene packet passes. Read [phase handoff](../../ndc-art-stage-pipeline/references/integration-pipeline.md); different released scenes may overlap. Layered actor batches do not authorize cross-task or cross-stage actor pipelines within that scene. For actual PS operations read the [global queue](../../ndc-photoshop-queue/SKILL.md); independent-scene non-PS overlap follows the cadence reference.
+Keep one owner for each complete scene at each phase: Astra/medium owns references, then Terra/xhigh owns formal production after the full scene packet passes. Read [phase handoff](../../ndc-art-stage-pipeline/references/integration-pipeline.md); different released scenes may overlap. Layered actor batches do not authorize cross-task or cross-stage actor pipelines within that scene. For actual PS operations use native MCP with one active operator per host and safe saved handover; independent-scene non-PS overlap follows the cadence reference.
 
 ## 1. Whole-scene rehearsal
 
