@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PhotoshopQueue, QueueError, fileEvidence } from '../scripts/queue-core.mjs';
 import { QueueService, startBroker, queueDefinitions } from '../scripts/broker.mjs';
-import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock, buildResumeCheck, leaseContextChanged } from '../scripts/queue-client.mjs';
+import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock, buildResumeCheck, leaseContextChanged, decorateHealthForLocalConfig } from '../scripts/queue-client.mjs';
 
 // All native handlers and PSD/PNG bytes here are synthetic. No Photoshop calls.
 const scratch = resolve(dirname(fileURLToPath(import.meta.url)), '.test-data');
@@ -598,4 +598,13 @@ test('resume check invalidates historical failure snapshots and selects the curr
   const disconnected = buildResumeCheck({ ...health, ok: false, ready_for_new_lease: false, bridge: { paired: true, connected: false }, blockers: [{ code: 'BRIDGE_DISCONNECTED' }] }, { diagnosis: 'IDLE', waiting: [], owner: null }, 'task-A');
   assert.equal(disconnected.photoshop_operational, false);
   assert.equal(disconnected.resume_action, 'follow_current_health_next_action');
+});
+
+test('client health blocks new leases when the running broker has stale allowed roots', () => {
+  const health = { ok: true, ready_for_new_lease: true, allowed_roots: [{ path: 'D:\\planning' }], blockers: [], next_action: 'enqueue' };
+  const decorated = decorateHealthForLocalConfig(health, ['D:\\work', 'D:\\planning']);
+  assert.equal(decorated.ok, false);
+  assert.equal(decorated.ready_for_new_lease, false);
+  assert.equal(decorated.blockers.at(-1).code, 'BROKER_CONFIG_RELOAD_REQUIRED');
+  assert.deepEqual(decorateHealthForLocalConfig(health, ['D:\\planning']), health);
 });

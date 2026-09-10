@@ -82,6 +82,29 @@ export async function ensureBroker() {
   } finally { if (handle !== undefined) { closeSync(handle); unlinkSync(lock); } }
 }
 export const resultData = result => result.structuredContent ?? {};
+const normalizedRoot = value => {
+  const path = resolve(value);
+  return process.platform === 'win32' ? path.toLowerCase() : path;
+};
+export function decorateHealthForLocalConfig(health, expectedRoots = settings.allowed_roots) {
+  const brokerRoots = Array.isArray(health?.allowed_roots) ? health.allowed_roots.map(item => item?.path).filter(Boolean) : [];
+  const expected = [...new Set(expectedRoots.map(normalizedRoot))].sort();
+  const actual = [...new Set(brokerRoots.map(normalizedRoot))].sort();
+  if (expected.length === actual.length && expected.every((value, index) => value === actual[index])) return health;
+  const blocker = {
+    code: 'BROKER_CONFIG_RELOAD_REQUIRED',
+    configured_roots: expectedRoots,
+    broker_roots: brokerRoots,
+    next: 'Keep independent work moving. Restart only the idle shared broker from its owning host, then rerun resume-check; do not start a second broker or copy source files into another root.'
+  };
+  return {
+    ...health,
+    ok: false,
+    ready_for_new_lease: false,
+    blockers: [...(Array.isArray(health?.blockers) ? health.blockers : []), blocker],
+    next_action: blocker.next
+  };
+}
 export function buildResumeCheck(health, status, task, context = {}, checkedAt = new Date().toISOString()) {
   const waiting = Array.isArray(status?.waiting) ? status.waiting : [];
   const ownWaiting = waiting.find(item => item?.task_id === task) || null;
@@ -150,7 +173,7 @@ async function cli() {
   }
   if (!request) {
     if (!task) throw new Error('RESUME_CHECK_TASK_REQUIRED: use --task with --action resume-check.');
-    const health = resultData(await call('photoshop_queue_health', {}, context));
+    const health = decorateHealthForLocalConfig(resultData(await call('photoshop_queue_health', {}, context)));
     const status = resultData(await call('photoshop_queue_status', {}, context));
     console.log(JSON.stringify(buildResumeCheck(health, status, task, context), null, 2));
     return;
@@ -164,7 +187,9 @@ async function cli() {
   // sandbox can read shared broker state but cannot write beneath LocalAppData.
   if (session && leaseContextChanged(priorContext, context)) saveLeaseSession(session, context);
   // Do not echo bearer credentials or private lease tokens into conversation logs.
-  const output = resultData(result);
+  const output = request.name === 'photoshop_queue_health'
+    ? decorateHealthForLocalConfig(resultData(result))
+    : resultData(result);
   console.log(JSON.stringify(output, (k, v) => k === 'token' ? '[stored in local task session]' : v, 2));
   if (result.isError) process.exitCode = 2;
 }

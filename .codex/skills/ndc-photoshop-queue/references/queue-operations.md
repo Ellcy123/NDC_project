@@ -28,6 +28,8 @@ $psSkillRoot = Split-Path -Parent '<当前实际 ndc-photoshop-queue/SKILL.md �
 
 state dir、client session、client-key 和 Bridge secret 必须设备隔离；另一台电脑不得复制这些状态或并发打开同一个 `queue.sqlite`。共享 broker 的 state dir 默认位于 `%LOCALAPPDATA%/NDC/photoshop-queue`；每任务 client session 默认位于当前用户临时目录的 `NDC/photoshop-queue/clients`，只保存本机租约上下文。若沙箱的临时目录不可写，可用 `NDC_PS_QUEUE_CLIENT_STATE_DIR` 指向本机可写的非工程提交目录；这不会改变 broker、队列数据库、导出目录或端口。health/status 等不改变租约的只读调用不得重写 client session。端口仅在设备本地通过 `NDC_PS_QUEUE_PORT` 覆盖。
 
+CLI 会比较当前设备解析出的允许根和运行中 broker 报告的启动时根列表。两者不一致时，`health`／`resume-check` 返回 `BROKER_CONFIG_RELOAD_REQUIRED` 并禁止新租约；仅由能控制该进程的宿主在队列确认空闲后重启同一个共享 broker。不得为绕过旧配置启动第二套 broker、复制输入到错误目录或把 `health.ok:true` 当成目标输入路径已经授权。
+
 若向监测任务发送消息时得到 `MCP tool call requires approval, but approval policy is never`，这是 Codex 跨任务通信策略阻断，不是 Photoshop 或 Bridge 错误。保留原始返回，写入当前任务的异常交接目录并继续独立工作；监测任务负责主动读取任务状态、队列状态和这些交接文件。恢复回执至少包含监测时间、使用的 Skill 根、health/status 结论、当前 blocker、可执行的下一动作以及仍未同步的源目录，不得仅写“已修复”。生产任务不把“通知未送达”当作阻止 `resume-check` 或后续 acquire 的门禁。
 
 CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每次只调用一个接口。请求、日志及审核证据放入本任务的 `工作过程文件` 目录。执行方式：
