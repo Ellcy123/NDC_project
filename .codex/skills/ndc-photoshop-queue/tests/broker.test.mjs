@@ -14,6 +14,7 @@ const result = (data, isError = false) => ({ content: [{ type: 'text', text: JSO
 const stateFor = (doc, saved = false) => ({ hasDocument: doc !== null, documentCount: doc === null ? 0 : 1, activeDocument: doc === null ? null : { id: doc, title: `Synthetic ${doc}`, saved } });
 function fakeNative() {
   const fake = { tools: new Map(), calls: [], state: stateFor(101), command: null, probe: null, pairing: null, bridgeState: { paired: true, connected: true }, bridge: { status: () => fake.bridgeState, stop: async () => {} } };
+  fake.copyPairingCode = async () => { fake.calls.push({ kind: 'pairing-clipboard' }); };
   fake.catalog = { get: id => ({ id, status: 'supported', risk: id === 'document.export' ? 'external' : id === 'document.inspect' ? 'read' : 'edit', engine: 'dom' }), validate: (_id, args) => args, list: () => [] };
   const register = (name, handler) => fake.tools.set(name, { definition: { name, inputSchema: { type: 'object' } }, handler });
   register('photoshop_host_describe', async () => result({ serverVersion: 'synthetic', runtime: { app: 'Photoshop' }, bridge: fake.bridge.status() }));
@@ -72,6 +73,7 @@ test('pairing dialog is allowed only for an idle unpaired queue', async t => {
   native.bridgeState = { paired: false, connected: false };
   assert.equal((await api.call('photoshop_pairing_begin')).structuredContent.status, 'displayed');
   assert.ok(native.calls.some(x => x.kind === 'pairing'));
+  assert.ok(native.calls.some(x => x.kind === 'pairing-clipboard'));
   native.bridgeState = { paired: true, connected: true };
   await rejectCode(api.call('photoshop_pairing_begin'), 'PAIRING_ALREADY_ESTABLISHED');
   native.bridgeState = { paired: false, connected: false };

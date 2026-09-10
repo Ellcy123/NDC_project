@@ -4,7 +4,7 @@ import { dirname, join, resolve, extname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { hostname } from 'node:os';
-import { execFile } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import { PhotoshopQueue, QueueError, fileEvidence, digest } from './queue-core.mjs';
 import { binding } from './runtime-config.mjs';
@@ -12,6 +12,18 @@ import { binding } from './runtime-config.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 export { binding };
 const executeFile = promisify(execFile);
+async function copyTextToWindowsClipboard(value) {
+  if (process.platform !== 'win32') throw new QueueError('CLIPBOARD_UNAVAILABLE', 'The trusted pairing clipboard fallback is available only on Windows.');
+  await new Promise((resolvePromise, rejectPromise) => {
+    const child = spawn('powershell.exe', ['-NoLogo', '-NoProfile', '-NonInteractive', '-STA', '-Command', '$value=[Console]::In.ReadToEnd(); Set-Clipboard -Value $value'], {
+      windowsHide: true,
+      stdio: ['pipe', 'ignore', 'ignore']
+    });
+    child.once('error', rejectPromise);
+    child.once('exit', code => code === 0 ? resolvePromise() : rejectPromise(new Error(`Clipboard helper exited with code ${code}`)));
+    child.stdin.end(value);
+  });
+}
 const envelope = (value, isError = false) => ({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value, ...(isError ? { isError: true } : {}) });
 const objectSchema = properties => ({ type: 'object', additionalProperties: false, properties });
 const string = { type: 'string', minLength: 1 };
@@ -170,7 +182,17 @@ export class QueueService {
         throw new QueueError('PAIRING_QUEUE_NOT_IDLE', 'Pairing is allowed only while the queue has no owner, waiter, external reservation, or native handler.');
       }
       this.pairingActive = true;
-      try { return await tool.handler(args); }
+      try {
+        let copiedToClipboard = false;
+        if (typeof this.native.copyPairingCode === 'function') {
+          await this.native.copyPairingCode();
+          copiedToClipboard = true;
+        }
+        const response = await tool.handler(args);
+        if (!copiedToClipboard) return response;
+        const data = dataOf(response);
+        return envelope({ ...data, pairing_code_copied_to_clipboard: true, note: 'Paste the short-lived local port-code into the Photoshop panel and click Pair. The code was not returned to the MCP client.' }, response.isError === true);
+      }
       finally { this.pairingActive = false; }
     }
     if (name.startsWith('photoshop_job_') || name === 'photoshop_approval_request') throw new QueueError('USER_ASSISTED_NOT_QUEUED', 'This queue supports completed silent commands. Keep user-assisted jobs in an explicit manual reservation.');
@@ -451,9 +473,34 @@ export async function createNative() {
   const { loadConfig } = await import(pathToFileURL(join(binding.runtime, 'dist/src/config.js')));
   const { CommandCatalog } = await import(pathToFileURL(join(binding.runtime, 'dist/src/catalog.js')));
   const { PhotoshopFullMcpServer } = await import(pathToFileURL(join(binding.runtime, 'dist/src/server.js')));
-  const config = await loadConfig({ allowedRoots: binding.allowed_roots, exportDir: join(binding.state_dir, 'exports') });
+  let actualWindowsUser;
+  if (process.platform === 'win32') {
+    const { stdout } = await executeFile('whoami.exe', [], { windowsHide: true, timeout: 5_000 });
+    const identity = stdout.trim();
+    const separator = identity.indexOf('\\');
+    if (separator > 0) {
+      const domain = identity.slice(0, separator), username = identity.slice(separator + 1);
+      actualWindowsUser = username;
+      if (`${process.env.USERDOMAIN || ''}\\${process.env.USERNAME || ''}`.toLowerCase() !== identity.toLowerCase()) {
+        process.env.USERDOMAIN = domain;
+        process.env.USERNAME = username;
+      }
+    }
+  }
+  const isolatedDataDir = binding.state_dir_fallback && actualWindowsUser
+    ? join(binding.state_dir, 'bridge-data', actualWindowsUser)
+    : undefined;
+  const config = await loadConfig({
+    ...(isolatedDataDir ? { dataDir: isolatedDataDir } : {}),
+    allowedRoots: binding.allowed_roots,
+    exportDir: join(binding.state_dir, 'exports')
+  });
   const native = await PhotoshopFullMcpServer.create(config, await CommandCatalog.load());
   await native.bridge.start();
+  native.copyPairingCode = async () => {
+    native.bridge.refreshPairingCode();
+    await copyTextToWindowsClipboard(`${native.bridge.port}-${native.bridge.pairingCode}`);
+  };
   return native;
 }
 export async function startBroker({ native, stateDir = binding.state_dir, port = binding.port } = {}) {

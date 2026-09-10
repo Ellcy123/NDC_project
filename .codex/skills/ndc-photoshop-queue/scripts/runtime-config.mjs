@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { hostname } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -42,6 +43,24 @@ function siblingSkillScript(scriptDir, skillName, relativeScript) {
   return resolve(skillsRoot, skillName, ...relativeScript.split('/'));
 }
 
+function writableStateDirectory(path) {
+  const probe = join(path, `.ndc-write-probe-${process.pid}-${Date.now()}`);
+  try {
+    mkdirSync(path, { recursive: true });
+    writeFileSync(probe, 'probe', { flag: 'wx' });
+    unlinkSync(probe);
+    return true;
+  } catch {
+    try { if (existsSync(probe)) unlinkSync(probe); } catch {}
+    return false;
+  }
+}
+
+function portableHostSegment(value = hostname()) {
+  const segment = String(value || 'unknown-host').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+  return segment || 'unknown-host';
+}
+
 export function loadRuntimeBinding(environment = process.env, options = {}) {
   const scriptDir = resolve(options.scriptDir || defaultScriptDir);
   const manifest = readJson(join(scriptDir, 'runtime-binding.json'));
@@ -69,9 +88,15 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
         planningRoot || machineConfig.planning_root,
       ].filter(Boolean).map(value => absolute(value, 'NDC root'));
   if (!configuredRoots.length) throw new Error('Cannot resolve an allowed NDC root. Run through ndc_art.py or set NDC_PLANNING_ROOT/NDC_PS_ALLOWED_ROOTS.');
+  const defaultStateDir = localAppData && join(localAppData, ...manifest.state.local_app_data_relative.split('/'));
+  const fallbackRoot = environment.NDC_ART_WORK_ROOT || machineConfig.work_root;
   const stateDir = environment.NDC_PS_QUEUE_STATE_DIR
     ? absolute(environment.NDC_PS_QUEUE_STATE_DIR, 'NDC_PS_QUEUE_STATE_DIR')
-    : localAppData && join(localAppData, ...manifest.state.local_app_data_relative.split('/'));
+    : defaultStateDir && writableStateDirectory(defaultStateDir)
+      ? defaultStateDir
+      : fallbackRoot
+        ? join(absolute(fallbackRoot, 'NDC work root'), 'PS_MCP', `queue-state-${portableHostSegment(options.hostname)}`)
+        : defaultStateDir;
   if (!stateDir) throw new Error('Cannot resolve the per-user queue state directory. Set NDC_PS_QUEUE_STATE_DIR.');
   const tempRoot = environment.TEMP
     ? absolute(environment.TEMP, 'TEMP')
@@ -98,6 +123,7 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
     // that also contains client keys, sessions, and the queue database.
     allowed_roots: [...new Set([...configuredRoots, exportRoot])],
     state_dir: resolve(stateDir),
+    state_dir_fallback: !environment.NDC_PS_QUEUE_STATE_DIR && Boolean(defaultStateDir) && resolve(stateDir) !== resolve(defaultStateDir),
     client_session_dir: resolve(clientSessionDir),
     port,
     hashes: manifest.hashes,

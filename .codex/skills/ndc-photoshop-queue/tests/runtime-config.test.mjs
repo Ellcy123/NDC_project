@@ -78,3 +78,29 @@ test('queue export evidence is authorized without exposing private queue state',
   assert.equal(binding.allowed_roots.includes(state), false);
   assert.equal(binding.allowed_roots.includes(join(state, 'exports')), true);
 });
+
+test('an unwritable per-user queue falls back to the configured work root per host', t => {
+  const root = mkdtempSync(join(scratch, 'sandbox-fallback-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const planning = join(root, 'planning'), work = join(root, 'work'), engine = join(root, 'engine');
+  const scripts = join(planning, '.codex', 'skills', 'ndc-photoshop-queue', 'scripts');
+  const localAsFile = join(root, 'blocked-local-app-data'), runtime = join(root, 'runtime'), temp = join(root, 'temp');
+  mkdirSync(join(planning, 'production', 'art_pipeline'), { recursive: true });
+  writeFileSync(join(planning, 'production', 'art_pipeline', 'skill_sources.json'), '{}');
+  writeFileSync(join(planning, 'ndc.local.json'), JSON.stringify({ planning_root: planning, engine_root: engine, work_root: work }));
+  mkdirSync(scripts, { recursive: true });
+  copyFileSync(join(here, '..', 'scripts', 'runtime-binding.json'), join(scripts, 'runtime-binding.json'));
+  for (const path of [work, engine, runtime, temp]) mkdirSync(path, { recursive: true });
+  writeFileSync(localAsFile, 'not a directory');
+  const binding = loadRuntimeBinding({
+    LOCALAPPDATA: localAsFile,
+    USERPROFILE: root,
+    TEMP: temp,
+    NDC_PLANNING_ROOT: planning,
+    NDC_PS_MCP_RUNTIME: runtime
+  }, { scriptDir: scripts, hostname: 'Device Test' });
+  const fallback = join(work, 'PS_MCP', 'queue-state-Device-Test');
+  assert.equal(binding.state_dir, fallback);
+  assert.equal(binding.state_dir_fallback, true);
+  assert.deepEqual(binding.allowed_roots, [work, engine, planning, join(fallback, 'exports')]);
+});
