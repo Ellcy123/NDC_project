@@ -39,7 +39,7 @@
 1. 在网页中打开对应生成结果，使用网页提供的下载动作取得原始图像；不使用屏幕截图、浏览器缩略图、复制粘贴的预览或系统重采样版本作为生产源。
 2. 保存到 packet 分配的 `work_directory` 内，文件名包含 scene、revision、pose、attempt 和 candidate 序号；不直接进入 `最终交付`。
 3. 计算下载文件 SHA-256，实际打开检查可读性、尺寸和候选对应关系，再补全提交包中的 `ndc-chatgpt-web-generation-receipt/v2` 回执。回执除 task/thread ID、scene/revision、pose、submission ID、ChatGPT conversation URL、提交/完成时间、candidate 序号、下载路径/哈希和固定 backend 字段外，必须逐字匹配 submission manifest 中的 prompt、importance profile 与三引用路径/哈希。旧 v1 仅可用 `--allow-legacy-v1` 审计历史记录，不得用于新提交。
-4. 运行 `python scripts/validate_chatgpt_web_receipt.py --receipt <receipt.json> --output <gate.json>`；只有 `CHATGPT_WEB_GENERATION_GATE: PASS` 才能用回执绝对路径作为 journal `resolve` 的 evidence。随后先按 H0/H1/H2/H3 对上下文结果作一次分流，再决定提取、局部修复或重试；同一真实观察可引用到多个相容门禁，不能重复截图充当重复审核。网页“已生成”或回执验证只证明来源与文件身份，不构成艺术 PASS。
+4. 运行 `python scripts/validate_chatgpt_web_receipt.py --receipt <receipt.json> --output <gate.json>`；只有 `CHATGPT_WEB_GENERATION_GATE: PASS` 才能用回执绝对路径作为 journal `resolve` 的 evidence。随后按 H0/H1/H2/H3 对上下文结果完成提取前分流：失败则在原生成阶段有限返修，通过则冻结原始文件／回执／审核结论／SHA-256，并继续本场下一未完成角色或状态。单个结果通过后不得立即抠图、去背景或注册；冻结 scope 全部生成／复用项齐备并取得 `SCENE_CAST_GENERATION_GATE: PASS` 后，才整体转入提取阶段。同一真实观察可引用到多个相容门禁，不能重复截图充当重复审核。网页“已生成”或回执验证只证明来源与文件身份，不构成艺术 PASS。
 
 ## 停止与恢复
 
