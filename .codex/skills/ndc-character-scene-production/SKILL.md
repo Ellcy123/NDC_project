@@ -23,13 +23,13 @@ metadata:
 
 执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，其他对话的资产历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于旧预算说明。
 
-生产编排任务固定为 `gpt-5.6-terra`，`thinking: xhigh`，由 [参考协调任务](../ndc-character-scene-reference/SKILL.md) 通过实际任务工具指定。Terra 负责判断、操作、回收与验收，但正式像素只在**受支持的可见浏览器中的 `chatgpt.com` 网页版 ChatGPT**生成；浏览器可为内置 `iab`，或 Computer Use 当前支持且用户已指定/授权的外置 Chrome、Edge。用户指定浏览器优先；未指定时选择当前健康、已登录且可追溯的浏览器。该网页后端是保持当前 NDC 角色画风一致性的必要生产路径，禁止调用 Codex 内置图片生成工具、图片生成 API、其它站点或其它生图后端替代。引用 [入景共享规则](../ndc-character-scene-integration/SKILL.md) 和 [入景阶段交接](../ndc-art-stage-pipeline/references/integration-pipeline.md)，先claim唯一场景，检查原来源、完整范围、pre-generation ledger、重要度配置和剩余次数。旧任务或重复消息不得重复领取或重开生产。
+生产编排任务固定为 `gpt-5.6-terra`，`thinking: xhigh`，由 [参考协调任务](../ndc-character-scene-reference/SKILL.md) 通过实际任务工具指定。Terra 负责判断、操作、回收与验收，但正式像素只在**受支持的可见浏览器中的 `chatgpt.com` 网页版 ChatGPT**生成；浏览器可为内置 `iab`，或 Computer Use 当前支持且用户已指定/授权的外置 Chrome、Edge。用户指定浏览器优先；未指定时选择当前健康、已登录且可追溯的浏览器。网页模型档位默认选择“极高”；若当前账号／页面没有“极高”，选择实际可用的最高档位，不等待解锁、不绕过账号限制。该网页后端是保持当前 NDC 角色画风一致性的必要生产路径，禁止调用 Codex 内置图片生成工具、图片生成 API、其它站点或其它生图后端替代。引用 [入景共享规则](../ndc-character-scene-integration/SKILL.md) 和 [入景阶段交接](../ndc-art-stage-pipeline/references/integration-pipeline.md)，先claim唯一场景，检查原来源、完整范围、pre-generation ledger、重要度配置和剩余次数。旧任务或重复消息不得重复领取或重开生产。
 
 读取 [制作节奏](../ndc-character-scene-integration/references/production-cadence.md) 及 [完整流程](../ndc-character-scene-integration/references/full-workflow.md) 从“Actual generation handoff”到最终交付；不要从需求盘点重跑参考阶段。
 
 - 全场按原远近层次、完整角色和交互单元生产，始终回到同一完整场景判断。保持各状态角色联动，不能拆成互不知情的角色任务；三人及以上快照保持已锁定的非 active 前景／近中景背影角色，并在正式候选及最终合成复核对应门禁。
 - 遵守[白模放行与正式完整性](../ndc-character-scene-integration/references/whitebox-acceptance.md)：已放行的小型遮挡/缺失不退回参考。实际提示词要求同姿势、位置、比例和头身比下生成完整角色，补全列出的缺失，结果逐项实查，不能照抄白模缺损或把提示词要求当作完整性通过。
-- 每次正式提交、结果回收和未知状态处理均按[网页版 ChatGPT 生图](references/chatgpt-web-generation.md)执行。一个完整场景 revision 使用一个专用 ChatGPT 网页对话；每次提交前先生成不可覆盖的 submission packet，按 `local-whitebox-crop → untouched-full-scene → approved-character-card → full-prompt` 固定顺序逐项核对并提交，不依赖历史上下文暗示。下载网页提供的原始结果到同一过程包，保存 v2 可追溯回执；浏览器预览截图不能冒充原始下载文件。
+- 每次正式提交、结果回收和未知状态处理均按[网页版 ChatGPT 生图](references/chatgpt-web-generation.md)执行。一个完整场景 revision 使用一个专用 ChatGPT 网页对话；每次提交前先生成不可覆盖的 submission packet，按 `local-whitebox-crop → untouched-full-scene → approved-character-card → full-prompt` 固定顺序逐项核对并提交，不依赖历史上下文暗示。已授权正式生产中，包与门禁通过后由任务自动选择最高可用网页档位并直接上传、提交，不向用户逐角色或逐次询问“是否发送／请回复发送”；下载网页提供的原始结果到同一过程包，保存 v2 可追溯回执；浏览器预览截图不能冒充原始下载文件。
 - 实际生图前guard并在原成本journal同一job登记attempt，结束或结果未知立即记实；多人调用按原规则在相关单元计入，统一提交标识用于全场去重统计。不得另建一份零计数日志。
 - 每次编辑正式生图提示词后、写入模型 `attempt` 前，必须运行[提示词风格绑定门禁](references/prompt-style-binding-gate.md)，保存当前提示词、固定风格块、三引用角色和动态字段的检查回执。仅 `PROMPT_STYLE_BINDING_GATE: PASS` 可提交；任何固定风格块哈希不符、缺失/改写、引用顺序漂移，或动态字段含反向风格要求均为 `FAIL`，不得用后续出图审美检查补救。
 - 实际像素的 `STYLE_LOCK_GATE` 与 `TEXTURE_COHERENCE_GATE` 按[上下文审美校准](references/contextual-review-calibration.md)作整体判断：提示词合同、身份、构图、支撑、场景氛围、遮挡、UI、Alpha 与 XY 仍是硬门槛；与身份卡一致且不破坏场景层级的局部笔触/发丝等软偏差不得机械一票否决。每次软偏差放行必须在当前候选的真实视觉记录中说明整体一致性、受影响范围及为何不构成画风漂移；用户对具体候选的明确艺术放行必须保留为新增且可回溯的记录，不能回写或删除原有失败记录。
