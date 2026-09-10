@@ -1,4 +1,4 @@
-# Astra参考 → Terra正式入景
+# Astra参考 → Terra编排网页版ChatGPT正式入景
 
 ## 阶段责任边界（2026-09-09 用户最新要求）
 
@@ -16,13 +16,13 @@
 
 参考和正式生产任务均须按[目标启动协议](task-dispatch.md)实际启用持续目标。参考目标止于全批完整场景参考交接，生产目标覆盖全批最终图层、接触层、原尺寸 XY、预览和可重建清单及实际自检；不将前者扩成常驻生产监控。旧普通任务优先原任务补建目标，不另建重复生产任务。
 
-固定配置：参考兼协调任务 `gpt-6-astra / medium`；正式生产任务 `gpt-5.6-terra / xhigh`。“极高”对应 `xhigh`，不是max或ultra。每条流水一个参考协调任务、一个可复用生产任务。
+固定配置：参考兼协调任务 `gpt-6-astra / medium`；正式生产编排任务 `gpt-5.6-terra / xhigh`。“极高”对应 `xhigh`，不是max或ultra。每条流水一个参考协调任务、一个可复用生产任务。这里的 Terra 是第二阶段任务执行者，不是正式像素生成后端；正式像素固定由该任务操控受支持的内置 `iab` 或外置 Chrome/Edge，通过网页版 ChatGPT 生成。
 
 当前已是Astra/medium的生产任务直接担任协调者；否则将实际需求保存到原过程目录，使用 `scripts/reference_task_plan.py --context <实际上下文.json> --request <需求绝对路径> --out <工具参数.json>` 生成参考任务的create/send参数。上下文字段沿用 [任务派发](task-dispatch.md)，`existing_reference_task_id`只在实际存在该参考任务时填写。预览参数后，原命令加 `--reserve` 原子创建需求文件旁的reference-dispatch.json并返回SUBMITTING，成功一次后才实际调用应用工具。重复reserve拒绝；原命令以 `--response <实际回执.json>` 绑定真实ID。只有clientThreadId时保留SETUP_PENDING，未知结果核实原任务，不删除标记或改需求文件名重建。工具参数已经含Astra/medium，Skill文本不能自行切换正在运行的回合。
 
 参考任务获得真实ID后以自身作为 `controller_task_id` 和各场景 `producer_task_id` 初始化流水。新开 Git worktree 仍通过策划仓库公共入口解析当前主 Skill，并共享过程数据库绝对路径；不能复制数据库、回退到旧提交中的 Skill，或引用维护机 `.agents/skills` 路径。
 
-派发生产使用公共reserve → dispatch_plan → dispatch-sent → 实际create/send → bind链。生成参数均明确 `model: gpt-5.6-terra`、`thinking: xhigh`，新建与唤醒一致。只把实际工具回执作为创建/续作证据；若可读运行配置显示不符则停止依赖操作并纠正目标任务配置，不能把提示词写了模型名当作切换成功。这里只指定运行模型，图像仍由原生图工具生成。
+派发生产使用公共reserve → dispatch_plan → dispatch-sent → 实际create/send → bind链。任务参数均明确 `model: gpt-5.6-terra`、`thinking: xhigh`，新建与唤醒一致。只把实际工具回执作为创建/续作证据；若可读运行配置显示不符则停止依赖操作并纠正目标任务配置，不能把提示词写了模型名当作切换成功。这里只指定生产编排任务模型；正式图像必须按 [网页版 ChatGPT 生图合同](../../ndc-character-scene-production/references/chatgpt-web-generation.md) 在受支持的可见浏览器中提交、下载和留存回执，禁止调用 Codex 图片生成工具、`imagegen`、图片 API、其它站点或其它生图后端。
 
 ## 完整场景计划
 
@@ -42,6 +42,8 @@
 
 authority.journal为原成本记录，upstream_jobs留空（上游通过原native ledger验收）；downstream_jobs包含所有本次formal actor/interaction job。已有标准journal直接续用。只有历史从未采用机器日志时，才以原生产ID和母任务ID建立一次标准日志，把真实已用数及原记录引用写入每个job.history/history_evidence；零次也须有实际新生产/该阶段未执行依据，不补造历史attempt或视觉PASS。模型6次、PS有限轮次按原节奏保留；明确授权的独立测试与旧测试只保留来源关系，不相互扣数。参考白模原3次生成与3轮PS记录继续保留在原记录中，不转成formal零次的新额度。
 
+第二阶段每次 `attempt` 的实际提交快照须使用新记录 `tool: chatgpt_web_browser`、`operation: generate_image`，并保存 `browser: iab|chrome|edge`、ChatGPT conversation URL、submission manifest、提示词/重要度配置哈希及按序三引用的路径/哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。网页收到消息即计一次 model attempt；pending/unknown 只回原对话核实，不能借切换浏览器重发或切换 Codex 生图。下载原图和 `ndc-chatgpt-web-generation-receipt/v2` 留在不可覆盖的提交包目录，回执路径作为 resolve evidence；网页预览与截图不作为生产源。
+
 正式job的requirements含scene_id、production_id、phase:"formal"、pose_ids；limits通常为model:6和原ps限额（不大于3）。多角色调用对每个受影响job登记同一提交标识；全场工具调用按该标识去重，不把各角色计数相加成实际调用总数。未知结果先核实。
 
 旧任务已有明确的一次有界额外授权时一并承接，不再次索要同一授权。payload.budget_exception_roles以原job ID映射授权文件role；文件须有source_kind:user_instruction、instruction、grant_id、source_roles，以及相同production_id、scene_id、job_id、phase:formal，base_limits和additional_limits（model、ps均为有限非负整数）。原journal的有效limits必须恰好等于base+additional；历史已用数照常继承，不能在每次交接时重加额度，也不能把某一角色或白模阶段的授权推广到全场正式角色。首次从旧人工日志导入时一次记录已授权的有效上限；已有机器journal的不可变上限不得靠改文件或重建journal绕过，需沿原记录支持的授权修订路径核实后再推进。
@@ -57,6 +59,7 @@ authority.journal为原成本记录，upstream_jobs留空（上游通过原nativ
 | pre_ledger_role | 原 `ndc-scene-integration-production-ledger/v2` 的完整pre-generation ledger |
 | depth_roles、identity_roles | 实际景深图及批准角色身份引用角色列表 |
 | prompt_bundle_role | 实际已组装生图输入记录，含scene_id和poses映射；每pose含prompt、reference_roles、checked_by、findings |
+| importance_profile_role、importance_gate_role | `ndc-visual-importance/v1` 与 `IMPORTANCE_TOLERANCE_GATE: PASS`，绑定本 scene/revision；新交接必需，旧包缺失时按全部 H0/H1 保守处理且不得使用 20%/30% 容差 |
 | history_role | 原记录导入索引，含production_id、basis、source_roles、jobs；jobs的原history数值须与journal一致 |
 | budget_jobs | 原formal job → 覆盖的pose ID数组，联合覆盖全部pose |
 | authorization_role | 用户已有生产授权索引，含allowed、source_kind:user_instruction、scene_ids、scope:character_scene_production、instruction |

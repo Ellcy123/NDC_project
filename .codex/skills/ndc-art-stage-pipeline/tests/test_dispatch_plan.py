@@ -58,6 +58,7 @@ class DispatchPlanTests(unittest.TestCase):
         self.assertFalse(plan["effect_scope"]["real_art_generation"])
         self.assertFalse(plan["effect_scope"]["photoshop"])
         self.assertIn("不调用 Midjourney", args["prompt"])
+        self.assertIn("网页版 ChatGPT 生图", args["prompt"])
 
     def test_create_has_atomic_sent_step_before_the_tool_and_real_response_binding_after_it(self):
         plan = self.plan()

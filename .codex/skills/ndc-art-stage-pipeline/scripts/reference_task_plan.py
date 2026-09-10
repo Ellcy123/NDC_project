@@ -61,7 +61,7 @@ def build_reference_task_plan(context, request_path):
     prompt = ('按用户已授权的当前需求运行 ndc-character-scene-reference，模型 Astra，中级智能。'
               '先读取此实际需求文件及其中原生产ID、历史来源和全部场景范围：' + request_path + '\n'
               '你是参考阶段兼协调任务。每个完整独立场景的所有景深、单人完整白模、联合快照和实际生图输入通过后，'
-              '立即按 ndc-art-stage-pipeline 的 character_scene 交接，创建或复用唯一 Terra/xhigh 生产任务；你继续其他场景参考。'
+              '立即按 ndc-art-stage-pipeline 的 character_scene 交接，创建或复用唯一 Terra/xhigh 生产任务；该任务只在受支持的内置 iab 或外置 Chrome/Edge 中通过网页版 ChatGPT 生成正式像素，不调用 Codex 图片生成或图片 API。你继续其他场景参考。'
               '不要另开参考协调层，不改生产ID或重开次数，不自动恢复用户暂停的资产工作。'
               '具体资产生产范围和权限以需求原文为准；若仅维护/验证Skill，不调用生图或PS。\n授权依据：' + note)
     prompt = goal_bootstrap('完成需求文件 ' + request_path + ' 中全部已授权人物入景场景的完整参考，核实身份来源和原次数，确定全部角色/状态的位置、比例、动作、演绎与遮挡，完成整场白模及实际UI检查，逐整场冻结交给唯一正式生产任务；交接后继续其他场景，不持续监控或代做下游生产。') + '\n\n' + prompt

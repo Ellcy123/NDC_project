@@ -48,6 +48,14 @@ def native_gate():
     return module
 
 
+def importance_gate():
+    path = Path(__file__).resolve().parents[2] / 'ndc-character-scene-integration/scripts/validate_importance_profile.py'
+    spec = importlib.util.spec_from_file_location('ndc_importance_gate', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def role_file(refs, role):
     need(role in refs, 'Missing real handoff role: ' + str(role))
     return Path(refs[role]['path'])
@@ -124,6 +132,16 @@ def validate_release(packet, base):
     scope_record = read(role_file(refs, payload['scope_role']))
     need(scope_record.get('scene_id') == packet['unit_id'] and scope_record.get('scope') == scope and scope_record.get('requirement_basis'), 'Original requirement scope and evidence required')
     need(scope_record.get('status') == 'LOCKED', 'Paused, rejected or unresolved scene scope cannot release')
+    importance_mode = 'legacy_conservative_h0_h1'
+    if scope_record.get('importance_policy_version') == 'ndc-visual-importance/v1':
+        profile_path = role_file(refs, payload.get('importance_profile_role'))
+        profile = read(profile_path)
+        need(profile.get('scene_id') == packet['unit_id'] and profile.get('revision') == packet['revision'], 'Importance profile belongs to another scene or revision')
+        result = importance_gate().validate(profile)
+        need(result['status'] == 'PASS', 'Importance profile gate failed: ' + '; '.join(result['errors']))
+        recorded = read(role_file(refs, payload.get('importance_gate_role')))
+        need(recorded.get('status') == 'PASS' and recorded.get('profile_sha256') == file_hash(profile_path), 'Recorded importance gate is stale or does not bind the profile')
+        importance_mode = 'tiered_h0_h1_h2_h3'
     for name in ('depth_roles', 'identity_roles'):
         need(payload.get(name), 'Required reference category: ' + name)
         for role in payload[name]:
@@ -167,7 +185,7 @@ def validate_release(packet, base):
     if validation:
         need(scope_record.get('validation_only') is True, 'Validation requires explicitly identified fixture evidence')
     can_execute = not validation and granted and not any(v['unknown'] for v in budgets.values())
-    return {'scene_id': packet['unit_id'], 'validation_only': validation, 'can_execute': bool(can_execute), 'stop_reason': None if can_execute or validation else 'Missing production authorization or unresolved original submission', 'case_ids': list(wanted), 'pre_ledger_sha256': file_hash(ledger_path), 'scope_sha256': digest(scope), 'budgets': budgets}
+    return {'scene_id': packet['unit_id'], 'validation_only': validation, 'can_execute': bool(can_execute), 'stop_reason': None if can_execute or validation else 'Missing production authorization or unresolved original submission', 'case_ids': list(wanted), 'pre_ledger_sha256': file_hash(ledger_path), 'scope_sha256': digest(scope), 'importance_mode': importance_mode, 'budgets': budgets}
 
 
 def validate_result(packet, result, base):

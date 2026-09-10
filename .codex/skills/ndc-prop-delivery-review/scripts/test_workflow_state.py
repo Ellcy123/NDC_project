@@ -132,6 +132,27 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'revised'):
             w.reserve_attempt(self.path,self.job,prompt,'retry')
 
+    def test_low_priority_master_uses_one_candidate_per_round(self):
+        new=self.root/'single.json'; b=copy.deepcopy(self.b)
+        b.pop('attempt_head'); b['attempt_log']='single.jsonl'
+        b['jobs'][self.job]['candidate_strategy']='single_first'
+        b['artifacts']['master'].update(visual_priority='H2',tolerance_ratio=0.2,status='PENDING',job_id=self.job)
+        w.write_json(new,b); w.initialize(new)
+        prompt=self.root/'single_prompt.txt'; prompt.write_text('first low priority candidate')
+        self.assertEqual(w.reserve_attempt(new,self.job,prompt,'first candidate'),1)
+        with self.assertRaisesRegex(ValueError,'revised'):
+            w.reserve_attempt(new,self.job,prompt,'second only after failure')
+        prompt.write_text('revised after actual hard or tolerance failure')
+        self.assertEqual(w.reserve_attempt(new,self.job,prompt,'documented failure'),2)
+        event=w.log_events(new,w.load_batch(new))[-1]
+        self.assertEqual(event['round'],2)
+        self.assertEqual(event['candidate_strategy'],'single_first')
+
+    def test_h3_requires_explicit_low_salience_basis(self):
+        self.b['artifacts']['big'].update(visual_priority='H3',tolerance_ratio=0.3)
+        self.save()
+        self.assertTrue(any('low_salience_basis' in e for e in w.validate(self.path,2)))
+
     def test_log_truncation_is_detected(self):
         prompt=self.root/'prompt.txt'; prompt.write_text('first')
         w.reserve_attempt(self.path,self.job,prompt,'first')

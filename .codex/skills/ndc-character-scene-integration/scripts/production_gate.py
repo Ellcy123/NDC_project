@@ -425,18 +425,19 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
         case["castScaleReport"],
         f"{label}.castScaleReport",
         ledger_path,
-        {"ndc-cast-scale-report/v1", "ndc-cast-scale-report/v2"},
+        {"ndc-cast-scale-report/v1", "ndc-cast-scale-report/v2", "ndc-cast-scale-report/v3"},
     )
     if cast_scale_report and cast_scale_report.get("status") != "pass":
         raise ValueError(f"{label} contains a failed cast-scale report.")
     if case["scaleDriver"].startswith("approved-card-anatomical-head-ratio-first"):
         if (
             not cast_scale_report
-            or cast_scale_report.get("schema") != "ndc-cast-scale-report/v2"
+            or cast_scale_report.get("schema")
+            not in {"ndc-cast-scale-report/v2", "ndc-cast-scale-report/v3"}
             or cast_scale_report.get("headScalePriority") is not True
         ):
             raise ValueError(
-                f"{label} head-first scale driver requires a cast-scale v2 head-priority report."
+                f"{label} head-first scale driver requires a cast-scale v2/v3 head-priority report."
             )
     cast_pose_ids = {
         str(actor.get("poseId"))

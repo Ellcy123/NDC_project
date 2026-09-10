@@ -4,6 +4,12 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 ---
 # NDC 道具最终复查与交付
 
+复核前读取[重要度、容差与候选策略](../ndc-prop-requirements/references/importance-and-tolerance.md)。硬合同不变；H1/H2/H3 分别最多容许 10%/20%/30% 的已定义可测偏差，不跨区域平均。H2/H3 在限内不得因为纯润色继续出图或放大审核；出现异常、身份/状态/文字/Alpha/Map/XY/阴影/重建问题时立即回到硬门禁和必要高倍率检查。
+
+## Photoshop MCP 强制前置
+
+本 Skill 触发 Photoshop MCP 有限返修时，第一次实际调用前必须完整读取当前环境的《PS MCP 操作参考手册》：维护工作区从项目根解析 `PS_MCP_操作参考手册.md`，工程镜像从仓库根解析 `production/art_pipeline/PS_MCP_操作参考手册.md`。在当前复查记录中保存实际手册路径、版本、SHA-256 和当前会话能力快照；两处均不存在或哈希不一致时不得以历史记忆继续操作。手册负责通用效率、抠图、Alpha、路径、单引擎、超时回退和视觉/技术验收；本 Skill 的责任阶段返回、候选转正和正式交付门禁继续优先。实时目录只允许执行 supported 能力，手册本身不增加返修权限。
+
 执行前读[对话任务独立额度](../ndc-prop-requirements/references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
 
 这是第五阶段。读[批次协议](../ndc-prop-requirements/references/batch-contract.md)、[审核与复用](references/review-contract.md)及[交付细则](references/production-details.md)。命名、角色和目录仍遵从[交付合同](../ndc-scene-evidence-placement/references/delivery-contract.md)。

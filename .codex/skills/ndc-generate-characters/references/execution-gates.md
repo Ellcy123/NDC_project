@@ -45,6 +45,7 @@ required_output:
 6. 正式角色卡或肖像的 `style_sources` 必须同时列出对应自检库目录和该分支的 style-only 参考文件；只列一张便利样本不能通过回执验证。
 7. 用户提供的原始提示词与用户明确选定的图是最高艺术依据。清单必须记录 `user_prompt_authority` 与 `explicit_user_selection`；一旦用户明确选图，该图的艺术搜索停止，除非用户明确要求再做艺术修改。
 8. 表情和便携故事道具只有在当前用户提示词明确要求时才是阶段硬门槛。其余均记录为 `DEFER_TO_IMAGE2`，不得阻断 MJ 选图或触发概念重开。
+9. 通用风格全身、通用角色卡及明确触发的黑白红角色卡在正式提交前，必须有 `CHATGPT_WEB_CHARACTER_GENERATION_GATE` 所需的不可覆盖提交包；其 mode/branch 对应的全部引用、完整提示词、专用对话 URL 和 SHA-256 任一缺失均为 `NOT_CHECKED`，不得提交。
 
 ## 二、阶段化执行
 
@@ -78,6 +79,7 @@ required_output:
 - 重要角色的 MJ 全身和可选头部候选选择遵循 `123` 原则：固定提示词的一组依次为初始四宫格（Batch 1）→ 从 Batch 1 最接近图执行一次 `Vary Subtle`（Batch 2）→ 从 Batches 1–2 合计八张最接近图执行一次 `Vary Strong`（Batch 3）。仅在 Batch 3 仍无通过项后，才能根据 Batch 1 的共同偏差改写提示词并开始下一组；最多三组、九批、三十六张。第三组结束仍无通过项时，选择全局最接近图为 `FALLBACK_SELECTED`，并只允许进入有阻断项记录的修复/候选链。不得把该状态写成身份锁、`FORMAL_PASS` 或正式 `identity_source`。
 - 每个 MJ 候选阶段回执必须包含：`group_number`、`batch_number`、`prompt_version`、`job_id_or_url`、`selection_action: INITIAL|VARY_SUBTLE|VARY_STRONG`、`selected_source_candidate`（初始批可为 `null`）、四张审查结论、当前阶段门禁、`prompt_delta_from_batch_1`（仅新组）和 `fallback_defects`（仅 `FALLBACK_SELECTED`）。保留每一批及被选源图的可复核链接或本地证据。
 - 本规则只替代 MJ 候选选择阶段原有的“两次失败即停止”做法；模块、肖像、转绘、状态、精修及技术整备的完整上限与累计规则统一见 `production-budgets-and-dependencies.md`；单参考回退不另开预算。
+- 通用风格全身、默认整卡、角色卡模块与明确触发的黑白红卡按 `chatgpt-web-character-generation.md` 生成。提交包及回执通过只证明网页来源、引用顺序、完整提示词和下载字节，不替代身份、结构、风格、版式或技术门禁；网页故障不得触发其它生图后端回退。
 
 ## 三、统一状态与阻断条件
 
@@ -104,6 +106,8 @@ card_receipt:
   ratio: PASS|FAIL
   provenance:
     production_route: DEFAULT_LOCKED_ONE_PASS|EXPLICIT_4K_MODULAR
+    generation_backend: CHATGPT_WEB_IAB
+    web_generation_gate: <absolute CHATGPT_WEB_CHARACTER_GENERATION_GATE PASS path or per-module paths>
     explicit_4k_requested: true|false
     explicit_4k_evidence: <user wording or null>
     modules_independently_generated: PASS|FAIL|NOT_REQUIRED
@@ -247,3 +251,4 @@ python scripts/validate_delivery_receipt.py --receipt <delivery-receipt.json>
 7. 默认整卡或肖像的实际提交提示词是否与锁定源代码块逐字一致？若否，阻断并返回生成前。
 8. 用户是否明确要求 4K？若否却采用模块化 4K 路线，阻断并返回生产路由。
 9. 是否因角色设定中的笑容、威胁感或可后补道具，否定了锁定提示词要求的中性角色卡/肖像，或重开了已由用户选定的艺术候选？若是，阻断并恢复用户选图。
+10. 通用风格全身、角色卡或黑白红卡是否缺少当前 mode/branch 的网页提交包、原始下载和 `CHATGPT_WEB_CHARACTER_GENERATION_GATE: PASS`，或实际使用了其它生图后端？若是，阻断并返回网页提交阶段。

@@ -20,6 +20,8 @@ import scene_release as scenes
 
 SCHEMA = 'ndc-prop-batch/v1'
 LIMITS = {'master': 6, 'scene': 3, 'menu': 3, 'derived': 3}
+VISUAL_LIMITS = {'H1': 0.10, 'H2': 0.20, 'H3': 0.30}
+CANDIDATE_STRATEGIES = {'paired', 'single_first'}
 HERE = Path(__file__).resolve().parent
 
 def digest(value):
@@ -45,6 +47,9 @@ def validate_job_definition(job_id, job, scope):
     old = job.get('legacy_attempts', 0)
     if type(old) is not int or old < 0 or (old and not job.get('legacy_evidence')):
         raise ValueError('legacy attempts require a nonnegative count and provenance')
+    strategy = job.get('candidate_strategy', 'paired')
+    if strategy not in CANDIDATE_STRATEGIES or (job['kind'] != 'master' and 'candidate_strategy' in job):
+        raise ValueError('candidate_strategy is only paired or single_first on master jobs: ' + job_id)
 
 def write_json(path, value):
     temp = path.with_name(path.name + '.writing')
@@ -603,7 +608,8 @@ def reserve_attempt(path, job_id, prompt, reason, task_id=None):
         if not reason.strip() or not prompt.is_file():
             raise ValueError('require actual prompt file and a specific reason')
         prompt_hash = sha(prompt)
-        new_round = j['kind'] != 'master' or n % 2 == 1
+        strategy = j.get('candidate_strategy', 'paired')
+        new_round = j['kind'] != 'master' or strategy == 'single_first' or n % 2 == 1
         if prior and new_round and prompt_hash == prior[-1]['prompt_sha256']:
             raise ValueError('retry requires revised actual prompt, not an identical rerun')
         saved_prompt = path.parent / 'attempt_prompts' / (digest(job_id)[:16] + '_' + str(lifetime_number) + '.txt')
@@ -613,7 +619,8 @@ def reserve_attempt(path, job_id, prompt, reason, task_id=None):
         saved_prompt.write_bytes(prompt.read_bytes())
         append(path, b, dict(type='attempt', job_id=job_id, number=lifetime_number,
                             task_id=task_id, task_number=n,
-                            round=(n + 1) // 2 if j['kind'] == 'master' else n,
+                            round=(n if strategy == 'single_first' else (n + 1) // 2) if j['kind'] == 'master' else n,
+                            candidate_strategy=strategy if j['kind'] == 'master' else None,
                             prompt_path=str(saved_prompt.resolve()), prompt_sha256=prompt_hash, reason=reason))
         return n
 
@@ -738,8 +745,8 @@ def validate(path, stage=1, scene_id=None):
             if errors:
                 return sorted(set(errors))
             if scene_id is not None:
-                if stage != 3:
-                    return ['scene-scoped validation is supported only at the stage-2 to stage-3 gate']
+                if stage not in (3, 4):
+                    return ['scene-scoped validation is supported only at stage 3 or stage 4 entry']
                 dependency = scenes.closure(b, archive, index, scene_id)
                 errors += dependency['failures']
         elif scene_id is not None and scene_id not in b['scope']['scene_ids']:
@@ -780,6 +787,17 @@ def validate(path, stage=1, scene_id=None):
                     errors.append(iid + '.' + field + ': invalid content requirement')
                 if fact.get('level') == 'B' and not fact.get('allowed_difference'):
                     errors.append(iid + '.' + field + ': B requires explicit allowed difference')
+                tier = fact.get('importance_tier', {'A':'H0','B':'H1','C':'H2'}.get(fact.get('level')))
+                ratio = fact.get('tolerance_ratio', {'H0':0.0,'H1':0.10,'H2':0.20}.get(tier))
+                if fact.get('level') == 'A' and (tier != 'H0' or ratio != 0):
+                    errors.append(iid + '.' + field + ': A facts are H0 with zero tolerance')
+                if fact.get('level') == 'B' and (tier != 'H1' or not isinstance(ratio,(int,float)) or isinstance(ratio,bool) or ratio < 0 or ratio > 0.10):
+                    errors.append(iid + '.' + field + ': B facts are H1 with at most 10% tolerance')
+                if fact.get('level') == 'C':
+                    if tier not in ('H2','H3') or not isinstance(ratio,(int,float)) or isinstance(ratio,bool) or ratio < 0 or ratio > VISUAL_LIMITS.get(tier, -1):
+                        errors.append(iid + '.' + field + ': C facts are H2 <=20% or explicit H3 <=30%')
+                    if tier == 'H3' and not fact.get('low_salience_basis'):
+                        errors.append(iid + '.' + field + ': H3 requires low_salience_basis')
         if stage >= 2 and b.get('requirements_locked') is not True:
             errors.append('requirements are not locked')
         required = b['scope']['required_artifacts']
@@ -793,14 +811,45 @@ def validate(path, stage=1, scene_id=None):
             if not isinstance(a.get('parents'), list):
                 errors.append(aid + ': explicit parent list required')
                 continue
+            priority = a.get('visual_priority', 'H1')
+            tolerance = a.get('tolerance_ratio', VISUAL_LIMITS.get(priority))
+            if priority not in VISUAL_LIMITS or not isinstance(tolerance,(int,float)) or isinstance(tolerance,bool) or tolerance < 0 or tolerance > VISUAL_LIMITS.get(priority, -1):
+                errors.append(aid + ': visual_priority must be H1/H2/H3 within 10%/20%/30%')
+            if priority == 'H3' and not a.get('low_salience_basis'):
+                errors.append(aid + ': H3 requires low_salience_basis')
             if a.get('stage') == 4 and not a['parents']:
                 errors.append(aid + ': hotspot has no accepted parent')
             if dependency is None and (a['stage'] < stage or (stage == 5)):
                 errors += review_errors(path, b, archive, aid)
+        for job_id, job in b['jobs'].items():
+            if job.get('kind') != 'master' or 'candidate_strategy' not in job:
+                continue
+            priorities = {b['artifacts'][aid].get('visual_priority', 'H1') for aid in required
+                          if b['artifacts'][aid].get('job_id') == job_id}
+            expected = 'single_first' if priorities and priorities <= {'H2','H3'} else 'paired'
+            if job['candidate_strategy'] != expected:
+                errors.append(job_id + ': candidate_strategy must be ' + expected + ' for current visual priority')
         if dependency is not None:
             for aid in dependency['prerequisite_artifacts']:
                 errors += review_errors(path, b, archive, aid)
-        if stage >= 4:
+            if stage == 4:
+                local = [aid for aid in index['scenes'][scene_id]['artifact_ids']
+                         if aid in b['artifacts'] and b['artifacts'][aid].get('stage') == 3 and not is_icon(b['artifacts'][aid])]
+                for aid in local:
+                    errors += review_errors(path, b, archive, aid)
+                if not any(b['artifacts'][aid].get('role') == 'scene_preview' for aid in local):
+                    errors.append(scene_id + ': scene preview coverage missing')
+                for aid in local:
+                    a = b['artifacts'][aid]
+                    if a.get('role') in ('scene_preview', 'container_type7') and a.get('frozen') is not True:
+                        errors.append(aid + ': scene/menu not frozen')
+                    if a.get('role') == 'container_type7':
+                        previews = [b['artifacts'][k] for k in local
+                                    if b['artifacts'][k].get('role') == 'scene_menu_preview'
+                                    and aid in b['artifacts'][k].get('parents', [])]
+                        if not previews:
+                            errors.append(aid + ': individual scene menu preview missing')
+        if stage >= 4 and dependency is None:
             covered_scenes = {b['artifacts'][a].get('scene_id') for a in required
                        if b['artifacts'][a].get('role') == 'scene_preview'}
             if not set(b['scope']['scene_ids']) <= covered_scenes:
@@ -866,14 +915,15 @@ def progress(path):
                 stage, state = 2, 'WAITING_SCENE_PREREQUISITES'
             elif not owned <= passed:
                 stage, state = 3, 'SCENE_PRODUCTION_READY'
-            elif not all_scenes_frozen:
-                stage, state = 3, 'WAITING_GLOBAL_ICON_AND_FREEZE_GATE'
+            elif validate(path, 4, scene_id=sid):
+                stage, state = 3, 'WAITING_LOCAL_SCENE_FREEZE_GATE'
             elif not all_outputs_current:
-                stage, state = 4, 'GLOBAL_HOTSPOT_GATE_OPEN'
+                stage, state = 4, 'LOCAL_HOTSPOT_GATE_OPEN'
             else:
                 stage, state = 5, 'ALL_REQUIRED_IMAGES_CURRENT'
             per_scene[sid] = {'stage': stage, 'state': state, 'stage3_ready': ready['ready'],
-                              'scene_outputs': metric(owned), 'blockers': ready['failures']}
+                              'scene_outputs': metric(owned), 'stage4_local_ready': not validate(path, 4, scene_id=sid),
+                              'global_stage4_ready': all_scenes_frozen, 'blockers': ready['failures']}
         result.update(declared_current_stage=b['current_stage'], stage_dispatch='per_scene', scenes=per_scene)
         # Keep the compatibility scalar as the earliest actual incomplete phase;
         # it is a report, never the authorization to enter every scene at once.

@@ -10,17 +10,27 @@ import re
 from pathlib import Path
 
 
-CONTRACT_SCHEMA = "ndc-non-generative-extraction-capability/v1"
+CONTRACT_SCHEMA = "ndc-non-generative-extraction-capability/v2"
 SNAPSHOT_SCHEMA = "ndc-photoshop-execution-capabilities/v1"
 METHODS = {
     "selection_to_layer_mask": {
+        "source_open": ("source_open", ()),
         "subject_selection": ("subject_selection", ("select", "subject")),
         "selection_to_mask": ("selection_to_layer_mask", ("mask", "selection")),
         "rgba_export": ("rgba_export", ("export",)),
     },
+    "action_result_to_rgba": {
+        "source_open": ("source_open", ()),
+        "extraction_action": ("installed_action_play", ("action", "play")),
+        "rgba_export": ("rgba_export", ("export",)),
+    },
+    "channel_derived_rgba": {
+        "source_open": ("source_open", ()),
+        "alpha_channel": ("alpha_channel_construction", ("alpha", "channel")),
+        "rgba_export": ("rgba_export", ("export",)),
+    },
 }
 BLOCKING_STATUSES = {"requires_user", "unavailable", "unverified", "experimental"}
-ACTION_CANDIDATE_COMMAND_IDS = {"action.play"}
 
 
 def sha256(path: Path) -> str:
@@ -141,6 +151,15 @@ def main() -> int:
     if missing_operations:
         errors.append(f"missing operation command IDs: {missing_operations}")
 
+    source_open_spec = operations.get("source_open")
+    if isinstance(source_open_spec, dict):
+        source_open_path = resolve(source_open_spec.get("source_path"), contract_path, "source_open.source_path", errors)
+        if source_path and source_open_path and source_path != source_open_path:
+            errors.append("source_open.source_path must bind the current source_candidate_path")
+        source_open_id = source_open_spec.get("command_id")
+        if source_open_id == "document.open_default":
+            errors.append("document.open_default is not a verified native-MCP production source-open route")
+
     requirements = contract.get("output_requirements")
     expected_requirements = {"format": "png", "alpha": True, "no_generated_pixels": True}
     if requirements != expected_requirements:
@@ -166,11 +185,6 @@ def main() -> int:
         command_id = operation_spec.get("command_id")
         if not isinstance(command_id, str) or not command_id.strip():
             continue
-        if command_id in ACTION_CANDIDATE_COMMAND_IDS:
-            errors.append(
-                f"{operation} cannot use {command_id}: installed Photoshop actions are "
-                "candidate trials, not verified subject-selection or selection-to-mask operations"
-            )
         status = command_statuses.get(command_id)
         description = command_descriptions.get(command_id, "")
         checks[f"{operation}_command"] = command_id
@@ -181,7 +195,10 @@ def main() -> int:
             errors.append(f"{operation} command is not remotely executable: {command_id} ({status})")
         elif status != "supported":
             errors.append(f"{operation} command must be supported: {command_id} ({status})")
-        if not all(term in description.lower() for term in terms):
+        if operation == "source_open":
+            if not any(term in description.lower() for term in ("open", "place", "import")):
+                errors.append(f"{operation} command description does not prove source entry: {command_id}")
+        elif not all(term in description.lower() for term in terms):
             errors.append(f"{operation} command description does not prove required effect: {command_id}")
         catalog_entry = catalog_commands.get(command_id)
         if catalog_entry is None:

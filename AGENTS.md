@@ -8,6 +8,8 @@
 
 美术生产前读取 `docs/美术生产工作区.md`。静态美术 Skill 主实现维护在本仓库 `.codex/skills/`；H3 视频生成、双音频调用、交付处理三个主实现维护在工程仓库 `.codex/skills/`，本仓库对应目录仅作兼容入口。角色卡唯一索引为 `美术资产交付/角色/角色索引.json`，表情配对索引为 `美术资产交付/角色表情/表情索引.json`。
 
+任何实际 Photoshop MCP 操作还必须先完整读取 `production/art_pipeline/PS_MCP_操作参考手册.md`，并在当前作业记录手册版本、SHA-256 和当前会话能力快照。该文件与维护工作区根目录的 `PS_MCP_操作参考手册.md` 必须字节一致；不允许使用旧缓存替代。手册约束通用效率、抠图、Alpha、路径、单引擎、超时回退和视觉/技术验收，具体 Skill 的授权、内容和专用门禁仍优先，实时目录只执行 `supported` 能力。
+
 从任一仓库根运行 `python -B scripts/art_pipeline/ndc_art.py configure --help` 配置本机三处路径；实际值保存在两库各自被 Git 忽略的 `ndc.local.json`，`paths` 查询，`skill NAME` 定位主实现。`production/art_pipeline/paths.json` 只维护团队预算和相对路径。Skill 必需的自有脚本、规则、模板和依赖清单必须随 Git 管理，不能只留在个人目录；第三方安装包、密钥、虚拟环境不进 Git。
 
 新任务使用 `python -B scripts/art_pipeline/ndc_art.py workspace create`，图像/视频过程文件、候选和待确认成品全部放返回的项目外 `payload`。自检后展示具体成品，用户确认该版本后才交付工程。成功交付并校验副本，或用户明确取消后，关闭任务并清理临时大文件；等待确认、仍在返工、旧任务、角色卡和未安全保存的母版不可清理。兼容入口必须从 `skill NAME` 返回的唯一主目录解析支持文件。

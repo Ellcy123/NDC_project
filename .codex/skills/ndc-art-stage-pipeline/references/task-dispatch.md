@@ -18,7 +18,7 @@
 
 - `create_thread` 仅在已有明确新任务授权时调用。先用 `list_projects` 取得真实 `projectId` 和 `isGitRepository`；Git 项目默认 worktree，非 Git 项目使用 local。只有用户明确要求直接使用保存项目时才覆盖为 local。
 - 创建非阻塞：实际返回 `threadId` 才能绑定；只有 `clientThreadId` 时是 `SETUP_PENDING`，不得把它填入 send/read/wait 的 `threadId`。
-- 复用任务使用 `send_message_to_thread`；UI与MJ保留原模型设置，不自行填入model/thinking；用户明确指定的character_scene派发固定填写Terra/xhigh，新建与send一致。参考启动固定Astra/medium，详见 [入景协议](integration-pipeline.md)。
+- 复用任务使用 `send_message_to_thread`；UI与MJ保留原模型设置，不自行填入model/thinking；用户明确指定的character_scene派发固定填写Terra/xhigh，新建与send一致。该参数只确定生产编排任务；人物正式像素固定由该任务在受支持的内置 `iab` 或外置 Chrome/Edge 中通过网页版 ChatGPT 生成，禁止 Codex 图片生成工具/API。参考启动固定Astra/medium，详见 [入景协议](integration-pipeline.md)。
 - 已知真实任务的简短检查用 `wait_threads` 的 `timeoutMs: 0`，后续传原工具返回的 cursor。需要具体回执时再 `read_thread`；不反复轮询相同状态。
 
 官方说明确认 worktree 用于隔离同一 Git 项目的并行文件工作；它不替本协议证明外部应用操作或美术生产速度。[OpenAI：Git worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)
@@ -54,7 +54,7 @@ python dispatch_plan.py --reservation <reservation.json绝对路径> --project-c
 
 输出包括符合本机工具声明的 `proposed_tool_call`、真实调用前原子命令、完整回执保存位置、绑定和未知结果登记命令，以及允许的效果范围。`argv` 是原始参数；同时提供正确单引号转义的 PowerShell 表达式。不得使用未经 shell 转义的 JSON 字符串拼接执行命令。
 
-没有任务授权时只保留参数预览，`tool_call` 为空。production 还要求当前批次美术生产授权。validation 始终禁止真实 MJ/ImageGen/Photoshop 出图，仅可读协议记录和处理明确的合成夹具；UI production 限于已审母图裁切，不增加生图或自动补肩权限。
+没有任务授权时只保留参数预览，`tool_call` 为空。production 还要求当前批次美术生产授权。validation 始终禁止真实 MJ、网页版 ChatGPT 生图、Codex ImageGen 和 Photoshop 操作，仅可读协议记录和处理明确的合成夹具；UI production 限于已审母图裁切，不增加生图或自动补肩权限。
 
 ## 一次发送的实际顺序
 

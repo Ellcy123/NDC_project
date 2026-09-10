@@ -53,6 +53,8 @@ python -B scripts/art_workflow_state.py resolve --journal <journal> --job <id> -
 
 `produced` 只表示产生了候选/完成了这一处理轮次，不表示视觉通过。`unknown` 表示提交可能成功但结果不明，仍占额度并阻断重复提交；先查服务端job和已保存文件，再用同ID补记结果。只有确证没有生成/没有执行时才能填 `no_output`，释放该次艺术额度并累计工具错误。不得将差图标成no_output。连续无结果错误默认两次后先修复能力连接；实际恢复并有证据时用 `recover-tool --reason ...`，历史事件和总次数仍保留。主Skill已有更严格断联规则时继续遵守。
 
+通用风格全身、通用角色卡和明确触发的黑白红卡使用网页版 ChatGPT 时，`submission` 直接引用不可覆盖角色提交包的 manifest，新提交固定记录 `tool: chatgpt_web_browser`、`operation: generate_image`、`browser: iab|chrome|edge`、专用对话 URL、character/revision、mode/branch、全部上传项及提示词哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。网页已收到消息即算真实 attempt；pending/unknown 必须先回原对话核实，不能刷新后重发或换生图后端。`resolve` 的网页来源证据必须包含 `CHATGPT_WEB_CHARACTER_GENERATION_GATE: PASS` 回执路径，但该门禁不代替艺术验收。
+
 达到额度后保留候选和失败原因，继续可独立执行的其他项。不要为凑满数字追加无意义操作，也不把候选标成正式。新对话自动拥有完整新额度，保留旧任务来源关系即可，不要求用户答复；同一对话不通过 `revise` 修改额度。
 
 ## 人工交接与接续

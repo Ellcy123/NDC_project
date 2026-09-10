@@ -42,8 +42,8 @@ Route defects explicitly:
 - Generate or regenerate head material for an otherwise good full body with an unusable head.
 - Refine locally for background debris, fake text/signatures, unwanted objects, silhouette joins, hands, feet, shoes, clothing borders, and excessive fragmented details.
 - Treat local repeated marks, broken texture continuity, or isolated decorative micro-detail as a bounded repair from the frozen approved source. Treat whole-image micro-detail inflation as a regeneration from the original stage authority; never chain from the failed candidate or use sharpening, texture overlays, AI upscaling, or repeated resizing as a texture fix.
-- Defer a missing portable story prop or non-identity expression to Image 2 unless the active user prompt explicitly makes it a current-stage hard requirement. Their absence alone must not restart MJ concept generation.
-- Treat a hand hidden behind the back as a pose defect. Prefer an otherwise comparable candidate with both arms and hands visible. Accept the hidden-hand candidate only when its body type, head-to-body proportion, face, or role fit is materially stronger; in that case, repair the pose with Image 2 before producing the character card.
+- Defer a missing portable story prop or non-identity expression to the later approved generation branch unless the active user prompt explicitly makes it a current-stage hard requirement. Their absence alone must not restart MJ concept generation.
+- Treat a hand hidden behind the back as a pose defect. Prefer an otherwise comparable candidate with both arms and hands visible. Accept the hidden-hand candidate only when its body type, head-to-body proportion, face, or role fit is materially stronger; in that case, repair the pose during the ChatGPT-web general-style conversion before producing the character card.
 - Accept directly when the full body and head are already clear and usable.
 
 Do not declare identity lock while the face is still ambiguous. If the raw full-body face fails the legibility gate, combine the chosen body with approved head material or locally repair/re-light the face until the resulting MJ-stage refined full body has a readable, distinctive face.
@@ -53,6 +53,6 @@ Treat that refined full body as the first identity lock. Preserve an identity-an
 
 ## 通用风格身份母版
 
-参考顺序：已锁定MJ全身 → 需要时其同源面部锚点 → 通用全身风格参考（style-only）。逐项比较脸型、额头、眉眼距离、鼻形、口／胡须、颧颌、耳朵、发际线和不对称特征；只保留“同年龄、胡须、发型”不足以通过。转绘身份漂移返回转绘，不能重开已选MJ设计。进入角色卡前双臂自然下垂、双手可见；严格侧视允许远侧手自然重叠。
+正式转绘固定使用受支持的内置 `iab` 或外置 Chrome/Edge 中的网页版 ChatGPT。参考顺序：已锁定MJ全身 → 需要时其同源面部锚点 → 通用全身风格参考（style-only）。先按共享网页合同生成不可覆盖提交包，每次重新上传全部合同引用和完整提示词，下载网页原始结果并验证回执；不得以网页已有上下文省略任何一项或切换其它生图后端。逐项比较脸型、额头、眉眼距离、鼻形、口／胡须、颧颌、耳朵、发际线和不对称特征；只保留“同年龄、胡须、发型”不足以通过。转绘身份漂移返回转绘，不能重开已选MJ设计。进入角色卡前双臂自然下垂、双手可见；严格侧视允许远侧手自然重叠。
 
-次要新角色直接按共享提示库1.1的通用风格生产母版，不走MJ；其标准下游为角色卡，不自动补肖像。每个真实生成／精修／转绘阶段沿用共享预算及当前hash绑定的视觉记录，任何候选失败不重置计数。
+次要新角色不走MJ，但也必须按共享提示库1.1和 `general-style-fullbody / secondary-direct` 合同在同一网页版 ChatGPT 路径生产母版；其标准下游为角色卡，不自动补肖像。每个真实生成／精修／转绘阶段沿用共享预算及当前hash绑定的视觉记录，任何候选失败不重置计数。

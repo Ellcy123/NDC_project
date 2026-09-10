@@ -78,6 +78,26 @@ class IntegrationAdapterTests(unittest.TestCase):
         self.assertEqual(result['budgets']['actor-job'], {'model_used':0,'ps_used':0,'unknown':[]})
         self.assertTrue(result['validation_only']); self.assertFalse(result['can_execute'])
         self.assertEqual(Path(self.packet['authority']['journal']).read_bytes(), before)
+        self.assertEqual(result['importance_mode'], 'legacy_conservative_h0_h1')
+
+    def test_new_scope_requires_current_tiered_importance_profile(self):
+        gate = adapter.importance_gate()
+        profile = {'schema':'ndc-visual-importance/v1','domain':'character_scene','scene_id':'A','revision':1,
+                   'classification_basis':['Synthetic runtime composition'],
+                   'hard_gates':{name:{'applicable':True,'reason':'Synthetic required contract'} for name in gate.HARD_GATES},
+                   'regions':[{'id':'actor','owner':'actor:nurse','tier':'H1','tolerance_ratio':0.1,
+                               'criteria':['identity silhouette'],'views':['whole_runtime','whole_100'],
+                               'reason':'Synthetic narrative focus','dependsOn':[]}]}
+        profile_ref=self.add('importance_profile',profile)
+        gate_ref=self.add('importance_gate',{'status':'PASS','profile_sha256':profile_ref['sha256']})
+        self.edit('scope',lambda d:d.update(importance_policy_version='ndc-visual-importance/v1'))
+        self.packet['payload'].update(importance_profile_role='importance_profile',importance_gate_role='importance_gate')
+        result=adapter.validate_release(self.packet,self.root)
+        self.assertEqual(result['importance_mode'],'tiered_h0_h1_h2_h3')
+        Path(gate_ref['path']).write_text(json.dumps({'status':'PASS','profile_sha256':'0'*64}))
+        gate_ref['sha256']=p.file_hash(gate_ref['path'])
+        with self.assertRaisesRegex(ValueError,'stale'):
+            adapter.validate_release(self.packet,self.root)
 
     def test_native_gate_is_actually_called_and_weak_fixture_cannot_pass_it(self):
         self.stub.stop()
@@ -155,9 +175,15 @@ class ModelDispatchTests(unittest.TestCase):
         result=build_dispatch_plan(self.reservation,self.context)
         args=result['tool_call']['arguments']
         self.assertEqual((args['model'],args['thinking']),('gpt-5.6-terra','xhigh'))
-        self.assertTrue(result['effect_scope']['photoshop_requires_shared_queue'])
+        self.assertEqual(result['effect_scope']['character_scene_generation_backend'],'chatgpt_web_browser')
+        self.assertFalse(result['effect_scope']['codex_image_generation'])
+        self.assertEqual(result['effect_scope']['photoshop_backend'],'native_mcp_single_operator')
+        self.assertFalse(result['effect_scope']['photoshop_requires_shared_queue'])
         self.assertTrue(result['effect_scope']['formal_delivery_requires_native_post_gate'])
         self.assertTrue(result['effect_scope']['formal_delivery'])
+        self.assertIn('网页版 ChatGPT',args['prompt'])
+        self.assertIn('外置 Chrome、Edge',args['prompt'])
+        self.assertIn('禁止调用 Codex ImageGen',args['prompt'])
 
     def test_reused_terra_task_has_same_explicit_model_policy(self):
         self.reservation.update(action='send',target_thread_id='terra-worker')

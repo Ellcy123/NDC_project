@@ -14,6 +14,7 @@ from typing import Any
 SCHEMA = "ndc-stage-visual-self-check/v1"
 ALLOWED_STATUSES = {"PASS", "FAIL", "NOT_CHECKED"}
 REQUIRED_VIEW_KINDS = {"whole_100", "local_200_or_tiles"}
+IMPORTANCE_LIMITS = {"H1": 0.10, "H2": 0.20, "H3": 0.30}
 TYPE7_REQUIRED_CRITERIA = {
     "mandatory_direct_image_container_rule",
     "source_anchor_visual_comparison",
@@ -321,7 +322,26 @@ def validate_record(record_path: Path, required_artifacts: list[Path]) -> list[s
                 path = resolve_record_path(raw_path, record_dir)
                 if not path.is_file():
                     errors.append(f"views[{index}].path: file does not exist: {path}")
-        missing_views = REQUIRED_VIEW_KINDS - seen_view_kinds
+        tier = data.get("importance_tier")
+        if tier is None:
+            required_views = REQUIRED_VIEW_KINDS
+        elif tier not in IMPORTANCE_LIMITS:
+            errors.append("importance_tier: must be H1, H2 or H3")
+            required_views = REQUIRED_VIEW_KINDS
+        else:
+            ratio = data.get("tolerance_ratio")
+            if not isinstance(ratio, (int, float)) or isinstance(ratio, bool) or ratio < 0 or ratio > IMPORTANCE_LIMITS[tier]:
+                errors.append(f"tolerance_ratio: exceeds {IMPORTANCE_LIMITS[tier]:.2f} for {tier}")
+            if tier == "H3" and not require_text(data.get("low_salience_basis"), "low_salience_basis", errors):
+                pass
+            if tier == "H1" and not isinstance(data.get("local_200_required"), bool):
+                errors.append("local_200_required: H1 requires an explicit boolean")
+            required_views = {"whole_runtime", "whole_100"}
+            if tier == "H3":
+                required_views = {"whole_runtime"}
+            elif tier == "H1" and data.get("local_200_required") is True:
+                required_views.add("local_200_or_tiles")
+        missing_views = required_views - seen_view_kinds
         if missing_views:
             errors.append("views: missing required kinds: " + ", ".join(sorted(missing_views)))
 

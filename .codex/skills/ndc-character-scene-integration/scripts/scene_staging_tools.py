@@ -940,14 +940,178 @@ def validate_support_contact(
     return report
 
 
+def _load_hashed_file_reference(
+    reference: dict[str, Any], label: str, base_path: Path
+) -> Path:
+    if not isinstance(reference, dict):
+        raise ValueError(f"{label} must be an object with path and sha256.")
+    require_fields(reference, ("path", "sha256"), label)
+    path = resolve_path(reference["path"], base_path)
+    if not path.is_file():
+        raise ValueError(f"{label} artifact is missing: {path}")
+    if sha256(path).lower() != str(reference["sha256"]).lower():
+        raise ValueError(f"{label} SHA-256 is stale: {path}")
+    return path
+
+
+def _load_hashed_json_reference(
+    reference: dict[str, Any], label: str, base_path: Path, schema: str
+) -> tuple[Path, dict[str, Any]]:
+    path = _load_hashed_file_reference(reference, label, base_path)
+    data = load_json(path)
+    if data.get("schema") != schema:
+        raise ValueError(f"{label} schema must be {schema}.")
+    return path, data
+
+
+def _point2(value: Any, label: str) -> list[float]:
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or not all(isinstance(item, (int, float)) and math.isfinite(float(item)) for item in value)
+    ):
+        raise ValueError(f"{label} must be two finite image coordinates.")
+    return [float(value[0]), float(value[1])]
+
+
+def _validate_elevated_support_projection(
+    data: dict[str, Any],
+    projection_path: Path,
+    placement: dict[str, Any],
+    placement_path: Path,
+    actor_id: str,
+    horizon_y: float,
+    label: str,
+) -> None:
+    """Bind elevated lying depth to fixed-scene, exact-pose and visual evidence."""
+    scene_size = tuple(int(value) for value in data["sceneSize"])
+    if scene_size != tuple(int(value) for value in placement.get("sceneSize", [])):
+        raise ValueError(f"{label}.sceneSize differs from the exact placement.")
+    if len(scene_size) != 2 or any(value <= 0 for value in scene_size):
+        raise ValueError(f"{label}.sceneSize must contain positive width and height.")
+    scene_path = _load_hashed_file_reference(data["scene"], f"{label}.scene", projection_path)
+    placement_scene = resolve_path(placement["scene"], placement_path)
+    if scene_path != placement_scene:
+        raise ValueError(f"{label}.scene is not the exact placement scene.")
+    bound_placement = _load_hashed_file_reference(
+        data["placementContract"], f"{label}.placementContract", projection_path
+    )
+    if bound_placement != placement_path.resolve():
+        raise ValueError(f"{label}.placementContract does not bind the current placement.")
+    target = placement["target"]
+    pose_id = str(target.get("poseDefinition", {}).get("poseId", ""))
+    if str(data["actorId"]) != actor_id or str(data["poseId"]) != pose_id:
+        raise ValueError(f"{label} actorId/poseId does not match the exact placement pose.")
+
+    support = data["supportPlane"]
+    if not isinstance(support, dict):
+        raise ValueError(f"{label}.supportPlane must be an object.")
+    require_fields(
+        support,
+        ("supportPlaneId", "supportObjectId", "supportPoint", "evidence"),
+        f"{label}.supportPlane",
+    )
+    support_plane_id = str(support["supportPlaneId"]).strip()
+    support_object_id = str(support["supportObjectId"]).strip()
+    if not support_plane_id or target.get("supportPlaneId") != support_plane_id:
+        raise ValueError(f"{label}.supportPlaneId does not match target.supportPlaneId.")
+    supported_by = {
+        str(item.get("objectId"))
+        for item in target.get("sceneRelations", [])
+        if isinstance(item, dict) and item.get("relation") == "supported-by"
+    }
+    if not support_object_id or support_object_id not in supported_by:
+        raise ValueError(
+            f"{label}.supportObjectId needs an exact supported-by scene relation."
+        )
+    support_point = _point2(support["supportPoint"], f"{label}.supportPlane.supportPoint")
+    width, height = scene_size
+    if not (0 <= support_point[0] < width and 0 <= support_point[1] < height):
+        raise ValueError(f"{label}.supportPlane.supportPoint lies outside sceneSize.")
+    outer = target.get("outerBBox")
+    if (
+        not isinstance(outer, list)
+        or len(outer) != 4
+        or not (float(outer[0]) <= support_point[0] <= float(outer[2]))
+        or not (float(outer[1]) <= support_point[1] <= float(outer[3]))
+    ):
+        raise ValueError(f"{label}.supportPlane.supportPoint must lie inside target.outerBBox.")
+    _load_hashed_file_reference(
+        support["evidence"], f"{label}.supportPlane.evidence", projection_path
+    )
+
+    depth = data["depthProjection"]
+    if not isinstance(depth, dict):
+        raise ValueError(f"{label}.depthProjection must be an object.")
+    require_fields(depth, ("mode", "evidence", "perspectiveBasisIds"), f"{label}.depthProjection")
+    basis_ids = depth["perspectiveBasisIds"]
+    if not isinstance(basis_ids, list) or not basis_ids or not all(
+        isinstance(value, str) and value.strip() for value in basis_ids
+    ):
+        raise ValueError(f"{label}.depthProjection.perspectiveBasisIds must be nonempty IDs.")
+    _load_hashed_file_reference(
+        depth["evidence"], f"{label}.depthProjection.evidence", projection_path
+    )
+    depth_mode = str(depth["mode"])
+    if depth_mode == "projected-ground-plane":
+        point = _point2(depth.get("projectedGroundPoint"), f"{label}.depthProjection.projectedGroundPoint")
+        if not (0 <= point[0] < width and horizon_y < point[1] < height):
+            raise ValueError(
+                f"{label}.depthProjection.projectedGroundPoint must be inside the scene below horizonY."
+            )
+    elif depth_mode == "same-depth-reference":
+        reference_actor_id = depth.get("referenceActorId")
+        if not isinstance(reference_actor_id, str) or not reference_actor_id.strip():
+            raise ValueError(f"{label}.depthProjection.referenceActorId must be nonempty.")
+    else:
+        raise ValueError(
+            f"{label}.depthProjection.mode must be projected-ground-plane or same-depth-reference."
+        )
+
+    whole_path = _load_hashed_file_reference(
+        data["wholeArtifact"], f"{label}.wholeArtifact", projection_path
+    )
+    local_path = _load_hashed_file_reference(
+        data["localArtifact"], f"{label}.localArtifact", projection_path
+    )
+    if whole_path == local_path:
+        raise ValueError(f"{label} wholeArtifact and localArtifact must be distinct reviewed views.")
+    with Image.open(whole_path) as whole_image:
+        if whole_image.size != scene_size:
+            raise ValueError(f"{label}.wholeArtifact must preserve the exact scene canvas.")
+
+    from production_gate import validate_visual_report
+
+    review = validate_visual_report(
+        data["visualReviewReport"], f"{label}.visualReviewReport", projection_path
+    )
+    if review.get("stage") != "exact-pose-whitebox":
+        raise ValueError(f"{label}.visualReviewReport must be exact-pose-whitebox.")
+    for check in ("elevatedSupportPlane", "projectedGroundDepth", "wholeLocalConsistency"):
+        if review.get("checks", {}).get(check) != "pass":
+            raise ValueError(f"{label}.visualReviewReport requires {check}=pass.")
+    reviewed = {
+        (str(Path(item["path"]).resolve()), str(item["sha256"]).lower()): set(item.get("poseIds", []))
+        for item in review.get("artifacts", [])
+    }
+    for name, reference, path in (
+        ("wholeArtifact", data["wholeArtifact"], whole_path),
+        ("localArtifact", data["localArtifact"], local_path),
+    ):
+        poses = reviewed.get((str(path), str(reference["sha256"]).lower()))
+        if poses is None or pose_id not in poses:
+            raise ValueError(f"{label}.{name} is not visually reviewed for exact pose {pose_id}.")
+
+
 def validate_cast_scale(
     contract_path: Path, report_path: Path | None = None
 ) -> dict[str, Any]:
     """Validate cast body and anatomical-head scale through one depth model.
 
-    Version 1 is retained for historical contracts.  New production must use
-    v2, which makes approved-card anatomical head scale a primary gate instead
-    of allowing a full-body box to stand in for cast proportion.
+    Version 1 is retained for historical contracts.  Version 2 makes the
+    approved-card anatomical head scale a primary gate.  Version 3 keeps that
+    gate and additionally separates an elevated lying support point from the
+    ground-depth point used by the perspective model.
     """
     data = load_json(contract_path)
     require_fields(
@@ -956,11 +1120,12 @@ def validate_cast_scale(
         "castScale",
     )
     schema = str(data["schema"])
-    if schema not in {"ndc-cast-scale/v1", "ndc-cast-scale/v2"}:
-        raise ValueError("castScale.schema must be ndc-cast-scale/v1 or v2.")
-    head_scale_required = schema == "ndc-cast-scale/v2"
+    if schema not in {"ndc-cast-scale/v1", "ndc-cast-scale/v2", "ndc-cast-scale/v3"}:
+        raise ValueError("castScale.schema must be ndc-cast-scale/v1, v2 or v3.")
+    head_scale_required = schema in {"ndc-cast-scale/v2", "ndc-cast-scale/v3"}
+    elevated_support_required = schema == "ndc-cast-scale/v3"
     if head_scale_required and data.get("headScalePriority") is not True:
-        raise ValueError("castScale v2 requires headScalePriority: true.")
+        raise ValueError(f"castScale {schema.rsplit('/', 1)[-1]} requires headScalePriority: true.")
     horizon_y = float(data["horizonY"])
     tolerance = float(data["maxDeviationRatio"])
     if tolerance <= 0 or tolerance > 0.20:
@@ -980,9 +1145,6 @@ def validate_cast_scale(
         if tuple(placement.get("sceneSize", [])) != tuple(data["sceneSize"]):
             raise ValueError(f"{label} sceneSize differs from cast scale sceneSize.")
         target = placement["target"]
-        support_y = float(target["foot"][1])
-        if support_y <= horizon_y:
-            raise ValueError(f"{label} support point must lie below horizonY.")
         placement_class = str(target.get("placementClass", "standing"))
         if placement_class in {"seated", "lying"}:
             standing_px = float(target.get("standingEquivalentHeightPx", 0))
@@ -995,10 +1157,84 @@ def validate_cast_scale(
             "characterName": placement.get("characterName", actor_id),
             "characterHeightCm": float(placement["characterHeightCm"]),
             "supportPoint": list(target["foot"]),
+            "depthPoint": list(target["foot"]),
+            "depthSource": "legacy-support-point",
             "standingEquivalentHeightPx": standing_px,
             "poseId": target.get("poseDefinition", {}).get("poseId", ""),
             "placementContract": str(placement_path.resolve()),
         }
+        if elevated_support_required:
+            depth_projection = entry.get("depthProjection")
+            if not isinstance(depth_projection, dict):
+                raise ValueError(f"{label}.depthProjection is required by castScale v3.")
+            mode = str(depth_projection.get("mode", ""))
+            if mode == "ground-support-point":
+                if placement_class == "lying" and target.get("supportPlaneClass") != "ground":
+                    raise ValueError(
+                        f"{label} lying ground-support-point requires "
+                        "target.supportPlaneClass='ground'; an elevated bed/sofa/stretcher "
+                        "must use elevated-support-projection."
+                    )
+                actor_record["depthSource"] = "ground-support-point"
+            elif mode == "elevated-support-projection":
+                if placement_class != "lying":
+                    raise ValueError(
+                        f"{label} elevated-support-projection is reserved for lying placementClass."
+                    )
+                contract_ref = depth_projection.get("contract")
+                if not isinstance(contract_ref, dict):
+                    raise ValueError(f"{label}.depthProjection.contract must be a hashed file reference.")
+                projection_path, projection = _load_hashed_json_reference(
+                    contract_ref,
+                    f"{label}.depthProjection.contract",
+                    contract_path,
+                    "ndc-elevated-support-projection/v1",
+                )
+                require_fields(
+                    projection,
+                    (
+                        "scene",
+                        "sceneSize",
+                        "actorId",
+                        "poseId",
+                        "placementContract",
+                        "supportPlane",
+                        "depthProjection",
+                        "wholeArtifact",
+                        "localArtifact",
+                        "visualReviewReport",
+                    ),
+                    f"{label}.elevatedSupportProjection",
+                )
+                _validate_elevated_support_projection(
+                    projection,
+                    projection_path,
+                    placement,
+                    placement_path,
+                    actor_id,
+                    horizon_y,
+                    f"{label}.elevatedSupportProjection",
+                )
+                projected = projection["depthProjection"]
+                actor_record.update(
+                    {
+                        "depthPoint": list(projected.get("projectedGroundPoint", target["foot"])),
+                        "depthSource": "elevated-support-projection",
+                        "elevatedSupportPoint": list(projection["supportPlane"]["supportPoint"]),
+                        "supportPlaneId": str(projection["supportPlane"]["supportPlaneId"]),
+                        "elevatedSupportProjection": str(projection_path),
+                    }
+                )
+                if projected["mode"] == "same-depth-reference":
+                    actor_record["depthPoint"] = None
+                    actor_record["depthReferenceActorId"] = str(projected["referenceActorId"])
+            else:
+                raise ValueError(
+                    f"{label}.depthProjection.mode must be ground-support-point or "
+                    "elevated-support-projection."
+                )
+        if actor_record["depthPoint"] is not None and float(actor_record["depthPoint"][1]) <= horizon_y:
+            raise ValueError(f"{label} effective depth point must lie below horizonY.")
         if head_scale_required:
             identity = entry["identityScaleReference"]
             require_fields(
@@ -1055,11 +1291,28 @@ def validate_cast_scale(
                 }
             )
         loaded[actor_id] = actor_record
+    if elevated_support_required:
+        for actor in loaded.values():
+            reference_actor_id = actor.get("depthReferenceActorId")
+            if not reference_actor_id:
+                continue
+            if reference_actor_id == actor["actorId"] or reference_actor_id not in loaded:
+                raise ValueError(
+                    f"castScale actor {actor['actorId']} has an invalid same-depth reference actor."
+                )
+            reference_actor = loaded[reference_actor_id]
+            if reference_actor.get("depthPoint") is None:
+                raise ValueError(
+                    f"castScale actor {actor['actorId']} same-depth reference must resolve "
+                    "directly to a ground or projected-ground actor, not another reference chain."
+                )
+            actor["depthPoint"] = list(reference_actor["depthPoint"])
+            actor["depthSource"] = "same-depth-reference"
     reference_id = str(data["referenceActorId"])
     if reference_id not in loaded:
         raise ValueError("castScale.referenceActorId is not present in actors.")
     reference = loaded[reference_id]
-    reference_depth = float(reference["supportPoint"][1]) - horizon_y
+    reference_depth = float(reference["depthPoint"][1]) - horizon_y
     reference_ppcm = float(reference["standingEquivalentHeightPx"]) / float(
         reference["characterHeightCm"]
     )
@@ -1071,7 +1324,7 @@ def validate_cast_scale(
         raise ValueError("castScale.maxPairwiseHeadDeviationRatio must be in (0, 0.20].")
     actor_results: list[dict[str, Any]] = []
     for actor in loaded.values():
-        depth_ratio = (float(actor["supportPoint"][1]) - horizon_y) / reference_depth
+        depth_ratio = (float(actor["depthPoint"][1]) - horizon_y) / reference_depth
         expected = float(actor["characterHeightCm"]) * reference_ppcm * depth_ratio
         actual = float(actor["standingEquivalentHeightPx"])
         deviation = (actual - expected) / expected
@@ -1114,8 +1367,8 @@ def validate_cast_scale(
             expected_ratio = (
                 float(actor_a["characterHeightCm"])
                 / float(actor_b["characterHeightCm"])
-                * (float(actor_a["supportPoint"][1]) - horizon_y)
-                / (float(actor_b["supportPoint"][1]) - horizon_y)
+                * (float(actor_a["depthPoint"][1]) - horizon_y)
+                / (float(actor_b["depthPoint"][1]) - horizon_y)
             )
             actual_ratio = float(actor_a["standingEquivalentHeightPx"]) / float(
                 actor_b["standingEquivalentHeightPx"]
@@ -1163,9 +1416,13 @@ def validate_cast_scale(
             )
             pairwise.append(pair_result)
     report = {
-        "schema": "ndc-cast-scale-report/v2"
-        if head_scale_required
-        else "ndc-cast-scale-report/v1",
+        "schema": (
+            "ndc-cast-scale-report/v3"
+            if elevated_support_required
+            else "ndc-cast-scale-report/v2"
+            if head_scale_required
+            else "ndc-cast-scale-report/v1"
+        ),
         "status": "pass"
         if all(item["status"] == "pass" for item in actor_results + pairwise)
         else "fail",

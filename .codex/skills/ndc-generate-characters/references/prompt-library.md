@@ -25,13 +25,13 @@
 
 不重要的新角色
 → 跳过 MJ
-→ Image 2 直接生成通用风格角色
+→ 受支持的内置或外置浏览器网页版 ChatGPT 直接生成通用风格角色
 → 生成通用风格角色卡；默认不生成肖像
 
 既有角色的其他状态
 → 跳过 MJ
 → 以现有已批准的通用风格角色卡为基础参考
-→ Image 2 生成指定状态
+→ Image 2 生成指定状态（本次网页强制规则不自动扩展到状态分支）
 
 黑白红风格角色卡
 → 不在标准流程中生成
@@ -54,7 +54,7 @@
 
 强制覆盖规则：所有 MJ 提示词使用当前默认模型，不添加任何 `--v`、`--V 8.1` 或类似模型版本参数。旧 JSON 中的 V8.1 文本已经失效。
 
-## 1.1 Image 2 快速路径
+## 1.1 网页版 ChatGPT 通用风格快速路径
 
 ### 不重要的新角色
 
@@ -93,7 +93,7 @@ Keep identity-critical facial landmarks and approved costume details fully reada
 Do not distribute folds, highlights, grain, scratches, seams, ornaments, repeated marks, or accessory-like micro-detail uniformly across the body. Do not invent non-semantic micro-detail, fragmented short marks, decorative micro-wrinkles, random speckle, or unsupported surface construction.
 ```
 
-不得将此模块追加到 `LOCKED_PROMPT:character-card-default`、`LOCKED_PROMPT:portrait` 或 `LOCKED_PROMPT:portrait-single-reference` 的实际提交文本。锁定分支先按 `style-self-check.md` 执行双门禁；只有用户明确批准新的锁定版本后才能改变对应哈希。
+不得将此模块追加到 `LOCKED_PROMPT:character-card-default`、`LOCKED_PROMPT:portrait` 或 `LOCKED_PROMPT:portrait-single-reference` 的实际提交文本。`general-style-conversion` 与 `black-white-red-character-card` 的锁定块是不可改写的提示词基底；当前分支需要本模块时，先逐字导出基底，再在其后逐字追加本模块，最终完整文本整体写入网页提交包并计算 SHA-256，不在网页临时拼接。锁定分支先按 `style-self-check.md` 执行双门禁；只有用户明确批准新的锁定版本后才能改变对应基底哈希。
 <!-- NDC_TEXTURE_COHERENCE_MODULE:END -->
 
 ## 2. 角色视觉设定
@@ -106,7 +106,7 @@ Do not distribute folds, highlights, grain, scratches, seams, ornaments, repeate
 
 ## 3. MJ 全身
 
-重要新角色的完整流程从此处的实际 Midjourney 全身候选开始。ChatGPT Image 2 的全身图只适用于不重要角色的快通道，或在无法执行 MJ 时明确标记为模拟；模拟不得被写成已完成的 MJ 阶段。
+重要新角色的完整流程从此处的实际 Midjourney 全身候选开始。网页版 ChatGPT 的全身图只适用于不重要角色的快通道，或在无法执行 MJ 时明确标记为模拟；模拟不得被写成已完成的 MJ 阶段。
 
 网站：固定使用 `https://alpha.midjourney.com/imagine`。
 
@@ -146,17 +146,23 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 
 ## 5. 通用风格全身转绘
 
+正式转绘只能在受支持的内置 `iab` 或外置 Chrome/Edge 中通过网页版 ChatGPT 生成。每次按共享 `chatgpt-web-character-generation.md` 重新上传当前合同列出的全部参考并提交完整提示词；不得依赖同一网页对话的历史省略任一引用或文字，也不得切换到 Codex 图片生成工具或图片 API。
+
 参考顺序：
 
 1. 图 1：MJ 阶段精修定稿；
 2. 图 2：从图 1 同一张精修定稿裁出的面部身份锚点（当全身尺寸不足以可靠比较五官时使用；不是另一张未合成的 MJ 头像）；
 3. 图 3：`assets/general-fullbody-style-reference.png`。若无需图 2，则风格参考顺延为图 2。
 
+<!-- LOCKED_PROMPT:general-style-conversion:BEGIN -->
 ```text
 将图1的风格朝着最后一张风格参考图转变。图1与图2（若提供）共同锁定同一个人的身份；最后一张图只控制画风，绝不采用其中人物的相貌。严格保留图1/图2中这个人的脸型和额头比例、眉眼间距、眼型、鼻梁与鼻尖轮廓、嘴部或胡须形状、颧骨与下颌轮廓、耳形、发际线和可见不对称特征；不能只保留“年龄、发型、胡须、服装相似”后重新画一张更规整或更普通的脸。保留图1的体型、头身比、服装、配饰和配色方案，不添加任何新的道具和设计。将角色调整为中性自然站姿，两只手臂都自然下垂，两只手完整露出；不得背手、插兜或用身体遮住手部。除手臂与手部姿态外，不改变图1的其他角色设计。并参考以下美术风格提示词进行调整：highly stylized graphic illustration, selective variable ink hierarchy with heavier marks at focal silhouette turns, occlusions and load-bearing corners, medium or fine tapered garment edges and selectively broken internal fold lines, visible swell, taper and decisive hand-drawn endings without making every edge equally heavy, grouped geometric hair masses with a few broad ribbon-like directional marks and no individual strand rendering, simplified planar shape blocking, decisive angular shadow wedges at load points, broad quiet near-black garment planes, hard structural edges with short controlled tonal bridges inside larger planes, high-contrast chiaroscuro that keeps all identity landmarks readable, deep grouped spot blacks on clothing and silhouette, material-specific finish with mostly matte cloth and compact sharp highlights reserved for approved polished leather, metal, jewelry or badges, selective identity-detail density, film noir aesthetic, American 1928s era context, full-body portrait standing, eye-level shot, straight perspective, minimalist pure white background, isolated on white void.
 ```
+<!-- LOCKED_PROMPT:general-style-conversion:END -->
 
 ## 6. 通用风格角色卡
+
+默认整卡及明确触发的模块艺术生成都只能在受支持的内置 `iab` 或外置 Chrome/Edge 中通过网页版 ChatGPT 执行；确定性拼版仍在本地完成且不得重绘。网页每次提交使用不可覆盖的角色提交包，完整引用与提示词按包内顺序重新上传／粘贴。
 
 输入：
 
@@ -190,7 +196,7 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 - `角色从小腿中段到鞋底的严格正面结构特写，正常站立并实际穿着批准鞋型，同时展示两侧裤脚、脚踝衔接与两只鞋`；
 - 经批准的配饰、便携道具或服装构造的准确名称与方向。
 
-模块全部通过后，按清单运行 `scripts/compose_character_card.py`。拼版阶段不再调用 Image 2，不重绘模块。
+模块全部通过后，按清单运行 `scripts/compose_character_card.py`。拼版阶段不再调用网页生图或任何图片模型，不重绘模块。
 
 ### 6.1.1 已批准色相下的衣褶与墨线返工
 
@@ -257,11 +263,14 @@ Full-body portrait standing (see head and feet), natural stance, camera at shoul
 
 本节仅作动画用途保留分支，不属于标准角色交付。只有角色明确进入动画制作时执行。
 
+一旦本分支被明确触发，正式艺术生成同样只能使用受支持的内置 `iab` 或外置 Chrome/Edge 中的网页版 ChatGPT；每次重新上传通用角色卡与黑白红风格参考，再提交下方锁定基底与当前适用纹理模块组成的完整提示词。
+
 参考顺序：
 
 1. 图 1：通用风格角色卡；
 2. 图 2：`assets/black-white-red-style-reference.jpg`。
 
+<!-- LOCKED_PROMPT:black-white-red-character-card:BEGIN -->
 ```text
 Light & Color: High-Contrast Chiaroscuro with black, white, and red unmistakably dominant, Stark Shadows, Limited Color Palette with Dramatic Accents. Use a small amount of bright red with a clear spatial or identity purpose: favor an asymmetric shadow-side rim, local separation light, or a tie, emblem, eye, or small approved accessory; do not trace every edge with an even red outline. Keep clothing, props, and most rendering achromatic, but retain low-contrast gray or faint warm-gray internal facets inside near-black garments so the body and clothing layers do not collapse into a featureless silhouette. Skin is almost grayscale with only a barely perceptible warm gray-brown or muted sepia bias, far less saturated than the general-style source. Do not restore natural brown/orange skin color. Avoid broad pure-white skin planes; retain the black-white graphic structure and use the faint skin hue only as a restrained tint.
 
@@ -273,3 +282,4 @@ Texture & Method: Minimalist blocky, Geometric Simplification of Forms, Sharp ou
 
 红色只能用于具有明确光向、空间分离或身份提示作用的阴影侧局部轮廓、细线、徽记、眼部或很小的配件点缀；不要求对称，不得沿所有边形成均匀完整红描边。禁止大面积红色背景、竖条、边框、地面块或服装面板；只有用户明确选择极简海报分支时，才可单独放开大红底。
 ```
+<!-- LOCKED_PROMPT:black-white-red-character-card:END -->

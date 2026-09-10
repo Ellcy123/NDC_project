@@ -9,10 +9,25 @@ import json
 from pathlib import Path
 
 
-PROMPT_IDS = ("character-card-default", "portrait", "portrait-single-reference")
-PORTRAIT_REFERENCE_ROLES = {
+PROMPT_IDS = (
+    "general-style-conversion",
+    "character-card-default",
+    "portrait",
+    "portrait-single-reference",
+    "black-white-red-character-card",
+)
+REFERENCE_ROLE_SEQUENCES = {
+    "general-style-conversion": [
+        ["identity", "style_only"],
+        ["identity", "identity_anchor", "style_only"],
+    ],
+    "character-card-default": [
+        ["identity"],
+        ["identity", "identity_anchor"],
+    ],
     "portrait": ["identity", "style_only"],
     "portrait-single-reference": ["identity"],
+    "black-white-red-character-card": [["identity", "style_only"]],
 }
 
 
@@ -50,18 +65,22 @@ def digest(value: str) -> str:
 
 
 def verify_reference_manifest(manifest_path: Path, prompt_id: str) -> None:
-    """Bind a portrait prompt branch to the actual ordered, immutable image inputs."""
-    expected = PORTRAIT_REFERENCE_ROLES.get(prompt_id)
-    if expected is None:
-        raise ValueError("Reference manifest validation is defined for portrait branches only")
+    """Bind a locked prompt branch to the actual ordered, immutable image inputs."""
+    expected_sequences = REFERENCE_ROLE_SEQUENCES.get(prompt_id)
+    if expected_sequences is None:
+        raise ValueError("Reference manifest validation is not defined for this prompt branch")
+    if expected_sequences and isinstance(expected_sequences[0], str):
+        expected_sequences = [expected_sequences]
     manifest_path = manifest_path.resolve()
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or data.get("prompt_id") != prompt_id:
         raise ValueError("Reference manifest prompt_id does not match the locked branch")
     rows = data.get("references")
-    if not isinstance(rows, list) or len(rows) != len(expected):
-        raise ValueError(f"Expected exactly {len(expected)} reference image(s) for {prompt_id}")
-    for index, (row, role) in enumerate(zip(rows, expected), start=1):
+    actual_roles = [row.get("role") for row in rows if isinstance(row, dict)] if isinstance(rows, list) else []
+    if actual_roles not in expected_sequences:
+        allowed = " or ".join(" -> ".join(sequence) for sequence in expected_sequences)
+        raise ValueError(f"Reference roles must be exactly: {allowed}")
+    for index, (row, role) in enumerate(zip(rows, actual_roles), start=1):
         if not isinstance(row, dict) or row.get("role") != role:
             raise ValueError(f"Reference {index} must have role {role}")
         path_value = row.get("path")

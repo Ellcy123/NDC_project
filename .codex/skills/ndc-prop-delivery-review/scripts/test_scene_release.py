@@ -88,6 +88,22 @@ class SceneReleaseTests(unittest.TestCase):
         w.write_json(self.root/a['review'],rec)
         w.write_json(self.path,self.b)
 
+    def materialize_review(self,aid):
+        self.b=w.read(self.path); a=self.b['artifacts'][aid]
+        output=self.root/(aid+'.png'); output.write_bytes(('fixture '+aid).encode())
+        whole=self.root/(aid+'_whole.png'); whole.write_bytes(b'whole')
+        local=self.root/(aid+'_local.png'); local.write_bytes(b'local')
+        a.update(path=output.name,sha256=w.sha(output),review=aid+'_review.json')
+        w.write_json(self.path,self.b)
+        rec={'schema':'ndc-stage-visual-self-check/v1','stage_id':aid,'role':a['role'],'reviewer':'fixture-only',
+             'reviewed_at':'2026-09-10T00:00:00+08:00','inputs':[],
+             'outputs':[{'path':output.name,'sha256':a['sha256']}],
+             'views':[{'kind':'whole_100','path':whole.name},{'kind':'local_200_or_tiles','path':local.name}],
+             'criteria':[{'name':name,'applicable':True,'status':'PASS','finding':'synthetic fixture only'} for name in a['acceptance_contract']],
+             'visual_check_status':'PASS','rework_stage':None,
+             'workflow_binding':w.expected_binding(self.b,self.archive,aid)}
+        w.write_json(self.root/a['review'],rec)
+
     def relation(self,kind='shared_identity',status='resolved',artifact_ids=None):
         self.index['relations']=[{'id':'p-q','kind':kind,'status':status,'item_ids':['p','q'],
                                  'artifact_ids':artifact_ids or [],'fact_refs':['q.identity'],
@@ -265,11 +281,14 @@ class SceneReleaseTests(unittest.TestCase):
         self.assertEqual(w.validate(self.path,3,scene_id='s'),[])
         self.assertTrue(w.validate(self.path,3,scene_id='t'))
 
-    def test_stage4_and_icon_global_barriers_remain(self):
-        self.install(); self.set_pass('scene')
+    def test_stage4_opens_per_frozen_scene_while_global_release_remains(self):
+        self.b['artifacts']['p_menu']['role']='menu_panel'; w.write_json(self.path,self.b)
+        self.install(); self.materialize_review('p_menu'); self.materialize_review('p_menu_preview')
+        self.set_pass('scene'); self.set_pass('p_menu'); self.set_pass('p_menu_preview')
         self.assertTrue(w.validate(self.path,4))
-        self.assertTrue(w.validate(self.path,4,scene_id='s'))
+        self.assertEqual(w.validate(self.path,4,scene_id='s'),[])
         self.assertEqual(w.validate(self.path,3,scene_id='s'),[])
+        self.assertEqual(w.progress(self.path)['scenes']['s']['state'],'LOCAL_HOTSPOT_GATE_OPEN')
         with self.assertRaisesRegex(ValueError,'prerequisites'):
             w.reserve_attempt(self.path,self.icon_job,self.prompt,'cannot start Icon before other scenes')
 

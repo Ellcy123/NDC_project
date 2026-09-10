@@ -4,9 +4,13 @@ description: 从已定稿的 NDC 场景及二级菜单，通过 Photoshop MCP �
 ---
 # NDC 热区与坐标导出
 
+## Photoshop MCP 强制前置
+
+本 Skill 第一次实际调用 Photoshop MCP 前，必须完整读取当前环境的《PS MCP 操作参考手册》：维护工作区从项目根解析 `PS_MCP_操作参考手册.md`，工程镜像从仓库根解析 `production/art_pipeline/PS_MCP_操作参考手册.md`。在当前热区作业记录中保存实际手册路径、版本、SHA-256 和当前会话能力快照；两处均不存在或哈希不一致时不得以历史记忆继续操作。手册负责通用效率、权威路径、Alpha、单引擎、超时回退和视觉/技术验收；本 Skill 的语义轮廓、父图像素、阴影归属、XY 和逐项热区门禁继续优先。实时目录只允许执行 supported 能力，手册本身不增加操作授权。
+
 执行前读[对话任务独立额度](../ndc-prop-requirements/references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
 
-这是第四阶段。输入是第三阶段冻结的全尺寸场景／菜单及批次记录；先读[批次协议](../ndc-prop-requirements/references/batch-contract.md)。调用全批次工作流校验 stage 4 通过后才开始；第二阶段到第三阶段的单场景放行不能代替该整批门槛。所有入景道具（含可拾取、线索与环境叙事道具）都必须先有本体＋全部归属阴影审核。对地图直接拾取且拾取后消失的道具，stage 4 入口还必须取得同尺寸、同坐标系并绑定哈希的原场景、无道具承载物状态、道具＋全部归属阴影独立 RGBA 层和拾取前合成结果；缺任一项或 `DIRECT_PICKUP_LAYER_GATE` 未通过时退回第三阶段，不得从唯一一张带道具场景直接裁图继续。Type 7 二级菜单子物品不套用这套承载物三层门禁。
+这是第四阶段。输入是第三阶段冻结的全尺寸场景／菜单及批次记录；先读[批次协议](../ndc-prop-requirements/references/batch-contract.md)。对已接入场景索引的批次，运行 `workflow_state.py validate --stage 4 --scene <scene_id>`，本场第三阶段非 Icon 产物、场景预览和菜单已通过且冻结即可开始本场热区，不再等待无关场景或全批 Icon；旧批无索引时仍使用全局门槛。第五阶段正式发布仍要求完整全批次通过。所有入景道具（含可拾取、线索与环境叙事道具）都必须先有本体＋全部归属阴影审核。对地图直接拾取且拾取后消失的道具，stage 4 入口还必须取得同尺寸、同坐标系并绑定哈希的原场景、无道具承载物状态、道具＋全部归属阴影独立 RGBA 层和拾取前合成结果；缺任一项或 `DIRECT_PICKUP_LAYER_GATE` 未通过时退回第三阶段，不得从唯一一张带道具场景直接裁图继续。Type 7 二级菜单子物品不套用这套承载物三层门禁。
 
 读[热区专业细则](references/production-details.md)、[语义轮廓检查](../ndc-scene-evidence-placement/references/hotspot-semantic-review.md)及[PS操作](../ndc-scene-evidence-placement/references/photoshop-mcp-repair-and-framing.md)。
 

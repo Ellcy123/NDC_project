@@ -97,7 +97,7 @@ pending/unknown的真实提交须先在原journal核实，不允许用结果回�
 
 包新版本不会杀掉旧任务或抹去未知操作。旧worker在下一guard或result时停止发布，记录STALE并保留实际文件；单一租约解除后才可领取当前版本。已在执行的外部命令不能靠修改数据库撤回。
 
-失联只触发核实：用实际任务状态、原生成job和PS队列状态检查是否仍有操作。只有确认原worker没有活动回合、外部操作已核实，才 `recover-worker --task <controller> --evidence <核实.json>`。证据包含worker_task_id、no_active_turn:true、external_operations_settled:true和具体observation。原journal存在pending/unknown仍拒绝恢复。恢复隔离旧租约并暂停该分支供保存结果复核，其他独立READY可继续，不重放、不重置次数。
+失联只触发核实：用实际任务状态、原生成job和原生 Photoshop MCP 的在途/未知命令状态检查是否仍有操作。只有确认原worker没有活动回合、外部操作已核实，才 `recover-worker --task <controller> --evidence <核实.json>`。证据包含worker_task_id、no_active_turn:true、external_operations_settled:true和具体observation。原journal存在pending/unknown仍拒绝恢复。恢复隔离旧流水领取并暂停该分支供保存结果复核，其他独立READY可继续，不重放、不重置次数。
 
 应用创建/消息投递的未知结果按任务派发文档单独处理；不要用worker恢复去清除创建回执不明。长期后台触发不在此Skill内，当前主任务结束后若要继续定时派发，应使用用户另行指定的调度方式。
 

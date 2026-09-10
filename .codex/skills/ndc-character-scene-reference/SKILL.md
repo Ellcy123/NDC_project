@@ -1,6 +1,6 @@
 ---
 name: ndc-character-scene-reference
-description: 用 Astra 中级智能为 NDC 人物入景制作整场方案、景深图、完整单人和联合白模，并按完整场景交给 Terra 极高生产。用于入景参考准备、参考缺陷返修和跨场景重叠协调；不生成正式角色资产。
+description: 用 Astra 中级智能为 NDC 人物入景制作整场方案、景深图、完整单人和联合白模，并按完整场景交给 Terra 极高任务通过受支持的内置或外置浏览器在网页版 ChatGPT 生产。用于入景参考准备、参考缺陷返修和跨场景重叠协调；不生成正式角色资产。
 metadata:
   category: art/character/scene-reference
 ---
@@ -10,6 +10,8 @@ metadata:
 自然交互按镜头实际看到的头、肩、躯干和脚判断，不凭“朝向某人”的提示词放行。结合交流对象位置判断是否应只见后脑勺；点击后优先一脚微移、躯干部分转向并侧对镜头、头眼回应镜头，不默认整个人转成正面。具体参照共享规则的 [状态动作连续性](../ndc-character-scene-integration/references/state-variant-assembly.md)。用户纠正后先修正当前画面，再沉淀可迁移判断，不能把单场姿势硬套所有场景。
 
 点击后交互状态必须看向镜头、回应玩家。整场白模明确 active 的头部朝向和朝镜头视线目标；保留合理的身体方向、工作位、支撑及手部动作。不能把“抬眼”或“看向画外人物”当作符合要求；该约束不套用于未点击 idle 或纯剧情人物间交流。
+
+同一快照三人及以上同时在场时，读取并执行[三人及以上同场背影构图门禁](../ndc-character-scene-integration/references/multicast-back-composition.md)：默认锁定至少一名非 active 支持角色位于前景或近中景并背对镜头，以可见上半身／背部形成前后层次，且不得遮挡当前真实 UI。联合白模阶段必须运行 `MULTICAST_BACK_COMPOSITION_GATE` 的 `whitebox` 合同；所有人正面／侧面对镜头不能放行。若没有可用非 active 角色，只接受用户对该具体 scene/snapshot 的明确例外，不得牺牲 active 看镜头规则。
 
 阶段责任以整场白模交接为界：本阶段确定完整场景各角色、各状态的白模位置、比例、头身比、动作、演绎和遮挡关系，冻结并交给下一阶段后即完成该场景参考职责。正式角色与白模的对齐、生成后技术/视觉自检、提取合成、返修及最终交付均由生产任务全权负责。交接成功后继续下一场参考；全部交接后结束参考轮次，不持续轮询、监控生产，不代做正式角色修复或重复验收。只有下游明确提交白模本身的核心错误时，才处理对应参考返修；生产结果偏离正确白模由下游自行对齐。
 
@@ -22,9 +24,9 @@ metadata:
 读取 [入景共享规则](../ndc-character-scene-integration/SKILL.md)、[制作节奏](../ndc-character-scene-integration/references/production-cadence.md) 和 [完整流程](../ndc-character-scene-integration/references/full-workflow.md) 中“Whole-scene rehearsal”至“Actual generation handoff”。后续图层生产细节仅在参考方案确实需要时读取。
 
 1. 锁定当前需求全部场景、出场状态、角色与姿势映射；盘点批准原图、身份来源和历史有效组件。先完成一场，再推进另一独立场景，不先批量制作所有角色局部白模。
-2. 完成表演、支撑、场景尺度证据、景深、单人白模和全体联合快照。按[白模放行规则](../ndc-character-scene-integration/references/whitebox-acceptance.md)重点检查位置、比例、头身比、动作和演绎；不影响判断的小型遮挡、局部缺失及小细节可放行，交接正式生图补全，不强制先修白模。各状态使用相同来源及变换，实际UI和多人关系联合审阅。尺度允许原门禁认可的 metric 或 bounded 模式，不能编造相机度量。
+2. 完成表演、支撑、场景尺度证据、景深、单人白模和全体联合快照。按[白模放行规则](../ndc-character-scene-integration/references/whitebox-acceptance.md)重点检查位置、比例、头身比、动作和演绎；不影响判断的小型遮挡、局部缺失及小细节可放行，交接正式生图补全，不强制先修白模。按[重要度与容差合同](../ndc-character-scene-integration/references/importance-and-tolerance.md)为“区域 × 验收项”登记 H0/H1/H2/H3，运行校验并随场景冻结；不得按整张图笼统标成“不重要”。各状态使用相同来源及变换，实际UI和多人关系联合审阅；三人及以上快照还必须保存 `whitebox` 背影构图门禁 PASS。尺度允许原门禁认可的 metric 或 bounded 模式，不能编造相机度量。
 3. 组装实际局部生图输入、原图映射、身份图及提示词；检查引用职责和可见动作。让原 `production_gate.py` 对当前 pre-generation ledger 验证通过，并保留真实技术/视觉检查。文件存在或旧PASS不足以放行。
-4. 用 `character_scene` 流水发布一个完整场景包，立刻派发或唤醒唯一的 `gpt-5.6-terra / xhigh` 正式生产任务。随后继续准备下一独立场景；不等待Terra完成，也不在Terra持有该场景时改写其参考。
+4. 用 `character_scene` 流水发布一个完整场景包，包内必须包含已通过的 `importance_profile_role` 及 gate 回执，立刻派发或唤醒唯一的 `gpt-5.6-terra / xhigh` 正式生产任务。Terra 是第二阶段编排与验收者，正式像素由它在受支持的内置 `iab` 或外置 Chrome/Edge 中通过网页版 ChatGPT 生成，不调用 Codex 图片生成工具或图片 API。随后继续准备下一独立场景；不等待Terra完成，也不在Terra持有该场景时改写其参考。
 5. 生产回传参考错误时，保留实际次数与候选，暂停相关场景后修正姿势、尺度、承托或多人关系，重核受影响证据并追加交接版本；不要求独立已通过场景重做。
 
 原始参考的模型/PS预算及已明确授权的独立测试计数都必须保留。交接继续引用原生产ID；真实新对话任务自动获得完整新额度，旧参考记录只追溯，不扣减新任务；同对话接续不清零。人工节点依原流程处理，等待时释放PS且可继续无依赖场景。所有需求场景都未到交接条件时如实报告缺口，不删减总清单。

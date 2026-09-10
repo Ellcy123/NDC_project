@@ -274,6 +274,55 @@ python scripts/scene_staging_tools.py validate-cast-scale cast-scale.json `
 
 The validator first derives each approved identity's anatomical head/full-body ratio, predicts the whitebox head height at its locked body scale and depth, and checks every actor plus every head-height pair. It then uses canonical height and support-point depth to check standing-equivalent body height and every body-height pair. Head checks are primary: a body-only pass is a failure. This report proves relative cast consistency only and cannot replace the preceding absolute-scale report.
 
+### Elevated lying depth: cast-scale v3
+
+`target.foot` remains the authored physical support/contact anchor for historical compatibility. It is not automatically a ground-depth point when `placementClass` is `lying`. Every new or revised scene containing a lying actor uses `ndc-cast-scale/v3`; all actor entries explicitly add `depthProjection`:
+
+```json
+{"mode": "ground-support-point"}
+```
+
+This mode is valid for a lying actor only when the placement explicitly records `target.supportPlaneClass: "ground"`. For a bed, sofa, stretcher, examination table or other elevated support, use:
+
+```json
+{
+  "mode": "elevated-support-projection",
+  "contract": {"path": "patient-depth.json", "sha256": "<current hash>"}
+}
+```
+
+The referenced contract is fail-closed:
+
+```json
+{
+  "schema": "ndc-elevated-support-projection/v1",
+  "scene": {"path": "scene.png", "sha256": "<current hash>"},
+  "sceneSize": [2560, 1600],
+  "actorId": "patient",
+  "poseId": "patient-lying-r3",
+  "placementContract": {"path": "patient-placement.json", "sha256": "<current hash>"},
+  "supportPlane": {
+    "supportPlaneId": "bed-mattress",
+    "supportObjectId": "bed-01",
+    "supportPoint": [1660, 1015],
+    "evidence": {"path": "bed-plane-evidence.png", "sha256": "<current hash>"}
+  },
+  "depthProjection": {
+    "mode": "projected-ground-plane",
+    "projectedGroundPoint": [1660, 1288],
+    "perspectiveBasisIds": ["floor-grid-01", "bed-leg-drop-01"],
+    "evidence": {"path": "bed-ground-projection.png", "sha256": "<current hash>"}
+  },
+  "wholeArtifact": {"path": "whole-lying-whitebox.png", "sha256": "<current hash>"},
+  "localArtifact": {"path": "local-lying-whitebox.png", "sha256": "<current hash>"},
+  "visualReviewReport": {"path": "exact-pose-whitebox-visual-review-report.json", "sha256": "<current hash>"}
+}
+```
+
+`depthProjection.mode` may instead be `same-depth-reference` with a nonempty `referenceActorId`. That reference must resolve directly to a current cast actor whose depth comes from a ground support point or projected-ground point; reference chains and cycles fail. The exact-pose review must include both distinct whole/local artifacts for the current `poseId`, plus explicit passing checks `elevatedSupportPlane`, `projectedGroundDepth`, and `wholeLocalConsistency`. The support plane must match `target.supportPlaneId`, its object must appear in an exact `supported-by` scene relation, and the current placement/scene hashes must still match.
+
+The v3 report preserves `supportPoint` and separately emits `depthPoint`/`depthSource`; body and pairwise perspective math uses only `depthPoint`. Never alter `target.foot`, `horizonY`, the identity reference or tolerances just to force a pass. Existing unchanged accepted reuse may retain its historical v2 report; any lying geometry revision enters v3.
+
 ## 4. Generate and rank blocking candidates automatically
 
 The browser editor is not the main authoring path. Codex creates a blocking request and runs the deterministic candidate builder first:
