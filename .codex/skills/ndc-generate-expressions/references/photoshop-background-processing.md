@@ -1,6 +1,6 @@
 # User-authorized Photoshop MCP background processing
 
-Actual Photoshop MCP use follows the [global queue](../../ndc-photoshop-queue/SKILL.md). Queue access does not authorize cutout, fringe repair or shoulder completion. Safe saved checkpoints can release PS for other independent tasks while this image awaits offline review or authorized repair; its acceptance and budget remain unchanged.
+Actual Photoshop use goes through native MCP with one active operator per host. A working connection does not authorize cutout, fringe repair or shoulder completion. Safe saved checkpoints can release PS for other independent tasks while this image awaits offline review or authorized repair; its acceptance and budget remain unchanged.
 
 This authorization covers the specified expression cutout/edge operation only. It never replaces the deliberate upstream manual shoulder/chest completion described in `manual-portrait-source.md`, and it cannot authorize Codex to create missing source anatomy.
 
