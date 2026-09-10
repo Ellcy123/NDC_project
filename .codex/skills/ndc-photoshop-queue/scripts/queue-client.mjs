@@ -79,6 +79,42 @@ export async function ensureBroker() {
   } finally { if (handle !== undefined) { closeSync(handle); unlinkSync(lock); } }
 }
 export const resultData = result => result.structuredContent ?? {};
+export function buildResumeCheck(health, status, task, context = {}, checkedAt = new Date().toISOString()) {
+  const waiting = Array.isArray(status?.waiting) ? status.waiting : [];
+  const ownWaiting = waiting.find(item => item?.task_id === task) || null;
+  const ownsQueue = Boolean(task && status?.owner?.task_id === task);
+  const blockers = Array.isArray(health?.blockers) ? health.blockers : [];
+  const photoshopOperational = Boolean(
+    health?.runtime?.ok &&
+    health?.bridge?.paired === true &&
+    health?.bridge?.connected === true &&
+    health?.storage?.ok &&
+    health?.storage?.writable
+  );
+  let resumeAction;
+  if (ownsQueue) resumeAction = 'acquire_existing_owner_to_rebind_and_probe';
+  else if (ownWaiting) resumeAction = 'acquire_existing_ticket';
+  else if (health?.ok) resumeAction = 'enqueue_prepared_work_then_acquire';
+  else if (blockers.some(item => ['IDLE_HELD', 'STALE_SAFE', 'STALE_UNSAVED', 'RECOVERY_REQUIRED'].includes(item?.code))) resumeAction = 'enqueue_prepared_work_then_acquire_to_drive_recovery';
+  else resumeAction = 'follow_current_health_next_action';
+  return {
+    schema: 'ndc-ps-resume-check/v1',
+    checked_at: checkedAt,
+    task_id: task || null,
+    photoshop_operational: photoshopOperational,
+    health_ok: health?.ok === true,
+    ready_for_new_lease: health?.ready_for_new_lease === true,
+    queue_diagnosis: status?.diagnosis || health?.queue?.diagnosis || null,
+    owner_task_id: status?.owner?.task_id || null,
+    own_waiting_ticket: ownWaiting?.ticket || context?.ticket || null,
+    current_blockers: blockers,
+    old_failure_snapshot_authoritative: false,
+    resume_action: resumeAction,
+    next_action: health?.next_action || null,
+    health,
+    status
+  };
+}
 export function retainLease(context, name, result) {
   const d = resultData(result);
   const empty = { task_id: d.task_id || context.task_id };
@@ -99,14 +135,22 @@ async function cli() {
   const opts = {};
   for (let i = 2; i < process.argv.length; i += 2) { if (!process.argv[i].startsWith('--') || process.argv[i + 1] === undefined) throw new Error('Use --task ID --request JSON_FILE, or --task ID --action status'); opts[process.argv[i].slice(2)] = process.argv[i + 1]; }
   await ensureBroker();
-  const request = opts.request ? JSON.parse(readFileSync(opts.request, 'utf8').replace(/^\uFEFF/, '')) : { name: `photoshop_queue_${opts.action || 'status'}`, arguments: {} };
-  const task = opts.task || request.arguments?.task_id;
+  const action = opts.action || 'status';
+  const request = opts.request ? JSON.parse(readFileSync(opts.request, 'utf8').replace(/^\uFEFF/, '')) : action === 'resume-check' ? null : { name: `photoshop_queue_${action}`, arguments: {} };
+  const task = opts.task || request?.arguments?.task_id;
   let context = task ? { task_id: task } : {};
   let session;
   if (task) {
     mkdirSync(join(settings.state_dir, 'clients'), { recursive: true });
     session = join(settings.state_dir, 'clients', `${createHash('sha256').update(task).digest('hex')}.json`);
     context = loadLeaseSession(session, task);
+  }
+  if (!request) {
+    if (!task) throw new Error('RESUME_CHECK_TASK_REQUIRED: use --task with --action resume-check.');
+    const health = resultData(await call('photoshop_queue_health', {}, context));
+    const status = resultData(await call('photoshop_queue_status', {}, context));
+    console.log(JSON.stringify(buildResumeCheck(health, status, task, context), null, 2));
+    return;
   }
   bindTaskRequest(request, task, context);
   const result = await call(request.name, request.arguments, context);

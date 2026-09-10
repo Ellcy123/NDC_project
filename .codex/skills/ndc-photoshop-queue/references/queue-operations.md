@@ -6,23 +6,32 @@
 
 共用 stdio 代理提供 `photoshop_queue_*` 和原生 `photoshop_*` 工具，底层统一经过同一 broker。已迁移客户端使用这些工具；旧任务仍缓存旧直连时，使用以下 CLI 调用同一个 MCP 接口，或重新连接到共用代理。仅更新 Skill 文档不能拦截旧直连客户端；不要同时保留两条生产执行通道。
 
-从策划仓库根运行公共入口；它依据当前机器的 `ndc.local.json` / `NDC_*` 环境变量找到 Skill，不依赖固定用户名、盘符或 `.agents` 维护目录：
+从当前实际 `SKILL.md` 所在目录运行 PowerShell 公共入口；它自行寻找系统或 Codex 内置 Node，不依赖固定用户名、盘符或可用的 `python` 命令：
 
 ```powershell
 $psTaskId = '当前真实任务ID'
-python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action health
+$psSkillRoot = Split-Path -Parent '<当前实际 ndc-photoshop-queue/SKILL.md 路径>'
+& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task $psTaskId -Action health
 ```
 
 正式入队前先运行 `--action health`。`ok:true` 表示受审运行时哈希、允许根、队列数据库、导出目录、磁盘及 Bridge 的静态检查通过；`ready_for_new_lease:true` 才表示当前可尝试取得新租约。acquire 还会实时确认 Photoshop 响应且当前为零文档；已有文档返回 `UNMANAGED_DOCUMENT_OPEN` 并续期原等待票。出现阻断时执行返回的唯一 `next_action`，不得用重启 broker 代替文档、人工或未知命令恢复。
 
-把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。Python 可用 `NDC_PYTHON_EXE` 指定，允许目录来自 `NDC_PS_ALLOWED_ROOTS` 或当前机器 NDC 配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
+跨轮次恢复、上下文压缩、任务被唤醒或收到继续指令时，先运行：
+
+```powershell
+& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task $psTaskId -Action resume-check
+```
+
+它在同一当前 broker 上重新读取 health 和 status，并返回带时间的 `ndc-ps-resume-check/v1`、`photoshop_operational`、`current_blockers` 与 `resume_action`。旧轮次的 Bridge 断联、旧文档 ID、旧错误码、截图、摘要或 `PREPARED_NOT_ENQUEUED` 一律失效，不能直接转成“等待用户修复”；若 `photoshop_operational:true`，立即按 `resume_action` 使用已有票、重新绑定原 owner，或为已准备工作 enqueue/acquire。若为 false，仅记录本次 `checked_at` 和当前 blocker，继续独立分支；任务下次恢复时再运行一次，不把历史失败永久缓存。
+
+把 `$psTaskId` 换为当前任务／会话的真实 ID，不能使用通用示例 ID。Node 必须支持 `node:sqlite`；公共入口优先使用 `NDC_NODE_EXE`，其次使用 PATH 和当前用户的 Codex 内置 Node。不得把 Windows Store `python.exe` 的无输出或退出码 9009 记成 PS MCP 故障；需要 `ndc_art.py` 时必须先解析到真实 Python，或直接使用上述不依赖 Python 的队列入口。`scripts/runtime-binding.json` 只记录可提交的相对约定与受审哈希；PS MCP 外部运行时默认从 `%LOCALAPPDATA%` 解析，非标准安装设置 `NDC_PS_MCP_RUNTIME`。允许目录来自 `NDC_PS_ALLOWED_ROOTS` 或当前机器 NDC 配置，队列状态默认在当前用户 `%LOCALAPPDATA%/NDC/photoshop-queue`。
 
 state dir、client session、client-key 和 Bridge secret 必须设备隔离；另一台电脑不得复制这些状态或并发打开同一个 `queue.sqlite`。端口仅在设备本地通过 `NDC_PS_QUEUE_PORT` 覆盖。
 
 CLI 的请求文件是 UTF-8 JSON：顶层固定为 `name` 和 `arguments`，每次只调用一个接口。请求、日志及审核证据放入本任务的 `工作过程文件` 目录。执行方式：
 
 ```powershell
-python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --request $psRequestPath
+& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task $psTaskId -Request $psRequestPath
 ```
 
 `$psRequestPath` 必须指向已写好的本次 JSON 文件。CLI 以命令行 `--task` 为权威身份，覆盖 enqueue/acquire/recover/cancel/review/external 请求中残留的旧 `task_id`，并自动填写 `acquire/cancel` 的 ticket；这避免 handoff 后审核查到另一个任务键。私有租约上下文采用临时文件原子替换，损坏文件会隔离为 `.corrupt-*` 后走同任务 rebind。不要手写 token、读取并打印 client-key，或复用其他任务的会话文件。每次检查返回内容及退出码，退出码 2 表示调用失败。
@@ -59,7 +68,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 CLI 自动填任务 ID；stdio 直接调用时需填写 `task_id`。一个任务最多有一个待处理请求，同资产重复 enqueue 返回原 ticket，不获得额外排队位置。当前资产尚未完成审核时不能换资产；已完成真实检查的 FAIL 按下文“离线审核及重新进入”决定有限返修或有据封存，不借新 ID 绕过未审门禁。
 
 ```powershell
-python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action acquire
+& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task $psTaskId -Action acquire
 ```
 
 仅返回 `acquired: true` 才可开始原生操作。`WAIT_TURN`、`BUSY`、`MANUAL_PENDING`、`EXTERNAL_USE` 均表示等待；`ALREADY_HELD` 不重新给出租约，沿用本客户端已保存上下文。仍准备好立即接手的在线任务约每30秒再次调用 `acquire`，等待期间可做短时独立工作，不高频轮询或重复 enqueue。尚在等待且已不需要 PS 时，用 `photoshop_queue_cancel` 的空 arguments 请求取消自己的 ticket，持有者不能用 cancel 代替安全 release。
@@ -140,7 +149,7 @@ python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.m
 示例路径、文档 ID 和恢复步骤必须替换为本轮真实值。checkpoint 会重新计算文件哈希，要求文件匹配当前文档在最后修改之后的实际 MCP export 记录；手工写哈希、仅复制旧文件或传入其他文档 PSD 均不能证明本轮已保存。`view` 可作为附加文件角色，但修改后的检查点内每一个文件都必须满足同一导出证据条件；离线制作的局部审阅图放在后续审核记录里，不伪称为 MCP export。
 
 ```powershell
-python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action release
+& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task $psTaskId -Action release
 ```
 
 release 成功后，该图进入 `WAITING_REVIEW`，下一个独立任务可以取得 PS。文件被改动、缺少当前检查点、命令在途或结果未知都会阻断释放；先解决所报问题，不删除队列文件。未改图且无未解决命令可直接释放，返回 `NO_IMAGE_CHANGE`，不生成艺术通过记录。客户端退出仅会尝试同样的安全释放，不能保证脏文档已经交棒。
@@ -227,7 +236,7 @@ CLI 强制使用当前 `--task` 绑定 `task_id`，无需占有 PS；请求文�
 CLI 自动填当前真实任务 ID，并保存成功返回的新租约。若本恢复任务还有排队中的生产 ticket，先取消自己的等待票；`RECOVERY_TASK_QUEUED` 不能通过换假任务 ID 绕开。broker 只允许一个恢复操作者；仍有原生命令 handler 或记录中的 in_flight 时拒绝接管，其他持有者仍响应时也不能夺取。恢复成功会隔离旧租约，**尚未证明宿主空闲或原图合格**。接着执行：
 
 ```powershell
-python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue queue-client.mjs -- --task $psTaskId --action probe
+& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task $psTaskId -Action probe
 ```
 
 probe 通过同一个桥接串行请求实际 PS 状态，成功只证明执行顺序已核对，不证明超时操作没执行、图像已保存或视觉合格。观察真实结果，不盲目重放原命令。恢复租约只用于允许的状态查看、救存导出及检查点验证后的本租约文档安全关闭；仍有正确文档时核对并导出 PSD／PNG、checkpoint、安全关闭、release，再重新排队进入正常制作。若文档身份不符或无法救存，保留恢复阻断，不擅自关闭文档或覆盖已有资产。

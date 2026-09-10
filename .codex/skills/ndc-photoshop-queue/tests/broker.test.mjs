@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PhotoshopQueue, QueueError, fileEvidence } from '../scripts/queue-core.mjs';
 import { QueueService, startBroker, queueDefinitions } from '../scripts/broker.mjs';
-import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock } from '../scripts/queue-client.mjs';
+import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock, buildResumeCheck } from '../scripts/queue-client.mjs';
 
 // All native handlers and PSD/PNG bytes here are synthetic. No Photoshop calls.
 const scratch = resolve(dirname(fileURLToPath(import.meta.url)), '.test-data');
@@ -572,4 +572,28 @@ test('health blocks lease acquisition when a required catalog capability is not 
   assert.equal(health.ok, false);
   assert.ok(health.blockers.some(item => item.code === 'CAPABILITY_NOT_PRODUCTION_READY'));
   assert.equal(health.runtime.production_commands.find(item => item.id === 'document.open_allowed').status, 'experimental');
+});
+
+test('resume check invalidates historical failure snapshots and selects the current queue action', () => {
+  const health = {
+    ok: true,
+    ready_for_new_lease: true,
+    runtime: { ok: true },
+    bridge: { paired: true, connected: true },
+    storage: { ok: true, writable: true },
+    blockers: [],
+    next_action: 'Enqueue prepared work and acquire.'
+  };
+  const idle = buildResumeCheck(health, { diagnosis: 'IDLE', waiting: [], owner: null }, 'task-A', {}, '2026-09-10T00:00:00.000Z');
+  assert.equal(idle.photoshop_operational, true);
+  assert.equal(idle.old_failure_snapshot_authoritative, false);
+  assert.equal(idle.resume_action, 'enqueue_prepared_work_then_acquire');
+
+  const waiting = buildResumeCheck({ ...health, ready_for_new_lease: false }, { diagnosis: 'BUSY', waiting: [{ task_id: 'task-A', ticket: 17 }], owner: { task_id: 'task-B' } }, 'task-A');
+  assert.equal(waiting.own_waiting_ticket, 17);
+  assert.equal(waiting.resume_action, 'acquire_existing_ticket');
+
+  const disconnected = buildResumeCheck({ ...health, ok: false, ready_for_new_lease: false, bridge: { paired: true, connected: false }, blockers: [{ code: 'BRIDGE_DISCONNECTED' }] }, { diagnosis: 'IDLE', waiting: [], owner: null }, 'task-A');
+  assert.equal(disconnected.photoshop_operational, false);
+  assert.equal(disconnected.resume_action, 'follow_current_health_next_action');
 });

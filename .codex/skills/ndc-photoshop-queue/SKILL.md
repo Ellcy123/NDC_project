@@ -7,13 +7,15 @@ description: 统一协调 NDC 多任务对同一 Photoshop MCP 的排队、单�
 
 ## 跨设备入口
 
-本 Skill 的 `scripts/`、`references/` 与其他随 Skill 提交的支持文件，始终以当前实际 `SKILL.md` 所在目录为根解析；不得把维护机的 `.agents/skills`、用户名或盘符写成执行前提。从策划仓库根统一用 `python -B scripts/art_pipeline/ndc_art.py run ndc-photoshop-queue <脚本名> -- <参数>` 启动。`runtime-binding.json` 只保存可提交的相对运行时约定，用户名、仓库位置、队列状态目录等在当前机器自动解析或由环境变量覆盖。缺少 `scripts/` 内文件或同级 Skill 校验器属于部署不完整，必须更新完整 Skill 包，不能回另一台电脑寻找脚本。
+本 Skill 的 `scripts/`、`references/` 与其他随 Skill 提交的支持文件，始终以当前实际 `SKILL.md` 所在目录为根解析；不得把维护机的 `.agents/skills`、用户名或盘符写成执行前提。把当前 Skill 根记录为 `$psSkillRoot`，优先用 `& (Join-Path $psSkillRoot 'scripts\queue-client.ps1') -Task <真实任务ID> -Action <动作>` 启动；该入口自行寻找系统或 Codex 内置 Node，不依赖容易命中 Windows Store 占位程序的 `python` 命令。已有可工作的真实 Python 解释器时，仍可从策划仓库根使用 `ndc_art.py run`。`runtime-binding.json` 只保存可提交的相对运行时约定，用户名、仓库位置、队列状态目录等在当前机器自动解析或由环境变量覆盖。缺少 `scripts/` 内文件或同级 Skill 校验器属于部署不完整，必须更新完整 Skill 包，不能回另一台电脑寻找脚本。
 
 所有客户端向同一队列提交请求，同一时刻只有一个任务操作 PS。以当前真实任务 ID 和资产 ID 登记，准备好输入后才入队；不以资产名代替任务 ID，也不新建任务来绕过当前图门禁。
 
 实际调用前读取 [队列操作与恢复](references/queue-operations.md) 的“客户端与入口”和“正常交棒”。人工需要使用 PS 时读“人工占用”；发生失联、超时、活动文档变化时读“异常恢复”。
 
 每次准备取得 PS 前先调用 `photoshop_queue_health`；按其 `next_action` 排除运行时漂移、正式生产必需命令未达到 `supported`、允许根缺失、数据库／导出目录不可写、磁盘不足、Bridge、命令或人工占用，再 `enqueue → acquire`。`experimental`、`unverified`、`requires_user` 或缺失能力均返回 `CAPABILITY_NOT_PRODUCTION_READY`，不得因为一次可调用就当作正式生产支持。健康检查不接触文档，也不代替取得租约时的实时零文档探测；PS 已有任何未登记文档时保持等待票，不发放自动租约。
+
+任务在新一轮、上下文压缩、被唤醒或收到“继续”后，必须先运行 `queue-client.ps1 -Task <真实任务ID> -Action resume-check`，再判断 PS 是否仍阻塞。旧轮次的断联提示、截图、错误码、文档 ID、`PREPARED_NOT_ENQUEUED` 或“等待用户外部修复”都不是当前状态证据；`resume-check.photoshop_operational:true` 时必须按 `resume_action` 重新入队／取得，不得继续等待或重复要求用户修复。只有本次 `resume-check.current_blockers` 才能作为当前阻塞依据；下次恢复时须重新检查。该检查只读且不取得租约，不能代替 acquire 的实时宿主探测。入口命令无输出或非零退出属于客户端启动失败，不得表述成 Photoshop MCP 卡住；保留退出码并改用该 PowerShell 入口复测一次。
 
 1. `enqueue → acquire` 获得使用权后，通过共用 stdio 代理或 `queue-client.mjs` 调用原生 Photoshop MCP 工具。旧会话缓存的直连工具不会自动受此队列拦截，须改用 CLI 或重新连接到共用代理。
 2. 对同一张图连续完成本轮操作。既有源图只在本机受审目录把 `document.open_allowed` 报为 `supported` 且 health 通过后，使用 `photoshop_command_execute` 与真实绝对路径打开；`document.open_default`、仍为 `experimental` 的命令和无稳定幂等键的快捷命令不进入生产队列。最后一次像素／文档修改后，经原生 MCP 实际导出可恢复 PSD 和唯一命名的审阅 PNG，再 `checkpoint → release`。队列验证导出路径、当前唯一文档及文件哈希；预先存在的文件或口头“已保存”不能替代导出证据。
