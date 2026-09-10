@@ -1473,6 +1473,10 @@ def validate_scene_absolute_scale(
     them are globally too large or too small.  This independent gate measures
     real scene objects, projects each measurement to a named actor plane, and
     reports the shared correction factor before any whitebox is approved.
+
+    The v1 compatibility branch treats horizontal measurements as footprint
+    diagnostics.  They never become vertical human-height evidence, so a
+    legacy report can be rechecked without fabricating cross-axis calibration.
     """
     data = load_json(contract_path)
     if data.get("schema") == "ndc-scene-absolute-scale/v2":
@@ -1527,7 +1531,8 @@ def validate_scene_absolute_scale(
     weighted_factors: list[tuple[float, float]] = []
     groups: set[str] = set()
     bands: set[str] = set()
-    axes: set[str] = set()
+    vertical_groups: set[str] = set()
+    vertical_bands: set[str] = set()
     for index, anchor in enumerate(data["anchors"]):
         label = f"sceneAbsoluteScale.anchors[{index}]"
         require_fields(
@@ -1558,7 +1563,6 @@ def validate_scene_absolute_scale(
         axis = str(anchor["axis"])
         if axis not in {"horizontal", "vertical"}:
             raise ValueError(f"{label}.axis must be horizontal or vertical.")
-        axes.add(axis)
         depth_band = str(anchor["depthBand"])
         if depth_band not in {"actor-local", "cross-depth"}:
             raise ValueError(f"{label}.depthBand must be actor-local or cross-depth.")
@@ -1587,32 +1591,35 @@ def validate_scene_absolute_scale(
             raise ValueError(
                 f"{label} cross-depth anchor requires sourceSupportPoint and targetSupportPoint."
             )
-        # Moving a measurement to the actor's depth does not rotate its world
-        # direction into a vertical ruler. Require a separately justified metric
-        # conversion; its artifact binds provenance, not artistic correctness.
+        # Legacy v1 mixed horizontal footprint measurements into vertical human
+        # height.  That created a circular "direction transfer" when the vertical
+        # rate came from an anchor already counted in the same report.  Keep an
+        # explicitly supplied transfer hash-checkable for audit, but never use a
+        # horizontal v1 anchor to compute or vote on actor height.
         direction_factor = 1.0
         direction_artifact = None
         if axis == "horizontal":
             transfer = evidence.get("directionTransfer")
-            if not isinstance(transfer, dict):
-                raise ValueError(f"{label} horizontal height anchor requires directionTransfer; depth alone is insufficient.")
-            require_fields(transfer, ("method", "sourceAxisPxPerCm", "verticalPxPerCm", "artifact"), f"{label}.directionTransfer")
-            if not isinstance(transfer["method"], str) or not transfer["method"].strip():
-                raise ValueError(f"{label}.directionTransfer.method must explain the metric conversion.")
-            source_rate = float(transfer["sourceAxisPxPerCm"])
-            vertical_rate = float(transfer["verticalPxPerCm"])
-            if not all(math.isfinite(value) and value > 0 for value in (source_rate, vertical_rate)):
-                raise ValueError(f"{label}.directionTransfer rates must be finite and positive.")
-            direction_factor = vertical_rate / source_rate
-            if not math.isfinite(direction_factor) or direction_factor <= 0:
-                raise ValueError(f"{label}.directionTransfer ratio must be finite and positive.")
-            ref = transfer["artifact"]
-            if not isinstance(ref, dict) or not ref.get("path") or not ref.get("sha256"):
-                raise ValueError(f"{label}.directionTransfer.artifact requires path and sha256.")
-            artifact_path = resolve_path(ref["path"], contract_path)
-            if not artifact_path.is_file() or sha256(artifact_path) != ref["sha256"]:
-                raise ValueError(f"{label}.directionTransfer artifact is missing or stale.")
-            direction_artifact = {"path": str(artifact_path.resolve()), "sha256": ref["sha256"]}
+            if transfer is not None:
+                if not isinstance(transfer, dict):
+                    raise ValueError(f"{label}.directionTransfer must be an object when retained for audit.")
+                require_fields(transfer, ("method", "sourceAxisPxPerCm", "verticalPxPerCm", "artifact"), f"{label}.directionTransfer")
+                if not isinstance(transfer["method"], str) or not transfer["method"].strip():
+                    raise ValueError(f"{label}.directionTransfer.method must explain the metric conversion.")
+                source_rate = float(transfer["sourceAxisPxPerCm"])
+                vertical_rate = float(transfer["verticalPxPerCm"])
+                if not all(math.isfinite(value) and value > 0 for value in (source_rate, vertical_rate)):
+                    raise ValueError(f"{label}.directionTransfer rates must be finite and positive.")
+                direction_factor = vertical_rate / source_rate
+                if not math.isfinite(direction_factor) or direction_factor <= 0:
+                    raise ValueError(f"{label}.directionTransfer ratio must be finite and positive.")
+                ref = transfer["artifact"]
+                if not isinstance(ref, dict) or not ref.get("path") or not ref.get("sha256"):
+                    raise ValueError(f"{label}.directionTransfer.artifact requires path and sha256.")
+                artifact_path = resolve_path(ref["path"], contract_path)
+                if not artifact_path.is_file() or sha256(artifact_path) != ref["sha256"]:
+                    raise ValueError(f"{label}.directionTransfer artifact is missing or stale.")
+                direction_artifact = {"path": str(artifact_path.resolve()), "sha256": ref["sha256"]}
         real_range = anchor["realWorldRangeCm"]
         if not isinstance(real_range, list) or len(real_range) != 2:
             raise ValueError(f"{label}.realWorldRangeCm must be [minimum, maximum].")
@@ -1621,9 +1628,32 @@ def validate_scene_absolute_scale(
         if not 0 < real_min <= assumed_cm <= real_max:
             raise ValueError(f"{label}.assumedCm must lie inside realWorldRangeCm.")
         actor = actors[actor_id]
-        projected_px = measured_px * projection_scale * direction_factor
+        projected_px = measured_px * projection_scale
         if not math.isfinite(projected_px) or projected_px <= 0:
             raise ValueError(f"{label} projected measurement must be finite and positive.")
+        if axis == "horizontal":
+            results.append(
+                {
+                    "anchorId": str(anchor["anchorId"]),
+                    "actorId": actor_id,
+                    "objectId": str(anchor["objectId"]),
+                    "independenceGroup": group,
+                    "axis": axis,
+                    "role": "legacy-footprint-diagnostic",
+                    "usedForHeightCalibration": False,
+                    "depthBand": depth_band,
+                    "confidence": confidence,
+                    "measurementLine": line,
+                    "measuredObjectPx": measured_px,
+                    "projectionScaleToActorPlane": projection_scale,
+                    "directionScaleToVertical": direction_factor if direction_artifact else None,
+                    "directionEvidenceArtifact": direction_artifact,
+                    "projectedObjectPx": projected_px,
+                }
+            )
+            continue
+        vertical_groups.add(group)
+        vertical_bands.add(depth_band)
         expected_px = projected_px * actor["characterHeightCm"] / assumed_cm
         expected_min_px = projected_px * actor["characterHeightCm"] / real_max
         expected_max_px = projected_px * actor["characterHeightCm"] / real_min
@@ -1657,10 +1687,10 @@ def validate_scene_absolute_scale(
         raise ValueError(
             f"sceneAbsoluteScale requires {minimum_anchors} independent anchors; found {len(groups)}."
         )
-    if bands != {"actor-local", "cross-depth"}:
-        raise ValueError("sceneAbsoluteScale requires actor-local and cross-depth anchors.")
-    if axes != {"horizontal", "vertical"}:
-        raise ValueError("sceneAbsoluteScale requires horizontal and vertical object dimensions.")
+    if len(vertical_groups) < 2 or vertical_bands != {"actor-local", "cross-depth"}:
+        raise ValueError(
+            "sceneAbsoluteScale v1 compatibility requires two independent vertical height anchors spanning actor-local and cross-depth."
+        )
 
     global_factor = _weighted_median(weighted_factors)
     factor_values = [value for value, _ in weighted_factors]
@@ -1670,6 +1700,7 @@ def validate_scene_absolute_scale(
     report = {
         "schema": "ndc-scene-absolute-scale-report/v1",
         "axisAwareProjection": True,
+        "legacyCompatibilityMode": "vertical-height-plus-horizontal-footprint-diagnostic",
         "contract": str(contract_path.resolve()),
         "contractSha256": sha256(contract_path),
         "status": "pass" if spread_status == global_status == "pass" else "fail",
@@ -1680,7 +1711,7 @@ def validate_scene_absolute_scale(
         "anchorSpreadStatus": spread_status,
         "limits": limits,
         "anchors": results,
-        "note": "Axis-aware arithmetic and evidence binding, independent from cast scale; camera assumptions and physical plausibility still require visual review.",
+        "note": "Legacy v1 compatibility uses vertical anchors only for height. Horizontal measurements are footprint diagnostics and cannot create or change the human-height factor. Current placement, head, support, UI and whole-scene reviews remain authoritative.",
     }
     if report_path:
         write_json(report_path, report)
@@ -1694,12 +1725,12 @@ def validate_scene_absolute_scale(
             line = [tuple(point) for point in result["measurementLine"]]
             color = (40, 220, 255, 255) if result["depthBand"] == "actor-local" else (255, 180, 40, 255)
             draw.line(line, fill=color, width=max(3, round(scene_size[1] / 350)))
-            draw.text(
-                line[0],
-                f"{result['anchorId']} {result['axis']} x{result['recommendedScaleFactor']:.3f}",
-                fill=color,
-                font=font,
+            scale_label = (
+                f"x{result['recommendedScaleFactor']:.3f}"
+                if result.get("usedForHeightCalibration", True)
+                else "footprint-only"
             )
+            draw.text(line[0], f"{result['anchorId']} {result['axis']} {scale_label}", fill=color, font=font)
         preview_path.parent.mkdir(parents=True, exist_ok=True)
         scene.save(preview_path)
     if report["status"] != "pass":

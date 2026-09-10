@@ -154,7 +154,7 @@ Every support surface requires `occupancy.status: clear|occupied`. An occupied s
 
 ## 3.1 Validate fixed-scene absolute scale
 
-New work uses `ndc-scene-absolute-scale/v2` as one shared scene register. Height calibration and horizontal footprint checks are separate. Existing v1 contracts remain readable through their original validator; an old report is never relabelled as a v2 PASS. A v1 report missing current axis-aware evidence remains blocked on rerun.
+New work uses `ndc-scene-absolute-scale/v2` as one shared scene register. Height calibration and horizontal footprint checks are separate. Existing v1 contracts remain readable through a compatibility validator; an old report is never relabelled as a v2 PASS. When its source scene and contract hash are still current, v1 is rechecked with vertical anchors only for height and any horizontal measurement as a footprint diagnostic. Missing v2 fields or `directionTransfer` alone never requires a new whitebox or a fabricated evidence file.
 
 ```powershell
 python scripts/scene_staging_tools.py validate-scene-absolute-scale scene-scale.json `
@@ -202,7 +202,7 @@ Depth projection does not convert a horizontal world direction into a vertical h
 
 The rates refer to the same support depth and measurement extent; the numbers illustrate a synthetic conversion, not a scene default. Document the actual camera/reference calculation and inspect its source-bound overlay. A ground-plane homography alone does not establish vertical height. Without direction evidence use a footprint anchor; if metric prerequisites are unavailable, evaluate the bounded branch without inventing a conversion.
 
-Historical v1 retains its original per-actor formula `lineLength × projectionScaleToActorPlane × directionScaleToVertical × characterHeightCm / assumedCm`, including the direction-evidence requirement. It is not automatically converted into the new shared register. Both branches recheck current evidence; hashing proves provenance, not the truth of authored camera assumptions.
+Historical v1 retains its original report schema but not its incorrect cross-axis vote. The compatibility validator requires at least two independent vertical anchors spanning actor-local and cross-depth, and uses only `lineLength × projectionScaleToActorPlane × characterHeightCm / assumedCm` for its legacy height factor. A horizontal v1 anchor remains a separately identified footprint diagnostic; an existing `directionTransfer` is hash-checked for audit but cannot change the height factor, while a missing one is not a blocker. The production ledger binds the v1 contract to the same current source scene, then relies on current placement, cast/head, support, UI and whole-scene reviews for current whitebox geometry. Upgrade to v2 only when current work genuinely needs the shared register; migrate existing measurements deterministically and never regenerate a whitebox solely to fill schema fields.
 
 The metric report's `recommendedGlobalScaleFactor` is diagnostic. A value outside tolerance fails; once the support basis is sound, correct affected actors from original complete layers under PS-first and update affected evidence. Inspect the source overlay: a consistent calculation from the wrong door base or support point is still invalid geometry.
 

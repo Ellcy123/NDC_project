@@ -16,6 +16,8 @@ class AxisProjectionTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        self.scene = self.root / 'unused.png'
+        self.scene.write_bytes(b'unchanged scene fixture')
         self.metric = self.root / 'metric.json'
         self.metric.write_text('{"fixture":"horizontal projection is foreshortened by one half"}', encoding='utf-8')
         self.contract = {
@@ -51,21 +53,28 @@ class AxisProjectionTests(unittest.TestCase):
         path.write_text(json.dumps(self.contract), encoding='utf-8')
         return tools.validate_scene_absolute_scale(path)
 
-    def test_foreshortened_width_needs_separate_direction_conversion(self):
+    def test_horizontal_transfer_is_audit_only_and_cannot_change_height(self):
         report = self.evaluate()
         self.assertEqual(report['status'], 'pass')
         self.assertTrue(report['axisAwareProjection'])
-        self.assertEqual(report['anchors'][2]['expectedActorHeightPx'], 170)
-        self.assertEqual(report['anchors'][2]['directionScaleToVertical'], 2)
+        self.assertEqual(report['recommendedGlobalScaleFactor'], 1)
+        horizontal = report['anchors'][2]
+        self.assertEqual(horizontal['role'], 'legacy-footprint-diagnostic')
+        self.assertFalse(horizontal['usedForHeightCalibration'])
+        self.assertNotIn('expectedActorHeightPx', horizontal)
+        self.assertEqual(horizontal['directionScaleToVertical'], 2)
         self.transfer['verticalPxPerCm'] = .5
-        with self.assertRaises(ValueError):
-            self.evaluate()
+        changed = self.evaluate()
+        self.assertEqual(changed['recommendedGlobalScaleFactor'], 1)
+        self.assertEqual(changed['anchors'][2]['directionScaleToVertical'], 1)
 
-    def test_depth_multiplier_cannot_stand_in_for_direction_evidence(self):
+    def test_horizontal_direction_transfer_is_optional_in_v1_compatibility(self):
         del self.horizontal['projectionEvidence']['directionTransfer']
         self.horizontal['projectionScaleToActorPlane'] = 2
-        with self.assertRaisesRegex(ValueError, 'requires directionTransfer'):
-            self.evaluate()
+        report = self.evaluate()
+        self.assertEqual(report['status'], 'pass')
+        self.assertEqual(report['recommendedGlobalScaleFactor'], 1)
+        self.assertIsNone(report['anchors'][2]['directionScaleToVertical'])
 
     def test_changed_metric_evidence_invalidates_previous_inputs(self):
         self.evaluate()
@@ -81,23 +90,23 @@ class AxisProjectionTests(unittest.TestCase):
                     self.evaluate()
 
     def case_with_report(self, report):
-        scene = self.root / 'scene.bin'
-        scene.write_bytes(b'unchanged scene fixture')
         report_path = self.root / 'report.json'
         report_path.write_text(json.dumps(report), encoding='utf-8')
         case = {key: [] for key in ('affordanceContract', 'uiSafetyReports', 'placementContracts',
             'stagingContracts', 'whiteboxEvidence', 'supportContactReports', 'castScaleReport',
             'localGenerationHandoffs', 'visualReviewReports')}
-        case.update(caseId='fixture', branch='pure-narrative', sourceScene=str(scene),
-            sourceSceneSha256=tools.sha256(scene), technicalStatus='TECHNICAL_FILE_PASS',
+        case.update(caseId='fixture', branch='pure-narrative', sourceScene=str(self.scene),
+            sourceSceneSha256=tools.sha256(self.scene), technicalStatus='TECHNICAL_FILE_PASS',
             scaleDriver='standing-equivalent-multi-anchor',
             sceneAbsoluteScaleReport={'path': str(report_path), 'sha256': tools.sha256(report_path)})
         return case
 
-    def test_ledger_rejects_old_arithmetic_only_pass(self):
+    def test_ledger_rechecks_current_v1_contract_without_new_report_marker(self):
         report = self.evaluate()
         del report['axisAwareProjection']
-        with self.assertRaisesRegex(ValueError, 'current axis-aware'):
+        # Compatibility authority comes from rerunning the current validator on
+        # the bound contract, not from requiring a newly generated report field.
+        with self.assertRaisesRegex(ValueError, 'componentPolicyReports'):
             production_gate.validate_case(self.case_with_report(report), 0, self.root / 'ledger.json', 'pre-generation')
 
     def test_ledger_rechecks_metric_artifact_behind_unchanged_report(self):

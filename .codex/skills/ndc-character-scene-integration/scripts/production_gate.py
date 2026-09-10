@@ -355,11 +355,12 @@ def validate_case(case: dict[str, Any], index: int, ledger_path: Path, stage: st
     else:
         if not absolute_scale_report or absolute_scale_report.get("status") != "pass":
             raise ValueError(f"{label} contains a failed fixed-scene absolute-scale report.")
-        if absolute_scale_report.get("axisAwareProjection") is not True:
-            raise ValueError(f"{label} requires a current axis-aware absolute-scale report; rerun the original contract without inventing missing geometry.")
-        absolute_contract_path, _ = validate_file_ref(
+        absolute_contract_path, absolute_contract = validate_file_ref(
             {"path": absolute_scale_report.get("contract"), "sha256": absolute_scale_report.get("contractSha256")},
             f"{label}.sceneAbsoluteScaleReport.contract", absolute_report_path, {"ndc-scene-absolute-scale/v1"})
+        assert absolute_contract is not None
+        if resolve_path(absolute_contract.get("scene", ""), absolute_contract_path) != scene.resolve():
+            raise ValueError(f"{label} legacy scale contract belongs to another source scene.")
         from scene_staging_tools import validate_scene_absolute_scale
         validate_scene_absolute_scale(absolute_contract_path)
 

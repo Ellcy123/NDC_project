@@ -483,14 +483,6 @@ class SceneStagingToolTests(unittest.TestCase):
                 "sourceSupportPoint": [180, 150],
                 "targetSupportPoint": [110, 185],
             }
-            metric_path = root / "metric-reference.json"
-            write_json(metric_path, {"fixture": "orthographic equal directional rates"})
-            projection["directionTransfer"] = {
-                "method": "Synthetic orthographic fixture with equal horizontal/vertical unit projections",
-                "sourceAxisPxPerCm": 1,
-                "verticalPxPerCm": 1,
-                "artifact": {"path": metric_path.name, "sha256": TOOLS.sha256(metric_path)},
-            }
             contract = {
                 "schema": "ndc-scene-absolute-scale/v1",
                 "scene": "scene.png",
@@ -558,6 +550,9 @@ class SceneStagingToolTests(unittest.TestCase):
                 path, root / "absolute-scale-report.json", root / "absolute-scale.png"
             )
             self.assertEqual(report["status"], "pass")
+            self.assertEqual(report["recommendedGlobalScaleFactor"], 1)
+            self.assertEqual(report["anchors"][1]["role"], "legacy-footprint-diagnostic")
+            self.assertFalse(report["anchors"][1]["usedForHeightCalibration"])
             contract["actors"][0]["standingEquivalentHeightPx"] = 200
             write_json(path, contract)
             with self.assertRaisesRegex(ValueError, "recommendedGlobalScaleFactor=0.8500"):
