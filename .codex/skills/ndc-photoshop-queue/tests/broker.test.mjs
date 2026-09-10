@@ -13,7 +13,7 @@ mkdirSync(scratch, { recursive: true });
 const result = (data, isError = false) => ({ content: [{ type: 'text', text: JSON.stringify(data) }], structuredContent: data, ...(isError ? { isError: true } : {}) });
 const stateFor = (doc, saved = false) => ({ hasDocument: doc !== null, documentCount: doc === null ? 0 : 1, activeDocument: doc === null ? null : { id: doc, title: `Synthetic ${doc}`, saved } });
 function fakeNative() {
-  const fake = { tools: new Map(), calls: [], state: stateFor(101), command: null, probe: null, bridge: { status: () => ({ connected: true }), stop: async () => {} } };
+  const fake = { tools: new Map(), calls: [], state: stateFor(101), command: null, probe: null, pairing: null, bridgeState: { paired: true, connected: true }, bridge: { status: () => fake.bridgeState, stop: async () => {} } };
   fake.catalog = { get: id => ({ id, status: 'supported', risk: id === 'document.export' ? 'external' : id === 'document.inspect' ? 'read' : 'edit', engine: 'dom' }), validate: (_id, args) => args, list: () => [] };
   const register = (name, handler) => fake.tools.set(name, { definition: { name, inputSchema: { type: 'object' } }, handler });
   register('photoshop_host_describe', async () => result({ serverVersion: 'synthetic', runtime: { app: 'Photoshop' }, bridge: fake.bridge.status() }));
@@ -26,6 +26,7 @@ function fakeNative() {
   });
   register('photoshop_advanced_execute', async () => { throw new Error('Unadapted tools must never execute'); });
   register('photoshop_command_validate', async () => { throw new Error('Unadapted tools must never execute'); });
+  register('photoshop_pairing_begin', async () => { fake.calls.push({ kind: 'pairing' }); return fake.pairing ? await fake.pairing() : result({ status: 'displayed' }); });
   return fake;
 }
 function fixture(t) {
@@ -65,6 +66,29 @@ function closeDocument(q, owner) {
   q.end(owner, op.id, { applied: true, documentId: q.read().owner.document_id });
 }
 function deferred() { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; }
+
+test('pairing dialog is allowed only for an idle unpaired queue', async t => {
+  const { api, q, native } = fixture(t);
+  native.bridgeState = { paired: false, connected: false };
+  assert.equal((await api.call('photoshop_pairing_begin')).structuredContent.status, 'displayed');
+  assert.ok(native.calls.some(x => x.kind === 'pairing'));
+  native.bridgeState = { paired: true, connected: true };
+  await rejectCode(api.call('photoshop_pairing_begin'), 'PAIRING_ALREADY_ESTABLISHED');
+  native.bridgeState = { paired: false, connected: false };
+  acquire(q);
+  await rejectCode(api.call('photoshop_pairing_begin'), 'PAIRING_QUEUE_NOT_IDLE');
+});
+
+test('a second pairing dialog cannot be opened concurrently', async t => {
+  const { api, native } = fixture(t), pending = deferred();
+  native.bridgeState = { paired: false, connected: false };
+  native.pairing = async () => pending.promise;
+  const first = api.call('photoshop_pairing_begin');
+  await new Promise(resolve => setImmediate(resolve));
+  await rejectCode(api.call('photoshop_pairing_begin'), 'PAIRING_ALREADY_ACTIVE');
+  pending.resolve(result({ status: 'displayed' }));
+  assert.equal((await first).structuredContent.status, 'displayed');
+});
 
 test('waiting acquire automatically fences stale unchanged owner and preserves FIFO', async t => {
   const { api, q, native, advance } = fixture(t);

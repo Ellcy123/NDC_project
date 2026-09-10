@@ -44,7 +44,7 @@ const dataOf = r => r.structuredContent ?? JSON.parse(r.content.find(x => x.type
 const stableJson = value => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item) ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item);
 export class QueueService {
   constructor(queue, native) {
-    this.queue = queue; this.native = native; this.busy = false;
+    this.queue = queue; this.native = native; this.busy = false; this.pairingActive = false;
     queue.db.exec(`CREATE TABLE IF NOT EXISTS native_requests (
       task_id TEXT NOT NULL, asset_id TEXT NOT NULL, external_key TEXT NOT NULL,
       scoped_key TEXT NOT NULL UNIQUE, request_hash TEXT NOT NULL, tool_name TEXT NOT NULL,
@@ -162,7 +162,17 @@ export class QueueService {
       return envelope({ ...nativeHost, queue: this.queue.diagnose(), bridge: this.native.bridge.status(), runtime_binding: binding.version, note: 'Acquire a lease for live Photoshop state. Queue count alone does not prove idleness.' });
     }
     if (name === 'photoshop_capability_list') return envelope({ commands: this.native.catalog.list(args), bridge: this.native.bridge.status() });
-    if (name === 'photoshop_pairing_begin') throw new QueueError('PAIRING_NOT_A_QUEUE_OPERATION', 'Existing pairing is preserved. Diagnose the bridge before any explicit re-pairing.');
+    if (name === 'photoshop_pairing_begin') {
+      const state = this.queue.read(), bridge = this.native.bridge.status();
+      if (bridge.paired === true) throw new QueueError('PAIRING_ALREADY_ESTABLISHED', 'The authenticated Photoshop bridge is already paired; use the panel reconnect action.');
+      if (this.pairingActive) throw new QueueError('PAIRING_ALREADY_ACTIVE', 'A trusted local pairing dialog is already open.');
+      if (this.busy || state.owner || state.waiting.length || state.external) {
+        throw new QueueError('PAIRING_QUEUE_NOT_IDLE', 'Pairing is allowed only while the queue has no owner, waiter, external reservation, or native handler.');
+      }
+      this.pairingActive = true;
+      try { return await tool.handler(args); }
+      finally { this.pairingActive = false; }
+    }
     if (name.startsWith('photoshop_job_') || name === 'photoshop_approval_request') throw new QueueError('USER_ASSISTED_NOT_QUEUED', 'This queue supports completed silent commands. Keep user-assisted jobs in an explicit manual reservation.');
     const owner = this.queue.auth(this.queue.read(), context);
     const bridgeInstance = this.bridgeInstance();
