@@ -10,7 +10,7 @@ const { StdioServerTransport } = await import(moduleUrl('server/stdio.js'));
 const { CallToolRequestSchema, ListToolsRequestSchema } = await import(moduleUrl('types.js'));
 await ensureBroker();
 let context = {};
-const server = new Server({ name: 'photoshop-full-mcp', version: '2.0.1-ndc-queue1' }, { capabilities: { tools: {} }, instructions: 'Shared Photoshop queue: read ndc-photoshop-queue. Enqueue your actual task ID and asset ID, acquire a ticket, execute existing native tools, checkpoint and release promptly. Different tasks may submit concurrently; Photoshop editing stays serial. Metadata needs no lease. Do not bypass this broker or treat a timeout as release.' });
+const server = new Server({ name: 'photoshop-full-mcp', version: '2.0.1-ndc-queue2' }, { capabilities: { tools: {} }, instructions: 'Shared Photoshop queue: read ndc-photoshop-queue. Run health, enqueue the real task and asset, acquire, then use atomic handoff after the final mutation. Different tasks may submit concurrently; Photoshop editing stays serial. Lost client context rebinds through acquire plus a live probe. Tokens, Bridge instances and document IDs never cross computers. Do not bypass or restart this broker, share queue.sqlite, or treat a timeout as release.' });
 server.setRequestHandler(ListToolsRequestSchema, () => rpc('tools/list'));
 server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name } = request.params, args = request.params.arguments || {};

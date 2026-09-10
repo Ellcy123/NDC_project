@@ -20,6 +20,8 @@ Viewing a transparent PNG only against the app's black background is insufficien
 
 Write `target_identity` and enumerate every intended `target_components` before drawing Alpha. For a compound clue, list each complete physical object separately—for example, `funeral register`, `1919 envelope`, and `supporting document`. For planar objects, include every visible face, thickness edge, curled edge, and attributable shadow.
 
+For every collectible, clue prop, and environmental-storytelling prop, enumerate all visible contact/cast-shadow regions attributable to that prop; they are `MUST_COVER` even when the prop remains after interaction. For a direct map pickup that disappears, also inventory `original_scene`, the persistent `carrier_without_prop`, and the independent `pickup_layer`. Every nonzero-Alpha pickup-body or pickup-shadow pixel in that layer is `MUST_COVER`; the carrier state contains the complete carrier and its own shadow but neither the pickup nor any pickup-attributable shadow/contact trace. A hotspot extracted only from a baked scene cannot pass this gate without the verified carrier state and reconstruction proof. Type 7 children use their menu-parent contract and do not require this direct-map carrier stack.
+
 First establish a loose inspection selection and pass the whole/local pre-extrema coverage gate for the complete body-plus-shadow union. Only then mark the top, bottom, left, and right semantic extrema independently on the accepted parent. Then inspect the base contour and final expanded/excluded contour against that inventory. A crop may be technically inside the parent while still missing a page corner, photo edge, drawer face, or visible thickness plane.
 
 Do not use a bounding rectangle or convex hull to join separate target objects when it captures the box, album page, tabletop, cabinet, or other background between them. Use concave paths or multiple Alpha islands. Multi-island Alpha is valid; unrelated bridge pixels are not.
@@ -59,6 +61,10 @@ All of the following criteria must be present, applicable, and PASS:
 - `adjacent_interactable_exclusion`
 - `click_mislead_risk`
 - `parent_overlay_semantic_alignment`
+- `attributable_shadow_completeness`
+- `direct_pickup_layer_coverage` for disappearing direct map pickups
+- `post_pickup_carrier_persistence` for disappearing direct map pickups
+- `post_pickup_residue_free` for disappearing direct map pickups
 
 The passing record also needs:
 
@@ -78,7 +84,21 @@ The passing record also needs:
     "transparent_negative_spaces": [],
     "adjacent_interactables_present": false,
     "excluded_adjacent_interactables": [],
-    "adjacent_interactables_alpha_zero": false
+    "adjacent_interactables_alpha_zero": false,
+    "direct_pickup_state_context": {
+      "applies": true,
+      "disappears_after_pickup": true,
+      "original_scene_sha256": "<sha256>",
+      "carrier_without_prop_sha256": "<sha256>",
+      "pickup_layer_sha256": "<sha256>",
+      "scene_before_pickup_sha256": "<sha256>",
+      "map_covers_all_pickup_layer_alpha": true,
+      "map_reconstructs_scene_before_pickup": true,
+      "map_removal_restores_carrier_without_prop": true,
+      "carrier_persists_after_pickup": true,
+      "carrier_or_carrier_shadow_inside_pickup_map": false,
+      "post_pickup_prop_or_shadow_residue": false
+    }
   }
 }
 ```
@@ -94,6 +114,9 @@ Reject and return to mask authoring when any of these is visible:
 - container/page/table/cabinet pixels used to connect separate target objects;
 - another drawer, door, box, pocket, or collectible partly inside Alpha;
 - an edge that would make a player reasonably believe a neighboring object also opens;
+- any prop fragment, pickup-attributable shadow, halo, or removal seam remaining over the persistent carrier after a direct map pickup;
+- any carrier or carrier-owned shadow removed with the pickup Map;
+- any independent pickup-layer body or shadow pixel lying outside the delivered Map Alpha;
 - a visual conclusion based only on hashes, coordinates, parent-pixel equality, or the absence of an obvious seam.
 
 After correction, regenerate all dependent coordinates, hashes, manifests, formal copies, and `XYposition.txt` entries. The rejected PASS record stays in history and must not cover the new bytes.

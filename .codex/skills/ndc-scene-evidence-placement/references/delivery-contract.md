@@ -16,13 +16,15 @@ Use this contract for scene-local clickable evidence packages. It records the co
 | delivery folder | `folderPath` | Path below `Art/Scene/EVIDENCE`, normally `EPIxx\<scene-folder>`. |
 | `x, y, z` | `Position` | Map-crop top-left pixel coordinate plus Unity sorting value. |
 
+Every collectible, clue prop, and environmental-storytelling prop must retain all visible contact/cast shadow attributable to it; any Map for those classes covers the body-plus-shadow union whether or not the prop disappears. For every direct map pickup that disappears after collection, the runtime/state contract must identify `original_scene`, the persistent `carrier_without_prop` produced before the pickup is placed, the independent `pickup_layer` containing only the pickup plus all pickup-attributable contact/cast shadow, and the reconstructed `scene_before_pickup`. Hiding or destroying the Map must reveal the carrier still present with no pickup or pickup-shadow residue. A baked-parent hotspot without this state separation is not a valid disappearing direct pickup. This carrier stack does not apply to Type 7 secondary-menu children.
+
 ## Acquisition coverage contract
 
 Every evidence-art batch starts with a coverage ledger. This is required even when existing ItemStaticData rows already contain Big/Icon paths, because those paths do not prove that an exploration pickup is present in the scene.
 
 | Actual acquisition event | Required visible/runtime coverage |
 |---|---|
-| Click item in base exploration scene | Item Map + full-scene `Position` + Big + configured Icon |
+| Click item in base exploration scene | Persistent carrier-without-prop state + item body-and-shadow Map + full-scene `Position` + Big + configured Icon; item Map disappears after pickup while carrier remains |
 | Open Type 6/Type 7 container, then click item | Type 6 Map/Position + Type 7 Map/Position + child item Map/full-scene `Position` + child Big + configured Icon |
 | Click environmental observation that does not enter inventory | Visible background/state prop + real scene Map/`Position` + Big; omit Icon |
 | Automatic dialogue or Expose grant | Big + configured Icon; add a conditional/handover state when the item is visibly presented. Every container-open state uses the secondary menu / Type 7 presentation, including AVG-triggered opening; never substitute a full-scene open state. Preserve the actual grant trigger and order. |
@@ -40,6 +42,11 @@ The following is the full verification/recovery package kept under the work-proc
 ```text
 delivery/
   scene_with_item.png
+  original_scene.png
+  carrier_without_prop.png
+  pickup_layer.png
+  pickup_reconstruction.png
+  pickup_removal_review.png
   <map-stem>.png
   <detail-stem>.png
   <icon-stem>.png
@@ -337,16 +344,17 @@ A Map PNG and its coordinate are one atomic record. Any Alpha, crop, padding, ex
 
 Choose the reconstruction mode before using the packaging command; record the choice, reason, and parent/state paths and hashes in the process manifest. These are production decisions, not new CLI flags or a claim that the existing validator can infer runtime state behavior.
 
-- **Map-alone reconstruction:** the runtime Sprite carries the entire authorized change, and all changed pixels belong to the target and its attributable shadow. Use the invariant below.
-- **Accepted-parent hotspot:** the target is baked into the accepted scene/state. This includes an Image in-place replacement whose old-object removal repairs background outside the new target. Retain and review that complete parent/state, derive only the semantic target-plus-shadow Map from its current pixels, and validate parent alignment rather than claiming the Map reconstructs the pre-replacement source. Record how the runtime obtains the accepted parent and any pickup/after-state that the design requires. A scene preview alone does not prove that dependency is installed. If the required state is missing or outside the authorized engineering scope, block that dependent release/synchronization rather than padding the Map with repaired background or silently changing configuration.
+- **Map-alone reconstruction:** required by default for every direct map pickup that disappears after collection. The runtime Sprite carries the complete pickup and every pickup-attributable contact/cast-shadow pixel; all changed pixels between `carrier_without_prop` and `scene_before_pickup` belong to that union. `carrier_without_prop + pickup_layer at (x,y) == scene_before_pickup` pixel-for-pixel, and removing/hiding the Sprite restores the carrier unchanged with no pickup, pickup shadow, halo, or removal seam. The carrier and its own shadow stay outside the pickup Map. Use the invariant below.
+- **Accepted-parent hotspot:** allowed for non-disappearing clue/environmental hotspots and baked interaction units. For a direct map pickup that disappears, it is allowed only when a separately delivered and verified runtime before/after-state mechanism keeps the carrier while removing the baked pickup and every pickup-attributable shadow/contact trace; the contract must name and hash-bind `original_scene`, `carrier_without_prop`, both pickup states, and the actual transition. An Image in-place replacement whose old-object removal repairs background outside the new target must retain and review that complete parent/state, derive only the semantic target-plus-shadow Map from its current pixels, and validate parent alignment rather than claiming the Map reconstructs the pre-replacement source. A scene preview alone does not prove that dependency is installed. If the persistent carrier state or its runtime transition is missing or outside the authorized engineering scope, block that dependent release/synchronization rather than padding the Map with repaired background or silently changing configuration. Type 7 children remain governed by their menu-parent contract, not this direct-map carrier stack.
 
-For Map-alone reconstruction, let `S` be the approved source scene, `F` the accepted scene with item, `C` the map crop, and `(x, y)` its coordinate. Delivery requires:
+For direct-pickup Map-alone reconstruction, let `R` be `original_scene`, `S` be `carrier_without_prop`, `F` be `scene_before_pickup`, `C` be the map crop, and `(x, y)` its coordinate. Delivery requires:
 
-1. `S` and `F` have identical size and mode.
+1. `R`, `S`, and `F` have identical size and mode. `S` adds or preserves only the persistent carrier and carrier-owned lighting/shadow relative to `R`.
 2. All `S != F` pixels are inside the approved authorization mask.
 3. Every changed pixel is inside `C`'s rectangle. Unchanged portions of the larger authorization workspace may remain outside it.
 4. For a rectangular Map, `C == F.crop(rect)` pixel-for-pixel. For an irregular Map, every Alpha-positive RGB pixel in `C` equals the corresponding pixel in `F`, Alpha 0 RGB is zero, and the contour includes every changed pixel required by the accepted state.
 5. Pasting the rectangular Map or alpha-compositing the irregular Map onto `S` at `(x, y)` produces `F` pixel-for-pixel.
+6. Treating `S` as the pickup-after state and removing the Map exposes `S` unchanged; visual review confirms the carrier remains complete and no pickup-attributable prop/shadow residue, halo, or repair seam remains.
 
 For Map-alone placement jobs with both `S` and `F`, derive `rect` from the actual changed-pixel bounding box plus at least `32px` of stable local background. That padding is transparent canvas outside the semantic contour, not clickable background. Fall back to the authorization-mask bounding box only when `S` is unavailable. Manual `--map-rect` input is reserved for audited legacy/baked-prop extraction. Accepted-parent hotspots use the reviewed semantic union's tight canvas and parent-exact extraction instead.
 

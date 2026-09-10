@@ -4,7 +4,13 @@ This reference applies to exploration NPCs whose runtime `ResPath` and `ClickRes
 
 ## Single-master rule
 
-The accepted idle state is always the master for runtime position, scale, identity/body proportions, support relationship, canvas, shadow registration, and Photoshop coordinates. It must read as a natural ambient hold that does not already perform to the player. The active state must visibly engage the player.
+Judge interaction from the camera-visible result, not the prompt's named target. First establish the partner's position and the actor's head, shoulder, pelvis and foot directions. When the camera is behind a character who faces away to speak, the expected result can be only the back of the head; do not expose a cheek, nose or eye merely to make identity readable. Choose the visible view from the actual shot rather than making every conversation a back view.
+
+Camera-directed attention after a click does not imply a frontal whole body. Use the smallest anatomically plausible response: a planted support foot, one short repositioning step, a partial pelvis/torso pivot that leaves the body side-on to camera, then a comfortable head turn and direct camera gaze. Avoid both a full frontal about-face and a neck-only twist against an unchanged back-facing torso. Inspect the two states together for support, effort, social context and motion continuity. SC2615's user-corrected example specifically requires idle back-of-head only and active one-foot movement with a side-on body; preserve these concrete requirements for that scene without imposing its exact pose on every scene.
+
+When a user corrects acting, record the failed visual cue and the transferable reasoning in the relevant directing/state guidance, withdraw affected evidence, and apply it to the current pair before handing it off. A rule copied into a file is not proof that the image follows it.
+
+The accepted idle state is always the master for runtime position, scale, identity/body proportions, support relationship, canvas, shadow registration, and Photoshop coordinates. It must read as a natural ambient hold that does not already perform to the player. The active state must turn its head naturally toward the camera and look directly into the lens to address the player. Merely looking up or toward an off-frame person does not satisfy this requirement. Preserve plausible torso orientation, support and hand/prop actions; a frontal torso is not required. Describe the camera-facing head and gaze explicitly in the generation prompt and visually verify both in the result. This click-after requirement does not apply to pure narrative exchanges between characters.
 
 Author a `stateDeltaScope` before generation. Default to the smallest readable change: attention target, eyes/expression, head angle, upper-torso orientation, or one motivated hand action. Preserve ongoing occupation, named support, social territory, depth, and runtime transform. A whole-body delta requires a recorded interaction reason; it is not the default cure for a stiff idle pose.
 
@@ -117,7 +123,7 @@ Check more than frozen-pixel equality:
 2. reject abrupt width changes, doubled outlines, broken lapels, disconnected sleeves, and lighting jumps;
 3. compare edge direction and luminance across any seam band;
 4. verify support/prop anchors do not move unless authorized;
-5. verify the idle state reads as ambient and active reads as player engagement;
+5. verify the idle state reads as ambient and the active head faces the camera with both eyes looking directly toward the lens; an active label or an upward/off-frame glance is not evidence of player engagement;
 6. flicker between states at original size to expose placement, scale, support, shadow, or identity jumps.
 
 A passing lower-body equality test does not prove that the transition is visually continuous.

@@ -1,20 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync, statSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PhotoshopQueue, QueueError, fileEvidence } from '../scripts/queue-core.mjs';
 import { QueueService, startBroker, queueDefinitions } from '../scripts/broker.mjs';
+import { retainLease, bindTaskRequest, loadLeaseSession, saveLeaseSession, reclaimStartLock, buildResumeCheck } from '../scripts/queue-client.mjs';
 
 // All native handlers and PSD/PNG bytes here are synthetic. No Photoshop calls.
 const scratch = resolve(dirname(fileURLToPath(import.meta.url)), '.test-data');
 mkdirSync(scratch, { recursive: true });
 const result = (data, isError = false) => ({ content: [{ type: 'text', text: JSON.stringify(data) }], structuredContent: data, ...(isError ? { isError: true } : {}) });
-const stateFor = doc => ({ hasDocument: doc !== null, documentCount: doc === null ? 0 : 1, activeDocument: doc === null ? null : { id: doc, title: `Synthetic ${doc}`, saved: false } });
+const stateFor = (doc, saved = false) => ({ hasDocument: doc !== null, documentCount: doc === null ? 0 : 1, activeDocument: doc === null ? null : { id: doc, title: `Synthetic ${doc}`, saved } });
 function fakeNative() {
   const fake = { tools: new Map(), calls: [], state: stateFor(101), command: null, probe: null, bridge: { status: () => ({ connected: true }), stop: async () => {} } };
-  fake.catalog = { get: id => ({ id, risk: id === 'document.export' ? 'external' : id === 'document.inspect' ? 'read' : 'edit', engine: 'dom' }), validate: (_id, args) => args, list: () => [] };
+  fake.catalog = { get: id => ({ id, status: 'supported', risk: id === 'document.export' ? 'external' : id === 'document.inspect' ? 'read' : 'edit', engine: 'dom' }), validate: (_id, args) => args, list: () => [] };
   const register = (name, handler) => fake.tools.set(name, { definition: { name, inputSchema: { type: 'object' } }, handler });
+  register('photoshop_host_describe', async () => result({ serverVersion: 'synthetic', runtime: { app: 'Photoshop' }, bridge: fake.bridge.status() }));
   register('photoshop_state_get', async () => { fake.calls.push({ kind: 'state' }); return fake.probe ? await fake.probe() : result(fake.state); });
   register('photoshop_preview_get', async () => result({ preview: 'synthetic' }));
   register('photoshop_command_execute', async args => {
@@ -58,10 +60,15 @@ function saved(q, owner, root, doc = 101) {
   });
   return q.checkpoint(owner, { files, document_id: doc, resume: 'Resume this synthetic test PSD.' });
 }
+function closeDocument(q, owner) {
+  const op = q.begin(owner, { command_id: 'document.close', mutates: false, resource_cleanup: true, expected_until: 1050 });
+  q.end(owner, op.id, { applied: true, documentId: q.read().owner.document_id });
+}
 function deferred() { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; }
 
 test('waiting acquire automatically fences stale unchanged owner and preserves FIFO', async t => {
   const { api, q, native, advance } = fixture(t);
+  native.state = stateFor(null);
   const old = acquire(q);
   const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
   const c = q.enqueue({ task_id: 'task-C', asset_id: 'image-C', description: 'waiting test', ready: true });
@@ -75,7 +82,7 @@ test('waiting acquire automatically fences stale unchanged owner and preserves F
 });
 
 test('heartbeat cannot perpetuate five-minute idle occupation; live command is preserved', async t => {
-  const { api, q, advance } = fixture(t);
+  const { api, q, native, advance } = fixture(t); native.state = stateFor(null);
   const old = acquire(q);
   const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
   q.abandonedMs = 200;
@@ -89,7 +96,7 @@ test('heartbeat cannot perpetuate five-minute idle occupation; live command is p
 
 test('failed live probe keeps one recovery owner and same waiter retries without approval', async t => {
   const { api, q, native, advance } = fixture(t);
-  acquire(q); const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
+  native.state = stateFor(null); acquire(q); const b = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'waiting test', ready: true });
   advance(101); native.probe = async () => { throw new Error('offline'); };
   const pending = await api.control('acquire', { task_id: 'task-B', ticket: b.ticket }, {});
   assert.equal(pending.acquired, false); assert.equal(pending.recovery.released, false);
@@ -156,7 +163,7 @@ test('same key with different payload is rejected before invoking native or touc
 test('different tasks using the same external key get separate durable and native keys', async t => {
   const { api, q, native, root } = fixture(t); const a = acquire(q);
   const first = await api.call('photoshop_command_execute', args('shared', 'A'), a);
-  saved(q, a, root); q.release(a); const b = acquire(q, 'task-B', 'image-B');
+  saved(q, a, root); closeDocument(q, a); q.release(a); const b = acquire(q, 'task-B', 'image-B');
   const second = await api.call('photoshop_command_execute', args('shared', 'B'), b);
   assert.equal(first.structuredContent.result.result.marker, 'A'); assert.equal(second.structuredContent.result.result.marker, 'B');
   const records = rows(q); assert.equal(records.length, 2); assert.notEqual(records[0].scoped_key, records[1].scoped_key);
@@ -166,7 +173,7 @@ test('different tasks using the same external key get separate durable and nativ
 test('different assets in the same task do not share an idempotency scope', async t => {
   const { api, q, native, root } = fixture(t); const a = acquire(q);
   await api.call('photoshop_command_execute', args('shared'), a);
-  const cp = saved(q, a, root); q.release(a);
+  const cp = saved(q, a, root); closeDocument(q, a); q.release(a);
   q.review({ task_id: a.task_id, asset_id: a.asset_id }, { valid: true, status: 'FAIL', sha256: cp.files.find(f => f.role === 'review').sha256, synthetic: true });
   const b = acquire(q, 'task-A', 'image-B'); await api.call('photoshop_command_execute', args('shared'), b);
   assert.equal(rows(q).length, 2); assert.equal(native.calls.filter(x => x.kind === 'command').length, 2);
@@ -205,15 +212,15 @@ test('restart turns durable running requests into UNKNOWN and keeps completed re
   assert.ok(q2.read().owner.unknown);
 });
 
-test('a mismatching live document fails before command_begin without dirtying or losing the saved checkpoint', async t => {
+test('a mismatching live document fails before command_begin without dirtying, losing the checkpoint, or leaving an unknown request', async t => {
   const { api, q, native, root } = fixture(t); const owner = acquire(q); bind(q, owner); saved(q, owner, root);
   native.state = stateFor(202); const before = q.read();
   await rejectCode(api.call('photoshop_command_execute', args(), owner), 'ACTIVE_DOCUMENT_CHANGED');
   assert.deepEqual(q.read(), before); assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
-  assert.equal(rows(q)[0].status, 'unknown'); assert.equal(api.busy, false);
+  assert.equal(rows(q).length, 0); assert.equal(api.busy, false);
 });
 
-test('preflight state awaits hold the broker mutex and block release without creating a mutation', async t => {
+test('preflight state awaits hold the broker mutex and block release without creating an unknown request', async t => {
   const { api, q, native } = fixture(t); const owner = acquire(q); bind(q, owner);
   const wait = deferred(); native.probe = () => wait.promise;
   const first = api.call('photoshop_command_execute', args(), owner);
@@ -223,7 +230,7 @@ test('preflight state awaits hold the broker mutex and block release without cre
   wait.reject(new QueueError('TIMEOUT', 'Synthetic preflight timeout.'));
   await rejectCode(first, 'TIMEOUT');
   assert.equal(q.read().owner.dirty, false); assert.equal(q.read().owner.unknown, null);
-  assert.equal(rows(q)[0].status, 'unknown');
+  assert.equal(rows(q).length, 0);
 });
 
 test('native exceptions preserve their original cause when queue settlement also fails', async t => {
@@ -280,10 +287,41 @@ test('safe document close preserves its current exported checkpoint and original
 
 test('document close without checkpoint or with changed saved bytes never reaches Photoshop', async t => {
   const { api, q, native, root } = fixture(t); const owner = acquire(q); bind(q, owner);
-  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.close', args: {} }, owner), 'CLOSE_CHECKPOINT_REQUIRED');
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.close', args: {}, idempotency_key: 'close-no-checkpoint' }, owner), 'CLOSE_CHECKPOINT_REQUIRED');
   const cp = saved(q, owner, root); writeFileSync(cp.files[0].path, 'changed externally');
-  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.close', args: {} }, owner), 'CHECKPOINT_CHANGED');
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.close', args: {}, idempotency_key: 'close-changed-checkpoint' }, owner), 'CHECKPOINT_CHANGED');
   assert.equal(native.calls.filter(x => x.kind === 'command').length, 0); assert.equal(q.read().owner.unknown, null);
+});
+
+test('allowed-root source open binds one clean document and can close without fake save evidence', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  const source = join(root, 'source.png'); writeFileSync(source, 'synthetic source');
+  native.command = async input => {
+    if (input.command_id === 'document.open_allowed') {
+      native.state = stateFor(202, true);
+      return result({ ok: true, status: 'completed', result: { result: { id: 202 } }, after: native.state });
+    }
+    assert.equal(input.command_id, 'document.close');
+    native.state = stateFor(null);
+    return result({ ok: true, status: 'completed', result: { result: { closedDocumentId: 202 } }, after: native.state });
+  };
+  await api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: source }, idempotency_key: 'open-source' }, owner);
+  assert.equal(q.read().owner.document_id, 202);
+  assert.equal(q.read().owner.opened_by_queue, true);
+  assert.equal(q.read().owner.dirty, false);
+  assert.equal(q.read().owner.mutation, 0);
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: source }, idempotency_key: 'open-source-again' }, owner), 'LEASE_DOCUMENT_ALREADY_BOUND');
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 1);
+  await api.call('photoshop_command_execute', { command_id: 'document.close', args: { save: false }, idempotency_key: 'close-clean-source' }, owner);
+  assert.equal(q.release(owner).status, 'NO_IMAGE_CHANGE');
+});
+
+test('state and preview reads never create an unknown queue command', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q); bind(q, owner, 101); native.state = stateFor(101, true);
+  const state = await api.call('photoshop_state_get', {}, owner);
+  const preview = await api.call('photoshop_preview_get', { max_edge: 64 }, owner);
+  assert.equal(state.isError, undefined); assert.equal(preview.isError, undefined);
+  assert.equal(q.read().owner.in_flight, null); assert.equal(q.read().owner.unknown, null);
 });
 
 test('serialized recovery probe must resolve before a recovered lease can release', async t => {
@@ -334,4 +372,228 @@ test('broker watchdog expires unused waiting tickets without touching Photoshop 
     assert.equal(native.calls.length, 0);
     assert.equal(q.db.prepare("SELECT COUNT(*) AS n FROM events WHERE kind='waiting_expired'").get().n, 1);
   } finally { await broker.close(); }
+});
+
+test('client discards fenced leases and a new enqueue never inherits stale credentials', () => {
+  const stale = { task_id: 'task-A', ticket: 7, epoch: 9, token: 'secret', device_id: 'old-device', broker_instance_id: 'old-broker' };
+  const fenced = retainLease(stale, 'photoshop_queue_release', result({ ok: false, code: 'STALE_LEASE' }, true));
+  assert.deepEqual(fenced, { task_id: 'task-A' });
+  const expired = retainLease(stale, 'photoshop_queue_acquire', result({ acquired: false, reason: 'TICKET_NOT_WAITING' }));
+  assert.deepEqual(expired, { task_id: 'task-A' });
+  const enqueued = retainLease(stale, 'photoshop_queue_enqueue', result({ task_id: 'task-A', ticket: 12 }));
+  assert.deepEqual(enqueued, { task_id: 'task-A', ticket: 12 });
+});
+
+test('a lost same-task client context is rebound, probed, and resumed without waiting for stale timeout', async t => {
+  const { api, q } = fixture(t); const owner = acquire(q);
+  const rebound = await api.control('acquire', { task_id: owner.task_id, ticket: owner.ticket }, {});
+  assert.equal(rebound.acquired, true); assert.equal(rebound.rebound, true);
+  assert.equal(rebound.probe.production_resumed, true); assert.ok(rebound.epoch > owner.epoch);
+  assert.equal(q.read().owner.recovering, false);
+  assert.throws(() => q.heartbeat(owner), e => ['STALE_LEASE', 'BROKER_INSTANCE_CHANGED'].includes(e.code));
+});
+
+test('a waiting head recovers an idle owner immediately after broker restart', async t => {
+  const { q, native } = fixture(t); native.state = stateFor(null); const old = acquire(q);
+  const waiting = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'Ready input.', ready: true });
+  q.recoverAfterRestart(); const api = new QueueService(q, native);
+  const next = await api.control('acquire', { task_id: 'task-B', ticket: waiting.ticket }, {});
+  assert.equal(next.acquired, true); assert.equal(next.recovery.released, true);
+  assert.equal(q.read().owner.task_id, 'task-B');
+  assert.throws(() => q.heartbeat(old), e => ['STALE_LEASE', 'BROKER_INSTANCE_CHANGED'].includes(e.code));
+});
+
+test('a disconnected bridge keeps the head ticket alive instead of creating a stranded owner', async t => {
+  const { api, q, native } = fixture(t);
+  const waiting = q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'Ready input.', ready: true });
+  native.bridge.status = () => ({ paired: true, connected: false, pluginInstanceId: 'bridge-1' });
+  const blocked = await api.control('acquire', { task_id: 'task-A', ticket: waiting.ticket }, {});
+  assert.equal(blocked.reason, 'HOST_PREFLIGHT_FAILED'); assert.equal(blocked.code, 'BRIDGE_DISCONNECTED');
+  assert.equal(q.read().owner, null); assert.equal(q.read().waiting[0].ticket, waiting.ticket);
+  native.bridge.status = () => ({ paired: true, connected: true, pluginInstanceId: 'bridge-1' });
+  native.state = stateFor(null);
+  assert.equal((await api.control('acquire', { task_id: 'task-A', ticket: waiting.ticket }, {})).acquired, true);
+});
+
+test('a changed bridge instance requires a live document barrier and then resumes the same lease', async t => {
+  const { api, q, native } = fixture(t);
+  native.bridge.status = () => ({ paired: true, connected: true, pluginInstanceId: 'bridge-1' });
+  const ticket = q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'Ready input.', ready: true });
+  const owner = q.acquire({ task_id: 'task-A', ticket: ticket.ticket }, { bridge_instance_id: 'bridge-1' }); bind(q, owner);
+  native.bridge.status = () => ({ paired: true, connected: true, pluginInstanceId: 'bridge-2' });
+  await rejectCode(api.call('photoshop_command_execute', args('after-reconnect'), owner), 'BRIDGE_SESSION_CHANGED');
+  assert.equal(q.read().owner.recovery_mode, 'BRIDGE_RECONNECT');
+  const probe = await api.control('probe', {}, owner); assert.equal(probe.production_resumed, true);
+  assert.equal((await api.call('photoshop_command_execute', args('after-reconnect'), owner)).structuredContent.ok, true);
+});
+
+test('atomic handoff exports both formats, checkpoints, closes, and releases without interleaving', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); bind(q, owner);
+  const edit = q.begin(owner, { command_id: 'synthetic.edit', mutates: true, expected_until: 2000 }); q.end(owner, edit.id, { documentId: 101 });
+  native.command = async input => {
+    if (input.command_id === 'document.close') { native.state = stateFor(null); return result({ ok: true, status: 'completed', result: { result: { closed: true } }, after: native.state }); }
+    const path = join(root, input.args.file_name); writeFileSync(path, `synthetic ${input.args.format}`);
+    return result({ ok: true, status: 'completed', result: { result: { path } }, after: native.state });
+  };
+  const handed = await api.control('handoff', { file_prefix: 'asset-A-safe', resume: 'Open the verified PSD and inspect the PNG before further edits.', close: true }, owner);
+  assert.equal(handed.handoff, true); assert.equal(handed.closed, true); assert.equal(handed.release.status, 'WAITING_REVIEW');
+  assert.equal(q.read().owner, null); assert.equal(handed.checkpoint.files.length, 2);
+  assert.equal(handed.checkpoint.device_id, q.deviceId);
+  assert.deepEqual(native.calls.filter(x => x.kind === 'command').map(x => x.args.command_id), ['document.export', 'document.export', 'document.close']);
+});
+
+test('clean handoff closes a queue-opened source and handoff can never release an open document', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q);
+  const open = q.begin(owner, { command_id: 'document.open_allowed', mutates: false, expected_until: 1050 });
+  q.end(owner, open.id, { documentId: 606, documentOpened: true }); native.state = stateFor(606, true);
+  await rejectCode(api.control('handoff', { resume: 'No changes.', close: false }, owner), 'HANDOFF_CLOSE_REQUIRED');
+  assert.throws(() => q.release(owner), error => error.code === 'DOCUMENT_STILL_OPEN');
+  native.command = async input => { assert.equal(input.command_id, 'document.close'); native.state = stateFor(null); return result({ ok: true, status: 'completed', result: { result: { closedDocumentId: 606 } }, after: native.state }); };
+  const handoff = await api.control('handoff', { resume: 'No changes.' }, owner);
+  assert.equal(handoff.closed, true); assert.equal(handoff.release.status, 'NO_IMAGE_CHANGE'); assert.equal(q.read().owner, null);
+});
+
+test('an unmanaged open Photoshop document keeps the waiting ticket instead of granting a dangerous lease', async t => {
+  const { api, q, native } = fixture(t); native.state = stateFor(999, true);
+  const waiting = q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'Ready input.', ready: true });
+  const blocked = await api.control('acquire', { task_id: 'task-A', ticket: waiting.ticket }, {});
+  assert.equal(blocked.acquired, false); assert.equal(blocked.code, 'UNMANAGED_DOCUMENT_OPEN');
+  assert.equal(q.read().owner, null); assert.equal(q.read().waiting[0].ticket, waiting.ticket);
+});
+
+test('ambiguous default-folder import and unkeyed or typed commands are rejected before Photoshop', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_default', args: { file_name: 'x.png' }, idempotency_key: 'unsafe-default' }, owner), 'OPEN_ALLOWED_REQUIRED');
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: 'C:\\missing.png' } }, owner), 'IDEMPOTENCY_KEY_REQUIRED');
+  await rejectCode(api.call('photoshop_document_open', { path: 'C:\\missing.png' }, owner), 'DURABLE_COMMAND_REQUIRED');
+  assert.equal(api.list().some(definition => definition.name === 'photoshop_document_open'), false);
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
+});
+
+test('experimental catalog commands are blocked before production dispatch', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  const get = native.catalog.get;
+  native.catalog.get = id => ({ ...get(id), status: id === 'document.open_allowed' ? 'experimental' : 'supported' });
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: 'C:\\missing.png' }, idempotency_key: 'experimental-open' }, owner), 'CAPABILITY_NOT_PRODUCTION_READY');
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
+});
+
+test('missing and outside-root source paths fail before a durable request or queue operation begins', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: join(root, 'missing.png') }, idempotency_key: 'missing-source' }, owner), 'SOURCE_FILE_NOT_FOUND');
+  const outsideRoot = mkdtempSync(join(scratch, 'outside-')); t.after(() => rmSync(outsideRoot, { recursive: true, force: true }));
+  const outside = join(outsideRoot, 'outside.png'); writeFileSync(outside, 'outside fixture');
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: outside }, idempotency_key: 'outside-source' }, owner), 'PATH_OUTSIDE_ROOT');
+  assert.equal(rows(q).length, 0); assert.equal(q.read().owner.in_flight, null); assert.equal(q.read().owner.unknown, null);
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 0);
+});
+
+test('a queue-opened source cannot be discarded after untracked unsaved changes', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  const source = join(root, 'source.png'); writeFileSync(source, 'synthetic source');
+  native.command = async input => {
+    assert.equal(input.command_id, 'document.open_allowed'); native.state = stateFor(202, false);
+    return result({ ok: true, status: 'completed', result: { result: { documentId: 202 } }, after: native.state });
+  };
+  await api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: source }, idempotency_key: 'open-unsaved-source' }, owner);
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.close', args: { save: false }, idempotency_key: 'unsafe-clean-close' }, owner), 'UNTRACKED_DOCUMENT_CHANGES');
+  assert.equal(native.calls.filter(x => x.kind === 'command').length, 1); assert.equal(q.read().owner.unknown, null);
+});
+
+test('document.create is a real mutation and cannot use the clean-source close exemption', async t => {
+  const { api, q, native } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  native.command = async input => { assert.equal(input.command_id, 'document.create'); native.state = stateFor(303, false); return result({ ok: true, status: 'completed', result: { result: { documentId: 303 } }, after: native.state }); };
+  await api.call('photoshop_command_execute', { command_id: 'document.create', args: { width: 10, height: 10 }, idempotency_key: 'create-document' }, owner);
+  assert.equal(q.read().owner.dirty, true); assert.equal(q.read().owner.mutation, 1);
+  await rejectCode(api.call('photoshop_command_execute', { command_id: 'document.close', args: { save: false }, idempotency_key: 'close-created' }, owner), 'CLOSE_CHECKPOINT_REQUIRED');
+});
+
+test('a definite native precondition failure restores the prior dirty checkpoint state', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); bind(q, owner); const checkpoint = saved(q, owner, root);
+  native.command = async () => result({ ok: false, status: 'failed', error: { code: 'PRECONDITION_FAILED' } }, true);
+  const failed = await api.call('photoshop_command_execute', { command_id: 'layer.rename', args: { marker: 'invalid' }, idempotency_key: 'definite-failure' }, owner);
+  assert.equal(failed.isError, true); assert.equal(q.read().owner.dirty, false); assert.equal(q.read().owner.mutation, 0);
+  assert.deepEqual(q.read().owner.checkpoint, checkpoint); assert.equal(q.read().owner.unknown, null);
+});
+
+test('an unknown source open is rebound by the serialized probe and then safely closed', async t => {
+  const { api, q, native, root } = fixture(t); const owner = acquire(q); native.state = stateFor(null);
+  const source = join(root, 'unknown-open.png'); writeFileSync(source, 'synthetic source');
+  native.command = async input => {
+    if (input.command_id === 'document.open_allowed') { native.state = stateFor(404, true); return result({ ok: false, status: 'failed', error: { code: 'HOST_ERROR' } }, true); }
+    assert.equal(input.command_id, 'document.close'); native.state = stateFor(null); return result({ ok: true, status: 'completed', result: { result: { closedDocumentId: 404 } }, after: native.state });
+  };
+  await api.call('photoshop_command_execute', { command_id: 'document.open_allowed', args: { path: source }, idempotency_key: 'unknown-open' }, owner);
+  assert.equal(q.read().owner.unknown.command_id, 'document.open_allowed');
+  const recovery = q.recoverClaim({ task_id: owner.task_id });
+  const context = { task_id: recovery.task_id, epoch: recovery.epoch, token: recovery.token };
+  const { state } = await api.control('probe', {}, context);
+  assert.equal(q.read().owner.document_id, 404); assert.equal(q.read().owner.opened_by_queue, true);
+  const released = await api.settleRecoveredLease(recovery, context, state);
+  assert.equal(released.status, 'NO_IMAGE_CHANGE'); assert.equal(q.read().owner, null);
+});
+
+test('stale clean queue-opened source is closed before the next waiting task acquires', async t => {
+  const { api, q, native, advance } = fixture(t); const owner = acquire(q);
+  const open = q.begin(owner, { command_id: 'document.open_allowed', mutates: false, expected_until: 1050 });
+  q.end(owner, open.id, { documentId: 505, documentOpened: true }); native.state = stateFor(505, true);
+  native.command = async input => { assert.equal(input.command_id, 'document.close'); native.state = stateFor(null); return result({ ok: true, status: 'completed', result: { result: { closedDocumentId: 505 } }, after: native.state }); };
+  const waiting = q.enqueue({ task_id: 'task-B', asset_id: 'image-B', description: 'Ready input.', ready: true }); advance(101);
+  const next = await api.control('acquire', { task_id: 'task-B', ticket: waiting.ticket }, {});
+  assert.equal(next.acquired, true); assert.equal(next.recovery.released, true);
+  assert.deepEqual(native.calls.filter(x => x.kind === 'command').map(x => x.args.command_id), ['document.close']);
+});
+
+test('CLI task binding overrides stale review identity and lease sessions recover atomically', t => {
+  const request = bindTaskRequest({ name: 'photoshop_queue_review', arguments: { task_id: 'stale-task', asset_id: 'asset-A', record: 'review.json' } }, 'real-task');
+  assert.equal(request.arguments.task_id, 'real-task');
+  const root = mkdtempSync(join(scratch, 'client-')); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const session = join(root, 'session.json'); saveLeaseSession(session, { task_id: 'real-task', ticket: 1 }); saveLeaseSession(session, { task_id: 'real-task', ticket: 2 });
+  assert.equal(loadLeaseSession(session, 'real-task').ticket, 2);
+  writeFileSync(session, '{broken'); assert.deepEqual(loadLeaseSession(session, 'real-task'), { task_id: 'real-task' });
+  assert.equal(readdirSync(root).some(name => name.startsWith('session.json.corrupt-')), true);
+  const lock = join(root, 'start.lock'); writeFileSync(lock, '{broken'); const mtime = statSync(lock).mtimeMs;
+  assert.equal(reclaimStartLock(lock, mtime + 2000), true); assert.equal(readdirSync(root).includes('start.lock'), false);
+});
+
+test('health reports the first actionable bridge blocker and device scope', t => {
+  const { api, q, native } = fixture(t);
+  native.bridge.status = () => ({ paired: true, connected: false, pluginInstanceId: 'bridge-offline' });
+  const health = api.health();
+  assert.equal(health.ok, false); assert.equal(health.blockers[0].code, 'BRIDGE_DISCONNECTED');
+  assert.equal(health.device_id, q.deviceId); assert.ok(health.next_action.includes('Photoshop'));
+});
+
+test('health blocks lease acquisition when a required catalog capability is not supported', t => {
+  const { api, native } = fixture(t);
+  const get = native.catalog.get;
+  native.catalog.get = id => ({ ...get(id), status: id === 'document.open_allowed' ? 'experimental' : 'supported' });
+  const health = api.health();
+  assert.equal(health.ok, false);
+  assert.ok(health.blockers.some(item => item.code === 'CAPABILITY_NOT_PRODUCTION_READY'));
+  assert.equal(health.runtime.production_commands.find(item => item.id === 'document.open_allowed').status, 'experimental');
+});
+
+test('resume check invalidates historical failure snapshots and selects the current queue action', () => {
+  const health = {
+    ok: true,
+    ready_for_new_lease: true,
+    runtime: { ok: true },
+    bridge: { paired: true, connected: true },
+    storage: { ok: true, writable: true },
+    blockers: [],
+    next_action: 'Enqueue prepared work and acquire.'
+  };
+  const idle = buildResumeCheck(health, { diagnosis: 'IDLE', waiting: [], owner: null }, 'task-A', {}, '2026-09-10T00:00:00.000Z');
+  assert.equal(idle.photoshop_operational, true);
+  assert.equal(idle.old_failure_snapshot_authoritative, false);
+  assert.equal(idle.resume_action, 'enqueue_prepared_work_then_acquire');
+
+  const waiting = buildResumeCheck({ ...health, ready_for_new_lease: false }, { diagnosis: 'BUSY', waiting: [{ task_id: 'task-A', ticket: 17 }], owner: { task_id: 'task-B' } }, 'task-A');
+  assert.equal(waiting.own_waiting_ticket, 17);
+  assert.equal(waiting.resume_action, 'acquire_existing_ticket');
+
+  const disconnected = buildResumeCheck({ ...health, ok: false, ready_for_new_lease: false, bridge: { paired: true, connected: false }, blockers: [{ code: 'BRIDGE_DISCONNECTED' }] }, { diagnosis: 'IDLE', waiting: [], owner: null }, 'task-A');
+  assert.equal(disconnected.photoshop_operational, false);
+  assert.equal(disconnected.resume_action, 'follow_current_health_next_action');
 });

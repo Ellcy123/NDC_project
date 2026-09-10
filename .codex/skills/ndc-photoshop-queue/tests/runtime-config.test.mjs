@@ -21,12 +21,12 @@ test('runtime binding follows a relocated Skill tree with spaces and Chinese cha
   mkdirSync(scripts, { recursive: true });
   copyFileSync(join(here, '..', 'scripts', 'runtime-binding.json'), join(scripts, 'runtime-binding.json'));
   mkdirSync(dirname(validator), { recursive: true }); writeFileSync(validator, '# fixture');
-  const runtime = join(local, 'PS_MCP', 'app', 'versions', '2.0.1-ndc1', 'runtime'); mkdirSync(runtime, { recursive: true });
+  const runtime = join(local, 'PS_MCP', 'app', 'versions', '2.0.1-ndc2', 'runtime'); mkdirSync(runtime, { recursive: true });
   for (const path of [engine, work]) mkdirSync(path, { recursive: true });
   const binding = loadRuntimeBinding({ LOCALAPPDATA: local, USERPROFILE: root, NDC_PLANNING_ROOT: planning, NDC_ENGINE_ROOT: engine, NDC_ART_WORK_ROOT: work }, { scriptDir: scripts });
   assert.equal(binding.runtime, runtime);
   assert.equal(binding.visual_validator, validator);
-  assert.deepEqual(binding.allowed_roots, [work, engine, planning]);
+  assert.deepEqual(binding.allowed_roots, [work, engine, planning, join(local, 'NDC', 'photoshop-queue', 'exports')]);
   assert.equal(binding.state_dir, join(local, 'NDC', 'photoshop-queue'));
 });
 
@@ -41,5 +41,20 @@ test('explicit runtime and queue paths override per-user defaults', t => {
   for (const path of [runtime, state, allowed]) mkdirSync(path, { recursive: true }); writeFileSync(validator, '# fixture');
   const binding = loadRuntimeBinding({ NDC_PS_MCP_RUNTIME: runtime, NDC_PS_QUEUE_STATE_DIR: state, NDC_PS_ALLOWED_ROOTS: allowed, NDC_STAGE_VISUAL_VALIDATOR: validator }, { scriptDir: scripts });
   assert.equal(binding.runtime, runtime); assert.equal(binding.state_dir, state);
-  assert.deepEqual(binding.allowed_roots, [allowed]); assert.equal(binding.visual_validator, validator);
+  assert.deepEqual(binding.allowed_roots, [allowed, join(state, 'exports')]); assert.equal(binding.visual_validator, validator);
+});
+
+test('queue export evidence is authorized without exposing private queue state', t => {
+  const root = mkdtempSync(join(scratch, 'export-root-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const scripts = join(root, 'skills', 'ndc-photoshop-queue', 'scripts');
+  mkdirSync(scripts, { recursive: true });
+  copyFileSync(join(here, '..', 'scripts', 'runtime-binding.json'), join(scripts, 'runtime-binding.json'));
+  const runtime = join(root, 'runtime'), state = join(root, 'state'), allowed = join(root, 'allowed');
+  const validator = join(root, 'validator.py');
+  for (const path of [runtime, state, allowed]) mkdirSync(path, { recursive: true });
+  writeFileSync(validator, '# fixture');
+  const binding = loadRuntimeBinding({ NDC_PS_MCP_RUNTIME: runtime, NDC_PS_QUEUE_STATE_DIR: state, NDC_PS_ALLOWED_ROOTS: allowed, NDC_STAGE_VISUAL_VALIDATOR: validator }, { scriptDir: scripts });
+  assert.equal(binding.allowed_roots.includes(state), false);
+  assert.equal(binding.allowed_roots.includes(join(state, 'exports')), true);
 });

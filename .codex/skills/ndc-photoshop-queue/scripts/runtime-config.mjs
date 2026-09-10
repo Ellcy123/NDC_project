@@ -13,7 +13,7 @@ function firstExisting(candidates) {
 }
 
 function absolute(value, label) {
-  if (!value || !isAbsolute(value)) throw new Error(`${label} must be an absolute path.`);
+  if (!value || !isAbsolute(value)) throw new Error(label + ' must be an absolute path.');
   return resolve(value);
 }
 
@@ -62,7 +62,10 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
     ? absolute(environment.NDC_PS_QUEUE_STATE_DIR, 'NDC_PS_QUEUE_STATE_DIR')
     : localAppData && join(localAppData, ...manifest.state.local_app_data_relative.split('/'));
   if (!stateDir) throw new Error('Cannot resolve the per-user queue state directory. Set NDC_PS_QUEUE_STATE_DIR.');
+  const port = Number(environment.NDC_PS_QUEUE_PORT || manifest.port);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('NDC_PS_QUEUE_PORT must be an integer from 1 to 65535.');
 
+  const exportRoot = join(stateDir, 'exports');
   return {
     schema: manifest.schema,
     version: manifest.version,
@@ -71,9 +74,12 @@ export function loadRuntimeBinding(environment = process.env, options = {}) {
     visual_validator: environment.NDC_STAGE_VISUAL_VALIDATOR
       ? absolute(environment.NDC_STAGE_VISUAL_VALIDATOR, 'NDC_STAGE_VISUAL_VALIDATOR')
       : siblingSkillScript(scriptDir, manifest.visual_validator.skill, manifest.visual_validator.script),
-    allowed_roots: [...new Set(configuredRoots)],
+    // Native document.export always writes beneath the queue-owned export
+    // folder. Authorize only that output subtree, never the state directory
+    // that also contains client keys, sessions, and the queue database.
+    allowed_roots: [...new Set([...configuredRoots, exportRoot])],
     state_dir: resolve(stateDir),
-    port: Number(environment.NDC_PS_QUEUE_PORT || manifest.port),
+    port,
     hashes: manifest.hashes,
   };
 }

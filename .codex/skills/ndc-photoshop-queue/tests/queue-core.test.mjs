@@ -52,6 +52,10 @@ function saved(q, owner, root, doc = 101) {
   const spec = { files, document_id: doc, resume: 'Reopen this PSD; inspect the frozen review PNG.' };
   return { spec, checkpoint: q.checkpoint(owner, spec) };
 }
+function closeDocument(q, owner) {
+  const command = q.begin(owner, { command_id: 'document.close', mutates: false, resource_cleanup: true, expected_until: 1050 });
+  q.end(owner, command.id, { applied: true, documentId: q.read().owner.document_id });
+}
 function barrier(q, owner, doc = 101) { return q.recoveryBarrier(owner, { ok: true, document_id: doc, synthetic: true }); }
 
 test('constructor resolves multiple roots without passing map indices to path.resolve', t => {
@@ -117,7 +121,7 @@ test('concurrent clients can claim a ticket only once', async t => {
 test('a released snapshot waits for its own review while the next task can use Photoshop', t => {
   const { q, root } = fixture(t); const a = lease(q);
   const b = ticket(q, 'task-B', 'image-B');
-  operation(q, a); saved(q, a, root);
+  operation(q, a); saved(q, a, root); closeDocument(q, a);
   assert.equal(q.release(a).status, 'WAITING_REVIEW');
   code('CURRENT_IMAGE_UNREVIEWED', () => ticket(q, 'task-A', 'another-image'));
   assert.equal(q.acquire({ task_id: 'task-B', ticket: b.ticket }).acquired, true);
@@ -126,7 +130,7 @@ test('a released snapshot waits for its own review while the next task can use P
 
 test('recorded FAIL permits an independent image without pretending the failed image passed', t => {
   const { q, root } = fixture(t); const a = lease(q);
-  operation(q, a); const { checkpoint } = saved(q, a, root); q.release(a);
+  operation(q, a); const { checkpoint } = saved(q, a, root); closeDocument(q, a); q.release(a);
   const reviewFile = checkpoint.files.find(f => f.role === 'review');
   q.review({ task_id: 'task-A', asset_id: 'image-A' }, { valid: true, status: 'FAIL', sha256: reviewFile.sha256, synthetic: true });
   assert.equal(ticket(q, 'task-A', 'independent-image').asset_id, 'independent-image');
@@ -207,7 +211,7 @@ test('recovered dirty output and its review remain assigned to the original prod
   const { q, advance, root } = fixture(t); const a = lease(q);
   operation(q, a); advance(101); const r = q.recoverClaim({ task_id: 'recovery' }); barrier(q, r);
   code('ONE_REQUEST_PER_TASK', () => ticket(q, 'task-A', 'another-image'));
-  saved(q, r, root); const result = q.release(r);
+  saved(q, r, root); closeDocument(q, r); const result = q.release(r);
   assert.equal(result.task_id, 'task-A'); assert.equal(result.recovered_by, 'recovery');
   assert.equal(q.read().reviews['task-A'].status, 'WAITING_REVIEW');
   assert.equal(q.read().reviews.recovery, undefined);
@@ -222,7 +226,7 @@ test('checkpoint requires actual exports from the latest mutation, with both PSD
   code('UNVERIFIED_SAVE', () => q.checkpoint(a, spec));
   const only = exportFile(q, a, root, 'working.psd');
   code('SAVE_REQUIRED', () => q.checkpoint(a, { ...spec, files: [only] }));
-  saved(q, a, root);
+  saved(q, a, root); closeDocument(q, a);
   assert.equal(q.release(a).status, 'WAITING_REVIEW');
 });
 
@@ -296,7 +300,7 @@ test('manual request preserves the in-flight operation, then permits read/export
   q.end(a, command.id, { documentId: 101 });
   code('MANUAL_PENDING', () => q.begin(a, { mutates: true }));
   assert.equal(q.read().owner.in_flight, null);
-  operation(q, a, { mutates: false }); saved(q, a, root); q.release(a);
+  operation(q, a, { mutates: false }); saved(q, a, root); closeDocument(q, a); q.release(a);
   assert.equal(q.read().external.status, 'ACTIVE');
   assert.equal(q.diagnose().diagnosis, 'EXTERNAL_USE');
   assert.equal(q.acquire({ task_id: 'task-B', ticket: b.ticket }).reason, 'EXTERNAL_USE');
@@ -430,4 +434,34 @@ test('acquire polling renews waiting during manual use without ending the manual
   advance(200000); const pending = q.acquire({ task_id: 'task-A', ticket: a.ticket });
   assert.equal(pending.reason, 'EXTERNAL_USE'); advance(200000);
   assert.equal(q.expireWaiting().expired.length, 0); assert.equal(q.read().external.status, 'ACTIVE');
+});
+
+test('enqueue distinguishes missing, overlong identifier, and overlong description errors', t => {
+  const { q } = fixture(t);
+  code('INVALID_REQUEST', () => q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: '', ready: true }));
+  code('IDENTIFIER_TOO_LONG', () => q.enqueue({ task_id: 'x'.repeat(251), asset_id: 'image-A', description: 'Ready.', ready: true }));
+  code('DESCRIPTION_TOO_LONG', () => q.enqueue({ task_id: 'task-A', asset_id: 'image-A', description: 'x'.repeat(251), ready: true }));
+});
+
+test('a copied queue cannot authenticate or auto-recover a lease owned by another computer', t => {
+  const root = mkdtempSync(join(scratch, 'device-')), path = join(root, 'queue.sqlite');
+  const a = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-A', brokerInstanceId: 'broker-A' });
+  const item = ticket(a), owner = a.acquire({ task_id: 'task-A', ticket: item.ticket });
+  const b = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-B', brokerInstanceId: 'broker-B' });
+  t.after(() => { a.close(); b.close(); rmSync(root, { recursive: true, force: true }); });
+  code('FOREIGN_DEVICE_LEASE', () => b.heartbeat(owner));
+  code('DEVICE_HANDOFF_REQUIRED', () => b.recoverClaim({ task_id: 'task-B' }));
+  assert.equal(b.read().owner.device_id, 'device-A');
+});
+
+test('a broker restart fences the old process but permits immediate same-device client rebind', t => {
+  const root = mkdtempSync(join(scratch, 'broker-instance-')), path = join(root, 'queue.sqlite');
+  const first = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-A', brokerInstanceId: 'broker-A' });
+  const item = ticket(first), owner = first.acquire({ task_id: 'task-A', ticket: item.ticket });
+  const restarted = new PhotoshopQueue(path, { roots: [root], deviceId: 'device-A', brokerInstanceId: 'broker-B' }); restarted.recoverAfterRestart();
+  t.after(() => { first.close(); restarted.close(); rmSync(root, { recursive: true, force: true }); });
+  code('BROKER_INSTANCE_CHANGED', () => restarted.heartbeat(owner));
+  const rebound = restarted.rebind({ task_id: owner.task_id, ticket: owner.ticket });
+  assert.ok(rebound.epoch > owner.epoch); assert.equal(rebound.broker_instance_id, 'broker-B');
+  barrier(restarted, rebound); assert.equal(restarted.read().owner.recovering, false);
 });

@@ -73,6 +73,14 @@ class JobAddendumTests(unittest.TestCase):
         self.source.write_text('Unreviewed changed historical source.')
         self.assertTrue(any('history source bytes changed' in error for error in w.validate(self.path, 1)))
 
+    def test_addendum_remains_valid_after_its_bound_scene_passes(self):
+        self.add()
+        batch = w.read(self.path)
+        batch['artifacts'][self.artifact]['status'] = 'PASS'
+        w.write_json(self.path, batch)
+        errors = w.validate(self.path, 1)
+        self.assertFalse(any('job addendum must bind' in error for error in errors))
+
     def test_addendum_cannot_rebind_a_passed_or_existing_job_artifact(self):
         batch = w.read(self.path)
         batch['artifacts'][self.artifact]['status'] = 'PASS'
