@@ -2,19 +2,19 @@
 
 For repairable whitebox defects, follow [PS-first repair](ps-first-repair.md) and [whitebox repair](whitebox-photoshop-fallback.md) from the first useful candidate. PS MCP repair may precede acceptance, including process-only separation of complete mannequin components. After repair, rerun the same current-pose scale, support, UI, visual and production gates described here; no filename or PS export grants readiness. Record up to three complete PS repair/review rounds separately from model calls; do not consume all three model attempts merely to enter PS.
 
-Use the tools in `scripts/scene_staging_tools.py` within the relevant workflow milestone. All authored JSON is strict JSON. Runtime reports and diagnostic previews stay under `D:/Codex/NDC/工作过程文件`. Within an authorized task, assets that pass all current visual and technical gates can be archived formally without an additional routine user-approval wait.
+Use the tools in `scripts/scene_staging_tools.py` within the relevant workflow milestone. All authored JSON is strict JSON. First resolve `{PLANNING_ROOT}`, `{ENGINE_ROOT}`, `{WORK_ROOT}` with `ndc_art.py paths` and `{SKILL_ROOT}` with `ndc_art.py skill ndc-character-scene-integration`; placeholders below must be replaced with those results before execution. Runtime reports and diagnostic previews stay in a dedicated child of `{WORK_ROOT}`. Bundled UI references come from `{SKILL_ROOT}/assets/ui/` and are verified against its manifest. Within an authorized task, assets that pass all current visual and technical gates can be archived formally without an additional routine user-approval wait.
 
 ## 1. Extract the engineering timeline
 
 ```powershell
-python scripts/scene_staging_tools.py extract-timeline `
-  --talk-table D:\PMH\ndc\NDC\Assets\table\Talk.json `
-  --npc-loop-table D:\PMH\ndc\NDC\Assets\table\NPCLoopData.json `
-  --scene-config-table D:\PMH\ndc\NDC\Assets\table\SceneConfig.json `
+python -B scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py -- extract-timeline `
+  --talk-table "{ENGINE_ROOT}/Assets/table/Talk.json" `
+  --npc-loop-table "{ENGINE_ROOT}/Assets/table/NPCLoopData.json" `
+  --scene-config-table "{ENGINE_ROOT}/Assets/table/SceneConfig.json" `
   --scene-id 1003 `
   --start-talk-id 106005001 `
-  --asset-root D:\PMH\ndc\NDC\Assets\Resources `
-  --output D:\Codex\NDC\工作过程文件\scene-name\timeline-engine.json
+  --asset-root "{ENGINE_ROOT}/Assets/Resources" `
+  --output "{WORK_ROOT}/jobs/scene-name/payload/timeline-engine.json"
 ```
 
 Use `--scene-config-table` plus `--scene-id` to derive the initial cast automatically. Add a repeated `--initial-loop-id` only for a verified actor not represented by that scene configuration. The report records source hashes, cast before/after every node, frozen actors, enter/exit events, asset paths, and issues.
@@ -342,7 +342,7 @@ The browser editor is not the main authoring path. Codex creates a blocking requ
   "gazePoint": [1550, 610],
   "actionTarget": [1510, 820],
   "uiSide": "left",
-  "uiReferences": {"left": "D:\\PMH\\工作\\对话构图参考-左.png"},
+  "uiReferences": {"left": "{SKILL_ROOT}/assets/ui/dialogue-composition-left.png"},
   "performance": {
     "action": "reads the chart while concealing concern",
     "gazeTarget": {"type": "scene-object", "id": "chart-01"},
@@ -457,8 +457,8 @@ This geometric report does not infer eye direction automatically; it prevents a 
   "scene": "scene.png",
   "sceneSize": [2560, 1600],
   "uiReferences": {
-    "left": "D:\\PMH\\工作\\对话构图参考-左.png",
-    "right": "D:\\PMH\\工作\\对话构图参考-右.png"
+    "left": "{SKILL_ROOT}/assets/ui/dialogue-composition-left.png",
+    "right": "{SKILL_ROOT}/assets/ui/dialogue-composition-right.png"
   },
   "maskThreshold": {"backgroundRgb": [255, 255, 255], "tolerance": 12},
   "limits": {"maxHeadOcclusionRatio": 0.0, "maxActionOcclusionRatio": 0.20},
@@ -592,8 +592,8 @@ After each simultaneous-cast whitebox snapshot is rendered, create:
   "schema": "ndc-timeline-board/v1",
   "sceneSize": [2560, 1600],
   "uiReferences": {
-    "left": "D:\\PMH\\工作\\对话构图参考-左.png",
-    "right": "D:\\PMH\\工作\\对话构图参考-右.png"
+    "left": "{SKILL_ROOT}/assets/ui/dialogue-composition-left.png",
+    "right": "{SKILL_ROOT}/assets/ui/dialogue-composition-right.png"
   },
   "snapshots": [
     {"id": "beat-01", "image": "whitebox-beat-01.png", "uiSide": "left", "caption": "Nurse holds chart before doctor enters"},
@@ -619,13 +619,13 @@ The editor is a reproducible inspection/fine-adjustment aid, not the primary wor
 Inventory the current read-only NPC/background assets and actual UI shapes without treating them as blanket artistic approvals:
 
 ```powershell
-python scripts/scene_staging_tools.py audit-project-assets `
-  --npc-loop-table D:\PMH\ndc\NDC\Assets\table\NPCLoopData.json `
-  --asset-root D:\PMH\ndc\NDC\Assets\Resources `
-  --background-root D:\PMH\ndc\NDC\Assets\Resources\Art\Scene\Backgrounds `
-  --ui-left D:\PMH\工作\对话构图参考-左.png `
-  --ui-right D:\PMH\工作\对话构图参考-右.png `
-  --output D:\Codex\NDC\工作过程文件\人物入景回归\project-baseline.json
+python -B scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration scene_staging_tools.py -- audit-project-assets `
+  --npc-loop-table "{ENGINE_ROOT}/Assets/table/NPCLoopData.json" `
+  --asset-root "{ENGINE_ROOT}/Assets/Resources" `
+  --background-root "{ENGINE_ROOT}/Assets/Resources/Art/Scene/Backgrounds" `
+  --ui-left "{SKILL_ROOT}/assets/ui/dialogue-composition-left.png" `
+  --ui-right "{SKILL_ROOT}/assets/ui/dialogue-composition-right.png" `
+  --output "{WORK_ROOT}/jobs/character-scene-regression/payload/project-baseline.json"
 ```
 
 The report records every configured idle/active path, coordinate, existence, canvas, alpha/corner state, hash, background inventory, and UI obstruction extent. Use `--strict` to fail missing state assets or idle/active canvas mismatches.

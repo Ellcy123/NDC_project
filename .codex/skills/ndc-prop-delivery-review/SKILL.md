@@ -14,6 +14,8 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 
 这是第五阶段。读[批次协议](../ndc-prop-requirements/references/batch-contract.md)、[审核与复用](references/review-contract.md)及[交付细则](references/production-details.md)。命名、角色和目录仍遵从[交付合同](../ndc-scene-evidence-placement/references/delivery-contract.md)。
 
+跨设备路径先由 `ndc_art.py paths` 解析：项目批准资产与工程运行时分别从 `{PLANNING_ROOT}` / `{ENGINE_ROOT}` 的索引和相对路径读取，新复查与 provisional 包只写入 `{WORK_ROOT}` 的受管 job。Skill 自有脚本、规范和资源从当前 Skill 根相对解析。占位符不是字面路径，任何配置漂移或缺失都不得用维护机盘符补位。
+
 本阶段同时收口 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW`，但不把它转为正式 PASS。只要上游 Photoshop MCP 已实际导出可打开的非生成 RGBA，即使提取不完整或低置信度，也必须汇总为 `工作过程文件` 下独立“待用户审核交付包”：包含提取前原图及 SHA-256、尝试 RGBA、可恢复 PSD、蒙版／路径／动作证据、Alpha 多底预览、置信度／逐区缺陷，以及继承该状态的场景、Big/Icon、Map、XY、重建和联组结果。缺少下游角色时先补做可执行 provisional 派生，不留空。旧 provisional 不覆盖；每次修正建立新版本。
 
 该审核包是用户可审核的交付材料，不进入 `最终交付`，不满足 stage 5、formal-release 或最终视觉记录 PASS，也不得覆盖已批准资产。正式统计同时报告 `formal_pass` 与 `provisional_review_delivery`，不能把后者算作正式覆盖。用户审核、人工修正或后续自动提取通过后，从保留原图或明确选定版本建立新修订，重跑受影响 Alpha、场景、阴影、热区、XY、重建、联组和正式发布门禁。道具语义、身份、结构、文字、承托或取得逻辑失败不适用本例外。

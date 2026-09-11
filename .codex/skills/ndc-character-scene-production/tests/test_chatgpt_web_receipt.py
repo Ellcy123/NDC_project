@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from validate_chatgpt_web_receipt import validate
 
 
-ROOT = Path(r"D:\Codex\NDC\工作过程文件")
 PNG = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")
 
 
@@ -21,7 +20,7 @@ def digest(path: Path) -> str:
 
 class ChatGptWebReceiptTests(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(prefix="chatgpt-web-receipt-", dir=ROOT)
+        self.temp = tempfile.TemporaryDirectory(prefix="chatgpt-web-receipt-")
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         prompt = self.root / "prompt.txt"

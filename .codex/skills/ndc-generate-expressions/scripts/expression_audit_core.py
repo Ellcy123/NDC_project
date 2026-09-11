@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -684,16 +685,15 @@ def save_mask(mask: np.ndarray, path: Path) -> None:
 
 
 def _font(size: int = 18) -> ImageFont.ImageFont:
-    candidates = [
-        Path("C:/Windows/Fonts/msyh.ttc"),
-        Path("C:/Windows/Fonts/arial.ttf"),
-    ]
+    system_root = os.environ.get("WINDIR") or os.environ.get("SystemRoot")
+    candidates = ([Path(system_root) / "Fonts" / name for name in ("msyh.ttc", "arial.ttf")]
+                  if system_root else [])
+    candidates.extend(("msyh.ttc", "arial.ttf"))
     for candidate in candidates:
-        if candidate.is_file():
-            try:
-                return ImageFont.truetype(str(candidate), size=size)
-            except OSError:
-                pass
+        try:
+            return ImageFont.truetype(str(candidate), size=size)
+        except OSError:
+            pass
     return ImageFont.load_default()
 
 

@@ -19,7 +19,7 @@ description: Perform bounded NDC raster cleanup, replacement and structural repa
 
 1. 查验当前资产及批准来源，确认本次是否已有满足同一修改目标的已接受输出。已有结果按 [production-record.md](references/production-record.md) 检查当前字节、源图/父图、用途、要求和拒收状态；只有哈希相同不足以复用。明确要求重新修改时执行当前任务。
 2. 锁定原始源图、实际修改目标、保护元素和合法编辑范围。需求可由当前授权及项目材料可靠确定时直接进入制作，不新增前后图或逐候选确认。
-3. 在项目 `工作过程文件` 下建立或恢复同一作业目录；候选、蒙版、提示、manifest、审核和失败原因长期留在此处，不在系统临时目录开展项目生产，不随发布删除历史。
+3. 用 `ndc_art.py paths` 解析 `{WORK_ROOT}`，在其受管 job 下建立或恢复同一作业目录；候选、蒙版、提示、manifest、审核和失败原因长期留在此处，不在系统临时目录开展项目生产，不随发布删除历史。源项目资产从 `{PLANNING_ROOT}` / `{ENGINE_ROOT}` 的索引和相对路径解析；Skill 自有脚本与参考从当前 Skill 根相对解析，不使用固定盘符。
 4. 使用 [scripts/coordinate_patch.py](scripts/coordinate_patch.py) 及其现有 manifest/命令；详见 [坐标作业操作](references/coordinate-job-mechanics.md)。旧 `scan-seam` / `repair-vertical-seam` 仅兼容旧记录，不用于新作业。
 
 ## 预算与故障处理

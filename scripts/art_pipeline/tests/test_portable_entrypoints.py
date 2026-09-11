@@ -31,7 +31,9 @@ class PortableEntrypoints(unittest.TestCase):
         self.caller.mkdir()
         self.environment = {key: value for key, value in os.environ.items()
                             if key not in {"NDC_PLANNING_ROOT", "NDC_ENGINE_ROOT",
-                                           "NDC_ART_WORK_ROOT", "NDC_ART_PATHS_CONFIG",
+                                           "NDC_ART_WORK_ROOT", "NDC_ART_DELIVERY_ROOT",
+                                           "NDC_ART_PATHS_CONFIG",
+                                           "NDC_ART_ALLOW_CONFIG_ROOT_OVERRIDE",
                                            "PYTHONUTF8", "PYTHONIOENCODING"}}
         for root in (self.planning, self.engine):
             (root / "scripts/art_pipeline").mkdir(parents=True)
@@ -65,7 +67,8 @@ class PortableEntrypoints(unittest.TestCase):
                 "print(json.dumps({'cwd':str(Path.cwd()),'args':sys.argv[1:],"
                 "'planning':os.environ['NDC_PLANNING_ROOT'],"
                 "'engine':os.environ['NDC_ENGINE_ROOT'],"
-                "'work':os.environ['NDC_ART_WORK_ROOT']}))\n", encoding="utf-8")
+                "'work':os.environ['NDC_ART_WORK_ROOT'],"
+                "'delivery':os.environ['NDC_ART_DELIVERY_ROOT']}))\n", encoding="utf-8")
             registry["skills"].append({"name": name, "owner_scope": owner,
                                        "path": ".codex/skills/" + name, "status": "centralized"})
         self.write(rules / "skill_sources.json", registry)
@@ -83,9 +86,9 @@ class PortableEntrypoints(unittest.TestCase):
         self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
         return result
 
-    def configure(self):
+    def configure(self, *extra):
         return self.call("engine", "configure", "--planning-root", self.planning,
-                         "--engine-root", self.engine, "--work-root", self.work)
+                         "--engine-root", self.engine, "--work-root", self.work, *extra)
 
     def test_real_configuration_resolution_and_child_execution_after_relocation(self):
         self.configure()
@@ -94,6 +97,8 @@ class PortableEntrypoints(unittest.TestCase):
             self.assertEqual(Path(paths["planning_root"]), self.planning)
             self.assertEqual(Path(paths["engine_root"]), self.engine)
             self.assertEqual(Path(paths["work_root"]), self.work)
+            self.assertEqual(Path(paths["delivery_root"]), self.planning.parent / "最终交付")
+            self.assertTrue(Path(paths["delivery_root"]).is_dir())
             selected = json.loads(self.call(owner, "skill", "engine-probe").stdout)
             self.assertEqual(selected["owner"], "engine")
             self.assertEqual(Path(selected["path"]), self.engine / ".codex/skills/engine-probe/SKILL.md")
@@ -103,6 +108,40 @@ class PortableEntrypoints(unittest.TestCase):
             self.assertEqual(Path(child["engine"]), self.engine)
             self.assertEqual(Path(child["planning"]), self.planning)
             self.assertEqual(Path(child["work"]), self.work)
+            self.assertEqual(Path(child["delivery"]), self.planning.parent / "最终交付")
+
+    def test_first_use_preflight_requires_user_designated_asset_libraries(self):
+        self.configure()
+        for group in ("expressions", "style-check"):
+            result = json.loads(self.call("planning", "preflight", group).stdout)
+            self.assertEqual(result["status"], "missing_user_designation")
+            self.assertTrue(result["missing"])
+            self.assertIn("需要用户指定", result["message"])
+
+    def test_device_local_sources_are_saved_and_pass_preflight(self):
+        sources = {name: self.root / name for name in (
+            "unit3 portraits", "unit1 expressions", "unit2 expressions",
+            "general cards", "general portraits", "black white red cards")}
+        for path in sources.values():
+            path.mkdir()
+        self.configure(
+            "--unit3-portrait-root", sources["unit3 portraits"],
+            "--unit1-expression-root", sources["unit1 expressions"],
+            "--unit2-expression-root", sources["unit2 expressions"],
+            "--general-character-card-style-root", sources["general cards"],
+            "--general-portrait-style-root", sources["general portraits"],
+            "--black-white-red-style-root", sources["black white red cards"],
+        )
+        for group in ("expressions", "style-check"):
+            result = json.loads(self.call("engine", "preflight", group).stdout)
+            self.assertEqual(result["status"], "ready")
+            self.assertEqual(len(result["sources"]), 3)
+
+    def test_custom_delivery_root_must_keep_final_folder_name(self):
+        result = self.call("engine", "configure", "--planning-root", self.planning,
+                           "--engine-root", self.engine, "--work-root", self.work,
+                           "--delivery-root", self.root / "renamed-delivery", expected=1)
+        self.assertIn("最终交付", result.stderr)
 
     def test_missing_configuration_reports_actionable_error_without_guessing(self):
         for owner in ("planning", "engine"):
@@ -120,10 +159,18 @@ class PortableEntrypoints(unittest.TestCase):
     def test_environment_overrides_machine_configuration(self):
         self.configure()
         environment = dict(self.environment, NDC_ENGINE_ROOT=str(self.root / "override engine"),
-                           NDC_ART_WORK_ROOT=str(self.root / "override scratch"))
+                           NDC_ART_WORK_ROOT=str(self.root / "override scratch"),
+                           NDC_ART_ALLOW_CONFIG_ROOT_OVERRIDE="1")
         paths = json.loads(self.call("planning", "paths", environment=environment).stdout)
         self.assertEqual(paths["engine_root"], environment["NDC_ENGINE_ROOT"])
         self.assertEqual(paths["work_root"], environment["NDC_ART_WORK_ROOT"])
+
+    def test_environment_config_drift_is_rejected_without_explicit_override(self):
+        self.configure()
+        environment = dict(self.environment, NDC_ENGINE_ROOT=str(self.root / "other engine"))
+        result = self.call("planning", "paths", expected=1, environment=environment)
+        self.assertIn("configuration disagrees", result.stderr)
+        self.assertIn("NDC_ART_ALLOW_CONFIG_ROOT_OVERRIDE", result.stderr)
 
     def test_machine_files_are_ignored_while_scripts_and_examples_are_visible_to_git(self):
         self.configure()
@@ -165,7 +212,10 @@ class PortableEntrypoints(unittest.TestCase):
                       "package", *arguments)
         self.assertFalse(forbidden.exists())
         self.call("engine", "workspace", "ready", "--job", created["job"])
-        self.assertEqual(json.loads((output.parent / "job.json").read_text())["state"], "waiting-for-user")
+        self.assertEqual(
+            json.loads((output.parent / "job.json").read_text(encoding="utf-8"))["state"],
+            "waiting-for-user",
+        )
         self.call("engine", "tool", "stage", "--help")
 
 

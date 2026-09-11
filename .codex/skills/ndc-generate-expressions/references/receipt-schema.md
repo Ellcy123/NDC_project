@@ -15,7 +15,7 @@ Schema 12 remains manual-only. Schema 13 permits a mix of unchanged manual rows 
 
 All original artistic, guide, composition, cross-profile and set gates remain unchanged. PS file signatures and operation logs provide provenance checks, not visual approval. Run the existing stage validator independently for each actual art stage before the receipt validator. Cross-profile hash uses the producer's `native_source_sha256` key (older `native_rgba_sha256` and `shared_native_rgba_sha256` remain accepted).
 
-Create one receipt per character and profile. Formal delivery is fail-closed.
+Create one receipt per character and profile. Formal delivery is fail-closed. JSON examples use `{WORK_ROOT}` only as a documentation placeholder; resolve it through `ndc_art.py paths` and write the resulting absolute path into a real receipt.
 
 The `portrait_source.portrait_completion_used=false` invariant describes this Skill's operations. An accepted manually completed upstream source is allowed; preserve its source-before/source-return hashes, human confirmation and E1 acceptance in the separate production record. Do not label that source operation as `manual_alpha_return` or claim Codex completed it. Existing schema 12/13 receipt fields and Alpha provenance remain unchanged.
 
@@ -29,20 +29,20 @@ The `portrait_source.portrait_completion_used=false` invariant describes this Sk
   "profile": "transparent",
   "profile_spec": {"canvas": [1164, 916], "mode": "RGBA", "background": "alpha_0"},
   "portrait_source": {
-    "path": "D:/path/approved-portrait.png",
+    "path": "{WORK_ROOT}/jobs/example/payload/approved-portrait.png",
     "sha256": "64-lowercase-hex",
     "authority": "USER_CONFIRMED_COMPLETED_PORTRAIT",
     "portrait_completion_used": false,
     "status": "PASS"
   },
-  "expression_manifest": "D:/path/expression-job.json",
-  "approved_asset_census": "D:/path/approved-expression-census.json",
+  "expression_manifest": "{WORK_ROOT}/jobs/example/payload/expression-job.json",
+  "approved_asset_census": "{WORK_ROOT}/jobs/example/payload/approved-expression-census.json",
   "expressions": [
     {
       "expression_id": "calm",
-      "profile_asset": "D:/path/transparent/character_calm.png",
+      "profile_asset": "{WORK_ROOT}/jobs/example/payload/transparent/character_calm.png",
       "profile_asset_sha256": "64-lowercase-hex",
-      "native_rgba": "D:/path/native/character_calm.png",
+      "native_rgba": "{WORK_ROOT}/jobs/example/payload/native/character_calm.png",
       "native_rgba_sha256": "64-lowercase-hex",
       "manual_alpha_return": {
         "method": "USER_RETURNED_MANUAL_BACKGROUND_PROCESSING",
@@ -51,15 +51,15 @@ The `portrait_source.portrait_completion_used=false` invariant describes this Sk
         "codex_background_removal_used": false,
         "user_returned": true,
         "handoff_source": {
-          "path": "D:/path/pre-alpha/character_calm.png",
+          "path": "{WORK_ROOT}/jobs/example/payload/pre-alpha/character_calm.png",
           "sha256": "64-lowercase-hex"
         },
         "returned_native": {
-          "path": "D:/path/native/character_calm.png",
+          "path": "{WORK_ROOT}/jobs/example/payload/native/character_calm.png",
           "sha256": "64-lowercase-hex"
         },
-        "handoff_manifest": "D:/path/pre-alpha/handoff-manifest.json",
-        "edge_review": "D:/path/qa/alpha-edge-review.json",
+        "handoff_manifest": "{WORK_ROOT}/jobs/example/payload/pre-alpha/handoff-manifest.json",
+        "edge_review": "{WORK_ROOT}/jobs/example/payload/qa/alpha-edge-review.json",
         "protected_white_status": "PASS",
         "white_fringe_status": "PASS",
         "formal_status": "PASS"
@@ -72,9 +72,9 @@ The `portrait_source.portrait_completion_used=false` invariant describes this Sk
       "detail_lighting_status": "PASS",
       "expression_status": "PASS",
       "profile_status": "PASS",
-      "cross_profile_source_audit": "D:/path/qa/cross-profile.json",
-      "profile_guide_review": "D:/path/qa/profile-guide.json",
-      "mechanical_audit": "D:/path/qa/mechanical.json"
+      "cross_profile_source_audit": "{WORK_ROOT}/jobs/example/payload/qa/cross-profile.json",
+      "profile_guide_review": "{WORK_ROOT}/jobs/example/payload/qa/profile-guide.json",
+      "mechanical_audit": "{WORK_ROOT}/jobs/example/payload/qa/mechanical.json"
     }
   ],
   "continuity_review": {

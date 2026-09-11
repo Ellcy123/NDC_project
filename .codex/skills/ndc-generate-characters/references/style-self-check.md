@@ -2,11 +2,11 @@
 
 ## 自检库
 
-- 通用角色卡：`D:\Codex\NDC\NDC风格化角色工作流\通用风格自检库`
-- 通用肖像：`D:\Codex\NDC\NDC风格化角色工作流\通用风格肖像自检库`
-- 黑白红角色卡：`D:\Codex\NDC\NDC风格化角色工作流\黑白红风格自检库`
+- 通用角色卡：设备配置 `style_check_libraries.general_character_card`
+- 通用肖像：设备配置 `style_check_libraries.general_portrait`
+- 黑白红角色卡：设备配置 `style_check_libraries.black_white_red_character_card`
 
-自检库是最后出库的风格基准。以整组库反复出现的共同特征为准，不得只挑一张与待审图最相似的样本。
+先运行 `ndc_art.py preflight style-check`。三个目录都是当前设备必须由用户指定的完整自检库；任一缺失或不可访问时报告 `MISSING_LOCAL_STYLE_CHECK_LIBRARIES`，列出缺项并提醒用户指定，不得猜测位置、静默改查项目索引，或用 Skill `assets/` 中的单张图替代。设备路径只保存在被 Git 忽略的本机配置中，不写入本文件。以每个已指定整组库反复出现的共同特征为准，不得只挑一张与待审图最相似的样本。
 
 任何风格自检或风格分析都必须先读 `style-analysis-protocol.md`：先检查整图，再以原始文件生成带重叠的无遗漏局部网格，逐块检查笔触、纹理、线条、边缘、材质和微小瑕疵，最后把局部结论返回整图复核。不得以 4K/8K 缩小预览、少量语义裁图或几个“代表性局部”代替完整覆盖。
 

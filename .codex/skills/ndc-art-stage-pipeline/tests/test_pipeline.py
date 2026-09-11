@@ -1,6 +1,7 @@
 """Concurrency, durable dispatch, scope, and stale-input tests with synthetic adapters."""
 import copy
 import json
+import os
 from pathlib import Path
 import sqlite3
 import sys
@@ -24,8 +25,14 @@ class PipelineTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.project = Path(self.temp.name)
-        self.root = self.project / '工作过程文件' / 'pipeline-test'
+        self.work_base = self.project / 'managed-work'
+        self.root = self.work_base / 'pipeline-test'
         self.root.mkdir(parents=True)
+        self.environment = patch.dict(os.environ, {
+            'NDC_PLANNING_ROOT': str(self.project),
+            'NDC_ART_WORK_ROOT': str(self.work_base),
+        })
+        self.environment.start(); self.addCleanup(self.environment.stop)
         self.file = self.root / 'synthetic.txt'
         self.file.write_text('fixture')
         (self.root / 'original.jsonl').write_text('{}\n', encoding='utf-8')
@@ -154,7 +161,7 @@ class PipelineTests(unittest.TestCase):
     def test_character_scene_references_wait_for_own_lease_but_other_scene_can_publish(self):
         # Synthetic core wiring only; native geometry and artistic gates are mocked.
         plan = copy.deepcopy(self.plan)
-        root = self.project / '工作过程文件' / 'integration-lease-test'
+        root = self.work_base / 'integration-lease-test'
         plan.update(pipeline_kind='character_scene', model_policy=p.INTEGRATION_MODELS, work_root=str(root))
         for unit in plan['units']:
             unit['scope'] = {'cases': [{'case_id': unit['unit_id'] + '-day', 'snapshots': [

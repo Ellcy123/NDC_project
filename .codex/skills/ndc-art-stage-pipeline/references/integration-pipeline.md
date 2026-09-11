@@ -77,7 +77,7 @@ PASS结果的payload包括post_ledger_role、delivery_manifest_role、job_bindin
 delivery_manifest_role所指JSON的格式如下；快照必须完整覆盖冻结scope，layers按实际叠放顺序列出所有人物、影子及必要遮挡层。每个文件同时列入结果files，路径为分配输出目录内的绝对路径，sha256为实际文件哈希。脚本从原场景以原尺寸、整数XY、不缩放地逐层重建，并逐像素对比已审核合成；此技术通过不能代替native视觉审核。
 
 ```json
-{"scene_id":"A","snapshots":[{"case_id":"A-day","snapshot_id":"s0","layers":[{"path":"D:/Codex/NDC/工作过程文件/example/actor.png","sha256":"实际SHA256","x":10,"y":20}],"composite":{"path":"D:/Codex/NDC/工作过程文件/example/final.png","sha256":"实际SHA256"}}]}
+{"scene_id":"A","snapshots":[{"case_id":"A-day","snapshot_id":"s0","layers":[{"path":"{WORK_ROOT}/jobs/example/payload/actor.png","sha256":"实际SHA256","x":10,"y":20}],"composite":{"path":"{WORK_ROOT}/jobs/example/payload/final.png","sha256":"实际SHA256"}}]}
 ```
 
 参考缺陷回传 `FAIL`，payload填reason、return_stage:reference；生成/提取缺陷为production，人工节点为manual。Astra从实际结果和差异判断影响范围，只有旧生产领取结束、在途命令已核实后才能修改该场景参考并发布下一连续revision。其他场景照常推进。Terra不得一边继续旧方案一边让Astra改它的白模。

@@ -39,7 +39,9 @@ The user-approved portrait is the identity, viewpoint, costume, lighting, style,
 
 Default to prompt and manifest preparation. Execute image generation only after the user explicitly authorizes Codex execution. A request to update this Skill, inspect portraits, or plan requirements is not authorization to start generation.
 
-For Unit3, treat the image files in `D:\PMH\工作\人设\003第三章\头像` as the user-confirmed completed portrait set. This directory is read-only. Copy required inputs into `D:\Codex\NDC\工作过程文件\角色表情\Unit3` before production; never modify PMH files.
+At the first use on each device, run `python -B scripts/art_pipeline/ndc_art.py preflight expressions`. If it returns `missing_user_designation`, tell the user exactly which of the Unit3 approved-portrait root, Unit1 expression root, or Unit2 expression root is missing or unavailable and ask the user to designate it; do not guess from the registry, another checkout, or a similarly named archive, and do not start the dependent E0 production branch until the designation is saved. This is a required first-device setup reminder, not an approval request for each later batch.
+
+For Unit3, use the device-local `expression_sources.unit3_portrait_root` as the user-confirmed completed portrait set. The source is read-only. Copy required bytes into `{WORK_ROOT}/jobs/<任务>/payload/角色表情/Unit3`, record provenance and SHA-256, and never encode its machine path in the submitted Skill. Resolve roots with `ndc_art.py paths` and Skill resources relative to the Skill root; placeholders are not literal paths.
 
 ## Required reading
 

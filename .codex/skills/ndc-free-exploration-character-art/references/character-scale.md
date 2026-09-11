@@ -4,7 +4,7 @@ Use this reference for every generated character, in free-exploration mode and i
 
 ## Resolve one canonical height before staging
 
-Search active character-design documents under `{PLANNING_ROOT}` first. Resolve the current episode and canonical English character name, then search active `剧情设计/Unit*/人物设定/` profiles and other current character briefs. Exclude paths containing `旧文档`, `_archive`, `backup`, `备份`, or `废弃` unless the user explicitly selects an archived source. Historical documents in `D:/NDC/NDC_project` are provenance only; resolve current authority through `{PLANNING_ROOT}/canon_manifest.json`.
+Search active character-design documents under `{PLANNING_ROOT}` first. Resolve the current episode and canonical English character name, then search active `剧情设计/Unit*/人物设定/` profiles and other current character briefs. Exclude paths containing `旧文档`, `_archive`, `backup`, `备份`, or `废弃` unless the user explicitly selects an archived source. Documents remembered from an older checkout are provenance only and not executable; resolve current authority through `{PLANNING_ROOT}/canon_manifest.json`.
 
 Apply this authority order:
 

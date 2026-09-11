@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import statistics
 import sys
 from pathlib import Path
@@ -49,12 +50,13 @@ def resolve_from_manifest(manifest_path: Path, value: str) -> Path:
 
 
 def load_font(size: int) -> ImageFont.ImageFont:
-    for path in (Path("C:/Windows/Fonts/msyh.ttc"), Path("C:/Windows/Fonts/arial.ttf")):
-        if path.is_file():
-            try:
-                return ImageFont.truetype(str(path), size=size)
-            except OSError:
-                pass
+    system_root = os.environ.get("WINDIR") or os.environ.get("SystemRoot")
+    paths = [Path(system_root) / "Fonts" / name for name in ("msyh.ttc", "arial.ttf")] if system_root else []
+    for candidate in [*paths, "msyh.ttc", "arial.ttf"]:
+        try:
+            return ImageFont.truetype(str(candidate), size=size)
+        except OSError:
+            pass
     return ImageFont.load_default()
 
 

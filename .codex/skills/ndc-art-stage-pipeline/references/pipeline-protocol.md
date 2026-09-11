@@ -4,7 +4,7 @@
 
 ## 固定范围与原历史
 
-每个已授权批次使用独立过程目录；数据库固定为该目录的 `pipeline.sqlite`。`init` 只创建一次，拒绝覆盖；续作直接使用原库。`project_root`为当前工程工作区根，本机为 `D:/Codex/NDC`；`work_root`必须位于其 `工作过程文件` 内。上游和下游使用同一共享数据库绝对路径；Git worktree不会复制外部过程资产。
+每个已授权批次使用独立过程目录；数据库固定为该目录的 `pipeline.sqlite`。`init` 只创建一次，拒绝覆盖；续作直接使用原库。先用 `ndc_art.py paths` 解析三根：计划中的 `project_root` 必须等于 `{PLANNING_ROOT}`，`work_root` 必须是 `{WORK_ROOT}` 的专用子目录。占位符只用于说明，写入 JSON 前替换为本机解析出的绝对路径；不得使用固定盘符、用户名或从仓库相邻关系猜根目录。上游和下游使用同一共享数据库绝对路径；Git worktree不会复制外部过程资产。
 
 计划最小结构：
 
@@ -14,15 +14,15 @@
   "pipeline_id": "本批次稳定编号",
   "pipeline_kind": "ui_portrait",
   "execution_mode": "production",
-  "project_root": "D:/Codex/NDC",
-  "work_root": "D:/Codex/NDC/工作过程文件/本批次流水",
+  "project_root": "{PLANNING_ROOT}",
+  "work_root": "{WORK_ROOT}/jobs/本批次流水",
   "controller_task_id": "真实协调任务ID",
   "units": [
     {
       "unit_id": "CHARACTER_A",
       "producer_task_id": "真实母生产任务ID",
       "authority": {
-        "journal": "D:/Codex/NDC/工作过程文件/本批次/production-journal.jsonl",
+        "journal": "{WORK_ROOT}/jobs/本批次/payload/production-journal.jsonl",
         "upstream_jobs": ["A-U0", "A-U1"],
         "downstream_jobs": ["A-big", "A-small"]
       }

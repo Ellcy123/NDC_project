@@ -6,10 +6,10 @@ Historical evidence for the former Mode B: an established scene keeps its camera
 
 User-approved comparison, 2026-08-24:
 
-- before: `D:\PMH\工作\场景\004第四章\定稿\u4_exp_morrison_service_night_preblast.png`
+- provenance-only historical before path (not executable): `D:\PMH\工作\场景\004第四章\定稿\u4_exp_morrison_service_night_preblast.png`
   - 3164 × 1600 RGB
   - SHA-256 `B5889FCCBE31109AAD078762A8D53108B5506DD534A8AD4D79A9D38C634534FB`
-- delivered aftermath: `D:\PMH\工作\场景\004第四章\定稿\u4_exp_morrison_service_night_preblast_BOOM.png`
+- provenance-only historical delivered aftermath path (not executable): `D:\PMH\工作\场景\004第四章\定稿\u4_exp_morrison_service_night_preblast_BOOM.png`
   - 3164 × 1600 RGB
   - SHA-256 `82655CE4A75CE0D676E90E29AD6E1063A90660C3E2CA62EF4B7F80165E09C427`
 - user-provided ChatGPT process record: `https://chatgpt.com/share/6a8bc223-58bc-83ea-b285-b4b29ed692a0`

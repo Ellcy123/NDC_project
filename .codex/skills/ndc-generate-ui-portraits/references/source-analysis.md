@@ -1,6 +1,6 @@
 # 来源分析与适用范围
 
-整理日期：2026-09-05（Asia/Shanghai）。用户输入的 `NDC\_project` 路径不存在；实际唯一匹配目录为 `D:/Codex/NDC/NDC_project/美术资产交付/角色UI肖像`。在其他机器用策划仓库相对路径 `美术资产交付/角色UI肖像` 定位。
+整理日期：2026-09-05（Asia/Shanghai）。以下只记录当时工作站的 provenance；旧绝对路径不可复制执行。用户输入的 `NDC\_project` 路径不存在；当时实际唯一匹配目录为 `D:/Codex/NDC/NDC_project/美术资产交付/角色UI肖像`。当前机器必须用 `{PLANNING_ROOT}/美术资产交付/角色UI肖像` 定位。
 
 ## 资料与结论
 

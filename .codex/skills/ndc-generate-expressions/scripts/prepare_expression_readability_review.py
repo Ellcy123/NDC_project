@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import random
 from pathlib import Path
 from typing import Any
@@ -37,12 +38,13 @@ def sha256(path: Path) -> str:
 
 
 def font(size: int) -> ImageFont.ImageFont:
-    for candidate in (Path("C:/Windows/Fonts/msyh.ttc"), Path("C:/Windows/Fonts/arial.ttf")):
-        if candidate.is_file():
-            try:
-                return ImageFont.truetype(str(candidate), size)
-            except OSError:
-                pass
+    system_root = os.environ.get("WINDIR") or os.environ.get("SystemRoot")
+    paths = [Path(system_root) / "Fonts" / name for name in ("msyh.ttc", "arial.ttf")] if system_root else []
+    for candidate in [*paths, "msyh.ttc", "arial.ttf"]:
+        try:
+            return ImageFont.truetype(str(candidate), size)
+        except OSError:
+            pass
     return ImageFont.load_default()
 
 

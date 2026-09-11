@@ -14,7 +14,9 @@ import integration_adapter as adapter
 from dispatch_plan import build_dispatch_plan
 from reference_task_plan import build_reference_task_plan, reserve_reference, bind_reference
 
-PROJECT = Path('D:/Codex/NDC')
+PROJECT = Path(__file__).resolve().parents[4]
+SKILLS_ROOT = Path(__file__).resolve().parents[2]
+WORKFLOW_STATE = SKILLS_ROOT / 'ndc-generate-characters/scripts/art_workflow_state.py'
 
 
 class NativeContractStub:
@@ -53,7 +55,7 @@ class IntegrationAdapterTests(unittest.TestCase):
         history = next(r for r in self.refs if r['role']=='history')
         plan = {'schema':'ndc-art-production-plan/v1','task_id':'upstream','production_id':'original-production','jobs':[{'job_id':'actor-job','asset_key':'A|formal','requirements':{'scene_id':'A','production_id':'original-production','phase':'formal','pose_ids':['nurse-pose','patient-pose']},'source_decision':{'mode':'derive','evidence':'Explicit fixture history'},'required_criteria':['native-post-generation'],'output_roles':['final-composite'],'limits':{'model':6,'ps':3},'history':{'model':2,'ps':1},'history_evidence':[history]}]}
         (self.root/'plan.json').write_text(json.dumps(plan), encoding='utf-8')
-        api = runpy.run_path(str(PROJECT/'scripts/ndc-art-workflow/art_workflow_state.py'))
+        api = runpy.run_path(str(WORKFLOW_STATE))
         api['initialize'](self.root/'plan.json', self.root/'journal.jsonl')
         self.packet = {'schema':p.SCHEMA,'pipeline_kind':'character_scene','project_root':str(PROJECT),'execution_mode':'validation','unit_id':'A','revision':1,'model_policy':p.INTEGRATION_MODELS,'producer_task_id':'upstream','unit_scope':self.scope,'authority':{'journal':str(self.root/'journal.jsonl'),'upstream_jobs':[],'downstream_jobs':['actor-job']},'files':self.refs,'payload':{'production_id':'original-production','scene_role':'scene','scope_role':'scope','pre_ledger_role':'pre','depth_roles':['depth'],'identity_roles':['identity'],'prompt_bundle_role':'prompts','history_role':'history','budget_jobs':{'actor-job':['nurse-pose','patient-pose']},'authorization_role':'authorization'}}
         self.stub = patch.object(adapter, 'native_gate', return_value=NativeContractStub)

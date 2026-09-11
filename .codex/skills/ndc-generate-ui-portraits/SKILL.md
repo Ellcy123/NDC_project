@@ -31,8 +31,8 @@ metadata:
 - 本 Skill 不新设计人物，不生产通用角色卡/通用肖像，也不制作表情库。仅在新制作分支缺少上游资产时输出 `UPSTREAM_CHARACTER_ASSET_REQUIRED` 和具体缺项，交角色生产流程；不把角色卡局部放大当成通用肖像。已命中的历史 UI 资产按复用分支处理。
 - 上游通用肖像允许截肩；若本次 UI 胸像所需肩胸轮廓在来源中缺失，按 [references/manual-portrait-source.md](references/manual-portrait-source.md) 进入 `WAITING_FOR_MANUAL_PORTRAIT_COMPLETION`，等待人工补全并从 U0 接收继续。这是刻意保留的人工交接，不消耗生图次数，也不授权本 Skill 或 PS 试验自动补肩。不能回写为所有通用肖像都必须补肩，也不能将小尺寸 UI 成品充当表情母版。
 - 用户仅要求提示词、准备在 ChatGPT 手工生成，或仅要求维护 Skill 时，不调用图片生成。用户明确要求 Codex 执行，或明确要求本流程批量生产/工程衔接时，按已有授权推进；创建 Skill 本身不授权出图。
-- 编制任务前读工程 `canon_manifest.json`、对应策划人物设定、角色索引及项目规则。工程采用路径配置时，读 `docs/美术生产工作区.md`，用 `ndc_art.py paths` / `skill ndc-generate-ui-portraits` 定位；没有配置不要套用别人的盘符。当前本机工程为 `D:/Codex/NDC/NDC_project`。
-- 过程件进入项目外受管工作区；本机工作根须在 `D:/Codex/NDC/工作过程文件` 下，按角色、Unit、可搜索中文名称分组。不得写入 `D:/PMH/工作` 或 `D:/PMH/ndc`。正式主档归档、工程转入授权和任务收尾遵循当前项目规则；不得擅自关闭或清除待返工任务。
+- 编制任务前读 `{ENGINE_ROOT}` 下的 `canon_manifest.json` / 运行时资料、`{PLANNING_ROOT}` 下的策划人物设定、角色索引及项目规则。先读 `docs/美术生产工作区.md`，用 `python -B scripts/art_pipeline/ndc_art.py paths` 和 `skill ndc-generate-ui-portraits` 解析三个项目根与 Skill 根；占位符不得作为字面路径，未配置时必须报错，不能猜盘符、用户名、相邻仓库或沿用另一台机器的位置。
+- 过程件只进入 `{WORK_ROOT}/jobs/<任务>/payload/` 下按角色、Unit、可搜索中文名称组织的受管目录。Skill 专属参考、模板与蒙版只从当前 Skill 的 `assets/` 相对解析；项目角色与场景资产从 `{PLANNING_ROOT}` / `{ENGINE_ROOT}` 的索引或运行时相对路径解析并记录哈希。正式主档归档、工程转入授权和任务收尾遵循当前项目规则；不得向未知历史根写入，也不得擅自关闭或清除待返工任务。
 
 ## U0 前置：过去章节资产检索与复用
 

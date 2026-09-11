@@ -7,7 +7,11 @@ description: Design and produce NDC static AVG scenes containing two or more sim
 
 Produce a static multi-character AVG image on an already approved fixed NDC background. Keep the original scene pixels authoritative and deliver a reconstructable layered PSD plus a flattened PNG.
 
-This is a specialized production workflow built on `../ndc-character-scene-integration/`. Reuse that skill's deterministic tools and detailed prompt modules, but do not rely on inheritance alone: the multi-character hard gates below are mandatory within this skill and its `ndc-multichar-avg-plan/v2` contract.
+This is a specialized production workflow built on `ndc-character-scene-integration`. Resolve that Skill through the shared launcher and reuse its deterministic tools and detailed prompt modules, but do not rely on inheritance alone: the multi-character hard gates below are mandatory within this skill and its `ndc-multichar-avg-plan/v2` contract.
+
+## Production paths
+
+From either configured repository root, run `python scripts/art_pipeline/ndc_art.py paths` before production. It resolves `{PLANNING_ROOT}`, `{ENGINE_ROOT}`, and `{WORK_ROOT}` from this machine's ignored `ndc.local.json` or environment variables. Create a job workspace through the launcher and treat its returned `payload` as `{JOB_PAYLOAD}`. Resolve another Skill with `python scripts/art_pipeline/ndc_art.py skill SKILL_NAME`; treat the returned root as `{SKILL_NAME_ROOT}` and keep Skill-owned references relative to it. Never copy a developer's drive letter or personal absolute path into a shared contract.
 
 ## Essential invariants
 
@@ -49,9 +53,9 @@ Do not advance to `whitebox-approved` unless timeline, actual UI, absolute scene
 
 1. Read [references/workflow.md](references/workflow.md) and resolve the source scene, dialogue beat, current cast, prop ownership, and existing-asset status.
 2. Present one concrete text blocking example before creating or changing production files, following the repository confirmation rule.
-3. After confirmation, author the v2 cast plan described in [references/contracts.md](references/contracts.md). Complete timeline, canonical-height, character-card scale, real-UI, scene-scale, cast-scale, affordance, pose-landmark, and occlusion records as described in [references/workflow.md](references/workflow.md). Run `scripts/validate_avg_cast_plan.py` at every declared stage.
+3. After confirmation, author the v2 cast plan described in [references/contracts.md](references/contracts.md). Complete timeline, canonical-height, character-card scale, real-UI, scene-scale, cast-scale, affordance, pose-landmark, and occlusion records as described in [references/workflow.md](references/workflow.md). Run `python scripts/art_pipeline/ndc_art.py run ndc-multichar-avg-production validate_avg_cast_plan.py <plan.json>` at every declared stage.
 4. Produce and visually review the combined anatomical mannequin whitebox plus `N` isolated whiteboxes. Run every `whitebox-approved` gate and ask for whitebox approval before formal actor generation.
-5. For each actor, run the existing `prepare-local-generation-handoff` tool and read `../ndc-character-scene-integration/references/prompt-modules.md`. Attach references in its required order: local isolated whitebox crop, untouched full scene, approved character card.
+5. For each actor, resolve `ndc-character-scene-integration`, run its existing `prepare-local-generation-handoff` tool through the shared launcher, and read `references/prompt-modules.md` relative to the returned Skill root. Attach references in its required order: local isolated whitebox crop, untouched full scene, approved character card.
 6. Generate each actor separately. Reject identity, costume, gaze, pose, scale, light, or texture drift before extraction. Retry only the failed actor.
 7. Read [references/photoshop-and-qa.md](references/photoshop-and-qa.md), then extract, manually refine, register, shadow, layer, and export through actual Photoshop.
 8. Inspect the whole composite at 100% and every actor/action region at 200%. Validate the final plan, leave the layered PSD open when useful, and deliver links to the PSD, PNG, and review record.

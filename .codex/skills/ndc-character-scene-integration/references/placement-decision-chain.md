@@ -307,7 +307,7 @@ After formal character generation and combined composition, add:
 }
 ```
 
-If attempt 6 still fails, do not fabricate PASS. Add a `candidateHandoff` record with `attemptCount: 6`, the selected artifact/hash, comparison report, unresolved `failedChecks`, selection reason, and a `candidateRoot` under `D:\Codex\NDC\工作过程文件`. The best-available candidate is shown only in the final batch review and never enters `最终交付`.
+If attempt 6 still fails, do not fabricate PASS. Add a `candidateHandoff` record with `attemptCount: 6`, the selected artifact/hash, comparison report, unresolved `failedChecks`, selection reason, and a `candidateRoot` in a dedicated child of configured `{WORK_ROOT}`. The best-available candidate is shown only in the final batch review and never enters a formal planning or engine target.
 
 For `placementClass: seated`, also provide:
 

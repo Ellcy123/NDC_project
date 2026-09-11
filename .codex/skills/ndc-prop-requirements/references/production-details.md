@@ -6,7 +6,7 @@
 
 Before selecting an NDC scene source, read and obey the current project's source-search precedence and stop conditions. Keep machine-specific root ordering in project rules, not in this Skill. Match the exact scene ID, chapter, state, and approval lineage; do not silently select a draft, process export, thumbnail, or similarly named scene when the governing source policy identifies an approved source. Record roots checked, exact source path, and SHA-256. If conflicting candidates within the permitted source cannot be resolved from current project records, block source selection instead of guessing.
 
-Treat `D:\PMH\工作` and `D:\PMH\ndc` as read/copy-only inputs. Copy required material into `D:\Codex\NDC\工作过程文件\道具\<Unit>\...` before authoring, and place confirmed deliverables only under `D:\Codex\NDC\最终交付\道具\<Unit>\...`. On this workstation, every scene-level work and delivery directory must include a clear Chinese scene/status name, optionally followed by a stable English alias after `__`, for example `SC4002_哈里森外间办公室_白天__Harrison_outer_office_day`. Runtime image stems and `XYposition.txt` entries must still match the configured engineering names exactly; never append Chinese to a runtime filename merely to satisfy the directory-naming rule.
+Resolve current sources through `ndc_art.py paths`: approved planning inputs come from registered paths under `{PLANNING_ROOT}`, runtime sources from read-only `{ENGINE_ROOT}`, and all new authoring material from a dedicated `{WORK_ROOT}/jobs/<任务>/payload/道具/<Unit>/...` directory. Any user-authorized legacy archive is read/copy-only and its actual path belongs only in the device-local configuration or task provenance, never in reusable Skill instructions. Confirmed user-facing deliverables go under `{DELIVERY_ROOT}/道具/<Unit>/...`; engineering synchronization remains a separately authorized copy from those passed assets. Every scene-level work and delivery directory must include a clear Chinese scene/status name, optionally followed by a stable English alias after `__`, for example `SC4002_哈里森外间办公室_白天__Harrison_outer_office_day`. Runtime image stems and `XYposition.txt` entries must still match the configured engineering names exactly; never append Chinese to a runtime filename merely to satisfy the directory-naming rule.
 
 ## Preflight inventory and reuse lineage
 
@@ -16,8 +16,8 @@ For a full-batch continuation, this is per-item method selection, not the batch 
 
 Before repairing or generating any item, inventory the recoverable scopes below for the scene ID, configured runtime stem, item ID, and clear Chinese/English aliases. These are evidence categories, not a source-search order: first obey the current project's source-search precedence and stop conditions. Do not search a prohibited later source root to replace a hit in an earlier authoritative root. Process/history records may still be inspected to recover approval, rejection, and derivation evidence; finding them does not change the selected source authority.
 
-1. current formal delivery under `D:\Codex\NDC\最终交付\道具`;
-2. accepted semantic masters, staged candidates, and prior technical/visual records under `D:\Codex\NDC\工作过程文件\道具`;
+1. current formal delivery under `{DELIVERY_ROOT}/道具`;
+2. accepted semantic masters, staged candidates, and prior technical/visual records in the applicable managed jobs under `{WORK_ROOT}`;
 3. recoverable historical, withdrawn, or superseded packages; and
 4. user-approved source or delivery assets from the declared read-only project roots.
 

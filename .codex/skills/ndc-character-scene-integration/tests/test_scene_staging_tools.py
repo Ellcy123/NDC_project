@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from PIL import Image, ImageDraw
 
@@ -89,8 +90,8 @@ class SceneStagingToolTests(unittest.TestCase):
     def test_pipeline_requires_affordance_and_snapshot_ui_report(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)
-            old_root = PIPELINE.NDC_ROOT
-            PIPELINE.NDC_ROOT = root
+            old_root = PIPELINE.TEST_ROOT_OVERRIDE
+            PIPELINE.TEST_ROOT_OVERRIDE = root
             try:
                 scene = root / "scene.png"
                 Image.new("RGBA", (240, 200), (0, 0, 0, 255)).save(scene)
@@ -128,7 +129,36 @@ class SceneStagingToolTests(unittest.TestCase):
                 loaded = PIPELINE.validate_staging(staging)
                 self.assertEqual(len(loaded), 1)
             finally:
-                PIPELINE.NDC_ROOT = old_root
+                PIPELINE.TEST_ROOT_OVERRIDE = old_root
+
+    def test_formal_delivery_uses_dedicated_device_root(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            formal = root / "最终交付"
+            work = root / "work"
+            engine = root / "engine"
+            for folder in (formal, work, engine):
+                folder.mkdir()
+            scene = root / "scene.png"
+            Image.new("RGBA", (240, 200), (0, 0, 0, 255)).save(scene)
+            placement = self._placement_contract(formal, scene)
+            old_root = PIPELINE.TEST_ROOT_OVERRIDE
+            PIPELINE.TEST_ROOT_OVERRIDE = None
+            environment = {
+                "NDC_ART_DELIVERY_ROOT": str(formal),
+                "NDC_ART_WORK_ROOT": str(work),
+            }
+            try:
+                with patch.dict("os.environ", environment, clear=False):
+                    PIPELINE.validate_contract(placement)
+                    placement["deliveryRoot"] = str(engine / scene.stem)
+                    with self.assertRaisesRegex(ValueError, "formal delivery root"):
+                        PIPELINE.validate_contract(placement)
+                    placement["deliveryRoot"] = str(work / scene.stem)
+                    with self.assertRaisesRegex(ValueError, "work root"):
+                        PIPELINE.validate_contract(placement)
+            finally:
+                PIPELINE.TEST_ROOT_OVERRIDE = old_root
 
     def test_production_gate_rejects_false_pass_and_bbox_scale_driver(self) -> None:
         with tempfile.TemporaryDirectory() as raw:

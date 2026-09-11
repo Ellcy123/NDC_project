@@ -15,8 +15,10 @@ Codex must not remove backgrounds, create or paint masks, remove white fringe, r
 Create the handoff only after every requested state passes artistic review. Place it under:
 
 ```text
-D:\Codex\NDC\工作过程文件\角色表情\Unit<n>\<character>\手工去底交接_非最终_<date>
+{WORK_ROOT}/jobs/<任务>/payload/角色表情/Unit<n>/<character>/手工去底交接_非最终_<date>
 ```
+
+Resolve `{WORK_ROOT}` with `ndc_art.py paths` before creating the job; do not write the placeholder literally.
 
 The handoff contains:
 

@@ -12,7 +12,8 @@ import stat
 import subprocess
 import sys
 
-from art_paths import (LOCAL_SCHEMA, absolute_root, load_art_paths,
+from art_paths import (EXPRESSION_SOURCE_KEYS, LOCAL_SCHEMA, STYLE_LIBRARY_KEYS,
+                       absolute_root, default_delivery_root, load_art_paths,
                        validate_roots)
 
 
@@ -66,8 +67,44 @@ def configured_environment(paths) -> dict:
     environment.update({"NDC_PLANNING_ROOT": str(paths.planning_root),
                         "NDC_ENGINE_ROOT": str(paths.engine_root),
                         "NDC_ART_WORK_ROOT": str(paths.work_root),
+                        "NDC_ART_DELIVERY_ROOT": str(paths.delivery_root),
                         "PYTHONIOENCODING": "utf-8"})
     return environment
+
+
+def configured_source_map(args, existing: dict, field: str,
+                          options: dict[str, str]) -> dict[str, str]:
+    result = dict(existing.get(field, {}) or {})
+    for key, argument in options.items():
+        value = getattr(args, argument)
+        if value is not None:
+            path = absolute_root(value, f"{field}.{key}")
+            if not path.is_dir():
+                raise ValueError(f"Configured source directory does not exist: {path}")
+            result[key] = str(path)
+    return result
+
+
+def source_preflight(paths, group: str) -> dict:
+    if group == "expressions":
+        configured, required = paths.expression_sources, EXPRESSION_SOURCE_KEYS
+        label = "表情前置资产"
+    else:
+        configured, required = paths.style_check_libraries, STYLE_LIBRARY_KEYS
+        label = "风格自检库"
+    missing_designations = [key for key in required if key not in configured]
+    unavailable = [key for key, path in configured.items() if not path.is_dir()]
+    if missing_designations or unavailable:
+        return {
+            "status": "missing_user_designation",
+            "group": group,
+            "label": label,
+            "missing": missing_designations,
+            "unavailable": unavailable,
+            "message": f"当前设备缺少可用的{label}配置；首次使用前需要用户指定对应目录。",
+        }
+    return {"status": "ready", "group": group, "label": label,
+            "sources": configured}
 
 
 def resolve_node() -> str:
@@ -157,12 +194,34 @@ def configure(args) -> dict:
     planning = absolute_root(args.planning_root, "planning_root")
     engine = absolute_root(args.engine_root, "engine_root")
     work = absolute_root(args.work_root, "work_root")
-    validate_roots(planning, engine, work)
+    existing = {}
+    local_path = planning / "ndc.local.json"
+    if local_path.is_file():
+        existing = json.loads(local_path.read_text(encoding="utf-8-sig"))
+        if existing.get("schema") != LOCAL_SCHEMA:
+            raise ValueError(f"Unsupported machine path configuration: {local_path}")
+    delivery = absolute_root(args.delivery_root or existing.get("delivery_root")
+                             or default_delivery_root(planning), "delivery_root")
+    validate_roots(planning, engine, work, delivery)
     for root in (planning, engine):
         inside(root, "scripts/art_pipeline/ndc_art.py")
     inside(planning, "production/art_pipeline/paths.json")
+    expression_sources = configured_source_map(
+        args, existing, "expression_sources",
+        {"unit3_portrait_root": "unit3_portrait_root",
+         "unit1_expression_root": "unit1_expression_root",
+         "unit2_expression_root": "unit2_expression_root"})
+    style_libraries = configured_source_map(
+        args, existing, "style_check_libraries",
+        {"general_character_card": "general_character_card_style_root",
+         "general_portrait": "general_portrait_style_root",
+         "black_white_red_character_card": "black_white_red_style_root"})
+    delivery.mkdir(parents=True, exist_ok=True)
     content = json.dumps({"schema": LOCAL_SCHEMA, "planning_root": str(planning),
-                          "engine_root": str(engine), "work_root": str(work)},
+                          "engine_root": str(engine), "work_root": str(work),
+                          "delivery_root": str(delivery),
+                          "expression_sources": expression_sources,
+                          "style_check_libraries": style_libraries},
                          ensure_ascii=False, indent=2) + "\n"
     snapshots = {}
     staged = []
@@ -197,7 +256,10 @@ def configure(args) -> dict:
             if temporary.exists():
                 temporary.unlink()
     return {"status": "configured", "planning_root": str(planning), "engine_root": str(engine),
-            "work_root": str(work), "local_files": [str(root / "ndc.local.json") for root in (planning, engine)]}
+            "work_root": str(work), "delivery_root": str(delivery),
+            "expression_sources": expression_sources,
+            "style_check_libraries": style_libraries,
+            "local_files": [str(root / "ndc.local.json") for root in (planning, engine)]}
 
 
 def main() -> int:
@@ -209,7 +271,16 @@ def main() -> int:
     setup = sub.add_parser("configure", help="Save machine paths in both ignored ndc.local.json files")
     for name in ("planning", "engine", "work"):
         setup.add_argument(f"--{name}-root", required=True)
+    setup.add_argument("--delivery-root", help="Formal root; defaults to 最终交付 beside planning checkout")
+    setup.add_argument("--unit3-portrait-root")
+    setup.add_argument("--unit1-expression-root")
+    setup.add_argument("--unit2-expression-root")
+    setup.add_argument("--general-character-card-style-root")
+    setup.add_argument("--general-portrait-style-root")
+    setup.add_argument("--black-white-red-style-root")
     sub.add_parser("paths", help="Show resolved checkout, work, and reference paths")
+    preflight = sub.add_parser("preflight", help="Check device-local prerequisites without guessing paths")
+    preflight.add_argument("group", choices=("expressions", "style-check"))
     skill = sub.add_parser("skill", help="Resolve a main skill from the shared registry")
     skill.add_argument("name")
     run = sub.add_parser("run", help="Run a registered skill's own script")
@@ -229,6 +300,8 @@ def main() -> int:
             paths = load_art_paths()
             if args.command == "paths":
                 result = asdict(paths)
+            elif args.command == "preflight":
+                result = source_preflight(paths, args.group)
             elif args.command == "skill":
                 result = resolve_skill(args.name, paths)
             elif args.command == "run":

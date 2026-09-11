@@ -10,7 +10,7 @@ description: 统计并锁定 NDC 道具和环境叙事需求、关键内容、�
 
 这是五阶段的第一阶段。全批次请求从这里建立内容档案与进度，再依次交接；仅统计请求在这里结束，不能自动进入生图。
 
-先读[共用批次协议](references/batch-contract.md)，再按需读[来源与分类细则](references/production-details.md)。来源顺序遵从项目底层规则；源文件只读，过程产物进入项目工作过程目录。
+先读[共用批次协议](references/batch-contract.md)，再按需读[来源与分类细则](references/production-details.md)。先用 `ndc_art.py paths` 解析 `{PLANNING_ROOT}`、`{ENGINE_ROOT}`、`{WORK_ROOT}`、`{DELIVERY_ROOT}`；来源顺序遵从项目底层规则和索引，源文件只读，过程产物只进入 `{WORK_ROOT}` 的受管 job，确认交付只进入 `{DELIVERY_ROOT}/道具`。Skill 自有规范、资源与脚本从当前 Skill 根相对解析。占位符不是字面路径，配置缺失或漂移时不得猜盘符、用户名或相邻目录。
 
 ## 工作步骤
 

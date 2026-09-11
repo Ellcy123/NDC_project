@@ -22,6 +22,9 @@ class SceneScaleV2Tests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(dir=Path(__file__).parent)
         self.addCleanup(self.temp.cleanup); self.root = Path(self.temp.name)
+        self.old_root_override = pipeline.TEST_ROOT_OVERRIDE
+        pipeline.TEST_ROOT_OVERRIDE = self.root
+        self.addCleanup(setattr, pipeline, 'TEST_ROOT_OVERRIDE', self.old_root_override)
         self.scene = self.root / 'scene.png'
         Image.new('RGB', (240, 200), (40, 50, 60)).save(self.scene)
         self.depth = self.root / 'depth.png'
@@ -179,7 +182,7 @@ class SceneScaleV2Tests(unittest.TestCase):
         production.validate_placement_contract(placement, 'A')
         # The contract validator checks the formal path name only; this test never
         # creates it or writes production files.
-        placement['deliveryRoot'] = 'D:/Codex/NDC/最终交付/合成路径检查不写入/scene'
+        placement['deliveryRoot'] = str(self.root / 'formal' / 'scene')
         self.assertEqual(pipeline.validate_contract(placement), (170, 0))
 
     def test_changed_pose_cannot_reuse_shared_report(self):
@@ -203,7 +206,7 @@ class SceneScaleV2Tests(unittest.TestCase):
         placements = []
         for actor_id, source in [('A', self.snapshot), ('B', second)]:
             value = copy.deepcopy(source)
-            value.update(deliveryRoot='D:/Codex/NDC/最终交付/合成路径检查不写入/scene', calibration={'sceneScaleEvidence': self.ref(self.report_path), 'actorId': actor_id})
+            value.update(deliveryRoot=str(self.root / 'formal' / 'scene'), calibration={'sceneScaleEvidence': self.ref(self.report_path), 'actorId': actor_id})
             placements.append(self.write(actor_id + '-final-placement.json', value))
         ui = self.write('staging-ui.json', {'schema': 'ndc-ui-safety-report/v1', 'status': 'pass', 'synthetic': True})
         staging = {'scene': str(self.scene), 'sceneSize': [240, 200], 'timelineSnapshotId': 'shot-1', 'uiSide': 'left',

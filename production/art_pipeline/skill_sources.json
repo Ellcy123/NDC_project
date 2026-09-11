@@ -1,7 +1,46 @@
 {
   "schema": "ndc-art-skill-sources/v2",
-  "updated_at": "2026-09-09",
+  "updated_at": "2026-09-11",
   "work_config": "production/art_pipeline/paths.json",
+  "layout_policy": {
+    "schema": "ndc-skill-layout-policy/v1",
+    "effective_at": "2026-09-11",
+    "required_layout_schema": "ndc-skill-layout/v1",
+    "required_entries": ["SKILL.md", "references/", "assets/", "scripts/", "tests/"],
+    "rule": "Every newly registered NDC Skill must declare layout_schema and submit non-empty references, assets, scripts, and tests directories. Skill-owned resources resolve relative to the Skill root; project assets resolve from configured roots. Optional agents metadata may coexist.",
+    "grandfathered_skills": [
+      "generate-ndc-emergency-art",
+      "ndc-avg-character-scene-art",
+      "ndc-character-scene-integration",
+      "ndc-coordinate-image-edit",
+      "ndc-evidence-container",
+      "ndc-evidence-detail-art",
+      "ndc-evidence-scene-placement",
+      "ndc-free-exploration-character-art",
+      "ndc-generate-characters",
+      "ndc-generate-ui-portraits",
+      "ndc-generate-expressions",
+      "ndc-h3-avatar-delivery",
+      "ndc-midjourney-operator",
+      "ndc-multichar-avg-production",
+      "ndc-scene-evidence-placement",
+      "ndc-scene-to-mj-prompt",
+      "art-detail-control",
+      "ndc-art-stage-pipeline",
+      "ndc-character-asset-derivation",
+      "ndc-character-identity-production",
+      "ndc-character-scene-production",
+      "ndc-character-scene-reference",
+      "ndc-prop-delivery-review",
+      "ndc-prop-hotspot-export",
+      "ndc-prop-master-production",
+      "ndc-prop-requirements",
+      "ndc-scene-state-variation",
+      "ndc-visual-description",
+      "runninghub-h3-greenscreen-avatar",
+      "runninghub-h3-ref2va-audio"
+    ]
+  },
   "workflow": "docs/美术生产工作区.md",
   "character_registry": "美术资产交付/角色/角色索引.json",
   "skills": [
@@ -78,7 +117,7 @@
     {
       "name": "ndc-free-exploration-character-art",
       "status": "centralized",
-      "canonical_origin": "current_engine_worktree",
+      "canonical_origin": "existing_planning_implementation",
       "legacy_entries": [
         {
           "scope": "engine",
@@ -331,15 +370,15 @@
   "unresolved_dependencies": [
     {
       "type": "external_reference_library",
-      "path": "D:/PMH/美术",
+      "resource_id": "user-authorized-external-character-reference-library",
       "status": "missing_on_this_machine",
-      "action": "Resolve original authorized reference assets; never substitute a same-named card without selection."
+      "action": "Resolve through current project configuration or an explicit user-authorized import; store the discovered machine path only in task provenance and never as a Skill default."
     },
     {
       "type": "external_style_library",
-      "path": "D:/Codex/NDC/NDC风格化角色素材库",
-      "status": "missing_on_this_machine",
-      "action": "Retain source provenance; select and record valid local references before applicable generation."
+      "resource_id": "optional-approved-character-style-corpus",
+      "status": "required_device_local_user_designation",
+      "action": "On first use per device, require the user to designate the three complete style-check libraries in ignored local configuration. Do not substitute bundled single images, a guessed workstation path, or a project-index candidate."
     },
     {
       "type": "protected_evidence_integration",

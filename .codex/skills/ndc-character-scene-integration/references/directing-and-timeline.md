@@ -121,7 +121,7 @@ Choose among physically valid zones by story value: objective access, tension, r
 
 ## 6. Actual UI references replace the two-thirds shortcut
 
-Use `D:\PMH\工作\对话构图参考-左.png` and `D:\PMH\工作\对话构图参考-右.png` as pixel references when available. Derive obstruction from their non-background pixels and check each snapshot's actual UI side.
+Use the bundled, hash-registered `../assets/ui/dialogue-composition-left.png` and `../assets/ui/dialogue-composition-right.png` as the stable obstruction references. Resolve them relative to this reference file (or the Skill root returned by `ndc_art.py skill ndc-character-scene-integration`), never from a maintainer's drive. Verify their SHA-256 against `../assets/ui/manifest.json` before production. When current Unity UI differs, export and review the current runtime UI from `{ENGINE_ROOT}` and update the bundled assets plus manifest as an explicit Skill revision; do not silently keep stale masks.
 
 The two references are mutually exclusive candidates, not simultaneous requirements. After the current cast, story focus, entrances, action envelope, and composition balance are known, Codex selects the lower-cost side, records one `uiSide` for that snapshot, and validates that side only. A later snapshot may select the opposite side when its cast distribution changes. Do not shrink a correctly scaled actor merely to make both UI candidates pass.
 

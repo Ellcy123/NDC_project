@@ -10,7 +10,7 @@ E5/E6 below describe default manual processing. When the user explicitly authori
 
 Map each requirement to one user-confirmed portrait, inventory existing approved expressions, normalize aliases, and route each requested state as `REUSE_APPROVED_AS_IS`, `GENERATE_NEW`, `REPLACE_ONLY_BY_USER_REQUEST`, or `BLOCKED_NAME_AMBIGUITY`. For Unit3-or-later requests, inspect the designated Unit1 and Unit2 expression libraries before any generation planning; see `approved-reuse-and-delta-production.md`. Calm routes to `DERIVE_CALM_FROM_APPROVED_PORTRAIT` when no exact profile calm exists. Freeze the complete library and true production delta.
 
-For Unit3, census every file in `D:\PMH\工作\人设\003第三章\头像`; do not infer additional portraits from character-card folders. PMH remains read-only.
+For Unit3, census every file in the device-local `expression_sources.unit3_portrait_root`; do not infer additional portraits from character-card folders or substitute a registry-only candidate. The configured source remains read-only. Record provenance and SHA-256, but keep its machine path out of reusable Skill instructions.
 
 ## E1_PORTRAIT_SOURCE_LOCK
 

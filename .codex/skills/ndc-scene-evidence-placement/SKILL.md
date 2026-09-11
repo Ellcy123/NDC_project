@@ -8,7 +8,7 @@ description: 将已锁定 NDC 道具放入既定场景，确定承载体、原�
 
 本 Skill 第一次实际调用 Photoshop MCP 前，必须完整读取当前环境的《PS MCP 操作参考手册》：维护工作区从项目根解析 `PS_MCP_操作参考手册.md`，工程镜像从仓库根解析 `production/art_pipeline/PS_MCP_操作参考手册.md`。在当前场景作业记录中保存实际手册路径、版本、SHA-256 和当前会话能力快照；两处均不存在或哈希不一致时不得以历史记忆继续操作。手册负责通用效率、变换、Alpha、路径、单引擎、超时回退和视觉/技术验收；本 Skill 的承载、替换、菜单、场景保护、Big/Icon 和阶段门禁继续优先。实时目录只允许执行 supported 能力，手册本身不增加操作授权。
 
-本 Skill 的 `scripts/`、`references/`、`assets/` 必须作为同一个完整目录随 Skill 提交，运行时从当前实际 `SKILL.md` 根相对解析。跨设备脚本入口为策划仓库的 `python -B scripts/art_pipeline/ndc_art.py run ndc-scene-evidence-placement <脚本名> -- <参数>`；不得引用维护机 `.agents`、用户名或固定盘符。Unity 根由 `NDC_ENGINE_ROOT` 推导，特殊布局用 `NDC_UNITY_EVIDENCE_ROOT`，这些本机路径不得写回 Skill。
+本 Skill 的 `scripts/`、`references/`、`assets/` 必须作为同一个完整目录随 Skill 提交，运行时从当前实际 `SKILL.md` 根相对解析。跨设备脚本入口为策划仓库的 `python -B scripts/art_pipeline/ndc_art.py run ndc-scene-evidence-placement <脚本名> -- <参数>`；项目资产从 `ndc_art.py paths` 返回的 `{PLANNING_ROOT}` / `{ENGINE_ROOT}` 及索引解析，过程件进入 `{WORK_ROOT}` 受管 job。特殊 Unity 布局只允许由本机配置显式覆盖；不得把维护机 `.agents`、用户名、固定盘符或该覆盖值写回 Skill。
 
 执行前读[对话任务独立额度](../ndc-prop-requirements/references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
 

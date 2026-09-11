@@ -19,8 +19,9 @@ spec.loader.exec_module(adapter)
 
 class UiAdapterTests(unittest.TestCase):
     def setUp(self):
-        # Keep synthetic artifacts within this authorized test subtree, not art delivery.
-        self.temp = tempfile.TemporaryDirectory(prefix="ui-fixture-", dir=Path(__file__).parent)
+        # Keep synthetic artifacts outside either relocated checkout; the production
+        # cropper correctly rejects any output nested in a repository.
+        self.temp = tempfile.TemporaryDirectory(prefix="ui-fixture-")
         self.root = Path(self.temp.name) / "case"
         self.fixture = fixtures.create_fixture(self.root)
         self.packet = self.fixture["packet"]

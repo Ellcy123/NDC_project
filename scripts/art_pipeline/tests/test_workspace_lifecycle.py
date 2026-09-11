@@ -89,7 +89,10 @@ class WorkspaceLifecycle(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.call("close", job=job, result="delivered", note="attempt closure")
         self.assertTrue(source.exists())
-        self.assertEqual(json.loads((job / "job.json").read_text())["state"], "approved")
+        self.assertEqual(
+            json.loads((job / "job.json").read_text(encoding="utf-8"))["state"],
+            "approved",
+        )
 
     def test_unretained_master_blocks_cancel_cleanup(self):
         job = self.job()

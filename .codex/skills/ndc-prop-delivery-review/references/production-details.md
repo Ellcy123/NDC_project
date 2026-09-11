@@ -64,7 +64,7 @@ Delivery is blocked unless all applicable checks pass:
 - when `--omit-icon` is used, the patch, manifest, and artifact list all omit the Icon rather than writing an empty or invented path;
 - asset stems and ItemStaticData paths agree;
 - staged artifact hashes still match the manifest.
-- the asset's `ndc-texture-coherence/v1` record passes `D:\Codex\NDC\scripts\validate-ndc-texture-gate.py`; use `authorized_region_plus_boundary_tiles` for scene insertion and `full_image_tiles` for standalone Type 7, Big, Icon-master, and clue-photo art.
+- the asset's `ndc-texture-coherence/v1` record passes `python -B scripts/art_pipeline/ndc_art.py tool texture -- <arguments>` from `{PLANNING_ROOT}`; use `authorized_region_plus_boundary_tiles` for scene insertion and `full_image_tiles` for standalone Type 7, Big, Icon-master, and clue-photo art.
 
 If any check fails, repair the job rather than editing coordinates or reports by hand.
 
@@ -84,7 +84,7 @@ See [references/delivery-contract.md](../../ndc-scene-evidence-placement/referen
 
 ## Staging and synchronization
 
-Stage new work under the current project's designated work-process scene/job directory, in a `delivery/` subfolder. On this workstation that parent is under `D:\Codex\NDC\工作过程文件\道具\<Unit>\...`. Existing `image/edit_jobs` packages are recoverable history, not the default destination for new work. This working package may contain manifests, verification JSON, overlays, patches, and recovery inputs. Never overwrite the approved scene or write directly into a Unity runtime asset directory during generation.
+Stage new work under the current managed job's `{WORK_ROOT}/jobs/<任务>/payload/道具/<Unit>/.../delivery/` subfolder. Resolve `{WORK_ROOT}` with `ndc_art.py paths`; do not write the placeholder literally or infer a drive. Existing `image/edit_jobs` packages are recoverable history, not the default destination for new work. This working package may contain manifests, verification JSON, overlays, patches, and recovery inputs. Never overwrite the approved scene or write directly into a Unity runtime asset directory during generation.
 
 Keep the eventual formal image-asset folder separate from engineering staging. Each asset-facing folder contains only accepted/final PNG image assets plus one ASCII `XYposition.txt`. A complete scene-prop package must include the accepted full-scene placement preview as a formal PNG, every required Type 6 and Type 7 image, every contained or direct-pickup Map, every required Big and configured Icon, and every requested environment/state image. The coverage ledger defines the required image roles; "only PNG plus XY" is a file-type boundary and must never be interpreted as permission to publish only the assets changed in the latest revision. An explicitly requested single-asset delivery may be incremental, but it must not be labeled a complete formal scene delivery.
 
@@ -96,7 +96,7 @@ Assemble a complete formal package into a new or verified-empty directory. Do no
 
 After all applicable gates pass, including `FINAL_VISUAL_RECORD_PRESENCE_GATE: PASS`, transfer the complete package directly into the formal image-asset folder; do not wait for a separate candidate review. A user-confirmed task authorizes this production and image-asset transfer. Copying assets into Unity or configuration tables still requires that the task scope explicitly includes the engineering synchronization. When merging `XYposition.txt`, preserve existing entries and normalize only the new line unless the user separately authorizes cleanup.
 
-At the end of the package self-check, run `python D:/Codex/NDC/scripts/validate-ndc-final-visual-record-presence.py --formal-dir <formal-folder> --record-root <scene-work-process>`. The command must be the terminal gate after the final copies are present, not an earlier staging check. The record root must include every current-hash `visual_review.json`, including a Photoshop MCP repair folder outside `03_质量记录/视觉审核`. A missing current-hash review record for any formal PNG is a hard block: perform the absent whole/local visual review, write its record, rerun the stage validator, then rerun this terminal gate. Do not convert that block into a request for an avoidable human authorization once the asset requirements are known.
+At the end of the package self-check, run `python -B scripts/art_pipeline/ndc_art.py tool final -- --formal-dir <formal-folder> --record-root <scene-work-process>` from `{PLANNING_ROOT}`. The command must be the terminal gate after the final copies are present, not an earlier staging check. The record root must include every current-hash `visual_review.json`, including a Photoshop MCP repair folder outside `03_质量记录/视觉审核`. A missing current-hash review record for any formal PNG is a hard block: perform the absent whole/local visual review, write its record, rerun the stage validator, then rerun this terminal gate. Do not convert that block into a request for an avoidable human authorization once the asset requirements are known.
 
 ## Recovery
 

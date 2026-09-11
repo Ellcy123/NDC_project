@@ -5,6 +5,7 @@ from contextlib import contextmanager
 import hashlib
 import importlib
 import json
+import os
 from pathlib import Path
 import re
 import runpy
@@ -87,7 +88,8 @@ def files_current(refs, output_root=None):
         need(file_hash(path).lower() == str(ref.get('sha256', '')).lower(), 'Changed file: ' + str(path))
 
 def workflow(packet):
-    module = Path(packet['project_root']) / 'scripts/ndc-art-workflow/art_workflow_state.py'
+    module = Path(__file__).resolve().parents[2] / 'ndc-generate-characters/scripts/art_workflow_state.py'
+    need(module.is_file(), 'Bundled character workflow state module is missing; deploy the complete Skill set')
     api = runpy.run_path(str(module))
     header, events, _ = api['load'](packet['authority']['journal'])
     need(header['plan']['task_id'] == packet['producer_task_id'], 'Use the original producer journal; do not reset task history')
@@ -144,7 +146,16 @@ class Pipeline:
             need(plan.get('model_policy') == INTEGRATION_MODELS, 'Character scene requires Astra medium and Terra xhigh')
         root = Path(plan['work_root']).resolve()
         project = Path(plan['project_root']).resolve()
-        need(root.is_relative_to(project / '工作过程文件') and root != project / '工作过程文件', 'Use an isolated work-process directory')
+        configured_project = os.environ.get('NDC_PLANNING_ROOT')
+        configured_work = os.environ.get('NDC_ART_WORK_ROOT')
+        need(configured_project and configured_work,
+             'Missing portable NDC roots; run this script through ndc_art.py run')
+        configured_project = Path(configured_project).expanduser().resolve()
+        configured_work = Path(configured_work).expanduser().resolve()
+        need(project == configured_project,
+             'project_root must equal the configured planning root')
+        need(root.is_relative_to(configured_work) and root != configured_work,
+             'Use an isolated child of the configured work root')
         need(database == root / 'pipeline.sqlite', 'Use the one canonical pipeline.sqlite inside work_root')
         units = plan.get('units')
         need(isinstance(units, list) and units, 'Full requested unit scope required')

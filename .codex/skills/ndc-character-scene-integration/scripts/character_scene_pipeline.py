@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import statistics
 from pathlib import Path
 
@@ -11,7 +12,29 @@ from PIL import Image, ImageChops, ImageDraw
 from head_measurement import anatomical_head_height
 
 
-NDC_ROOT = Path(r"D:\Codex\NDC")
+TEST_ROOT_OVERRIDE: Path | None = None
+
+
+def configured_root(name: str) -> Path:
+    """Resolve a root injected by the portable ndc_art.py entrypoint."""
+    if TEST_ROOT_OVERRIDE is not None:
+        if name == "NDC_ART_WORK_ROOT":
+            return (TEST_ROOT_OVERRIDE / "工作过程文件").resolve()
+        return TEST_ROOT_OVERRIDE.resolve()
+    value = os.environ.get(name)
+    if not value:
+        raise ValueError(
+            f"Missing {name}. Run this Skill through "
+            "scripts/art_pipeline/ndc_art.py run so machine roots are injected."
+        )
+    root = Path(value).expanduser()
+    if not root.is_absolute():
+        raise ValueError(f"{name} must be an absolute path.")
+    return root.resolve()
+
+
+def is_within(path: Path, root: Path) -> bool:
+    return path == root or path.is_relative_to(root)
 
 
 def load_contract(path: Path) -> dict:
@@ -185,12 +208,16 @@ def validate_delivery_root(data: dict) -> None:
             "deliveryRoot folder name must exactly match the source scene basename: "
             f"expected={scene.stem}, actual={delivery_root.name}"
         )
-    try:
-        delivery_root.resolve().relative_to(NDC_ROOT.resolve())
-    except ValueError as error:
-        raise ValueError("deliveryRoot must stay under D:\\Codex\\NDC.") from error
-    if "工作过程文件" in delivery_root.parts:
-        raise ValueError("Formal deliveryRoot cannot be inside 工作过程文件.")
+    delivery_root = delivery_root.resolve()
+    formal_root = configured_root("NDC_ART_DELIVERY_ROOT")
+    work_root = configured_root("NDC_ART_WORK_ROOT")
+    if is_within(delivery_root, work_root):
+        raise ValueError("Formal deliveryRoot cannot be inside the configured work root.")
+    if not is_within(delivery_root, formal_root):
+        raise ValueError(
+            "deliveryRoot must stay under the configured formal delivery root; "
+            "keep provisional packages under the configured work root instead."
+        )
 
 
 def validate_scale_anchors(
@@ -1170,9 +1197,9 @@ def validate_candidate_handoff(data: dict) -> None:
     if not comparison_report.is_file():
         raise ValueError(f"Candidate comparison report is missing: {comparison_report}")
     candidate_root = Path(review["candidateRoot"]).resolve()
-    process_root = (NDC_ROOT / "工作过程文件").resolve()
-    if process_root not in candidate_root.parents:
-        raise ValueError("Candidate handoff must stay under D:\\Codex\\NDC\\工作过程文件.")
+    process_root = configured_root("NDC_ART_WORK_ROOT")
+    if candidate_root == process_root or not candidate_root.is_relative_to(process_root):
+        raise ValueError("Candidate handoff must stay in a child of the configured work root.")
 
 
 def apply_occluders(image: Image.Image, base: Image.Image, polygons: list) -> Image.Image:
