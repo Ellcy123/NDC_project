@@ -356,7 +356,8 @@ def mutate(journal_path, key, action, data, expected_previous=None):
         elif action == "resolve":
             prior = j["attempts"].get(data["submission_id"])
             require(prior and prior["result"] in {"pending", "unknown"}, "submission not pending")
-            require(data["result"] in {"produced", "no_output", "unknown"} and data.get("evidence"), "result and evidence required")
+            require(data["result"] in {"produced", "no_output", "unknown", "account_record_unavailable"}
+                    and data.get("evidence"), "result and evidence required")
         elif action == "revise":
             changes = data["changes"]
             require(changes and set(changes) <= {"requirements", "inputs"}, "revise cannot rename jobs, reset history, change scope/limits or dependencies")
@@ -434,7 +435,7 @@ def main():
             c.add_argument("--submission", required=True, help="JSON with actual tool, operation and arguments; journal embeds it")
         if name == "resolve":
             c.add_argument("--submission-id", required=True)
-            c.add_argument("--result", choices=["produced", "no_output", "unknown"], required=True)
+            c.add_argument("--result", choices=["produced", "no_output", "unknown", "account_record_unavailable"], required=True)
             c.add_argument("--evidence", required=True)
         if name == "revise":
             c.add_argument("--changes", required=True)

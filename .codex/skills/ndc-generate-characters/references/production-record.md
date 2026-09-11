@@ -51,9 +51,9 @@ python -B scripts/art_workflow_state.py attempt --journal <journal> --job <id> -
 python -B scripts/art_workflow_state.py resolve --journal <journal> --job <id> --submission-id <同ID> --result produced --evidence <实际jobID及保存结果的说明>
 ```
 
-`produced` 只表示产生了候选/完成了这一处理轮次，不表示视觉通过。`unknown` 表示提交可能成功但结果不明，仍占额度并阻断重复提交；先查服务端job和已保存文件，再用同ID补记结果。只有确证没有生成/没有执行时才能填 `no_output`，释放该次艺术额度并累计工具错误。不得将差图标成no_output。连续无结果错误默认两次后先修复能力连接；实际恢复并有证据时用 `recover-tool --reason ...`，历史事件和总次数仍保留。主Skill已有更严格断联规则时继续遵守。
+`produced` 只表示产生了候选/完成了这一处理轮次，不表示视觉通过。`unknown` 表示提交可能成功但结果不明，仍占额度并阻断重复提交；先查服务端job和已保存文件，再用同ID补记结果。只有确证没有生成/没有执行时才能填 `no_output`，释放该次艺术额度并累计工具错误。不得将差图标成no_output。网页版 ChatGPT 因切换到不同已登录账户而确实无法访问原专用对话、历史消息或原结果时，可用 `account_record_unavailable` 关闭原 pending/unknown；证据必须记录非敏感账户／浏览器配置标签、切换原因、原 URL、原 submission ID、最后可知状态和核实方式。该终态继续计入一次真实艺术尝试、不累计工具错误、不删除旧记录，并允许以相同输入与提示词哈希在新账户的新专用对话登记下一次 attempt；原记录仍可访问时不得使用此例外。连续无结果错误默认两次后先修复能力连接；实际恢复并有证据时用 `recover-tool --reason ...`，历史事件和总次数仍保留。主Skill已有更严格断联规则时继续遵守。
 
-通用风格全身、通用角色卡和明确触发的黑白红卡使用网页版 ChatGPT 时，`submission` 直接引用不可覆盖角色提交包的 manifest，新提交固定记录 `tool: chatgpt_web_browser`、`operation: generate_image`、`browser: iab|chrome|edge`、专用对话 URL、character/revision、mode/branch、全部上传项及提示词哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。网页已收到消息即算真实 attempt；pending/unknown 必须先回原对话核实，不能刷新后重发或换生图后端。`resolve` 的网页来源证据必须包含 `CHATGPT_WEB_CHARACTER_GENERATION_GATE: PASS` 回执路径，但该门禁不代替艺术验收。
+通用风格全身、通用角色卡和明确触发的黑白红卡使用网页版 ChatGPT 时，`submission` 直接引用不可覆盖角色提交包的 manifest，新提交固定记录 `tool: chatgpt_web_browser`、`operation: generate_image`、`browser: iab|chrome|edge`、账户非敏感标签、专用对话 URL、character/revision、mode/branch、全部上传项及提示词哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。网页已收到消息即算真实 attempt；pending/unknown 在原记录可访问时必须先回原对话核实，不能刷新后重发或换生图后端；账户隔离导致记录确实不可访问时才按上段封存并登记新 attempt。`resolve` 的网页来源证据必须包含 `CHATGPT_WEB_CHARACTER_GENERATION_GATE: PASS` 回执路径，但该门禁不代替艺术验收。
 
 达到额度后保留候选和失败原因，继续可独立执行的其他项。不要为凑满数字追加无意义操作，也不把候选标成正式。新对话自动拥有完整新额度，保留旧任务来源关系即可，不要求用户答复；同一对话不通过 `revise` 修改额度。
 

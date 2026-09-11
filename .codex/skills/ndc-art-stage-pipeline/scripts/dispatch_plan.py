@@ -63,7 +63,7 @@ def worker_prompt(reservation, controller_task_id, core_script):
     elif reservation["downstream_skill"] == "ndc-generate-ui-portraits":
         effect = "只处理包内已放行 UI 母图的规格裁切与检查；保留已通过的 big/small，只补缺失或受变更影响的规格。本派发不授权重新生图、自动补肩或改变角色身份。"
     elif reservation["downstream_skill"] == "ndc-character-scene-production":
-        effect = "使用 gpt-5.6-terra / xhigh 执行 ndc-character-scene-production。接收一个完整场景的全部状态和人物参考，沿用原生产ID、原次数与真实前后置门禁；整场由你统筹，不能拆角色并行。正式像素只通过受支持的可见浏览器（内置 iab，或用户已指定/授权的外置 Chrome、Edge）在网页版 ChatGPT 生成；用户指定浏览器优先，未指定时选当前健康、已登录且可追溯的浏览器。每个 scene revision 使用专用网页对话，每次重传三引用和完整提示词，下载原图并保存 browser 与网页生图回执。禁止调用 Codex ImageGen、图片 API、其它站点或其它生图后端；提交前换浏览器不计 attempt，提交已发生或结果未知时只回同一对话核实，不得借换浏览器重发。姿势、几何、多人关系的参考错误回传 reference 阶段，由 Astra / medium 修正；技术提取、边缘、映射问题在原预算内处理。实际PS只使用本机已配对原生 MCP，并保持本机单一操作者；不调用旧队列/租约，不抢写上游参考或其他场景。"
+        effect = "使用 gpt-5.6-terra / xhigh 执行 ndc-character-scene-production。接收一个完整场景的全部状态和人物参考，沿用原生产ID、原次数与真实前后置门禁；整场由你统筹，不能拆角色并行。正式像素只通过受支持的可见浏览器（内置 iab，或用户已指定/授权的外置 Chrome、Edge）在网页版 ChatGPT 生成；用户指定浏览器优先，未指定时选当前健康、已登录且可追溯的浏览器，不同已登录账户均可继续。每个 scene revision 使用专用网页对话，每次重传三引用和完整提示词，下载原图并保存 browser、账户非敏感标签与网页生图回执。原记录可访问时只回原对话核实；账户隔离导致旧记录确实不可访问时，以 account_record_unavailable 保留旧 attempt，在新账户新建专用对话并以相同输入／提示词哈希登记新的真实 attempt。禁止调用 Codex ImageGen、图片 API、其它站点或其它生图后端。姿势、几何、多人关系的参考错误回传 reference 阶段，由 Astra / medium 修正；技术提取、边缘、映射问题在原预算内处理。实际PS只使用本机已配对原生 MCP，并保持本机单一操作者；不调用旧队列/租约，不抢写上游参考或其他场景。"
     else:
         effect = "只按不可变包中已锁定的场景与额度执行 ndc-midjourney-operator。每场景完整 views 由你这一任务统筹，保持跨视图一致性；不拆成多个任务，不扩展生成额度或制作道具。"
     return "\n\n".join([

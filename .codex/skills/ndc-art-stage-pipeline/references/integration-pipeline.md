@@ -46,7 +46,7 @@
 
 authority.journal为原成本记录，upstream_jobs留空（上游通过原native ledger验收）；downstream_jobs包含所有本次formal actor/interaction job。已有标准journal直接续用。只有历史从未采用机器日志时，才以原生产ID和母任务ID建立一次标准日志，把真实已用数及原记录引用写入每个job.history/history_evidence；零次也须有实际新生产/该阶段未执行依据，不补造历史attempt或视觉PASS。模型6次、PS有限轮次按原节奏保留；明确授权的独立测试与旧测试只保留来源关系，不相互扣数。参考白模原3次生成与3轮PS记录继续保留在原记录中，不转成formal零次的新额度。
 
-第二阶段每次 `attempt` 的实际提交快照须使用新记录 `tool: chatgpt_web_browser`、`operation: generate_image`，并保存 `browser: iab|chrome|edge`、ChatGPT conversation URL、submission manifest、提示词/重要度配置哈希及按序三引用的路径/哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。网页收到消息即计一次 model attempt；pending/unknown 只回原对话核实，不能借切换浏览器重发或切换 Codex 生图。下载原图和 `ndc-chatgpt-web-generation-receipt/v2` 留在不可覆盖的提交包目录，回执路径作为 resolve evidence；网页预览与截图不作为生产源。
+第二阶段每次 `attempt` 的实际提交快照须使用新记录 `tool: chatgpt_web_browser`、`operation: generate_image`，并保存 `browser: iab|chrome|edge`、账户非敏感标签、ChatGPT conversation URL、submission manifest、提示词/重要度配置哈希及按序三引用的路径/哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。不同已登录账户均可继续生产。网页收到消息即计一次 model attempt；pending/unknown 在原记录可访问时只回原对话核实。账户隔离导致旧对话、消息和结果确实不可访问时，以 `account_record_unavailable` 终结旧状态并保留已用次数，随后在新账户新建专用对话，以相同输入／提示词哈希登记新的真实 attempt；不得借账户切换抹除历史或切换 Codex 生图。下载原图和 `ndc-chatgpt-web-generation-receipt/v2` 留在不可覆盖的提交包目录，回执路径作为 resolve evidence；网页预览与截图不作为生产源。
 
 正式job的requirements含scene_id、production_id、phase:"formal"、pose_ids；limits通常为model:6和原ps限额（不大于3）。多角色调用对每个受影响job登记同一提交标识；全场工具调用按该标识去重，不把各角色计数相加成实际调用总数。未知结果先核实。
 

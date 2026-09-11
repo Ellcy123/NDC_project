@@ -40,7 +40,7 @@ metadata:
 
 - 只规划或维护 Skill 不授权生图。用户已要求 Codex 执行、批量生产或工程衔接时沿用已有授权；不重复请求开始确认。
 - 生产或跨阶段续作读取 [角色合同](references/character-contract.md)、[预算与依赖](references/production-budgets-and-dependencies.md) 和 [持久生产记录](references/production-record.md)。交接同一任务记录与剩余预算，不能另起阶段重置失败。
-- 网页三类正式资产每次提交前运行 `scripts/build_chatgpt_web_character_packet.py`，回收网页原始下载后运行 `scripts/validate_chatgpt_web_character_receipt.py`。一个角色同一 production revision 使用专用网页对话；任何引用、完整提示词、上传顺序、对话 URL 或哈希缺失都不提交，网页故障不静默回退其它生图后端。门禁全部满足后自动选择最高可用网页档位并立即提交，不要求用户回复“发送角色名”或再次确认已经交办的单个角色。浏览器按用户指定及当前健康、登录和可追溯状态动态选择，不固定先内置后外置；只有当前恰为内置浏览器且首次明确确认该载体无法收图时，才立即使用已登录同一 ChatGPT 账户的健康外置浏览器打开同一专用对话验收和下载，不重复等待、不另开对话、不重发。
+- 网页三类正式资产每次提交前运行 `scripts/build_chatgpt_web_character_packet.py`，回收网页原始下载后运行 `scripts/validate_chatgpt_web_character_receipt.py`。一个角色同一 production revision 使用专用网页对话；任何引用、完整提示词、上传顺序、对话 URL 或哈希缺失都不提交，网页故障不静默回退其它生图后端。门禁全部满足后自动选择最高可用网页档位并立即提交，不要求用户回复“发送角色名”或再次确认已经交办的单个角色。浏览器按用户指定及当前健康、登录和可追溯状态动态选择，不固定先内置后外置，不同已登录 ChatGPT 账户均可继续任务。原记录可访问时只接续原对话；账户隔离导致原记录确实不可访问时，以 `account_record_unavailable` 保留原 attempt，在新账户新建专用对话并以相同输入／提示词哈希重新生图。
 - 肖像可保留原生截肩。表情目标裁切不适配时，用 [一次人工适配交接](references/character-contract.md#人工肖像适配) 交人工处理；接收合格人工完成源后继续，不增加自动补肩。
 - 纯复用不重做创作分析。确需新图时由执行 Skill 在构思和实际提交前接入 `ndc-visual-description`，仅复核变化项。
 - 旧 `assets/`、`scripts/` 和专业 `references/` 保留为两个执行 Skill 的共享权威资源，旧脚本路径仍有效。按当前阶段加载，不默认通读整个旧资料库。
