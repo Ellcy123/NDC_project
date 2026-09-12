@@ -186,6 +186,11 @@ class ModelDispatchTests(unittest.TestCase):
         self.assertIn('网页版 ChatGPT',args['prompt'])
         self.assertIn('外置 Chrome、Edge',args['prompt'])
         self.assertIn('禁止调用 Codex ImageGen',args['prompt'])
+        self.assertIn('每个 scene revision 建立一个逻辑场景工作区',args['prompt'])
+        self.assertIn('多个专用 ChatGPT 对话',args['prompt'])
+        self.assertIn('用户原版风格 asset 的精确字节',args['prompt'])
+        self.assertIn('同一角色的不同 pose',args['prompt'])
+        self.assertIn('同一 actor/pose 未决时禁止重复提交',args['prompt'])
 
     def test_reused_terra_task_has_same_explicit_model_policy(self):
         self.reservation.update(action='send',target_thread_id='terra-worker')
