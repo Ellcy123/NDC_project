@@ -70,6 +70,31 @@ class IrregularMapTests(unittest.TestCase):
         self.assertEqual([20, 4, 35, 18], components[0]["bounds"])
         self.assertEqual([2, 13, 12, 18], components[1]["bounds"])
 
+    def test_disconnected_semantic_body_is_preserved_and_not_reported_as_shadow(self):
+        primary_body = [(20, 4), (34, 4), (34, 17), (20, 17)]
+        additional_body = [(2, 13), (11, 13), (11, 17), (2, 17)]
+        parent = Image.new("RGBA", (40, 22), (40, 50, 60, 255))
+
+        sprite, bbox, mask = irregular_map.build_sprite(
+            parent,
+            primary_body,
+            padding=0,
+            expand=0,
+            body_polygons=[additional_body],
+        )
+
+        components = irregular_map.connected_component_bounds(mask)
+        self.assertEqual((2, 4, 35, 18), bbox)
+        self.assertEqual(2, len(components))
+
+        args = irregular_map.build_parser().parse_args(
+            [
+                "build", "--parent", "parent.png", "--polygon", "20,4;34,4;34,17",
+                "--body-polygon", "2,13;11,13;11,17", "--output", "output.png",
+            ]
+        )
+        self.assertEqual(["2,13;11,13;11,17"], args.body_polygon)
+
     def test_final_extrema_gate_rejects_occluder_that_removes_shadow_extreme(self):
         base = irregular_map.polygon_union_mask(
             (40, 22),

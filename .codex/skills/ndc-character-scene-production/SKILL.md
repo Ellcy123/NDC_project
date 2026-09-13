@@ -42,7 +42,7 @@ metadata:
 2. 为 `scene_id + revision` 建立一个逻辑场景工作区。它可以是一个物理窗口中的标签组，也可以是可追溯的浏览器/session 标签集合；不强制独占 OS 窗口。
 3. 先做一次真实轻量 canary；健康与 canary 均通过后工作区才为 `READY`。失败载体进入 `QUARANTINED`，不让每个角色重复探测。默认 WIP 为 3，限流时降为 1–2。
 4. 每个角色或不可分割状态组使用独立 ChatGPT 对话。不同角色及同角色不同 pose 可并发；同一对话只允许一个未决 attempt，同一 actor/pose 不得跨对话重复占用。
-5. 每次尝试按固定顺序重新上传三份独立引用：`local-whitebox-crop → untouched-full-scene → approved-character-card`，再粘贴完整提示词。不得合并、少传、换序或依赖历史。用 `confirm-uploads` 留存三个独立缩略图和本地哈希核对后，只点击一次发送；网页明确接收后立即 `mark-submitted`。
+5. 每次尝试按固定顺序重新上传三份独立引用：`local-whitebox-crop → untouched-full-scene → approved-character-card`，再粘贴完整提示词。Image 1 必须与节点冻结的该 actor/pose `final_submission_whitebox` 以及 reference handoff 的首引用路径、SHA-256 完全一致；其人体来源必须是节点绑定的 `complete_anatomy_master`。联合多人预览、UI 避让图、木棍／关节点／程序块人形、扁平色剪影或临时裁图均不得替换 Image 1。不得合并、少传、换序或依赖历史。用 `confirm-uploads` 留存三个独立缩略图和本地哈希核对后，只点击一次发送；网页明确接收后立即 `mark-submitted`。
 6. 风格描述唯一权威是 `assets/original-user-style-description.txt` 的原始 UTF-8 字节。每次提示词编辑后运行[风格绑定门禁](references/prompt-style-binding-gate.md)；关键语义和原字节是硬门禁，网页空格/换行/显示格式正常化是软记录。
 7. 页面收到提交即记一次真实 model attempt。提交未知只回原 URL 核实，不重发；账户隔离确实无法访问旧记录时，才按网页合同封存 `account_record_unavailable` 并建立单一后继链。
 8. 新 revision 立即 `supersede` 旧工作区：取消未提交 packet；已提交/未知结果只回收与隔离，不再继续旧引用。恢复时只读 `manage_scene_web_window.py resume` 的紧凑条目。
@@ -70,3 +70,7 @@ metadata:
 `formal` 仍必须通过 post-generation ledger、真实 UI、身份/风格、Alpha、完整 scope、XY/图层和原尺寸逐像素重建。finalizer 只生成过程预览、确定性 `package-index.json` 和当前状态，不把技术通过写成艺术批准。工作证据及 provisional/H0 包留在 `{WORK_ROOT}`；每张由当前任务明确选定准备交付的图片随后用共享 `delivery_candidate_registry.py` 登记到 `{DELIVERY_ROOT}/.../交付候选/<candidate-id>`，其中包括明确作为交付件的参考图。候选覆盖是审计和制作进度首选，不是正式 PASS；复核失败先原位标记为可考虑移出，不自动删除。只有另行通过并转正的资产进入已批准正式资产区或允许工程同步。
 
 当前场景结束后只调用一次 `claim-next`。有 READY 场景就继续；没有就结束本轮，等上游发布新 READY 后唤醒同一任务。不得常驻轮询或建立后台 heartbeat 服务。用户明确暂停时只做被要求的分析或 Skill 维护，不恢复资产生产。
+
+## 节点、检索与可选人工交回
+
+读[检索、人工节点与回流合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)及[网页生图合同](references/chatgpt-web-generation.md)。新网页提交前，`build_chatgpt_web_submission_packet.py` 必须从 CURRENT revision gate 验证精确节点，并验证 scene/revision/actor/pose/artifact role/active scope SHA 全部匹配的 discovery receipt；它阻止未检索、可复用、可修复、未绑定或失效来源的重生。默认 `PARALLEL_NONBLOCKING` 不要求人工 approval，正式网页生图、回收、提取、合成和验收继续覆盖冻结范围；只有用户明确要求等待时，`USER_HOLD` 才要求 approval。用户明确交回预先冻结的角色 workspace 后，将 `USER_RETURN_ACCEPTED_FOR_PACKAGING` 与 INPUT_GAP 作为支线 revision 处理，只重跑受影响门禁；不得停止、覆盖或缩小已在推进的主线。

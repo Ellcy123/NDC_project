@@ -23,6 +23,8 @@ workflow_state.py validate会同时确认：
 
 ## 最终复查
 
+最终复查先运行 `delivery_candidate.py audit --candidate-root <最终交付根> --batch <batch.json>`。只对清单中的 active 交付候选及其选定参考做首轮逐项审查，再对照 active scope 查缺；普通候选和过程历史只在当前候选的来源、失败或绑定需要时读取。候选复核失败先通过状态命令原位记录失败、审核文件与原因；失败后才可使用 `move-failed` 保留式移出，禁止在审核前清走或失败后自动删除。`PROMOTED_FORMAL` 必须指向候选的字节一致正式副本；正式发布扫描显式排除任何名为 `交付候选`（以及兼容旧名 `_交付候选`）的子树。
+
 最终校验完整的需求—图像—父图—坐标—正式目录对应关系，并做跨状态、跨角色的实际联组判断。已有相同范围的联组审核可以复用，但缺失联组证据必须补查。已失败且退出选定链的历史候选只保留记录，不要求为它们取得PASS才能发布合格替代品。
 
 workflow_state.py不证明美术质量，只验证交接与审核证据；validate_formal_release.py继续验证文件角色、尺寸／Alpha、坐标和父图像素。final_visual_check.py在--batch模式按明确published_path和审核绑定核对，拒绝仅凭历史文件哈希覆盖当前拒收。

@@ -1,0 +1,63 @@
+{
+  "schema": "ndc-prop-node-delivery-scope/v1",
+  "unit": "Unit【N】",
+  "scene_id": "SC【SCENE_ID】",
+  "scene_label": {
+    "display_name": "【地点概括】（【白天_OR_夜晚_OR_明确时段_OR_时段未标注】）",
+    "location": "【地点概括】",
+    "time": "【白天_OR_夜晚_OR_明确时段_OR_时段未标注】"
+  },
+  "revision": "r【REVISION】",
+  "node_id": "SC【SCENE_ID】-r【REVISION】-initial-prop-node",
+  "node_delivery_basis": "INITIAL_REQUESTED_STAGE",
+  "mainline_scope_behavior": "CONTINUE_ALL_FROZEN_SCOPE_ASSETS_AFTER_NODE",
+  "source_scope": {"path": "【ACTIVE_DELIVERY_SCOPE_JSON】", "sha256": "【SHA256】"},
+  "subjects": [
+    {
+      "subject_id": "SC【SCENE_ID】",
+      "subject_kind": "scene",
+      "semantic_class": "scene",
+      "role_dispositions": [
+        {"role": "source_master", "disposition": "NOT_APPLICABLE", "reason": "scene identity is carried by scene_original"},
+        {"role": "state_master", "disposition": "NOT_APPLICABLE", "reason": "no separate scene state master"},
+        {"role": "psd_source", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["SC【SCENE_ID】.psd"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "big", "disposition": "NOT_APPLICABLE", "reason": "scene subject has no Big"},
+        {"role": "icon", "disposition": "NOT_APPLICABLE", "reason": "scene subject has no Icon"},
+        {"role": "scene_original", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["SC【SCENE_ID】.scene_original"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "scene_final", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["SC【SCENE_ID】.scene_final"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "scene_preview", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["SC【SCENE_ID】.scene_preview"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "carrier_without_prop", "disposition": "NOT_APPLICABLE", "reason": "declared on the direct-pickup item"},
+        {"role": "pickup_layer", "disposition": "NOT_APPLICABLE", "reason": "declared on the direct-pickup item"},
+        {"role": "scene_before_pickup", "disposition": "NOT_APPLICABLE", "reason": "declared on the direct-pickup item"},
+        {"role": "map_hotspot", "disposition": "NOT_APPLICABLE", "reason": "scene subject is not a hotspot"},
+        {"role": "xy", "disposition": "NOT_APPLICABLE", "reason": "scene subject has no runtime coordinate"},
+        {"role": "type6_container", "disposition": "NOT_APPLICABLE", "reason": "scene subject is not a container"},
+        {"role": "type7_menu", "disposition": "NOT_APPLICABLE", "reason": "scene subject is not a menu"},
+        {"role": "menu_preview", "disposition": "NOT_APPLICABLE", "reason": "scene subject is not a menu"}
+      ]
+    },
+    {
+      "subject_id": "【ITEM_ID】",
+      "subject_kind": "item",
+      "semantic_class": "【prop_OR_clue_OR_environment_narrative】",
+      "role_dispositions": [
+        {"role": "source_master", "disposition": "REQUIRED", "artifact_ids": ["【ITEM_ID】.master"]},
+        {"role": "state_master", "disposition": "NOT_APPLICABLE", "reason": "no additional required state master"},
+        {"role": "psd_source", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.psd"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "big", "disposition": "REQUIRED", "artifact_ids": ["【ITEM_ID】.big"]},
+        {"role": "icon", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.icon"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "scene_original", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.original_scene"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "scene_final", "disposition": "NOT_APPLICABLE", "reason": "shared final scene is declared on the scene subject"},
+        {"role": "scene_preview", "disposition": "NOT_APPLICABLE", "reason": "shared preview is declared on the scene subject"},
+        {"role": "carrier_without_prop", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.carrier_without_prop"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "pickup_layer", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.pickup_layer"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "scene_before_pickup", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.scene_before_pickup"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "map_hotspot", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.map"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "xy", "disposition": "MAINLINE_AFTER_NODE", "artifact_ids": ["【ITEM_ID】.xy"], "reason": "not requested at the initial node; remains in the frozen production mainline"},
+        {"role": "type6_container", "disposition": "NOT_APPLICABLE", "reason": "direct pickup is not a Type 6 container"},
+        {"role": "type7_menu", "disposition": "NOT_APPLICABLE", "reason": "direct pickup is not a Type 7 menu"},
+        {"role": "menu_preview", "disposition": "NOT_APPLICABLE", "reason": "direct pickup has no Type 7 menu preview"}
+      ]
+    }
+  ]
+}

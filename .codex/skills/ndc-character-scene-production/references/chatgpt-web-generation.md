@@ -41,7 +41,7 @@ python scripts/manage_scene_web_window.py record-canary --state <state> --result
 python scripts/manage_scene_web_window.py register --state <scene-window-state.json> --unit-id <unit> --actor-id <actor> --pose-id <pose> --conversation-url <https://chatgpt.com/c/...> --registered-at <ISO-8601>
 ```
 
-对 READY 单元先运行重要度与 v2 提示词风格门禁，并保存最近 15 分钟内的流水 CURRENT revision gate，再用 `python scripts/build_chatgpt_web_submission_packet.py --contract <source-v3.json> --out-dir <unit_attempt_dir> --browser <iab|chrome|edge>` 生成不可覆盖的提交包。包中包含逻辑工作区身份、按序重命名的三引用、完整提示词、用户原版风格文本、重要度配置、revision/retry 控制及 v3 manifest/v4 receipt draft。操作者只能从该目录上传。
+对 READY 单元先运行重要度与 v2 提示词风格门禁，并保存最近 15 分钟内的流水 CURRENT revision gate，再用 `python scripts/build_chatgpt_web_submission_packet.py --contract <source-v3.json> --out-dir <unit_attempt_dir> --browser <iab|chrome|edge>` 生成不可覆盖的提交包。gate 必须含精确的阶段 node；默认 `PARALLEL_NONBLOCKING` 不要求人工 approval，只有用户明确设置 `USER_HOLD` 时才必须绑定 approval。source 还必须为当前 scene/revision/actor/pose/artifact role 绑定三根 discovery receipt 和 scope SHA。包中包含逻辑工作区身份、按序重命名的三引用、完整提示词、用户原版风格文本、重要度配置、revision/retry 控制及 v3 manifest/v4 receipt draft。操作者只能从该目录上传。
 
 新 source 使用 `ndc-chatgpt-web-submission-source/v3`，其场景／角色字段必须与已登记单元完全相同；以下路径值在运行时从 `{WORK_ROOT}` 解析成真实绝对路径：
 
@@ -61,7 +61,12 @@ python scripts/manage_scene_web_window.py register --state <scene-window-state.j
   "prompt": {"path": "absolute packet source", "sha256": "..."},
   "prompt_binding_gate": {"path": "absolute v2 PASS gate", "sha256": "..."},
   "importance_profile": {"path": "absolute profile", "sha256": "..."},
-  "importance_gate": {"path": "absolute PASS gate", "sha256": "..."}
+  "importance_gate": {"path": "absolute PASS gate", "sha256": "..."},
+  "artifact_role": "formal_rgba",
+  "discovery": {
+    "scope_revision_sha256": "same SHA as revision gate",
+    "receipt": {"path": "absolute discovery receipt", "sha256": "..."}
+  }
 }
 ```
 

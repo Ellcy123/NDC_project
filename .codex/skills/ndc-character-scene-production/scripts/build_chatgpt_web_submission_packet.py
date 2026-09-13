@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -18,6 +19,12 @@ from manage_scene_web_window import (
     timestamp,
     validate_state,
 )
+
+SHARED_PIPELINE = Path(__file__).resolve().parents[2] / "ndc-art-stage-pipeline" / "scripts"
+if str(SHARED_PIPELINE) not in sys.path:
+    sys.path.insert(0, str(SHARED_PIPELINE))
+from asset_discovery import bound as discovery_bound, validate_receipt  # noqa: E402
+from manual_review_node import verify_approval  # noqa: E402
 
 SCHEMA = "ndc-chatgpt-web-submission-source/v3"
 PACKET_SCHEMA = "ndc-chatgpt-web-submission-packet/v3"
@@ -107,6 +114,49 @@ def build(contract_path: Path, out_dir: Path, browser: str = "iab") -> dict:
         or revision_record.get("revision") != identity["revision"]
     ):
         raise ValueError("revision_gate must bind a CURRENT guard for this scene/revision")
+    node_path = source(revision_record.get("manual_review_node"), "revision_gate.manual_review_node")
+    branch = revision_record.get("manual_review_branch")
+    if branch is None:
+        branch = {
+            "mode": "USER_HOLD",
+            "blocks_mainline": True,
+            "approval": revision_record.get("manual_review_approval"),
+        }
+    if not isinstance(branch, dict) or branch.get("mode") not in {"PARALLEL_NONBLOCKING", "USER_HOLD"}:
+        raise ValueError("revision_gate manual review branch is invalid")
+    if branch.get("blocks_mainline") is not (branch["mode"] == "USER_HOLD"):
+        raise ValueError("revision_gate manual review branch blocking flag is inconsistent")
+    approval_ref = branch.get("approval")
+    if branch["mode"] == "USER_HOLD" and approval_ref is None:
+        raise ValueError("revision_gate USER_HOLD requires manual review approval")
+    if approval_ref is not None:
+        approval_path = source(approval_ref, "revision_gate.manual_review_branch.approval")
+        try:
+            verify_approval(node_path, approval_path)
+        except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(f"revision_gate manual review approval is invalid: {exc}") from exc
+    discovery = contract.get("discovery")
+    if not isinstance(discovery, dict):
+        raise ValueError("discovery receipt is required before a new web submission")
+    artifact_role = contract.get("artifact_role")
+    if not isinstance(artifact_role, str) or not artifact_role:
+        raise ValueError("artifact_role is required for discovery binding")
+    scope_sha = revision_record.get("scope_sha256")
+    if not isinstance(scope_sha, str) or len(scope_sha) != 64:
+        raise ValueError("revision gate must bind a frozen scope SHA-256")
+    if str(discovery.get("scope_revision_sha256", "")).lower() != scope_sha.lower():
+        raise ValueError("discovery receipt does not bind the current frozen scope")
+    try:
+        receipt_path = discovery_bound(discovery.get("receipt"), contract_path.parent, "discovery.receipt")
+        discovery_failures = validate_receipt(receipt_path, expected_scope={
+            "domain": "character_scene", "scene_id": identity["scene_id"], "revision": identity["revision"],
+            "actor_id": unit["actor_id"], "pose_or_state": "|".join(unit["pose_ids"]),
+            "artifact_role": artifact_role, "scope_revision_sha256": scope_sha,
+        }, action="GENERATE")
+    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"discovery receipt is invalid: {exc}") from exc
+    if discovery_failures:
+        raise ValueError("discovery receipt blocks generation: " + "; ".join(discovery_failures))
     checked_at = timestamp(revision_record.get("checked_at"), "revision_gate.checked_at")
     prepared_dt = datetime.fromisoformat(prepared_at.replace("Z", "+00:00"))
     checked_dt = datetime.fromisoformat(checked_at.replace("Z", "+00:00"))

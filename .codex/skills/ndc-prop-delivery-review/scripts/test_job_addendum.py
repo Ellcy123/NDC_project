@@ -52,6 +52,15 @@ class JobAddendumTests(unittest.TestCase):
         self.assertEqual(w.reserve_attempt(self.path, self.job, prompt, 'first call in current conversation'), 1)
         self.assertEqual(w.log_events(self.path, w.load_batch(self.path))[-1]['number'], 2)
 
+    def test_addendum_can_snapshot_active_batch_without_disabling_other_source_checks(self):
+        evidence = self.evidence()
+        evidence['sources'].append({'path': str(self.path), 'sha256': w.sha(self.path)})
+        result = self.add(evidence)
+        self.assertEqual(result['historical_attempts'], 1)
+        self.assertEqual(w.log_events(self.path, w.load_batch(self.path))[-1]['type'], 'job_addendum')
+        self.source.write_text('Unreviewed change to the independently retained source.')
+        self.assertTrue(any('history source bytes changed' in error for error in w.validate(self.path, 1)))
+
     def test_addendum_rejects_invalid_history_without_changing_batch_or_log(self):
         proposal = self.evidence()
         proposal['confirmed_count'] = 4

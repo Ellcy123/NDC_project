@@ -47,9 +47,9 @@ Inspect `source_crop.png`, `hard_mask.png`, and `manifest.json` before generatio
 
 If a target such as `1730x520` exceeds 3:1, expand the real-source crop, for example to `1744x592`; do not scale the target. Prefer a square crop when it comfortably fits, because square model outputs avoid aspect drift.
 
-### 3. Generate one full crop for the confirmed job
+### 3. Generate one full crop with the confirmed backend route
 
-Reserve the next actual generation in the existing production job before submission; a child crop does not receive a new budget. Use built-in `image_gen` with `source_crop.png` in `referenced_image_paths`. Do not use `num_last_images_to_include` for a local crop. Ask for the edited full crop, not an isolated object.
+Reserve the next actual generation in the existing production job before submission; a child crop does not receive a new budget. For ordinary local repair, Big/Icon work, and any task that does not add a new scene object, use built-in `image_gen` with `source_crop.png` in `referenced_image_paths`; do not use `num_last_images_to_include` for a local crop. Only when the parent `ndc-scene-evidence-placement` job has already classified the target as adding a new carrier, container, environmental-narrative object, or equivalent extra object inside the locked scene or its scene-derived container view, upload the same `source_crop.png` to the authorized `chatgpt.com` web conversation and use that route. This child workflow must not create or broaden the web exception. In either route, ask for the edited full crop, not an isolated object.
 
 ```text
 Use case: precise-object-edit
@@ -197,7 +197,7 @@ Before handoff, inspect the current full image and affected close crops (reuse v
 
 - original source and final PNG paths;
 - the recorded parent masks and job manifests;
-- final prompts and built-in generation mode;
+- final prompts and the actual routed generation mode (`built-in image_gen` or the parent-authorized scene-extra-object web route);
 - registration scale/dx/dy for each AI job;
 - boundary and structure scan results;
 - the process `final_verification.json` path and four final containment fields;

@@ -21,11 +21,11 @@ from PIL import Image
 FORBIDDEN_FORMAL_TOKENS = (
     "candidate", "checker", "debug", "history", "manifest", "mask", "old",
     "overlay", "rejected", "report", "superseded", "verification", "候选",
-    "历史", "旧版", "拒绝", "验证", "报告", "叠图",
+    "历史", "旧版", "拒绝", "验证", "报告", "叠图", "节点交付",
 )
 HISTORY_PATH_TOKENS = (
     "history", "legacy", "old", "rejected", "superseded", "历史", "旧版",
-    "拒绝", "废弃",
+    "拒绝", "废弃", "节点交付",
 )
 HASH_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 PARENT_PIXEL_ROLES = {"map", "type6"}

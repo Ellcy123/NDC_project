@@ -72,7 +72,9 @@ def main() -> int:
     if not formal_dir.is_dir():
         print(f"FINAL_VISUAL_RECORD_PRESENCE_GATE: BLOCKED\n- formal directory is missing: {formal_dir}")
         return 1
-    artifacts = sorted(path for path in formal_dir.rglob("*.png") if path.is_file())
+    artifacts = sorted(path for path in formal_dir.rglob("*.png")
+                       if path.is_file()
+                       and not ({"交付候选", "_交付候选", "节点交付"} & set(path.relative_to(formal_dir).parts)))
     if not artifacts:
         print(f"FINAL_VISUAL_RECORD_PRESENCE_GATE: BLOCKED\n- no formal PNG artifacts found: {formal_dir}")
         return 1

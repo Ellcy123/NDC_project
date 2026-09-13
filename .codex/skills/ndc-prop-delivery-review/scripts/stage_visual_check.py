@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -36,14 +37,23 @@ HOTSPOT_REQUIRED_CRITERIA = {
     "click_mislead_risk",
     "parent_overlay_semantic_alignment",
 }
+_SHA256_CACHE: dict[tuple[str, int, int], str] = {}
 
 
 def sha256(path: Path) -> str:
+    path = Path(path)
+    stat = path.stat()
+    key = (os.path.normcase(os.path.abspath(path)), stat.st_size, stat.st_mtime_ns)
+    cached = _SHA256_CACHE.get(key)
+    if cached is not None:
+        return cached
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
-    return digest.hexdigest().upper()
+    value = digest.hexdigest().upper()
+    _SHA256_CACHE[key] = value
+    return value
 
 
 def require_text(value: Any, field: str, errors: list[str]) -> str:
@@ -65,7 +75,7 @@ def resolve_record_path(raw: str, record_dir: Path) -> Path:
     path = Path(raw)
     if not path.is_absolute():
         path = record_dir / path
-    return path.resolve()
+    return Path(os.path.abspath(path))
 
 
 def validate_artifact(

@@ -1,8 +1,10 @@
 # Production cadence and evidence reuse
 
-白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+人体覆盖按[效率与状态合同](efficiency-and-state-contract.md)分类。`FULL_IN_FRAME` 与 `SCENE_OCCLUDED` 保留完整头到脚母层，后者再按真实遮挡关系裁剪；`FRAME_CROPPED_FOREGROUND` 只需完整到自然出框边界，并保存画外尺度、重心和承托证据。正常场景遮挡或自然画框裁切不算可见结构缺失。
 
-白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：位置、比例、头身比、动作和演绎可准确判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
+白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：角色/状态、头身比、动作大类、主朝向、承托类型、粗略景深及完整母版范围可判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
+
+所有作业使用[执行档位、事实分支与单入口终结](execution-profiles-and-finalizer.md)。`probe`、`provisional`、`formal` 是同一工作流的交付深度，不重置预算。七项基础审核始终执行；只有状态连续性、多人 Links/遮挡、三人背影、软承托及躺卧/高位投影按事实启用。
 
 Use whole-scene rehearsal, layered production, whole-scene acceptance and one final package. Technical schemas are evidence interfaces inside these milestones, not a demand for a new picture or report for every command.
 
@@ -12,12 +14,12 @@ The Astra/medium reference coordinator owns complete scene direction, whiteboxes
 
 - Read the latest user instruction and rejection/pause note before old PASS records. Inventory current layers, unresolved defects, actual counts and verified tool capabilities once. Preserve valid components instead of restarting the cast.
 - Separate authorized asset work from formal Skill maintenance. Record uninstalled proposals; do not silently apply an unapproved exception or block unrelated authorized work on maintenance approval.
-- Keep one concise work record: current source/output identity, useful artifact, transforms/contact dependencies, unresolved defect, next action, generation/repair counts and elapsed time. Native reports and one ledger carry detailed evidence; do not duplicate measurements by hand.
-- For a test comparable to four actors in a fixed room, target a useful full-scene preview within about 30 minutes and a method review at about 90 minutes. These are planning targets, not delivery guarantees or universal time limits. Record tool/model waiting separately and report total elapsed time too. At the checkpoint identify the bottleneck and switch to a permitted workable method or report the exact blocker; do not extend polish/paperwork by default. Do not duplicate an in-flight model submission.
+- Keep one concise work record: current source/output identity, useful artifact, transforms/contact dependencies, unresolved defect, next action, generation/repair counts and per-phase timing. For web work, generate this single entry with `manage_scene_web_window.py resume`; do not replay the whole history. Native reports and one ledger carry detailed evidence; do not duplicate measurements by hand.
+- Target Layout Preview within 10 active minutes, first-download/first-usable-RGBA Pixel Proof Preview within 15 active minutes, and finalization within 10 active minutes. External web/login/transfer waiting is recorded separately. At 30 active minutes without a Pixel Proof Preview, switch method; at 60 active minutes stop low-value polish and package the scene once as `FORMAL_CANDIDATE`, `PROVISIONAL_SCENE_PACKAGE` or evidence-backed `H0_BLOCKED_PACKAGE`. Do not duplicate an in-flight model submission.
 
 ## Rehearsal before polish
 
-Reuse available candidates/masters for a cheap full-shot read. With none available, the first anatomical whitebox assembly supplies the preview; do not require an extra generation just for rehearsal. Provisional evidence does not pass the pre-generation gate.
+Reuse available candidates/masters for a cheap full-shot read. With none available, the first anatomical whitebox assembly supplies the Layout Preview; overlay the selected real UI and do not require an extra generation just for rehearsal. Provisional evidence does not pass the pre-generation gate.
 
 Read intended relationships and body language first; then support/depth/scale, soft contact, UI and overlap. Apply the frozen H0/H1/H2/H3 profile before fine polish: hard failure stops dependent refinement, while H2/H3 within 20%/30% ends that branch without optional cleanup. Use the same actor layers for unobstructed and final-occluded views. Whole-shot judgment precedes fine head/edge measurement.
 
@@ -29,7 +31,9 @@ Before another model call, classify the defect using [ps-first-repair.md](ps-fir
 
 Same-document extraction cleanup, documented uniform registration and save may form one operation. Intermediate files are unaccepted work states. Within the same task, save, run relevant technical checks, inspect whole/local views, write and validate the current-hash review before advancing to another image. Never batch-edit several PS documents before reviewing. Bridge occupancy is separate: after saving a recoverable checkpoint and frozen review snapshots with no in-flight or unknown native MCP command, hand off to another independent task. Offline review need not hold PS. Keep unfinished/failed acceptance, dependency blocks and existing counts; recheck document identity, source version and current hashes when the task returns to PS. A timeout alone cannot prove safe handoff. Tell the user whether PS is editing, saved awaiting review, or safely handed off; record a user-confirmed manual close as such, not as an inferred bridge failure.
 
-Inspect contextual RGB before extraction; extraction cannot certify an unaccepted face, pose or contact. Prefer verified non-generative extraction/native alpha that preserves the accepted pixels and contextual workflow. Do not assume a PS selection command exists. Model-based removal is a new generative attempt: compare it to the accepted parent for identity, silhouette, scale and contact.
+Inspect contextual RGB before extraction; extraction cannot certify an unaccepted face, pose or contact. Prefer verified non-generative extraction/native alpha that preserves the accepted pixels and contextual workflow. Do not assume a PS selection command exists. The first H0-usable RGBA immediately produces a Pixel Proof Preview on the actual scene; do not wait for edge polish or the remaining cast. The first formal RGBA stops remaining routes for that layer. Without a formal RGBA, exhaust every other applicable, supported independent route before declaring overall capability failure. Model-based removal is a new generative attempt: compare it to the accepted parent for identity, silhouette, scale and contact.
+
+Alpha review is two-tiered. H0 structural review requires real transparency, no rectangular scene background and no major anatomy/critical-prop clipping. H1/H2 edge review covers small halo, residue, hair, translucent material and local edge defects; these can continue only as clearly marked provisional work. `provisional` and `formal` each generate one batched black/white/dark-scene-tone contact sheet and perform one bound review rather than three artificial stages. The actual-scene read remains the Pixel Proof Preview.
 
 Review normalized actors on the actual scene as well as neutral backgrounds. Permitted PS correction includes support-anchored uniform scale/translation/rotation of an anatomically and semantically suitable layer, plus bounded extraction, occlusion and compatible-pixel repairs under ps-first-repair.md; update affected whitebox/placement evidence and interaction layers, then revalidate. Respect explicit user-locked coordinates. Do not warp a wrong pose, fit an alpha box or alter fixed furniture. Preserve the untouched high-resolution source and apply the composed transform once to avoid repeated destructive resampling.
 
@@ -55,7 +59,7 @@ Neutral-edge detectors are diagnostic. When flags indicate intentional white hai
 
 ## Package once
 
-Freeze pixels after scene acceptance. Produce source paths/hashes, layer/XY mapping and reconstruction from those outputs once, referencing valid existing reports. Formal folders contain passed assets; prompts, candidates and evidence remain in the work directory. Copy/reconstruction success cannot override withdrawn or failed visual acceptance.
+Freeze pixels after scene acceptance. Run the manifest-driven `finalize-scene --manifest <scene.json> --profile probe|provisional|formal` entry, whose cache key binds pixel hashes, profile, applicable criteria and evidence hashes but ignores metadata-only edits. Produce source paths/hashes, layer/XY mapping and reconstruction from those outputs once, referencing valid existing reports. Formal folders contain passed assets; prompts, candidates and evidence remain in the work directory. Copy/reconstruction success cannot override withdrawn or failed visual acceptance, and the finalizer never authors artistic PASS.
 
 ## Repair rounds and scoped reuse
 

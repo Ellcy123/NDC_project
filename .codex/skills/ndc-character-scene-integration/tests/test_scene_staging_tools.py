@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,6 +12,7 @@ from PIL import Image, ImageDraw
 
 
 SCRIPT_PATH = Path(__file__).parents[1] / "scripts" / "scene_staging_tools.py"
+sys.path.insert(0, str(SCRIPT_PATH.parent))
 SPEC = importlib.util.spec_from_file_location("scene_staging_tools", SCRIPT_PATH)
 TOOLS = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader

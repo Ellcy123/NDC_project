@@ -3,6 +3,7 @@ import copy
 import json
 import tempfile
 import unittest
+from unittest import mock
 
 import workflow_state as w
 
@@ -71,6 +72,34 @@ class WorkflowTests(unittest.TestCase):
         a['published_path'] = str(target); self.save()
         self.assertEqual(w.formal_errors(self.path, formal), [])
 
+    def test_formal_scan_ignores_isolated_delivery_candidate_tree(self):
+        formal = self.root / 'formal'; formal.mkdir()
+        a = self.b['artifacts']['big']; target = formal / 'big.png'
+        target.write_bytes((self.root / a['path']).read_bytes())
+        a['published_path'] = str(target); self.save()
+        candidate = formal / 'asset' / '交付候选' / 'r001' / 'candidate.png'
+        candidate.parent.mkdir(parents=True)
+        candidate.write_bytes(b'not formally reviewed')
+        self.assertEqual(w.formal_errors(self.path, formal), [])
+
+    def test_formal_scan_ignores_isolated_node_delivery_tree(self):
+        formal = self.root / 'formal'; formal.mkdir()
+        a = self.b['artifacts']['big']; target = formal / 'big.png'
+        target.write_bytes((self.root / a['path']).read_bytes())
+        a['published_path'] = str(target); self.save()
+        node_asset = formal / '节点交付' / 'SC1' / 'SC1_4112_big.png'
+        node_asset.parent.mkdir(parents=True)
+        node_asset.write_bytes(b'node review only')
+        self.assertEqual(w.formal_errors(self.path, formal), [])
+
+    def test_shared_review_context_validates_each_artifact_once(self):
+        context = w.review_context(self.b, self.archive)
+        module = w.stage_check_module()
+        with mock.patch.object(module, 'validate_record', wraps=module.validate_record) as validator:
+            self.assertEqual(w.review_errors(self.path, self.b, self.archive, 'scene', context=context), [])
+            self.assertEqual(w.review_errors(self.path, self.b, self.archive, 'big', context=context), [])
+        self.assertEqual(validator.call_count, 3)  # scene, shared master, then big
+
     def test_inventory_required_before_generation(self):
         self.archive['items']['p'].pop('inventory'); w.write_json(self.root/'content.json',self.archive)
         self.assertTrue(any('inventory' in e for e in w.validate(self.path,2)))
@@ -108,6 +137,24 @@ class WorkflowTests(unittest.TestCase):
     def test_incomplete_batch_blocks_hotspots(self):
         self.b['artifacts']['scene']['status']='PENDING'; self.save()
         self.assertTrue(w.validate(self.path,4))
+
+    def test_job_addendum_remains_valid_while_bound_scene_artifact_is_candidate(self):
+        self.b['artifacts']['environment']['status']='PENDING'; self.save()
+        source=self.root/'addendum-source.txt'; source.write_text('Synthetic historical scene attempt: one.')
+        evidence=self.root/'addendum-evidence.json'
+        key='q|scene|s|environment'
+        w.write_json(evidence,{
+            'schema':'ndc-prop-job-addendum-history/v1', 'batch_id':'test',
+            'job_id':key, 'artifact_id':'environment', 'confirmed_count':1,
+            'determination':'known_historical', 'reviewer':'test fixture',
+            'reason':'synthetic exact historical scene attempt',
+            'sources':[{'path':source.name,'sha256':w.sha(source)}]})
+        w.register_job_addendum(self.path,key,'environment',evidence,'synthetic missing scene job')
+        b=w.read(self.path)
+        b['artifacts']['environment']['status']='CANDIDATE'
+        w.write_json(self.path,b)
+        self.assertEqual(w.log_events(self.path,w.load_batch(self.path))[-1]['type'],'job_addendum')
+        self.assertTrue(any('candidate' in error for error in w.validate(self.path,4)))
 
     def test_unfrozen_scene_blocks_hotspots(self):
         self.b['artifacts']['scene']['frozen']=False; self.save()

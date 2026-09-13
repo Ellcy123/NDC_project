@@ -27,6 +27,40 @@ def artifact_scene(b, aid):
     a = b['artifacts'][aid]
     return a.get('scene_id') or b['jobs'].get(a.get('job_id'), {}).get('scene_id', '')
 
+def execution_artifact_ids(b):
+    """Return the current user-authorized delivery subset without rewriting history.
+
+    The immutable batch scope and its scene index remain complete audit records.
+    A separately hashed active-delivery revision can exclude an obsolete branch
+    (for example minigame-only roles) from current prerequisite and release
+    gates.  A broken revision pointer must block rather than silently widen or
+    shrink the user-approved execution scope.
+    """
+    full = set(b['scope']['required_artifacts'])
+    pointer = b.get('active_delivery_scope_revision')
+    if pointer is None:
+        return full
+    if (not isinstance(pointer, dict) or not isinstance(pointer.get('path'), str)
+            or not isinstance(pointer.get('sha256'), str) or len(pointer['sha256']) != 64):
+        raise ValueError('active delivery scope revision pointer is incomplete')
+    revision_path = Path(pointer['path'])
+    if sha(revision_path).lower() != pointer['sha256'].lower():
+        raise ValueError('active delivery scope revision bytes changed')
+    revision = read(revision_path)
+    ids = revision.get('execution_required_artifacts')
+    if not isinstance(ids, list) or len(ids) != len(set(ids)) or not set(ids) <= full:
+        raise ValueError('active delivery scope revision has invalid execution artifacts')
+    return set(ids)
+
+def execution_item_ids(b):
+    active = execution_artifact_ids(b)
+    # A retained scene preview can carry historical/context item membership.
+    # It cannot, by itself, re-add a minigame-only item whose individual asset
+    # roles were explicitly removed from the current delivery revision.
+    return {iid for aid in active
+            if b['artifacts'][aid].get('role') != 'scene_preview'
+            for iid in b['artifacts'][aid].get('item_ids', [])}
+
 def refs_shape(rows):
     return (isinstance(rows, list) and bool(rows) and all(isinstance(r, dict)
             and isinstance(r.get('path'), str) and r['path'] and isinstance(r.get('sha256'), str)
@@ -57,30 +91,32 @@ def validate_index(index, b, archive):
             errors.append(iid + ': association review needs status, source hashes and open_questions')
         elif item['status'] == 'unresolved' and not item['open_questions']:
             errors.append(iid + ': unresolved association requires a concrete question')
-    non_icons = {aid for aid in b['scope']['required_artifacts']
+    active_artifacts = execution_artifact_ids(b)
+    non_icons = {aid for aid in active_artifacts
                  if b['artifacts'][aid].get('stage') == 3 and not icon(b['artifacts'][aid])}
-    for aid in b['scope']['required_artifacts']:
+    for aid in active_artifacts:
         a = b['artifacts'][aid]
         if a.get('role') != 'source_reference' and (not a.get('item_ids') or not set(a['item_ids']) <= known):
             errors.append(aid + ': item-producing artifact requires complete indexed item membership')
     covered = set()
     for sid, row in scenes.items():
         if (not isinstance(row, dict) or not string_list(row.get('item_ids')) or not string_list(row.get('artifact_ids'))
-                or not set(row['item_ids']) <= known or not set(row['artifact_ids']) <= non_icons
+                or not set(row['item_ids']) <= known or not set(row['artifact_ids']) <= set(b['artifacts'])
                 or not refs_shape(row.get('sources'))):
             errors.append(sid + ': scene membership/producer coverage/source evidence invalid')
             continue
         actual = {aid for aid in non_icons if artifact_scene(b, aid) == sid}
-        if not actual <= set(row['artifact_ids']):
+        active_row_artifacts = set(row['artifact_ids']) & active_artifacts
+        if not actual <= active_row_artifacts:
             errors.append(sid + ': scene index omits a declared scene producer')
-        for aid in row['artifact_ids']:
+        for aid in active_row_artifacts:
             a = b['artifacts'][aid]
             if artifact_scene(b, aid) not in {'', sid}:
                 errors.append(sid + ': producer belongs to another scene: ' + aid)
             used_items = set(a.get('item_ids', []))
             if not used_items <= set(row['item_ids']):
                 errors.append(sid + ': scene membership omits producer content: ' + aid)
-        covered.update(row['artifact_ids'])
+        covered.update(active_row_artifacts)
     if covered != non_icons:
         errors.append('scene index must assign every required stage-3 non-Icon producer')
     seen = set()
@@ -161,7 +197,9 @@ def closure(b, archive, index, sid):
     if sid not in index['scenes']:
         raise ValueError('scene is not in the locked index: ' + sid)
     row = index['scenes'][sid]
-    production_items = set(row['item_ids'])
+    active_artifacts = execution_artifact_ids(b)
+    active_items = execution_item_ids(b)
+    production_items = set(row['item_ids']) & active_items
     context_items = set(production_items)
     related = {}
     roots = set()
@@ -172,18 +210,19 @@ def closure(b, archive, index, sid):
             physical = relation['kind'] in PHYSICAL_RELATIONS
             consumers = relation.get('consumer_scene_ids', [])
             applicable = physical or not consumers or sid in consumers
-            if applicable and set(relation['item_ids']) & (production_items if physical else context_items):
+            relevant_items = production_items if physical else context_items
+            if applicable and set(relation['item_ids']) & relevant_items:
                 related[relation['id']] = relation
-                context_items.update(relation['item_ids'])
+                context_items.update(set(relation['item_ids']) & active_items)
                 if physical:
-                    production_items.update(relation['item_ids'])
+                    production_items.update(set(relation['item_ids']) & active_items)
                 if sid in relation.get('consumer_scene_ids', []):
                     roots.update(relation['artifact_ids'])
-        roots.update(aid for aid in b['scope']['required_artifacts']
+        roots.update(aid for aid in active_artifacts
                      if b['artifacts'][aid].get('stage') == 2 and set(b['artifacts'][aid].get('item_ids', [])) & production_items)
         # Traverse local future producers for their inputs, but never demand a
         # local not-yet-produced scene/menu as its own stage-2->3 prerequisite.
-        local = set(row['artifact_ids'])
+        local = set(row['artifact_ids']) & active_artifacts
         seen = set()
         def visit(aid, stack=None):
             stack = set() if stack is None else stack
@@ -195,11 +234,15 @@ def closure(b, archive, index, sid):
             if aid not in b['artifacts']:
                 raise ValueError('missing dependency artifact: ' + aid)
             a = b['artifacts'][aid]
-            production_items.update(a.get('item_ids', []))
-            context_items.update(a.get('item_ids', []))
-            context_items.update(v.split('.', 1)[0] for v in a.get('fact_refs', []))
-            referenced_facts.update(a.get('fact_refs', []))
+            production_items.update(set(a.get('item_ids', [])) & active_items)
+            context_items.update(set(a.get('item_ids', [])) & active_items)
+            active_fact_refs = [v for v in a.get('fact_refs', [])
+                                if v.split('.', 1)[0] in active_items]
+            context_items.update(v.split('.', 1)[0] for v in active_fact_refs)
+            referenced_facts.update(active_fact_refs)
             for parent in a.get('parents', []):
+                if parent not in active_artifacts:
+                    continue
                 if parent not in local:
                     roots.add(parent)
                 visit(parent, stack | {aid})
@@ -248,7 +291,8 @@ def closure(b, archive, index, sid):
             prereqs[aid]['review_sha256'] = sha(base / review_path) if review_path else None
         except OSError:
             prereqs[aid]['review_sha256'] = 'missing'
-    context = {'scene_id': sid, 'scope_sha256': digest(b['scope']), 'scene_membership': row,
+    context = {'scene_id': sid, 'scope_sha256': digest(b['scope']),
+               'execution_scope_sha256': digest(sorted(active_artifacts)), 'scene_membership': row,
                'items': {i: index['items'][i] for i in sorted(production_items)},
                'relations': [related[i] for i in sorted(related)], 'facts': facts, 'prerequisites': prereqs}
     return {'scene_id': sid, 'item_ids': sorted(context_items), 'production_item_ids': sorted(production_items),
