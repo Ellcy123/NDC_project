@@ -1,5 +1,7 @@
 # Zack Brennan - Unit5《系统没有主人》
 
+> 2026-09-14 整理标记：本文件保留背景、动机和历史设计，案件经过／Loop／结局尚待与现行《Unit5_大纲.md》同步。下文旧来源声明只代表写作时依据；冲突内容不得作为 State 的既定事实。现行入口见 `canon_manifest.json` 与 Unit5 的 `README.md`。
+
 > 本档以 Unit5 案件层（`Unit5_大纲_0601.md`）+ 主线层（`Unit5_主线推进.md` / v3 §14-16）为准。
 > 旧版「罗生门六循环 / Miranda / 警察局台阶 / 录音定罪」结构已废弃；本案Zack逐环推翻嫁祸（Pierce/Foster/Vivian/Moore/Lula），靠宝石链 + 横向并列六方真话锁定小Charles。
 

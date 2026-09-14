@@ -1,5 +1,7 @@
 # Rose Martinez - Unit5《没有主人的帝国》
 
+> 2026-09-14 整理标记：本文件保留背景、动机和历史设计，案件经过／Loop／结局尚待与现行《Unit5_大纲.md》同步。下文旧来源声明只代表写作时依据；冲突内容不得作为 State 的既定事实。现行入口见 `canon_manifest.json` 与 Unit5 的 `README.md`。
+
 ## 一、基本信息
 
 - 姓名：Rose Martinez

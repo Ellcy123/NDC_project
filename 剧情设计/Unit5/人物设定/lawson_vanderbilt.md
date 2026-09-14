@@ -1,5 +1,7 @@
 # Lawson Vanderbilt - Unit5《系统没有主人》
 
+> 2026-09-14 整理标记：本文件保留背景、动机和历史设计，案件经过／Loop／结局尚待与现行《Unit5_大纲.md》同步。下文旧来源声明只代表写作时依据；冲突内容不得作为 State 的既定事实。现行入口见 `canon_manifest.json` 与 Unit5 的 `README.md`。
+
 > 设计基准：用户指定的 `Unit5_大纲_v3.md`。截至 2026-08-28，`canon_manifest.json` 登记的 Unit5 active outline 仍为 `Unit5_大纲_0601.md`；本档记录 V3 方向，不代表 Manifest 已完成切换。
 >
 > 本档供策划与写手使用，包含 Lawson 的身世、跨 Unit 关系、案件知识边界与终局信息，不直接展示给玩家。
