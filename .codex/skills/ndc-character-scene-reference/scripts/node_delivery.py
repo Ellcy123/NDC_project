@@ -18,10 +18,18 @@ from urllib.parse import quote
 from PIL import Image
 
 
-PACK_SCHEMA = "ndc-character-node-delivery-pack/v1"
-MANIFEST_SCHEMA = "ndc-character-node-delivery/v1"
-BATCH_AUDIT_SCHEMA = "ndc-character-node-delivery-batch-audit/v1"
-BATCH_REPORT_SCHEMA = "ndc-character-node-delivery-batch-report/v1"
+PACK_SCHEMA = "ndc-character-node-delivery-pack/v3"
+PREVIOUS_PACK_SCHEMA = "ndc-character-node-delivery-pack/v2"
+LEGACY_PACK_SCHEMA = "ndc-character-node-delivery-pack/v1"
+PACK_SCHEMAS = {LEGACY_PACK_SCHEMA, PREVIOUS_PACK_SCHEMA, PACK_SCHEMA}
+EDITABLE_PACK_SCHEMAS = {PREVIOUS_PACK_SCHEMA, PACK_SCHEMA}
+MANIFEST_SCHEMA = "ndc-character-node-delivery/v2"
+LEGACY_MANIFEST_SCHEMA = "ndc-character-node-delivery/v1"
+MANIFEST_SCHEMAS = {LEGACY_MANIFEST_SCHEMA, MANIFEST_SCHEMA}
+BATCH_AUDIT_SCHEMA = "ndc-character-node-delivery-batch-audit/v2"
+LEGACY_BATCH_AUDIT_SCHEMA = "ndc-character-node-delivery-batch-audit/v1"
+BATCH_AUDIT_SCHEMAS = {LEGACY_BATCH_AUDIT_SCHEMA, BATCH_AUDIT_SCHEMA}
+BATCH_REPORT_SCHEMA = "ndc-character-node-delivery-batch-report/v2"
 READY_STATUS = "NODE_DELIVERY_READY_PENDING_USER_REVIEW"
 METADATA_DIR = "_节点资料"
 NODE_METADATA_DIR = "_节点"
@@ -44,6 +52,35 @@ PROXY_ABSENCE_KEYS = {
     "technical_ruler",
     "combined_scene_preview_as_master",
 }
+EDITABLE_STRUCTURE_KEYS = {
+    "original_scene_separate_layer",
+    "actual_ui_separate_layer",
+    "every_actor_pose_separate_named_layer_or_group",
+    "current_position_and_scale_preserved",
+    "original_scene_canvas_size_preserved",
+}
+WHITEBOX_VISUAL_REVIEW_SCHEMA = "ndc-character-whitebox-visual-review/v1"
+WHITEBOX_VISUAL_GATE_KEYS = {
+    "independent_transparent_master",
+    "continuous_3d_volume_and_shading",
+    "head_neck_torso_pelvis_readable",
+    "both_arms_and_hands_readable",
+    "both_legs_and_feet_readable",
+    "support_and_weight_readable",
+    "not_flat_joint_or_programmatic_proxy",
+    "not_derived_from_joint_preview",
+}
+EDITABLE_PSD_REVIEW_SCHEMA = "ndc-character-performance-editable-psd-review/v1"
+EDITABLE_PSD_GATE_KEYS = {
+    "original_scene_separate_layer",
+    "actual_ui_separate_toggle_layer",
+    "every_actor_pose_separate_named_layer_or_group",
+    "current_position_and_scale_preserved",
+    "original_scene_canvas_size_preserved",
+    "accepted_3d_whiteboxes_only",
+    "no_joint_preview_or_flat_proxy_layer",
+    "no_broken_external_links",
+}
 ROOT_ROLES = {
     "complete_anatomy_master": "whitebox-master",
     "final_submission_whitebox": "image1-whitebox",
@@ -58,15 +95,16 @@ ROLE_LABELS = {
     "final_submission_whitebox": "网页 Image 1 最终生产白模",
     "joint_whitebox_preview": "整场联合站位预览（只供关系审核）",
     "actual_ui_clearance_preview": "真实 UI 避让预览",
-    "editable_source": "白模可编辑源文件",
+    "editable_source": "每场可编辑表演 PSD",
     "legacy_render_candidate": "本次明确分拣的历史生成候选（非普通节点固定内容）",
     "legacy_scene_ready_rgba": "本次明确分拣的历史可入景 RGBA（非普通节点固定内容）",
 }
 
 WARNING_TEXT = """角色入景白模节点交付包 - 非正式 PASS
 
-场景目录根层只平铺本场可直接打开的真实 3D 白模 PNG/JPG 与 PSD/PSB 源文件；不得按角色、类型或 revision 再拆资产文件夹。
+场景目录根层只平铺本场可直接打开的真实 3D 白模图片与每场唯一的可编辑表演 PSD；不得按角色、类型或 revision 再拆资产文件夹。
 逐 actor/pose 必须同时包含完整人体白模母层和实际作为网页版 ChatGPT Image 1 的最终局部白模。联合站位图与 UI 预览只供整场审核，不能冒充逐角色生产白模。
+可编辑表演 PSD 必须保持原场景画布尺寸，并将原场景、实际 UI 和每个 actor/pose 放在独立命名层或组中，保留节点当前位置和比例。
 所有 JSON、提示词、说明、候选状态、审核证据与清单统一放在“_节点资料”中，并按对应交付文件的同名 stem 归组。
 只有用户明确要求分拣旧冗余资产并显式开启 legacy_migration_backfill，才可额外附历史候选／已抠图 RGBA；它们只供用户判断可复用性，不是普通节点固定内容，也不替代生产白模。
 本包只代表等待用户节点审核，不代表正式资产 PASS、正式角色生产完成或允许工程同步。任何文件变化都必须建立新 revision。
@@ -75,6 +113,96 @@ WARNING_TEXT = """角色入景白模节点交付包 - 非正式 PASS
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_psd(path: Path, label: str) -> None:
+    try:
+        with path.open("rb") as handle:
+            signature = handle.read(4)
+            version = int.from_bytes(handle.read(2), "big")
+    except OSError as exc:
+        raise ValueError(f"{label} cannot be opened: {exc}") from exc
+    if signature != b"8BPS" or version != 1:
+        raise ValueError(f"{label} must be an actual PSD file")
+
+
+def review_digest(value: object, label: str) -> str:
+    digest = text(value, label).lower()
+    if HEX.fullmatch(digest) is None:
+        raise ValueError(f"{label} must be a SHA-256 digest")
+    return digest
+
+
+def require_true_gate(value: object, keys: set[str], label: str) -> None:
+    if not isinstance(value, dict) or set(value) != keys or any(item is not True for item in value.values()):
+        raise ValueError(f"{label} must explicitly PASS every required visual invariant")
+
+
+def validate_whitebox_visual_review(
+    path: Path,
+    label: str,
+    actor: str,
+    pose: str,
+    master_sha256: str,
+    image1_sha256: str,
+) -> None:
+    review = load(path)
+    if review.get("schema") != WHITEBOX_VISUAL_REVIEW_SCHEMA or review.get("status") != "PASS":
+        raise ValueError(f"{label} must be a current PASS whitebox visual review")
+    if safe_id(review.get("actor_id"), f"{label}.actor_id") != actor or safe_id(review.get("pose_id"), f"{label}.pose_id") != pose:
+        raise ValueError(f"{label} actor/pose differs from the packaged whitebox")
+    if review_digest(review.get("complete_anatomy_master_sha256"), f"{label}.complete_anatomy_master_sha256") != master_sha256:
+        raise ValueError(f"{label} does not bind the exact complete anatomy master")
+    if review_digest(review.get("final_submission_whitebox_sha256"), f"{label}.final_submission_whitebox_sha256") != image1_sha256:
+        raise ValueError(f"{label} does not bind the exact Image 1 whitebox")
+    timestamp(review.get("reviewed_at"), f"{label}.reviewed_at")
+    scales = review.get("review_scales")
+    if not isinstance(scales, dict) or scales.get("whole_frame_percent") != 100 or not isinstance(scales.get("local_percent"), (int, float)) or scales["local_percent"] < 200:
+        raise ValueError(f"{label}.review_scales must record whole-frame 100% and local 200% or greater")
+    require_true_gate(review.get("visual_gate"), WHITEBOX_VISUAL_GATE_KEYS, f"{label}.visual_gate")
+    text(review.get("decision_basis"), f"{label}.decision_basis")
+
+
+def validate_editable_psd_review(
+    path: Path,
+    label: str,
+    psd_sha256: str,
+    authority: dict[tuple[str, str], dict[str, str]],
+) -> None:
+    review = load(path)
+    if review.get("schema") != EDITABLE_PSD_REVIEW_SCHEMA or review.get("status") != "PASS":
+        raise ValueError(f"{label} must be a current PASS editable PSD structure review")
+    if review_digest(review.get("psd_sha256"), f"{label}.psd_sha256") != psd_sha256:
+        raise ValueError(f"{label} does not bind the exact performance editable PSD")
+    timestamp(review.get("reviewed_at"), f"{label}.reviewed_at")
+    canvas = review.get("canvas_size")
+    source_canvas = review.get("original_scene_canvas_size")
+    for value, field in ((canvas, "canvas_size"), (source_canvas, "original_scene_canvas_size")):
+        if not isinstance(value, dict) or not isinstance(value.get("width"), int) or not isinstance(value.get("height"), int) or value["width"] <= 0 or value["height"] <= 0:
+            raise ValueError(f"{label}.{field} must contain positive integer width and height")
+    if canvas != source_canvas:
+        raise ValueError(f"{label} PSD canvas differs from the original scene canvas")
+    require_true_gate(review.get("structure_gate"), EDITABLE_PSD_GATE_KEYS, f"{label}.structure_gate")
+    rows = review.get("actor_pose_layers")
+    if not isinstance(rows, list):
+        raise ValueError(f"{label}.actor_pose_layers must enumerate the frozen scope")
+    actual: dict[tuple[str, str], str] = {}
+    for index, row in enumerate(rows):
+        row_label = f"{label}.actor_pose_layers[{index}]"
+        if not isinstance(row, dict):
+            raise ValueError(f"{row_label} must be an object")
+        key = (safe_id(row.get("actor_id"), f"{row_label}.actor_id"), safe_id(row.get("pose_id"), f"{row_label}.pose_id"))
+        if key in actual:
+            raise ValueError(f"{row_label} duplicates actor/pose {key}")
+        if row.get("independently_editable") is not True or row.get("current_position_and_scale_preserved") is not True or row.get("accepted_3d_whitebox_only") is not True:
+            raise ValueError(f"{row_label} must remain editable and contain only an accepted 3D whitebox")
+        actual[key] = review_digest(row.get("complete_anatomy_master_sha256"), f"{row_label}.complete_anatomy_master_sha256")
+    if set(actual) != set(authority):
+        raise ValueError(f"{label} PSD actor/pose coverage differs from the frozen scope")
+    for key, digest in actual.items():
+        if digest != authority[key]["master"]:
+            raise ValueError(f"{label} PSD layer {key} does not bind the accepted complete anatomy master")
+    text(review.get("decision_basis"), f"{label}.decision_basis")
 
 
 def load(path: Path) -> dict:
@@ -275,25 +403,26 @@ def normalize_artifact(
     }
 
 
-def normalize_checks(entry: dict, base: Path, label: str) -> list[dict]:
+def normalize_checks(entry: dict, base: Path, label: str, *, verify: bool = True) -> list[dict]:
     result = []
     for kind in ("technical_review", "visual_review", "discovery_receipt"):
-        result.append({"kind": kind, "binding": binding(entry.get(kind), base, f"{label}.{kind}")})
+        result.append({"kind": kind, "binding": binding(entry.get(kind), base, f"{label}.{kind}", verify=verify)})
     return result
 
 
-def normalize_legacy_checks(entry: dict, base: Path, label: str) -> list[dict]:
+def normalize_legacy_checks(entry: dict, base: Path, label: str, *, verify: bool = True) -> list[dict]:
     result = []
     for kind in ("technical_review", "visual_review", "provenance_receipt"):
-        result.append({"kind": kind, "binding": binding(entry.get(kind), base, f"{label}.{kind}")})
+        result.append({"kind": kind, "binding": binding(entry.get(kind), base, f"{label}.{kind}", verify=verify)})
     return result
 
 
 def validate_pack(path: Path, *, verify: bool = True, scope_override: Path | None = None) -> tuple[dict, list[dict]]:
     path = path.resolve()
     pack = load(path)
-    if pack.get("schema") != PACK_SCHEMA:
-        raise ValueError(f"pack schema must be {PACK_SCHEMA}")
+    pack_schema = pack.get("schema")
+    if pack_schema not in PACK_SCHEMAS:
+        raise ValueError(f"pack schema must be one of {sorted(PACK_SCHEMAS)}")
     doc_id = identity(pack, "pack")
     timestamp(pack.get("created_at"), "pack.created_at")
     scope = binding(pack.get("scope"), path.parent, "pack.scope", verify=verify)
@@ -312,6 +441,7 @@ def validate_pack(path: Path, *, verify: bool = True, scope_override: Path | Non
         raise ValueError("pack.production_whiteboxes must contain every actor/pose")
     artifacts: list[dict] = []
     actual: set[tuple[str, str]] = set()
+    whitebox_authority: dict[tuple[str, str], dict[str, str]] = {}
     protected_hashes: set[str] = set()
     for role in ("joint_whitebox_preview", "actual_ui_clearance_preview"):
         raw = pack.get(role)
@@ -337,21 +467,53 @@ def validate_pack(path: Path, *, verify: bool = True, scope_override: Path | Non
         absence = entry.get("prohibited_proxy_types_absent")
         if not isinstance(absence, dict) or set(absence) != PROXY_ABSENCE_KEYS or any(value is not True for value in absence.values()):
             raise ValueError(f"{label} must explicitly reject all prohibited proxy types")
-        checks = normalize_checks(entry, path.parent, label)
+        checks = normalize_checks(entry, path.parent, label, verify=verify)
         master = normalize_artifact(entry.get("complete_anatomy_master"), path.parent, doc_id["scene_id"], actor, pose, "complete_anatomy_master", f"{label}.complete_anatomy_master", checks=checks)
         image1 = normalize_artifact(entry.get("final_submission_whitebox"), path.parent, doc_id["scene_id"], actor, pose, "final_submission_whitebox", f"{label}.final_submission_whitebox", checks=checks)
         if master["source"]["sha256"] == image1["source"]["sha256"]:
             raise ValueError(f"{label} must separate complete master from Image 1")
         if master["source"]["sha256"] in protected_hashes or image1["source"]["sha256"] in protected_hashes:
             raise ValueError(f"{label} cannot use a joint/UI preview as a production whitebox")
+        whitebox_authority[key] = {"master": master["source"]["sha256"], "image1": image1["source"]["sha256"]}
+        if pack_schema == PACK_SCHEMA and verify:
+            visual_review = next(check["binding"]["path"] for check in checks if check["kind"] == "visual_review")
+            validate_whitebox_visual_review(
+                visual_review,
+                f"{label}.visual_review",
+                actor,
+                pose,
+                master["source"]["sha256"],
+                image1["source"]["sha256"],
+            )
         artifacts.extend((master, image1))
     if actual != required:
         raise ValueError(f"whitebox coverage differs from frozen scope; missing={sorted(required-actual)}, extra={sorted(actual-required)}")
     editable = pack.get("editable_sources", [])
     if not isinstance(editable, list):
         raise ValueError("pack.editable_sources must be a list")
+    if pack_schema in EDITABLE_PACK_SCHEMAS and len(editable) != 1:
+        raise ValueError("v2/v3 pack must contain exactly one per-scene performance editable PSD")
     for index, entry in enumerate(editable):
-        artifacts.append(normalize_artifact(entry, path.parent, doc_id["scene_id"], "scene", doc_id["revision"], "editable_source", f"pack.editable_sources[{index}]"))
+        label = f"pack.editable_sources[{index}]"
+        artifact = normalize_artifact(entry, path.parent, doc_id["scene_id"], "scene", doc_id["revision"], "editable_source", label)
+        if pack_schema in EDITABLE_PACK_SCHEMAS:
+            if artifact["source"]["path"].suffix.lower() != ".psd" or Path(artifact["delivery_name"]).suffix.lower() != ".psd":
+                raise ValueError("v2/v3 performance editable source must be a PSD")
+            validate_psd(artifact["source"]["path"], f"{label}.source")
+            structure = entry.get("editable_structure") if isinstance(entry, dict) else None
+            if not isinstance(structure, dict) or set(structure) != EDITABLE_STRUCTURE_KEYS or any(value is not True for value in structure.values()):
+                raise ValueError(f"{label}.editable_structure must confirm every required editable layer invariant")
+        if pack_schema == PACK_SCHEMA:
+            structure_review = binding(entry.get("structure_review"), path.parent, f"{label}.structure_review", verify=verify)
+            artifact["checks"].append({"kind": "structure_review", "binding": structure_review})
+            if verify:
+                validate_editable_psd_review(
+                    structure_review["path"],
+                    f"{label}.structure_review",
+                    artifact["source"]["sha256"],
+                    whitebox_authority,
+                )
+        artifacts.append(artifact)
     migration = pack.get("legacy_migration_backfill", {"enabled": False})
     if not isinstance(migration, dict) or not isinstance(migration.get("enabled"), bool):
         raise ValueError("pack.legacy_migration_backfill must declare enabled=true or false")
@@ -375,7 +537,7 @@ def validate_pack(path: Path, *, verify: bool = True, scope_override: Path | Non
             pose = safe_id(entry.get("pose_id"), f"{label}.pose_id")
             artifacts.append(normalize_artifact(
                 entry, path.parent, doc_id["scene_id"], actor, pose, role, label,
-                checks=normalize_legacy_checks(entry, path.parent, label),
+                checks=normalize_legacy_checks(entry, path.parent, label, verify=verify),
             ))
     elif legacy_entries:
         raise ValueError("legacy review assets are allowed only when legacy_migration_backfill.enabled=true")
@@ -387,6 +549,7 @@ def validate_pack(path: Path, *, verify: bool = True, scope_override: Path | Non
     if len(names_seen) != len(set(names_seen)) or len(stems) != len(set(stems)):
         raise ValueError("flat delivery filenames and stems must be unique")
     pack["_normalized"] = {
+        "pack_schema": pack_schema,
         "identity": doc_id,
         "scope": scope,
         "source_index": source_index,
@@ -439,7 +602,7 @@ def human_index(doc_id: dict, artifacts: list[dict]) -> str:
         if Path(relative).suffix.lower() in IMAGE_SUFFIXES:
             preview = f'<a href="{href}"><img src="{href}" alt="{html.escape(relative)}"></a>'
         else:
-            preview = f'<a class="source" href="{href}">打开 PSD/PSB 源文件</a>'
+            preview = f'<a class="source" href="{href}">打开可编辑表演 PSD</a>'
         cards.append(
             f'<article><h2>{html.escape(ROLE_LABELS[item["role"]])}</h2>{preview}'
             f'<p>{html.escape(item["actor_id"])} / {html.escape(item["pose_id"])}</p>'
@@ -534,7 +697,7 @@ def build(pack_path: Path, delivery_root: Path) -> Path:
             hashed.extend([item["package_file"]["relative_path"], item["candidate_record"]["relative_path"]])
             hashed.extend(check["relative_path"] for check in item["checks"])
         manifest = {
-            "schema": MANIFEST_SCHEMA, "status": READY_STATUS, **doc_id, "created_at": pack["created_at"],
+            "schema": MANIFEST_SCHEMA, "source_pack_schema": normalized["pack_schema"], "status": READY_STATUS, **doc_id, "created_at": pack["created_at"],
             "formal_pass": False, "package_root": str(target),
             "scope_source": {"path": str(normalized["scope"]["path"]), "sha256": normalized["scope"]["sha256"]},
             "legacy_migration_backfill": {
@@ -574,7 +737,8 @@ def verify_binding(root: Path, relative: str, digest: object, label: str) -> Pat
 def verify_manifest(manifest_path: Path, delivery_root: Path) -> dict:
     manifest_path = manifest_path.resolve()
     manifest = load(manifest_path)
-    if manifest.get("schema") != MANIFEST_SCHEMA or manifest.get("status") != READY_STATUS:
+    manifest_schema = manifest.get("schema")
+    if manifest_schema not in MANIFEST_SCHEMAS or manifest.get("status") != READY_STATUS:
         raise ValueError("character node delivery manifest schema or status is invalid")
     doc_id = identity(manifest, "manifest")
     root = package_target(delivery_root, doc_id)
@@ -610,6 +774,9 @@ def verify_manifest(manifest_path: Path, delivery_root: Path) -> dict:
         verify=False,
         scope_override=support_by_kind["scope_snapshot"],
     )
+    pack_schema = pack["_normalized"]["pack_schema"]
+    if manifest_schema == MANIFEST_SCHEMA and manifest.get("source_pack_schema") != pack_schema:
+        raise ValueError("manifest source pack schema differs from the frozen pack")
     if identity(pack, "pack") != doc_id:
         raise ValueError("pack identity differs from manifest")
     expected_migration = {
@@ -634,6 +801,7 @@ def verify_manifest(manifest_path: Path, delivery_root: Path) -> dict:
     if not isinstance(artifacts, list) or len(artifacts) != len(expected_by_id):
         raise ValueError("manifest artifact coverage is incomplete")
     seen = set()
+    verified_check_paths: dict[str, dict[str, Path]] = {}
     for index, item in enumerate(artifacts):
         label = f"artifacts[{index}]"
         artifact_id = safe_id(item.get("artifact_id"), f"{label}.artifact_id")
@@ -670,17 +838,53 @@ def verify_manifest(manifest_path: Path, delivery_root: Path) -> dict:
         checks = item.get("checks")
         if not isinstance(checks, list):
             raise ValueError(f"{label}.checks is required")
+        expected_checks = {check["kind"]: check["binding"]["sha256"] for check in frozen_item["checks"]}
+        if len(checks) != len(expected_checks):
+            raise ValueError(f"{label}.checks differs from the frozen pack")
+        check_paths: dict[str, Path] = {}
         for check_index, check in enumerate(checks):
+            kind = text(check.get("kind"), f"{label}.checks[{check_index}].kind")
+            if kind not in expected_checks or kind in check_paths or check.get("sha256") != expected_checks[kind]:
+                raise ValueError(f"{label}.checks[{check_index}] differs from the frozen pack")
             check_relative = text(check.get("relative_path"), f"{label}.checks[{check_index}].relative_path")
             try:
                 Path(check_relative).relative_to(Path(METADATA_DIR) / frozen_item["asset_stem"] / "审核证据")
             except ValueError as exc:
                 raise ValueError(f"{label}.checks are not grouped by the same asset name") from exc
-            verify_binding(root, check_relative, check.get("sha256"), f"{label}.checks[{check_index}]")
+            check_paths[kind] = verify_binding(root, check_relative, check.get("sha256"), f"{label}.checks[{check_index}]")
             expected_files.add(check_relative); hashed.append(check_relative)
+        verified_check_paths[artifact_id] = check_paths
     if seen != set(expected_by_id):
         raise ValueError("manifest artifact coverage differs from pack")
     required_pairs = scope_actor_poses(support_by_kind["scope_snapshot"])
+    if pack_schema == PACK_SCHEMA:
+        artifact_by_role = {(item["actor_id"], item["pose_id"], item["role"]): item for item in artifacts}
+        authority: dict[tuple[str, str], dict[str, str]] = {}
+        for actor, pose in required_pairs:
+            master = artifact_by_role[(actor, pose, "complete_anatomy_master")]
+            image1 = artifact_by_role[(actor, pose, "final_submission_whitebox")]
+            authority[(actor, pose)] = {
+                "master": master["package_file"]["sha256"],
+                "image1": image1["package_file"]["sha256"],
+            }
+            validate_whitebox_visual_review(
+                verified_check_paths[master["artifact_id"]]["visual_review"],
+                f"artifacts[{master['artifact_id']}].visual_review",
+                actor,
+                pose,
+                authority[(actor, pose)]["master"],
+                authority[(actor, pose)]["image1"],
+            )
+        editable = [item for item in artifacts if item["role"] == "editable_source"]
+        if len(editable) != 1:
+            raise ValueError("v3 manifest must contain exactly one performance editable PSD")
+        editable_item = editable[0]
+        validate_editable_psd_review(
+            verified_check_paths[editable_item["artifact_id"]]["structure_review"],
+            "performance_editable_psd.structure_review",
+            editable_item["package_file"]["sha256"],
+            authority,
+        )
     coverage = manifest.get("coverage")
     if coverage != {"actor_poses_required": len(required_pairs), "actor_poses_packaged": len(required_pairs), "missing": [], "extra": []}:
         raise ValueError("manifest actor/pose coverage is incomplete")
@@ -703,9 +907,11 @@ def verify_manifest(manifest_path: Path, delivery_root: Path) -> dict:
         }
         for item in artifacts if item["role"] in LEGACY_MIGRATION_ROLES
     ]
+    editable_assets = [item for item in artifacts if item["role"] == "editable_source"]
     return {
-        "schema": MANIFEST_SCHEMA, "status": "PASS", **doc_id, "artifacts": len(artifacts),
+        "schema": manifest_schema, "source_pack_schema": pack_schema, "status": "PASS", **doc_id, "artifacts": len(artifacts),
         "actor_poses": len(required_pairs), "legacy_migration_assets": migration_assets,
+        "performance_editable_psd": editable_assets[0]["package_file"]["relative_path"] if editable_assets else None,
         "content_tree_sha256": manifest["content_tree_sha256"],
     }
 
@@ -717,8 +923,10 @@ def audit_batch(spec_path: Path, delivery_root: Path, output_dir: Path) -> dict:
     if output_dir == delivery_root or output_dir.is_relative_to(delivery_root):
         raise ValueError("batch audit reports must stay outside the delivery root, normally under {WORK_ROOT}")
     spec = load(spec_path)
-    if spec.get("schema") != BATCH_AUDIT_SCHEMA:
-        raise ValueError(f"batch audit schema must be {BATCH_AUDIT_SCHEMA}")
+    batch_schema = spec.get("schema")
+    if batch_schema not in BATCH_AUDIT_SCHEMAS:
+        raise ValueError(f"batch audit schema must be one of {sorted(BATCH_AUDIT_SCHEMAS)}")
+    require_performance_psd = batch_schema == BATCH_AUDIT_SCHEMA
     unit = text(spec.get("unit"), "batch.unit")
     if UNIT.fullmatch(unit) is None:
         raise ValueError("batch.unit must look like Unit2")
@@ -778,6 +986,8 @@ def audit_batch(spec_path: Path, delivery_root: Path, output_dir: Path) -> dict:
                     raise ValueError("verified manifest scene label differs from the batch label")
                 if verified["actor_poses"] != len(entry["actor_poses"]):
                     raise ValueError("verified actor/pose coverage differs from the batch scene scope")
+                if require_performance_psd and (verified["source_pack_schema"] not in EDITABLE_PACK_SCHEMAS or not verified["performance_editable_psd"]):
+                    raise ValueError("v2 batch requires a v2 node package with one per-scene performance editable PSD")
             except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
                 error = str(exc)
         elif len(manifests) == 0:
@@ -785,7 +995,7 @@ def audit_batch(spec_path: Path, delivery_root: Path, output_dir: Path) -> dict:
         else:
             error = f"multiple node delivery manifests found: {len(manifests)}"
         status = "VERIFIED_COMPLETE" if verified is not None else ("MISSING_NODE_PACKAGE" if not manifests else "INVALID_NODE_PACKAGE")
-        required_count = len(entry["actor_poses"]) * 2 + 2
+        required_count = len(entry["actor_poses"]) * 2 + 2 + (1 if require_performance_psd else 0)
         scene_rows.append({
             "scene_id": scene_id,
             **entry["scene_label"],
@@ -799,6 +1009,8 @@ def audit_batch(spec_path: Path, delivery_root: Path, output_dir: Path) -> dict:
             "error": error,
         })
         requirements = [("scene", "scene", "joint_whitebox_preview"), ("scene", "scene", "actual_ui_clearance_preview")]
+        if require_performance_psd:
+            requirements.append(("scene", "scene", "editable_source"))
         for actor, pose in sorted(entry["actor_poses"]):
             requirements.extend(((actor, pose, "complete_anatomy_master"), (actor, pose, "final_submission_whitebox")))
         for actor, pose, role in requirements:

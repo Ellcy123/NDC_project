@@ -36,7 +36,7 @@ metadata:
 4. 下游取得唯一 `claim` 后，按原Skill生产；每个有成本或写入的安全段前 `guard`，仍通过原journal登记attempt及结果。跨任务保留资产语义ID和原journal，按实际下游对话ID自动独立计数，旧资产历史不扣减新任务额度；PS若实际使用，通过原生 MCP；本机同一时刻仅由一个任务操作，保存检查点并核对无在途命令后才交棒。
 5. 用 `result` 回收实际文件、审核或明确失败／人工停止记录。下游只调用一次 `claim-next`；没有 READY 单位时结束当前轮，由上游在新 READY revision 发布后唤醒同一任务。不得 heartbeat 轮询无变化状态。
 
-人工补肩、来源身份选择、用户明确保留的确认节点或既有出图授权缺口只停止相关分支。人工返回须接入真实来源和原日志、重核相关条件再恢复；不得由流水脚本自动补肩、替用户批准或把等待算作模型重试。
+人工补肩、来源身份选择、用户明确保留的确认节点或既有出图授权缺口只停止相关分支。角色入景人工返回由独立 `ndc-character-scene-manual-return` Skill 接管，流水只负责路由，不在本 Skill 内复核或恢复；不得由流水脚本自动补肩、替用户批准或把等待算作模型重试。道具人工回流暂不定义。
 
 输入发生实质变化时追加新版本并停止旧版本后继。旧任务的在途或未知操作先核实，旧结果留在隔离目录；不能因超时自动把同一资产交给第二位执行者。最终完成仍要完整单位范围及各自原有技术、视觉、身份、纹理和交付门槛都通过。
 
@@ -44,6 +44,6 @@ metadata:
 
 ## 统一检索与一次中间人工节点
 
-读[检索、人工节点与回流合同](references/discovery-and-manual-node.md)。每个 scene/revision 的每个 actor/item、状态和 artifact role 在生成、修复、复用或人工回流前，都要有绑定当前 scope revision 与 asset-index 的三根 discovery receipt；发布 READY 不能绕过其 action 结论。角色初始节点在正式生图前创建，逐 actor/pose 交付实际 `complete_anatomy_master` 和最终 Image 1；道具初始节点交付原任务最先要求的实际母图、Big 等阶段资产。节点 scope 用 `REQUIRED` 区分当次必交，以 `MAINLINE_AFTER_NODE` 记录仍在冻结主线、节点之后继续生产的资产，不能借节点删去 Icon、场景／状态、Map／XY、Type6／Type7、菜单、环境叙事、线索、提取、合成或正式验收。只有用户额外要求分拣旧冗余资产时，才把已核验旧候选、RGBA、热区等追加进节点；普通任务不提前强制这些内容。两类节点均携带地点＋时间的可读 `scene_label`，真实文件平铺，元数据隔离；场景就绪透明 PNG 带精确 XY。人工处理／回流默认是 `PARALLEL_NONBLOCKING` 支线，原生产主线继续推进；只有用户明确要求等待时才设 `USER_HOLD` 并要求 approval。用户回流建立受影响支线的新 revision、记录 INPUT_GAP 并重跑依赖门禁，不覆盖或缩小主线。
+读[检索、人工节点与回流路由合同](references/discovery-and-manual-node.md)。每个 scene/revision 的每个 actor/item、状态和 artifact role 在生成、修复或复用前，都要有绑定当前 scope revision 与 asset-index 的三根 discovery receipt；发布 READY 不能绕过其 action 结论。角色初始节点在正式生图前创建，逐 actor/pose 交付实际 `complete_anatomy_master` 和最终 Image 1，并额外交付每场唯一的可编辑表演 PSD：保持原场景尺寸，原场景、实际 UI 与每个 actor/pose 分层，保留当前位置和比例。道具初始节点交付原任务最先要求的实际母图、Big 等阶段资产。节点 scope 用 `REQUIRED` 区分当次必交，以 `MAINLINE_AFTER_NODE` 记录仍在冻结主线、节点之后继续生产的资产，不能借节点删去 Icon、场景／状态、Map／XY、Type6／Type7、菜单、环境叙事、线索、提取、合成或正式验收。只有用户额外要求分拣旧冗余资产时，才把已核验旧候选、RGBA、热区等追加进节点；普通任务不提前强制这些内容。两类节点均携带地点＋时间的可读 `scene_label`，真实文件平铺，元数据隔离。角色人工回流出现时直接改用 `ndc-character-scene-manual-return`，原生产主线默认继续；道具人工回流暂不建立流程，不得从角色合同类推。
 
 用户明确要求从当前任务旧冗余资产中分拣可用内容时，可开启 `legacy_migration_backfill`，把绑定本次完整来源清单的旧 RGB 候选及已有透明 RGBA 作为非正式审阅副本补入节点；RGBA 文件名同样带匹配 XY。以后遇到同类明确要求可再次启用，但普通节点默认关闭；此模式不影响正常节点的固定范围，不能要求固定重交全历史，也不能把追加副本冒充生产白模或正式候选。

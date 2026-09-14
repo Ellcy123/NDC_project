@@ -1,5 +1,7 @@
 # Delivery contract and QA
 
+本合同不适用于角色入景人工回流。用户交回或指定人工修改后的 PSD 时，改用 [ndc-character-scene-manual-return](../../ndc-character-scene-manual-return/SKILL.md)；不要运行本文件的 evidence coverage、技术／视觉门禁、registry、重建或 PASS 流程。
+
 Use [production-cadence.md](production-cadence.md) for milestone boundaries, shared budgets and valid review reuse. Whiteboxes allow [up to three generations and three Photoshop MCP repairs](whitebox-photoshop-fallback.md), with PS available from the first useful candidate under [PS-first repair](ps-first-repair.md). Formal context, revision and model extraction share the actor/interaction model budget. Do not create a fresh budget at packaging or manufacture attempts to fit an old checker.
 
 Use [execution-profiles-and-finalizer.md](execution-profiles-and-finalizer.md) to finish through the single manifest-driven entry. `probe` writes the real-UI Layout Preview; `provisional` adds the first usable RGBA Pixel Proof Preview and one batched Alpha contact sheet; `formal` additionally requires every scoped layer and applicable validator to pass. The result is `PASS`, `PROVISIONAL` or `BLOCKED`; no file/hash/validator result can create artistic approval.
