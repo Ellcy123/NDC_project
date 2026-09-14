@@ -1,0 +1,5552 @@
+# Unit5 / Loop5 设计期蓝图；含获批互动终幕，不是 Loop6。
+# 来源以 source_anchor 回查。正式 Talk ID 与 special_adapter 尚未落 Unity。
+schema_version: 1
+unit: "Unit5"
+episode: "EPI05"
+loop: 5
+chapter_id: 505
+title: "小 Charles——拿走钥石的人"
+validation_status: "DESIGN_REVIEW_PASS"
+runtime_status: "special_adapter_required"
+source_contract: "../state_source_contract.md"
+time: "1928年12月8—13日暴风雪封锁期间；本轮各调查段无另定精确分钟"
+player_context:
+  goals:
+    - "到底是谁在众人进入现场后拿走了断翼鸢尾钥石；Lawson 房间里那套看似完整的凶手证据，究竟是他的秘密，还是别人替他写好的故事？"
+    - "证明取石、闩门与暗门离场的行为链；将致命刀刺判断保留到最终裁决。"
+  known_facts:
+    - "Zack 持有水源风险与 Sean 旧报告异常页面，尚不足以定案老 Charles 对 1912 年事件的完整责任。"
+    - "O'Hara 已送往圣心医院，Rosa 已得到同一水源风险警告。"
+    - "Pierce 的镜中观察不能排除第二名正常入口者，未确认具体进入者。"
+    - "中央镜至礼堂门约十秒、全程约二十秒，Pierce 打点低头十四秒。"
+    - "Pierce 说21:15楼梯在B、破门却在A，尚须客观影像验证。"
+    - "Emma 昏睡并被独立看守；她与 Zack 的信任尚未修复。"
+    - "21:38止付发送联使用M-7提前登记死亡，授权人未知。"
+    - "Emma 主动申请当天20:30—22:30彩排并约老 Charles 于21:30到舞台。"
+    - "老 Charles 先高处坠落重伤，后遭致命刀刺；刀创喷溅早于楼梯B到A回转。"
+    - "Vivian 隐瞒楼梯状态异常，不等于她操作楼梯、共谋或杀人。"
+    - "A位顶端是用途不明的木合地布景板，尚不能称暗门。"
+    - "Zack 没有隐瞒彩排批准联，Emma 见证他遵守查清真相的承诺。"
+    - "9米内部总高减去下层Vivian3米及上层Lawson4米，剩约2米未登记夹层。"
+    - "实地推开A位顶端暗门；Moore 指证后打开夹层地面通向书房天花板的第二入口。"
+    - "Moore 携催收急件追入第一岔口，使用M-7提前止付，仍未证明其实施刀刺。"
+    - "凌乱重叠鞋印至少分四组；除Moore与老Charles外另有两名未知经过者，身份和先后不明。"
+    - "文件柜背后局部存在用途未明的异常隔音材质。"
+    - "Mary 实为Lula，依Mickey留言寻找1912材料；她换药并进入档案区取页，准确时点未定。"
+    - "紫片未正式鉴定，Lula自称安眠药；与E-12可能同源仅为嫌疑。"
+    - "Emma 在录音室E-12杯旁失去行动能力，致命血迹形成后被拖到尸旁，持刀嫌疑洗清。"
+    - "Emma 事先委托Watts安排远端单向刻录，但不知道是否录成或母盘是否存在。"
+    - "Moore 已被隔离；Moore与Lula杀人嫌疑仍未排除。"
+    - "同一份1928投毒文件看似老Charles签发，尚未鉴定签名真伪。"
+  opening_facts:
+    - "Emma 获释协查；Moore、Lula 保持隔离。"
+    - "Vivian 仅确认彩排通知到 Pierce/Lawson、21:15 前安保回报及小 Charles 经手 E-12；消息转告与投药者未知。"
+  new_directions:
+    - "暗角的血迹负形、破门曝光、锁芯断齿与机关用途。"
+    - "以 Lawson 的职业痕迹回查湿区，不识别四组鞋印身份与先后。"
+    - "开门实验后还原照片墙，区分钥石知识与取石机会。"
+  post_expose_knowledge:
+    - "Emma 已获释协查，Moore与Lula仍被隔离且不因取石指证自动排除刀刺嫌疑。"
+    - "完整拼回断齿的鸢尾钥石配合特殊三指握姿可以从暗门两侧退栓。"
+    - "钥石在致命喷溅时已在暗角，22:10仍在、22:15被主动提走，机会者为Lawson与小Charles。"
+    - "夹层可见湿迹没有Lawson鞋底晶屑对应的蓝色反应；教学照还原指向小Charles的钥石知识。"
+    - "小Charles承认取石、内部闩门和暗门离场，仍否认致命刀刺；继承安排尚未揭晓。"
+opening:
+  type: "cutscene_sequence"
+  runtime_root:
+    table: "ChapterConfig"
+    chapter_id: 505
+    init_scene: 5007
+    init_talk: "L5_opening_corridor_release"
+  sequence:
+    -
+      event_id: "L5_opening_corridor_release"
+      talk: "L5_opening_corridor_release"
+      scene_id: 5007
+      location: "东侧客房走廊"
+      cast:
+        - 501
+        - 507
+        - 511
+        - 509
+        - 502
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:796"
+      required_beats:
+        - "L4 的小推理已经证明 Emma 被下药，并在致命血迹形成后才从后台拖到舞台正面，她的持刀杀人嫌疑已经洗清。小 Charles 主动支持释放，更加坐实自己此前的“好人”形象。"
+        - "Zack、小 Charles 与警员将 Lula 送入东侧客房走廊的另一间独立客房，随后释放 Emma。Emma 恢复共同调查者身份；Moore 与 Lula 仍各自隔离，两人的杀人嫌疑都没有被最终排除。"
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5011
+        continuation: "next_talk"
+        next_talk: "L5_opening_cup_recollection"
+    -
+      event_id: "L5_opening_cup_recollection"
+      talk: "L5_opening_cup_recollection"
+      scene_id: 5011
+      location: "舞台后台"
+      cast:
+        - 501
+        - 502
+        - 504
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:802"
+      required_beats:
+        - "Emma 获释后，Zack 重新按杯号核对后台酒杯流转。Vivian 看见 E-12 标记后，才把此前没有确认到具体杯号的两段记忆连起来；Pierce 在 21:15 前完成检查，则来自他当时向 Vivian 作出的工作回报。Vivian 随后补充两段有限证词："
+        - "这两条只建立两种彼此分开的机会：Pierce 与 Lawson 明确知道 Emma 会单独彩排；小 Charles 实际接触过她的酒杯。结合此前 Pierce 听从小 Charles 安排的暗示，玩家可以自行怀疑消息是否经 Pierce 传递，但 Zack 不说破，也不把转告写成已证实事实。"
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5021
+        continuation: "next_talk"
+        next_talk: "L5_opening_study_review"
+      testimony_ids:
+        -
+          id: 5045001
+          kind: "oral_record"
+          collectible: false
+          content: "Emma 申请单独使用礼堂彩排后，Vivian 按晚宴统筹流程同时把这项安排告诉了 Pierce 和 Lawson；Pierce 因此在 21:15 前进入礼堂完成过一次安保检查。Vivian 不知道 Pierce 后来是否把消息转告给其他人，也没有声称两人知道 Emma 与老 Charles 的 21:30 私约。"
+          acquisition_talk: "L5_opening_cup_recollection"
+          source_anchor: "剧情设计/Unit5/Unit5_大纲.md:804"
+        -
+          id: 5045002
+          kind: "oral_record"
+          collectible: false
+          content: "小 Charles 曾经经手 Emma 的 E-12 酒杯；Vivian 没看见他往杯里放东西，也没有持续盯住酒杯，因而不能排除后来还有别人接触。"
+          acquisition_talk: "L5_opening_cup_recollection"
+          source_anchor: "剧情设计/Unit5/Unit5_大纲.md:805"
+      knowledge_boundary: "不生成正式物证，不证明投药或 Pierce 转告；不声称 Pierce/Lawson 知道21:30私约。"
+    -
+      event_id: "L5_opening_study_review"
+      talk: "L5_opening_study_review"
+      scene_id: 5021
+      location: "老 Charles 书房"
+      cast:
+        - 501
+        - 502
+        - 506
+        - 507
+        - 504
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      required_beats:
+        - "众人核对书房暗门与 TideWater 文件。"
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5025
+        continuation: "next_talk"
+        next_talk: "L5_opening_hall_passage"
+    -
+      event_id: "L5_opening_hall_passage"
+      talk: "L5_opening_hall_passage"
+      scene_id: 5025
+      location: "门厅"
+      cast:
+        - 501
+        - 502
+        - 506
+        - 507
+        - 504
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      required_beats:
+        - "公开经过门厅；照片墙无调查热点，不提示调换。"
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5016
+        continuation: "next_talk"
+        next_talk: "L5_opening_office_review"
+    -
+      event_id: "L5_opening_office_review"
+      talk: "L5_opening_office_review"
+      scene_id: 5016
+      location: "Lawson 办公室"
+      cast:
+        - 501
+        - 502
+        - 506
+        - 507
+        - 504
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      required_beats:
+        - "Lawson 要求暂时封存公司文件，开放办公室供调查与庄园人员交错核对矿物登记、封存清单。"
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5005
+        continuation: "next_talk"
+        next_talk: "L5_opening_stage_return"
+    -
+      event_id: "L5_opening_stage_return"
+      talk: "L5_opening_stage_return"
+      scene_id: 5005
+      location: "舞台正面"
+      cast:
+        - 501
+        - 502
+        - 506
+        - 507
+        - 504
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      required_beats:
+        - "众人回到礼堂，开放本轮自由调查；此前往返没有任何人的排他独处窗口。"
+      runtime_exit:
+        action: "release_to_exploration"
+  player_control_restored_after: "L5_opening_stage_return"
+scenes:
+  -
+    id: 5005
+    name: "舞台正面"
+    type: "free_exploration"
+    unlock_condition:
+      -
+        type: "event_completed"
+        param: "L5_opening_stage_return"
+    npcs:
+      505:
+        name: "Foster"
+        talk: "L5_talk_stage_lighting"
+        runtime_entry: "NPCLoopData.TalkInfo"
+        is_liar: false
+        known_information:
+          active_topics:
+            -
+              text: "两次曝光间的小 Charles C-3背面位置；没有一直看他的双手"
+              truth_status: "true"
+          withheld_topics: []
+          unknown_topics:
+            - "没有持续观察小Charles双手，不知道取石/刀刺者"
+        mindset: "严格分开持续站位与手部观察。"
+        player_inquiry: "两张破门照片的暗角变化与 C-3 遮挡" # 8
+        player_inquiry_score: 8
+        testimony_ids:
+          -
+            id: 5055001
+            kind: "testimony"
+            content: "拍摄 22:10 第一张照片前，她让小 Charles 到 C-3 景墙背面帮忙打光；直到 22:15 第二张照片曝光，他都在那一带。她没有持续观察小 Charles 的双手。"
+            acquisition_talk: "L5_talk_stage_lighting"
+            source_anchor: "剧情设计/Unit5/Unit5_大纲.md:818"
+        forbidden_reveals:
+          - "不提前披露法庭旧尸检或投毒鉴定"
+      512:
+        name: "摄影师"
+        talk: "L5_talk_stage_exposures"
+        runtime_entry: "NPCLoopData.TalkInfo"
+        is_liar: false
+        known_information:
+          active_topics:
+            -
+              text: "固定机位、装置未移动、可见人物站位未变"
+              truth_status: "true"
+          withheld_topics: []
+          unknown_topics:
+            - "墙后具体手部行为"
+        mindset: "认证曝光条件，不代替玩家认定取石。"
+        player_inquiry: "L2原照片组在L5放大后的差异" # 8
+        player_inquiry_score: 8
+        testimony_ids:
+          -
+            id: 5125001
+            kind: "testimony"
+            content: "22:10 与 22:15 两张玻璃底片使用同一固定机位，两次曝光之间相机与舞台装置没有移动；可见人物与 C-3 正面 Lawson 的站位保持不变，只有 Lawson 与景墙背面的小 Charles 能接触暗角。"
+            acquisition_talk: "L5_talk_stage_exposures"
+            source_anchor: "剧情设计/Unit5/Unit5_大纲.md:820"
+    evidence_ids:
+      - 5501
+      - 5551
+      - 5204
+    event_triggers: []
+  -
+    id: 5020
+    name: "舞台侧夹层暗门"
+    type: "free_exploration"
+    unlock_condition:
+      -
+        type: "event_completed"
+        param: "L5_opening_stage_return"
+    npcs:
+      502:
+        name: "Emma"
+        talk: "L5_talk_door_grip_memory"
+        runtime_entry: "NPCLoopData.TalkInfo"
+        is_liar: false
+        known_information:
+          active_topics:
+            -
+              text: "药效后的短暂手势记忆，操作者未辨认"
+              truth_status: "true"
+          withheld_topics: []
+          unknown_topics:
+            - "没见到坠落/刀刺；远端录制是否成功未知"
+        mindset: "以自己的有限记忆尝试复现；保持协查自主性。"
+        player_inquiry: "普通转动不能开启拼回断齿的钥石" # 8
+        player_inquiry_score: 8
+        testimony_ids:
+          -
+            id: 5025001
+            kind: "oral_record"
+            content: "药效使她彻底失去行动能力、意识断续；被放到尸旁后，她曾短暂睁眼，看见楼梯控制箱附近有一只手用三指握住鸢尾石并转动。她没有看清操作者的面孔，无法辨认那个人，只能尝试复现手势。"
+            acquisition_talk: "L5_talk_door_grip_memory"
+            source_anchor: "剧情设计/Unit5/Unit5_大纲.md:856"
+            collectible: false
+        unlock_condition:
+          -
+            type: "event_completed"
+            param: "L5_event_key_comparison"
+          -
+            type: "event_completed"
+            param: "L5_event_ordinary_grip_failed"
+    evidence_ids:
+      - 5502
+      - 5503
+      - 5311
+    event_triggers:
+      -
+        event_id: "L5_event_tooth_closes_door"
+        talk: "L5_event_tooth_closes_door"
+        scene_id: 5020
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:838"
+        cast:
+          - 501
+          - 502
+        required_beats:
+          - "Zack 取出卡在锁芯里的断齿，暗门失去卡阻后意外闭合。门内外都没有普通把手，只有断翼鸢尾形浅槽；要重新开启，必须先找到能够与浅槽吻合的完整钥件。Lawson 负责庄园的矿物与石件管理，Zack 因此立即转去他的办公室询问。"
+        runtime_binding:
+          kind: "special_adapter"
+          status: "not_implemented"
+          trigger: "item_acquired"
+          required_item_ids:
+            - 5502
+          required_talks: []
+          previous_event_completed: "L5_opening_stage_return"
+          once: true
+        runtime_exit:
+          action: "change_scene"
+          target_scene_id: 5016
+          continuation: "release_to_exploration"
+      -
+        event_id: "L5_event_ordinary_grip_failed"
+        talk: "L5_event_ordinary_grip_failed"
+        scene_id: 5020
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:858"
+        cast:
+          - 501
+          - 502
+        required_beats:
+          - "Zack临时拼回断齿、嵌入门槽，普通转动失败；恢复控制后Emma可点击询问。"
+        runtime_binding:
+          kind: "chained_talk"
+          status: "not_implemented"
+          entry_from: "L5_event_key_comparison"
+          required_item_ids:
+            - 5502
+            - 5504
+          previous_event_completed: "L5_event_key_comparison"
+        runtime_exit:
+          action: "release_to_exploration"
+      -
+        event_id: "L5_event_grip_reopens_door"
+        talk: "L5_event_grip_reopens_door"
+        scene_id: 5020
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:858"
+        cast:
+          - 501
+          - 502
+        required_beats:
+          - "Emma 模仿昏迷时见过的特殊三指握姿，成功开启暗门。调查只确认“鸢尾钥石需要特定握姿操作”，不判断她当时看见的是谁。"
+          - "取石返回后的完整实验才确认：拼回断齿的钥石能够从暗门两侧退栓。这是暗门机关的调查结论，不另生成联动复原页，也不说明案发时由谁操作。"
+        callback_only: "Zack临时拼回断齿、普通旋转失败已由L5_event_ordinary_grip_failed唯一演出，本节点只承接该状态，不重演前半。"
+        runtime_binding:
+          kind: "special_adapter"
+          status: "not_implemented"
+          required_item_ids:
+            - 5502
+            - 5504
+          required_talks:
+            - "L5_talk_door_grip_memory"
+          previous_event_completed: "L5_event_ordinary_grip_failed"
+          once: true
+        runtime_exit:
+          action: "release_to_exploration"
+          set_flags:
+            u5_door_reopened: true
+          unlocks_scene_id: 5025
+  -
+    id: 5016
+    name: "Lawson 办公室"
+    type: "free_exploration"
+    unlock_condition:
+      -
+        type: "event_completed"
+        param: "L5_event_tooth_closes_door"
+    npcs:
+      506:
+        name: "Lawson"
+        talk: "L5_talk_office_crystals"
+        runtime_entry: "NPCLoopData.TalkInfo"
+        is_liar: false
+        known_information:
+          active_topics:
+            -
+              text: "处理镶座洒落晶体、案后未换鞋且仍有残屑"
+              truth_status: "true"
+          withheld_topics: []
+          unknown_topics:
+            - "不知道钥石握姿，不知道实体监印用途，不知继承变更"
+        mindset: "有真实不满和文件保管职责；要求物证检验而非替其洗白。"
+        player_inquiry: "暗门闭合需找管理石件者；湿痕需要职业对照" # 8
+        player_inquiry_score: 8
+        testimony_ids:
+          -
+            id: 5063001
+            ref: "loop3_state.yaml"
+            kind: "testimony"
+            content: "自己处理宝石金属镶座时曾洒落硫酸铜晶体，晶屑卡进鞋底，踩到水会溶出蓝色痕迹；案发后没有换鞋。"
+            acquisition_talk: "L3_talk_lawson_measurement"
+            source_anchor: "剧情设计/Unit5/Unit5_大纲.md:514"
+            revealed_here: "自己处理宝石金属镶座时洒落了硫酸铜晶体，晶屑卡进鞋底，踩到水便会溶出蓝色痕迹；案发后没有换鞋，鞋底仍有残余晶屑。"
+            callback_talk: "L5_talk_office_crystals"
+            callback_source_anchor: "剧情设计/Unit5/Unit5_大纲.md:843"
+        unlock_condition:
+          -
+            type: "event_completed"
+            param: "L5_event_tooth_closes_door"
+    evidence_ids:
+      - 5504
+      - 5505
+      - 5306
+    event_triggers:
+      -
+        event_id: "L5_event_key_comparison"
+        talk: "L5_event_key_comparison"
+        scene_id: 5016
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:851"
+        cast:
+          - 501
+          - 502
+        required_beats:
+          - "Zack 当场把锁芯断齿与残缺钥石的新鲜缺口比对，二者能够吻合。他不在 Lawson 办公室内凭空完成开门，而是带着残缺钥石立刻返回夹层暗门。"
+        runtime_binding:
+          kind: "special_adapter"
+          status: "not_implemented"
+          required_item_ids:
+            - 5502
+            - 5504
+          required_talks:
+            - "L5_talk_office_crystals"
+          previous_event_completed: "L5_event_tooth_closes_door"
+          once: true
+        runtime_exit:
+          action: "change_scene"
+          target_scene_id: 5020
+          continuation: "next_talk"
+          next_talk: "L5_event_ordinary_grip_failed"
+  -
+    id: 5025
+    name: "门厅照片墙"
+    type: "free_exploration"
+    unlock_condition:
+      -
+        type: "flag"
+        param: "u5_door_reopened"
+    npcs: {}
+    evidence_ids:
+      - 5552
+      - 5553
+      - 5554
+      - 5506
+    event_triggers: []
+  -
+    id: 5006
+    name: "圆桌会议室"
+    type: "free_exploration"
+    unlock_condition:
+      -
+        type: "event_completed"
+        param: "L5_opening_stage_return"
+    npcs:
+      507:
+        name: "小 Charles"
+        talk: "L5_talk_roundtable_key_claim"
+        runtime_entry: "NPCLoopData.TalkInfo"
+        is_liar: true
+        known_information:
+          active_topics:
+            -
+              text: "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+              truth_status: "false"
+          withheld_topics:
+            - "取石、闩门、暗门离场与刀刺真实行为；继承安排"
+          unknown_topics: []
+        mindset: "在刚形成的公共事实下把取石解释继续推给 Lawson。"
+        player_inquiry: null
+        player_inquiry_score: 8
+        testimony_ids:
+          -
+            id: 5075001
+            kind: "collectible_lie_anchor"
+            content: "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+            acquisition_talk: "L5_talk_roundtable_key_claim"
+            source_anchor: "剧情设计/Unit5/Unit5_大纲.md:920"
+        unlock_condition:
+          -
+            type: "flag"
+            param: "u5_public_reasoning_2"
+          -
+            type: "flag_equals"
+            param:
+              id: "u5_final_vote"
+              value: "unchosen"
+        approval:
+          mapping: "added"
+          source: "../state_source_contract.md#偏差审批表"
+          user_approved: true
+        inquiry_driver: "两次公共推理后主动点击询问；绝不把强制段改名充作普通Talk。"
+    evidence_ids: []
+    event_triggers:
+      -
+        event_id: "L5_event_public_reasoning_1"
+        talk: "L5_event_public_reasoning_1"
+        scene_id: 5006
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:886"
+        cast:
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 506
+          - 507
+          - 512
+        required_beats:
+          - "众人围绕舞台暗角的异常血迹提出不同解释：Vivian 怀疑舞台零件遮挡了喷溅，Pierce 认为可能只是方向巧合，Lawson 只从矿物质感判断它像经过打磨的石件，Foster 则限定这片血形成于致命刀刺时刻。小 Charles 不必主动替自己辩护，只随众人质疑单凭形状能否确认物件。"
+        runtime_binding:
+          kind: "special_adapter"
+          status: "not_implemented"
+          trigger: "player_enters_public_reasoning"
+          required_item_ids:
+            - 5501
+            - 5502
+            - 5503
+            - 5504
+            - 5505
+            - 5506
+            - 5204
+            - 5311
+            - 5306
+          required_talks:
+            - "L5_talk_stage_lighting"
+            - "L5_talk_stage_exposures"
+            - "L5_talk_office_crystals"
+            - "L5_talk_door_grip_memory"
+          required_flags:
+            - "u5_photo_wall_restored"
+            - "u5_door_reopened"
+          required_environment_ids:
+            - 5551
+            - 5552
+            - 5553
+            - 5554
+          once: true
+        runtime_exit:
+          continuation: "special_mechanic"
+          mechanic: "public_reasoning_1"
+      -
+        event_id: "L5_event_public_reasoning_2"
+        talk: "L5_event_public_reasoning_2"
+        scene_id: 5006
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:896"
+        cast:
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 506
+          - 507
+          - 512
+        required_beats:
+          - "摄影师把 `22:10—22:15 破门照片组`带上圆桌。Vivian 提出可能有人移动过舞台装置，摄影师确认两次曝光间相机与装置没有移动、可见人物的站位保持不变；Foster 指出自然滚动应留下连续血尾，Lawson 承认自己位于暗角正面，小 Charles 也在景墙背面协助照明。"
+        runtime_binding:
+          kind: "chained_talk"
+          status: "not_implemented"
+          entry_from: "special_mechanics.public_reasoning_1"
+          required_item_ids:
+            - 5204
+          required_testimony_ids:
+            - 5125001
+            - 5055001
+          previous_event_completed: "L5_event_public_reasoning_1"
+          required_flags:
+            - "u5_public_reasoning_1"
+        runtime_exit:
+          continuation: "special_mechanic"
+          mechanic: "public_reasoning_2"
+      -
+        event_id: "L5_event_key_purpose_claim"
+        talk: "L5_event_key_purpose_claim"
+        scene_id: 5006
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:902"
+        cast:
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 506
+          - 507
+          - 512
+        required_beats:
+          - "Zack 随后把照片组与 `暗门内侧锁芯断齿`并置：断齿证明残缺钥石直接对应那扇未能真正落锁的暗门；有人在破门后拿走它，不是在搬动普通宝石，而是在抹去能够解释离场路线的机关钥件、维持“正常门从内上闩后无人能够离开”的密室假象。前两轮圆桌只建立钥石与取石时序的公共事实，不把任何人的临场解释写成正式谎言。"
+          - "Zack 据此提出进入正式指证的强判断："
+          - "> “拿走钥石的人，就是制造这间密室的人——也是我现在指控的凶手。”"
+          - "这句话是 Zack 根据行为目的提出的指控，也是启动嫌疑人选择与正式指证的入口；它不是大纲事实层已经完成的落刀证明。接下来的三轮必须先锁定取石者与密室制造者，致命刀刺仍留给最终裁决。"
+        runtime_binding:
+          kind: "chained_talk"
+          status: "not_implemented"
+          entry_from: "special_mechanics.public_reasoning_2"
+          required_item_ids:
+            - 5204
+            - 5502
+          required_flags:
+            - "u5_public_reasoning_2"
+        runtime_exit:
+          action: "release_to_exploration"
+          available_npc_talk: "L5_talk_roundtable_key_claim"
+# presentation 仅为设计演出载体占位，不导出 ItemStaticData；现场拍照 clue 只保存记录，原物留在现场。
+evidence_registry:
+  -
+    id: 5204
+    ref: "loop2_state.yaml"
+    revealed_here: "L5放大L2同一组底片：22:10钥石仍在，22:15消失；相同可见人物站位、向上短擦痕，无滚动血尾。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:823"
+  -
+    id: 5311
+    ref: "loop3_state.yaml"
+    revealed_here: "四组不可识别先后的重叠足迹；与Lawson职业痕迹对照后，所有可见水迹均无蓝色反应。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:832"
+  -
+    id: 5306
+    ref: "loop3_state.yaml"
+    revealed_here: "同一双带硫酸铜晶屑的鞋踩水留下醒目蓝痕；仅本轮用于夹层排除。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:845"
+  -
+    id: 5312
+    ref: "loop3_state.yaml"
+    revealed_here: "局部异常隔音仍未解释，取石指证后仍封闭；只到终幕A才能判断隐藏房。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:969"
+  -
+    id: 5452
+    ref: "loop4_state.yaml"
+    revealed_here: "同材质录音室隔音层；无本地回放的限制仅属Emma后台录音室。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:1002"
+  -
+    id: 5308
+    ref: "loop3_state.yaml"
+    revealed_here: "M-7原授权牌，只在终幕A作为错误工具。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:1003"
+  -
+    id: 5405
+    ref: "loop4_state.yaml"
+    revealed_here: "同一份投毒文件，法庭前仅看似老Charles签名；终幕双成功法庭才鉴定。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:691"
+  -
+    id: 5251
+    ref: "loop2_state.yaml"
+    revealed_here: "卡原件留房；终幕只使用Emma脑内残像，不调用背包。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:388"
+  -
+    id: 5153
+    ref: "loop1_state.yaml"
+    revealed_here: "E.F.原手帕，终幕Zack额角视觉回收，未调查不补知识。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:271"
+  -
+    id: 5351
+    ref: "loop3_state.yaml"
+    revealed_here: "Vivian仍持有原女士手枪，不补进包。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:502"
+  -
+    id: 5454
+    ref: "loop4_state.yaml"
+    revealed_here: "护士站医用乙醚，终幕只呈现Foster带来，不演取得。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:679"
+  -
+    id: 5105
+    ref: "loop1_state.yaml"
+    revealed_here: "监印照片不是实体监印；直到公开失败后交付5561。"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:327"
+  -
+    id: 5501
+    name: "断翼鸢尾形喷溅遮挡近照"
+    item_type: "clue"
+    collectible: true
+    type: "clue"
+    pickup: "photograph"
+    physical_original_retained: true
+    analysis:
+      available: false
+    description: "近照记录致命喷溅绕过一件三瓣不等、左右断翼并带燕尾缺口的物件。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5005
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:822"
+    note: ""
+  -
+    id: 5551
+    name: "C-3 活动景墙"
+    item_type: "envir"
+    collectible: false
+    type: "envir"
+    pickup: "observe_only"
+    analysis:
+      available: false
+    description: "薄型景墙正面朝向摄影机，背面由支架固定，开放末端紧邻钥石暗角。正面照片看不见墙后的人，但墙后可以伸手接触暗角。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5005
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:824"
+    note: "场景道具"
+  -
+    id: 5502
+    name: "暗门内侧锁芯断齿"
+    item_type: "item"
+    collectible: true
+    type: "item"
+    pickup: "collect"
+    analysis:
+      available: false
+    description: "从卡住退栓回程的锁芯中取出，一端保留新鲜折口。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5020
+      atomic_event: "L5_event_tooth_closes_door"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:830"
+    note: ""
+  -
+    id: 5503
+    name: "暗门双面异形凹槽照片"
+    item_type: "clue"
+    collectible: true
+    type: "clue"
+    pickup: "photograph"
+    physical_original_retained: true
+    analysis:
+      available: false
+    description: "照片记录门内、门外各有一处断翼鸢尾形浅槽，轮廓与喷溅遮挡近照一致。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5020
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:831"
+    note: ""
+  -
+    id: 5504
+    name: "舞台消失的残缺钥石"
+    item_type: "item"
+    collectible: true
+    type: "item"
+    pickup: "collect"
+    analysis:
+      available: false
+      scripted_comparison_with: 5502
+      output_item: false
+    description: "藏在 Lawson 房间内层工作台的匣子里，断口新鲜。它就是 22:10—22:15 两次曝光之间从暗角消失的钥石。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5016
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:846"
+    note: ""
+  -
+    id: 5505
+    name: "Lawson 房间里的唱片碎片"
+    item_type: "item"
+    collectible: true
+    type: "item"
+    pickup: "collect"
+    analysis:
+      available: false
+    description: "商业歌手唱片在Lawson内层工作区摔碎，残片带印刷标签；断口、厚度与唱纹可供对照。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5016
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:847"
+    note: ""
+  -
+    id: 5552
+    name: "宝石阅览手册"
+    item_type: "envir"
+    collectible: false
+    type: "envir"
+    pickup: "observe_only"
+    analysis:
+      available: false
+    description: "门厅阅览册记录庄园陈列宝石的名称与编号，却没有断翼鸢尾钥石。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5025
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:866"
+    note: "场景道具"
+  -
+    id: 5553
+    name: "晚宴来宾履历册"
+    item_type: "envir"
+    collectible: false
+    type: "envir"
+    pickup: "observe_only"
+    analysis:
+      available: false
+    description: "公开履历记载小 Charles 生于 1891 年、Lawson 生于 1892 年；它不说明两人的血缘、继承关系或童年经历。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5025
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:867"
+    note: "场景道具"
+  -
+    id: 5554
+    name: "门厅照片墙"
+    item_type: "envir"
+    collectible: false
+    type: "envir"
+    pickup: "observe_only"
+    analysis:
+      available: false
+    description: "按年份排列 Miller 家族大事，每个相框都有固定年份牌。其他相框均锁定，只有固定在 1901 与 1904 年份牌下的两张儿童照片可以翻面和拖动；钥石教学照背面写“十岁留影”，普通童年合影背面写“十二岁留影”，均没有姓名。此前没有调查热点，本场才首次开放。"
+    acquisition:
+      kind: "investigation"
+      scene_id: 5025
+      condition:
+        -
+          type: "flag"
+          param: "u5_door_reopened"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:868"
+    note: "场景道具"
+  -
+    id: 5506
+    name: "照片墙年份还原记录"
+    item_type: "item"
+    collectible: true
+    type: "item"
+    pickup: "collect"
+    analysis:
+      available: false
+    description: "记录两张照片与固定年份牌的正确对应关系。`父子后台钥石教学照`中的少年保持特殊三指握姿，老 Charles 扶着他的手腕；还原年份后，这个孩子对应小 Charles。Lawson 对应的只是另一张普通童年合影。照片原件仍留在门厅墙面，不作为可移动证物。"
+    acquisition:
+      kind: "special_mechanic"
+      scene_id: 5025
+      mechanic: "photo_wall"
+      condition:
+        -
+          type: "flag"
+          param: "u5_photo_wall_restored"
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:874"
+    note: "关键——L5 R3 证明小 Charles 知道钥石操作方式"
+  -
+    id: 5561
+    name: "TideWater 档案监印"
+    item_type: "item"
+    collectible: true
+    type: "item"
+    pickup: "scripted_delivery"
+    analysis:
+      available: false
+    description: "随公司档案责任交接的实体监印，Lawson此前不知道它对应何处。"
+    acquisition:
+      kind: "dialogue"
+      scene_id: 5006
+      talk: "L5_finale_private_seal"
+      carrier: "L5_finale_private_seal"
+      condition:
+        -
+          type: "event_completed"
+          param: "L5_finale_public_failure"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:76"
+    note: ""
+  -
+    id: 5562
+    name: "隐藏室 Webb 唱片残片"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "Q4开门后直接见到旧唱片残片；只在Q5正确后自动与1602拼合并播放，不生成可收集新Item。"
+    acquisition:
+      kind: "special_mechanic"
+      scene_id: 5029
+      talk: "A_Q5"
+      carrier: "A_Q5"
+      condition:
+        -
+          type: "mechanic_step"
+          param: "A_Q4.success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:94"
+    note: "场景道具"
+  -
+    id: 5563
+    name: "1912 私存尸检工作底稿"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "Foster在法庭提交的1912原始异常记录；不参与L5调查。"
+    acquisition:
+      kind: "presentation"
+      scene_id: 5034
+      talk: "L5_finale_court_recording"
+      carrier: "L5_finale_court_recording"
+      condition:
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_a"
+            value: "success"
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_b"
+            value: "success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:316"
+    note: "场景道具"
+  -
+    id: 5564
+    name: "1912 官方签字报告副本"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "Foster当年假尸检签字责任及官方伤序记录，法庭公开纠正。"
+    acquisition:
+      kind: "presentation"
+      scene_id: 5034
+      talk: "L5_finale_court_recording"
+      carrier: "L5_finale_court_recording"
+      condition:
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_a"
+            value: "success"
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_b"
+            value: "success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:316"
+    note: "场景道具"
+  -
+    id: 5565
+    name: "1928 投毒文件字迹鉴定报告"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "专门鉴定人员签署；Foster提交，鉴定同一5405签名为小Charles仿写。"
+    acquisition:
+      kind: "presentation"
+      scene_id: 5034
+      talk: "L5_finale_court_recording"
+      carrier: "L5_finale_court_recording"
+      condition:
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_a"
+            value: "success"
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_b"
+            value: "success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:318"
+    note: "场景道具"
+  -
+    id: 5566
+    name: "投毒命令传递记录"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "法庭材料显示命令经Pierce执行渠道送入南区。"
+    acquisition:
+      kind: "presentation"
+      scene_id: 5034
+      talk: "L5_finale_court_recording"
+      carrier: "L5_finale_court_recording"
+      condition:
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_a"
+            value: "success"
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_b"
+            value: "success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:319"
+    note: "场景道具"
+  -
+    id: 5567
+    name: "Watts 封存的唯一远端母盘"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "Watts远端设备录制，之后发现、登记和封存；法庭核验后播放父子对话与致命刀刺连续声音。"
+    acquisition:
+      kind: "presentation"
+      scene_id: 5034
+      talk: "L5_finale_court_recording"
+      carrier: "L5_finale_court_recording"
+      condition:
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_a"
+            value: "success"
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_b"
+            value: "success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:332"
+    note: "场景道具"
+  -
+    id: 5568
+    name: "远端母盘书面保全记录"
+    item_type: "presentation"
+    collectible: false
+    type: "presentation"
+    pickup: "presentation_only"
+    analysis:
+      available: false
+    description: "事先在卷的设备编号、日期和封存保全记录；书记员在法庭比对母盘。"
+    acquisition:
+      kind: "presentation"
+      scene_id: 5034
+      talk: "L5_finale_court_recording"
+      carrier: "L5_finale_court_recording"
+      condition:
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_a"
+            value: "success"
+        -
+          type: "flag_equals"
+          param:
+            id: "u5_finale_b"
+            value: "success"
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:334"
+    note: "场景道具"
+  -
+    id: 5309
+    ref: "loop3_state.yaml"
+    revealed_here: "A Q2 已解释铆圈错误对照，不重新收集。"
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:82"
+doubts:
+  -
+    id: 5501
+    isFragment: false
+    text: "夹层水迹与 Lawson 房里的蓝色水痕相同吗？"
+    condition:
+      -
+        type: "item"
+        id: 5311
+      -
+        type: "item"
+        id: 5306
+    appear_loop: 5
+    earliest_expose_loop: 5
+    resolve_on: "chapter_boundary"
+    note: "L3原物在本轮回查；无L3重复挂载。"
+  -
+    id: 5502
+    isFragment: false
+    text: "正面照片之外，景墙背面站着谁？"
+    condition:
+      -
+        type: "item"
+        id: 5204
+      -
+        type: "testimony"
+        id: 5055001
+    appear_loop: 5
+    earliest_expose_loop: 5
+    resolve_on: "chapter_boundary"
+  -
+    id: 5503
+    isFragment: false
+    text: "校正年份后，接受钥石教学的孩子是谁？"
+    condition:
+      -
+        type: "item"
+        id: 5506
+    appear_loop: 5
+    earliest_expose_loop: 5
+    resolve_on: "chapter_boundary"
+    single_source_reason: "已批准的多输入小游戏唯一产出；此局部疑点只锁定童年教学，不单件定杀人。"
+expose:
+  id: 505
+  scene_id: 5006
+  target_npc: 507
+  is_liar: true
+  player_inquiry: null
+  talk: "L5_expose_key_removal"
+  source_anchor: "剧情设计/Unit5/Unit5_大纲.md:918"
+  unlock_condition:
+    -
+      type: "doubts_complete"
+      param:
+        - 5501
+        - 5502
+        - 5503
+    -
+      type: "flag"
+      param: "u5_door_reopened"
+    -
+      type: "flag"
+      param: "u5_photo_wall_restored"
+    -
+      type: "flag"
+      param: "u5_public_reasoning_1"
+    -
+      type: "flag"
+      param: "u5_public_reasoning_2"
+    -
+      type: "talk_completed"
+      param: "L5_talk_roundtable_key_claim"
+    -
+      type: "testimony"
+      param: 5075001
+    -
+      type: "choice"
+      param: "suspect_selection.charles_jr"
+  required_talks:
+    - "L5_talk_stage_lighting"
+    - "L5_talk_stage_exposures"
+    - "L5_talk_office_crystals"
+    - "L5_talk_door_grip_memory"
+    - "L5_talk_roundtable_key_claim"
+  expose_lie_ids:
+    - 5075901
+    - 5075902
+  rounds:
+    -
+      round: 1
+      dimension: "水壶打翻后是否进过夹层"
+      lie: "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+      lie_source: 5075001
+      evidence_set:
+        -
+          type: "item"
+          id: 5311
+        -
+          type: "item"
+          id: 5306
+      doubt_ids:
+        - 5501
+      prerequisites:
+        -
+          testimony_ref: 5063001
+          required_callback_talk: "L5_talk_office_crystals"
+          fact: "案后未换鞋且仍有残晶；湿地毯横贯不可绕开"
+      result:
+        - "- 矛盾：湿区的大量重叠鞋印可以按大小、纹路与深浅分成四组，但无法据此指认各组身份；所有可见水迹中都没有一处硫酸铜遇水形成的蓝色反应。四组足迹对应的经过者中没有 Lawson。"
+        - "- 最小结论：不能用“Lawson 在水壶打翻后进入过夹层”解释他为什么认识并拿走钥石。本轮仍不判断四组凌乱鞋印分别属于谁，也不还原他们的经过先后。"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:920"
+    -
+      round: 2
+      dimension: "谁能接触照片看不到的景墙背面暗角"
+      lie: "即使 Lawson 没有进入夹层，拿走钥石的也只能是他。破门底片拍得很清楚——当时站在钥石旁边的人就是 Lawson。"
+      lie_source: 5075901
+      generated_at: "expose.round1.retreat"
+      evidence_set:
+        -
+          type: "item"
+          id: 5204
+        -
+          type: "testimony"
+          id: 5055001
+      doubt_ids:
+        - 5502
+      prerequisites:
+        -
+          testimony: 5125001
+        -
+          environment_observed: 5551
+      result:
+        - "照片只拍正面不等于只有Lawson；小Charles在两次曝光间同样具有机会。"
+        - "不把扩大机会等同取石定案。"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:929"
+    -
+      round: 3
+      dimension: "是否掌握钥石用途与特定握姿"
+      lie: "我根本不知道它能打开暗门，更不知道为什么必须把它藏起来。"
+      lie_source: 5075902
+      generated_at: "expose.round2.retreat"
+      evidence_set:
+        -
+          type: "item"
+          id: 5506
+      doubt_ids:
+        - 5503
+      prerequisites:
+        -
+          flag: "u5_door_reopened"
+        -
+          environment_observed: 5552
+      result:
+        - "教学照还原为小Charles；三轮合成取石/密室维护行为链，刀刺仍未独立定案。"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:945"
+  post_expose:
+    event_id: "L5_post_expose_limited_confession"
+    talk: "L5_post_expose_limited_confession"
+    scene_id: 5006
+    cast:
+      - 501
+      - 502
+      - 503
+      - 504
+      - 505
+      - 506
+      - 507
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:961"
+    required_beats:
+      - "> “你不是因为留下钥石暴露。”  \n> “你是因为拿走了它。”"
+      - "小 Charles 承认自己从内部闩上正常门、经暗门离场，并在 22:10—22:15 的两次曝光之间拿走父亲的残缺钥石，以免调查者循钥石发现第二条出路。这份有限认罪把取石者与密室制造者锁为同一人；他仍坚持自己只是发现父亲倒下后掩盖家族暗道，否认实施致命刀刺。"
+      - "Lawson 房间里的残缺钥石和被交换照片仍然构成一套明显针对 Lawson 的布置。三轮指证与小 Charles 的承认已经证明取石、闩门、暗门离场与维持密室假象属于同一条案后行为链；本场仍不借排他的进房窗口，把致命刀刺也强行压成已经由这组物证证实的行为。"
+    testimony_ids:
+      -
+        id: 5075002
+        kind: "limited_confession"
+        content: "门是我从里面闩上的，我也确实从暗门离开。破门后，那块钥石是我拿走的——我不能让任何人知道那里还有一条路。但父亲身上的刀不是我刺的。"
+        acquisition_talk: "L5_post_expose_limited_confession"
+        source_anchor: "剧情设计/Unit5/Unit5_大纲.md:950"
+    runtime_exit:
+      continuation: "next_talk"
+      next_talk: "L5_finale_final_vote"
+      chapter_boundary: false
+    forbidden:
+      - "此处loop_end"
+      - "此处交付实体监印"
+      - "此处开隐藏试听室"
+      - "此处取得继承录音"
+    knowledge_boundary:
+      - "Emma 已获释协查，Moore与Lula仍被隔离且不因取石指证自动排除刀刺嫌疑。"
+      - "完整拼回断齿的鸢尾钥石配合特殊三指握姿可以从暗门两侧退栓。"
+      - "钥石在致命喷溅时已在暗角，22:10仍在、22:15被主动提走，机会者为Lawson与小Charles。"
+      - "夹层可见湿迹没有Lawson鞋底晶屑对应的蓝色反应；教学照还原指向小Charles的钥石知识。"
+      - "小Charles承认取石、内部闩门和暗门离场，仍否认致命刀刺；继承安排尚未揭晓。"
+post_expose_knowledge:
+  - "Emma 已获释协查，Moore与Lula仍被隔离且不因取石指证自动排除刀刺嫌疑。"
+  - "完整拼回断齿的鸢尾钥石配合特殊三指握姿可以从暗门两侧退栓。"
+  - "钥石在致命喷溅时已在暗角，22:10仍在、22:15被主动提走，机会者为Lawson与小Charles。"
+  - "夹层可见湿迹没有Lawson鞋底晶屑对应的蓝色反应；教学照还原指向小Charles的钥石知识。"
+  - "小Charles承认取石、内部闩门和暗门离场，仍否认致命刀刺；继承安排尚未揭晓。"
+special_mechanics:
+  photo_wall:
+    runtime_binding:
+      kind: "special_adapter"
+      status: "not_implemented"
+    replaces_standard_doubts: false
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:24"
+    controller: 501
+    scene_id: 5025
+    unlock_condition:
+      -
+        type: "flag"
+        param: "u5_door_reopened"
+      -
+        type: "environment_observed"
+        param: 5553
+      -
+        type: "environment_observed"
+        param: 5554
+    inputs:
+      -
+        type: "environment_observed"
+        id: 5553
+      -
+        type: "environment_observed"
+        id: 5554
+    data:
+      birth_years:
+        charles_jr: 1891
+        lawson: 1892
+      fixed_years:
+        - 1901
+        - 1904
+      photos:
+        -
+          key: "key_lesson"
+          initial_year: 1904
+          inscription: "十岁留影"
+          age: 10
+          signature: null
+          identity_legible_from_face: false
+        -
+          key: "childhood_group"
+          initial_year: 1901
+          inscription: "十二岁留影"
+          age: 12
+          signature: null
+          identity_legible_from_face: false
+    operations:
+      - "放大、翻面读年龄"
+      - "出生年与年龄拖入草算区只显示年份算式"
+      - "拖动两个相框；其他照片和年份牌锁定"
+      - "点击确认排列才提交"
+    solution:
+      key_lesson: 1901
+      childhood_group: 1904
+      calculations:
+        - "1891+10=1901"
+        - "1892+12=1904"
+      reversed_identity_years:
+        - 1902
+        - 1903
+    failure:
+      counts_only: "确认排列"
+      feedback: "出生年、年龄题记与年份牌没有同时吻合"
+      hints:
+        -
+          consecutive_errors: 2
+          action: "高亮两张背面年龄题记"
+        -
+          consecutive_errors: 3
+          action: "依次提示1891＋10、1892＋12，仍由玩家拖拽"
+      permanent_failure: false
+      timer: false
+    save_fields:
+      - "arrangement"
+      - "consecutive_errors"
+      - "photo_faces"
+      - "completed"
+      - "award_5506_once"
+    on_success:
+      set_flags:
+        u5_photo_wall_restored: true
+      grants_evidence:
+        - 5506
+      return_scene_id: 5025
+    knowledge_limit: "只认童年钥石知识，不认取石/刀刺/照片交换者；照片原物不入包，不使用5204。"
+    source_contract_notes:
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:13"
+        constraint: "- 用固定年份牌、两人的公开出生年和照片背面不同的年龄题记建立唯一可验证的排列；\n- 让玩家通过拖拽还原照片墙，而不是由角色直接宣布照片被换过；\n- 产出可进入标准 Expose 候选池的`照片墙年份还原记录`。"
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:19"
+        constraint: "- 不引用`22:10—22:15 破门照片组`；\n- 不证明小 Charles 在案发时使用过钥石；\n- 不证明他在两次曝光之间拿走钥石；\n- 不证明 Lawson 从未见过家族照片；\n- 不把钥石写进庄园宝石编号册；\n- 不生成案发当晚直接拍到小 Charles 佩戴完整钥石的新照片。"
+  public_reasoning_1:
+    runtime_binding:
+      kind: "special_adapter"
+      status: "not_implemented"
+    replaces_standard_doubts: false
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:888"
+    entry_talk: "L5_event_public_reasoning_1"
+    inputs:
+      -
+        type: "item"
+        id: 5501
+      -
+        type: "item"
+        id: 5503
+    completion_condition:
+      submit_all_ids:
+        - 5501
+        - 5503
+    output: "致命刀刺发生时，老 Charles 的残缺钥石已经落在舞台暗角。"
+    on_success:
+      set_flags:
+        u5_public_reasoning_1: true
+      next_talk: "L5_event_public_reasoning_2"
+    wrong_submission:
+      effect: "维持本题、允许重新出示；不定案、不生成谎言"
+      production_feedback: "具体反馈措辞留台本，不新增证物或永久失败"
+  public_reasoning_2:
+    runtime_binding:
+      kind: "special_adapter"
+      status: "not_implemented"
+    replaces_standard_doubts: false
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:898"
+    entry_talk: "L5_event_public_reasoning_2"
+    inputs:
+      -
+        type: "item"
+        id: 5204
+    prerequisites:
+      -
+        type: "testimony"
+        id: 5125001
+      -
+        type: "testimony"
+        id: 5055001
+    completion_condition:
+      submit_all_ids:
+        - 5204
+    output: "钥石22:10仍在、22:15消失，在相同可见站位的五分钟内被主动提走；Lawson与小Charles均能接触暗角。"
+    on_success:
+      set_flags:
+        u5_public_reasoning_2: true
+      next_talk: "L5_event_key_purpose_claim"
+    wrong_submission:
+      effect: "保留既有公共结论，重新出示本题材料"
+      production_feedback: "未指定具体错误句，不另设计惩罚"
+  suspect_selection:
+    runtime_binding:
+      kind: "special_adapter"
+      status: "not_implemented"
+    replaces_standard_doubts: false
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:912"
+    kind: "reselectable_investigation_choice"
+    question: "谁在 22:10—22:15 之间拿走残缺钥石、继续维持了这间密室？"
+    unlock_condition:
+      -
+        type: "flag"
+        param: "u5_public_reasoning_2"
+      -
+        type: "talk_completed"
+        param: "L5_talk_roundtable_key_claim"
+      -
+        type: "testimony"
+        param: 5075001
+      -
+        type: "doubts_complete"
+        param:
+          - 5501
+          - 5502
+          - 5503
+    options:
+      -
+        key: "lawson"
+        npc_id: 506
+        result: "recheck"
+        feedback: "若选错 Lawson，他承认自己怨恨老 Charles、负责封存 TideWater 文件，也确实曾靠近暗角；但他要求玩家先证明自己进入过夹层，并解释为什么夹层湿地毯上的凌乱鞋印没有留下与其房间相同的蓝色水痕。错误指控无法通过湿脚印排除检验，也把“正面底片拍到 Lawson”错误理解成“现场只有 Lawson”。玩家返回夹层暗门、Lawson 办公室与舞台复核后，再次进入嫌疑人选择；不进入永久坏结局。"
+        return_scene_ids:
+          - 5020
+          - 5016
+          - 5005
+        recheck_targets:
+          -
+            scene_id: 5020
+            item_ids:
+              - 5311
+          -
+            scene_id: 5016
+            item_ids:
+              - 5306
+          -
+            scene_id: 5005
+            item_ids:
+              - 5204
+            required_testimony_ids:
+              - 5055001
+        next: "special_mechanics.suspect_selection"
+        permanent_bad_ending: false
+      -
+        key: "charles_jr"
+        npc_id: 507
+        result: "expose"
+        next: "expose"
+    save_fields:
+      - "selected_suspect"
+      - "recheck_active"
+      - "visited_recheck_scenes"
+    final_vote_unchanged: true
+  finale_a:
+    runtime_binding:
+      kind: "special_adapter"
+      status: "not_implemented"
+    replaces_standard_doubts: false
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:25"
+    controller: 501
+    cast:
+      - 501
+      - 502
+      - 504
+      - 505
+    absent:
+      - 506
+    entry: "L5_finale_a_entry"
+    required_item_ids:
+      - 5312
+      - 5561
+      - 5504
+      - 5308
+      - 5505
+      - 5311
+      - 5309
+    required_environment_ids:
+      - 5452
+    external_dependencies:
+      -
+        episode: "EPI01"
+        item_id: 1602
+        status: "not_implemented"
+        contract: "Unit1合法取得并导入Unit5；缺接口是工程错误，不能初始化伪造或扣玩家机会。"
+    pressure:
+      label: "剩余思考时间"
+      initial: 5
+      min: 0
+      timer: false
+      decrement_on: "正式提交错误"
+      non_counting:
+        - "地图单击查看"
+        - "拖动"
+        - "缩放"
+        - "查看线索"
+        - "读选项"
+        - "播放Foster提示"
+      failure_at: 0
+      pursuer_approach_during_play: false
+    steps:
+      -
+        id: "A_Q1"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:63"
+        question: "庄园地图上，哪一处最可能还留存小 Charles 未被发现的秘密？"
+        interaction: "map_select_then_confirm"
+        correct_hotspot: "夹层"
+        incorrect_hotspots: "其他允许正式提交的地图地点"
+        submit_button: "确认此处"
+        on_correct:
+          next: "A_Q2"
+        on_wrong:
+          dispatch_once: "special_mechanics.finale_a.wrong_submission"
+          stay: "A_Q1"
+          feedback: "该地点不能回应尚未解释的结构异常；具体热点文案留制作。"
+      -
+        id: "A_Q2"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:76"
+        question: "夹层里的哪项异常，直到现在仍不知道具体用途？"
+        options:
+          -
+            id: "insulation"
+            item_id: 5312
+            correct: true
+            next: "A_Q3"
+          -
+            id: "footprints"
+            item_id: 5311
+            correct: false
+            feedback: "鞋印说明有人经过，不能解释新的封闭空间"
+          -
+            id: "rivet"
+            item_id: 5309
+            correct: false
+            feedback: "铆圈已经对应牵引结构，功能并未悬空"
+      -
+        id: "A_Q3"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:87"
+        question: "同一种隔音材料只包住文件柜背后的一小块未登记空间，最合理的解释是什么？"
+        inputs:
+          -
+            type: "item"
+            id: 5312
+          -
+            type: "environment_observed"
+            id: 5452
+        options:
+          -
+            id: "hidden_listening_room"
+            label: "文件柜后藏着一间录音／试听用的隐藏房间"
+            correct: true
+            next: "A_Q4"
+            effect: "移开文件柜，显露TideWater印槽；只推用途，不预知录音内容。"
+          -
+            id: "protect_papers"
+            label: "隔音层用于保护1912年纸质档案"
+            correct: false
+            feedback: "隔音材料不能防潮，也不能解释与录音室墙材相同"
+          -
+            id: "hide_steps"
+            label: "隔音层用于遮住整条夹层脚步声"
+            correct: false
+            feedback: "材料只覆盖局部边界，没有包覆整条夹层"
+      -
+        id: "A_Q4"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:101"
+        question: "什么东西能够吻合文件柜后这道 TideWater 实体印槽？"
+        options:
+          -
+            id: "seal"
+            item_id: 5561
+            correct: true
+            next: "A_Q5"
+            effect: "监印嵌槽，隐藏室打开；记录a_hidden_room_open=true"
+            runtime_exit:
+              action: "change_scene"
+              target_scene_id: 5029
+              continuation: "special_mechanic"
+              next_step: "A_Q5"
+          -
+            id: "keystone"
+            item_id: 5504
+            correct: false
+            feedback: "钥石对应夹层入口断翼鸢尾槽，轮廓与卡齿不同"
+          -
+            id: "authorization"
+            item_id: 5308
+            correct: false
+            feedback: "业务授权牌没有与机械印槽咬合的凸齿"
+      -
+        id: "A_Q5"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:114"
+        question: "这块残片最可能属于哪一张唱片？"
+        visible_prop_id: 5562
+        options:
+          -
+            id: "webb"
+            external_item_id: 1602
+            correct: true
+            effect: "置a_q5_correct=true并交还控制；只请求L5_finale_a_complete_playback执行自动调入、修复、完整播放，不在玩法重复播放。"
+            next: "L5_finale_a_complete_playback"
+          -
+            id: "emma_master"
+            reference: "Emma今晚远端母盘（当时未证实存在，非包中物件）"
+            correct: false
+            feedback: "今晚母盘若存在，应完整留在Watts远端设备，不会以旧断片出现在这里"
+          -
+            id: "singer"
+            item_id: 5505
+            correct: false
+            feedback: "商业标签、厚度、断口和唱纹均不能接续"
+    wrong_submission:
+      remaining_delta: -1
+      settlement_owner: "A_Q1至A_Q5共用此唯一扣格入口；以submission_id原子去重，Q1局部处理不再扣格。"
+      nonterminal: "留在当前题，允许重新选择"
+      terminal: "剩余为0立即停止本题并走L5_finale_a_failed；不继续扣格或播录音"
+    hint:
+      flag: "u5_foster_hint"
+      provider: 505
+      trigger: "每次正式错选扣格后"
+      content: "只指当前被忽略的证据维度"
+      constraints:
+        - "不代选"
+        - "不高亮或锁定答案"
+        - "不移除选项"
+        - "不返格"
+        - "不保护第五次错误"
+    success:
+      after: "Q5正确且完整播放完毕"
+      settlement_owner: "L5_finale_a_complete_playback；此处是结果合同，不是第二个播放或flag提交入口。"
+      set_flags:
+        u5_finale_a: "success"
+        u5_inheritance_heard: true
+      next: "L5_finale_powercut_assault"
+    failure:
+      at: "第五次正式错误"
+      set_flags:
+        u5_finale_a: "failure"
+        u5_inheritance_heard: false
+      audio: "不播放任何继承内容、半成品或零散录音"
+      room_state: "保留a_hidden_room_open；Q5失败可能已开门，不统一当未开门"
+      next: "L5_finale_powercut_assault"
+    checkpoint:
+      id: "A_before_Q1"
+      save_before: "A_Q1"
+      retry:
+        step: "A_Q1"
+        remaining: 5
+        clear:
+          - "a_completed_steps"
+          - "a_hidden_room_open"
+          - "a_fragment_seen"
+          - "a_playback_complete"
+          - "u5_inheritance_heard"
+        result: "unplayed"
+        preserve:
+          - "上游合法物证"
+          - "u5_foster_hint"
+          - "u5_vivian_hint"
+          - "已锁最终投票"
+        randomize: false
+    save_fields:
+      - "a_step"
+      - "a_remaining"
+      - "a_completed_steps"
+      - "a_hidden_room_open"
+      - "a_fragment_seen"
+      - "a_selected_map_location"
+      - "a_playback_position"
+      - "a_playback_complete"
+      - "u5_finale_a"
+      - "u5_inheritance_heard"
+    source_contract_notes:
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:13"
+        constraint: "- 让 Zack 重新解释 L3、L4 留下的结构异常，找到夹层文件柜后的隐藏录音／试听室；\n- 验证`TideWater 档案监印`与内部印槽的对应关系；\n- 辨认 Webb 唱片缺片并自动恢复完整继承录音；\n- 以 A 成功／失败决定 Zack 能否用具体继承条款拖住 Pierce。"
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:20"
+        constraint: "- 不证明小 Charles 亲手弑父；\n- 不寻找 Emma 当晚远端录音的母盘；\n- 不设置手工旋转唱片碎片或通用物品合成；\n- 不让 Lawson 参加玩法或听见继承录音；\n- 不在玩法进行中同时进行追逐、枪战或 QTE；\n- 不直接决定终局总结果，A 只结算 Zack 线。"
+  finale_b:
+    runtime_binding:
+      kind: "special_adapter"
+      status: "not_implemented"
+    replaces_standard_doubts: false
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:25"
+    controller: 502
+    entry: "L5_finale_mechanical_hall"
+    start_at: "小Charles持枪进入主厅立即显示风险条"
+    required_flags:
+      - "u5_fire_card_seen"
+    a_result_must_be:
+      - "success"
+      - "failure"
+    inputs:
+      -
+        type: "memory"
+        environment_ref: 5251
+    inventory_access: false
+    caseboard_access: false
+    original_card_access: false
+    pressure:
+      label: "Lawson 暴露风险"
+      initial: 0
+      max: 3
+      timer: false
+      increment_on:
+        - "R1唯一错选"
+        - "R2唯一错选"
+        - "每次错误拉杆"
+      non_counting:
+        - "观察图标"
+        - "回想"
+        - "透明度切换"
+        - "脑内旋转"
+      terminal_at: 3
+    rounds:
+      -
+        id: "B_R1"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:79"
+        interaction: "one_shot_dialogue_choice"
+        options:
+          -
+            id: "challenge_control"
+            function: "挑战其掌控力／胜负欲"
+            correct: true
+            feedback: "他留在Emma正面直视她辩解"
+          -
+            id: "mention_lawson"
+            function: "直接提Lawson或校准舱方向"
+            correct: false
+            feedback: "他转向主控台；Emma固定动作拉回注意力"
+          -
+            id: "yield_way"
+            function: "服软并主动让路"
+            correct: false
+            feedback: "他试图越过Emma搜查；Emma固定补救"
+        on_wrong:
+          risk_delta: 1
+          automatic_correction: true
+          reselect: false
+        next: "B_R2"
+        dialogue_text: "仅功能槽；正式三句话由台本生成，正确槽不提示消防答案。"
+      -
+        id: "B_R2"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:101"
+        interaction: "one_shot_position_thumbnail"
+        options:
+          -
+            id: "main_hall_fire_wall"
+            correct: true
+            visual_requirements:
+              - "主厅侧、隔断轨道外"
+              - "遮住EXIT"
+              - "距机械墙一步"
+              - "不引视线向校准舱"
+          -
+            id: "control_cabin_gap"
+            correct: false
+            visual_requirements:
+              - "位于主控台与校准舱之间"
+              - "移动反使视线带向校准舱"
+          -
+            id: "track_or_anteroom"
+            correct: false
+            visual_requirements:
+              - "轨道内或检修前室侧"
+              - "落入隔断作用区且不能一步触墙"
+        on_wrong:
+          risk_delta: 1
+          automatic_correction: true
+          reselect: false
+        fixed_followup: "小Charles推开Emma，看到显露EXIT，被诱入检修前室；不追加QTE或姿势选择。"
+        next: "B_R3"
+      -
+        id: "B_R3"
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:131"
+        interaction: "observe_rotate_pull_lever"
+        memory:
+          top: "正向排烟、右卡扣"
+          lower_left: "单人校准舱"
+          lower_right: "EXIT/防火隔断"
+          connecting_lines: false
+        panel:
+          upper_left:
+            id: "R-42"
+            function: "防火隔断"
+            icon: "涂花"
+          upper_right:
+            id: "R-17"
+            function: "校准舱换气"
+            icon: "涂花"
+          lower_center:
+            id: "R-28"
+            function: "屋顶排烟"
+            icon: "倒置排烟、左卡扣"
+          connecting_lines: false
+        transform: "整体旋转180度；右卡扣移到左，不是简单上下镜像"
+        options:
+          -
+            id: "R-42"
+            correct: true
+            feedback: "机械配重脱开，隔断在他返回主厅前形成有效阻挡，立即锁成功"
+          -
+            id: "R-17"
+            correct: false
+            feedback: "校准舱换气百叶弹开，产生暴露危险"
+          -
+            id: "R-28"
+            correct: false
+            feedback: "屋顶排烟风门开启，明显机械声"
+        on_wrong:
+          risk_delta: 1
+          if_risk_below_3: "错误杆自动复位，重新观察/选杆"
+          if_risk_3: "立即失败"
+        on_correct:
+          requires: "risk<3且有效阻挡形成"
+          set_flags:
+            u5_finale_b: "success"
+          disable_input: true
+          next: "L5_finale_b_blocked"
+    tolerance_examples:
+      -
+        r1_wrong: false
+        r2_wrong: false
+        r3_entry_risk: 0
+        recoverable_wrong_levers: 2
+      -
+        r1_wrong: true
+        r2_wrong: false
+        r3_entry_risk: 1
+        recoverable_wrong_levers: 1
+      -
+        r1_wrong: false
+        r2_wrong: true
+        r3_entry_risk: 1
+        recoverable_wrong_levers: 1
+      -
+        r1_wrong: true
+        r2_wrong: true
+        r3_entry_risk: 2
+        recoverable_wrong_levers: 0
+    hint:
+      flag: "u5_vivian_hint"
+      provider: 504
+      round: "B_R3"
+      source_text: "先看还没有被涂掉的那个。"
+      constraints:
+        - "不暂停"
+        - "不显示原图"
+        - "不说180度或R-42"
+        - "不移除错误项"
+    failure:
+      at: "risk=3"
+      set_flags:
+        u5_finale_b: "failure"
+      next: "L5_finale_b_blackout"
+      details: "他在阻挡形成前返回主厅，枪口指Emma切黑；不定义黑屏死亡顺序。"
+    success_immutable: true
+    a_result_effects:
+      - "允许的继承对白"
+      - "最终来人身份"
+    a_result_must_not_change:
+      - "答案"
+      - "风险上限"
+      - "基础成功权限"
+    output_items: []
+    checkpoint:
+      id: "B_before_R1"
+      save_before: "小Charles入场"
+      restore: "恢复已提交轮次、累计风险和结果锁；常规读档不重选R1/R2、不返风险"
+      retry_policy: "来源没有规定新重试菜单；仅保存恢复接口，不额外开放玩法回滚。"
+    save_fields:
+      - "b_round"
+      - "b_risk"
+      - "b_r1_choice"
+      - "b_r2_choice"
+      - "b_lever_state"
+      - "b_memory_rotation"
+      - "b_panel_transparency"
+      - "b_barrier_effective"
+      - "u5_finale_b"
+    source_contract_notes:
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:13"
+        constraint: "- 让 Emma 通过对话、站位和空间换算持续误导小 Charles；\n- 回收 L2 见过的消防维护卡，但终局只能使用脑内残像；\n- 让玩家在风险满格前拉下正确实体拉杆，使防火隔断形成有效阻挡；\n- 以 B 成功／失败决定 Emma、Lawson 与 Vivian 是否获得安全空间。"
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:20"
+        constraint: "- 不让玩家选择是否把 Lawson 藏进校准舱；该动作属于固定剧情；\n- 不开放消防维护卡原件、背包或 Caseboard；\n- 不把拉杆操作写成推理证据；\n- 不证明小 Charles 的罪行；\n- 不把 A 的结果用于改变 B 的答案、风险上限或成功权限；\n- 拉对后不再要求玩家持续按住、再次确认或选择是否升降隔断。"
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:205"
+        constraint: "- 建议 flag：`终局B_防火隔断成功`（工作名）；\n- 成功条件唯一：风险满格前拉对`R-42`，使隔断形成有效阻挡；\n- 小 Charles 用枪托卡住隔断、射伤 Emma／Vivian／Lawson、Emma 拒绝复位和门口来人均为成功后的固定演出；\n- 这些演出不得重新读取玩家输入，也不得把已锁定成功翻回失败。"
+      -
+        source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:219"
+        constraint: "- B 是求生操作，不是案件证据；\n- A 成功时角色可以使用完整继承条款对白，A 失败时只能依据小 Charles 的追杀行为试探；\n- A 的对白差异不能改变 B 的答案、风险值或基础成功权限；\n- 门口最终出现 Zack 或 Pierce 只结算 A，不再判断 B。"
+ending_sequence:
+  kind: "non_loop_interactive_finale"
+  loop: 5
+  approval: "state_source_contract.md：用户明确批准A/B控制，覆盖通用纯过场限制。"
+  entry_from: "L5_post_expose_limited_confession"
+  entry_talk: "L5_finale_final_vote"
+  runtime_binding:
+    kind: "special_adapter"
+    status: "not_implemented"
+    unique_entry: true
+  control_policy: "最终票选与A/B允许操作；其他段纯演出；不恢复一般搜证。"
+  scenes:
+    -
+      id: 5006
+      name: "圆桌会议室"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids:
+        - 5561
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_final_vote"
+        - "L5_finale_public_failure"
+        - "L5_finale_private_seal"
+        - "L5_finale_lula_false_verdict"
+        - "L5_finale_moore_false_verdict"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5019
+      name: "夹层文件柜区域"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_a_entry"
+        - "L5_finale_a_failed"
+        - "L5_finale_dark_disguise"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5028
+      name: "酒局房间"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_powercut_assault"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5029
+      name: "文件柜后隐藏录音试听室"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids:
+        - 5562
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_a_complete_playback"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5030
+      name: "旧档案区封闭试听室"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_hidden_gunshot"
+        - "L5_finale_fallen_forgery"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5031
+      name: "庄园逃亡连廊"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_escape_corridor"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5032
+      name: "飞行机械馆主厅"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_mechanical_hide"
+        - "L5_finale_mechanical_hall"
+        - "L5_finale_b_blocked"
+        - "L5_finale_b_blackout"
+        - "L5_finale_arrival_reveal"
+        - "L5_finale_vivian_betrayal"
+        - "L5_finale_fallen_detective"
+        - "L5_finale_no_rescue"
+        - "L5_finale_true_rescue"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5033
+      name: "消防检修前室"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids: []
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+      spatial_usage: "B中小Charles跨过隔断轨道进入的区域；同一主厅场景演出连续表现，不另设自由入口。"
+    -
+      id: 5034
+      name: "法庭"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids:
+        - 5563
+        - 5564
+        - 5565
+        - 5566
+        - 5567
+        - 5568
+        - 5405
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_court_recording"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5035
+      name: "监狱蒙太奇"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_lula_prison"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5036
+      name: "五十年后旧车逃亡"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_lula_escape"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5037
+      name: "Emma汽车旅馆"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_lula_motel"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5038
+      name: "Margaret墓地"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_lula_grave"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5039
+      name: "城市衰退与犯罪蒙太奇"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_moore_depression"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5040
+      name: "电影首映礼"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_moore_premiere"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+    -
+      id: 5041
+      name: "离城火车"
+      type: "finale_scene"
+      npcs: {}
+      evidence_ids: []
+      event_triggers: []
+      sequence_event_ids:
+        - "L5_finale_fallen_train"
+      firstEnterTalk: null
+      ordinary_npc_talk: false
+  sequence:
+    -
+      event_id: "L5_finale_final_vote"
+      talk: "L5_finale_final_vote"
+      scene_id: 5006
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:984"
+      cast:
+        - 501
+        - 502
+        - 503
+        - 504
+        - 505
+        - 506
+        - 507
+      player_control: "final_vote"
+      required_beats:
+        - "第二幕结束于小 Charles 承认自己闩门、经暗门离开，并在破门后拿走钥石维持密室假象，但仍否认实施致命刀刺。第三幕从圆桌对“谁杀死老 Charles”的最终投票开始；L5 已锁定密室制造者并为 Zack 的凶手指控提供强依据，却仍不能被直接当作落刀定案。"
+        - "玩家决定 Zack 把自己的一票投给 Lula Washington、Moore 或小 Charles。白板本次新增的“选项—Lula／Moore／小 Charles”节点与这一入口一致；Lawson 仍不是玩家可选的最终指证对象。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit: {}
+      next:
+        - "L5_finale_lula_false_verdict"
+        - "L5_finale_moore_false_verdict"
+        - "L5_finale_public_failure"
+      choice:
+        question: "谁杀死了老 Charles？"
+        irreversible: true
+        options:
+          -
+            key: "lula"
+            npc_id: 509
+            set_flags:
+              u5_final_vote: "lula"
+            next: "L5_finale_lula_false_verdict"
+          -
+            key: "moore"
+            npc_id: 508
+            set_flags:
+              u5_final_vote: "moore"
+            next: "L5_finale_moore_false_verdict"
+          -
+            key: "charles_jr"
+            npc_id: 507
+            set_flags:
+              u5_final_vote: "charles_jr"
+            next: "L5_finale_public_failure"
+        forbidden_candidate: 506
+        does_not_read_relationship_flags: true
+    -
+      event_id: "L5_finale_public_failure"
+      talk: "L5_finale_public_failure"
+      scene_id: 5006
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:61"
+      cast:
+        - 501
+        - 502
+        - 503
+        - 504
+        - 505
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "Zack 在圆桌上公开宣布：小 Charles 是杀死老 Charles 的真凶。"
+        - "Lawson 弃权。他已经开始怀疑哥哥，但不愿凭尚未闭合的推断公开裁决家人。"
+        - "Vivian 弃权。她可以私下帮助 Zack，却不愿公开承担站队风险。"
+        - "Foster 仍指向 Moore。她目前能用尸检支持的，仍只是 Moore 在死亡时间上撒谎。"
+        - "Pierce 仍指向 Lula，并维护自己此前的拘禁与调查结论。"
+        - "Emma 已释放协查但不投票；Moore、Lula继续拘禁且不投票。"
+        - "Zack 的指认正确，却因证据不足而公开失败。这不是众人提前设计的假戏。"
+        - "小 Charles 相信自己已经赢下圆桌，同意散场。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        continuation: "next_talk"
+        next_talk: "L5_finale_private_seal"
+      next: "L5_finale_private_seal"
+    -
+      event_id: "L5_finale_private_seal"
+      talk: "L5_finale_private_seal"
+      scene_id: 5006
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:74"
+      cast:
+        - 501
+        - 502
+        - 504
+        - 505
+        - 506
+      player_control: false
+      required_beats:
+        - "圆桌散场后，Lawson 私下找到 Zack。"
+        - "Lawson 不承认哥哥已经弑父，只承认 Zack 的怀疑值得最后查证一次。"
+        - "Lawson 把一枚实体`TideWater 档案监印`交给 Zack。它是 Lawson 接管公司档案责任时一并收到的旧物；Lawson 只知道自己必须保管，却没有档案索引，也始终不知道它对应哪一道门或哪一组档案。"
+        - "Zack 把自己对小 Charles 的判断完整告诉 Emma，让她自行决定是否继续参与；Emma 沿用 L5 开篇取得的受监督协查身份，不需要任何人在终局再次释放她。"
+        - "Emma 此时没有母盘，也不知道远端录音是否成功保存。"
+        - "Lawson 要求 Foster 以中立监督者身份随 Zack、Emma 与 Vivian 继续查证。她仍不认同小 Charles 已经弑父，只负责观察调查是否被人为操纵。"
+        - "Lawson 留下陪小 Charles 喝酒，为四人的调查争取时间；他不会主动离席，也不参与谜题 A。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5019
+        continuation: "next_talk"
+        next_talk: "L5_finale_a_entry"
+      next: "L5_finale_a_entry"
+      grants_evidence:
+        - 5561
+      knowledge_boundary: "Lawson不知道监印用途；Emma自主决定继续，未重新释放；Foster仍中立。"
+    -
+      event_id: "L5_finale_a_entry"
+      talk: "L5_finale_a_entry"
+      scene_id: 5019
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:88"
+      cast:
+        - 501
+        - 502
+        - 504
+        - 505
+      player_control: "special_mechanics.finale_a"
+      required_beats:
+        - "谜题 A 只在玩家最终选择指认小 Charles、且圆桌公开失败后触发。Zack、Emma、Vivian 与 Foster 带着 Lawson 私下交出的实体监印返回已探索过的夹层；Lawson 仍留在酒局中拖住小 Charles，不参与 A，也听不见其后的录音。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        continuation: "special_mechanic"
+        mechanic: "finale_a"
+      next:
+        - "L5_finale_a_complete_playback"
+        - "L5_finale_a_failed"
+    -
+      event_id: "L5_finale_a_complete_playback"
+      talk: "L5_finale_a_complete_playback"
+      scene_id: 5029
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:101"
+      cast:
+        - 501
+        - 502
+        - 504
+        - 505
+      player_control: false
+      required_beats:
+        - "Zack 在五格“剩余思考时间”耗尽前完成五步推理，并完成自动拼合与播放；完整播放结束后才启动庄园断电、Pierce 在酒局袭击 Lawson 并追入夹层的后续演出。"
+        - "Zack、Emma、Vivian 与 Foster 共同听见老 Charles 修改继承安排的完整录音；仍在酒局中的 Lawson 没有听见。"
+        - "录音明确说明：Lawson 已成为新的法定唯一受益继承人，遗嘱正本与变更手续由家族外部律师经办。"
+        - "Lawson 若在交割前非正常死亡，外部律师将封存庄园安保记录并追查受益人；小 Charles 也不会因 Lawson 死亡自动取得全部遗产。"
+        - "Foster 仍坚持这段录音只能证明继承安排与杀人动机，不能证明小 Charles 亲手弑父。"
+        - "该录音足以成为 Zack 随后拖延 Pierce 的真话筹码；本流程不再要求寻找遗嘱原件。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5028
+        continuation: "next_talk"
+        next_talk: "L5_finale_powercut_assault"
+      next: "L5_finale_powercut_assault"
+      condition:
+        a_q5_correct: true
+      completion_gate:
+        a_playback_complete: true
+      execution_owner: "本节点唯一执行自动调入1602、修复与完整播放；Q5正确直接进入，不等待本节点自己的播放完成flag。"
+      set_flags_timing: "本节点自动拼合与完整播放结束后，才原子提交下列flags并续接停电。"
+      set_flags:
+        u5_finale_a: "success"
+        u5_inheritance_heard: true
+    -
+      event_id: "L5_finale_a_failed"
+      talk: "L5_finale_a_failed"
+      scene_id: 5019
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:110"
+      cast:
+        - 501
+        - 502
+        - 504
+        - 505
+      player_control: false
+      required_beats:
+        - "玩家第五次正式答错，将“剩余思考时间”扣至 0／5；当前推理立即中止，随后才触发小 Charles 切断庄园电力、Pierce 在酒局对 Lawson 动手的演出。"
+        - "Zack、Emma、Vivian 与 Foster 没有任何人听见继承录音内容；本分支不存在可供后续引用的“零散录音”。"
+        - "Zack 因此无法在后续追杀中说出足够具体、可以迫使 Pierce 核实的条款。"
+        - "A 失败不会在夹层内当场杀死 Zack。停电后必须继续进入 Lawson 从酒局逃入、Zack 与 Lawson 黑暗换装、Zack 引走 Pierce 的固定演出。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5028
+        continuation: "next_talk"
+        next_talk: "L5_finale_powercut_assault"
+      next: "L5_finale_powercut_assault"
+      location_policy: "若已开隐藏室仍保留门状态，失败演出从实际位置撤回文件柜区；不虚构未开门。"
+      condition:
+        a_remaining: 0
+      set_flags:
+        u5_finale_a: "failure"
+        u5_inheritance_heard: false
+    -
+      event_id: "L5_finale_powercut_assault"
+      talk: "L5_finale_powercut_assault"
+      scene_id: 5028
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:129"
+      cast:
+        - 503
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "谜题 A 成功播放结束或五格耗尽后，小 Charles 察觉 Lawson 一直在替 Zack 争取时间，才命令 Pierce 在酒局对 Lawson 动手。玩法进行期间不提前表现 Pierce 逐步逼近。"
+        - "若 A 成功，四人已经听完整段继承录音；若 A 失败，系统没有播放任何继承内容。小 Charles 下达追杀命令后，随即切断庄园主要照明与普通电话线；Pierce 此时仍在酒局房间。"
+        - "谜题 A 已在停电前完成成功或失败结算：成功时完整播放已经结束，失败时玩法已在机会归零处终止且不播放任何继承内容。随后酒局所在房间陷入黑暗，Pierce 拔枪准备射杀 Lawson。"
+        - "Lawson 撞开酒局房门逃跑，被 Pierce 一路追到夹层文件柜区域；他来不及询问调查结果，只来得及告诉众人 Pierce 要杀他。无论 A 成败，此时都不要求隐藏录音／试听室已经开启。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5019
+        continuation: "next_talk"
+        next_talk: "L5_finale_dark_disguise"
+      next: "L5_finale_dark_disguise"
+      requires_flags:
+        u5_finale_a:
+          - "success"
+          - "failure"
+    -
+      event_id: "L5_finale_dark_disguise"
+      talk: "L5_finale_dark_disguise"
+      scene_id: 5019
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:133"
+      cast:
+        - 501
+        - 502
+        - 503
+        - 504
+        - 505
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "Foster 与 Vivian 利用夹层门、文件柜和狭窄通道暂时阻挡 Pierce。Zack 与 Lawson 趁黑交换深色外套、帽子和围巾。"
+        - "Lawson 穿上 Zack 的衣物随 Emma、Vivian 撤离；Zack 则穿着 Lawson 的衣物从另一侧跑出，故意让 Pierce 只看见背影。停电、相近的衣物轮廓与未见正脸共同支撑误认；Pierce 不得在听清声音或看清面孔后仍认错人。"
+        - "Pierce 追向 Zack；Emma、Vivian 护送真正的 Lawson 前往庄园另一端。Foster 让 Zack 把 Pierce 引向旧档案区附近原本就可进入的封闭试听室，自己转身赶往嫌疑人走廊。"
+        - "众人分散后，小 Charles 取出另一把警用手枪，从侧廊追向 Emma、Vivian 与 Lawson。"
+        - "追杀阶段不再进行谜题 A 选项、找遗嘱或其他搜证操作，只保留逃亡、延迟结算与双线交叉剪辑。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5030
+        continuation: "next_talk"
+        next_talk: "L5_finale_hidden_gunshot"
+      next: "L5_finale_hidden_gunshot"
+    -
+      event_id: "L5_finale_hidden_gunshot"
+      talk: "L5_finale_hidden_gunshot"
+      scene_id: 5030
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:141"
+      cast:
+        - 501
+        - 503
+      player_control: false
+      required_beats:
+        - "Zack 按照 Foster 临走前的指示，把 Pierce 引入旧档案区附近的封闭试听室；该处不是谜题 A 才能开启的文件柜后隐藏房间。"
+        - "若 A 成功，Zack 隔着障碍说出“Lawson 已被指定为继承人、异常死亡会触发外部追查、小 Charles 无法自动继承”等具体条款，使 Pierce 短暂停步核实。"
+        - "若 A 失败，Zack 只能根据小 Charles 切断调查并命令 Pierce 追杀 Lawson 的行为，试探这场追杀背后的利益动机；他不能引用任何继承录音或具体继承条款，Pierce 继续逼近。"
+        - "Pierce 靠近后识破 Zack 的伪装。"
+        - "黑暗中突然传出一声枪响。"
+        - "画面立刻切黑，不展示 Zack、Pierce 或 Foster 的状态。"
+        - "画面切回 Emma 线；A 的生死结果仍由飞行机械馆入口的人影揭晓。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5031
+        continuation: "next_talk"
+        next_talk: "L5_finale_escape_corridor"
+      next: "L5_finale_escape_corridor"
+      reveal_survival: false
+    -
+      event_id: "L5_finale_escape_corridor"
+      talk: "L5_finale_escape_corridor"
+      scene_id: 5031
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:155"
+      cast:
+        - 502
+        - 504
+        - 506
+      player_control: false
+      required_beats:
+        - "Emma 护送真正的 Lawson 与 Vivian 穿过停电后的庄园。"
+        - "暴风雪封死直接离开庄园的路线，三人只能进入西丘封闭的 Miller飞行机械馆寻找临时藏身处。这座馆是老 Charles 以少年小 Charles 的航空梦为名修建、又由自己掌握主控权的旧馆。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5032
+        continuation: "next_talk"
+        next_talk: "L5_finale_mechanical_hide"
+      next: "L5_finale_mechanical_hide"
+    -
+      event_id: "L5_finale_mechanical_hide"
+      talk: "L5_finale_mechanical_hide"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:157"
+      cast:
+        - 502
+        - 504
+        - 506
+      player_control: false
+      required_beats:
+        - "飞行模拟主厅仍保留小 Charles 使用过的教学飞行台、机械星球仪，以及老 Charles 独自掌握的高位主控台。主控台后方有一间只能容纳一人的校准舱，另一侧则通向防火隔断后的消防逃生门。"
+        - "防火隔断是机械馆闭馆后的消防改造，平时收在天花板夹层内。隔断与逃生门之间留有一块消防检修前室；主厅一侧的消防机械墙上设有多根实体拉杆及各自的机械线路。"
+        - "消防逃生门已经被冻胀的门框与门外积雪卡死，短时间内无法打开；它从主厅看去仍像一条可信的逃生路线，正适合被 Emma 用作诱饵。"
+        - "演出不立刻揭示 Emma 把 Lawson 推向哪一边。实际选择是让 Lawson 藏进主控台后的单人校准舱，并保持传声管畅通；Lawson 可以从内部自行开门。"
+        - "Emma 与 Vivian 留在飞行模拟主厅一侧。Emma 面对消防机械墙上的多根实体拉杆，意识到终局现场没有 L2 旧消防维护卡原件，只能靠脑内记忆判断哪根拉杆控制防火隔断。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        continuation: "next_talk"
+        next_talk: "L5_finale_mechanical_hall"
+      next: "L5_finale_mechanical_hall"
+      set_state:
+        lawson_hidden: "single_calibration_cabin"
+        lawson_can_open_inside: true
+        sound_pipe_open: true
+      choice: false
+    -
+      event_id: "L5_finale_mechanical_hall"
+      talk: "L5_finale_mechanical_hall"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:165"
+      cast:
+        - 502
+        - 504
+        - 506
+        - 507
+      player_control: "special_mechanics.finale_b"
+      execution_contract:
+        opening_only: "只演入场与Zack伪装威胁（下列beats索引0、1），立刻打开B，不先演完R1/R2。"
+        beats_by_round:
+          B_R1: [2, 3, 4, 5, 6]
+          B_R2: [8]
+        shared_rule_beat: 7
+        driven_by: "special_mechanics.finale_b.rounds；下列required_beats是本场完整职责清单，按轮消费一次，不是先行顺播。"
+        confession_timing: "B_R1对话/固定纠正的连续演出内发生；B_R2选位后才推进第8项誘入前室。"
+      required_beats:
+        - "小 Charles 的脚步声从连廊逼近。他持枪进入飞行机械馆时，谜题 B 立即开始，三格“Lawson 暴露风险”出现；他随后声称，自己已经知道 Pierce 追赶的人其实是 Zack。"
+        - "这句话不向玩家证明 Zack 的生死，只用于打击 Emma 与 Vivian，让她们相信门外不会有援手。"
+        - "Emma 一边拖延，一边把小 Charles 的注意力维持在自己身上，并缓慢向能够遮住消防逃生门标志、又靠近消防机械墙的位置移动。"
+        - "若 A 成功，Emma 可以说出 Lawson 已成为唯一受益继承人、其异常死亡会触发外部追查等明确条款；若 A 失败，她只能抓住小 Charles 切断调查、又立即派人追杀 Lawson 的行动，试探 Lawson 究竟触碰了什么利益。A 失败分支不允许 Emma 引用“零散录音”、遗嘱原句或任何具体继承安排。"
+        - "若 A 成功，Emma 逼问小 Charles：既然杀死父亲也拿不回继承权，他接下来还准备杀多少人；若 A 失败，她则逼问：为什么调查刚碰到夹层，他就非要 Lawson 死。"
+        - "小 Charles 终于亲口承认老 Charles 是他杀的。A 成功时，他进一步声称只要 Lawson 死去，遗嘱与继承秩序仍能被他重新处理；A 失败时，他只承认 Lawson 活着会毁掉自己，不主动补出具体继承条款。"
+        - "Emma、Vivian，以及藏在单人校准舱内的 Lawson，都听见这段承认。"
+        - "对话拖延和移动站位构成 B 的前两轮一次性判断；任何错误都由 Emma 在演出中自行察觉并纠正，但会使“Lawson 暴露风险”增加一格，玩家不能回头重选。"
+        - "Emma 到达主厅一侧、隔断轨道之外的正确站位后，用身体挡住消防逃生门标志。小 Charles 推开她，看见突然显露的标志后认定 Lawson 已从该处逃走，持枪越过隔断轨道，进入隔断与逃生门之间的消防检修前室。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        continuation: "special_mechanic"
+        mechanic: "finale_b"
+      next:
+        - "L5_finale_b_blocked"
+        - "L5_finale_b_blackout"
+      confession_hearers:
+        - 502
+        - 504
+        - 506
+      lawson_hears_via: "传声管"
+      no_collectible_testimony: true
+    -
+      event_id: "L5_finale_b_blocked"
+      talk: "L5_finale_b_blocked"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:204"
+      cast:
+        - 502
+        - 504
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "Emma 在“Lawson 暴露风险”满格前拉对实体拉杆，防火隔断落到足以阻断小 Charles 返回主厅的位置；B 成功在这一刻锁定。"
+        - "小 Charles 来不及返回飞行模拟主厅，只能横起枪托卡住隔断下缘，在地面上方留下一道狭窄射击缝隙。"
+        - "他要求 Emma 升起隔断。Emma 的拒绝属于固定人物行为；他随后隔着缝隙射伤 Emma 的左腿，期间不再交还玩家操作。"
+        - "小 Charles 随即向 Vivian 开枪，试图迫使藏匿的 Lawson 自己现身。"
+        - "Lawson 从单人校准舱的传声管里听见枪声与 Vivian 的惨叫，自行打开门冲出来保护她。"
+        - "小 Charles 从缝隙中击伤 Lawson，但受隔断限制，无法立刻补枪。"
+        - "飞行机械馆入口随即出现一个持枪人影；来人是谁，只负责揭晓此前被延迟的 A 结算，不会改变已经锁定的 B 成功。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        continuation: "next_talk"
+        next_talk: "L5_finale_arrival_reveal"
+      next: "L5_finale_arrival_reveal"
+      condition:
+        u5_finale_b: "success"
+      immutable_result: true
+    -
+      event_id: "L5_finale_b_blackout"
+      talk: "L5_finale_b_blackout"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:214"
+      cast:
+        - 502
+        - 504
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "对话、站位或错误拉杆累计使“Lawson 暴露风险”达到 3／3，小 Charles 识破 Emma 的误导。"
+        - "防火隔断未能形成有效阻挡，小 Charles 退回 Emma 与 Vivian 所在的飞行模拟主厅一侧。"
+        - "小 Charles 确认消防逃生门无法通行，转身将枪口指向 Emma。"
+        - "枪口对准 Emma 的瞬间，画面切黑。"
+        - "黑暗中只保留连续枪声与碰撞声，不展示任何人的具体行动与死亡顺序。"
+        - "玩家视点直接切换至飞行机械馆门外的来者。"
+        - "Emma、Vivian 与 Lawson 的死亡统一在 Zack 或 Pierce 推门进入后揭晓。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        continuation: "next_talk"
+        next_talk: "L5_finale_arrival_reveal"
+      next: "L5_finale_arrival_reveal"
+      condition:
+        u5_finale_b: "failure"
+      blackout_prohibitions:
+        - "不补具体枪击/死亡顺序"
+        - "不定义Vivian谈判/拔枪/出卖"
+        - "不定义Lawson是否出舱"
+    -
+      event_id: "L5_finale_arrival_reveal"
+      talk: "L5_finale_arrival_reveal"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:230"
+      cast: []
+      player_control: false
+      required_beats:
+        - "门口来人只揭晓A的生死结果，不重判B。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit: {}
+      next:
+        - "L5_finale_true_rescue"
+        - "L5_finale_fallen_detective"
+        - "L5_finale_vivian_betrayal"
+        - "L5_finale_no_rescue"
+      variants:
+        a_success:
+          required_beats:
+            - "门口人影显出 Zack 的脸；他拿着 Pierce 的手枪，额角系着 L1 Foster 自由探索中出现过的“E.F.”白色医用手帕。调查过该热点的玩家能够认出归属；未调查的玩家只看到这一视觉细节。该物件暗示 Foster 曾经介入。"
+            - "极短回放揭示 A 成功的结果：Foster 撞偏 Pierce 的枪口，Zack 扑倒并压住 Pierce，Foster 用医用乙醚面罩使其失去意识。"
+          when_b_failure: "Zack推门后看见Emma、Vivian与Lawson已经倒地，举枪控制小Charles；此时才揭晓三人死亡。"
+          next_by_b:
+            success: "L5_finale_true_rescue"
+            failure: "L5_finale_fallen_detective"
+        a_failure:
+          required_beats:
+            - "门口人影显出持枪Pierce，A失败与Zack死亡至此揭晓。"
+            - "若B失败，推门后才展示Emma、Vivian与Lawson已倒地；不补黑屏过程。"
+          next_by_b:
+            success: "L5_finale_vivian_betrayal"
+            failure: "L5_finale_no_rescue"
+    -
+      event_id: "L5_finale_vivian_betrayal"
+      talk: "L5_finale_vivian_betrayal"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:252"
+      cast:
+        - 502
+        - 503
+        - 504
+        - 505
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "镜头短暂切回旧档案区附近的封闭试听室：Foster 带着乙醚赶到，只看见 Zack 的尸体与已经离开的 Pierce。"
+        - "Foster 判断继续追赶持枪的 Pierce 已经无法救回 Zack，只会让自己以及仍被拘禁的 Lula、Moore 一同陷入危险，因此带着乙醚撤回嫌疑人走廊。"
+        - "画面切回飞行机械馆。Pierce 持枪站到小 Charles 一方，封住机械馆出口并把枪口转向 Vivian。"
+        - "隔断后的小 Charles 继续通过射击缝隙控制 Emma 与 Lawson。"
+        - "Vivian 先看向门口，确认不会再有 Zack；再看向两处枪线，确认自己已经无法同时保住 Lawson、Emma 与自己。"
+        - "Lawson 此时已经负伤挡在 Vivian 面前。Vivian 从身后拉住他；Lawson 回头后，她吻了他，随后用自己偷偷带入庄园的 `Colt Vest Pocket Model 1908` 开枪杀死他。"
+        - "Vivian 放低枪口，主动提出由自己接管 TideWater、处理投毒文件并维持官方叙事，以此向小 Charles 与 Pierce 投诚。"
+        - "Vivian 同时要求留下 Emma 的性命：杀死记者只会制造烈士，摧毁她的信誉、让整座城市拒绝相信她，才是更安全的处理方式。"
+        - "小 Charles 接受这套方案，保住 Miller 家族；Pierce 继续控制机械馆出口。"
+        - "Emma 没有母盘，也没有能被城市权力结构采信的决定性证据。她被塑造成煽动枪击、害死 Lawson 的失控记者。"
+        - "Vivian 与小 Charles 都向 Emma 提供过住所、工作或金钱。Emma 全部拒绝，独自承受整座城市的排斥。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "loop_end"
+        chapter_boundary: true
+        ending: "a_failure_b_success"
+      next: "chapter_boundary"
+      montage_scene_ids:
+        - 5030
+        - 5007
+        - 5032
+      condition:
+        u5_finale_a: "failure"
+        u5_finale_b: "success"
+    -
+      event_id: "L5_finale_fallen_detective"
+      talk: "L5_finale_fallen_detective"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:272"
+      cast:
+        - 501
+        - 507
+      player_control: false
+      required_beats:
+        - "小 Charles 指向已经失去继承人、记者与公司负责人的现场，声称 Miller 庄园如今只会服从他；这场枪击会被处理成家务事，自己不会入狱，第二天的报纸甚至不会刊登死者姓名。"
+        - "Zack 看向 Emma，随后开枪杀死小 Charles。"
+        - "Zack 放下枪，抱着 Emma 的尸体坐了一会儿。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5030
+        continuation: "next_talk"
+        next_talk: "L5_finale_fallen_forgery"
+      next: "L5_finale_fallen_forgery"
+      condition:
+        u5_finale_a: "success"
+        u5_finale_b: "failure"
+    -
+      event_id: "L5_finale_fallen_forgery"
+      talk: "L5_finale_fallen_forgery"
+      scene_id: 5030
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:275"
+      cast:
+        - 501
+        - 503
+        - 505
+      player_control: false
+      required_beats:
+        - "他返回旧档案区附近的封闭试听室。Pierce 仍因乙醚昏迷，Foster 守在附近；此前枪响后的结果至此得到完整交代。"
+        - "Zack 向 Foster 借了一双医用手套。"
+        - "Zack 戴上手套，把手枪放回 Pierce 手中，握着 Pierce 的手扣下扳机。"
+        - "他重新摆放 Pierce 的手与枪，伪造 Pierce 畏罪自杀的现场。"
+        - "第二天，报纸刊登简短消息：Miller 庄园内多人离奇死亡，私家侦探 Zack Brennan 下落不明。报道没有说明凶手，也没有还原庄园内发生的事情。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5041
+        continuation: "next_talk"
+        next_talk: "L5_finale_fallen_train"
+      next: "L5_finale_fallen_train"
+    -
+      event_id: "L5_finale_fallen_train"
+      talk: "L5_finale_fallen_train"
+      scene_id: 5041
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:280"
+      cast:
+        - 501
+      player_control: false
+      required_beats:
+        - "画面切到一列驶离艾斯弗德的火车。Zack 独自坐在车厢里，膝上摊着那份报纸。"
+        - "火车驶过城市边界，Zack 没有回头。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "loop_end"
+        chapter_boundary: true
+        ending: "a_success_b_failure"
+      next: "chapter_boundary"
+    -
+      event_id: "L5_finale_no_rescue"
+      talk: "L5_finale_no_rescue"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:292"
+      cast:
+        - 503
+        - 507
+      player_control: false
+      required_beats:
+        - "Pierce 与小 Charles 一同收走现场枪械与材料，并封锁飞行机械馆。"
+        - "四名关键角色全部死亡。Pierce 继续维护小 Charles 的对外口径，小 Charles 则保住 Miller 家族，并将枪击、投毒与庄园混乱推给 Zack 和其他嫌疑人。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "loop_end"
+        chapter_boundary: true
+        ending: "a_failure_b_failure"
+      next: "chapter_boundary"
+      condition:
+        u5_finale_a: "failure"
+        u5_finale_b: "failure"
+    -
+      event_id: "L5_finale_true_rescue"
+      talk: "L5_finale_true_rescue"
+      scene_id: 5032
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:302"
+      cast:
+        - 501
+        - 502
+        - 504
+        - 505
+        - 506
+        - 507
+      player_control: false
+      required_beats:
+        - "Zack 从飞行模拟主厅一侧压住小 Charles 的射击角度，击落卡住隔断的枪托，挡住他的最后一次反击。"
+        - "枪托脱离后，已经释放的机械配重自行带动防火隔断彻底落下；小 Charles 被困在消防检修前室内，Emma 不再进行任何操作。"
+        - "Zack 避免了最后的伤亡，却不取代 Emma 此前完成的藏人、误导、记忆换算与实体拉杆操作。"
+        - "Foster 稍后赶来，为 Zack 与飞行机械馆内的伤员做紧急处理。"
+        - "Lawson 与 Vivian 接受救治并存活。庄园危机结束，但小 Charles 亲手弑父仍需要能够进入公开程序的决定性证据。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5034
+        continuation: "next_talk"
+        next_talk: "L5_finale_court_recording"
+      next: "L5_finale_court_recording"
+      condition:
+        u5_finale_a: "success"
+        u5_finale_b: "success"
+    -
+      event_id: "L5_finale_court_recording"
+      talk: "L5_finale_court_recording"
+      scene_id: 5034
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:314"
+      cast:
+        - 501
+        - 502
+        - 505
+        - 507
+        - 514
+        - 515
+        - 516
+      player_control: false
+      required_beats:
+        - "后日谈发生在小 Charles 的法庭审判中。"
+        - "Foster 首先作为法医证人出庭，正式念出 Sean O'Malley 的姓名。"
+        - "她提交 1912 年的原始异常记录与自己当年签下的假尸检责任，证明 Sean 并非死于公开报告所称的意外，而是在事故前已遭到蓄意致命袭击。"
+        - "她由此纠正老 Charles 对 Sean 谋杀案的官方记录，也证明 Miller 体系曾迫使法医系统调换伤情顺序。"
+        - "Foster 随后出示 L4 已经取得的同一份 1928 年 TideWater 投毒文件，以及法医相关方提供的官方字迹鉴定报告；报告由专门鉴定人员签署，Foster 只负责在证言顺序中将其提交法庭。"
+        - "字迹鉴定确认：投毒命令上的“老 Charles”签名实际由小 Charles 仿写；传递记录显示命令经 Pierce 的执行渠道送入南区。"
+        - "该材料证明小 Charles 是投毒命令的真正签发者、Pierce 是知情执行者，但仍不能证明小 Charles 亲手杀死父亲。"
+        - "Foster 最后确认：老 Charles 当晚的真正致命伤是刀伤，而不是坠落或其他伤势。"
+        - "法官指出：刀伤只能确定死因，不能单独确定持刀者就是小 Charles。"
+        - "Foster 示意自己的证言已经完成，该换下一组证人和物证。"
+        - "法官的问题落下后，镜头扫过证物桌与唱片箱；Zack 与 Emma 对视，身体已经准备走向证物桌。"
+        - "画面只保留一至两秒调查前摇，不开放界面，也不给玩家取得操作权。"
+        - "Watts 抱着一张已经封存的母盘赶进法庭：“母盘在我办公室里啦！不用找了！”"
+        - "Emma 在晚宴前只把舞台拾音线路单向接入 Watts 办公室的远端刻录设备，并不知道是否录制成功、母盘是否存在或录到了什么。"
+        - "Watts 后来在办公室发现唯一母盘，按远端设备编号与录制日期登记、封存并形成书面保全记录；该记录已经先行提交法庭。"
+        - "书记员核对母盘上的设备编号、日期、封条与在卷保全记录，法官准许播放。"
+        - "笑点来自 Watts 的迟到和 Zack、Emma 刚准备继续工作的反应；本段不开放玩家操作。"
+        - "唯一母盘被装上法庭留声机，并通过法庭内部扩音设备播放给法官、陪审团、记者与旁听者。"
+        - "录音先播放老 Charles 临死前与小 Charles 的谈话，并留下能够明确辨认父子身份的称呼与回应。"
+        - "随后响起小 Charles 实施致命刀刺以及仍留在现场的连续声音。"
+        - "方才因 Zack 与 Emma 吵嘴而稍显松动的法庭气氛立刻冷下来。"
+        - "记者席与旁听席一片哗然，法官敲槌也无法立刻恢复秩序。"
+        - "场景停在公众第一次共同听见完整弑父真相的时刻。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "loop_end"
+        chapter_boundary: true
+        ending: "true_ending"
+      next: "chapter_boundary"
+      stages:
+        -
+          id: "foster_evidence"
+          evidence_ids:
+            - 5563
+            - 5564
+            - 5405
+            - 5565
+            - 5566
+          source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:314"
+        -
+          id: "false_investigation_anticipation"
+          duration: "1—2秒"
+          restore_player_control: false
+          source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:327"
+        -
+          id: "watts_custody"
+          evidence_ids:
+            - 5567
+            - 5568
+          source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:332"
+        -
+          id: "father_son_recording"
+          source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:340"
+      grants_evidence: []
+      presentation_only_evidence_ids:
+        - 5563
+        - 5564
+        - 5405
+        - 5565
+        - 5566
+        - 5567
+        - 5568
+      puzzle_c: false
+    -
+      event_id: "L5_finale_lula_false_verdict"
+      talk: "L5_finale_lula_false_verdict"
+      scene_id: 5006
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:27"
+      cast:
+        - 501
+        - 502
+        - 507
+        - 509
+      player_control: false
+      required_beats:
+        - "Zack 无法证明致命一刀，却仍坚持指证 Lula。小 Charles 接受这个有利于 Miller 的答案，并让 Zack 短暂接触 Mickey 留下的档案、报社和警务接口；Emma 看出 Zack 已经选择替系统管理牺牲者，与他决裂。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5035
+        continuation: "next_talk"
+        next_talk: "L5_finale_lula_prison"
+      next: "L5_finale_lula_prison"
+    -
+      event_id: "L5_finale_lula_prison"
+      talk: "L5_finale_lula_prison"
+      scene_id: 5035
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:29"
+      cast:
+        - 501
+      player_control: false
+      required_beats:
+        - "暴风雪后，药检证明 Lula 携带的只是普通安眠药，既非毒药，也不同于 Emma 酒杯中的液体镇静剂。Lula 洗脱谋杀嫌疑，但仍需承担冒名、换药和非法进入的责任。小 Charles 随即将误判与证据问题全部推给 Zack，使他以伪证、妨碍司法和共谋等重罪入狱。报纸把他称为“史上最笨侦探”，此后的五十年以历次假释失败的蒙太奇带过。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5036
+        continuation: "next_talk"
+        next_talk: "L5_finale_lula_escape"
+      next: "L5_finale_lula_escape"
+    -
+      event_id: "L5_finale_lula_escape"
+      talk: "L5_finale_lula_escape"
+      scene_id: 5036
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:33"
+      cast:
+        - 501
+        - 517
+        - 518
+      player_control: false
+      required_beats:
+        - "1978 年，高龄的 Mary 与 Helen 趁监狱交接混乱逃脱，又把年迈的 Zack 带出监狱。三名老人乘旧车展开一段短促、荒诞的公路逃亡；这不是替 Zack 洗清错误，只是不让 Miller 写下的版本成为他人生的最后一页。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5037
+        continuation: "next_talk"
+        next_talk: "L5_finale_lula_motel"
+      next: "L5_finale_lula_motel"
+    -
+      event_id: "L5_finale_lula_motel"
+      talk: "L5_finale_lula_motel"
+      scene_id: 5037
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:37"
+      cast:
+        - 501
+        - 502
+        - 517
+        - 518
+      player_control: false
+      required_beats:
+        - "Mary 与 Helen 把 Zack 送到 Emma 经营的旧汽车旅馆。Emma 只准他住一晚，并让他第二天随自己去看 Margaret。屋内整面墙保存着 Zack 五十年来的报道和假释消息；Margaret 的遗物与安葬纪念说明 Emma 曾替她养老送终。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5038
+        continuation: "next_talk"
+        next_talk: "L5_finale_lula_grave"
+      next: "L5_finale_lula_grave"
+    -
+      event_id: "L5_finale_lula_grave"
+      talk: "L5_finale_lula_grave"
+      scene_id: 5038
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:39"
+      cast:
+        - 501
+        - 502
+      player_control: false
+      required_beats:
+        - "次日，Emma 陪 Zack 来到一直受到照料的 Margaret 墓前。结局不交代 Zack 是否随 Emma 回去，也不说明这一晚究竟延续了多久。Zack 想成为掌握系统的 Mickey，最终却只做了三天便于切割的工具；Emma 的照顾也不等于撤销她对他当年选择的判断。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "loop_end"
+        chapter_boundary: true
+        ending: "lula_bad"
+      next: "chapter_boundary"
+    -
+      event_id: "L5_finale_moore_false_verdict"
+      talk: "L5_finale_moore_false_verdict"
+      scene_id: 5006
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:49"
+      cast:
+        - 501
+        - 502
+        - 507
+        - 508
+      player_control: false
+      required_beats:
+        - "Zack 无法证明 Moore 实施了致命刀刺，却利用他的逼签、提前处理死讯和金融恶名完成指控。Moore 与 Zack 无关，也不是他想保护的人；Emma 因此看出，Zack 选择的是最方便交割的对象，而非最接近真相的人。"
+        - "当小 Charles 准备冻结湖滨信托并把 Miller 的责任全部推给 Moore 时，Moore 揭露自己已通过控股和往来关系控制艾斯弗德近半银行。小 Charles 抛售其证券、切断项目回款，Moore 则冻结 Miller 账户、抽走信贷。两人的金融内战使谋杀案迅速退出头版，也让任何一方都无法再把另一方安全送进监狱。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5039
+        continuation: "next_talk"
+        next_talk: "L5_finale_moore_depression"
+      next: "L5_finale_moore_depression"
+    -
+      event_id: "L5_finale_moore_depression"
+      talk: "L5_finale_moore_depression"
+      scene_id: 5039
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:55"
+      cast:
+        - 501
+        - 502
+      player_control: false
+      required_beats:
+        - "约一周后，挤兑击穿艾斯弗德的银行、地产和市政信用。外部金融机构及时隔离风险，并依据暴露的问题提前避险，使 1929 年的全国危机只发展为短期衰退；艾斯弗德却独自陷入长期萧条，世博会、南区开发和 Tidewater 项目全部停摆。"
+        - "失去 Miller 约束的银月会接管烂尾建筑、地下信贷和大批失业人员，正式成为公开的城市势力。银行劫案、绑架、私酒、保护费和帮派火并取代开发计划，艾斯弗德由此变成经典美国犯罪片式的帮派都市。"
+        - "无尽犯罪让 Zack 的事务所异常繁荣。他有钱、有名、永远不缺客户，却清楚这些案件源于自己当年的错误裁决，因此开始拖延开案、只做最低限度的工作，不再相信破案能够让城市变好。"
+        - "Emma 则成为著名犯罪记者。她一次次准备离开，又因新的失踪和冤案留下；她救下具体的人，报社却把整座城市的苦难经营成畅销的犯罪传奇。她越努力报道，艾斯弗德的“犯罪之城”品牌便越成功。两人偶尔仍交换案件材料，但不因此恢复原来的关系。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "change_scene"
+        target_scene_id: 5040
+        continuation: "next_talk"
+        next_talk: "L5_finale_moore_premiere"
+      next: "L5_finale_moore_premiere"
+    -
+      event_id: "L5_finale_moore_premiere"
+      talk: "L5_finale_moore_premiere"
+      scene_id: 5040
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:67"
+      cast:
+        - 501
+        - 502
+      player_control: false
+      required_beats:
+        - "好莱坞最终把艾斯弗德拍成犯罪电影，将 Zack 与 Emma 塑造成恢复城市秩序的英雄。结局在首映礼与真实街道之间交叉：观众在银幕前鼓掌，银月会仍控制着夜晚；Zack 面前还有一份没有打开的委托，Emma 又走向下一宗冤案，老 Charles 的真凶始终没有被揭露。"
+        - "> 美国没有迎来大萧条，艾斯弗德独自承担了它。  \n> Zack 与 Emma 没有失去事业，反而被这座犯罪之城成就。"
+      runtime_binding:
+        kind: "chained_talk"
+        adapter: "special_adapter"
+        status: "not_implemented"
+        unique_entry: true
+      runtime_exit:
+        action: "loop_end"
+        chapter_boundary: true
+        ending: "moore_bad"
+      next: "chapter_boundary"
+  branch_knowledge:
+    pre_finale:
+      allowed:
+        - "Emma 已获释协查，Moore与Lula仍被隔离且不因取石指证自动排除刀刺嫌疑。"
+        - "完整拼回断齿的鸢尾钥石配合特殊三指握姿可以从暗门两侧退栓。"
+        - "钥石在致命喷溅时已在暗角，22:10仍在、22:15被主动提走，机会者为Lawson与小Charles。"
+        - "夹层可见湿迹没有Lawson鞋底晶屑对应的蓝色反应；教学照还原指向小Charles的钥石知识。"
+        - "小Charles承认取石、内部闩门和暗门离场，仍否认致命刀刺；继承安排尚未揭晓。"
+      forbidden:
+        - "继承安排"
+        - "Webb隐藏残片"
+        - "紫片正式药检"
+        - "远端母盘存在或内容"
+        - "1928仿签真实人"
+    a_success:
+      when:
+        u5_finale_a: "success"
+        u5_inheritance_heard: true
+      hearers:
+        - 501
+        - 502
+        - 504
+        - 505
+      absent_hearers:
+        - 506
+        - 503
+      allowed:
+        - "Lawson成为新法定唯一受益继承人"
+        - "外部律师持有遗嘱正本并经办变更手续"
+        - "Lawson异常死亡冻结交割并触发外部调查及安保记录保全"
+        - "Lawson死亡不让小Charles自动继承"
+      not_proven:
+        - "亲手弑父"
+      lawson_policy: "不参加A、不听继承录音；不自动继承Zack知识。"
+      pierce_policy: "只在Zack拖延时听其转述，未亲听录音。"
+    a_failure:
+      when:
+        u5_finale_a: "failure"
+      allowed:
+        - "调查遭切断、Lawson被追杀的可见行为"
+      forbidden:
+        - "具体继承条款"
+        - "零散继承录音"
+        - "遗嘱原句"
+        - "A成功法定受益人信息"
+      room_open_is_not_knowledge: true
+    b_confession:
+      hearers:
+        - 502
+        - 504
+        - 506
+      allowed_both_a_results:
+        - "小Charles亲口承认杀死父亲"
+        - "Lawson活着会毁掉他"
+      a_success_additions:
+        - "针对继承安排的自辩"
+      a_failure_forbidden:
+        - "具体继承条款"
+      not_formal_master_disc: true
+    court_only:
+      when:
+        u5_finale_a: "success"
+        u5_finale_b: "success"
+      allowed:
+        - "Foster1912假报告责任与Sean异常记录"
+        - "同一1928文件签名为小Charles仿写，Pierce执行渠道"
+        - "Watts唯一远端母盘合法保全及完整弑父声音"
+      no_player_search: true
+    lula_bad_only:
+      when:
+        u5_final_vote: "lula"
+      after: "暴风雪封锁结束后的正式药检"
+      allowed:
+        - "紫片普通片剂安眠药，非毒药，与E-12液体制剂不同"
+      not_back_propagated_to_l5: true
+    wrong_verdict_limits:
+      - "两条误指路线固定演出，不增加关系变体或二次选择"
+      - "坏结局不补母盘翻案解释"
+      - "Mary_Elder不是冒名护工Lula"
+  persistence:
+    status: "special_adapter_required"
+    global_flags:
+      u5_final_vote:
+        initial: "unchosen"
+        write_once: true
+      u5_finale_a:
+        initial: "unplayed"
+        values:
+          - "unplayed"
+          - "success"
+          - "failure"
+      u5_inheritance_heard:
+        initial: false
+        set_after: "完整播放结束"
+      u5_finale_b:
+        initial: "unplayed"
+        values:
+          - "unplayed"
+          - "success"
+          - "failure"
+    state_fields:
+      - "active_node"
+      - "current_talk_cursor"
+      - "controlled_character"
+      - "last_committed_submission_id"
+      - "a_checkpoint_snapshot"
+      - "b_checkpoint_snapshot"
+      - "a_survival_reveal_pending"
+      - "ending_branch"
+      - "chapter_boundary_committed"
+      - "event_completion_set"
+      - "inventory_awards_once"
+      - "environment_observation_set"
+      - "photo_wall_arrangement"
+    transaction_policy:
+      - "一次提交与扣格/转步原子保存；重复载入不重扣、不重发"
+      - "恢复中途玩法先恢复当前阶段，不重进ChapterConfig.initTalk"
+      - "失败分支禁止载入成功音频缓冲；继承知识必须按flag过滤"
+      - "B有效阻挡形成即提交不可逆success，再播放受伤事件"
+      - "A生死只在arrival_reveal展示，内部存档不可泄漏给UI"
+      - "普通读档继续当前A/B；明确A检查点重试才执行Q1五格重置"
+      - "所有分支终点只提交一次loop_end与chapter_boundary"
+    checkpoints:
+      - "final_vote_before_commit"
+      - "A_before_Q1"
+      - "A_result_committed_before_powercut"
+      - "gunshot_reveal_pending"
+      - "B_before_R1"
+      - "B_result_committed"
+      - "arrival_reveal"
+      - "final_endpoint"
+    cross_chapter_dependency: "1602通过合法U1持有记录导入；未实装时报告技术阻断，绝不代扣机会。"
+  endpoints:
+    -
+      node: "L5_finale_lula_grave"
+      ending: "lula_bad"
+      action: "loop_end"
+      chapter_boundary: true
+    -
+      node: "L5_finale_moore_premiere"
+      ending: "moore_bad"
+      action: "loop_end"
+      chapter_boundary: true
+    -
+      node: "L5_finale_vivian_betrayal"
+      ending: "a_failure_b_success"
+      action: "loop_end"
+      chapter_boundary: true
+    -
+      node: "L5_finale_fallen_train"
+      ending: "a_success_b_failure"
+      action: "loop_end"
+      chapter_boundary: true
+    -
+      node: "L5_finale_no_rescue"
+      ending: "a_failure_b_failure"
+      action: "loop_end"
+      chapter_boundary: true
+    -
+      node: "L5_finale_court_recording"
+      ending: "true_ending"
+      action: "loop_end"
+      chapter_boundary: true
+outline_coverage:
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:796"
+    target: "opening.sequence[0]"
+    mapping: "exact"
+    note: "强制开篇场景"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:802"
+    target: "opening.sequence[1]"
+    mapping: "exact"
+    note: "强制开篇场景"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+    target: "opening.sequence[2]"
+    mapping: "merged"
+    note: "S1:809连续换场公开流动拆成顺序场景，无排他窗口或调查热点。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+    target: "opening.sequence[3]"
+    mapping: "merged"
+    note: "S1:809连续换场公开流动拆成顺序场景，无排他窗口或调查热点。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+    target: "opening.sequence[4]"
+    mapping: "merged"
+    note: "S1:809连续换场公开流动拆成顺序场景，无排他窗口或调查热点。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+    target: "opening.sequence[5]"
+    mapping: "merged"
+    note: "S1:809连续换场公开流动拆成顺序场景，无排他窗口或调查热点。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:817"
+    target: "scenes[0]"
+    mapping: "exact"
+    scene_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:817"
+    target: "scenes[0].npcs.505.talk"
+    mapping: "exact"
+    dialogue_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:818"
+    target: "scenes[0].npcs.505.testimony_ids[0]"
+    mapping: "exact"
+    testimony_required: true
+    testimony_id: 5055001
+    source_text: "拍摄 22:10 第一张照片前，她让小 Charles 到 C-3 景墙背面帮忙打光；直到 22:15 第二张照片曝光，他都在那一带。她没有持续观察小 Charles 的双手。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:819"
+    target: "scenes[0].npcs.512.talk"
+    mapping: "exact"
+    dialogue_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:820"
+    target: "scenes[0].npcs.512.testimony_ids[0]"
+    mapping: "exact"
+    testimony_required: true
+    testimony_id: 5125001
+    source_text: "22:10 与 22:15 两张玻璃底片使用同一固定机位，两次曝光之间相机与舞台装置没有移动；可见人物与 C-3 正面 Lawson 的站位保持不变，只有 Lawson 与景墙背面的小 Charles 能接触暗角。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:828"
+    target: "scenes[1]"
+    mapping: "exact"
+    scene_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:855"
+    target: "scenes[1].npcs.502.talk"
+    mapping: "exact"
+    dialogue_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:856"
+    target: "scenes[1].npcs.502.testimony_ids[0]"
+    mapping: "exact"
+    testimony_required: true
+    testimony_id: 5025001
+    source_text: "药效使她彻底失去行动能力、意识断续；被放到尸旁后，她曾短暂睁眼，看见楼梯控制箱附近有一只手用三指握住鸢尾石并转动。她没有看清操作者的面孔，无法辨认那个人，只能尝试复现手势。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:838"
+    target: "scenes[1].event_triggers[0]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:858"
+    target: "scenes[1].event_triggers[1]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:858"
+    target: "scenes[1].event_triggers[2]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:840"
+    target: "scenes[2]"
+    mapping: "exact"
+    scene_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:842"
+    target: "scenes[2].npcs.506.talk"
+    mapping: "exact"
+    dialogue_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:843"
+    target: "scenes[2].npcs.506.testimony_ids[0]"
+    mapping: "merged"
+    testimony_required: true
+    testimony_id: 5063001
+    source_text: "自己处理宝石金属镶座时洒落了硫酸铜晶体，晶屑卡进鞋底，踩到水便会溶出蓝色痕迹；案发后没有换鞋，鞋底仍有残余晶屑。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:851"
+    target: "scenes[2].event_triggers[0]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:864"
+    target: "scenes[3]"
+    mapping: "exact"
+    scene_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:882"
+    target: "scenes[4]"
+    mapping: "exact"
+    scene_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:920"
+    target: "scenes[4].npcs.507.talk"
+    mapping: "added"
+    dialogue_required: true
+    approval: "state_source_contract.md：用户批准公共推理后普通问话"
+    source_text: "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:920"
+    target: "scenes[4].npcs.507.testimony_ids[0]"
+    mapping: "added"
+    testimony_required: true
+    testimony_id: 5075001
+    source_text: "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+    approval: "state_source_contract.md：用户批准R1普通取得"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:886"
+    target: "scenes[4].event_triggers[0]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:896"
+    target: "scenes[4].event_triggers[1]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:902"
+    target: "scenes[4].event_triggers[2]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:804"
+    target: "opening.sequence[1].testimony_ids[0]"
+    mapping: "exact"
+    testimony_required: true
+    testimony_id: 5045001
+    source_text: "Emma 申请单独使用礼堂彩排后，Vivian 按晚宴统筹流程同时把这项安排告诉了 Pierce 和 Lawson；Pierce 因此在 21:15 前进入礼堂完成过一次安保检查。Vivian 不知道 Pierce 后来是否把消息转告给其他人，也没有声称两人知道 Emma 与老 Charles 的 21:30 私约。"
+    collectible: false
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:805"
+    target: "opening.sequence[1].testimony_ids[1]"
+    mapping: "exact"
+    testimony_required: true
+    testimony_id: 5045002
+    source_text: "小 Charles 曾经经手 Emma 的 E-12 酒杯；Vivian 没看见他往杯里放东西，也没有持续盯住酒杯，因而不能排除后来还有别人接触。"
+    collectible: false
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:823"
+    target: "evidence_registry[0]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5204
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:832"
+    target: "evidence_registry[1]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5311
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:845"
+    target: "evidence_registry[2]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5306
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:969"
+    target: "evidence_registry[3]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5312
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:1002"
+    target: "evidence_registry[4]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5452
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:1003"
+    target: "evidence_registry[5]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5308
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:691"
+    target: "evidence_registry[6]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5405
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:388"
+    target: "evidence_registry[7]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5251
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:271"
+    target: "evidence_registry[8]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5153
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:502"
+    target: "evidence_registry[9]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5351
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:679"
+    target: "evidence_registry[10]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5454
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:327"
+    target: "evidence_registry[11]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5105
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:822"
+    target: "evidence_registry[12]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5501
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:824"
+    target: "evidence_registry[13]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5551
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:830"
+    target: "evidence_registry[14]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5502
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:831"
+    target: "evidence_registry[15]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5503
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:846"
+    target: "evidence_registry[16]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5504
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:847"
+    target: "evidence_registry[17]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5505
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:866"
+    target: "evidence_registry[18]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5552
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:867"
+    target: "evidence_registry[19]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5553
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:868"
+    target: "evidence_registry[20]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5554
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:874"
+    target: "evidence_registry[21]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5506
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:76"
+    target: "evidence_registry[22]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5561
+    evidence_delivery_required: true
+    talk: "L5_finale_private_seal"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:94"
+    target: "evidence_registry[23]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5562
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:316"
+    target: "evidence_registry[24]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5563
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:316"
+    target: "evidence_registry[25]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5564
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:318"
+    target: "evidence_registry[26]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5565
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:319"
+    target: "evidence_registry[27]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5566
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:332"
+    target: "evidence_registry[28]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5567
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:334"
+    target: "evidence_registry[29]"
+    mapping: "exact"
+    evidence_required: true
+    evidence_id: 5568
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:82"
+    target: "evidence_registry[30]"
+    mapping: "merged"
+    evidence_required: true
+    evidence_id: 5309
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:920"
+    target: "expose.rounds[0]"
+    mapping: "exact"
+    expose_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:929"
+    target: "expose.rounds[1]"
+    mapping: "exact"
+    expose_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:945"
+    target: "expose.rounds[2]"
+    mapping: "exact"
+    expose_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:961"
+    target: "expose.post_expose"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:950"
+    target: "expose.post_expose.testimony_ids[0]"
+    mapping: "exact"
+    testimony_required: true
+    testimony_id: 5075002
+    source_text: "门是我从里面闩上的，我也确实从暗门离开。破门后，那块钥石是我拿走的——我不能让任何人知道那里还有一条路。但父亲身上的刀不是我刺的。"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:790"
+    target: "player_context.goals"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:807"
+    target: "opening.sequence[1].knowledge_boundary"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:811"
+    target: "ending_sequence.sequence[21].presentation_only_evidence_ids"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:826"
+    target: "special_mechanics.suspect_selection"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:834"
+    target: "scenes[1].event_triggers"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:849"
+    target: "scenes[2].npcs.506.known_information"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:860"
+    target: "scenes[1].event_triggers[2]"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:862"
+    target: "narrative_continuity"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:872"
+    target: "special_mechanics.photo_wall"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:876"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:878"
+    target: "source_constraints.investigation_forbidden"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:888"
+    target: "special_mechanics.public_reasoning_1"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:890"
+    target: "special_mechanics.public_reasoning_1.output"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:892"
+    target: "special_mechanics.public_reasoning_1.output"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:898"
+    target: "special_mechanics.public_reasoning_2"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:900"
+    target: "special_mechanics.public_reasoning_2.output"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:906"
+    target: "scenes[4].event_triggers[2].required_beats"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:908"
+    target: "expose.post_expose.knowledge_boundary"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:912"
+    target: "special_mechanics.suspect_selection"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:914"
+    target: "special_mechanics.suspect_selection.options[0]"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:916"
+    target: "expose.rounds"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:939"
+    target: "expose.rounds[1]"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:941"
+    target: "expose.rounds[1].result"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:963"
+    target: "expose.post_expose.required_beats"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:967"
+    target: "source_constraints.investigation_forbidden"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:969"
+    target: "expose.post_expose.forbidden"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:973"
+    target: "expose.post_expose.knowledge_boundary"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:984"
+    target: "ending_sequence.sequence[0]"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:986"
+    target: "ending_sequence.sequence[0].choice"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:990"
+    target: "ending_sequence.branch_knowledge.lula_bad_only"
+    mapping: "exact"
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_大纲.md:984"
+    target: "ending_sequence.sequence[0]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:61"
+    target: "ending_sequence.sequence[1]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:74"
+    target: "ending_sequence.sequence[2]"
+    mapping: "exact"
+    event_required: true
+    evidence_delivery_required: true
+    grants_evidence:
+      - 5561
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:88"
+    target: "ending_sequence.sequence[3]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:101"
+    target: "ending_sequence.sequence[4]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:110"
+    target: "ending_sequence.sequence[5]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:129"
+    target: "ending_sequence.sequence[6]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:133"
+    target: "ending_sequence.sequence[7]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:141"
+    target: "ending_sequence.sequence[8]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:155"
+    target: "ending_sequence.sequence[9]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:157"
+    target: "ending_sequence.sequence[10]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:165"
+    target: "ending_sequence.sequence[11]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:204"
+    target: "ending_sequence.sequence[12]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:214"
+    target: "ending_sequence.sequence[13]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:230"
+    target: "ending_sequence.sequence[14]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:252"
+    target: "ending_sequence.sequence[15]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:272"
+    target: "ending_sequence.sequence[16]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:275"
+    target: "ending_sequence.sequence[17]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:280"
+    target: "ending_sequence.sequence[18]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:292"
+    target: "ending_sequence.sequence[19]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:302"
+    target: "ending_sequence.sequence[20]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:314"
+    target: "ending_sequence.sequence[21]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:27"
+    target: "ending_sequence.sequence[22]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:29"
+    target: "ending_sequence.sequence[23]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:33"
+    target: "ending_sequence.sequence[24]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:37"
+    target: "ending_sequence.sequence[25]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:39"
+    target: "ending_sequence.sequence[26]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:49"
+    target: "ending_sequence.sequence[27]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:55"
+    target: "ending_sequence.sequence[28]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:67"
+    target: "ending_sequence.sequence[29]"
+    mapping: "exact"
+    event_required: true
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:13"
+    target: "special_mechanics.photo_wall.source_contract_notes[0]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0013"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:19"
+    target: "special_mechanics.photo_wall.source_contract_notes[1]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0019"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:32"
+    target: "special_mechanics.photo_wall.unlock_condition"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0032"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:39"
+    target: "special_mechanics.photo_wall.unlock_condition"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0039"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:45"
+    target: "special_mechanics.photo_wall.unlock_condition"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0045"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:51"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0051"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:53"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0053"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:55"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0055"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:60"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0060"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:62"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0062"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:67"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0067"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:75"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0075"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:81"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0081"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:88"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0088"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:90"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0090"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:94"
+    target: "special_mechanics.photo_wall.data"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0094"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:100"
+    target: "special_mechanics.photo_wall.operations"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0100"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:112"
+    target: "special_mechanics.photo_wall.failure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0112"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:126"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0126"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:128"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0128"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:133"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0133"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:142"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0142"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:146"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0146"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:148"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0148"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:150"
+    target: "special_mechanics.photo_wall.knowledge_limit"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0150"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:161"
+    target: "special_mechanics.photo_wall.unlock_condition"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0161"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:167"
+    target: "special_mechanics.photo_wall.runtime_binding"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0167"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:176"
+    target: "special_mechanics.photo_wall.runtime_binding"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S5-0176"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:13"
+    target: "special_mechanics.finale_a.source_contract_notes[0]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0013"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:20"
+    target: "special_mechanics.finale_a.source_contract_notes[1]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0020"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:33"
+    target: "special_mechanics.finale_a.required_item_ids"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0033"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:41"
+    target: "special_mechanics.finale_a.required_item_ids"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0041"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:48"
+    target: "special_mechanics.finale_a.required_item_ids"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0048"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:56"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0056"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:64"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0064"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:77"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0077"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:79"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0079"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:84"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0084"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:88"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0088"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:90"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0090"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:98"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0098"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:100"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0100"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:102"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0102"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:108"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0108"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:112"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0112"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:114"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0114"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:120"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0120"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:124"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0124"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:126"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0126"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:128"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0128"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:134"
+    target: "special_mechanics.finale_a.steps"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0134"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:140"
+    target: "special_mechanics.finale_a.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0140"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:142"
+    target: "special_mechanics.finale_a.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0142"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:148"
+    target: "special_mechanics.finale_a.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0148"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:156"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0156"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:158"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0158"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:165"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0165"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:167"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0167"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:173"
+    target: "special_mechanics.finale_a.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0173"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:181"
+    target: "special_mechanics.finale_a.success"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0181"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:183"
+    target: "special_mechanics.finale_a.success"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0183"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:188"
+    target: "special_mechanics.finale_a.success"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0188"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:192"
+    target: "special_mechanics.finale_a.failure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0192"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:202"
+    target: "special_mechanics.finale_a.required_item_ids"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0202"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:211"
+    target: "special_mechanics.finale_a.runtime_binding"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0211"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局A_夹层隐藏试听室_五步推理.md:220"
+    target: "special_mechanics.finale_a.runtime_binding"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S6-0220"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:13"
+    target: "special_mechanics.finale_b.source_contract_notes[0]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0013"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:20"
+    target: "special_mechanics.finale_b.source_contract_notes[1]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0020"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:33"
+    target: "special_mechanics.finale_b.required_flags"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0033"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:35"
+    target: "special_mechanics.finale_b.required_flags"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0035"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:42"
+    target: "special_mechanics.finale_b.required_flags"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0042"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:46"
+    target: "special_mechanics.finale_b.required_flags"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0046"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:52"
+    target: "special_mechanics.finale_b.required_flags"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0052"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:60"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0060"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:67"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0067"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:74"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0074"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:76"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0076"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:79"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0079"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:82"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0082"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:95"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0095"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:97"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0097"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:101"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0101"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:103"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0103"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:105"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0105"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:111"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0111"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:115"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0115"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:117"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0117"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:122"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0122"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:124"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0124"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:130"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0130"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:132"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0132"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:136"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0136"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:140"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0140"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:149"
+    target: "special_mechanics.finale_b.rounds"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0149"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:157"
+    target: "special_mechanics.finale_b.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0157"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:159"
+    target: "special_mechanics.finale_b.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0159"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:166"
+    target: "special_mechanics.finale_b.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0166"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:174"
+    target: "special_mechanics.finale_b.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0174"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:180"
+    target: "special_mechanics.finale_b.pressure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0180"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:186"
+    target: "special_mechanics.finale_b.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0186"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:188"
+    target: "special_mechanics.finale_b.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0188"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:190"
+    target: "special_mechanics.finale_b.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0190"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:192"
+    target: "special_mechanics.finale_b.hint"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0192"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:205"
+    target: "special_mechanics.finale_b.source_contract_notes[2]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0205"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:212"
+    target: "special_mechanics.finale_b.failure"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0212"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:219"
+    target: "special_mechanics.finale_b.source_contract_notes[3]"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0219"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:230"
+    target: "special_mechanics.finale_b.required_flags"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0230"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:237"
+    target: "special_mechanics.finale_b.runtime_binding"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0237"
+  -
+    source_anchor: "剧情设计/Unit5/小玩法设计/终局B_飞行机械馆防火隔断_风险操作.md:246"
+    target: "special_mechanics.finale_b.runtime_binding"
+    mapping: "exact"
+    mechanic_required: true
+    source_id: "S7-0246"
+narrative_continuity:
+  units:
+    -
+      id: "L5_opening_corridor_release"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:796"
+      entry_state:
+        - "L4已洗清Emma持刀嫌疑；Lula仍未排除杀人。"
+      consumes:
+        - "Emma隔离状态需要依法在场解除。"
+      required_beats:
+        - "L4 的小推理已经证明 Emma 被下药，并在致命血迹形成后才从后台拖到舞台正面，她的持刀杀人嫌疑已经洗清。小 Charles 主动支持释放，更加坐实自己此前的“好人”形象。"
+        - "Zack、小 Charles 与警员将 Lula 送入东侧客房走廊的另一间独立客房，随后释放 Emma。Emma 恢复共同调查者身份；Moore 与 Lula 仍各自隔离，两人的杀人嫌疑都没有被最终排除。"
+      exit_state:
+        - "强制段继续。"
+      hands_off_to:
+        - "L5_opening_cup_recollection"
+    -
+      id: "L5_opening_cup_recollection"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:802"
+      entry_state:
+        - "前一opening事件已完成。"
+      consumes:
+        - "继续按杯号复核与公开流动。"
+      required_beats:
+        - "Emma 获释后，Zack 重新按杯号核对后台酒杯流转。Vivian 看见 E-12 标记后，才把此前没有确认到具体杯号的两段记忆连起来；Pierce 在 21:15 前完成检查，则来自他当时向 Vivian 作出的工作回报。Vivian 随后补充两段有限证词："
+        - "这两条只建立两种彼此分开的机会：Pierce 与 Lawson 明确知道 Emma 会单独彩排；小 Charles 实际接触过她的酒杯。结合此前 Pierce 听从小 Charles 安排的暗示，玩家可以自行怀疑消息是否经 Pierce 传递，但 Zack 不说破，也不把转告写成已证实事实。"
+      exit_state:
+        - "强制段继续。"
+      hands_off_to:
+        - "L5_opening_study_review"
+    -
+      id: "L5_opening_study_review"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      entry_state:
+        - "前一opening事件已完成。"
+      consumes:
+        - "继续按杯号复核与公开流动。"
+      required_beats:
+        - "众人核对书房暗门与 TideWater 文件。"
+      exit_state:
+        - "强制段继续。"
+      hands_off_to:
+        - "L5_opening_hall_passage"
+    -
+      id: "L5_opening_hall_passage"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      entry_state:
+        - "前一opening事件已完成。"
+      consumes:
+        - "继续按杯号复核与公开流动。"
+      required_beats:
+        - "公开经过门厅；照片墙无调查热点，不提示调换。"
+      exit_state:
+        - "强制段继续。"
+      hands_off_to:
+        - "L5_opening_office_review"
+    -
+      id: "L5_opening_office_review"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      entry_state:
+        - "前一opening事件已完成。"
+      consumes:
+        - "继续按杯号复核与公开流动。"
+      required_beats:
+        - "Lawson 要求暂时封存公司文件，开放办公室供调查与庄园人员交错核对矿物登记、封存清单。"
+      exit_state:
+        - "强制段继续。"
+      hands_off_to:
+        - "L5_opening_stage_return"
+    -
+      id: "L5_opening_stage_return"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:809"
+      entry_state:
+        - "前一opening事件已完成。"
+      consumes:
+        - "继续按杯号复核与公开流动。"
+      required_beats:
+        - "众人回到礼堂，开放本轮自由调查；此前往返没有任何人的排他独处窗口。"
+      exit_state:
+        - "释放共同调查控制；照片墙仍无热点。"
+      hands_off_to:
+        - "L5_talk_stage_lighting"
+        - "L5_talk_stage_exposures"
+        - "L5_event_tooth_closes_door"
+    -
+      id: "L5_talk_stage_lighting"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:818"
+      entry_state:
+        - "场景解锁且该NPC普通入口可点击。"
+      consumes:
+        - "两张破门照片的暗角变化与 C-3 遮挡"
+      required_beats:
+        - "拍摄 22:10 第一张照片前，她让小 Charles 到 C-3 景墙背面帮忙打光；直到 22:15 第二张照片曝光，他都在那一带。她没有持续观察小 Charles 的双手。"
+      exit_state:
+        - "对应普通证言/口头记录已取得；未知信息不泄露。"
+      hands_off_to:
+        - "L5_event_tooth_closes_door"
+    -
+      id: "L5_talk_stage_exposures"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:820"
+      entry_state:
+        - "场景解锁且该NPC普通入口可点击。"
+      consumes:
+        - "L2原照片组在L5放大后的差异"
+      required_beats:
+        - "22:10 与 22:15 两张玻璃底片使用同一固定机位，两次曝光之间相机与舞台装置没有移动；可见人物与 C-3 正面 Lawson 的站位保持不变，只有 Lawson 与景墙背面的小 Charles 能接触暗角。"
+      exit_state:
+        - "对应普通证言/口头记录已取得；未知信息不泄露。"
+      hands_off_to:
+        - "L5_event_tooth_closes_door"
+    -
+      id: "L5_talk_door_grip_memory"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:856"
+      entry_state:
+        - "场景解锁且该NPC普通入口可点击。"
+      consumes:
+        - "普通转动不能开启拼回断齿的钥石"
+      required_beats:
+        - "药效使她彻底失去行动能力、意识断续；被放到尸旁后，她曾短暂睁眼，看见楼梯控制箱附近有一只手用三指握住鸢尾石并转动。她没有看清操作者的面孔，无法辨认那个人，只能尝试复现手势。"
+      exit_state:
+        - "对应普通证言/口头记录已取得；未知信息不泄露。"
+      hands_off_to:
+        - "L5_event_grip_reopens_door"
+    -
+      id: "L5_event_tooth_closes_door"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:838"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "断齿卡阻需要调查。"
+      required_beats:
+        - "Zack 取出卡在锁芯里的断齿，暗门失去卡阻后意外闭合。门内外都没有普通把手，只有断翼鸢尾形浅槽；要重新开启，必须先找到能够与浅槽吻合的完整钥件。Lawson 负责庄园的矿物与石件管理，Zack 因此立即转去他的办公室询问。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5016
+          continuation: "release_to_exploration"
+      hands_off_to:
+        - "L5_talk_office_crystals"
+    -
+      id: "L5_event_ordinary_grip_failed"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:858"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "消费前一机关/公共推理状态，禁止跳步。"
+      required_beats:
+        - "Zack临时拼回断齿、嵌入门槽，普通转动失败；恢复控制后Emma可点击询问。"
+      exit_state:
+        -
+          action: "release_to_exploration"
+      hands_off_to:
+        - "L5_talk_door_grip_memory"
+    -
+      id: "L5_event_grip_reopens_door"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:858"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "消费前一机关/公共推理状态，禁止跳步。"
+      required_beats:
+        - "Zack 将断齿临时拼回钥石后嵌入门槽，但以普通方式旋转仍无法开门。Emma 模仿昏迷时见过的特殊三指握姿，成功开启暗门。调查只确认“鸢尾钥石需要特定握姿操作”，不判断她当时看见的是谁。"
+        - "取石返回后的完整实验才确认：拼回断齿的钥石能够从暗门两侧退栓。这是暗门机关的调查结论，不另生成联动复原页，也不说明案发时由谁操作。"
+      exit_state:
+        -
+          u5_door_reopened: true
+      hands_off_to:
+        - "L5_photo_wall"
+    -
+      id: "L5_talk_office_crystals"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:843"
+      entry_state:
+        - "场景解锁且该NPC普通入口可点击。"
+      consumes:
+        - "暗门闭合需找管理石件者；湿痕需要职业对照"
+      required_beats:
+        - "自己处理宝石金属镶座时洒落了硫酸铜晶体，晶屑卡进鞋底，踩到水便会溶出蓝色痕迹；案发后没有换鞋，鞋底仍有残余晶屑。"
+      exit_state:
+        - "对应普通证言/口头记录已取得；未知信息不泄露。"
+      hands_off_to:
+        - "L5_event_key_comparison"
+    -
+      id: "L5_event_key_comparison"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:851"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "暗门意外闭合，需要找吻合钥件。"
+      required_beats:
+        - "Zack 当场把锁芯断齿与残缺钥石的新鲜缺口比对，二者能够吻合。他不在 Lawson 办公室内凭空完成开门，而是带着残缺钥石立刻返回夹层暗门。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5020
+          continuation: "next_talk"
+          next_talk: "L5_event_ordinary_grip_failed"
+      hands_off_to:
+        - "L5_event_ordinary_grip_failed"
+    -
+      id: "L5_talk_roundtable_key_claim"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:920"
+      entry_state:
+        - "场景解锁且该NPC普通入口可点击。"
+      consumes:
+        - "两次公共推理后主动点击询问；绝不把强制段改名充作普通Talk。"
+      required_beats:
+        - "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+      exit_state:
+        - "对应普通证言/口头记录已取得；未知信息不泄露。"
+      hands_off_to:
+        - "L5_suspect_selection"
+    -
+      id: "L5_event_public_reasoning_1"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:886"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "消费前一机关/公共推理状态，禁止跳步。"
+      required_beats:
+        - "众人围绕舞台暗角的异常血迹提出不同解释：Vivian 怀疑舞台零件遮挡了喷溅，Pierce 认为可能只是方向巧合，Lawson 只从矿物质感判断它像经过打磨的石件，Foster 则限定这片血形成于致命刀刺时刻。小 Charles 不必主动替自己辩护，只随众人质疑单凭形状能否确认物件。"
+      exit_state:
+        -
+          continuation: "special_mechanic"
+          mechanic: "public_reasoning_1"
+      hands_off_to:
+        - "L5_public_reasoning_1"
+    -
+      id: "L5_event_public_reasoning_2"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:896"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "消费前一机关/公共推理状态，禁止跳步。"
+      required_beats:
+        - "摄影师把 `22:10—22:15 破门照片组`带上圆桌。Vivian 提出可能有人移动过舞台装置，摄影师确认两次曝光间相机与装置没有移动、可见人物的站位保持不变；Foster 指出自然滚动应留下连续血尾，Lawson 承认自己位于暗角正面，小 Charles 也在景墙背面协助照明。"
+      exit_state:
+        -
+          continuation: "special_mechanic"
+          mechanic: "public_reasoning_2"
+      hands_off_to:
+        - "L5_public_reasoning_2"
+    -
+      id: "L5_event_key_purpose_claim"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:902"
+      entry_state:
+        - "已满足required_item_ids/required_talks/previous_event_completed。"
+      consumes:
+        - "消费前一机关/公共推理状态，禁止跳步。"
+      required_beats:
+        - "Zack 随后把照片组与 `暗门内侧锁芯断齿`并置：断齿证明残缺钥石直接对应那扇未能真正落锁的暗门；有人在破门后拿走它，不是在搬动普通宝石，而是在抹去能够解释离场路线的机关钥件、维持“正常门从内上闩后无人能够离开”的密室假象。前两轮圆桌只建立钥石与取石时序的公共事实，不把任何人的临场解释写成正式谎言。"
+        - "Zack 据此提出进入正式指证的强判断："
+        - "> “拿走钥石的人，就是制造这间密室的人——也是我现在指控的凶手。”"
+        - "这句话是 Zack 根据行为目的提出的指控，也是启动嫌疑人选择与正式指证的入口；它不是大纲事实层已经完成的落刀证明。接下来的三轮必须先锁定取石者与密室制造者，致命刀刺仍留给最终裁决。"
+      exit_state:
+        -
+          action: "release_to_exploration"
+          available_npc_talk: "L5_talk_roundtable_key_claim"
+      hands_off_to:
+        - "L5_talk_roundtable_key_claim"
+    -
+      id: "L5_photo_wall"
+      source_anchor: "剧情设计/Unit5/小玩法设计/L5_门厅照片墙_年份还原.md:24"
+      entry_state:
+        - "特殊三指握姿已实验，公开出生年已调查。"
+      consumes:
+        - "两张无姓名儿童照与固定年份不吻合。"
+      required_beats:
+        - "放大、翻面读年龄"
+        - "出生年与年龄拖入草算区只显示年份算式"
+        - "拖动两个相框；其他照片和年份牌锁定"
+        - "点击确认排列才提交"
+      exit_state:
+        - "5506只发放一次，照片原件留墙。"
+      hands_off_to:
+        - "L5_event_public_reasoning_1"
+    -
+      id: "L5_public_reasoning_1"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:888"
+      entry_state:
+        - "圆桌第一次公共材料选择。"
+      consumes:
+        - "血迹负形物件不明。"
+      required_beats:
+        - "提交5501与5503。"
+      exit_state:
+        - "致命刀刺发生时，老 Charles 的残缺钥石已经落在舞台暗角。"
+      hands_off_to:
+        - "L5_event_public_reasoning_2"
+    -
+      id: "L5_public_reasoning_2"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:898"
+      entry_state:
+        - "第一次公共结论已成立。"
+      consumes:
+        - "破门后钥石去向未知。"
+      required_beats:
+        - "提交5204，摄影师认证与Foster站位作为前提。"
+      exit_state:
+        - "钥石22:10仍在、22:15消失，在相同可见站位的五分钟内被主动提走；Lawson与小Charles均能接触暗角。"
+      hands_off_to:
+        - "L5_event_key_purpose_claim"
+    -
+      id: "L5_suspect_selection"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:912"
+      entry_state:
+        - "两次公共推理与新增普通R1问话均完成。"
+      consumes:
+        - "需要检验Lawson与小Charles两名机会者。"
+      required_beats:
+        - "Lawson错误可回查重选；选小Charles才进入正式三轮。"
+      exit_state:
+        - "不写最终投票，不产生永久结局。"
+      hands_off_to:
+        - "L5_suspect_selection"
+        - "L5_expose_key_removal"
+    -
+      id: "L5_expose_key_removal"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:918"
+      entry_state:
+        - "选小Charles、疑点100%、所有调查前提就绪。"
+      consumes:
+        - "R1夹层经历、R2机会、R3知识逐层退守。"
+      required_beats:
+        - "拿走现场钥石的人是 Lawson。水壶打翻以后，他曾进入夹层，知道断裂钥石会暴露入口，所以才必须把它拿走。"
+        - "即使 Lawson 没有进入夹层，拿走钥石的也只能是他。破门底片拍得很清楚——当时站在钥石旁边的人就是 Lawson。"
+        - "我根本不知道它能打开暗门，更不知道为什么必须把它藏起来。"
+      exit_state:
+        - "取石与密室维护指向小Charles，刀刺仍未定。"
+      hands_off_to:
+        - "L5_post_expose_limited_confession"
+    -
+      id: "L5_post_expose_limited_confession"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:961"
+      entry_state:
+        - "三轮被击破。"
+      consumes:
+        - "需区分有限认罪与最终落刀责任。"
+      required_beats:
+        - "> “你不是因为留下钥石暴露。”  \n> “你是因为拿走了它。”"
+        - "小 Charles 承认自己从内部闩上正常门、经暗门离场，并在 22:10—22:15 的两次曝光之间拿走父亲的残缺钥石，以免调查者循钥石发现第二条出路。这份有限认罪把取石者与密室制造者锁为同一人；他仍坚持自己只是发现父亲倒下后掩盖家族暗道，否认实施致命刀刺。"
+        - "Lawson 房间里的残缺钥石和被交换照片仍然构成一套明显针对 Lawson 的布置。三轮指证与小 Charles 的承认已经证明取石、闩门、暗门离场与维持密室假象属于同一条案后行为链；本场仍不借排他的进房窗口，把致命刀刺也强行压成已经由这组物证证实的行为。"
+      exit_state:
+        - "Emma 已获释协查，Moore与Lula仍被隔离且不因取石指证自动排除刀刺嫌疑。"
+        - "完整拼回断齿的鸢尾钥石配合特殊三指握姿可以从暗门两侧退栓。"
+        - "钥石在致命喷溅时已在暗角，22:10仍在、22:15被主动提走，机会者为Lawson与小Charles。"
+        - "夹层可见湿迹没有Lawson鞋底晶屑对应的蓝色反应；教学照还原指向小Charles的钥石知识。"
+        - "小Charles承认取石、内部闩门和暗门离场，仍否认致命刀刺；继承安排尚未揭晓。"
+      hands_off_to:
+        - "L5_finale_final_vote"
+    -
+      id: "L5_finale_final_vote"
+      source_anchor: "剧情设计/Unit5/Unit5_大纲.md:984"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "第二幕结束于小 Charles 承认自己闩门、经暗门离开，并在破门后拿走钥石维持密室假象，但仍否认实施致命刀刺。第三幕从圆桌对“谁杀死老 Charles”的最终投票开始；L5 已锁定密室制造者并为 Zack 的凶手指控提供强依据，却仍不能被直接当作落刀定案。"
+        - "玩家决定 Zack 把自己的一票投给 Lula Washington、Moore 或小 Charles。白板本次新增的“选项—Lula／Moore／小 Charles”节点与这一入口一致；Lawson 仍不是玩家可选的最终指证对象。"
+      exit_state:
+        -
+
+      hands_off_to:
+        - "L5_finale_lula_false_verdict"
+        - "L5_finale_moore_false_verdict"
+        - "L5_finale_public_failure"
+    -
+      id: "L5_finale_public_failure"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:61"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Zack 在圆桌上公开宣布：小 Charles 是杀死老 Charles 的真凶。"
+        - "Lawson 弃权。他已经开始怀疑哥哥，但不愿凭尚未闭合的推断公开裁决家人。"
+        - "Vivian 弃权。她可以私下帮助 Zack，却不愿公开承担站队风险。"
+        - "Foster 仍指向 Moore。她目前能用尸检支持的，仍只是 Moore 在死亡时间上撒谎。"
+        - "Pierce 仍指向 Lula，并维护自己此前的拘禁与调查结论。"
+        - "Emma 已释放协查但不投票；Moore、Lula继续拘禁且不投票。"
+        - "Zack 的指认正确，却因证据不足而公开失败。这不是众人提前设计的假戏。"
+        - "小 Charles 相信自己已经赢下圆桌，同意散场。"
+      exit_state:
+        -
+          continuation: "next_talk"
+          next_talk: "L5_finale_private_seal"
+      hands_off_to:
+        - "L5_finale_private_seal"
+    -
+      id: "L5_finale_private_seal"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:74"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "圆桌散场后，Lawson 私下找到 Zack。"
+        - "Lawson 不承认哥哥已经弑父，只承认 Zack 的怀疑值得最后查证一次。"
+        - "Lawson 把一枚实体`TideWater 档案监印`交给 Zack。它是 Lawson 接管公司档案责任时一并收到的旧物；Lawson 只知道自己必须保管，却没有档案索引，也始终不知道它对应哪一道门或哪一组档案。"
+        - "Zack 把自己对小 Charles 的判断完整告诉 Emma，让她自行决定是否继续参与；Emma 沿用 L5 开篇取得的受监督协查身份，不需要任何人在终局再次释放她。"
+        - "Emma 此时没有母盘，也不知道远端录音是否成功保存。"
+        - "Lawson 要求 Foster 以中立监督者身份随 Zack、Emma 与 Vivian 继续查证。她仍不认同小 Charles 已经弑父，只负责观察调查是否被人为操纵。"
+        - "Lawson 留下陪小 Charles 喝酒，为四人的调查争取时间；他不会主动离席，也不参与谜题 A。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5019
+          continuation: "next_talk"
+          next_talk: "L5_finale_a_entry"
+        - "Lawson不知道监印用途；Emma自主决定继续，未重新释放；Foster仍中立。"
+      hands_off_to:
+        - "L5_finale_a_entry"
+    -
+      id: "L5_finale_a_entry"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:88"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "谜题 A 只在玩家最终选择指认小 Charles、且圆桌公开失败后触发。Zack、Emma、Vivian 与 Foster 带着 Lawson 私下交出的实体监印返回已探索过的夹层；Lawson 仍留在酒局中拖住小 Charles，不参与 A，也听不见其后的录音。"
+      exit_state:
+        -
+          continuation: "special_mechanic"
+          mechanic: "finale_a"
+      hands_off_to:
+        - "L5_finale_a_complete_playback"
+        - "L5_finale_a_failed"
+    -
+      id: "L5_finale_a_complete_playback"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:101"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "Zack 在五格“剩余思考时间”耗尽前完成五步推理，并完成自动拼合与播放；完整播放结束后才启动庄园断电、Pierce 在酒局袭击 Lawson 并追入夹层的后续演出。"
+        - "Zack、Emma、Vivian 与 Foster 共同听见老 Charles 修改继承安排的完整录音；仍在酒局中的 Lawson 没有听见。"
+        - "录音明确说明：Lawson 已成为新的法定唯一受益继承人，遗嘱正本与变更手续由家族外部律师经办。"
+        - "Lawson 若在交割前非正常死亡，外部律师将封存庄园安保记录并追查受益人；小 Charles 也不会因 Lawson 死亡自动取得全部遗产。"
+        - "Foster 仍坚持这段录音只能证明继承安排与杀人动机，不能证明小 Charles 亲手弑父。"
+        - "该录音足以成为 Zack 随后拖延 Pierce 的真话筹码；本流程不再要求寻找遗嘱原件。"
+      exit_state:
+        -
+          u5_finale_a: "success"
+          u5_inheritance_heard: true
+      hands_off_to:
+        - "L5_finale_powercut_assault"
+    -
+      id: "L5_finale_a_failed"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:110"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "玩家第五次正式答错，将“剩余思考时间”扣至 0／5；当前推理立即中止，随后才触发小 Charles 切断庄园电力、Pierce 在酒局对 Lawson 动手的演出。"
+        - "Zack、Emma、Vivian 与 Foster 没有任何人听见继承录音内容；本分支不存在可供后续引用的“零散录音”。"
+        - "Zack 因此无法在后续追杀中说出足够具体、可以迫使 Pierce 核实的条款。"
+        - "A 失败不会在夹层内当场杀死 Zack。停电后必须继续进入 Lawson 从酒局逃入、Zack 与 Lawson 黑暗换装、Zack 引走 Pierce 的固定演出。"
+      exit_state:
+        -
+          u5_finale_a: "failure"
+          u5_inheritance_heard: false
+      hands_off_to:
+        - "L5_finale_powercut_assault"
+    -
+      id: "L5_finale_powercut_assault"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:129"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "谜题 A 成功播放结束或五格耗尽后，小 Charles 察觉 Lawson 一直在替 Zack 争取时间，才命令 Pierce 在酒局对 Lawson 动手。玩法进行期间不提前表现 Pierce 逐步逼近。"
+        - "若 A 成功，四人已经听完整段继承录音；若 A 失败，系统没有播放任何继承内容。小 Charles 下达追杀命令后，随即切断庄园主要照明与普通电话线；Pierce 此时仍在酒局房间。"
+        - "谜题 A 已在停电前完成成功或失败结算：成功时完整播放已经结束，失败时玩法已在机会归零处终止且不播放任何继承内容。随后酒局所在房间陷入黑暗，Pierce 拔枪准备射杀 Lawson。"
+        - "Lawson 撞开酒局房门逃跑，被 Pierce 一路追到夹层文件柜区域；他来不及询问调查结果，只来得及告诉众人 Pierce 要杀他。无论 A 成败，此时都不要求隐藏录音／试听室已经开启。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5019
+          continuation: "next_talk"
+          next_talk: "L5_finale_dark_disguise"
+      hands_off_to:
+        - "L5_finale_dark_disguise"
+    -
+      id: "L5_finale_dark_disguise"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:133"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Foster 与 Vivian 利用夹层门、文件柜和狭窄通道暂时阻挡 Pierce。Zack 与 Lawson 趁黑交换深色外套、帽子和围巾。"
+        - "Lawson 穿上 Zack 的衣物随 Emma、Vivian 撤离；Zack 则穿着 Lawson 的衣物从另一侧跑出，故意让 Pierce 只看见背影。停电、相近的衣物轮廓与未见正脸共同支撑误认；Pierce 不得在听清声音或看清面孔后仍认错人。"
+        - "Pierce 追向 Zack；Emma、Vivian 护送真正的 Lawson 前往庄园另一端。Foster 让 Zack 把 Pierce 引向旧档案区附近原本就可进入的封闭试听室，自己转身赶往嫌疑人走廊。"
+        - "众人分散后，小 Charles 取出另一把警用手枪，从侧廊追向 Emma、Vivian 与 Lawson。"
+        - "追杀阶段不再进行谜题 A 选项、找遗嘱或其他搜证操作，只保留逃亡、延迟结算与双线交叉剪辑。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5030
+          continuation: "next_talk"
+          next_talk: "L5_finale_hidden_gunshot"
+      hands_off_to:
+        - "L5_finale_hidden_gunshot"
+    -
+      id: "L5_finale_hidden_gunshot"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:141"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Zack 按照 Foster 临走前的指示，把 Pierce 引入旧档案区附近的封闭试听室；该处不是谜题 A 才能开启的文件柜后隐藏房间。"
+        - "若 A 成功，Zack 隔着障碍说出“Lawson 已被指定为继承人、异常死亡会触发外部追查、小 Charles 无法自动继承”等具体条款，使 Pierce 短暂停步核实。"
+        - "若 A 失败，Zack 只能根据小 Charles 切断调查并命令 Pierce 追杀 Lawson 的行为，试探这场追杀背后的利益动机；他不能引用任何继承录音或具体继承条款，Pierce 继续逼近。"
+        - "Pierce 靠近后识破 Zack 的伪装。"
+        - "黑暗中突然传出一声枪响。"
+        - "画面立刻切黑，不展示 Zack、Pierce 或 Foster 的状态。"
+        - "画面切回 Emma 线；A 的生死结果仍由飞行机械馆入口的人影揭晓。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5031
+          continuation: "next_talk"
+          next_talk: "L5_finale_escape_corridor"
+      hands_off_to:
+        - "L5_finale_escape_corridor"
+    -
+      id: "L5_finale_escape_corridor"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:155"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Emma 护送真正的 Lawson 与 Vivian 穿过停电后的庄园。"
+        - "暴风雪封死直接离开庄园的路线，三人只能进入西丘封闭的 Miller飞行机械馆寻找临时藏身处。这座馆是老 Charles 以少年小 Charles 的航空梦为名修建、又由自己掌握主控权的旧馆。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5032
+          continuation: "next_talk"
+          next_talk: "L5_finale_mechanical_hide"
+      hands_off_to:
+        - "L5_finale_mechanical_hide"
+    -
+      id: "L5_finale_mechanical_hide"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:157"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "飞行模拟主厅仍保留小 Charles 使用过的教学飞行台、机械星球仪，以及老 Charles 独自掌握的高位主控台。主控台后方有一间只能容纳一人的校准舱，另一侧则通向防火隔断后的消防逃生门。"
+        - "防火隔断是机械馆闭馆后的消防改造，平时收在天花板夹层内。隔断与逃生门之间留有一块消防检修前室；主厅一侧的消防机械墙上设有多根实体拉杆及各自的机械线路。"
+        - "消防逃生门已经被冻胀的门框与门外积雪卡死，短时间内无法打开；它从主厅看去仍像一条可信的逃生路线，正适合被 Emma 用作诱饵。"
+        - "演出不立刻揭示 Emma 把 Lawson 推向哪一边。实际选择是让 Lawson 藏进主控台后的单人校准舱，并保持传声管畅通；Lawson 可以从内部自行开门。"
+        - "Emma 与 Vivian 留在飞行模拟主厅一侧。Emma 面对消防机械墙上的多根实体拉杆，意识到终局现场没有 L2 旧消防维护卡原件，只能靠脑内记忆判断哪根拉杆控制防火隔断。"
+      exit_state:
+        -
+          continuation: "next_talk"
+          next_talk: "L5_finale_mechanical_hall"
+      hands_off_to:
+        - "L5_finale_mechanical_hall"
+    -
+      id: "L5_finale_mechanical_hall"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:165"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "小 Charles 的脚步声从连廊逼近。他持枪进入飞行机械馆时，谜题 B 立即开始，三格“Lawson 暴露风险”出现；他随后声称，自己已经知道 Pierce 追赶的人其实是 Zack。"
+        - "这句话不向玩家证明 Zack 的生死，只用于打击 Emma 与 Vivian，让她们相信门外不会有援手。"
+        - "Emma 一边拖延，一边把小 Charles 的注意力维持在自己身上，并缓慢向能够遮住消防逃生门标志、又靠近消防机械墙的位置移动。"
+        - "若 A 成功，Emma 可以说出 Lawson 已成为唯一受益继承人、其异常死亡会触发外部追查等明确条款；若 A 失败，她只能抓住小 Charles 切断调查、又立即派人追杀 Lawson 的行动，试探 Lawson 究竟触碰了什么利益。A 失败分支不允许 Emma 引用“零散录音”、遗嘱原句或任何具体继承安排。"
+        - "若 A 成功，Emma 逼问小 Charles：既然杀死父亲也拿不回继承权，他接下来还准备杀多少人；若 A 失败，她则逼问：为什么调查刚碰到夹层，他就非要 Lawson 死。"
+        - "小 Charles 终于亲口承认老 Charles 是他杀的。A 成功时，他进一步声称只要 Lawson 死去，遗嘱与继承秩序仍能被他重新处理；A 失败时，他只承认 Lawson 活着会毁掉自己，不主动补出具体继承条款。"
+        - "Emma、Vivian，以及藏在单人校准舱内的 Lawson，都听见这段承认。"
+        - "对话拖延和移动站位构成 B 的前两轮一次性判断；任何错误都由 Emma 在演出中自行察觉并纠正，但会使“Lawson 暴露风险”增加一格，玩家不能回头重选。"
+        - "Emma 到达主厅一侧、隔断轨道之外的正确站位后，用身体挡住消防逃生门标志。小 Charles 推开她，看见突然显露的标志后认定 Lawson 已从该处逃走，持枪越过隔断轨道，进入隔断与逃生门之间的消防检修前室。"
+      exit_state:
+        -
+          continuation: "special_mechanic"
+          mechanic: "finale_b"
+      hands_off_to:
+        - "L5_finale_b_blocked"
+        - "L5_finale_b_blackout"
+    -
+      id: "L5_finale_b_blocked"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:204"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "Emma已独立操作B，固定段不反转已锁结果。"
+      required_beats:
+        - "Emma 在“Lawson 暴露风险”满格前拉对实体拉杆，防火隔断落到足以阻断小 Charles 返回主厅的位置；B 成功在这一刻锁定。"
+        - "小 Charles 来不及返回飞行模拟主厅，只能横起枪托卡住隔断下缘，在地面上方留下一道狭窄射击缝隙。"
+        - "他要求 Emma 升起隔断。Emma 的拒绝属于固定人物行为；他随后隔着缝隙射伤 Emma 的左腿，期间不再交还玩家操作。"
+        - "小 Charles 随即向 Vivian 开枪，试图迫使藏匿的 Lawson 自己现身。"
+        - "Lawson 从单人校准舱的传声管里听见枪声与 Vivian 的惨叫，自行打开门冲出来保护她。"
+        - "小 Charles 从缝隙中击伤 Lawson，但受隔断限制，无法立刻补枪。"
+        - "飞行机械馆入口随即出现一个持枪人影；来人是谁，只负责揭晓此前被延迟的 A 结算，不会改变已经锁定的 B 成功。"
+      exit_state:
+        -
+          continuation: "next_talk"
+          next_talk: "L5_finale_arrival_reveal"
+      hands_off_to:
+        - "L5_finale_arrival_reveal"
+    -
+      id: "L5_finale_b_blackout"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:214"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "Emma已独立操作B，固定段不反转已锁结果。"
+      required_beats:
+        - "对话、站位或错误拉杆累计使“Lawson 暴露风险”达到 3／3，小 Charles 识破 Emma 的误导。"
+        - "防火隔断未能形成有效阻挡，小 Charles 退回 Emma 与 Vivian 所在的飞行模拟主厅一侧。"
+        - "小 Charles 确认消防逃生门无法通行，转身将枪口指向 Emma。"
+        - "枪口对准 Emma 的瞬间，画面切黑。"
+        - "黑暗中只保留连续枪声与碰撞声，不展示任何人的具体行动与死亡顺序。"
+        - "玩家视点直接切换至飞行机械馆门外的来者。"
+        - "Emma、Vivian 与 Lawson 的死亡统一在 Zack 或 Pierce 推门进入后揭晓。"
+      exit_state:
+        -
+          continuation: "next_talk"
+          next_talk: "L5_finale_arrival_reveal"
+      hands_off_to:
+        - "L5_finale_arrival_reveal"
+    -
+      id: "L5_finale_arrival_reveal"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:230"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "门口来人只揭晓A的生死结果，不重判B。"
+      exit_state:
+        -
+
+      hands_off_to:
+        - "L5_finale_true_rescue"
+        - "L5_finale_fallen_detective"
+        - "L5_finale_vivian_betrayal"
+        - "L5_finale_no_rescue"
+    -
+      id: "L5_finale_vivian_betrayal"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:252"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "镜头短暂切回旧档案区附近的封闭试听室：Foster 带着乙醚赶到，只看见 Zack 的尸体与已经离开的 Pierce。"
+        - "Foster 判断继续追赶持枪的 Pierce 已经无法救回 Zack，只会让自己以及仍被拘禁的 Lula、Moore 一同陷入危险，因此带着乙醚撤回嫌疑人走廊。"
+        - "画面切回飞行机械馆。Pierce 持枪站到小 Charles 一方，封住机械馆出口并把枪口转向 Vivian。"
+        - "隔断后的小 Charles 继续通过射击缝隙控制 Emma 与 Lawson。"
+        - "Vivian 先看向门口，确认不会再有 Zack；再看向两处枪线，确认自己已经无法同时保住 Lawson、Emma 与自己。"
+        - "Lawson 此时已经负伤挡在 Vivian 面前。Vivian 从身后拉住他；Lawson 回头后，她吻了他，随后用自己偷偷带入庄园的 `Colt Vest Pocket Model 1908` 开枪杀死他。"
+        - "Vivian 放低枪口，主动提出由自己接管 TideWater、处理投毒文件并维持官方叙事，以此向小 Charles 与 Pierce 投诚。"
+        - "Vivian 同时要求留下 Emma 的性命：杀死记者只会制造烈士，摧毁她的信誉、让整座城市拒绝相信她，才是更安全的处理方式。"
+        - "小 Charles 接受这套方案，保住 Miller 家族；Pierce 继续控制机械馆出口。"
+        - "Emma 没有母盘，也没有能被城市权力结构采信的决定性证据。她被塑造成煽动枪击、害死 Lawson 的失控记者。"
+        - "Vivian 与小 Charles 都向 Emma 提供过住所、工作或金钱。Emma 全部拒绝，独自承受整座城市的排斥。"
+      exit_state:
+        -
+          action: "loop_end"
+          chapter_boundary: true
+          ending: "a_failure_b_success"
+      hands_off_to:
+        - "chapter_boundary"
+    -
+      id: "L5_finale_fallen_detective"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:272"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "小 Charles 指向已经失去继承人、记者与公司负责人的现场，声称 Miller 庄园如今只会服从他；这场枪击会被处理成家务事，自己不会入狱，第二天的报纸甚至不会刊登死者姓名。"
+        - "Zack 看向 Emma，随后开枪杀死小 Charles。"
+        - "Zack 放下枪，抱着 Emma 的尸体坐了一会儿。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5030
+          continuation: "next_talk"
+          next_talk: "L5_finale_fallen_forgery"
+      hands_off_to:
+        - "L5_finale_fallen_forgery"
+    -
+      id: "L5_finale_fallen_forgery"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:275"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "他返回旧档案区附近的封闭试听室。Pierce 仍因乙醚昏迷，Foster 守在附近；此前枪响后的结果至此得到完整交代。"
+        - "Zack 向 Foster 借了一双医用手套。"
+        - "Zack 戴上手套，把手枪放回 Pierce 手中，握着 Pierce 的手扣下扳机。"
+        - "他重新摆放 Pierce 的手与枪，伪造 Pierce 畏罪自杀的现场。"
+        - "第二天，报纸刊登简短消息：Miller 庄园内多人离奇死亡，私家侦探 Zack Brennan 下落不明。报道没有说明凶手，也没有还原庄园内发生的事情。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5041
+          continuation: "next_talk"
+          next_talk: "L5_finale_fallen_train"
+      hands_off_to:
+        - "L5_finale_fallen_train"
+    -
+      id: "L5_finale_fallen_train"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:280"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "画面切到一列驶离艾斯弗德的火车。Zack 独自坐在车厢里，膝上摊着那份报纸。"
+        - "火车驶过城市边界，Zack 没有回头。"
+      exit_state:
+        -
+          action: "loop_end"
+          chapter_boundary: true
+          ending: "a_success_b_failure"
+      hands_off_to:
+        - "chapter_boundary"
+    -
+      id: "L5_finale_no_rescue"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:292"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Pierce 与小 Charles 一同收走现场枪械与材料，并封锁飞行机械馆。"
+        - "四名关键角色全部死亡。Pierce 继续维护小 Charles 的对外口径，小 Charles 则保住 Miller 家族，并将枪击、投毒与庄园混乱推给 Zack 和其他嫌疑人。"
+      exit_state:
+        -
+          action: "loop_end"
+          chapter_boundary: true
+          ending: "a_failure_b_failure"
+      hands_off_to:
+        - "chapter_boundary"
+    -
+      id: "L5_finale_true_rescue"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:302"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Zack 从飞行模拟主厅一侧压住小 Charles 的射击角度，击落卡住隔断的枪托，挡住他的最后一次反击。"
+        - "枪托脱离后，已经释放的机械配重自行带动防火隔断彻底落下；小 Charles 被困在消防检修前室内，Emma 不再进行任何操作。"
+        - "Zack 避免了最后的伤亡，却不取代 Emma 此前完成的藏人、误导、记忆换算与实体拉杆操作。"
+        - "Foster 稍后赶来，为 Zack 与飞行机械馆内的伤员做紧急处理。"
+        - "Lawson 与 Vivian 接受救治并存活。庄园危机结束，但小 Charles 亲手弑父仍需要能够进入公开程序的决定性证据。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5034
+          continuation: "next_talk"
+          next_talk: "L5_finale_court_recording"
+      hands_off_to:
+        - "L5_finale_court_recording"
+    -
+      id: "L5_finale_court_recording"
+      source_anchor: "剧情设计/Unit5/Unit5_小Charles正确路线_终局线性流程.md:314"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "后日谈发生在小 Charles 的法庭审判中。"
+        - "Foster 首先作为法医证人出庭，正式念出 Sean O'Malley 的姓名。"
+        - "她提交 1912 年的原始异常记录与自己当年签下的假尸检责任，证明 Sean 并非死于公开报告所称的意外，而是在事故前已遭到蓄意致命袭击。"
+        - "她由此纠正老 Charles 对 Sean 谋杀案的官方记录，也证明 Miller 体系曾迫使法医系统调换伤情顺序。"
+        - "Foster 随后出示 L4 已经取得的同一份 1928 年 TideWater 投毒文件，以及法医相关方提供的官方字迹鉴定报告；报告由专门鉴定人员签署，Foster 只负责在证言顺序中将其提交法庭。"
+        - "字迹鉴定确认：投毒命令上的“老 Charles”签名实际由小 Charles 仿写；传递记录显示命令经 Pierce 的执行渠道送入南区。"
+        - "该材料证明小 Charles 是投毒命令的真正签发者、Pierce 是知情执行者，但仍不能证明小 Charles 亲手杀死父亲。"
+        - "Foster 最后确认：老 Charles 当晚的真正致命伤是刀伤，而不是坠落或其他伤势。"
+        - "法官指出：刀伤只能确定死因，不能单独确定持刀者就是小 Charles。"
+        - "Foster 示意自己的证言已经完成，该换下一组证人和物证。"
+        - "法官的问题落下后，镜头扫过证物桌与唱片箱；Zack 与 Emma 对视，身体已经准备走向证物桌。"
+        - "画面只保留一至两秒调查前摇，不开放界面，也不给玩家取得操作权。"
+        - "Watts 抱着一张已经封存的母盘赶进法庭：“母盘在我办公室里啦！不用找了！”"
+        - "Emma 在晚宴前只把舞台拾音线路单向接入 Watts 办公室的远端刻录设备，并不知道是否录制成功、母盘是否存在或录到了什么。"
+        - "Watts 后来在办公室发现唯一母盘，按远端设备编号与录制日期登记、封存并形成书面保全记录；该记录已经先行提交法庭。"
+        - "书记员核对母盘上的设备编号、日期、封条与在卷保全记录，法官准许播放。"
+        - "笑点来自 Watts 的迟到和 Zack、Emma 刚准备继续工作的反应；本段不开放玩家操作。"
+        - "唯一母盘被装上法庭留声机，并通过法庭内部扩音设备播放给法官、陪审团、记者与旁听者。"
+        - "录音先播放老 Charles 临死前与小 Charles 的谈话，并留下能够明确辨认父子身份的称呼与回应。"
+        - "随后响起小 Charles 实施致命刀刺以及仍留在现场的连续声音。"
+        - "方才因 Zack 与 Emma 吵嘴而稍显松动的法庭气氛立刻冷下来。"
+        - "记者席与旁听席一片哗然，法官敲槌也无法立刻恢复秩序。"
+        - "场景停在公众第一次共同听见完整弑父真相的时刻。"
+      exit_state:
+        -
+          action: "loop_end"
+          chapter_boundary: true
+          ending: "true_ending"
+      hands_off_to:
+        - "chapter_boundary"
+    -
+      id: "L5_finale_lula_false_verdict"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:27"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "Zack 无法证明致命一刀，却仍坚持指证 Lula。小 Charles 接受这个有利于 Miller 的答案，并让 Zack 短暂接触 Mickey 留下的档案、报社和警务接口；Emma 看出 Zack 已经选择替系统管理牺牲者，与他决裂。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5035
+          continuation: "next_talk"
+          next_talk: "L5_finale_lula_prison"
+      hands_off_to:
+        - "L5_finale_lula_prison"
+    -
+      id: "L5_finale_lula_prison"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:29"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "暴风雪后，药检证明 Lula 携带的只是普通安眠药，既非毒药，也不同于 Emma 酒杯中的液体镇静剂。Lula 洗脱谋杀嫌疑，但仍需承担冒名、换药和非法进入的责任。小 Charles 随即将误判与证据问题全部推给 Zack，使他以伪证、妨碍司法和共谋等重罪入狱。报纸把他称为“史上最笨侦探”，此后的五十年以历次假释失败的蒙太奇带过。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5036
+          continuation: "next_talk"
+          next_talk: "L5_finale_lula_escape"
+      hands_off_to:
+        - "L5_finale_lula_escape"
+    -
+      id: "L5_finale_lula_escape"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:33"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "1978 年，高龄的 Mary 与 Helen 趁监狱交接混乱逃脱，又把年迈的 Zack 带出监狱。三名老人乘旧车展开一段短促、荒诞的公路逃亡；这不是替 Zack 洗清错误，只是不让 Miller 写下的版本成为他人生的最后一页。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5037
+          continuation: "next_talk"
+          next_talk: "L5_finale_lula_motel"
+      hands_off_to:
+        - "L5_finale_lula_motel"
+    -
+      id: "L5_finale_lula_motel"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:37"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "Mary 与 Helen 把 Zack 送到 Emma 经营的旧汽车旅馆。Emma 只准他住一晚，并让他第二天随自己去看 Margaret。屋内整面墙保存着 Zack 五十年来的报道和假释消息；Margaret 的遗物与安葬纪念说明 Emma 曾替她养老送终。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5038
+          continuation: "next_talk"
+          next_talk: "L5_finale_lula_grave"
+      hands_off_to:
+        - "L5_finale_lula_grave"
+    -
+      id: "L5_finale_lula_grave"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:39"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "查证机会与继承知识尚需按A结果管理。"
+      required_beats:
+        - "次日，Emma 陪 Zack 来到一直受到照料的 Margaret 墓前。结局不交代 Zack 是否随 Emma 回去，也不说明这一晚究竟延续了多久。Zack 想成为掌握系统的 Mickey，最终却只做了三天便于切割的工具；Emma 的照顾也不等于撤销她对他当年选择的判断。"
+      exit_state:
+        -
+          action: "loop_end"
+          chapter_boundary: true
+          ending: "lula_bad"
+      hands_off_to:
+        - "chapter_boundary"
+    -
+      id: "L5_finale_moore_false_verdict"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:49"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "Zack 无法证明 Moore 实施了致命刀刺，却利用他的逼签、提前处理死讯和金融恶名完成指控。Moore 与 Zack 无关，也不是他想保护的人；Emma 因此看出，Zack 选择的是最方便交割的对象，而非最接近真相的人。"
+        - "当小 Charles 准备冻结湖滨信托并把 Miller 的责任全部推给 Moore 时，Moore 揭露自己已通过控股和往来关系控制艾斯弗德近半银行。小 Charles 抛售其证券、切断项目回款，Moore 则冻结 Miller 账户、抽走信贷。两人的金融内战使谋杀案迅速退出头版，也让任何一方都无法再把另一方安全送进监狱。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5039
+          continuation: "next_talk"
+          next_talk: "L5_finale_moore_depression"
+      hands_off_to:
+        - "L5_finale_moore_depression"
+    -
+      id: "L5_finale_moore_depression"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:55"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "约一周后，挤兑击穿艾斯弗德的银行、地产和市政信用。外部金融机构及时隔离风险，并依据暴露的问题提前避险，使 1929 年的全国危机只发展为短期衰退；艾斯弗德却独自陷入长期萧条，世博会、南区开发和 Tidewater 项目全部停摆。"
+        - "失去 Miller 约束的银月会接管烂尾建筑、地下信贷和大批失业人员，正式成为公开的城市势力。银行劫案、绑架、私酒、保护费和帮派火并取代开发计划，艾斯弗德由此变成经典美国犯罪片式的帮派都市。"
+        - "无尽犯罪让 Zack 的事务所异常繁荣。他有钱、有名、永远不缺客户，却清楚这些案件源于自己当年的错误裁决，因此开始拖延开案、只做最低限度的工作，不再相信破案能够让城市变好。"
+        - "Emma 则成为著名犯罪记者。她一次次准备离开，又因新的失踪和冤案留下；她救下具体的人，报社却把整座城市的苦难经营成畅销的犯罪传奇。她越努力报道，艾斯弗德的“犯罪之城”品牌便越成功。两人偶尔仍交换案件材料，但不因此恢复原来的关系。"
+      exit_state:
+        -
+          action: "change_scene"
+          target_scene_id: 5040
+          continuation: "next_talk"
+          next_talk: "L5_finale_moore_premiere"
+      hands_off_to:
+        - "L5_finale_moore_premiere"
+    -
+      id: "L5_finale_moore_premiere"
+      source_anchor: "剧情设计/Unit5/Unit5_误指坏结局.md:67"
+      entry_state:
+        - "从唯一合法前驱进入，按分支condition核验。"
+      consumes:
+        - "消费前段人物行动与未解决压力。"
+      required_beats:
+        - "好莱坞最终把艾斯弗德拍成犯罪电影，将 Zack 与 Emma 塑造成恢复城市秩序的英雄。结局在首映礼与真实街道之间交叉：观众在银幕前鼓掌，银月会仍控制着夜晚；Zack 面前还有一份没有打开的委托，Emma 又走向下一宗冤案，老 Charles 的真凶始终没有被揭露。"
+        - "> 美国没有迎来大萧条，艾斯弗德独自承担了它。  \n> Zack 与 Emma 没有失去事业，反而被这座犯罪之城成就。"
+      exit_state:
+        -
+          action: "loop_end"
+          chapter_boundary: true
+          ending: "moore_bad"
+      hands_off_to:
+        - "chapter_boundary"
+    -
+      id: "chapter_boundary"
+      source_anchor: "剧情设计/Unit5/state_source_contract.md:31"
+      entry_state:
+        - "已到达六个合法终点之一。"
+      consumes:
+        - "结束最后一轮，不虚构Loop6。"
+      required_beats:
+        - "loop_end，chapter_boundary=true。"
+      exit_state:
+        - "Unit5结束。"
+      hands_off_to: []
+doubt_progress:
+  total: 3
+  doubts: 3
+  fragments: 0
+  required_percent: 100
+  other_gates_still_required: true
+runtime_adapters:
+  - "四小游戏及阶段门控未实装；本文件涉及照片墙、A/B"
+  - "固定Talk/flag事件与公共推理衔接"
+  - "可点击R1问话仅在公共推理后可用"
+  - "跨Loop环境观察与原物回查"
+  - "1602合法跨章导入"
+  - "终幕持久化、A/B独立结算、loop_end章节边界"
+source_constraints:
+  authority: "active outline + 已批准source_contract"
+  backstage_truth_not_performed: "主大纲第二节幕后真相不能作为玩家known_facts；附录候选不自动成事实。"
+  investigation_forbidden:
+    - "继承安排"
+    - "刀刺定案"
+    - "未鉴定紫片结论"
+    - "排他独处窗口"
+    - "未获母盘"
+    - "把E12经手等同投药"
+  fixed_times:
+    fatal_spatter: "约21:30，仅既有伤序不新增精确认定"
+    photo_1: "22:10"
+    photo_2: "22:15"
+    time_delta_minutes: 5
+  finale_gun_policy: "Zack原本未携枪；Vivian原枪未入包；小Charles/Pierce有内部枪械；E.F.与乙醚只回收既有伏笔。"
+self_check:
+  A:
+    status: "PASS"
+    detail: "合同必填根、场景、NPC、证词和物证字段已填写。"
+  B:
+    status: "PASS"
+    detail: "L5新物与跨轮ref、终幕剧情载体分配齐全；1602是外部依赖。"
+  C:
+    status: "PASS"
+    detail: "五个自由NPC入口；两个开篇口头记录非正式物证；R1普通、R2+现场。"
+  D:
+    status: "PASS"
+    detail: "目标为取石与密室行为链，致命刀刺留最终裁决。"
+  E:
+    status: "PASS"
+    detail: "继承/药检/字迹鉴定/母盘按分支白名单；known_facts只累计L1—4。"
+  F:
+    status: "PASS"
+    detail: "照片墙、两公共推理、可回退选择、最终投票、A/B所有选项及六个结局接口完整；无C。"
+  G:
+    status: "PASS"
+    detail: "三轮各1—2件、3疑点0碎片；每件正式证据只有唯一疑点归属。"
+  H:
+    status: "DESIGN_REVIEW_PASS"
+    detail: "主代理已完成五场、证物、公共推理和终幕逐源设计审查；235条覆盖及获批R1新增通过。运行时适配未实装。"
+  I:
+    status: "PASS"
+    detail: "一个opening根、六段强制场景流，最后才放控制；不吞自由NPC。"
+  J:
+    status: "DESIGN_REVIEW_PASS"
+    detail: "主代理确认连续性、唯一执行主落点、A/B操作与六路终点；四项执行歧义修复关闭。special_adapter未实装，不代表Unity运行通过。"

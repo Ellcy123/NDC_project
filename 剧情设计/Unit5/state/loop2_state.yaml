@@ -1,0 +1,342 @@
+unit: Unit5
+episode: EPI05
+loop: 2
+chapter_id: 502
+title: Vivian——刀创之后才移动的楼梯
+schema_contract: state_contract.yaml
+validation_status: DESIGN_REVIEW_PASS
+player_context:
+  goals:
+    - 核对楼梯是否曾从 B 回转至 A，以及回转与致命刀创的先后。
+    - 在入口已可破解但出口未知的条件下，调查 A 位顶端异常。
+  known_facts:
+    - Zack 持有水源风险与 Sean 旧报告异常页面，尚不足以定案老 Charles 对 1912 年事件的完整责任。
+    - O'Hara 已送往圣心医院，Rosa 已得到同一水源风险警告。
+    - Pierce 的镜中观察不能排除第二名正常入口者，未确认具体进入者。
+    - 中央镜至礼堂门约十秒、全程约二十秒，Pierce 打点低头十四秒。
+    - Pierce 说21:15楼梯在B、破门却在A，尚须客观影像验证。
+    - Emma 昏睡并被独立看守；她与 Zack 的信任尚未修复。
+    - 21:38止付发送联使用M-7提前登记死亡，授权人未知。
+  historical_fact_policy: known_facts保留前序原句；历史昏睡记载由本轮opening苏醒更新当前状态，不再让Emma继续昏睡。
+  opening_facts:
+    - Emma 已在独立客房苏醒，承认主动申请彩排及约老 Charles 于21:30赴舞台。
+    - Emma 只记得零碎声音、不能确定刀是否由自己刺下；Zack 承诺即使不利也公开真相。
+    - Emma 观察了旧消防维护卡，原件留在客房，未入包。
+  new_directions: [客观底片与当天批准联, 导轨血迹与完整死亡顺序, A位顶端用途不明木板]
+  forbidden_conclusions: [布景板已是暗门, 夹层确实存在, 楼梯操作者身份, Vivian共谋或杀人, E-12投药与远端刻录, 暗角钥石变化]
+opening:
+  type: cutscene_sequence
+  runtime_root: {table: ChapterConfig, init_scene: 5008, init_talk: L2_opening_waking_promise}
+  sequence:
+    - event_id: waking_promise
+      talk: L2_opening_waking_promise
+      scene_id: 5008
+      location: Emma 独立客房
+      cast: [501, 502]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:386
+      required_beats:
+        - Emma 苏醒，承认彩排由自己申请，也承认主动约老 Charles 于21:30到舞台。
+        - 她无法判断刀是否由自己刺下，只记得失去意识前后零碎声响。
+        - Zack 承诺带她出去，Emma 要求查清真相而非包庇；若证据证明她杀人也不能隐瞒，Zack 答应。
+        - 临走前 Zack 问房间进出，Emma 只能回忆模糊刀刃入肉声；不说远端安排、E-12与握姿。
+        - Emma 查看应急疏散册夹着的旧消防维护卡，清楚展示三个正三角空间锚点与右侧不对称卡扣，随后留在房内。
+      observations: [{type: environment_observed, id: 5251, observer: 502}]
+      set_flags: {u5_fire_card_seen: true}
+      runtime_exit: {action: change_scene, target_scene_id: 5009, continuation: next_talk, next_talk: L2_opening_corridor_arrival}
+    - event_id: corridor_arrival
+      talk: L2_opening_corridor_arrival
+      scene_id: 5009
+      location: 礼堂入口走廊
+      cast: [501]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:394
+      required_beats:
+        - Zack 抵达走廊，调查由入口转向出口；只回扣一条可能进入路线，不声称确有第二人走过。
+        - 恢复控制后，Pierce 与 Vivian 的明确可对话条目由玩家分别询问，不由开场自动发放证言。
+      runtime_exit: {action: release_to_exploration}
+  player_control_restored_after: corridor_arrival
+scenes:
+  - {id: 5008, name: Emma 独立客房, type: cutscene, availability: opening_only, npcs: {}, evidence_ids: [5251], event_triggers: []}
+  - {id: 5007, name: 东侧客房走廊, type: transition, availability: opening_transition, npcs: {}, evidence_ids: [], event_triggers: []}
+  - id: 5009
+    name: 礼堂入口走廊
+    type: exploration
+    availability: {after_event: corridor_arrival}
+    evidence_ids: [5102, 5154, 5155, 5156]
+    event_triggers: []
+    npcs:
+      503:
+        name: Pierce
+        talk: L2_talk_corridor_stair_position
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:396
+        known_information:
+          active_topics: [{topic: 21:15与破门后的楼梯位置口供, truth_status: true}]
+          withheld_topics: []
+          unknown_claims: [楼梯操作者, 刀创与回转先后, 暗道与夹层]
+        mindset: 观察刚受质疑，仍报告自己看见的楼梯状态，不把口供升级为影像。
+        player_inquiry: "L1 指证后补充21:15在B、破门在A，需与现场及底片核对" # 9
+        is_liar: false
+        testimony_ids:
+          - id: 5032001
+            kind: testimony
+            content: 21:15 楼梯仍在 B 位，破门时却在 A 位。
+            acquisition_talk: L2_talk_corridor_stair_position
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:397
+        grants_evidence: []
+      504:
+        name: Vivian
+        talk: L2_talk_corridor_stage_departure
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:398
+        known_information:
+          active_topics: [{topic: 18:05团队离场已在A且此后无人再动, truth_status: false}]
+          withheld_topics: [团队离场实为B, 自保而隐瞒异常]
+          unknown_claims: [后来的楼梯操作者, 回转晚于刀创的时序]
+        mindset: 害怕失去蓝月亮、员工生计与承办位置，坚持保护自己的离场口径。
+        player_inquiry: null
+        inquiry_context: "Pierce 所述楼梯B/A差异与舞台团队的离场状态" # 10
+        is_liar: true
+        testimony_ids:
+          - id: 5042001
+            kind: collectible_lie_anchor
+            truth_status: false
+            content: 团队 18:05 离场时楼梯已经在 A，此后也没有人再动过。
+            acquisition_talk: L2_talk_corridor_stage_departure
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:399
+        grants_evidence: []
+        topic_unlocks:
+          - id: rehearsal_permission
+            required_item_ids: [5203]
+            content: 只说明批准联记载的临时彩排；不新增通知对象、私约知情人或E-12经手信息。
+            truth_status: true
+  - id: 5005
+    name: 舞台正面
+    type: exploration_and_expose
+    availability: {after_event: corridor_arrival}
+    evidence_ids: [5201, 5252]
+    event_triggers: []
+    npcs:
+      505:
+        name: Foster
+        talk: L2_talk_stage_death_sequence
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:408
+        known_information:
+          active_topics: [{topic: 已取得导轨血滴后完成坠落先刀刺后的伤序, truth_status: true}]
+          withheld_topics: []
+          unknown_claims: [具体三米高度, 刺刀者, 楼梯操作者, 夹层与投药]
+        mindset: 得到导轨血迹才写完整顺序，不受手帕关系选择或 Zack 施压改变专业结论。
+        player_inquiry: "导轨回转轮下血滴与尚未完成的死亡顺序" # 10
+        is_liar: false
+        unlock_condition: [{type: item, param: 5201}]
+        testimony_ids:
+          - id: 5052001
+            kind: testimony
+            content: 老 Charles 除刀伤外还有高空坠落造成的伤势。坠落使他重伤，但没有立即致死；真正的致命伤是随后形成的刀刺。回转轮下的血滴与尸旁刀创形成时的活体喷溅连续。
+            acquisition_talk: L2_talk_stage_death_sequence
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:409
+            prerequisites: {required_item_ids: [5201]}
+        grants_evidence: []
+  - id: 5014
+    name: 舞台背面
+    type: exploration
+    availability: {after_event: corridor_arrival}
+    evidence_ids: [5202, 5203, 5204]
+    npcs: {}
+    event_triggers:
+      - event_id: approval_disclosure_intent
+        talk: L2_event_approval_promise
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:429
+        cast: [501]
+        runtime_binding: {type: special_adapter, required_item_ids: [5203], previous_event_completed: corridor_arrival, once: true}
+        required_beats:
+          - 短暂呈现隐瞒批准联与带回圆桌两个念头；均非玩家可执行的丢弃或隐藏选项。
+          - Zack 想起对 Emma 的承诺，主动放弃隐瞒，携批准联及约见事实回到圆桌公开。
+        runtime_exit: {action: change_scene, target_scene_id: 5006, continuation: next_talk, next_talk: L2_event_public_approval}
+  - id: 5006
+    name: 圆桌会议室
+    type: event_and_exploration
+    availability: {after_event: corridor_arrival}
+    evidence_ids: []
+    npcs: {}
+    event_triggers:
+      - event_id: public_approval
+        talk: L2_event_public_approval
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:431
+        cast: [501, 503, 504, 505, 506, 507]
+        runtime_binding: {type: chained_talk, required_item_ids: [5203], previous_event_completed: approval_disclosure_intent, sole_entry: L2_event_approval_promise}
+        required_beats:
+          - Zack 向圆桌公开申请与约见，允许不利证据加重 Emma 嫌疑，落实不包庇承诺。
+          - Emma 对公开行为的确认作为关系状态写入，不擅自把仍被看守的她搬到圆桌参加自由调查。
+        runtime_exit: {action: release_to_exploration}
+evidence_registry:
+  - id: 5201
+    name: 回转轮下的叠压血滴
+    item_type: clue
+    collectible: true
+    description: 一滴血先落在内导轨，回转轮后来经过并将其拖开；血源须与 Foster 的活体喷溅判断交叉理解。
+    acquisition: {kind: investigation, scene_id: 5005, method: 记录内导轨的血滴与回转轮叠压}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:411
+    note: 关键——L2 R3 判断刀创喷溅早于回转
+    analysis: {available: false}
+  - id: 5202
+    name: 21:15 舞台预备全景底片
+    item_type: item
+    collectible: true
+    description: 楼梯仍在B位，舞台钟为21:15；控制箱旁可见Emma当晚提交的彩排批准联。批准联须清晰可辨，钟面本身不证明日期。
+    acquisition: {kind: investigation, scene_id: 5014, method: 舞台背面搜取预备全景底片}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:425
+    note: 关键——L2 R1 客观固定21:15停位
+    analysis: {available: false}
+  - id: 5203
+    name: Emma 的彩排申请批准联
+    item_type: item
+    collectible: true
+    description: 写有Emma姓名、Vivian签字、20:30—22:30手写时段和案发当天日期；证明Emma主动申请进入舞台。没有楼梯停位或远端刻录内容。
+    acquisition: {kind: investigation, scene_id: 5014, method: 搜取控制箱旁批准联}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:426
+    note: 关键——L2 R2 固定底片日期
+    analysis: {available: false}
+  - id: 5204
+    name: 22:10—22:15 破门照片组
+    item_type: item
+    collectible: true
+    description: 同一固定机位两张连续底片，均有Emma、Zack、其他可见人物、C-3正面Lawson与A位楼梯。本轮只读取22:10全景人物、C-3与楼梯位置。
+    acquisition: {kind: investigation, scene_id: 5014, method: 舞台背面取得既有破门底片组}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:427
+    note: 关键——L5 R2 与 Foster 证言交叉核对C-3前后机会
+    analysis: {available: false}
+    reveals_by_loop:
+      2: 全景、C-3与楼梯，不开放暗角对照。
+      5: 发现暗道后放大同一组底片，比较暗角钥石仍在与消失、无滚动血尾而向上终止的擦痕。
+    doubt_owner: {loop: 5, id: 5502}
+  - id: 5251
+    name: Miller飞行机械馆旧消防维护卡
+    item_type: envir
+    collectible: false
+    description: 夹在客房应急疏散册；三处正三角分布，上方正向屋顶排烟图标右侧有不对称卡扣，左下单人校准舱，右下带消防标志与EXIT的防火隔断。无连接线、无R-42／R-17／R-28编号。
+    acquisition: {kind: scripted_observation, scene_id: 5008, carrier: opening, talk: L2_opening_waking_promise, observer: 502}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:392
+    note: 场景道具
+    physical_custody: Emma 查看后留在客房，终局仅调用记忆。
+    completion_flag: u5_fire_card_seen
+  - id: 5252
+    name: A 位顶端布景板
+    item_type: envir
+    collectible: false
+    description: 楼梯在A封存，顶端是融入舞台装饰的木合地布景板，无把手和普通锁孔，边缘极轻断尘与冷风；尚不足以证明它是门。
+    acquisition: {kind: environment_observation, scene_id: 5005, method: 沿封存A位楼梯检查顶端}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:413
+    note: 场景道具
+    boundaries: [Vivian与舞台技师解释为布景检修板只作环境语境，不新增技师NPC, 不强行开启, 不标注暗道或三米实测结论]
+  - {id: 5102, ref: loop1_state.yaml, revealed_here: 正常入口仍只有一扇且曾从内部上闩, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:400}
+  - {id: 5154, ref: loop1_state.yaml, revealed_here: 入口监视已被证明不能排除另一人，保持既有观察, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:400}
+  - {id: 5155, ref: loop1_state.yaml, revealed_here: 礼堂正常门不提供离场解释, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:401}
+  - {id: 5156, ref: loop1_state.yaml, revealed_here: 衣帽间门为既有误判对象，不新增出口, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:400}
+doubts:
+  - {id: 5201, isFragment: false, text: '底片里的楼梯停位与离场说法一致吗？', condition: [{type: item, id: 5202}, {type: testimony, id: 5042001}]}
+  - {id: 5202, isFragment: false, text: '画面中的批准联属于哪一天？', condition: [{type: item, id: 5203}]}
+  - {id: 5203, isFragment: false, text: '回转轮与血滴，哪一个先经过这里？', condition: [{type: item, id: 5201}, {type: testimony, id: 5052001}]}
+expose:
+  id: 502
+  scene_id: 5005
+  target_npc: 504
+  talk: L2_expose_vivian
+  is_liar: true
+  player_inquiry: null
+  source_anchor: 剧情设计/Unit5/Unit5_大纲.md:435
+  progress: {doubts: 3, fragments: 0, denominator: 3, required_percent: 100}
+  prerequisites:
+    required_doubt_ids: [5201, 5202, 5203]
+    required_item_ids: [5201, 5202, 5203, 5204]
+    required_environment_ids: [5252]
+    required_testimony_ids: [5032001, 5042001, 5052001]
+    required_talks: [L2_talk_corridor_stair_position, L2_talk_corridor_stage_departure, L2_talk_stage_death_sequence, L2_event_public_approval]
+    previous_events_completed: [waking_promise, corridor_arrival, public_approval]
+    required_flags: {u5_fire_card_seen: true}
+    runtime_status: special_adapter_required
+  expose_lie_ids: [5042901, 5042902]
+  rounds:
+    - round: 1
+      lie_source: 5042001
+      lie: 我们 18:05 离开时，楼梯已经在 A。此后没有人再动过；Pierce 所谓 21:15 的 B 位是他看错了。
+      evidence_set: [{type: item, id: 5202}]
+      result: 21:15客观处于B；离场在A且无人再动的说法不成立，不推测她18:05操作过楼梯。
+      retreat: 底片可能是前一天同一时刻的彩排旧片。
+    - round: 2
+      lie_source: 5042901
+      lie: 钟面只能说明时间，不能说明日期。
+      evidence_set: [{type: item, id: 5203}]
+      result: 底片中批准联属于案发当天，不可能是前一天旧片；底片本身为已知前提，不重复出示。
+      retreat: 即使后来发生 B→A，也可能早于刀创，只是未登记的舞台调整。
+    - round: 3
+      lie_source: 5042902
+      lie: 那次移动发生在刀创之前，与伤后现场处理无关。
+      evidence_set: [{type: item, id: 5201}]
+      prerequisites: {required_testimony_ids: [5052001]}
+      result: 刀创活体喷溅先出现，回转轮后拖开血滴；发现现场不是刀创时原状，仍不知道操作者。
+  post_expose:
+    talk: L2_post_expose_concealment
+    scene_id: 5005
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:461
+    testimony_ids: []
+    required_beats:
+      - Vivian 承认知道团队离场仍B、破门却A，为保蓝月亮与承办位置隐瞒状态异常。
+      - 她18:05未操作，不曾见后来的操作者，也不知道回转晚于刀创；不升级共谋或杀人结论。
+      - 玩家选择如何划定隐瞒的边界，然后由A位顶端异常引向公开两层是否占满建筑的测高问题。
+    choices:
+      - {id: restraint, meaning: 只确认隐瞒异常，不扩大为操作者或共谋杀人, set_flags: {u5_vivian_hint: true}}
+      - {id: overreach, meaning: 把隐瞒异常扩大为亲自操作或参与共谋杀人, set_flags: {u5_vivian_hint: false}}
+    choice_boundary: 只改变终局B观察提示资格，不改变线索、风险、成功权限、票型、生死或后续固定信息。
+    runtime_exit: {action: loop_end, next_loop: 3, next_talk: L3_opening_measurement_proposal}
+post_expose_knowledge:
+  - Emma 主动申请当天20:30—22:30彩排并约老 Charles 于21:30到舞台。
+  - 老 Charles 先高处坠落重伤，后遭致命刀刺；刀创喷溅早于楼梯B到A回转。
+  - Vivian 隐瞒楼梯状态异常，不等于她操作楼梯、共谋或杀人。
+  - A位顶端是用途不明的木合地布景板，尚不能称暗门。
+  - Zack 没有隐瞒彩排批准联，Emma 见证他遵守查清真相的承诺。
+special_mechanics:
+  medical_prerequisite: {status: special_adapter_required, required_item_ids: [5201], unlocked_talk: L2_talk_stage_death_sequence, independent_of_flag: u5_foster_hint}
+  approval_disclosure: {status: special_adapter_required, entry: L2_event_approval_promise, continuation: L2_event_public_approval, player_choice: false, no_discard_branch: true}
+  fire_card_memory: {status: special_adapter_required, environment_id: 5251, observer: 502, flag: u5_fire_card_seen, persistent_across_loops: true, inventory: false, later_access: memory_only}
+  relationship_hint: {flag: u5_vivian_hint, default: false, consumer: loop5_state.yaml#ending_sequence, changes_only: 终局B观察提示}
+outline_coverage:
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:386, target: opening.sequence.waking_promise, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:392, target: evidence_registry.5251, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:394, target: opening.sequence.corridor_arrival, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:396, target: scenes.5009.npcs.503.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:397, target: scenes.5009.npcs.503.testimony_ids.5032001, mapping: exact, testimony_required: true, source_text: '21:15 楼梯仍在 B 位，破门时却在 A 位。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:398, target: scenes.5009.npcs.504.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:399, target: scenes.5009.npcs.504.testimony_ids.5042001, mapping: exact, testimony_required: true, source_text: '团队 18:05 离场时楼梯已经在 A，此后也没有人再动过。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:408, target: scenes.5005.npcs.505.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:409, target: scenes.5005.npcs.505.testimony_ids.5052001, mapping: exact, testimony_required: true, source_text: '老 Charles 除刀伤外还有高空坠落造成的伤势。坠落使他重伤，但没有立即致死；真正的致命伤是随后形成的刀刺。回转轮下的血滴与尸旁刀创形成时的活体喷溅连续。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:411, target: evidence_registry.5201, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:413, target: evidence_registry.5252, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:425, target: evidence_registry.5202, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:426, target: evidence_registry.5203, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:427, target: evidence_registry.5204, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:429, target: scenes.5014.event_triggers.approval_disclosure_intent, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:431, target: scenes.5006.event_triggers.public_approval, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:439, target: expose.rounds.1, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:447, target: expose.rounds.2, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:455, target: expose.rounds.3, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:461, target: expose.post_expose.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:465, target: expose.post_expose.choices, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:472, target: narrative_continuity.units.L2_post_expose, mapping: exact}
+narrative_continuity:
+  units:
+    - {id: L2_opening, entry_state: Emma尚在隔离且信任未修复, consumes: L1入口可行而出口未明, required_beats: [苏醒承认申请约见, 要求真相而非包庇, 消防卡强制观察, 走廊恢复控制], exit_state: 尚未取得Pierce与Vivian本轮普通证言, hands_off_to: L2_corridor_talks}
+    - {id: L2_corridor_talks, entry_state: B/A口供待客观核实, consumes: 团队离场与最后观察矛盾, required_beats: [Pierce报告B/A, Vivian坚持离场A无人移动], exit_state: 获R1原话而未知道操作者, hands_off_to: L2_stage_talk}
+    - {id: L2_stage_talk, entry_state: 已取得叠压血滴, consumes: Foster未完成伤序, required_beats: [高坠先而不致命, 刀创后且致命, 血滴与活体喷溅连续], exit_state: 完整死亡顺序已获但三米未测, hands_off_to: L2_approval_event}
+    - {id: L2_approval_event, entry_state: 批准联使Emma处境不利, consumes: 开篇承诺不隐瞒, required_beats: [念头出现但固定放弃隐瞒, 圆桌公开申请与约见], exit_state: Emma确认Zack遵守承诺, hands_off_to: L2_expose}
+    - {id: L2_expose, entry_state: 三疑点与额外前提齐备, consumes: Vivian不变停位口径, required_beats: [底片停位, 批准联日期, 血滴叠压], exit_state: 刀创后B到A但操作者未知, hands_off_to: L2_post_expose}
+    - {id: L2_post_expose, entry_state: 隐瞒异常已经击穿, consumes: 自保与推理边界, required_beats: [有限承认, 关系选择, 提出建筑占高问题], exit_state: 尚未确认暗门与夹层, hands_off_to: L3_opening}
+  exploration_order: 自由询问与物证收集允许不同顺序；Foster血滴前置和批准联事件续接严格执行。
+self_check:
+  A: PASS——合同根字段齐全，scene id未重复
+  B: PASS——四件新物证与两件环境均有取得位置
+  C: PASS——开篇标题下两名普通NPC独立可点击；Foster血滴前置明确
+  D: PASS——停位、日期、刀创后回转
+  E: PASS——暗门和暗角放大留后轮；消防卡无拉杆编号
+  F: PASS——隐瞒为念头演出，Vivian关系才是真选择；本轮无quiz
+  G: PASS——三轮提交材料一对一挂疑点
+  H: DESIGN_REVIEW_PASS——独立覆盖审查已通过
+  I: PASS——一个开场根，客房后走廊恢复控制
+  J: DESIGN_REVIEW_PASS——L3逻辑入口与后置公开事件通过交叉审

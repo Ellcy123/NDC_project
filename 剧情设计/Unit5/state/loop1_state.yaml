@@ -1,0 +1,525 @@
+unit: Unit5
+episode: EPI05
+loop: 1
+chapter_id: 501
+title: Pierce——镜子里一直关着的门
+schema_contract: state_contract.yaml
+validation_status: DESIGN_REVIEW_PASS
+player_context:
+  goals:
+    - 查验唯一正常入口的值守能否排除另一名进入者。
+    - 分清 Pierce 的实际观察、镜中误判与走廊耗时。
+  known_facts:
+    - Zack 持有水源风险与 Sean 旧报告异常页面，尚不足以定案老 Charles 对 1912 年事件的完整责任。
+    - O'Hara 已送往圣心医院，Rosa 已得到同一水源风险警告。
+  opening_facts:
+    - Emma 因 Zack 扣下水源风险与 Sean 材料而决裂，独自前往庄园。
+    - 晚宴广播把 Emma 对十六年前死亡的公开质问定性为女记者骚乱。
+    - 老 Charles 死于舞台；Emma 昏迷在尸旁，握着与伤口吻合的餐刀。
+    - 圆桌同意继续调查，调查推理须向众人公开；Emma 暂置独立客房看守。
+  new_directions:
+    - 走廊镜像、巡警惯用手与 Pierce 值守记录。
+    - 衣物血迹的来源与通信台的提前死讯只留待后续调查。
+  forbidden_conclusions:
+    - 具体进入者、刺刀者、反锁后的离场路线。
+    - 夹层、钥石、E-12 投药、远端刻录与继承安排。
+opening:
+  type: cutscene_sequence
+  runtime_root: {table: ChapterConfig, init_scene: 5001, init_talk: L1_opening_hospital_break}
+  sequence:
+    - event_id: hospital_break
+      talk: L1_opening_hospital_break
+      scene_id: 5001
+      location: 圣心医院走廊
+      cast: [501, 502]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:122
+      required_beats:
+        - O'Hara 进入急诊，Rosa 已收到水源警告；Emma 因看见投水点书页在急诊室外拦住 Zack。
+        - Emma 追问他为何只说强制清退，隐去水源风险与 Sean 页面；回扣谈 Mary 时不再删减真相的承诺。
+        - Zack 承认恐惧 Emma 重蹈 Harrison、Morrison、Mickey 的命运并扣下材料；恐惧不能抵消越界。
+        - Zack 把持有页面交给 Emma，只承认 Sean 不是可照旧归档的普通事故，不能定案老 Charles 的完整责任。
+        - Emma 指出他又替她决定知情时机，离开并明确要求别跟上来；关系断裂不靠一句道歉恢复。
+      evidence_transfers:
+        - {kind: existing_story_material, from: 501, to: 502, content: Zack 已持有的水源风险与 Sean 旧报告页面, inventory_effect: no_new_item}
+      runtime_exit: {action: change_scene, target_scene_id: 5002, continuation: next_talk, next_talk: L1_opening_office_departure}
+    - event_id: office_departure
+      talk: L1_opening_office_departure
+      scene_id: 5002
+      location: Watts 办公室
+      cast: [501, 514]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:148
+      required_beats:
+        - Zack 赶到时 Emma 已整理材料离开，只留下无法再共事、无法相信他的真相、只能独自走的纸条。
+        - Watts 以 Harrison 前书记员及法院程序协助者经验核对材料和公开活动，判断 Emma 可能去了慈善纪念晚宴。
+        - Zack 独自出发；Watts 留守处理 Emma 托付的程序安排，本场不说明内容，不赋予警员或司法权力。
+      story_props:
+        - {name: Emma 留给 Zack 的纸条, collectible: false, content: '我们没有办法再一起共事了。现在，我没有办法相信从你嘴里说出的真相。接下来的路，我只能一个人走。'}
+      runtime_exit: {action: change_scene, target_scene_id: 5003, continuation: next_talk, next_talk: L1_opening_drive_broadcast}
+    - event_id: drive_broadcast
+      talk: L1_opening_drive_broadcast
+      scene_id: 5003
+      location: 赶路车内
+      cast: [501, 519]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:159
+      required_beats:
+        - 车内无线电播出艾斯弗德晚报现场短讯；把 Emma 当众指控 Charles 与十六年前死亡有关的行为写成骚乱。
+        - 播报维护慈善家名望，删掉 O'Hara、水源风险与 Sean 名字，只留下失控记者与受辱慈善家。
+        - 抵达、要求进入时，用又一位私家侦探要求入庄园的补讯收尾。
+      runtime_exit: {action: change_scene, target_scene_id: 5004, continuation: next_talk, next_talk: L1_opening_prologue_callback}
+    - event_id: prologue_callback
+      talk: L1_opening_prologue_callback
+      scene_id: 5004
+      location: 庄园二楼走廊／既有序幕短回扣
+      cast: [501, 502, 510]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:177
+      required_beats:
+        - 8—12 秒依次回扣明晨新闻稿的确认演讲人、资助关系逼迫 Emma 发声、全城最大讲台、记者闪光灯。
+        - 立即回到 22:00 前现在；不重玩教程，不复演短刀展柜、案发闪切、标题或一个月前。
+      runtime_exit: {action: next, next_talk: L1_opening_upstairs_interruption}
+    - event_id: upstairs_interruption
+      talk: L1_opening_upstairs_interruption
+      scene_id: 5004
+      location: 庄园二楼走廊
+      cast: [501, 507, 511]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:181
+      required_beats:
+        - Zack 因 Emma 在威逼下同意演讲而低落，独自在二楼走廊抽烟。
+        - 小 Charles 在逆光中把背影误认成 Lawson，Zack 转身立刻纠正；只建立衣着、背影、低照明相似。
+        - 隔窗谈西丘已关闭的 Miller 飞行机械馆；小 Charles 只说父亲在自己年幼时专门修建。
+        - 建立庄园原则上禁宾客携枪、由 Pierce 管理的规则；Zack 本就无枪，不演交枪、搜查或寄存，不承诺全员搜净。
+        - 警员打断，报告舞台发现尸体，Emma 倒在旁边且被怀疑杀人；不进入雪地。
+      runtime_exit: {action: change_scene, target_scene_id: 5005, continuation: next_talk, next_talk: L1_opening_stage_exposures}
+    - event_id: stage_exposures
+      talk: L1_opening_stage_exposures
+      scene_id: 5005
+      location: 舞台正面
+      cast: [501, 502, 503, 504, 505, 506, 507, 508, 510, 511, 512]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:189
+      required_beats:
+        - 承接警员报告交代 22:00 撞开内部上闩的礼堂门、门槛外发现尸体与 Emma，控制入口再允许必要人员入内。
+        - Zack 与小 Charles 赶到，Zack 护住 Emma，小 Charles 协助封锁，Pierce 派警员通知众人。
+        - Lawson 联系公司律师、要求暂缓公司文件放行；Vivian 震惊，Moore 刻意落后。
+        - 22:10 Foster 让小 Charles 去 C-3 背面打光，Lawson 正面靠近暗角确认呼吸；摄影师拍第一张底片。
+        - 相机与装置保持不动、换底片；22:15 拍第二张。演出保持人物站位，不给暗角取石动作或两张暗角差异的特写结论。
+        - 第二张完成后 Pierce 将众人带去圆桌，不重复演调查规则。
+      staging_constraints:
+        - 底片物理内容按大纲195—197固定；L2才读取全景，L5才放大暗角。
+        - 此时不发放照片组，不提取 Foster 的 C-3 正式站位证言。
+      runtime_exit: {action: change_scene, target_scene_id: 5006, continuation: next_talk, next_talk: L1_opening_roundtable_rules}
+    - event_id: roundtable_rules
+      talk: L1_opening_roundtable_rules
+      scene_id: 5006
+      location: 圆桌会议室
+      cast: [501, 503, 504, 506, 507]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:247
+      required_beats:
+        - Pierce 据 Emma 尸旁持刀、公开冲突准备逮捕；Zack 只要求排除另一进入者，不保证她无罪。
+        - Vivian 要求查清，Lawson 承认工作争执、反对调查并以总裁身份要求封存公司文件待律师。
+        - 小 Charles 支持查清并接受 Lawson 的每次形成推理须向众人公开的条件，允许平等质询 Pierce。
+        - Pierce 坚持逮捕后等待小 Charles 的一眼示意，改为客房看守；不解释两人是否交换案情，不生成证词。
+        - Emma 仍昏睡，被安置到东侧独立客房；走廊鬼影与十四秒留给普通询问。
+      runtime_exit: {action: release_to_exploration}
+  player_control_restored_after: roundtable_rules
+scenes:
+  - {id: 5001, name: 圣心医院走廊, type: cutscene, availability: opening_only, npcs: {}, evidence_ids: [], event_triggers: []}
+  - {id: 5002, name: Watts 办公室, type: cutscene, availability: opening_only, npcs: {}, evidence_ids: [], event_triggers: []}
+  - {id: 5003, name: 赶路车内, type: cutscene, availability: opening_only, npcs: {}, evidence_ids: [], event_triggers: []}
+  - {id: 5004, name: 庄园二楼走廊, type: cutscene, availability: opening_only, npcs: {}, evidence_ids: [], event_triggers: []}
+  - id: 5005
+    name: 舞台正面
+    type: exploration
+    availability: {after_event: roundtable_rules}
+    evidence_ids: [5101, 5151, 5152, 5153]
+    npcs:
+      505:
+        name: Foster
+        talk: L1_talk_stage_medical
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:265
+        known_information:
+          active_topics: [{topic: 刀伤是直接致命伤而记录尚未完成, truth_status: true}]
+          withheld_topics: [Sean旧案责任, C-3站位正式认证]
+          unknown_claims: [当前尚未完成死亡先后判断, 尚未获得具体坠落高度]
+          forbidden_reveals: [完整死亡顺序留L2取得血滴后, 具体高度留L3实测]
+        mindset: 专业中立，只记录当前能够确认的伤情，不替侦探站队。
+        player_inquiry: "尸旁餐刀与尚未完成的伤情记录" # 9
+        is_liar: false
+        testimony_ids:
+          - id: 5051001
+            kind: testimony
+            content: 初步确认老 Charles 的直接致命伤来自刀刺；坠落与刀创的完整先后仍未写完。
+            acquisition_talk: L1_talk_stage_medical
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:266
+        grants_evidence: []
+    event_triggers:
+      - event_id: foster_boundary
+        talk: L1_event_handkerchief_boundary
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:271
+        optional: true
+        runtime_binding: {type: special_adapter, required_environment_ids: [5153], required_item_ids: [], once: true}
+        required_beats:
+          - 先展示 E.F. 归属特写与 Zack 内心辨认，再给关系选择。
+        choices:
+          - {id: restraint, meaning: 递还手帕，只要求记录已能确认的刀伤，把无证据支持的先后留空, set_flags: {u5_foster_hint: true}}
+          - {id: pressure, meaning: 逼她立即补全顺序或公开背书, set_flags: {u5_foster_hint: false}}
+        runtime_exit: {action: release_to_exploration}
+  - id: 5009
+    name: 礼堂入口走廊
+    type: exploration
+    availability: {after_event: roundtable_rules}
+    evidence_ids: [5102, 5154, 5155, 5156]
+    event_triggers: []
+    npcs:
+      503:
+        name: Pierce
+        talk: L1_talk_corridor_watch
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:284
+        known_information:
+          active_topics: [{topic: 左手抽烟者与鬼魂解释, truth_status: mistaken}, {topic: 自己没有故意离岗, truth_status: true}]
+          withheld_topics: []
+          unknown_claims: [转镜者身份, 未知进入者的真实行动]
+          forbidden_reveals: [R2镜面方向退守只在现场被击破后, R3中段路程退守只在现场被击破后]
+        mindset: 主观确信没有看错，以值守责任和鬼影解释维护判断。
+        player_inquiry: null
+        inquiry_context: "圆桌坚持没有离岗，却尚未核实唯一入口观察" # 10
+        is_liar: true
+        testimony_ids:
+          - id: 5031001
+            kind: collectible_lie_anchor
+            truth_status: mistaken
+            content: 低头打点前后，他看见一名用左手抽烟的警员经过走廊，随后消失在走廊尽头。Morrison 生前惯用左手，因此他怀疑自己看见了 Morrison 的鬼魂。
+            acquisition_talk: L1_talk_corridor_watch
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:285
+        grants_evidence: []
+  - id: 5010
+    name: C-3 景墙背面
+    type: exploration
+    availability: {after_event: roundtable_rules}
+    evidence_ids: []
+    npcs: {}
+    event_triggers:
+      - event_id: c3_encounter
+        talk: L1_event_c3_encounter
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:293
+        cast: [501, 507]
+        runtime_binding: {type: SceneConfig.firstEnterTalk, required_item_ids: [], once: true}
+        required_beats:
+          - Zack 独自探索遇见小 Charles，只谈老 Charles、Emma 与破门混乱，不追问他为什么在这里。
+          - 清楚表现 C-3 编号、背面支架和开放末端；不生成站位证据，不当作不在场证明。
+        runtime_exit: {action: release_to_exploration}
+  - id: 5011
+    name: 舞台后台
+    type: exploration
+    availability: {after_event: roundtable_rules}
+    evidence_ids: []
+    npcs: {}
+    event_triggers:
+      - event_id: backstage_warning
+        talk: L1_event_backstage_warning
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:297
+        cast: [501, 504, 507]
+        runtime_binding: {type: SceneConfig.firstEnterTalk, required_item_ids: [], once: true}
+        required_beats:
+          - Zack 在转角撞见私谈，小 Charles 委婉提醒 Vivian 别继续替 Zack 与 Emma 争取调查空间。
+          - 两人发现 Zack 后立即换成晚宴善后话题，只种控制关系，不生成证物或证言。
+        runtime_exit: {action: release_to_exploration}
+  - id: 5012
+    name: 安保室
+    type: exploration
+    availability: {after_event: roundtable_rules}
+    evidence_ids: [5103, 5104]
+    event_triggers: []
+    npcs:
+      511:
+        name: 巡逻警员
+        talk: L1_talk_security_patrol
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:303
+        known_information:
+          active_topics: [{topic: 巡逻路程耗时与第十三圈打点, truth_status: true}, {topic: 右手与右袋取烟, truth_status: true}]
+          withheld_topics: []
+          unknown_claims: [跟随者身份, 转镜动作, 刺杀与离场]
+        mindset: 按自身经历回答，对怪力乱神不提供保证。
+        player_inquiry: "Pierce 对左手抽烟警员的描述，需要核对当晚实际巡逻者" # 10
+        is_liar: false
+        required_beats: [接受询问时自然用右手从制服右袋取烟；动作与烟草调查同一物理状态。]
+        testimony_ids:
+          - id: 5111001
+            kind: testimony
+            content: 自己从走廊入口开始巡逻；走到中央镜约需十秒，抵达礼堂门约需二十秒。第十三圈经过中央镜时，Pierce 正在低头签字打点；自己当时从制服右袋取烟，并一直惯用右手。
+            acquisition_talk: L1_talk_security_patrol
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:304
+        grants_evidence: []
+  - id: 5006
+    name: 圆桌会议室
+    type: exploration_and_expose
+    availability: {after_event: roundtable_rules}
+    evidence_ids: [5105]
+    event_triggers: []
+    npcs:
+      506:
+        name: Lawson
+        talk: L1_talk_roundtable_noise
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:316
+        known_information:
+          active_topics: [{topic: 地板下方急促脚步与闷撞, truth_status: true}, {topic: Vivian隐瞒访客的解释, truth_status: bias}, {topic: 工作与档案交接负担, truth_status: true}]
+          withheld_topics: []
+          unknown_claims: [夹层存在, 监印实际用途, 继承安排]
+        mindset: 不耐烦、维护职责边界；把声音当成人误会，不愿写正式陈述。
+        player_inquiry: "圆桌已公开的工作争执，促使 Zack 私下核对他的不满" # 7
+        is_liar: false
+        required_beats:
+          - 坚持声音来自地板下方，把它理解为 Vivian 的秘密访客；拒绝正式陈述。
+          - 抱怨接管 TideWater 档案责任却只收到用途不明监印、没有索引。
+          - 展示实体后立即收回；允许玩家拍摄，实体始终由 Lawson 保管。
+        testimony_ids:
+          - id: 5061001
+            kind: oral_record
+            collectible: false
+            truth_status: observation_with_bias
+            content: 案发前的急促脚步和闷撞来自地板下方，也就是 Vivian 房间所在方向；他把声音理解成 Vivian 在隐瞒一名秘密访客。
+            acquisition_talk: L1_talk_roundtable_noise
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:317
+        grants_evidence: []
+        enables_investigation: [5105]
+  - id: 5013
+    name: 安保与通讯室
+    type: exploration
+    availability: {after_event: roundtable_rules}
+    evidence_ids: [5106]
+    npcs: {}
+    event_triggers: []
+  - {id: 5007, name: 东侧客房走廊, type: restricted, availability: story_custody_only, npcs: {}, evidence_ids: [], event_triggers: []}
+  - {id: 5008, name: Emma 独立客房, type: restricted, availability: Emma_unconscious_no_talk, npcs: {}, evidence_ids: [], event_triggers: []}
+evidence_registry:
+  - id: 5101
+    name: Emma 礼服背部的擦抹血迹
+    item_type: clue
+    collectible: true
+    description: 开篇衣物记录显示礼服背面的血呈连续擦抹状，与站立时形成的飞溅不同；本轮来源不明。
+    acquisition: {kind: investigation, scene_id: 5005, method: 复核开篇衣物记录}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:269
+    note: ''
+    analysis: {available: false}
+    reused_in: [4]
+  - id: 5102
+    name: 礼堂唯一正常入口勘验页
+    item_type: item
+    collectible: true
+    description: 礼堂正常出入只经过这条廊道与一扇门；发现时门从内部上闩。
+    acquisition: {kind: investigation, scene_id: 5009, method: 入口现场勘验}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:286
+    note: ''
+    analysis: {available: false}
+  - id: 5103
+    name: 巡逻警员右侧口袋里的手卷烟草
+    item_type: item
+    collectible: true
+    description: 烟草装在制服右袋；接受询问时，巡逻警员也自然地用右手从右袋取烟。
+    acquisition: {kind: investigation, scene_id: 5012, method: 调查巡警右侧口袋, required_talks: [L1_talk_security_patrol]}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:308
+    note: 关键——L1 R1 核对取烟手与镜像身份
+    analysis: {available: false}
+  - id: 5104
+    name: Pierce 巡更打点纸带
+    item_type: item
+    collectible: true
+    description: 纸带固定了 Pierce 唯一一次低头签字的时长，共十四秒。
+    acquisition: {kind: investigation, scene_id: 5012, method: 安保室计时记录}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:312
+    note: 关键——L1 R3 对比十四秒与镜后路程
+    analysis: {available: false}
+  - id: 5105
+    name: Lawson 所持监印照片
+    item_type: clue
+    collectible: true
+    description: 记录随 TideWater 档案责任交接而来的实体监印及表面纹样。Lawson 不知道对应何处；不称钥匙或入口。
+    acquisition: {kind: investigation, scene_id: 5006, method: Lawson展示期间拍摄原物, required_talks: [L1_talk_roundtable_noise]}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:329
+    physical_custody: 实体由 Lawson 展示后立即收回，玩家只持照片；具体尺寸沿美术原物，不捏造数值。
+    note: ''
+    analysis: {available: false}
+  - id: 5106
+    name: 湖滨信托夜间止付密电
+    item_type: item
+    collectible: true
+    description: 通信台碳写发送联显示21:38有人发出冻结老Charles当夜交易的指令，已登记其死亡；仅留夜间授权号M-7，身份未知。线路切断前已经成功发出。
+    acquisition: {kind: investigation, scene_id: 5013, method: 通信台搜取碳写发送联}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:334
+    note: 关键——L3 R3 对照 M-7 授权人
+    analysis: {available: false}
+    doubt_owner: {loop: 3, id: 5303}
+  - id: 5151
+    name: 舞台上的尸体与 Emma
+    item_type: envir
+    collectible: false
+    description: 开篇记录显示 Emma 昏迷在尸旁，握着与伤口吻合的餐刀；只能证明她被留在这里，不能排除更早离开者。当前 Emma 已移至客房。
+    acquisition: {kind: environment_observation, scene_id: 5005, method: 复核开篇记录而非重复搬回Emma}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:268
+    note: 场景道具
+  - id: 5152
+    name: 舞台麦克风
+    item_type: envir
+    collectible: false
+    description: 留在舞台，线缆沿边缘通向后台录音室；只看外观与走向，不说明启动或录音状态。
+    acquisition: {kind: environment_observation, scene_id: 5005}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:270
+    note: 场景道具
+  - id: 5153
+    name: 绣有“E.F.”的白色医用手帕
+    item_type: envir
+    collectible: false
+    description: 放在 Foster 尚未完成的伤情记录旁；只建立 E.F. 属于 Foster 的视觉记忆。
+    acquisition: {kind: environment_observation, scene_id: 5005, optional: true}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:271
+    note: 场景道具
+    excluded_from_progress: true
+  - id: 5154
+    name: 可旋转的镜子
+    item_type: envir
+    collectible: false
+    description: 走廊正中央转轴镜可旋转；正常角度照礼堂门，偏转后照衣帽间门及继续离去的巡警方向。
+    acquisition: {kind: environment_observation, scene_id: 5009, method: 现场旋转与观察反射方向}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:287
+    note: 关键——L1 R2 引用已调查镜面反射方向
+    runtime_status: special_adapter_required
+  - id: 5155
+    name: 礼堂正门
+    item_type: envir
+    collectible: false
+    description: 深色木门、黄铜把手、门槛横向铜条；发现时内部上闩。
+    acquisition: {kind: environment_observation, scene_id: 5009}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:288
+    note: 场景道具
+  - id: 5156
+    name: 衣帽间门
+    item_type: envir
+    collectible: false
+    description: 远距外观与礼堂门相近，门脚独有浅色补漆。
+    acquisition: {kind: environment_observation, scene_id: 5009}
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:289
+    note: 场景道具
+doubts:
+  - {id: 5101, isFragment: false, text: '他看到的抽烟动作，和警员身上的物品吻合吗？', condition: [{type: item, id: 5103}, {type: testimony, id: 5031001}]}
+  - {id: 5102, isFragment: false, text: '转动镜面后，看见的还是同一扇门吗？', condition: [{type: environment_observed, id: 5154}]}
+  - {id: 5103, isFragment: false, text: '打点时间与镜子之后的路程相差多少？', condition: [{type: testimony, id: 5111001}, {type: item, id: 5104}]}
+expose:
+  id: 501
+  scene_id: 5006
+  target_npc: 503
+  is_liar: true
+  player_inquiry: null
+  talk: L1_expose_pierce
+  source_anchor: 剧情设计/Unit5/Unit5_大纲.md:338
+  progress: {doubts: 3, fragments: 0, denominator: 3, required_percent: 100}
+  prerequisites:
+    required_doubt_ids: [5101, 5102, 5103]
+    required_item_ids: [5101, 5102, 5103, 5104, 5105, 5106]
+    required_environment_ids: [5151, 5152, 5154, 5155, 5156]
+    required_testimony_ids: [5031001, 5051001, 5111001]
+    required_talks: [L1_talk_corridor_watch, L1_talk_stage_medical, L1_talk_security_patrol, L1_talk_roundtable_noise]
+    previous_events_completed: [roundtable_rules, c3_encounter, backstage_warning]
+    runtime_status: special_adapter_required
+  expose_lie_ids: [5031901, 5031902]
+  rounds:
+    - round: 1
+      lie_source: 5031001
+      lie: 我看见的是用左手抽烟的 Morrison；那个人随后就消失了。
+      evidence_set: [{type: item, id: 5103}]
+      result: 镜像把右手变成左手，所见者是当晚巡警而非死去的 Morrison；不识别转镜者。
+      retreat: 那不可能。警员当时已经离开走廊了，他怎么会又出现在我面前？
+    - round: 2
+      lie_source: 5031901
+      lie: 警员已经离开走廊，不可能又出现在我面前。
+      evidence_set: [{type: environment_observed, id: 5154}]
+      result: 偏转镜面纳入衣帽间门与继续离去的巡警；巡警没有折返，是观察方向改变。
+      retreat: 即使有人转了镜子，也不可能进入礼堂。入口到礼堂门要二十秒，我只低头十四秒。
+    - round: 3
+      lie_source: 5031902
+      lie: 即使那个人当时就在镜子旁，十四秒也不够他进入礼堂。
+      evidence_set: [{type: testimony, id: 5111001}, {type: item, id: 5104}]
+      result: 二十秒为全程；镜后约十秒，十四秒足够转镜并走剩余路程。只证明可行性。
+  post_expose:
+    talk: L1_post_expose_observation
+    scene_id: 5006
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:367
+    testimony_ids: []
+    required_beats:
+      - Pierce 承认没有故意离岗，但镜面可能替换观察方向；不知道转镜者，也不能确认第二人实际采用路线。
+      - 补充自己21:15最后看舞台楼梯在B，破门却在A；刚被证明误判，必须寻找客观影像。
+      - Emma 仍在独立客房昏睡，苏醒、记忆与承诺留到下一轮。
+    runtime_exit: {action: loop_end, next_loop: 2, next_talk: L2_opening_waking_promise}
+post_expose_knowledge:
+  - Pierce 的镜中观察不能排除第二名正常入口者，未确认具体进入者。
+  - 中央镜至礼堂门约十秒、全程约二十秒，Pierce 打点低头十四秒。
+  - Pierce 说21:15楼梯在B、破门却在A，尚须客观影像验证。
+  - Emma 昏睡并被独立看守；她与 Zack 的信任尚未修复。
+  - 21:38止付发送联使用M-7提前登记死亡，授权人未知。
+special_mechanics:
+  environment_expose: {status: special_adapter_required, items: [5154], needs: [环境观察持久化, 疑点重判, Expose环境候选与提交]}
+  conditional_events: {status: special_adapter_required, needs: [Talk完成前提, 强制事件唯一触发, 可选手帕关系节点]}
+  relationship_hint: {flag: u5_foster_hint, default: false, optional: true, does_not_gate_mainline: true, consumer: loop5_state.yaml#ending_sequence}
+source_constraints:
+  backstage_truth_not_performed:
+    - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:169, constraint: 不演Emma与小Charles私下补齐材料或任何录音准备；只约束后续知识边界。}
+  physical_parameters: {patrol_seconds: 20, mirror_to_door_seconds: 10, head_down_seconds: 14}
+  later_materials: [不在本轮开放钥石暗角解读, 不解释舞台麦克风是否启动, 监印实体不进入库存]
+outline_coverage:
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:122, target: 'opening.sequence[hospital_break]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:148, target: 'opening.sequence[office_departure]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:159, target: 'opening.sequence[drive_broadcast]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:169, target: source_constraints.backstage_truth_not_performed, mapping: exact, kind: constraint_not_performed}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:177, target: 'opening.sequence[prologue_callback]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:181, target: 'opening.sequence[upstairs_interruption]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:189, target: 'opening.sequence[stage_exposures]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:247, target: 'opening.sequence[roundtable_rules]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:265, target: 'scenes[5005].npcs[505].talk', mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:266, target: 'scenes[5005].npcs[505].testimony_ids[5051001]', mapping: exact, testimony_required: true, source_text: '初步确认老 Charles 的直接致命伤来自刀刺；坠落与刀创的完整先后仍未写完。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:268, target: 'evidence_registry[5151]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:269, target: 'evidence_registry[5101]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:270, target: 'evidence_registry[5152]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:271, target: 'evidence_registry[5153]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:273, target: 'scenes[5005].event_triggers[foster_boundary]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:284, target: 'scenes[5009].npcs[503].talk', mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:285, target: 'scenes[5009].npcs[503].testimony_ids[5031001]', mapping: exact, testimony_required: true, source_text: '低头打点前后，他看见一名用左手抽烟的警员经过走廊，随后消失在走廊尽头。Morrison 生前惯用左手，因此他怀疑自己看见了 Morrison 的鬼魂。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:286, target: 'evidence_registry[5102]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:287, target: 'evidence_registry[5154]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:288, target: 'evidence_registry[5155]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:289, target: 'evidence_registry[5156]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:293, target: 'scenes[5010].event_triggers[c3_encounter]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:297, target: 'scenes[5011].event_triggers[backstage_warning]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:303, target: 'scenes[5012].npcs[511].talk', mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:304, target: 'scenes[5012].npcs[511].testimony_ids[5111001]', mapping: exact, testimony_required: true, source_text: '自己从走廊入口开始巡逻；走到中央镜约需十秒，抵达礼堂门约需二十秒。第十三圈经过中央镜时，Pierce 正在低头签字打点；自己当时从制服右袋取烟，并一直惯用右手。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:308, target: 'evidence_registry[5103]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:312, target: 'evidence_registry[5104]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:316, target: 'scenes[5006].npcs[506].talk', mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:317, target: 'scenes[5006].npcs[506].testimony_ids[5061001]', mapping: exact, testimony_required: true, source_text: '案发前的急促脚步和闷撞来自地板下方，也就是 Vivian 房间所在方向；他把声音理解成 Vivian 在隐瞒一名秘密访客。'}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:323, target: 'scenes[5006].npcs[506].testimony_ids[5061001]', mapping: merged, reason: 同段重复解释明确仅生成一条普通记录}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:327, target: 'scenes[5006].npcs[506].required_beats', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:329, target: 'evidence_registry[5105]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:334, target: 'evidence_registry[5106]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:342, target: 'expose.rounds[1]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:350, target: 'expose.rounds[2]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:358, target: 'expose.rounds[3]', mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:367, target: expose.post_expose, mapping: exact}
+narrative_continuity:
+  units:
+    - {id: L1_opening, entry_state: U4水源事件后, consumes: 隐瞒造成的知情冲突, required_beats: [医院决裂, Watts留守, 赶路广播, 序幕回扣, 楼上误认, 两次曝光, 圆桌规则], exit_state: Emma昏睡隔离且调查获准, hands_off_to: L1_stage_talk}
+    - {id: L1_stage_talk, entry_state: 尸旁持刀表象, consumes: 死因尚未确认, required_beats: [Foster仅确认刀伤, 衣物记录小线索], exit_state: 死亡顺序仍未完整, hands_off_to: L1_corridor_talk}
+    - {id: L1_corridor_talk, entry_state: 唯一入口监视主张, consumes: Pierce确信观察可靠, required_beats: [取得鬼影原话, 现场查看两门与镜子], exit_state: 需要核对巡警身份与耗时, hands_off_to: L1_patrol_talk}
+    - {id: L1_patrol_talk, entry_state: 左手鬼影待核实, consumes: 惯用手与耗时缺口, required_beats: [右袋右手取烟, 全程二十秒与中央镜十秒, 十四秒纸带], exit_state: 具备三维检验证据, hands_off_to: L1_c3_event}
+    - {id: L1_c3_event, entry_state: 自由回查舞台, consumes: 破门后的混乱, required_beats: [墙后偶遇只留空间记忆], exit_state: 无站位证据, hands_off_to: L1_backstage_event}
+    - {id: L1_backstage_event, entry_state: 自由探索后台, consumes: Vivian争取调查空间, required_beats: [私下劝阻后改口善后], exit_state: 控制关系仅留暗示, hands_off_to: L1_lawson_talk}
+    - {id: L1_lawson_talk, entry_state: 圆桌公开的工作冲突, consumes: Lawson不信任, required_beats: [地板下声音, 展示后收回监印], exit_state: 照片与非正式声音记录, hands_off_to: L1_expose}
+    - {id: L1_expose, entry_state: 收齐原始材料, consumes: 值守能否排除第二人, required_beats: [身份, 反射方向, 时间距离], exit_state: 仅一条可行入口路线, hands_off_to: L1_post_expose}
+    - {id: L1_post_expose, entry_state: Pierce观察遭击穿, consumes: 出口仍未知, required_beats: [承认观察局限, 21:15B与破门A口供], exit_state: 需要客观影像且Emma仍昏睡, hands_off_to: L2_opening}
+  exploration_order: 上述自由节点链为信息承接关系，不强制玩家按列举顺序访问。
+self_check:
+  A: PASS——合同根字段与唯一场景齐全
+  B: PASS——六件原始证物与六件环境逐项分配
+  C: PASS——四个自由NPC含内联原文；R2以上只在Expose
+  D: PASS——只查入口观察可靠性
+  E: PASS——后续真相隔离；开篇两次曝光不解读暗角
+  F: PASS——手帕关系可跳过，无本轮quiz
+  G: PASS——三轮证据对应唯一疑点
+  H: DESIGN_REVIEW_PASS——独立逐项覆盖审查已通过
+  I: PASS——七段根Opening，圆桌后才释放
+  J: DESIGN_REVIEW_PASS——跨轮目标与已声明适配设计通过交叉审

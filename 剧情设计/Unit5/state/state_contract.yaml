@@ -1,0 +1,97 @@
+schema_version: 1
+unit: Unit5
+episode: EPI05
+expected_loops: 5
+structure: 5_loops_plus_non_loop_finale
+status: design_contract
+source_contract: ../state_source_contract.md
+id_registry: id_registry.yaml
+runtime_report: reviews/runtime_preflight.md
+approved_exceptions:
+  interactive_finale: true
+  added_r1_talks:
+    - {loop: 3, scene_id: 5018, npc_id: 508, after: stage2_exploration_unlocked}
+    - {loop: 5, scene_id: 5006, npc_id: 507, after: public_reasoning_2_completed}
+format:
+  root_required: [unit, episode, loop, chapter_id, title, player_context, opening, scenes, evidence_registry, doubts, expose, post_expose_knowledge, special_mechanics, outline_coverage, narrative_continuity]
+  scene_required: [id, name, npcs, evidence_ids, event_triggers]
+  npc_required: [name, talk, known_information, mindset, player_inquiry, testimony_ids]
+  testimony_required: [id, kind, content, acquisition_talk, source_anchor]
+  evidence_required: [id, name, item_type, collectible, description, acquisition, source_anchor]
+  doubt_required: [id, isFragment, text, condition]
+  evidence_ref: '{type: item|environment_observed|testimony, id: integer}'
+  condition_ref: '{type: item|environment_observed|testimony, id: integer}'
+  formal_condition_mapping: 设计期type为语义类型，非直接新增Unity枚举；适配前不得落表。
+  item_type_values: [item, clue, envir, presentation]
+  item_type_mapping: item为可带走物品，clue为现场拍照记录，envir不入包；presentation仅终幕演出占位，不直接落ItemStaticData。condition/evidence_set中的item统指背包材料（含clue），不是itemType枚举。
+  talk_ids: logical_names_only
+  npc_keys: numeric_id
+  expose_id: 501至505，与chapter_id对应但属于不同表命名空间；未写正式Expose表。
+  expose_target_field: target_npc
+  scene_ids: unique_per_loop_reused_across_loops
+  evidence_registry: 本轮首次定义的完整物证，加显式ref回查对象；跨轮原物不复制定义。
+  reused_evidence: '{id: existing_id, ref: loopN_state.yaml, revealed_here: description, source_anchor: source}'
+  source_anchor: '剧情设计/Unit5/来源.md:原始行号'
+  outline_coverage: 逐场事件/物证/证言含source_anchor、target、mapping；新增R1标added与approval。
+  continuity: 每个主要opening/talk/expose/post_expose/ending节点包含id、entry_state、consumes、required_beats、exit_state、hands_off_to。
+  local_flags: 各Loop可在special_mechanics显式声明既有事件的完成状态（默认值、setter和消费者）；只作流程落地，不新增剧情门槛或覆盖global_flags。
+knowledge:
+  model: known_facts为前序post_expose_knowledge的累积；本轮开篇所得单独放opening_facts，不预写入known_facts。
+  initial_facts:
+    - Zack 持有水源风险与 Sean 旧报告异常页面，尚不足以定案老 Charles 对 1912 年事件的完整责任。
+    - O'Hara 已送往圣心医院，Rosa 已得到同一水源风险警告。
+  outcomes:
+    1:
+      - Pierce 的镜中观察不能排除第二名正常入口者，未确认具体进入者。
+      - 中央镜至礼堂门约十秒、全程约二十秒，Pierce 打点低头十四秒。
+      - Pierce 说21:15楼梯在B、破门却在A，尚须客观影像验证。
+      - Emma 昏睡并被独立看守；她与 Zack 的信任尚未修复。
+      - 21:38止付发送联使用M-7提前登记死亡，授权人未知。
+    2:
+      - Emma 主动申请当天20:30—22:30彩排并约老 Charles 于21:30到舞台。
+      - 老 Charles 先高处坠落重伤，后遭致命刀刺；刀创喷溅早于楼梯B到A回转。
+      - Vivian 隐瞒楼梯状态异常，不等于她操作楼梯、共谋或杀人。
+      - A位顶端是用途不明的木合地布景板，尚不能称暗门。
+      - Zack 没有隐瞒彩排批准联，Emma 见证他遵守查清真相的承诺。
+    3:
+      - 9米内部总高减去下层Vivian3米及上层Lawson4米，剩约2米未登记夹层。
+      - 实地推开A位顶端暗门；Moore 指证后打开夹层地面通向书房天花板的第二入口。
+      - Moore 携催收急件追入第一岔口，使用M-7提前止付，仍未证明其实施刀刺。
+      - 凌乱重叠鞋印至少分四组；除Moore与老Charles外另有两名未知经过者，身份和先后不明。
+      - 文件柜背后局部存在用途未明的异常隔音材质。
+    4:
+      - Mary 实为Lula，依Mickey留言寻找1912材料；她换药并进入档案区取页，准确时点未定。
+      - 紫片未正式鉴定，Lula自称安眠药；与E-12可能同源仅为嫌疑。
+      - Emma 在录音室E-12杯旁失去行动能力，致命血迹形成后被拖到尸旁，持刀嫌疑洗清。
+      - Emma 事先委托Watts安排远端单向刻录，但不知道是否录成或母盘是否存在。
+      - Moore 已被隔离；Moore与Lula杀人嫌疑仍未排除。
+      - 同一份1928投毒文件看似老Charles签发，尚未鉴定签名真伪。
+    5:
+      - Emma 已获释协查，Moore与Lula仍被隔离且不因取石指证自动排除刀刺嫌疑。
+      - 完整拼回断齿的鸢尾钥石配合特殊三指握姿可以从暗门两侧退栓。
+      - 钥石在致命喷溅时已在暗角，22:10仍在、22:15被主动提走，机会者为Lawson与小Charles。
+      - 夹层可见湿迹没有Lawson鞋底晶屑对应的蓝色反应；教学照还原指向小Charles的钥石知识。
+      - 小Charles承认取石、内部闩门和暗门离场，仍否认致命刀刺；继承安排尚未揭晓。
+global_flags:
+  foster_hint: {id: u5_foster_hint, default: false, setter: L1手帕调查后的克制选择}
+  vivian_hint: {id: u5_vivian_hint, default: false, setter: L2指证后的克制选择}
+  fire_card_seen: {id: u5_fire_card_seen, default: false, setter: L2开篇Emma观察消防卡}
+  section_stage1: {id: u5_section_stage1, default: false, setter: L3第一次复原}
+  section_stage2: {id: u5_section_stage2, default: false, setter: L3第二次定位}
+  reopened_door: {id: u5_door_reopened, default: false, setter: L5Emma握姿实验}
+  photo_wall: {id: u5_photo_wall_restored, default: false, setter: L5照片墙完成}
+  public_reasoning_1: {id: u5_public_reasoning_1, default: false, setter: L5圆桌第一次}
+  public_reasoning_2: {id: u5_public_reasoning_2, default: false, setter: L5圆桌第二次}
+  a_result: {id: u5_finale_a, default: unplayed, values: [unplayed, success, failure]}
+  inheritance_heard: {id: u5_inheritance_heard, default: false, setter: A成功完整播放结束}
+  b_result: {id: u5_finale_b, default: unplayed, values: [unplayed, success, failure]}
+  final_vote: {id: u5_final_vote, default: unchosen, values: [unchosen, lula, moore, charles_jr]}
+gates:
+  doubts_per_loop: 3
+  fragments_per_loop: 0
+  ordinary_doubts_required: true
+  full_progress_does_not_replace: 场景事件、证词前提和小游戏完成条件；所有条件均须写成明确ID/flag。
+  l5_public_reasoning_before_r1_talk: true
+  finale_requires_last_post_expose: true
+  finale_runtime_status: special_adapter_required
+  u1_1602: external_dependency_not_initial_inventory

@@ -1,0 +1,655 @@
+# Unit5 / L3：设计期完整蓝图；正式 Talk ID 待对白阶段分配。
+unit: Unit5
+episode: EPI05
+loop: 3
+chapter_id: 503
+title: Moore——两层之间消失的两米
+source: 剧情设计/Unit5/Unit5_大纲.md
+validation_status: DESIGN_REVIEW_PASS
+runtime_status: special_adapter_required
+player_context:
+  goals:
+    primary: 验证公开楼层之间是否存在未登记空间，追查谁进入过并隐瞒了什么。
+    secondary:
+      - 先测量建筑高度，再判断 A 位顶端布景板是否值得实地检查。
+      - 核实 Moore 公文夹的缺损、追签目的及 M-7 提前死讯。
+  known_facts:
+    - Zack 持有水源风险与 Sean 旧报告异常页面，尚不足以定案老 Charles 对 1912 年事件的完整责任。
+    - O'Hara 已送往圣心医院，Rosa 已得到同一水源风险警告。
+    - Pierce 的镜中观察不能排除第二名正常入口者，未确认具体进入者。
+    - 中央镜至礼堂门约十秒、全程约二十秒，Pierce 打点低头十四秒。
+    - Pierce 说21:15楼梯在B、破门却在A，尚须客观影像验证。
+    - Emma 昏睡并被独立看守；她与 Zack 的信任尚未修复。
+    - 21:38止付发送联使用M-7提前登记死亡，授权人未知。
+    - Emma 主动申请当天20:30—22:30彩排并约老 Charles 于21:30到舞台。
+    - 老 Charles 先高处坠落重伤，后遭致命刀刺；刀创喷溅早于楼梯B到A回转。
+    - Vivian 隐瞒楼梯状态异常，不等于她操作楼梯、共谋或杀人。
+    - A位顶端是用途不明的木合地布景板，尚不能称暗门。
+    - Zack 没有隐瞒彩排批准联，Emma 见证他遵守查清真相的承诺。
+  historical_fact_policy: 已知事实为前序原句累计；历史昏睡状态不覆盖 L2 已苏醒状态。
+  opening_facts: [本轮将以实测验证公开楼层是否占满建筑，不凭门缝宣布暗道。]
+  new_directions:
+    - 舞台通高与 Vivian、Lawson 房间净高及对应楼板厚度。
+    - M-7 的持有人与公文夹缺损；确认夹层后才调查追签痕迹。
+  post_expose_knowledge_ref: post_expose_knowledge
+opening:
+  type: cutscene_sequence
+  runtime_root: {table: ChapterConfig, chapter_id: 503, init_scene: 5005, init_talk: L3_opening_measurement_proposal}
+  sequence:
+    - event_id: L3_opening
+      talk: L3_opening_measurement_proposal
+      scene_id: 5005
+      location: 礼堂舞台正面
+      cast: [501, 503, 504, 506, 507, 508]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:495
+      required_beats:
+        - 众人重新面对 A 位楼梯顶端无法开启的木合地布景板。
+        - Zack 拒绝凭门缝和直觉宣布暗道，提出验证公开一二楼是否占满建筑。
+      character_states:
+        501: {knowledge: [L2 刀创后 B 到 A 已确认], boundary: 尚不知道两米夹层和入口}
+        508: {knowledge: [自己追入第一岔口并使用 M-7], boundary: 开场不坦白}
+      runtime_exit: {action: release_to_exploration}
+  player_control_restored_after: L3_opening
+scenes:
+  - id: 5005
+    name: 舞台正面
+    phase: stage1_exploration
+    type: free_exploration
+    unlock_condition: [{type: event_completed, param: L3_opening}]
+    npcs: {}
+    evidence_ids: [5301, 5302]
+    event_triggers: []
+  - id: 5015
+    name: Vivian 房间
+    phase: stage1_exploration
+    type: free_exploration
+    unlock_condition: [{type: event_completed, param: L3_opening}]
+    npcs:
+      504:
+        name: Vivian
+        talk: L3_talk_vivian_measurement
+        known_information:
+          active_topics:
+            - {topic: 案发前天花板上方的急促脚步与闷撞, truth_status: true}
+            - {topic: 怀疑 Lawson 有访客但没有看见被指控的人, truth_status: bias}
+            - {topic: 拒绝把成人误会写成正式证言, truth_status: true}
+          withheld_topics: []
+          forbidden_reveals: [夹层使用者、暗门钥件与后续枪械用途均不得说出]
+          blind_spots: [不知道 A 位接住家族暗门，不知道钥石能越过楼梯锁闭]
+        mindset: 自保但配合测量，因争吵而反向怀疑 Lawson。
+        player_inquiry: "L1 Lawson 所说地板下的怪声与本轮层高测量" # 8
+        is_liar: false
+        testimony_ids:
+          - id: 5043001
+            kind: oral_record
+            collectible: false
+            truth_status: bias
+            content: 案发前的急促脚步和闷撞来自房间天花板上方；她反过来怀疑 Lawson 隐瞒了访客，却没有在房内看见被自己指控的人。
+            acquisition_talk: L3_talk_vivian_measurement
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:503
+        grants_evidence: []
+    evidence_ids: [5303, 5351]
+    event_triggers: []
+  - id: 5016
+    name: Lawson 办公室外层办公区
+    phase: stage1_exploration
+    type: free_exploration
+    unlock_condition: [{type: event_completed, param: L3_opening}]
+    npcs:
+      506:
+        name: Lawson
+        talk: L3_talk_lawson_measurement
+        known_information:
+          active_topics:
+            - {topic: 回查地板下怪声口头记录, truth_status: true}
+            - {topic: 工作时硫酸铜晶屑卡鞋底且案发后未换鞋, truth_status: true}
+            - {topic: 房间测量与公共建筑档案, truth_status: true}
+          withheld_topics: []
+          forbidden_reveals: [不将档案发现位置升级为自己知道夹层，不提前排除夹层经过者]
+          blind_spots: [夹层空间和钥石用途，另一份继承安排]
+        mindset: 处理工作被打断的不耐烦；不为真实工作痕迹制造谎言。
+        player_inquiry: "Vivian 上方怪声、L1 地板下声音和办公区层高" # 8
+        is_liar: false
+        testimony_ids:
+          - id: 5063001
+            kind: testimony
+            collectible: true
+            truth_status: true
+            content: 自己处理宝石金属镶座时曾洒落硫酸铜晶体，晶屑卡进鞋底，踩到水会溶出蓝色痕迹；案发后没有换鞋。
+            acquisition_talk: L3_talk_lawson_measurement
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:514
+        oral_record_refs:
+          - id: 5061001
+            ref: loop1_state.yaml
+            content_recalled: 案发前的急促脚步与闷撞来自地板下方。
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:513
+            acquisition_talk: L3_talk_lawson_measurement
+            grants_again: false
+        grants_evidence: []
+    evidence_ids: [5304, 5305, 5306]
+    event_triggers: []
+  - id: 5017
+    name: Moore 房间
+    phase: stage1_exploration
+    type: free_exploration
+    unlock_condition: [{type: event_completed, param: L3_opening}]
+    npcs: {}
+    evidence_ids: [5307, 5308]
+    event_triggers: []
+  - id: 5006
+    name: 圆桌会议室
+    phase: section_stage2
+    type: scripted_event
+    unlock_condition: [{type: flag, param: u5_section_stage1}]
+    npcs: {}
+    evidence_ids: []
+    event_triggers:
+      - event_id: L3_roundtable
+        talk: L3_event_roundtable_locate
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:537
+        cast: [501, 503, 504, 506, 507, 508]
+        runtime_binding:
+          type: special_adapter
+          trigger: enter_scene_when_all_requirements_met
+          scene_id: 5006
+          required_item_ids: [5301, 5302, 5303, 5304, 5305, 5306, 5307, 5308]
+          required_talks: [L3_talk_vivian_measurement, L3_talk_lawson_measurement]
+          required_flags: [u5_section_stage1]
+          once: true
+        required_beats:
+          - Moore 指出少了两米只能证明藏有空间，不能证明入口就在舞台；小 Charles 附和。
+          - 玩家结合 L1 正常门入口可行、门内上闩且无第二人、L2 刀后楼梯复位的既有事实。
+          - 打开同一张已复原图纸，转入第二次定位操作。
+        next_mechanic: section_stage2
+  - id: 5020
+    name: 舞台侧夹层暗门
+    phase: stage2_transition
+    type: scripted_event
+    unlock_condition: [{type: flag, param: u5_section_stage2}]
+    npcs: {}
+    evidence_ids: [5352]
+    event_triggers:
+      - event_id: L3_stage_door_open
+        talk: L3_event_stage_door_open
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:547
+        cast: [501, 503, 504, 506, 507, 508]
+        runtime_binding:
+          type: chained_talk
+          sole_entry: special_mechanics.section_stage2.runtime_exit
+          required_item_ids: [5302, 5305]
+          required_flags: [u5_section_stage2]
+          previous_event_completed: L3_roundtable
+        required_beats:
+          - 众人直接从圆桌前往礼堂，登上 A 位楼梯。
+          - 断尘、空鼓与冷风支持实地检查；异物卡住退栓，布景板被直接推开。
+          - 露出约两米高连续夹层，镜头短暂记录门内外异形浅槽，无把手。
+          - 舞台侧仅确认为公开楼层唯一同标高直接入口；另一种垂直通道尚未发现。
+        observes_environment: [5352]
+        grants_evidence: []
+        hotspots_enabled: false
+        sets_flags: {u5_stage_door_open: true, u5_stage2_exploration_unlocked: true}
+        runtime_exit: {action: change_scene, target_scene_id: 5018, continuation: release_to_exploration}
+  - id: 5018
+    name: 夹层第一岔口
+    phase: stage2_exploration
+    type: free_exploration
+    unlock_condition: [{type: flag, param: u5_stage2_exploration_unlocked}]
+    npcs:
+      508:
+        name: Moore
+        talk: L3_talk_moore_before_expose
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:571
+        approval: state_source_contract.md / 用户批准第一岔口第二阶段普通 R1 问话
+        known_information:
+          active_topics:
+            - {topic: 否认昨晚进入夹层的 R1 主张, truth_status: false}
+          withheld_topics: [追签目的、听见闷响后提前冻结、书房端入口留到指证及同段后续]
+          blind_spots: [未目击刀刺，不能指認四组鞋印的全部身份与顺序]
+        mindset: 先否认进入，力图保住自己没有参与案情的表象。
+        player_inquiry: null
+        inquiry_driver: "已开启夹层与第一岔口的追签调查" # 9
+        is_liar: true
+        testimony_ids:
+          - id: 5083001
+            kind: collectible_lie_anchor
+            collectible: true
+            truth_status: false
+            content: 我昨晚没有进入过那条夹层。
+            acquisition_talk: L3_talk_moore_before_expose
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:571
+        grants_evidence: []
+    evidence_ids: [5309, 5310, 5311, 5353, 5312]
+    event_triggers: []
+  - id: 5021
+    name: 老 Charles 书房天花板入口
+    phase: post_expose
+    type: scripted_event
+    unlock_condition: [{type: event_completed, param: L3_expose}]
+    npcs: {}
+    evidence_ids: [5354]
+    event_triggers: []
+evidence_registry:
+  - id: 5301
+    name: 舞台玻璃实测页
+    item_type: item
+    type: item
+    collectible: true
+    pickup: measure_and_record
+    analysis: null
+    description: 舞台通高玻璃总高 9 米，固定建筑内部完整高度。
+    acquisition: {kind: investigation, scene_id: 5005}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:497
+  - id: 5302
+    name: 舞台楼梯高度实测页
+    item_type: item
+    type: item
+    collectible: true
+    pickup: measure_and_record
+    analysis: null
+    description: A 位顶端平台距舞台地面 3 米，正对木合地布景板；只记录高度与位置。
+    acquisition: {kind: investigation, scene_id: 5005}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:498
+  - id: 5303
+    name: Vivian 房间层高实测页
+    item_type: item
+    type: item
+    collectible: true
+    pickup: measure_and_record
+    analysis: null
+    description: Vivian 房间净高约 2.7 米；对应楼板厚度须查附图。
+    acquisition: {kind: investigation, scene_id: 5015}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:505
+  - id: 5304
+    name: Lawson 办公区层高实测页
+    item_type: item
+    type: item
+    collectible: true
+    pickup: measure_and_record
+    analysis: null
+    description: Lawson 办公区净高约 3.6 米；对应楼板厚度须查附图。
+    acquisition: {kind: investigation, scene_id: 5016}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:516
+  - id: 5305
+    name: 建筑材料登记册附图：庄园公开剖面
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 登记册封底夹层中的双面折页。正面为未按实测比例标高的 Vivian 房间、Lawson 办公区及外壳公开剖面，无夹层登记；背面测绘网格记一层楼板 0.3 米、二层楼板 0.4 米。形成早于 Lawson 本次接管，属公共保险／估值档案，发现地点不证明他知道夹层。
+    acquisition: {kind: investigation, scene_id: 5016, hotspot: 登记册封底夹层}
+    document_fields: {floor1_thickness: 0.3, floor2_thickness: 0.4, unit: 米}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:517
+  - id: 5306
+    name: Lawson 房间的蓝色水痕
+    item_type: clue
+    type: clue
+    collectible: true
+    pickup: photograph
+    analysis: null
+    description: 矿物工作台与洗手区间留有蓝色湿鞋印，Lawson 鞋底仍卡有硫酸铜晶屑；本轮只记录痕迹，不排除任何人。
+    acquisition: {kind: investigation, scene_id: 5016}
+    note: 关键——L5 回查湿迹时反驳 Lawson 经过夹层的说法
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:518
+    reveals_by_loop: {3: 记录蓝色水痕与鞋底晶屑, 5: 与夹层全部可见湿迹对照}
+  - id: 5307
+    name: Moore 公文夹
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 红封公文夹缺少一枚黄铜牵引铆圈，缺口保留新鲜不规则断面。
+    acquisition: {kind: investigation, scene_id: 5017}
+    note: 关键——L3 R1 与第一岔口铆圈断面比对
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:522
+  - id: 5308
+    name: Moore 私人授权牌 M-7
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 牌面登记湖滨信托夜间授权号码 M-7；持有人可从庄园通信设备发出专用止付指令。
+    acquisition: {kind: investigation, scene_id: 5017}
+    note: 关键——L3 R3 将 M-7 止付发送联对应到 Moore
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:523
+  - id: 5309
+    name: 第一岔口黄铜牵引铆圈
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 新鲜不规则断面可与 Moore 公文夹缺口吻合；比对不生成拼合报告。
+    acquisition: {kind: investigation, scene_id: 5018, required_flags: [u5_stage2_exploration_unlocked]}
+    note: 关键——L3 R1 反驳公文夹未到第一岔口
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:559
+  - id: 5310
+    name: 需要老 Charles 签字的催收急件
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 文件带当夜截止时限与 Moore 经办标记，限定追找签署人的目的。
+    acquisition: {kind: investigation, scene_id: 5018}
+    note: 关键——L3 R2 反驳偶然看一眼的说法
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:560
+  - id: 5311
+    name: 夹层湿地毯上的凌乱鞋印
+    item_type: clue
+    type: clue
+    collectible: true
+    pickup: photograph
+    analysis: null
+    description: 翻倒的清水壶浸湿整段狭窄通道。大量叠压、方向凌乱的鞋印依大小、纹路、踩踏深浅可稳定分为四组，至少四人经过；无法对应身份或还原先后。
+    acquisition: {kind: investigation, scene_id: 5018}
+    note: 关键——L5 R1 回查全部可见湿迹
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:561
+    reveals_by_loop: {3: 只确认至少四组未知足迹, 5: 全部可见水迹均无硫酸铜溶出蓝色反应}
+  - id: 5312
+    name: 文件柜背后异常隔音材质勘验照片
+    item_type: clue
+    type: clue
+    collectible: true
+    pickup: photograph
+    analysis: null
+    description: 文件柜背后一小段墙体使用不同于周边的异常隔音材质，局部且用途不明；墙面和隔音层不取样、不拆墙、不移柜，不据此宣布墙后房间。
+    acquisition: {kind: investigation, scene_id: 5018, hotspot: 文件柜背后可见局部墙面}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:563
+  - id: 5351
+    name: Vivian 的女士手枪
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 晚宴手包内衬下的 Colt Vest Pocket Model 1908（.25 ACP，象牙贴片枪柄），为 Unit1 结案后归还 Vivian 的原枪。Zack 只保有调查记录与外观记忆。
+    acquisition: {kind: environment, scene_id: 5015, context: Vivian 在房间另一侧扶持量尺}
+    note: 场景道具
+    observation_effect: Zack 内心辨认；Vivian 不当场回应；不进入背包、疑点或证据链。
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:506
+  - id: 5352
+    name: 暗门双面异形凹槽
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: scripted_observation
+    analysis: null
+    description: 门内门外各一处三瓣不等、左右断翼浅槽，无普通把手；本轮不取拓片、不解释钥件。
+    acquisition: {kind: scripted_observation, scene_id: 5020, carrier: L3_event_stage_door_open}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:551
+  - id: 5353
+    name: 夹层文件柜
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 存放 Miller 家族 1912 年材料，可见翻动及缺页痕迹；具体内容 L4 才检查。
+    acquisition: {kind: environment, scene_id: 5018}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:562
+  - id: 5354
+    name: 书房端四组凌乱鞋印
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: scripted_observation
+    analysis: null
+    description: 书房端入口附近一大片重叠乱向足迹，按大小、纹路与深浅稳定分四组；至少四人经过，身份与先后未知。
+    acquisition: {kind: scripted_observation, scene_id: 5021, carrier: L3_post_expose_study_door}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:606
+  - {id: 5106, ref: loop1_state.yaml, revealed_here: M-7 所属与 Moore 的提前死讯, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:586}
+doubts:
+  - id: 5301
+    isFragment: false
+    text: 岔口铆圈的断面能与公文夹缺口接上吗？
+    condition: [{type: item, id: 5307}, {type: item, id: 5309}]
+  - id: 5302
+    isFragment: false
+    text: 这份急件为什么必须在当夜找到 Charles？
+    condition: [{type: item, id: 5310}]
+    single_source_reason: 当夜时限与经办标记已能反驳无目的进入，仅承载追签目的。
+  - id: 5303
+    isFragment: false
+    text: 止付发送联上的 M-7 属于谁？
+    condition: [{type: item, id: 5106}, {type: item, id: 5308}]
+progress: {doubts: 3, fragments: 0, denominator: 3}
+special_mechanics:
+  local_flags:
+    u5_stage_door_open: {default: false, setter: L3_stage_door_open, consumers: [L3_stage2_search]}
+    u5_stage2_exploration_unlocked: {default: false, setter: L3_stage_door_open, consumers: [scenes.5018, L3_expose]}
+    u5_study_door_open: {default: false, setter: L3_post_expose, consumers: [loop4_state.yaml.scenes.5021, loop4_state.yaml.scenes.5019]}
+  section_stage1:
+    status: special_adapter_required
+    replaces_standard_doubts: false
+    source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:53
+    runtime_binding:
+      type: special_adapter
+      trigger: inventory_and_document_read_changed
+      required_item_ids: [5301, 5303, 5304, 5305]
+      required_document_fields: [5305.floor1_thickness, 5305.floor2_thickness]
+      forbidden_completed_flags: [u5_section_stage1]
+      location: current_scene
+      preserves_return_scene: true
+      once: true
+    inputs: [{type: item, id: 5301}, {type: item, id: 5303}, {type: item, id: 5304}, {type: item, id: 5305}]
+    initial_view: 背面测绘网格；正面房间未按实测比例归位，不提前露出夹层。
+    slots:
+      - {id: total_height, source_item: 5301, correct_value_m: 9}
+      - {id: vivian_net, source_item: 5303, correct_value_m: 2.7}
+      - {id: vivian_floor, source_item: 5305, correct_value_m: 0.3}
+      - {id: lawson_net, source_item: 5304, correct_value_m: 3.6}
+      - {id: lawson_floor, source_item: 5305, correct_value_m: 0.4}
+    locked_inputs: [5302]
+    excluded_inputs: [5043001, 5061001]
+    formula: 9-(2.7+0.3)-(3.6+0.4)=2
+    correct_feedback:
+      - 数值正确吸附时延伸铅笔尺寸线。
+      - 每组净高加楼板括号合拢，显示下部 3 米和上部 4 米。
+      - 完成后自动翻回正面，Vivian 模块贴地、Lawson 模块贴 9 米上沿，中间显出约 2 米未登记阴影带。
+    wrong_feedback:
+      wrong_category: 轻微弹回、不扣时间；首次只显示红色校准记号。
+      repeated_same_data: 净高需要与对应楼板厚度合计。
+      missing_material: 仍缺一项实测；不提前显示 2 米。
+    free_operations: [拖动, 翻面, 缩放, 阅读来源]
+    timer: none
+    permanent_failure: false
+    output_items: []
+    completion_condition: all_five_slots_correct
+    sets_flags: {u5_section_stage1: true}
+    conclusion: 公开两处房间与楼板合计占高 7 米，内部总高 9 米，中间约 2 米未登记空间；不证明入口或使用者。
+    runtime_exit: {action: restore_current_scene, adapter_required: true, next_target: L3_roundtable}
+  section_stage2:
+    status: special_adapter_required
+    replaces_standard_doubts: false
+    source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:144
+    runtime_binding:
+      type: special_adapter
+      sole_entry: L3_event_roundtable_locate
+      scene_id: 5006
+      required_item_ids: [5302, 5305]
+      required_flags: [u5_section_stage1]
+      active_talk: L3_event_roundtable_locate
+      reached_segment: open_section_stage2
+      required_prior_outcomes: [loop2_state.yaml.post_expose_knowledge]
+    inputs: [{type: item, id: 5302}, {type: item, id: 5305}]
+    operation: 同一张已复原图纸正面，选择 A 位楼梯记录，拖到舞台侧 0 米基准线。
+    correct_geometry: {baseline_m: 0, stair_top_m: 3, hidden_space_lower_edge_m: 3, total_m: 9, lower_module_m: 3, upper_module_m: 4, gap_m: 2}
+    correct_feedback: 自动显示 A 位朝向；顶端与夹层下沿闭合尺寸线；布景板只显示待查问号。
+    wrong_feedback:
+      wrong_record: 自动退回；它能确认高度，不能形成抵达这段空间的路径。
+      wrong_baseline: 不吸附，标高线不闭合。
+    locked_stage1_values: [9, 4, 3, 2]
+    timer: none
+    permanent_failure: false
+    output_items: []
+    completion_condition: stair_record_snapped_to_stage_zero_baseline
+    sets_flags: {u5_section_stage2: true}
+    conclusion: A 位顶端与未登记空间下沿同标高，所对布景板可能是入口，仍需实地检查。
+    runtime_exit: {action: change_scene, target_scene_id: 5020, continuation: next_talk, next_talk: L3_event_stage_door_open}
+expose:
+  id: 503
+  scene_id: 5018
+  talk: L3_expose_moore
+  target_npc: 508
+  is_liar: true
+  player_inquiry: null
+  source_anchor: 剧情设计/Unit5/Unit5_大纲.md:567
+  runtime_binding:
+    type: special_adapter
+    required_doubt_ids: [5301, 5302, 5303]
+    required_item_ids: [5106, 5307, 5308, 5309, 5310, 5311, 5312]
+    required_environment_ids: [5352, 5353]
+    required_talks: [L3_talk_moore_before_expose]
+    required_testimony_ids: [5083001, 5063001]
+    required_flags: [u5_section_stage1, u5_section_stage2, u5_stage2_exploration_unlocked]
+    completion_event: L3_expose
+  expose_lie_ids: [5083901, 5083902]
+  rounds:
+    - round: 1
+      lie_source: 5083001
+      lie: 我昨晚没有进入过那条夹层。
+      evidence_set: [{type: item, id: 5307}, {type: item, id: 5309}]
+      doubt_ids: [5301]
+      result: 新断面与公文夹缺口吻合，证明 Moore 的公文夹到过第一岔口。
+      retreat: 我是进去过，但只是偶然看到入口，站在门边，没有追找 Charles。
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:571
+    - round: 2
+      lie_source: 5083901
+      lie: 我不是去找 Charles，只是看见有条通道，进去看了一眼。
+      evidence_set: [{type: item, id: 5310}]
+      doubt_ids: [5302]
+      result: 带当夜必须签署的急件进入，具有追找 Charles 的明确目标。
+      retreat: 我是追进去要求签字，但 Charles 拒绝后继续向前，我立刻折返，不知道之后发生了什么。
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:578
+    - round: 3
+      lie_source: 5083902
+      lie: 我离开时 Charles 还活着。直到所有人破门，我才知道他已经死亡。
+      evidence_set: [{type: item, id: 5106}, {type: item, id: 5308}]
+      doubt_ids: [5303]
+      result: 21:38 的 M-7 发送联对应 Moore 授权牌，在 22:00 公开破门前二十二分钟已向银行登记死亡。
+      minimum_admission: 第一岔口折返时听见前方沉重闷响，没有查看或求救，以商业判断提前冻结交易；坚持未到舞台、未实施刀刺。
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:585
+  post_expose:
+    event_id: L3_post_expose
+    talk: L3_post_expose_study_door
+    scene_id: 5018
+    cast: [501, 503, 504, 506, 507, 508]
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:594
+    runtime_binding: {type: chained_talk, sole_entry: L3_expose_moore, previous_event_completed: L3_expose}
+    required_beats:
+      - 三轮结束；Zack 只能提出 Moore 可能继续走向舞台，不宣布其实施刀刺。
+      - Moore 反击众人擅自假定他从舞台端进入。
+      - 同段 AVG 直接从第一岔口走向书房端，不回礼堂。
+      - Moore 找到隐蔽暗扣，打开夹层地面向下通往书房天花板的第二入口。
+      - Moore 承认亲眼看见老 Charles 从书房进入，自己随后跟入追签，坚持只到第一岔口。
+      - 入口显出四组凌乱足迹；Moore 追问除自己与老 Charles 之外的另两人。
+      - 第二入口只削弱舞台端进入的假定；至少两名未知经过者的身份、目的和先后仍不明。
+    movement: {from_scene_id: 5018, to_scene_id: 5021, continuous_avg: true, return_to_hall: false}
+    internal_scene_transition:
+      type: special_adapter
+      after_beat: Moore反击舞台端进入假定并从第一岔口走向书房端
+      action: change_scene
+      target_scene_id: 5021
+      continuation: same_talk_next_segment
+      logical_talk: L3_post_expose_study_door
+      next_segment: study_ceiling_door_open
+      formal_mapping: 同一连续AVG文件内在切场句配置change_scene，next指向本文件后续书房端段首；正式句ID待对白阶段分配。
+      skip_first_enter: true
+      release_player_control: false
+    observes_environment: [5354]
+    testimony_ids: []
+    sets_flags: {u5_study_door_open: true}
+    runtime_exit: {action: loop_end, next_chapter_id: 504, next_opening: L4_opening, next_talk: L4_opening_escort_corridor}
+post_expose_knowledge:
+  - 9米内部总高减去下层Vivian3米及上层Lawson4米，剩约2米未登记夹层。
+  - 实地推开A位顶端暗门；Moore 指证后打开夹层地面通向书房天花板的第二入口。
+  - Moore 携催收急件追入第一岔口，使用M-7提前止付，仍未证明其实施刀刺。
+  - 凌乱重叠鞋印至少分四组；除Moore与老Charles外另有两名未知经过者，身份和先后不明。
+  - 文件柜背后局部存在用途未明的异常隔音材质。
+source_constraints:
+  - 本轮不揭示另两人身份、钥石用途、断齿原因、隐藏试听室、紫片或继承。
+  - 5311 与 5306 保留 L5 唯一疑点挂载；L3 不先生成重复疑点。
+  - 5351 原枪属于 Vivian，不生成跨章实体库存。
+  - 三个疑点满格不可绕过两阶段图纸、普通 R1、必要调查记录。
+outline_coverage:
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:495, target: opening.sequence.L3_opening, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:497, target: evidence_registry.5301, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:498, target: evidence_registry.5302, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:502, target: scenes.5015.npcs.504.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:503, target: scenes.5015.npcs.504.testimony_ids.5043001, mapping: exact, testimony_required: true, source_text: 案发前的急促脚步和闷撞来自房间天花板上方；她反过来怀疑 Lawson 隐瞒了访客，却没有在房内看见被自己指控的人。}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:505, target: evidence_registry.5303, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:506, target: evidence_registry.5351, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:508, target: scenes.5015.npcs.504.known_information, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:512, target: scenes.5016.npcs.506.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:513, target: scenes.5016.npcs.506.oral_record_refs.5061001, mapping: merged, testimony_required: true, source_text: 案发前的急促脚步与闷撞来自地板下方。}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:514, target: scenes.5016.npcs.506.testimony_ids.5063001, mapping: exact, testimony_required: true, source_text: 自己处理宝石金属镶座时曾洒落硫酸铜晶体，晶屑卡进鞋底，踩到水会溶出蓝色痕迹；案发后没有换鞋。}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:516, target: evidence_registry.5304, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:517, target: evidence_registry.5305, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:518, target: evidence_registry.5306, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:522, target: evidence_registry.5307, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:523, target: evidence_registry.5308, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:529, target: special_mechanics.section_stage1, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:112, target: special_mechanics.section_stage1.slots, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:127, target: special_mechanics.section_stage1.correct_feedback, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:134, target: special_mechanics.section_stage1.wrong_feedback, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:537, target: scenes.5006.event_triggers.L3_roundtable, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:539, target: special_mechanics.section_stage2, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:144, target: special_mechanics.section_stage2.operation, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:152, target: special_mechanics.section_stage2.correct_feedback, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/小玩法设计/L3_庄园双面剖面图_两阶段复原.md:158, target: special_mechanics.section_stage2.wrong_feedback, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:547, target: scenes.5020.event_triggers.L3_stage_door_open, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:551, target: evidence_registry.5352, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:559, target: evidence_registry.5309, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:560, target: evidence_registry.5310, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:561, target: evidence_registry.5311, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:562, target: evidence_registry.5353, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:563, target: evidence_registry.5312, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:571, target: scenes.5018.npcs.508.talk, mapping: added, dialogue_required: true, approval: 用户批准第一岔口第二阶段搜证新增 Moore 普通 R1 问话}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:571, target: scenes.5018.npcs.508.testimony_ids.5083001, mapping: added, testimony_required: true, source_text: 我昨晚没有进入过那条夹层。, approval: 同上}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:571, target: expose.rounds.1, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:578, target: expose.rounds.2, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:585, target: expose.rounds.3, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:594, target: expose.post_expose.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:598, target: expose.post_expose.movement, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:600, target: expose.post_expose.sets_flags.u5_study_door_open, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:602, target: expose.post_expose.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:606, target: evidence_registry.5354, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:612, target: post_expose_knowledge, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:616, target: expose.post_expose.runtime_exit, mapping: deferred, deferred_to: L4_opening}
+narrative_continuity:
+  units:
+    - {id: L3_opening, entry_state: L2 刀后楼梯复位且布景板用途未知, consumes: 不能凭门缝定暗道, required_beats: [提出测高], exit_state: 三处测量开放, hands_off_to: L3_measurements}
+    - {id: L3_measurements, entry_state: 自由测量, consumes: 两层是否占满建筑, required_beats: [舞台9米, Vivian净高2.7, Lawson净高3.6, 楼板0.3与0.4], exit_state: 收齐图纸尺寸, hands_off_to: L3_section_stage1}
+    - {id: L3_talk_vivian_measurement, entry_state: 已听 Lawson 误会, consumes: 怪声方向, required_beats: [上方声音与未目击限定], exit_state: 非正式口头记录, hands_off_to: L3_measurements}
+    - {id: L3_talk_lawson_measurement, entry_state: 办公区测量, consumes: 地板下怪声与工作痕迹, required_beats: [原口头记录回查, 未换鞋与晶屑], exit_state: 职业痕迹保留待后轮, hands_off_to: L3_measurements}
+    - {id: L3_section_stage1, entry_state: 当前场景收齐尺寸, consumes: 公开比例失真, required_beats: [玩家复原9减3减4], exit_state: 约两米未登记空间, hands_off_to: L3_roundtable}
+    - {id: L3_roundtable, entry_state: 空间已证实但入口未知, consumes: Moore与小Charles质疑, required_beats: [三项旧结论与楼梯定位], exit_state: 布景板可能入口, hands_off_to: L3_stage_door_open}
+    - {id: L3_stage_door_open, entry_state: 第二次图纸完成, consumes: 实地验证必要, required_beats: [AVG推开布景板, 短暂观察双槽], exit_state: 第一岔口开放, hands_off_to: L3_stage2_search}
+    - {id: L3_stage2_search, entry_state: 夹层已开, consumes: 谁进入过, required_beats: [铆圈, 急件, 四组鞋印, 局部隔音照片], exit_state: 可质询Moore, hands_off_to: L3_talk_moore_before_expose}
+    - {id: L3_talk_moore_before_expose, entry_state: 第二阶段可点击询问, consumes: 夹层经过疑问, required_beats: [取得R1原句], exit_state: 正式指证锚齐备, hands_off_to: L3_expose}
+    - {id: L3_expose, entry_state: 三疑点与特殊门控齐备, consumes: 否认进入, required_beats: [公文夹到访, 追签目的, 提前死讯], exit_state: Moore最强嫌疑但刀刺未定, hands_off_to: L3_post_expose}
+    - {id: L3_post_expose, entry_state: 众人误默认舞台端进入, consumes: Moore反击入口假定, required_beats: [同段开启书房端, 四组未知经过者], exit_state: L4书房开放且两人身份未明, hands_off_to: L4_opening}
+self_check:
+  A: PASS
+  B: PASS
+  C: PASS
+  D: PASS
+  E: PASS
+  F: PASS
+  G: PASS
+  H: DESIGN_REVIEW_PASS
+  I: PASS
+  J: DESIGN_REVIEW_PASS
+  runtime_caveat: 图纸、flag条件、连续AVG移动为设计期适配，非Unity已运行证明。

@@ -1,0 +1,646 @@
+# Unit5 / L4：设计期完整蓝图；正式 Talk ID 待对白阶段分配。
+unit: Unit5
+episode: EPI05
+loop: 4
+chapter_id: 504
+title: Mary Jones——两片紫色药与一张缺页
+source: 剧情设计/Unit5/Unit5_大纲.md
+validation_status: DESIGN_REVIEW_PASS
+runtime_status: special_adapter_required
+player_context:
+  goals:
+    primary: 核实老 Charles 的送药与夹层搜档行为，查明临时护工的真实身份。
+    secondary:
+      - 从 Emma 最后记得的 E-12 追查失去行动能力的起点。
+      - 复核礼服擦抹、跨血拖痕与倒杯的先后关系。
+  known_facts:
+    - Zack 持有水源风险与 Sean 旧报告异常页面，尚不足以定案老 Charles 对 1912 年事件的完整责任。
+    - O'Hara 已送往圣心医院，Rosa 已得到同一水源风险警告。
+    - Pierce 的镜中观察不能排除第二名正常入口者，未确认具体进入者。
+    - 中央镜至礼堂门约十秒、全程约二十秒，Pierce 打点低头十四秒。
+    - Pierce 说21:15楼梯在B、破门却在A，尚须客观影像验证。
+    - Emma 昏睡并被独立看守；她与 Zack 的信任尚未修复。
+    - 21:38止付发送联使用M-7提前登记死亡，授权人未知。
+    - Emma 主动申请当天20:30—22:30彩排并约老 Charles 于21:30到舞台。
+    - 老 Charles 先高处坠落重伤，后遭致命刀刺；刀创喷溅早于楼梯B到A回转。
+    - Vivian 隐瞒楼梯状态异常，不等于她操作楼梯、共谋或杀人。
+    - A位顶端是用途不明的木合地布景板，尚不能称暗门。
+    - Zack 没有隐瞒彩排批准联，Emma 见证他遵守查清真相的承诺。
+    - 9米内部总高减去下层Vivian3米及上层Lawson4米，剩约2米未登记夹层。
+    - 实地推开A位顶端暗门；Moore 指证后打开夹层地面通向书房天花板的第二入口。
+    - Moore 携催收急件追入第一岔口，使用M-7提前止付，仍未证明其实施刀刺。
+    - 凌乱重叠鞋印至少分四组；除Moore与老Charles外另有两名未知经过者，身份和先后不明。
+    - 文件柜背后局部存在用途未明的异常隔音材质。
+  historical_fact_policy: 前序原句累计是历史账本；当前状态以最近事件为准，Emma 已苏醒但仍被看守。
+  opening_facts:
+    - Moore 已押入看守房；主线期间不离房参与反咬。
+    - Emma 事前委托 Watts 安排庄园外单向电气刻录，本地无刻盘机、母盘或回放装置。
+    - Emma 不知道是否录成、线路维持多久或母盘是否存在；不产生寻找母盘目标。
+    - Emma 接通拾音线路后喝过 E-12，随后意识含混，在杯旁失去行动能力。
+  new_directions:
+    - 录音室 E-12 残液与倒伏起点；文件柜消毒剂气味在本轮实际调查后才导向医务人员。
+    - 送药职责、正常药物外观与书房弃药。
+  post_expose_knowledge_ref: post_expose_knowledge
+opening:
+  type: cutscene_sequence
+  runtime_root: {table: ChapterConfig, chapter_id: 504, init_scene: 5007, init_talk: L4_opening_escort_corridor}
+  sequence:
+    - event_id: L4_opening
+      talk: L4_opening_escort_corridor
+      scene_id: 5007
+      location: 东侧客房走廊
+      cast: [501, 502, 503, 508, 511]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:640
+      required_beats:
+        - Zack 与警员押送 Moore，经过 Emma 房门；她听见书房暗门并惊讶追问。
+        - Moore 被关进独立看守房；后续主线不再外出。
+        - Pierce 离开后 Emma 主动补全 Watts 的庄园外单向刻录安排。
+        - Emma 因 Zack 此前依约公开不利证据而坦白；为替他决定何事不必知道道歉，不为独自行动或未获许可道歉。
+        - Zack 接受责任与道歉，不重新取得管理 Emma 行动的权力。
+        - Emma 说出最后动作：接通线路、喝 E-12、在杯旁失去行动能力。
+      character_states:
+        502:
+          known: [自己安排试音预约并接线，最后喝E-12]
+          unknown: [是否录成, 母盘是否存在, 线路维持时长, 投药者, 刀刺者]
+          relation: 依照 L2—L3 的公开承诺作自主坦白。
+        508: {location_after: 5026, mainline_movement_locked: true}
+      sets_flags: {u5_moore_isolated: true, u5_emma_remote_plan_disclosed: true}
+      runtime_exit: {action: change_scene, target_scene_id: 5022, continuation: next_talk, next_talk: L4_opening_recording_room_arrival}
+    - event_id: L4_recording_arrival
+      talk: L4_opening_recording_room_arrival
+      scene_id: 5022
+      location: 舞台后台深处的录音室
+      cast: [501, 505]
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:654
+      required_beats:
+        - 从 Emma 所说杯号抵达录音室，调查目标固定为 E-12。
+        - 抵达后恢复控制；Foster 的简易检验证词由主动询问取得。
+      runtime_exit: {action: release_to_exploration}
+  player_control_restored_after: L4_recording_arrival
+scenes:
+  - id: 5007
+    name: 东侧客房走廊
+    type: scripted_event
+    phase: opening
+    npcs: {}
+    evidence_ids: []
+    event_triggers: []
+  - id: 5026
+    name: Moore 看守房
+    type: restricted
+    phase: isolation
+    unlock_condition: [{type: flag, param: u5_moore_isolated}]
+    npcs: {}
+    resident_cast: [508]
+    evidence_ids: []
+    event_triggers: []
+    movement_constraint: Moore 主线仅在该房；无自行离开、跟随搜证或反咬事件。
+  - id: 5022
+    name: 后台录音室
+    type: free_exploration
+    phase: exploration
+    unlock_condition: [{type: event_completed, param: L4_recording_arrival}]
+    npcs:
+      505:
+        name: Foster
+        talk: L4_talk_foster_e12
+        known_information:
+          active_topics:
+            - {topic: E-12 简易检验中的安眠药痕迹足以使人失去行动能力, truth_status: true}
+            - {topic: 简易检验不能判断谁下药, truth_status: true}
+          withheld_topics: []
+          forbidden_reveals: [不提前说明紫片药性，不确认两类制剂相同，不替玩家组织最终栽赃链]
+          blind_spots: [E-12 投药者, 紫片成分, 远端录音是否存在, 1928 签名真伪]
+        mindset: 专业中立，严格限定已确认事实。
+        player_inquiry: "Emma 说在 E-12 杯旁失去行动能力" # 10
+        is_liar: false
+        testimony_ids:
+          - id: 5054001
+            kind: testimony
+            collectible: true
+            truth_status: true
+            content: 简易检验确认 E-12 残液中留有足以使人失去行动能力的安眠药痕迹，但不能判断是谁下药。
+            acquisition_talk: L4_talk_foster_e12
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:657
+        grants_evidence: []
+    evidence_ids: [5401, 5402, 5451, 5452]
+    event_triggers: []
+  - id: 5023
+    name: 护士站
+    type: free_exploration
+    phase: exploration
+    unlock_condition: [{type: event_completed, param: L4_recording_arrival}]
+    npcs:
+      513:
+        name: 管家
+        talk: L4_talk_butler_medication
+        known_information:
+          active_topics:
+            - {topic: 老 Charles 平时每次两片蓝色心脏病药, truth_status: true}
+          withheld_topics: []
+          forbidden_reveals: [不推断 Mary 已换药或紫片性质]
+          blind_spots: [实际送入的药, 夹层经过者, E-12 投药者]
+        mindset: 按日常服药常规提供证词。
+        player_inquiry: "护士站的心脏病药剂盒与当夜送药职责" # 8
+        is_liar: false
+        testimony_ids:
+          - id: 5134001
+            kind: testimony
+            collectible: true
+            truth_status: true
+            content: 老 Charles 每次服用两片蓝色心脏病药。
+            acquisition_talk: L4_talk_butler_medication
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:673
+        grants_evidence: []
+      509:
+        name: Mary Jones
+        talk: L4_talk_mary_delivery
+        known_information:
+          active_topics:
+            - {topic: 20:30 亲手送药且未转手, truth_status: mixed}
+          truthful_claims: [20:30进入房间, 亲手送整剂药, 中途没有交给第二个人]
+          false_claims: [实际送入的是心脏病药]
+          withheld_topics: [换药自认与安眠药说法留R1后，夹层取页承认留R2后，Lula身份留R3]
+          blind_spots: [老Charles随后坠落, Moore是否在场, E-12投药者, 刀刺者]
+        mindset: 维持临时护工身份，用正常送药职责遮住替换行为。
+        player_inquiry: null
+        inquiry_driver: "护士站 20:30 排班和书房服药调查" # 9
+        is_liar: true
+        testimony_ids:
+          - id: 5094001
+            kind: collectible_lie_anchor
+            collectible: true
+            truth_status: mixed
+            content: 20:30，她进入老 Charles 的房间，亲手送去心脏病药；中途没有交给第二个人。
+            acquisition_talk: L4_talk_mary_delivery
+            source_anchor: 剧情设计/Unit5/Unit5_大纲.md:675
+            semantic_anchor: 亲送心脏病药为虚假主张；普通原句不增加两片蓝色或没有换药。
+        grants_evidence: []
+    evidence_ids: [5403, 5453, 5454]
+    event_triggers: []
+  - id: 5021
+    name: 老 Charles 书房
+    type: free_exploration
+    phase: exploration
+    unlock_condition: [{type: event_completed, param: L4_recording_arrival}, {type: flag, param: u5_study_door_open}]
+    npcs: {}
+    evidence_ids: [5404, 5455, 5456]
+    event_triggers: []
+  - id: 5019
+    name: 夹层文件柜区域
+    type: free_exploration
+    phase: exploration
+    unlock_condition: [{type: event_completed, param: L4_recording_arrival}, {type: flag, param: u5_study_door_open}]
+    npcs: {}
+    evidence_ids: [5405, 5406, 5457, 5458]
+    event_triggers: []
+  - id: 5024
+    name: Mary 临时房间
+    type: free_exploration
+    phase: exploration_and_expose
+    unlock_condition: [{type: event_completed, param: L4_recording_arrival}]
+    npcs: {}
+    evidence_ids: [5407, 5408, 5409]
+    event_triggers: []
+  - id: 5011
+    name: 舞台后台
+    type: scripted_event
+    phase: post_expose
+    unlock_condition: [{type: event_completed, param: L4_drug_dispute}]
+    npcs: {}
+    evidence_ids: []
+    event_triggers:
+      - event_id: L4_clear_emma
+        talk: L4_event_clear_emma
+        source_anchor: 剧情设计/Unit5/Unit5_大纲.md:759
+        cast: [501, 503, 504, 505, 507, 509]
+        runtime_binding:
+          type: chained_talk
+          sole_entry: expose.post_expose.runtime_exit
+          previous_event_completed: L4_drug_dispute
+          required_item_ids: [5401, 5101, 5402]
+          required_testimony_ids: [5054001]
+          required_talks: [L4_talk_foster_e12, L4_post_expose_drug_dispute]
+          special_adapter: 三材料事件输入与完成状态，不配置为三件 condition 疑点。
+        required_beats:
+          - Zack 将 E-12、L1 礼服擦抹与跨血拖痕带回众人面前。
+          - 玩家在事件内联系杯旁失能起点、衣物擦抹及跨越既有致命血区的拖行。
+          - 明确 Emma 是致命喷溅形成后被拖到尸旁并被放刀，洗清她的持刀杀人嫌疑。
+          - Pierce 将紫片自称安眠药与 E-12 痕迹并置，指控 Lula；Vivian 只提出可能同源的嫌疑。
+          - Foster 的可靠比对限制仍有效；Lula 要求正式检验。
+          - 小 Charles 压住争执、支持释放 Emma 并请 Zack 继续核查，不替玩家编出针对 Lula 的完整解释。
+        mechanic: clear_emma
+        sets_flags: {u5_emma_knife_suspicion_cleared: true}
+        runtime_exit: {action: loop_end, next_chapter_id: 505, next_opening: L5_opening, next_talk: L5_opening_corridor_release}
+evidence_registry:
+  - id: 5401
+    name: 倒下的 E-12 酒杯
+    item_type: clue
+    type: clue
+    collectible: true
+    pickup: photograph
+    analysis: null
+    description: 倒在录音室地面的 E-12 酒杯；只有 Emma 使用的这一杯残液检出安眠药痕迹，证明被定向下药，不确认投药者。
+    acquisition: {kind: investigation, scene_id: 5022}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:659
+    knowledge_boundary: 安眠药定性与普通 Foster 证词一致；不自行新增正式成分分析或同源结果。
+  - id: 5402
+    name: 录音室至舞台的跨血拖痕
+    item_type: clue
+    type: clue
+    collectible: true
+    pickup: photograph
+    analysis: null
+    description: 起点在倒下的 E-12 杯旁；宽度、礼服纤维与连续擦抹纹理吻合 Emma 礼服背面。拖痕从录音室穿过已形成的致命喷溅血迹延伸到舞台正面，没有 Emma 从舞台正面返回录音室的反向移动痕迹。
+    acquisition: {kind: investigation, scene_id: 5022}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:660
+  - id: 5403
+    name: 心脏病药剂盒
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 正常心脏病药包装，图像中的药片为蓝色，包装文字不直接写明颜色；玩家需辨认图像。
+    acquisition: {kind: investigation, scene_id: 5023}
+    note: 关键——L4 R1 对照正常药物外观
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:677
+  - id: 5404
+    name: 手帕中的两片紫色药物
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 书房废纸篓深处手帕内的两片近乎完整紫色药，能确认并非正常蓝色心脏病药；尚无药性鉴定。
+    acquisition: {kind: investigation, scene_id: 5021, container_id: 5455}
+    note: 关键——L4 R1 对照实际弃药
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:684
+    analysis_locked_until: 本轮、L5与最终投票前均不作正式药性鉴定。
+  - id: 5405
+    name: TideWater 毒杀文件
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 记录 1928 年南区投毒安排，带有看似属于老 Charles Miller 的签名。首次取得者会以为是老 Charles 签发，当前未经真伪鉴定。
+    acquisition: {kind: investigation, scene_id: 5019}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:691
+    deferred_reference: 终局法庭只复用同一原件与外部专门鉴定报告；鉴定结论不得进入本轮可见说明。
+  - id: 5406
+    name: 世博会计划与庄园扩建单
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 将南区清退与 Miller 庄园扩建计划相连，说明 1928 年投毒安排背后的土地利益。
+    acquisition: {kind: investigation, scene_id: 5019}
+    note: ""
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:692
+  - id: 5407
+    name: 临时护工房里的 1912 年缺页
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 页码、撕边与装订孔对应文件柜档案缺口；保留原页，不生成拼合证据。
+    acquisition: {kind: investigation, scene_id: 5024}
+    note: 关键——L4 R2 反驳与夹层材料无关
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:696
+  - id: 5408
+    name: Mickey 寄出的信
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 以旧互助网称呼要求收信人继续寻找 Frank 的 1912 年材料；一周前已寄到芝加哥，不写 Lula 全名。
+    acquisition: {kind: investigation, scene_id: 5024}
+    note: 关键——L4 R3 收信时间与身份核对
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:697
+  - id: 5409
+    name: Mary Jones 的护照
+    item_type: item
+    type: item
+    collectible: true
+    pickup: collect
+    analysis: null
+    description: 真正 Mary Jones 三天前才从墨西哥入境美国，与一周前在芝加哥收信的时间矛盾。
+    acquisition: {kind: investigation, scene_id: 5024}
+    note: 关键——L4 R3 身份轮日期矛盾
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:698
+  - id: 5451
+    name: 单向拾音接线盒
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 舞台麦克风线缆接入录音室接线盒，再单向通向庄园外；此室无本地刻盘机、母盘或回放装置。结构不确认当夜麦克风启动或远端录成。
+    acquisition: {kind: environment, scene_id: 5022}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:661
+  - id: 5452
+    name: 后台录音室隔音层
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 墙面与 L3 文件柜后异常处同类隔音材质，用于隔绝内外声音；舞台声通过独立线缆接入接线盒，不依赖穿墙。只提供用途对照，不推出夹层墙后房间。
+    acquisition: {kind: environment, scene_id: 5022}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:662
+    persistence: 观察记忆保留到 L5 终幕 A；环境原物不入包。
+  - id: 5453
+    name: 护士站排班表
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 20:30 任务栏记录由 Mary 给老 Charles 送心脏病药；只固定职责与时点。
+    acquisition: {kind: environment, scene_id: 5023}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:678
+  - id: 5454
+    name: 医用乙醚
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 护士站密封医用乙醚，只展示外观；不证明 E-12 的投药者或药源，不进入背包。
+    acquisition: {kind: environment, scene_id: 5023}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:679
+    placement_constraint: 仅护士站；Mary 房间不重复。终局 Foster 带来，不另演取得。
+  - id: 5455
+    name: 书房废纸篓
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 废纸深处压着老 Charles 丢弃的手帕。
+    acquisition: {kind: environment, scene_id: 5021}
+    contains: [5404]
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:683
+  - id: 5456
+    name: 书房里的空水杯
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 杯底残留清水和少量粉末，只能说明服药时用过此杯。
+    acquisition: {kind: environment, scene_id: 5021}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:685
+  - id: 5457
+    name: 1912 年档案缺页处
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 被翻动档案缺一页，撕边与装订孔可供原物比对。
+    acquisition: {kind: environment, scene_id: 5019}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:689
+    runtime_adapter: environment_observed 用于疑点；不转为持有物。
+  - id: 5458
+    name: 文件柜附近的消毒剂气味
+    item_type: envir
+    type: envir
+    collectible: false
+    pickup: observe_only
+    analysis: null
+    description: 被翻动文件柜附近留有医务室常用消毒剂气味；结合额外经过者，只将其中一人的范围引向医务人员，不确定身份、时点或另一人。
+    acquisition: {kind: environment, scene_id: 5019}
+    note: 场景道具
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:690
+  - {id: 5101, ref: loop1_state.yaml, revealed_here: 后台三材料事件复核礼服擦抹与跨血拖行, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:761}
+  - {id: 5312, ref: loop3_state.yaml, revealed_here: 录音室提供同类隔音用途对照但不证明墙后房间, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:662}
+  - {id: 5353, ref: loop3_state.yaml, revealed_here: 本轮正式调查柜内材料与具体缺页, source_anchor: 剧情设计/Unit5/Unit5_大纲.md:687}
+doubts:
+  - id: 5401
+    isFragment: false
+    text: 送进房间的药，与平时的药一致吗？
+    condition: [{type: item, id: 5403}, {type: item, id: 5404}]
+  - id: 5402
+    isFragment: false
+    text: 护工房里的纸页，能对应档案缺口吗？
+    condition: [{type: item, id: 5407}, {type: environment_observed, id: 5457}]
+    runtime_adapter: environment_observed
+  - id: 5403
+    isFragment: false
+    text: 来信与护照的日期能同时成立吗？
+    condition: [{type: item, id: 5408}, {type: item, id: 5409}]
+progress: {doubts: 3, fragments: 0, denominator: 3}
+special_mechanics:
+  local_flags:
+    u5_moore_isolated: {default: false, setter: L4_opening, consumers: [scenes.5026, L4_expose, loop5_state.yaml]}
+    u5_emma_remote_plan_disclosed: {default: false, setter: L4_opening, consumers: [L4_expose, loop5_state.yaml.ending_sequence]}
+    u5_mickey_inference_completed: {default: false, setter: special_mechanics.mickey_inference, consumers: [expose.rounds.3]}
+    u5_emma_knife_suspicion_cleared: {default: false, setter: L4_clear_emma, consumers: [L5_opening]}
+  environment_observed:
+    status: special_adapter_required
+    scope: 疑点 5402 的不入包档案缺口观察
+    inputs: [{type: environment_observed, id: 5457}]
+    required_capabilities: [环境调查事件点亮疑点, 观察状态保存与重判, 跨Loop原物回查]
+    converts_to_collectible: false
+  mickey_inference:
+    status: special_adapter_required
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:727
+    sole_entry: expose.rounds.2.next_mechanic
+    runtime_binding:
+      type: special_adapter
+      previous_round_completed: 2
+      required_item_ids: [5408, 5407]
+      active_talk: L4_expose_mary
+    question: 谁会委托“Mary Jones”潜入 Miller 庄园，寻找 1912 年材料？
+    correct_answer: Mickey
+    answer_basis: 1912 年旧案、Frank 的关系与 Mickey 来信。
+    success: 从委托内容转到收信人身份，才开放 R3。
+    wrong_answer: 返回本题重新选择，不解锁身份轮；其他选项具体文字由对白阶段填写，不新增案情。
+    sets_flags: {u5_mickey_inference_completed: true}
+    output_items: []
+    runtime_exit: {action: resume_expose, adapter_required: true, round: 3}
+  clear_emma:
+    status: special_adapter_required
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:761
+    sole_entry: L4_event_clear_emma
+    replaces_standard_doubts: false
+    runtime_binding:
+      type: special_adapter
+      previous_event_completed: L4_drug_dispute
+      required_item_ids: [5401, 5101, 5402]
+      required_testimony_ids: [5054001]
+    inputs: [{type: item, id: 5401}, {type: item, id: 5101}, {type: item, id: 5402}]
+    operation: 事件内将三件原材料并置，按失能起点与跨血先后完成小推理。
+    conclusion: 致命喷溅已形成后，昏迷的 Emma 才被从录音室拖到尸旁并被放刀，持刀杀人嫌疑洗清。
+    boundary: 不指认投药者或拖行者，不把紫片与 E-12 认定同源，不排除 Moore 或 Lula 刀刺。
+    output_items: []
+    creates_doubt: false
+    completion_condition: all_three_materials_considered_in_event
+    sets_flags: {u5_emma_knife_suspicion_cleared: true}
+    runtime_exit: {action: resume_talk, adapter_required: true, talk: L4_event_clear_emma}
+expose:
+  id: 504
+  scene_id: 5024
+  talk: L4_expose_mary
+  target_npc: 509
+  is_liar: true
+  player_inquiry: null
+  source_anchor: 剧情设计/Unit5/Unit5_大纲.md:706
+  runtime_binding:
+    type: special_adapter
+    required_doubt_ids: [5401, 5402, 5403]
+    required_item_ids: [5401, 5402, 5403, 5404, 5405, 5406, 5407, 5408, 5409, 5101, 5312]
+    required_environment_ids: [5451, 5452, 5453, 5457, 5458]
+    required_talks: [L4_talk_foster_e12, L4_talk_butler_medication, L4_talk_mary_delivery]
+    required_testimony_ids: [5054001, 5134001, 5094001]
+    required_flags: [u5_moore_isolated, u5_emma_remote_plan_disclosed]
+    completion_event: L4_expose
+  expose_lie_ids: [5094901, 5094902]
+  rounds:
+    - round: 1
+      lie_source: 5094001
+      lie: 我送进去的就是 Charles 平时服用的两片蓝色药物。我没有换过药。
+      lie_source_relation: 普通送药原句是语义锚；本句为指证现场重申加码，不提前改写普通证词。
+      required_testimony_ids: [5134001, 5094001]
+      evidence_set: [{type: item, id: 5403}, {type: item, id: 5404}]
+      doubt_ids: [5401]
+      result: 正常药盒图像是蓝色，吐出的整剂为近乎完整的两片紫色药；结合亲手送达且未转手，证明送入整剂被替换。
+      retreat: 好，是我换的。但那不是毒药，只是安眠药。我需要让他睡上一会儿。
+      boundary: Zack 不接受也不否定药性自述，只追问失能目的。
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:710
+    - round: 2
+      lie_source: 5094901
+      lie: 那只是护理判断。我没有进入过书房暗门，也没有从夹层拿走任何东西。
+      evidence_set: [{type: item, id: 5407}]
+      required_environment_ids: [5457]
+      doubt_ids: [5402]
+      result: 护工房里的原页对应暗门后缺口，先击破与材料无关；物证本身不独立证明亲手撕页或进入时点。
+      retreat: 我承认进去过，也拿走了那一页。但我只是替人取回一份材料。这与 Charles 的死无关。
+      boundary: 她的主动承认坐实进入与取页；准确时间、是否遇人仍未知。
+      next_mechanic: mickey_inference
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:720
+    - round: 3
+      lie_source: 5094902
+      lie: 我当然是 Mary Jones。为什么要问这个？
+      required_flags: [u5_mickey_inference_completed]
+      evidence_set: [{type: item, id: 5408}, {type: item, id: 5409}]
+      doubt_ids: [5403]
+      result: 真正 Mary 三天前才入境，一周前却已有人在芝加哥收下并拆开 Mickey 来信；护工冒名，是实际收信人。
+      dramatic_reveal: 摘下面罩，承认自己是 Lula Washington。
+      source_anchor: 剧情设计/Unit5/Unit5_大纲.md:739
+  post_expose:
+    event_id: L4_drug_dispute
+    talk: L4_post_expose_drug_dispute
+    scene_id: 5024
+    cast: [501, 503, 505, 509]
+    source_anchor: 剧情设计/Unit5/Unit5_大纲.md:751
+    runtime_binding: {type: chained_talk, sole_entry: L4_expose_mary, previous_event_completed: L4_expose}
+    required_beats:
+      - Lula 仅承认受 Mickey 留言引导，找 Frank 相关 1912 材料、进入取页及换成紫片。
+      - Lula 坚称紫片是普通片剂安眠药，为继续搜档而让老 Charles 睡着。
+      - Pierce 以冒名、换药、暗门提出杀人指控，质疑谁能证明不是毒药。
+      - Lula 要求封存紫片，暴风雪结束后正式送检。
+      - Foster 说明庄园不能可靠比对成分；L4、L5、最终投票前药性仍未知。
+    testimony_ids: []
+    knowledge_boundary: 此处药性只是 Lula 自述；不生成正式鉴定结果。
+    runtime_exit: {action: change_scene, target_scene_id: 5011, continuation: next_talk, next_talk: L4_event_clear_emma}
+post_expose_knowledge:
+  - Mary 实为Lula，依Mickey留言寻找1912材料；她换药并进入档案区取页，准确时点未定。
+  - 紫片未正式鉴定，Lula自称安眠药；与E-12可能同源仅为嫌疑。
+  - Emma 在录音室E-12杯旁失去行动能力，致命血迹形成后被拖到尸旁，持刀嫌疑洗清。
+  - Emma 事先委托Watts安排远端单向刻录，但不知道是否录成或母盘是否存在。
+  - Moore 已被隔离；Moore与Lula杀人嫌疑仍未排除。
+  - 同一份1928投毒文件看似老Charles签发，尚未鉴定签名真伪。
+source_constraints:
+  - Mary／Lula 始终同一个 NPC 509；揭名不新增身份实体。
+  - 进入夹层准确时点、是否与 Moore 碰面为幕后，玩家本轮不能推出。
+  - L5 才由 Vivian 提供彩排通知对象及小 Charles 经手 E-12 的有限口头记录。
+  - 本轮不揭示钥石三指握姿、使用者、照片换位、继承安排或墙后隐藏房间。
+  - E-12 安眠药痕迹已确认；紫片既不能定普通安眠药，也不能定毒药。
+  - 1912 材料与 1928 投毒文件为不同原件；1928 文件首读误认签署与终局鉴定必须是同一原件的分层观察。
+  - Mary 房间普通护工生活痕迹不增加新证物，乙醚只在护士站。
+outline_coverage:
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:640, target: opening.sequence.L4_opening, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:642, target: scenes.5026.movement_constraint, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:644, target: opening.sequence.L4_opening.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:646, target: player_context.opening_facts, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:648, target: opening.sequence.L4_opening.character_states.502, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:652, target: opening.sequence.L4_opening.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:654, target: opening.sequence.L4_recording_arrival, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:656, target: scenes.5022.npcs.505.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:657, target: scenes.5022.npcs.505.testimony_ids.5054001, mapping: exact, testimony_required: true, source_text: 简易检验确认 E-12 残液中留有足以使人失去行动能力的安眠药痕迹，但不能判断是谁下药。}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:659, target: evidence_registry.5401, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:660, target: evidence_registry.5402, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:661, target: evidence_registry.5451, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:662, target: evidence_registry.5452, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:664, target: special_mechanics.clear_emma.boundary, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:672, target: scenes.5023.npcs.513.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:673, target: scenes.5023.npcs.513.testimony_ids.5134001, mapping: exact, testimony_required: true, source_text: 老 Charles 每次服用两片蓝色心脏病药。}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:674, target: scenes.5023.npcs.509.talk, mapping: exact, dialogue_required: true}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:675, target: scenes.5023.npcs.509.testimony_ids.5094001, mapping: exact, testimony_required: true, source_text: 20:30，她进入老 Charles 的房间，亲手送去心脏病药；中途没有交给第二个人。}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:677, target: evidence_registry.5403, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:678, target: evidence_registry.5453, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:679, target: evidence_registry.5454, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:683, target: evidence_registry.5455, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:684, target: evidence_registry.5404, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:685, target: evidence_registry.5456, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:689, target: evidence_registry.5457, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:690, target: evidence_registry.5458, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:691, target: evidence_registry.5405, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:692, target: evidence_registry.5406, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:696, target: evidence_registry.5407, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:697, target: evidence_registry.5408, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:698, target: evidence_registry.5409, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:700, target: source_constraints, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:710, target: expose.rounds.1, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:720, target: expose.rounds.2, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:727, target: special_mechanics.mickey_inference, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:739, target: expose.rounds.3, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:751, target: expose.post_expose, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:753, target: expose.post_expose.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:757, target: expose.post_expose.knowledge_boundary, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:761, target: special_mechanics.clear_emma, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:763, target: scenes.5011.event_triggers.L4_clear_emma.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:765, target: scenes.5011.event_triggers.L4_clear_emma.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:767, target: scenes.5011.event_triggers.L4_clear_emma.required_beats, mapping: exact}
+  - {source_anchor: 剧情设计/Unit5/Unit5_大纲.md:771, target: scenes.5011.event_triggers.L4_clear_emma.runtime_exit, mapping: deferred, deferred_to: L5_opening}
+narrative_continuity:
+  units:
+    - {id: L4_opening, entry_state: Moore刚打开书房端且刀刺未定, consumes: 额外两名经过者与Emma信任, required_beats: [押送隔离, Emma补全远端安排与杯号], exit_state: Moore锁在看守房且目标为E-12, hands_off_to: L4_recording_arrival}
+    - {id: L4_recording_arrival, entry_state: 最后喝E-12的自述, consumes: 失能原因, required_beats: [抵达录音室并恢复控制], exit_state: Foster与现场可调查, hands_off_to: L4_talk_foster_e12}
+    - {id: L4_talk_foster_e12, entry_state: 录音室调查, consumes: 单杯失能疑问, required_beats: [安眠药痕迹及不能认人限定], exit_state: E-12性质确认且投药者未知, hands_off_to: L4_investigation}
+    - {id: L4_investigation, entry_state: 书房与文件柜已开放, consumes: 其他经过者与送药异常, required_beats: [消毒剂气味, 紫片, 缺页, 来信护照], exit_state: 原始材料齐备而药性未鉴定, hands_off_to: L4_talk_butler_medication}
+    - {id: L4_talk_butler_medication, entry_state: 正常药盒与送药职责, consumes: 平时服药外观, required_beats: [每次两片蓝药], exit_state: R1数量与外观前提, hands_off_to: L4_talk_mary_delivery}
+    - {id: L4_talk_mary_delivery, entry_state: 20:30送药排班, consumes: 整剂药经手链, required_beats: [亲送心脏病药且无人转手原句], exit_state: 普通R1语义锚, hands_off_to: L4_expose}
+    - {id: L4_expose, entry_state: 三疑点和三证人均齐备, consumes: 换药与搜档否认, required_beats: [换药击破, 缺页击破], exit_state: 承认代人取页而身份未明, hands_off_to: L4_mickey_inference}
+    - {id: L4_mickey_inference, entry_state: R2退守替人取材料, consumes: Frank与Mickey来信关系, required_beats: [玩家选Mickey后质疑收信身份], exit_state: 身份轮可用, hands_off_to: L4_identity_round}
+    - {id: L4_identity_round, entry_state: 已选Mickey, consumes: 护照与来信日期矛盾, required_beats: [揭面承认Lula], exit_state: 冒名换药搜档成立但谋杀未定, hands_off_to: L4_drug_dispute}
+    - {id: L4_drug_dispute, entry_state: Lula已揭名, consumes: 药性无人鉴定, required_beats: [Pierce第一次指控, 封存送检请求, Foster限制], exit_state: 自称安眠药仍可疑, hands_off_to: L4_clear_emma}
+    - {id: L4_clear_emma, entry_state: 换药线不等于刀刺, consumes: E12礼服跨血三材料, required_beats: [证明致命血后拖放, Pierce第二次指控, 小Charles支持释放], exit_state: Emma持刀嫌疑清除且两名嫌疑人仍未排除, hands_off_to: L5_opening}
+self_check:
+  A: PASS
+  B: PASS
+  C: PASS
+  D: PASS
+  E: PASS
+  F: PASS
+  G: PASS
+  H: DESIGN_REVIEW_PASS
+  I: PASS
+  J: DESIGN_REVIEW_PASS
+  runtime_caveat: 环境疑点、R2后中间选择、三材料后置事件及flag持久化为待实现适配。
