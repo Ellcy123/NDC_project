@@ -127,6 +127,29 @@ class SceneReleaseTests(unittest.TestCase):
         self.assertEqual(result['scenes']['t']['stage'],2)
         self.assertEqual(result['current_stage'],2)
 
+    def test_active_delivery_scope_ignores_excluded_legacy_scene_members(self):
+        # The immutable audit/index remain complete, while an explicit current
+        # scope revision excludes a minigame-only q branch that legacy scene
+        # membership had attached to scene s.  It must not become a production
+        # prerequisite for the retained p scene.
+        self.b['artifacts']['q_scene']['scene_id']='s'
+        self.index['scenes']['s']['item_ids'].append('q')
+        self.index['scenes']['s']['artifact_ids'].append('q_scene')
+        self.index['scenes']['t']['artifact_ids'].remove('q_scene')
+        self.index['items']['q'].update(status='unresolved',open_questions=['minigame-only association deliberately excluded'])
+        revision={'execution_required_artifacts':[aid for aid in self.b['scope']['required_artifacts']
+                                                  if aid not in {'q_master','q_scene','environment'}]}
+        revision_path=self.root/'active-delivery-scope.json'
+        w.write_json(revision_path,revision)
+        self.b['active_delivery_scope_revision']={'path':str(revision_path),'sha256':w.sha(revision_path)}
+        w.write_json(self.path,self.b)
+        self.install()
+        result=w.scene_readiness(self.path,'s')
+        self.assertTrue(result['ready'])
+        self.assertNotIn('q',result['production_item_ids'])
+        self.assertNotIn('q_master',result['prerequisite_artifacts'])
+        self.assertEqual(w.progress(self.path)['overall']['required'],len(revision['execution_required_artifacts']))
+
     def test_stage_scalar_cannot_bypass_the_scene_gate(self):
         self.relation(); self.install()
         self.b['current_stage']=5; w.write_json(self.path,self.b)
@@ -167,6 +190,43 @@ class SceneReleaseTests(unittest.TestCase):
         self.assertEqual(w.validate(self.path,3,scene_id='s'),[])
         with self.assertRaisesRegex(ValueError,'prerequisites'):
             w.reserve_attempt(self.path,self.menu_job,self.prompt,'actual menu still requires its scene')
+
+    def empty_source_fixture(self):
+        """Create a first native source job whose root is not delivery scope."""
+        path = self.root / 'empty-source.json'
+        b = copy.deepcopy(self.b)
+        b.pop('attempt_head', None)
+        b['attempt_log'] = 'empty-source-attempts.jsonl'
+        job = 'p|scene|s|empty_source'
+        b['jobs'] = {job: {'item_id':'p','kind':'scene','scene_id':'s','state':'empty_source'}}
+        b['artifacts']['source'] = dict(item_ids=['p'], stage=3, role='source_reference', scene_id='s',
+                                         status='PENDING', rejected=False, parents=[], fact_refs=['p.identity'],
+                                         acceptance_contract={'content_contract':'fixture empty source'})
+        b['artifacts']['carrier'] = dict(item_ids=['p'], stage=3, role='scene_carrier', scene_id='s',
+                                          status='PENDING', rejected=False, parents=['source'], fact_refs=['p.identity'],
+                                          acceptance_contract={'content_contract':'fixture source-derived carrier'})
+        b['artifacts']['scene'].update(status='PENDING', frozen=False, job_id=job,
+                                       parents=['source','carrier'])
+        w.write_json(path, b)
+        w.initialize(path)
+        w.write_json(self.index_path, self.index)
+        w.install_scene_index(path, self.index_path, 'fixture empty-source scene-index migration')
+        prompt = self.root / 'empty-source-prompt.txt'
+        prompt.write_text('fixture first native empty office source')
+        return path, job, prompt
+
+    def test_empty_source_job_can_create_only_its_pending_source_branch(self):
+        path, job, prompt = self.empty_source_fixture()
+        self.assertEqual(w.validate(path, 3, scene_id='s'), [])
+        self.assertEqual(w.reserve_attempt(path, job, prompt, 'fixture first root source'), 1)
+
+    def test_empty_source_job_cannot_bypass_an_independent_parent(self):
+        path, job, prompt = self.empty_source_fixture()
+        b = w.read(path)
+        b['artifacts']['carrier']['parents'] = ['source', 'master']
+        w.write_json(path, b)
+        with self.assertRaisesRegex(ValueError, 'prerequisites'):
+            w.reserve_attempt(path, job, prompt, 'fixture cannot bypass independent parent')
 
     def test_depicted_external_content_is_real_prerequisite(self):
         self.relation('depicted_content',artifact_ids=['q_scene']); self.install()

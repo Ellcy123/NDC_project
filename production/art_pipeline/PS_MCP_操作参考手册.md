@@ -1,6 +1,6 @@
 # Photoshop MCP 高效高质量操作参考手册
 
-> 版本：v2.7
+> 版本：v2.8
 >
 > 更新日期：2026-09-11（Asia/Shanghai）
 >
@@ -53,6 +53,7 @@
 
 - 旧 ndc-photoshop-queue 已退役，不再调用 queue、proxy、broker、lease 或 watchdog。
 - 本机所有客户端共享一个原生 Photoshop 执行引擎；同一时刻只允许一个任务修改 Photoshop。
+- 所有针对活动文档的写命令应在 `photoshop_command_execute` 顶层传入刚由 `photoshop_state_get` 观察到的 `expected_document_id`。服务端必须在下发命令前核对活动文档 ID；不一致时返回 `PRECONDITION_FAILED` 且不执行。`document.close` 在多文档状态下缺少该字段时必须拒绝，禁止仅凭“当前活动文档”推定所有权。
 - 并发修改通常返回 NATIVE_COMMAND_BUSY。遇到忙碌时不抢占、不循环重试。
 - 人工正在操作 Photoshop 时不得接管。
 - 新任务准备使用 Photoshop MCP 时，必须先执行第 3.1.1 节的陈旧自动文档检查；只释放来源可证明为自动任务且已异常遗留的文档，人工打开或来源不明的文档一律保护。
@@ -181,7 +182,7 @@ Adobe Photoshop 可在“首选项 → 图像处理”中选择 Select Subject �
    `document.save` 仍为 requires_user，不得借关闭流程覆盖原文件。
 3. 对恢复 PSD 做文件层验证：文件存在、非零字节、可读，记录绝对路径和 SHA-256；重要构图文档同时导出或保留审阅 PNG。验证失败则保持文档打开并登记 `STALE_RELEASE_SAVE_FAILED`。
 4. 文档无未保存改动也要确认其原文件或最近恢复副本仍存在；证据不足则不关闭。
-5. 在调用 `document.close` 前读取实时 command describe，按其当前 schema 选择不会再次覆盖原文件的关闭方式；使用唯一 idempotency_key。
+5. 在调用 `document.close` 前读取实时 command describe，按其当前 schema 选择不会再次覆盖原文件的关闭方式；在 `photoshop_command_execute` 顶层传入目标文档的 `expected_document_id`，并使用唯一 idempotency_key。若活动文档已经变化，保留现场并重新建立所有权，不得改用新活动文档 ID 盲目重试。
 6. 关闭后重新调用 state，确认目标文档 ID 已消失、活动文档符合预期、文档数量准确减少且 `queuedCommands=0`，登记 `STALE_RELEASE_PASS`。
 7. 若关闭超时、断线或结果为 unknown，不得重发。先读 host、state、history 和恢复文件判断文档是否已关闭；仍无法确定则登记 `STALE_RELEASE_UNKNOWN` 并停止自动清理。
 
@@ -871,6 +872,7 @@ Photoshop MCP 通用目录支持创建和编辑文本层，但 NDC 道具规则�
     commands:
       - command_id:
         idempotency_key:
+        expected_document_id:
         arguments:
         result_status:
         verification:
@@ -946,6 +948,7 @@ Photoshop MCP 通用目录支持创建和编辑文本层，但 NDC 道具规则�
   - 路径禁用和优化条件；
   - 超时不重发；
   - 单引擎交接；
+  - 写命令的 `expected_document_id` 身份绑定，以及多文档 `document.close` 无 ID 必须拒绝；
   - 陈旧自动文档的所有权证据、30 分钟阈值、人工窗口保护、安全保存、逐份关闭与未知状态回退；
   - `layer.place_file` 的实时状态、允许根、嵌入式智能对象结果、Alpha 一致性与回滚；
   - 技术与视觉双门禁。

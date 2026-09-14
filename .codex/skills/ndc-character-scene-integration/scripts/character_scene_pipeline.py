@@ -6,6 +6,10 @@ import json
 import math
 import os
 import statistics
+import subprocess
+import sys
+import time
+from datetime import datetime
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw
@@ -1365,6 +1369,868 @@ def verify_states(contract_path: Path, before_path: Path, after_path: Path) -> N
     print("Frozen rectangles are identical; seam bands still require visual continuity review.")
 
 
+FINALIZATION_SCHEMA = "ndc-character-scene-finalization/v2"
+FINALIZATION_IMPLEMENTATION_VERSION = 9
+FINALIZATION_PROFILES = {"probe", "provisional", "formal"}
+FINALIZATION_BASE_CHECKS = (
+    "scope_timeline",
+    "actual_ui",
+    "support_contact",
+    "scene_scale",
+    "occlusion_layer_order",
+    "identity_action_orientation",
+    "whole_scene_review",
+)
+
+
+def resolve_manifest_path(value: str, manifest_path: Path) -> Path:
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = manifest_path.parent / path
+    return path.resolve()
+
+
+def write_json(path: Path, payload: dict | list) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def finalization_branches(scope: dict) -> list[str]:
+    """Resolve only scene facts; universal checks never disappear."""
+    cast_count = scope.get("simultaneousCastCount")
+    if not isinstance(cast_count, int) or isinstance(cast_count, bool) or cast_count < 1:
+        raise ValueError("scope.simultaneousCastCount must be a positive integer.")
+    interaction_type = scope.get("interactionType")
+    if interaction_type not in {"pure-narrative", "exploration-click-pair"}:
+        raise ValueError(
+            "scope.interactionType must be pure-narrative or exploration-click-pair."
+        )
+    support_types = scope.get("supportTypes", [])
+    if not isinstance(support_types, list) or not all(
+        isinstance(value, str) and value for value in support_types
+    ):
+        raise ValueError("scope.supportTypes must be a string list.")
+    branches: list[str] = []
+    if interaction_type == "exploration-click-pair":
+        branches.append("idle_click_continuity")
+    if cast_count >= 2:
+        branches.extend(
+            ("multicast_links", "multi_actor_relative_scale", "pairwise_actor_occlusion")
+        )
+    if cast_count >= 3:
+        branches.append("multicast_back_composition")
+    if scope.get("hasSoftSupport") is True:
+        branches.append("soft_support_response")
+    if scope.get("hasRecliningOrElevatedActor") is True or any(
+        value in {"bed", "sofa", "stretcher", "table", "elevated", "reclining"}
+        for value in support_types
+    ):
+        branches.append("reclining_elevated_projection")
+    return branches
+
+
+def validate_ui_contract(ui: dict, manifest_path: Path) -> tuple[list[str], dict[str, Path]]:
+    if ui.get("required") is not True:
+        raise ValueError("ui.required must be true for every NPC scene.")
+    variant = ui.get("variant")
+    if variant not in {"left", "right", "both_or_dynamic"}:
+        raise ValueError("ui.variant must be left, right or both_or_dynamic.")
+    references = ui.get("references")
+    if not isinstance(references, dict):
+        raise ValueError("ui.references must map actual UI sides to files.")
+    sides = [variant] if variant in {"left", "right"} else ["left", "right"]
+    resolved: dict[str, Path] = {}
+    for side in sides:
+        value = references.get(side)
+        if not isinstance(value, str) or not value:
+            raise ValueError(f"ui.references.{side} is required for variant {variant}.")
+        path = resolve_manifest_path(value, manifest_path)
+        if not path.is_file():
+            raise ValueError(f"Actual UI reference does not exist: {path}")
+        resolved[side] = path
+    return sides, resolved
+
+
+def verified_evidence_signature(entry: dict, manifest_path: Path, label: str) -> list[dict]:
+    evidence = entry.get("evidence")
+    if not isinstance(evidence, list) or not evidence:
+        raise ValueError(f"{label}.evidence must bind at least one reviewed file.")
+    signature: list[dict] = []
+    for index, item in enumerate(evidence):
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
+            raise ValueError(f"{label}.evidence[{index}] requires path and sha256.")
+        path = resolve_manifest_path(item["path"], manifest_path)
+        if not path.is_file():
+            raise ValueError(f"{label}.evidence[{index}] does not exist: {path}")
+        actual = sha256_file(path)
+        if item.get("sha256") != actual:
+            raise ValueError(f"{label}.evidence[{index}] SHA-256 does not match current bytes.")
+        signature.append({"path": str(path), "sha256": actual})
+    return signature
+
+
+def finalization_check_state(
+    criteria: dict,
+    applicable: list[str],
+    manifest_path: Path,
+    profile: str,
+) -> tuple[dict, list[dict], list[str], list[str]]:
+    if not isinstance(criteria, dict):
+        raise ValueError("criteria must be an object keyed by criterion name.")
+    checks: dict[str, dict] = {}
+    signature: list[dict] = []
+    blocked: list[str] = []
+    provisional: list[str] = []
+    for name in applicable:
+        entry = criteria.get(name)
+        if not isinstance(entry, dict):
+            checks[name] = {"status": "MISSING", "evidence": []}
+            if profile == "provisional":
+                provisional.append(f"missing duplicate or unfinished review evidence: {name}")
+            else:
+                blocked.append(f"missing required review criterion: {name}")
+            continue
+        status = entry.get("status")
+        if status not in {"PASS", "PROVISIONAL", "FAIL", "NOT_CHECKED"}:
+            raise ValueError(
+                f"criteria.{name}.status must be PASS, PROVISIONAL, FAIL or NOT_CHECKED."
+            )
+        evidence = verified_evidence_signature(entry, manifest_path, f"criteria.{name}")
+        tier = entry.get("tier", "H0" if status in {"FAIL", "NOT_CHECKED"} else None)
+        if tier is not None and tier not in {"H0", "H1", "H2", "H3"}:
+            raise ValueError(f"criteria.{name}.tier must be H0, H1, H2 or H3.")
+        checks[name] = {"status": status, "tier": tier, "evidence": evidence}
+        signature.append({"name": name, "status": status, "tier": tier, "evidence": evidence})
+        if status in {"FAIL", "NOT_CHECKED"}:
+            if tier == "H0" or profile != "provisional":
+                blocked.append(f"required review criterion is {status} at {tier}: {name}")
+            else:
+                provisional.append(f"soft review criterion is {status} at {tier}: {name}")
+        elif status == "PROVISIONAL":
+            provisional.append(name)
+    return checks, signature, blocked, provisional
+
+
+def validate_anatomy_coverage(scope: dict, required_layer_ids: list[str], manifest_path: Path) -> tuple[list[dict], list[str]]:
+    entries = scope.get("anatomyCoverage")
+    if not isinstance(entries, list):
+        raise ValueError("scope.anatomyCoverage must be a list covering every required layer.")
+    normalized: list[dict] = []
+    blocked: list[str] = []
+    ids: set[str] = set()
+    for index, entry in enumerate(entries):
+        label = f"scope.anatomyCoverage[{index}]"
+        if not isinstance(entry, dict):
+            raise ValueError(f"{label} must be an object.")
+        layer_id = entry.get("id")
+        mode = entry.get("mode")
+        if not isinstance(layer_id, str) or not layer_id or layer_id in ids:
+            raise ValueError(f"{label}.id must be unique non-empty text.")
+        if mode not in {"FULL_IN_FRAME", "SCENE_OCCLUDED", "FRAME_CROPPED_FOREGROUND"}:
+            raise ValueError(f"{label}.mode is invalid.")
+        ids.add(layer_id)
+        evidence = verified_evidence_signature(entry, manifest_path, label)
+        item = {"id": layer_id, "mode": mode, "evidence": evidence}
+        if entry.get("visibleAnatomyReview") != "PASS":
+            blocked.append(f"visible anatomy is not PASS: {layer_id}")
+        if mode in {"FULL_IN_FRAME", "SCENE_OCCLUDED"}:
+            master = entry.get("completeMaster")
+            try:
+                master_path = resolve_manifest_path(master.get("path", ""), manifest_path) if isinstance(master, dict) else Path()
+                if not master_path.is_file() or master.get("sha256") != sha256_file(master_path):
+                    raise ValueError
+                item["completeMaster"] = {"path": str(master_path), "sha256": sha256_file(master_path)}
+            except (OSError, ValueError, TypeError):
+                blocked.append(f"complete head-to-toe master is missing or stale: {layer_id}")
+            if entry.get("completeMasterReview") != "PASS":
+                blocked.append(f"complete master review is not PASS: {layer_id}")
+        else:
+            if entry.get("naturalFrameExit") is not True:
+                blocked.append(f"foreground crop is not a natural frame exit: {layer_id}")
+            if entry.get("visibleAnatomyComplete") is not True:
+                blocked.append(f"foreground crop has incomplete visible anatomy: {layer_id}")
+            support = entry.get("offFrameScaleSupportEvidence")
+            if not isinstance(support, list) or not support:
+                blocked.append(f"foreground crop lacks off-frame scale/support evidence: {layer_id}")
+            else:
+                item["offFrameScaleSupportEvidence"] = verified_evidence_signature(
+                    {"evidence": support}, manifest_path, label + ".offFrameScaleSupportEvidence"
+                )
+        normalized.append(item)
+    missing = sorted(set(required_layer_ids) - ids)
+    extra = sorted(ids - set(required_layer_ids))
+    if missing:
+        blocked.append("anatomy coverage missing required layers: " + ", ".join(missing))
+    if extra:
+        blocked.append("anatomy coverage has unknown layers: " + ", ".join(extra))
+    return normalized, blocked
+
+
+def validate_ps_handoff(data: object, manifest_path: Path) -> tuple[dict, list[str]]:
+    if data is None:
+        return {"used": False}, []
+    if not isinstance(data, dict) or data.get("used") is not True:
+        raise ValueError("psSession must be omitted or declare used:true.")
+    blocked: list[str] = []
+    owner = data.get("ownerTaskId")
+    if not isinstance(owner, str) or not owner:
+        blocked.append("Photoshop ownerTaskId is missing")
+    if data.get("openDocumentCount") != 0:
+        blocked.append("Photoshop handoff requires actual docs0")
+    if data.get("inFlightCommandCount") != 0 or data.get("unknownCommandCount") != 0:
+        blocked.append("Photoshop handoff requires queue0 and no unknown command")
+    if data.get("handoffStatus") != "RELEASED":
+        blocked.append("Photoshop handoffStatus must be RELEASED")
+    evidence = verified_evidence_signature(data, manifest_path, "psSession")
+    capability = data.get("capabilitySnapshot")
+    capability_path = None
+    if isinstance(capability, dict):
+        capability_path = resolve_manifest_path(str(capability.get("path", "")), manifest_path)
+    if not capability_path or not capability_path.is_file() or capability.get("sha256") != sha256_file(capability_path):
+        blocked.append("current Photoshop capability snapshot is missing or stale")
+    return {
+        "used": True,
+        "ownerTaskId": owner,
+        "openDocumentCount": data.get("openDocumentCount"),
+        "inFlightCommandCount": data.get("inFlightCommandCount"),
+        "unknownCommandCount": data.get("unknownCommandCount"),
+        "handoffStatus": data.get("handoffStatus"),
+        "evidence": evidence,
+        "capabilitySnapshot": (
+            {"path": str(capability_path), "sha256": sha256_file(capability_path)}
+            if capability_path and capability_path.is_file() else None
+        ),
+    }, blocked
+
+
+def _load_rgba_layer(item: dict, manifest_path: Path, label: str) -> tuple[Path, Image.Image]:
+    path_value = item.get("path")
+    if not isinstance(path_value, str) or not path_value:
+        raise ValueError(f"{label}.path is required.")
+    path = resolve_manifest_path(path_value, manifest_path)
+    if not path.is_file():
+        raise ValueError(f"{label} does not exist: {path}")
+    source = Image.open(path)
+    if source.mode != "RGBA":
+        raise ValueError(f"{label} must be an RGBA image, not {source.mode}.")
+    image = source.copy()
+    alpha = image.getchannel("A")
+    extrema = alpha.getextrema()
+    if extrema[0] == 255 or extrema[1] == 0:
+        raise ValueError(f"{label} needs both transparent and visible pixels.")
+    return path, image
+
+
+def validate_extraction_layers(
+    extraction: dict,
+    required_layer_ids: list[str],
+    profile: str,
+    manifest_path: Path,
+) -> tuple[list[dict], list[str], list[str], dict]:
+    layers = extraction.get("layers", [])
+    if not isinstance(layers, list):
+        raise ValueError("extraction.layers must be a list.")
+    normalized: list[dict] = []
+    ids: set[str] = set()
+    blocked: list[str] = []
+    provisional: list[str] = []
+    first_usable = False
+    formal_layer_ids: list[str] = []
+    for index, item in enumerate(layers):
+        label = f"extraction.layers[{index}]"
+        if not isinstance(item, dict):
+            raise ValueError(f"{label} must be an object.")
+        layer_id = item.get("id")
+        quality = item.get("quality")
+        if not isinstance(layer_id, str) or not layer_id or layer_id in ids:
+            raise ValueError(f"{label}.id must be unique non-empty text.")
+        if quality not in {"usable", "formal"}:
+            raise ValueError(f"{label}.quality must be usable or formal.")
+        ids.add(layer_id)
+        path, image = _load_rgba_layer(item, manifest_path, label)
+        structural = item.get("structuralReview")
+        edge = item.get("edgeReview")
+        if structural != "PASS":
+            blocked.append(f"H0 structural Alpha is not PASS: {layer_id}")
+        if edge not in {"PASS", "PROVISIONAL", "FAIL"}:
+            raise ValueError(f"{label}.edgeReview must be PASS, PROVISIONAL or FAIL.")
+        if edge == "FAIL":
+            blocked.append(f"H1/H2 edge review failed: {layer_id}")
+        elif edge == "PROVISIONAL":
+            provisional.append(f"H1/H2 edge review is provisional: {layer_id}")
+        review_evidence: list[dict] = []
+        if item.get("reviewEvidence"):
+            review_evidence = verified_evidence_signature(
+                {"evidence": item["reviewEvidence"]}, manifest_path, label
+            )
+        else:
+            blocked.append(f"hash-bound Alpha review evidence is missing: {layer_id}")
+        normalized.append(
+            {
+                "id": layer_id,
+                "quality": quality,
+                "path": str(path),
+                "sha256": sha256_file(path),
+                "xy": item.get("xy", [0, 0]),
+                "structuralReview": structural,
+                "edgeReview": edge,
+                "reviewEvidence": review_evidence,
+                "image": image,
+            }
+        )
+        if structural == "PASS" and edge in {"PASS", "PROVISIONAL"}:
+            first_usable = True
+            if quality == "formal" and edge == "PASS":
+                formal_layer_ids.append(layer_id)
+    missing = sorted(set(required_layer_ids) - ids)
+    if not first_usable:
+        blocked.append("no first usable RGBA exists")
+    if profile == "formal":
+        for layer_id in required_layer_ids:
+            match = next((item for item in normalized if item["id"] == layer_id), None)
+            if match is None:
+                blocked.append(f"required formal RGBA is missing: {layer_id}")
+            elif match["quality"] != "formal":
+                blocked.append(f"required layer is not formal RGBA: {layer_id}")
+            elif match["edgeReview"] != "PASS":
+                blocked.append(f"formal H1/H2 edge review is not PASS: {layer_id}")
+    routes = extraction.get("routeExhaustion", [])
+    if not isinstance(routes, list):
+        raise ValueError("extraction.routeExhaustion must be a list.")
+    terminal = {"FORMAL_PASS", "FAILED", "NOT_APPLICABLE", "UNSUPPORTED"}
+    exhausted = bool(routes) and all(
+        isinstance(item, dict) and item.get("status") in terminal for item in routes
+    )
+    route_state = {
+        "firstUsableRgba": first_usable,
+        "firstFormalRgba": bool(formal_layer_ids),
+        "formalLayerIds": sorted(formal_layer_ids),
+        "stopRemainingRoutesForLayerIds": sorted(formal_layer_ids),
+        "stopRemainingRoutes": bool(required_layer_ids) and set(required_layer_ids) <= set(formal_layer_ids),
+        "allApplicableRoutesExhausted": exhausted,
+        "missingLayerIds": missing,
+    }
+    if profile != "probe" and not first_usable and not exhausted:
+        blocked.append("continue remaining applicable supported extraction routes")
+    return normalized, blocked, provisional, route_state
+
+
+def _alpha_overlay(base: Image.Image, overlay: Image.Image, xy: list | tuple = (0, 0)) -> None:
+    if not isinstance(xy, (list, tuple)) or len(xy) != 2:
+        raise ValueError("Each extraction layer xy must be [x, y].")
+    x, y = (int(round(float(value))) for value in xy)
+    base.alpha_composite(overlay, dest=(x, y))
+
+
+def _fit_panel(image: Image.Image, size: tuple[int, int], background: tuple[int, int, int]) -> Image.Image:
+    panel = Image.new("RGB", size, background)
+    copy = image.convert("RGBA")
+    copy.thumbnail((size[0] - 24, size[1] - 48), Image.Resampling.LANCZOS)
+    x = (size[0] - copy.width) // 2
+    y = 34 + (size[1] - 34 - copy.height) // 2
+    panel.paste(copy, (x, y), copy)
+    return panel
+
+
+def _apply_ui(base: Image.Image, ui_path: Path) -> Image.Image:
+    overlay = Image.open(ui_path).convert("RGBA")
+    if overlay.size != base.size:
+        raise ValueError(
+            f"UI reference must already use the exact scene canvas; no implicit resize/placement: {ui_path}"
+        )
+    result = base.copy().convert("RGBA")
+    result.alpha_composite(overlay, dest=(0, 0))
+    return result
+
+
+def _save_variant_board(
+    base: Image.Image,
+    sides: list[str],
+    ui_paths: dict[str, Path],
+    output: Path,
+) -> None:
+    variants = [_apply_ui(base, ui_paths[side]) for side in sides]
+    if len(variants) == 1:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        variants[0].save(output)
+        return
+    board = Image.new("RGBA", (base.width * len(variants), base.height), (0, 0, 0, 0))
+    for index, variant in enumerate(variants):
+        board.alpha_composite(variant, dest=(index * base.width, 0))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    board.save(output)
+
+
+def render_matte_contact_sheet(layers: list[dict], scene: Image.Image, output: Path) -> None:
+    if not layers:
+        return
+    sampled_tone = tuple(scene.convert("RGB").resize((1, 1), Image.Resampling.BOX).getpixel((0, 0)))
+    luminance = 0.2126 * sampled_tone[0] + 0.7152 * sampled_tone[1] + 0.0722 * sampled_tone[2]
+    tone_factor = min(1.0, 72.0 / max(luminance, 1.0))
+    scene_tone = tuple(max(8, int(round(channel * tone_factor))) for channel in sampled_tone)
+    backgrounds = ((0, 0, 0), (255, 255, 255), scene_tone)
+    panel_size = (360, 300)
+    board = Image.new(
+        "RGB", (panel_size[0] * len(backgrounds), panel_size[1] * len(layers)), (32, 32, 32)
+    )
+    for row, item in enumerate(layers):
+        for column, background in enumerate(backgrounds):
+            panel = _fit_panel(item["image"], panel_size, background)
+            draw = ImageDraw.Draw(panel)
+            draw.rectangle((0, 0, panel_size[0], 30), fill=(28, 28, 28))
+            draw.text((10, 8), f"{item['id']} | {('black', 'white', 'dark-scene-tone')[column]}", fill=(240, 240, 240))
+            board.paste(panel, (column * panel_size[0], row * panel_size[1]))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    board.save(output)
+
+
+def validator_signature(validators: list, profile: str, manifest_path: Path) -> list[dict]:
+    signature: list[dict] = []
+    for index, item in enumerate(validators):
+        if not isinstance(item, dict):
+            raise ValueError(f"validators[{index}] must be an object.")
+        profiles = item.get("profiles", ["probe", "provisional", "formal"])
+        if not isinstance(profiles, list) or not set(profiles) <= FINALIZATION_PROFILES:
+            raise ValueError(f"validators[{index}].profiles contains an unsupported profile.")
+        if profile not in profiles:
+            continue
+        contract = resolve_manifest_path(str(item.get("contract", "")), manifest_path)
+        if not contract.is_file():
+            raise ValueError(f"validators[{index}].contract does not exist: {contract}")
+        signature.append(
+            {
+                "name": item.get("name"),
+                "contract": str(contract),
+                "sha256": sha256_file(contract),
+                "required": item.get("required", True) is True,
+            }
+        )
+    return signature
+
+
+def run_finalization_validators(
+    validators: list,
+    profile: str,
+    manifest_path: Path,
+    output_dir: Path,
+) -> tuple[list[dict], list[str]]:
+    script_root = Path(__file__).resolve().parent
+    results: list[dict] = []
+    blocked: list[str] = []
+    for index, item in enumerate(validators):
+        profiles = item.get("profiles", ["probe", "provisional", "formal"])
+        if profile not in profiles:
+            continue
+        name = item.get("name")
+        contract = resolve_manifest_path(str(item.get("contract", "")), manifest_path)
+        required = item.get("required", True) is True
+        try:
+            if name == "final-conformance":
+                validate_final_conformance(load_contract(contract))
+                detail = "FINAL_CONFORMANCE_OK"
+            elif name == "whitebox-gate":
+                loaded = validate_staging(load_contract(contract), True)
+                detail = f"WHITEBOX_GATE_OK characters={len(loaded)}"
+            elif name == "candidate-handoff":
+                validate_candidate_handoff(load_contract(contract))
+                detail = "CANDIDATE_HANDOFF_OK"
+            else:
+                report_path = output_dir / "validator-reports" / f"{index:02d}-{name}.json"
+                commands = {
+                    "production-ledger": [sys.executable, str(script_root / "production_gate.py"), str(contract), "--report", str(report_path)],
+                    "importance-profile": [sys.executable, str(script_root / "validate_importance_profile.py"), "--profile", str(contract), "--output", str(report_path)],
+                    "multicast-back-composition": [sys.executable, str(script_root / "validate_multicast_back_composition.py"), "--contract", str(contract), "--output", str(report_path)],
+                    "visual-review": [sys.executable, str(script_root / "visual_review_gate.py"), str(contract), str(report_path.parent / f"{index:02d}-visual")],
+                }
+                if name not in commands:
+                    raise ValueError(f"Unsupported finalization validator: {name}")
+                completed = subprocess.run(
+                    commands[name], capture_output=True, text=True, encoding="utf-8",
+                    errors="replace", check=False
+                )
+                detail = (completed.stdout or completed.stderr).strip()
+                if completed.returncode != 0:
+                    raise ValueError(detail or f"validator exited {completed.returncode}")
+            results.append({"name": name, "status": "PASS", "detail": detail})
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            results.append({"name": name, "status": "FAIL", "detail": str(error)})
+            if required:
+                blocked.append(f"required validator failed: {name}")
+    return results, blocked
+
+
+def finalization_cache_key(
+    profile: str,
+    scope: dict,
+    sides: list[str],
+    ui_paths: dict[str, Path],
+    scene_path: Path,
+    layout_path: Path,
+    layers: list[dict],
+    criteria_signature: list[dict],
+    validators_signature: list[dict],
+    anatomy_signature: list[dict],
+    ps_handoff: dict,
+) -> str:
+    cache_criteria = [
+        {
+            "name": item["name"],
+            "status": item["status"],
+            "tier": item.get("tier"),
+            "evidenceSha256": sorted(evidence["sha256"] for evidence in item["evidence"]),
+        }
+        for item in criteria_signature
+    ]
+    cache_validators = [
+        {key: item[key] for key in ("name", "sha256", "required")}
+        for item in validators_signature
+    ]
+    payload = {
+        "implementationVersion": FINALIZATION_IMPLEMENTATION_VERSION,
+        "profile": profile,
+        "scope": {
+            "interactionType": scope.get("interactionType"),
+            "simultaneousCastCount": scope.get("simultaneousCastCount"),
+            "supportTypes": sorted(scope.get("supportTypes", [])),
+            "hasSoftSupport": scope.get("hasSoftSupport") is True,
+            "hasRecliningOrElevatedActor": scope.get("hasRecliningOrElevatedActor") is True,
+            "requiredLayerIds": sorted(scope.get("requiredLayerIds", [])),
+        },
+        "ui": [{"side": side, "sha256": sha256_file(ui_paths[side])} for side in sides],
+        "pixels": {
+            "scene": sha256_file(scene_path),
+            "layout": sha256_file(layout_path),
+            "layers": [
+                {
+                    "id": item["id"],
+                    "quality": item["quality"],
+                    "sha256": item["sha256"],
+                    "xy": item["xy"],
+                    "structuralReview": item["structuralReview"],
+                    "edgeReview": item["edgeReview"],
+                    "reviewEvidenceSha256": sorted(
+                        evidence["sha256"] for evidence in item["reviewEvidence"]
+                    ),
+                }
+                for item in layers
+            ],
+        },
+        "criteria": cache_criteria,
+        "validators": cache_validators,
+        "anatomyCoverage": anatomy_signature,
+        "psHandoff": {
+            "used": ps_handoff.get("used", False),
+            "openDocumentCount": ps_handoff.get("openDocumentCount"),
+            "inFlightCommandCount": ps_handoff.get("inFlightCommandCount"),
+            "unknownCommandCount": ps_handoff.get("unknownCommandCount"),
+            "handoffStatus": ps_handoff.get("handoffStatus"),
+            "evidenceSha256": sorted(item["sha256"] for item in ps_handoff.get("evidence", [])),
+            "capabilitySha256": (ps_handoff.get("capabilitySnapshot") or {}).get("sha256"),
+        },
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def validate_timing_ledger(records: list, pixel_preview_ready: bool) -> tuple[list[dict], list[str], float]:
+    if not isinstance(records, list):
+        raise ValueError("timingLedger must be a list.")
+    normalized: list[dict] = []
+    actions: list[str] = []
+    targets = {"layout": 600, "pixel-preview": 900, "finalization": 600}
+    total_active = 0.0
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            raise ValueError(f"timingLedger[{index}] must be an object.")
+        require_fields(
+            record,
+            (
+                "phase",
+                "started_at",
+                "finished_at",
+                "active_seconds",
+                "external_wait_seconds",
+                "cache_hit",
+                "result",
+                "block_reason",
+            ),
+            f"timingLedger[{index}]",
+        )
+        active = record["active_seconds"]
+        wait = record["external_wait_seconds"]
+        if not isinstance(active, (int, float)) or active < 0:
+            raise ValueError(f"timingLedger[{index}].active_seconds must be non-negative.")
+        if not isinstance(wait, (int, float)) or wait < 0:
+            raise ValueError(f"timingLedger[{index}].external_wait_seconds must be non-negative.")
+        total_active += float(active)
+        normalized.append(dict(record))
+        target = targets.get(record["phase"])
+        if target is not None and active > target:
+            actions.append(f"{record['phase']} exceeded active-time target {target}s")
+    if total_active >= 1800 and not pixel_preview_ready:
+        actions.append("SWITCH_METHOD: 30m active without Pixel Proof Preview")
+    if total_active >= 3600:
+        actions.append("PACKAGE_PROVISIONAL: stop low-value polish at 60m active")
+    return normalized, actions, total_active
+
+
+def finalize_scene(manifest_path: Path, profile: str) -> dict:
+    started_clock = time.perf_counter()
+    started_at = datetime.now().astimezone().isoformat(timespec="seconds")
+    if profile not in FINALIZATION_PROFILES:
+        raise ValueError("profile must be probe, provisional or formal.")
+    manifest_path = manifest_path.resolve()
+    data = load_contract(manifest_path)
+    require_fields(data, ("schema", "sceneId", "scope", "ui", "artifacts", "criteria"), "manifest")
+    if data["schema"] != FINALIZATION_SCHEMA:
+        raise ValueError(f"manifest.schema must be {FINALIZATION_SCHEMA}.")
+    scope = data["scope"]
+    if not isinstance(scope, dict):
+        raise ValueError("scope must be an object.")
+    required_layer_ids = scope.get("requiredLayerIds", [])
+    if not isinstance(required_layer_ids, list) or not required_layer_ids or len(required_layer_ids) != len(set(required_layer_ids)) or not all(
+        isinstance(value, str) and value for value in required_layer_ids
+    ):
+        raise ValueError("scope.requiredLayerIds must be a non-empty distinct string list.")
+    branches = finalization_branches(scope)
+    applicable = list(FINALIZATION_BASE_CHECKS) + branches
+    anatomy_coverage, anatomy_blocked = validate_anatomy_coverage(
+        scope, required_layer_ids, manifest_path
+    )
+    ps_handoff, ps_blocked = validate_ps_handoff(data.get("psSession"), manifest_path)
+    sides, ui_paths = validate_ui_contract(data["ui"], manifest_path)
+    artifacts = data["artifacts"]
+    if not isinstance(artifacts, dict):
+        raise ValueError("artifacts must be an object.")
+    scene_path = resolve_manifest_path(str(artifacts.get("sourceScene", "")), manifest_path)
+    layout_path = resolve_manifest_path(str(artifacts.get("layoutSource", "")), manifest_path)
+    for label, path in (("sourceScene", scene_path), ("layoutSource", layout_path)):
+        if not path.is_file():
+            raise ValueError(f"artifacts.{label} does not exist: {path}")
+    scene = Image.open(scene_path).convert("RGBA")
+    layout = Image.open(layout_path).convert("RGBA")
+    if layout.size != scene.size:
+        raise ValueError("artifacts.layoutSource must use the source-scene canvas.")
+    checks, criteria_sig, blocked, provisional = finalization_check_state(
+        data["criteria"], applicable, manifest_path, profile
+    )
+    blocked.extend(anatomy_blocked)
+    blocked.extend(ps_blocked)
+    extraction = data.get("extraction", {})
+    if not isinstance(extraction, dict):
+        raise ValueError("extraction must be an object.")
+    layers, extraction_blocked, extraction_provisional, route_state = validate_extraction_layers(
+        extraction, required_layer_ids, profile, manifest_path
+    )
+    blocked.extend(extraction_blocked)
+    if profile != "probe":
+        provisional.extend(extraction_provisional)
+    validators = data.get("validators", [])
+    if not isinstance(validators, list):
+        raise ValueError("validators must be a list.")
+    validators_sig = validator_signature(validators, profile, manifest_path)
+    if profile == "formal":
+        validator_names = {item["name"] for item in validators_sig}
+        for required_name in ("production-ledger", "final-conformance"):
+            if required_name not in validator_names:
+                blocked.append(f"formal profile requires validator: {required_name}")
+    output_value = data.get("outputDir", f"finalization/{data['sceneId']}")
+    if not isinstance(output_value, str) or not output_value:
+        raise ValueError("outputDir must be a non-empty path string.")
+    output_dir = resolve_manifest_path(output_value, manifest_path)
+    if os.environ.get("NDC_ART_WORK_ROOT"):
+        work_root = configured_root("NDC_ART_WORK_ROOT")
+        if not is_within(output_dir, work_root):
+            raise ValueError(
+                "Finalization previews, evidence and provisional outputs must stay under NDC_ART_WORK_ROOT."
+            )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    cache_key = finalization_cache_key(
+        profile, scope, sides, ui_paths, scene_path, layout_path, layers,
+        criteria_sig, validators_sig, anatomy_coverage, ps_handoff,
+    )
+    report_path = output_dir / f"finalize-{profile}-report.json"
+    cache_hit = False
+    prior: dict | None = None
+    if report_path.is_file():
+        try:
+            loaded = load_contract(report_path)
+            required_outputs = [Path(value) for value in loaded.get("outputs", {}).values()]
+            if loaded.get("cacheKey") == cache_key and all(path.is_file() for path in required_outputs):
+                prior = loaded
+                cache_hit = True
+        except (OSError, ValueError, json.JSONDecodeError, TypeError):
+            prior = None
+    if cache_hit and prior is not None:
+        outputs = prior["outputs"]
+    else:
+        layout_output = output_dir / f"layout-preview-{profile}.png"
+        _save_variant_board(layout, sides, ui_paths, layout_output)
+        outputs = {"layoutPreview": str(layout_output.resolve())}
+        usable_layers = [
+            item
+            for item in layers
+            if item["structuralReview"] == "PASS" and item["edgeReview"] in {"PASS", "PROVISIONAL"}
+        ]
+        pixel_preview_ready = bool(usable_layers)
+        if usable_layers:
+            composite = scene.copy()
+            for item in usable_layers:
+                _alpha_overlay(composite, item["image"], item["xy"])
+            pixel_output = output_dir / f"pixel-proof-preview-{profile}.png"
+            _save_variant_board(composite, sides, ui_paths, pixel_output)
+            outputs["pixelProofPreview"] = str(pixel_output.resolve())
+            if profile != "probe":
+                matte_output = output_dir / f"matte-contact-sheet-{profile}.png"
+                render_matte_contact_sheet(usable_layers, scene, matte_output)
+                outputs["matteContactSheet"] = str(matte_output.resolve())
+            if profile != "probe" and data.get("reconstruction", {}).get("enabled") is True:
+                reconstruction_output = output_dir / f"reconstruction-{profile}.png"
+                composite.save(reconstruction_output)
+                outputs["reconstruction"] = str(reconstruction_output.resolve())
+                xy_output = output_dir / f"xy-manifest-{profile}.json"
+                write_json(
+                    xy_output,
+                    {
+                        "sceneId": data["sceneId"],
+                        "sourceScene": {"path": str(scene_path), "sha256": sha256_file(scene_path)},
+                        "layers": [
+                            {key: item[key] for key in ("id", "path", "sha256", "xy", "quality")}
+                            for item in usable_layers
+                        ],
+                    },
+                )
+                outputs["xyManifest"] = str(xy_output.resolve())
+    validator_results, validator_blocked = run_finalization_validators(
+        validators, profile, manifest_path, output_dir
+    )
+    blocked.extend(validator_blocked)
+    if profile != "provisional" and provisional:
+        blocked.extend(
+            f"provisional review is not accepted by {profile}: {item}" for item in provisional
+        )
+    if blocked:
+        result = "BLOCKED"
+    elif profile == "provisional" or provisional:
+        result = "PROVISIONAL"
+    else:
+        result = "PASS"
+    block_reason = "; ".join(blocked)
+    pixel_preview_ready = "pixelProofPreview" in outputs
+    timing_records, schedule_actions, total_active_seconds = validate_timing_ledger(
+        data.get("timingLedger", []), pixel_preview_ready
+    )
+    if profile == "formal":
+        package_state = "FORMAL_CANDIDATE" if result == "PASS" else "FORMAL_REVIEW_BLOCKED"
+    elif profile == "provisional":
+        package_state = "H0_BLOCKED_PACKAGE" if result == "BLOCKED" else "PROVISIONAL_SCENE_PACKAGE"
+    else:
+        package_state = "PIXEL_PROOF_READY" if result == "PASS" else "PROBE_BLOCKED"
+    finished_at = datetime.now().astimezone().isoformat(timespec="seconds")
+    timing_records.append(
+        {
+            "phase": "finalization",
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "active_seconds": round(time.perf_counter() - started_clock, 3),
+            "external_wait_seconds": 0.0,
+            "cache_hit": cache_hit,
+            "result": result,
+            "block_reason": block_reason,
+        }
+    )
+    timing_path = output_dir / "timing-ledger.json"
+    write_json(timing_path, timing_records)
+    canonical_path = output_dir / "finalization.json"
+    summary_path = output_dir / "finalization-summary.txt"
+    outputs["finalization"] = str(canonical_path.resolve())
+    outputs["summary"] = str(summary_path.resolve())
+    report = {
+        "schema": "ndc-character-scene-finalization-report/v1",
+        "implementationVersion": FINALIZATION_IMPLEMENTATION_VERSION,
+        "sceneId": data["sceneId"],
+        "profile": profile,
+        "result": result,
+        "packageState": package_state,
+        "cacheKey": cache_key,
+        "cacheHit": cache_hit,
+        "ui": {"required": True, "variant": data["ui"]["variant"], "reviewedSides": sides},
+        "inputBindings": {
+            "sourceScene": {"path": str(scene_path), "sha256": sha256_file(scene_path)},
+            "layoutSource": {"path": str(layout_path), "sha256": sha256_file(layout_path)},
+            "ui": [
+                {"side": side, "path": str(ui_paths[side]), "sha256": sha256_file(ui_paths[side])}
+                for side in sides
+            ],
+            "rgbaLayers": [
+                {key: item[key] for key in ("id", "path", "sha256", "xy", "quality", "structuralReview", "edgeReview", "reviewEvidence")}
+                for item in layers
+            ],
+        },
+        "universalChecks": list(FINALIZATION_BASE_CHECKS),
+        "conditionalBranches": branches,
+        "anatomyCoverage": anatomy_coverage,
+        "photoshopHandoff": ps_handoff,
+        "checks": checks,
+        "routeState": route_state,
+        "validators": validator_results,
+        "outputs": outputs,
+        "blockedReasons": blocked,
+        "provisionalReasons": provisional,
+        "scheduleActions": schedule_actions,
+        "totalActiveSecondsBeforeFinalization": total_active_seconds,
+        "timingLedger": str(timing_path.resolve()),
+        "note": (
+            "PASS is limited to this execution profile and requires explicit hash-bound review evidence. "
+            "The finalizer does not infer artistic approval from pixels or technical metrics."
+        ),
+    }
+    write_json(report_path, report)
+    write_json(canonical_path, report)
+    stable_outputs = {
+        key: {"file": Path(value).name, "sha256": sha256_file(Path(value))}
+        for key, value in outputs.items()
+        if key not in {"finalization", "summary", "packageIndex"} and Path(value).is_file()
+    }
+    package_index_path = output_dir / "package-index.json"
+    write_json(
+        package_index_path,
+        {
+            "schema": "ndc-character-scene-package-index/v1",
+            "sceneId": data["sceneId"],
+            "profile": profile,
+            "packageState": package_state,
+            "cacheKey": cache_key,
+            "sourceSceneSha256": sha256_file(scene_path),
+            "requiredLayerIds": sorted(required_layer_ids),
+            "layers": [
+                {key: item[key] for key in ("id", "sha256", "xy", "quality", "structuralReview", "edgeReview")}
+                for item in sorted(layers, key=lambda value: value["id"])
+            ],
+            "artifacts": stable_outputs,
+        },
+    )
+    outputs["packageIndex"] = str(package_index_path.resolve())
+    write_json(report_path, report)
+    write_json(canonical_path, report)
+    summary_path.write_text(
+        "\n".join(
+            (
+                f"scene={data['sceneId']}",
+                f"profile={profile}",
+                f"result={result}",
+                f"package_state={package_state}",
+                f"cache_hit={str(cache_hit).lower()}",
+                f"blocked={'; '.join(report['blockedReasons']) or '-'}",
+                f"provisional={'; '.join(report['provisionalReasons']) or '-'}",
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return report
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1394,6 +2260,9 @@ def main() -> None:
     states.add_argument("contract", type=Path)
     states.add_argument("before", type=Path)
     states.add_argument("after", type=Path)
+    finalize = subparsers.add_parser("finalize-scene")
+    finalize.add_argument("--manifest", required=True, type=Path)
+    finalize.add_argument("--profile", required=True, choices=sorted(FINALIZATION_PROFILES))
     args = parser.parse_args()
     if args.command == "validate-contract":
         data = load_contract(args.contract)
@@ -1423,6 +2292,14 @@ def main() -> None:
         render_shadow(args.contract, args.output)
     elif args.command == "verify-states":
         verify_states(args.contract, args.before, args.after)
+    elif args.command == "finalize-scene":
+        report = finalize_scene(args.manifest, args.profile)
+        print(
+            f"FINALIZE_SCENE_{report['result']} profile={report['profile']} "
+            f"cache_hit={str(report['cacheHit']).lower()}"
+        )
+        if report["result"] == "BLOCKED":
+            raise SystemExit(2)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,8 @@ description: 制作 NDC 独立道具透明母版、指定状态和普通 Big，�
 ---
 # NDC 道具母版制作
 
+先读[五阶段共用执行核心](../ndc-prop-requirements/references/pipeline-core.md)。本 Skill 只补充母版语义、生成与 Alpha 整备，不复制定义候选状态、增量复核和进度口径。
+
 先读取[重要度、容差与候选策略](../ndc-prop-requirements/references/importance-and-tolerance.md)。含 H1 的 master job 使用 `paired` 两图选优；全部为 H2/H3 时使用 `single_first`，首图通过硬门禁且处于 20%/30% 容差内即停止，只有实际失败才提交第二张。六次上限仍是故障/返修上限，不是默认必须用满的产量。
 
 ## Photoshop MCP 强制前置
@@ -26,12 +28,16 @@ description: 制作 NDC 独立道具透明母版、指定状态和普通 Big，�
 
 Photoshop MCP 已实际产出可打开的非生成 RGBA 后，不得因边缘不完整、残留／误删或把握不足而留空。保留提取前原图的精确字节、尺寸和 SHA-256；另存尝试 RGBA、可恢复 PSD、蒙版／路径／动作证据、Alpha 多底预览、置信度和逐区缺陷。旧 provisional 不覆盖，后续尝试新建版本。
 
-该结果可作为**明确标记的 provisional 来源**继续场景布局、Big/Icon 派生、状态预览、Map／XY 与整包联组检查；全部后继继承 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 和源哈希。把原图、尝试件、恢复件、缺陷记录和派生件放入 `工作过程文件` 下独立“待用户审核交付包”。不得把它写成 scene-readiness／正式覆盖 PASS，也不得进入 `最终交付`。用户审核、修正或新提取通过后，从保留原图或明确选定版本建立新修订，重跑受影响 Alpha、身份、场景、热区、XY、重建及发布门禁。若没有任何合规 RGBA 输出，则只保存能力阻断并继续其它独立资产，不伪造 provisional 文件。
+该结果可作为**明确标记的 provisional 来源**继续场景布局、Big/Icon 派生、状态预览、Map／XY 与整包联组检查；全部后继继承 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 和源哈希。把原图、尝试件、恢复件、缺陷记录和派生件放入 `工作过程文件` 下独立“待用户审核交付包”；其中只有当前任务已经明确选作交付目标的图像副本及其选定参考图，才可按共用执行核心登记到 `最终交付` 的“交付候选”隔离层。不得把它写成 scene-readiness／正式覆盖 PASS。用户审核、修正或新提取通过后，从保留原图或明确选定版本建立新修订，重跑受影响 Alpha、身份、场景、热区、XY、重建及发布门禁。若没有任何合规 RGBA 输出，则只保存能力阻断并继续其它独立资产，不伪造 provisional 文件。
 
 ## 生成和选优
 
+提交任何真实生成前，先运行 `scripts/submission_preflight.py`，核对当前 active scope、job 归属、目标 artifact、提示词哈希、该对话真实 attempt 和未知提交状态。预检输出 `ready=true` 后才允许提交；同一 submission 已发生或结果未知时回原记录核实，不得盲目重发。
+
+**固定生成载体：** 本 Skill 中所有实际新栅格像素生成一律使用 Codex 内置 `image_gen`。不得把“生图”理解为 `chatgpt.com` 网页对话，也不得使用浏览器自动化、其他网站或其它生图后端。需使用本地参考时，先实际查看参考，再按内置工具当前支持的引用方式提交；工具失败、结果未知或暂不可用时保留回执和检查点，不能改到网页 GPT 重新发送。
+
 1. 先处理本阶段可执行缺失项，之后再复检已有问题和修复／重制。当前缺失项有有效来源就复用，必要依赖只做针对性核对；“先复用”是单项方案选择，不是全批旧图先审先修。纯框幅、摆放、透明边缘问题优先使用可用PS MCP修复。
-2. 编写输入前按需调用现有 imagegen 与 ndc-visual-description；细节控制针对当前参考和错误，不把减少纹理当成改变画风。
+2. 编写输入前按需调用 Codex 内置 `image_gen` 与 ndc-visual-description；细节控制针对当前参考和错误，不把减少纹理当成改变画风。
 3. 同一物品状态母版总上限6张，首张计入。含 H1 的 `paired` job 按最多3轮、每轮2张比较选优；全部 H2/H3 的 `single_first` job 每轮只生成1张，首张通过硬门禁且处于容差内即停止，只有实际失败才进入下一轮。已有通过版本不为了用完额度继续生成。
 4. 必须在生图前通过 attempt 命令登记，prompt指向实际提交的提示文件。`paired` 同轮两张可用同一锁定提示作不同候选；下一轮须按失败原因实质修改。`single_first` 每次都是新一轮，第二张及以后均须记录首张的硬失败或超容差原因并修改提示。只有选定版进入透明整备。
 5. PS MCP一次只操作当前目标；占用、保存交接、检查等待及切换遵循共享PS协议。当前图必须先完成实际检查并保存 PASS、FAIL 或 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 的当前哈希记录，不能批量修改后补审；其中 provisional 只允许进入上文明确标记的下游和审核包，正式依赖及发布仍阻断。安全交接后其他任务可使用PS。恢复已有路径修局部，不反复描整圈。
@@ -42,3 +48,9 @@ Photoshop MCP 已实际产出可打开的非生成 RGBA 后，不得因边缘不
 ## 输出
 
 完整语义母版、透明选定版、已完成的普通Big、供后续Icon参考的来源索引、当前审核和总尝试记录。立体Icon的独立呈现来源也在第三阶段末制作；不能把整张Big机械缩成Icon。
+
+上述每个当前资产同时登记到本场 `ndc-prop-node-delivery-scope/v1` 对应 `source_master`／`state_master`／`big` 槽，并保留实际图像、技术与视觉审核路径及 SHA-256，供末端场景节点打包。这里只登记现成文件，不创建只有 JSON 的节点、不把未完成 Icon／Map 等角色标为 NOT_APPLICABLE，也不要求用户跨“共享资产”目录自行拼装母图。
+
+## 生成前来源门禁
+
+读[检索、人工节点与回流合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)。`submission-preflight-template.json` 与 `submission_preflight.py` v2 要求每次提交绑定 active delivery-scope SHA、item/state/artifact role 和对应三根 discovery receipt；旧批次没有当前 scope revision 时先显式迁移，不能伪造历史 checked_roots。普通透明母版、普通 Big 与 Icon 不适用 `chatgpt_web`；只有 scene evidence、container menu、environmental-narrative Big 可按获授权的网页例外处理。节点批准不会免除此处的单项检索、attempt、Alpha 与质量门禁。

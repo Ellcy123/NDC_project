@@ -23,13 +23,31 @@ LIMITS = {'master': 6, 'scene': 3, 'menu': 3, 'derived': 3}
 VISUAL_LIMITS = {'H1': 0.10, 'H2': 0.20, 'H3': 0.30}
 CANDIDATE_STRATEGIES = {'paired', 'single_first'}
 HERE = Path(__file__).resolve().parent
+_SHA_CACHE = {}
+_STAGE_CHECK = None
 
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
                                     separators=(',', ':')).encode('utf-8')).hexdigest()
 
 def sha(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    p = Path(os.path.abspath(path))
+    stat = p.stat()
+    key = (os.path.normcase(str(p)), stat.st_size, stat.st_mtime_ns)
+    cached = _SHA_CACHE.get(key)
+    if cached is None:
+        cached = hashlib.sha256(p.read_bytes()).hexdigest()
+        _SHA_CACHE[key] = cached
+    return cached
+
+def stage_check_module():
+    global _STAGE_CHECK
+    if _STAGE_CHECK is None:
+        spec = importlib.util.spec_from_file_location('ndc_prop_stage_check', HERE / 'stage_visual_check.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        _STAGE_CHECK = module
+    return _STAGE_CHECK
 
 def read(path):
     return json.loads(Path(path).read_text(encoding='utf-8-sig'))
@@ -37,6 +55,9 @@ def read(path):
 def resolve(base, path):
     p = Path(path)
     return p.resolve() if p.is_absolute() else (base / p).resolve()
+def execution_required_artifacts(b):
+    active = scenes.execution_artifact_ids(b)
+    return [aid for aid in b['scope']['required_artifacts'] if aid in active]
 
 def validate_job_definition(job_id, job, scope):
     if not isinstance(job, dict) or job.get('kind') not in LIMITS or job.get('item_id') not in scope['item_ids']:
@@ -87,6 +108,18 @@ def load_batch(path):
         raise ValueError('required artifacts missing from inventory')
     for job_id, j in b['jobs'].items():
         validate_job_definition(job_id, j, scope)
+    state_events = b.get('state_events', [])
+    if not isinstance(state_events, list):
+        raise ValueError('state_events must be a list')
+    previous = None
+    for sequence, event in enumerate(state_events, 1):
+        if (not isinstance(event, dict) or event.get('sequence') != sequence
+                or event.get('previous_event_sha256') != previous):
+            raise ValueError('state event sequence or predecessor damaged')
+        actual = digest({key: value for key, value in event.items() if key != 'event_sha256'})
+        if event.get('event_sha256') != actual:
+            raise ValueError('state event hash damaged')
+        previous = digest(event)
     return b
 
 def log_events(path, b, *, _pending_revalidation=None):
@@ -114,7 +147,7 @@ def log_events(path, b, *, _pending_revalidation=None):
     history = {}
     attempted = set()
     active_scene_index = None
-    for e in events[1:]:
+    for event_index, e in enumerate(events[1:], 1):
         key = e.get('job_id')
         if e.get('type') == 'task_attribution':
             if not e.get('task_id') or not e.get('reason') or first.get('task_id'):
@@ -136,11 +169,12 @@ def log_events(path, b, *, _pending_revalidation=None):
                        'role': artifact.get('role'), 'scene_id': artifact.get('scene_id', ''),
                        'item_ids': artifact.get('item_ids'), 'job_id': artifact.get('job_id')}
             # An addendum may only be registered against a PENDING artifact, but the
-            # immutable addendum must remain valid after its real scene output passes
-            # review.  Requiring PENDING here made a correct PASS transition corrupt
-            # the batch on every subsequent validation.
+            # immutable addendum must remain valid while its real scene output is a
+            # candidate and after it passes review. Requiring PENDING or PASS alone
+            # made a correct CANDIDATE transition corrupt the batch on subsequent
+            # validation. CANDIDATE remains non-releasable through review_errors.
             if (e.get('artifact_binding') != binding or artifact.get('job_id') != key
-                    or artifact.get('status') not in {'PENDING', 'PASS'} or artifact.get('rejected') is not False
+                    or artifact.get('status') not in {'PENDING', 'CANDIDATE', 'PASS'} or artifact.get('rejected') is not False
                     or job['item_id'] not in artifact.get('item_ids', [])
                     or job['kind'] != 'scene' or artifact.get('stage') != 3
                     or job.get('scene_id') != artifact.get('scene_id')):
@@ -204,7 +238,7 @@ def log_events(path, b, *, _pending_revalidation=None):
         if e.get('number') != counts[key] or (not e.get('task_id') and counts[key] > LIMITS[b['jobs'][key]['kind']]):
             raise ValueError('attempt budget exceeded or reset for ' + key)
         if e.get('task_id'):
-            expected = task_count(b, events[:events.index(e)], key, e['task_id']) + 1
+            expected = task_count(b, events[:event_index], key, e['task_id']) + 1
             if e.get('task_number') != expected or expected > LIMITS[b['jobs'][key]['kind']]:
                 raise ValueError('conversation task budget exceeded or reset for ' + key)
         if sha(Path(e['prompt_path'])) != e.get('prompt_sha256'):
@@ -218,8 +252,15 @@ def log_events(path, b, *, _pending_revalidation=None):
         # still validates the full chain, snapshots, counts and all live sources.
         evidence_path, evidence, evidence_sha256 = _pending_revalidation
         apply_history_revalidation(b, history, evidence_path, evidence, evidence_sha256)
+    # A job-addendum may record the active batch as the state-at-registration
+    # source.  `append()` necessarily rewrites that materialized state to move
+    # the attempt head, so re-hashing it during every replay would make the
+    # event invalidate itself.  The event's immutable binding, evidence
+    # snapshot, and job/scope replay still bind that state; keep every other
+    # historical source hash live-validated.
+    mutable_state_sources = {os.path.normcase(str(path.resolve()))}
     for entry in history.values():
-        check_history_sources(entry['sources'])
+        check_history_sources(entry['sources'], mutable_state_sources=mutable_state_sources)
     return events
 
 def unknown_hold(job):
@@ -245,8 +286,10 @@ def history_source_map(path, sources):
         result[key] = source['sha256'].lower()
     return result
 
-def check_history_sources(sources):
+def check_history_sources(sources, *, mutable_state_sources=frozenset()):
     for path, expected in sources.items():
+        if os.path.normcase(str(Path(path).resolve())) in mutable_state_sources:
+            continue
         if sha(path).lower() != expected:
             raise ValueError('history source bytes changed: ' + path)
 
@@ -546,6 +589,56 @@ def scene_readiness(path, scene_id):
     result.update(mode='scene_dependency_closure', ready=not result['failures'])
     return result
 
+def empty_source_bootstrap_parents(batch, job, targets):
+    """Return only the direct pending source branch an empty-scene job may create.
+
+    A newly registered ``empty_source`` job is intentionally bound to the
+    required final scene artifact: the root ``source_reference`` is an
+    internal parent rather than an independently required delivery artifact.
+    That used to create a circular gate, because the first source generation
+    was required to review the source it is supposed to produce. This narrow
+    exception admits only a single unbound pending root source and direct
+    pending descendants whose sole upstream branch is that source. Any actual
+    master, cross-scene, rejected, candidate, or produced dependency remains
+    a normal prerequisite.
+    """
+    if (job.get('kind') != 'scene' or job.get('state') != 'empty_source'
+            or len(targets) != 1):
+        return set()
+    target = targets[0]
+    if target.get('role') != 'scene_preview':
+        return set()
+    scene_id = job.get('scene_id')
+    direct = list(target.get('parents', []))
+    roots = [aid for aid in direct if aid in batch['artifacts']
+             and batch['artifacts'][aid].get('role') == 'source_reference'
+             and batch['artifacts'][aid].get('scene_id') == scene_id
+             and batch['artifacts'][aid].get('stage') == 3
+             and batch['artifacts'][aid].get('status') == 'PENDING'
+             and batch['artifacts'][aid].get('rejected') is False
+             and not batch['artifacts'][aid].get('job_id')
+             and not batch['artifacts'][aid].get('parents')]
+    if len(roots) != 1:
+        return set()
+    root = roots[0]
+
+    def source_only_pending_branch(aid, trail=None):
+        trail = set() if trail is None else set(trail)
+        if aid in trail or aid not in batch['artifacts']:
+            return False
+        if aid == root:
+            return True
+        row = batch['artifacts'][aid]
+        if (row.get('scene_id') != scene_id or row.get('stage') != 3
+                or row.get('status') != 'PENDING' or row.get('rejected') is not False):
+            return False
+        parents = row.get('parents', [])
+        return bool(parents) and all(source_only_pending_branch(parent, trail | {aid})
+                                     for parent in parents)
+
+    ignored = {aid for aid in direct if source_only_pending_branch(aid)}
+    return ignored if root in ignored else set()
+
 def reserve_attempt(path, job_id, prompt, reason, task_id=None):
     task_id = current_task_id(task_id)
     with lock(path):
@@ -591,11 +684,14 @@ def reserve_attempt(path, job_id, prompt, reason, task_id=None):
             gate_errors = validate(path, stage)
         archive = read(resolve(path.parent, b['content_archive']))
         if icon_job:
-            for aid in b['scope']['required_artifacts']:
+            for aid in execution_required_artifacts(b):
                 artifact = b['artifacts'][aid]
                 if artifact.get('stage') == 3 and not is_icon(artifact):
                     gate_errors += review_errors(path, b, archive, aid)
+        bootstrap_parents = empty_source_bootstrap_parents(b, j, targets)
         for parent in {p for a in targets for p in a.get('parents', [])}:
+            if parent in bootstrap_parents:
+                continue
             if parent not in b['artifacts']:
                 gate_errors.append('missing generation parent ' + parent)
             else:
@@ -651,7 +747,21 @@ def fact_values(archive, refs):
         values[ref] = archive['items'][item_id]['requirements'][field]
     return values
 
-def expected_binding(b, archive, aid):
+def review_context(b, archive):
+    index = scenes.active_index(b)
+    owners = {aid: [] for aid in b['artifacts']}
+    if index is not None:
+        for sid, row in index['scenes'].items():
+            for aid in row['artifact_ids']:
+                owners.setdefault(aid, []).append(sid)
+    return {'index': index, 'owners': owners, 'closures': {}, 'reviews': {}}
+
+def scene_closure(b, archive, context, sid):
+    if sid not in context['closures']:
+        context['closures'][sid] = scenes.closure(b, archive, context['index'], sid)
+    return context['closures'][sid]
+
+def expected_binding(b, archive, aid, context=None):
     a = b['artifacts'][aid]
     binding = {
         'artifact_id': aid, 'role': a['role'], 'output_sha256': a['sha256'].lower(),
@@ -659,16 +769,25 @@ def expected_binding(b, archive, aid):
         'acceptance_digest': digest(a['acceptance_contract']),
         'parent_hashes': {p: b['artifacts'][p]['sha256'].lower() for p in a['parents']},
     }
-    scene_context = scenes.artifact_binding(b, archive, aid)
+    if context is None:
+        scene_context = scenes.artifact_binding(b, archive, aid)
+    elif context['index'] is None:
+        scene_context = {}
+    else:
+        scene_context = {sid: scene_closure(b, archive, context, sid)['context_sha256']
+                         for sid in context['owners'].get(aid, [])}
     if scene_context:
         binding['scene_release_contexts'] = scene_context
     return binding
 
-def review_errors(path, b, archive, aid, trail=None):
+def review_errors(path, b, archive, aid, trail=None, context=None):
+    context = review_context(b, archive) if context is None else context
     errors = []
     trail = set() if trail is None else set(trail)
     if aid in trail:
         return ['dependency cycle: ' + aid]
+    if aid in context['reviews']:
+        return list(context['reviews'][aid])
     trail.add(aid)
     a = b['artifacts'][aid]
     if a.get('status') != 'PASS' or a.get('rejected') is not False:
@@ -677,18 +796,18 @@ def review_errors(path, b, archive, aid, trail=None):
         if parent not in b['artifacts']:
             errors.append(aid + ': missing parent ' + parent)
         else:
-            errors += review_errors(path, b, archive, parent, trail)
+            errors += review_errors(path, b, archive, parent, trail, context)
     # Association prerequisites may be absent from the old image-only parent DAG.
     # Keep them live for already-produced scenes as well as new attempts.
     try:
-        index = scenes.active_index(b)
+        index = context['index']
         if index is not None:
-            for sid in scenes.owners(b, index, aid):
-                dependency = scenes.closure(b, archive, index, sid)
+            for sid in context['owners'].get(aid, []):
+                dependency = scene_closure(b, archive, context, sid)
                 errors += dependency['failures']
                 for parent in dependency['prerequisite_artifacts']:
                     if parent not in a.get('parents', []):
-                        errors += review_errors(path, b, archive, parent, trail)
+                        errors += review_errors(path, b, archive, parent, trail, context)
     except (OSError, KeyError, ValueError, TypeError) as exc:
         errors.append(aid + ': scene association binding invalid: ' + str(exc))
     try:
@@ -701,15 +820,12 @@ def review_errors(path, b, archive, aid, trail=None):
             errors.append(aid + ': output bytes changed')
         rp = resolve(path.parent, a['review'])
         record = read(rp)
-        expected = expected_binding(b, archive, aid)
+        expected = expected_binding(b, archive, aid, context)
         if record.get('workflow_binding') != expected:
             errors.append(aid + ': stale facts/requirements/parent/review scope')
         if record.get('role') != a['role']:
             errors.append(aid + ': review role mismatch')
-        spec = importlib.util.spec_from_file_location('ndc_prop_stage_check', HERE / 'stage_visual_check.py')
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        errors += [aid + ': ' + e for e in module.validate_record(rp, [])]
+        errors += [aid + ': ' + e for e in stage_check_module().validate_record(rp, [])]
         if a['sha256'].lower() not in {x.get('sha256', '').lower() for x in record.get('outputs', [])}:
             errors.append(aid + ': review does not bind current output')
         names = {c.get('name') for c in record.get('criteria', [])
@@ -728,17 +844,23 @@ def review_errors(path, b, archive, aid, trail=None):
             errors.append(aid + ': published copy differs')
     except (OSError, KeyError, ValueError, TypeError, AttributeError) as exc:
         errors.append(aid + ': incomplete review evidence: ' + str(exc))
+    errors = sorted(set(errors))
+    context['reviews'][aid] = errors
     return errors
 
-def validate(path, stage=1, scene_id=None):
+def validate(path, stage=1, scene_id=None, *, _loaded=None, _review_context=None):
     errors = []
     try:
-        b = load_batch(path)
-        log_events(path, b)
-        archive = read(resolve(path.parent, b['content_archive']))
+        if _loaded is None:
+            b = load_batch(path)
+            log_events(path, b)
+            archive = read(resolve(path.parent, b['content_archive']))
+            index = scenes.active_index(b)
+        else:
+            b, archive, index = _loaded
+        context = review_context(b, archive) if _review_context is None else _review_context
         if archive.get('schema') != 'ndc-prop-content/v1':
             errors.append('unsupported content schema')
-        index = scenes.active_index(b)
         dependency = None
         if index is not None:
             errors += scenes.validate_index(index, b, archive)
@@ -747,11 +869,15 @@ def validate(path, stage=1, scene_id=None):
             if scene_id is not None:
                 if stage not in (3, 4):
                     return ['scene-scoped validation is supported only at stage 3 or stage 4 entry']
-                dependency = scenes.closure(b, archive, index, scene_id)
+                dependency = scene_closure(b, archive, context, scene_id)
                 errors += dependency['failures']
         elif scene_id is not None and scene_id not in b['scope']['scene_ids']:
             return ['scene is outside full batch scope']
+        required = execution_required_artifacts(b)
+        execution_items = {iid for aid in required for iid in b['artifacts'][aid].get('item_ids', [])}
         for iid in b['scope']['item_ids']:
+            if iid not in execution_items:
+                continue
             item = archive['items'][iid]
             if not item.get('source_references') or not item.get('requirements'):
                 errors.append(iid + ': source/content missing')
@@ -800,7 +926,6 @@ def validate(path, stage=1, scene_id=None):
                         errors.append(iid + '.' + field + ': H3 requires low_salience_basis')
         if stage >= 2 and b.get('requirements_locked') is not True:
             errors.append('requirements are not locked')
-        required = b['scope']['required_artifacts']
         for aid in required:
             a = b['artifacts'][aid]
             if a.get('stage') not in (2, 3, 4):
@@ -820,7 +945,7 @@ def validate(path, stage=1, scene_id=None):
             if a.get('stage') == 4 and not a['parents']:
                 errors.append(aid + ': hotspot has no accepted parent')
             if dependency is None and (a['stage'] < stage or (stage == 5)):
-                errors += review_errors(path, b, archive, aid)
+                errors += review_errors(path, b, archive, aid, context=context)
         for job_id, job in b['jobs'].items():
             if job.get('kind') != 'master' or 'candidate_strategy' not in job:
                 continue
@@ -831,12 +956,12 @@ def validate(path, stage=1, scene_id=None):
                 errors.append(job_id + ': candidate_strategy must be ' + expected + ' for current visual priority')
         if dependency is not None:
             for aid in dependency['prerequisite_artifacts']:
-                errors += review_errors(path, b, archive, aid)
+                errors += review_errors(path, b, archive, aid, context=context)
             if stage == 4:
                 local = [aid for aid in index['scenes'][scene_id]['artifact_ids']
-                         if aid in b['artifacts'] and b['artifacts'][aid].get('stage') == 3 and not is_icon(b['artifacts'][aid])]
+                         if aid in required and b['artifacts'][aid].get('stage') == 3 and not is_icon(b['artifacts'][aid])]
                 for aid in local:
-                    errors += review_errors(path, b, archive, aid)
+                    errors += review_errors(path, b, archive, aid, context=context)
                 if not any(b['artifacts'][aid].get('role') == 'scene_preview' for aid in local):
                     errors.append(scene_id + ': scene preview coverage missing')
                 for aid in local:
@@ -878,7 +1003,8 @@ def formal_errors(path, folder):
         a = b['artifacts'][aid]
         if a.get('published_path'):
             by_path[resolve(path.parent, a['published_path'])] = a
-    pngs = [p for p in folder.rglob('*') if p.is_file() and p.suffix.lower() == '.png']
+    pngs = [p for p in folder.rglob('*') if p.is_file() and p.suffix.lower() == '.png'
+            and not ({'交付候选', '_交付候选', '节点交付'} & set(p.relative_to(folder).parts))]
     if not pngs:
         errors.append('no formal PNGs')
     for p in pngs:
@@ -891,10 +1017,13 @@ def progress(path):
     b = load_batch(path)
     log_events(path, b)
     archive = read(resolve(path.parent, b['content_archive']))
-    required = b['scope']['required_artifacts']
+    index = scenes.active_index(b)
+    loaded = (b, archive, index)
+    context = review_context(b, archive)
+    required = execution_required_artifacts(b)
     passed = {aid for aid in required
               if b['artifacts'][aid].get('status') == 'PASS'
-              and not review_errors(path, b, archive, aid)}
+              and not review_errors(path, b, archive, aid, context=context)}
     def metric(ids):
         ids = set(ids)
         return {'passed': len(ids & passed), 'required': len(ids),
@@ -903,26 +1032,28 @@ def progress(path):
         str(stage): metric(aid for aid in required if b['artifacts'][aid].get('stage') == stage)
         for stage in (2, 3, 4)}, 'current_stage': b['current_stage'],
                  'next_action': b['next_action'], 'execution_priority': b.get('execution_priority')}
-    index = scenes.active_index(b)
     if index is not None:
         per_scene = {}
-        all_scenes_frozen = not validate(path, 4)
-        all_outputs_current = not validate(path, 5)
+        all_scenes_frozen = not validate(path, 4, _loaded=loaded, _review_context=context)
+        all_outputs_current = not validate(path, 5, _loaded=loaded, _review_context=context)
         for sid, row in index['scenes'].items():
-            ready = scene_readiness(path, sid)
+            dependency = scene_closure(b, archive, context, sid)
+            readiness_errors = validate(path, 3, scene_id=sid, _loaded=loaded, _review_context=context)
+            ready = dict(dependency, ready=not readiness_errors, failures=readiness_errors)
             owned = set(row['artifact_ids'])
+            local_stage4_errors = validate(path, 4, scene_id=sid, _loaded=loaded, _review_context=context)
             if not ready['ready']:
                 stage, state = 2, 'WAITING_SCENE_PREREQUISITES'
             elif not owned <= passed:
                 stage, state = 3, 'SCENE_PRODUCTION_READY'
-            elif validate(path, 4, scene_id=sid):
+            elif local_stage4_errors:
                 stage, state = 3, 'WAITING_LOCAL_SCENE_FREEZE_GATE'
             elif not all_outputs_current:
                 stage, state = 4, 'LOCAL_HOTSPOT_GATE_OPEN'
             else:
                 stage, state = 5, 'ALL_REQUIRED_IMAGES_CURRENT'
             per_scene[sid] = {'stage': stage, 'state': state, 'stage3_ready': ready['ready'],
-                              'scene_outputs': metric(owned), 'stage4_local_ready': not validate(path, 4, scene_id=sid),
+                              'scene_outputs': metric(owned), 'stage4_local_ready': not local_stage4_errors,
                               'global_stage4_ready': all_scenes_frozen, 'blockers': ready['failures']}
         result.update(declared_current_stage=b['current_stage'], stage_dispatch='per_scene', scenes=per_scene)
         # Keep the compatibility scalar as the earliest actual incomplete phase;
@@ -930,10 +1061,14 @@ def progress(path):
         if per_scene:
             result['current_stage'] = min(row['stage'] for row in per_scene.values())
     if 'initial_missing_artifacts' in b:
-        missing = b['initial_missing_artifacts']
-        if not isinstance(missing, list) or len(missing) != len(set(missing)) or not set(missing) <= set(required):
+        missing_full = b['initial_missing_artifacts']
+        if (not isinstance(missing_full, list) or len(missing_full) != len(set(missing_full))
+                or not set(missing_full) <= set(b['scope']['required_artifacts'])):
             raise ValueError('invalid missing baseline; preserve required artifact scope')
+        active = set(required)
+        missing = [aid for aid in missing_full if aid in active]
         result['missing_fill'] = metric(missing)
+        result['initial_missing_excluded_from_active_scope'] = len(set(missing_full) - active)
     else:
         result['missing_fill'] = None
     return result

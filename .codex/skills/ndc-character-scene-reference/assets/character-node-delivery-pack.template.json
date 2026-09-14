@@ -1,0 +1,79 @@
+{
+  "schema": "ndc-character-node-delivery-pack/v1",
+  "unit": "Unit【N】",
+  "scene_id": "【SCENE_ID】",
+  "scene_label": {
+    "display_name": "【地点概括】（【白天_OR_夜晚_OR_明确时段_OR_时段未标注】）",
+    "location": "【地点概括】",
+    "time": "【白天_OR_夜晚_OR_明确时段_OR_时段未标注】"
+  },
+  "revision": "【REVISION】",
+  "node_id": "【SCENE_ID】-r【REVISION】-character-node",
+  "created_at": "【ISO-8601_WITH_TIMEZONE】",
+  "scope": {"path": "【FROZEN_SCOPE】", "sha256": "【SHA256】"},
+  "source_index": {"path": "【IDENTITY_CARD_SCENE_SOURCE_INDEX】", "sha256": "【SHA256】"},
+  "handoff_document": {"path": "【HANDOFF_DOCUMENT】", "sha256": "【SHA256】"},
+  "naming_table": {"path": "【NAMING_TABLE】", "sha256": "【SHA256】"},
+  "web_prompt": {"path": "【CHARACTER_WEB_PROMPT】", "sha256": "【SHA256】"},
+  "production_whiteboxes": [
+    {
+      "actor_id": "【ACTOR_ID】",
+      "pose_id": "【POSE_ID】",
+      "anatomy_mode": "【FULL_IN_FRAME_OR_SCENE_OCCLUDED_OR_FRAME_CROPPED_FOREGROUND】",
+      "whitebox_kind": "3d-anatomical-mannequin-exact-pose",
+      "prohibited_proxy_types_absent": {
+        "stick_or_joint_figure": true,
+        "programmatic_geometry_blocks": true,
+        "flat_color_silhouette": true,
+        "technical_ruler": true,
+        "combined_scene_preview_as_master": true
+      },
+      "technical_review": {"path": "【WHITEBOX_TECHNICAL_REVIEW】", "sha256": "【SHA256】"},
+      "visual_review": {"path": "【WHITEBOX_WHOLE_100_AND_LOCAL_200_VISUAL_REVIEW】", "sha256": "【SHA256】"},
+      "discovery_receipt": {"path": "【ACTOR_POSE_DISCOVERY_RECEIPT】", "sha256": "【SHA256】"},
+      "complete_anatomy_master": {
+        "artifact_id": "【ACTOR_ID】.【POSE_ID】.whitebox-master",
+        "source": {"path": "【FINAL_PRODUCTION_RGBA_WHITEBOX_MASTER】", "sha256": "【SHA256】"},
+        "delivery_name": "【SCENE_ID】_【ACTOR_ID】_【POSE_ID】_whitebox-master.png",
+        "review_status": "【CURRENT_REVIEW_STATUS】",
+        "selection_basis": "完整 3D 解剖人体母层，绑定当前 actor/pose"
+      },
+      "final_submission_whitebox": {
+        "artifact_id": "【ACTOR_ID】.【POSE_ID】.image1-whitebox",
+        "source": {"path": "【EXACT_LOCAL_SCENE_CROP_USED_AS_CHATGPT_IMAGE_1】", "sha256": "【SHA256】"},
+        "delivery_name": "【SCENE_ID】_【ACTOR_ID】_【POSE_ID】_image1-whitebox.png",
+        "review_status": "【CURRENT_REVIEW_STATUS】",
+        "selection_basis": "正式网页提交实际使用的 Image 1 精确字节"
+      }
+    }
+  ],
+  "joint_whitebox_preview": {
+    "artifact_id": "scene.joint-whitebox",
+    "source": {"path": "【JOINT_PREVIEW】", "sha256": "【SHA256】"},
+    "delivery_name": "【SCENE_ID】_scene_【REVISION】_joint-whitebox.png",
+    "review_status": "【CURRENT_REVIEW_STATUS】",
+    "selection_basis": "整场人物关系审核；禁止作为逐角色生产白模"
+  },
+  "actual_ui_clearance_preview": {
+    "artifact_id": "scene.ui-whitebox",
+    "source": {"path": "【ACTUAL_UI_CLEARANCE_PREVIEW】", "sha256": "【SHA256】"},
+    "delivery_name": "【SCENE_ID】_scene_【REVISION】_ui-whitebox.png",
+    "review_status": "【CURRENT_REVIEW_STATUS】",
+    "selection_basis": "本场真实 UI 避让审核"
+  },
+  "editable_sources": [
+    {
+      "artifact_id": "scene.whitebox-source",
+      "source": {"path": "【EDITABLE_WHITEBOX_SOURCE_PSD_OR_PSB】", "sha256": "【SHA256】"},
+      "delivery_name": "【SCENE_ID】_scene_【REVISION】_source.psd",
+      "review_status": "SOURCE_ONLY",
+      "selection_basis": "本场白模可恢复源文件"
+    }
+  ],
+  "legacy_migration_backfill": {
+    "enabled": false,
+    "reason": "仅在用户明确要求分拣当前任务旧冗余候选时改为 true；普通新节点保持 false",
+    "source_inventory": {"path": "【ONE_TIME_LEGACY_SOURCE_INVENTORY】", "sha256": "【SHA256】"}
+  },
+  "legacy_review_assets": []
+}

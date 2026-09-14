@@ -1,6 +1,6 @@
 # Prompt modules
 
-白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+人体覆盖遵循[效率与状态合同](efficiency-and-state-contract.md)：`FULL_IN_FRAME` 和 `SCENE_OCCLUDED` 保留完整头到脚母层；`FRAME_CROPPED_FOREGROUND` 保留完整可见解剖至自然出框边界，并绑定画外尺度、重心和承托证据。场景遮挡与镜头出框不可混淆。
 
 白模阶段以 [白模放行与正式完整性](whitebox-acceptance.md) 为准：位置、比例、头身比、动作和演绎可准确判断时，小型遮挡、局部缺失和细节可放行，不为此强制补全、PS返修或再生成。下文完整母层要求在正式生产仍适用；白模只须提供足以判断核心目标的独立及联合参考。
 
@@ -10,8 +10,8 @@ For new layered production, apply [layered-character-batches.md](layered-charact
 
 State each role explicitly:
 
-- scene: camera, geometry, local light, contact surfaces, and style;
-- character card: identity, body type, costume, palette, and fixed accessories;
+- scene: camera, geometry, local light, contact surfaces, and source-pixel color relationships; it does not define final rendering;
+- character card: identity, body type, costume (including factual garment colors), and fixed accessories; it does not define final rendering;
 - Codex-reviewed exact-pose proxy: preliminary position, scale, pose landmarks, contacts, and action envelope only;
 - depth map: continuous depth and occlusion only;
 - Codex-reviewed exact-pose whitebox: primary structural authority for final pose, scale, generation position, body volume, contacts, prop envelope, and actor/scene overlap;
@@ -38,14 +38,16 @@ Use this prompt skeleton with the applicable camera-visible fields from the dire
 ```text
 Base the result on Image 1. Replace only the reviewed whitebox with [CHARACTER] from Image 3. Show [CAMERA-RELATIVE BODY AND HEAD ORIENTATION], [VISIBLE ACTION OR RESTING STATE], and [VISIBLE SUPPORT/CONTACT RELATION]. [OPTIONAL VISIBLE FACE OR HAND DETAIL]. Preserve the approved whitebox pose, occupied volume, support contacts, depth, and local position. Let non-acting limbs rest with credible weight and joint relaxation rather than assigning them extra gestures.
 
-Image 1 is a deterministic crop from Image 2. Keep camera geometry, fixed furniture topology, perspective, and all pixels outside [MINIMUM INTERACTION REGION, IF ANY] unchanged. Within that region, show [REQUIRED SOFT-SURFACE LOAD RESPONSE, IF ANY] together with the character's contact; preserve the underlying fixed structure. Use Image 2 to match scene geometry, full-scene lighting, palette, and color grade. Add only the necessary contact and lighting response.
+Image 1 is a deterministic crop from Image 2. Keep camera geometry, fixed furniture topology, perspective, and all pixels outside [MINIMUM INTERACTION REGION, IF ANY] unchanged. Within that region, show [REQUIRED SOFT-SURFACE LOAD RESPONSE, IF ANY] together with the character's contact; preserve the underlying fixed structure. Use Image 2 only for scene geometry, full-scene lighting, source-pixel color relationships, and contextual contact. Add only the necessary contact and lighting response; Image 2 does not define final rendering.
 
-Use Image 3 only for identity, face, body type, costume, fixed accessories, palette, brushwork, and line language. Do not invent material, costume, texture, or accessory detail. Nearby object height is only a sanity check against absurd character scale; the approved whitebox is the scale authority. Remove the whitebox/mannequin in the result.
+Use Image 3 only for identity, face, body type, costume including factual garment colors, and fixed accessories. Do not take palette, brushwork, or line language from Image 3. Do not invent material, costume, texture, or accessory detail. Nearby object height is only a sanity check against absurd character scale; the approved whitebox is the scale authority. Remove the whitebox/mannequin in the result.
 
-Preserve the approved NDC character and scene style authorities exactly. Control only texture coherence and spatial detail density. Keep the character's large hair, face, costume, and shadow masses readable; retain the card's native line and brush language; place folds and texture only where pose, support, overlap, material, and local lighting require them. Match the scene depth by avoiding foreground-strength micro-detail on a distant actor. Do not invent repeated marks, random speckle, fragmented strokes, decorative micro-wrinkles, new seams, extra accessories, uniformly sharpened edges, or unsupported material texture. Keep all scene texture outside the minimum interaction component unchanged.
+Preserve the approved NDC character and scene authorities exactly. Keep the character's large hair, face, costume, and shadow masses readable; place folds and local marks only where pose, support, overlap, material, and local lighting require them. Do not invent repeated marks, random speckle, decorative micro-wrinkles, new seams or extra accessories. Keep all scene pixels outside the minimum interaction component unchanged.
 
-Style: highly stylized graphic illustration, extremely bold heavy inked outer silhouette contour::1.5, exaggerated drastic line weight variation, distinct heavy layered ink contours for each garment layer, bolder heavier internal ink lines, flat graphic monolithic hair mass, zero internal texture or detail in hair, single solid block of black or color for hair, simplified geometric planar shape blocking, distinct hard-edge color blocks, geometric face rendering with clean features, extreme high contrast chiaroscuro lighting, heavy use of solid black shadows (spot blacks), intense deep shadow areas, minimal specular highlights, matte surfaces, film noir aesthetic, American 1928s era context, straight perspective.
+[BYTE-COPY THE COMPLETE CONTENTS OF ndc-character-scene-production/assets/original-user-style-description.txt HERE. IT IS THE SOLE AUTHORITY FOR FINAL RENDERING. DO NOT TRANSCRIBE IT FROM THIS MARKDOWN, ADD A `Style:` PREFIX INSIDE IT, NORMALIZE ITS WHITESPACE, OR EDIT ANY CHARACTER.]
 ```
+
+The bracketed line is an assembly instruction, not text sent to ChatGPT. The production prompt must replace it with the canonical asset bytes. New web submissions run `ndc-prompt-style-binding/v2`; the gate rejects the previous shortened variant that omitted `(shirt, jacket, skirt, tie)`, any changed punctuation/whitespace, and any second rewritten style block.
 
 Translate the performance contract into visible orientation, action, support, and appropriate gesture size through `ndc-visual-description`; keep story objective, subtext, performance-family labels, and ten-second-hold reasoning out of the image prompt unless they add necessary context. A quiet explanatory hand motion can be valid, and an unoccupied hand may rest. Do not make every actor clasp hands, lower their head, or hold rigid arms; likewise do not prescribe staggered feet and tilted shoulders to everyone. Check the complete cast for both story fit and naturalness before extraction or polish.
 

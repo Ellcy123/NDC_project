@@ -1,0 +1,79 @@
+{
+  "schema": "ndc-art-stage-integration-scene-window-handoff-template/v2",
+  "scene_id": "FILL_FROM_FROZEN_PACKET",
+  "revision": 1,
+  "logical_workspace": {
+    "workspace_id": "FILL_WITH_SCENE_REVISION_WORKSPACE_ID",
+    "state": "READY_AFTER_REAL_HEALTH_AND_CANARY_PASS",
+    "browser": "FILL_WITH_iab_chrome_or_edge",
+    "browser_session_id": "FILL_WITH_ACTUAL_OR_STABLE_SESSION_ID",
+    "workspace_label": "FILL_WITH_SCENE_AND_REVISION",
+    "account_profile_label": "OPTIONAL_NON_SENSITIVE_ALIAS",
+    "health": {
+      "result": "PASS",
+      "checked_at": "FILL_WITH_ISO_8601",
+      "evidence": "FILL_WITH_REAL_BROWSER_CHECK"
+    },
+    "canary": {
+      "result": "PASS",
+      "checked_at": "FILL_WITH_ISO_8601",
+      "evidence": "FILL_WITH_REAL_CANARY_RECEIPT"
+    }
+  },
+  "generation_units": [
+    {
+      "generation_unit_id": "FILL_WITH_ACTOR_AND_POSE_UNIT",
+      "actor_id": "FILL_FROM_FROZEN_SCOPE",
+      "pose_ids": [
+        "FILL_FROM_FROZEN_SCOPE"
+      ],
+      "conversation_url": "https://chatgpt.com/c/FILL_WITH_CONVERSATION_ID",
+      "state": "DRAFT",
+      "active_packet_manifest_path": null,
+      "upload_confirmation": null
+    }
+  ],
+  "submission_policy": {
+    "parallel_distinct_units": true,
+    "same_actor_different_pose_parallel": true,
+    "max_open_submissions": 3,
+    "max_unresolved_per_conversation": 1,
+    "duplicate_actor_pose_while_unresolved": false,
+    "retry_same_conversation_after_terminal": true,
+    "new_conversation_for_same_work_only_after": "account_record_unavailable"
+  },
+  "state_policy": {
+    "workspace_states": [
+      "DRAFT",
+      "READY",
+      "QUARANTINED",
+      "SUPERSEDED",
+      "CLOSED"
+    ],
+    "open_attempt_states": [
+      "PREPARED",
+      "UPLOAD_CONFIRMED",
+      "PENDING",
+      "UNKNOWN"
+    ],
+    "submit_requires": [
+      "workspace_READY",
+      "current_revision_gate",
+      "exact_three_independent_references",
+      "full_prompt",
+      "UPLOAD_CONFIRMED"
+    ],
+    "supersede_cancels_unsubmitted_only": true,
+    "supersede_preserves_pending_for_audit": true
+  },
+  "prompt_policy": {
+    "canonical_style_sha256": "b1208685aa0dfdde5da5fca44dfde6f94d815c720bc55612a998d2e53859bf79",
+    "exact_occurrences_per_prompt": 1,
+    "reference_order": [
+      "local-whitebox-crop",
+      "untouched-full-scene",
+      "approved-character-card",
+      "full-prompt"
+    ]
+  }
+}

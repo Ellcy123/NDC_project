@@ -313,9 +313,12 @@ def build_sprite(
     padding: int,
     expand: int = 0,
     exclude_polygons: Sequence[Sequence[Point]] = (),
+    body_polygons: Sequence[Sequence[Point]] = (),
     shadow_polygons: Sequence[Sequence[Point]] = (),
 ) -> tuple[Image.Image, tuple[int, int, int, int], Image.Image]:
-    base_mask = polygon_union_mask(parent.size, [points, *shadow_polygons])
+    base_mask = polygon_union_mask(
+        parent.size, [points, *body_polygons, *shadow_polygons]
+    )
     expanded = expand_mask(base_mask, expand)
     exclusions = (
         exclusion_mask(parent.size, exclude_polygons) if exclude_polygons else None
@@ -544,12 +547,21 @@ def draw_overlay(
     extreme_points: dict[str, Point] | None = None,
     expanded_mask: Image.Image | None = None,
     exclusions: Image.Image | None = None,
+    body_polygons: Sequence[Sequence[Point]] = (),
     shadow_polygons: Sequence[Sequence[Point]] = (),
 ) -> None:
     overlay = parent.copy()
     draw = ImageDraw.Draw(overlay, "RGBA")
     closed = list(points) + [points[0]]
     draw.line(closed, fill=(255, 40, 40, 255), width=3, joint="curve")
+    for polygon in body_polygons:
+        body_closed = list(polygon) + [polygon[0]]
+        draw.line(
+            body_closed,
+            fill=(190, 70, 255, 255),
+            width=3,
+            joint="curve",
+        )
     for polygon in shadow_polygons:
         shadow_closed = list(polygon) + [polygon[0]]
         draw.line(
@@ -592,10 +604,13 @@ def command_build(args: argparse.Namespace) -> int:
     output_path = args.output.resolve()
     parent = load_rgba(parent_path)
     points = parse_points(args.polygon)
+    body_polygons = [parse_points(value) for value in args.body_polygon]
     shadow_polygons = [parse_points(value) for value in args.shadow_polygon]
     exclude_polygons = [parse_points(value) for value in args.exclude_polygon]
     extreme_points = parse_extreme_points(args.extreme_points) if args.extreme_points else None
-    base_mask = polygon_union_mask(parent.size, [points, *shadow_polygons])
+    base_mask = polygon_union_mask(
+        parent.size, [points, *body_polygons, *shadow_polygons]
+    )
     expanded_mask = expand_mask(base_mask, args.expand)
     exclusions = (
         exclusion_mask(parent.size, exclude_polygons) if exclude_polygons else None
@@ -606,6 +621,7 @@ def command_build(args: argparse.Namespace) -> int:
         args.padding,
         args.expand,
         exclude_polygons,
+        body_polygons,
         shadow_polygons,
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -645,6 +661,9 @@ def command_build(args: argparse.Namespace) -> int:
         },
         "bodyPolygonParentCoordinates": [list(point) for point in points],
         "polygonParentCoordinates": [list(point) for point in points],
+        "additionalBodyPolygonsParentCoordinates": [
+            [list(point) for point in polygon] for polygon in body_polygons
+        ],
         "shadowPolygonsParentCoordinates": [
             [list(point) for point in polygon] for polygon in shadow_polygons
         ],
@@ -665,6 +684,7 @@ def command_build(args: argparse.Namespace) -> int:
         },
         "multiIslandPolicy": {
             "allowed": True,
+            "additionalBodyPolygonsAreSemanticBodiesNotShadows": True,
             "keepVisibleShadowBeyondForegroundOccluders": True,
             "largestComponentOnlyIsForbidden": True,
             "finalConnectedComponentCount": len(connected_component_bounds(mask)),
@@ -690,6 +710,7 @@ def command_build(args: argparse.Namespace) -> int:
             extreme_points,
             expanded_mask,
             exclusions,
+            body_polygons,
             shadow_polygons,
         )
         report["overlay"] = {
@@ -814,6 +835,15 @@ def build_parser() -> argparse.ArgumentParser:
     build = commands.add_parser("build", help="Build a tight RGBA Map from a parent-space polygon")
     build.add_argument("--parent", type=Path, required=True)
     build.add_argument("--polygon", required=True, help="x,y;x,y;... in parent-image coordinates")
+    build.add_argument(
+        "--body-polygon",
+        action="append",
+        default=[],
+        help=(
+            "Repeatable additional semantic foreground body polygon unioned with the "
+            "primary body; use for a required separate object, never to label it as a shadow"
+        ),
+    )
     build.add_argument(
         "--shadow-polygon",
         action="append",

@@ -2,9 +2,11 @@
 
 Use [production-cadence.md](production-cadence.md) for milestone boundaries, shared budgets and valid review reuse. Whiteboxes allow [up to three generations and three Photoshop MCP repairs](whitebox-photoshop-fallback.md), with PS available from the first useful candidate under [PS-first repair](ps-first-repair.md). Formal context, revision and model extraction share the actor/interaction model budget. Do not create a fresh budget at packaging or manufacture attempts to fit an old checker.
 
+Use [execution-profiles-and-finalizer.md](execution-profiles-and-finalizer.md) to finish through the single manifest-driven entry. `probe` writes the real-UI Layout Preview; `provisional` adds the first usable RGBA Pixel Proof Preview and one batched Alpha contact sheet; `formal` additionally requires every scoped layer and applicable validator to pass. The result is `PASS`, `PROVISIONAL` or `BLOCKED`; no file/hash/validator result can create artistic approval.
+
 ## Required asset and evidence coverage
 
-The list below is coverage, not 23 separate production or review stages per actor. Shared scene evidence is created once and referenced by the relevant actors. Formal folders contain passed image/layer assets; reports, prompts, manifests and rejected history stay in the work folder. Consolidate final source/hash/XY data once after pixel freeze.
+The list below is coverage, not 23 separate production or review stages per actor. Shared scene evidence is created once and referenced by the relevant actors. The delivery root contains approved image/layer assets and the managed `交付候选` layer for images explicitly selected as delivery targets. Reports, prompts, PSDs, full manifests and rejected history normally stay in the work folder; the candidate layer keeps only the byte-identical selected image, its compact status manifest and visible label. The one explicit pre-production exception is the user-facing whitebox review node defined by `ndc-character-scene-reference/references/node-delivery-contract.md`: it is isolated under `角色融入场景/Unit<n>/节点交付/<scene-id>`, marked non-formal, and contains exact copied PNG/PSD/PSB bytes with all metadata under `_节点资料`. It is neither the candidate registry nor a formal asset. Consolidate final source/hash/XY data once after pixel freeze.
 
 The user-facing scene delivery root must be named with the source scene basename, without the extension, for example `SC2212_bg_LakeshoreTrust_VIPParlor`. Put character/version folders inside it when needed. Do not use a generic `delivery` folder as the user-facing scene root. The placement contract must store this absolute path as `deliveryRoot`; `validate-contract` rejects a basename mismatch, paths outside configured `{DELIVERY_ROOT}`, and formal delivery roots inside configured `{WORK_ROOT}`. Resolve those placeholders with `ndc_art.py paths`; never copy them literally into JSON. `{DELIVERY_ROOT}` itself retains the folder name `最终交付` on every device.
 
@@ -26,7 +28,7 @@ The user-facing scene delivery root must be named with the source scene basename
 16. actual extraction and registration provenance, composed uniform transform if used, and current revalidated pose/scale/contact evidence; permitted PS correction follows the cadence reference and explicit user locks;
 17. exact source-scene occluder masks with internal holes preserved, and any minimum changed actor-object interaction component;
 18. `xyposition-Unit<chapter>.md` entry;
-19. when the actual model/repair budget is exhausted or a specific capability/time stop remains, a marked work candidate with unresolved failures and true counts, never in the formal root; if Photoshop MCP actually produced an incomplete or low-confidence RGBA, also retain the exact pre-extraction original, attempted RGBA, PSD/mask/path evidence, multi-background previews and inherited provisional composites in a dedicated user-review package under the work root with `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW`;
+19. when the actual model/repair budget is exhausted or a specific capability/time stop remains, retain the marked source candidate, unresolved failures and true counts under the work root; if that image is explicitly selected as the current delivery target, register a byte-identical copy in the delivery root's `交付候选` layer without calling it PASS. If Photoshop MCP produced an incomplete or low-confidence RGBA, retain the exact pre-extraction original, attempted RGBA, PSD/mask/path evidence, multi-background previews and inherited provisional composites in a dedicated user-review package under the work root with `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW`; only its explicitly selected image copy may enter the candidate layer.
 20. a pre-generation and post-generation `ndc-scene-integration-production-ledger/v2`, plus their `production_gate.py` reports. The ledger must hash every referenced artifact and use only `NOT_RUN`, `TECHNICAL_FILE_PASS`, or `TECHNICAL_FILE_FAIL` for file-check status.
 21. a fixed-scene absolute-scale report and overlay, independent from cast-relative head/body scale;
 22. planned/final component-policy reports, with paired masks for every relocated loose prop and fixed structures excluded from scalable layers;
@@ -69,7 +71,7 @@ The user-facing scene delivery root must be named with the source scene basename
 - complete outer rectangle contains hair, hands, props, garments, and shoes;
 - feet/seat/support contacts are plausible;
 - final pose and volume match the current reviewed placement/whitebox: head-ratio individual/pairwise deviation within 20%; valid fixed-line support contacts retain 4px tolerance and major joints 3% of standing-equivalent height. Continuous floors use their region-plus-physical-review branch and cannot claim a measured floating gap from region coverage;
-- hidden feet/body are verified using the same complete layer/transform as final occlusion; head-neck-shoulder support and loaded pillow/bedding response are visibly continuous, not just within a support polygon;
+- `SCENE_OCCLUDED` hidden feet/body are verified using the same complete layer/transform as final occlusion; `FRAME_CROPPED_FOREGROUND` instead binds complete visible anatomy and off-frame scale/support evidence; head-neck-shoulder support and loaded pillow/bedding response remain visibly continuous;
 - character-character and character-scene occlusion match the approved combined whitebox and graph;
 - identity and style match the approved card and scene;
 - final eye/face direction agrees geometrically with the named current-snapshot target;
@@ -79,6 +81,25 @@ The user-facing scene delivery root must be named with the source scene basename
 
 Do not erase a character with a straight horizontal alpha cut to simulate foreground furniture. Deliver the complete actor plus a separate pixel-accurate foreground occluder when layering permits; otherwise use an irregular mask traced from the exact source object and document the hidden region.
 
-Do not report formal completion when visual gates fail. Follow the shared counts and time/repair routing in the cadence reference. Preserve unresolved candidates under `工作过程文件`; do not force a legacy exact-six handoff schema to describe a different actual stop. Copy-bound reviews retain original observation provenance plus destination hash checks; packaging cannot revive a user-rejected asset. Archive passed assets within the authorized task without another routine approval hold.
+Do not report formal completion when visual gates fail. Follow the shared counts and time/repair routing in the cadence reference. Preserve unresolved candidate sources and full evidence under `工作过程文件`; register only images actually selected for delivery in the isolated `交付候选` layer. Do not force a legacy exact-six handoff schema to describe a different actual stop. Copy-bound reviews retain original observation provenance plus destination hash checks; packaging cannot revive a user-rejected asset. Archive passed assets within the authorized task without another routine approval hold.
+
+## Delivery-candidate registry
+
+Create a registration record from `assets/delivery-candidate-registration.template.json`, then run:
+
+```powershell
+python -B scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration delivery_candidate_registry.py -- register --spec <registration.json>
+python -B scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration delivery_candidate_registry.py -- inventory --scope <frozen-delivery-scope.json> --output <work-audit-report.json>
+```
+
+Use `artifactRole: delivery_candidate` for a character, composite or other intended image and `artifactRole: selected_reference` only when the reference image itself was explicitly chosen as a deliverable. New registrations use `ndc-delivery-candidate-registration/v2` and must declare `scenePlacement`. Any transparent `delivery_candidate` already extracted for direct scene placement uses `mode: SCENE_READY_RGBA`, integer Photoshop top-left `x`/`y`, and a `targetFilename` whose stem ends exactly with `__XY_x<int>_y<int>`; the suffix and manifest coordinates must match. Non-placeable images and selected references use `NOT_SCENE_PLACEABLE` and must not claim an XY suffix. `deliveryParent` is relative to `{DELIVERY_ROOT}` and must begin with `<category>/Unit<n>/<asset-or-scene>`; the registry creates `交付候选/<candidate-id>` itself. Every registration verifies the source SHA-256, copies exact bytes, writes `candidate-status.json`, and adds `00_交付候选_状态.txt` stating that the file is not formal PASS. Existing v1 status manifests remain auditable as legacy records, but every new registration is v2.
+
+One `requirementId` has one current candidate. Replacing it requires `supersedesCandidateId`; neither file is overwritten. Review failure is recorded in place:
+
+```powershell
+python -B scripts/art_pipeline/ndc_art.py run ndc-character-scene-integration delivery_candidate_registry.py -- review --manifest <candidate-status.json> --result fail --reviewed-at <ISO-8601> --reason <actual-finding>
+```
+
+This changes the state to `DELIVERY_CANDIDATE_REVIEW_FAILED_MOVE_ELIGIBLE` but does not move or delete the candidate. Any later move must preserve destination, before/after hashes and the replacement chain. Inventory enumerates candidate manifests first, then compares their unique requirement IDs with the frozen scope. Candidate coverage, review PASS/FAIL and formal readiness remain separate figures; the candidate area is never an approved identity source or engine-sync source.
 
 Never write a bare `PASS` or `hardGatePass` from canvas, alpha, hash, bbox, or reconstruction checks. Report `TECHNICAL_FILE_PASS` for those checks and record the separate Codex semantic reviews for performance, scale, support, occlusion, UI, identity, light, and edge quality.

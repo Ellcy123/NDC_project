@@ -1,0 +1,29 @@
+{
+  "schema": "ndc-prop-node-delivery-pack/v1",
+  "unit": "Unit【N】",
+  "scene_id": "SC【SCENE_ID】",
+  "scene_label": {
+    "display_name": "【地点概括】（【白天_OR_夜晚_OR_明确时段_OR_时段未标注】）",
+    "location": "【地点概括】",
+    "time": "【白天_OR_夜晚_OR_明确时段_OR_时段未标注】"
+  },
+  "revision": "r【REVISION】",
+  "node_id": "SC【SCENE_ID】-r【REVISION】-complete-prop-node",
+  "created_at": "【ISO-8601_WITH_TIMEZONE】",
+  "scope": {"path": "【PROP_NODE_DELIVERY_SCOPE_JSON】", "sha256": "【SHA256】"},
+  "artifacts": [
+    {
+      "artifact_id": "【ARTIFACT_ID_FROM_SCOPE】",
+      "subject_id": "【SUBJECT_ID_FROM_SCOPE】",
+      "role": "【ROLE_FROM_SCOPE】",
+      "source": {"path": "【ACTUAL_PNG_JPG_PSD_OR_XY_TXT_FILE】", "sha256": "【SHA256】"},
+      "delivery_name": "SC【SCENE_ID】_【SUBJECT_ID】_【OPTIONAL_STATE_】【ROLE_TOKEN】【FOR_PICKUP_MAP_TYPE6_ONLY:__XY_xINTEGER_yINTEGER】.【EXT】",
+      "review_status": "【PASS_OR_PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW_OR_REVIEW_FAILED_VISIBLE_FOR_USER】",
+      "selection_basis": "【WHY_THIS_EXACT_FILE_IS_THE_CURRENT_NODE_TARGET】",
+      "checks": [
+        {"kind": "technical_review", "file": {"path": "【TECHNICAL_REVIEW_FILE】", "sha256": "【SHA256】"}},
+        {"kind": "visual_review", "file": {"path": "【VISUAL_REVIEW_FILE_FOR_IMAGE】", "sha256": "【SHA256】"}}
+      ]
+    }
+  ]
+}

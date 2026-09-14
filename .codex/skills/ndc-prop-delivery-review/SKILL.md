@@ -4,6 +4,8 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 ---
 # NDC 道具最终复查与交付
 
+先读[五阶段共用执行核心](../ndc-prop-requirements/references/pipeline-core.md)。最终复核从“交付候选”清单开始，再与冻结范围和过程台账对账；普通过程候选不得抢占首轮审核。
+
 复核前读取[重要度、容差与候选策略](../ndc-prop-requirements/references/importance-and-tolerance.md)。硬合同不变；H1/H2/H3 分别最多容许 10%/20%/30% 的已定义可测偏差，不跨区域平均。H2/H3 在限内不得因为纯润色继续出图或放大审核；出现异常、身份/状态/文字/Alpha/Map/XY/阴影/重建问题时立即回到硬门禁和必要高倍率检查。
 
 ## Photoshop MCP 强制前置
@@ -22,6 +24,11 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 
 ## 完整复查
 
+- `scripts/delivery_candidate.py register|set-status|audit|move-failed`：把明确选定的交付目标及其选定参考图登记到 `最终交付/<类别>/<Unit>/<资产或场景>/交付候选/<candidate-id>`，原位记录复核失败；失败后才允许保留式移出，且不自动删除。
+- `scripts/node_delivery.py pack|verify|audit-batch`：按[道具节点交付阶段资产合同](references/node-delivery-contract.md)把当前人工节点明确要求的阶段资产平铺到 `最终交付/道具/Unit<n>/节点交付/<scene>/`。默认初始节点以原任务要求的母图、Big 等为必需内容；Icon、场景态、热区、菜单、PSD 等只有原任务节点本来要求、或用户额外要求把可复用旧资产也带入时才成为节点 `REQUIRED`。仍在冻结生产范围但位于节点之后的资产必须标 `MAINLINE_AFTER_NODE`，不能写成不适用或从主线取消。文件名统一为 `SC<scene>_<subject>_[state_]map|big|icon|master|prop|psd` 及合同内扩展状态尾缀；可直接融回场景的透明 PNG 必须追加 `__XY_x<int>_y<int>`。每场同时携带包括地点和时间的可读 `scene_label`；JSON、交付候选、HTML／人读清单和审核证据只进入 `_节点资料`。`audit-batch` 只审核当前节点冻结的 `REQUIRED`，不把后续主线资产误报成当前节点缺件。
+- `scripts/node_delivery.py reconcile-hotspots`：仅在用户明确要求从前序／旧冗余资产分拣更多节点内容时，从当前冻结 `ndc-prop-batch/v1` 反查 Stage4 PASS 的实际 PNG、当前审核哈希、正确场景平铺副本和 XY 文件名，避免已有可用热区漏包。它是可选人工回流／旧资产分拣支线，不是普通新节点或整条生产主线的默认门禁。
+- `scripts/batch_update.py artifact-transition|next-action`：以期望批次哈希和期望旧状态执行原子写入，自动绑定文件哈希、追加状态事件，并把 next_action 限制为最多三条／300 字；禁止手工编辑大批次 JSON 更新产物状态。
+
 全量生产时，本阶段在可执行缺失交付补全后进行整体复检，问题返回责任阶段有限修复；不得把本入口提前当作补缺前的全量审核任务。用户当前仅要求统计／复检时按该范围执行，不自动生图。进度按共用协议同时报告完整总角色、各场景实际阶段与补缺基线，正式交付另计；某场景获准入景不代表整批Icon／热区或正式交付已放行。
 
 1. 从锁定需求推导必需交付，不能从现有文件反推需求已齐全。分别报告母版、场景、热区、正式整项及阻塞数量。
@@ -31,6 +38,7 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 5. 关键问题返回责任阶段，保留原job和累计次数。先区分道具本体的身份、结构、必要信息、状态和可读文字，与人物/手部、背景、承托、场景残留、构图边界和Alpha等外部问题；后者先做一次 Photoshop MCP 抠取或修复并复查。若已产出可打开 RGBA 但隔离结果不完整、视觉失败或低置信度，将其登记为 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW`，继续补齐 provisional 下游并汇入待审核包；不计正式候选／进度，不可正式发布。可在原剩余额度内返回生成阶段产出空背景／原生透明背景的新版本，但不在同一失败源上重复调 Alpha。道具本体语义门禁失败同样回到生成且不走此例外。额度用尽保留真实候选和 provisional 审核包；不得因最终审核再次启动三轮生成，也不得把生产劳动默认转交用户。
 6. 每个正式PNG必须绑定通过的真实视觉记录。复用记录只证明旧观察仍适用，脚本不得生成新的艺术PASS。详情图通过不代表热区通过。
 7. 图片范围和程序接入分开：交付图片及可供接入的坐标／说明，不擅自修改Unity，不将程序未绑定错误计为缺PNG。但地图直接拾取道具缺少独立道具层或无道具承载物状态，属于图片／状态合同未完成，不能降格为“仅待程序接入”。用户明确要求运行时完成时仍需单独验证。
+8. 用户要求人工节点时，按场景建立阶段节点交付。节点 scope 逐 subject 对 16 类角色明确写 `REQUIRED`、`MAINLINE_AFTER_NODE` 或 `NOT_APPLICABLE`：初始要求中的母图、Big 等是节点必需；位于后续阶段且仍属于冻结生产范围的内容写 `MAINLINE_AFTER_NODE`，主线照常继续；只有确实不适用的角色才能写 `NOT_APPLICABLE`。用户额外要求整理旧冗余资产时，可把经当前来源、哈希和审核核对的 Icon、场景态、热区／XY、菜单、PSD、环境叙事和线索作为该节点的附加 `REQUIRED`，但这仍是人工回流支线。实际资产按标准名平铺在场景根；场景就绪透明 PNG 必须带精确 XY。JSON／交付候选／总览／证据隔离进 `_节点资料`。多场任务以当前节点清单运行 `audit-batch`；不得把节点范围当成整个生产分母，也不得因节点已通过而停止冻结主线。
 
 ## 校验和归档
 
@@ -40,7 +48,7 @@ description: 复查并归档 NDC 道具图片包，核验内容覆盖、跨状�
 - `python ../ndc-scene-evidence-placement/scripts/validate_formal_release.py --folder <formal> --release-contract <contract> --batch <batch.json>`：原图像角色、XY、父图与旧副本检查，并核验批次。
 - `python scripts/final_visual_check.py --formal-dir <formal> --record-root <process> --batch <batch.json>`：最终复制后核对每个正式文件有有效逐图审核绑定。
 
-正式目录仅接受通过的PNG与一份XYposition.txt。报告、候选、PSD、遮罩、历史及 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 审核包放在工作过程目录。替换包先完整验证，保存旧版本后发布；不混入旧目录的未知文件。通过适用门槛即归档，不等待重复人工确认。每个正式 artifact 可记录published_path以支持最终副本核对，但它必须与已审核字节一致；provisional 只记录 review-package 路径，不得伪造 published_path。
+`最终交付` 中的正式资产子目录仅接受通过的PNG与一份XYposition.txt；隔离的“交付候选”子树只接受明确选定的单项交付候选及其选定参考图，隔离的“节点交付”子树只接受当前节点范围内完整的阶段审核包，三者职责不同。节点交付场景根必须含其 `REQUIRED` 的真实图片／适用 PSD／XY/TXT；`MAINLINE_AFTER_NODE` 只列在节点资料中并继续生产，不要求提前塞进节点。HTML、Markdown、JSON、交付候选记录和审核证据只能位于 `_节点资料`，不得混入场景根或正式资产子目录。除节点明确要求的当前 PSD 源副本外，历史 PSD、遮罩、报告及完整 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 审核包仍放工作过程目录。替换包先完整验证，保存旧版本后发布；不混入旧目录的未知文件。通过适用门槛即归档，不等待重复人工确认。每个正式 artifact 可记录published_path以支持最终副本核对，但它必须与已审核字节一致；provisional 候选不得伪造 published_path。
 
 ## 可复用工具
 
@@ -48,3 +56,7 @@ scripts/workflow_state.py 管理批次门槛、追加尝试日志、缺失 job �
 历史次数已确认后，其引用的来源文件发生变化并触发`history source bytes changed`时，读[历史来源复核](references/history-source-revalidation.md)。只有重新查明历史次数未变后才能追加来源复核；它不重开次数，也不恢复图像审核。
 scripts/stage_visual_check.py、scripts/final_visual_check.py 是移入本Skill的共用审核实现；项目根旧命令保留兼容入口。
 旧evidence_art、evidence_delivery、irregular_map、secondary_prop_border和validate_formal_release仍保留在原Skill脚本地址。不要搬动脚本破坏历史作业。
+
+## 节点与来源复核
+
+读[检索、人工节点与回流合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)。最终复查同时枚举完整冻结 scope、现行 discovery receipt、阶段节点 manifest、可选 approval／人工回流快照与正式文件：先运行 `node_delivery.py verify`，再由 `manual_review_node.py` 绑定同一 scene/revision/node 字节。节点只审核当前 `REQUIRED`，不能覆盖 `MAINLINE_AFTER_NODE` 的生产、缺失父图、热区、复核或正式发布门禁；任何 scope／asset-index／父图实质变化都只撤销受影响项。`USER_RETURN_ACCEPTED_FOR_PACKAGING` 是并行人工支线的当前快照，`节点交付`、`交付候选` 与 `PROVISIONAL_EXTRACTION_PENDING_USER_REVIEW` 仍需分列，均不得在报告或正式目录中冒充 PASS。

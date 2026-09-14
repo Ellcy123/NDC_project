@@ -2,11 +2,11 @@
 
 ## 阶段责任边界（2026-09-09 用户最新要求）
 
-上游把整个场景及所有必需角色/状态的白模确定、冻结并成功交接后，完成该场景参考职责，立即推进下一独立场景；全部参考交接后结束本轮。下游全权负责正式角色生成、与白模的位置及比例对齐、头身比/动作核验、完整母层、遮挡、提取合成、自检、返修和交付。下游默认优先生成、回收、审核并冻结同一场景全部必需角色／状态，再统一进行提取、去背景、Alpha、注册与合成；这是减少切换和返工的优先顺序，不是强制阻断。网页生成、回收或浏览器传输真实等待／受阻，或有其它可记录的具体调度理由时，可先处理已经就绪角色的合规提取和独立下游工作。上游不持续监控、轮询等待、逐角色审查生产结果或代做生产修复。结果由下游自行写入原流水并接续下一 READY 场景；结果登记是下游职责，不要求上游常驻回收。
+上游把整个场景及所有必需角色/状态的白模确定、冻结并成功交接后，完成该场景参考职责，立即推进下一独立场景；全部参考交接后结束本轮。下游全权负责正式角色生成、与白模的位置及比例对齐、头身比/动作核验、完整母层、遮挡、提取合成、自检、返修和交付。下游默认优先准备同一场景全部必需角色／状态的生成包，在一个 scene/revision 逻辑场景工作区内为不同角色／状态单元建立多个 ChatGPT 对话并连续提交，使不同角色、或同一角色的不同姿势网页生成同时在途；工作区不强制独占物理 OS 窗口，整场仍由同一 Terra 任务统筹。结果回收、审核和冻结齐备后再统一进行提取、去背景、Alpha、注册与合成仍是减少切换和返工的优先顺序，不是强制阻断。网页生成、回收或浏览器传输真实等待／受阻，或有其它可记录的具体调度理由时，可先处理已经就绪角色的合规提取和独立下游工作。上游不持续监控、轮询等待、逐角色审查生产结果或代做生产修复。结果由下游自行写入原流水并接续下一 READY 场景；结果登记是下游职责，不要求上游常驻回收。
 
 沿正确白模修正正式角色的尺度、落点或动作属于生产工作；仅白模方案本身存在影响核心关系的错误时，由下游附差异证据主动回传 reference。收到明确返修请求才重开受影响参考，其他已交接场景不重复审核。上游保留交接前白模核心检查与可追溯包，下游保留正式生成前和交付前的真实检查，不能把已移交的生产自检重新变为上游监控任务。本节优先于公共协议中容易被理解为上游必须持续等待/回收的表述。
 
-白模顺序：初次生成时包括隐藏部位的完整人体，保留未裁剪母层；随后按真实遮挡关系裁剪派生层或制作蒙版，审核裁剪后的场景参考。正常裁剪不算缺失，不要求补回场景中本应被遮住的像素；小瑕疵容错不取消初始完整生成。正式角色同样先生成完整母层再应用遮挡。
+人体覆盖按[效率与状态合同](../../ndc-character-scene-integration/references/efficiency-and-state-contract.md)分类：画幅内或场景遮挡角色保留完整头到脚母层；`FRAME_CROPPED_FOREGROUND` 只要求完整可见解剖至自然出框边界，并保存画外尺度、重心和承托证据。模式随整场交接冻结，变化时发布新 revision。
 
 白模交接按[白模放行与正式完整性](../../ndc-character-scene-integration/references/whitebox-acceptance.md)：小型遮挡/缺失不影响位置、比例、头身比、动作和演绎时可放行，完整场景包指角色及状态范围齐全。下游不因这些已记录细节退回参考，须在正式生图补全并实查完整角色；原native检查保留真实核心判断与当前文件绑定。
 
@@ -40,13 +40,15 @@
 
 使用原时间线和已确认需求填写完整范围；不能从一个已做好的删减ledger反推“全部需求”。探索点击前后、连续在场和其他必需状态不能漏掉。每个case的staging快照、演员→pose绑定必须与此范围一致。
 
-正式生图按远近批次执行。正常路径中，每个网页结果回收后完成提取前视觉审核、保存原始下载与来源回执并冻结 SHA-256，然后继续本场剩余 `actor_pose_id`；冻结 scope 的全部必需角色／状态均有审核通过的生成结果或合法复用源后，再统一处理提取和合成。用整场生成进度清单逐项绑定 scene/revision、完整 scope、actor/pose、生成或复用来源、原始文件、网页回执、视觉结论、SHA-256 和当前状态，以便调度与防漏；清单是进度事实，不是提取硬门禁。
+正式生图按远近批次准备，但网页等待不再强制串行。Terra 先取得当前 `guard`、完整参考 READY gate，并建立逻辑场景工作区；一次 canary 通过后才 fan-out。每个 `generation_unit_id` 仍必须在自己的对话中重新上传三份独立引用和完整提示词。默认 WIP 为 3，限流时缩小；网页明确接收一个单元后可转下一个 READY 标签。各对话独立保存 URL/packet/submission，同一对话最多一个未决 attempt，同一 actor/pose 不得重复提交。
+
+交接字段可从 `assets/integration-scene-window-handoff.template.json` 复制到当前工作记录后填写；不得直接改写 Skill 内模板，也不得把占位值当作真实逻辑工作区、浏览器 session、URL、账户标签或提交证据。
 
 若网页生成、回收或浏览器传输处于真实等待／受阻，或存在其它有证据的具体调度理由，为避免空转可让已经就绪的角色提前进入 Remove Background、Select Subject、Alpha／蒙版、注册或其它不依赖缺项的工作。须在清单中记录例外原因、开始时间、已就绪／未就绪项、执行范围及恢复顺序；未就绪项继续保持待办，局部产物不得使整场完成或最终验收提前通过。旧任务已有部分提取结果正常保留和续用；不同完整场景仍可独立推进。参考白模与生图输入准备不受本调度原则限制。
 
 authority.journal为原成本记录，upstream_jobs留空（上游通过原native ledger验收）；downstream_jobs包含所有本次formal actor/interaction job。已有标准journal直接续用。只有历史从未采用机器日志时，才以原生产ID和母任务ID建立一次标准日志，把真实已用数及原记录引用写入每个job.history/history_evidence；零次也须有实际新生产/该阶段未执行依据，不补造历史attempt或视觉PASS。模型6次、PS有限轮次按原节奏保留；明确授权的独立测试与旧测试只保留来源关系，不相互扣数。参考白模原3次生成与3轮PS记录继续保留在原记录中，不转成formal零次的新额度。
 
-第二阶段每次 `attempt` 的实际提交快照须使用新记录 `tool: chatgpt_web_browser`、`operation: generate_image`，并保存 `browser: iab|chrome|edge`、账户非敏感标签、ChatGPT conversation URL、submission manifest、提示词/重要度配置哈希及按序三引用的路径/哈希；历史 `chatgpt_web_iab` 记录继续兼容审计。不同已登录账户均可继续生产。网页收到消息即计一次 model attempt；pending/unknown 在原记录可访问时只回原对话核实。账户隔离导致旧对话、消息和结果确实不可访问时，以 `account_record_unavailable` 终结旧状态并保留已用次数，随后在新账户新建专用对话，以相同输入／提示词哈希登记新的真实 attempt；不得借账户切换抹除历史或切换 Codex 生图。下载原图和 `ndc-chatgpt-web-generation-receipt/v2` 留在不可覆盖的提交包目录，回执路径作为 resolve evidence；网页预览与截图不作为生产源。
+第二阶段每次 `attempt` 使用 `tool: chatgpt_web_browser`、`operation: generate_image`，保存 browser、逻辑 workspace ID、generation unit、actor/pose、非敏感账户标签、对话 URL、v3 submission manifest、CURRENT revision gate、retry control、原版 style-lock、prompt/importance 哈希及按序三引用。网页收到消息即计一次 model attempt；pending/unknown 只回原对话核实。下载原图和 v4 receipt 留在不可覆盖包目录；旧 v3/v2/v1 回执仅作审计。
 
 正式job的requirements含scene_id、production_id、phase:"formal"、pose_ids；limits通常为model:6和原ps限额（不大于3）。多角色调用对每个受影响job登记同一提交标识；全场工具调用按该标识去重，不把各角色计数相加成实际调用总数。未知结果先核实。
 
@@ -74,13 +76,15 @@ authority.journal为原成本记录，upstream_jobs留空（上游通过原nativ
 
 PASS结果的payload包括post_ledger_role、delivery_manifest_role、job_bindings。job_bindings按当前原jobs逐项调用 `integration_adapter.job_binding(job)`，拒收/要求变更后旧结果失效。返回files包括分配目录中的真实最终合成、native ledger、原图层/XY/重建清单及必要证据；post ledger的完整case/快照/pose范围和原场景仍须一致。沿用既有全部交付验证，不能把清单存在当重建成功。
 
+结果回传前，从真实场景包中明确列出准备交付的当前图片；这些图片以稳定 `requirementId` 登记到 `{DELIVERY_ROOT}/<类别>/Unit<n>/<资产或场景>/交付候选/<candidate-id>`。普通角色／合成图使用 `delivery_candidate`，只有参考图本身被明确选为交付件时才使用 `selected_reference`；不得把三引用、所有生成候选或完整证据批量复制。流水审计与进度先读取 `candidate-status.json`，再核对冻结 scope、journal 和结果 files；同一必需产物只计一个 current 候选，候选覆盖不等于 result PASS。复核失败先原位标记 `REVIEW_FAILED_MOVE_ELIGIBLE`，不自动移动或删除，也不触发工程镜像同步。
+
 delivery_manifest_role所指JSON的格式如下；快照必须完整覆盖冻结scope，layers按实际叠放顺序列出所有人物、影子及必要遮挡层。每个文件同时列入结果files，路径为分配输出目录内的绝对路径，sha256为实际文件哈希。脚本从原场景以原尺寸、整数XY、不缩放地逐层重建，并逐像素对比已审核合成；此技术通过不能代替native视觉审核。
 
 ```json
 {"scene_id":"A","snapshots":[{"case_id":"A-day","snapshot_id":"s0","layers":[{"path":"{WORK_ROOT}/jobs/example/payload/actor.png","sha256":"实际SHA256","x":10,"y":20}],"composite":{"path":"{WORK_ROOT}/jobs/example/payload/final.png","sha256":"实际SHA256"}}]}
 ```
 
-参考缺陷回传 `FAIL`，payload填reason、return_stage:reference；生成/提取缺陷为production，人工节点为manual。Astra从实际结果和差异判断影响范围，只有旧生产领取结束、在途命令已核实后才能修改该场景参考并发布下一连续revision。其他场景照常推进。Terra不得一边继续旧方案一边让Astra改它的白模。
+参考缺陷回传 `FAIL`，payload填 reason、`return_stage:reference`；生成/提取缺陷为 production，人工节点为 manual。Astra只能在旧领取结束、在途命令已核实后发布下一连续 revision；发布后旧网页工作区必须 `supersede`。其他场景照常推进，Terra不得一边提交旧方案一边让 Astra 改其白模。
 
 同一人物身份/原场景或跨场景共同前置未冻结时不视为独立。固定只读身份源可共享；不同scene的工作PSD、输出和记录分开。上游按整场交接，下游整场接续；不能以任务重叠为由把同场角色A正式生成与角色B白模推导拆开。
 

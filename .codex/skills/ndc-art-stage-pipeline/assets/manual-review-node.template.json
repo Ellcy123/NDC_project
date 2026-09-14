@@ -1,0 +1,27 @@
+{
+  "schema": "ndc-manual-review-node/v1",
+  "status": "NODE_DELIVERABLE_READY",
+  "unit": "Unit【N】",
+  "node_id": "【SCENE_ID】__r【REVISION】__node",
+  "domain": "【character_scene_OR_prop_scene】",
+  "scene_id": "【SCENE_ID】",
+  "scene_label": {"display_name": "【LOCATION】（【TIME】）", "location": "【LOCATION】", "time": "【TIME】"},
+  "revision": "【REVISION】",
+  "created_at": "【ISO-8601_WITH_TIMEZONE】",
+  "manual_return_branch_mode": "PARALLEL_NONBLOCKING",
+  "legacy_migration_backfill": {"enabled": false, "reason": null, "asset_count": 0},
+  "scope": {"path": "【FROZEN_SCOPE_PATH】", "sha256": "【FROZEN_SCOPE_SHA256】"},
+  "source_index": {"path": "【FROZEN_SOURCE_INDEX_PATH】", "sha256": "【FROZEN_SOURCE_INDEX_SHA256】"},
+  "handoff_document": {"path": "【HANDOFF_DOCUMENT_PATH】", "sha256": "【HANDOFF_DOCUMENT_SHA256】"},
+  "naming_table": {"path": "【NAMING_TABLE_PATH】", "sha256": "【NAMING_TABLE_SHA256】"},
+  "web_prompt": {"path": "【WEB_PROMPT_PATH】", "sha256": "【WEB_PROMPT_SHA256】"},
+  "deliverables": {
+    "production_whiteboxes": [{"actor_id": "【ACTOR_ID】", "pose_id": "【POSE_ID】", "anatomy_mode": "FULL_IN_FRAME", "whitebox_kind": "3d-anatomical-mannequin-exact-pose", "complete_anatomy_master": {"path": "【FINAL_PRODUCTION_RGBA_WHITEBOX_MASTER】", "sha256": "【SHA256】"}, "final_submission_whitebox": {"path": "【EXACT_CHATGPT_IMAGE_1_WHITEBOX_CROP】", "sha256": "【SHA256】"}, "final_submission_authority": true, "anatomy_coverage": {"head": true, "neck": true, "torso": true, "pelvis": true, "left_arm": true, "right_arm": true, "left_hand": true, "right_hand": true, "left_leg": true, "right_leg": true, "left_foot": true, "right_foot": true}, "prohibited_proxy_types_absent": {"stick_or_joint_figure": true, "programmatic_geometry_blocks": true, "flat_color_silhouette": true, "technical_ruler": true, "combined_scene_preview_as_master": true}, "technical_review": {"path": "【WHITEBOX_TECHNICAL_REVIEW】", "sha256": "【SHA256】"}, "visual_review": {"path": "【WHITEBOX_VISUAL_REVIEW】", "sha256": "【SHA256】"}, "discovery_receipt": {"path": "【DISCOVERY_RECEIPT】", "sha256": "【SHA256】"}}],
+    "joint_whitebox_preview": {"path": "【JOINT_WHITEBOX_PREVIEW】", "sha256": "【SHA256】"},
+    "actual_ui_clearance_preview": {"path": "【ACTUAL_UI_PREVIEW】", "sha256": "【SHA256】"},
+    "discovery_receipts": [{"path": "【DISCOVERY_RECEIPT】", "sha256": "【SHA256】"}],
+    "node_delivery_manifest": {"path": "【DOMAIN_STAGE_NODE_DELIVERY_MANIFEST】", "sha256": "【SHA256】"}
+  },
+  "user_review_focus": ["proportion", "narrative_pose", "landing_plausibility", "ui_clearance"],
+  "manual_return_workspace": {"path": "【WORKSPACE_MANIFEST】", "sha256": "【WORKSPACE_MANIFEST_SHA256】"}
+}

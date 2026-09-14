@@ -4,6 +4,8 @@ description: 统计并锁定 NDC 道具和环境叙事需求、关键内容、�
 ---
 # NDC 道具需求整理
 
+先读[五阶段共用执行核心](references/pipeline-core.md)。共用状态语义、交付候选优先区、增量复核、场景工作包、原生 Photoshop MCP 与版本稳定规则只在该文档维护；本 Skill 只补充需求阶段职责。
+
 开始分级时读取[重要度、容差与候选策略](references/importance-and-tolerance.md)。A/H0 零容差；B/H1 最大 10%；C 默认 H2 最大 20%，只有明确低显著依据才可标 H3 最大 30%。按“资产/区域 × 验收项”登记，不跨区域平均；该分级同时决定母版首轮是双图选优还是单图先行。
 
 执行前读[对话任务独立额度](references/task-budget.md)：新对话完整新额度，资产在其他对话中的历史不扣减；已授权工作直接推进，不索要例行答复。此用户最新规则优先于引用中的旧预算说明。
@@ -21,6 +23,7 @@ description: 统计并锁定 NDC 道具和环境叙事需求、关键内容、�
 5. 把人物手持、递交、开柜转译成无人物的可信物品状态；保留身份、状态、承托和取得顺序。不把角色身高、白模和人物入景作为道具前置。
 6. 建立 batch.json、固定 jobs 和产物表。实际取得方式决定 Map/Big/Icon/Type6/Type7 需求；对标为直接拾取的道具，还须记录原场景承载物是否能以正常物理逻辑、可读比例和可点击范围完整展示它。任一项失败时，不得把勉强摆放的候选记入直接拾取覆盖或创建 Map；如锁定来源表明存在真实容器／物品盘，则改登记容器入口、Type6、Type7、子道具和取得顺序，否则将该项标为场景路由待解。程序未接入另列 integration_status，不能凭空增加美术角色。未锁定事实仅阻断相关依赖。
 7. 核对内容档案与完整批次范围，标记第一阶段完成。先init锁定批次，再用migrate-scene-release追加已核对的全范围场景索引；旧批接续保留日志和次数，不再次init。调用共用校验通过后，按授权进入[物品母版制作](../ndc-prop-master-production/SKILL.md)；某场景全部关联前置已齐即可进入第三阶段，无需等待无关场景母版。
+8. 每次续作先用 `scripts/scope_status.py` 对冻结范围与 active delivery revision 做差集；只处理 `active_required`，被排除项不得因旧 scene index、旧报告或旧 next_action 回流。输出作为场景工作包和进度统计的唯一活动范围输入。
 
 ## 既有资产查验的固定位置
 
@@ -33,3 +36,7 @@ description: 统计并锁定 NDC 道具和环境叙事需求、关键内容、�
 ## 接续与变更
 
 以用户最新有效指令校正批次 objective、current_stage、next_action，再恢复当前拒收和进度；当前“仅统计／暂停”必须遵守，已经被用户明确恢复生产的旧暂停不再沿用。不要重新扫描所有历史目录。来源变化只修正相关档案并撤销受影响派生。历史接入区分未开始、已知次数和未知占用，遵从共用协议，不将换Skill当作重置次数。
+
+## 检索收据与道具节点计划
+
+读[检索、人工节点与回流合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)及[道具节点交付完整资产合同](../ndc-prop-delivery-review/references/node-delivery-contract.md)。本阶段为每个 future item/state/artifact role 规划 `ndc-asset-discovery-receipt/v1` 的精确 scope、三类根、当前 asset-index 和 scope revision；不得用文件名、旧表或单根 no-match 推定不存在。同时为每场建立完整节点角色矩阵：场景与每个 item／container／shared subject 对 16 类角色逐一标 REQUIRED 或说明 NOT_APPLICABLE，冻结后续母图、PSD、Big、Icon、场景状态、Map／XY、菜单、环境叙事和线索的完整分母，并预先确定 `SC<scene>_<subject>_[state_]role` 平铺名。本阶段只规划和冻结分母，不提前建立空节点；直到后续阶段实际资产全部收齐并通过 `node_delivery.py pack|verify`，才建立每场唯一 prop_scene 节点。候选／provisional／节点批准均不是正式 PASS。
