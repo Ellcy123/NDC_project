@@ -112,8 +112,8 @@
 - 类型/地点：Item；字母锁保险柜。
 - `Name`：`1919 年的银行授权附页-Donnelly & Associates（手写签名）` / `1919 Bank Authorization Addendum — Donnelly & Associates (Hand-Signed)`
 - `Describe`：  
-  `一份 1919 年银行授权附页，将“1919-A”登记为 Donnelly & Associates 的受托结算子账户。唯一授权签字人为 Michael F. Donnelly，账户用途栏引用 Harrison 存根上的圣心医院赔偿案号。附页证明账户授权与法律实体关系，不代表每笔记录内容都真实。`  
-  `A 1919 bank-authorization addendum registering “1919-A” as a fiduciary settlement subaccount of Donnelly & Associates. Michael F. Donnelly is the sole authorized signer, and the account-purpose field cites the Sacred Heart compensation case numbers found on Harrison's receipt. The addendum establishes account authority and legal-entity linkage, not the truth of every transaction recorded under it.`
+  `一份 1919 年银行授权附页，将“1919-A”登记为 Donnelly & Associates 的受托结算子账户。唯一授权签字人为 Michael F. Donnelly，账户用途栏与 Harrison 存根共用圣心医院赔偿类别 SACRED HEART COMPENSATION。附页证明账户授权与法律实体关系，不代表每笔记录内容都真实。`  
+  `A 1919 bank-authorization addendum registering “1919-A” as a fiduciary settlement subaccount of Donnelly & Associates. Michael F. Donnelly is the sole authorized signer, and the account-purpose field shares the category SACRED HEART COMPENSATION with Harrison's receipt. The addendum establishes account authority and legal-entity linkage, not the truth of every transaction recorded under it.`
 - `ShortDescribe`：  
   `1919-A 属于 Donnelly & Associates 受托子账户，Mickey 是唯一授权签字人。`  
   `1919-A is a Donnelly & Associates fiduciary subaccount with Mickey as sole authorized signer.`
@@ -122,7 +122,7 @@
 重点（信息表达必不可少）：
 
 1. `ACCOUNT: 1919-A`、`FIDUCIARY SETTLEMENT SUBACCOUNT`、`DONNELLY & ASSOCIATES`、`SOLE AUTHORIZED SIGNER: MICHAEL F. DONNELLY` 全部可读。
-2. Sacred Heart 赔偿案号与 4112 备注一一对应；账号和案号格式必须复用。
+2. Sacred Heart 赔偿案类别与4112备注一致，统一写 `SACRED HEART COMPENSATION`；复用账户1919-A，不要求具体案号一一对应，不倒用1924—1928儿童病例编号。
 3. Mickey 正式签名是 4515 笔迹比对的已知样本，需提供高分辨率签字裁切。
 4. 签名笔画在关键转折处出现与 4511 缺口笔尖一致的断墨，但不能夸张成肉眼远景就自动得出结论。
 
@@ -369,3 +369,7 @@
 - 开放节点网概念稿若未来获批，需要另行更新 State、玩法规范和本节资源清单；当前不按该概念追加全量节点美术。
 
 ---
+
+## 2026-09-14 日期边界
+
+4519必须保留发现文件四天后的关系；具体月日仍待统一世界内时间线，排版阶段留空日期数字，不拿相对占位词冒充正式执行日。当前不放行含具体日期的最终Big。

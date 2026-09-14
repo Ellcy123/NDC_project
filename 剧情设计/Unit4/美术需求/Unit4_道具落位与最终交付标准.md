@@ -48,10 +48,10 @@ ordinary Big、Icon、clue Big、Type 7 白边、命名、坐标推导和验证�
 
 | 路由 | 数量 | 说明 |
 |---|---:|---|
-| 基础场景直接拾取／记录 | 20 | 包含点击家具后直接取得；不自动升级为 Type 6/7 |
+| 基础场景直接拾取／记录 | 19 | 包含点击家具后直接取得；不自动升级为 Type 6/7 |
 | 真实二级容器中的逐件点击 | 1 | 4320，必须有完整子物 Map/Position |
 | 对话、AVG、事件、分析、记忆、推理或容器原子发放 | 33 | 全部 detail-only，无世界 Map/Position |
-| 环境观察 | 5 | 4216、4321、4322、4323、4324；均需 Map/Position/Big 且无 Icon |
+| 环境观察 | 6 | 4216、4311、4321、4322、4323、4324；均需 Map/Position/Big 且无 Icon |
 | 合计 | 59 | 与当前 EPI04 ItemStaticData 正式行数一致 |
 
 ---
@@ -102,7 +102,7 @@ ordinary Big、Icon、clue Big、Type 7 白边、命名、坐标推导和验证�
 
 | ID | 名称 / 运行类型 | 场景与实际获取事件 | 交付类别 | 必交资产 | 路由状态 |
 |---|---|---|---|---|---|
-| 4311 | 磨号手枪与枪内未击发余弹 / clue | SC4022；记录 Harold 尸体右手枪位 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定 |
+| 4311 | 磨号手枪与枪内未击发余弹 / envir | SC4022；查看 Harold 尸体右手枪位，首次触发 Zack OS | `environment` | Map + Position + Big；无 Icon | 已定；非照片、不收集、不进指证 |
 | 4312 | 伪造遗书 / item | SC4022；点击书桌中央遗书 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定 |
 | 4313 | Pierce档案移交通知 / item | SC4022；点击书桌侧档案袋 | `scene-pickup` | Map + Position + ordinary Big + Icon | 已定；日期／时刻数字故意模糊不可辨，不填写具体钟点 |
 | 4314 | 两只酒杯 / clue | SC4027；记录会客矮桌上的两只酒杯 | `scene-pickup` | Map + Position + `620 x 620` clue Big + Icon | 已定；不放电话桌 |
@@ -209,3 +209,11 @@ ordinary Big、Icon、clue Big、Type 7 白边、命名、坐标推导和验证�
 3. 场景类资产只在批准的原生分辨率底图上非破坏制作；Position 从最终验收图自动推导，不手抄、不目测。
 4. Big、Icon、clue Big、Envir Icon 省略和容器链按 Skill 完整验证；旧试制包不得跳过新闸门。
 5. 先交付到 `image/edit_jobs/<job>/delivery/`。资产进 Unity、正式配置表变更和 SceneConfig 重绑需另行取得用户授权。
+
+## 2026-09-14 上画裁决补充（覆盖冲突旧要求）
+
+- 4219年龄分类统一CHILD，不编七个年龄；4218只写1928年，月日留白。
+- 4112/4514按账户1919-A与SACRED HEART COMPENSATION类别对应，不补具体案号。
+- 4412未定金额留白；4116/4319未定时间不补；4519保留四天后的关系，具体执行日最终Big仍待时间线。
+- 4311必须依附获批Harold死亡状态右手层；先盘点已有资产，不把历史缺件记录当最新实物结论。
+- 4704—4709独立UI规格待定，见《Unit4_结果卡规格待定清单.md》，本轮不作为普通证物图生产。

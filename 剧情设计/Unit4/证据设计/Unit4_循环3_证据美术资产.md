@@ -12,7 +12,7 @@
 
 | ID | 中文名 | 类型/地点 | 小玩法关系 |
 |---|---|---|---|
-| 4311 | 磨号手枪与枪内未击发余弹 | Clue；Morrison 书房尸体右手。 | 无 |
+| 4311 | 磨号手枪与枪内未击发余弹 | Envir；Morrison 书房尸体右手，不可收集。 | 无 |
 | 4312 | 伪造遗书 | Item；Morrison 书房书桌。 | 无 |
 | 4313 | Pierce 档案移交通知（档案袋装） | Item；Morrison 书房档案袋。 | 无 |
 | 4314 | 两只酒杯 | Clue；Morrison 宅邸门厅/电话桌与客厅。 | 无 |
@@ -33,7 +33,7 @@
 
 ### 4311 - 磨号手枪与枪内未击发余弹
 
-- 类型/地点：Clue；Morrison 书房尸体右手。
+- 类型/地点：Envir；Morrison 书房尸体右手，不可收集。
 - `Name`：`磨号手枪与枪内未击发余弹` / `Defaced Pistol and Unfired Rounds`
 - `Describe`：  
   `一把被放在 Morrison 尸体右手中的手枪。它不是 Morrison 的登记配枪，枪号已被磨去，手指也没有形成稳定握持。枪内仍有未击发余弹；这些事实说明现场使用了刻意切断来源的武器，但不能单独确定开枪者。`  
@@ -41,18 +41,18 @@
 - `ShortDescribe`：  
   `非登记配枪，枪号被磨去，并被松散地放在 Morrison 右手。`  
   `An unregistered pistol with its serial ground off, loosely placed in Morrison's right hand.`
-- 小玩法关系：`无`。属于爆炸前非进度型现场记录；爆炸后原现场被毁，不生成独立分析产物。
+- 小玩法关系：`无`。属于爆炸前环境观察；不拍照、不收集、不进入 CASE BOARD、疑点进度或指证，不生成独立分析产物。首次查看触发 Zack 内心 OS：（枪在右手里……可这手指搭得太松了。根本没握实。）
 
 重点（信息表达必不可少）：
 
-1. 取证构图必须同时看到“右手”“松散手指”“枪号磨损区”和手枪主体。
+1. 环境详情构图必须同时看到“右手”“松散手指”“枪号磨损区”和手枪主体。
 2. 枪号磨除应表现为新鲜机械刮磨，不是自然锈蚀。
-3. 余弹作为同一证据的插图/剖开展示，可辨为未击发，但不画成能够直接锁定具体供枪者的独家标识。
+3. 余弹作为同一环境观察的局部详情展示，可辨为未击发，但不画成能够直接锁定具体供枪者的独家标识。
 4. 不出现 Mickey 指纹、姓名或“凶器属于某人”的标签。
 
 美术参考（不影响推理）：
 
-- Zack 爆炸前匆忙拍下的近景记录，黑白或低饱和闪光照片；手枪为 1920 年代常见半自动手枪/左轮，由武器设定统一。
+- 玩家视角的现场观察特写，不是 Zack 持有的照片；不加相纸边框、拍照闪光或取证标签，不制作背包 Icon；手枪为 1920 年代常见半自动手枪/左轮，由武器设定统一。
 - 尸体手部避免猎奇特写，重点是握持关系和可追溯编号被破坏。
 
 ---
@@ -312,8 +312,8 @@
 - 类型/地点：Item；法院外圈调度材料。
 - `Name`：`Harrison案证物转运调度单` / `Harrison Evidence-Transfer Dispatch Sheet`
 - `Describe`：  
-  `Harrison 案的证物转运调度与交接材料。记录显示 21:30 至 23:20 期间，Pierce 负责法院东门与市政档案库交接，相关警员不得离岗。材料可以解释警局为何迟到，并排除 Pierce 在主要案发窗口亲自在宅邸布置现场，但缺少足以证明其全程在场的独立连续记录。`  
-  `Dispatch and handover records for evidence in the Harrison case. They place Pierce in charge of the courthouse east-gate and municipal archive transfer from 9:30 to 11:20 p.m., with assigned officers ordered not to leave. The records explain the delayed police response and exclude Pierce from personally staging the house during the principal window, but they do not provide independent continuous proof of his presence every minute.`
+  `Harrison 案的证物转运调度与交接材料。记录显示 21:30 至 23:20 期间，Pierce 负责法院东门与市政档案库交接，相关警员不得离岗。材料可以解释警局为何迟到，并提高 Pierce 当时在法院的可能，但缺少足以证明其全程在场的独立连续记录。`  
+  `Dispatch and handover records for evidence in the Harrison case. They place Pierce in charge of the courthouse east-gate and municipal archive transfer from 9:30 to 11:20 p.m., with assigned officers ordered not to leave. The records explain the delayed police response and make his presence at the courthouse more likely, but they do not provide independent continuous proof of his presence every minute.`
 - `ShortDescribe`：  
   `21:30至23:20，Pierce 被排在法院东门与市政档案库交接任务中。`  
   `Pierce was assigned to the courthouse and municipal archive transfer from 9:30 to 11:20 p.m.`

@@ -137,19 +137,7 @@ scenes:
       - O'Hara 是否接受 Lakeshore 报价
       - Margaret 对求助 Zack 说过什么
       - O'Hara 对 Sarah 暂时离开的决定
-      testimony_ids:
-      - id: 4114001
-        content: Margaret劝说O'Hara 接受报价，但Ohara没听，她说自己无论如何都不会卖房子
-        kind: collectible
-        speaker: 411
-        source_anchor: active outline / Loop4 / 自由探索 / O'Hara家门口 / O'Hara / ⚪
-        acquisition_talk: L4_scene4032_ohara
-      - id: 4114002
-        content: Margaret 明确要求 O'Hara 不找 Zack，并邀请Ohara和自己一起搬去北边教会的小公寓住
-        kind: collectible
-        speaker: 411
-        source_anchor: active outline / Loop4 / 自由探索 / O'Hara家门口 / O'Hara / ⚪
-        acquisition_talk: L4_scene4032_ohara
+      testimony_ids: [] # 两条正式证词在停止执行后的室内事件取得
 - id: 4033
   name: O'Hara 家
   type: free_exploration
@@ -178,8 +166,8 @@ scenes:
     name: Margaret写给O'Hara的短便条
     type: item
     pickup: true
-    note: Margaret R2 主力
-    description: 把报价签了，先搬来我这里。别找 Zack。便条有 Margaret 签名
+    note: Margaret R2 主力；便条上的地址独立解锁4034；取得后独立解锁4034，不以停止执行完成为前提
+    description: 把报价签了，先搬来我这里。别找 Zack。便条有 Margaret 签名及北边教会公寓的新家地址；具体门牌不由美术编造
   - id: 4414
     name: 临时停止执行回执
     type: item
@@ -229,23 +217,20 @@ scenes:
         required_item_ids:
         - 4411
         - 4412
-        - 4413
-        required_testimony_ids:
-        - 4114001
-        - 4114002
+        # 4413 只解锁 Margaret 家；两条事后证词不作电话前置
     talk: L4_event_stop_order_delivery
-    forced: true
+    forced: false # 玩家主动点击电话后进入连续剧情
     locks_player_control: true
     runtime_binding:
       adapter: ordered_story_event
       interaction_source: 4033.phone_stop_order_application
-      reason: Unity现有SceneEnterTalkTriggerConfig不支持requiredTalkIds；必须把墙边电话做成受O'Hara Talk、Sarah Talk、4114001、4114002与4411—4413共同门控的申请交互，交互开始后再锁定玩家控制
+      reason: 玩家主动点击墙边电话申请；完成门口准入及Sarah Talk并持有4411、4412后可用。不要求4413或事后证词；事件开始后才锁定控制，不因搜证完成自动触发。
     grants_evidence:
     - 4414
     required_beats:
     - O'Hara已在门口明确拒售并允许Zack进入处理现实危机。
     - Sarah已在自由Talk中确认自己熟悉Rosa家、曾在那里留宿。
-    - Zack取得O'Hara写下的“不出售”、Margaret短便条、清退协警通知与限时协议后联系Watts。
+    - Zack持有清退协警通知与写有“不出售”的限时收购协议，主动使用电话联系Watts。
     - 值班法官签发临时停止执行，Watts完成登记并送达4414，警员离开。
     runtime_exit:
       continuation: next_talk
@@ -262,10 +247,24 @@ scenes:
     required_beats:
     - O'Hara选择留下，Sarah同意暂时离开。
     - Emma先把Sarah送到熟悉的Rosa家住一晚。
-    - 完成安置后Zack才前往Margaret家。
+    - 停止执行生效后，O'Hara在室内给出关于Margaret的两条正式证词，用于指证Margaret；不得在门口Talk提前取得。
+    - 如尚未调查4413，在Zack出示便条前从本场桌上查看并取得；便条上的Margaret新址解锁4034，不自动转场。
+    - 事件结束后恢复4033自由控制；玩家可在O'Hara家与已解锁的Margaret家间往返。
+    testimony_ids:
+    - id: 4114001
+      content: Margaret劝说O'Hara 接受报价，但Ohara没听，她说自己无论如何都不会卖房子
+      kind: collectible
+      speaker: 411
+      source_anchor: active dialogue / Loop4 / 停止执行后 / O'Hara家室内 / O'Hara
+      acquisition_talk: L4_event_sarah_relocation
+    - id: 4114002
+      content: Margaret 明确要求 O'Hara 不找 Zack，并邀请Ohara和自己一起搬去北边教会的小公寓住
+      kind: collectible
+      speaker: 411
+      source_anchor: active dialogue / Loop4 / 停止执行后 / O'Hara家室内 / O'Hara
+      acquisition_talk: L4_event_sarah_relocation
     runtime_exit:
-      action: change_scene
-      target_scene_id: 4034
+      action: release_control
       continuation: release_to_exploration
 - id: 4035
   name: O'Hara 家后巷井检口 / 建立镜头
@@ -278,13 +277,16 @@ scenes:
 - id: 4034
   name: Margaret 家
   type: free_exploration
+  access:
+    required_item_ids: [4413]
+    runtime_requirement: 取得写有地址的便条即解锁；允许与4033往返自由探索，不要求停止执行或Sarah转移已完成。
   design_tags:
   - expose_location
-  description: 'Patrick 遗物不是一桌主题展览。Margaret 先收拾、再阻止 Zack 触碰，
+  description: 'Patrick 遗物不是一桌主题展览。Margaret 继续收拾，不遮挡或阻止 Zack 调查。
 
-    最后在指证推进中主动交出遗物匣。照片、旧信封、外套粉笔牌与未寄短笺
+    照片、旧信封、外套粉笔牌与未寄短笺从入场起在不同生活位置开放自由调查。
 
-    分别从不同生活位置取得。
+    只有遗物匣在指证结束后主动交出。
 
     '
   evidence:

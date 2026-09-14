@@ -59,8 +59,8 @@
 - 类型/地点：Item；Harrison 外间办公室普通费用抽屉。
 - `Name`：`1919-A入账存根` / `1919-A Deposit Receipt`
 - `Describe`：  
-  `一张长期夹在普通收入凭据中的入账存根。付款方只写作“1919-A”，备注栏连续引用圣心医院赔偿案号，款项进入 Harrison 的私人账户。纸张保存多年，没有被刻意销毁的痕迹。`  
-  `A deposit receipt kept for years among ordinary income records. The payer is listed only as “1919-A”; the memo field cites Sacred Heart compensation case numbers, and the money was credited to Harrison's personal account. The receipt shows no sign of an attempt to destroy it.`
+  `一张长期夹在普通收入凭据中的入账存根。付款方只写作“1919-A”，备注栏标明圣心医院赔偿类别 SACRED HEART COMPENSATION，款项进入 Harrison 的私人账户。纸张保存多年，没有被刻意销毁的痕迹。`  
+  `A deposit receipt kept for years among ordinary income records. The payer is listed only as “1919-A”; the memo field names the category SACRED HEART COMPENSATION, and the money was credited to Harrison's personal account. The receipt shows no sign of an attempt to destroy it.`
 - `ShortDescribe`：  
   `付款方记作“1919-A”，款项进入 Harrison 私人账户。`  
   `A deposit from “1919-A” was credited to Harrison's personal account.`
@@ -68,7 +68,7 @@
 
 重点（信息表达必不可少）：
 
-1. `PAYOR: 1919-A`、Harrison 私人账户栏和 Sacred Heart 赔偿案号备注必须同时可读。
+1. `PAYOR: 1919-A`、Harrison 私人账户栏和 Sacred Heart 赔偿案类别备注必须同时可读（不填未定具体案号）。
 2. 不出现 Donnelly & Associates、Mickey、Whale 或账户实际控制人。
 3. 与 4514 使用同一套 `1919-A` 账户编号排版和银行表格体系，方便 L5 视觉对照。
 
@@ -326,3 +326,7 @@
 - 配置归属：玩法附属页面，不进入 state 的正式证据清单、ItemStaticData 或玩家背包。
 
 ---
+
+## 2026-09-14 上画补充
+
+4112赔偿案类别统一写 `SACRED HEART COMPENSATION`，与4514一致，不补具体案号。4116未定提交日期和4319未定发行时刻不由美术编造；保留既定相对时序，关键精确数字待时间线定稿。

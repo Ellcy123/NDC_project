@@ -83,8 +83,8 @@
 - 类型/地点：Item；O'Hara 家，收购协议旁。
 - `Name`：`Margaret写给O'Hara的短便条` / `Margaret's Note to O'Hara`
 - `Describe`：  
-  `Margaret 留给 O'Hara 的短便条：“把报价签了，先搬来我这里。别找 Zack。”便条末尾有 Margaret 的签名。`  
-  `A short note from Margaret to O'Hara: “Sign the offer and come stay with me first. Don't go to Zack.” Margaret's signature appears at the bottom.`
+  `Margaret 留给 O'Hara 的短便条：“把报价签了，先搬来我这里。别找 Zack。”便条末尾有 Margaret 的签名及北边教会公寓的新家地址。`  
+  `A short note from Margaret to O'Hara: “Sign the offer and come stay with me first. Don't go to Zack.” Margaret's signature and her new address at the northern church apartments appear at the bottom.`
 - `ShortDescribe`：  
   `Margaret 要 O'Hara 签约搬走，并明确写着“别找 Zack”。`  
   `Margaret tells O'Hara to sign, move out, and “don't go to Zack.”`
@@ -93,7 +93,7 @@
 重点（信息表达必不可少）：
 
 1. 画面英文正文固定表达三件事：签报价、先搬来、不要找 Zack。
-2. Margaret 签名必须清楚，使便条来源无需靠猜。
+2. Margaret 签名与新家地址必须可读；地址用于解锁 Margaret 家，具体街名门牌待策划定稿，不由美术编造。
 3. 与 4419 保持同一老年女性笔迹体系，但 4413 更匆忙、更短促。
 
 美术参考（不影响推理）：
@@ -311,3 +311,7 @@
 - 禁止在开柜动画中露出隐藏附件、4518或4519，禁止用密码正确直接播放 `Mickey = Whale` 结论。
 
 ---
+
+## 2026-09-14 金额边界
+
+4412保留低价收购含义；未锁定美元数与正常估值前，报价数值栏留白，仅作待定排版。不用虚构数值表现低价，不将空白稿视为可读金额证据的最终交付。

@@ -35,10 +35,10 @@
 
 ## 美术资源状态
 
-- 56 条正式证据均已具备 `ArtRequirement`，美术需求文档完整度已不再是当前阻塞项。
+- 59 条正式证据均已具备 `ArtRequirement`，美术需求文档完整度已不再是当前阻塞项。
 - 49 件普通证据的 `folderPath`、`desSpritePath`、`mapSpritePath`、`iconPath` 均已预配置；资源文件尚未产出，因此仍保持 `art_pending`。
 - CASE BOARD 4704–4709 标记为 `previewAssetMode: minigame`；4516 标记为 `previewAssetMode: narrative_discovery`。网页显示“普通道具图片不适用”，不再误报三个资源字段未配置。
-- 27 个场景已从探索/AVG 场景文档导入画面重点、资产性质、道具锚点、复用与演出边界，并预配置到 `Art\Scene\Backgrounds\EPI04\u4_*`。SC4043 的楼梯接应与档案车拆成两条独立美术资产。
+- 28 个场景已从探索/AVG 场景文档导入画面重点、资产性质、道具锚点、复用与演出边界，并预配置到 `Art\Scene\Backgrounds\EPI04\u4_*`。SC4043 的楼梯接应与档案车拆成两条独立美术资产。
 - 资源路径均为设计期预配置名；实际证据图、背景图、新角色头像和场景立绘仍未全部产出。
 
 ## 自检结论
@@ -58,3 +58,9 @@
 - 确认 NPC role，并核对预配置资源名与最终美术交付文件名是否一致。
 - 分别完成 CASE BOARD 小玩法美术规格和 4516 场景发现演出方案；不能并入普通道具图流程。
 - 剥离 `pending*`、`preview*`、`runtimeCandidateId`、`specialMechanics`、`endingSequence` 等设计期字段，除非 Unity 端明确接入。
+
+## 2026-09-14 审查更新
+
+当前预览登记为28个SceneConfig、59个ItemStaticData、29个ArtAssetConfig；场景文档目录为18个EXP、14个AVG（不含README）。文件数与运行场景数不是同一口径。此前审查将探索README计入19个文件，已纠正；原场景总览18个无误。当前未重跑本报告历史测试。
+
+4219年龄分类CHILD、4218月日留白、4112/4514共用账户及赔偿类别已批准；金额及必要精确时间仍待定。结果卡规格和尸体人物层详见新需求。终幕只用行驶中的车内拆阅，不另制安全地点。

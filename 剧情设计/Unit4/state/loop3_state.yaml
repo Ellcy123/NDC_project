@@ -134,13 +134,12 @@ scenes:
   - target_scene_id: 4028
     direction: bidirectional
     unlock_condition:
+      required_viewed_environment_ids: [4311, 4323]
       required_item_ids:
-      - 4311
       - 4312
       - 4313
       - 4314
       - 4315
-      - 4323
     locked_feedback: 先把书房和客厅现场完整记录下来；煤气味正在变重，进入检修区后不会再有时间回头。
   evidence:
   - id: 4314
@@ -215,9 +214,11 @@ scenes:
   evidence:
   - id: 4311
     name: 磨号手枪与枪内未击发余弹
-    type: clue
-    pickup: true
-    note: 非进度型自杀现场记录；不能单独证明开枪者
+    type: envir
+    pickup: false
+    note: 环境观察；不收集、不拍照、不进CASE BOARD或指证。首次查看触发Zack内心OS，不能单独证明开枪者
+    first_view_os: '（枪在右手里……可这手指搭得太松了。根本没握实。）'
+    observation_flag: viewed_environment_4311
     description: 不是 Harold 的登记配枪，枪号被磨去；手枪被放在尸体右手，手指没有形成稳定握持
   - id: 4312
     name: 伪造遗书
@@ -334,13 +335,13 @@ scenes:
   - pre_blast
   access:
     from_scene: 4027
+    required_viewed_environment_ids: [4311, 4323]
     required_item_ids:
-    - 4311
     - 4312
     - 4313
     - 4314
     - 4315
-    runtime_requirement: 进入本场前必须已完成书房与客厅调查；不能只依赖自然语言提示
+    runtime_requirement: 进入本场前必须已完成书房与客厅调查；4311、4323按环境查看标记判断，4312—4315按持有判断。环境查看适配待运行层接入，禁止等待不可收集的4311进入背包。
   description: '煤气表、壁炉时钟接线、主阀与背风窗缝构成四个检查反馈。
 
     铅封与接线两处都完成后产出4316；再完成阀门和窗缝检查只满足宅邸侧门槛，不设真实倒计时。
@@ -642,10 +643,10 @@ special_mechanics:
 non_progress_investigation_records:
 - id: record_suicide_scene
   text: 右手枪位与 Harold 左手生活习惯冲突
+  observed_environment_ids: [4311]
   inputs:
-  - 4311
   - 4063002
-  boundary: 支持伪装现场判断；不进入本轮疑点进度，也不能单独确定枪手
+  boundary: 仅叙事层交叉记忆；4311是环境观察，不生成照片、背包证物或指证输入，不进入疑点进度，也不能单独确定枪手
   presentation:
     channel: investigation_log
     blocking: false
@@ -711,10 +712,10 @@ doubts:
 evidence_registry:
 - id: 4311
   name: 磨号手枪与枪内未击发余弹
-  type: clue
-  pickup: true
+  type: envir
+  pickup: false
   first_scene: 4022
-  note: 非进度型自杀现场记录
+  note: 环境观察；不收集、不拍照、不进指证；只记录viewed_environment_4311查看状态
 - id: 4312
   name: 伪造遗书
   type: item
