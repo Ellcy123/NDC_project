@@ -46,8 +46,8 @@ Bernard 的私人办公室。
 
 ## 进入状态
 
-- Charles 已在银行大厅纯 AVG 场景 `3592` 中带走 Emma。
-- 玩家进入 SC3014 时只有 Zack 与 Bernard，后续搜证和指证均由 Zack 独自推进。
+- Charles 已在银行大厅带走 Emma；Zack 独自进入办公室。
+- 办公室初访与指证只按 Zack、Bernard 在场设计，不增加 Emma 或 Charles 旁听层。
 
 ## 指证流程
 

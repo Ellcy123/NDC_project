@@ -60,8 +60,8 @@ player_context:
     - "Mary + Helen 19 号一起预先上天台布置陷阱"
     - "Mary 早识破 Thomas 的杀妻骗保计划，与 Helen 联手反杀"
     - "Mary 即'戴花瓣缺口手链去 Bernard 桌上咨询的女人'"
-    - "玩家做出二选项决定：销毁证据保护 Mary / 拿起证据继续"
-    - "（若拿起）案件后续走向待续；（若销毁）Zack 选择不告诉 Emma 真相"
+    - "玩家做出二选项决定：放过 Mary / 拿起证据（不同心理路径，最终均销毁）"
+    - "两种选择最终都销毁证据；Zack 选择不告诉 Emma 真相"
     - "Mary 准备把房子卖给 TideWater 还债；银行不会阻拦，因为清退房产最终正流向 TideWater"
     - "南区援助计划：房产清退最终流入 TideWater，世博会选址附近"
 
@@ -110,7 +110,7 @@ opening:
 # ─────────────────────────────
 #
 # 本 Loop 场景状态:
-#   SC3005 法医办公室    → 🔓（Foster 精确报告 + 关键证词）
+#   SC3005 法医办公室    → 🎬 3695 完整 AVG（Foster 精确报告 + 关键证词）
 #   SC3006 二楼走廊      → 🔓（Seamus 润滑油新陈述）
 #   SC3011 Mickey 办公室 → 🔓 → ⚔️ 控辩对决
 
@@ -118,11 +118,14 @@ scenes:
   # ── SC3005 法医办公室（精密检测出炉） ──
   - id: 3005
     name: "法医办公室（精密检测出炉）"
-    type: free_exploration
+    type: story_dialogue
+    art_scene_id: 3695
+    characters: [Zack, Foster]
+    acquisition: "完整 AVG 对话中取得 3601 报告；不另设地面拾取"
     description: |
       Foster 把一份盖了红章的鉴定报告推到桌上。
       "精密检测结果出来了——血液酒精浓度 0.25%。"
-      她不需要再用'严重醉酒'这种委婉的措辞。
+      此前精密结果未出，只能陈述已有观察；现在依据充分，给出精确数值与职业判断，并非此前故意隐瞒。
 
     evidence:
       - id: 3601
@@ -142,7 +145,7 @@ scenes:
         active_topics:
           - "死者血液酒精浓度 0.25%"
           - "0.25% 已无有效攻击能力（医学判断）"
-        withheld_topics: []  # L6 收束，Foster 不再保留
+        withheld_topics: []  # 结果到位后完整交付；此前不是刻意保留
 
         player_inquiry:
           - "0.25% 意味着什么——能否进行有效行动 / 攻击"  # 9
@@ -308,7 +311,7 @@ expose:
     # ── 玩家二选项（结局分叉） ──
     # 两条 outcome 都会进入下方共用的 ending_sequence（大纲第 587-589 明示：
     # 无论销毁/拿起，Mickey 都问 Zack 要不要告诉 Emma；Zack 都表明不告诉的理由）。
-    # 选项差异仅在于 Zack 此刻持有/不持有证据，以及后续追诉可能性——影响 Unit4+。
+    # 2026-09-14 用户确认：两条心理演出路径最终均销毁证据，不保留持证分支。
     player_choice:
       prompt: "证据就在手中——"
       options:
@@ -317,7 +320,7 @@ expose:
           outcome: "Zack 销毁了证据。Mickey 问 Zack 要不要告诉 Emma 这一切；Zack 表示如果说了 Emma 肯定执着于真相——还是算了。"
         - id: take
           label: "拿起证据"
-          outcome: "Zack 拿走了证据。Mickey 同样问 Zack 要不要告诉 Emma；Zack 表示如果说了 Emma 肯定执着于真相——还是算了。证据被保留，案件后续追诉可能性留待 Unit4+。"
+          outcome: "Zack 先拿起证据，经历追诉后果的心理预演后回到现实，最终销毁证据；随后与另一选项汇合，隐瞒 Mary 真相并进入共用结尾。"
 
 # ─────────────────────────────
 # 五、结局序列（🎭 大纲明示的多场景收尾）

@@ -2,7 +2,7 @@
 
 说明：本文件只记录 Unit3 里"纯 AVG 对话/过场场景"和"指证场景背景"的美术语义。它不是自由探索场景清单，也不是 NPC 可点击立绘、证据道具、动态漫画分镜清单。
 
-> **说明**：Unit3 处于 state 设计阶段，对白与配置尚未落地。下表 SceneId / 资产命名为按 Unit2 命名规律拟定的建议值（`SC3{loop}{9x}_avg_*`），待配置落地时以实际 SceneConfig 为准。
+> 2026-09-14：已按用户审核更新。预览配置已存在；历史建议 ID 不作为追加出图依据。3695 为本次新增的法医报告完整 AVG 场景。
 
 ## 核心规则
 
@@ -18,23 +18,21 @@
 
 | Loop | 类型 | SceneId | 资产命名 | 画面人物 | 画面重点 |
 |---|---|---:|---|---|---|
-| L1 | 开篇纯 AVG | `3191` | `SC3191_avg_Opening_MickeyCommission` | Mickey、Zack、Emma | Mickey 登门事务所委托调查 Thomas 坠楼案；点出"欠贷款 + 巨额保险 + 湖滨信托银行"与 Frank 案同模式，自己不参与、请两人查后到他办公室汇报。 |
-| L1 | 指证后纯 AVG | `3192` | `SC3192_avg_MorrisonPointsToMary` | Morrison、Zack、Emma | Morrison 摆烂放任调查，抛出"楼顶脚印可能属于死者妻子 Mary"；态度是"内部牵扯太多、不想管"。 |
+| L1 | 开篇纯 AVG 1 | `3017` | `SC3017_avg_u3_l1_open_car_news_day` | Mickey、Zack、Emma | Mickey 驾车，Zack 副驾驶、Emma 后排读早报，从墓地返回事务所。 |
+| L1 | 开篇纯 AVG 2 | `3018` | `SC3018_avg_u3_l1_open_office_case_day` | Mickey、Zack、Emma | 三人抵达事务所，Mickey 正式委托调查 Thomas 坠楼案。 |
 | L2 | 开篇纯 AVG | `3291` | `SC3291_avg_Opening_BackToApartment` | Zack、Emma | 带着"脚印属于 Mary"的线索回到 Thomas 公寓楼下（楼体为 6 层住宅 + 楼顶天台，画面可从街面仰看至楼顶护栏）；Emma 仰看天台护栏，感慨普通人被谋杀却被警方掩盖。 |
-| L2 | 指证后纯 AVG | `3292` | `SC3292_avg_MaryRooftopVersion` | Mary、Zack、Emma | Mary 三轮被逼后退守：承认 22:00 上过天台，称与 Thomas 约好为 Emily 祈福、Thomas 突然想推她、她推回去时 Thomas 失力撞栏坠落；反复说自己会不会被当凶手。 |
 | L3 | 开篇纯 AVG | `3391` | `SC3391_avg_Opening_ExpandSearch` | Zack、Emma | 走回公寓楼内，Emma 盯着住户名牌思考"Thomas 为何要推妻子、他的出轨对象会不会知情"，决定扩大搜查。 |
-| L3 | 指证后纯 AVG | `3392` | `SC3392_avg_ThomasKillerRevealed` | Helen、Zack、Emma | 第一重反转：Thomas 是杀妻骗保恶魔（非单纯酗酒丈夫）。Helen 承认布置陷阱（毁栏 + 涂油）、否认杀人，坚称"被 Thomas 命令独自去做、Thomas 肯定是意外坠楼"。 |
 | L4 | 开篇纯 AVG | `3491` | `SC3491_avg_u3_l4_open_office_call_night` | Zack、Emma（Foster 电话，不出实体立绘） | Zack 侦探事务所，复盘 Helen 退守版本时 Foster 来电：组里申请的油痕检测仪到了；两人决定去法医办公室取仪器并扩大调查。 |
 | L4 | 指证后衔接 1 | `3492` | `SC3492_avg_CityHallVerdict` | Harrison（法官）、Mickey、Zack、Emma | 市政厅，Mickey 以辩护律师身份交代案情，为 Mary 争取合法杀人判决、为 Helen 争取无罪。 |
 | L4 | 指证后衔接 2 | `3493` | `SC3493_avg_NewspaperInterview` | Emma、Mary、Helen | 报社，Emma 采访 Mary 与 Helen；Mary 陈述多年家暴遭遇，Helen 补充"银行存在诱导"（为 L5 起势）。 |
 | L5 | 开篇纯 AVG | `3591` | `SC3591_avg_Opening_MickeyOffice` | Mickey、Zack、Emma | Mickey 律所，告知"Mary 已无罪、Helen 还在争取"；为起诉湖滨信托银行取证，派两人继续查 Bernard，写介绍函。 |
-| L5 | 剧情衔接纯 AVG | `3592` | `SC3592_avg_BankLobbyCharlesTakesEmma` | Charles、Emma、Zack | 湖滨信托银行大厅，Charles Miller 突然出现，以基金会事务和 Seamus 资助问题为由带走 Emma；Zack 被迫独自进入 Bernard 办公室。 |
+| L5 | 剧情衔接纯 AVG | `3592` | `SC3592_avg_BankLobbyCharlesTakesEmma` | 小 Charles、Emma、Zack | 小 Charles 在银行大厅以基金会急事及 Seamus 资助事项为由带走 Emma；Zack 独自进入 Bernard 办公室。 |
 | L6 | 开篇纯 AVG | `3691` | `SC3691_avg_Opening_NeedEvidence` | Mickey、Zack | Mickey 律所，Zack 怀疑去咨询的女人是 Mary；Mickey 提醒法庭只认事实证据；Zack 决定再查（若合谋且预谋，两人将面临死刑）。 |
-| L6 | 关键剧情 AVG（法医室） | `3695` | `SC3695_avg_FosterFinalReport` | Foster、Zack、Emma | 法医办公室，Foster 推出盖红章的精密检测报告：血液酒精浓度 0.25%、Thomas 无有效攻击能力 → 颠覆"正当防卫"。L6 死因反转的关键剧情对话节点（不做突发事件动态漫画，按纯 AVG 关键场处理）。 |
+| L6 | 关键剧情 AVG（法医室） | `3695` | `SC3695_avg_FosterFinalReport` | Foster、Zack | 法医办公室，Foster 推出盖红章的精密检测报告：血液酒精浓度 0.25%、Thomas 无有效攻击能力 → 颠覆"正当防卫"。L6 死因反转的关键剧情对话节点（不做突发事件动态漫画，按纯 AVG 关键场处理）。 |
 | L6 | 结尾衔接 1 | `3692` | `SC3692_avg_OfficeEmmaMaryHelen` | Zack、Emma、Mary、Helen | Zack 侦探事务所，Emma 从报社回来，与 Zack 谈到 Bernard 已招供银行违规；随后 Mary 携 Helen 登门道谢，提到准备卖房给 TideWater 还债，Helen 提出两人同住打工还债。 |
 | L6 | 结尾衔接 2 | `3693` | `SC3693_avg_StreetLeonardDelivers` | Leonard、Mary、Helen、Zack、Emma | 侦探事务所门口街道，Emma 和 Zack 送 Mary、Helen 出门时遇到已在路灯下徘徊的 Leonard；Mary、Helen 离开后，Leonard 交出南区援助计划内部文件，揭示房产最终流入 TideWater。 |
 
-> **结局二选项**（Zack 销毁证据 / 拿起证据）发生在 L6 指证后、上述事务所衔接之前，属于剧情分叉点；两个 outcome 都进入共用的事务所衔接序列，画面上无需为两个分支单独出整图，差异由 Zack 是否持证及表情体现。
+> **结局二选项**（Zack 销毁证据 / 拿起证据）发生在 L6 指证后、上述事务所衔接之前，属于剧情分叉点；两个 outcome 都进入共用的事务所衔接序列，两个选项先有不同的心理演出，最终均销毁证据；汇合后的事务所场景不再有持证差异。
 
 ## 需要单独明确人物动作资产的纯 AVG 场景
 
@@ -56,7 +54,7 @@
 | Loop | 指证对象 | 指证场景 | topBg 语义 |
 |---|---|---|---|
 | L1 | Morrison | SC3004 警局 | Morrison 指证用警局办公室画面。 |
-| L2 | Mary | SC3013 公寓楼门口 | Mary 指证用公寓楼门口画面。 |
+| L2 | Mary | SC3001 公寓楼下入口 | Mary 指证用公寓楼门口画面。 |
 | L3 | Helen | SC3008 Helen 家 | Helen 指证用 Helen 家画面。 |
 | L4 | Helen（补充） | SC3008 Helen 家 | Helen 补充指证用 Helen 家画面（可与 L3 区分光线/时段）。 |
 | L5 | Bernard | SC3014 Bernard 办公室 | Bernard 指证用银行办公室画面。 |
@@ -64,13 +62,11 @@
 
 ## 和自由探索分开的点
 
-- L1 开篇 `3191` 是 Mickey 登门委托的完整 AVG 图，不是 SC3001 探索证据场景。
-- L2 指证后 `3292` 是 Mary 退守自述的过场图，不是 Mary NPC 挂载。
-- L3 指证后 `3392` 是 Thomas 真面目反转 + Helen 承认布陷阱的过场图。
+- L1 开篇分别制作 3017 车内与 3018 事务所两张完整 AVG 图。
 - L4 开篇 `3491` 中 Foster 仅电话出现，不画实体立绘；油痕检测仪是 L4 自由探索/小玩法的功能道具，不在本过场图。
 - L4 Mary 登场求情是突发事件动态漫画（见《突发事件》文档），不在本表纯 AVG 场景内。
 - L6 法医室 `3695` 中 Foster 推红章报告是关键剧情对话；报告本身是证据道具（法医鉴定 3601），AVG 图只表现 Foster 出报告的场面，不画成可点击拾取。
-- L5 `3592` 是从 Mickey 开篇到 Bernard 办公室探索之间的剧情衔接图；Charles 带走 Emma 后，Zack 独自进入 SC3014。
+- 小 Charles 在银行大厅以基金会急事及 Seamus 资助事项为由带走 Emma；Zack 独自进入 Bernard 办公室。
 - L6 结尾衔接合并为两张图：`3692` 表现事务所内完整谈话，`3693` 表现事务所门口送别与 Leonard 交文件。
 
 ## 配置落点
@@ -83,3 +79,7 @@
 ## 变更记录
 
 - 2026-06-27 v1.0：基于 Unit3 state（loop1-6）首次建立。列出各 Loop 开篇 / 指证后 / 衔接纯 AVG 场景与指证 topBg；L6 Foster 法医反转作为关键剧情 AVG（`3695`）处理，不做突发事件。SceneId / 资产命名为待落地的建议值。
+
+## 指证后普通对白口径
+
+L1 Morrison、L2 Mary、L3 Helen 的指证后内容沿用所在指证场地，不单独制作原建议的 3192、3292、3392 整图；台词内容继续保留。

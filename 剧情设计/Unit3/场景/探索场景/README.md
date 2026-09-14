@@ -24,8 +24,7 @@ EXP_SC{sceneId}_{地点名}.md
 | EXP_SC3010_Margaret鞋坊.md | `u3_exp_shoe_shop` | Margaret 鞋坊 |
 | EXP_SC3011_Mickey办公室.md | `u3_exp_mickey_office` | Mickey 办公室，L5 / L6 使用，可作为控辩背景复用 |
 | EXP_SC3012_Smith家_卧室.md | `u3_exp_smith_bedroom` | Smith 家卧室 |
-| EXP_SC3013_已并入SC3001_公寓楼门口.md | `u3_exp_entrance` | 历史占位；已并入 SC3001，不独立开放 / 出图 |
-| EXP_SC3014_Bernard办公室.md | `u3_exp_bernard_office` | Bernard 办公室，L5 指证与 Charles 突发事件地点 |
+| EXP_SC3014_Bernard办公室.md | `u3_exp_bernard_office` | Bernard 办公室，L5 Zack 独自调查与指证 Bernard 的地点；Charles 带走 Emma 发生在银行大厅 |
 | EXP_SC3015_三楼走廊.md | `u3_exp_3f_hall` | Helen 家门口与上行楼梯过渡 |
 | EXP_SC3016_公寓一楼走廊.md | `u3_exp_1f_hall` | Smith 家一楼入口过渡 |
 | EXP_SC3019_公寓六楼走廊.md | `u3_exp_6f_hall` | 六楼天台门外侧过渡，L4 承载门外侧把手油痕 |

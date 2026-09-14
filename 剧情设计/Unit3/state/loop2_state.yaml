@@ -101,12 +101,12 @@ opening:
 #   SC3005 法医办公室            → 🔓（沿用 L1，无新对话节点）
 #   SC3007 教堂                  → 🔓 解锁（Mary 提及"在教堂祈祷"触发）
 #   SC3012 Smith 卧室            → 🔓 解锁
-#   SC3013 公寓楼门口            → 🔓 → ⚔️（Mary）
+#   SC3001 楼下入口              → 🔓 → ⚔️（Mary；与楼下现场共用）
 #   SC3006/3008/3009/3010/3014   → 🔒
 
 scenes:
-  # ── SC3013 公寓楼门口（Mary 拦截） ──
-  - id: 3013
+  # ── SC3001 公寓楼门口（Mary 拦截） ──
+  - id: 3001
     name: "Thomas 公寓楼门口"
     type: free_exploration
     description: |
@@ -180,7 +180,7 @@ scenes:
         type: envir
         pickup: false
         note: "🔒 动机相关——女儿 Emily 的遗物（仅环境叙事）"
-        description: "贴在女儿房间门口的蜡笔画：歪歪斜斜的'妈妈'两字，旁边画着一个戴花形项链的女人"
+        description: "贴在女儿房间门口的蜡笔画：歪歪斜斜的'妈妈'两字，旁边画着一个手腕戴花形手链的女人"
 
       - id: 3205
         name: "Thomas 家的廉价酒照片"
@@ -297,7 +297,7 @@ scenes:
 expose:
   target: mary
   target_talk: L2_expose_mary
-  location: "SC3013 公寓楼门口"
+  location: "SC3001 公寓楼门口"
   total_rounds: 3
   is_liar: true
   player_inquiry: null
@@ -442,14 +442,14 @@ evidence_registry:
     name: "祈祷披肩"
     type: clue
     pickup: false
-    first_scene: 3013
+    first_scene: 3001
     note: "关键——Expose R2 主力（破洞 + 袖扣纤维同源）；搜身观察拍照、不可带走"
 
   - id: 3202
     name: "Mary 的花形手链"
     type: clue
     pickup: false
-    first_scene: 3013
+    first_scene: 3001
     note: "🔵 跨 Loop——本 Loop 客观记录花瓣缺口物理特征但不点破其含义（L5 用于联想压痕 / L6 R5 完成指认）；搜身观察拍照、不可带走"
 
   - id: 3203

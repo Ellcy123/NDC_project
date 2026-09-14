@@ -71,7 +71,8 @@ opening:
   type: cutscene
   scene_name: "L4 开篇 · Zack侦探事务所 · Foster来电"
   location: "Zack 侦探事务所"
-  characters: [Zack, Emma, Foster]
+  characters: [Zack, Emma]
+  remote_characters: [Foster]  # 电话参与，不画现场实体
   description: |
     L3 指证后，Helen 给出"独自一人布陷阱、当晚没去过楼顶"的退守版本，
     眼神依然闪烁。Zack 和 Emma 回到 Zack 侦探事务所复盘突破口时，
@@ -103,7 +104,7 @@ opening:
 # ─────────────────────────────
 #
 # 本 Loop 场景状态:
-#   SC3001/3003/3007/3012/3013/3009 → 🔓 沿用
+#   SC3001/3003/3007/3012/3009 → 🔓 沿用
 #   SC3019 六楼走廊                → 🔓 天台门外侧把手油痕检查
 #   SC3002 楼顶                    → 🔓 天台门内侧把手检查（凭楼顶钥匙）
 #   SC3005 法医办公室              → 🔓 + 🎮 油痕检测仪小玩法
@@ -315,15 +316,15 @@ expose:
     description: |
       **第二重反转（假结局）**：Helen 被点破当晚在场，却一时语塞、不知如何辩解。
       这时 Mary 出现，主动作证：是 Helen 为了保护自己、才把 Thomas 推下楼的。
-      Helen 顺着 Mary 的话接下去——她当晚听到 Mary 的呼救声，于心不忍，才……
-      Mary 随即恳请 Zack 按自己过失杀人告知警官，不要连累 Helen。
+      Helen 抢先承认布置陷阱与推下 Thomas 的全部责任；Mary 安抚她，讲述 Thomas 逼近、Helen 冲入救人的版本。Helen 补充：Mary 上天台后自己留在楼道，听到叫声才冲入。
+      Mary 请求警方直接来问自己，坚持 Thomas 先动手、Helen 最后救了她。
       Mary 补充：当晚是 Thomas 先约 Mary 说话，争吵之后 Helen 才出现的。
       Zack 决定回去和 Mickey 商量，看能否帮两人辩护。
     new_evidence_gained: null
     player_knowledge_gained:
       - "Helen 被点破当晚在场后语塞；是 Mary 出现主动作证'Helen 为保护自己才推下 Thomas'"
-      - "Helen 顺着 Mary 的话称：当晚听到 Mary 呼救、于心不忍才上楼（被动附和）"
-      - "Mary 请求按自己过失杀人告知警官，不连累 Helen"
+      - "Helen 主动揽下布置陷阱及推人责任，随后补充自己留在楼道、听到 Mary 叫声才冲入的说法"
+      - "Mary 请求警方直接问自己，强调 Helen 救了她"
       - "Mary 补充：当晚 Thomas 先约 Mary，争吵后 Helen 才出现"
       - "Zack 决定与 Mickey 商量辩护方案"
 

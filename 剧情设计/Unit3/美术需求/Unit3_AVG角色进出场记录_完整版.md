@@ -21,23 +21,23 @@
 
 ---
 
-## Loop 2 · Opening / Scene 3013 — Smith 公寓周边
+## Loop 2 · Opening / Scene 3001 — Smith 公寓周边
 
 ### 进场角色
-无。Mary 已在门口守候，场景开始时在场。
+无。Mary 提着旧布袋从楼内出来，准备采买；与两人偶遇时自然、克制，不露慌乱。
 
 ### 离场角色
 无。
 
 ---
 
-## Loop 3 · Scene 3008_corridor — 公寓三楼走廊
+## Loop 3 · Scene 3015（对白旧键 3008_corridor） — 公寓三楼走廊
 
 ### 进场角色
 无。Helen 已坐在走廊尽头抽烟，场景开始时在场。
 
 ### 离场角色
-无（Helen 是被打断并试图躲进房间，不是主动告别）。
+门口交谈和口红观察完成后，Helen 同意进屋；Helen、Zack、Emma 从三楼走廊进入 Helen 家，需表现门口到室内的衔接。
 
 ---
 
