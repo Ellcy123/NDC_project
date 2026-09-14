@@ -1,9 +1,13 @@
 ---
 name: ndc-character-scene-integration
-description: Direct and place approved NDC characters in fixed scenes using narrative timelines, natural performance, physical scale and contact, independent character layers, actual dialogue UI, and original-resolution RGBA delivery. Use for 人物入景、角色融图、剧情角色进退场、点击前后状态、人物表演与站位、人物投影及既有入景资产审核；do not design new characters or generate new empty backgrounds.
+description: Direct and place approved NDC characters in fixed scenes using narrative timelines, natural performance, physical scale and contact, independent character layers, actual dialogue UI, and original-resolution RGBA delivery. Use for 人物入景、角色融图、剧情角色进退场、点击前后状态、人物表演与站位、人物投影及既有入景资产审核；route user-edited PSD returns to ndc-character-scene-manual-return, and do not design new characters or generate new empty backgrounds.
 ---
 
 # NDC Character Scene Integration
+
+## 人工回流路由
+
+用户交回或指定人工修改后的角色入景 PSD 时，停止加载本 Skill 的生产／审核流程，改用 [ndc-character-scene-manual-return](../ndc-character-scene-manual-return/SKILL.md)。道具人工回流暂不建立流程，不得类推。
 
 ## Photoshop MCP 强制前置
 
@@ -37,6 +41,7 @@ Start or resume with [效率与状态合同](references/efficiency-and-state-con
 
 | Decision | Reference |
 |---|---|
+| 用户交回人工修改后的角色入景 PSD | 改用 [ndc-character-scene-manual-return](../ndc-character-scene-manual-return/SKILL.md)，不进入本 Skill 其余门禁 |
 | READY/revision、人体覆盖、三引用原子提交、浏览器隔离、WIP、时间盒、恢复与最低产出 | [efficiency-and-state-contract.md](references/efficiency-and-state-contract.md) |
 | Probe / provisional / formal depth, universal versus factual checks, previews, cache and timing | [execution-profiles-and-finalizer.md](references/execution-profiles-and-finalizer.md) |
 | Cast presence and natural, readable acting | [directing-and-timeline.md](references/directing-and-timeline.md) |
@@ -93,4 +98,4 @@ Require current visual/semantic acceptance, actual UI, independent complete laye
 
 ## 场景节点与来源冻结
 
-按[检索、人工节点与回流合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)及[角色白模节点交付合同](../ndc-character-scene-reference/references/node-delivery-contract.md)执行。每个新白模、正式角色或合法复用先以 scene/revision/actor/pose/artifact role 核验三根 discovery receipt；任一 FOUND_USABLE、FOUND_REPAIRABLE、未完成或失效结论都按收据路由，不能生成替代品。每个 actor/pose 的实际 `complete_anatomy_master`、`final_submission_whitebox`、联合预览和实际 UI 避让预览齐备后，先逐场用 `node_delivery.py pack|verify` 建立 `{DELIVERY_ROOT}/角色融入场景/Unit<n>/节点交付/<scene-id>/`：根层只平铺真实图片和已有 PSD/PSB，资料只进 `_节点资料`；多场批次逐场齐备，不能只交一个场景或放进通用“角色”类目。随后仅建立一次非最终节点，并绑定交付 manifest；用户只审核比例、叙事姿态、落点合理性与 UI 避让。木棍／关节点／程序块面／扁平色剪影／量尺或联合预览不是生产白模。批准节点是正式生产唯一上游权威；正式阶段不重审或替换白模／场景／角色卡职责，只在其基础上完成像素、提取和交付门禁。
+按[检索、人工节点与回流路由合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)及[角色白模节点交付合同](../ndc-character-scene-reference/references/node-delivery-contract.md)执行。每个新白模、正式角色或合法复用先以 scene/revision/actor/pose/artifact role 核验三根 discovery receipt；任一 FOUND_USABLE、FOUND_REPAIRABLE、未完成或失效结论都按收据路由，不能生成替代品。每个 actor/pose 的实际 `complete_anatomy_master`、`final_submission_whitebox`、联合预览和实际 UI 避让预览齐备后，逐场建立节点包；新 v2 节点还必须包含每场唯一的可编辑表演 PSD，保持原场景尺寸，并将原场景、实际 UI 和每个 actor/pose 独立分层且保留当前位置与比例。根层平铺真实资产，资料只进 `_节点资料`；多场批次逐场齐备，不能只交一个场景或放进通用“角色”类目。随后仅建立一次非最终节点，并绑定交付 manifest；用户只审核比例、叙事姿态、落点合理性与 UI 避让。木棍／关节点／程序块面／扁平色剪影／量尺或联合预览不是生产白模。批准节点是正式生产唯一上游权威；正式阶段不重审或替换白模／场景／角色卡职责，只在其基础上完成像素、提取和交付门禁。人工修改 PSD 回流后改用独立 `ndc-character-scene-manual-return`。

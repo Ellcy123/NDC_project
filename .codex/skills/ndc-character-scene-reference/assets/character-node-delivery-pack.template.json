@@ -1,5 +1,5 @@
 {
-  "schema": "ndc-character-node-delivery-pack/v1",
+  "schema": "ndc-character-node-delivery-pack/v3",
   "unit": "Unit【N】",
   "scene_id": "【SCENE_ID】",
   "scene_label": {
@@ -63,11 +63,19 @@
   },
   "editable_sources": [
     {
-      "artifact_id": "scene.whitebox-source",
-      "source": {"path": "【EDITABLE_WHITEBOX_SOURCE_PSD_OR_PSB】", "sha256": "【SHA256】"},
-      "delivery_name": "【SCENE_ID】_scene_【REVISION】_source.psd",
+      "artifact_id": "scene.performance-editable-source",
+      "source": {"path": "【PER_SCENE_EDITABLE_PERFORMANCE_PSD】", "sha256": "【SHA256】"},
+      "delivery_name": "【SCENE_ID】_scene_【REVISION】_performance-editable_source.psd",
       "review_status": "SOURCE_ONLY",
-      "selection_basis": "本场白模可恢复源文件"
+      "selection_basis": "本场可编辑表演 PSD；原场景、实际 UI 和每个 actor/pose 独立分层并保留当前位置与比例",
+      "editable_structure": {
+        "original_scene_separate_layer": true,
+        "actual_ui_separate_layer": true,
+        "every_actor_pose_separate_named_layer_or_group": true,
+        "current_position_and_scale_preserved": true,
+        "original_scene_canvas_size_preserved": true
+      },
+      "structure_review": {"path": "【PERFORMANCE_EDITABLE_PSD_STRUCTURE_REVIEW】", "sha256": "【SHA256】"}
     }
   ],
   "legacy_migration_backfill": {

@@ -16,7 +16,9 @@ CONFIRMED_ABSENT 只有完整检索全部三根且无候选时才可用于 GENER
 
 复制 assets/manual-review-node.template.json 及对应领域模板。
 
-角色节点须先按[角色白模节点交付合同](../../ndc-character-scene-reference/references/node-delivery-contract.md)生成场景包，再由 node manifest 绑定包内实际字节。固定路径是 `{DELIVERY_ROOT}/角色融入场景/Unit<n>/节点交付/<scene-id>/`；根层只平铺全部逐 actor/pose 透明 `complete_anatomy_master`、确实会作为网页 Image 1 的 `final_submission_whitebox`、联合白模、真实 UI 预览及现有 PSD/PSB，JSON、候选状态和审核证据只进 `_节点资料` 并按交付文件同 stem 归组。每场 scope、pack、manifest 与 manual node 必须绑定同一 `scene_label`，同时写可读地点和时间，不能只把 SC 代号交给用户。多场批次逐场建包，并用冻结 `expected_scene_ids` 运行 `node_delivery.py audit-batch`；其 CSV／Markdown／JSON 逐场、逐 actor/pose 列出已验证项和待人工补齐项。不得只交一个场景、混入一个日期根、错放 `{DELIVERY_ROOT}/角色` 或建立角色／类型资产子目录。联合预览只是多人关系视图，不能冒充任一 actor/pose 的最终生产白模。木棍、关节点、程序几何块、扁平色剪影、技术量尺和仅文件名／JSON 声明的白模均拒绝；reference handoff 必须逐字节复用节点这两个权威文件。
+角色节点须先按[角色白模节点交付合同](../../ndc-character-scene-reference/references/node-delivery-contract.md)生成场景包，再由 node manifest 绑定包内实际字节。固定路径是 `{DELIVERY_ROOT}/角色融入场景/Unit<n>/节点交付/<scene-id>/`；根层平铺全部逐 actor/pose 透明 `complete_anatomy_master`、确实会作为网页 Image 1 的 `final_submission_whitebox`、联合白模、真实 UI 预览，以及每场唯一的 `performance_editable_source` PSD。该 PSD 保持原场景尺寸，把原场景、实际 UI 和冻结 scope 内每个 actor/pose 放在可独立开关／修改的命名层或组中，并保留当前位置与比例。JSON、候选状态和审核证据只进 `_节点资料` 并按交付文件同 stem 归组。每场 scope、pack、manifest 与 manual node 必须绑定同一 `scene_label`，同时写可读地点和时间，不能只把 SC 代号交给用户。多场批次逐场建包，并用冻结 `expected_scene_ids` 运行 `node_delivery.py audit-batch`；其 CSV／Markdown／JSON 逐场、逐 actor/pose 列出已验证项和待人工补齐项。不得只交一个场景、混入一个日期根、错放 `{DELIVERY_ROOT}/角色` 或建立角色／类型资产子目录。联合预览只是多人关系视图，不能冒充任一 actor/pose 的最终生产白模。木棍、关节点、程序几何块、扁平色剪影、技术量尺和仅文件名／JSON 声明的白模均拒绝；reference handoff 必须逐字节复用节点这两个权威文件。
+
+新 v3 角色节点必须把逐 actor/pose 的视觉 PASS 绑定到实际母层与 Image 1 哈希，并把 PSD 结构 PASS 绑定到当前 PSD 哈希、原场景画布和全 scope 图层覆盖。彩色三维白模可以合格；扁平／关节代理即使带渐变、混合 Alpha 或通过色彩统计也不能放行。部分返修以用户当前认可的整场白模为 baseline，只替换最新明确名单内的角色／状态，未涉及层保持来源字节和既定变换；合并后的整场复核不能扩大返修范围。
 
 用户明确要求查看／分拣旧批冗余生成结果时，可在角色 pack 显式开启 `legacy_migration_backfill` 并绑定当次完整历史来源清单；旧 RGB 候选与已有透明 RGBA 以非正式审阅副本进入场景根，后者文件名须携带匹配的 `__XY_x<int>_y<int>`。以后遇到同类明确要求可再次启用，但普通节点默认关闭；这不把历史候选提升为生产白模／当前交付候选／PASS。
 
@@ -31,15 +33,11 @@ CONFIRMED_ABSENT 只有完整检索全部三根且无候选时才可用于 GENER
 
 角色下游必须使用节点精确绑定的生产白模；`PARALLEL_NONBLOCKING` 下节点本身的哈希即为主线输入权威，不要求 approval。`USER_HOLD` 下 approval 的 node manifest 路径和 SHA-256 是上游权威。道具附加分拣资产只约束对应支线字节，不阻断未依赖它们的主线阶段。不能回头静默换来源或覆盖节点前判断；节点或回流支线都不等于任务完成。
 
-## 3. 可选人工回流支线
+## 3. 人工回流路由
 
-角色使用 ndc-character-scene-production/assets/manual-render-return-workspace.template.json；道具使用 ndc-scene-evidence-placement/assets/manual-finished-package-workspace.template.json。每个 workspace 必须在审批前预先列出 slot、角色和相对路径，并写入 node_id／domain／scene_id／revision；节点反向以 SHA-256 绑定该 workspace，所以 workspace 不内嵌 approval（否则会形成自引用哈希循环）。
+本流水不再执行角色人工回流。用户交回或指定人工修改后的角色入景 PSD 时，立即改用 `ndc-character-scene-manual-return`；定稿后只按该 Skill 导出既定人物／阴影层和 `XYposition.txt`。不得在本 Skill 内运行 `manual_review_node.py return`、写 `USER_RETURN_ACCEPTED_FOR_PACKAGING`／INPUT_GAP、建立 return revision 或重跑角色生产门禁。
 
-人工回流不是默认主线的替代品。只有用户明确说“已经生成好了”或同义表达后，读取 workspace 当前内容并运行：
-
-    python scripts/manual_review_node.py return --workspace-manifest <workspace.json> --approval <approved-node-approval.json> --workspace <folder> --out <accepted-return.json> --returned-at <ISO-8601> --user-statement <用户明确交回原话>
-
-它写 USER_RETURN_ACCEPTED_FOR_PACKAGING，保留全体当前文件及 slot SHA-256。文件的新增或变更是用户主动新 revision，不以旧哈希退回；此前节点／返回和并行主线版本均保留。缺独立层但只有扁平预览时写 INPUT_GAP，继续其余 present slots，不生图补洞。回流只建立受影响支线的新 revision 并重跑相应技术、视觉、关系和正式发布门禁；不得覆盖已经推进的主线，也不得把主线本应完成的范围默认转交用户。
+道具人工回流暂未定义。不要使用角色人工回流 Skill，也不要把历史道具 workspace／return 命令当成现行流程；待用户完成一次实际道具人工修改并明确所需程度后再建立。
 
 ## 4. 失效条件
 
