@@ -7,7 +7,7 @@ metadata:
 
 # 角色入景：人工回流
 
-本 Skill 只在用户交回或指定人工修改后的角色入景 PSD 时使用。普通角色入景生产继续使用原参考／生产 Skill；道具人工回流尚未定义，不得套用本 Skill。
+本 Skill 只在用户交回或指定人工修改后的角色入景 PSD 时使用。普通角色入景生产继续使用原参考／生产 Skill；道具人工回流使用独立的 [ndc-prop-manual-return](../ndc-prop-manual-return/SKILL.md)，不得套用本 Skill。
 
 执行前读[人工回流与极简导出合同](references/return-and-export-contract.md)。若来源是节点交付包，优先使用其中每场唯一的 `performance_editable_source` PSD；新节点 PSD 的三维白模、整场 baseline 和结构质量由上游 reference 节点合同负责，本 Skill 不在用户定稿后复审。也可使用用户明确指定的其它角色入景 PSD。
 

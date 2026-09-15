@@ -12,7 +12,7 @@
 6. 语义正确的轻微框幅／变换先进行一次可用PS修正。该分支不赠送新生成额度；同一缺陷不能无限PS微调，未能修正则使用剩余额度或记录人工阻塞。
 7. 达上限后的最佳版本仍按实际质量分为通过或候选。关键失败下游继承候选，只可用于不受影响的布局试验；不进入正式热区／归档。已允许的B/C差异不反复报风险。
 8. 每阶段只审核新增或改变的风险；每个当前产物有一份包含相关内容、风格、边缘等结论的真实视觉记录。旧审核可严格复用；禁止技术检查自动给艺术PASS。
-9. 每个新生成、修复、复用或用户人工回流前，按 scene/revision/item/state/artifact role 建立并验证当前 `ndc-asset-discovery-receipt/v1`。收据绑定活动 scope revision SHA 和 asset-index SHA，完整检索 official_runtime、approved_archive、formal_delivery 三类实际根；仅完整 `CONFIRMED_ABSENT` 放行生成，FOUND_USABLE／FOUND_REPAIRABLE 分别强制复用／修复。旧 inventory 的 checked_roots 只保留历史，必须经显式迁移获得新收据。
+9. 每个新生成、修复或复用前，按 scene/revision/item/state/artifact role 建立并验证当前 `ndc-asset-discovery-receipt/v1`。收据绑定活动 scope revision SHA 和 asset-index SHA，完整检索 official_runtime、approved_archive、formal_delivery 三类实际根；仅完整 `CONFIRMED_ABSENT` 放行生成，FOUND_USABLE／FOUND_REPAIRABLE 分别强制复用／修复。旧 inventory 的 checked_roots 只保留历史，必须经显式迁移获得新收据。用户明确指定已经人工定稿的道具 PSD 时，不把它重新分类为 GENERATE／REPAIR／REUSE，也不重跑三根检索；改用 `ndc-prop-manual-return`，绑定当前 scope、用户指定源与 SHA-256 后只做机械导出。该例外不改变任何生成、修复或复用门禁。
 10. 每个 scene/revision 只有一次 `prop_scene` 中间人工节点，位于可预先确定的 Big／运行时角色与环境语义母图齐备后。`USER_NODE_APPROVED` 冻结这些上游语义，却不是 PASS；依赖实际位置的场景入景、承托、菜单、Map/XY、Icon 与最终包仍由后续阶段核验。节点等待只暂停该场景，继续独立场景。
 
 ## 执行优先级与清单授权

@@ -37,7 +37,9 @@ CONFIRMED_ABSENT 只有完整检索全部三根且无候选时才可用于 GENER
 
 本流水不再执行角色人工回流。用户交回或指定人工修改后的角色入景 PSD 时，立即改用 `ndc-character-scene-manual-return`；定稿后只按该 Skill 导出既定人物／阴影层和 `XYposition.txt`。不得在本 Skill 内运行 `manual_review_node.py return`、写 `USER_RETURN_ACCEPTED_FOR_PACKAGING`／INPUT_GAP、建立 return revision 或重跑角色生产门禁。
 
-道具人工回流暂未定义。不要使用角色人工回流 Skill，也不要把历史道具 workspace／return 命令当成现行流程；待用户完成一次实际道具人工修改并明确所需程度后再建立。
+用户交回或指定已经人工定稿的道具 PSD，并要求按当前图层、图层效果、层级和画布坐标导出时，立即改用 `ndc-prop-manual-return`。该 Skill 只做机械导出、文件名／XY 一致性和必要技术核对；不生图、不修图、不重做热区、不运行候选 registry，也不判定正式 PASS。人工回流产物直接写入用户指定的场景交付目录，不再额外建立 `交付候选`；只有覆盖唯一可恢复旧文件时才在工作过程区保留必要备份。
+
+若用户仍要求修改图层、修边、补内容、重新判断热区或正式复核，则分别留在道具场景／热区／交付 Skill，不得用人工回流绕过这些职责。不要使用角色人工回流 Skill，也不要恢复历史道具 workspace／return 命令；SC4002、SC4003 的具体层名和坐标由新 Skill 的案例参考解释，不泛化为其他场景固定值。
 
 ## 4. 失效条件
 

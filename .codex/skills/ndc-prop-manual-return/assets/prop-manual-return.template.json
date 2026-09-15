@@ -1,0 +1,68 @@
+{
+  "schema": "ndc-prop-manual-return/v1",
+  "unit_id": "UnitN",
+  "scene_id": "SCxxxx",
+  "finalized_by_user": true,
+  "source": {
+    "mode": "saved_psd",
+    "psd": "runtime-resolved-source.psd",
+    "saved_after_manual_edits": true,
+    "sha256": null
+  },
+  "destination": {
+    "directory": "runtime-resolved-delivery-directory",
+    "overwrite_authorized": false
+  },
+  "candidate_policy": {
+    "create_extra_candidate_directory": false,
+    "backup_only_when_needed": true
+  },
+  "xy": {
+    "filename": "XYposition.txt",
+    "format": "fullwidth_brackets"
+  },
+  "outputs": [
+    {
+      "output_id": "SCxxxx_item_scene_carrier",
+      "layer_path": ["item", "map1"],
+      "role": "scene_carrier",
+      "filename": "SCxxxx_item_map1__XY_x0_y0.png",
+      "render_mode": "raw_layer",
+      "coordinate_bearing": true,
+      "embed_xy_in_filename": true,
+      "xy": [0, 0],
+      "parent_id": null,
+      "final_profile": null,
+      "target_size": null,
+      "expected_sha256": null
+    },
+    {
+      "output_id": "SCxxxx_item_child_map",
+      "layer_path": ["item", "map2"],
+      "role": "carrier_child_map",
+      "filename": "SCxxxx_item_map2__XY_x0_y0.png",
+      "render_mode": "raw_layer",
+      "coordinate_bearing": true,
+      "embed_xy_in_filename": true,
+      "xy": [0, 0],
+      "parent_id": "SCxxxx_item_scene_carrier",
+      "final_profile": null,
+      "target_size": null,
+      "expected_sha256": null
+    },
+    {
+      "output_id": "SCxxxx_clue_big",
+      "layer_path": ["clue", "big"],
+      "role": "big",
+      "filename": "SCxxxx_clue_big.png",
+      "render_mode": "deterministic_derivative",
+      "coordinate_bearing": false,
+      "embed_xy_in_filename": false,
+      "xy": null,
+      "parent_id": null,
+      "final_profile": "clue_polaroid",
+      "target_size": [620, 620],
+      "expected_sha256": null
+    }
+  ]
+}

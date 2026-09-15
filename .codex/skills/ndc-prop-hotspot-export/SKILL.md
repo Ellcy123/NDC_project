@@ -4,6 +4,10 @@ description: 从已定稿的 NDC 场景及二级菜单，通过 Photoshop MCP �
 ---
 # NDC 热区与坐标导出
 
+## 人工回流路由
+
+用户交回或指定已经人工定稿的道具 PSD，并只要求按现有图层、图层效果、层级与画布坐标导出时，停止加载本 Skill 的热区设计、语义复核和返修流程，改用 [ndc-prop-manual-return](../ndc-prop-manual-return/SKILL.md)。人工回流不重描轮廓、不生图、不建立额外 `交付候选`，也不产生新的视觉 PASS；只有用户仍要求修正或重新判断热区时才继续使用本 Skill。
+
 先读[五阶段共用执行核心](../ndc-prop-requirements/references/pipeline-core.md)。本 Skill 只补充 Alpha 轮廓、XY、重建与菜单热区规则；共用候选状态和进度口径不重复展开。
 
 ## Photoshop MCP 强制前置

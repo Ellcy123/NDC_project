@@ -7,7 +7,7 @@ description: Direct and place approved NDC characters in fixed scenes using narr
 
 ## 人工回流路由
 
-用户交回或指定人工修改后的角色入景 PSD 时，停止加载本 Skill 的生产／审核流程，改用 [ndc-character-scene-manual-return](../ndc-character-scene-manual-return/SKILL.md)。道具人工回流暂不建立流程，不得类推。
+用户交回或指定人工修改后的角色入景 PSD 时，停止加载本 Skill 的生产／审核流程，改用 [ndc-character-scene-manual-return](../ndc-character-scene-manual-return/SKILL.md)。用户交回人工定稿的道具 PSD 时改用 [ndc-prop-manual-return](../ndc-prop-manual-return/SKILL.md)，不得把两类合同互相类推。
 
 ## Photoshop MCP 强制前置
 
