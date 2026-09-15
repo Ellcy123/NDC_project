@@ -27,7 +27,7 @@
 | L5 | 开篇纯 AVG | `2591` | `SC2591_avg_FrankHomeMislead` | Zack、Emma；线索物可作为画面焦点 | 小铁盒、举报材料、情书作为剧情焦点出现，但不是可点击拾取物。 |
 | L5 | 指证后纯 AVG | `2592` | `SC2592_avg_VinnieConfession` | Vinnie、Zack、Emma；Tony 如对白需要可在场 | Vinnie 抢话认罪，试图把案件收束到自己身上，场面要有突然打断和强行揽罪的压迫感。 |
 | L6 | 开篇纯 AVG | `2691` | `SC2691_avg_FinalHospitalBeforeSearch` | Zack、Emma、Margaret、Foster | 最终循环前的证词整合，Margaret 苏醒后的虚弱与 Foster 的严肃说明都要能看出来。 |
-| L6 | 指证后纯 AVG | `2692` | `SC2692_avg_LeonardConfession` | Leonard、Zack、Emma；Vinnie 可作为替罪被揭穿后的关系暗示 | Leonard 招供，Vinnie 替罪被揭穿，空间要有终局摊牌后的冷硬感。 |
+| L6 | 指证后纯 AVG | `2692` | `SC2692_avg_LeonardConfession` | Leonard、Zack、Emma；Vinnie 此时已被拘留，不在现场、不得画入 | Leonard 承认杀死 Frank，并承认自己接受了 Vinnie 替他顶罪；Vinnie 仅作为对白中被提及的对象。画面聚焦 Leonard 被击溃、低头认罪并准备被押往警局，空间要有终局摊牌后的冷硬感。 |
 
 ## 需要单独明确人物动作资产的纯 AVG 场景
 
