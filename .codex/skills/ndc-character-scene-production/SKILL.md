@@ -9,6 +9,8 @@ metadata:
 
 本 Skill 只接收已经 `READY` 的整场参考。Terra `gpt-5.6-terra / xhigh` 是同一场景的唯一生产编排与验收者；正式像素只在受支持且已登录的 `chatgpt.com` 可见浏览器中生成，载体可为 `iab`、Chrome 或 Edge。禁止 Codex 图片生成工具、图片 API、其它站点和其它生图后端。用户手工在 ChatGPT 生图时，本 Skill 只输出提示词；已授权自动生产则不逐角色索要“发送”确认。
 
+用户交回或指定人工修改后的角色入景 PSD 时，立即转到独立的 [ndc-character-scene-manual-return](../ndc-character-scene-manual-return/SKILL.md)。不要进入本 Skill 的网页提交、回收提取、门禁、审计、finalizer、候选登记或正式验收，也不要读取下列生产资料。道具人工回流不得使用该角色 Skill。
+
 执行前读取：
 
 1. [效率与状态合同](../ndc-character-scene-integration/references/efficiency-and-state-contract.md)；
@@ -73,4 +75,4 @@ metadata:
 
 ## 节点、检索与可选人工交回
 
-读[检索、人工节点与回流合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)及[网页生图合同](references/chatgpt-web-generation.md)。新网页提交前，`build_chatgpt_web_submission_packet.py` 必须从 CURRENT revision gate 验证精确节点，并验证 scene/revision/actor/pose/artifact role/active scope SHA 全部匹配的 discovery receipt；它阻止未检索、可复用、可修复、未绑定或失效来源的重生。默认 `PARALLEL_NONBLOCKING` 不要求人工 approval，正式网页生图、回收、提取、合成和验收继续覆盖冻结范围；只有用户明确要求等待时，`USER_HOLD` 才要求 approval。用户明确交回预先冻结的角色 workspace 后，将 `USER_RETURN_ACCEPTED_FOR_PACKAGING` 与 INPUT_GAP 作为支线 revision 处理，只重跑受影响门禁；不得停止、覆盖或缩小已在推进的主线。
+读[检索与人工节点合同](../ndc-art-stage-pipeline/references/discovery-and-manual-node.md)及[网页生图合同](references/chatgpt-web-generation.md)。新网页提交前，`build_chatgpt_web_submission_packet.py` 必须从 CURRENT revision gate 验证精确节点，并验证 scene/revision/actor/pose/artifact role/active scope SHA 全部匹配的 discovery receipt；它阻止未检索、可复用、可修复、未绑定或失效来源的重生。默认 `PARALLEL_NONBLOCKING` 不要求人工 approval，正式网页生图、回收、提取、合成和验收继续覆盖冻结范围；只有用户明确要求等待时，`USER_HOLD` 才要求 approval。人工回流由独立 Skill 接管，不在本 Skill 内建立 return revision、INPUT_GAP 或重新验收。
