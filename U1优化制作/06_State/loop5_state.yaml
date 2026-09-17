@@ -1,0 +1,2588 @@
+schema_version: five_loop_design_1
+loop: 5
+unit: Unit1
+episode: EPI01
+title: 枪声背后的选择
+validation_status: design_review_pass_runtime_pending
+sources:
+  manifest: canon_manifest.json
+  confirmed_scene_plan: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  outline: 剧情设计/Unit1/Unit1_内容修改方案_双重谋杀计划与欠条版.md
+  narrative: 剧情设计/Unit1/内容修改后的增强情节线.md
+player_context:
+  goals:
+  - 结合实际演出、声音与行踪，选择并指证实际射手
+  - 履行与Whale交易以释放Vivian，追查案件背后胁迫
+  known_facts:
+  - Webb死于胸口中枪；Vivian持有的.25小手枪近期未击发。
+  - Webb利用照片从事账外勒索；Tommy经手日常营运与演出联络。
+  - 致命枪击早于23:20，不能以23:30枪声定死亡时间。
+  - Rosa受女儿性命威胁而诬指Vivian；Emma答应保密。
+  - Zack帮助James借款并持有欠条；Emma未亲历。
+  - Rosa交出的现场弹壳已在L4拓印，确认.45 ACP。
+  - Vivian确有杀意并请求换曲，Tommy经手演出；她认领的射击经过不成立。
+  - 23:05门内传来特定喊话，她未入内；23:30再到时Webb已倒下，后听到上方枪声。
+  - Vivian只向Tommy透露计划，他也怨恨Webb；只形成调查方向，不直接认定凶手。
+  - Morrison无视射击矛盾强押Vivian；幕后关系尚未知。
+  - 已取得密码纸条、23:18离室目击及故障枪。
+  - 故障枪未见所述试枪痕迹、故障后未击发；Tommy尚未解释活人交枪。
+  new_directions:
+  - Whale来电的寻物交易
+  - Tommy现场行为、James惯用声音、实际节目时段三线交叉
+  post_expose_knowledge:
+  - James是真正射手，冒充门内声音并制造后续枪响；故障枪不是实际凶器。
+  - 后巷得知Whale交易和家庭胁迫，James自杀，Anna获救后在医院。
+  - Whale送真凶枪使Vivian获释；Morrison赌债与强押有关。
+  - Vivian保留酒吧与员工；柜内照片及唱片碎片揭新线索，Whale真身仍不揭。
+opening:
+  type: cutscene_sequence
+  runtime_root:
+    table: ChapterConfig
+    init_scene: 1505
+    init_talk: L5_opening_call_notice
+  sequence:
+  - event_id: call_notice
+    talk: L5_opening_call_notice
+    scene_id: 1505
+    cast:
+    - Zack
+    - Emma
+    - Bartender
+    required_beats: &id041
+    - 承接拘捕紧迫感，小酒保通知神秘来电找两人，不报Whale身份。
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1511
+      next_talk: L5_opening_office_call
+      continuation: next_talk
+  - event_id: office_call
+    talk: L5_opening_office_call
+    scene_id: 1511
+    cast:
+    - Zack
+    - Emma
+    - Whale
+    required_beats: &id042
+    - 接听才揭Whale；专用电话UI，Caseboard关闭。
+    - Whale原要求停止调查离开，玩家组织四步判断争取救人机会。
+    - 电话挂断关闭UI，同场Zack完整告知交换条件、主动邀Emma查到底。
+    - Emma接受并回扣搬柜，交换姓名是重新认识的小仪式，不演此前不知姓名。
+    - Emma开始称Zack，Zack仍称O’Malley小姐，承认对自己有点快；正式结伴在开放探索前完成。
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    quiz:
+    - id: phone_1
+      prompt: Rita收购之外还想拿到什么？
+      options:
+      - key: 1
+        text: 酒吧的营业账目
+        correct: false
+      - key: 2
+        text: Webb留下的勒索材料
+        correct: true
+      - key: 3
+        text: Vivian的私人财物
+        correct: false
+      wrong_feedback: 留意她没有按交接清单检查哪些东西。
+      wrong_next: phone_1
+      correct_next: phone_2
+      optional_knowledge_locks_options: false
+    - id: phone_2
+      prompt: 她在替谁寻找这些材料？
+      options:
+      - key: 1
+        text: 自己接手勒索生意
+        correct: false
+      - key: 2
+        text: 警方搜集案件证据
+        correct: false
+      - key: 3
+        text: Whale找回把柄
+        correct: true
+      wrong_feedback: 区分经营利益与谁急于取回把柄。
+      wrong_next: phone_2
+      correct_next: phone_3
+      optional_knowledge_locks_options: false
+    - id: phone_3
+      prompt: Webb会把材料藏在哪里？
+      options:
+      - key: 1
+        text: Tommy营业文件柜
+        correct: false
+      - key: 2
+        text: Webb办公室保险柜
+        correct: true
+      - key: 3
+        text: 营业账本
+        correct: false
+      wrong_feedback: 区分营业材料经手处与私人原件保管处。
+      wrong_next: phone_3
+      correct_next: phone_4
+      optional_knowledge_locks_options: false
+    - id: phone_4
+      prompt: 手里什么能让Whale愿意谈？
+      options:
+      - key: 1
+        text: 酒吧产权
+        correct: false
+      - key: 2
+        text: 已经听过的完整秘密
+        correct: false
+      - key: 3
+        text: 开保险柜的密码线索
+        correct: true
+      wrong_feedback: 区分已掌握能力与尚未取得内容。
+      wrong_next: phone_4
+      correct_next: agreement
+      optional_knowledge_locks_options: false
+    agreement:
+      required_item_ids:
+      - 1491
+      beats:
+      - 第二步答对后Whale回应确认委托Rita收购，不提前点答案。
+      - 第三步仅定位最可能藏处，不能声称柜内仍有或载体是唱片。
+      - 第四步用密码纸条作筹码，不报密码、不交付尚未取得物件。
+      - 同意找到真凶及证据以换Vivian自由，并取得交付其需要的材料。
+      failure_policy: 错选留当前电话，提示缺口，不公布答案、不发新证、不永久失败。
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1517
+      continuation: release_to_exploration
+      next_talk: null
+      locked_scene_after_exit: 1511
+      source_note: 办公室电话与结伴结束后退出到既有相邻二楼走廊，再恢复自由控制；仅末段出场动作，不新增剧情事件。
+    source_contracts:
+    - beat_id: U1L5_confirmed_rule_028
+      source_anchor: &id016
+        file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+        heading: 电话推理的材料前置
+        line: 481
+      requirement: '- 密码纸条须在L4取得，作为谈判筹码；L5电话期间不能打开Caseboard。
+
+        - 回用L3保管习惯、L4现场观察及Emma转述等信息；可选信息漏看不锁掉正确选项，也不补发证词。
+
+        - Rita判断保留于电话推理。具体选项、谈判过程与信息揭示见双重谋杀方案。'
+    - beat_id: U1L5_narrative_detail_061
+      source_anchor: &id040
+        file: 剧情设计/Unit1/内容修改后的增强情节线.md
+        heading: 13. 同一开篇的电话后收尾：正式成为搭档（已确认）
+        line: 498
+      requirement: '形式：接在同一L5开篇内，电话挂断后关闭专用电话UI，仍在Webb办公室面对面交谈，不单开确立关系的AVG。
+
+
+        Whale电话谈妥后，两人终于争得最后一次调查机会。Zack把实际交易条件完整告诉Emma，留一个短暂停顿，再主动邀请她一起查到底。此时的邀请是Zack明确承认自己需要她；此前的临时合作在这里成为双方共同选择。邀请、交换姓名与改称呼均在电话结束后、自由调查之前完成。
+
+
+        Emma 接受，并借机回扣前面的吃瘪：
+
+
+        > “一直都在等你这句话呢！你这个连柜子都搬不动的侦探要是遇上什么事可咋办啊！”
+
+
+        这次请求是正式结伴的明确节点。此前借身份、套消息、临时求助的经历，终于落到由 Zack 主动提出、由 Emma 自己答应的合作。
+
+
+        两人在这里正式交换姓名。即便此前已经知道名字，也作为重新认识、正式成为搭档的小仪式，不演成直到此刻才得知对方是谁。
+
+
+        Emma 随即开始直接称他 Zack；Zack 仍称她 O’Malley 小姐。被她指出后，他的反应是：
+
+
+        > “对我来说有点太快了！”
+
+
+        行动上愿意并肩，称呼上仍慢半拍，保留 Zack 对亲近关系的不习惯。两人随后带着共同目标继续调查，搭档关系不再拖到医院才成立。'
+  player_control_restored_after: office_call
+  source_contracts:
+  - beat_id: U1L5_narrative_event_001
+    source_anchor: &id001
+      file: 剧情设计/Unit1/内容修改后的增强情节线.md
+      heading: L5
+      line: 71
+    requirement:
+      形式: 开篇剧情（固定）
+      情节点: 小酒保喊接电话 → Whale电话考验 → Zack与Emma正式结伴
+      地点: 歌舞厅（来电通知）→ Webb办公室（谈判与结伴）
+      在场人物: Zack、Emma；小酒保进入歌舞厅传话，Whale仅电话声音
+      进入与接续: 承接L4拘捕的紧迫感；办公室通话使用专用电话UI，挂断后同场完成邀请、交换姓名与称呼，随后开放自由调查；办公室不因此成为L5自由搜证地点
+  - beat_id: U1L5_narrative_detail_060
+    source_anchor: &id039
+      file: 剧情设计/Unit1/内容修改后的增强情节线.md
+      heading: 12. L5开篇：Whale电话考验，争取最后一次调查机会
+      line: 490
+    requirement: 'L4以歌舞厅押走Vivian收束。L5开篇，两人在歌舞厅尚未缓过神，小酒保进入歌舞厅告知神秘电话找他们两人，催他们去Webb办公室接听；此时不报Whale身份。开篇随两人转到Webb办公室，使用专用电话UI，接听后才揭示来电者。
+
+
+      Whale原本要求Zack、Emma停止调查、离开；Zack结合此前双方的调查见闻，由玩家在通话中组织判断与筹码，争取查明真凶及证据后释放Vivian。Whale不在开头主动布置查凶任务，两人也没有预先安排这通电话。
+
+
+      通话时尚未打开保险柜、听到唱片，不提前得知Whale真实身份，不由Emma替玩家说出答案。电话谈妥后同场接正式结伴，开篇整体结束才开放自由调查。'
+scenes:
+- id: 1504
+  name: 大厅
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment: []
+  exits:
+  - target_scene_id: 1505
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1507
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1518
+    available: true
+    locked_feedback: null
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_014
+    source_anchor: &id008
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 463
+    requirement:
+      场景: 酒吧大厅
+      NPC: 无驻场NPC
+      开放与物件: 通往歌舞厅、一楼走廊、厨房走廊均开放；无新增证物、证词
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+- id: 1505
+  name: 歌舞厅
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment:
+  - name: 假油画
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 可查看不收集
+  - name: 曲目音量参考表
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 5级：酒吧内除乐器声外，其他声音都听不到；不记录实际时段。
+  exits:
+  - target_scene_id: 1504
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1506
+    available: true
+    locked_feedback: null
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_015
+    source_anchor: &id009
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 464
+    requirement:
+      场景: 歌舞厅
+      NPC: 无驻场NPC
+      开放与物件: 大厅、小包厢出口开放；假油画与舞台附近曲目音量参考表可查看、不收集
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+- id: 1506
+  name: 小包厢
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence:
+  - id: 1590
+    key: actual_program
+    name: 当晚完整节目单
+    type: item
+    pickup: 软椅坐垫缝露角，独立点击取得，无人物调查或枪检前置
+    analysis: null
+    description: 揉皱但完整可读的当晚实际演出节目单，艾斯弗德狂想曲的实际演出时段为23:00—23:10，包含完整鼓段强奏。
+    note: 关键——L5第一轮
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    actual_time: 23:00—23:10
+    performance: 艾斯弗德狂想曲，完整鼓段强奏
+    on_pickup:
+      talk: L5_booth_program_observation
+      ui: inner_os
+      cast:
+      - Zack
+      - Emma
+      required_beats:
+      - Emma只确认实际记录性质、曲目与时间，不解释掩声或选人答案。
+      runtime_exit:
+        action: release_to_exploration
+    source_contracts:
+    - beat_id: U1L5_narrative_event_005
+      source_anchor: &id005
+        file: 剧情设计/Unit1/内容修改后的增强情节线.md
+        heading: L5
+        line: 75
+      requirement:
+        形式: 证物触发伙伴短对话
+        情节点: 取得实际节目单，Emma补充观察
+        地点: 小包厢
+        在场人物: Zack、Emma
+        进入与接续: 玩家检查节目单时以内心OS UI呈现，结束继续探索；不是Emma独立驻场或交付AVG
+    design_notes: 小包厢坐垫缝，揉皱但完整；艾斯弗德狂想曲23:00—23:10，完整鼓段强奏，调查起即能取。
+  environment:
+  - name: 歌舞服
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 原位保留环境物
+  - name: 猎犬面具
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 原位保留环境物
+  exits:
+  - target_scene_id: 1505
+    available: true
+    locked_feedback: null
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_016
+    source_anchor: &id010
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 465
+    requirement:
+      场景: 小包厢
+      NPC: 无驻场NPC
+      开放与物件: 软椅坐垫缝隙放完整节目单，露出一角，独立点击查看并收集；歌舞服、猎犬面具保留环境物；返回歌舞厅开放
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_037
+    source_anchor: &id025
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 节目单与故障枪详情
+      line: 503
+    requirement:
+      材料: 完整节目单
+      获取／检查: 小包厢自由探索开始即能取得，无其他调查前置；纸张揉皱但完整可读，直接收集
+      信息与用途: 当晚实际曲目及起止时间，包含《艾斯弗德狂想曲》23:00—23:10；用于判断作案窗口
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+- id: 1510
+  name: Tommy办公室
+  type: free_exploration
+  unlock_condition: []
+  npcs:
+    Tommy:
+      id: 105
+      talk: L5_tommy_office_questioning
+      repeat_talk: L5_tommy_office_questioning_repeat
+      is_liar: true
+      motive: 保护家庭与Vivian，掩藏干预
+      mindset: 家庭辩护真诚但经过撒谎
+      active_topics: &id043
+      - 回用23:18目击问访谈；活人取待修枪、三分钟，再说当面试枪交枪
+      - 妻女和身份手续依赖Webb，面对旧怨回避
+      withheld_topics:
+      - 入室见尸、故意归还故障枪保护Vivian
+      - 身份希望破灭及勒索照片另一人
+      player_inquiry: '23:18离室目击与Vivian提及计划 # 10'
+      testimony_ids:
+      - id: 1055001
+        kind: lie
+        content: 当时Webb仍活着，去取Webb要求维修的故障枪，在里面待了三分钟。
+        acquisition_talk: L5_tommy_office_questioning
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+        design_notes: 当时Webb仍活着，自己去取Webb要求维修的故障枪，在里面待了三分钟。试枪解释在同一普通Talk呈现，不另发第二张证词。
+      repeat_policy: 保留已开放选项，不重复发物或首访动作；新增选项按自己的条件开放。
+      options:
+      - key: visit
+        unlock_condition:
+        - type: testimony
+          param: 1124001
+        required_beats:
+        - 自述Webb活着、取待修枪、三分钟
+        - 继续说Webb当面试枪后交枪
+        - 上述同一话题全部说完后才交付1055001
+        grants_testimony_after_all_beats: 1055001
+      - key: family
+        unlock_condition: []
+        required_beats:
+        - 妻女等待身份手续；旧怨回避，不正常探索完整坦白
+      source_contracts:
+      - beat_id: U1L5_narrative_event_002
+        source_anchor: &id002
+          file: 剧情设计/Unit1/内容修改后的增强情节线.md
+          heading: L5
+          line: 72
+        requirement:
+          形式: 普通问话
+          情节点: Tommy受询问，辩护家庭依赖、回避旧怨
+          地点: Tommy办公室
+          在场人物: Zack、Emma、Tommy
+          进入与接续: 点击Tommy选项，回用L4目击开启对应问题；Emma随队，不要求每个选项都接话
+      - beat_id: U1L5_confirmed_entry_029
+        source_anchor: &id017
+          file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+          heading: 证词、调查入口与取得前置
+          line: 489
+        requirement:
+          入口／材料: 回用L4小酒保目击
+          确认内容: 23:18看见Tommy离开会客室，未见何时进入
+          前置与用途: L4已收录Caseboard，L5不重复发放；开启Tommy对应询问
+          interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+      - beat_id: U1L5_confirmed_entry_030
+        source_anchor: &id018
+          file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+          heading: 证词、调查入口与取得前置
+          line: 490
+        requirement:
+          入口／材料: Tommy据目击回答
+          确认内容: 当时Webb仍活着，去取Webb要求维修的故障枪，在里面待了三分钟
+          前置与用途: 取得目击后才能询问；不要求先拿枪；关键信息收录为Caseboard自述证言
+          interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+      - beat_id: U1L5_confirmed_entry_031
+        source_anchor: &id019
+          file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+          heading: 证词、调查入口与取得前置
+          line: 491
+        requirement:
+          入口／材料: Tommy继续解释试枪
+          确认内容: 声称Webb当面试枪后交枪
+          前置与用途: 回用物品详情中的“未见所述试枪痕迹”，确认当面试枪说法不成立；Webb当时可能已死仍只是怀疑，不以故障本身或仅无击发痕迹反驳试枪
+          interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+      - beat_id: U1L5_confirmed_entry_032
+        source_anchor: &id020
+          file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+          heading: 证词、调查入口与取得前置
+          line: 492
+        requirement:
+          入口／材料: James厨房喊话
+          确认内容: “Do not be bothering me!”
+          前置与用途: 首次进入厨房取得并收录；无节目单、枪检或Tommy问话前置，供与L4隔门见闻交叉
+          interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+      - beat_id: U1L5_confirmed_entry_035
+        source_anchor: &id023
+          file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+          heading: 证词、调查入口与取得前置
+          line: 495
+        requirement:
+          入口／材料: Tommy家庭话题
+          确认内容: 妻女与身份手续等普通交谈
+          前置与用途: 正常探索不提前取得其完整坦白；具体内容见信息分布及增强情节线
+          interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+      - beat_id: U1L5_confirmed_rule_036
+        source_anchor: &id024
+          file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+          heading: 证词、调查入口与取得前置
+          line: 497
+        requirement: 23:18离室有第三方目击；三分钟停留仅为Tommy自述，约23:15入室只属推算，不另发客观入室证词。目击不证明Webb当时生死，也不排除Tommy更早曾经入室。
+      truthful_claims: []
+      false_claims:
+      - 当时Webb仍活着。
+      - Webb当面试枪后交给他维修。
+      unknown_claims:
+      - 在里面待了三分钟；仅为本人自述，不确认实际进入时间。
+      truth_status_note: 完整自述证词保持一条；分句标签只供作者控制真假，不另发证词。
+  evidence: []
+  environment:
+  - name: Vivian排班表
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 原位1208不收集
+  - name: 假艺术品碎片
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 留在原处的艺术摆件碎片。
+    design_notes: L4同一碎片，不追加线索
+  exits:
+  - target_scene_id: 1517
+    available: true
+    locked_feedback: null
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_017
+    source_anchor: &id011
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 466
+    requirement:
+      场景: Tommy办公室
+      NPC: Tommy
+      开放与物件: Vivian排班表原位保留；假艺术品延续L4破碎状态，两者均为可查看、不收集的环境证物，不新增线索。调查入口见下表；枪支回用L4已取得物件，相关信息直接在物品详情展示
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+- id: 1509
+  name: 厨房
+  type: free_exploration
+  unlock_condition: []
+  npcs:
+    James:
+      id: 107
+      talk: L5_kitchen_questioning
+      repeat_talk: L5_kitchen_questioning_repeat
+      is_liar: true
+      motive: 守住家庭和隐瞒犯罪
+      mindset: 普通交谈克制，指控后才否认退守
+      active_topics: &id045
+      - Vivian被捕反应，工作事实和送餐经过普通谈话
+      - 回用L2已收录23:10—24:00厨房自述，不重发
+      withheld_topics:
+      - 23:05冒充声音、射杀Webb、Whale交易
+      - 胁迫Rosa女儿及妻子被控制
+      player_inquiry: '门内声音与L2工作行踪 # 10'
+      testimony_ids: []
+      repeat_policy: 保留已开放选项，不重复发物或首访动作；新增选项按自己的条件开放。
+      truthful_claims:
+      - 23:10—24:00留厨房的既有自述不等于全程不在场证明。
+      false_claims: []
+      unknown_claims: []
+      truth_status_note: 隐瞒犯罪，但不提前发放指证现场的否认和走火退守；这些只在expose.rounds出现。
+    Bartender:
+      id: 112
+      talk: L5_kitchen_bartender
+      repeat_talk: L5_kitchen_bartender_repeat
+      is_liar: false
+      motive: 受辱后想出口气又顾及工作
+      mindset: 嘴快热心，仍信James
+      active_topics: &id046
+      - James惯用该句，Webb通常直接叫人滚出去，不收录
+      - 可选恶作剧与厨房楼层、窗下巷子空间
+      withheld_topics:
+      - Whale交易和James实际杀人
+      player_inquiry: '相似喊话与厨房空间 # 8'
+      testimony_ids: []
+      repeat_policy: 保留已开放选项，不重复发物或首访动作；新增选项按自己的条件开放。
+      optional_quiz:
+        id: water_prank
+        options:
+        - key: tomato
+          correct: false
+          feedback: 不能达到只泼凉水的计划，返回选择。
+        - key: dry_sponge
+          correct: false
+          feedback: 不能达到泼水效果，返回选择。
+        - key: water
+          correct: true
+          sets_flag: water_prank_planned
+        can_skip: true
+        completion_required: false
+        result: 只泼凉水、留下容器；尾声依标记选择淋湿状态。
+      source_contracts:
+      - beat_id: U1L5_narrative_detail_056
+        source_anchor: &id038
+          file: 剧情设计/Unit1/内容修改后的增强情节线.md
+          heading: 2. 厨房恶作剧
+          line: 141
+        requirement: 番茄、干海绵、水三选一，只有水正确，选错返回。小酒保只泼凉水、留下容器，尾声Morrison淋湿进店；玩家可跳过，未确定计划则正常外观。谜题条件与判定见案件方案。演出只取狼狈的轻喜剧，不取笑James之死或Anna的困境。
+      truthful_claims: []
+      false_claims: []
+      unknown_claims: []
+  evidence:
+  - id: 1504
+    key: english_book
+    name: 美国工人英语练习书
+    type: item
+    pickup: 远离灶火置物架，可选点击收集
+    analysis: null
+    description: 满是笔记的英语练习书，可见反复练写的英文字母。
+    note: ''
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    required_for_progress: false
+    callback_rule: 仅已持有时，指证后可比对J/T；未持有不播放基于该书的字形指认。
+    design_notes: 厨房远离火源置物架；正式收集物；J/T对照在击破后，不提前定伪造者。
+  environment:
+  - name: 厨房工作表
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 23:00—23:10送餐安排，仅计划，不证明实际履行。
+  - name: 厨房窗户
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 可独立检查：在会客室楼上，窗下巷子；不解释制造假枪声用途。
+  - name: 大铁锅
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 不可点击装饰
+    clickable: false
+  exits:
+  - target_scene_id: 1518
+    available: true
+    locked_feedback: null
+  source_contracts:
+  - beat_id: U1L5_narrative_event_004
+    source_anchor: &id004
+      file: 剧情设计/Unit1/内容修改后的增强情节线.md
+      heading: L5
+      line: 74
+    requirement:
+      形式: 普通问话
+      情节点: James工作事实、小酒保语言习惯与可选恶作剧
+      地点: 二楼厨房
+      在场人物: Zack、Emma、James、小酒保
+      进入与接续: 点击对应NPC选项；恶作剧可以不选，取证不依赖它；窗口空间随此处交谈表现
+  - beat_id: U1L5_confirmed_entry_018
+    source_anchor: &id012
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 467
+    requirement:
+      场景: 厨房
+      NPC: James、小酒保
+      开放与物件: 首次进入取得James喊话证词，事件后两人留场；英语练习书移至厨房远离灶火的置物架，可查看并收集为正式证物；工作表、窗户为可查看环境物，大铁锅为装饰；厨房走廊出口开放
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_033
+    source_anchor: &id021
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 证词、调查入口与取得前置
+      line: 493
+    requirement:
+      入口／材料: James普通交谈
+      确认内容: 对Vivian被捕等事件的反应
+      前置与用途: 行踪回用L2已收录的23:10—24:00厨房自述；送餐经过只属普通对白
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_034
+    source_anchor: &id022
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 证词、调查入口与取得前置
+      line: 494
+    requirement:
+      入口／材料: 小酒保语言习惯话题
+      确认内容: James常用上述说法，Webb通常直接叫人滚出去
+      前置与用途: 普通对话，不收录证词、不作疑点触发或出示材料
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  event_triggers:
+  - event_id: kitchen_voice
+    talk: L5_kitchen_first_voice
+    scene_id: 1509
+    cast:
+    - Zack
+    - Emma
+    - James
+    - Bartender
+    required_beats: &id044
+    - 小酒保翻找、摆弄用具打扰忙碌中的James，引出不耐烦喊话；James不突然意识到露馅。
+    - 首次进入听见James喊Do not be bothering me!，先收录再自由交谈；Emma不替玩家认凶。
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    runtime_binding:
+      type: SceneConfig.firstEnterTalk
+      once: true
+    testimony_ids:
+    - id: 1075001
+      kind: fact
+      content: Do not be bothering me!
+      acquisition_talk: L5_kitchen_first_voice
+      source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      design_notes: 首次进入厨房时喊“Do not be bothering me!”；不需节目单、Tommy问话或枪检。
+    runtime_exit:
+      action: release_to_exploration
+    source_contracts:
+    - beat_id: U1L5_narrative_event_003
+      source_anchor: &id003
+        file: 剧情设计/Unit1/内容修改后的增强情节线.md
+        heading: L5
+        line: 73
+      requirement:
+        形式: 突发事件（进场事件）
+        情节点: 听见James厨房喊话
+        地点: 二楼厨房
+        在场人物: Zack、Emma、James、小酒保
+        进入与接续: 首次进入触发，随后恢复厨房调查及NPC选项
+- id: 1518
+  name: 厨房走廊
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment: []
+  exits:
+  - target_scene_id: 1509
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1504
+    available: true
+    locked_feedback: null
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_019
+    source_anchor: &id013
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 468
+    requirement:
+      场景: 厨房走廊
+      NPC: 无
+      开放与物件: 厨房、大厅出口开放；原照片相盒收集入口删除，生日吊坠已改在L3医院取得
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  removed_interactions:
+  - 旧照片相盒收集，吊坠已L3医院取得
+- id: 1507
+  name: 一楼走廊
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment:
+  - name: 假艺术品展览墙
+    type: envir
+    collectible: false
+    note: 场景道具
+    description: 假艺术品陈列墙。
+    design_notes: 可查看，不收录
+  exits:
+  - target_scene_id: 1504
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1517
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1530
+    available: false
+    locked_feedback: 暂未开启
+  - target_scene_id: 1503
+    available: false
+    locked_feedback: 暂未开启
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_020
+    source_anchor: &id014
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 469
+    requirement:
+      场景: 一楼走廊
+      NPC: 无
+      开放与物件: 大厅、二楼开放；地下走廊、会客室锁定；假艺术品展览墙可查看
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+- id: 1517
+  name: 二楼走廊
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment: []
+  exits:
+  - target_scene_id: 1510
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1507
+    available: true
+    locked_feedback: null
+  - target_scene_id: 1511
+    available: false
+    locked_feedback: 暂未开启
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_021
+    source_anchor: &id015
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 场景、NPC与环境物
+      line: 470
+    requirement:
+      场景: 二楼走廊
+      NPC: 无
+      开放与物件: Tommy办公室、一楼开放；Webb办公室锁定
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+evidence_registry:
+- id: 1590
+  key: actual_program
+  name: 当晚完整节目单
+  kind: item
+  acquisition:
+    loop: 5
+    scene_id: 1506
+    kind: search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+- id: 1504
+  key: english_book
+  name: 美国工人英语练习书
+  kind: item
+  acquisition:
+    loop: 5
+    scene_id: 1509
+    kind: search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+- id: 1602
+  key: record_fragment
+  name: 录音盘碎片
+  kind: item
+  acquisition:
+    loop: 5
+    scene_id: 1511
+    kind: dialogue
+    talk: L5_ending_safe_finale
+    carrier: ending_sequence.scenes[4]
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+inherited_evidence_refs:
+- id: 1101
+  key: pocket_pistol
+  acquired_loop: 1
+  content: .25口径小手枪，可分析；L4枪号与收据同为384216；美术需补可辨刻号。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1711
+  key: pistol_no_residue
+  acquired_loop: 1
+  content: 近期未击发；L1击破后L4回用。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1103
+  key: executor_agreement
+  acquired_loop: 1
+  content: Zack 为遗嘱执行人，Vivian 继承；保留原协议，不算L1第二次指证。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1290
+  key: iou
+  acquired_loop: 2
+  content: L2首次借款交付；情感物件，不作指证、住址或笔迹谜题；L5归还Anna后不再留玩家栏。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1302
+  key: threat
+  acquired_loop: 3
+  content: 命令Rosa23:30去会客室谎称目击Vivian杀人，以女儿性命威胁；J/T异常保留，直到L5指证后回扣。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1301
+  key: glass
+  acquired_loop: 3
+  content: 带硝烟且被垃圾袋压住；联系23:20倒垃圾，证明致命枪击早于23:20。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1702
+  key: casing_rubbing
+  acquired_loop: 4
+  content: 检查拓印确认.45 ACP；L4与.25小手枪对照。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1502
+  key: program_request
+  acquired_loop: 4
+  content: Moonlight Bay改艾斯弗德狂想曲，完整版全部鼓段，音量5，Vivian签名，Tommy已转交乐队；不写实际起止时刻。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1601
+  key: faulty_gun
+  acquired_loop: 4
+  content: L4抽屉取得；M1911式样、.45 ACP。详情直接呈现仍有故障、未见试枪痕迹、故障后未击发；不加分析/检查完成前置。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1491
+  key: password_note
+  acquired_loop: 4
+  content: Webb办公室被Rita翻过的抽屉取得；L4必取，L5电话筹码，不给保险柜密码小游戏。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1124001
+  key: exit_witness
+  acquired_loop: 4
+  content: 23:18看见Tommy离开会客室，未见何时进入。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1064001
+  key: voice
+  acquired_loop: 4
+  content: 23:05 听到门内喊“Do not be bothering me!”后离开。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1072005
+  key: james_alibi
+  acquired_loop: 2
+  content: 23:10—24:00在厨房、没有离开。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1122002
+  key: music_role
+  acquired_loop: 2
+  content: 酒吧的乐队演出由 Tommy 负责联系和安排。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+- id: 1063005
+  key: safe_habit
+  acquired_loop: 3
+  content: Webb 通常把重要私人材料放在自己办公室的保险柜里。
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  regrant: false
+  optional: true
+  ownership: conditional
+  only_if:
+    type: already_collected
+    param: 1063005
+  locks_phone_options: false
+doubts:
+- id: '1501'
+  key: L5_D1
+  loop: 5
+  text: 他所说的停留时段，对应哪段演出？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1590'
+    key: actual_program
+    visible: true
+    registry_key: actual_program
+  - type: 4
+    param: '1055001'
+    key: tommy_visit_account
+    visible: true
+    registry_key: tommy_visit
+  evidence_usage:
+  - key: actual_program
+    param: '1590'
+    first_acquired_loop: 5
+    expose_steps:
+    - L5_James_R1
+    role: 指证用
+    earliest_expose_loop: 5
+  - key: tommy_visit_account
+    param: '1055001'
+    first_acquired_loop: 5
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L5
+- id: '1502'
+  key: L5_D2
+  loop: 5
+  text: 这句话为什么听起来似曾相识？
+  isFragment: false
+  condition:
+  - type: 4
+    param: '1064001'
+    key: vivian_door_voice
+    visible: true
+    registry_key: voice
+  - type: 4
+    param: '1075001'
+    key: james_kitchen_voice
+    visible: true
+    registry_key: james_voice
+  evidence_usage:
+  - key: vivian_door_voice
+    param: '1064001'
+    first_acquired_loop: 4
+    expose_steps:
+    - L5_James_R2
+    role: 指证用
+    earliest_expose_loop: 5
+  - key: james_kitchen_voice
+    param: '1075001'
+    first_acquired_loop: 5
+    expose_steps:
+    - L5_James_R2
+    role: 指证用
+    earliest_expose_loop: 5
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L5
+expose:
+  target: James
+  target_npc_id: 107
+  is_liar: true
+  player_inquiry: null
+  scene_id: 1509
+  selection:
+    candidates:
+    - npc_id: 105
+      branch: wrong_branch
+    - npc_id: 107
+      branch: rounds
+    required_doubts:
+    - '1501'
+    - '1502'
+    runtime_binding: special_adapter
+    checkpoint: L5_before_suspect_selection
+  pre_expose:
+    talk: L5_expose_accusation
+    required_beats:
+    - Zack提出作案窗口询问James；小酒保现场替他辩护。
+  rounds:
+  - round: 1
+    lie: 那时候要是开枪，我们怎么可能听不见？
+    lie_source: L5_expose_bartender_defense
+    usable_evidence:
+    - 1590
+    result: 实际节目时段与已读音量资料使掩声成为可能；不将小酒保当嫌疑人。
+    speaker: Bartender
+    wrong_evidence_feedback: 保留本轮，提示所选材料尚未对应这句说法；不提前揭下轮答案。
+  - round: 2
+    lie: 我没进过会客室，里面说话的不是我。
+    lie_source: L5_expose_james_denial
+    usable_evidence:
+    - 1064001
+    - 1075001
+    result: 两份特定表达互相对应；连同时间与工作行踪支持门内身份。
+    speaker: James
+    wrong_evidence_feedback: 保留本轮，提示所选材料尚未对应这句说法；不提前揭下轮答案。
+  - round: 3
+    lie: Webb拿枪威胁我，争抢时走火了。
+    lie_source: L5_expose_james_accident
+    usable_evidence:
+    - 1601
+    result: 该枪故障后未击发，不能按所述争枪走火。
+    speaker: James
+    wrong_evidence_feedback: 保留本轮，提示所选材料尚未对应这句说法；不提前揭下轮答案。
+  expose_lie_ids:
+  - L5_expose_bartender_defense
+  - L5_expose_james_denial
+  - L5_expose_james_accident
+  wrong_branch:
+    target: Tommy
+    target_npc_id: 105
+    is_liar: true
+    player_inquiry: null
+    scene_id: 1510
+    rounds:
+    - round: 1
+      lie: Webb当面试过枪，随后交给我维修。
+      lie_source:
+        talk: L5_tommy_office_questioning
+        spoken_anchor: 试枪解释完成后才发1055001
+      usable_evidence:
+      - 1601
+      result: 未见所述试枪痕迹；只击破编造互动，随后主动坦白，不能物件单独证明见尸。
+      speaker: Tommy
+      wrong_evidence_feedback: 保留本轮，提示所选材料尚未对应这句说法；不提前揭下轮答案。
+    post_expose:
+      talk: L5_wrong_tommy_confession
+      testimony_ids: []
+      grants_evidence: []
+      required_beats:
+      - 主动撤回存活说法，承认入室已见尸、误认Vivian杀人。
+      - 故意归还未修枪保护Vivian；见尸取枪自保；存活伪证仍为保护她。
+      - 坦白被勒索和身份承诺无望，不揭照片另一人。
+      - 回看已有节目单提醒23:18在掩声窗口外，不排除更早进入，不直接点名James。
+      - 黑屏时间耗尽，未救Vivian、伙伴未能继续、黑暗未揭。
+    return:
+      runtime_binding: special_adapter
+      checkpoint: L5_before_suspect_selection
+      retain:
+      - 选择前物品
+      - 选择前证词
+      - 探索完成状态
+      rollback:
+      - 错误线新增人物知识
+      - 错误线剧情标记
+      - 错误线指证进度
+      destination: suspect_selection
+      not_plain_talk_jump: true
+    source_contracts:
+    - beat_id: U1L5_narrative_event_006
+      source_anchor: &id006
+        file: 剧情设计/Unit1/内容修改后的增强情节线.md
+        heading: L5
+        line: 76
+      requirement:
+        形式: 错误分支指证后剧情（固定）
+        情节点: Tommy坦白、错误结局反馈
+        地点: Tommy办公室 → 黑屏结局
+        在场人物: Zack、Emma、Tommy
+        进入与接续: 面板选Tommy，完成一次击破后进入；结束恢复选人前状态
+    - beat_id: U1L5_confirmed_entry_046
+      source_anchor: &id031
+        file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+        heading: L5 Tommy错误分支：一次击破（已确认）
+        line: 527
+      requirement:
+        谎言: Webb当面试过枪，随后交给我维修
+        玩家出示: 详情说明未见所述试枪痕迹的故障手枪
+        击破依据: 未见所述试枪痕迹，确认Tommy编造当面试枪经过；不能仅据此确认Webb当时已死或Tommy就是凶手
+        interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+    - beat_id: U1L5_confirmed_rule_047
+      source_anchor: &id032
+        file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+        heading: L5 Tommy错误分支：一次击破（已确认）
+        line: 529
+      requirement: 本分支仅一次击破。之后Tommy坦白见尸取枪及伪证，进入既定错误结局；存活说法不再设第二次出示，节目单仅用于既定反馈。返回选人时保留材料并恢复选择前状态。
+  post_expose:
+    event_id: reconstruction
+    talk: L5_post_expose_reconstruction
+    scene_id: 1509
+    cast:
+    - Zack
+    - Emma
+    - James
+    - Bartender
+    required_beats: &id047
+    - James要求还原；案件还原说明23:00—23:10掩声窗口、23:05假声、23:10回厨房、23:20垃圾、23:30二楼假枪声。
+    - 小酒保替James辩护；家庭交易真心留后巷。
+    - 英语练习书1504已取得：Emma自动回扣该书、L2欠条1290和L3威胁纸条1302的J/T视觉联系，再追问胁迫孩子；不是新增指证轮次或手写鉴定谜题。
+    - 未取得英语书：省略书与字形断言，不凭空确认执笔身份；仍承接对抗失守后的逃跑，不补发材料。
+    - James逃离厨房，Zack与Emma追出，要他活着接受拘捕。
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    testimony_ids: []
+    grants_evidence: []
+    conditional_beats:
+    - condition:
+        type: item
+        param: 1504
+      then: 自动剧情回扣英语练习书1504、James欠条1290与威胁纸条1302的J/T视觉联系；不是第四轮或玩家出示谜题。
+      else: 不播放书本字形指认；保留逃跑及追赶
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1508
+      next_talk: L5_ending_alley
+      continuation: next_talk
+    source_contracts:
+    - beat_id: U1L5_narrative_event_007
+      source_anchor: &id007
+        file: 剧情设计/Unit1/内容修改后的增强情节线.md
+        heading: L5
+        line: 77
+      requirement:
+        形式: 指证后剧情（固定）
+        情节点: James要求还原，小酒保辩护，Emma指出胁迫孩子
+        地点: 二楼厨房
+        在场人物: Zack、Emma、James、小酒保
+        进入与接续: 面板选James并完成三轮后原地接还原及争辩；James逃走，Zack、Emma追出
+    truth_reconstruction:
+      type: existing_finalexpose_video_requires_revision
+      narrator: Zack
+      speaker_confession: false
+      source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md#五、L5结尾统一顺序
+      player_proof_boundary: 节目单只证明23:00—23:10窗口，不独自推出23:00准确杀人时刻；完整作者时间线由改版还原呈现。
+      required_beats:
+      - 23:00利用送餐入室杀人
+      - 23:05临时冒充Webb声音
+      - 23:10回厨房
+      - 23:18Tommy离室，仅第三方离开目击
+      - 23:20Rosa倒垃圾
+      - 23:30厨房朝外开枪制造假时间
+      asset_status: 待新版时间线验收，不宣称旧视频可直接用
+  source_contracts:
+  - beat_id: U1L5_confirmed_entry_041
+    source_anchor: &id026
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 推理材料分工与指证前准备
+      line: 513
+    requirement:
+      核查内容: Tommy试枪解释
+      材料: 离室目击、Tommy自述、故障枪物品详情
+      用途: 目击开启询问；未见所述试枪痕迹反驳当面试枪；不能仅据此确认Webb当时已死
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_042
+    source_anchor: &id027
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 推理材料分工与指证前准备
+      line: 514
+    requirement:
+      核查内容: 门内说话者
+      材料: L4 Vivian 23:05隔门见闻、L5 James厨房喊话
+      用途: 支持James嫌疑判断
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_043
+    source_anchor: &id028
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 推理材料分工与指证前准备
+      line: 515
+    requirement:
+      核查内容: 作案时间窗口
+      材料: 完整节目单、音量参考、L3早于23:20的枪击时序、L2 James厨房自述
+      用途: 玩家交叉判断时间空白；节目单或喊话均不单独定凶
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_044
+    source_anchor: &id029
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 推理材料分工与指证前准备
+      line: 516
+    requirement:
+      核查内容: James走火辩解
+      材料: 物品详情已说明状态的故障枪
+      用途: 回用同一物品详情：故障后没有击发过的迹象，反驳争枪走火
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_rule_045
+    source_anchor: &id030
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: 推理材料分工与指证前准备
+      line: 518
+    requirement: '- 选人前取得节目单，并在正常探索备齐正确指控必需材料；故障枪取得后直接可用，不需另做枪检；不依赖错误分支补发材料。
+
+      - 选Tommy进入错误分支；返回选人界面时保留材料并恢复选择前状态，无须重走探索。
+
+      - L5沿用指证面板的开放时机，入口选择谁是凶手。选择Tommy进入仅一次击破的Tommy指证及错误结局；选择James进入厨房三轮指证，由Zack先提出作案窗口并询问James，再逐轮出现谎言、出示证物、推进退守。选人不替代第一轮，也不减少James的指证轮数。
+
+      - 正式出示材料须在使用前进入对应疑点／碎片，同一材料按唯一归属跨轮回用。'
+  - beat_id: U1L5_confirmed_rule_048
+    source_anchor: &id033
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: L5 James三轮指证：发言与出示（已确认）
+      line: 533
+    requirement: Zack先提出作案窗口并询问James；第一轮由小酒保替James辩护，后两轮由James自己否认、退守。指证对象始终是James，小酒保的错误判断不作为其犯罪嫌疑。
+  - beat_id: U1L5_confirmed_entry_049
+    source_anchor: &id034
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: L5 James三轮指证：发言与出示（已确认）
+      line: 537
+    requirement:
+      轮次／发言人: 第一轮／小酒保
+      说法大意: 那时候要是开枪，我们怎么可能听不见？
+      玩家出示: 完整节目单
+      玩家选择依据: 实际演出时段对应作案窗口；结合已查看的曲目音量参考，想到音乐能盖住枪声
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_050
+    source_anchor: &id035
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: L5 James三轮指证：发言与出示（已确认）
+      line: 538
+    requirement:
+      轮次／发言人: 第二轮／James
+      说法大意: 我没进过会客室，里面说话的不是我。
+      玩家出示: Vivian隔门喊话证词＋James厨房喊话证词
+      玩家选择依据: 两份“Do not be bothering me!”相互对应
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_051
+    source_anchor: &id036
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: L5 James三轮指证：发言与出示（已确认）
+      line: 539
+    requirement:
+      轮次／发言人: 第三轮／James
+      说法大意: Webb拿枪威胁我，争抢时走火了。
+      玩家出示: 物品详情已说明状态的故障手枪
+      玩家选择依据: Webb故障枪的物品详情已说明，故障后没有击发过的迹象，反驳争枪走火说法
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_rule_052
+    source_anchor: &id037
+      file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      heading: L5 James三轮指证：发言与出示（已确认）
+      line: 541
+    requirement: 三轮选证物体验已确认：时间窗口 → 门内说话者 → 射击经过。音量参考表承担阅读依据，不增加出示物件；故障枪直接回用物品详情信息。
+outline_coverage:
+- beat_id: U1L5_narrative_event_001
+  source_anchor: *id001
+  mapping: exact
+  deviation: none
+  state_path: opening
+  implementation_path: opening
+  source_excerpt_path: opening.source_contracts[0]
+- beat_id: U1L5_narrative_event_002
+  source_anchor: *id002
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[0]
+- beat_id: U1L5_narrative_event_003
+  source_anchor: *id003
+  mapping: exact
+  deviation: none
+  state_path: scenes[4].event_triggers[0]
+  implementation_path: scenes[4].event_triggers[0]
+  source_excerpt_path: scenes[4].event_triggers[0].source_contracts[0]
+- beat_id: U1L5_narrative_event_004
+  source_anchor: *id004
+  mapping: exact
+  deviation: none
+  state_path: scenes[4]
+  implementation_path: scenes[4]
+  source_excerpt_path: scenes[4].source_contracts[0]
+- beat_id: U1L5_narrative_event_005
+  source_anchor: *id005
+  mapping: exact
+  deviation: none
+  state_path: scenes[2].evidence[0]
+  implementation_path: scenes[2].evidence[0]
+  source_excerpt_path: scenes[2].evidence[0].source_contracts[0]
+- beat_id: U1L5_narrative_event_006
+  source_anchor: *id006
+  mapping: exact
+  deviation: none
+  state_path: expose.wrong_branch
+  implementation_path: expose.wrong_branch
+  source_excerpt_path: expose.wrong_branch.source_contracts[0]
+- beat_id: U1L5_narrative_event_007
+  source_anchor: *id007
+  mapping: exact
+  deviation: none
+  state_path: expose.post_expose
+  implementation_path: expose.post_expose
+  source_excerpt_path: expose.post_expose.source_contracts[0]
+- beat_id: U1L5_narrative_event_008
+  source_anchor: &id060
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L5
+    line: 78
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[0]
+  implementation_path: ending_sequence.scenes[0]
+  source_excerpt_path: ending_sequence.scenes[0].source_contracts[0]
+- beat_id: U1L5_narrative_event_009
+  source_anchor: &id062
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L5
+    line: 79
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[1]
+  implementation_path: ending_sequence.scenes[1]
+  source_excerpt_path: ending_sequence.scenes[1].source_contracts[0]
+- beat_id: U1L5_narrative_event_010
+  source_anchor: &id065
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L5
+    line: 80
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[2]
+  implementation_path: ending_sequence.scenes[2]
+  source_excerpt_path: ending_sequence.scenes[2].source_contracts[0]
+- beat_id: U1L5_narrative_event_011
+  source_anchor: &id071
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L5
+    line: 81
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[3]
+  implementation_path: ending_sequence.scenes[3]
+  source_excerpt_path: ending_sequence.scenes[3].source_contracts[0]
+- beat_id: U1L5_narrative_event_012
+  source_anchor: &id074
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L5
+    line: 82
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[4]
+  implementation_path: ending_sequence.scenes[4]
+  source_excerpt_path: ending_sequence.scenes[4].source_contracts[0]
+- beat_id: U1L5_confirmed_rule_013
+  source_anchor: &id048
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L5
+    line: 457
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[0]
+- beat_id: U1L5_confirmed_entry_014
+  source_anchor: *id008
+  mapping: exact
+  deviation: none
+  state_path: scenes[0]
+  implementation_path: scenes[0]
+  source_excerpt_path: scenes[0].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_015
+  source_anchor: *id009
+  mapping: exact
+  deviation: none
+  state_path: scenes[1]
+  implementation_path: scenes[1]
+  source_excerpt_path: scenes[1].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_016
+  source_anchor: *id010
+  mapping: exact
+  deviation: none
+  state_path: scenes[2]
+  implementation_path: scenes[2]
+  source_excerpt_path: scenes[2].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_017
+  source_anchor: *id011
+  mapping: exact
+  deviation: none
+  state_path: scenes[3]
+  implementation_path: scenes[3]
+  source_excerpt_path: scenes[3].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_018
+  source_anchor: *id012
+  mapping: exact
+  deviation: none
+  state_path: scenes[4]
+  implementation_path: scenes[4]
+  source_excerpt_path: scenes[4].source_contracts[1]
+- beat_id: U1L5_confirmed_entry_019
+  source_anchor: *id013
+  mapping: exact
+  deviation: none
+  state_path: scenes[5]
+  implementation_path: scenes[5]
+  source_excerpt_path: scenes[5].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_020
+  source_anchor: *id014
+  mapping: exact
+  deviation: none
+  state_path: scenes[6]
+  implementation_path: scenes[6]
+  source_excerpt_path: scenes[6].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_021
+  source_anchor: *id015
+  mapping: exact
+  deviation: none
+  state_path: scenes[7]
+  implementation_path: scenes[7]
+  source_excerpt_path: scenes[7].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_022
+  source_anchor: &id049
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 场景、NPC与环境物
+    line: 471
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[1]
+- beat_id: U1L5_confirmed_entry_023
+  source_anchor: &id050
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 场景、NPC与环境物
+    line: 472
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[2]
+- beat_id: U1L5_confirmed_entry_024
+  source_anchor: &id051
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 场景、NPC与环境物
+    line: 473
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[3]
+- beat_id: U1L5_confirmed_entry_025
+  source_anchor: &id052
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 场景、NPC与环境物
+    line: 474
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[4]
+- beat_id: U1L5_confirmed_entry_026
+  source_anchor: &id053
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 场景、NPC与环境物
+    line: 475
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[5]
+- beat_id: U1L5_confirmed_rule_027
+  source_anchor: &id054
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 场景、NPC与环境物
+    line: 477
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[6]
+- beat_id: U1L5_confirmed_rule_028
+  source_anchor: *id016
+  mapping: exact
+  deviation: none
+  state_path: opening.sequence[1]
+  implementation_path: opening.sequence[1]
+  source_excerpt_path: opening.sequence[1].source_contracts[0]
+- beat_id: U1L5_confirmed_entry_029
+  source_anchor: *id017
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[1]
+- beat_id: U1L5_confirmed_entry_030
+  source_anchor: *id018
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[2]
+- beat_id: U1L5_confirmed_entry_031
+  source_anchor: *id019
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[3]
+- beat_id: U1L5_confirmed_entry_032
+  source_anchor: *id020
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[4]
+- beat_id: U1L5_confirmed_entry_033
+  source_anchor: *id021
+  mapping: exact
+  deviation: none
+  state_path: scenes[4]
+  implementation_path: scenes[4]
+  source_excerpt_path: scenes[4].source_contracts[2]
+- beat_id: U1L5_confirmed_entry_034
+  source_anchor: *id022
+  mapping: exact
+  deviation: none
+  state_path: scenes[4]
+  implementation_path: scenes[4]
+  source_excerpt_path: scenes[4].source_contracts[3]
+- beat_id: U1L5_confirmed_entry_035
+  source_anchor: *id023
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[5]
+- beat_id: U1L5_confirmed_rule_036
+  source_anchor: *id024
+  mapping: exact
+  deviation: none
+  state_path: scenes[3].npcs.Tommy
+  implementation_path: scenes[3].npcs.Tommy
+  source_excerpt_path: scenes[3].npcs.Tommy.source_contracts[6]
+- beat_id: U1L5_confirmed_entry_037
+  source_anchor: *id025
+  mapping: exact
+  deviation: none
+  state_path: scenes[2]
+  implementation_path: scenes[2]
+  source_excerpt_path: scenes[2].source_contracts[1]
+- beat_id: U1L5_confirmed_entry_038
+  source_anchor: &id055
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 节目单与故障枪详情
+    line: 504
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[7]
+- beat_id: U1L5_confirmed_entry_039
+  source_anchor: &id056
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 节目单与故障枪详情
+    line: 505
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[8]
+- beat_id: U1L5_confirmed_rule_040
+  source_anchor: &id057
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 节目单与故障枪详情
+    line: 507
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[9]
+- beat_id: U1L5_confirmed_entry_041
+  source_anchor: *id026
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[0]
+- beat_id: U1L5_confirmed_entry_042
+  source_anchor: *id027
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[1]
+- beat_id: U1L5_confirmed_entry_043
+  source_anchor: *id028
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[2]
+- beat_id: U1L5_confirmed_entry_044
+  source_anchor: *id029
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[3]
+- beat_id: U1L5_confirmed_rule_045
+  source_anchor: *id030
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[4]
+- beat_id: U1L5_confirmed_entry_046
+  source_anchor: *id031
+  mapping: exact
+  deviation: none
+  state_path: expose.wrong_branch
+  implementation_path: expose.wrong_branch
+  source_excerpt_path: expose.wrong_branch.source_contracts[1]
+- beat_id: U1L5_confirmed_rule_047
+  source_anchor: *id032
+  mapping: exact
+  deviation: none
+  state_path: expose.wrong_branch
+  implementation_path: expose.wrong_branch
+  source_excerpt_path: expose.wrong_branch.source_contracts[2]
+- beat_id: U1L5_confirmed_rule_048
+  source_anchor: *id033
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[5]
+- beat_id: U1L5_confirmed_entry_049
+  source_anchor: *id034
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[6]
+- beat_id: U1L5_confirmed_entry_050
+  source_anchor: *id035
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[7]
+- beat_id: U1L5_confirmed_entry_051
+  source_anchor: *id036
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[8]
+- beat_id: U1L5_confirmed_rule_052
+  source_anchor: *id037
+  mapping: exact
+  deviation: none
+  state_path: expose
+  implementation_path: expose
+  source_excerpt_path: expose.source_contracts[9]
+- beat_id: U1L5_confirmed_entry_053
+  source_anchor: &id075
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 结尾物件的位置确认
+    line: 547
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[4]
+  implementation_path: ending_sequence.scenes[4]
+  source_excerpt_path: ending_sequence.scenes[4].source_contracts[1]
+- beat_id: U1L5_confirmed_entry_054
+  source_anchor: &id076
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 结尾物件的位置确认
+    line: 548
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[4]
+  implementation_path: ending_sequence.scenes[4]
+  source_excerpt_path: ending_sequence.scenes[4].source_contracts[2]
+- beat_id: U1L5_confirmed_entry_055
+  source_anchor: &id077
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 结尾物件的位置确认
+    line: 549
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[4]
+  implementation_path: ending_sequence.scenes[4]
+  source_excerpt_path: ending_sequence.scenes[4].source_contracts[3]
+- beat_id: U1L5_narrative_detail_056
+  source_anchor: *id038
+  mapping: exact
+  deviation: none
+  state_path: scenes[4].npcs.Bartender
+  implementation_path: scenes[4].npcs.Bartender
+  source_excerpt_path: scenes[4].npcs.Bartender.source_contracts[0]
+- beat_id: U1L5_narrative_detail_057
+  source_anchor: &id072
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 3. 大厅收尾：赌债、请酒与 Vivian 下楼
+    line: 145
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[3]
+  implementation_path: ending_sequence.scenes[3]
+  source_excerpt_path: ending_sequence.scenes[3].source_contracts[1]
+- beat_id: U1L5_narrative_detail_058
+  source_anchor: &id078
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 五、L5结尾统一顺序
+    line: 237
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence
+  implementation_path: ending_sequence
+  source_excerpt_path: ending_sequence.source_contracts[0]
+- beat_id: U1L5_narrative_detail_059
+  source_anchor: &id079
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 指证结束：先说亲历，再产生对 Tommy 的怀疑
+    line: 297
+  mapping: merged
+  deviation: none
+  state_path: inherited_knowledge_reference
+  implementation_path: inherited_knowledge_reference
+  coverage_class: cross_loop_reference
+  cross_file_state_path: loop4_state.yaml:expose.post_expose
+  source_excerpt_path: inherited_knowledge_reference.source_contracts[0]
+- beat_id: U1L5_narrative_detail_060
+  source_anchor: *id039
+  mapping: exact
+  deviation: none
+  state_path: opening
+  implementation_path: opening
+  source_excerpt_path: opening.source_contracts[1]
+- beat_id: U1L5_narrative_detail_061
+  source_anchor: *id040
+  mapping: exact
+  deviation: none
+  state_path: opening.sequence[1]
+  implementation_path: opening.sequence[1]
+  source_excerpt_path: opening.sequence[1].source_contracts[1]
+- beat_id: U1L5_narrative_detail_062
+  source_anchor: &id058
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 14. 合作追查 Tommy 与 James
+    line: 518
+  mapping: exact
+  deviation: none
+  state_path: exploration_completion
+  implementation_path: exploration_completion
+  source_excerpt_path: exploration_completion.source_contracts[10]
+- beat_id: U1L5_narrative_detail_063
+  source_anchor: &id063
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 17. 进入病房前的走廊：Emma 担忧，Zack 硬撑着安慰
+    line: 546
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[1]
+  implementation_path: ending_sequence.scenes[1]
+  source_excerpt_path: ending_sequence.scenes[1].source_contracts[1]
+- beat_id: U1L5_narrative_detail_064
+  source_anchor: &id066
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 18. Anna 病房：从盘算生活，到攥住欠条崩溃
+    line: 556
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[2]
+  implementation_path: ending_sequence.scenes[2]
+  source_excerpt_path: ending_sequence.scenes[2].source_contracts[1]
+- beat_id: U1L5_narrative_detail_065
+  source_anchor: &id067
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 19. 先陪伴 Anna，再处理生活问题
+    line: 582
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[2]
+  implementation_path: ending_sequence.scenes[2]
+  source_excerpt_path: ending_sequence.scenes[2].source_contracts[2]
+- beat_id: U1L5_narrative_detail_066
+  source_anchor: &id068
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 20. Tommy 到病房叫两人回酒吧
+    line: 592
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[2]
+  implementation_path: ending_sequence.scenes[2]
+  source_excerpt_path: ending_sequence.scenes[2].source_contracts[3]
+- beat_id: U1L5_narrative_detail_067
+  source_anchor: &id069
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 22. 告别 Anna，共同返回酒吧
+    line: 602
+  mapping: exact
+  deviation: none
+  state_path: ending_sequence.scenes[2]
+  implementation_path: ending_sequence.scenes[2]
+  source_excerpt_path: ending_sequence.scenes[2].source_contracts[4]
+narrative_continuity:
+  units:
+  - id: call_notice
+    talk: L5_opening_call_notice
+    phase: opening
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id041
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: office_call
+    ordering: locked_sequence
+  - id: office_call
+    talk: L5_opening_office_call
+    phase: opening
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id042
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: L5_tommy_office_questioning
+    ordering: locked_sequence
+  - id: L5_tommy_office_questioning
+    talk: L5_tommy_office_questioning
+    phase: exploration
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id043
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: expose
+    ordering: 探索条目可自由穿插，handoff表达汇聚而非前置
+  - id: kitchen_voice
+    talk: L5_kitchen_first_voice
+    phase: exploration
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id044
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: expose
+    ordering: 探索条目可自由穿插，handoff表达汇聚而非前置
+  - id: L5_kitchen_questioning
+    talk: L5_kitchen_questioning
+    phase: exploration
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id045
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: expose
+    ordering: 探索条目可自由穿插，handoff表达汇聚而非前置
+  - id: L5_kitchen_bartender
+    talk: L5_kitchen_bartender
+    phase: exploration
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id046
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: expose
+    ordering: 探索条目可自由穿插，handoff表达汇聚而非前置
+  - id: expose
+    talk: L5_expose
+    phase: expose
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats:
+    - 实际节目时段与已读音量资料使掩声成为可能；不将小酒保当嫌疑人。
+    - 两份特定表达互相对应；连同时间与工作行踪支持门内身份。
+    - 该枪故障后未击发，不能按所述争枪走火。
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: reconstruction
+    ordering: locked_sequence
+  - id: reconstruction
+    talk: L5_post_expose_reconstruction
+    phase: post_expose
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: *id047
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: alley
+    ordering: locked_sequence
+  - id: alley
+    talk: L5_ending_alley
+    phase: ending
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: &id059
+    - James见经过车辆中受控制的Anna，两主角也看见；Whale不实体揭身份。
+    - James转述同次酒谈：Tommy被勒索、身份无望、演出安排；看见自身未来，接受Whale交易。
+    - 自白不抹去杀人、嫁祸及威胁孩子责任；胁迫下自杀。
+    - 不搜现场、不取枪送枪、不新增证词；自动医院。
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: hospital_door
+    ordering: locked_sequence
+  - id: hospital_door
+    talk: L5_ending_hospital_door
+    phase: ending
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: &id061
+    - 得知Anna苏醒；Emma担忧绑架、未出生孩子与死讯。
+    - Zack也受死亡冲击，撑住安慰并承担告知，让Emma陪伴；不展开律师旧伤回忆。
+    - 一起进入；门外不翻欠条、不先谈还款。
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: anna_ward
+    ordering: locked_sequence
+  - id: anna_ward
+    talk: L5_ending_anna_ward
+    phase: ending
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: &id064
+    - Anna问James；明确告知杀Webb、看见Anna受控、胁迫下自杀的基本事实，不讲血腥。
+    - Anna努力盘算恢复工作、房租食物、孩子照护和机构可能，冷静带吃力；Emma一时接不上。
+    - Anna主动提欠款，Zack亲手交还1290欠条并免还；不新增金额期限。
+    - 接纸、看到James名字、停顿、攥紧，才崩溃，哭诉绑架恐惧与杀人死亡疑问。
+    - Emma靠近陪伴，等最强情绪过去，Zack承诺两人追究幕后责任；不说找全然未知凶手。
+    - 等能交谈后问医院工作人员有限照护信息，不凭一次问话解决安置、不保证机构接收探望。
+    - 仍担忧Whale是否履约；Tommy到病房门边告知Vivian获释，邀返店取得约定材料，通知后退场。
+    - 此时不预告Vivian留店或照护承诺；告别Anna共同返店。
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: lobby_return
+    ordering: locked_sequence
+  - id: lobby_return
+    talk: L5_ending_lobby_return
+    phase: ending
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: &id070
+    - Morrison说明Whale的人将James真凶枪送警局并要求释放，已经照办；不由玩家拾取枪。
+    - 抱怨Whale原替付赌债换取迅速以Vivian收案，如今追讨；小酒保理解L3赛马工作碰了痛处。
+    - 有泼水计划：Morrison淋湿，小酒保心软但不揭穿；无计划：正常外观，也因赌债困境同情。
+    - 小酒保提出请酒；Morrison质疑快失业何来钱。
+    - Vivian从楼上下来接话：不去巴黎，接手酒吧并留员工，认可请酒。
+    - 轻松只落此支线，不拿James死亡与Anna处境取笑；带两人去办公室。
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: safe_finale
+    ordering: locked_sequence
+  - id: safe_finale
+    talk: L5_ending_safe_finale
+    phase: ending
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    entry_state:
+    - 承接本轮player_context.known_facts；按实际已完成事件与持有材料发言。
+    consumes:
+    - 救Vivian交易与追究实际射手
+    required_beats: &id073
+    - 先私谈Anna处境与有限照护帮助，不保证一切解决；再谈Tommy的疑点与旧怨余波。
+    - Vivian得知真正射手与假枪声制造者为James，修正Tommy栽赃怀疑；知道Tommy未交代把柄。不由Zack总结错误分支保护动机。
+    - Vivian剧情开保险柜，无玩家密码输入。
+    - 展示Tommy/Vivian勒索照片，仅环境查看，不据此断言恋爱，不收入证据栏。
+    - 取得唱片碎片并试听、Zack保留；录音触及家人，承接南区与Margaret。
+    - Vivian简短承认照片是Webb安排的设局、自己参与；不扩成长篇往事，不默认与Tommy真有私情或立即和好。
+    - 不揭Whale真身，不提前解密缺失部分，不交出尚需U2交付的碎片。
+    exit_state:
+      facts: 只增加本段明确揭示的信息
+      relationship_changes: 按演出动作变化，不提前正式结伴或重演结伴
+      unresolved_pressure: 后续案件与人物代价仍待解决
+    hands_off_to: Unit2_opening
+    ordering: locked_sequence
+open_details:
+- item: 工作日期与年份
+  handling: 照片及寄件采用1928年9月10/11/12日；按制作细节定稿采用1928年日期；72小时已确认，具体起算待定
+- item: 枪号与借款金额已定／美术精确坐标仍待核
+  handling: 制作细节定稿.md已确定枪号384216与借款20美元；场景坐标仍须结合美术核对。
+- item: 小酒保23:18目击站位及记时画面
+  handling: 制作核验；只见离开，不变成看到入室或携枪
+- item: 现有真相视频适配
+  handling: 须覆盖新版掩声时间与取枪支线；不能宣称旧视频已通过
+- item: 英语书可选的对白措辞
+  handling: 按用户覆盖分支；无书不凭空指认，逃跑与结尾照常
+runtime_dependencies:
+- key: doubt_conditions
+  status: special_adapter
+  contract: 可显示前两项，第三项visible:false但参与全部AND；visible不是Unity正式字段，须UI适配，不能删掉隐藏条件。type1=物品、type3=时间线验证、type4=直接收录证词。
+- key: analysis_condition_compatibility
+  status: special_adapter
+  contract: 1201→1706、1101→1711替换背包原件；HasItem兼容派生，但Doubt全量重检当前仅遍历实际ID；必须补原物条件兼容重检及读档一致性。
+- key: scene_events
+  status: existing_item_and_only
+  contract: SceneEnterTalkTriggerConfig只支持requiredItemIds全AND和一次性；Talk完成/前事件完成条件需special_adapter，不把普通点击争执升级条件链。
+- key: dual_suspects
+  status: special_adapter
+  contract: L5单Chapter的Tommy/James两套指证路由；错误线完成后恢复选人前状态、保留材料、不继承错误线知识与完成标记。
+- key: locked_ending_resume
+  status: existing_runtime_requires_integration_verification
+  contract: L5正确线postExpose→后巷→医院门外→病房→大厅→Webb办公室；持续锁定，跨场续播点优先于initTalk恢复；不另生成探索入口。
+- key: five_loop_end
+  status: table_migration_pending
+  contract: GameFlowConfig Unit1 loopCount=5；终点loop_end+chapter_boundary:true，旧106不再可达；不使用不存在的chapter_end。
+closed_locations:
+- Webb办公室自由探索
+- Webb会客室
+- 地下走廊
+- 清洁间
+- 化妆间
+- James住宅（短笺、卧室抽屉、摇铃取消）
+- Morrison住宅
+- 警局办公室
+companion:
+  key: Emma
+  independent_npc_entry: false
+  scope: 全程随队，不要求每选项发言，不代玩家推理
+exploration_completion:
+  doubt_denominator: 2
+  required_doubts:
+  - '1501'
+  - '1502'
+  free_order:
+  - tommy_office
+  - kitchen
+  - booth
+  optional_items:
+  - 1504
+  never_require:
+  - 先走错误分支
+  - 枪检
+  - 详情已读
+  - 恶作剧
+  - Emma可选见闻
+  source_contracts:
+  - beat_id: U1L5_confirmed_rule_013
+    source_anchor: *id048
+    requirement: Emma随Zack同队探索，不设独立驻场取证入口。电话结束后，Tommy办公室、厨房、小包厢可自由选择、穿插调查。
+  - beat_id: U1L5_confirmed_entry_022
+    source_anchor: *id049
+    requirement:
+      场景: Webb办公室、会客室
+      NPC: 无探索入口
+      开放与物件: 本轮自由探索锁定，结尾按剧情进入；办公室不补取密码纸条
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_023
+    source_anchor: *id050
+    requirement:
+      场景: 地下走廊、储藏间、化妆间
+      NPC: 无探索入口
+      开放与物件: 本轮关闭
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_024
+    source_anchor: *id051
+    requirement:
+      场景: James住宅
+      NPC: 无探索入口
+      开放与物件: 不挂Anna住宅问话；短笺、卧室抽屉、摇铃取消本轮探索配置，英语练习书移至厨房
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_025
+    source_anchor: *id052
+    requirement:
+      场景: Morrison住宅、警局办公室
+      NPC: 无探索入口
+      开放与物件: 本轮不开放
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_026
+    source_anchor: *id053
+    requirement:
+      场景: 后巷、酒吧后门、医院
+      NPC: 独立AVG场景
+      开放与物件: 不设本轮自由搜证或独立问话；后巷不收录新证词
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_rule_027
+    source_anchor: *id054
+    requirement: 厨房工作表保留23:00—23:10送餐安排，为工作计划，不证明实际履行。窗户检查呈现厨房在会客室楼上、窗下为巷子的空间关系，不收集。
+  - beat_id: U1L5_confirmed_entry_038
+    source_anchor: *id055
+    requirement:
+      材料: 演出曲目与音量参考表
+      获取／检查: L2起位于歌舞厅舞台附近，可反复查看、不收集
+      信息与用途: 5级：“酒吧内除乐器声外，其他声音都听不到”；不记录案发当晚实际执行时段
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_entry_039
+    source_anchor: *id056
+    requirement:
+      材料: Webb故障枪
+      获取／检查: L4 Tommy办公室抽屉取得；取得后直接查看物品详情，L5回用同一物品，不需补检
+      信息与用途: 未见试枪及故障后击发痕迹的故障枪；不新增Zack证词，不要求回办公室
+      interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  - beat_id: U1L5_confirmed_rule_040
+    source_anchor: *id057
+    requirement: 枪型为M1911式样、.45 ACP，与James实际凶器不是同一把。同一物品详情分别说明“未见所述试枪痕迹”和“故障后没有击发过的迹象”，分别反驳Tommy所述Webb当面试枪与James所述争枪走火。
+  - beat_id: U1L5_narrative_detail_062
+    source_anchor: *id058
+    requirement: 'L5电话后两人同队，自由调查Tommy、厨房与小包厢；实际节目单由玩家在小包厢点击检查取得。玩家先用时间、声音和实际行动选择射手，选James后才进入正式对抗；正确路线的家庭动机在后巷由James自行转述酒谈，不依赖Tommy错误分支。
+
+
+      Emma 提供协助、记录与调查成果，核心证据判断仍保留给扮演 Zack 的玩家。已经结成搭档，不再反复扣留必要信息，制造同一种合作矛盾。'
+ending_sequence:
+  type: locked_sequence
+  entry_from: L5_post_expose_reconstruction
+  player_control: false
+  scenes:
+  - event_id: alley
+    talk: L5_ending_alley
+    scene_id: 1508
+    cast:
+    - Zack
+    - Emma
+    - James
+    - Anna
+    required_beats: *id059
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    character_states:
+      mode: 同一场景连续演出，人物没有独立自由Talk入口
+    runtime_binding:
+      type: chained_talk
+      from_talk: L5_post_expose_reconstruction
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1591
+      next_talk: L5_ending_hospital_door
+      continuation: next_talk
+    source_contracts:
+    - beat_id: U1L5_narrative_event_008
+      source_anchor: *id060
+      requirement:
+        形式: 独立AVG
+        情节点: 后巷见Anna被控制，James坦露真心后自杀
+        地点: 酒吧后门／后巷
+        在场人物: Zack、Emma、James；Anna在经过的车内
+        进入与接续: 接厨房追赶，随后衔接医院；Whale身份不以实体登场揭露
+  - event_id: hospital_door
+    talk: L5_ending_hospital_door
+    scene_id: 1591
+    cast:
+    - Zack
+    - Emma
+    required_beats: *id061
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    character_states:
+      mode: 同一场景连续演出，人物没有独立自由Talk入口
+    runtime_binding:
+      type: chained_talk
+      from_talk: L5_ending_alley
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1592
+      next_talk: L5_ending_anna_ward
+      continuation: next_talk
+    source_contracts:
+    - beat_id: U1L5_narrative_event_009
+      source_anchor: *id062
+      requirement:
+        形式: 独立AVG
+        情节点: 病房外担忧与安慰
+        地点: 医院走廊、Anna病房门外
+        在场人物: Zack、Emma
+        进入与接续: 接后巷；两人共同进入Anna病房
+    - beat_id: U1L5_narrative_detail_063
+      source_anchor: *id063
+      requirement: '两人得知 Anna 已经苏醒，来到病房门外。他们知道必须亲口告诉她 James 的死讯，却担忧她无法接受。
+
+
+        Emma 更直接地说出不安。她想到 Anna 经历的绑架、尚未出生的孩子，以及对方一醒来就可能询问丈夫，迟迟难以迈进病房。
+
+
+        Zack 自己也在承受死亡的冲击，但先撑住眼前这一步。他安慰 Emma，承担进去告知的责任，让她陪在 Anna 身边。安慰落在两人能够共同做的事情上，不保证 Anna 一定能承受，也不以冷漠或看惯死亡的口吻消解她的担忧。
+
+
+        两人随后一起进入病房。走廊不再安排翻看欠条、谈借款与归还的戏，欠条保留到 Anna 主动谈起债务时出现。'
+  - event_id: anna_ward
+    talk: L5_ending_anna_ward
+    scene_id: 1592
+    cast:
+    - Zack
+    - Emma
+    - Anna
+    - HospitalStaff
+    - Tommy
+    required_beats: *id064
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    item_transfers:
+    - id: 1290
+      from: Zack
+      to: Anna
+      remove_from_player_inventory: true
+      return_to_player: false
+      destroy: false
+    character_states:
+      mode: 同一场景连续演出，人物没有独立自由Talk入口
+    runtime_binding:
+      type: chained_talk
+      from_talk: L5_ending_hospital_door
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1504
+      next_talk: L5_ending_lobby_return
+      continuation: next_talk
+    source_contracts:
+    - beat_id: U1L5_narrative_event_010
+      source_anchor: *id065
+      requirement:
+        形式: 独立AVG
+        情节点: 告知死讯、交还欠条、Anna崩溃与共同追查承诺；Tommy到病房叫两人回酒吧
+        地点: Anna病房
+        在场人物: Zack、Emma、Anna；Tommy过来叫Zack、Emma回酒吧
+        进入与接续: 从告知到Tommy传话都在同一病房AVG完成；安慰与照护后Tommy过来叫两人回酒吧，通知后退场；两人与Anna告别，再回酒吧
+    - beat_id: U1L5_narrative_detail_064
+      source_anchor: *id066
+      requirement: '**告知死讯。** Anna 刚从昏迷中苏醒，孩子尚未出生。面对她对 James 下落的询问，Zack 明确告诉她 James 已死，并简短说明：James 杀了 Webb，之后看见
+        Anna 被控制在车里，在胁迫下自杀。Anna 此前不知道丈夫杀人，必须在这里先得到基本事实，后面关于杀人的追问才有来源。叙述不展开血腥细节，不将自杀改成被枪杀，也不以一场案件讲解盖过她的反应。
+
+
+        **先谈孩子与工作。** Anna 没有立即痛哭，反而询问身体恢复后何时能工作、工作时谁照顾孩子、怎样维持房租和食物。她可以继续问到临时机构照护、日后接回与探望的可能。她急于抓住仍能安排的事情，让生活有一个可以继续往下走的次序。
+
+
+        这种冷静要有吃力的痕迹，例如没听清回答就接着问下一件事，或反复确认一项已经说过的开支。Emma 原本担心她无法接受，面对这些具体问题反而一时接不上话。可通过 Emma 的反应，或让玩家追问 Anna 的打算，使玩家自然疑惑她为何如此冷静；不直接用旁白解释心理，不让人误以为她毫不在乎丈夫。
+
+
+        **Anna 提起欠款。** 她想到自己与 James 欠 Zack 的钱，认真表示等以后能够工作，一定归还。她试图把这份还款承诺也放进未来的生活安排里。
+
+
+        **Zack 交还欠条。** Zack 取出 James 写下的欠条，亲手交给 Anna，表示不需要偿还。他不解释自己的懊悔，只替她卸下眼前能够卸下的一件负担。这里沿用 L2 的借款与欠条，不新增金额、期限或利息，也不把债务作为向遗属追索的要求。
+
+
+        **欠条触发崩溃。** Anna 接过纸，看见 James 写下的名字，停住，随后慢慢攥紧。她刚才还能安排工作、孩子和还钱，此刻却无法继续把这些话说下去。必须留出接过、看见、停顿再攥紧的时间，避免演成一听免债就感动落泪。
+
+
+        她终于哭出来，说起被绑走时的恐惧。她不知道自己会被带去哪里，不懂事情为什么变成这样，为什么 James 杀了人，又为什么最后一定要死。话可以断裂、重复，问题不必有条理。她在释放恐惧与悲伤，不负责替玩家总结案件，也不以自己的悲痛抹去
+        James 的犯罪责任。
+
+
+        **Emma 陪伴，Zack 再承诺。** Emma 靠近、安慰 Anna，听她把话说出来，不急着解释案件或继续询问托养。Zack 留在一旁，等她最强烈的一阵情绪过去，再主动承诺他与 Emma 会继续追查，让逼死
+        James 的幕后者承担责任。
+
+
+        两人已经知道 Whale 实施胁迫，承诺应落在追查到底、追究责任，不再把任务说成寻找一个全然未知的凶手。Emma 以看向 Zack、点头等动作接下这份共同承诺，再继续照顾 Anna。
+
+
+        Anna 不因承诺立即平静，哭泣也不作为主角发表宣言的过场。欠条在交还后留在 Anna 手里，Zack 不收回、不撕毁；它从他保留的借款凭据，变成 Anna 此刻握着的丈夫遗留之物。
+
+
+        关系变化落在各自承担的行动中：Zack 在走廊接住 Emma 的担忧，Emma 在病房接住 Anna 的崩溃，Zack 再主动以两个人的身份承担继续追查的责任。两人已在L5开篇电话后正式成为搭档，医院不重演劝退或争取留下的矛盾，也不必明说“你没了我不行”。'
+    - beat_id: U1L5_narrative_detail_065
+      source_anchor: *id067
+      requirement: '两人先陪 Anna 待一会儿，等她能够继续交谈，再回应前面提到的孩子、工作与照护问题。她的悲伤不会因此结束，也不要求她马上振作。
+
+
+        Emma与Zack留在病房，记下需要询问的事项，并向来病房的医院工作人员打听。得到的可以只是有限信息和仍需核实的事项，不凭一次询问解决困境。Anna 尚未办理送养或托养，没有确定的机构接收安排，两人不随口保证探望或团聚条件。
+
+
+        能做的事务暂告一段落后，Vivian 的处境仍悬着：James 没能活着到案，Whale 是否仍会兑现释放她的约定，两人没有答案。带着这份未解的担忧，衔接 Tommy 到来。
+
+
+        Tommy 的返店通知发生在告知、欠条崩溃、安慰及共同追查承诺之后，不打断 Anna 最强烈的情绪，也不承担决定 Emma 是否留下的功能。'
+    - beat_id: U1L5_narrative_detail_066
+      source_anchor: *id068
+      requirement: 'Tommy 来到 Anna 病房门边，告诉 Zack、Emma：Vivian 已经获释，请两人回酒吧见面、取得此前约定的 Webb 勒索材料。通知后 Tommy 退场。
+
+
+        消息带来有限的宽慰，但 James 的死亡与 Anna 的困境仍在。传话发生在安慰、照护之后，与前面的告知同属一个病房 AVG；取消 Vivian 来电和病房接电话安排。'
+    - beat_id: U1L5_narrative_detail_067
+      source_anchor: *id069
+      requirement: 'Zack、Emma 听到 Tommy 的通知后与 Anna 告别；此时尚未得到 Vivian 的照护承诺，不能提前把这份帮助告诉 Anna。
+
+
+        随后，两人共同返回酒吧。新的消息给他们一件能接着做的事，并不意味着悲伤已经结束。'
+  - event_id: lobby_return
+    talk: L5_ending_lobby_return
+    scene_id: 1504
+    cast:
+    - Zack
+    - Emma
+    - Morrison
+    - Bartender
+    - Vivian
+    required_beats: *id070
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    conditional_state:
+      flag: water_prank_planned
+      'true': Morrison湿衣，小酒保含恶作剧歉意
+      'false': Morrison正常，不提泼水愧疚
+    character_states:
+      mode: 同一场景连续演出，人物没有独立自由Talk入口
+    runtime_binding:
+      type: chained_talk
+      from_talk: L5_ending_anna_ward
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1511
+      next_talk: L5_ending_safe_finale
+      continuation: next_talk
+    source_contracts:
+    - beat_id: U1L5_narrative_event_011
+      source_anchor: *id071
+      requirement:
+        形式: 独立AVG
+        情节点: 送枪放人、赌债抱怨、恶作剧回收、小酒保请酒；Vivian下楼决定经营酒吧并留下员工
+        地点: 酒吧大厅
+        在场人物: Zack、Emma、Morrison、小酒保；Vivian随后下楼
+        进入与接续: 同一大厅AVG连续完成；Morrison按泼水计划呈正常或淋湿状态，Vivian接请酒话题后带两人去办公室
+    - beat_id: U1L5_narrative_detail_057
+      source_anchor: *id072
+      requirement: 'Zack、Emma 从医院返回酒吧后，小酒保与 Morrison 都在大厅。Vivian 暂未下楼；先由 Morrison 的谈话交代两件事：
+
+
+        - Whale 的人把 James 的枪送到警局门口，作为真凶的物证，并要求释放 Vivian；Morrison 已经照办。
+
+        - Morrison 埋怨 Zack 竟然让 Whale 来要求自己放人；Whale 此前替他处理赌债，换取他尽快以 Vivian 为凶手收队，如今又要求他偿还那笔款项。
+
+
+        送枪消息承载 Whale 履约的反转；赌债抱怨随后接入以下短流程。下列为情节含义，正式对白另行制作：
+
+
+        1. Morrison 向 Zack 埋怨 Whale 又来追索赌债，小酒保在旁听见，才明白自己 L3 问赛马场工作时，无意间碰到了对方的痛处。
+
+        2. 小酒保见他今天如此狼狈，生出一点歉意与同情，提出今天的酒由自己请。若此前完成了泼水计划，这份歉意包含对恶作剧的心软；但他不告诉 Morrison 水是自己按 Zack 的建议泼的，Zack 也不揭穿。
+
+        3. Morrison 对突然的好意很狐疑，追问小酒保不是快没工作了吗，哪来的钱请自己喝酒。这句话把此前的遣散压力重新带回眼前。
+
+        4. Vivian 此时从楼上下来，接住这个疑问：酒吧现在由她接手，她不打算遣散员工，也决定留下来、不去巴黎。她以新经营者的身份认可这次请酒，让小酒保留下工作，完成回应；不另解释为小酒保突然拿到了新工作或一笔新收入。
+
+        5. 大厅人物收束后，接回取得、听取 Webb 唱片碎片的流程。此处不增设庆功宴，也不让轻松段落覆盖 James 之死与 Anna 的处境。
+
+
+        小酒保并非认为自己求职有错，也不是替 Morrison 的辱骂、收买和强押行为开脱；他只是得知对方困境后，不再一味幸灾乐祸。若玩家跳过恶作剧，他仍因赌债原委而生出同情、提出请酒，但不出现对未发生泼水的愧疚或暗示。两条状态均汇入
+        Morrison 质疑与 Vivian 下楼的共同段落。'
+  - event_id: safe_finale
+    talk: L5_ending_safe_finale
+    scene_id: 1511
+    cast:
+    - Zack
+    - Emma
+    - Vivian
+    required_beats: *id073
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    evidence:
+    - id: 1602
+      key: record_fragment
+      name: 录音盘碎片
+      type: item
+      pickup: Vivian开柜后剧情取得并试听保留
+      analysis: null
+      description: 保险柜内保存的录音唱片碎片，存在断口，能够播放现存部分。
+      note: 关键——跨章唱片线索
+      source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+      design_notes: L5锁定尾声保险柜取得、试听并保留至后章；具体断口、跨章音频范围另行对齐，不在此臆定。
+    grants_evidence:
+    - 1602
+    testimony_ids: []
+    environment:
+    - name: Tommy/Vivian照片
+      type: envir
+      collectible: false
+      note: 场景道具
+      description: 保险柜内的Tommy与Vivian照片。
+      design_notes: 开柜后环境展示，不收录、不先断言恋爱。
+    character_states:
+      mode: 同一场景连续演出，人物没有独立自由Talk入口
+    runtime_binding:
+      type: chained_talk
+      from_talk: L5_ending_lobby_return
+    runtime_exit:
+      action: loop_end
+      chapter_boundary: true
+    source_contracts:
+    - beat_id: U1L5_narrative_event_012
+      source_anchor: *id074
+      requirement:
+        形式: 独立AVG
+        情节点: Anna的有限照护、Tommy关系余波；开柜见照片、取得并试听唱片
+        地点: Webb办公室
+        在场人物: Zack、Emma、Vivian
+        进入与接续: 同一办公室AVG中先私谈，再由Vivian开柜并接照片与唱片；两件物品属性见核对稿
+    - beat_id: U1L5_confirmed_entry_053
+      source_anchor: *id075
+      requirement:
+        项目: Webb办公室保险柜
+        取得／交互: L5尾声由Vivian剧情开柜，无玩家密码输入玩法
+        收录与用途: 开柜后展示柜内物件
+        interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+    - beat_id: U1L5_confirmed_entry_054
+      source_anchor: *id076
+      requirement:
+        项目: 唱片碎片
+        取得／交互: 开柜后取得、试听，由Zack保留
+        收录与用途: 正式物件，承接后续章节，不用于本章指证
+        interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+    - beat_id: U1L5_confirmed_entry_055
+      source_anchor: *id077
+      requirement:
+        项目: Tommy／Vivian照片
+        取得／交互: 开柜后可查看
+        收录与用途: 环境证物，不收入Caseboard，不新增疑点或证词
+        interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+    forbidden_knowledge_transfer: 错误分支回滚，正确路线不记得Tommy完整坦白；照片另一人首次在此揭。
+  resume_contract: 优先消费保存的续播状态，不重播开篇、不恢复自由入口；工程接入验证待办。
+  source_contracts:
+  - beat_id: U1L5_narrative_detail_058
+    source_anchor: *id078
+    requirement: '以下情节点按五个连续锁定的场景AVG承载：后巷 → Anna病房门外 → Anna病房（含Tommy返店通知）→ 酒吧大厅（含Vivian下楼）→ Webb办公室（私谈、开柜与试听）。场景间不恢复自由探索；下表细分情节点，不另拆场景。
+
+
+      L5后巷／酒吧后门已确认：James逃离厨房后，Zack、Emma追出，自动进入连续AVG。James、Zack、Emma在场，Anna在车内受控制，通过剧情呈现；James看见Anna后坦露家庭动机与Whale交易，随后自杀。坦白作为剧情信息；本段不收录新证词，不设置自由搜证或独立NPC问话。结束后自动衔接医院探望Anna，追赶途中不插入探索。
+
+
+      L5 情绪节奏已确认：厨房正式对抗中，James 始终控制信息、反驳并退守，不主动诉苦或交心。指证结束后，他要求 Zack 完整说明自己做了什么，接原 finalexpose 真相视频；视频是 Zack 的案件还原，不是
+      James 的真心自白。视频后由小酒保承担不信、动摇及替他辩护的情感，Emma 回应受害者付出的代价，提到胁迫孩子后，James 不辩解、直接冲下二楼逃到后巷。Zack、Emma 追赶；James 看见 Whale
+      车内的 Anna、退路被截断后，才坦露对 Anna 与孩子的打算及真正害怕失去的生活，随后进入自杀结局。厨房还原他做了什么，后巷才由他自己说原本想得到什么。
+
+
+      | 顺序 | 事件 | 此时让玩家感受到什么 |
+
+      |---|---|---|
+
+      | 1 | 厨房正式对抗，James 控制信息、反驳；要求 Zack 完整还原后接真相视频。视频后小酒保辩护，Emma 指出他人代价 | 真相成立，小酒保仍想替他解释；James 尚未坦露真心 |
+
+      | 2 | Emma 提及胁迫孩子，James 不辩解，冲下二楼逃到后巷；Zack、Emma 追赶，想让他停下、自首 | 仍想让人活着承担责任，完成释放 Vivian 的约定 |
+
+      | 3 | James 停步，Whale 的车经过，两人看见 Anna；退路被截断的 James 此时才坦露真心，随后在威胁下自杀 | 对 Whale 的愤怒与救人失败的无力 |
+
+      | 4 | 自动转场医院，探望 Anna | 死亡的后果延续到仍要生活的人身上 |
+
+      | 5 | 告知死讯后，Anna 盘算工作、孩子与欠款；Zack 交还欠条，Anna 攥纸崩溃；Emma 安慰，Zack 承诺共同追查，随后协助照护问题 | 死亡落到家人身上，欠条成为遗物；搭档共同承担后果，Vivian
+      能否获释仍未确定 |
+
+      | 6 | Tommy 到病房传达 Vivian 获释的消息、叫两人回酒吧取材料；Anna的照护话题留到Webb办公室私谈 | 获释先带来意外与宽慰，Anna 的困境留到见面时接住 |
+
+      | 7 | 回酒吧大厅，小酒保与 Morrison 在场；若已确定泼水计划，Morrison 呈淋湿状态，否则正常；交代送枪放人与赌债追索 | 恶作剧得到回报，Whale 履约留下疑问；小酒保此时才听懂 L3 失态的原因
+      |
+
+      | 8 | 小酒保心软提出请酒，不承认泼水；Morrison 狐疑他快没工作还哪来的钱 | 报复后出现一点歉意与同情，重新提起遣散压力 |
+
+      | 9 | Vivian 从楼上下来，此时才揭露不卖给 Rita、接手酒吧并留下员工的决定；她接话、认可请酒，明确为照顾他们的生计而不去巴黎 | 员工的去留有了回应；L4 主动请求查明真相的她，回来后终于作出自己的选择
+      |
+
+      | 10 | Vivian带两人到Webb办公室，在同一AVG中先私谈Anna与Tommy，再开柜；玩家发现 Tommy／Vivian 的勒索照片及唱片碎片，随后听取唱片 | 照片回收被隐去的旧怨；兑现谈判筹码，转向下一章危机
+      |
+
+
+      结尾的 Whale 由行动留下存在感：逼死 James、安排送枪、释放 Vivian。无需再安排一通解释或威胁电话。轻喜剧只落在 Morrison 的狼狈上，不让 Zack、Emma 把这一晚当作值得庆功的胜利。'
+inherited_knowledge_reference:
+  source_loop: 4
+  cross_file_state_path: loop4_state.yaml:expose.post_expose
+  replay: false
+  content: L4指证后隔门见闻、Tommy计划信息及同行边界均已发生，L5只回用。
+  source_contracts:
+  - beat_id: U1L5_narrative_detail_059
+    source_anchor: *id079
+    requirement: '1. 她先说清真正经历：23:05 敲门，听见门内“Do not be bothering me!”后离开，并未进去；23:30 再入时 Webb 已经倒下，随后听到的枪声来自头顶二楼。隔门见闻按既定安排收录，供
+      L5 回用；门内说话者尚未确定。
+
+      2. 原先“是我杀的人”不成立，她才开始考虑别人如何利用这场计划。此时首次坦白，她只把杀人计划告诉过 Tommy；他也怨恨 Webb。这比第二轮承认普通经手多了一层关键信息。
+
+      3. 她进一步猜测，二楼那声枪响会不会是 Tommy 制造的，目的是让持枪抵达现场的自己被认成凶手。她说明两人很早以前有过纠葛，此后不再一条心，但不展开事件经过。这里的旧怨是她怀疑对方的原因，不是 Tommy 实施犯罪的证据。
+
+      4. Zack 只在内心想起 Tommy 曾关心 Vivian 的处境，注意到两人的态度对不上。不当面告诉 Vivian，不用这句话替 Tommy 排除嫌疑或逼她回答。
+
+      5. 接回 Morrison 强押 Vivian 的既定冲突。她已不再一心认罪，主动请求 Zack、Emma 查明真相；L5开篇先经Whale电话争取继续调查，再正式结伴。
+
+
+      这个转变必须发生在证据击破之后：她先想独自认罪、不牵连 Tommy；随后发现自己的认罪解释不成立，旧怨才让她转而怀疑他。不能在前段就把她写成一面确信 Tommy 栽赃自己，一面无缘由地替他隐瞒。'
+validation:
+  scope: 设计蓝图本地自检；不代表Unity已接入
+  A_structure: PASS
+  B_evidence: PASS
+  C_npc: PASS
+  D_goals: PASS
+  E_information: PASS
+  F_quiz_and_special: PASS
+  G_expose: PASS
+  H_source_coverage: PASS
+  I_opening: PASS
+  J_runtime_contract: PENDING_INTEGRATION
+  source_coverage_rows: 67
+  notes:
+  - 本地源路径和必填块校验通过；跨轮审计由主代理执行。
+  - 旧schema/知识池指定路径缺失，采用本次统一字段合同。
+
+production_details:
+  source: U1优化制作/06_State/制作细节定稿.md
+  precedence: 本轮制作决定优先于source_contracts或origin中保留的旧待定摘录；不改写历史原文。
+  iou_amount_usd: 20
+  iou_date_field: omitted
+  iou_interest_and_due_date: none
+  pistol_serial: "384216"
+  pistol_serial_art_status: pending_visual_update
+
+calendar_contract:
+  source: U1优化制作/06_State/制作细节定稿.md
+  crime_date: "1928-11-03"
+  investigation_limit_hours: 72
+  countdown_start: pending
+  newspaper_date: "1928-11-03"
+  precedence: 本轮定稿覆盖来源摘录中的日期与节目表待定说明；origin及source_contracts保留历史原文。
+
+actual_performance_program:
+  item_id: 1590
+  date: '1928-11-03'
+  rows:
+  - start: '22:00'
+    end: '22:15'
+    title: 蓝月之歌 / Blue Moon Song
+    performance: Vivian Gray演唱；乐队常规伴奏
+    volume: 3
+  - start: '22:15'
+    end: '22:30'
+    title: 河岸小夜曲 / Riverside Serenade
+    performance: Vivian Gray演唱慢曲组；轻鼓伴奏
+    volume: 2
+  - start: '22:30'
+    end: '22:45'
+    title: 霓虹两步舞 / Neon Two-Step
+    performance: Vivian Gray演唱舞曲组；常规鼓组
+    volume: 3
+  - start: '22:45'
+    end: '22:55'
+    title: 晚灯圆舞曲 / Lamplight Waltz
+    performance: Vivian Gray演唱；轻鼓伴奏
+    volume: 2
+  - start: '22:55'
+    end: '23:00'
+    title: 晚灯圆舞曲（谢幕段） / Lamplight Waltz (Finale)
+    performance: Vivian Gray谢幕演唱；轻奏伴奏
+    volume: 2
+  - start: '23:00'
+    end: '23:10'
+    title: 艾斯弗德狂想曲 / Ashford Rhapsody
+    performance: 乐队独奏完整版；全部鼓段强奏；无Vivian演唱
+    volume: 5
+  - start: '23:10'
+    end: '23:25'
+    title: 余晖慢曲 / Afterglow
+    performance: 钢琴与弦乐；鼓组休息
+    volume: 2
+  - start: '23:25'
+    end: '23:30'
+    title: 最后一支圆舞曲 / One Last Waltz
+    performance: 轻奏；无鼓组；23:30停演
+    volume: 2
+  stopped_at: '23:30'
+  source: U1优化制作/06_State/制作细节定稿.md

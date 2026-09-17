@@ -1,0 +1,1779 @@
+schema_version: 2
+unit: Unit1
+episode: EPI01
+loop: 3
+title: 枪击时序与受胁迫的指认
+validation_status: design_review_pass_runtime_pending
+runtime_status: integration_pending
+source_contract: 剧情设计\Unit1\五轮State来源覆盖.yaml
+id_contract: 剧情设计\Unit1\五轮State标识与接口.yaml
+player_context:
+  goals:
+    primary: 核对Rosa所说23:30枪声与真实枪击时序，查清她为何指认Vivian。
+    secondary:
+    - 向Morrison核实勘验
+    - 找到已离开酒吧的Rosa
+    - 调查玻璃与垃圾的先后关系
+  known_facts:
+  - Webb死于会客室、胸口中枪；Rosa指认现场持枪的Vivian。
+  - Vivian的.25小手枪近期未开火，推翻持枪即刚杀人的指认，不能宣告她无辜。
+  - Rosa仍声称23:30是死亡枪声，随后玻璃碎裂且当时里面只有Vivian，尚未反驳。
+  - Zack受Webb委托保障Vivian继承，据此争取调查并阻止Rita仓促接管。
+  - Webb用私照经营勒索，Tommy说明条件并经手执行；未确定他策划整个网络。
+  - 私照男子是Lawson Vanderbilt；Éléonore Vanderbilt女士与他同姓但关系未确认，Zack与Tommy误认妻子不是客观事实，Emma未自动获知。
+  - Zack为Anna医疗需求向James垫款，取得欠条；Emma未亲历。
+  - James自述23:10—24:00厨房未离开；小酒保自述22:00—24:00吧台未离岗。
+  - 演出由Tommy联系安排；他负责账目、排班、库存、日常运转。
+  - 开场Morrison告知Vivian与Rosa已释放，不知Rosa去向，约在大厅详谈。
+  new_directions:
+  - 大厅核实勘验
+  - 清洁间个人物品寻找Rosa去向
+  - 会客室核对破窗
+  post_expose_knowledge:
+  - 致命枪击早于23:20，尚不能锁定23:00—23:10。
+  - Rosa因女儿性命被威胁而作伪证，匿名威胁者仍未知。
+  - Rosa交出现场捡走留作自保的弹壳，口径及来源待L4检查拓印。
+  - Emma已同行并主动保密，Zack对她改观但尚未正式认可搭档。
+  optional_knowledge:
+  - 若询问Vivian，得知22:00—23:00演出和通常23:30送酒。
+  - 若问保管习惯，得知重要私人材料一般在办公室保险柜；不确认具体内容、开柜能力。
+  - only_if: L2抽屉点击及Tommy制止事件已完成
+    fact: Zack瞥见Tommy抽屉一把枪后被制止，抽屉锁起；不知来历、故障与用途。
+opening:
+  type: cutscene_sequence
+  runtime_root:
+    table: ChapterConfig
+    init_scene: 1023
+    init_talk: L3_opening_release_notice
+  sequence:
+  - event_id: L3_opening_release_notice
+    talk: L3_opening_release_notice
+    scene_id: 1023
+    location: 酒吧一楼走廊
+    cast:
+    - Zack
+    - Morrison
+    source_anchor: 内容修改后的增强情节线.md#L3开篇
+    required_beats:
+    - 告知Vivian和Rosa已经释放
+    - 不知Rosa现去向，此处不便详谈约到大厅
+    - 不提前发勘验证词或告知医院地址，Emma尚未同行
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1307
+      continuation: release_to_exploration
+  player_control_restored_after: L3_opening_release_notice
+exploration_rules:
+  order: 除医疗单→夫妻问路→病房吊坠→清洁箱→Emma同行的局部链外，自由穿插。
+  companion:
+    initial: null
+    joins_after: L3_storage_following_revealed
+    independent_talk: false
+  hospital_map:
+    unlock_condition:
+    - type: item
+      param: 1303
+    target_scene_id: 1390
+    return_mode: map
+    scene_item_teleport: false
+  optional_not_in_progress:
+  - Vivian保管习惯
+  - Vivian普通经历
+  - 环境物查看
+scenes:
+- id: 1307
+  name: 一楼走廊
+  type: free_exploration
+  npcs: {}
+  evidence: []
+  environment:
+  - key: fake_art_trophy_wall
+    type: envir
+    pickup: false
+    description: 假艺术品陈列墙。
+    location: 原位置
+    interaction: 点击查看
+    note: 场景道具
+    design_notes: 延续L2假艺术品陈列，可反复查看；回用已确认Zack回看OS，不新增证物、不逐件调查。
+  exits:
+  - key: basement
+    target_scene_id: 1330
+    status: open
+  - key: upstairs
+    target_scene_id: 1317
+    status: locked
+    feedback: 暂未开启
+  - key: parlor
+    target_scene_id: 1303
+    status: open
+  - key: lobby
+    target_scene_id: 1304
+    status: open
+- id: 1330
+  name: 地下走廊
+  type: free_exploration
+  npcs: {}
+  evidence: []
+  environment: []
+  exits:
+  - key: corridor
+    target_scene_id: 1307
+    status: open
+  - key: storage
+    target_scene_id: 1301
+    status: open
+  - key: dressing
+    target_scene_id: 1302
+    status: open
+- id: 1304
+  name: 酒吧大厅
+  type: free_exploration
+  npcs:
+    Morrison:
+      id: 104
+      talk: L3_lobby_forensic_questions
+      repeat_talk: L3_lobby_forensic_questions_repeat
+      motive: 尽快处理案件，维护办案权威。
+      mindset: 受赛马场话题刺激后仍提供勘验，不解释隐情。
+      active_topics:
+      - topic: 现场搜查结果
+        truth_status: 'true'
+      - topic: 穿胸后破窗的弹道
+        truth_status: 'true'
+      - topic: 普通暗示Webb自己的枪不知为何不见，不新增证词
+        truth_status: 'true'
+      withheld_topics:
+      - Whale收买与赌债
+      - Rosa医院地址
+      - 取枪者、故障与藏放位置
+      - 真实枪击时间
+      player_inquiry: 开篇邀请到大厅核实勘验
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: 1043001
+        kind: fact
+        content: 搜查后确认：现场没有其他枪，也没有找到弹壳。
+        acquisition_talk: L3_lobby_forensic_questions
+        source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:206
+      - id: 1043002
+        kind: fact
+        content: 子弹射穿Webb后继续飞行，击中了会客室窗户。
+        acquisition_talk: L3_lobby_forensic_questions
+        source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:207
+      grants_evidence: []
+  evidence: []
+  environment:
+  - key: prohibition_flask_book
+    type: envir
+    pickup: false
+    description: 小酒保个人私藏《禁酒法详解》，点击才展开挖空书页及扁酒壶，不接成受斥后的自动笑点。
+    location: 大厅吧台
+    interaction: 点击查看
+    note: 场景道具
+  exits:
+  - key: cabaret
+    target_scene_id: 1305
+    status: locked
+    feedback: 暂未开启
+  - key: corridor
+    target_scene_id: 1307
+    status: open
+  - key: kitchen_corridor
+    target_scene_id: 1318
+    status: open
+  event_triggers:
+  - event_id: L3_lobby_job_request
+    talk: L3_lobby_job_request
+    trigger: first_enter
+    runtime_binding:
+      table: SceneConfig
+      field: firstEnterTalk
+      scene_id: 1304
+    cast:
+    - Zack
+    - Morrison
+    - Bartender
+    source_anchor: 内容修改后的增强情节线.md#小酒保求职受斥
+    required_beats:
+    - 小酒保向熟客Morrison求工作介绍，提及赛马场
+    - Morrison原在看报，闻言变脸斥责；不透露赌债原因
+    - 小酒保笑容僵住，想解释又咽回去，委屈带气离场，不当场宣布报复
+    - Morrison留场接受自由询问；本轮小酒保无普通Talk
+    once: true
+    runtime_exit:
+      action: release_to_exploration
+- id: 1318
+  name: 厨房走廊
+  type: free_exploration
+  npcs: {}
+  evidence: []
+  environment: []
+  exits:
+  - key: kitchen
+    target_scene_id: 1309
+    status: locked
+    feedback: 暂未开启
+    legacy_feedback_parameter: 1309|1541
+  - key: lobby
+    target_scene_id: 1304
+    status: open
+  absent_items:
+  - 1309
+- id: 1303
+  name: Webb会客室
+  type: free_exploration
+  npcs: {}
+  evidence:
+  - id: 1301
+    key: glass
+    name: 玻璃碎片
+    type: item
+    pickup: search
+    analysis: null
+    description: 带硝烟的玻璃碎片被垃圾袋压住。
+    location: 窗外近景
+    note: 关键——结合23:20倒垃圾推翻死亡枪声时刻
+  environment:
+  - key: torn_whale_contract
+    type: envir
+    pickup: false
+    description: 拼合后只能读出Whale、约定报酬及事成后尾款；受托人和具体任务缺失。不收集，不用于指证、电话出示或笔迹识人；角色不确认Rita为受托人。
+    location: 窗外近景原位置
+    interaction: 原拼合查看
+    note: 场景道具
+  - key: webb_diary
+    type: envir
+    pickup: false
+    description: Webb勒索记录日记的Whale、Danger信息保留查看；不收集，不确认Whale身份或具体任务。
+    location: 下层矮柜抽屉
+    interaction: 点击查看
+    note: 场景道具
+  - key: rita_photo
+    type: envir
+    pickup: false
+    description: Rita照片原位查看，不收入证据栏。
+    location: 旧报纸夹层
+    interaction: 点击查看
+    note: 场景道具
+  exits:
+  - key: corridor
+    target_scene_id: 1307
+    status: open
+  containers:
+  - key: broken_window
+    interaction: 点击进入原窗外近景
+    contains:
+    - 1301
+    - torn_whale_contract
+  - key: lower_cabinet_drawer
+    interaction: 点击打开
+    contains:
+    - webb_diary
+- id: 1301
+  name: Rosa清洁间
+  type: free_exploration
+  npcs: {}
+  evidence:
+  - id: 1303
+    key: hospital_notice
+    name: Isabel医疗单
+    type: item
+    pickup: search
+    analysis: null
+    description: Isabel就诊／住院通知，含姓名、圣心医院地址、住院及病房信息；Zack尚未找到病房号，需夫妻帮助查看，不沿用旧医疗金额与年份。
+    location: 清洁箱外原位置
+    note: ''
+  - id: 1302
+    key: threat
+    name: 威胁纸条
+    type: item
+    pickup: search
+    analysis: null
+    description: 蓝月酒吧餐巾纸背面：“23:30 去 Webb 的会客室，说你看见 Vivian 杀了 Webb。否则，你女儿就没命了。”
+    location: 清洁箱内
+    note: 关键——反驳自愿作证
+    visual_only: J/T字形仅保留图像，L3描述和角色不点评异常、不识别作者。
+  environment: []
+  exits:
+  - key: basement
+    target_scene_id: 1330
+    status: open
+  containers:
+  - key: cleaning_box
+    interaction: 原开锁小游戏
+    unlock_condition:
+    - type: item
+      param: 1309
+    clue: 生日吊坠内盖“我的天使 · 0915”，不由角色直接解释为密码。
+    contains:
+    - 1302
+    after_pickup_talk: L3_storage_following_revealed
+    persisted_states:
+    - locked
+    - opened
+    - threat_collected
+    - event_completed
+  event_triggers:
+  - event_id: L3_storage_following_revealed
+    talk: L3_storage_following_revealed
+    trigger: after_cleaning_box_threat_pickup
+    runtime_binding:
+      kind: item_interaction_continuation
+      source_item_id: 1302
+      once: true
+      special_adapter: 开箱取纸条后原地接唯一事件，不等待离场重进
+    required_item_ids:
+    - 1302
+    - 1309
+    cast:
+    - Zack
+    - Emma
+    source_anchor: 内容修改后的增强情节线.md#清洁间解谜后发现跟踪
+    required_beats:
+    - Zack发现Emma跟踪，她坚持参与
+    - Zack仍保留但默许同行；正式搭档认可留L5
+    - Emma未亲历首次医院问路，不能以亲历口吻追述
+    effects:
+      companion: Emma
+      formal_partnership: false
+    runtime_exit:
+      action: release_to_exploration
+- id: 1302
+  name: Vivian化妆间
+  type: free_exploration
+  npcs:
+    Vivian:
+      id: 106
+      talk: L3_dressing_private_questions
+      repeat_talk: L3_dressing_private_questions_repeat
+      motive: 希望事情结束，对未来失去把握。
+      mindset: 无法分清杀意与实际行为，消沉且放任遗产处置。
+      active_topics:
+      - topic: 对Rita收购及遗产放任但尚未签出售协议
+        truth_status: subjective
+      - topic: 为自己唱歌与生活态度
+        truth_status: subjective
+      - topic: 舞台表演与惯常送酒时间
+        truth_status: 'true'
+      - topic: 重要私人材料保管习惯，可选选项
+        truth_status: 'true'
+      withheld_topics:
+      - 23:05持枪到场
+      - 杀人计划与Tommy知情
+      - 换曲申请及门内声音
+      - 23:30楼上枪声
+      - 自己能开柜与特定原件在哪里
+      player_inquiry: 获释后核实她的活动及继承态度
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: 1063004
+        kind: fact
+        content: 22:00 到 23:00 一直在歌舞厅舞台上表演。
+        acquisition_talk: L3_dressing_private_questions
+        source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:230
+      - id: 1063002
+        kind: fact
+        content: 每晚 23:30 按惯例给 Webb 送酒。
+        acquisition_talk: L3_dressing_private_questions
+        source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:231
+      - id: 1063005
+        kind: fact
+        content: Webb 通常把重要私人材料放在自己办公室的保险柜里。
+        acquisition_talk: L3_dressing_private_questions
+        source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:160
+        optional: true
+        required_for_progress: false
+      grants_evidence: []
+  evidence: []
+  environment: []
+  exits:
+  - key: basement
+    target_scene_id: 1330
+    status: open
+  removed_content:
+  - id: 1403
+    reason: 痛苦日记与点击入口删除，不恢复旧文案。
+- id: 1390
+  name: 圣心医院走廊
+  type: free_exploration
+  npcs:
+    James_Anna:
+      id: 107
+      talk: L3_hospital_family_directions
+      repeat_talk: L3_hospital_family_directions_repeat
+      motive: 感谢借款，照顾待产与将出生的孩子并帮助问路。
+      mindset: Anna为身份办妥能来正规医院检查而高兴，James关心孩子，不演可疑心虚。
+      active_topics:
+      - topic: 感谢Zack为Anna医疗需求垫款
+        truth_status: 'true'
+      - topic: Anna高兴身份办妥，依本作设定可来正规医院检查待产
+        truth_status: 'true'
+      - topic: James体恤Isabel年幼住院，自然提到自己孩子快出生
+        truth_status: 'true'
+      - topic: 查看通知指出Isabel就在夫妻病房隔壁
+        truth_status: 'true'
+      withheld_topics:
+      - Whale办证
+      - 杀人、嫁祸与胁迫
+      - Webb身份承诺骗局
+      - 保证James绝不会伤害Isabel
+      player_inquiry: 医疗单提供医院地址但尚未找到病房号，向熟人求助
+      player_inquiry_score: 9
+      testimony_ids: []
+      grants_evidence: []
+      cast_ids:
+      - 107
+      - 108
+      shared_entry: true
+      question_effects:
+        ask_directions:
+          unlock_scene_id: 1391
+          completion_marker: L3_hospital_directions_complete
+      repeat_policy: 夫妻始终留场，共用重复入口；不新增Anna个人Talk，不重复致谢和首次问路演出。
+      presentation: 语气锚点：哎呀，这不是就在我们病房旁边的那个病房吗！谁接话留对白制作；不把Zack写成看不懂数字，不拿病情取笑、不提示James早知情。
+  evidence: []
+  environment: []
+  exits:
+  - key: isabel_ward
+    target_scene_id: 1391
+    status: conditional
+    unlock_condition:
+    - type: talk_completed
+      param: L3_hospital_directions_complete
+    runtime_binding:
+      special_adapter: 以问路选项末句已听标记映射入口，不能任意一句代替完成问路
+  - key: bar_map
+    interaction: 地图返回酒吧既有已开放节点
+    status: open
+  unlock_condition:
+  - type: item
+    param: 1303
+- id: 1391
+  name: Isabel病房
+  type: free_exploration
+  npcs:
+    Rosa:
+      id: 103
+      talk: L3_ward_garbage_questions
+      repeat_talk: L3_ward_garbage_questions_repeat
+      motive: 保护住院女儿，维持被迫作出的指认。
+      mindset: 担心问话牵连女儿，不在指证前自揭威胁。
+      active_topics:
+      - topic: 女儿住院与照护处境
+        truth_status: 'true'
+      - topic: 23:20倒垃圾后返回走廊
+        truth_status: 'true'
+      withheld_topics:
+      - 被胁迫的真相
+      - 留作自保的弹壳
+      - 匿名威胁者身份未知
+      - 房内实际杀人经过未知
+      player_inquiry: 医疗单及夫妻问路找到Rosa，核实垃圾形成时间
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: 1033001
+        kind: fact
+        content: 23:20 去侧巷倒垃圾，放下垃圾袋便返回走廊。
+        acquisition_talk: L3_ward_garbage_questions
+        source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:263
+      grants_evidence: []
+      false_claims:
+      - 仍维持L1的23:30死亡枪声说法，不重发证词
+      prior_lie_reference: 1031002
+  evidence:
+  - id: 1309
+    key: locket
+    name: Isabel生日吊坠
+    type: item
+    pickup: search
+    analysis: null
+    description: 原磨旧金属照片相盒，内盖刻着“我的天使 · 0915”；作为清洁箱提示，不直接解释为密码。
+    location: 病房场景搜证
+    note: ''
+  environment: []
+  exits:
+  - key: hospital_corridor
+    target_scene_id: 1390
+    status: open
+  unlock_condition:
+  - type: talk_completed
+    param: L3_hospital_directions_complete
+  passive_cast:
+  - id: 117
+    name: Isabel
+    state: 在病房休息
+    independent_talk: false
+expose:
+  scene_id: 1391
+  target:
+    id: 103
+    name: Rosa
+    is_liar: true
+    player_inquiry: null
+    motive: 保护女儿并维持被胁迫的说法。
+    mindset: 被逐轮击破后仍恐惧匿名威胁。
+    active_topics:
+    - 23:30死亡枪声
+    - 没人逼迫自愿作证
+    withheld_topics:
+    - 未击破前不承认胁迫
+    - 不知道写信者身份
+    testimony_ids: []
+  talk: L3_expose_ward
+  cast:
+  - Zack
+  - Rosa
+  - Emma
+  passive_cast:
+  - Isabel
+  unlock_condition:
+  - type: doubt
+    param: 1301
+  - type: doubt
+    param: 1302
+  - type: doubt
+    param: 1303
+  - type: event_completed
+    param: L3_storage_following_revealed
+  rounds:
+  - round: 1
+    lie: 23:30一定是Webb死亡的枪响。
+    lie_source:
+      kind: collectible_lie_anchor
+      testimony_id: 1031002
+      acquisition_loop: 1
+    usable_evidence:
+    - 1301
+    - 1033001
+    evidence_set:
+      all_of:
+      - 1301
+      - 1033001
+    result: 23:20放袋，玻璃在袋下；结合勘验确认致命射击早于23:20。
+    knowledge_limit: 不锁定演出时段，不揭露第二枪地点和实际射手。
+    source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md#Rosa指证地点与结构
+  - round: 2
+    lie: 没人逼我，我是自愿来作证的。
+    lie_source:
+      kind: expose_generated
+      key: L3_R2_voluntary_claim
+    usable_evidence:
+    - 1302
+    evidence_set:
+      all_of:
+      - 1302
+    result: 纸条命令23:30指认Vivian，以女儿生命相逼，击穿自愿说法。
+    knowledge_limit: 不识别作者，医疗单仅解释处境不增出示槽。
+    source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md#Rosa指证地点与结构
+  expose_lie_ids:
+  - L3_R2_voluntary_claim
+  post_expose:
+    talk: L3_ward_confidence_and_casing
+    scene_id: 1391
+    runtime_entry:
+      kind: chained_talk
+      from_talk: L3_expose_ward
+    cast:
+    - Zack
+    - Emma
+    - Rosa
+    source_anchor: 内容修改后的增强情节线.md#Rosa的困境
+    required_beats:
+    - Rosa仍恐惧女儿受伤，记者在场使她顾虑
+    - Zack此刻担心Emma会为报道公开处境
+    - Emma主动收起记录承诺保密，不以承诺换取材料
+    - 两人都承诺保护母女后Rosa才继续说明秘密经过
+    - Rosa交出从会客室捡走留作自保的弹壳
+    - Zack修正对Emma的判断但尚未正式认可搭档
+    testimony_ids: []
+    grants_evidence:
+    - 1401
+    protection_request: 人物情节，不增加取证或出示限制。
+    runtime_exit:
+      action: loop_end
+      chapter_boundary: false
+      next_loop: 4
+evidence_registry:
+- id: 1301
+  key: glass
+  name: 玻璃碎片
+  kind: item
+  acquisition:
+    loop: 3
+    scene_id: 1303
+    kind: search
+    carrier: 窗外近景
+  source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+- id: 1303
+  key: hospital_notice
+  name: Isabel医疗单
+  kind: item
+  acquisition:
+    loop: 3
+    scene_id: 1301
+    kind: search
+    carrier: 清洁箱外原位置
+  source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+- id: 1302
+  key: threat
+  name: 威胁纸条
+  kind: item
+  acquisition:
+    loop: 3
+    scene_id: 1301
+    kind: search
+    carrier: 清洁箱内
+  source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+- id: 1309
+  key: locket
+  name: Isabel生日吊坠
+  kind: item
+  acquisition:
+    loop: 3
+    scene_id: 1391
+    kind: search
+    carrier: 病房场景搜证
+  source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+- id: 1401
+  key: casing
+  name: 案发现场弹壳
+  kind: item
+  acquisition:
+    loop: 3
+    scene_id: 1391
+    kind: dialogue
+    talk: L3_ward_confidence_and_casing
+    carrier: expose.post_expose
+  analysis:
+    available_from_loop: 4
+    result_id: 1702
+  source_anchor: Unit1_逐Loop场景人物证物与指证核对定稿.md:264
+inherited_evidence_refs:
+- id: 1031002
+  from_loop: 1
+  usage: 疑点1301隐藏条件与R1谎言锚；不在L3重发。
+doubts:
+- id: '1301'
+  key: L3_D1
+  loop: 3
+  text: 垃圾袋下面的玻璃是什么时候碎的？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1301'
+    key: glass_fragments
+    visible: true
+    registry_key: glass
+  - type: 4
+    param: '1033001'
+    key: rosa_garbage_2320
+    visible: true
+    registry_key: trash
+  - type: 4
+    param: '1031002'
+    key: rosa_2330_death
+    visible: false
+    registry_key: death_shot
+  evidence_usage:
+  - key: glass_fragments
+    param: '1301'
+    first_acquired_loop: 3
+    expose_steps:
+    - L3_R1
+    role: 指证用
+    earliest_expose_loop: 3
+  - key: rosa_garbage_2320
+    param: '1033001'
+    first_acquired_loop: 3
+    expose_steps:
+    - L3_R1
+    role: 指证用
+    earliest_expose_loop: 3
+  - key: rosa_2330_death
+    param: '1031002'
+    first_acquired_loop: 1
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+- id: '1302'
+  key: L3_D2
+  loop: 3
+  text: 这张纸条为什么提到Rosa的女儿？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1302'
+    key: threat_note
+    visible: true
+    registry_key: threat
+  - type: 1
+    param: '1303'
+    key: medical_bill
+    visible: true
+    registry_key: hospital_notice
+  evidence_usage:
+  - key: threat_note
+    param: '1302'
+    first_acquired_loop: 3
+    expose_steps:
+    - L3_R2
+    role: 指证用
+    earliest_expose_loop: 3
+  - key: medical_bill
+    param: '1303'
+    first_acquired_loop: 3
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+- id: '1303'
+  key: L3_D3
+  loop: 3
+  text: 射穿窗户的那一枪，现场还留下了什么？
+  isFragment: false
+  condition:
+  - type: 4
+    param: '1043002'
+    key: morrison_ballistics
+    visible: true
+    registry_key: trajectory
+  - type: 4
+    param: '1043001'
+    key: morrison_search
+    visible: true
+    registry_key: morrison_search
+  evidence_usage:
+  - key: morrison_ballistics
+    param: '1043002'
+    first_acquired_loop: 3
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  - key: morrison_search
+    param: '1043001'
+    first_acquired_loop: 3
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L3
+doubt_progress:
+  denominator: 3
+  condition_logic: all_AND
+  display_rule: 只显示前两项；第三项隐藏但必须满足。
+  required_ids:
+  - 1301
+  - 1302
+  - 1303
+quiz: []
+runtime_adapters:
+- key: hospital_navigation
+  status: pending_integration
+  requirement: 1303解锁医院地图1390；问路选项末句解锁1391，不以任意听过一句代替问路完成。新增医院场景及Isabel117待落表。
+- key: storage_event
+  status: pending_integration
+  requirement: 开箱取1302后原地唯一续接Emma事件；读档优先续播，不重发物件，不提前开放指证。
+- key: hide_third
+  status: existing_runtime_verified
+  requirement: 1301第三项1031002隐藏但参与AND；设计visible不是运行时正式字段。
+- key: talk_ids
+  status: dialogue_generation_pending
+  requirement: 逻辑Talk名待对白阶段分配ID，未宣称已完成Unity运行验证。
+outline_coverage:
+- beat_id: U1L3_narrative_event_001
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 42
+  source_text:
+    形式: 开篇剧情（固定）
+    情节点: Morrison告知放人，约Zack到大厅详谈
+    地点: 酒吧一楼走廊
+    在场人物: Zack、Morrison
+    进入与接续: 沿正式版L3开篇的走廊地点，按新版改由Morrison本人告知；Emma尚未同行
+  state_path: opening.sequence[0]
+  mapping: exact
+- beat_id: U1L3_narrative_event_002
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 43
+  source_text:
+    形式: 普通问话
+    情节点: Morrison补充现场勘验
+    地点: 酒吧大厅
+    在场人物: Zack、Morrison
+    进入与接续: 到大厅点击问话选项，开篇不重复讲完勘验
+  state_path: scenes[2].npcs.Morrison
+  mapping: exact
+- beat_id: U1L3_narrative_event_003
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 44
+  source_text:
+    形式: 突发事件（进场事件）
+    情节点: 小酒保求职提到赛马场，遭Morrison斥责
+    地点: 酒吧大厅吧台
+    在场人物: Zack、小酒保、Morrison
+    进入与接续: L3首次进入大厅时触发一次；小酒保受斥后委屈带气地离场，Morrison留场供自由问话；下次见小酒保在L4 Tommy办公室，不交代赌债缘由
+  state_path: scenes[2].event_triggers[0]
+  mapping: exact
+- beat_id: U1L3_narrative_event_004
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 45
+  source_text:
+    形式: 普通问话
+    情节点: Vivian消沉、对遗产放任，谈Webb保管习惯
+    地点: 化妆间
+    在场人物: Zack、Vivian
+    进入与接续: 沿正式版化妆间NPC问话；生活态度与保管习惯各在相应选项中呈现
+  state_path: scenes[6].npcs.Vivian
+  mapping: exact
+- beat_id: U1L3_narrative_event_005
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 46
+  source_text:
+    形式: 普通问话
+    情节点: James、Anna感谢借款、谈身份与孩子，帮助认出病房号
+    地点: 医院走廊
+    在场人物: Zack、James、Anna
+    进入与接续: 医疗单引导来院后，点击夫妻共用入口选项；交谈后两人仍驻场，Emma不在这次初访中
+  state_path: scenes[7].npcs.James_Anna
+  mapping: exact
+- beat_id: U1L3_narrative_event_006
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 47
+  source_text:
+    形式: 普通问话
+    情节点: Rosa与女儿处境、倒垃圾见闻
+    地点: Isabel病房
+    在场人物: Zack、Rosa；Isabel在病房
+    进入与接续: 问路后进入病房点击Rosa选项；生日吊坠仍是场景调查，非自动剧情交付
+  state_path: scenes[8].npcs.Rosa
+  mapping: exact
+- beat_id: U1L3_narrative_event_007
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 48
+  source_text:
+    形式: 突发事件（调查触发事件）
+    情节点: 开箱后发现Emma跟踪，Zack默许同行
+    地点: 酒吧清洁间／Rosa储藏间
+    在场人物: Zack、Emma；Rosa不在
+    进入与接续: 清洁箱解谜完成后触发一次；Emma从此随行，正式搭档认可留L5开篇电话后
+  state_path: scenes[5].event_triggers[0]
+  mapping: exact
+- beat_id: U1L3_narrative_event_008
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3
+    line: 49
+  source_text:
+    形式: 指证后剧情（固定）
+    情节点: Rosa说出受胁迫处境，Emma主动保密，Zack改观
+    地点: 医院Isabel病房
+    在场人物: Zack、Emma、Rosa；Isabel在病房
+    进入与接续: Rosa两轮指证后原地接承诺与弹壳交付；不另设保密取证门槛，随后进入L4
+  state_path: expose.post_expose
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_009
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 保管习惯与保险柜：L3—L5 信息分布（已确认）
+    line: 160
+  source_text: '- L3：Vivian 自由探索对话提供并收录保管习惯证词：Webb 通常把重要私人材料放在自己办公室的保险柜里。此处不直接确认勒索材料或某份特定原件在柜内，不交代 Vivian 能开柜。
+
+    - L4：Webb 办公室保险柜为可点击检查的环境证物，不收集。保持关闭；玩家已听过 L3 保管习惯时，检查触发 Zack 的简短回想，仅提醒该习惯，不推断勒索材料就在里面。未听过则只查看锁闭状态，不补发证词、不引用未发生的问话。L4
+    不再由 Vivian 重复提供保管习惯。
+
+    - 保险柜不提供密码输入或开锁玩法，不透露柜内物品；密码纸条仍从被 Rita 翻过的办公室抽屉取得。L5 结尾由 Vivian 开柜的安排不变。
+
+    - L5：Whale 电话过程中不能打开 Caseboard。密码纸条必须已在L4取得，作为开柜筹码；玩家联系此前听到的习惯、现场检查与Rita私搜自行判断。Emma调查信息等可选内容漏问、漏看不锁掉正确选项，不自动复述或补发未读材料。'
+  state_path: scenes[6].npcs.Vivian.testimony_ids[2]
+  mapping: exact
+  testimony_required: true
+  cross_loop_handoff: 本行L3保管习惯落此；L4柜子条件回想与L5电话使用须由loop4/5承接，不将跨轮功能在L3执行。
+- beat_id: U1L3_confirmed_rule_010
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 威胁纸条的 J/T 回扣（已确认）
+    line: 167
+  source_text: L2 James欠条与L3威胁纸条保留相关字形，L2—L4只在图像中呈现，不提示笔迹对应。L5厨房远离灶火的置物架放英语练习书，可点击查看并收集，作为正式证物；与欠条及威胁纸条形成J/T字形回扣，不新增James指证材料。解读与身份揭示时点见增强情节线。
+  state_path: scenes[5].evidence[1].visual_only
+  mapping: exact
+  cross_loop_handoff: L3仅纸条视觉与不点评边界；L5可选英语书回扣由loop5承接。
+- beat_id: U1L3_confirmed_entry_011
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 储藏间／清洁间：容器与出口（已确认）
+    line: 173
+  source_text:
+    项目: Rosa 清洁箱
+    原 Excel／工程行为: 点击箱子进入原开锁小玩法，展示打开状态，箱内取得威胁纸条
+    修改版: 原容器、玩法及取得方式保留；沿已确认流程，先取得医院 Rosa 所在病房内生日吊坠上的“我的天使 · 0915”提示，再返回清洁间开箱
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].containers[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_012
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 储藏间／清洁间：容器与出口（已确认）
+    line: 174
+  source_text:
+    项目: 返回地下走廊的门
+    原 Excel／工程行为: 通往本轮地下走廊
+    修改版: 原样保留，不新增解锁条件
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_013
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 储藏间／清洁间：容器与出口（已确认）
+    line: 176
+  source_text: 医疗单在箱外，不以开箱为取得或前往医院的条件。威胁纸条的 J/T 视觉细节及 L5 解读按本轮已确认调整，不因容器沿用而恢复旧版提前提示字迹的描述。
+  state_path: scenes[5].evidence[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_014
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 厨房走廊（已确认）
+    line: 179
+  source_text: 无驻场 NPC、无新增证词。
+  state_path: scenes[3].npcs
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_015
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 厨房走廊（已确认）
+    line: 183
+  source_text:
+    项目: Isabel 生日吊坠（原照片相盒）
+    原 Excel 配置: 厨房走廊可收集物件；内盖写“我的天使 · 0915”
+    修改版: 移至医院 Rosa 所在的 Isabel 病房；保留原物、收集方式及内容，作为清洁箱密码提示，不直接解释为密码；厨房走廊不再放置
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[8].evidence[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_016
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 厨房走廊（已确认）
+    line: 184
+  source_text:
+    项目: 通往厨房的楼梯
+    原 Excel 配置: 可通行，目标 1309
+    修改版: L3 不开放厨房；入口锁定，拟参数改为 1309
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[3].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_017
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 厨房走廊（已确认）
+    line: 185
+  source_text:
+    项目: 返回大厅的门
+    原 Excel 配置: 可通行，目标 1304
+    修改版: 原样保留，不新增条件
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[3].exits[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_018
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 188
+  source_text: 原场景无驻场 NPC、无独立询问证词。
+  state_path: scenes[4].npcs
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_019
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 192
+  source_text:
+    物件／入口: 破窗
+    原 Excel 配置: 点击进入窗外近景
+    修改版: 原入口与近景保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].containers[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_020
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 193
+  source_text:
+    物件／入口: 玻璃碎片
+    原 Excel 配置: 窗外近景可收集线索，带硝烟，被垃圾袋压住
+    修改版: 保留，用于 L3 时序指证
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].evidence[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_021
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 194
+  source_text:
+    物件／入口: 撕毁的 Whale 委托书
+    原 Excel 配置: 窗外近景原位置
+    修改版: 原位置保留，改为环境证物；保留拼合查看，不收入证据栏、不用于指证或电话出示。不再移至公共走廊废纸篓
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].environment[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_022
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 195
+  source_text:
+    物件／入口: 下层矮柜抽屉
+    原 Excel 配置: 点击打开，内有 Webb 日记
+    修改版: 保留原容器及打开方式
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].containers[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_023
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 196
+  source_text:
+    物件／入口: Webb 勒索记录日记
+    原 Excel 配置: 抽屉内可收集物件
+    修改版: 原位保留，改为环境证物
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].environment[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_024
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 197
+  source_text:
+    物件／入口: Rita 照片
+    原 Excel 配置: 夹在旧报纸里的可收集物件
+    修改版: 原位保留，改为环境证物
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].environment[2]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_025
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 会客室（已确认）
+    line: 198
+  source_text:
+    物件／入口: 返回一楼走廊的门
+    原 Excel 配置: 可通行
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_026
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅：Morrison 的现场搜查证词（已确认）
+    line: 201
+  source_text: L3首次进入大厅触发小酒保求职受斥事件，结束后小酒保离场，本轮不再提供其驻场问话。Morrison留在大厅，以下勘验证词在普通询问取得；医院地址来自医疗单。
+  state_path: scenes[2].event_triggers[0]
+  mapping: merged
+  merged_with: U1L3_narrative_event_003
+- beat_id: U1L3_confirmed_entry_027
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅：Morrison 的现场搜查证词（已确认）
+    line: 205
+  source_text:
+    项目: 藏酒假书《禁酒法详解》
+    原 Excel 配置: 新增
+    修改版: L3大厅吧台，小酒保个人私藏；可查看的环境物，点击展示挖空书页内藏的扁酒壶；不收集、不用于疑点或指证
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].environment[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_028
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅：Morrison 的现场搜查证词（已确认）
+    line: 206
+  source_text:
+    项目: 现场搜查结果
+    原 Excel 配置: “搜查后确认：现场没有其他枪，也没有找到弹壳。”
+    修改版: 原样保留，收录为证词
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].npcs.Morrison.testimony_ids[0]
+  mapping: exact
+  testimony_required: true
+- beat_id: U1L3_confirmed_entry_029
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅：Morrison 的现场搜查证词（已确认）
+    line: 207
+  source_text:
+    项目: 弹道情况
+    原 Excel 配置: “子弹射穿Webb后继续飞行，击中了会客室窗户。”
+    修改版: 原样保留，收录为证词；连接致命射击与窗外玻璃碎片，供 L3 时序推理使用
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].npcs.Morrison.testimony_ids[1]
+  mapping: exact
+  testimony_required: true
+- beat_id: U1L3_confirmed_entry_030
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅：Morrison 的现场搜查证词（已确认）
+    line: 208
+  source_text:
+    项目: 普通对白备注
+    原 Excel 配置: 本次新增要求
+    修改版: Morrison 在交谈中可暗示：不知道为什么 Webb 自己的枪也不见了。不另增收录证词，不在此处透露取枪者、枪的故障或藏放位置
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].npcs.Morrison.active_topics[2]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_031
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 大厅通道（已确认）
+    line: 214
+  source_text:
+    通道: 前往歌舞厅
+    原 Excel 配置: 本轮锁闭
+    修改版: 原样保留；L3 Vivian 位于化妆间，不因此开放歌舞厅
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_032
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 大厅通道（已确认）
+    line: 215
+  source_text:
+    通道: 前往一楼走廊
+    原 Excel 配置: 开放
+    修改版: 原样保留，不新增解锁条件
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].exits[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_033
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 大厅通道（已确认）
+    line: 216
+  source_text:
+    通道: 前往厨房走廊
+    原 Excel 配置: 开放
+    修改版: 原样保留；Isabel 生日吊坠在医院病房取得，厨房内部仍按已确认方案锁闭
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].exits[2]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_034
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 化妆间：痛苦日记（已确认）
+    line: 222
+  source_text:
+    项目: Vivian 的痛苦日记（1403）
+    原 Excel 配置: L3、L4 化妆间可点击的环境物，表达对背叛的痛苦与恨意
+    修改版: 删除，不保留点击入口或日记文字；Vivian 的心理由既有交谈、Rita 相关情节及 L4 指证呈现
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].removed_content[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_035
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 化妆间：痛苦日记（已确认）
+    line: 223
+  source_text:
+    项目: 返回地下走廊的门（130024）
+    原 Excel 配置: 开放，通往本轮地下走廊
+    修改版: 原样保留，不新增解锁条件
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_036
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 Vivian 的交谈证词（已确认）
+    line: 229
+  source_text:
+    证词: 22:00 到 23:00 一直在歌舞厅舞台上表演（1063004）
+    原版: L3 交谈取得
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].npcs.Vivian.testimony_ids[0]
+  mapping: exact
+  testimony_required: true
+- beat_id: U1L3_confirmed_entry_037
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 Vivian 的交谈证词（已确认）
+    line: 230
+  source_text:
+    证词: 每晚 23:30 按惯例给 Webb 送酒（1063002）
+    原版: L3 交谈取得
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].npcs.Vivian.testimony_ids[1]
+  mapping: exact
+  testimony_required: true
+- beat_id: U1L3_confirmed_rule_038
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 Vivian 的交谈证词（已确认）
+    line: 232
+  source_text: 取得节点核查：1063003“23:05 持枪到会客室”在原正式台本 L4 Vivian 认罪后的询问分支中说出；原 Testimony.xlsx 挂于 106003116，章节 104。不是
+    L3 可取得证词，也不是仅因编号含 3 就归入 L3。已确认修改版沿用该 L4 询问节点取得，不另设搜证事件；询问中的演出安排提前泄露部分按下方 L4 记录调整。
+  state_path: scenes[6].npcs.Vivian.withheld_topics
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_039
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 一楼走廊（整组已确认）
+    line: 236
+  source_text: 无驻场 NPC，不新增证词。原通道沿用，不增加解锁条件。
+  state_path: scenes[0].npcs
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_040
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 一楼走廊（整组已确认）
+    line: 240
+  source_text:
+    项目: 假艺术品战利品墙
+    原 Excel 配置: 无此独立环境物
+    修改版: 延续 L2 陈列、可反复查看；L3 增加已确认的 Zack 回看 OS，文字见独立 OS 稿。不新增收录证物、不要求逐件调查、不用于 L3 指证
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].environment[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_041
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 一楼走廊（整组已确认）
+    line: 241
+  source_text:
+    项目: 前往地下走廊（130010）
+    原 Excel 配置: 开放，目标 1330
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_042
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 一楼走廊（整组已确认）
+    line: 242
+  source_text:
+    项目: 前往二楼走廊（130011）
+    原 Excel 配置: 锁闭，参数 1317／提示“暂未开启”
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].exits[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_043
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 一楼走廊（整组已确认）
+    line: 243
+  source_text:
+    项目: 前往 Webb 会客室（130012）
+    原 Excel 配置: 开放，目标 1303
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].exits[2]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_044
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 一楼走廊（整组已确认）
+    line: 244
+  source_text:
+    项目: 返回大厅（130014）
+    原 Excel 配置: 开放，目标 1304
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].exits[3]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_045
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 地下走廊（整组已确认）
+    line: 250
+  source_text:
+    项目: 返回一楼走廊（130006）
+    原 Excel 配置: 开放，目标 1307
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_046
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 地下走廊（整组已确认）
+    line: 251
+  source_text:
+    项目: 前往 Rosa 清洁间（130007）
+    原 Excel 配置: 开放，目标 1301
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].exits[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_047
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 地下走廊（整组已确认）
+    line: 252
+  source_text:
+    项目: 前往 Vivian 化妆间（130008）
+    原 Excel 配置: 开放，目标 1302
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].exits[2]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_048
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 地下走廊（整组已确认）
+    line: 253
+  source_text:
+    项目: NPC、证物、证词
+    原 Excel 配置: 无
+    修改版: 不新增
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].npcs
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_049
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 259
+  source_text:
+    项目: James
+    原版: 厨房烧纸交谈，取得节目单碎片及印错才烧的证词
+    修改版: 医院走廊固定驻场，与 Anna 共用一个可重复交谈入口，交谈后不退场；不继承原烧纸材料
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[7].npcs.James_Anna
+  mapping: merged
+  merged_with: U1L3_narrative_event_005
+- beat_id: U1L3_confirmed_entry_050
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 260
+  source_text:
+    项目: Anna
+    原版: 无此医院相遇
+    修改版: 医院走廊与 James 共用交谈入口，不另设个人入口；感谢借款、提及身份已办妥，夫妻提供病房路线，不新增收录证词
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[7].npcs.James_Anna
+  mapping: merged
+  merged_with: U1L3_confirmed_entry_049
+- beat_id: U1L3_confirmed_entry_051
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 261
+  source_text:
+    项目: 医院地图节点
+    原版: 无本版医院节点
+    修改版: 医疗单解锁医院 Map 节点；通过地图跳转，首次落点为医院走廊，不以场景内物件作为医院地图跳转入口
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: exploration_rules.hospital_map
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_052
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 262
+  source_text:
+    项目: Rosa 病房入口
+    原版: 无本版入口安排
+    修改版: 从医院走廊前往 Isabel 病房；完成夫妻共用入口中的问路交谈后解锁，不以威胁纸条为前置
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[7].exits[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_053
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 263
+  source_text:
+    项目: Rosa 普通询问及倒垃圾证词
+    原版: 在酒吧清洁间询问，取得“23:20 去侧巷倒垃圾，放下垃圾袋便返回走廊”的证词
+    修改版: 询问及证词取得地点移至医院 Rosa 所在的 Isabel 病房，内容与用途不变；结合垃圾袋下的玻璃判断枪击早于 23:20，不提前交代胁迫真相
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[8].npcs.Rosa.testimony_ids[0]
+  mapping: exact
+  testimony_required: true
+- beat_id: U1L3_confirmed_entry_054
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 264
+  source_text:
+    项目: 致命一枪的 .45 弹壳
+    原版: Rosa 指证后交出当晚从会客室捡走、留作自保的弹壳
+    修改版: 沿用既定方案：医院指证后由 Rosa 亲手交出，不作为病房可搜物件；检查、拓印后供 L4 与 Vivian 的 .25 小手枪对照；Rosa保密要求仅属剧情，不增加取证或出示限制
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: expose.post_expose.grants_evidence
+  mapping: exact
+  evidence_delivery_required: true
+- beat_id: U1L3_confirmed_rule_055
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L3 医院自由探索：人物与取得方式（已确认）
+    line: 266
+  source_text: 取证链：箱外医疗单 → 医院走廊夫妻问路 → Isabel病房生日吊坠 → 清洁箱开锁及威胁纸条 → Emma随行 → 备齐材料后在病房指证Rosa。James、Anna交谈后仍驻场，Emma不设独立点击入口。
+  state_path: exploration_rules.order
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_056
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 指证地点与结构（已确认）
+    line: 269
+  source_text: 玩家选证物流程已核对通过：
+  state_path: expose.rounds
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_057
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 指证地点与结构（已确认）
+    line: 273
+  source_text:
+    谎言: 23:30一定是Webb死亡的枪响
+    玩家出示: 玻璃碎片＋Rosa的23:20倒垃圾证词
+    探索后的选择依据: 亲自发现玻璃压在垃圾袋下，再联系放袋时间，想到玻璃更早已碎
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: expose.rounds[0]
+  mapping: exact
+- beat_id: U1L3_confirmed_entry_058
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 指证地点与结构（已确认）
+    line: 274
+  source_text:
+    谎言: 没人逼我，我是自愿来作证的
+    玩家出示: 威胁纸条
+    探索后的选择依据: 开箱取得的威胁纸条直接对应“没人逼我”，选择明确
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: expose.rounds[1]
+  mapping: exact
+- beat_id: U1L3_confirmed_rule_059
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 指证地点与结构（已确认）
+    line: 276
+  source_text: 本轮为两次选证物，保留现有流程；本次不调整台本过渡。
+  state_path: expose.rounds
+  mapping: merged
+  merged_with: U1L3_confirmed_rule_056
+- beat_id: U1L3_confirmed_rule_060
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Rosa 指证地点与结构（已确认）
+    line: 278
+  source_text: 沿用原正式台本两轮指证，只将场景由酒吧储藏间移至医院 Rosa 所在的 Isabel 病房。第一轮“23:30 一定是 Webb 死亡的枪响”，沿用玻璃碎片与 23:20 倒垃圾证词等原材料，结合枪击破窗的勘验信息，确认致命枪击早于
+    23:20；不提前锁定演出时段。第二轮“没人逼我，我是自愿来作证的”，沿用原胁迫揭露及材料安排。全部自由探索完成、Emma 已同行后触发；指证后交付弹壳按上表执行。
+  state_path: expose
+  mapping: exact
+- beat_id: U1L3_narrative_detail_061
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L3 开篇：Morrison 告知放人，约 Zack 在大厅详谈
+    line: 405
+  source_text: 'Morrison 告诉 Zack，Vivian 和 Rosa 已经被放出来，但他不知道 Rosa 现在去了哪里。眼下所在的地方不方便详细聊案情，因此让 Zack 稍后到酒吧大厅找他，有什么细节在那里谈。地点沿正式版开篇落在酒吧一楼走廊，之后转到大厅详谈。
+
+
+    进入自由探索后，Morrison 固定在大厅接受询问，提供原有现场勘验信息。开篇只交代放人、Rosa 去向不明与大厅碰面的约定，不一次讲完勘验证词。玩家因此知道仍可向这名警察核实案情，为后续对其处理方式的信任及 L4
+    翻脸保留基础，不提前暗示 Whale 已收买他。
+
+
+    医院地址仍由 Zack 在清洁间找到 Isabel 医疗单后获知，Morrison 不直接告知医院或病房。Vivian 在 L3 化妆间可供询问；Rosa 已离开酒吧，玩家需自行追查。Emma 不在此完成入队：生日吊坠移至医院病房后，玩家先到医院调查，再回清洁间开箱，才触发她跟踪现身、争取同行的事件。'
+  state_path: opening.sequence[0]
+  mapping: merged
+  merged_with: U1L3_narrative_event_001
+- beat_id: U1L3_narrative_detail_062
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 医院夫妻问路：发现就在隔壁的轻喜剧
+    line: 413
+  source_text: 'L3 玩家通过医院走廊中 James、Anna 共用的交谈入口问路。Zack 没找着医疗单上的病房号，夫妻帮他查看，向他指出目的地恰好就在他们病房旁边。用户指定的语气锚点为：“哎呀，这不是就在我们病房旁边的那个病房吗！”具体由夫妻中的谁接话留正式对白制作，不新增独立突发事件。
+
+
+    喜剧感来自认真找路后发现目的地近在身边的巧遇。玩家在问路中听到夫妻认出相邻病房，不提前点破James已知情；不把 Zack 写成看不懂数字，也不以病情或孩子的处境取笑。对话完成后解锁从走廊前往 Isabel 病房的入口，两人仍驻场、可重复交谈。这段只建立亲近感与路线衔接，不新增收录证词，不作为
+    James 知情的嫌疑提示。'
+  state_path: scenes[7].npcs.James_Anna.presentation
+  mapping: exact
+- beat_id: U1L3_narrative_detail_063
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 7. 清洁间解谜后发现跟踪，默许同行
+    line: 418
+  source_text: 清洁间解谜后，Zack发现Emma跟踪而来，她坚持参与，他仍有保留但最终默许。此时只是允许同行；她随后参与Rosa的询问与保密承诺，不以亲历者口吻谈自己未在场的医院初次问话。正式认可搭档关系留L5开篇电话后。
+  state_path: scenes[5].event_triggers[0]
+  mapping: merged
+  merged_with: U1L3_narrative_event_007
+- beat_id: U1L3_narrative_detail_064
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 8. Rosa 的困境：Emma 主动保密
+    line: 422
+  source_text: '剧情备注：Rosa要求保密及两人的承诺只用于人物与情节表现，不属于推理配置，不限制既定弹壳使用，不新增疑点、取证或指证条件。
+
+
+    Zack 击破 Rosa 的谎言后，Rosa 对女儿安全的恐惧仍在。查出真相不代表她敢公开改口，记者在场更会加重顾虑。
+
+
+    Zack 此刻才真正担忧：这个一直追逐真相的记者，会不会把内容报道出去，让 Rosa 与女儿陷入危险？
+
+
+    Emma 却主动答应保密，以收起记录等明确动作表示不会为了报道公开 Rosa 的处境。她的承诺不以换取勒索材料为条件。
+
+
+    两人都承诺保护她与女儿之后，Rosa 才继续说明秘密经过。保密既推进了询问，也让 Zack 修正对 Emma 的判断。'
+  state_path: expose.post_expose.required_beats
+  mapping: exact
+narrative_continuity:
+  units:
+  - id: L3_opening
+    state_path: opening
+    entry_state:
+    - 释放两人但Rosa去向未知
+    consumes:
+    - 释放两人但Rosa去向未知
+    required_callbacks:
+    - 释放两人但Rosa去向未知
+    required_beats:
+    - 去大厅核实并自行寻找Rosa
+    exit_state:
+      facts:
+      - 去大厅核实并自行寻找Rosa
+      relationship_changes: []
+      unresolved_pressure:
+      - 真实射手及威胁者未明，Vivian仍有嫌疑
+    hands_off_to: L3_free_investigation
+  - id: L3_free_investigation
+    state_path: scenes
+    entry_state:
+    - 23:30说法未破，勒索已查明
+    consumes:
+    - 23:30说法未破，勒索已查明
+    required_callbacks:
+    - 23:30说法未破，勒索已查明
+    required_beats:
+    - 自由取得勘验、玻璃与医疗单，认识夫妻找到病房
+    exit_state:
+      facts:
+      - 自由取得勘验、玻璃与医疗单，认识夫妻找到病房
+      relationship_changes: []
+      unresolved_pressure:
+      - 真实射手及威胁者未明，Vivian仍有嫌疑
+    hands_off_to: L3_storage_companion
+    branch_units:
+    - L3_lobby_job_request
+    - L3_forensic_talk
+    - L3_vivian_talk
+    - L3_family_talk
+    - L3_rosa_talk
+  - id: L3_storage_companion
+    state_path: scenes[5].event_triggers[0]
+    entry_state:
+    - 病房吊坠提示可打开清洁箱
+    consumes:
+    - 病房吊坠提示可打开清洁箱
+    required_callbacks:
+    - 病房吊坠提示可打开清洁箱
+    required_beats:
+    - 取得威胁，Emma跟踪现身并同行
+    exit_state:
+      facts:
+      - 取得威胁，Emma跟踪现身并同行
+      relationship_changes:
+      - Emma入队及保密不等于正式搭档
+      unresolved_pressure:
+      - 真实射手及威胁者未明，Vivian仍有嫌疑
+    hands_off_to: L3_ward_confrontation
+  - id: L3_ward_confrontation
+    state_path: expose.rounds
+    entry_state:
+    - 所有疑点已点亮，Emma已同行
+    consumes:
+    - 所有疑点已点亮，Emma已同行
+    required_callbacks:
+    - 所有疑点已点亮，Emma已同行
+    required_beats:
+    - 枪击早于23:20且指认受胁迫，匿名作者未明
+    exit_state:
+      facts:
+      - 枪击早于23:20且指认受胁迫，匿名作者未明
+      relationship_changes: []
+      unresolved_pressure:
+      - 真实射手及威胁者未明，Vivian仍有嫌疑
+    hands_off_to: L3_ward_confidence
+  - id: L3_ward_confidence
+    state_path: expose.post_expose
+    entry_state:
+    - 母女仍有危险，记者在场使Rosa顾虑
+    consumes:
+    - 母女仍有危险，记者在场使Rosa顾虑
+    required_callbacks:
+    - 母女仍有危险，记者在场使Rosa顾虑
+    required_beats:
+    - Emma主动保密，Zack改观；收到未检查弹壳
+    exit_state:
+      facts:
+      - Emma主动保密，Zack改观；收到未检查弹壳
+      relationship_changes:
+      - Emma入队及保密不等于正式搭档
+      unresolved_pressure:
+      - 真实射手及威胁者未明，Vivian仍有嫌疑
+    hands_off_to: L4_opening
+  - id: L3_lobby_job_request
+    state_path: scenes[2].event_triggers[0]
+    entry_state:
+    - 员工面临失业，小酒保试图求工作介绍
+    consumes:
+    - 员工面临失业，小酒保试图求工作介绍
+    required_callbacks:
+    - 员工面临失业，小酒保试图求工作介绍
+    required_beats:
+    - 提及赛马场遭斥后离开；Morrison留场，缘由留L5
+    exit_state:
+      facts:
+      - 提及赛马场遭斥后离开；Morrison留场，缘由留L5
+      relationship_changes: []
+      unresolved_pressure:
+      - 致命射击、胁迫者仍待查
+    hands_off_to: L3_free_investigation
+    routing_note: 自由探索信息回流，不规定下一场访问顺序。
+  - id: L3_forensic_talk
+    state_path: scenes[2].npcs.Morrison
+    entry_state:
+    - 开篇已约大厅详谈，死亡时间未核实
+    consumes:
+    - 开篇已约大厅详谈，死亡时间未核实
+    required_callbacks:
+    - 开篇已约大厅详谈，死亡时间未核实
+    required_beats:
+    - 取得搜查和弹道证词，不给医院地址
+    exit_state:
+      facts:
+      - 取得搜查和弹道证词，不给医院地址
+      relationship_changes: []
+      unresolved_pressure:
+      - 致命射击、胁迫者仍待查
+    hands_off_to: L3_free_investigation
+    routing_note: 自由探索信息回流，不规定下一场访问顺序。
+  - id: L3_vivian_talk
+    state_path: scenes[6].npcs.Vivian
+    entry_state:
+    - Vivian获释但仍不知自己是否杀人
+    consumes:
+    - Vivian获释但仍不知自己是否杀人
+    required_callbacks:
+    - Vivian获释但仍不知自己是否杀人
+    required_beats:
+    - 可选获知表演、送酒及保管习惯，未问不自动获得
+    exit_state:
+      facts:
+      - 可选获知表演、送酒及保管习惯，未问不自动获得
+      relationship_changes: []
+      unresolved_pressure:
+      - 致命射击、胁迫者仍待查
+    hands_off_to: L3_free_investigation
+    routing_note: 自由探索信息回流，不规定下一场访问顺序。
+  - id: L3_family_talk
+    state_path: scenes[7].npcs.James_Anna
+    entry_state:
+    - Zack凭医疗单来到医院，L2已借款
+    consumes:
+    - Zack凭医疗单来到医院，L2已借款
+    required_callbacks:
+    - Zack凭医疗单来到医院，L2已借款
+    required_beats:
+    - 夫妻感谢与家庭期待，帮认相邻病房，问路解锁1391
+    exit_state:
+      facts:
+      - 夫妻感谢与家庭期待，帮认相邻病房，问路解锁1391
+      relationship_changes: []
+      unresolved_pressure:
+      - 致命射击、胁迫者仍待查
+    hands_off_to: L3_free_investigation
+    routing_note: 自由探索信息回流，不规定下一场访问顺序。
+  - id: L3_rosa_talk
+    state_path: scenes[8].npcs.Rosa
+    entry_state:
+    - 找到Rosa和住院女儿，不知她被胁迫
+    consumes:
+    - 找到Rosa和住院女儿，不知她被胁迫
+    required_callbacks:
+    - 找到Rosa和住院女儿，不知她被胁迫
+    required_beats:
+    - 取得23:20倒垃圾证词，生日吊坠另由场景搜得
+    exit_state:
+      facts:
+      - 取得23:20倒垃圾证词，生日吊坠另由场景搜得
+      relationship_changes: []
+      unresolved_pressure:
+      - 致命射击、胁迫者仍待查
+    hands_off_to: L3_free_investigation
+    routing_note: 自由探索信息回流，不规定下一场访问顺序。
+  external_handoffs:
+  - id: L4_opening
+    file: loop4_state.yaml
+    requirement: 承接Emma保密、未检查弹壳与Vivian未说明经历
+validation:
+  A:
+    status: PASS
+    detail: 结构字段、9场景、开篇与指证完整。
+  B:
+    status: PASS
+    detail: 5件本轮新物品定位完整；1401仅指证后交付，L4分析。
+  C:
+    status: PASS
+    detail: 4个自由Talk入口含夫妻共用入口；6条内联证词，正文来自批准核对稿。
+  D:
+    status: PASS
+    detail: 本轮只查枪击早于23:20及被胁迫指认。
+  E:
+    status: PASS
+    detail: 未提前开放23:05、演出实际时间、故障枪、James真凶、Whale身份。
+  F:
+    status: PASS
+    detail: 无quiz；开锁小游戏保留；医院问路与开箱后跟随链显式。
+  G:
+    status: PASS
+    detail: R1玻璃+23:20证词、R2纸条；所有出示均属本轮疑点。
+  H:
+    status: PASS
+    detail: 64来源条目唯一beat，actual state_path逐一解析通过；同一事件多源标merged。
+  I:
+    status: PASS
+    detail: 单initTalk根，最后开篇结束到1307恢复控制；大厅首入事件不重复开篇。
+  J:
+    status: PASS
+    detail: 关键Talk、事件、指证、post均有连续性单元；事件单入口与恢复适配待办明确，未宣称工程测试通过。
+validation_scope: 本轮自检A-J通过；主代理仍需全五轮引用、累积知识、运行时适配审查后才能整体PASS。
+
+production_details:
+  source: U1优化制作/06_State/制作细节定稿.md
+  precedence: 本轮制作决定优先于source_contracts或origin中保留的旧待定摘录；不改写历史原文。
+  iou_amount_usd: 20
+  iou_date_field: omitted
+  iou_interest_and_due_date: none
+  pistol_serial: "384216"
+  pistol_serial_art_status: pending_visual_update
+
+calendar_contract:
+  source: U1优化制作/06_State/制作细节定稿.md
+  crime_date: "1928-11-03"
+  investigation_limit_hours: 72
+  countdown_start: pending
+  newspaper_date: "1928-11-03"
+  precedence: 本轮定稿覆盖来源摘录中的日期与节目表待定说明；origin及source_contracts保留历史原文。

@@ -1,0 +1,1804 @@
+schema_version: 1
+loop: 2
+unit: Unit1
+episode: EPI01
+title: 账外的花瓶生意
+status: complete_design_pending_cross_audit
+validation_status: design_review_pass_runtime_pending
+runtime_status: NOT_INTEGRATED
+sources:
+- 剧情设计/Unit1/Unit1_内容修改方案_双重谋杀计划与欠条版.md
+- 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+- 剧情设计/Unit1/内容修改后的增强情节线.md
+source_contract: U1优化制作/06_State/讨论结论.md
+player_context:
+  goals:
+  - 核查Webb账外收入与员工经手的业务
+  - 收集照片、账目、花瓶与寄件材料，验证Tommy营业说法
+  known_facts:
+  - content: Zack受Webb委托担任遗嘱执行人，确保Vivian继承遗产；协议由Zack携带
+    truth_status: truth
+    source: 案前委托
+  - content: Vivian小手枪近期未击发；仅推翻以持枪认定刚射杀Webb的指认，未证明她完全无辜
+    truth_status: truth
+  - content: Rosa坚持23:30是死亡枪声、紧接玻璃碎裂且当时只有Vivian在里面
+    truth_status: unverified_claim
+  - content: Zack以遗嘱执行协议争取继续调查，Emma不满被擅自借用记者身份
+    truth_status: truth
+  new_directions:
+  - Webb私人业务及照片中人物
+  - 员工工作职责、枪声前后行踪
+  - 遗产尚待继承，Rita拟接管与员工处境
+  post_expose_knowledge:
+  - content: Webb经营私密照片勒索；Tommy说明付款与寄送条件并经手执行
+    truth_status: truth
+  - content: 私照男子为Lawson Vanderbilt；原签收件人为另一个名字Éléonore Vanderbilt女士，关系未获证物确认
+    truth_status: truth
+  - content: Zack与Tommy误以为收件人是Lawson妻子
+    truth_status: character_misbelief
+  - content: James获Zack临时借款并交欠条，Anna有医疗需要；Emma不在场
+    truth_status: truth
+  - content: James自述23:10—24:00在厨房；小酒保自述22:00—00:00在吧台；酒吧演出由Tommy安排
+    truth_status: recorded_claims
+  - content: Tommy抽屉曾有一把枪，尚不知物主、口径和故障；Rosa的23:30说法仍未核实
+    truth_status: truth
+opening:
+  type: cutscene_sequence
+  runtime_root:
+    table: ChapterConfig
+    init_scene: 1022
+    init_talk: L2_opening_street_split
+  sequence:
+  - event_id: street_split
+    talk: L2_opening_street_split
+    scene_id: 1022
+    cast:
+    - Zack
+    - Emma
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    required_beats:
+    - Emma质问Zack拒绝合作却擅用其记者身份
+    - 双方分头调查，Emma去小包厢，Zack查员工；尚未正式结伴
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1204
+      continuation: scene_first_enter_then_release
+      skip_first_enter: false
+      next_talk: null
+      first_enter_talk: L2_event_lobby_layoff_loan
+      release_after: 大厅首入遣散借款事件结束；由场景首入标记确保一次性
+    grants_evidence: []
+    testimony_ids: []
+  player_control_restored_after: street_split
+  control_boundary_note: 街角末段正常切回1204，无next续播、不跳过firstEnterTalk；借款段唯一入口为SceneConfig.firstEnterTalk，不在opening另挂入口。大厅首入局部锁定，事件结束恢复调查。
+scenes:
+- id: 1204
+  key: L2_lobby
+  name: 大厅
+  location_id: 1204
+  type: free_exploration
+  unlock_condition: []
+  npcs:
+    James:
+      id: 107
+      talk: L2_lobby_james
+      repeat_talk: L2_lobby_james_repeat
+      motive: 应付工作问话并筹妻子医疗费，隐藏犯罪
+      mindset: 疲惫而认真对待借款，不主动露凶
+      active_topics:
+      - content: 工作及23:00—23:10送餐经过，普通对白
+        truth_status: partial_account
+      - content: 23:10—24:00在厨房没有离开
+        truth_status: self_report
+      - content: Anna医疗需要和未付报酬，普通对白
+        truth_status: truth
+      withheld_topics:
+      - 杀人、假喊话、假枪声、胁迫Rosa
+      - 身份已解决与Whale交易
+      - 不额外收录缺钱或送餐证词
+      player_inquiry: 大厅讨款、借款及案发员工行踪
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: '1072005'
+        kind: self_report
+        content: 23:10—24:00在厨房、没有离开
+        acquisition_talk: L2_lobby_james
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+      is_liar: false
+      unlock_condition: []
+      grants_evidence: []
+    Bartender:
+      id: 112
+      talk: L2_lobby_bartender
+      repeat_talk: L2_lobby_bartender_repeat
+      motive: 保住工作，解释自己岗位及演出职责
+      mindset: 怕被遣散，抱怨但愿意接话
+      active_topics:
+      - content: 22:00—00:00在吧台岗位未离开
+        truth_status: truth
+      - content: 乐队演出由Tommy联系安排
+        truth_status: truth
+      withheld_topics:
+      - 不知道杀人计划、房内枪击、实际幕后交易
+      - L4才交23:18目击，不提前提供
+      player_inquiry: 遣散冲突中小酒保留场，核查员工与演出分工
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: '1122001'
+        kind: truth
+        content: 22:00—00:00一直在吧台岗位，没有离开。
+        acquisition_talk: L2_lobby_bartender
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+      - id: '1122002'
+        kind: truth
+        content: 酒吧的乐队演出由 Tommy 负责联系和安排。
+        acquisition_talk: L2_lobby_bartender
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+      is_liar: false
+      unlock_condition: []
+      grants_evidence: []
+  evidence: []
+  environment: []
+  passages:
+  - target_scene_id: 1205
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1205'
+    blocked_feedback: null
+  - target_scene_id: 1207
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1207'
+    blocked_feedback: null
+  - target_scene_id: 1218
+    enabled: false
+    unlock_condition: []
+    runtime_parameter: 1218|1541
+    blocked_feedback: 暂未开启
+  event_triggers:
+  - event_id: lobby_layoff_loan
+    talk: L2_event_lobby_layoff_loan
+    trigger: first_enter
+    runtime_binding:
+      table: SceneConfig
+      field: firstEnterTalk
+      one_shot: true
+    cast:
+    - Zack
+    - Rita
+    - James
+    - Bartender
+    required_beats:
+    - Rita以小股东及TideWater代表身份推进收购交接、遣散；小酒保希望保住工作和落脚处
+    - James追讨Webb未付跑腿报酬，Anna孕检不好需医疗费，Rita拒付；不解释跑腿实际业务
+    - Zack以已有委托和Vivian继承安排阻止仓促接管，要求手续完成后与Vivian商谈，不永久代决定出售
+    - Rita退出本次交接并离开大厅，James报酬仍未取得
+    - Zack借出20美元用于眼前医疗开支，不称覆盖全部医疗费；James认真写下20美元欠条交给Zack，不约定还款日或利息
+    - James与小酒保留场可反复询问；Emma一直在小包厢未亲历
+    grants_evidence:
+    - '1290'
+    testimony_ids: []
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md#一、共同起点
+    runtime_exit:
+      action: release_to_exploration
+- id: 1206
+  key: L2_booth
+  name: 小包厢
+  location_id: 1206
+  type: free_exploration
+  unlock_condition: []
+  npcs:
+    Emma:
+      id: 102
+      talk: L2_booth_emma
+      repeat_talk: L2_booth_emma_repeat
+      motive: 独立调查，不愿免费交成果
+      mindset: 不满被利用；被套话后警惕，帮忙时拿回主动
+      active_topics:
+      - content: 调查酒吧勒索生意的方向，由Zack试探引出
+        truth_status: partial_truth
+      withheld_topics:
+      - 未亲历大厅借款、不知Zack随后指证全部结果
+      - 不替玩家解两账和花瓶、签的链条
+      player_inquiry: 街角分头后在小包厢遇见记者
+      player_inquiry_score: 9
+      testimony_ids: []
+      is_liar: false
+      unlock_condition: []
+      grants_evidence: []
+  evidence:
+  - id: '1201'
+    type: item
+    pickup: scene_search_after_cabinet_help
+    unlock_condition:
+    - type: event_completed
+      param: cabinet_help
+    description: 已冲印的Vivian与一名男子的亲密合影，背景花瓶上有清晰划痕。背面有9月10日拍摄日期及9月11日冲印标记，另有几处尚不可辨读的淡黄褐色痕迹。
+    analysis:
+      result_id: '1706'
+      method: 玩家拖近煤油灯热区加热柠檬汁字迹
+      result: 花瓶 — $4,000
+      optional_overheat: 一次性冒烟扑灭仅烧无信息空白边，人物、日期、划痕、金额不损伤
+    note: 关键——身份疑点、L2第二轮旧照与当前花瓶比对
+    design_notes:
+    - 已冲印Vivian与未署名男子的亲密合影，背景花瓶划痕清晰；拍摄9月10日，冲印9月11日均为待全章核对工作日期；背面正常日期可读、淡黄褐色隐写不可读
+  - id: '1206'
+    type: item
+    pickup: scene_observation_record
+    description: 小包厢花瓶的观察记录，记下瓶身外观和一处清晰的划痕。
+    analysis: null
+    note: 关键——L2第二轮同一性比对
+    design_notes:
+    - 原位花瓶外观和清晰划痕观察记录；不拍新照片，不搬走花瓶，不提前称为后补仿品
+  environment:
+  - key: costume_hound_mask
+    description: 歌舞服与长狗嘴猎犬面具，内侧喝酒前请先摘下面具；详情可见狗嘴与杯沿相抵
+    collectible: false
+    clickable: true
+    note: 场景道具
+  passages:
+  - target_scene_id: 1205
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1205'
+    blocked_feedback: null
+  event_triggers:
+  - event_id: cabinet_help
+    talk: L2_event_booth_cabinet_help
+    trigger: inspect_cabinet_search_position
+    runtime_binding:
+      kind: object_interaction_talk
+      one_shot: true
+      status: needs_talk_completion_adapter
+    required_talks:
+    - L2_booth_emma
+    order_policy: 本场先完成套话再求助；不限制其它探索场景顺序
+    cast:
+    - Zack
+    - Emma
+    required_beats:
+    - Zack刚套完话得意，查相机相关位置却独自搬不动柜子
+    - Zack求助，Emma指挥配合挪柜，玩家实际看见协作
+    - 露出已冲印照片的搜证位置；机内胶卷与此照片区分，不将取胶卷当显影
+    grants_evidence: []
+    reveals_evidence:
+    - '1201'
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md#5. 搜查受阻
+    runtime_exit:
+      action: release_to_exploration
+- id: 1210
+  key: L2_tommy_office
+  name: Tommy办公室
+  location_id: 1210
+  type: free_exploration
+  unlock_condition: []
+  npcs:
+    Tommy:
+      id: 105
+      talk: L2_office_tommy
+      repeat_talk: L2_office_tommy_repeat
+      motive: 遮掩经手勒索，关心Vivian并保住自己的秘密
+      mindset: 用普通营业话术挡住追问，行踪含糊
+      active_topics:
+      - content: 收入全部已进营业账
+        truth_status: false_claim
+      - content: 账目排班库存日常职责
+        truth_status: truth
+      - content: 23:30听到一声枪响
+        truth_status: truth
+      withheld_topics:
+      - 照片与花瓶交易退守只在指证现场说
+      - 整晚留办公室证词已取消
+      - 杀人计划、故障枪、移民受骗、勒索自身及照片对象
+      player_inquiry: 员工指向日常管理者、办公室营业账
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: '1052001'
+        kind: lie
+        content: Webb 收到的钱都已计入我的营业账，没有账外进项。
+        acquisition_talk: L2_office_tommy
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+      - id: '1052003'
+        kind: truth
+        content: 负责蓝月亮的账目、排班、库存和日常运转
+        acquisition_talk: L2_office_tommy
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+      - id: '1052002'
+        kind: truth
+        content: 23:30，我听到了一声枪响。
+        acquisition_talk: L2_office_tommy
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+      is_liar: true
+      unlock_condition: []
+      grants_evidence: []
+      ordinary_dialogue:
+      - 关心Vivian但不说完整旧怨
+      - 被问行踪含糊回避，不保证整晚未离开；不产生另条证词
+  evidence:
+  - id: '1204'
+    type: item
+    pickup: scene_search
+    analysis: null
+    description: 九月营业收入4,000美元，十月营业收入4,500美元，并列有营业明细。
+    note: 关键——L2第一轮两账
+    design_notes:
+    - 9月营业收入4000；10月4500；同月同范围实收口径
+  - id: '1291'
+    type: item
+    pickup: scene_search_old_business_files
+    analysis: null
+    description: 客户：Lawson Vanderbilt。名目：花瓶。收件人：Éléonore Vanderbilt女士。处理标记：9月12日，作废。
+    note: 关键——L2第三轮收件栏
+    design_notes:
+    - 客户Lawson Vanderbilt；花瓶；收件人Éléonore Vanderbilt女士；9月12日作废（工作日期）；无亲属称谓、照片、金额、威胁条件或职衔
+  environment:
+  - key: fake_art
+    description: 一件完整的仿制艺术品。
+    clickable: true
+    collectible: false
+    note: 场景道具
+    design_notes:
+    - 完整假艺术品，L4碎片沿用同一物件
+  - key: vivian_roster
+    description: Vivian的排班表。
+    clickable: true
+    collectible: false
+    note: 场景道具
+    design_notes:
+    - Vivian排班表原位查看
+  - key: lunchbox_note
+    description: 空饭盒、布条系勺子及叮嘱Tommy爱惜饭盒的送饭纸条
+    clickable: true
+    collectible: false
+    note: 场景道具
+  passages:
+  - target_scene_id: 1217
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1217'
+    blocked_feedback: null
+  event_triggers:
+  - event_id: drawer_glimpse
+    talk: L2_event_office_drawer_glimpse
+    trigger: inspect_drawer
+    runtime_binding:
+      kind: object_interaction_talk
+      one_shot: true
+    cast:
+    - Zack
+    - Tommy
+    required_beats:
+    - Zack拉开抽屉只瞥见一把枪
+    - Tommy立即制止并锁上抽屉
+    - 不取得枪，不确认物主或故障，不见弹壳和完整节目单
+    grants_evidence: []
+    testimony_ids: []
+    source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#文件柜抽屉
+    runtime_exit:
+      action: release_to_exploration
+- id: 1211
+  key: L2_webb_office
+  name: Webb办公室
+  location_id: 1211
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence:
+  - id: '1202'
+    type: item
+    pickup: scene_search
+    analysis: null
+    description: Webb与贵宾们的合影，题注中的Lawson Vanderbilt姓名明确对应其中一名男子的站位。
+    note: ''
+    design_notes:
+    - 贵宾合影的Lawson Vanderbilt全名与站位对应，只帮助辨认私照男子
+  - id: '1203'
+    type: item
+    pickup: scene_search
+    analysis: null
+    description: 九月基本收入4,000美元，花瓶4,000美元，合计8,000美元；十月基本收入4,500美元，油画7,000美元，合计11,500美元。
+    note: 关键——L2第一轮两账
+    design_notes:
+    - 九月基本4000+花瓶4000=8000；十月基本4500+油画7000=11500。与营业账同月同收款范围；交付栏属待核记载
+  environment:
+  - key: desk_blood
+    description: 桌面残留旧血迹
+    clickable: true
+    collectible: false
+    note: 场景道具
+  - key: citizen_award
+    description: 艾斯弗德好市民奖
+    clickable: true
+    collectible: false
+    note: 场景道具
+  - key: dart_map
+    description: 城市势力飞镖地图
+    clickable: false
+    collectible: false
+    note: 场景道具
+  passages:
+  - target_scene_id: 1217
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1217'
+    blocked_feedback: null
+  event_triggers: []
+- id: 1205
+  key: L2_cabaret
+  name: 歌舞厅
+  location_id: 1205
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment:
+  - key: fake_painting
+    description: 歌舞厅墙上悬挂的一幅仿制油画。
+    clickable: true
+    collectible: false
+    note: 场景道具
+    design_notes:
+    - 假油画原位置，不移入战利品墙
+  - key: volume_reference
+    description: 舞台音量对照：5级时，酒吧内除乐器声外，其他声音都听不到。
+    clickable: true
+    collectible: false
+    note: 场景道具
+    design_notes:
+    - 舞台音量对照：5级时酒吧内除乐器声外，其他声音都听不到；不写当晚实际分钟
+  passages:
+  - target_scene_id: 1204
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1204'
+    blocked_feedback: null
+  - target_scene_id: 1206
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1206'
+    blocked_feedback: null
+  event_triggers: []
+- id: 1207
+  key: L2_corridor
+  name: 一楼走廊
+  location_id: 1207
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment:
+  - key: trophy_wall
+    description: 会客室旁走廊对面的独立战利品陈列
+    clickable: true
+    collectible: false
+    note: 场景道具
+  passages:
+  - target_scene_id: 1217
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1217'
+    blocked_feedback: null
+  - target_scene_id: 1204
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1204'
+    blocked_feedback: null
+  - target_scene_id: 1203
+    enabled: false
+    unlock_condition: []
+    runtime_parameter: 1203|1541
+    blocked_feedback: 暂未开启
+  - target_scene_id: 1230
+    enabled: false
+    unlock_condition: []
+    runtime_parameter: 1230|1541
+    blocked_feedback: 暂未开启
+  event_triggers: []
+- id: 1217
+  key: L2_upstairs
+  name: 二楼走廊
+  location_id: 1217
+  type: free_exploration
+  unlock_condition: []
+  npcs: {}
+  evidence: []
+  environment: []
+  passages:
+  - target_scene_id: 1210
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1210'
+    blocked_feedback: null
+  - target_scene_id: 1211
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1211'
+    blocked_feedback: null
+  - target_scene_id: 1207
+    enabled: true
+    unlock_condition: []
+    runtime_parameter: '1207'
+    blocked_feedback: null
+  event_triggers: []
+inherited_evidence_refs:
+- id: '1103'
+  first_acquired_loop: 1
+  usage: 大厅阻止仓促接管，不消耗
+- id: '1711'
+  first_acquired_loop: 1
+  usage: 保留枪检供后轮
+- id: '1101'
+  first_acquired_loop: 1
+  usage: 同一实枪已分析状态的原物引用，不重复发放
+evidence_registry:
+- id: '1201'
+  key: private_photo
+  name: 私密照片
+  kind: item
+  description: 已冲印的Vivian与一名男子的亲密合影，背景花瓶上有清晰划痕。背面有9月10日拍摄日期及9月11日冲印标记，另有几处尚不可辨读的淡黄褐色痕迹。
+  acquisition:
+    loop: 2
+    scene_id: 1206
+    kind: scene_search
+    unlock_condition:
+    - type: event_completed
+      param: cabinet_help
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  analysed_evidence: '1706'
+  design_notes:
+  - 已冲印的 Vivian 与男子私密合影；背面不写 Lawson 姓名；搬柜后取，烘烤前金额不可读。
+- id: '1706'
+  key: heated_photo
+  name: 显影私密照片
+  kind: derived
+  description: 加热后，照片背面的字迹显现为“花瓶 — $4,000”。正面人物、花瓶划痕以及原有日期和冲印标记仍清晰可辨。
+  acquisition:
+    loop: 2
+    scene_id: 1206
+    kind: analysis
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  before_analysed_evidence: '1201'
+  design_notes:
+  - 仅显影花瓶4000美元，不再显影油画7000；正面保留可辨认男子与花瓶划痕。
+- id: '1206'
+  key: vase_record
+  name: 当前花瓶观察记录
+  kind: item
+  description: 小包厢花瓶的观察记录，记下瓶身外观和一处清晰的划痕。
+  acquisition:
+    loop: 2
+    scene_id: 1206
+    kind: scene_observation_record
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - 小包厢当前花瓶与旧私照同位置同形状划痕；现物留场，以观察记录入证据。
+- id: '1202'
+  key: vip_photo
+  name: Webb 办公室贵宾合影
+  kind: item
+  description: Webb与贵宾们的合影，题注中的Lawson Vanderbilt姓名明确对应其中一名男子的站位。
+  acquisition:
+    loop: 2
+    scene_id: 1211
+    kind: scene_search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - 题注明确对应 Lawson Vanderbilt 站位，与私照同一男子；疑点用不出示。
+- id: '1203'
+  key: webb_ledger
+  name: Webb 收入记录
+  kind: item
+  description: 九月基本收入4,000美元，花瓶4,000美元，合计8,000美元；十月基本收入4,500美元，油画7,000美元，合计11,500美元。
+  acquisition:
+    loop: 2
+    scene_id: 1211
+    kind: scene_search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - 沿用原文：9月基本4000+花瓶4000=8000；10月基本4500+油画7000=11500。
+- id: '1204'
+  key: tommy_ledger
+  name: Tommy 营业账本
+  kind: item
+  description: 九月营业收入4,000美元，十月营业收入4,500美元，并列有营业明细。
+  acquisition:
+    loop: 2
+    scene_id: 1210
+    kind: scene_search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - 9月总收入4000；10月4500；与Webb同月同范围对照。
+- id: '1291'
+  key: shipping_label
+  name: 作废寄件签
+  kind: item
+  description: 客户：Lawson Vanderbilt。名目：花瓶。收件人：Éléonore Vanderbilt女士。处理标记：9月12日，作废。
+  acquisition:
+    loop: 2
+    scene_id: 1210
+    kind: scene_search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - 客户Lawson Vanderbilt，收件人Éléonore Vanderbilt女士；花瓶，9/12作废；不写亲属关系或勒索解释。
+- id: '1290'
+  key: iou
+  name: James 欠条
+  kind: item
+  description: James亲手写下并交给Zack的20美元借款欠条，承诺归还，签名James O'Sullivan；不列日期、利息或到期日。
+  acquisition:
+    loop: 2
+    scene_id: 1204
+    kind: dialogue
+    talk: L2_event_lobby_layoff_loan
+    carrier: scenes[0].event_triggers[0]
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - 借款20美元；正式纸面正文见制作细节定稿.md；J/T只视觉呈现不提示异常；不用于指证、住址或笔迹谜题，L5还Anna
+doubts:
+- id: '1201'
+  key: L2_D1
+  loop: 2
+  text: 私密照片中的男人是谁？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1201'
+    key: photo_original
+    visible: true
+    registry_key: private_photo
+  - type: 1
+    param: '1202'
+    key: vip_photo
+    visible: true
+    registry_key: vip_photo
+  evidence_usage:
+  - key: photo_original
+    param: '1201'
+    first_acquired_loop: 2
+    expose_steps:
+    - L2_R2_equivalent_state
+    role: 指证用
+    earliest_expose_loop: 2
+  - key: vip_photo
+    param: '1202'
+    first_acquired_loop: 2
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+- id: '1202'
+  key: L2_D2
+  loop: 2
+  text: 两本收款账为什么对不上？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1204'
+    key: tommy_ledger
+    visible: true
+    registry_key: tommy_ledger
+  - type: 1
+    param: '1203'
+    key: webb_income
+    visible: true
+    registry_key: webb_ledger
+  - type: 4
+    param: '1052001'
+    key: tommy_business_lie
+    visible: false
+    registry_key: revenue_lie
+  evidence_usage:
+  - key: tommy_ledger
+    param: '1204'
+    first_acquired_loop: 2
+    expose_steps:
+    - L2_R1
+    role: 指证用
+    earliest_expose_loop: 2
+  - key: webb_income
+    param: '1203'
+    first_acquired_loop: 2
+    expose_steps:
+    - L2_R1
+    role: 指证用
+    earliest_expose_loop: 2
+  - key: tommy_business_lie
+    param: '1052001'
+    first_acquired_loop: 2
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+- id: '1203'
+  key: L2_D3
+  loop: 2
+  text: 照片里的花瓶，和眼前这只有什么联系？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1706'
+    key: photo_developed
+    visible: true
+    registry_key: heated_photo
+  - type: 1
+    param: '1206'
+    key: vase_observation
+    visible: true
+    registry_key: vase_record
+  evidence_usage:
+  - key: photo_developed
+    param: '1706'
+    first_acquired_loop: 2
+    expose_steps:
+    - L2_R2
+    role: 指证用
+    earliest_expose_loop: 2
+  - key: vase_observation
+    param: '1206'
+    first_acquired_loop: 2
+    expose_steps:
+    - L2_R2
+    role: 指证用
+    earliest_expose_loop: 2
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+- id: '1204'
+  key: L2_D4
+  loop: 2
+  text: 这张寄件签为什么作废了？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1291'
+    key: cancelled_shipping_label
+    visible: true
+    registry_key: shipping_label
+  evidence_usage:
+  - key: cancelled_shipping_label
+    param: '1291'
+    first_acquired_loop: 2
+    expose_steps:
+    - L2_R3
+    role: 指证用
+    earliest_expose_loop: 2
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+- id: '1205'
+  key: L2_D5
+  loop: 2
+  text: 枪响前后，两名员工各在哪里？
+  isFragment: false
+  condition:
+  - type: 4
+    param: '1072005'
+    key: james_kitchen_alibi
+    visible: true
+    registry_key: james_alibi
+  - type: 4
+    param: '1122001'
+    key: bartender_bar_alibi
+    visible: true
+    registry_key: bartender_alibi
+  evidence_usage:
+  - key: james_kitchen_alibi
+    param: '1072005'
+    first_acquired_loop: 2
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  - key: bartender_bar_alibi
+    param: '1122001'
+    first_acquired_loop: 2
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+- id: '1206'
+  key: L2_D6
+  loop: 2
+  text: 酒吧的演出安排由谁经手？
+  isFragment: false
+  condition:
+  - type: 4
+    param: '1122002'
+    key: bartender_music_duty
+    visible: true
+    registry_key: music_role
+  - type: 4
+    param: '1052003'
+    key: tommy_management_duty
+    visible: true
+    registry_key: tommy_role
+  evidence_usage:
+  - key: bartender_music_duty
+    param: '1122002'
+    first_acquired_loop: 2
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  - key: tommy_management_duty
+    param: '1052003'
+    first_acquired_loop: 2
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L2
+doubt_progress:
+  denominator: 6
+  condition_logic: all_AND
+  completion: 全部本轮疑点点亮并按现有流程收集后开启指证
+  display: 前两项可见；第三项隐藏但参与AND
+expose:
+  target: Tommy
+  npc_id: 105
+  scene_id: 1210
+  is_liar: true
+  player_inquiry: null
+  talk: L2_expose_tommy
+  unlock_condition:
+  - type: doubt_collected
+    param: '1201'
+  - type: doubt_collected
+    param: '1202'
+  - type: doubt_collected
+    param: '1203'
+  - type: doubt_collected
+    param: '1204'
+  - type: doubt_collected
+    param: '1205'
+  - type: doubt_collected
+    param: '1206'
+  expose_lie_ids:
+  - L2_R2_retreat
+  - L2_R3_retreat
+  rounds:
+  - round: 1
+    lie: Webb 收到的钱都已计入我的营业账，没有账外进项。
+    lie_source: '1052001'
+    collectible_lie_anchor: scenes[2].npcs.Tommy.testimony_ids[0]
+    usable_evidence:
+    - '1204'
+    - '1203'
+    evidence_set:
+    - '1204'
+    - '1203'
+    result: 9月差4000、10月差7000，确认存在账外私人交易；不是净利与毛收入差
+    next_retreat: 承认私人生意，称9月12日真花瓶交付Lawson前一直摆真品，此后才换眼前仿品
+  - round: 2
+    lie: 9月12日交付前一直摆真品，Lawson买走后才换上目前这只仿品。
+    lie_source: L2_R2_retreat
+    usable_evidence:
+    - '1706'
+    - '1206'
+    evidence_set:
+    - '1706'
+    - '1206'
+    accepted_equivalent_sets:
+    - - '1201'
+      - '1206'
+    result: 旧照最迟9月11日已冲印，同位置同形状划痕认定当前这只此前已存在；仅击破先真后假的时间解释
+    preconditions_established_on_site:
+    - Tommy亲口认当前这只为仿品
+    - 所称首次摆放晚于交付
+    next_retreat: 撤回古董说法，承认花瓶指本组照片和底片，四千为处理销毁费，价格由Webb定
+  - round: 3
+    lie: 这张原签写的是Lawson本人；不付款也只是将照片退还他本人。
+    lie_source: L2_R3_retreat
+    required_setup:
+    - Tommy认领这一单、照片底片与这张原寄件签
+    - 说明Lawson付款前看过原签：12日前结清销毁，不结按签寄送
+    - 将其包装为正常付费处理，并自行坚称收件人就是客户本人
+    usable_evidence:
+    - '1291'
+    evidence_set:
+    - '1291'
+    result: 客户Lawson与收件人Éléonore不同；Tommy承认第三人收件，结合事前告知和付款条件确认要挟；不靠作废标记独立定案
+    proof_boundary: 无需认出亲属关系，不加入贵宾合影额外槽
+  post_expose:
+    talk: L2_post_expose_business
+    scene_id: 1210
+    cast:
+    - Zack
+    - Tommy
+    required_beats:
+    - 确认Webb照片勒索与Tommy经手，非完整网络策划者
+    - Zack与Tommy将同姓女性猜作妻子，作为误判不写入客观证物或人物关系事实
+    - 转回致命枪击和Rosa；不交代杀人准备、移民骗局、保护取枪或James交易
+    - Emma未在场，不自动得到完整结果
+    testimony_ids: []
+    grants_evidence: []
+    runtime_exit:
+      action: loop_end
+      next_loop: 3
+outline_coverage:
+- beat_id: U1L2_narrative_event_001
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 29
+  source_event:
+    形式: 开篇剧情（固定）
+    情节点: Emma不满被借用身份，两人暂时分头调查
+    地点: 酒吧外街角
+    在场人物: Zack、Emma
+    进入与接续: 沿正式版街角段落地点；结束后Zack查员工，Emma去小包厢，尚未正式结伴
+  state_path: opening.sequence[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_002
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 30
+  source_event:
+    形式: 突发事件（进场事件）
+    情节点: Rita遣散、James追款，Zack阻止仓促接管并借款
+    地点: 酒吧大厅
+    在场人物: Zack、Rita、James、小酒保
+    进入与接续: 本轮首次进入大厅；Rita退出后接借款与欠条，Emma不在场；结束后James与小酒保留场
+  state_path: scenes[0].event_triggers[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_003
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 31
+  source_event:
+    形式: 普通问话
+    情节点: 员工工作、生活与演出信息
+    地点: 酒吧大厅
+    在场人物: Zack、James、小酒保
+    进入与接续: 点击对应NPC选项；沿原James问话内容调整地点
+  state_path: scenes[0].npcs
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_004
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 32
+  source_event:
+    形式: 普通问话
+    情节点: 小包厢套话，Emma被Zack引出调查方向
+    地点: 歌舞厅侧小包厢
+    在场人物: Zack、Emma
+    进入与接续: 沿正式版小包厢Emma问话入口；情绪回扣到后续求助，不把整轮锁成线性剧情
+  state_path: scenes[1].npcs.Emma
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_005
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 33
+  source_event:
+    形式: 突发事件（调查触发事件）
+    情节点: 搬柜受阻，Emma帮助Zack取得照片
+    地点: 同一小包厢
+    在场人物: Zack、Emma
+    进入与接续: 调查对应位置触发；搬柜、取得已冲印照片后恢复物件检查，接既定显影交互
+  state_path: scenes[1].event_triggers[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_006
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 34
+  source_event:
+    形式: 普通问话
+    情节点: Tommy营业说辞、关心Vivian
+    地点: Tommy办公室
+    在场人物: Zack、Tommy
+    进入与接续: 点击Tommy后的对话选项
+  state_path: scenes[2].npcs.Tommy
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_007
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 35
+  source_event:
+    形式: 突发事件（调查触发事件）
+    情节点: 看见枪后被Tommy制止
+    地点: Tommy办公室
+    在场人物: Zack、Tommy
+    进入与接续: 调查抽屉触发；Zack瞥见枪，Tommy制止并锁回抽屉，结束后恢复探索
+  state_path: scenes[2].event_triggers[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_narrative_event_008
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L2
+    line: 36
+  source_event:
+    形式: 指证后剧情（固定）
+    情节点: 勒索业务揭开，转向真实枪击与Rosa
+    地点: Tommy办公室
+    在场人物: Zack、Tommy
+    进入与接续: 沿正式版Tommy指证及收尾地点；结束进入L3，Emma不自动得到Zack的全部调查成果
+  state_path: expose.post_expose
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_009
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 52
+  source_event:
+    项目: James 驻场
+    原 Excel 配置: 厨房
+    修改版: 大厅；首次交谈后不退场，可重复询问，与小酒保同场
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.James
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_010
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 53
+  source_event:
+    项目: “家里确实很缺钱”证词
+    原 Excel 配置: 普通询问后收录
+    修改版: 删除该收录证词；缺钱事实由讨款及医疗需要的普通交谈呈现
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: design_constraints[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_011
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 54
+  source_event:
+    项目: 厨房探索
+    原 Excel 配置: 可进入，询问 James、查看工作表及工资单
+    修改版: L2 不开放厨房探索，James 相关询问在大厅完成
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: closed_locations[4]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_012
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 55
+  source_event:
+    项目: James 工资单
+    原 Excel 配置: 厨房可收集
+    修改版: 删除，沿用已确认决定
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: closed_locations[4]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_confirmed_entry_011
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_confirmed_entry_013
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 56
+  source_event:
+    项目: 厨房工作表
+    原 Excel 配置: L2 厨房环境证物
+    修改版: 不在 L2 查看；原位保留，随 L5 厨房探索查看，不作新增定罪材料
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: closed_locations[4]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_confirmed_entry_012
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_confirmed_entry_014
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 57
+  source_event:
+    项目: James 欠条
+    原 Excel 配置: 原配置无此物件
+    修改版: 首次交谈借款时取得，只作情感物件，不用于指证、住址或笔迹谜题
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: evidence_registry[7]
+  mapping: exact
+  deviation: none
+  evidence_delivery_required: true
+- beat_id: U1L2_confirmed_rule_015
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 59
+  source_event: James行踪问话与证词已确认：沿用原L2厨房台本的内容，送餐经过只留普通对白，仅收录“23:10—24:00在厨房、没有离开”一条时间线自述证词；仅将交谈位置移至大厅，指向厨房的现场用语随位置调整。L5直接回用，与节目单及门内／厨房喊话交叉，不新增行踪旁证。23:10—24:00在厨房不等于有人全程看见，也不排除在厨房制造23:30假枪声。
+  state_path: scenes[0].npcs.James.testimony_ids[0]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L2_confirmed_entry_016
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 63
+  source_event:
+    L2行踪证词分配: James
+    当前确认: 送餐仅为普通对白；只收录23:10—24:00一直在厨房的时间线自述证词
+    推理作用: L2先作为普通工作与行踪信息，L5发现演出窗口后重新理解，再与喊话交叉
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.James.testimony_ids[0]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_confirmed_rule_015
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+  testimony_required: true
+- beat_id: U1L2_confirmed_entry_017
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 64
+  source_event:
+    L2行踪证词分配: 小酒保
+    当前确认: 承接原Tommy的22:00—00:00整晚未离岗证词，地点调整为小酒保吧台岗位，L2交谈收录
+    推理作用: 排除小酒保的作案窗口，不另开展其嫌疑线；L4的23:18目击须与未离岗位置相容
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Bartender.testimony_ids[0]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L2_confirmed_entry_018
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：James 询问移至大厅，取消厨房探索
+    line: 65
+  source_event:
+    L2行踪证词分配: Tommy
+    当前确认: 不再持有整晚在办公室的证词，行踪仍含糊回应
+    推理作用: L4离室目击开启L5询问，不恢复旧整晚不在场谎言
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].npcs.Tommy.ordinary_dialogue[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_019
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 小包厢：本次确认项
+    line: 71
+  source_event:
+    项目: 歌舞服与猎犬面具
+    原 Excel 配置: 小包厢环境证物
+    修改版: 原位保留，可查看、不收集、不用于指证；面具内侧有“喝酒前请先摘下面具”的提醒，详情展示外侧长狗嘴与杯沿相抵的形制关系
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].environment[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_020
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 小包厢：本次确认项
+    line: 72
+  source_event:
+    项目: 私密照片
+    原 Excel 配置: 小包厢取证
+    修改版: Emma协助Zack搬开柜子后取得已冲印照片，随后沿既定流程查看、烘烤显影
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].evidence[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_021
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Tommy 办公室：已确认
+    line: 76
+  source_event: 假艺术品为可查看环境物：L2完整，L4被小酒保打碎后保留碎片，两态须对应同一物件。不收入背包，不用于疑点或指证。
+  state_path: scenes[2].environment[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_022
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Tommy 办公室：已确认
+    line: 78
+  source_event: 办公室剩余一组已确认：Tommy 营业账本原位保留，按新版同月同范围口径用于第一轮指证；Vivian 排班表原位保留为环境证物；空饭盒与送饭纸条保留为可查看、不收集的环境物件；勺子用布条系在饭盒上，纸条内容改为叮嘱Tommy好好爱惜饭盒；“负责蓝月亮的账目、排班、库存和日常运转”证词原文保留。枪声证词以本节最新仅保留时间的版本为准。
+  state_path: scenes[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_023
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Tommy 办公室：已确认
+    line: 80
+  source_event: Tommy 枪声证词已确认：原“23:30 听到一声枪响，方向在厨房和会客室一带”改为“23:30，我听到了一声枪响。”L2 办公室询问取得并收录，只印证听到枪声的时间，不提供声音方向，不证明死亡时间。
+  state_path: scenes[2].npcs.Tommy.testimony_ids[2]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L2_confirmed_entry_024
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：营业谎言证词与寄件签
+    line: 86
+  source_event:
+    项目: Tommy 营业证词
+    原配置: 蓝月亮除了私酒之外没有别的交易。
+    修改版: Webb 收到的钱都已计入我的营业账，没有账外进项。
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].npcs.Tommy.testimony_ids[0]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L2_confirmed_entry_025
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：营业谎言证词与寄件签
+    line: 87
+  source_event:
+    项目: 作废寄件签
+    原配置: 原场景未配置
+    修改版: L2 Tommy 办公室可搜的旧业务文件中取得，不放入 L4 才能打开的上锁抽屉
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].evidence[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_026
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：营业谎言证词与寄件签
+    line: 89
+  source_event: 营业证词在 L2 自由探索询问营业情况时取得并收录，用作第一轮指证的谎言。玩家出示 Tommy 营业账本与 Webb 收入记录，以同月、同范围的四千／八千收款差额击破。此处不提前谈照片，不将第二、三轮退守提前加入普通询问。
+  state_path: expose.rounds[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_027
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：营业谎言证词与寄件签
+    line: 91
+  source_event: 寄件签用于第三轮指证，客户为 Lawson Vanderbilt，收件人为 Éléonore Vanderbilt；前两轮击破后，由 Tommy 的退守建立它与照片、付款及寄送条件的关系。
+  state_path: expose.rounds[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_028
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：营业谎言证词与寄件签
+    line: 93
+  source_event: 行踪询问已确认：删除原“22:00 到 00:00 一直在办公室核账，没有离开过”的收录证词。Zack 可继续询问，Tommy 以含糊回答回避，不保证整晚未离开，也不另行收录证词。L5 不再将
+    23:18 离室目击作为对这条已删除证词的反驳。
+  state_path: scenes[2].npcs.Tommy.ordinary_dialogue[1]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_confirmed_entry_018
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_confirmed_entry_029
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 已确认：营业谎言证词与寄件签
+    line: 97
+  source_event:
+    项目: 文件柜抽屉
+    原 Excel 配置: 点击触发对话，描述可见 .45 弹壳
+    修改版: L2 玩家可拉开抽屉，只瞥见一把枪即被 Tommy 制止；Tommy 当场锁上抽屉；L4可直接打开取枪，不设开锁小游戏或钥匙条件。取消原弹壳。不取得枪、不确认物主或故障、不展示完整节目单。L4搜查抽屉取得故障枪，物品详情直接说明未见试枪痕迹与故障后未击发；L5回用
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[2].event_triggers[0]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_narrative_event_007
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_confirmed_rule_030
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 办公室：贵宾合影与身份疑点（已确认）
+    line: 100
+  source_event: L2 身份疑点已确认：题面为“私密照片中的男人是谁？”。玩家在指证前的疑点收集环节连接小包厢私密照片与 Webb 办公室贵宾合影，确认两图中的同一男子是 Lawson Vanderbilt。贵宾合影为可收集的正式线索，完整姓名题注须与人物站位明确对应；私密照片背面不直接写
+    Lawson 姓名，保留日期、冲印标记及隐写金额。该疑点纳入本轮指证前收集条件，只确认身份，不揭晓勒索性质或收件人亲属身份。贵宾合影是疑点触发材料，不是指证出示材料：第二轮仍出示私密照片＋当前花瓶观察记录，第三轮仍只出示作废寄件签。不额外增加一套指证前流程。
+  state_path: doubts[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_031
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 收入记录（已确认）
+    line: 104
+  source_event: 第一轮账目口径已确认：Webb 收入记录沿用原 Excel 内容，不删油画收入、不改原描述。九月 Tommy 营业账 $4,000 对 Webb $8,000，差额对应花瓶 $4,000；十月
+    Tommy 营业账 $4,500 对 Webb $11,500，差额对应油画 $7,000。第一轮出示两本账核对两个月；后续第二、三轮集中深入花瓶交易，不另开油画指证轮。
+  state_path: scenes[3].evidence[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_032
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 办公室：环境物（已确认）
+    line: 110
+  source_event:
+    项目: 桌面残留血迹
+    原配置: 可查看的环境证物
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[3].environment[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_033
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 办公室：环境物（已确认）
+    line: 111
+  source_event:
+    项目: 艾斯弗德好市民奖
+    原配置: 可查看的环境证物
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[3].environment[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_034
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: Webb 办公室：环境物（已确认）
+    line: 112
+  source_event:
+    项目: 城市势力飞镖地图
+    原配置: 可查看的环境证物
+    修改版: 已有美术保留为不可点击的背景装饰，不再提供调查入口
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[3].environment[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_035
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 歌舞厅与战利品墙：位置确认
+    line: 117
+  source_event:
+    项目: 假油画
+    原配置: 歌舞厅原位置
+    修改版: 保持原位置，不移入战利品墙
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].environment[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_036
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 歌舞厅与战利品墙：位置确认
+    line: 118
+  source_event:
+    项目: 通往大厅的门
+    原配置: 歌舞厅至大厅的切换入口
+    修改版: 原位置、原通行功能保留，不新增解锁条件
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].passages[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_037
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 歌舞厅与战利品墙：位置确认
+    line: 119
+  source_event:
+    项目: 通往小包厢的门
+    原配置: 歌舞厅至小包厢的切换入口
+    修改版: 原位置、原通行功能保留，不新增解锁条件
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[4].passages[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_038
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 歌舞厅与战利品墙：位置确认
+    line: 120
+  source_event:
+    项目: 战利品墙
+    原配置: 无此独立环境物安排
+    修改版: 会客室旁走廊对面，独立作为环境证物
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].environment[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_039
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 歌舞厅与战利品墙：位置确认
+    line: 121
+  source_event:
+    项目: 花瓶特征
+    原配置: 原描述未明确照片比对标记
+    修改版: 小包厢花瓶上有一处明显划痕，与旧照片中同位置、同形状的划痕对应；现物与照片均须清晰可辨，用于第二轮指证
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[1].evidence[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_040
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 二楼走廊（已确认）
+    line: 124
+  source_event: 原配置无驻场 NPC、证词及可搜证物。以下通道全部原样保留，不新增解锁条件。
+  state_path: scenes[6]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_041
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 二楼走廊（已确认）
+    line: 128
+  source_event:
+    项目: Tommy 办公室入口
+    原配置: 通往 Tommy 办公室
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].passages[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_042
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 二楼走廊（已确认）
+    line: 129
+  source_event:
+    项目: Webb 办公室入口
+    原配置: 通往 Webb 办公室
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].passages[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_043
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 二楼走廊（已确认）
+    line: 130
+  source_event:
+    项目: 下楼入口
+    原配置: 通往一楼走廊
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[6].passages[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_044
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 二楼走廊（已确认）
+    line: 132
+  source_event: L2 至 L4 搜查前的锁闭限制只适用于 Tommy 办公室内抽屉，不适用于办公室房门。
+  state_path: scenes[2].event_triggers[0]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_confirmed_entry_029
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_confirmed_entry_045
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 一楼走廊（已确认）
+    line: 137
+  source_event:
+    项目: 战利品墙
+    原配置: 无独立环境物
+    修改版: 按已确认方案保留新增环境陈列；L3 回看 OS 仅记录于独立 OS 稿
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].environment[0]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_confirmed_entry_038
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_confirmed_entry_046
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 一楼走廊（已确认）
+    line: 138
+  source_event:
+    项目: 通往二楼走廊
+    原配置: 楼梯入口
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].passages[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_047
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 一楼走廊（已确认）
+    line: 139
+  source_event:
+    项目: 通往大堂
+    原配置: 门
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].passages[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_048
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 一楼走廊（已确认）
+    line: 140
+  source_event:
+    项目: 通往 Webb 会客室
+    原配置: 门，含额外通行参数
+    修改版: 保留原锁定入口；参数 1203
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].passages[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_049
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 一楼走廊（已确认）
+    line: 141
+  source_event:
+    项目: 通往地下走廊
+    原配置: 楼梯入口，含额外通行参数
+    修改版: 保留原锁定入口；参数 1230
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[5].passages[3]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_050
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 一楼走廊（已确认）
+    line: 143
+  source_event: 无驻场 NPC、独立证词。
+  state_path: scenes[5].npcs
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_051
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅通道（已确认）
+    line: 148
+  source_event:
+    项目: 通往歌舞厅
+    原 Excel 配置: 可通行
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].passages[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_052
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅通道（已确认）
+    line: 149
+  source_event:
+    项目: 通往一楼走廊
+    原 Excel 配置: 可通行
+    修改版: 原样保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].passages[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_entry_053
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 大厅通道（已确认）
+    line: 150
+  source_event:
+    项目: 通往厨房走廊
+    原 Excel 配置: 可通行，可继续去厨房
+    修改版: L2 锁定，点击显示“暂未开启”；拟参数由 1218 改为 1218
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].passages[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L2_confirmed_rule_054
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 小酒保演出证词与节目单分工（已确认）
+    line: 153
+  source_event: '- L2 小酒保收录证词：“酒吧的乐队演出由 Tommy 负责联系和安排。”不特别强调案发当晚，不透露换曲、Vivian 的委托、杀人计划或实际分钟。这条证词引出 L4 对 Vivian 的
+    Tommy 经手情况追问，不作为第二轮出示材料；该轮出示有 Tommy 经手记录的节目修改申请。L5 不另取演出执行证词，完整节目单即当晚实际执行记录。
+
+    - L4：第二轮只确认 Tommy 经手演出；全部指证结束后，Vivian 才坦白曾告知他杀人计划。节目修改申请的证据分工不变。
+
+    - L5：完整节目单本身就是当晚实际执行记录，显示曲目、实际起止时间及鼓段强奏信息，不额外安排小酒保的演出执行证词。'
+  state_path: scenes[0].npcs.Bartender.testimony_ids[1]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L2_narrative_detail_055
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 一、共同起点：L2 大厅遣散与追款冲突
+    line: 92
+  source_event: 'Emma 此时在小包厢，Zack 独自进入大厅。Rita 是酒吧已有的小股东，同时代表 TideWater 推进全面收购。她提出给员工一笔钱，遣散他们；对缺乏所需移民身份、依赖酒吧工作和落脚的员工来说，这意味着失去容身之所。小酒保希望留下工作。James
+    则向 Rita 追讨 Webb 尚未结清的跑腿报酬：Anna 孕检情况不好，接下来需要一笔医疗费用，Rita 不肯支付这笔款项。
+
+
+    James 对其他员工担忧的移民问题没有明显反应。幕后原因是 Whale 已替他与 Anna 办妥身份；L2 不说明这一原因，也不由 Zack 当场点出异常。所谓跑腿实际涉及 Webb 的勒索业务，当前追款不直接交代完整经手内容，更不能将这笔旧报酬混同为
+    Whale 的杀人酬金。
+
+
+    事件按以下顺序发生：
+
+
+    1. Zack 独自目睹遣散与追款冲突。Rita 推进收购交接，Zack 以 Webb 留下的遗嘱委托及 Vivian 的继承安排正面阻止：如要全面收购，应等继承手续走完，再与 Vivian 商谈；不替 Vivian
+    永久决定是否出售。
+
+    2. Rita 暂时退出这次交接、离开大厅，收购诉求仍在。大厅剩下 Zack、James 和小酒保；James 的跑腿报酬仍未拿到，小酒保的去留也未确定。
+
+    3. 得知 Anna 的医疗需求后，Zack 临时拿出一些钱借给 James 应急，具体金额与医疗开支在制作时落实，不默认这笔钱已覆盖全部费用。
+
+    4. James 认真写下所借金额的欠条，交给 Zack，准备之后还钱。
+
+    5. James与小酒保留在大厅，接续Zack询问。工作与行踪的收录口径见核对稿。
+
+
+    同一场事件区分两人的困境：小酒保害怕失去工作与落脚处，James 已解决身份问题，却仍为眼前医疗支出追款、借钱。Zack 垫款给 James，James 认真记下要归还的债。Emma 不在事件现场，也没有出钱；后续不能让她以亲历者身份回忆这场援助。'
+  state_path: scenes[0].event_triggers[0]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_narrative_event_002
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_narrative_detail_056
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 4. 小包厢博弈：Emma 再吃一次瘪
+    line: 377
+  source_event: 'Zack 想知道 Emma 到底在查什么，Emma 不愿白白交出成果。
+
+
+    Zack 利用试探与有意留错的判断，引她纠正自己，从反应中套出：她正在调查酒吧的勒索生意。
+
+
+    这一轮明确由 Zack 得手。Emma 发现又被绕了进去，Zack 带着赢了的得意离开。这里不安排公平交换，也不顺势谈成搭档。
+
+
+    Emma 透露的是调查方向与局部信息，不替玩家解开账目、照片及相关物证之间的完整勒索链。'
+  state_path: scenes[1].npcs.Emma
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_narrative_event_004
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_narrative_detail_057
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 5. 搜查受阻：Zack 必须请她帮忙
+    line: 387
+  source_event: 'Zack 刚结束口头博弈，准备继续检查相机及相关搜查位置，就遇到实际障碍：柜子需要挪动，他一个人没能搬开，只能向 Emma 求助。
+
+
+    Emma 这次掌握主动，要求 Zack 配合操作。Zack 必须放下得意，听她安排，两人配合完成挪动与后续检查；摄影相关操作也可发挥 Emma 的职业能力。
+
+
+    必须让玩家实际看见“搬柜子受阻、Emma 帮忙”，供L5开篇电话后正式结伴时回扣。趣味来自刚套完话就需要求助的反差，不把 Zack 写成缺乏基本常识，也不以损坏关键证物制造笑话。
+
+
+    柜子、相机与照片的精确位置和操作在搜证制作时统一。已冲印照片与机内胶卷分开处理，不能把取出胶卷直接等同于显影完成，也不能提前给出推理结论。'
+  state_path: scenes[1].event_triggers[0]
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_narrative_event_005
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L2_narrative_detail_058
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 6. 合作暂时结束，信息仍不对等
+    line: 397
+  source_event: '完成这次任务后，两人继续各自调查。Zack 核对证据、指证 Tommy，取得更多勒索生意的信息。
+
+
+    Emma 帮过忙，却没有自动获得 Zack 后续查到的全部结果。这份不对等留到 L3 再起一次小摩擦。'
+  state_path: expose.post_expose
+  mapping: merged
+  deviation: none
+  merged_with: U1L2_narrative_event_008
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+narrative_continuity:
+  units:
+  - id: L2_opening
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id001
+    - Emma因身份被借用而不满
+    consumes: *id001
+    required_callbacks: []
+    required_beats:
+    - 街角争执，双方分头
+    exit_state:
+      facts:
+      - Emma去小包厢，尚未结伴
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L2_free_investigation
+  - id: L2_free_investigation
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id002
+    - 继承和员工生计受收购施压；Webb生意待查
+    consumes: *id002
+    required_callbacks: []
+    required_beats:
+    - 大厅首入按遣散→Rita退场→借款欠条
+    - 大厅员工普通问话；两办公室、小包厢及通道自由穿插
+    - Emma套话后搬柜合作，Tommy抽屉瞥枪受阻
+    exit_state:
+      facts:
+      - 必需六疑点材料可取得，Emma未获后续全量成果
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L2_expose
+  - id: L2_expose
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id003
+    - 营业说法与两账冲突
+    consumes: *id003
+    required_callbacks: []
+    required_beats:
+    - 三轮分别账差、花瓶时间、原签收件栏；退守由Tommy主动产生
+    exit_state:
+      facts:
+      - 勒索与经手成立；亲属误判保留
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L2_post_expose
+  - id: L2_post_expose
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id004
+    - Webb死亡原因与Rosa证词仍待解
+    consumes: *id004
+    required_callbacks: []
+    required_beats:
+    - 结束业务对抗转回枪击调查
+    exit_state:
+      facts:
+      - James欠条保留，Emma信息不对等
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L3_opening
+quiz: []
+runtime_requirements:
+- key: analysis_condition_compatibility
+  status: special_adapter
+  detail: 1201→1706替换实际背包；原图身份疑点对有效现态需兼容重检/读档，不要求先认人后烘烤；R2接受保留照片正面与日期的等效状态
+- key: cabinet_talk_order
+  status: special_adapter
+  detail: 同场套话→搬柜求助的顺序需Talk完成绑定；不能把其它探索场景锁成线性链
+- key: hidden_lie
+  status: special_adapter
+  detail: 1202疑点第三项1052001全AND但不显示；不得删掉或改为OR
+design_constraints:
+- 不恢复James缺钱证词、工资单、Tommy整晚办公室证词
+- 照片及寄件采用1928年9月10/11/12日；案发1928年11月3日
+- 账本十月油画7000保留，私照只显花瓶4000，不另开油画指证
+- 小酒保L2仅一般演出职责；L4换曲与L5实际节目单不提前披露
+- 环境物均不进疑点或指证；贵宾合影仅识人
+- 抽屉阻止事件与普通Tommy对话分离，旧业务文件不随抽屉上锁
+- 不做独立古董鉴定，花瓶观察记录不依赖摔坏后的相机继续拍照
+self_check:
+  A: PASS_LOCAL
+  B: PASS_LOCAL
+  C: PASS_LOCAL
+  D: PASS_LOCAL
+  E: PASS_LOCAL
+  F: PASS_LOCAL
+  G: PASS_LOCAL
+  H: PASS_LOCAL
+  I: PASS_LOCAL
+  J: PENDING_CROSS_AUDIT_RUNTIME_ADAPTERS_RECORDED
+closed_locations:
+- scene_id: 1203
+  reason: 会客室保留原锁定入口
+- scene_id: 1230
+  reason: 地下走廊保留原锁定入口
+- scene_id: 1201
+  reason: 地下区域本轮不可达
+- scene_id: 1218
+  reason: 大厅至厨房走廊锁定
+- scene_id: 1209
+  reason: 厨房不开放，James移大厅；不配工资单、工作表取证
+
+production_details:
+  source: U1优化制作/06_State/制作细节定稿.md
+  precedence: 本轮制作决定优先于source_contracts或origin中保留的旧待定摘录；不改写历史原文。
+  iou_amount_usd: 20
+  iou_date_field: omitted
+  iou_interest_and_due_date: none
+  pistol_serial: "384216"
+  pistol_serial_art_status: pending_visual_update
+
+calendar_contract:
+  source: U1优化制作/06_State/制作细节定稿.md
+  crime_date: "1928-11-03"
+  investigation_limit_hours: 72
+  countdown_start: pending
+  newspaper_date: "1928-11-03"
+  precedence: 本轮定稿覆盖来源摘录中的日期与节目表待定说明；origin及source_contracts保留历史原文。

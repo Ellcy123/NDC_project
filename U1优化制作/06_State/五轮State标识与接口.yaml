@@ -1,0 +1,2980 @@
+schema_version: 1
+unit: Unit1
+episode: EPI01
+updated_at: '2026-09-17'
+status: design_contract_not_runtime_tables
+calendar_and_program_contract:
+  source: U1优化制作/06_State/制作细节定稿.md
+  crime_date: '1928-11-03'
+  newspaper_date: '1928-11-03'
+  actual_program_item: 1590
+  actual_program_detail: U1优化制作/06_State/loop5_state.yaml#actual_performance_program
+  precedence: 本轮定稿优先于origin和历史来源中保留的日期或待定说明；图片尚未修改。
+sources:
+  manifest: canon_manifest.json
+  confirmed_scene_plan: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  outline: 剧情设计/Unit1/Unit1_内容修改方案_双重谋杀计划与欠条版.md
+  narrative: 剧情设计/Unit1/内容修改后的增强情节线.md
+allocation_policy:
+  scope: 现有同语义ID优先保留，跨轮迁移不重编码；新项只设计分配，未写入Unity。
+  collision_scan:
+  - D:/NDC/Assets/table
+  - avg_editor_v2/data/table
+  - D:/NDC/res/xls/ItemStaticData.xlsx
+  - D:/NDC/res/xls/证词道具表.xlsx
+  - D:/NDC/res/xls/NPCStaticData.xlsx
+  - D:/NDC/res/xls/SceneConfig.xlsx
+  - D:/NDC/res/xls/LocationConfig.xlsx
+  - 剧情设计/Unit1旧state、AVG/EPI01与Unit1草稿已有引用
+  talk_ids: 不分配正式Talk ID，所有Talk入口用逻辑名。
+  origin_rule: origin保存工程当前原名原文，content为批准新版信息合同，不将origin旧事实直接抄入新对白。
+items:
+- key: pocket_pistol
+  id: 1101
+  name: Vivian 小手枪
+  content: .25口径小手枪，可分析；L4枪号与收据同为384216；美术需补可辨刻号。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - Vivian Gray的小手枪
+    - Vivian Gray's Pocket Pistol
+    content:
+    - 'Vivian Gray 手里拿着一把柯尔特 1908 型袖珍手枪。
+
+      .25 口径，枪身小巧，适合随身藏放。'
+    - 'A Colt 1908 pocket pistol in Vivian Gray''s hand.
+
+      .25 caliber, compact enough to conceal.'
+  analysed_evidence: 1711
+- key: pistol_no_residue
+  id: 1711
+  name: 无硝烟的小手枪检查结果
+  content: 近期未击发；L1击破后L4回用。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 无硝烟的手枪
+    - 'Pistol: No Gunshot Residue'
+    content:
+    - '检查 Vivian Gray 的小手枪后记录的结果：
+
+      枪管内没有硝烟残留，枪膛和弹匣也没有近期击发留下的污痕。'
+    - 'Inspection of Vivian Gray''s pocket pistol found no gunshot residue in the barrel and no recent firing marks
+      in the chamber or magazine.
+
+
+      The pistol had not been fired recently.'
+  before_analysed_evidence: 1101
+- key: executor_agreement
+  id: 1103
+  name: Webb 委托协议书
+  content: Zack 为遗嘱执行人，Vivian 继承；保留原协议，不算L1第二次指证。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - Arthur Webb 委托协议书
+    - Webb's Executor Agreement
+    content:
+    - '黑色信封里放着 Arthur Webb 签署的遗嘱执行协议。
+
+      纸上写明：Zack Brennan 被指定为遗嘱执行人，
+
+      负责确保 Vivian Gray 完整继承 Arthur Webb 的遗产。
+
+      日期是 1928 年 10 月 31 日，右下角有 Arthur Webb 的签名。
+
+
+      这不是普通委托，而是 Arthur Webb 提前系在 Zack Brennan 手上的责任。'
+    - 'A signed estate executor agreement from Arthur Webb.
+
+      It names Zack Brennan as executor and directs him to ensure Vivian Gray receives Webb''s full estate.
+
+      Dated October 31, 1928, it bears Webb''s signature.
+
+
+      This is more than a routine contract. Webb left Zack a responsibility.'
+- key: private_photo
+  id: 1201
+  name: 私密照片
+  content: 已冲印的 Vivian 与男子私密合影；背面不写 Lawson 姓名；搬柜后取，烘烤前金额不可读。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 一些合影
+    - Private Photos
+    content:
+    - 'Vivian Gray 和一名衣着体面的中产男士坐在包厢里，姿态亲密。
+
+      照片背面有几处淡黄褐色污渍，肉眼看不出意义。'
+    - 'Vivian Gray sits close beside a well-dressed middle-class man in a private booth.
+
+      Several pale yellow-brown stains mark the back of the photograph, but nothing readable can be made out.
+
+
+      It feels less like a keepsake than material someone kept as leverage.'
+  analysed_evidence: 1706
+- key: heated_photo
+  id: 1706
+  name: 显影私密照片
+  content: 仅显影花瓶4000美元，不再显影油画7000；正面保留可辨认男子与花瓶划痕。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 带金额显影的勒索照片
+    - Blackmail Photo with Prices
+    content:
+    - '经过煤油灯烘烤后，照片背面的隐写字迹显影。
+
+      两笔金额清楚浮现：“花瓶 4000 美元”和“油画 7000 美元”。
+
+
+      这张照片不是普通隐私照，而是一份已经标价的勒索材料。'
+    - 'After warming it over a kerosene lamp, hidden writing appears on the back of the photo.
+
+      Two prices become clear: Vase $4,000 and Painting $7,000.
+
+
+      This is not a private memento, but blackmail material with prices attached.'
+  before_analysed_evidence: 1201
+- key: vip_photo
+  id: 1202
+  name: Webb 办公室贵宾合影
+  content: 题注明确对应 Lawson Vanderbilt 站位，与私照同一男子；疑点用不出示。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - Arthur Webb 办公室贵宾合影
+    - VIP Photo
+    content:
+    - '一张贵宾合影。
+
+      照片中，Arthur Webb 与 Thompson、Coleman 站在一起，
+
+      两人面对镜头微笑。'
+    - 'A framed VIP photo from Arthur Webb''s office.
+
+      Webb stands with Thompson and Coleman, all smiling for the camera.'
+- key: webb_ledger
+  id: 1203
+  name: Webb 收入记录
+  content: 沿用原文：9月基本4000+花瓶4000=8000；10月基本4500+油画7000=11500。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - Arthur Webb 收入记录
+    - Arthur Webb's Income Ledger
+    content:
+    - 'Arthur Webb 的个人收入记录抬头写着“1928 年个人收入”。
+
+      9 月：基本收入 4000 美元，花瓶 4000 美元，合计 8000 美元。
+
+      10 月：基本收入 4500 美元，油画 7000 美元，合计 11500 美元。
+
+
+      正常收入之外的两笔钱，被写成了古董名目。'
+    - 'Arthur Webb''s private ledger reads “ARTHUR WEBB · PERSONAL INCOME · 1928.”
+
+      September: Base $4,000, Vase $4,000, Total $8,000.
+
+      October: Base $4,500, Painting $7,000, Total $11,500.
+
+
+      Two payments outside his regular income are disguised as antiques.'
+- key: tommy_ledger
+  id: 1204
+  name: Tommy 营业账本
+  content: 9月总收入4000；10月4500；与Webb同月同范围对照。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - Tommy Connelly 酒吧账本
+    - Tommy Connelly's Bar Ledger
+    content:
+    - '蓝月亮酒吧 1928 年正式账本。
+
+      9 月：酒水 2800 美元，餐食 700 美元，音乐演出 500 美元，月收入 4000 美元。
+
+      10 月：酒水 3200 美元，餐食 800 美元，音乐演出 500 美元，月收入 4500 美元。
+
+
+      账面只留下正常营收，干净得像被人刻意擦过。'
+    - 'The Blue Moon Bar''s official financial record lists only regular revenue.
+
+      September: Liquor Sales $2,800, Food Service $700, Music Entertainment $500, Monthly Revenue $4,000.
+
+      October: Liquor Sales $3,200, Food Service $800, Music Entertainment $500, Monthly Revenue $4,500.
+
+
+      The book is clean enough to feel deliberately cleaned.'
+- key: vase_record
+  id: 1206
+  name: 当前花瓶观察记录
+  content: 小包厢当前花瓶与旧私照同位置同形状划痕；现物留场，以观察记录入证据。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 花瓶现场照
+    - Vase Photo
+    content:
+    - 一个古董花瓶。
+    - 'A crime-scene photo of the vase still sitting in place.
+
+      The ledger says the vase was sold to Thompson, but the object never seems to have left the room.'
+- key: iou
+  id: 1290
+  name: James 欠条
+  content: L2首次借款20美元后交付，承诺归还，不列日期、利息或到期日；情感物件，不作指证、住址或笔迹谜题；L5归还Anna并免还，之后不再留玩家栏。正文见制作细节定稿.md。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: shipping_label
+  id: 1291
+  name: 作废寄件签
+  content: 客户Lawson Vanderbilt，收件人Éléonore Vanderbilt女士；花瓶，9/12作废；不写亲属关系或勒索解释。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: glass
+  id: 1301
+  name: 垃圾袋下的玻璃碎片
+  content: 带硝烟且被垃圾袋压住；联系23:20倒垃圾，证明致命枪击早于23:20。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 玻璃碎片
+    - Glass Shards
+    content:
+    - '一组压在垃圾袋下方的玻璃碎片。
+
+      碎片表面有黑灰色硝烟痕迹；
+
+      旁边的垃圾袋压住了其中几块碎片，袋口还系着清洁登记标签。'
+    - 'A set of glass shards pressed under a trash bag.
+
+      The shards carry dark gray gunpowder residue;
+
+      the nearby trash bag is weighing some of them down, and its opening is tied with a cleaning log tag.'
+- key: threat
+  id: 1302
+  name: 威胁纸条
+  content: 命令Rosa23:30去会客室谎称目击Vivian杀人，以女儿性命威胁；J/T异常保留，直到L5指证后回扣。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 威胁纸条
+    - Threatening Note
+    content:
+    - '蓝月亮酒吧餐巾纸背面写着一段威胁：
+
+      23:30 去 Arthur Webb 的会客室，
+
+      谎称亲眼看见 Vivian Gray 杀了他；
+
+      照做，否则你的女儿会死。
+
+      铅笔字很用力，里面的 J 写法也显得别扭。
+
+
+      这不是威胁一个证人，而是掐住一个母亲的喉咙。'
+    - 'A Blue Moon Saloon napkin with a pencil threat on the back:
+
+      “Just go to Mr. Arthur Webb''s parlor at 23:30.
+
+      Just say you saw Miss Vivian Gray kill him.
+
+      Just do this job — or your daughter dies.”
+
+      The pencil strokes are harsh, and the letter J is written oddly.
+
+
+      It threatens not just a witness, but a mother.'
+- key: hospital_notice
+  id: 1303
+  name: Sacred Heart 医院通知
+  content: 箱外取得，给医院地址与Isabel病房信息；解锁医院地图，不沿用旧圣玛丽账单年月金额。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 女儿医疗单
+    - Isabel's Medical Bill
+    content:
+    - '圣玛丽慈善医院的逾期医疗账单。
+
+      病人是 Isabel Martinez，监护人 Rosa Martinez，日期 1925 年 11 月 28 日。
+
+      费用包括：问诊 30 美元、哮喘吸入药 45 美元、可待因止咳糖浆 27.5 美元、
+
+      两晚病床 50 美元、护理杂费 15 美元，总计 167.5 美元。
+
+      账单底部盖着“逾期未付”。
+
+
+      这些数字说明，Rosa Martinez 的谎言是被恐惧逼出来的。'
+    - 'An overdue bill from St. Mary''s Charity Hospital.
+
+      Patient: Isabel Martinez. Guardian: Rosa Martinez. Date: November 28, 1925.
+
+      Charges include doctor''s consultation $30.00, asthma inhalant $45.00, cough syrup $27.50,
+
+      hospital bed for two nights $50.00, and nursing care $15.00. Total due: $167.50.
+
+      The bottom is stamped “BILL OVERDUE.”
+
+
+      The numbers make Rosa Martinez''s fear painfully plain.'
+- key: locket
+  id: 1309
+  name: Isabel 生日吊坠
+  content: Isabel病房取得，内盖“我的天使 · 0915”；清洁箱密码提示，不直接解释为密码。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - Rosa Martinez 女儿的照片
+    - Photo of Rosa's Daughter
+    content:
+    - '一只磨旧的金属相盒。打开后，里面嵌着一张约十岁女孩的黑白照片；
+
+      内盖刻着 Rosa Martinez 的字：“我的天使 · 0915”。'
+    - 'A worn metal photo locket. Inside is a black-and-white photograph of a girl about ten years old.
+
+      Rosa Martinez has engraved the inner lid: “My Angel · 0915.”'
+- key: casing
+  id: 1401
+  name: 致命一枪的弹壳
+  content: L3医院指证后Rosa交出；来自会客室，不作为病房可搜物。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 案发现场的弹壳
+    - Crime-Scene Casing
+    content:
+    - 'Rosa Martinez 悄悄交给 Zack Brennan 的一枚案发现场弹壳。
+
+      弹底有细小印记，暂时无法确认口径与来源。'
+    - 'A casing from the crime scene, quietly handed to Zack Brennan by Rosa Martinez.
+
+      Tiny marks are present on the base, but its caliber and origin have not yet been confirmed.'
+  analysed_evidence: 1702
+- key: casing_rubbing
+  id: 1702
+  name: 致命弹壳拓印
+  content: 检查拓印确认.45 ACP；L4与.25小手枪对照。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - .45 警用弹壳拓印
+    - .45 ACP Casing Rubbing
+    content:
+    - '对 .45 警用弹壳的弹底做铅笔拓印后取得的图样。
+
+      外圈能读出“WCC · .45 ACP”，确认其口径；
+
+      内圈显出“潮汐军械”。'
+    - 'A pencil rubbing from the base of the .45 casing.
+
+      The outer ring reads WCC - .45 ACP, confirming the caliber.
+
+      The inner mark reads TIDEWATER ARMS.'
+  before_analysed_evidence: 1401
+  acquisition_note: L3指证后仅交付弹壳原物；L4开放分析/拓印后取得口径材料。
+- key: program_request
+  id: 1502
+  name: 节目修改申请
+  content: Moonlight Bay改艾斯弗德狂想曲，完整版全部鼓段，音量5，Vivian签名，Tommy已转交乐队；不写实际起止时刻。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 节目修改申请
+    - Program Change Request
+    content:
+    - 'Vivian Gray 签的节目修改申请。
+
+      申请日期是 1928 年 10 月 28 日，演出日期是 1928 年 11 月 3 日。
+
+      原节目是 23:00-23:10 的“月光小夜曲”和“秋日情歌”，
+
+      风格为抒情曲，音量 2。
+
+      她申请改成“艾斯弗德狂想曲”和“爵士风暴”，
+
+      风格改为强劲节奏的爵士乐，
+
+      并把音量调到最高的 5 级。'
+    - 'A program change request signed by Vivian Gray.
+
+      Filed October 28 for the November 3 performance.
+
+      The original 23:00 to 23:10 set was “Moonlight Serenade” and “Autumn Love Song”, both quiet pieces at volume
+      2.
+
+      Vivian requested “Ashford Rhapsody” and “Jazz Storm” instead, with heavy drums at maximum volume.'
+- key: faulty_gun
+  id: 1601
+  name: Webb 故障手枪
+  content: L4抽屉取得；M1911式样、.45 ACP。详情直接呈现仍有故障、未见试枪痕迹、故障后未击发；不加分析/检查完成前置。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 一把手枪
+    - Tidewater Arms Pistol
+    content:
+    - '一把手枪，.45 口径。
+
+      握把和枪管有明显使用痕迹。'
+    - 'A .45 caliber pistol.
+
+      The grip and barrel show clear signs of use.'
+- key: gun_receipt
+  id: 1490
+  name: 磨损的购枪收据
+  content: Webb办公室旧文件；仅枪号与付款人Webb可辨；与Vivian小手枪对应，不显示型号/日期。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: password_note
+  id: 1491
+  name: 密码纸条
+  content: Webb办公室被Rita翻过的抽屉取得；L4必取，L5电话筹码，不给保险柜密码小游戏。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: actual_program
+  id: 1590
+  name: 当晚完整节目单
+  content: 小包厢坐垫缝，揉皱但完整；艾斯弗德狂想曲23:00—23:10，完整鼓段强奏，调查起即能取。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 5
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: english_book
+  id: 1504
+  name: 美国工人英语练习书
+  content: 厨房远离火源置物架；正式收集物；J/T对照在击破后，不提前定伪造者。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 5
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 美国工人英语练习书
+    - English Practice Book
+    content:
+    - '一本《美国工人英语练习系列》。
+
+      扉页写着 James O''Sullivan，1927 年 10 月。
+
+      右页是第一课：英文字母。
+
+      下面的练习句写着：我叫 James O''Sullivan。我来自爱尔兰。我住在纽约。
+
+      我在工厂工作。我想学英语。美国是个好国家。
+
+
+      那些反复练习的字母不像偶然笔误，更像一个人努力融入这座城市时留下的痕迹。'
+    - 'A copy of The American Worker’s English Series.
+
+      The flyleaf says “James O''Sullivan, Oct. 1927.”
+
+      The right-hand page is Lesson One: the alphabet.
+
+      The practice sentences read: My name is James O''Sullivan. I am from Ireland. I live in New York.
+
+      I work in a factory. I want to learn English. America is a good country.
+
+
+      The repeated letters feel less like a random mistake than the marks of someone trying to fit into this city.'
+- key: record_fragment
+  id: 1602
+  name: 录音盘碎片
+  content: L5锁定尾声保险柜取得、试听并保留至后章；具体断口、跨章音频范围另行对齐，不在此臆定。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 5
+  origin:
+    table: D:\NDC\Assets\table\ItemStaticData.json
+    name:
+    - 录音盘碎片
+    - Record Fragments
+    content:
+    - '一张录音盘的碎片，边缘带烧焦痕迹。
+
+      '
+    - A fragment of a record, with burned edges.
+testimonies:
+- key: rosa_accusation
+  id: 1031001
+  name: Rosa持枪指认
+  content: 看见 Vivian 持枪，就认定她刚杀了 Webb。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 看见Vivian持枪
+    - Saw Vivian holding gun
+    content:
+    - 只看见Vivian手里拿着枪，就认定她刚杀了Webb先生。
+    - Only saw Vivian holding the gun and assumed she had just killed Mr. Webb.
+  design_notes: 只看见Vivian拿枪，就认定她刚杀了Webb。
+- key: death_shot
+  id: 1031002
+  name: Rosa23:30死亡枪声
+  content: 23:30 为死亡枪声，紧接着玻璃碎裂，当时只有 Vivian 在里面。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - Gray独自在会客室
+    - Gray alone in parlor
+    content:
+    - 23:30 一定是Webb死亡的枪响。我亲耳听到，紧接着还有玻璃碎裂声；那会儿只有Gray小姐在里面。
+    - The 23:30 shot must have killed Webb. I heard it myself, followed immediately by glass shattering; Miss Gray
+      was the only one inside then.
+  design_notes: 23:30一定是Webb死亡枪声，紧接玻璃碎裂，当时只有Vivian在里面。
+- key: rosa_role
+  id: 1031003
+  name: Rosa职业
+  content: 蓝月亮清洁工。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 清洁工
+    - Cleaner
+    content:
+    - 蓝月亮酒吧的清洁工。
+    - Cleaner at the Blue Moon Cabaret.
+- key: morrison_role
+  id: 1041004
+  name: Morrison辖区
+  content: 二十二分局辖区警察。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 辖区警察
+    - Precinct officer
+    content:
+    - 二十二分局警察，蓝月亮所在片区归他管。
+    - A 22nd Precinct police officer who says the Blue Moon district is under his watch.
+  design_notes: 二十二分局警察，蓝月亮所属辖区。
+- key: fatal_wound
+  id: 1041005
+  name: Webb死因
+  content: Webb 胸口中枪身亡。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 胸口中枪身亡
+    - Fatal chest gunshot
+    content:
+    - Webb胸口中了一枪身亡。
+    - Webb died from a single gunshot wound to the chest.
+  design_notes: Webb胸口中枪身亡。
+- key: vivian_role
+  id: 1061001
+  name: Vivian职业
+  content: 蓝月亮歌女。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 1
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 酒吧歌女
+    - Cabaret singer
+    content:
+    - 蓝月亮酒吧的歌女。
+    - Singer at the Blue Moon Cabaret.
+- key: james_alibi
+  id: 1072005
+  name: James厨房行踪自述
+  content: 23:10—24:00在厨房、没有离开。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 一直在厨房
+    - Stayed in kitchen
+    content:
+    - 从 23:10 回到厨房以后，一直到 00:00，我都没出过这厨房的门。
+    - After returning to the 2F kitchen at 23:10, did not leave the kitchen until 00:00.
+  design_notes: 23:10返回厨房后直到00:00没离开；非旁人连续目击，不排除厨房制造假枪声。
+- key: bartender_alibi
+  id: 1122001
+  name: 小酒保吧台行踪
+  content: 22:00—00:00一直在吧台岗位，没有离开。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  design_notes: 22:00—00:00一直在吧台岗位，没离岗；L4目击视线须与岗位相容。
+- key: music_role
+  id: 1122002
+  name: 小酒保演出职责证词
+  content: 酒吧的乐队演出由 Tommy 负责联系和安排。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  design_notes: 酒吧乐队演出由Tommy负责联系和安排；不指案发晚具体换曲。
+- key: tommy_role
+  id: 1052003
+  name: Tommy管理职责
+  content: 负责蓝月亮的账目、排班、库存和日常运转。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 管理酒吧事务
+    - Manages cabaret business
+    content:
+    - 负责蓝月亮的账目、排班、库存和日常运转。
+    - Handles the Blue Moon accounts, shifts, inventory, and daily operations.
+  design_notes: 负责蓝月亮账目、排班、库存和日常运转。
+- key: revenue_lie
+  id: 1052001
+  name: Tommy收入谎言
+  content: Webb 收到的钱都已计入我的营业账，没有账外进项。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 酒吧只有私酒生意
+    - Only bootlegging business
+    content:
+    - 蓝月亮除了私酒之外没有别的交易。
+    - The Blue Moon had no business beyond bootlegging.
+  design_notes: Webb收到的钱都已计入我的营业账，没有账外进项。
+- key: shot_time
+  id: 1052002
+  name: Tommy枪声时间
+  content: 23:30，我听到了一声枪响。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 2
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 听到枪声
+    - Heard a gunshot
+    content:
+    - 23:30 听到一声枪响，方向在厨房和会客室一带。
+    - At 23:30, heard one gunshot from the kitchen/parlor side.
+  design_notes: 23:30，我听到了一声枪响；不提供方向或死亡时间判断。
+- key: trash
+  id: 1033001
+  name: Rosa倒垃圾时间
+  content: 23:20 去侧巷倒垃圾，放下垃圾袋便返回走廊。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 去侧巷倒垃圾
+    - Took out trash
+    content:
+    - 23:20 左右去侧巷倒过一次垃圾，之后回到走廊。
+    - Went to the side alley around 23:20 to take out trash, then returned to the corridor.
+  design_notes: 23:20左右到侧巷倒垃圾，放下垃圾袋便返回走廊。
+- key: morrison_search
+  id: 1043001
+  name: Morrison现场搜查
+  content: 搜查后确认：现场没有其他枪，也没有找到弹壳。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 现场无其他枪/弹壳
+    - No other gun/casing
+    content:
+    - 搜查后确认：现场没有其他枪，也没有找到弹壳。
+    - After searching the scene, no other gun and no shell casing were found.
+  design_notes: 现场没有其他枪，也没有找到弹壳。
+- key: trajectory
+  id: 1043002
+  name: Morrison弹道
+  content: 子弹射穿Webb后继续飞行，击中了会客室窗户。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 弹道指向会客室窗户
+    - Trajectory points to parlor window
+    content:
+    - 子弹射穿Webb后继续飞行，击中了会客室窗户。
+    - The bullet passed through Webb and struck the parlor window.
+  design_notes: 子弹射穿Webb后继续飞行，击中会客室窗户。
+- key: vivian_performance
+  id: 1063004
+  name: Vivian演出时间
+  content: 22:00 到 23:00 一直在歌舞厅舞台上表演。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 在舞台表演
+    - Performing on stage
+    content:
+    - 22:00 到 23:00 一直在歌舞厅舞台上表演。
+    - From 22:00 to 23:00, was performing on the dance-hall stage.
+  design_notes: 22:00—23:00一直在舞台表演。
+- key: vivian_drinks
+  id: 1063002
+  name: Vivian送酒惯例
+  content: 每晚 23:30 按惯例给 Webb 送酒。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 给Webb送酒
+    - Brought Webb a drink
+    content:
+    - 每晚 23:30 按惯例给Webb送酒。
+    - Every night at 23:30, brings Webb his drink as usual.
+  design_notes: 每晚23:30按惯例给Webb送酒。
+- key: safe_habit
+  id: 1063005
+  name: Vivian保管习惯
+  content: Webb 通常把重要私人材料放在自己办公室的保险柜里。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 3
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  design_notes: Webb通常把重要私人材料放在自己办公室的保险柜里；不确认具体材料或Vivian开柜能力。
+- key: exit_witness
+  id: 1124001
+  name: 小酒保23:18目击
+  content: 23:18看见Tommy离开会客室，未见何时进入。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  design_notes: 23:18看见Tommy离开会客室；未见进入时间，不证明Webb生死。
+- key: vivian_gun_source
+  id: 1064005
+  name: Vivian枪源谎言
+  content: 枪是我自己买的，与Webb无关。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  design_notes: 枪是我自己买的，与Webb无关；按用户本轮批准作为隐藏第三条件收录。
+- key: vivian_armed
+  id: 1063003
+  name: Vivian持枪到访
+  content: 23:05 持枪到会客室。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 持枪到会客室
+    - Went armed to the parlor
+    content:
+    - 23:05，Vivian 持枪来到 Webb 会客室，原本打算进去找他。
+    - At 23:05, Vivian came armed to Webb’s parlor, intending to go in and find him.
+  design_notes: 23:05持枪到会客室，原本打算进去找Webb；沿用ID，实际L4取得。
+- key: voice
+  id: 1064001
+  name: Vivian隔门见闻
+  content: 23:05 听到门内喊“Do not be bothering me!”后离开。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 4
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 23:05 听到门内喊话后离开
+    - Left after hearing a voice at 23:05
+    content:
+    - 23:05，Vivian 听见门内有人喊“你不要来烦着我！（Don't be bothering me!）”，没有进去。
+    - At 23:05, Vivian heard someone shout “Don't be bothering me!” from inside and did not enter.
+  design_notes: 23:05听见门内喊“Do not be bothering me!”后没有进去；L4全部指证后取得。
+- key: tommy_visit
+  id: 1055001
+  name: Tommy停留与取枪自述
+  content: 当时Webb仍活着，去取Webb要求维修的故障枪，在里面待了三分钟。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 5
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  design_notes: 当时Webb仍活着，自己去取Webb要求维修的故障枪，在里面待了三分钟。试枪解释在同一普通Talk呈现，不另发第二张证词。
+- key: james_voice
+  id: 1075001
+  name: James厨房喊话
+  content: Do not be bothering me!
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  acquisition_loop: 5
+  origin:
+    table: D:\NDC\Assets\table\TestimonyItem.json
+    name:
+    - 慌乱中脱口而出
+    - Blurted out the phrase
+    content:
+    - James在慌乱中脱口而出“你不要来烦着我！（Don't be bothering me!）”。
+    - James blurted out “Don’t be bothering me!” when caught off guard.
+  design_notes: 首次进入厨房时喊“Do not be bothering me!”；不需节目单、Tommy问话或枪检。
+npcs:
+- key: Webb
+  id: 100
+  name: Webb
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Arthur Webb
+    - Arthur Webb
+    content: null
+- key: Zack
+  id: 101
+  name: Zack
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Zack Brennan
+    - Zack Brennan
+    content: null
+- key: Emma
+  id: 102
+  name: Emma
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Emma O'Malley
+    - Emma O'Malley
+    content: null
+- key: Rosa
+  id: 103
+  name: Rosa
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Rosa Martinez
+    - Rosa Martinez
+    content: null
+- key: Morrison
+  id: 104
+  name: Morrison
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Harold Morrison
+    - Harold Morrison
+    content: null
+- key: Tommy
+  id: 105
+  name: Tommy
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Tommy Connelly
+    - Tommy Connelly
+    content: null
+- key: Vivian
+  id: 106
+  name: Vivian
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Vivian Gray
+    - Vivian Gray
+    content: null
+- key: James
+  id: 107
+  name: James
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - James O'Sullivan
+    - James O'Sullivan
+    content: null
+- key: Anna
+  id: 108
+  name: Anna
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Anna O'Sullivan
+    - Anna O'Sullivan
+    content: null
+- key: Whale
+  id: 111
+  name: Whale
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Whale
+    - Whale
+    content: null
+- key: Bartender
+  id: 112
+  name: Bartender
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - 酒保
+    - Bartender
+    content: null
+- key: Rita
+  id: 116
+  name: Rita
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\NPCStaticData.json
+    name:
+    - Rita Valenti
+    - Rita Valenti
+    content: null
+- key: Isabel
+  id: 117
+  name: Isabel
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: HospitalStaff
+  id: 118
+  name: HospitalStaff
+  content: 既有身份沿用；新医院人物仅分配必要身份，不扩写档案。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+scenes:
+- key: L1_storage
+  id: 1101
+  name: 清洁间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1101
+- key: L1_dressing
+  id: 1102
+  name: 化妆间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1102
+- key: L1_parlor
+  id: 1103
+  name: Webb会客室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1103
+- key: L1_lobby
+  id: 1104
+  name: 大厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1104
+- key: L1_cabaret
+  id: 1105
+  name: 歌舞厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1105
+- key: L1_booth
+  id: 1106
+  name: 小包厢
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1106
+- key: L1_corridor
+  id: 1107
+  name: 一楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1107
+- key: L1_alley
+  id: 1108
+  name: 后巷
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1108
+- key: L1_kitchen
+  id: 1109
+  name: 厨房
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1109
+- key: L1_tommy_office
+  id: 1110
+  name: Tommy办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1110
+- key: L1_webb_office
+  id: 1111
+  name: Webb办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1111
+- key: L1_upstairs
+  id: 1117
+  name: 二楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1117
+- key: L1_kitchen_corridor
+  id: 1118
+  name: 厨房走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1118
+- key: L1_basement
+  id: 1130
+  name: 地下走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1130
+- key: L2_storage
+  id: 1201
+  name: 清洁间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1201
+- key: L2_dressing
+  id: 1202
+  name: 化妆间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1202
+- key: L2_parlor
+  id: 1203
+  name: Webb会客室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1203
+- key: L2_lobby
+  id: 1204
+  name: 大厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1204
+- key: L2_cabaret
+  id: 1205
+  name: 歌舞厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1205
+- key: L2_booth
+  id: 1206
+  name: 小包厢
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1206
+- key: L2_corridor
+  id: 1207
+  name: 一楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1207
+- key: L2_alley
+  id: 1208
+  name: 后巷
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1208
+- key: L2_kitchen
+  id: 1209
+  name: 厨房
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1209
+- key: L2_tommy_office
+  id: 1210
+  name: Tommy办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1210
+- key: L2_webb_office
+  id: 1211
+  name: Webb办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1211
+- key: L2_upstairs
+  id: 1217
+  name: 二楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1217
+- key: L2_kitchen_corridor
+  id: 1218
+  name: 厨房走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1218
+- key: L2_basement
+  id: 1230
+  name: 地下走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1230
+- key: L3_storage
+  id: 1301
+  name: 清洁间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1301
+- key: L3_dressing
+  id: 1302
+  name: 化妆间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1302
+- key: L3_parlor
+  id: 1303
+  name: Webb会客室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1303
+- key: L3_lobby
+  id: 1304
+  name: 大厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1304
+- key: L3_cabaret
+  id: 1305
+  name: 歌舞厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1305
+- key: L3_booth
+  id: 1306
+  name: 小包厢
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1306
+- key: L3_corridor
+  id: 1307
+  name: 一楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1307
+- key: L3_kitchen
+  id: 1309
+  name: 厨房
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1309
+- key: L3_tommy_office
+  id: 1310
+  name: Tommy办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1310
+- key: L3_webb_office
+  id: 1311
+  name: Webb办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1311
+- key: L3_upstairs
+  id: 1317
+  name: 二楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1317
+- key: L3_kitchen_corridor
+  id: 1318
+  name: 厨房走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1318
+- key: L3_basement
+  id: 1330
+  name: 地下走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1330
+- key: L4_storage
+  id: 1401
+  name: 清洁间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1401
+- key: L4_dressing
+  id: 1402
+  name: 化妆间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1402
+- key: L4_parlor
+  id: 1403
+  name: Webb会客室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1403
+- key: L4_lobby
+  id: 1404
+  name: 大厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1404
+- key: L4_cabaret
+  id: 1405
+  name: 歌舞厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1405
+- key: L4_booth
+  id: 1406
+  name: 小包厢
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1406
+- key: L4_corridor
+  id: 1407
+  name: 一楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1407
+- key: L4_alley
+  id: 1408
+  name: 后巷
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1408
+- key: L4_kitchen
+  id: 1409
+  name: 厨房
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1409
+- key: L4_tommy_office
+  id: 1410
+  name: Tommy办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1410
+- key: L4_webb_office
+  id: 1411
+  name: Webb办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1411
+- key: L4_upstairs
+  id: 1417
+  name: 二楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1417
+- key: L4_kitchen_corridor
+  id: 1418
+  name: 厨房走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1418
+- key: L4_basement
+  id: 1430
+  name: 地下走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1430
+- key: L5_storage
+  id: 1501
+  name: 清洁间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1501
+- key: L5_dressing
+  id: 1502
+  name: 化妆间
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1502
+- key: L5_parlor
+  id: 1503
+  name: Webb会客室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1503
+- key: L5_lobby
+  id: 1504
+  name: 大厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1504
+- key: L5_cabaret
+  id: 1505
+  name: 歌舞厅
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1505
+- key: L5_booth
+  id: 1506
+  name: 小包厢
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1506
+- key: L5_corridor
+  id: 1507
+  name: 一楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1507
+- key: L5_alley
+  id: 1508
+  name: 后巷
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1508
+- key: L5_kitchen
+  id: 1509
+  name: 厨房
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1509
+- key: L5_tommy_office
+  id: 1510
+  name: Tommy办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1510
+- key: L5_webb_office
+  id: 1511
+  name: Webb办公室
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1511
+- key: L5_upstairs
+  id: 1517
+  name: 二楼走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1517
+- key: L5_kitchen_corridor
+  id: 1518
+  name: 厨房走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1518
+- key: L5_basement
+  id: 1530
+  name: 地下走廊
+  content: 现有场景标识可复用；开放与驻场以该轮state为准，本表列出不代表全部开放。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1530
+- key: L1_opening_entrance
+  id: 1021
+  name: 酒吧门口
+  content: L1锁定开篇
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1021
+- key: L1_opening_lobby
+  id: 1004
+  name: 大厅开篇
+  content: L1连续争执段
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1004
+- key: L1_opening_parlor
+  id: 1019
+  name: 会客室案发
+  content: L1锁定案发段
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1019
+- key: L2_opening_corner
+  id: 1022
+  name: 街角
+  content: L2开篇
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1022
+- key: L3_opening_corridor
+  id: 1023
+  name: 一楼走廊开篇
+  content: L3开篇
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1023
+- key: L4_opening_lobby
+  id: 1024
+  name: 大厅分工
+  content: L4开篇
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1024
+- key: L4_post_lobby
+  id: 1424
+  name: 大厅指证后交涉
+  content: L4锁定段
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1424
+- key: L4_post_arrest
+  id: 1425
+  name: 歌舞厅押解
+  content: L4锁定段
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\SceneConfig.json
+    name: null
+    content: null
+  location_id: 1425
+- key: L3_hospital_corridor
+  id: 1390
+  name: 医院走廊
+  content: L3夫妻共用可重复问话
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  location_id: 1390
+- key: L3_isabel_ward
+  id: 1391
+  name: Isabel病房
+  content: L3问话、吊坠与指证
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  location_id: 1391
+- key: L5_hospital_door
+  id: 1591
+  name: Anna病房门外
+  content: L5锁定尾声，不设探索NPC入口
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  location_id: 1591
+- key: L5_anna_ward
+  id: 1592
+  name: Anna病房
+  content: L5锁定尾声与电话，不设探索NPC入口
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+  location_id: 1592
+locations:
+- key: L1_storage
+  id: 1101
+  name: 清洁间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 储藏间
+    - Storage Room
+    content: null
+- key: L1_dressing
+  id: 1102
+  name: 化妆间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 化妆间
+    - Dressing Room
+    content: null
+- key: L1_parlor
+  id: 1103
+  name: Webb会客室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 会客室
+    - Webb's Parlor
+    content: null
+- key: L1_lobby
+  id: 1104
+  name: 大厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L1_cabaret
+  id: 1105
+  name: 歌舞厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅
+    - Dance Hall
+    content: null
+- key: L1_booth
+  id: 1106
+  name: 小包厢
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅小包厢
+    - Private Booth
+    content: null
+- key: L1_corridor
+  id: 1107
+  name: 一楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼走廊
+    - 1F Corridor
+    content: null
+- key: L1_alley
+  id: 1108
+  name: 后巷
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼侧巷
+    - Side Alley
+    content: null
+- key: L1_kitchen
+  id: 1109
+  name: 厨房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房
+    - Kitchen
+    content: null
+- key: L1_tommy_office
+  id: 1110
+  name: Tommy办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Tommy 办公室
+    - Tommy's Office
+    content: null
+- key: L1_webb_office
+  id: 1111
+  name: Webb办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 办公室
+    - Webb's Office
+    content: null
+- key: L1_upstairs
+  id: 1117
+  name: 二楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 二楼走廊
+    - 2F Corridor
+    content: null
+- key: L1_kitchen_corridor
+  id: 1118
+  name: 厨房走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房走廊
+    - Kitchen Corridor
+    content: null
+- key: L1_basement
+  id: 1130
+  name: 地下走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 地下走廊
+    - Basement Corridor
+    content: null
+- key: L2_storage
+  id: 1201
+  name: 清洁间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 储藏间
+    - Storage Room
+    content: null
+- key: L2_dressing
+  id: 1202
+  name: 化妆间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 化妆间
+    - Dressing Room
+    content: null
+- key: L2_parlor
+  id: 1203
+  name: Webb会客室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 会客室
+    - Webb's Parlor
+    content: null
+- key: L2_lobby
+  id: 1204
+  name: 大厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L2_cabaret
+  id: 1205
+  name: 歌舞厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅
+    - Dance Hall
+    content: null
+- key: L2_booth
+  id: 1206
+  name: 小包厢
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅小包厢
+    - Private Booth
+    content: null
+- key: L2_corridor
+  id: 1207
+  name: 一楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼走廊
+    - 1F Corridor
+    content: null
+- key: L2_alley
+  id: 1208
+  name: 后巷
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼侧巷
+    - Side Alley
+    content: null
+- key: L2_kitchen
+  id: 1209
+  name: 厨房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房
+    - Kitchen
+    content: null
+- key: L2_tommy_office
+  id: 1210
+  name: Tommy办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Tommy 办公室
+    - Tommy's Office
+    content: null
+- key: L2_webb_office
+  id: 1211
+  name: Webb办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 办公室
+    - Webb's Office
+    content: null
+- key: L2_upstairs
+  id: 1217
+  name: 二楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 二楼走廊
+    - 2F Corridor
+    content: null
+- key: L2_kitchen_corridor
+  id: 1218
+  name: 厨房走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房走廊
+    - Kitchen Corridor
+    content: null
+- key: L2_basement
+  id: 1230
+  name: 地下走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 地下走廊
+    - Basement Corridor
+    content: null
+- key: L3_storage
+  id: 1301
+  name: 清洁间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 储藏间
+    - Storage Room
+    content: null
+- key: L3_dressing
+  id: 1302
+  name: 化妆间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 化妆间
+    - Dressing Room
+    content: null
+- key: L3_parlor
+  id: 1303
+  name: Webb会客室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 会客室
+    - Webb's Parlor
+    content: null
+- key: L3_lobby
+  id: 1304
+  name: 大厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L3_cabaret
+  id: 1305
+  name: 歌舞厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅
+    - Dance Hall
+    content: null
+- key: L3_booth
+  id: 1306
+  name: 小包厢
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅小包厢
+    - Private Booth
+    content: null
+- key: L3_corridor
+  id: 1307
+  name: 一楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼走廊
+    - 1F Corridor
+    content: null
+- key: L3_kitchen
+  id: 1309
+  name: 厨房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房
+    - Kitchen
+    content: null
+- key: L3_tommy_office
+  id: 1310
+  name: Tommy办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Tommy 办公室
+    - Tommy's Office
+    content: null
+- key: L3_webb_office
+  id: 1311
+  name: Webb办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 办公室
+    - Webb's Office
+    content: null
+- key: L3_upstairs
+  id: 1317
+  name: 二楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 二楼走廊
+    - 2F Corridor
+    content: null
+- key: L3_kitchen_corridor
+  id: 1318
+  name: 厨房走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房走廊
+    - Kitchen Corridor
+    content: null
+- key: L3_basement
+  id: 1330
+  name: 地下走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 地下走廊
+    - Basement Corridor
+    content: null
+- key: L4_storage
+  id: 1401
+  name: 清洁间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 储藏间
+    - Storage Room
+    content: null
+- key: L4_dressing
+  id: 1402
+  name: 化妆间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 化妆间
+    - Dressing Room
+    content: null
+- key: L4_parlor
+  id: 1403
+  name: Webb会客室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 会客室
+    - Webb's Parlor
+    content: null
+- key: L4_lobby
+  id: 1404
+  name: 大厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L4_cabaret
+  id: 1405
+  name: 歌舞厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅
+    - Dance Hall
+    content: null
+- key: L4_booth
+  id: 1406
+  name: 小包厢
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅小包厢
+    - Private Booth
+    content: null
+- key: L4_corridor
+  id: 1407
+  name: 一楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼走廊
+    - 1F Corridor
+    content: null
+- key: L4_alley
+  id: 1408
+  name: 后巷
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼侧巷
+    - Side Alley
+    content: null
+- key: L4_kitchen
+  id: 1409
+  name: 厨房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房
+    - Kitchen
+    content: null
+- key: L4_tommy_office
+  id: 1410
+  name: Tommy办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Tommy 办公室
+    - Tommy's Office
+    content: null
+- key: L4_webb_office
+  id: 1411
+  name: Webb办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 办公室
+    - Webb's Office
+    content: null
+- key: L4_upstairs
+  id: 1417
+  name: 二楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 二楼走廊
+    - 2F Corridor
+    content: null
+- key: L4_kitchen_corridor
+  id: 1418
+  name: 厨房走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房走廊
+    - Kitchen Corridor
+    content: null
+- key: L4_basement
+  id: 1430
+  name: 地下走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 地下走廊
+    - Basement Corridor
+    content: null
+- key: L5_storage
+  id: 1501
+  name: 清洁间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 储藏间
+    - Storage Room
+    content: null
+- key: L5_dressing
+  id: 1502
+  name: 化妆间
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 化妆间
+    - Dressing Room
+    content: null
+- key: L5_parlor
+  id: 1503
+  name: Webb会客室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 会客室
+    - Webb's Parlor
+    content: null
+- key: L5_lobby
+  id: 1504
+  name: 大厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L5_cabaret
+  id: 1505
+  name: 歌舞厅
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅
+    - Dance Hall
+    content: null
+- key: L5_booth
+  id: 1506
+  name: 小包厢
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅小包厢
+    - Private Booth
+    content: null
+- key: L5_corridor
+  id: 1507
+  name: 一楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼走廊
+    - 1F Corridor
+    content: null
+- key: L5_alley
+  id: 1508
+  name: 后巷
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼侧巷
+    - Side Alley
+    content: null
+- key: L5_kitchen
+  id: 1509
+  name: 厨房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房
+    - Kitchen
+    content: null
+- key: L5_tommy_office
+  id: 1510
+  name: Tommy办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Tommy 办公室
+    - Tommy's Office
+    content: null
+- key: L5_webb_office
+  id: 1511
+  name: Webb办公室
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 办公室
+    - Webb's Office
+    content: null
+- key: L5_upstairs
+  id: 1517
+  name: 二楼走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 二楼走廊
+    - 2F Corridor
+    content: null
+- key: L5_kitchen_corridor
+  id: 1518
+  name: 厨房走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 厨房走廊
+    - Kitchen Corridor
+    content: null
+- key: L5_basement
+  id: 1530
+  name: 地下走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 地下走廊
+    - Basement Corridor
+    content: null
+- key: L1_opening_entrance
+  id: 1021
+  name: 酒吧门口
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧外街道
+    - Outside the Blue Moon
+    content: null
+- key: L1_opening_lobby
+  id: 1004
+  name: 大厅开篇
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L1_opening_parlor
+  id: 1019
+  name: 会客室案发
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - Webb 会客室
+    - Webb's Parlor
+    content: null
+- key: L2_opening_corner
+  id: 1022
+  name: 街角
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 街角
+    - Street Corner
+    content: null
+- key: L3_opening_corridor
+  id: 1023
+  name: 一楼走廊开篇
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 一楼走廊
+    - 1F Corridor
+    content: null
+- key: L4_opening_lobby
+  id: 1024
+  name: 大厅分工
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L4_post_lobby
+  id: 1424
+  name: 大厅指证后交涉
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 酒吧大堂
+    - Main Hall
+    content: null
+- key: L4_post_arrest
+  id: 1425
+  name: 歌舞厅押解
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: existing_id_design_revision
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: D:\NDC\Assets\table\LocationConfig.json
+    name:
+    - 歌舞厅
+    - Dance Hall
+    content: null
+- key: L3_hospital_corridor
+  id: 1390
+  name: 医院走廊
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: L3_isabel_ward
+  id: 1391
+  name: Isabel病房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: L5_hospital_door
+  id: 1591
+  name: Anna病房门外
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+- key: L5_anna_ward
+  id: 1592
+  name: Anna病房
+  content: 背景资源待按对应美术需求批准与挂载；不得用同名旧住宅替代医院。
+  status: design_allocated
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  origin:
+    table: null
+    note: 新增设计ID，已排除现工程及预览已有条目；未落表。
+narrative_claims:
+- key: tommy_test_fire
+  id: null
+  collection: false
+  content: Webb当面试枪后交给Tommy维修。
+  lie_source: L5_tommy_office_questioning
+  note: 不分配1055002，不新增Caseboard证词；同一普通Talk先解释试枪，再交付1055001。
+interfaces:
+- key: doubt_conditions
+  status: special_adapter
+  contract: 可显示前两项，第三项visible:false但参与全部AND；visible不是Unity正式字段，须UI适配，不能删掉隐藏条件。type1=物品、type3=时间线验证、type4=直接收录证词。
+- key: analysis_condition_compatibility
+  status: special_adapter
+  contract: 1201→1706、1101→1711替换背包原件；HasItem兼容派生，但Doubt全量重检当前仅遍历实际ID；必须补原物条件兼容重检及读档一致性。
+- key: opening_chain
+  status: existing_runtime_mapping
+  contract: Chapter.initTalk/initScene唯一根；change_scene+next连续切场跳过firstEnter；最后结束才恢复探索。
+- key: scene_events
+  status: existing_item_and_only
+  contract: SceneEnterTalkTriggerConfig只支持requiredItemIds全AND和一次性；Talk完成/前事件完成条件需special_adapter，不把普通点击争执升级条件链。
+- key: dual_suspects
+  status: special_adapter
+  contract: L5单Chapter的Tommy/James两套指证路由；错误线完成后恢复选人前状态、保留材料、不继承错误线知识与完成标记。
+- key: locked_ending_resume
+  status: existing_runtime_requires_integration_verification
+  contract: L5正确线postExpose→后巷→医院门外→病房→大厅→Webb办公室；持续锁定，跨场续播点优先于initTalk恢复；不另生成探索入口。
+- key: five_loop_end
+  status: table_migration_pending
+  contract: GameFlowConfig Unit1 loopCount=5；终点loop_end+chapter_boundary:true，旧106不再可达；不使用不存在的chapter_end。
+- key: ordinary_doubts
+  status: existing_runtime_mapping
+  contract: 全部普通疑点，分母当前Chapter.doubts.Length，点击新疑点后加进度；旧ID不放后轮分母；clearDoubts只清纸条不删材料；不依赖尚未实现碎片合并。
+runtime_fingerprints:
+  D:\NDC\Assets\table\ItemStaticData.json: 2b93abb0cdb069928c1298bd31b7643c1e7c4cb53c12cd78be7e8532cccaf437
+  D:\NDC\Assets\table\TestimonyItem.json: ef1544dcd70cef62a9201a2f9f2c994a6f219899fe76a03c1293bd089566b8c4
+  D:\NDC\Assets\table\NPCStaticData.json: 99c5aa4bf56fef652f9e8f2741222c4c0dc6dcfdabe0cb46ecd53b6dc5cab145
+  D:\NDC\Assets\table\SceneConfig.json: 2209a52404c5708ea47df540b010334ba3439f7dfb38136a5f67fd0391427ff3
+  D:\NDC\Assets\table\LocationConfig.json: 3d5bbf9c40825ff48a23e8aaaa16bee6d9c5e63c29740569e70f877365012610
+
+production_details:
+  source: U1优化制作/06_State/制作细节定稿.md
+  precedence: 本轮制作决定优先于source_contracts或origin中保留的旧待定摘录；不改写历史原文。
+  iou_amount_usd: 20
+  iou_date_field: omitted
+  iou_interest_and_due_date: none
+  pistol_serial: "384216"
+  pistol_serial_art_status: pending_visual_update

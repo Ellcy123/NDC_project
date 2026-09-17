@@ -1,0 +1,757 @@
+schema_version: 1
+loop: 1
+unit: Unit1
+episode: EPI01
+title: 持枪不等于开枪
+status: complete_design_pending_cross_audit
+validation_status: design_review_pass_runtime_pending
+runtime_status: NOT_INTEGRATED
+sources:
+- 剧情设计/Unit1/Unit1_内容修改方案_双重谋杀计划与欠条版.md
+- 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+- 剧情设计/Unit1/内容修改后的增强情节线.md
+source_contract: U1优化制作/06_State/讨论结论.md
+player_context:
+  goals:
+  - 查明Webb会客室命案，核查Rosa以持枪认定Vivian刚杀人的说法
+  - 凭委托争取继续调查机会
+  known_facts:
+  - content: Zack受Webb委托担任遗嘱执行人，确保Vivian继承遗产；协议由Zack携带
+    truth_status: truth
+    source: 案前委托
+  new_directions:
+  - 现场持枪指认是否足以成立
+  - 枪支是否近期击发
+  post_expose_knowledge:
+  - content: Vivian小手枪近期未击发；仅推翻以持枪认定刚射杀Webb的指认，未证明她完全无辜
+    truth_status: truth
+  - content: Rosa坚持23:30是死亡枪声、紧接玻璃碎裂且当时只有Vivian在里面
+    truth_status: unverified_claim
+  - content: Zack以遗嘱执行协议争取继续调查，Emma不满被擅自借用记者身份
+    truth_status: truth
+opening:
+  type: cutscene_sequence
+  runtime_root:
+    table: ChapterConfig
+    init_scene: 1021
+    init_talk: L1_opening_entrance
+  sequence:
+  - event_id: entrance
+    talk: L1_opening_entrance
+    scene_id: 1021
+    cast:
+    - Zack
+    - Bartender
+    - Emma
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    required_beats:
+    - 秘密通道无人接应只作来意交代
+    - Zack敲门被小酒保阻拦；Emma随后到场，使两人获准进入
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1004
+      next_talk: L1_opening_lobby
+      skip_first_enter: true
+    grants_evidence: []
+    testimony_ids: []
+  - event_id: lobby_disagreement
+    talk: L1_opening_lobby
+    scene_id: 1004
+    cast:
+    - Zack
+    - Emma
+    - Bartender
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    required_beats:
+    - 大厅入口一侧商量合作、争执，未正式结伴
+    - 小酒保继续在场；枪声直接把两人引向会客室
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1019
+      next_talk: L1_opening_crime_scene
+      skip_first_enter: true
+    grants_evidence: []
+    testimony_ids: []
+  - event_id: crime_scene
+    talk: L1_opening_crime_scene
+    scene_id: 1019
+    cast:
+    - Zack
+    - Emma
+    - Rosa
+    - Vivian
+    - Morrison
+    - Webb遗体
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    required_beats:
+    - 发现Webb遗体、持枪Vivian、Rosa指认；Morrison进入处置
+    - 私家侦探身份招怀疑，Zack主动假称是Emma记者助手；Emma未预先同意
+    - 记者身份只用于周旋，不自动获得搜查权；本段结束才放开会客室调查
+    runtime_exit:
+      action: change_scene
+      target_scene_id: 1103
+      continuation: release_to_exploration
+      skip_first_enter: true
+      next_talk: null
+      release_after: 会客室1103加载完成；无firstEnterTalk，不重复案发段
+    grants_evidence: []
+    testimony_ids: []
+  player_control_restored_after: crime_scene
+scenes:
+- id: 1103
+  key: L1_parlor
+  name: Webb会客室
+  location_id: 1103
+  type: free_exploration
+  unlock_condition: []
+  npcs:
+    Rosa:
+      id: 103
+      talk: L1_parlor_rosa
+      repeat_talk: L1_parlor_rosa_repeat
+      motive: 隐瞒受胁迫，照指定说法指认以保护女儿
+      mindset: 惶恐、紧张；不主动解释隐情
+      active_topics:
+      - content: 清洁工身份
+        truth_status: truth
+      - content: 持枪即刚杀人
+        truth_status: false_claim
+      - content: 23:30死亡枪声与玻璃、Vivian独在
+        truth_status: false_claim
+      withheld_topics:
+      - 女儿受到威胁及纸条
+      - 23:20倒垃圾与藏弹壳
+      - 不知实际凶手身份
+      player_inquiry: 开篇的现场指认与枪声
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: '1031003'
+        kind: truth
+        content: 蓝月亮清洁工
+        acquisition_talk: L1_parlor_rosa
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+      - id: '1031001'
+        kind: lie
+        content: 看见 Vivian 持枪，就认定她刚杀了 Webb
+        acquisition_talk: L1_parlor_rosa
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+        talk_anchor: L1_parlor_rosa_scene_account
+        delivery_order: 2
+      - id: '1031002'
+        kind: lie
+        content: 23:30 为死亡枪声，紧接着玻璃碎裂，当时只有 Vivian 在里面
+        acquisition_talk: L1_parlor_rosa
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+        talk_anchor: L1_parlor_rosa_scene_account
+        delivery_order: 1
+      is_liar: true
+      unlock_condition: []
+      grants_evidence: []
+      testimony_delivery_order:
+      - topic: 现场经过
+        talk_anchor: L1_parlor_rosa_scene_account
+        ordered_testimony_ids:
+        - '1031002'
+        - '1031001'
+        policy: 同一已有现场经过话题先交23:30时间说法，再交持枪指认；1031001进入背包时1031002必须已收录。并非新增前置、额外证词或第三个疑点条件。
+    Morrison:
+      id: 104
+      talk: L1_parlor_morrison
+      repeat_talk: L1_parlor_morrison_repeat
+      motive: 尽快控制命案现场，压住外人干预
+      mindset: 以警衔和程序压人
+      active_topics:
+      - content: 二十二分局辖区身份
+        truth_status: truth
+      - content: 胸部枪伤死因
+        truth_status: truth
+      withheld_topics:
+      - 后轮现场勘验详情
+      - Whale影响及赌债
+      player_inquiry: Morrison现场处置与Webb遗体
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: '1041004'
+        kind: truth
+        content: 二十二分局辖区警察
+        acquisition_talk: L1_parlor_morrison
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+      - id: '1041005'
+        kind: truth
+        content: Webb 胸口中枪身亡
+        acquisition_talk: L1_parlor_morrison
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+      is_liar: false
+      unlock_condition: []
+      grants_evidence: []
+    Vivian:
+      id: 106
+      talk: L1_parlor_vivian
+      repeat_talk: L1_parlor_vivian_repeat
+      motive: 不愿澄清完整经过，情绪崩溃与自责
+      mindset: 失神、短句，不向玩家交代杀人准备
+      active_topics:
+      - content: 蓝月亮歌女身份
+        truth_status: truth
+      - content: 是否开枪回答不知道，只留对白
+        truth_status: evasive_claim
+      withheld_topics:
+      - 枪源、杀人计划、23:05门内喊话
+      - 23:30头顶枪声方向
+      - Tommy知情与旧怨
+      player_inquiry: 现场持枪者及Rosa指认
+      player_inquiry_score: 9
+      testimony_ids:
+      - id: '1061001'
+        kind: truth
+        content: 蓝月亮歌女
+        acquisition_talk: L1_parlor_vivian
+        source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+      is_liar: false
+      unlock_condition: []
+      grants_evidence: []
+  evidence:
+  - id: '1101'
+    type: item
+    pickup: scene_search
+    description: .25口径小手枪，枪身刻有枪号。
+    analysis:
+      result_id: '1711'
+      method: 既有枪支检查
+      result: 近期未击发
+    note: 关键——L1枪检与L4枪源、口径比对
+    design_notes:
+    - .25口径小手枪；枪号供L4与收据比对
+  environment: []
+  passages: []
+  event_triggers: []
+  companions:
+  - name: Emma
+    role: 随行在场，无独立取证Talk
+inherited_evidence_refs: []
+evidence_registry:
+- id: '1101'
+  key: pocket_pistol
+  name: Vivian 小手枪
+  kind: item
+  description: .25口径小手枪，枪身刻有枪号。
+  acquisition:
+    loop: 1
+    scene_id: 1103
+    kind: scene_search
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  analysed_evidence: '1711'
+  design_notes:
+  - .25口径小手枪，可分析；L4枪号与收据同为384216；美术需补可辨刻号。
+- id: '1711'
+  key: pistol_no_residue
+  name: 无硝烟的小手枪检查结果
+  kind: derived
+  description: 枪管没有硝烟残留，枪膛和弹匣没有近期击发留下的污痕。
+  acquisition:
+    loop: 1
+    scene_id: 1103
+    kind: analysis
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  before_analysed_evidence: '1101'
+  design_notes:
+  - 近期未击发；L1击破后L4回用。
+- id: '1103'
+  key: executor_agreement
+  name: Webb 委托协议书
+  kind: item
+  description: Webb签署的遗嘱执行协议，指定Zack为遗嘱执行人，确保Vivian继承遗产。
+  acquisition:
+    loop: 1
+    scene_id: 1021
+    kind: carried_at_start
+    note: 案前随身携带，不由会客室搜证拾取；开篇初始化已有物品
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+  design_notes:
+  - Zack 为遗嘱执行人，Vivian 继承；保留原协议，不算L1第二次指证。
+doubts:
+- id: '1101'
+  key: L1_D1
+  loop: 1
+  text: 她手中的枪，真的刚开过火吗？
+  isFragment: false
+  condition:
+  - type: 1
+    param: '1711'
+    key: pistol_analyzed
+    visible: true
+    registry_key: pistol_no_residue
+  - type: 4
+    param: '1031001'
+    key: rosa_accusation
+    visible: true
+    registry_key: rosa_accusation
+  evidence_usage:
+  - key: pistol_analyzed
+    param: '1711'
+    first_acquired_loop: 1
+    expose_steps:
+    - L1_R1
+    - L4_R3
+    role: 指证用
+    earliest_expose_loop: 1
+  - key: rosa_accusation
+    param: '1031001'
+    first_acquired_loop: 1
+    expose_steps: []
+    role: 仅触发疑点／前置调查
+    earliest_expose_loop: null
+  source_anchor: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md#L1
+doubt_progress:
+  denominator: 1
+  condition_logic: all_AND
+  completion: 全部本轮疑点点亮并按现有流程收集后开启指证
+  display: 前两项可见；第三项隐藏但参与AND
+expose:
+  target: Rosa
+  npc_id: 103
+  scene_id: 1103
+  is_liar: true
+  player_inquiry: null
+  talk: L1_expose_rosa
+  unlock_condition:
+  - type: doubt_collected
+    param: '1101'
+  rounds:
+  - round: 1
+    lie: 看见 Vivian 持枪，就认定她刚杀了 Webb
+    lie_source: '1031001'
+    collectible_lie_anchor: scenes[0].npcs.Rosa.testimony_ids[1]
+    usable_evidence:
+    - '1711'
+    evidence_set:
+    - '1711'
+    result: 枪近期未击发，持枪不能证明刚用此枪射杀；不宣告完整无罪
+    next_retreat: Rosa仍坚持23:30枪声与玻璃、当时只有Vivian；不开放第二次出示
+  expose_lie_ids: []
+  post_expose:
+    talk: L1_post_expose_commission
+    scene_id: 1103
+    cast:
+    - Zack
+    - Emma
+    - Morrison
+    - Rosa
+    - Vivian
+    required_beats:
+    - Rosa坚持23:30说法，此处重复已有说法而非新增证词
+    - Zack展示随身协议，以遗嘱执行人职责争取调查
+    - Morrison允许继续调查；Emma的不满留给L2街角
+    testimony_ids: []
+    grants_evidence: []
+    uses_existing_evidence:
+    - '1103'
+    runtime_exit:
+      action: loop_end
+      next_loop: 2
+outline_coverage:
+- beat_id: U1L1_narrative_event_001
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L1
+    line: 19
+  source_event:
+    形式: 开篇剧情（固定，第一场）
+    情节点: 无人接应，Zack敲门被拦，Emma出面让两人进入
+    地点: 酒吧大门口
+    在场人物: Zack、小酒保；Emma随后到场
+    进入与接续: 秘密通道无人接应作为来意与受阻交代，不另拆自由场景；获准入内后直接续接大厅，不释放探索控制
+  state_path: opening.sequence[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_narrative_event_002
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L1
+    line: 20
+  source_event:
+    形式: 开篇剧情（固定，第二场）
+    情节点: Zack与Emma商量、争执，首次合作未谈成
+    地点: 一楼大厅入口一侧
+    在场人物: Zack、Emma、小酒保
+    进入与接续: 沿正式版大厅商量场景；小酒保继续在场。段尾枪声直接引向会客室
+  state_path: opening.sequence[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_narrative_event_003
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L1
+    line: 21
+  source_event:
+    形式: 开篇剧情（固定，第三场）
+    情节点: 发现命案，Rosa指认，Zack借用Emma记者身份
+    地点: Webb会客室
+    在场人物: Zack、Emma、Rosa、Vivian；Morrison进入处置；Webb遗体
+    进入与接续: 从枪声接入本场；本场结束后才开放会客室调查
+  state_path: opening.sequence[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_narrative_event_004
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L1
+    line: 22
+  source_event:
+    形式: 普通问话
+    情节点: 现场询问
+    地点: Webb会客室
+    在场人物: Zack；对应选中的Morrison、Rosa或Vivian，Emma在场
+    进入与接续: 点击NPC进入其选项；证词与物件见核对稿
+  state_path: scenes[0].npcs
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_narrative_event_005
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: L1
+    line: 23
+  source_event:
+    形式: 指证后剧情（固定）
+    情节点: 有限推翻指认，以遗嘱委托争取调查机会
+    地点: Webb会客室
+    在场人物: Zack、Emma、Morrison、Rosa、Vivian
+    进入与接续: Rosa指证后接Morrison交涉；转入L2
+  state_path: expose.post_expose
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_rule_006
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: L1
+    line: 11
+  source_event: 已确认。原配置依据工程 res/xls 下当前 Excel，表达参照正式完整版台本。
+  state_path: sources
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_007
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 自由探索：Webb 会客室
+    line: 17
+  source_event:
+    项目: 驻场 NPC
+    原配置: Vivian、Rosa、Morrison
+    修改版: 保留；Emma 随行，不新增独立取证入口
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs
+  mapping: merged
+  deviation: none
+  merged_with: U1L1_narrative_event_004
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L1_confirmed_entry_008
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 自由探索：Webb 会客室
+    line: 18
+  source_event:
+    项目: Vivian 小手枪
+    原配置: 会客室取得，.25 口径，可分析
+    修改版: 保留
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].evidence[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_009
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 自由探索：Webb 会客室
+    line: 19
+  source_event:
+    项目: 无硝烟的手枪
+    原配置: 小手枪分析结果，近期未击发
+    修改版: 保留，L1 指证及 L4 回用
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: evidence_registry[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_010
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 自由探索：Webb 会客室
+    line: 20
+  source_event:
+    项目: Webb 委托协议书
+    原配置: 配置挂在会客室，剧情由 Zack 随身携带；Zack 为遗嘱执行人、Vivian 继承遗产
+    修改版: 保留，后续亦支撑 L2 与 Rita 交涉
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: evidence_registry[2]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_011
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 自由探索：Webb 会客室
+    line: 21
+  source_event:
+    项目: 环境证物
+    原配置: 本场景未额外挂载
+    修改版: 不新增
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].environment
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_rule_012
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 25
+  source_event: 以下均保留普通询问取得，不新增物件前置。
+  state_path: design_constraints[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_013
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 29
+  source_event:
+    来源: Rosa
+    收录内容: 蓝月亮清洁工
+    用途: 人物关系
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Rosa.testimony_ids[0]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L1_confirmed_entry_014
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 30
+  source_event:
+    来源: Rosa
+    收录内容: 看见 Vivian 持枪，就认定她刚杀了 Webb
+    用途: L1 指证目标
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Rosa.testimony_ids[1]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L1_confirmed_entry_015
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 31
+  source_event:
+    来源: Rosa
+    收录内容: 23:30 为死亡枪声，紧接着玻璃碎裂，当时只有 Vivian 在里面
+    用途: L1 退守，L3 击破时序
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Rosa.testimony_ids[2]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L1_confirmed_entry_016
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 32
+  source_event:
+    来源: Morrison
+    收录内容: 二十二分局辖区警察
+    用途: 人物关系
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Morrison.testimony_ids[0]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L1_confirmed_entry_017
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 33
+  source_event:
+    来源: Morrison
+    收录内容: Webb 胸口中枪身亡
+    用途: 死因信息
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Morrison.testimony_ids[1]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L1_confirmed_entry_018
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 34
+  source_event:
+    来源: Vivian
+    收录内容: 蓝月亮歌女
+    用途: 人物关系
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: scenes[0].npcs.Vivian.testimony_ids[0]
+  mapping: exact
+  deviation: none
+  testimony_required: true
+- beat_id: U1L1_confirmed_rule_019
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 证词
+    line: 36
+  source_event: Vivian 对是否开枪回答“不知道”属于对话，不单独收录证词。
+  state_path: scenes[0].npcs.Vivian.active_topics[1]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_020
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 指证：Rosa
+    line: 42
+  source_event:
+    步骤: 击破
+    原配置: 据 Vivian 持枪认定刚杀人；出示无硝烟的手枪
+    修改版: 保留，一次实际击破
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: expose.rounds[0]
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_021
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 指证：Rosa
+    line: 43
+  source_event:
+    步骤: 退守
+    原配置: 坚持 23:30 是死亡枪声、当时只有 Vivian；无第二组出示物件
+    修改版: 保留，真正死亡时间不在 L1 解决
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: expose.rounds[0].next_retreat
+  mapping: exact
+  deviation: none
+- beat_id: U1L1_confirmed_entry_022
+  source_anchor:
+    file: 剧情设计/Unit1/Unit1_逐Loop场景人物证物与指证核对定稿.md
+    heading: 指证：Rosa
+    line: 44
+  source_event:
+    步骤: 交涉
+    原配置: 出示委托协议书争取调查机会
+    修改版: 保留，不算第二轮击破证据
+    interpretation: 旧配置列仅供差异核对；当前确认优先，不恢复删除/锁闭/环境降级项
+  state_path: expose.post_expose
+  mapping: merged
+  deviation: none
+  merged_with: U1L1_narrative_event_005
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+- beat_id: U1L1_narrative_detail_023
+  source_anchor:
+    file: 剧情设计/Unit1/内容修改后的增强情节线.md
+    heading: 2. 犯罪现场：Zack 擅自借用她的身份
+    line: 359
+  source_event: '枪声将事件推向犯罪现场。面对 Webb 的尸体、持枪的 Vivian 与 Morrison 的阻拦，Zack 的私家侦探身份反而招来怀疑。
+
+
+    Zack 临时借用 Emma 的记者身份，把自己说成她的助手，应对 Morrison。这个主意由 Zack 主动使出，Emma 没有事先答应替他承担这种关系。
+
+
+    案件推进仍依靠后续枪械与现场核查。记者助手身份只承担现场周旋的作用，不变成自动获得搜查权的通行证。
+
+
+    事后 Emma 对他拒绝合作、却擅自利用自己的做法不满，两人分开调查。Zack 的长期问题从这里露出：习惯先替别人决定，再让别人接受结果。'
+  state_path: opening.sequence[2]
+  mapping: merged
+  deviation: none
+  merged_with: U1L1_narrative_event_003
+  merge_reason: 同一事件或材料的补充说明，入口只配置一次
+narrative_continuity:
+  units:
+  - id: L1_opening
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id001
+    - Zack携委托前来，双方尚非搭档
+    consumes: *id001
+    required_callbacks: []
+    required_beats:
+    - 受阻入门→合作争执→案发借身份
+    exit_state:
+      facts:
+      - 会客室开放，Emma不满尚未爆发
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L1_investigation
+  - id: L1_investigation
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id002
+    - Rosa指认、警察压力
+    consumes: *id002
+    required_callbacks: []
+    required_beats:
+    - 分别询问三人、取得枪并检查
+    exit_state:
+      facts:
+      - 仅枪支事实可核，23:30说法未证实
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L1_expose
+  - id: L1_expose
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id003
+    - 持枪指认证词和枪检冲突
+    consumes: *id003
+    required_callbacks: []
+    required_beats:
+    - 单轮推翻刚用此枪射击，Rosa坚持时间说法
+    exit_state:
+      facts:
+      - 指认出现缺口但案未解
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L1_post_expose
+  - id: L1_post_expose
+    source_anchor: 剧情设计/Unit1/内容修改后的增强情节线.md
+    entry_state: &id004
+    - 需争取继续调查
+    consumes: *id004
+    required_callbacks: []
+    required_beats:
+    - 出示已有委托，有限争取调查
+    exit_state:
+      facts:
+      - 保留23:30谜团与Emma身份利用矛盾
+      relationship_changes: []
+      unresolved_pressure: []
+    hands_off_to: L2_opening
+quiz: []
+runtime_requirements:
+- key: analysis_condition_compatibility
+  status: special_adapter
+  detail: 1101→1711背包状态链原枪/检查件同一物；L4原枪疑点与出示应接受有效现态，不复制实物
+design_constraints:
+- 六项证词都可普通询问取得，无物件前置；23:30陈述先收录，指证后复述不再发放
+- L1仅会客室自由探索，不增环境物或Emma取证入口
+- 协议仅交涉使用，不造第二轮指证；日期以新章统筹为准，不沿旧年份
+- 所有NPC可谈本职与亲历，不说后轮真相；opening不提前替代普通询问的证词发放
+self_check:
+  A: PASS_LOCAL
+  B: PASS_LOCAL
+  C: PASS_LOCAL
+  D: PASS_LOCAL
+  E: PASS_LOCAL
+  F: PASS_LOCAL
+  G: PASS_LOCAL
+  H: PASS_LOCAL
+  I: PASS_LOCAL
+  J: PENDING_CROSS_AUDIT_RUNTIME_ADAPTERS_RECORDED
+
+production_details:
+  source: U1优化制作/06_State/制作细节定稿.md
+  precedence: 本轮制作决定优先于source_contracts或origin中保留的旧待定摘录；不改写历史原文。
+  iou_amount_usd: 20
+  iou_date_field: omitted
+  iou_interest_and_due_date: none
+  pistol_serial: "384216"
+  pistol_serial_art_status: pending_visual_update
+
+calendar_contract:
+  source: U1优化制作/06_State/制作细节定稿.md
+  crime_date: "1928-11-03"
+  investigation_limit_hours: 72
+  countdown_start: pending
+  newspaper_date: "1928-11-03"
+  precedence: 本轮定稿覆盖来源摘录中的日期与节目表待定说明；origin及source_contracts保留历史原文。
