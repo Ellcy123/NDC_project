@@ -26,7 +26,7 @@
 
 - 阶段：L1 开篇连续剧情，命案调查开放前。
 - 使用：S02 大厅。Zack、Emma、小酒保全程在场。
-- AVG 图：`U1_avg_LobbyArgument_bg.png`。
+- AVG 图文件名见本节末尾
 - 独立人物：无。
 
 ### 画面与拆分
@@ -37,13 +37,27 @@
 
 以 SC9004_bg_MainHall.png 为基础补人物；大厅建筑、家具与机位保持原样。段尾枪声转场。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_LobbyArgument_bg.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_LobbyArgument_bg.psd
+```
+
 ## A03 L3 走廊开篇｜新增
 
 ### 基本信息
 
 - 阶段：L3 开篇。
 - 使用：S07 一楼走廊。Zack、Morrison。
-- AVG 图：`U1_avg_CorridorMorrison_bg.png`。
+- AVG 图文件名见本节末尾
 - 独立人物：无。
 
 ### 画面与拆分
@@ -54,14 +68,28 @@ Zack 在走廊一侧停步，侧身听 Morrison 说话；Morrison 在对面，�
 
 原 SC9023_bg_Cabaret1FCorridor.png 中是 Zack 与 Emma。本次以同一走廊空间重新制作 Zack 与 Morrison 的对话图；采用干净背景或源文件，清除旧 Emma。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_CorridorMorrison_bg.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_CorridorMorrison_bg.psd
+```
+
 ## A08 L4 大厅分工｜新增
 
 ### 基本信息
 
 - 阶段：L4 开篇；Emma 离场后转自由探索。
 - 使用：S02 大厅一侧。Zack、Emma；Emma 先离开调查 Rita。
-- AVG 图：`U1_avg_LobbyParting_bg.png`。
-- 独立人物：`U1_avg_LobbyParting_Emma.png`。
+- AVG 图文件名见本节末尾
+- 独立人物文件名见本节末尾
 
 ### 画面与拆分
 
@@ -71,14 +99,47 @@ Zack 在走廊一侧停步，侧身听 Morrison 说话；Morrison 在对面，�
 
 原 SC9024_bg_MainHall_open.png 将两人都画在底图中。新图保留大厅与桌椅，重新组织人物；Emma 离场后结束开篇，恢复大厅自由探索；吧台调酒事件使用探索底图与独立人物，动作配漫画。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_LobbyParting_bg.png
+```
+
+独立人物图
+
+```text
+U1_avg_LobbyParting_Emma.png
+```
+
+人物入场景预览与坐标
+
+```text
+U1_avg_LobbyParting_Emma_preview.png
+U1_avg_LobbyParting_Emma_XYposition.txt
+```
+
+需要独立阴影时交付
+
+```text
+U1_avg_LobbyParting_Emma_shadow.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_LobbyParting_bg.psd
+```
+
 ## A13 L4 歌舞厅押走 Vivian｜修改
 
 ### 基本信息
 
 - 阶段：L4 指证后固定跳转的押解场景。
 - 使用：S05 歌舞厅。固定 Zack、Emma；Morrison、Vivian 随押解离场。
-- AVG 图：`U1_avg_CabaretArrest_bg.png`。
-- 独立人物：`U1_avg_CabaretArrest_Morrison.png`、`U1_avg_CabaretArrest_Vivian.png`。
+- AVG 图文件名见本节末尾
+- 独立人物文件名见本节末尾
 
 ### 画面与拆分
 
@@ -88,14 +149,51 @@ Zack 在走廊一侧停步，侧身听 Morrison 说话；Morrison 在对面，�
 
 先检查原分层源文件，已有同姿势人物层可直接提取；源图已合平时补齐人物后方背景并提取／重制独立层。挡路、担责与押走动作归漫画，漫画结束移除 Morrison、Vivian。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_CabaretArrest_bg.png
+```
+
+独立人物图
+
+```text
+U1_avg_CabaretArrest_Morrison.png
+U1_avg_CabaretArrest_Vivian.png
+```
+
+人物入场景预览与坐标
+
+```text
+U1_avg_CabaretArrest_Morrison_preview.png
+U1_avg_CabaretArrest_Morrison_XYposition.txt
+U1_avg_CabaretArrest_Vivian_preview.png
+U1_avg_CabaretArrest_Vivian_XYposition.txt
+```
+
+需要独立阴影时交付
+
+```text
+U1_avg_CabaretArrest_Morrison_shadow.png
+U1_avg_CabaretArrest_Vivian_shadow.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_CabaretArrest_bg.psd
+```
+
 ## A14 L5 歌舞厅喊接电话｜新增
 
 ### 基本信息
 
 - 阶段：L5 开篇。
 - 使用：S05 歌舞厅。固定 Zack、Emma；小酒保进入歌舞厅喊两人接电话。
-- AVG 图：`U1_avg_CabaretCall_bg.png`。
-- 独立人物：`U1_avg_CabaretCall_Bartender.png`。
+- AVG 图文件名见本节末尾
+- 独立人物文件名见本节末尾
 
 ### 画面与拆分
 
@@ -105,13 +203,46 @@ Zack 在走廊一侧停步，侧身听 Morrison 说话；Morrison 在对面，�
 
 使用歌舞厅背景，新作 Zack、Emma 的交谈姿势并合入 AVG 图；小酒保单独制作透明层，在喊话节点出现。来电通知后切 Webb 办公室。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_CabaretCall_bg.png
+```
+
+独立人物图
+
+```text
+U1_avg_CabaretCall_Bartender.png
+```
+
+人物入场景预览与坐标
+
+```text
+U1_avg_CabaretCall_Bartender_preview.png
+U1_avg_CabaretCall_Bartender_XYposition.txt
+```
+
+需要独立阴影时交付
+
+```text
+U1_avg_CabaretCall_Bartender_shadow.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_CabaretCall_bg.psd
+```
+
 ## A15 L5 接电话与正式结伴｜新增
 
 ### 基本信息
 
 - 阶段：L5 开篇，正式结伴后开放自由探索。
 - 使用：S10 Webb 办公室。Zack、Emma；Whale 只有电话声音。
-- AVG 图：`U1_avg_OfficeWhaleCall_bg.png`。
+- AVG 图文件名见本节末尾
 - 独立人物：无。
 
 ### 画面与拆分
@@ -122,13 +253,27 @@ Zack 与 Emma 在 Webb 办公室面对面站立，目光相对，姿态认真而
 
 接电话使用专用 UI，AVG 保留两人面对面的同一张图；通话结束关闭电话 UI，接正式结伴对白。电话位置仍为 Webb 办公室。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_OfficeWhaleCall_bg.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_OfficeWhaleCall_bg.psd
+```
+
 ## A19 L5 Anna 病房门外｜新增
 
 ### 基本信息
 
 - 阶段：L5 指证后连续锁定剧情：医院门外。
 - 使用：S15 医院走廊。Zack、Emma。
-- AVG 图：`U1_avg_AnnaWardDoor_bg.png`。
+- AVG 图文件名见本节末尾
 - 独立人物：无。
 
 ### 画面与拆分
@@ -139,14 +284,28 @@ Zack 与 Emma 在 Webb 办公室面对面站立，目光相对，姿态认真而
 
 复用医院走廊空景，同一门位与病房入口对应。两人共同入病房作为整场转场，不做留在空走廊继续对白的画面。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_AnnaWardDoor_bg.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_AnnaWardDoor_bg.psd
+```
+
 ## A20 L5 Anna 病房告知与返店通知｜新增
 
 ### 基本信息
 
 - 阶段：L5 指证后连续锁定剧情：Anna 病房。
 - 使用：S19 Anna 病房。固定 Zack、Emma、Anna；Tommy 过来喊 Zack、Emma 回酒吧。
-- AVG 图：`U1_avg_AnnaWard_bg_news.png`、`U1_avg_AnnaWard_bg_comfort.png`。
-- 独立人物：`U1_avg_AnnaWard_Tommy.png`。
+- AVG 图文件名见本节末尾
+- 独立人物文件名见本节末尾
 
 ### 画面与拆分
 
@@ -156,14 +315,49 @@ Zack 与 Emma 在 Webb 办公室面对面站立，目光相对，姿态认真而
 
 两版固定三人分别合图。安慰与照护之后，Tommy 在病房门边停步，朝 Zack、Emma 小幅抬手，叫两人回酒吧；单独透明图，通知完成退场。沿用 Tommy 的既有外貌与服装，按病房机位和光照制作新姿态。欠条交递、攥皱与崩溃特写交漫画；通知及告别沿用安慰版；两人与 Anna 告别后共同回酒吧。
 
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_AnnaWard_bg_news.png
+U1_avg_AnnaWard_bg_comfort.png
+```
+
+独立人物图
+
+```text
+U1_avg_AnnaWard_Tommy.png
+```
+
+人物入场景预览与坐标
+
+```text
+U1_avg_AnnaWard_Tommy_preview.png
+U1_avg_AnnaWard_Tommy_XYposition.txt
+```
+
+需要独立阴影时交付
+
+```text
+U1_avg_AnnaWard_Tommy_shadow.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_AnnaWard_bg_news.psd
+U1_avg_AnnaWard_bg_comfort.psd
+```
+
 ## A21 L5 大厅尾声｜新增
 
 ### 基本信息
 
 - 阶段：L5 指证后连续锁定剧情：酒吧大厅。
 - 使用：S02 大厅。固定 Zack、Emma、小酒保；Morrison 按分支呈正常／淋湿；Vivian 稍后下楼。
-- AVG 图：`U1_avg_LobbyEpilogue_bg.png`。
-- 独立人物：`U1_avg_LobbyEpilogue_Morrison_dry.png`、`U1_avg_LobbyEpilogue_Morrison_wet.png`、`U1_avg_LobbyEpilogue_Vivian.png`。
+- AVG 图文件名见本节末尾
+- 独立人物文件名见本节末尾
 
 ### 画面与拆分
 
@@ -172,3 +366,44 @@ Zack、Emma 站在吧台外同一侧，小酒保留吧台内招呼；Morrison �
 ### 本次制作
 
 Morrison 正常／淋湿二选一；湿态头发、帽檐与衣领带水，衣服局部变深，姿势与干态对齐。Vivian 到下楼节点才出现。Anna 留在医院，泼水动作另接漫画。
+
+### 交付文件名
+
+AVG 场景图
+
+```text
+U1_avg_LobbyEpilogue_bg.png
+```
+
+独立人物图
+
+```text
+U1_avg_LobbyEpilogue_Morrison_dry.png
+U1_avg_LobbyEpilogue_Morrison_wet.png
+U1_avg_LobbyEpilogue_Vivian.png
+```
+
+人物入场景预览与坐标
+
+```text
+U1_avg_LobbyEpilogue_Morrison_dry_preview.png
+U1_avg_LobbyEpilogue_Morrison_dry_XYposition.txt
+U1_avg_LobbyEpilogue_Morrison_wet_preview.png
+U1_avg_LobbyEpilogue_Morrison_wet_XYposition.txt
+U1_avg_LobbyEpilogue_Vivian_preview.png
+U1_avg_LobbyEpilogue_Vivian_XYposition.txt
+```
+
+需要独立阴影时交付
+
+```text
+U1_avg_LobbyEpilogue_Morrison_dry_shadow.png
+U1_avg_LobbyEpilogue_Morrison_wet_shadow.png
+U1_avg_LobbyEpilogue_Vivian_shadow.png
+```
+
+分层源文件（对应场景图，包含独立人物及遮挡层）
+
+```text
+U1_avg_LobbyEpilogue_bg.psd
+```
