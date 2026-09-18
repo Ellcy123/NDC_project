@@ -13,8 +13,10 @@ sources:
   sha256: 8830f582b058e676390a2cdc32dc672a1873fd41e5122d4d4fe8f2818eef5b3c
 - role: narrativePlan
   path: 剧情设计/Unit1/内容修改后的增强情节线.md
-  sha256: 867ad3c46020cd294baeb4c1506e929bf8858c5082ef773e1f83b8646290da9f
+  sha256: b3927fc37afa9ae17f9f32cfc2bedab8389a9dd0e2c4307bce51a575ddcdb3dd
 user_overrides:
+- id: UO_L2_CONTINUOUS_CABINET_20260918
+  instruction: 首次Emma套话直接续接搬柜及相机、发现照片演出；不再点击柜子触发；结束恢复探索，由玩家点击取得照片。现有对白文档不修改，旧触发备注在接入时按本合同覆盖。
 - id: UO_17_DOUBTS
   instruction: 采用本轮批准的17疑点方案；指定疑点两项显示、第三项谎言隐藏，三项全AND；具体condition以lead批准表为准，本包不重设计
 - id: UO_L4_STATIC
@@ -244,7 +246,7 @@ coverage:
     情节点: 小包厢套话，Emma被Zack引出调查方向
     地点: 歌舞厅侧小包厢
     在场人物: Zack、Emma
-    进入与接续: 沿正式版小包厢Emma问话入口；情绪回扣到后续求助，不把整轮锁成线性剧情
+    进入与接续: 沿正式版小包厢Emma问话入口；套话结束直接接搬柜求助，不把整轮锁成线性剧情
   cast:
   - Zack、Emma
   location: 歌舞厅侧小包厢
@@ -259,11 +261,11 @@ coverage:
     heading: L2
     line: 33
   source_event:
-    形式: 突发事件（调查触发事件）
-    情节点: 搬柜受阻，Emma帮助Zack取得照片
+    形式: 普通问话连续演出
+    情节点: 搬柜受阻，Emma帮助Zack发现照片
     地点: 同一小包厢
     在场人物: Zack、Emma
-    进入与接续: 调查对应位置触发；搬柜、取得已冲印照片后恢复物件检查，接既定显影交互
+    进入与接续: 首次Emma套话后直接连续接搬柜、相机与发现照片演出，中间不恢复探索、不等待点击柜子；结束后恢复探索，玩家点击搜得照片，再进入既定显影交互
   cast:
   - Zack、Emma
   location: 同一小包厢

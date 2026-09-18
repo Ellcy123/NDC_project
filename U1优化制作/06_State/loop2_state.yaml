@@ -191,6 +191,8 @@ scenes:
     Emma:
       id: 102
       talk: L2_booth_emma
+      talk_continuation: L2_event_booth_cabinet_help
+      continuation_policy: 首次套话结束直接接搬柜及相机、发现照片演出，中间不恢复探索；Repeat不重播。演出结束才开放照片点击搜得。
       repeat_talk: L2_booth_emma_repeat
       motive: 独立调查，不愿免费交成果
       mindset: 不满被利用；被套话后警惕，帮忙时拿回主动
@@ -245,14 +247,13 @@ scenes:
   event_triggers:
   - event_id: cabinet_help
     talk: L2_event_booth_cabinet_help
-    trigger: inspect_cabinet_search_position
+    trigger: continuation_after_L2_booth_emma
     runtime_binding:
-      kind: object_interaction_talk
+      kind: talk_chain_continuation
       one_shot: true
-      status: needs_talk_completion_adapter
-    required_talks:
-    - L2_booth_emma
-    order_policy: 本场先完成套话再求助；不限制其它探索场景顺序
+      status: existing_runtime_mapping_pending_integration
+      entry_from: L2_booth_emma
+    order_policy: 套话后直接接搬柜求助，不等待再次点击柜子；本段结束露出照片搜证点，恢复探索后玩家点击取得，不自动发放；不限制其它场景顺序
     cast:
     - Zack
     - Emma
@@ -961,7 +962,7 @@ outline_coverage:
     情节点: 小包厢套话，Emma被Zack引出调查方向
     地点: 歌舞厅侧小包厢
     在场人物: Zack、Emma
-    进入与接续: 沿正式版小包厢Emma问话入口；情绪回扣到后续求助，不把整轮锁成线性剧情
+    进入与接续: 沿正式版小包厢Emma问话入口；套话结束直接接搬柜求助，不把整轮锁成线性剧情
   state_path: scenes[1].npcs.Emma
   mapping: exact
   deviation: none
@@ -971,11 +972,11 @@ outline_coverage:
     heading: L2
     line: 33
   source_event:
-    形式: 突发事件（调查触发事件）
-    情节点: 搬柜受阻，Emma帮助Zack取得照片
+    形式: 普通问话连续演出
+    情节点: 搬柜受阻，Emma帮助Zack发现照片
     地点: 同一小包厢
     在场人物: Zack、Emma
-    进入与接续: 调查对应位置触发；搬柜、取得已冲印照片后恢复物件检查，接既定显影交互
+    进入与接续: 首次Emma套话后直接连续接搬柜、相机与发现照片演出，中间不恢复探索、不等待点击柜子；结束后恢复探索，玩家点击搜得照片，再进入既定显影交互
   state_path: scenes[1].event_triggers[0]
   mapping: exact
   deviation: none
@@ -1750,8 +1751,8 @@ runtime_requirements:
   status: special_adapter
   detail: 1201→1706替换实际背包；原图身份疑点对有效现态需兼容重检/读档，不要求先认人后烘烤；R2接受保留照片正面与日期的等效状态
 - key: cabinet_talk_order
-  status: special_adapter
-  detail: 同场套话→搬柜求助的顺序需Talk完成绑定；不能把其它探索场景锁成线性链
+  status: existing_runtime_mapping_pending_integration
+  detail: 首次套话直接续接搬柜、相机与发现照片对白及C02漫画，中间不恢复探索、不另设柜子点击前置；结束恢复探索并开放照片拾取。Repeat不重播；不列为新增程序功能。2026-09-18用户确认，现有对白文档不改，接入以本合同为准。
 - key: hidden_lie
   status: special_adapter
   detail: 1202疑点第三项1052001全AND但不显示；不得删掉或改为OR

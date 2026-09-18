@@ -46,7 +46,7 @@ By default artifacts are stored outside the repository at `$CODEX_HOME/novai-gem
 
 ## Default dialogue handoff
 
-For NDC dialogue writing and iterative polishing, follow [ndc-dialogue](../ndc-dialogue/SKILL.md). The current conversation model writes the information-controlled draft and every complete prompt, including the user's core emotional goals and the full Nyra reference. Call `[次]gemini-3.8-flash` unless the user selects another model. Do not delegate prompt authorship to the operator.
+For NDC dialogue writing and iterative polishing, follow [ndc-dialogue](../ndc-dialogue/SKILL.md). The current conversation model writes the information-controlled draft and every complete prompt, including the user's emotional goals, selected character personality/history/interests, and the full Nyra reference. Knowledge-boundary checklists stay local to the lead; Gemini is asked for smoother, conversational, character-faithful expression with unchanged information, flexible sentence counts, and optional fitting banter or humor. Preserve game routing and acquisition markers. Call `[次]gemini-3.8-flash` unless the user selects another model. Do not delegate prompt authorship to the operator.
 
 One fixed script call can be executed directly by the lead. When independent operator work is useful, follow the repository's Sol / medium assignment with a fresh, minimal context. The operator submits the exact prepared input, retrieves the raw result, and never improvises revisions. Each authorized polish round receives its own run ID; use status/result on the existing ID while it is pending.
 
